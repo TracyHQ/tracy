@@ -35,6 +35,9 @@ import {
   isPageList,
   LISTED_ACTIONS,
   narrowDescribe,
+  nativePageIdAdvice,
+  pageSearchProblem,
+  pageIdAdvice,
   pageListRows,
   takeViewParams,
   workingLocale
@@ -1064,9 +1067,35 @@ function cutPagesList(answer, params) {
  * (a refusal's, a cut's) keeps it, and one that is neither document (a refusal) is left alone.
  * @param {unknown} answer
  * @param {boolean | null} describeSeen - `memory.describeSeen(…)`; null (no conversation) never nudges.
+ * @param {Record<string, unknown> | null} [params]
  * @returns {unknown}
  */
-export function contentReadNext(answer, describeSeen) {
+export function contentReadNext(answer, describeSeen, params = null) {
+  if (
+    isRecord(answer) &&
+    !('next' in answer) &&
+    isRecord(params) &&
+    isRecord(answer.error) &&
+    answer.error.code === 'CONTENT_BAD_QUERY' &&
+    typeof params.type === 'string' &&
+    /type/i.test(String(answer.error.message ?? '')) &&
+    params.id === undefined &&
+    params.cursor === undefined &&
+    params.blocksCursor === undefined
+  ) {
+    return {
+      ...answer,
+      next: {
+        action: 'content.read',
+        params: {
+          view: 'pages',
+          ...(typeof params.locale === 'string' ? { locale: params.locale } : {}),
+          ...(typeof params.search === 'string' ? { search: params.search } : {})
+        },
+        why: 'Find the requested page by title or URL first. view:pages includes articles, services and projects too; do not infer type:page from the word page. Use the returned Content API id only when reading fields.'
+      }
+    }
+  }
   if (!isRecord(answer) || 'next' in answer) return answer
   // 🔒 A LINK THAT SHOWS NO PAGE SAYS WHAT TO TRY (round 7): `{view:"pages", url:"/"}` answered `pages: []`
   // on a multilingual Joomla site, whose home is `/en`, and the model went on to list every page of a
@@ -1699,6 +1728,9 @@ export async function runSiteCall(input) {
   // 🔒 A READ'S VIEW IS TRACY'S (05/10/2026, `read-compact.mjs`): `full`, `blockKinds` and a whole list's
   // `search`/`type`/`offset`/`limit` shape what the model is shown; taken off before the call is normalised,
   // they are never judged as a door's parameter nor relayed. The replace job reads whole (`bodiesWhole`).
+  const searchProblem = pageSearchProblem(plan.action, plan.params)
+  if (searchProblem)
+    return finish({ ok: false, code: 'CONTENT_BAD_QUERY', error: searchProblem }, planNotes, nextFacts)
   const taken = takeViewParams(plan.action, plan.params)
   if (taken.view !== null) plan = { ...plan, params: taken.params }
   const view = taken.view
@@ -2248,10 +2280,14 @@ export async function runSiteCall(input) {
       isRecord(lost) ? lost : { ok: false, code: 'COWORK_WEB_UNREACHABLE' }
     ),
     asked,
+    // The call never reached Tracy's own server (`COWORK_WEB_UNREACHABLE`: the way from this host to
+    // tracy-web failed): the site was never asked, so it is not "the site not answering" (#208).
     next:
-      asked === 2
-        ? 'Tracy asked the site twice, 2 s apart, and its content door answered neither time: tell the customer the site is not answering now; do not call it again or change the site another way.'
-        : `The site's content door gave no answer in ${Math.round(ms / 1000)} s, too long to ask again: tell the customer the site is not answering now; do not call it again or change the site another way.`
+      !isRecord(lost) || lost.code === 'COWORK_WEB_UNREACHABLE'
+        ? "The call did not reach Tracy's own server, so the site was not asked at all: tell the customer Tracy had a connection problem and to ask again in a minute; never say their site is not answering."
+        : asked === 2
+          ? 'Tracy asked the site twice, 2 s apart, and its content door answered neither time: tell the customer the site is not answering now; do not call it again or change the site another way.'
+          : `The site's content door gave no answer in ${Math.round(ms / 1000)} s, too long to ask again: tell the customer the site is not answering now; do not call it again or change the site another way.`
   })
 
   /**
@@ -2343,7 +2379,7 @@ export async function runSiteCall(input) {
   if (n.action === 'content.read') n = { ...n, params: withReadBudget(n.params) }
   if (expectedBodyRevision !== null && n.action === 'content.update')
     n = { ...n, params: { ...n.params, expected_body_revision: expectedBodyRevision } }
-  if (n.action === 'content.contract') answer = await contractCall(n)
+  if (n.action === 'content.contract') answer = driftSaidOnce(await contractCall(n), memory, sessionId)
   else if (wholeGroup !== null && n.action === 'content.delete') answer = await deleteGroup(n, wholeGroup)
   else if (BUSY_RETRY_ACTIONS.has(n.action) && platform === 'joomla' && memory)
     answer = await memory.flight(label, () => sendLost(n.action, n.params))
@@ -2464,6 +2500,7 @@ export async function runSiteCall(input) {
       facts.actions,
       sealed
     )
+  if (n.action === 'content.list') answer = nativePageIdAdvice(answer, n.params, platform)
   if (n.action === 'content.read') {
     if (isRecord(answer) && answer.schemaVersion === CONTENT_DESCRIBE)
       memory?.rememberDescribe(sessionId, label)
@@ -2479,12 +2516,14 @@ export async function runSiteCall(input) {
           // facts that cannot be read are no facts: nothing is guessed in their place
         }
       }
-      listed = compactPageList(a, n.params, { home })
+      listed = compactPageList(a, n.params, { home, view })
     }
     answer = contentReadNext(
       listed ?? cutContentList(answer, n.params),
-      memory ? memory.describeSeen(sessionId, label) : null
+      memory ? memory.describeSeen(sessionId, label) : null,
+      compactView ? n.params : null
     )
+    if (compactView) answer = pageIdAdvice(answer)
     // D1: only what the model was shown (after the listing cut) is a base an apply may name.
     memory?.rememberContentRevisions(sessionId, label, answer, readGeneration)
     // The site's own host, for a picture the model writes as an address (`libraryPath`).
@@ -4073,6 +4112,46 @@ export function judgeWholeBody({
             ? `${field} is ${chars(length)} chars; ${what} holds ${chars(baseline)} now`
             : `${field} is ${chars(length)} chars; this conversation last read ${what} at ${chars(baseline)}`
     }
+  }
+}
+
+/**
+ * 🔒 A SITE'S PRESENTATION DRIFT IS SAID ONCE A CONVERSATION (#258, survey 29/10/2026). The Joomla Claude
+ * Cowork plugin answers every contract inspect and apply with the site's whole drift against its
+ * quickstart (`warnings[]`, `{code: PRESENTATION_DRIFT, message, severity: warning}`, ADR 0022): 17 lines,
+ * 80 % of each answer and ~4,500 tokens over one phone-number turn, none of it about the change. On a
+ * built site that drift is permanent. A line this conversation was told is folded into one count; a
+ * line it was not told stays whole. A new answer object: a flight's shared answer is never changed.
+ * @param {unknown} answer
+ * @param {{ unsaidDrift?: (sessionId: unknown, messages: string[]) => string[] } | null | undefined} memory
+ * @param {unknown} sessionId
+ */
+export function driftSaidOnce(answer, memory, sessionId) {
+  if (!isRecord(answer) || !Array.isArray(answer.warnings) || typeof memory?.unsaidDrift !== 'function')
+    return answer
+  /** @param {unknown} w @returns {w is { code: string, message: string }} */
+  const isDrift = (w) => isRecord(w) && w.code === 'PRESENTATION_DRIFT' && typeof w.message === 'string'
+  const drift = answer.warnings.filter(isDrift)
+  if (drift.length === 0) return answer
+  const fresh = new Set(
+    memory.unsaidDrift(
+      sessionId,
+      drift.map((w) => w.message)
+    )
+  )
+  const repeated = drift.filter((w) => !fresh.has(w.message)).length
+  if (repeated === 0) return answer
+  return {
+    ...answer,
+    warnings: [
+      ...answer.warnings.filter((w) => !isDrift(w) || fresh.has(w.message)),
+      {
+        code: 'PRESENTATION_DRIFT',
+        severity: 'warning',
+        said: repeated,
+        message: `${repeated} presentation drift ${repeated === 1 ? 'line' : 'lines'} already said in this conversation: where the site's design differs from its quickstart; unchanged, and not about this call.`
+      }
+    ]
   }
 }
 

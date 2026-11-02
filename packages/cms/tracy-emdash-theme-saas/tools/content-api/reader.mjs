@@ -111,21 +111,33 @@ function cutToBudget(owner, budget, size) {
  * A native list item is the same row, mapped by the same code, as the native GET's item, with
  * one difference: the GET overlays a pending draft (`liveData`) and hides draft fields from a
  * caller who may not read drafts. So only an entry with a draft revision is fetched on its own,
- * and the first entry without one is fetched too and compared byte for byte with its list item:
- * if they differ (another EmDash version, another caller role), every entry is fetched as before.
+ * and the first entry without one in each collection is fetched too and compared byte for byte with its list item:
+ * if they differ (another EmDash version, another caller role), that collection is fetched as before.
+ * When current transactional schema is provided, reference-bearing collections always use GET;
+ * reference-free collections reproduce the native empty references object before comparison.
  * A listing that took one GET per entry (~2000 on the Business seed) now takes one per list page.
  */
-export async function sourceRows({ collections, list, get, published }) {
+export async function sourceRows({ collections, list, get, published, referenceFree = null }) {
   const rows = []
   // null: not yet compared; true: list items equal native GET items on this site and caller.
-  let listed = null
   for (const collection of collections) {
+    let listed = null
     let cursor
     do {
       const page = await list(collection, cursor)
-      for (const entry of page.items) {
+      for (const nativeEntry of page.items) {
+        // Schema is read in the same transaction as these rows. Native GET appends an empty
+        // reference object only for a translation group in a collection without reference fields.
+        const entry =
+          referenceFree?.has(collection) && nativeEntry.translationGroup
+            ? { ...nativeEntry, references: {} }
+            : nativeEntry
         let item = entry
-        if (entry.draftRevisionId || listed !== true) {
+        if (
+          entry.draftRevisionId ||
+          listed !== true ||
+          (referenceFree !== null && !referenceFree.has(collection))
+        ) {
           item = (await get(collection, entry.id)).item
           if (listed === null && !entry.draftRevisionId)
             listed = JSON.stringify(entry) === JSON.stringify(item)
@@ -145,6 +157,122 @@ export async function sourceRows({ collections, list, get, published }) {
     } while (cursor)
   }
   return rows
+}
+/**
+ * The source rows are kept between reads only while the database provably has not changed. EmDash
+ * offers no such signal: every token request writes `_emdash_api_tokens.last_used_at` on the same
+ * connection, the scheduler writes in the background, and a native GET also reads SEO, bylines,
+ * media, relations, references and draft revisions. So the identity tool (identity-sqlite.mjs)
+ * gives every table a native list or GET may read three triggers that count each row written,
+ * by any connection, into one counter; the reader keeps rows under (counter, schema cookie) and
+ * reads fresh whenever a watched table lacks its triggers (a table created since, an older site).
+ */
+export const CHANGES_TABLE = '_tracy_content_changes'
+// Never read by a native list or GET, and written by routine traffic or background bookkeeping
+// (measured on Business 1.7.23 / EmDash 1.1.0): a write here cannot change an answer.
+const UNWATCHED = new Set([
+  '_emdash_api_tokens',
+  '_emdash_redirect_state',
+  '_emdash_redirect_write_lock',
+  '_emdash_revision_prune_queue',
+  '_emdash_404_log',
+  '_emdash_rate_limits',
+  '_emdash_entry_locks',
+  '_emdash_cron_tasks',
+  '_emdash_migrations_lock',
+  '_emdash_device_codes',
+  '_emdash_authorization_codes',
+  '_emdash_oauth_tokens',
+  'auth_challenges',
+  'auth_tokens',
+  'credentials',
+  'audit_logs'
+])
+const UNWATCHED_PREFIX = '_emdash_media_usage'
+// Rows of a watched table that are bookkeeping, not content: the scheduler's own run stamps.
+const QUIET = { options: (row) => `${row}.name GLOB 'system:scheduler:*'` }
+const FTS5_SHADOWS = ['_data', '_idx', '_content', '_docsize', '_config']
+const quoted = (name) => '"' + name.replaceAll('"', '""') + '"'
+const isVirtual = (row) => row.type === 'table' && /^CREATE\s+VIRTUAL\s+TABLE/i.test(row.sql ?? '')
+/** The tables whose writes are counted, from `sqlite_master` rows ({ type, name, tbl_name, sql }). */
+export function watchedTables(master) {
+  const virtual = new Set(master.filter(isVirtual).map((r) => r.name))
+  const shadows = new Set([...virtual].flatMap((v) => FTS5_SHADOWS.map((s) => v + s)))
+  return master
+    .filter(
+      (r) =>
+        r.type === 'table' &&
+        !r.name.startsWith('sqlite_') &&
+        r.name !== CHANGES_TABLE &&
+        !UNWATCHED.has(r.name) &&
+        !r.name.startsWith(UNWATCHED_PREFIX) &&
+        !virtual.has(r.name) &&
+        !shadows.has(r.name)
+    )
+    .map((r) => r.name)
+    .sort()
+}
+/** The three triggers that count `table`'s row writes: [{ name, sql }], the SQL exactly as stored. */
+export function changeTriggers(table) {
+  const quiet = QUIET[table]
+  return [
+    ['i', 'INSERT', quiet && quiet('NEW')],
+    ['u', 'UPDATE', quiet && `${quiet('OLD')} AND ${quiet('NEW')}`],
+    ['d', 'DELETE', quiet && quiet('OLD')]
+  ].map(([suffix, event, skip]) => {
+    const name = `tracy_change_${table}_${suffix}`
+    return {
+      name,
+      sql: `CREATE TRIGGER ${quoted(name)} AFTER ${event} ON ${quoted(table)}${skip ? ` WHEN NOT (${skip})` : ''} BEGIN UPDATE ${quoted(CHANGES_TABLE)} SET n = n + 1 WHERE id = 1; END`
+    }
+  })
+}
+/** Whether every watched table carries its triggers, exactly as `changeTriggers` writes them. */
+export function changesWatched(master) {
+  const stored = new Map(master.filter((r) => r.type === 'trigger').map((r) => [r.name, r]))
+  return watchedTables(master).every((table) =>
+    changeTriggers(table).every(
+      (t) => stored.get(t.name)?.sql === t.sql && stored.get(t.name).tbl_name === table
+    )
+  )
+}
+/**
+ * The key of the database state a read sees: `${nonce}:${count}:${schema cookie}`, or null (read
+ * fresh, keep nothing) when the counter is missing or a watched table lacks its triggers. `db`
+ * answers, inside the read's transaction: `counter()` ({ nonce, n } or undefined), `schema()` (the
+ * schema cookie) and `master()` (the `sqlite_master` rows). `memo` keeps the coverage verdict per
+ * schema cookie: triggers cannot change without changing it.
+ */
+export async function changeKey(db, memo) {
+  try {
+    const counter = await db.counter()
+    const schema = await db.schema()
+    if (!counter || typeof schema !== 'number') return null
+    if (memo.schema !== schema) Object.assign(memo, { schema, watched: changesWatched(await db.master()) })
+    return memo.watched ? `${counter.nonce}:${counter.n}:${schema}` : null
+  } catch {
+    return null
+  }
+}
+function frozen(value) {
+  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+    Object.freeze(value)
+    for (const v of Object.values(value)) frozen(v)
+  }
+  return value
+}
+/**
+ * The rows for `slot` (the caller's draft and scope rights), from `cache` when they were read in
+ * the database state `key` names, else from `read()`. A null key (changes not watched) reads fresh
+ * and keeps nothing. Kept rows are frozen: no answer built from them can alter the next one.
+ */
+export async function cachedRows(cache, slot, key, read) {
+  const kept = key === null ? undefined : cache.get(slot)
+  if (kept?.key === key) return { rows: kept.rows, hit: true }
+  cache.delete(slot)
+  const rows = await read()
+  if (key !== null) cache.set(slot, { key, rows: frozen(rows) })
+  return { rows, hit: false }
 }
 export function hasher(key) {
   return (...values) => createHmac('sha256', key).update(JSON.stringify(values)).digest('base64url')
@@ -442,14 +570,25 @@ export function project(item, collection, options, hash, origin, detail = true) 
   }
   return { content, unresolved }
 }
+// The heads of kept (frozen) rows, projected once per site seed, origin and options.
+const keptHeads = new WeakMap()
+function heads(rows, options, hash, origin, siteSeed) {
+  const all = () =>
+    rows.map(({ item, collection }) => project(item, collection, options, hash, origin, false))
+  if (!Object.isFrozen(rows)) return all()
+  const key = JSON.stringify([siteSeed, origin, options])
+  const kept = keptHeads.get(rows)
+  if (kept?.key === key) return kept.projected
+  const projected = frozen(all())
+  keptHeads.set(rows, { key, projected })
+  return projected
+}
 export function envelope(rows, query, options, identity, key, origin, siteSeed = key) {
   const hash = hasher(siteSeed)
   const codec = cursorCodec(key)
   // Only the content an `id` read returns needs its fields, blocks and images; every other
   // record contributes its head alone (ids, types, locales, revisions, summaries).
-  const projected = rows.map(({ item, collection }) =>
-    project(item, collection, options, hash, origin, false)
-  )
+  const projected = [...heads(rows, options, hash, origin, siteSeed)]
   const target = query.id ? projected.findIndex((x) => x.content.id === query.id) : -1
   if (target >= 0)
     projected[target] = project(rows[target].item, rows[target].collection, options, hash, origin)

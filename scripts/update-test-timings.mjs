@@ -6,15 +6,22 @@
  * file (the child process from start to exit: process start, imports, `before()` hooks and tests),
  * bracketed by `begin`/`end` lines that carry the shard and its wall seconds; the last shard also
  * prints what `rest` (interop + dsh-passwords) took. This script reads those lines out of
- * `gh run view --log` for green pull-request runs into `develop` and writes, per file, the MEDIAN
- * over at least three runs.
+ * `gh run view --log` for green pull-request runs into `develop` and green nightly runs, and writes,
+ * per file, the MEDIAN over at least three runs.
+ *
+ * 🔒 THE NIGHTLY IS A SOURCE (30/10/2026). Pull requests run on GitHub-hosted runners since that day,
+ * with three shards, and a routine one leaves the database test files out: such a run is refused
+ * below (shard count, `linux` label), and the files it skips could never reach three samples. The
+ * nightly (`schedule`) still runs on our runners, in the two shards, with every file — so it is what
+ * keeps this table fresh. It has no pull request to tie it to: its run, attempt and commit are the
+ * tie, and `pr` is `null` in `source.runs`.
  *
  * 🔒 NEVER FROM A LAPTOP. This script used to time each file on the machine it ran on. A table
  * measured that way on macOS was reverted (`7cdbcfb46`): it split the runners' shards 225 s / 457 s
  * where the hand-typed one gave 358 s / 352 s. There is no local mode any more, on purpose.
  *
  * 🔒 NO NUMBER IS EVER MADE UP. A file with fewer than three eligible samples, a run that is not a
- * green Linux pull-request run into `develop`, a shard whose records are cut short, duplicated or
+ * green Linux pull-request run into `develop` or nightly run, a shard whose records are cut short, duplicated or
  * contradict each other: each is refused with its reason, the table on disk stays as it was, and
  * the exit code is not 0. "GitHub could not be read" is exit 3 (nothing was learnt), never "the
  * logs carry no durations".
@@ -307,7 +314,9 @@ export function pullOf(run, pulls, repo) {
 export function refusal(run, { pulls, jobs }, shardCount, repo) {
   if (!run || typeof run !== 'object') return 'no run data'
   if (!isId(run.id)) return 'no usable run id'
-  if (run.event !== 'pull_request') return `event is ${String(run.event)}, not pull_request`
+  const nightly = run.event === 'schedule'
+  if (run.event !== 'pull_request' && !nightly)
+    return `event is ${String(run.event)}, not pull_request or schedule`
   if (run.status !== 'completed' || run.conclusion !== 'success')
     return `not a green run (${String(run.status)}/${String(run.conclusion)})`
   if (!isId(run.run_attempt)) return 'no usable attempt number'
@@ -318,10 +327,13 @@ export function refusal(run, { pulls, jobs }, shardCount, repo) {
     return `it belongs to ${String(run.repository?.full_name)}, not ${repo}`
   if (!sameRepo(run.head_repository?.full_name, repo))
     return `its head lives in ${String(run.head_repository?.full_name)}: a fork's run cannot be tied to a pull request here`
-  if (pulls === null) return null
-  const pr = pullOf(run, pulls, repo)
-  if ('refused' in pr) return pr.refused
-  if (pr.base !== 'develop') return `pull request #${String(pr.number)} base is ${pr.base}, not develop`
+  // The nightly tests `develop` (the commit its `plan` pinned) and belongs to no pull request.
+  if (!nightly) {
+    if (pulls === null) return null
+    const pr = pullOf(run, pulls, repo)
+    if ('refused' in pr) return pr.refused
+    if (pr.base !== 'develop') return `pull request #${String(pr.number)} base is ${pr.base}, not develop`
+  }
   if (jobs === null) return null
   if (jobs.length === 0) return 'its attempt lists no job'
   for (const job of jobs) {
@@ -338,6 +350,48 @@ export function refusal(run, { pulls, jobs }, shardCount, repo) {
       return `"${name}" did not run on a linux runner (${labels.join(', ') || 'no labels'})`
   }
   return null
+}
+
+/** `name:` of the job in `tracy-ci.yml` that pins the nightly's commit (`PLAN_JOB` in `green-tree.mjs`). */
+const PLAN_JOB = 'plan the build-check rows'
+/** The line `tracy-ci.yml` prints with the commit a nightly pinned (`plan`, and every row before checkout). */
+const NIGHTLY_PIN = /^nightly tree: plan selected ([0-9a-f]{40})$/
+
+/**
+ * The `develop` commit a nightly run tested, read from its own log, or the reason it cannot be told.
+ *
+ * A `schedule` run's `head_sha` is the DEFAULT branch's (`main`): the workflow checks out the commit
+ * its `plan` job resolved `develop` to and prints it — `plan` in "Pin the nightly to one commit", each
+ * row in "Refuse a nightly without its pinned commit", before checking it out. A sample is recorded
+ * against that commit, never against `main`'s. 🔒 It must be printed exactly once by the plan job and
+ * by every workers shard job, and be the same everywhere; anything else (missing, twice, two commits)
+ * refuses the run — a wrong commit in `source.runs` is worse than one nightly fewer.
+ *
+ * @param {string} text - `gh run view --log` of the run's attempt.
+ * @param {number} shardCount
+ * @returns {{ sha: string } | { refused: string }}
+ */
+export function nightlyCommitOf(text, shardCount) {
+  const jobs = [PLAN_JOB, ...Array.from({ length: shardCount }, (_, i) => shardJobName(i + 1, shardCount))]
+  /** @type {Map<string, string[]>} */
+  const said = new Map(jobs.map((j) => [j, []]))
+  for (const raw of String(text).split('\n')) {
+    const whole = LOG_LINE.exec(raw.replace(/\r$/, ''))
+    if (!whole || !said.has(whole[1])) continue
+    const m = NIGHTLY_PIN.exec(whole[3])
+    if (m) said.get(whole[1])?.push(m[1])
+  }
+  for (const [job, shas] of said)
+    if (shas.length !== 1)
+      return {
+        refused: `nightly: "${job}" printed the pinned develop commit ${String(shas.length)} time(s), not once — the commit it tested cannot be told`
+      }
+  const all = new Set([...said.values()].flat())
+  if (all.size !== 1)
+    return {
+      refused: `nightly: its jobs name ${String(all.size)} different pinned commits (${[...all].join(', ')})`
+    }
+  return { sha: [...all][0] }
 }
 
 /**
@@ -417,12 +471,12 @@ export function tableFromSamples({ files, runs, repo }) {
   if (!(wallPerSummedSecond > 0)) return { refused: 'the wall/summed factor is not positive', short: [] }
   const table = {
     _about:
-      'Seconds of each test:workers file as the CI runners measured it (the child process from start to exit, several files at once), the median over the runs listed in source (each a run id, its attempt, its commit and the pull request into develop it ran for). GENERATED by scripts/update-test-timings.mjs from the tracy-test-timing lines of green Tracy CI pull-request runs into develop; never typed, never measured on a laptop. shardOf balances shards by it. wallPerSummedSecond = median of (a shard wall seconds / the sum of its files). restWallSeconds = median wall of rest (interop + dsh-passwords) on the last shard; preloadLastShardSeconds = restWallSeconds / wallPerSummedSecond, the same figure in the unit shardOf balances in. Verify: node --import tsx scripts/update-test-timings.mjs --check-ci',
+      'Seconds of each test:workers file as the CI runners measured it (the child process from start to exit, several files at once), the median over the runs listed in source (each a run id, its attempt, the commit it tested and the pull request into develop it ran for, or pr null for a nightly run, whose commit is the develop commit it pinned). GENERATED by scripts/update-test-timings.mjs from the tracy-test-timing lines of green Tracy CI pull-request runs into develop and nightly runs, on our runners; never typed, never measured on a laptop. shardOf balances shards by it. wallPerSummedSecond = median of (a shard wall seconds / the sum of its files). restWallSeconds = median wall of rest (interop + dsh-passwords) on the last shard; preloadLastShardSeconds = restWallSeconds / wallPerSummedSecond, the same figure in the unit shardOf balances in. Verify: node --import tsx scripts/update-test-timings.mjs --check-ci',
     source: {
       kind: 'ci',
       repo,
       workflow: WORKFLOW,
-      event: 'pull_request',
+      events: ['pull_request', 'schedule'],
       base: 'develop',
       minSamples: MIN_SAMPLES,
       runs: runs
@@ -471,7 +525,12 @@ export function tableProblems(table) {
       const ids = new Set(runs.map((r) => r?.id))
       if (runs.length < MIN_SAMPLES || ids.size !== runs.length)
         problems.push(`source.runs must name at least ${String(MIN_SAMPLES)} different runs`)
-      if (runs.some((r) => !isId(r?.id) || !isId(r?.attempt) || !isSha(r?.headSha) || !isId(r?.pr)))
+      // `pr: null` is a nightly run (no pull request); anything else must name one.
+      if (
+        runs.some(
+          (r) => !isId(r?.id) || !isId(r?.attempt) || !isSha(r?.headSha) || !(isId(r?.pr) || r?.pr === null)
+        )
+      )
         problems.push('source.runs has an entry without id, attempt, headSha and pr')
       if (typeof s.repo !== 'string' || !/^[\w.-]+\/[\w.-]+$/.test(s.repo))
         problems.push('source.repo is not owner/name')
@@ -739,12 +798,10 @@ function ghJson(gh, args) {
 function readRun(gh, repo, run, shardCount) {
   const early = refusal(run, { pulls: null, jobs: null }, shardCount, repo)
   if (early) return { refused: early }
-  const listed = ghJson(gh, [
-    'api',
-    '--method',
-    'GET',
-    `repos/${repo}/commits/${run.head_sha}/pulls?per_page=100`
-  ])
+  const nightly = run.event === 'schedule'
+  const listed = nightly
+    ? []
+    : ghJson(gh, ['api', '--method', 'GET', `repos/${repo}/commits/${run.head_sha}/pulls?per_page=100`])
   if (!Array.isArray(listed))
     throw new UnknownError(`run ${String(run.id)}: the pull request list is not a list`)
   const based = refusal(run, { pulls: listed, jobs: null }, shardCount, repo)
@@ -758,7 +815,7 @@ function readRun(gh, repo, run, shardCount) {
   if (!Array.isArray(jobs?.jobs)) throw new UnknownError(`run ${String(run.id)}: the job list is not a list`)
   const late = refusal(run, { pulls: listed, jobs: jobs.jobs }, shardCount, repo)
   if (late) return { refused: late }
-  const pr = pullOf(run, listed, repo)
+  const pr = nightly ? { number: null } : pullOf(run, listed, repo)
   if ('refused' in pr) return pr
   const log = gh([
     'run',
@@ -772,9 +829,12 @@ function readRun(gh, repo, run, shardCount) {
   ])
   if (typeof log !== 'string' || log.trim() === '')
     throw new UnknownError(`run ${String(run.id)}: the log came back empty`)
+  // A nightly is recorded against the develop commit it tested, which its log names; not `main`'s.
+  const tested = nightly ? nightlyCommitOf(log, shardCount) : { sha: run.head_sha }
+  if ('refused' in tested) return tested
   const sample = sampleOf(parseTimingLog(log), shardCount)
   if ('refused' in sample) return sample
-  return { ...sample, id: run.id, attempt: run.run_attempt, headSha: run.head_sha, pr: pr.number }
+  return { ...sample, id: run.id, attempt: run.run_attempt, headSha: tested.sha, pr: pr.number }
 }
 
 /**
@@ -811,7 +871,7 @@ export function run({ argv, gh, files, shardCount, tablePath = TABLE_PATH, out, 
       if (source?.kind !== 'ci') {
         err(
           'update-test-timings: the committed table is NOT CI-derived (no source.kind "ci"). Nothing to verify: ' +
-            `it needs ${String(MIN_SAMPLES)} green pull-request runs into develop that carry tracy-test-timing lines, then a refresh.`
+            `it needs ${String(MIN_SAMPLES)} green pull-request runs into develop or nightly runs that carry tracy-test-timing lines, then a refresh.`
         )
         return 1
       }
@@ -823,10 +883,11 @@ export function run({ argv, gh, files, shardCount, tablePath = TABLE_PATH, out, 
           'GET',
           `repos/${source.repo}/actions/runs/${String(named.id)}`
         ])
+        // A nightly's entry names the develop commit it tested (`nightlyCommitOf`), compared below.
         if (
           meta?.id !== named.id ||
           meta?.run_attempt !== named.attempt ||
-          meta?.head_sha !== named.headSha
+          (named.pr !== null && meta?.head_sha !== named.headSha)
         ) {
           err(
             `update-test-timings: run ${String(named.id)} is no longer the attempt and commit the table names (it was re-run, or the id is wrong)`
@@ -840,9 +901,15 @@ export function run({ argv, gh, files, shardCount, tablePath = TABLE_PATH, out, 
           )
           return 1
         }
+        if (got.headSha !== named.headSha) {
+          err(
+            `update-test-timings: run ${String(named.id)} tested commit ${got.headSha}, not ${String(named.headSha)} as the table says`
+          )
+          return 1
+        }
         if (got.pr !== named.pr) {
           err(
-            `update-test-timings: run ${String(named.id)} ran for pull request #${String(got.pr)}, not #${String(named.pr)} as the table says`
+            `update-test-timings: run ${String(named.id)} ran for ${got.pr === null ? 'no pull request (a nightly)' : `pull request #${String(got.pr)}`}, not ${named.pr === null ? 'a nightly' : `#${String(named.pr)}`} as the table says`
           )
           return 1
         }
@@ -870,14 +937,20 @@ export function run({ argv, gh, files, shardCount, tablePath = TABLE_PATH, out, 
       return 0
     }
 
-    const listed = ghJson(gh, [
-      'api',
-      '--method',
-      'GET',
-      `repos/${args.repo}/actions/workflows/${WORKFLOW}/runs?event=pull_request&status=success&per_page=30`
-    ])
-    const candidates = Array.isArray(listed?.workflow_runs) ? listed.workflow_runs : null
-    if (candidates === null) throw new UnknownError('the run list has no workflow_runs')
+    // Pull-request runs and nightly runs, newest first by run id, whichever event they came from.
+    const candidates = []
+    for (const event of ['pull_request', 'schedule']) {
+      const listed = ghJson(gh, [
+        'api',
+        '--method',
+        'GET',
+        `repos/${args.repo}/actions/workflows/${WORKFLOW}/runs?event=${event}&status=success&per_page=30`
+      ])
+      if (!Array.isArray(listed?.workflow_runs))
+        throw new UnknownError(`the ${event} run list has no workflow_runs`)
+      candidates.push(...listed.workflow_runs)
+    }
+    candidates.sort((a, b) => (Number(b?.id) || 0) - (Number(a?.id) || 0))
     const runs = []
     const refused = []
     const seen = new Set()

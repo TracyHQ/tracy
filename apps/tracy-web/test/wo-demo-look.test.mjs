@@ -507,6 +507,30 @@ test('a look names the pages it saw whole: a page cut by the time budget is not 
   assert.deepEqual(cut.seen, first)
 })
 
+// #247 (dev 30/10/2026): one call cut by the provider threw away every page of its stream, so six checks of a 29-page
+// build ended "looked partly" with 0 pages seen. A page every tile of which was answered is seen.
+test('a page is seen once every tile of it is answered, even when a later call of its stream fails', async () => {
+  const fake = await fakes({ faults: [] }, { height: 700 })
+  let calls = 0
+  const fetchImpl = async (url, init) => {
+    calls++
+    // The first call answers home at both widths and the menu's desktop; every later one fails.
+    if (calls > 1) return new Response('provider down', { status: 500 })
+    return fake.fetchImpl(url, init)
+  }
+  const r = await createDemoLook({ ...fake, fetchImpl, visionFor: door, callsAtOnce: 1 })(
+    {},
+    { pages: ['/', '/menu'] }
+  )
+  assert.equal(r.looked, 'partly')
+  assert.equal(r.pass, false)
+  assert.deepEqual(r.seen, ['/'])
+  assert.deepEqual(
+    r.unlooked.map((u) => [u.page, u.viewports]),
+    [['/menu', ['phone']]]
+  )
+})
+
 test('a clean verdict without a readable image code cannot acknowledge any tiles', async () => {
   for (const imageCode of [undefined, null, 'WRONG123']) {
     const fake = await fakes({ faults: [], imageCode })
@@ -765,4 +789,34 @@ test('the look is told the approved neutral words a card with no source keeps, a
   const plain = await fakes({ faults: [] }, { height: 900 })
   await createDemoLook({ ...plain, visionFor: door })({}, { pages: ['/'] })
   assert.ok(!plain.asked[0].body.messages[0].content[0].text.includes('neutral words'))
+})
+
+// #247: every look of a 29-page build ran the full 300 s and saw no page whole. A whole look says what a page
+// cost; the next check takes what its time holds, and says the rest are left, never passing them unseen.
+test('a look says what a page seen whole cost, and the next takes the pages its time holds (#247)', async () => {
+  const { lookFit } = await import('../src/opportunities-build/client-demo.js')
+  let clock = 0
+  const fake = await fakes({ faults: [] }, { height: 10604 })
+  const timed = createDemoLook({
+    ...fake,
+    visionFor: door,
+    now: () => {
+      clock += 1_000
+      return clock
+    }
+  })
+  const whole = await timed({}, { pages: ['/', '/menu'] })
+  assert.equal(whole.looked, true)
+  assert.equal(typeof whole.msPerPage, 'number')
+  assert.ok(whole.msPerPage > 0)
+  // No rate yet: every page is tried, as before.
+  const pages = ['/menu', '/', '/about', '/contact', '/team']
+  assert.deepEqual(lookFit(pages, {}), { pages, left: [] })
+  // 100 s a page in a 300 s look: three pages — home first, then the unseen, then the seen.
+  assert.deepEqual(lookFit(pages, { msPerPage: 100_000, seen: ['/menu', '/about'] }), {
+    pages: ['/', '/contact', '/team'],
+    left: ['/menu', '/about']
+  })
+  // A page that alone outlasts the look is still tried, one at a time.
+  assert.deepEqual(lookFit(pages, { msPerPage: 900_000 }).pages, ['/'])
 })

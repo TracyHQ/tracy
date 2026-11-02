@@ -5,7 +5,7 @@
     "tracy-base/emdash-0.x": "0.5.5"
   },
   "maxVersion": {
-    "tracy-base/emdash-0.x": "0.5.6"
+    "tracy-base/emdash-0.x": "0.5.8"
   },
   "maxVersionNote": "0.5.5 (feat/ds-role-variables, 16/10/2026) is the first release whose stylesheets read every standard role variable themselves (var(--ds-*, <its own value>), design-system-roles.json: 0 unresolved), re-measured on the release build (contracts/0.5.5); 0.5.6 (16/10/2026) fits the Add site preview under Moxie and Figma, both modes: the call band's button is drawn in the band's words on the dark side, the dark scene band takes the quiet raised ground, the call capsule leaves room for a wider face, the swatch rule sits on its label and the worn-only shades are defined only while a system is worn; re-measured on the release build (contracts/0.5.6)",
   "splitNote": "the role-reading line of emdash/tracy-base: releases from 0.5.5 on wear a system through the role variables alone (readsRoles). Releases 0.5.0 to 0.5.4 read the template patches of emdash-base.json, which stays as it was for every site still built from them",

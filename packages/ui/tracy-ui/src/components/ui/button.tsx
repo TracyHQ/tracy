@@ -8,7 +8,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/80',
+        // Focused, the stroke is the text colour: the ring is terracotta, the fill's own colour, so a
+        // focused primary button showed no change at all (#228). Still one 1px stroke, never a halo.
+        default: 'bg-primary text-primary-foreground hover:bg-primary/80 focus-visible:border-foreground',
         outline:
           'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
         secondary:
@@ -16,7 +18,8 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
         destructive:
-          'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 dark:bg-destructive/20 dark:hover:bg-destructive/30',
+          // The full red, not 40 % of it: 1.4–2:1 on its own tint was no visible focus (#228).
+          'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive dark:bg-destructive/20 dark:hover:bg-destructive/30',
         link: 'text-primary underline-offset-4 hover:underline'
       },
       size: {

@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-263-comment-hint-not-wish",
+  "kind": "fix",
+  "title": "The hint after a comment turn's last block is never read as the customer's lasting wish",
+  "pr": 263,
+  "area": "site-tools/site-notes",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: build one-comment and two-comment turns with the chat input's own builder, words with no lasting wish.",
+    "S2: the same with a comment that states one (\"From now on …\")."
+  ],
+  "expect": [
+    "S1: only the person's words are left; mayHoldWish is false; a line of the hint never passes quoteIsSaid.",
+    "S2: mayHoldWish is true."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/site-notes.mjs",
+    "exports": "withoutPageBlocks, mayHoldWish"
+  },
+  "evidence": "Issue #256: every Browser-tab comment turn got the wish notice and a site-notes side call, from \"never\" in Tracy's own hint",
+  "fence": "Site notes",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#256\\)",
+      "packages/tools/tracy-site-tools/test/site-notes.test.mjs"
+    ],
+    "tests": [
+      "the hint after a comment turn’s last block is Tracy’s, not the customer’s: no wish, no quote (#256)"
+    ]
+  }
+}

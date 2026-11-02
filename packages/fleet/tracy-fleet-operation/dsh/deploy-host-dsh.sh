@@ -654,6 +654,10 @@ done
 say
 say "==> seeding the profile from $IMAGE"
 "$SEED" "$IMAGE" "$DESK_HOME_DIR"
+# The site agent's notes store, dsh's own (host-dsh-init.sh step 2): a host initialised before it
+# existed gets it here, on its next deploy (#210). Idempotent; it only ever creates or fixes ownership.
+install -d -m 0700 -o 33 -g 33 "$SITES_ROOT/.site-notes" \
+  || warn "could not make $SITES_ROOT/.site-notes dsh's — site notes are not kept on this host"
 
 # ── 4. From here on the host is changed, so from here on there is a way back ───────────────────
 say

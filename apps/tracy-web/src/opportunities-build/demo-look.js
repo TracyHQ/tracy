@@ -392,7 +392,8 @@ export function createDemoLook({
     const applyNext = async () => {
       const { batch, streamSignal, answer } = calls.shift()
       const { result, error } = await answer
-      if (timeSpent()) {
+      // 🔒 AN ANSWER THAT CAME IS APPLIED, EVEN AT THE END OF THE TIME (#247): only a call the time cut is lost.
+      if (timeSpent() && (error || result?.why)) {
         visionFailed = true
         throw Object.assign(new Error('Vision look time budget exhausted'), { code: 'TIME_EXCEEDED' })
       }
@@ -602,10 +603,23 @@ export function createDemoLook({
     console.info(
       `[demo-look] ${site?.site_key ?? site?.label ?? 'site'}: ${layouts.length} page(s) in ${spent.streams} stream(s), ${pictures} tiles, ${spent.calls} call(s)${spent.calls ? ` of ${secs(spent.callMs / spent.calls)}s on average` : ''} (${inFlight} at once); ${secs(now() - started)}s, ${secs(spent.held)}s held at the call limit, ${secs(spent.drained)}s waiting for answers at stream ends`
     )
+    /**
+     * 🔒 A PAGE IS SEEN AS SOON AS EVERY TILE OF IT IS ANSWERED (#247). A page counted only when its whole stream of four
+     * ended clean, so one call cut by the time or the provider threw away every page of its stream: six checks of a
+     * 29-page build ended "looked partly" with 0 pages seen (dev 30/10/2026). A view whose shots ended complete and whose
+     * every tile a call answered was looked at, whatever broke after it for a named reason (the time, the budget, a
+     * failed call, a stop); a stream whose frames did not hold together (`VISION_STREAM_INVALID`), or that ended with no
+     * reason and no valid terminal manifest, still vouches for none of its pages.
+     */
     const unlooked = layouts.flatMap((layout) => {
       const missing = ['desktop', 'phone'].filter((viewport) => {
         const state = states.get(`${layout.path}\n${viewport}`)
-        return !state.ended || !state.complete || state.acknowledged !== state.height || !state.validStream
+        return (
+          !state.ended ||
+          !state.complete ||
+          state.acknowledged !== state.height ||
+          !(state.validStream || (state.streamWhy && state.streamWhy !== 'VISION_STREAM_INVALID'))
+        )
       })
       const missingStates = missing.map((v) => states.get(`${layout.path}\n${v}`))
       const reason = missingStates.map((state) => state.streamWhy ?? state.why).find(Boolean)
@@ -632,6 +646,7 @@ export function createDemoLook({
         unlooked
       }
     const unseen = new Set(unlooked.map((u) => u.page))
+    const seenCount = layouts.length - unseen.size
     return {
       id: 'looks-finished',
       pass: unlooked.length === 0 && faults.length === 0,
@@ -645,6 +660,9 @@ export function createDemoLook({
         'a vision model saw no visible fault from top to footer on every page at desktop and phone width',
       detail: faults,
       ...(unlooked.length ? { unlooked } : {}),
+      // What one page seen whole cost this look, at this deployment's vision speed: the next check fits its pages
+      // to the look's time with it (`client-demo.js` `lookFit`, #247).
+      ...(seenCount > 0 ? { msPerPage: Math.round((now() - started) / seenCount) } : {}),
       usage
     }
 

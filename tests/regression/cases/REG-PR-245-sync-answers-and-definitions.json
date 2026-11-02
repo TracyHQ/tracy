@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-245-sync-answers-and-definitions",
+  "kind": "fix",
+  "title": "Sync from live keeps a merge answer of any size off the command line, and puts in place a table whose collation alone changed",
+  "pr": 245,
+  "area": "sync/merge",
+  "cms": ["jo"],
+  "steps": [
+    "Run the Sync from live flow case with 8000 titles changed on both sides (about 1.2 MB of kept places).",
+    "Run the flow case where the live site changes only a table collation, first read and after a stored read."
+  ],
+  "expect": [
+    "The sync with 8000 kept places ends applied, with no `Argument list too long`.",
+    "The copy takes the live collation (utf8mb3_general_ci) on both reads; its rows stay the same."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#219|#120",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+    ],
+    "tests": [
+      "a collation the live site changed, with no row changed, reaches the copy",
+      "`sync` keeps thousands of places both sides changed"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

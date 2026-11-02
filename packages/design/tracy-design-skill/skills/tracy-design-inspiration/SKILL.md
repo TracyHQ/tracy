@@ -67,7 +67,10 @@ other id (an OpenDesign name such as `stripe`) is refused.
 
 ## Are design systems on?
 
-Tracy's operators decide whether the 152 design systems are offered at all, and the tools tell you.
+Tracy's operators decide whether the 152 design systems are offered at all. The site context says
+so before you start: `- Design systems: OFF`. Then a request to see design styles, a new look or a
+design system skips the site reading of the steps below: call `tracy_design_library` once, first, and
+answer from the `templates` it hands you. The tools tell you too.
 While they are off, `tracy_design_library`, `tracy_design_propose` and `tracy_design_copy` refuse
 every design-system id with `code: "DESIGN_SYSTEMS_OFF"` and hand you `templates` — the finished
 templates published on Design templates right now, read at the moment you call (`id`, `name`,

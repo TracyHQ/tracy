@@ -83,6 +83,14 @@ runs:
         node scripts/build-dsh.mjs --restore .dsh-lib/dsh-lib.tar
         rm -rf .dsh-lib
 
+    # Only a cold hosted build needs the download store. A built-dsh cache hit keeps this a
+    # lookup/unpack and does not download a second, much larger cache. Self-hosted is unchanged.
+    - name: Cache downloads for a cold hosted dsh build
+      if: runner.environment == 'github-hosted' && inputs.mode == 'ensure' && steps.probe.outputs.cache-hit != 'true'
+      uses: ./.github/actions/dsh-lib/hosted-pnpm
+      with:
+        scope: dsh
+
     # The clean start is the one `build-dsh.mjs`'s header pins: the submodule install claims the
     # members, the root install relinks them afterwards. A runner's checkout persists between jobs.
     - name: Build dsh once for this key (not cached yet)

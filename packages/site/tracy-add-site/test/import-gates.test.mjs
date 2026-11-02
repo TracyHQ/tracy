@@ -498,7 +498,11 @@ function fakeInstaller({
   templates = [],
   namesContract,
   publicFiles = {},
-  assets = {}
+  assets = {},
+  // Joomla's System Information as JSON names this PHP (`info.phpversion`); none = not answered.
+  sysinfoPhp,
+  // The package's own installer refuses this PHP on every install POST (its script.php preflight).
+  installerRefusesPhp
 } = {}) {
   const state = {
     installed: false,
@@ -523,6 +527,10 @@ function fakeInstaller({
         if (installPost === 'joomla_403') return withUrl(new Response(JOOMLA_403, { status: 403 }), url)
         if (installPost === 'server_403') return withUrl(new Response(SERVER_403, { status: 403 }), url)
         if (installPost === 'cloudflare') return withUrl(cloudflareChallenge(), url)
+        if (installerRefusesPhp) {
+          state.refusedPhp = true
+          return withUrl(new Response('', { status: 303, headers: { location: url } }), url)
+        }
         if (kind === 'url' && urlInstall === 'hangs')
           throw new DOMException('The operation was aborted due to timeout', 'TimeoutError')
         if (kind === 'url' && urlInstall === 'error_500')
@@ -546,6 +554,13 @@ function fakeInstaller({
       if (installPage === 'cloudflare') return withUrl(cloudflareChallenge(), url)
       if (installPage === 'cloudflare_200') return withUrl(cloudflareChallenge(200), url)
       if (installPage === 'login') return withUrl(new Response(JOOMLA_LOGIN), `${ADMIN}`)
+      if (state.refusedPhp)
+        return withUrl(
+          new Response(
+            `<div class="alert alert-warning">Claude Cowork needs PHP 7.4.0 or newer; this site runs PHP ${installerRefusesPhp}. Ask your host to upgrade PHP on this site, then install the package again.</div><form><input type="hidden" name="${CSRF}" value="1"></form>`
+          ),
+          url
+        )
       return withUrl(new Response(`<form><input type="hidden" name="${CSRF}" value="1"></form>`), url)
     }
     if (url === `${ADMIN}?option=com_admin&view=sysinfo&layout=phpinfo`) {
@@ -558,6 +573,16 @@ function fakeInstaller({
         .join('')
       const page = `${php ? `<h1 class="p">PHP Version ${php}</h1>` : ''}${rows ? `<table>${rows}</table>` : ''}`
       return withUrl(new Response(page || '<p>disabled</p>'), url)
+    }
+    if (url === `${ADMIN}?option=com_admin&view=sysinfo&format=json`) {
+      if (!sysinfoPhp) return withUrl(new Response('Not found', { status: 404 }), url)
+      // On PHP 7 a disabled phpinfo() warns ahead of the JSON when display_errors is on.
+      return withUrl(
+        new Response(
+          `<b>Warning</b>: phpinfo() has been disabled for security reasons<br />{"info":{"php_built_on":"Linux","phpversion":"${sysinfoPhp}","version":"Joomla! 3.10.6 Stable"},"phpInfo":[]}`
+        ),
+        url
+      )
     }
     if (url.startsWith(`${ADMIN}?option=com_config`)) {
       if (state.installed && configPage === 'cloudflare') return withUrl(cloudflareChallenge(), url)
@@ -1050,6 +1075,30 @@ test('the manifest minimum is the only minimum: PHP 7.4 goes ahead when it says 
     minimumPhp: '8.1',
     detail: { at: 'php_check', check: 'below_minimum' }
   })
+})
+
+test('phpinfo disabled and no X-Powered-By: the PHP version comes from System Information, refused before installing (#225)', async () => {
+  const state = fakeInstaller({ sysinfoPhp: '7.3.33' })
+  const result = await joomla.installCowork(SESSION, PACKAGE_URL, LATEST, undefined, { requiresPhp: '7.4' })
+  assert.deepEqual(result, {
+    ok: false,
+    reason: 'php_too_old',
+    php: '7.3.33',
+    minimumPhp: '7.4',
+    detail: { at: 'php_check', check: 'below_minimum' }
+  })
+  assert.deepEqual(state.posts, [])
+})
+
+test('the package installer refusing the site’s PHP is php_too_old with its two versions, not install_failed (#225)', async () => {
+  // Neither phpinfo nor System Information said a version: the installer's own preflight did.
+  fakeInstaller({ installerRefusesPhp: '7.3.33' })
+  const result = await joomla.installCowork(SESSION, PACKAGE_URL, LATEST, undefined, { requiresPhp: '7.4' })
+  assert.equal(result.ok, false)
+  assert.equal(result.reason, 'php_too_old', JSON.stringify(result))
+  assert.equal(result.php, '7.3.33')
+  assert.equal(result.minimumPhp, '7.4.0')
+  assert.equal(result.detail.check, 'installer_php_floor')
 })
 
 test('no declared minimum refuses nothing, and an unknown version is not refused', async () => {

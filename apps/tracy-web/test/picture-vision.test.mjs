@@ -256,3 +256,45 @@ test('the same call names what each photo shows in a fixed vocabulary for any tr
   assert.equal(b.labels.content, undefined)
   assert.ok(b.labels.caption.length <= 124, b.labels.caption.length)
 })
+
+test('a bounded pool: the next batch starts as soon as any call answers, never waiting for the slowest of a wave (#250)', async () => {
+  const pictures = await Promise.all(
+    Array.from({ length: 5 }, async (_, i) => ({ id: `p${i}`, bytes: await jpeg(64, 64) }))
+  )
+  const started = []
+  const release = new Map()
+  const fetchImpl = (_url, init) => {
+    const body = JSON.parse(init.body)
+    const id = body.messages[0].content
+      .find((c) => c.type === 'text' && c.text.startsWith('Picture id: '))
+      .text.slice(12)
+    started.push(id)
+    return new Promise((resolve) => release.set(id, () => resolve(answer([]))))
+  }
+  const running = labelWithVision({
+    door: { url: 'u', key: 'k', model: 'm' },
+    pictures,
+    batch: 1,
+    concurrency: 2,
+    fetchImpl,
+    challengeFor
+  })
+  /** Waits until `n` calls went out, then a little longer, so a call that should not start has had its chance. */
+  const outstanding = async (n) => {
+    for (let i = 0; i < 400 && started.length < n; i += 1) await new Promise((r) => setTimeout(r, 5))
+    await new Promise((r) => setTimeout(r, 30))
+    return [...started]
+  }
+  assert.deepEqual(await outstanding(2), ['p0', 'p1'], 'two calls at once')
+  release.get('p1')()
+  // p0 is still out (the slow one of the first pair): a wave would wait for it, the pool starts p2 now.
+  assert.deepEqual(await outstanding(3), ['p0', 'p1', 'p2'])
+  release.get('p2')()
+  assert.deepEqual(await outstanding(4), ['p0', 'p1', 'p2', 'p3'])
+  release.get('p0')()
+  release.get('p3')()
+  assert.deepEqual(await outstanding(5), ['p0', 'p1', 'p2', 'p3', 'p4'])
+  release.get('p4')()
+  const out = await running
+  assert.equal(out.usage.calls, 5)
+})

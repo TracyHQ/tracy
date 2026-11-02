@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-business",
     "label": "Tracy Business",
-    "version": "1.7.23"
+    "version": "1.7.25"
   },
   "locales": {
     "default": "en",
@@ -4757,7 +4757,7 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:424b334f280bfc54098b92c1abb5ea83ffec155d94a2ce25c1926535172c1686",
-    "package.json": "sha256:110e824d029ee09a2e31761f7aac93beadd8eb696fdc11c01689229ee293eff6",
+    "package.json": "sha256:dccc4629aff746c34b85599d02e3ed68e753ca19a6c612186d088698bd2c7f31",
     "pnpm-lock.yaml": "sha256:604c8a85fa3fe073389043da5dca2f78cb69aa33764b867de68a5b2024168610",
     "seed/field-map.json": "sha256:b463bc104be5dcf058893c8d2b9e333de95faf7791dd945dc2f28345af30d334",
     "seed/media-map.json": "sha256:f62125be2fda732dfc8a4a9d05ff341d2f4ec4dab7cbf08f5900d9e12a929bd6",
@@ -4853,7 +4853,7 @@
     "src/views/Service.astro": "sha256:dbbb49b29191625ee021626f2541439ef503a04c183002e48fadf6c28c4547fe",
     "src/views/Services.astro": "sha256:d1d584e3e0d1b6cfa2f06c8f037148d599c10c1039606faaf57243f9bad403b8",
     "src/views/Sitemap.astro": "sha256:979278a8534d9168abf53dcc2f66584627392b49af7c2dce9a70ca53557dfa7e",
-    "template.config.json": "sha256:3810e5356b7e04bd407634665e68d8ca10bb03b053a1faba6a024b0bda5d1d67",
+    "template.config.json": "sha256:0700138edc2a4e07d8853544c90d10f92e70436b2cd6def60d14ce18fc16cbad",
     "tools/forms.json": "sha256:75b8fadc91e8dc4991d588c06a9219b07fc4e36b7719eee6ebcb3ad3f49cdc85",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

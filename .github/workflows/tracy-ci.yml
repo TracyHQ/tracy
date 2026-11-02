@@ -173,9 +173,35 @@ jobs:
   # or "Ready for review": label events do not start this workflow) also asks for `X64`, which only
   # the EC2 runners carry. Without the label the extra element is `linux` again, already in the list,
   # so every other run picks its runner exactly as before.
+  #
+  # GITHUB-HOSTED BY DEFAULT ON A PULL REQUEST (30/10/2026, Hano; opt-in `ci:hosted` the same morning,
+  # #221). The repo is public, so standard GitHub-hosted runners are free for it and outside the org
+  # quota the top of this file measured; moving pull requests there takes their load off our
+  # machines. A pull request from this repository runs `dsh-lib`, `plan`, every `build-check` row,
+  # `suite-skipped`, `test-growth` and `new-test-proof` on `ubuntu-latest` (4 vCPU / 16 GB x64)
+  # unless it carries the label `ci:self-hosted`, which puts it back on the self-hosted list above,
+  # unchanged. `runs-on` is one expression: `'ubuntu-latest'` or that list. The label is read from the
+  # event payload like `ci:aws-only`, so the same rule holds: set it BEFORE the push or "Ready for
+  # review" (a re-run replays the old payload; `ci-label-rerun.yml` does not watch it). The nightly
+  # and manual runs carry no pull request, so they stay self-hosted (one exception, `pnpm-store-seed`,
+  # which saves the hosted pnpm store and must run where pull requests do); a fork's pull request never
+  # reaches these jobs (`fork-checks`). On GitHub-hosted the full workers suite is THREE rows, not
+  # two (`plan-ci.mjs`; `plan` reads where it runs itself, `ROWS_HOSTED`): two shards measured ~9 and ~20 min
+  # there (run 41028805223). What the runner image gave is set up explicitly on a fresh VM, in steps
+  # gated on `runner.environment == 'github-hosted'`: Node from `.node-version` (the assert after it
+  # still compares), `php` 8.3 cli, and for `build-check` a PostgreSQL 16 service with
+  # TEST_DATABASE_URL. Secrets and the deploy key are the same-repo ones as before; the Turbo cache is
+  # this repository's GitHub Actions cache on either kind of runner (no secret since 30/10/2026).
+  # `check-pr-merge.mjs` accepts such a job by its one label `ubuntu-latest` AND runner group
+  # `GitHub Actions`.
+  # Witness: `scripts/test/ci-hosted.test.mjs`.
   dsh-lib:
     name: build dsh once for this run
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-check","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 45
     # Pull requests and manual runs only. The nightly builds dsh in `dsh-lib-nightly` below, which
     # waits for `plan`'s pinned commit; this job must NOT wait for `plan`, or every pull request
@@ -184,7 +210,7 @@ jobs:
     steps:
       # Same three steps as `build-check` below; the reasons are written there.
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
 
@@ -207,6 +233,14 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
+      # GitHub-hosted only (a pull request without `ci:self-hosted`): a fresh VM has no runner image, so Node comes from
+      # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -214,7 +248,7 @@ jobs:
           HAVE="$(node -v | sed 's/^v//')"
           echo "want $WANT, runner has $HAVE"
           [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image, or on GitHub-hosted read the step \"Set up Node on a GitHub-hosted runner\""
             exit 1
           }
           corepack enable pnpm
@@ -242,7 +276,11 @@ jobs:
   # is still ANNOUNCED (notice + job summary) from here.
   plan:
     name: plan the build-check rows
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 5
     if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository)
     # `actions: read` + `checks: read` for `green-tree.mjs` only: it reads earlier Tracy CI runs, their
@@ -280,13 +318,21 @@ jobs:
       # 🔒 THE ONLY PLACE THE NIGHTLY NAMES `develop`. Every later job takes the commit this checkout
       # resolved (`checkout_sha`), never the branch — the branch moves while the run is in flight.
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           ref: ${{ github.event_name == 'schedule' && 'develop' || '' }}
           # 2, not 1: a pull request checks out its merge commit, and HEAD^1 (the base tip) is
           # what the plan diffs against.
           fetch-depth: 2
+
+      # GitHub-hosted only (a pull request without `ci:self-hosted`): a fresh VM has no runner image, so Node comes from
+      # `.node-version`. Skipped on our runners, whose image carries it.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       # The summary is written BEFORE the output on purpose: a step that dies half way must not
       # leave a usable `checkout_sha` behind. 40 lowercase hex is the whole accepted shape — the
@@ -379,18 +425,20 @@ jobs:
       # 🔒 EVERY EVENT ASKS TURBO, SINCE 17/10/2026 — a release pull request, the nightly and a manual
       # run too. Theirs is a FULL run: `plan-ci.mjs` gives each Turbo row `force`, the row runs every
       # task with `turbo run --force` (nothing is read from the cache; results are still written, so
-      # the nightly warms the cache for the next morning's pull requests), each task audits its own
+      # the nightly — ref `main`, the one cache scope every pull request reads — warms the cache for
+      # the next morning's pull requests), each task audits its own
       # inputs as it runs, and `checks` no longer runs every suite a second time under the tracer
       # (~19 of a release's ~23-minute `checks`, run 38930622899). Any failure above still falls back
       # to the two workers shards; their suites are then traced in `checks` on the nightly and manual
       # runs only — a pull request's `checks` traces none since 28/10/2026 (`check-all.ts`).
+      #
+      # 🔒 THE CACHE IS THE GITHUB ACTIONS CACHE, SINCE 30/10/2026 (`.github/actions/turbo-cache`). Until
+      # then it was an R2 bucket behind four `TURBO_CACHE_S3_*` secrets that were never set on the public
+      # repository: the cache never started, so every run, the nightly included, fell back to the
+      # workers shards and no Turbo artifact was ever written. Now it starts on every event with no
+      # secret, and the nightly's forced rows write under `main`.
       - name: Start the Turbo remote cache
         uses: ./.github/actions/turbo-cache
-        with:
-          endpoint: ${{ secrets.TURBO_CACHE_S3_ENDPOINT }}
-          bucket: ${{ secrets.TURBO_CACHE_S3_BUCKET }}
-          access-key: ${{ secrets.TURBO_CACHE_S3_ACCESS_KEY }}
-          secret-key: ${{ secrets.TURBO_CACHE_S3_SECRET_KEY }}
 
       # Only when the cache answered: without it every task is a miss and the fetch buys nothing.
       # Same command as the rows' "Fetch the vendored dsh submodule" (no --depth: the pinned commit
@@ -465,6 +513,10 @@ jobs:
           # again from the labels and is red when its answer differs from the scope step's.
           PR_LABELS: ${{ steps.labels.outputs.labels }}
           SCOPE_SKIP_DB: ${{ steps.scope.outputs.skip_db }}
+          # Where the rows will run: this job's `runs-on` and `build-check`'s pick `ubuntu-latest` by the
+          # same condition, so this job's own runner says it without reading the payload's labels here
+          # (the rule above). `true` plans three workers shards, anything else our runners' two.
+          ROWS_HOSTED: ${{ runner.environment == 'github-hosted' }}
         run: node scripts/ci/plan-ci.mjs
 
       # 🔒 SAME TREE, SAME VERDICT — added 10/10/2026. Two jobs in one step:
@@ -501,6 +553,20 @@ jobs:
           TRACY_CI_TESTED_SCOPE: ${{ steps.plan.outputs.tested_scope }}
         run: node scripts/ci/green-tree.mjs
 
+      # Turbo only warns "502 Bad Gateway" when a write fails; the cache server's own log says which
+      # call to the GitHub Actions cache failed, with its status and the start of the answer (no
+      # token, no signed URL's query: `redact` in `scripts/ci/turbo-cache-server.mjs`).
+      - name: Print the Turbo remote cache log
+        if: always()
+        run: |
+          LOG="$RUNNER_TEMP/turbo-cache.log"
+          if [ -s "$LOG" ]; then
+            echo "$(grep -c 'cache-service failure' "$LOG" || true) cache-service failure(s); full log:"
+            cat "$LOG"
+          else
+            echo "No Turbo remote cache log (the cache did not start, or logged nothing)."
+          fi
+
   # ─────────────────────────────────────────────────────────────────────────────────────────────
   # THE NIGHTLY'S dsh BUILD — added 2026-10-05. Same work as `dsh-lib`, for the commit `plan` pinned.
   #
@@ -535,7 +601,7 @@ jobs:
           echo "nightly tree: plan selected $NIGHTLY_SHA"
 
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           ref: ${{ needs.plan.outputs.checkout_sha }}
@@ -571,6 +637,14 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
+      # GitHub-hosted only (a pull request without `ci:self-hosted`): a fresh VM has no runner image, so Node comes from
+      # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -578,7 +652,7 @@ jobs:
           HAVE="$(node -v | sed 's/^v//')"
           echo "want $WANT, runner has $HAVE"
           [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image, or on GitHub-hosted read the step \"Set up Node on a GitHub-hosted runner\""
             exit 1
           }
           corepack enable pnpm
@@ -637,14 +711,23 @@ jobs:
   # A routine PR into develop now runs only the related workers files in one row. The two full
   # shards above still run for release PRs, manual runs and the nightly. The browser-driven suites
   # — `e2e` and the three EmDash themes — remain conditional by path on develop PRs.
+  #
+  # THREE SHARDS ON GITHUB-HOSTED — 30/10/2026. A pull request's rows run on `ubuntu-latest` by
+  # default (`dsh-lib`), and there a full run's workers suite is `tests 1/3`, `tests 2/3` and
+  # `tests 3/3` (`workers:3/3,rest`), planned from the same table. Two shards took 7-11 and 18-19
+  # minutes of `Build check` on a 4-vCPU VM (run 41028805223, two attempts) against ~9.5 and ~14
+  # minutes of job on our runners. Our runners keep two: they share their pool with the image builds.
   build-check:
     name: build check (${{ matrix.group }})
     # ─────────────────────────────────────────────────────────────────────────────────────────
     # `tracy-check`, NOT `tracy-build` — changed 2026-09-21
     #
-    # NOT `ubuntu-latest`: the org's shared monthly quota is a dependency this gate cannot see and
-    # cannot fix (the measurement at the top of this file). What changed is WHICH self-hosted
-    # label it asks for, and the reason is a boundary rather than a preference.
+    # Self-hosted when this was written: the org's shared monthly quota was a dependency this gate
+    # could not see or fix (the measurement at the top of this file). The repo is public since, and
+    # a pull request's rows run on `ubuntu-latest` unless it carries `ci:self-hosted` (30/10/2026,
+    # reasons at `dsh-lib`); the nightly, manual runs and that label take the list below, unchanged.
+    # What changed in 2026-09-21 is WHICH self-hosted label it asks for, and the reason is a
+    # boundary rather than a preference.
     #
     # 🔒 A `tracy-build` RUNNER HOLDS THE DOCKER SOCKET, WHICH IS ROOT ON ITS HOST. Only machines
     # that run nothing a customer depends on carry it. Checks need no daemon at all — the one
@@ -665,8 +748,29 @@ jobs:
     # today: the one test that needed a docker daemon needed it only to reach a PHP interpreter,
     # and the runner image carries `php-cli` since `tracy-runners@bf07c3a` — so the exception that
     # briefly lived here was removed rather than kept warm.
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", '${{ matrix.label }}', "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","{1}","{2}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      matrix.label,
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 45
+    # 🔒 THE RUNNER'S PostgreSQL ON A FRESH VM — GitHub-hosted rows only. An empty `image` starts no service
+    # container (GitHub's rule for conditional services), so our runners, which have no docker, see
+    # none. Same major as `deploy/compose.yml` and `check-tests.ts`'s throwaway (16); the step "Point
+    # the tests at the job's PostgreSQL…" exports TEST_DATABASE_URL for it.
+    services:
+      postgres:
+        image: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'postgres:16-alpine' || '' }}
+        env:
+          POSTGRES_USER: tracy
+          POSTGRES_PASSWORD: tracy
+          POSTGRES_DB: tracy
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tracy -d tracy"
+          --health-interval 2s --health-timeout 5s --health-retries 30
     # dsh is built by `dsh-lib` above and restored here, never built eight times (see there).
     #
     # 🔒 THE `if` SPELLS OUT WHAT `needs` USED TO IMPLY — changed 2026-10-05. Exactly one of the two
@@ -694,8 +798,8 @@ jobs:
       # Every verdict, always: a red lint must not hide what the tests would have said.
       fail-fast: false
       # 🔒 LONGEST FIRST, and the order is `plan-ci.mjs`'s: EmDash suites (5-10 min), then e2e, then
-      # the two halves of the workers suite, then `checks` (lint + every gate but the tests). Three
-      # rows always exist; the EmDash rows and `e2e` exist only when the pull request touches their
+      # the shards of the workers suite (two on our runners, three on GitHub-hosted), then `checks`
+      # (lint + every gate but the tests). The full set of rows always exists; the EmDash rows and `e2e` exist only when the pull request touches their
       # inputs, on a PR into `main`, on manual runs and on the nightly. Rows are built by `plan`.
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
@@ -720,7 +824,7 @@ jobs:
           echo "nightly tree: plan selected $NIGHTLY_SHA"
 
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           ref: ${{ github.event_name == 'schedule' && needs.plan.outputs.checkout_sha || '' }}
@@ -773,8 +877,43 @@ jobs:
 
       # The runner image pins Node; `.node-version` pins what the repo expects. Nothing keeps the
       # two in step, so compare them here rather than let a mismatch surface as some gate's odd
-      # failure twenty minutes in. No `actions/setup-node`: this is our box, not a fresh VM, and
-      # the two proven workflows on this runner do the same.
+      # failure twenty minutes in. On our runners there is no `actions/setup-node`: this is our box,
+      # not a fresh VM. On GitHub-hosted (a pull request without `ci:self-hosted`) there is no runner image, so the steps below
+      # install what it carried, and the assert then checks what `setup-node` installed.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      # The runner image's `php` cli (`tracy-runners@bf07c3a`), for the tests that run real PHP.
+      - name: Set up PHP on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: none
+
+      # GNU awk 5.2.1 crashes in token_mount_custody on malformed compose input (Node_array_ref).
+      # Match the self-hosted image's mawk; only this disposable VM's alternative is changed.
+      - name: Select mawk on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        run: |
+          set -euo pipefail
+          if ! command -v mawk >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install --yes --no-install-recommends mawk
+          fi
+          sudo update-alternatives --set awk "$(command -v mawk)"
+          awk -W version
+      # The runner's PostgreSQL, on a fresh VM: the job's `postgres` service (started only on
+      # the GitHub-hosted path). `check-tests.ts` uses an exported TEST_DATABASE_URL first, and is red if it
+      # does not answer. Through `GITHUB_ENV`, not a job `env`: an empty value there would hide
+      # the variable our runners export.
+      - name: Point the tests at the job's PostgreSQL on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        run: echo "TEST_DATABASE_URL=postgres://tracy:tracy@127.0.0.1:5432/tracy" >> "$GITHUB_ENV"
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -782,7 +921,7 @@ jobs:
           HAVE="$(node -v | sed 's/^v//')"
           echo "want $WANT, runner has $HAVE"
           [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner)"
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner), or on GitHub-hosted read the step \"Set up Node on a GitHub-hosted runner\""
             exit 1
           }
           corepack enable pnpm
@@ -834,6 +973,12 @@ jobs:
           rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
           node scripts/build-dsh.mjs --skip-if-built
 
+      - name: Prepare pnpm on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: ./.github/actions/dsh-lib/hosted-pnpm
+        with:
+          scope: workspace
+
       - name: Install dependencies
         id: install
         run: pnpm install --frozen-lockfile
@@ -841,11 +986,6 @@ jobs:
       - name: Start the Turbo remote cache
         if: matrix.turbo
         uses: ./.github/actions/turbo-cache
-        with:
-          endpoint: ${{ secrets.TURBO_CACHE_S3_ENDPOINT }}
-          bucket: ${{ secrets.TURBO_CACHE_S3_BUCKET }}
-          access-key: ${{ secrets.TURBO_CACHE_S3_ACCESS_KEY }}
-          secret-key: ${{ secrets.TURBO_CACHE_S3_SECRET_KEY }}
 
       # NO `npm ci --prefix vendor/tracy/dsh-passwords` HERE — 06/09. It became a pnpm workspace member,
       # so the install above already built its `node_modules` and its `prepare` built `dist/`. Running
@@ -928,6 +1068,10 @@ jobs:
           # run, provisions no database for it, and says so. `0` everywhere else, the nightly and the
           # release pull requests included.
           TRACY_TESTS_SKIP_DB: ${{ needs.plan.outputs.skip_db == 'true' && '1' || '0' }}
+          # `1` on GitHub-hosted: the workers shards place the small suites on the last shard at their
+          # hosted cost (`HOSTED_COST` in `check-tests.ts`), not the table's, which our runners measured.
+          # Every row of a run gets the same value (one `runs-on` condition), so they agree on the split.
+          TRACY_TESTS_HOSTED: ${{ runner.environment == 'github-hosted' && '1' || '0' }}
           # `turbo-config` on the `checks` row (`check-all.ts`, `TURBO_CONFIG_ARGS`): on every pull
           # request `--structure-only` — structure and ignored inputs, NO suite traced (28/10/2026:
           # the traced run cost this row 8.3 and 26.0 minutes on two pull requests). The nightly and
@@ -1019,6 +1163,19 @@ jobs:
       - name: Remove the deploy key
         if: always()
         run: rm -f "$RUNNER_TEMP/vendor_deploy"
+      # Turbo only warns "502 Bad Gateway" when a write fails; the cache server's own log says which
+      # call to the GitHub Actions cache failed, with its status and the start of the answer (no
+      # token, no signed URL's query: `redact` in `scripts/ci/turbo-cache-server.mjs`).
+      - name: Print the Turbo remote cache log
+        if: always() && matrix.turbo
+        run: |
+          LOG="$RUNNER_TEMP/turbo-cache.log"
+          if [ -s "$LOG" ]; then
+            echo "$(grep -c 'cache-service failure' "$LOG" || true) cache-service failure(s); full log:"
+            cat "$LOG"
+          else
+            echo "No Turbo remote cache log (the cache did not start, or logged nothing)."
+          fi
 
   # A red nightly is ANNOUNCED, not left for someone to notice on the Actions page. Nobody is
   # looking at a 02:30 run, so the verdict goes to the run's summary (and an error annotation).
@@ -1034,7 +1191,11 @@ jobs:
   # in the job name itself. Its summary carries the same sentence.
   suite-skipped:
     name: "full suite skipped: tree ${{ needs.plan.outputs.tree }} already green in run ${{ needs.plan.outputs.green_run }}"
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 2
     needs: [plan]
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && needs.plan.result == 'success' && needs.plan.outputs.green_run != ''
@@ -1074,6 +1235,118 @@ jobs:
           exit 1
 
   # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # THE HOSTED PNPM STORE, SAVED ONCE A DAY UNDER `main` — added 30/10/2026.
+  #
+  # A pull request's hosted jobs only RESTORE the pnpm content store (`.github/actions/dsh-lib/
+  # hosted-pnpm`): a save from a pull request lands in its own scope, read by that pull request
+  # alone, ~870 MB each, and pushed everything else out of the repository's 10 GB. Every pull
+  # request reads the `main` scope, and a `schedule` run's ref IS `main` — but the nightly's jobs are
+  # self-hosted, so nothing on `main` ever filled a hosted store. This job does, on `ubuntu-latest`
+  # (same OS and architecture as a pull request's hosted rows), through the same action, so the key
+  # it saves is exactly the key they look up. The nightly checks out the commit `plan` pinned on
+  # `develop`, so the key matches a routine pull request into `develop`; one that changes the
+  # lockfile restores this store by prefix and downloads only the difference.
+  #
+  # Workspace store only: that is what every `build-check` row and `new-test-proof` install. The
+  # `dsh` scope (a cold hosted dsh build, when a pull request moves the submodule) is not seeded.
+  #
+  # `pnpm fetch` fills the store from `pnpm-lock.yaml` alone: no build, no script, no dsh. An entry
+  # already saved for the key is immutable, so a hit skips the fetch and the save.
+  #
+  # 🔒 REPORT-ONLY, AND IT GATES NOTHING. Not a `build-check` row, not in `nightly verdict`'s
+  # `needs`, never on a pull request. `continue-on-error` at job level, unlike the report-only jobs
+  # above, because a red job here would turn the nightly RUN red, and the run's conclusion is what
+  # `green-tree.mjs` and `check-pr-merge.mjs` read; a failure is still shown on the job.
+  pnpm-store-seed:
+    name: save the hosted pnpm store (report-only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    needs: [plan]
+    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref_name == github.event.repository.default_branch
+    steps:
+      # The two guards of the nightly's pinned commit (reasons at `dsh-lib-nightly`); a manual run
+      # checks out its own ref, `main`.
+      - name: Refuse a nightly without its pinned commit
+        if: github.event_name == 'schedule'
+        env:
+          NIGHTLY_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$NIGHTLY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::plan published no usable commit id for this nightly — refusing to check out (an empty ref would fall back to main)"
+            exit 1
+          fi
+          echo "nightly tree: plan selected $NIGHTLY_SHA"
+
+      - name: Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: false
+          ref: ${{ github.event_name == 'schedule' && needs.plan.outputs.checkout_sha || '' }}
+
+      - name: Assert the nightly checkout is the pinned commit
+        if: github.event_name == 'schedule'
+        env:
+          NIGHTLY_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git rev-parse --verify 'HEAD^{commit}')"
+          echo "nightly tree: checked out $HEAD_SHA"
+          if [ "$HEAD_SHA" != "$NIGHTLY_SHA" ]; then
+            echo "::error::this job checked out $HEAD_SHA but plan pinned another commit for the nightly — the run would describe two trees"
+            exit 1
+          fi
+
+      # The key hashes the submodule's lockfile too, so the submodule must be there; nothing in it
+      # is installed or built.
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          git submodule status vendor/tracy/deepseek-harness
+
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+      - name: Set up Node from .node-version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
+      # On the default branch the action only looks the key up (`cache-hit`); it restores nothing.
+      - name: Prepare pnpm and look up the store key
+        id: pnpm
+        uses: ./.github/actions/dsh-lib/hosted-pnpm
+        with:
+          scope: workspace
+
+      - name: Fill the store from the lockfile
+        if: steps.pnpm.outputs.cache-hit != 'true'
+        run: pnpm fetch
+
+      - name: Save the store under the default branch
+        if: steps.pnpm.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.pnpm.outputs.path }}
+          key: ${{ steps.pnpm.outputs.key }}
+
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
   # TEST GROWTH — added 2026-10-12. One line in the summary of EVERY non-draft pull request: test
   # files and case registrations added and removed, counted from the two versions of each changed
   # test file (`scripts/ci/new-test-proof.mjs --growth-only`). It runs no test, installs nothing,
@@ -1085,16 +1358,27 @@ jobs:
   # Seconds are NOT reported here (nothing ran); the proof job below reports the seconds it measured.
   test-growth:
     name: test growth (report-only)
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 5
     if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           # The merge commit and its parents: HEAD^1 is the base tip, as in `plan`.
           fetch-depth: 2
+
+      # GitHub-hosted only (a pull request without `ci:self-hosted`), as in `plan`.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       - name: Report what this pull request adds to and removes from the suite
         run: |
@@ -1124,7 +1408,11 @@ jobs:
   # `always()` step below removes whatever copy is left, by its owner file.
   new-test-proof:
     name: new-test proof (report-only)
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-check","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 30
     needs: [dsh-lib, plan]
     if: >-
@@ -1139,7 +1427,7 @@ jobs:
       }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           # The merge commit and its parents: the proof compares HEAD^1 (the base tip) with HEAD,
@@ -1165,6 +1453,33 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
+      # GitHub-hosted only (a pull request without `ci:self-hosted`): a fresh VM has no runner image, so Node comes from
+      # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      # The runner image's `php` cli (`tracy-runners@bf07c3a`), for the tests that run real PHP.
+      - name: Set up PHP on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: none
+
+      - name: Select mawk on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        run: |
+          set -euo pipefail
+          if ! command -v mawk >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install --yes --no-install-recommends mawk
+          fi
+          sudo update-alternatives --set awk "$(command -v mawk)"
+          awk -W version
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -1172,7 +1487,7 @@ jobs:
           HAVE="$(node -v | sed 's/^v//')"
           echo "want $WANT, runner has $HAVE"
           [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image, or on GitHub-hosted read the step \"Set up Node on a GitHub-hosted runner\""
             exit 1
           }
           corepack enable pnpm
@@ -1189,6 +1504,12 @@ jobs:
           set -euo pipefail
           rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
           node scripts/build-dsh.mjs --skip-if-built
+
+      - name: Prepare pnpm on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: ./.github/actions/dsh-lib/hosted-pnpm
+        with:
+          scope: workspace
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -1229,7 +1550,7 @@ jobs:
       contents: read
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           persist-credentials: false

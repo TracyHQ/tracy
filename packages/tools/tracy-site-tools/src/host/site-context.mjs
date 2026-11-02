@@ -10,7 +10,7 @@
  *
  * Pure apart from the file reads, so `test/site-context.test.mjs` pins the wording rules.
  */
-import { chatRouteLine } from './chat-design-route.mjs'
+import { chatRouteLine, libraryLine } from './chat-design-route.mjs'
 import { promises as fs, readFileSync } from 'node:fs'
 import path from 'node:path'
 
@@ -1679,7 +1679,7 @@ function recordLine(record) {
  * @param {{ wordpressReadBack?: boolean, buildInBlock?: boolean, tools?: Iterable<string> | null,
  *   slot?: { id: string, name: string | null, where: string, vars: string[], platform?: string } | null | undefined,
  *   roles?: { vars: string[], tokens?: Record<string, string>, values?: Record<string, string> } | null,
- *   chatDesign?: { chat: boolean, button: boolean } | null }} [options] - `chatDesign`: whether the
+ *   chatDesign?: { chat: boolean, button: boolean, library?: boolean } | null }} [options] - `chatDesign`: whether the
  *   operator lets the chat apply a design system (`chat-design-route.mjs`), read by the caller at
  *   Tracy; off, the block says so on the line after the design system's (`chatRouteLine`). `slot`:
  *   the design-system slot the site wears, read from the site by the caller (`ds-slot-worn.mjs`: a
@@ -1886,6 +1886,9 @@ export async function siteContext(folder, label, detectPlatform, presetId, optio
   // asked for a new look, a named system or a pasted DESIGN.md, the agent points at the button instead.
   const route = chatRouteLine(options?.chatDesign ?? null)
   if (route) lines.push(route)
+  // The design-system library itself, closed by the operator (#259): said before the first step.
+  const library = libraryLine(options?.chatDesign ?? null)
+  if (library) lines.push(library)
   // The build's state is NOT here: it changes while the conversation runs, so it travels as its own
   // notice (`siteStateNotice`) and the rules below are not re-sent each time a stage moves — unless
   // the build sends no such notice (`buildInBlock`, the last site line below).

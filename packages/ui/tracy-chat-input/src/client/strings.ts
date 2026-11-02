@@ -350,6 +350,7 @@ export const en = {
   'undo.unnamed.profile': 'an author profile',
   'undo.unnamed.entry': 'an entry',
   'undo.unnamed.item': 'an item',
+  'undo.home': 'the home page',
   'undo.zone.design': 'Design',
   'undo.zone.function': 'Function',
   'undo.zone.addons': 'Add-ons',

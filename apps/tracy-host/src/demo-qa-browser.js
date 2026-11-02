@@ -13,7 +13,7 @@
  */
 import { createHash } from 'node:crypto'
 import { LAUNCH_ARGS } from './browser.js'
-import { DemoReadCache, pagesWithFindings } from './demo-read-cache.js'
+import { DemoReadCache, keptForFinding, pagesWithFindings } from './demo-read-cache.js'
 import { qaDeadline } from './demo-qa-deadline.js'
 import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, READ_AT_ONCE, runDemoQa } from './demo-qa.js'
 import { readResidueInPage } from './demo-residue-page.js'
@@ -35,6 +35,12 @@ const GOTO_MS = 25_000
 const ASSETS = new Set(['image', 'font', 'stylesheet', 'script'])
 /** The most bytes of one picture hashed (bigger pictures are hashed on their first bytes). */
 const HASH_MAX_BYTES = 16 * 1024 * 1024
+/** What a page loads by its load event that its fingerprint holds besides the document, by each body's hash (#247). */
+const PRINTED = new Set(['stylesheet', 'script', 'image'])
+/** How long the fingerprint waits for those bodies' hashes; one still out leaves the print different, never wrong. */
+const PRINT_WAIT_MS = 2_000
+/** How much printed stylesheet text a read keeps to know the pictures it names. */
+const PRINTED_CSS_MAX_CHARS = 4 * 1024 * 1024
 
 /**
  * @param {import('playwright').Page} page
@@ -99,6 +105,8 @@ export async function readDemoPage(
   /** @type {Map<string, string>} */
   const shas = new Map()
   const hashing = []
+  /** @type {string | null} the document as served (`goto`'s response), once it answered */
+  let served = null
   // The site's own address, or its published hostname: WordPress writes absolute links to the latter.
   const sameOrigin = (u) => {
     try {
@@ -120,20 +128,69 @@ export async function readDemoPage(
     )
       failed.push({ url: req.url(), status: text, type: req.resourceType() })
   }
+  /**
+   * The same-origin stylesheets, scripts and pictures loaded before the fingerprint, each by its body's hash: a style or
+   * a picture the build rewrote in place changes what the page shows while its document stays the same (#247).
+   * @type {Map<string, string>}
+   */
+  const printedBodies = new Map()
+  const printing = []
+  let printed = false
+  /**
+   * 🔒 WHAT THE FINGERPRINT CANNOT HOLD MAKES THE PAGE DYNAMIC (#247): same-origin data fetched by script (a card list, a
+   * category label loaded as the visitor scrolls, review 27/10/2026), or a style, script or picture loaded after the
+   * fingerprint that the served document does not name. A dynamic page's read is never kept for a finding.
+   */
+  let dynamic = false
+  /** The page's own requests, until the reader's own fetches begin (a stylesheet's text, the sitemap, a probe). */
+  let watching = true
+  /** The printed stylesheets' text, for the pictures they name (bounded). @type {string[]} */
+  const printedCss = []
+  let printedCssChars = 0
+  /**
+   * Whether the served document or a printed stylesheet names this picture (a lazy `src`/`srcset`/`data-src`, a section's
+   * CSS background): by its last two path segments, as a relative URL (`../images/bg.jpg`) writes them too.
+   */
+  const printNames = (/** @type {string} */ u) => {
+    let tail = ''
+    try {
+      tail = new URL(u).pathname.split('/').filter(Boolean).slice(-2).join('/')
+    } catch {
+      return false
+    }
+    if (!tail) return false
+    return (
+      (typeof served === 'string' && served.includes(tail)) || printedCss.some((css) => css.includes(tail))
+    )
+  }
   const onResponse = (res) => {
     const req = res.request()
     const type = req.resourceType()
-    if (res.status() >= 400 && sameOrigin(res.url()) && ASSETS.has(type))
+    const own = sameOrigin(res.url())
+    if (res.status() >= 400 && own && ASSETS.has(type))
       failed.push({ url: res.url(), status: res.status(), type })
-    if (type === 'image' && res.status() < 400)
-      hashing.push(
-        res
-          .body()
-          .then((bytes) =>
-            shas.set(res.url(), createHash('sha256').update(bytes.subarray(0, HASH_MAX_BYTES)).digest('hex'))
-          )
-          .catch(() => {})
-      )
+    if (own && watching && res.status() < 400) {
+      if (type === 'xhr' || type === 'fetch') dynamic = true
+      else if (printed && PRINTED.has(type) && !(type === 'image' && printNames(res.url()))) dynamic = true
+    }
+    const print = own && !printed && PRINTED.has(type) && res.status() < 400
+    if ((type === 'image' || print) && res.status() < 400) {
+      const hashed = res
+        .body()
+        .then((bytes) => {
+          const sha = createHash('sha256').update(bytes.subarray(0, HASH_MAX_BYTES)).digest('hex')
+          if (type === 'image') shas.set(res.url(), sha)
+          if (print) printedBodies.set(res.url(), sha)
+          if (print && type === 'stylesheet' && printedCssChars < PRINTED_CSS_MAX_CHARS) {
+            const css = bytes.toString('utf8').slice(0, PRINTED_CSS_MAX_CHARS - printedCssChars)
+            printedCss.push(css)
+            printedCssChars += css.length
+          }
+        })
+        .catch(() => {})
+      hashing.push(hashed)
+      if (print) printing.push(hashed)
+    }
   }
   const route = async (r) => {
     let u = null
@@ -177,7 +234,7 @@ export async function readDemoPage(
     read.status = response?.status() ?? null
     read.finalUrl = landed.get(page.url()) ?? page.url()
     // The document as the server sent it, before any script ran: what the fingerprint below is made of.
-    const served = typeof response?.text === 'function' ? await response.text().catch(() => null) : null
+    served = typeof response?.text === 'function' ? await response.text().catch(() => null) : null
     const left = Math.max(1, loadCapMs - (Date.now() - started))
     const loaded = await page
       .waitForLoadState('load', { timeout: left })
@@ -208,13 +265,23 @@ export async function readDemoPage(
             ? await page.content().catch(() => null)
             : null
       if (typeof html === 'string') {
+        // 🔒 THE DOCUMENT AND WHAT IT LOADED (#247): the same-origin stylesheets, scripts and pictures the page loaded
+        // by its load event, each by its body, are part of the print, so a page kept for a finding is one whose words,
+        // styles and pictures are all as they were read.
+        await Promise.race([Promise.all(printing), page.waitForTimeout(PRINT_WAIT_MS)])
+        printed = true
+        const bodies = [...printedBodies].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
         read.fingerprint = createHash('sha256')
-          .update(`${read.status}\n${read.finalUrl}\n${html}`)
+          .update(`${read.status}\n${read.finalUrl}\n${html}\n${JSON.stringify(bodies)}`)
           .digest('hex')
-        if (previous?.fingerprint === read.fingerprint && previous.read && !previous.read.error)
-          return { ...structuredClone(previous.read), fingerprint: read.fingerprint, reused: true }
+        if (previous?.fingerprint === read.fingerprint && previous.read && !previous.read.error) {
+          // What the last run said of the kept read (`unchanged`) is that run's; this one says its own.
+          const { unchanged: _said, ...kept } = structuredClone(previous.read)
+          return { ...kept, fingerprint: read.fingerprint, reused: true }
+        }
       }
     }
+    printed = true
     // Lazy pictures arrive as they scroll in; a visitor scrolls, so the read does too.
     await page
       .evaluate(async () => {
@@ -241,6 +308,8 @@ export async function readDemoPage(
       .catch(() => {})
     await page.waitForTimeout(600)
     await Promise.race([Promise.all(hashing), page.waitForTimeout(5000)])
+    // What the page asked for by itself ends here: the reads below fetch with the page's own `fetch`.
+    watching = false
     Object.assign(
       read,
       await page.evaluate(readInPage, {
@@ -318,6 +387,8 @@ export async function readDemoPage(
         return { scrollWidth: document.documentElement.scrollWidth, widest, phoneImages }
       })
     )
+    // Said to the read cache only (`makeDemoQa` takes it off the read): whether this page's read may stand for a finding.
+    read.dynamic = dynamic
     return read
   } catch (error) {
     read.error ??= String(error?.message ?? error)
@@ -1691,7 +1762,9 @@ export async function makeDemoQa({
             options?.logoPicture ?? null,
             options?.sentinels ?? null
           ])
-          const last = asked.incremental ? lastReads.get(key) : null
+          // A full read reads every page anew; it still says which had not changed since their last read (#247).
+          const held = lastReads.get(key)
+          const last = asked.incremental ? held : null
           try {
             const r = await readDemoPage(page, url, path, {
               ...options,
@@ -1700,15 +1773,28 @@ export async function makeDemoQa({
               proxySiteLabel,
               previous: last?.asks === asks ? last : null
             })
+            // Unchanged since its last read, for the look to keep its verdict (`unchanged`): never a dynamic page, whose
+            // fingerprint does not hold all it shows.
+            if (
+              held?.asks === asks &&
+              held.dynamic === false &&
+              r.fingerprint &&
+              !r.error &&
+              held.fingerprint === r.fingerprint
+            )
+              r.unchanged = true
             signal.throwIfAborted()
             seen.read++
             if (last?.asks === asks) seen.last++
             if (r.reused) seen.unchanged++
             if (!r.fingerprint) seen.unprinted++
+            // Whether the page loads what its fingerprint cannot hold (`readDemoPage`): kept with the read, never sent.
+            const dynamic = r.dynamic
+            delete r.dynamic
             if (r.fingerprint && !r.error && !r.reused) {
-              lastReads.set(key, { fingerprint: r.fingerprint, read: r, asks })
+              lastReads.set(key, { fingerprint: r.fingerprint, read: r, asks, dynamic: dynamic === true })
               keptNow.add(key)
-            }
+            } else if (r.reused && last) lastReads.set(key, last)
             return r
           } finally {
             await page.close().catch(() => {})
@@ -1720,8 +1806,11 @@ export async function makeDemoQa({
         log.log?.(
           `[host] demo-qa ${asked.label ?? ''}: ${seen.read} read, ${seen.last} with a last read, ${seen.unchanged} unchanged, ${seen.unprinted} with no fingerprint`
         )
-      // A page a finding names is read in full next time, never kept (`pagesWithFindings`).
-      for (const path of pagesWithFindings(result)) lastReads.drop(JSON.stringify([siteKey, path]))
+      // A page a finding names keeps its read only when its fingerprint holds all it shows (`keptForFinding`).
+      for (const path of pagesWithFindings(result)) {
+        const key = JSON.stringify([siteKey, path])
+        if (!keptForFinding(lastReads.get(key))) lastReads.drop(key)
+      }
       return result
     } catch (failure) {
       for (const key of keptNow) lastReads.drop(key)

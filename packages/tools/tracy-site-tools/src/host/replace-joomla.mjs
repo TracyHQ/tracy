@@ -36,6 +36,7 @@
  * copy off the page: an article in another language whose words the page also shows is one more
  * AMBIGUOUS candidate, and `all:"page"` would write it too.
  */
+import { CONTACT_NOTE, contactChanges, readContacts, writeContacts } from './replace-joomla-contacts.mjs'
 import {
   IDENTITY_FIELDS,
   IDENTITY_TOKENS,
@@ -2516,6 +2517,8 @@ function notReachedOf(ctx, results, writes) {
  *   apply: (params: Record<string, unknown>) => Promise<unknown>,
  *   pageHtml: (path: string) => Promise<PageRead | Record<string, unknown>>,
  *   mint: (prefix: string) => string,
+ *   read?: (action: string, params: Record<string, unknown>) => Promise<unknown>,
+ *   write?: (action: string, params: Record<string, unknown>) => Promise<unknown>,
  *   evidenceText?: string | readonly string[] | null, confirmed?: boolean,
  *   verify?: boolean, env?: Record<string, string | undefined>, nameInQuote?: 'refuse' | 'line'
  * }} JoomlaDeps
@@ -2757,11 +2760,47 @@ export async function replaceOnJoomla(deps) {
     if (status < 400) page = pageOf(r0.html)
   }
   let snap = answerOf(first)
+  // Site wide, the contact records too: a contact is not a contract slot, and "change our phone
+  // everywhere" left the Contact page on the old number (#204, `replace-joomla-contacts.mjs`).
+  const listDoor = deps.read
+  const contactRead = plan.all === true && listDoor ? await readContacts(listDoor) : { rows: [], whole: true }
+  const contacts = contactChanges(contactRead.rows, plan.changes)
+  const contactPlaces = contacts.flatMap((c) => c.places)
+  /** The contacts' part of an answer: listed on a dry run, written (with their own undo) otherwise. */
+  const withContacts = async (/** @type {Record<string, any>} */ out) => {
+    if (!contactRead.whole) out.notes = [...(out.notes ?? []), CONTACT_NOTE.cut]
+    if (contacts.length === 0) return out
+    if (plan.dryRun) {
+      out.contacts = contactPlaces.slice(0, 10)
+      out.notes = [...(out.notes ?? []), CONTACT_NOTE.dryRun(contactPlaces.length)]
+      return out
+    }
+    const write = deps.write
+    if (!write) return out
+    const done = await writeContacts(write, () => mint('replace'), contacts)
+    if (done.written.length) {
+      out.contacts = done.written.slice(0, 10)
+      out.contactsUndo = { action: 'apply.revert', params: { apply_id: done.applyId } }
+      out.notes = [...(out.notes ?? []), CONTACT_NOTE.written(done.written.length)]
+    }
+    if (done.failed.length) {
+      out.contactsFailed = done.failed
+      out.notes = [...(out.notes ?? []), CONTACT_NOTE.partial]
+    }
+    return out
+  }
   for (let attempt = 0; ; attempt += 1) {
     if (snap.ok === false) return snap
     if (!Array.isArray(snap.slots) || typeof snap.contract !== 'string' || snap.contract === '')
       return refuse('NOT_SUPPORTED_HERE', joomlaText('notSealedError'), joomlaText('notSealedNext'))
     const planned = planOn(deps, plan, snap, page)
+    // No slot holds the words, a contact does: the contacts alone.
+    if (!planned.ok && planned.code === 'NOT_FOUND' && contacts.length > 0)
+      return await withContacts(
+        plan.dryRun
+          ? { ok: true, dryRun: true, platform: 'joomla', path: plan.path, count: 0, would: [] }
+          : { ok: true, platform: 'joomla', path: plan.path, changed: [], next: REPLACE_NEXT.receipt }
+      )
     if (!planned.ok) return planned
     const { rows, companions, writes, notes } = planned
     const companionRows = companions.map((c) => ({ at: c.at, before: c.before, after: c.value, why: c.why }))
@@ -2779,17 +2818,17 @@ export async function replaceOnJoomla(deps) {
         out.apply = planned.apply
         out.next = joomlaText('evidenceNext')
       }
-      return fitDryRun(out)
+      return fitDryRun(await withContacts(out))
     }
     if (writes.length === 0)
-      return {
+      return await withContacts({
         ok: true,
         platform: 'joomla',
         path: plan.path,
         changed: [],
         notes: [joomlaText('already')],
         next: REPLACE_NEXT.receipt
-      }
+      })
     const applyId = mint('contract-replace')
     const { changes } = planned
     const evidence = Object.keys(planned.evidence).length > 0 ? planned.evidence : undefined
@@ -2871,7 +2910,7 @@ export async function replaceOnJoomla(deps) {
       })
       if (verified) out.verified = verified
       if (plan.normalized.length > 0) out.normalized = plan.normalized
-      return out
+      return await withContacts(out)
     }
     const planRows = rows.slice(0, 6).map((row) => ({ at: row.at, before: row.before, after: row.after }))
     if (conflicted(answer)) {

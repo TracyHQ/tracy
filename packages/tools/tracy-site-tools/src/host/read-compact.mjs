@@ -74,7 +74,7 @@ export const VIEW_PARAMS = Object.freeze({
 })
 
 /**
- * @typedef {{ full: boolean, blockKinds: boolean, search: string, type: string, offset: number, limit: number }} ReadView
+ * @typedef {{ full: boolean, blockKinds: boolean, search: string, type: string, offset: number, limit: number, pageRows?: boolean, pageSearches?: string[] }} ReadView
  */
 
 /**
@@ -86,7 +86,11 @@ export const VIEW_PARAMS = Object.freeze({
  */
 export function takeViewParams(action, params) {
   const p = isRecord(params) ? params : {}
-  const own = /** @type {Record<string, readonly string[]>} */ (VIEW_PARAMS)[action]
+  const pageRows =
+    action === 'content.read' && p.view === 'pages' && p.url === undefined && p.changedSince === undefined
+  const base = /** @type {Record<string, readonly string[]>} */ (VIEW_PARAMS)[action]
+  // Listing envelopes already own cursor/limit. Only the page-address view is filtered here.
+  const own = pageRows ? [...base, 'search', 'offset', 'limit'] : base
   if (own === undefined) return { params: p, view: null }
   /** @type {Record<string, unknown>} */
   const rest = {}
@@ -106,9 +110,11 @@ export function takeViewParams(action, params) {
       full: taken.full === true || taken.full === 'true',
       blockKinds: taken.blockKinds === true || taken.blockKinds === 'true',
       search: str(taken.search).slice(0, 80),
+      ...(pageRows && Array.isArray(taken.search) ? { pageSearches: taken.search.map(str) } : {}),
       type: str(taken.type).slice(0, 40),
       offset: whole(taken.offset, 0, 0),
-      limit: Math.min(whole(taken.limit, LIST_ROWS, 1), LIST_ROWS_MAX)
+      limit: Math.min(whole(taken.limit, LIST_ROWS, 1), LIST_ROWS_MAX),
+      pageRows: pageRows && ['search', 'offset', 'limit'].some((key) => p[key] !== undefined)
     }
   }
 }
@@ -167,10 +173,10 @@ const recordOf = (native) => {
  * rows still do not fit. Anything that is not a page list is returned as it came.
  * @param {unknown} answer
  * @param {unknown} params - the call as sent.
- * @param {{ home?: string }} [opts] - the working language (`workingLocale`), or ''.
+ * @param {{ home?: string, view?: ReadView | null }} [opts] - the working language and host query.
  * @returns {unknown}
  */
-export function compactPageList(answer, params, { home = '' } = {}) {
+export function compactPageList(answer, params, { home = '', view = null } = {}) {
   if (!isPageList(answer, params)) return answer
   const a = /** @type {Record<string, any>} */ (answer)
   const p = isRecord(params) ? params : {}
@@ -192,7 +198,21 @@ export function compactPageList(answer, params, { home = '' } = {}) {
       if (!everyLanguage(locale) && locale !== home)
         elsewhere[/** @type {string} */ (locale)] = (elsewhere[/** @type {string} */ (locale)] ?? 0) + 1
     }
-  const pages = shown.filter(isRecord)
+  const words = (view?.search ?? '').toLowerCase()
+  const searches = view?.pageSearches?.map((word) => word.toLowerCase()) ?? (words ? [words] : [])
+  const matched = shown
+    .filter(isRecord)
+    .filter(
+      (page) =>
+        searches.length === 0 ||
+        searches.some((term) =>
+          [page.title, page.path, page.url, page.id, recordOf(page.native)].some(
+            (value) => typeof value === 'string' && value.toLowerCase().includes(term)
+          )
+        )
+    )
+  const offset = view?.pageRows ? view.offset : 0
+  const pages = view?.pageRows ? matched.slice(offset, offset + view.limit) : matched
   const columns = ['title', 'path', 'id', 'record']
   const anyType = pages.some((page) => typeof page.type === 'string' && page.type !== 'page')
   const anyStatus = pages.some((page) => typeof page.status === 'string' && page.status !== 'published')
@@ -216,12 +236,22 @@ export function compactPageList(answer, params, { home = '' } = {}) {
   const { pages: _pages, truncatedCount: _count, next: _next, ...rest } = a
   /** @param {number} count */
   const build = (count) => {
-    const cut = rows.length - count
+    const cut = matched.length - offset - count
+    const more = Math.max(0, cut)
+    const continuation = {
+      view: 'pages',
+      ...(typeof p.locale === 'string' ? { locale: p.locale } : {}),
+      ...(view?.pageSearches ? { search: view.pageSearches } : words ? { search: view?.search } : {}),
+      offset: offset + count,
+      limit: view?.pageRows ? view.limit : Math.min(count, LIST_ROWS_MAX)
+    }
     const parts = [
       leftOut > 0
         ? `Pages of ${home} and of every language; ${leftOut} more in ${Object.keys(elsewhere).length} other language${Object.keys(elsewhere).length === 1 ? '' : 's'} (otherLanguages): the same call with locale lists one.`
         : '',
-      cut > 0 ? `${cut} more pages not shown: find one by its link with url.` : '',
+      more > 0
+        ? `${more} more pages not shown: next.params gives the next rows; search finds a title or path; url reads one known link.`
+        : '',
       'A page by its link: {view:"pages", url}. Every language and field as the site gave them: full:true.'
     ].filter((x) => x !== '')
     return {
@@ -229,16 +259,28 @@ export function compactPageList(answer, params, { home = '' } = {}) {
       columns,
       pages: rows.slice(0, count),
       ...(leftOut > 0 ? { otherLanguages: elsewhere } : {}),
-      ...(cut > 0 ? { truncated: true, truncatedCount: cut } : {}),
+      ...(more > 0 ? { truncated: true, truncatedCount: more } : {}),
+      ...(view?.pageRows || more > 0
+        ? {
+            pagination: {
+              offset,
+              returned: count,
+              total: matched.length,
+              totalIsComplete: a.truncated !== true,
+              nextOffset: more > 0 ? offset + count : null
+            }
+          }
+        : {}),
+      ...(a.truncated === true && a.next !== undefined ? { sourceNext: a.next } : {}),
+      ...(a.truncated === true && a.truncatedCount !== undefined
+        ? { sourceTruncatedCount: a.truncatedCount }
+        : {}),
       // A whole list in one language says nothing more: every page is a row.
-      ...(leftOut > 0 || cut > 0
+      ...(leftOut > 0 || more > 0
         ? {
             next: {
               action: 'content.read',
-              params:
-                leftOut > 0
-                  ? { view: 'pages', locale: '<a locale of otherLanguages>' }
-                  : { view: 'pages', url: '<the link>' },
+              params: more > 0 ? continuation : { view: 'pages', locale: '<a locale of otherLanguages>' },
               why: parts.join(' ')
             }
           }
@@ -536,5 +578,79 @@ export function pageListRows(answer, view) {
     total: matched.length,
     ...(Object.keys(byType).length > 1 ? { byType } : {}),
     next
+  }
+}
+
+/**
+ * A WordPress page listing names native post IDs, not Content API IDs. Keep those IDs intact for
+ * record operations and put the map lookup beside the rows so a lookup cannot silently use either
+ * namespace as the other. No extra read is performed; the model chooses whether it needs the map.
+ * @param {unknown} answer
+ * @param {Record<string, unknown>} params
+ * @param {unknown} platform
+ * @returns {unknown}
+ */
+export function nativePageIdAdvice(answer, params, platform) {
+  if (platform !== 'wordpress' || !isRecord(answer) || answer.ok !== true || !Array.isArray(answer.items))
+    return answer
+  if (
+    params.post_type !== 'page' &&
+    !(answer.items.length > 0 && answer.items.every((row) => isRecord(row) && row.type === 'page'))
+  )
+    return answer
+  if (answer.kind !== undefined && answer.kind !== 'post') return answer
+  const one = answer.items.length === 1 ? answer.items[0] : null
+  const path = isRecord(one) ? str(one.path) : ''
+  const search = str(params.search)
+  return {
+    ...answer,
+    idNamespace: 'wordpress:post',
+    contentIdLookup: {
+      action: 'content.read',
+      params: {
+        view: 'pages',
+        ...(path.startsWith('/') && !path.startsWith('//') ? { url: path } : search ? { search } : {})
+      },
+      why: 'items[].id is a native post ID for content.get/update. This read returns opaque Content API IDs.'
+    }
+  }
+}
+
+/** A bounded OR query on page-address rows only; other search contracts remain unchanged.
+ * @param {string} action
+ * @param {unknown} params
+ * @returns {string | null}
+ */
+export function pageSearchProblem(action, params) {
+  if (
+    action !== 'content.read' ||
+    !isRecord(params) ||
+    params.view !== 'pages' ||
+    !Array.isArray(params.search)
+  )
+    return null
+  if (params.url !== undefined || params.changedSince !== undefined)
+    return 'A search array is only for a page list without url or changedSince.'
+  if (
+    params.search.length < 1 ||
+    params.search.length > 8 ||
+    params.search.some((word) => typeof word !== 'string' || word.trim() === '' || word.length > 80)
+  )
+    return 'search must contain 1 to 8 nonempty title or path fragments, at most 80 characters each.'
+  return null
+}
+
+/** Label the two ID namespaces where the agent reads them, without changing either identifier.
+ * @param {unknown} answer
+ * @returns {unknown}
+ */
+export function pageIdAdvice(answer) {
+  if (!isRecord(answer) || answer.schemaVersion !== CONTENT_PAGES || !Array.isArray(answer.pages))
+    return answer
+  return {
+    ...answer,
+    idNamespace: 'content-api',
+    idMeaning:
+      'Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.'
   }
 }

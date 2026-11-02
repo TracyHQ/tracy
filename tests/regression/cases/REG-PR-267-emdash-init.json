@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-267-emdash-init",
+  "kind": "fix",
+  "title": "An EmDash site's container runs an init, and the custody matchers still know its compose",
+  "pr": 267,
+  "area": "fleet/compose",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: render an EmDash site's compose in every custody environment.",
+    "S2: classify the render, the render without init, init out of place, and init put back by the frame-policy recreate, with both matchers.",
+    "S3: reconcile the frame policy of an EmDash site whose compose has no init."
+  ],
+  "expect": [
+    "S1: init: true sits right under restart: unless-stopped.",
+    "S2: protected, protected, unknown, and byte-identical to the render.",
+    "S3: the recreate adds init: true in that place, once; a compose of another form is left alone."
+  ],
+  "selectors": {
+    "file": "packages/fleet/tracy-fleet-operation/scripts/provision/render-compose.sh",
+    "exports": "tracy_compose_emdash"
+  },
+  "evidence": "Issue #205: every EmDash recreate waited Docker's stop timeout (node as PID 1): measured 5.0 s without an init, 0.8 s with one",
+  "fence": "Site compose",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=EmDash custody forms|\\(#205\\)",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/frame-policy.test.mjs"
+    ],
+    "tests": [
+      "EmDash custody forms are the generator's own output (a short label, production defaults)",
+      "emdash: the policy recreate adds init: true under restart, once, and nothing else (#205)"
+    ]
+  }
+}

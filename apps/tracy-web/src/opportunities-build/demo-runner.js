@@ -15,6 +15,36 @@ import { withHandoffLock } from './handoff.js'
 const POLL_MS = 10_000
 const LEASE_MS = 6 * 60_000
 const ACTION_TIMEOUT_MS = 2 * 60 * 60_000
+/** A chat turn with a write, a check beat or its start this recent is alive (#247). */
+const CHAT_ALIVE_MS = 30 * 60_000
+/** Past this, an action ends whatever its chat does: a turn row left open by a dsh that died never holds it. */
+const CHAT_ACTION_MAX_MS = 2 * ACTION_TIMEOUT_MS
+
+/**
+ * 🔒 A BUILD WHOSE CHAT IS STILL WORKING IS NOT TIMED OUT (#247, dev 30/10/2026). A client-send action stays queued for
+ * its whole chat, and a build of six checks of 9–28 min each crossed the 2 h deadline while its agent was still
+ * repairing: the action failed `DEMO_STEP_TIMEOUT`, Build from my business said failed, and eight minutes later the
+ * chat told the customer the site was built. The deadline now waits while the action's chat turn is open and alive (a
+ * write of that turn, a beat of its running check, or the turn opened within `CHAT_ALIVE_MS`), up to
+ * `CHAT_ACTION_MAX_MS`. SQL over `wo_demo_action a`: `alive` names the parameter holding the alive window's start.
+ */
+const chatAliveSql = (alive) => `(a.selection->>'chatMode' = 'client-send/1' and exists (
+    select 1 from wo_build b join site_turn t on t.site_key = b.site_key and t.session_id = a.session_id
+    where b.account_id = a.account_id and b.request_id = a.build_request_id and t.state = 'open'
+      and (t.opened_at > ${alive}
+        or exists (select 1 from site_write w where w.turn_id = t.turn_id and w.at > ${alive})
+        or case when b.qa->'clientCheck'->>'beatAt' ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T'
+          then (b.qa->'clientCheck'->>'beatAt')::timestamptz end > ${alive})))`
+
+/** Whether this action's chat turn is alive (`chatAliveSql`), so its deadline waits. */
+export async function chatTurnAlive(db, action, at = Date.now()) {
+  if (at - new Date(action.accepted_at).getTime() > CHAT_ACTION_MAX_MS) return false
+  const { rows } = await db.query(
+    `select ${chatAliveSql('$2')} as alive from wo_demo_action a where a.id = $1`,
+    [action.id, new Date(at - CHAT_ALIVE_MS)]
+  )
+  return rows[0]?.alive === true
+}
 
 /**
  * Every database operation of a runner is fenced by the queue row. A write holds that row for
@@ -68,10 +98,16 @@ export function demoLeasePool(pool, lease, now = Date.now) {
  */
 export async function expireOverdueDemoActions(pool, at = Date.now()) {
   const { rowCount } = await pool.query(
-    `update wo_demo_action set status = 'failed', error = 'DEMO_STEP_TIMEOUT', lease_until = null,
-      lease_token = lease_token + 1, checked_at = $1, updated_at = $1
-    where status = 'queued' and accepted_at < $2`,
-    [new Date(at), new Date(at - ACTION_TIMEOUT_MS)]
+    `update wo_demo_action a set status = 'failed', error = 'DEMO_STEP_TIMEOUT', lease_until = null,
+      lease_token = a.lease_token + 1, checked_at = $1, updated_at = $1
+    where a.status = 'queued' and a.accepted_at < $2
+      and (a.accepted_at < $3 or not ${chatAliveSql('$4')})`,
+    [
+      new Date(at),
+      new Date(at - ACTION_TIMEOUT_MS),
+      new Date(at - CHAT_ACTION_MAX_MS),
+      new Date(at - CHAT_ALIVE_MS)
+    ]
   )
   return rowCount
 }
@@ -128,7 +164,10 @@ export function createDemoRunner(deps) {
           updated_at: new Date(now())
         })
       try {
-        if (now() - new Date(action.accepted_at).getTime() > ACTION_TIMEOUT_MS)
+        if (
+          now() - new Date(action.accepted_at).getTime() > ACTION_TIMEOUT_MS &&
+          !(await chatTurnAlive(pool, action, now()))
+        )
           return finish('failed', 'DEMO_STEP_TIMEOUT')
         if (action.selection?.chatMode === 'client-send/1') {
           if (!deps.clientDemo) return finish('failed', 'DEMO_CHAT_UNAVAILABLE')

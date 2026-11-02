@@ -1029,7 +1029,16 @@ test('Sync then ZIP: in the ZIP flow, once the sync started here is applied, the
     'the export is started by itself',
     3_000
   )
-  assert.notEqual(stage(), 'confirm', 'not left waiting on Prepare ZIP')
+  // WAITED FOR, never read at once: the export's requests are answered before React has drawn the
+  // stage `run()` set (read 30/10/2026: the step still said `confirm` when the export POST answered,
+  // 6 runs of 6), so a check made the moment the POST is seen depends on whether a render fell in
+  // between — it did not on a slower GitHub-hosted runner (run 41041876917). `packing` is where the
+  // started export rests while its package is queued.
+  await until(
+    () => assert.equal(stage(), 'packing', 'not left waiting on Prepare ZIP'),
+    'the step follows the export it started',
+    3_000
+  )
 })
 
 test('Sync then ZIP: the ZIP flow chosen on the first step chains the same way', async () => {

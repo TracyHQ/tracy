@@ -11,6 +11,14 @@
  * A routine PR into `develop` replaces `tests 1/2` and `tests 2/2` by one `tests related` row (or
  * none), see `related-tests.mjs`; `checks` always runs.
  *
+ * THREE WORKERS SHARDS ON GITHUB-HOSTED (30/10/2026). A pull request's rows run on `ubuntu-latest`
+ * unless it carries `ci:self-hosted` (`hosted`, from the workflow's `ROWS_HOSTED`), and there the
+ * full workers suite is `tests 1/3`, `tests 2/3`, `tests 3/3` (+ the small suites): a 4-vCPU VM ran
+ * the two shards in ~9 and ~20 minutes (run 41028805223) against ~9.5 and ~14 on our runners. Same
+ * `shardOf` over the same measured table, one shard more; GitHub-hosted runners cost no machine of
+ * ours. Our runners keep two shards: their pool is shared with the image builds, and a third row is
+ * one more runner per full run there.
+ *
  * TEMPLATE-DATA LANE (12/10/2026). When every changed file of a PR into `develop` is template data
  * (`TEMPLATE_DATA` in `related-tests.mjs`: contracts, template profiles, quickstart pins, journal,
  * regression cases — never a code file), `checks` keeps its name but runs only the gates that read
@@ -130,6 +138,7 @@ export function e2ePaths(e2eFiles) {
  * @param {readonly string[]} input.allFiles - tracked files, to derive the e2e owners.
  * @param {(file: string) => string} [input.readText] - reads a tracked file; without it there is no
  *   template-data lane (the planner's own run passes one).
+ * @param {boolean} [input.hosted] - the rows run on GitHub-hosted runners: three workers shards, not two.
  * @returns {{matrix: {include: object[]}, skipped: {group: string, paths: string}[], runsAll: boolean, why: string}}
  */
 /**
@@ -195,6 +204,23 @@ export function turboRows(dry, { force = false } = {}) {
   return { rows: out, cached }
 }
 
+/** Workers shards of a full run on our runners, and on GitHub-hosted `ubuntu-latest` (30/10/2026). */
+export const SELF_HOSTED_SHARDS = 2
+export const HOSTED_SHARDS = 3
+
+/**
+ * The full workers rows: `tests i/n`, the small suites (`rest`) on the last one only, where
+ * `shardOf` reserves their measured seconds (`check-tests.ts` refuses `rest` on any other shard).
+ * @param {number} n
+ */
+function workersShards(n) {
+  return Array.from({ length: n }, (_, i) => ({
+    group: `tests ${String(i + 1)}/${String(n)}`,
+    label: 'tracy-check',
+    args: `--only tests --tests-part workers:${String(i + 1)}/${String(n)}${i === n - 1 ? ',rest' : ''}`
+  }))
+}
+
 /** The title of the notice `plan` prints when a full run's tests are forced Turbo rows. */
 export const FULL_RUN_TITLE = 'full run'
 
@@ -212,18 +238,24 @@ const ONE_TASK_PER_ROW = {
 
 /**
  * The `build check` row names a full run may have (17/10/2026): `legacy`, the two workers shards
- * (`plan` could not ask Turbo, or a run from before forced rows), and `turbo`, the forced Turbo
- * rows. Both carry `checks` and every conditional row. `green-tree.mjs` and `check-pr-merge.mjs`
- * judge a full run by these; a `turbo` set counts only with `plan`'s `full run` notice, because a
- * pull request into develop has rows of the same names whose tasks the cache may have served.
- * @returns {{ legacy: string[], turbo: string[] }}
+ * (`plan` could not ask Turbo, or a run from before forced rows), `hosted`, the three workers shards
+ * of the same fallback on GitHub-hosted runners (30/10/2026), and `turbo`, the forced Turbo rows,
+ * which do not depend on the runner. All carry `checks` and every conditional row. `green-tree.mjs`
+ * and `check-pr-merge.mjs` judge a full run by these; a `turbo` set counts only with `plan`'s
+ * `full run` notice, because a pull request into develop has rows of the same names whose tasks the
+ * cache may have served.
+ * @returns {{ legacy: string[], hosted: string[], turbo: string[] }}
  */
 export function fullRowSets() {
-  const groups = (turboDry) =>
-    planMatrix({ event: 'workflow_dispatch', changed: null, allFiles: [], turboDry }).matrix.include.map(
-      (row) => row.group
-    )
-  return { legacy: groups(null), turbo: groups(ONE_TASK_PER_ROW) }
+  const groups = (turboDry, hosted = false) =>
+    planMatrix({
+      event: 'workflow_dispatch',
+      changed: null,
+      allFiles: [],
+      turboDry,
+      hosted
+    }).matrix.include.map((row) => row.group)
+  return { legacy: groups(null), hosted: groups(null, true), turbo: groups(ONE_TASK_PER_ROW) }
 }
 
 export function planMatrix({
@@ -234,7 +266,8 @@ export function planMatrix({
   dependencies = {},
   readText,
   turboDry = null,
-  labels = null
+  labels = null,
+  hosted = false
 }) {
   const conditional = [
     ...EMDASH.map((r) => ({
@@ -250,10 +283,7 @@ export function planMatrix({
       paths: e2ePaths(allFiles)
     }
   ]
-  const fullRows = [
-    { group: 'tests 1/2', label: 'tracy-check', args: '--only tests --tests-part workers:1/2' },
-    { group: 'tests 2/2', label: 'tracy-check', args: '--only tests --tests-part workers:2/2,rest' }
-  ]
+  const fullRows = workersShards(hosted ? HOSTED_SHARDS : SELF_HOSTED_SHARDS)
   let checks = { group: 'checks', label: 'tracy-check', args: '--skip tests' }
 
   let runsAll = true
@@ -345,8 +375,9 @@ export function planMatrix({
         : []
   // The tests with the clock moved forward run on exactly one row: the last full shard, the related
   // row, or — when Turbo plans the tests and may start none — `checks`, which always runs.
+  const lastShard = fullRows.at(-1).group
   const clockRow =
-    turbo || fullTurbo ? 'checks' : tests.some((r) => r.group === 'tests 2/2') ? 'tests 2/2' : 'tests related'
+    turbo || fullTurbo ? 'checks' : tests.some((r) => r.group === lastShard) ? lastShard : 'tests related'
   const rows = [...include, ...tests, checks].map((r) => (r.group === clockRow ? { ...r, clock: true } : r))
   // A docs-only PR has no test job. The full nightly and release rows are unchanged.
   return {
@@ -522,7 +553,10 @@ function main() {
     dependencies,
     readText: repoReader(),
     turboDry,
-    labels: parseLabels(process.env.PR_LABELS)
+    labels: parseLabels(process.env.PR_LABELS),
+    // `true` exactly when the rows run on `ubuntu-latest` (the workflow's own `runs-on` condition);
+    // anything else, unset included, plans our runners' two shards.
+    hosted: process.env.ROWS_HOSTED === 'true'
   })
   // 🔒 THE DRY RUN AND THE ROWS MUST AGREE ON THE SKIP. Turbo hashed the tests under the decision the
   // `--scope` step made; if this plan decides otherwise, the cache answer it holds describes a run

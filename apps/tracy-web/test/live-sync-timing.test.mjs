@@ -126,11 +126,14 @@ test('the live read’s timing line is progress, never the answer of a script th
 function scriptReadLine(answer) {
   const script = readFileSync(SYNC_SCRIPT, 'utf8')
   const m =
-    /python3 -c '(import json,sys\nr = json\.loads\(sys\.argv\[1\]\)\nprint\(json\.dumps\(\{"ok": True, "liveReadAt"[^']*)' "\$pulled" >&2/.exec(
+    /printf '%s' "\$pulled" \| python3 -c '(import json,sys\nr = json\.load\(sys\.stdin\)\nprint\(json\.dumps\(\{"ok": True, "liveReadAt"[^']*)' >&2/.exec(
       script
     )
   assert.ok(m, 'webroot-sync.sh prints the read timing line with the snippet this test runs')
-  return execFileSync('python3', ['-c', m[1], JSON.stringify(answer)], { encoding: 'utf8' }).trim()
+  return execFileSync('python3', ['-c', m[1]], {
+    input: JSON.stringify(answer),
+    encoding: 'utf8'
+  }).trim()
 }
 
 test('the read line the real script prints is read for its mode, seconds and parts', () => {

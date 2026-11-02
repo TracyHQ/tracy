@@ -1,0 +1,1 @@
+{"id":"REG-PR-264-build-from-business-waits","verdict":"PASS","commit":"0db55920a92ba0f86d13e642a2513ee7e8b94a54","ran_at":"2026-10-31T10:35:16.165Z","evidence":"tests/regression/.runs/2026-10-31-0db55920a/REG-PR-264-build-from-business-waits.log"}

@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-264-look-fit",
+  "kind": "fix",
+  "title": "A build check's look takes the pages its time holds, at the rate the last look measured",
+  "pr": 264,
+  "area": "wo/demo-look",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run a whole look over two pages with a clock that moves 1 s a reading.",
+    "S2: fit five pages with no rate, with 100 s a page and two of them seen, and with 900 s a page."
+  ],
+  "expect": [
+    "S1: the look says msPerPage, a positive number.",
+    "S2: every page; home, then the three unseen fitting 300 s with the two seen left; home alone."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/opportunities-build/client-demo.js",
+    "exports": "lookFit"
+  },
+  "evidence": "Issue #247: six checks of a 29-page build each ran the full 300 s look and ended looked partly with 0 pages seen",
+  "fence": "Build checks",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#247\\)",
+      "apps/tracy-web/test/wo-demo-look.test.mjs"
+    ],
+    "tests": ["a look says what a page seen whole cost, and the next takes the pages its time holds (#247)"]
+  }
+}

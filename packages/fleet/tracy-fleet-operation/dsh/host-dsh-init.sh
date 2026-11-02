@@ -293,6 +293,10 @@ run chmod 750 "$DESK_HOME"
 # this script before it ever provisions a site.
 say "2. shared mount at $SITES_ROOT"
 run mkdir -p "$SITES_ROOT"
+# The site agent's lasting wishes (`tracy-site-tools` site-notes.mjs) live in a store of dsh's own under
+# the sites root, which root owns: dsh runs as www-data (33) and could not create it, so no wish was
+# ever kept and nothing said so (#210). Made here once, dsh's; deploy-host-dsh.sh repeats it.
+run install -d -m 0700 -o 33 -g 33 "$SITES_ROOT/.site-notes"
 if mountpoint -q "$SITES_ROOT" 2>/dev/null; then
   printf '    already a mount point: %s\n' "$SITES_ROOT"
 else

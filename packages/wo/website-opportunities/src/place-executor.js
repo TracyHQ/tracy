@@ -1027,6 +1027,16 @@ export function createPlaceRunner(h) {
 
     async profile(ctx) {
       const { lease, snapshotId, keys, settings } = ctx
+      // 🔒 THE JOB SAYS IT IS READING THE BUSINESS (#251). This stage waits on the business reading (up to two minutes
+      // measured) and wrote no progress, so the job kept the collection's last word ("now reading Instagram") all that
+      // time. `reading: 'business'` is what the page shows now; no source is being collected any more.
+      const reads = !ctx.prefetch && !ctx.job.only_source
+      if (
+        !(await checkpoint(pool, lease, {
+          progress: { collecting: null, operation: null, reading: reads ? 'business' : null }
+        }))
+      )
+        throw new StaleLeaseError(lease.jobId)
       const sources = await snapshotSourcesOf(pool, snapshotId)
       const google =
         sources.find((s) => s.source === GOOGLE_FACTS_SOURCE && s.collected_at)?.collected ?? null

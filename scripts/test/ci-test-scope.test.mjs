@@ -283,7 +283,8 @@ test('plan reads the labels from the API at run time, with its own token, and ne
   assert.equal(workflow.jobs.plan.permissions.contents, 'read')
   // The labels a re-run sees are the labels now: nothing in the plan job reads them from the payload.
   // `runs-on` is excluded on purpose: it picks the runner from the `ci:aws-only` label (PR #1422) and
-  // decides no test; every other key of the job must not read the payload's labels.
+  // `ci:self-hosted` (30/10/2026) and decides no test by itself (`plan` reads the runner it got, never
+  // the label); every other key of the job must not read the payload's labels.
   const { 'runs-on': _runner, ...planWithoutRunner } = workflow.jobs.plan
   const planYaml = JSON.stringify(planWithoutRunner)
   assert.ok(!/github\.event\.pull_request\.labels/.test(planYaml), 'labels from the event payload')

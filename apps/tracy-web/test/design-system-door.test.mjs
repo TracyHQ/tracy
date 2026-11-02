@@ -985,16 +985,20 @@ test('contractFor refuses a release newer than the last one confirmed to wear th
   assert.deepEqual(business('1.7.22'), { contract: 'emdash-tracy-business-roles' })
   // 1.7.23 (design system dot 3): the roles 1.7.20-1.7.22 took from contract patches are read at the source
   assert.deepEqual(business('1.7.23'), { contract: 'emdash-tracy-business-source' })
-  assert.deepEqual(business('1.7.24'), {
+  // 1.7.25 (#271): 1.7.23 with the cached Content API reader, the same styles; the last checked
+  assert.deepEqual(business('1.7.25'), { contract: 'emdash-tracy-business-source' })
+  assert.deepEqual(business('1.7.26'), {
     reason: 'TEMPLATE_VERSION_UNCHECKED',
-    upTo: '1.7.23',
-    have: '1.7.24'
+    upTo: '1.7.25',
+    have: '1.7.26'
   })
   const base = (version) => contractFor('emdash/tracy-base', { key: 'tracy-base/emdash-0.x', version })
   assert.deepEqual(base('0.5.4'), { contract: 'emdash-base' })
   assert.deepEqual(base('0.5.5'), { contract: 'emdash-base-roles' })
   assert.deepEqual(base('0.5.6'), { contract: 'emdash-base-roles' })
-  assert.deepEqual(base('0.5.7'), { reason: 'TEMPLATE_VERSION_UNCHECKED', upTo: '0.5.6', have: '0.5.7' })
+  // 0.5.8 (#271): 0.5.6 with the cached Content API reader, the same styles; the last checked
+  assert.deepEqual(base('0.5.8'), { contract: 'emdash-base-roles' })
+  assert.deepEqual(base('0.5.9'), { reason: 'TEMPLATE_VERSION_UNCHECKED', upTo: '0.5.8', have: '0.5.9' })
   assert.deepEqual(base('0.4.0'), { reason: 'TEMPLATE_NEEDS_UPDATE', need: '0.5.0', have: '0.4.0' })
   assert.deepEqual(contractFor('wordpress/wp-ja-vega', { key: 'wp-ja-vega', version: '1.1.20' }), {
     contract: 'wordpress-ja-vega'

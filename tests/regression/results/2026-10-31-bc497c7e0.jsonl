@@ -1,0 +1,1 @@
+{"id":"REG-PR-271-emdash-reader-cache","verdict":"PASS","commit":"bc497c7e0802c7f258e8ff4983a8fcd1c9921c10","ran_at":"2026-10-31T12:20:26.930Z","evidence":"tests/regression/.runs/2026-10-31-bc497c7e0/REG-PR-271-emdash-reader-cache.log"}

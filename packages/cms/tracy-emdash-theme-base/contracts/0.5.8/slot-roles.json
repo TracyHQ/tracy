@@ -1,0 +1,4771 @@
+{
+  "schemaVersion": "tracy-quickstart-slot-roles/v1",
+  "roleVocabularyVersion": "place-content-roles/1",
+  "contract": "tracy-base/emdash-0.x/0.5.6",
+  "cms": "emdash",
+  "baseHash": "e67a800175a15d6ca5ca570833623c6311235882f7e00dfb1885c27657370f03",
+  "baseFiles": {
+    "seed/seed.json": "e4450591a62cbebab968faca7f816ccb663da3eb0e4f7747b8e62e6983b18330",
+    "seed/personalize.json": "c9091f77b4ada862a129bcf4ddb6673b2fd95eb236b83d31477e375f5fbc4a9f",
+    "seed/field-map.json": "a1517641e7ba5da01638b5f862fd031b424985a56a13d0861ec80e9f8a087f4d"
+  },
+  "status": "checked",
+  "groups": [
+    {
+      "id": "settings.title.identity.0",
+      "groupId": "settings.title.identity.0",
+      "entityKind": "business",
+      "allowedKinds": ["business"],
+      "itemIndex": 0,
+      "requiredRoles": ["business.name"],
+      "neutral": {
+        "business.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "settings.tagline.identity.0",
+      "groupId": "settings.tagline.identity.0",
+      "entityKind": "business",
+      "allowedKinds": ["business"],
+      "itemIndex": 0,
+      "requiredRoles": ["business.tagline"],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "site.site.identity.0",
+      "groupId": "site.site.identity.0",
+      "entityKind": "business",
+      "allowedKinds": ["business"],
+      "itemIndex": 0,
+      "requiredRoles": ["business.name"],
+      "neutral": {
+        "business.name": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.identity.0",
+      "groupId": "onepage.onepage.identity.0",
+      "entityKind": "business",
+      "allowedKinds": ["business"],
+      "itemIndex": 0,
+      "requiredRoles": ["business.name"],
+      "neutral": {
+        "business.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "contact.contact.identity.0",
+      "groupId": "contact.contact.identity.0",
+      "entityKind": "contact",
+      "allowedKinds": ["contact"],
+      "itemIndex": 0,
+      "requiredRoles": ["contact.email"],
+      "neutral": {
+        "contact.email": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "services.service-detail.faq_items.0",
+      "groupId": "services.service-detail.faq_items.0",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 0,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "services.service-detail.faq_items.1",
+      "groupId": "services.service-detail.faq_items.1",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 1,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "services.service-detail.faq_items.2",
+      "groupId": "services.service-detail.faq_items.2",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 2,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "people.how-to-curabitur-tempus-lacus-id-orci-feugiat.name.0",
+      "groupId": "people.how-to-curabitur-tempus-lacus-id-orci-feugiat.name.0",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 0,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "people.create-donec-lacinia-urna-a-metus-iaculis-ultrices.name.0",
+      "groupId": "people.create-donec-lacinia-urna-a-metus-iaculis-ultrices.name.0",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 0,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "people.unlimited-nam-id-sem-eu-enim-sagittis-mollis.name.0",
+      "groupId": "people.unlimited-nam-id-sem-eu-enim-sagittis-mollis.name.0",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 0,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "people.save-pellentesque-habitant-morbi-tristique-senectus-et-netus.name.0",
+      "groupId": "people.save-pellentesque-habitant-morbi-tristique-senectus-et-netus.name.0",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 0,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus.author.0",
+      "groupId": "posts.how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel.author.0",
+      "groupId": "posts.how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-to-write-like-hemingway.author.0",
+      "groupId": "posts.how-to-write-like-hemingway.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-much-money-do-youtubers-make.author.0",
+      "groupId": "posts.how-much-money-do-youtubers-make.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.21-useful-keyboard-shortcuts-for-writers.author.0",
+      "groupId": "posts.21-useful-keyboard-shortcuts-for-writers.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.want-new-customers-faster-avoid-this-rookie-marketing-habit.author.0",
+      "groupId": "posts.want-new-customers-faster-avoid-this-rookie-marketing-habit.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-to-write-bullet-points-people-actually-want-to-read.author.0",
+      "groupId": "posts.how-to-write-bullet-points-people-actually-want-to-read.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.why-being-naive-can-make-your-fortune.author.0",
+      "groupId": "posts.why-being-naive-can-make-your-fortune.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-to-write-bullet-points-people-actually-want-to-read-22.author.0",
+      "groupId": "posts.how-to-write-bullet-points-people-actually-want-to-read-22.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.abb-group-develops-rpa-solutions-for-construction.author.0",
+      "groupId": "posts.abb-group-develops-rpa-solutions-for-construction.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.draas-vs-disaster-recovery-which-one-is-right-for-you.author.0",
+      "groupId": "posts.draas-vs-disaster-recovery-which-one-is-right-for-you.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-next-gen-embedded-analytics-power-data-driven-action.author.0",
+      "groupId": "posts.how-next-gen-embedded-analytics-power-data-driven-action.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.servicenow-integrates-with-microsoft-to-boost-cybersecurity.author.0",
+      "groupId": "posts.servicenow-integrates-with-microsoft-to-boost-cybersecurity.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo.author.0",
+      "groupId": "posts.verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.five-steps-to-creating-a-post-pandemic-workplace.author.0",
+      "groupId": "posts.five-steps-to-creating-a-post-pandemic-workplace.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-to-expand-the-cloud-native-technology-workforce.author.0",
+      "groupId": "posts.how-to-expand-the-cloud-native-technology-workforce.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.liverpool-trials-free-5g-to-help-monitor-health-conditions.author.0",
+      "groupId": "posts.liverpool-trials-free-5g-to-help-monitor-health-conditions.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.becoming-more-human-in-a-hyper-connected-world.author.0",
+      "groupId": "posts.becoming-more-human-in-a-hyper-connected-world.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.uk-government-approves-44bn-o2-virgin-media-merger.author.0",
+      "groupId": "posts.uk-government-approves-44bn-o2-virgin-media-merger.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise.author.0",
+      "groupId": "posts.deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.opinion-how-the-m-a-landscape-is-reshaping-post-pandemic.author.0",
+      "groupId": "posts.opinion-how-the-m-a-landscape-is-reshaping-post-pandemic.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.why-china-is-cracking-down-on-crypto-mining-and-trading.author.0",
+      "groupId": "posts.why-china-is-cracking-down-on-crypto-mining-and-trading.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.people-moves-apac-ubs-flipkart-aon-heineken-fullerton.author.0",
+      "groupId": "posts.people-moves-apac-ubs-flipkart-aon-heineken-fullerton.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.opinion-the-future-of-the-city-is-smart-and-sustainable.author.0",
+      "groupId": "posts.opinion-the-future-of-the-city-is-smart-and-sustainable.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.include-nunc-eget-mauris-a-urna-viverra-rutrum.author.0",
+      "groupId": "posts.include-nunc-eget-mauris-a-urna-viverra-rutrum.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.how-to-curabitur-tempus-lacus-id-orci-feugiat.author.0",
+      "groupId": "posts.how-to-curabitur-tempus-lacus-id-orci-feugiat.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.double-suspendisse-luctus-justo-convallis-blandit-facilisis.author.0",
+      "groupId": "posts.double-suspendisse-luctus-justo-convallis-blandit-facilisis.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum.author.0",
+      "groupId": "posts.delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.phasellus-rutrum-turpis-mattis-aliquet-pharetra.author.0",
+      "groupId": "posts.phasellus-rutrum-turpis-mattis-aliquet-pharetra.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies.author.0",
+      "groupId": "posts.pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.create-curabitur-tempus-lacus-id-orci-feugiat.author.0",
+      "groupId": "posts.create-curabitur-tempus-lacus-id-orci-feugiat.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla.author.0",
+      "groupId": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.create-more-elit-nisi-egestas-vel-vestibulum-ut.author.0",
+      "groupId": "posts.create-more-elit-nisi-egestas-vel-vestibulum-ut.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu.author.0",
+      "groupId": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.donec-vitae-efficitur-erat-at-sodales-sem.author.0",
+      "groupId": "posts.donec-vitae-efficitur-erat-at-sodales-sem.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique.author.0",
+      "groupId": "posts.quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu-studio-life.author.0",
+      "groupId": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu-studio-life.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.create-more-elit-nisi-egestas-vel-vestibulum-ut-studio-life.author.0",
+      "groupId": "posts.create-more-elit-nisi-egestas-vel-vestibulum-ut-studio-life.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla-studio-life.author.0",
+      "groupId": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla-studio-life.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.create-curabitur-tempus-lacus-id-orci-feugiat-studio-life.author.0",
+      "groupId": "posts.create-curabitur-tempus-lacus-id-orci-feugiat-studio-life.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique.author.0",
+      "groupId": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla-people.author.0",
+      "groupId": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla-people.author.0",
+      "entityKind": "post",
+      "allowedKinds": ["post"],
+      "itemIndex": 0,
+      "requiredRoles": ["post.author"],
+      "neutral": {
+        "post.author": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "site.site.notice.0",
+      "groupId": "site.site.notice.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.stats.0",
+      "groupId": "home.home.stats.0",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 0,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.stats.1",
+      "groupId": "home.home.stats.1",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 1,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.stats.2",
+      "groupId": "home.home.stats.2",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 2,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.stats.3",
+      "groupId": "home.home.stats.3",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 3,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.team_quotes.0",
+      "groupId": "home.home.team_quotes.0",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 0,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.team_quotes.1",
+      "groupId": "home.home.team_quotes.1",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 1,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.team_quotes.2",
+      "groupId": "home.home.team_quotes.2",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 2,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.team_note.0",
+      "groupId": "home.home.team_note.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.faq_items.0",
+      "groupId": "home.home.faq_items.0",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 0,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.faq_items.1",
+      "groupId": "home.home.faq_items.1",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 1,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.faq_items.2",
+      "groupId": "home.home.faq_items.2",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 2,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.faq_items.3",
+      "groupId": "home.home.faq_items.3",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 3,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.faq_items.4",
+      "groupId": "home.home.faq_items.4",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 4,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.pricing_tiers.0",
+      "groupId": "home.home.pricing_tiers.0",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 0,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.pricing_tiers.1",
+      "groupId": "home.home.pricing_tiers.1",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 1,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.pricing_tiers.2",
+      "groupId": "home.home.pricing_tiers.2",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 2,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.pricing_note.0",
+      "groupId": "home.home.pricing_note.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home.home.pricing_disclaimer.0",
+      "groupId": "home.home.pricing_disclaimer.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.services_items.0",
+      "groupId": "onepage.onepage.services_items.0",
+      "entityKind": "service",
+      "allowedKinds": ["service", "menu_item", "package"],
+      "itemIndex": 0,
+      "requiredRoles": ["offering.name"],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.services_items.1",
+      "groupId": "onepage.onepage.services_items.1",
+      "entityKind": "service",
+      "allowedKinds": ["service", "menu_item", "package"],
+      "itemIndex": 1,
+      "requiredRoles": ["offering.name"],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.services_items.2",
+      "groupId": "onepage.onepage.services_items.2",
+      "entityKind": "service",
+      "allowedKinds": ["service", "menu_item", "package"],
+      "itemIndex": 2,
+      "requiredRoles": ["offering.name"],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.services_items.3",
+      "groupId": "onepage.onepage.services_items.3",
+      "entityKind": "service",
+      "allowedKinds": ["service", "menu_item", "package"],
+      "itemIndex": 3,
+      "requiredRoles": ["offering.name"],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.services_items.4",
+      "groupId": "onepage.onepage.services_items.4",
+      "entityKind": "service",
+      "allowedKinds": ["service", "menu_item", "package"],
+      "itemIndex": 4,
+      "requiredRoles": ["offering.name"],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.services_items.5",
+      "groupId": "onepage.onepage.services_items.5",
+      "entityKind": "service",
+      "allowedKinds": ["service", "menu_item", "package"],
+      "itemIndex": 5,
+      "requiredRoles": ["offering.name"],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.team_members.0",
+      "groupId": "onepage.onepage.team_members.0",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 0,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.team_members.1",
+      "groupId": "onepage.onepage.team_members.1",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 1,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.team_members.2",
+      "groupId": "onepage.onepage.team_members.2",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 2,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.team_members.3",
+      "groupId": "onepage.onepage.team_members.3",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 3,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.faq_items.0",
+      "groupId": "onepage.onepage.faq_items.0",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 0,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.faq_items.1",
+      "groupId": "onepage.onepage.faq_items.1",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 1,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.faq_items.2",
+      "groupId": "onepage.onepage.faq_items.2",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 2,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.faq_items.3",
+      "groupId": "onepage.onepage.faq_items.3",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 3,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.faq_items.4",
+      "groupId": "onepage.onepage.faq_items.4",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 4,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "onepage.onepage.footer_note.0",
+      "groupId": "onepage.onepage.footer_note.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.hero_notes.0",
+      "groupId": "landing.landing.hero_notes.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.hero_notes.1",
+      "groupId": "landing.landing.hero_notes.1",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 1,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.stats_figures.0",
+      "groupId": "landing.landing.stats_figures.0",
+      "entityKind": "step",
+      "allowedKinds": ["step"],
+      "itemIndex": 0,
+      "requiredRoles": ["step.index", "step.title"],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.stats_figures.1",
+      "groupId": "landing.landing.stats_figures.1",
+      "entityKind": "step",
+      "allowedKinds": ["step"],
+      "itemIndex": 1,
+      "requiredRoles": ["step.index", "step.title"],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.stats_figures.2",
+      "groupId": "landing.landing.stats_figures.2",
+      "entityKind": "step",
+      "allowedKinds": ["step"],
+      "itemIndex": 2,
+      "requiredRoles": ["step.index", "step.title"],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.stats_figures.3",
+      "groupId": "landing.landing.stats_figures.3",
+      "entityKind": "step",
+      "allowedKinds": ["step"],
+      "itemIndex": 3,
+      "requiredRoles": ["step.index", "step.title"],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.pricing_intro.0",
+      "groupId": "landing.landing.pricing_intro.0",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 0,
+      "requiredRoles": ["package.summary"],
+      "neutral": {
+        "package.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.pricing_tiers.0",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 0,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.pricing_tiers.1",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 1,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.pricing_tiers.2",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 2,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.testimonials_quotes.0",
+      "groupId": "landing.landing.testimonials_quotes.0",
+      "entityKind": "quote",
+      "allowedKinds": ["quote"],
+      "itemIndex": 0,
+      "requiredRoles": ["quote.text"],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.testimonials_quotes.1",
+      "groupId": "landing.landing.testimonials_quotes.1",
+      "entityKind": "quote",
+      "allowedKinds": ["quote"],
+      "itemIndex": 1,
+      "requiredRoles": ["quote.text"],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.testimonials_quotes.2",
+      "groupId": "landing.landing.testimonials_quotes.2",
+      "entityKind": "quote",
+      "allowedKinds": ["quote"],
+      "itemIndex": 2,
+      "requiredRoles": ["quote.text"],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.clients_marks.0",
+      "groupId": "landing.landing.clients_marks.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.entity_name"],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.clients_marks.1",
+      "groupId": "landing.landing.clients_marks.1",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 1,
+      "requiredRoles": ["claim.entity_name"],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.clients_marks.2",
+      "groupId": "landing.landing.clients_marks.2",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 2,
+      "requiredRoles": ["claim.entity_name"],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.clients_marks.3",
+      "groupId": "landing.landing.clients_marks.3",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 3,
+      "requiredRoles": ["claim.entity_name"],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.clients_marks.4",
+      "groupId": "landing.landing.clients_marks.4",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 4,
+      "requiredRoles": ["claim.entity_name"],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "landing.landing.clients_marks.5",
+      "groupId": "landing.landing.clients_marks.5",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 5,
+      "requiredRoles": ["claim.entity_name"],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.team_members.0",
+      "groupId": "home_2.home_2.team_members.0",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 0,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.team_members.1",
+      "groupId": "home_2.home_2.team_members.1",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 1,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.team_members.2",
+      "groupId": "home_2.home_2.team_members.2",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 2,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.team_members.3",
+      "groupId": "home_2.home_2.team_members.3",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 3,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.faq_items.0",
+      "groupId": "home_2.home_2.faq_items.0",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 0,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.faq_items.1",
+      "groupId": "home_2.home_2.faq_items.1",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 1,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.faq_items.2",
+      "groupId": "home_2.home_2.faq_items.2",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 2,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.faq_items.3",
+      "groupId": "home_2.home_2.faq_items.3",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 3,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.faq_items.4",
+      "groupId": "home_2.home_2.faq_items.4",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 4,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.stats_figures.0",
+      "groupId": "home_2.home_2.stats_figures.0",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 0,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.stats_figures.1",
+      "groupId": "home_2.home_2.stats_figures.1",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 1,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "home_2.home_2.stats_figures.2",
+      "groupId": "home_2.home_2.stats_figures.2",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 2,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "product.product.stats_figures.0",
+      "groupId": "product.product.stats_figures.0",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 0,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "product.product.stats_figures.1",
+      "groupId": "product.product.stats_figures.1",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 1,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "product.product.stats_figures.2",
+      "groupId": "product.product.stats_figures.2",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 2,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "product.product.stats_figures.3",
+      "groupId": "product.product.stats_figures.3",
+      "entityKind": "stat_item",
+      "allowedKinds": ["stat_item"],
+      "itemIndex": 3,
+      "requiredRoles": ["stat.value", "stat.label"],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.pricing_intro.0",
+      "groupId": "pricing.pricing.pricing_intro.0",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 0,
+      "requiredRoles": ["package.summary"],
+      "neutral": {
+        "package.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.pricing_tiers.0",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 0,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.pricing_tiers.1",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 1,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.pricing_tiers.2",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "entityKind": "package",
+      "allowedKinds": ["package", "service", "menu_item"],
+      "itemIndex": 2,
+      "requiredRoles": ["package.name", "package.price"],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.faq_items.0",
+      "groupId": "pricing.pricing.faq_items.0",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 0,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.faq_items.1",
+      "groupId": "pricing.pricing.faq_items.1",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 1,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.faq_items.2",
+      "groupId": "pricing.pricing.faq_items.2",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 2,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.faq_items.3",
+      "groupId": "pricing.pricing.faq_items.3",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 3,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pricing.pricing.faq_items.4",
+      "groupId": "pricing.pricing.faq_items.4",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 4,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "about.about.stats_figures.0",
+      "groupId": "about.about.stats_figures.0",
+      "entityKind": "step",
+      "allowedKinds": ["step"],
+      "itemIndex": 0,
+      "requiredRoles": ["step.index", "step.title"],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "about.about.stats_figures.1",
+      "groupId": "about.about.stats_figures.1",
+      "entityKind": "step",
+      "allowedKinds": ["step"],
+      "itemIndex": 1,
+      "requiredRoles": ["step.index", "step.title"],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "about.about.stats_figures.2",
+      "groupId": "about.about.stats_figures.2",
+      "entityKind": "step",
+      "allowedKinds": ["step"],
+      "itemIndex": 2,
+      "requiredRoles": ["step.index", "step.title"],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "about.about.stats_figures.3",
+      "groupId": "about.about.stats_figures.3",
+      "entityKind": "step",
+      "allowedKinds": ["step"],
+      "itemIndex": 3,
+      "requiredRoles": ["step.index", "step.title"],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "about.about.team_members.0",
+      "groupId": "about.about.team_members.0",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 0,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "about.about.team_members.1",
+      "groupId": "about.about.team_members.1",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 1,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "about.about.team_members.2",
+      "groupId": "about.about.team_members.2",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 2,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "about.about.team_members.3",
+      "groupId": "about.about.team_members.3",
+      "entityKind": "person",
+      "allowedKinds": ["person"],
+      "itemIndex": 3,
+      "requiredRoles": ["person.name"],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "careers.careers.timeline_intro.0",
+      "groupId": "careers.careers.timeline_intro.0",
+      "entityKind": "event",
+      "allowedKinds": ["event"],
+      "itemIndex": 0,
+      "requiredRoles": ["event.description"],
+      "neutral": {
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "careers.careers.timeline_entries.0",
+      "groupId": "careers.careers.timeline_entries.0",
+      "entityKind": "event",
+      "allowedKinds": ["event"],
+      "itemIndex": 0,
+      "requiredRoles": ["event.title"],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "careers.careers.timeline_entries.1",
+      "groupId": "careers.careers.timeline_entries.1",
+      "entityKind": "event",
+      "allowedKinds": ["event"],
+      "itemIndex": 1,
+      "requiredRoles": ["event.title"],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "careers.careers.timeline_entries.2",
+      "groupId": "careers.careers.timeline_entries.2",
+      "entityKind": "event",
+      "allowedKinds": ["event"],
+      "itemIndex": 2,
+      "requiredRoles": ["event.title"],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "careers.careers.timeline_entries.3",
+      "groupId": "careers.careers.timeline_entries.3",
+      "entityKind": "event",
+      "allowedKinds": ["event"],
+      "itemIndex": 3,
+      "requiredRoles": ["event.title"],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "help.help.faq_items.0",
+      "groupId": "help.help.faq_items.0",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 0,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "help.help.faq_items.1",
+      "groupId": "help.help.faq_items.1",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 1,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "help.help.faq_items.2",
+      "groupId": "help.help.faq_items.2",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 2,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "help.help.faq_items.3",
+      "groupId": "help.help.faq_items.3",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 3,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "help.help.faq_items.4",
+      "groupId": "help.help.faq_items.4",
+      "entityKind": "faq",
+      "allowedKinds": ["faq"],
+      "itemIndex": 4,
+      "requiredRoles": ["faq.question", "faq.answer"],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "contact.contact.notice.0",
+      "groupId": "contact.contact.notice.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "marketing.marketing.note.0",
+      "groupId": "marketing.marketing.note.0",
+      "entityKind": "claim",
+      "allowedKinds": ["claim"],
+      "itemIndex": 0,
+      "requiredRoles": ["claim.notice"],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "slotKey": "settings.title",
+      "groupId": "settings.title.identity.0",
+      "role": "business.name",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "settings.tagline",
+      "groupId": "settings.tagline.identity.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "site.site.brand_name",
+      "groupId": "site.site.identity.0",
+      "role": "business.name",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "site.site.brand_tagline",
+      "groupId": "site.site.identity.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.nav_brand",
+      "groupId": "onepage.onepage.identity.0",
+      "role": "business.name",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "onepage.onepage.footer_brand",
+      "groupId": "onepage.onepage.identity.0",
+      "role": "business.name",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "contact.contact.email",
+      "groupId": "contact.contact.identity.0",
+      "role": "contact.email",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "services.service-detail.faq_items[0].question",
+      "groupId": "services.service-detail.faq_items.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "services.service-detail.faq_items[0].answer",
+      "groupId": "services.service-detail.faq_items.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "services.service-detail.faq_items[1].question",
+      "groupId": "services.service-detail.faq_items.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "services.service-detail.faq_items[1].answer",
+      "groupId": "services.service-detail.faq_items.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "services.service-detail.faq_items[2].question",
+      "groupId": "services.service-detail.faq_items.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "services.service-detail.faq_items[2].answer",
+      "groupId": "services.service-detail.faq_items.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "people.how-to-curabitur-tempus-lacus-id-orci-feugiat.name",
+      "groupId": "people.how-to-curabitur-tempus-lacus-id-orci-feugiat.name.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "people.create-donec-lacinia-urna-a-metus-iaculis-ultrices.name",
+      "groupId": "people.create-donec-lacinia-urna-a-metus-iaculis-ultrices.name.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "people.unlimited-nam-id-sem-eu-enim-sagittis-mollis.name",
+      "groupId": "people.unlimited-nam-id-sem-eu-enim-sagittis-mollis.name.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "people.save-pellentesque-habitant-morbi-tristique-senectus-et-netus.name",
+      "groupId": "people.save-pellentesque-habitant-morbi-tristique-senectus-et-netus.name.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus.author",
+      "groupId": "posts.how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel.author",
+      "groupId": "posts.how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-to-write-like-hemingway.author",
+      "groupId": "posts.how-to-write-like-hemingway.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-much-money-do-youtubers-make.author",
+      "groupId": "posts.how-much-money-do-youtubers-make.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.21-useful-keyboard-shortcuts-for-writers.author",
+      "groupId": "posts.21-useful-keyboard-shortcuts-for-writers.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.want-new-customers-faster-avoid-this-rookie-marketing-habit.author",
+      "groupId": "posts.want-new-customers-faster-avoid-this-rookie-marketing-habit.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-to-write-bullet-points-people-actually-want-to-read.author",
+      "groupId": "posts.how-to-write-bullet-points-people-actually-want-to-read.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.why-being-naive-can-make-your-fortune.author",
+      "groupId": "posts.why-being-naive-can-make-your-fortune.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-to-write-bullet-points-people-actually-want-to-read-22.author",
+      "groupId": "posts.how-to-write-bullet-points-people-actually-want-to-read-22.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.abb-group-develops-rpa-solutions-for-construction.author",
+      "groupId": "posts.abb-group-develops-rpa-solutions-for-construction.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.draas-vs-disaster-recovery-which-one-is-right-for-you.author",
+      "groupId": "posts.draas-vs-disaster-recovery-which-one-is-right-for-you.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-next-gen-embedded-analytics-power-data-driven-action.author",
+      "groupId": "posts.how-next-gen-embedded-analytics-power-data-driven-action.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.servicenow-integrates-with-microsoft-to-boost-cybersecurity.author",
+      "groupId": "posts.servicenow-integrates-with-microsoft-to-boost-cybersecurity.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo.author",
+      "groupId": "posts.verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.five-steps-to-creating-a-post-pandemic-workplace.author",
+      "groupId": "posts.five-steps-to-creating-a-post-pandemic-workplace.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-to-expand-the-cloud-native-technology-workforce.author",
+      "groupId": "posts.how-to-expand-the-cloud-native-technology-workforce.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.liverpool-trials-free-5g-to-help-monitor-health-conditions.author",
+      "groupId": "posts.liverpool-trials-free-5g-to-help-monitor-health-conditions.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.becoming-more-human-in-a-hyper-connected-world.author",
+      "groupId": "posts.becoming-more-human-in-a-hyper-connected-world.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.uk-government-approves-44bn-o2-virgin-media-merger.author",
+      "groupId": "posts.uk-government-approves-44bn-o2-virgin-media-merger.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise.author",
+      "groupId": "posts.deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.opinion-how-the-m-a-landscape-is-reshaping-post-pandemic.author",
+      "groupId": "posts.opinion-how-the-m-a-landscape-is-reshaping-post-pandemic.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.why-china-is-cracking-down-on-crypto-mining-and-trading.author",
+      "groupId": "posts.why-china-is-cracking-down-on-crypto-mining-and-trading.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.people-moves-apac-ubs-flipkart-aon-heineken-fullerton.author",
+      "groupId": "posts.people-moves-apac-ubs-flipkart-aon-heineken-fullerton.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.opinion-the-future-of-the-city-is-smart-and-sustainable.author",
+      "groupId": "posts.opinion-the-future-of-the-city-is-smart-and-sustainable.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.include-nunc-eget-mauris-a-urna-viverra-rutrum.author",
+      "groupId": "posts.include-nunc-eget-mauris-a-urna-viverra-rutrum.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.how-to-curabitur-tempus-lacus-id-orci-feugiat.author",
+      "groupId": "posts.how-to-curabitur-tempus-lacus-id-orci-feugiat.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.double-suspendisse-luctus-justo-convallis-blandit-facilisis.author",
+      "groupId": "posts.double-suspendisse-luctus-justo-convallis-blandit-facilisis.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum.author",
+      "groupId": "posts.delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.phasellus-rutrum-turpis-mattis-aliquet-pharetra.author",
+      "groupId": "posts.phasellus-rutrum-turpis-mattis-aliquet-pharetra.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies.author",
+      "groupId": "posts.pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.create-curabitur-tempus-lacus-id-orci-feugiat.author",
+      "groupId": "posts.create-curabitur-tempus-lacus-id-orci-feugiat.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla.author",
+      "groupId": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.create-more-elit-nisi-egestas-vel-vestibulum-ut.author",
+      "groupId": "posts.create-more-elit-nisi-egestas-vel-vestibulum-ut.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu.author",
+      "groupId": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.donec-vitae-efficitur-erat-at-sodales-sem.author",
+      "groupId": "posts.donec-vitae-efficitur-erat-at-sodales-sem.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique.author",
+      "groupId": "posts.quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu-studio-life.author",
+      "groupId": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu-studio-life.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.create-more-elit-nisi-egestas-vel-vestibulum-ut-studio-life.author",
+      "groupId": "posts.create-more-elit-nisi-egestas-vel-vestibulum-ut-studio-life.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla-studio-life.author",
+      "groupId": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla-studio-life.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.create-curabitur-tempus-lacus-id-orci-feugiat-studio-life.author",
+      "groupId": "posts.create-curabitur-tempus-lacus-id-orci-feugiat-studio-life.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique.author",
+      "groupId": "posts.maecenas-tristique-nunc-arcu-in-molestie-elit-tristique.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla-people.author",
+      "groupId": "posts.vivamus-maximus-ante-in-ligula-egestas-fringilla-people.author.0",
+      "role": "post.author",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "site.site.notice",
+      "groupId": "site.site.notice.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.stats[0].value",
+      "groupId": "home.home.stats.0",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "home.home.stats[0].caption",
+      "groupId": "home.home.stats.0",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.stats[1].value",
+      "groupId": "home.home.stats.1",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "home.home.stats[1].caption",
+      "groupId": "home.home.stats.1",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.stats[2].value",
+      "groupId": "home.home.stats.2",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "home.home.stats[2].caption",
+      "groupId": "home.home.stats.2",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.stats[3].value",
+      "groupId": "home.home.stats.3",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "home.home.stats[3].caption",
+      "groupId": "home.home.stats.3",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[0].quote",
+      "groupId": "home.home.team_quotes.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[0].name",
+      "groupId": "home.home.team_quotes.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[0].role",
+      "groupId": "home.home.team_quotes.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[1].quote",
+      "groupId": "home.home.team_quotes.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[1].name",
+      "groupId": "home.home.team_quotes.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[1].role",
+      "groupId": "home.home.team_quotes.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[2].quote",
+      "groupId": "home.home.team_quotes.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[2].name",
+      "groupId": "home.home.team_quotes.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_quotes[2].role",
+      "groupId": "home.home.team_quotes.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.team_note",
+      "groupId": "home.home.team_note.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[0].question",
+      "groupId": "home.home.faq_items.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[0].answer",
+      "groupId": "home.home.faq_items.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[1].question",
+      "groupId": "home.home.faq_items.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[1].answer",
+      "groupId": "home.home.faq_items.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[2].question",
+      "groupId": "home.home.faq_items.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[2].answer",
+      "groupId": "home.home.faq_items.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[3].question",
+      "groupId": "home.home.faq_items.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[3].answer",
+      "groupId": "home.home.faq_items.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[4].question",
+      "groupId": "home.home.faq_items.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.faq_items[4].answer",
+      "groupId": "home.home.faq_items.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[0].name",
+      "groupId": "home.home.pricing_tiers.0",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[0].badge",
+      "groupId": "home.home.pricing_tiers.0",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[0].summary",
+      "groupId": "home.home.pricing_tiers.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[0].price",
+      "groupId": "home.home.pricing_tiers.0",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[0].period",
+      "groupId": "home.home.pricing_tiers.0",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[0].features",
+      "groupId": "home.home.pricing_tiers.0",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[0].cta_label",
+      "groupId": "home.home.pricing_tiers.0",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[0].cta_url",
+      "groupId": "home.home.pricing_tiers.0",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[1].name",
+      "groupId": "home.home.pricing_tiers.1",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[1].badge",
+      "groupId": "home.home.pricing_tiers.1",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[1].summary",
+      "groupId": "home.home.pricing_tiers.1",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[1].price",
+      "groupId": "home.home.pricing_tiers.1",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[1].period",
+      "groupId": "home.home.pricing_tiers.1",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[1].features",
+      "groupId": "home.home.pricing_tiers.1",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[1].cta_label",
+      "groupId": "home.home.pricing_tiers.1",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[1].cta_url",
+      "groupId": "home.home.pricing_tiers.1",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[2].name",
+      "groupId": "home.home.pricing_tiers.2",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[2].badge",
+      "groupId": "home.home.pricing_tiers.2",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[2].summary",
+      "groupId": "home.home.pricing_tiers.2",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[2].price",
+      "groupId": "home.home.pricing_tiers.2",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[2].period",
+      "groupId": "home.home.pricing_tiers.2",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[2].features",
+      "groupId": "home.home.pricing_tiers.2",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[2].cta_label",
+      "groupId": "home.home.pricing_tiers.2",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_tiers[2].cta_url",
+      "groupId": "home.home.pricing_tiers.2",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_note",
+      "groupId": "home.home.pricing_note.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home.home.pricing_disclaimer",
+      "groupId": "home.home.pricing_disclaimer.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[0].title",
+      "groupId": "onepage.onepage.services_items.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[0].text",
+      "groupId": "onepage.onepage.services_items.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[1].title",
+      "groupId": "onepage.onepage.services_items.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[1].text",
+      "groupId": "onepage.onepage.services_items.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[2].title",
+      "groupId": "onepage.onepage.services_items.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[2].text",
+      "groupId": "onepage.onepage.services_items.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[3].title",
+      "groupId": "onepage.onepage.services_items.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[3].text",
+      "groupId": "onepage.onepage.services_items.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[4].title",
+      "groupId": "onepage.onepage.services_items.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[4].text",
+      "groupId": "onepage.onepage.services_items.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[5].title",
+      "groupId": "onepage.onepage.services_items.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.services_items[5].text",
+      "groupId": "onepage.onepage.services_items.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[0].image",
+      "groupId": "onepage.onepage.team_members.0",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[0].image_alt",
+      "groupId": "onepage.onepage.team_members.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[0].name",
+      "groupId": "onepage.onepage.team_members.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[0].role",
+      "groupId": "onepage.onepage.team_members.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[0].text",
+      "groupId": "onepage.onepage.team_members.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[1].image",
+      "groupId": "onepage.onepage.team_members.1",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[1].image_alt",
+      "groupId": "onepage.onepage.team_members.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[1].name",
+      "groupId": "onepage.onepage.team_members.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[1].role",
+      "groupId": "onepage.onepage.team_members.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[1].text",
+      "groupId": "onepage.onepage.team_members.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[2].image",
+      "groupId": "onepage.onepage.team_members.2",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[2].image_alt",
+      "groupId": "onepage.onepage.team_members.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[2].name",
+      "groupId": "onepage.onepage.team_members.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[2].role",
+      "groupId": "onepage.onepage.team_members.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[2].text",
+      "groupId": "onepage.onepage.team_members.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[3].image",
+      "groupId": "onepage.onepage.team_members.3",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[3].image_alt",
+      "groupId": "onepage.onepage.team_members.3",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[3].name",
+      "groupId": "onepage.onepage.team_members.3",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[3].role",
+      "groupId": "onepage.onepage.team_members.3",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.team_members[3].text",
+      "groupId": "onepage.onepage.team_members.3",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[0].question",
+      "groupId": "onepage.onepage.faq_items.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[0].answer",
+      "groupId": "onepage.onepage.faq_items.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[1].question",
+      "groupId": "onepage.onepage.faq_items.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[1].answer",
+      "groupId": "onepage.onepage.faq_items.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[2].question",
+      "groupId": "onepage.onepage.faq_items.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[2].answer",
+      "groupId": "onepage.onepage.faq_items.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[3].question",
+      "groupId": "onepage.onepage.faq_items.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[3].answer",
+      "groupId": "onepage.onepage.faq_items.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[4].question",
+      "groupId": "onepage.onepage.faq_items.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.faq_items[4].answer",
+      "groupId": "onepage.onepage.faq_items.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "onepage.onepage.footer_note",
+      "groupId": "onepage.onepage.footer_note.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.hero_notes[0].text",
+      "groupId": "landing.landing.hero_notes.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.hero_notes[1].text",
+      "groupId": "landing.landing.hero_notes.1",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.stats_figures[0].value",
+      "groupId": "landing.landing.stats_figures.0",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "landing.landing.stats_figures[0].caption",
+      "groupId": "landing.landing.stats_figures.0",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.stats_figures[1].value",
+      "groupId": "landing.landing.stats_figures.1",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "landing.landing.stats_figures[1].caption",
+      "groupId": "landing.landing.stats_figures.1",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.stats_figures[2].value",
+      "groupId": "landing.landing.stats_figures.2",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "landing.landing.stats_figures[2].caption",
+      "groupId": "landing.landing.stats_figures.2",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.stats_figures[3].value",
+      "groupId": "landing.landing.stats_figures.3",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "landing.landing.stats_figures[3].caption",
+      "groupId": "landing.landing.stats_figures.3",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_intro",
+      "groupId": "landing.landing.pricing_intro.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[0].name",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[0].badge",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[0].summary",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[0].price",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[0].period",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[0].features",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[0].cta_label",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[0].cta_url",
+      "groupId": "landing.landing.pricing_tiers.0",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[1].name",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[1].badge",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[1].summary",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[1].price",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[1].period",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[1].features",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[1].cta_label",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[1].cta_url",
+      "groupId": "landing.landing.pricing_tiers.1",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[2].name",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[2].badge",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[2].summary",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[2].price",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[2].period",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[2].features",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[2].cta_label",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.pricing_tiers[2].cta_url",
+      "groupId": "landing.landing.pricing_tiers.2",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[0].quote",
+      "groupId": "landing.landing.testimonials_quotes.0",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[0].name",
+      "groupId": "landing.landing.testimonials_quotes.0",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[0].role",
+      "groupId": "landing.landing.testimonials_quotes.0",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[1].quote",
+      "groupId": "landing.landing.testimonials_quotes.1",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[1].name",
+      "groupId": "landing.landing.testimonials_quotes.1",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[1].role",
+      "groupId": "landing.landing.testimonials_quotes.1",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[2].quote",
+      "groupId": "landing.landing.testimonials_quotes.2",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[2].name",
+      "groupId": "landing.landing.testimonials_quotes.2",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.testimonials_quotes[2].role",
+      "groupId": "landing.landing.testimonials_quotes.2",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[0].image",
+      "groupId": "landing.landing.clients_marks.0",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[0].name",
+      "groupId": "landing.landing.clients_marks.0",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[0].url",
+      "groupId": "landing.landing.clients_marks.0",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[1].image",
+      "groupId": "landing.landing.clients_marks.1",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[1].name",
+      "groupId": "landing.landing.clients_marks.1",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[1].url",
+      "groupId": "landing.landing.clients_marks.1",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[2].image",
+      "groupId": "landing.landing.clients_marks.2",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[2].name",
+      "groupId": "landing.landing.clients_marks.2",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[2].url",
+      "groupId": "landing.landing.clients_marks.2",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[3].image",
+      "groupId": "landing.landing.clients_marks.3",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[3].name",
+      "groupId": "landing.landing.clients_marks.3",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[3].url",
+      "groupId": "landing.landing.clients_marks.3",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[4].image",
+      "groupId": "landing.landing.clients_marks.4",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[4].name",
+      "groupId": "landing.landing.clients_marks.4",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[4].url",
+      "groupId": "landing.landing.clients_marks.4",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[5].image",
+      "groupId": "landing.landing.clients_marks.5",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[5].name",
+      "groupId": "landing.landing.clients_marks.5",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "landing.landing.clients_marks[5].url",
+      "groupId": "landing.landing.clients_marks.5",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[0].image",
+      "groupId": "home_2.home_2.team_members.0",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[0].name",
+      "groupId": "home_2.home_2.team_members.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[0].role",
+      "groupId": "home_2.home_2.team_members.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[0].text",
+      "groupId": "home_2.home_2.team_members.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[0].url",
+      "groupId": "home_2.home_2.team_members.0",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[1].image",
+      "groupId": "home_2.home_2.team_members.1",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[1].name",
+      "groupId": "home_2.home_2.team_members.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[1].role",
+      "groupId": "home_2.home_2.team_members.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[1].text",
+      "groupId": "home_2.home_2.team_members.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[1].url",
+      "groupId": "home_2.home_2.team_members.1",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[2].image",
+      "groupId": "home_2.home_2.team_members.2",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[2].name",
+      "groupId": "home_2.home_2.team_members.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[2].role",
+      "groupId": "home_2.home_2.team_members.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[2].text",
+      "groupId": "home_2.home_2.team_members.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[2].url",
+      "groupId": "home_2.home_2.team_members.2",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[3].image",
+      "groupId": "home_2.home_2.team_members.3",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[3].name",
+      "groupId": "home_2.home_2.team_members.3",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[3].role",
+      "groupId": "home_2.home_2.team_members.3",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[3].text",
+      "groupId": "home_2.home_2.team_members.3",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.team_members[3].url",
+      "groupId": "home_2.home_2.team_members.3",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[0].question",
+      "groupId": "home_2.home_2.faq_items.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[0].answer",
+      "groupId": "home_2.home_2.faq_items.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[1].question",
+      "groupId": "home_2.home_2.faq_items.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[1].answer",
+      "groupId": "home_2.home_2.faq_items.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[2].question",
+      "groupId": "home_2.home_2.faq_items.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[2].answer",
+      "groupId": "home_2.home_2.faq_items.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[3].question",
+      "groupId": "home_2.home_2.faq_items.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[3].answer",
+      "groupId": "home_2.home_2.faq_items.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[4].question",
+      "groupId": "home_2.home_2.faq_items.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.faq_items[4].answer",
+      "groupId": "home_2.home_2.faq_items.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.stats_figures[0].value",
+      "groupId": "home_2.home_2.stats_figures.0",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "home_2.home_2.stats_figures[0].caption",
+      "groupId": "home_2.home_2.stats_figures.0",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.stats_figures[1].value",
+      "groupId": "home_2.home_2.stats_figures.1",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "home_2.home_2.stats_figures[1].caption",
+      "groupId": "home_2.home_2.stats_figures.1",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "home_2.home_2.stats_figures[2].value",
+      "groupId": "home_2.home_2.stats_figures.2",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "home_2.home_2.stats_figures[2].caption",
+      "groupId": "home_2.home_2.stats_figures.2",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "product.product.stats_figures[0].value",
+      "groupId": "product.product.stats_figures.0",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "product.product.stats_figures[0].caption",
+      "groupId": "product.product.stats_figures.0",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "product.product.stats_figures[1].value",
+      "groupId": "product.product.stats_figures.1",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "product.product.stats_figures[1].caption",
+      "groupId": "product.product.stats_figures.1",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "product.product.stats_figures[2].value",
+      "groupId": "product.product.stats_figures.2",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "product.product.stats_figures[2].caption",
+      "groupId": "product.product.stats_figures.2",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "product.product.stats_figures[3].value",
+      "groupId": "product.product.stats_figures.3",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "product.product.stats_figures[3].caption",
+      "groupId": "product.product.stats_figures.3",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_intro",
+      "groupId": "pricing.pricing.pricing_intro.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[0].name",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[0].badge",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[0].summary",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[0].price",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[0].period",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[0].features",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[0].cta_label",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[0].cta_url",
+      "groupId": "pricing.pricing.pricing_tiers.0",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[1].name",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[1].badge",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[1].summary",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[1].price",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[1].period",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[1].features",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[1].cta_label",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[1].cta_url",
+      "groupId": "pricing.pricing.pricing_tiers.1",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[2].name",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[2].badge",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[2].summary",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[2].price",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[2].period",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[2].features",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[2].cta_label",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.pricing_tiers[2].cta_url",
+      "groupId": "pricing.pricing.pricing_tiers.2",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[0].question",
+      "groupId": "pricing.pricing.faq_items.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[0].answer",
+      "groupId": "pricing.pricing.faq_items.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[1].question",
+      "groupId": "pricing.pricing.faq_items.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[1].answer",
+      "groupId": "pricing.pricing.faq_items.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[2].question",
+      "groupId": "pricing.pricing.faq_items.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[2].answer",
+      "groupId": "pricing.pricing.faq_items.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[3].question",
+      "groupId": "pricing.pricing.faq_items.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[3].answer",
+      "groupId": "pricing.pricing.faq_items.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[4].question",
+      "groupId": "pricing.pricing.faq_items.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pricing.pricing.faq_items[4].answer",
+      "groupId": "pricing.pricing.faq_items.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.stats_figures[0].value",
+      "groupId": "about.about.stats_figures.0",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "about.about.stats_figures[0].caption",
+      "groupId": "about.about.stats_figures.0",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.stats_figures[1].value",
+      "groupId": "about.about.stats_figures.1",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "about.about.stats_figures[1].caption",
+      "groupId": "about.about.stats_figures.1",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.stats_figures[2].value",
+      "groupId": "about.about.stats_figures.2",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "about.about.stats_figures[2].caption",
+      "groupId": "about.about.stats_figures.2",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.stats_figures[3].value",
+      "groupId": "about.about.stats_figures.3",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "about.about.stats_figures[3].caption",
+      "groupId": "about.about.stats_figures.3",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[0].image",
+      "groupId": "about.about.team_members.0",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "about.about.team_members[0].name",
+      "groupId": "about.about.team_members.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[0].role",
+      "groupId": "about.about.team_members.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[0].text",
+      "groupId": "about.about.team_members.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[0].url",
+      "groupId": "about.about.team_members.0",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[1].image",
+      "groupId": "about.about.team_members.1",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "about.about.team_members[1].name",
+      "groupId": "about.about.team_members.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[1].role",
+      "groupId": "about.about.team_members.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[1].text",
+      "groupId": "about.about.team_members.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[1].url",
+      "groupId": "about.about.team_members.1",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[2].image",
+      "groupId": "about.about.team_members.2",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "about.about.team_members[2].name",
+      "groupId": "about.about.team_members.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[2].role",
+      "groupId": "about.about.team_members.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[2].text",
+      "groupId": "about.about.team_members.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[2].url",
+      "groupId": "about.about.team_members.2",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[3].image",
+      "groupId": "about.about.team_members.3",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "about.about.team_members[3].name",
+      "groupId": "about.about.team_members.3",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[3].role",
+      "groupId": "about.about.team_members.3",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[3].text",
+      "groupId": "about.about.team_members.3",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about.about.team_members[3].url",
+      "groupId": "about.about.team_members.3",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_intro",
+      "groupId": "careers.careers.timeline_intro.0",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[0].marker",
+      "groupId": "careers.careers.timeline_entries.0",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[0].title",
+      "groupId": "careers.careers.timeline_entries.0",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[0].text",
+      "groupId": "careers.careers.timeline_entries.0",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[1].marker",
+      "groupId": "careers.careers.timeline_entries.1",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[1].title",
+      "groupId": "careers.careers.timeline_entries.1",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[1].text",
+      "groupId": "careers.careers.timeline_entries.1",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[2].marker",
+      "groupId": "careers.careers.timeline_entries.2",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[2].title",
+      "groupId": "careers.careers.timeline_entries.2",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[2].text",
+      "groupId": "careers.careers.timeline_entries.2",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[3].marker",
+      "groupId": "careers.careers.timeline_entries.3",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[3].title",
+      "groupId": "careers.careers.timeline_entries.3",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "careers.careers.timeline_entries[3].text",
+      "groupId": "careers.careers.timeline_entries.3",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[0].question",
+      "groupId": "help.help.faq_items.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[0].answer",
+      "groupId": "help.help.faq_items.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[1].question",
+      "groupId": "help.help.faq_items.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[1].answer",
+      "groupId": "help.help.faq_items.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[2].question",
+      "groupId": "help.help.faq_items.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[2].answer",
+      "groupId": "help.help.faq_items.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[3].question",
+      "groupId": "help.help.faq_items.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[3].answer",
+      "groupId": "help.help.faq_items.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[4].question",
+      "groupId": "help.help.faq_items.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "help.help.faq_items[4].answer",
+      "groupId": "help.help.faq_items.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "contact.contact.notice",
+      "groupId": "contact.contact.notice.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "marketing.marketing.note",
+      "groupId": "marketing.marketing.note.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    }
+  ],
+  "unplaced": []
+}

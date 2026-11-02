@@ -37,7 +37,7 @@ test('every page in this file carries the shared shell — token block, color-sc
   ]
   for (const html of pages) {
     assert.match(html, /<meta name="color-scheme" content="light dark">/)
-    assert.match(html, /--primary:oklch\(0\.588 0\.136 37\.4\)/)
+    assert.match(html, /--primary:oklch\(0\.565 0\.136 37\.4\)/)
   }
 })
 

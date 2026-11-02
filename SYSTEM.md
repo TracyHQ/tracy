@@ -939,6 +939,18 @@ carry the template's recipients (`tracy-business`: `sales@northgate-ind.ru` on a
 turns off digests, drops the webhooks of every form, then reads back; submissions are still stored in the site for the owner to read. A site with no form plugin
 has nothing to do; any other error means the site is not marked ready.
 
+**EmDash Content API reads are kept in the site's process while its database is unchanged** (31/10/2026, templates Base 0.5.8,
+Business 1.7.25, SaaS 1.4.16): every read of `/_emdash/api/content/tracy-content-v1.json` needs the whole site's records (the
+snapshot revision covers them all), which cost about 3 s of the site's only Node process per read on dev (#252). The identity step
+of `platform/emdash.sh` (`tools/content-api/identity-sqlite.mjs init|fork`) now also creates `_tracy_content_changes` (one row:
+`nonce`, `n`) and three triggers on every table a native list or GET may read, which count each row written by any connection.
+The template's reader keeps the rows it read, per caller rights, under (nonce, count, schema cookie) and reads fresh when the key
+moved or any watched table lacks its triggers (a table created since, a site whose identity step ran on an older template). Tables
+only routine traffic writes are not watched (`_emdash_api_tokens`, sign-in, locks, logs, the media-usage index, and the
+scheduler's `system:scheduler:*` rows of `options`); the list is `UNWATCHED` in `tools/content-api/reader.mjs`. The cache is
+memory only and starts empty with the process. `redeploy-template.mjs` does not run the identity step, so a redeployed site
+reads fresh every time until `identity-sqlite.mjs init` runs in its web container.
+
 ### Invitations: sandbox and real campaigns kept separate in Ops, no real mail sent yet
 
 The real-customer campaign path has its own API `/api/ops/invitations/real`, mounted before the sandbox at the
@@ -2379,6 +2391,16 @@ secret for any host, `dev` included. `HOST_DSH_GATEWAY` and `HOST_DSH_CONTAINER`
 it waits for; a second, prefixed dsh on the same machine must set all five variables `HOST_DSH_HOME`, `HOST_SITES_ROOT`,
 `HOST_DSH_ENV_FILE`, `HOST_DSH_GATEWAY`, `HOST_DSH_CONTAINER`, otherwise it keeps the first dsh's `dsh-passwords.env`.
 Details of each flag and the order for setting up a host: `packages/fleet/tracy-fleet-operation/dsh/HOST-DSH.md` §3.
+
+**The site agent's calls to tracy-web can stay on the machine (#208).** `MCP_TRACY_ORIGIN` stays the public origin
+people are sent to and read in messages; `MCP_TRACY_API_ORIGIN`, when set to a bare http(s) origin, is where the Apply
+door (`tracy-site-tools` `applyDoorOnce`) sends its calls instead. The whole-machine stack (`deploy/compose.yml`) sets
+it to `http://tracy-web:8080`, which `tracy-dsh` reaches on the stack's own `tracy` network. A host dsh (`host-dsh.yml`,
+its own compose project) takes it from `HOST_TRACY_API_ORIGIN` in `host-dsh.env`. Left empty, a fleet dsh
+(`MCP_TRACY_FLEET=1`) finds tracy-web by itself: every server stack joins tracy-web to dsh's network under the name
+`tracy-web` (`deploy/compose.server.yml`), so while that name resolves calls go to `http://tracy-web:8080`; on a shard
+whose tracy-web lives on another machine the name does not resolve and calls keep the public origin. A call that never
+reached tracy-web is told to the agent as Tracy's connection problem, never as the site not answering.
 
 **Reading `joomlart-products` when the host's App is not installed there.** `releasesToken` in
 [`quickstart-releases.js`](apps/tracy-web/src/lib/quickstart-releases.js) still mints a token from the GitHub App when the App

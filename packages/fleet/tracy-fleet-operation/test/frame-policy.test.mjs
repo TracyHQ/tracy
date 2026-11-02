@@ -5,7 +5,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, symlinkSyn
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
-import { reconcileFramePolicy } from '../scripts/webroot/site-frame-policy.mjs'
+import { reconcileFramePolicy, withInit } from '../scripts/webroot/site-frame-policy.mjs'
 
 const A = 'http://workspace.example:47211',
   B = 'https://panel.example:39129'
@@ -234,6 +234,36 @@ test('the locked CLI executes reconciliation and emits a parseable current recei
     })
     assert.equal(result.status, 0, result.stderr)
     assert.equal(JSON.parse(result.stdout.trim()).state, 'current')
+  } finally {
+    f.clean()
+  }
+})
+
+// #205: the recreate this job makes anyway gives an EmDash container rendered before 31/10/2026 its
+// init, in the one place render-compose.sh writes it, so its next stop is at once.
+test('emdash: the policy recreate adds init: true under restart, once, and nothing else (#205)', () => {
+  const f = fixture('emdash')
+  const compose = path.join(f.directory, 'docker-compose.yml')
+  const before =
+    'services:\n  web:\n    image: tracy/web-emdash:0.37.0\n    restart: unless-stopped\n    security_opt: ["no-new-privileges:true"]\n    environment:\n      TRACY_FRAME_ANCESTORS: "${TRACY_FRAME_ANCESTORS:-}"\n'
+  writeFileSync(compose, before)
+  try {
+    const result = reconcileFramePolicy({
+      root: f.root,
+      label: 'cafe',
+      policy: policy(B),
+      publicOrigin: B,
+      run: () => {}
+    })
+    assert.equal(result.state, 'updated')
+    assert.equal(
+      readFileSync(compose, 'utf8'),
+      before.replace('    restart: unless-stopped\n', '    restart: unless-stopped\n    init: true\n')
+    )
+    assert.equal(withInit(readFileSync(compose, 'utf8')), readFileSync(compose, 'utf8'), 'never twice')
+    // Not the generator's form (no image/restart run under web): left as it is.
+    const other = 'services:\n  web:\n    environment: {}\n'
+    assert.equal(withInit(other), other)
   } finally {
     f.clean()
   }

@@ -1,0 +1,3 @@
+{"id":"REG-PR-248-composer-row-draft","verdict":"PASS","commit":"5d22de15c28b75e730dccb6879974f0399541520","ran_at":"2026-10-30T16:13:27.960Z","evidence":"tests/regression/.runs/2026-10-30-5d22de15c/REG-PR-248-composer-row-draft.log"}
+{"id":"REG-PR-248-help-ended-state","verdict":"PASS","commit":"5d22de15c28b75e730dccb6879974f0399541520","ran_at":"2026-10-30T16:13:36.081Z","evidence":"tests/regression/.runs/2026-10-30-5d22de15c/REG-PR-248-help-ended-state.log"}
+{"id":"REG-PR-248-subfolder-import-address","verdict":"PASS","commit":"5d22de15c28b75e730dccb6879974f0399541520","ran_at":"2026-10-30T16:13:42.346Z","evidence":"tests/regression/.runs/2026-10-30-5d22de15c/REG-PR-248-subfolder-import-address.log"}

@@ -4031,6 +4031,48 @@ test(
 )
 
 test(
+  'apply + x-tracy-write-front: the dsh host marks a write to the static front page; a cookie and a revert keep none (#257)',
+  opts,
+  async () => {
+    // Survey 29/10/2026: a home page hero edit was named after the front page record's hidden demo title.
+    // The host marks the write; the screens then say "the home page" in the reader's language.
+    const { pool } = db
+    const { fetchImpl } = fakeNetwork({ answer: { ok: true } })
+    const { app, config, cookieFor } = harness(pool, { fetchImpl })
+    await siteWithComponent(pool)
+    const payload = Buffer.from(
+      JSON.stringify({ email: 'owner@x.y', exp: Math.floor(Date.now() / 1000) + 60 })
+    ).toString('base64url')
+    const actor = `v1.${payload}.${createHmac('sha256', config.actorSecret).update(payload).digest('base64url')}`
+    const send = (auth, front, body = ARTICLE) =>
+      app.fetch(
+        new Request('http://tracy.test/api/sites/lantern.localhost/apply', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            ...auth,
+            'x-tracy-session': 'session-f',
+            'x-tracy-turn': 'session-f:1',
+            ...(front === undefined ? {} : { 'x-tracy-write-front': front })
+          },
+          body: JSON.stringify(body)
+        })
+      )
+    const host = { 'x-tracy-actor': actor }
+    assert.equal((await send(host, '1')).status, 200)
+    assert.equal((await send(host, 'yes')).status, 200)
+    assert.equal((await send(host, '1', { action: 'apply.revert', params: { apply_id: 'a-1' } })).status, 200)
+    assert.equal((await send({ cookie: await cookieFor('owner@x.y') }, '1')).status, 200)
+    const targets = (await siteWrites(pool)).map((w) => w.target)
+    assert.deepEqual(targets[0], { kind: 'article', id: '1', fields: ['title'], front: true })
+    assert.deepEqual(targets[1], { kind: 'article', id: '1', fields: ['title'] }, 'only "1" marks it')
+    assert.deepEqual(targets[2], { reverts: 'a-1' })
+    assert.deepEqual(targets[3], { kind: 'article', id: '1', fields: ['title'] }, 'a cookie may not mark it')
+    assert.equal(targets.length, 4)
+  }
+)
+
+test(
   'apply: an update, or a create whose answer names no usable id, keeps the call id and action',
   opts,
   async () => {

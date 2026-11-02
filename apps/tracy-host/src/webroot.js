@@ -1134,15 +1134,17 @@ function matchLimits(lines, at) {
  * written before #289; `{ opt: 'limits' }` is the resource-cap run (`matchLimits`), absent from every
  * file written before 28/09/2026; `{ opt: 'networks' }` is the required `networks:` stanza
  * (`webNetworkForms`, one line or four); `{ opt: 'dns' }` is the local-dev-only `dns:` line
- * (`TRACY_SITE_DNS`); a function judges a line whose value the generator fills in. `s` is the
+ * (`TRACY_SITE_DNS`); `{ opt: 'init' }` is `init: true` (#205), absent from every file written
+ * before 31/10/2026; a function judges a line whose value the generator fills in. `s` is the
  * absolute site directory, `l` its label.
- * @type {Array<string | {opt: 'token', slot: 'first'|'generator'|'last'} | {opt: 'mail'|'limits'|'networks'|'dns'|'access'|'shared-footer'} | ((line: string, s: string, l: string) => boolean)>}
+ * @type {Array<string | {opt: 'token', slot: 'first'|'generator'|'last'} | {opt: 'mail'|'limits'|'networks'|'dns'|'access'|'shared-footer'|'init'} | ((line: string, s: string, l: string) => boolean)>}
  */
 const EMDASH_COMPOSE_FORM = [
   'services:',
   '  web:',
   (line) => line.startsWith('    image: ') && IMAGE_VALUE.test(line.slice('    image: '.length)),
   '    restart: unless-stopped',
+  { opt: 'init' },
   '    security_opt: ["no-new-privileges:true"]',
   '    shm_size: 512m',
   { opt: 'limits' },
@@ -1237,6 +1239,8 @@ export function classifyTokenMount(text, siteDir) {
         slots.push(want.slot)
         at++
       } else if (want.opt === 'dns' && !isolated && line !== undefined && isDnsLine(line)) at++
+      // `init: true` (#205), written by render-compose.sh since 31/10/2026 and absent before.
+      else if (want.opt === 'init' && line === '    init: true') at++
       continue
     }
     if (line === undefined) return 'unknown'

@@ -55,11 +55,26 @@ export function templateRefusal(template) {
  * `templates`: async, the offered cards (`/api/templates`); a refusal it throws is the caller's.
  * `logoResearch`: `{research}` for `withLogoResearch`; without it a brief never waits for a logo research. While
  * one asked may still answer, `{pending: true, retryAt}` and no brief: a later call makes it.
- * @returns {Promise<{ revision: object } | { error: string }>}
+ * `pictureLabels`: the brief's photograph labelling, awaited here. `pictureLabelRuns` (`picture-label-runs.js`) instead
+ * runs it beside the caller (#250): while its run still labels, `{pending: true, retryAt, waitingFor: 'pictures'}` and
+ * no brief; a later call makes it with the run's settled labels.
+ * @returns {Promise<{ revision: object } | { error: string }
+ *   | { pending: true, retryAt: number, waitingFor?: 'pictures' }>}
  */
 export async function revisionForAction(
   db,
-  { action, domain, templates, ops, now = Date.now, editorial, historical, logoResearch, pictureLabels }
+  {
+    action,
+    domain,
+    templates,
+    ops,
+    now = Date.now,
+    editorial,
+    historical,
+    logoResearch,
+    pictureLabels,
+    pictureLabelRuns
+  }
 ) {
   const built = (
     await db.query('select choice from wo_build where account_id = $1 and request_id = $2', [
@@ -115,6 +130,21 @@ export async function revisionForAction(
     // (logo-research.js).
     const read = await withLogoResearch(db, { action, now, ...logoResearch })
     if (read.pending) return { pending: true, retryAt: read.retryAt }
+    // 🔒 Never awaited here when it runs beside the caller (#250): the brief waits for the run's settled answer by
+    // answering pending, never by holding the request, and never reads labels still being made.
+    let pictureLabelling = null
+    if (pictureLabelRuns) {
+      const input = await pictureLabelInputOf(db, {
+        accountId: action.account_id,
+        opportunityId: action.opportunity_id,
+        frozenResearchRead: read.input ?? null
+      }).catch(() => null)
+      const got = input
+        ? pictureLabelRuns.answer(input)
+        : { labelling: failedPictureLabelling('vision_failed') }
+      if (got.pending) return { pending: true, retryAt: got.retryAt, waitingFor: 'pictures' }
+      pictureLabelling = got.labelling
+    }
     const made = await createRevision(db, {
       accountId: action.account_id,
       opportunityId: action.opportunity_id,
@@ -125,7 +155,7 @@ export async function revisionForAction(
       domain,
       now,
       // What the brief's photographs show, asked before the brief is made (`brief-picture-labels.js`, F08).
-      ...(pictureLabels ? { pictureLabels } : {}),
+      ...(pictureLabelling ? { pictureLabelling } : pictureLabels ? { pictureLabels } : {}),
       ...(editorial ? { editorial, choiceFor: (frozen) => choiceFor(frozen) ?? fail(failure) } : {})
     }).catch((error) => (error?.code && error.code === failure ? { error: failure } : Promise.reject(error)))
     if (made.error) return made
@@ -420,43 +450,54 @@ export async function currentResearchKey(db, opp, domain) {
  */
 async function withPictureLabelling(pool, args) {
   if (typeof args.pictureLabels !== 'function' || args.pictureLabelling) return args
-  let read = args.frozenResearchRead ?? null
-  let opp = null
   try {
-    if (!read) {
-      const client = await pool.connect()
-      try {
-        opp = (
-          await client.query('select * from wo_opportunity where id = $1 and account_id = $2', [
-            args.opportunityId,
-            args.accountId
-          ])
-        ).rows[0]
-        if (!opp) return args
-        read = await liveRead(client, opp, opp.place_id ? await placeViewOf(client, opp) : null)
-      } finally {
-        client.release()
-      }
-    }
-    const answer = await args.pictureLabels({
-      media: read.media ?? [],
-      brand: briefBrand(read.brand),
-      accountId: args.accountId,
-      trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null,
-      // The brief's offerings and people the model may link a photo to, and the name that marks the business's own
-      // Google photos (#48).
-      closedList: closedListOf(read.profile?.businessReading),
-      businessName: read.profile?.name ?? read.opportunity?.name ?? opp?.name ?? null
-    })
-    return { ...args, pictureLabelling: answer }
+    const input = await pictureLabelInputOf(pool, args)
+    if (!input) return args
+    return { ...args, pictureLabelling: await args.pictureLabels(input) }
   } catch {
-    return {
-      ...args,
-      pictureLabelling: {
-        labels: new Map(),
-        note: { status: 'failed', asked: 0, labelled: 0, cached: 0, reason: 'vision_failed' }
-      }
+    return { ...args, pictureLabelling: failedPictureLabelling('vision_failed') }
+  }
+}
+
+/** A labelling that labelled nothing, and why: the brief says so (never a failed brief). */
+export function failedPictureLabelling(reason) {
+  return { labels: new Map(), note: { status: 'failed', asked: 0, labelled: 0, cached: 0, reason } }
+}
+
+/**
+ * What the brief's photograph labelling (`brief-picture-labels.js`) is asked with: the photographs of the read the brief
+ * will be made from (`frozenResearchRead`, else the opportunity's live read), its brand, trade, closed list and name.
+ * Null when the opportunity is gone.
+ * @param {import('pg').Pool} pool
+ * @param {{accountId: string, opportunityId: string, frozenResearchRead?: object | null}} args
+ */
+export async function pictureLabelInputOf(pool, { accountId, opportunityId, frozenResearchRead = null }) {
+  let read = frozenResearchRead ?? null
+  let opp = null
+  if (!read) {
+    const client = await pool.connect()
+    try {
+      opp = (
+        await client.query('select * from wo_opportunity where id = $1 and account_id = $2', [
+          opportunityId,
+          accountId
+        ])
+      ).rows[0]
+      if (!opp) return null
+      read = await liveRead(client, opp, opp.place_id ? await placeViewOf(client, opp) : null)
+    } finally {
+      client.release()
     }
+  }
+  return {
+    media: read.media ?? [],
+    brand: briefBrand(read.brand),
+    accountId,
+    trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null,
+    // The brief's offerings and people the model may link a photo to, and the name that marks the business's own
+    // Google photos (#48).
+    closedList: closedListOf(read.profile?.businessReading),
+    businessName: read.profile?.name ?? read.opportunity?.name ?? opp?.name ?? null
   }
 }
 

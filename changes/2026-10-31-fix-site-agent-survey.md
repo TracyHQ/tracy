@@ -1,0 +1,2 @@
+- **The site agent draws into a bound WordPress site's media library, reads only the customer's own words for lasting wishes, names a front page edit as the home page, says a site's presentation drift once, and knows design systems are off before reading the site** — site agent (Claude, for David) · #263 · `fix/site-agent-survey` · 2026-10-31
+  **Affects:** `tracy-site-tools` (media.draw, site notes, WordPress replace labels, content.contract answers, site context) and `tracy-design-inspiration`. Live once the tracy-dsh image is rebuilt and deployed.

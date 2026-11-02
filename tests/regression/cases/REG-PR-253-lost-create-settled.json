@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-253-lost-create-settled",
+  "kind": "fix",
+  "title": "A create whose answer was lost, or in flight at a kill, is settled from the engine write log and never written twice",
+  "pr": 253,
+  "area": "sync/push",
+  "cms": ["wp", "jo"],
+  "steps": [
+    "Apply a create whose answer the live engine drops after writing; apply the same push again; Undo it.",
+    "Kill the writer while a create is in flight; run the writer settle op; Undo the push.",
+    "Two lost creates of one kind, one never made."
+  ],
+  "expect": [
+    "The create is written under the live number apply.list names, the id map learns it, no second content.update, Undo trashes it.",
+    "settle journals it written; a second settle finds nothing; Undo takes it back; one content.update in all.",
+    "The made one is paired by its fields; the other is NOT_WRITTEN."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "a lost create answer is settled by the engine",
+      "two lost creates of one kind are told apart by their fields",
+      "a worker killed after create cannot resend that create",
+      "a create in flight when the job was killed is settled before the next sync"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

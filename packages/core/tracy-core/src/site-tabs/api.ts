@@ -465,7 +465,7 @@ export type ActivityDescriptionKey =
 
 export interface ActivityDescription {
   key: ActivityDescriptionKey
-  params: Record<string, string | number | null>
+  params: Record<string, string | number | boolean | null>
   /** True when no result is confirmed and the row stands on the request alone. */
   isRequestOnly: boolean
 }

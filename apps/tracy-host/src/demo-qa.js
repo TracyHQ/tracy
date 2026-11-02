@@ -4169,8 +4169,13 @@ export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce 
     ...(fittedLogo ? { fittedLogo } : {}),
     baseline: baselineOf(reads, asked.placed ?? [], { frames: asked.measureFrames, routes: routeReads }),
     pages: reads.map((r) => r.path),
-    // Pages whose document had not changed since the last check: their read was kept (`readDemoPage` `previous`).
-    reused: reads.filter((r) => r.reused === true).map((r) => r.path),
+    // Pages and routes whose document had not changed since the last check: their read was kept (`readDemoPage`
+    // `previous`). Routes too (#247): a whole read is one that kept none, and a kept route is a kept read.
+    reused: everyRead.filter((r) => r.reused === true).map((r) => r.path),
+    // …and those whose document, styles and pictures had not changed since the last read of them, kept or read anew
+    // (#247), never a page that fetches its content by script: what the look may keep its verdict on (tracy-web
+    // `client-demo.js`).
+    unchanged: everyRead.filter((r) => r.unchanged === true).map((r) => r.path),
     ...(asked.routes?.length ? { routes: routeReads.map((r) => r.path), routesUnread } : {}),
     visited,
     durationMs: now() - started

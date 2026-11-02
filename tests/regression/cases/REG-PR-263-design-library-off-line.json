@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-263-design-library-off-line",
+  "kind": "fix",
+  "title": "The site context says the design-system library is off before the first step",
+  "pr": 263,
+  "area": "site-tools/site-context",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read the switches and the library at Tracy, with the library shown, not shown, unreadable and with no origin.",
+    "S2: build the site context with the library read off, and read on."
+  ],
+  "expect": [
+    "S1: library is true only for a plain shown:true.",
+    "S2: off adds \"- Design systems: OFF\" telling the agent to read nothing of the site first, naming no tool; on adds nothing."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/chat-design-route.mjs",
+    "exports": "libraryLine"
+  },
+  "evidence": "Issue #259: a design request read the site for ~48 s before the library refused DESIGN_SYSTEMS_OFF",
+  "fence": "Design route",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#259\\)|the switch is read at Tracy",
+      "packages/tools/tracy-site-tools/test/chat-design-route.test.mjs"
+    ],
+    "tests": [
+      "the switch is read at Tracy; off, unreadable or no origin is OFF",
+      "the site context says the design-system library is off before the first step, and only when read off (#259)"
+    ]
+  }
+}

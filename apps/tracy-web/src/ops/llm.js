@@ -35,6 +35,7 @@ import {
   saveModels,
   saveProvider
 } from '../lib/llm-store.js'
+import { foreignMakerIn } from '../lib/model-providers.js'
 import { admit, denied } from './admit.js'
 
 /** A provider id somebody typed: a catalog id, or `custom:<slug>`. Nothing else reaches the table. */
@@ -245,6 +246,27 @@ export function llmRoutes({ pool, config, fetchImpl = fetch, deps = {} }) {
     const aliases = normalizeModelAliases(b.value.aliases)
     if (aliases === null) return c.json({ error: 'INVALID_MODEL_ALIASES' }, 400)
     const id = c.req.param('id')
+    // 🔒 A display name is Tracy's, never another product's (#249): one that names a model maker the
+    // route itself does not ("Claude Opus 5.5" on a DeepSeek route) is refused, by model, with the word.
+    const provider = (await readProviders(pool, secret)).find((p) => p.id === id)
+    if (provider) {
+      const own = [provider.presetId, provider.id, provider.name]
+      const misnamed = Object.entries(aliases).flatMap(([modelId, alias]) => {
+        const model = (provider.models ?? []).find((m) => m?.id === modelId)
+        const word = foreignMakerIn(alias, [...own, modelId, model?.name])
+        return word === null ? [] : [{ model: modelId, alias, word }]
+      })
+      const providerWord = typeof providerAlias === 'string' ? foreignMakerIn(providerAlias, own) : null
+      if (misnamed.length > 0 || providerWord !== null)
+        return c.json(
+          {
+            error: 'ALIAS_NAMES_ANOTHER_MAKER',
+            ...(misnamed.length > 0 ? { models: misnamed } : {}),
+            ...(providerWord !== null ? { providerAlias: { alias: providerAlias, word: providerWord } } : {})
+          },
+          400
+        )
+    }
     if (!(await saveModelAliases(pool, id, aliases, g.who.email, providerAlias)))
       return c.json({ error: 'NO_SUCH_PROVIDER' }, 404)
     await auditBook(pool, {
