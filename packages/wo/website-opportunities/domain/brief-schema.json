@@ -270,7 +270,7 @@
           "field": {
             "type": "string",
             "minLength": 1,
-            "description": "name, branch, address, phone, email, hours, serviceAreas, services, menu, team, audience, story, googleRating, rating, socialFigures, whatsapp, website, booking, socials or otherPhones; for an observed fact, facility, activity or atmosphere."
+            "description": "name, branch, address, phone, email, hours, serviceAreas, services, menu, team, audience, story, googleRating, rating, socialFigures, whatsapp, website, booking, socials, otherPhones, facility, activity or atmosphere."
           },
           "value": {},
           "evidence": {
