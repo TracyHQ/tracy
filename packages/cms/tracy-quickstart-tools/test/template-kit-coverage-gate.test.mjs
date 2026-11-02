@@ -212,3 +212,23 @@ test('the gate is 0 for a kit that covers every shown slot, and lists every fail
   )
   assert.equal(k2.coverage.parts.orphanTexts, 0)
 })
+
+test('the gate names a limit below the demo words, and a text slot of a list without a sample row', () => {
+  const kit = kitOf()
+  applyCoverage(kit, { map: MAP })
+  kit.blocks[1].slots[0].maxCharacters = 5 // "Swim with us" shows 12 characters
+  kit.blocks[1].lists.push({ id: 'block-4.quote', rowSlots: [{ id: 'block-4.0', type: 'text' }], rows: [] })
+  coverageGate(kit, { map: MAP })
+  const failed = kit.coverage.failures.map((f) => `${f.part} ${f.where}`)
+  assert.ok(failed.includes('limitsBelowDemo slots[block-4.0]'), failed.join(' | '))
+  assert.ok(failed.includes('textFormatMissing slots[block-4.0]'), failed.join(' | '))
+})
+
+test('the main menu row takes its reading in the page, at every width it shows as one row, when there is one', () => {
+  const kit = kitOf()
+  const rowFit = { 'nav-block-1': { maxCharacters: 41, byWidth: { 1440: 64, 1024: 41 }, narrowest: 1024 } }
+  applyCoverage(kit, { map: MAP, rowFit })
+  const row = kit.site.navigationGroups[0].rowLimit
+  assert.deepEqual([row.maxCharacters, row.narrowestWidth], [41, 1024])
+  assert.match(row.maxCharactersFrom, /^kit frame: .*1440px 64, 1024px 41/)
+})

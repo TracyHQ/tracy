@@ -1,21 +1,23 @@
-// One character limit per text slot across the whole kit, copied faithfully from what the contract and the kit
-// already read, never measured again. A slot's numbers: the content map's measured fit (the narrowest of its
-// widths), the kit's own frame reading (text-fit.json, card and row fields) and the content map's declared number
-// (the store's cap). The slot takes the smallest; the slots at one place of every list row, and an items list's
-// card field, are one slot for this (a planner applies one number to every row). A fit that is only the box of the
-// demo word on an auto-sizing item (a menu label, a button: its box grows with its words) is no limit, and the
-// source says so. Every place that lists the slot carries the one number and its source (`maxCharactersFrom`).
+// One character limit per text slot across the whole kit, from what the contract and the kit read. A slot's
+// numbers: the kit's frame reading (text-fit.json: its container filled until it wraps past the lines it may take or
+// pushes another text), the content map's measured fit and the content map's declared number (the store's cap).
+// The slot takes the smallest; the slots at one place of every list row, and an items list's card field, are one
+// slot for this (a planner applies one number to every row). No number below the demo words is a limit: the demo
+// shows fine at its own length. A content map fit that is only the box of the demo words (an item that grows with
+// its words: a menu label, a tab, a chip, a title box) is no limit and is never lent to the other slots of its group,
+// and the source says so. Every place that lists the slot carries the one number and its source
+// (`maxCharactersFrom`).
 import { neutralKey } from './ids.mjs'
 import { places } from './text-limits.mjs'
+import { partsOf } from './text-format.mjs'
 
-const AUTO_SIZING = /(menu_label|button_label|chip|tag)$/
-const SLACK = 3 // a box estimate of the demo word reads a few characters wider than the word
+const SLACK = 3 // a box estimate of the demo words reads a few characters wider than the words
 
-const plain = (s) =>
-  String(s ?? '')
-    .replace(/\(\([^)]*\)\)|<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
+/** How many characters the demo shows: every paragraph and bullet of the slot. */
+export const demoLength = (sample) =>
+  partsOf(sample)
+    .map((p) => p.text)
+    .join(' ').length
 
 /**
  * Every place the kit lists a text slot: `{id, entry, mapOnly?}`. `entry` is the object that carries
@@ -42,7 +44,7 @@ export function slotPlaces(kit) {
 }
 
 /** The slot ids that must share one number: the slots at one place of every row, an items list's card field. */
-function groupsOf(kit) {
+export function groupsOf(kit) {
   const parent = new Map()
   const find = (x) => {
     while (parent.has(x) && parent.get(x) !== x) x = parent.get(x)
@@ -61,30 +63,36 @@ function groupsOf(kit) {
   return find
 }
 
-/** A slot's own numbers, each with its source. */
+/** A slot's own numbers, each with its source; `notes` say what was set aside and why. */
 function claimsOf(id, mapSlot, textFit) {
   const claims = []
-  let note = ''
-  const fit = mapSlot?.fit
-  if (fit?.measured && Number.isFinite(fit.maxCharacters)) {
-    const at = Object.entries(fit.maxChars ?? {})
-      .map(([w, n]) => `${w} ${n}`)
-      .join(', ')
-    const demo = plain(mapSlot.sample).length
-    if (AUTO_SIZING.test(mapSlot.role ?? '') && fit.maxCharacters <= demo + SLACK)
-      note = `; the content map fit (${at}) is the box of the demo word on an auto-sizing item, not a limit`
-    else claims.push({ n: fit.maxCharacters, from: 'content map fit', at, id })
-  }
+  const notes = []
+  const demo = demoLength(mapSlot?.sample)
+  // The kit's frame reading fills the slot's real container; when it holds the demo words it stands for the frame,
+  // and the content map's fit (an estimate from the demo words' box) is not used.
   const kitFit = textFit[id]
+  let framed = false
   if (Number.isFinite(kitFit?.limit)) {
     const at = Object.entries(kitFit.byWidth ?? {})
       .map(([w, n]) => `${w}px ${n}`)
       .join(', ')
-    claims.push({ n: kitFit.limit, from: 'kit frame', at, id })
+    if (kitFit.limit >= demo) {
+      claims.push({ n: kitFit.limit, from: 'kit frame', at, id })
+      framed = true
+    } else notes.push(`the kit frame reading (${at}) is below the demo words, which show fine`)
+  }
+  const fit = mapSlot?.fit
+  if (!framed && fit?.measured && Number.isFinite(fit.maxCharacters)) {
+    const at = Object.entries(fit.maxChars ?? {})
+      .map(([w, n]) => `${w} ${n}`)
+      .join(', ')
+    if (fit.maxCharacters <= demo + SLACK)
+      notes.push(`the content map fit (${at}) is the box of the demo words, not a limit`)
+    else claims.push({ n: fit.maxCharacters, from: 'content map fit', at, id })
   }
   if (Number.isFinite(mapSlot?.maxCharacters))
-    claims.push({ n: mapSlot.maxCharacters, from: 'content map declared', at: '', id, note })
-  return claims
+    claims.push({ n: mapSlot.maxCharacters, from: 'content map declared', at: '', id })
+  return { claims, notes, demo }
 }
 
 /**
@@ -97,19 +105,30 @@ export function unifyLimits(kit, { mapSlots, textFit = {} }) {
   const mapOf = new Map(mapSlots.map((s) => [neutralKey(s.key), s]))
   const all = slotPlaces(kit)
   const find = groupsOf(kit)
+  const groups = new Map()
+  for (const id of new Set(all.map((p) => p.id))) {
+    const g = groups.get(find(id)) ?? { claims: [], notes: new Map(), demo: 0 }
+    const own = claimsOf(id, mapOf.get(id), textFit)
+    g.claims.push(...own.claims)
+    if (own.notes.length) g.notes.set(id, own.notes)
+    g.demo = Math.max(g.demo, own.demo)
+    groups.set(find(id), g)
+  }
+  // A group's number: the smallest claim that still holds every member's demo words.
   const best = new Map()
-  for (const id of new Set(all.map((p) => p.id)))
-    for (const c of claimsOf(id, mapOf.get(id), textFit)) {
-      const g = find(id)
-      const had = best.get(g)
-      if (!had || c.n < had.n) best.set(g, c)
-    }
+  for (const [key, g] of groups) {
+    const fits = g.claims.filter((c) => c.n >= g.demo)
+    const pool = fits.length ? fits : g.claims
+    const c = pool.reduce((a, x) => (!a || x.n < a.n ? x : a), null)
+    if (c) best.set(key, { ...c, notes: g.notes.get(c.id) ?? [] })
+  }
   for (const { id, entry } of all) {
     const c = best.get(find(id))
     if (!c) continue
     const of = c.id !== id ? ` of ${c.id}` : ''
     entry.maxCharacters = c.n
-    entry.maxCharactersFrom = `${c.from}${of}${c.at ? ` (${c.at})` : ''}${c.note ?? ''}`
+    const notes = c.notes.length ? `; ${c.notes.join('; ')}` : ''
+    entry.maxCharactersFrom = `${c.from}${of}${c.at ? ` (${c.at})` : ''}${notes}`
     delete entry.limitFrom
   }
   // An items list's card field takes its items' number.

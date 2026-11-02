@@ -13,6 +13,7 @@ import { urlOfPath } from './kit-paths.mjs'
 import { assignedAt, indexMap } from './map-index.mjs'
 import { measureFrames } from './measure-frames.mjs'
 import { measureMin } from './measure-min.mjs'
+import { measureRowFit } from './measure-row-fit.mjs'
 import { measureTextFit } from './measure-text-fit.mjs'
 import { measureWordsLinks } from './measure-words-links.mjs'
 import { pictureBytes } from './picture-bytes.mjs'
@@ -212,6 +213,22 @@ export async function runFull({ o, out, tool, chromium, log }) {
     })
   } catch (e) {
     log('text limits failed', e.message)
+  }
+  // The main menu row's whole-row limit (DOM only), at every width it shows as one row.
+  try {
+    await measureRowFit({
+      chromium,
+      siteUrl: o.site,
+      hostHeader: host,
+      kit,
+      capture,
+      map,
+      out,
+      hide: hideArg,
+      log
+    })
+  } catch (e) {
+    log('row limit failed', e.message)
   }
   t.done()
   kit = await assembleKit(o, out, tool)

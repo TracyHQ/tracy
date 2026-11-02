@@ -84,15 +84,21 @@ export function kitOfRelease(release, contracts) {
 
 /**
  * The kit's own self-checks (`checks`: counts that must be 0 for a planner to use the kit, such as a slot listed by
- * two blocks or a showcase page left in): a kit with any of them above 0 is incomplete. Null when all are 0.
+ * two blocks or a showcase page left in): a kit with any of them above 0 is incomplete. The coverage gate
+ * (`checks.slotCoverage`) lists its failures in `coverage.failures` (`{part, where, reason}`); the first ones are
+ * named, so the failing slots show without opening the file. Null when all are 0.
  * @param {any} doc
  */
 function failingChecksOf(doc) {
   const checks = doc.checks && typeof doc.checks === 'object' ? doc.checks : {}
   const failing = Object.entries(checks).filter(([, n]) => typeof n === 'number' && n > 0)
   if (failing.length === 0) return null
+  const failures = Array.isArray(doc.coverage?.failures) ? doc.coverage.failures : []
+  const named = failures.slice(0, SHOWN_GAPS).map((f) => `${String(f?.part)} ${String(f?.where)}`)
   return {
-    reason: `its self-checks fail: ${failing.map(([name, n]) => `${name} ${n}`).join(', ')}`,
+    reason: `its self-checks fail: ${failing.map(([name, n]) => `${name} ${n}`).join(', ')}${
+      named.length ? ` (${named.join(', ')}${failures.length > SHOWN_GAPS ? ', ...' : ''})` : ''
+    }`,
     missing: []
   }
 }

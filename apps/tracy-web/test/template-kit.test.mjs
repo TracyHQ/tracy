@@ -186,6 +186,22 @@ test('a kit whose self-checks count anything is incomplete, and the step names t
   assert.notDeepEqual(verdictOf(kit({ checks: { slotsInTwoBlocks: 0 } })), ['todo', 'kit-incomplete'])
 })
 
+test('a kit failing a coverage gate part is incomplete, and the step names the part and the slot', () => {
+  for (const [part, where] of [
+    ['limitsBelowDemo', 'slots[block-1.2]'],
+    ['textFormatMissing', 'slots[block-1.3]']
+  ]) {
+    const k = kit({
+      checks: { slotCoverage: 1 },
+      coverage: { parts: { [part]: 1 }, failures: [{ part, where, reason: 'made up' }] }
+    })
+    assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+    const step = stepOf(roadOf(release(), world(contractsWith(k))))
+    assert.match(String(step.params.reason), /slotCoverage 1/)
+    assert.ok(String(step.params.reason).includes(`${part} ${where}`))
+  }
+})
+
 test('a block the template does not show at a width, with a reason, needs no picture there', () => {
   // Shown at 1440 only, declared with a reason: complete.
   const desktopOnly = kit()

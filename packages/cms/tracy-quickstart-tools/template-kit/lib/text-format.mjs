@@ -81,11 +81,17 @@ export function formatOf(sample, page = {}) {
   return { paragraphs: parts.length - li, bullets: li, formatFrom: 'content map', ...base }
 }
 
-/** Every declared text slot of a block that a planner writes: its own, its list rows', its demo facts'. */
+/**
+ * Every declared text slot of a block that a planner writes: its own, its list rows' and row template's (a list
+ * with no sample row still has one), its card fields' items, its demo facts'.
+ */
 export function textSlotsOf(b) {
   return [
     ...(b.slots ?? []),
-    ...(b.lists ?? []).flatMap((l) => (l.rows ?? []).flatMap((r) => r.slots ?? [])),
+    ...(b.lists ?? []).flatMap((l) => [
+      ...(l.rows ?? []).flatMap((r) => r.slots ?? []),
+      ...(l.rowSlots ?? []).flatMap((s) => (Array.isArray(s.slots) ? s.slots : [s]))
+    ]),
     ...(b.demoOwned ?? [])
   ].filter((s) => s.type === 'text')
 }
@@ -114,6 +120,9 @@ export function textFormatChecks({ blocks, errors }) {
 export function formatTextSlots({ blocks, slotOf, detailsOf }) {
   for (const b of blocks) {
     for (const d of b.demoOwned ?? []) if (slotOf(d.id)?.type === 'text') d.type = 'text'
+    for (const l of b.lists ?? [])
+      for (const f of l.rowSlots ?? [])
+        if (f.type === 'text') for (const x of f.slots ?? []) if (x?.id) x.type = 'text'
     const page = detailsOf(b.id) ?? {}
     for (const s of textSlotsOf(b)) {
       const raw = slotOf(s.id)?.sample

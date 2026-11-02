@@ -6,7 +6,7 @@
 // then counts what is still missing, part by part, and lists every failure: green (0) means the kit is final.
 import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
 import { neutralKey } from './ids.mjs'
-import { slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
+import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
 
 /** The slot entries a block lists as its own (a reference to another block's slot is not one). */
@@ -80,14 +80,29 @@ const mainMenuBlock = (kit) => {
 }
 
 /**
- * The main menu row's whole-row limit: the top-level labels' widths as the content map measured the demo row at
- * desktop, summed. The demo row is known to fit; its spare room was not measured, so this is the safe number.
+ * The main menu row's whole-row limit: the characters its top-level labels hold when all are filled together, read
+ * in the page at every width the row shows (row-fit.json). Without that reading, the labels as the content map
+ * measured the demo row at desktop, summed: the row is known to hold them, and the source says its room was not read.
  */
-function mainMenuRow(kit, mapOf) {
+function mainMenuRow(kit, mapOf, rowFit) {
   const block = mainMenuBlock(kit)
   const g = (kit.site?.navigationGroups ?? []).find((x) => x.block === block)
   if (!g) return
   const top = (g.items ?? []).filter((it) => it.level === 1 && it.labelSlot)
+  const read = rowFit[g.id]
+  if (Number.isFinite(read?.maxCharacters)) {
+    const at = Object.entries(read.byWidth ?? {})
+      .sort(([a], [b]) => Number(b) - Number(a))
+      .map(([w, n]) => `${w}px ${n}`)
+      .join(', ')
+    g.rowLimit = {
+      maxCharacters: read.maxCharacters,
+      items: top.map((it) => it.labelSlot),
+      narrowestWidth: read.narrowest,
+      maxCharactersFrom: `kit frame: every top-level label filled together until one wraps, drops to another row or pushes past the header, at each width the row shows (${at}); narrower, the menu folds into the off-canvas button`
+    }
+    return
+  }
   const widths = top.map((it) => mapOf.get(it.labelSlot)?.fit?.maxChars?.desktop)
   if (!top.length || !widths.every(Number.isFinite)) return
   g.rowLimit = {
@@ -95,22 +110,22 @@ function mainMenuRow(kit, mapOf) {
     items: top.map((it) => it.labelSlot),
     at: 'desktop',
     maxCharactersFrom:
-      'content map fit: the top-level labels of the demo row at desktop, summed; the row is known to hold them, its spare room was not measured'
+      'content map fit: the top-level labels of the demo row at desktop, summed; the row is known to hold them, its spare room was not read'
   }
 }
 
 /**
  * Complete the kit from the contract: link label slots, contact fields, one limit per slot, the main menu row.
  * @param {object} kit changed in place
- * @param {{map: object, textFit?: object}} o
+ * @param {{map: object, textFit?: object, rowFit?: object}} o
  */
-export function applyCoverage(kit, { map, textFit = {} }) {
+export function applyCoverage(kit, { map, textFit = {}, rowFit = {} }) {
   const mapSlots = map.slots ?? []
   const mapOf = new Map(mapSlots.map((s) => [neutralKey(s.key), s]))
   labelSlots(kit, mapOf)
   contactFields(kit, mapSlots)
   unifyLimits(kit, { mapSlots, textFit })
-  mainMenuRow(kit, mapOf)
+  mainMenuRow(kit, mapOf, rowFit)
   whatElseChanges(kit)
   return kit
 }
@@ -171,6 +186,20 @@ export function coverageGate(kit, { map }) {
   const formatErrors = []
   parts.textFormatMissing = textFormatChecks({ blocks: kit.blocks, errors: formatErrors })
   for (const e of formatErrors) fail('textFormatMissing', `slots[${e.slot}]`, e.reason)
+  // No limit below the demo words, which show fine on the page.
+  parts.limitsBelowDemo = 0
+  const below = new Set()
+  for (const { id, entry } of slotPlaces(kit)) {
+    const demo = demoLength(mapOf.get(id)?.sample)
+    if (!Number.isFinite(entry.maxCharacters) || entry.maxCharacters >= demo || below.has(id)) continue
+    below.add(id)
+    parts.limitsBelowDemo++
+    fail(
+      'limitsBelowDemo',
+      `slots[${id}]`,
+      `limit ${entry.maxCharacters} is below the ${demo} characters the demo shows`
+    )
+  }
   // 4. The main menu row has its whole-row limit.
   const block = mainMenuBlock(kit)
   const main = (kit.site?.navigationGroups ?? []).find((g) => g.block === block)

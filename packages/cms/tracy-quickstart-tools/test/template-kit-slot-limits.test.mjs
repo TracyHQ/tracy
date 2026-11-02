@@ -147,12 +147,16 @@ test('a menu label whose fit is only its demo word takes the declared number, an
   assert.match(login.maxCharactersFrom, /^content map fit \(desktop 18, phone 30\)/)
 })
 
-test('a slot shown on a card and on its own page takes the narrowest number, in both places', () => {
+test('a slot shown on a card and on its own page takes the kit frame reading, the narrowest of its places, in both', () => {
   const kit = run()
   const field = kit.blocks[2].lists[0].rowSlots[0]
   const own = kit.blocks[3].slots[0]
-  assert.deepEqual([field.maxCharacters, field.slots[0].maxCharacters, own.maxCharacters], [136, 136, 136])
-  assert.equal(own.maxCharactersFrom, 'content map fit (desktop 146, phone 136)')
+  assert.deepEqual([field.maxCharacters, field.slots[0].maxCharacters, own.maxCharacters], [142, 142, 142])
+  assert.equal(
+    own.maxCharactersFrom,
+    'kit frame (390px 150, 1440px 142)',
+    'the frame reading, not the content map estimate'
+  )
   assert.equal(field.maxCharactersFrom, own.maxCharactersFrom)
 })
 
@@ -183,4 +187,69 @@ test('self-check: a slot holding two limits anywhere in the kit, or a text slot 
   const errors = []
   assert.equal(slotLimitChecks({ kit, errors }), 2)
   assert.deepEqual(errors.map((e) => e.slot).sort(), ['article-4.0', 'block-7.0'])
+})
+
+// A row of tabs: each tab grows with its words, so the content map fit of each is its own demo word's box.
+const TABS = [
+  { key: 'module-9.1', type: 'text', role: 'step.title', sample: 'Basic', maxCharacters: 40, fit: fit(5, 5) },
+  {
+    key: 'module-9.2',
+    type: 'text',
+    role: 'step.title',
+    sample: 'Trial practice',
+    maxCharacters: 48,
+    fit: fit(14, 14)
+  }
+]
+const tabsKit = () => ({
+  blocks: [
+    {
+      id: 'block-9',
+      slots: [],
+      demoOwned: [],
+      lists: [
+        {
+          id: 'block-9.step',
+          rowSlots: [{ id: 'block-9.1', role: 'step.title', type: 'text' }],
+          rows: [
+            { slots: [{ id: 'block-9.1', role: 'step.title', type: 'text' }] },
+            { slots: [{ id: 'block-9.2', role: 'step.title', type: 'text' }] }
+          ]
+        }
+      ]
+    }
+  ],
+  site: {}
+})
+
+test('a fit that is only a tab word box is never lent to the other tabs: the container reading decides', () => {
+  const declared = tabsKit()
+  unifyLimits(declared, { mapSlots: TABS })
+  assert.deepEqual(
+    declared.blocks[0].lists[0].rows.map((r) => r.slots[0].maxCharacters),
+    [40, 40],
+    'no frame reading: the smaller declared number, never the 5 of "Basic"'
+  )
+  const framed = tabsKit()
+  unifyLimits(framed, {
+    mapSlots: TABS,
+    textFit: { 'block-9.1': { limit: 22, byWidth: { 390: 22, 1440: 31 } } }
+  })
+  const [basic] = framed.blocks[0].lists[0].rows.map((r) => r.slots[0])
+  assert.deepEqual([basic.maxCharacters, basic.maxCharactersFrom], [22, 'kit frame (390px 22, 1440px 31)'])
+})
+
+test('no number below the demo words: a short frame reading is set aside, and a group holds its longest demo', () => {
+  const kit = tabsKit()
+  // "Basic" filled to 9 holds "Basic" but not "Trial practice", which shows fine in its own tab.
+  unifyLimits(kit, {
+    mapSlots: TABS,
+    textFit: {
+      'block-9.1': { limit: 9, byWidth: { 1440: 9 } },
+      'block-9.2': { limit: 3, byWidth: { 1440: 3 } }
+    }
+  })
+  const [basic, trial] = kit.blocks[0].lists[0].rows.map((r) => r.slots[0])
+  assert.equal(basic.maxCharacters, 40)
+  assert.equal(trial.maxCharacters, 40)
 })

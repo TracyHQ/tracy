@@ -3,11 +3,14 @@
 
 /**
  * The character limit of each text box of a block, measured from its frame: the box that shows a text is filled
- * with that text repeated, longer and longer, until it needs more lines than the demo text used, the block grows taller,
- * or the text runs past the block's right edge. The longest fill that passes is the limit, so two rows of one
- * list in frames of one size get one limit whatever their demo lengths. The box is put back as it was.
- * @param {{block: string, texts: {id: string, text: string}[]}} o
- * @returns {Record<string, {limit: number, lines: number, demo: number}>} only the texts found and shown
+ * with that text repeated, longer and longer, until it needs more lines than allowed, the block grows taller than
+ * those lines need, the text or any other text of the block runs past the block's right edge, or another text of the
+ * block wraps onto more lines (an item that grows with its words, a tab or a chip, pushing its neighbours). The
+ * longest fill that passes is the limit, so two rows of one list in frames of one size get one limit whatever their
+ * demo lengths. Allowed lines: the demo's own, or `lines` when the slot shows on more lines elsewhere (a title that
+ * wraps nicely on another card). The box is put back as it was.
+ * @param {{block: string, texts: {id: string, text: string, lines?: number}[]}} o
+ * @returns {Record<string, {limit: number, lines: number, allowed: number, demo: number}>} only the texts found and shown
  */
 export function readTextFit({ block, texts }) {
   const root = document.querySelector(`[data-kit-block="${block}"]`)
@@ -47,17 +50,29 @@ export function readTextFit({ block, texts }) {
     }
     return Math.max(tops.length, 1)
   }
+  // The other texts of the block: elements with words of their own and no element child holding words.
+  const leaves = all.filter(
+    (el) => shown(el) && norm(el.textContent) && ![...el.children].some((c) => norm(c.textContent))
+  )
   const used = new Set()
   const out = {}
-  for (const { id, text } of texts) {
+  for (const { id, text, lines: wanted } of texts) {
     const el = boxOf(text)
     if (!el || used.has(el)) continue
     used.add(el)
     const saved = el.innerHTML
     const demo = el.textContent.replace(/\s+/g, ' ').trim()
     const lines = linesOf(el)
-    const height = root.getBoundingClientRect().height
+    const allowed = Math.max(lines, Number(wanted) || 0)
+    const lineHeight = el.getBoundingClientRect().height / lines
+    const height = root.getBoundingClientRect().height + (allowed - lines) * lineHeight
     const right = root.getBoundingClientRect().right
+    const others = leaves.filter((x) => x !== el && !el.contains(x) && !x.contains(el))
+    // What each other text showed before: its lines and right edge (one already past the block, a slide off to the
+    // side, may stay there).
+    const before = new Map(
+      others.map((x) => [x, { lines: linesOf(x), right: x.getBoundingClientRect().right }])
+    )
     const seed = `${demo || 'text'} `
     const fill = (n) => {
       let s = seed
@@ -67,7 +82,12 @@ export function readTextFit({ block, texts }) {
     const ok = (n) => {
       fill(n)
       const r = el.getBoundingClientRect()
-      return linesOf(el) <= lines && root.getBoundingClientRect().height <= height + 1 && r.right <= right + 1
+      if (linesOf(el) > allowed || root.getBoundingClientRect().height > height + 1 || r.right > right + 1)
+        return false
+      return others.every((x) => {
+        const b = before.get(x)
+        return linesOf(x) <= b.lines && x.getBoundingClientRect().right <= Math.max(right, b.right) + 1
+      })
     }
     try {
       let lo = 0
@@ -81,7 +101,8 @@ export function readTextFit({ block, texts }) {
         if (ok(mid)) lo = mid
         else hi = mid
       }
-      if (lo > 0) out[id] = { limit: lo, lines, demo: demo.length }
+      // A box that never runs out of room (its words clipped or hidden past the edge) has no frame to read.
+      if (lo > 0 && hi <= 6000) out[id] = { limit: lo, lines, allowed, demo: demo.length }
     } finally {
       el.innerHTML = saved
     }

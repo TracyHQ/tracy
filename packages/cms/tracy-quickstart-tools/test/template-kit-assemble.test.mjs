@@ -304,13 +304,22 @@ test('blocks: role, shared, lists with min sources, frames, links, template word
     ['items', { kind: 'category', id: 'category-9' }, ['article-3', 'article-4']],
     'what the content map says of a list is carried as it is'
   )
+  // A row template's text slot says its paragraphs and bullets like any text slot (coverage gate).
   assert.deepEqual(by['block-10'].lists[0], {
     id: 'block-10.cta',
     rowKind: 'slots',
     min: 1,
     max: 1,
     rowSlots: [
-      { id: 'block-10.1', role: 'contact.cta_label', type: 'text' },
+      {
+        id: 'block-10.1',
+        role: 'contact.cta_label',
+        type: 'text',
+        paragraphs: 1,
+        bullets: 0,
+        formatFrom: 'page',
+        sample: 'Book a session'
+      },
       { id: 'block-10.2', role: 'contact.cta_url', type: 'url' }
     ],
     minSource: 'row-count'
