@@ -7,7 +7,7 @@ import { test } from 'node:test'
 
 import { createHash } from 'node:crypto'
 
-import { compilePolicy, loadPolicy, scanRef } from '../opensource/scan.mjs'
+import { catFileBatchParser, compilePolicy, loadPolicy, scanRef } from '../opensource/scan.mjs'
 
 const EMPTY_POLICY = { exclude: [], allow: [] }
 
@@ -530,5 +530,35 @@ test('a schema migration is source, not a committed dump', async () => {
   assert.deepEqual(
     hitsOf(report, 'archive').map((h) => h.path),
     ['fixtures/backup.sql']
+  )
+})
+
+test('the cat-file parser splits blobs correctly whatever the chunk boundaries', () => {
+  const blobs = [
+    Buffer.from('hello\nworld'),
+    Buffer.alloc(0),
+    Buffer.from([0, 10, 1, 2, 10]),
+    Buffer.alloc(70000, 97)
+  ]
+  const stream = Buffer.concat(
+    blobs.flatMap((b, i) => [Buffer.from(`${'a'.repeat(39)}${i} blob ${b.length}\n`), b, Buffer.from('\n')])
+  )
+  for (const size of [1, 2, 7, 4096, stream.length]) {
+    const push = catFileBatchParser()
+    const out = []
+    for (let i = 0; i < stream.length; i += size) out.push(...push(stream.subarray(i, i + size)))
+    assert.deepEqual(out, blobs, `chunk size ${size}`)
+  }
+})
+
+test('a large blob read in many chunks is scanned like a small one', async () => {
+  const big = `${'x'.repeat(200)}\n`.repeat(20000) + 'const to = "jane.doe@gmail.com"\n'
+  const report = await scan(repoWith({ 'src/big.js': big, 'src/small.js': 'to = "john.roe@gmail.com"\n' }))
+  assert.deepEqual(
+    report.hits.map((h) => [h.category, h.path, h.line, h.match]),
+    [
+      ['email', 'src/big.js', 20001, 'jane.doe@gmail.com'],
+      ['email', 'src/small.js', 1, 'john.roe@gmail.com']
+    ]
   )
 })
