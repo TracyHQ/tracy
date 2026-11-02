@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-294-undo-metadata-revert-retry",
+  "kind": "fix",
+  "title": "An Undo whose metadata revert went unanswered is unfinished and finishes on the next press",
+  "pr": 294,
+  "area": "sync/push/undo",
+  "cms": [
+    "wp"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-write cases: a push creates a page with metadata; the Undo meets a 503 on apply.revert, or the revert lands and its read-back is blocked; press Undo again; press a third time."
+  ],
+  "expect": [
+    "First press: ok:false (WRITE_OUTCOME_UNKNOWN or LIVE_BLOCKED), the page still published. Second press: ok, state undone, page and meta gone. apply.revert sent twice after the 503, once when it had landed; the third press sends nothing."
+  ],
+  "selectors": {},
+  "evidence": "Issue #227 re-test: a 503 on apply.revert answered state partial with failed WRITE_OUTCOME_UNKNOWN, then repeated",
+  "fence": "live-write.mjs undo pending",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=new page with its metadata",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "WordPress Undo of a new page with its metadata: revert-503",
+      "WordPress Undo of a new page with its metadata: revert-landed-read-unanswered"
+    ]
+  }
+}

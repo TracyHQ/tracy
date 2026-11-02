@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-294-joomla-sysinfo-token",
+  "kind": "fix",
+  "title": "The Joomla import reads System Information's PHP version with the session's form token",
+  "pr": 294,
+  "area": "import/joomla",
+  "cms": [
+    "jo"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the import-gates case for #225: phpinfo disabled, no X-Powered-By; the fake Joomla answers the System Information export only with the form token from the page's own JSON link."
+  ],
+  "expect": [
+    "php_too_old with php 7.3.33 and minimumPhp 7.4, check below_minimum, and no install POST."
+  ],
+  "selectors": {},
+  "evidence": "Issue #225 re-test: view=sysinfo&format=json answered 303 on Joomla 3.10 without a token",
+  "fence": "joomla.ts readSysinfoPhp",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#225",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs"
+    ],
+    "tests": [
+      "phpinfo disabled and no X-Powered-By"
+    ]
+  }
+}

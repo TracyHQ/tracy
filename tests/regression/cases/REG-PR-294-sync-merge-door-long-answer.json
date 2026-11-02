@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-294-sync-merge-door-long-answer",
+  "kind": "fix",
+  "title": "The merge door with thousands of kept places keeps its live read; an apply without it refuses",
+  "pr": 294,
+  "area": "sync/merge",
+  "cms": [
+    "jo"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-sync-flow cases for #287 (real MariaDB): 8000 titles changed on both sides plus one live-only edit, then merge and apply; and an apply whose live read was removed."
+  ],
+  "expect": [
+    "The merge answers ready with 8000 kept places and live/db.sql.gz still exists; the apply is ok, the live edit is on the copy and the next sync is unchanged: merge.",
+    "The apply without its read answers ok:false NOT_MERGED and the copy is unchanged."
+  ],
+  "selectors": {},
+  "evidence": "Issue #287: line 1697 Argument list too long, then cp: cannot stat live/db.sql.gz",
+  "fence": "webroot-sync.sh answer_state",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#287",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+    ],
+    "tests": [
+      "`merge` then `apply` with thousands of kept places",
+      "an `apply` whose live read is gone refuses"
+    ]
+  }
+}

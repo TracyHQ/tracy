@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-294-joomla3-dist-configuration",
+  "kind": "fix",
+  "title": "Joomla 3's configuration.php-dist layout merges setting by setting",
+  "pr": 294,
+  "area": "sync/files",
+  "cms": [
+    "jo"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-sync-files case for #285: base, copy and live configuration.php in the -dist layout (trailing comments, brace on its own line), the live site changes and removes settings."
+  ],
+  "expect": [
+    "No conflict, nothing kept; the live values come over with their comments, the removed setting goes with its comment, the copy keeps its environment; a setting both changed is one setting conflict."
+  ],
+  "selectors": {},
+  "evidence": "Issue #285: configuration.php kept as config-unreadable on Joomla 3.10.11",
+  "fence": "live_sync.py joomla_settings",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#285",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-files.test.mjs"
+    ],
+    "tests": [
+      "configuration.php in Joomla 3's -dist layout"
+    ]
+  }
+}
