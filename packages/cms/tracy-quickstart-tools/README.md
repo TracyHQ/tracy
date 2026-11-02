@@ -342,7 +342,7 @@ in a block's `source`.
 6. `cli.mjs approve --out <kit dir> --by <login>` (a person, after the review sheet) seals the pack's image set.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
-shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one
+shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one
 list, kept by every later run).
 
 - **Every page.** The crawl starts from every route of the content map and the front page, then follows every
@@ -470,8 +470,8 @@ list, kept by every later run).
      `linksWithoutTarget`, every clickable element without an address (`details.clickables`: a button, a tab, a
      menu heading, a submit) whose label a slot of its block prints is a link of the block with what it opens
      (`links[].opens`: `modal` or `panel` with its `element` (a tab's own `#fragment` included), `submenu`, `form`
-     with its `action`, `script`; a modal drawing a map from the page's own settings says `writable: false` with
-     the reason);
+     with its `action`, `script`; a modal drawing a map says `writable: true` with the `slotId` of its setting
+     slot when exactly one map setting is assigned to the page, else `writable: false` with the reason);
      `linksWithoutLabelSlot` (`lib/link-label-slots.mjs`), every link whose shown words a slot prints names it
      (`links[].labelId`): the text slot of the link's own address group first, then a slot the block declares or
      one of its own entities (links repeating the same words take each its own twin slot), then the one content
@@ -492,10 +492,20 @@ list, kept by every later run).
      `row-fit.json`, `narrowestWidth`; without that reading, the demo row's labels as the content map measured them,
      summed, and the source says the room was not read); `contactFieldsUnresolved`, every
      `site.contactBlocks[].accepts.fields[]` entry names the content map slot of its column (`id`,
-     `writable: true`, with its limit) or says `writable: false` with `writableReason`, never a made-up id; and
+     `writable: true`, with its limit), a setting slot (`settingSlot: true`, listed in `site.settingSlots`), or says
+     `writable: false` with `writableReason`, never a made-up id; and
      `orphanTexts`. On /ops the Template kit step reads `kit-incomplete` while the gate is above 0 and names the
      first failing parts and slots.
      A label slot says what else changes with it (`alsoChanges`: other blocks, page titles, menus).
+- **Setting slots** (`lib/setting-slots.mjs`, `site.settingSlots[]`). A value the page prints from a CMS row that no
+  content map slot holds (a released content map never changes) is named by the kit itself: `id`, `kind`, `writeTo`
+  (the content map entity and column), `valueFormat`, `fillFrom`. `map-location`: a free-HTML block whose whole
+  content is one map shortcode (Joomla: JA Google Map's `{jamap ... locations='...'}{/jamap}`, read from the
+  database by the adapter, `lib/site/adapters/joomla-map.mjs`), written as the whole column from
+  `writeTo.template` (`<address>`, `<latitude>`, `<longitude>`); only a setting a map button uses is listed.
+  `contact-mobile`: a contact block's printed mobile field with no content map slot, written through
+  `<contact>.mobile` with the limit of the contact's telephone line. `cli.mjs setting-slots --out <dir> --contract
+  <dir> --db-command <prefix>` settles a written kit again (no browser, no image), then `pack`.
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and
   `canHide`, the shape the planner reads. The id is stable across rebuilds: `<block>.fixed-<constant>` for a CMS
   line (the words around its placeholder may change), `<block>.fixed-<words>-<hash>` for template words. The check

@@ -3,6 +3,7 @@
 // written). Everything it returns is in CMS-neutral words; the Joomla names only appear as the `setting` a later step
 // writes. Another CMS gets an adapter of the same shape.
 import { languageFilesOf } from '../cms-strings.mjs'
+import { mapRowsSql, mapSettingOf } from './joomla-map.mjs'
 import { emptyShowsOf, logoLayouts, t4PrintsOpenGraph, t4Settings, variableOf } from './joomla-t4.mjs'
 
 /** The most bytes Joomla stores in one module's content (`Table\Module::check`). */
@@ -216,6 +217,14 @@ export function joomlaAdapter(source) {
           ? `a messaging app or social profile goes in a named link: ${namedLinks.max - namedLinks.filled} free of ${namedLinks.max}`
           : 'none: a messaging app or social profile has no field this page prints (named links are switched off)'
       }
+    },
+    /**
+     * The maps the site's own blocks draw from their content (joomla-map.mjs): `[{entity, column, template,
+     * location, drawnBy}]`, or null without a database.
+     */
+    mapSettings() {
+      if (!query || !state.prefix) return null
+      return query(mapRowsSql(state.prefix)).map(mapSettingOf).filter(Boolean)
     },
     /** Map entities that are free HTML blocks (no slots but their HTML). */
     isFreeHtml: (entity) => entity?.kind === 'module' && entity.identity?.module === 'mod_custom'

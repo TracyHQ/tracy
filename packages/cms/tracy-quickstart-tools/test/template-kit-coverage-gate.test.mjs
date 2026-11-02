@@ -184,10 +184,11 @@ test('a contact field gets the map slot of its column, or says it cannot be writ
   const [address, phone, mobile, fax] = kit.site.contactBlocks[0].accepts.fields
   assert.deepEqual([address.id, address.maxCharacters], ['contact-1.1', 30])
   assert.deepEqual([phone.id, phone.maxCharacters, phone.writable], ['contact-1.2', 24, true])
-  assert.equal(mobile.id, undefined)
-  assert.equal(mobile.writable, false)
-  assert.match(mobile.writableReason, /no slot for the contact's mobile column/)
+  // The mobile line has no map slot: it is written through a setting slot with the telephone line's limit.
+  assert.deepEqual([mobile.id, mobile.writable, mobile.maxCharacters], ['contact-1.mobile', true, 24])
+  assert.equal(fax.id, undefined)
   assert.equal(fax.writable, false)
+  assert.match(fax.writableReason, /no slot for the contact's fax column/)
 })
 
 test('the gate is 0 for a kit that covers every shown slot, and lists every failure when it is not', () => {
@@ -200,7 +201,7 @@ test('the gate is 0 for a kit that covers every shown slot, and lists every fail
   k2.blocks[1].slots.splice(0, 1) // block-4.0 shown, now declared nowhere
   k2.blocks[0].slots.pop() // the button label is no longer a slot of the header
   delete k2.site.navigationGroups[0].rowLimit
-  k2.site.contactBlocks[0].accepts.fields[2].writable = undefined
+  k2.site.settingSlots = [] // the mobile field names a setting slot the kit no longer lists
   delete k2.blocks[1].slots[0].bullets
   assert.equal(coverageGate(k2, { map: MAP }), 5)
   assert.deepEqual(
