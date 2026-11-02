@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-294-brand-layer-primary-contrast",
+  "kind": "fix",
+  "title": "The brand theme layer paints the default primary at WCAG AA under labels and as words",
+  "pr": 294,
+  "area": "ui/brand",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Read tracy-brand's default theme layer (primaryTokens('')) and tokens.css; compute contrast of --primary-foreground on each fill and of each fill on white."
+  ],
+  "expect": [
+    "--primary, the dsh button fill and brand text equal tokens.css --primary and read at least 4.5:1 both ways; --ring and the brand mark stay #bf5b3d."
+  ],
+  "selectors": {},
+  "evidence": "Issue #228 re-test: theme.mjs primaryTokens wrote --primary #bf5b3d inline on <body>, 4.21:1",
+  "fence": "tracy-brand theme.mjs primaryTokens",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/primary-contrast.test.mjs"],
+    "tests": ["the tracy-brand theme layer paints the same AA primary over tokens.css"]
+  }
+}

@@ -5,7 +5,13 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { primaryTokens, fontTokens, brandTitle, composeLayer, siteKeyFromPath } from '../src/shared/theme.mjs'
-import { DEFAULT_PRIMARY, GLOBAL_FONTS, CODE_FONTS, DEFAULT_FONT } from '../src/shared/settings.mjs'
+import {
+  DEFAULT_PRIMARY,
+  DEFAULT_PRIMARY_FILL,
+  GLOBAL_FONTS,
+  CODE_FONTS,
+  DEFAULT_FONT
+} from '../src/shared/settings.mjs'
 
 test('a valid hex primary lands on dsh brand tokens and on Tracy --primary, same in both modes', () => {
   const t = primaryTokens('#00B96B')
@@ -20,6 +26,25 @@ test('an invalid or empty primary falls back to Tracy blue instead of poisoning 
   assert.equal(primaryTokens('not a colour')['--dsw-alias-brand-primary'].light, DEFAULT_PRIMARY)
   assert.equal(primaryTokens('#12')['--dsw-alias-brand-primary'].light, DEFAULT_PRIMARY)
   assert.equal(primaryTokens('#abc')['--dsw-alias-brand-primary'].light, '#abc')
+})
+
+test('the default terracotta fills buttons and colours words in its AA shade; the mark and rings keep #bf5b3d (#228)', () => {
+  for (const value of ['', '#bf5b3d', '#BF5B3D', 'not a colour']) {
+    const t = primaryTokens(value)
+    for (const name of ['--primary', '--dsw-alias-button-primary-fill', '--dsw-alias-brand-text'])
+      assert.deepEqual(
+        t[name],
+        { light: DEFAULT_PRIMARY_FILL, dark: DEFAULT_PRIMARY_FILL },
+        `${value} ${name}`
+      )
+    for (const name of ['--dsw-alias-brand-primary', '--ring', '--dsw-alias-state-business-primary'])
+      for (const mode of ['light', 'dark'])
+        assert.equal(t[name][mode].toLowerCase(), DEFAULT_PRIMARY, `${value} ${name}`)
+    assert.match(t['--dsw-alias-button-primary-hover'].light, new RegExp(DEFAULT_PRIMARY_FILL))
+  }
+  // A colour the person picked is theirs, unchanged.
+  assert.deepEqual(primaryTokens('#5b8def')['--primary'], { light: '#5b8def', dark: '#5b8def' })
+  assert.deepEqual(primaryTokens('#5b8def')['--dsw-alias-brand-text'], { light: '#5b8def', dark: '#5b8def' })
 })
 
 test('the default font contributes nothing, so dsh keeps its own stack', () => {

@@ -395,3 +395,311 @@ test(
     )
   }
 )
+
+// ── #223 on WordPress: records a push made, then deleted for good on the live site ────────────────
+// WordPress's own tables (wp-admin/includes/schema.php), and rows as two real WordPress 7.1 sites
+// made them through the Claude Cowork writer (02/11/2026): the copy's by Tracy, the live site's by the
+// push. They differ only where WordPress stamps the record itself — the times of what is sent with no
+// date, the `guid` (fixed from the site's own address at the first insert), an untitled menu item's
+// name (its number), a custom link's object (the item's own number) — and in their numbers.
+const WP_TABLES = `
+CREATE TABLE wp_posts (ID bigint(20) unsigned NOT NULL AUTO_INCREMENT, post_author bigint(20) unsigned NOT NULL DEFAULT 0,
+  post_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00', post_date_gmt datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  post_content longtext NOT NULL, post_title text NOT NULL, post_excerpt text NOT NULL,
+  post_status varchar(20) NOT NULL DEFAULT 'publish', comment_status varchar(20) NOT NULL DEFAULT 'open',
+  ping_status varchar(20) NOT NULL DEFAULT 'open', post_password varchar(255) NOT NULL DEFAULT '',
+  post_name varchar(200) NOT NULL DEFAULT '', to_ping text NOT NULL, pinged text NOT NULL,
+  post_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00', post_modified_gmt datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  post_content_filtered longtext NOT NULL, post_parent bigint(20) unsigned NOT NULL DEFAULT 0,
+  guid varchar(255) NOT NULL DEFAULT '', menu_order int(11) NOT NULL DEFAULT 0, post_type varchar(20) NOT NULL DEFAULT 'post',
+  post_mime_type varchar(100) NOT NULL DEFAULT '', comment_count bigint(20) NOT NULL DEFAULT 0,
+  PRIMARY KEY (ID), KEY post_name (post_name(191)), KEY type_status_date (post_type, post_status, post_date, ID),
+  KEY post_parent (post_parent), KEY post_author (post_author));
+CREATE TABLE wp_postmeta (meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, post_id bigint(20) unsigned NOT NULL DEFAULT 0,
+  meta_key varchar(255) DEFAULT NULL, meta_value longtext, PRIMARY KEY (meta_id), KEY post_id (post_id), KEY meta_key (meta_key(191)));
+CREATE TABLE wp_terms (term_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, name varchar(200) NOT NULL DEFAULT '',
+  slug varchar(200) NOT NULL DEFAULT '', term_group bigint(10) NOT NULL DEFAULT 0, PRIMARY KEY (term_id), KEY slug (slug(191)));
+CREATE TABLE wp_term_taxonomy (term_taxonomy_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, term_id bigint(20) unsigned NOT NULL DEFAULT 0,
+  taxonomy varchar(32) NOT NULL DEFAULT '', description longtext NOT NULL, parent bigint(20) unsigned NOT NULL DEFAULT 0,
+  count bigint(20) NOT NULL DEFAULT 0, PRIMARY KEY (term_taxonomy_id), UNIQUE KEY term_id_taxonomy (term_id, taxonomy));
+CREATE TABLE wp_term_relationships (object_id bigint(20) unsigned NOT NULL DEFAULT 0, term_taxonomy_id bigint(20) unsigned NOT NULL DEFAULT 0,
+  term_order int(11) NOT NULL DEFAULT 0, PRIMARY KEY (object_id, term_taxonomy_id));
+CREATE TABLE wp_options (option_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, option_name varchar(191) NOT NULL DEFAULT '',
+  option_value longtext NOT NULL, autoload varchar(20) NOT NULL DEFAULT 'yes', PRIMARY KEY (option_id), UNIQUE KEY option_name (option_name));
+INSERT INTO wp_terms VALUES (1, 'Uncategorized', 'uncategorized', 0), (2, 'Main', 'main', 0),
+  (3, 'twentytwentyfive', 'twentytwentyfive', 0), (4, 'header', 'header', 0);
+INSERT INTO wp_term_taxonomy VALUES (1, 1, 'category', '', 0, 0), (2, 2, 'nav_menu', '', 0, 0),
+  (3, 3, 'wp_theme', '', 0, 0), (4, 4, 'wp_template_part_area', '', 0, 0);
+INSERT INTO wp_options VALUES (1, 'home', 'HOME', 'yes'), (2, 'siteurl', 'HOME', 'yes'), (3, 'blogname', 'Shop', 'yes');
+`
+const sqlText = (v) => `'${String(v).replace(/\\/g, '\\\\').replace(/'/g, "''")}'`
+const wpRow = (r) => {
+  const row = {
+    post_author: 0,
+    post_content: '',
+    post_excerpt: '',
+    post_status: 'publish',
+    comment_status: 'closed',
+    ping_status: 'closed',
+    post_password: '',
+    to_ping: '',
+    pinged: '',
+    post_content_filtered: '',
+    post_parent: 0,
+    menu_order: 0,
+    post_mime_type: '',
+    comment_count: 0,
+    ...r
+  }
+  row.post_date_gmt ??= row.post_date
+  row.post_modified ??= row.post_date
+  row.post_modified_gmt ??= row.post_date
+  const cols = Object.keys(row)
+  return `INSERT INTO wp_posts (${cols.join(', ')}) VALUES (${cols.map((c) => sqlText(row[c])).join(', ')});`
+}
+const menuMeta = (id, post, type, object, objectId, url) =>
+  [
+    ['_menu_item_type', type],
+    ['_menu_item_menu_item_parent', '0'],
+    ['_menu_item_object_id', String(objectId)],
+    ['_menu_item_object', object],
+    ['_menu_item_target', ''],
+    ['_menu_item_classes', 'a:1:{i:0;s:0:"";}'],
+    ['_menu_item_xfn', ''],
+    ['_menu_item_url', url]
+  ].map(([k, v], i) => `(${id + i}, ${post}, ${sqlText(k)}, ${sqlText(v)})`)
+/** The records Tracy made on the copy (`by: 'copy'`, its numbers) or the push on the live site (+100). */
+function made(by) {
+  const live = by === 'live'
+  const n = (id) => (live ? id + 100 : id)
+  const at = live ? '2026-11-02 15:12:28' : '2026-11-02 15:12:26'
+  const home = 'HOME'
+  return [
+    wpRow({
+      ID: n(7),
+      post_date: '2026-11-02 15:12:26',
+      post_content: '<p>Open daily.</p>',
+      post_title: 'Opening hours',
+      post_name: 'opening-hours',
+      guid: `${home}/opening-hours/`,
+      post_type: 'page'
+    }),
+    wpRow({
+      ID: n(10),
+      post_date: at,
+      post_content: ' ',
+      post_title: '',
+      post_name: String(n(10)),
+      guid: `${home}/${n(10)}/`,
+      menu_order: 1,
+      post_type: 'nav_menu_item'
+    }),
+    wpRow({
+      ID: n(12),
+      post_date: at,
+      post_title: 'Sale',
+      post_name: 'sale',
+      guid: `${home}/sale/`,
+      menu_order: 2,
+      post_type: 'nav_menu_item'
+    }),
+    wpRow({
+      ID: n(13),
+      post_date: at,
+      post_content: '<!-- wp:site-title /-->',
+      post_title: 'Header',
+      post_name: 'header',
+      guid: `${home}/header/`,
+      post_type: 'wp_template_part'
+    }),
+    wpRow({
+      ID: n(17),
+      post_date: at,
+      post_content: 'body { color: #123456; }',
+      post_title: 'twentytwentyfive',
+      post_name: 'twentytwentyfive',
+      guid: `${home}/twentytwentyfive/`,
+      post_type: 'custom_css'
+    }),
+    wpRow({
+      ID: n(18),
+      post_date: at,
+      post_title: 'tracy-pixel',
+      post_status: 'inherit',
+      comment_status: 'open',
+      post_name: 'tracy-pixel',
+      guid: `${home}/tracy-pixel/`,
+      post_type: 'attachment',
+      post_mime_type: 'image/png'
+    }),
+    `INSERT INTO wp_postmeta VALUES ${[
+      `(${n(13)}, ${n(7)}, 'subtitle', 'A subtitle')`,
+      ...menuMeta(n(40), n(10), 'post_type', 'page', n(7), ''),
+      ...menuMeta(n(30), n(12), 'custom', 'custom', n(12), `${home}/sale/`),
+      `(${n(50)}, ${n(18)}, '_wp_attached_file', '2026/11/tracy-pixel.png')`,
+      `(${n(51)}, ${n(18)}, '_wp_attachment_metadata', 'a:1:{s:4:"file";s:23:"2026/11/tracy-pixel.png";}')`
+    ].join(', ')};`,
+    `INSERT INTO wp_term_relationships VALUES (${n(10)}, 2, 0), (${n(12)}, 2, 0), (${n(13)}, 3, 0), (${n(13)}, 4, 0);`
+  ].join('\n')
+}
+const SITE = (url, records) =>
+  `${WP_TABLES}\nINSERT INTO wp_posts (ID, post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, to_ping, pinged, post_modified, post_modified_gmt, post_content_filtered, post_name, guid, post_type)
+   VALUES (2, 1, '2026-01-01 00:00:00', '2026-01-01 00:00:00', '<p>Sample</p>', 'Sample Page', '', '', '', '2026-01-01 00:00:00', '2026-01-01 00:00:00', '', 'sample-page', 'HOME/?page_id=2', 'page');
+   ${records}`.replaceAll('HOME', url)
+// As lib/live_push.py `seeds` writes the creates of this push (test/live-push-changeset.test.mjs).
+const W = ['guid', 'post_author', 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt']
+const menuSeeds = (id) => [
+  {
+    table: 'posts',
+    match: { ID: id },
+    columns: ['post_title', 'menu_order'],
+    create: true,
+    entity: 'posts',
+    id,
+    stamps: [...W, 'post_name'].sort()
+  },
+  ...[
+    '_menu_item_type',
+    '_menu_item_object',
+    '_menu_item_object_id',
+    '_menu_item_url',
+    '_menu_item_menu_item_parent'
+  ].map((meta_key) => ({
+    table: 'postmeta',
+    match: { post_id: id, meta_key },
+    columns: ['meta_value'],
+    align: { entity: 'postmeta', match: { post_id: id, meta_key } }
+  }))
+]
+const WP_PUSHED = [
+  {
+    table: 'posts',
+    match: { ID: 7 },
+    create: true,
+    entity: 'posts',
+    id: 7,
+    columns: [
+      'post_title',
+      'post_content',
+      'post_excerpt',
+      'post_status',
+      'post_name',
+      'post_parent',
+      'menu_order',
+      'post_date',
+      'post_type'
+    ],
+    stamps: ['guid', 'post_author', 'post_date_gmt', 'post_modified', 'post_modified_gmt']
+  },
+  {
+    table: 'postmeta',
+    match: { post_id: 7, meta_key: 'subtitle' },
+    columns: ['meta_value'],
+    align: { entity: 'postmeta', match: { post_id: 7, meta_key: 'subtitle' } }
+  },
+  ...menuSeeds(10),
+  ...menuSeeds(12),
+  {
+    table: 'posts',
+    match: { ID: 13 },
+    columns: ['post_content', 'post_title'],
+    create: true,
+    entity: 'posts',
+    id: 13,
+    stamps: W
+  },
+  {
+    table: 'posts',
+    match: { ID: 17 },
+    create: true,
+    entity: 'posts',
+    id: 17,
+    stamps: W,
+    columns: ['post_type', 'post_name', 'post_title', 'post_status', 'post_content']
+  },
+  { table: 'posts', match: { ID: 18 }, columns: [], create: true, entity: 'posts', id: 18, stamps: W }
+]
+const WP_MAP = { posts: { 107: 7, 110: 10, 112: 12, 113: 13, 117: 17, 118: 18 } }
+
+function wpMerge(names, pushed, map = WP_MAP) {
+  const file = join(root, `${names.ours}-${names.theirs}-map.json`)
+  writeFileSync(file, JSON.stringify(map))
+  const args = [
+    ENGINE,
+    'db',
+    '--base-schema',
+    names.base,
+    '--ours-schema',
+    names.ours,
+    '--theirs-schema',
+    names.theirs,
+    '--work-schema',
+    `${names.theirs}_work`,
+    '--platform',
+    'wordpress',
+    '--prefix',
+    'wp_',
+    '--prefer',
+    'ours',
+    '--id-map',
+    file
+  ]
+  if (pushed) {
+    writeFileSync(`${file}.pushed`, JSON.stringify({ records: pushed }))
+    args.push('--pushed', `${file}.pushed`)
+  }
+  const r = spawnSync('python3', args, {
+    encoding: 'utf8',
+    env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) }
+  })
+  assert.equal(r.status, 0, r.stderr + r.stdout)
+  return JSON.parse(r.stdout.trim().split('\n').at(-1))
+}
+const schema = (name, script) => {
+  sql(`DROP DATABASE IF EXISTS \`${name}\`; CREATE DATABASE \`${name}\`;`)
+  sql(script, name)
+}
+
+test(
+  'WordPress: what a push made and the customer then deleted for good on the live site goes from the copy too — page, menu items, template part, Additional CSS, picture (#223)',
+  opts,
+  () => {
+    // The sync right after the push: the live site holds the push's records, stamped its own way.
+    schema('wd_base', SITE(LIVE, ''))
+    schema('wd_ours', SITE(COPY, made('copy')))
+    schema('wd_theirs', SITE(LIVE, made('live')))
+    const settle = wpMerge({ base: 'wd_base', ours: 'wd_ours', theirs: 'wd_theirs' }, WP_PUSHED)
+    assert.equal(settle.ok, true)
+    assert.deepEqual(settle.kept, [], JSON.stringify(settle.kept))
+    assert.deepEqual(settle.held, [])
+    assert.deepEqual(
+      rows('SELECT COUNT(*) FROM wp_posts', 'wd_ours'),
+      [['7']],
+      'no record of the push came back a second time'
+    )
+    // The live site's stamps came over: the copy's rows read as the live site's now.
+    assert.deepEqual(rows('SELECT guid FROM wp_posts WHERE ID = 7', 'wd_ours'), [[`${LIVE}/opening-hours/`]])
+    assert.deepEqual(
+      rows(
+        "SELECT meta_value FROM wp_postmeta WHERE post_id = 12 AND meta_key = '_menu_item_object_id'",
+        'wd_ours'
+      ),
+      [['12']]
+    )
+
+    // The customer deletes every one of them for good on the live site (emptying the trash does the
+    // same): rows, meta and relationships. The next sync reads the live site again.
+    schema('wd_base2', SITE(LIVE, made('live')))
+    schema('wd_theirs2', SITE(LIVE, ''))
+    const after = wpMerge({ base: 'wd_base2', ours: 'wd_ours', theirs: 'wd_theirs2' }, null, {
+      ...settle.idMap,
+      posts: { ...WP_MAP.posts, ...settle.idMap?.posts }
+    })
+    assert.equal(after.ok, true)
+    assert.deepEqual(after.kept, [], JSON.stringify(after.kept))
+    assert.deepEqual(after.held, [])
+    assert.deepEqual(rows('SELECT ID FROM wp_posts ORDER BY ID', 'wd_ours'), [['2']])
+    assert.deepEqual(rows('SELECT COUNT(*) FROM wp_postmeta', 'wd_ours'), [['0']])
+    assert.deepEqual(rows('SELECT COUNT(*) FROM wp_term_relationships', 'wd_ours'), [['0']])
+  }
+)

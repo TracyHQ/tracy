@@ -1234,5 +1234,10 @@
   "sync.error.liveToken": "Votre site en ligne a refusé le token Claude Cowork. Reconnectez-le avec son token actuel, puis réessayez.",
   "push.label.featuredImage": "Image mise en avant",
   "push.label.pageTemplate": "Template de page",
-  "push.label.altText": "Texte alternatif"
+  "push.label.altText": "Texte alternatif",
+  "push.status.unknown": "Votre site en ligne a peut-être changé",
+  "push.status.unknownBody": "Tracy a envoyé {count} modifications sans recevoir de réponse : elles sont peut-être déjà sur votre site en ligne. Vérifiez-les là-bas avant de synchroniser à nouveau.",
+  "push.status.unknownBody.one": "Tracy a envoyé 1 modification sans recevoir de réponse : elle est peut-être déjà sur votre site en ligne. Vérifiez-la là-bas avant de synchroniser à nouveau.",
+  "push.status.unknownAlso": "{count} autres modifications ont été envoyées sans réponse : elles sont peut-être déjà sur votre site en ligne. Vérifiez-les là-bas avant de synchroniser à nouveau.",
+  "push.status.unknownAlso.one": "1 autre modification a été envoyée sans réponse : elle est peut-être déjà sur votre site en ligne. Vérifiez-la là-bas avant de synchroniser à nouveau."
 }

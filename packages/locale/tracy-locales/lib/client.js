@@ -4755,7 +4755,12 @@ window.__ModuleLoader__.load({
           "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut.",
           "push.label.featuredImage": "Beitragsbild",
           "push.label.pageTemplate": "Seiten-Template",
-          "push.label.altText": "Alternativtext"
+          "push.label.altText": "Alternativtext",
+          "push.status.unknown": "Ihre Live-Site wurde möglicherweise geändert",
+          "push.status.unknownBody": "Tracy hat {count} Änderungen gesendet, aber keine Antwort erhalten, sie sind also vielleicht schon auf Ihrer Live-Site. Prüfen Sie sie dort, bevor Sie erneut übertragen.",
+          "push.status.unknownBody.one": "Tracy hat 1 Änderung gesendet, aber keine Antwort erhalten, sie ist also vielleicht schon auf Ihrer Live-Site. Prüfen Sie sie dort, bevor Sie erneut übertragen.",
+          "push.status.unknownAlso": "{count} weitere Änderungen wurden ohne Antwort gesendet und sind vielleicht schon auf Ihrer Live-Site. Prüfen Sie sie dort, bevor Sie erneut übertragen.",
+          "push.status.unknownAlso.one": "1 weitere Änderung wurde ohne Antwort gesendet und ist vielleicht schon auf Ihrer Live-Site. Prüfen Sie sie dort, bevor Sie erneut übertragen."
         },
         "tracy-tab-link": {
           "launcher.empty": "Klicken Sie auf +, um zu starten",
@@ -11516,7 +11521,12 @@ window.__ModuleLoader__.load({
           "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo.",
           "push.label.featuredImage": "Imagen destacada",
           "push.label.pageTemplate": "Template de página",
-          "push.label.altText": "Texto alternativo"
+          "push.label.altText": "Texto alternativo",
+          "push.status.unknown": "Puede que tu site publicado haya cambiado",
+          "push.status.unknownBody": "Tracy envió {count} cambios pero no recibió respuesta, así que puede que ya estén en tu site publicado. Revísalos allí antes de volver a sincronizar.",
+          "push.status.unknownBody.one": "Tracy envió 1 cambio pero no recibió respuesta, así que puede que ya esté en tu site publicado. Revísalo allí antes de volver a sincronizar.",
+          "push.status.unknownAlso": "Se enviaron {count} cambios más sin respuesta, así que puede que ya estén en tu site publicado. Revísalos allí antes de volver a sincronizar.",
+          "push.status.unknownAlso.one": "Se envió 1 cambio más sin respuesta, así que puede que ya esté en tu site publicado. Revísalo allí antes de volver a sincronizar."
         },
         "tracy-tab-link": {
           "launcher.empty": "Haga clic en + para empezar",
@@ -17611,7 +17621,12 @@ window.__ModuleLoader__.load({
           "sync.error.liveToken": "Votre site en ligne a refusé le token Claude Cowork. Reconnectez-le avec son token actuel, puis réessayez.",
           "push.label.featuredImage": "Image mise en avant",
           "push.label.pageTemplate": "Template de page",
-          "push.label.altText": "Texte alternatif"
+          "push.label.altText": "Texte alternatif",
+          "push.status.unknown": "Votre site en ligne a peut-être changé",
+          "push.status.unknownBody": "Tracy a envoyé {count} modifications sans recevoir de réponse : elles sont peut-être déjà sur votre site en ligne. Vérifiez-les là-bas avant de synchroniser à nouveau.",
+          "push.status.unknownBody.one": "Tracy a envoyé 1 modification sans recevoir de réponse : elle est peut-être déjà sur votre site en ligne. Vérifiez-la là-bas avant de synchroniser à nouveau.",
+          "push.status.unknownAlso": "{count} autres modifications ont été envoyées sans réponse : elles sont peut-être déjà sur votre site en ligne. Vérifiez-les là-bas avant de synchroniser à nouveau.",
+          "push.status.unknownAlso.one": "1 autre modification a été envoyée sans réponse : elle est peut-être déjà sur votre site en ligne. Vérifiez-la là-bas avant de synchroniser à nouveau."
         },
         "tracy-tab-link": {
           "launcher.empty": "Cliquez sur + pour commencer",
@@ -23377,7 +23392,12 @@ window.__ModuleLoader__.load({
           "sync.error.liveToken": "Il site online ha rifiutato il token Claude Cowork. Ricollegalo con il token attuale, poi riprova.",
           "push.label.featuredImage": "Immagine in evidenza",
           "push.label.pageTemplate": "Template di pagina",
-          "push.label.altText": "Testo alternativo"
+          "push.label.altText": "Testo alternativo",
+          "push.status.unknown": "Il tuo site online potrebbe essere cambiato",
+          "push.status.unknownBody": "Tracy ha inviato {count} modifiche ma non ha ricevuto risposta, quindi potrebbero essere già sul tuo site online. Controllale lì prima di sincronizzare di nuovo.",
+          "push.status.unknownBody.one": "Tracy ha inviato 1 modifica ma non ha ricevuto risposta, quindi potrebbe essere già sul tuo site online. Controllala lì prima di sincronizzare di nuovo.",
+          "push.status.unknownAlso": "Altre {count} modifiche sono state inviate senza risposta, quindi potrebbero essere già sul tuo site online. Controllale lì prima di sincronizzare di nuovo.",
+          "push.status.unknownAlso.one": "Un’altra modifica è stata inviata senza risposta, quindi potrebbe essere già sul tuo site online. Controllala lì prima di sincronizzare di nuovo."
         },
         "tracy-tab-link": {
           "launcher.empty": "Faccia clic su + per iniziare",
@@ -29143,7 +29163,12 @@ window.__ModuleLoader__.load({
           "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw.",
           "push.label.featuredImage": "Uitgelichte afbeelding",
           "push.label.pageTemplate": "Pagina-template",
-          "push.label.altText": "Alternatieve tekst"
+          "push.label.altText": "Alternatieve tekst",
+          "push.status.unknown": "Je live site is mogelijk gewijzigd",
+          "push.status.unknownBody": "Tracy heeft {count} wijzigingen verstuurd maar kreeg geen antwoord, dus ze staan misschien al op je live site. Controleer ze daar voordat je opnieuw synchroniseert.",
+          "push.status.unknownBody.one": "Tracy heeft 1 wijziging verstuurd maar kreeg geen antwoord, dus die staat misschien al op je live site. Controleer die daar voordat je opnieuw synchroniseert.",
+          "push.status.unknownAlso": "Nog {count} wijzigingen zijn zonder antwoord verstuurd, dus ze staan misschien al op je live site. Controleer ze daar voordat je opnieuw synchroniseert.",
+          "push.status.unknownAlso.one": "Nog 1 wijziging is zonder antwoord verstuurd, dus die staat misschien al op je live site. Controleer die daar voordat je opnieuw synchroniseert."
         },
         "tracy-tab-link": {
           "launcher.empty": "Klik op + om te beginnen",
@@ -34231,7 +34256,12 @@ window.__ModuleLoader__.load({
           "sync.error.liveToken": "线上 site拒绝了 Claude Cowork token。请使用当前token重新连接线上 site，然后重试。",
           "push.label.featuredImage": "特色图片",
           "push.label.pageTemplate": "页面 template",
-          "push.label.altText": "替代文本"
+          "push.label.altText": "替代文本",
+          "push.status.unknown": "你的线上 site 可能已有改动",
+          "push.status.unknownBody": "Tracy 已发送 {count} 项修改但没有收到回应，因此它们可能已在你的线上 site 上。再次同步到线上之前，请先在那里检查。",
+          "push.status.unknownBody.one": "Tracy 已发送 1 项修改但没有收到回应，因此它可能已在你的线上 site 上。再次同步到线上之前，请先在那里检查。",
+          "push.status.unknownAlso": "另有 {count} 项修改已发送但没有回应，因此它们可能已在你的线上 site 上。再次同步到线上之前，请先在那里检查。",
+          "push.status.unknownAlso.one": "另有 1 项修改已发送但没有回应，因此它可能已在你的线上 site 上。再次同步到线上之前，请先在那里检查。"
         },
         "tracy-tab-link": {
           "launcher.empty": "点击 + 开始",

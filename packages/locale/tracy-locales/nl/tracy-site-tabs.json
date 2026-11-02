@@ -1234,5 +1234,10 @@
   "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw.",
   "push.label.featuredImage": "Uitgelichte afbeelding",
   "push.label.pageTemplate": "Pagina-template",
-  "push.label.altText": "Alternatieve tekst"
+  "push.label.altText": "Alternatieve tekst",
+  "push.status.unknown": "Je live site is mogelijk gewijzigd",
+  "push.status.unknownBody": "Tracy heeft {count} wijzigingen verstuurd maar kreeg geen antwoord, dus ze staan misschien al op je live site. Controleer ze daar voordat je opnieuw synchroniseert.",
+  "push.status.unknownBody.one": "Tracy heeft 1 wijziging verstuurd maar kreeg geen antwoord, dus die staat misschien al op je live site. Controleer die daar voordat je opnieuw synchroniseert.",
+  "push.status.unknownAlso": "Nog {count} wijzigingen zijn zonder antwoord verstuurd, dus ze staan misschien al op je live site. Controleer ze daar voordat je opnieuw synchroniseert.",
+  "push.status.unknownAlso.one": "Nog 1 wijziging is zonder antwoord verstuurd, dus die staat misschien al op je live site. Controleer die daar voordat je opnieuw synchroniseert."
 }

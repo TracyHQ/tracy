@@ -855,6 +855,9 @@ POLICY = {
                             # A featured image, a menu item's parent item and what it opens.
                             ("postmeta", "meta_value", "meta_key IN ('_thumbnail_id', '_menu_item_menu_item_parent')"),
                             ("postmeta", "meta_value", MENU_OBJECT.format(kind="post_type")),
+                            # A custom link's object is the item itself: WordPress sets it to the
+                            # item's own number (wp_update_nav_menu_item), so it moves with the item.
+                            ("postmeta", "meta_value", MENU_OBJECT.format(kind="custom")),
                             ("options", "option_value",
                              "option_name IN ('page_on_front', 'page_for_posts', 'wp_page_for_privacy_policy',"
                              " 'site_logo', 'site_icon')"),

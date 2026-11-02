@@ -4,7 +4,7 @@
  * Every value is a `{ light, dark }` pair of literal strings — the shape `ctx.theme.overrideTokens`
  * validates, and the shape that cannot form a CSS variable cycle.
  */
-import { CODE_FONTS, DEFAULT_FONT, DEFAULT_PRIMARY, GLOBAL_FONTS } from './settings.mjs'
+import { CODE_FONTS, DEFAULT_FONT, DEFAULT_PRIMARY, DEFAULT_PRIMARY_FILL, GLOBAL_FONTS } from './settings.mjs'
 
 const HEX = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i
 
@@ -18,22 +18,26 @@ export function normalizePrimary(value) {
 /**
  * The accent: dsh's brand tokens plus Tracy's own `--primary`/`--ring`, so a dsh button and a
  * Tracy button agree. Hover shades are mixed at use time by the browser — literal strings, no
- * variables — darker on light backgrounds, lighter on dark ones.
+ * variables — darker on light backgrounds, lighter on dark ones. The default terracotta is a fill
+ * and words in its darker shade (`DEFAULT_PRIMARY_FILL`, as tokens.css): this layer is written on
+ * `<body>`, over tokens.css, and painted #bf5b3d under every primary label (#228). A colour the
+ * person picked is used as it is.
  */
 export function primaryTokens(value) {
   const color = normalizePrimary(value)
+  const fill = color.toLowerCase() === DEFAULT_PRIMARY ? DEFAULT_PRIMARY_FILL : color
   return {
     '--dsw-alias-brand-primary': both(color),
-    '--dsw-alias-brand-text': both(color),
-    '--dsw-alias-button-primary-fill': both(color),
+    '--dsw-alias-brand-text': both(fill),
+    '--dsw-alias-button-primary-fill': both(fill),
     '--dsw-alias-button-primary-hover': {
-      light: `color-mix(in oklab, ${color} 88%, black)`,
-      dark: `color-mix(in oklab, ${color} 88%, white)`
+      light: `color-mix(in oklab, ${fill} 88%, black)`,
+      dark: `color-mix(in oklab, ${fill} 88%, white)`
     },
-    '--dsw-alias-button-primary-dimmed': both(`color-mix(in oklab, ${color} 55%, transparent)`),
+    '--dsw-alias-button-primary-dimmed': both(`color-mix(in oklab, ${fill} 55%, transparent)`),
     '--dsw-alias-brand-primary-invert': both('#ffffff'),
     '--dsw-alias-state-business-primary': both(color),
-    '--primary': both(color),
+    '--primary': both(fill),
     '--ring': both(color)
   }
 }

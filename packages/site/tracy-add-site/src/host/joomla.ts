@@ -1524,13 +1524,32 @@ export async function readPhpInfo(
   }
 }
 
+/**
+ * The session's form token on the administrator's System Information page: its "Download as JSON"
+ * (or text) link carries it (`Sysinfo\HtmlView`, Joomla 3 to 6), else Joomla 4+'s script options or
+ * a form's hidden field.
+ */
+export function sysinfoToken(html: string): string | undefined {
+  return (
+    html.match(/view=sysinfo&(?:amp;)?format=(?:json|text)&(?:amp;)?([a-f0-9]{32})=1/)?.[1] ??
+    html.match(/"csrf\.token"\s*:\s*"([a-f0-9]{32})"/)?.[1] ??
+    html.match(CSRF_FIELD)?.[1]
+  )
+}
+
 /** `info.phpversion` of the administrator's System Information as JSON, or `undefined` (`readPhpInfo`). */
 async function readSysinfoPhp(
   fetchAuthed: (url: string, init?: RequestInit) => Promise<Response>,
   adminBase: string
 ): Promise<string | undefined> {
   try {
-    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json`, {
+    // Joomla answers the export only with the session's form token in the address (com_admin's
+    // controller checks it for `format=json`, Joomla 3 to 6); without it, a 303 back to the page and
+    // no version, so the check before installing never fired (#225 re-test, Joomla 3.10).
+    const view = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo`, { signal: timeout() })
+    const token = sysinfoToken(await readCappedBody(view))
+    if (!token) return undefined
+    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json&${token}=1`, {
       signal: timeout()
     })
     // Read as text, not parsed: a PHP warning printed ahead of the JSON (phpinfo() disabled, on

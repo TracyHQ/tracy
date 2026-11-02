@@ -1699,9 +1699,15 @@ async function readPhpInfo(fetchAuthed, adminBase, onAnswer) {
     return { limits: {} };
   }
 }
+function sysinfoToken(html) {
+  return html.match(/view=sysinfo&(?:amp;)?format=(?:json|text)&(?:amp;)?([a-f0-9]{32})=1/)?.[1] ?? html.match(/"csrf\.token"\s*:\s*"([a-f0-9]{32})"/)?.[1] ?? html.match(CSRF_FIELD)?.[1];
+}
 async function readSysinfoPhp(fetchAuthed, adminBase) {
   try {
-    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json`, {
+    const view = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo`, { signal: timeout() });
+    const token = sysinfoToken(await readCappedBody(view));
+    if (!token) return void 0;
+    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json&${token}=1`, {
       signal: timeout()
     });
     const body = await readCappedBody(page);

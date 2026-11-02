@@ -27,6 +27,13 @@ export const CODE_FONT_FIELD = 'codeFont'
  */
 export const DEFAULT_PRIMARY = '#bf5b3d'
 
+/**
+ * The default primary where it is a fill under a light label or words on the page: one step darker,
+ * the same hue, as tokens.css `--primary` (#276). `#fafafa` on it reads 4.64:1 and it on white 4.84:1;
+ * on #bf5b3d they read 4.21:1 and 4.40:1, under WCAG AA (#228). The mark and focus rings keep #bf5b3d.
+ */
+export const DEFAULT_PRIMARY_FILL = '#b75436'
+
 /** Font id meaning "leave dsh's own stack alone". */
 export const DEFAULT_FONT = 'default'
 

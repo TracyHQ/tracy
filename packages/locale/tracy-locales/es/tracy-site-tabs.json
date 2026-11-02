@@ -1234,5 +1234,10 @@
   "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo.",
   "push.label.featuredImage": "Imagen destacada",
   "push.label.pageTemplate": "Template de página",
-  "push.label.altText": "Texto alternativo"
+  "push.label.altText": "Texto alternativo",
+  "push.status.unknown": "Puede que tu site publicado haya cambiado",
+  "push.status.unknownBody": "Tracy envió {count} cambios pero no recibió respuesta, así que puede que ya estén en tu site publicado. Revísalos allí antes de volver a sincronizar.",
+  "push.status.unknownBody.one": "Tracy envió 1 cambio pero no recibió respuesta, así que puede que ya esté en tu site publicado. Revísalo allí antes de volver a sincronizar.",
+  "push.status.unknownAlso": "Se enviaron {count} cambios más sin respuesta, así que puede que ya estén en tu site publicado. Revísalos allí antes de volver a sincronizar.",
+  "push.status.unknownAlso.one": "Se envió 1 cambio más sin respuesta, así que puede que ya esté en tu site publicado. Revísalo allí antes de volver a sincronizar."
 }
