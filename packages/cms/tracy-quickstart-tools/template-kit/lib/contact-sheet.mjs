@@ -1,10 +1,10 @@
-// A contact sheet of every block image of a kit (and any list evidence images), so a person or an agent
+// A contact sheet of every block image of a kit (the pack's images), so a person or an agent
 // reading an image can eyeball them at once: misaligned, blank, cut by a header, or the same block twice.
 const esc = (s) =>
   String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
 
-/** The cells of the sheet: each block image per width, in kit order, then evidence images when asked. */
-export function sheetCells(kit, { evidence = false } = {}) {
+/** The cells of the sheet: each block image per width, in kit order. */
+export function sheetCells(kit) {
   const cells = []
   // Pages and blocks name images by id; the image list says where each one is.
   const pathOf = new Map((kit.images ?? []).map((i) => [i.id, i.path]))
@@ -12,12 +12,6 @@ export function sheetCells(kit, { evidence = false } = {}) {
   for (const b of kit.blocks)
     for (const w of kit.widths.map(String))
       if (b.images?.[w]) cells.push({ label: b.id, width: w, file: file(b.images[w]) })
-  if (evidence)
-    for (const b of kit.blocks)
-      for (const l of b.lists ?? [])
-        for (const [count, byWidth] of Object.entries(l.minEvidence?.images ?? {}))
-          for (const [w, id] of Object.entries(byWidth))
-            cells.push({ label: `${l.id} x${count}`, width: w, file: file(id) })
   return cells
 }
 

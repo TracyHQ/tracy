@@ -1,6 +1,8 @@
 // One picture of the measured brand colours for the owner review sheet: the main colour with the words written on it,
 // the secondary, each side's ground, the status colours, the brand variables, and where the brand colour sits inside
-// pictures. Drawn as HTML and shot in the browser (no image library).
+// pictures. Written as an HTML page; nothing is shot.
+
+import { writeFileSync } from 'node:fs'
 
 const esc = (s) =>
   String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
@@ -45,14 +47,7 @@ ul{margin:0;padding-left:18px;color:#333}</style>
 <h2>Where the brand colour sits in pictures</h2><ul>${places.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`
 }
 
-/** Shoot the palette into a PNG file with an open Playwright browser. */
-export async function writePalettePng(browser, bc, title, file) {
-  const ctx = await browser.newContext({ viewport: { width: 1008, height: 600 }, deviceScaleFactor: 1 })
-  try {
-    const page = await ctx.newPage()
-    await page.setContent(paletteHtml(bc, title))
-    await page.screenshot({ path: file, fullPage: true, type: 'png' })
-  } finally {
-    await ctx.close()
-  }
+/** Write the palette as an HTML page (no screenshot: a person opens it in a browser). */
+export function writePaletteHtml(bc, title, file) {
+  writeFileSync(file, `<!doctype html><meta charset="utf-8">${paletteHtml(bc, title)}`)
 }

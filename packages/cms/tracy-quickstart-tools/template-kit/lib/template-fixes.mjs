@@ -53,8 +53,7 @@ export function templateFixes(minEvidence) {
           width,
           gap: c.gap,
           ok: c.ok,
-          before: m.images?.[count]?.[width],
-          after: c.image
+          reason: c.reason
         })
       }
     by.set(m.fix.selector, f)

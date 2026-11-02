@@ -74,6 +74,9 @@ function loadIndexes(o, contract) {
   return { siteConfig, dbIndex, sourceIndex }
 }
 
+/** Who wrote each article and the accounts the dump ships: an author page lists its author's articles (`author-lists.mjs`). */
+const dumpPeopleOf = (dbIndex) => ({ contentAuthors: dbIndex.authors, contentUsers: dbIndex.accounts })
+
 /** Match and classify again the items of an earlier findings.json (new rules, no browser run). */
 function reclassify(result, contract, siteUrl, o) {
   const { dbIndex, sourceIndex } = loadIndexes(o, contract)
@@ -93,6 +96,7 @@ function reclassify(result, contract, siteUrl, o) {
     'lockState',
     '_n'
   ]
+  if (dbIndex) Object.assign(result, dumpPeopleOf(dbIndex))
   for (const p of result.pages) {
     for (const it of p.items) for (const k of derived) delete it[k]
     annotate(p.items, match, classify)
@@ -160,6 +164,8 @@ async function main() {
   if (o['report-only'] || o.reclassify) {
     result = JSON.parse(readFileSync(findings, 'utf8'))
     if (o.reclassify) result = reclassify(result, contract, siteUrl, o)
+    else if (o['db-dump'] && existsSync(o['db-dump']))
+      Object.assign(result, dumpPeopleOf(buildDbIndex(o['db-dump'])))
   } else {
     const t0 = Date.now()
     const { dbIndex, sourceIndex } = loadIndexes(o, contract)
@@ -177,6 +183,8 @@ async function main() {
       seconds: Math.round((Date.now() - t0) / 1000),
       ...run
     }
+    // Who wrote each article (from the dump): an author page lists only that author's articles (`author-lists.mjs`).
+    if (dbIndex) Object.assign(result, dumpPeopleOf(dbIndex))
   }
   const unique = new Map()
   for (const p of result.pages)

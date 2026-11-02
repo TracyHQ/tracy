@@ -70,7 +70,9 @@ export async function browseSite({
   const failures = []
   try {
     for (const p of pages) {
-      const opened = await openFrozen(ctx, urlOfPath(p.path, siteUrl), assignedAt(idx, p.path))
+      const opened = await openFrozen(ctx, urlOfPath(p.path, siteUrl), assignedAt(idx, p.path), null, {
+        wake: 'quick'
+      })
       if (!opened.page) {
         failures.push({ path: p.path, reason: opened.error })
         continue

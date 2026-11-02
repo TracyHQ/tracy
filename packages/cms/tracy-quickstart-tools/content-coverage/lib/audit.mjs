@@ -8,6 +8,7 @@ import { createMatcher } from './match.mjs'
 import { createClassifier } from './classify.mjs'
 import { findHygiene } from './hygiene.mjs'
 import { normText } from './normalize.mjs'
+import { standUserFilter } from './stand-users.mjs'
 
 const log = (...a) => console.error('[audit]', ...a)
 const pathOfUrl = (url) => {
@@ -46,6 +47,8 @@ export async function runAudit({
   const match = createMatcher(contract, siteUrl)
   const classify = createClassifier(contract, dbIndex, sourceIndex)
   const plan = new PagePlan(siteUrl, contract, cap)
+  // The stand's own accounts (absent from the release database) are never crawled nor reported.
+  const stand = standUserFilter({ users: dbIndex?.users ?? null })
   const browser = await chromium.launch()
   const ctx = {}
   for (const vp of viewports) ctx[vp] = await openContext(browser, vp)
@@ -108,11 +111,20 @@ export async function runAudit({
       if (plan.land(job, first.finalUrl)) continue // same page reached twice
       const n = pages.length + 1
       plan.addLinks(
-        first.data.items.filter((i) => i.kind === 'link' && i.source === 'a').map((i) => i.value),
+        first.data.items
+          .filter((i) => i.kind === 'link' && i.source === 'a' && !stand.isStandLink(i.value))
+          .map((i) => i.value),
         first.finalUrl
       )
       const results = { [viewports[0]]: first }
       for (const vp of viewports.slice(1)) results[vp] = await renderPage(ctx[vp], first.finalUrl)
+      {
+        const vps = Object.keys(results).filter((vp) => results[vp]?.data?.items)
+        const kept = stand.dropItems(vps.map((vp) => results[vp].data.items))
+        vps.forEach((vp, i) => {
+          results[vp].data.items = kept[i]
+        })
+      }
       const shots = {}
       for (const [vp, r] of Object.entries(results)) {
         if (!r.shot) continue

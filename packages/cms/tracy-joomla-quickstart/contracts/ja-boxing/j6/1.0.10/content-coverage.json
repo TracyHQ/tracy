@@ -6,10 +6,10 @@
   },
   "contract": {
     "id": "ja-boxing/j6/1.0.10",
-    "contentMapSha256": "d5e04741c2b2862e131c75ed7dbd6b1015d271c56ec1fb5810d3a298a270fa66",
+    "contentMapSha256": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
     "presentationLockSha256": "62352a206b2084372c42e45c69602a705982738975c291b2d257bc6d8b2674ec"
   },
-  "measuredAt": "2026-11-01T16:40:19.108Z",
+  "measuredAt": "2026-11-01T20:28:26.887Z",
   "viewports": [
     "desktop",
     "phone"
@@ -560,8 +560,8 @@
     "applies": true,
     "r1": {
       "facts": 346,
-      "slots": 1296,
-      "percent": 26.7
+      "slots": 1304,
+      "percent": 26.5
     },
     "rules": {
       "R2": {
@@ -576,8 +576,17 @@
       },
       "R4": {
         "title": "repeat or CTA not grouped",
-        "count": 0,
-        "keys": []
+        "count": 8,
+        "keys": [
+          "module-171.8",
+          "module-171.9",
+          "module-171.10",
+          "module-171.11",
+          "module-180.12",
+          "module-180.13",
+          "module-180.14",
+          "module-180.15"
+        ]
       },
       "R5": {
         "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
@@ -614,9 +623,9 @@
     "state": "judged",
     "reason": null,
     "counts": {
-      "slots": 1461,
+      "slots": 1469,
       "located": 883,
-      "notLocated": 578,
+      "notLocated": 586,
       "judged": 883,
       "notJudged": 0,
       "right": 883,

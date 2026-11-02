@@ -601,6 +601,97 @@ test(
   }
 )
 
+/** An invented social block: a repeatable row (an icon class, a name, a link) and one option named like an icon. */
+const SOCIAL_XML = `<?xml version="1.0" encoding="utf-8"?>
+<form><fields name="social"><fieldset name="social-intro" multiple="1">
+  <field name="font-icon" type="text"/><field name="title" type="text"/><field name="link" type="text"/>
+</fieldset><fieldset name="basic"><field name="heading-icon" type="text"/></fieldset></fields></form>`
+const SOCIAL = {
+  'jatools-layout-social': 'style-1',
+  'heading-icon': 'fa fa-star',
+  'social-intro[font-icon]': ['fa fa-kite', 'fa fa-lantern'],
+  'social-intro[title]': ['Kiteline', 'Lanternly'],
+  'social-intro[link]': ['#', '#']
+}
+
+test(
+  "--repeat-icons declares the icon field of a repeatable row, after the module's other slots and kept from Customize",
+  needsPhp,
+  () => {
+    const plain = capture(acmInventory('social', SOCIAL), { schemas: { social: SOCIAL_XML } })
+    assertWritten(plain)
+    const before = slotsOf(plain)
+    assert.equal(
+      before.some(([p]) => p.includes('font-icon')),
+      false,
+      'without the flag the capture is the published one'
+    )
+    const run = capture(acmInventory('social', SOCIAL), {
+      args: ['--repeat-icons'],
+      schemas: { social: SOCIAL_XML }
+    })
+    assertWritten(run)
+    assert.deepEqual(slotsOf(run), [
+      ...before,
+      ['social|social-intro[font-icon]|0', 'text', 'fa fa-kite'],
+      ['social|social-intro[font-icon]|1', 'text', 'fa fa-lantern']
+    ])
+    const icons = run
+      .read('content-map.json')
+      .slots.filter((s) => (s.jsonPath ?? []).join('|').includes('font-icon'))
+    assert.deepEqual(
+      icons.map((s) => [s.key, s.customize]),
+      [
+        ['module-7.' + before.length, 'keep'],
+        ['module-7.' + (before.length + 1), 'keep']
+      ]
+    )
+  }
+)
+
+test(
+  '--repeat-icons with --full-coverage still adds the row icons last, so no other slot key moves',
+  needsPhp,
+  () => {
+    const keys = (run) =>
+      run
+        .read('content-map.json')
+        .slots.filter((s) => s.entity === 'module-7')
+        .map((s) => [s.key, s.column, (s.jsonPath ?? []).map(String).join('|'), s.sample])
+    // A section heading the template's module form adds beside the block config: a slot the full coverage rules
+    // declare after the block's own fields.
+    const inventory = () => {
+      const inv = acmInventory('social', SOCIAL)
+      const block = inv.modules.find((m) => m.id === '7')
+      block.params = JSON.stringify({ ...JSON.parse(block.params), 'main-section': 'Find us online' })
+      return inv
+    }
+    const options = (args) => ({
+      args,
+      schemas: { social: SOCIAL_XML },
+      files: { 'templates/tracy/etc/form/com_modules.module.xml': MODULE_FORM_XML }
+    })
+    const plain = capture(inventory(), options(['--full-coverage']))
+    assertWritten(plain)
+    const before = keys(plain)
+    assert.ok(
+      before.some(([, , p]) => p === 'main-section'),
+      'the full coverage rules add a slot after the block fields'
+    )
+    const run = capture(inventory(), options(['--full-coverage', '--repeat-icons']))
+    assertWritten(run)
+    const after = keys(run)
+    assert.deepEqual(after.slice(0, before.length), before)
+    assert.deepEqual(
+      after.slice(before.length).map(([, , p, sample]) => [p, sample]),
+      [
+        ['social|social-intro[font-icon]|0', 'fa fa-kite'],
+        ['social|social-intro[font-icon]|1', 'fa fa-lantern']
+      ]
+    )
+  }
+)
+
 test(
   'a trashed module whose ACM schema is shipped is still captured unless --skip-trashed-modules is passed',
   needsPhp,

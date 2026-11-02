@@ -2,8 +2,9 @@
 // Every field the kit cannot know is named in `errors` with its path and the reason; nothing is invented.
 import { imagesDigest } from '../../../../../apps/tracy-web/src/lib/template-kit/reader.js'
 import { imageIdOf, neutralKey, pageIdOf } from './ids.mjs'
-import { buildBlock, sampleIndex } from './kit-blocks.mjs'
-import { itemParents } from './kit-item-lists.mjs'
+import { buildBlock } from './kit-blocks.mjs'
+import { sampleIndex } from './sample-index.mjs'
+import { itemListsOf, itemParents, listingListKeys } from './kit-item-lists.mjs'
 import { canonicalPath, pathOfRoute } from './kit-paths.mjs'
 import { applyLayouts } from './layouts.mjs'
 import { listingMax } from './listing-rows.mjs'
@@ -83,7 +84,7 @@ export function buildKit({
   minEvidence = {},
   cardFields = {},
   frameKit,
-  layoutProfiles = {},
+  wordsLinks = {},
   siteUrl,
   aliasHosts = []
 }) {
@@ -127,7 +128,8 @@ export function buildKit({
     for (const w of widths) {
       if (!p.widths?.[w]) continue
       blocks[w] = p.widths[w].blocks
-      images[w] = imageIdOf(p.widths[w].full)
+      // Only a group's representative has a full-page shot; the others show it (`fullShotOf` in the pack).
+      if (p.widths[w].full) images[w] = imageIdOf(p.widths[w].full)
     }
     const inMainMenu = menu.paths ? [p.path, ...(p.aliases ?? [])].some((x) => menu.paths.has(x)) : null
     return {
@@ -159,6 +161,8 @@ export function buildKit({
       minEvidence,
       cardFields,
       frameKit,
+      linkIcons: wordsLinks.links?.[rec.id] ?? [],
+      iconProbe: wordsLinks.iconProbes?.[rec.id] ?? null,
       siteUrl,
       aliasHosts,
       widths
@@ -166,9 +170,40 @@ export function buildKit({
     if (body) {
       block.source.owner = body.owner ? neutralKey(body.owner) : null
       block.source.ownerKind = body.kind
+      // The map's lists of this page (a listing page's: no block of their own): attached to the page's body block.
+      // A further result page (`?start=6`) takes page 1's card fields instead (itemsListChecks).
+      const bodyPath = String(pathOfBody.get(rec.id) ?? '')
+      const keys = bodyPath.includes('?') ? [] : listingListKeys(map, bodyPath, pathOfRoute)
+      if (keys.length) {
+        const r = itemListsOf({
+          map,
+          blockId: rec.id,
+          entities: [],
+          minEvidence,
+          cardFields,
+          errors,
+          only: keys
+        })
+        block.lists.push(...r.lists)
+        for (const d of r.demoOwned) if (!block.demoOwned.some((x) => x.id === d.id)) block.demoOwned.push(d)
+      }
       if (LISTING.test(body.kind)) {
-        // A listing's items list: measured rows may already have made it (from min-evidence.json).
-        let list = block.lists.find((l) => l.id === `${rec.id}.items`)
+        // A listing's items list: the content map's (with its card fields) when it declares one for the page's
+        // owner, else the one measured rows made (min-evidence.json), else a new one. A measured minimum joins the
+        // map's list.
+        const own = block.lists.find((l) => l.id === `${rec.id}.items`)
+        const fromMap = block.lists.find((l) => l.rowKind === 'items' && l !== own && l.rowSlots?.length)
+        if (fromMap && own) {
+          if (fromMap.min == null && own.min != null) {
+            const { id: _id, rowKind: _k, rowSlots: _r, max: _m, ...measured } = own
+            Object.assign(fromMap, measured)
+            // The map's list now has the measured minimum: its "no minimum" error no longer holds.
+            const stale = `blocks[${rec.id}].lists[${fromMap.id}].min`
+            for (let i = errors.length - 1; i >= 0; i--) if (errors[i].field === stale) errors.splice(i, 1)
+          }
+          block.lists.splice(block.lists.indexOf(own), 1)
+        }
+        let list = fromMap ?? own
         if (!list) {
           list = { id: `${rec.id}.items`, rowKind: 'items', min: null, max: null, rowSlots: [] }
           block.lists.unshift(list)
@@ -188,7 +223,11 @@ export function buildKit({
           siteUrl,
           aliasHosts
         })
-        if (most) Object.assign(list, most)
+        // The view's page size from the map beats a count of the rows this demo happens to show (an author with
+        // three articles on a page of six).
+        if (most && most.maxSource === 'captured-rows' && list.maxFrom === 'view-setting' && list.max != null)
+          Object.assign(list, { maxSource: 'view-setting', maxEvidence: most.maxEvidence })
+        else if (most) Object.assign(list, most)
         else
           errors.push({
             kind: 'missing',
@@ -205,7 +244,8 @@ export function buildKit({
       .map((r) => [r.id, r.widths?.[widths[0]]?.details?.skeleton])
       .filter(([, sk]) => sk)
   )
-  applyLayouts({ pages, pageGroups, blocks, errors }, { profiles: layoutProfiles, skeletons })
+  const { checks: layoutChecks } = applyLayouts({ pages, pageGroups, blocks, errors }, { skeletons })
+  const checks = itemsListChecks({ pages, blocks, errors })
   for (const p of pages) {
     delete p.kind
   }
@@ -235,6 +275,10 @@ export function buildKit({
     pageGroups,
     pages,
     blocks,
+    // Pairs of layouts of one kind with close skeletons, kept apart (layouts.mjs): for a person to look at.
+    layoutChecks,
+    // Counts that must be 0 for a kit a planner can use.
+    checks,
     images,
     imagesSha256: imagesDigest(images),
     // Test-data pages left out of the kit, counted by reason and never named (see exclude.mjs).
@@ -242,4 +286,34 @@ export function buildKit({
     errors,
     approval: null
   }
+}
+
+/**
+ * Items lists and their card fields: a further result page's list takes page 1's card fields (`rowSlotsFrom`);
+ * every items list still without card fields is an error, and their count is a check that must be 0.
+ */
+export function itemsListChecks({ pages, blocks, errors }) {
+  const bodyOf = (pageId) => blocks.find((b) => b.id === `body-${String(pageId).replace(/^page-/, '')}`)
+  const itemsOf = (b) => b?.lists.find((l) => l.rowKind === 'items')
+  for (const p of pages) {
+    if (!p.paginationOf) continue
+    const list = itemsOf(bodyOf(p.id))
+    const first = itemsOf(bodyOf(p.paginationOf))
+    if (list && !list.rowSlots?.length && first?.rowSlots?.length) {
+      list.rowSlots = first.rowSlots
+      list.rowSlotsFrom = first.id
+    }
+  }
+  let without = 0
+  for (const b of blocks)
+    for (const l of b.lists)
+      if (l.rowKind === 'items' && !l.rowSlots?.length) {
+        without++
+        errors.push({
+          kind: 'missing',
+          field: `blocks[${b.id}].lists[${l.id}].rowSlots`,
+          reason: 'no card fields: the content map declares none for this items list'
+        })
+      }
+  return { itemsListsWithoutCardFields: without }
 }

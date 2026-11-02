@@ -120,10 +120,10 @@ test('withEmptyOverride and judgeHide', () => {
   assert.equal(withEmptyOverride(null, 'MOD_FOOT_LINE2'), 'MOD_FOOT_LINE2=""\n')
   assert.equal(withEmptyOverride('A="b"\n\n', 'C'), 'A="b"\nC=""\n')
   const text = 'Example CMS is free software'
-  assert.equal(judgeHide({ textBefore: `x ${text}`, textAfter: 'x', text, change: 0.3 }).canHide, true)
-  assert.equal(judgeHide({ textBefore: text, textAfter: text, text, change: 0.3 }).canHide, false)
-  assert.equal(judgeHide({ textBefore: text, textAfter: '', text, change: 0 }).canHide, null)
-  assert.equal(judgeHide({ textBefore: '', textAfter: '', text, change: 0.5 }).canHide, null)
+  assert.equal(judgeHide({ textBefore: `x ${text}`, textAfter: 'x', text, changed: true }).canHide, true)
+  assert.equal(judgeHide({ textBefore: text, textAfter: text, text, changed: true }).canHide, false)
+  assert.equal(judgeHide({ textBefore: text, textAfter: '', text, changed: false }).canHide, null)
+  assert.equal(judgeHide({ textBefore: '', textAfter: '', text, changed: true }).canHide, null)
 })
 
 test('the writer only touches the override folder, and the source reads many files in one go', () => {

@@ -9,12 +9,32 @@ import { buildFrames } from './kit-frames.mjs'
 import { itemListsOf } from './kit-item-lists.mjs'
 import { measuredMin } from './min-evidence.mjs'
 import { matchRepeat, ruleOneMin } from './rows.mjs'
+import { addIconSlots } from './icon-slots.mjs'
+import { networkOf } from './site/helpers.mjs'
+
+const esc = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 const short = (s, n = 60) => {
   const t = String(s ?? '')
     .replace(/\s+/g, ' ')
     .trim()
   return t ? t.slice(0, n) : null
+}
+
+/**
+ * The block's shown links, one per position (links repeating a label and an address are each kept), each with the
+ * icon it draws. The words-and-links reading lists them by position with their icons; without it, the read pass's
+ * list, with icons from an older `label|href` file.
+ */
+export function shownLinks(read = [], linkIcons = {}) {
+  if (Array.isArray(linkIcons) && linkIcons.length) return linkIcons
+  const byKey = Array.isArray(linkIcons) ? {} : linkIcons
+  return read.map((l, position) => ({
+    position,
+    label: l.label,
+    href: l.href,
+    icon: byKey[`${l.label}|${l.href}`] ?? null
+  }))
 }
 
 /** The area a block sits in, from its kind and position, in CMS-neutral words. */
@@ -29,25 +49,11 @@ export function roleOf(rec, position) {
   return 'section'
 }
 
-/** Every normalized slot sample of the map, to tell template words from content. */
-export function sampleIndex(map) {
-  const exact = new Set()
-  const all = []
-  for (const s of map.slots ?? []) {
-    if (s.type === 'image' || s.type === 'url') continue
-    const n = normText(s.sample)
-    if (!n) continue
-    exact.add(n)
-    all.push(n)
-  }
-  // A piece of a slot (a heading split by inline markup) is the slot's words, not the template's.
-  return {
-    has: (t) => exact.has(t) || (t.length >= 3 && all.some((l) => l.length > t.length && l.includes(t)))
-  }
-}
-
 /**
- * @param {{rec: object, entity: string|null, idx: object, samples: object, errors: object[], minEvidence: object, cardFields?: object, frameKit?: {evidence: object, classes: object, review: object}, siteUrl: string, aliasHosts: string[], widths: string[]}} o
+ * @param {{rec: object, entity: string|null, idx: object, samples: object, errors: object[], minEvidence: object, cardFields?: object, frameKit?: {evidence: object, classes: object, review: object}, linkIcons?: object[]|Record<string, object>, iconProbe?: object|null, siteUrl: string, aliasHosts: string[], widths: string[]}} o
+ *   `linkIcons`: every shown link by position with the icon it draws (measure-words-links.mjs; an older file keys
+ *   icons by `label|href`); `iconProbe`: whether
+ *   setting a font icon's class changed its glyph
  */
 export function buildBlock({
   rec,
@@ -58,6 +64,8 @@ export function buildBlock({
   minEvidence,
   cardFields,
   frameKit,
+  linkIcons = {},
+  iconProbe = null,
   siteUrl,
   aliasHosts,
   widths
@@ -74,8 +82,33 @@ export function buildBlock({
     .filter(([k]) => entities.some((e) => k.startsWith(`${e}.`)))
     .map(([k, g]) => {
       const listId = neutralKey(k)
-      const max = g.max ?? g.items ?? null
-      const row0 = slots.filter((s) => String(s.group?.id ?? '') === `${k}.0`)
+      // The rows are the list's slot groups (`<list>.<n>`), in order: a map that numbers every row as its own group
+      // (item 0 of each) still has as many rows as groups, whatever its item count says.
+      const groupIds = [
+        ...new Set(
+          slots
+            .map((s) => String(s.group?.id ?? ''))
+            .filter((gid) => new RegExp(`^${esc(k)}\\.\\d+$`).test(gid))
+        )
+      ].sort((a, b) => Number(a.slice(k.length + 1)) - Number(b.slice(k.length + 1)))
+      const slotOut = (s) => ({
+        id: neutralKey(s.key),
+        role: s.role ?? null,
+        type: s.type,
+        ...(s.maxCharacters != null ? { maxCharacters: s.maxCharacters } : {})
+      })
+      const rowsOf = groupIds.map((gid, index) => ({
+        index,
+        slots: slots
+          .filter((s) => String(s.group?.id ?? '') === gid)
+          .map((s) => ({
+            ...slotOut(s),
+            ...(s.type === 'image' || s.type === 'url' ? {} : { sample: short(s.sample) })
+          }))
+      }))
+      const mapMax = g.max ?? g.items ?? null
+      const max = mapMax != null && groupIds.length > mapMax ? groupIds.length : mapMax
+      const row0 = slots.filter((s) => String(s.group?.id ?? '') === groupIds[0])
       // What the map says of the list beyond its size (a listing's source category, the items it shows...)
       // is carried as it is, so a richer content map needs no change here.
       const { min: _min, max: _max, items: _items, minFrom: _from, rowKind = 'slots', ...extra } = g
@@ -84,13 +117,10 @@ export function buildBlock({
         rowKind,
         min: null,
         max,
-        rowSlots: row0.map((s) => ({
-          id: neutralKey(s.key),
-          role: s.role ?? null,
-          type: s.type,
-          ...(s.maxCharacters != null ? { maxCharacters: s.maxCharacters } : {})
-        })),
-        ...extra
+        rowSlots: row0.map(slotOut),
+        ...extra,
+        ...(max !== mapMax ? { maxFrom: 'slot-rows', shown: groupIds.length } : {}),
+        ...(rowsOf.length > 1 ? { rows: rowsOf } : {})
       }
       const measured = minEvidence?.[listId]
       const repeat = matchRepeat(desk?.repeats, max, used)
@@ -139,16 +169,33 @@ export function buildBlock({
   })
   const urlSlots = slots.filter((s) => s.type === 'url')
   const labelSlot = new Map(slots.filter((s) => s.type === 'text').map((s) => [normText(s.sample), s]))
-  const links = (desk?.links ?? []).map((l, i) => {
+  const usedIds = new Set()
+  const links = shownLinks(desk?.links, linkIcons).map((l, i) => {
     const target =
       canonicalPath(l.href, siteUrl, aliasHosts) ??
       (/^(https?:|mailto:|tel:)/i.test(l.href ?? '') && !aliasHosts.some((h) => l.href.includes(h))
         ? l.href
         : null)
-    const label = labelSlot.get(normText(l.label))
-    const pair = label?.group ? urlSlots.find((u) => u.group?.id === label.group.id) : null
-    return { id: pair ? neutralKey(pair.key) : `${id}.link-${i + 1}`, label: l.label || null, target }
+    const icon = l.icon ?? null
+    // Paired with a row's address slot by its words, or, for an icon-only link, by the network its icon draws
+    // when a row's label slot names that network ("Facebook" for fa-facebook).
+    const network = icon ? networkOf({ icon, target: l.href, label: l.label }) : null
+    const urlOf = (t) => (t?.group ? urlSlots.find((u) => u.group?.id === t.group.id) : null)
+    const pair =
+      urlOf(labelSlot.get(normText(l.label))) ?? (network ? urlOf(labelSlot.get(normText(network))) : null)
+    // A repeat of a paired link (same label) keeps its own position id, so every id stays one link.
+    const paired = pair ? neutralKey(pair.key) : null
+    const linkId = paired && !usedIds.has(paired) ? paired : `${id}.link-${i + 1}`
+    usedIds.add(linkId)
+    return {
+      id: linkId,
+      position: l.position ?? i,
+      label: l.label || null,
+      target,
+      ...(icon ? { icon: { ...icon, network } } : {})
+    }
   })
+  addIconSlots(lists, links, iconProbe, slots, neutralKey)
   // A menu the pages never show (an off-canvas menu) has its links in the content map's menu block.
   const menu = !desk && entity ? idx.map.menuBlocks?.[entity] : null
   if (menu)
@@ -165,17 +212,34 @@ export function buildBlock({
     }
   else if (!desk) missing('links', 'the block was never shown, so its links could not be read')
   // Words the block shows that no slot holds; the site part names the CMS language string behind a sentence.
-  const fixedText = [
-    ...new Set(
-      (desk?.texts ?? []).filter((t) => {
-        const n = normText(t)
-        return n && /\p{L}/u.test(n) && !samples.has(n)
-      })
-    )
-  ].map((text) => ({ text, source: null }))
+  // Shown words that are a content slot's (whole, cut short, or split by markup) are content, never fixed text: a
+  // slot of this block is already declared; another entity's (an item's intro on a listing) is the demo's own.
+  const ownKeys = new Set(slots.map((s) => s.key))
+  const fixedText = []
+  const shownContent = []
+  for (const text of new Set(desk?.texts ?? [])) {
+    const n = normText(text)
+    if (!n || !/\p{L}/u.test(n)) continue
+    const m = samples.matchOf(n, slots)
+    if (!m) fixedText.push({ text, source: null })
+    // Another entity's words shown whole or as a piece are an item's card or a menu label, read as content
+    // already; words only a looser match recognizes (cut short, split, run together) are named as the demo's.
+    else if (!ownKeys.has(m.slot.key) && !/^(whole|piece)$/.test(m.how))
+      shownContent.push({ slot: m.slot, text, how: m.how })
+  }
   const demoOwned = slots
     .filter((s) => isFactRole(s.role) || (id === 'header' && String(s.role ?? '').startsWith('business.')))
     .map((s) => ({ id: neutralKey(s.key), role: s.role, sample: short(s.sample) }))
+  for (const { slot, text, how } of shownContent)
+    if (!demoOwned.some((d) => d.id === neutralKey(slot.key)))
+      demoOwned.push({
+        id: neutralKey(slot.key),
+        role: slot.role ?? null,
+        sample: short(slot.sample),
+        kind: 'text',
+        shownAs: short(text),
+        matched: how
+      })
   for (const d of items.demoOwned) if (!demoOwned.some((x) => x.id === d.id)) demoOwned.push(d)
   // Icons drawing the demo business's trade must be replaced or hidden like its facts.
   for (const icon of demoIcons) {

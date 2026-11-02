@@ -47,6 +47,7 @@ export async function assembleKit(o, out, tool) {
   const host = typeof o['host-header'] === 'string' ? o['host-header'] : null
   const map = readJson(join(o.contract, 'content-map.json'))
   const siteDoc = readIf(join(out, 'site.json'))
+  const wordsLinks = readIf(join(out, 'words-links.json')) ?? {}
   const kit = buildKit({
     map,
     capture,
@@ -60,11 +61,11 @@ export async function assembleKit(o, out, tool) {
       review: readIf(join(out, 'frame-review.json')) ?? {},
       logoIds: logoFrameIds(map, siteDoc?.site)
     },
-    layoutProfiles: readIf(join(out, 'layout-profiles.json')) ?? {},
+    wordsLinks,
     siteUrl: o.site,
     aliasHosts: host ? [host] : []
   })
-  mergeSite(kit, siteDoc, map)
+  mergeSite(kit, siteDoc, map, wordsLinks)
   const unchecked = kit.blocks.flatMap((b) => b.frames.filter((f) => f.faces === null && !f.twinOf))
   if (unchecked.length)
     kit.errors.push({

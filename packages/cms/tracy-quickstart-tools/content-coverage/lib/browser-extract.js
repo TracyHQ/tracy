@@ -180,7 +180,7 @@ export function extractPage() {
   const add = (kind, el, extra) => {
     const scopes = el ? scopesOf(el) : []
     items.push({
-      ...(scopes.length ? { scopes } : {}),
+      scopes,
       kind,
       tag: el ? el.tagName.toLowerCase() : null,
       selector: el ? selectorOf(el) : null,

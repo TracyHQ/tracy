@@ -1,6 +1,6 @@
-// The owner's one-pass review page: every icon with its class and why, every frame shot whole and emptied
-// side by side with the automatic verdict, and every proposed template fix with its trial. HTML pages, made
-// into PNGs by the caller.
+// The owner's one-pass review page, built from the pack's own images only (nothing is shot for it): every icon with
+// its class and why, every emptied frame with the DOM numbers behind its verdict, every proposed template fix with
+// its trial, every fixed CMS text and template gap. HTML pages.
 const esc = (s) =>
   String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
 
@@ -16,53 +16,71 @@ export function reviewRows(kit, fixes = []) {
           section: 'Icons and faces',
           title: `${f.id} · ${f.faces ? 'demo-faces (demoOwned)' : f.fixed == null ? 'NOT CLASSIFIED' : f.fixed ? 'fixed' : 'demo (demoOwned)'}`,
           note: f.twinOf ? `twin of ${f.twinOf}` : (f.classReason ?? ''),
-          pics: [img(`${f.twinOf ?? f.id}-crop-${kit.widths[0]}`)]
+          pics: [img(b.images?.[kit.widths[0]] ?? b.images?.[String(kit.widths[0])])]
         })
-  const shotOnce = new Set() // a row slot is one shot for every row's frame
+  const said = new Set() // a row slot is one measurement for every row's frame
+  const numbers = (m) =>
+    m
+      ? `height ${m.blockBefore?.height ?? '?'} -> ${m.blockAfter?.height ?? '?'}px, text moved ${m.textMoved}px, ${m.textOverlaps} new overlaps${m.emptyBox ? `, empty ${m.emptyBox.width}x${m.emptyBox.height} box` : ''}${m.uneven ? `, ${m.uneven}` : ''}`
+      : ''
   for (const b of kit.blocks)
     for (const f of b.frames)
       if (f.hideEvidence)
         for (const w of kit.widths.map(String)) {
-          const shot = f.hideEvidence.images[w]
-          if (!shot || shotOnce.has(shot)) continue
-          shotOnce.add(shot)
+          const m = f.hideEvidence.measured?.[w]
+          const key = `${f.hideEvidence.measuredAs === 'row-slot' ? b.id : f.id}:${w}:${f.hideEvidence.checks[w]}`
+          if (!f.hideEvidence.checks[w] || said.has(key)) continue
+          said.add(key)
           const slot = f.hideEvidence.measuredAs === 'row-slot' ? ' · row slot, emptied in every row' : ''
           rows.push({
-            section: 'Frames emptied (whole | emptied)',
+            section: 'Frames emptied (the block as packed; the DOM numbers once emptied)',
             title: `${f.id} · ${f.kind ?? '?'} · ${w} · canHide ${f.canHide}${slot}`,
-            note: `${f.hideEvidence.checks[w] ?? ''} (${f.hideEvidence.judgedBy})`,
-            pics: [img(b.images[w]), img(shot)]
+            note: `${f.hideEvidence.checks[w]} (${f.hideEvidence.judgedBy}); ${numbers(m)}`,
+            pics: [img(b.images?.[w])]
           })
         }
   for (const fix of fixes)
     for (const e of fix.evidence ?? [])
       rows.push({
-        section: 'Template fixes (as is | with the fix)',
+        section: 'Template fixes (measured in the DOM)',
         title: `${fix.selector} { ${fix.rule} } · ${fix.verified ? 'verified' : 'NOT verified'}`,
         note: `${e.list} with ${e.count} rows at ${e.width}: gap ${e.gap.left}px left, ${e.gap.right}px right; unlocks ${fix.lists.join(', ')}`,
-        pics: [e.before, e.after]
+        pics: []
       })
   for (const b of kit.blocks)
-    for (const t of (b.fixedText ?? []).filter((x) => x.source))
-      rows.push({
-        section: 'Fixed CMS text (as is | hidden by override)',
-        title: `${b.id} · ${t.source.constant} · canHide ${t.canHide}`,
-        note: `"${t.text}" from ${t.source.file}${t.evidence ? `; ${t.evidence.reason} (change ${t.evidence.change})` : ''}`,
-        pics: t.evidence ? [t.evidence.before, t.evidence.after] : []
-      })
+    for (const t of b.fixedText ?? []) {
+      const pics = [img(b.images?.[kit.widths[0]] ?? b.images?.[String(kit.widths[0])])]
+      if (t.source?.constant)
+        rows.push({
+          section: 'Fixed CMS text (the block as packed; the DOM numbers with the override)',
+          title: `${b.id} · ${[t.source.constant].flat().join(', ')} · canHide ${t.canHide}`,
+          note: `"${t.text}" from ${t.source.file}${t.evidence ? `; ${t.evidence.reason} (height ${t.evidence.heightChange}px, ${t.evidence.textGone} text pieces gone)` : ''}`,
+          pics
+        })
+      else
+        rows.push({
+          section: 'Fixed template words (the block as packed; the DOM numbers with the words emptied)',
+          title: `${b.id} · canHide ${t.canHide ?? 'not measured'}`,
+          note: `"${t.text}"${t.reason ? `; ${t.reason}` : ''}${t.evidence ? ` (height ${t.evidence.heightChange}px, text moved ${t.evidence.textMoved}px)` : ''}`,
+          pics
+        })
+    }
   for (const g of kit.templateGaps ?? [])
     rows.push({
       section: 'Template gaps (defects for the template owner)',
       title: `${g.kind} · ${Object.values(g.where).filter(Boolean).join(' · ')}${g.accepted ? ' · accepted' : ''}`,
       note: `${g.detail}${g.accepted ? ` (accepted by ${g.accepted.by ?? '?'}: ${g.accepted.reason})` : ''} [${g.id}]`,
-      pics: g.evidence.slice(0, 2).map((id) => img(id) ?? id)
+      pics: g.evidence
+        .map((id) => img(id))
+        .filter(Boolean)
+        .slice(0, 2)
     })
   if (kit.site?.brandColours)
     rows.push({
       section: 'Site',
       title: 'Brand colours',
-      note: 'site-palette.png',
-      pics: ['site-palette.png']
+      note: 'open site-palette.html beside the kit',
+      pics: []
     })
   return rows
 }

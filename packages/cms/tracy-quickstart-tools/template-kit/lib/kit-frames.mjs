@@ -2,7 +2,7 @@
 // was measured on the site (frame-evidence.json), the icon classes (icon-classes.json) and a person's review
 // (frame-review.json); nothing guessed. A field that could not be measured is null and named in `errors`.
 import { pictureOf } from './block-slots.mjs'
-import { imageIdOf, neutralKey } from './ids.mjs'
+import { neutralKey } from './ids.mjs'
 
 const ICON_SIDE = 128 // a frame no wider or taller than this on the page is an icon
 const MARK_SIDE = 320 // a picture mostly clear (drawn on nothing), up to this size, is a drawn mark: an icon too
@@ -108,7 +108,8 @@ export function buildFrames({ blockId, slots, evidence, classes, review, widths,
       fixed: null,
       hideEvidence: measuredAt.length
         ? {
-            images: Object.fromEntries(measuredAt.map(([w, x]) => [w, imageIdOf(x.hidden.image)])),
+            // The DOM numbers behind the check, per width (empty-frame.mjs): no screenshot is taken.
+            measured: Object.fromEntries(measuredAt.map(([w, x]) => [w, x.hidden.evidence ?? null])),
             checks: Object.fromEntries(Object.entries(checks).map(([w, c]) => [w, c.reason])),
             measuredAs,
             invalid: Object.values(checks).some((c) => c.ok === null),
@@ -182,8 +183,8 @@ export function buildFrames({ blockId, slots, evidence, classes, review, widths,
         f.id,
         'canHide',
         f.hideEvidence?.invalid
-          ? 'emptying the frame and its painters changed no pixel in its box: the measurement is invalid'
-          : 'the frame was never shown, so emptying it could not be shot'
+          ? 'emptying it changes nothing a visitor sees (nothing emptied, or the picture lies under a solid block): the measurement is invalid'
+          : 'the frame was never shown, so emptying it could not be measured'
       )
   }
   return { frames, demoIcons }

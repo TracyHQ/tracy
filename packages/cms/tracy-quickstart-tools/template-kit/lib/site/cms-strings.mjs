@@ -56,6 +56,19 @@ export function stringPattern(value) {
 }
 
 /**
+ * The pattern a short language value (a form label, "Page %s of %s", "Previous article: %s") prints as, matched only
+ * against a whole line: at least two letters outside the placeholders. Short values are common, so a hit names
+ * every constant with that value (`source.constants`) and stays a guess (`source.short`) until the measurement
+ * empties them all and sees the words leave.
+ */
+export function shortPattern(value) {
+  const text = shownText(value)
+  if ((text.replace(PLACEHOLDER, '').match(/\p{L}/gu) ?? []).length < 2) return null
+  const parts = text.split(PLACEHOLDER).map((p) => norm(p).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  return new RegExp(`^${parts.join('.+?')}$`)
+}
+
+/**
  * @param {{lines: Array<{block: string, text: string, pageId?: string, path?: string, raw?: string}>, files: Array<{file: string, text: string}>, slotTexts?: string[]}} o
  * @returns {{fixedTexts: object[], nameLines: object[]}} each `{block, text, pages, source: {file, constant}, placeholders}`
  */
@@ -64,20 +77,28 @@ export function matchCmsStrings({ lines, files, slotTexts = [] }) {
   for (const f of files)
     for (const s of parseIni(f.text)) {
       const pattern = stringPattern(s.value)
-      if (pattern) strings.push({ ...s, file: f.file, pattern })
+      const short = pattern ? null : shortPattern(s.value)
+      if (pattern || short) strings.push({ ...s, file: f.file, pattern: pattern ?? short, short: !pattern })
     }
   const slots = new Set(slotTexts.map(norm))
   const by = new Map()
   for (const l of lines) {
     const text = norm(l.text)
     if (!text || slots.has(text)) continue
-    const hit = strings.find((s) => s.pattern.test(text))
+    const long = strings.find((s) => !s.short && s.pattern.test(text))
+    const hits = long ? [long] : strings.filter((s) => s.short && s.pattern.test(text))
+    const hit = hits[0]
     if (!hit) continue
     const key = `${l.block}|${hit.constant}`
+    const constants = [...new Set(hits.map((h) => h.constant))]
     const rec = by.get(key) ?? {
       block: l.block,
       text: String(l.text).replace(/\s+/g, ' ').trim(),
-      source: { file: hit.file, constant: hit.constant },
+      source: {
+        file: hit.file,
+        constant: hit.constant,
+        ...(hit.short ? { short: true, constants } : {})
+      },
       placeholders: [...new Set(hit.value.match(PLACEHOLDER) ?? [])],
       printsName: NAME_PLACEHOLDER.test(hit.value),
       at: l.path ? { path: l.path, raw: l.raw ?? l.block } : null,

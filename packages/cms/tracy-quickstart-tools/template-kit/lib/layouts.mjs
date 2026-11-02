@@ -1,92 +1,107 @@
-// Pages that share a layout, decided from what each page renders, never from its menu group: the same kind of main
-// content, the same skeleton of its body block when the capture read one, and a body shot whose ink sits in the same
-// places (layout-profiles.mjs). Within one layout a page stands for the rest (a group's representative first, then the
-// page with the most blocks, a main menu page, the shortest path): its body shot is the one packed (`shotOf` on the
-// others) and its frames are the ones emptied: a frame of another page in the same place (same role, same order among
-// the frames of that role) takes its `canHide` (`canHideFrom`). A frame with no counterpart is measured on its own
-// page. A further result page (`?start=6`, `/page/2`) of the same kind and skeleton as its page 1 uses page 1's
-// shots (`paginationOf`): its pictures differ, its layout does not.
-import { profileSimilarity, SAME_LAYOUT } from './layout-profiles.mjs'
+// Pages that share a layout, decided from the DOM each page renders, never from its menu group: the same kind of
+// main content and the same body skeleton (read-details.js: containers with their classes, flowing content as `~`).
+// Two layouts of one kind whose skeletons are close but not equal stay apart (one more body shot, the safe side)
+// and are listed in `layoutChecks` for a person to look at. Within one layout a page stands for the rest
+// (a group's representative first, then the page with the most blocks, a main menu page, the shortest path): its
+// body shot is the one taken (`shotOf` on the others) and its frames are the ones emptied: a frame of another page
+// in the same place (same role, same order among the frames of that role) takes its `canHide` (`canHideFrom`). A
+// frame with no counterpart is measured on its own page. A further result page (`?start=6`, `/page/2`) whose
+// skeleton is page 1's or close to it uses page 1's shots (`paginationOf`): it lacks only what page 1 alone shows.
 import { firstPageOf } from './kit-paths.mjs'
 import { representativeOf } from './pack.mjs'
+
+/** Two skeletons at least this close (and not equal): a further result page joins page 1; other pages are listed. */
+export const SKELETON_CLOSE = 0.8
 
 const bodyOf = (page) => `body-${String(page.id).replace(/^page-/, '')}`
 const listed = (page) =>
   new Set(Array.isArray(page.blocks) ? page.blocks : Object.values(page.blocks ?? {}).flat())
+// A further result page's kind names its offset (`category listing (list position 6)`): the view is page 1's.
+const kindOf = (page) => String(page.kind ?? 'unknown').replace(/\s*\(list position \d+\)$/, '')
 
-/**
- * What a page's main area is, without its words: the kind of main content and the skeleton of the body block. The
- * blocks around the body are left out: an extra module beside an article does not change the article's layout, and
- * a sidebar that narrows the body shows in its profile.
- */
+/** What a page's main area is, without its words: the kind of main content and the body skeleton. */
 export function layoutKey(page, skeleton = null) {
-  // A further result page's kind names its offset (`category listing (list position 6)`): the view is page 1's.
-  const kind = String(page.kind ?? 'unknown').replace(/\s*\(list position \d+\)$/, '')
-  return `${kind}|${skeleton ?? ''}`
+  return `${kindOf(page)}|${skeleton ?? ''}`
+}
+
+/** Share of the distinct pieces (an element's tag and classes, or `~`) two skeletons have in common, 0..1. */
+export function skeletonSimilarity(a, b) {
+  const parts = (s) =>
+    new Set(
+      String(s ?? '')
+        .split(/[(),>]+/)
+        .filter(Boolean)
+    )
+  const x = parts(a)
+  const y = parts(b)
+  if (!x.size && !y.size) return 1
+  let both = 0
+  for (const t of x) if (y.has(t)) both++
+  return Math.round((both / (x.size + y.size - both)) * 1000) / 1000
 }
 
 /**
- * @param {{pages: object[], pageGroups: object[], blocks?: object[], profiles?: object, skeletons?: Map<string, string>}} kit
- *   pages with `kind` (what owns their main area); `profiles`: image id -> layout profile; `skeletons`: body id -> skeleton
- * @returns {Map<string, {exemplar: string, key: string, size: number, similarity: number|null, paginationOf?: string}>}
+ * @param {{pages: object[], pageGroups: object[], skeletons?: Map<string, string>}} kit
+ *   pages with `kind` (what owns their main area); `skeletons`: body id -> skeleton
+ * @returns {{layouts: Map<string, {exemplar: string, key: string, size: number, paginationOf?: string}>, checks: object[]}}
  */
-export function bodyLayouts({ pages, pageGroups, blocks = [], profiles = {}, skeletons = new Map() }) {
+export function bodyLayouts({ pages, pageGroups, skeletons = new Map() }) {
   const pageById = new Map(pages.map((p) => [p.id, p]))
   const pageByPath = new Map(pages.map((p) => [p.path, p]))
   const reps = new Set((pageGroups ?? []).map((g) => representativeOf(g, pageById)?.page).filter(Boolean))
-  const shotOf = new Map(blocks.map((b) => [b.id, b.images?.['1440'] ?? b.images?.[1440]]))
-  const profile = (bodyId) => profiles[shotOf.get(bodyId)] ?? null
-  const looksSame = (a, b) => {
-    const s = profileSimilarity(profile(a), profile(b))
-    return { ok: s === null || s >= SAME_LAYOUT, s }
-  }
-  const withBody = pages.filter((p) => listed(p).has(bodyOf(p)))
-  const buckets = new Map()
-  for (const p of withBody) {
-    const k = layoutKey(p, skeletons.get(bodyOf(p)))
-    if (!buckets.has(k)) buckets.set(k, [])
-    buckets.get(k).push(p)
-  }
   const rank = (a, b) =>
     Number(reps.has(b.id)) - Number(reps.has(a.id)) ||
     listed(b).size - listed(a).size ||
     Number(!!b.inMainMenu) - Number(!!a.inMainMenu) ||
     a.path.length - b.path.length ||
     (a.id < b.id ? -1 : 1)
-  const out = new Map()
-  for (const [key, list] of buckets) {
-    const firsts = list.filter((p) => !firstPageOf(p.path)).sort(rank)
-    const further = list.filter((p) => firstPageOf(p.path)).sort(rank)
-    const clusters = []
-    const join = (p, c, s, extra = {}) => {
-      c.members.push(p)
-      out.set(bodyOf(p), { exemplar: c.exemplar, key, similarity: s, ...extra })
+  const sk = (p) => skeletons.get(bodyOf(p)) ?? ''
+  const withBody = pages.filter((p) => listed(p).has(bodyOf(p)))
+  // Further result pages first find page 1; the rest form one cluster per kind and skeleton.
+  const further = new Map()
+  for (const p of withBody) {
+    const first = pageByPath.get(firstPageOf(p.path))
+    if (first && listed(first).has(bodyOf(first)) && kindOf(first) === kindOf(p)) {
+      const s = skeletonSimilarity(sk(first), sk(p))
+      if (s >= SKELETON_CLOSE) further.set(p.id, first)
     }
-    for (const p of [...firsts, ...further]) {
-      const body = bodyOf(p)
-      // A further result page is page 1's menu item and view at another offset: in page 1's bucket (same kind, same
-      // skeleton) it is page 1's layout, whatever its pictures, which differ on every result page.
-      const first = pageByPath.get(firstPageOf(p.path))
-      const home = first && clusters.find((c) => c.members.includes(first))
-      if (home) {
-        join(p, home, looksSame(body, home.exemplar).s, { paginationOf: first.id })
-        continue
-      }
-      // The closest layout that looks the same, not the first one met.
-      const hit = clusters
-        .map((c) => ({ c, ...looksSame(body, c.exemplar) }))
-        .filter((x) => x.ok)
-        .sort((a, b) => (b.s ?? 1) - (a.s ?? 1))[0]
-      if (hit) join(p, hit.c, hit.s)
-      else {
-        const c = { exemplar: body, members: [] }
-        clusters.push(c)
-        join(p, c, null)
-      }
-    }
-    for (const c of clusters) for (const p of c.members) out.get(bodyOf(p)).size = c.members.length
   }
-  return out
+  const clusters = new Map()
+  for (const p of withBody.filter((x) => !further.has(x.id))) {
+    const k = layoutKey(p, sk(p))
+    if (!clusters.has(k)) clusters.set(k, { key: k, kind: kindOf(p), members: [] })
+    clusters.get(k).members.push(p)
+  }
+  const list = [...clusters.values()]
+  for (const c of list) c.members.sort(rank)
+  list.sort((a, b) => rank(a.members[0], b.members[0]))
+  // Close skeletons of one kind: listed, kept apart.
+  const checks = []
+  for (const [i, a] of list.entries())
+    for (const b of list.slice(i + 1)) {
+      if (a.kind !== b.kind) continue
+      const close = skeletonSimilarity(sk(a.members[0]), sk(b.members[0]))
+      if (close >= SKELETON_CLOSE)
+        checks.push({
+          a: bodyOf(a.members[0]),
+          b: bodyOf(b.members[0]),
+          skeletonSimilarity: close,
+          same: false
+        })
+    }
+  const out = new Map()
+  for (const c of list) {
+    const exemplar = bodyOf(c.members[0])
+    for (const p of c.members) out.set(bodyOf(p), { exemplar, key: c.key })
+  }
+  for (const [id, first] of further) {
+    const home = out.get(bodyOf(first))
+    if (home) out.set(bodyOf(pageById.get(id)), { ...home, paginationOf: first.id })
+  }
+  const size = new Map()
+  for (const l of out.values()) size.set(l.exemplar, (size.get(l.exemplar) ?? 0) + 1)
+  for (const l of out.values()) l.size = size.get(l.exemplar)
+  return { layouts: out, checks }
 }
 
 /** Each frame's place in its block: its role and its order among the block's frames of that role. */
@@ -122,8 +137,9 @@ export function inheritedFrames(layouts, framesOf) {
  * Apply the layouts to an assembled kit (in place): `shotOf` on a body block that is not its layout's exemplar,
  * `canHide` and `canHideFrom` on a frame that has a counterpart there, and its own canHide error dropped.
  */
-export function applyLayouts(kit, { profiles = {}, skeletons = new Map() } = {}) {
-  const layouts = bodyLayouts({ ...kit, profiles, skeletons })
+export function applyLayouts(kit, { skeletons = new Map() } = {}) {
+  const { layouts, checks } = bodyLayouts({ ...kit, skeletons })
+  kit.layoutChecks = checks
   for (const p of kit.pages) {
     const l = layouts.get(bodyOf(p))
     if (l?.paginationOf) p.paginationOf = l.paginationOf
@@ -134,7 +150,6 @@ export function applyLayouts(kit, { profiles = {}, skeletons = new Map() } = {})
     const b = blockById.get(id)
     if (b && id !== l.exemplar && blockById.get(l.exemplar)?.images) {
       b.shotOf = l.exemplar
-      b.shotSimilarity = l.similarity
     }
   }
   const inherit = inheritedFrames(layouts, (id) => blockById.get(id)?.frames ?? [])
@@ -153,5 +168,5 @@ export function applyLayouts(kit, { profiles = {}, skeletons = new Map() } = {})
     return !(m && dropped.has(m[1]) && frameById.get(m[1]).canHide != null)
   })
   kit.errors.splice(0, kit.errors.length, ...kept)
-  return { layouts, inherit }
+  return { layouts, inherit, checks }
 }

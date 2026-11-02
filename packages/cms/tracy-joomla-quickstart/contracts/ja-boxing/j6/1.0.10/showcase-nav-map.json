@@ -2,10 +2,10 @@
   "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
   "profileVersion": "1.0.0",
   "contract": "ja-boxing/j6/1.0.10",
-  "baseHash": "d64dbc78e9961bdd63497546dc026cbc5b851ac712198f1761dfa713f257a1ca",
+  "baseHash": "b945f320e52008140bb01eb73dff28cc36f04642fcb02b0d564471dc1053fa09",
   "baseFiles": {
     "manifest.json": "c6cfd80ec71910f6e7ed126b22f417fe663e971be316d8d58063f367a8194efe",
-    "content-map.json": "d5e04741c2b2862e131c75ed7dbd6b1015d271c56ec1fb5810d3a298a270fa66",
+    "content-map.json": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
     "presentation-lock.json": "62352a206b2084372c42e45c69602a705982738975c291b2d257bc6d8b2674ec"
   },
   "inputs": {},

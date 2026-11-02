@@ -50,24 +50,47 @@ export function parseBatch(text) {
 
 /**
  * @param {{db?: string, dbCommand?: string, filesCommand?: string, webroot?: string}} o
- * @returns {{query: Function|null, readFile: Function|null, readMany: Function|null, listDir: Function|null, describe: string[]}}
+ * @returns {{query: Function|null, queryMany: Function|null, readFile: Function|null, readMany: Function|null, listDir: Function|null, describe: string[]}}
+ *   Every answer is kept: the same statement or file is read once; `queryMany` and `readMany` cost one exec each.
  */
 export function siteSource({ db, dbCommand, filesCommand, webroot }) {
   const prefix = db ? mysqlPrefix(db) : dbCommand ? split(dbCommand) : null
-  const query = prefix
-    ? (sql) => {
-        if (!/^\s*(select|show)\b/i.test(sql))
-          throw new Error('only SELECT and SHOW statements are sent to a site')
-        const out = execFileSync(prefix[0], [...prefix.slice(1), '--batch', '-e', sql], {
-          encoding: 'utf8',
-          stdio: ['ignore', 'pipe', 'ignore'],
-          maxBuffer: 64 * 1024 * 1024
-        })
-        return parseBatch(out)
+  // One exec runs every statement it is given: the answers are split on a marker row between statements.
+  const MARK_ROW = 'kit_mark\n@@template-kit-next\n'
+  const run = (sqls) => {
+    for (const sql of sqls)
+      if (!/^\s*(select|show)\b/i.test(sql))
+        throw new Error('only SELECT and SHOW statements are sent to a site')
+    const joined = sqls
+      .map((q) => q.replace(/;\s*$/, ''))
+      .join("; SELECT '@@template-kit-next' AS kit_mark; ")
+    const out = execFileSync(prefix[0], [...prefix.slice(1), '--batch', '-e', joined], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+      maxBuffer: 64 * 1024 * 1024
+    })
+    const parts = out.split(MARK_ROW)
+    return sqls.map((_, i) => parseBatch(parts[i] ?? ''))
+  }
+  const answered = new Map()
+  const queryMany = prefix
+    ? (sqls) => {
+        const todo = [...new Set(sqls.filter((q) => !answered.has(q)))]
+        if (todo.length) for (const [i, rows] of run(todo).entries()) answered.set(todo[i], rows)
+        return sqls.map((q) => answered.get(q))
       }
     : null
+  const query = prefix ? (sql) => queryMany([sql])[0] : null
   const files = filesCommand ? split(filesCommand) : null
+  const known = new Map() // file -> text (null: not there), filled by readFile and readMany
   const readFile = webroot
+    ? (rel) => {
+        if (known.has(rel)) return known.get(rel)
+        known.set(rel, readOne(rel))
+        return known.get(rel)
+      }
+    : null
+  const readOne = webroot
     ? (rel) => {
         try {
           if (!files) return readFileSync(join(webroot, rel), 'utf8')
@@ -86,6 +109,14 @@ export function siteSource({ db, dbCommand, filesCommand, webroot }) {
   const readMany = webroot
     ? (rels) => {
         if (!files) return rels.map((rel) => ({ file: rel, text: readFile(rel) }))
+        const todo = rels.filter((r) => !known.has(r))
+        if (todo.length) for (const f of readBatch(todo)) known.set(f.file, f.text || null)
+        for (const r of todo) if (!known.has(r)) known.set(r, null)
+        return rels.map((rel) => ({ file: rel, text: known.get(rel) ?? '' }))
+      }
+    : null
+  const readBatch = webroot
+    ? (rels) => {
         try {
           const script = `for f in "$@"; do echo "${MARK}$f"; cat "${webroot}/$f" 2>/dev/null; echo; done`
           const out = execFileSync(files[0], [...files.slice(1), 'sh', '-c', script, 'sh', ...rels], {
@@ -122,6 +153,7 @@ export function siteSource({ db, dbCommand, filesCommand, webroot }) {
     : null
   return {
     query,
+    queryMany,
     readFile,
     readMany,
     listDir,

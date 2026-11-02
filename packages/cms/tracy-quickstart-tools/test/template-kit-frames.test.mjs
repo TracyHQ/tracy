@@ -2,7 +2,7 @@
 // classes, on a fabricated gym page served by a local test server; the classifier with a mocked model; the
 // pipeline's own planning (which lists to measure, which template fixes to propose).
 import assert from 'node:assert/strict'
-import { existsSync, mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, readdirSync, rmSync } from 'node:fs'
 import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -153,21 +153,27 @@ test('frames are measured on the page: kind, size, emptied and judged, light/dar
     assert.equal(at('block-5.1').hidden.check.ok, true)
     assert.equal(at('block-6.1').hidden.measuredAs, 'row-slot', 'a list row frame is emptied in every row')
     assert.equal(at('block-6.1').hidden.check.ok, true, 'every card without its picture still matches')
-    assert.equal(at('block-6.3').hidden.image, at('block-6.1').hidden.image, 'one shot for the whole slot')
-    assert.ok(existsSync(join(out, at('block-6.1').hidden.image)))
+    assert.deepEqual(
+      at('block-6.3').hidden.check,
+      at('block-6.1').hidden.check,
+      'one measurement for the slot'
+    )
+    assert.ok(at('block-6.1').hidden.evidence.blockBefore.height > 0, 'the DOM numbers are the evidence')
+    assert.deepEqual(readdirSync(out), ['frame-evidence.json'], 'nothing is shot')
     assert.equal(at('block-8.0').shown, true, 'a mask painted over an invisible img is what shows')
     assert.equal(at('block-8.0').paintedBy.how, 'after')
     assert.deepEqual([at('block-8.0').box.width, at('block-8.0').box.height], [60, 60])
-    assert.equal(at('block-8.0').hidden.emptied, 'painter', 'the mask is emptied, not only the img')
+    assert.match(at('block-8.0').hidden.emptied, /painters/, 'the mask is emptied, not only the img')
     assert.notEqual(at('block-8.0').hidden.check.ok, null)
-    assert.equal(at('block-9.0').hidden.check.ok, null, 'no visible change is not a pass')
+    assert.equal(at('block-9.0').hidden.check.ok, null, 'a picture under a solid block: not a pass')
+    assert.equal(at('block-9.0').hidden.evidence.covered, true)
     assert.equal(at('block-9.0').hidden.check.reason, 'no visible change, measurement invalid')
     assert.equal(at('block-10.0').shown, true)
     assert.equal(at('block-10.0').revealed, 'control of #tab-b')
-    assert.ok(at('block-10.0').hidden?.image, 'a revealed frame is emptied and shot too')
+    assert.ok(at('block-10.0').hidden?.check, 'a revealed frame is emptied and judged too')
     assert.equal(at('block-13.0').measuredIn, 'module-14', 'found in the listing block that shows it')
     assert.equal(kindOf(at('block-13.0')), 'photo')
-    assert.ok(existsSync(join(out, at('block-7.0').crop)))
+    assert.equal(at('block-7.0').crop, undefined, 'no crop is shot: icons are classified from their files')
     const errors = []
     const slots = MAP.slots.map((s) => ({ ...s, role: 'item.icon' }))
     const classes = {
@@ -216,7 +222,7 @@ test('frames are measured on the page: kind, size, emptied and judged, light/dar
     assert.equal(
       rows.filter((r) => r.section.startsWith('Frames emptied') && r.title.startsWith('block-6.')).length,
       2,
-      'one row slot shot per width'
+      'one row slot measurement per width'
     )
     assert.equal(by['block-7.1'].twinOf, 'block-7.0')
     assert.equal(by['block-7.3'].twinOf, 'block-7.2')
@@ -382,8 +388,9 @@ test('the pipeline measures every list it can find rows for, and groups template
       min: 4,
       minIfCentered: 1,
       fix,
-      images: { 3: { 1440: 'images/a.jpg' } },
-      centered: { 3: { 1440: { ok: true, gap: { left: 0, right: 300 }, image: 'images/b.jpg' } } }
+      centered: {
+        3: { 1440: { ok: true, reason: 'the last line is centered', gap: { left: 0, right: 300 } } }
+      }
     },
     'block-2.card': {
       rowKind: 'slots',
@@ -429,7 +436,6 @@ test('the pipeline measures every list it can find rows for, and groups template
     width: '1440',
     gap: { left: 0, right: 300 },
     ok: true,
-    before: 'images/a.jpg',
-    after: 'images/b.jpg'
+    reason: 'the last line is centered'
   })
 })

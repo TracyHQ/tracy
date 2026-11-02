@@ -142,7 +142,7 @@ export function readPage({ siteName, contactPattern }) {
     if (textLines.length >= 3000 || el.closest('script, style, noscript') || !shown(el)) continue
     if (![...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue
     const text = clean(el.innerText)
-    if (text.length >= 16 && text.length <= 400) textLines.push({ block: blockOf(el), text })
+    if (text.length >= 2 && text.length <= 400) textLines.push({ block: blockOf(el), text })
   }
   // The words and links of the page's own area (outside header, footer and menus), for pages such as not-found.
   const own = document.querySelector('#t4-main-body, main, [role="main"]') ?? document.body

@@ -202,5 +202,18 @@ export function layoutOf({ block }) {
     for (const [shape, rows] of groups) if (rows.length >= 2) sets.push({ shape, rows })
     if (sets.length >= 40) break
   }
-  return { block: box(root), sets }
+  // Every piece of text and every button, tagged once so the same element is found again after a frame is emptied.
+  const marks = []
+  let n = 0
+  for (const el of root.querySelectorAll('*')) {
+    const own = [...el.childNodes].some((c) => c.nodeType === 3 && c.textContent.trim())
+    if (!own && !/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) continue
+    const b = box(el)
+    if (b.width < 1 || b.height < 1) continue
+    if (!el.hasAttribute('data-kit-t'))
+      el.setAttribute('data-kit-t', `${n++}-${Math.random().toString(36).slice(2, 6)}`)
+    marks.push({ key: el.getAttribute('data-kit-t'), ...b })
+    if (marks.length >= 300) break
+  }
+  return { block: box(root), sets, marks }
 }

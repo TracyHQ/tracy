@@ -21,7 +21,9 @@ import {
   pictureKindOf,
   pictureReplaceOf
 } from '../../../../wo/website-opportunities/domain/content-map-fit.mjs'
+import { authorListsOf } from './author-lists.mjs'
 import { itemListsOf } from './item-lists.mjs'
+import { listingListsOf } from './listing-lists.mjs'
 import { menuBlocksOf } from './menu-blocks.mjs'
 
 const round4 = (n) => Math.round(n * 10000) / 10000
@@ -300,6 +302,17 @@ export function measureSlotFit({ map, findings, lock }) {
     delete out.itemLists
     delete out.itemPages
     const { itemLists, itemPages } = itemListsOf({ map: out, lock, findings })
+    // Listing pages (a category, the featured items, the authors) declare their lists the same way.
+    const listings = listingListsOf({ map: out, lock, findings })
+    Object.assign(itemLists, listings.itemLists)
+    for (const [item, row] of Object.entries(listings.itemPages)) {
+      if (!itemPages[item]) itemPages[item] = row
+      else
+        for (const from of row.linkedFrom)
+          if (!itemPages[item].linkedFrom.includes(from)) itemPages[item].linkedFrom.push(from)
+    }
+    // Author pages (one author's articles, reached from an author list) too.
+    Object.assign(itemLists, authorListsOf({ map: out, lock, findings }).itemLists)
     if (Object.keys(itemLists).length) {
       out.itemLists = itemLists
       out.itemPages = itemPages

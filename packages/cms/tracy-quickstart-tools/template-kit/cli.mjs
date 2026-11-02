@@ -1,22 +1,21 @@
 #!/usr/bin/env node
 // Template kit: the pack made once per template version and reused by every site build, in one file
-// (template-kit.json) beside its images. Per page one overview image and per block one clean image, at 1440
-// and 390; per block its lists (with measured minimums), picture frames (kind, size, canHide, twins, fixed),
+// (template-kit.json) beside its images. Every page is read (DOM only), grouped by layout, and only what the pack
+// holds is shot: per page group one overview image and per block id one clean image, at 1440 and 390; per block its lists (with measured minimums), picture frames (kind, size, canHide, twins, fixed),
 // links, template words and demo facts; a version stamp and every gap in `errors`. Read-only on the site.
 //
 //   cli.mjs build --site <url> [--host-header <host>] --contract <dir> --out <dir> --full
 //                 [--reuse-capture] [--trade <words>] [--widths 1440,390] [--max-pages 400] [--only /,/a]
 //                 [--template-version x.y.z] [--exclude-path '/test-*,/other']
 //                 [--db-command '<client prefix>' | --db mysql://...] [--files-command '<prefix>' --webroot <dir>]
-//       --full: the whole pipeline (README "Make a kit for a new template"); without it, capture + assemble only.
+//       --full: the whole pipeline (README "Make a kit for a new template"); without it, read + shoot + assemble only.
 //       The database and file reads feed the site part (site-cli.mjs); without them it reads the pages only.
 //   cli.mjs assemble ...  (template-kit.json again from the files in --out, no browser)
 //   cli.mjs measure-min ... --list <id> --page <path> --max <rows> [--block <id>] [--rows <css>] [--row-kind items]
 //                 [--note <why>]   (an override: a person's measurement of one list; the pipeline keeps it)
-//   cli.mjs sheet --out <dir> [--evidence | --review]
+//   cli.mjs sheet --out <dir> [--review]   (HTML pages of the kit's own images; nothing is shot)
 //   cli.mjs approve --out <dir> --by <login>   (ONLY a person, after the review sheet: seals the PACK's image set,
 //                 in pack/template-kit.json, the file committed beside the contract)
-//   cli.mjs layouts --out <dir>   (layout-profiles.json from the body shots; build --full runs it)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
 //
@@ -25,18 +24,17 @@ import { mkdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
 import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
+import { captureSite } from './lib/capture-site.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { assignedAt, indexMap } from './lib/map-index.mjs'
 import { measureMin } from './lib/measure-min.mjs'
-import { writeLayoutProfiles } from './lib/layout-profiles.mjs'
 import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
-import { runCapture } from './lib/run-capture.mjs'
 import { writeSheets } from './lib/sheets.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 
 const TOOL = 'template-kit 3.0.0'
-const COMMANDS = ['build', 'assemble', 'measure-min', 'sheet', 'approve', 'pack', 'layouts']
+const COMMANDS = ['build', 'assemble', 'measure-min', 'sheet', 'approve', 'pack']
 
 export function parseArgs(argv) {
   const o = { _: [] }
@@ -57,10 +55,10 @@ async function chromiumOf() {
 }
 
 async function sheet(o, out) {
-  const kind = o.review ? 'review' : o.evidence ? 'evidence' : 'blocks'
+  const kind = o.review ? 'review' : 'blocks'
   const fixes = fixesOf(readIf(join(out, 'template-fixes.json')))
   const kit = readJson(join(out, 'template-kit.json'))
-  const r = await writeSheets({ out, kit, chromium: await chromiumOf(), kind, fixes })
+  const r = await writeSheets({ out, kit, kind, fixes })
   console.log(`${r.count} items on ${r.files.length} sheet(s) in ${join(out, 'contact-sheet')}`)
 }
 
@@ -87,7 +85,7 @@ function pack(out) {
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
-  const needSite = !['sheet', 'approve', 'pack', 'layouts'].includes(cmd)
+  const needSite = !['sheet', 'approve', 'pack'].includes(cmd)
   if (!o.out || !COMMANDS.includes(cmd) || (needSite && (!o.site || !o.contract))) {
     console.error(
       `usage: cli.mjs ${COMMANDS.join('|')} --out <dir> [--site <url> --contract <dir>] (see the head of this file)`
@@ -99,12 +97,6 @@ async function main() {
   if (cmd === 'sheet') return sheet(o, out).then(() => 0)
   if (cmd === 'approve') return approve(o, out)
   if (cmd === 'pack') return pack(out)
-  if (cmd === 'layouts') {
-    const kit = readJson(join(out, 'template-kit.json'))
-    const n = Object.keys(await writeLayoutProfiles({ chromium: await chromiumOf(), out, kit })).length
-    console.log(`layout-profiles.json: ${n} body shots profiled; run assemble to apply`)
-    return 0
-  }
   const map = readJson(join(o.contract, 'content-map.json'))
   const hostHeader = str(o['host-header'])
   const widths = String(o.widths ?? '1440,390')
@@ -127,7 +119,6 @@ async function main() {
       max: Number(o.max),
       css: str(o.rows),
       widths,
-      out,
       note: str(o.note)
     })
     const file = join(out, 'min-evidence.json')
@@ -144,20 +135,8 @@ async function main() {
     const r = await runFull({ o, out, tool: TOOL, chromium: await chromiumOf(), log })
     capture = r.capture
   } else {
-    if (cmd === 'build') {
-      const { hide: _hide, ...rest } = await runCapture({
-        chromium: await chromiumOf(),
-        siteUrl: o.site,
-        hostHeader,
-        map,
-        out,
-        widths,
-        cap: Number(o['max-pages'] ?? 400),
-        only: str(o.only)?.split(','),
-        excludePaths: str(o['exclude-path'])?.split(',')
-      })
-      writeJson(join(out, 'capture-index.json'), rest)
-    }
+    if (cmd === 'build')
+      await captureSite({ o, out, tool: TOOL, chromium: await chromiumOf(), map, widths, log })
     capture = readJson(join(out, 'capture-index.json'))
     await assembleKit(o, out, TOOL)
     writeJson(join(out, 'template-fixes.json'), templateFixes(readIf(join(out, 'min-evidence.json')) ?? {}))

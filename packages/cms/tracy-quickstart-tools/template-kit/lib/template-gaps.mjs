@@ -21,7 +21,6 @@ export const gapId = (kind, where) =>
 export function templateGaps({ kit, mainHeadings = [], dead = [], fixes = [], accepts = {} }) {
   const gaps = []
   const seen = new Set()
-  const idOfPath = new Map((kit.images ?? []).map((i) => [i.path, i.id]))
   const add = (kind, where, detail, evidence) => {
     const id = gapId(kind, where)
     if (seen.has(id)) return
@@ -62,10 +61,10 @@ export function templateGaps({ kit, mainHeadings = [], dead = [], fixes = [], ac
       'sparse-row-left-packed',
       { selector: f.selector },
       `short last row packed left in ${f.lists.join(', ')}; proposed fix { ${f.rule} }${f.verified ? '' : ' (not verified)'}`,
-      (f.evidence ?? []).flatMap((e) => [
-        idOfPath.get(e.before) ?? e.before,
-        idOfPath.get(e.after) ?? e.after
-      ])
+      // The packed shots of the blocks the lists live in (the trial itself is read in the DOM, not shot).
+      [...new Set(f.lists.map((l) => l.replace(/\.[^.]+$/, '')))].flatMap((id) =>
+        Object.values(kit.blocks.find((b) => b.id === id)?.images ?? {})
+      )
     )
   return gaps
 }

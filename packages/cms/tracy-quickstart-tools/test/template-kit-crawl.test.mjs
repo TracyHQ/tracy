@@ -5,7 +5,7 @@ import { test } from 'node:test'
 import { crawlSite, extractLinks } from '../template-kit/lib/crawl.mjs'
 import { accountOfPath, decideExclusions, knownAccounts, pathPattern } from '../template-kit/lib/exclude.mjs'
 import { canonicalPath, pathOfRoute, slugOfPath, urlOfPath } from '../template-kit/lib/kit-paths.mjs'
-import { applyExclusions, seedsOf } from '../template-kit/lib/run-capture.mjs'
+import { applyExclusions, seedsOf } from '../template-kit/lib/read-pass.mjs'
 
 const SITE = 'http://site.example:8080'
 const ALIAS = ['studio.example.test']

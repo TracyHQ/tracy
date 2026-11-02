@@ -1,29 +1,16 @@
-// Write the contact sheets (every block image; with `evidence` every list minimum image too) and the owner's
-// review sheet as HTML pages in <out>/contact-sheet, and a PNG of each.
+// Write the contact sheet (every block image) and the owner's
+// review sheet as HTML pages in <out>/contact-sheet. They show the kit's own images only: nothing is shot for them.
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { contactSheetPages, sheetCells } from './contact-sheet.mjs'
 import { reviewPages, reviewRows } from './review-sheet.mjs'
 
-async function toPng(chromium, files) {
-  const browser = await chromium.launch()
-  try {
-    const page = await browser.newPage({ viewport: { width: 1800, height: 1000 } })
-    for (const f of files) {
-      await page.goto(`file://${f}`, { waitUntil: 'load' })
-      await page.screenshot({ path: f.replace(/\.html$/, '.png'), fullPage: true })
-    }
-  } finally {
-    await browser.close()
-  }
-}
-
 /**
- * @param {{out: string, kit: object, chromium: object, kind: 'blocks'|'evidence'|'review', fixes?: object[]}} o
+ * @param {{out: string, kit: object, kind: 'blocks'|'review', fixes?: object[]}} o
  * @returns {Promise<{files: string[], count: number}>}
  */
-export async function writeSheets({ out, kit, chromium, kind, fixes = [] }) {
+export async function writeSheets({ out, kit, kind, fixes = [] }) {
   const dir = join(out, 'contact-sheet')
   mkdirSync(dir, { recursive: true })
   let pages
@@ -33,7 +20,7 @@ export async function writeSheets({ out, kit, chromium, kind, fixes = [] }) {
     count = rows.length
     pages = reviewPages(rows, { title: 'Template kit review' })
   } else {
-    const cells = sheetCells(kit, { evidence: kind === 'evidence' })
+    const cells = sheetCells(kit)
     count = cells.length
     pages = contactSheetPages(cells, { title: `Template kit ${kind}` })
   }
@@ -42,6 +29,5 @@ export async function writeSheets({ out, kit, chromium, kind, fixes = [] }) {
     writeFileSync(f, html)
     return f
   })
-  await toPng(chromium, files)
   return { files, count }
 }

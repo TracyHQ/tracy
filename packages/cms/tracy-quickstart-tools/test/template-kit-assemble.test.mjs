@@ -291,11 +291,11 @@ test('blocks: role, shared, lists with min sources, frames, links, template word
   const by = Object.fromEntries(kit.blocks.map((b) => [b.id, b]))
   assert.equal(by.header.role, 'header')
   assert.equal(by.header.shared, true)
-  assert.deepEqual(by.header.links, [{ id: 'header.link-1', label: 'Blog', target: '/blog' }])
+  assert.deepEqual(by.header.links, [{ id: 'header.link-1', position: 0, label: 'Blog', target: '/blog' }])
   assert.equal(by['block-10'].role, 'hero')
   assert.deepEqual(by['block-10'].links, [
-    { id: 'block-10.2', label: 'Book a session', target: '/visit' },
-    { id: 'block-10.link-2', label: 'Read more', target: 'https://elsewhere.example/x' }
+    { id: 'block-10.2', position: 0, label: 'Book a session', target: '/visit' },
+    { id: 'block-10.link-2', position: 1, label: 'Read more', target: 'https://elsewhere.example/x' }
   ])
   assert.deepEqual(by['block-10'].fixedText, [{ text: 'Read more', source: null }])
   const people = by['block-11'].lists.find((l) => l.id === 'block-11.person')
@@ -469,7 +469,7 @@ test('stamp: template version from templateDetails.xml and image checksums', () 
   }
 })
 
-test('contact sheet: every block image once per width, and evidence on request', () => {
+test('contact sheet: every block image once per width', () => {
   const kit = kitOf({
     minEvidence: {
       'block-11.person': {
@@ -486,7 +486,6 @@ test('contact sheet: every block image once per width, and evidence on request',
     cells.map((c) => `${c.label}:${c.width}`),
     ['header:1440', 'block-10:1440', 'block-10:390', 'block-11:1440', 'body-blog:1440']
   )
-  assert.equal(sheetCells(kit, { evidence: true }).length, 6)
   assert.equal(cells[1].file, 'block-10-1440', 'an id without a listed image stays as it is')
   const pages = contactSheetPages(cells, { title: 'Kit <demo>', perPage: 3 })
   assert.equal(pages.length, 2)

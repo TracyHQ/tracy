@@ -105,3 +105,38 @@ export function restoreFrame({ id }) {
   }
   delete window.__kitHidden?.[id]
 }
+
+/**
+ * Before emptying: is frame `id` hidden under something opaque that is not part of it (a solid block laid over the
+ * picture)? Then emptying it changes nothing a visitor sees and the measurement is invalid. Five points of the
+ * frame's box are probed; covered only when every one is under a solid-coloured element outside the frame.
+ */
+export function coveredFrame({ id }) {
+  const el = document.querySelector(`[data-kit-frame~="${id}"]`)
+  if (!el) return false
+  const painters = [...document.querySelectorAll(`[data-kit-painter~="${id}"]`)]
+  const ours = (x) =>
+    x === el || el.contains(x) || x.contains(el) || painters.some((p) => p === x || p.contains(x))
+  const solid = (x) => {
+    const m = getComputedStyle(x).backgroundColor.match(/rgba?\(([^)]+)\)/)
+    const a = m ? (m[1].split(',')[3] ?? '1') : '0'
+    return Number(a) >= 0.99
+  }
+  ;(painters[0] ?? el).scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' })
+  const r = (painters[0] ?? el).getBoundingClientRect()
+  if (r.width < 2 || r.height < 2) return false
+  const points = [
+    [0.5, 0.5],
+    [0.25, 0.25],
+    [0.75, 0.25],
+    [0.25, 0.75],
+    [0.75, 0.75]
+  ]
+  return points.every(([fx, fy]) => {
+    const x = r.left + r.width * fx
+    const y = r.top + r.height * fy
+    if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) return false
+    const top = document.elementsFromPoint(x, y).find((e) => !ours(e) || e === el)
+    return !!top && !ours(top) && solid(top)
+  })
+}

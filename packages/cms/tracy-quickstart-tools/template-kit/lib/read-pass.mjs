@@ -1,17 +1,18 @@
-// Crawl the site, then shoot every live page at every width into `<out>/images`, and return the capture index.
-// A block shared by several pages is cut once per width, on the first page that shows it.
-import { join } from 'node:path'
-
-import { capturePage, openKitContext } from './capture.mjs'
+// The READ pass: crawl the site, then open every live page at every width and read its DOM only (blocks, their boxes,
+// links, rows, frames' places and the body skeleton). Nothing is shot here: the shoot pass (shoot-pass.mjs) shoots
+// what the pack holds once the pages are grouped by layout.
+import { openKitContext, openFrozen } from './capture.mjs'
 import { crawlSite, httpFetcher } from './crawl.mjs'
 import { decideExclusions } from './exclude.mjs'
-import { blockIdOf, pageIdOf } from './ids.mjs'
+import { blockIdOf } from './ids.mjs'
+import { readDetails } from './read-details.js'
 import { pathOfRoute, slugOfPath, urlOfPath } from './kit-paths.mjs'
 import { assignedAt, indexMap } from './map-index.mjs'
 
 const log = (...a) => console.error('[template-kit]', ...a)
 
 const OFF = new Set([0, '0', false, -2, '-2'])
+const TABS = 3 // pages read at once
 
 /**
  * Does a map page open a page of its own? A menu heading or separator (no link), a `#` or empty URL, an alias
@@ -41,8 +42,8 @@ export function seedsOf(map) {
   return seeds
 }
 
-/** Fold one page's capture at one width into the page and block records. */
-export function recordShot({ page, width, result, blocks }) {
+/** Fold one page's reading at one width into the page and block records (a block's box and details: first page). */
+export function recordRead({ page, width, result, blocks }) {
   const w = String(width)
   const order = []
   const hidden = []
@@ -66,19 +67,12 @@ export function recordShot({ page, width, result, blocks }) {
     }
     order.push(id)
     at.pages.push(page.slug)
-    if (b.file) {
-      at.image = `images/${b.file}`
+    if (!at.box) {
       at.box = { width: b.width, height: b.height }
       at.details = result.details?.[b.block] ?? null
     }
   }
-  page.widths[w] = {
-    full: `images/${pageIdOf(page.slug)}-${w}.jpg`,
-    height: result.height,
-    truncated: result.truncated || undefined,
-    blocks: order,
-    hidden
-  }
+  page.widths[w] = { height: result.height, blocks: order, hidden }
 }
 
 /**
@@ -105,19 +99,10 @@ export function applyExclusions(crawl, { map, patterns = [] }) {
 }
 
 /**
- * @param {{chromium: object, siteUrl: string, hostHeader?: string, map: object, out: string, widths: number[], cap: number, only?: string[], excludePaths?: string[]}} o
+ * @param {{chromium: object, siteUrl: string, hostHeader?: string, map: object, widths: number[], cap: number, only?: string[], excludePaths?: string[]}} o
+ * @returns the capture index without images, and `hide` (the left-out paths, in memory only)
  */
-export async function runCapture({
-  chromium,
-  siteUrl,
-  hostHeader,
-  map,
-  out,
-  widths,
-  cap,
-  only,
-  excludePaths
-}) {
+export async function readSite({ chromium, siteUrl, hostHeader, map, widths, cap, only, excludePaths }) {
   const aliasHosts = hostHeader ? [hostHeader] : []
   const crawl = await crawlSite({
     seeds: seedsOf(map),
@@ -128,6 +113,7 @@ export async function runCapture({
     log
   })
   const kept = applyExclusions(crawl, { map, patterns: excludePaths })
+  const hide = kept.hide
   log(
     'crawl',
     kept.pages.length,
@@ -138,7 +124,6 @@ export async function runCapture({
     'left out'
   )
   const idx = indexMap(map)
-  const dir = join(out, 'images')
   const targets = only?.length ? kept.pages.filter((p) => only.includes(p.path)) : kept.pages
   const slugs = new Set()
   const pages = targets.map((p) => {
@@ -152,35 +137,49 @@ export async function runCapture({
   const browser = await chromium.launch()
   try {
     for (const width of widths) {
-      const ctx = await openKitContext(browser, { width, siteUrl, hostHeader })
-      const cut = new Set()
-      try {
-        for (const page of pages) {
-          const fileOf = (b) => {
-            const id = blockIdOf(b.block, page.slug)
-            return cut.has(id) ? null : `${id}-${width}.jpg`
-          }
-          const result = await capturePage(ctx, {
-            url: urlOfPath(page.path, siteUrl),
-            width,
-            dir,
-            fullName: `${pageIdOf(page.slug)}-${width}.jpg`,
-            fileOf,
-            assigned: assignedAt(idx, page.path),
-            hide: { paths: kept.hide, hosts: aliasHosts }
-          })
-          if (result.error) {
-            failures.push({ path: page.path, width, status: result.status, error: result.error })
-            log('fail', width, page.path, result.error)
-            continue
-          }
-          for (const b of result.blocks) if (b.file) cut.add(blockIdOf(b.block, page.slug))
-          recordShot({ page, width, result, blocks })
-          log(width, page.path, page.widths[width].blocks.length, 'blocks')
+      // DOM only: pictures, video and fonts are never fetched; TABS pages are read at once.
+      const ctx = await openKitContext(browser, {
+        width,
+        siteUrl,
+        hostHeader,
+        skip: ['image', 'media', 'font']
+      })
+      const results = new Map()
+      const readOne = async (page) => {
+        const opened = await openFrozen(
+          ctx,
+          urlOfPath(page.path, siteUrl),
+          assignedAt(idx, page.path),
+          { paths: hide, hosts: aliasHosts },
+          { wake: 'quick' }
+        )
+        if (!opened.page) return results.set(page.slug, { error: opened })
+        try {
+          const details = await opened.page.evaluate(readDetails)
+          results.set(page.slug, { result: { ...opened, height: opened.docHeight, details } })
+        } finally {
+          await opened.page.close().catch(() => {})
         }
+      }
+      try {
+        const queue = [...pages]
+        await Promise.all(
+          Array.from({ length: TABS }, async () => {
+            while (queue.length) await readOne(queue.shift())
+          })
+        )
       } finally {
         await ctx.close()
       }
+      // Folded in crawl order, so a block's first page is the same whatever tab finished first.
+      for (const page of pages) {
+        const r = results.get(page.slug)
+        if (r?.error) {
+          failures.push({ path: page.path, width, status: r.error.status, error: r.error.error })
+          log('fail', width, page.path, r.error.error)
+        } else if (r) recordRead({ page, width, result: r.result, blocks })
+      }
+      log('read', width, pages.length, 'pages')
     }
   } finally {
     await browser.close()
@@ -193,8 +192,7 @@ export async function runCapture({
     pages,
     blocks,
     dead: kept.dead,
-    // In memory only, never written: the left-out paths, for later browser runs to remove links to them.
-    hide: kept.hide,
-    failures
+    failures,
+    hide: kept.hide
   }
 }

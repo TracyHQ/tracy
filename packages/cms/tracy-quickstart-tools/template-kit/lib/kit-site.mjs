@@ -12,8 +12,9 @@ const ITEM_KINDS = /^(article|contact|user|userProfile)$/ // an entity with a pa
  * @param {object} kit template-kit.json, changed in place
  * @param {{site: object, mainHeadings: object[], errors: object[]}|null} doc site.json, or null when it is missing
  * @param {object} map the content map
+ * @param {object|null} [words] words-links.json: the DOM verdict on each piece of template words
  */
-export function mergeSite(kit, doc, map) {
+export function mergeSite(kit, doc, map, words = null) {
   if (!doc) {
     kit.site = null
     kit.errors.push({ kind: 'missing', field: 'site', reason: 'the site part did not run (no site.json)' })
@@ -50,8 +51,32 @@ export function mergeSite(kit, doc, map) {
     // the site name is a name slot, not fixed text.
     const cms = fixedOf(b.id)
     const said = [...cms.map((c) => c.text), ...namedOf(b.id)].map(normText).filter(Boolean)
-    const plain = (b.fixedText ?? []).filter((t) => !said.some((x) => x.includes(normText(t.text))))
+    // Template words no language string prints: measured in the DOM (measure-words-links.mjs).
+    const plain = (b.fixedText ?? [])
+      .filter((t) => !said.some((x) => x.includes(normText(t.text))))
+      .map((t) => {
+        const m = words?.words?.[b.id]?.[t.text]
+        return m
+          ? {
+              ...t,
+              source: { kind: 'template' },
+              canHide: m.canHide,
+              reason: m.reason,
+              measuredBy: 'dom',
+              evidence: m.evidence
+            }
+          : { ...t, source: { kind: 'template' }, canHide: null }
+      })
     b.fixedText = [...plain, ...cms]
+    for (const t of b.fixedText)
+      if (t.canHide == null && !t.source?.constant)
+        kit.errors.push({
+          kind: 'missing',
+          field: `blocks[${b.id}].fixedText[${t.text.slice(0, 40)}].canHide`,
+          reason:
+            words?.words?.[b.id]?.[t.text]?.reason ??
+            'the words were not measured (no words-links.json entry)'
+        })
     const blockRoles = [...b.lists.flatMap((l) => l.rowSlots ?? []), ...(b.frames ?? [])]
       .map((s) => s.role)
       .filter(Boolean)
@@ -59,7 +84,12 @@ export function mergeSite(kit, doc, map) {
     for (const l of b.lists) l.holds = listHolds(l, { blockRoles, rowLinks: l.maxEvidence?.rowLinks ?? [] })
     for (const link of b.links)
       link.action = linkAction(
-        { label: link.label, target: link.target, role: roleOf.get(link.id) ?? null },
+        {
+          label: link.label,
+          target: link.target,
+          role: roleOf.get(link.id) ?? null,
+          icon: link.icon ?? null
+        },
         { itemPaths, contactPaths, inRow: inRow.has(link.id) }
       )
   }

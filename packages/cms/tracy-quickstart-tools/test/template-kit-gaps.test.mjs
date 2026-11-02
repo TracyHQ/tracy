@@ -91,10 +91,7 @@ test('template gaps: kinds, stable ids, a person accepts, never the kit', () => 
       verified: true,
       lists: ['block-3.items'],
       evidence: [
-        {
-          before: 'images/block-3.items-min-2-1440.jpg',
-          after: 'images/block-3.items-min-2-1440-centered.jpg'
-        }
+        { list: 'block-3.items', count: 2, width: '1440', ok: true, reason: 'the last line is centered' }
       ]
     }
   ]
@@ -119,10 +116,11 @@ test('template gaps: kinds, stable ids, a person accepts, never the kit', () => 
     1,
     'one per target and block'
   )
-  assert.deepEqual(gaps.find((g) => g.kind === 'sparse-row-left-packed').evidence, [
-    'block-3.items-min-2-1440',
-    'block-3.items-min-2-1440-centered'
-  ])
+  assert.deepEqual(
+    gaps.find((g) => g.kind === 'sparse-row-left-packed').evidence,
+    ['block-3-1440'],
+    "the packed shot of the list's block"
+  )
   assert.ok(
     gaps.every((g) => g.accepted === null),
     'nothing is accepted automatically'
@@ -135,7 +133,7 @@ test('template gaps: kinds, stable ids, a person accepts, never the kit', () => 
   })
   const rows = reviewRows({ ...kit, widths: [1440], templateGaps: again, site: SITE.site })
   assert.equal(rows.filter((r) => r.section.startsWith('Template gaps')).length, 5)
-  assert.ok(rows.some((r) => r.pics[0] === 'site-palette.png'))
+  assert.ok(rows.some((r) => r.note.includes('site-palette.html')))
 })
 
 test('a block says each CMS sentence once, with its source; the name line is a name slot, not fixed text', () => {
@@ -181,7 +179,10 @@ test('a block says each CMS sentence once, with its source; the name line is a n
   )
   assert.equal(b.fixedText[1].at, undefined)
   const rows = reviewRows({ ...kit, blocks: [b], widths: [1440] }).filter((r) =>
-    r.section.startsWith('Fixed')
+    r.section.startsWith('Fixed CMS')
   )
   assert.equal(rows.length, 1)
+  assert.equal(b.fixedText[0].source.kind, 'template', "words no language string prints are the template's")
+  assert.equal(b.fixedText[0].canHide, null, 'not measured: an error names it')
+  assert.ok(kit.errors.some((e) => e.field === 'blocks[block-3].fixedText[Members only].canHide'))
 })

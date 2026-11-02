@@ -17,7 +17,7 @@ const COUNT_KEY = /^(count|limit|num_?items|items_?count|number_?of_?items|displ
 const ITEM_KINDS = new Set(['article'])
 
 /** A settings value as an object: a JSON string or an object; anything else is empty. */
-function objectOf(raw) {
+export function objectOf(raw) {
   if (raw && typeof raw === 'object') return raw
   if (typeof raw !== 'string' || !/^\s*[[{]/.test(raw)) return {}
   try {
@@ -67,7 +67,7 @@ const contains = (box, r) => {
   const cy = r.y + r.h / 2
   return cx >= box.x0 && cx <= box.x1 && cy >= box.y0 && cy <= box.y1
 }
-const pathOfHref = (href) => {
+export const pathOfHref = (href) => {
   if (!href || /^\s*(#|javascript:|mailto:|tel:)/i.test(href)) return null
   try {
     const u = new URL(href, 'http://site.invalid/')
@@ -92,22 +92,27 @@ function fieldOf(slot) {
 /** Is a findings item inside the block whose id is `id`? Joomla chrome ids: `Mod160`, `mod-articles-160`, `module-160`. */
 const scopeTest = (id) => new RegExp(`^(?:mod|module)[-_a-z]*0*${id}$`, 'i')
 
-/**
- * The cards of one block on one page: per shown item its findings items (in page order) and its detail page path.
- * @returns {{cards: Map<string, {first: number, items: {it: any, index: number, slots: string[]}[], path: string|null}>, by: string}|null}
- */
-function cardsOnPage(page, block, candidates, slotsByKey, assigned) {
-  const items = page.items ?? []
+/** The findings items of a block on a page (`by: "block"`), else the whole page when it is assigned there. */
+export const blockPool = (block, assigned) => (items) => {
   const inScope = scopeTest(block.sourceId)
-  let pool = items
+  const pool = items
     .map((it, index) => ({ it, index }))
     .filter(({ it }) => (it.scopes ?? []).some((s) => inScope.test(s)))
-  let by = 'block'
-  if (pool.length === 0) {
-    if (items.some((it) => Array.isArray(it.scopes)) || !assigned) return null
-    pool = items.map((it, index) => ({ it, index }))
-    by = 'page'
-  }
+  if (pool.length) return { pool, by: 'block' }
+  if (items.some((it) => Array.isArray(it.scopes)) || !assigned) return null
+  return { pool: items.map((it, index) => ({ it, index })), by: 'page' }
+}
+
+/**
+ * The cards of one list on one page: per shown item its findings items (in page order) and its detail page path.
+ * `pick` chooses the page's items the list may hold and says how (`block`, `body` or `page`): on `page` every slot
+ * an anchor matched must be the item's, since nothing says where on the page the words are.
+ */
+export function cardsOnPage(page, pick, candidates, slotsByKey) {
+  const items = page.items ?? []
+  const picked = pick(items)
+  if (!picked) return null
+  const { pool, by } = picked
   const ownersOf = (it) => [
     ...new Set(
       (it.slots ?? []).filter((k) => slotsByKey.has(k)).map((k) => slotsByKey.get(k).entity ?? entityOfKey(k))
@@ -137,7 +142,7 @@ function cardsOnPage(page, block, candidates, slotsByKey, assigned) {
   for (const { it, index } of matched) {
     const owners = ownersOf(it)
     const mine = owners.filter((o) => candidates.has(o))
-    if (mine.length === 1 && (by === 'block' || owners.length === 1)) {
+    if (mine.length === 1 && (by !== 'page' || owners.length === 1)) {
       const c = card(mine[0])
       c.first = Math.min(c.first, index)
       c.items.push({ it, index, slots: it.slots.filter((k) => entityOfKey(k) === mine[0]) })
@@ -183,7 +188,7 @@ function cardsOnPage(page, block, candidates, slotsByKey, assigned) {
 }
 
 /** The character limit of a text slot: its slot-fit limit when measured, else the store's. */
-function limitOf(slot) {
+export function limitOf(slot) {
   if (slot.type !== 'text') return {}
   if (slot.fit?.measured && Number.isFinite(slot.fit.maxCharacters))
     return { maxCharacters: slot.fit.maxCharacters, limitFrom: 'slot-fit' }
@@ -191,7 +196,7 @@ function limitOf(slot) {
 }
 
 /** The row fields of a list from the cards of its best page, in the order a card shows them. */
-function rowSlotsOf(shown, observed, slotsByKey) {
+export function rowSlotsOf(shown, observed, slotsByKey) {
   /** @type {Map<string, any>} */
   const fields = new Map()
   const order = new Map()
@@ -307,7 +312,7 @@ export function itemListsOf({ map, lock, findings }) {
     let best = null
     for (const page of findings?.pages ?? []) {
       const assigned = (page.mapPages ?? []).some((m) => assignedTo.get(block.key)?.has(m.entity))
-      const seen = cardsOnPage(page, block, candidates, slotsByKey, assigned)
+      const seen = cardsOnPage(page, blockPool(block, assigned), candidates, slotsByKey)
       if (!seen) continue
       if (!best || seen.cards.size > best.cards.size || (best.by === 'page' && seen.by === 'block'))
         best = { ...seen, url: page.url }

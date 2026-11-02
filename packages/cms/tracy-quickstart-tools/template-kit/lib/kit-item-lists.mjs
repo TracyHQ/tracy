@@ -8,6 +8,7 @@
 // field decided not printed stays in `rowSlots` with `printed: false`; the open question is then closed.
 import { neutralKey } from './ids.mjs'
 import { measuredMin } from './min-evidence.mjs'
+import { canonicalPath } from './kit-paths.mjs'
 
 const norm = (s) =>
   String(s ?? '')
@@ -58,16 +59,25 @@ export function sameTextFields(entry, sampleOf) {
 }
 
 /**
- * @param {{map: object, blockId: string, entities: string[], minEvidence?: object, cardFields?: object, errors: object[]}} o
+ * @param {{map: object, blockId: string, entities: string[], minEvidence?: object, cardFields?: object, errors: object[], only?: string[]|null}} o
  * @returns {{lists: object[], demoOwned: {id: string, role: string|null, sample: string, from: string}[]}}
  */
-export function itemListsOf({ map, blockId, entities, minEvidence = {}, cardFields = {}, errors }) {
+export function itemListsOf({
+  map,
+  blockId,
+  entities,
+  minEvidence = {},
+  cardFields = {},
+  errors,
+  only = null
+}) {
   const slotBy = new Map((map.slots ?? []).map((s) => [s.key, s]))
   const sampleOf = (key) => slotBy.get(key)?.sample ?? ''
   const lists = []
   const demoOwned = []
   for (const [key, e] of Object.entries(map.itemLists ?? {})) {
-    if (!entities.includes(e.block)) continue
+    // A block's own lists; or, given `only`, the listing page's lists (the map gives them a page, no block).
+    if (only ? !only.includes(key) : !entities.includes(e.block)) continue
     const id = neutralKey(key)
     const field = (f) => `blocks[${blockId}].lists[${id}].${f}`
     const decided = (name) => cardFields[`${id} ${name}`] ?? cardFields[name] ?? null
@@ -128,3 +138,19 @@ export const itemParents = (map) =>
   Object.values(map.itemPages ?? {})
     .filter((p) => p.path && p.categoryRoute)
     .map((p) => ({ path: p.path, categoryRoute: p.categoryRoute }))
+
+/**
+ * The keys of the map's items lists a listing page shows (`block: null`): a list with its own `pagePath` (an
+ * author's page of articles, which has no menu item) at that path in canonical form; any other at its page's route.
+ */
+export function listingListKeys(map, path, pathOfRoute) {
+  const routeOf = new Map((map.pages ?? []).map((p) => [p.entity, p.route]))
+  return Object.entries(map.itemLists ?? {})
+    .filter(([, e]) => e.block == null)
+    .filter(([, e]) => {
+      if (e.pagePath) return canonicalPath(e.pagePath, 'http://site.invalid') === path
+      const route = e.source?.route ?? routeOf.get(e.page)
+      return route != null && pathOfRoute(route) === path
+    })
+    .map(([key]) => key)
+}

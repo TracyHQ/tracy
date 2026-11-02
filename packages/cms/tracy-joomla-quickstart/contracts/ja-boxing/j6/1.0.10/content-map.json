@@ -8727,6 +8727,90 @@
       }
     },
     {
+      "key": "module-171.8",
+      "entity": "module-171",
+      "column": "params",
+      "type": "text",
+      "sample": "fa fa-facebook",
+      "maxCharacters": 48,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "social",
+        "social-intro[font-icon]",
+        0
+      ],
+      "nestedJson": "jatools-config",
+      "label": "Footer Social / font-icon 1",
+      "customize": "keep",
+      "role": "editorial.item_icon",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "module-171.9",
+      "entity": "module-171",
+      "column": "params",
+      "type": "text",
+      "sample": "fa fa-instagram",
+      "maxCharacters": 50,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "social",
+        "social-intro[font-icon]",
+        1
+      ],
+      "nestedJson": "jatools-config",
+      "label": "Footer Social / font-icon 2",
+      "customize": "keep",
+      "role": "editorial.item_icon",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "module-171.10",
+      "entity": "module-171",
+      "column": "params",
+      "type": "text",
+      "sample": "fa fa-twitter",
+      "maxCharacters": 46,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "social",
+        "social-intro[font-icon]",
+        2
+      ],
+      "nestedJson": "jatools-config",
+      "label": "Footer Social / font-icon 3",
+      "customize": "keep",
+      "role": "editorial.item_icon",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "module-171.11",
+      "entity": "module-171",
+      "column": "params",
+      "type": "text",
+      "sample": "fa fa-telegram",
+      "maxCharacters": 48,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "social",
+        "social-intro[font-icon]",
+        3
+      ],
+      "nestedJson": "jatools-config",
+      "label": "Footer Social / font-icon 4",
+      "customize": "keep",
+      "role": "editorial.item_icon",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
       "key": "module-172.0",
       "entity": "module-172",
       "column": "params",
@@ -12387,6 +12471,90 @@
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-180.12",
+      "entity": "module-180",
+      "column": "params",
+      "type": "text",
+      "sample": "fa fa-facebook",
+      "maxCharacters": 48,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "hero",
+        "hero[social-intro][font-icon]",
+        0
+      ],
+      "nestedJson": "jatools-config",
+      "label": "Darlene Robertson / font-icon 1",
+      "customize": "keep",
+      "role": "editorial.item_icon",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "module-180.13",
+      "entity": "module-180",
+      "column": "params",
+      "type": "text",
+      "sample": "fa fa-twitter",
+      "maxCharacters": 46,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "hero",
+        "hero[social-intro][font-icon]",
+        1
+      ],
+      "nestedJson": "jatools-config",
+      "label": "Darlene Robertson / font-icon 2",
+      "customize": "keep",
+      "role": "editorial.item_icon",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "module-180.14",
+      "entity": "module-180",
+      "column": "params",
+      "type": "text",
+      "sample": "fa fa-instagram",
+      "maxCharacters": 50,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "hero",
+        "hero[social-intro][font-icon]",
+        2
+      ],
+      "nestedJson": "jatools-config",
+      "label": "Darlene Robertson / font-icon 3",
+      "customize": "keep",
+      "role": "editorial.item_icon",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "module-180.15",
+      "entity": "module-180",
+      "column": "params",
+      "type": "text",
+      "sample": "fa fa-telegram",
+      "maxCharacters": 48,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "hero",
+        "hero[social-intro][font-icon]",
+        3
+      ],
+      "nestedJson": "jatools-config",
+      "label": "Darlene Robertson / font-icon 4",
+      "customize": "keep",
+      "role": "editorial.item_icon",
+      "fit": {
+        "measured": false
       }
     },
     {
@@ -64897,6 +65065,1776 @@
       ],
       "observedBy": "block",
       "observedOn": "/index.php?Itemid=101"
+    },
+    "menuItem-163.items": {
+      "block": null,
+      "page": "menuItem-163",
+      "rowKind": "items",
+      "source": {
+        "kind": "category",
+        "id": "category-8",
+        "title": "Blogs",
+        "page": "menuItem-163",
+        "route": "pages/j-content/category-blog"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-1",
+        "article-3",
+        "article-4",
+        "article-5",
+        "article-6",
+        "article-7"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "slot": "article-1.15",
+              "maxCharacters": 28,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.15",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-4",
+              "slot": "article-4.15",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-5",
+              "slot": "article-5.15",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.15",
+              "maxCharacters": 26,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-7",
+              "slot": "article-7.15",
+              "maxCharacters": 31,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "path": "/index.php/pages/j-content/category-blog/never-boxed-before"
+            },
+            {
+              "item": "article-3",
+              "path": "/index.php/pages/j-content/category-blog/boxing-legends-remembered"
+            },
+            {
+              "item": "article-4",
+              "path": "/index.php/pages/j-content/category-blog/title-defense-strategies"
+            },
+            {
+              "item": "article-5",
+              "path": "/index.php/pages/j-content/category-blog/inside-boxing-techniques"
+            },
+            {
+              "item": "article-6",
+              "path": "/index.php/pages/j-content/blog-detail"
+            },
+            {
+              "item": "article-7",
+              "path": "/index.php/pages/j-content/category-blog/classic-boxing-rivalries"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "article.lead",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "slot": "article-1.0",
+              "maxCharacters": 295,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-4",
+              "slot": "article-4.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-5",
+              "slot": "article-5.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-7",
+              "slot": "article-7.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "slot": "article-1.16"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.16"
+            },
+            {
+              "item": "article-4",
+              "slot": "article-4.16"
+            },
+            {
+              "item": "article-5",
+              "slot": "article-5.16"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.16"
+            },
+            {
+              "item": "article-7",
+              "slot": "article-7.16"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php?Itemid=163"
+    },
+    "menuItem-164.items": {
+      "block": null,
+      "page": "menuItem-164",
+      "rowKind": "items",
+      "source": {
+        "kind": "featured",
+        "id": null,
+        "title": null,
+        "page": "menuItem-164",
+        "route": "pages/j-content/featured-articles"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-1",
+        "article-3",
+        "article-4",
+        "article-5",
+        "article-6",
+        "article-7"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "slot": "article-1.15",
+              "maxCharacters": 28,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.15",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-4",
+              "slot": "article-4.15",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-5",
+              "slot": "article-5.15",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.15",
+              "maxCharacters": 26,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-7",
+              "slot": "article-7.15",
+              "maxCharacters": 31,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "path": "/index.php/pages/j-content/category-blog/never-boxed-before"
+            },
+            {
+              "item": "article-3",
+              "path": "/index.php/pages/j-content/category-blog/boxing-legends-remembered"
+            },
+            {
+              "item": "article-4",
+              "path": "/index.php/pages/j-content/category-blog/title-defense-strategies"
+            },
+            {
+              "item": "article-5",
+              "path": "/index.php/pages/j-content/category-blog/inside-boxing-techniques"
+            },
+            {
+              "item": "article-6",
+              "path": "/index.php/pages/j-content/blog-detail"
+            },
+            {
+              "item": "article-7",
+              "path": "/index.php/pages/j-content/category-blog/classic-boxing-rivalries"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "article.lead",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "slot": "article-1.0",
+              "maxCharacters": 295,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-4",
+              "slot": "article-4.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-5",
+              "slot": "article-5.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-7",
+              "slot": "article-7.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "slot": "article-1.16"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.16"
+            },
+            {
+              "item": "article-4",
+              "slot": "article-4.16"
+            },
+            {
+              "item": "article-5",
+              "slot": "article-5.16"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.16"
+            },
+            {
+              "item": "article-7",
+              "slot": "article-7.16"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php?Itemid=164"
+    },
+    "menuItem-165.items": {
+      "block": null,
+      "page": "menuItem-165",
+      "rowKind": "items",
+      "source": {
+        "kind": "authors",
+        "id": null,
+        "title": null,
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 8,
+      "maxFrom": "view-setting",
+      "shown": [
+        "user-44",
+        "user-45",
+        "user-46",
+        "user-47",
+        "user-48",
+        "user-49",
+        "user-51"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "person.name",
+          "demoOwned": true,
+          "items": [
+            {
+              "item": "user-44",
+              "slot": "user-44.0",
+              "maxCharacters": 32,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "user-45",
+              "slot": "user-45.0",
+              "maxCharacters": 34,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "user-46",
+              "slot": "user-46.0",
+              "maxCharacters": 32,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "user-47",
+              "slot": "user-47.0",
+              "maxCharacters": 33,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "user-48",
+              "slot": "user-48.0",
+              "maxCharacters": 34,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "user-49",
+              "slot": "user-49.0",
+              "maxCharacters": 33,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "user-51",
+              "slot": "user-51.0",
+              "maxCharacters": 33,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "user-44",
+              "path": "/index.php/index.php/pages/j-content/author-listting/author/Drew_Stokes"
+            },
+            {
+              "item": "user-45",
+              "path": "/index.php/index.php/pages/j-content/author-listting/author/Daniel%20Vasquez"
+            },
+            {
+              "item": "user-46",
+              "path": "/index.php/index.php/pages/j-content/author-listting/author/Franklin%20Wagner"
+            },
+            {
+              "item": "user-47",
+              "path": "/index.php/index.php/pages/j-content/author-listting/author/Lorene%20Bass"
+            },
+            {
+              "item": "user-48",
+              "path": "/index.php/index.php/pages/j-content/author-listting/author/Corey%20Gibson"
+            },
+            {
+              "item": "user-49",
+              "path": "/index.php/index.php/pages/j-content/author-listting/author/Cora%20Stephens"
+            },
+            {
+              "item": "user-51",
+              "path": "/index.php/index.php/pages/j-content/author-listting/author/Gene%20Roberts"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [
+        "user-44.0",
+        "user-45.0",
+        "user-46.0",
+        "user-47.0",
+        "user-48.0",
+        "user-49.0",
+        "user-51.0"
+      ],
+      "observedBy": "body",
+      "observedOn": "/index.php?Itemid=165"
+    },
+    "menuItem-167.items": {
+      "block": null,
+      "page": "menuItem-167",
+      "rowKind": "items",
+      "source": {
+        "kind": "category",
+        "id": "category-9",
+        "title": "Classes",
+        "page": "menuItem-167",
+        "route": "classes"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 4,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-2",
+        "article-14",
+        "article-15",
+        "article-16"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "offering.name",
+          "demoOwned": true,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.4",
+              "maxCharacters": 12,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.4",
+              "maxCharacters": 15,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-15",
+              "slot": "article-15.4",
+              "maxCharacters": 16,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.4",
+              "maxCharacters": 15,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "custom:classes-title",
+          "kind": "custom",
+          "type": "text",
+          "role": "editorial.heading",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.7",
+              "maxCharacters": 12,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.7",
+              "maxCharacters": 15,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-15",
+              "slot": "article-15.7",
+              "maxCharacters": 16,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.7",
+              "maxCharacters": 15,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [
+            "Try a class"
+          ],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "path": "/index.php/classes/group-boxing"
+            },
+            {
+              "item": "article-14",
+              "path": "/index.php/classes/beginner-boxing"
+            },
+            {
+              "item": "article-15",
+              "path": "/index.php/classes/private-training"
+            },
+            {
+              "item": "article-16",
+              "path": "/index.php/classes/advanced-boxing"
+            }
+          ]
+        },
+        {
+          "field": "custom:classes-type",
+          "kind": "custom",
+          "type": "text",
+          "role": "offering.schedule",
+          "demoOwned": true,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.9",
+              "maxCharacters": 38,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.8",
+              "maxCharacters": 38,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-15",
+              "slot": "article-15.8",
+              "maxCharacters": 74,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.8",
+              "maxCharacters": 38,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "custom:classes-info/classes-info0/project_label",
+          "kind": "custom",
+          "type": "text",
+          "role": "offering.schedule",
+          "demoOwned": true,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.10",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.9",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.9",
+              "maxCharacters": 17,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "custom:classes-info/classes-info0/project_info",
+          "kind": "custom",
+          "type": "text",
+          "role": "offering.schedule",
+          "demoOwned": true,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.11",
+              "maxCharacters": 48,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.10",
+              "maxCharacters": 29,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.10",
+              "maxCharacters": 18,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "custom:classes-info/classes-info1/project_label",
+          "kind": "custom",
+          "type": "text",
+          "role": "offering.schedule",
+          "demoOwned": true,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.12",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "custom:classes-info/classes-info1/project_info",
+          "kind": "custom",
+          "type": "text",
+          "role": "offering.schedule",
+          "demoOwned": true,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.13",
+              "maxCharacters": 46,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "offering.image",
+          "demoOwned": true,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.5"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.5"
+            },
+            {
+              "item": "article-15",
+              "slot": "article-15.5"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.5"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.0",
+              "maxCharacters": 261,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.0",
+              "maxCharacters": 136,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-15",
+              "slot": "article-15.0",
+              "maxCharacters": 261,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.0",
+              "maxCharacters": 117,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [
+        "article-2.4",
+        "article-14.4",
+        "article-15.4",
+        "article-16.4",
+        "article-2.9",
+        "article-14.8",
+        "article-15.8",
+        "article-16.8",
+        "article-2.10",
+        "article-14.9",
+        "article-16.9",
+        "article-2.11",
+        "article-14.10",
+        "article-16.10",
+        "article-2.12",
+        "article-2.13",
+        "article-2.5",
+        "article-14.5",
+        "article-15.5",
+        "article-16.5"
+      ],
+      "observedBy": "body",
+      "observedOn": "/index.php?Itemid=167"
+    },
+    "menuItem-194.items": {
+      "block": null,
+      "page": "menuItem-194",
+      "rowKind": "items",
+      "source": {
+        "kind": "category",
+        "id": "category-10",
+        "title": "Learning Center",
+        "page": "menuItem-194",
+        "route": "about-us/learning-center"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-18",
+        "article-19",
+        "article-20",
+        "article-21",
+        "article-22",
+        "article-23"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-18",
+              "slot": "article-18.12",
+              "maxCharacters": 50,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-19",
+              "slot": "article-19.12",
+              "maxCharacters": 48,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-20",
+              "slot": "article-20.12",
+              "maxCharacters": 51,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-21",
+              "slot": "article-21.12",
+              "maxCharacters": 51,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-22",
+              "slot": "article-22.12",
+              "maxCharacters": 50,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-23",
+              "slot": "article-23.12",
+              "maxCharacters": 50,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-18",
+              "path": "/index.php/about-us/learning-center/every-champ-was-a-beginner-at-some-point"
+            },
+            {
+              "item": "article-19",
+              "path": "/index.php/about-us/learning-center/unforgettable-moments-in-boxing-history"
+            },
+            {
+              "item": "article-20",
+              "path": "/index.php/about-us/learning-center/the-art-and-science-of-boxing-strategy"
+            },
+            {
+              "item": "article-21",
+              "path": "/index.php/about-us/learning-center/boxing-legends-stories-of-great-fighters"
+            },
+            {
+              "item": "article-22",
+              "path": "/index.php/about-us/learning-center/behind-the-scenes-of-boxing-training-camps"
+            },
+            {
+              "item": "article-23",
+              "path": "/index.php/about-us/learning-center/the-impact-of-boxing-on-popular-culture"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-18",
+              "slot": "article-18.13"
+            },
+            {
+              "item": "article-19",
+              "slot": "article-19.13"
+            },
+            {
+              "item": "article-20",
+              "slot": "article-20.13"
+            },
+            {
+              "item": "article-21",
+              "slot": "article-21.13"
+            },
+            {
+              "item": "article-22",
+              "slot": "article-22.13"
+            },
+            {
+              "item": "article-23",
+              "slot": "article-23.13"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php?Itemid=194"
+    },
+    "user-42.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/index.php/pages/j-content/author-listting/author/admin",
+      "rowKind": "items",
+      "source": {
+        "kind": "author",
+        "id": "user-42",
+        "title": "Super User",
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-28",
+        "article-29",
+        "article-17",
+        "article-1",
+        "article-3",
+        "article-11"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "editorial.heading",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-28",
+              "slot": "article-28.7",
+              "maxCharacters": 20,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-29",
+              "slot": "article-29.7",
+              "maxCharacters": 32,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-17",
+              "slot": "article-17.186",
+              "maxCharacters": 18,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-1",
+              "slot": "article-1.15",
+              "maxCharacters": 28,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.15",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.15",
+              "maxCharacters": 28,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-28",
+              "path": "/index.php/pages/j-pages/offline-pages"
+            },
+            {
+              "item": "article-29",
+              "path": "/index.php/pages/j-pages/error-page"
+            },
+            {
+              "item": "article-17",
+              "path": "/index.php/pages/j-pages/typography"
+            },
+            {
+              "item": "article-1",
+              "path": "/index.php/pages/j-content/category-blog/never-boxed-before"
+            },
+            {
+              "item": "article-3",
+              "path": "/index.php/pages/j-content/category-blog/boxing-legends-remembered"
+            },
+            {
+              "item": "article-11",
+              "path": "/index.php/pages/j-content/category-blog/boxing-and-mental-toughness"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-28",
+              "slot": "article-28.2",
+              "maxCharacters": 66,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-29",
+              "slot": "article-29.0",
+              "maxCharacters": 40,
+              "limitFrom": "store",
+              "inferred": true
+            },
+            {
+              "item": "article-17",
+              "slot": "article-17.0",
+              "maxCharacters": 18,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-1",
+              "slot": "article-1.0",
+              "maxCharacters": 295,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.0",
+              "maxCharacters": 290,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-1",
+              "slot": "article-1.16"
+            },
+            {
+              "item": "article-3",
+              "slot": "article-3.16"
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.16"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/index.php/pages/j-content/author-listting/author/admin"
+    },
+    "user-44.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/index.php/pages/j-content/author-listting/author/Drew_Stokes",
+      "rowKind": "items",
+      "source": {
+        "kind": "author",
+        "id": "user-44",
+        "title": "Drew Stokes ",
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-7",
+        "article-22"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-7",
+              "slot": "article-7.15",
+              "maxCharacters": 31,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-22",
+              "slot": "article-22.12",
+              "maxCharacters": 50,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-7",
+              "path": "/index.php/pages/j-content/category-blog/classic-boxing-rivalries"
+            },
+            {
+              "item": "article-22",
+              "path": "/index.php/about-us/learning-center/behind-the-scenes-of-boxing-training-camps"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-7",
+              "slot": "article-7.16"
+            },
+            {
+              "item": "article-22",
+              "slot": "article-22.13"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/index.php/pages/j-content/author-listting/author/Drew_Stokes"
+    },
+    "user-45.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/index.php/pages/j-content/author-listting/author/Daniel%20Vasquez",
+      "rowKind": "items",
+      "source": {
+        "kind": "author",
+        "id": "user-45",
+        "title": "Daniel Vasquez ",
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-6",
+        "article-21"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-6",
+              "slot": "article-6.15",
+              "maxCharacters": 26,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-21",
+              "slot": "article-21.12",
+              "maxCharacters": 51,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-6",
+              "path": "/index.php/pages/j-content/blog-detail"
+            },
+            {
+              "item": "article-21",
+              "path": "/index.php/about-us/learning-center/boxing-legends-stories-of-great-fighters"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-6",
+              "slot": "article-6.16"
+            },
+            {
+              "item": "article-21",
+              "slot": "article-21.13"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/index.php/pages/j-content/author-listting/author/Daniel%20Vasquez"
+    },
+    "user-46.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/index.php/pages/j-content/author-listting/author/Franklin%20Wagner",
+      "rowKind": "items",
+      "source": {
+        "kind": "author",
+        "id": "user-46",
+        "title": "Franklin Wagner ",
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-8",
+        "article-13",
+        "article-23"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-8",
+              "slot": "article-8.15",
+              "maxCharacters": 29,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-13",
+              "slot": "article-13.15",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-23",
+              "slot": "article-23.12",
+              "maxCharacters": 50,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-8",
+              "path": "/index.php/pages/j-content/category-blog/boxings-finest-moments"
+            },
+            {
+              "item": "article-13",
+              "path": "/index.php/pages/j-content/category-blog/the-evolution-of-boxing"
+            },
+            {
+              "item": "article-23",
+              "path": "/index.php/about-us/learning-center/the-impact-of-boxing-on-popular-culture"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-8",
+              "slot": "article-8.16",
+              "inferred": true
+            },
+            {
+              "item": "article-13",
+              "slot": "article-13.16"
+            },
+            {
+              "item": "article-23",
+              "slot": "article-23.13"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/index.php/pages/j-content/author-listting/author/Franklin%20Wagner"
+    },
+    "user-47.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/index.php/pages/j-content/author-listting/author/Lorene%20Bass",
+      "rowKind": "items",
+      "source": {
+        "kind": "author",
+        "id": "user-47",
+        "title": "Lorene Bass ",
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-10",
+        "article-25",
+        "article-26"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-10",
+              "slot": "article-10.15",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-25",
+              "slot": "article-25.12",
+              "maxCharacters": 49,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-26",
+              "slot": "article-26.12",
+              "maxCharacters": 50,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-10",
+              "path": "/index.php/pages/j-content/category-blog/boxings-impact-on-culture"
+            },
+            {
+              "item": "article-25",
+              "path": "/index.php/about-us/learning-center/the-business-of-professional-boxing-promotions"
+            },
+            {
+              "item": "article-26",
+              "path": "/index.php/about-us/learning-center/the-evolution-of-boxing-equipment-and-gear"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-10",
+              "slot": "article-10.16"
+            },
+            {
+              "item": "article-25",
+              "slot": "article-25.13"
+            },
+            {
+              "item": "article-26",
+              "slot": "article-26.13"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/index.php/pages/j-content/author-listting/author/Lorene%20Bass"
+    },
+    "user-48.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/index.php/pages/j-content/author-listting/author/Corey%20Gibson",
+      "rowKind": "items",
+      "source": {
+        "kind": "author",
+        "id": "user-48",
+        "title": "Corey Gibson ",
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-4",
+        "article-20",
+        "article-27"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.15",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-20",
+              "slot": "article-20.12",
+              "maxCharacters": 51,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-27",
+              "slot": "article-27.12",
+              "maxCharacters": 51,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "path": "/index.php/pages/j-content/category-blog/title-defense-strategies"
+            },
+            {
+              "item": "article-20",
+              "path": "/index.php/about-us/learning-center/the-art-and-science-of-boxing-strategy"
+            },
+            {
+              "item": "article-27",
+              "path": "/index.php/about-us/learning-center/in-depth-analysis-of-classic-boxing-matches"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.16"
+            },
+            {
+              "item": "article-20",
+              "slot": "article-20.13"
+            },
+            {
+              "item": "article-27",
+              "slot": "article-27.13"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/index.php/pages/j-content/author-listting/author/Corey%20Gibson"
+    },
+    "user-49.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/index.php/pages/j-content/author-listting/author/Cora%20Stephens",
+      "rowKind": "items",
+      "source": {
+        "kind": "author",
+        "id": "user-49",
+        "title": "Cora Stephens ",
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-5",
+        "article-18",
+        "article-19"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.15",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-18",
+              "slot": "article-18.12",
+              "maxCharacters": 50,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-19",
+              "slot": "article-19.12",
+              "maxCharacters": 48,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "path": "/index.php/pages/j-content/category-blog/inside-boxing-techniques"
+            },
+            {
+              "item": "article-18",
+              "path": "/index.php/about-us/learning-center/every-champ-was-a-beginner-at-some-point"
+            },
+            {
+              "item": "article-19",
+              "path": "/index.php/about-us/learning-center/unforgettable-moments-in-boxing-history"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.16"
+            },
+            {
+              "item": "article-18",
+              "slot": "article-18.13"
+            },
+            {
+              "item": "article-19",
+              "slot": "article-19.13"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/index.php/pages/j-content/author-listting/author/Cora%20Stephens"
+    },
+    "user-51.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/index.php/pages/j-content/author-listting/author/Gene%20Roberts",
+      "rowKind": "items",
+      "source": {
+        "kind": "author",
+        "id": "user-51",
+        "title": "Gene Roberts ",
+        "page": "menuItem-165",
+        "route": "pages/j-content/author-listting"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 6,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-12",
+        "article-24"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-12",
+              "slot": "article-12.15",
+              "maxCharacters": 29,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-24",
+              "slot": "article-24.12",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-12",
+              "path": "/index.php/pages/j-content/category-blog/boxings-undisputed-champs"
+            },
+            {
+              "item": "article-24",
+              "path": "/index.php/about-us/learning-center/global-perspectives-on-the-sport-of-boxing"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-12",
+              "slot": "article-12.16"
+            },
+            {
+              "item": "article-24",
+              "slot": "article-24.13"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/index.php/pages/j-content/author-listting/author/Gene%20Roberts"
     }
   },
   "itemPages": {
@@ -64907,7 +66845,8 @@
       "categoryRoute": "classes",
       "linkedFrom": [
         "module-159",
-        "module-160"
+        "module-160",
+        "menuItem-167"
       ]
     },
     "article-14": {
@@ -64917,7 +66856,8 @@
       "categoryRoute": "classes",
       "linkedFrom": [
         "module-159",
-        "module-160"
+        "module-160",
+        "menuItem-167"
       ]
     },
     "article-2": {
@@ -64926,7 +66866,8 @@
       "categoryPage": "menuItem-167",
       "categoryRoute": "classes",
       "linkedFrom": [
-        "module-160"
+        "module-160",
+        "menuItem-167"
       ]
     },
     "article-15": {
@@ -64935,7 +66876,178 @@
       "categoryPage": "menuItem-167",
       "categoryRoute": "classes",
       "linkedFrom": [
-        "module-160"
+        "module-160",
+        "menuItem-167"
+      ]
+    },
+    "article-1": {
+      "path": "/index.php/pages/j-content/category-blog/never-boxed-before",
+      "category": "category-8",
+      "categoryPage": "menuItem-163",
+      "categoryRoute": "pages/j-content/category-blog",
+      "linkedFrom": [
+        "menuItem-163",
+        "menuItem-164"
+      ]
+    },
+    "article-3": {
+      "path": "/index.php/pages/j-content/category-blog/boxing-legends-remembered",
+      "category": "category-8",
+      "categoryPage": "menuItem-163",
+      "categoryRoute": "pages/j-content/category-blog",
+      "linkedFrom": [
+        "menuItem-163",
+        "menuItem-164"
+      ]
+    },
+    "article-4": {
+      "path": "/index.php/pages/j-content/category-blog/title-defense-strategies",
+      "category": "category-8",
+      "categoryPage": "menuItem-163",
+      "categoryRoute": "pages/j-content/category-blog",
+      "linkedFrom": [
+        "menuItem-163",
+        "menuItem-164"
+      ]
+    },
+    "article-5": {
+      "path": "/index.php/pages/j-content/category-blog/inside-boxing-techniques",
+      "category": "category-8",
+      "categoryPage": "menuItem-163",
+      "categoryRoute": "pages/j-content/category-blog",
+      "linkedFrom": [
+        "menuItem-163",
+        "menuItem-164"
+      ]
+    },
+    "article-6": {
+      "path": "/index.php/pages/j-content/blog-detail",
+      "category": "category-8",
+      "categoryPage": "menuItem-163",
+      "categoryRoute": "pages/j-content/category-blog",
+      "linkedFrom": [
+        "menuItem-163",
+        "menuItem-164"
+      ]
+    },
+    "article-7": {
+      "path": "/index.php/pages/j-content/category-blog/classic-boxing-rivalries",
+      "category": "category-8",
+      "categoryPage": "menuItem-163",
+      "categoryRoute": "pages/j-content/category-blog",
+      "linkedFrom": [
+        "menuItem-163",
+        "menuItem-164"
+      ]
+    },
+    "user-44": {
+      "path": "/index.php/index.php/pages/j-content/author-listting/author/Drew_Stokes",
+      "listingPage": "menuItem-165",
+      "listingRoute": "pages/j-content/author-listting",
+      "linkedFrom": [
+        "menuItem-165"
+      ]
+    },
+    "user-45": {
+      "path": "/index.php/index.php/pages/j-content/author-listting/author/Daniel%20Vasquez",
+      "listingPage": "menuItem-165",
+      "listingRoute": "pages/j-content/author-listting",
+      "linkedFrom": [
+        "menuItem-165"
+      ]
+    },
+    "user-46": {
+      "path": "/index.php/index.php/pages/j-content/author-listting/author/Franklin%20Wagner",
+      "listingPage": "menuItem-165",
+      "listingRoute": "pages/j-content/author-listting",
+      "linkedFrom": [
+        "menuItem-165"
+      ]
+    },
+    "user-47": {
+      "path": "/index.php/index.php/pages/j-content/author-listting/author/Lorene%20Bass",
+      "listingPage": "menuItem-165",
+      "listingRoute": "pages/j-content/author-listting",
+      "linkedFrom": [
+        "menuItem-165"
+      ]
+    },
+    "user-48": {
+      "path": "/index.php/index.php/pages/j-content/author-listting/author/Corey%20Gibson",
+      "listingPage": "menuItem-165",
+      "listingRoute": "pages/j-content/author-listting",
+      "linkedFrom": [
+        "menuItem-165"
+      ]
+    },
+    "user-49": {
+      "path": "/index.php/index.php/pages/j-content/author-listting/author/Cora%20Stephens",
+      "listingPage": "menuItem-165",
+      "listingRoute": "pages/j-content/author-listting",
+      "linkedFrom": [
+        "menuItem-165"
+      ]
+    },
+    "user-51": {
+      "path": "/index.php/index.php/pages/j-content/author-listting/author/Gene%20Roberts",
+      "listingPage": "menuItem-165",
+      "listingRoute": "pages/j-content/author-listting",
+      "linkedFrom": [
+        "menuItem-165"
+      ]
+    },
+    "article-18": {
+      "path": "/index.php/about-us/learning-center/every-champ-was-a-beginner-at-some-point",
+      "category": "category-10",
+      "categoryPage": "menuItem-194",
+      "categoryRoute": "about-us/learning-center",
+      "linkedFrom": [
+        "menuItem-194"
+      ]
+    },
+    "article-19": {
+      "path": "/index.php/about-us/learning-center/unforgettable-moments-in-boxing-history",
+      "category": "category-10",
+      "categoryPage": "menuItem-194",
+      "categoryRoute": "about-us/learning-center",
+      "linkedFrom": [
+        "menuItem-194"
+      ]
+    },
+    "article-20": {
+      "path": "/index.php/about-us/learning-center/the-art-and-science-of-boxing-strategy",
+      "category": "category-10",
+      "categoryPage": "menuItem-194",
+      "categoryRoute": "about-us/learning-center",
+      "linkedFrom": [
+        "menuItem-194"
+      ]
+    },
+    "article-21": {
+      "path": "/index.php/about-us/learning-center/boxing-legends-stories-of-great-fighters",
+      "category": "category-10",
+      "categoryPage": "menuItem-194",
+      "categoryRoute": "about-us/learning-center",
+      "linkedFrom": [
+        "menuItem-194"
+      ]
+    },
+    "article-22": {
+      "path": "/index.php/about-us/learning-center/behind-the-scenes-of-boxing-training-camps",
+      "category": "category-10",
+      "categoryPage": "menuItem-194",
+      "categoryRoute": "about-us/learning-center",
+      "linkedFrom": [
+        "menuItem-194"
+      ]
+    },
+    "article-23": {
+      "path": "/index.php/about-us/learning-center/the-impact-of-boxing-on-popular-culture",
+      "category": "category-10",
+      "categoryPage": "menuItem-194",
+      "categoryRoute": "about-us/learning-center",
+      "linkedFrom": [
+        "menuItem-194"
       ]
     }
   },

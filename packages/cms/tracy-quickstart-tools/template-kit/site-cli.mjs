@@ -11,7 +11,7 @@
 //                [--webroot <dir> [--files-command '<prefix>']] [--capture-index <file>] [--max-pages 60]
 //                [--no-hide-measure]
 //
-// Writes into --out: site.json ({site, mainHeadings, errors}), site-palette.png and the fixed-text shots in images/.
+// Writes into --out: site.json ({site, mainHeadings, errors}) and site-palette.html.
 // Exit: 0 written with no error · 1 written with errors · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -25,7 +25,7 @@ import { siteSource } from './lib/site/adapters/source.mjs'
 import { buildBrandColours } from './lib/site/brand-colours.mjs'
 import { browseSite, fetchStyles } from './lib/site/browse-site.mjs'
 import { logoSlotsOf } from './lib/site/logo-spots.mjs'
-import { writePalettePng } from './lib/site/palette.mjs'
+import { writePaletteHtml } from './lib/site/palette.mjs'
 import { measureFixedTexts } from './lib/site/hide-cms-text.mjs'
 import { buildSite } from './lib/site/site-kit.mjs'
 
@@ -59,7 +59,7 @@ export function pagesToRead(map, captureIndex, cap) {
 }
 
 /**
- * The site part, for this CLI and for the kit's one-command pipeline: writes site.json and site-palette.png
+ * The site part, for this CLI and for the kit's one-command pipeline: writes site.json and site-palette.html
  * into `out` and returns the document. Without a database or file command it reads the pages only, and the
  * fields only those can answer are named in `errors`.
  * @param {{o: object, out: string, chromium: object, capture?: object|null, log?: Function}} a
@@ -104,8 +104,6 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
     const fixed = r.site.fixedTexts
     if (fixed.length && cms && !o['no-hide-measure']) {
       const writer = siteWriter({ filesCommand: str(o['files-command']), webroot: str(o.webroot) })
-      const dir = join(out, 'images')
-      mkdirSync(dir, { recursive: true })
       say(fixed.length, 'fixed CMS sentences; measuring whether each can be hidden')
       r.errors.push(
         ...(await measureFixedTexts({
@@ -117,10 +115,11 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
           override: cms.override,
           readFile: source.readFile,
           writer,
-          dir,
           log: say
         }))
       )
+      // Words a short language value only seemed to print stay template words: the kit measures them itself.
+      r.site.fixedTexts = fixed.filter((f) => !f.notPrintedByCms)
     } else if (fixed.length)
       for (const [i] of fixed.entries())
         r.errors.push({
@@ -137,13 +136,8 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
       errors: r.errors
     }
     writeFileSync(join(out, 'site.json'), `${JSON.stringify(doc, null, 2)}\n`)
-    await writePalettePng(
-      browser,
-      r.site.brandColours,
-      `Brand colours of ${manifest.id}`,
-      join(out, 'site-palette.png')
-    )
-    say(`site.json: ${r.site.logoSpots.length} logo spots, ${r.errors.length} errors; site-palette.png`)
+    writePaletteHtml(r.site.brandColours, `Brand colours of ${manifest.id}`, join(out, 'site-palette.html'))
+    say(`site.json: ${r.site.logoSpots.length} logo spots, ${r.errors.length} errors; site-palette.html`)
     return doc
   } finally {
     await browser.close()

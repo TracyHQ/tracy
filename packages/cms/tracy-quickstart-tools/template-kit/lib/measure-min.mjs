@@ -1,12 +1,11 @@
-// The measured minimum of one list: on the live page, remove rows from the DOM one at a time (from the last),
-// shoot the block at every width for every count, and check the layout of what is left. Read-only on the
-// site: rows are removed in the browser only, never in the site's database.
-import { mkdirSync } from 'node:fs'
-import { join } from 'node:path'
-
-import { cropBox, cutImages, openFrozen, openKitContext, shootPng } from './capture.mjs'
+// The measured minimum of one list, in the DOM only (no screenshot): on the live page, remove rows one at a time
+// (from the last) and, at every width (the same page resized), read the boxes of the rows left: a full, centered or
+// filling last line is right, a hole is not, a short last line pressed to the left is tried again with a centering
+// rule injected and taken out. One page load per list. Read-only on the site: rows go in the browser only.
+import { openFrozen, openKitContext } from './capture.mjs'
 import { tryRowFix } from './row-fix.js'
-import { layoutCheck, matchRepeat, minOfCounts } from './rows.mjs'
+import { readRowContext } from './row-context.js'
+import { firstLineSpans, layoutCheck, matchRepeat, minOfCounts } from './rows.mjs'
 import { readDetails } from './read-details.js'
 
 /** Runs INSIDE the page: keep the first `keep` rows of the set, remove the rest, return the boxes left. */
@@ -48,7 +47,7 @@ export function keepRows({ block, path, shape, css, keep }) {
 }
 
 /**
- * @param {{chromium: object, siteUrl: string, hostHeader?: string, url: string, assigned: object[], source: string, listId: string, max: number, css?: string, repeat?: {path: number[], shape: string}, widths: number[], out: string, note?: string, hide?: object}} o
+ * @param {{chromium: object, siteUrl: string, hostHeader?: string, url: string, assigned: object[], source: string, listId: string, max: number, css?: string, repeat?: {path: number[], shape: string}, widths: number[], note?: string, hide?: object}} o
  */
 export async function measureMin({
   chromium,
@@ -61,95 +60,59 @@ export async function measureMin({
   max,
   css,
   widths,
-  out,
   note,
   repeat: given,
   hide
 }) {
-  mkdirSync(join(out, 'images'), { recursive: true })
   const browser = await chromium.launch()
-  const images = {}
   const checks = {}
   let repeat = given ?? null
   const centered = {}
+  const contexts = {}
   let fix = null
   try {
-    for (const width of widths) {
-      const ctx = await openKitContext(browser, { width, siteUrl, hostHeader })
-      try {
-        for (let keep = max; keep >= 1; keep--) {
-          const opened = await openFrozen(ctx, url, assigned, hide)
-          if (!opened.page) throw new Error(`${url}: ${opened.error}`)
-          const { page } = opened
-          try {
-            if (!css && !repeat) {
-              repeat = matchRepeat((await page.evaluate(readDetails))[source]?.repeats, max)
-              if (!repeat) throw new Error(`no row set of ${max} rows in ${source}; pass --rows <css>`)
-            }
-            const left = await page.evaluate(keepRows, {
-              block: source,
-              path: repeat?.path ?? [],
-              shape: repeat?.shape,
-              css,
-              keep
-            })
-            if (!left) throw new Error(`block ${source} not found on ${url}`)
-            if (left.total !== max) throw new Error(`expected ${max} rows in ${source}, found ${left.total}`)
-            await page.waitForTimeout(300)
-            const after = await page.evaluate(keepRows, {
-              block: source,
-              path: repeat?.path ?? [],
-              shape: repeat?.shape,
-              css,
-              keep
-            })
-            const height = await page.evaluate(() => document.documentElement.scrollHeight)
-            const png = await shootPng(page, width, Math.min(height, 16000))
-            const name = `${listId}-min-${keep}-${width}.jpg`
-            const c = cropBox(after.block, width, Math.min(height, 16000))
-            if (c) await cutImages(ctx, png, [{ name, ...c }], join(out, 'images'))
-            ;(images[keep] ??= {})[width] = `images/${name}`
-            const check = layoutCheck(after.rows, after.container)
-            ;(checks[keep] ??= {})[width] = check
-            if (check.leftPacked) {
-              // The trial of the centering fix: inject it, read the rows again, shoot the block.
-              const args = { block: source, path: repeat?.path ?? [], shape: repeat?.shape, css }
-              const tried = await page.evaluate(tryRowFix, args)
-              if (tried) {
-                await page.waitForTimeout(200)
-                const again = await page.evaluate(keepRows, { ...args, keep })
-                const fixed = layoutCheck(again.rows, again.container)
-                const cname = `${listId}-centered-${keep}-${width}.jpg`
-                const c2 = cropBox(again.block, width, Math.min(height, 16000))
-                if (c2)
-                  await cutImages(
-                    ctx,
-                    await shootPng(page, width, Math.min(height, 16000)),
-                    [{ name: cname, ...c2 }],
-                    join(out, 'images')
-                  )
-                ;(centered[keep] ??= {})[width] = {
-                  ok: fixed.ok,
-                  reason: fixed.reason,
-                  gap: check.gap,
-                  image: `images/${cname}`
-                }
-                fix ??= {
-                  selector: tried.selector,
-                  display: tried.display,
-                  rule: tried.rule,
-                  matches: tried.matches
-                }
-              }
-            }
-          } finally {
-            await page.close().catch(() => {})
-          }
+    const ctx = await openKitContext(browser, { width: widths[0], siteUrl, hostHeader })
+    const opened = await openFrozen(ctx, url, assigned, hide, { wake: 'quick' })
+    if (!opened.page) throw new Error(`${url}: ${opened.error}`)
+    const { page } = opened
+    if (!css && !repeat) {
+      repeat = matchRepeat((await page.evaluate(readDetails))[source]?.repeats, max)
+      if (!repeat) throw new Error(`no row set of ${max} rows in ${source}; pass --rows <css>`)
+    }
+    const args = { block: source, path: repeat?.path ?? [], shape: repeat?.shape, css }
+    for (let keep = max; keep >= 1; keep--) {
+      const left = await page.evaluate(keepRows, { ...args, keep })
+      if (!left) throw new Error(`block ${source} not found on ${url}`)
+      if (keep === max && left.total !== max)
+        throw new Error(`expected ${max} rows in ${source}, found ${left.total}`)
+      for (const width of widths) {
+        await page.setViewportSize({ width, height: 900 })
+        await page.waitForTimeout(250)
+        const after = await page.evaluate(keepRows, { ...args, keep })
+        // How the content around the rows is aligned, read once per width on the full set.
+        if (keep === max) {
+          const around = await page.evaluate(readRowContext, args)
+          const spans = firstLineSpans(after.rows, after.container)
+          contexts[width] = around ? { ...around, spans, centered: around.centered || spans } : null
         }
-      } finally {
-        await ctx.close()
+        const check = layoutCheck(after.rows, after.container, 6, contexts[width])
+        ;(checks[keep] ??= {})[width] = check
+        if (!check.leftPacked) continue
+        // The trial of the centering fix: inject it, read the rows again, take it out.
+        const tried = await page.evaluate(tryRowFix, args)
+        if (!tried) continue
+        await page.waitForTimeout(200)
+        const again = await page.evaluate(keepRows, { ...args, keep })
+        const fixed = layoutCheck(again.rows, again.container, 6, contexts[width])
+        await page.evaluate(() => {
+          for (const el of document.querySelectorAll('style[data-kit-fix]')) el.remove()
+        })
+        ;(centered[keep] ??= {})[width] = { ok: fixed.ok, reason: fixed.reason, gap: check.gap }
+        fix ??= { selector: tried.selector, display: tried.display, rule: tried.rule, matches: tried.matches }
       }
     }
+    await page.close().catch(() => {})
+    await ctx.close()
   } finally {
     await browser.close()
   }
@@ -169,17 +132,18 @@ export async function measureMin({
     sparseRow: packed ? 'left-packed' : centers ? 'centers' : 'fills',
     minIfCentered: packed ? minOfCounts(okIfCentered, max).min : min,
     centered,
+    context: contexts,
     fix: fix && {
       ...fix,
       verified: counts.every((n) => widths.every((w) => !checks[n][w]?.leftPacked || centered[n]?.[w]?.ok))
     },
     listId,
+    measuredBy: 'dom',
     max,
     min,
     okCounts,
     layoutOkContiguous,
     checks,
-    images,
     inSlider: repeat?.inSlider ?? null,
     rows: css ? { css } : { path: repeat?.path, shape: repeat?.shape },
     faithfulness: note ?? null

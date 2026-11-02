@@ -46,19 +46,17 @@ export function joomlaAdapter(source) {
   if (query) {
     state.prefix = prefixOf(query('SHOW TABLES').map((r) => Object.values(r)[0]))
     const p = state.prefix
-    const style = query(
-      `SELECT template, params FROM ${p}template_styles WHERE client_id = 0 AND home = '1'`
-    )[0]
-    state.template = style?.template ?? null
-    state.menus = query(
-      `SELECT id, title, link, menutype, home, params FROM ${p}menu WHERE client_id = 0 AND published = 1 AND link <> ''`
-    ).map((r) => ({ ...r, params: safeJson(r.params) }))
-    state.schemaPlugin = query(
-      `SELECT enabled FROM ${p}extensions WHERE type = 'plugin' AND folder = 'system' AND element = 'schemaorg'`
-    )[0]
-    const langParams = query(
+    const [styles, menus, schema, langs] = (source.queryMany ?? ((qs) => qs.map(query)))([
+      `SELECT template, params FROM ${p}template_styles WHERE client_id = 0 AND home = '1'`,
+      `SELECT id, title, link, menutype, home, params FROM ${p}menu WHERE client_id = 0 AND published = 1 AND link <> ''`,
+      `SELECT enabled FROM ${p}extensions WHERE type = 'plugin' AND folder = 'system' AND element = 'schemaorg'`,
       `SELECT params FROM ${p}extensions WHERE type = 'component' AND element = 'com_languages'`
-    )[0]?.params
+    ])
+    const style = styles[0]
+    state.template = style?.template ?? null
+    state.menus = menus.map((r) => ({ ...r, params: safeJson(r.params) }))
+    state.schemaPlugin = schema[0]
+    const langParams = langs[0]?.params
     state.language = safeJson(langParams).site ?? null
   } else missing('site', 'no database to read the template and menus from (--db or --db-command)')
   const t4 = state.template && readFile ? t4Settings(readFile, state.template, 'site') : null

@@ -1,9 +1,8 @@
 // A measured list minimum as template-kit.json states it, derived again from the measured counts every time the
 // kit is assembled, so evidence measured under an older rule follows the current one.
-import { imageIdOf } from './ids.mjs'
 import { minOfCounts } from './rows.mjs'
 
-/** The count, whether every count from it to the maximum is right, and the images and checks per count. */
+/** The count, whether every count from it to the maximum is right, and the DOM checks per count. */
 export function measuredMin(m) {
   const { min, layoutOkContiguous } = minOfCounts(m.okCounts, m.max)
   return {
@@ -12,12 +11,6 @@ export function measuredMin(m) {
     // How a short last line sits: `fills`, `centers`, or `left-packed` (and the minimum once centered).
     ...(m.sparseRow ? { sparseRow: m.sparseRow, minIfCentered: m.minIfCentered ?? null } : {}),
     minEvidence: {
-      images: Object.fromEntries(
-        Object.entries(m.images ?? {}).map(([n, byW]) => [
-          n,
-          Object.fromEntries(Object.entries(byW).map(([w, f]) => [w, imageIdOf(f)]))
-        ])
-      ),
       layoutOkAt: m.okCounts,
       layoutOkContiguous,
       checks: Object.fromEntries(

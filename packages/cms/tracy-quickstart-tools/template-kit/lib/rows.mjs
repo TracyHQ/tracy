@@ -15,9 +15,10 @@ export function linesOf(boxes, tol = 4) {
 /**
  * Is a set of rows laid out right? The last line either holds as many rows as the first (it fills the line)
  * or sits centered in the container (left and right gaps within `tol` px). Rows stacked one per line at a
- * narrow width fill their line by definition.
+ * narrow width fill their line by definition. `context` (row-context.js, plus whether full lines span the container)
+ * tells a short line that follows a left-aligned column from a hole.
  */
-export function layoutCheck(rows, container, tol = 6) {
+export function layoutCheck(rows, container, tol = 6, context = null) {
   if (!rows.length) return { ok: false, reason: 'no row is shown' }
   const lines = linesOf(rows)
   const first = lines[0].rows.length
@@ -29,6 +30,15 @@ export function layoutCheck(rows, container, tol = 6) {
   if (Math.abs(left - right) <= tol)
     return { ok: true, reason: 'the last line is centered', lines: lines.length }
   if (left <= tol && right <= tol) return { ok: true, reason: 'the rows fill the line', lines: lines.length }
+  // A short line pressed to the left in a left-aligned column, starting where the words beside it start (icons
+  // over a left-aligned copyright line), follows its column: no hole. Only a centered context (centered words
+  // or buttons around the rows, or full lines that span the container) makes it one.
+  if (left <= tol && right > tol && context && !context.centered && context.leftAligned)
+    return {
+      ok: true,
+      reason: 'the short line sits left, in line with the left-aligned content beside it',
+      lines: lines.length
+    }
   return {
     ok: false,
     reason: `the last line leaves a hole (${left}px left, ${right}px right)`,
@@ -68,4 +78,14 @@ export function minOfCounts(okCounts, max) {
   if (!ok.length) return { min: null, layoutOkContiguous: false }
   const min = ok[0]
   return { min, layoutOkContiguous: ok.length === max - min + 1 }
+}
+
+/** Whether the first line of the full set of rows spans its container (a grid whose full lines reach both edges). */
+export function firstLineSpans(rows, container, tol = 6) {
+  const lines = linesOf(rows)
+  const first = lines[0]?.rows ?? []
+  if (first.length < 2) return false
+  const left = Math.min(...first.map((r) => r.left)) - container.left
+  const right = container.left + container.width - Math.max(...first.map((r) => r.left + r.width))
+  return left <= tol && right <= tol
 }

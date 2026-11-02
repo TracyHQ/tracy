@@ -1,7 +1,7 @@
 // Template kit blocks and crops in a real browser, on a fabricated page: a sticky header frozen at the
 // top, a hero that only carries `#acm-*-N`, a module in a bare position, the off-canvas menu not cropped.
 import assert from 'node:assert/strict'
-import { existsSync, mkdtempSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { test } from 'node:test'
@@ -115,7 +115,10 @@ test('the measured minimum removes rows one at a time and checks the layout', as
     })
     assert.deepEqual(r.okCounts, [1, 2, 3])
     assert.equal(r.min, 1)
-    for (const n of [1, 2, 3]) for (const w of [1440, 390]) assert.ok(existsSync(join(out, r.images[n][w])))
+    for (const n of [1, 2, 3])
+      for (const w of [1440, 390]) assert.ok(r.checks[n][w].reason, 'a DOM check per count and width')
+    assert.equal(r.images, undefined, 'nothing is shot for a minimum')
+    assert.deepEqual(readdirSync(out), [], 'no file is written')
   } finally {
     rmSync(out, { recursive: true, force: true })
   }
@@ -153,6 +156,30 @@ test('links to left-out pages are removed with the row that holds them, nothing 
   }
 })
 
+test('a short line in a left-aligned column, in line with the words below it, is no hole', async (t) => {
+  const browser = await launch()
+  if (!browser) return t.skip('no Chromium available')
+  await browser.close()
+  const page = pathToFileURL(
+    join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'template-kit', 'rows-left-column.html')
+  ).href
+  const r = await measureMin({
+    chromium,
+    siteUrl: 'http://site.example',
+    url: page,
+    assigned: [],
+    source: 'module-41',
+    listId: 'block-41.social',
+    max: 4,
+    widths: [1440, 390]
+  })
+  assert.notEqual(r.sparseRow, 'left-packed')
+  assert.equal(r.fix, null)
+  assert.equal(r.min, 1)
+  assert.equal(r.context[1440].centered, false)
+  assert.equal(r.context[1440].leftAligned, true)
+})
+
 test('a short last line packed to the left is caught, and the centering fix is proposed and tried', async (t) => {
   const browser = await launch()
   if (!browser) return t.skip('no Chromium available')
@@ -184,9 +211,10 @@ test('a short last line packed to the left is caught, and the centering fix is p
       /div\.acm-cards\.style-2 div\.cards\.row$|div\.acm-cards\.style-2 div\.row\.cards$/
     )
     assert.equal(r.fix.verified, true)
+    assert.equal(r.context[1440].centered, true)
     for (const n of [1, 2, 3]) {
       assert.equal(r.centered[n][1440].ok, true)
-      assert.ok(existsSync(join(out, r.centered[n][1440].image)))
+      assert.equal(r.centered[n][1440].image, undefined, 'the trial is read in the DOM, not shot')
     }
   } finally {
     rmSync(out, { recursive: true, force: true })

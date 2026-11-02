@@ -1,14 +1,13 @@
-// Whether a CMS-printed sentence can be taken off the site, measured: the sentence's language constant is set to an
-// empty override, the block is shot before and after, and the override file is put back as it was (removed when it
-// did not exist), whatever happens. Each fixed text gets `canHide` (true: the words left the page and the block
-// changed on screen; false: the words still show; null: nothing changed on screen), `hiddenBy` and `evidence`.
-import { join } from 'node:path'
-
+// Whether a CMS-printed sentence can be taken off the site, measured in the DOM (no screenshot): the sentence's
+// language constant is set to an empty override, the block's text and layout (its box, its text and buttons) are
+// read before and after, and the override file is put back as it was (removed when it did not exist), whatever
+// happens. Each fixed text gets `canHide` (true: the words left the page and the block's layout changed with them;
+// false: the words still show; null: nothing in the block changed), `hiddenBy` and `evidence` (the numbers).
+import { textShift } from '../empty-frame.mjs'
 import { openFrozen, openKitContext } from '../capture.mjs'
-import { INVALID } from '../empty-frame.mjs'
 import { urlOfPath } from '../kit-paths.mjs'
 import { assignedAt } from '../map-index.mjs'
-import { changedShare, MIN_CHANGED } from '../pixel-diff.mjs'
+import { layoutOf } from '../read-frames.js'
 
 const WIDTH = 1440
 const norm = (s) =>
@@ -19,27 +18,31 @@ const norm = (s) =>
 
 /** The override file's text with `constant` set to an empty string (a later line wins over an earlier one). */
 export const withEmptyOverride = (original, constant) =>
-  `${original ? `${original.replace(/\n*$/, '')}\n` : ''}${constant}=""\n`
+  `${original ? `${original.replace(/\n*$/, '')}\n` : ''}${[constant]
+    .flat()
+    .map((c) => `${c}=""\n`)
+    .join('')}`
 
 /** The verdict of one measurement. */
-export function judgeHide({ textBefore, textAfter, text, change }) {
+export function judgeHide({ textBefore, textAfter, text, changed }) {
   if (!norm(textBefore).includes(norm(text)))
     return { canHide: null, reason: 'the sentence was not on the page before the change' }
   if (norm(textAfter).includes(norm(text)))
     return { canHide: false, reason: 'the sentence still shows with the override set' }
-  if (change < MIN_CHANGED) return { canHide: null, reason: INVALID }
-  return { canHide: true, reason: 'the sentence left the page and the block changed on screen' }
+  if (!changed) return { canHide: null, reason: 'nothing in the block changed: measurement invalid' }
+  return { canHide: true, reason: 'the sentence left the page and the block changed with it' }
 }
 
-async function shootBlock(ctx, { siteUrl, idx, at, file }) {
-  const opened = await openFrozen(ctx, urlOfPath(at.path, siteUrl), assignedAt(idx, at.path))
+async function readBlock(ctx, { siteUrl, idx, at }) {
+  const opened = await openFrozen(ctx, urlOfPath(at.path, siteUrl), assignedAt(idx, at.path), null, {
+    wake: 'quick'
+  })
   if (!opened.page) return { error: opened.error }
   try {
     const el = opened.page.locator(`[data-kit-block="${at.raw}"]`).first()
     const text = await el.innerText({ timeout: 5000 })
-    const png = await el.screenshot({ type: 'png', timeout: 15000 })
-    await el.screenshot({ path: file, type: 'jpeg', quality: 82, timeout: 15000 })
-    return { text, png }
+    const layout = await opened.page.evaluate(layoutOf, { block: at.raw })
+    return { text, layout }
   } catch (e) {
     return { error: String(e.message ?? e).split('\n')[0] }
   } finally {
@@ -48,8 +51,7 @@ async function shootBlock(ctx, { siteUrl, idx, at, file }) {
 }
 
 /**
- * @param {{browser: object, siteUrl: string, hostHeader?: string, idx: object, fixedTexts: object[], override: {file: string, setting: string}, readFile: Function, writer: object, dir: string, log?: Function}} o
- *   `dir`: the folder the shots go in (named `images/<file>` in the evidence)
+ * @param {{browser: object, siteUrl: string, hostHeader?: string, idx: object, fixedTexts: object[], override: {file: string, setting: string}, readFile: Function, writer: object, log?: Function}} o
  * @returns {Promise<object[]>} errors for the texts that could not be measured
  */
 export async function measureFixedTexts({
@@ -61,12 +63,11 @@ export async function measureFixedTexts({
   override,
   readFile,
   writer,
-  dir,
   log = () => {}
 }) {
   const errors = []
+  const befores = new Map()
   const ctx = await openKitContext(browser, { width: WIDTH, siteUrl, hostHeader })
-  const cmp = await ctx.newPage()
   try {
     for (const [i, f] of fixedTexts.entries()) {
       const field = `site.fixedTexts[${i}].canHide`
@@ -74,17 +75,20 @@ export async function measureFixedTexts({
         errors.push({ kind: 'missing', field, reason: 'no page where the sentence shows' })
         continue
       }
-      const name = `fixed-${f.block}-${f.source.constant.toLowerCase()}`
-      const before = await shootBlock(ctx, { siteUrl, idx, at: f.at, file: join(dir, `${name}-before.jpg`) })
+      // One reading of a block before any change serves every sentence it shows.
+      const beforeKey = `${f.at.path}|${f.at.raw}`
+      if (!befores.has(beforeKey)) befores.set(beforeKey, await readBlock(ctx, { siteUrl, idx, at: f.at }))
+      const before = befores.get(beforeKey)
       if (before.error) {
-        errors.push({ kind: 'missing', field, reason: `the block could not be shot: ${before.error}` })
+        errors.push({ kind: 'missing', field, reason: `the block could not be read: ${before.error}` })
         continue
       }
+      const constants = f.source.constants ?? [f.source.constant]
       const original = readFile(override.file)
       let after
       try {
-        writer.writeFile(override.file, withEmptyOverride(original, f.source.constant))
-        after = await shootBlock(ctx, { siteUrl, idx, at: f.at, file: join(dir, `${name}-after.jpg`) })
+        writer.writeFile(override.file, withEmptyOverride(original, constants))
+        after = await readBlock(ctx, { siteUrl, idx, at: f.at })
       } finally {
         if (original === null) writer.removeFile(override.file)
         else writer.writeFile(override.file, original)
@@ -93,18 +97,37 @@ export async function measureFixedTexts({
         errors.push({
           kind: 'missing',
           field,
-          reason: `the block could not be shot after the change: ${after.error}`
+          reason: `the block could not be read after the change: ${after.error}`
         })
         continue
       }
-      const change = await changedShare(cmp, before.png, after.png)
-      const verdict = judgeHide({ textBefore: before.text, textAfter: after.text, text: f.text, change })
+      const shift = textShift(before.layout, after.layout)
+      const heightChange = (after.layout?.block?.height ?? 0) - (before.layout?.block?.height ?? 0)
+      const changed = shift.gone > 0 || shift.moved > 0 || heightChange !== 0
+      let verdict = judgeHide({ textBefore: before.text, textAfter: after.text, text: f.text, changed })
+      // A short value was a guess: the words still showing with every candidate emptied means the CMS does not
+      // print them from these strings (the template does), so they are measured as template words instead.
+      if (verdict.canHide === false && f.source.short) {
+        f.notPrintedByCms = true
+        log('fixed text', f.block, 'not printed by', constants.join(','))
+        continue
+      }
+      if (verdict.canHide && shift.overlaps)
+        verdict = { canHide: false, reason: `${shift.overlaps} pairs of text or buttons now overlap` }
       f.canHide = verdict.canHide
-      f.hiddenBy = { setting: override.setting, file: override.file, constant: f.source.constant, value: '' }
+      f.hiddenBy = {
+        setting: override.setting,
+        file: override.file,
+        constant: constants.length > 1 ? constants : constants[0],
+        value: ''
+      }
       f.evidence = {
-        before: `images/${name}-before.jpg`,
-        after: `images/${name}-after.jpg`,
-        change: Math.round(change * 1000) / 1000,
+        blockBefore: before.layout?.block ?? null,
+        blockAfter: after.layout?.block ?? null,
+        heightChange,
+        textGone: shift.gone,
+        textMoved: shift.moved,
+        textOverlaps: shift.overlaps,
         reason: verdict.reason
       }
       if (verdict.canHide === null) errors.push({ kind: 'missing', field, reason: verdict.reason })
