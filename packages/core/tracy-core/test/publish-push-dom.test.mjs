@@ -994,6 +994,81 @@ test('a write with no answer is "may already be on your live site", apart from w
   assert.match(failed.textContent, new RegExp(t('push.note.liveBlocked').slice(0, 40)))
 })
 
+test('writes sent with no answer back are never "your live site was not changed", nor a plain success (#286)', async () => {
+  const unknownItem = item('u1', 'Page template', { code: 'WRITE_OUTCOME_UNKNOWN' })
+  const pushedWith = (result, extra = {}) =>
+    open(() =>
+      json(200, {
+        available: true,
+        push: row({ state: 'pushed', phase: 'apply', pushedAt: ago(1), preview: PREVIEW, result, ...extra }),
+        lastPush: null
+      })
+    )
+  // Every write ended with no answer: nothing confirmed, nothing refused.
+  await pushedWith({ pushed: [], conflicts: [], failed: [unknownItem], skipped: [] })
+  assert.equal(phase(), 'pushed')
+  assert.equal(document.querySelector('[data-push-nothing-sent]'), null, 'no "Nothing was sent"')
+  assert.doesNotMatch(text(), new RegExp(t('push.status.nothingSentBody').slice(0, 30)))
+  const notice = document.querySelector('[data-push-unknown]')
+  assert.ok(notice, 'the unknown-outcome notice')
+  assert.match(notice.textContent, new RegExp(t('push.status.unknown')))
+  assert.match(notice.textContent, /Tracy sent 1 change but got no answer/)
+  assert.match(notice.textContent, /Check it there before you sync to live again/)
+  assert.ok(document.querySelector('[data-push-group="unknown"]'), 'the group still lists it')
+
+  // One refused, one with no answer: still the unknown outcome, never "not changed".
+  await pushedWith({
+    pushed: [],
+    conflicts: [],
+    failed: [unknownItem, item('b1', 'Prices', { code: 'LIVE_BLOCKED' })],
+    skipped: []
+  })
+  assert.ok(document.querySelector('[data-push-unknown]'))
+  assert.equal(document.querySelector('[data-push-nothing-sent]'), null)
+
+  // Some written, some with no answer: a warning beside the count, not a plain success.
+  await pushedWith({
+    pushed: [item('a1', 'Opening hours'), item('a2', 'Prices')],
+    conflicts: [],
+    failed: [unknownItem, item('u2', 'Footer', { code: 'WRITE_OUTCOME_UNKNOWN' })],
+    skipped: []
+  })
+  assert.match(text(), /2 changes reached your live site/)
+  const also = document.querySelector('[data-push-unknown-also]')
+  assert.ok(also, 'the writes with no answer are said beside the count')
+  assert.match(also.textContent, /2 more changes were sent with no answer back/)
+  assert.equal(also.closest('[data-severity]').getAttribute('data-severity'), 'warning')
+
+  // Nothing unknown: the success as before.
+  await pushedWith({ pushed: [item('a1', 'Opening hours')], conflicts: [], failed: [], skipped: [] })
+  assert.equal(document.querySelector('[data-push-unknown-also]'), null)
+  assert.equal(document.querySelector('[data-severity="success"]')?.textContent.includes(t('push.status.pushed')), true)
+  assert.equal(document.querySelector('[data-push-unknown]'), null)
+
+  // An Apply that stopped (the live site stopped answering) with one write on the way and none
+  // confirmed: the failure, and that this one may be on the live site, listed.
+  await open(() =>
+    json(200, {
+      available: true,
+      push: row({
+        state: 'failed',
+        phase: 'apply',
+        error: 'LIVE_UNREACHABLE',
+        preview: PREVIEW,
+        result: { pushed: [], conflicts: [], failed: [unknownItem], skipped: [item('s1', 'Contact')] }
+      }),
+      lastPush: null
+    })
+  )
+  assert.equal(phase(), 'failed')
+  assert.equal(stepIs(), 'send')
+  assert.match(text(), new RegExp(t('push.error.liveUnreachable').slice(0, 40)))
+  assert.match(document.querySelector('[data-push-unknown]').textContent, /Tracy sent 1 change but got no answer/)
+  const group = document.querySelector('[data-push-group="unknown"]')
+  assert.ok(group, 'the change that may be on the live site is listed')
+  assert.match(group.textContent, /Page template/)
+})
+
 test('an Undo answering that nothing is left to undo: said once on this push, no Undo to press; later screens say nothing (#226)', async () => {
   const pushed = (id, extra = {}) =>
     row({

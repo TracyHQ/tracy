@@ -4076,7 +4076,12 @@ window.__ModuleLoader__.load({
               "sync.error.liveToken": "Site live từ chối token Claude Cowork. Kết nối lại site live bằng token hiện tại rồi thử lại.",
               "push.label.featuredImage": "Ảnh đại diện",
               "push.label.pageTemplate": "Template trang",
-              "push.label.altText": "Văn bản thay thế"
+              "push.label.altText": "Văn bản thay thế",
+              "push.status.unknown": "Site thật của bạn có thể đã thay đổi",
+              "push.status.unknownBody": "Tracy đã gửi {count} thay đổi nhưng không nhận được phản hồi, nên có thể chúng đã có trên site thật của bạn. Hãy kiểm tra ở đó trước khi đồng bộ lên site thật lần nữa.",
+              "push.status.unknownBody.one": "Tracy đã gửi 1 thay đổi nhưng không nhận được phản hồi, nên có thể nó đã có trên site thật của bạn. Hãy kiểm tra ở đó trước khi đồng bộ lên site thật lần nữa.",
+              "push.status.unknownAlso": "Thêm {count} thay đổi đã được gửi nhưng không có phản hồi, nên có thể chúng đã có trên site thật của bạn. Hãy kiểm tra ở đó trước khi đồng bộ lên site thật lần nữa.",
+              "push.status.unknownAlso.one": "Thêm 1 thay đổi đã được gửi nhưng không có phản hồi, nên có thể nó đã có trên site thật của bạn. Hãy kiểm tra ở đó trước khi đồng bộ lên site thật lần nữa."
       },
       "tracy-tab-link": {
               "launcher.open": "Mở danh sách tab",

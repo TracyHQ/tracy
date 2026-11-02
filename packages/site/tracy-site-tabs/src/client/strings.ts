@@ -1447,6 +1447,17 @@ export const en = {
     'Your live site was not changed. Below is why each change stayed on Tracy’s copy.',
   'push.status.nothingSentOpen':
     'Your live site was not changed: the changes below are open in an editor on your live site. Once they are saved or closed there, press Preview again.',
+  /** Nothing confirmed written, but writes sent with no answer back (WRITE_OUTCOME_UNKNOWN, #286). */
+  'push.status.unknown': 'Your live site may have changed',
+  'push.status.unknownBody':
+    'Tracy sent {count} changes but got no answer, so they may already be on your live site. Check them there before you sync to live again.',
+  'push.status.unknownBody.one':
+    'Tracy sent 1 change but got no answer, so it may already be on your live site. Check it there before you sync to live again.',
+  /** Beside the changes that reached the live site: those sent with no answer back (#286). */
+  'push.status.unknownAlso':
+    '{count} more changes were sent with no answer back, so they may already be on your live site. Check them there before you sync to live again.',
+  'push.status.unknownAlso.one':
+    '1 more change was sent with no answer back, so it may already be on your live site. Check it there before you sync to live again.',
   'push.result.open': 'Not sent: open in an editor on your live site ({count})',
   'push.result.openHint':
     'Someone has these open in the editor of your live site, so Tracy did not write them: their next Save would undo it. Once they are saved or closed, press Preview again.',

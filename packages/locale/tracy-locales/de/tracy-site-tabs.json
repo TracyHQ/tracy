@@ -1234,5 +1234,10 @@
   "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut.",
   "push.label.featuredImage": "Beitragsbild",
   "push.label.pageTemplate": "Seiten-Template",
-  "push.label.altText": "Alternativtext"
+  "push.label.altText": "Alternativtext",
+  "push.status.unknown": "Ihre Live-Site wurde möglicherweise geändert",
+  "push.status.unknownBody": "Tracy hat {count} Änderungen gesendet, aber keine Antwort erhalten, sie sind also vielleicht schon auf Ihrer Live-Site. Prüfen Sie sie dort, bevor Sie erneut übertragen.",
+  "push.status.unknownBody.one": "Tracy hat 1 Änderung gesendet, aber keine Antwort erhalten, sie ist also vielleicht schon auf Ihrer Live-Site. Prüfen Sie sie dort, bevor Sie erneut übertragen.",
+  "push.status.unknownAlso": "{count} weitere Änderungen wurden ohne Antwort gesendet und sind vielleicht schon auf Ihrer Live-Site. Prüfen Sie sie dort, bevor Sie erneut übertragen.",
+  "push.status.unknownAlso.one": "1 weitere Änderung wurde ohne Antwort gesendet und ist vielleicht schon auf Ihrer Live-Site. Prüfen Sie sie dort, bevor Sie erneut übertragen."
 }

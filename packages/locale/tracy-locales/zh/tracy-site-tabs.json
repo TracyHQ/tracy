@@ -1234,5 +1234,10 @@
   "sync.error.liveToken": "线上 site拒绝了 Claude Cowork token。请使用当前token重新连接线上 site，然后重试。",
   "push.label.featuredImage": "特色图片",
   "push.label.pageTemplate": "页面 template",
-  "push.label.altText": "替代文本"
+  "push.label.altText": "替代文本",
+  "push.status.unknown": "你的线上 site 可能已有改动",
+  "push.status.unknownBody": "Tracy 已发送 {count} 项修改但没有收到回应，因此它们可能已在你的线上 site 上。再次同步到线上之前，请先在那里检查。",
+  "push.status.unknownBody.one": "Tracy 已发送 1 项修改但没有收到回应，因此它可能已在你的线上 site 上。再次同步到线上之前，请先在那里检查。",
+  "push.status.unknownAlso": "另有 {count} 项修改已发送但没有回应，因此它们可能已在你的线上 site 上。再次同步到线上之前，请先在那里检查。",
+  "push.status.unknownAlso.one": "另有 1 项修改已发送但没有回应，因此它可能已在你的线上 site 上。再次同步到线上之前，请先在那里检查。"
 }
