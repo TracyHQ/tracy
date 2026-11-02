@@ -46,8 +46,13 @@ export function emptyShowsOf(php, variable) {
         /<\?php\s+(?:if\s*\(.*?\)\s*:|else\s*:|elseif\s*\(.*?\)\s*:|endif\s*;)\s*\?>/g,
         ''
       )
-      const prints =
-        /<\?php\s+echo\b|<\?=/.test(rest) || /\S/.test(rest.replace(/<\?php[\s\S]*?\?>|<[^>]*>/g, ''))
+      // Drop PHP blocks and tags until the text is stable, so a nested "<<b>" cannot leave a tag behind.
+      let visible = rest
+      for (let before = ''; before !== visible; ) {
+        before = visible
+        visible = visible.replace(/<\?php[\s\S]*?\?>|<[^>]*>/g, '')
+      }
+      const prints = /<\?php\s+echo\b|<\?=/.test(rest) || /\S/.test(visible)
       return prints ? 'template-text' : 'nothing'
     }
   }

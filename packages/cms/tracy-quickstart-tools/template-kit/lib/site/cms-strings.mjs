@@ -27,8 +27,13 @@ const norm = (s) =>
 
 /** Text of an HTML snippet as a browser would show it: tags dropped, entities decoded, spaces collapsed. */
 export function shownText(html) {
-  return String(html ?? '')
-    .replace(/<[^>]*>/g, '')
+  // Strip tags until the text is stable, so "<<b>script>" cannot rebuild a tag after one pass.
+  let stripped = String(html ?? '')
+  for (let before = ''; before !== stripped; ) {
+    before = stripped
+    stripped = stripped.replace(/<[^>]*>/g, '')
+  }
+  return stripped
     .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
     .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(Number.parseInt(n, 16)))
     .replace(/&([a-z]+);/gi, (m, n) => ENTITIES[n.toLowerCase()] ?? m)

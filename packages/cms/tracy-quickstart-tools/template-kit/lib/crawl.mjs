@@ -32,10 +32,12 @@ export function httpFetcher({ siteUrl, hostHeader, timeoutMs = 30000, maxRedirec
   }
   const once = (url) =>
     new Promise((resolve) => {
+      // Certificates are always verified. Stand sites are crawled over plain http; for a self-signed https
+      // site, point NODE_EXTRA_CA_CERTS at its certificate instead of disabling validation.
       const lib = url.protocol === 'https:' ? https : http
       const headers = { 'user-agent': 'TracyTemplateKit/1.0', accept: 'text/html' }
       if (hostHeader) headers.host = hostHeader
-      const req = lib.get(url, { headers, timeout: timeoutMs, rejectUnauthorized: false }, (res) => {
+      const req = lib.get(url, { headers, timeout: timeoutMs }, (res) => {
         const chunks = []
         res.on('data', (c) => chunks.push(c))
         res.on('end', () =>
