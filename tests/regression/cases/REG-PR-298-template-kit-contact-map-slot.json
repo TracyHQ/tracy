@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-298-template-kit-contact-map-slot",
+  "kind": "fix",
+  "title": "Template kit: a contact page button opening a map drawn from a block's map shortcode, and a contact's empty mobile line, are writable setting slots",
+  "pr": 298,
+  "area": "quickstart/template-kit",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand. From the checkout run: node --test --test-concurrency=1 packages/cms/tracy-quickstart-tools/test/template-kit-setting-slots.test.mjs packages/cms/tracy-quickstart-tools/test/template-kit-coverage-gate.test.mjs",
+    "S2: Read packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.10/template-kit.json: the link body-about-us_contact.button-1 and site.contactBlocks[] field kind mobile.",
+    "S3: Read the node:test summary lines."
+  ],
+  "expect": [
+    "S3: fail 0 in both files.",
+    "S2: the map button's opens says writable true and slotId block-164.map-location, listed in site.settingSlots with writeTo entity module-164 column content.",
+    "S2: the mobile field says id contact-1.mobile, writable true, maxCharacters 22, and site.settingSlots lists contact-1.mobile with writeTo entity contact-1 column mobile.",
+    "S2: imagesSha256 equals approval.imagesSha256."
+  ],
+  "selectors": {
+    "button": "blocks[body-about-us_contact].links[body-about-us_contact.button-1].opens",
+    "settingSlots": "site.settingSlots[].id"
+  },
+  "evidence": "Before the fix the JA Boxing 1.0.10 kit marked the map button and the mobile field writable: false, so every site hid the map button. After it, a fabricated address and number written into those rows show in the rendered contact page HTML of a site restored from the 1.0.10 installer.",
+  "fence": "packages/cms/tracy-quickstart-tools/template-kit/lib/setting-slots.mjs (settleSettingSlots) and lib/site/adapters/joomla-map.mjs (mapSettingOf)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-setting-slots.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-coverage-gate.test.mjs"
+    ]
+  }
+}

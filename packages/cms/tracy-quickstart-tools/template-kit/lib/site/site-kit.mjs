@@ -170,7 +170,10 @@ export function buildSite({ map, adapter, reads, logoReads, notFound, styles, ht
     ),
     forms: buildForms(reads, { idOf }),
     systemPages: system.systemPages,
-    fixedTexts: cmsTexts.fixedTexts
+    fixedTexts: cmsTexts.fixedTexts,
+    // The maps blocks draw from their own content; the kit turns the ones a button opens into setting slots
+    // (setting-slots.mjs) and drops this list.
+    mapSettings: adapter.mapSettings?.() ?? []
   }
   if (!site.favicon.currentFile)
     errors.push({ kind: 'missing', field: 'site.favicon.currentFile', reason: 'no page links an icon' })

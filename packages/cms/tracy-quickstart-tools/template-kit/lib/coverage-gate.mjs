@@ -11,6 +11,7 @@ import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
 import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
 import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
 import { neutralKey } from './ids.mjs'
+import { settleSettingSlots } from './setting-slots.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
 
@@ -74,6 +75,33 @@ function contactFields(kit, mapSlots) {
   }
 }
 
+/**
+ * Every contact field names a slot with its limit (a content map slot, or a setting slot listed in
+ * `site.settingSlots`), or says it cannot be written and why. Returns how many do neither, each passed to `fail`.
+ */
+export function contactFieldChecks(kit, fail) {
+  const settings = new Set((kit.site?.settingSlots ?? []).map((s) => s.id))
+  let wrong = 0
+  for (const c of kit.site?.contactBlocks ?? [])
+    for (const f of c.accepts?.fields ?? []) {
+      const ok =
+        f.writable === false
+          ? !!f.writableReason && !f.id
+          : !!f.id &&
+            Number.isFinite(f.maxCharacters) &&
+            !!f.maxCharactersFrom &&
+            (!f.settingSlot || settings.has(f.id))
+      if (ok) continue
+      wrong++
+      fail(
+        'contactFieldsUnresolved',
+        `site.contactBlocks[${c.block}].accepts.fields[${f.column}]`,
+        'neither a slot with its limit nor a reason it cannot be written'
+      )
+    }
+  return wrong
+}
+
 /** The menu block the header's links come from (`links[].menu`), as a kit block id. */
 const mainMenuBlock = (kit) => {
   const header = kit.blocks.find((b) => b.id === 'header')
@@ -129,6 +157,8 @@ export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = 
   labelSlots(kit, mapOf)
   contactFields(kit, mapSlots)
   unifyLimits(kit, { mapSlots, textFit })
+  // After the limits: a setting slot borrows the limit of the line the page prints it beside.
+  settleSettingSlots(kit, { map })
   mainMenuRow(kit, mapOf, rowFit)
   whatElseChanges(kit)
   return kit
@@ -222,21 +252,7 @@ export function coverageGate(kit, { map, readings = new Map() }) {
       'the main menu row has no whole-row limit'
     )
   // 5. Every contact field: a slot with its limit, or not writable with the reason.
-  parts.contactFieldsUnresolved = 0
-  for (const c of kit.site?.contactBlocks ?? [])
-    for (const f of c.accepts?.fields ?? []) {
-      const ok =
-        f.writable === false
-          ? !!f.writableReason && !f.id
-          : !!f.id && Number.isFinite(f.maxCharacters) && !!f.maxCharactersFrom
-      if (ok) continue
-      parts.contactFieldsUnresolved++
-      fail(
-        'contactFieldsUnresolved',
-        `site.contactBlocks[${c.block}].accepts.fields[${f.column}]`,
-        'neither a slot with its limit nor a reason it cannot be written'
-      )
-    }
+  parts.contactFieldsUnresolved = contactFieldChecks(kit, fail)
   // 6. Shown words from a slot declared nowhere (the orphan check, counted here too).
   parts.orphanTexts = kit.checks?.orphanTexts ?? 0
   // How many shown text slots part 1 checked, so a gate at 0 over nothing is told from a covered kit.

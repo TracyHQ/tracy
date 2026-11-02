@@ -16212,8 +16212,8 @@
             "kind": "modal",
             "element": "#modalMap",
             "shows": "map",
-            "writable": false,
-            "writableReason": "the button opens a map the page draws from its own settings, which no content map slot holds; a planner cannot point it at the customer address"
+            "writable": true,
+            "slotId": "block-164.map-location"
           },
           "labelId": "languageString-30910664.0",
           "action": "page-control"
@@ -57174,8 +57174,11 @@
               "printed": true,
               "filled": false,
               "setting": "cms contact setting show_mobile",
-              "writable": false,
-              "writableReason": "the content map declares no slot for the contact's mobile column, so it cannot be written; the page prints it once it is filled"
+              "writable": true,
+              "id": "contact-1.mobile",
+              "maxCharacters": 22,
+              "maxCharactersFrom": "the contact's telephone line (contact-1.2): the page prints the mobile line in the same layout, once filled",
+              "settingSlot": true
             },
             {
               "kind": "fax",
@@ -64262,6 +64265,41 @@
           "textOverlaps": 0,
           "reason": "the sentence left the page and the block changed with it"
         }
+      }
+    ],
+    "settingSlots": [
+      {
+        "id": "block-164.map-location",
+        "kind": "map-location",
+        "writable": true,
+        "writeTo": {
+          "entity": "module-164",
+          "column": "content",
+          "whole": true,
+          "template": "{jamap mode='normal' locations='{\"location\":{\"0\":\"<address>\"},\"latitude\":{\"0\":\"<latitude>\"},\"longitude\":{\"0\":\"<longitude>\"},\"info\":{\"0\":\"\"}}' zoom='10' }{/jamap}"
+        },
+        "sample": {
+          "address": "Wall St",
+          "latitude": "40.7049955",
+          "longitude": "-74.0069912"
+        },
+        "valueFormat": "the whole column, written from `template` with three values: <address> one line of plain text, the address as a visitor would type it in Google Maps; <latitude> and <longitude> decimal degrees (40.7049955, -74.0069912), or both empty. Each value is escaped as inside a JSON string; no single quote (write a typographic one), no line break.",
+        "fillFrom": "<address>: the brief's `address` fact on one line. <latitude>, <longitude>: with a Google placeId, the place's own coordinates (the place record's location, or Place Details geometry.location), since the map takes no place id; without a placeId, both empty, and the map finds the address itself when it opens",
+        "drawnBy": "map shortcode {jamap} (plugin System - JA Google Map), attribute locations: location, latitude, longitude"
+      },
+      {
+        "id": "contact-1.mobile",
+        "kind": "contact-mobile",
+        "writable": true,
+        "writeTo": {
+          "entity": "contact-1",
+          "column": "mobile"
+        },
+        "sample": "",
+        "maxCharacters": 22,
+        "maxCharactersFrom": "the contact's telephone line (contact-1.2): the page prints the mobile line in the same layout, once filled",
+        "valueFormat": "a phone number as the page should print it, plain text on one line ((239) 555-0108)",
+        "fillFrom": "a second number of the brief's `phone` fact (a mobile or another line); the first number goes to the telephone slot. Without a second number it stays empty and the page prints no mobile line"
       }
     ]
   },

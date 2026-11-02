@@ -18,6 +18,9 @@
 //                 in pack/template-kit.json, the file committed beside the contract)
 //   cli.mjs relabel --out <dir> --contract <dir>   (the link labels of the template-kit.json in --out settled
 //                 again from the content map: labelId or a fixed-text reason per link; no browser, no capture, no image)
+//   cli.mjs setting-slots --out <dir> --contract <dir> [--db-command '<client prefix>' | --db mysql://...]
+//                 (the setting slots of the template-kit.json in --out settled again: the map a button opens, read
+//                 from the site's database, and the contact's mobile line; no browser, no capture, no image)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
 //
@@ -31,6 +34,10 @@ import { urlOfPath } from './lib/kit-paths.mjs'
 import { assignedAt, indexMap } from './lib/map-index.mjs'
 import { linkLabelSlots } from './lib/link-label-slots.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
+import { contactFieldChecks } from './lib/coverage-gate.mjs'
+import { settleSettingSlots } from './lib/setting-slots.mjs'
+import { adapterFor } from './lib/site/adapters/index.mjs'
+import { siteSource } from './lib/site/adapters/source.mjs'
 import { measureMin } from './lib/measure-min.mjs'
 import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
@@ -38,7 +45,8 @@ import { writeSheets } from './lib/sheets.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 
 const TOOL = 'template-kit 3.0.0'
-const COMMANDS = ['build', 'assemble', 'measure-min', 'sheet', 'approve', 'pack', 'relabel']
+const COMMANDS = ['build', 'assemble', 'measure-min', 'sheet', 'approve', 'pack', 'relabel', 'setting-slots']
+const NO_SITE = ['sheet', 'approve', 'pack', 'relabel', 'setting-slots']
 
 export function parseArgs(argv) {
   const o = { _: [] }
@@ -100,15 +108,41 @@ function relabel(o, out) {
   return r.wrong ? 1 : 0
 }
 
+/**
+ * Settle the setting slots of the kit in `out` again (setting-slots.mjs): the map settings are read from the site's
+ * database (SELECT only); the contact field check is counted again. Exit 1 when a map button or a contact field is
+ * left unresolved.
+ */
+function settingSlots(o, out) {
+  const file = join(out, 'template-kit.json')
+  const kit = readJson(file)
+  const map = readJson(join(o.contract, 'content-map.json'))
+  const manifest = readJson(join(o.contract, 'manifest.json'))
+  const source = siteSource({ db: str(o.db), dbCommand: str(o['db-command']) })
+  const mapSettings = adapterFor(manifest.platform, source).mapSettings?.() ?? null
+  if (!mapSettings) throw new Error('setting-slots needs the site database (--db-command or --db)')
+  const r = settleSettingSlots(kit, { map, mapSettings })
+  const failures = []
+  const wrong = contactFieldChecks(kit, (part, where, reason) => failures.push({ part, where, reason }))
+  if (kit.coverage?.parts) kit.coverage.parts.contactFieldsUnresolved = wrong
+  writeJson(file, kit)
+  const maps = kit.blocks.flatMap((b) => (b.links ?? []).filter((l) => l.opens?.shows === 'map'))
+  console.log(
+    `${r.slots} setting slots: ${r.tied} of ${maps.length} map buttons tied, ${r.mobile} mobile lines opened; contactFieldsUnresolved ${wrong}`
+  )
+  for (const f of failures) console.error(`${f.where}: ${f.reason}`)
+  return wrong || r.tied < maps.length ? 1 : 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
-  const needSite = !['sheet', 'approve', 'pack', 'relabel'].includes(cmd)
+  const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||
     !COMMANDS.includes(cmd) ||
     (needSite && !o.site) ||
-    ((needSite || cmd === 'relabel') && !o.contract)
+    ((needSite || cmd === 'relabel' || cmd === 'setting-slots') && !o.contract)
   ) {
     console.error(
       `usage: cli.mjs ${COMMANDS.join('|')} --out <dir> [--site <url> --contract <dir>] (see the head of this file)`
@@ -121,6 +155,7 @@ async function main() {
   if (cmd === 'approve') return approve(o, out)
   if (cmd === 'pack') return pack(out)
   if (cmd === 'relabel') return relabel(o, out)
+  if (cmd === 'setting-slots') return settingSlots(o, out)
   const map = readJson(join(o.contract, 'content-map.json'))
   const hostHeader = str(o['host-header'])
   const widths = String(o.widths ?? '1440,390')
