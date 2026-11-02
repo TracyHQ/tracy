@@ -22,6 +22,8 @@ import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import { photographsOnly } from 'website-opportunities/domain/pictures/brief-media.mjs'
 import { closedListDigest, ownershipOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { labelWithVision } from '../lib/picture-vision.js'
+import { observeWithModel } from '../lib/picture-observations.js'
+import { observeBriefPictures } from './brief-picture-observations.js'
 import { claimAnalyses, doneAnalyses, reopenAnalyses, settleAnalysis } from './media-analysis.js'
 
 export const BRIEF_VISION_MAX_PICTURES = 60
@@ -42,7 +44,8 @@ const entryOf = (vision, labels) => ({ key: vision.key, model: vision.door.model
 /**
  * @param {{pool: {query: Function}, objects: {get: (key: string) => Promise<Response | null>} | null,
  *   visionFor: () => Promise<{door: {url: string, key: string, model: string}, key: string} | null>,
- *   label?: typeof labelWithVision, chargeable?: Function, maxPictures?: number, log?: {warn?: Function}}} deps
+ *   label?: typeof labelWithVision, chargeable?: Function, maxPictures?: number, observe?: typeof observeWithModel,
+ *   log?: {warn?: Function}}} deps - `observe`: the text call that turns the labels into facts; null skips it
  */
 export function createBriefPictureLabels({
   pool,
@@ -51,6 +54,7 @@ export function createBriefPictureLabels({
   label = labelWithVision,
   chargeable = createChargeable(null),
   maxPictures = BRIEF_VISION_MAX_PICTURES,
+  observe = observeWithModel,
   log = console
 }) {
   /** The stored bytes of each picture, read by id and checked against its sha256. */
@@ -90,16 +94,10 @@ export function createBriefPictureLabels({
    * @param {{media: any[], brand: any, accountId: string | null, trade: string | null,
    *   closedList?: {offerings?: any[], people?: any[]} | null, businessName?: string | null}} input a brief read's media,
    *   the brief's closed list of offerings and people (`picture-links.mjs closedListOf`) and the business's name
+   * @param {{vision?: any}} ctx receives the vision door this labelling used, for the observation that follows it
    * @returns {Promise<{labels: Map<string, {key: string, model: string, labels: any}>, note: Record<string, any>}>}
    */
-  return async function labelBriefPictures({
-    media,
-    brand,
-    accountId,
-    trade,
-    closedList = null,
-    businessName = null
-  }) {
+  async function labelOnly({ media, brand, accountId, trade, closedList = null, businessName = null }, ctx) {
     const digest = closedListDigest(closedList)
     /** A label made against this closed list (none made against none). */
     const current = (l) => l && typeof l === 'object' && (l.closedList ?? null) === digest
@@ -130,6 +128,7 @@ export function createBriefPictureLabels({
     let sent = []
     try {
       vision = await visionFor()
+      ctx.vision = vision
       if (!vision) {
         mark([...photoIds], 'no_vision_model')
         return done({ ...note, status: 'off', reason: 'no_vision_model' })
@@ -241,6 +240,33 @@ export function createBriefPictureLabels({
       )
       return done({ ...note, status: 'failed', reason: String(error?.code ?? 'vision_failed').slice(0, 60) })
     }
+  }
+
+  /**
+   * The labelling, then what the labelled photos show about the business as facts (`brief-picture-observations.js`),
+   * asked on the same vision door: `observed` is `{facts, note}`, absent when nothing was labelled.
+   * @param {{media: any[], brand: any, accountId: string | null, trade: string | null,
+   *   closedList?: {offerings?: any[], people?: any[]} | null, businessName?: string | null}} input a brief read's media,
+   *   the brief's closed list of offerings and people (`picture-links.mjs closedListOf`) and the business's name
+   * @returns {Promise<{labels: Map<string, {key: string, model: string, labels: any}>, note: Record<string, any>,
+   *   observed?: {facts: any[], note: Record<string, any>}}>}
+   */
+  return async function labelBriefPictures(input) {
+    const ctx = {}
+    const out = await labelOnly(input, ctx)
+    if (!observe || !ctx.vision || !out.labels.size) return out
+    const observed = await observeBriefPictures({
+      media: input.media,
+      labels: out.labels,
+      closedList: input.closedList ?? null,
+      businessName: input.businessName ?? null,
+      trade: input.trade ?? null,
+      door: ctx.vision.door,
+      accountId: input.accountId ?? null,
+      observe,
+      chargeable
+    })
+    return { ...out, observed }
   }
 }
 

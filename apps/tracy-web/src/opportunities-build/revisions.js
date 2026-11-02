@@ -510,7 +510,9 @@ function withPictureLabels(read, labelling) {
     media: (read.media ?? []).map((m) =>
       labels.has(m.id) ? { ...m, labels: { ...m.labels, vision: labels.get(m.id) } } : m
     ),
-    ...(labelling.note ? { assetLabelling: labelling.note } : {})
+    ...(labelling.note ? { assetLabelling: labelling.note } : {}),
+    // What the labelled photos show about the business, held as facts the brief states (`observed-facts.mjs`).
+    ...(Array.isArray(labelling.observed?.facts) ? { observedFacts: labelling.observed.facts } : {})
   }
 }
 
@@ -547,11 +549,11 @@ function withoutVisionLabels(m) {
 
 /** The research a brief reads, as one hash: the same read twice is the same brief. */
 export function researchKey(domain, research) {
-  // How the labelling went is not research, and neither are the vision labels the brief step put on the photographs
-  // (`withPictureLabels`): a place's are kept in the shared analysis cache, never on its media rows, so the live read the
+  // How the labelling went is not research, nor what the photos were observed to show, nor the vision labels the brief
+  // step put on the photographs (`withPictureLabels`): a place's are kept in the shared analysis cache, never on its media rows, so the live read the
   // Details page hashes (`currentResearchKey`) has none, and a brief made a minute ago would read as stale. The other
   // labels a picture carries are the store's own and do count.
-  const { demoRequest, assetLabelling: _labelling, ...read } = research
+  const { demoRequest, assetLabelling: _labelling, observedFacts: _observed, ...read } = research
   return researchHash({
     schemaVersion: domain.BRIEF_SCHEMA_VERSION,
     profileSnapshotVersion: PROFILE_SNAPSHOT_VERSION,

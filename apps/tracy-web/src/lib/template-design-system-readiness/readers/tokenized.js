@@ -143,6 +143,24 @@ export function tokenizedSheets(context) {
   return /** @type {Promise<Tokenized>} */ (memo.get(context))
 }
 
+/**
+ * The release's stylesheets the tokenizer reads, as [path, text]: in scope for its CMS, not a design page,
+ * not a Joomla sheet no worn page loads. Null on a CMS with no stylesheet to tokenize (EmDash).
+ * @param {import('../index.js').RuleContext} context
+ * @returns {Promise<[string, string][] | null>}
+ */
+export async function templateSheets(context) {
+  const scope = IN_SCOPE[context.release.platform]
+  if (!scope) return null
+  const files = await releaseFiles(context)
+  return stylesheetsOf(files).filter(
+    ([file]) =>
+      scope.test(file) &&
+      !NOT_THE_TEMPLATE.test(file) &&
+      !(context.release.platform === 'joomla' && NOT_LOADED_JOOMLA.test(file))
+  )
+}
+
 /** @param {import('../index.js').RuleContext} context @returns {Promise<Tokenized>} */
 async function read(context) {
   const scope = IN_SCOPE[context.release.platform]

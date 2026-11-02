@@ -1,0 +1,3 @@
+- **Docs: the template kit's images are said to live on the quickstart's GitHub release** - Claude, for Akemi · `docs/template-kit-images-location` · 2026-11-02
+  **Affects:** anyone reading `template-kit/reader.js` or the quickstart tools README. The comment and the README no longer say the images are "stored elsewhere" or "not decided yet": they name the zip asset `template-kit-<template>-<version>.zip` on the release in `JoomlArt-Products/joomlart-products`, made by `cli.mjs pack`. No behavior change.
+  **Why / Measured:** comment-only change; `pack.mjs` names the zip that way and `approval.imagesSha256` is computed with `imagesDigest`.

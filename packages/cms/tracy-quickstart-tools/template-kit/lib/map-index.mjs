@@ -1,0 +1,69 @@
+// Read a content map the way the page summary needs it: what each block declares, and which map entity
+// owns the component area of a page, found by the page path.
+import { pathOfRoute } from './kit-paths.mjs'
+
+const queryOf = (link) =>
+  Object.fromEntries([...String(link ?? '').matchAll(/([\w[\]]+)=([^&]*)/g)].map((m) => [m[1], m[2]]))
+const aliasOf = (segment) => String(segment ?? '').replace(/^\d+-/, '')
+
+export function indexMap(map) {
+  const entities = new Map(map.entities.map((e) => [e.key, e]))
+  const slotsBy = new Map()
+  for (const s of map.slots ?? []) {
+    if (!slotsBy.has(s.entity)) slotsBy.set(s.entity, [])
+    slotsBy.get(s.entity).push(s)
+  }
+  const positionOf = new Map()
+  for (const p of map.pages ?? [])
+    for (const a of p.assignedModules ?? [])
+      if (!positionOf.has(a.entity)) positionOf.set(a.entity, a.position)
+  const pageByPath = new Map((map.pages ?? []).map((p) => [pathOfRoute(p.route), p]))
+  const byAlias = new Map()
+  for (const e of map.entities) {
+    const i = e.identity ?? {}
+    if ((e.kind === 'article' || e.kind === 'contact') && i.alias) byAlias.set(`${e.kind}:${i.alias}`, e.key)
+    if (e.kind === 'tag' && i.path) byAlias.set(`tag:${String(i.path).split('/').pop()}`, e.key)
+    if (e.kind === 'category' && i.path) byAlias.set(`category:${String(i.path).split('/').pop()}`, e.key)
+  }
+  return { map, entities, slotsBy, positionOf, pageByPath, byAlias }
+}
+
+/** The modules the map assigns to the page at `path` (for blocks that render without a wrapper id). */
+export function assignedAt(idx, path) {
+  const p = idx.pageByPath.get(path.split('?')[0]) ?? idx.pageByPath.get('/')
+  return (p?.assignedModules ?? []).map((a) => ({ entity: a.entity, position: a.position }))
+}
+
+/**
+ * Which map entity fills the component area of the page at `path`: a menu page by its link (category by
+ * `view=category&id=N`, contact `contact-N`, article `article-N`), otherwise by the last path segment
+ * (an article or contact alias, a tag `tag-N`, a category alias). `?start=N` keeps the owner of its list.
+ * @returns {{owner: string|null, kind: string}}
+ */
+export function ownerOfPath(idx, path) {
+  const [base, query] = path.split('?')
+  const page = idx.pageByPath.get(base)
+  const listPage = query ? ` (list position ${query.replace('start=', '')})` : ''
+  if (page && page.link && page.link !== '#') {
+    const q = queryOf(page.link)
+    const view = q.view ?? ''
+    if (view === 'category' && q.id) return { owner: `category-${q.id}`, kind: `category listing${listPage}` }
+    if (view === 'contact' && q.id) return { owner: `contact-${q.id}`, kind: 'contact page' }
+    if (view === 'article' && q.id) return { owner: `article-${q.id}`, kind: 'article' }
+    if (view === 'featured') return { owner: null, kind: `featured articles${listPage}` }
+    const component = (q.option ?? 'unknown').replace(/^com_/, '')
+    return { owner: null, kind: `${component} ${view || 'page'}`.trim() }
+  }
+  const segments = base.split('/').filter(Boolean)
+  const last = aliasOf(segments.at(-1))
+  if (segments.includes('tag') || segments.includes('tags')) {
+    const tag = idx.byAlias.get(`tag:${last}`)
+    return { owner: tag ?? null, kind: tag ? `tag listing${listPage}` : 'tag listing (no map entity)' }
+  }
+  if (segments.includes('author')) return { owner: null, kind: `author listing${listPage} (no map entity)` }
+  for (const kind of ['article', 'contact', 'category']) {
+    const key = idx.byAlias.get(`${kind}:${last}`)
+    if (key) return { owner: key, kind: kind === 'category' ? `category listing${listPage}` : kind }
+  }
+  return { owner: null, kind: 'unknown' }
+}

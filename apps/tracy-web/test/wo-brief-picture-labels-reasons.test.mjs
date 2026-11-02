@@ -100,6 +100,8 @@ const run = async (seeded, label, charged = []) =>
     pool: db.pool,
     objects: seeded.store,
     visionFor: async () => VISION,
+    // Labelling only: the observation that follows it has its own test (wo-brief-picture-observations).
+    observe: null,
     label,
     chargeable: async (spec, invoke) => {
       charged.push(spec)

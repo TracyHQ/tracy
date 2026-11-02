@@ -195,7 +195,13 @@ const DEMO_FIX =
  */
 export function summarizeDsReadiness(report, severity = DS_SEVERITY, world = {}) {
   const of = (/** @type {string} */ id) => dsSeverityOf(id, severity.rules)
-  const results = Array.isArray(report?.results) ? report.results : []
+  const all = Array.isArray(report?.results) ? report.results : []
+  // brand mode (ADR 0031 revision 02/11/2026) is graded apart: its rules are listed under their own heading
+  // and never change the Design system grade, its counts or ds-ready, which opens the Design system picker
+  // to customers. A template not ready for the brand step still serves every design system as before
+  const brand = brandOf(all, of)
+  const results = all.filter((r) => !isBrandRule(r?.id))
+  report = report ? { ...report, results } : report
   // not measured at the current preview probe (no file of this version, or preview rows of an older
   // probe, `rules/built-site.js`): the release was not judged on the preview rules, so the step shows
   // that alone, with no grade, no ratio and no groups built from older evidence (16/10/2026)
@@ -212,6 +218,7 @@ export function summarizeDsReadiness(report, severity = DS_SEVERITY, world = {})
       grade: null,
       measuredOn: null,
       evidence: null,
+      brand,
       notAtProbe: {
         current: Number(gap.current),
         measured: gap.measured ?? null,
@@ -328,6 +335,31 @@ export function summarizeDsReadiness(report, severity = DS_SEVERITY, world = {})
     unmeasuredHolds: severity.unmeasured.group === 'must-fix',
     grade,
     measuredOn,
-    evidence
+    evidence,
+    brand
   }
+}
+
+/** A rule of the brand step (BRAND-1, BRAND-2, BRAND-3). */
+export const isBrandRule = (/** @type {unknown} */ id) => typeof id === 'string' && /^BRAND-\d+$/.test(id)
+
+/**
+ * The brand step's rules as /ops lists them: every one, whatever its status (a live-only rule shows its
+ * measuring command), each with its plain line, what was seen and the fix.
+ * @param {any[]} results
+ * @param {(id: string) => { text: string, question: string }} of
+ * @returns {{ rule: string, status: string, text: string, question: string, owner: string, message: string, fix: string | null }[]}
+ */
+function brandOf(results, of) {
+  return results
+    .filter((r) => isBrandRule(r?.id))
+    .map((r) => ({
+      rule: r.id,
+      status: String(r.status),
+      text: of(r.id).text,
+      question: of(r.id).question,
+      owner: r.owner ?? 'contract',
+      message: clip(r.message),
+      fix: r.fix ? clipCommand(r.fix) : null
+    }))
 }

@@ -290,7 +290,59 @@ test('a text drawn at font size 0 (a T3 "text-hide" credit) holds its own words 
 test('groups say how many items the demo shows and whether their pictures share one shape', () => {
   const { map, findings } = fixture()
   const out = measureSlotFit({ map, findings }).map
-  assert.deepEqual(out.fitGroups, { 'module-4.item': { items: 2, uniform: true, whenFewer: 'neutral' } })
+  assert.deepEqual(out.fitGroups, {
+    'module-4.item': {
+      items: 2,
+      shown: 2,
+      uniform: true,
+      whenFewer: 'neutral',
+      min: null,
+      minFrom: 'unknown',
+      max: 2,
+      maxFrom: 'demo-count'
+    }
+  })
+})
+
+test('every repeated list carries a min next to its max, and an unknown min is said, never invented', () => {
+  const { map, findings } = fixture()
+  // A third item of the same collection that no audited page shows (an inactive slide of an invented gym).
+  map.slots.push({
+    key: 'article-10.0',
+    entity: 'article-10',
+    type: 'image',
+    sample: 'images/demo/classes/late.jpg',
+    label: 'Late class / feature_img',
+    group: { id: 'module-4.item.2', item: 2, kind: 'offering' }
+  })
+  // A second collection of plain text items, all shown.
+  for (const n of [0, 1, 2, 3])
+    map.slots.push({
+      key: `module-6.${n}`,
+      entity: 'module-6',
+      type: 'text',
+      sample: `Perk ${n}`,
+      label: 'Perks / item',
+      group: { id: `module-6.perk.${n}`, item: n, kind: 'feature' }
+    })
+  findings.pages[0].items.push(
+    ...[0, 1, 2, 3].map((n) =>
+      text(`Perk ${n}`, [`module-6.${n}`], { desktop: vp(200, 24, textLook(200, 1, 10)) })
+    )
+  )
+  const groups = measureSlotFit({ map, findings }).map.fitGroups
+  for (const [id, g] of Object.entries(groups)) {
+    assert.ok(Object.hasOwn(g, 'min') && Object.hasOwn(g, 'max'), `${id} has min and max`)
+    // One demo shows one count only: nothing measures the fewest items a layout holds.
+    assert.equal(g.min, null, `${id} min is unknown`)
+    assert.equal(g.minFrom, 'unknown')
+    assert.equal(g.max, g.items, `${id} max is the demo count`)
+    assert.equal(g.maxFrom, 'demo-count')
+  }
+  assert.deepEqual([groups['module-4.item'].items, groups['module-4.item'].shown], [3, 2])
+  assert.deepEqual([groups['module-6.perk'].items, groups['module-6.perk'].shown], [4, 4])
+  // The Slot fit check still accepts the groups.
+  assert.deepEqual(checkContentMapFit(measureSlotFit({ map, findings }).map).errors, [])
 })
 
 test('the measured map passes the Slot fit check, and the summary counts kinds and kept pictures', () => {

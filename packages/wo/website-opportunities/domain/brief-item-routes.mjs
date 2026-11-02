@@ -77,6 +77,15 @@ export const BRIEF_ITEM_ROUTES = Object.freeze({
   'fact.socials': roles('contact.social_url'),
   'fact.contactChannels': roles('contact.cta_label', 'contact.cta_url'),
   'fact.otherPhones': roles('contact.phone'),
+  'fact.facility': notShown(
+    'An observed fact: read from photos for tone and frame descriptions, never a claim on the page.'
+  ),
+  'fact.activity': notShown(
+    'An observed fact: read from photos for tone and frame descriptions, never a claim on the page.'
+  ),
+  'fact.atmosphere': notShown(
+    'An observed fact: read from photos for tone and frame descriptions, never a claim on the page.'
+  ),
   // Integrations.
   'integration.booking': roles('contact.cta_url', 'contact.cta_label'),
   'integration.map': roles('contact.map'),

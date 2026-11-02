@@ -23,6 +23,7 @@ import { mintSession } from '../src/lib/session.js'
 import { demoPublicHost } from '../src/ops/quickstarts.js'
 import { deleteShot, putShot } from '../src/lib/template-shots.js'
 import { dbSitesResolver } from '../src/sites/resolver.js'
+import { imagesDigest } from '../src/lib/template-kit/reader.js'
 import { fileDb } from './_db.mjs'
 
 // One migrated schema for the whole file, emptied before each test (see _db.mjs).
@@ -120,7 +121,26 @@ const COVERAGE_MEASURED = () => ({
   }
 })
 
-function harness(pool, { opsFetch, extraEnv, realRoles = false, realCoverage = false } = {}) {
+/**
+ * An approved template kit of the release's own version, the same way: the released contracts these fixtures borrow
+ * carry no template-kit.json. A test hands in its own `templateKitOf` to judge another kit.
+ */
+const KIT_IMAGES = [{ path: 'pages/home-1440.png', sha256: 'a'.repeat(64) }]
+const kitDoc = (version, over = {}) => ({
+  kitVersion: '1.0.0',
+  quickstart: { version },
+  images: KIT_IMAGES,
+  pages: [{ id: 'home', images: { 1440: 'home-1440', 390: 'home-390' } }],
+  blocks: [{ id: 'hero', images: { 1440: 'hero-1440', 390: 'hero-390' } }],
+  approval: { by: 'reviewer', at: '2026-10-30T00:00:00.000Z', imagesSha256: imagesDigest(KIT_IMAGES) },
+  ...over
+})
+const KIT_APPROVED = (r) => ({ state: 'read', doc: kitDoc(String(r?.setting?.version ?? '')) })
+
+function harness(
+  pool,
+  { opsFetch, extraEnv, realRoles = false, realCoverage = false, templateKitOf = KIT_APPROVED } = {}
+) {
   const config = readConfig({
     ...env,
     ...(opsFetch ? { MODEL_API_KEY: 'test-key', MODEL_BASE_URL: 'https://model.test/v1' } : {}),
@@ -134,6 +154,7 @@ function harness(pool, { opsFetch, extraEnv, realRoles = false, realCoverage = f
     sites: dbSitesResolver(pool, config),
     ...(realRoles ? {} : { rolesOf: ROLES_READY, fitOf: FIT_READY }),
     ...(realCoverage ? {} : { coverageOf: COVERAGE_MEASURED }),
+    templateKitOf,
     ...(opsFetch ? { fetchImpl: opsFetch } : {})
   })
   const cookieFor = async (email) => `tracy_sess=${await mintSession(email, config.sessionSecret)}`
@@ -1100,6 +1121,34 @@ test(
     assert.deepEqual([coverage.state, coverage.code], ['todo', 'coverage-roles'])
   }
 )
+
+test('Publish refuses a template kit nobody approved without changing GitHub', opts, async () => {
+  const { pool } = db
+  const github = fakeGithub()
+  const { send, get, cookieFor } = harness(pool, {
+    opsFetch: github.fetchImpl,
+    extraEnv: withToken,
+    templateKitOf: (r) => ({
+      state: 'read',
+      doc: kitDoc(String(r?.setting?.version ?? ''), { approval: null })
+    })
+  })
+  await seedWordpressRelease(pool, DRAFT, '1.0.0')
+  await seedStaff(pool, 'owner@tracy.test')
+  const owner = await cookieFor('owner@tracy.test')
+  assert.equal((await send('PUT', doorOf(DRAFT), owner, typedCard())).status, 200)
+  await passCustomize(pool, DRAFT)
+  const before = names(github)
+  const answer = await send('POST', publishOf(DRAFT), owner)
+  assert.equal(answer.status, 400)
+  const body = await answer.json()
+  assert.equal(body.error, 'TEMPLATE_KIT_NOT_READY')
+  assert.match(body.reason, /not approved/)
+  assert.deepEqual(names(github), before)
+  const row = (await (await get('/api/ops/quickstarts', owner)).json()).releases.find((r) => r.tag === DRAFT)
+  const kit = row.road.find((s) => s.step === 'template-kit')
+  assert.deepEqual([kit.state, kit.code], ['todo', 'kit-not-approved'])
+})
 
 for (const coverageState of ['missing', 'stale']) {
   test(`Publish refuses ${coverageState} Content coverage without changing GitHub`, opts, async () => {

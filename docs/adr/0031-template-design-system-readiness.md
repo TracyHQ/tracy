@@ -204,3 +204,48 @@ nicely only because all of its colours go through tokens.
   run scripts.
 - The Joomla and WordPress slots state the light/dark side of the page wearing the system, overriding the theme's `:root{color-scheme: light dark}`.
 - The Joomla slot has a size gate (under 60 KB, because the Joomla module content column is a 64 KB TEXT).
+
+## Revision 02/11/2026: brand mode and three BRAND rules
+
+### Why revise
+
+The new site build has a brand step: it paints the whole site in the customer's own colours through the Design system
+door. Measured 02/11/2026 on JA Boxing 1.0.10, two gaps. The door only took a library system, not the customer's
+palette. And inside the bands a contract keeps (`keepScopes`: a photo hero, a call-to-action band, a video card) the slot
+resets every role and gives the template's own values back (`keepDefaults`), so those spots stayed the template's red
+`#f44141` under any brand colour. No rule graded a template for this.
+
+### Decisions changed
+
+18. **Brand mode.** `@tracy/ds-slot` `src/brand.mjs` builds a profile from `{ bg, fg, accent, fonts }`
+    (`brandProfile`, through `fromOpenDesign`; fonts default to the template's, read from the contract; colours that
+    would not read are shifted and recorded). `joomlaSlot(profile, base, contract, { brand: true })` wears it like a
+    system, and inside each kept band hands the ACCENT ROLE alone to the brand accent: the slot's accent variables and
+    the given-back variables that carried the template accent. The band's picture, words and layout stay. The accent is
+    made readable on the band's recorded ground (words 4.5:1, fills 3:1) and each shift is recorded in `adjusted`.
+    An inline SVG of the band's markup filled or stroked in a template accent (`fill="#F44141"`) takes the band's
+    accent fill too: a presentation attribute loses to any stylesheet rule, so the band matches it by attribute.
+    Outside the kept bands the same promise holds on the page and its surface: accent words reach 4.5:1 and accent
+    fills (buttons, their borders) 3:1 by a lightness shift that keeps the brand's hue, never by the generic clamp
+    toward the body text colour (which turned bronze on white and moss on near black into body text grey), and the
+    button text is made to read on the shifted fill (`brandPageAccent`, recorded `brand:page:…`). Without `brand` the module is byte for byte what it was (control test
+    `test/brand-mode-default-unchanged.test.mjs`). Joomla only for now. A profile is named `brand:<bg>-<fg>-<accent>`,
+    which `ds-slot.mjs joomla` and `flow.mjs` accept.
+19. **Three rules grade a release for brand mode** (Joomla):
+    BRAND-1 (contract): every literal template accent a kept band's stylesheet paints, and a role paint can reach, is
+    named in `bands.<band>.paint` or `vars`. BRAND-2 (template): no kept band paints the accent inside a gradient, a
+    shadow or an inline picture, which only a release can fix. BRAND-3 (`live-only`): whether the brand accent reads on
+    each kept band and how much template accent is left, with the `flow.mjs` command that measures it. `live-only` is
+    counted in neither number, so BRAND-3 never changes the grade or holds Publish.
+20. **The BRAND rules are graded apart.** /ops lists them under their own heading on the Design system step, every
+    status shown, a live-only one with its command. They never change the Design system grade, its counts or
+    `ds-ready`, which opens the Design system picker to customers: a template not ready for the brand step still serves
+    every design system. (Counted as worth-fixing they would have locked the picker on 17 Joomla lines.) Their entries in
+    `rule-severity.json` keep the plain line and question /ops shows.
+
+### Consequences
+
+- The static rules read stylesheets only (a right-to-left mirror once, through its left-to-right sheet). A template
+  accent drawn by layout markup is repainted by attribute when it is an SVG `fill`/`stroke`; any other markup colour
+  (an inline `style`), and a template accent inside an image, is found by the BRAND-3 run, not by BRAND-1/BRAND-2.
+- The tdsr skill fixes BRAND-1 in the contract and BRAND-2 by a template release.

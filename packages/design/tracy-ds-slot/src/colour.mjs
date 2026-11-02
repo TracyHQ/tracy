@@ -76,6 +76,65 @@ export function readable(color, bg, toward, min = 4.5) {
   return null
 }
 
+/** HSL (h 0..360, s and l 0..1) of a parsed colour. */
+function hslOf(/** @type {{ r: number, g: number, b: number }} */ c) {
+  const [r, g, b] = [c.r / 255, c.g / 255, c.b / 255]
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const l = (max + min) / 2
+  const d = max - min
+  if (d === 0) return { h: 0, s: 0, l }
+  const s = d / (1 - Math.abs(2 * l - 1))
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4
+  return { h: (h * 60 + 360) % 360, s, l }
+}
+
+/** The colour of HSL `h`, `s`, `l`. */
+function fromHsl(/** @type {number} */ h, /** @type {number} */ s, /** @type {number} */ l) {
+  const c = (1 - Math.abs(2 * l - 1)) * s
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1))
+  const m = l - c / 2
+  const [r, g, b] =
+    h < 60
+      ? [c, x, 0]
+      : h < 120
+        ? [x, c, 0]
+        : h < 180
+          ? [0, c, x]
+          : h < 240
+            ? [0, x, c]
+            : h < 300
+              ? [x, 0, c]
+              : [c, 0, x]
+  return toHex({ r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 })
+}
+
+/**
+ * `color` made to read at `min`:1 on every one of `grounds` by its LIGHTNESS alone, keeping its hue and saturation
+ * (HSL): away from the first ground's lightness first, then the other way, in steps of 1%. Mixing toward white or
+ * black instead greys a deep colour on its way (moss #042515 mixed toward white read 4.5:1 on #121111 as a grey
+ * #87978f, which no longer looks like the brand: JA Boxing, 02/11/2026). The brand step's shift; null when no
+ * lightness reads.
+ * @param {string} color @param {string[]} grounds @param {number} [min]
+ */
+export function readableLightness(color, grounds, min = 4.5) {
+  const c = parseHex(color)
+  const gs = grounds.filter((g) => parseHex(g))
+  if (!c || gs.length === 0) return null
+  const worst = (/** @type {string} */ x) => Math.min(...gs.map((g) => contrast(x, g) ?? 0))
+  if (worst(color) >= min) return color
+  const { h, s, l } = hslOf(c)
+  const up = luminance(/** @type {any} */ (parseHex(gs[0]))) < 0.3
+  for (const dir of up ? [1, -1] : [-1, 1])
+    for (let k = 1; k <= 100; k++) {
+      const nl = l + dir * k * 0.01
+      if (nl < 0 || nl > 1) break
+      const x = fromHsl(h, s, nl)
+      if (worst(x) >= min) return x
+    }
+  return null
+}
+
 /**
  * The fill and text a call to action wears on a band whose ground is `ground`: the system's button
  * pair (`accent` fill, `on` text), checked against the band. The fill must stand out from the ground

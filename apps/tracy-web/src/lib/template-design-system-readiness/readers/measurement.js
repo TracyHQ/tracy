@@ -22,6 +22,8 @@ import { readText } from '../../template-customization-question-readiness/releas
 import { inheritanceFiles, inheritanceProofAt } from './measurement-inheritance.js'
 
 export const MEASUREMENT_FILE = 'design-system-measurement.json'
+/** The brand-mode measurement beside it (`@tracy/ds-slot` `scripts/brand-measure.mjs`), which BRAND-3 scores. */
+export const BRAND_MEASUREMENT_FILE = 'brand-measurement.json'
 
 /**
  * The kinds a design system causes on most templates (`scripts/tdsr/preview-system-issues.mjs`, PR 2 of
@@ -64,14 +66,14 @@ const SEGMENT = /^[a-z0-9][a-z0-9-]*(\.[0-9a-z-]+)*$/i
  * @param {{ tag: string | null | undefined, version: string | null | undefined }} release
  * @returns {string[]}
  */
-export function treeMeasurementFiles({ tag, version }) {
+export function treeMeasurementFiles({ tag, version }, file = MEASUREMENT_FILE) {
   const published = publishedTagOf(String(tag ?? ''))
   const parts = published.split('/')
   const named = parts.at(-2)
   const slug = named ? (CARD_ALIASES[named] ?? named) : named
   const cmsDir = parts.at(-1)
   if (!slug || !cmsDir || !version || ![slug, cmsDir, version].every((s) => SEGMENT.test(s))) return []
-  const roots = [IN_IMAGE, ...IN_CHECKOUT].map((r) => path.join(r, slug, cmsDir, version, MEASUREMENT_FILE))
+  const roots = [IN_IMAGE, ...IN_CHECKOUT].map((r) => path.join(r, slug, cmsDir, version, file))
   if (cmsDir.startsWith('emdash'))
     roots.push(
       path.join(
@@ -79,7 +81,7 @@ export function treeMeasurementFiles({ tag, version }) {
         `tracy-emdash-theme-${slug.replace(/^tracy-/, '')}`,
         'contracts',
         version,
-        MEASUREMENT_FILE
+        file
       )
     )
   return [...new Set(roots)].filter((f) => existsSync(f))
@@ -93,7 +95,10 @@ export function treeMeasurementFiles({ tag, version }) {
  * @param {{ tag: string | null | undefined, version: string | null | undefined }} release
  */
 export function treeMeasurementBytes(release) {
-  return measurementBytesOf(treeMeasurementFiles(release))
+  return measurementBytesOf([
+    ...treeMeasurementFiles(release),
+    ...treeMeasurementFiles(release, BRAND_MEASUREMENT_FILE)
+  ])
 }
 
 /**
