@@ -9,6 +9,7 @@ import { join } from 'node:path'
 import { applyCoverage, coverageGate } from './coverage-gate.mjs'
 import { httpFetcher } from './crawl.mjs'
 import { buildKit } from './kit.mjs'
+import { fixedLinkLabels, linkLabelChecks } from './link-label-reasons.mjs'
 import { mergeSite } from './kit-site.mjs'
 import { slotOwnerChecks } from './slot-owners.mjs'
 import { templateGaps } from './template-gaps.mjs'
@@ -89,6 +90,9 @@ export async function assembleKit(o, out, tool) {
   kit.checks.listLimitsDiffering = limitChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotsInTwoBlocks = slotOwnerChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotCoverage = coverageGate(kit, { map, readings })
+  // One source for a link's label: its labelId, or the reason its words are fixed (link-label-reasons.mjs).
+  fixedLinkLabels(kit)
+  kit.checks.linksWithoutLabel = linkLabelChecks({ kit, errors: kit.errors })
   const unchecked = kit.blocks.flatMap((b) => b.frames.filter((f) => f.faces === null && !f.twinOf))
   if (unchecked.length)
     kit.errors.push({

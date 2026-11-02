@@ -90,10 +90,7 @@ test('a label slot says what else changes with it: other blocks, page titles and
     blocks: [
       {
         id: 'header',
-        slots: [
-          { id: 'menuItem-150.0', labelOf: ['header.link-2'], alsoShownIn: ['crumbs'] },
-          { id: 'menuItem-193.0', labelOf: ['header.link-3'] }
-        ]
+        slots: [{ id: 'menuItem-150.0', alsoShownIn: ['crumbs'] }, { id: 'menuItem-193.0' }]
       }
     ],
     pages: [

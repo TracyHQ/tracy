@@ -2670,9 +2670,6 @@
           "type": "text",
           "maxCharacters": 35,
           "sample": "Home",
-          "labelOf": [
-            "header.link-2"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -2697,9 +2694,6 @@
           "type": "text",
           "maxCharacters": 40,
           "sample": "About",
-          "labelOf": [
-            "header.link-3"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -2719,9 +2713,6 @@
           "type": "text",
           "maxCharacters": 40,
           "sample": "Classes",
-          "labelOf": [
-            "header.link-4"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -2741,9 +2732,6 @@
           "type": "text",
           "maxCharacters": 40,
           "sample": "Plans",
-          "labelOf": [
-            "header.link-5"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -2765,9 +2753,6 @@
           "type": "text",
           "maxCharacters": 40,
           "sample": "Pages",
-          "labelOf": [
-            "header.link-6"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -2790,9 +2775,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "ownedBy": "block-162",
-          "labelOf": [
-            "header.link-1"
-          ],
           "maxCharacters": 40,
           "maxCharactersFrom": "content map declared"
         },
@@ -2805,9 +2787,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-176",
-          "labelOf": [
-            "header.link-7"
-          ],
           "maxCharacters": 40,
           "maxCharactersFrom": "content map declared"
         }
@@ -3044,9 +3023,6 @@
           "type": "text",
           "maxCharacters": 40,
           "sample": "Contact us",
-          "labelOf": [
-            "block-176.link-1"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -3106,9 +3082,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "header",
-          "labelOf": [
-            "block-187.link-1"
-          ],
           "maxCharacters": 35,
           "maxCharactersFrom": "kit frame (390px 35, 1440px 56)",
           "alsoChanges": {
@@ -3128,9 +3101,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "Login Form",
-          "labelOf": [
-            "block-187.link-4"
-          ],
           "maxCharacters": 18,
           "maxCharactersFrom": "content map fit (phone 18)",
           "alsoChanges": {
@@ -3150,9 +3120,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "Registration Form",
-          "labelOf": [
-            "block-187.link-5"
-          ],
           "maxCharacters": 54,
           "maxCharactersFrom": "content map declared; the content map fit (phone 19) is the box of the demo words, not a limit",
           "alsoChanges": {
@@ -3172,9 +3139,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "User Profile",
-          "labelOf": [
-            "block-187.link-6"
-          ],
           "maxCharacters": 44,
           "maxCharactersFrom": "content map declared; the content map fit (desktop 12, phone 12) is the box of the demo words, not a limit",
           "alsoChanges": {
@@ -3195,9 +3159,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_admin",
-          "labelOf": [
-            "block-187.link-8"
-          ],
           "maxCharacters": 36,
           "maxCharactersFrom": "kit frame (390px 36, 1440px 36)",
           "alsoChanges": {
@@ -3218,9 +3179,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_admin",
-          "labelOf": [
-            "block-187.link-9"
-          ],
           "maxCharacters": 34,
           "maxCharactersFrom": "kit frame (390px 35, 1440px 34)",
           "alsoChanges": {
@@ -3241,9 +3199,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_admin",
-          "labelOf": [
-            "block-187.link-10"
-          ],
           "maxCharacters": 31,
           "maxCharactersFrom": "kit frame (390px 33, 1440px 31)",
           "alsoChanges": {
@@ -3263,9 +3218,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "Smart Search",
-          "labelOf": [
-            "block-187.link-11"
-          ],
           "maxCharacters": 18,
           "maxCharactersFrom": "content map fit (phone 18)",
           "alsoChanges": {
@@ -3286,9 +3238,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-17",
-          "labelOf": [
-            "block-187.link-13"
-          ],
           "maxCharacters": 43,
           "maxCharactersFrom": "kit frame (390px 43, 1440px 135)",
           "alsoChanges": {
@@ -3308,9 +3257,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "Featured Articles",
-          "labelOf": [
-            "block-187.link-14"
-          ],
           "maxCharacters": 54,
           "maxCharactersFrom": "content map declared; the content map fit (desktop 180, phone 19) is the box of the demo words, not a limit",
           "alsoChanges": {
@@ -3330,9 +3276,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "Author listting",
-          "labelOf": [
-            "block-187.link-15"
-          ],
           "maxCharacters": 48,
           "maxCharactersFrom": "content map fit (desktop 192, phone 48)",
           "alsoChanges": {
@@ -3352,9 +3295,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "Blog Detail",
-          "labelOf": [
-            "block-187.link-16"
-          ],
           "maxCharacters": 42,
           "maxCharactersFrom": "content map declared",
           "alsoChanges": {
@@ -3375,9 +3315,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "header",
-          "labelOf": [
-            "block-187.link-17"
-          ],
           "maxCharacters": 40,
           "maxCharactersFrom": "content map declared",
           "alsoChanges": {
@@ -3398,9 +3335,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "header",
-          "labelOf": [
-            "block-187.link-18"
-          ],
           "maxCharacters": 40,
           "maxCharactersFrom": "content map declared",
           "alsoChanges": {
@@ -3423,9 +3357,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "header",
-          "labelOf": [
-            "block-187.link-19"
-          ],
           "maxCharacters": 40,
           "maxCharactersFrom": "content map declared",
           "alsoChanges": {
@@ -3446,9 +3377,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-about-us_contact",
-          "labelOf": [
-            "block-187.link-20"
-          ],
           "maxCharacters": 19,
           "maxCharactersFrom": "kit frame (390px 35, 1440px 19)",
           "alsoChanges": {
@@ -3468,9 +3396,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "Learning Center",
-          "labelOf": [
-            "block-187.link-21"
-          ],
           "maxCharacters": 19,
           "maxCharactersFrom": "content map fit (phone 19)",
           "alsoChanges": {
@@ -3490,9 +3415,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "Our trainers",
-          "labelOf": [
-            "block-187.link-22"
-          ],
           "maxCharacters": 19,
           "maxCharactersFrom": "content map fit (desktop 774, phone 19)",
           "alsoChanges": {
@@ -3513,9 +3435,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-178",
-          "labelOf": [
-            "block-187.link-23"
-          ],
           "maxCharacters": 32,
           "maxCharactersFrom": "kit frame (390px 34, 1440px 32)",
           "alsoChanges": {
@@ -3535,9 +3454,6 @@
           "bullets": 0,
           "formatFrom": "content map",
           "sample": "About Us",
-          "labelOf": [
-            "block-187.link-24"
-          ],
           "maxCharacters": 37,
           "maxCharactersFrom": "content map fit (desktop 68, phone 37)",
           "alsoChanges": {
@@ -4143,9 +4059,6 @@
           "type": "text",
           "maxCharacters": 37,
           "sample": "about us",
-          "labelOf": [
-            "block-157.link-1"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -5016,9 +4929,6 @@
           "type": "text",
           "maxCharacters": 34,
           "sample": "Start practicing",
-          "labelOf": [
-            "block-160.link-1"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -5030,9 +4940,6 @@
           "type": "text",
           "maxCharacters": 20,
           "sample": "Advanced Boxing",
-          "labelOf": [
-            "block-160.link-2"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -5060,12 +4967,6 @@
           "type": "text",
           "maxCharacters": 37,
           "sample": "Try a class",
-          "labelOf": [
-            "block-160.link-3",
-            "block-160.link-5",
-            "block-160.link-7",
-            "block-160.link-9"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -5089,9 +4990,6 @@
           "type": "text",
           "maxCharacters": 20,
           "sample": "Group Boxing",
-          "labelOf": [
-            "block-160.link-6"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -5117,9 +5015,6 @@
           "type": "text",
           "maxCharacters": 25,
           "sample": "Private Training",
-          "labelOf": [
-            "block-160.link-8"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -6382,9 +6277,6 @@
           "type": "text",
           "maxCharacters": 32,
           "sample": "View more",
-          "labelOf": [
-            "block-163.link-25"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -9369,7 +9261,8 @@
           "position": 0,
           "label": "(239) 555-0108",
           "target": null,
-          "action": "contact"
+          "action": "contact",
+          "labelId": "block-175.1"
         },
         {
           "id": "block-175.link-2",
@@ -9455,9 +9348,6 @@
           "type": "text",
           "maxCharacters": 21,
           "sample": "Beginners",
-          "labelOf": [
-            "block-173.link-4"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -9476,9 +9366,6 @@
           "type": "text",
           "maxCharacters": 25,
           "sample": "Try Free Intro",
-          "labelOf": [
-            "block-173.link-5"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -9500,9 +9387,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "block-173.link-1"
-          ],
           "maxCharacters": 20,
           "maxCharactersFrom": "kit frame (390px 20, 1440px 30)",
           "alsoChanges": {
@@ -9522,9 +9406,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "block-173.link-2"
-          ],
           "maxCharacters": 20,
           "maxCharactersFrom": "kit frame (390px 20, 1440px 29)",
           "alsoChanges": {
@@ -9544,9 +9425,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "block-173.link-3"
-          ],
           "maxCharacters": 25,
           "maxCharactersFrom": "kit frame (390px 25, 1440px 34)",
           "alsoChanges": {
@@ -9653,9 +9531,6 @@
           "type": "text",
           "maxCharacters": 20,
           "sample": "About",
-          "labelOf": [
-            "block-174.link-1"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -9676,9 +9551,6 @@
           "type": "text",
           "maxCharacters": 24,
           "sample": "Class",
-          "labelOf": [
-            "block-174.link-2"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -9697,9 +9569,6 @@
           "type": "text",
           "maxCharacters": 20,
           "sample": "Schedule",
-          "labelOf": [
-            "block-174.link-3"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -9718,9 +9587,6 @@
           "type": "text",
           "maxCharacters": 24,
           "sample": "Price",
-          "labelOf": [
-            "block-174.link-4"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -9810,14 +9676,22 @@
           "position": 0,
           "label": "Joomla!",
           "target": "https://www.joomla.org",
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "block-168.link-2",
           "position": 1,
           "label": "GNU General Public License.",
           "target": "https://www.gnu.org/licenses/gpl-2.0.html",
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -10669,21 +10543,33 @@
           "position": 0,
           "label": "Forgot your password?",
           "target": "/pages/users/login-form",
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_users_login-form.link-2",
           "position": 1,
           "label": "Forgot your username?",
           "target": "/pages/users/login-form",
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_users_login-form.link-3",
           "position": 2,
           "label": "Don't have an account?",
           "target": "/pages/users/registration-form",
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -11010,7 +10896,11 @@
           "position": 0,
           "label": "CANCEL",
           "target": "/",
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -11828,9 +11718,6 @@
           "type": "text",
           "maxCharacters": 43,
           "sample": "Category Blog",
-          "labelOf": [
-            "block-17.link-2"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -11872,9 +11759,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "header",
-          "labelOf": [
-            "block-17.link-1"
-          ],
           "maxCharacters": 35,
           "maxCharactersFrom": "kit frame (390px 35, 1440px 56)",
           "alsoChanges": {
@@ -12031,9 +11915,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-finest-moments",
-          "labelOf": [
-            "body-pages_j-content_category-blog.link-7"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -12053,9 +11934,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-ultimate-showdown",
-          "labelOf": [
-            "body-pages_j-content_category-blog.link-8"
-          ],
           "maxCharacters": 27,
           "maxCharactersFrom": "kit frame (390px 27, 1440px 43)",
           "alsoChanges": {
@@ -12075,9 +11953,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-impact-on-culture",
-          "labelOf": [
-            "body-pages_j-content_category-blog.link-9"
-          ],
           "maxCharacters": 50,
           "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
           "alsoChanges": {
@@ -12097,9 +11972,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxing-and-mental-toughness",
-          "labelOf": [
-            "body-pages_j-content_category-blog.link-10"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -12507,7 +12379,11 @@
           "position": 10,
           "label": "2",
           "target": "/pages/j-content/category-blog?start=6",
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog.link-12",
@@ -12520,7 +12396,11 @@
             "title": "Go to next page",
             "network": null
           },
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog.link-13",
@@ -12533,7 +12413,11 @@
             "title": "Go to end page",
             "network": null
           },
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         }
       ],
       "fixedText": [
@@ -12646,9 +12530,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-finest-moments",
-          "labelOf": [
-            "body-pages_j-content_featured-articles.link-7"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -12668,9 +12549,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-ultimate-showdown",
-          "labelOf": [
-            "body-pages_j-content_featured-articles.link-8"
-          ],
           "maxCharacters": 27,
           "maxCharactersFrom": "kit frame (390px 27, 1440px 43)",
           "alsoChanges": {
@@ -12690,9 +12568,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-impact-on-culture",
-          "labelOf": [
-            "body-pages_j-content_featured-articles.link-9"
-          ],
           "maxCharacters": 50,
           "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
           "alsoChanges": {
@@ -12712,9 +12587,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxing-and-mental-toughness",
-          "labelOf": [
-            "body-pages_j-content_featured-articles.link-10"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -13122,7 +12994,11 @@
           "position": 10,
           "label": "2",
           "target": "/pages/j-content/featured-articles?start=6",
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-pages_j-content_featured-articles.link-12",
@@ -13135,7 +13011,11 @@
             "title": "Go to next page",
             "network": null
           },
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-pages_j-content_featured-articles.link-13",
@@ -13148,7 +13028,11 @@
             "title": "Go to end page",
             "network": null
           },
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         }
       ],
       "fixedText": [
@@ -13264,9 +13148,6 @@
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_drew_stokes"
           ],
-          "labelOf": [
-            "body-pages_j-content_author-listting.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 33, 1440px 49)",
           "alsoChanges": {
             "blocks": [
@@ -13289,9 +13170,6 @@
           "formatFrom": "page",
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_daniel_vasquez"
-          ],
-          "labelOf": [
-            "body-pages_j-content_author-listting.link-14"
           ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
@@ -13316,9 +13194,6 @@
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_franklin_wagner"
           ],
-          "labelOf": [
-            "body-pages_j-content_author-listting.link-20"
-          ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
             "blocks": [
@@ -13341,9 +13216,6 @@
           "formatFrom": "page",
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_lorene_bass"
-          ],
-          "labelOf": [
-            "body-pages_j-content_author-listting.link-26"
           ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
@@ -13368,9 +13240,6 @@
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_corey_gibson"
           ],
-          "labelOf": [
-            "body-pages_j-content_author-listting.link-32"
-          ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
             "blocks": [
@@ -13394,9 +13263,6 @@
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_cora_stephens"
           ],
-          "labelOf": [
-            "body-pages_j-content_author-listting.link-38"
-          ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
             "blocks": [
@@ -13419,9 +13285,6 @@
           "formatFrom": "page",
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_gene_roberts"
-          ],
-          "labelOf": [
-            "body-pages_j-content_author-listting.link-44"
           ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
@@ -13699,7 +13562,11 @@
           "position": 1,
           "label": "Admin",
           "target": "/pages/j-content/author-listting/author/admin",
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-3",
@@ -13712,7 +13579,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-4",
@@ -13725,7 +13596,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-5",
@@ -13738,7 +13613,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-6",
@@ -13751,7 +13630,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-7",
@@ -13786,7 +13669,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-10",
@@ -13799,7 +13686,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-11",
@@ -13812,7 +13703,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-12",
@@ -13825,7 +13720,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-13",
@@ -13860,7 +13759,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-16",
@@ -13873,7 +13776,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-17",
@@ -13886,7 +13793,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-18",
@@ -13899,7 +13810,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-19",
@@ -13934,7 +13849,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-22",
@@ -13947,7 +13866,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-23",
@@ -13960,7 +13883,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-24",
@@ -13973,7 +13900,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-25",
@@ -14008,7 +13939,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-28",
@@ -14021,7 +13956,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-29",
@@ -14034,7 +13973,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-30",
@@ -14047,7 +13990,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-31",
@@ -14082,7 +14029,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-34",
@@ -14095,7 +14046,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-35",
@@ -14108,7 +14063,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-36",
@@ -14121,7 +14080,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-37",
@@ -14156,7 +14119,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-40",
@@ -14169,7 +14136,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-41",
@@ -14182,7 +14153,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-42",
@@ -14195,7 +14170,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-43",
@@ -14230,7 +14209,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-46",
@@ -14243,7 +14226,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-47",
@@ -14256,7 +14243,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting.link-48",
@@ -14269,7 +14260,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         }
       ],
       "fixedText": [
@@ -14994,7 +14989,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_blog-detail.link-2",
@@ -15007,7 +15006,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -15235,9 +15238,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog",
-          "labelOf": [
-            "block-158.link-2"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -15256,9 +15256,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog",
-          "labelOf": [
-            "block-158.link-4"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -15351,9 +15348,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "body-classes.link-1"
-          ],
           "maxCharacters": 20,
           "maxCharactersFrom": "kit frame (390px 20, 1440px 30)",
           "alsoChanges": {
@@ -15373,12 +15367,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "body-classes.link-2",
-            "body-classes.link-4",
-            "body-classes.link-6",
-            "body-classes.link-8"
-          ],
           "maxCharacters": 37,
           "maxCharactersFrom": "kit frame (1440px 37)"
         },
@@ -15391,9 +15379,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "body-classes.link-5"
-          ],
           "maxCharacters": 25,
           "maxCharactersFrom": "kit frame (390px 25, 1440px 34)",
           "alsoChanges": {
@@ -15413,9 +15398,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "body-classes.link-7"
-          ],
           "maxCharacters": 20,
           "maxCharactersFrom": "kit frame (390px 20, 1440px 29)",
           "alsoChanges": {
@@ -16095,9 +16077,6 @@
           "type": "text",
           "maxCharacters": 26,
           "sample": "open in google maps",
-          "labelOf": [
-            "body-about-us_contact.button-1"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -16164,9 +16143,6 @@
           "type": "text",
           "maxCharacters": 26,
           "sample": "Submit",
-          "labelOf": [
-            "body-about-us_contact.button-2"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -16534,9 +16510,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "block-184.link-2"
-          ],
           "maxCharactersFrom": "kit frame (390px 24, 1440px 81)"
         },
         {
@@ -16570,9 +16543,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "block-184.link-1"
-          ],
           "maxCharactersFrom": "kit frame (390px 42, 1440px 91)"
         },
         {
@@ -16584,9 +16554,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "block-184.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 45, 1440px 94)"
         }
       ],
@@ -19532,9 +19499,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-157",
-          "labelOf": [
-            "block-190.link-1"
-          ],
           "maxCharacters": 37,
           "maxCharactersFrom": "content map fit (desktop 68, phone 37)"
         }
@@ -20361,9 +20325,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "block-177.link-1"
-          ],
           "maxCharacters": 25,
           "maxCharactersFrom": "kit frame (390px 25, 1440px 34)",
           "alsoChanges": {
@@ -20886,7 +20847,8 @@
           "position": 2,
           "label": "(239) 555-0108",
           "target": "tel:(239) 555-0108",
-          "action": "contact"
+          "action": "contact",
+          "labelId": "block-177.14"
         },
         {
           "id": "block-177.link-4",
@@ -20909,7 +20871,8 @@
           "position": 5,
           "label": "(239) 555-0108",
           "target": "tel:(239) 555-0108",
-          "action": "contact"
+          "action": "contact",
+          "labelId": "block-177.15"
         }
       ],
       "fixedText": [],
@@ -21043,9 +21006,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_gene_roberts",
-          "labelOf": [
-            "body-about-us_learning-center.link-7"
-          ],
           "maxCharacters": 43,
           "maxCharactersFrom": "kit frame (390px 43, 1440px 51)",
           "alsoChanges": {
@@ -21064,9 +21024,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_lorene_bass",
-          "labelOf": [
-            "body-about-us_learning-center.link-8"
-          ],
           "maxCharacters": 50,
           "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
           "alsoChanges": {
@@ -21085,9 +21042,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_lorene_bass",
-          "labelOf": [
-            "body-about-us_learning-center.link-9"
-          ],
           "maxCharacters": 50,
           "maxCharactersFrom": "kit frame (390px 52, 1440px 50)",
           "alsoChanges": {
@@ -21106,9 +21060,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_corey_gibson",
-          "labelOf": [
-            "body-about-us_learning-center.link-10"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -21434,7 +21385,11 @@
           "position": 10,
           "label": "2",
           "target": "/about-us/learning-center?start=6",
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-about-us_learning-center.link-12",
@@ -21447,7 +21402,11 @@
             "title": "Go to next page",
             "network": null
           },
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-about-us_learning-center.link-13",
@@ -21460,7 +21419,11 @@
             "title": "Go to end page",
             "network": null
           },
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         }
       ],
       "fixedText": [
@@ -21571,10 +21534,6 @@
           "type": "text",
           "maxCharacters": 32,
           "sample": "Darlene Robertson",
-          "labelOf": [
-            "block-178.link-2",
-            "block-178.link-44"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -21597,9 +21556,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-163",
-          "labelOf": [
-            "block-178.link-49"
-          ],
           "maxCharacters": 32,
           "maxCharactersFrom": "kit frame (390px 32, 1440px 150)"
         }
@@ -25030,9 +24986,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-163",
-          "labelOf": [
-            "block-182.link-25"
-          ],
           "maxCharacters": 32,
           "maxCharactersFrom": "kit frame (390px 32, 1440px 150)"
         }
@@ -27605,7 +27558,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -27947,9 +27904,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "block-159.link-1"
-          ],
           "maxCharacters": 20,
           "maxCharactersFrom": "kit frame (390px 20, 1440px 29)",
           "alsoChanges": {
@@ -27969,10 +27923,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "block-160",
-          "labelOf": [
-            "block-159.link-2",
-            "block-159.link-4"
-          ],
           "maxCharacters": 37,
           "maxCharactersFrom": "kit frame (1440px 37)"
         }
@@ -29433,7 +29383,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-classes_beginner-boxing.link-2",
@@ -29446,7 +29400,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -29861,9 +29819,6 @@
           "type": "text",
           "maxCharacters": 32,
           "sample": "See Schedule",
-          "labelOf": [
-            "body-classes_group-boxing.link-1"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -30164,9 +30119,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-classes_group-boxing.link-2"
-          ],
           "maxCharactersFrom": "kit frame (390px 32, 1440px 152)"
         },
         {
@@ -31465,7 +31417,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -32891,7 +32847,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-classes_private-training.link-2",
@@ -32904,7 +32864,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -33658,7 +33622,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -33805,9 +33773,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-about-us_learning-center",
-          "labelOf": [
-            "block-191.link-2"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -33826,9 +33791,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-about-us_learning-center",
-          "labelOf": [
-            "block-191.link-4"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -34269,7 +34231,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_boxing-legends-remembered.link-2",
@@ -34282,7 +34248,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -34838,7 +34808,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_title-defense-strategies.link-2",
@@ -34851,7 +34825,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -35407,7 +35385,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_inside-boxing-techniques.link-2",
@@ -35420,7 +35402,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -35980,7 +35966,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_classic-boxing-rivalries.link-2",
@@ -35993,7 +35983,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -36556,7 +36550,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_boxings-finest-moments.link-2",
@@ -36569,7 +36567,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -37128,7 +37130,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_boxings-ultimate-showdown.link-2",
@@ -37141,7 +37147,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -37697,7 +37707,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_boxings-impact-on-culture.link-2",
@@ -37710,7 +37724,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -38270,7 +38288,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_boxing-and-mental-toughness.link-2",
@@ -38283,7 +38305,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -38491,9 +38517,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-finest-moments",
-          "labelOf": [
-            "body-pages_j-content_category-blog--start-6.link-1"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -38513,9 +38536,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-ultimate-showdown",
-          "labelOf": [
-            "body-pages_j-content_category-blog--start-6.link-2"
-          ],
           "maxCharacters": 27,
           "maxCharactersFrom": "kit frame (390px 27, 1440px 43)",
           "alsoChanges": {
@@ -38535,9 +38555,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-impact-on-culture",
-          "labelOf": [
-            "body-pages_j-content_category-blog--start-6.link-3"
-          ],
           "maxCharacters": 50,
           "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
           "alsoChanges": {
@@ -38557,9 +38574,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxing-and-mental-toughness",
-          "labelOf": [
-            "body-pages_j-content_category-blog--start-6.link-4"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -38578,9 +38592,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_gene_roberts",
-          "labelOf": [
-            "body-pages_j-content_category-blog--start-6.link-5"
-          ],
           "maxCharacters": 43,
           "maxCharactersFrom": "kit frame of article-24.12 (390px 43, 1440px 51)",
           "alsoChanges": {
@@ -38599,9 +38610,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_franklin_wagner",
-          "labelOf": [
-            "body-pages_j-content_category-blog--start-6.link-6"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -38967,7 +38975,11 @@
             "title": "Go to start page",
             "network": null
           },
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog--start-6.link-8",
@@ -38980,14 +38992,22 @@
             "title": "Go to previous page",
             "network": null
           },
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog--start-6.link-9",
           "position": 8,
           "label": "1",
           "target": "/pages/j-content/category-blog",
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         }
       ],
       "fixedText": [
@@ -39073,9 +39093,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-finest-moments",
-          "labelOf": [
-            "body-pages_j-content_featured-articles--start-6.link-1"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -39095,9 +39112,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-ultimate-showdown",
-          "labelOf": [
-            "body-pages_j-content_featured-articles--start-6.link-2"
-          ],
           "maxCharacters": 27,
           "maxCharactersFrom": "kit frame (390px 27, 1440px 43)",
           "alsoChanges": {
@@ -39117,9 +39131,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxings-impact-on-culture",
-          "labelOf": [
-            "body-pages_j-content_featured-articles--start-6.link-3"
-          ],
           "maxCharacters": 50,
           "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
           "alsoChanges": {
@@ -39139,9 +39150,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_category-blog_boxing-and-mental-toughness",
-          "labelOf": [
-            "body-pages_j-content_featured-articles--start-6.link-4"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -39160,9 +39168,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_gene_roberts",
-          "labelOf": [
-            "body-pages_j-content_featured-articles--start-6.link-5"
-          ],
           "maxCharacters": 43,
           "maxCharactersFrom": "kit frame of article-24.12 (390px 43, 1440px 51)",
           "alsoChanges": {
@@ -39181,9 +39186,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_franklin_wagner",
-          "labelOf": [
-            "body-pages_j-content_featured-articles--start-6.link-6"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -39549,7 +39551,11 @@
             "title": "Go to start page",
             "network": null
           },
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-pages_j-content_featured-articles--start-6.link-8",
@@ -39562,14 +39568,22 @@
             "title": "Go to previous page",
             "network": null
           },
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-pages_j-content_featured-articles--start-6.link-9",
           "position": 8,
           "label": "1",
           "target": "/pages/j-content/featured-articles",
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         }
       ],
       "fixedText": [
@@ -39883,9 +39897,6 @@
           "type": "text",
           "maxCharacters": 34,
           "sample": "Error Page",
-          "labelOf": [
-            "body-pages_j-content_author-listting_author_admin.link-5"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -39905,9 +39916,6 @@
           "type": "text",
           "maxCharacters": 36,
           "sample": "Offline Pages",
-          "labelOf": [
-            "body-pages_j-content_author-listting_author_admin.link-6"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -39927,9 +39935,6 @@
           "type": "text",
           "maxCharacters": 31,
           "sample": "Typography",
-          "labelOf": [
-            "body-pages_j-content_author-listting_author_admin.link-7"
-          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -40298,7 +40303,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_admin.link-2",
@@ -40311,7 +40320,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_admin.link-3",
@@ -40324,7 +40337,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_admin.link-4",
@@ -40337,7 +40354,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_admin.link-5",
@@ -40735,7 +40756,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_drew_stokes.link-2",
@@ -40748,7 +40773,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_drew_stokes.link-3",
@@ -40761,7 +40790,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_drew_stokes.link-4",
@@ -40774,7 +40807,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_drew_stokes.link-5",
@@ -41002,7 +41039,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_daniel_vasquez.link-2",
@@ -41015,7 +41056,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_daniel_vasquez.link-3",
@@ -41028,7 +41073,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_daniel_vasquez.link-4",
@@ -41041,7 +41090,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_daniel_vasquez.link-5",
@@ -41296,7 +41349,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_franklin_wagner.link-2",
@@ -41309,7 +41366,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_franklin_wagner.link-3",
@@ -41322,7 +41383,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_franklin_wagner.link-4",
@@ -41335,7 +41400,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_franklin_wagner.link-5",
@@ -41597,7 +41666,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_lorene_bass.link-2",
@@ -41610,7 +41683,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_lorene_bass.link-3",
@@ -41623,7 +41700,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_lorene_bass.link-4",
@@ -41636,7 +41717,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_lorene_bass.link-5",
@@ -41898,7 +41983,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_corey_gibson.link-2",
@@ -41911,7 +42000,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_corey_gibson.link-3",
@@ -41924,7 +42017,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_corey_gibson.link-4",
@@ -41937,7 +42034,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_corey_gibson.link-5",
@@ -42199,7 +42300,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_cora_stephens.link-2",
@@ -42212,7 +42317,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_cora_stephens.link-3",
@@ -42225,7 +42334,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_cora_stephens.link-4",
@@ -42238,7 +42351,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_cora_stephens.link-5",
@@ -42475,7 +42592,11 @@
             "title": "facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_gene_roberts.link-2",
@@ -42488,7 +42609,11 @@
             "title": "instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_gene_roberts.link-3",
@@ -42501,7 +42626,11 @@
             "title": "twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_gene_roberts.link-4",
@@ -42514,7 +42643,11 @@
             "title": "linkedin",
             "network": "linkedin"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "fixedLabel": {
+            "rule": "icon-name",
+            "reason": "the link shows an icon only; its words are the icon's accessible name, not a slot"
+          }
         },
         {
           "id": "body-pages_j-content_author-listting_author_gene_roberts.link-5",
@@ -42745,9 +42878,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-2"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -42759,9 +42889,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -42773,9 +42900,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -42787,9 +42911,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -42801,9 +42922,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -42815,9 +42933,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -43155,7 +43270,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-2",
@@ -43556,9 +43675,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -43570,9 +43686,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -43584,9 +43697,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -43598,9 +43708,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -43612,9 +43719,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -43626,9 +43730,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -43966,7 +44067,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-2",
@@ -43979,7 +44084,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-3",
@@ -44458,9 +44567,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -44472,9 +44578,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -44486,9 +44589,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -44500,9 +44600,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -44514,9 +44611,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -44528,9 +44622,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -45224,7 +45315,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-2",
@@ -45237,7 +45332,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-3",
@@ -45723,9 +45822,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -45737,9 +45833,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -45751,9 +45844,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -45765,9 +45855,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -45779,9 +45866,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -45793,9 +45877,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -46133,7 +46214,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-2",
@@ -46146,7 +46231,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-3",
@@ -46625,9 +46714,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -46639,9 +46725,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -46653,9 +46736,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -46667,9 +46747,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -46681,9 +46758,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -46695,9 +46769,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -47035,7 +47106,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-2",
@@ -47048,7 +47123,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-3",
@@ -47531,9 +47610,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -47545,9 +47621,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -47559,9 +47632,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -47573,9 +47643,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -47587,9 +47654,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -47601,9 +47665,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -47941,7 +48002,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-2",
@@ -47954,7 +48019,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-3",
@@ -48433,9 +48502,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -48447,9 +48513,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -48461,9 +48524,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -48475,9 +48535,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -48489,9 +48546,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -48503,9 +48557,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -48843,7 +48894,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-2",
@@ -48856,7 +48911,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-3",
@@ -49335,9 +49394,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -49349,9 +49405,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -49363,9 +49416,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -49377,9 +49427,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -49391,9 +49438,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -49405,9 +49449,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -49745,7 +49786,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-2",
@@ -49758,7 +49803,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-3",
@@ -50237,9 +50286,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -50251,9 +50297,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -50265,9 +50308,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -50279,9 +50319,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -50293,9 +50330,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -50307,9 +50341,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-8"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -50647,7 +50678,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-2",
@@ -50660,7 +50695,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-3",
@@ -51139,9 +51178,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-2"
-          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -51153,9 +51189,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-3"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -51167,9 +51200,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-4"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -51181,9 +51211,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-5"
-          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -51195,9 +51222,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-6"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -51209,9 +51233,6 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "labelOf": [
-            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-7"
-          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -51549,7 +51570,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-2",
@@ -51802,9 +51827,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_gene_roberts",
-          "labelOf": [
-            "body-about-us_learning-center--start-6.link-1"
-          ],
           "maxCharacters": 43,
           "maxCharactersFrom": "kit frame (390px 43, 1440px 51)",
           "alsoChanges": {
@@ -51823,9 +51845,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_lorene_bass",
-          "labelOf": [
-            "body-about-us_learning-center--start-6.link-2"
-          ],
           "maxCharacters": 50,
           "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
           "alsoChanges": {
@@ -51844,9 +51863,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_lorene_bass",
-          "labelOf": [
-            "body-about-us_learning-center--start-6.link-3"
-          ],
           "maxCharacters": 50,
           "maxCharactersFrom": "kit frame (390px 52, 1440px 50)",
           "alsoChanges": {
@@ -51865,9 +51881,6 @@
           "bullets": 0,
           "formatFrom": "page",
           "ownedBy": "body-pages_j-content_author-listting_author_corey_gibson",
-          "labelOf": [
-            "body-about-us_learning-center--start-6.link-4"
-          ],
           "maxCharacters": 46,
           "maxCharactersFrom": "content map declared of article-28.7",
           "alsoChanges": {
@@ -52126,7 +52139,11 @@
             "title": "Go to start page",
             "network": null
           },
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-about-us_learning-center--start-6.link-6",
@@ -52139,14 +52156,22 @@
             "title": "Go to previous page",
             "network": null
           },
-          "action": "navigation"
+          "action": "navigation",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         },
         {
           "id": "body-about-us_learning-center--start-6.link-7",
           "position": 6,
           "label": "1",
           "target": "/about-us/learning-center",
-          "action": "page-control"
+          "action": "page-control",
+          "fixedLabel": {
+            "rule": "pagination",
+            "reason": "a CMS pagination control: a page number or step word linking the same listing at another result page"
+          }
         }
       ],
       "fixedText": [
@@ -52580,7 +52605,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         },
         {
           "id": "body-pages_j-content_category-blog_boxings-undisputed-champs.link-2",
@@ -52593,7 +52622,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -53153,7 +53186,11 @@
             "title": null,
             "network": null
           },
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "fixedLabel": {
+            "rule": "template-words",
+            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
+          }
         }
       ],
       "fixedText": [
@@ -53278,7 +53315,8 @@
     "orphanTexts": 0,
     "paragraphsMissing": 0,
     "fixedTextIdsInvalid": 0,
-    "slotCoverage": 0
+    "slotCoverage": 0,
+    "linksWithoutLabel": 0
   },
   "images": [
     {

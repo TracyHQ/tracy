@@ -34,19 +34,16 @@ function labelSlots(kit, mapOf) {
     const here = new Set([...ownEntries(b), ...(b.slots ?? [])].map((s) => s.id))
     for (const l of b.links ?? []) {
       if (!l.labelId) continue
-      const had = (b.slots ?? []).find((s) => s.id === l.labelId)
-      if (had) {
-        had.labelOf = [...new Set([...(had.labelOf ?? []), l.id])]
-        continue
-      }
-      if (here.has(l.labelId)) continue // a list row or card field of this block holds it
+      // The block already lists it (a slot, a list row or a card field); which link prints it is said only by the
+      // link's own labelId, never copied onto the slot.
+      if (here.has(l.labelId)) continue
       const o = owner.get(l.labelId)
       const m = mapOf.get(l.labelId)
       const entry = o
         ? Object.fromEntries(FORMAT.filter((k) => o.s[k] !== undefined).map((k) => [k, o.s[k]]))
         : { type: 'text', role: m?.role ?? null, ...formatOf(m?.sample ?? l.label, {}) }
       entry.type ??= 'text'
-      const slot = { id: l.labelId, ...entry, ...(o ? { ownedBy: o.b.id } : {}), labelOf: [l.id] }
+      const slot = { id: l.labelId, ...entry, ...(o ? { ownedBy: o.b.id } : {}) }
       b.slots = [...(b.slots ?? []), slot]
       here.add(l.labelId)
       if (!o) owner.set(l.labelId, { b, s: slot })

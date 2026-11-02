@@ -223,7 +223,7 @@ export function buildBlock({
     if (same && b.opens) same.opens = b.opens
     else if (b.labelId) links.push(b)
   }
-  const labelOf = new Map(links.filter((l) => l.labelId).map((l) => [normText(l.label), l.labelId]))
+  const labelOfText = new Map(links.filter((l) => l.labelId).map((l) => [normText(l.label), l.labelId]))
   const mapSlot = new Map((idx.map.slots ?? []).map((x) => [neutralKey(x.key), x]))
   // A menu the pages never show (an off-canvas menu) has its links in the content map's menu block.
   const menu = !desk && entity ? idx.map.menuBlocks?.[entity] : null
@@ -253,7 +253,7 @@ export function buildBlock({
     const n = normText(text)
     if (!n || !/\p{L}/u.test(n)) continue
     // A link's label is the slot the link names, not the first slot sharing its words.
-    const label = labelOf.get(n)
+    const label = labelOfText.get(n)
     if (label) {
       textsShown.push({ text, slot: label, source: mapSlot.get(label) ?? null, how: 'whole', label: true })
       continue
@@ -346,11 +346,6 @@ export function buildBlock({
   const blockSlots = [...shown.values(), ...urls]
     .filter((x, i, all) => all.findIndex((y) => y.key === x.key) === i)
     .map(slotOut)
-  // A label slot says which link prints it.
-  for (const x of blockSlots) {
-    const ls = links.filter((l) => l.labelId === x.id).map((l) => l.id)
-    if (ls.length) x.labelOf = ls
-  }
   const images = {}
   for (const w of widths) if (rec.widths[w]?.image) images[w] = imageIdOf(rec.widths[w].image)
   const visibleAt = widths.filter((w) => rec.widths[w]?.pages?.length)
