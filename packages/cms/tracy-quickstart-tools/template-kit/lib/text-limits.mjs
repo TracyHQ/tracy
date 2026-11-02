@@ -4,10 +4,10 @@
 // planner that applies the first row's number to every row never overfills one. A row that could not be filled
 // falls back to the content map's limit, and the limit says so (`maxCharactersFrom`).
 
-const kindOf = (s) => `${s.role ?? ''}|${s.type ?? ''}`
+export const kindOf = (s) => `${s.role ?? ''}|${s.type ?? ''}`
 
 /** The slots of each row at one place: the n-th slot of each kind (role and type) in the row. */
-function places(rows) {
+export function places(rows) {
   const out = new Map()
   for (const row of rows) {
     const seen = new Map()

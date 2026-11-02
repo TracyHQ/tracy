@@ -392,7 +392,8 @@ list, kept by every later run).
   `kit-incomplete` and it cannot be approved: `itemsListsWithoutCardFields` (a listing's items list takes the content
   map's list and its card fields, a further result page takes page 1's), and the planner rules below:
   `listLimitsDiffering`, `showcasePagesNotExcluded`, `mixedPageGroups`, `detailPagesOutsideListing`,
-  `representativesNotListing`, `slotsInTwoBlocks`, `orphanTexts`, `paragraphsMissing`, `fixedTextIdsInvalid`),
+  `representativesNotListing`, `slotsInTwoBlocks`, `orphanTexts`, `paragraphsMissing`, `fixedTextIdsInvalid`, and the
+  coverage gate `slotCoverage`),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the
@@ -443,6 +444,22 @@ list, kept by every later run).
      paragraphs or more and contains it, even when another slot holds that paragraph alone. The check names a slot
      shown in two paragraphs or more with fewer paragraphs read than shown, so the orphan check sees every
      paragraph of a long quote or body.
+  7. *The coverage gate* (`lib/coverage-gate.mjs`, `checks.slotCoverage`; parts and every failure in `coverage`).
+     The kit is completed from the contract and its own readings, never measured again, then counted part by part:
+     `slotsMissing`, every content map text slot a kit block shows (`coverage.shownTextSlots` counts them) is listed
+     with `maxCharacters` and `maxCharactersFrom`; `linkLabelsOutsideBlock`, every link's `labelId` is a slot of the
+     block holding the link (a slot another block owns is listed by reference, `ownedBy`, and is not ownership) and
+     every top-level menu item is some link's label; `slotLimitsDiffering`, a slot holds one limit in every place
+     that lists it (`lib/slot-limits.mjs`: the smallest of the content map's measured fit, the kit's frame reading
+     and the content map's declared number, the slots at one place of every list row and an items list's card field
+     counted as one; a fit that is only the box of the demo word on an auto-sizing item, a menu label or a button,
+     is no limit and the source says so); `textFormatMissing`, every text slot gives `paragraphs`, `bullets`,
+     `formatFrom` and a sample with the first words of each paragraph and bullet (`lib/text-format.mjs`);
+     `mainMenuRowLimitMissing`, the main menu group has `rowLimit` (its top-level labels as the content map
+     measured the demo row at desktop, summed: the row is known to hold them); `contactFieldsUnresolved`, every
+     `site.contactBlocks[].accepts.fields[]` entry names the content map slot of its column (`id`, `writable: true`,
+     with its limit) or says `writable: false` with `writableReason`, never a made-up id; and `orphanTexts`.
+     A label slot says what else changes with it (`alsoChanges`: other blocks, page titles, menus).
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and
   `canHide`, the shape the planner reads. The id is stable across rebuilds: `<block>.fixed-<constant>` for a CMS
   line (the words around its placeholder may change), `<block>.fixed-<words>-<hash>` for template words. The check

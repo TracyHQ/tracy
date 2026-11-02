@@ -6,14 +6,17 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
+import { applyCoverage, coverageGate } from './coverage-gate.mjs'
 import { httpFetcher } from './crawl.mjs'
 import { buildKit } from './kit.mjs'
 import { mergeSite } from './kit-site.mjs'
+import { slotOwnerChecks } from './slot-owners.mjs'
 import { templateGaps } from './template-gaps.mjs'
 import { fixesOf } from './template-fixes.mjs'
 import { showcaseViewFor } from './site/adapters/index.mjs'
 import { logoFrameIds } from './site/logo-spots.mjs'
 import { buildStamp, imageChecksums, templateVersionOf } from './stamp.mjs'
+import { limitChecks } from './text-limits.mjs'
 
 export const readJson = (f) => JSON.parse(readFileSync(f, 'utf8'))
 export const readIf = (f) => (existsSync(f) ? readJson(f) : null)
@@ -70,6 +73,13 @@ export async function assembleKit(o, out, tool) {
     aliasHosts: host ? [host] : []
   })
   mergeSite(kit, siteDoc, map, wordsLinks)
+  // The coverage gate (coverage-gate.mjs): complete the kit from the contract, then count what it still lacks. The
+  // list and owner checks run again over the completed kit.
+  applyCoverage(kit, { map, textFit: readIf(join(out, 'text-fit.json')) ?? {} })
+  kit.errors = kit.errors.filter((e) => !/^(list-limits-differ|slot-in-two-blocks)$/.test(e.kind))
+  kit.checks.listLimitsDiffering = limitChecks({ blocks: kit.blocks, errors: kit.errors })
+  kit.checks.slotsInTwoBlocks = slotOwnerChecks({ blocks: kit.blocks, errors: kit.errors })
+  kit.checks.slotCoverage = coverageGate(kit, { map })
   const unchecked = kit.blocks.flatMap((b) => b.frames.filter((f) => f.faces === null && !f.twinOf))
   if (unchecked.length)
     kit.errors.push({

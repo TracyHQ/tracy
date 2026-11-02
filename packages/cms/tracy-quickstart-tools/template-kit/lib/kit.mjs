@@ -14,6 +14,7 @@ import { representativeChecks } from './pack.mjs'
 import { detailPageChecks, groupPages, LISTING, mixedGroupChecks } from './page-groups.mjs'
 import { orphanTextChecks, paragraphChecks, settleForeignTexts } from './orphan-text.mjs'
 import { judgeShowcase, showcaseChecks } from './showcase-pages.mjs'
+import { formatTextSlots } from './text-format.mjs'
 import { assignSlotOwners, slotOwnerChecks } from './slot-owners.mjs'
 import { harmonizeLimits, limitChecks } from './text-limits.mjs'
 
@@ -254,6 +255,10 @@ export function buildKit({
   )
   // Other entities' words no block declares: a link label, a coincidence (fixed text), or the block's slot.
   settleForeignTexts(blocks)
+  // Every declared text slot says how many paragraphs and bullets it shows, its sample every part's first words.
+  const mapSlotOf = new Map((map.slots ?? []).map((sl) => [neutralKey(sl.key), sl]))
+  const detailsById = new Map(recs.map((r) => [r.id, r.widths?.[desk]?.details ?? null]))
+  formatTextSlots({ blocks, slotOf: (id) => mapSlotOf.get(id), detailsOf: (id) => detailsById.get(id) })
   // One limit per slot kind of a list, measured from the frame (text-limits.mjs).
   for (const b of blocks) for (const l of b.lists ?? []) harmonizeLimits(l, textFit)
   // One block per slot: the block that renders it, read from the shown words of the read pass (slot-owners.mjs).
@@ -285,6 +290,9 @@ export function buildKit({
     paragraphsMissing: paragraphChecks({ blocks, errors })
   }
   for (const b of blocks) {
+    // The slots the block shows, for the coverage gate (coverage-gate.mjs); kept out of the written kit.
+    const shownSlots = new Set(b.textsShown.map((t) => t.slot).filter(Boolean))
+    Object.defineProperty(b, 'shownSlots', { value: shownSlots, enumerable: false })
     delete b.textsShown
     delete b.paragraphsShown
   }

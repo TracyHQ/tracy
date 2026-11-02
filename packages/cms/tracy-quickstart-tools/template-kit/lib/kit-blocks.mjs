@@ -1,5 +1,6 @@
 // The `blocks[]` of template-kit.json: per block what a planner may change (lists, picture frames, links)
 // and what it may not (template words, the demo business's own facts), joined from the capture and the map.
+import { labelLinks } from './link-labels.mjs'
 import { shownParagraphs } from './orphan-text.mjs'
 import { isFactRole } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { normText } from '../../content-coverage/lib/normalize.mjs'
@@ -197,6 +198,10 @@ export function buildBlock({
     }
   })
   addIconSlots(lists, links, iconProbe, slots, neutralKey)
+  // The slot each text link's label comes from: the block's own menu item, or the one slot printing its words.
+  labelLinks({ links, menuBlocks: idx.map.menuBlocks, mapSlots: idx.map.slots, siteUrl, aliasHosts })
+  const labelOf = new Map(links.filter((l) => l.labelId).map((l) => [normText(l.label), l.labelId]))
+  const mapSlot = new Map((idx.map.slots ?? []).map((x) => [neutralKey(x.key), x]))
   // A menu the pages never show (an off-canvas menu) has its links in the content map's menu block.
   const menu = !desk && entity ? idx.map.menuBlocks?.[entity] : null
   if (menu)
@@ -208,6 +213,7 @@ export function buildBlock({
         label: it.label?.text ?? null,
         target: it.target?.path ?? (it.target?.page ? pathOfPage(idx.map, it.target.page) : null),
         menuItem: it.item,
+        ...(it.label?.slot ? { labelId: neutralKey(it.label.slot) } : {}),
         from: 'menu'
       })
     }
@@ -223,6 +229,12 @@ export function buildBlock({
   for (const text of new Set(desk?.texts ?? [])) {
     const n = normText(text)
     if (!n || !/\p{L}/u.test(n)) continue
+    // A link's label is the slot the link names, not the first slot sharing its words.
+    const label = labelOf.get(n)
+    if (label) {
+      textsShown.push({ text, slot: label, source: mapSlot.get(label) ?? null, how: 'whole', label: true })
+      continue
+    }
     const m = samples.matchOf(n, slots)
     textsShown.push({ text, slot: m ? neutralKey(m.slot.key) : null, source: m?.slot ?? null, how: m?.how })
     if (!m) fixedText.push({ text, source: null })
@@ -279,7 +291,7 @@ export function buildBlock({
   )
   for (const t of textsShown) {
     const s = t.source
-    if (!s || ownKeys.has(s.key) || held.has(t.slot) || pageItems.has(entityOfKey(s.key))) continue
+    if (!s || t.label || ownKeys.has(s.key) || held.has(t.slot) || pageItems.has(entityOfKey(s.key))) continue
     if (PLACED.test(s.key) || t.how === 'piece') t.foreign = slotOut(s)
   }
   // The block's own slots it shows that nothing above holds (a section title, an intro, a lone button label), and
@@ -300,6 +312,11 @@ export function buildBlock({
   const blockSlots = [...shown.values(), ...urls]
     .filter((x, i, all) => all.findIndex((y) => y.key === x.key) === i)
     .map(slotOut)
+  // A label slot says which link prints it.
+  for (const x of blockSlots) {
+    const ls = links.filter((l) => l.labelId === x.id).map((l) => l.id)
+    if (ls.length) x.labelOf = ls
+  }
   const images = {}
   for (const w of widths) if (rec.widths[w]?.image) images[w] = imageIdOf(rec.widths[w].image)
   const visibleAt = widths.filter((w) => rec.widths[w]?.pages?.length)

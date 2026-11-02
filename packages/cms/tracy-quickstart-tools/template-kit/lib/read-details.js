@@ -133,7 +133,19 @@ export function readDetails() {
       .filter((p) => shown(p))
       .map((p) => (p.innerText || '').replace(/\s+/g, ' ').trim())
       .filter((t) => t.length >= 2)
-    out[root.getAttribute('data-kit-block')] = { links, texts: [...texts], paragraphs, repeats, skeleton }
+    // Every shown bullet whole: the page's own count of a slot's bullets.
+    const bullets = [...root.querySelectorAll('li')]
+      .filter((li) => shown(li) && !li.querySelector('li'))
+      .map((li) => (li.innerText || '').replace(/\s+/g, ' ').trim())
+      .filter((t) => t.length >= 2)
+    out[root.getAttribute('data-kit-block')] = {
+      links,
+      texts: [...texts],
+      paragraphs,
+      bullets,
+      repeats,
+      skeleton
+    }
   }
   return out
 }

@@ -17,7 +17,8 @@ const SECOND =
 test('the read pass records a long paragraph, and every shown paragraph whole', async (t) => {
   assert.ok(SECOND.length > 300)
   const html = `<div data-kit-block="quote-1"><h2>Our <span>story</span></h2>
-    <div class="description"><p>${FIRST}</p><p>${SECOND}</p><p style="display:none">Hidden words here</p></div></div>`
+    <div class="description"><p>${FIRST}</p><p>${SECOND}</p><p style="display:none">Hidden words here</p></div>
+    <ul><li>Warm <b>up</b></li><li>Footwork</li><li style="display:none">Hidden step</li></ul></div>`
   let browser
   try {
     browser = await chromium.launch()
@@ -30,6 +31,7 @@ test('the read pass records a long paragraph, and every shown paragraph whole', 
     const d = (await page.evaluate(readDetails))['quote-1']
     assert.ok(d.texts.includes(SECOND), 'a paragraph longer than 300 characters is read')
     assert.deepEqual(d.paragraphs, [FIRST, SECOND], 'shown paragraphs only, each whole')
+    assert.deepEqual(d.bullets, ['Warm up', 'Footwork'], 'shown bullets only, each whole')
   } finally {
     await browser.close()
   }

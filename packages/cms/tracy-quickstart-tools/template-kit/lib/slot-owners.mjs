@@ -19,7 +19,8 @@ const pictureOf = (sample) =>
 /** The slot ids a block lists as its own, and where. */
 function ownLists(b) {
   const out = []
-  for (const d of b.slots ?? []) out.push({ id: d.id, where: 'slots', entry: d })
+  // A slot owned by another block (a link label listed by reference, `ownedBy`) is not the block's own.
+  for (const d of b.slots ?? []) if (!d.ownedBy) out.push({ id: d.id, where: 'slots', entry: d })
   for (const d of b.demoOwned ?? []) out.push({ id: d.id, where: 'demoOwned', entry: d })
   for (const f of b.frames ?? []) out.push({ id: f.id, where: 'frames', entry: f })
   for (const l of b.lists ?? []) {
