@@ -341,8 +341,8 @@ in a block's `source`.
    zip carries a fixed date, so the same files give the same sha256.
 6. `cli.mjs approve --out <kit dir> --by <login>` (a person, after the review sheet) seals the pack's image set.
 
-Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture,
-measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one
+Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
+shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one
 list, kept by every later run).
 
 - **Every page.** The crawl starts from every route of the content map and the front page, then follows every
@@ -387,11 +387,12 @@ list, kept by every later run).
   `image-file` or `css-background`, whether it can be changed, measured by setting one row's icon class to
   another's), `frames[]`, `links[]` (every shown link by `position`, repeats of one label and address included,
   with `icon` when the link draws one: `mechanism`, `classes`/`file`,
-  `network`), `fixedText[]`, `demoOwned[]`), `checks` (counts that must all be 0, or /ops marks the kit
+  `network`; `labelId` when the label is another entity's slot, a menu item's title), `slots[]` (planner rule 5),
+  `fixedText[]`, `demoOwned[]`), `checks` (counts that must all be 0, or /ops marks the kit
   `kit-incomplete` and it cannot be approved: `itemsListsWithoutCardFields` (a listing's items list takes the content
   map's list and its card fields, a further result page takes page 1's), and the planner rules below:
   `listLimitsDiffering`, `showcasePagesNotExcluded`, `mixedPageGroups`, `detailPagesOutsideListing`,
-  `representativesNotListing`, `slotsInTwoBlocks`, `fixedTextIdsInvalid`),
+  `representativesNotListing`, `slotsInTwoBlocks`, `orphanTexts`, `paragraphsMissing`, `fixedTextIdsInvalid`),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the
@@ -426,6 +427,22 @@ list, kept by every later run).
      blocks (`demoOwned`, `frames`, list rows) goes to the block that renders it, read from the shown words and
      measured frames of the read pass, the block of the slot's own entity first; the others are named on it
      (`alsoShownIn`). An items list's card fields only point at their items' slots and are not ownership.
+  5. *Every shown text has a slot* (`lib/orphan-text.mjs`, `checks.orphanTexts`). A block's `slots[]`
+     (`id, role, type, maxCharacters, sample`) are the words it shows that no list row, frame, link or demo fact
+     holds: a section title, an intro, a lone button label, with the address slot that goes with a shown label (same
+     JSON path or same row group), and other entities' words it prints (a CMS language string, a form field label,
+     a module rendered inside it, the menu item title a page prints as its heading). Another content item's, menu
+     item's or category's words, or a piece of a longer sample, that no block declares are settled across the kit:
+     a link label of the block names its link (`links[].labelId`); a content item's words or a piece of a longer
+     sample are a coincidence (the same word in that item, `Next` in a typography article) and become fixed text;
+     anything else is the block's slot. The check names every shown text whose slot no block of the kit declares.
+  6. *Every paragraph of a slot is read* (`lib/orphan-text.mjs` `paragraphChecks`, `checks.paragraphsMissing`).
+     The read pass records every shown text whatever its length, and every shown paragraph (`<p>`) whole, the
+     page's own count. A paragraph is read when the shown texts hold its words (a paragraph split by inline markup
+     is read in pieces, longest text first). A paragraph counts for every slot of the block whose sample holds two
+     paragraphs or more and contains it, even when another slot holds that paragraph alone. The check names a slot
+     shown in two paragraphs or more with fewer paragraphs read than shown, so the orphan check sees every
+     paragraph of a long quote or body.
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and
   `canHide`, the shape the planner reads. The id is stable across rebuilds: `<block>.fixed-<constant>` for a CMS
   line (the words around its placeholder may change), `<block>.fixed-<words>-<hash>` for template words. The check
@@ -439,6 +456,11 @@ list, kept by every later run).
   `orderFrom` is passed through and `"item-id"` gets an `orderNote` (a stand-in order, not the menu's own); what a
   footer column holds (`holds`, `itemsOf`) is joined in from the pages, and a link column that is no menu block is
   kept as read (`from: "page"`). An off-canvas menu the pages never show takes its links from its menu block.
+  `contactBlocks[]`: each block showing contact lines (`kinds`, `lines`); one that shows a CMS contact also says
+  what it accepts (`accepts`, from the platform adapter's `contactChannels`): every one-value field (`kind`,
+  `column`, `max: 1`, `printed` when the template's contact layout prints it and its switch is on, `filled`,
+  `setting`), `repeatableRows: false`, the named links (`max`, `printed`, `filled`, `setting`) and `otherChannels`:
+  where a messaging app or social profile goes, or `none: …` when the page prints no field for it.
   `fixedTexts[]` (also `blocks[].fixedText`): a sentence the CMS prints from a language file (rendered text that is
   no content slot and matches a string of the site language's `.ini` files, placeholders such as `%s` and `%date%`
   taken as wildcards), with `source: {file, constant}`. A short value (a form label, `Page %s of %s`) matches only a
@@ -483,7 +505,8 @@ list, kept by every later run).
 - **Frames** (`frames[]`: `id, shape, width, height, kind, canHide, twinOf, fixed`, measured; plus evidence).
   Each frame is found on the page by the picture file the map names. `width`/`height` are its box at desktop
   width and `shape` comes from them. `kind`: `icon` (128 px or smaller, or a mostly clear drawing up to 320 px),
-  `cutout` (a mostly clear picture over another picture), `photo`, or `logo` (named by the site part:
+  `cutout` (a picture larger than a drawing with a tenth or more of it clear: a figure cut out of its background,
+  over another picture or beside the text), `photo`, or `logo` (named by the site part:
   `business.logo` slots and every logo spot's frame; who owns it is the brand step's, so `fixed` is null). An
   `<img>` kept at opacity 0 while its holder paints a mask or background over it is shown through that painter
   (`paintedBy`) and measured from it. A frame in a closed tab, slide or accordion is opened first, the way a

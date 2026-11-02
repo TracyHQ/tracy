@@ -1,5 +1,6 @@
 // The `blocks[]` of template-kit.json: per block what a planner may change (lists, picture frames, links)
 // and what it may not (template words, the demo business's own facts), joined from the capture and the map.
+import { shownParagraphs } from './orphan-text.mjs'
 import { isFactRole } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { imageIdOf, neutralKey } from './ids.mjs'
@@ -217,16 +218,28 @@ export function buildBlock({
   const ownKeys = new Set(slots.map((s) => s.key))
   const fixedText = []
   const shownContent = []
+  // Each shown text and the slot it comes from (orphan-text.mjs checks every one is declared somewhere).
+  const textsShown = []
   for (const text of new Set(desk?.texts ?? [])) {
     const n = normText(text)
     if (!n || !/\p{L}/u.test(n)) continue
     const m = samples.matchOf(n, slots)
+    textsShown.push({ text, slot: m ? neutralKey(m.slot.key) : null, source: m?.slot ?? null, how: m?.how })
     if (!m) fixedText.push({ text, source: null })
     // Another entity's words shown whole or as a piece are an item's card or a menu label, read as content
     // already; words only a looser match recognizes (cut short, split, run together) are named as the demo's.
     else if (!ownKeys.has(m.slot.key) && !/^(whole|piece)$/.test(m.how))
       shownContent.push({ slot: m.slot, text, how: m.how })
   }
+  // Each paragraph the page shows, the slot it comes from, and whether the shown texts read all of its words (a
+  // paragraph split by inline markup is read in pieces): orphan-text.mjs paragraphChecks.
+  const paragraphsShown = shownParagraphs({
+    paragraphs: desk?.paragraphs ?? [],
+    texts: desk?.texts ?? [],
+    slots,
+    matchOf: (n) => samples.matchOf(n, slots),
+    keyOf: neutralKey
+  })
   const demoOwned = slots
     .filter((s) => isFactRole(s.role) || (id === 'header' && String(s.role ?? '').startsWith('business.')))
     .map((s) => ({ id: neutralKey(s.key), role: s.role, sample: short(s.sample) }))
@@ -247,6 +260,46 @@ export function buildBlock({
     if (!had) demoOwned.push(icon)
     else if (icon.class) Object.assign(had, { kind: icon.kind, class: icon.class }) // why it is the demo's
   }
+  // The block's own slots it shows that no list row, frame, link or demo fact holds (a section title, an intro, a
+  // lone button label), with the address slot that goes with a shown label: what a planner writes or hides.
+  const held = new Set([
+    ...lists.flatMap((l) => [
+      ...(l.rowSlots ?? []).map((x) => x.id),
+      ...(l.rows ?? []).flatMap((r) => r.slots.map((x) => x.id))
+    ]),
+    ...frames.map((f) => f.id),
+    ...links.map((l) => l.id),
+    ...demoOwned.map((d) => d.id)
+  ])
+  // Another entity's words shown here are settled across the kit (orphan-text.mjs settleForeignTexts): a content
+  // item's, menu item's or category's words, or a piece of a longer sample, unless the page prints them as its own
+  // heading (a page shows its menu item's title).
+  const pageItems = new Set(
+    (idx.map.pages ?? []).filter((p) => pagesOf(rec, widths).has(pageIdOf(p.route))).map((p) => p.entity)
+  )
+  for (const t of textsShown) {
+    const s = t.source
+    if (!s || ownKeys.has(s.key) || held.has(t.slot) || pageItems.has(entityOfKey(s.key))) continue
+    if (PLACED.test(s.key) || t.how === 'piece') t.foreign = slotOut(s)
+  }
+  // The block's own slots it shows that nothing above holds (a section title, an intro, a lone button label), and
+  // the shown words of other entities it prints (a CMS string, a form field label, a module shown inside it).
+  const shown = new Map()
+  for (const t of textsShown) if (t.slot && !held.has(t.slot) && !t.foreign) shown.set(t.slot, t.source)
+  // The address slot that goes with a shown label: the same JSON path, or the same row group.
+  const slotPath = (x) => JSON.stringify(x.jsonPath ?? null)
+  const shownPaths = new Set([...shown.values()].filter((x) => x.jsonPath).map(slotPath))
+  const shownGroups = new Set([...shown.values()].map((x) => x.group?.id).filter(Boolean))
+  const urls = slots.filter(
+    (x) =>
+      x.type === 'url' &&
+      !held.has(neutralKey(x.key)) &&
+      String(x.sample ?? '').trim() &&
+      ((x.jsonPath && shownPaths.has(slotPath(x))) || (x.group && shownGroups.has(x.group.id)))
+  )
+  const blockSlots = [...shown.values(), ...urls]
+    .filter((x, i, all) => all.findIndex((y) => y.key === x.key) === i)
+    .map(slotOut)
   const images = {}
   for (const w of widths) if (rec.widths[w]?.image) images[w] = imageIdOf(rec.widths[w].image)
   const visibleAt = widths.filter((w) => rec.widths[w]?.pages?.length)
@@ -268,11 +321,14 @@ export function buildBlock({
         }
       : {}),
     images,
+    slots: blockSlots,
     lists,
     frames,
     links,
     fixedText,
     demoOwned,
+    textsShown,
+    paragraphsShown,
     source: {
       ref: rec.source,
       entity,
@@ -282,6 +338,22 @@ export function buildBlock({
     }
   }
 }
+
+// Entities with a page of their own: their words on another block are a link, a card, or a coincidence.
+const PLACED = /^(article|menuItem|category)-/
+const entityOfKey = (key) => String(key).replace(/\.[^.]*$/, '')
+/** A map page's route as the capture names pages ("about-us/contact" is "about-us_contact"). */
+const pageIdOf = (route) => String(route ?? '').replace(/\//g, '_')
+const pagesOf = (rec, widths) => new Set(widths.flatMap((w) => rec.widths[w]?.pages ?? []))
+
+/** A slot as a block declares it. */
+const slotOut = (x) => ({
+  id: neutralKey(x.key),
+  role: x.role ?? null,
+  type: x.type,
+  ...(x.maxCharacters != null ? { maxCharacters: x.maxCharacters } : {}),
+  ...(x.type === 'url' ? {} : { sample: short(x.sample) })
+})
 
 /** The path of the map page an entity opens, or null. */
 function pathOfPage(map, entity) {

@@ -2663,6 +2663,22 @@
         "390": "header-390",
         "1440": "header-1440"
       },
+      "slots": [
+        {
+          "id": "menuItem-101.0",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Home"
+        },
+        {
+          "id": "menuItem-169.0",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Plans"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -2803,6 +2819,7 @@
           "position": 2,
           "label": "ABOUT",
           "target": "/about-us",
+          "labelId": "menuItem-184.0",
           "action": "navigation"
         },
         {
@@ -2810,6 +2827,7 @@
           "position": 3,
           "label": "CLASSES",
           "target": "/classes",
+          "labelId": "category-9.0",
           "action": "navigation"
         },
         {
@@ -2824,6 +2842,7 @@
           "position": 5,
           "label": "PAGES",
           "target": null,
+          "labelId": "menuItem-152.0",
           "action": "page-control"
         },
         {
@@ -2868,6 +2887,18 @@
         "390": "block-176-390",
         "1440": "block-176-1440"
       },
+      "slots": [
+        {
+          "id": "block-176.1",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Contact us",
+          "alsoShownIn": [
+            "header"
+          ]
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -2900,6 +2931,7 @@
       ],
       "notShownBecause": "off-canvas menu: opens only on demand",
       "images": {},
+      "slots": [],
       "lists": [],
       "frames": [],
       "links": [
@@ -3087,6 +3119,22 @@
         "390": "block-156-390",
         "1440": "block-156-1440"
       },
+      "slots": [
+        {
+          "id": "block-156.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 128,
+          "sample": "Become the fittest and healthiest version of yourself."
+        },
+        {
+          "id": "block-156.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 82,
+          "sample": "Try Us With No Strings Attached"
+        }
+      ],
       "lists": [
         {
           "id": "block-156.cta",
@@ -3377,6 +3425,40 @@
         "390": "block-157-390",
         "1440": "block-157-1440"
       },
+      "slots": [
+        {
+          "id": "block-157.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "THE WORKOUT"
+        },
+        {
+          "id": "block-157.21",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 538,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin",
+          "alsoShownIn": [
+            "body-classes",
+            "body-about-us_learning-center",
+            "body-about-us_learning-center--start-6"
+          ]
+        },
+        {
+          "id": "block-157.23",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "about us"
+        },
+        {
+          "id": "block-157.22",
+          "role": "editorial.navigation_url",
+          "type": "url",
+          "maxCharacters": 2048
+        }
+      ],
       "lists": [
         {
           "id": "block-157.item",
@@ -4156,6 +4238,40 @@
         "390": "block-160-390",
         "1440": "block-160-1440"
       },
+      "slots": [
+        {
+          "id": "block-160.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "Our Classes"
+        },
+        {
+          "id": "block-160.1",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 538,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "block-160.6",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Start practicing"
+        },
+        {
+          "id": "languageString-256948293.0",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "Try a class",
+          "alsoShownIn": [
+            "body-classes",
+            "block-159"
+          ]
+        }
+      ],
       "lists": [
         {
           "id": "block-160.stat",
@@ -4870,6 +4986,7 @@
         "390": "block-161-390",
         "1440": "block-161-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "block-161.claim",
@@ -5068,6 +5185,29 @@
         "390": "block-163-390",
         "1440": "block-163-1440"
       },
+      "slots": [
+        {
+          "id": "block-163.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Our trainers"
+        },
+        {
+          "id": "block-163.17",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 186,
+          "sample": "Clear information about membership options, pricing tiers, a"
+        },
+        {
+          "id": "block-163.18",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "View more"
+        }
+      ],
       "lists": [
         {
           "id": "block-163.person",
@@ -5997,6 +6137,15 @@
         "390": "block-165-390",
         "1440": "block-165-1440"
       },
+      "slots": [
+        {
+          "id": "block-165.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 96,
+          "sample": "Training ((br/))((span))route((/span))"
+        }
+      ],
       "lists": [
         {
           "id": "block-165.step",
@@ -6122,7 +6271,7 @@
           },
           "width": 704,
           "height": 733,
-          "kind": "photo",
+          "kind": "cutout",
           "canHide": false,
           "twinOf": null,
           "fixed": false,
@@ -6271,6 +6420,22 @@
         "390": "block-166-390",
         "1440": "block-166-1440"
       },
+      "slots": [
+        {
+          "id": "block-166.17",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Boxing Studio"
+        },
+        {
+          "id": "block-166.18",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 190,
+          "sample": "Visual proof of the engaging workouts and sense of community"
+        }
+      ],
       "lists": [
         {
           "id": "block-166.cta",
@@ -7145,6 +7310,7 @@
         "390": "block-170-390",
         "1440": "block-170-1440"
       },
+      "slots": [],
       "lists": [],
       "frames": [
         {
@@ -7280,6 +7446,22 @@
         "390": "block-169-390",
         "1440": "block-169-1440"
       },
+      "slots": [
+        {
+          "id": "block-169.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 86,
+          "sample": "Sign up for the Boxing newsletter"
+        },
+        {
+          "id": "block-169.1",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 194,
+          "sample": "These routines are designed to help you stay in shape and ma"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [],
@@ -7335,6 +7517,7 @@
         "390": "block-171-390",
         "1440": "block-171-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "block-171.social",
@@ -7644,6 +7827,15 @@
         "390": "block-175-390",
         "1440": "block-175-1440"
       },
+      "slots": [
+        {
+          "id": "block-175.5",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "GET IN TOUCH"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -7701,6 +7893,15 @@
         "390": "block-173-390",
         "1440": "block-173-1440"
       },
+      "slots": [
+        {
+          "id": "block-173.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "CLASSES"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -7730,6 +7931,7 @@
           "position": 3,
           "label": "Beginners",
           "target": "/classes/beginner-boxing",
+          "labelId": "menuItem-191.0",
           "action": "go-to-item"
         },
         {
@@ -7737,6 +7939,7 @@
           "position": 4,
           "label": "Try Free Intro",
           "target": "/about-us/contact",
+          "labelId": "menuItem-192.0",
           "action": "contact"
         }
       ],
@@ -7763,6 +7966,15 @@
         "390": "block-174-390",
         "1440": "block-174-1440"
       },
+      "slots": [
+        {
+          "id": "block-174.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "SITE MAP"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -7778,6 +7990,7 @@
           "position": 1,
           "label": "Class",
           "target": "/classes",
+          "labelId": "menuItem-185.0",
           "action": "navigation"
         },
         {
@@ -7785,6 +7998,7 @@
           "position": 2,
           "label": "Schedule",
           "target": "/classes",
+          "labelId": "menuItem-186.0",
           "action": "navigation"
         },
         {
@@ -7792,6 +8006,7 @@
           "position": 3,
           "label": "Price",
           "target": "/plans",
+          "labelId": "menuItem-187.0",
           "action": "navigation"
         }
       ],
@@ -7818,6 +8033,7 @@
         "390": "block-168-390",
         "1440": "block-168-1440"
       },
+      "slots": [],
       "lists": [],
       "frames": [],
       "links": [
@@ -7896,6 +8112,7 @@
         "390": "block-162-390",
         "1440": "block-162-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "block-162.page",
@@ -7990,14 +8207,6 @@
               "index": 3,
               "slots": [
                 {
-                  "id": "block-162.5",
-                  "role": "editorial.menu_label",
-                  "type": "text",
-                  "maxCharacters": 40,
-                  "sample": "User Profile",
-                  "maxCharactersFrom": "content map"
-                },
-                {
                   "id": "block-162.20",
                   "role": "editorial.paragraph",
                   "type": "text",
@@ -8010,14 +8219,6 @@
             {
               "index": 4,
               "slots": [
-                {
-                  "id": "block-162.6",
-                  "role": "editorial.menu_label",
-                  "type": "text",
-                  "maxCharacters": 40,
-                  "sample": "Offline Pages",
-                  "maxCharactersFrom": "content map"
-                },
                 {
                   "id": "block-162.21",
                   "role": "editorial.paragraph",
@@ -8053,14 +8254,6 @@
               "index": 6,
               "slots": [
                 {
-                  "id": "block-162.8",
-                  "role": "editorial.menu_label",
-                  "type": "text",
-                  "maxCharacters": 40,
-                  "sample": "Typography",
-                  "maxCharactersFrom": "content map"
-                },
-                {
                   "id": "block-162.23",
                   "role": "editorial.paragraph",
                   "type": "text",
@@ -8073,14 +8266,6 @@
             {
               "index": 7,
               "slots": [
-                {
-                  "id": "block-162.9",
-                  "role": "editorial.menu_label",
-                  "type": "text",
-                  "maxCharacters": 40,
-                  "sample": "Category Blog",
-                  "maxCharactersFrom": "content map"
-                },
                 {
                   "id": "block-162.24",
                   "role": "editorial.paragraph",
@@ -8413,6 +8598,28 @@
         "390": "body-pages_users_login-form-390",
         "1440": "body-pages_users_login-form-1440"
       },
+      "slots": [
+        {
+          "id": "languageString-44242957.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Username",
+          "alsoShownIn": [
+            "body-pages_users_registration-form"
+          ]
+        },
+        {
+          "id": "languageString-135820122.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Password",
+          "alsoShownIn": [
+            "body-pages_users_registration-form"
+          ]
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -8440,6 +8647,34 @@
       ],
       "fixedText": [
         {
+          "text": "Show Password",
+          "source": {
+            "kind": "template"
+          },
+          "canHide": false,
+          "reason": "a link or a button would be left with no words",
+          "measuredBy": "dom",
+          "evidence": {
+            "emptied": 1,
+            "blockBefore": {
+              "left": 0,
+              "top": 549,
+              "width": 1440,
+              "height": 720
+            },
+            "blockAfter": {
+              "left": 0,
+              "top": 549,
+              "width": 1440,
+              "height": 720
+            },
+            "heightChange": 0,
+            "textMoved": 0,
+            "textOverlaps": 0
+          },
+          "id": "body-pages_users_login-form.fixed-show-password-b485da"
+        },
+        {
           "text": "yes",
           "source": {
             "kind": "template"
@@ -8466,46 +8701,6 @@
             "textOverlaps": 0
           },
           "id": "body-pages_users_login-form.fixed-yes-8a7988"
-        },
-        {
-          "text": "SHOW PASSWORD",
-          "source": {
-            "file": "language/en-GB/joomla.ini",
-            "constant": "JSHOWPASSWORD",
-            "short": true,
-            "constants": [
-              "JSHOWPASSWORD"
-            ]
-          },
-          "placeholders": [],
-          "pages": 1,
-          "canHide": true,
-          "hiddenBy": {
-            "setting": "cms language override",
-            "file": "language/overrides/en-GB.override.ini",
-            "constant": "JSHOWPASSWORD",
-            "value": ""
-          },
-          "evidence": {
-            "blockBefore": {
-              "left": 0,
-              "top": 549,
-              "width": 1440,
-              "height": 720
-            },
-            "blockAfter": {
-              "left": 0,
-              "top": 549,
-              "width": 1440,
-              "height": 720
-            },
-            "heightChange": 0,
-            "textGone": 14,
-            "textMoved": 0,
-            "textOverlaps": 0,
-            "reason": "the sentence left the page and the block changed with it"
-          },
-          "id": "body-pages_users_login-form.fixed-jshowpassword"
         },
         {
           "text": "Remember me",
@@ -8746,6 +8941,22 @@
         "390": "body-pages_users_registration-form-390",
         "1440": "body-pages_users_registration-form-1440"
       },
+      "slots": [
+        {
+          "id": "block-162.5",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "User Profile"
+        },
+        {
+          "id": "field-1.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Phone"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -9263,6 +9474,34 @@
           "id": "body-pages_users_registration-form.fixed-i-agree-77366e"
         },
         {
+          "text": "Website",
+          "source": {
+            "kind": "template"
+          },
+          "canHide": true,
+          "reason": "the words leave and nothing else moves",
+          "measuredBy": "dom",
+          "evidence": {
+            "emptied": 1,
+            "blockBefore": {
+              "left": 0,
+              "top": 549,
+              "width": 1440,
+              "height": 2798
+            },
+            "blockAfter": {
+              "left": 0,
+              "top": 549,
+              "width": 1440,
+              "height": 2798
+            },
+            "heightChange": 0,
+            "textMoved": 0,
+            "textOverlaps": 0
+          },
+          "id": "body-pages_users_registration-form.fixed-website-747a8f"
+        },
+        {
           "text": "User Registration",
           "source": {
             "file": "language/en-GB/com_users.ini",
@@ -9537,6 +9776,22 @@
         "390": "block-17-390",
         "1440": "block-17-1440"
       },
+      "slots": [
+        {
+          "id": "block-162.9",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Category Blog"
+        },
+        {
+          "id": "menuItem-155.0",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "J! Content"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -9623,6 +9878,7 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "menuItem-163.items",
@@ -10066,6 +10322,7 @@
         "390": "body-pages_j-content_featured-articles-390",
         "1440": "body-pages_j-content_featured-articles-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "menuItem-164.items",
@@ -10509,6 +10766,78 @@
         "390": "body-pages_j-content_author-listting-390",
         "1440": "body-pages_j-content_author-listting-1440"
       },
+      "slots": [
+        {
+          "id": "user-44.0",
+          "role": "person.name",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Drew Stokes",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes"
+          ]
+        },
+        {
+          "id": "user-45.0",
+          "role": "person.name",
+          "type": "text",
+          "maxCharacters": 50,
+          "sample": "Daniel Vasquez",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_daniel_vasquez"
+          ]
+        },
+        {
+          "id": "user-46.0",
+          "role": "person.name",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Franklin Wagner",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_franklin_wagner"
+          ]
+        },
+        {
+          "id": "user-47.0",
+          "role": "person.name",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Lorene Bass",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_lorene_bass"
+          ]
+        },
+        {
+          "id": "user-48.0",
+          "role": "person.name",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Corey Gibson",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_corey_gibson"
+          ]
+        },
+        {
+          "id": "user-49.0",
+          "role": "person.name",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Cora Stephens",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_cora_stephens"
+          ]
+        },
+        {
+          "id": "user-51.0",
+          "role": "person.name",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Gene Roberts",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
+        }
+      ],
       "lists": [
         {
           "id": "menuItem-165.items",
@@ -11336,43 +11665,64 @@
           "id": "user-44.0",
           "role": "person.name",
           "sample": "Drew Stokes ",
-          "from": "menuItem-165.items"
+          "from": "menuItem-165.items",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes"
+          ]
         },
         {
           "id": "user-45.0",
           "role": "person.name",
           "sample": "Daniel Vasquez ",
-          "from": "menuItem-165.items"
+          "from": "menuItem-165.items",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_daniel_vasquez"
+          ]
         },
         {
           "id": "user-46.0",
           "role": "person.name",
           "sample": "Franklin Wagner ",
-          "from": "menuItem-165.items"
+          "from": "menuItem-165.items",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_franklin_wagner"
+          ]
         },
         {
           "id": "user-47.0",
           "role": "person.name",
           "sample": "Lorene Bass ",
-          "from": "menuItem-165.items"
+          "from": "menuItem-165.items",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_lorene_bass"
+          ]
         },
         {
           "id": "user-48.0",
           "role": "person.name",
           "sample": "Corey Gibson ",
-          "from": "menuItem-165.items"
+          "from": "menuItem-165.items",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_corey_gibson"
+          ]
         },
         {
           "id": "user-49.0",
           "role": "person.name",
           "sample": "Cora Stephens ",
-          "from": "menuItem-165.items"
+          "from": "menuItem-165.items",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_cora_stephens"
+          ]
         },
         {
           "id": "user-51.0",
           "role": "person.name",
           "sample": "Gene Roberts ",
-          "from": "menuItem-165.items"
+          "from": "menuItem-165.items",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
         }
       ],
       "source": {
@@ -11398,6 +11748,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-6.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "The Boxing World Tour"
+        },
+        {
+          "id": "article-6.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-6.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-6.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-6.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-6.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-6.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-6.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-6.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-6.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-6.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-6.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-6.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -11961,6 +12404,22 @@
         "390": "block-158-390",
         "1440": "block-158-1440"
       },
+      "slots": [
+        {
+          "id": "block-158.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "More Blogs"
+        },
+        {
+          "id": "block-158.1",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 186,
+          "sample": "Clear information about membership options, pricing tiers, a"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -12030,6 +12489,7 @@
         "390": "body-classes-390",
         "1440": "body-classes-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "menuItem-167.items",
@@ -12492,6 +12952,78 @@
         "390": "body-about-us_contact-390",
         "1440": "body-about-us_contact-1440"
       },
+      "slots": [
+        {
+          "id": "menuItem-168.0",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Contact"
+        },
+        {
+          "id": "contact-1.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 174,
+          "sample": "Want to know more? One of our friendly staff will be more th"
+        },
+        {
+          "id": "languageString-34322868.0",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Visit"
+        },
+        {
+          "id": "languageString-30910664.0",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 58,
+          "sample": "open in google maps"
+        },
+        {
+          "id": "languageString-169039348.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "LEAVE US A MESSAGE"
+        },
+        {
+          "id": "languageString-50724917.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Your name"
+        },
+        {
+          "id": "languageString-219823601.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Your email"
+        },
+        {
+          "id": "field-1.1",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Your phone"
+        },
+        {
+          "id": "languageString-234398682.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Your subject"
+        },
+        {
+          "id": "languageString-139204367.0",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Submit"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -12753,6 +13285,43 @@
         "390": "block-184-390",
         "1440": "block-184-1440"
       },
+      "slots": [
+        {
+          "id": "block-188.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "Memberships"
+        },
+        {
+          "id": "block-184.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Memberships workshops"
+        },
+        {
+          "id": "block-184.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 170,
+          "sample": "Choose the class pack or membership that fits your schedule "
+        },
+        {
+          "id": "block-167.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Credit Bundles"
+        },
+        {
+          "id": "block-189.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Kids credits"
+        }
+      ],
       "lists": [
         {
           "id": "block-167.item",
@@ -14095,6 +14664,15 @@
         "390": "block-172-390",
         "1440": "block-172-1440"
       },
+      "slots": [
+        {
+          "id": "block-172.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 176,
+          "sample": "Give the gift of training: a gift card for classes, private "
+        }
+      ],
       "lists": [
         {
           "id": "block-172.item",
@@ -14349,6 +14927,22 @@
         "390": "block-183-390",
         "1440": "block-183-1440"
       },
+      "slots": [
+        {
+          "id": "block-183.7",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Our Story"
+        },
+        {
+          "id": "block-183.1",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        }
+      ],
       "lists": [
         {
           "id": "block-183.quote",
@@ -14642,6 +15236,35 @@
         "390": "block-190-390",
         "1440": "block-190-1440"
       },
+      "slots": [
+        {
+          "id": "block-190.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "THE WORKOUT"
+        },
+        {
+          "id": "block-190.21",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 538,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "block-190.23",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "about us"
+        },
+        {
+          "id": "block-190.22",
+          "role": "editorial.navigation_url",
+          "type": "url",
+          "maxCharacters": 2048
+        }
+      ],
       "lists": [
         {
           "id": "block-190.item",
@@ -15421,6 +16044,7 @@
         "390": "block-177-390",
         "1440": "block-177-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "block-177.item",
@@ -15958,6 +16582,7 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "menuItem-194.items",
@@ -16356,6 +16981,15 @@
         "390": "block-178-390",
         "1440": "block-178-1440"
       },
+      "slots": [
+        {
+          "id": "block-178.32",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "View more"
+        }
+      ],
       "lists": [
         {
           "id": "block-178.person",
@@ -18109,6 +18743,7 @@
         "390": "block-180-390",
         "1440": "block-180-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "block-180.person",
@@ -18562,6 +19197,22 @@
         "390": "block-181-390",
         "1440": "block-181-1440"
       },
+      "slots": [
+        {
+          "id": "block-181.18",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Video Trainer"
+        },
+        {
+          "id": "block-181.19",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 190,
+          "sample": "Visual proof of the engaging workouts and sense of community"
+        }
+      ],
       "lists": [
         {
           "id": "block-181.cta",
@@ -19418,6 +20069,29 @@
         "390": "block-182-390",
         "1440": "block-182-1440"
       },
+      "slots": [
+        {
+          "id": "block-182.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "More trainers"
+        },
+        {
+          "id": "block-182.17",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 186,
+          "sample": "Clear information about membership options, pricing tiers, a"
+        },
+        {
+          "id": "block-182.18",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "View more"
+        }
+      ],
       "lists": [
         {
           "id": "block-182.person",
@@ -20347,6 +21021,197 @@
         "390": "body-classes_advanced-boxing-390",
         "1440": "body-classes_advanced-boxing-1440"
       },
+      "slots": [
+        {
+          "id": "article-16.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 528,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-16.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 252,
+          "sample": "Morbi vitae ligula id dolor iaculis tincidunt. Vivamus ligul"
+        },
+        {
+          "id": "article-16.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 98,
+          "sample": "Prep For Your First Punch"
+        },
+        {
+          "id": "article-16.13",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "WHAT TO BRING"
+        },
+        {
+          "id": "article-16.14",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 190,
+          "sample": "Here’s everything you need to know to get ready for your fir"
+        },
+        {
+          "id": "article-16.17",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Athletic Wear"
+        },
+        {
+          "id": "article-16.21",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Boxing Gloves"
+        },
+        {
+          "id": "article-16.25",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Hand Wraps"
+        },
+        {
+          "id": "article-16.29",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Boxing Shoes"
+        },
+        {
+          "id": "article-16.30",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 188,
+          "sample": "While the Coach sets the tempo, you absolutely are encourage"
+        },
+        {
+          "id": "article-16.31",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 68,
+          "sample": "Typical Boxing Exercises"
+        },
+        {
+          "id": "article-16.32",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 400,
+          "sample": "Now that you know what goes into a boxing workout, here is a"
+        },
+        {
+          "id": "article-16.35",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Warmup:"
+        },
+        {
+          "id": "article-16.36",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 60,
+          "sample": "10 minutes jump rope"
+        },
+        {
+          "id": "article-16.37",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "15 squats"
+        },
+        {
+          "id": "article-16.38",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "15 pushups"
+        },
+        {
+          "id": "article-16.39",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "30 crunches"
+        },
+        {
+          "id": "article-16.42",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Shadowboxing:"
+        },
+        {
+          "id": "article-16.43",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 120,
+          "sample": "3-minute round: Basic jab, cross, and hook punches"
+        },
+        {
+          "id": "article-16.44",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 50,
+          "sample": "Rest 30 seconds"
+        },
+        {
+          "id": "article-16.45",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Repeat 5X"
+        },
+        {
+          "id": "article-16.48",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "Heavy bag workout: basic combinations"
+        },
+        {
+          "id": "article-16.49",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "3-minute round"
+        },
+        {
+          "id": "article-16.54",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Conditioning:"
+        },
+        {
+          "id": "article-16.55",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "10 pushups"
+        },
+        {
+          "id": "article-16.56",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "10 jump squats"
+        },
+        {
+          "id": "article-16.57",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "1-minute plank"
+        }
+      ],
       "lists": [
         {
           "id": "article-16.video",
@@ -21813,6 +22678,22 @@
         "390": "block-159-390",
         "1440": "block-159-1440"
       },
+      "slots": [
+        {
+          "id": "block-159.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "More For You"
+        },
+        {
+          "id": "block-159.1",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        }
+      ],
       "lists": [
         {
           "id": "block-159.items",
@@ -22120,6 +23001,197 @@
         "390": "body-classes_advanced-boxing-390",
         "1440": "body-classes_advanced-boxing-1440"
       },
+      "slots": [
+        {
+          "id": "article-14.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 528,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-14.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 292,
+          "sample": "Nulla pretium viverra augue, in tincidunt nibh suscipit vita"
+        },
+        {
+          "id": "article-14.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 98,
+          "sample": "Prep For Your First Punch"
+        },
+        {
+          "id": "article-14.13",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "WHAT TO BRING"
+        },
+        {
+          "id": "article-14.14",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 172,
+          "sample": "Here’s everything you need to know to get ready for your fir"
+        },
+        {
+          "id": "article-14.17",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Athletic Wear"
+        },
+        {
+          "id": "article-14.21",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Boxing Gloves"
+        },
+        {
+          "id": "article-14.25",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Hand Wraps"
+        },
+        {
+          "id": "article-14.29",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Boxing Shoes"
+        },
+        {
+          "id": "article-14.30",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 188,
+          "sample": "While the Coach sets the tempo, you absolutely are encourage"
+        },
+        {
+          "id": "article-14.31",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 68,
+          "sample": "Typical Boxing Exercises"
+        },
+        {
+          "id": "article-14.32",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 400,
+          "sample": "Now that you know what goes into a boxing workout, here is a"
+        },
+        {
+          "id": "article-14.35",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Warmup:"
+        },
+        {
+          "id": "article-14.36",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 60,
+          "sample": "10 minutes jump rope"
+        },
+        {
+          "id": "article-14.37",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "15 squats"
+        },
+        {
+          "id": "article-14.38",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "15 pushups"
+        },
+        {
+          "id": "article-14.39",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "30 crunches"
+        },
+        {
+          "id": "article-14.42",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Shadowboxing:"
+        },
+        {
+          "id": "article-14.43",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 120,
+          "sample": "3-minute round: Basic jab, cross, and hook punches"
+        },
+        {
+          "id": "article-14.44",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 50,
+          "sample": "Rest 30 seconds"
+        },
+        {
+          "id": "article-14.45",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Repeat 5X"
+        },
+        {
+          "id": "article-14.48",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "Heavy bag workout: basic combinations"
+        },
+        {
+          "id": "article-14.49",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "3-minute round"
+        },
+        {
+          "id": "article-14.54",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Conditioning:"
+        },
+        {
+          "id": "article-14.55",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "10 pushups"
+        },
+        {
+          "id": "article-14.56",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "10 jump squats"
+        },
+        {
+          "id": "article-14.57",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "1-minute plank"
+        }
+      ],
       "lists": [
         {
           "id": "article-14.video",
@@ -23181,6 +24253,211 @@
         "390": "body-classes_group-boxing-390",
         "1440": "body-classes_group-boxing-1440"
       },
+      "slots": [
+        {
+          "id": "article-2.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "languageString-90793445.0",
+          "role": "editorial.button_label",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "See Schedule"
+        },
+        {
+          "id": "article-2.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 98,
+          "sample": "Prep For Your First Punch"
+        },
+        {
+          "id": "article-2.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 528,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-2.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "WHAT TO BRING"
+        },
+        {
+          "id": "article-2.17",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 184,
+          "sample": "Here’s everything you need to know to get ready for your fir"
+        },
+        {
+          "id": "article-2.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Athletic Wear"
+        },
+        {
+          "id": "article-2.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Boxing Gloves"
+        },
+        {
+          "id": "article-2.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Hand Wraps"
+        },
+        {
+          "id": "article-2.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Boxing Shoes"
+        },
+        {
+          "id": "article-2.33",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 188,
+          "sample": "While the Coach sets the tempo, you absolutely are encourage"
+        },
+        {
+          "id": "article-2.34",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 68,
+          "sample": "Typical Boxing Exercises"
+        },
+        {
+          "id": "article-2.35",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 400,
+          "sample": "Now that you know what goes into a boxing workout, here is a"
+        },
+        {
+          "id": "article-2.38",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Warmup:"
+        },
+        {
+          "id": "article-2.39",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 60,
+          "sample": "10 minutes jump rope"
+        },
+        {
+          "id": "article-2.40",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "15 squats"
+        },
+        {
+          "id": "article-2.41",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "15 pushups"
+        },
+        {
+          "id": "article-2.42",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "30 crunches"
+        },
+        {
+          "id": "article-2.45",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Shadowboxing:"
+        },
+        {
+          "id": "article-2.46",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 120,
+          "sample": "3-minute round: Basic jab, cross, and hook punches"
+        },
+        {
+          "id": "article-2.47",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 50,
+          "sample": "Rest 30 seconds"
+        },
+        {
+          "id": "article-2.48",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Repeat 5X"
+        },
+        {
+          "id": "article-2.51",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "Heavy bag workout: basic combinations"
+        },
+        {
+          "id": "article-2.52",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "3-minute round"
+        },
+        {
+          "id": "article-2.57",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Conditioning:"
+        },
+        {
+          "id": "article-2.58",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "10 pushups"
+        },
+        {
+          "id": "article-2.59",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "10 jump squats"
+        },
+        {
+          "id": "article-2.60",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "1-minute plank"
+        },
+        {
+          "id": "languageString-76896395.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 70,
+          "sample": "Book your trial class now"
+        }
+      ],
       "lists": [
         {
           "id": "article-2.video",
@@ -24704,6 +25981,197 @@
         "390": "body-classes_advanced-boxing-390",
         "1440": "body-classes_advanced-boxing-1440"
       },
+      "slots": [
+        {
+          "id": "article-15.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-15.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 98,
+          "sample": "Prep For Your First Punch"
+        },
+        {
+          "id": "article-15.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 528,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-15.11",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "WHAT TO BRING"
+        },
+        {
+          "id": "article-15.12",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 196,
+          "sample": "Here’s everything you need to know to get ready for your fir"
+        },
+        {
+          "id": "article-15.15",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Athletic Wear"
+        },
+        {
+          "id": "article-15.19",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Boxing Gloves"
+        },
+        {
+          "id": "article-15.23",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Hand Wraps"
+        },
+        {
+          "id": "article-15.27",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Boxing Shoes"
+        },
+        {
+          "id": "article-15.28",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 188,
+          "sample": "While the Coach sets the tempo, you absolutely are encourage"
+        },
+        {
+          "id": "article-15.29",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 68,
+          "sample": "Typical Boxing Exercises"
+        },
+        {
+          "id": "article-15.30",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 400,
+          "sample": "Now that you know what goes into a boxing workout, here is a"
+        },
+        {
+          "id": "article-15.33",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Warmup:"
+        },
+        {
+          "id": "article-15.34",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 60,
+          "sample": "10 minutes jump rope"
+        },
+        {
+          "id": "article-15.35",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "15 squats"
+        },
+        {
+          "id": "article-15.36",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "15 pushups"
+        },
+        {
+          "id": "article-15.37",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 42,
+          "sample": "30 crunches"
+        },
+        {
+          "id": "article-15.40",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Shadowboxing:"
+        },
+        {
+          "id": "article-15.41",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 120,
+          "sample": "3-minute round: Basic jab, cross, and hook punches"
+        },
+        {
+          "id": "article-15.42",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 50,
+          "sample": "Rest 30 seconds"
+        },
+        {
+          "id": "article-15.43",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Repeat 5X"
+        },
+        {
+          "id": "article-15.46",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "Heavy bag workout: basic combinations"
+        },
+        {
+          "id": "article-15.47",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "3-minute round"
+        },
+        {
+          "id": "article-15.52",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Conditioning:"
+        },
+        {
+          "id": "article-15.53",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "10 pushups"
+        },
+        {
+          "id": "article-15.54",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "10 jump squats"
+        },
+        {
+          "id": "article-15.55",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "1-minute plank"
+        }
+      ],
       "lists": [
         {
           "id": "article-15.video",
@@ -25764,6 +27232,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-1.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Never boxed before"
+        },
+        {
+          "id": "article-1.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 610,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-1.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-1.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-1.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-1.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-1.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-1.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-1.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-1.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-1.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-1.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-1.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -26075,6 +27636,22 @@
         "390": "block-191-390",
         "1440": "block-191-1440"
       },
+      "slots": [
+        {
+          "id": "block-191.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "More Blogs"
+        },
+        {
+          "id": "block-191.1",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 186,
+          "sample": "Clear information about membership options, pricing tiers, a"
+        }
+      ],
       "lists": [],
       "frames": [],
       "links": [
@@ -26144,6 +27721,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-3.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 70,
+          "sample": "Boxing Legends Remembered"
+        },
+        {
+          "id": "article-3.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-3.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-3.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-3.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-3.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-3.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-3.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-3.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-3.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-3.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-3.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-3.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -26550,6 +28220,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-4.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 68,
+          "sample": "Title Defense Strategies"
+        },
+        {
+          "id": "article-4.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-4.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-4.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-4.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-4.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-4.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-4.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-4.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-4.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-4.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-4.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-4.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -26805,6 +28568,46 @@
           "id": "body-pages_j-content_category-blog_title-defense-strategies.fixed-jprevious-title"
         },
         {
+          "text": "Prev",
+          "source": {
+            "file": "language/en-GB/joomla.ini",
+            "constant": "JPREV",
+            "short": true,
+            "constants": [
+              "JPREV"
+            ]
+          },
+          "placeholders": [],
+          "pages": 1,
+          "canHide": true,
+          "hiddenBy": {
+            "setting": "cms language override",
+            "file": "language/overrides/en-GB.override.ini",
+            "constant": "JPREV",
+            "value": ""
+          },
+          "evidence": {
+            "blockBefore": {
+              "left": 0,
+              "top": 210,
+              "width": 1440,
+              "height": 2631
+            },
+            "blockAfter": {
+              "left": 0,
+              "top": 210,
+              "width": 1440,
+              "height": 2631
+            },
+            "heightChange": 0,
+            "textGone": 20,
+            "textMoved": 0,
+            "textOverlaps": 0,
+            "reason": "the sentence left the page and the block changed with it"
+          },
+          "id": "body-pages_j-content_category-blog_title-defense-strategies.fixed-jprev"
+        },
+        {
           "text": "Next article: Inside Boxing Techniques",
           "source": {
             "file": "language/en-GB/joomla.ini",
@@ -26916,6 +28719,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-5.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 68,
+          "sample": "Inside Boxing Techniques"
+        },
+        {
+          "id": "article-5.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-5.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-5.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-5.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-5.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-5.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-5.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-5.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-5.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-5.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-5.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-5.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -27326,6 +29222,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-7.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 68,
+          "sample": "Classic Boxing Rivalries"
+        },
+        {
+          "id": "article-7.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-7.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-7.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-7.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-7.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-7.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-7.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-7.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-7.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-7.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-7.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-7.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -27736,6 +29725,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-8.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 66,
+          "sample": "Boxing's Finest Moments"
+        },
+        {
+          "id": "article-8.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-8.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-8.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-8.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-8.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-8.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-8.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-8.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-8.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-8.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-8.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-8.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -28145,6 +30227,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-9.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 72,
+          "sample": "Boxing's Ultimate Showdown"
+        },
+        {
+          "id": "article-9.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-9.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-9.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-9.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-9.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-9.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-9.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-9.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-9.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-9.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-9.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-9.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -28554,6 +30729,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-10.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 72,
+          "sample": "Boxing's Impact on Culture"
+        },
+        {
+          "id": "article-10.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-10.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-10.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-10.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-10.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-10.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-10.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-10.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-10.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-10.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-10.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-10.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -28964,6 +31232,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-11.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Boxing and Mental Toughness"
+        },
+        {
+          "id": "article-11.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-11.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-11.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-11.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-11.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-11.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-11.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-11.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-11.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-11.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-11.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-11.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -29370,6 +31731,7 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "body-pages_j-content_category-blog--start-6.items",
@@ -29742,6 +32104,7 @@
         "390": "body-pages_j-content_featured-articles-390",
         "1440": "body-pages_j-content_featured-articles-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "body-pages_j-content_featured-articles--start-6.items",
@@ -30114,6 +32477,134 @@
         "390": "body-pages_j-content_author-listting_author_admin-390",
         "1440": "body-pages_j-content_author-listting_author_admin-1440"
       },
+      "slots": [
+        {
+          "id": "tag-4.0",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "boxer",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes",
+            "body-pages_j-content_author-listting_author_daniel_vasquez",
+            "body-pages_j-content_author-listting_author_franklin_wagner",
+            "body-pages_j-content_author-listting_author_lorene_bass",
+            "body-pages_j-content_author-listting_author_corey_gibson",
+            "body-pages_j-content_author-listting_author_cora_stephens",
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
+        },
+        {
+          "id": "userProfile-4400.0",
+          "role": "person.bio",
+          "type": "text",
+          "maxCharacters": 654,
+          "sample": "Darlene Robertson has a lot of energy and loves to share it ",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes",
+            "body-pages_j-content_author-listting_author_daniel_vasquez",
+            "body-pages_j-content_author-listting_author_franklin_wagner",
+            "body-pages_j-content_author-listting_author_lorene_bass",
+            "body-pages_j-content_author-listting_author_corey_gibson",
+            "body-pages_j-content_author-listting_author_cora_stephens",
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
+        },
+        {
+          "id": "userProfile-4400.1",
+          "role": "person.bio",
+          "type": "text",
+          "maxCharacters": 460,
+          "sample": "Kino stepped in the ring several times, accumulating a recor",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes",
+            "body-pages_j-content_author-listting_author_daniel_vasquez",
+            "body-pages_j-content_author-listting_author_franklin_wagner",
+            "body-pages_j-content_author-listting_author_lorene_bass",
+            "body-pages_j-content_author-listting_author_corey_gibson",
+            "body-pages_j-content_author-listting_author_cora_stephens",
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
+        },
+        {
+          "id": "userProfile-4400.2",
+          "role": "person.bio",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Loves to dance",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes",
+            "body-pages_j-content_author-listting_author_daniel_vasquez",
+            "body-pages_j-content_author-listting_author_franklin_wagner",
+            "body-pages_j-content_author-listting_author_lorene_bass",
+            "body-pages_j-content_author-listting_author_corey_gibson",
+            "body-pages_j-content_author-listting_author_cora_stephens",
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
+        },
+        {
+          "id": "userProfile-4400.3",
+          "role": "person.bio",
+          "type": "text",
+          "maxCharacters": 60,
+          "sample": "Muay thai specialist",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes",
+            "body-pages_j-content_author-listting_author_daniel_vasquez",
+            "body-pages_j-content_author-listting_author_franklin_wagner",
+            "body-pages_j-content_author-listting_author_lorene_bass",
+            "body-pages_j-content_author-listting_author_corey_gibson",
+            "body-pages_j-content_author-listting_author_cora_stephens",
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
+        },
+        {
+          "id": "userProfile-4400.4",
+          "role": "person.bio",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Loves Footing",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes",
+            "body-pages_j-content_author-listting_author_daniel_vasquez",
+            "body-pages_j-content_author-listting_author_franklin_wagner",
+            "body-pages_j-content_author-listting_author_lorene_bass",
+            "body-pages_j-content_author-listting_author_corey_gibson",
+            "body-pages_j-content_author-listting_author_cora_stephens",
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
+        },
+        {
+          "id": "userProfile-4400.5",
+          "role": "person.bio",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Bring CHURROS!",
+          "alsoShownIn": [
+            "body-pages_j-content_author-listting_author_drew_stokes",
+            "body-pages_j-content_author-listting_author_daniel_vasquez",
+            "body-pages_j-content_author-listting_author_franklin_wagner",
+            "body-pages_j-content_author-listting_author_lorene_bass",
+            "body-pages_j-content_author-listting_author_corey_gibson",
+            "body-pages_j-content_author-listting_author_cora_stephens",
+            "body-pages_j-content_author-listting_author_gene_roberts"
+          ]
+        },
+        {
+          "id": "block-162.6",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "maxCharacters": 46,
+          "sample": "Offline Pages"
+        },
+        {
+          "id": "block-162.8",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Typography"
+        }
+      ],
       "lists": [
         {
           "id": "user-42.items",
@@ -30558,22 +33049,6 @@
           "kind": "text",
           "shownAs": "Each JA Joomla Template has its own matching Offline page. B",
           "matched": "slots run together"
-        },
-        {
-          "id": "article-1.0",
-          "role": "article.lead",
-          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci",
-          "kind": "text",
-          "shownAs": "Consectetur adipiscing elit. Curabitur est molestie adipisci",
-          "matched": "cut short"
-        },
-        {
-          "id": "article-3.0",
-          "role": "article.lead",
-          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci",
-          "kind": "text",
-          "shownAs": "Consectetur adipiscing elit. Curabitur est molestie adipisci",
-          "matched": "cut short"
         }
       ],
       "source": {
@@ -30599,6 +33074,7 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "user-44.items",
@@ -30785,16 +33261,7 @@
         }
       ],
       "fixedText": [],
-      "demoOwned": [
-        {
-          "id": "block-157.21",
-          "role": "editorial.paragraph",
-          "sample": "10-rounds and 45 minutes split between two styles of trainin",
-          "kind": "text",
-          "shownAs": "10-rounds and 45 minutes split between two styles of trainin",
-          "matched": "cut short"
-        }
-      ],
+      "demoOwned": [],
       "source": {
         "ref": "main-body",
         "entity": null,
@@ -30818,6 +33285,7 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "user-45.items",
@@ -31029,6 +33497,7 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "user-46.items",
@@ -31267,6 +33736,7 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "user-47.items",
@@ -31504,6 +33974,7 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "user-48.items",
@@ -31741,6 +34212,7 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "user-49.items",
@@ -31978,6 +34450,7 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "user-51.items",
@@ -32189,6 +34662,152 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-18.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 102,
+          "sample": "Every champ was a beginner at some point!"
+        },
+        {
+          "id": "article-18.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-18.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-18.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-18.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-18.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-18.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-18.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-18.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-18.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-18.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-18.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "block-179.14",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 60,
+          "sample": "All you need to know",
+          "alsoShownIn": [
+            "body-about-us_learning-center_unforgettable-moments-in-boxing-history",
+            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy",
+            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters",
+            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps",
+            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture",
+            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing",
+            "body-about-us_learning-center_the-business-of-professional-boxing-promotions",
+            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear",
+            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches"
+          ]
+        },
+        {
+          "id": "article-18.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-18.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-18.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-18.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-18.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-18.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -32758,6 +35377,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-19.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 98,
+          "sample": "Unforgettable Moments in Boxing History"
+        },
+        {
+          "id": "article-19.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-19.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-19.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-19.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-19.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-19.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-19.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-19.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-19.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-19.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-19.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-19.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-19.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-19.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-19.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-19.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-19.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -33418,6 +36165,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-20.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 96,
+          "sample": "The Art and Science of Boxing Strategy"
+        },
+        {
+          "id": "article-20.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-20.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-20.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-20.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-20.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-20.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-20.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-20.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-20.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-20.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-20.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-20.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-20.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-20.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-20.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-20.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-20.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -34441,6 +37316,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-21.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 102,
+          "sample": "Boxing Legends: Stories of Great Fighters"
+        },
+        {
+          "id": "article-21.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-21.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-21.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-21.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-21.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-21.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-21.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-21.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-21.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-21.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-21.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-21.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-21.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-21.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-21.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-21.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-21.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -35101,6 +38104,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-22.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 104,
+          "sample": "Behind the Scenes of Boxing Training Camps"
+        },
+        {
+          "id": "article-22.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-22.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-22.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-22.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-22.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-22.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-22.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-22.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-22.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-22.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-22.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-22.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-22.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-22.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-22.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-22.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-22.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -35765,6 +38896,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-23.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 98,
+          "sample": "The Impact of Boxing on Popular Culture"
+        },
+        {
+          "id": "article-23.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-23.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-23.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-23.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-23.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-23.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-23.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-23.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-23.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-23.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-23.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-23.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-23.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-23.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-23.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-23.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-23.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -36425,6 +39684,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-24.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 104,
+          "sample": "Global Perspectives on the Sport of Boxing"
+        },
+        {
+          "id": "article-24.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-24.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-24.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-24.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-24.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-24.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-24.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-24.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-24.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-24.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-24.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-24.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-24.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-24.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-24.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-24.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-24.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -37085,6 +40472,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-25.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 112,
+          "sample": "The Business of Professional Boxing Promotions"
+        },
+        {
+          "id": "article-25.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-25.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-25.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-25.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-25.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-25.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-25.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-25.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-25.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-25.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-25.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-25.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-25.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-25.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-25.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-25.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-25.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -37745,6 +41260,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-26.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 104,
+          "sample": "The Evolution of Boxing Equipment and Gear"
+        },
+        {
+          "id": "article-26.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-26.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-26.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-26.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-26.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-26.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-26.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-26.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-26.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-26.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-26.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-26.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-26.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-26.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-26.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-26.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-26.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -38405,6 +42048,134 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "slots": [
+        {
+          "id": "article-27.12",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 106,
+          "sample": "In-Depth Analysis of Classic Boxing Matches"
+        },
+        {
+          "id": "article-27.0",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles of trainin"
+        },
+        {
+          "id": "article-27.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 56,
+          "sample": "Benefits of Boxing"
+        },
+        {
+          "id": "article-27.3",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 864,
+          "sample": "Learn the sweet science of boxing at Systems Training Center"
+        },
+        {
+          "id": "article-27.4",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 44,
+          "sample": "Coordination"
+        },
+        {
+          "id": "article-27.5",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Cardio (good for the heart)"
+        },
+        {
+          "id": "article-27.6",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 76,
+          "sample": "Improves whole-body strength"
+        },
+        {
+          "id": "article-27.7",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Decreases stress"
+        },
+        {
+          "id": "article-27.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 62,
+          "sample": "Lowers blood pressure"
+        },
+        {
+          "id": "article-27.9",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 88,
+          "sample": "Fun way to workout and lose weight"
+        },
+        {
+          "id": "article-27.10",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 74,
+          "sample": "Foundations of self-defense"
+        },
+        {
+          "id": "article-27.11",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 52,
+          "sample": "Improves balance"
+        },
+        {
+          "id": "article-27.16",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Jab"
+        },
+        {
+          "id": "article-27.20",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Cross"
+        },
+        {
+          "id": "article-27.24",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Lead Hook"
+        },
+        {
+          "id": "article-27.28",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 40,
+          "sample": "Rear Hook"
+        },
+        {
+          "id": "article-27.32",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Lead Uppercut"
+        },
+        {
+          "id": "article-27.36",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 48,
+          "sample": "Rear Uppercut"
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -38966,6 +42737,7 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
+      "slots": [],
       "lists": [
         {
           "id": "body-about-us_learning-center--start-6.items",
@@ -39269,6 +43041,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-12.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 72,
+          "sample": "Boxing's Undisputed Champs"
+        },
+        {
+          "id": "article-12.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-12.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-12.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-12.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-12.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-12.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-12.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-12.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-12.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-12.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-12.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-12.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -39679,6 +43544,99 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "slots": [
+        {
+          "id": "article-13.15",
+          "role": "article.title",
+          "type": "text",
+          "maxCharacters": 66,
+          "sample": "The Evolution of Boxing"
+        },
+        {
+          "id": "article-13.0",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 600,
+          "sample": "Consectetur adipiscing elit. Curabitur est molestie adipisci"
+        },
+        {
+          "id": "article-13.1",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 54,
+          "sample": "About this Boxer:"
+        },
+        {
+          "id": "article-13.2",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1798,
+          "sample": "Designers cas, it can sometimes be a challenge wont up with "
+        },
+        {
+          "id": "article-13.3",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 118,
+          "sample": "It was popularised in the 1960s with the release."
+        },
+        {
+          "id": "article-13.4",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 156,
+          "sample": "Adipiscing elit ut aliquam purus sit amet viverra suspendiss"
+        },
+        {
+          "id": "article-13.5",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 138,
+          "sample": "Mauris commodo quis imperdiet massa tincidunt nunc pulvinar"
+        },
+        {
+          "id": "article-13.6",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 164,
+          "sample": "Excepteur sint occaecat cupidatat non proident sunt in culpa"
+        },
+        {
+          "id": "article-13.7",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 956,
+          "sample": "It is a long established fact that a reader will be distract"
+        },
+        {
+          "id": "article-13.10",
+          "role": "editorial.heading",
+          "type": "text",
+          "maxCharacters": 94,
+          "sample": "There are many variations of passages"
+        },
+        {
+          "id": "article-13.11",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 480,
+          "sample": "'Content here, content here', making it look like readable E"
+        },
+        {
+          "id": "article-13.12",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 542,
+          "sample": "The master-builder of human happiness. No one rejects, disli"
+        },
+        {
+          "id": "article-13.13",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 1320,
+          "sample": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut "
+        }
+      ],
       "lists": [],
       "frames": [
         {
@@ -39996,6 +43954,8 @@
     "detailPagesOutsideListing": 0,
     "representativesNotListing": 0,
     "slotsInTwoBlocks": 0,
+    "orphanTexts": 0,
+    "paragraphsMissing": 0,
     "fixedTextIdsInvalid": 0
   },
   "images": [
@@ -43812,7 +47772,68 @@
             "sample": "4517 Washington Ave. Manchester, Kentucky 39495"
           }
         ],
-        "shared": false
+        "shared": false,
+        "accepts": {
+          "entity": "contact-1",
+          "fields": [
+            {
+              "kind": "address",
+              "column": "address",
+              "max": 1,
+              "printed": true,
+              "filled": true,
+              "setting": "cms contact setting show_street_address"
+            },
+            {
+              "kind": "phone",
+              "column": "telephone",
+              "max": 1,
+              "printed": true,
+              "filled": true,
+              "setting": "cms contact setting show_telephone"
+            },
+            {
+              "kind": "mobile",
+              "column": "mobile",
+              "max": 1,
+              "printed": true,
+              "filled": false,
+              "setting": "cms contact setting show_mobile"
+            },
+            {
+              "kind": "fax",
+              "column": "fax",
+              "max": 1,
+              "printed": true,
+              "filled": false,
+              "setting": "cms contact setting show_fax"
+            },
+            {
+              "kind": "email",
+              "column": "email_to",
+              "max": 1,
+              "printed": true,
+              "filled": true,
+              "setting": "cms contact setting show_email"
+            },
+            {
+              "kind": "website",
+              "column": "webpage",
+              "max": 1,
+              "printed": true,
+              "filled": false,
+              "setting": "cms contact setting show_webpage"
+            }
+          ],
+          "repeatableRows": false,
+          "namedLinks": {
+            "max": 5,
+            "printed": false,
+            "filled": 0,
+            "setting": "cms contact setting show_links"
+          },
+          "otherChannels": "none: a messaging app or social profile has no field this page prints (named links are switched off)"
+        }
       },
       {
         "block": "block-177",
@@ -44008,50 +48029,6 @@
           },
           "heightChange": -42,
           "textGone": 4,
-          "textMoved": 0,
-          "textOverlaps": 0,
-          "reason": "the sentence left the page and the block changed with it"
-        }
-      },
-      {
-        "block": "body-pages_users_login-form",
-        "text": "SHOW PASSWORD",
-        "source": {
-          "file": "language/en-GB/joomla.ini",
-          "constant": "JSHOWPASSWORD",
-          "short": true,
-          "constants": [
-            "JSHOWPASSWORD"
-          ]
-        },
-        "placeholders": [],
-        "at": {
-          "path": "/pages/users/login-form",
-          "raw": "main-body"
-        },
-        "pages": 1,
-        "canHide": true,
-        "hiddenBy": {
-          "setting": "cms language override",
-          "file": "language/overrides/en-GB.override.ini",
-          "constant": "JSHOWPASSWORD",
-          "value": ""
-        },
-        "evidence": {
-          "blockBefore": {
-            "left": 0,
-            "top": 549,
-            "width": 1440,
-            "height": 720
-          },
-          "blockAfter": {
-            "left": 0,
-            "top": 549,
-            "width": 1440,
-            "height": 720
-          },
-          "heightChange": 0,
-          "textGone": 14,
           "textMoved": 0,
           "textOverlaps": 0,
           "reason": "the sentence left the page and the block changed with it"
@@ -46559,6 +50536,50 @@
           "setting": "cms language override",
           "file": "language/overrides/en-GB.override.ini",
           "constant": "JPREVIOUS_TITLE",
+          "value": ""
+        },
+        "evidence": {
+          "blockBefore": {
+            "left": 0,
+            "top": 210,
+            "width": 1440,
+            "height": 2631
+          },
+          "blockAfter": {
+            "left": 0,
+            "top": 210,
+            "width": 1440,
+            "height": 2631
+          },
+          "heightChange": 0,
+          "textGone": 20,
+          "textMoved": 0,
+          "textOverlaps": 0,
+          "reason": "the sentence left the page and the block changed with it"
+        }
+      },
+      {
+        "block": "body-pages_j-content_category-blog_title-defense-strategies",
+        "text": "Prev",
+        "source": {
+          "file": "language/en-GB/joomla.ini",
+          "constant": "JPREV",
+          "short": true,
+          "constants": [
+            "JPREV"
+          ]
+        },
+        "placeholders": [],
+        "at": {
+          "path": "/pages/j-content/category-blog/title-defense-strategies",
+          "raw": "main-body"
+        },
+        "pages": 1,
+        "canHide": true,
+        "hiddenBy": {
+          "setting": "cms language override",
+          "file": "language/overrides/en-GB.override.ini",
+          "constant": "JPREV",
           "value": ""
         },
         "evidence": {

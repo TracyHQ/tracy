@@ -18,7 +18,7 @@ import { measureWordsLinks } from './measure-words-links.mjs'
 import { pictureBytes } from './picture-bytes.mjs'
 import { matchRepeat } from './rows.mjs'
 import { captureSite, phase, reshootChanged } from './capture-site.mjs'
-import { applyExclusions, seedsOf } from './read-pass.mjs'
+import { applyExclusions, readSite, refreshDetails, seedsOf } from './read-pass.mjs'
 import { packKitFolder } from './pack.mjs'
 import { writeSheets } from './sheets.mjs'
 import { templateFixes } from './template-fixes.mjs'
@@ -145,6 +145,19 @@ export async function runFull({ o, out, tool, chromium, log }) {
     const fetchPage = httpFetcher({ siteUrl: o.site, hostHeader: host })
     const crawl = await crawlSite({ seeds: seedsOf(map), fetchPage, siteUrl: o.site, aliasHosts: hosts })
     hide = applyExclusions(crawl, { map, patterns }).hide
+    // The DOM reading follows the current reader (a reused reading would hide a reader fix); shots are kept.
+    const tread = phase(log, 'read')
+    const fresh = await readSite({
+      chromium,
+      siteUrl: o.site,
+      hostHeader: host,
+      map,
+      widths,
+      cap: Number(o['max-pages'] ?? 400),
+      only: typeof o.only === 'string' ? o.only.split(',') : undefined,
+      excludePaths: patterns
+    })
+    tread.done(refreshDetails(capture, fresh.blocks), 'block readings refreshed')
     const tr = phase(log, 'reshoot')
     await reshootChanged({ o, out, tool, chromium, map, capture, hide: { paths: hide, hosts }, log })
     tr.done()

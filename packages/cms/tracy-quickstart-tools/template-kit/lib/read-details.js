@@ -61,7 +61,7 @@ export function readDetails() {
         .join(' ')
         .replace(/\s+/g, ' ')
         .trim()
-      if (own.length >= 2 && own.length <= 300) texts.add(own)
+      if (own.length >= 2) texts.add(own)
       for (const attr of ['placeholder', 'value']) {
         const v = el.tagName === 'INPUT' || el.tagName === 'BUTTON' ? el.getAttribute(attr) : null
         if (v && v.trim().length >= 2 && el.type !== 'hidden') texts.add(v.trim())
@@ -128,7 +128,12 @@ export function readDetails() {
       return parts.join(',')
     }
     const skeleton = skel(root, 1).slice(0, 4000)
-    out[root.getAttribute('data-kit-block')] = { links, texts: [...texts], repeats, skeleton }
+    // Every shown paragraph whole (inline markup included): the page's own count of a slot's paragraphs.
+    const paragraphs = [...root.querySelectorAll('p')]
+      .filter((p) => shown(p))
+      .map((p) => (p.innerText || '').replace(/\s+/g, ' ').trim())
+      .filter((t) => t.length >= 2)
+    out[root.getAttribute('data-kit-block')] = { links, texts: [...texts], paragraphs, repeats, skeleton }
   }
   return out
 }

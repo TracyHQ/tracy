@@ -249,6 +249,20 @@ test('frames are measured on the page: kind, size, emptied and judged, light/dar
   }
 })
 
+test('a large partly clear picture is a cutout, drawn over other content or not', () => {
+  const m = (width, height, share, over = false) => ({
+    found: true,
+    box: { width, height },
+    over,
+    pixels: { share }
+  })
+  assert.equal(kindOf(m(704, 733, 0.23)), 'cutout', 'a figure cut out of its background, beside the text')
+  assert.equal(kindOf(m(1175, 960, 0.65, true)), 'cutout', 'a figure over the hero background')
+  assert.equal(kindOf(m(240, 200, 0.3)), 'icon', 'a small clear picture is a drawn mark')
+  assert.equal(kindOf(m(704, 733, 0)), 'photo', 'an opaque picture is a photo')
+  assert.equal(kindOf(m(704, 733, 0.05)), 'photo', 'a few clear pixels at the edges do not make a cutout')
+})
+
 test('twins need different theme markers and exactly one shown', () => {
   const ev = (shown, theme) => ({
     widths: { 1440: { found: true, shown, theme, box: { width: 40, height: 40 } } }

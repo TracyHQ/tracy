@@ -161,6 +161,13 @@ export function buildSite({ map, adapter, reads, logoReads, notFound, styles, ht
     head,
     navigationGroups: menus.navigationGroups,
     contactBlocks: buildContactBlocks(reads, { addressSamples, idOf }),
+    // What each CMS contact accepts, said on its block by the kit (kit-site.mjs).
+    contactChannels: Object.fromEntries(
+      (map.entities ?? [])
+        .filter((e) => e.kind === 'contact')
+        .map((e) => [e.key, adapter.contactChannels?.(e.key) ?? null])
+        .filter(([, c]) => c)
+    ),
     forms: buildForms(reads, { idOf }),
     systemPages: system.systemPages,
     fixedTexts: cmsTexts.fixedTexts

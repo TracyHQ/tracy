@@ -42,6 +42,22 @@ export function seedsOf(map) {
   return seeds
 }
 
+/**
+ * A reused capture brought up to the current reader: each block's DOM reading (`details`) is replaced by a fresh
+ * one (`fresh`: the blocks of a new read pass), its shots and boxes kept. Returns how many block widths changed.
+ */
+export function refreshDetails(capture, fresh) {
+  let n = 0
+  for (const [id, rec] of Object.entries(capture.blocks ?? {}))
+    for (const [w, at] of Object.entries(rec.widths ?? {})) {
+      const details = fresh?.[id]?.widths?.[w]?.details
+      if (!details) continue
+      at.details = details
+      n++
+    }
+  return n
+}
+
 /** Fold one page's reading at one width into the page and block records (a block's box and details: first page). */
 export function recordRead({ page, width, result, blocks }) {
   const w = String(width)

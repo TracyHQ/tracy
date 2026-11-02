@@ -19,6 +19,7 @@ const pictureOf = (sample) =>
 /** The slot ids a block lists as its own, and where. */
 function ownLists(b) {
   const out = []
+  for (const d of b.slots ?? []) out.push({ id: d.id, where: 'slots', entry: d })
   for (const d of b.demoOwned ?? []) out.push({ id: d.id, where: 'demoOwned', entry: d })
   for (const f of b.frames ?? []) out.push({ id: f.id, where: 'frames', entry: f })
   for (const l of b.lists ?? []) {
@@ -61,6 +62,7 @@ export function assignSlotOwners({ blocks, slotOf, textsOf }) {
     const also = shown.filter((b) => b !== owner).map((b) => b.id)
     for (const b of all) {
       if (b === owner) continue
+      b.slots = (b.slots ?? []).filter((d) => d.id !== id)
       b.demoOwned = (b.demoOwned ?? []).filter((d) => d.id !== id)
       b.frames = (b.frames ?? []).filter((f) => f.id !== id)
       for (const l of b.lists ?? []) {

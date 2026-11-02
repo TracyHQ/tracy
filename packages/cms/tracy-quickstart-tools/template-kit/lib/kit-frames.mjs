@@ -15,6 +15,8 @@ export function kindOf(m) {
   if (side <= ICON_SIDE) return 'icon'
   if (clear >= 0.1 && m.over) return 'cutout'
   if (clear >= 0.15 && side <= MARK_SIDE) return 'icon'
+  // Too large for a mark and partly clear: a figure cut out of its background, beside the text or over it.
+  if (clear >= 0.1) return 'cutout'
   return 'photo'
 }
 

@@ -166,10 +166,71 @@ export function joomlaAdapter(source) {
         override: { file: `language/overrides/${tag}.override.ini`, setting: 'cms language override' }
       }
     },
+    /**
+     * The channels a CMS contact (`contact-N`) accepts, from its fields, the switches that print them (the menu
+     * entry's, then the contact's, then the component's) and the template's own contact layout: each field holds
+     * one value; the five named links are where any other channel (a messaging app, a social profile) goes, and
+     * only when the page prints them. Null for any other entity or without a database.
+     */
+    contactChannels(entityKey) {
+      const id = Number(/^contact-(\d+)$/.exec(entityKey ?? '')?.[1])
+      if (!id || !query || !state.prefix) return null
+      const p = state.prefix
+      const [contacts, globals, entries] = (source.queryMany ?? ((qs) => qs.map(query)))([
+        `SELECT address, telephone, fax, mobile, email_to, webpage, params FROM ${p}contact_details WHERE id = ${id}`,
+        `SELECT params FROM ${p}extensions WHERE type = 'component' AND element = 'com_contact'`,
+        `SELECT params FROM ${p}menu WHERE client_id = 0 AND published = 1 AND link LIKE 'index.php?option=com_contact&view=contact&id=${id}%'`
+      ])
+      const row = contacts[0]
+      if (!row) return null
+      const own = safeJson(row.params)
+      const layers = [...entries.map((e) => safeJson(e.params)), own, safeJson(globals[0]?.params)]
+      const setting = (k) => layers.map((l) => l[k]).find((v) => v != null && v !== '') ?? null
+      const layout = (f) =>
+        readFile?.(`templates/${state.template}/html/com_contact/contact/${f}`) ??
+        readFile?.(`components/com_contact/tmpl/contact/${f}`) ??
+        ''
+      const address = layout('default_address.php')
+      const main = layout('default.php')
+      const fields = CONTACT_FIELDS.map(([kind, column, sw]) => ({
+        kind,
+        column,
+        max: 1,
+        printed: `${main}\n${address}`.includes(`item->${column}`) && setting(sw) === '1',
+        filled: Boolean(String(row[column] ?? '').trim()),
+        setting: `cms contact setting ${sw}`
+      }))
+      const links = ['a', 'b', 'c', 'd', 'e']
+      const namedLinks = {
+        max: links.length,
+        printed: main.includes("loadTemplate('links')") && setting('show_links') === '1',
+        filled: links.filter((x) => String(own[`link${x}`] ?? '').trim()).length,
+        setting: 'cms contact setting show_links'
+      }
+      return {
+        entity: entityKey,
+        fields,
+        repeatableRows: false,
+        namedLinks,
+        otherChannels: namedLinks.printed
+          ? `a messaging app or social profile goes in a named link: ${namedLinks.max - namedLinks.filled} free of ${namedLinks.max}`
+          : 'none: a messaging app or social profile has no field this page prints (named links are switched off)'
+      }
+    },
     /** Map entities that are free HTML blocks (no slots but their HTML). */
     isFreeHtml: (entity) => entity?.kind === 'module' && entity.identity?.module === 'mod_custom'
   }
 }
+
+// The one-value fields of a CMS contact a contact layout may print: [kind, column, switch].
+const CONTACT_FIELDS = [
+  ['address', 'address', 'show_street_address'],
+  ['phone', 'telephone', 'show_telephone'],
+  ['mobile', 'mobile', 'show_mobile'],
+  ['fax', 'fax', 'show_fax'],
+  ['email', 'email_to', 'show_email'],
+  ['website', 'webpage', 'show_webpage']
+]
 
 function safeJson(text) {
   try {

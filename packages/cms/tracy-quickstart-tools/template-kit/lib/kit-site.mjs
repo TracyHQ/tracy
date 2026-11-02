@@ -22,6 +22,13 @@ export function mergeSite(kit, doc, map, words = null) {
     kit.errors.push({ kind: 'missing', field: 'site', reason: 'the site part did not run (no site.json)' })
   } else {
     kit.site = doc.site
+    // A contact block showing a CMS contact says what channels it accepts (the adapter's contactChannels).
+    const channels = doc.site?.contactChannels ?? {}
+    for (const c of doc.site?.contactBlocks ?? []) {
+      const entity = kit.blocks.find((b) => b.id === c.block)?.source?.entity
+      if (channels[entity]) c.accepts = channels[entity]
+    }
+    if (doc.site) delete doc.site.contactChannels
     // A page the kit left out (a template showcase page) is not the kit's to fix.
     const kept = new Set(kit.pages.map((p) => p.id))
     const leftOut = (e) => {

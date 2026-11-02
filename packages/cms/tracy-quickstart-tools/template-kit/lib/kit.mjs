@@ -12,6 +12,7 @@ import { indexMap, ownerOfPath } from './map-index.mjs'
 import { noMinReason } from './min-evidence.mjs'
 import { representativeChecks } from './pack.mjs'
 import { detailPageChecks, groupPages, LISTING, mixedGroupChecks } from './page-groups.mjs'
+import { orphanTextChecks, paragraphChecks, settleForeignTexts } from './orphan-text.mjs'
 import { judgeShowcase, showcaseChecks } from './showcase-pages.mjs'
 import { assignSlotOwners, slotOwnerChecks } from './slot-owners.mjs'
 import { harmonizeLimits, limitChecks } from './text-limits.mjs'
@@ -251,6 +252,8 @@ export function buildKit({
   const skeletons = new Map(
     recs.map((r) => [r.id, r.widths?.[widths[0]]?.details?.skeleton]).filter(([, sk]) => sk)
   )
+  // Other entities' words no block declares: a link label, a coincidence (fixed text), or the block's slot.
+  settleForeignTexts(blocks)
   // One limit per slot kind of a list, measured from the frame (text-limits.mjs).
   for (const b of blocks) for (const l of b.lists ?? []) harmonizeLimits(l, textFit)
   // One block per slot: the block that renders it, read from the shown words of the read pass (slot-owners.mjs).
@@ -277,7 +280,13 @@ export function buildKit({
     mixedPageGroups: mixedGroupChecks({ pages, pageGroups, itemParent, listedBy, errors }),
     detailPagesOutsideListing: detailPageChecks({ pages, pageGroups, listedBy, errors }),
     representativesNotListing: representativeChecks({ pages, pageGroups, errors }),
-    slotsInTwoBlocks: slotOwnerChecks({ blocks, errors })
+    slotsInTwoBlocks: slotOwnerChecks({ blocks, errors }),
+    orphanTexts: orphanTextChecks({ blocks, errors }),
+    paragraphsMissing: paragraphChecks({ blocks, errors })
+  }
+  for (const b of blocks) {
+    delete b.textsShown
+    delete b.paragraphsShown
   }
   for (const p of pages) {
     delete p.kind
