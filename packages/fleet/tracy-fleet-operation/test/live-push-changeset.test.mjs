@@ -626,7 +626,14 @@ test('Joomla: a menu both sides renamed since the last sync is a conflict — th
 // ── WordPress ────────────────────────────────────────────────────────────────────────────────
 const HOMES = ['https://shop.example', 'https://shop-com.tracy.ai']
 /** What WordPress stamps itself on a record it makes, as a create's seed names it (lib/live_push.py `W_CREATE_STAMPS`). */
-const WP_CREATE_STAMPS = ['guid', 'post_author', 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt']
+const WP_CREATE_STAMPS = [
+  'guid',
+  'post_author',
+  'post_date',
+  'post_date_gmt',
+  'post_modified',
+  'post_modified_gmt'
+]
 const post = (id, fields = {}) => ({
   ID: String(id),
   post_type: 'page',
@@ -1270,7 +1277,13 @@ test('WordPress: a new page with a new picture, a new category and a menu entry 
   // What WordPress stamps itself on each record it makes: the next sync's base holds the copy's, so a
   // live delete of it is taken, never held as a false delete-modify (#223). The post sends its date.
   const stampsOf = (id) => items[id].seed.find((s) => s.create)?.stamps
-  assert.deepEqual(stampsOf('post:new:61'), ['guid', 'post_author', 'post_date_gmt', 'post_modified', 'post_modified_gmt'])
+  assert.deepEqual(stampsOf('post:new:61'), [
+    'guid',
+    'post_author',
+    'post_date_gmt',
+    'post_modified',
+    'post_modified_gmt'
+  ])
   assert.deepEqual(stampsOf('media:new:60'), WP_CREATE_STAMPS)
   // An item with no title is named after its number by WordPress.
   assert.deepEqual(stampsOf('menuItem:new:62'), [...WP_CREATE_STAMPS, 'post_name'].sort())

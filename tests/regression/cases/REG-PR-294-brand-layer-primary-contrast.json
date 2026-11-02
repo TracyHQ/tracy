@@ -4,11 +4,7 @@
   "title": "The brand theme layer paints the default primary at WCAG AA under labels and as words",
   "pr": 294,
   "area": "ui/brand",
-  "cms": [
-    "wp",
-    "jo",
-    "em"
-  ],
+  "cms": ["wp", "jo", "em"],
   "needs": [],
   "flaky_model": false,
   "steps": [
@@ -21,14 +17,7 @@
   "evidence": "Issue #228 re-test: theme.mjs primaryTokens wrote --primary #bf5b3d inline on <body>, 4.21:1",
   "fence": "tracy-brand theme.mjs primaryTokens",
   "run": {
-    "cmd": [
-      "node",
-      "--test",
-      "--test-reporter=tap",
-      "scripts/test/primary-contrast.test.mjs"
-    ],
-    "tests": [
-      "the tracy-brand theme layer paints the same AA primary over tokens.css"
-    ]
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/primary-contrast.test.mjs"],
+    "tests": ["the tracy-brand theme layer paints the same AA primary over tokens.css"]
   }
 }

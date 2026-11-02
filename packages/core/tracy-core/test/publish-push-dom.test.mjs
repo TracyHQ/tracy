@@ -1042,7 +1042,10 @@ test('writes sent with no answer back are never "your live site was not changed"
   // Nothing unknown: the success as before.
   await pushedWith({ pushed: [item('a1', 'Opening hours')], conflicts: [], failed: [], skipped: [] })
   assert.equal(document.querySelector('[data-push-unknown-also]'), null)
-  assert.equal(document.querySelector('[data-severity="success"]')?.textContent.includes(t('push.status.pushed')), true)
+  assert.equal(
+    document.querySelector('[data-severity="success"]')?.textContent.includes(t('push.status.pushed')),
+    true
+  )
   assert.equal(document.querySelector('[data-push-unknown]'), null)
 
   // An Apply that stopped (the live site stopped answering) with one write on the way and none
@@ -1063,7 +1066,10 @@ test('writes sent with no answer back are never "your live site was not changed"
   assert.equal(phase(), 'failed')
   assert.equal(stepIs(), 'send')
   assert.match(text(), new RegExp(t('push.error.liveUnreachable').slice(0, 40)))
-  assert.match(document.querySelector('[data-push-unknown]').textContent, /Tracy sent 1 change but got no answer/)
+  assert.match(
+    document.querySelector('[data-push-unknown]').textContent,
+    /Tracy sent 1 change but got no answer/
+  )
   const group = document.querySelector('[data-push-group="unknown"]')
   assert.ok(group, 'the change that may be on the live site is listed')
   assert.match(group.textContent, /Page template/)

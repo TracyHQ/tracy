@@ -288,7 +288,11 @@ ${s.offset === undefined ? '' : `\tpublic $offset = ${s.offset}; /* the site's t
   assert.match(text, /\tpublic \$live_site = 'https:\/\/shop-com\.tracy\.ai'; \/\/ Optional/)
   assert.match(text, /^class JConfig\n\{\n/m)
   // Both changed one setting: the clash is that setting, never the whole file.
-  const clash = merge(base, commit({ 'configuration.php': DIST({ ...copy, sitename: "'Shop (Tracy)'" }) }), theirs)
+  const clash = merge(
+    base,
+    commit({ 'configuration.php': DIST({ ...copy, sitename: "'Shop (Tracy)'" }) }),
+    theirs
+  )
   assert.deepEqual(
     clash.conflicts.flatMap((c) => (c.settings ?? [c]).map((x) => x.id)),
     ['file:configuration.php#sitename']

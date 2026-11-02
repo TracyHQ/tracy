@@ -4,10 +4,7 @@
   "title": "The Sync to live result never says the live site was not changed while writes went unanswered",
   "pr": 294,
   "area": "publish/push",
-  "cms": [
-    "wp",
-    "jo"
-  ],
+  "cms": ["wp", "jo"],
   "needs": [],
   "flaky_model": false,
   "steps": [
@@ -27,8 +24,6 @@
       "--test-name-pattern=#286",
       "packages/core/tracy-core/test/publish-push-dom.test.mjs"
     ],
-    "tests": [
-      "writes sent with no answer back are never"
-    ]
+    "tests": ["writes sent with no answer back are never"]
   }
 }

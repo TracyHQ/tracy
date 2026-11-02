@@ -4,9 +4,7 @@
   "title": "What a push made and the customer then deleted for good on live goes from the copy, meta and links included",
   "pr": 294,
   "area": "sync/push",
-  "cms": [
-    "wp"
-  ],
+  "cms": ["wp"],
   "needs": [],
   "flaky_model": false,
   "steps": [

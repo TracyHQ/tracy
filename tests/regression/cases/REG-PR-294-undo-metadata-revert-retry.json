@@ -4,9 +4,7 @@
   "title": "An Undo whose metadata revert went unanswered is unfinished and finishes on the next press",
   "pr": 294,
   "area": "sync/push/undo",
-  "cms": [
-    "wp"
-  ],
+  "cms": ["wp"],
   "needs": [],
   "flaky_model": false,
   "steps": [

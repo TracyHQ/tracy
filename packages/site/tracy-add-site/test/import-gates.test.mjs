@@ -587,7 +587,10 @@ function fakeInstaller({
     }
     // The export checks that token (com_admin's controller): without it, a 303 back to the page.
     if (url === `${ADMIN}?option=com_admin&view=sysinfo&format=json`)
-      return withUrl(new Response('', { status: 303, headers: { location: `${ADMIN}?option=com_admin&view=sysinfo` } }), url)
+      return withUrl(
+        new Response('', { status: 303, headers: { location: `${ADMIN}?option=com_admin&view=sysinfo` } }),
+        url
+      )
     if (url === `${ADMIN}?option=com_admin&view=sysinfo&format=json&${CSRF}=1`) {
       if (!sysinfoPhp) return withUrl(new Response('Not found', { status: 404 }), url)
       // On PHP 7 a disabled phpinfo() warns ahead of the JSON when display_errors is on.

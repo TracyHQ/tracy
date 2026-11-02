@@ -4,10 +4,7 @@
   "title": "A create's seed names what the CMS stamps on the record itself, on WordPress and Joomla",
   "pr": 294,
   "area": "sync/push",
-  "cms": [
-    "wp",
-    "jo"
-  ],
+  "cms": ["wp", "jo"],
   "needs": [],
   "flaky_model": false,
   "steps": [

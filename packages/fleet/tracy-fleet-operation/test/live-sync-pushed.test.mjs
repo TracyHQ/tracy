@@ -435,9 +435,21 @@ INSERT INTO wp_options VALUES (1, 'home', 'HOME', 'yes'), (2, 'siteurl', 'HOME',
 const sqlText = (v) => `'${String(v).replace(/\\/g, '\\\\').replace(/'/g, "''")}'`
 const wpRow = (r) => {
   const row = {
-    post_author: 0, post_content: '', post_excerpt: '', post_status: 'publish', comment_status: 'closed',
-    ping_status: 'closed', post_password: '', to_ping: '', pinged: '', post_content_filtered: '', post_parent: 0,
-    menu_order: 0, post_mime_type: '', comment_count: 0, ...r
+    post_author: 0,
+    post_content: '',
+    post_excerpt: '',
+    post_status: 'publish',
+    comment_status: 'closed',
+    ping_status: 'closed',
+    post_password: '',
+    to_ping: '',
+    pinged: '',
+    post_content_filtered: '',
+    post_parent: 0,
+    menu_order: 0,
+    post_mime_type: '',
+    comment_count: 0,
+    ...r
   }
   row.post_date_gmt ??= row.post_date
   row.post_modified ??= row.post_date
@@ -447,9 +459,14 @@ const wpRow = (r) => {
 }
 const menuMeta = (id, post, type, object, objectId, url) =>
   [
-    ['_menu_item_type', type], ['_menu_item_menu_item_parent', '0'], ['_menu_item_object_id', String(objectId)],
-    ['_menu_item_object', object], ['_menu_item_target', ''], ['_menu_item_classes', 'a:1:{i:0;s:0:"";}'],
-    ['_menu_item_xfn', ''], ['_menu_item_url', url]
+    ['_menu_item_type', type],
+    ['_menu_item_menu_item_parent', '0'],
+    ['_menu_item_object_id', String(objectId)],
+    ['_menu_item_object', object],
+    ['_menu_item_target', ''],
+    ['_menu_item_classes', 'a:1:{i:0;s:0:"";}'],
+    ['_menu_item_xfn', ''],
+    ['_menu_item_url', url]
   ].map(([k, v], i) => `(${id + i}, ${post}, ${sqlText(k)}, ${sqlText(v)})`)
 /** The records Tracy made on the copy (`by: 'copy'`, its numbers) or the push on the live site (+100). */
 function made(by) {
@@ -458,18 +475,63 @@ function made(by) {
   const at = live ? '2026-11-02 15:12:28' : '2026-11-02 15:12:26'
   const home = 'HOME'
   return [
-    wpRow({ ID: n(7), post_date: '2026-11-02 15:12:26', post_content: '<p>Open daily.</p>', post_title: 'Opening hours',
-      post_name: 'opening-hours', guid: `${home}/opening-hours/`, post_type: 'page' }),
-    wpRow({ ID: n(10), post_date: at, post_content: ' ', post_title: '', post_name: String(n(10)), guid: `${home}/${n(10)}/`,
-      menu_order: 1, post_type: 'nav_menu_item' }),
-    wpRow({ ID: n(12), post_date: at, post_title: 'Sale', post_name: 'sale', guid: `${home}/sale/`, menu_order: 2,
-      post_type: 'nav_menu_item' }),
-    wpRow({ ID: n(13), post_date: at, post_content: '<!-- wp:site-title /-->', post_title: 'Header', post_name: 'header',
-      guid: `${home}/header/`, post_type: 'wp_template_part' }),
-    wpRow({ ID: n(17), post_date: at, post_content: 'body { color: #123456; }', post_title: 'twentytwentyfive',
-      post_name: 'twentytwentyfive', guid: `${home}/twentytwentyfive/`, post_type: 'custom_css' }),
-    wpRow({ ID: n(18), post_date: at, post_title: 'tracy-pixel', post_status: 'inherit', comment_status: 'open',
-      post_name: 'tracy-pixel', guid: `${home}/tracy-pixel/`, post_type: 'attachment', post_mime_type: 'image/png' }),
+    wpRow({
+      ID: n(7),
+      post_date: '2026-11-02 15:12:26',
+      post_content: '<p>Open daily.</p>',
+      post_title: 'Opening hours',
+      post_name: 'opening-hours',
+      guid: `${home}/opening-hours/`,
+      post_type: 'page'
+    }),
+    wpRow({
+      ID: n(10),
+      post_date: at,
+      post_content: ' ',
+      post_title: '',
+      post_name: String(n(10)),
+      guid: `${home}/${n(10)}/`,
+      menu_order: 1,
+      post_type: 'nav_menu_item'
+    }),
+    wpRow({
+      ID: n(12),
+      post_date: at,
+      post_title: 'Sale',
+      post_name: 'sale',
+      guid: `${home}/sale/`,
+      menu_order: 2,
+      post_type: 'nav_menu_item'
+    }),
+    wpRow({
+      ID: n(13),
+      post_date: at,
+      post_content: '<!-- wp:site-title /-->',
+      post_title: 'Header',
+      post_name: 'header',
+      guid: `${home}/header/`,
+      post_type: 'wp_template_part'
+    }),
+    wpRow({
+      ID: n(17),
+      post_date: at,
+      post_content: 'body { color: #123456; }',
+      post_title: 'twentytwentyfive',
+      post_name: 'twentytwentyfive',
+      guid: `${home}/twentytwentyfive/`,
+      post_type: 'custom_css'
+    }),
+    wpRow({
+      ID: n(18),
+      post_date: at,
+      post_title: 'tracy-pixel',
+      post_status: 'inherit',
+      comment_status: 'open',
+      post_name: 'tracy-pixel',
+      guid: `${home}/tracy-pixel/`,
+      post_type: 'attachment',
+      post_mime_type: 'image/png'
+    }),
     `INSERT INTO wp_postmeta VALUES ${[
       `(${n(13)}, ${n(7)}, 'subtitle', 'A subtitle')`,
       ...menuMeta(n(40), n(10), 'post_type', 'page', n(7), ''),
@@ -487,28 +549,74 @@ const SITE = (url, records) =>
 // As lib/live_push.py `seeds` writes the creates of this push (test/live-push-changeset.test.mjs).
 const W = ['guid', 'post_author', 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt']
 const menuSeeds = (id) => [
-  { table: 'posts', match: { ID: id }, columns: ['post_title', 'menu_order'], create: true, entity: 'posts', id,
-    stamps: [...W, 'post_name'].sort() },
-  ...['_menu_item_type', '_menu_item_object', '_menu_item_object_id', '_menu_item_url', '_menu_item_menu_item_parent'].map(
-    (meta_key) => ({
-      table: 'postmeta',
-      match: { post_id: id, meta_key },
-      columns: ['meta_value'],
-      align: { entity: 'postmeta', match: { post_id: id, meta_key } }
-    })
-  )
+  {
+    table: 'posts',
+    match: { ID: id },
+    columns: ['post_title', 'menu_order'],
+    create: true,
+    entity: 'posts',
+    id,
+    stamps: [...W, 'post_name'].sort()
+  },
+  ...[
+    '_menu_item_type',
+    '_menu_item_object',
+    '_menu_item_object_id',
+    '_menu_item_url',
+    '_menu_item_menu_item_parent'
+  ].map((meta_key) => ({
+    table: 'postmeta',
+    match: { post_id: id, meta_key },
+    columns: ['meta_value'],
+    align: { entity: 'postmeta', match: { post_id: id, meta_key } }
+  }))
 ]
 const WP_PUSHED = [
-  { table: 'posts', match: { ID: 7 }, create: true, entity: 'posts', id: 7,
-    columns: ['post_title', 'post_content', 'post_excerpt', 'post_status', 'post_name', 'post_parent', 'menu_order', 'post_date', 'post_type'],
-    stamps: ['guid', 'post_author', 'post_date_gmt', 'post_modified', 'post_modified_gmt'] },
-  { table: 'postmeta', match: { post_id: 7, meta_key: 'subtitle' }, columns: ['meta_value'],
-    align: { entity: 'postmeta', match: { post_id: 7, meta_key: 'subtitle' } } },
+  {
+    table: 'posts',
+    match: { ID: 7 },
+    create: true,
+    entity: 'posts',
+    id: 7,
+    columns: [
+      'post_title',
+      'post_content',
+      'post_excerpt',
+      'post_status',
+      'post_name',
+      'post_parent',
+      'menu_order',
+      'post_date',
+      'post_type'
+    ],
+    stamps: ['guid', 'post_author', 'post_date_gmt', 'post_modified', 'post_modified_gmt']
+  },
+  {
+    table: 'postmeta',
+    match: { post_id: 7, meta_key: 'subtitle' },
+    columns: ['meta_value'],
+    align: { entity: 'postmeta', match: { post_id: 7, meta_key: 'subtitle' } }
+  },
   ...menuSeeds(10),
   ...menuSeeds(12),
-  { table: 'posts', match: { ID: 13 }, columns: ['post_content', 'post_title'], create: true, entity: 'posts', id: 13, stamps: W },
-  { table: 'posts', match: { ID: 17 }, create: true, entity: 'posts', id: 17, stamps: W,
-    columns: ['post_type', 'post_name', 'post_title', 'post_status', 'post_content'] },
+  {
+    table: 'posts',
+    match: { ID: 13 },
+    columns: ['post_content', 'post_title'],
+    create: true,
+    entity: 'posts',
+    id: 13,
+    stamps: W
+  },
+  {
+    table: 'posts',
+    match: { ID: 17 },
+    create: true,
+    entity: 'posts',
+    id: 17,
+    stamps: W,
+    columns: ['post_type', 'post_name', 'post_title', 'post_status', 'post_content']
+  },
   { table: 'posts', match: { ID: 18 }, columns: [], create: true, entity: 'posts', id: 18, stamps: W }
 ]
 const WP_MAP = { posts: { 107: 7, 110: 10, 112: 12, 113: 13, 117: 17, 118: 18 } }
@@ -516,13 +624,34 @@ const WP_MAP = { posts: { 107: 7, 110: 10, 112: 12, 113: 13, 117: 17, 118: 18 } 
 function wpMerge(names, pushed, map = WP_MAP) {
   const file = join(root, `${names.ours}-${names.theirs}-map.json`)
   writeFileSync(file, JSON.stringify(map))
-  const args = [ENGINE, 'db', '--base-schema', names.base, '--ours-schema', names.ours, '--theirs-schema', names.theirs,
-    '--work-schema', `${names.theirs}_work`, '--platform', 'wordpress', '--prefix', 'wp_', '--prefer', 'ours', '--id-map', file]
+  const args = [
+    ENGINE,
+    'db',
+    '--base-schema',
+    names.base,
+    '--ours-schema',
+    names.ours,
+    '--theirs-schema',
+    names.theirs,
+    '--work-schema',
+    `${names.theirs}_work`,
+    '--platform',
+    'wordpress',
+    '--prefix',
+    'wp_',
+    '--prefer',
+    'ours',
+    '--id-map',
+    file
+  ]
   if (pushed) {
     writeFileSync(`${file}.pushed`, JSON.stringify({ records: pushed }))
     args.push('--pushed', `${file}.pushed`)
   }
-  const r = spawnSync('python3', args, { encoding: 'utf8', env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) } })
+  const r = spawnSync('python3', args, {
+    encoding: 'utf8',
+    env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) }
+  })
   assert.equal(r.status, 0, r.stderr + r.stdout)
   return JSON.parse(r.stdout.trim().split('\n').at(-1))
 }
@@ -550,7 +679,13 @@ test(
     )
     // The live site's stamps came over: the copy's rows read as the live site's now.
     assert.deepEqual(rows('SELECT guid FROM wp_posts WHERE ID = 7', 'wd_ours'), [[`${LIVE}/opening-hours/`]])
-    assert.deepEqual(rows("SELECT meta_value FROM wp_postmeta WHERE post_id = 12 AND meta_key = '_menu_item_object_id'", 'wd_ours'), [['12']])
+    assert.deepEqual(
+      rows(
+        "SELECT meta_value FROM wp_postmeta WHERE post_id = 12 AND meta_key = '_menu_item_object_id'",
+        'wd_ours'
+      ),
+      [['12']]
+    )
 
     // The customer deletes every one of them for good on the live site (emptying the trash does the
     // same): rows, meta and relationships. The next sync reads the live site again.
@@ -558,7 +693,7 @@ test(
     schema('wd_theirs2', SITE(LIVE, ''))
     const after = wpMerge({ base: 'wd_base2', ours: 'wd_ours', theirs: 'wd_theirs2' }, null, {
       ...settle.idMap,
-      posts: { ...WP_MAP.posts, ...(settle.idMap?.posts ?? {}) }
+      posts: { ...WP_MAP.posts, ...settle.idMap?.posts }
     })
     assert.equal(after.ok, true)
     assert.deepEqual(after.kept, [], JSON.stringify(after.kept))

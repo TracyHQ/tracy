@@ -58,17 +58,27 @@ const hexToLinear = (hex) =>
 const toHex = (linear) =>
   `#${linear
     .map((c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055))
-    .map((c) => Math.round(c * 255).toString(16).padStart(2, '0'))
+    .map((c) =>
+      Math.round(c * 255)
+        .toString(16)
+        .padStart(2, '0')
+    )
     .join('')}`
 
 test('the tracy-brand theme layer paints the same AA primary over tokens.css, the mark and rings kept (#228)', async () => {
   // The layer is written inline on <body> by dsh's theme service, after tokens.css: its default is
   // what every primary button shows.
-  const { primaryTokens } = await import(new URL('packages/brand/tracy-brand/src/shared/theme.mjs', ROOT).href)
-  const { DEFAULT_PRIMARY } = await import(new URL('packages/brand/tracy-brand/src/shared/settings.mjs', ROOT).href)
+  const { primaryTokens } = await import(
+    new URL('packages/brand/tracy-brand/src/shared/theme.mjs', ROOT).href
+  )
+  const { DEFAULT_PRIMARY } = await import(
+    new URL('packages/brand/tracy-brand/src/shared/settings.mjs', ROOT).href
+  )
   const layer = primaryTokens('')
   const tokensPrimary = toHex(oklchToLinear(token(read('packages/ui/tracy-ui/src/tokens.css'), '--primary')))
-  const label = luminance(oklchToLinear(token(read('packages/ui/tracy-ui/src/tokens.css'), '--primary-foreground')))
+  const label = luminance(
+    oklchToLinear(token(read('packages/ui/tracy-ui/src/tokens.css'), '--primary-foreground'))
+  )
   for (const name of ['--primary', '--dsw-alias-button-primary-fill', '--dsw-alias-brand-text']) {
     for (const mode of ['light', 'dark']) {
       const value = layer[name][mode]

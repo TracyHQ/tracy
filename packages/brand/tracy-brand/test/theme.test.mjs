@@ -5,7 +5,13 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { primaryTokens, fontTokens, brandTitle, composeLayer, siteKeyFromPath } from '../src/shared/theme.mjs'
-import { DEFAULT_PRIMARY, DEFAULT_PRIMARY_FILL, GLOBAL_FONTS, CODE_FONTS, DEFAULT_FONT } from '../src/shared/settings.mjs'
+import {
+  DEFAULT_PRIMARY,
+  DEFAULT_PRIMARY_FILL,
+  GLOBAL_FONTS,
+  CODE_FONTS,
+  DEFAULT_FONT
+} from '../src/shared/settings.mjs'
 
 test('a valid hex primary lands on dsh brand tokens and on Tracy --primary, same in both modes', () => {
   const t = primaryTokens('#00B96B')
@@ -26,9 +32,14 @@ test('the default terracotta fills buttons and colours words in its AA shade; th
   for (const value of ['', '#bf5b3d', '#BF5B3D', 'not a colour']) {
     const t = primaryTokens(value)
     for (const name of ['--primary', '--dsw-alias-button-primary-fill', '--dsw-alias-brand-text'])
-      assert.deepEqual(t[name], { light: DEFAULT_PRIMARY_FILL, dark: DEFAULT_PRIMARY_FILL }, `${value} ${name}`)
+      assert.deepEqual(
+        t[name],
+        { light: DEFAULT_PRIMARY_FILL, dark: DEFAULT_PRIMARY_FILL },
+        `${value} ${name}`
+      )
     for (const name of ['--dsw-alias-brand-primary', '--ring', '--dsw-alias-state-business-primary'])
-      for (const mode of ['light', 'dark']) assert.equal(t[name][mode].toLowerCase(), DEFAULT_PRIMARY, `${value} ${name}`)
+      for (const mode of ['light', 'dark'])
+        assert.equal(t[name][mode].toLowerCase(), DEFAULT_PRIMARY, `${value} ${name}`)
     assert.match(t['--dsw-alias-button-primary-hover'].light, new RegExp(DEFAULT_PRIMARY_FILL))
   }
   // A colour the person picked is theirs, unchanged.
