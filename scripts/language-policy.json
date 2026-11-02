@@ -60,6 +60,30 @@
       "sha256": "5aa6bc27be710e9146d21c078f9a28e0474d090e6e2c6e878e15ea56392edfdb",
       "count": 1,
       "reason": "Exact multilingual page-title fixture or expected query value used to verify Unicode matching. Test names, comments and executable behavior remain subject to English policy."
+    },
+    {
+      "path": "packages/wo/website-opportunities/domain/pictures/observed-facts.mjs",
+      "sha256": "69902bb4c3b61db631b7d7aeab80b95c221a8d7ab5a6886af02c09d9301b6eff",
+      "count": 1,
+      "reason": "Exact regex line that strips combining accents: it holds the literal combining-diacritics range U+0300 to U+036F, not prose. Executable behavior and comments remain subject to English policy."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.10/content-map.json",
+      "sha256": "f66b01b3b55a8495cd0301912d5cd6849ff96a99e8d310e2940b10f7282f2718",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Boxing 1.0.10 quickstart contract: the template's own English demo text, which contains a proper name with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.10/content-map.json",
+      "sha256": "392aaacd306ddfce3b8ea65b48be54b6fbfbbc38c9c7ee1f929c82925743705d",
+      "count": 8,
+      "reason": "Exact line of the sealed JA Boxing 1.0.10 quickstart contract: the template's own English demo text, which contains a proper name with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.10/presentation-lock.json",
+      "sha256": "a1704f3997b0dc023843720831d5d461bc27fc831968a7b0a3f94999a46f3cb9",
+      "count": 8,
+      "reason": "Exact line of the sealed JA Boxing 1.0.10 quickstart contract: the template's own English demo text, which contains a proper name with an accent. The contract is hash-sealed, so the file is not edited."
     }
   ],
   "objects": [

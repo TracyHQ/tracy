@@ -1,0 +1,2 @@
+- **The language policy approves four exact lines of the JA Boxing 1.0.10 contract and the template kit** — CI maintainer (Claude, for Akemi) · `chore/language-policy-ja-boxing-1010` · 2026-11-02
+  **Affects:** the `language-policy` check of #283 (template kit). The accents are the template's own English demo text in a sealed contract (a coach's proper name), plus one regex line with the literal combining-accent range. Merge this, then update #283's branch.
