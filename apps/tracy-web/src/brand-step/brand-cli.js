@@ -1,16 +1,13 @@
 // The brand bench's command line (brand step trial bench, #320): the bench has no screen, so runs are started, read and
 // cancelled from inside the tracy-web container (scripts/brand-bench.mjs), the way the site planner bench is. The
 // worker in the server process picks the run up. Exit codes: 0 done, 1 refused or not found, 2 wrong usage.
-import { cp, mkdir, writeFile } from 'node:fs/promises'
-import { readFile } from 'node:fs/promises'
-import path from 'node:path'
 import { parseArgs } from 'node:util'
-import { listLines, runFiles, statusLines } from './brand-export.js'
-import { briefOfRevision, cancelBrandRun, startBrandRun } from './brand-control.js'
-import { callsOf } from './brand-call-store.js'
-import { listRuns, readRun } from './brand-store.js'
 import { openKit, readableKits } from '../site-planner/kit-source.js'
-import { brandKitProblem } from './brand-control.js'
+import { callsOf } from './brand-call-store.js'
+import { brandKitProblem, cancelBrandRun } from './brand-control.js'
+import { listLines, statusLines } from './brand-export.js'
+import { getRunCommand, refused, startRunCommand, Usage } from './brand-cli-run.js'
+import { listRuns, readRun } from './brand-store.js'
 
 export const USAGE = `usage: node scripts/brand-bench.mjs <command>
   kits                                    list the kits the brand step can use, and whether it can run on them
@@ -26,10 +23,6 @@ export const USAGE = `usage: node scripts/brand-bench.mjs <command>
   cancel <runId>                          stop a run (a held run stops between model calls)
 The models are the "Brand agent" and "Brand reviewer" doors in /ops > Model & AI. They must be two different models and
 never an Anthropic model.`
-
-const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
-
-class Usage extends Error {}
 
 /**
  * @param {string[]} argv the arguments after the script name
@@ -70,11 +63,6 @@ export async function runCli(argv, deps) {
   }
 }
 
-const refused = (io, message) => {
-  io.err(message)
-  return 1
-}
-
 const COMMANDS = {
   kits: {
     async run(d) {
@@ -95,7 +83,7 @@ const COMMANDS = {
       return 0
     }
   },
-  run: { run: startRun },
+  run: { run: startRunCommand },
   list: {
     async run(d, values) {
       for (const line of listLines(await listRuns(d.pool, { limit: values.limit }))) d.out(line)
@@ -111,7 +99,7 @@ const COMMANDS = {
       return 0
     }
   },
-  get: { needsId: true, run: getRun },
+  get: { needsId: true, run: getRunCommand },
   cancel: {
     needsId: true,
     async run(d, _values, runId) {
@@ -126,80 +114,4 @@ const COMMANDS = {
       return 0
     }
   }
-}
-
-async function startRun(d, values) {
-  const file = values['brief-file']
-  const revision = values['brief-revision']
-  if (!values.kit) throw new Usage('run needs --kit')
-  if (Boolean(file) === Boolean(revision))
-    throw new Usage('run needs exactly one of --brief-file and --brief-revision')
-  if (values.by !== undefined && !LABEL.test(values.by))
-    throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
-  if (Boolean(values['agent-model']) !== Boolean(values['agent-model-reason']))
-    throw new Usage('--agent-model and --agent-model-reason go together')
-  let brief
-  let briefSource
-  if (file) {
-    let text
-    try {
-      text = await readFile(path.resolve(d.cwd ?? process.cwd(), file), 'utf8')
-    } catch (error) {
-      return refused(d, `Cannot read the brief file ${path.basename(file)} (${error.code ?? 'error'}).`)
-    }
-    try {
-      brief = JSON.parse(text)
-    } catch {
-      return refused(d, `The brief file ${path.basename(file)} is not JSON.`)
-    }
-    // Only the file's name is stored: a path would name the machine it was run on.
-    briefSource = { kind: 'file', name: path.basename(file) }
-  } else {
-    const found = await briefOfRevision(d.pool, revision)
-    if (!found.ok) return refused(d, `No WO revision ${revision}.`)
-    brief = found.brief
-    briefSource = { kind: 'revision', revisionId: revision }
-  }
-  const started = await startBrandRun({
-    pool: d.pool,
-    secret: d.secret,
-    brief,
-    briefSource,
-    kitRef: values.kit,
-    startedBy: values.by ? `cli:${values.by}` : 'cli',
-    kitImages: d.kitImages,
-    wiring: d.wiring,
-    ...(values['agent-model']
-      ? { agentModel: { model: values['agent-model'], reason: values['agent-model-reason'] } }
-      : {}),
-    ...(d.index ? { index: d.index } : {})
-  })
-  if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)
-  d.out(started.run.id)
-  return 0
-}
-
-async function getRun(d, values, runId) {
-  if (!values.out) throw new Usage('get needs --out <dir>')
-  const run = await readRun(d.pool, runId)
-  if (!run) return refused(d, `No run ${runId}.`)
-  const { rows } = await d.pool.query(
-    `select * from brand_call where run_id = $1 and kind = 'agent' order by n`,
-    [run.id]
-  )
-  const dir = path.resolve(d.cwd ?? process.cwd(), values.out)
-  await mkdir(dir, { recursive: true })
-  // Every image and file the tools wrote, at the same relative paths the brand file names.
-  await cp(d.runDir(run.id), dir, { recursive: true }).catch((error) => {
-    if (error?.code !== 'ENOENT') throw error
-  })
-  const files = await runFiles(d.pool, run, rows)
-  for (const [name, text] of files) {
-    await mkdir(path.dirname(path.join(dir, name)), { recursive: true })
-    await writeFile(path.join(dir, name), text)
-  }
-  d.out(`${files.length} files written besides the images: ${files.map(([name]) => name).join(', ')}`)
-  if (run.outcome === 'safe-version') d.out(`safe version (${run.safeVersionReason})`)
-  else if (run.status === 'queued') d.out('still running')
-  return 0
 }

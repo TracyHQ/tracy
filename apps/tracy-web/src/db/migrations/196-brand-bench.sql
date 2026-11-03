@@ -1,6 +1,7 @@
--- The brand trial bench (brand step trial bench, #320): one row per run, one per round, one per model call. Apart from
+-- The brand trial bench (brand step trial bench, #320): one row per run, one per round, one per model call, one per
+-- tool result. Apart from
 -- the site planner bench and the WO quality tables: a brand run builds no site, belongs to no account and may run the
--- same brief any number of times. Removing the bench removes only these three tables.
+-- same brief any number of times. Removing the bench removes only these four tables.
 
 -- One brand run. The row is also the durable queue's row (website-opportunities/src/durable-queue.js): `status` stays
 -- 'queued' while the run waits or a worker holds its lease, and becomes the verdict; `step` and `round` say what it is
@@ -112,6 +113,8 @@ create table if not exists brand_call (
   error jsonb,
   usage jsonb,
   cost_usd numeric(16, 9),
+  -- True when the provider sent no cost: cost_usd was computed from the tokens at the model's price (brand-prices.js).
+  cost_estimated boolean not null default false,
   retries jsonb,
   progress jsonb,
   resend_of integer,
@@ -136,3 +139,19 @@ end $$;
 drop trigger if exists brand_call_append_only on brand_call;
 create trigger brand_call_append_only before update on brand_call
   for each row execute function brand_call_append_only();
+
+-- What a tool answered, saved before the answer goes back to the agent loop. A resumed run re-runs the tools of the last
+-- answered agent turn; make_icon (a drawing) and look_logo (the reviewer) cost money, so a call that has a row here is
+-- answered from it and never sent again. The loop does not give a tool its call id, so a call is keyed by the turn
+-- whose answer made it, the tool, the hash of its arguments and its place among identical calls of that turn.
+-- `result` is what the agent was sent: the text, and for pictures only a reference to the run's file (never bytes).
+create table if not exists brand_tool_result (
+  run_id uuid not null references brand_run(id) on delete cascade,
+  turn integer not null check (turn >= 0),
+  tool text not null,
+  args_sha256 text not null check (args_sha256 ~ '^[0-9a-f]{64}$'),
+  seq integer not null default 0 check (seq >= 0),
+  result jsonb not null,
+  created_at timestamptz not null default now(),
+  primary key (run_id, turn, tool, args_sha256, seq)
+);

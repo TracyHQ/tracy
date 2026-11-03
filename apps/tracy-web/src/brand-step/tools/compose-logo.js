@@ -2,6 +2,7 @@
 //   logo.<side>.png     name on one line: mark height M = 400, name letter height 0.42 M, centred
 //   logo-2l.<side>.png  name on two lines (when set_name made them): the two-line block is 0.9 M high, centred, so
 //                       each line's letter height is 0.9 M x 160 / 368 (set_name's line gap 0.3 kept)
+// nameOnly (no mark): the name alone, no gap, and the canvas is as high as the name (168 px; the two-line block 360 px).
 // Gap between mark and name 0.22 M. Writes logo/logo.json beside the logos (fit_logo needs it).
 // Never overwrites: the first run writes logo/logo.<side>.png, logo/logo-2l.<side>.png, logo/logo.json; run N >= 2
 // writes logo.<side>.vN.png, logo-2l.<side>.vN.png, logo.vN.json, so a failed version is kept. `run` and every file
@@ -79,54 +80,66 @@ export const tool = {
   inputSchema: {
     type: 'object',
     properties: {
-      mark: { type: 'string', description: 'Path of the mark image in the run folder.' },
+      mark: {
+        type: 'string',
+        description: 'Path of the mark image in the run folder. Not needed with nameOnly.'
+      },
+      nameOnly: { type: 'boolean', description: 'The name alone, with no mark (the safe version).' },
       name: { type: 'string', description: 'The `sidecar` path set_name returned (name/name.json).' },
       markLight: { type: 'string', description: 'Optional: the mark to use on the light side.' },
       markDark: { type: 'string', description: 'Optional: the mark to use on the dark side.' }
     },
-    required: ['mark', 'name'],
+    required: ['name'],
     additionalProperties: false
   },
-  async run({ mark, name, markLight, markDark }, ctx) {
-    if (!mark || !name) throw new BrandToolError('usage: compose_logo(mark, name)')
+  async run({ mark, name, markLight, markDark, nameOnly = false }, ctx) {
+    if (!name || (!mark && !nameOnly)) throw new BrandToolError('usage: compose_logo(mark, name)')
     const nameInfo = nameSidecar(ctx.files, name)
     const SUF = runSuffix(ctx.files, 'logo/logo.json')
+    // markImg null: the name alone (nameOnly), as high as the name itself.
     const lockup = async (markImg, mw, nameFile, nameH, hint) => {
       const nameBytes = ctx.files.read(nameFile)
       const meta = await sharp(nameBytes).metadata()
       const nw = Math.round((meta.width * nameH) / meta.height)
       const nameImg = await sharp(nameBytes).resize(nw, nameH).png().toBuffer()
-      const W = mw + GAP + nw
-      const top = Math.round((M - nameH) / 2)
-      const png = await sharp({ create: { width: W, height: M, channels: 4, background: CLEAR } })
+      const gap = markImg ? GAP : 0
+      const H = markImg ? M : nameH
+      const W = mw + gap + nw
+      const top = Math.round((H - nameH) / 2)
+      const png = await sharp({ create: { width: W, height: H, channels: 4, background: CLEAR } })
         .composite([
-          { input: markImg, left: 0, top: 0 },
-          { input: nameImg, left: mw + GAP, top }
+          ...(markImg ? [{ input: markImg, left: 0, top: 0 }] : []),
+          { input: nameImg, left: mw + gap, top }
         ])
         .png()
         .toBuffer()
       return {
         file: ctx.files.write(hint, png),
         width: W,
-        height: M,
-        markBox: [0, 0, mw, M],
-        nameBox: [mw + GAP, top, nw, nameH]
+        height: H,
+        markBox: markImg ? [0, 0, mw, H] : null,
+        nameBox: [mw + gap, top, nw, nameH]
       }
     }
     const out = {
       ok: true,
       run: runOf(SUF),
       sidecar: `logo/logo${SUF}.json`,
+      nameOnly: Boolean(nameOnly),
       layout: { markHeight: M, gap: GAP, oneLineLetterHeight: LH, twoLineBlock: BLOCK2 },
       sides: {}
     }
     for (const side of ['light', 'dark']) {
-      const markFile = (side === 'light' ? markLight : markDark) ?? mark
-      const markBytes = imageBytes(ctx.files, markFile)
+      const markFile = nameOnly ? null : ((side === 'light' ? markLight : markDark) ?? mark)
+      const markBytes = markFile ? imageBytes(ctx.files, markFile) : null
       const grounds = sideGrounds(ctx.kit, side)
-      const markT = await sharp(markBytes).trim({ threshold: 0 }).toBuffer({ resolveWithObject: true })
-      const mw = Math.round((markT.info.width * M) / markT.info.height)
-      const markImg = await sharp(markT.data).resize(mw, M).png().toBuffer()
+      let mw = 0
+      let markImg = null
+      if (markBytes) {
+        const markT = await sharp(markBytes).trim({ threshold: 0 }).toBuffer({ resolveWithObject: true })
+        mw = Math.round((markT.info.width * M) / markT.info.height)
+        markImg = await sharp(markT.data).resize(mw, M).png().toBuffer()
+      }
       const nameFiles = nameInfo.oneLine?.files ?? nameInfo.files
       const one = await lockup(markImg, mw, nameFiles[side], LH, `logo/logo.${side}${SUF}.png`)
       one.letterHeight = LH
@@ -148,7 +161,7 @@ export const tool = {
         ratio: contrastHex(nameColour, g),
         ok: contrastHex(nameColour, g) >= 3
       }))
-      const advice = await markAdvice(markBytes, grounds)
+      const advice = markBytes ? await markAdvice(markBytes, grounds) : null
       out.sides[side] = {
         file: one.file,
         width: one.width,
@@ -161,8 +174,8 @@ export const tool = {
         nameOn,
         nameReads: nameOn.every((x) => x.ok),
         markAdvice: advice,
-        markAdviceSummary: advice.every((c) => c.advice === 'reads') ? 'reads' : 'weak',
-        markAdviceNote: 'advisory only: the look_logo reviewer decides whether the mark reads'
+        markAdviceSummary: advice ? (advice.every((c) => c.advice === 'reads') ? 'reads' : 'weak') : null,
+        markAdviceNote: advice ? 'advisory only: the look_logo reviewer decides whether the mark reads' : null
       }
       if (!out.sides[side].nameReads) out.ok = false
     }

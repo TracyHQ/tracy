@@ -28,9 +28,10 @@ export function contractOfKit(library, kit) {
 
 /**
  * @param {any} config the server's config (readinessDir locates the bench data folder)
- * @param {{ fetchImpl?: typeof fetch }} [deps] the network door of the font download; tests pass a fake
+ * @param {{ fetchImpl?: typeof fetch, prices?: object[] }} [deps] the network door of the font download and the price
+ *   table of the models (brand-prices.js; the default table when left out); tests pass fakes
  */
-export function productionWiring(config, { fetchImpl = fetch } = {}) {
+export function productionWiring(config, { fetchImpl = fetch, prices } = {}) {
   let loaded = null
   return async () => {
     if (loaded) return loaded
@@ -42,10 +43,11 @@ export function productionWiring(config, { fetchImpl = fetch } = {}) {
     ])
     loaded = {
       tools: brandTools,
+      ...(prices ? { prices } : {}),
       /** The drawing door for make_icon: the picture door `seedImage` (brand-draw.js). */
-      async drawFor({ pool, secret, fetchImpl: modelFetch }) {
+      async drawFor({ pool, secret, fetchImpl: modelFetch, prices }) {
         const { createDraw } = await import('./brand-draw.js')
-        return createDraw({ pool, secret, fetchImpl: modelFetch })
+        return createDraw({ pool, secret, fetchImpl: modelFetch, prices })
       },
       filesFor: (runId) => diskRunFiles(brandRunDir(config, runId)),
       /** The kit's heading font, or null with the reason in `refusal` when the template does not give it. */

@@ -35,8 +35,11 @@ import {
   saveModels,
   saveProvider
 } from '../lib/llm-store.js'
+import { isAnthropicModel } from '../brand-step/brand-doors.js'
 import { foreignMakerIn } from '../lib/model-providers.js'
 import { admit, denied } from './admit.js'
+
+const BRAND_DOORS = new Set(['brandAgent', 'brandReviewer'])
 
 /** A provider id somebody typed: a catalog id, or `custom:<slug>`. Nothing else reaches the table. */
 const SAFE_ID = /^(?:[a-z0-9-]{1,40}|custom:[a-z0-9-]{1,40})$/
@@ -324,6 +327,17 @@ export function llmRoutes({ pool, config, fetchImpl = fetch, deps = {} }) {
       if (typeof b.value.model !== 'string' || b.value.model.length > 200 || /\s/.test(b.value.model))
         return c.json({ error: 'INVALID_MODEL' }, 400)
     }
+    // The brand step never uses Anthropic models (brand-step/brand-doors.js refuses them at run time too); saying no
+    // here means the screen cannot show a configured door that every run would refuse.
+    if (BRAND_DOORS.has(doorId) && isAnthropicModel(b.value.providerId, b.value.model))
+      return c.json(
+        {
+          error: 'MODEL_NOT_ALLOWED',
+          model: b.value.model,
+          reason: `${b.value.model} is an Anthropic model. The brand step never uses Opus or Sonnet (the cost has to be multipliable); pick another model.`
+        },
+        400
+      )
     if (meta.requires?.length && b.value.model) {
       const { rows } = await pool.query('select models from llm_provider where id = $1', [b.value.providerId])
       const known = (rows[0]?.models ?? []).find((m) => m.id === b.value.model)

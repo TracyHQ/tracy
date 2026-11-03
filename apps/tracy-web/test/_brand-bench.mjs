@@ -17,6 +17,13 @@ export const API_KEY = 'sk-or-brand-test-secret-key'
 export const AGENT_MODEL = 'vendor/agent-model'
 export const REVIEWER_MODEL = 'vendor/reviewer-model'
 export const quiet = { error() {}, warn() {}, log() {} }
+/** Prices for the three test models (brand-prices.js shape); a model not listed has no price and is refused. */
+export const TEST_PRICES = [
+  {
+    match: /^(agent|reviewer|picture)-model$/,
+    price: { inputCacheHit: 1, inputCacheMiss: 2, output: 4, callCeiling: 0.05 }
+  }
+]
 
 /** Both brand doors on one OpenRouter-like provider, two different models; `models` is the provider's own list. */
 export async function assignBrandDoors(
@@ -146,7 +153,7 @@ export function memoryRunFiles(entries = new Map()) {
 
 /** The wiring the bench takes (brand-wiring.js) with fakes; `files` is the one folder every run shares. */
 export const fakeWiring = ({ tools = fakeTools(), files, font = { family: 'Invented Sans' } } = {}) => {
-  return async () => ({ tools, filesFor: () => files, fontFor: async () => font })
+  return async () => ({ tools, filesFor: () => files, fontFor: async () => font, prices: TEST_PRICES })
 }
 
 /** Routes each request to the agent's or the reviewer's scripted replies by the model it names. */

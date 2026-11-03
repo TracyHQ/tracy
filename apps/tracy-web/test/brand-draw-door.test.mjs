@@ -6,7 +6,7 @@ import { after, before, beforeEach, test } from 'node:test'
 import sharp from 'sharp'
 import { createDraw, DrawRefused } from '../src/brand-step/brand-draw.js'
 import { assignDoor, saveModels, saveProvider } from '../src/lib/llm-store.js'
-import { API_KEY, SECRET } from './_brand-bench.mjs'
+import { API_KEY, SECRET, TEST_PRICES } from './_brand-bench.mjs'
 import { PICTURE_MODEL, pictureReply } from './_brand-bench-doors.mjs'
 import { fileDb } from './_db.mjs'
 
@@ -42,7 +42,12 @@ test(
   async () => {
     await book(db.pool)
     const seen = []
-    const draw = createDraw({ pool: db.pool, secret: SECRET, fetchImpl: answering(pictureReply(png), seen) })
+    const draw = createDraw({
+      pool: db.pool,
+      secret: SECRET,
+      prices: TEST_PRICES,
+      fetchImpl: answering(pictureReply(png), seen)
+    })
     const drawn = await draw({ prompt: 'a flat icon of a fish', size: 1024 })
     assert.ok(Buffer.isBuffer(drawn.image))
     assert.deepEqual([drawn.cost, drawn.model, drawn.provider], [0.034, PICTURE_MODEL, 'openrouter'])
@@ -56,7 +61,12 @@ test(
 
 test('an unset, disabled or incapable door refuses with its reason and sends nothing', opts, async () => {
   const sent = []
-  const draw = createDraw({ pool: db.pool, secret: SECRET, fetchImpl: answering(pictureReply(png), sent) })
+  const draw = createDraw({
+    pool: db.pool,
+    secret: SECRET,
+    prices: TEST_PRICES,
+    fetchImpl: answering(pictureReply(png), sent)
+  })
   process.env.OPENROUTER_API_KEY = 'sk-env-key-must-not-be-used'
   try {
     await assert.rejects(
@@ -77,13 +87,15 @@ test('an answer with no picture, or a provider error, fails without showing the 
   await book(db.pool)
   const text = { model: PICTURE_MODEL, choices: [{ message: { role: 'assistant', content: 'sorry' } }] }
   await assert.rejects(
-    createDraw({ pool: db.pool, secret: SECRET, fetchImpl: answering(text) })({ prompt: 'p' }),
+    createDraw({ pool: db.pool, secret: SECRET, prices: TEST_PRICES, fetchImpl: answering(text) })({
+      prompt: 'p'
+    }),
     /answered no picture/
   )
   const refuse = async () =>
     new Response(JSON.stringify({ error: { message: 'bad request' } }), { status: 400 })
   await assert.rejects(
-    createDraw({ pool: db.pool, secret: SECRET, fetchImpl: refuse })({ prompt: 'p' }),
+    createDraw({ pool: db.pool, secret: SECRET, prices: TEST_PRICES, fetchImpl: refuse })({ prompt: 'p' }),
     (e) => /bad request/.test(e.message) && !e.message.includes(API_KEY)
   )
 })

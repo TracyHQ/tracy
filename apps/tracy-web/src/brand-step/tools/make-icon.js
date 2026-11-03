@@ -99,7 +99,7 @@ export const tool = {
       writeJson(ctx.files, `${stem}.json`, failure)
       return failure
     }
-    const { image, cost = null, model, provider = 'seedImage' } = done.drawn
+    const { image, cost = null, costEstimated = false, model, provider = 'seedImage' } = done.drawn
     await ctx.spend.record({
       kind: 'drawing',
       tool: 'make_icon',
@@ -107,7 +107,8 @@ export const tool = {
       purpose: 'draw the icon mark',
       status: 'answered',
       latencyMs: done.latencyMs,
-      costUsd: cost
+      costUsd: cost,
+      costEstimated
     })
     const format = (
       await sharp(image)

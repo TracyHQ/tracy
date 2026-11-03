@@ -13,7 +13,10 @@ const COST_COLUMN = { agent: 'cost_agent_usd', drawing: 'cost_drawing_usd', revi
  * cost to the run. False when nothing was written: a stale lease, a turn number already taken, or a turn already
  * finished.
  */
-export async function saveTurn(pool, { runId, round, turn, model, leaseToken = null }) {
+export async function saveTurn(
+  pool,
+  { runId, round, turn, model, leaseToken = null, costEstimated = false }
+) {
   const r = turnRow(turn, round)
   if (r.state === 'dispatched') {
     const { rowCount } = await pool.query(
@@ -29,7 +32,7 @@ export async function saveTurn(pool, { runId, round, turn, model, leaseToken = n
   const { rowCount } = await pool.query(
     `with t as (
        update brand_call set state = $3, message = $4, finish_reason = $5, generation_id = $6, provider_model = $7,
-         refusal = $8, error = $9, usage = $10, cost_usd = $11, answered_at = $12, retries = $14::jsonb,
+         refusal = $8, error = $9, usage = $10, cost_usd = $11, answered_at = $12, retries = $14::jsonb, cost_estimated = $15::boolean,
          latency_ms = (extract(epoch from ($12::timestamptz - dispatched_at)) * 1000)::int
        where run_id = $1 and kind = 'agent' and n = $2 and state = 'dispatched' and ${fenced(1, 13)}
        returning cost_usd)
@@ -49,7 +52,8 @@ export async function saveTurn(pool, { runId, round, turn, model, leaseToken = n
       r.cost_usd,
       r.answered_at,
       leaseToken,
-      json(r.retries)
+      json(r.retries),
+      costEstimated
     ]
   )
   return rowCount === 1
@@ -98,6 +102,7 @@ export async function logCall(pool, call) {
     status,
     latencyMs,
     costUsd,
+    costEstimated = false,
     usage,
     error,
     leaseToken = null
@@ -106,10 +111,10 @@ export async function logCall(pool, call) {
   if (!column || kind === 'agent') throw new Error(`logCall takes a drawing or reviewer call, not ${kind}`)
   const { rowCount } = await pool.query(
     `with c as (
-       insert into brand_call (run_id, kind, round, tool, model, purpose, state, latency_ms, cost_usd, usage, error,
-                               answered_at)
-       select $1::uuid, $2::text, $3::int, $4::text, $5::text, $6::text, $7::text, $8::int, $9::numeric, $10::jsonb,
-              $11::jsonb, now()
+       insert into brand_call (run_id, kind, round, tool, model, purpose, state, latency_ms, cost_usd, cost_estimated,
+                               usage, error, answered_at)
+       select $1::uuid, $2::text, $3::int, $4::text, $5::text, $6::text, $7::text, $8::int, $9::numeric, $13::boolean,
+              $10::jsonb, $11::jsonb, now()
        where ${fenced(1, 12)}
        returning cost_usd)
      update brand_run set ${column} = ${column} + coalesce((select cost_usd from c), 0), updated_at = now()
@@ -126,7 +131,8 @@ export async function logCall(pool, call) {
       costUsd ?? null,
       json(usage),
       json(error),
-      leaseToken
+      leaseToken,
+      costEstimated
     ]
   )
   return rowCount === 1
@@ -135,7 +141,7 @@ export async function logCall(pool, call) {
 /** The call log of a run in order, without what each call sent or answered. */
 export async function callsOf(pool, runId) {
   const { rows } = await pool.query(
-    `select id, kind, n, round, tool, model, purpose, state, finish_reason, usage, cost_usd, latency_ms, error,
+    `select id, kind, n, round, tool, model, purpose, state, finish_reason, usage, cost_usd, cost_estimated, latency_ms, error,
             dispatched_at, answered_at
        from brand_call where run_id = $1 order by id`,
     [runId]
@@ -152,6 +158,7 @@ export async function callsOf(pool, runId) {
     finishReason: r.finish_reason,
     usage: r.usage,
     costUsd: r.cost_usd === null ? null : Number(r.cost_usd),
+    costEstimated: r.cost_estimated,
     latencyMs: r.latency_ms,
     error: r.error,
     at: new Date(r.dispatched_at).toISOString()

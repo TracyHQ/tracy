@@ -11,6 +11,7 @@
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { brandPrompt } from './brand-prompt.js'
 import { brandDoors } from './brand-doors.js'
+import { BRAND_PRICES, priceFor } from './brand-prices.js'
 import { createReview } from './brand-reviewer.js'
 import { nextRound, playRound } from './brand-rounds.js'
 import { buildSafeVersion } from './brand-safe-version.js'
@@ -130,6 +131,21 @@ async function prepare(deps, row) {
   const images = await kitImages.ensure(kit)
   if (!images.ok) return images
   const wiring = await deps.wiring()
+  // Every model call is counted toward the cap even when the provider sends no cost, so each door's model needs a
+  // price (brand-prices.js); one without is refused here, before any call.
+  const prices = wiring.prices ?? BRAND_PRICES
+  const agentPrice = priceFor(doors.agent.door.model, prices)
+  const reviewerPrice = priceFor(doors.reviewer.door.model, prices)
+  for (const [side, found] of [
+    ['agent', agentPrice],
+    ['reviewer', reviewerPrice]
+  ])
+    if (!found)
+      return {
+        ok: false,
+        code: 'BRAND_PRICE_UNKNOWN',
+        reason: `no price for the ${side} model ${doors[side].door.model}, so its calls cannot be counted toward the cap. Add it to brand-step/brand-prices.js`
+      }
   const font = await wiring.fontFor(kit).catch((e) => ({ refusal: String(e?.message ?? e) }))
   if (!font || font.refusal)
     return {
@@ -149,6 +165,7 @@ async function prepare(deps, row) {
     prompt,
     kit,
     agent: doors.agent,
+    agentPrice,
     tools: wiring.tools,
     ctx: {
       files,
@@ -157,9 +174,15 @@ async function prepare(deps, row) {
       font,
       runId: row.id,
       kitImage,
-      draw: await wiring.drawFor?.({ pool, secret, fetchImpl: deps.fetchImpl })
+      draw: await wiring.drawFor?.({ pool, secret, fetchImpl: deps.fetchImpl, prices })
     },
     reviewFor: ({ spend, tool }) =>
-      createReview({ door: doors.reviewer.door, fetchImpl: deps.fetchImpl, spend, tool })
+      createReview({
+        door: doors.reviewer.door,
+        fetchImpl: deps.fetchImpl,
+        spend,
+        tool,
+        price: reviewerPrice
+      })
   }
 }

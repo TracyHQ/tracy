@@ -1,8 +1,8 @@
 // The safe version (brand step trial bench, #320): when the gate still rejects after two fix rounds, or the run hits
-// its cost cap, code builds a brand file that needs no judgement: the template's own accent, an initials lettermark
-// beside the name in the template's heading font (a name-only logo, since fit_logo works on a composed lockup), the
-// favicon from that mark, and an owner task to replace the temporary logo. It is not the agent's work and it is not
-// run through the agent's gate: the run is marked `safe-version` with its reason (`gate` or `cost-cap`). It calls only
+// its cost cap, code builds a brand file that needs no judgement: the template's own accent, a name-only logo per
+// spot in the template's heading font (compose_logo nameOnly, then fit_logo), the favicon from an initials
+// lettermark (the only place the mark is used), and an owner task to replace the temporary logo. It is not the
+// agent's work and it is not run through the agent's gate: the run is marked `safe-version` with its reason (`gate` or `cost-cap`). It calls only
 // the tools that are code, no model: name_slots, set_name, make_lettermark, compose_logo, fit_logo and make_favicon,
 // and reads the shapes those tools really answer (brand-step/tools/): name_slots { slots, ownerTasks }, set_name
 // { text, rendersAs, files, twoLines: { lines, files } | null, sidecar }, make_lettermark { file }, compose_logo
@@ -99,7 +99,8 @@ export async function buildSafeVersion({ tools, ctx, kit, brief, reason }) {
       twoLines: set.twoLines ? { lines: set.twoLines.lines, files: set.twoLines.files } : null
     }
     mark = await call('make_lettermark', { letters: initialsOf(name), accent })
-    const composed = await call('compose_logo', { mark: mark.file, name: set.sidecar })
+    // The logo is the name alone; the initials mark is only the favicon's.
+    const composed = await call('compose_logo', { name: set.sidecar, nameOnly: true })
     for (const spot of doc.site.logoSpots) {
       const side = spot.ground.side
       const oneLine = composed.sides[side].file

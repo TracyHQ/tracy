@@ -2,9 +2,11 @@
 // tool calls review({ images, question, blind }) and gets the reviewer's answer text and its cost back; the tool
 // builds the question (and, in blind mode, never names the business) and judges the answer by code. One call to the
 // brand reviewer door, never a key or an image in the log: the call log row holds tool, model, purpose, status,
-// latency and cost only. The cap is checked before the call (brand-spend.js).
-import { costOf, usageOf } from '../lib/agent-over-door-wire.js'
+// latency and cost only. The cap is checked before the call (brand-spend.js). An answer with no cost figure is
+// counted at the model's price (brand-prices.js) and its row marked estimated; a model with no price is refused.
+import { usageOf } from '../lib/agent-over-door-wire.js'
 import { isAnthropicModel } from './brand-doors.js'
+import { costOfCall } from './brand-prices.js'
 
 const SYSTEM =
   'You look at images and answer questions about them. Answer only what is asked, in the form asked, from what you see.'
@@ -21,11 +23,13 @@ function imagePart(image) {
 
 /**
  * @param {{ door: { baseUrl: string, apiKey: string, model: string }, fetchImpl?: typeof fetch,
- *   spend: ReturnType<import('./brand-spend.js').createSpend>, tool?: () => string | null, price?: object }} input
+ *   spend: ReturnType<import('./brand-spend.js').createSpend>, tool?: () => string | null,
+ *   price: { inputCacheHit: number, inputCacheMiss: number, output: number, callCeiling: number } }} input
  * @returns {(call: { images: unknown[], question: string, blind?: boolean }) => Promise<{ answer: string, cost: number | null }>}
  */
 export function createReview({ door, fetchImpl = fetch, spend, tool = () => null, price }) {
   if (isAnthropicModel(null, door.model)) throw new Error('the brand reviewer is never an Anthropic model')
+  if (!price) throw new Error(`BRAND_PRICE_UNKNOWN: no price for ${door.model}, so no call is sent`)
   return async function review({ images, question, blind = false }) {
     await spend.check()
     const started = Date.now()
@@ -74,16 +78,17 @@ export function createReview({ door, fetchImpl = fetch, spend, tool = () => null
       throw error
     }
     const answer = json?.choices?.[0]?.message?.content
-    const cost = costOf(json?.usage, price)
+    const { cost, estimated } = costOfCall(json?.usage, price)
     if (typeof answer !== 'string' || !answer.trim()) {
       await log('failed', {
         costUsd: cost,
+        costEstimated: estimated,
         usage: usageOf(json?.usage),
         error: { code: 'REVIEWER_EMPTY', reason: 'no answer' }
       })
       throw new Error('REVIEWER_FAILED: the reviewer gave no answer')
     }
-    await log('answered', { costUsd: cost, usage: usageOf(json?.usage) })
+    await log('answered', { costUsd: cost, costEstimated: estimated, usage: usageOf(json?.usage) })
     return { answer, cost }
   }
 }

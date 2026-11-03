@@ -4,6 +4,8 @@
 //   1. the one-line logo, when the name's letter height in the spot reaches 14 px (1x);
 //   2. else the two-line logo, when each line reaches 14 px;
 //   3. else the side's mark alone.
+// A name-only logo (compose_logo nameOnly) has no mark to fall back to: a spot too small for either variant shows
+// the larger name variant, and the note says so.
 // Reports which (`shows`: logo | logo-2-lines | mark) and the letter height of every candidate.
 // Never overwrites: the file is spots/<spot>.png, then spots/<spot>.vN.png (`run` = N).
 import path from 'node:path'
@@ -69,11 +71,12 @@ export const tool = {
       { shows: 'logo', file: one.file, letter: letterIn(one) },
       ...(two ? [{ shows: 'logo-2-lines', file: two.file, letter: letterIn(two), lines: two.lines }] : [])
     ]
-    const pick = candidates.find((c) => c.letter >= MIN_LETTER_PX) ?? {
-      shows: 'mark',
-      file: info.mark,
-      letter: null
-    }
+    const nameOnly = !info.mark
+    const pick =
+      candidates.find((c) => c.letter >= MIN_LETTER_PX) ??
+      (nameOnly
+        ? candidates.reduce((best, c) => (c.letter > best.letter ? c : best))
+        : { shows: 'mark', file: info.mark, letter: null })
 
     const W = spot.width * 2
     const H = spot.height * 2
@@ -113,6 +116,9 @@ export const tool = {
           : null,
         pick.shows === 'mark'
           ? `name under ${MIN_LETTER_PX} px ${two ? 'on one line and on two lines' : 'on one line (one word: no two-line variant)'}: mark alone`
+          : null,
+        nameOnly && pick.letter < MIN_LETTER_PX
+          ? `name only, no mark to fall back to: the name is ${pick.letter} px (< ${MIN_LETTER_PX}) in this spot`
           : null,
         spot.setting === null ? 'no setting can write this spot' : null
       ].filter(Boolean)

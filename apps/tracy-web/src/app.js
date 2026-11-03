@@ -1176,22 +1176,19 @@ export function buildApp(deps) {
       : null
   // The brand bench's worker (`brand-step/brand-worker.js`, #320): its own queue, one run at a time, parallel to the
   // planner bench; runs are started and read from the bench CLI (scripts/brand-bench.mjs).
-  app.brandQueue =
+  const brandBench =
     deps.config && deps.pool
-      ? createBrandQueue({
-          pool: deps.pool,
-          secret: deps.config.sessionSecret,
-          config: deps.config,
-          fetchImpl: deps.fetchImpl ?? fetch,
-          kitImages: kitImagesFor({
-            pool: deps.pool,
-            config: deps.config,
-            fetchImpl: deps.fetchImpl ?? fetch
-          }),
-          wiring: productionWiring(deps.config),
-          log: deps.log ?? console
-        })
+      ? { pool: deps.pool, config: deps.config, fetchImpl: deps.fetchImpl ?? fetch }
       : null
+  app.brandQueue = brandBench
+    ? createBrandQueue({
+        ...brandBench,
+        secret: deps.config.sessionSecret,
+        kitImages: kitImagesFor(brandBench),
+        wiring: productionWiring(deps.config),
+        log: deps.log ?? console
+      })
+    : null
   app.opportunityTick = null
   app.demoQaTick = null
   app.siteChecksTick = null

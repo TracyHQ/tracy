@@ -6,7 +6,9 @@
 import { AgentError, runAgent } from '../lib/agent-over-door.js'
 import { agentTools } from './brand-tool-adapter.js'
 import { saveTurn, saveTurnProgress, turnCountOf, turnsOf } from './brand-call-store.js'
+import { savedToolResult, saveToolResult } from './brand-tool-result-store.js'
 import { firstUserMessage, fixMessage } from './brand-first-message.js'
+import { costOfTurn } from './brand-prices.js'
 import { harnessOf, MAX_FIX_ROUNDS } from './brand-harness.js'
 import { brandFileInAnswer, saveBrandFileTool } from './brand-save-tool.js'
 import { CostCapReached, createSpend } from './brand-spend.js'
@@ -98,6 +100,7 @@ async function ask(deps, { row, ready, round, history, followUp, leaseToken, mus
   const runId = row.id
   const stop = new AbortController()
   const current = { tool: null }
+  const capHit = { error: null }
   const spend = createSpend({ pool, runId, capUsd: row.harness.capUsd, round: () => round, leaseToken })
   const ctx = { ...ready.ctx, spend, review: ready.reviewFor({ spend, tool: () => current.tool }) }
   const { tools, resolveImage } = agentTools({
@@ -106,6 +109,16 @@ async function ask(deps, { row, ready, round, history, followUp, leaseToken, mus
     imageEdge: row.harness.imageLongEdge,
     onTool: (name) => {
       current.tool = name
+    },
+    // Every tool answer is saved before the loop gets it; a call that has one is not made again on a resume.
+    results: {
+      get: (key) => savedToolResult(pool, { runId, ...key }),
+      put: (key, result) => must(saveToolResult(pool, { runId, ...key, result, leaseToken }))
+    },
+    // A cap reached inside a tool ends the run: the loop is told to stop, and the cap is the round's end below.
+    onCapReached: (error) => {
+      capHit.error ??= error
+      stop.abort()
     },
     extra: [saveBrandFileTool({ pool, runId, round: () => round, leaseToken })]
   })
@@ -126,11 +139,16 @@ async function ask(deps, { row, ready, round, history, followUp, leaseToken, mus
       onTurn: async (turn) => {
         // The cap is checked before every call goes out, and nothing is saved for a call that never goes out.
         if (turn.state === 'dispatched') await spend.check()
-        await must(saveTurn(pool, { runId, round, turn, model: ready.agent.door.model, leaseToken }))
+        // An answer with no cost figure is counted at the model's price and saved as estimated, never as 0.
+        const unpriced = turn.state === 'answered' && turn.cost == null
+        const saved = unpriced ? { ...turn, cost: costOfTurn(turn.usage, ready.agentPrice) } : turn
+        const model = ready.agent.door.model
+        await must(saveTurn(pool, { runId, round, turn: saved, model, leaseToken, costEstimated: unpriced }))
         if (turn.state === 'answered' && (await cancelAsked(pool, runId))) stop.abort()
       }
     })
   } catch (error) {
+    if (capHit.error) return { ended: ['failed', capHit.error.message] }
     if (error instanceof CostCapReached) return { ended: ['failed', error.message] }
     if (!(error instanceof AgentError)) throw error
     if (error.code === 'AGENT_ABORTED') return { ended: ['cancelled'] }

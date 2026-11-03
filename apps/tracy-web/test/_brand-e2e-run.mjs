@@ -7,7 +7,7 @@ import { productionWiring } from '../src/brand-step/brand-wiring.js'
 import { readRun } from '../src/brand-step/brand-store.js'
 import { createBrandQueue } from '../src/brand-step/brand-worker.js'
 import { assignDoor } from '../src/lib/llm-store.js'
-import { assignBrandDoors, quiet, REVIEWER_MODEL, SECRET, startRun } from './_brand-bench.mjs'
+import { assignBrandDoors, quiet, REVIEWER_MODEL, SECRET, startRun, TEST_PRICES } from './_brand-bench.mjs'
 import { fakeFontFetch, PICTURE_MODEL, passingReviewer, pictureReply } from './_brand-bench-doors.mjs'
 import { scriptedAgent } from './_brand-bench-script.mjs'
 import { loadCase } from './_brand-gate-files.mjs'
@@ -40,7 +40,7 @@ export async function wordsOnlyRun(pool, dir, agentOptions, { picture = 'icon' }
   const kitImages = await pictureKitImages()
   const config = { readinessDir: path.join(dir, 'readiness') }
   const font = fakeFontFetch()
-  const wiring = productionWiring(config, { fetchImpl: font.fetchImpl })
+  const wiring = productionWiring(config, { fetchImpl: font.fetchImpl, prices: TEST_PRICES })
   const c = await loadCase('3-no-logo')
   await assignBrandDoors(pool)
   await assignDoor(pool, 'seedImage', { providerId: 'openrouter', model: PICTURE_MODEL }, 'owner@tracy.test')
