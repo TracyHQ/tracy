@@ -1,6 +1,7 @@
 // The site planner bench worker (ADR 0041, #301), at the bench-run seam: a queued run is claimed, the planner runs
 // over the site planner door with the two kit tools, every model call is saved, the final answer is parsed as plan
-// JSON and scored by the checker, and round 0 and the run's verdict are saved. The model is a scripted fake.
+// JSON and scored by the checker, and round 0 and the run's verdict are saved. The model is a scripted fake. Fix
+// rounds and answers that are not a plan: site-planner-bench-fix-rounds.test.mjs.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
@@ -74,24 +75,6 @@ test(
     assert.equal(model.requests[0].headers.authorization, `Bearer ${API_KEY}`)
   }
 )
-
-test('an answer that is not JSON is an error, never a plan', opts, async () => {
-  const { pool } = db
-  const { run } = await runOnce(pool, [
-    finalReply({ content: `Here is the plan: ${JSON.stringify(plan())}` })
-  ])
-  assert.equal(run.status, 'failed')
-  assert.match(run.error, /^SITE_PLANNER_ANSWER_NOT_JSON/)
-  assert.equal(run.rounds[0].state, 'failed')
-  assert.equal(run.rounds[0].plan, null)
-  assert.match(run.rounds[0].answer, /^Here is the plan/)
-})
-
-test('a JSON answer that is not one object is an error too', opts, async () => {
-  const { pool } = db
-  const { run } = await runOnce(pool, [finalReply({ content: '[1, 2]' })])
-  assert.match(run.error, /^SITE_PLANNER_ANSWER_NOT_OBJECT/)
-})
 
 test('a truncated answer fails the run', opts, async () => {
   const { pool } = db

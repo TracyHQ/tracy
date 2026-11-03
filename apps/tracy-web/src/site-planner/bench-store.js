@@ -97,7 +97,8 @@ export function turnRow(turn, round) {
     usage: turn.usage ?? null,
     cost_usd: turn.cost ?? null,
     dispatched_at: turn.dispatchedAt,
-    answered_at: turn.answeredAt ?? null
+    answered_at: turn.answeredAt ?? null,
+    resend_of: turn.resendOf ?? null
   }
 }
 
@@ -105,6 +106,7 @@ export function turnRow(turn, round) {
 export function turnOf(row) {
   const state = row.state === 'refused' ? 'answered' : row.state
   const turn = { n: row.n, state, sent: row.sent, request: row.request, dispatchedAt: iso(row.dispatched_at) }
+  if (row.resend_of !== null && row.resend_of !== undefined) turn.resendOf = row.resend_of
   if (state === 'answered')
     Object.assign(turn, {
       message: row.message,
@@ -116,7 +118,8 @@ export function turnOf(row) {
       ...(row.refusal ? { refusal: row.refusal } : {})
     })
   if (state === 'failed') turn.error = row.error
-  if (state !== 'dispatched') turn.answeredAt = iso(row.answered_at)
+  if (state === 'abandoned') turn.error = row.error
+  else if (state !== 'dispatched') turn.answeredAt = iso(row.answered_at)
   return turn
 }
 
@@ -128,10 +131,11 @@ export async function saveTurn(pool, { runId, round, turn, leaseToken = null }) 
   const r = turnRow(turn, round)
   if (r.state === 'dispatched') {
     const { rowCount } = await pool.query(
-      `insert into site_planner_turn (run_id, n, round, state, request, sent, dispatched_at)
-       select $1::uuid, $2::int, $3::int, 'dispatched', $4::jsonb, $5::jsonb, $6::timestamptz where ${fenced(1, 7)}
+      `insert into site_planner_turn (run_id, n, round, state, request, sent, dispatched_at, resend_of)
+       select $1::uuid, $2::int, $3::int, 'dispatched', $4::jsonb, $5::jsonb, $6::timestamptz, $8::int
+       where ${fenced(1, 7)}
        on conflict (run_id, n) do nothing`,
-      [runId, r.n, round, json(r.request), json(r.sent), r.dispatched_at, leaseToken]
+      [runId, r.n, round, json(r.request), json(r.sent), r.dispatched_at, leaseToken, r.resend_of]
     )
     return rowCount === 1
   }
@@ -160,6 +164,34 @@ export async function saveTurn(pool, { runId, round, turn, leaseToken = null }) 
     ]
   )
   return rowCount === 1
+}
+
+/**
+ * Mark a turn that was dispatched and never answered (a restart while waiting for the model) as abandoned, so the
+ * same request can be sent once more as a new turn. Its row stays. False when the turn is not dispatched any more or
+ * the lease is stale.
+ */
+export async function abandonTurn(pool, { runId, n, leaseToken = null }) {
+  const { rowCount } = await pool.query(
+    `update site_planner_turn set state = 'abandoned', error = $3::jsonb
+     where run_id = $1 and n = $2 and state = 'dispatched' and ${fenced(1, 4)}`,
+    [
+      runId,
+      n,
+      json({ code: 'TURN_ABANDONED', reason: 'no answer before a restart; the same request is sent again' }),
+      leaseToken
+    ]
+  )
+  return rowCount === 1
+}
+
+/** How many turns a round has saved: none means a fix round has not sent its failure list yet. */
+export async function turnCountOf(pool, runId, round) {
+  const { rows } = await pool.query(
+    'select count(*)::int as n from site_planner_turn where run_id = $1 and round = $2',
+    [runId, round]
+  )
+  return rows[0].n
 }
 
 /** Every saved turn of a run in order: the history runAgent resumes from. */
@@ -264,18 +296,8 @@ export async function readRun(pool, id) {
     checkerVersion: row.checker_version,
     door: row.door,
     harness: row.harness,
-    rounds: rounds.rows.map((r) => ({
-      round: r.round,
-      state: r.state,
-      answer: r.answer,
-      plan: r.plan,
-      checkResult: r.check_result,
-      failureList: r.failure_list,
-      costUsd: Number(r.cost_usd),
-      error: r.error,
-      startedAt: iso(r.started_at),
-      finishedAt: iso(r.finished_at)
-    })),
+    standingFailures: row.standing_failures ?? null,
+    rounds: rounds.rows.map(roundOf),
     totals: {
       turns: t.turns,
       calls: t.calls,
@@ -288,6 +310,29 @@ export async function readRun(pool, id) {
       turnsWithoutCost: t.without_cost
     }
   }
+}
+
+function roundOf(r) {
+  return {
+    round: r.round,
+    state: r.state,
+    answer: r.answer,
+    plan: r.plan,
+    checkResult: r.check_result,
+    failureList: r.failure_list,
+    costUsd: Number(r.cost_usd),
+    error: r.error,
+    startedAt: iso(r.started_at),
+    finishedAt: iso(r.finished_at)
+  }
+}
+
+/** The rounds of a run in order. */
+export async function roundsOf(pool, runId) {
+  const { rows } = await pool.query('select * from site_planner_round where run_id = $1 order by round', [
+    runId
+  ])
+  return rows.map(roundOf)
 }
 
 /** The newest runs first, without their brief or plans. */
