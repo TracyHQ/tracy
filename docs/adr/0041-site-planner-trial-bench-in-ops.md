@@ -122,3 +122,11 @@
   is tried again up to 5 attempts with exponential backoff and jitter (Retry-After honoured, 60 s at most per wait);
   400, 401, 403, 404 and content filter refusals never are. Each failed attempt is recorded on the turn and shown in
   the turns log.
+- **A fix round answers with only the changed parts (refines decision 5).** After the failure list the server asks for
+  `{"changes": [...]}`, each change replacing one whole part named by its id or one top-level section; it applies them
+  to the previous plan, records the list (`changes-vN.json`) and scores the merged plan. A whole plan is still
+  accepted; a list that cannot be applied gets one ask for the whole plan within the same round.
+- **A plan after a prose lead-in is read.** An answer with text around exactly one fenced JSON block is read as that
+  block, and the dropped text is recorded on the round; two fenced blocks or none stay not a plan.
+- **Both cache markers live one hour.** An answer can take longer than 5 minutes, so the rolling marker is 1h like the
+  system one (two markers per request, within Anthropic's four), recorded in the run's harness settings.
