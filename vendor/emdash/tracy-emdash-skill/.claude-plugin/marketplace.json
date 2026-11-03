@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Turn a folder of design HTML into a running, acceptance-gated EmDash site.",
-    "version": "1.5.2"
+    "version": "1.5.3"
   },
   "plugins": [
     {

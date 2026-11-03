@@ -511,6 +511,48 @@ describe('F10 — acceptance gate', () => {
       assert.equal(stale.report.status, 'fail')
       writeFileSync(path.join(root, 'src/pages/index.astro'), '<h1/>')
     })
+    it('release-chain from qa: qa.mjs on the packed artifact passes against the mock EmDash, the chain goes on and stops at the first failing step (content-api) with its log; release is not run', async () => {
+      const base = mkdtempSync(path.join(tmpdir(), 'qa-chain-'))
+      const artifact = path.join(base, 'pack')
+      const { artifactHash } = pack(root, miniContract(), artifact)
+      writeFileSync(path.join(root, 'chain.contract.json'), JSON.stringify(miniContract()))
+      const first = await qa(root, miniContract(), good.origin, ['--artifact', artifact])
+      const identity = { contractHash: first.report.contractHash, artifactHash, origin: good.origin }
+      const reviews = path.join(base, 'reviews')
+      mkdirSync(reviews)
+      for (const g of ['build', 'security', 'visual-review', 'font-review', 'viewing-contexts', 'editability', 'forms', 'recovery', 'clean-install', 'independent'])
+        receipt(reviews, g, identity)
+      // the mock stands in for the clean install this chain would have recorded at its clean-install step
+      const port = new URL(good.origin).port
+      mkdirSync(path.join(base, 'chain'))
+      writeFileSync(
+        path.join(base, 'chain', 'chain.json'),
+        JSON.stringify({ runs: [], qaReport: null, cleanInstall: { target: path.join(base, 'site'), port, origin: good.origin } })
+      )
+      let r
+      try {
+        r = await execFileP(
+          process.execPath,
+          [path.resolve(HERE, '../tools/release-chain.mjs'), '--from', 'qa', '--contract', 'chain.contract.json', '--pack', artifact,
+            '--target', path.join(base, 'site'), '--source', SOURCE, '--reviews', reviews, '--port', port,
+            '--out', path.join(base, 'chain'), '--', '--visual', '--visual-scans', 'hover'],
+          { cwd: root, maxBuffer: 16 * 1024 * 1024 }
+        )
+        assert.fail('content-api must fail on the mini package')
+      } catch (e) {
+        r = e
+      }
+      assert.equal(r.code, 1, r.stdout + r.stderr)
+      const lines = r.stdout.trim().split('\n')
+      assert.match(lines[4], /^release-chain qa: ok /, lines.join('\n'))
+      assert.match(lines[5], /^release-chain content-api: FAIL \(exit 1\) .* -> .*1-06-content-api\.log$/)
+      assert.match(lines[6], /^release-chain: status=fail at=content-api/)
+      assert.equal(lines.length, 7, 'release is not run after a failure')
+      const report = JSON.parse(readFileSync(path.join(base, 'chain', 'qa.1', 'report.json'), 'utf8'))
+      assert.equal(report.status, 'pass', JSON.stringify(Object.fromEntries(Object.entries(report.gates).filter(([, g]) => g.status !== 'pass'))))
+      assert.equal(report.artifactHash, artifactHash)
+      assert.equal(JSON.parse(readFileSync(path.join(base, 'chain', 'chain.json'), 'utf8')).qaReport, path.join(base, 'chain', 'qa.1', 'report.json'))
+    })
     const defects = [
       ['brokenImage', /image decodes: .*\/logo.png/],
       ['stuckTheme', /observed theme matches requested theme \(dark\)/],

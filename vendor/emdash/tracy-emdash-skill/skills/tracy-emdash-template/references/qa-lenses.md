@@ -102,12 +102,21 @@ compare" explicitly instead of staying silent. **Unverified** guesses at a cause
 | en-home | 1440-light | source: figures sit 8px lower than the source | stats strip | hypothesis: align-items | baselines equal | LEE |
 | en-not-found | 390-dark | output: search button drops to a new row under 390 (no source to compare) | form, y≈420 | flex-wrap | one row at 390 | |
 | ru-services | 390-light | output: unit "т" drops to its own line under "18 000" (the source drops too) | stats strip, cell 1 | nowrap figure+unit | one line | SOURCE |
+
+## Seen
+| Tile | Hash | Verdict |
+|---|---|---|
+| /abs/path/shots/en-home--1440-light/1.png | <index.json hash of the shot> | clean |
 ```
 
 - **What**: where the site differs from source/system, one sentence. **Where**: region + approximate coordinates. **Fix**: suggested file/rule/seed.
   **Verify**: the sentence that closes it. **Flag** `LEE` = changes design intent (token, dropping a block, changing a font) — the agent
   does not decide alone; `SOURCE` = the source is wrong too, fix it better than the source, only counted separately.
 - An empty table = nothing found; the `Opened` section is still required in full.
+- `## Seen` (after `## Notes`) is the lens's own record for the next round: one row per tile with the shot's `hash` from
+  `index.json` and a one-word verdict (`clean` or the note ids). In a close round (§6 step 5) the lens opens only tiles
+  whose shot hash changed and lists only those under `## Opened` ([`execution-rules.md`](execution-rules.md) §Fan-out,
+  images once). The clean confirmation round (§6 step 6) still opens every tile. `qa-notes.mjs` does not read this table.
 - `|` inside a cell is written `\|`.
 
 Coding agent: `notes/fix.md` — `| Id | Status | Fix |`, Status `done` / `skipped` (+reason) / `lee`.
@@ -121,7 +130,10 @@ content, duplicates across lenses merged into one line with several tags), exit 
    the tier's last run **is** the receipt's site.
 2. `node tools/visual-qa.mjs --contract qa.contract.json --site <origin> --source-site <source> --out <run> --stage <id> [--reuse <earlier runs>]`.
 3. Read `<run>/index.json`; spin the tier's QA agents **in parallel**, each with: its file list,
-   `references/qa-lenses.md` §4–5, the path to write `notes/<lens>.md`. Wait for all.
+   `references/qa-lenses.md` §4–5, the path to write `notes/<lens>.md`. Wait for all: dispatch them in **one message as
+   foreground calls** and block until every one returns — a headless run (`claude -p`) ends with the turn and stops
+   the background agents it started ([`execution-rules.md`](execution-rules.md) §Fan-out). The same holds for the
+   coding agents of step 4.
 4. `qa-notes.mjs merge` → open todos? → spin **coding agents by file group, in parallel** (Lee 14/09
    19:40): split the todos of `NOTES-<stage>.md` by view/file — each agent owns a **non-overlapping**
    group (e.g. Contact + Form kit · Article · Investors + Careers · Home/News/Projects · Slides kit +
@@ -135,6 +147,23 @@ content, duplicates across lenses merged into one line with several tags), exit 
    and put into the contract), and the last run is a **clean confirmation round** — all the tier's lenses look again at
    every shot and open no new todo (`notes/<lens>.md` has only `Opened`).
 7. Each tier's last run is copied into `evidence/qa-<n>/visual-<stage>/`; scratch runs are deleted.
+
+**Loop caps** — the zero-open bar of step 6 is unchanged; these bound how many runs it takes and when the loop stops:
+
+- **Full scope twice on the clean path**: one full-scope run of the tiers as the **first baseline** (P7, after the
+  Fast Gate verdict passes) and one as the **final** run whose last runs feed the receipt. Every fix round between
+  them is narrowed: `--stage <id>` for the tier under repair and `--reuse <previous runs>` so only pages whose hash
+  changed are reshot ([§8](#8-fast-gate--standardised-early-qa-contract--resolver--run-mode--verdict); in P5
+  `fast-gate.mjs plan --changed <files>`). A further full-scope run is allowed only with its reason written in
+  `STATUS.md` before it starts (what the narrowed runs cannot see: a tool, contract, renderer or scan-threshold change
+  — `--reuse` then declines and says so).
+- **A pass that closes nothing stops the loop**: when a fix round (coding agents → recapture → close) ends with no
+  todo closed, do not start the same round again. Write the open list (ids, files, what was tried) to `STATUS.md`
+  and take it to the owner as one batched question; the tier stays open.
+- **A tool defect leaves the fix loop**: a todo that is a false positive of a tool (the page matches source and
+  system; the measurement is wrong) is not fixed by editing pages to silence it, and no threshold is widened. It
+  becomes a kit-tool fix in `scripts/tools/` with a negative fixture (the template takes the copy, `check-kit-sync.mjs`),
+  or, until then, a record in `STATUS.md` with the evidence. The todo stays open, so the tier does not close on it.
 
 ## 7. `visual-review` — five things the machine checks (`qa.mjs`, `assessVisualReview`)
 
@@ -198,5 +227,10 @@ used in P5 when adding a family/component.
 **When to run**: P3 — Fast Gate on the slice built so far (the plan can only pick pages that exist; record the scope);
 P5 — when adding a family/component, declare `layouts[].family`, run `plan --changed`, run the related cases
 with `--reuse`; **before full QA (P7)** — Fast Gate must be clean against the current contract and build; P7 —
-full, the whole matrix, `--reuse` the Fast Gate run for pages whose hash did not change; P8 — receipt. A Fast Gate pass **does not
+full, the whole matrix, `--reuse` the Fast Gate run for pages whose hash did not change (full scope twice, §6 loop caps);
+P8 — receipt. On the P8 clean site, `qa.mjs --visual --visual-reuse <final P7 run of each tier>` reshoots only pages
+whose hash changed: the site origin is not part of the reuse key (`visual-qa.mjs` `verdictInputs`), so the
+measurements carry across origins. The receipt does **not** carry across: `qa.mjs` refuses a tier run whose origin is
+not the report's (§7.1) and needs every consumer's notes in that run (§7.2), so the lenses still report on the P8
+runs. A Fast Gate pass **does not
 replace** visual acceptance, and does not replace the release receipt.
