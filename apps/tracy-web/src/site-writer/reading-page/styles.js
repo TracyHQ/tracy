@@ -26,6 +26,11 @@ nav.toc a.bad{background:var(--bad-bg);color:var(--bad)}
 .block.dim{opacity:.7}.block .body{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:0}
 .shot{padding:12px;border-right:1px solid var(--line);background:var(--note)}
 .shot img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px;background:#fff}
+.shot .zoom{all:unset;display:block;width:100%;cursor:zoom-in}
+.shot .zoom:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,8,7,.88);overflow-y:auto;cursor:zoom-out}
+.lb img{display:block;width:100%;height:auto;background:#fff}
+.lb button{position:fixed;top:12px;right:16px;z-index:51;font:inherit;font-size:22px;line-height:1;width:40px;height:40px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
 .shot .none{padding:24px 8px;text-align:center}
 .slots{padding:8px 16px 14px;min-width:0}
 .slot{padding:10px 0;border-top:1px solid var(--line)}.slot:first-child{border-top:0}
@@ -44,4 +49,14 @@ table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--surf
 th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--note)}
 ul.tight{margin:4px 0;padding-left:18px}
 @media (max-width:760px){.block .body{grid-template-columns:1fr}.shot{border-right:0;border-bottom:1px solid var(--line)}}
+`
+
+// Tiny lightbox: click a block image to see it full width, click anywhere, the close button or Escape to close.
+export const ZOOM_JS = `
+(function(){var lb=null;function close(){if(lb){lb.remove();lb=null}}
+document.addEventListener('click',function(e){var z=e.target.closest&&e.target.closest('.zoom');
+if(lb){close();return}if(!z)return;var i=z.querySelector('img');lb=document.createElement('div');lb.className='lb';
+var im=document.createElement('img');im.src=i.src;im.alt=i.alt;var b=document.createElement('button');b.type='button';b.textContent='\\u00d7';b.setAttribute('aria-label','Close');
+lb.appendChild(im);lb.appendChild(b);document.body.appendChild(lb)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')close()})})();
 `

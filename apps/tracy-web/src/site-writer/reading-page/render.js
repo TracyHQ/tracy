@@ -1,7 +1,7 @@
 // Renders the copy reading page's model (model.js) as one self-contained HTML string: no script, no external file.
 // Every value from a plan, a copy file or a brief goes through esc(). Images are passed in already resolved as src
 // strings (data URIs or relative paths). Red (class "bad") marks only what the copy check failed.
-import { CSS } from './styles.js'
+import { CSS, ZOOM_JS } from './styles.js'
 
 const ENTITIES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 export const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ENTITIES[c])
@@ -55,7 +55,7 @@ function blockHtml(b, imageSrc) {
   if (b.decision !== 'keep')
     return `<section class="block dim"><header><h3>${esc(b.id)}</h3><span class="chip">${esc(b.decision)}</span><span class="muted small">${esc(b.why)}</span></header></section>`
   const shot = imageSrc
-    ? `<img src="${esc(imageSrc)}" alt="Block ${esc(b.id)} at 1440 px" loading="lazy">`
+    ? `<button type="button" class="zoom" title="Click to enlarge"><img src="${esc(imageSrc)}" alt="Block ${esc(b.id)} at 1440 px" loading="lazy"></button>`
     : '<div class="none muted">No 1440 image found for this block.</div>'
   const hidden = b.hidden.length
     ? `<div class="muted small">Hidden slots: ${b.hidden.map((h) => `${esc(h.slot)} (${esc(h.why)})`).join('; ')}</div>`
@@ -147,6 +147,6 @@ ${pages}
 ${strays}
 <h2 id="notebook">Copy notebook</h2>${notebook}
 <h2 id="returns">Returns to planner</h2>${returns}
-</main></body></html>
+</main><script>${ZOOM_JS}</script></body></html>
 `
 }

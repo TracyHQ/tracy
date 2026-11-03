@@ -117,6 +117,7 @@ test('the page shows every page, block, slot and picture of the plan, failing on
     assert.ok(html.includes('Alt: A coach showing a member how to lift'))
     assert.ok(html.includes('Quay Fitness Studio, group classes'), 'page title')
     assert.ok(html.includes('Privacy policy'), 'legal page')
+    assert.match(html, /<button type="button" class="zoom"[^>]*><img src=/, 'block images are clickable')
     assert.ok(html.includes('Page not found'), 'not found page')
     assert.ok(html.includes('returned to the planner: no coach name in the brief'))
     assert.ok(html.includes('coaches know members'), 'notebook')
@@ -151,7 +152,7 @@ test('text from the files is escaped', async () => {
     const html = await readFile(outFile, 'utf8')
     assert.ok(!html.includes('<script>alert'), 'no raw script from the copy')
     assert.ok(html.includes('&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt; &amp; members'))
-    assert.ok(!html.includes('<script'), 'the page has no script at all')
+    assert.equal(html.split('<script').length - 1, 1, 'only the built-in zoom script')
   } finally {
     await rm(root, { recursive: true, force: true })
   }
