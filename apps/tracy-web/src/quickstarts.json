@@ -1562,6 +1562,25 @@
     "multilingual": false,
     "contract": "ja-cagox/j6/1.0.2"
   },
+  "quickstart/ja-kidscorner/j6": {
+    "platform": "joomla",
+    "version": "1.0.3",
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.77.zip",
+      "version": "0.24.77",
+      "bytes": 544051,
+      "sha256": "b627621d8cf1076bc45bdaeea9d12a3496b9fe8ae0cf88e315be67f548dae5b5",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.77/pkg_claudecowork-0.24.77.zip",
+      "contractFiles": {
+        "content-map.json": "76aed1963bbe1689aa2e5bc0b4ff438919325cc74a16e0864b578a8ab9602457",
+        "manifest.json": "8e36d50c9af0ce16caeb8bdc9d4e5391c8faa45b5067b382c5d8d401da14eb12",
+        "presentation-lock.json": "ec12e72eebe6a864951a7e1085f2f9732d43ceeb4349bcafb59c91de457ee37f",
+        "showcase-nav-map.json": "cbb9637d5a28b0ef3456a23846cf1295ed69f4c8bfabe247b9fec412c2e960d8"
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-kidscorner/j6/1.0.3"
+  },
   "quickstart/ja-diner/wp7": {
     "platform": "wordpress",
     "version": "1.0.1",

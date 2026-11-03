@@ -221,12 +221,14 @@ def form_types(files):
    if node.get('name') and node.get('type'):types.setdefault(node.get('name'),node.get('type').lower())
  return types
 tpl_dir=root/'templates'/template
-# T4 and T3 both read an article's extra fields from `etc/extrafields/*.xml` and add module fields from `etc/form/`.
+# T4 and T3 both read an article's extra fields from `etc/extrafields/*.xml` and add module fields from `etc/form/`:
+# `com_modules*.xml` for every module, `<module>.xml` for that one (JA Kids Corner's "view all" link of mod_articles_category).
 article_types=form_types(sorted((tpl_dir/'etc'/'extrafields').glob('*.xml'))) if a.full_coverage else {}
 module_form=sorted((tpl_dir/'etc'/'form').glob('com_modules*.xml')) if a.full_coverage else []
 module_types_cache={}
 def module_types(module):
- if module not in module_types_cache:module_types_cache[module]=form_types([root/'modules'/module/f'{module}.xml',*module_form])
+ own=[tpl_dir/'etc'/'form'/f'{module}.xml'] if a.full_coverage and module else []
+ if module not in module_types_cache:module_types_cache[module]=form_types([root/'modules'/module/f'{module}.xml',*module_form,*own])
  return module_types_cache[module]
 CONTENT_TYPES={'text','textarea','editor','media','url','email'}
 # Options, not words: a field whose NAME says it styles or places something. A picture is a picture
@@ -336,6 +338,13 @@ def declare_everything(kind,row,add):
   for col in CONTACT_TEXT:declare_text(add,col,row.get(col),title+' / '+col,requiresEvidence=col in CONTACT_FACTS)
   declare_text(add,'webpage',row.get('webpage'),title+' / webpage','url',requiresEvidence=True)
   declare_html(add,'misc',row.get('misc'),title+' / misc')
+  # Joomla's five contact links (`linka` … `linke`) and the words shown for each; an unused one holds `false`.
+  try:params=json.loads(row.get('params') or '{}')
+  except ValueError:params={}
+  for n in 'abcde':
+   for k,typ in ((f'link{n}_name','text'),(f'link{n}','url')):
+    v=params.get(k) if isinstance(params,dict) else None
+    if isinstance(v,str) and v.strip():add('params',typ,v,jsonPath=[k],label=title+' / '+k,customize='keep',**({'requiresEvidence':True} if typ=='url' else {}))
  elif kind=='tag':
   declare_text(add,'title',row.get('title'),title+' / title')
   declare_html(add,'description',row.get('description'),title+' / description')
@@ -456,15 +465,18 @@ if a.full_coverage:
  # account's id, which a provision keeps (it only resets the password).
  for uid in sorted(owners,key=int):declare_profiles(uid,owners[uid]['name'],{'user_id':str(uid)},None)
 # Template language strings (--full-coverage): words a template keeps in its language file and prints itself (JA Boxing's
-# "Try a class" is `Text::_('TPL_TRY_CLASS')`). One `languageString` entity per key the template's front-end PHP names as a
-# literal, identity {extension, key, language}: `tpl_<template>` (or its `.sys` file) for a key that file defines, or a
+# "Try a class" is `Text::_('TPL_TRY_CLASS')`; JA Kids Corner's map hands `'TPL_MAP_STATIC_OPEN'` to a helper of its own that
+# calls `Text::_`). One `languageString` entity per key the template's front-end PHP names as a literal (in a `Text` call,
+# or any quoted `TPL_…` string; a quoted prefix joined to a variable names no key), identity {extension, key, language}:
+# `tpl_<template>` (or its `.sys` file) for a key that file defines, or a
 # `TPL_` key no file defines (Joomla prints the key itself). A key another extension's file also defines is that
 # extension's to print, and is left out. Its value is what a visitor reads, as the Claude Cowork plugin reads it
 # (lib/LanguageStrings.php): the override file, else the site's `language/<tag>/` copy, else the template's own, else the
 # key. The row id is the plugin's LanguageStrings::id(). Never counted: a language file is not inventory.
 NOT_VISITOR_PHP={'templateInfo.php','error-t4.php'}
 NOT_VISITOR_DIRS={'admin','fields','elements','params'}
-LANG_CALL=re.compile(r'\b(?:J?Text)::(?:_|sprintf|plural|script)\(\s*([\'"])([A-Za-z0-9_][A-Za-z0-9_.-]*)\1',re.I)
+LANG_CALL=re.compile(r'\b(?:J?Text)::(?:_|sprintf|plural|script)\(\s*([\'"])([A-Za-z0-9_][A-Za-z0-9_.-]*)\1(?!\s*\.)',re.I)
+TPL_LITERAL=re.compile(r'([\'"])(TPL_[A-Za-z0-9_.-]+)\1(?!\s*\.)')
 # Joomla's own reading of a language file (LanguageOverrides::parse in the plugin), so a value is read exactly as the plugin reads it.
 INI_PHP=r'''$o=[];foreach(json_decode(stream_get_contents(STDIN),true) as $f=>$b){$r=[];$s=trim($b)===''?[]:@parse_ini_string(str_replace('_QQ_','"\""',$b),false,INI_SCANNER_RAW);if(is_array($s))foreach($s as $k=>$v)if(is_string($k)&&is_scalar($v))$r[strtoupper($k)]=str_replace('\"','"',(string)$v);$o[$f]=(object)$r;}echo json_encode((object)$o);'''
 def string_id(extension,language,key):return int(hashlib.sha1(f'{extension}|{language}|{key}'.encode()).hexdigest()[:7],16)+1
@@ -473,7 +485,7 @@ if a.full_coverage:
  for f in sorted(tpl_dir.rglob('*.php')):
   rel=f.relative_to(tpl_dir).parts
   if rel[-1] in NOT_VISITOR_PHP or rel[0] in NOT_VISITOR_DIRS:continue
-  named.update(m.group(2).upper() for m in LANG_CALL.finditer(read_text(f)))
+  named.update(m.group(2).upper() for rx in (LANG_CALL,TPL_LITERAL) for m in rx.finditer(read_text(f)))
  tags=sorted({d.name for base in [root/'language',tpl_dir/'language'] if base.is_dir() for d in base.iterdir() if d.is_dir() and re.fullmatch(r'[a-z]{2,3}-[A-Z]{2,4}',d.name) and any((d/n).is_file() for n in [f'{d.name}.tpl_{template}.ini',f'tpl_{template}.ini'])})
  if a.languages:tags=[t for t in tags if t in set(a.languages.split(','))]
  ini_files={}

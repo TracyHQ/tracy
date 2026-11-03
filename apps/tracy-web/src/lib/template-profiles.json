@@ -900,6 +900,28 @@
         "darkLogo": true
       }
     },
+    "quickstart/ja-kidscorner/j6": {
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": { "width": 168, "height": 48 },
+        "logoHeight": 48,
+        "unverified": ["brandReady", "faviconReady"],
+        "note": "Template ja_kidscorner: two styles (Default, DT Register), both logotype image with logoimage empty, so the header shows the template's own images/logo.png (a dark 168 x 48 picture, mean luminance 118, on the light #fdf9ef page; no logoimage_sm, no logoimage_dark, no footer logo, no dark mode); no CSS rule holds an uploaded logo to a height, so the writer scales it to 48. The header shows the style's logoimage when logotype is image (tpls/blocks/header.php), and the only icon link is templates/ja_kidscorner/favicon.ico (T3, no favicon setting). Measured on the published 1.0.2 (31/10/2026); the brand writer and favicon proof was not run, hence unverified."
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": { "width": 168, "height": 48 },
+        "logoHeight": 48,
+        "unverified": ["brandReady", "faviconReady"],
+        "note": "Same logos as 1.0.2; no logo file, logo layout or logo rule changed (images/logo.png, favicon.ico and tpls/blocks/header.php are byte-identical, both styles still logotype image with logoimage empty): the template stylesheets read the role variables of a worn design system with the old colours as fallback. Measured on the 1.0.3 installer (31/10/2026); the brand writer and favicon proof was not run, hence unverified."
+      }
+    },
     "quickstart/ja-kinetic/j6": {
       "1.0.2": {
         "logos": "pair",

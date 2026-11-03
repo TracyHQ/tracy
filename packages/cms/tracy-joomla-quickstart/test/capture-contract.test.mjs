@@ -1087,6 +1087,59 @@ test(
 )
 
 test(
+  "--full-coverage reads a module's template fields from the template's form for that module, and a contact's links",
+  needsPhp,
+  () => {
+    // JA Kids Corner: `etc/form/mod_articles_category.xml` adds a "view all" link to the category module, and the
+    // contact's social links sit in its `params` (Joomla's own `linka` … `linke`).
+    const categoryForm = `<?xml version="1.0" encoding="utf-8"?>
+<form><fields name="params"><fieldset name="custom-field">
+  <field name="show-link" type="list"/>
+  <field name="title-category" type="text"/>
+</fieldset></fields></form>`
+    const inv = fullInventory()
+    inv.modules.push(
+      module('13', {
+        title: 'Programs',
+        module: 'mod_articles_category',
+        params: JSON.stringify({ 'show-link': '1', 'title-category': 'View All Programs' })
+      })
+    )
+    inv.modules_menu.push({ id: '13', moduleid: '13', menuid: '101' })
+    inv.contact_details[0].params = JSON.stringify({
+      show_links: '1',
+      linka_name: 'facebook',
+      linka: 'https://joomlart.com',
+      linkb_name: '',
+      linkb: false
+    })
+    const run = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage'],
+      schemas: { features: ICONS_XML },
+      files: { ...FULL_FILES, 'templates/tracy/etc/form/mod_articles_category.xml': categoryForm }
+    })
+    assertWritten(run)
+    const slots = described(run)
+    assert.deepEqual(
+      slots.filter((s) => s.startsWith('module-13 params')),
+      ['module-13 params title-category text View All Programs keep']
+    )
+    assert.deepEqual(
+      slots.filter((s) => s.startsWith('contact-1 params')),
+      [
+        'contact-1 params linka_name text facebook keep',
+        'contact-1 params linka url https://joomlart.com keep'
+      ]
+    )
+    // A contact's own links are the customer's to state, as its web page is.
+    const link = run
+      .read('content-map.json')
+      .slots.find((s) => s.entity === 'contact-1' && s.jsonPath?.[0] === 'linka')
+    assert.equal(link.requiresEvidence, true)
+  }
+)
+
+test(
   '--full-coverage with --evidence-by-field leaves no fact field the contracts gate refuses',
   needsPhp,
   () => {
@@ -1134,7 +1187,7 @@ const languageStringId = (extension, language, key) =>
 const STRING_FILES = {
   // The site's copy is the one Joomla loads; the template's own copy is read only when there is none.
   'language/en-GB/en-GB.tpl_tracy.ini':
-    '; Tracy\nTPL_TRY_CLASS = "Try a class"\nTPL_LEAD = "The 6 <span>punches</span>"\nTPL_CONTACT_SEND="Submit"\nTPL_UNUSED = "Not on any page"\nTPL_T4_SUPPORT="Support"\n',
+    '; Tracy\nTPL_TRY_CLASS = "Try a class"\nTPL_LEAD = "The 6 <span>punches</span>"\nTPL_CONTACT_SEND="Submit"\nTPL_UNUSED = "Not on any page"\nTPL_T4_SUPPORT="Support"\nTPL_MAP_OPEN="Open in Google Maps"\nTPL_MAP_ALT="Street map of %s"\n',
   'templates/tracy/language/en-GB/en-GB.tpl_tracy.ini': 'TPL_TRY_CLASS = "Try a class (template copy)"\n',
   'language/en-GB/en-GB.tpl_tracy.sys.ini': 'TPL_TRACY_POSITION_MAIN="Main"\n',
   // An override the release ships is what a visitor reads.
@@ -1142,6 +1195,9 @@ const STRING_FILES = {
   'language/en-GB/com_finder.ini': 'COM_FINDER_SEARCH="Search"\n',
   'templates/tracy/html/com_content/article/classes.php':
     "<?php echo Text::_('TPL_TRY_CLASS'); ?><h2><?php echo Text::_('TPL_LEAD'); ?></h2><?php echo JText::_(\"TPL_FOLLOW_US\"); echo Text::sprintf('TPL_CONTACT_SEND', 1);",
+  // A layout that hands the key to a helper of its own as a plain string; a key built at run time names nothing.
+  'templates/tracy/html/jagooglemap/default.php':
+    "<?php $say = function ($key, $english) { return Text::_($key); }; echo $say('TPL_MAP_OPEN', 'Open'); echo sprintf($say(\"TPL_MAP_ALT\", 'Map of %s'), $place); echo Text::_('TPL_' . $name);",
   'templates/tracy/html/mod_menu/main.php':
     "<?php echo Text::_('TPL_TRACY_POSITION_MAIN'); echo Text::_('COM_FINDER_SEARCH');",
   // The T4 error page (shown only when the framework is missing) and the administrator's overview are no visitor page.
@@ -1209,6 +1265,8 @@ test(
     const want = [
       ['tpl_tracy', 'TPL_CONTACT_SEND', 'Send it'],
       ['tpl_tracy', 'TPL_FOLLOW_US', 'TPL_FOLLOW_US'],
+      ['tpl_tracy', 'TPL_MAP_ALT', 'Street map of %s'],
+      ['tpl_tracy', 'TPL_MAP_OPEN', 'Open in Google Maps'],
       ['tpl_tracy', 'TPL_TRY_CLASS', 'Try a class'],
       ['tpl_tracy.sys', 'TPL_TRACY_POSITION_MAIN', 'Main']
     ]

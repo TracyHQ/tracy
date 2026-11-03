@@ -1,0 +1,369 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v2",
+  "profileVersion": "1.0.0",
+  "contract": "ja-kidscorner/j6/1.0.3",
+  "baseHash": "28e175f5a1223177543964832ceab3cc6b14cde492ce183e2354a65e559e8946",
+  "baseFiles": {
+    "manifest.json": "8e36d50c9af0ce16caeb8bdc9d4e5391c8faa45b5067b382c5d8d401da14eb12",
+    "content-map.json": "76aed1963bbe1689aa2e5bc0b4ff438919325cc74a16e0864b578a8ab9602457",
+    "presentation-lock.json": "ec12e72eebe6a864951a7e1085f2f9732d43ceeb4349bcafb59c91de457ee37f"
+  },
+  "inputs": {},
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-134",
+      "identity": {
+        "path": "other-pages/offline-page",
+        "menutype": "bonus-pages",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-135",
+      "identity": {
+        "path": "other-pages/error-page",
+        "menutype": "bonus-pages",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-138",
+      "identity": {
+        "path": "joomla-content/featured-articles",
+        "menutype": "bonus-pages",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_content view=featured) in bonus-pages, the drawer menu of module-117"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-140",
+      "identity": {
+        "path": "joomla-content/tagged-items",
+        "menutype": "bonus-pages",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_tags view=tag) in bonus-pages, the drawer menu of module-117"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-143",
+      "identity": {
+        "path": "joomla-content/typography",
+        "menutype": "bonus-pages",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-152",
+      "identity": {
+        "path": "homepage/home-default",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Default",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "ja_kidscorner - Default",
+        "template": "ja_kidscorner",
+        "client_id": "0"
+      },
+      "label": "ja_kidscorner - Default · Home",
+      "style": {
+        "id": 9,
+        "template": "ja_kidscorner"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "49fed35cccaa0a81cadfbdae56b6dd4ae211d613d055f17196bf9ab49a105cf3",
+      "after": "880e4ded6e76b0f801cfc474520cb4532b477628d182d128d39710cd04333caf",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "ja_kidscorner - DT Register",
+        "template": "ja_kidscorner",
+        "client_id": "0"
+      },
+      "label": "ja_kidscorner - DT Register · Home",
+      "style": {
+        "id": 10,
+        "template": "ja_kidscorner"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "3afd4b9ea4a955bf8668665bf4505776ae8d96a35ebd5934e2cb6406d68de3e5",
+      "after": "c69a84c73f38b99945b40b67c948615df0b7b233d6b60634889001cc8006702b",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "Login",
+      "where": "bonus-pages/user-page/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "Registration",
+      "where": "bonus-pages/user-page/registration",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "Profile",
+      "where": "bonus-pages/user-page/profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "Edit Profile",
+      "where": "bonus-pages/user-page/edit-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "Smart Search",
+      "where": "bonus-pages/other-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "Joomla Content",
+      "where": "bonus-pages/joomla-content",
+      "rule": "keep.holds-kept-entry",
+      "reason": "holds menuItem-139, which stays"
+    },
+    {
+      "key": "menuItem-139",
+      "label": "Blog",
+      "where": "bonus-pages/joomla-content/category-blog",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to category:10: a branch hide may not take real content along"
+    },
+    {
+      "key": "menuItem-141",
+      "label": "About Us",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-142",
+      "label": "Contact Us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-145",
+      "label": "Home",
+      "where": "main-menu/home-dt",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-146",
+      "label": "Events",
+      "where": "main-menu/events",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-148",
+      "label": "Programs",
+      "where": "mainmenu/programs",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-149",
+      "label": "Events",
+      "where": "mainmenu/events-content",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-150",
+      "label": "Contact Us",
+      "where": "main-menu/contact-us-dt",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-151",
+      "label": "About Us",
+      "where": "main-menu/about-us-dt",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-154",
+      "label": "Home - Default",
+      "where": "main-menu/home-dt/home-default",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-207",
+      "label": "User Panel",
+      "where": "main-menu/user-panel",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-272",
+      "label": "Password Reset",
+      "where": "usermenu/password-reset",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=reset): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-273",
+      "label": "Username Reminder Request",
+      "where": "usermenu/username-reminder-request",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=remind): a working feature stays unless decided"
+    },
+    {
+      "key": "module-117",
+      "label": "Bonus Pages",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders bonus-pages: 9 entries stay"
+    },
+    {
+      "key": "module-148",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 5 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-126",
+      "label": "User Page",
+      "where": "bonus-pages/user-page",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in bonus-pages, the drawer menu of module-117"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Other Pages",
+      "where": "bonus-pages/other-pages",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in bonus-pages, the drawer menu of module-117"
+    },
+    {
+      "key": "menuItem-155",
+      "label": "Home - DT Register",
+      "where": "main-menu/home-dt/home-dt-register",
+      "rule": "unresolved.variant-label",
+      "reason": "\"Home - DT Register\" reads as a home or colour demo"
+    }
+  ],
+  "counts": {
+    "menuItems": 6,
+    "modules": 0,
+    "megaSubs": 2,
+    "kept": 27,
+    "unresolved": 3
+  }
+}

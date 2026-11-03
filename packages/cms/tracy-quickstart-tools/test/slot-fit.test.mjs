@@ -244,6 +244,49 @@ test('text gets the characters and lines its box holds per viewport, the smalles
   assert.equal(slotOf(out, 'module-1.9').fit, undefined)
 })
 
+test('a text drawn at font size 0 (a T3 "text-hide" credit) holds its own words on one line, not an unreadable fit', () => {
+  // The page measures its line height as 0: lines come back Infinity (NaN when the box is 0 high too), characters 0 wide.
+  const map = {
+    roleVocabularyVersion: 'place-content-roles/2',
+    slots: [
+      {
+        key: 'languageString-9.0',
+        entity: 'languageString-9',
+        type: 'text',
+        sample: 'Powered By T3 Framework',
+        role: 'editorial.paragraph'
+      },
+      {
+        key: 'languageString-8.0',
+        entity: 'languageString-8',
+        type: 'text',
+        sample: 'Built with T3',
+        role: 'editorial.paragraph'
+      }
+    ]
+  }
+  const findings = {
+    pages: [
+      {
+        items: [
+          text('Powered By T3 Framework', ['languageString-9.0'], {
+            desktop: vp(60, 30, textLook(900, Infinity, 0)),
+            phone: vp(60, 30, textLook(300, Infinity, 0))
+          }),
+          text('Built with T3', ['languageString-8.0'], { desktop: vp(60, 30, textLook(900, Number.NaN, 0)) })
+        ]
+      }
+    ]
+  }
+  const out = measureSlotFit({ map, findings }).map
+  const fit = slotOf(out, 'languageString-9.0').fit
+  assert.deepEqual(fit.lines, { desktop: 1, phone: 1 })
+  assert.deepEqual(fit.maxChars, { desktop: 23, phone: 23 })
+  assert.equal(fit.maxCharacters, 23)
+  assert.deepEqual(slotOf(out, 'languageString-8.0').fit.lines, { desktop: 1 })
+  assert.deepEqual(checkContentMapFit(out).errors, [])
+})
+
 test('groups say how many items the demo shows and whether their pictures share one shape', () => {
   const { map, findings } = fixture()
   const out = measureSlotFit({ map, findings }).map
