@@ -157,3 +157,19 @@ test('a twin of a twin is hidden when the root source is hidden', () => {
   assert.ok(!('module-7.3' in out.mapping.changes))
   assert.ok(out.hidden.some((h) => h.frame === 'block-7.3'))
 })
+
+test('a twin whose source was returned is hidden with the reason source returned', () => {
+  const input = pictures()
+  input.frames = input.frames.filter((e) => e.frame !== 'block-7.1')
+  const out = run({ pictures: input })
+  assert.ok(!('module-7.2' in out.mapping.changes))
+  assert.deepEqual(
+    out.hidden.find((h) => h.frame === 'block-7.2'),
+    {
+      frame: 'block-7.2',
+      key: 'module-7.2',
+      reason: 'source returned'
+    }
+  )
+  assert.ok(!out.problems.some((p) => p.where === 'block-7.2'))
+})

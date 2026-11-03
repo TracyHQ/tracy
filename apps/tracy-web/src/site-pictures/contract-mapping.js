@@ -30,6 +30,7 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
   const bad = (where, detail) => {
     problems.push({ where, detail })
   }
+  // No image slot of the JA Boxing content map (1.0.10) sets requiresEvidence, so `evidence` can stay empty.
   const changes = {}
   const placedFiles = new Map() // sitePath -> upload record, one per file
   // The Joomla door cannot hide a picture slot, so a hidden frame is only listed here, never written. The write step
@@ -42,7 +43,8 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
   function placement(e, seen = new Set()) {
     if (e.source !== 'twin') return { file: e }
     const src = frames.get(e.twinOf)
-    if (!src) return bad(e.frame, `twin follows ${e.twinOf}, which has no entry`) ?? null
+    // A source with no entry was returned to the planner; its twin is hidden too (ADR 0043, P11).
+    if (!src) return { hide: { frame: e.twinOf }, returned: true }
     if (src.source === 'hide') return { hide: src }
     // A twin of a twin follows the chain: it is hidden when the root source is hidden.
     if (src.source === 'twin') {
@@ -65,7 +67,11 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     const p = placement(e)
     if (!p) continue
     if (p.hide) {
-      hidden.push({ frame: e.frame, key, reason: `its source ${p.hide.frame} is hidden` })
+      hidden.push({
+        frame: e.frame,
+        key,
+        reason: p.returned ? 'source returned' : `its source ${p.hide.frame} is hidden`
+      })
       continue
     }
     if (imageSlots && !imageSlots.has(key)) {
