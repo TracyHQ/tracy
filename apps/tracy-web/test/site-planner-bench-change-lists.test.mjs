@@ -1,6 +1,7 @@
 // Change lists in the fix rounds of the site planner bench (ADR 0041, #301), at the bench-run seam: the planner may
 // answer a fix round with only the parts it changes; the server applies them to the previous plan, records the list
-// and scores the merged plan. A list that cannot be applied asks once for the whole plan, in the same round. The
+// and scores the merged plan. The valid changes of a list are applied and only the invalid ones are asked for again,
+// once; if those still fail, or the list cannot be read at all, the whole plan is asked for, in the same round. The
 // rolling cache marker lives one hour. The model is a scripted fake.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
@@ -8,7 +9,13 @@ import { runFiles } from '../src/site-planner/bench-export.js'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { createSitePlannerQueue, NOT_A_PLAN_MESSAGE } from '../src/site-planner/bench-worker.js'
 import { smallEditsMessage } from '../src/site-planner/plan-change-size.js'
-import { applyChanges, CHANGES_INSTRUCTION, WHOLE_PLAN_MESSAGE } from '../src/site-planner/plan-changes.js'
+import {
+  applyChanges,
+  applyValidChanges,
+  CHANGES_INSTRUCTION,
+  invalidChangesMessage,
+  WHOLE_PLAN_MESSAGE
+} from '../src/site-planner/plan-changes.js'
 import { finalReply, scriptedModel, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import { plan } from './_site-plan-check.mjs'
@@ -125,13 +132,20 @@ test('a whole plan in a fix round is still accepted', opts, async () => {
   assert.deepEqual(run.rounds[1].reading, { form: 'plan', droppedText: false })
 })
 
-test('an unknown id asks once for the whole plan, and its answer is the same round', opts, async () => {
+test('an unknown id asks only for corrected edits, and the whole plan if those fail too', opts, async () => {
   const { pool } = db
   const changes = [{ page: 'page-that-does-not-exist', with: { id: 'page-that-does-not-exist' } }]
-  const { run, model } = await runOnce(pool, [reply(noSite()), reply({ changes }), reply(plan())])
+  const { run, model } = await runOnce(pool, [
+    reply(noSite()),
+    reply({ changes }),
+    reply({ changes }),
+    reply(plan())
+  ])
   assert.equal(run.status, 'succeeded', run.error)
-  assert.equal(model.requests.length, 3)
-  assert.equal(lastUserText(model.requests[2]), WHOLE_PLAN_MESSAGE)
+  assert.equal(model.requests.length, 4)
+  const asked = run.rounds[1].reading.invalidChangesAsked
+  assert.equal(lastUserText(model.requests[2]), asked.message)
+  assert.equal(lastUserText(model.requests[3]), WHOLE_PLAN_MESSAGE)
   assert.deepEqual(
     run.rounds.map((r) => [r.round, r.state]),
     [
@@ -148,6 +162,146 @@ test('an unknown id asks once for the whole plan, and its answer is the same rou
   assert.equal(run.rounds[1].reading.form, 'plan')
 })
 
+/** A plan with two defects (no site, a bad slot in a block), and a change list that fixes both with one bad key. */
+function twoDefects() {
+  const { good, bad, block } = brokenBlock()
+  delete bad.site
+  const blockFix = { block: block.block, field: 'copy', with: block.copy }
+  const siteFix = { section: 'site', with: good.site }
+  return { good, bad, blockFix, siteFix, broken: { ...blockFix, oops: true } }
+}
+
+test(
+  'one invalid change: the rest is applied and only the invalid one is asked for again',
+  opts,
+  async () => {
+    const { pool } = db
+    const { good, bad, blockFix, siteFix, broken } = twoDefects()
+    const first = [siteFix, broken]
+    const { run, model } = await runOnce(pool, [
+      reply(bad),
+      reply({ changes: first }),
+      reply({ changes: [blockFix] })
+    ])
+    assert.equal(run.status, 'succeeded', run.error)
+    assert.equal(model.requests.length, 3)
+    const message = lastUserText(model.requests[2])
+    assert.notEqual(message, WHOLE_PLAN_MESSAGE)
+    assert.doesNotMatch(message, /whole plan as one JSON/)
+    assert.match(message, /^1 of your changes were applied\. 1 could not be applied/)
+    assert.match(message, /- change 1: change 1 has keys it should not: oops\n/)
+    assert.ok(message.includes(JSON.stringify(broken)))
+    const reading = run.rounds[1].reading
+    assert.equal(
+      message,
+      invalidChangesMessage(
+        [{ index: 1, reason: 'change 1 has keys it should not: oops', change: broken }],
+        1
+      )
+    )
+    assert.equal(run.rounds[1].state, 'checked')
+    assert.deepEqual(run.rounds[1].plan, good)
+    assert.equal(run.rounds[1].failureList, '')
+    assert.deepEqual(run.rounds[1].changes, [siteFix, blockFix])
+    assert.equal(reading.wholePlanAsked, undefined)
+    assert.equal(reading.form, 'changes')
+    assert.equal(reading.changesApplied, 2)
+    assert.deepEqual(reading.changesRejected, [])
+    assert.equal(reading.invalidChangesAsked.message, message)
+  }
+)
+
+test('a second failure of the corrected edits falls back to asking for the whole plan', opts, async () => {
+  const { pool } = db
+  const { good, bad, siteFix, broken } = twoDefects()
+  const { run, model } = await runOnce(pool, [
+    reply(bad),
+    reply({ changes: [siteFix, broken] }),
+    reply({ changes: [broken] }),
+    reply(good)
+  ])
+  assert.equal(run.status, 'succeeded', run.error)
+  assert.equal(model.requests.length, 4)
+  assert.equal(lastUserText(model.requests[3]), WHOLE_PLAN_MESSAGE)
+  assert.equal(run.rounds[1].state, 'checked')
+  assert.deepEqual(run.rounds[1].plan, good)
+  assert.equal(run.rounds[1].reading.form, 'plan')
+  assert.match(run.rounds[1].reading.wholePlanAsked.reason, /keys it should not: oops/)
+  assert.equal(run.rounds[1].reading.changesApplied, 1)
+  assert.equal(run.rounds[1].reading.changesRejected.length, 1)
+})
+
+test(
+  'a redeploy while corrected edits are asked for resends that ask on the partly edited plan',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool)
+    const started = await startRun(pool)
+    const { good, bad, blockFix, siteFix, broken } = twoDefects()
+    await drain(pool, scriptedModel([reply(bad), reply({ changes: [siteFix, broken] })]), { killOn: 3 })
+    await pool.query(`update site_planner_run set lease_until = now() - interval '1 second' where id = $1`, [
+      started.id
+    ])
+    let run = await readRun(pool, started.id)
+    assert.equal(run.rounds[1].state, 'planning')
+    const { message } = run.rounds[1].reading.invalidChangesAsked
+
+    const model = scriptedModel([reply({ changes: [blockFix] })])
+    await drain(pool, model)
+    run = await readRun(pool, started.id)
+    assert.equal(run.status, 'succeeded', run.error)
+    assert.equal(model.requests.length, 1)
+    assert.equal(lastUserText(model.requests[0]), message)
+    assert.deepEqual(run.rounds[1].plan, good)
+    assert.deepEqual(run.rounds[1].changes, [siteFix, blockFix])
+  }
+)
+
+test('applyValidChanges applies what is valid and holds back what depends on a rejected change', () => {
+  const previous = plan()
+  const block = previous.pages.flatMap((p) => p.blocks ?? []).find((b) => b.copy?.length >= 1)
+  const slot = block.copy[0].slot
+  const other = previous.pages
+    .flatMap((p) => p.blocks ?? [])
+    .find((b) => b.block !== block.block && b.copy?.length)
+  const changes = [
+    { slot, remove: true, oops: true },
+    { slot, field: 'says', with: 'after the rejected remove' },
+    { slot: other.copy[0].slot, field: 'says', with: 'an unrelated edit' },
+    { page: 'no-such-page', with: { id: 'no-such-page' } }
+  ]
+  const out = applyValidChanges(previous, { changes })
+  assert.equal(out.ok, true)
+  assert.equal(out.applied, 1)
+  assert.deepEqual(
+    out.rejected.map((r) => r.index),
+    [0, 1, 3]
+  )
+  assert.match(out.rejected[0].reason, /keys it should not: oops/)
+  assert.match(out.rejected[1].reason, /change 1 depends on change 0/)
+  assert.deepEqual(out.rejected[1].change, changes[1])
+  const findSlot = (p, id) =>
+    p.pages
+      .flatMap((x) => x.blocks ?? [])
+      .flatMap((b) => b.copy ?? [])
+      .find((c) => c.slot === id)
+  assert.equal(findSlot(out.plan, slot).says, findSlot(previous, slot).says)
+  assert.equal(findSlot(out.plan, other.copy[0].slot).says, 'an unrelated edit')
+  assert.equal(findSlot(previous, other.copy[0].slot).says, other.copy[0].says)
+  assert.equal(applyValidChanges(previous, { changes: [] }).ok, false)
+  assert.equal(applyValidChanges(null, { changes }).ok, false)
+})
+
+test('the message for rejected changes truncates long changes and long lists', () => {
+  const long = { slot: 's', field: 'says', with: 'x'.repeat(2000), oops: true }
+  const rejected = Array.from({ length: 45 }, (_, i) => ({ index: i + 3, reason: 'bad', change: long }))
+  const message = invalidChangesMessage(rejected, 100)
+  assert.ok(message.length < 45 * 400)
+  assert.match(message, /- and 5 more rejected changes: 43, 44, 45, 46, 47/)
+  assert.match(message, /\.\.\.\n/)
+})
+
 test(
   'a second change list that cannot be applied ends the round as not a plan; rounds stay bounded',
   opts,
@@ -159,10 +313,12 @@ test(
       reply(unknown),
       reply(unknown),
       reply(unknown),
+      reply(unknown),
+      reply(unknown),
       reply(noSite())
     ])
     assert.equal(run.status, 'succeeded', run.error)
-    assert.equal(model.requests.length, 5)
+    assert.equal(model.requests.length, 7)
     assert.deepEqual(
       run.rounds.map((r) => [r.round, r.state]),
       [
@@ -172,8 +328,8 @@ test(
       ]
     )
     assert.match(run.rounds[1].error, /^SITE_PLANNER_CHANGES_NOT_APPLIED/)
-    assert.equal(lastUserText(model.requests[3]), NOT_A_PLAN_MESSAGE)
-    assert.equal(lastUserText(model.requests[4]), WHOLE_PLAN_MESSAGE)
+    assert.equal(lastUserText(model.requests[4]), NOT_A_PLAN_MESSAGE)
+    assert.equal(lastUserText(model.requests[6]), WHOLE_PLAN_MESSAGE)
     assert.ok(run.standingFailures)
   }
 )
@@ -183,7 +339,7 @@ test('a redeploy while the whole plan is asked for resends that ask in the same 
   await assignPlannerDoor(pool)
   const started = await startRun(pool)
   const unknown = { changes: [{ frame: 'nope', with: { frame: 'nope' } }] }
-  await drain(pool, scriptedModel([reply(noSite()), reply(unknown)]), { killOn: 3 })
+  await drain(pool, scriptedModel([reply(noSite()), reply(unknown), reply(unknown)]), { killOn: 4 })
   await pool.query(`update site_planner_run set lease_until = now() - interval '1 second' where id = $1`, [
     started.id
   ])

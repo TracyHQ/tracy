@@ -10,9 +10,11 @@
 // section, then replaces one value at a path inside it ("field"), adds one entry to a list in it ("add"), removes one
 // value at a path or the part itself ("remove"), or, with none of these, replaces the whole part (plan-change-edits.js).
 // Every other part stays as it was. A change list that names a part that is not there (or more than one), or whose
-// edit is malformed, is not applied: the server then asks once for the whole plan. A list whose replacements resend
-// much of the plan unchanged is refused once by the worker (plan-change-size.js).
-import { applyEdit, PART_KINDS } from './plan-change-edits.js'
+// edit is malformed, is rejected on its own: every valid change is still applied (applyValidChanges) and the server
+// sends back only the rejected ones, once, for corrected edits. Only when that does not work, or the answer is not a
+// usable change list at all, does it ask for the whole plan. A list whose replacements resend much of the plan
+// unchanged is refused once by the worker (plan-change-size.js).
+import { applyEdit, PART_KINDS, pathSteps } from './plan-change-edits.js'
 
 export { PART_KINDS } from './plan-change-edits.js'
 
@@ -31,7 +33,10 @@ export const CHANGES_INSTRUCTION = [
   ''
 ].join('\n')
 
-/** Sent once in a round whose change list could not be applied; its answer counts as the same round. */
+/**
+ * Sent once in a round whose change list could not be applied at all, or whose corrected edits (invalidChangesMessage)
+ * still had invalid changes; its answer counts as the same round. Last resort, so a round cannot loop forever.
+ */
 export const WHOLE_PLAN_MESSAGE =
   'Your changes could not be applied. Answer with the whole plan as one JSON object, with nothing before or after it.\n'
 
@@ -196,4 +201,87 @@ export function applyChanges(previous, changeList) {
     if (reason) return { ok: false, reason }
   }
   return { ok: true, plan, replacements }
+}
+
+const NO_KEY = Symbol('no key')
+
+/** The part a change names, as one string key, or NO_KEY when it names none or several. */
+function partKeyOf(change) {
+  if (!isObject(change)) return NO_KEY
+  const named = KIND_KEYS.filter((k) => Object.hasOwn(change, k))
+  if (named.length !== 1 || typeof change[named[0]] !== 'string') return NO_KEY
+  return `${named[0]}:${change[named[0]]}`
+}
+
+/** The path a change edits inside its part, or null when it edits the whole part (or does not name one). */
+function pathKeyOf(change) {
+  for (const op of OPS) {
+    const v = change[op]
+    if (typeof v === 'string') return (pathSteps(v) ?? [v]).join('.')
+  }
+  return null
+}
+
+const overlaps = (a, b) =>
+  a === null || b === null || a === b || a.startsWith(`${b}.`) || b.startsWith(`${a}.`)
+
+/**
+ * The previous plan with every valid change of a list applied, in order, and the invalid ones set aside:
+ * `{ ok: true, plan, replacements, applied, rejected, validChanges }`, where rejected is `[{ index, reason, change }]`
+ * and validChanges the changes that were applied. `{ ok: false, reason }` only when there is no usable list (no
+ * previous plan, "changes" empty or not a list). The previous plan is never modified.
+ *
+ * Order dependence: a later change that edits the same part as a rejected earlier change, at the same path or one
+ * above or below it (or anywhere in the part when either change replaces the whole part), is not applied either and
+ * is rejected as depending on that change. Applying it alone could leave the part in a state the planner never
+ * intended (a remove that was rejected, then an add on the same slot). It is sent back with the others, so the
+ * corrected edits restate both. Changes on other parts, or other paths of the same part, are unaffected.
+ */
+export function applyValidChanges(previous, changeList) {
+  if (!isObject(previous)) return { ok: false, reason: 'there is no previous plan to apply changes to' }
+  const changes = changeList?.changes
+  if (!Array.isArray(changes) || !changes.length)
+    return { ok: false, reason: '"changes" must be a list with at least one change' }
+  const plan = structuredClone(previous)
+  const replacements = []
+  const rejected = []
+  const validChanges = []
+  const blocked = [] // [part key, path or null, index of the rejected change]
+  for (const [n, change] of changes.entries()) {
+    const key = partKeyOf(change)
+    const path = isObject(change) ? pathKeyOf(change) : null
+    const dependsOn = key === NO_KEY ? undefined : blocked.find(([k, p]) => k === key && overlaps(p, path))
+    const reason = dependsOn
+      ? `change ${n} depends on change ${dependsOn[2]}, which was rejected (it edits the same part)`
+      : applyOne(plan, change, n, replacements)
+    if (!reason) {
+      validChanges.push(change)
+      continue
+    }
+    rejected.push({ index: n, reason, change })
+    if (key !== NO_KEY) blocked.push([key, path, n])
+  }
+  return { ok: true, plan, replacements, applied: validChanges.length, rejected, validChanges }
+}
+
+const MAX_LISTED = 40
+const CHANGE_TEXT_CHARS = 300
+const REASON_CHARS = 300
+
+const clip = (text, n) => (text.length > n ? `${text.slice(0, n)}...` : text)
+
+/** Sent once in a round when some changes were applied and some were not: only the invalid ones come back. */
+export function invalidChangesMessage(rejected, applied) {
+  const shown = rejected.slice(0, MAX_LISTED)
+  const more = rejected.slice(MAX_LISTED).map((r) => r.index)
+  return [
+    `${applied} of your changes were applied. ${rejected.length} could not be applied and were left out:`,
+    ...shown.map(
+      (r) =>
+        `- change ${r.index}: ${clip(r.reason, REASON_CHARS)}\n  ${clip(JSON.stringify(r.change) ?? 'undefined', CHANGE_TEXT_CHARS)}`
+    ),
+    ...(more.length ? [`- and ${more.length} more rejected changes: ${more.join(', ')}`] : []),
+    'Answer with only the corrected edits for these changes, as one JSON object {"changes": [...]} in the same format, with nothing before or after it. Do not resend the changes that were applied, and do not send the whole plan.',
+    ''
+  ].join('\n')
 }

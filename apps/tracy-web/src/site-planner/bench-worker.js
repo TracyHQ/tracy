@@ -59,10 +59,11 @@ import {
 import { oversizedReplacements, smallEditsMessage } from './plan-change-size.js'
 import { readBalance, readsBalance } from './provider-balance.js'
 import {
-  applyChanges,
+  applyValidChanges,
   CHANGES_INSTRUCTION,
   isChangeList,
   objectOf,
+  invalidChangesMessage,
   WHOLE_PLAN_MESSAGE
 } from './plan-changes.js'
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
@@ -217,8 +218,9 @@ const followUpAfter = (round) =>
   round.state === 'checked' ? `${round.failureList}${CHANGES_INSTRUCTION}` : round.failureList
 
 // One round: the planner runs (resuming from the saved turns), then its answer is saved as a plan with its check, or
-// as an answer that is not a plan. A change list that cannot be applied asks once for the whole plan, in the same
-// round. Returns the run's verdict when the round ends the run, else null.
+// as an answer that is not a plan. In a change list the valid changes are applied and the invalid ones are asked
+// for again, only those, once; corrected edits that still have invalid changes (or a list that cannot be read at
+// all) ask once for the whole plan. All of it in the same round. Returns the run's verdict when the round ends the run, else null.
 async function playRound(deps, { row, ready, round, followUp, base, reading: prior, leaseToken, must }) {
   const { pool } = deps
   const runId = row.id
@@ -234,6 +236,16 @@ async function playRound(deps, { row, ready, round, followUp, base, reading: pri
   const smallAsk = prior?.smallEditsAsked?.message
   let askedSmall = Boolean(smallAsk) && (await roundSent(pool, runId, round, smallAsk))
   const reading = { ...prior }
+  // The corrected edits go onto the plan the first list left behind: the valid changes of that list, applied again.
+  let askedFix =
+    Boolean(reading.invalidChangesAsked) &&
+    (await roundSent(pool, runId, round, reading.invalidChangesAsked.message))
+  let carried = null
+  if (askedFix) {
+    const first = objectOf(reading.invalidChangesAsked.answer)
+    carried = first.ok ? applyValidChanges(base, first.value) : null
+    if (!carried?.ok) askedFix = false
+  }
   for (;;) {
     const result = await ask(deps, { row, ready, round, history, followUp, leaseToken, must })
     if (result.ended) {
@@ -256,7 +268,7 @@ async function playRound(deps, { row, ready, round, followUp, base, reading: pri
     let plan = read.value
     let changes
     if (reading.form === 'changes') {
-      const applied = applyChanges(base, read.value)
+      const applied = applyValidChanges(askedFix ? carried.plan : base, read.value)
       if (!applied.ok && askedWhole) {
         await save('not_a_plan', {
           answer: result.answer,
@@ -276,8 +288,11 @@ async function playRound(deps, { row, ready, round, followUp, base, reading: pri
         askedWhole = true
         continue
       }
-      const oversized = oversizedReplacements(applied.replacements)
-      if (oversized.length && !askedSmall) {
+      const replacements = askedFix
+        ? [...carried.replacements, ...applied.replacements]
+        : applied.replacements
+      const oversized = oversizedReplacements(replacements)
+      if (oversized.length && !askedSmall && !askedFix) {
         const message = smallEditsMessage(oversized)
         reading.smallEditsAsked = { message, replacements: oversized, answer: result.answer }
         await save('planning', { changes: read.value.changes, reading })
@@ -286,10 +301,48 @@ async function playRound(deps, { row, ready, round, followUp, base, reading: pri
         askedSmall = true
         continue
       }
+      if (applied.rejected.length) {
+        // Recorded before the ask goes out, so a resumed round still knows what was applied and what was sent back.
+        reading.changesApplied = askedFix ? carried.applied + applied.applied : applied.applied
+        reading.changesRejected = applied.rejected.map(({ index, reason }) => ({ index, reason }))
+        const fixable = !askedFix && !askedWhole
+        if (fixable) {
+          const message = invalidChangesMessage(applied.rejected, applied.applied)
+          reading.invalidChangesAsked = { message, answer: result.answer }
+          await save('planning', { changes: read.value.changes, reading })
+          history = result.turns
+          followUp = message
+          askedFix = true
+          carried = applied
+          continue
+        }
+        const reason = `${applied.rejected.length} changes could not be applied: ${applied.rejected[0].reason}`
+        if (askedWhole) {
+          await save('not_a_plan', {
+            answer: result.answer,
+            error: `SITE_PLANNER_CHANGES_NOT_APPLIED: ${reason}`,
+            failureList: NOT_A_PLAN_MESSAGE,
+            changes: read.value.changes,
+            reading
+          })
+          return null
+        }
+        // The corrected edits are still not valid: the last resort is the whole plan.
+        reading.wholePlanAsked = { reason, answer: result.answer }
+        await save('planning', { changes: read.value.changes, reading })
+        history = result.turns
+        followUp = WHOLE_PLAN_MESSAGE
+        askedWhole = true
+        continue
+      }
       // Correctness over speed: a second oversized list is applied, and the round says so.
       if (oversized.length) reading.bigReplacementsApplied = oversized
+      if (askedFix) {
+        reading.changesApplied = carried.applied + applied.applied
+        reading.changesRejected = []
+      }
       plan = applied.plan
-      changes = read.value.changes
+      changes = askedFix ? [...carried.validChanges, ...read.value.changes] : read.value.changes
     }
     await must(setProgress(pool, { runId, step: 'checking', round, leaseToken }))
     const checkResult = checkPlan({
