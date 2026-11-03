@@ -1,0 +1,135 @@
+// Starting and cancelling a picture bench run (#340). A start checks everything a run needs before it is queued (the
+// plan's and the brief's shape, the kit, the owner photos of a brief file) and stores what the run will use, so a
+// refused start leaves nothing behind and an accepted one says exactly what it ran: plan, brief as used, where its
+// owner photos come from, kit, prompt hashes and checker version. The worker (bench-worker.js) does the rest.
+import { briefShapeProblems } from '../lib/bench-brief-shape.js'
+import { briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { readableKits } from '../lib/template-kit-source.js'
+import { planShapeProblems } from '../site-writer/bench-control.js'
+import { activeRun, createRun, readRun, requestCancel, SITE_PICTURES_RUN_ACTIVE } from './bench-store.js'
+import { fileStore, sha256Hex } from './file-store.js'
+import { openKitWithMap } from './kit-with-map.js'
+import { briefImages } from './owner-photos.js'
+import { CHECKER_VERSION } from './picture-check/check-pictures.js'
+import { picturePrompts } from './picture-prompts.js'
+
+export { briefOfRevision }
+
+const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })
+
+/**
+ * Queue one run, or refuse it with a reason and nothing written.
+ * @param {{ pool: import('pg').Pool, plan: unknown, planSource: object, brief: unknown, briefSource: object,
+ *   kitRef: string, startedBy: string, photos?: { name: string, files: Map<string, Buffer> } | null,
+ *   storeDir?: string, index?: Map<string, object> }} input `photos`: for a brief file, the folder of owner photos the
+ *   CLI read (its name and its files by file name, each named by its sha256); a revision's photos are read by the
+ *   worker from the revision's media
+ */
+export async function startPictureRun({
+  pool,
+  plan,
+  planSource,
+  brief,
+  briefSource,
+  kitRef,
+  startedBy,
+  photos = null,
+  storeDir,
+  index
+}) {
+  const where = index ? { index } : {}
+  const kits = readableKits(where)
+  if (!kits.some((k) => k.ref === kitRef))
+    return refuse(
+      'SITE_PICTURES_KIT_UNKNOWN',
+      `No readable kit "${kitRef}". Readable kits: ${kits.map((k) => k.ref).join(', ') || 'none'}.`
+    )
+  const planProblems = planShapeProblems(plan, kitRef)
+  if (planProblems.length)
+    return refuse('SITE_PICTURES_PLAN_SHAPE', `The plan cannot run: ${planProblems.join('; ')}`, {
+      problems: planProblems
+    })
+  const problems = briefShapeProblems(brief)
+  if (problems.length)
+    return refuse('SITE_PICTURES_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
+  const kit = openKitWithMap(kitRef, where)
+  if (!kit) return refuse('SITE_PICTURES_KIT_UNKNOWN', `The kit ${kitRef} cannot be read.`)
+  let photoSource
+  if (briefSource?.kind === 'revision') photoSource = { kind: 'revision', revisionId: briefSource.revisionId }
+  else {
+    const read = await storePhotos(brief, photos, storeDir)
+    if (!read.ok) return read
+    photoSource = read.source
+  }
+  const active = await activeRun(pool)
+  if (active) return activeRefusal(active)
+  const created = await createRun(pool, {
+    startedBy,
+    plan,
+    planSource,
+    brief,
+    briefSource,
+    photoSource,
+    kit: { ref: kit.ref, release: kit.release, version: kit.version },
+    prompts: picturePrompts(),
+    checkerVersion: CHECKER_VERSION
+  })
+  if (created.error === SITE_PICTURES_RUN_ACTIVE) return activeRefusal(created.active)
+  return { ok: true, run: created.run }
+}
+
+// A brief file's owner photos: every file in the folder is named by the sha256 of its bytes (an extension is allowed)
+// and its bytes have that hash; the ones the brief lists as still images go into the bench's file store. Only the
+// folder's name and the counts are stored on the run.
+async function storePhotos(brief, photos, storeDir) {
+  if (!photos) return { ok: true, source: { kind: 'folder', name: null, files: 0, used: 0 } }
+  const wanted = new Set(briefImages(brief).map((a) => a.sha256))
+  const store = fileStore(storeDir)
+  let used = 0
+  for (const [name, bytes] of photos.files) {
+    const stem = name.split('.')[0]
+    const sha = sha256Hex(bytes)
+    if (stem !== sha)
+      return refuse(
+        'SITE_PICTURES_PHOTO_HASH',
+        `The photo ${name} is not named by the sha256 of its bytes (${sha}); name every owner photo by its hash.`
+      )
+    if (!wanted.has(sha)) continue
+    await store.putPhoto(bytes)
+    used += 1
+  }
+  return { ok: true, source: { kind: 'folder', name: photos.name, files: photos.files.size, used } }
+}
+
+function activeRefusal(active) {
+  const who = active
+    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
+    : 'another run'
+  return refuse(SITE_PICTURES_RUN_ACTIVE, `Only one picture run at a time: ${who} is still active.`, {
+    active
+  })
+}
+
+/** Cancel a run: one no worker holds ends at once; one a worker holds is asked to stop between two steps. */
+export async function cancelPictureRun(pool, runId) {
+  if (!UUID.test(String(runId))) return refuse('SITE_PICTURES_RUN_NOT_FOUND', `No run ${runId}.`)
+  const { rows } = await pool.query(
+    `update site_picture_run set status = 'cancelled', step = 'done', cancel_requested_at = coalesce(cancel_requested_at, now()),
+       finished_at = now(), updated_at = now(), lease_token = lease_token + 1
+     where id = $1 and status = 'queued' and (lease_until is null or lease_until < now())
+     returning id`,
+    [runId]
+  )
+  if (rows.length) {
+    await pool.query(
+      `update site_picture_round set state = 'cancelled', finished_at = now() where run_id = $1 and state = 'planning'`,
+      [runId]
+    )
+    return { ok: true, run: await readRun(pool, runId) }
+  }
+  const asked = await requestCancel(pool, runId)
+  if (asked) return { ok: true, run: asked }
+  const run = await readRun(pool, runId)
+  if (!run) return refuse('SITE_PICTURES_RUN_NOT_FOUND', `No run ${runId}.`)
+  return refuse('SITE_PICTURES_RUN_NOT_ACTIVE', `Run ${runId} has already ended (${run.status}).`)
+}

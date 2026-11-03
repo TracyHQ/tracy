@@ -2253,6 +2253,31 @@ A trial bench for the writer step (#326): one agent writes the copy of a whole s
   the reviews it quotes, a slim view of the kit blocks it uses (with their look text) and the two handed-over name slots.
   Code adds version, fingerprint and the plan's label slots; fix rounds apply only the writer's corrected entries.
 
+### Picture bench (03/11/2026, [ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md))
+
+A trial bench for the picture step (#336): every picture frame of a frozen site plan gets a file cut to the size the
+site needs, a hide, a return to the planner or a pending entry, written as one `site-pictures/1` manifest that the
+picture check grades. It builds no site, writes nothing to one and has **no screen, route or API endpoint**.
+
+- **Started and read from a command line** inside the tracy-web container:
+  [`scripts/site-pictures-bench.mjs`](apps/tracy-web/scripts/site-pictures-bench.mjs) (`run --plan-file --kit
+  --brief-file --photos | --brief-revision`, `list`, `status`, `get`, `cancel`;
+  [`bench-cli.js`](apps/tracy-web/src/site-pictures/bench-cli.js)). `get` copies the manifest, the picture files, each
+  round's check and the turns to an output folder.
+- **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-pictures/bench-worker.js)) is the picture step as a step
+  of the shared bench run loop, its own durable queue over `site_picture_run` (`app.sitePicturesQueue`, started by
+  `server.js`, migration 198), one picture run at a time.
+- **Owner photo bytes** of a WO revision are read through the brief asset reader (`briefPictureBytes`,
+  `opportunities-build/brief-picture-labels.js`) from the media store, hash checked; a run on a brief file reads a folder
+  of files named by their sha256, which the CLI copies into the bench's file store when the run starts.
+- **A new store on disk**: the bench's file store ([`file-store.js`](apps/tracy-web/src/site-pictures/file-store.js)),
+  a folder in the container (`TRACY_PICTURE_BENCH_DIR`, default in the system's temporary directory) where every
+  picture file is named by its sha256, with one `site_picture_file` row per file (path, hash, bytes, cost). It is a
+  cache: a file gone from it is reported by `get`, never invented.
+- **No model yet** (#340, code only): any-real frames take owner photos by code, person frames a confirmed portrait or
+  initials, twins copy their source, frames the kit marks not writable are returned (a picture painted behind blocks is
+  listed in `siteSettings`); specific, icon and cut-out frames stay pending for the picker, icon and cut-out tickets.
+
 ## 9. Sign-in, seats, permissions
 
 ### Credentials for external programs: seat key, MCP OAuth, account token (24/10/2026)
