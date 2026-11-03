@@ -5,7 +5,8 @@
 // "plan-label"`, the plan's own words) that the writer left out, as the prompt tells it to. Nothing the writer wrote
 // is changed, reordered or dropped.
 //
-// A fix round answers only the corrected entries: { slots, alts, seo, pages }, each list holding only what changed.
+// A fix round answers only the corrected entries: { slots, alts, seo, pages }, each list holding only what changed
+// (and `returns`, which withdraws the writer's own text for a slot or page).
 // They are read as a change list for the shared run loop (asChangeList: one change per entry, { in: <list>, ...entry
 // }) and applied onto the previous round's copy (applyValidChanges): an entry replaces the text of the entry with the
 // same key (slot, frame, page) or adds it when the writer had left it out. An entry that names nothing the plan has,
@@ -18,8 +19,11 @@ export const COPY_VERSION = 'site-copy/1'
 /** The lists a fix round's answer may hold, and the key that names each entry. */
 export const FIX_LISTS = Object.freeze({ slots: 'slot', alts: 'frame', seo: 'page', pages: 'page' })
 
-/** What only a whole turn's answer holds: an answer with any of these is read as a whole copy. */
-const WHOLE_KEYS = ['version', 'fingerprint', 'notebook', 'returns']
+/** What code writes into the file: a fix round answer that repeats them is still corrected entries. */
+const CODE_KEYS = ['version', 'fingerprint']
+
+/** In a fix round, `returns` entries withdraw the writer's own text (applyReturn); they are keyed by slot or page. */
+const RETURNS = 'returns'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
@@ -45,19 +49,23 @@ export function assembleCopy(answer, { fingerprint, index }) {
 }
 
 /**
- * A fix round's answer as a change list, or null when it is a whole answer. Read so only in a fix round: an object
- * whose keys are among the fix lists, at least one, and none of what only a whole answer holds.
+ * A fix round's answer as a change list, or null when it is a whole answer. Only a whole writing turn writes the
+ * notebook, so in a fix round an answer without one is the writer's corrected entries, even when it repeats the
+ * file's version and fingerprint (code's own, ignored) or names returns. Read so it can never replace the whole copy
+ * with a few entries (first run on dev, #334). A key that is no list of a fix answer is one rejected change.
  */
 export function asChangeList(value, { round }) {
-  if (round === 0 || !isObject(value)) return null
-  const keys = Object.keys(value)
-  if (!keys.length || keys.some((k) => WHOLE_KEYS.includes(k) || !Object.hasOwn(FIX_LISTS, k))) return null
+  if (round === 0 || !isObject(value) || Object.hasOwn(value, 'notebook')) return null
+  const keys = Object.keys(value).filter((k) => !CODE_KEYS.includes(k))
   const changes = []
-  for (const list of Object.keys(FIX_LISTS))
+  for (const list of [...Object.keys(FIX_LISTS), RETURNS])
     for (const entry of arr(value[list]))
       changes.push(isObject(entry) ? { in: list, ...entry } : { in: list, entry })
-  // A list that is not a list is one change of its own, so it is sent back rather than silently dropped.
-  for (const list of keys) if (!Array.isArray(value[list])) changes.push({ in: list, entry: value[list] })
+  // A list that is not a list, or a key no fix answer has, is one change of its own, so it is sent back rather than
+  // silently dropped.
+  const known = (k) => Object.hasOwn(FIX_LISTS, k) || k === RETURNS
+  for (const list of keys)
+    if (!known(list) || !Array.isArray(value[list])) changes.push({ in: list, entry: value[list] })
   return { changes }
 }
 
@@ -70,6 +78,7 @@ const textProblem = (text) => {
 // Why one entry cannot be applied, or null.
 function entryProblem(change, index) {
   const list = change.in
+  if (list === RETURNS) return returnProblem(change, index)
   const keyName = FIX_LISTS[list]
   if (!keyName) return `it is in "${list}", which is not one of ${Object.keys(FIX_LISTS).join(', ')}`
   if (Object.hasOwn(change, 'entry')) return `an entry of "${list}" must be an object`
@@ -108,9 +117,41 @@ function entryProblem(change, index) {
   return null
 }
 
+const returnKey = (entry) => (isText(entry.slot) ? `slot ${entry.slot}` : `page ${entry.page}`)
+
+// Why one returns entry of a fix round cannot be applied, or null. A label slot is code's to write, never returned.
+function returnProblem(change, index) {
+  if (Object.hasOwn(change, 'entry')) return 'an entry of "returns" must be an object'
+  if (!isText(change.reason)) return 'a returns entry must give its reason'
+  if (isText(change.slot)) {
+    const planned = index.expected.get(change.slot)
+    if (planned && planned.label !== null)
+      return `slot ${change.slot} is a label: code fills it with the plan's words, leave it out`
+    return null
+  }
+  if (!isText(change.page)) return 'a returns entry must name its slot or its page'
+  if (!index.pages.includes(change.page) && !index.textPages.includes(change.page))
+    return `page ${change.page} is not a page the plan keeps`
+  return null
+}
+
+// A fix round return: the writer withdraws its own text for that slot (or pages entry). A slot the plan keeps is
+// listed as returned for the owner; a slot the plan does not keep (written by mistake) only leaves the copy.
+function applyReturn(doc, entry, index) {
+  if (isText(entry.slot)) {
+    doc.slots = arr(doc.slots).filter(
+      (s) => !(isObject(s) && s.slot === entry.slot && s.owner !== 'plan-label')
+    )
+    if (!index.expected.has(entry.slot)) return
+  } else doc.pages = arr(doc.pages).filter((p) => !(isObject(p) && p.page === entry.page))
+  if (!Array.isArray(doc.returns)) doc.returns = []
+  if (!doc.returns.some((r) => isObject(r) && returnKey(r) === returnKey(entry))) doc.returns.push(entry)
+}
+
 // Apply one valid entry to the copy, in place.
-function applyEntry(doc, change) {
+function applyEntry(doc, change, index) {
   const { in: list, ...entry } = change
+  if (list === RETURNS) return applyReturn(doc, entry, index)
   const keyName = FIX_LISTS[list]
   if (!Array.isArray(doc[list])) doc[list] = []
   const at = doc[list].filter((e) => isObject(e) && e[keyName] === entry[keyName])
@@ -143,7 +184,11 @@ export function applyValidChanges(previous, changeList, { ready }) {
   const validChanges = []
   const seen = new Set()
   for (const [n, change] of changes.entries()) {
-    const key = isObject(change) ? `${change.in}:${change[FIX_LISTS[change.in]]}` : null
+    const key = !isObject(change)
+      ? null
+      : change.in === RETURNS
+        ? `returns:${returnKey(change)}`
+        : `${change.in}:${change[FIX_LISTS[change.in]]}`
     const problem = !isObject(change)
       ? 'it is not an object'
       : (entryProblem(change, ready.index) ?? (seen.has(key) ? `${key} is named twice in this answer` : null))
@@ -152,7 +197,7 @@ export function applyValidChanges(previous, changeList, { ready }) {
       continue
     }
     seen.add(key)
-    applyEntry(doc, change)
+    applyEntry(doc, change, ready.index)
     validChanges.push(change)
   }
   return { ok: true, doc, replacements: [], applied: validChanges.length, rejected, validChanges }

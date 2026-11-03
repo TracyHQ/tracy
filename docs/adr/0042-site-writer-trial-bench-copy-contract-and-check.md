@@ -164,6 +164,13 @@ The check only reports. In a fix round the failing slots go back to the same wri
 (length against limit, which sentence repeats where) and only those slots are rewritten. At most **2 fix rounds**.
 A slot still failing after that keeps the writer's own text and is shown in red. Code never deletes or rewrites it.
 
+A fix round answer is read as corrected entries whenever it holds no `notebook` (only a whole writing turn writes
+one), even when it repeats `version` and `fingerprint` (code's own, ignored): the first run on dev lost its whole copy
+when a fix answer repeated them and was read as a whole file. A fix answer may also hold `returns`: each entry
+withdraws the writer's own text for that slot or pages entry. A slot the plan keeps becomes a return; a slot the plan
+does not keep (written by mistake, W02 unknown) only leaves the copy, which is the one way a fix round can clear it.
+A return of a label slot is rejected, since code writes labels.
+
 ### 6. Bench run loop in lib/
 
 The writer bench reuses the planner bench's run loop instead of forking it (#327). The loop, the round, the change
