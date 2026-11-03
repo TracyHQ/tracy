@@ -39,6 +39,7 @@ export function checkCopy({ copy, plan, kit, brief } = {}) {
       slots: view.slots.length,
       alts: view.alts.length,
       seo: view.seo.length,
+      pages: view.pages.length,
       returns: view.returns.length
     }
   }

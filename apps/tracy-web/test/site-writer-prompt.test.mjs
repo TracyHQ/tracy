@@ -39,6 +39,13 @@ test('the prompt has an instruction for every copy check rule and its thresholds
   assert.match(text, /this section shows/)
 })
 
+test("the prompt says where footer headings go, how pages entries work and that labels are not the writer's", () => {
+  const { text } = writerPrompt()
+  for (const s of ['"pages"', 'footerMenu', 'titleSlot', 'legal:privacy', 'notFound', 'planner label'])
+    assert.ok(text.includes(s), `prompt mentions ${s}`)
+  assert.match(text, /body.*non-empty list/s)
+})
+
 test('the prompt holds no long dash', () => {
   // Built from code points so this file holds no long dash itself.
   const longDash = new RegExp(`[${String.fromCharCode(0x2013)}${String.fromCharCode(0x2014)}]`)

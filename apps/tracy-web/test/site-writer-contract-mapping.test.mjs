@@ -105,6 +105,16 @@ test('alts and page meta go to the extras section', () => {
   for (const f of Object.keys(extras.alts)) assert.ok(!(f in mapping.changes))
 })
 
+test('footer headings export like other slots, pages without kit slots go to extras.pages', () => {
+  const c = copy()
+  const { mapping, extras } = run()
+  assert.equal(mapping.changes['module-6.1'], 'Our classes')
+  assert.equal(mapping.changes['module-6.2'], 'Meet the coach')
+  assert.deepEqual(Object.keys(extras.pages), ['legal:privacy', 'notFound'])
+  assert.deepEqual(extras.pages.notFound, { title: c.pages[1].title, body: c.pages[1].body })
+  for (const k of Object.keys(extras.pages)) assert.ok(!(k in mapping.changes))
+})
+
 // The real write door check, run dry against a fake site that knows every exported key (test only import).
 test('the real applyJoomlaContract accepts the mapping in a dry run', async () => {
   const { mapping } = run()

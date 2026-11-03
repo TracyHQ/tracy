@@ -3,6 +3,9 @@
 Status: (binding) for the copy file shape and the check; the bench itself follows in #326.
 
 Builds on [ADR 0041](0041-site-planner-trial-bench-in-ops.md) (the site planner bench and its plan checker).
+Amended: footer column headings are ordinary writer slots, a new `pages` key carries the pages that have no kit
+slots, and W11 only notes a long dash in a planner label (contract gaps found while drafting the writer prompt;
+version strings unchanged because nothing shipped yet).
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -28,8 +31,16 @@ One JSON object, English keys, plain text only (no HTML; markup is the write ste
 | `slots` | `[{ slot, owner, text, factIds }]`, one entry per kept text slot, keyed by kit slot id. `owner` is `writer` or `plan-label`. `text` is a string, or a non-empty list of strings when the kit shows several paragraphs or bullets. `factIds` lists the brief facts the text rests on (may be empty). |
 | `alts` | `[{ frame, text }]`, one per planned picture frame, written from the plan's picture wish. |
 | `seo` | `[{ page, title, description }]`, one per kept page, including the page the plan creates for the privacy notice. The home entry also covers the two slots the brand step hands over (document title and meta description). |
+| `pages` | `[{ page, title, body }]`, one per page that has no kit slots: every plan legal page with `use: "create"` (keyed by its plan `id`, e.g. `legal:privacy`) and one entry keyed `notFound`. `title` is a string, `body` a non-empty list of paragraph strings. |
 | `notebook` | `[{ page, points[], openings[], calls[], phrases[] }]`, the copy notebook. |
 | `returns` | `[{ slot?, page?, reason }]`, at least one of `slot` and `page`, the returns to planner. |
+
+Footer column headings are not labels. The plan decides them in `site.footerMenu[].{group, heading:{says, page}}`
+(never in `copy`), and the kit's `site.navigationGroups[]` entry with the same `id` names the kit slot in
+`titleSlot` (its `heading` is the demo text). The writer writes each heading in `slots` under that `titleSlot` id
+with `owner: "writer"`, and the check expects it like any slot of the plan. The created legal page and the 404
+page have no kit slots at all, so their words live in `pages`; the created legal page also keeps its `seo` entry,
+`notFound` has none.
 
 Not in the file: hidden slots, link targets, label propagation to other menus and URL slots. The plan and the kit
 already hold them. Label slots (the plan gives them `text`) are filled by code from the plan and carry
@@ -58,17 +69,17 @@ on every run. Bump `CHECKER_VERSION` on any change to a rule, a threshold, a fai
 
 | Rule | Fails when |
 |---|---|
-| W01 | the file does not match section 1 |
-| W02 | a kept slot is missing (and not returned) or written twice; a hidden slot has text; a slot is unknown to the plan; a label differs from the plan's words; the owner does not match (label or not) |
-| W03 | text is empty, over the limit, under the floor, or has more paragraphs than the kit allows |
-| W04 | a number, time, price, phone, email or link is not in the facts the slot cites |
+| W01 | the file does not match section 1 (including the `pages` entries) |
+| W02 | a kept slot is missing (and not returned) or written twice; a hidden slot has text; a slot is unknown to the plan; a label differs from the plan's words; the owner does not match (label or not); a `pages` entry is missing (and not returned), written twice or unknown to the plan |
+| W03 | text is empty, over the limit, under the floor, or has more paragraphs than the kit allows; a `pages` title is over 60 characters or empty, or a `pages` paragraph is empty |
+| W04 | a number, time, price, phone, email or link is not in the facts the slot cites (a `pages` text cites no fact: see W04 details) |
 | W05 | a quoted review passage is not an exact passage of a review in the brief |
 | W06 | a sentence equals or nearly equals another sentence on the site |
 | W07 | a demo sentence or a demo proper name is left in the copy |
 | W08 | a phrase from the voice avoid list, the forbidden list or the brief's missing list appears |
-| W09 | an alt, a page title or a page description is missing or too long, or two titles are equal |
+| W09 | an alt, a page title or a page description is missing or too long, or two titles are equal (the created legal page needs a `seo` entry, `notFound` needs none) |
 | W10 | a sentence describes the page or section itself |
-| W11 | a long dash appears |
+| W11 | a long dash appears in writer text (in a planner label it is only a note) |
 
 Thresholds and decisions (named constants in the code):
 
@@ -76,6 +87,13 @@ Thresholds and decisions (named constants in the code):
   paragraphs the limit applies to the total of all items joined with one space. **Floor:** 60% of the demo text
   length (`FLOOR_RATIO`), only when the demo text is longer than 40 characters (`FLOOR_DEMO_MIN`), never above the
   limit. Paragraph count allowed: the larger of the kit's `paragraphs` and `bullets`, at least 1.
+- **Footer heading limits.** The limit is the kit slot's `maxCharacters` (the smaller of it and the plan's, as for
+  any slot). When the kit lists no limit for the `titleSlot`, the fallback is `HEADING_LIMIT_FACTOR` (2) times the
+  demo heading length, at least `HEADING_LIMIT_MIN` (20) characters.
+- **Pages entries.** W03: title at most `PAGE_TITLE_MAX` (60) characters and not empty, every body paragraph not
+  empty, no demo floor (there is no demo text). W04 reads them like alt text: details must exist in some fact of
+  the brief. W06 compares body paragraphs with the rest of the site (titles excluded). W07, W08, W10 and W11 read
+  title and body.
 - **W04 details.** Extracted from the text: emails, links (`http(s)://` or `www.`), phone numbers (7 or more digits
   with `+ ( ) . - space`), times (`06:00`, `6.30 pm`, `6pm`) and every other digit-bearing number. Each must appear,
   whitespace and case normalised, as a whole token in the values of the facts the slot cites; phones compare by
@@ -103,7 +121,9 @@ Thresholds and decisions (named constants in the code):
 - **W10 patterns.** Case-insensitive: "this section/page/block/row/card/banner/layout/template", "here you will/can
   find", "shows the shape of", "made to show", "section/block/page above/below", "demo text/content", "lorem
   ipsum". The list is in `rules-bans.js`.
-- **W11.** U+2014 and U+2013, in any text including labels.
+- **W11.** U+2014 and U+2013, in any written text. In a `plan-label` slot the writer cannot fix it, so it is
+  reported as a note on W11 ("planner label, return to planner"), not a failure. The same holds for any rule the
+  writer cannot fix: labels never fail W04 to W10.
 - Emoji use is left to the owner's eye, not a rule.
 
 ### 5. Code never edits writer text

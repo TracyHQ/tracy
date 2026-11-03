@@ -69,7 +69,9 @@ export function checkW04({ R, view, idx }) {
     if (!bad) R.w04.ok()
   }
   // Alt text and page titles and descriptions cite no fact: their details must exist in some fact of the brief.
-  for (const t of allTexts(view).filter((x) => ['alt', 'seo-title', 'seo-description'].includes(x.kind))) {
+  for (const t of allTexts(view).filter((x) =>
+    ['alt', 'seo-title', 'seo-description', 'page-title', 'page-body'].includes(x.kind)
+  )) {
     let bad = false
     for (const d of detailsOf(t.text))
       if (!backed(d, everything)) {

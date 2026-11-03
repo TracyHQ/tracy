@@ -172,3 +172,139 @@ test('oddly shaped plan, kit and brief parts never throw', () => {
     assert.equal(r.rules.length, 11)
   }
 })
+
+test('W01 fails a pages entry that does not match the shape', () => {
+  const w01 = (mutate, detail) => {
+    const c = copy()
+    mutate(c)
+    const r = ruleOf(c, 'W01')
+    assert.equal(r.status, 'fail')
+    assert.ok(
+      r.failures.some((f) => detail.test(f.detail)),
+      r.failures.map((f) => f.detail).join('\n')
+    )
+  }
+  w01((c) => {
+    delete c.pages
+  }, /pages must be a list/)
+  w01((c) => {
+    c.pages[0].body = []
+  }, /pages\[0\]/)
+  w01((c) => {
+    c.pages[1].body = 'one paragraph'
+  }, /pages\[1\]/)
+  w01((c) => {
+    c.pages[0].title = 5
+  }, /pages\[0\]/)
+  w01((c) => {
+    c.pages[0].page = ''
+  }, /pages\[0\]/)
+})
+
+test('W02 treats footer column headings as ordinary writer slots', () => {
+  breaks(
+    'W02',
+    (c) => {
+      c.slots = c.slots.filter((s) => s.slot !== 'block-6.1')
+    },
+    /block-6\.1.*missing/
+  )
+  breaks(
+    'W02',
+    (c) => {
+      c.slots = c.slots.filter((s) => s.slot !== 'block-6.2')
+    },
+    /block-6\.2.*missing/
+  )
+  breaks(
+    'W02',
+    (c) => {
+      slotOf(c, 'block-6.1').owner = 'plan-label'
+    },
+    /block-6\.1.*owner/
+  )
+  const c = copy()
+  c.slots = c.slots.filter((s) => s.slot !== 'block-6.2')
+  c.returns = [{ slot: 'block-6.2', reason: 'nothing true to say' }]
+  assert.equal(ruleOf(c, 'W02').status, 'pass')
+})
+
+test('W02 fails a missing, duplicate or unknown pages entry; a returned page may be absent', () => {
+  breaks(
+    'W02',
+    (c) => {
+      c.pages = c.pages.filter((p) => p.page !== 'legal:privacy')
+    },
+    /legal:privacy.*missing/
+  )
+  breaks(
+    'W02',
+    (c) => {
+      c.pages = c.pages.filter((p) => p.page !== 'notFound')
+    },
+    /notFound.*missing/
+  )
+  breaks(
+    'W02',
+    (c) => {
+      c.pages.push({ ...c.pages[1], body: ['Nothing lives at this address.'] })
+    },
+    /notFound.*twice/
+  )
+  breaks(
+    'W02',
+    (c) => {
+      c.pages.push({ page: 'legal:terms', title: 'Terms', body: ['Some terms.'] })
+    },
+    /legal:terms.*unknown/
+  )
+  const c = copy()
+  c.pages = c.pages.filter((p) => p.page !== 'notFound')
+  c.returns = [{ page: 'notFound', reason: 'no leads to name' }]
+  assert.equal(ruleOf(c, 'W02').status, 'pass')
+})
+
+test('W03 limits footer headings by the kit slot, or by the demo heading when the kit has no slot', () => {
+  breaks(
+    'W03',
+    (c) => {
+      slotOf(c, 'block-6.1').text = 'Everything about our classes'
+    },
+    /block-6\.1.*28.*25/
+  )
+  // block-6.2 is not in the kit blocks: limit is twice the 13 character demo heading (26)
+  breaks(
+    'W03',
+    (c) => {
+      slotOf(c, 'block-6.2').text = 'Meet the coach and the team'
+    },
+    /block-6\.2.*27.*26/
+  )
+  const c = copy()
+  slotOf(c, 'block-6.2').text = 'Meet the coach and the tea'
+  assert.equal(ruleOf(c, 'W03').status, 'pass')
+})
+
+test('W03 limits a pages entry: title at most 60, no empty paragraph, no demo floor', () => {
+  breaks(
+    'W03',
+    (c) => {
+      c.pages[0].title = 'T'.repeat(61)
+    },
+    /legal:privacy.*61.*60/
+  )
+  breaks(
+    'W03',
+    (c) => {
+      c.pages[1].body = ['Head back home.', '   ']
+    },
+    /notFound.*empty/
+  )
+  const c = copy()
+  c.pages[1].body = ['Back home.']
+  assert.equal(ruleOf(c, 'W03').status, 'pass')
+})
+
+test('the result counts the pages entries', () => {
+  assert.equal(check(copy()).meta.counts.pages, 2)
+})

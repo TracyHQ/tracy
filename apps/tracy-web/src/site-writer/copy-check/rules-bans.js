@@ -72,6 +72,7 @@ export function checkW09({ R, view, idx }) {
     else if (key) titles.set(key, p)
     if (!bad) R.w09.ok()
   }
+  R.w09.note('notFound needs no seo entry, only the created legal pages and the kept pages do')
   for (const s of view.seo)
     if (!idx.pages.includes(s.page))
       R.w09.fail(s.page, `${s.page}: seo entry for a page the plan does not keep`, 'seo-unknown')
@@ -89,7 +90,12 @@ export function checkW10({ R, view }) {
 export function checkW11({ R, view }) {
   for (const t of allTexts(view)) {
     const n = (t.text.match(LONG_DASH) ?? []).length
-    if (n) R.w11.fail(t.where, `${t.where}: ${n} long dash${n > 1 ? 'es' : ''} in the text`, 'long-dash')
+    // A label is the planner's words and the writer cannot fix it: a note, not a failure.
+    if (n && t.kind === 'label') {
+      R.w11.note(`${t.where}: long dash in a planner label, return to planner`)
+      R.w11.ok()
+    } else if (n)
+      R.w11.fail(t.where, `${t.where}: ${n} long dash${n > 1 ? 'es' : ''} in the text`, 'long-dash')
     else R.w11.ok()
   }
 }

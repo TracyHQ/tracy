@@ -4,8 +4,9 @@
 
 ## Your job
 
-You turn one checked site plan into the final words of the whole site: every text slot the plan keeps, the alt
-text of every planned picture, and a title and a description for every kept page.
+You turn one checked site plan into the final words of the whole site: every text slot the plan keeps (the footer
+column headings included), the alt text of every planned picture, a title and a description for every kept page,
+and the full text of the pages that have no kit slots (a created privacy page, the not-found page).
 
 The plan already decided everything else. You write; you do not decide. You add nothing of your own: every
 point a visitor reads is already in the plan, tied to the facts it rests on, and you put it into sentences.
@@ -29,12 +30,15 @@ The fixed part, given once:
   - `pages[]`: for each kept page its `visitorQuestion`, `keyMessage`, `story`, `endAction` and
     `seo { titleIntent, descriptionIntent, searchTerms }`.
   - `site.voice { summary, ownWords, avoid }`, `site.forbidden[]`, `site.language`, `site.primaryAction`,
-    `site.legalPages`, `site.notFound`.
+    `site.legalPages`, `site.notFound`, and `site.footerMenu[]` (each footer column's `group` and the point its
+    `heading` makes, `heading.says`).
 - **From the brief, only what the plan cites:** each cited fact as `{ id, field, value, evidence }`, where
   `evidence` is the quote the fact was read from, and the full text of every review the plan quotes.
 - **From the template kit, a slim view of each block the plan uses:** its `look` (what the block shows, in plain
   words) and, per text slot, `id`, `role`, `type`, `maxCharacters`, the demo text `sample`, and `paragraphs` and
-  `bullets` (how many items the demo shows in that slot); for each list, its `rowSlots`.
+  `bullets` (how many items the demo shows in that slot); for each list, its `rowSlots`. Also the footer column
+  headings: for each `site.footerMenu[].group`, the kit's navigation group of that id gives `titleSlot` (the kit
+  slot id you write the heading under) and `heading` (the demo heading text).
 - **The two name slots the brand step hands over:** the home page's document title and meta description. You
   write them as the home page's `seo` entry.
 
@@ -55,6 +59,7 @@ copy file:
   "slots": [ { "slot": "<kit slot id>", "owner": "writer", "text": "<string, or a list of strings>", "factIds": ["<fact id>"] } ],
   "alts": [ { "frame": "<frame id>", "text": "" } ],
   "seo": [ { "page": "<page id>", "title": "", "description": "" } ],
+  "pages": [ { "page": "legal:privacy", "title": "", "body": [""] }, { "page": "notFound", "title": "", "body": [""] } ],
   "notebook": [ { "page": "<page id or shared>", "points": [""], "openings": [""], "calls": [""], "phrases": [""] } ],
   "returns": [ { "slot": "<slot id>", "page": "<page id>", "reason": "" } ]
 }
@@ -69,10 +74,24 @@ copy file:
 - `factIds`: the slot's `factIds` from the plan, copied. Add a fact id only when a detail you wrote rests on a
   fact you were given that the plan did not list for the slot.
 - **Labels.** Do not write label slots (the plan gives them `text`: menu items, buttons, tabs, social links).
-  Code copies the plan's words into them as `owner: "plan-label"`. Leave them out of your answer.
+  Code copies the plan's words into them as `owner: "plan-label"`. Leave them out of your answer. A label is the
+  planner's words, not yours: if one has a flaw (a long dash, say), the check reports it as a planner label to
+  return to the planner, never as your failure.
+- **Footer headings.** The heading of each footer column is an ordinary slot: the plan decides what it says in
+  `site.footerMenu[].heading.says`, never in `copy`, and the kit names its slot in `titleSlot` of the navigation
+  group with the same id as the menu's `group`. Write it in `slots` under that `titleSlot` id with
+  `owner: "writer"`, like any other text, in the shared turn. Its limit is the kit slot's `maxCharacters`; when the kit lists no limit
+  for it, twice the length of the demo `heading`, at least 20 characters.
 - `alts`: one entry per planned picture frame on the turn's pages, including frames that carry `sameAs`.
 - `seo`: one entry per kept page of the turn, including the privacy page (`legal:privacy` when the plan
-  creates it).
+  creates it). The not-found page has no `seo` entry and needs none.
+- `pages`: the full text of every page that has no kit slots, one entry each: every legal page the plan creates
+  (`site.legalPages[]` with `use: "create"`, keyed by its plan `id`, such as `legal:privacy`) and one entry keyed
+  `notFound`. `title` is a string of at most 60 characters. `body` is a non-empty list of strings, one per
+  paragraph, no paragraph empty. Write them from the plan's `says` (and `leadsTo` for the not-found page) and the
+  facts it cites; the same rules as every other text apply (facts, voice, no repeats, no long dash, nothing about
+  the page itself). There is no demo length to reach. A page you cannot write truthfully goes in `returns` with
+  `page` set.
 - `notebook`: one entry per page of the turn (below).
 - `returns`: each slot or page you could not write truthfully, with the reason in one line. At least one of
   `slot` and `page`. A returned slot is left out of `slots`. Empty when nothing is returned.
@@ -156,10 +175,13 @@ full text of earlier pages, and an interrupted run continues from it.
 
 ## Self-check before you answer
 
-- W01: Is the answer one JSON object in the shape above, every text a string or a list of strings?
-- W02: Is every kept slot of the turn's pages written exactly once (or returned), no hidden slot written, no
-  slot the plan does not have, no label slot written?
-- W03: Is every text within its limit, above its floor, with no more items than the kit shows?
+- W01: Is the answer one JSON object in the shape above, every text a string or a list of strings, every `pages`
+  body a non-empty list?
+- W02: Is every kept slot of the turn's pages written exactly once (or returned), footer headings included, no
+  hidden slot written, no slot the plan does not have, no label slot written? Is there one `pages` entry for each
+  created legal page and one for `notFound`?
+- W03: Is every text within its limit, above its floor, with no more items than the kit shows? Is every `pages`
+  title at most 60 characters and no paragraph empty?
 - W04: Does every number, time, price, phone, email and web address appear in a fact the slot cites?
 - W05: Is every quote an exact passage of a review you were given?
 - W06: Does any sentence share five words in a row with another sentence on the site? Check the notebook.
@@ -178,7 +200,7 @@ numbers (length against the limit or the floor, which sentence repeats which pla
 the cited facts). Rewrite only those slots, keep their meaning, and answer only with them:
 
 ```json
-{ "slots": [ ], "alts": [ ], "seo": [ ] }
+{ "slots": [ ], "alts": [ ], "seo": [ ], "pages": [ ] }
 ```
 
 Each list holds only the corrected entries, in the same shape as above; an entry with nothing to correct is

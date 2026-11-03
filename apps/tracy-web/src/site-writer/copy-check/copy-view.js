@@ -12,7 +12,7 @@ const HEX64 = /^[0-9a-f]{64}$/
 
 export function readCopy(copy) {
   const problems = []
-  const view = { slots: [], alts: [], seo: [], notebook: [], returns: [] }
+  const view = { slots: [], alts: [], seo: [], pages: [], notebook: [], returns: [] }
   const bad = (where, detail) => problems.push({ where, detail })
   if (!isObject(copy)) {
     bad('file', 'the copy file is not a JSON object')
@@ -58,6 +58,18 @@ export function readCopy(copy) {
       view.seo.push({ page: s.page, title: s.title, description: s.description })
     else bad(`seo[${i}]`, 'seo entry needs a page, a title string and a description string')
   })
+  list('pages').forEach((p, i) => {
+    if (
+      isObject(p) &&
+      isNonEmpty(p.page) &&
+      isText(p.title) &&
+      Array.isArray(p.body) &&
+      p.body.length > 0 &&
+      isStrings(p.body)
+    )
+      view.pages.push({ page: p.page, title: p.title, body: p.body })
+    else bad(`pages[${i}]`, 'pages entry needs a page, a title string and a non-empty body list of strings')
+  })
   list('notebook').forEach((n, i) => {
     const ok =
       isObject(n) &&
@@ -75,7 +87,7 @@ export function readCopy(copy) {
 }
 
 // Every written string with the place it sits, for the rules that scan all text (W07, W08, W10, W11).
-// kind: slot | label | alt | seo-title | seo-description.
+// kind: slot | label | alt | seo-title | seo-description | page-title | page-body.
 export function allTexts(view) {
   const out = []
   for (const s of view.slots)
@@ -85,6 +97,10 @@ export function allTexts(view) {
   for (const s of view.seo) {
     out.push({ where: `${s.page} (title)`, kind: 'seo-title', text: s.title })
     out.push({ where: `${s.page} (description)`, kind: 'seo-description', text: s.description })
+  }
+  for (const p of view.pages) {
+    out.push({ where: `${p.page} (title)`, kind: 'page-title', text: p.title })
+    p.body.forEach((t, i) => out.push({ where: `${p.page} (body ${i + 1})`, kind: 'page-body', text: t }))
   }
   return out
 }

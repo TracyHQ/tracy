@@ -4,6 +4,10 @@ import { sentencesOf, stripEllipsis, textOfValue, wordsOf } from './text-tools.j
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
+// Footer headings (ADR 0042 amended): when the kit lists no slot for a heading's title slot id, the limit is derived
+// from the demo heading text: HEADING_LIMIT_FACTOR times its length, never below HEADING_LIMIT_MIN characters.
+export const HEADING_LIMIT_FACTOR = 2
+export const HEADING_LIMIT_MIN = 20
 const REVIEW_BLOCK = /review|testimonial/i
 const REVIEW_SAYS = /\b(quote|review|testimonial)s?\b/i
 
@@ -31,7 +35,39 @@ function indexKit(kit) {
 }
 
 // The decisions of the plan (shared blocks and every page's blocks) and what they say about slots and frames.
-function indexPlan(plan, kitIdx) {
+// The footer column headings: plan.site.footerMenu[] joined to kit.site.navigationGroups[] by group id gives the kit
+// slot id the writer fills. A kit slot is used as listed; otherwise (or without a limit) the limit comes from the
+// demo heading. Returns the extra expected slots and adds the missing kit slots to the index.
+function indexFooterHeadings(plan, kit, kitIdx) {
+  const groups = new Map(
+    arr(kit?.site?.navigationGroups)
+      .filter(isObject)
+      .map((g) => [g.id, g])
+  )
+  const out = []
+  for (const m of arr(plan?.site?.footerMenu)) {
+    const g = isObject(m) ? groups.get(m.group) : null
+    if (!g || typeof g.titleSlot !== 'string' || !g.titleSlot) continue
+    const demo = typeof g.heading === 'string' ? g.heading : ''
+    const known = kitIdx.slots.get(g.titleSlot)
+    const fallback = demo ? Math.max(HEADING_LIMIT_MIN, demo.length * HEADING_LIMIT_FACTOR) : null
+    if (!known || typeof known.maxCharacters !== 'number')
+      kitIdx.slots.set(g.titleSlot, {
+        type: 'text',
+        role: 'editorial.heading',
+        paragraphs: 1,
+        bullets: 0,
+        sample: demo,
+        ...known,
+        id: g.titleSlot,
+        maxCharacters: fallback ?? known?.maxCharacters
+      })
+    out.push({ slot: g.titleSlot, says: String(m.heading?.says ?? '') })
+  }
+  return out
+}
+
+function indexPlan(plan, kitIdx, headings) {
   const decisions = [...arr(plan?.sharedBlocks), ...arr(plan?.pages).flatMap((p) => arr(p?.blocks))].filter(
     isObject
   )
@@ -67,13 +103,28 @@ function indexPlan(plan, kitIdx) {
     ]
     for (const p of pics) if (isObject(p) && typeof p.frame === 'string') frames.add(p.frame)
   }
+  for (const h of headings)
+    if (!expected.has(h.slot))
+      expected.set(h.slot, {
+        slot: h.slot,
+        says: h.says,
+        factIds: [],
+        label: null,
+        maxCharacters: null,
+        isReview: false
+      })
   for (const id of expected.keys()) hidden.delete(id)
   const pages = arr(plan?.pages)
     .filter((p) => isObject(p) && p.decision === 'keep' && typeof p.id === 'string')
     .map((p) => p.id)
   for (const l of arr(plan?.site?.legalPages))
     if (isObject(l)) pages.push(typeof l.id === 'string' ? l.id : `legal:${l.kind}`)
-  return { expected, hidden, frames, pages }
+  // Pages with no kit slots: each created legal page (by plan id) and the not-found page.
+  const textPages = arr(plan?.site?.legalPages)
+    .filter((l) => isObject(l) && l.use === 'create')
+    .map((l) => (typeof l.id === 'string' ? l.id : `legal:${l.kind}`))
+  if (isObject(plan?.site?.notFound)) textPages.push('notFound')
+  return { expected, hidden, frames, pages, textPages }
 }
 
 const reviewTexts = (brief) => {
@@ -112,12 +163,13 @@ function indexDemo(kit, kitIdx) {
 
 export function indexInputs({ plan, kit, brief }) {
   const kitIdx = indexKit(kit)
+  const headings = indexFooterHeadings(plan, kit, kitIdx)
   const facts = new Map()
   for (const f of arr(brief?.facts))
     if (isObject(f) && typeof f.id === 'string') facts.set(f.id, textOfValue(f.value))
   return {
     kitSlots: kitIdx.slots,
-    ...indexPlan(plan, kitIdx),
+    ...indexPlan(plan, kitIdx, headings),
     facts,
     reviews: reviewTexts(brief),
     demo: indexDemo(kit, kitIdx)

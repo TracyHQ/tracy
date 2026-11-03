@@ -13,6 +13,8 @@ export function checkW06({ R, view }) {
   const entries = []
   for (const s of view.slots)
     if (s.owner === 'writer') for (const t of s.items) entries.push({ where: s.slot, text: t })
+  for (const p of view.pages)
+    p.body.forEach((t, i) => entries.push({ where: `${p.page} (body ${i + 1})`, text: t }))
   for (const s of view.seo) entries.push({ where: `${s.page} (description)`, text: s.description })
   const grams = new Map()
   const whole = new Map()

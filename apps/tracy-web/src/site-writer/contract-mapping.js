@@ -35,7 +35,7 @@ function kitSlotIndex(kit) {
 
 /**
  * @param {{ copy: object, contract: string, revision: string, kit?: object, brief?: { facts?: {id:string,value:string}[] } }} input
- * @returns {{ mapping: object, extras: { alts: Record<string,string>, pageMeta: Record<string,{title:string,description:string}> }, problems: object[] }}
+ * @returns {{ mapping: object, extras: { alts: Record<string,string>, pageMeta: Record<string,{title:string,description:string}>, pages: Record<string,{title:string,body:string[]}> }, problems: object[] }}
  */
 export function exportContractMapping({ copy, contract, revision, kit, brief }) {
   const { view, problems } = readCopy(copy)
@@ -55,9 +55,10 @@ export function exportContractMapping({ copy, contract, revision, kit, brief }) 
   const pageMeta = Object.fromEntries(
     view.seo.map((s) => [s.page, { title: s.title, description: s.description }])
   )
+  const pages = Object.fromEntries(view.pages.map((p) => [p.page, { title: p.title, body: p.body }]))
   return {
     mapping: { contract, revision, changes, evidence, pending: [], emptyLinks: [] },
-    extras: { alts, pageMeta },
+    extras: { alts, pageMeta, pages },
     problems
   }
 }

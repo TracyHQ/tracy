@@ -245,3 +245,81 @@ test('W11 fails long dashes in any written text', () => {
     /page-home/
   )
 })
+
+test('W04 checks details in pages entries against every fact of the brief', () => {
+  breaks(
+    'W04',
+    (c) => {
+      c.pages[1].body = ['Ask at the desk or call +000 555 0188.']
+    },
+    /notFound.*0188/
+  )
+  const c = copy()
+  c.pages[1].body = ['Ask at the desk or call +000 555 0100.']
+  assert.equal(status(c, 'W04'), 'pass')
+})
+
+test('W06 compares pages entries with the rest of the site', () => {
+  breaks(
+    'W06',
+    (c) => {
+      c.pages[1].body = ['Small group classes run every day, so come back soon.']
+    },
+    /notFound.*block-2\.2/
+  )
+})
+
+test('W08, W10 and W11 read pages entries', () => {
+  breaks(
+    'W08',
+    (c) => {
+      c.pages[0].body = ['Every member gets a free trial.']
+    },
+    /legal:privacy.*free trial/
+  )
+  breaks(
+    'W10',
+    (c) => {
+      c.pages[1].body = ['This page shows what an error looks like.']
+    },
+    /notFound.*this page/i
+  )
+  breaks(
+    'W11',
+    (c) => {
+      c.pages[0].title = `Privacy ${EM} policy`
+    },
+    /legal:privacy/
+  )
+})
+
+test('W09 asks the created legal page for a seo entry but notFound for none', () => {
+  assert.ok(!copy().seo.some((s) => s.page === 'notFound'))
+  assert.equal(status(copy(), 'W09'), 'pass')
+  const w09 = check(copy()).rules.find((x) => x.id === 'W09')
+  assert.ok(
+    w09.notes.some((n) => /notFound/.test(n) && /no seo/i.test(n)),
+    w09.notes.join('\n')
+  )
+  breaks(
+    'W09',
+    (c) => {
+      c.seo = c.seo.filter((s) => s.page !== 'legal:privacy')
+    },
+    /legal:privacy.*seo/
+  )
+})
+
+test('W11 reports a long dash in a planner label as a note, not a failure', () => {
+  const c = copy()
+  slotOf(c, 'block-1.1').text = `Join ${EM} us`
+  const r = check(c)
+  // the label differs from the plan's words, which is W02's business; W11 itself must not fail
+  const w11 = r.rules.find((x) => x.id === 'W11')
+  assert.equal(w11.status, 'pass')
+  assert.deepEqual(w11.failures, [])
+  assert.ok(
+    w11.notes.some((n) => /block-1\.1/.test(n) && /planner label, return to planner/.test(n)),
+    w11.notes.join('\n')
+  )
+})

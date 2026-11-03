@@ -24,6 +24,12 @@ export function kit() {
         { kind: 'printed', where: 'document-title', block: null, sample: 'Demo Gym - Fitness Template' },
         { kind: 'printed', where: 'meta description', block: null, sample: 'Demo Gym is a template.' },
         { kind: 'printed', where: 'title-attribute', block: 'header', sample: 'Demo Gym' }
+      ],
+      // Footer column headings: group-footer-a has its title slot in the kit blocks (block-6.1), group-footer-b
+      // points at a title slot the kit blocks do not list, so only its demo heading is known.
+      navigationGroups: [
+        { id: 'group-footer-a', titleSlot: 'block-6.1', heading: 'Useful links' },
+        { id: 'group-footer-b', titleSlot: 'block-6.2', heading: 'Find out more' }
       ]
     },
     blocks: [
@@ -103,6 +109,13 @@ export function kit() {
         role: 'page-body',
         slots: [text('block-5.1', 'person.name', 30, 'Marta Quill')],
         lists: []
+      },
+      {
+        id: 'block-6',
+        role: 'footer',
+        shared: true,
+        slots: [text('block-6.1', 'editorial.heading', 25, 'Useful links')],
+        lists: []
       }
     ]
   }
@@ -153,7 +166,11 @@ export function plan() {
           says: 'contact data use'
         }
       ],
-      notFound: { says: 'page not found', leadsTo: ['page-home'] }
+      notFound: { says: 'page not found', leadsTo: ['page-home'] },
+      footerMenu: [
+        { group: 'group-footer-a', heading: { says: 'links about the classes', page: 'page-home' } },
+        { group: 'group-footer-b', heading: { says: 'where to learn about the coach', page: 'page-about' } }
+      ]
     },
     sharedBlocks: [
       keep('block-1', {
@@ -263,7 +280,9 @@ export function copy() {
         'f-review-1'
       ]),
       w('block-3.6', 'Early sessions are the calm ones before the day starts.', ['f-hours']),
-      w('block-5.1', 'Nia Brook', ['f-coach'])
+      w('block-5.1', 'Nia Brook', ['f-coach']),
+      w('block-6.1', 'Our classes'),
+      w('block-6.2', 'Meet the coach')
     ],
     alts: [{ frame: 'block-2.f1', text: 'A coach showing a member how to lift' }],
     seo: [
@@ -281,6 +300,21 @@ export function copy() {
         page: 'legal:privacy',
         title: 'Privacy policy of Quay Fitness Studio',
         description: 'How the studio uses the contact details you send us.'
+      }
+    ],
+    pages: [
+      {
+        page: 'legal:privacy',
+        title: 'Privacy policy',
+        body: [
+          'Your message is read by the studio team and used only to reply to you.',
+          'Nobody outside the studio ever receives them.'
+        ]
+      },
+      {
+        page: 'notFound',
+        title: 'Page not found',
+        body: ['That address leads nowhere. Head back to the home page or ask a coach at the desk.']
       }
     ],
     notebook: [
