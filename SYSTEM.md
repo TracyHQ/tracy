@@ -2215,10 +2215,12 @@ endpoint**.
   lease renewed every minute, 20 claims, so a redeploy mid-run resumes from the last saved turn. A call dispatched with no
   answer is marked abandoned and sent once more; a second loss fails the run. A failing plan gets at most two fix rounds in
   the same conversation.
-- **The model** is called through the `sitePlanner` door (`/ops` › Model & AI, OpenRouter) by
+- **The model** is called through the `sitePlanner` door (`/ops` › Model & AI; by default `deepseek-flash` on the
+  `deepseek` provider, with `deepseek-v4-pro` and Claude through OpenRouter as alternatives) by
   [`agent-over-door.js`](apps/tracy-web/src/lib/agent-over-door.js): an OpenAI-compatible `/chat/completions` tool loop
-  with high reasoning effort, reasoning details sent back, a rolling cache marker, and the provider's own cost per call.
-  A run whose model reads no pictures (DeepSeek V4 Pro on DeepSeek's own API) gets the whole kit in its first message and
+  with the reasoning effort of the model's profile, reasoning sent back, and per call the provider's own cost or, on
+  DeepSeek's own API (streamed), one computed from DeepSeek's published prices. DeepSeek Flash reads the kit's text
+  looks with tool calls. A run whose model reads no pictures (DeepSeek V4 Pro on DeepSeek's own API) gets the whole kit in its first message and
   no tools; a run that reads with tools is told to write after 20 reading calls or a read of parts it already had. Every
   run stops past its cost budget (2 USD by default). On DeepSeek's own API the bench also reads the account balance
   (`GET /user/balance`) before and after a run and stores it on the run.

@@ -115,7 +115,7 @@ test("the deepseek-native profile: DeepSeek's wire, no provider routing, a price
   assert.equal(h.wire, 'deepseek-native')
   assert.equal(h.toolImages, 'user-message')
   assert.equal(h.cacheMarkers, false)
-  assert.equal(h.effort, 'low')
+  assert.equal(h.effort, 'high')
   assert.equal(h.provider, undefined)
   assert.equal(h.maxTokens, 128000)
   assert.deepEqual(h.price, DEEPSEEK_FLASH_PRICE)
@@ -306,13 +306,22 @@ test(
   async () => {
     const { pool } = db
     await assignTextOnlyDoor(pool)
-    const refused = await start(pool)
-    assert.equal(refused.ok, false)
-    assert.equal(refused.code, 'SITE_PLANNER_MODEL_LACKS')
-    assert.deepEqual(refused.lacking, ['vision'])
-    assert.ok(refused.reason.includes(KIT_REF))
-    assert.match(refused.reason, /no current look for \d+ of its 1440 shots/)
-    assert.equal((await pool.query('select count(*)::int as n from site_planner_run')).rows[0].n, 0)
+    // The bench kit ships a look for every shot; one is taken away here.
+    const kit = kitIndexWithLooks((doc) => {
+      delete doc.pages[0].look
+      return doc
+    })
+    try {
+      const refused = await start(pool, { index: kit.index })
+      assert.equal(refused.ok, false)
+      assert.equal(refused.code, 'SITE_PLANNER_MODEL_LACKS')
+      assert.deepEqual(refused.lacking, ['vision'])
+      assert.ok(refused.reason.includes(KIT_REF))
+      assert.match(refused.reason, /no current look for 1 of its 1440 shots/)
+      assert.equal((await pool.query('select count(*)::int as n from site_planner_run')).rows[0].n, 0)
+    } finally {
+      kit.done()
+    }
   }
 )
 

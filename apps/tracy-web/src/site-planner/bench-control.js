@@ -89,9 +89,11 @@ export const MODEL_HARNESS = Object.freeze([
       wire: 'deepseek-native',
       toolImages: 'user-message',
       cacheMarkers: false,
-      // DeepSeek's efforts are low, high and max. A measured Flash run at high spent about two thirds of its 10.5
-      // minutes thinking (about 70k reasoning tokens of 105k output); low is being measured against it.
-      effort: 'low',
+      // DeepSeek's efforts are low, high and max. Measured on the same brief and checker (03/11/2026): at high, 10.5
+      // minutes and about 0.04 USD, 62 failures in the first draft and none after the fix rounds; at low, 7.6 minutes
+      // (faster per call) but 202 failures in the first draft, still 2 after the second fix round, and a weaker page
+      // judgement. Low omits far more and does not converge in two fix rounds, so high stays.
+      effort: 'high',
       // Not yet measured against DeepSeek's own API; kept at the bench budget until it is.
       maxTokens: MAX_OUTPUT_TOKENS,
       price: DEEPSEEK_FLASH_PRICE
@@ -115,8 +117,9 @@ export const MODEL_HARNESS = Object.freeze([
       price: DEEPSEEK_V4_PRO_PRICE
     }
   },
-  // Claude Sonnet 5.5 and Opus 5.5 alike (alternatives to the planner's default model, door.js SITE_PLANNER_MODEL): OpenRouter lists both with
-  // image input, tools, reasoning_effort, a 1h cache write price and 128000 output tokens on every endpoint (03/11/2026).
+  // Claude Sonnet 5.5 and Opus 5.5 alike (alternatives to the planner's default model, door.js SITE_PLANNER_MODEL):
+  // OpenRouter lists both with image input, tools, reasoning_effort, a 1h cache write price and 128000 output tokens on
+  // every endpoint (03/11/2026).
   { profile: 'anthropic', match: /^anthropic\//, harness: {} },
   {
     profile: 'deepseek-v4.1-flash',

@@ -11,6 +11,7 @@ import {
   SITE_PLANNER_PROVIDER,
   sitePlannerDoor
 } from '../src/site-planner/door.js'
+import { sendsImages } from '../src/site-planner/bench-control.js'
 import { openKit } from '../src/site-planner/kit-source.js'
 import { fileDb } from './_db.mjs'
 import { KIT_REF, MODEL, withAllLooks } from './_site-planner-bench.mjs'
@@ -22,10 +23,11 @@ after(db.close)
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const SECRET = 's'.repeat(32)
-const PRO = SITE_PLANNER_MODEL
+/** DeepSeek V4 Pro, an alternative planner model that DeepSeek's own API lists as text only. */
+const PRO = 'deepseek-v4-pro'
 
-test("the planner runs on DeepSeek V4 Pro on DeepSeek's own API by default", () => {
-  assert.equal(SITE_PLANNER_MODEL, 'deepseek-v4-pro')
+test("the planner runs on DeepSeek Flash on DeepSeek's own API by default", () => {
+  assert.equal(SITE_PLANNER_MODEL, 'deepseek-flash')
   assert.equal(SITE_PLANNER_PROVIDER, 'deepseek')
 })
 
@@ -57,7 +59,7 @@ test('the WO doors are unchanged by the new door', () => {
   )
 })
 
-async function deepseek(pool, models) {
+async function deepseek(pool, models, model = PRO) {
   await saveProvider(
     pool,
     { id: 'deepseek', presetId: 'deepseek', apiKey: 'sk-ds-test', enabled: true },
@@ -65,7 +67,7 @@ async function deepseek(pool, models) {
     'owner@tracy.test'
   )
   await saveModels(pool, 'deepseek', models)
-  await assignDoor(pool, 'sitePlanner', { providerId: 'deepseek', model: PRO }, 'me')
+  await assignDoor(pool, 'sitePlanner', { providerId: 'deepseek', model }, 'me')
 }
 
 async function openRouter(pool, { enabled = true, models } = {}) {
@@ -104,7 +106,7 @@ test('an unset door refuses with its reason, even when the environment has a mod
     assert.match(found.reason, /Site planner/)
     assert.match(found.reason, /Model & AI/)
     assert.ok(
-      found.reason.includes('deepseek-v4-pro on the deepseek provider'),
+      found.reason.includes('deepseek-flash on the deepseek provider'),
       'an unset door names the planner model'
     )
   } finally {
@@ -173,6 +175,17 @@ test('a ready door with a model that reads pictures records that images are give
   assert.equal(found.snapshot.images, true)
 })
 
+test('the default DeepSeek Flash door is let in on the kit as it is, and is given images', opts, async () => {
+  const { pool } = db
+  // DeepSeek's own model list gives Flash text and image input.
+  await deepseek(pool, [{ id: SITE_PLANNER_MODEL, tools: true, vision: true }], SITE_PLANNER_MODEL)
+  const found = await sitePlannerDoor({ pool, secret: SECRET, kit: openKit(KIT_REF), sendsImages })
+  assert.equal(found.ok, true, JSON.stringify(found))
+  assert.equal(found.door.model, 'deepseek-flash')
+  assert.equal(found.snapshot.providerId, 'deepseek')
+  assert.equal(found.snapshot.images, true)
+})
+
 test(
   'a text-only model is let in for a kit with a current look for every 1440 shot, given no images',
   opts,
@@ -228,7 +241,14 @@ test(
     const { pool } = db
     await deepseek(pool, [])
     const noImages = () => false
-    const bare = await sitePlannerDoor({ pool, secret: SECRET, kit: openKit(KIT_REF), sendsImages: noImages })
+    const doc = withAllLooks(openKit(KIT_REF).doc)
+    delete doc.blocks[0].look
+    const bare = await sitePlannerDoor({
+      pool,
+      secret: SECRET,
+      kit: { ref: KIT_REF, doc },
+      sendsImages: noImages
+    })
     assert.equal(bare.code, 'SITE_PLANNER_MODEL_LACKS')
     assert.match(bare.reason, /is given no pictures/)
     const kit = { ref: KIT_REF, doc: withAllLooks(openKit(KIT_REF).doc) }

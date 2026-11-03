@@ -289,7 +289,7 @@ test(
     assert.equal(run.harness.modelProfile, 'deepseek-flash-native')
     for (const { body } of model.requests) {
       assert.equal(body.model, DEEPSEEK_NATIVE_FLASH)
-      assert.equal(body.reasoning_effort, 'low')
+      assert.equal(body.reasoning_effort, 'high')
       for (const absent of ['reasoning', 'usage', 'provider']) assert.equal(body[absent], undefined, absent)
       assert.doesNotMatch(JSON.stringify(body), /cache_control/)
     }

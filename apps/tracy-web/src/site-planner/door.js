@@ -8,12 +8,15 @@ import { looksMissingOf } from '../lib/template-kit/reader.js'
 export const SITE_PLANNER_DOOR = 'sitePlanner'
 
 /**
- * The model the bench's planner runs on (ADR 0041 amendment): DeepSeek V4 Pro on DeepSeek's own API, for its cost. It
- * reads no pictures, so it plans a kit only from complete looks (below). Claude Sonnet 5.5 and Opus 5.5 through
- * OpenRouter still run as alternatives. The door is still set in /ops; an unset door names this provider and model.
+ * The model the bench's planner runs on (ADR 0041 amendment): DeepSeek Flash on DeepSeek's own API, at high effort
+ * (bench-control.js). It reads the kit's looks with tool calls and may open a kit image; on the same brief and checker
+ * it reached zero failures for about 0.04 USD in 10.5 minutes, where DeepSeek V4 Pro (text only, planned from complete
+ * looks, below) took 33.5 minutes and about 0.41 USD for a weaker plan. V4 Pro and Claude Sonnet 5.5 or Opus 5.5
+ * through OpenRouter still run as alternatives. The door is still set in /ops; an unset door names this provider and
+ * model.
  */
 export const SITE_PLANNER_PROVIDER = 'deepseek'
-export const SITE_PLANNER_MODEL = 'deepseek-v4-pro'
+export const SITE_PLANNER_MODEL = 'deepseek-flash'
 const DEFAULT_NAMED = `${SITE_PLANNER_MODEL} on the ${SITE_PLANNER_PROVIDER} provider`
 
 const WHERE = '/ops › Model & AI'

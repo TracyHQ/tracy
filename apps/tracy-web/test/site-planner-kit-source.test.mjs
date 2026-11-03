@@ -109,8 +109,13 @@ test('contents names every part id, and every one of them can be read', () => {
   assert.equal(contents.pages.length, 50)
   assert.equal(contents.blocks.length, 76)
   assert.equal(contents.images, 110)
-  assert.deepEqual(contents.pages[0], { id: 'page-home', group: 'group-home', path: '/', inMainMenu: true })
-  assert.deepEqual(contents.blocks[0], { id: 'header', role: 'header', shared: true })
+  // The kit carries a look for every packed 1440 shot; contents gives each as its text alone.
+  const { look: homeLook, ...home } = contents.pages[0]
+  assert.deepEqual(home, { id: 'page-home', group: 'group-home', path: '/', inMainMenu: true })
+  assert.equal(typeof homeLook, 'string')
+  const { look: headerLook, ...header } = contents.blocks[0]
+  assert.deepEqual(header, { id: 'header', role: 'header', shared: true })
+  assert.ok(headerLook === undefined || typeof headerLook === 'string')
   const ids = [
     ...contents.parts.map((p) => p.id),
     ...contents.pageGroups,

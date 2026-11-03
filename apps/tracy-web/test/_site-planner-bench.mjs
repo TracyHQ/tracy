@@ -9,7 +9,7 @@ import path from 'node:path'
 import { assignDoor, saveModels, saveProvider } from '../src/lib/llm-store.js'
 import { looksMissingOf } from '../src/lib/template-kit/reader.js'
 import { startBenchRun } from '../src/site-planner/bench-control.js'
-import { SITE_PLANNER_MODEL, SITE_PLANNER_PROVIDER } from '../src/site-planner/door.js'
+import { SITE_PLANNER_PROVIDER } from '../src/site-planner/door.js'
 import { openKit } from '../src/site-planner/kit-source.js'
 import { brief } from './_site-plan-check-inputs.mjs'
 
@@ -17,13 +17,13 @@ export const SECRET = 's'.repeat(32)
 export const KIT_REF = 'ja-boxing/j6/1.0.10'
 /** Claude Sonnet 5.5 on OpenRouter: an alternative planner model that reads pictures, used by most bench tests. */
 export const MODEL = 'anthropic/claude-sonnet-5.5'
-/** The planner's default model, DeepSeek V4 Pro on DeepSeek's own API: text only. */
-export const DEEPSEEK_PRO = SITE_PLANNER_MODEL
+/** DeepSeek V4 Pro on DeepSeek's own API, an alternative planner model: text only. */
+export const DEEPSEEK_PRO = 'deepseek-v4-pro'
 export const DEEPSEEK_PROVIDER = SITE_PLANNER_PROVIDER
 /** DeepSeek V4.1 Flash as OpenRouter lists it (the 17/10/2026 snapshot), for the one comparison run. */
 export const DEEPSEEK_FLASH = 'deepseek/deepseek-v4.1-flash-1017'
 export const API_KEY = 'sk-or-test-secret-key'
-/** DeepSeek Flash as DeepSeek's own API lists it, for a run whose door points at DeepSeek directly. */
+/** DeepSeek Flash as DeepSeek's own API lists it: the planner's default model (door.js SITE_PLANNER_MODEL). */
 export const DEEPSEEK_NATIVE_FLASH = 'deepseek-flash'
 
 /** The bytes the ready kit images give for an image id. */
