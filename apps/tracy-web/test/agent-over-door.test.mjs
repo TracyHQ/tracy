@@ -229,6 +229,67 @@ test('a provider 5xx is an error with the provider reason, and the turn is saved
   assert.equal(saved[1].error.uncertain, false)
 })
 
+test('a provider rejection keeps the upstream detail OpenRouter forwards, bounded and without credentials', async () => {
+  const raw = JSON.stringify({
+    type: 'error',
+    error: {
+      type: 'invalid_request_error',
+      message:
+        'messages.8.content.1.image.source.base64.data: At least one of the image dimensions exceed max allowed size: 8000 pixels'
+    }
+  })
+  const saved = []
+  const model = scriptedModel([
+    {
+      status: 400,
+      body: {
+        error: {
+          code: 400,
+          message: 'Provider returned error',
+          metadata: { raw, provider_name: 'Anthropic' }
+        }
+      }
+    }
+  ])
+  await assert.rejects(
+    runAgent({
+      door: DOOR,
+      system: SYSTEM,
+      firstUser: FIRST,
+      tools: [],
+      fetchImpl: model.fetchImpl,
+      onTurn: (t) => saved.push(t)
+    }),
+    (e) =>
+      e.code === 'AGENT_PROVIDER_HTTP' &&
+      e.status === 400 &&
+      /Provider returned error/.test(e.reason) &&
+      /Anthropic/.test(e.reason) &&
+      /exceed max allowed size: 8000 pixels/.test(e.message)
+  )
+  assert.match(saved[1].error.reason, /image dimensions exceed max allowed size/)
+
+  // A long upstream body is cut to about 2 kB, and anything shaped like a key or a bearer token is masked.
+  const long = scriptedModel([
+    {
+      status: 400,
+      body: {
+        error: {
+          message: 'Provider returned error',
+          metadata: { raw: `Bearer abc.def.ghi key sk-or-v1-0123456789abcdef ${'x'.repeat(5000)}` }
+        }
+      }
+    }
+  ])
+  await assert.rejects(
+    runAgent({ door: DOOR, system: SYSTEM, firstUser: FIRST, tools: [], fetchImpl: long.fetchImpl }),
+    (e) =>
+      e.reason.length <= 2300 &&
+      !e.reason.includes('sk-or-v1-0123456789abcdef') &&
+      !e.reason.includes('abc.def.ghi')
+  )
+})
+
 test('an error inside a 200 answer is a provider error too', async () => {
   const model = scriptedModel([
     {

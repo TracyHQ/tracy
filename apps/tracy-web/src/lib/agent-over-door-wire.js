@@ -108,8 +108,22 @@ export function providerReason(body) {
     typeof body === 'string'
       ? body
       : (body?.error?.message ?? body?.message ?? (body?.error ? JSON.stringify(body.error) : ''))
-  return String(text || 'no reason given').slice(0, 300)
+  const head = String(text || 'no reason given').slice(0, 300)
+  // OpenRouter answers "Provider returned error" and forwards the upstream body in error.metadata.raw: that body holds
+  // the real reason (an image too large, a malformed message), so it is kept, bounded, with credentials masked.
+  const metadata = typeof body === 'object' ? body?.error?.metadata : undefined
+  const raw = metadata?.raw
+  if (raw == null || raw === '') return head
+  const upstream = typeof raw === 'string' ? raw : JSON.stringify(raw)
+  const from =
+    typeof metadata.provider_name === 'string' ? ` from ${metadata.provider_name.slice(0, 60)}` : ''
+  return `${head}; upstream${from}: ${maskCredentials(upstream).slice(0, UPSTREAM_DETAIL_MAX)}`
 }
+
+/** About 2 kB of the upstream body: enough for the provider's own error message, small enough for a status line. */
+const UPSTREAM_DETAIL_MAX = 2000
+const maskCredentials = (s) =>
+  s.replace(/\bBearer\s+\S+/gi, 'Bearer [masked]').replace(/\bsk-[A-Za-z0-9_-]{8,}/g, 'sk-[masked]')
 
 /**
  * The part a saved conversation keeps for an image that has a `ref`: the reference, never the bytes. agent-over-door.js
