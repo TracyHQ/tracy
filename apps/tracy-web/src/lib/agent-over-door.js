@@ -7,9 +7,12 @@
 // the loop goes on, so a process killed at any point loses at most the call in flight. history (the saved turns)
 // resumes the conversation:
 // - last turn answered with tool calls: its tools run again (tools must be safe to repeat), then the next call goes;
-// - last turn answered with a final answer: that answer is returned, nothing is sent;
+// - last turn answered with a final answer: that answer is returned, nothing is sent; unless the caller gives a
+//   followUp, which goes out as the next user message in the same conversation (a fix round);
 // - last turn dispatched with no answer, or failed with an uncertain outcome (network, timeout): AGENT_TURN_UNANSWERED.
-//   The provider may have answered and charged; the caller decides, and resends only by dropping that turn;
+//   The provider may have answered and charged; the caller decides. To resend it, the caller marks it `abandoned`:
+//   an abandoned last turn's messages are sent again as a new turn carrying `resendOf` (its number), and an abandoned
+//   turn before the last one is skipped;
 // - last turn failed with a provider rejection (HTTP error, error answer): its messages are sent again as the next turn;
 // - last turn answered but truncated (AGENT_TRUNCATED) or refused by the model's content filter (AGENT_REFUSED): the
 //   same error again, nothing is sent.
@@ -55,6 +58,7 @@ export async function runAgent({
   onTurn = async () => {},
   fetchImpl = fetch,
   signal,
+  followUp,
   ...options
 }) {
   const o = { ...DEFAULTS, ...options, cacheTtl: { ...DEFAULTS.cacheTtl, ...options.cacheTtl } }
@@ -68,8 +72,9 @@ export async function runAgent({
     throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'the door needs baseUrl, apiKey and model' })
 
   const turns = history.map((t) => structuredClone(t))
-  const { messages, pending, final } = rebuild(turns, firstUser)
-  if (final) return { answer: final, turns, totals: totalsOf(turns) }
+  const { messages, pending: rebuilt, final, resendOf } = rebuild(turns, firstUser)
+  const pending = final && followUp ? [{ role: 'user', content: followUp }] : rebuilt
+  if (final && !pending) return { answer: final, turns, totals: totalsOf(turns) }
   let next = pending ?? (await runTools(turns.at(-1).message.tool_calls, tools, o.toolImages))
 
   for (;;) {
@@ -88,7 +93,8 @@ export async function runAgent({
         tools: tools.map((t) => t.name),
         messages: messages.length + next.length + 1
       },
-      dispatchedAt: new Date().toISOString()
+      dispatchedAt: new Date().toISOString(),
+      ...(resendOf !== undefined && turns.length === resendOf + 1 ? { resendOf } : {})
     }
     turns.push(turn)
     await onTurn(structuredClone(turn))
@@ -137,7 +143,8 @@ function rebuild(turns, firstUser) {
   turns.forEach((t, i) => {
     const last = i === turns.length - 1
     if (t.state === 'answered') messages.push(...t.sent, t.message)
-    else if (!last && t.state === 'failed') return
+    else if (!last && (t.state === 'failed' || t.state === 'abandoned')) return
+    else if (t.state === 'abandoned') return
     else if (t.state === 'dispatched' || t.error?.uncertain || !last)
       throw new AgentError('AGENT_TURN_UNANSWERED', {
         turn: t.n,
@@ -145,6 +152,7 @@ function rebuild(turns, firstUser) {
       })
   })
   const last = turns.at(-1)
+  if (last.state === 'abandoned') return { messages, pending: last.sent, resendOf: last.n }
   if (last.state === 'failed') return { messages, pending: last.sent }
   const outcome = outcomeOf(last)
   if (outcome.error) throw outcome.error
