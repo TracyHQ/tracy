@@ -9,6 +9,7 @@
 // is one that was dispatched and never answered (the provider may have charged it): that run fails with
 // AGENT_TURN_UNANSWERED. A cancel is honoured between two model calls and between two rounds.
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
+import { ensureLogo } from './brand-logo.js'
 import { brandPrompt } from './brand-prompt.js'
 import { brandDoors } from './brand-doors.js'
 import { BRAND_PRICES, priceFor } from './brand-prices.js'
@@ -16,7 +17,7 @@ import { createReview } from './brand-reviewer.js'
 import { nextRound, playRound } from './brand-rounds.js'
 import { buildSafeVersion } from './brand-safe-version.js'
 import { saveRound } from './brand-round-store.js'
-import { cancelAsked, setProgress } from './brand-store.js'
+import { cancelAsked, setLogoSource, setProgress } from './brand-store.js'
 import { openKit } from '../lib/template-kit-source.js'
 import { endWithRealPage } from './real-page/real-page-step.js'
 
@@ -70,6 +71,7 @@ export async function runBrandRun(deps, row, lease) {
     }
     const ready = await prepare(deps, row)
     if (!ready.ok) return end('failed', `${ready.code}: ${ready.reason}`)
+    if (ready.logoSource) await must(setLogoSource(pool, { runId, logo: ready.logoSource, leaseToken }))
     // The accepted brand file or the safe version goes on to the real-page check when the server has one.
     const endChecked = endWithRealPage(deps, { row, ready, leaseToken, must, end, LeaseLost })
     for (;;) {
@@ -158,6 +160,9 @@ async function prepare(deps, row) {
       reason: `the template heading font cannot be read: ${font?.refusal ?? 'the template has no slot contract'}`
     }
   const files = wiring.filesFor(row.id)
+  // The found logo is a media id in the brief; its bytes go into the run folder before any model call.
+  const logo = await ensureLogo({ pool, files, brief: row.brief, objects: wiring.logoObjects ?? null })
+  if (!logo.ok) return { ok: false, code: 'BRAND_LOGO_UNAVAILABLE', reason: logo.reason }
   // The picture of a kit image by its id, for open_image: the bytes the kit image cache serves, or null.
   const kitImage = async (id) => {
     const opened = await images.images.open(id)
@@ -166,6 +171,7 @@ async function prepare(deps, row) {
   }
   return {
     ok: true,
+    logoSource: logo.source,
     prompt,
     kit,
     agent: doors.agent,

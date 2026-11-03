@@ -52,9 +52,12 @@ export async function wordsOnlyRun(
   // the picture model draws a disc in the accent on white, or fails (a refused request)
   const accent = c.kit.site.brandColours.primary.value
   const iconPicture = await drawing(disc(accent))
-  const started = await startRun(pool, c, { wiring, kitImages })
-  // a found logo is a brief image in the run folder, under media/<id>.png
-  if (material) (await wiring()).filesFor(started.id).write(`media/${c.brief.brand.logo}.png`, material)
+  // a found logo comes in as the logo file given at the start (--logo-file), which stages it in the run folder
+  const started = await startRun(pool, c, {
+    wiring,
+    kitImages,
+    ...(material ? { logo: { bytes: material, name: 'logo.png' } } : {})
+  })
   const agent = agentFor(c.kit, agentOptions)
   const requests = []
   const fetchImpl = async (_url, init) => {

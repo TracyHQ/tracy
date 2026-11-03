@@ -1187,7 +1187,10 @@ export function buildApp(deps) {
         ...brandBench,
         secret: deps.config.sessionSecret,
         kitImages: kitImagesFor(brandBench),
-        wiring: productionWiring(deps.config),
+        // A brief's logo media is read from the same objects Website Opportunities stores its pictures in.
+        wiring: productionWiring(deps.config, {
+          objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
+        }),
         // The real-page check on the one configured trial site (TRACY_BRAND_TRIAL_SITE, with the internal account that
         // holds a seat on it in TRACY_BRAND_TRIAL_ACCOUNT); null when either is unset (brand-step/real-page/).
         realPage: createRealPage({
