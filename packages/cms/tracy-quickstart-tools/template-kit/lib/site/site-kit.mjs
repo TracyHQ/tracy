@@ -68,6 +68,7 @@ export function buildSite({ map, adapter, reads, logoReads, notFound, styles, ht
     }
   const colours = buildBrandColours({
     styles,
+    variables: adapter.colourVariables?.() ?? [],
     pages: htmls,
     seen: reads.length
       ? { opensOn: opening, inlineIcons: [...inlineIcons.values()], pictures: [...seenPictures.values()] }

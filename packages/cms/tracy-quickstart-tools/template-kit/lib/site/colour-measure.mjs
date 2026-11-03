@@ -10,8 +10,8 @@
 // variables (`:root{--color-primary:...}` read by `var()`) and one that paints literal compiled colours both resolve
 // to the same colour, so one measure covers both.
 import { chromaOf, coloursIn, hexOf, hueGapOf, rgbOf } from './colour-maths.mjs'
-import { cssRules } from './css-rules.mjs'
 import { itemsOf, resolveVars, sideOfItem, sideOfRule, sidesOf } from './colour-sides.mjs'
+import { cssRules } from './css-rules.mjs'
 
 /** Status colours of the frameworks (`.text-danger`, `.alert-error`, `--color-warning`, `.btn-info`): never brand. */
 export const STATUS =
@@ -29,6 +29,9 @@ const ROLE_RULES = [
 const PRIMARY_VAR =
   /^--(?!ds-)(?:[a-z0-9]+-)*(?:(?:primary|brand|accent)(?:-colou?r)?|link(?:-hover|-active)?-colou?r)$/
 const SECONDARY_VAR = /^--(?!ds-)(?:[a-z0-9]+-)*secondary(?:-colou?r)?$/
+/** The same roles among variables a template declares before compiling (LESS `@brand-primary`, `@brand-secondary`). */
+const DECLARED_PRIMARY = /^@(?:[a-z0-9]+-)*(?:primary|brand|accent)(?:-colou?r)?$/
+const DECLARED_SECONDARY = /^@(?:[a-z0-9]+-)*secondary(?:-colou?r)?$/
 
 /** A colour strong enough to be a brand colour: coloured and mostly opaque. */
 export const strong = (c) => Boolean(c) && chromaOf(c) >= 0.25 && (c.a ?? 1) > 0.5
@@ -43,8 +46,12 @@ export const rulesOf = (styles) =>
 
 /**
  * @param {Array<{css: string, from?: string}>} styles
+ * @param {{variables?: Array<{name: string, value: string}>}} [o] colour variables the template declares outside its
+ *   stylesheets (a T3 template's LESS variables, compiled away): each votes like a CSS variable, but only when a rule
+ *   of the stylesheets paints its colour. A colour the template declares as its primary stays a brand colour even
+ *   when a status rule reuses it (JA Cagox paints `.invalid` borders with `@brand-primary`).
  */
-export function measureBrandColours(styles) {
+export function measureBrandColours(styles, { variables = [] } = {}) {
   const rules = rulesOf(styles)
   const sides = sidesOf(rules)
   const base = /** @type {{vars: Map<string, string>}} */ (sides.get('base'))
@@ -65,11 +72,22 @@ export function measureBrandColours(styles) {
       })
     }
   }
+  const painted = new Set()
+  for (const r of rules)
+    for (const d of r.decls) for (const c of coloursIn(resolveVars(d.value, base.vars))) painted.add(hexOf(c))
+  const hexOfValue = (value) => {
+    const c = coloursIn(String(value ?? ''))[0]
+    return c ? hexOf(c) : null
+  }
+  const declared = variables.filter((v) => painted.has(hexOfValue(v.value)))
+  const declaredPrimary = new Set(
+    declared.filter((v) => DECLARED_PRIMARY.test(v.name)).map((v) => hexOfValue(v.value))
+  )
   const votes = { primary: new Map(), secondary: new Map() }
   const roles = { primary: new Map(), secondary: new Map() }
   const vote = (kind, value, weight, role) => {
     const c = coloursIn(resolveVars(value, base.vars)).find(strong)
-    if (!c || status.has(hexOf(c))) return
+    if (!c || (status.has(hexOf(c)) && !declaredPrimary.has(hexOf(c)))) return
     const hex = hexOf(c)
     votes[kind].set(hex, (votes[kind].get(hex) ?? 0) + weight)
     if (!roles[kind].has(hex)) roles[kind].set(hex, new Set())
@@ -80,6 +98,10 @@ export function measureBrandColours(styles) {
   for (const [name, value] of base.vars) {
     if (PRIMARY_VAR.test(name)) vote('primary', value, 1, `variable ${name}`)
     else if (SECONDARY_VAR.test(name)) vote('secondary', value, 1, `variable ${name}`)
+  }
+  for (const { name, value } of declared) {
+    if (DECLARED_PRIMARY.test(name)) vote('primary', value, 1, `variable ${name}`)
+    else if (DECLARED_SECONDARY.test(name)) vote('secondary', value, 1, `variable ${name}`)
   }
   const top = (m) => [...m.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
   const primary = top(votes.primary)

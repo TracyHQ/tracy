@@ -24,9 +24,9 @@ import { siteWriter } from './lib/site/adapters/site-writer.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { buildBrandColours } from './lib/site/brand-colours.mjs'
 import { browseSite, fetchStyles } from './lib/site/browse-site.mjs'
+import { measureFixedTexts } from './lib/site/hide-cms-text.mjs'
 import { logoSlotsOf } from './lib/site/logo-spots.mjs'
 import { writePaletteHtml } from './lib/site/palette.mjs'
-import { measureFixedTexts } from './lib/site/hide-cms-text.mjs'
 import { buildSite } from './lib/site/site-kit.mjs'
 
 const log = (...a) => console.error('[template-kit site]', ...a)
@@ -84,7 +84,7 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
   const pages = pagesToRead(map, capture, Number(o['max-pages'] ?? 60))
   const { styles, htmls } = await fetchStyles({ pages, siteUrl: o.site, hostHeader })
   say(styles.length, 'stylesheets from', htmls.length, 'pages')
-  const first = buildBrandColours({ styles, pages: htmls })
+  const first = buildBrandColours({ styles, pages: htmls, variables: adapter.colourVariables?.() ?? [] })
   const brand = [first.brandColours.primary?.value, first.brandColours.secondary?.value].filter(Boolean)
   const browser = await chromium.launch()
   try {

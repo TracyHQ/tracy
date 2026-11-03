@@ -7,7 +7,9 @@ import { join } from 'node:path'
 
 import { runSite } from '../site-cli.mjs'
 import { assembleKit, readIf, readJson, writeJson } from './assemble.mjs'
+import { captureSite, phase, reshootChanged } from './capture-site.mjs'
 import { crawlSite, httpFetcher } from './crawl.mjs'
+import { excludePatternsOf } from './exclude.mjs'
 import { classifyIcons, mergeClasses } from './icon-classify.mjs'
 import { urlOfPath } from './kit-paths.mjs'
 import { assignedAt, indexMap } from './map-index.mjs'
@@ -16,11 +18,10 @@ import { measureMin } from './measure-min.mjs'
 import { measureRowFit } from './measure-row-fit.mjs'
 import { measureTextFit } from './measure-text-fit.mjs'
 import { measureWordsLinks } from './measure-words-links.mjs'
-import { pictureBytes } from './picture-bytes.mjs'
-import { matchRepeat } from './rows.mjs'
-import { captureSite, phase, reshootChanged } from './capture-site.mjs'
-import { applyExclusions, readSite, refreshDetails, seedsOf } from './read-pass.mjs'
 import { packKitFolder } from './pack.mjs'
+import { pictureBytes } from './picture-bytes.mjs'
+import { applyExclusions, readSite, refreshDetails, seedsOf } from './read-pass.mjs'
+import { matchRepeat } from './rows.mjs'
 import { writeSheets } from './sheets.mjs'
 import { templateFixes } from './template-fixes.mjs'
 
@@ -138,7 +139,7 @@ export async function runFull({ o, out, tool, chromium, log }) {
     .split(',')
     .map(Number)
     .filter(Boolean)
-  const patterns = typeof o['exclude-path'] === 'string' ? o['exclude-path'].split(',') : []
+  const patterns = excludePatternsOf(o['exclude-path'])
   let capture
   let hide
   if (o['reuse-capture'] && existsSync(join(out, 'capture-index.json'))) {

@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { assembleKit, writeJson } from './assemble.mjs'
+import { excludePatternsOf } from './exclude.mjs'
 import { readSite } from './read-pass.mjs'
 import { shootPages, shootPlan } from './shoot-pass.mjs'
 
@@ -36,7 +37,7 @@ export async function captureSite({ o, out, tool, chromium, map, widths, log }) 
     widths,
     cap: Number(o['max-pages'] ?? 400),
     only: typeof o.only === 'string' ? o.only.split(',') : undefined,
-    excludePaths: typeof o['exclude-path'] === 'string' ? o['exclude-path'].split(',') : []
+    excludePaths: excludePatternsOf(o['exclude-path'])
   })
   t.done(capture.pages.length, 'pages x', widths.length, 'widths')
   t = phase(log, 'group')
