@@ -39,14 +39,16 @@ export const lookWords = (wish) => ({
  * part of an extended photo outlined. `realPart` is a box on the finished file.
  */
 export async function lookImage(bytes, { width, height }, realPart = null) {
-  const img = sharp(Buffer.from(bytes), { failOn: 'none' }).rotate()
+  // Turned upright first, so the outline and its box are on the picture as shown.
+  const upright = await sharp(Buffer.from(bytes), { failOn: 'none' }).rotate().toBuffer()
+  const img = sharp(upright)
   const meta = await img.metadata()
   let pipeline = img
   if (realPart) {
     const { x, y, width: w, height: h } = realPart
     const line = Math.max(2, Math.round(Math.min(meta.width, meta.height) / 150))
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${meta.width}" height="${meta.height}"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="${OUTLINE}" stroke-width="${line}"/></svg>`
-    pipeline = sharp(await img.toBuffer()).composite([{ input: Buffer.from(svg) }])
+    pipeline = sharp(upright).composite([{ input: Buffer.from(svg) }])
   }
   const sized = await sharp(await pipeline.png().toBuffer())
     .resize(width, height, { fit: 'inside', withoutEnlargement: true })

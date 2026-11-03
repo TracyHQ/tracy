@@ -14,11 +14,10 @@
 //
 // The looks run where a checked round is saved (looker-round.js withLooker). Every look is kept in the bench's file store (runs/<run id>/looks/<key>.json, the key a hash of the picture, its
 // display size, the words, the model and the prompt), so a resumed run or a later round pays once per picture.
-import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { altNotesFor } from './alt-notes.js'
-import { fileStore } from './file-store.js'
+import { fileStore, sha256Hex } from './file-store.js'
 import { askLooker, lookImage, lookWords } from './looker-call.js'
 
 export const LOOK_CONCURRENCY = 4
@@ -26,7 +25,6 @@ export const LOOK_CONCURRENCY = 4
 export const LOOKED_SOURCES = new Set(['owner-photo', 'owner-photo-extended', 'drawn'])
 export const LOOKER_RULE = Object.freeze({ id: 'L01', title: 'The looker passes every finished picture' })
 
-const sha = (text) => createHash('sha256').update(text).digest('hex')
 const whereOf = (list, frame) => (list === 'siteSettings' ? `siteSettings ${frame}` : frame)
 
 /** Run `work` over `items`, at most `n` at a time, keeping the order of the results. */
@@ -69,7 +67,7 @@ export function createLooker({
     const words = lookWords(idx.wishes.get(entry.frame))
     const box = { width: frame?.width ?? entry.width, height: frame?.height ?? entry.height }
     const realPart = entry.source === 'owner-photo-extended' ? (entry.realPart ?? null) : null
-    const key = sha(JSON.stringify([entry.sha256, box, words, realPart, door.model, prompt.sha256]))
+    const key = sha256Hex(JSON.stringify([entry.sha256, box, words, realPart, door.model, prompt.sha256]))
     const before = await readFile(kept(key), 'utf8')
       .then(JSON.parse)
       .catch(() => null)

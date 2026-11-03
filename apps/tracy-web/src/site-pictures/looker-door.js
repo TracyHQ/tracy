@@ -33,7 +33,8 @@ export function makerOf(providerId, model) {
 export async function pictureLookerDoor({ pool, secret, picker = null }) {
   const found = secret ? await lookupDoor(pool, PICTURE_LOOKER_DOOR, secret) : { state: 'unassigned' }
   const none = (note) => ({ door: null, snapshot: null, note: `no picture was looked at: ${note}` })
-  if (found.state !== 'ok') return none(`the ${LABEL} door is ${found.state}`)
+  if (found.state !== 'ok')
+    return none(`the ${LABEL} door is ${found.state} (set it in /ops, meant for ${PICTURE_LOOKER_MODEL})`)
   const { providerId, baseUrl, apiKey, model } = found.credential
   if (!model) return none(`the ${LABEL} door names no model`)
   if (found.snapshot.metadata?.vision === false)
