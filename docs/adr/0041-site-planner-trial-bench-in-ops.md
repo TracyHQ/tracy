@@ -110,3 +110,7 @@
 - **Images are stored by reference (refines decision 8).** A saved turn keeps a reference to each opened image (kit,
   image id, sha256), never its bytes; every request still sends the full images, read back from the cache when a run
   resumes or a fix round replays the conversation. A kit whose images are not usable is refused before any model call.
+- **Images reach the model fitted inside 2000x2000 px (refines decision 3's "full size").** The provider refuses a side
+  over 8000 px, and over 2000 px once a request carries more than 20 images; full-page captures are up to 10000 px
+  tall, so each is scaled down (aspect kept, never enlarged) as the reference run's harness also did, and the fitted
+  copy is cached by image id and sha256 while the sha256 check stays on the original.
