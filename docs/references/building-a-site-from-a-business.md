@@ -57,6 +57,15 @@ The rules that keep the agent going all the way (all with tests):
   (`buildsSite`).
 - A failed check says how many tries remain and what to fix (`checkAgainNext`); a check with nothing written since the last one does not run
   and costs no try (`changedSinceCheck`).
+- A first plan refused for its own rows is kept on the build as a draft; the answer names the refused rows, and the agent sends only those
+  with `tracy_demo {operation:"plan.fix", fix:{"<rowIndex>": row | null}}` (#296). Re-sending the whole plan was 40–60 % of a build's
+  output tokens.
+- From the 4th counted check on, two checks in a row that found no fewer faults than the one before each end the checking (#296): the
+  build ends as one that used all 8 does (`failed`, `QA_NEEDS_REVIEW`), and the agent is told to stop and say what is left.
+- Every call on the vision door (photo labels, the look, photo observations) asks the model not to reason and bounds its answer
+  (`postVisionDoor`, #296): dev's `deepseek-flash` took ~36 s a call reasoning, against 1–3 s without.
+- An EmDash sweep round sends up to four calls at once (`sendRound`, `roundOrder`); WordPress and Joomla rounds stay one call at a time,
+  since Claude Cowork's write lock refuses a second writer.
 - A step steered after the turn has closed (the visual check step, the todo reminder) reopens the turn (`turn-record.mjs`
   `reopen`, `openTurn`); a build's turn only becomes stale after 2 hours (`BUILD_STALE_AFTER_MS`). Without these two, every
   write gets `AGENT_DEMO_TURN_NOT_BOUND`.
@@ -88,8 +97,9 @@ The rules that keep the agent going all the way (all with tests):
 | `native-structure` | record counts, ids, publishing, paths, relations differ from the frozen inventory (changing text, links, images, showcase page names is allowed) |
 | `looks-finished` | the AI eye sees visible faults in desktop/phone screenshots |
 
-All passing → `needs-review` (a person reviews it). Still failing after 8 tries → `failed` `QA_NEEDS_REVIEW`; the site remains, and the customer
-can keep messaging in the chat.
+All passing → `needs-review` (a person reviews it). Still failing after 8 tries, or after two checks in a row with no fewer faults from the
+4th on → `failed` `QA_NEEDS_REVIEW`; the site remains, and the customer can keep messaging in the chat. **What a build costs** goes on the
+cost ledger to the thousandth of a cent, against its own day cap (`/ops/wo` › `buildDailyCapCents`), apart from research's.
 
 ## 4. Trying it locally
 

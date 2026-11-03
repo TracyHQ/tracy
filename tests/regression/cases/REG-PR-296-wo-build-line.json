@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-296-wo-build-line",
+  "kind": "feat",
+  "title": "A refused first plan is fixed by its refused rows; checks stop on no progress; vision calls do not reason; the host QA deadline counts routes; the ledger records real cost on a build budget",
+  "pr": 296,
+  "area": "website-opportunities/build",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout (no stand, no site, no browser) run: node --test --test-concurrency=1 apps/tracy-web/test/wo-check-plateau.test.mjs apps/tracy-web/test/vision-door-no-reasoning.test.mjs apps/tracy-web/test/wo-cost-ledger-exact-build.test.mjs apps/tracy-host/test/demo-qa-deadline.test.mjs",
+    "S2: Read the summary lines `pass` and `fail`."
+  ],
+  "expect": [
+    "S2: fail 0.",
+    "`an EmDash-like build flat from its third check stops at its fourth` passes and `a Joomla-like build that still improves keeps checking` passes.",
+    "`photo labels on deepseek: the model is asked not to reason, and a batch of 8 has room for 8 labels` passes.",
+    "`the deadline gives the routes their own time on top of the pages` passes.",
+    "`a vision call costs its tokens, unrounded; its ceiling stays a whole cent` passes (the database tests of that file skip without TEST_DATABASE_URL)."
+  ],
+  "selectors": {
+    "plan": "tracy_demo {operation: \"plan.fix\", fix: {\"<rowIndex>\": row | null}}",
+    "stop": "wo_build.qa.checksStopped = 'no-progress'",
+    "ledger": "wo_cost_ledger.actual_millicents, wo_cost_ledger.budget; /ops/wo buildDailyCapCents"
+  },
+  "evidence": "Local round 5 / round 3 and dev Zuni (30/10/2026): builds 78-128 min, checks 51-81 min; dev vision ~36 s a call reasoning; plan.save 4-10 whole resends; look calls booked at 1 cent each.",
+  "fence": "apps/tracy-web/src/opportunities-build/agent-demo.js fixPlanDraft/refusedRowsOf; client-demo.js checksPlateaued; lib/picture-vision.js postVisionDoor; packages/wo/website-opportunities/src/cost-ledger.js SPENT/budget; apps/tracy-host/src/demo-qa-deadline.js qaDeadlineMs",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-check-plateau.test.mjs",
+      "apps/tracy-web/test/vision-door-no-reasoning.test.mjs",
+      "apps/tracy-web/test/wo-cost-ledger-exact-build.test.mjs",
+      "apps/tracy-host/test/demo-qa-deadline.test.mjs"
+    ]
+  }
+}
