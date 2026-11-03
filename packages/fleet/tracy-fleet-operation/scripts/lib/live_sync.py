@@ -1503,12 +1503,14 @@ class IdMap:
         return {t: {str(k): v for k, v in m.items()} for t, m in self.map.items() if m}
 
     def forget_gone(self, ours: str, theirs: str) -> list[dict]:
-        """After the merge: the map's records that neither the live read (renumbered into the copy's
-        numbers) nor the merged copy holds any more — a live delete the merge took — leave the map.
-        Kept, the copy's next record under that number read as the live site's own and was never
-        pushed (#307); and a live site that numbers again from a lower top (MySQL 5.7 after a restart)
-        would have its next record taken for the deleted one. A record the merge held (the copy still
-        has it) keeps its entry. Answers what left, one entry each."""
+        """After the merge: the map's records the live read no longer holds (renumbered into the copy's
+        numbers) leave the map — the live site deleted them. Kept, the copy's next record under that
+        number read as the live site's own and was never pushed (#307); and a live site that numbers
+        again from a lower top (MySQL 5.7 after a restart) would have its next record taken for the
+        deleted one. A record the merge kept (Tracy changed it) leaves too: the live site has no
+        record of it any more, and Sync to live holds it by its kept place (`changed-on-both`),
+        never again as a live record nothing can push. A site already holding a new record under a
+        deleted one's number is put right at its next sync. Answers what left, one entry each."""
         tables = [t for t, m in self.map.items() if m]
         if not tables:
             return []
@@ -1516,14 +1518,13 @@ class IdMap:
             "SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema IN"
             f" ({sql_str(ours)}, {sql_str(theirs)});")}
         tables = [t for t in tables if all((s, self.table(t)) in present for s in (ours, theirs))]
-        held = self.ids_of([(s, t) for t in tables for s in (ours, theirs)])
+        live = self.ids_of([(theirs, t) for t in tables])
         gone = []
         for t in tables:
-            still = held[(ours, t)] | held[(theirs, t)]
-            for live, copy in sorted(self.map[t].items()):
-                if copy not in still:
-                    del self.map[t][live]
-                    gone.append({"table": t, "live": live, "copy": copy})
+            for raw, copy in sorted(self.map[t].items()):
+                if copy not in live[(theirs, t)]:
+                    del self.map[t][raw]
+                    gone.append({"table": t, "live": raw, "copy": copy})
         return gone
 
 

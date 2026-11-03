@@ -2168,3 +2168,29 @@ test('WordPress: no words are written for a picture whose upload is not sent (#2
     ['file-not-in-copy']
   )
 })
+
+test('Joomla: an article a sync kept though the live site deleted it is held by its kept place, never refused as a live record (#307)', () => {
+  // The sync kept Tracy's edited article 7 the customer deleted on live, and took 7 out of the id map:
+  // the base (the live read) has no 7.
+  const data = {
+    entities: { content: { base: [1], copy: [1, 7] } },
+    kinds: { article: kind([article(1)], [article(1), article(7, { title: 'Edited by Tracy' })]) }
+  }
+  const held = changeset('joomla', data, [
+    {
+      id: 'db:jos_content:["7"]',
+      kind: 'row',
+      table: 'jos_content',
+      key: { id: '7' },
+      reason: 'delete-modify'
+    }
+  ])
+  const item = byId(held)['article:new:7']
+  assert.ok(item, JSON.stringify(held.items.map((i) => i.id)))
+  assert.equal(item.conflict?.reason, 'changed-on-both', JSON.stringify(item))
+  assert.ok(!held.unsupported.some((u) => u.why === 'live-record'), JSON.stringify(held.unsupported))
+  // Once no sync keeps it, it is Tracy's article to send, as any other.
+  const free = byId(changeset('joomla', data))['article:new:7']
+  assert.equal(free.op, 'create')
+  assert.equal(free.conflict, undefined)
+})

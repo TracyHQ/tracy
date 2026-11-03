@@ -792,7 +792,7 @@ test(
 )
 
 test(
-  'Joomla: an article the merge keeps (Tracy changed it, the live site deleted it) keeps its id map entry and its versions (#307)',
+  'Joomla: an article the merge keeps (Tracy changed it, the live site deleted it) keeps its versions; its live number leaves the id map (#307)',
   opts,
   () => {
     schema('jk_base', `${J_TABLES} ${ARTICLE_1}`)
@@ -812,8 +812,10 @@ test(
       answer.kept.some((k) => k.reason === 'delete-modify' && k.table === 'jos_content'),
       JSON.stringify(answer.kept)
     )
-    assert.deepEqual(answer.idMap.content, { 1: 1 })
-    assert.equal(answer.idMapForgotten, undefined)
+    // The live site has no record of it any more: Sync to live holds it by its kept place, never
+    // again refuses it as a live record.
+    assert.equal(answer.idMap.content, undefined)
+    assert.deepEqual(answer.idMapForgotten, [{ table: 'content', live: 1, copy: 1 }])
     assert.deepEqual(rows('SELECT introtext FROM jos_content', 'jk_ours'), [['edited by Tracy']])
     assert.deepEqual(rows('SELECT COUNT(*) FROM jos_history', 'jk_ours'), [['1']])
     // The rows the live site deleted with it stay with the kept article (`dependents`).
@@ -897,5 +899,31 @@ test(
       ['0']
     ])
     assert.equal(answer.counts.orphansRemoved, 2)
+  }
+)
+
+test(
+  "Joomla: a site already stuck — a new copy article under a deleted one's number — is put right at its next sync (#307)",
+  opts,
+  () => {
+    // The delete was taken by an older sync: the base no longer has article 1, and the copy has a new
+    // article that got number 1 again, which the map still names as the live site's.
+    schema('js_base', J_TABLES)
+    schema(
+      'js_ours',
+      `${J_TABLES} INSERT INTO jos_content VALUES (1, 0, 'Tracy news 2', 'tracy-news-2', 'again', 1, 2, '2026-11-03 09:00:00');`
+    )
+    schema('js_theirs', J_TABLES)
+    const answer = joomlaMerge(
+      { base: 'js_base', ours: 'js_ours', theirs: 'js_theirs' },
+      { content: { 1: 1 } }
+    )
+    assert.equal(answer.ok, true)
+    assert.equal(answer.idMap.content, undefined, JSON.stringify(answer.idMap))
+    assert.deepEqual(
+      rows('SELECT title FROM jos_content', 'js_ours'),
+      [['Tracy news 2']],
+      'the new article stays'
+    )
   }
 )
