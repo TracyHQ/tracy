@@ -30,6 +30,7 @@ const id = (prefix, ...parts) =>
 const unescape = (s) => s.replace(/\\\|/g, '|').trim()
 const escape = (s) =>
   String(s ?? '')
+    .replace(/\\/g, '\\\\')
     .replace(/\|/g, '\\|')
     .replace(/\n/g, ' ')
 /** Rows of the first Markdown table under `heading` (or the first table in the file). */

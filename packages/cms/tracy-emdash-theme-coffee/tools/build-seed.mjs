@@ -806,7 +806,7 @@ function iconOf(svg) {
   if (!svg) return ''
   const s = JSON.stringify(svg.children?.map((c) => c.attribs ?? {}) ?? [])
   for (const [needle, name] of ICONS)
-    if (s.includes(needle) || s.includes(needle.replace('"', '\\"'))) return name
+    if (s.includes(needle) || s.includes(needle.replaceAll('"', '\\"'))) return name
   return 'unknown'
 }
 const od = (id) => {

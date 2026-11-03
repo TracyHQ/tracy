@@ -1474,7 +1474,7 @@ writeFileSync(
     '|---|---|---|---|---|---|---|---|---|',
     ...machine.map(
       (m) =>
-        `| ${m.id} | ${m.lens} | ${m.page} | ${m.axis} | ${m.what.replace(/\|/g, '\\|')} | ${m.fix} | ${m.verify} | ${m.status} | |`
+        `| ${m.id} | ${m.lens} | ${m.page} | ${m.axis} | ${m.what.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')} | ${m.fix} | ${m.verify} | ${m.status} | |`
     ),
     machine.length ? '' : 'none',
     ''
