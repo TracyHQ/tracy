@@ -283,11 +283,10 @@ export function validateDsSlotBody(body) {
   )
   if (!p) return 'refused payload'
   if (JSON.stringify(p).length > DS_PAYLOAD_MAX) return 'refused payload size'
-  // `od:<id>` (OpenDesign), `refero:<uuid>` (the curated Refero set tracy-web offers) or `brand:<bg>-<fg>-<accent>`
-  // (the brand bench's accent-only module, #322; hex without `#`, fg empty when the template's own is kept).
+  // `od:<id>` (OpenDesign) or `refero:<uuid>` (the curated Refero set tracy-web offers).
   if (
     typeof p.system !== 'string' ||
-    !/^(od:[a-z0-9][a-z0-9-]{0,60}|refero:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|brand:[0-9a-f]{6}-([0-9a-f]{6})?-[0-9a-f]{6})$/.test(
+    !/^(od:[a-z0-9][a-z0-9-]{0,60}|refero:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/.test(
       p.system
     )
   )

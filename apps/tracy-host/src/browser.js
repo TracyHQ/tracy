@@ -18,7 +18,6 @@
 
 import { selfNamedServer } from './self-named.js'
 import { createVisionCapturer } from './vision-capture.js'
-import { createViewsCapturer } from './real-page-views.js'
 
 /** Chromium in a container needs both of these; the dsh image's `tracy-chrome` wrapper sets the
  * same pair. `--no-sandbox` because there is no user namespace to sandbox into, and
@@ -443,8 +442,6 @@ export async function makeShoot({ log = console, playwright = null, visionStream
     })
   }
   shoot.vision = createVisionCapturer({ launched, prepare: boundOtherOrigins, streams: visionStreams })
-  // The brand bench's real-page views (`real-page-views.js`, mode `real-page/1`); template cards never use it.
-  shoot.views = createViewsCapturer({ launched, prepare: boundOtherOrigins })
   return shoot
 }
 

@@ -23,7 +23,6 @@ import { Hono } from 'hono'
 import { verifyHostCall } from './auth.js'
 import { installSlots, memoryStep, slotStep } from './install-slots.js'
 import { captureBody, captureTarget, CAPTURE_TIMEOUT_MS, runCapture } from './capture.js'
-import { pathOf, selectorsOf } from './real-page-views.js'
 import { demoAddress, demoQaBody, reachableBase } from './demo-qa.js'
 import { draining } from './jobs.js'
 import { prefetchRefusal, runPrefetchJob } from './prefetch.js'
@@ -974,34 +973,10 @@ function captureRoute({ shoot, timeoutMs, reach = reachableBase, proxyOrigin = n
     if (!shoot) return c.json({ code: 'NO_BROWSER' }, 503)
     const { body, refused } = bodyObject(c)
     if (refused) return refused
-    if (body.mode !== undefined && !['vision-tiles/1', 'real-page/1'].includes(body.mode))
+    if (body.mode !== undefined && body.mode !== 'vision-tiles/1')
       return badRequest(c, 'Unknown capture mode')
     const asked = captureBody(body)
     if (asked.error) return badRequest(c, asked.error)
-    // The brand bench's real-page views: header, footer, opened phone menu and tab icons, light and dark.
-    if (body.mode === 'real-page/1') {
-      if (!shoot.views) return c.json({ code: 'REAL_PAGE_VIEWS_UNAVAILABLE' }, 503)
-      const address = await demoAddress(asked, { reach, proxyOrigin })
-      try {
-        const layout = asked.layouts[0]
-        const url = new URL(pathOf(layout.address ?? layout.path), address.base).href
-        const views = await shoot.views({
-          url,
-          selectors: selectorsOf(body.selectors),
-          serveFrom: address.serveFrom ?? null,
-          serveFromIsProxy: address.serveFromIsProxy ?? false,
-          proxySiteLabel: address.proxySiteLabel ?? null,
-          siteHosts: [asked.host].filter(Boolean),
-          signal: c.req.raw.signal
-        })
-        return c.json({ ok: true, url, ...views }, 200)
-      } catch (error) {
-        return c.json(
-          { ok: false, code: 'REAL_PAGE_VIEWS_FAILED', reason: String(error?.message ?? error) },
-          502
-        )
-      }
-    }
     // Probed like `/demo-qa`, never assumed (23/10/2026): on the macOS stand tracy-host sits on the compose
     // network, the loopback port refuses, and every shot of a finished demo's vision look failed.
     // Opened at the name the demo gives itself when the caller names it (`publicOrigin`), as `/demo-qa` does: on the

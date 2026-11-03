@@ -244,26 +244,6 @@ test('validateDsSlotBody accepts the three shapes and refuses everything else', 
   const ok = (b) => assert.equal(validateDsSlotBody({ kind: DS_SLOT_KIND, label: LABEL, ...b }), null)
   const no = (b) => assert.notEqual(validateDsSlotBody({ kind: DS_SLOT_KIND, label: LABEL, ...b }), null)
   ok({ mode: 'read', platform: 'joomla' })
-  // The brand bench's accent-only module (#322): bg, optional fg, accent.
-  ok({
-    mode: 'apply',
-    platform: 'joomla',
-    payload: {
-      system: 'brand:121111--cc3322',
-      html: '<style>/* tracy-ds-slot: x */</style>',
-      module: { position: 'top', title: 'DS' }
-    }
-  })
-  ok({
-    mode: 'apply',
-    platform: 'joomla',
-    payload: {
-      system: 'brand:121111-eeeeee-cc3322',
-      html: '<style>/* tracy-ds-slot: x */</style>',
-      module: { position: 'top', title: 'DS' }
-    }
-  })
-  no({ mode: 'apply', platform: 'joomla', payload: { system: 'brand:12111-cc3322', html: 'x', module: {} } })
   ok({ mode: 'undo', platform: 'emdash', id: 'abcdefabcdef' })
   ok({ mode: 'apply', platform: 'emdash', payload: { system: 'od:stripe', css: SHEET('stripe', 'Stripe') } })
   ok({
