@@ -42,7 +42,8 @@ export function requestBody({ model, system, messages, tools, maxTokens, effort,
           }))
         }
       : {}),
-    reasoning: { effort },
+    // enabled makes thinking explicit; with effort alone an Anthropic model may still skip thinking on an easy turn.
+    reasoning: { enabled: true, effort },
     max_tokens: maxTokens,
     usage: { include: true }
   }

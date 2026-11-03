@@ -78,7 +78,7 @@ test('a two tool call conversation ends in the final answer, each turn saved bef
   assert.equal(first.url, 'https://models.example.test/api/v1/chat/completions')
   assert.equal(first.headers.authorization, 'Bearer test-key')
   assert.equal(first.body.model, 'vendor/test-model')
-  assert.deepEqual(first.body.reasoning, { effort: 'high' })
+  assert.deepEqual(first.body.reasoning, { enabled: true, effort: 'high' })
   assert.ok(first.body.max_tokens >= 64000)
   assert.deepEqual(first.body.tools, [
     {
@@ -548,3 +548,69 @@ function stripMarkers(m) {
   if (!Array.isArray(m.content)) return m
   return { ...m, content: m.content.map(({ cache_control: _marker, ...p }) => p) }
 }
+
+test('a refusal is an error carrying the provider refusal text, and the turn is saved', async () => {
+  const saved = []
+  const model = scriptedModel([
+    {
+      body: {
+        choices: [
+          {
+            finish_reason: 'content_filter',
+            native_finish_reason: 'refusal',
+            message: {
+              role: 'assistant',
+              content: null,
+              refusal: 'This request was blocked by a usage policy.'
+            }
+          }
+        ]
+      }
+    }
+  ])
+  await assert.rejects(
+    runAgent({
+      door: DOOR,
+      system: SYSTEM,
+      firstUser: FIRST,
+      tools: [],
+      fetchImpl: model.fetchImpl,
+      onTurn: (t) => saved.push(structuredClone(t))
+    }),
+    (e) => e instanceof AgentError && e.code === 'AGENT_REFUSED' && /usage policy/.test(e.reason)
+  )
+  assert.deepEqual(
+    saved.map((t) => t.state),
+    ['dispatched', 'answered']
+  )
+  assert.equal(saved[1].finishReason, 'content_filter')
+  assert.match(saved[1].refusal, /usage policy/)
+  // Resuming a refused conversation refuses again without a call.
+  const again = scriptedModel([])
+  await assert.rejects(
+    runAgent({
+      door: DOOR,
+      system: SYSTEM,
+      firstUser: FIRST,
+      tools: [],
+      history: [saved[1]],
+      fetchImpl: again.fetchImpl
+    }),
+    (e) => e.code === 'AGENT_REFUSED'
+  )
+  assert.equal(again.requests.length, 0)
+})
+
+test('a reply body padded with leading whitespace (provider keep-alive) is read normally', async () => {
+  const reply = finalReply({ content: 'ok', usage: usageOf({ cost: 0.001 }) })
+  const model = scriptedModel([{ body: `\n\n   \n${JSON.stringify(reply.body)}` }])
+  const result = await runAgent({
+    door: DOOR,
+    system: SYSTEM,
+    firstUser: FIRST,
+    tools: [],
+    fetchImpl: model.fetchImpl
+  })
+  assert.equal(result.answer, 'ok')
+  assert.equal(result.turns[0].cost, 0.001)
+})

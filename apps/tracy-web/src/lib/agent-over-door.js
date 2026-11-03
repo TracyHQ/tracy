@@ -10,7 +10,9 @@
 // - last turn answered with a final answer: that answer is returned, nothing is sent;
 // - last turn dispatched with no answer, or failed with an uncertain outcome (network, timeout): AGENT_TURN_UNANSWERED.
 //   The provider may have answered and charged; the caller decides, and resends only by dropping that turn;
-// - last turn failed with a provider refusal (HTTP error, error answer): its messages are sent again as the next turn.
+// - last turn failed with a provider rejection (HTTP error, error answer): its messages are sent again as the next turn;
+// - last turn answered but truncated (AGENT_TRUNCATED) or refused by the model's content filter (AGENT_REFUSED): the
+//   same error again, nothing is sent.
 // Reasoning details are saved on every assistant message and sent back: Anthropic refuses a tool loop whose earlier
 // thinking comes back unsigned. A cancel (signal) is honoured between turns only; a call in flight is never cut.
 import {
@@ -114,6 +116,9 @@ export async function runAgent({
       providerModel: answer.model ?? null,
       usage: usageOf(answer.usage),
       cost: costOf(answer.usage),
+      ...(typeof choice.message.refusal === 'string' && choice.message.refusal
+        ? { refusal: choice.message.refusal }
+        : {}),
       answeredAt: new Date().toISOString()
     })
     await onTurn(structuredClone(turn))
@@ -149,6 +154,14 @@ function rebuild(turns, firstUser) {
 function outcomeOf(turn) {
   if (turn.finishReason === 'length')
     return { error: new AgentError('AGENT_TRUNCATED', { turn: turn.n, reason: 'the answer hit max_tokens' }) }
+  // A refusal (content filter) arrives as HTTP 200 with no content: say so, never report it as an empty answer.
+  if (turn.refusal || turn.finishReason === 'content_filter')
+    return {
+      error: new AgentError('AGENT_REFUSED', {
+        turn: turn.n,
+        reason: (turn.refusal || 'the provider filtered the answer').slice(0, 300)
+      })
+    }
   if (turn.message.tool_calls?.length) return {}
   const text = typeof turn.message.content === 'string' ? turn.message.content.trim() : ''
   if (!text) return { error: new AgentError('AGENT_EMPTY_ANSWER', { turn: turn.n }) }
