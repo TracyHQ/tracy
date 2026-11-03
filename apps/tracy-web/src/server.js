@@ -128,6 +128,8 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
     : { stop() {} }
   // The AI Assistant's handoff to a person: its Telegram outbox, and on a laptop its long poll.
   const support = app.assistantSupport?.start() ?? { stop: async () => {} }
+  // The site planner bench's worker (`site-planner/bench-worker.js`): claims the one queued run every few seconds.
+  if (pool) app.sitePlannerQueue?.start()
   const server = await new Promise((resolve) => {
     const s = serve(
       { fetch: app.fetch, port: Number(env.PORT ?? 8080), hostname: '0.0.0.0', createServer },
@@ -216,6 +218,7 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
     close: async () => {
       speechProbe?.stop()
       await cron.stop()
+      app.sitePlannerQueue?.stop()
       await support.stop()
       await app.betaLogin?.stop()
       await new Promise((r) => server.close(r))
