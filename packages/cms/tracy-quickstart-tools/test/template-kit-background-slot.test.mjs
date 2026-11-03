@@ -10,14 +10,16 @@ import { settleSettingSlots } from '../template-kit/lib/setting-slots.mjs'
 const BG = 'images/demo/others/court-dusk.jpg'
 const PROFILE = 'templates/demo_court/etc/site/default.json'
 
-function fakeSource(siteSettings) {
+function fakeSource(siteSettings, profile = null) {
   const files = {
     'configuration.php': "public $sitename = 'Clay Court Club';",
-    [PROFILE]: JSON.stringify(siteSettings)
+    [PROFILE]: JSON.stringify(profile ? { body_bg_img: 'images/demo/others/old.jpg' } : siteSettings),
+    ...(profile ? { [`templates/demo_court/etc/site/${profile}.json`]: JSON.stringify(siteSettings) } : {})
   }
+  const params = JSON.stringify(profile ? { 'typelist-site': profile } : {})
   const rows = {
     'SHOW TABLES': [{ t: 'cc_extensions' }, { t: 'cc_menu' }],
-    template_styles: [{ template: 'demo_court' }]
+    template_styles: [{ template: 'demo_court', params }]
   }
   return {
     readFile: (rel) => files[rel] ?? null,
@@ -65,6 +67,18 @@ test('the T4 adapter reads the page background setting, without the media field 
   ])
   assert.deepEqual(joomlaAdapter(fakeSource({ body_bg_img: '' })).backgroundSettings(), [])
   assert.equal(joomlaAdapter({ query: null, readFile: null }).backgroundSettings(), null)
+})
+
+test('the background is read from the profile the home style names, not always the default one', () => {
+  const adapter = joomlaAdapter(fakeSource({ body_bg_img: BG }, 'evening'))
+  assert.deepEqual(adapter.backgroundSettings(), [
+    {
+      key: 'body_bg_img',
+      value: BG,
+      template: 'demo_court',
+      file: 'templates/demo_court/etc/site/evening.json'
+    }
+  ])
 })
 
 test('every frame painted behind with the setting picture points at one writable slot; others keep their reason', () => {

@@ -177,7 +177,7 @@ export function buildSite({ map, adapter, reads, logoReads, notFound, styles, ht
     mapSettings: adapter.mapSettings?.() ?? [],
     // The picture the template paints behind its pages from one setting; the kit turns it into one setting slot
     // the frames painted behind with it point at (background-slot.mjs) and drops this list.
-    backgroundSettings: adapter.backgroundSettings?.() ?? []
+    backgroundSettings: adapter.backgroundSettings?.() ?? null
   }
   if (!site.favicon.currentFile)
     errors.push({ kind: 'missing', field: 'site.favicon.currentFile', reason: 'no page links an icon' })

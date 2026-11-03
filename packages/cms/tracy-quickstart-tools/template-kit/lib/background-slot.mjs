@@ -10,7 +10,8 @@ import { PAINTED_BEHIND_REASON } from './picture-frames.mjs'
 export const BACKGROUND_SLOT_ID = 'site.body-background'
 export const BACKGROUND_KIND = 'template-background'
 
-const norm = (f) =>
+/** A picture path as compared: without the media field suffix (`#joomlaImage:...`), a leading slash or case. */
+const pictureKey = (f) =>
   String(f ?? '')
     .split('#')[0]
     .replace(/^\/+/, '')
@@ -18,7 +19,9 @@ const norm = (f) =>
 
 /** Frames a background setting shows: painted behind a block as a CSS background, with the setting's picture. */
 const showsSetting = (f, setting) =>
-  f.paintedBehind === true && f.shownAs === 'background' && norm(f.picture) === norm(setting.value)
+  f.paintedBehind === true &&
+  f.shownAs === 'background' &&
+  pictureKey(f.picture) === pictureKey(setting.value)
 
 /** The slot of one background setting read by the adapter (`{key, value, template, file}`), naming its frames. */
 function backgroundSlot(setting, frames) {
