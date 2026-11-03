@@ -8,8 +8,10 @@ export function sideText(k) {
   const t = k.site.brandColours.tokens
   const get = (side, name) => t.find((x) => x.side === side && x.name === name)?.value?.toLowerCase()
   const opens = k.site.brandColours.opensOn?.markers?.includes('dark-active') ? 'dark' : 'light'
-  // base tokens are the side the template opens on; .light-active / .dark-active override the other side
-  const base = get('base', '--headings-color') ?? get('base', '--t4-heading-color')
+  // base tokens are the side the template opens on; .light-active / .dark-active override the other side. A T3
+  // template has no CSS variables: its heading colour is the LESS variable the kit read (`@headings-color`).
+  const base =
+    get('base', '--headings-color') ?? get('base', '--t4-heading-color') ?? get('base', '@headings-color')
   return {
     dark: (opens === 'dark' ? base : get('.dark-active', '--headings-color')) ?? '#ffffff',
     light: (opens === 'light' ? base : get('.light-active', '--headings-color')) ?? '#212529',
@@ -25,15 +27,29 @@ export function templateGrounds(k) {
   return { opens, opening: bc.opensOn.ground.toLowerCase(), other }
 }
 
-/** Why a kit cannot feed the gate, or null when it can. */
+/**
+ * Why a kit cannot feed the gate, or null when it can. An empty part is a problem, not a pass: a kit whose site reader
+ * found nothing (no colour variables, no name slot, a logo the page shows with no slot to write it) would let the gate
+ * judge a brand against defaults it invented.
+ */
 export function kitProblem(k) {
   if (!k || typeof k !== 'object') return 'the kit is not an object'
   if (!k.quickstart?.product || !k.quickstart?.version)
     return 'the kit has no quickstart.product and quickstart.version'
   if (!Array.isArray(k.site?.logoSpots) || !k.site.logoSpots.length) return 'the kit has no site.logoSpots'
-  if (!Array.isArray(k.site?.nameSlots)) return 'the kit has no site.nameSlots'
+  const unwritable = k.site.logoSpots.filter((s) => s?.shownIn?.length && !s.frameId).map((s) => s.id)
+  if (unwritable.length)
+    return `the kit has logo spots the page shows with no frame to write them: ${unwritable.join(', ')}`
+  if (!Array.isArray(k.site?.nameSlots) || !k.site.nameSlots.length) return 'the kit has no site.nameSlots'
   const bc = k.site?.brandColours
-  if (!bc?.primary?.value || !bc.opensOn?.ground || !Array.isArray(bc.sides) || !Array.isArray(bc.tokens)) {
+  if (
+    !bc?.primary?.value ||
+    !bc.opensOn?.ground ||
+    !Array.isArray(bc.sides) ||
+    !bc.sides.length ||
+    !Array.isArray(bc.tokens) ||
+    !bc.tokens.length
+  ) {
     return 'the kit has no usable site.brandColours (primary, opensOn, sides, tokens)'
   }
   return null

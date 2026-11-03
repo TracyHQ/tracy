@@ -363,7 +363,8 @@ list, kept by every later run).
 - **No test data.** A restored site carries accounts the quickstart does not ship (the one the restore signs in
   with). An account page (`/author/<name>`, `/user/<name>`...) whose account the content map does not declare and
   which links to no content of its own is left out, so is a page that lists only left-out pages, a page reached only
-  through them, and any page matching `--exclude-path` (`*` matches any run of characters). Links to them are
+  through them, and any page matching `--exclude-path` (comma-separated; `*` matches any run of characters; a comma inside a pattern is
+  written `\,`, so VirtueMart's sort pages `/shop/<category>/by,<field>` are `'*/by\,*'`). Links to them are
   removed from every page in the browser before it is shot, with the row that holds them. The kit counts what was
   left out by reason (`excludedPages`) and never names it.
 - **Read, then shoot** (`lib/capture-site.mjs`). The READ pass (`read-pass.mjs`) opens every page at every width

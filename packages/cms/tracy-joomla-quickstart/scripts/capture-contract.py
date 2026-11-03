@@ -64,6 +64,18 @@ p.add_argument('--identity-note',default='')
 # keep one that uses a block the template does not ship. With this flag such rows are left out of the
 # contract (entities, slots, assignments). Off by default so every published profile re-captures byte for byte.
 p.add_argument('--skip-trashed-modules',action='store_true')
+# A menu item in the trash (published = -2) is no page a visitor can open, yet a demo archive keeps some (JA Cagox 1.0.2:
+# trashed copies of its shop pages), and each one became a page of the contract that no crawl ever reaches. With this
+# flag such rows are left out of the contract (entities, slots, pages). Off by default so every published profile
+# re-captures byte for byte.
+p.add_argument('--skip-trashed-menu-items',action='store_true')
+# A T3 template keeps its logos in the params of each template style (`logoimage`, `logoimage_sm`, `logofooterimage`,
+# `logoimage_dark`), not in a module or a settings file, so a T3 contract declared no slot for the logo every page prints
+# (JA Cagox 1.0.2: three logo pictures, no slot). With this flag each such param a captured style sets is an image slot
+# of that style's `templateStyle` entity (column `params`, `jsonPath` [key]), role `business.logo`, kept from Customize;
+# the Claude Cowork plugin writes it as it writes any style param (`content.update` kind `templateStyle`). Off by
+# default so every published profile re-captures byte for byte.
+p.add_argument('--template-style-logos',action='store_true')
 # A published mod_ja_acm module whose BLOCK the template does not ship (no `acm/<block>/` folder at all)
 # renders nothing: mod_ja_acm has no layout to draw it with, so its words never reach a page (JA Vega j6:
 # #121 "Our FAQ", block `accordion`, assigned to Home, absent from the rendered page). With this flag such
@@ -354,6 +366,8 @@ def declare_everything(kind,row,add):
   except ValueError:params={}
   v=params.get('hint') if isinstance(params,dict) else None
   if isinstance(v,str) and v.strip():add('params','text',v,jsonPath=['hint'],label=title+' / hint',customize='keep')
+# A T3 style param naming a logo picture (the kit's `joomla-t3.mjs` T3_LOGO_KEY reads the same names).
+T3_LOGO_KEY=re.compile(r'logo[a-z]*image(?:_[a-z]+)?')
 volatile={'id','asset_id','checked_out','checked_out_time','created','created_by','created_by_alias','modified','modified_by','hits','version','lft','rgt'}
 tables={'category':'categories','module':'modules','article':'content','menuItem':'menu','templateStyle':'template_styles'}
 # The kinds --full-coverage adds, each read through the plugin's own writer for its kind (JoomlaSiteWriter::MAP).
@@ -368,6 +382,7 @@ for kind,table in tables.items():
   if kind=='module' and a.skip_trashed_modules and str(row.get('published'))=='-2':continue
   if kind=='module' and row['id'] in unshipped:continue
   if kind=='menuItem' and (row.get('client_id')!='0' or row.get('menutype') not in menutypes):continue
+  if kind=='menuItem' and a.skip_trashed_menu_items and str(row.get('published'))=='-2':continue
   if kind=='templateStyle' and row.get('template') not in styleTemplates:continue
   if kind=='article' and row.get('state')!='1':continue
   if kind=='contact' and str(row.get('published'))!='1':continue
@@ -424,6 +439,12 @@ for kind,table in tables.items():
   # Labels remain content; identities use stable aliases rather than mutable titles.
   if kind in ['article','menuItem']:add('title','text',row['title'],label=row['title'])
   if a.full_coverage:declare_everything(kind,row,add)
+  if kind=='templateStyle' and a.template_style_logos:
+   try:style_params=json.loads(row.get('params') or '{}')
+   except ValueError:style_params={}
+   for k,v in (style_params.items() if isinstance(style_params,dict) else []):
+    if T3_LOGO_KEY.fullmatch(k) and isinstance(v,str) and v.strip():
+     add('params','image',v,jsonPath=[k],label=f'{k} (template style {row["title"]})',customize='keep',requiresEvidence=False,role='business.logo',group={'id':'site-logo.business','item':0,'kind':'business'})
   # Row icons (--repeat-icons) come after every other slot of the entity, so no key an older rule made moves.
   for node,path,name in icons:add('params','text',node,jsonPath=path,nestedJson='jatools-config',label=row['title']+' / '+name+' '+str(path[-1]+1),customize='keep')
 # Authors (--full-coverage): a visitor reads each post's author name, and on the author pages the picture, bio and job

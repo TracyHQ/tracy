@@ -49,6 +49,26 @@ export function parseBatch(text) {
 }
 
 /**
+ * The files of one batched read: each answer is a marker line naming the file, the file's bytes, then the one newline
+ * the batch script adds after every file (so a file without a final newline still ends its answer), which is dropped
+ * here: a file comes back byte for byte.
+ * @param {string} out @param {string} mark
+ * @returns {{file: string, text: string}[]}
+ */
+export function splitBatch(out, mark) {
+  return String(out ?? '')
+    .split(mark)
+    .slice(1)
+    .map((chunk) => {
+      const at = chunk.indexOf('\n')
+      return {
+        file: chunk.slice(0, at),
+        text: chunk.endsWith('\n') ? chunk.slice(at + 1, -1) : chunk.slice(at + 1)
+      }
+    })
+}
+
+/**
  * @param {{db?: string, dbCommand?: string, filesCommand?: string, webroot?: string}} o
  * @returns {{query: Function|null, queryMany: Function|null, readFile: Function|null, readMany: Function|null, listDir: Function|null, describe: string[]}}
  *   Every answer is kept: the same statement or file is read once; `queryMany` and `readMany` cost one exec each.
@@ -124,13 +144,7 @@ export function siteSource({ db, dbCommand, filesCommand, webroot }) {
             stdio: ['ignore', 'pipe', 'ignore'],
             maxBuffer: 64 * 1024 * 1024
           })
-          return out
-            .split(MARK)
-            .slice(1)
-            .map((chunk) => {
-              const at = chunk.indexOf('\n')
-              return { file: chunk.slice(0, at), text: chunk.slice(at + 1) }
-            })
+          return splitBatch(out, MARK)
         } catch {
           return []
         }

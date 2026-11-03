@@ -35,6 +35,20 @@ export function knownAccounts(map) {
   return keys
 }
 
+/**
+ * The patterns of one `--exclude-path` value: split on commas; a comma a pattern holds is written `\,` (a VirtueMart sort
+ * page such as `/shop/x/by,product_name` is matched by `/shop/*by\,*`). Empty patterns are dropped.
+ * @param {unknown} value
+ * @returns {string[]}
+ */
+export function excludePatternsOf(value) {
+  if (typeof value !== 'string') return []
+  return value
+    .split(/(?<!\\),/)
+    .map((p) => p.replace(/\\,/g, ','))
+    .filter(Boolean)
+}
+
 /** A `--exclude-path` pattern as a test on a canonical path: `*` is any run of characters. */
 export function pathPattern(glob) {
   const body = String(glob)

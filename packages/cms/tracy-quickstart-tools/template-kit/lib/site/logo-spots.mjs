@@ -1,8 +1,9 @@
 // `site.logoSpots[]`: every place the site prints a logo, measured in a browser in each theme of the template, joined to
 // the content map slot that fills it (its frame id) when one does. A logo in free HTML with no slot is listed too,
 // with `frameId: null`. Pure: it takes the browser reads, the map's logo slots and the adapter's logo settings.
-import { sideOfGround } from './colour-maths.mjs'
+
 import { neutralKey } from '../ids.mjs'
+import { sideOfGround } from './colour-maths.mjs'
 
 const WHERE = ['header', 'offcanvas', 'footer', 'other']
 const fileOf = (sample) =>
@@ -11,11 +12,29 @@ const fileOf = (sample) =>
     .split('?')[0]
     .replace(/^\/+/, '')
 
-/** The content map's logo slots (role `business.logo`), with their file and entity. */
-export const logoSlotsOf = (map) =>
-  (map.slots ?? [])
+/**
+ * The template setting a logo slot writes: a site settings entity names it (`identity.key`, a T4 profile key); a
+ * template style slot names it by its one-step path into the style's params (`logoimage` of a T3 style).
+ */
+function settingOf(slot, entity) {
+  if (entity?.identity?.key) return entity.identity.key
+  if (entity?.kind === 'templateStyle' && slot.column === 'params' && slot.jsonPath?.length === 1)
+    return String(slot.jsonPath[0])
+  return null
+}
+
+/** The content map's logo slots (role `business.logo`), with their file, entity and the setting they write. */
+export function logoSlotsOf(map) {
+  const entities = new Map((map.entities ?? []).map((e) => [e.key, e]))
+  return (map.slots ?? [])
     .filter((s) => s.role === 'business.logo')
-    .map((s) => ({ key: s.key, entity: s.entity, file: fileOf(s.sample) }))
+    .map((s) => ({
+      key: s.key,
+      entity: s.entity,
+      file: fileOf(s.sample),
+      setting: settingOf(s, entities.get(s.entity))
+    }))
+}
 
 /** The frame ids of the kit that are logos: every `business.logo` slot, and every spot's frame. */
 export function logoFrameIds(map, site) {
@@ -50,8 +69,8 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
     const where = WHERE.includes(g.region) ? g.region : 'other'
     const own = g.block ? slots.filter((s) => s.entity === g.block && s.file === g.file) : []
     const siteLevel = slots.filter((s) => !s.entity.startsWith('module-') && s.file === g.file)
-    const slot = own[0] ?? (g.block ? null : pickByTheme(siteLevel, entities, g.themeClass))
-    const settingKey = slot ? entities.get(slot.entity)?.identity?.key : null
+    const slot = own[0] ?? (g.block ? null : pickByTheme(siteLevel, g.themeClass))
+    const settingKey = slot?.setting ?? null
     const setting = settings.find((s) => s.key === settingKey)
     const entity = g.block ? entities.get(g.block) : null
     let emptyShows = setting?.prints.find((p) => p.where === where)?.emptyShows ?? null
@@ -109,8 +128,8 @@ const openingTheme = (reads) => reads.find((r) => r.opening)?.theme ?? 'base'
 const isOpening = (spot, reads) => spot.shownIn.includes(openingTheme(reads))
 
 /** Of several site-level slots with the same file, the one whose setting names the logo's theme. */
-function pickByTheme(list, entities, themeClass) {
+function pickByTheme(list, themeClass) {
   if (list.length <= 1) return list[0] ?? null
   const dark = /dark/.test(themeClass ?? '')
-  return list.find((s) => /dark/.test(entities.get(s.entity)?.identity?.key ?? '') === dark) ?? list[0]
+  return list.find((s) => /dark/.test(s.setting ?? '') === dark) ?? list[0]
 }

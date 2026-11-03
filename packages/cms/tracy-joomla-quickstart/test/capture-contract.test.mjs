@@ -1700,3 +1700,100 @@ test(
     )
   }
 )
+
+// ── T3 templates: logos in the style params, trashed menu items ──────────────────────────────────────
+
+/** A T3 style: its logos are params of the style row (invented files). */
+const t3Inventory = () => {
+  const inv = clean()
+  inv.template_styles = [
+    style('9', {
+      home: '1',
+      title: 'Tracy - Default',
+      params: JSON.stringify({
+        logotype: 'image',
+        logoimage: 'images/brand/logo-main.png',
+        enable_logoimage_sm: '1',
+        logoimage_sm: 'images/brand/logo-small.png',
+        logofootertype: 'image',
+        logofooterimage: 'images/brand/logo-foot.png',
+        logoimage_dark: '',
+        sitename: ''
+      })
+    })
+  ]
+  inv.menu = [menu('101'), menu('102', { path: 'old-shop', title: 'Old shop', published: '-2' })]
+  return inv
+}
+
+test(
+  '--template-style-logos declares every logo picture a T3 style sets as a business.logo slot of that style',
+  needsPhp,
+  () => {
+    const plain = capture(t3Inventory())
+    assertWritten(plain)
+    assert.equal(
+      plain.read('content-map.json').slots.some((s) => s.entity === 'templateStyle-9'),
+      false,
+      'off by default: a published profile re-captures byte for byte'
+    )
+    const run = capture(t3Inventory(), { args: ['--template-style-logos'] })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.entity === 'templateStyle-9')
+    assert.deepEqual(
+      slots.map((s) => [s.key, s.column, s.type, s.jsonPath, s.sample, s.role, s.customize]),
+      [
+        [
+          'templateStyle-9.0',
+          'params',
+          'image',
+          ['logoimage'],
+          'images/brand/logo-main.png',
+          'business.logo',
+          'keep'
+        ],
+        [
+          'templateStyle-9.1',
+          'params',
+          'image',
+          ['logoimage_sm'],
+          'images/brand/logo-small.png',
+          'business.logo',
+          'keep'
+        ],
+        [
+          'templateStyle-9.2',
+          'params',
+          'image',
+          ['logofooterimage'],
+          'images/brand/logo-foot.png',
+          'business.logo',
+          'keep'
+        ]
+      ],
+      'an empty logo param (logoimage_dark) and the switches (logotype) are not pictures'
+    )
+    assert.deepEqual(slots[0].group, { id: 'site-logo.business', item: 0, kind: 'business' })
+  }
+)
+
+test(
+  '--skip-trashed-menu-items leaves a trashed menu item out of the entities and the pages',
+  needsPhp,
+  () => {
+    const plain = capture(t3Inventory())
+    assertWritten(plain)
+    assert.ok(plain.read('content-map.json').pages.some((p) => p.entity === 'menuItem-102'))
+    const run = capture(t3Inventory(), { args: ['--skip-trashed-menu-items'] })
+    assertWritten(run)
+    const map = run.read('content-map.json')
+    assert.deepEqual(
+      map.pages.map((p) => p.entity),
+      ['menuItem-101']
+    )
+    assert.equal(
+      map.entities.some((e) => e.key === 'menuItem-102'),
+      false
+    )
+  }
+)
