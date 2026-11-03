@@ -234,7 +234,7 @@ export const en = {
     "What every customer's agent talks to. Tracy changes the key here; the model itself is chosen by the agent runtime.",
   'settings.model.door.sitePlanner.label': 'Site planner',
   'settings.model.door.sitePlanner.blurb':
-    'WO New Flow Test: the site planner bench in /ops. An agent plans a whole site from a brief and a template kit, reading the kit with tool calls and its pictures by sight.',
+    'WO New Flow Test: the site planner bench, started from a command line on the server. An agent plans a whole site from a brief and a template kit, reading the kit with tool calls and its pictures by sight.',
 
   'settings.ui.title': 'User Interface',
   'settings.ui.blurb':

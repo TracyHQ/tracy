@@ -78,7 +78,7 @@
   "settings.model.door.seedImage.label": "已构建 site 的图片",
   "settings.model.door.seedText.blurb": "写入客户新 site 的 blog 文章、页面区块和翻译。",
   "settings.model.door.seedText.label": "已构建 site 的文字",
-  "settings.model.door.sitePlanner.blurb": "WO New Flow Test：/ops 中的 site planner 试验台。agent 根据一份 brief 和一个 template 套件规划整个 site：通过工具调用读取套件，并查看其中的图片。",
+  "settings.model.door.sitePlanner.blurb": "WO New Flow Test：site planner 试验台，在服务器上通过命令行启动。agent 根据一份 brief 和一个 template 套件规划整个 site：通过工具调用读取套件，并查看其中的图片。",
   "settings.model.door.sitePlanner.label": "Site planner",
   "settings.model.door.vision.blurb": "Website Opportunities：分析来源照片，审阅渲染后页面的截图。需要单独的像素测试；能生成图片并不能证明具备此能力。",
   "settings.model.door.vision.label": "读取图片",

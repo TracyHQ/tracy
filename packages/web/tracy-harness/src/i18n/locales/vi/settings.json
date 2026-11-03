@@ -78,7 +78,7 @@
   "settings.model.door.seedImage.label": "Hình cho một site được dựng",
   "settings.model.door.seedText.blurb": "Bài blog, các phần của trang và bản dịch được viết vào site mới của khách.",
   "settings.model.door.seedText.label": "Chữ cho một site được dựng",
-  "settings.model.door.sitePlanner.blurb": "WO New Flow Test: bàn thử site planner trong /ops. Một agent lên kế hoạch cho cả site từ một brief và một template kit: đọc kit bằng lệnh gọi tool và tự xem hình của kit.",
+  "settings.model.door.sitePlanner.blurb": "WO New Flow Test: bàn thử site planner, chạy bằng dòng lệnh trên server. Một agent lên kế hoạch cho cả site từ một brief và một template kit: đọc kit bằng lệnh gọi tool và tự xem hình của kit.",
   "settings.model.door.sitePlanner.label": "Site planner",
   "settings.model.door.vision.blurb": "Website Opportunities: phân tích ảnh nguồn và duyệt ảnh chụp trang đã dựng. Cần một lượt thử điểm ảnh riêng; vẽ được hình không chứng minh khả năng này.",
   "settings.model.door.vision.label": "Đọc hình",

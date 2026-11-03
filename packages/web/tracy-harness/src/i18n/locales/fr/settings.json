@@ -78,7 +78,7 @@
   "settings.model.door.seedImage.label": "Images d’un site construit",
   "settings.model.door.seedText.blurb": "Articles de blog, sections de page et traductions écrits dans le nouveau site d’un client.",
   "settings.model.door.seedText.label": "Texte d’un site construit",
-  "settings.model.door.sitePlanner.blurb": "WO New Flow Test : le banc d’essai du site planner dans /ops. Un agent planifie un site entier à partir d’un brief et d’un kit de template : il lit le kit par appels d’outils et regarde ses images.",
+  "settings.model.door.sitePlanner.blurb": "WO New Flow Test : le banc d’essai du site planner, lancé depuis une ligne de commande sur le serveur. Un agent planifie un site entier à partir d’un brief et d’un kit de template : il lit le kit par appels d’outils et regarde ses images.",
   "settings.model.door.sitePlanner.label": "Site planner",
   "settings.model.door.vision.blurb": "Website Opportunities : analyser les photos sources et relire les captures des pages rendues. Exige un test en pixels distinct ; savoir dessiner des images ne prouve pas cette capacité.",
   "settings.model.door.vision.label": "Lire des images",

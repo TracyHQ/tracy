@@ -208,7 +208,7 @@ export const LLM_DOORS = [
     label: 'Site planner',
     where: 'this process',
     blurb:
-      'WO New Flow Test: the site planner bench in /ops. An agent plans a whole site from a brief and a template kit, reading the kit with tool calls and its pictures by sight.',
+      'WO New Flow Test: the site planner bench, started from a command line on the server. An agent plans a whole site from a brief and a template kit, reading the kit with tool calls and its pictures by sight.',
     needsModel: true,
     // Both REQUIRED: the planner reads the kit only through tool calls and judges each block from its picture.
     // No effort setting: the bench fixes it in code and records it on each run (ADR 0041, #301).

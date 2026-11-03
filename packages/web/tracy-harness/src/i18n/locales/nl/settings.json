@@ -78,7 +78,7 @@
   "settings.model.door.seedImage.label": "Afbeeldingen voor een gebouwde site",
   "settings.model.door.seedText.blurb": "Blog-berichten, paginasecties en vertalingen die in de nieuwe site van een klant worden geschreven.",
   "settings.model.door.seedText.label": "Tekst voor een gebouwde site",
-  "settings.model.door.sitePlanner.blurb": "WO New Flow Test: de testbank van de site planner in /ops. Een agent plant een hele site vanuit een brief en een template-kit: hij leest de kit via toolaanroepen en bekijkt de afbeeldingen ervan.",
+  "settings.model.door.sitePlanner.blurb": "WO New Flow Test: de testbank van de site planner, gestart vanaf een opdrachtregel op de server. Een agent plant een hele site vanuit een brief en een template-kit: hij leest de kit via toolaanroepen en bekijkt de afbeeldingen ervan.",
   "settings.model.door.sitePlanner.label": "Site planner",
   "settings.model.door.vision.blurb": "Website Opportunities: bronfoto’s analyseren en schermafbeeldingen van gerenderde pagina’s beoordelen. Vereist een aparte pixeltest; afbeeldingen kunnen tekenen bewijst dit niet.",
   "settings.model.door.vision.label": "Afbeeldingen lezen",
