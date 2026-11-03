@@ -1,0 +1,56 @@
+// The rungs of the fallback ladder (#344, ADR 0043 section 4), in the order a frame climbs them, and the plan reading
+// the "fewer rows" rung needs. Pure.
+//
+// A `specific` frame is drawn (one redraw with the looker's fault names), then takes the next owner photo, then its row
+// is dropped, then it is hidden, then returned to the planner. An `any-real` frame is never drawn or extended: it starts
+// at the next photo. A `person` frame is never drawn and never takes another photo: it is hidden or returned.
+
+/** The rungs per plan match. */
+export const RUNGS = Object.freeze({
+  specific: Object.freeze(['draw', 'redraw', 'next-photo', 'fewer-rows', 'hide', 'return']),
+  'any-real': Object.freeze(['next-photo', 'fewer-rows', 'hide', 'return']),
+  person: Object.freeze(['hide', 'return'])
+})
+
+/** The rungs of a plan wish (an unknown match climbs only the rungs that place nothing new). */
+export const rungsOf = (wish) => RUNGS[wish?.match] ?? RUNGS.person
+
+const arr = (x) => (Array.isArray(x) ? x : [])
+
+/**
+ * The list row of the plan a frame sits in: `{ block, list, rows, frames }` with the frames of that row's item, or null
+ * when the frame is not in a list row. Only kept blocks of kept pages and the shared blocks are read.
+ */
+export function rowOf(plan, frameId) {
+  const blocks = [
+    ...arr(plan?.sharedBlocks),
+    ...arr(plan?.pages)
+      .filter((p) => p?.decision === 'keep')
+      .flatMap((p) => arr(p.blocks))
+  ].filter((d) => d?.decision !== 'hide')
+  for (const d of blocks)
+    for (const l of arr(d.lists))
+      for (const item of arr(l?.items)) {
+        const frames = arr(item?.pictures)
+          .map((p) => p?.frame)
+          .filter((f) => typeof f === 'string')
+        if (frames.includes(frameId))
+          return { block: d.block, list: l.list, rows: Number(l.rows) || arr(l.items).length, frames }
+      }
+  return null
+}
+
+/**
+ * Whether the kit lets a list show one row fewer than `now`: the kit lists it, its rows are not content items of their
+ * own (those belong to the planner), and one fewer is still at least its `min` (1 when it names none). Returns the
+ * reason it may not, or null when it may.
+ */
+export function fewerRowsRefusal(kit, row, now) {
+  const block = arr(kit?.blocks).find((b) => b?.id === row.block)
+  const list = arr(block?.lists).find((l) => l?.id === row.list)
+  if (!list) return `the kit does not list ${row.list}`
+  if (list.rowKind === 'items') return `each row of ${row.list} is a content item of its own`
+  const min = typeof list.min === 'number' ? list.min : 1
+  if (now - 1 < min) return `${row.list} shows at least ${min} rows`
+  return null
+}

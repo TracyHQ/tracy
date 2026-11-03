@@ -79,7 +79,11 @@ test(
     const placed = [...run.rounds[0].pictures.frames, ...run.rounds[0].pictures.siteSettings].filter(
       (e) => e.file
     )
-    assert.deepEqual(new Set(after_.map((f) => f.sha256)), new Set(placed.map((e) => e.sha256)))
+    // Every placed file has its row; a darkened picture's cut (#344) has one too.
+    const recorded = new Set(after_.map((f) => f.sha256))
+    for (const e of placed) assert.ok(recorded.has(e.sha256), e.frame)
+    const darkened = placed.filter((e) => e.darkened && e.source !== 'twin').length
+    assert.equal(recorded.size, new Set(placed.map((e) => e.sha256)).size + darkened)
   }
 )
 

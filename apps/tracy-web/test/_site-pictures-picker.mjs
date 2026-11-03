@@ -4,7 +4,16 @@
 // _agent-over-door-fake.mjs: no real model is called.
 import { assignDoor, saveProvider } from '../src/lib/llm-store.js'
 import { createSitePicturesQueue } from '../src/site-pictures/bench-worker.js'
-import { isLook, lookReply, plan, quiet, SECRET, startRun } from './_site-pictures-bench.mjs'
+import {
+  drawReply,
+  isDraw,
+  isLook,
+  lookReply,
+  plan,
+  quiet,
+  SECRET,
+  startRun
+} from './_site-pictures-bench.mjs'
 
 export { SECRET }
 
@@ -87,14 +96,16 @@ export function balances(totals) {
 
 /**
  * Run what is queued with one worker that can open the picker door (and read a release webroot, `webroot`). Looks go
- * to `looker` (a function of the request body; by default every picture passes), every other call to `fetchImpl`.
+ * to `looker` (a function of the request body; by default every picture passes), drawings to `drawer` (by default a
+ * flat picture), every other call to `fetchImpl`.
  */
 export async function drainPicker(
   pool,
-  { index, dir, fetchImpl, balanceFetch = balances([]), retry = { attempts: 1 }, webroot, looker }
+  { index, dir, fetchImpl, balanceFetch = balances([]), retry = { attempts: 1 }, webroot, looker, drawer }
 ) {
   const routed = async (url, init) => {
     const body = init?.body ? JSON.parse(init.body) : null
+    if (isDraw(body)) return drawer ? drawer(body) : drawReply(body)
     if (!isLook(body)) return fetchImpl(url, init)
     return looker ? looker(body) : lookReply()
   }

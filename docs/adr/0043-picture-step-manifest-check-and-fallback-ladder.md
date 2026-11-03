@@ -38,8 +38,11 @@ reader uses that module.
 | `refusedPhotos` | `[{ asset, reason }]`: brief assets no frame may take (not a still, lettering, another business, a label that is unknown, blurry, no bytes with its hash). |
 | `altNotes` | `[{ frame, alt, seen, agrees, shared, note }]`: the writer's alt next to what the picture actually shows, compared by code (section 3b); filled only when a writer copy file is given to the run. |
 | `usage` | `[{ asset, frames }]`: per brief photo, how many frames use it. |
-| `cost`, `timing` | Objects keyed by role: `code` (always 0 USD; the time code took), `iconRanking` (the ranking call's cost as the provider reports it, 0 without a call, and its time in milliseconds), `looker` (the sum of the looks' costs as the provider reports them, or at the model's price when it reports none, and the sum of their times; section 3b), and later the drawer and background removal. The picker's cost is the cost of the run's turns, one row per call, with the provider balance before and after on the run. |
+| `cost`, `timing` | Objects keyed by role: `code` (always 0 USD; the time code took), `iconRanking` (the ranking call's cost as the provider reports it, 0 without a call, and its time in milliseconds), `looker` (the sum of the looks' costs as the provider reports them, or at the model's price when it reports none, and the sum of their times; section 3b), `drawer` (the sum of the drawings' costs and times; section 3c), and later background removal. The picker's cost is the cost of the run's turns, one row per call, with the provider balance before and after on the run. |
 | `iconRanking` | `{ model, notes }`: the model that ranked the icon names (`null` when the shortlist order decided) and why it did not, when it did not (no `pictureIconRanker` door, the demo icons not read, no usable answer). |
+| `drawer` | `{ model, door, promptSha256, count, calls: [{ frame, mode, attempt, sha256, model, ms, costUsd, cached, problem? }] }` (section 3c): the drawer door's model and snapshot (never the key), the drawing template's hash, how many entries are drawn or extended, one record per drawing. `cost.drawer` and `timing.drawer` are their sums. |
+| `ladder` | `[{ frame, steps: [{ rung, outcome, detail }] }]`: every rung of the fallback ladder a frame took in the round (section 4), so the manifest says why a frame ended as it did. |
+| `rows` | `[{ block, list, rows, from, dropped, reason }]`: lists the ladder made shorter (section 4), with the frames of the dropped rows. |
 
 A frame entry:
 
@@ -59,6 +62,9 @@ A frame entry:
 | `enlarge` | The scale applied to the crop (below 1 shrinks), or `null` when not cut from a photo. |
 | `sharpness` | `{ passed, verdict, score, bar, width, reason, version }`, the sharpness gate measured by the step at the display size when the crop was enlarged or the photo is low quality, or `null`. |
 | `darkened` | A dark overlay was baked in so the heading over it stays readable. |
+| `overlay` | `{ colour, strength, before, after }` when `darkened`: the overlay's colour and opacity, and the picture's mean luminance (0 to 1) before and after. |
+| `realPart` | `{ x, y, width, height }` on the file, for `owner-photo-extended`: the part that is the owner's own pixels. |
+| `drawing` | `{ mode, attempt }` for `drawn` and `owner-photo-extended`: `scene`, `object` or `outpaint`, and 1 or 2 (the redraw). |
 | `recolourable` | Initials and icons the write step may repaint in the brand colours. |
 | `seen` | One sentence from the looker saying what the picture actually shows. |
 | `looker` | The look of the picture (section 3b): `{ verdict: "pass" \| "fail", faults: [...], seen }`, the fault names from the fixed list; `{ verdict: "fail", faults: ["look unreadable"], seen: null, problem }` when the look could not be read twice. Absent when the frame is not looked at (icons, initials, hidden frames). |
@@ -213,6 +219,36 @@ Thresholds and readings (named constants in the code):
 - **The prompt** is `site-pictures/looker-prompt.md`, a draft until the owner approves real output, loaded once per
   process with its hash and recorded on the run (`prompts.looker`) and in the manifest's fingerprint.
 
+### 3c. The drawer and dark frames (#344)
+
+- **One call per drawing**, through its own model door `pictureDrawer` (by default
+  `google/gemini-3.1-flash-lite-image` through OpenRouter, about 0.034 USD a picture), at most 4 at a time, each a fresh
+  conversation with one user message: the fixed template `site-pictures/drawing-prompt.md` filled only from the plan's
+  words for the frame (`shows`, `mustInclude`, `avoid`, `mood`, `size`) and nothing else, and the aspect ratio nearest
+  the frame's shape as a request setting. The template's hash is recorded on the run (`prompts.drawing`) and in the
+  fingerprint; it is a draft until the owner approves real output.
+- **Modes**, chosen by code: `outpaint` for a wide band (shape at least 2 wide to 1 tall) when a usable portrait owner
+  photo shows the frame's own offering (its `depicts` is one of the wish's facts) and no other frame on its pages shows
+  it: the photo is placed in the middle of the band at the band's height (never enlarged), the model extends the grey
+  sides, and code pastes the real photo back over the middle of the answer, so the real part is the owner's pixels
+  (`realPart`, outlined for the looker, section 3b). Otherwise `object` for a frame whose kit role names an illustration
+  or a product, else `scene`. The answer is fitted to the size the frame's picture is written at (the demo file's aspect,
+  at least the display box).
+- **Never** for an `any-real` or a `person` frame, and never for icon, logo or cut-out frames (background removal is its
+  own step, #346): those frames never reach the drawer, whatever waits.
+- **The door is mandatory when drawing may be needed**: a run whose plan has a frame for the picker refuses at its start,
+  and again when a worker claims it, an unset, disabled or unreadable drawer door or a model its provider says cannot
+  draw (`SITE_PICTURES_DRAWER_UNSET`, `_DISABLED`, `_UNREADABLE`, `_MODEL_LACKS`), and a door changed since the start
+  (`SITE_PICTURES_DRAWER_CHANGED`). The run stores the door's snapshot as `door.drawer`.
+- **Recorded**: each drawing's cost (the provider's figure, else its tokens at the model's price) on the manifest's
+  `drawer.calls`, on its file row (`site_picture_file.cost_usd`) and in the run's `costUsd`. Each drawing is kept in the
+  bench's file store by a hash of the mode, the text, the real photo, the size, the model and the template, so a later
+  round or a resumed run pays once. A failed call is not kept.
+- **Dark frames**: a kit frame shown as a background, or marked `textOver`, has text over its picture. Code tries the
+  photos whose mean luminance is at most 0.42 first (`DARK_ENOUGH`); a placed, extended or drawn picture still brighter
+  gets a black overlay baked in, its opacity the least that brings it to that level, between 0.15 and 0.6, recorded as
+  `overlay` with `darkened: true`. The looker sees the darkened picture.
+
 ### 4. Fix rounds and the fallback ladder
 
 Looker rejections and check failures go back to the picker for the failing frames only, with the fault names. At most
@@ -225,6 +261,26 @@ Looker rejections and check failures go back to the picker for the failing frame
 
 A `person` frame never enters the drawing steps: no confirmed portrait means initials. A demo picture is never kept in
 a frame the plan asked to fill.
+
+How it runs (#344, `site-pictures/ladder-step.js`). Every checked round is finished where it is saved (the shared run
+loop is unchanged): the frames waiting for the drawer are drawn, dark frames darkened, every picture looked at, and
+each rejected frame climbs one rung, after which the changed pictures are looked at again, until no rejected frame can
+climb. The rungs, in order:
+
+| Rung | Who climbs it | What it does |
+|---|---|---|
+| draw | `specific` | the drawer draws or extends (section 3c) |
+| redraw | `specific` | once more, the template's redraw part naming the looker's faults |
+| next photo | `specific`, `any-real` | code cuts the next owner photo in the any-real order (darker first in a dark frame) not yet tried and not on the frame's pages; at most 2 per frame |
+| fewer rows | `specific`, `any-real` | the frame's list row is dropped when the kit lists the list, its rows are not content items of their own, one fewer is still at least its `min` (1 when none), and every frame of the row may hide; the row's frames are hidden and the list's new count is in `rows` |
+| hide | every match | the frame is hidden when the kit allows hiding and it is not a template setting |
+| return | every match | the frame is returned to the planner (`returns`) |
+
+A `person` frame climbs only hide and return (no other person's photo, never a drawing). A frame waiting for the drawer
+starts at draw; a frame code placed starts at its first rung after the placement; a frame the picker placed climbs only
+in the last round (no picker round follows), from draw, when the looker rejects it or it still fails the check. A look
+that could not be read is no rejection: the picture fails L01 and the next round asks again. Each rung is recorded in
+`ladder` and the entry's reason.
 
 ## Consequences
 

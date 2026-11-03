@@ -2293,6 +2293,20 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   rejections are rule L01 failures that go back to the picker in the fix rounds. The run's cost adds the looks and the
   icon ranking to the picker's turns. `run --copy-file` passes a writer copy file whose alts are compared with the
   seen sentences (`altNotes`). Migration 201 adds the door to the door check and the run's `copy` column.
+- **The drawer and the fallback ladder** (#344) finish every checked round before it is saved
+  ([`ladder-step.js`](apps/tracy-web/src/site-pictures/ladder-step.js), wrapped around the store's `saveRound` like the
+  looker, so the shared loop is unchanged). A specific frame no owner photo fits (or the picker answered "none") is
+  drawn through the `pictureDrawer` door (`google/gemini-3.1-flash-lite-image` through OpenRouter, about 0.034 USD a
+  picture, 4 at a time) from a fixed template filled only with the plan's words
+  ([`drawing-prompt.md`](apps/tracy-web/src/site-pictures/drawing-prompt.md)), or, for a wide band with a portrait owner
+  photo of its own offering, that photo is extended sideways (`owner-photo-extended`, its real part kept and recorded as
+  `realPart`). A run on a plan with specific frames does not start without the door, nor run when it changed. Frames with
+  text over the picture take darker photos first; a picture still too bright gets a dark overlay baked in (`darkened`,
+  `overlay`). A rejected frame then climbs its ladder: one redraw with the fault names, up to two other photos, one row
+  fewer (where the kit's list allows), hidden (where the kit allows), returned to the planner; any-real frames never
+  draw, person frames only hide or return. Each rung is recorded in `ladder`, dropped rows in `rows`, every drawing in
+  `drawer` and `cost.drawer`; the run's cost adds the drawings, and each drawn file's row its cost. Drawings and looks are
+  kept in the file store by key, so a later round or a resumed run pays once. Migration 202 adds the door.
 
 ## 9. Sign-in, seats, permissions
 

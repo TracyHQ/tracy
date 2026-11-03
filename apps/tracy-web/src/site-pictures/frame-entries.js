@@ -64,6 +64,7 @@ const copyOf = (twin, sourceFrame, src) => ({
   enlarge: src.enlarge,
   sharpness: src.sharpness,
   darkened: src.darkened,
+  ...(src.overlay ? { overlay: src.overlay } : {}),
   recolourable: src.recolourable,
   seen: null,
   reason: `follows ${sourceFrame}`

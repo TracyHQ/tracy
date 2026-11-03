@@ -3,11 +3,13 @@
 // drawn) and for person frames that have a confirmed portrait; other person frames get initials drawn by code in the
 // template accent (recolourable); a frame with no fitting photo is hidden where the kit allows, else returned to the
 // planner; frames the kit marks not writable are returned, except a picture painted behind blocks, which goes into
-// siteSettings; twins copy their source. Specific, icon and cut-out frames are left as pending entries for the steps
+// siteSettings; twins copy their source. A frame with text over its picture tries darker photos first (the overlay a
+// picture still too bright gets is baked when the round is finished, ladder-step.js). Specific, icon and cut-out frames are left as pending entries for the steps
 // that come later (the picker, the icons, the cut-outs): never a demo picture. No owner photo is shown twice on a page.
 import { initialsOf } from 'website-opportunities/domain/person-avatar.mjs'
 import { initialsAvatar } from '../lib/initials-avatar.js'
 import { cutPhoto, outputSizeFor } from './cut-photo.js'
+import { darkerFirst } from './darken.js'
 import { addTwins, hiddenEntry, pendingEntry, placedEntry } from './frame-entries.js'
 import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
 import { indexInputs } from './picture-check/inputs-index.js'
@@ -45,6 +47,7 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
   const files = new Map()
   const accent = kit?.site?.brandColours?.primary?.value
   const keep = (made) => files.set(`files/${made.sha256}.${made.ext}`, made)
+  const luminance = new Map()
 
   const work = []
   const iconJobs = []
@@ -150,7 +153,13 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
       }
       tried = null
     } else {
-      const ranked = rankForFrame(usable, wish, frame, usage).map((r) => r.a)
+      // A frame with text over its picture tries the dark enough photos first (darken.js).
+      const ranked = await darkerFirst(
+        rankForFrame(usable, wish, frame, usage).map((r) => r.a),
+        frame,
+        photoBytes,
+        luminance
+      )
       tried = await placePhoto(
         job,
         ranked,

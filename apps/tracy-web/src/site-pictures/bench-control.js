@@ -2,8 +2,9 @@
 // plan's and the brief's shape, the kit, the owner photos of a brief file) and stores what the run will use, so a
 // refused start leaves nothing behind and an accepted one says exactly what it ran: plan, brief as used, where its
 // owner photos come from, kit, prompt hashes and checker version, and, when the plan has a frame for the picker (#342),
-// the picker door's snapshot (never the key) and the harness settings, and always the looker door's snapshot (#343,
-// `door.looker`): a run does not start without the looker. The worker (bench-worker.js) does the rest.
+// the picker door's snapshot (never the key) and the harness settings, and the drawer door's (#344, `door.drawer`): a
+// frame the picker cannot fill is drawn, so such a run does not start without the drawer. Always the looker door's
+// snapshot (#343, `door.looker`): a run does not start without the looker. The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
@@ -20,6 +21,7 @@ import {
 import { fileStore, sha256Hex } from './file-store.js'
 import { openKitWithMap } from './kit-with-map.js'
 import { picturePickerDoor } from './door.js'
+import { pictureDrawerDoor } from './drawer-door.js'
 import { pictureLookerDoor } from './looker-door.js'
 import { altsOfCopy } from './alt-notes.js'
 import { briefImages } from './owner-photos.js'
@@ -81,13 +83,20 @@ export async function startPictureRun({
   if (!kit) return refuse('SITE_PICTURES_KIT_UNKNOWN', `The kit ${kitRef} cannot be read.`)
   // A plan with a frame for the picker needs the picker door; one without calls no model and stores no door.
   let door = null
-  if (needsPicker(indexInputs({ plan, kit: kit.doc, brief, files: {} }))) {
+  const specific = needsPicker(indexInputs({ plan, kit: kit.doc, brief, files: {} }))
+  if (specific) {
     door = await picturePickerDoor({ pool, secret })
     if (!door.ok) return refuse(door.code, door.reason)
   }
   // Every run needs the looker (#343): it checks every finished picture.
   const looker = await pictureLookerDoor({ pool, secret, picker: door?.door ?? null })
   if (!looker.ok) return refuse(looker.code, looker.reason)
+  // The picker's frames may need a drawing (no owner photo fits, or the picker answers "none"): the drawer door too.
+  let drawer = null
+  if (specific) {
+    drawer = await pictureDrawerDoor({ pool, secret })
+    if (!drawer.ok) return refuse(drawer.code, drawer.reason)
+  }
   let photoSource
   if (briefSource?.kind === 'revision') photoSource = { kind: 'revision', revisionId: briefSource.revisionId }
   else {
@@ -108,7 +117,11 @@ export async function startPictureRun({
     kit: { ref: kit.ref, release: kit.release, version: kit.version },
     prompts: picturePrompts(),
     checkerVersion: CHECKER_VERSION,
-    door: { ...(door ? door.snapshot : {}), looker: looker.snapshot },
+    door: {
+      ...(door ? door.snapshot : {}),
+      looker: looker.snapshot,
+      ...(drawer ? { drawer: drawer.snapshot } : {})
+    },
     harness: door ? benchHarnessFor(door.snapshot.model, door.snapshot.providerId) : {}
   })
   if (created.error === SITE_PICTURES_RUN_ACTIVE) return activeRefusal(created.active)

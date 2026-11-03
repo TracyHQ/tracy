@@ -19,14 +19,19 @@
 // hash), and stores no file again once round 0 is checked; the loop resumes the conversation from the saved turns, and
 // the thumbnails are made again from the owner photos.
 //
-// Every checked round is then looked at (#343, looker-step.js): the looker checks each finished picture through its own
-// door, and its rejections join the round's failures, so a rejected frame the picker placed goes back in the next fix
-// round with its fault names.
+// Every checked round is then finished (#343, #344, ladder-step.js): the frames waiting for the drawer are drawn or
+// extended through the drawer's own door, pictures with text over them are darkened, the looker checks each finished
+// picture through its own door, and every rejected frame the picker does not get back climbs the fallback ladder (one
+// redraw, the next photo, fewer rows, hidden, returned to the planner). The looker's rejections join the round's
+// failures, so a rejected frame the picker placed goes back in the next fix round with its fault names.
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { kitIdOf } from '../site-writer/bench-worker.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
 import { picturePickerDoor } from './door.js'
 import { fileStore } from './file-store.js'
+import { runDrawerDoor } from './drawer-door.js'
+import { createDrawing } from './ladder-draw.js'
+import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
 import { withLooker } from './looker-round.js'
 import { createLooker } from './looker-step.js'
@@ -148,6 +153,8 @@ async function prepare(deps, row) {
   if (!door.ok) return door
   const lookerDoor = await runLookerDoor({ ...deps, picker: door.door ?? null }, row.door?.looker)
   if (!lookerDoor.ok) return lookerDoor
+  const drawerDoor = await runDrawerDoor(deps, row.door?.drawer)
+  if (!drawerDoor.ok) return drawerDoor
   const rounds = await SITE_PICTURES_STORE.roundsOf(deps.pool, row.id)
   const recorded = rounds.some((r) => r.state === 'checked')
   const store = fileStore(deps.storeDir)
@@ -174,11 +181,9 @@ async function prepare(deps, row) {
   const iconsDone = iconStep.report()
   const { files: made, refused, ...parts } = filled
   const idx = indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief, files: {} })
+  const { usable } = usablePhotos(row.brief, photoBytes)
   let picker = null
-  if (door.door) {
-    const { usable } = usablePhotos(row.brief, photoBytes)
-    picker = await pickerInput({ idx, manifest: parts, usable, photoBytes })
-  }
+  if (door.door) picker = await pickerInput({ idx, manifest: parts, usable, photoBytes })
   const files = {}
   for (const [file, cut] of [...made, ...(picker?.files ?? [])]) {
     if (files[file]) continue
@@ -224,7 +229,44 @@ async function prepare(deps, row) {
     alts: row.copy?.alts ?? null,
     fetchImpl: deps.fetchImpl
   })
-  const ready = { ok: true, kit, door: door.door ?? undefined, files, idx, base, parts, picker, looker }
+  const prompts = picturePrompts()
+  const finisher = createFinisher({
+    idx,
+    plan: row.plan,
+    kit: kit.doc,
+    usable,
+    photoBytes,
+    store,
+    looker,
+    drawing: drawerDoor.door
+      ? createDrawing({
+          door: drawerDoor.door,
+          prompt: { parts: prompts.drawing, sha256: prompts.roles.drawing },
+          storeDir: store.dir,
+          runId: row.id,
+          photoBytes,
+          fetchImpl: deps.fetchImpl
+        })
+      : null,
+    drawer: {
+      model: drawerDoor.door?.model ?? null,
+      snapshot: drawerDoor.snapshot ?? null,
+      promptSha256: prompts.roles.drawing
+    }
+  })
+  const ready = {
+    ok: true,
+    kit,
+    door: door.door ?? undefined,
+    files,
+    idx,
+    base,
+    parts,
+    picker,
+    looker,
+    finisher,
+    store
+  }
   ready.manifest = manifestFor(ready, new Map())
   ready.firstUser = picker?.frames.length ? pickerFirstMessage(picker) : null
   return ready

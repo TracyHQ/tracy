@@ -32,7 +32,7 @@ export const LOOKER_RULE = Object.freeze({ id: 'L01', title: 'The looker passes 
 const whereOf = (list, frame) => (list === 'siteSettings' ? `siteSettings ${frame}` : frame)
 
 /** Run `work` over `items`, at most `n` at a time, keeping the order of the results. */
-async function inParallel(items, n, work) {
+export async function inParallel(items, n, work) {
   const out = Array.from({ length: items.length })
   let next = 0
   const worker = async () => {
@@ -65,12 +65,20 @@ export function createLooker({
   const store = fileStore(storeDir)
   const kept = (key) => path.join(store.dir, 'runs', String(runId), 'looks', `${key}.json`)
 
-  async function lookAt(list, entry) {
+  async function lookAt(list, entry, memo) {
     const frame = idx.frames.get(entry.frame)
     const words = lookWords(idx.wishes.get(entry.frame))
     const box = { width: frame?.width ?? entry.width, height: frame?.height ?? entry.height }
     const realPart = entry.source === 'owner-photo-extended' ? (entry.realPart ?? null) : null
     const key = sha256Hex(JSON.stringify([entry.sha256, box, words, realPart, door.model, prompt.sha256]))
+    // A look already taken in this save (the fallback ladder looks again after each rung), readable or not.
+    if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true }
+    const looked = await lookFresh(list, entry, { key, words, box, realPart })
+    memo?.set(key, looked.said)
+    return looked
+  }
+
+  async function lookFresh(list, entry, { key, words, box, realPart }) {
     const before = await readFile(kept(key), 'utf8')
       .then(JSON.parse)
       .catch(() => null)
@@ -116,8 +124,11 @@ export function createLooker({
     return said
   }
 
-  /** The manifest with every look written on it, and the looker's rule result. Never modifies `doc`. */
-  async function look(doc) {
+  /**
+   * The manifest with every look written on it, and the looker's rule result. Never modifies `doc`. `memo` (a Map) keeps
+   * every look of one save, so a picture looked at again after a rung of the fallback ladder is not asked twice.
+   */
+  async function look(doc, { memo = null } = {}) {
     const lists = {
       frames: doc.frames.map((e) => ({ ...e })),
       siteSettings: doc.siteSettings.map((e) => ({ ...e }))
@@ -128,7 +139,9 @@ export function createLooker({
     const todo = Object.entries(lists).flatMap(([list, entries]) =>
       entries.filter((e) => LOOKED_SOURCES.has(e.source) && e.file).map((e) => [list, e])
     )
-    const looks = await inParallel(todo, concurrency ?? LOOK_CONCURRENCY, ([list, e]) => lookAt(list, e))
+    const looks = await inParallel(todo, concurrency ?? LOOK_CONCURRENCY, ([list, e]) =>
+      lookAt(list, e, memo)
+    )
     for (const { list, entry, said, cached } of looks) {
       calls.push({
         frame: entry.frame,

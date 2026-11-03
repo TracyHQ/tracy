@@ -226,9 +226,19 @@ The AI role that checks each finished picture on its own, in a fresh context, ag
 faults from a fixed list and writes one sentence of what the picture shows. A model of another maker than the picker.
 _Avoid_: reviewer, judge
 
+**Drawer**:
+The image model role that draws a specific picture no owner photo fits, from a fixed template filled only with the
+plan's words, or extends a real owner photo sideways for a wide band. It never draws a person or an any-real frame.
+_Avoid_: generator, illustrator
+
+**Dark overlay**:
+A black layer of recorded strength code bakes into a picture whose frame has text over it, when the picture is too
+bright for light text; the entry says `darkened`.
+_Avoid_: dimming, tint
+
 **Fallback ladder**:
-The fixed order a frame walks down once two fix rounds have not filled it: draw, next photo, fewer rows, hide, return
-to planner. A demo picture is never kept and a person is never drawn.
+The fixed order a rejected frame walks down: draw, one redraw, next photo, fewer rows, hide, return to planner. Every
+rung it took is recorded. A demo picture is never kept, a person is never drawn, an any-real frame never drawn.
 _Avoid_: retry policy, plan B
 
 ---

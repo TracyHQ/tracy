@@ -179,9 +179,14 @@ test(
       'round 1 reads the kept looks'
     )
     assert.equal(r1.failureList.includes('L01'), false)
-    // The run's cost holds every role: the picker's turns and the looks paid for (cached looks are not paid again).
-    const paid = [r0, r1].flatMap((r) => r.pictures.looker.calls).filter((c) => !c.cached).length * 0.0002
-    assert.ok(paid > 0)
+    // The run's cost holds every role: the picker's turns, the looks paid for (cached looks are not paid again) and the
+    // drawing of the hero the picker gave up on (#344).
+    const looks = [r0, r1].flatMap((r) => r.pictures.looker.calls).filter((c) => !c.cached).length * 0.0002
+    assert.ok(looks > 0)
+    assert.equal(r1.pictures.drawer.count, 1)
+    const drawn = [r0, r1].flatMap((r) => r.pictures.drawer.calls).filter((c) => !c.cached)
+    assert.equal(drawn.length, 1)
+    const paid = looks + drawn[0].costUsd
     assert.ok(Math.abs(run.costUsd - (r0.costUsd + r1.costUsd + paid)) < 1e-9, `${run.costUsd}`)
     // No copy file: no alt notes.
     assert.deepEqual(r1.pictures.altNotes, [])

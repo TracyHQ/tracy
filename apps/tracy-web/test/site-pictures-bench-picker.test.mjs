@@ -156,7 +156,7 @@ test(
 )
 
 test(
-  'only failing frames go back: invalid picks are returned, valid ones applied, and the run stops after two rounds',
+  'only failing frames go back: invalid picks are returned, valid ones applied, and after two rounds the ladder draws',
   opts,
   async () => {
     const { pool } = db
@@ -199,17 +199,19 @@ test(
     assert.match(second, /P99 is not in its photos list/)
     const [r0, r1, r2] = run.rounds
     assert.equal(r0.reading.changesApplied, 3)
-    // Valid picks applied: the hero holds its photo, the about section waits for the drawer with its twin.
+    // Valid picks applied: the hero holds its photo; the about section the picker left is drawn (#344), its twin follows.
     const e0 = byFrame(r0.pictures)
     assert.equal(e0.get('block-2.0').source, 'owner-photo')
-    const waiting = new Map(r0.pictures.pending.map((p) => [p.frame, p.waitsFor]))
-    assert.equal(waiting.get('block-5.1'), 'drawer')
-    assert.equal(waiting.get('block-5.2'), 'drawer')
-    // Round 0 failed on the repeat and on the frames left for the drawer; only the picker's failing frame went back,
-    // the others are kept on the round's check result.
+    assert.equal(e0.get('block-5.1').source, 'drawn')
+    assert.deepEqual(
+      [e0.get('block-5.2').source, e0.get('block-5.2').sha256],
+      ['twin', e0.get('block-5.1').sha256]
+    )
+    assert.deepEqual(r0.pictures.pending, [])
+    // Round 0 failed on the repeat; only the picker's failing frame went back.
     assert.match(r0.failureList, /^P06 \|.*\| block-6\.1 \|/m)
     assert.doesNotMatch(r0.failureList, /block-5\.1 \|/)
-    assert.match(r0.checkResult.notForPicker, /^P01 \|.*\| block-5\.1 \|/m)
+    assert.doesNotMatch(r0.checkResult.notForPicker, /block-5\.1 \|/)
     for (const req of [requests[2], requests[3]]) {
       const lines = lastUserText(req).split('\n\nThe frames above')[0].trim().split('\n')
       assert.ok(lines.length > 0)
@@ -221,13 +223,23 @@ test(
     )
     assert.equal(r1.state, 'checked')
     assert.equal(r2.state, 'checked')
-    assert.match(run.standingFailures, /^P06 \|.*block-6\.1/m)
-    assert.doesNotMatch(run.standingFailures, /block-5\.1 \|/)
-    assert.match(r2.checkResult.notForPicker, /^P01 \|.*block-5\.1/m)
+    // The last round has no picker round after it: the frame still failing the check climbs the ladder and is drawn.
+    assert.match(r1.failureList, /^P06 \|.*block-6\.1/m)
+    const e2 = byFrame(r2.pictures)
+    assert.equal(e2.get('block-6.1').source, 'drawn')
+    assert.deepEqual(
+      r2.pictures.ladder.find((l) => l.frame === 'block-6.1').steps.map((x) => [x.rung, x.outcome]),
+      [
+        ['placed', 'failed the check'],
+        ['draw', 'placed']
+      ]
+    )
+    assert.equal(r2.failureList, '')
+    assert.equal(run.standingFailures, null)
   }
 )
 
-test('a run whose last failures are not the picker to fix ends without another call', opts, async () => {
+test('a run whose frames the picker cannot fill draws them and ends without another call', opts, async () => {
   const { pool } = db
   await assignPickerDoor(pool)
   const started = await startPickerRun(pool, where)
@@ -237,19 +249,20 @@ test('a run whose last failures are not the picker to fix ends without another c
   assert.equal(run.status, 'succeeded', run.error)
   assert.equal(model.requests.length, 1)
   assert.equal(run.rounds.length, 1)
-  const pending = run.rounds[0].pictures.pending.map((p) => [p.frame, p.waitsFor])
-  for (const f of [...PICKER_FRAMES, 'block-5.2'])
-    assert.ok(
-      pending.some(([x, w]) => x === f && w === 'drawer'),
-      f
-    )
-  // Nothing went back to the picker: the frames left for the drawer are on the round's check result only.
+  // Every frame the picker left is drawn (#344), its twins follow, and nothing waits.
+  const manifest = run.rounds[0].pictures
+  const e = byFrame(manifest)
+  for (const f of PICKER_FRAMES) assert.equal(e.get(f).source, 'drawn', f)
+  assert.equal(e.get('block-5.2').source, 'twin')
+  assert.deepEqual(manifest.pending, [])
+  assert.equal(manifest.drawer.count, PICKER_FRAMES.length)
+  // Nothing went back to the picker, and nothing is left failing.
   assert.equal(run.standingFailures, null)
   assert.equal(run.rounds[0].failureList, '')
-  assert.match(run.rounds[0].checkResult.notForPicker, /block-2\.0/)
-  // `get` writes them beside the failures still standing.
+  assert.equal(run.rounds[0].checkResult.notForPicker, '')
+  // `get` writes no list of failures not for the picker when there is none.
   const written = new Map(runFiles({ ...run, ...(await inputsOf(pool, run.id)) }, [], []))
-  assert.match(written.get('failures-not-for-picker.txt'), /^P01 \|.*\| block-2\.0 \|/m)
+  assert.equal(written.has('failures-not-for-picker.txt'), false)
 })
 
 test('a plan with frames for the picker does not start without the picker door', opts, async () => {
@@ -317,6 +330,6 @@ test(
     )
     const e = byFrame(run.rounds.at(-1).pictures)
     assert.equal(e.get('block-2.0').source, 'owner-photo')
-    assert.ok(!e.has('block-6.1'), 'the feature now waits for the drawer')
+    assert.equal(e.get('block-6.1').source, 'drawn', 'the feature the picker gave up on is drawn')
   }
 )

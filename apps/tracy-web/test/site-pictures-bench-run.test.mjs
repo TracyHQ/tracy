@@ -97,8 +97,9 @@ test(
     )
     assert.deepEqual(manifest.pending, [])
     // Cost and time per role are recorded; a code only run spends nothing and reads no balance.
-    // Every placed owner photo was looked at by the (free, passing) fake looker (#343).
-    assert.deepEqual(manifest.cost, { code: 0, iconRanking: 0, looker: 0 })
+    // Every placed owner photo was looked at by the (free, passing) fake looker (#343); nothing was drawn (#344).
+    assert.deepEqual(manifest.cost, { code: 0, iconRanking: 0, looker: 0, drawer: 0 })
+    assert.deepEqual([manifest.drawer.count, manifest.drawer.calls], [0, []])
     assert.ok(manifest.looker.calls.length > 0)
     assert.ok(
       manifest.frames.filter((e) => e.source === 'owner-photo').every((e) => e.looker?.verdict === 'pass')
@@ -114,7 +115,17 @@ test(
     // Every placed file is on disk under its hash, of the size and hash the manifest says, with one row per file.
     const rows = await filesOf(pool, started.id)
     const placed = [...manifest.frames, ...manifest.siteSettings].filter((x) => x.file)
-    assert.deepEqual(new Set(rows.map((r) => r.sha256)), new Set(placed.map((x) => x.sha256)))
+    const recorded = new Set(rows.map((r) => r.sha256))
+    for (const x of placed) assert.ok(recorded.has(x.sha256), x.frame)
+    // The picture painted behind a block has text over it: too bright, it got a dark overlay (#344), and the cut it was
+    // made from has its row too.
+    const darkened = placed.filter((x) => x.darkened && x.source !== 'twin')
+    assert.deepEqual(
+      darkened.map((x) => x.frame),
+      ['block-7.picture-1']
+    )
+    assert.ok(darkened[0].overlay.strength > 0 && darkened[0].overlay.after < darkened[0].overlay.before)
+    assert.equal(rows.length, new Set(placed.map((x) => x.sha256)).size + darkened.length)
     const files = {}
     for (const row of rows) {
       const bytes = await readFile(path.join(store.dir, row.path))
@@ -147,11 +158,11 @@ test(
 )
 
 test(
-  'cut-out frames and specific frames no photo fits are left pending, never as demo pictures; icons are placed',
+  'cut-out frames are left pending, never as demo pictures; a specific frame no photo fits is drawn; icons are placed',
   opts,
   async () => {
     const { pool } = db
-    // The specific frame goes to the picker (#342), which finds no fitting photo: it waits for the drawer.
+    // The specific frame goes to the picker (#342), which finds no fitting photo: the drawer draws it (#344).
     await assignPickerDoor(pool)
     const started = await startRun(pool, where, { plan: plan({ later: true }), secret: SECRET })
     const model = scriptedModel([
@@ -166,26 +177,28 @@ test(
     const manifest = run.rounds[0].pictures
     assert.deepEqual(
       manifest.pending.map((p) => [p.frame, p.waitsFor]),
-      [
-        ['block-9.2', 'cut-out'],
-        ['block-9.0', 'drawer']
-      ]
+      [['block-9.2', 'cut-out']]
     )
-    const placedFrames = new Set([...manifest.frames, ...manifest.siteSettings].map((x) => x.frame))
-    for (const f of ['block-9.0', 'block-9.2']) assert.ok(!placedFrames.has(f), f)
+    const placed = new Map([...manifest.frames, ...manifest.siteSettings].map((x) => [x.frame, x]))
+    assert.ok(!placed.has('block-9.2'))
+    assert.equal(placed.get('block-9.0').source, 'drawn')
+    assert.equal(manifest.drawer.count, 1)
     // The icon step (#345) placed the icon frame: a library icon, light and dark.
     assert.equal(manifest.frames.find((x) => x.frame === 'block-9.1')?.source, 'icon')
-    // The picture check counts the pending frames as unfilled, and nothing else fails; none of them is the picker's
-    // to fix, so no fix round runs and the failures are kept on the round's check result.
+    // The picture check counts the pending cut-out as unfilled, and nothing else fails; it is not the picker's to fix,
+    // so no fix round runs and the failure is kept on the round's check result.
     const failing = run.rounds[0].checkResult.rules.filter((r) => r.status === 'fail')
     assert.deepEqual(
       failing.map((r) => r.id),
       ['P01']
     )
-    assert.deepEqual(failing[0].failures.map((f) => f.where).sort(), ['block-9.0', 'block-9.2'])
+    assert.deepEqual(
+      failing[0].failures.map((f) => f.where),
+      ['block-9.2']
+    )
     assert.equal(model.requests.length, 1)
     assert.equal(run.rounds.length, 1)
-    assert.match(run.rounds[0].checkResult.notForPicker, /block-9\.0/)
+    assert.match(run.rounds[0].checkResult.notForPicker, /block-9\.2/)
   }
 )
 

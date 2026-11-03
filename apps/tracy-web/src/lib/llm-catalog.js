@@ -266,6 +266,18 @@ export const LLM_DOORS = [
     prefers: ['json']
   },
   {
+    id: 'pictureDrawer',
+    label: 'Picture drawer',
+    where: 'this process',
+    blurb:
+      "WO New Flow Test: the picture bench, started from a command line on the server. Draws a picture the plan asks for when no owner photo fits, from a fixed template filled with the plan's words, or extends a real photo sideways for a wide band. Never draws a person. A picture run that may need a drawing does not start without it.",
+    needsModel: true,
+    // Drawing is REQUIRED: a model that answers only text gives no picture (site-pictures/drawer-door.js). Meant for
+    // google/gemini-3.1-flash-lite-image through OpenRouter, about 0.034 USD a picture (#344).
+    requires: ['draws'],
+    drawsPictures: true
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',
