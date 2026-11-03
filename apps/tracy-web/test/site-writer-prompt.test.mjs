@@ -5,7 +5,15 @@ import { test } from 'node:test'
 import { RULE_TITLES } from '../src/site-writer/copy-check/rule-set.js'
 import { WRITER_PROMPT_FILE, writerPrompt } from '../src/site-writer/writer-prompt.js'
 
-// The writer prompt is a draft (#332): no hash pin until the owner approves real output (#334).
+// The owner approved this prompt on 2026-11-03 after reading real output on dev (#334); its bytes change only with a
+// new approval from the owner, recorded in ADR 0042.
+const APPROVED_SHA256 = 'bd4a4f3a1087a109496251b3e971d064775d9730fb16b657744d204a92f987c5'
+
+test('the shipped writer prompt is the approved one, byte for byte', () => {
+  const bytes = readFileSync(WRITER_PROMPT_FILE)
+  assert.equal(createHash('sha256').update(bytes).digest('hex'), APPROVED_SHA256)
+  assert.equal(writerPrompt().sha256, APPROVED_SHA256)
+})
 
 test('the loader exposes the text and the sha256 of the bytes it read', () => {
   const p = writerPrompt()

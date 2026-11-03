@@ -1,6 +1,6 @@
-// The site writer prompt (ADR 0042, #332). writer-prompt.md is a DRAFT: it is locked by a hash test only after the
-// owner approves real output (#334). Every run records the sha256 below, so each result names the exact prompt
-// bytes it was written with. How to call the bench's tools is said in the first user message, never here.
+// The approved site writer prompt (ADR 0042, #332, #334). writer-prompt.md is the owner's locked text: never edit it
+// here. A change is a new approved prompt, and the sha256 below changes with it (test/site-writer-prompt.test.mjs
+// pins it), so every run records exactly which prompt bytes it was written with. How to call the bench's tools is said in the first user message, never here.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 

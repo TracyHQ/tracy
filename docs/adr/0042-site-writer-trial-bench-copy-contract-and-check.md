@@ -10,6 +10,10 @@ Amended again: W06 exempts runs wholly inside a brief fact value; the checker ve
 because bench runs scored by `/1` exist.
 Amended a third time: the main menu dropdowns (section 1, "Main menu dropdowns"); W02 requires the dropdown slots
 and fails a slot the plan words differently in two places; the checker version moved to `site-copy-check/3`.
+Amended a fourth time (#334): the writer prompt is locked. The owner approved its output after the first real run on
+dev; `apps/tracy-web/src/site-writer/writer-prompt.md` has sha256
+`bd4a4f3a1087a109496251b3e971d064775d9730fb16b657744d204a92f987c5`, pinned by `test/site-writer-prompt.test.mjs`.
+Changing a byte of it needs the owner's approval and a new hash here. Fix round answers are read as in section 5.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
