@@ -5,6 +5,7 @@ import { brief, breaks, ruleOf, check, copy, kit, plan, slotOf } from './_site-c
 
 test('the passing copy passes every rule and the version is frozen', () => {
   const r = check(copy())
+  // test-quality: contract ADR 0042 stores the checker version with every run and bumps it on any rule change
   assert.equal(CHECKER_VERSION, 'site-copy-check/3')
   assert.deepEqual(
     r.rules.map((x) => `${x.id}:${x.status}`),

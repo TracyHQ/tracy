@@ -112,6 +112,7 @@ Numbering rules and the inheritance register: [adr/README.md](adr/README.md).
 | [ADR 0039 — Slot fit lives in the content map, measured at capture; a picture's keep flag follows its measured kind](adr/0039-slot-fit-lives-in-content-map.md) | ADR 0039 — Slot fit lives in the content map, measured at capture; a picture's keep flag follows its measured kind |
 | [ADR 0040 — Place content roles v3: the slot role is the only decider of keep or replace](adr/0040-place-content-roles-v3-role-is-the-single-keep-decider.md) | ADR 0040 — Place content roles v3: the slot role is the only decider of keep or replace |
 | [ADR 0041 — The site planner runs first on a trial bench in /ops, as a tool-using agent, apart from the WO build](adr/0041-site-planner-trial-bench-in-ops.md) | ADR 0041 — The site planner runs first on a trial bench in /ops, as a tool-using agent, apart from the WO build |
+| [0042. Site writer trial bench: the site-copy/1 contract and the copy check](adr/0042-site-writer-trial-bench-copy-contract-and-check.md) | 0042. Site writer trial bench: the site-copy/1 contract and the copy check |
 
 ## READMEs next to the code
 

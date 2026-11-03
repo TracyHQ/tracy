@@ -99,8 +99,7 @@ test('the copy check passes a copy that writes the dropdown slots, under the new
     r.rules.filter((x) => x.status === 'fail').map((x) => [x.id, x.failures]),
     []
   )
-  assert.equal(r.meta.checker, 'site-copy-check/3')
-  assert.equal(CHECKER_VERSION, 'site-copy-check/3')
+  assert.equal(r.meta.checker, CHECKER_VERSION)
 })
 
 test('W02 requires every dropdown slot the writer owns', () => {
