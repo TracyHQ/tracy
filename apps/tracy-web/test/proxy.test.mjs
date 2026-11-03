@@ -12,6 +12,7 @@ import { outgoingCookieHeader, relabelSetCookie, seatTokenCookieName } from '../
 import {
   ENTERED_WINDOW_MS,
   enteredKey,
+  linkVisitKey,
   SITE_COOKIE,
   resolveSite,
   siteFromReferer,
@@ -1943,6 +1944,83 @@ test(
     )
   }
 )
+
+// A campaign link pressed by someone already signed in never shows `/login`, so the root counts it:
+// one `link.visited` per person and source each half hour, a navigation only, never a view-as.
+test(
+  'workspaceRoutes: a signed-in navigation to / with utm_* records link.visited once per half hour',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    createOpsSignal({ pool, config: { environment: 'test' }, log: { warn() {}, info() {} } })
+    let at = Date.parse('2026-11-03T03:00:00Z')
+    const app = workspaceRoutes({
+      config: routeConfig,
+      sites: fakeSites(),
+      pool,
+      seats: fakeSeats(),
+      now: () => at
+    })
+    const cookie = `tracy_sess=${await mintSession('ceo@tracy.ai', routeSessionSecret)}`
+    const link = '/?utm_source=tracy&utm_medium=email&utm_campaign=tracy-beta-2026-10&utm_content=followup-d'
+    const open = (path, headers) => app.fetch(new Request(`http://tracy.test${path}`, { headers }))
+    const visits = async () =>
+      (await pool.query(`select data from ops_signal where kind = 'link.visited' order by id`)).rows
+    const settle = async (n) => {
+      for (let i = 0; i < 100 && (await visits()).length < n; i++) await new Promise((r) => setTimeout(r, 10))
+    }
+    await open(link, { cookie, accept: 'text/html' })
+    await open(link, { cookie, accept: 'text/html' })
+    await open(link, { cookie, accept: 'application/json' })
+    await open('/', { cookie, accept: 'text/html' })
+    const signedOut = await open(link, { accept: 'text/html' })
+    assert.equal(signedOut.status, 302)
+    assert.match(signedOut.headers.get('location'), /^\/login\?utm_source=tracy/)
+    await settle(1)
+    await new Promise((r) => setTimeout(r, 50))
+    assert.deepEqual(await visits(), [
+      {
+        data: {
+          email: 'ceo@tracy.ai',
+          source: 'tracy',
+          medium: 'email',
+          campaign: 'tracy-beta-2026-10',
+          content: 'followup-d'
+        }
+      }
+    ])
+    at += ENTERED_WINDOW_MS
+    await open(link, { cookie, accept: 'text/html' })
+    await settle(2)
+    assert.equal((await visits()).length, 2, 'a new half hour is a new visit')
+    assert.equal(
+      linkVisitKey('Ceo@Tracy.ai', 'utm_source=tracy', 0),
+      linkVisitKey('ceo@tracy.ai', 'utm_source=tracy', ENTERED_WINDOW_MS - 1)
+    )
+  }
+)
+
+test('workspaceRoutes: a view as a customer records no link.visited for the customer', dbOpts, async () => {
+  const { pool } = db
+  createOpsSignal({ pool, config: { environment: 'test' }, log: { warn() {}, info() {} } })
+  const app = workspaceRoutes({
+    config: routeConfig,
+    sites: fakeSites(),
+    pool,
+    seats: fakeSeats(),
+    now: () => Date.parse('2026-11-03T03:00:00Z')
+  })
+  const view = await mintViewSession('customer@example.com', 'ceo@tracy.ai', routeSessionSecret)
+  await withViewAs(true, () =>
+    app.fetch(
+      new Request('http://tracy.test/?utm_source=tracy&utm_medium=email', {
+        headers: { cookie: `tracy_view=${view}`, accept: 'text/html' }
+      })
+    )
+  )
+  await new Promise((r) => setTimeout(r, 100))
+  assert.equal((await pool.query(`select 1 from ops_signal where kind = 'link.visited'`)).rows.length, 0)
+})
 
 // /ops › View as user: an admin looking at a customer's workspace is not that customer's visit.
 test('workspaceRoutes: a view as a customer records no site.entered for the customer', dbOpts, async (t) => {

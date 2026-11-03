@@ -237,6 +237,17 @@ export function enteredKey(email, siteKey, at) {
   return `entered:${email.toLowerCase()}:${siteKey}:${Math.floor(at / ENTERED_WINDOW_MS)}`
 }
 
+/**
+ * The dedupe key of a `link.visited` signal: the person, the link's cleaned source and the half
+ * hour it fell in, so a second press of the same mail link soon after is one visit.
+ * @param {string} email
+ * @param {string} source - `sourceQuery` of the cleaned source
+ * @param {number} at - epoch ms
+ */
+export function linkVisitKey(email, source, at) {
+  return `link-visit:${email.toLowerCase()}:${source}:${Math.floor(at / ENTERED_WINDOW_MS)}`
+}
+
 export function workspaceRoutes({
   config,
   sites,
@@ -497,6 +508,19 @@ export function workspaceRoutes({
           .filter(Boolean)
           .join('&')
         return c.redirect(query ? `/login?${query}` : '/login', 302)
+      }
+      // 🔒 COUNT THE SIGNED-IN PRESS TOO. A campaign link sent to people who already have an account
+      // (`/?utm_…`) never shows `/login` to anyone still signed in, so `login.visited` saw none of
+      // them and a mail to existing customers looked like it had no clicks at all (measured 03/11 on
+      // cowork.tracy.ai). A navigation only, never a fetch, and never an admin viewing as a customer.
+      if (!viewing && c.req.method === 'GET' && wantsHtml(c)) {
+        const linkSource = signInSource(url.searchParams)
+        if (linkSource)
+          void opsFor(pool).record('link.visited', {
+            email,
+            data: linkSource,
+            dedupeKey: linkVisitKey(email, sourceQuery(linkSource), _now())
+          })
       }
       // A TEMPLATE WAITING ON THE ACCOUNT (plan B6). The JoomlArt sign-in door and the web
       // template page write it; a Tracy Desktop that signs in as the same person lands here, on
