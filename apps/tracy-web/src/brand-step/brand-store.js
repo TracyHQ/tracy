@@ -20,12 +20,23 @@ const ONE_ACTIVE = 'brand_run_one_active'
  * @returns {Promise<{ run: object } | { error: string, active: object | null }>}
  */
 export async function createRun(pool, input) {
-  const { startedBy, brief, briefSource, kit, promptSha256, door, tools, harness } = input
+  const {
+    id = null,
+    logoSource = null,
+    startedBy,
+    brief,
+    briefSource,
+    kit,
+    promptSha256,
+    door,
+    tools,
+    harness
+  } = input
   const briefText = JSON.stringify(brief)
   try {
     const { rows } = await pool.query(
-      `insert into brand_run (started_by, brief, brief_source, brief_sha256, kit, prompt_sha256, door, tools, harness)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *`,
+      `insert into brand_run (id, started_by, brief, brief_source, brief_sha256, kit, prompt_sha256, door, tools, harness, logo_source)
+       values (coalesce($10::uuid, gen_random_uuid()), $1, $2, $3, $4, $5, $6, $7, $8, $9, $11) returning *`,
       [
         startedBy,
         briefText,
@@ -35,7 +46,9 @@ export async function createRun(pool, input) {
         promptSha256,
         json(door),
         json(tools),
-        json(harness)
+        json(harness),
+        id,
+        json(logoSource)
       ]
     )
     return { run: summaryOf(rows[0]) }
@@ -56,6 +69,15 @@ export async function setProgress(pool, { runId, step, round, leaseToken = null 
   const { rowCount } = await pool.query(
     `update brand_run set step = $2, round = $3, updated_at = now() where id = $1 and ${fenced(1, 4)}`,
     [runId, step, round, leaseToken]
+  )
+  return rowCount === 1
+}
+
+/** Records where the run's logo came from (a media id or a file name, never bytes). */
+export async function setLogoSource(pool, { runId, logo, leaseToken = null }) {
+  const { rowCount } = await pool.query(
+    `update brand_run set logo_source = $2::jsonb, updated_at = now() where id = $1 and ${fenced(1, 3)}`,
+    [runId, json(logo), leaseToken]
   )
   return rowCount === 1
 }
@@ -104,6 +126,7 @@ function summaryOf(row) {
     model: row.door?.agent?.model ?? null,
     reviewerModel: row.door?.reviewer?.model ?? null,
     briefSource: row.brief_source,
+    logoSource: row.logo_source ?? null,
     outcome: row.outcome,
     safeVersionReason: row.safe_version_reason,
     realPageVerdict: row.real_page_verdict ?? null,

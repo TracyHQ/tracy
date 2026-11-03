@@ -12,6 +12,7 @@
  * Every command and its options: `node scripts/brand-bench.mjs` with no command (src/brand-step/brand-cli.js).
  * Nothing it prints or writes carries a key.
  */
+import { placeMediaObjectsFor } from '../src/app.js'
 import { readConfig } from '../src/config.js'
 import { createPool } from '../src/db/index.js'
 import { runCli } from '../src/brand-step/brand-cli.js'
@@ -31,7 +32,7 @@ export async function main(argv, env = process.env) {
       pool,
       secret: env.SESSION_SECRET,
       kitImages,
-      wiring: productionWiring(config),
+      wiring: productionWiring(config, { objects: placeMediaObjectsFor(config, fetch) }),
       runDir: (runId) => brandRunDir(config, runId)
     })
   } finally {

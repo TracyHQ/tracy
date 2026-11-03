@@ -22,10 +22,13 @@ export async function startRunCommand(d, values) {
   if (!values.kit) throw new Usage('run needs --kit')
   if (Boolean(file) === Boolean(revision))
     throw new Usage('run needs exactly one of --brief-file and --brief-revision')
+  if (values['logo-file'] && !file) throw new Usage('--logo-file goes with --brief-file')
   if (values.by !== undefined && !LABEL.test(values.by))
     throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
   if (Boolean(values['agent-model']) !== Boolean(values['agent-model-reason']))
     throw new Usage('--agent-model and --agent-model-reason go together')
+  if (values['reviewer-model'] && !values['agent-model'])
+    throw new Usage('--reviewer-model goes with --agent-model')
   let brief
   let briefSource
   if (file) {
@@ -48,6 +51,15 @@ export async function startRunCommand(d, values) {
     brief = found.brief
     briefSource = { kind: 'revision', revisionId: revision }
   }
+  let logo
+  if (values['logo-file']) {
+    const name = path.basename(values['logo-file'])
+    try {
+      logo = { name, bytes: await readFile(path.resolve(d.cwd ?? process.cwd(), values['logo-file'])) }
+    } catch (error) {
+      return refused(d, `Cannot read the logo file ${name} (${error.code ?? 'error'}).`)
+    }
+  }
   const started = await startBrandRun({
     pool: d.pool,
     secret: d.secret,
@@ -55,10 +67,17 @@ export async function startRunCommand(d, values) {
     briefSource,
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
+    ...(logo ? { logo } : {}),
     kitImages: d.kitImages,
     wiring: d.wiring,
     ...(values['agent-model']
-      ? { agentModel: { model: values['agent-model'], reason: values['agent-model-reason'] } }
+      ? {
+          agentModel: {
+            model: values['agent-model'],
+            reason: values['agent-model-reason'],
+            ...(values['reviewer-model'] ? { reviewerModel: values['reviewer-model'] } : {})
+          }
+        }
       : {}),
     ...(d.index ? { index: d.index } : {})
   })

@@ -1,6 +1,5 @@
-// Gate section: the attempts of the icon record (at most 3 drawn, 4 make_icon calls), each with its blind record and
-// plate fallback. The blind verdict is recomputed with the blind match rule (no model).
-import { blindVerdict } from './blind-match.js'
+// Gate section: the attempts of the icon record (at most 3 drawn, 4 make_icon calls), each with its verdict and
+// plate fallback.
 import { PLATE_MIN_RATIO, contrastHex } from './colour-math.js'
 
 export function checkAttempts(ctx, IC) {
@@ -15,7 +14,6 @@ export function checkAttempts(ctx, IC) {
     return
   }
   at.forEach((t, i) => {
-    if (t?.verdict !== 'tool-failed') checkBlind(ctx, IC, t, i)
     if (!['pass', 'fail', 'tool-failed'].includes(t?.verdict))
       bad(`logo.mark.icon.attempts[${i}].verdict`, 'pass | fail | tool-failed')
     if (typeof t?.subject !== 'string' || !t.subject)
@@ -62,44 +60,4 @@ export function checkAttempts(ctx, IC) {
       )
     }
   }
-}
-
-/** The blind record of one drawn attempt: its verdict is recomputed with the blind match rule (no model). */
-function checkBlind(ctx, IC, t, i) {
-  const { bad } = ctx
-  const bl = t?.blind
-  if (
-    !bl ||
-    typeof bl.answer !== 'string' ||
-    !Array.isArray(bl.guesses) ||
-    !['pass', 'fail'].includes(bl.verdict)
-  ) {
-    bad(`logo.mark.icon.attempts[${i}].blind`, '{ answer, guesses, verdict } from the blind look_logo')
-    return
-  }
-  const want = blindVerdict({
-    answer: bl.answer,
-    guesses: bl.guesses,
-    businessType: IC.businessType,
-    accept: Array.isArray(IC.accept) ? IC.accept : [],
-    neighbour: IC.neighbour,
-    neighbourAccept: Array.isArray(IC.neighbourAccept) ? IC.neighbourAccept : []
-  })
-  if (want.verdict !== bl.verdict)
-    bad(
-      `logo.mark.icon.attempts[${i}].blind.verdict`,
-      `the code comparison of the guesses ${JSON.stringify(bl.guesses)} gives ${want.verdict}`
-    )
-  if (want.matchedPosition !== (bl.matchedPosition ?? null))
-    bad(
-      `logo.mark.icon.attempts[${i}].blind.matchedPosition`,
-      `the code comparison gives ${want.matchedPosition}`
-    )
-  if (bl.size !== 128)
-    bad(
-      `logo.mark.icon.attempts[${i}].blind.size`,
-      '128 (the blind check runs on the icon rendered at 128 px, header size)'
-    )
-  if (bl.verdict === 'fail' && t.verdict === 'pass')
-    bad(`logo.mark.icon.attempts[${i}].verdict`, 'failed the blind check: fail')
 }

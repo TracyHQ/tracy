@@ -3,12 +3,12 @@
 import { finalReply, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { brandFileFrom, CHECKS, iconOf, looksOf, markFileOf, NAME, resultsOf } from './_brand-bench-agent.mjs'
 
-const BLIND_CHECKS = [
+const ICON_CHECKS = [
   'there are no letters, numbers or words in it',
   'it reads as one clear shape on this ground'
 ]
 
-/** After make_icon: a drawn icon is looked at blind at 128 px on both opening grounds; else the lettermark fallback. */
+/** After make_icon: a drawn icon is looked at on both opening grounds; else the lettermark fallback. */
 const afterIcons = (kit, r) => {
   const icon = iconOf(r)
   if (!icon) return [['make_lettermark', { letters: 'GB', accent: kit.site.brandColours.primary.value }]]
@@ -17,12 +17,7 @@ const afterIcons = (kit, r) => {
       'look_logo',
       {
         files: ['#ffffff', '#121111'].map((ground) => ({ file: icon.file, ground })),
-        checks: BLIND_CHECKS,
-        blind: true,
-        businessType: 'swim school',
-        accept: ['swimming school'],
-        neighbour: 'surf school',
-        neighbourAccept: []
+        checks: ICON_CHECKS
       }
     ]
   ]
@@ -30,7 +25,7 @@ const afterIcons = (kit, r) => {
 
 /**
  * The scripted agent: each request gets the next step, chosen by how many assistant turns the conversation holds.
- * `icon: true` draws one icon (the picture door answers it) and looks at it blind; else make_icon is called four
+ * `icon: true` draws one icon (the picture door answers it) and looks at it; else make_icon is called four
  * times, and the script goes on with the lettermark whatever the picture door answered.
  */
 export function scriptedAgent(kit, { wrongName = false, icon = false } = {}) {

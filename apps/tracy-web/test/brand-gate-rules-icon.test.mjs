@@ -1,44 +1,14 @@
-// save_brand_file gate: one focused failing case per rule of the icon mark: the blind check, the icon colours,
+// save_brand_file gate: one focused failing case per rule of the icon mark: the icon colours,
 // the plate fallback and the attempt limits. Each case breaks exactly one thing in a passing invented case.
+import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { iconPng, withFiles } from './_brand-gate-files.mjs'
-import { assertNames, expectRejected, lookOf } from './_brand-gate-rules.mjs'
+import { checkBrandFile } from '../src/brand-step/save-brand-file.js'
+import { iconPng, loadCase, withFiles } from './_brand-gate-files.mjs'
+import { assertNames, expectRejected } from './_brand-gate-rules.mjs'
 
 const attempt = (brand, i = 0) => brand.logo.mark.icon.attempts[i]
 
 const ROWS = [
-  [
-    'blind verdict is recomputed from the three guesses',
-    '2-words-only',
-    ({ brand }) => {
-      attempt(brand).blind.guesses = ['car wash', 'zoo', 'bank']
-    },
-    'logo.mark.icon.attempts[0].blind.verdict'
-  ],
-  [
-    'the matched position is recomputed',
-    '2-words-only',
-    ({ brand }) => {
-      attempt(brand).blind.matchedPosition = 1
-    },
-    'logo.mark.icon.attempts[0].blind.matchedPosition'
-  ],
-  [
-    'the blind check runs at 128 px',
-    '2-words-only',
-    ({ brand }) => {
-      attempt(brand).blind.size = 32
-    },
-    'logo.mark.icon.attempts[0].blind.size'
-  ],
-  [
-    'a neighbour business is not a pass',
-    '2-words-only',
-    ({ brand }) => {
-      Object.assign(brand.logo.mark.icon, { neighbour: 'pilates studio', neighbourAccept: [] })
-    },
-    'logo.mark.icon.attempts[0].blind.verdict'
-  ],
   [
     'the icon takes the logo colours in order',
     '5-bakery-words',
@@ -92,8 +62,7 @@ const ROWS = [
       brand.logo.mark.icon.attempts.unshift(
         ...[1, 2, 3].map(() => ({
           ...structuredClone(a),
-          verdict: 'fail',
-          blind: { ...a.blind, verdict: 'fail', matchedPosition: null, guesses: ['x', 'y', 'z'] }
+          verdict: 'fail'
         }))
       )
     },
@@ -108,24 +77,6 @@ const ROWS = [
     },
     'logo.mark.icon.attempts',
     /logo\.mark\.file/
-  ],
-  [
-    'the icon look has a passing blind check',
-    '2-words-only',
-    ({ brand }) => {
-      for (const l of lookOf(brand, 'icon/icon-1.png'))
-        l.checks = l.checks.filter((c) => !c.check.startsWith('blind:'))
-    },
-    'logo.mark.file',
-    /blind/
-  ],
-  [
-    'blind looks are shown at 128 px',
-    '2-words-only',
-    ({ brand }) => {
-      lookOf(brand, 'icon/icon-1.png')[0].shownAt = 32
-    },
-    'logo.look (blind)'
   ]
 ]
 
@@ -134,3 +85,13 @@ for (const [title, id, mutate, field, why] of ROWS) {
     assertNames(await expectRejected(id, mutate), field, why)
   })
 }
+
+test('gate: an icon attempt with no blind data passes when its looks pass', async () => {
+  const c = await loadCase('2-words-only')
+  const brand = structuredClone(c.brand)
+  assert.equal('blind' in attempt(brand), false)
+  assert.equal('businessType' in brand.logo.mark.icon, false)
+  const r = await checkBrandFile({ brandFile: brand, brief: c.brief, kit: c.kit, files: c.files })
+  assert.deepEqual(r.rejected ?? [], [])
+  assert.equal(r.ok, true)
+})

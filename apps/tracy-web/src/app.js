@@ -1185,7 +1185,10 @@ export function buildApp(deps) {
         ...brandBench,
         secret: deps.config.sessionSecret,
         kitImages: kitImagesFor(brandBench),
-        wiring: productionWiring(deps.config),
+        // A brief's logo media is read from the same objects Website Opportunities stores its pictures in.
+        wiring: productionWiring(deps.config, {
+          objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
+        }),
         log: deps.log ?? console
       })
     : null

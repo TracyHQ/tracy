@@ -21,7 +21,7 @@ const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_
 test('the locked prompt is copied byte for byte and its hash is the approved one', () => {
   const bytes = readFileSync(new URL('../src/brand-step/brand-step.system.md', import.meta.url))
   assert.equal(createHash('sha256').update(bytes).digest('hex'), BRAND_PROMPT_SHA256)
-  assert.equal(brandPrompt().sha256, 'cf88737d3ed918950dc6de2d31d04e6b7929eea3cd70e71f526affc3e2c9eadb')
+  assert.equal(brandPrompt().sha256, 'bffba6a4735a2957e38ff7e575234ba189cc1569d451344686cacf3decba70e0')
   assert.match(brandPrompt().text, /^# Brand step/)
 })
 

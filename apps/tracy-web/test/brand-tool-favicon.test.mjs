@@ -50,19 +50,36 @@ test('make_favicon: a side with its own mark skips the transparent icon and uses
   assert.equal(ctx.files.has('favicon/favicon.ico'), true)
 })
 
-test('make_favicon: a dark mark fails both icons, then passes recoloured when recolour_mark is wired', async () => {
+test('make_favicon: a dark mark fails both icons, then passes with the mark recoloured by recolour_mark', async () => {
   const ctx = makeCtx()
   ctx.files.write('mark.png', await markPng('#0b3d20', 300))
-  const noHook = await run({ mark: 'mark.png' }, ctx)
-  assert.equal(noHook.ok, false)
+  const real = await run({ mark: 'mark.png' }, ctx)
+  assert.equal(real.ok, true)
+  assert.equal(real.tabIcons, 'tile')
+  assert.equal(real.tileMarkRecoloured, true)
   assert.deepEqual(
-    noHook.candidates.map((c) => [c.kind, c.pass]),
+    real.candidates.map((c) => [c.kind, c.pass]),
     [
       ['transparent', false],
-      ['tile', false]
+      ['tile', false],
+      ['tile-recoloured', true]
     ]
   )
-  assert.match(noHook.recolour.error, /recolour_mark is not available/)
+  assert.equal(real.recolour.mode, 'palette')
+  assert.match(real.tileMark, /^favicon\/tile-mark\.dark/)
+  assert.equal(ctx.files.has('mark.png'), true, 'the mark itself is untouched')
+
+  const broken = await run(
+    { mark: 'mark.png' },
+    makeCtx({
+      files: ctx.files,
+      recolourMark: async () => {
+        throw new Error('recolour broke')
+      }
+    })
+  )
+  assert.equal(broken.ok, false)
+  assert.match(broken.recolour.error, /recolour broke/)
 
   const calls = []
   const wired = makeCtx({

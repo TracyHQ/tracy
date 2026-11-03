@@ -3,10 +3,12 @@
 // images, the template font) and stores what the run will use, so a refused start leaves nothing behind and an
 // accepted one says exactly what it ran: brief as used, kit, prompt hash, both door snapshots (never a key), tool
 // names and harness settings. The worker (brand-worker.js) does the rest.
+import { randomUUID } from 'node:crypto'
 import { briefOfRevision } from '../lib/bench-sql.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { brandBriefProblems } from './brand-brief-shape.js'
 import { brandDoors } from './brand-doors.js'
+import { logoIdOf, stageLogo } from './brand-logo.js'
 import { brandHarnessFor } from './brand-harness.js'
 import { brandPrompt } from './brand-prompt.js'
 import { activeRun, BRAND_RUN_ACTIVE, createRun, readRun, requestCancel, UUID } from './brand-store.js'
@@ -33,8 +35,10 @@ export const toolInfo = (tools) => tools.map((t) => ({ name: t.name, version: t.
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
  *   startedBy: string, kitImages: { ensure: Function }, wiring: Function, index?: Map<string, object>,
- *   agentModel?: { model: string, reason: string } }} input `agentModel`: a one-off agent model for this run,
- *   recorded with its reason; `wiring` gives the tools and the template font (brand-wiring.js).
+ *   logo?: { bytes: Buffer, name: string },
+ *   agentModel?: { model: string, reason: string, reviewerModel?: string } }} input `logo`: the logo file given at the start
+ *   (--logo-file), staged in the run folder before the run is queued and recorded by its name; `agentModel`: a one-off agent model
+ *   for this run (and, when given, an explicit reviewer model), recorded with its reason; `wiring` gives the tools and the template font (brand-wiring.js).
  */
 export async function startBrandRun({
   pool,
@@ -46,6 +50,7 @@ export async function startBrandRun({
   kitImages,
   wiring,
   index,
+  logo,
   agentModel
 }) {
   const problems = brandBriefProblems(brief)
@@ -78,10 +83,26 @@ export async function startBrandRun({
   // Last, since the first use of a kit version downloads its image zip: a kit whose images are unusable never queues.
   const images = await kitImages.ensure(opened)
   if (!images.ok) return refuse(images.code, images.reason)
+  let runId = null
+  let logoSource = null
+  if (logo) {
+    const mediaId = logoIdOf(brief)
+    if (!mediaId)
+      return refuse(
+        'BRAND_LOGO_NO_ID',
+        'A logo file needs a brief that names its logo (brand.logo is empty).'
+      )
+    runId = randomUUID()
+    if (!(await stageLogo(wired.filesFor(runId), mediaId, logo.bytes)))
+      return refuse('BRAND_LOGO_NOT_IMAGE', `The logo file ${logo.name} is not an image.`)
+    logoSource = { kind: 'file', name: logo.name }
+  }
   const created = await createRun(pool, {
+    id: runId,
     startedBy,
     brief,
     briefSource,
+    logoSource,
     kit,
     promptSha256: brandPrompt().sha256,
     door: { agent: doors.agent.snapshot, reviewer: doors.reviewer.snapshot },

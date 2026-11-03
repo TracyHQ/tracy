@@ -36,11 +36,8 @@ export const pictureReply = (png) => ({
   usage: { prompt_tokens: 80, completion_tokens: 1200, cost: 0.034 }
 })
 
-/** The reviewer: passes every check of every image it is shown; in blind mode it also guesses the industry. */
-export function passingReviewer(
-  body,
-  guesses = ['swimming school', 'public swimming pool', 'swimwear shop']
-) {
+/** The reviewer: passes every check of every image it is shown. */
+export function passingReviewer(body) {
   const parts = body.messages.at(-1).content
   const images = parts.filter((p) => p.type === 'image_url').length
   const checks =
@@ -49,9 +46,7 @@ export function passingReviewer(
       .text.split('Checks:\n')[1]
       ?.split('\n')
       .filter(Boolean) ?? []
-  const blind = parts.find((p) => p.type === 'text').text.includes('Nobody tells you what business')
   const answer = {
-    ...(blind ? { business: { answer: guesses[0], guesses, reason: 'a swimmer in goggles' } } : {}),
     images: Array.from({ length: images }, (_, i) => ({
       image: i + 1,
       checks: checks.map((c) => ({ check: c.replace(/^\d+\.\s*/, ''), verdict: 'pass', reason: 'it reads' }))

@@ -13,9 +13,13 @@ export const USAGE = `usage: node scripts/brand-bench.mjs <command>
   kits                                    list the kits the brand step can use, and whether it can run on them
   run --kit <ref> --brief-file <path>     queue a run on a brief JSON file
   run --kit <ref> --brief-revision <id>   queue a run on the brief of a WO revision
+      [--logo-file <path>]                the brief's logo (brand.logo) as a file on this server, used instead of
+                                          looking the media id up (--brief-file only; only its name is stored)
       [--by <label>]                      who started it (stored as cli:<label>)
       [--agent-model <model> --agent-model-reason <text>]
                                           use another agent model for this run only; the reason is recorded
+      [--reviewer-model <model>]          also use another reviewer model for this run only (explicit, recorded with
+                                          the reason); the two must still differ
   list [--limit <n>]                      the newest runs
   status <runId>                          state, round, gate verdict, cost split, duration
   get <runId> --out <dir>                 write the brand file, its images, every rejected attempt, the gate results
@@ -41,11 +45,13 @@ export async function runCli(argv, deps) {
         kit: { type: 'string' },
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
+        'logo-file': { type: 'string' },
         by: { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' },
         'agent-model': { type: 'string' },
-        'agent-model-reason': { type: 'string' }
+        'agent-model-reason': { type: 'string' },
+        'reviewer-model': { type: 'string' }
       }
     })
     const [command, runId] = positionals

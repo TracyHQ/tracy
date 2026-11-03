@@ -2,6 +2,7 @@
 // fake brand tools answering in the shapes the real ones do, an in-memory run folder holding the pictures of an
 // invented business (drawn by code, test/_brand-gate-files.mjs), and a model router that gives the agent and the
 // reviewer their own scripted replies. No real model is called and no money is spent.
+import { logoStaged } from '../src/brand-step/brand-logo.js'
 import assert from 'node:assert/strict'
 import sharp from 'sharp'
 import { startBrandRun } from '../src/brand-step/brand-control.js'
@@ -124,8 +125,7 @@ export function fakeTools({ onCall = () => {}, failOn = null } = {}) {
     tool('look_logo', async (input, ctx) => {
       const { answer, cost } = await ctx.review({
         images: [{ mediaType: 'image/png', bytes: PNG }],
-        question: String(input.question ?? 'q'),
-        blind: Boolean(input.blind)
+        question: String(input.question ?? 'q')
       })
       return { verdict: answer, cost }
     })
@@ -180,7 +180,11 @@ export const done = (cost = 0.01) => finalReply({ content: 'Saved.', usage: usag
 /** One invented case (the second approved example, words only) as the run's brief, brand file and picture folder. */
 export async function brandCase(id = '2-words-only') {
   const c = await loadCase(id)
-  return { ...c, files: memoryRunFiles(c.entries) }
+  const files = memoryRunFiles(c.entries)
+  // the found logo of the brief is in the run folder (the worker loads it there before the first call, #321)
+  if (c.brief.brand.logo && !logoStaged(files, c.brief.brand.logo))
+    files.map.set(`media/${c.brief.brand.logo}.png`, PNG)
+  return { ...c, files }
 }
 
 /** Start a run on a case; fails the test when the start is refused. */

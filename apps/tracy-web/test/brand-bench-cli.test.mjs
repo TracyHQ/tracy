@@ -81,6 +81,11 @@ test('run queues a run from a brief file and prints its id; refusals say why and
     await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json', '--agent-model', 'x/y']),
     2
   )
+  assert.equal(
+    await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json', '--reviewer-model', 'x/y']),
+    2,
+    '--reviewer-model goes with --agent-model'
+  )
   assert.equal(await k.run(['cancel', id]), 0)
   assert.match(k.out.at(-1), /cancelled/)
   k.done()
@@ -113,7 +118,7 @@ test(
     assert.match(status, /cost \$0\.6000 \(agent \$0\.6000, drawing \$0\.0000, reviewer \$0\.0000\)/)
     assert.match(status, /round 0: rejected, gate rejected 1 field, fault agent/)
     assert.match(status, /round 1: accepted, gate ok/)
-    assert.match(status, /prompt sha256 cf88737d/)
+    assert.match(status, /prompt sha256 bffba6a4/)
     k.out.length = 0
     const outDir = path.join(k.dir, 'out')
     assert.equal(await k.run(['get', run.id, '--out', outDir]), 0)

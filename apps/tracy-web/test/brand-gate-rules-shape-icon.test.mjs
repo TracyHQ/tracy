@@ -83,24 +83,6 @@ const ROWS = [
     'logo.mark.icon.provider'
   ],
   [
-    'the icon records the business type',
-    '2-words-only',
-    put('logo.mark.icon.businessType', ''),
-    'logo.mark.icon.businessType'
-  ],
-  [
-    'the icon records its synonyms',
-    '2-words-only',
-    put('logo.mark.icon.accept', null),
-    'logo.mark.icon.accept'
-  ],
-  [
-    'the icon records its neighbour names',
-    '2-words-only',
-    put('logo.mark.icon.neighbourAccept', null),
-    'logo.mark.icon.neighbourAccept'
-  ],
-  [
     'an attempt verdict is known',
     '2-words-only',
     put('logo.mark.icon.attempts.0.verdict', 'maybe'),
@@ -162,19 +144,6 @@ const ROWS = [
     all(put('logo.mark.decision', 'lettermark'), put('logo.mark.letters', 'GB')),
     'logo.mark.icon.attempts',
     /lettermark after icons/
-  ],
-  [
-    'a blind record has its parts',
-    '2-words-only',
-    put('logo.mark.icon.attempts.0.blind', { answer: 'x' }),
-    'logo.mark.icon.attempts[0].blind'
-  ],
-  [
-    'a failed blind check cannot pass',
-    '2-words-only',
-    put('logo.mark.icon.attempts.0.blind.verdict', 'fail'),
-    'logo.mark.icon.attempts[0].verdict',
-    /failed the blind/
   ]
 ]
 

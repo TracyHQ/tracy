@@ -1,6 +1,6 @@
 // The brand reviewer (brand step trial bench, #320): the only model that looks at logos and icons for the agent. A
-// tool calls review({ images, question, blind }) and gets the reviewer's answer text and its cost back; the tool
-// builds the question (and, in blind mode, never names the business) and judges the answer by code. One call to the
+// tool calls review({ images, question }) and gets the reviewer's answer text and its cost back; the tool
+// builds the question and judges the answer by code. One call to the
 // brand reviewer door, never a key or an image in the log: the call log row holds tool, model, purpose, status,
 // latency and cost only. The cap is checked before the call (brand-spend.js). An answer with no cost figure is
 // counted at the model's price (brand-prices.js) and its row marked estimated; a model with no price is refused.
@@ -25,12 +25,12 @@ function imagePart(image) {
  * @param {{ door: { baseUrl: string, apiKey: string, model: string }, fetchImpl?: typeof fetch,
  *   spend: ReturnType<import('./brand-spend.js').createSpend>, tool?: () => string | null,
  *   price: { inputCacheHit: number, inputCacheMiss: number, output: number, callCeiling: number } }} input
- * @returns {(call: { images: unknown[], question: string, blind?: boolean }) => Promise<{ answer: string, cost: number | null }>}
+ * @returns {(call: { images: unknown[], question: string }) => Promise<{ answer: string, cost: number | null }>}
  */
 export function createReview({ door, fetchImpl = fetch, spend, tool = () => null, price }) {
   if (isAnthropicModel(null, door.model)) throw new Error('the brand reviewer is never an Anthropic model')
   if (!price) throw new Error(`BRAND_PRICE_UNKNOWN: no price for ${door.model}, so no call is sent`)
-  return async function review({ images, question, blind = false }) {
+  return async function review({ images, question }) {
     await spend.check()
     const started = Date.now()
     const log = (status, extra = {}) =>
@@ -38,7 +38,7 @@ export function createReview({ door, fetchImpl = fetch, spend, tool = () => null
         kind: 'reviewer',
         tool: tool(),
         model: door.model,
-        purpose: blind ? 'blind icon look' : 'logo look',
+        purpose: 'logo look',
         status,
         latencyMs: Date.now() - started,
         ...extra

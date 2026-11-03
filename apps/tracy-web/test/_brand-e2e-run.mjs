@@ -1,5 +1,5 @@
 // Set-up of the end-to-end brand test (brand step trial bench, #320): kit images that are real pictures, and a words-only
-// run on the real wiring (run folder on disk, heading font through the fake Google Fonts door, the picture door
+// run (a words-only brief, or a found logo given as `material`) on the real wiring (run folder on disk, heading font through the fake Google Fonts door, the picture door
 // assigned to a fake picture model) that a worker plays to its end.
 import path from 'node:path'
 import sharp from 'sharp'
@@ -36,19 +36,29 @@ export async function pictureKitImages() {
 }
 
 /** Start a words-only run on the real wiring and let a worker run it to its end. */
-export async function wordsOnlyRun(pool, dir, agentOptions, { picture = 'icon' } = {}) {
+export async function wordsOnlyRun(
+  pool,
+  dir,
+  agentOptions,
+  { picture = 'icon', caseId = '3-no-logo', material = null, agentFor = scriptedAgent } = {}
+) {
   const kitImages = await pictureKitImages()
   const config = { readinessDir: path.join(dir, 'readiness') }
   const font = fakeFontFetch()
   const wiring = productionWiring(config, { fetchImpl: font.fetchImpl, prices: TEST_PRICES })
-  const c = await loadCase('3-no-logo')
+  const c = await loadCase(caseId)
   await assignBrandDoors(pool)
   await assignDoor(pool, 'seedImage', { providerId: 'openrouter', model: PICTURE_MODEL }, 'owner@tracy.test')
   // the picture model draws a disc in the accent on white, or fails (a refused request)
   const accent = c.kit.site.brandColours.primary.value
   const iconPicture = await drawing(disc(accent))
-  const started = await startRun(pool, c, { wiring, kitImages })
-  const agent = scriptedAgent(c.kit, agentOptions)
+  // a found logo comes in as the logo file given at the start (--logo-file), which stages it in the run folder
+  const started = await startRun(pool, c, {
+    wiring,
+    kitImages,
+    ...(material ? { logo: { bytes: material, name: 'logo.png' } } : {})
+  })
+  const agent = agentFor(c.kit, agentOptions)
   const requests = []
   const fetchImpl = async (_url, init) => {
     const body = JSON.parse(init.body)

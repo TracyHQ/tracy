@@ -28,10 +28,11 @@ export function contractOfKit(library, kit) {
 
 /**
  * @param {any} config the server's config (readinessDir locates the bench data folder)
- * @param {{ fetchImpl?: typeof fetch, prices?: object[] }} [deps] the network door of the font download and the price
- *   table of the models (brand-prices.js; the default table when left out); tests pass fakes
+ * @param {{ fetchImpl?: typeof fetch, prices?: object[], objects?: { get: Function } | null }} [deps] the network door of
+ *   the font download, the price table of the models (brand-prices.js; the default table when left out) and the object
+ *   store the brief's logo (`wo_media`) is read from (app.js placeMediaObjectsFor); tests pass fakes
  */
-export function productionWiring(config, { fetchImpl = fetch, prices } = {}) {
+export function productionWiring(config, { fetchImpl = fetch, prices, objects = null } = {}) {
   let loaded = null
   return async () => {
     if (loaded) return loaded
@@ -44,6 +45,8 @@ export function productionWiring(config, { fetchImpl = fetch, prices } = {}) {
     loaded = {
       tools: brandTools,
       ...(prices ? { prices } : {}),
+      /** Where a brief's logo media is read from (brand-logo.js); null when the server has no object store. */
+      logoObjects: objects,
       /** The drawing door for make_icon: the picture door `seedImage` (brand-draw.js). */
       async drawFor({ pool, secret, fetchImpl: modelFetch, prices }) {
         const { createDraw } = await import('./brand-draw.js')

@@ -49,6 +49,7 @@ async function oneDoor({ pool, secret, door, override }) {
     )
   const { providerId, baseUrl, apiKey } = found.credential
   const model = override?.model ?? found.credential.model
+  const replaces = override ? found.credential.model : null
   if (!model) return refuse(door, 'UNSET', `The ${label} door names no model. Set it in ${WHERE}.`)
   if (isAnthropicModel(providerId, model))
     return refuse(
@@ -75,27 +76,33 @@ async function oneDoor({ pool, secret, door, override }) {
       model,
       endpointHost: new URL(baseUrl).hostname,
       ...found.snapshot,
-      ...(override ? { override } : {})
+      ...(override ? { override: { ...override, ...(replaces ? { replaces } : {}) } } : {})
     }
   }
 }
 
 /**
- * Both brand doors, or the first refusal. `override`: a one-off agent model for this run, `{ model, reason }`, on the
- * agent door's provider; recorded in the agent snapshot.
+ * Both brand doors, or the first refusal. `override`: a one-off agent model for this run, `{ model, reason,
+ * reviewerModel? }`, on the agent door's provider; recorded in the agent snapshot. `reviewerModel` is the explicit
+ * switch of the reviewer for this run only (on the reviewer door's provider), so the two never match; it is recorded
+ * in the reviewer snapshot with the same reason and the model it replaces. Nothing is switched on its own: the same
+ * model on both doors is still refused.
  * @returns {Promise<{ ok: true, agent: { door: object, snapshot: object }, reviewer: { door: object, snapshot: object } }
  *   | { ok: false, code: string, reason: string }>}
  */
 export async function brandDoors({ pool, secret, override = null }) {
   const agent = await oneDoor({ pool, secret, door: BRAND_AGENT_DOOR, override })
   if (!agent.ok) return agent
-  const reviewer = await oneDoor({ pool, secret, door: BRAND_REVIEWER_DOOR })
+  const reviewerOverride = override?.reviewerModel
+    ? { model: override.reviewerModel, reason: override.reason }
+    : null
+  const reviewer = await oneDoor({ pool, secret, door: BRAND_REVIEWER_DOOR, override: reviewerOverride })
   if (!reviewer.ok) return reviewer
   if (bare(agent.door.model) === bare(reviewer.door.model))
     return {
       ok: false,
       code: 'BRAND_SAME_MODEL',
-      reason: `The brand agent and the brand reviewer both resolve to ${agent.door.model}. The reviewer has to be another model, so the blind icon check is not judged by the model that chose the subject. Change one door in ${WHERE}.`
+      reason: `The brand agent and the brand reviewer both resolve to ${agent.door.model}. The reviewer has to be another model, so the agent's work is not judged by the model that made it. Change one door in ${WHERE}.`
     }
   return { ok: true, agent, reviewer }
 }
