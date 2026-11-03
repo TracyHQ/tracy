@@ -5,20 +5,24 @@
 // around exactly one fenced block whose content is one JSON object is read as that block, and the dropped text is
 // recorded. Two fenced blocks or none stay unread.
 //
-// In a fix round the planner may answer with only the parts it changes: { "changes": [ ... ] }. Each change replaces
-// one whole part of the previous plan, named by exactly one kind key (see PART_KINDS), or one whole top-level section.
-// Every other part stays as it was. A change list that names a part that is not there (or more than one), or whose
+// In a fix round the planner may answer with only the parts it changes: { "changes": [ ... ] }, applied in order. A
+// change replaces one whole part of the previous plan, named by exactly one kind key (see PART_KINDS), or one whole
+// top-level section; or, finer (#301 cost cuts), replaces one field of a block, adds one entry to a block's list, or
+// removes one entry inside a block (a slot, link, frame or list), so a fix to a few hidden slots does not resend
+// whole blocks. Every other part stays as it was. A change list that names a part that is not there (or more than one), or whose
 // replacement is malformed, is not applied: the server then asks once for the whole plan.
 
 /** Appended after the failure list of a fix round. */
 export const CHANGES_INSTRUCTION = [
   '',
   'Answer with only the parts of the plan you change, as one JSON object {"changes": [...]}, with nothing before or after it.',
-  'Each change replaces one whole part, named by one key and its id:',
-  '{"page": "<id>", "with": {...}}, and likewise "pageGroup" and "legalPage" (by id), "block", "form" (by block), "slot", "link", "frame" or "list";',
-  'or {"section": "<top-level key of the plan, such as site, mainMenu, pageGroups, ownerTasks or kitGaps>", "with": <its whole value>}.',
-  '"with" is the whole new part with the same id. To add or remove a part, replace the part or section that holds it.',
-  'Every part you do not name stays as it was.',
+  'The changes are applied in order. Each change is one of:',
+  '- {"page": "<id>", "with": {...}}: replaces one whole part named by its id; likewise "pageGroup" and "legalPage" (by id), "block", "form" (by block), "slot", "link", "frame" or "list". "with" is the whole new part with the same id.',
+  '- {"block": "<id>", "field": "<one key of that block decision, such as hiddenSlots, copy, pictures or links>", "with": <its whole new value>}: replaces one field of a block and keeps the rest of the block.',
+  '- {"block": "<id>", "add": "<copy, hiddenSlots, pictures, links or lists>", "with": {...}}: adds one entry at the end of that list of the block.',
+  '- {"slot": "<id>", "remove": true}: removes that one entry wherever it is (in copy or hiddenSlots); likewise "link", "frame" or "list".',
+  '- {"section": "<top-level key of the plan, such as site, mainMenu, pageGroups, ownerTasks or kitGaps>", "with": <its whole value>}.',
+  'To move a slot from hiddenSlots to copy, remove it, then add it. Every part you do not name stays as it was.',
   ''
 ].join('\n')
 
@@ -125,12 +129,85 @@ export const PART_KINDS = Object.freeze({
 
 const KIND_KEYS = [...Object.keys(PART_KINDS), 'section']
 
+/** The kinds a change may remove: entries inside a block, never a page, group or block (those carry decisions). */
+const REMOVABLE = ['slot', 'link', 'frame', 'list']
+
+/** Where the parts of one kind with one id are: [array, index] pairs. */
+function locate(plan, kind, id) {
+  const found = []
+  for (const [k, key, arr] of partArrays(plan)) {
+    if (k !== kind || !Array.isArray(arr)) continue
+    arr.forEach((part, i) => {
+      if (isObject(part) && part[key] === id) found.push([arr, i])
+    })
+  }
+  return found
+}
+
+/** The one part of a kind with an id, or the reason there is not exactly one. */
+function onlyOne(plan, kind, id, at) {
+  const found = locate(plan, kind, id)
+  if (found.length === 0) return { reason: `${at} names a ${kind} that does not exist: ${id.slice(0, 80)}` }
+  if (found.length > 1)
+    return { reason: `${at} names a ${kind} that is in the plan ${found.length} times: ${id.slice(0, 80)}` }
+  return { at: found[0] }
+}
+
+// A finer change to one block: one field replaced ("field") or one entry added to one of its lists ("add").
+function applyToBlock(plan, change, at) {
+  const op = Object.hasOwn(change, 'field') ? 'field' : 'add'
+  const extra = Object.keys(change).filter((k) => !['block', op, 'with'].includes(k))
+  if (extra.length)
+    return `${at} must name exactly one of field or add, with block and with; it also has: ${extra.join(', ')}`
+  const { block: id, with: value } = change
+  const key = change[op]
+  if (typeof id !== 'string' || !id) return `${at} names no block id`
+  if (typeof key !== 'string' || !key) return `${at} names no ${op}`
+  if (key === 'block') return `${at} cannot replace the block id; replace the whole block instead`
+  if (value === undefined) return `${at} has no "with"`
+  const one = onlyOne(plan, 'block', id, at)
+  if (one.reason) return one.reason
+  const [arr, i] = one.at
+  const block = arr[i]
+  const current = block[key]
+  if (op === 'field') {
+    if (current !== undefined && Array.isArray(current) !== Array.isArray(value))
+      return `${at} replaces field ${key} of block ${id} with a value of another type`
+    block[key] = value
+    return null
+  }
+  if (current !== undefined && !Array.isArray(current))
+    return `${at} adds to ${key} of block ${id}, which is not a list`
+  if (!isObject(value)) return `${at} must add one object to ${key} of block ${id}`
+  block[key] = [...(current ?? []), value]
+  return null
+}
+
+// A finer change that removes one entry inside a block.
+function removeOne(plan, change, kind, at) {
+  if (change.remove !== true) return `${at}: remove must be true`
+  const extra = Object.keys(change).filter((k) => k !== kind && k !== 'remove')
+  if (extra.length) return `${at} has keys it should not: ${extra.join(', ')}`
+  if (!REMOVABLE.includes(kind)) return `${at}: a ${kind} cannot be removed, only a ${REMOVABLE.join(', ')}`
+  const id = change[kind]
+  if (typeof id !== 'string' || !id) return `${at} names no ${kind} id`
+  const one = onlyOne(plan, kind, id, at)
+  if (one.reason) return one.reason
+  const [arr, i] = one.at
+  arr.splice(i, 1)
+  return null
+}
+
 /** One change applied to a plan, in place. Returns null, or the reason it cannot be applied. */
 function applyOne(plan, change, n) {
   const at = `change ${n}`
   if (!isObject(change)) return `${at} is not an object`
+  const finer = ['field', 'add'].filter((k) => Object.hasOwn(change, k))
+  if (finer.length > 1) return `${at} must name exactly one of field or add`
+  if (finer.length) return applyToBlock(plan, change, at)
   const named = KIND_KEYS.filter((k) => Object.hasOwn(change, k))
   if (named.length !== 1) return `${at} must name exactly one of ${KIND_KEYS.join(', ')}`
+  if (Object.hasOwn(change, 'remove')) return removeOne(plan, change, named[0], at)
   if (!Object.hasOwn(change, 'with')) return `${at} has no "with"`
   const extra = Object.keys(change).filter((k) => k !== named[0] && k !== 'with')
   if (extra.length) return `${at} has keys it should not: ${extra.join(', ')}`
@@ -150,17 +227,9 @@ function applyOne(plan, change, n) {
   const idKey = PART_KINDS[kind]
   if (!isObject(replacement) || replacement[idKey] !== id)
     return `${at} must replace ${kind} ${id} with one object whose ${idKey} is ${id}`
-  const found = []
-  for (const [k, key, arr] of partArrays(plan)) {
-    if (k !== kind || !Array.isArray(arr)) continue
-    arr.forEach((part, i) => {
-      if (isObject(part) && part[key] === id) found.push([arr, i])
-    })
-  }
-  if (found.length === 0) return `${at} names a ${kind} that does not exist: ${id.slice(0, 80)}`
-  if (found.length > 1)
-    return `${at} names a ${kind} that is in the plan ${found.length} times: ${id.slice(0, 80)}`
-  const [arr, i] = found[0]
+  const one = onlyOne(plan, kind, id, at)
+  if (one.reason) return one.reason
+  const [arr, i] = one.at
   arr[i] = replacement
   return null
 }
