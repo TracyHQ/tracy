@@ -82,6 +82,9 @@ copy file:
   group with the same id as the menu's `group`. Write it in `slots` under that `titleSlot` id with
   `owner: "writer"`, like any other text, in the shared turn. Its limit is the kit slot's `maxCharacters`; when the kit lists no limit
   for it, twice the length of the demo `heading`, at least 20 characters.
+- **Main menu dropdowns.** The "Main menu" part lists the dropdown slots under their parent's label, each with
+  its `intent`, `maxCharacters` and demo `sample`. Write each in `slots` with `owner: "writer"` in the shared
+  turn: a short navigation label, consistent with the page it opens, never the demo label.
 - `alts`: one entry per planned picture frame on the turn's pages, including frames that carry `sameAs`.
 - `seo`: one entry per kept page of the turn, including the privacy page (`legal:privacy` when the plan
   creates it). The not-found page has no `seo` entry and needs none.

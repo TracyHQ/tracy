@@ -1,11 +1,11 @@
 // The copy reading page's stylesheet: colour tokens on :root, redefined for dark mode, nothing external.
 export const CSS = `
 :root{color-scheme:light dark;--bg:#faf8f6;--surface:#fff;--ink:#1f1b18;--muted:#6b625b;--line:#e4ddd6;--accent:#bf5b3d;
---bad:#b3261e;--bad-bg:#fdeceb;--bad-line:#f0b8b4;--ok:#2e7d4f;--note:#f4efe9;--chip:#efe8e0}
+--bad:#b3261e;--bad-bg:#fdeceb;--bad-line:#f0b8b4;--ok:#2e7d4f;--note:#f4efe9;--chip:#efe8e0;--w:#1d5fd1;--w-bg:#eaf1ff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171412;--surface:#211d1a;--ink:#efe9e3;--muted:#a79d94;--line:#383129;--accent:#e08566;
---bad:#ff8a80;--bad-bg:#3a1f1d;--bad-line:#7a3a35;--ok:#7fd1a0;--note:#2a2521;--chip:#332d28}}
+--bad:#ff8a80;--bad-bg:#3a1f1d;--bad-line:#7a3a35;--ok:#7fd1a0;--note:#2a2521;--chip:#332d28;--w:#8ab4ff;--w-bg:#17253d}}
 :root[data-theme="dark"]{--bg:#171412;--surface:#211d1a;--ink:#efe9e3;--muted:#a79d94;--line:#383129;--accent:#e08566;
---bad:#ff8a80;--bad-bg:#3a1f1d;--bad-line:#7a3a35;--ok:#7fd1a0;--note:#2a2521;--chip:#332d28}
+--bad:#ff8a80;--bad-bg:#3a1f1d;--bad-line:#7a3a35;--ok:#7fd1a0;--note:#2a2521;--chip:#332d28;--w:#8ab4ff;--w-bg:#17253d}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 main{max-width:1180px;margin:0 auto;padding:24px 16px 80px}
@@ -39,7 +39,20 @@ nav.toc a.bad{background:var(--bad-bg);color:var(--bad)}
 .note{background:var(--note);border-radius:6px;padding:6px 10px;margin:6px 0;font-size:13px}
 .facts{display:flex;flex-direction:column;gap:3px;margin:4px 0}
 .fact{font-size:12.5px}.fact code{background:var(--chip);border-radius:4px;padding:0 5px}.fact q{color:var(--muted)}
-.text{margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}.text p{margin:4px 0}.text.label{font-weight:600}
+.text{margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}.text p{margin:4px 0}
+.w,dd.w{background:var(--w-bg);border-left:3px solid var(--w);border-radius:0 6px 6px 0;padding:4px 10px}
+span.w{padding:1px 8px}
+.label,.text.label{border-left:3px dashed var(--muted);color:var(--muted);padding:2px 10px;font-weight:600}
+.copy.bad.w{border-left:3px solid var(--w)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin:8px 0;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:22px;height:14px;border-radius:0 3px 3px 0}
+.sw-w{background:var(--w-bg);border-left:3px solid var(--w)}.sw-label{border-left:3px dashed var(--muted);background:transparent}
+.sw-note{background:var(--note);border-radius:3px}
+table.rows{margin:4px 0 8px;font-size:13px}table.rows td.id{width:1%;white-space:nowrap}
+.warn{color:var(--bad);font-weight:600}
+ul.links{margin:4px 0 8px;padding-left:18px}ul.links li{margin:3px 0}.links-head{margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
+ul.menu{margin:4px 0;padding-left:18px}ul.menu li{margin:3px 0}#main-menu .slots>ul.menu{padding-left:4px;list-style:none}
 .count{font-size:12px;color:var(--muted)}.count.over{color:var(--bad);font-weight:700}
 .chip{display:inline-block;background:var(--chip);border-radius:999px;padding:0 9px;font-size:12px;margin-right:4px}
 .fail{color:var(--bad);font-size:13px;margin:3px 0}.fail b{font-family:ui-monospace,Menlo,monospace}

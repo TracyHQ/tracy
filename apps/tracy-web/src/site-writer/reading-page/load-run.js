@@ -36,10 +36,11 @@ const latestVersion = (names, stem, ext) => {
 
 /**
  * The files of one run folder: plan, brief, the final copy (site-copy.json, else the newest copy-vN.json), the newest
- * check-vN.json, the failures still standing, run.json when present.
+ * check-vN.json, the failures still standing, run.json when present, and the main menu and footer column headings of
+ * mapping.json when present.
  * @param {string} dir
  */
-export async function loadRunFolder(dir) {
+export async function loadRunFolder(dir, { kitFile = null } = {}) {
   const names = await readdir(dir).catch((e) => {
     throw new Error(`cannot open the run folder: ${e.message}`)
   })
@@ -53,7 +54,24 @@ export async function loadRunFolder(dir) {
   const checkV = latestVersion(names, 'check', 'json')
   const check = checkV ? await readJson(path.join(dir, `check-v${checkV}.json`), true) : null
   const standing = await readText(path.join(dir, 'failures-standing.txt'))
-  return { plan, brief, run, copy, check, checkVersion: checkV || null, standing }
+  // The main menu with its dropdowns travels in the mapping export (extras.mainMenu), when the run had a content map.
+  const mapping = await readJson(path.join(dir, 'mapping.json'), false)
+  const mainMenu = mapping?.extras?.mainMenu ?? null
+  const footerHeadings = mapping?.extras?.footerHeadings ?? []
+  // The kit (template-kit.json) is not in a run folder; given, the page shows the kit's lists and the slots left alone.
+  const kit = kitFile ? await readJson(kitFile, true) : null
+  return {
+    plan,
+    brief,
+    run,
+    copy,
+    check,
+    checkVersion: checkV || null,
+    standing,
+    mainMenu,
+    footerHeadings,
+    kit
+  }
 }
 
 async function listImages(dir, depth = 0) {

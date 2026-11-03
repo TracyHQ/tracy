@@ -1,5 +1,6 @@
 // The site copy checker (ADR 0042): a pure, read-only check of a "site-copy/1" file against the site plan it was
-// written from, the template kit and the brief. Same calling shape and result shape as the site plan checker:
+// written from, the template kit, the brief and (when the template has one) its content map, whose main menu tree
+// gives the dropdown slots (main-menu.js). Same calling shape and result shape as the site plan checker:
 // checkCopy({ copy, plan, kit, brief }) returns { meta, inputErrors, summary, rules: [{ id, title, status:
 // pass|fail|skip, cause, causes, failures: [{ where, detail, cause }], notes }] }. Inputs are never modified, a
 // malformed copy file is reported under W01 and never throws, and the same input gives the same result.
@@ -13,7 +14,7 @@ import { checkW02, checkW03 } from './rules-slots.js'
 
 // Stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title, a threshold, a failure
 // text or the result shape changes, so two runs scored by different checkers are never compared as equal.
-export const CHECKER_VERSION = 'site-copy-check/2'
+export const CHECKER_VERSION = 'site-copy-check/3'
 
 const RUN_ORDER = [
   checkW02,
@@ -29,7 +30,7 @@ const RUN_ORDER = [
 ]
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 
-export function checkCopy({ copy, plan, kit, brief } = {}) {
+export function checkCopy({ copy, plan, kit, brief, contentMap } = {}) {
   const { R, list } = createRuleSet()
   const { view, problems } = readCopy(copy)
   const meta = {
@@ -57,7 +58,7 @@ export function checkCopy({ copy, plan, kit, brief } = {}) {
       if (key !== 'w01') r.skip(`cannot check: ${inputErrors.join('; ')}`)
     return { meta, inputErrors, ...finishRules(list) }
   }
-  const ctx = { R, view, plan, kit, brief, idx: indexInputs({ plan, kit, brief }) }
+  const ctx = { R, view, plan, kit, brief, idx: indexInputs({ plan, kit, brief, contentMap }) }
   for (const check of RUN_ORDER) check(ctx)
   return { meta, inputErrors, ...finishRules(list) }
 }

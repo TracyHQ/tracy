@@ -4,6 +4,7 @@
 // records time, cost per call and the provider balance before and after. Its inputs are frozen. The model and the
 // balance endpoint are fakes: no real model or account is called.
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { after, before, beforeEach, test } from 'node:test'
 import { readRun } from '../src/site-writer/bench-store.js'
 import { scriptedModel } from './_agent-over-door-fake.mjs'
@@ -13,12 +14,25 @@ import {
   balances,
   copy,
   drain,
+  kit,
   kitIndex,
+  lastUserText,
   plan,
   reply,
   startRun,
   writerAnswer
 } from './_site-writer-bench.mjs'
+import * as menu from './_site-writer-main-menu.mjs'
+
+// The main menu fixtures' kit parts (header labels, mobile menu block, pages) on the shipped bench kit.
+const menuKitParts = () => {
+  const k = menu.kit()
+  return {
+    blocks: k.blocks.map((b) => (b.id === 'block-2' ? kit().blocks.find((x) => x.id === 'block-2') : b)),
+    pages: k.pages
+  }
+}
+const menuPlan = () => ({ ...menu.plan(), kit: 'tracy-template-kit/2 demo-gym/j6/1.0.0' })
 
 const db = fileDb()
 before(db.open)
@@ -207,3 +221,47 @@ test('a second run is refused while one is active; a plan made on another kit is
   })
   assert.equal(other.code, 'SITE_WRITER_PLAN_SHAPE')
 })
+
+test(
+  'a run freezes the hash of the content map it read, writes the dropdowns, and stops when the file changed',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignWriterDoor(pool)
+    const map = menu.contentMap()
+    const menuKits = kitIndex({ kitDoc: { ...kit(), ...menuKitParts() }, contentMap: map })
+    try {
+      const first = await startRun(pool, menuKits.index, { plan: menuPlan() })
+      const { rows } = await pool.query('select kit from site_writer_run where id = $1', [first.id])
+      assert.equal(
+        rows[0].kit.contentMapSha256,
+        createHash('sha256').update(JSON.stringify(map)).digest('hex')
+      )
+      // The writer is asked for the dropdowns: its first message names them under their parent.
+      const answer = writerAnswer()
+      answer.slots.push(
+        { slot: 'menuItem-21.0', owner: 'writer', text: 'Yoga', factIds: [] },
+        { slot: 'menuItem-31.0', owner: 'writer', text: 'Coaches', factIds: [] }
+      )
+      const model = scriptedModel([reply(answer)])
+      await drain(pool, {
+        fetchImpl: model.fetchImpl,
+        index: menuKits.index,
+        balanceFetch: balances([]).fetchImpl
+      })
+      const done = await readRun(pool, first.id)
+      assert.match(lastUserText(model.requests[0]), /## Main menu: the dropdown slots/)
+      assert.equal(done.status, 'succeeded', done.error)
+      assert.equal(done.rounds[0].checkResult.meta.checker, 'site-copy-check/3')
+
+      const second = await startRun(pool, menuKits.index, { plan: menuPlan() })
+      menuKits.writeContentMap({ ...map, slots: [] })
+      await drain(pool, { fetchImpl: scriptedModel([]).fetchImpl, index: menuKits.index })
+      const refused = await readRun(pool, second.id)
+      assert.equal(refused.status, 'failed')
+      assert.match(refused.error, /^SITE_WRITER_CONTENT_MAP_CHANGED: /)
+    } finally {
+      menuKits.done()
+    }
+  }
+)

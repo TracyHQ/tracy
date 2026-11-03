@@ -13,10 +13,12 @@
 // applied and the invalid ones sent back once. Failures still standing after round 2 keep the writer's text and are
 // stored on the run. A run whose answered calls cost more than the harness's budgetUsd stops before its next call
 // with SITE_WRITER_BUDGET.
-import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
+
 import { isChangeList } from '../lib/bench-answer.js'
+import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { openKit } from '../lib/template-kit-source.js'
 import { SITE_WRITER_STORE } from './bench-store.js'
+import { openContentMap } from './content-map-source.js'
 import {
   applyValidChanges,
   asChangeList,
@@ -48,7 +50,13 @@ export const SITE_WRITER_STEP = Object.freeze({
   checker: Object.freeze({
     version: CHECKER_VERSION,
     check: ({ doc, row, ready }) =>
-      checkCopy({ copy: doc, plan: row.plan, kit: ready.kit.doc, brief: row.brief }),
+      checkCopy({
+        copy: doc,
+        plan: row.plan,
+        kit: ready.kit.doc,
+        brief: row.brief,
+        contentMap: ready.contentMap
+      }),
     failureListText
   }),
   changes: Object.freeze({
@@ -109,15 +117,24 @@ function agentRequest({ ready }) {
 }
 
 // Everything the run was started with must still hold (the loop checks the prompt and the checker first): a run that
-// silently ran on another model, or a kit the server no longer reads, would not measure what it records.
+// silently ran on another model, a kit the server no longer reads, or a changed content map would not measure what it
+// records.
 async function prepare({ pool, secret, index }, row) {
   const kit = openKit(row.kit?.ref, index ? { index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_WRITER_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
+  const map = contentMapOf(row, index)
+  if (!map.ok) return map
   const door = await siteWriterDoor({ pool, secret })
   if (!door.ok) return door
   const same = ['providerId', 'model', 'endpointHost'].every((k) => door.snapshot[k] === row.door?.[k])
-  const input = writerInput({ plan: row.plan, brief: row.brief, kit: kit.doc })
+  const contentMap = map.doc
+  const input = writerInput({
+    plan: row.plan,
+    brief: row.brief,
+    kit: kit.doc,
+    contentMap: contentMap ?? null
+  })
   if (!same)
     return {
       ok: false,
@@ -128,8 +145,25 @@ async function prepare({ pool, secret, index }, row) {
     ok: true,
     kit,
     door: door.door,
-    index: indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief }),
+    contentMap,
+    index: indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief, contentMap }),
     input,
     firstUser: firstUserMessage(input)
   }
+}
+
+// The content map the run started on (its sha256 is frozen in row.kit): the same bytes, or a refusal. A run started
+// before content maps were read (no contentMapSha256 on its kit) reads none: `doc` is undefined and the check runs as
+// it did then.
+function contentMapOf(row, index) {
+  if (!row.kit || !('contentMapSha256' in row.kit)) return { ok: true, doc: undefined }
+  const map = openContentMap(row.kit.ref, index ? { index } : {})
+  const sha = map?.sha256 ?? null
+  if (sha !== row.kit.contentMapSha256)
+    return {
+      ok: false,
+      code: 'SITE_WRITER_CONTENT_MAP_CHANGED',
+      reason: `the content map of ${row.kit.ref} is not the one the run started on`
+    }
+  return { ok: true, doc: map?.doc ?? null }
 }

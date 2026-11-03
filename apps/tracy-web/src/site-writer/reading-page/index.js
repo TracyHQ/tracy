@@ -7,12 +7,19 @@ import { buildModel } from './model.js'
 import { renderPage } from './render.js'
 
 /**
- * @param {{ runDir: string, imagesDir?: string | null, outFile: string, linkImages?: boolean }} options
- *   linkImages: reference images by a path relative to the output file instead of embedding them as data URIs
+ * @param {{ runDir: string, imagesDir?: string | null, outFile: string, linkImages?: boolean, kitFile?: string | null }} options
+ *   linkImages: reference images by a path relative to the output file instead of embedding them as data URIs;
+ *   kitFile: the run's template-kit.json, for the kit's lists and the slots neither written nor hidden
  * @returns {Promise<{ blocks: number, images: number, bytes: number }>}
  */
-export async function buildReadingPage({ runDir, imagesDir = null, outFile, linkImages = false }) {
-  const files = await loadRunFolder(runDir)
+export async function buildReadingPage({
+  runDir,
+  imagesDir = null,
+  outFile,
+  linkImages = false,
+  kitFile = null
+}) {
+  const files = await loadRunFolder(runDir, { kitFile })
   const model = buildModel(files)
   const find = await blockImageFinder(imagesDir)
   const sources = new Map()

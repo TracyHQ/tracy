@@ -8,6 +8,8 @@ slots, and W11 only notes a long dash in a planner label (contract gaps found wh
 version strings unchanged because nothing shipped yet).
 Amended again: W06 exempts runs wholly inside a brief fact value; the checker version moved to `site-copy-check/2`
 because bench runs scored by `/1` exist.
+Amended a third time: the main menu dropdowns (section 1, "Main menu dropdowns"); W02 requires the dropdown slots
+and fails a slot the plan words differently in two places; the checker version moved to `site-copy-check/3`.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -48,6 +50,31 @@ Not in the file: hidden slots, link targets, label propagation to other menus an
 already hold them. Label slots (the plan gives them `text`) are filled by code from the plan and carry
 `owner: "plan-label"`; every other slot has `owner: "writer"`. Every slot has exactly one owner.
 
+**Main menu dropdowns.** The kit's header block names only the top-level menu items, and the kit has no menu tree.
+The tree lives in the template's content map (`content-map.json` beside `template-kit.json` in the contract folder,
+the file step 9 writes into): `entities[]` of kind `menuItem`, each with `identity.menutype` and `identity.path`. The
+main menu is the menu type of the top-level labels the kit's header block shows; an item's parent is the item whose
+path is its path minus the last segment. Plan pages map to menu items through the kit's `pages[].path`
+(`/about-us/our-trainers` opens the item with path `about-us/our-trainers`). Code (`site-writer/main-menu.js`) then
+decides:
+
+- an item under a kept top-level item (its label slot is in a kept block decision, not hidden), whose parent is
+  shown and whose page the plan's `mainMenu[]` keeps as a child of that top-level item, is shown. When no kept block
+  already labels it, it is a writer slot (`menuItem-<n>.0`, `owner: "writer"`, role menu label), with the kit's own
+  `maxCharacters` for that slot, else the parent top-level slot's, and the plan child's `intent` as its note. When a
+  kept block labels it already, that one label stands: it is not asked twice.
+- every other main menu item (children the plan does not keep, items under a hidden item, every item under a hidden
+  top-level item, and the hidden top-level items themselves) is hidden.
+- a plan child whose page the kit does not know, or that opens no main menu item under its parent, is a problem
+  returned to the planner (a note on W02), never guessed.
+
+The hidden menu items are **not in the copy file**: they are not words, the writer does not own them, and code
+derives them from the plan and the content map every time. The contract mapping export (`contract-mapping.js`)
+carries them for step 9 in `extras.mainMenu.hide` (`{ item, slot, path, why }`), beside the whole menu with each
+item's final label; the dropdown labels themselves are ordinary slots in `mapping.changes`. A run stores the sha256
+of the content map it read in its frozen `kit` (`contentMapSha256`, null when the contract has none) and stops with
+`SITE_WRITER_CONTENT_MAP_CHANGED` when the file changed.
+
 ### 2. The copy notebook
 
 Per page: the main points made, the opening lines, the calls to action and the notable phrases used. The writer
@@ -60,9 +87,10 @@ A slot or page the writer cannot write truthfully from the plan's facts goes int
 writer never changes the plan (adds, drops or moves slots, pages or blocks). A returned slot may be absent from
 `slots` without failing W02. Returns are listed for the owner; nothing is sent back to the planner automatically.
 
-### 4. The copy check is `site-copy-check/2`
+### 4. The copy check is `site-copy-check/3`
 
-A pure module, `checkCopy({ copy, plan, kit, brief })`, in `apps/tracy-web/src/site-writer/copy-check/`. Same
+A pure module, `checkCopy({ copy, plan, kit, brief, contentMap })` (`contentMap` optional: without it no dropdown
+slot is derived), in `apps/tracy-web/src/site-writer/copy-check/`. Same
 calling shape and result shape as the plan checker: `{ meta, inputErrors, summary, rules: [{ id, title, status:
 pass|fail|skip, cause, causes, failures: [{ where, detail, cause }], notes }] }`. `failureListText(result)` gives one
 line per failure, `<rule id> | <title> | <where> | <detail>`, which is what a fix round sends back. It never throws:
@@ -72,7 +100,7 @@ on every run. Bump `CHECKER_VERSION` on any change to a rule, a threshold, a fai
 | Rule | Fails when |
 |---|---|
 | W01 | the file does not match section 1 (including the `pages` entries) |
-| W02 | a kept slot is missing (and not returned) or written twice; a hidden slot has text; a slot is unknown to the plan; a label differs from the plan's words; the owner does not match (label or not); a `pages` entry is missing (and not returned), written twice or unknown to the plan |
+| W02 | a kept slot is missing (and not returned) or written twice; a hidden slot has text; a slot is unknown to the plan; a label differs from the plan's words; the owner does not match (label or not); a `pages` entry is missing (and not returned), written twice or unknown to the plan; the plan gives one slot different text in two places (two labels, or a label and a writer slot) |
 | W03 | text is empty, over the limit, under the floor, or has more paragraphs than the kit allows; a `pages` title is over 60 characters or empty, or a `pages` paragraph is empty |
 | W04 | a number, time, price, phone, email or link is not in the facts the slot cites (a `pages` text cites no fact: see W04 details) |
 | W05 | a quoted review passage is not an exact passage of a review in the brief |
@@ -159,5 +187,5 @@ inputs.
 ## Consequences
 
 - The writer bench (#326) and the future write step read one stable file shape.
-- Every threshold above is a named constant; changing one is a deliberate `site-copy-check/2`.
+- Every threshold above is a named constant; changing one is a deliberate new checker version.
 - Judgement items (is the prose good, are emojis fine) stay with the owner reading real output.

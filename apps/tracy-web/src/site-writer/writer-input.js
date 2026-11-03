@@ -10,7 +10,11 @@
 //   list, its row slots and the slots of demo rows the row slots do not name. Also the footer column headings
 //   (the kit's navigation group of each `site.footerMenu[].group`) and the two name slots the brand step hands over
 //   (`kit.site.nameSlots` printed at the document title and the meta description).
+// - From the content map (when the template has one), the main menu dropdown slots the writer writes, grouped under
+//   their parent's label slot (main-menu.js).
 // No image: the writer reads the block look text instead.
+import { mainMenuOf } from './main-menu.js'
+
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 
@@ -142,11 +146,29 @@ const nameSlots = (kit) =>
     .filter((n) => isObject(n) && n.kind === 'printed' && HANDED_OVER_NAME_SLOTS.includes(n.where))
     .map((n) => ({ where: n.where, sample: n.sample ?? '' }))
 
+/** The dropdown slots to write, grouped under their parent's label slot, in menu order. */
+export function mainMenuSection(menu) {
+  const groups = new Map()
+  for (const s of menu.slots) {
+    const list = groups.get(s.parentSlot) ?? []
+    list.push({
+      slot: s.slot,
+      page: s.page,
+      intent: s.intent,
+      maxCharacters: s.maxCharacters,
+      sample: s.sample
+    })
+    groups.set(s.parentSlot, list)
+  }
+  return [...groups].map(([parent, dropdown]) => ({ parent, dropdown }))
+}
+
 /**
  * The writer's input.
- * @param {{ plan: object, brief: object, kit: object }} input `kit` is the kit document (template-kit.json)
+ * @param {{ plan: object, brief: object, kit: object, contentMap?: object | null }} input `kit` is the kit document
+ *   (template-kit.json); `contentMap` the content map beside it, when the template has one
  */
-export function writerInput({ plan, brief, kit }) {
+export function writerInput({ plan, brief, kit, contentMap = null }) {
   const facts = citedFacts(plan, brief)
   const blocks = new Map(
     arr(kit?.blocks)
@@ -165,7 +187,8 @@ export function writerInput({ plan, brief, kit }) {
       .filter((id) => blocks.has(id))
       .map((id) => slimBlock(blocks.get(id))),
     footerHeadings: footerHeadings(plan, kit),
-    nameSlots: nameSlots(kit)
+    nameSlots: nameSlots(kit),
+    mainMenu: mainMenuSection(mainMenuOf({ plan, kit, contentMap }))
   }
 }
 

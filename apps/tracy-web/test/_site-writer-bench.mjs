@@ -41,11 +41,17 @@ export function kit() {
   }
 }
 
-/** A contract index holding the invented kit, in a temporary folder; `done()` removes it. */
-export function kitIndex() {
+/**
+ * A contract index holding the invented kit, in a temporary folder; `done()` removes it. With `contentMap`, a
+ * content-map.json beside the kit, and `writeContentMap(value)` replaces it.
+ */
+export function kitIndex({ kitDoc = kit(), contentMap } = {}) {
   const dir = mkdtempSync(path.join(tmpdir(), 'site-writer-kit-'))
-  writeFileSync(path.join(dir, 'template-kit.json'), JSON.stringify(kit()))
+  writeFileSync(path.join(dir, 'template-kit.json'), JSON.stringify(kitDoc))
+  const writeContentMap = (value) => writeFileSync(path.join(dir, 'content-map.json'), JSON.stringify(value))
+  if (contentMap) writeContentMap(contentMap)
   return {
+    writeContentMap,
     index: new Map([[`demo-gym@1.0.0`, { id: KIT_REF, dir, platform: 'joomla' }]]),
     done: () => rmSync(dir, { recursive: true, force: true })
   }

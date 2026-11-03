@@ -22,8 +22,10 @@ export const finalCopyOf = (run) => run.rounds.findLast((r) => r.copy)?.copy ?? 
  * @param {object} run readRun's run with `plan`, `planSource` and `planSha256`
  * @param {object[]} turns
  * @param {object | null} kitDoc the kit document, for the mapping's paragraph and bullet format
+ * @param {object | null} [contentMap] the content map beside the kit: the mapping then carries the main menu labels
+ *   and the menu items to hide
  */
-export function runFiles(run, turns, kitDoc) {
+export function runFiles(run, turns, kitDoc, contentMap = null) {
   const json = (value) => `${JSON.stringify(value, null, 2)}\n`
   const { plan, ...meta } = run
   const files = shared.runFiles(meta, turns)
@@ -40,7 +42,9 @@ export function runFiles(run, turns, kitDoc) {
           contract,
           revision: `site-writer-run ${run.id}`,
           kit: kitDoc,
-          brief: run.brief
+          brief: run.brief,
+          plan,
+          contentMap
         })
       )
     ])

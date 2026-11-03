@@ -10,6 +10,7 @@ import { openKit } from '../lib/template-kit-source.js'
 import { briefOfRevision, cancelWriterRun, startWriterRun } from './bench-control.js'
 import { listLines, runFiles, standingLines, statusLines } from './bench-export.js'
 import { listRuns, planOf, readRun } from './bench-store.js'
+import { openContentMap } from './content-map-source.js'
 
 export const USAGE = `usage: node scripts/site-writer-bench.mjs <command>
   run --plan-file <path> --kit <ref> --brief-file <path>     queue a run on a plan and a brief JSON file
@@ -168,9 +169,10 @@ async function getRun(d, values, runId) {
   const { rows } = await d.pool.query('select * from site_writer_turn where run_id = $1 order by n', [run.id])
   const turns = rows.map((row) => ({ ...turnOf(row), round: row.round }))
   const kit = openKit(run.kitRef, d.index ? { index: d.index } : {})
+  const contentMap = openContentMap(run.kitRef, d.index ? { index: d.index } : {})
   const dir = path.resolve(d.cwd ?? process.cwd(), values.out)
   await mkdir(dir, { recursive: true })
-  const files = runFiles(run, turns, kit?.doc ?? null)
+  const files = runFiles(run, turns, kit?.doc ?? null, contentMap?.doc ?? null)
   for (const [name, text] of files) await writeFile(path.join(dir, name), text)
   d.out(`${files.length} files written: ${files.map(([name]) => name).join(', ')}`)
   if (run.balance) d.out(`balance ${balanceLine(run.balance)}`)

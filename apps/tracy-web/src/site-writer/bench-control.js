@@ -1,12 +1,14 @@
 // Starting and cancelling a site writer bench run (#329). A start checks everything a run needs before it is queued
 // (the plan's and the brief's shape, the kit, the door) and stores what the run will use, so a refused start leaves
-// nothing behind and an accepted one says exactly what it ran: plan, brief as used, kit, prompt hash, checker version,
+// nothing behind and an accepted one says exactly what it ran: plan, brief as used, kit (with the sha256 of the content
+// map beside it, null when there is none), prompt hash, checker version,
 // door snapshot (never the key) and harness settings, pages per turn among them (#330). The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } from './bench-store.js'
+import { openContentMap } from './content-map-source.js'
 import { CHECKER_VERSION } from './copy-check/check-copy.js'
 import { siteWriterDoor } from './door.js'
 import { writerPrompt } from './writer-prompt.js'
@@ -68,6 +70,10 @@ export async function startWriterRun({
   if (problems.length)
     return refuse('SITE_WRITER_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
   if (!openKit(kitRef, where)) return refuse('SITE_WRITER_KIT_UNKNOWN', `The kit ${kitRef} cannot be read.`)
+  // The content map beside the kit gives the main menu dropdowns; its hash is frozen with the kit (null: none).
+  const contentMap = openContentMap(kitRef, where)
+  if (contentMap?.invalid)
+    return refuse('SITE_WRITER_CONTENT_MAP', `The run cannot start: ${contentMap.invalid}.`)
   const door = await siteWriterDoor({ pool, secret })
   if (!door.ok) return refuse(door.code, door.reason)
   const active = await activeRun(pool)
@@ -78,7 +84,7 @@ export async function startWriterRun({
     planSource,
     brief,
     briefSource,
-    kit,
+    kit: { ...kit, contentMapSha256: contentMap?.sha256 ?? null },
     promptSha256: writerPrompt().sha256,
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,

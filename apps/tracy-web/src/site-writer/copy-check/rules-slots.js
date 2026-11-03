@@ -31,6 +31,13 @@ export function checkW02({ R, view, idx }) {
       R.w02.fail(id, `${id}: pages entry is missing`, 'missing')
     else R.w02.ok()
   }
+  for (const c of idx.labelConflicts ?? [])
+    R.w02.fail(
+      c.slot,
+      `${c.slot}: the plan gives this slot different text in two places: ${c.places.join(', ')}`,
+      'conflict'
+    )
+  for (const p of idx.menuProblems ?? []) R.w02.note(`main menu, return to planner: ${p.detail}`)
   const seen = new Set()
   for (const s of view.slots) {
     if (seen.has(s.slot)) continue

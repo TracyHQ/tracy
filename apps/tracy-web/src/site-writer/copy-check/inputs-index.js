@@ -1,5 +1,6 @@
 // Indexes the plan, the kit and the brief for the copy check rules (ADR 0042). Reads tolerantly: a missing or
 // oddly shaped part yields an empty index and never throws. Nothing here modifies an input.
+import { mainMenuOf, planCopyEntries } from '../main-menu.js'
 import { sentencesOf, stripEllipsis, textOfValue, wordsOf } from './text-tools.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
@@ -161,15 +162,67 @@ function indexDemo(kit, kitIdx) {
   return { sentences: [...new Set(sentences)], names: [...names] }
 }
 
-export function indexInputs({ plan, kit, brief }) {
+// Main menu dropdowns (ADR 0042, site-copy-check/3): the dropdown slots the writer owns become expected slots with
+// their limit and the plan child's intent; their kit entry is added when the kit blocks do not list them.
+function indexMainMenu(menu, kitIdx, planIdx) {
+  for (const s of menu.slots) {
+    if (planIdx.expected.has(s.slot)) continue
+    planIdx.expected.set(s.slot, {
+      slot: s.slot,
+      says: s.intent,
+      factIds: [],
+      label: null,
+      maxCharacters: s.maxCharacters,
+      isReview: false
+    })
+    planIdx.hidden.delete(s.slot)
+    if (!kitIdx.slots.has(s.slot))
+      kitIdx.slots.set(s.slot, {
+        id: s.slot,
+        type: 'text',
+        role: 'editorial.menu_label',
+        paragraphs: 1,
+        bullets: 0,
+        sample: s.sample,
+        maxCharacters: s.maxCharacters
+      })
+  }
+}
+
+// Slots the plan words differently in two places (two labels that differ, or a label in one block and a writer slot
+// in another): one slot holds one text, so the plan contradicts itself there.
+function labelConflicts(plan) {
+  const bySlot = new Map()
+  for (const e of planCopyEntries(plan)) {
+    const list = bySlot.get(e.slot) ?? []
+    if (!list.some((x) => x.text === e.text)) list.push(e)
+    bySlot.set(e.slot, list)
+  }
+  return [...bySlot]
+    .filter(([, list]) => list.length > 1)
+    .map(([slot, list]) => ({
+      slot,
+      places: list
+        .map((e) => `${e.block} ${e.text === null ? '(written by the writer)' : `"${e.text}"`}`)
+        .sort()
+    }))
+}
+
+export function indexInputs({ plan, kit, brief, contentMap }) {
   const kitIdx = indexKit(kit)
   const headings = indexFooterHeadings(plan, kit, kitIdx)
   const facts = new Map()
   for (const f of arr(brief?.facts))
     if (isObject(f) && typeof f.id === 'string') facts.set(f.id, textOfValue(f.value))
+  const planIdx = indexPlan(plan, kitIdx, headings)
+  const menu =
+    contentMap === undefined ? { slots: [], hidden: [], problems: [] } : mainMenuOf({ plan, kit, contentMap })
+  indexMainMenu(menu, kitIdx, planIdx)
   return {
     kitSlots: kitIdx.slots,
-    ...indexPlan(plan, kitIdx, headings),
+    ...planIdx,
+    menuProblems: menu.problems,
+    labelConflicts: labelConflicts(plan),
     facts,
     reviews: reviewTexts(brief),
     demo: indexDemo(kit, kitIdx)
