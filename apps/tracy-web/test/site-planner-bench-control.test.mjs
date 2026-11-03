@@ -236,7 +236,7 @@ test('Claude Sonnet 5.5, an alternative planner model, runs on the anthropic pro
   assert.deepEqual(benchHarnessFor('anthropic/claude-opus-5.5', 'openrouter'), h)
 })
 
-test("the deepseek-v4-pro-native profile: DeepSeek's wire, no images, effort high, 128000 out, an assumed price table", () => {
+test("the deepseek-v4-pro-native profile: DeepSeek's wire, no images, effort high, 128000 out, DeepSeek's peak and off-peak prices", () => {
   const h = benchHarnessFor(DEEPSEEK_PRO, 'deepseek')
   assert.equal(h.modelProfile, 'deepseek-v4-pro-native')
   assert.equal(h.wire, 'deepseek-native')
@@ -245,8 +245,33 @@ test("the deepseek-v4-pro-native profile: DeepSeek's wire, no images, effort hig
   assert.equal(h.effort, 'high')
   assert.equal(h.maxTokens, 128000)
   assert.equal(h.provider, undefined)
-  assert.deepEqual(h.price, { inputCacheHit: 0.1, inputCacheMiss: 1, output: 2.5 })
+  // DeepSeek's pricing page (03/11/2026), USD per million tokens; peak 01-04 and 06-10 UTC, Monday to Friday.
+  assert.deepEqual(h.price, {
+    peak: { inputCacheHit: 0.044, inputCacheMiss: 1.32, output: 3.96 },
+    offPeak: { inputCacheHit: 0.022, inputCacheMiss: 0.66, output: 1.98 },
+    peakUtc: {
+      weekdays: [1, 2, 3, 4, 5],
+      hours: [
+        [1, 4],
+        [6, 10]
+      ]
+    }
+  })
   assert.deepEqual(h.price, DEEPSEEK_V4_PRO_PRICE)
+  assert.deepEqual(DEEPSEEK_FLASH_PRICE, {
+    peak: { inputCacheHit: 0.006, inputCacheMiss: 0.3, output: 1.2 },
+    offPeak: { inputCacheHit: 0.003, inputCacheMiss: 0.15, output: 0.6 },
+    peakUtc: {
+      weekdays: [1, 2, 3, 4, 5],
+      hours: [
+        [1, 4],
+        [6, 10]
+      ]
+    }
+  })
+  // Every run is guarded by a budget and, when it reads with tools, by the write step.
+  assert.equal(h.budgetUsd, 2)
+  assert.equal(h.writeAfterToolTurns, 20)
   assert.equal(sendsImages(DEEPSEEK_PRO, 'deepseek'), false)
   assert.equal(sendsImages(MODEL, 'openrouter'), true)
   assert.equal(benchHarnessFor(DEEPSEEK_PRO, 'openrouter').modelProfile, 'other')

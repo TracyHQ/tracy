@@ -2218,6 +2218,10 @@ endpoint**.
 - **The model** is called through the `sitePlanner` door (`/ops` › Model & AI, OpenRouter) by
   [`agent-over-door.js`](apps/tracy-web/src/lib/agent-over-door.js): an OpenAI-compatible `/chat/completions` tool loop
   with high reasoning effort, reasoning details sent back, a rolling cache marker, and the provider's own cost per call.
+  A run whose model reads no pictures (DeepSeek V4 Pro on DeepSeek's own API) gets the whole kit in its first message and
+  no tools; a run that reads with tools is told to write after 20 reading calls or a read of parts it already had. Every
+  run stops past its cost budget (2 USD by default). On DeepSeek's own API the bench also reads the account balance
+  (`GET /user/balance`) before and after a run and stores it on the run.
 - **Kit images** ([`kit-images.js`](apps/tracy-web/src/site-planner/kit-images.js)): the first time a kit version is needed,
   tracy-web **downloads the kit zip from GitHub** (the `template-kit-<template>-<version>.zip` asset of the kit's quickstart
   release, found through `quickstart_releases`, read with the releases credential), checks every image against the sha256 the

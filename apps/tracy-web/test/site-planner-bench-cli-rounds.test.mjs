@@ -120,10 +120,11 @@ test('status shows the call in flight: what a streamed call has received and how
 
 test('a run never fixed: get writes three versions and the failures still standing', opts, async () => {
   const id = await finishedRun([
-    toolCallReply({ calls: [['read_kit_part', { id: 'contents' }]], usage: usageOf({ cost: 0.5 }) }),
-    finalReply({ content: JSON.stringify(badPlan()), usage: usageOf({ cost: 1 }) }),
-    finalReply({ content: JSON.stringify(badPlan()), usage: usageOf({ cost: 1 }) }),
-    finalReply({ content: JSON.stringify(badPlan()), usage: usageOf({ cost: 1 }) })
+    // Invented costs, under the run's budget (BENCH_HARNESS.budgetUsd).
+    toolCallReply({ calls: [['read_kit_part', { id: 'pageGroups' }]], usage: usageOf({ cost: 0.25 }) }),
+    finalReply({ content: JSON.stringify(badPlan()), usage: usageOf({ cost: 0.5 }) }),
+    finalReply({ content: JSON.stringify(badPlan()), usage: usageOf({ cost: 0.5 }) }),
+    finalReply({ content: JSON.stringify(badPlan()), usage: usageOf({ cost: 0.5 }) })
   ])
   const status = await cli('status', id)
   assert.match(status.out, /state\s+succeeded \(after round 2\)/)
@@ -167,10 +168,10 @@ test('a run never fixed: get writes three versions and the failures still standi
   assert.deepEqual(
     turns.map((t) => [t.n, t.round, t.costUsd, t.runningCostUsd]),
     [
-      [0, 0, 0.5, 0.5],
-      [1, 0, 1, 1.5],
-      [2, 1, 1, 2.5],
-      [3, 2, 1, 3.5]
+      [0, 0, 0.25, 0.25],
+      [1, 0, 0.5, 0.75],
+      [2, 1, 0.5, 1.25],
+      [3, 2, 0.5, 1.75]
     ]
   )
   assert.ok(turns.every((t) => t.dispatchedAt && t.answeredAt))

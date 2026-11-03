@@ -2,6 +2,8 @@
 // and its turns in, text and files out. Nothing here carries a key: the door snapshot names the provider and model,
 // never the credential, and a turn is summarised (tool calls, sizes, usage, cost), not copied.
 
+import { balanceLine } from './provider-balance.js'
+
 const usd = (value) => `$${Number(value ?? 0).toFixed(4)}`
 
 function duration(run, now) {
@@ -68,6 +70,7 @@ export function statusLines(run, now = Date.now()) {
       'cost',
       `${usd(run.costUsd)} (cached tokens ${run.totals.cachedTokens}, without cost ${run.totals.turnsWithoutCost})`
     ],
+    ...(run.balance ? [['balance', balanceLine(run.balance)]] : []),
     ['duration', duration(run, now)],
     ...(run.status === 'queued' && run.inFlight ? [['call', inFlightLine(run.inFlight, now)]] : []),
     ['checker', checkerLine(run)],
@@ -119,6 +122,7 @@ export function compactTurn(turn, runningCostUsd = null) {
     usage: turn.usage ?? null,
     costUsd: turn.cost ?? null,
     ...(turn.costSource ? { costSource: turn.costSource } : {}),
+    ...(turn.request?.priceRate ? { priceRate: turn.request.priceRate } : {}),
     runningCostUsd,
     ...(turn.resendOf !== undefined ? { resendOf: turn.resendOf } : {}),
     ...(turn.retries?.length ? { retries: turn.retries } : {}),

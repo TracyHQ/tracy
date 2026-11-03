@@ -8,6 +8,7 @@ import { briefOfRevision, cancelBenchRun, startBenchRun } from './bench-control.
 import { listLines, runFiles, standingLines, statusLines } from './bench-export.js'
 import { listRuns, readRun, turnOf } from './bench-store.js'
 import { openKit, readableKits } from './kit-source.js'
+import { balanceLine } from './provider-balance.js'
 
 export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
   kits                                    list the kits the server can read, and whether their images are ready
@@ -177,6 +178,7 @@ async function getRun(d, values, runId) {
   const files = runFiles(run, turns)
   for (const [name, text] of files) await writeFile(path.join(dir, name), text)
   d.out(`${files.length} files written: ${files.map(([name]) => name).join(', ')}`)
+  if (run.balance) d.out(`balance ${balanceLine(run.balance)}`)
   const standing = standingLines(run)
   if (!standing.length) d.out(run.status === 'queued' ? 'still running' : 'no failures standing')
   else {

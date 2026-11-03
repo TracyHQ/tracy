@@ -22,7 +22,8 @@ after(db.close)
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const quiet = { error() {}, warn() {}, log() {} }
 
-const reply = (value, cost = 1) =>
+// Invented costs stay well under the run's budget (BENCH_HARNESS.budgetUsd).
+const reply = (value, cost = 0.1) =>
   finalReply({ content: typeof value === 'string' ? value : JSON.stringify(value), usage: usageOf({ cost }) })
 const lastUserText = (request) => {
   const m = request.body.messages.at(-1)

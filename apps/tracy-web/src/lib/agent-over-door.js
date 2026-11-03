@@ -22,7 +22,18 @@
 // their own, such as DeepSeek); provider is OpenRouter's provider routing object, sent as is. wire 'deepseek-native'
 // talks to DeepSeek's own API (agent-over-door-wire.js): its reasoning_content is saved and sent back the same way.
 // price (USD per million tokens) computes each turn's cost from its tokens, for a provider that reports none; such a
-// turn carries costSource 'price-table'. A cancel (signal) is honoured between turns only; a call in flight is never cut.
+// turn carries costSource 'price-table'. A timed price (agent-over-door-wire.js priceAt) picks its peak or off-peak
+// table by the UTC time the call is dispatched; the turn's request keeps the table used and `priceRate`. A cancel
+// (signal) is honoured between turns only; a call in flight is never cut.
+//
+// Guards. budgetUsd: before each call, a conversation whose answered turns already cost more than this stops with
+// AGENT_BUDGET (turns without a cost count as nothing). maxTurns bounds the number of calls. writeStep
+// ({ afterToolTurns, message }) ends the reading: once the conversation has `afterToolTurns` answers that called
+// tools, or an answer whose every tool call was answered as a repeat (a tool result with `repeated: true`), the
+// message goes out as a user message after the tool results, and from then on every request of the conversation
+// carries tool_choice "none", so the next answer must be the final one. Whether a request carries it is read from the
+// conversation itself (the message was sent), so a resumed run decides the same. A tool's run gets a second argument,
+// { call }: the number of the turn whose answer made the call.
 //
 // The deepseek-native wire is streamed (agent-over-door-call.js): the answer is put back together into the same
 // message an unstreamed call returns, a call silent for idleMs is cut and retried, and onProgress(progress) hears every
@@ -47,7 +58,8 @@ import {
   costOf,
   IMAGE_REF,
   imageRefKey,
-  isPriceTable,
+  isPrice,
+  priceAt,
   requestBody,
   savedAssistant,
   streams,
@@ -99,6 +111,7 @@ export async function runAgent({
   resolveImage,
   sleep,
   random,
+  clock = () => new Date(),
   ...options
 }) {
   const o = {
@@ -127,9 +140,24 @@ export async function runAgent({
     throw new AgentError('AGENT_SETTINGS_INVALID', {
       reason: 'callTimeoutMs, idleMs and progressMs must be positive milliseconds'
     })
-  if (o.price !== undefined && !isPriceTable(o.price))
+  if (o.price !== undefined && !isPrice(o.price))
     throw new AgentError('AGENT_SETTINGS_INVALID', {
-      reason: 'price needs inputCacheHit, inputCacheMiss and output, USD per million tokens'
+      reason:
+        'price needs inputCacheHit, inputCacheMiss and output, USD per million tokens, or peak, offPeak and peakUtc'
+    })
+  if (o.budgetUsd !== undefined && !(Number.isFinite(o.budgetUsd) && o.budgetUsd > 0))
+    throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'budgetUsd must be a positive number of USD' })
+  if (
+    o.writeStep !== undefined &&
+    !(
+      Number.isInteger(o.writeStep?.afterToolTurns) &&
+      o.writeStep.afterToolTurns > 0 &&
+      typeof o.writeStep.message === 'string' &&
+      o.writeStep.message !== ''
+    )
+  )
+    throw new AgentError('AGENT_SETTINGS_INVALID', {
+      reason: 'writeStep needs afterToolTurns (a positive whole number) and a message'
     })
   if (!door?.baseUrl || !door?.apiKey || !door?.model)
     throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'the door needs baseUrl, apiKey and model' })
@@ -139,14 +167,26 @@ export async function runAgent({
   const { messages, pending: rebuilt, final, resendOf } = rebuild(turns, firstUser)
   const pending = final && followUp ? [{ role: 'user', content: followUp }] : rebuilt
   if (final && !pending) return { answer: final, turns, totals: totalsOf(turns) }
-  let next = pending ?? (await runTools(turns.at(-1).message.tool_calls, tools, o.toolImages, images))
+  let next = pending ?? (await toolTurn(turns.at(-1)))
 
   for (;;) {
     if (signal?.aborted) throw new AgentError('AGENT_ABORTED', { turn: turns.length })
     if (turns.length >= o.maxTurns)
       throw new AgentError('AGENT_TURN_LIMIT', { reason: `${o.maxTurns} model calls` })
+    const spent = totalsOf(turns).cost
+    if (o.budgetUsd !== undefined && spent > o.budgetUsd)
+      throw new AgentError('AGENT_BUDGET', {
+        turn: turns.length,
+        reason: `the conversation has cost $${spent.toFixed(4)}, past its budget of $${o.budgetUsd.toFixed(2)}`
+      })
+    const toolChoice =
+      tools.length && o.writeStep && sentWriteStep([...messages, ...next], o.writeStep.message)
+        ? 'none'
+        : undefined
     const wire = await images.hydrate([...messages, ...next], turns.length)
-    const body = requestBody({ model: door.model, system, messages: wire, tools, ...o })
+    const body = requestBody({ model: door.model, system, messages: wire, tools, ...o, toolChoice })
+    const dispatchedAt = clock()
+    const priced = o.price ? priceAt(o.price, dispatchedAt) : null
     const turn = {
       n: turns.length,
       state: 'dispatched',
@@ -161,18 +201,20 @@ export async function runAgent({
         ...(o.provider ? { provider: o.provider } : {}),
         ...(o.wire !== 'openrouter' ? { wire: o.wire } : {}),
         ...(streams(o.wire) ? { stream: true, idleMs: o.idleMs } : {}),
-        ...(o.price ? { price: o.price } : {}),
+        ...(priced ? { price: priced.table } : {}),
+        ...(priced?.rate ? { priceRate: priced.rate } : {}),
         tools: tools.map((t) => t.name),
+        ...(toolChoice ? { toolChoice } : {}),
         messages: messages.length + next.length + 1
       },
-      dispatchedAt: new Date().toISOString(),
+      dispatchedAt: dispatchedAt.toISOString(),
       ...(resendOf !== undefined && turns.length === resendOf + 1 ? { resendOf } : {})
     }
     turns.push(turn)
     await onTurn(structuredClone(turn))
     const report = progressReport(onProgress, turn.n)
     const attempt = () =>
-      callModel(door, body, { ...o, fetchImpl, n: turn.n, price: o.price, progress: report.progress })
+      callModel(door, body, { ...o, fetchImpl, n: turn.n, price: priced?.table, progress: report.progress })
     const { answer, retries } = await withRetries(attempt, { policy: o.retry, sleep, random }).catch(
       async (error) => {
         await report.settled()
@@ -201,8 +243,8 @@ export async function runAgent({
       generationId: answer.id ?? null,
       providerModel: answer.model ?? null,
       usage: withFailedUsage(usageOf(answer.usage), retries),
-      cost: withFailedCost(costOf(answer.usage, o.price), retries),
-      ...(o.price ? { costSource: 'price-table' } : {}),
+      cost: withFailedCost(costOf(answer.usage, priced?.table), retries),
+      ...(priced ? { costSource: 'price-table' } : {}),
       retries,
       ...(typeof choice.message.refusal === 'string' && choice.message.refusal
         ? { refusal: choice.message.refusal }
@@ -214,8 +256,43 @@ export async function runAgent({
     const outcome = outcomeOf(turn)
     if (outcome.error) throw outcome.error
     if (outcome.final !== undefined) return { answer: outcome.final, turns, totals: totalsOf(turns) }
-    next = await runTools(turn.message.tool_calls, tools, o.toolImages, images)
+    next = await toolTurn(turn)
   }
+
+  // The tool results that answer one turn's tool calls, followed by the write step's message when its rule says the
+  // reading is over and the message has not gone out yet (see the header).
+  async function toolTurn(turn) {
+    const { results, allRepeated } = await runTools(
+      turn.message.tool_calls,
+      tools,
+      o.toolImages,
+      images,
+      turn.n
+    )
+    if (!o.writeStep || sentWriteStep(messages, o.writeStep.message)) return results
+    const toolTurns = turns.filter((t) => t.state === 'answered' && t.message?.tool_calls?.length).length
+    if (toolTurns < o.writeStep.afterToolTurns && !allRepeated) return results
+    return withUserText(results, o.writeStep.message)
+  }
+}
+
+// Whether the conversation already holds the write step's message, as a user message or a text part of one.
+function sentWriteStep(messages, message) {
+  return messages.some(
+    (m) =>
+      m.role === 'user' &&
+      (m.content === message ||
+        (Array.isArray(m.content) && m.content.some((p) => p?.type === 'text' && p.text === message)))
+  )
+}
+
+// A user text after the tool results: added to the user message that already follows them (the tool images), so two
+// user messages never follow each other.
+function withUserText(results, text) {
+  const last = results.at(-1)
+  if (last?.role === 'user' && Array.isArray(last.content))
+    return [...results.slice(0, -1), { ...last, content: [...last.content, { type: 'text', text }] }]
+  return [...results, { role: 'user', content: text }]
 }
 
 // What a streamed call has received so far, handed to onProgress without holding up the read: a report still being
@@ -334,10 +411,12 @@ function withFailedCost(cost, retries) {
   return Math.round(failed.reduce((sum, c) => sum + c, cost ?? 0) * 1e9) / 1e9
 }
 
-// One tool message per call, in call order; images go inline or into one user message after them.
-async function runTools(calls, tools, toolImages, cache) {
+// One tool message per call, in call order; images go inline or into one user message after them. allRepeated: every
+// call was answered by its tool as a repeat of what this conversation already holds.
+async function runTools(calls, tools, toolImages, cache, call) {
   const out = []
   const later = []
+  let repeats = 0
   for (const c of calls) {
     const tool = tools.find((t) => t.name === c?.function?.name)
     let result
@@ -353,11 +432,12 @@ async function runTools(calls, tools, toolImages, cache) {
         result = JSON.stringify({ error: 'INVALID_ARGUMENTS', tool: tool.name })
       else
         result = await Promise.resolve()
-          .then(() => tool.run(args))
+          .then(() => tool.run(args, { call }))
           .catch((e) =>
             JSON.stringify({ error: 'TOOL_FAILED', tool: tool.name, detail: String(e?.message ?? e) })
           )
     }
+    if (result?.repeated === true) repeats++
     const { text, images } = toolContent(result)
     for (const image of images) cache.remember(image.stored, image.wire)
     const stored = images.map((image) => image.stored)
@@ -371,5 +451,5 @@ async function runTools(calls, tools, toolImages, cache) {
       later.push({ type: 'text', text: `Images returned by tool call ${c.id} (${tool.name}):` }, ...stored)
   }
   if (later.length) out.push({ role: 'user', content: later })
-  return out
+  return { results: out, allRepeated: calls.length > 0 && repeats === calls.length }
 }

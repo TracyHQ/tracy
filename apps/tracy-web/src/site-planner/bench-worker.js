@@ -23,12 +23,22 @@
 // whose images do not match the kit fails the run with that code and reason. A model the door gives no images (a
 // text-only model on a kit with every look, door.js) skips this and is offered no image tool. The saved turns keep a reference for
 // each opened image, and the images are read back from the cache when the run resumes or a fix round replays them.
+//
+// A model given no images reads no part either: its first message carries the whole kit (kit-source.js
+// preloadedFirstMessage) and the run sends no tools, so its first answer is the plan. A run that reads with tools gets
+// the write step: after the harness's writeAfterToolTurns answers that called a tool, or an answer that only re-read
+// parts already sent, WRITE_STEP_MESSAGE goes out and every later request carries tool_choice "none". A run whose
+// answered calls cost more than the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
+//
+// On DeepSeek's own API the provider balance is read before the first model call of the run and again when the run
+// ends (provider-balance.js), and both are stored on the run; a failed read is recorded and never stops the run.
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { AgentError, runAgent } from '../lib/agent-over-door.js'
 import {
   abandonTurn,
   roundSent,
   roundsOf,
+  saveBalance,
   saveRound,
   saveTurn,
   saveTurnProgress,
@@ -38,8 +48,16 @@ import {
 } from './bench-store.js'
 import { sitePlannerDoor } from './door.js'
 import { kitImagesFor } from './kit-images.js'
-import { firstUserMessage, kitTools, openKit } from './kit-source.js'
+import {
+  FIRST_MESSAGE_PARTS,
+  firstUserMessage,
+  kitTools,
+  openKit,
+  preloadedFirstMessage,
+  WRITE_PLAN_INSTRUCTION
+} from './kit-source.js'
 import { oversizedReplacements, smallEditsMessage } from './plan-change-size.js'
+import { readBalance, readsBalance } from './provider-balance.js'
 import {
   applyChanges,
   CHANGES_INSTRUCTION,
@@ -57,6 +75,9 @@ export const MAX_FIX_ROUNDS = 2
 export const NOT_A_PLAN_MESSAGE =
   'Your answer is not a plan. Answer with the whole plan as one JSON object, with nothing before or after it.\n'
 
+/** What a run that reads with tools is told once it has read enough (the write step). */
+export const WRITE_STEP_MESSAGE = `You have read enough of the kit: everything you need is in this conversation, and no more tool calls are possible. ${WRITE_PLAN_INSTRUCTION}`
+
 /** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
 export const BENCH_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })
 
@@ -72,15 +93,16 @@ const HARNESS_KEYS = [
   'idleMs',
   'retry',
   'wire',
-  'price'
+  'price',
+  'budgetUsd'
 ]
 
 class LeaseLost extends Error {}
 
 /**
  * @param {{ pool: import('pg').Pool, secret: string, config: any, fetchImpl?: typeof fetch,
- *   index?: Map<string, object>, kitImages?: { ensure: Function }, log?: Console, now?: () => number,
- *   retry?: object }} deps
+ *   balanceFetch?: typeof fetch, index?: Map<string, object>, kitImages?: { ensure: Function }, log?: Console,
+ *   now?: () => number, retry?: object }} deps `balanceFetch` reads the provider balance (fetchImpl unless given)
  *   `config` locates the image cache and the releases credential; `kitImages` replaces the release zips (tests);
  *   `retry` replaces the run's retry policy (tests that kill the process mid call, which no retry may outlive).
  */
@@ -89,6 +111,7 @@ export function createSitePlannerQueue({
   secret,
   config,
   fetchImpl = fetch,
+  balanceFetch = fetchImpl,
   index,
   kitImages = kitImagesFor({ pool, config, fetchImpl }),
   log = console,
@@ -103,7 +126,8 @@ export function createSitePlannerQueue({
     ...BENCH_QUEUE,
     log,
     ...(now ? { now } : {}),
-    run: (row, lease) => runBenchRun({ pool, secret, fetchImpl, index, kitImages, retry }, row, lease)
+    run: (row, lease) =>
+      runBenchRun({ pool, secret, fetchImpl, balanceFetch, index, kitImages, retry }, row, lease)
   })
 }
 
@@ -133,16 +157,29 @@ export async function runBenchRun(deps, row, lease) {
     }
     const ready = await prepare(deps, row)
     if (!ready.ok) return end('failed', `${ready.code}: ${ready.reason}`)
+    const balance = (side) =>
+      readsBalance(ready.door)
+        ? // A record, not a gate: a write refused (side already read, or a stale lease) changes nothing.
+          readBalance(ready.door, { fetchImpl: deps.balanceFetch ?? deps.fetchImpl }).then((read) =>
+            saveBalance(pool, { runId, side, balance: read, leaseToken })
+          )
+        : null
+    const ended = async (...verdict) => {
+      await balance('after')
+      return end(...verdict)
+    }
+    // Read once per run: a resumed run keeps the balance read before its first call (saveBalance never replaces it).
+    if (!row.balance?.before) await balance('before')
     for (;;) {
       const next = await nextRound(pool, runId)
-      if (next.end) return end(...next.end)
+      if (next.end) return ended(...next.end)
       const { round, followUp, base, reading } = next
       // A cancel asked during the last call of a round ends the run before the next round opens.
-      if (round > 0 && next.opening && (await cancelAsked(pool, runId))) return end('cancelled')
+      if (round > 0 && next.opening && (await cancelAsked(pool, runId))) return ended('cancelled')
       await must(setProgress(pool, { runId, step: round ? 'fixing' : 'planning', round, leaseToken }))
       if (next.opening) await must(saveRound(pool, { runId, round, state: 'planning', leaseToken }))
-      const ended = await playRound(deps, { row, ready, round, followUp, base, reading, leaseToken, must })
-      if (ended) return end(...ended)
+      const verdict = await playRound(deps, { row, ready, round, followUp, base, reading, leaseToken, must })
+      if (verdict) return ended(...verdict)
     }
   } catch (error) {
     if (error instanceof LeaseLost) return false
@@ -278,12 +315,29 @@ async function ask(deps, { row, ready, round, history, followUp, leaseToken, mus
   const { pool } = deps
   const runId = row.id
   const stop = new AbortController()
+  // A model given no images gets the whole kit and no tools; a run that already went out with tools (saved before the
+  // kit was preloaded) keeps them, since its conversation holds tool calls.
+  const preloaded = !ready.images && (history.length === 0 || !history[0].request?.tools?.length)
+  const imageTool = Boolean(ready.images)
+  const writeAfter = row.harness?.writeAfterToolTurns
   try {
     return await runAgent({
       door: ready.door,
       system: ready.prompt.text,
-      firstUser: firstUserMessage({ kit: ready.kit, brief: row.brief, imageTool: Boolean(ready.images) }),
-      tools: kitTools(ready.kit.doc, { images: ready.images, imageTool: Boolean(ready.images) }),
+      firstUser: preloaded
+        ? preloadedFirstMessage({ kit: ready.kit, brief: row.brief })
+        : firstUserMessage({ kit: ready.kit, brief: row.brief, imageTool }),
+      tools: preloaded
+        ? []
+        : kitTools(ready.kit.doc, {
+            images: ready.images,
+            imageTool,
+            history,
+            inFirstMessage: FIRST_MESSAGE_PARTS
+          }),
+      ...(!preloaded && writeAfter
+        ? { writeStep: { afterToolTurns: writeAfter, message: WRITE_STEP_MESSAGE } }
+        : {}),
       resolveImage: ready.images?.resolve,
       history,
       followUp,
@@ -301,6 +355,7 @@ async function ask(deps, { row, ready, round, history, followUp, leaseToken, mus
   } catch (error) {
     if (!(error instanceof AgentError)) throw error
     if (error.code === 'AGENT_ABORTED') return { ended: ['cancelled'] }
+    if (error.code === 'AGENT_BUDGET') return { ended: ['failed', `SITE_PLANNER_BUDGET: ${error.reason}`] }
     return { ended: ['failed', error.message] }
   }
 }

@@ -203,3 +203,14 @@
   10k of reasoning, 12s since last byte"). The OpenRouter wire (Claude) stays unstreamed: its `reasoning_details`
   carry Anthropic thinking signatures that must come back byte for byte, and how OpenRouter splits them over chunks
   cannot be proven equal to the unstreamed shape without a paid call.
+- **A text-only planner gets the whole kit at once; every run is guarded (03/11/2026).** A measured DeepSeek V4 Pro run
+  read kit parts for 85 calls, re-reading parts it had (prompt 170k to 555k tokens), and never wrote a plan; with tools
+  in a request DeepSeek adds every earlier turn's reasoning to the context. A run whose model is given no images now
+  sends no tools: its first message is the kit block (the whole planner view of the kit, the same bytes for every run on
+  that kit version, so DeepSeek's prefix cache can reuse it), then the brief, then an instruction to write the plan in
+  one fenced json block (about 790k characters on JA Boxing 1.0.10). A run that reads with tools gets `contents` in its
+  first message, a short "already sent in call N" for a part read twice, and `tool_choice: "none"` with the same
+  instruction after 20 reading answers or one made only of repeats. A run past 2.00 USD stops with
+  `SITE_PLANNER_BUDGET`. DeepSeek turns are costed at its published peak or off-peak price by UTC dispatch time
+  (holidays ignored), and a DeepSeek run records the account balance before and after (migration 194). The approved
+  prompt is unchanged.

@@ -96,7 +96,7 @@ test(
     await assignPlannerDoor(pool)
     const started = await startRun(pool)
     const before = toolCallReply({
-      calls: [['read_kit_part', { id: 'contents' }]],
+      calls: [['read_kit_part', { id: 'pageGroups' }]],
       usage: usageOf({ cost: 0.5 })
     })
     await killedAfter(pool, started.id, [before], { dieAt: { n: 1, state: 'dispatched' } })
@@ -126,7 +126,7 @@ test('a call dispatched without an answer is abandoned and sent once more', opts
   await assignPlannerDoor(pool)
   const started = await startRun(pool)
   const before = toolCallReply({
-    calls: [['read_kit_part', { id: 'contents' }]],
+    calls: [['read_kit_part', { id: 'pageGroups' }]],
     usage: usageOf({ cost: 0.5 })
   })
   await killedAfter(pool, started.id, [before], { dieAt: { n: 0, state: 'answered' } })
@@ -158,7 +158,7 @@ test('a resend lost again fails the run with AGENT_TURN_UNANSWERED', opts, async
   const { pool } = db
   await assignPlannerDoor(pool)
   const started = await startRun(pool)
-  await killedAfter(pool, started.id, [toolCallReply({ calls: [['read_kit_part', { id: 'contents' }]] })], {
+  await killedAfter(pool, started.id, [toolCallReply({ calls: [['read_kit_part', { id: 'pageGroups' }]] })], {
     dieAt: { n: 0, state: 'answered' }
   })
   await drain(pool, scriptedModel([]), { killOn: 1 })
@@ -248,7 +248,7 @@ test('a cancel asked while the run had no worker ends it on the next claim, with
   const { pool } = db
   await assignPlannerDoor(pool)
   const started = await startRun(pool)
-  const before = toolCallReply({ calls: [['read_kit_part', { id: 'contents' }]] })
+  const before = toolCallReply({ calls: [['read_kit_part', { id: 'pageGroups' }]] })
   await killedAfter(pool, started.id, [before], { dieAt: { n: 1, state: 'dispatched' } })
   await pool.query('update site_planner_run set cancel_requested_at = now() where id = $1', [started.id])
   await pool.query(

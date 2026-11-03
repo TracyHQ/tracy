@@ -7,6 +7,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import {
   compactForPlanner,
+  FIRST_MESSAGE_PARTS,
   firstUserMessage,
   lookTextOf,
   KIT_TOOL_NAMES,
@@ -14,8 +15,11 @@ import {
   kitTools,
   openKit,
   PLANNER_DROPPED_KIT_FIELDS,
+  preloadedFirstMessage,
+  preloadedKitBlock,
   READ_MANY_LIMIT,
-  readableKits
+  readableKits,
+  WRITE_PLAN_INSTRUCTION
 } from '../src/site-planner/kit-source.js'
 import { plannerPrompt } from '../src/site-planner/planner-prompt.js'
 import { brief } from './_site-plan-check-inputs.mjs'
@@ -273,22 +277,26 @@ test('read_kit_part reads by id, refuses a missing id, and open_kit_image withou
   assert.equal(JSON.parse(await openImage.run({ id: 'nothing-1440' })).known, false)
 })
 
-test('the first user message explains the two tools, then gives the brief; the prompt stays as approved', () => {
+test('the first user message explains the two tools, then gives the kit contents, then the brief; the prompt stays as approved', () => {
   const kit = boxing()
   const b = brief()
   const text = firstUserMessage({ kit, brief: b })
   assert.match(text, /read_kit_part/)
   assert.match(text, /open_kit_image/)
   assert.match(text, /"the image tool"[^.]*open_kit_image/)
-  assert.match(text, /read_kit_part\(\{"ids": \["contents"\]\}\)|read_kit_part\("contents"\)/)
   assert.match(text, /part by part/)
+  assert.match(text, /sent once per conversation/)
   assert.doesNotMatch(text, /one id per call/)
   assert.match(text, /several/)
   assert.match(text, /same turn/)
   assert.ok(text.includes(REF), 'the message does not name the kit')
-  const at = text.indexOf('{"')
-  assert.ok(at > text.indexOf('open_kit_image'), 'the brief comes before the tools are explained')
-  assert.equal(text.slice(at), JSON.stringify(b), 'the brief is not compact JSON')
+  // The kit before the brief: the tools, then "contents" as compact JSON, then the brief, which closes the message.
+  const contents = JSON.stringify(kitParts(kit.doc).contents)
+  const at = text.indexOf(contents)
+  assert.ok(at > text.indexOf('open_kit_image'), 'the contents come before the tools are explained')
+  assert.ok(text.endsWith(JSON.stringify(b)), 'the brief is not compact JSON at the end')
+  assert.ok(at < text.lastIndexOf(JSON.stringify(b)), 'the brief comes before the kit contents')
+  assert.deepEqual(FIRST_MESSAGE_PARTS, ['contents'])
 
   const prompt = plannerPrompt()
   assert.ok(prompt.sha256.startsWith('b48800fb'))
@@ -412,4 +420,72 @@ test('a model given no images is offered only read_kit_part, and the first user 
   assert.match(text, /plan from the looks instead/)
   assert.match(text, /plan from these looks/)
   assert.ok(text.endsWith(JSON.stringify(brief())), 'the brief still closes the message')
+})
+
+test('read_kit_part sends a part once per run: a later read answers the call it was sent in, and a resume replays the reads', async () => {
+  const kit = boxing()
+  const [readPart] = kitTools(kit.doc, { inFirstMessage: FIRST_MESSAGE_PARTS })
+  const first = await readPart.run({ ids: ['site', 'header'] }, { call: 1 })
+  assert.equal(first.repeated, false)
+  assert.deepEqual(Object.keys(JSON.parse(first.text)), ['site', 'header'])
+  // The same call read again (a resumed run runs the last call's tools once more): the parts in full.
+  assert.equal((await readPart.run({ ids: ['site', 'header'] }, { call: 1 })).text, first.text)
+  const again = await readPart.run({ id: 'header' }, { call: 4 })
+  assert.equal(again.repeated, true)
+  assert.deepEqual(JSON.parse(again.text).alreadySent, 'header')
+  assert.match(JSON.parse(again.text).detail, /your call 1 of this conversation/)
+  const contents = await readPart.run({ id: 'contents' }, { call: 2 })
+  assert.equal(contents.repeated, true)
+  assert.match(JSON.parse(contents.text).detail, /first message/)
+  // A mix of a repeat and a new part is not a repeat; the new part comes in full.
+  const mixed = await readPart.run({ ids: ['header', 'page-home'] }, { call: 5 })
+  assert.equal(mixed.repeated, false)
+  const parsed = JSON.parse(mixed.text)
+  assert.equal(parsed.header.alreadySent, 'header')
+  assert.deepEqual(parsed['page-home'], JSON.parse(kitParts(kit.doc).read('page-home')))
+  // An unknown id is never recorded as sent.
+  await readPart.run({ id: 'page-nowhere' }, { call: 6 })
+  assert.equal(
+    JSON.parse((await readPart.run({ id: 'page-nowhere' }, { call: 7 })).text).error,
+    'UNKNOWN_PART'
+  )
+
+  // A resumed run builds the tool from the saved turns and answers the same.
+  const turn = (n, args) => ({
+    n,
+    state: 'answered',
+    message: {
+      tool_calls: [{ id: `c${n}`, function: { name: 'read_kit_part', arguments: JSON.stringify(args) } }]
+    }
+  })
+  const [resumed] = kitTools(kit.doc, { history: [turn(0, { id: 'site' }), turn(1, { ids: ['header'] })] })
+  assert.match(JSON.parse((await resumed.run({ id: 'header' }, { call: 3 })).text).detail, /your call 1 /)
+  assert.match(JSON.parse((await resumed.run({ id: 'site' }, { call: 3 })).text).detail, /your call 0 /)
+  // The last saved call run again on resume still answers its parts in full.
+  assert.equal((await resumed.run({ ids: ['header'] }, { call: 1 })).repeated, false)
+  // Called without a call number (no tracking), the tool answers as before.
+  assert.equal(typeof (await resumed.run({ id: 'header' })), 'string')
+})
+
+test('a preloaded first message: the kit block first (the same bytes for every brief), then the brief, then the write instruction', () => {
+  const kit = { ref: 'harbour-test/j6/0.0.1', doc: harbourKit() }
+  const block = preloadedKitBlock(kit)
+  assert.equal(preloadedKitBlock(structuredClone(kit)), block, 'the kit block is not deterministic')
+  const one = preloadedFirstMessage({ kit, brief: brief() })
+  const other = preloadedFirstMessage({ kit, brief: { ...brief(), invented: 'another brief' } })
+  assert.ok(one.startsWith(block) && other.startsWith(block), 'the message does not open with the kit block')
+  assert.ok(one.endsWith(`${JSON.stringify(brief())}\n\n${WRITE_PLAN_INSTRUCTION}`))
+  assert.equal(
+    WRITE_PLAN_INSTRUCTION,
+    'Write the complete plan now as one JSON object in a single ```json fenced block; no tool calls.'
+  )
+  // The whole planner view of the kit, as compact JSON, and nothing about tools to call.
+  const json = block.slice(block.indexOf('\n{') + 1)
+  assert.deepEqual(JSON.parse(json), compactForPlanner(kit.doc))
+  assert.equal(json, JSON.stringify(compactForPlanner(kit.doc)))
+  assert.match(block, /The whole kit is included below/)
+  assert.match(block, /There are no tools in this run/)
+  assert.match(block, /plan from the looks instead/)
+  assert.doesNotMatch(one, /read_kit_part|open_kit_image/)
+  assert.ok(!block.includes(JSON.stringify(brief())), 'the brief leaks into the kit block')
 })

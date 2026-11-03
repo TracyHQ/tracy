@@ -8,10 +8,16 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { zipSync } from 'fflate'
+import { DEEPSEEK_FLASH_PRICE, DEEPSEEK_V4_PRO_PRICE } from '../src/site-planner/bench-control.js'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { kitZipName } from '../src/site-planner/kit-images.js'
-import { KIT_TOOL_NAMES, openKit } from '../src/site-planner/kit-source.js'
+import {
+  KIT_TOOL_NAMES,
+  openKit,
+  preloadedKitBlock,
+  WRITE_PLAN_INSTRUCTION
+} from '../src/site-planner/kit-source.js'
 import { finalReply, scriptedModel, toolCallReply } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import { plan } from './_site-plan-check.mjs'
@@ -38,6 +44,18 @@ const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_
 const quiet = { error() {}, warn() {}, log() {} }
 const openImage = (id) => toolCallReply({ calls: [[KIT_TOOL_NAMES.openImage, { id }]] })
 const dataUrl = (id) => `data:image/jpeg;base64,${inventedImageBytes(id).toString('base64')}`
+
+/**
+ * The cost of a DeepSeek turn at the rate its request recorded (peak or off-peak, by its dispatch time): hit, miss and
+ * output tokens at that table's USD per million tokens.
+ */
+function deepseekCost(turn, price, { hit, miss, output }) {
+  const table = turn.request.priceRate === 'peak' ? price.peak : price.offPeak
+  assert.ok(['peak', 'off-peak'].includes(turn.request.priceRate), 'the turn records no rate')
+  assert.deepEqual(turn.request.price, table)
+  const usd = (hit * table.inputCacheHit + miss * table.inputCacheMiss + output * table.output) / 1e6
+  return Math.round(usd * 1e9) / 1e9
+}
 
 /** Every image_url sent in one request, in order. */
 const sentImages = (request) =>
@@ -282,22 +300,22 @@ test(
     )
     assert.equal(messages[2].reasoning_content, 'the header shows a logo')
     assert.equal(messages[5].content.at(-1).type, 'image_url')
-    // (1500 x 0.03 + 500 x 0.30 + 500 x 1.20) per million tokens, per turn.
+    // 1500 cache hits, 500 misses and 500 output tokens per turn, at the rate of its dispatch time.
     const turns = await turnsOf(pool, started.id)
+    const expected = turns.map((t) =>
+      deepseekCost(t, DEEPSEEK_FLASH_PRICE, { hit: 1500, miss: 500, output: 500 })
+    )
     assert.deepEqual(
       turns.map((t) => [t.cost, t.costSource]),
-      [
-        [0.000795, 'price-table'],
-        [0.000795, 'price-table']
-      ]
+      expected.map((cost) => [cost, 'price-table'])
     )
-    assert.equal(run.totals.costUsd, 0.00159)
+    assert.equal(run.totals.costUsd, Math.round((expected[0] + expected[1]) * 1e9) / 1e9)
     assert.equal(run.totals.turnsWithoutCost, 0)
   }
 )
 
 test(
-  "a run on DeepSeek V4 Pro (text only) plans from the looks: no image tool, no image, DeepSeek's wire and price table",
+  'a run on DeepSeek V4 Pro (text only) gets the whole kit in its first message, no tools, and answers the plan at once',
   opts,
   async () => {
     const { pool } = db
@@ -306,29 +324,16 @@ test(
     try {
       const kitImages = readyKitImages()
       const started = await startRun(pool, { index: kit.index, kitImages })
-      const native = (reply) => {
-        const { reasoning: _openRouterField, ...message } = reply.body.choices[0].message
-        reply.body.choices[0].message = { ...message, reasoning_content: 'thinking' }
-        reply.body.usage = {
-          prompt_tokens: 2000,
-          completion_tokens: 500,
-          prompt_cache_hit_tokens: 1000,
-          prompt_cache_miss_tokens: 1000
-        }
-        return reply
+      const reply = finalReply({ content: `\`\`\`json\n${JSON.stringify(plan())}\n\`\`\`` })
+      const { reasoning: _openRouterField, ...message } = reply.body.choices[0].message
+      reply.body.choices[0].message = { ...message, reasoning_content: 'thinking' }
+      reply.body.usage = {
+        prompt_tokens: 2000,
+        completion_tokens: 500,
+        prompt_cache_hit_tokens: 1000,
+        prompt_cache_miss_tokens: 1000
       }
-      const model = scriptedModel([
-        // A call to the image tool it was never offered is answered as an unknown tool, with no image.
-        native(
-          toolCallReply({
-            calls: [
-              [KIT_TOOL_NAMES.readPart, { id: 'contents' }],
-              [KIT_TOOL_NAMES.openImage, { id: 'header-1440' }]
-            ]
-          })
-        ),
-        native(finalReply({ content: JSON.stringify(plan()) }))
-      ])
+      const model = scriptedModel([reply])
       await drain(pool, model, kitImages, { index: kit.index })
       const run = await readRun(pool, started.id)
       assert.equal(run.status, 'succeeded', run.error)
@@ -336,36 +341,33 @@ test(
       assert.equal(run.door.images, false)
       assert.equal(kitImages.calls.ensure, 0)
       assert.deepEqual(kitImages.calls.open, [])
-      for (const request of model.requests) {
-        const { body } = request
-        assert.equal(body.model, DEEPSEEK_PRO)
-        assert.equal(body.reasoning_effort, 'high')
-        assert.equal(body.max_tokens, 128000)
-        for (const absent of ['reasoning', 'usage', 'provider']) assert.equal(body[absent], undefined, absent)
-        assert.doesNotMatch(JSON.stringify(body), /cache_control/)
-        assert.deepEqual(
-          body.tools.map((t) => t.function.name),
-          [KIT_TOOL_NAMES.readPart]
-        )
-        assert.deepEqual(sentImages(request), [])
-      }
-      const first = model.requests[0].body.messages[1].content
-      assert.doesNotMatch(first, /open_kit_image/)
-      assert.match(first, /there is no image tool/)
-      const messages = model.requests[1].body.messages
+      assert.equal(model.requests.length, 1)
+      const [request] = model.requests
+      const { body } = request
+      assert.equal(body.model, DEEPSEEK_PRO)
+      assert.equal(body.reasoning_effort, 'high')
+      assert.equal(body.max_tokens, 128000)
+      for (const absent of ['reasoning', 'usage', 'provider', 'tools', 'tool_choice'])
+        assert.equal(body[absent], undefined, absent)
+      assert.doesNotMatch(JSON.stringify(body), /cache_control/)
+      assert.deepEqual(sentImages(request), [])
+      // System prompt, then one user message: the kit block, the brief, the instruction to write.
       assert.deepEqual(
-        messages.map((m) => m.role),
-        ['system', 'user', 'assistant', 'tool', 'tool']
+        body.messages.map((m) => m.role),
+        ['system', 'user']
       )
-      assert.match(messages[4].content, /UNKNOWN_TOOL/)
-      // (1000 x 0.10 + 1000 x 1.00 + 500 x 2.50) per million tokens, per turn.
+      const first = body.messages[1].content
+      assert.ok(first.startsWith(preloadedKitBlock(openKit(KIT_REF, { index: kit.index }))))
+      assert.ok(first.endsWith(WRITE_PLAN_INSTRUCTION))
+      assert.ok(first.indexOf(JSON.stringify(run.brief)) > first.indexOf('"pageGroups"'))
+      assert.doesNotMatch(first, /read_kit_part|open_kit_image/)
+      // The plan came in one fenced block and was read.
+      assert.equal(run.rounds[0].state, 'checked')
       const turns = await turnsOf(pool, started.id)
-      assert.deepEqual(
-        turns.map((t) => [t.cost, t.costSource]),
-        [
-          [0.00235, 'price-table'],
-          [0.00235, 'price-table']
-        ]
+      assert.deepEqual(turns[0].request.tools, [])
+      assert.equal(
+        turns[0].cost,
+        deepseekCost(turns[0], DEEPSEEK_V4_PRO_PRICE, { hit: 1000, miss: 1000, output: 500 })
       )
     } finally {
       kit.done()

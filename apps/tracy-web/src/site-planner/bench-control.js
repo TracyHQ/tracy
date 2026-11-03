@@ -22,6 +22,11 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
  * markers (system and rolling) live one hour: an answer can take longer than 5 minutes, and a 5 minute rolling marker
  * then expires before the next call, which writes the whole conversation to the cache again. Thinking effort is
  * medium, as in the Claude Code runs that produced the approved reference plans.
+ *
+ * Guards (#301, after a DeepSeek V4 Pro run looped 86 calls re-reading kit parts and was cancelled): a run whose
+ * answered calls already cost more than budgetUsd stops before its next call (SITE_PLANNER_BUDGET); a run that reads
+ * the kit with tools is told to write the plan, with tool_choice "none", after writeAfterToolTurns answers that called
+ * a tool or as soon as an answer only re-reads parts it was already sent (bench-worker.js); maxTurns bounds the calls.
  */
 export const BENCH_HARNESS = Object.freeze({
   maxTokens: MAX_OUTPUT_TOKENS,
@@ -32,21 +37,39 @@ export const BENCH_HARNESS = Object.freeze({
   maxTurns: 150,
   callTimeoutMs: 45 * 60_000,
   idleMs: STREAM_IDLE_MS,
-  retry: RETRY_DEFAULTS
+  retry: RETRY_DEFAULTS,
+  budgetUsd: 2,
+  writeAfterToolTurns: 20
 })
 
 /**
- * DeepSeek's own API reports no cost, so a run on it computes one from this table, USD per million tokens.
- * Assumed, check platform.deepseek.com pricing: input on a cache miss and output are OpenRouter's listing of
- * DeepSeek's own endpoint for deepseek-v4.1-flash (03/11/2026); the cache hit price is an assumption.
+ * DeepSeek's peak hours, in UTC: 01:00 to 04:00 and 06:00 to 10:00, Monday to Friday; every other hour is off-peak
+ * (DeepSeek's pricing page, read 03/11/2026). DeepSeek also prices Chinese public holidays off-peak; they are ignored
+ * here, so a call on such a holiday inside these hours is costed at the peak rate, an overestimate.
  */
-export const DEEPSEEK_FLASH_PRICE = Object.freeze({ inputCacheHit: 0.03, inputCacheMiss: 0.3, output: 1.2 })
+export const DEEPSEEK_PEAK_UTC = Object.freeze({
+  weekdays: Object.freeze([1, 2, 3, 4, 5]),
+  hours: Object.freeze([Object.freeze([1, 4]), Object.freeze([6, 10])])
+})
+
+const deepseekPrice = (peak, offPeak) =>
+  Object.freeze({ peak: Object.freeze(peak), offPeak: Object.freeze(offPeak), peakUtc: DEEPSEEK_PEAK_UTC })
 
 /**
- * The same for deepseek-v4-pro on DeepSeek's own API, USD per million tokens.
- * Assumed from OpenRouter third-party listings on 2026-11-03; check platform.deepseek.com pricing.
+ * DeepSeek's own API reports no cost, so a run on it computes one from its pricing page (read 03/11/2026), USD per
+ * million tokens: input on a cache hit, input on a cache miss, output; the table is chosen per call by the UTC time it
+ * is dispatched (agent-over-door-wire.js priceAt), and the turn records which rate it used.
  */
-export const DEEPSEEK_V4_PRO_PRICE = Object.freeze({ inputCacheHit: 0.1, inputCacheMiss: 1, output: 2.5 })
+export const DEEPSEEK_FLASH_PRICE = deepseekPrice(
+  { inputCacheHit: 0.006, inputCacheMiss: 0.3, output: 1.2 },
+  { inputCacheHit: 0.003, inputCacheMiss: 0.15, output: 0.6 }
+)
+
+/** The same for deepseek-v4-pro on DeepSeek's own API (pricing page, read 03/11/2026). */
+export const DEEPSEEK_V4_PRO_PRICE = deepseekPrice(
+  { inputCacheHit: 0.044, inputCacheMiss: 1.32, output: 3.96 },
+  { inputCacheHit: 0.022, inputCacheMiss: 0.66, output: 1.98 }
+)
 
 /**
  * What changes in the harness for the door's model, by model id, and by the door's provider id where an entry names
@@ -78,8 +101,9 @@ export const MODEL_HARNESS = Object.freeze([
     match: /^deepseek-v4-pro$/,
     harness: {
       wire: 'deepseek-native',
-      // DeepSeek's own API lists this model as text only (03/11/2026): it plans from the kit's looks, is offered no
-      // image tool, and the door lets it in only for a kit with a current look for every shot (door.js).
+      // DeepSeek's own API lists this model as text only (03/11/2026): it plans from the kit's looks, and the door lets
+      // it in only for a kit with a current look for every shot (door.js). Given no images, the run gets the whole kit
+      // in its first message and no tools at all (bench-worker.js), so the first answer is the plan.
       images: false,
       toolImages: 'user-message',
       cacheMarkers: false,

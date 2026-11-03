@@ -38,8 +38,9 @@ const failuresOf = (p) =>
     checkPlan({ plan: p, kit: openKit(KIT_REF).doc, brief: brief(), briefRef: 'harbour-sport-club.json' })
   )
 const answer = (p, cost = 1) => finalReply({ content: JSON.stringify(p), usage: usageOf({ cost }) })
-const readContents = () =>
-  toolCallReply({ calls: [['read_kit_part', { id: 'contents' }]], usage: usageOf({ cost: 0.5 }) })
+// "contents" comes in the first message; a part read twice is answered as a repeat, so each read names a new part.
+const readContents = (id = 'pageGroups') =>
+  toolCallReply({ calls: [['read_kit_part', { id }]], usage: usageOf({ cost: 0.5 }) })
 const lastUserText = (request) => {
   const m = request.body.messages.at(-1)
   return typeof m.content === 'string' ? m.content : m.content.map((p) => p.text).join('')
@@ -68,7 +69,7 @@ test(
     const steps = []
     const { run, model } = await runOnce(
       pool,
-      [readContents(), answer(badPlan()), readContents(), answer(plan(), 2)],
+      [readContents(), answer(badPlan()), readContents('site'), answer(plan(), 2)],
       {
         wrap: (fetchImpl, started) => async (url, init) => {
           const { step, round } = await readRun(pool, started.id)

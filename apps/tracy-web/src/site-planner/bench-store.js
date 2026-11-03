@@ -65,6 +65,20 @@ export async function setProgress(pool, { runId, step, round, leaseToken = null 
   return rowCount === 1
 }
 
+/**
+ * Record one provider balance read around the run (provider-balance.js), as `before` or `after`. A side already
+ * recorded is kept: a resumed run never replaces the balance read before its first call. Written only under the lease.
+ */
+export async function saveBalance(pool, { runId, side, balance, leaseToken = null }) {
+  const { rowCount } = await pool.query(
+    `update site_planner_run
+        set balance = coalesce(balance, '{}'::jsonb) || jsonb_build_object($2::text, $3::jsonb), updated_at = now()
+      where id = $1 and not coalesce(balance ? $2::text, false) and ${fenced(1, 4)}`,
+    [runId, side, json(balance), leaseToken]
+  )
+  return rowCount === 1
+}
+
 /** Ask an active run to stop; the worker honours it between model calls. Null when the run is not active. */
 export async function requestCancel(pool, runId) {
   if (!UUID.test(String(runId))) return null
@@ -338,6 +352,8 @@ export async function readRun(pool, id) {
     door: row.door,
     harness: row.harness,
     standingFailures: row.standing_failures ?? null,
+    // The provider balance before and after the run (provider-balance.js), or null.
+    balance: row.balance ?? null,
     rounds: rounds.rows.map(roundOf),
     // The call in flight, if any: when it went out, whether it streams, and what it has received so far.
     inFlight: f

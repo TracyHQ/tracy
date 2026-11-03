@@ -13,6 +13,11 @@
 // the top-level reasoning_effort, and neither usage nor provider is sent (DeepSeek ignores the first, and the second
 // is OpenRouter's alone). Either way the assistant message's thinking is saved and sent back on every later turn.
 //
+// A request with no tools on the 'deepseek-native' wire sends the assistant messages without their reasoning_content:
+// DeepSeek's docs (thinking mode) say earlier reasoning is ignored and not added to the context when a request carries
+// no tools, so sending it would only add bytes. toolChoice 'none' (the write step, agent-over-door.js) is sent as
+// tool_choice on a request that has tools: the model may not call one and must answer.
+//
 // Only 'deepseek-native' is streamed (stream: true, with stream_options.include_usage so the last chunk carries the
 // token counts; agent-over-door-stream.js puts the answer back together). 'openrouter' stays unstreamed: its answer
 // carries reasoning_details with Anthropic thinking signatures that must come back byte for byte, and how OpenRouter
@@ -50,8 +55,15 @@ export function requestBody({
   cacheTtl,
   cacheMarkers = true,
   provider,
-  wire = 'openrouter'
+  wire = 'openrouter',
+  toolChoice
 }) {
+  if (wire === 'deepseek-native' && !tools.length)
+    messages = messages.map((m) => {
+      if (m.role !== 'assistant' || m.reasoning_content === undefined) return m
+      const { reasoning_content: _ignoredWithoutTools, ...rest } = m
+      return rest
+    })
   const newest = messages.findLastIndex((m) => m.role !== 'assistant')
   return {
     model,
@@ -68,7 +80,8 @@ export function requestBody({
           tools: tools.map((t) => ({
             type: 'function',
             function: { name: t.name, description: t.description, parameters: t.parameters }
-          }))
+          })),
+          ...(toolChoice ? { tool_choice: toolChoice } : {})
         }
       : {}),
     ...(wire === 'deepseek-native'
@@ -146,6 +159,43 @@ export const isPriceTable = (price) =>
   price !== null &&
   typeof price === 'object' &&
   ['inputCacheHit', 'inputCacheMiss', 'output'].every((k) => Number.isFinite(price[k]) && price[k] >= 0)
+
+const isHour = (h) => Number.isInteger(h) && h >= 0 && h <= 24
+
+/**
+ * A price that depends on when the call goes out: two price tables, `peak` and `offPeak`, and `peakUtc`, the UTC
+ * weekdays (0 Sunday to 6 Saturday) and the hour ranges [from, to) of those days when the peak table applies.
+ */
+export const isTimedPrice = (price) =>
+  price !== null &&
+  typeof price === 'object' &&
+  isPriceTable(price.peak) &&
+  isPriceTable(price.offPeak) &&
+  Array.isArray(price.peakUtc?.weekdays) &&
+  price.peakUtc.weekdays.every((d) => Number.isInteger(d) && d >= 0 && d <= 6) &&
+  Array.isArray(price.peakUtc?.hours) &&
+  price.peakUtc.hours.every(
+    (r) => Array.isArray(r) && r.length === 2 && isHour(r[0]) && isHour(r[1]) && r[0] < r[1]
+  )
+
+/** A price a run may carry: one table, or a timed price. */
+export const isPrice = (price) => isPriceTable(price) || isTimedPrice(price)
+
+/**
+ * The table a call is costed with, chosen by the time it is dispatched: a single table always; a timed price's peak
+ * table when the dispatch falls on one of its UTC weekdays inside one of its hour ranges, else its off-peak table.
+ * `rate` says which ('peak' or 'off-peak'); a single table has none.
+ * @returns {{ table: object, rate?: 'peak' | 'off-peak' }}
+ */
+export function priceAt(price, at) {
+  if (!isTimedPrice(price)) return { table: price }
+  const day = at.getUTCDay()
+  const hour = at.getUTCHours() + at.getUTCMinutes() / 60 + at.getUTCSeconds() / 3600
+  const peak =
+    price.peakUtc.weekdays.includes(day) &&
+    price.peakUtc.hours.some(([from, to]) => hour >= from && hour < to)
+  return peak ? { table: price.peak, rate: 'peak' } : { table: price.offPeak, rate: 'off-peak' }
+}
 
 /** Totals over every answered turn. */
 export function totalsOf(turns) {
