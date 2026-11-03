@@ -133,3 +133,16 @@
 - **Thinking effort is medium (parity with the reference harness).** The Claude Code runs that produced the approved
   reference plans sent effort medium on every call; high made the first pass about 4.5 minutes longer, almost all of
   it thinking tokens, with the same output speed.
+- **The planner reads a leaner kit (cost cut).** `read_kit_part` leaves out the fields that only record how a value was
+  measured or proved (`PLANNER_DROPPED_KIT_FIELDS`, none named by the prompt), about 36% of the block text a run reads;
+  the checker still reads the full kit.
+- **Several kit parts in one call (cost cut).** `read_kit_part` takes a list of ids (bounded at 150000 characters per
+  answer), and the first user message asks for every part and image needed next in the same turn instead of one per
+  call; the brief goes as compact JSON.
+- **Finer change lists (cost cut).** A fix round change may replace one field of a block, add one entry to a block's
+  list, or remove one slot, link, frame or list entry, so unhiding a few slots no longer resends whole blocks; whole
+  parts, sections and a whole plan are still accepted.
+- **The harness follows the model.** A run records a model profile: Anthropic models keep inline tool images and the two
+  cache markers; DeepSeek V4.1 Flash (`deepseek/deepseek-v4.1-flash-1017` on OpenRouter) gets images in a user message,
+  no cache markers, effort high (it has no medium), the DeepSeek provider pinned for the whole run, and the same 128000
+  output budget; reasoning is sent back on every later turn and cost is read from `usage.cost` as before.
