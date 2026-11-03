@@ -38,7 +38,7 @@ const field = (b, at, length) => {
 
 /**
  * The files of a tar.gz whose name ends with one of `wanted` (a site path; the archive may put a folder in front),
- * read as a stream. Ustar names, GNU long names and pax `path` records.
+ * read as a stream; the first match of a path wins. Ustar names, GNU long names and pax `path` records.
  * @param {Buffer} gzipped
  * @param {string[]} wanted site paths
  * @returns {Promise<Map<string, Buffer>>} by site path
@@ -67,7 +67,8 @@ export async function tarGzFilesEndingWith(gzipped, wanted) {
       }
       if (entry) {
         const take = Math.min(entry.left, buf.length)
-        if (entry.key || entry.kind !== 'file') entry.chunks.push(buf.subarray(0, take))
+        // Only a wanted file and a long name record are kept; every other body is skipped as it streams by.
+        if (entry.key || entry.kind === 'L' || entry.kind === 'x') entry.chunks.push(buf.subarray(0, take))
         entry.left -= take
         buf = buf.subarray(take)
         if (entry.left > 0) break
@@ -76,7 +77,7 @@ export async function tarGzFilesEndingWith(gzipped, wanted) {
         if (entry.kind === 'L') longName = body.toString('utf8').replace(/\0+$/, '')
         else if (entry.kind === 'x')
           longName = /(?:^|\n)\d+ path=([^\n]*)\n/.exec(body.toString('utf8'))?.[1] ?? null
-        else if (entry.key) out.set(entry.key, body)
+        else if (entry.key && !out.has(entry.key)) out.set(entry.key, body)
         entry = null
         if (out.size === want.size) return out
         continue
@@ -94,7 +95,7 @@ export async function tarGzFilesEndingWith(gzipped, wanted) {
       const pad = Math.ceil(size / 512) * 512 - size
       entry = { left: size, pad, chunks: [], kind, key: kind === 'file' ? match(name) : null }
       if (size === 0) {
-        if (entry.key) out.set(entry.key, Buffer.alloc(0))
+        if (entry.key && !out.has(entry.key)) out.set(entry.key, Buffer.alloc(0))
         entry = null
       }
     }

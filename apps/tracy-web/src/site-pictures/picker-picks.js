@@ -125,8 +125,10 @@ export function applyPicks(previous, changeList, { ready }) {
   if (!Array.isArray(changes) || !changes.length) return { ok: false, reason: 'the answer holds no pick' }
   const frames = new Map((ready.picker?.frames ?? []).map((f) => [f.frame, f]))
   const picks = new Map()
+  // A pick is kept only while its code is still on the frame's shortlist (a resumed run cuts the shortlist again).
   for (const p of (previous ?? ready.manifest)?.picks ?? [])
-    if (p.photo) picks.set(p.frame, { photo: p.photo, reason: p.reason })
+    if (p.photo === NONE || frames.get(p.frame)?.candidates.has(p.photo))
+      picks.set(p.frame, { photo: p.photo, reason: p.reason })
   const rejected = []
   const validChanges = []
   const seen = new Set()

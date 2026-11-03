@@ -47,6 +47,9 @@ import sharp from 'sharp'
 
 export { BENCH_QUEUE }
 
+/** Round 0's answer when no picker was called: the code half (compared by identity, never read from a model). */
+const CODE_HALF = Object.freeze({ by: 'code' })
+
 /** Fix rounds after round 0: round 2 is the last manifest scored. */
 export const MAX_FIX_ROUNDS = 2
 
@@ -87,10 +90,10 @@ export const SITE_PICTURES_STEP = Object.freeze({
   }),
   // Round 0 is one picker call, or none when no frame waits for the picker: then the loop reads the code half.
   nextTurn: ({ ready, answers }) => (answers.length === 0 && ready.firstUser ? ready.firstUser : null),
-  mergeTurns: (answers) => answers[0] ?? { by: 'code' },
+  mergeTurns: (answers) => answers[0] ?? CODE_HALF,
   // An answer with no list of picks is an empty change list: the loop asks once for every pick.
   readAnswer: (value, { ready }) =>
-    value?.by === 'code' ? ready.manifest : (pickerChanges(value) ?? { changes: [] }),
+    value === CODE_HALF ? ready.manifest : (pickerChanges(value) ?? { changes: [] }),
   prepare,
   agentRequest: ({ ready }) => ({
     firstUser: ready.firstUser,
