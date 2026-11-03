@@ -1194,6 +1194,7 @@ export function buildApp(deps) {
     deps.config && deps.pool
       ? createSitePicturesQueue({
           pool: deps.pool,
+          secret: deps.config.sessionSecret,
           objects:
             deps.websiteOpportunitiesObjects ?? placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
           storeDir: defaultStoreDir(),

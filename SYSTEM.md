@@ -2274,9 +2274,14 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   a folder in the container (`TRACY_PICTURE_BENCH_DIR`, default in the system's temporary directory) where every
   picture file is named by its sha256, with one `site_picture_file` row per file (path, hash, bytes, cost). It is a
   cache: a file gone from it is reported by `get`, never invented.
-- **No model yet** (#340, code only): any-real frames take owner photos by code, person frames a confirmed portrait or
-  initials, twins copy their source, frames the kit marks not writable are returned (a picture painted behind blocks is
-  listed in `siteSettings`); specific, icon and cut-out frames stay pending for the picker, icon and cut-out tickets.
+- **Code first** (#340): any-real frames take owner photos by code, person frames a confirmed portrait or initials,
+  twins copy their source, frames the kit marks not writable are returned (a picture painted behind blocks is listed
+  in `siteSettings`); icon and cut-out frames stay pending for their tickets.
+- **The picker** (#342) is called through the `picturePicker` door (`/ops` › Model & AI; by default `deepseek-flash` on
+  the `deepseek` provider, effort max, no tools): one call per run with the owner photos as 512 px thumbnails and a code
+  shortlist per specific frame, never a demo picture of the kit. A run whose plan has no specific frame needs no door
+  and calls no model. Fix rounds send back only the picker's failing frames (at most two); the DeepSeek balance is read
+  before and after, as on the other benches. Migration 199 adds the door to the door check.
 
 ## 9. Sign-in, seats, permissions
 

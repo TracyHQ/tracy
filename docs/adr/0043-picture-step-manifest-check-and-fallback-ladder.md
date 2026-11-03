@@ -33,6 +33,9 @@ reader uses that module.
 | `frames` | One entry per planned kit frame id (see below), plus one per twin of a planned frame. |
 | `siteSettings` | Template level pictures (the body background painted behind blocks), same fields plus `writeDoor: "none"`: no write door exists yet. |
 | `returns` | `[{ frame, reason }]`: frames the step cannot fill (or the kit marks not writable), for the planner. |
+| `pending` | `[{ frame, kind, match, waitsFor, reason }]`: frames no step has filled yet, never a demo picture. `waitsFor` names the step: `picker`, `drawer` (no owner photo fits, or the picker answered "none"), `icons` or `cut-out`. A twin of a pending frame is pending for the same step. The picture check counts a pending frame as unfilled (P01). |
+| `picks` | `[{ frame, photo, asset, reason }]`: one per frame the picker answers, in the order it was asked: the photo code it chose (or `"none"`, or `null` while unanswered), the brief asset that code names, and its reason. Empty when the run had no picker frame. |
+| `refusedPhotos` | `[{ asset, reason }]`: brief assets no frame may take (not a still, lettering, another business, a label that is unknown, blurry, no bytes with its hash). |
 | `altNotes` | `[{ frame, alt, seen }]`: the writer's alt next to what the picture actually shows; filled only when a writer copy file is given to the run. |
 | `usage` | `[{ asset, frames }]`: per brief photo, how many frames use it. |
 | `cost`, `timing` | Objects keyed by role (picker, drawer, looker, background removal, icon ranking). |
@@ -43,16 +46,17 @@ A frame entry:
 |---|---|
 | `frame` | The kit frame id. |
 | `source` | `owner-photo`, `owner-photo-extended` (a real photo extended sideways by the image model), `drawn`, `icon`, `initials`, `hide` or `twin`. |
-| `asset` | The brief asset id, for `owner-photo` and `owner-photo-extended`. |
+| `asset` | The brief asset id, for `owner-photo` and `owner-photo-extended`; `null` otherwise. |
 | `icon` | `{ light, dark }` icon names, for `icon`. |
-| `letters` | The initials, for `initials`. |
-| `twinOf` | The source frame, for `twin`. |
+| `letters` | The initials, for `initials` (an entry of another source leaves it out). |
+| `twinOf` | The source frame, for `twin` (an entry of another source leaves it out). A twin copies its source's file fields, `crop`, `enlarge`, `sharpness`, `darkened` and `recolourable`. |
+| `writeDoor` | `"none"`, on every `siteSettings` entry only. |
 | `file`, `width`, `height`, `sha256` | The cut file, its pixel size and hash. `null` file for `hide`. |
 | `sitePath` | `images/tracy-content/<sha256>.<ext>`: where the write step uploads it. |
 | `dark` | `{ file, width, height, sha256, sitePath }`, the dark version of an icon; `null` otherwise. |
 | `crop` | `{ x, y, width, height }` on the original, or `null`. |
 | `enlarge` | The scale applied to the crop (below 1 shrinks), or `null` when not cut from a photo. |
-| `sharpness` | `{ passed, ... }`, the sharpness gate measured by the step at the display size, or `null`. |
+| `sharpness` | `{ passed, verdict, score, bar, width, reason, version }`, the sharpness gate measured by the step at the display size when the crop was enlarged or the photo is low quality, or `null`. |
 | `darkened` | A dark overlay was baked in so the heading over it stays readable. |
 | `recolourable` | Initials and icons the write step may repaint in the brand colours. |
 | `seen` | One sentence from the looker saying what the picture actually shows. |
@@ -141,6 +145,26 @@ Thresholds and readings (named constants in the code):
   against the plan's words, with a fixed list of fault names (wrong subject, forbidden item, subject cut off, distorted
   face or body, stray lettering, visible drawing seam), and writes the `seen` sentence. It never sees the picker's
   reasons.
+
+### 3a. The picker (#342)
+
+- **One call for the whole site**, through its own model door `picturePicker` (DeepSeek Flash on DeepSeek's own API by
+  default, no tools). A run whose plan has no frame for the picker needs no door and calls no model.
+- **Its input** is one user message: per frame that waits for the picker, the plan's words (shows, must include,
+  avoid, mood, size, the frame's shape) and the code shortlist of photo codes; then each shortlisted owner photo once,
+  as a thumbnail of at most 512 px tagged with its code (`P1`, `P2`, ... in the brief's order). Never a demo picture of
+  the kit, never a brief asset id. The shortlist is every usable owner photo (section 3's code shortlist, no portrait of
+  a person) that is not already shown on a page of the frame and that cuts well for it; each is cut before the call, so
+  an answer is applied by lookup. A frame with an empty shortlist never goes to the picker and waits for the drawer.
+- **Its answer** is `{ picks: [{ frame, photo, reason }] }`, a code from the frame's list or `"none"`. A pick naming
+  another frame, a code outside the list, no reason, or a frame twice is invalid: it is sent back once, alone, and every
+  valid pick is applied. `"none"` leaves the frame (and its twins) pending for the drawer.
+- **Fix rounds** send back only the check failures of the frames the picker placed or left unanswered. Every other
+  failure (frames code decided, frames waiting for the drawer, icons or cut-outs) is kept on the round's check result
+  as `notForPicker` and never goes to the picker; when none is left for the picker the run ends.
+- **The prompt** is `site-pictures/picker-prompt.md`, loaded once per process with its hash; the hash is recorded on
+  the run (`prompts.picker`) and in the manifest's fingerprint. Every call records its cost (the price table) and the
+  run records the provider balance before and after.
 
 ### 4. Fix rounds and the fallback ladder
 

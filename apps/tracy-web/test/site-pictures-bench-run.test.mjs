@@ -10,6 +10,7 @@ import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { filesOf, readRun } from '../src/site-pictures/bench-store.js'
 import { checkPictures } from '../src/site-pictures/picture-check/check-pictures.js'
+import { scriptedModel } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import {
   brief,
@@ -22,6 +23,7 @@ import {
   startRun,
   storeDir
 } from './_site-pictures-bench.mjs'
+import { assignPickerDoor, drainPicker, reply, SECRET } from './_site-pictures-picker.mjs'
 
 const db = fileDb()
 before(db.open)
@@ -144,8 +146,15 @@ test(
   opts,
   async () => {
     const { pool } = db
-    const started = await startRun(pool, where, { plan: plan({ later: true }) })
-    await drain(pool, where)
+    // The specific frame goes to the picker (#342), which finds no fitting photo: it waits for the drawer.
+    await assignPickerDoor(pool)
+    const started = await startRun(pool, where, { plan: plan({ later: true }), secret: SECRET })
+    const model = scriptedModel([
+      reply({
+        picks: [{ frame: 'block-9.0', photo: 'none', reason: 'no photo shows the owner fitting a tyre' }]
+      })
+    ])
+    await drainPicker(pool, { ...where, fetchImpl: model.fetchImpl })
 
     const run = await readRun(pool, started.id)
     assert.equal(run.status, 'succeeded', run.error)
@@ -153,22 +162,24 @@ test(
     assert.deepEqual(
       manifest.pending.map((p) => [p.frame, p.waitsFor]),
       [
-        ['block-9.0', 'picker'],
         ['block-9.1', 'icons'],
-        ['block-9.2', 'cut-out']
+        ['block-9.2', 'cut-out'],
+        ['block-9.0', 'drawer']
       ]
     )
     const placedFrames = new Set([...manifest.frames, ...manifest.siteSettings].map((x) => x.frame))
     for (const f of ['block-9.0', 'block-9.1', 'block-9.2']) assert.ok(!placedFrames.has(f), f)
-    // The picture check counts the pending frames as unfilled, and nothing else fails; with no fix round, the failures
-    // stand on the run.
+    // The picture check counts the pending frames as unfilled, and nothing else fails; none of them is the picker's
+    // to fix, so no fix round runs and the failures are kept on the round's check result.
     const failing = run.rounds[0].checkResult.rules.filter((r) => r.status === 'fail')
     assert.deepEqual(
       failing.map((r) => r.id),
       ['P01']
     )
     assert.deepEqual(failing[0].failures.map((f) => f.where).sort(), ['block-9.0', 'block-9.1', 'block-9.2'])
-    assert.match(run.standingFailures, /block-9\.0/)
+    assert.equal(model.requests.length, 1)
+    assert.equal(run.rounds.length, 1)
+    assert.match(run.rounds[0].checkResult.notForPicker, /block-9\.0/)
   }
 )
 

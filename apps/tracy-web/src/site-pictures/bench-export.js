@@ -20,7 +20,7 @@ export const finalManifestOf = (run) => run.rounds.findLast((r) => r.pictures)?.
 /**
  * Every text file `get` writes, as [name, text]: the shared run files (run.json, brief.json, pictures-vN.json,
  * check-vN.json, failures-vN.txt, failures-standing.txt, turns.jsonl), plan.json, files.json and, once a manifest
- * exists, site-pictures.json.
+ * exists, site-pictures.json and the failures not for the picker (failures-not-for-picker.txt) when there are any.
  * @param {object} run readRun's run with the inputs of inputsOf
  * @param {object[]} turns
  * @param {object[]} fileRows filesOf's rows
@@ -33,6 +33,10 @@ export function runFiles(run, turns, fileRows) {
   files.push(['files.json', json(fileRows)])
   const manifest = finalManifestOf(run)
   if (manifest) files.push(['site-pictures.json', json(manifest)])
+  // The failures the picker could not fix (frames of code, or waiting for the drawer, icons or cut-outs), kept on the
+  // last checked round's check result rather than in the failures still standing.
+  const notForPicker = run.rounds.findLast((r) => r.checkResult)?.checkResult?.notForPicker
+  if (notForPicker) files.push(['failures-not-for-picker.txt', notForPicker])
   return files
 }
 

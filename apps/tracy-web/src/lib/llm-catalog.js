@@ -230,6 +230,18 @@ export const LLM_DOORS = [
     prefers: []
   },
   {
+    id: 'picturePicker',
+    label: 'Picture picker',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the picture bench, started from a command line on the server. One call per site looks at the owner photos as small thumbnails and chooses one for every frame of the site plan that needs a specific picture.',
+    needsModel: true,
+    // Vision is REQUIRED: the picker judges the owner photos by sight (site-pictures/door.js). No tools. No effort
+    // setting: the bench fixes it in code (max on DeepSeek Flash) and records it on each run (#342).
+    requires: ['vision'],
+    prefers: []
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',

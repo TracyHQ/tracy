@@ -1,16 +1,21 @@
 // Starting and cancelling a picture bench run (#340). A start checks everything a run needs before it is queued (the
 // plan's and the brief's shape, the kit, the owner photos of a brief file) and stores what the run will use, so a
 // refused start leaves nothing behind and an accepted one says exactly what it ran: plan, brief as used, where its
-// owner photos come from, kit, prompt hashes and checker version. The worker (bench-worker.js) does the rest.
+// owner photos come from, kit, prompt hashes and checker version, and, when the plan has a frame for the picker (#342),
+// the picker door's snapshot (never the key) and the harness settings. The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
+import { benchHarnessFor } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { readableKits } from '../lib/template-kit-source.js'
 import { planShapeProblems } from '../site-writer/bench-control.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_PICTURES_RUN_ACTIVE } from './bench-store.js'
 import { fileStore, sha256Hex } from './file-store.js'
 import { openKitWithMap } from './kit-with-map.js'
+import { picturePickerDoor } from './door.js'
 import { briefImages } from './owner-photos.js'
 import { CHECKER_VERSION } from './picture-check/check-pictures.js'
+import { indexInputs } from './picture-check/inputs-index.js'
+import { needsPicker } from './picker-input.js'
 import { picturePrompts } from './picture-prompts.js'
 
 export { briefOfRevision }
@@ -19,7 +24,7 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
 
 /**
  * Queue one run, or refuse it with a reason and nothing written.
- * @param {{ pool: import('pg').Pool, plan: unknown, planSource: object, brief: unknown, briefSource: object,
+ * @param {{ pool: import('pg').Pool, secret?: string, plan: unknown, planSource: object, brief: unknown, briefSource: object,
  *   kitRef: string, startedBy: string, photos?: { name: string, files: Map<string, Buffer> } | null,
  *   storeDir?: string, index?: Map<string, object> }} input `photos`: for a brief file, the folder of owner photos the
  *   CLI read (its name and its files by file name, each named by its sha256); a revision's photos are read by the
@@ -27,6 +32,7 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
  */
 export async function startPictureRun({
   pool,
+  secret,
   plan,
   planSource,
   brief,
@@ -54,6 +60,12 @@ export async function startPictureRun({
     return refuse('SITE_PICTURES_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
   const kit = openKitWithMap(kitRef, where)
   if (!kit) return refuse('SITE_PICTURES_KIT_UNKNOWN', `The kit ${kitRef} cannot be read.`)
+  // A plan with a frame for the picker needs the picker door; one without calls no model and stores no door.
+  let door = null
+  if (needsPicker(indexInputs({ plan, kit: kit.doc, brief, files: {} }))) {
+    door = await picturePickerDoor({ pool, secret })
+    if (!door.ok) return refuse(door.code, door.reason)
+  }
   let photoSource
   if (briefSource?.kind === 'revision') photoSource = { kind: 'revision', revisionId: briefSource.revisionId }
   else {
@@ -72,7 +84,9 @@ export async function startPictureRun({
     photoSource,
     kit: { ref: kit.ref, release: kit.release, version: kit.version },
     prompts: picturePrompts(),
-    checkerVersion: CHECKER_VERSION
+    checkerVersion: CHECKER_VERSION,
+    door: door ? door.snapshot : {},
+    harness: door ? benchHarnessFor(door.snapshot.model, door.snapshot.providerId) : {}
   })
   if (created.error === SITE_PICTURES_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }

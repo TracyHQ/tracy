@@ -1,33 +1,53 @@
-// The picture bench worker (ADR 0043, #340): the picture step as one more step of the shared bench run loop
-// (lib/bench-run-loop.js), which claims the queued run, plays its round, checks it and stores the verdict. This file
+// The picture bench worker (ADR 0043, #340, #342): the picture step as one more step of the shared bench run loop
+// (lib/bench-run-loop.js), which claims the queued run, plays its rounds, checks them and stores the verdict. This file
 // says what is the picture step's own.
 //
-// The first runs are code only: no model is called. Before round 0 the step reads the owner photos (each checked
-// against its hash, owner-photos.js), decides every frame by code (fill-frames.js), stores every picture file on disk
-// by its sha256 with a row per file, and puts the site-pictures/1 manifest together; round 0 has no writing turn, so
-// the loop reads that manifest as the round's answer and grades it with the picture check. Specific, icon and cut-out
-// frames are pending entries the picture check counts as unfilled (P01); with no model to send failures back to there
-// is no fix round, and what still fails is stored on the run. A redeploy mid-run claims the run again: the step
-// repeats the same code work (the same bytes, files written once by hash, file rows kept), unless round 0 was already
-// checked, in which case nothing is redone and the run just ends.
+// Before round 0 the step reads the owner photos (each checked against its hash, owner-photos.js), decides every frame
+// it can by code (fill-frames.js), cuts every photo of the picker's shortlists (picker-input.js) and stores every
+// picture file on disk by its sha256 with a row per file. Round 0 is then one picker call for the whole site (a writing
+// turn of the loop): one user message with the frames that need a specific picture, the plan's words and the photo
+// codes of each shortlist, and the owner photos once, as 512 px thumbnails tagged with their codes; never a demo
+// picture of the kit. Its picks are applied as a change list onto the code half (picker-picks.js) and the manifest is
+// graded with the picture check. The failures of the frames the picker placed or left unanswered go back to the same
+// conversation, at most two fix rounds; invalid picks are sent back once, valid ones applied. A frame no photo fits, or
+// that the picker answered "none", waits for the drawer (#344). A run whose plan has no such frame calls no model:
+// round 0 is the code half alone. Failures the picker cannot fix (frames of code, icons, cut-outs) never go back: the
+// round's failure list holds only the picker's (so the loop ends once none is left, and those stand on the run), and
+// every other failure is kept on the round's check result as `notForPicker`.
+//
+// A redeploy mid-run claims the run again: the step repeats the same code work (the same bytes, files written once by
+// hash), and stores no file again once round 0 is checked; the loop resumes the conversation from the saved turns, and
+// the thumbnails are made again from the owner photos.
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { kitIdOf } from '../site-writer/bench-worker.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
+import { picturePickerDoor } from './door.js'
 import { fileStore } from './file-store.js'
 import { fillFrames } from './fill-frames.js'
 import { openKitWithMap } from './kit-with-map.js'
 import { PICTURES_VERSION } from './manifest-shape.js'
 import { ownerPhotoBytes } from './owner-photos.js'
-import { CHECKER_VERSION, checkPictures, failureListText } from './picture-check/check-pictures.js'
+import { CHECKER_VERSION, checkPictures } from './picture-check/check-pictures.js'
+import { indexInputs } from './picture-check/inputs-index.js'
 import { picturePrompts } from './picture-prompts.js'
+import { pickerFirstMessage, pickerInput, thumbnailResolver } from './picker-input.js'
+import {
+  applyPicks,
+  CHANGES_INSTRUCTION,
+  invalidChangesMessage,
+  manifestFor,
+  NOT_PICKS_MESSAGE,
+  pickerChanges,
+  splitForPicker,
+  WHOLE_PICKS_MESSAGE
+} from './picker-picks.js'
+import { usablePhotos } from './photo-shortlist.js'
 import sharp from 'sharp'
 
 export { BENCH_QUEUE }
 
-/** No fix round in a code only run: nothing could answer one. The picker brings them (#342). */
-export const MAX_FIX_ROUNDS = 0
-
-const CODE_ONLY = 'a code only picture run sends nothing to a model'
+/** Fix rounds after round 0: round 2 is the last manifest scored. */
+export const MAX_FIX_ROUNDS = 2
 
 /** The picture step as a bench step (lib/bench-run-loop.js). */
 export const SITE_PICTURES_STEP = Object.freeze({
@@ -38,74 +58,115 @@ export const SITE_PICTURES_STEP = Object.freeze({
   prompt: picturePrompts,
   checker: Object.freeze({
     version: CHECKER_VERSION,
+    // The whole result is stored on the round; the loop's failure list is only what the picker can fix.
     check: ({ doc, row, ready }) =>
-      checkPictures({
-        pictures: doc,
-        plan: row.plan,
-        kit: ready.kit.doc,
-        brief: row.brief,
-        files: ready.files
-      }),
-    failureListText
+      splitForPicker(
+        checkPictures({
+          pictures: doc,
+          plan: row.plan,
+          kit: ready.kit.doc,
+          brief: row.brief,
+          files: ready.files
+        }),
+        doc
+      ),
+    failureListText: (result) => result.forPicker
   }),
   changes: Object.freeze({
-    applyValidChanges: () => ({ ok: false, reason: CODE_ONLY }),
+    applyValidChanges: applyPicks,
+    // A pick replaces one frame's photo; there is no large replacement to refuse.
     oversized: () => [],
     smallEditsMessage: () => '',
-    invalidChangesMessage: () => ''
+    invalidChangesMessage
   }),
-  messages: Object.freeze({ changesInstruction: '', wholeDoc: '', notADoc: CODE_ONLY }),
-  // Round 0 has no writing turn: the loop merges none and reads the manifest code made before the round.
-  nextTurn: () => null,
-  mergeTurns: () => ({ by: 'code' }),
-  readAnswer: (_value, { ready }) => ready.manifest,
+  messages: Object.freeze({
+    changesInstruction: CHANGES_INSTRUCTION,
+    wholeDoc: WHOLE_PICKS_MESSAGE,
+    notADoc: NOT_PICKS_MESSAGE
+  }),
+  // Round 0 is one picker call, or none when no frame waits for the picker: then the loop reads the code half.
+  nextTurn: ({ ready, answers }) => (answers.length === 0 && ready.firstUser ? ready.firstUser : null),
+  mergeTurns: (answers) => answers[0] ?? { by: 'code' },
+  // An answer with no list of picks is an empty change list: the loop asks once for every pick.
+  readAnswer: (value, { ready }) =>
+    value?.by === 'code' ? ready.manifest : (pickerChanges(value) ?? { changes: [] }),
   prepare,
-  agentRequest: () => {
-    throw new Error(CODE_ONLY)
-  }
+  agentRequest: ({ ready }) => ({
+    firstUser: ready.firstUser,
+    tools: [],
+    resolveImage: ready.picker ? thumbnailResolver(ready.picker) : undefined
+  })
 })
 
 /**
- * @param {{ pool: import('pg').Pool, objects?: { get: Function } | null, storeDir?: string,
- *   index?: Map<string, object>, log?: Console, now?: () => number }} deps `objects`: the media store a revision's
- *   photos are read from; `storeDir`: the bench's file store; `index`: the contracts to find kits in (tests)
+ * @param {{ pool: import('pg').Pool, secret?: string, objects?: { get: Function } | null, storeDir?: string,
+ *   fetchImpl?: typeof fetch, balanceFetch?: typeof fetch, index?: Map<string, object>, log?: Console,
+ *   now?: () => number, retry?: object }} deps `secret` opens the picker door's key; `objects`: the media store a
+ *   revision's photos are read from; `storeDir`: the bench's file store; `index`: the contracts to find kits in
+ *   (tests); `retry` replaces the run's retry policy (tests)
  */
 export function createSitePicturesQueue({ log = console, now, ...deps }) {
   return createBenchQueue(SITE_PICTURES_STEP, { ...deps, log, now })
 }
 
-// The kit, the owner photos, every frame decided and every file stored; or a refusal. A run whose round 0 is already
-// checked needs none of the code work again.
+// The run's picker door when it was started with one (bench-control.js): the same provider, model and endpoint, or a
+// refusal. A run started with no door (its plan has no frame for the picker) gets none.
+async function doorOf({ pool, secret }, row) {
+  if (!row.door?.door) return { ok: true, door: null }
+  const door = await picturePickerDoor({ pool, secret })
+  if (!door.ok) return door
+  const same = ['providerId', 'model', 'endpointHost'].every((k) => door.snapshot[k] === row.door?.[k])
+  if (!same)
+    return {
+      ok: false,
+      code: 'SITE_PICTURES_DOOR_CHANGED',
+      reason: `the door now uses ${door.snapshot.providerId} ${door.snapshot.model}, the run was started on ${row.door?.providerId} ${row.door?.model}`
+    }
+  return door
+}
+
+// The kit, the door, the owner photos, every frame code decides, the picker's input and every file stored; or a
+// refusal. Once round 0 is checked, the files are already stored and recorded, so none is recorded again.
 async function prepare(deps, row) {
   const kit = openKitWithMap(row.kit?.ref, deps.index ? { index: deps.index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_PICTURES_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
+  const door = await doorOf(deps, row)
+  if (!door.ok) return door
   const rounds = await SITE_PICTURES_STORE.roundsOf(deps.pool, row.id)
-  if (rounds.some((r) => r.state === 'checked')) return { ok: true, kit }
+  const recorded = rounds.some((r) => r.state === 'checked')
   const store = fileStore(deps.storeDir)
   const started = Date.now()
   const photoBytes = await ownerPhotoBytes({ ...deps, store }, row)
   const filled = await fillFrames({ plan: row.plan, brief: row.brief, kit: kit.doc, photoBytes })
+  const { files: made, refused, ...parts } = filled
+  const idx = indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief, files: {} })
+  let picker = null
+  if (door.door) {
+    const { usable } = usablePhotos(row.brief, photoBytes)
+    picker = await pickerInput({ idx, manifest: parts, usable, photoBytes })
+  }
   const files = {}
-  for (const [file, made] of filled.files) {
-    const name = await store.putPicture(made.bytes, made.ext)
+  for (const [file, cut] of [...made, ...(picker?.files ?? [])]) {
+    if (files[file]) continue
+    const name = await store.putPicture(cut.bytes, cut.ext)
     // Measured again from the stored bytes, so the check grades what is on disk.
     const stored = await store.readPicture(name)
     if (!stored)
       return { ok: false, code: 'SITE_PICTURES_STORE', reason: `the file ${name} could not be stored` }
     const meta = await sharp(stored).metadata()
-    files[file] = { sha256: made.sha256, width: meta.width, height: meta.height }
-    await saveFile(deps.pool, {
-      runId: row.id,
-      sha256: made.sha256,
-      path: name,
-      bytes: stored.length,
-      width: meta.width,
-      height: meta.height
-    })
+    files[file] = { sha256: cut.sha256, width: meta.width, height: meta.height }
+    if (!recorded)
+      await saveFile(deps.pool, {
+        runId: row.id,
+        sha256: cut.sha256,
+        path: name,
+        bytes: stored.length,
+        width: meta.width,
+        height: meta.height
+      })
   }
-  const { files: _made, refused, ...parts } = filled
-  const manifest = {
+  const base = {
     version: PICTURES_VERSION,
     fingerprint: {
       kit: kitIdOf(kit.doc, row.kit?.ref),
@@ -113,11 +174,14 @@ async function prepare(deps, row) {
       briefSha256: row.brief_sha256,
       prompts: row.prompts
     },
-    ...parts,
     altNotes: [],
     refusedPhotos: refused,
+    // The picker's cost is the cost of the run's turns (one row per call), and its balance is read around the run.
     cost: { code: 0 },
     timing: { code: Date.now() - started }
   }
-  return { ok: true, kit, manifest, files }
+  const ready = { ok: true, kit, door: door.door ?? undefined, files, idx, base, parts, picker }
+  ready.manifest = manifestFor(ready, new Map())
+  ready.firstUser = picker?.frames.length ? pickerFirstMessage(picker) : null
+  return ready
 }

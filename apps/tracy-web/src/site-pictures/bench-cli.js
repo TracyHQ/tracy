@@ -21,7 +21,8 @@ export const USAGE = `usage: node scripts/site-pictures-bench.mjs <command>
                                           picture files (files/), the file rows, the check and failure list of each
                                           round, the failures still standing, run meta, plan and turns
   cancel <runId>                          stop a run
-This first bench is code only: no model is called (picker, drawer and looker come later).`
+A plan with frames that need a specific picture calls the picker through the "Picture picker" door (/ops, Model & AI);
+one without calls no model. The drawer and the looker come later.`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
 
@@ -29,7 +30,7 @@ class Usage extends Error {}
 
 /**
  * @param {string[]} argv the arguments after the script name
- * @param {{ pool: import('pg').Pool, cwd?: string, storeDir?: string, out?: (line: string) => void,
+ * @param {{ pool: import('pg').Pool, secret?: string, cwd?: string, storeDir?: string, out?: (line: string) => void,
  *   err?: (line: string) => void, index?: Map<string, object>, now?: () => number }} deps
  * @returns {Promise<number>} the exit code
  */
@@ -162,6 +163,7 @@ async function startRun(d, values) {
   }
   const started = await startPictureRun({
     pool: d.pool,
+    secret: d.secret,
     plan: plan.value,
     planSource: plan.source,
     brief: brief.value,
