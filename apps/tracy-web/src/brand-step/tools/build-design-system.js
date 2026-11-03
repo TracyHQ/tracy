@@ -144,7 +144,8 @@ export const tool = {
     return {
       ok: contrastOk,
       ...(contrastOk ? {} : { error: 'an accent pair is under 3:1 (hard rule for text and buttons)' }),
-      module: { file, bytes, limit: 64000, slot: name },
+      // "<slot contract id>@<version>" is the form the gate wants: the contract that built it, for this template version.
+      module: { file, bytes, limit: 64000, slot: `${name}@${K.quickstart.version}` },
       profileId: brand.r.profile.id,
       opensOn: opens,
       brandColour,

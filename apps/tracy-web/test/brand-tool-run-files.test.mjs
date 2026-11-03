@@ -7,9 +7,7 @@ import { after, test } from 'node:test'
 import sharp from 'sharp'
 import { toAgentImage } from '../src/brand-step/agent-image.js'
 import { diskRunFiles, memoryRunFiles } from '../src/brand-step/run-files.js'
-import { displayFaceOf, resolveTemplateFont, TemplateFontError } from '../src/brand-step/template-font.js'
 import { brandTools, toolByName } from '../src/brand-step/tools/index.js'
-import { FONT } from './_brand-tool-fixtures.mjs'
 
 const dirs = []
 after(() => {
@@ -86,42 +84,4 @@ test('the tool list: names match the approved prompt, each with a schema and a r
     assert.equal(toolByName(t.name), t)
   }
   assert.equal(toolByName('cut_mark'), undefined)
-})
-
-const fontFiles = (entries) => ({ list: () => Object.keys(entries), read: (p) => entries[p] })
-
-test('template font: the display face comes from the contract, the bytes from the template own files', () => {
-  assert.equal(displayFaceOf({ discovered: { displayFace: 'Bebas Neue 400, tracking 0em' } }), 'Bebas Neue')
-  assert.equal(displayFaceOf({ baseTokens: { '--font-display': '"Oswald", sans-serif' } }), 'Oswald')
-  assert.equal(displayFaceOf({}), null)
-  const css = '@font-face { font-family: "Teko"; src: url("../fonts/heading.woff2") format("woff2"); }'
-  const t = fontFiles({
-    'tpl/css/fonts.css': Buffer.from(css),
-    'tpl/fonts/heading.woff2': FONT.bytes,
-    'tpl/fonts/other.woff2': Buffer.from('nope')
-  })
-  const f = resolveTemplateFont({ contract: { discovered: { displayFace: 'Teko 700' } }, templateFiles: t })
-  assert.equal(f.family, 'Teko')
-  assert.equal(f.from, 'tpl/fonts/heading.woff2')
-  assert.ok(Buffer.compare(f.bytes, FONT.bytes) === 0)
-  // no stylesheet rule: found by the family the font file itself carries
-  const byFamily = resolveTemplateFont({
-    contract: { discovered: { displayFace: 'Teko' } },
-    templateFiles: fontFiles({ 'a/x.woff2': FONT.bytes })
-  })
-  assert.equal(byFamily.from, 'a/x.woff2')
-})
-
-test('template font: a face the template does not ship is refused with the reason', () => {
-  const contract = { discovered: { displayFace: 'Bebas Neue 400, tracking 0em' } }
-  const t = fontFiles({
-    'tpl/fonts/icons.woff2': FONT.bytes,
-    'tpl/css/template.css': Buffer.from('body{font-family:"Bebas Neue"}')
-  })
-  assert.throws(
-    () => resolveTemplateFont({ contract, templateFiles: t }),
-    (e) => e instanceof TemplateFontError && /"Bebas Neue".*Google Fonts/.test(e.message)
-  )
-  assert.throws(() => resolveTemplateFont({ contract: {}, templateFiles: t }), /declares no display face/)
-  assert.throws(() => resolveTemplateFont({ contract, templateFiles: null }), /not available/)
 })

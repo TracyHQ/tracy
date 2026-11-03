@@ -130,17 +130,27 @@ async function prepare(deps, row) {
   const images = await kitImages.ensure(kit)
   if (!images.ok) return images
   const wiring = await deps.wiring()
-  const font = await wiring.fontFor(kit)
-  if (!font)
-    return { ok: false, code: 'BRAND_FONT_UNRESOLVED', reason: 'the template heading font cannot be read' }
+  const font = await wiring.fontFor(kit).catch((e) => ({ refusal: String(e?.message ?? e) }))
+  if (!font || font.refusal)
+    return {
+      ok: false,
+      code: 'BRAND_FONT_UNRESOLVED',
+      reason: `the template heading font cannot be read: ${font?.refusal ?? 'the template has no slot contract'}`
+    }
   const files = wiring.filesFor(row.id)
+  // The picture of a kit image by its id, for open_image: the bytes the kit image cache serves, or null.
+  const kitImage = async (id) => {
+    const opened = await images.images.open(id)
+    const base64 = typeof opened === 'object' ? opened?.images?.[0]?.base64 : null
+    return base64 ? Buffer.from(base64, 'base64') : null
+  }
   return {
     ok: true,
     prompt,
     kit,
     agent: doors.agent,
     tools: wiring.tools,
-    ctx: { files, kit: kit.doc, brief: row.brief, font, runId: row.id, kitImages: images.images },
+    ctx: { files, kit: kit.doc, brief: row.brief, font, runId: row.id, kitImage },
     reviewFor: ({ spend, tool }) =>
       createReview({ door: doors.reviewer.door, fetchImpl: deps.fetchImpl, spend, tool })
   }

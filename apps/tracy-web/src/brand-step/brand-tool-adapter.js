@@ -1,10 +1,15 @@
 // Brand tools as the agent loop takes them (brand step trial bench, #320). The tools are product modules with the
 // shape { name, description, inputSchema, run(input, ctx) } (brand-step/tools/); the loop wants { name, description,
-// parameters, run(args) }. This adapter also keeps the saved conversation free of image bytes: every picture a tool
-// returns is fitted to the harness's long edge (512 px), written to the run's file folder once, and travels as a
-// reference to that file; resolveImage(ref) reads it back when a run resumes or a fix round replays the conversation.
+// parameters, run(args) }. A tool answers a JSON object, which goes to the agent as { text: '<the JSON>', images }.
+// open_image adds `image: { mediaType, base64 }`: the adapter takes it out of the JSON and sends it as the agent's
+// image entry { mediaType, base64, ref }.
+// A usage error (BrandToolError) goes back as the JSON the lab tool printed: { ok: false, error, ...extra }.
+// The saved conversation stays free of image bytes: every picture is fitted to the harness's long edge (512 px),
+// written to the run's file folder once, and travels as a reference to that file; resolveImage(ref) reads it back
+// when a run resumes or a fix round replays the conversation.
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
+import { BrandToolError } from './tools/common.js'
 
 /** The picture fitted inside `edge` px on its long side (never enlarged); PNG stays PNG, anything else becomes JPEG. */
 export async function fitToEdge({ mediaType, base64 }, edge) {
@@ -48,8 +53,14 @@ export function agentTools({ tools, ctx, imageEdge, onTool = () => {}, extra = [
     onTool(tool.name)
     try {
       const result = await tool.run(args, ctx)
-      if (!result || typeof result !== 'object' || !Array.isArray(result.images)) return result
-      return { ...result, images: await Promise.all(result.images.map(stored)) }
+      if (!result || typeof result !== 'object') return result
+      // Always the { text, images } envelope: a bare object with a `text` field of its own (set_name's) would be taken
+      // by the loop for the envelope and only that string would reach the agent.
+      const { image, ...rest } = result
+      return { text: JSON.stringify(rest), images: image ? [await stored(image)] : [] }
+    } catch (error) {
+      if (!(error instanceof BrandToolError)) throw error
+      return JSON.stringify({ ok: false, error: error.message, ...error.extra })
     } finally {
       onTool(null)
     }

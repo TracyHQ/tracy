@@ -99,7 +99,7 @@ test('two fix rounds that still fail end with the safe version, marked gate', op
   )
   // No third fix round: three agent conversations' worth of calls and no more.
   assert.equal(model.agent.requests.length, 6)
-  // The safe version: the template's own accent, a name-only logo per spot, an initials favicon, an owner task.
+  // The safe version: the template's own accent, an initials lettermark and the name per spot, a favicon from the mark, an owner task.
   const safe = run.brandFile
   assert.equal(safe.kind, 'brand-file')
   assert.equal(safe.safeVersion.reason, 'gate')
@@ -138,6 +138,7 @@ test('a safe version asks the tools that are code only: no model is called to bu
     'name_slots',
     'set_name',
     'make_lettermark',
+    'compose_logo',
     ...Array(SPOTS).fill('fit_logo'),
     'make_favicon'
   ])

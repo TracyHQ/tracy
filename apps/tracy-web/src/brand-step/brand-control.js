@@ -67,10 +67,11 @@ export async function startBrandRun({
   const doors = await brandDoors({ pool, secret, override: agentModel ?? null })
   if (!doors.ok) return refuse(doors.code, doors.reason, doors.lacking ? { lacking: doors.lacking } : {})
   const wired = await wiring()
-  if (!(await wired.fontFor(opened)))
+  const font = await wired.fontFor(opened).catch((e) => ({ refusal: String(e?.message ?? e) }))
+  if (!font || font.refusal)
     return refuse(
       'BRAND_FONT_UNRESOLVED',
-      `The template heading font of ${kitRef} cannot be read from the template's own files.`
+      `The template heading font of ${kitRef} cannot be read: ${font?.refusal ?? 'the template has no slot contract'}.`
     )
   const active = await activeRun(pool)
   if (active) return activeRefusal(active)

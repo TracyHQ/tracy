@@ -1,5 +1,5 @@
 // Shared set-up of the brand bench tests (brand step trial bench, #320): both brand doors assigned to a test provider,
-// fake brand tools (the real ones are a separate piece of work), an in-memory run folder holding the pictures of an
+// fake brand tools answering in the shapes the real ones do, an in-memory run folder holding the pictures of an
 // invented business (drawn by code, test/_brand-gate-files.mjs), and a model router that gives the agent and the
 // reviewer their own scripted replies. No real model is called and no money is spent.
 import assert from 'node:assert/strict'
@@ -53,7 +53,7 @@ const PNG = await sharp({ create: { width: 900, height: 700, channels: 4, backgr
   .png()
   .toBuffer()
 
-/** Fake brand tools: they answer in the shapes brand-step/brand-safe-version.js documents. */
+/** Fake brand tools: they answer in the shapes the real tools of brand-step/tools/ answer. */
 export function fakeTools({ onCall = () => {}, failOn = null } = {}) {
   const tool = (name, answer) => ({
     name,
@@ -66,27 +66,52 @@ export function fakeTools({ onCall = () => {}, failOn = null } = {}) {
     }
   })
   return [
-    tool('open_image', {
-      text: JSON.stringify({ ok: true }),
-      images: [{ mediaType: 'image/png', base64: PNG.toString('base64') }]
-    }),
+    tool('open_image', () => ({
+      ok: true,
+      id: 'page-home-1440',
+      image: { mediaType: 'image/png', base64: PNG.toString('base64') }
+    })),
     tool('set_name', {
       ok: true,
       text: 'Name',
       rendersAs: 'Name',
       files: { light: 'name-light.png', dark: 'name-dark.png' },
-      twoLines: null
+      twoLines: null,
+      sidecar: 'name/name.json'
     }),
     tool('make_lettermark', { ok: true, file: 'mark-lettermark.png' }),
+    tool('compose_logo', {
+      ok: true,
+      sides: {
+        light: { file: 'logo-light.png', variants: { twoLines: null } },
+        dark: { file: 'logo-dark.png', variants: { twoLines: null } }
+      }
+    }),
     tool('fit_logo', (input) => ({ ok: true, file: `spot-${input.spot}.png`, shows: 'logo' })),
     tool('make_favicon', {
       ok: true,
-      from: 'mark',
       mark: 'mark-lettermark.png',
-      ico: 'favicon.ico',
-      png32: 'f32.png',
-      png512: 'f512.png',
-      phone180: 'p180.png'
+      phoneMark: 'mark-lettermark.png',
+      phoneGround: '#121111',
+      tabIcons: 'transparent',
+      tileGround: null,
+      tileMark: null,
+      tileMarkRecoloured: false,
+      files: { ico: 'favicon.ico', png32: 'f32.png', png512: 'f512.png', phone180: 'p180.png' },
+      check: {
+        bboxShare: 0.6,
+        pass: true,
+        tabs: { '#ffffff': { contrastShare: 0.9 }, '#202124': { contrastShare: 0.8 } }
+      },
+      candidates: [
+        {
+          kind: 'transparent',
+          png32: 'c32.png',
+          pass: true,
+          bboxShare: 0.6,
+          contrastShare: { '#ffffff': 0.9, '#202124': 0.8 }
+        }
+      ]
     }),
     tool('name_slots', { ok: true, slots: [], ownerTasks: [] }),
     tool('look_logo', async (input, ctx) => {
