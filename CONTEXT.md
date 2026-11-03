@@ -204,6 +204,33 @@ The script-only grader of a site copy file (`site-copy-check/1`, rules W01 to W1
 numbers and never edits the writer's text.
 _Avoid_: copy review, linter
 
+**Picture manifest**:
+The file `site-pictures/1` the picture step produces for a whole site: per planned frame, where its picture came from
+(owner photo, extended photo, drawing, icon, initials, hidden, twin), the cut file with its size, crop, enlargement and
+hash, and what the looker saw; plus template level pictures, returns to planner and cost
+([ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md)).
+_Avoid_: image list, picture plan
+
+**Picture check**:
+The script-only grader of a picture manifest (`site-pictures-check/1`, rules P01 to P13). It reads the files' recorded
+hashes and sizes, never judges how a picture looks, and never changes a picture.
+_Avoid_: image review, picture linter
+
+**Picker**:
+The AI role that looks at the owner's photos once, as labelled thumbnails, and chooses one for every frame that needs
+a specific picture. It never sees the template's demo pictures.
+_Avoid_: selector, matcher
+
+**Looker**:
+The AI role that checks each finished picture on its own, in a fresh context, against the plan's words, names its
+faults from a fixed list and writes one sentence of what the picture shows. A model of another maker than the picker.
+_Avoid_: reviewer, judge
+
+**Fallback ladder**:
+The fixed order a frame walks down once two fix rounds have not filled it: draw, next photo, fewer rows, hide, return
+to planner. A demo picture is never kept and a person is never drawn.
+_Avoid_: retry policy, plan B
+
 ---
 
 **Read next:** [`SYSTEM.md`](SYSTEM.md) (how the system runs) · [`CLAUDE.md`](CLAUDE.md) (boundary
