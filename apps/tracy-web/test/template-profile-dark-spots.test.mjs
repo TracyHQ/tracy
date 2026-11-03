@@ -62,7 +62,9 @@ const PROVEN_SINCE = {
   'quickstart/ja-boxing/j6@1.0.10': { footer: true },
   // JA Cagox's first row (29/10/2026): measured on a site restored from 1.0.2 (1.0.1 with language keys and dated articles), the footer band and its logo are dark
   'quickstart/ja-cagox/j6@1.0.1': { footer: true },
-  'quickstart/ja-cagox/j6@1.0.2': { footer: true }
+  'quickstart/ja-cagox/j6@1.0.2': { footer: true },
+  // Template 2.0.3 preserves the native dark footer and separate white footer mark.
+  'quickstart/ja-cagox/j6@1.0.3': { footer: true }
 }
 
 /** `darkSpotsOf` as it read the table above. */

@@ -3,12 +3,12 @@
   "extends": "joomla-t3-ja",
   "template": "joomla/ja-cagox",
   "minVersion": {
-    "quickstart/ja-cagox/j6": "1.0.1"
+    "quickstart/ja-cagox/j6": "1.0.3"
   },
   "maxVersion": {
-    "quickstart/ja-cagox/j6": "1.0.2"
+    "quickstart/ja-cagox/j6": "1.0.3"
   },
-  "release": "quickstart/ja-cagox/j6@1.0.2",
+  "release": "quickstart/ja-cagox/j6@1.0.3",
   "roles": {
     "page": "body",
     "display": "div.slideshow-content h2.block-title",
@@ -27,7 +27,7 @@
     "card": "the product cards of the home tabs",
     "section": "the story sections under the video band"
   },
-  "keepScopes": [".t3-header", ".t3-slideshow", ".dark-style", ".block-video", ".t3-footer"],
+  "keepScopes": [],
   "baseSystem": "od:apple",
   "alphaText": true,
   "baseTokens": {
@@ -63,17 +63,26 @@
       "fg-2": "#000000",
       "border": "#cccccc",
       "surface": "#f5f5f5"
+    },
+    {
+      "border": "#f7f7f7",
+      "surface": "#eeeeee"
     }
   ],
   "baseNote": "T3 less/variables.less (colours) and the default home page (discover.mjs, 1440): page #fff, body text #444, headings #222, the accent #da4e35 and its readable shade #c33c24 (links, the active tab). The display line and the body are Playfair Display; labels, menus and buttons Montserrat (they read the body face role in the stylesheets)",
   "selectors": {
     "displaySize": "h2.block-title",
     "heading": [".t3-wrapper h2", ".t3-wrapper h3"],
-    "button": [".btn:not(.off-canvas-toggle)"],
-    "buttonPrimary": [".btn-primary:not(.off-canvas-toggle)"],
+    "button": [".btn:not(.off-canvas-toggle):not(.btn-block)"],
+    "buttonPrimary": [],
     "card": ["ul.vmproduct > li"],
     "container": ["#t3-mainbody .container, .container"],
-    "bodyFace": ["body"]
+    "bodyFace": ["body"],
+    "inkImages": [
+      ".logo .logo-img[src$=\"/images/joomlart/logo/logo-default.png\"]",
+      ".logo .logo-img-sm[src$=\"/images/joomlart/logo/logo-mobile.png\"]",
+      ".t3-header:not(.dark-style) .vmCartModule .total_products::before"
+    ]
   },
   "displayImportant": true,
   "displayImportantNote": "js/script.js sets the slideshow title to 55px as an inline style on windows at least 768px wide and 768px tall; only !important beats it (Notion, Airbnb and nine more systems read 55px at 1440x900 without it)",
@@ -92,38 +101,96 @@
     "why": "head-search is in the header block every layout of the quickstart loads (tpls/blocks/header.php) and renders whenever a module sits in it; off-canvas renders earlier on the home page (byte 7340 against 24720 of 14 positions tried) but only while the style's off-canvas option is on"
   },
   "ready": true,
-  "readyNote": "measured with flow.mjs on a local 1.0.1 site under the 15 featured systems at 1440 and 390: 34/34 PASS; the empty slot is pixel-identical to the untokenized build on 7 pages at 1440 and 390 (the sidebar featured products show a random order on each load)",
+  "readyNote": "Release-specific acceptance is measured by flow.mjs, preview-check.mjs and preview-parity.mjs, with results in design-system-measurement.json.",
   "bands": {
-    ".t3-header": {
-      "ground": "#eaeaea",
-      "texts": ["#222222", "#444444"],
-      "important": true
-    },
-    ".t3-slideshow": {
-      "ground": "#eaeaea",
+    ".block-slideshow-item:not(.dark-style)": {
+      "ground": "#ffffff",
       "texts": ["#000000", "#111111"],
+      "fill": true,
+      "important": true,
       "picture": true,
-      "important": true
+      "paint": {
+        ".btn-border:hover, .btn-border:focus, .btn-default:hover, .btn-default:focus": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      },
+      "media": "(min-width: 768px)"
     },
-    ".dark-style": {
+    ".slideshow-content.dark-style": {
       "ground": "#000000",
       "texts": ["#ffffff", "#aaaaaa"],
-      "important": true
+      "fill": true,
+      "important": true,
+      "paint": {
+        ".btn-border:hover, .btn-border:focus, .btn-default:hover, .btn-default:focus": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      }
+    },
+    ".block-slideshow-item.dark-style": {
+      "ground": "#333333",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "important": true,
+      "picture": true,
+      "paint": {
+        ".btn-border:hover, .btn-border:focus, .btn-default:hover, .btn-default:focus": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      },
+      "media": "(min-width: 768px)"
+    },
+    ".block-hero.dark-style": {
+      "ground": "#ffffff",
+      "texts": ["#000000", "#111111"],
+      "fill": true,
+      "important": true,
+      "picture": true,
+      "paint": {
+        ".btn-border:hover, .btn-border:focus, .btn-default:hover, .btn-default:focus": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      }
+    },
+    ".block-hero.light-style": {
+      "ground": "#ffffff",
+      "texts": ["#000000", "#111111"],
+      "fill": true,
+      "important": true,
+      "picture": true,
+      "paint": {
+        ".btn-border:hover, .btn-border:focus, .btn-default:hover, .btn-default:focus": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      }
     },
     ".block-video": {
       "ground": "#000000",
       "texts": ["#ffffff"],
+      "fill": true,
+      "important": true,
       "picture": true,
       "paint": {
         ".block-content": {
           "background-color": "ground"
         }
-      },
-      "important": true
+      }
     },
     ".t3-footer": {
       "ground": "#111111",
       "texts": ["#aaaaaa", "#ffffff"],
+      "fill": true,
+      "important": true,
       "paint": {
         ".module small a": {
           "color": "accent"
@@ -131,10 +198,136 @@
         ".copyright small a": {
           "color": "accent"
         }
-      },
-      "important": true
+      }
+    },
+    ".slideshow-content:not(.dark-style)": {
+      "ground": "#ffffff",
+      "texts": ["#000000", "#444444"],
+      "fill": true,
+      "repaint": true,
+      "important": true,
+      "media": "(max-width: 767px)",
+      "paint": {
+        ".btn-border, .btn-default": {
+          "background-color": "ground",
+          "border-color": "text",
+          "color": "text"
+        },
+        ".btn-border:hover, .btn-border:focus, .btn-default:hover, .btn-default:focus": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      }
+    },
+    ".hero-content.col-md-6": {
+      "ground": "#ffffff",
+      "texts": ["#000000", "#444444"],
+      "fill": true,
+      "repaint": true,
+      "important": true,
+      "media": "(max-width: 767px)",
+      "paint": {
+        ".btn-border, .btn-default": {
+          "background-color": "ground",
+          "border-color": "text",
+          "color": "text"
+        },
+        ".btn-border:hover, .btn-border:focus, .btn-default:hover, .btn-default:focus": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      }
+    },
+    ".hero-content.col-md-offset-6": {
+      "ground": "#ffffff",
+      "texts": ["#000000", "#444444"],
+      "fill": true,
+      "repaint": true,
+      "important": true,
+      "paint": {
+        ".btn-border, .btn-default": {
+          "background-color": "ground",
+          "border-color": "text",
+          "color": "text"
+        },
+        ".btn-border:hover, .btn-border:focus, .btn-default:hover, .btn-default:focus": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      }
     }
   },
-  "bandsNote": "read off the default home page with scripts/bands.mjs (1440): the header is a light panel (#eaeaea on the home page, white on inner pages; the black logo picture needs a light ground, so under a dark system the panel stays light), .dark-style and the footer are ink bands, the hero slides and the video band stand on photographs",
-  "maxVersionNote": "1.0.1 built locally with release-joomla.mjs from the template source that reads the role variables; static checker: CSS-1, CSS-2, DEF-1, BAND-1, PLAT-1, VARS-1, PIC-1, TEXT-1 pass. 1.0.2 (never published before it, like 1.0.1) is 1.0.1 with its stylesheets unchanged (release-joomla.mjs tokenized 0 files): ten overrides print their words through language keys and the demo articles carry distinct dates"
+  "bandsNote": "Plain headers and slideshow grounds follow the page. Photo text and outline buttons are paired to the actual photograph ground, including the bright landing photograph whose source class is dark-style. Its right-hand caption and all phone hero captions wear opaque paired system panels where words otherwise cross both pale and dark areas of a photograph. The footer wears its own paired band colours.",
+  "maxVersionNote": "1.0.3 is rebuilt from template 2.0.3 with release-joomla.mjs. Release-specific measurements accompany the content contract; older source versions are outside this measured range.",
+  "followRules": {
+    ".t3-header, .t3-slideshow": {
+      "background-color": "bg!",
+      "color": "fg!"
+    },
+    ".reset .form-validate p, .remind .form-validate p": {
+      "background-color": "surface!",
+      "color": "fg!",
+      "border-color": "border!"
+    },
+    ".checkout-button-top": {
+      "border-color": "border-soft!"
+    },
+    ".block-slideshow-item, .block-slideshow .slick-slider": {
+      "background-color": "bg!"
+    },
+    ".block-slideshow.style-1:has(.block-slideshow-item.active.light-style) .carousel-indicators li": {
+      "border-color": "ink!"
+    },
+    ".block-slideshow.style-1:has(.block-slideshow-item.active.light-style) .carousel-indicators li.active": {
+      "background-color": "ink!"
+    },
+    ".block-slideshow.style-1:has(.block-slideshow-item.active.dark-style) .carousel-indicators li": {
+      "border-color": "on-ink!"
+    },
+    ".block-slideshow.style-1:has(.block-slideshow-item.active.dark-style) .carousel-indicators li.active": {
+      "background-color": "on-ink!"
+    },
+    ".t3-header .vmCartModule .total_products": {
+      "border-color": "fg!"
+    },
+    ".t3-slideshow .block-slideshow .carousel-control span": {
+      "background-color": "on-ink!"
+    },
+    ".t3-header .off-canvas-toggle, .t3-header .off-canvas-toggle .fa, .t3-header .navbar-default .navbar-nav > li > a, .t3-header .vmCartModule .total_products": {
+      "color": "fg!"
+    },
+    ".t3-header .navbar-default .navbar-nav > li > a .caret": {
+      "border-top-color": "fg!",
+      "border-bottom-color": "fg!"
+    },
+    "#fp-nav": {
+      "background-color": "surface!",
+      "color": "fg!"
+    },
+    "#fp-nav ul li a span": {
+      "border-color": "fg!"
+    },
+    "#fp-nav ul li a.active span": {
+      "background-color": "fg!"
+    }
+  },
+  "measureStill": true,
+  "sideRules": {
+    "light": {
+      ".block-slideshow-item": {
+        "background-color": "var(--ds-c-bg)!important"
+      },
+      ".t3-header.dark-style .logo-img[src$=\"/images/joomlart/logo/logo-default-light.png\"], .t3-header.dark-style .logo-img-sm[src$=\"/images/joomlart/logo/logo-mobile-light.png\"], .t3-header.dark-style .vmCartModule .total_products::before": {
+        "filter": "invert(1) hue-rotate(180deg)!important"
+      }
+    },
+    "dark": {
+      ".block-slideshow-item": {
+        "background-color": "var(--ds-c-bg)!important"
+      }
+    }
+  }
 }

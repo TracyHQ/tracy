@@ -166,6 +166,23 @@
           "proof": "the footer band is rgb(17,17,17) on every page, and each style's logofooterimage is the white mark logo-footer.png (mean luminance 255)"
         },
         "note": "Same logos as 1.0.1; no logo file, logo layout or logo rule changed: ten template overrides print their interface words through language keys, and the demo content gives the articles of each category distinct dates, retitles one menu item and neutralises one picture caption (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 60,
+          "height": 60
+        },
+        "logoHeight": 60,
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(17,17,17) on every page, and each style's logofooterimage is the white mark logo-footer.png (mean luminance 255)"
+        },
+        "note": "Same logos and content as 1.0.2; template 2.0.3 retains the six T3 styles, 60 x 60 header marks, separate footer mark and favicon path from 1.0.2. The pack preserves the database and logo files; its slot declares the monochrome header marks as ink images. Brand and favicon writer trials remain unverified."
       }
     },
     "quickstart/ja-diner/j6": {
