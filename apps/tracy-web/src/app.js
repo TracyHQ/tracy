@@ -1166,6 +1166,7 @@ export function buildApp(deps) {
       ? createSitePlannerQueue({
           pool: deps.pool,
           secret: deps.config.sessionSecret,
+          config: deps.config,
           fetchImpl: deps.fetchImpl ?? fetch,
           log: deps.log ?? console
         })

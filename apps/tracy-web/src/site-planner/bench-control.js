@@ -1,11 +1,11 @@
 // Starting and cancelling a site planner bench run (ADR 0041, #301). A start checks everything a run needs before
-// it is queued (the brief's shape, the kit, the door) and stores what the run will use, so a refused start leaves
+// it is queued (the brief's shape, the kit, the door, the kit's images) and stores what the run will use, so a refused start leaves
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from './brief-shape.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { sitePlannerDoor } from './door.js'
-import { readableKits } from './kit-source.js'
+import { openKit, readableKits } from './kit-source.js'
 import { CHECKER_VERSION } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
 
@@ -26,9 +26,19 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
 /**
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
- *   startedBy: string, index?: Map<string, object> }} input `index`: the contracts to find kits in (tests).
+ *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object> }} input `kitImages`: the kit
+ *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests).
  */
-export async function startBenchRun({ pool, secret, brief, briefSource, kitRef, startedBy, index }) {
+export async function startBenchRun({
+  pool,
+  secret,
+  brief,
+  briefSource,
+  kitRef,
+  startedBy,
+  kitImages,
+  index
+}) {
   const problems = briefShapeProblems(brief)
   if (problems.length)
     return refuse('SITE_PLANNER_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
@@ -43,6 +53,9 @@ export async function startBenchRun({ pool, secret, brief, briefSource, kitRef, 
   if (!door.ok) return refuse(door.code, door.reason, door.lacking ? { lacking: door.lacking } : {})
   const active = await activeRun(pool)
   if (active) return activeRefusal(active)
+  // Last, since the first use of a kit version downloads its image zip: a kit whose images are unusable never queues.
+  const images = await kitImages.ensure(openKit(kitRef, index ? { index } : {}))
+  if (!images.ok) return refuse(images.code, images.reason)
   const created = await createRun(pool, {
     startedBy,
     brief,

@@ -12,6 +12,10 @@
 // died while waiting for the model) is marked abandoned and its request is sent once more: a model call has no effect
 // besides its cost. If that resend is lost too, the run fails with AGENT_TURN_UNANSWERED. Every claim counts as an
 // attempt, so the retry limit is high. A cancel is honoured between two model calls and between two rounds.
+//
+// Before any model call of a claim, the kit's images are made ready (kit-images.js): a kit whose zip is missing or
+// whose images do not match the kit fails the run with that code and reason. The saved turns keep a reference for
+// each opened image, and the images are read back from the cache when the run resumes or a fix round replays them.
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { AgentError, runAgent } from '../lib/agent-over-door.js'
 import {
@@ -24,6 +28,7 @@ import {
   turnsOf
 } from './bench-store.js'
 import { sitePlannerDoor } from './door.js'
+import { kitImagesFor } from './kit-images.js'
 import { firstUserMessage, kitTools, openKit } from './kit-source.js'
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
@@ -43,10 +48,20 @@ const HARNESS_KEYS = ['maxTokens', 'effort', 'cacheTtl', 'toolImages', 'maxTurns
 class LeaseLost extends Error {}
 
 /**
- * @param {{ pool: import('pg').Pool, secret: string, fetchImpl?: typeof fetch, index?: Map<string, object>,
- *   log?: Console, now?: () => number }} deps
+ * @param {{ pool: import('pg').Pool, secret: string, config: any, fetchImpl?: typeof fetch,
+ *   index?: Map<string, object>, kitImages?: { ensure: Function }, log?: Console, now?: () => number }} deps
+ *   `config` locates the image cache and the releases credential; `kitImages` replaces the release zips (tests).
  */
-export function createSitePlannerQueue({ pool, secret, fetchImpl = fetch, index, log = console, now }) {
+export function createSitePlannerQueue({
+  pool,
+  secret,
+  config,
+  fetchImpl = fetch,
+  index,
+  kitImages = kitImagesFor({ pool, config, fetchImpl }),
+  log = console,
+  now
+}) {
   return createDurableQueue({
     pool,
     table: 'site_planner_run',
@@ -55,7 +70,7 @@ export function createSitePlannerQueue({ pool, secret, fetchImpl = fetch, index,
     ...BENCH_QUEUE,
     log,
     ...(now ? { now } : {}),
-    run: (row, lease) => runBenchRun({ pool, secret, fetchImpl, index }, row, lease)
+    run: (row, lease) => runBenchRun({ pool, secret, fetchImpl, index, kitImages }, row, lease)
   })
 }
 
@@ -139,7 +154,8 @@ async function playRound(deps, { row, ready, round, followUp, leaseToken, must }
       door: ready.door,
       system: ready.prompt.text,
       firstUser: firstUserMessage({ kit: ready.kit, brief: row.brief }),
-      tools: kitTools(ready.kit.doc),
+      tools: kitTools(ready.kit.doc, { images: ready.images }),
+      resolveImage: ready.images.resolve,
       history,
       followUp,
       fetchImpl: deps.fetchImpl,
@@ -182,7 +198,7 @@ async function playRound(deps, { row, ready, round, followUp, leaseToken, must }
 
 // Everything the run was started with must still hold: a run that silently ran on another model, prompt, checker or
 // a kit the server no longer reads would not measure what it records.
-async function prepare({ pool, secret, index }, row) {
+async function prepare({ pool, secret, index, kitImages }, row) {
   const prompt = plannerPrompt()
   if (prompt.sha256 !== row.prompt_sha256)
     return {
@@ -208,7 +224,9 @@ async function prepare({ pool, secret, index }, row) {
       code: 'SITE_PLANNER_DOOR_CHANGED',
       reason: `the door now uses ${door.snapshot.providerId} ${door.snapshot.model}, the run was started on ${row.door?.providerId} ${row.door?.model}`
     }
-  return { ok: true, prompt, kit, door: door.door }
+  const images = await kitImages.ensure(kit)
+  if (!images.ok) return images
+  return { ok: true, prompt, kit, door: door.door, images: images.images }
 }
 
 const harnessOf = (harness) =>

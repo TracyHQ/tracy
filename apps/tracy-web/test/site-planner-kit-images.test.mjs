@@ -82,6 +82,30 @@ test('the zip is fetched once per kit version, checked, cached, and reused by a 
   assert.equal(JSON.parse(opened.text).id, 'page-home-390')
 })
 
+test('an opened image carries a reference that reads the same bytes back, and only those', async () => {
+  const kit = fakeKit()
+  const ready = await createKitImages({
+    dir,
+    fetchZip: zipSource({ ok: true, bytes: goodZip() }).fetchZip
+  }).ensure(kit)
+  const opened = await ready.images.open('header-1440')
+  const { ref } = opened.images[0]
+  assert.deepEqual(ref, { kit: 'demo/j6/2.0.0', image: 'header-1440', sha256: sha(bytesOf('header-1440')) })
+
+  // A later process holds no bytes in memory: the reference is read back from the cache.
+  const later = await createKitImages({ dir, fetchZip: async () => assert.fail('downloaded again') }).ensure(
+    kit
+  )
+  const back = await later.images.resolve(ref)
+  assert.equal(back.mediaType, 'image/jpeg')
+  assert.deepEqual(Buffer.from(back.base64, 'base64'), bytesOf('header-1440'))
+
+  assert.equal(await later.images.resolve({ ...ref, kit: 'other/j6/1.0.0' }), null)
+  assert.equal(await later.images.resolve({ ...ref, sha256: '0'.repeat(64) }), null)
+  assert.equal(await later.images.resolve({ ...ref, image: 'nothing-1440' }), null)
+  assert.equal(await later.images.resolve(null), null)
+})
+
 test('two runs asking at once share one download', async () => {
   const kit = fakeKit()
   const source = zipSource({ ok: true, bytes: goodZip() })

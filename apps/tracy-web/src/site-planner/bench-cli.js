@@ -7,10 +7,10 @@ import { parseArgs } from 'node:util'
 import { briefOfRevision, cancelBenchRun, startBenchRun } from './bench-control.js'
 import { listLines, runFiles, standingLines, statusLines } from './bench-export.js'
 import { listRuns, readRun, turnOf } from './bench-store.js'
-import { readableKits } from './kit-source.js'
+import { openKit, readableKits } from './kit-source.js'
 
 export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
-  kits                                    list the kits the server can read
+  kits                                    list the kits the server can read, and whether their images are ready
   run --kit <ref> --brief-file <path>     queue a run on a brief JSON file
   run --kit <ref> --brief-revision <id>   queue a run on the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
@@ -26,8 +26,9 @@ class Usage extends Error {}
 
 /**
  * @param {string[]} argv the arguments after the script name
- * @param {{ pool: import('pg').Pool, secret: string, cwd?: string, out?: (line: string) => void,
- *   err?: (line: string) => void, index?: Map<string, object>, now?: () => number }} deps
+ * @param {{ pool: import('pg').Pool, secret: string, kitImages: { ensure: Function }, cwd?: string,
+ *   out?: (line: string) => void, err?: (line: string) => void, index?: Map<string, object>,
+ *   now?: () => number }} deps `kitImages`: the kit images of this server (kit-images.js kitImagesFor)
  * @returns {Promise<number>} the exit code
  */
 export async function runCli(argv, deps) {
@@ -68,10 +69,17 @@ const refused = (io, message) => {
 const COMMANDS = {
   kits: {
     run: async (d) => {
-      const kits = readableKits(d.index ? { index: d.index } : {})
+      const where = d.index ? { index: d.index } : {}
+      const kits = readableKits(where)
       if (!kits.length) d.out('no readable kits')
-      for (const k of kits)
-        d.out(`${k.ref}  ${k.platform}  ${k.template.name} ${k.template.version}  ${k.images} images`)
+      for (const k of kits) {
+        // The first look at a kit version downloads and checks its image zip; later looks read the cache.
+        const images = await d.kitImages.ensure(openKit(k.ref, where))
+        const state = images.ok ? 'images ready' : `images not usable: ${images.code}: ${images.reason}`
+        d.out(
+          `${k.ref}  ${k.platform}  ${k.template.name} ${k.template.version}  ${k.images} images  ${state}`
+        )
+      }
       return 0
     }
   },
@@ -145,6 +153,7 @@ async function startRun(d, values) {
     briefSource,
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
+    kitImages: d.kitImages,
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)

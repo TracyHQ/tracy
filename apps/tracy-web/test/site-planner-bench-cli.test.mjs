@@ -9,7 +9,7 @@ import { runCli } from '../src/site-planner/bench-cli.js'
 import { createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { API_KEY, assignPlannerDoor, KIT_REF, SECRET } from './_site-planner-bench.mjs'
+import { API_KEY, assignPlannerDoor, KIT_REF, readyKitImages, SECRET } from './_site-planner-bench.mjs'
 import { brief, plan } from './_site-plan-check.mjs'
 
 const db = fileDb()
@@ -26,12 +26,26 @@ beforeEach(() => {
 })
 after(() => dir && rmSync(dir, { recursive: true, force: true }))
 
+/** Kit images whose zip does not match the kit: what a tampered or re-cut release looks like. */
+const unusableKitImages = () => ({
+  ensure: async () => ({
+    ok: false,
+    code: 'SITE_PLANNER_KIT_IMAGE_MISMATCH',
+    reason: '3 image(s) in template-kit-ja-boxing-1.0.10.zip do not match the sha256 the kit lists'
+  })
+})
+
 async function cli(...argv) {
+  return cliWith(readyKitImages(), ...argv)
+}
+
+async function cliWith(kitImages, ...argv) {
   const out = []
   const err = []
   const code = await runCli(argv, {
     pool: db.pool,
     secret: SECRET,
+    kitImages,
     cwd: dir,
     out: (line) => out.push(line),
     err: (line) => err.push(line)
@@ -52,7 +66,18 @@ test('without a command it prints the usage', opts, async () => {
 test('kits lists the kits the server can read', opts, async () => {
   const r = await cli('kits')
   assert.equal(r.code, 0)
-  assert.match(r.out, /ja-boxing\/j6\/1\.0\.10\s.*110 images/)
+  assert.match(r.out, /ja-boxing\/j6\/1\.0\.10\s.*110 images  images ready/)
+  const unusable = await cliWith(unusableKitImages(), 'kits')
+  assert.equal(unusable.code, 0)
+  assert.match(unusable.out, /110 images  images not usable: SITE_PLANNER_KIT_IMAGE_MISMATCH: 3 image\(s\)/)
+})
+
+test('run refuses a kit whose images are not usable, with the reason, and queues nothing', opts, async () => {
+  await assignPlannerDoor(db.pool)
+  const r = await cliWith(unusableKitImages(), 'run', '--brief-file', 'hsc.json', '--kit', KIT_REF)
+  assert.equal(r.code, 1)
+  assert.match(r.err, /^SITE_PLANNER_KIT_IMAGE_MISMATCH: 3 image\(s\) .* do not match/)
+  assert.equal(await runCount(), 0)
 })
 
 test(
@@ -114,6 +139,7 @@ test('status, list and get show a finished run, and nothing written carries a ke
   await createSitePlannerQueue({
     pool: db.pool,
     secret: SECRET,
+    kitImages: readyKitImages(),
     fetchImpl: model.fetchImpl,
     log: quiet
   }).drain()

@@ -8,7 +8,7 @@ import { readRun, saveTurn, setProgress } from '../src/site-planner/bench-store.
 import { createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { DOOR, finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { assignPlannerDoor, SECRET, startRun } from './_site-planner-bench.mjs'
+import { assignPlannerDoor, readyKitImages, SECRET, startRun } from './_site-planner-bench.mjs'
 import { plan } from './_site-plan-check.mjs'
 
 const db = fileDb()
@@ -66,7 +66,13 @@ async function drain(pool, model, { killOn, dieOnFixing } = {}) {
             : target[key]
       })
     : pool
-  await createSitePlannerQueue({ pool: watched, secret: SECRET, fetchImpl, log: quiet })
+  await createSitePlannerQueue({
+    pool: watched,
+    secret: SECRET,
+    fetchImpl,
+    kitImages: readyKitImages(),
+    log: quiet
+  })
     .drain()
     .catch(() => {})
 }

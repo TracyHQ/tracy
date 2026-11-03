@@ -6,6 +6,10 @@
 //
 // Cache layout: <dir>/<kit ref>/<digest of the kit's image list>/<image path>, plus `verified.json`. A kit captured
 // again lists other hashes, so it gets a new folder; a folder is written whole under a temporary name and renamed.
+//
+// An opened image carries a reference (kit ref, image id, sha256). The saved conversation keeps that reference, never
+// the bytes (agent-over-door.js), and resolve(ref) reads the same bytes back from the cache when a run resumes or a
+// fix round replays the conversation; a reference to another kit, or to bytes the kit no longer lists, is not read.
 import { createHash, randomBytes } from 'node:crypto'
 import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -97,7 +101,8 @@ export function createKitImages({ dir, fetchZip }) {
     /**
      * Make the kit's images ready: from the cache when every cached image still matches, else from the zip.
      * @param {{ ref: string, release: string, doc: any }} kit as openKit returns it
-     * @returns {Promise<{ ok: true, images: { open: (id: string) => Promise<any> } }
+     * @returns {Promise<{ ok: true, images: { open: (id: string) => Promise<any>,
+     *   resolve: (ref: any) => Promise<{ mediaType: string, base64: string } | null> } }
      *   | { ok: false, code: string, reason: string }>}
      */
     async ensure(kit) {
@@ -110,7 +115,7 @@ export function createKitImages({ dir, fetchZip }) {
           prepare(kit, listed.list, folder).finally(() => inFlight.delete(folder))
         )
       const ready = await inFlight.get(folder)
-      return ready.ok ? { ok: true, images: opener(listed.list, folder) } : ready
+      return ready.ok ? { ok: true, images: opener(kit.ref, listed.list, folder) } : ready
     }
   }
 
@@ -187,10 +192,27 @@ async function writeWhole(folder, list, files, about) {
   }
 }
 
-/** open(id): one cached image as a tool result (text plus the image), or an error the planner can read. */
-function opener(list, folder) {
+/**
+ * open(id): one cached image as a tool result (text plus the image and its reference), or an error the planner can
+ * read. resolve(ref): the bytes of an image opened earlier, or null.
+ */
+function opener(kitRef, list, folder) {
   const byId = new Map(list.map((i) => [i.id, i]))
+  const bytesOf = async (image) => {
+    try {
+      const bytes = await readFile(path.join(folder, image.path))
+      return sha256(bytes) === image.sha256 ? bytes : null
+    } catch {
+      return null
+    }
+  }
   return {
+    async resolve(ref) {
+      const image = ref?.kit === kitRef ? byId.get(ref?.image) : undefined
+      if (!image || image.sha256 !== ref.sha256) return null
+      const bytes = await bytesOf(image)
+      return bytes ? { mediaType: image.mediaType, base64: bytes.toString('base64') } : null
+    },
     async open(id) {
       const image = byId.get(id)
       if (!image)
@@ -200,13 +222,8 @@ function opener(list, folder) {
           detail:
             'No kit image has this id. Use an id a page or a block lists under "images", such as "page-home-1440".'
         })
-      let bytes
-      try {
-        bytes = await readFile(path.join(folder, image.path))
-      } catch {
-        bytes = null
-      }
-      if (!bytes || sha256(bytes) !== image.sha256)
+      const bytes = await bytesOf(image)
+      if (!bytes)
         return JSON.stringify({
           error: 'IMAGE_UNAVAILABLE',
           id,
@@ -214,7 +231,13 @@ function opener(list, folder) {
         })
       return {
         text: JSON.stringify({ id, path: image.path, mediaType: image.mediaType, bytes: bytes.length }),
-        images: [{ mediaType: image.mediaType, base64: bytes.toString('base64') }]
+        images: [
+          {
+            mediaType: image.mediaType,
+            base64: bytes.toString('base64'),
+            ref: { kit: kitRef, image: image.id, sha256: image.sha256 }
+          }
+        ]
       }
     }
   }

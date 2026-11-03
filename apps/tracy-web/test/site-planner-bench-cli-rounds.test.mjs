@@ -11,7 +11,7 @@ import { runFiles, statusLines } from '../src/site-planner/bench-export.js'
 import { createSitePlannerQueue, NOT_A_PLAN_MESSAGE } from '../src/site-planner/bench-worker.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { assignPlannerDoor, KIT_REF, SECRET } from './_site-planner-bench.mjs'
+import { assignPlannerDoor, KIT_REF, readyKitImages, SECRET } from './_site-planner-bench.mjs'
 import { brief, plan } from './_site-plan-check.mjs'
 
 const db = fileDb()
@@ -34,6 +34,7 @@ async function cli(...argv) {
   const code = await runCli(argv, {
     pool: db.pool,
     secret: SECRET,
+    kitImages: readyKitImages(),
     cwd: dir,
     out: (line) => out.push(line),
     err: (line) => err.push(line)
@@ -54,6 +55,7 @@ async function finishedRun(replies) {
   await createSitePlannerQueue({
     pool: db.pool,
     secret: SECRET,
+    kitImages: readyKitImages(),
     fetchImpl: model.fetchImpl,
     log: quiet
   }).drain()

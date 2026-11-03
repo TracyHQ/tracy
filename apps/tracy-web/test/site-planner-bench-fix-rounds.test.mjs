@@ -14,7 +14,7 @@ import { openKit } from '../src/site-planner/kit-source.js'
 import { checkPlan, failureListText } from '../src/site-planner/plan-check/check-plan.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { assignPlannerDoor, KIT_REF, SECRET, startRun } from './_site-planner-bench.mjs'
+import { assignPlannerDoor, KIT_REF, readyKitImages, SECRET, startRun } from './_site-planner-bench.mjs'
 import { brief, plan } from './_site-plan-check.mjs'
 
 const db = fileDb()
@@ -48,7 +48,13 @@ async function runOnce(pool, replies, { wrap } = {}) {
   const started = await startRun(pool)
   const model = scriptedModel(replies)
   const fetchImpl = wrap ? wrap(model.fetchImpl, started) : model.fetchImpl
-  await createSitePlannerQueue({ pool, secret: SECRET, fetchImpl, log: quiet }).drain()
+  await createSitePlannerQueue({
+    pool,
+    secret: SECRET,
+    fetchImpl,
+    kitImages: readyKitImages(),
+    log: quiet
+  }).drain()
   return { run: await readRun(pool, started.id), model }
 }
 

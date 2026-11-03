@@ -11,7 +11,15 @@ import { checkPlan, failureListText } from '../src/site-planner/plan-check/check
 import { plannerPrompt } from '../src/site-planner/planner-prompt.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { API_KEY, assignPlannerDoor, KIT_REF, MODEL, SECRET, startRun } from './_site-planner-bench.mjs'
+import {
+  API_KEY,
+  assignPlannerDoor,
+  KIT_REF,
+  MODEL,
+  readyKitImages,
+  SECRET,
+  startRun
+} from './_site-planner-bench.mjs'
 import { brief, plan } from './_site-plan-check.mjs'
 
 const db = fileDb()
@@ -32,7 +40,13 @@ async function runOnce(pool, replies, { wrap } = {}) {
   const run = await startRun(pool)
   const model = scriptedModel(replies)
   const fetchImpl = wrap ? wrap(model.fetchImpl, run) : model.fetchImpl
-  await createSitePlannerQueue({ pool, secret: SECRET, fetchImpl, log: quiet }).drain()
+  await createSitePlannerQueue({
+    pool,
+    secret: SECRET,
+    fetchImpl,
+    kitImages: readyKitImages(),
+    log: quiet
+  }).drain()
   return { run: await readRun(pool, run.id), model }
 }
 
@@ -99,7 +113,13 @@ test('a door changed after the start fails the run before any call', opts, async
   const started = await startRun(pool)
   await pool.query(`update llm_assignment set model = 'vendor/other-model' where door = 'sitePlanner'`)
   const model = scriptedModel([])
-  await createSitePlannerQueue({ pool, secret: SECRET, fetchImpl: model.fetchImpl, log: quiet }).drain()
+  await createSitePlannerQueue({
+    pool,
+    secret: SECRET,
+    fetchImpl: model.fetchImpl,
+    kitImages: readyKitImages(),
+    log: quiet
+  }).drain()
   const run = await readRun(pool, started.id)
   assert.equal(model.requests.length, 0)
   assert.equal(run.status, 'failed')

@@ -11,7 +11,15 @@ import {
 } from '../src/site-planner/bench-control.js'
 import { CHECKER_VERSION } from '../src/site-planner/plan-check/check-plan.js'
 import { plannerPrompt } from '../src/site-planner/planner-prompt.js'
-import { API_KEY, assignPlannerDoor, KIT_REF, MODEL, SECRET, startRun } from './_site-planner-bench.mjs'
+import {
+  API_KEY,
+  assignPlannerDoor,
+  KIT_REF,
+  MODEL,
+  readyKitImages,
+  SECRET,
+  startRun
+} from './_site-planner-bench.mjs'
 import { brief } from './_site-plan-check-inputs.mjs'
 import { fileDb } from './_db.mjs'
 
@@ -29,6 +37,7 @@ const start = (pool, over = {}) =>
     briefSource: { kind: 'file', name: 'hsc.json' },
     kitRef: KIT_REF,
     startedBy: 'cli',
+    kitImages: readyKitImages(),
     ...over
   })
 
