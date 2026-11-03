@@ -1,0 +1,27 @@
+{
+  "brand": {
+    "logo": "d4a3f5e7-0e61-4f8c-9d94-5ac182ae3f46",
+    "name": "Thistle & Tin Bakehouse",
+    "fonts": [],
+    "voice": "English; warm, homely tone",
+    "accent": {
+      "hex": "#c0562b",
+      "share": 0.22,
+      "source": "logo"
+    },
+    "colors": [
+      {
+        "hex": "#6b3a1f",
+        "role": "primary"
+      },
+      {
+        "hex": "#c0562b",
+        "role": "accent"
+      }
+    ],
+    "origin": "social",
+    "official": false,
+    "colorsFrom": "logo"
+  },
+  "missing": []
+}

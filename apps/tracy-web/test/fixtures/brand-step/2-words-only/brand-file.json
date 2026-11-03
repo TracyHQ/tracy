@@ -1,0 +1,489 @@
+{
+  "kind": "brand-file",
+  "version": 10,
+  "kit": "ja-boxing@1.0.10",
+  "name": {
+    "value": "Willow Arch Pilates",
+    "from": "brief.brand.name",
+    "slots": [
+      {
+        "id": "setting:global configuration sitename",
+        "kind": "setting",
+        "where": "cms",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Willow Arch Pilates",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "setting:template site setting site_name (templates/ja_boxing/etc/site/default.json)",
+        "kind": "setting",
+        "where": "template",
+        "current": "",
+        "status": "written",
+        "value": "Willow Arch Pilates",
+        "handOff": null,
+        "pattern": "empty-setting",
+        "reason": "empty setting that prints the CMS site name: gets the business name"
+      },
+      {
+        "id": "slot:block-162.0",
+        "kind": "slot",
+        "where": "block-162.0",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Willow Arch Pilates",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:text:block-168",
+        "kind": "printed",
+        "where": "text",
+        "current": "Copyright © 2026 JA Boxing. All Rights Reserved.",
+        "status": "written",
+        "value": "Copyright © 2026 Willow Arch Pilates. All Rights Reserved.",
+        "handOff": null,
+        "pattern": "legal-line",
+        "reason": "fixed legal or attribution pattern: only the template name is replaced"
+      },
+      {
+        "id": "printed:title-attribute:offcanvas",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Willow Arch Pilates",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:offcanvas",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Willow Arch Pilates",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:title-attribute:header",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Willow Arch Pilates",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:header",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Willow Arch Pilates",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:document-title:page",
+        "kind": "printed",
+        "where": "document-title",
+        "current": "JA Boxing - Gym, Fitness, and Boxing Studio Joomla Template",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      },
+      {
+        "id": "printed:meta description:page",
+        "kind": "printed",
+        "where": "meta description",
+        "current": "Elevate your gym, fitness center, or boxing studio website with JA Boxing Joomla template. Engage your audience with a stunning design and powerful features",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      }
+    ]
+  },
+  "colours": {
+    "decision": "new-accent",
+    "why": "The brand primary teal #0f4c4a became the accent; the tool lifted it to #1a8480 to read on the dark opening ground.",
+    "brandColour": "#0f4c4a",
+    "lift": {
+      "from": "#0f4c4a",
+      "to": "#1a8480",
+      "lightnessFrom": 0.178,
+      "lightnessTo": 0.31,
+      "say": "Your dark green was made lighter (same hue) so buttons and links stand out on the dark template."
+    },
+    "accent": "#1a8480",
+    "replaces": "#f44141",
+    "keeps": "template",
+    "builds": 1,
+    "shifts": [
+      {
+        "side": "light",
+        "opens": false,
+        "colour": "accent-text",
+        "from": "#1a8480",
+        "to": "#187b78",
+        "on": "#ffffff",
+        "ratio": 5.07
+      },
+      {
+        "side": "dark",
+        "opens": true,
+        "colour": "accent-text",
+        "from": "#1a8480",
+        "to": "#1f9e99",
+        "on": "#121111",
+        "ratio": 5.75
+      }
+    ],
+    "module": {
+      "file": "module-build-1.html",
+      "bytes": 50747,
+      "slot": "joomla-ja-boxing-modes@f29c1d8f7f"
+    }
+  },
+  "logo": {
+    "material": {
+      "mediaId": "b2e1d3c5-8c4f-4d6a-9b72-3eaf608c1d24",
+      "width": 1200,
+      "height": 420,
+      "hasAlpha": true,
+      "readsAs": "Willow Arch PILATES STUDIO",
+      "ground": "transparent"
+    },
+    "mark": {
+      "decision": "icon",
+      "why": "The logo is words only, so an icon in the logo's two colours shows the business: a figure on a pilates reformer, named a Pilates studio in the reviewer's third guess at 128 px.",
+      "letters": null,
+      "icon": {
+        "businessType": "pilates studio",
+        "businessTypeFrom": "brand.name and the logo readsAs (business.trade fitness and subTrade coaching are broader; reading.about lists other sports)",
+        "accept": ["reformer studio", "reformer pilates"],
+        "neighbour": "yoga studio",
+        "neighbourAccept": ["yoga school", "yoga retreat"],
+        "distinguishing": "a figure on a pilates reformer machine",
+        "subject": "a pilates studio: one simplified figure doing a leg stretch lying on a pilates reformer machine",
+        "colours": ["#0f4c4a", "#c8693f"],
+        "coloursFrom": "logo",
+        "provider": "openrouter",
+        "model": "google/gemini-3.1-flash-lite-image",
+        "attempts": [
+          {
+            "file": "icon/icon-1.png",
+            "raw": "icon/icon-1.raw.jpg",
+            "subject": "a pilates studio: one simplified figure doing a leg stretch lying on a pilates reformer machine",
+            "verdict": "pass",
+            "plate": null,
+            "blind": {
+              "answer": "physical therapy clinic",
+              "guesses": ["physical therapy clinic", "massage therapy clinic", "Pilates studio"],
+              "verdict": "pass",
+              "matchedPosition": 3,
+              "size": 128
+            }
+          }
+        ]
+      },
+      "file": "icon/icon-1.png",
+      "recoloured": {
+        "light": null,
+        "dark": "recoloured/mark.dark.png"
+      }
+    },
+    "name": {
+      "text": "Willow Arch Pilates",
+      "rendersAs": "WILLOW ARCH PILATES",
+      "files": {
+        "light": "name/name.light.png",
+        "dark": "name/name.dark.png"
+      },
+      "twoLines": {
+        "lines": ["Willow", "Arch Pilates"],
+        "files": {
+          "light": "name/name-2l.light.png",
+          "dark": "name/name-2l.dark.png"
+        }
+      }
+    },
+    "logos": {
+      "light": "logo/logo.light.png",
+      "dark": "logo/logo.dark.v2.png",
+      "twoLines": {
+        "light": null,
+        "dark": "logo/logo-2l.dark.v2.png"
+      }
+    },
+    "look": [
+      {
+        "file": "icon/icon-1.png",
+        "ground": "#ffffff",
+        "shownAt": 128,
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "there are no letters, numbers or words in it",
+            "verdict": "pass",
+            "reason": "The icon contains a figure and equipment, with no text."
+          },
+          {
+            "check": "it reads as one clear shape on this ground",
+            "verdict": "pass",
+            "reason": "The reclining figure and table form a recognizable icon against white."
+          },
+          {
+            "check": "blind: the business type the icon suggests at 128 px, unprompted",
+            "verdict": "pass",
+            "reason": "reviewer answered \"physical therapy clinic\" (guesses: physical therapy clinic; massage therapy clinic; Pilates studio); business type \"pilates studio\", neighbour \"yoga studio\": guess 3 \"Pilates studio\" matches \"pilates studio\""
+          }
+        ]
+      },
+      {
+        "file": "icon/icon-1.png",
+        "ground": "#121111",
+        "shownAt": 128,
+        "verdict": "fail",
+        "checks": [
+          {
+            "check": "there are no letters, numbers or words in it",
+            "verdict": "pass",
+            "reason": "The icon contains a figure and equipment, with no text."
+          },
+          {
+            "check": "it reads as one clear shape on this ground",
+            "verdict": "fail",
+            "reason": "The dark teal figure blends into the near-black ground, obscuring its shape."
+          },
+          {
+            "check": "blind: the business type the icon suggests at 128 px, unprompted",
+            "verdict": "pass",
+            "reason": "reviewer answered \"physical therapy clinic\" (guesses: physical therapy clinic; massage therapy clinic; Pilates studio); business type \"pilates studio\", neighbour \"yoga studio\": guess 3 \"Pilates studio\" matches \"pilates studio\""
+          }
+        ]
+      },
+      {
+        "file": "logo/logo.light.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Willow Arch Pilates` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "“WILLOW ARCH PILATES” is fully legible."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The teal and orange mark and dark name are clear on white."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the logo mark and name appear."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo.dark.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Willow Arch Pilates` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "“WILLOW ARCH PILATES” is fully legible."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The mark and white name are clear on the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the logo mark and name appear."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.dark.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Willow Arch Pilates` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "“WILLOW” and “ARCH PILATES” are fully legible."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The mark and white name are clear on the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the logo mark and name appear."
+          }
+        ]
+      },
+      {
+        "file": "recoloured/mark.dark.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "it reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The white and orange figure and equipment stand out clearly against the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo.dark.v2.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Willow Arch Pilates` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The text reads “WILLOW ARCH PILATES.”"
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The white and orange mark and white lettering are clear on the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the Pilates mark and name are visible."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.dark.v2.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Willow Arch Pilates` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The text reads “WILLOW ARCH PILATES.”"
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The white and orange mark and white lettering are clear on the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the Pilates mark and name are visible."
+          }
+        ]
+      }
+    ],
+    "spots": [
+      {
+        "spot": "logo-header-1",
+        "file": "spots/logo-header-1.png",
+        "shows": "logo",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-header-2",
+        "file": "spots/logo-header-2.v2.png",
+        "shows": "logo",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-1",
+        "file": "spots/logo-offcanvas-1.png",
+        "shows": "mark",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-2",
+        "file": "spots/logo-offcanvas-2.v2.png",
+        "shows": "mark",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-footer-1",
+        "file": "spots/logo-footer-1.v2.png",
+        "shows": "logo-2-lines",
+        "ground": "#1f1e1e",
+        "writable": false
+      }
+    ]
+  },
+  "favicon": {
+    "from": "mark",
+    "mark": "icon/icon-1.png",
+    "phoneMark": "recoloured/mark.dark.png",
+    "phoneGround": "#121111",
+    "tabIcons": "tile",
+    "tileGround": "#121111",
+    "tileMark": "recoloured/mark.dark.png",
+    "tileMarkRecoloured": false,
+    "check": {
+      "final": {
+        "bboxShare": 0.25,
+        "contrastShare": {
+          "#ffffff": 1,
+          "#202124": 1
+        },
+        "pass": true
+      },
+      "candidates": [
+        {
+          "kind": "tile",
+          "png32": "favicon/candidate-tile-32.png",
+          "bboxShare": 0.25,
+          "contrastShare": {
+            "#ffffff": 1,
+            "#202124": 1
+          },
+          "pass": true
+        }
+      ]
+    },
+    "ico": "favicon/favicon.ico",
+    "png32": "favicon/favicon-32.png",
+    "png512": "favicon/favicon-512.png",
+    "phone180": "favicon/apple-touch-icon-180.png"
+  },
+  "ownerTasks": [
+    {
+      "kind": "approve-rebuilt-logo",
+      "say": "We made a symbol in your logo colours, a figure on a reformer, to stand beside your name; please approve it or send us your own."
+    }
+  ]
+}

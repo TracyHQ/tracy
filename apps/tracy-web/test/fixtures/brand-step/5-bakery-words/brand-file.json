@@ -1,0 +1,547 @@
+{
+  "kind": "brand-file",
+  "version": 10,
+  "kit": "ja-boxing@1.0.10",
+  "name": {
+    "value": "Thistle & Tin Bakehouse",
+    "from": "brief.brand.name",
+    "slots": [
+      {
+        "id": "setting:global configuration sitename",
+        "kind": "setting",
+        "where": "cms",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Thistle & Tin Bakehouse",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "setting:template site setting site_name (templates/ja_boxing/etc/site/default.json)",
+        "kind": "setting",
+        "where": "template",
+        "current": "",
+        "status": "written",
+        "value": "Thistle & Tin Bakehouse",
+        "handOff": null,
+        "pattern": "empty-setting",
+        "reason": "empty setting that prints the CMS site name: gets the business name"
+      },
+      {
+        "id": "slot:block-162.0",
+        "kind": "slot",
+        "where": "block-162.0",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Thistle & Tin Bakehouse",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:text:block-168",
+        "kind": "printed",
+        "where": "text",
+        "current": "Copyright © 2026 JA Boxing. All Rights Reserved.",
+        "status": "written",
+        "value": "Copyright © 2026 Thistle & Tin Bakehouse. All Rights Reserved.",
+        "handOff": null,
+        "pattern": "legal-line",
+        "reason": "fixed legal or attribution pattern: only the template name is replaced"
+      },
+      {
+        "id": "printed:title-attribute:offcanvas",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Thistle & Tin Bakehouse",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:offcanvas",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Thistle & Tin Bakehouse",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:title-attribute:header",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Thistle & Tin Bakehouse",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:header",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Thistle & Tin Bakehouse",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:document-title:page",
+        "kind": "printed",
+        "where": "document-title",
+        "current": "JA Boxing - Gym, Fitness, and Boxing Studio Joomla Template",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      },
+      {
+        "id": "printed:meta description:page",
+        "kind": "printed",
+        "where": "meta description",
+        "current": "Elevate your gym, fitness center, or boxing studio website with JA Boxing Joomla template. Engage your audience with a stunning design and powerful features",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      }
+    ]
+  },
+  "colours": {
+    "decision": "new-accent",
+    "why": "The brand primary brown #6b3a1f became the accent; the tool lifted it to #b26134 to read on the dark opening ground.",
+    "brandColour": "#6b3a1f",
+    "lift": {
+      "from": "#6b3a1f",
+      "to": "#b26134",
+      "lightnessFrom": 0.271,
+      "lightnessTo": 0.451,
+      "say": "Your brown was made lighter (same hue) so buttons and links stand out on the dark template."
+    },
+    "accent": "#b26134",
+    "replaces": "#f44141",
+    "keeps": "template",
+    "builds": 1,
+    "shifts": [
+      {
+        "side": "light",
+        "opens": false,
+        "colour": "accent-text",
+        "from": "#b26134",
+        "to": "#a65b31",
+        "on": "#ffffff",
+        "ratio": 5.05
+      },
+      {
+        "side": "dark",
+        "opens": true,
+        "colour": "accent-text",
+        "from": "#b26134",
+        "to": "#c97546",
+        "on": "#121111",
+        "ratio": 5.49
+      }
+    ],
+    "module": {
+      "file": "module-build-1.html",
+      "bytes": 50741,
+      "slot": "joomla-ja-boxing-modes@f29c1d8f7f"
+    }
+  },
+  "logo": {
+    "material": {
+      "mediaId": "d4a3f5e7-0e61-4f8c-9d94-5ac182ae3f46",
+      "width": 1080,
+      "height": 1080,
+      "hasAlpha": false,
+      "readsAs": "Thistle & Tin BAKEHOUSE",
+      "ground": "#ffffff"
+    },
+    "mark": {
+      "decision": "icon",
+      "why": "The logo is words only, so an icon in the logo's two colours shows the business: a scored loaf, named a bread bakery blind at 128 px.",
+      "letters": null,
+      "icon": {
+        "businessType": "bakery",
+        "businessTypeFrom": "business.subTrade.id (bakery), matching brand.name and reading.about",
+        "accept": ["bakehouse", "bread shop", "patisserie", "baker"],
+        "neighbour": "cafe",
+        "neighbourAccept": ["coffee shop", "coffee house", "tea room"],
+        "distinguishing": "one scored bread loaf",
+        "subject": "a bakery: one long scored bread loaf, its crust in the first colour and its three wide scores in the second colour",
+        "colours": ["#6b3a1f", "#c0562b"],
+        "coloursFrom": "logo",
+        "provider": "openrouter",
+        "model": "google/gemini-3.1-flash-lite-image",
+        "attempts": [
+          {
+            "file": "icon/icon-1.png",
+            "raw": "icon/icon-1.raw.jpg",
+            "subject": "a bakery: one long scored bread loaf, its crust in the first colour and its three wide scores in the second colour",
+            "verdict": "pass",
+            "plate": null,
+            "blind": {
+              "answer": "bread bakery",
+              "guesses": ["bread bakery", "artisan bakery", "sandwich shop"],
+              "verdict": "pass",
+              "matchedPosition": 1,
+              "size": 128
+            }
+          }
+        ]
+      },
+      "file": "icon/icon-1.png",
+      "recoloured": {
+        "light": null,
+        "dark": "recoloured/mark.dark.v2.png"
+      }
+    },
+    "name": {
+      "text": "Thistle & Tin Bakehouse",
+      "rendersAs": "THISTLE & TIN BAKEHOUSE",
+      "files": {
+        "light": "name/name.light.png",
+        "dark": "name/name.dark.png"
+      },
+      "twoLines": {
+        "lines": ["Thistle & Tin", "Bakehouse"],
+        "files": {
+          "light": "name/name-2l.light.png",
+          "dark": "name/name-2l.dark.png"
+        }
+      }
+    },
+    "logos": {
+      "light": null,
+      "dark": null,
+      "twoLines": {
+        "light": "logo/logo-2l.light.v3.png",
+        "dark": "logo/logo-2l.dark.v3.png"
+      }
+    },
+    "look": [
+      {
+        "file": "icon/icon-1.pre-fix.png",
+        "ground": "#ffffff",
+        "shownAt": 128,
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "there are no letters, numbers or words in it",
+            "verdict": "pass",
+            "reason": "Only a stylized loaf shape is visible."
+          },
+          {
+            "check": "it reads as one clear shape on this ground",
+            "verdict": "pass",
+            "reason": "The brown loaf is distinct against the white ground."
+          },
+          {
+            "check": "blind: the business type the icon suggests at 128 px, unprompted",
+            "verdict": "pass",
+            "reason": "reviewer answered \"bread bakery\" (guesses: bread bakery; artisan bakery; pastry shop); business type \"bakery\", neighbour \"cafe\": guess 1 \"bread bakery\" matches \"bakery\""
+          }
+        ]
+      },
+      {
+        "file": "icon/icon-1.pre-fix.png",
+        "ground": "#121111",
+        "shownAt": 128,
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "there are no letters, numbers or words in it",
+            "verdict": "pass",
+            "reason": "Only a stylized loaf shape is visible."
+          },
+          {
+            "check": "it reads as one clear shape on this ground",
+            "verdict": "pass",
+            "reason": "The brown loaf is distinct against the dark ground."
+          },
+          {
+            "check": "blind: the business type the icon suggests at 128 px, unprompted",
+            "verdict": "pass",
+            "reason": "reviewer answered \"bread bakery\" (guesses: bread bakery; artisan bakery; pastry shop); business type \"bakery\", neighbour \"cafe\": guess 1 \"bread bakery\" matches \"bakery\""
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.light.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Thistle & Tin Bakehouse` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "“THISTLE & TIN BAKEHOUSE” is spelled correctly."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The mark and dark lettering are clear against white."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the bread mark and name are shown."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.dark.png",
+        "ground": "#121111",
+        "verdict": "fail",
+        "checks": [
+          {
+            "check": "the name reads exactly `Thistle & Tin Bakehouse` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "“THISTLE & TIN BAKEHOUSE” is spelled correctly."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "fail",
+            "reason": "The dark brown mark has low contrast against the near-black ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the bread mark and name are shown."
+          }
+        ]
+      },
+      {
+        "file": "recoloured/mark.dark.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "it reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The white and orange mark is clearly visible against the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.dark.v2.png",
+        "ground": "#121111",
+        "verdict": "fail",
+        "checks": [
+          {
+            "check": "the name reads exactly `Thistle & Tin Bakehouse` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "“THISTLE & TIN BAKEHOUSE” is spelled correctly."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The white name and mark are clear against the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "fail",
+            "reason": "A faint dotted outline is visible around the orange section of the mark."
+          }
+        ]
+      },
+      {
+        "file": "icon/icon-1.png",
+        "ground": "#ffffff",
+        "shownAt": 128,
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "there are no letters, numbers or words in it",
+            "verdict": "pass",
+            "reason": "It shows only a bread-like shape."
+          },
+          {
+            "check": "it reads as one clear shape on this ground",
+            "verdict": "pass",
+            "reason": "The brown loaf silhouette is clear against the white ground."
+          },
+          {
+            "check": "blind: the business type the icon suggests at 128 px, unprompted",
+            "verdict": "pass",
+            "reason": "reviewer answered \"bread bakery\" (guesses: bread bakery; artisan bakery; sandwich shop); business type \"bakery\", neighbour \"cafe\": guess 1 \"bread bakery\" matches \"bakery\""
+          }
+        ]
+      },
+      {
+        "file": "icon/icon-1.png",
+        "ground": "#121111",
+        "shownAt": 128,
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "there are no letters, numbers or words in it",
+            "verdict": "pass",
+            "reason": "It shows only a bread-like shape."
+          },
+          {
+            "check": "it reads as one clear shape on this ground",
+            "verdict": "pass",
+            "reason": "The brown loaf silhouette is clear against the dark ground."
+          },
+          {
+            "check": "blind: the business type the icon suggests at 128 px, unprompted",
+            "verdict": "pass",
+            "reason": "reviewer answered \"bread bakery\" (guesses: bread bakery; artisan bakery; sandwich shop); business type \"bakery\", neighbour \"cafe\": guess 1 \"bread bakery\" matches \"bakery\""
+          }
+        ]
+      },
+      {
+        "file": "recoloured/mark.dark.v2.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "it reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The white and rust-colored mark stands out clearly against the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.light.v3.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Thistle & Tin Bakehouse` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The text reads “THISTLE & TIN BAKEHOUSE.”"
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The mark and dark lettering are clear on the white ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the bread mark and name are visible."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.dark.v3.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Thistle & Tin Bakehouse` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The text reads “THISTLE & TIN BAKEHOUSE.”"
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The mark and white lettering are clear on the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the bread mark and name are visible."
+          }
+        ]
+      }
+    ],
+    "spots": [
+      {
+        "spot": "logo-header-1",
+        "file": "spots/logo-header-1.v3.png",
+        "shows": "logo-2-lines",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-header-2",
+        "file": "spots/logo-header-2.v3.png",
+        "shows": "logo-2-lines",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-1",
+        "file": "spots/logo-offcanvas-1.v3.png",
+        "shows": "mark",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-2",
+        "file": "spots/logo-offcanvas-2.v3.png",
+        "shows": "mark",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-footer-1",
+        "file": "spots/logo-footer-1.v3.png",
+        "shows": "logo-2-lines",
+        "ground": "#1f1e1e",
+        "writable": false
+      }
+    ]
+  },
+  "favicon": {
+    "from": "mark",
+    "mark": "icon/icon-1.png",
+    "phoneMark": "recoloured/mark.dark.v2.png",
+    "phoneGround": "#121111",
+    "tabIcons": "tile",
+    "tileGround": "#121111",
+    "tileMark": "recoloured/mark.dark.v2.png",
+    "tileMarkRecoloured": false,
+    "check": {
+      "final": {
+        "bboxShare": 0.25,
+        "contrastShare": {
+          "#ffffff": 1,
+          "#202124": 1
+        },
+        "pass": true
+      },
+      "candidates": [
+        {
+          "kind": "tile",
+          "png32": "favicon/candidate-tile-32.png",
+          "bboxShare": 0.25,
+          "contrastShare": {
+            "#ffffff": 1,
+            "#202124": 1
+          },
+          "pass": true
+        }
+      ]
+    },
+    "ico": "favicon/favicon.ico",
+    "png32": "favicon/favicon-32.png",
+    "png512": "favicon/favicon-512.png",
+    "phone180": "favicon/apple-touch-icon-180.png"
+  },
+  "ownerTasks": [
+    {
+      "kind": "approve-rebuilt-logo",
+      "say": "We made a symbol in your logo colours, a scored loaf, to stand beside your name; please approve it or send us your own."
+    }
+  ]
+}
