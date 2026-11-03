@@ -12,10 +12,17 @@ import { renderPage } from './render.js'
  * @param {{ runDir: string, photosDir?: string | null, kitImagesDir?: string | null, outFile: string }} options
  * @returns {Promise<{ frames: number, missing: number, bytes: number }>} `missing` counts files the page expected
  */
-export async function buildPicturesPage({ runDir, photosDir = null, kitImagesDir = null, outFile }) {
+export async function buildPicturesPage({
+  runDir,
+  photosDir = null,
+  kitImagesDir = null,
+  kitFile = null,
+  webrootDir = null,
+  outFile
+}) {
   const files = await loadRunFolder(runDir)
   const model = buildModel(files)
-  const find = await pictureFinders({ runDir, photosDir, kitImagesDir })
+  const find = await pictureFinders({ runDir, photosDir, kitImagesDir, kitFile, webrootDir })
   const base = path.dirname(path.resolve(outFile))
   const link = (found) =>
     found && {
@@ -35,7 +42,13 @@ export async function buildPicturesPage({ runDir, photosDir = null, kitImagesDir
         f.sha256 ? find.original(f.sha256) : null
       ])
       if ((e?.file && !out) || (e?.dark?.file && !dark) || (f.sha256 && !original)) missing += 1
-      media.set(f.frame, { demo: link(demo), out: link(out), dark: link(dark), original: link(original) })
+      media.set(f.frame, {
+        displayWidth: Number(find.kitFrame(f.frame)?.width) || null,
+        demo: link(demo),
+        out: link(out),
+        dark: link(dark),
+        original: link(original)
+      })
     }
   const html = renderPage(model, (frame) => media.get(frame))
   await writeFile(outFile, html)

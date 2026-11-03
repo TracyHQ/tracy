@@ -44,6 +44,17 @@ export async function loadRunFolder(dir) {
   return { plan, brief, run, manifest }
 }
 
+/** The frames of a template kit JSON (blocks[].frames[]) by id; an unreadable kit gives none. */
+async function readKitFrames(kitFile) {
+  const frames = new Map()
+  if (!kitFile) return frames
+  const kit = await readJson(kitFile, true)
+  for (const b of Array.isArray(kit?.blocks) ? kit.blocks : [])
+    for (const f of Array.isArray(b?.frames) ? b.frames : [])
+      if (f && typeof f.id === 'string' && !frames.has(f.id)) frames.set(f.id, f)
+  return frames
+}
+
 /** The pixel size of an image file, or null. */
 async function sizeOf(file) {
   try {
@@ -64,7 +75,14 @@ const isFile = (file) =>
  * The finders of the page: each returns { file, width, height } (absolute file) or null when the picture is not there.
  * @param {{ runDir: string, photosDir?: string | null, kitImagesDir?: string | null }} options
  */
-export async function pictureFinders({ runDir, photosDir = null, kitImagesDir = null }) {
+export async function pictureFinders({
+  runDir,
+  photosDir = null,
+  kitImagesDir = null,
+  kitFile = null,
+  webrootDir = null
+}) {
+  const kitFrames = await readKitFrames(kitFile)
   const photoNames = photosDir ? await readdir(photosDir).catch(() => []) : []
   const demo = await blockImageFinder(kitImagesDir)
   const withSize = async (file) => (file ? { file, ...(await sizeOf(file)) } : null)
@@ -83,7 +101,17 @@ export async function pictureFinders({ runDir, photosDir = null, kitImagesDir = 
       )
       return sha256 && name ? withSize(path.join(photosDir, name)) : null
     },
-    /** The kit's demo picture of a frame: an image whose name holds the frame id. */
-    demo: async (frameId) => withSize(demo(frameId))
+    /** The kit frame (its display size), or null. */
+    kitFrame: (frameId) => kitFrames.get(frameId) ?? null,
+    /** The kit's demo picture of a frame: webroot + the frame's `picture`, else (fallback) an image named after the frame id. */
+    async demo(frameId) {
+      const picture = String(kitFrames.get(frameId)?.picture ?? '').split('#')[0]
+      if (webrootDir && picture) {
+        const root = path.resolve(webrootDir)
+        const file = path.resolve(root, picture.replace(/^\/+/, ''))
+        if (file.startsWith(`${root}${path.sep}`) && (await isFile(file))) return withSize(file)
+      }
+      return withSize(demo(frameId))
+    }
   }
 }

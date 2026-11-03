@@ -160,6 +160,28 @@ async function setup() {
   ])
     await writeFile(path.join(run, 'files', `${name}.png`), await png(w, h, c))
   await writeFile(path.join(root, 'photos', `${SHA('b')}.png`), await png(800, 600, '#6b4f3a'))
+  await mkdir(path.join(root, 'webroot', 'images', 'demo'), { recursive: true })
+  await sharp({ create: { width: 400, height: 200, channels: 3, background: '#777' } })
+    .jpeg()
+    .toFile(path.join(root, 'webroot', 'images', 'demo', 'hero.jpg'))
+  await writeFile(
+    path.join(root, 'template-kit.json'),
+    JSON.stringify({
+      blocks: [
+        {
+          id: 'block-2',
+          frames: [
+            {
+              id: 'hero',
+              picture: 'images/demo/hero.jpg#joomlaImage://local-images/demo/hero.jpg?width=400&height=200',
+              width: 300,
+              height: 150
+            }
+          ]
+        }
+      ]
+    })
+  )
   await writeFile(path.join(root, 'kit', 'block-2-hero-demo.png'), await png(400, 200, '#999'))
   return { root, run, out: path.join(root, 'reading.html') }
 }
@@ -185,8 +207,10 @@ test('every planned frame appears once with its source label, and hidden pages a
       s.out,
       '--photos',
       path.join(s.root, 'photos'),
-      '--kit-images',
-      path.join(s.root, 'kit')
+      '--kit',
+      path.join(s.root, 'template-kit.json'),
+      '--webroot',
+      path.join(s.root, 'webroot')
     ])
     assert.equal(r.code, 0, r.err.join('\n'))
     const html = await readFile(s.out, 'utf8')
@@ -228,8 +252,10 @@ test('the request, flags, cut box, icon grounds, looker blanks, summary and cost
       s.out,
       '--photos',
       path.join(s.root, 'photos'),
-      '--kit-images',
-      path.join(s.root, 'kit')
+      '--kit',
+      path.join(s.root, 'template-kit.json'),
+      '--webroot',
+      path.join(s.root, 'webroot')
     ])
     const html = await readFile(s.out, 'utf8')
     const hero = articleOf(html, 'hero')
@@ -251,7 +277,12 @@ test('the request, flags, cut box, icon grounds, looker blanks, summary and cost
       /class="cut" style="left:12\.5%;top:8\.33\d*%;width:50%;height:33\.33\d*%"/,
       'cut box on the 800 x 600 original'
     )
-    assert.match(hero, /src="\.\.\/kit\/block-2-hero-demo\.png"|src="kit\/block-2-hero-demo\.png"/)
+    assert.match(hero, /src="webroot\/images\/demo\/hero\.jpg"/, 'the demo is webroot + frame.picture')
+    assert.match(
+      hero,
+      /class="frame-img" style="width:300px"/,
+      'the finished picture is drawn at the kit frame width'
+    )
     assert.match(hero, /src="run\/files\/hero\.png"/)
     assert.match(articleOf(html, 'team-1'), /not looked at yet/)
     const logo = articleOf(html, 'logo')
@@ -281,6 +312,32 @@ test('missing files are shown as missing, not a crash, and a folder without phot
     assert.match(articleOf(html, 'hero'), /No kit demo image found/)
     assert.match(articleOf(html, 'unlisted'), /No entry for this frame in the manifest/)
     assert.match(articleOf(html, 'badge'), /Hidden: no fitting photo/)
+  } finally {
+    await rm(s.root, { recursive: true, force: true })
+  }
+})
+
+test('the kit images folder is only a fallback, and a picture outside the webroot is not read', async () => {
+  const s = await setup()
+  try {
+    await run(['--run', s.run, '--out', s.out, '--kit-images', path.join(s.root, 'kit')])
+    const html = await readFile(s.out, 'utf8')
+    assert.match(articleOf(html, 'hero'), /src="kit\/block-2-hero-demo\.png"/)
+    await writeFile(
+      path.join(s.root, 'template-kit.json'),
+      JSON.stringify({ blocks: [{ id: 'b', frames: [{ id: 'hero', picture: '../photos/x.png' }] }] })
+    )
+    await run([
+      '--run',
+      s.run,
+      '--out',
+      s.out,
+      '--kit',
+      path.join(s.root, 'template-kit.json'),
+      '--webroot',
+      path.join(s.root, 'webroot')
+    ])
+    assert.match(articleOf(await readFile(s.out, 'utf8'), 'hero'), /No kit demo image found/)
   } finally {
     await rm(s.root, { recursive: true, force: true })
   }

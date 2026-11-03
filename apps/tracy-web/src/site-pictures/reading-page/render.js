@@ -50,7 +50,7 @@ function iconFig(f, pics) {
   }</div>`
 }
 
-function finishedFig(f, pic) {
+function finishedFig(f, pic, displayWidth) {
   const e = f.entry
   let body
   if (!e)
@@ -61,7 +61,7 @@ function finishedFig(f, pic) {
   else if (e.source === 'hide') body = gone(`Hidden: ${esc(e.reason)}`)
   else if (!pic) body = gone(`File missing: ${esc(e.file)}`, true)
   else
-    body = `<span class="frame-img" style="width:${pic.width ?? 320}px">${img(pic, `Finished picture of ${f.frame}`)}</span>`
+    body = `<span class="frame-img" style="width:${displayWidth ?? pic.width ?? 320}px">${img(pic, `Finished picture of ${f.frame}`)}</span>`
   const size = e?.width ? ` <span class="muted small">${esc(e.width)} x ${esc(e.height)} px</span>` : ''
   return `<div class="fig"><h4>Finished picture${size}</h4>${body}</div>`
 }
@@ -115,7 +115,7 @@ function frameHtml(f, media) {
   const figs = [
     `<div class="fig"><h4>Kit demo</h4>${pics.demo ? `<span class="frame-img">${demo}</span>` : demo}</div>`,
     originalFig(f, pics.original),
-    finishedFig(f, pics.out),
+    finishedFig(f, pics.out, pics.displayWidth),
     ...(f.entry?.source === 'icon' ? [iconFig(f, pics)] : [])
   ]
   const gap = f.label === 'no entry' || (f.entry && f.entry.source !== 'hide' && !pics.out)
