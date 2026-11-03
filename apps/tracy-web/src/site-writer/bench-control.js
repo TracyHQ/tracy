@@ -1,7 +1,7 @@
 // Starting and cancelling a site writer bench run (#329). A start checks everything a run needs before it is queued
 // (the plan's and the brief's shape, the kit, the door) and stores what the run will use, so a refused start leaves
 // nothing behind and an accepted one says exactly what it ran: plan, brief as used, kit, prompt hash, checker version,
-// door snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
+// door snapshot (never the key) and harness settings, pages per turn among them (#330). The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
@@ -10,6 +10,7 @@ import { activeRun, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } 
 import { CHECKER_VERSION } from './copy-check/check-copy.js'
 import { siteWriterDoor } from './door.js'
 import { writerPrompt } from './writer-prompt.js'
+import { DEFAULT_PAGES_PER_TURN, pagesPerTurnProblem } from './writer-turns.js'
 
 export { briefOfRevision }
 
@@ -32,8 +33,9 @@ export function planShapeProblems(plan, kitRef) {
 /**
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, plan: unknown, planSource: object, brief: unknown,
- *   briefSource: object, kitRef: string, startedBy: string, index?: Map<string, object> }} input `index`: the
- *   contracts to find kits in (tests).
+ *   briefSource: object, kitRef: string, startedBy: string, pagesPerTurn?: number | 'all',
+ *   index?: Map<string, object> }} input `pagesPerTurn`: pages per writing turn, the whole site in one turn unless
+ *   given; `index`: the contracts to find kits in (tests).
  */
 export async function startWriterRun({
   pool,
@@ -44,8 +46,11 @@ export async function startWriterRun({
   briefSource,
   kitRef,
   startedBy,
+  pagesPerTurn = DEFAULT_PAGES_PER_TURN,
   index
 }) {
+  const turnProblem = pagesPerTurnProblem(pagesPerTurn)
+  if (turnProblem) return refuse('SITE_WRITER_HARNESS', `The run cannot start: ${turnProblem}.`)
   const where = index ? { index } : {}
   const kits = readableKits(where)
   const kit = kits.find((k) => k.ref === kitRef)
@@ -77,7 +82,7 @@ export async function startWriterRun({
     promptSha256: writerPrompt().sha256,
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
-    harness: benchHarnessFor(door.snapshot.model, door.snapshot.providerId)
+    harness: { ...benchHarnessFor(door.snapshot.model, door.snapshot.providerId), pagesPerTurn }
   })
   if (created.error === SITE_WRITER_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }

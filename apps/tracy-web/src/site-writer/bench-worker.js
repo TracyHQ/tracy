@@ -3,9 +3,11 @@
 // every call. This file says what is the writer's own: the writer prompt, the copy check, how an answer becomes a
 // site-copy/1 file, the corrected entries of a fix round, and the first user message.
 //
-// One writing turn for the whole site (pages per turn is #330). The writer gets no tools and no image: its first user
-// message carries the fixed part (plan, cited facts, quoted reviews, slim kit view, handed-over name slots) and the
-// turn naming every page (writer-turns.js). Its answer is put together into site-copy/1 by code (copy-changes.js
+// Round 0 is written in writing turns (#330): harness.pagesPerTurn cuts the writing order into turns, and the loop
+// asks for them one after another through the step's turn hooks (nextTurn, mergeTurns; lib/bench-run-round.js). The
+// writer gets no tools and no image: each turn's only user message carries the fixed part (plan, cited facts, quoted
+// reviews, slim kit view, handed-over name slots), the pages of the turn and the copy notebook of the earlier turns
+// (writer-turns.js); the partial answers are merged before the copy is put together and checked, once. Its answer is put together into site-copy/1 by code (copy-changes.js
 // assembleCopy: version, fingerprint, the plan's label slots) and graded by checkCopy. Failing entries go back with
 // the check's failure list, at most two fix rounds; the writer answers with corrected entries only, the valid ones are
 // applied and the invalid ones sent back once. Failures still standing after round 2 keep the writer's text and are
@@ -29,7 +31,7 @@ import { indexInputs } from './copy-check/inputs-index.js'
 import { siteWriterDoor } from './door.js'
 import { writerInput } from './writer-input.js'
 import { writerPrompt } from './writer-prompt.js'
-import { firstUserMessage } from './writer-turns.js'
+import { firstUserMessage, mergeTurnAnswers, nextTurnMessage } from './writer-turns.js'
 
 export { BENCH_QUEUE }
 
@@ -62,6 +64,9 @@ export const SITE_WRITER_STEP = Object.freeze({
     notADoc: NOT_A_COPY_MESSAGE
   }),
   readAnswer,
+  // Writing turns: the user message of the next turn of round 0, or null once all are written; then the merge.
+  nextTurn: ({ row, ready, answers }) => nextTurnMessage(ready.input, answers, row.harness?.pagesPerTurn),
+  mergeTurns: mergeTurnAnswers,
   prepare,
   agentRequest
 })
@@ -112,6 +117,7 @@ async function prepare({ pool, secret, index }, row) {
   const door = await siteWriterDoor({ pool, secret })
   if (!door.ok) return door
   const same = ['providerId', 'model', 'endpointHost'].every((k) => door.snapshot[k] === row.door?.[k])
+  const input = writerInput({ plan: row.plan, brief: row.brief, kit: kit.doc })
   if (!same)
     return {
       ok: false,
@@ -123,6 +129,7 @@ async function prepare({ pool, secret, index }, row) {
     kit,
     door: door.door,
     index: indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief }),
-    firstUser: firstUserMessage(writerInput({ plan: row.plan, brief: row.brief, kit: kit.doc }))
+    input,
+    firstUser: firstUserMessage(input)
   }
 }

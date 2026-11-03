@@ -10,6 +10,15 @@
 // (reading.bigReplacementsApplied). All of it in the same round. An answer that is not one JSON object (one fenced
 // block in it is read, the text around it dropped and recorded) is a round that is not a document: the step's message
 // asking for the whole document as one JSON object is sent back instead, and it counts as a fix round.
+//
+// Writing turns (optional, the writer's since #330): a step with nextTurn({ row, ready, answers }) and
+// mergeTurns(answers) writes round 0 in turns. Each turn is a request of its own (a fresh conversation: the hook's
+// message is its only user message); after each answer the round records it (reading.writingTurns: the raw answer and
+// the run's turn count once it was written, saved before the next turn goes out) and asks the hook for the next. A
+// resumed round 0 starts its next turn after the last recorded one, from the saved turns past that count, so a turn
+// that was answered but not yet recorded is read back, never sent again. Once the hook answers null the parsed answers
+// are merged into one and read and checked as the round's only answer. A fix round continues the conversation of the
+// last turn (reading.conversationFrom of round 0). A step without the hooks (the planner) plays one conversation.
 import { isChangeList, objectOf } from './bench-answer.js'
 
 /** Play one round. Returns the run's verdict when the round ends the run, else null. */
@@ -49,14 +58,69 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
   }
   const notADoc = (result, fields) =>
     save('not_a_plan', { answer: result.answer, failureList: messages.notADoc, reading, ...fields })
-  for (;;) {
-    const result = await ctx.ask({ row, ready: ctx.ready, round, history, followUp, leaseToken, must })
-    if (result.ended) {
-      const [state, error] = result.ended
-      await save(state, error ? { error } : {})
-      return result.ended
+  const ended = async (result) => {
+    const [state, error] = result.ended
+    await save(state, error ? { error } : {})
+    return result.ended
+  }
+  // Where the conversation this round continues starts in the run's turns: the last writing turn's first call.
+  let from = 0
+  if (step.nextTurn && round > 0)
+    from = (await store.roundsOf(pool, runId))[0]?.reading?.conversationFrom ?? 0
+  // Round 0 in writing turns: the merged answer, read below as the round's only answer.
+  let written = null
+  if (step.nextTurn && round === 0) {
+    const done = reading.writingTurns ?? []
+    for (;;) {
+      const answers = done.map((d) => objectOf(d.answer, step).value)
+      const firstUser = step.nextTurn({ row, ready: ctx.ready, answers })
+      if (firstUser === null) {
+        const value = step.mergeTurns(answers)
+        const droppedText = done
+          .map((d) => d.droppedText)
+          .filter(Boolean)
+          .join('\n')
+        written = {
+          answer: done.length === 1 ? done[0].answer : JSON.stringify(value),
+          turns: history,
+          parsed: { ok: true, value, ...(droppedText ? { droppedText } : {}) }
+        }
+        break
+      }
+      from = done.at(-1)?.to ?? 0
+      reading.conversationFrom = from
+      const result = await ctx.ask({
+        row,
+        ready: ctx.ready,
+        round,
+        history,
+        leaseToken,
+        must,
+        firstUser,
+        from
+      })
+      if (result.ended) return ended(result)
+      const parsed = objectOf(result.answer, step)
+      if (!parsed.ok) {
+        await notADoc(result, { error: parsed.error })
+        return null
+      }
+      history = result.turns
+      done.push({
+        to: history.length,
+        answer: result.answer,
+        ...(parsed.droppedText ? { droppedText: parsed.droppedText } : {})
+      })
+      reading.writingTurns = done
+      await save('planning', { reading })
     }
-    const parsed = objectOf(result.answer, step)
+  }
+  for (;;) {
+    const result =
+      written ?? (await ctx.ask({ row, ready: ctx.ready, round, history, followUp, leaseToken, must, from }))
+    if (result.ended) return ended(result)
+    const parsed = written ? written.parsed : objectOf(result.answer, step)
+    written = null
     if (!parsed.ok) {
       await notADoc(result, { error: parsed.error })
       return null

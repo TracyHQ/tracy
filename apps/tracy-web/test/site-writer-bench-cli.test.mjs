@@ -72,7 +72,9 @@ test('wrong usage prints the usage, exits 2 and queues nothing', opts, async () 
     [[...START, '--by', 'two words'], /--by takes letters/],
     [['status'], /status needs a run id/],
     [['get', '00000000-0000-0000-0000-000000000000'], /get needs --out/],
-    [['run', '--bogus'], /Unknown option/]
+    [['run', '--bogus'], /Unknown option/],
+    [[...START, '--pages-per-turn', 'two'], /--pages-per-turn takes a positive whole number or "all"/],
+    [[...START, '--pages-per-turn', '0'], /--pages-per-turn takes a positive whole number or "all"/]
   ]
   for (const [argv, message] of cases) {
     const r = await cli(...argv)
@@ -210,3 +212,20 @@ test('cancel ends a run nobody holds, and refuses one that has ended', opts, asy
   const none = await cli('status', '00000000-0000-0000-0000-000000000000')
   assert.equal(none.code, 1)
 })
+
+test(
+  'run --pages-per-turn freezes pages per turn on the run; without it the whole site is one turn',
+  opts,
+  async () => {
+    await assignWriterDoor(db.pool)
+    const two = await cli(...START, '--pages-per-turn', '2')
+    assert.equal(two.code, 0, two.err)
+    const harnessOf = async (id) =>
+      (await db.pool.query('select harness from site_writer_run where id = $1', [id])).rows[0].harness
+    assert.equal((await harnessOf(two.out)).pagesPerTurn, 2)
+    await cli('cancel', two.out)
+    const all = await cli(...START)
+    assert.equal(all.code, 0, all.err)
+    assert.equal((await harnessOf(all.out)).pagesPerTurn, 'all')
+  }
+)

@@ -30,6 +30,8 @@
 //   prepare(deps, row)            everything else the run needs before a call: { ok: true, door, ... } or a refusal
 //                                 { ok: false, code, reason }; checked after the prompt and the checker
 //   agentRequest({ row, ready, history })  { firstUser, tools, writeStep?, resolveImage? } for runAgent
+//   nextTurn({ row, ready, answers }), mergeTurns(answers)  optional: round 0 written in turns, each a request of its
+//                                 own (bench-run-round.js); nextTurn gives the next turn's user message or null
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { AgentError, runAgent } from './agent-over-door.js'
 import { playRound } from './bench-run-round.js'
@@ -160,30 +162,44 @@ async function nextRound(step, pool, runId) {
   return { round: last.round + 1, base: baseOf(last.round + 1), followUp: followUpAfter(last), opening: true }
 }
 
-// One runAgent call over the saved conversation: `{ answer, turns }`, or `{ ended }` with the run's verdict.
-async function ask(step, deps, { row, ready, round, history, followUp, leaseToken, must }) {
+// One runAgent call over the saved conversation: `{ answer, turns }`, or `{ ended }` with the run's verdict. The
+// conversation is the run's turns from `from` on (a writing turn opens a new one), numbered from 0 for runAgent and
+// saved under the run's own numbers; `firstUser` replaces the step's first message (a writing turn's).
+async function ask(
+  step,
+  deps,
+  { row, ready, round, history, followUp, leaseToken, must, firstUser, from = 0 }
+) {
   const { pool } = deps
   const { store } = step
   const runId = row.id
   const stop = new AbortController()
+  const shift = (turn, by) => ({
+    ...turn,
+    n: turn.n + by,
+    ...(turn.resendOf !== undefined && turn.resendOf !== null ? { resendOf: turn.resendOf + by } : {})
+  })
   try {
-    return await runAgent({
+    const result = await runAgent({
       door: ready.door,
       system: ready.prompt.text,
       ...step.agentRequest({ row, ready, history }),
-      history,
+      ...(firstUser !== undefined ? { firstUser } : {}),
+      history: history.slice(from).map((t) => shift(t, -from)),
       followUp,
       fetchImpl: deps.fetchImpl,
       signal: stop.signal,
       ...harnessOf(row.harness),
       ...(deps.retry ? { retry: deps.retry } : {}),
       // A streamed call's progress, for `status`: a hint, so a lost write is not an error (runAgent ignores it).
-      onProgress: ({ n, ...progress }) => store.saveTurnProgress(pool, { runId, n, progress, leaseToken }),
+      onProgress: ({ n, ...progress }) =>
+        store.saveTurnProgress(pool, { runId, n: n + from, progress, leaseToken }),
       onTurn: async (turn) => {
-        await must(store.saveTurn(pool, { runId, round, turn, leaseToken }))
+        await must(store.saveTurn(pool, { runId, round, turn: shift(turn, from), leaseToken }))
         if (turn.state === 'answered' && (await store.cancelAsked(pool, runId))) stop.abort()
       }
     })
+    return { ...result, turns: [...history.slice(0, from), ...result.turns.map((t) => shift(t, from))] }
   } catch (error) {
     if (!(error instanceof AgentError)) throw error
     if (error.code === 'AGENT_ABORTED') return { ended: ['cancelled'] }

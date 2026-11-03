@@ -15,6 +15,7 @@ export const USAGE = `usage: node scripts/site-writer-bench.mjs <command>
   run --plan-file <path> --kit <ref> --brief-file <path>     queue a run on a plan and a brief JSON file
   run --plan-file <path> --kit <ref> --brief-revision <id>   queue a run on a plan and the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
+      [--pages-per-turn <n|all>]          pages per writing turn, frozen with the run (default all: one turn)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, balance, duration, checker summary
   get <runId> --out <dir>                 write every copy version, the corrections, check and failure list of each
@@ -45,6 +46,7 @@ export async function runCli(argv, deps) {
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
         by: { type: 'string' },
+        'pages-per-turn': { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -127,6 +129,9 @@ async function startRun(d, values) {
     throw new Usage('run needs exactly one of --brief-file and --brief-revision')
   if (values.by !== undefined && !LABEL.test(values.by))
     throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
+  const perTurn = values['pages-per-turn']
+  if (perTurn !== undefined && perTurn !== 'all' && !/^[1-9][0-9]{0,3}$/.test(perTurn))
+    throw new Usage('--pages-per-turn takes a positive whole number or "all"')
   const plan = await readJsonFile(d, values['plan-file'], 'plan')
   if (plan.error) return refused(d, plan.error)
   let brief
@@ -147,6 +152,7 @@ async function startRun(d, values) {
     briefSource: brief.source,
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
+    ...(perTurn !== undefined ? { pagesPerTurn: perTurn === 'all' ? 'all' : Number(perTurn) } : {}),
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)
