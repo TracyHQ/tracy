@@ -67,6 +67,7 @@ ambiguous, and there is no way to detect it by machine.
 | [0038](0038-slot-roles-live-in-content-map.md) | Slot roles live on each slot of the content map; the Road to live checks them under Content coverage; released contracts are never edited | (binding) |
 | [0039](0039-slot-fit-lives-in-content-map.md) | Slot fit (box, kind, transparency, text limits) lives on each slot of the content map, measured at capture; a picture's keep flag follows its measured kind | (binding) — **decision 3 superseded by 0040 for `place-content-roles/3` maps** |
 | [0040](0040-place-content-roles-v3-role-is-the-single-keep-decider.md) | Place content roles v3: new roles, the decorative picture split, repeatable lists; the slot role is the only decider of keep or replace, `customize` and `fit.replace` derive from it | (binding) |
+| [0041](0041-site-planner-trial-bench-in-ops.md) | The site planner runs first on a trial bench in /ops (group "WO New Flow Test"), as a tool-using Opus 5.5 agent with the approved prompt, checked by the R00 to R18 module with at most two fix rounds, apart from the WO build | (binding) |
 
 ## Inheritance — `tracy-infra` ADRs still binding here
 
