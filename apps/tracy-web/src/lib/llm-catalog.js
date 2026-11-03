@@ -218,6 +218,18 @@ export const LLM_DOORS = [
     prefers: ['vision']
   },
   {
+    id: 'siteWriter',
+    label: 'Site writer',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the site writer bench, started from a command line on the server. An agent writes the copy of a whole site from a checked site plan, the facts it cites and a slim view of the template kit.',
+    needsModel: true,
+    // The writer reads everything from its first message: no tool calls, no pictures (it reads the kit's block looks).
+    // No effort setting: the bench fixes it in code (max on DeepSeek Flash) and records it on each run (#329).
+    requires: [],
+    prefers: []
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',

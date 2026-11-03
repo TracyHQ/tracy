@@ -97,6 +97,7 @@ test('GET /api/ops/llm answers the catalog even before anything is configured', 
     'seedImage',
     'seedText',
     'sitePlanner',
+    'siteWriter',
     'vision',
     'web',
     'woEditorial'

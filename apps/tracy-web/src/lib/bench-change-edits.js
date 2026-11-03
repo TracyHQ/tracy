@@ -1,30 +1,15 @@
-// The edits of a fix round's change list inside one part of a site plan (plan-changes.js, ADR 0041, #301): a whole
-// part replaced, one value at a path replaced ("field"), one entry added to a list ("add"), one value or the part
-// itself removed ("remove"). A path is keys and list positions joined by dots, relative to the part or section the
-// change names: "says", "hiddenSlots", "story.2.step", "footerMenu[1].heading" (a bracketed position reads as one
-// more dot). Pure.
-import { measureReplacement } from './plan-change-size.js'
-
-/** The kinds a change may name, and the key that holds each kind's id. */
-export const PART_KINDS = Object.freeze({
-  page: 'id',
-  pageGroup: 'id',
-  legalPage: 'id',
-  block: 'block',
-  form: 'block',
-  slot: 'slot',
-  link: 'link',
-  frame: 'frame',
-  list: 'list'
-})
-
-/** The kinds a change may remove whole: entries inside a block, never a page, group or block (those carry decisions). */
-const REMOVABLE = ['slot', 'link', 'frame', 'list']
+// The edits of a bench fix round's change list inside one part of a document (bench-changes.js; ADR 0041, #301; shared
+// by every bench step since #327): a whole part replaced, one value at a path replaced ("field"), one entry added to a
+// list ("add"), one value or the part itself removed ("remove"). A path is keys and list positions joined by dots,
+// relative to the part or section the change names: "says", "hiddenSlots", "story.2.step", "footerMenu[1].heading" (a
+// bracketed position reads as one more dot). Which kinds of part exist, the key holding each kind's id, and which
+// kinds may be removed whole are the step's (ctx.rules: { partKinds, removable, noun }). Pure.
+import { measureReplacement } from './bench-change-size.js'
 
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v)
 const isContainer = (v) => v !== null && typeof v === 'object'
 
-/** Keys a path may not step through: they reach the object's prototype, not the plan. */
+/** Keys a path may not step through: they reach the object's prototype, not the document. */
 const FORBIDDEN = new Set(['__proto__', 'prototype', 'constructor'])
 
 /** The steps of a path, or null when it is not a non-empty path with no empty or forbidden step. */
@@ -59,13 +44,14 @@ function positionIn(list, step) {
 }
 
 // A path inside the target: where it ends, or the reason it cannot be edited. The id of a part is not a field.
-function placeOf(target, path, op, at) {
+function placeOf(target, path, op, { at, rules }) {
   const steps = pathSteps(path)
   if (!steps) return { reason: `${at} names no path to ${op}` }
-  if (target.kind !== 'section' && steps.length === 1 && steps[0] === PART_KINDS[target.kind])
+  if (target.kind !== 'section' && steps.length === 1 && steps[0] === rules.partKinds[target.kind])
     return { reason: `${at} cannot ${op} the ${target.kind} id; replace the whole ${target.kind} instead` }
   const root = target.get()
-  if (root === undefined) return { reason: `${at} names ${target.label}, which the plan does not have` }
+  if (root === undefined)
+    return { reason: `${at} names ${target.label}, which the ${rules.noun} does not have` }
   const place = walkPath(root, steps)
   return place.reason ? { reason: `${at} cannot ${op} ${path} of ${target.label}: ${place.reason}` } : place
 }
@@ -73,12 +59,12 @@ function placeOf(target, path, op, at) {
 const sameShape = (current, value) => current === undefined || Array.isArray(current) === Array.isArray(value)
 
 // The whole part or section replaced by "with".
-function replaceWhole(target, value, { n, at, replacements }) {
+function replaceWhole(target, value, { n, at, replacements, rules }) {
   const current = target.get()
   if (target.kind === 'section') {
     if (!sameShape(current, value)) return `${at} replaces section ${target.id} with a value of another type`
   } else {
-    const idKey = PART_KINDS[target.kind]
+    const idKey = rules.partKinds[target.kind]
     if (!isObject(value) || value[idKey] !== target.id)
       return `${at} must replace ${target.kind} ${target.id} with one object whose ${idKey} is ${target.id}`
   }
@@ -88,11 +74,12 @@ function replaceWhole(target, value, { n, at, replacements }) {
 }
 
 // One value inside the part replaced ("field"), one entry added to a list in it ("add"), or one value removed.
-function edit(target, change, op, { n, at, replacements }) {
+function edit(target, change, op, ctx) {
+  const { n, at, replacements, rules } = ctx
   const value = change.with
   if (op === 'remove' && change.remove === true) {
-    if (!REMOVABLE.includes(target.kind))
-      return `${at}: a ${target.kind} cannot be removed, only a ${REMOVABLE.join(', ')}`
+    if (!rules.removable.includes(target.kind))
+      return `${at}: a ${target.kind} cannot be removed, only a ${rules.removable.join(', ')}`
     target.remove()
     return null
   }
@@ -106,7 +93,7 @@ function edit(target, change, op, { n, at, replacements }) {
     return null
   }
   const path = change[op]
-  const place = placeOf(target, path, op === 'field' ? 'replace' : op, at)
+  const place = placeOf(target, path, op === 'field' ? 'replace' : op, ctx)
   if (place.reason) return place.reason
   const { parent, key } = place
   const current = Object.hasOwn(parent, key) ? parent[key] : undefined
@@ -130,9 +117,9 @@ function edit(target, change, op, { n, at, replacements }) {
 }
 
 /**
- * One change applied to its target (a part or a section, as plan-changes.js resolves it), in place: op is "replace"
+ * One change applied to its target (a part or a section, as bench-changes.js resolves it), in place: op is "replace"
  * (the whole part), "field", "add" or "remove". Returns null, or the reason it cannot be applied. Every replaced
- * value is measured into ctx.replacements.
+ * value is measured into ctx.replacements; ctx.rules holds the step's part kinds and removable kinds.
  */
 export const applyEdit = (target, change, op, ctx) =>
   op === 'replace' ? replaceWhole(target, change.with, ctx) : edit(target, change, op, ctx)

@@ -77,6 +77,8 @@ COPY apps/tracy-web/scripts/push-wo-places.mjs ./scripts/push-wo-places.mjs
 COPY apps/tracy-web/scripts/site-planner-bench.mjs ./scripts/site-planner-bench.mjs
 #   brand-bench.mjs — start, read and cancel brand bench runs (brand step trial bench; the bench has no screen).
 COPY apps/tracy-web/scripts/brand-bench.mjs ./scripts/brand-bench.mjs
+#   site-writer-bench.mjs: start, read and cancel site writer bench runs (ADR 0042, #329; the bench has no screen).
+COPY apps/tracy-web/scripts/site-writer-bench.mjs ./scripts/site-writer-bench.mjs
 # The design registry decides which Joomla template a picked inspiration actually builds with, and
 # the CANONICAL copy ships with the fleet's provision scripts (`tracy-host` carries that directory
 # whole) because that is where it is executed. This process only resolves against it, so it gets
