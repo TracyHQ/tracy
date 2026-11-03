@@ -125,8 +125,7 @@ export function fakeTools({ onCall = () => {}, failOn = null } = {}) {
     tool('look_logo', async (input, ctx) => {
       const { answer, cost } = await ctx.review({
         images: [{ mediaType: 'image/png', bytes: PNG }],
-        question: String(input.question ?? 'q'),
-        blind: Boolean(input.blind)
+        question: String(input.question ?? 'q')
       })
       return { verdict: answer, cost }
     })

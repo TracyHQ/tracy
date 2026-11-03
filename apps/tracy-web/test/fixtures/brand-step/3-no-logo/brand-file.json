@@ -140,15 +140,9 @@
     "material": null,
     "mark": {
       "decision": "icon",
-      "why": "There is no logo, so an icon in the site's accent shows what the business does; the first drawing, a swimmer in goggles, was named a swimming school blind at 128 px.",
+      "why": "There is no logo, so an icon in the site's accent shows what the business does; the first drawing, a swimmer in goggles, passed the looks on both grounds.",
       "letters": null,
       "icon": {
-        "businessType": "swim school",
-        "businessTypeFrom": "brand.name (business.trade fitness and subTrade coaching are broader; reading.about lists other sports)",
-        "accept": ["swimming school", "swimming lessons", "aquatics centre"],
-        "neighbour": "surf school",
-        "neighbourAccept": ["surf shop", "surfing lessons"],
-        "distinguishing": "a swimmer doing front crawl, wearing swim goggles",
         "subject": "a swim school: one simplified swimmer doing front crawl, head turned to breathe, wearing swim goggles",
         "colours": ["#f44141"],
         "coloursFrom": "accent",
@@ -160,14 +154,7 @@
             "raw": "icon/icon-1.raw.jpg",
             "subject": "a swim school: one simplified swimmer doing front crawl, head turned to breathe, wearing swim goggles",
             "verdict": "pass",
-            "plate": null,
-            "blind": {
-              "answer": "swimming school",
-              "guesses": ["swimming school", "public swimming pool", "swimwear shop"],
-              "verdict": "pass",
-              "matchedPosition": 1,
-              "size": 128
-            }
+            "plate": null
           }
         ]
       },
@@ -204,7 +191,6 @@
       {
         "file": "icon/icon-1.png",
         "ground": "#ffffff",
-        "shownAt": 128,
         "verdict": "pass",
         "checks": [
           {
@@ -216,18 +202,12 @@
             "check": "it reads as one clear shape on this ground",
             "verdict": "pass",
             "reason": "The red swimmer-like silhouette is clear against white."
-          },
-          {
-            "check": "blind: the business type the icon suggests at 128 px, unprompted",
-            "verdict": "pass",
-            "reason": "reviewer answered \"swimming school\" (guesses: swimming school; public swimming pool; swimwear shop); business type \"swim school\", neighbour \"surf school\": guess 1 \"swimming school\" matches \"swim school\""
           }
         ]
       },
       {
         "file": "icon/icon-1.png",
         "ground": "#121111",
-        "shownAt": 128,
         "verdict": "pass",
         "checks": [
           {
@@ -239,11 +219,6 @@
             "check": "it reads as one clear shape on this ground",
             "verdict": "pass",
             "reason": "The red swimmer-like silhouette is clear against the dark ground."
-          },
-          {
-            "check": "blind: the business type the icon suggests at 128 px, unprompted",
-            "verdict": "pass",
-            "reason": "reviewer answered \"swimming school\" (guesses: swimming school; public swimming pool; swimwear shop); business type \"swim school\", neighbour \"surf school\": guess 1 \"swimming school\" matches \"swim school\""
           }
         ]
       },

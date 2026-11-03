@@ -11,7 +11,7 @@
 // - kit: the template kit (quickstart, template, site.logoSpots, site.nameSlots, site.brandColours).
 // - files: the run's file folder as { has(relativePath), read(relativePath) -> Promise<Buffer> } (see memoryFiles).
 // The module reads no file, key or environment variable itself and never changes its inputs.
-// Recomputed here: the accent lift (accent-lift rule), the blind icon verdicts and positions, the favicon code check
+// Recomputed here: the accent lift (accent-lift rule), the favicon code check
 // on both browser tabs, the plate contrast, the name slots (name_slots rule), transparency of every image and the
 // exact colours of an icon. The order of the checks, and so the order of the rejected list, is the approved lab gate's.
 import { checkFaviconSet } from './gate-favicon.js'

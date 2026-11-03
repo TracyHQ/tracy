@@ -176,15 +176,9 @@
     },
     "mark": {
       "decision": "icon",
-      "why": "The logo is words only, so an icon in the logo's two colours shows the business: a scored loaf, named a bread bakery blind at 128 px.",
+      "why": "The logo is words only, so an icon in the logo's two colours shows the business: a scored loaf.",
       "letters": null,
       "icon": {
-        "businessType": "bakery",
-        "businessTypeFrom": "business.subTrade.id (bakery), matching brand.name and reading.about",
-        "accept": ["bakehouse", "bread shop", "patisserie", "baker"],
-        "neighbour": "cafe",
-        "neighbourAccept": ["coffee shop", "coffee house", "tea room"],
-        "distinguishing": "one scored bread loaf",
         "subject": "a bakery: one long scored bread loaf, its crust in the first colour and its three wide scores in the second colour",
         "colours": ["#6b3a1f", "#c0562b"],
         "coloursFrom": "logo",
@@ -196,14 +190,7 @@
             "raw": "icon/icon-1.raw.jpg",
             "subject": "a bakery: one long scored bread loaf, its crust in the first colour and its three wide scores in the second colour",
             "verdict": "pass",
-            "plate": null,
-            "blind": {
-              "answer": "bread bakery",
-              "guesses": ["bread bakery", "artisan bakery", "sandwich shop"],
-              "verdict": "pass",
-              "matchedPosition": 1,
-              "size": 128
-            }
+            "plate": null
           }
         ]
       },
@@ -240,7 +227,6 @@
       {
         "file": "icon/icon-1.pre-fix.png",
         "ground": "#ffffff",
-        "shownAt": 128,
         "verdict": "pass",
         "checks": [
           {
@@ -252,18 +238,12 @@
             "check": "it reads as one clear shape on this ground",
             "verdict": "pass",
             "reason": "The brown loaf is distinct against the white ground."
-          },
-          {
-            "check": "blind: the business type the icon suggests at 128 px, unprompted",
-            "verdict": "pass",
-            "reason": "reviewer answered \"bread bakery\" (guesses: bread bakery; artisan bakery; pastry shop); business type \"bakery\", neighbour \"cafe\": guess 1 \"bread bakery\" matches \"bakery\""
           }
         ]
       },
       {
         "file": "icon/icon-1.pre-fix.png",
         "ground": "#121111",
-        "shownAt": 128,
         "verdict": "pass",
         "checks": [
           {
@@ -275,11 +255,6 @@
             "check": "it reads as one clear shape on this ground",
             "verdict": "pass",
             "reason": "The brown loaf is distinct against the dark ground."
-          },
-          {
-            "check": "blind: the business type the icon suggests at 128 px, unprompted",
-            "verdict": "pass",
-            "reason": "reviewer answered \"bread bakery\" (guesses: bread bakery; artisan bakery; pastry shop); business type \"bakery\", neighbour \"cafe\": guess 1 \"bread bakery\" matches \"bakery\""
           }
         ]
       },
@@ -364,7 +339,6 @@
       {
         "file": "icon/icon-1.png",
         "ground": "#ffffff",
-        "shownAt": 128,
         "verdict": "pass",
         "checks": [
           {
@@ -376,18 +350,12 @@
             "check": "it reads as one clear shape on this ground",
             "verdict": "pass",
             "reason": "The brown loaf silhouette is clear against the white ground."
-          },
-          {
-            "check": "blind: the business type the icon suggests at 128 px, unprompted",
-            "verdict": "pass",
-            "reason": "reviewer answered \"bread bakery\" (guesses: bread bakery; artisan bakery; sandwich shop); business type \"bakery\", neighbour \"cafe\": guess 1 \"bread bakery\" matches \"bakery\""
           }
         ]
       },
       {
         "file": "icon/icon-1.png",
         "ground": "#121111",
-        "shownAt": 128,
         "verdict": "pass",
         "checks": [
           {
@@ -399,11 +367,6 @@
             "check": "it reads as one clear shape on this ground",
             "verdict": "pass",
             "reason": "The brown loaf silhouette is clear against the dark ground."
-          },
-          {
-            "check": "blind: the business type the icon suggests at 128 px, unprompted",
-            "verdict": "pass",
-            "reason": "reviewer answered \"bread bakery\" (guesses: bread bakery; artisan bakery; sandwich shop); business type \"bakery\", neighbour \"cafe\": guess 1 \"bread bakery\" matches \"bakery\""
           }
         ]
       },

@@ -176,15 +176,9 @@
     },
     "mark": {
       "decision": "icon",
-      "why": "The logo is words only, so an icon in the logo's two colours shows the business: a figure on a pilates reformer, named a Pilates studio in the reviewer's third guess at 128 px.",
+      "why": "The logo is words only, so an icon in the logo's two colours shows the business: a figure on a pilates reformer, passed the looks on both grounds.",
       "letters": null,
       "icon": {
-        "businessType": "pilates studio",
-        "businessTypeFrom": "brand.name and the logo readsAs (business.trade fitness and subTrade coaching are broader; reading.about lists other sports)",
-        "accept": ["reformer studio", "reformer pilates"],
-        "neighbour": "yoga studio",
-        "neighbourAccept": ["yoga school", "yoga retreat"],
-        "distinguishing": "a figure on a pilates reformer machine",
         "subject": "a pilates studio: one simplified figure doing a leg stretch lying on a pilates reformer machine",
         "colours": ["#0f4c4a", "#c8693f"],
         "coloursFrom": "logo",
@@ -196,14 +190,7 @@
             "raw": "icon/icon-1.raw.jpg",
             "subject": "a pilates studio: one simplified figure doing a leg stretch lying on a pilates reformer machine",
             "verdict": "pass",
-            "plate": null,
-            "blind": {
-              "answer": "physical therapy clinic",
-              "guesses": ["physical therapy clinic", "massage therapy clinic", "Pilates studio"],
-              "verdict": "pass",
-              "matchedPosition": 3,
-              "size": 128
-            }
+            "plate": null
           }
         ]
       },
@@ -240,7 +227,6 @@
       {
         "file": "icon/icon-1.png",
         "ground": "#ffffff",
-        "shownAt": 128,
         "verdict": "pass",
         "checks": [
           {
@@ -252,18 +238,12 @@
             "check": "it reads as one clear shape on this ground",
             "verdict": "pass",
             "reason": "The reclining figure and table form a recognizable icon against white."
-          },
-          {
-            "check": "blind: the business type the icon suggests at 128 px, unprompted",
-            "verdict": "pass",
-            "reason": "reviewer answered \"physical therapy clinic\" (guesses: physical therapy clinic; massage therapy clinic; Pilates studio); business type \"pilates studio\", neighbour \"yoga studio\": guess 3 \"Pilates studio\" matches \"pilates studio\""
           }
         ]
       },
       {
         "file": "icon/icon-1.png",
         "ground": "#121111",
-        "shownAt": 128,
         "verdict": "fail",
         "checks": [
           {
@@ -275,11 +255,6 @@
             "check": "it reads as one clear shape on this ground",
             "verdict": "fail",
             "reason": "The dark teal figure blends into the near-black ground, obscuring its shape."
-          },
-          {
-            "check": "blind: the business type the icon suggests at 128 px, unprompted",
-            "verdict": "pass",
-            "reason": "reviewer answered \"physical therapy clinic\" (guesses: physical therapy clinic; massage therapy clinic; Pilates studio); business type \"pilates studio\", neighbour \"yoga studio\": guess 3 \"Pilates studio\" matches \"pilates studio\""
           }
         ]
       },

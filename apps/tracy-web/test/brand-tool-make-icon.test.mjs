@@ -43,7 +43,7 @@ test('one colour: every visible pixel is exactly that colour, in a transparent 5
   assert.match(prompt, /ONE subject only/)
   assert.match(prompt, /bold geometric pictogram or emblem/)
   assert.match(prompt, /one tenth of the icon width/)
-  assert.match(prompt, /symbolic rather than realistic/)
+  assert.match(prompt, /symbolic or abstract/)
   assert.match(prompt, /No text, no letters/)
   assert.match(prompt, /Plain uniform white background \(#ffffff\)/)
 })

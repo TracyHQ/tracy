@@ -1,4 +1,4 @@
-// save_brand_file gate: one focused failing case per rule of the logo (name, spots, looks, mark, icon, blind check,
+// save_brand_file gate: one focused failing case per rule of the logo (name, spots, looks, mark, icon,
 // plate contrast). Each case breaks exactly one thing in a passing invented case and expects the field named.
 import { test } from 'node:test'
 import { assertNames, expectRejected, lookOf } from './_brand-gate-rules.mjs'

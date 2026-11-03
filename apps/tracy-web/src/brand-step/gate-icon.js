@@ -1,4 +1,4 @@
-// Gate section: the icon record of the mark (subject, colours, the questions written at step start) and its
+// Gate section: the icon record of the mark (subject, colours, provider, model) and its
 // attempts (gate-icon-attempts.js). Fills ctx.IC and ctx.iconColours for the sections after it.
 import { HEX } from './gate-context.js'
 import { checkAttempts } from './gate-icon-attempts.js'
@@ -45,20 +45,6 @@ export function checkIcon(ctx) {
     ctx.iconColours = got
     for (const k of ['provider', 'model'])
       if (typeof IC[k] !== 'string' || !IC[k]) bad(`logo.mark.icon.${k}`, 'as make_icon reported')
-    for (const k of ['businessType', 'businessTypeFrom', 'neighbour', 'distinguishing']) {
-      if (typeof IC[k] !== 'string' || !IC[k].trim())
-        bad(`logo.mark.icon.${k}`, 'written once at step start (see the prompt, step 3 Icon)')
-    }
-    if (!Array.isArray(IC.accept))
-      bad(
-        'logo.mark.icon.accept',
-        'array of accepted names: close synonyms and the broader field of the business type (may be empty)'
-      )
-    if (!Array.isArray(IC.neighbourAccept))
-      bad(
-        'logo.mark.icon.neighbourAccept',
-        'array of other names of the neighbouring business (may be empty)'
-      )
     checkAttempts(ctx, IC)
   }
   if (mk.decision === 'lettermark' && !Array.isArray(IC?.attempts))

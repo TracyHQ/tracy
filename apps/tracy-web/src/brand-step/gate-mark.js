@@ -1,6 +1,6 @@
 // Gate section: the logo material (what the brief found) and the mark decision (cut, icon, lettermark), decisions
 // 13, 14, 15, 18, 19, 20. Fills ctx.L, mat, mk, rec and sideMark, then hands the icon record to gate-icon.js
-// (which fills IC, iconColours; its blind attempts live in gate-icon-attempts.js).
+// (which fills IC, iconColours; its attempts live in gate-icon-attempts.js).
 import { HEX } from './gate-context.js'
 import { checkIcon } from './gate-icon.js'
 

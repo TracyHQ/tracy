@@ -67,8 +67,8 @@ text colour or fonts: they stay exactly the template's.
   shield, the cells of a grid) keeps its original colour, so the mark is never hollow. A shape with no closed
   outline has no inside.
 - `make_icon(subject, colours)`: an image model draws a flat, very simple icon and code makes it exact. You give
-  only `subject`: one short line with the business type and the one symbolic element that tells it apart from its
-  nearest neighbour ("a dental clinic: a single molar tooth"). The tool writes the model's instructions itself:
+  only `subject`: one short line describing a simple, distinctive symbol that suits the business ("a single molar
+  tooth", "a stylised wave inside a circle"); it may be abstract or evocative. The tool writes the model's instructions itself:
   one subject (one object, or one simple figure with one object or piece of equipment it uses), no full scene and
   no background setting, large bold shapes with clear empty space, no thin hairlines or small details, readable
   at 128 px, no text, plain ground, only the given colours. The same icon is the favicon: there is no separate
@@ -114,17 +114,6 @@ text colour or fonts: they stay exactly the template's.
 - `look_logo(files, checks)`: a separate reviewer looks at images, each on the ground you give it, and answers
   each check pass or fail with a reason. You never judge your own result. For every image it returns
   `{ "file", "ground", "verdict", "checks": [ { "check", "verdict", "reason" } ] }`.
-  **Blind mode** (`blind`, with `businessType`, `accept`, `neighbour`), for an icon only: the reviewer is not told
-  the business. It sees the icon as a visitor sees it in the site header, at 128 px (code renders it at 128 x 128
-  pixels with proper resampling and states the real size), and names the one kind of business it suggests
-  (`answer`) and its top 3 guesses (the first is the answer).
-  Code, not the model, then compares: pass when one of the 3 guesses names the business type or one of the
-  `accept` names (synonyms or the business's broader field) and that guess does not name the neighbour (or one of `neighbourAccept`, the neighbour's other
-  names); `matchedPosition` says which guess (1, 2 or 3). Fail otherwise (`why`: `neighbour` when the first
-  guess names the neighbour, else `other`). Generic place words (studio, shop, school, centre) are ignored and
-  words are stemmed. The result is added to every image as one more check, `blind: ...`, and comes back as
-  `blind { answer, guesses, verdict, why, matchedPosition, size: 128 }`. Your other checks must not name the
-  business (the tool refuses them).
 - `build_design_system({ accent })`: you give it a brand colour exactly as the brief has it. It runs the
   template's Design system slot in brand mode with that colour and nothing else (it refuses a ground or a text
   colour). It refuses black, grey and white: colours with no visible hue. A dark or a light colour that has a
@@ -209,44 +198,25 @@ the cut mark is looked at on it. Decide, from what you see:
     logo is black words, the icon is black. A logo with no measured colour counts as no logo. No logo (or the
     material is not a logo): one colour, the accent the site wears on the side it opens on (the template's
     accent when you kept it). Never add, drop, mix or adjust a colour.
-  - Business type, once, before the first `make_icon`: the most specific kind of business the brief supports,
-    read from `business.trade`, `business.subTrade`, `brand.name`, the logo's `readsAs` and `reading.about`;
-    when they disagree, the name and the logo win (they are what visitors see). Also write up to eight
-    accepted names (`accept`): close synonyms of the business AND the broader field it belongs to (for a Pilates
-    studio: fitness studio, gym, yoga studio, wellness studio), so that a reviewer who names the field still
-    counts. Never the neighbour. Log one line: "business type: X (from: <fields>); accept: A, B".
-  - Nearest neighbour and distinguishing element, once: from the brief, name the neighbouring kind of business
-    a viewer could most easily confuse it with, from a DIFFERENT field than the business (what it must not be
-    mistaken for, such as a furniture maker for a Pilates studio; never one of the `accept` names), with up to four other names for that neighbour (`neighbourAccept`, so a reviewer who names
-    it in other words is reported as naming the neighbour), then pick ONE visual element that this business has
-    and that neighbour does not. The element is one subject: a simple symbolic pictogram that stands for the business, an emblem
-    built from a few bold shapes (for example a stylised figure in a balanced pose inside a circle, or an
-    abstract symbol of the activity), not a literal technical depiction of equipment or a scene, whichever a
-    visitor recognises faster at header size. Never a full scene, a background setting or several props. Log one line: "nearest neighbour: X (also: A, B);
-    distinguishing element: Y". For example, a dental clinic and a beauty salon both suggest a smile and care: a
-    single molar tooth is dental, a lipstick is not.
-  - Subject: one short line, the business type and the distinguishing element alone, so that the element is the
-    whole icon. Never a scene, a list of parts, letters, words, the name, a person you could recognise, or
-    anything the brief does not support.
+  - Subject: one short line describing a simple, distinctive symbol that suits the business. It may be abstract or
+    evocative (a geometric mark, a stylised form, a symbol of the activity's feel); it does not have to depict
+    the trade literally, because the business name sits next to the icon. One symbol only: never a scene, a list
+    of parts, letters, words, the name, a person you could recognise, or anything the brief does not support.
   - Call `make_icon(subject, colours)`. A tool failure (`toolFailure: true`) is not a drawing attempt: nobody
     looked at it, so it does not count toward the three. Call again; change the subject only when the failure
     says the drawing itself was the problem (for example empty). At most four `make_icon` calls in all, tool
     failures included.
   - Look at every drawing once, in its original colours, on both sides' template backgrounds (the light side's
-    and the dark side's): `look_logo` in blind mode (`businessType`, `accept`, `neighbour`, `neighbourAccept`); the reviewer sees
-    the icon at 128 px, the size a visitor sees in the header. Checks: "there are no letters, numbers or words in
-    it"; "it reads as one clear shape on this ground". The blind check runs here, on the icon's first look, and
-    never again for that drawing: a recoloured side changes colours, not the business. The 32 px favicon is not
-    looked at by anyone: `make_favicon` checks it by code (step 5).
-  - The blind check fails (none of the 3 guesses names the business or its field), or "no letters" fails on any ground: draw
-    again. Rewrite the subject from the reviewer's guesses: the drawing was mistaken for what the reviewer
-    named, so make the subject simpler, bigger and more symbolic (fewer parts, no setting, a pictogram rather
-    than equipment), or pick another symbol that the business the reviewer named does not have; never add details
-    to explain it. Log what it was mistaken for and what you changed. It fails only reading on one side: keep it; that side
-    gets its own mark in step 4 (`recolour_mark`), never a new drawing.
+    and the dark side's): `look_logo` with two checks: "there are no letters, numbers or words in it"; "it reads
+    as one clear shape on this ground". The 32 px favicon is not looked at by anyone: `make_favicon` checks it by
+    code (step 5).
+  - A drawing fails only when "no letters" or "one clear shape" fails on a ground. Then draw again by simplifying:
+    fewer parts, bigger shapes, no setting; never add details. Log what failed and what you changed. It fails
+    only reading on one side: keep it; that side gets its own mark in step 4 (`recolour_mark`), never a new
+    drawing.
   - At most three drawings looked at by the reviewer (and four `make_icon` calls). None passed: use a lettermark
     and say why in one sentence (`logo.mark.why`). Record every call in `logo.mark.icon.attempts`, tool failures
-    too, each drawing with its blind result (seen at 128 px) and its `plate` (null when no plate was needed).
+    too, each drawing with its `plate` (null when no plate was needed).
 - **Lettermark** (only after three failed drawings, or four calls with no pass): the letters are the first letter of the first two main words of `brand.name` (skip words such as
   "the", "and", "of", "&", and legal endings such as "LLC", "FZ", "LLC-FZ"); one letter when the name has one main
   word. Call `make_lettermark` with the accent the site wears on the side it opens on. Add the owner task
@@ -276,7 +246,7 @@ the accent (no logo) or a lettermark adds `replace-temporary-logo`.
      because it fails on one side.
      The inverted mark still fails: stop, and say which side and which check failed.
    - Icon: `recolour_mark` for that side (colours that do not read take the side's heading colour), then look
-     at the recoloured icon on that side's background, not blind, with one check: "it reads clearly on this
+     at the recoloured icon on that side's background with one check: "it reads clearly on this
      ground". Never draw a new icon because it fails on one side. The recoloured icon still fails to read: stop,
      and say which side failed.
    - Lettermark: `make_lettermark` again with the accent the site wears on that side.
@@ -349,13 +319,10 @@ file. Fix every rejected field and save again.
       "why": "<one sentence with what decided it>",
       "letters": "<letters> | null",
       "icon": {
-        "businessType": "<written once>", "businessTypeFrom": "<brief fields>", "accept": [ "<synonym>" ],
-        "neighbour": "<nearest neighbouring business>", "neighbourAccept": [ "<other name of the neighbour>" ], "distinguishing": "<the one visual element>",
         "subject": "<the last subject given>", "colours": [ "#rrggbb" ], "coloursFrom": "logo | accent",
         "provider": "<from make_icon>", "model": "<from make_icon>",
         "attempts": [ { "file": "<icon png>", "raw": "<raw model image>", "subject": "<subject>", "verdict": "pass | fail | tool-failed",
-          "plate": null,
-          "blind": { "answer": "<what the reviewer named>", "guesses": [ "<1>", "<2>", "<3>" ], "verdict": "pass | fail", "matchedPosition": 2, "size": 128 } } ]
+          "plate": null } ]
       },
       "file": "<transparent 512 png>",
       "recoloured": { "light": "<png> | null", "dark": "<png> | null" }
@@ -370,7 +337,7 @@ file. Fix every rejected field and save again.
       "light": "<transparent png> | null", "dark": "<transparent png> | null",
       "twoLines": { "light": "<transparent png> | null", "dark": "<transparent png> | null" }
     },
-    "look": [ { "file": "<png>", "ground": "#rrggbb", "shownAt": "128 for a blind look, else omitted", "verdict": "pass|fail", "checks": [ { "check": "<check text>", "verdict": "pass|fail", "reason": "<reviewer reason>" } ] } ],
+    "look": [ { "file": "<png>", "ground": "#rrggbb", "verdict": "pass|fail", "checks": [ { "check": "<check text>", "verdict": "pass|fail", "reason": "<reviewer reason>" } ] } ],
     "spots": [ { "spot": "<kit logoSpots id>", "file": "<png>", "shows": "logo|logo-2-lines|mark", "ground": "#rrggbb", "writable": true } ]
   },
   "favicon": {
@@ -401,12 +368,11 @@ file. Fix every rejected field and save again.
 - `logo.material` is null when `brand.logo` is null; `logo.material.ground` is the ground `measure_logo` found.
 - `logo.mark.icon`: null for a cut mark that needed no icon. For `icon`: the attempts in order, the last one is
   `logo.mark.file` with verdict `pass`; `colours` are the icon's exact colours: the logo's colours in order
-  (`coloursFrom: logo`), or `[colours.accent]` (`coloursFrom: accent`). Every drawn attempt keeps its blind
-  result exactly as `look_logo` gave it, with `size: 128` and `matchedPosition` (null on a fail); an attempt
-  whose blind check failed has verdict `fail`. `plate` is null, or what `make_icon` reported when it put a
+  (`coloursFrom: logo`), or `[colours.accent]` (`coloursFrom: accent`). An attempt
+  whose look failed has verdict `fail`. `plate` is null, or what `make_icon` reported when it put a
   one-colour drawing on a plate (`{ "shape": "circle | rounded-square", "iconColour", "plateColour", "ratio" }`).
   A tool failure is recorded with verdict `tool-failed` and does not count as a drawing: at most three drawings
-  and four calls. A blind look entry keeps `shownAt: 128` from `look_logo`. For a lettermark after failed icons:
+  and four calls. For a lettermark after failed icons:
   every call (three failed drawings, or four calls with no pass), and `logo.mark.why` says why.
 - `logo.mark.recoloured`: a file for each side that got its own mark in step 4, null for a side that uses
   `logo.mark.file`.
@@ -444,10 +410,8 @@ file. Fix every rejected field and save again.
   two-line logo where each line reaches 14 px, else the mark alone?
 - Is every image transparent except the phone icon?
 - With a words-only logo or no logo, is the mark an icon (not a lettermark, unless three icon drawings failed)?
-  Did you log the business type, the nearest neighbour and the distinguishing element before the first drawing?
-  Did the reviewer, not told the business and seeing the icon at 128 px, name it (blind check pass), with no
-  letters in the icon (pass = the business among the reviewer's 3 guesses)? Is the icon one subject (an object,
-  or a figure with one object), not a scene? Were tool failures left out of the three drawings? Are its
+  Did the reviewer see no letters, numbers or words in the icon, and one clear shape on both grounds? Is the
+  icon one simple symbol, not a scene? Were tool failures left out of the three drawings? Are its
   colours exactly the logo's (one or two), or the accent alone when there is no logo?
 - Was the cut mark looked at on the material's own ground, and fixed before any logo look?
 - Did the favicon's code check pass on a white and on a dark browser tab, with its numbers copied?

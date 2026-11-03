@@ -145,9 +145,9 @@ export function checkSpotsAndShown(ctx) {
   checkMarkLooks(ctx, passed)
 }
 
-/** The mark's own looks: a cut mark on its material ground, an icon's blind looks and its per-side looks. */
+/** The mark's own looks: a cut mark on its material ground, and an icon's per-side looks. */
 function checkMarkLooks(ctx, passed) {
-  const { L, K, mk, twoLogos, bad, norm, lastLookOn, sideMark, materialLookGround } = ctx
+  const { K, mk, twoLogos, bad, norm, lastLookOn, sideMark, materialLookGround } = ctx
   if (
     mk.decision === 'cut' &&
     materialLookGround &&
@@ -158,21 +158,6 @@ function checkMarkLooks(ctx, passed) {
       'logo.mark.file',
       `the last look of the cut mark on the material's ground ${materialLookGround} is not a pass`
     )
-  }
-  if (mk.decision === 'icon' && typeof mk.file === 'string' && Array.isArray(L.look)) {
-    const blindLooks = L.look.filter(
-      (l) =>
-        typeof l.file === 'string' &&
-        norm(l.file) === norm(mk.file) &&
-        (l.checks ?? []).some((c) => String(c?.check ?? '').startsWith('blind:'))
-    )
-    const bl = blindLooks.flatMap((l) =>
-      (l.checks ?? []).filter((c) => String(c?.check ?? '').startsWith('blind:'))
-    )
-    if (!bl.length || bl[bl.length - 1].verdict !== 'pass')
-      bad('logo.mark.file', 'the icon\'s look has no passing "blind:" check')
-    else if (blindLooks.some((l) => l.shownAt !== 128))
-      bad('logo.look (blind)', 'every blind look of the icon is shown at 128 px (shownAt: 128)')
   }
   if (twoLogos && !twoLogos.light && !twoLogos.dark)
     bad('logo.logos.twoLines', 'no spot shows a two-line logo: null')

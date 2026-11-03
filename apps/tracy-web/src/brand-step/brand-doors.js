@@ -102,7 +102,7 @@ export async function brandDoors({ pool, secret, override = null }) {
     return {
       ok: false,
       code: 'BRAND_SAME_MODEL',
-      reason: `The brand agent and the brand reviewer both resolve to ${agent.door.model}. The reviewer has to be another model, so the blind icon check is not judged by the model that chose the subject. Change one door in ${WHERE}.`
+      reason: `The brand agent and the brand reviewer both resolve to ${agent.door.model}. The reviewer has to be another model, so the agent's work is not judged by the model that made it. Change one door in ${WHERE}.`
     }
   return { ok: true, agent, reviewer }
 }

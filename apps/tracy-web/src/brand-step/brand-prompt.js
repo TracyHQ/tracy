@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs'
 export const BRAND_PROMPT_FILE = new URL('./brand-step.system.md', import.meta.url)
 
 /** The sha256 the locked prompt must have. */
-export const BRAND_PROMPT_SHA256 = 'c21e2a7d553165fba3479e0a42fd433f2fa8c0aedf15eb534943af866953ec53'
+export const BRAND_PROMPT_SHA256 = 'bffba6a4735a2957e38ff7e575234ba189cc1569d451344686cacf3decba70e0'
 
 let loaded = null
 

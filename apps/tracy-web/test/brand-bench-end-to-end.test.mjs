@@ -45,7 +45,7 @@ test(
       assert.equal(
         requests.filter((m) => m === REVIEWER_MODEL).length,
         2,
-        'one blind look at the icon and one look for all the logos'
+        'one look at the icon and one look for all the logos'
       )
       assert.equal(requests.filter((m) => m === PICTURE_MODEL).length, 1, 'one drawing')
       assert.ok(run.cost.agent > 0 && run.cost.reviewer > 0, JSON.stringify(run.cost))
@@ -82,7 +82,7 @@ test(
         assert.ok(files.includes(f), f)
       const brand = JSON.parse(readFileSync(path.join(out, 'brand-file.json'), 'utf8'))
       assert.equal(brand.logo.mark.decision, 'icon')
-      assert.equal(brand.logo.mark.icon.attempts[0].blind.verdict, 'pass')
+      assert.equal(brand.logo.mark.icon.attempts[0].verdict, 'pass')
       for (const f of [brand.favicon.png32, brand.favicon.ico, brand.logo.mark.file])
         assert.ok(existsSync(path.join(out, f)), `${f} is exported beside the brand file`)
       const turns = JSON.parse(readFileSync(path.join(out, 'turns.json'), 'utf8'))

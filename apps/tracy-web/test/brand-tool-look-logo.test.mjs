@@ -1,5 +1,5 @@
 // look_logo at the seam tool.run(input, ctx) with a scripted reviewer (ctx.review): the images and the question it is
-// given and the verdicts. Blind mode is in brand-tool-look-logo-blind.test.mjs.
+// given and the verdicts.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
@@ -56,7 +56,6 @@ test('look_logo: each image is shown on its ground, the question lists the check
   )
   assert.equal(r.results[1].checks[1].reason, 'stray mark')
   assert.equal(calls.length, 1)
-  assert.equal(calls[0].blind, false)
   assert.equal(calls[0].images.length, 3, 'two looks and the original')
   const [first] = calls[0].images
   assert.equal((await sharp(first).metadata()).width, 400 + 40)

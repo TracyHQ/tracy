@@ -96,18 +96,12 @@ export function brandFileFrom(kit, r) {
           : 'Four make_icon calls gave no icon, so the initials are the last fallback.',
         letters: icon ? null : 'GB',
         icon: {
-          businessType: 'swim school',
-          businessTypeFrom: 'brand.name',
-          accept: ['swimming school'],
-          neighbour: 'surf school',
-          neighbourAccept: [],
-          distinguishing: 'a swimmer in goggles',
           subject: icon ? icon.subject : 'a swimmer in goggles',
           colours: [accent],
           coloursFrom: 'accent',
           provider: icon ? icon.provider : 'none',
           model: icon ? icon.model : 'none',
-          attempts: icon ? [iconAttempt(icon, r)] : toolFailures(r)
+          attempts: icon ? [iconAttempt(icon)] : toolFailures(r)
         },
         file: mark.file,
         recoloured: { light: null, dark: null }
@@ -142,23 +136,9 @@ export function brandFileFrom(kit, r) {
   }
 }
 
-/** The icon's attempt record, with its blind look (the first look_logo, in blind mode). */
-function iconAttempt(icon, r) {
-  const blind = r.look_logo.find((l) => l.blind).blind
-  return {
-    file: icon.file,
-    raw: icon.raw,
-    subject: icon.subject,
-    verdict: 'pass',
-    plate: icon.plate,
-    blind: {
-      answer: blind.answer,
-      guesses: blind.guesses,
-      verdict: blind.verdict,
-      matchedPosition: blind.matchedPosition,
-      size: blind.size
-    }
-  }
+/** The icon's attempt record. */
+function iconAttempt(icon) {
+  return { file: icon.file, raw: icon.raw, subject: icon.subject, verdict: 'pass', plate: icon.plate }
 }
 
 /** Every make_icon call failed: four tool failures, none a drawing attempt. */

@@ -118,7 +118,7 @@ test(
     assert.match(status, /cost \$0\.6000 \(agent \$0\.6000, drawing \$0\.0000, reviewer \$0\.0000\)/)
     assert.match(status, /round 0: rejected, gate rejected 1 field, fault agent/)
     assert.match(status, /round 1: accepted, gate ok/)
-    assert.match(status, /prompt sha256 c21e2a7d/)
+    assert.match(status, /prompt sha256 bffba6a4/)
     k.out.length = 0
     const outDir = path.join(k.dir, 'out')
     assert.equal(await k.run(['get', run.id, '--out', outDir]), 0)
