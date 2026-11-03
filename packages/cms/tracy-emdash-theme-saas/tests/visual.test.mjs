@@ -1202,8 +1202,10 @@ it('hidden responsive nav and CTA are absent on both sides, but a visible source
 })
 
 it('same-document fragment navigation verifies the real HTTP status, including a 404 document', async () => {
-  const site = await serve()
+  // The browser first: a launch that throws must not leave a listening server behind, which keeps
+  // this file alive and the whole `node --test` run waiting with it.
   const browser = await launchBrowser()
+  const site = await serve()
   try {
     const page = await browser.newPage()
     await navigate(page, `${site.origin}/tiny#drawer`)

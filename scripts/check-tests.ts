@@ -560,10 +560,17 @@ export function ensureDeps(): void {
 }
 
 /**
- * Try to open a browser the same way the suite opens it: the machine's `chrome` channel first, Playwright's
- * Chromium second (`tools/qa-browser.mjs`). `createRequire` from the package's own directory, not a bare
+ * Try to open a browser the same way the suites open it by default: Playwright's own Chromium for the
+ * version the package pins (`chromium.launch()` in the e2e tests, `browserChoice` in the templates'
+ * `tools/qa-browser.mjs`). `createRequire` from the package's own directory, not a bare
  * `import('playwright')`: a bare specifier inside `node -e` resolves against the process's working
  * directory, and a probe must never depend on who called it.
+ *
+ * ⚠ NO FALLBACK TO THE MACHINE'S CHROME — changed 03/11/2026. The probe tried the `chrome` channel first,
+ * as `qa-browser.mjs` once did; the templates dropped that fallback (pinned Chromium, so a report says
+ * which binary drew it) and the e2e tests never had it. On `ubuntu-latest`, which ships Google Chrome,
+ * the probe then said "a browser opens", nothing was installed, and every launch failed with
+ * `Executable doesn't exist at …/chromium_headless_shell-1243/…` (run 41581075192: 86 e2e tests red).
  */
 function browserOpens(dir: string): { ok: boolean; why: string } {
   const probe = spawnSync(
@@ -572,7 +579,7 @@ function browserOpens(dir: string): { ok: boolean; why: string } {
       '-e',
       `const { createRequire } = require('node:module');` +
         `const pw = createRequire(${JSON.stringify(join(dir, 'probe.cjs'))})('playwright');` +
-        `pw.chromium.launch({ channel: 'chrome' }).catch(() => pw.chromium.launch())` +
+        `pw.chromium.launch()` +
         `.then((b) => b.close()).then(() => process.exit(0))` +
         `.catch((e) => { console.error(String(e && e.message || e)); process.exit(1); });`
     ],
@@ -636,9 +643,9 @@ function canInstallSystemDeps(): boolean {
  * across two places, of which only one is right.
  *
  * 🔒 PROBE FIRST, INSTALL SECOND — and the probe is the same path the suite opens a browser by
- * (`tools/qa-browser.mjs`: the machine's `chrome` channel first, Playwright's Chromium second). A machine
- * that can open one downloads nothing: a laptop with Chrome runs this gate without swallowing 150 MB,
- * and a blank runner downloads exactly once per run. A blind install would make everyone pay that price
+ * (`browserOpens`: Playwright's pinned Chromium). A machine that already has it downloads nothing, and
+ * a blank runner downloads exactly once per run (none on GitHub-hosted, where the workflow's step
+ * "Install the Playwright browser on a GitHub-hosted runner" put it there first). A blind install would make everyone pay that price
  * to fix one machine.
  *
  * ⚠ DOWNLOADING THE BINARY IS NOT HAVING A BROWSER — fixed 2026-09-18, after the patch above fixed
@@ -1409,6 +1416,18 @@ function runE2e(): void {
   }
 }
 
+/**
+ * A template's `test` argv with `--test-force-exit`, as `test:workers` and e2e already run. A test that
+ * fails before closing what it opened (a server listening, a browser) otherwise keeps its file's
+ * process alive, and `node --test` waits for it without a word: measured 03/11/2026 on run
+ * 41581075192, `tests emdash-base` printed nothing for 43 minutes after F7/F10 failed, until the job
+ * timeout. `visual.test.mjs` started a server, then a browser that did not exist threw before the
+ * `try` that closed it. With the flag the file ends when its tests do, and the row is red in minutes.
+ */
+export function standaloneArgs(args: readonly string[]): string[] {
+  return args.includes('--test-force-exit') ? [...args] : ['--test', '--test-force-exit', ...args.slice(1)]
+}
+
 /** One standalone EmDash template: its own lockfile, its own browser, its own `pnpm test`. */
 function runStandalone(rel: string): void {
   const dir = join(ROOT, rel)
@@ -1425,7 +1444,10 @@ function runStandalone(rel: string): void {
     }
   }
   ensureBrowser(dir, rel)
-  const run = spawnReported(process.execPath, scriptArgs(dir, 'test'), { cwd: dir, env: scriptEnv(dir) })
+  const run = spawnReported(process.execPath, standaloneArgs(scriptArgs(dir, 'test')), {
+    cwd: dir,
+    env: scriptEnv(dir)
+  })
   if (run.status !== 0) {
     process.stderr.write(`check-tests: the suite of ${rel} is red.\n`)
     process.exit(1)
