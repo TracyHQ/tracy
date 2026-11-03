@@ -148,6 +148,7 @@ test('readAssignments answers every door, named, even the ones nobody assigned',
     'assistant',
     'seedImage',
     'seedText',
+    'sitePlanner',
     'vision',
     'web',
     'woEditorial'

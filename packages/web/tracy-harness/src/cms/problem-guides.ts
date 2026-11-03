@@ -1420,10 +1420,13 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
     case 'kit-incomplete':
       return g(tr('cms-readiness.kit.incomplete'), {
         detail: kitDetail(p, tr('cms-readiness.kit.incomplete.detail')),
+        // Shots without a current look need text, not a new capture (skill quickstart-contract, image-looks).
         outside: kitOutside(
           ctx,
           p,
-          `is incomplete: ${str(p.reason) ?? 'pictures are missing'}. Capture it again.`
+          Array.isArray(p.missingLooks) && p.missingLooks.length > 0
+            ? `is incomplete: ${str(p.reason) ?? 'shots have no look'}. Write the looks with the template kit tool's looks command, as references/image-looks.md of the quickstart-contract skill says; do not capture it again.`
+            : `is incomplete: ${str(p.reason) ?? 'pictures are missing'}. Capture it again.`
         )
       })
     case 'kit-not-approved':

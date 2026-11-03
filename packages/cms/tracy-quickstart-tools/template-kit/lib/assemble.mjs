@@ -10,6 +10,7 @@ import { applyCoverage, coverageGate } from './coverage-gate.mjs'
 import { httpFetcher } from './crawl.mjs'
 import { buildKit } from './kit.mjs'
 import { fixedLinkLabels, linkLabelChecks } from './link-label-reasons.mjs'
+import { keepLooks } from './looks.mjs'
 import { mergeSite } from './kit-site.mjs'
 import { slotOwnerChecks } from './slot-owners.mjs'
 import { templateGaps } from './template-gaps.mjs'
@@ -111,6 +112,8 @@ export async function assembleKit(o, out, tool) {
     accepts: readIf(join(out, 'gap-accepts.json')) ?? {}
   })
   if (!kit.template.version) kit.errors.push({ kind: 'missing', field: 'template.version', reason: tv.from })
+  // A look (looks.mjs) is written by a person's Claude Code once per kit version: a shot that did not change keeps it.
+  keepLooks(kit, previous)
   writeJson(join(out, 'template-kit.json'), kit)
   return kit
 }

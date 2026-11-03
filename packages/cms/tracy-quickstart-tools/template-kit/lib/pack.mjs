@@ -123,6 +123,19 @@ export function packPlan(kit) {
   return { representatives, imageIds, missing, excused }
 }
 
+/**
+ * Put `look` on `item` right after its `images` (the end when it has none), keeping every other key in place; an
+ * undefined look removes it. Mutates and returns `item`.
+ */
+export function placeLook(item, look) {
+  const entries = Object.entries(item).filter(([k]) => k !== 'look')
+  const at = entries.findIndex(([k]) => k === 'images')
+  if (look !== undefined) entries.splice(at === -1 ? entries.length : at + 1, 0, ['look', look])
+  for (const k of Object.keys(item)) delete item[k]
+  Object.assign(item, Object.fromEntries(entries))
+  return item
+}
+
 /** An image id, or a path such as `images/x.jpg`, to its record in `kit.images`. */
 function recordsOf(kit, refs) {
   const byId = new Map((kit.images ?? []).map((i) => [i.id, i]))
@@ -163,14 +176,20 @@ export function writePack({ kit, out }) {
     pageGroups,
     pages: kit.pages.map((p) => {
       // A further result page with page 1's layout shows page 1's full-page shots (`paginationOf`, layouts.mjs).
+      // A page or block drawn by another one's shot carries that one's look too (looks.mjs), like its images.
       const rep = repOf.get(p.paginationOf ?? p.id) ?? repOf.get(p.id) ?? p.id
       return rep === p.id
         ? { ...p, fullShotOf: p.id }
-        : { ...p, images: pageById.get(rep)?.images ?? {}, fullShotOf: rep }
+        : placeLook(
+            { ...p, images: pageById.get(rep)?.images ?? {}, fullShotOf: rep },
+            pageById.get(rep)?.look
+          )
     }),
-    blocks: kit.blocks.map((b) =>
-      b.shotOf ? { ...b, images: kit.blocks.find((x) => x.id === b.shotOf)?.images ?? {} } : b
-    ),
+    blocks: kit.blocks.map((b) => {
+      if (!b.shotOf) return b
+      const source = kit.blocks.find((x) => x.id === b.shotOf)
+      return placeLook({ ...b, images: source?.images ?? {} }, source?.look)
+    }),
     images: records,
     imagesSha256,
     approval: old?.approval?.imagesSha256 === imagesSha256 ? old.approval : null,

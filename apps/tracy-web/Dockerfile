@@ -73,6 +73,8 @@ COPY apps/tracy-web/scripts/seed-admin-seats.mjs ./scripts/seed-admin-seats.mjs
 COPY apps/tracy-web/scripts/copy-place-media-to-shared-bucket.mjs ./scripts/copy-place-media-to-shared-bucket.mjs
 #   push-wo-places.mjs — push places to a master's ingest door (plan-wo-shared-places §6).
 COPY apps/tracy-web/scripts/push-wo-places.mjs ./scripts/push-wo-places.mjs
+#   site-planner-bench.mjs — start, read and cancel site planner bench runs (ADR 0041; the bench has no screen).
+COPY apps/tracy-web/scripts/site-planner-bench.mjs ./scripts/site-planner-bench.mjs
 # The design registry decides which Joomla template a picked inspiration actually builds with, and
 # the CANONICAL copy ships with the fleet's provision scripts (`tracy-host` carries that directory
 # whole) because that is where it is executed. This process only resolves against it, so it gets

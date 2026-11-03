@@ -24,6 +24,10 @@ import { checkR00 } from './rules-shape.js'
 import { checkR10d, checkR10e, checkR13 } from './rules-targets.js'
 import { checkR10f } from './rules-trade.js'
 
+// The checker's version, stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title,
+// a failure text or the result shape changes, so two runs scored by different checkers are never compared as equal.
+export const CHECKER_VERSION = 'site-plan-check/1'
+
 const RUN_ORDER = [
   checkR00,
   checkR01,
