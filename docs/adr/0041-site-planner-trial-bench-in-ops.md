@@ -25,7 +25,7 @@
 4. **Model access on dev, measured 02/11/2026.** The dev server has two providers, OpenRouter and DeepSeek, and no
    Anthropic key of its own. A probe through the OpenRouter key reached `anthropic/claude-opus-5.5`, which answered
    with a correct tool call. No door uses an Anthropic model today.
-5. **Kit images are not in the repo.** The kit JSON lists 112 images (about 17 MB) with their sha256; the images ship
+5. **Kit images are not in the repo.** The kit JSON lists 110 images (about 17 MB) with their sha256; the images ship
    in the `template-kit-<template>-<version>.zip` asset of the quickstart's GitHub release. No code fetches them.
 6. **The quality run tables belong to the WO build.** `wo_quality_run` allows one run per brief revision and freezes its
    input, and every row stands for a site being built for a customer.
@@ -83,10 +83,30 @@
 
 ## Alternatives rejected
 
-- **One call with every image in the prompt.** Up to 112 images per pass, and the prompt's way of working (open what
+- **One call with every image in the prompt.** Up to 110 images per pass, and the prompt's way of working (open what
   you need, when you need it) would have to be rewritten, so results would no longer compare with the approved run.
 - **Reuse the `woEditorial` door.** Changing its model would change the WO build too.
 - **Store runs in `wo_quality_run`.** One run per revision, a frozen input, and rows that read as customer builds.
 - **Commit the kit images.** 17 MB per template version in a public repo, out of step with how kits ship.
 - **Place the bench under "Website opportunities" or "Builds".** The new flow gets its own group so later steps land
   together and the running groups stay as they are.
+
+## Amendment 03/11/2026: no UI, and how a lost call and a fix round are sent (settled by Akemi)
+
+- **Who decided, when.** Akemi (COO), on 03/11/2026, while the tickets were cut (#299, #301, #303).
+- **No UI.** Decisions 1, 2, 9 and 11 lose their screens: the bench has no `/ops` group, list, run page, route or API
+  endpoint. Runs are started, read and cancelled with a command-line script inside the tracy-web container
+  (`kits`, `run`, `list`, `status`, `get`, `cancel`), which calls the bench service directly. Access is whoever can run
+  commands in that container. `get` downloads every plan version, the checker result and the failure list of every
+  round, the failures still standing, the run meta and a compact turns log. A plan is read and approved off the server:
+  the team turns `plan.json` into a page on their own machine with the approved plan reader script. No plan reader is
+  built into Tracy. The "site planner" door (decision 4) is still set in `/ops` like every other door.
+- **A lost call is sent once more (refines decision 7).** A call recorded as dispatched with no answer (the process
+  died while waiting) is marked abandoned and its request is sent once more as a new turn naming it; a model call has no
+  effect besides its cost. If that resend is lost too, the run fails. Nothing else is ever replayed.
+- **A fix round is the next user turn (refines decision 5).** The failure list goes back as the next user message of
+  the same conversation, with every reasoning and tool turn kept. An answer that is not one JSON object is not scored:
+  a short message asking for the whole plan as one JSON object goes back instead, and it counts as a fix round.
+- **Images are stored by reference (refines decision 8).** A saved turn keeps a reference to each opened image (kit,
+  image id, sha256), never its bytes; every request still sends the full images, read back from the cache when a run
+  resumes or a fix round replays the conversation. A kit whose images are not usable is refused before any model call.
