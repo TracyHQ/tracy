@@ -2,7 +2,7 @@
 // cancelled from inside the tracy-web container (scripts/brand-bench.mjs), the way the site planner bench is. The
 // worker in the server process picks the run up. Exit codes: 0 done, 1 refused or not found, 2 wrong usage.
 import { parseArgs } from 'node:util'
-import { openKit, readableKits } from '../site-planner/kit-source.js'
+import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { callsOf } from './brand-call-store.js'
 import { brandKitProblem, cancelBrandRun } from './brand-control.js'
 import { listLines, statusLines } from './brand-export.js'

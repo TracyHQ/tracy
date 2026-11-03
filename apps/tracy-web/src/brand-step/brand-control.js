@@ -3,8 +3,8 @@
 // images, the template font) and stores what the run will use, so a refused start leaves nothing behind and an
 // accepted one says exactly what it ran: brief as used, kit, prompt hash, both door snapshots (never a key), tool
 // names and harness settings. The worker (brand-worker.js) does the rest.
-import { briefOfRevision } from '../site-planner/bench-control.js'
-import { openKit, readableKits } from '../site-planner/kit-source.js'
+import { briefOfRevision } from '../lib/bench-sql.js'
+import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { brandBriefProblems } from './brand-brief-shape.js'
 import { brandDoors } from './brand-doors.js'
 import { brandHarnessFor } from './brand-harness.js'

@@ -11,7 +11,7 @@
 //   picture model: OpenRouter lists it per token; a measured drawing call cost about 0.034 USD (03/11/2026). Its token
 //   rates stay a CEILING above that class and its per-call ceiling sits just above the measured call.
 import { costOf, usageOf } from '../lib/agent-over-door-wire.js'
-import { DEEPSEEK_FLASH_PRICE } from '../site-planner/bench-control.js'
+import { DEEPSEEK_FLASH_PRICE } from '../lib/bench-harness.js'
 
 const price = (inputCacheHit, inputCacheMiss, output, callCeiling) => ({
   inputCacheHit,

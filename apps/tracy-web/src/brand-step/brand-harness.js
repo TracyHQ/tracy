@@ -4,7 +4,7 @@
 // cache write costs more and buys nothing here), images to the agent at a 512 px long edge (the largest logo spot is
 // 195 by 56), and an output budget and effort sized for a brand file, not a site plan. The cost cap is 1 USD per run,
 // checked before every model call (brand-spend.js).
-import { benchHarnessFor } from '../site-planner/bench-control.js'
+import { benchHarnessFor } from '../lib/bench-harness.js'
 
 /** The most one run may spend on model calls, all three parts together, in USD. */
 export const BRAND_CAP_USD = 1

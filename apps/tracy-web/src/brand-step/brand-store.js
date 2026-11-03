@@ -4,7 +4,8 @@
 // lease token and lands only while the run still holds that token, so a worker that lost its lease (a redeploy) never
 // writes over the one that took it over. The model calls are in brand-call-store.js.
 import { createHash } from 'node:crypto'
-import { fenced, iso, json, num, UUID } from './brand-sql.js'
+import { iso, json, num, UUID } from '../lib/bench-sql.js'
+import { fenced } from './brand-sql.js'
 import { roundsOf } from './brand-round-store.js'
 
 export { UUID }

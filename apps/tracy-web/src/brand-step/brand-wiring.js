@@ -3,7 +3,7 @@
 // pass fakes, never load them. The tools are brand-step/tools/index.js (`brandTools`), the folders
 // brand-step/run-files.js (`diskRunFiles`), the font brand-step/template-font.js (`templateFont`).
 import path from 'node:path'
-import { kitImagesDirOf } from '../site-planner/kit-images.js'
+import { kitImagesDirOf } from '../lib/template-kit-images.js'
 
 const benchDirOf = (config) => path.join(path.dirname(kitImagesDirOf(config)), 'brand-bench')
 

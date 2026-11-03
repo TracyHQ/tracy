@@ -3,6 +3,7 @@
 // file fallback: an unset, disabled or unreadable door, a model the provider says cannot do what the door needs, an
 // Anthropic model, or one model on both doors refuses the run with its reason. Assigning is done in /ops.
 import { doorEntry } from '../lib/llm-catalog.js'
+import { isAnthropicModel } from '../lib/llm-door-policy.js'
 import { lookupDoor } from '../lib/llm-store.js'
 
 export const BRAND_AGENT_DOOR = 'brandAgent'
@@ -13,9 +14,7 @@ const LABELS = { [BRAND_AGENT_DOOR]: 'Brand agent', [BRAND_REVIEWER_DOOR]: 'Bran
 const CODES = { [BRAND_AGENT_DOOR]: 'BRAND_AGENT_DOOR', [BRAND_REVIEWER_DOOR]: 'BRAND_REVIEWER_DOOR' }
 const NEEDS = { tools: 'tool calls', vision: 'reading pictures' }
 
-/** True for any Anthropic model: Opus and Sonnet are never used for the brand step (the cost has to be multipliable). */
-export const isAnthropicModel = (providerId, model) =>
-  providerId === 'anthropic' || /claude|anthropic|\b(opus|sonnet)\b/i.test(String(model ?? ''))
+export { isAnthropicModel }
 
 // The model without its vendor prefix ("openai/gpt-6-luna" and "gpt-6-luna" are one model).
 const bare = (model) =>

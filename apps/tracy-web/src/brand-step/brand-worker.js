@@ -17,7 +17,7 @@ import { nextRound, playRound } from './brand-rounds.js'
 import { buildSafeVersion } from './brand-safe-version.js'
 import { saveRound } from './brand-round-store.js'
 import { cancelAsked, setProgress } from './brand-store.js'
-import { openKit } from '../site-planner/kit-source.js'
+import { openKit } from '../lib/template-kit-source.js'
 
 /** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
 export const BRAND_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })

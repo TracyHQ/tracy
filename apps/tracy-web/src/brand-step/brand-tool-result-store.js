@@ -2,7 +2,8 @@
 // answer a tool gives is saved before it goes back to the agent loop, so a run that resumes after a crash answers a
 // tool call it already made from the saved result instead of calling the tool (and paying for its drawing or
 // reviewer question) again.
-import { fenced, json } from './brand-sql.js'
+import { json } from '../lib/bench-sql.js'
+import { fenced } from './brand-sql.js'
 
 /** The saved result of a tool call, or null. `key` is { runId, turn, tool, argsSha, seq }. */
 export async function savedToolResult(pool, { runId, turn, tool, argsSha, seq }) {

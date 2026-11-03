@@ -1,6 +1,7 @@
 // The brand bench's rounds table (brand step trial bench, #320; migration 196, table brand_round). A write takes the
 // run's lease token and lands only while the run still holds it (brand-sql.js fenced).
-import { fenced, iso, json } from './brand-sql.js'
+import { iso, json } from '../lib/bench-sql.js'
+import { fenced } from './brand-sql.js'
 
 /**
  * Open or update one round. Its cost is always the sum of the agent turns saved for it. Fields left undefined keep
