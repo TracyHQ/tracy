@@ -31,6 +31,7 @@ import {
   roundsOf,
   saveRound,
   saveTurn,
+  saveTurnProgress,
   setProgress,
   turnCountOf,
   turnsOf
@@ -68,6 +69,7 @@ const HARNESS_KEYS = [
   'toolImages',
   'maxTurns',
   'callTimeoutMs',
+  'idleMs',
   'retry',
   'wire',
   'price'
@@ -289,6 +291,8 @@ async function ask(deps, { row, ready, round, history, followUp, leaseToken, mus
       signal: stop.signal,
       ...harnessOf(row.harness),
       ...(deps.retry ? { retry: deps.retry } : {}),
+      // A streamed call's progress, for `status`: a hint, so a lost write is not an error (runAgent ignores it).
+      onProgress: ({ n, ...progress }) => saveTurnProgress(pool, { runId, n, progress, leaseToken }),
       onTurn: async (turn) => {
         await must(saveTurn(pool, { runId, round, turn, leaseToken }))
         if (turn.state === 'answered' && (await cancelAsked(pool, runId))) stop.abort()

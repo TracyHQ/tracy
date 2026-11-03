@@ -24,6 +24,11 @@
 // price (USD per million tokens) computes each turn's cost from its tokens, for a provider that reports none; such a
 // turn carries costSource 'price-table'. A cancel (signal) is honoured between turns only; a call in flight is never cut.
 //
+// The deepseek-native wire is streamed (agent-over-door-call.js): the answer is put back together into the same
+// message an unstreamed call returns, a call silent for idleMs is cut and retried, and onProgress(progress) hears every
+// progressMs what the call in flight has received so far ({ n, contentChars, reasoningChars, toolArgumentChars,
+// lastByteAt, at }); it is never saved on the turn itself.
+//
 // A call that meets a transient provider error (a 429, a 5xx, an overloaded answer, a network error before any
 // response) is tried again inside the same turn, up to `retry.attempts` times (agent-over-door-retry.js). The turn
 // keeps one dispatched and one answered or failed save; each failed attempt is recorded in its `retries`, and the
@@ -35,16 +40,17 @@
 // the caller's resolveImage(ref). A reference that cannot be resolved stops the run with AGENT_IMAGE_UNAVAILABLE
 // before the call is dispatched. An image without a ref is saved inline, as it is sent.
 
-import { RETRY_DEFAULTS, retryAfterMs, withRetries } from './agent-over-door-retry.js'
+import { AgentError, callModel } from './agent-over-door-call.js'
+import { RETRY_DEFAULTS, withRetries } from './agent-over-door-retry.js'
 import {
   CACHE_TTLS,
   costOf,
   IMAGE_REF,
   imageRefKey,
   isPriceTable,
-  providerReason,
   requestBody,
   savedAssistant,
+  streams,
   toolContent,
   totalsOf,
   usageOf,
@@ -52,19 +58,17 @@ import {
   wireImage
 } from './agent-over-door-wire.js'
 
-export class AgentError extends Error {
-  constructor(code, { reason = '', status, turn } = {}) {
-    super(reason ? `${code}: ${reason}` : code)
-    this.name = 'AgentError'
-    this.code = code
-    this.reason = reason
-    if (status !== undefined) this.status = status
-    if (turn !== undefined) this.turn = turn
-  }
-}
+export { AgentError }
 
 /** The output budget of one call: thinking and the answer both count against it (Claude Code runs with the same). */
 export const MAX_OUTPUT_TOKENS = 128_000
+
+/**
+ * A streamed call is cut after this long without a single byte (agent-over-door-call.js). Three minutes: a provider
+ * that is writing sends tokens every few seconds, and one still queueing sends keep-alive comments; three silent
+ * minutes is far past either, yet long enough for a slow first token on a prompt of 200k tokens or more.
+ */
+export const STREAM_IDLE_MS = 3 * 60_000
 
 const DEFAULTS = {
   maxTokens: MAX_OUTPUT_TOKENS,
@@ -74,6 +78,9 @@ const DEFAULTS = {
   cacheMarkers: true,
   maxTurns: 150,
   callTimeoutMs: 20 * 60_000,
+  idleMs: STREAM_IDLE_MS,
+  // How often a streamed call reports what has arrived so far (onProgress).
+  progressMs: 15_000,
   retry: RETRY_DEFAULTS,
   wire: 'openrouter'
 }
@@ -85,6 +92,7 @@ export async function runAgent({
   tools = [],
   history = [],
   onTurn = async () => {},
+  onProgress,
   fetchImpl = fetch,
   signal,
   followUp,
@@ -114,6 +122,10 @@ export async function runAgent({
   if (o.wire === 'deepseek-native' && o.provider !== undefined)
     throw new AgentError('AGENT_SETTINGS_INVALID', {
       reason: 'provider routing is OpenRouter only; the deepseek-native wire sends none'
+    })
+  if (![o.idleMs, o.progressMs, o.callTimeoutMs].every((ms) => Number.isFinite(ms) && ms > 0))
+    throw new AgentError('AGENT_SETTINGS_INVALID', {
+      reason: 'callTimeoutMs, idleMs and progressMs must be positive milliseconds'
     })
   if (o.price !== undefined && !isPriceTable(o.price))
     throw new AgentError('AGENT_SETTINGS_INVALID', {
@@ -148,6 +160,7 @@ export async function runAgent({
         toolImages: o.toolImages,
         ...(o.provider ? { provider: o.provider } : {}),
         ...(o.wire !== 'openrouter' ? { wire: o.wire } : {}),
+        ...(streams(o.wire) ? { stream: true, idleMs: o.idleMs } : {}),
         ...(o.price ? { price: o.price } : {}),
         tools: tools.map((t) => t.name),
         messages: messages.length + next.length + 1
@@ -157,9 +170,12 @@ export async function runAgent({
     }
     turns.push(turn)
     await onTurn(structuredClone(turn))
-    const attempt = () => call(door, body, fetchImpl, o.callTimeoutMs, turn.n, o.price)
+    const report = progressReport(onProgress, turn.n)
+    const attempt = () =>
+      callModel(door, body, { ...o, fetchImpl, n: turn.n, price: o.price, progress: report.progress })
     const { answer, retries } = await withRetries(attempt, { policy: o.retry, sleep, random }).catch(
       async (error) => {
+        await report.settled()
         Object.assign(turn, {
           state: 'failed',
           error: {
@@ -176,6 +192,7 @@ export async function runAgent({
         throw error
       }
     )
+    await report.settled()
     const choice = answer.choices[0]
     Object.assign(turn, {
       state: 'answered',
@@ -198,6 +215,27 @@ export async function runAgent({
     if (outcome.error) throw outcome.error
     if (outcome.final !== undefined) return { answer: outcome.final, turns, totals: totalsOf(turns) }
     next = await runTools(turn.message.tool_calls, tools, o.toolImages, images)
+  }
+}
+
+// What a streamed call has received so far, handed to onProgress without holding up the read: a report still being
+// saved when the next one is due is skipped, and a failed save is ignored (progress is a hint, the turn is the record).
+// The last report is awaited before the turn is saved answered or failed, so it never lands after them.
+function progressReport(onProgress, n) {
+  let pending = null
+  return {
+    progress: onProgress
+      ? (p) => {
+          if (pending) return
+          pending = Promise.resolve()
+            .then(() => onProgress({ n, ...p, at: new Date().toISOString() }))
+            .catch(() => {})
+            .finally(() => {
+              pending = null
+            })
+        }
+      : undefined,
+    settled: () => pending ?? Promise.resolve()
   }
 }
 
@@ -294,61 +332,6 @@ function withFailedCost(cost, retries) {
   const failed = retries.map((r) => r.cost).filter((c) => typeof c === 'number')
   if (!failed.length) return cost
   return Math.round(failed.reduce((sum, c) => sum + c, cost ?? 0) * 1e9) / 1e9
-}
-
-async function call(door, body, fetchImpl, timeoutMs, n, price) {
-  let r
-  try {
-    r = await fetchImpl(`${door.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
-      method: 'POST',
-      headers: { authorization: `Bearer ${door.apiKey}`, 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(timeoutMs)
-    })
-  } catch (error) {
-    const timeout = error?.name === 'TimeoutError'
-    throw Object.assign(
-      new AgentError(timeout ? 'AGENT_TIMEOUT' : 'AGENT_NETWORK', {
-        turn: n,
-        reason: String(error?.message ?? error)
-      }),
-      { uncertain: true }
-    )
-  }
-  const text = await r.text().catch(() => '')
-  let json = null
-  try {
-    json = JSON.parse(text)
-  } catch {}
-  if (!r.ok)
-    throw Object.assign(
-      new AgentError('AGENT_PROVIDER_HTTP', {
-        turn: n,
-        status: r.status,
-        reason: providerReason(json ?? text)
-      }),
-      { retryAfterMs: retryAfterMs(r.headers?.get?.('retry-after')) }
-    )
-  // A 200 whose body is not JSON: DeepSeek cuts the body while it is overloaded. Retried (agent-over-door-retry.js);
-  // the head of the raw body is kept so the cause can be read.
-  if (!json || typeof json !== 'object')
-    throw Object.assign(
-      new AgentError('AGENT_PROVIDER_JSON', { turn: n, reason: `not JSON: ${providerReason(text)}` }),
-      { uncertain: true }
-    )
-  const choice = json.choices?.[0]
-  if (json.error || choice?.finish_reason === 'error' || choice?.error) {
-    const source = choice?.error ? choice : json
-    throw Object.assign(new AgentError('AGENT_PROVIDER_ERROR', { turn: n, reason: providerReason(source) }), {
-      providerCode: source.error?.code,
-      retryAfterMs: retryAfterMs(r.headers?.get?.('retry-after')),
-      ...(json.usage ? { usage: json.usage, cost: costOf(json.usage, price) } : {})
-    })
-  }
-  const m = choice?.message
-  if (!m || typeof m !== 'object' || (m.tool_calls != null && !Array.isArray(m.tool_calls)))
-    throw Object.assign(new AgentError('AGENT_MESSAGE_SHAPE', { turn: n }), { uncertain: true })
-  return json
 }
 
 // One tool message per call, in call order; images go inline or into one user message after them.

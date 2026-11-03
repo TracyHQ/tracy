@@ -173,6 +173,19 @@ export async function saveTurn(pool, { runId, round, turn, leaseToken = null }) 
 }
 
 /**
+ * Record what a streamed call in flight has received so far (agent-over-door.js onProgress): one small update of the
+ * dispatched row. False when the turn is no longer dispatched or the lease is stale; nothing else is touched.
+ */
+export async function saveTurnProgress(pool, { runId, n, progress, leaseToken = null }) {
+  const { rowCount } = await pool.query(
+    `update site_planner_turn set progress = $3::jsonb
+     where run_id = $1 and n = $2 and state = 'dispatched' and ${fenced(1, 4)}`,
+    [runId, n, json(progress), leaseToken]
+  )
+  return rowCount === 1
+}
+
+/**
  * Mark a turn that was dispatched and never answered (a restart while waiting for the model) as abandoned, so the
  * same request can be sent once more as a new turn. Its row stays. False when the turn is not dispatched any more or
  * the lease is stale.
@@ -309,6 +322,12 @@ export async function readRun(pool, id) {
     [id]
   )
   const t = totals.rows[0]
+  const flying = await pool.query(
+    `select n, round, dispatched_at, progress, request from site_planner_turn
+      where run_id = $1 and state = 'dispatched' order by n desc limit 1`,
+    [id]
+  )
+  const f = flying.rows[0]
   return {
     ...summaryOf(row),
     brief: row.brief,
@@ -320,6 +339,16 @@ export async function readRun(pool, id) {
     harness: row.harness,
     standingFailures: row.standing_failures ?? null,
     rounds: rounds.rows.map(roundOf),
+    // The call in flight, if any: when it went out, whether it streams, and what it has received so far.
+    inFlight: f
+      ? {
+          n: f.n,
+          round: f.round,
+          dispatchedAt: iso(f.dispatched_at),
+          streamed: f.request?.stream === true,
+          progress: f.progress ?? null
+        }
+      : null,
     totals: {
       turns: t.turns,
       calls: t.calls,

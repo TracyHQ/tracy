@@ -2,7 +2,7 @@
 // it is queued (the brief's shape, the kit, the door, the kit's images) and stores what the run will use, so a refused start leaves
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
-import { MAX_OUTPUT_TOKENS } from '../lib/agent-over-door.js'
+import { MAX_OUTPUT_TOKENS, STREAM_IDLE_MS } from '../lib/agent-over-door.js'
 import { RETRY_DEFAULTS } from '../lib/agent-over-door-retry.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { briefShapeProblems } from './brief-shape.js'
@@ -16,7 +16,9 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 /**
  * How every bench run calls the model, stored on the run (parity with the reference run, ADR 0041). The output
  * budget is Claude Code's (thinking counts against it, and the reference plan alone is about 50k tokens); a call
- * that long, not streamed, can take well over 20 minutes, hence 45. Transient provider errors are retried. Both cache
+ * that long can take well over 20 minutes, hence 45. A streamed call (the deepseek-native wire) is also cut after
+ * idleMs without a byte, so a hung connection is retried within minutes instead of at the 45 minute mark; the
+ * OpenRouter wire is not streamed and has only the 45 minutes. Transient provider errors are retried. Both cache
  * markers (system and rolling) live one hour: an answer can take longer than 5 minutes, and a 5 minute rolling marker
  * then expires before the next call, which writes the whole conversation to the cache again. Thinking effort is
  * medium, as in the Claude Code runs that produced the approved reference plans.
@@ -29,6 +31,7 @@ export const BENCH_HARNESS = Object.freeze({
   cacheMarkers: true,
   maxTurns: 150,
   callTimeoutMs: 45 * 60_000,
+  idleMs: STREAM_IDLE_MS,
   retry: RETRY_DEFAULTS
 })
 

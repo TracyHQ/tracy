@@ -34,6 +34,23 @@ function progressOf(run) {
   return `queued (${run.step} round ${run.round})`
 }
 
+const k = (chars) => (chars >= 1000 ? `${Math.round(chars / 1000)}k` : String(chars))
+const ago = (at, now) => `${Math.max(0, Math.round((now - Date.parse(at)) / 1000))}s`
+
+/**
+ * The model call in flight: what a streamed call has received so far and how long since its last byte. The last byte
+ * time is the one of the newest report (every 15 s), so the silence shown can be up to one report interval too long.
+ */
+function inFlightLine(f, now) {
+  const head = `turn ${f.n} (round ${f.round})`
+  if (!f.streamed)
+    return `${head}: waiting for the answer, sent ${ago(f.dispatchedAt, now)} ago (not streamed)`
+  const p = f.progress
+  if (!p) return `${head}: streamed, nothing reported yet, sent ${ago(f.dispatchedAt, now)} ago`
+  const tools = p.toolArgumentChars ? `, ${k(p.toolArgumentChars)} tool arguments` : ''
+  return `${head} writing: ${k(p.contentChars)} chars of answer, ${k(p.reasoningChars)} of reasoning${tools}, ${ago(p.lastByteAt, now)} since last byte`
+}
+
 /** The failures still standing when the run ended, one line each; empty when none. */
 export const standingLines = (run) => (run.standingFailures ?? '').split('\n').filter(Boolean)
 
@@ -52,6 +69,7 @@ export function statusLines(run, now = Date.now()) {
       `${usd(run.costUsd)} (cached tokens ${run.totals.cachedTokens}, without cost ${run.totals.turnsWithoutCost})`
     ],
     ['duration', duration(run, now)],
+    ...(run.status === 'queued' && run.inFlight ? [['call', inFlightLine(run.inFlight, now)]] : []),
     ['checker', checkerLine(run)],
     ['attempts', String(run.attempts)]
   ]

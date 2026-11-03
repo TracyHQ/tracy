@@ -13,6 +13,7 @@ import {
   SITE_PLANNER_RUN_ACTIVE,
   saveRound,
   saveTurn,
+  saveTurnProgress,
   setProgress,
   turnOf,
   turnRow,
@@ -253,6 +254,48 @@ test('a dispatched call with no answer stays on record and is never resent', opt
   )
   assert.equal(again.requests.length, 0)
 })
+
+test(
+  'a streamed call in flight records its progress on the dispatched row, and only there',
+  opts,
+  async () => {
+    const { pool } = db
+    const { run } = await createRun(pool, input())
+    const dispatchedAt = new Date().toISOString()
+    const turn = {
+      n: 0,
+      state: 'dispatched',
+      sent: [],
+      request: { stream: true, idleMs: 180000 },
+      dispatchedAt
+    }
+    assert.equal(await saveTurn(pool, { runId: run.id, round: 0, turn }), true)
+    const progress = {
+      contentChars: 41000,
+      reasoningChars: 900,
+      toolArgumentChars: 0,
+      lastByteAt: dispatchedAt,
+      at: dispatchedAt
+    }
+    assert.equal(await saveTurnProgress(pool, { runId: run.id, n: 0, progress }), true)
+    // A stale lease writes nothing.
+    assert.equal(await saveTurnProgress(pool, { runId: run.id, n: 0, progress: {}, leaseToken: 99 }), false)
+    const flying = await readRun(pool, run.id)
+    assert.deepEqual(flying.inFlight, { n: 0, round: 0, dispatchedAt, streamed: true, progress })
+    // Once answered, the row is final: a late report changes nothing, and nothing is in flight.
+    const answered = {
+      ...turn,
+      state: 'answered',
+      message: { role: 'assistant', content: '{}' },
+      answeredAt: dispatchedAt
+    }
+    assert.equal(await saveTurn(pool, { runId: run.id, round: 0, turn: answered }), true)
+    assert.equal(await saveTurnProgress(pool, { runId: run.id, n: 0, progress: {} }), false)
+    assert.equal((await readRun(pool, run.id)).inFlight, null)
+    const { rows } = await pool.query('select progress from site_planner_turn where run_id = $1', [run.id])
+    assert.deepEqual(rows[0].progress, progress)
+  }
+)
 
 test('a refused answer is stored as refused and read back as the same turn', opts, async () => {
   const { pool } = db

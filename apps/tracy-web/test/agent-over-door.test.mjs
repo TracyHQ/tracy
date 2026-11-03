@@ -82,6 +82,9 @@ test('a two tool call conversation ends in the final answer, each turn saved bef
   assert.equal(first.headers.authorization, 'Bearer test-key')
   assert.equal(first.body.model, 'vendor/test-model')
   assert.deepEqual(first.body.reasoning, { enabled: true, effort: 'high' })
+  // The OpenRouter wire is not streamed (agent-over-door-wire.js): reasoning_details must come back byte for byte.
+  assert.equal(first.body.stream, undefined)
+  assert.equal(first.body.stream_options, undefined)
   assert.equal(first.body.max_tokens, 128000)
   assert.deepEqual(first.body.tools, [
     {
@@ -874,6 +877,10 @@ test('the deepseek-native wire: reasoning_effort, no OpenRouter fields, reasonin
   for (const { body } of model.requests) {
     assert.equal(body.reasoning_effort, 'high')
     assert.equal(body.max_tokens, 64000)
+    // Streamed, with the token counts asked for in the last chunk (agent-over-door-stream.js). This scripted model
+    // answers with one JSON body, which a streamed call still reads (the streamed shape: agent-over-door-stream.test.mjs).
+    assert.equal(body.stream, true)
+    assert.deepEqual(body.stream_options, { include_usage: true })
     for (const absent of ['reasoning', 'usage', 'provider']) assert.equal(body[absent], undefined, absent)
     assert.doesNotMatch(JSON.stringify(body), /cache_control/)
   }
@@ -895,6 +902,8 @@ test('the deepseek-native wire: reasoning_effort, no OpenRouter fields, reasonin
   assert.ok(result.turns.every((t) => t.costSource === 'price-table'))
   assert.deepEqual(result.turns[0].request.price, PRICE)
   assert.equal(result.turns[0].request.wire, 'deepseek-native')
+  assert.equal(result.turns[0].request.stream, true)
+  assert.equal(result.turns[0].request.idleMs, 180000)
   assert.equal(result.totals.cost, 0.00108)
   assert.equal(result.totals.turnsWithoutCost, 0)
 })

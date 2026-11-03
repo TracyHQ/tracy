@@ -12,10 +12,18 @@
 // {include: true} and the provider routing object. 'deepseek-native' talks to DeepSeek's own API: thinking effort is
 // the top-level reasoning_effort, and neither usage nor provider is sent (DeepSeek ignores the first, and the second
 // is OpenRouter's alone). Either way the assistant message's thinking is saved and sent back on every later turn.
+//
+// Only 'deepseek-native' is streamed (stream: true, with stream_options.include_usage so the last chunk carries the
+// token counts; agent-over-door-stream.js puts the answer back together). 'openrouter' stays unstreamed: its answer
+// carries reasoning_details with Anthropic thinking signatures that must come back byte for byte, and how OpenRouter
+// splits those entries over chunks cannot be checked here without a paid call.
 
 export const CACHE_TTLS = ['5m', '1h']
 
 export const WIRES = ['openrouter', 'deepseek-native']
+
+/** Whether calls on this wire are streamed. */
+export const streams = (wire) => wire === 'deepseek-native'
 
 const marker = (ttl) => (ttl === '1h' ? { type: 'ephemeral', ttl: '1h' } : { type: 'ephemeral' })
 
@@ -64,7 +72,12 @@ export function requestBody({
         }
       : {}),
     ...(wire === 'deepseek-native'
-      ? { reasoning_effort: effort, max_tokens: maxTokens }
+      ? {
+          reasoning_effort: effort,
+          max_tokens: maxTokens,
+          stream: true,
+          stream_options: { include_usage: true }
+        }
       : {
           // enabled makes thinking explicit; with effort alone an Anthropic model may still skip thinking on an easy turn.
           reasoning: { enabled: true, effort },

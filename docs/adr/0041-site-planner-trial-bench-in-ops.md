@@ -192,3 +192,14 @@
   computes cost from a price table assumed from OpenRouter's third-party listings until checked against DeepSeek's own
   pricing. DeepSeek's overload answers are retried with backoff: a 503 `service_unavailable_error`, the same code in a
   200 body, and a 200 whose body is not JSON (cut while overloaded), whose first 300 characters are kept in the reason.
+- **Calls on DeepSeek's own API are streamed, and a silent one is cut (03/11/2026).** The longest call writes the
+  whole plan (55k to 80k output tokens, over ten minutes), and unstreamed nothing shows while it writes, so "still
+  writing" and "the provider hung" looked the same until the 45 minute call timeout. The `deepseek-native` wire now
+  sends `stream: true` with `stream_options.include_usage` and puts the chunks back together into the same message,
+  usage and cost the unstreamed answer gives (`agent-over-door-stream.js`). A call with no byte at all, data or
+  keep-alive, for `idleMs` (3 minutes, recorded in the run's harness) is cut and retried as a timeout; the 45 minute
+  total stays. Every 15 s the call in flight records what it has received on its dispatched turn row (column
+  `progress`, migration 193), and `status` shows it as a `call` line ("turn 7 (round 0) writing: 41k chars of answer,
+  10k of reasoning, 12s since last byte"). The OpenRouter wire (Claude) stays unstreamed: its `reasoning_details`
+  carry Anthropic thinking signatures that must come back byte for byte, and how OpenRouter splits them over chunks
+  cannot be proven equal to the unstreamed shape without a paid call.

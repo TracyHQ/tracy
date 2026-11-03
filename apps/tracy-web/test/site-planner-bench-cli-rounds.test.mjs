@@ -89,6 +89,35 @@ test('status says what the run is doing, and which fix round', () => {
   )
 })
 
+test('status shows the call in flight: what a streamed call has received and how long since its last byte', () => {
+  const now = Date.parse(bare.createdAt) + 600_000
+  const callOf = (inFlight, over = {}) =>
+    statusLines({ ...bare, step: 'planning', ...over, inFlight }, now).find((l) => l.startsWith('call'))
+  const progress = {
+    contentChars: 41_200,
+    reasoningChars: 9_800,
+    toolArgumentChars: 0,
+    lastByteAt: new Date(now - 12_000).toISOString(),
+    at: new Date(now - 3_000).toISOString()
+  }
+  const dispatchedAt = new Date(now - 300_000).toISOString()
+  assert.equal(
+    callOf({ n: 7, round: 0, dispatchedAt, streamed: true, progress }),
+    'call      turn 7 (round 0) writing: 41k chars of answer, 10k of reasoning, 12s since last byte'
+  )
+  assert.match(
+    callOf({ n: 7, round: 0, dispatchedAt, streamed: true, progress: null }),
+    /nothing reported yet, sent 300s ago/
+  )
+  assert.match(callOf({ n: 2, round: 1, dispatchedAt, streamed: false, progress: null }), /\(not streamed\)$/)
+  assert.equal(callOf(null), undefined)
+  // A finished run shows no call, even with a dispatched turn left on record.
+  assert.equal(
+    callOf({ n: 7, round: 0, dispatchedAt, streamed: true, progress }, { status: 'failed', rounds: [] }),
+    undefined
+  )
+})
+
 test('a run never fixed: get writes three versions and the failures still standing', opts, async () => {
   const id = await finishedRun([
     toolCallReply({ calls: [['read_kit_part', { id: 'contents' }]], usage: usageOf({ cost: 0.5 }) }),
