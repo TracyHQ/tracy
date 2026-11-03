@@ -21,11 +21,27 @@ function checkerLine(run) {
   return `${run.checkerVersion}: ${pass} pass, ${fail} fail, ${skip} skip (round ${checked.round})`
 }
 
+const FIX_ROUNDS = 2
+
+/** What the run is doing now, or the round it ended after. */
+function progressOf(run) {
+  if (run.status !== 'queued') {
+    const last = run.rounds.at(-1)
+    return last ? `${run.status} (after round ${last.round})` : run.status
+  }
+  if (run.step === 'waiting') return 'queued (waiting)'
+  if (run.step === 'fixing') return `queued (fixing round ${run.round}/${FIX_ROUNDS})`
+  return `queued (${run.step} round ${run.round})`
+}
+
+/** The failures still standing when the run ended, one line each; empty when none. */
+export const standingLines = (run) => (run.standingFailures ?? '').split('\n').filter(Boolean)
+
 /** The status of one run, one "label  value" line each. */
 export function statusLines(run, now = Date.now()) {
   const rows = [
     ['run', run.id],
-    ['state', `${run.status} (step ${run.step}, round ${run.round})`],
+    ['state', progressOf(run)],
     ['started', `by ${run.startedBy} at ${run.createdAt}`],
     ['brief', briefLabel(run.briefSource)],
     ['kit', run.kitRef],
@@ -39,6 +55,9 @@ export function statusLines(run, now = Date.now()) {
     ['checker', checkerLine(run)],
     ['attempts', String(run.attempts)]
   ]
+  const standing = standingLines(run)
+  if (standing.length)
+    rows.push(['standing', `${standing.length} failures after round ${run.rounds.at(-1)?.round ?? 0}`])
   if (run.cancelRequestedAt) rows.push(['cancel', `asked at ${run.cancelRequestedAt}`])
   if (run.error) rows.push(['error', run.error])
   return rows.map(([label, value]) => `${label.padEnd(9)} ${value}`)
@@ -60,8 +79,8 @@ export function briefLabel(source) {
   return 'unknown'
 }
 
-/** One turn, compact: what was asked of the tools, how much went each way, usage and cost. */
-export function compactTurn(turn) {
+/** One turn, compact: what was asked of the tools, how much went each way, usage, cost and the run's cost so far. */
+export function compactTurn(turn, runningCostUsd = null) {
   const content = turn.message?.content
   return {
     n: turn.n,
@@ -81,6 +100,8 @@ export function compactTurn(turn) {
     })),
     usage: turn.usage ?? null,
     costUsd: turn.cost ?? null,
+    runningCostUsd,
+    ...(turn.resendOf !== undefined ? { resendOf: turn.resendOf } : {}),
     providerModel: turn.providerModel ?? null,
     generationId: turn.generationId ?? null,
     ...(turn.refusal ? { refusal: turn.refusal } : {}),
@@ -93,7 +114,7 @@ export function compactTurn(turn) {
 /** Every file `get` writes, as [name, text]. Round r is version r + 1 (plan-v1.json is round 0's plan). */
 export function runFiles(run, turns) {
   const json = (value) => `${JSON.stringify(value, null, 2)}\n`
-  const { brief, rounds, ...meta } = run
+  const { brief, rounds, standingFailures, ...meta } = run
   const files = [
     [
       'run.json',
@@ -121,9 +142,12 @@ export function runFiles(run, turns) {
     if (r.failureList !== null && r.failureList !== undefined)
       files.push([`failures-v${v}.txt`, r.failureList])
   }
-  files.push([
-    'turns.jsonl',
-    turns.map((t) => JSON.stringify(compactTurn(t))).join('\n') + (turns.length ? '\n' : '')
-  ])
+  if (standingFailures) files.push(['failures-standing.txt', standingFailures])
+  let running = 0
+  const lines = turns.map((t) => {
+    running = Math.round((running + (t.cost ?? 0)) * 1e9) / 1e9
+    return JSON.stringify(compactTurn(t, running))
+  })
+  files.push(['turns.jsonl', lines.join('\n') + (lines.length ? '\n' : '')])
   return files
 }

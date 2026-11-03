@@ -5,7 +5,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { briefOfRevision, cancelBenchRun, startBenchRun } from './bench-control.js'
-import { listLines, runFiles, statusLines } from './bench-export.js'
+import { listLines, runFiles, standingLines, statusLines } from './bench-export.js'
 import { listRuns, readRun, turnOf } from './bench-store.js'
 import { readableKits } from './kit-source.js'
 
@@ -16,7 +16,8 @@ export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
       [--by <label>]                      who started it (stored as cli:<label>)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, duration, checker summary
-  get <runId> --out <dir>                 write plans, checks, failure lists, run meta and turns
+  get <runId> --out <dir>                 write every plan version, the check and failure list of each round,
+                                          the failures still standing, run meta and turns
   cancel <runId>                          stop a run (a held run stops between model calls)`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
@@ -164,5 +165,11 @@ async function getRun(d, values, runId) {
   const files = runFiles(run, turns)
   for (const [name, text] of files) await writeFile(path.join(dir, name), text)
   d.out(`${files.length} files written: ${files.map(([name]) => name).join(', ')}`)
+  const standing = standingLines(run)
+  if (!standing.length) d.out(run.status === 'queued' ? 'still running' : 'no failures standing')
+  else {
+    d.out(`${standing.length} failures still standing after round ${run.rounds.at(-1)?.round ?? 0}:`)
+    for (const line of standing) d.out(line)
+  }
   return 0
 }
