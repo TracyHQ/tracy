@@ -1,0 +1,28 @@
+// The picture reading page's stylesheet: the copy reading page's tokens and base (light and dark), plus the frame cards.
+import { CSS as BASE, ZOOM_JS } from '../../site-writer/reading-page/styles.js'
+
+export { ZOOM_JS }
+export const CSS = `${BASE}
+.frame{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+.frame>header{padding:10px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.frame>header .id{font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:650;overflow-wrap:anywhere}
+.chip.src{background:var(--accent);color:#fff}.chip.warn{background:var(--bad-bg);color:var(--bad)}
+.frame.gap{border-color:var(--bad-line)}
+.req{padding:10px 16px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:max-content minmax(0,1fr);gap:2px 12px;font-size:13.5px;margin:0}
+.req dt{color:var(--muted)}.req dd{margin:0;overflow-wrap:anywhere}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:12px 16px}
+.fig{min-width:0}.fig h4{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.fig .frame-img{position:relative;display:block;max-width:100%;background:var(--note);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.fig img{display:block;max-width:100%;height:auto}
+.zoom{all:unset;display:block;max-width:100%;cursor:zoom-in}.zoom:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cut{position:absolute;border:2px solid var(--accent);box-shadow:0 0 0 1px #fff,0 0 0 9999px rgba(0,0,0,.35);pointer-events:none}
+.gone{border:1px dashed var(--line);border-radius:6px;padding:18px 10px;text-align:center;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.gone.bad{border-color:var(--bad-line);color:var(--bad);background:var(--bad-bg)}
+.grounds{display:flex;flex-wrap:wrap;gap:8px}.ground{border:1px solid var(--line);border-radius:6px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.ground.light{background:#fff;color:#555}.ground.dark{background:#16130f;color:#bbb}.ground img{max-width:72px;max-height:72px;width:auto}
+.seen{padding:8px 16px 12px;font-size:13.5px;border-top:1px solid var(--line)}.seen .empty{color:var(--muted);font-style:italic}
+.note.ret{color:var(--ink)}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:16px 0}
+.sum .stat{min-width:0}.sum .stat.zero{opacity:.55}
+@media (max-width:760px){.req{grid-template-columns:1fr}.req dt{margin-top:6px}.figs{padding:12px}}
+`
