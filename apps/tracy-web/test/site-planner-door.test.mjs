@@ -43,6 +43,7 @@ test('the WO doors are unchanged by the new door', () => {
       'seedImage',
       'agent',
       'sitePlanner',
+      'siteWriter',
       'brandAgent',
       'brandReviewer'
     ]

@@ -21,9 +21,12 @@
 //   maxFixRounds                  fix rounds after round 0
 //   prompt()                      { text, sha256 }: the approved prompt, compared with the run's prompt_sha256
 //   checker                       { version, check({ doc, row, ready }), failureListText(result) }
-//   changes                       { applyValidChanges(previous, list), oversized(replacements),
+//   changes                       { applyValidChanges(previous, list, { row, ready }), oversized(replacements),
 //                                   smallEditsMessage(oversized), invalidChangesMessage(rejected, applied) }
 //   messages                      { changesInstruction, wholeDoc, notADoc }
+//   readAnswer(value, { round, row, ready })  optional: what the step makes of an answer object before it is read as
+//                                 a document or a change list ({ changes }); the writer puts its copy file together
+//                                 here, and reads a fix round's corrected entries as a change list
 //   prepare(deps, row)            everything else the run needs before a call: { ok: true, door, ... } or a refusal
 //                                 { ok: false, code, reason }; checked after the prompt and the checker
 //   agentRequest({ row, ready, history })  { firstUser, tools, writeStep?, resolveImage? } for runAgent

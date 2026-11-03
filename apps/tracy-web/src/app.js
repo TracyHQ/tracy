@@ -220,6 +220,7 @@ import {
   picturesWhere
 } from './sites/agent-demo-inventory.js'
 import { createSitePlannerQueue } from './site-planner/bench-worker.js'
+import { createSiteWriterQueue } from './site-writer/bench-worker.js'
 import { createBrandQueue } from './brand-step/brand-worker.js'
 import { productionWiring } from './brand-step/brand-wiring.js'
 import { kitImagesFor } from './site-planner/kit-images.js'
@@ -1170,6 +1171,17 @@ export function buildApp(deps) {
           pool: deps.pool,
           secret: deps.config.sessionSecret,
           config: deps.config,
+          fetchImpl: deps.fetchImpl ?? fetch,
+          log: deps.log ?? console
+        })
+      : null
+  // The site writer bench's worker (`site-writer/bench-worker.js`, #329): its own queue, one run at a time, parallel to
+  // the planner bench; runs are started and read from the bench CLI (scripts/site-writer-bench.mjs).
+  app.siteWriterQueue =
+    deps.config && deps.pool
+      ? createSiteWriterQueue({
+          pool: deps.pool,
+          secret: deps.config.sessionSecret,
           fetchImpl: deps.fetchImpl ?? fetch,
           log: deps.log ?? console
         })

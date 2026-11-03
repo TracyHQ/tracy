@@ -37,10 +37,14 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
   let askedFix =
     Boolean(reading.invalidChangesAsked) &&
     (await store.roundSent(pool, runId, round, reading.invalidChangesAsked.message))
+  // What a step makes of an answer object (step.readAnswer): a whole document put together by code, or a change list.
+  const valueOf = (value) =>
+    step.readAnswer ? step.readAnswer(value, { round, row, ready: ctx.ready }) : value
+  const applyTo = (doc, list) => rules.applyValidChanges(doc, list, { row, ready: ctx.ready })
   let carried = null
   if (askedFix) {
     const first = objectOf(reading.invalidChangesAsked.answer, step)
-    carried = first.ok ? rules.applyValidChanges(base, first.value) : null
+    carried = first.ok ? applyTo(base, valueOf(first.value)) : null
     if (!carried?.ok) askedFix = false
   }
   const notADoc = (result, fields) =>
@@ -52,11 +56,12 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
       await save(state, error ? { error } : {})
       return result.ended
     }
-    const read = objectOf(result.answer, step)
-    if (!read.ok) {
-      await notADoc(result, { error: read.error })
+    const parsed = objectOf(result.answer, step)
+    if (!parsed.ok) {
+      await notADoc(result, { error: parsed.error })
       return null
     }
+    const read = { ...parsed, value: valueOf(parsed.value) }
     // A whole document is recorded under the step's document name ("plan"), as the round's reading always has been.
     reading.form = isChangeList(read.value) ? 'changes' : docColumn
     reading.droppedText = read.droppedText
@@ -69,7 +74,7 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
       followUp = message
     }
     if (reading.form === 'changes') {
-      const applied = rules.applyValidChanges(askedFix ? carried.doc : base, read.value)
+      const applied = applyTo(askedFix ? carried.doc : base, read.value)
       if (!applied.ok && askedWhole) {
         await notADoc(result, { error: `${notApplied}: ${applied.reason}`, changes: read.value.changes })
         return null
