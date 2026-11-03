@@ -5,7 +5,8 @@
 // Part ids: "contents" (what the kit holds and every id below), "site" (the site-wide parts, each large one replaced
 // by the id that reads it), "site.<key>" (one site-wide part in full), any other top-level list or object small enough
 // to read whole ("pageGroups", "pages", "templateGaps", ...), a page group id, a page id and a block id. A part is
-// answered as compact JSON, unchanged from the kit. Kit images are not served yet (#302): open_kit_image says so.
+// answered as compact JSON, unchanged from the kit. open_kit_image answers one kit image from the images made ready by
+// kit-images.js (#302); without them it says images are not available.
 import { defaultContracts } from '../lib/contracts.js'
 import { kitOfContract } from '../lib/template-kit/reader.js'
 
@@ -42,13 +43,19 @@ export function readableKits({ index = defaultContracts() } = {}) {
   return kits.sort((a, b) => (a.ref < b.ref ? -1 : a.ref > b.ref ? 1 : 0))
 }
 
-/** One readable kit by its ref (the contract id, e.g. "ja-boxing/j6/1.0.10"), or null. */
+/**
+ * One readable kit by its ref (the contract id, e.g. "ja-boxing/j6/1.0.10"), with the release tag and version its
+ * contract seals (where the kit's image zip is published), or null.
+ */
 export function openKit(ref, { index = defaultContracts() } = {}) {
   if (typeof ref !== 'string' || ref === '') return null
-  for (const contract of index.values()) {
+  for (const [key, contract] of index) {
     if (contract.id !== ref) continue
     const kit = kitOfContract(contract)
-    return kit.state === 'read' ? { ref, doc: kit.doc } : null
+    const at = key.lastIndexOf('@')
+    return kit.state === 'read'
+      ? { ref, release: key.slice(0, at), version: key.slice(at + 1), doc: kit.doc }
+      : null
   }
   return null
 }
@@ -138,8 +145,13 @@ function list(value) {
   return Array.isArray(value) ? value.filter((entry) => entry && typeof entry.id === 'string') : []
 }
 
-/** The two tools the planner works with, in the shape runAgent takes. */
-export function kitTools(doc) {
+/**
+ * The two tools the planner works with, in the shape runAgent takes.
+ * @param {any} doc the kit
+ * @param {{ images?: { open: (id: string) => Promise<any> } }} [options] the kit's images, made ready by
+ *   kit-images.js `ensure`; without them open_kit_image answers that images are not available
+ */
+export function kitTools(doc, { images } = {}) {
   const parts = kitParts(doc)
   const imageIds = new Set(list(doc.images).map((image) => image.id))
   const idParameter = (description) => ({
@@ -165,14 +177,16 @@ export function kitTools(doc) {
       description: 'Open one kit image by its id (the ids a page or a block lists under images).',
       parameters: idParameter('An image id, such as "header-1440".'),
       run: ({ id }) =>
-        typeof id === 'string' && id !== ''
-          ? JSON.stringify({
-              error: 'IMAGES_NOT_AVAILABLE',
-              id,
-              known: imageIds.has(id),
-              detail: 'Kit images are not available on this bench yet. Continue from the kit text.'
-            })
-          : badId(KIT_TOOL_NAMES.openImage)
+        typeof id !== 'string' || id === ''
+          ? badId(KIT_TOOL_NAMES.openImage)
+          : images
+            ? images.open(id)
+            : JSON.stringify({
+                error: 'IMAGES_NOT_AVAILABLE',
+                id,
+                known: imageIds.has(id),
+                detail: 'Kit images are not available on this bench yet. Continue from the kit text.'
+              })
     }
   ]
 }

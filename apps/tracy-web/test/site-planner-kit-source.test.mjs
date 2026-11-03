@@ -75,7 +75,11 @@ test('a contract with no kit, or a kit that cannot be read, is not listed', () =
       [['good/wp7/2.0.0', 'quickstart/good/wp7', '2.0.0', 1, false]]
     )
     assert.equal(openKit('none/j6/1.0.0', { index }), null)
-    assert.equal(openKit('good/wp7/2.0.0', { index }).ref, 'good/wp7/2.0.0')
+    const good2 = openKit('good/wp7/2.0.0', { index })
+    assert.deepEqual(
+      [good2.ref, good2.release, good2.version],
+      ['good/wp7/2.0.0', 'quickstart/good/wp7', '2.0.0']
+    )
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
@@ -164,7 +168,7 @@ test('an unknown id answers an error that lists the valid id kinds', () => {
     )
 })
 
-test('read_kit_part reads by id, refuses a missing id, and open_kit_image says images are not available yet', async () => {
+test('read_kit_part reads by id, refuses a missing id, and open_kit_image without images says they are not available', async () => {
   const kit = boxing()
   const [readPart, openImage] = kitTools(kit.doc)
   assert.deepEqual(KIT_TOOL_NAMES, { readPart: 'read_kit_part', openImage: 'open_kit_image' })
