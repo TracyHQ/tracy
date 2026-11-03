@@ -292,6 +292,13 @@ const KIT_GAPS = {
   ]
 }
 
+/** Template kit shots without a current look, as `template-kit/road-step.js` sends them. */
+const KIT_LOOKS = {
+  ...KIT_BASE,
+  reason: '1 page or block has no current look of its 1440 shot: block hero',
+  missingLooks: [{ kind: 'block', id: 'hero', image: 'hero-1440', why: 'missing' }]
+}
+
 const EVERY_CODE = [
   ['release', 'release-published', {}],
   ['release', 'release-draft', {}],
@@ -387,6 +394,7 @@ const EVERY_CODE = [
       missingPictures: [{ kind: 'block', id: 'hero', missing: [390] }]
     }
   ],
+  ['template-kit', 'kit-incomplete', KIT_LOOKS],
   ['template-kit', 'kit-gaps', KIT_GAPS],
   ['template-kit', 'kit-gaps', { ...KIT_GAPS, live: true }],
   ['template-kit', 'kit-not-approved', { ...KIT_BASE, approvedBy: null }],
@@ -647,6 +655,13 @@ test('Template kit: a short title per verdict, live only warns, ONE prompt that 
   )
   assert.equal(done.outside, undefined)
   assert.match(done.detail, /reviewer-one/)
+  const looks = mod.guideOf(
+    { step: 'template-kit', state: 'todo', code: 'kit-incomplete', params: KIT_LOOKS },
+    JOOMLA
+  )
+  assert.match(looks.detail, /no current look/)
+  assert.match(looks.outside.text, /looks command/)
+  assert.match(looks.outside.text, /do not capture it again/)
   for (const [step, code, params] of EVERY_CODE.filter(([s]) => s === 'template-kit')) {
     const g = mod.guideOf({ step, state: 'todo', code, params }, JOOMLA)
     for (const w of [g.title, g.why, g.detail ?? '']) assert.doesNotMatch(w, /module/i, `${code}: "${w}"`)
