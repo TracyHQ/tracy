@@ -119,6 +119,47 @@ test('an overloaded error object in a 200 body is retried, its reported usage co
   assert.equal(result.totals.cost, 0.021)
 })
 
+test("DeepSeek's overload answers are retried: a 503 service_unavailable_error and a 200 cut before its JSON ends", async () => {
+  const cut = `{"id":"gen-cut","choices":[{"message":{"role":"assistant","content":"${'x'.repeat(400)}`
+  const { model, saved, waits, promise } = await run([
+    {
+      status: 503,
+      body: {
+        error: {
+          message: 'Service is too busy.',
+          type: 'service_unavailable_error',
+          code: 'service_unavailable_error'
+        }
+      }
+    },
+    { body: cut },
+    { body: { error: { code: 'service_unavailable_error', message: 'Service is too busy.' } } },
+    finalReply({ content: 'done' })
+  ])
+  assert.equal((await promise).answer, 'done')
+  assert.equal(model.requests.length, 4)
+  assert.equal(waits.length, 3)
+  const [busy, notJson, inBody] = saved.at(-1).retries
+  assert.deepEqual([busy.code, busy.status], ['AGENT_PROVIDER_HTTP', 503])
+  assert.match(busy.reason, /too busy/)
+  assert.equal(notJson.code, 'AGENT_PROVIDER_JSON')
+  // The head of the raw body is kept, so the cause can be read; the rest is cut at 300 characters.
+  assert.match(notJson.reason, /^not JSON: \{"id":"gen-cut"/)
+  assert.ok(notJson.reason.length <= 300 + 'not JSON: '.length)
+  assert.equal(inBody.code, 'AGENT_PROVIDER_ERROR')
+})
+
+test('a 200 that is never JSON fails after the attempts with the head of its body', async () => {
+  const replies = [1, 2, 3, 4, 5].map(() => ({ body: '<html>upstream overloaded</html>' }))
+  const { model, promise } = await run(replies)
+  await assert.rejects(promise, (error) => {
+    assert.equal(error.code, 'AGENT_PROVIDER_JSON')
+    assert.match(error.reason, /<html>upstream overloaded<\/html>/)
+    return true
+  })
+  assert.equal(model.requests.length, 5)
+})
+
 test('an error object in a 200 body with a 400 code, or a content filter answer, is not retried', async () => {
   const bad = await run([{ body: { error: { code: 400, message: 'rate limit field is malformed' } } }])
   await assert.rejects(bad.promise, (error) => error.code === 'AGENT_PROVIDER_ERROR')

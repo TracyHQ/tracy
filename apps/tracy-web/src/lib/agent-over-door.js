@@ -329,8 +329,13 @@ async function call(door, body, fetchImpl, timeoutMs, n, price) {
       }),
       { retryAfterMs: retryAfterMs(r.headers?.get?.('retry-after')) }
     )
+  // A 200 whose body is not JSON: DeepSeek cuts the body while it is overloaded. Retried (agent-over-door-retry.js);
+  // the head of the raw body is kept so the cause can be read.
   if (!json || typeof json !== 'object')
-    throw Object.assign(new AgentError('AGENT_PROVIDER_JSON', { turn: n }), { uncertain: true })
+    throw Object.assign(
+      new AgentError('AGENT_PROVIDER_JSON', { turn: n, reason: `not JSON: ${providerReason(text)}` }),
+      { uncertain: true }
+    )
   const choice = json.choices?.[0]
   if (json.error || choice?.finish_reason === 'error' || choice?.error) {
     const source = choice?.error ? choice : json

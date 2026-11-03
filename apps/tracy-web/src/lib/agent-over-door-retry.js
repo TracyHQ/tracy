@@ -2,10 +2,12 @@
 // belong to one dispatched turn: the turn is saved dispatched once, then answered (or failed) once, and every attempt
 // that failed on the way is recorded on it (attempt number, reason, wait).
 //
-// Retried: HTTP 408, 409, 425, 429, 500, 502, 503, 504 and 529; an error object in a 200 body (OpenRouter forwards
-// the provider's) whose code is one of those or whose message says overloaded or rate limit; a network error or a
-// timeout before any response. Never retried: any other HTTP status (400, 401, 403, 404...), an answer that is not
-// JSON or not a message, and a content filter refusal (that is an answered turn, never an error here).
+// Retried: HTTP 408, 409, 425, 429, 500, 502, 503, 504 and 529 (DeepSeek's own API answers 503
+// service_unavailable_error "Service is too busy" when overloaded); an error object in a 200 body (OpenRouter
+// forwards the provider's) whose code is one of those or whose code or message says overloaded, rate limit, service
+// unavailable or too busy; a 200 whose body is not JSON (DeepSeek cuts the body while overloaded); a network error or
+// a timeout before any response. Never retried: any other HTTP status (400, 401, 403, 404...), an answer that is JSON
+// but not a message, and a content filter refusal (that is an answered turn, never an error here).
 // The wait is the provider's Retry-After when it sends one, else exponential backoff with jitter; capped either way.
 
 export const RETRY_STATUSES = Object.freeze([408, 409, 425, 429, 500, 502, 503, 504, 529])
@@ -14,16 +16,20 @@ export const RETRY_STATUSES = Object.freeze([408, 409, 425, 429, 500, 502, 503, 
 export const RETRY_DEFAULTS = Object.freeze({ attempts: 5, maxWaitMs: 60_000, baseMs: 2_000 })
 
 const NEVER_STATUSES = new Set([400, 401, 403, 404])
-const TRANSIENT_TEXT = /overloaded|rate[ _-]?limit/i
+const TRANSIENT_TEXT = /overloaded|rate[ _-]?limit|service[ _-]?unavailable|too busy/i
 
 /** Whether an AgentError from one attempt is worth another attempt. */
 export function isTransient(error) {
-  if (error?.code === 'AGENT_NETWORK' || error?.code === 'AGENT_TIMEOUT') return true
+  if (['AGENT_NETWORK', 'AGENT_TIMEOUT', 'AGENT_PROVIDER_JSON'].includes(error?.code)) return true
   if (error?.code === 'AGENT_PROVIDER_HTTP') return RETRY_STATUSES.includes(error.status)
   if (error?.code === 'AGENT_PROVIDER_ERROR') {
     const code = Number(error.providerCode)
     if (NEVER_STATUSES.has(code)) return false
-    return RETRY_STATUSES.includes(code) || TRANSIENT_TEXT.test(String(error.reason ?? ''))
+    return (
+      RETRY_STATUSES.includes(code) ||
+      TRANSIENT_TEXT.test(String(error.providerCode ?? '')) ||
+      TRANSIENT_TEXT.test(String(error.reason ?? ''))
+    )
   }
   return false
 }
