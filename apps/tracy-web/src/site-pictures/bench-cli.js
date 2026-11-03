@@ -15,6 +15,8 @@ export const USAGE = `usage: node scripts/site-pictures-bench.mjs <command>
                                           and a folder of its owner photos, each file named by its sha256
   run --plan-file <path> --kit <ref> --brief-revision <id>   queue a run on a plan and the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
+      [--copy-file <path>]                a writer copy file (site-copy/1): its alts are compared with what the
+                                          looker saw, in the manifest's altNotes
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, cost, duration, checker summary
   get <runId> --out <dir>                 write the manifest of each round and the final site-pictures.json, the
@@ -22,7 +24,8 @@ export const USAGE = `usage: node scripts/site-pictures-bench.mjs <command>
                                           round, the failures still standing, run meta, plan and turns
   cancel <runId>                          stop a run
 A plan with frames that need a specific picture calls the picker through the "Picture picker" door (/ops, Model & AI);
-one without calls no model. The drawer and the looker come later.`
+one without calls no model. Every finished picture is checked by the looker through the "Picture looker" door; without
+that door no picture is looked at and the manifest says why. The drawer comes later.`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
 
@@ -46,6 +49,7 @@ export async function runCli(argv, deps) {
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
         photos: { type: 'string' },
+        'copy-file': { type: 'string' },
         by: { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
@@ -161,6 +165,11 @@ async function startRun(d, values) {
     if (!found.ok) return refused(d, `No WO revision ${revision}.`)
     brief = { value: found.brief, source: { kind: 'revision', revisionId: revision } }
   }
+  let copy = null
+  if (values['copy-file']) {
+    copy = await readJsonFile(d, values['copy-file'], 'copy')
+    if (copy.error) return refused(d, copy.error)
+  }
   const started = await startPictureRun({
     pool: d.pool,
     secret: d.secret,
@@ -171,6 +180,7 @@ async function startRun(d, values) {
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
     photos,
+    copy,
     storeDir: d.storeDir,
     ...(d.index ? { index: d.index } : {})
   })

@@ -32,8 +32,8 @@ export async function createRun(pool, input) {
     const { rows } = await pool.query(
       `insert into site_picture_run
          (started_by, plan, plan_source, plan_sha256, brief, brief_source, brief_sha256, photo_source, kit,
-          prompt_sha256, prompts, checker_version, door, harness)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+          prompt_sha256, prompts, checker_version, door, harness, copy)
+       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
        returning *`,
       [
         startedBy,
@@ -49,7 +49,8 @@ export async function createRun(pool, input) {
         json(prompts.roles),
         checkerVersion,
         json(input.door ?? {}),
-        json(input.harness ?? {})
+        json(input.harness ?? {}),
+        input.copy ? json(input.copy) : null
       ]
     )
     return { run: SITE_PICTURES_STORE.summaryOf(rows[0]) }
@@ -62,7 +63,7 @@ export async function createRun(pool, input) {
 /** A run's own inputs that the shared reads leave out. Null when there is no such run. */
 export async function inputsOf(pool, runId) {
   const { rows } = await pool.query(
-    'select plan, plan_source, plan_sha256, photo_source, prompts from site_picture_run where id = $1',
+    'select plan, plan_source, plan_sha256, photo_source, prompts, copy from site_picture_run where id = $1',
     [runId]
   )
   const r = rows[0]
@@ -72,7 +73,8 @@ export async function inputsOf(pool, runId) {
         planSource: r.plan_source,
         planSha256: r.plan_sha256,
         photoSource: r.photo_source,
-        prompts: r.prompts
+        prompts: r.prompts,
+        copy: r.copy ?? null
       }
     : null
 }

@@ -254,6 +254,18 @@ export const LLM_DOORS = [
     prefers: ['json']
   },
   {
+    id: 'pictureLooker',
+    label: 'Picture looker',
+    where: 'this process',
+    blurb:
+      "WO New Flow Test: the picture bench, started from a command line on the server. One call per finished picture, in a fresh context, checks it at display size against the plan's words and says what it shows. Its model must be of another maker than the picker's. Without it no picture is looked at.",
+    needsModel: true,
+    // Vision is REQUIRED: the looker judges each picture by sight (site-pictures/looker-door.js). No tools, no effort
+    // setting. Meant for openai/gpt-6-luna through OpenRouter, as the brand step's reviewer (#343).
+    requires: ['vision'],
+    prefers: ['json']
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',

@@ -8,10 +8,18 @@ import { benchHarnessFor } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { readableKits } from '../lib/template-kit-source.js'
 import { planShapeProblems } from '../site-writer/bench-control.js'
-import { activeRun, createRun, readRun, requestCancel, SITE_PICTURES_RUN_ACTIVE } from './bench-store.js'
+import {
+  activeRun,
+  createRun,
+  readRun,
+  requestCancel,
+  SITE_PICTURES_RUN_ACTIVE,
+  sha256Of
+} from './bench-store.js'
 import { fileStore, sha256Hex } from './file-store.js'
 import { openKitWithMap } from './kit-with-map.js'
 import { picturePickerDoor } from './door.js'
+import { altsOfCopy } from './alt-notes.js'
 import { briefImages } from './owner-photos.js'
 import { CHECKER_VERSION } from './picture-check/check-pictures.js'
 import { indexInputs } from './picture-check/inputs-index.js'
@@ -28,7 +36,8 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
  *   kitRef: string, startedBy: string, photos?: { name: string, files: Map<string, Buffer> } | null,
  *   storeDir?: string, index?: Map<string, object> }} input `photos`: for a brief file, the folder of owner photos the
  *   CLI read (its name and its files by file name, each named by its sha256); a revision's photos are read by the
- *   worker from the revision's media
+ *   worker from the revision's media; `copy`: a writer copy file (site-copy/1) and its source, whose alts the run
+ *   compares with what the looker saw (#343); only its alts, its hash and its source are stored
  */
 export async function startPictureRun({
   pool,
@@ -40,6 +49,7 @@ export async function startPictureRun({
   kitRef,
   startedBy,
   photos = null,
+  copy = null,
   storeDir,
   index
 }) {
@@ -58,6 +68,13 @@ export async function startPictureRun({
   const problems = briefShapeProblems(brief)
   if (problems.length)
     return refuse('SITE_PICTURES_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
+  let copyRow = null
+  if (copy) {
+    const read = altsOfCopy(copy.value)
+    if (read.problem)
+      return refuse('SITE_PICTURES_COPY_SHAPE', `The copy file cannot be used: ${read.problem}.`)
+    copyRow = { source: copy.source, sha256: sha256Of(copy.value), alts: read.alts }
+  }
   const kit = openKitWithMap(kitRef, where)
   if (!kit) return refuse('SITE_PICTURES_KIT_UNKNOWN', `The kit ${kitRef} cannot be read.`)
   // A plan with a frame for the picker needs the picker door; one without calls no model and stores no door.
@@ -82,6 +99,7 @@ export async function startPictureRun({
     brief,
     briefSource,
     photoSource,
+    copy: copyRow,
     kit: { ref: kit.ref, release: kit.release, version: kit.version },
     prompts: picturePrompts(),
     checkerVersion: CHECKER_VERSION,

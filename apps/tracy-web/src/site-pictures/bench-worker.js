@@ -18,11 +18,18 @@
 // A redeploy mid-run claims the run again: the step repeats the same code work (the same bytes, files written once by
 // hash), and stores no file again once round 0 is checked; the loop resumes the conversation from the saved turns, and
 // the thumbnails are made again from the owner photos.
+//
+// Every checked round is then looked at (#343, looker-step.js): the looker checks each finished picture through its own
+// door, and its rejections join the round's failures, so a rejected frame the picker placed goes back in the next fix
+// round with its fault names.
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { kitIdOf } from '../site-writer/bench-worker.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
 import { picturePickerDoor } from './door.js'
 import { fileStore } from './file-store.js'
+import { pictureLookerDoor } from './looker-door.js'
+import { withLooker } from './looker-round.js'
+import { createLooker } from './looker-step.js'
 import { iconStepFor } from './icon-step.js'
 import { fillFrames } from './fill-frames.js'
 import { openKitWithMap } from './kit-with-map.js'
@@ -112,7 +119,7 @@ export const SITE_PICTURES_STEP = Object.freeze({
  *   the kit's demo icons are read (icon-step.js releaseWebroot)
  */
 export function createSitePicturesQueue({ log = console, now, ...deps }) {
-  return createBenchQueue(SITE_PICTURES_STEP, { ...deps, log, now })
+  return createBenchQueue(withLooker(SITE_PICTURES_STEP), { ...deps, log, now })
 }
 
 // The run's picker door when it was started with one (bench-control.js): the same provider, model and endpoint, or a
@@ -205,7 +212,21 @@ async function prepare(deps, row) {
     timing: { code: Date.now() - started - iconsDone.timing, iconRanking: iconsDone.timing },
     iconRanking: iconsDone.ranking
   }
-  const ready = { ok: true, kit, door: door.door ?? undefined, files, idx, base, parts, picker }
+  const lookerDoor = await pictureLookerDoor({
+    pool: deps.pool,
+    secret: deps.secret,
+    picker: door.door ?? null
+  })
+  const looker = createLooker({
+    ...lookerDoor,
+    prompt: { text: picturePrompts().looker, sha256: picturePrompts().roles.looker },
+    storeDir: store.dir,
+    runId: row.id,
+    idx,
+    alts: row.copy?.alts ?? null,
+    fetchImpl: deps.fetchImpl
+  })
+  const ready = { ok: true, kit, door: door.door ?? undefined, files, idx, base, parts, picker, looker }
   ready.manifest = manifestFor(ready, new Map())
   ready.firstUser = picker?.frames.length ? pickerFirstMessage(picker) : null
   return ready

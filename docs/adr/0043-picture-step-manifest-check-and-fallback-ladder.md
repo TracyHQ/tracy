@@ -36,9 +36,9 @@ reader uses that module.
 | `pending` | `[{ frame, kind, match, waitsFor, reason }]`: frames no step has filled yet, never a demo picture. `waitsFor` names the step: `picker`, `drawer` (no owner photo fits, or the picker answered "none"), `icons` or `cut-out`. A twin of a pending frame is pending for the same step. The picture check counts a pending frame as unfilled (P01). |
 | `picks` | `[{ frame, photo, asset, reason }]`: one per frame the picker answers, in the order it was asked: the photo code it chose (or `"none"`, or `null` while unanswered), the brief asset that code names, and its reason. Empty when the run had no picker frame. |
 | `refusedPhotos` | `[{ asset, reason }]`: brief assets no frame may take (not a still, lettering, another business, a label that is unknown, blurry, no bytes with its hash). |
-| `altNotes` | `[{ frame, alt, seen }]`: the writer's alt next to what the picture actually shows; filled only when a writer copy file is given to the run. |
+| `altNotes` | `[{ frame, alt, seen, agrees, shared, note }]`: the writer's alt next to what the picture actually shows, compared by code (section 3b); filled only when a writer copy file is given to the run. |
 | `usage` | `[{ asset, frames }]`: per brief photo, how many frames use it. |
-| `cost`, `timing` | Objects keyed by role: `code` (always 0 USD; the time code took), `iconRanking` (the ranking call's cost as the provider reports it, 0 without a call, and its time in milliseconds), and later the drawer, looker and background removal. The picker's cost is the cost of the run's turns, one row per call, with the provider balance before and after on the run. |
+| `cost`, `timing` | Objects keyed by role: `code` (always 0 USD; the time code took), `iconRanking` (the ranking call's cost as the provider reports it, 0 without a call, and its time in milliseconds), `looker` (the sum of the looks' costs as the provider reports them, or at the model's price when it reports none, and the sum of their times; section 3b), and later the drawer and background removal. The picker's cost is the cost of the run's turns, one row per call, with the provider balance before and after on the run. |
 | `iconRanking` | `{ model, notes }`: the model that ranked the icon names (`null` when the shortlist order decided) and why it did not, when it did not (no `pictureIconRanker` door, the demo icons not read, no usable answer). |
 
 A frame entry:
@@ -61,6 +61,7 @@ A frame entry:
 | `darkened` | A dark overlay was baked in so the heading over it stays readable. |
 | `recolourable` | Initials and icons the write step may repaint in the brand colours. |
 | `seen` | One sentence from the looker saying what the picture actually shows. |
+| `looker` | The look of the picture (section 3b): `{ verdict: "pass" \| "fail", faults: [...], seen }`, the fault names from the fixed list; `{ verdict: null, faults: [], seen: null, problem }` when the look could not be read. Absent when the frame was not looked at. |
 | `reason` | Why this picture, or why hidden. |
 
 Twins (a kit frame with `twinOf`, the light or dark copy of another frame, and a plan frame with `sameAs`, a second
@@ -166,6 +167,42 @@ Thresholds and readings (named constants in the code):
 - **The prompt** is `site-pictures/picker-prompt.md`, loaded once per process with its hash; the hash is recorded on
   the run (`prompts.picker`) and in the manifest's fingerprint. Every call records its cost (the price table) and the
   run records the provider balance before and after.
+
+### 3b. The looker (#343)
+
+- **One call per finished picture**, through its own model door `pictureLooker` (by default `openai/gpt-6-luna`
+  through OpenRouter, as the brand step's reviewer), at most 4 at a time, each a fresh conversation: the looker prompt
+  as system message and one user message with the plan's words for the frame (shows, mustInclude, avoid, mood) and the
+  picture resized to fit the frame's display box (never enlarged). Never the picker's reason, the brief or another
+  frame. Looked at: `owner-photo`, `owner-photo-extended` and `drawn`. Not looked at: icons and initials (code made them
+  from a fixed library or letters), hidden frames, and twins, which take their source's look.
+- **Extended photos** (`owner-photo-extended`, extending comes with #344): when the entry carries `realPart`, a box on
+  the finished file, that box is outlined in magenta on the picture and the message says the outlined part is the
+  owner's real photo, so the looker looks for a drawing seam at its border.
+- **Its model must be of another maker than the picker's**: the maker is the vendor prefix of the model id, else the
+  provider. Like the icon ranker's door, the looker's door never stops a run: unset, disabled, unreadable, a model the
+  provider says cannot read pictures, or the picker's maker means no picture is looked at, and `looker.note` in the
+  manifest says why.
+- **Its answer** is `{ verdict, faults, seen }`. A fault name outside the fixed list is dropped and noted; any fault
+  makes the verdict `fail`. The look is stored on the entry as `looker` (above) and its sentence as `seen`. An answer
+  that cannot be read is a note, never a failure.
+- **Rejections join the fix rounds.** A rejection is a failure of rule `L01` (the looker passes every finished picture)
+  at the frame, its detail naming the faults and the seen sentence. L01 is added by the bench step to the round's
+  picture check result, outside the frozen rules P01 to P13, so `site-pictures-check/1` is unchanged. The result is then
+  split as in section 3a: a rejected frame the picker placed goes back in the next fix round with its fault names; any
+  other rejection stays in `notForPicker` for the fallback ladder. The shared run loop checks a round synchronously and
+  is not changed; the looks run where a checked round is saved (the step wraps its store's `saveRound`).
+- **Recorded**: the manifest's `looker` holds the door's model and snapshot (never the key), the looker prompt's hash and
+  one record per call (frame, file hash, model, time, cost, cached). Each look is kept in the bench's file store by a
+  hash of the picture, its display size, the words, the model and the prompt, so a later round or a resumed run pays
+  once per picture.
+- **Alt notes**: a run started with a writer copy file (`--copy-file`, `site-copy/1`; only its alts, its hash and its
+  name are stored on the run) gets one note per frame with both an alt and a seen sentence. The comparison is code,
+  not a model call: both texts are cut into content words (lower case, three letters or more, common little words
+  dropped, a plural or -ing ending trimmed); the alt `agrees` when at least one of its words, and at least a third of
+  them, are in the seen sentence. The note lists the shared words, so a reader sees why.
+- **The prompt** is `site-pictures/looker-prompt.md`, a draft until the owner approves real output, loaded once per
+  process with its hash and recorded on the run (`prompts.looker`) and in the manifest's fingerprint.
 
 ### 4. Fix rounds and the fallback ladder
 
