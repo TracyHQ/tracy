@@ -114,3 +114,11 @@
   over 8000 px, and over 2000 px once a request carries more than 20 images; full-page captures are up to 10000 px
   tall, so each is scaled down (aspect kept, never enlarged) as the reference run's harness also did, and the fitted
   copy is cached by image id and sha256 while the sha256 check stays on the original.
+- **Output budget of 128000 tokens and a 45 minute call (parity with the reference harness).** Claude Code ran the
+  reference runs with 128000 output tokens, thinking included, and the reference plan alone is about 50k tokens; the
+  bench records the same budget on every run, and a call that long, not streamed, gets 45 minutes.
+- **Transient provider errors are retried inside the turn (parity with the reference harness).** A 408, 409, 425, 429,
+  500, 502, 503, 504 or 529, an overloaded or rate limit error in a 200 body, or a network error before any response
+  is tried again up to 5 attempts with exponential backoff and jitter (Retry-After honoured, 60 s at most per wait);
+  400, 401, 403, 404 and content filter refusals never are. Each failed attempt is recorded on the turn and shown in
+  the turns log.
