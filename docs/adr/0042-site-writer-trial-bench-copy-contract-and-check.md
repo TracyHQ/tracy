@@ -132,6 +132,26 @@ The check only reports. In a fix round the failing slots go back to the same wri
 (length against limit, which sentence repeats where) and only those slots are rewritten. At most **2 fix rounds**.
 A slot still failing after that keeps the writer's own text and is shown in red. Code never deletes or rewrites it.
 
+### 6. Bench run loop in lib/
+
+The writer bench reuses the planner bench's run loop instead of forking it (#327). The loop, the round, the change
+list machinery, the store and the run files live in `apps/tracy-web/src/lib/` (`bench-run-loop.js`,
+`bench-run-round.js`, `bench-changes.js`, `bench-change-edits.js`, `bench-change-size.js`, `bench-answer.js`,
+`bench-run-store.js`, `bench-run-read.js`, `bench-turn-store.js`, `bench-export.js`, `provider-balance.js`). A
+step is a plain object: queue name and error code prefix, store, fix round limit, prompt `{ text, sha256 }`, checker
+`{ version, check, failureListText }`, change rules (part kinds, removable kinds, sections, where the parts are, the
+document's noun) with their messages, the input preparation hook and the agent request hook. The planner is
+`SITE_PLANNER_STEP` in `site-planner/bench-worker.js`, and runs exactly as before.
+
+**Store: each step gets its own three tables, with the planner's shape.** The store takes the table names and the
+name of the round column that holds the document (`plan` for the planner). The planner's tables and rows stay as
+they are, with no migration. A shared table with a step column was rejected: it would have to rename or widen
+`site_planner_*` and its constraints (rounds 0 to 2, the frozen input trigger, the one active run index), and two
+steps would then block each other through one active run index. The state words of rounds and runs (`planning`,
+`checked`, `not_a_plan`; steps `waiting`, `planning`, `fixing`, `checking`, `done`) are part of the shape and are
+reused as they are. Starting a run (its insert) stays the step's own, since each step is started on different
+inputs.
+
 ## Consequences
 
 - The writer bench (#326) and the future write step read one stable file shape.
