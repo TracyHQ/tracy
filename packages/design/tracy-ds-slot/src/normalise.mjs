@@ -730,13 +730,18 @@ function flagsOf(p) {
 /**
  * The quality gate. A profile that fails is never offered to a customer. Reasons are returned, not
  * thrown, so a report can count them.
+ * `options.keepOwnText`: accent-only mode (brand.mjs) leaves the template's own page text as it is, so the
+ * text-on-page contrast is not judged (JA Boxing's own text is 4.02:1 on its page); everything else is.
+ * @param {any} p
+ * @param {{ keepOwnText?: boolean }} [options]
  * @returns {{ ok: boolean, reasons: string[] }}
  */
-export function gate(p) {
+export function gate(p, options = {}) {
   const reasons = []
   for (const k of ['bg', 'fg', 'accent']) if (!parseHex(p.colors[k]?.v)) reasons.push(`no-${k}`)
   const text = contrast(p.colors.fg?.v, p.colors.bg?.v)
-  if (text !== null && text < 4.5) reasons.push(`contrast-fg-bg:${text.toFixed(2)}`)
+  if (text !== null && text < 4.5 && options?.keepOwnText !== true)
+    reasons.push(`contrast-fg-bg:${text.toFixed(2)}`)
   const on = contrast(p.colors.accentOn?.v, p.colors.accent?.v)
   if (on !== null && on < 4.5) reasons.push(`contrast-accent:${on.toFixed(2)}`)
   if (p.fonts.body.s === 'empty' && p.fonts.display.s === 'empty') reasons.push('no-usable-font')

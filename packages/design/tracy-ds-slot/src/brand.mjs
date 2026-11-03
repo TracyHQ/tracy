@@ -23,6 +23,16 @@ import { contrast, luminance, mix, parseHex, readable, readableLightness, readab
 import { fromOpenDesign, gate } from './normalise.mjs'
 import { keptScopes } from './tokens56.mjs'
 
+/**
+ * An accent with no real hue (white, black, a grey): it would not read as a brand colour and, lifted to read, would
+ * collapse to the page text. Chroma (max minus min channel) under 12% of the range.
+ * @param {string} hex
+ */
+export function isNeutralAccent(hex) {
+  const c = parseHex(hex)
+  return !c || Math.max(c.r, c.g, c.b) - Math.min(c.r, c.g, c.b) < 31
+}
+
 /** A brand profile's id: `brand:<bg>-<fg>-<accent>`, hex without `#`, fg empty when the template's is kept. */
 export const BRAND_ID = /^brand:([0-9a-f]{6})-([0-9a-f]{6})?-([0-9a-f]{6})$/
 
@@ -83,20 +93,26 @@ const readableEither = (/** @type {string} */ c, /** @type {string} */ g, /** @t
  * @param {{ bg?: string, fg?: string | null, accent: string, fonts?: { display?: string, body?: string } }} input
  * @param {Record<string, any>} contract  the template's slot contract (library.loadContract)
  * @param {Record<string, string>} base  the template's 56 tokens (library.contractBase)
+ * @param {{ accentOnly?: boolean }} [options]  accentOnly: only the accent family changes (see `isNeutralAccent`):
+ *   bg, fg and fonts of `input` are ignored, the template's own are kept as they are (its page text is NOT
+ *   shifted to read, which brand mode does), and a neutral accent is refused with `neutral-accent`
  * @returns {{ profile: any, adjusted: string[] } | { refused: string[] }}
  */
-export function brandProfile(input, contract, base) {
+export function brandProfile(input, contract, base, options = {}) {
+  const accentOnly = options?.accentOnly === true
+  if (accentOnly) input = { accent: input?.accent }
   const bg = hex6(input?.bg ?? base['--bg'])
   const accent = hex6(input?.accent)
   const refused = [...(bg ? [] : ['no-bg']), ...(accent ? [] : ['no-accent'])]
   if (input?.fg && !hex6(input.fg)) refused.push('no-fg')
+  if (accentOnly && accent && isNeutralAccent(accent)) refused.push('neutral-accent')
   if (refused.length) return { refused }
   /** @type {string[]} */
   const adjusted = []
   const toward = towardOf(/** @type {string} */ (bg))
   const ownFg = hex6(input.fg ?? base['--fg']) ?? toward
   let fg = ownFg
-  if ((contrast(fg, bg) ?? 0) < 4.5) {
+  if (!accentOnly && (contrast(fg, bg) ?? 0) < 4.5) {
     fg = readableEither(fg, /** @type {string} */ (bg), 4.5) ?? /** @type {string} */ (readableOn(bg))
     adjusted.push(`fg:${ratio(ownFg, /** @type {string} */ (bg))}→${ratio(fg, /** @type {string} */ (bg))}`)
   }
@@ -155,8 +171,8 @@ export function brandProfile(input, contract, base) {
             ? { f: `brand ${k}` }
             : { s: 'derived', f: `brand step from the template and the brand colours (${k})` }
         )
-  const profile = { ...p, id, source: 'brand' }
-  const g = gate(profile)
+  const profile = { ...p, id, source: 'brand', ...(accentOnly ? { accentOnly: true } : {}) }
+  const g = gate(profile, { keepOwnText: accentOnly })
   return g.ok ? { profile, adjusted } : { refused: g.reasons }
 }
 
