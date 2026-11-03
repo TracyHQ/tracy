@@ -19,18 +19,27 @@
  * (test/brand-mode-default-unchanged.test.mjs).
  */
 import { bandColours } from './bands.mjs'
-import { contrast, luminance, mix, parseHex, readable, readableLightness, readableOn } from './colour.mjs'
+import {
+  contrast,
+  luminance,
+  mix,
+  neutralReason,
+  parseHex,
+  readable,
+  readableLightness,
+  readableOn
+} from './colour.mjs'
 import { fromOpenDesign, gate } from './normalise.mjs'
 import { keptScopes } from './tokens56.mjs'
 
 /**
- * An accent with no real hue (white, black, a grey): it would not read as a brand colour and, lifted to read, would
- * collapse to the page text. Chroma (max minus min channel) under 12% of the range.
+ * An accent with no visible hue (white, black, a grey): the lab rule, OKLCH chroma under 0.03 (`neutralReason` in
+ * colour-lift.mjs, the function the save_brand_file gate runs). A dark or pale colour WITH a hue is a real brand
+ * colour and is accepted here (it is lifted by `liftAccent` before it gets here).
  * @param {string} hex
  */
 export function isNeutralAccent(hex) {
-  const c = parseHex(hex)
-  return !c || Math.max(c.r, c.g, c.b) - Math.min(c.r, c.g, c.b) < 31
+  return neutralReason(hex) !== null
 }
 
 /** A brand profile's id: `brand:<bg>-<fg>-<accent>`, hex without `#`, fg empty when the template's is kept. */
@@ -93,8 +102,9 @@ const readableEither = (/** @type {string} */ c, /** @type {string} */ g, /** @t
  * @param {{ bg?: string, fg?: string | null, accent: string, fonts?: { display?: string, body?: string } }} input
  * @param {Record<string, any>} contract  the template's slot contract (library.loadContract)
  * @param {Record<string, string>} base  the template's 56 tokens (library.contractBase)
- * @param {{ accentOnly?: boolean }} [options]  accentOnly: only the accent family changes (see `isNeutralAccent`):
- *   bg, fg and fonts of `input` are ignored, the template's own are kept as they are (its page text is NOT
+ * @param {{ accentOnly?: boolean }} [options]  accentOnly: only the accent family changes (see `isNeutralAccent`).
+ *   `input.accent` is taken as ALREADY LIFTED (lab flow: `liftAccent` from colour.mjs with the template grounds
+ *   first, then this call with the lifted colour); it is not lifted again here. bg, fg and fonts of `input` are ignored, the template's own are kept as they are (its page text is NOT
  *   shifted to read, which brand mode does), and a neutral accent is refused with `neutral-accent`
  * @returns {{ profile: any, adjusted: string[] } | { refused: string[] }}
  */

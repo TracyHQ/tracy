@@ -30,3 +30,36 @@ export function assertNames(result, field, why) {
 export const lookOf = (brand, file, ground) =>
   brand.logo.look.filter((l) => l.file === file && (!ground || l.ground === ground))
 export const slotKey = (brand, where) => brand.name.slots.find((s) => s.where === where)
+
+const walk = (obj, path) => {
+  const keys = path.split('.')
+  const last = keys.pop()
+  let at = obj
+  for (const k of keys) at = at[k]
+  return [at, last]
+}
+
+/** A mutate step that sets one dotted path of the brand file (numbers index arrays: "colours.shifts.0.side"). */
+export const put = (path, value) => (ctx) => {
+  const [at, last] = walk(ctx.brand, path)
+  at[last] = typeof value === 'function' ? value(at[last]) : value
+}
+
+/** A mutate step that deletes one dotted path of the brand file. */
+export const del = (path) => (ctx) => {
+  const [at, last] = walk(ctx.brand, path)
+  delete at[last]
+}
+
+/** Several mutate steps in order. */
+export const all =
+  (...steps) =>
+  async (ctx) => {
+    for (const step of steps) await step(ctx)
+  }
+
+/** The brief: a mutate step that sets one dotted path of the brief. */
+export const putBrief = (path, value) => (ctx) => {
+  const [at, last] = walk(ctx.brief, path)
+  at[last] = value
+}

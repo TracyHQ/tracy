@@ -35,9 +35,27 @@ const declarations = (/** @type {string} */ css) =>
     .map((d) => d.trim())
     .filter((d) => /^[\w-]+:/.test(d))
 
-/** The accent family: its variables and the properties a button or a link paints with. */
-const ACCENT_FAMILY =
-  /^(--ds-c-(accent|on-accent|focus-ring)[\w-]*|--ds-accent-text[\w-]*|--color-primary|--body-link[\w-]*|--mainnav-link[\w-]*|--(t4|bs)-(primary|link)[\w-]*|--accent[\w-]*|color|background-color|border-color|fill|stroke|outline-color)$/
+/** The accent roles the approved lab guard allows to change (`--ds-c-<role>`); nothing else may differ. */
+const ACCENT_ROLES = [
+  'accent',
+  'accent-on',
+  'accent-hover',
+  'accent-active',
+  'accent-text',
+  'accent-text-hover',
+  'accent-on-ink',
+  'accent-band',
+  'on-accent-band',
+  'focus-ring'
+]
+
+/** A colour written as a hex or as an "r, g, b" triple, as a lower-case hex; null for anything else. */
+const asHex = (/** @type {string} */ v) => {
+  const x = v.replace(/!important$/, '').trim()
+  if (/^#[0-9a-f]{6}$/i.test(x)) return x.toLowerCase()
+  const t = /^(\d+), (\d+), (\d+)$/.exec(x)
+  return t ? `#${[t[1], t[2], t[3]].map((n) => Number(n).toString(16).padStart(2, '0')).join('')}` : null
+}
 
 /** Declarations in one sheet and not the other (as a multiset: the order and the count of equal ones count). */
 const changed = (/** @type {string} */ a, /** @type {string} */ b) => {
@@ -61,8 +79,25 @@ for (const accent of [GOLD, MOSS, SAND]) {
   test(`accent-only ${accent}: only the accent family differs from the template's own accent`, () => {
     const diff = changed(press(OWN).slot.css, press(accent).slot.css)
     assert.ok(diff.length > 0, 'the accent did change something')
-    const outside = diff.filter((d) => !ACCENT_FAMILY.test(d.name))
+    const built = declarations(press(accent).slot.css)
+    const roleValues = new Set(
+      built
+        .filter((d) => d.startsWith('--ds-c-') && ACCENT_ROLES.includes(d.slice(7, d.indexOf(':'))))
+        .map((d) => asHex(d.slice(d.indexOf(':') + 1)))
+    )
+    // every changed role variable is one of the lab guard's accent roles
+    const outside = diff.filter(
+      (d) => d.name.startsWith('--ds-c-') && !ACCENT_ROLES.includes(d.name.slice(7))
+    )
     assert.deepEqual(outside, [])
+    // any other changed declaration (the template's own link and button variables, the paint of a button) carries
+    // only a colour that one of those accent roles holds
+    const carried = diff.filter((d) => d.diff < 0 && !d.name.startsWith('--ds-c-'))
+    assert.ok(carried.length > 0, 'the template accent carriers changed')
+    for (const d of carried) {
+      const v = asHex(d.decl.slice(d.decl.indexOf(':') + 1))
+      assert.ok(v && roleValues.has(v), `${d.decl} is not an accent role colour`)
+    }
   })
 
   test(`accent-only ${accent}: every other colour role of both sides is byte for byte`, () => {

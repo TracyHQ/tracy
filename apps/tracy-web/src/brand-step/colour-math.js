@@ -1,3 +1,8 @@
+// FROZEN PORT of the approved lab gate (accent-lift and contrast rules). Do not edit on its own. Its twin is
+// packages/design/tracy-ds-slot/src/colour.mjs (colour-lift.mjs, re-exported): apps/tracy-web does not import
+// tracy-ds-slot, so the two stay copies on purpose. The drift guard is the same lift vector table asserted in
+// apps/tracy-web/test/brand-gate-colour-math.test.mjs and packages/design/tracy-ds-slot/test/accent-lift-vectors.test.mjs.
+//
 // Colour maths of the brand step gate: hex parsing, WCAG contrast, OKLCH neutral test and the accent lift
 // (decision 9: a dark or pale colour with a clear hue is a real brand colour; its HSL lightness moves, hue and
 // saturation kept, until it reads on the template's opening ground). Pure functions, no files, no environment.
@@ -21,11 +26,12 @@ export function parseHexColour(h) {
   return { r: n >> 16, g: (n >> 8) & 255, b: n & 255 }
 }
 
-const linear = (c) => {
+/** sRGB to linear light for WCAG contrast (threshold 0.03928, as the WCAG 2.1 text states it). */
+const wcagLinear = (c) => {
   const v = c / 255
   return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
 }
-const luminance = ({ r, g, b }) => 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b)
+const luminance = ({ r, g, b }) => 0.2126 * wcagLinear(r) + 0.7152 * wcagLinear(g) + 0.0722 * wcagLinear(b)
 
 /** WCAG contrast ratio of two #rrggbb colours, rounded to two decimals. */
 export function contrastHex(a, b) {
@@ -34,7 +40,8 @@ export function contrastHex(a, b) {
   return +((Math.max(A, B) + 0.05) / (Math.min(A, B) + 0.05)).toFixed(2)
 }
 
-const srgbToLinear = (c) => {
+/** sRGB to linear light for OKLab (threshold 0.04045, as the OKLab reference states it). */
+const oklabLinear = (c) => {
   const v = c / 255
   return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
 }
@@ -42,9 +49,9 @@ const srgbToLinear = (c) => {
 /** OKLab lightness (0..1) and chroma of a #rrggbb colour. */
 export function oklch(h) {
   const c = parseHexColour(h)
-  const r = srgbToLinear(c.r)
-  const g = srgbToLinear(c.g)
-  const b = srgbToLinear(c.b)
+  const r = oklabLinear(c.r)
+  const g = oklabLinear(c.g)
+  const b = oklabLinear(c.b)
   const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
   const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
   const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
