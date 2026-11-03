@@ -221,7 +221,9 @@ import {
 } from './sites/agent-demo-inventory.js'
 import { createSitePlannerQueue } from './site-planner/bench-worker.js'
 import { createBrandQueue } from './brand-step/brand-worker.js'
-import { productionWiring } from './brand-step/brand-wiring.js'
+import { contractOfKit, productionWiring } from './brand-step/brand-wiring.js'
+import { createRealPage } from './brand-step/real-page/real-page-wiring.js'
+import { trialLabelFrom } from './brand-step/real-page/trial-guard.js'
 import { kitImagesFor } from './site-planner/kit-images.js'
 import { presign, signedCall } from './sites/artifacts.js'
 import { readBrandFile } from './sites/brand-files.js'
@@ -1186,6 +1188,25 @@ export function buildApp(deps) {
         secret: deps.config.sessionSecret,
         kitImages: kitImagesFor(brandBench),
         wiring: productionWiring(deps.config),
+        // The real-page check on the one configured trial site (TRACY_BRAND_TRIAL_SITE, with the internal account that
+        // holds a seat on it in TRACY_BRAND_TRIAL_ACCOUNT); null when either is unset (brand-step/real-page/).
+        realPage: createRealPage({
+          trialLabel: trialLabelFrom(),
+          account: String(process.env.TRACY_BRAND_TRIAL_ACCOUNT ?? '').trim() || null,
+          findSite: (label) => siteByLabel(deps.pool, label),
+          applyAs: (email, call) => app.applyAs(email, call),
+          setSiteBrand,
+          runSiteJob: (site, input, ms) => app.runSiteJob(site, input, ms),
+          hostCall: (site, body) =>
+            deps.host.hostCall(deps.config, site.host ?? deps.config.defaultHost, '/capture', body, {
+              fetchImpl: deps.fetchImpl ?? fetch,
+              timeoutMs: 300_000
+            }),
+          bodyFor: (site) => demoSelfNames(deps.config, site),
+          contractModule: async (kit) =>
+            contractOfKit(await (await import('./lib/ds-slot.js')).dsSlotModule('library'), kit)?.module ??
+            null
+        }),
         log: deps.log ?? console
       })
     : null
@@ -2295,6 +2316,7 @@ export function buildApp(deps) {
     app.route('/', sites)
     sitesApp = sites
     app.applyAs = sites.applyAs
+    app.runSiteJob = sites.runSiteJob
     // A setup run's hold on the webroot (SC-3): what the brief runner above calls, reachable the same way as `applyAs`.
     app.setupWebroot = sites.setupWebroot
     // Lets the row of a deleted site go once its host said the site is off it; the cron's sweep is

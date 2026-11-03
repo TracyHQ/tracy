@@ -82,6 +82,9 @@ export async function runFiles(pool, run, agentRows) {
         JSON.stringify({ ...r.gateResult, fault: r.fault, sentBack: r.sentBack }, null, 2)
       ])
   }
+  // The real-page check: its verdict (also when the check stopped); the captures are in the run folder `get` copies.
+  if (run.realPageVerdict)
+    files.push(['real-page/verdict.json', JSON.stringify(run.realPageVerdict, null, 2)])
   const { brief: _brief, rounds: _rounds, brandFile: _file, ...meta } = run
   files.push(['run.json', JSON.stringify({ ...meta, briefSha256: run.briefSha256 }, null, 2)])
   files.push(['turns.json', JSON.stringify(turnsLog(agentRows), null, 2)])
