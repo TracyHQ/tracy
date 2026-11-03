@@ -18,6 +18,7 @@ import { buildSafeVersion } from './brand-safe-version.js'
 import { saveRound } from './brand-round-store.js'
 import { cancelAsked, setProgress } from './brand-store.js'
 import { openKit } from '../lib/template-kit-source.js'
+import { endWithRealPage } from './real-page/real-page-step.js'
 
 /** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
 export const BRAND_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })
@@ -69,17 +70,20 @@ export async function runBrandRun(deps, row, lease) {
     }
     const ready = await prepare(deps, row)
     if (!ready.ok) return end('failed', `${ready.code}: ${ready.reason}`)
+    // The accepted brand file or the safe version goes on to the real-page check when the server has one.
+    const endChecked = endWithRealPage(deps, { row, ready, leaseToken, must, end, LeaseLost })
     for (;;) {
       const next = await nextRound(pool, runId)
-      if (next.end) return end(...next.end)
-      if (next.safe) return await safeVersion(deps, { row, ready, reason: next.safe, leaseToken, must, end })
+      if (next.end) return endChecked(...next.end)
+      if (next.safe)
+        return await safeVersion(deps, { row, ready, reason: next.safe, leaseToken, must, end: endChecked })
       const { round, followUp } = next
       // A cancel asked during the last call of a round ends the run before the next round opens.
       if (round > 0 && next.opening && (await cancelAsked(pool, runId))) return end('cancelled')
       await must(setProgress(pool, { runId, step: round ? 'fixing' : 'working', round, leaseToken }))
       if (next.opening) await must(saveRound(pool, { runId, round, state: 'working', leaseToken }))
       const verdict = await playRound(deps, { row, ready, round, followUp, leaseToken, must })
-      if (verdict) return end(...verdict)
+      if (verdict) return endChecked(...verdict)
     }
   } catch (error) {
     if (error instanceof LeaseLost) return false

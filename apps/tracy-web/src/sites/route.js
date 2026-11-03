@@ -8223,6 +8223,8 @@ export function sitesRoutes({
   return Object.assign(app, {
     applyDoor,
     applyAs,
+    // The host job runner (the brand bench's real-page check writes the accent module through it).
+    runSiteJob,
     setupWebroot,
     // The cron's tick finishes the design system picks whose worker died with its process (`server.js`).
     designSystemSweep: () => dsAtCreate.sweep(),
