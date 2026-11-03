@@ -5,10 +5,15 @@
 // Part ids: "contents" (what the kit holds and every id below), "site" (the site-wide parts, each large one replaced
 // by the id that reads it), "site.<key>" (one site-wide part in full), any other top-level list or object small enough
 // to read whole ("pageGroups", "pages", "templateGaps", ...), a page group id, a page id and a block id. A part is
-// answered as compact JSON, unchanged from the kit. open_kit_image answers one kit image from the images made ready by
-// kit-images.js (#302); without them it says images are not available.
+// answered as compact JSON, without the measurement and evidence fields the approved prompt never uses
+// (PLANNER_DROPPED_KIT_FIELDS); the checker still reads the whole kit. read_kit_part takes one id or a list of ids.
+// open_kit_image answers one kit image from the images made ready by kit-images.js (#302); without them it says
+// images are not available.
 import { defaultContracts } from '../lib/contracts.js'
 import { kitOfContract } from '../lib/template-kit/reader.js'
+import { compactForPlanner } from './kit-planner-view.js'
+
+export { compactForPlanner, PLANNER_DROPPED_KIT_FIELDS } from './kit-planner-view.js'
 
 export const KIT_TOOL_NAMES = Object.freeze({ readPart: 'read_kit_part', openImage: 'open_kit_image' })
 
@@ -16,6 +21,9 @@ export const KIT_TOOL_NAMES = Object.freeze({ readPart: 'read_kit_part', openIma
 const PART_LIMIT = 120_000
 /** Inside "site", a part larger than this is named, not inlined (brand colours and fixed texts on JA Boxing). */
 const SITE_INLINE_LIMIT = 20_000
+
+/** A read_kit_part call with several ids stops adding parts past this many characters; the rest are named. */
+export const READ_MANY_LIMIT = 150_000
 
 const sizeOf = (value) => JSON.stringify(value ?? null).length
 const isPart = (value) => value !== null && typeof value === 'object'
@@ -61,7 +69,8 @@ export function openKit(ref, { index = defaultContracts() } = {}) {
 }
 
 /** The kit's parts by id, and `read(id)`: the part as compact JSON, or an error result as JSON. */
-export function kitParts(doc) {
+export function kitParts(kitDoc) {
+  const doc = compactForPlanner(kitDoc)
   const site = isPart(doc.site) ? doc.site : {}
   const byId = new Map()
   const add = (id, value) => {
@@ -125,18 +134,39 @@ export function kitParts(doc) {
     'a block id, such as "header"'
   ]
 
+  const read = (id) => {
+    if (byId.has(id)) return JSON.stringify(byId.get(id))
+    if (tooLarge.includes(id))
+      return JSON.stringify({
+        error: 'PART_TOO_LARGE',
+        id,
+        detail: `"${id}" is too large to read whole: read each entry by its own id (each block id is listed in "contents").`
+      })
+    return JSON.stringify({ error: 'UNKNOWN_PART', id, validIds })
+  }
   return {
     contents,
     has: (id) => byId.has(id),
-    read(id) {
-      if (byId.has(id)) return JSON.stringify(byId.get(id))
-      if (tooLarge.includes(id))
-        return JSON.stringify({
-          error: 'PART_TOO_LARGE',
-          id,
-          detail: `"${id}" is too large to read whole: read each entry by its own id (each block id is listed in "contents").`
-        })
-      return JSON.stringify({ error: 'UNKNOWN_PART', id, validIds })
+    read,
+    /** Several parts as one JSON object by id; past READ_MANY_LIMIT characters the rest are listed in notRead. */
+    readMany(ids) {
+      const parts = []
+      let size = 2
+      const notRead = []
+      for (const id of ids) {
+        const text = read(id)
+        if (notRead.length || (parts.length && size + text.length > READ_MANY_LIMIT)) notRead.push(id)
+        else {
+          parts.push(`${JSON.stringify(id)}:${text}`)
+          size += text.length + id.length + 4
+        }
+      }
+      if (notRead.length)
+        parts.push(
+          `"notRead":${JSON.stringify(notRead)}`,
+          `"detail":${JSON.stringify('These parts did not fit in this answer: read them in another call.')}`
+        )
+      return `{${parts.join(',')}}`
     }
   }
 }
@@ -166,11 +196,33 @@ export function kitTools(doc, { images } = {}) {
     {
       name: KIT_TOOL_NAMES.readPart,
       description:
-        'Read one part of the template kit by its id, as JSON. Start with "contents", which lists every id.',
-      parameters: idParameter(
-        'A part id: "contents", "site", "site.<key>", "pageGroups", "pages", a page group id, a page id or a block id.'
-      ),
-      run: ({ id }) => (typeof id === 'string' && id !== '' ? parts.read(id) : badId(KIT_TOOL_NAMES.readPart))
+        'Read parts of the template kit as JSON: one by its id, or several in one call by ids. Start with "contents", which lists every id.',
+      parameters: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            description:
+              'One part id: "contents", "site", "site.<key>", "pageGroups", "pages", a page group id, a page id or a block id.'
+          },
+          ids: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'Several part ids, read in one call and answered as one JSON object by id.'
+          }
+        },
+        additionalProperties: false
+      },
+      run: ({ id, ids }) => {
+        if (Array.isArray(ids) && ids.length && ids.every((i) => typeof i === 'string' && i !== ''))
+          return parts.readMany(id ? [id, ...ids] : ids)
+        if (ids === undefined && typeof id === 'string' && id !== '') return parts.read(id)
+        return JSON.stringify({
+          error: 'INVALID_ARGUMENTS',
+          tool: KIT_TOOL_NAMES.readPart,
+          detail: 'give id (a non-empty string) or ids (a non-empty list of non-empty strings)'
+        })
+      }
     },
     {
       name: KIT_TOOL_NAMES.openImage,
@@ -201,11 +253,12 @@ export function firstUserMessage({ kit, brief }) {
   return [
     `Input 2, the template kit, is ${kit.ref}${template}. It is not in this message: read it part by part with your two tools.`,
     '',
-    `- ${readPart}(id) answers one part of the kit as JSON. Start with ${readPart}("contents"): it lists what the kit holds and every part id. Then read the parts as your work reaches them, one id per call: "site" (the site-wide parts; a large one is named there by its own id, such as "site.fixedTexts"), "pageGroups", "pages", a page group id, a page id or a block id.`,
+    `- ${readPart} answers parts of the kit as JSON. Start with ${readPart}("contents"): it lists what the kit holds and every part id. Then read the parts as your work reaches them: "site" (the site-wide parts; a large one is named there by its own id, such as "site.fixedTexts"), "pageGroups", "pages", a page group id, a page id or a block id. Give it one id, or several as ids (a list) to read them in one call.`,
     `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}.`,
+    '- You may call the tools several times in the same turn: ask for every part and image you need next at once, rather than one per turn.',
     '',
     'Input 1, the brief, is this JSON:',
     '',
-    JSON.stringify(brief, null, 2)
+    JSON.stringify(brief)
   ].join('\n')
 }

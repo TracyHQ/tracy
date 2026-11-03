@@ -6,11 +6,14 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 import {
+  compactForPlanner,
   firstUserMessage,
   KIT_TOOL_NAMES,
   kitParts,
   kitTools,
   openKit,
+  PLANNER_DROPPED_KIT_FIELDS,
+  READ_MANY_LIMIT,
   readableKits
 } from '../src/site-planner/kit-source.js'
 import { plannerPrompt } from '../src/site-planner/planner-prompt.js'
@@ -114,28 +117,87 @@ test('contents names every part id, and every one of them can be read', () => {
   for (const id of ids) assert.equal(read(parts, id).error, undefined, id)
 })
 
-test('a part is its kit entry as compact JSON, unchanged', () => {
+test('a part is its kit entry as compact JSON, without the fields the planner never uses', () => {
   const kit = boxing()
   const parts = kitParts(kit.doc)
-  const page = kit.doc.pages.find((p) => p.id === 'page-home')
-  assert.equal(parts.read('page-home'), JSON.stringify(page))
-  const block = kit.doc.blocks.find((b) => b.id === 'header')
-  assert.equal(parts.read('header'), JSON.stringify(block))
-  assert.equal(parts.read('pageGroups'), JSON.stringify(kit.doc.pageGroups))
-  assert.equal(parts.read('group-home'), JSON.stringify(kit.doc.pageGroups[0]))
-  assert.equal(parts.read('site.contactBlocks'), JSON.stringify(kit.doc.site.contactBlocks))
-  assert.equal(parts.read('site.fixedTexts'), JSON.stringify(kit.doc.site.fixedTexts))
+  const lean = compactForPlanner(kit.doc)
+  assert.equal(parts.read('page-home'), JSON.stringify(lean.pages.find((p) => p.id === 'page-home')))
+  assert.equal(parts.read('header'), JSON.stringify(lean.blocks.find((b) => b.id === 'header')))
+  assert.equal(parts.read('pageGroups'), JSON.stringify(lean.pageGroups))
+  assert.equal(parts.read('group-home'), JSON.stringify(lean.pageGroups[0]))
+  assert.equal(parts.read('site.contactBlocks'), JSON.stringify(lean.site.contactBlocks))
+  assert.equal(parts.read('site.fixedTexts'), JSON.stringify(lean.site.fixedTexts))
+})
+
+/** Every key anywhere in a value, with the key of the object that holds it. */
+function keysOf(value, parent = '', out = []) {
+  if (Array.isArray(value)) for (const v of value) keysOf(v, parent, out)
+  else if (value && typeof value === 'object')
+    for (const [k, v] of Object.entries(value)) {
+      out.push([parent, k])
+      keysOf(v, k, out)
+    }
+  return out
+}
+
+test('the planner reads no measurement or evidence field, and keeps every field its prompt or the checker names', () => {
+  const kit = boxing()
+  const parts = kitParts(kit.doc)
+  const prompt = plannerPrompt().text
+  for (const { field } of PLANNER_DROPPED_KIT_FIELDS)
+    assert.doesNotMatch(prompt, new RegExp(`\\b${field}\\b`), `the prompt names ${field}, so it must stay`)
+  const read = [...kit.doc.blocks, ...kit.doc.pages].map((p) => JSON.parse(parts.read(p.id)))
+  read.push(JSON.parse(parts.read('site.fixedTexts')))
+  const seen = keysOf(read)
+  for (const { field, in: holders } of PLANNER_DROPPED_KIT_FIELDS)
+    assert.ok(
+      !seen.some(([parent, k]) => k === field && (!holders || holders.includes(parent))),
+      `${field} is still read`
+    )
+  const kept = new Set(seen.map(([, k]) => k))
+  for (const field of [
+    'canHide',
+    'kind',
+    'twinOf',
+    'fixed',
+    'maxCharacters',
+    'labelId',
+    'source',
+    'reason',
+    'network'
+  ])
+    assert.ok(kept.has(field), `${field} was dropped`)
+  const link = kit.doc.blocks.flatMap((b) => b.links ?? []).find((l) => l.icon?.mechanism && l.icon.classes)
+  const block = kit.doc.blocks.find((b) => b.links?.includes(link))
+  const readIcon = JSON.parse(parts.read(block.id)).links.find((l) => l.id === link.id).icon
+  assert.equal(
+    readIcon.mechanism,
+    link.icon.mechanism,
+    'a link icon keeps its mechanism (the prompt reads iconMechanism)'
+  )
+  assert.equal(readIcon.classes, undefined)
+  // The kit itself is untouched: the checker keeps reading every field.
+  assert.ok(kit.doc.blocks.some((b) => b.frames?.some((f) => f.hideEvidence)))
+})
+
+test('the blocks the planner reads are at least a third smaller', () => {
+  const kit = boxing()
+  const parts = kitParts(kit.doc)
+  const full = kit.doc.blocks.reduce((n, b) => n + JSON.stringify(b).length, 0)
+  const lean = kit.doc.blocks.reduce((n, b) => n + parts.read(b.id).length, 0)
+  assert.ok(lean < full * (2 / 3), `${lean} of ${full}`)
 })
 
 test('site keeps its small parts inline and names each large one by the id that reads it', () => {
   const kit = boxing()
   const site = read(kitParts(kit.doc), 'site')
-  assert.deepEqual(site.contactBlocks, kit.doc.site.contactBlocks)
-  assert.deepEqual(site.forms, kit.doc.site.forms)
+  const lean = compactForPlanner(kit.doc).site
+  assert.deepEqual(site.contactBlocks, lean.contactBlocks)
+  assert.deepEqual(site.forms, lean.forms)
   assert.deepEqual(site.fixedTexts, {
     part: 'site.fixedTexts',
     entries: 150,
-    characters: JSON.stringify(kit.doc.site.fixedTexts).length
+    characters: JSON.stringify(lean.fixedTexts).length
   })
   assert.equal(site.brandColours.part, 'site.brandColours')
   assert.ok(JSON.stringify(site).length < 40_000, 'site is not compact')
@@ -168,12 +230,34 @@ test('an unknown id answers an error that lists the valid id kinds', () => {
     )
 })
 
+test('read_kit_part reads several ids in one call, and leaves the rest for another call past its size bound', async () => {
+  const kit = boxing()
+  const [readPart] = kitTools(kit.doc)
+  const parts = kitParts(kit.doc)
+  assert.equal(readPart.parameters.properties.ids.type, 'array')
+  const two = JSON.parse(await readPart.run({ ids: ['page-home', 'header'] }))
+  assert.deepEqual(Object.keys(two), ['page-home', 'header'])
+  assert.deepEqual(two['page-home'], JSON.parse(parts.read('page-home')))
+  assert.equal(
+    JSON.parse(await readPart.run({ ids: ['page-home', 'page-nowhere'] }))['page-nowhere'].error,
+    'UNKNOWN_PART'
+  )
+  const all = kit.doc.blocks.map((b) => b.id)
+  const many = JSON.parse(await readPart.run({ ids: all }))
+  assert.ok(Array.isArray(many.notRead) && many.notRead.length > 0, 'every block came back in one call')
+  assert.ok(JSON.stringify(many).length < READ_MANY_LIMIT + 50_000)
+  const got = Object.keys(many).filter((k) => k !== 'notRead' && k !== 'detail')
+  assert.deepEqual([...got, ...many.notRead], all)
+  assert.equal(JSON.parse(await readPart.run({ ids: [] })).error, 'INVALID_ARGUMENTS')
+  assert.equal(JSON.parse(await readPart.run({ ids: ['x', 3] })).error, 'INVALID_ARGUMENTS')
+})
+
 test('read_kit_part reads by id, refuses a missing id, and open_kit_image without images says they are not available', async () => {
   const kit = boxing()
   const [readPart, openImage] = kitTools(kit.doc)
   assert.deepEqual(KIT_TOOL_NAMES, { readPart: 'read_kit_part', openImage: 'open_kit_image' })
   assert.equal(readPart.name, 'read_kit_part')
-  assert.deepEqual(readPart.parameters.required, ['id'])
+  assert.equal(readPart.parameters.required, undefined)
   assert.equal(await readPart.run({ id: 'page-home' }), kitParts(kit.doc).read('page-home'))
   assert.equal(JSON.parse(await readPart.run({})).error, 'INVALID_ARGUMENTS')
   assert.equal(JSON.parse(await readPart.run({ id: 7 })).error, 'INVALID_ARGUMENTS')
@@ -195,12 +279,15 @@ test('the first user message explains the two tools, then gives the brief; the p
   assert.match(text, /read_kit_part/)
   assert.match(text, /open_kit_image/)
   assert.match(text, /"the image tool"[^.]*open_kit_image/)
-  assert.match(text, /read_kit_part\("contents"\)/)
+  assert.match(text, /read_kit_part\(\{"ids": \["contents"\]\}\)|read_kit_part\("contents"\)/)
   assert.match(text, /part by part/)
+  assert.doesNotMatch(text, /one id per call/)
+  assert.match(text, /several/)
+  assert.match(text, /same turn/)
   assert.ok(text.includes(REF), 'the message does not name the kit')
-  const at = text.indexOf('{')
+  const at = text.indexOf('{"')
   assert.ok(at > text.indexOf('open_kit_image'), 'the brief comes before the tools are explained')
-  assert.deepEqual(JSON.parse(text.slice(at)), b)
+  assert.equal(text.slice(at), JSON.stringify(b), 'the brief is not compact JSON')
 
   const prompt = plannerPrompt()
   assert.ok(prompt.sha256.startsWith('1492da55'))
