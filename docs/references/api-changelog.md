@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-04: Template page background
+
+Added key `body_bg_img` to action `template.siteSettings` (Joomla, T4 only, Claude Cowork 0.24.78+): the picture a T4 template paints behind the top of its pages, a path under `images/` of a file already on the site; empty clears it and the template's own background colour shows. An older plugin refuses it with `unsupported` and writes nothing of that set.
+
 ## 2026-11-03: Template kit looks
 
 Staff-only doors under `/api/ops`. Changed: step `template-kit` in `road` of `GET /api/ops/quickstarts` reads `kit-incomplete` while a packed 1440 shot of a page or block has no current look (a short text of what the shot shows, written with `template-kit looks`), with new `params.missingLooks` `[{ kind, id, image, why: "missing" | "stale" }]` (the first eight) and a `reason` naming them; `POST /api/ops/quickstart/inspiration/publish` refuses with `TEMPLATE_KIT_NOT_READY` on it like any incomplete kit. Judged after the template gaps and before the approval; the approval still names only the images.

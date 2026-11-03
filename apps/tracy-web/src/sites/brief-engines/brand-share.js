@@ -34,7 +34,7 @@ const TOO_OLD = 'plugin too old'
 const WHY = (/** @type {unknown} */ error) => (error instanceof Error ? error.message : String(error))
 
 /** The plugin's own version, or null when the site does not say. */
-async function componentOf(/** @type {Function} */ read) {
+export async function componentOf(/** @type {Function} */ read) {
   const info = await read('info', {}).catch(() => null)
   return info?.ok === false ? null : (info?.info?.component ?? null)
 }

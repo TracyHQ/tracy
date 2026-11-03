@@ -495,7 +495,7 @@ list, kept by every later run).
      nothing opaque between) is a frame of the block or a declared image slot; a picture none holds becomes a frame
      (`<block>.picture-N`, `shownAs`, `painter`, `paintedBehind`, `twinOf` when the same painter shows it in an
      earlier block, `canHide: true` for a background, which takes no room) with `writable: false` and the reason,
-     since no content map slot holds it;
+     since no content map slot holds it, unless a setting slot does (a template background, below);
      `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom` and a sample with the first
      words of each paragraph and bullet (`lib/text-format.mjs`), read from the block's real page, including the row
      template of a list with no sample row and the items of a card field; `mainMenuRowLimitMissing`, the main menu
@@ -516,8 +516,14 @@ list, kept by every later run).
   database by the adapter, `lib/site/adapters/joomla-map.mjs`), written as the whole column from
   `writeTo.template` (`<address>`, `<latitude>`, `<longitude>`); only a setting a map button uses is listed.
   `contact-mobile`: a contact block's printed mobile field with no content map slot, written through
-  `<contact>.mobile` with the limit of the contact's telephone line. `cli.mjs setting-slots --out <dir> --contract
-  <dir> --db-command <prefix>` settles a written kit again (no browser, no image), then `pack`.
+  `<contact>.mobile` with the limit of the contact's telephone line. `template-background`
+  (`lib/background-slot.mjs`): the picture a T4 template paints behind the top of its pages from one site setting
+  (`body_bg_img` in `etc/site/<profile>.json`, read by the adapter): one slot `site.body-background` with
+  `writeTo: {action: "template.siteSettings", template, key, file}`, `canHide: true` and the `frames` it covers; every
+  frame painted behind with that picture says `writable: true` and `slotId`, its twins included. Tracy writes it with
+  `apps/tracy-web/src/sites/brief-engines/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
+  `cli.mjs setting-slots --out <dir> --contract <dir> --db-command <prefix> [--webroot <dir>]` settles a written kit
+  again (no browser, no image; without `--webroot` the background slot the kit has is kept), then `pack`.
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and
   `canHide`, the shape the planner reads. The id is stable across rebuilds: `<block>.fixed-<constant>` for a CMS
   line (the words around its placeholder may change), `<block>.fixed-<words>-<hash>` for template words. The check

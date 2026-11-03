@@ -268,6 +268,16 @@ export function joomlaAdapter(source) {
       if (!query || !state.prefix) return null
       return query(mapRowsSql(state.prefix)).map(mapSettingOf).filter(Boolean)
     },
+    /**
+     * The picture a T4 template paints behind the blocks of its pages from its site profile (`body_bg_img`, the
+     * media field's `#joomlaImage` suffix dropped): `[{key, value, template, file}]`, `[]` when the template has none
+     * (or is not T4), null without the database and the web root to read it from.
+     */
+    backgroundSettings() {
+      if (!query || !readFile) return null
+      const value = String(t4?.values.body_bg_img ?? '').split('#')[0]
+      return t4 && value ? [{ key: 'body_bg_img', value, template: state.template, file: t4.file }] : []
+    },
     /** Map entities that are free HTML blocks (no slots but their HTML). */
     isFreeHtml: (entity) => entity?.kind === 'module' && entity.identity?.module === 'mod_custom'
   }

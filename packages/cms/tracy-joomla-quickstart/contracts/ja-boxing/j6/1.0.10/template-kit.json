@@ -10690,11 +10690,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [],
@@ -10870,11 +10870,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -12158,11 +12158,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -13900,11 +13900,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -16571,11 +16571,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -18173,11 +18173,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -19786,11 +19786,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [],
@@ -23110,11 +23110,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -24275,11 +24275,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -40809,11 +40809,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -41267,11 +41267,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -41555,11 +41555,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -41870,11 +41870,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -42192,11 +42192,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -42514,11 +42514,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -42836,11 +42836,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -43133,11 +43133,11 @@
           "shownAs": "background",
           "painter": "div.bg-mask",
           "paintedBehind": true,
-          "writable": false,
-          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "writable": true,
           "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
           "faces": false,
-          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)",
+          "slotId": "site.body-background"
         }
       ],
       "links": [
@@ -64925,6 +64925,41 @@
         "maxCharactersFrom": "the contact's telephone line (contact-1.2): the page prints the mobile line in the same layout, once filled",
         "valueFormat": "a phone number as the page should print it, plain text on one line ((239) 555-0108)",
         "fillFrom": "a second number of the brief's `phone` fact (a mobile or another line); the first number goes to the telephone slot. Without a second number it stays empty and the page prints no mobile line"
+      },
+      {
+        "id": "site.body-background",
+        "kind": "template-background",
+        "writable": true,
+        "writeTo": {
+          "action": "template.siteSettings",
+          "template": "ja_boxing",
+          "key": "body_bg_img",
+          "file": "templates/ja_boxing/etc/site/default.json"
+        },
+        "sample": "images/joomlart/others/bg-cta.jpg",
+        "canHide": true,
+        "frames": [
+          "block-162.picture-1",
+          "body-pages_users_login-form.picture-1",
+          "block-17.picture-1",
+          "body-pages_j-content_author-listting.picture-1",
+          "body-about-us_contact.picture-1",
+          "block-184.picture-1",
+          "block-183.picture-1",
+          "block-178.picture-1",
+          "block-180.picture-1",
+          "body-pages_j-content_author-listting_author_admin.picture-4",
+          "body-pages_j-content_author-listting_author_drew_stokes.picture-3",
+          "body-pages_j-content_author-listting_author_daniel_vasquez.picture-3",
+          "body-pages_j-content_author-listting_author_franklin_wagner.picture-4",
+          "body-pages_j-content_author-listting_author_lorene_bass.picture-4",
+          "body-pages_j-content_author-listting_author_corey_gibson.picture-4",
+          "body-pages_j-content_author-listting_author_cora_stephens.picture-4",
+          "body-pages_j-content_author-listting_author_gene_roberts.picture-3"
+        ],
+        "valueFormat": "a picture path relative to the site root, under images/, of a file already on the site (media.upload first, under a new name each time); empty clears the background",
+        "fillFrom": "the picture wish of the frame in `frames` that has no twinOf (the others are its twins and follow it): a wide photo that suits the business, shown behind the top of every page those frames are on. A hiddenSlots entry for that frame writes it empty: those pages then show the template's own background colour, with its gradient and overlay",
+        "drawnBy": "template site setting body_bg_img (templates/ja_boxing/etc/site/default.json), printed by the template as the CSS background painted behind the blocks of every page that uses it"
       }
     ]
   },

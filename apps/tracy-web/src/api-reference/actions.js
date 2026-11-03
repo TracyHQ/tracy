@@ -897,7 +897,7 @@ export const APPLY_ACTION_DOCS = {
   'template.siteSettings': {
     summary: 'Read or set a Joomla template’s logo, name and favicon',
     description:
-      'A T4 template keeps its logo, its name and slogan and its favicon in a site profile file per template style (`templates/<t>/etc/site/<profile>.json`). `read` (the default) answers the profiles the site’s styles use, each with `source` and the eight keys it holds, and `missing` for a profile no file holds; a template without T4 (T3) answers `other_faviconFile` and `other_shareImage`, its logo being a template style param (`content.update` kind `templateStyle`). `other_shareImage` (0.24.5+, a png, jpg, webp or gif) is the share picture the plugin prints as `og:image`: on a template without T4 on every page, in place of any other; on T4 only where the page’s head has no `og:image` of its own, and only in `fields` (refused inside `profiles`). `set` writes `fields` into every profile a site style uses and `profiles: {<name>: {...}}` into that one, keeps every other byte of each file, and records the previous bytes under `apply_id` so `apply.revert` puts them back. A picture is a path under `images/`, `media/` or a template’s `images/` naming a file already on the site (`media.upload` first, under a new name each time); empty clears it. Any other key is refused with `unsupported` and nothing is written.',
+      'A T4 template keeps its logo, its name and slogan and its favicon in a site profile file per template style (`templates/<t>/etc/site/<profile>.json`). `read` (the default) answers the profiles the site’s styles use, each with `source` and the eight keys it holds, and `missing` for a profile no file holds; a template without T4 (T3) answers `other_faviconFile` and `other_shareImage`, its logo being a template style param (`content.update` kind `templateStyle`). `other_shareImage` (0.24.5+, a png, jpg, webp or gif) is the share picture the plugin prints as `og:image`: on a template without T4 on every page, in place of any other; on T4 only where the page’s head has no `og:image` of its own, and only in `fields` (refused inside `profiles`). `body_bg_img` (0.24.78+, T4 only; an older plugin refuses it with `unsupported` and writes nothing of that set) is the picture a T4 template paints behind the top of its pages, compiled into the page CSS on every page that uses the profile; empty clears it, and the template’s own background colour shows. `set` writes `fields` into every profile a site style uses and `profiles: {<name>: {...}}` into that one, keeps every other byte of each file, and records the previous bytes under `apply_id` so `apply.revert` puts them back. A picture is a path under `images/`, `media/` or a template’s `images/` naming a file already on the site (`media.upload` first, under a new name each time); empty clears it. Any other key is refused with `unsupported` and nothing is written.',
     writes: true,
     platforms: JOOMLA,
     params: {
@@ -919,7 +919,8 @@ export const APPLY_ACTION_DOCS = {
               'site_name',
               'site_slogan',
               'other_faviconFile',
-              'other_shareImage'
+              'other_shareImage',
+              'body_bg_img'
             ].map((key) => [key, { type: 'string', maxLength: 4096 }])
           ),
           additionalProperties: false
