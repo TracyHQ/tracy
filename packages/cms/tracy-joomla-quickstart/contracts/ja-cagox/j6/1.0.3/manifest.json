@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-cagox/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_cagox",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-cagox",
+    "id": "quickstart/ja-cagox/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.2.0"
+    },
+    "template": "ja_cagox",
+    "parts": {
+      "webroot": {
+        "file": "ja-cagox-j6-webroot-1.0.3.tar.gz",
+        "bytes": 107554942,
+        "sha256": "de9428eddc04dcc607ca94f9a947b444a9438831a4634910c9ecac86277b55c0"
+      },
+      "database": {
+        "file": "ja-cagox-j6-database-1.0.3.sql.gz",
+        "bytes": 250287,
+        "sha256": "e9fde4c66b960e1dd9f143210dd0c3340cf9fed93267fc3e696159db5ecb5e96"
+      }
+    },
+    "release": "quickstart/ja-cagox/j6",
+    "repository": "JoomlArt-Products/joomlart-products",
+    "createdAt": "2026-11-03T21:33:52.903Z",
+    "builtFrom": {
+      "from": "quickstart/ja-cagox/j6@1.0.2",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 507 files replaced (templates/ja_cagox/AGENTS.md, templates/ja_cagox/CLAUDE.md, templates/ja_cagox/component.php, templates/ja_cagox/error.php, templates/ja_cagox/favicon.ico, templates/ja_cagox/index.html, templates/ja_cagox/index.php, templates/ja_cagox/index1.php, templates/ja_cagox/offline.php, templates/ja_cagox/templateDetails.xml, templates/ja_cagox/templateHook.php, templates/ja_cagox/templateInfo.php, templates/ja_cagox/template_preview.png, templates/ja_cagox/template_thumbnail.png, templates/ja_cagox/thememagic.xml, templates/ja_cagox/acm, templates/ja_cagox/css, templates/ja_cagox/docs, templates/ja_cagox/etc, templates/ja_cagox/fonts, templates/ja_cagox/html, templates/ja_cagox/images, templates/ja_cagox/js, templates/ja_cagox/language, templates/ja_cagox/less, templates/ja_cagox/tpls); 2 installed language files (language/en-GB/en-GB.tpl_ja_cagox.ini, language/en-GB/en-GB.tpl_ja_cagox.sys.ini); stylesheets read the worn design system (--ds-c-*); demo content: a hidden Reset Password menu item under J! Pages, the trashed VM Shop menu item removed, sample links to \"#\" in the manufacturers descriptions unlinked"
+    }
+  },
+  "coworkContractVersion": "0.24.78",
+  "mode": "content-recommendation"
+}
