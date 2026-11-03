@@ -166,7 +166,7 @@ const px = (v) => {
  * @param {object} side  the worn colours of the side, literal hexes: bg, surface, surfaceWarm, surfaceHover
  *   (the system's own, optional), fg, fg2,
  *   muted, meta, line, lineSoft, accent, accentOn, accentHover, accentActive, accentText,
- *   accentTextHover, ink, onInk; `status` the tuned status colours a CMS already writes ({ success }…),
+ *   accentTextHover, ink, onInk, keepInk (accent-only mode: the ink band is not moved apart from the accent); `status` the tuned status colours a CMS already writes ({ success }…),
  *   `hues` the template's own status hues
  * @param {Record<string, string>} slot  slotVars (corners, faces read off the reference page)
  * @param {{ body?: string | null, display?: string | null, mono?: string | null }} faces  the system's stacks
@@ -188,7 +188,8 @@ export function roleVariableValues(side, slot = {}, faces = {}) {
   const disabledBg = stepAll(mix(bg, fg, dark ? 0.12 : 0.08), fg, grounds, DISABLED.apart)
   const disabledFg = stepAll(disabledBg, fg, [disabledBg, ...grounds], DISABLED.words)
   // the ink band holds the accent-filled button too: it stands out there (3:1), its words still read
-  const ink = apart(side.ink, side.accent, 3)
+  // accent-only mode keeps the ink band as the template has it, wherever the accent sits (side.keepInk)
+  const ink = side.keepInk ? side.ink : apart(side.ink, side.accent, 3)
   const onInk = (contrast(side.onInk, ink) ?? 0) >= 4.5 ? side.onInk : wordsFor(ink, bg, fg)
   // the accent on the ink band: the system's own accent when it already reads 4.5:1 there (a light or
   // yellow accent on a dark band stays vivid: Mailchimp's #ffe01b reads ~13:1 on its ink, while the walk
@@ -270,7 +271,7 @@ export function facesOf(profile) {
  * @param {Record<string, string>} slot  slotVars
  * @param {ReturnType<typeof facesOf>} faces
  */
-export function wornRoleValues({ tokens, text, palette: p }, { ink, onInk }, slot, faces) {
+export function wornRoleValues({ tokens, text, palette: p, keepInk }, { ink, onInk }, slot, faces) {
   const t = text.colours
   return roleVariableValues(
     {
@@ -285,6 +286,7 @@ export function wornRoleValues({ tokens, text, palette: p }, { ink, onInk }, slo
       accentTextHover: t['--ds-accent-text-hover'] ?? t['--ds-accent-text'] ?? p.accentHover,
       ink,
       onInk,
+      keepInk,
       // the status colours tokens56 tuned from the template's own: kept as they are
       status: { success: tokens['--success'], warn: tokens['--warn'], danger: tokens['--danger'] },
       hues: { success: tokens['--success'], warn: tokens['--warn'], danger: tokens['--danger'] }

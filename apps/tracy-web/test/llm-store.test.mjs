@@ -146,6 +146,8 @@ test('readAssignments answers every door, named, even the ones nobody assigned',
   assert.deepEqual(Object.keys(all).sort(), [
     'agent',
     'assistant',
+    'brandAgent',
+    'brandReviewer',
     'seedImage',
     'seedText',
     'sitePlanner',

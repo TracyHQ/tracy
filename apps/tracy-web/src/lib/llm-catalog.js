@@ -216,6 +216,27 @@ export const LLM_DOORS = [
     // on each run (ADR 0041, #301).
     requires: ['tools'],
     prefers: ['vision']
+  },
+  {
+    id: 'brandAgent',
+    label: 'Brand agent',
+    where: 'this process',
+    blurb:
+      'Brand bench: the agent that builds a site’s brand file (accent colour, logos, favicon, name slots) from a brief and a template kit, with tool calls and by looking at pictures. Never an Anthropic model; never the same model as the Brand reviewer.',
+    needsModel: true,
+    // Both REQUIRED: the agent works only through tool calls and judges the template by sight (brand-step/brand-doors.js).
+    requires: ['tools', 'vision'],
+    prefers: []
+  },
+  {
+    id: 'brandReviewer',
+    label: 'Brand reviewer',
+    where: 'this process',
+    blurb:
+      'Brand bench: answers questions about logo and icon pictures for the brand agent, and names the business an icon suggests when it is not told the business. Never an Anthropic model; never the same model as the Brand agent.',
+    needsModel: true,
+    requires: ['vision'],
+    prefers: []
   }
 ]
 

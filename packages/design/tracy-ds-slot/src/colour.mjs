@@ -155,3 +155,6 @@ export function buttonPair(accent, on, hover, ground) {
   if ((contrast(on, ground) ?? 0) >= 3) return { fill: on, text: accent, hover: on, turned: true }
   return null
 }
+
+// The brand step neutral test and accent lift (frozen port of the approved lab rules).
+export * from './colour-lift.mjs'

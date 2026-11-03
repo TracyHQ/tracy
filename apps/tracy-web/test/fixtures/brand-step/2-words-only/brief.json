@@ -1,0 +1,27 @@
+{
+  "brand": {
+    "logo": "b2e1d3c5-8c4f-4d6a-9b72-3eaf608c1d24",
+    "name": "Willow Arch Pilates",
+    "fonts": [],
+    "voice": "English; calm, friendly tone",
+    "accent": {
+      "hex": "#c8693f",
+      "share": 0.31,
+      "source": "logo"
+    },
+    "colors": [
+      {
+        "hex": "#0f4c4a",
+        "role": "primary"
+      },
+      {
+        "hex": "#c8693f",
+        "role": "accent"
+      }
+    ],
+    "origin": "social",
+    "official": false,
+    "colorsFrom": "logo"
+  },
+  "missing": []
+}

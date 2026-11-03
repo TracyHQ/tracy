@@ -92,6 +92,8 @@ test('GET /api/ops/llm answers the catalog even before anything is configured', 
   assert.deepEqual(Object.keys(body.assignments).sort(), [
     'agent',
     'assistant',
+    'brandAgent',
+    'brandReviewer',
     'seedImage',
     'seedText',
     'sitePlanner',
