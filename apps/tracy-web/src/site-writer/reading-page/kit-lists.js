@@ -3,10 +3,11 @@
 //
 // A kit list comes in two shapes: rowKind "slots" (rowSlots are slots, rows[] the demo rows with their own slots) and
 // rowKind "items" (rowSlots are fields, each listing one slot per item the list pulls, e.g. one article per card).
-// Image fields are the image step's, never listed here.
+// Only text slots are listed: image and video fields are the media step's, links and icons are not copy.
 const asArray = (x) => (Array.isArray(x) ? x : [])
+// Text slots only: links, icons and images are not copy, and a video id or an image field is the media step's.
 const isText = (s) =>
-  s && s.type !== 'image' && !/image/.test(String(s.role ?? '')) && typeof s.id === 'string'
+  s && s.type === 'text' && !/image|video/.test(String(s.role ?? '')) && typeof s.id === 'string'
 
 /** The rows of one kit list as [{ item, slots: [kit slot] }]. */
 function rowsOf(list) {

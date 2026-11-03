@@ -361,6 +361,9 @@ test('with the kit, each block shows its lists row by row and the page lists the
       type: 'text',
       sample: 'Book a session'
     })
+    // Not copy: a link and a video id are never listed as left alone.
+    hero.slots.push({ id: 'block-2.10', role: 'contact.cta_url', type: 'url' })
+    hero.slots.push({ id: 'block-2.11', role: 'business.video', type: 'text', sample: 'demo-video-id' })
     hero.lists = [
       {
         id: 'block-2.cards',
