@@ -1,0 +1,100 @@
+// Starting and cancelling a site planner bench run (ADR 0041, #301). A start checks everything a run needs before
+// it is queued (the brief's shape, the kit, the door) and stores what the run will use, so a refused start leaves
+// nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
+// snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
+import { briefShapeProblems } from './brief-shape.js'
+import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
+import { sitePlannerDoor } from './door.js'
+import { readableKits } from './kit-source.js'
+import { CHECKER_VERSION } from './plan-check/check-plan.js'
+import { plannerPrompt } from './planner-prompt.js'
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/** How every bench run calls the model, stored on the run (parity with the reference run, ADR 0041). */
+export const BENCH_HARNESS = Object.freeze({
+  maxTokens: 64000,
+  effort: 'high',
+  cacheTtl: Object.freeze({ system: '1h', rolling: '5m' }),
+  toolImages: 'inline',
+  maxTurns: 150,
+  callTimeoutMs: 20 * 60_000
+})
+
+const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })
+
+/**
+ * Queue one run, or refuse it with a reason and nothing written.
+ * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
+ *   startedBy: string, index?: Map<string, object> }} input `index`: the contracts to find kits in (tests).
+ */
+export async function startBenchRun({ pool, secret, brief, briefSource, kitRef, startedBy, index }) {
+  const problems = briefShapeProblems(brief)
+  if (problems.length)
+    return refuse('SITE_PLANNER_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
+  const kits = readableKits(index ? { index } : {})
+  const kit = kits.find((k) => k.ref === kitRef)
+  if (!kit)
+    return refuse(
+      'SITE_PLANNER_KIT_UNKNOWN',
+      `No readable kit "${kitRef}". Readable kits: ${kits.map((k) => k.ref).join(', ') || 'none'}.`
+    )
+  const door = await sitePlannerDoor({ pool, secret })
+  if (!door.ok) return refuse(door.code, door.reason, door.lacking ? { lacking: door.lacking } : {})
+  const active = await activeRun(pool)
+  if (active) return activeRefusal(active)
+  const created = await createRun(pool, {
+    startedBy,
+    brief,
+    briefSource,
+    kit,
+    promptSha256: plannerPrompt().sha256,
+    checkerVersion: CHECKER_VERSION,
+    door: door.snapshot,
+    harness: BENCH_HARNESS
+  })
+  if (created.error === SITE_PLANNER_RUN_ACTIVE) return activeRefusal(created.active)
+  return { ok: true, run: created.run }
+}
+
+function activeRefusal(active) {
+  const who = active
+    ? `run ${active.id} (started by ${active.startedBy}, step ${active.step})`
+    : 'another run'
+  return refuse(SITE_PLANNER_RUN_ACTIVE, `Only one run at a time: ${who} is still active.`, { active })
+}
+
+/**
+ * Cancel a run. One no worker holds ends at once; one a worker holds is asked to stop, which the worker does
+ * between two model calls (a call in flight is never cut).
+ */
+export async function cancelBenchRun(pool, runId) {
+  if (!UUID.test(String(runId))) return refuse('SITE_PLANNER_RUN_NOT_FOUND', `No run ${runId}.`)
+  const { rows } = await pool.query(
+    `update site_planner_run set status = 'cancelled', step = 'done', cancel_requested_at = coalesce(cancel_requested_at, now()),
+       finished_at = now(), updated_at = now(), lease_token = lease_token + 1
+     where id = $1 and status = 'queued' and (lease_until is null or lease_until < now())
+     returning id`,
+    [runId]
+  )
+  if (rows.length) {
+    await pool.query(
+      `update site_planner_round set state = 'cancelled', finished_at = now() where run_id = $1 and state = 'planning'`,
+      [runId]
+    )
+    return { ok: true, run: await readRun(pool, runId) }
+  }
+  const asked = await requestCancel(pool, runId)
+  if (asked) return { ok: true, run: asked }
+  const run = await readRun(pool, runId)
+  if (!run) return refuse('SITE_PLANNER_RUN_NOT_FOUND', `No run ${runId}.`)
+  return refuse('SITE_PLANNER_RUN_NOT_ACTIVE', `Run ${runId} has already ended (${run.status}).`)
+}
+
+/** The brief of one WO revision by its id. */
+export async function briefOfRevision(pool, revisionId) {
+  if (!UUID.test(String(revisionId))) return { ok: false, code: 'SITE_PLANNER_REVISION_UNKNOWN' }
+  const { rows } = await pool.query('select brief from wo_revision where id = $1', [revisionId])
+  if (!rows[0]) return { ok: false, code: 'SITE_PLANNER_REVISION_UNKNOWN' }
+  return { ok: true, brief: rows[0].brief }
+}
