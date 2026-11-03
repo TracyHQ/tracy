@@ -544,6 +544,80 @@ test('a tool result with an image is sent inline, or as a user message after the
   }
 })
 
+test('an image with a ref is saved as the ref and sent in full; a resume reads it back through resolveImage', async () => {
+  const png = 'iVBORw0KGgo='
+  const ref = { image: 'i1' }
+  const tools = [
+    {
+      name: 'open_image',
+      description: 'Open one image.',
+      parameters: { type: 'object', properties: {} },
+      run: async () => ({ text: 'image i1', images: [{ mediaType: 'image/png', base64: png, ref }] })
+    }
+  ]
+  const url = `data:image/png;base64,${png}`
+  const imagesIn = (request) =>
+    request.body.messages
+      .flatMap((m) => (Array.isArray(m.content) ? m.content : []))
+      .filter((p) => p.type === 'image_url')
+  const saved = []
+  const model = scriptedModel([
+    toolCallReply({ calls: [['open_image', {}]] }),
+    finalReply({ content: 'seen' })
+  ])
+  await runAgent({
+    door: DOOR,
+    system: SYSTEM,
+    firstUser: FIRST,
+    tools,
+    fetchImpl: model.fetchImpl,
+    onTurn: async (turn) => saved.push(turn)
+  })
+  assert.deepEqual(imagesIn(model.requests[1]), [{ type: 'image_url', image_url: { url } }])
+  const turns = saved.filter((t) => t.state === 'answered')
+  assert.doesNotMatch(JSON.stringify(turns), /iVBORw0KGgo=/)
+  assert.deepEqual(turns[1].sent[0].content[1], { type: 'image_ref', ref, media_type: 'image/png' })
+
+  // A follow-up on the saved turns sends the image in full again, resolved once.
+  const resolved = []
+  const next = scriptedModel([finalReply({ content: 'again' })])
+  await runAgent({
+    door: DOOR,
+    system: SYSTEM,
+    firstUser: FIRST,
+    tools,
+    history: turns,
+    followUp: 'look again',
+    fetchImpl: next.fetchImpl,
+    resolveImage: async (r) => {
+      resolved.push(r)
+      return { mediaType: 'image/png', base64: png }
+    }
+  })
+  assert.deepEqual(imagesIn(next.requests[0]), [{ type: 'image_url', image_url: { url } }])
+  assert.deepEqual(resolved, [ref])
+
+  // An image that cannot be read back stops the run before anything is dispatched.
+  const none = scriptedModel([finalReply({ content: 'never' })])
+  const dispatched = []
+  await assert.rejects(
+    runAgent({
+      door: DOOR,
+      system: SYSTEM,
+      firstUser: FIRST,
+      tools,
+      history: turns,
+      followUp: 'look again',
+      fetchImpl: none.fetchImpl,
+      onTurn: async (turn) => dispatched.push(turn),
+      resolveImage: async () => null
+    }),
+    (e) => e instanceof AgentError && e.code === 'AGENT_IMAGE_UNAVAILABLE'
+  )
+  assert.equal(none.requests.length, 0)
+  assert.deepEqual(dispatched, [])
+})
+
 function stripMarkers(m) {
   if (!Array.isArray(m.content)) return m
   return { ...m, content: m.content.map(({ cache_control: _marker, ...p }) => p) }

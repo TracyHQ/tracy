@@ -18,15 +18,24 @@
 //   same error again, nothing is sent.
 // Reasoning details are saved on every assistant message and sent back: Anthropic refuses a tool loop whose earlier
 // thinking comes back unsigned. A cancel (signal) is honoured between turns only; a call in flight is never cut.
+//
+// Images: a tool may return images with a `ref` (any JSON value naming the image). The saved turn then keeps only
+// that reference, never the bytes, and every request carries the full bytes again: an image opened in this process
+// is held in memory once, and a reference read back from saved turns (a resume, a fix round) is turned into bytes by
+// the caller's resolveImage(ref). A reference that cannot be resolved stops the run with AGENT_IMAGE_UNAVAILABLE
+// before the call is dispatched. An image without a ref is saved inline, as it is sent.
 import {
   CACHE_TTLS,
   costOf,
+  IMAGE_REF,
+  imageRefKey,
   providerReason,
   requestBody,
   savedAssistant,
   toolContent,
   totalsOf,
-  usageOf
+  usageOf,
+  wireImage
 } from './agent-over-door-wire.js'
 
 export class AgentError extends Error {
@@ -59,6 +68,7 @@ export async function runAgent({
   fetchImpl = fetch,
   signal,
   followUp,
+  resolveImage,
   ...options
 }) {
   const o = { ...DEFAULTS, ...options, cacheTtl: { ...DEFAULTS.cacheTtl, ...options.cacheTtl } }
@@ -72,15 +82,18 @@ export async function runAgent({
     throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'the door needs baseUrl, apiKey and model' })
 
   const turns = history.map((t) => structuredClone(t))
+  const images = imageCache(resolveImage)
   const { messages, pending: rebuilt, final, resendOf } = rebuild(turns, firstUser)
   const pending = final && followUp ? [{ role: 'user', content: followUp }] : rebuilt
   if (final && !pending) return { answer: final, turns, totals: totalsOf(turns) }
-  let next = pending ?? (await runTools(turns.at(-1).message.tool_calls, tools, o.toolImages))
+  let next = pending ?? (await runTools(turns.at(-1).message.tool_calls, tools, o.toolImages, images))
 
   for (;;) {
     if (signal?.aborted) throw new AgentError('AGENT_ABORTED', { turn: turns.length })
     if (turns.length >= o.maxTurns)
       throw new AgentError('AGENT_TURN_LIMIT', { reason: `${o.maxTurns} model calls` })
+    const wire = await images.hydrate([...messages, ...next], turns.length)
+    const body = requestBody({ model: door.model, system, messages: wire, tools, ...o })
     const turn = {
       n: turns.length,
       state: 'dispatched',
@@ -98,7 +111,6 @@ export async function runAgent({
     }
     turns.push(turn)
     await onTurn(structuredClone(turn))
-    const body = requestBody({ model: door.model, system, messages: [...messages, ...next], tools, ...o })
     const answer = await call(door, body, fetchImpl, o.callTimeoutMs, turn.n).catch(async (error) => {
       Object.assign(turn, {
         state: 'failed',
@@ -132,7 +144,46 @@ export async function runAgent({
     const outcome = outcomeOf(turn)
     if (outcome.error) throw outcome.error
     if (outcome.final !== undefined) return { answer: outcome.final, turns, totals: totalsOf(turns) }
-    next = await runTools(turn.message.tool_calls, tools, o.toolImages)
+    next = await runTools(turn.message.tool_calls, tools, o.toolImages, images)
+  }
+}
+
+// The bytes behind image references: those opened in this process, then those resolveImage reads back. Each
+// distinct image is read once per runAgent call, so a long conversation costs one read per image, not per request.
+function imageCache(resolveImage) {
+  const known = new Map()
+  const wireOf = async (part, n) => {
+    const key = imageRefKey(part.ref)
+    if (!known.has(key)) {
+      const got = resolveImage ? await resolveImage(part.ref) : null
+      if (!got?.base64 || !got?.mediaType)
+        throw new AgentError('AGENT_IMAGE_UNAVAILABLE', {
+          turn: n,
+          reason: `the saved conversation names an image that cannot be read again: ${key.slice(0, 200)}`
+        })
+      known.set(key, wireImage(got))
+    }
+    return known.get(key)
+  }
+  return {
+    remember: (stored, wire) => {
+      if (stored.type === IMAGE_REF) known.set(imageRefKey(stored.ref), wire)
+    },
+    /** The messages as they are sent: every image reference replaced by its image_url part. */
+    async hydrate(messages, n) {
+      const out = []
+      for (const m of messages) {
+        if (!Array.isArray(m.content) || !m.content.some((p) => p?.type === IMAGE_REF)) {
+          out.push(m)
+          continue
+        }
+        const content = []
+        // eslint-disable-next-line no-await-in-loop -- one image at a time, each read at most once.
+        for (const p of m.content) content.push(p?.type === IMAGE_REF ? await wireOf(p, n) : p)
+        out.push({ ...m, content })
+      }
+      return out
+    }
   }
 }
 
@@ -221,7 +272,7 @@ async function call(door, body, fetchImpl, timeoutMs, n) {
 }
 
 // One tool message per call, in call order; images go inline or into one user message after them.
-async function runTools(calls, tools, toolImages) {
+async function runTools(calls, tools, toolImages, cache) {
   const out = []
   const later = []
   for (const c of calls) {
@@ -245,14 +296,16 @@ async function runTools(calls, tools, toolImages) {
           )
     }
     const { text, images } = toolContent(result)
-    const inline = images.length && toolImages === 'inline'
+    for (const image of images) cache.remember(image.stored, image.wire)
+    const stored = images.map((image) => image.stored)
+    const inline = stored.length && toolImages === 'inline'
     out.push({
       role: 'tool',
       tool_call_id: c.id,
-      content: inline ? [{ type: 'text', text }, ...images] : text
+      content: inline ? [{ type: 'text', text }, ...stored] : text
     })
-    if (images.length && !inline)
-      later.push({ type: 'text', text: `Images returned by tool call ${c.id} (${tool.name}):` }, ...images)
+    if (stored.length && !inline)
+      later.push({ type: 'text', text: `Images returned by tool call ${c.id} (${tool.name}):` }, ...stored)
   }
   if (later.length) out.push({ role: 'user', content: later })
   return out

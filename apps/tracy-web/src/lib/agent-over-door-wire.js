@@ -111,16 +111,40 @@ export function providerReason(body) {
   return String(text || 'no reason given').slice(0, 300)
 }
 
-/** A tool's result as message content: a string, or text plus image parts. */
+/**
+ * The part a saved conversation keeps for an image that has a `ref`: the reference, never the bytes. agent-over-door.js
+ * turns it back into an image_url part (the full bytes) before every call; the provider never sees this type.
+ */
+export const IMAGE_REF = 'image_ref'
+
+const imagePart = (img) => ({
+  type: 'image_url',
+  image_url: { url: `data:${img.mediaType};base64,${img.base64}` }
+})
+
+/** The key of an image reference, the same for equal references. */
+export const imageRefKey = (ref) => JSON.stringify(ref)
+
+/**
+ * A tool's result as message content: a string, or text plus images. Each image is { stored, wire }: `wire` is the
+ * image_url part sent to the model, `stored` what the saved conversation keeps (the reference part when the image
+ * carries a `ref`, else the image_url part itself).
+ */
 export function toolContent(result) {
   if (typeof result === 'string') return { text: result, images: [] }
   if (result && typeof result === 'object' && typeof result.text === 'string')
     return {
       text: result.text,
-      images: (Array.isArray(result.images) ? result.images : []).map((img) => ({
-        type: 'image_url',
-        image_url: { url: `data:${img.mediaType};base64,${img.base64}` }
-      }))
+      images: (Array.isArray(result.images) ? result.images : []).map((img) => {
+        const wire = imagePart(img)
+        return {
+          wire,
+          stored: img.ref === undefined ? wire : { type: IMAGE_REF, ref: img.ref, media_type: img.mediaType }
+        }
+      })
     }
   return { text: JSON.stringify(result ?? null), images: [] }
 }
+
+/** An image_url part from the bytes a resolver gave back for a reference. */
+export const wireImage = imagePart
