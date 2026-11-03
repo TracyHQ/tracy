@@ -170,7 +170,7 @@ test('status, list and get show a finished run, and nothing written carries a ke
   assert.match(meta.promptSha256, /^[0-9a-f]{64}$/)
   assert.equal(meta.checkerVersion, 'site-plan-check/1')
   assert.equal(meta.door.model, 'anthropic/claude-opus-5.5')
-  assert.equal(meta.harness.effort, 'high')
+  assert.equal(meta.harness.effort, 'medium')
   const turns = read('turns.jsonl').trim().split('\n').map(JSON.parse)
   assert.equal(turns.length, 2)
   assert.deepEqual(turns[0].toolCalls, [{ name: 'read_kit_part', arguments: '{"id":"contents"}' }])

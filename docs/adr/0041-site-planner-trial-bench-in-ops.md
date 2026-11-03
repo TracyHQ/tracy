@@ -130,3 +130,6 @@
   block, and the dropped text is recorded on the round; two fenced blocks or none stay not a plan.
 - **Both cache markers live one hour.** An answer can take longer than 5 minutes, so the rolling marker is 1h like the
   system one (two markers per request, within Anthropic's four), recorded in the run's harness settings.
+- **Thinking effort is medium (parity with the reference harness).** The Claude Code runs that produced the approved
+  reference plans sent effort medium on every call; high made the first pass about 4.5 minutes longer, almost all of
+  it thinking tokens, with the same output speed.

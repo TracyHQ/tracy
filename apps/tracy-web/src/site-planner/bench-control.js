@@ -18,11 +18,12 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
  * budget is Claude Code's (thinking counts against it, and the reference plan alone is about 50k tokens); a call
  * that long, not streamed, can take well over 20 minutes, hence 45. Transient provider errors are retried. Both cache
  * markers (system and rolling) live one hour: an answer can take longer than 5 minutes, and a 5 minute rolling marker
- * then expires before the next call, which writes the whole conversation to the cache again.
+ * then expires before the next call, which writes the whole conversation to the cache again. Thinking effort is
+ * medium, as in the Claude Code runs that produced the approved reference plans.
  */
 export const BENCH_HARNESS = Object.freeze({
   maxTokens: MAX_OUTPUT_TOKENS,
-  effort: 'high',
+  effort: 'medium',
   cacheTtl: Object.freeze({ system: '1h', rolling: '1h' }),
   toolImages: 'inline',
   maxTurns: 150,
