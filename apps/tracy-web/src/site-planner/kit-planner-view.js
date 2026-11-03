@@ -1,5 +1,6 @@
 // The template kit as the site planner reads it (ADR 0041, #301 cost cuts): the kit without the fields that only
-// record how a value was measured or proved. read_kit_part answers this view; the checker reads the full kit.
+// record how a value was measured or proved, and each page's and block's look as its text alone. read_kit_part
+// answers this view; the checker reads the full kit.
 
 /**
  * Kit fields the planner never reads (#301 cost cuts): how the kit measured or proved a value, never the value itself.
@@ -26,7 +27,20 @@ export const PLANNER_DROPPED_KIT_FIELDS = Object.freeze([
 
 const DROPPED = new Map(PLANNER_DROPPED_KIT_FIELDS.map((d) => [d.field, d.in ?? null]))
 
-/** A kit value as the planner reads it: every field of PLANNER_DROPPED_KIT_FIELDS left out, at any depth. */
+/**
+ * A page's or block's look as the planner reads it: its text alone, or nothing when it has none. The planner plans
+ * from the text (the approved prompt names `look`); the shot's id and sha256 only keep the look current for the
+ * Road to live (lib/template-kit/reader.js looksMissingOf), and the image itself is opened by the ids under `images`.
+ */
+export function lookTextOf(look) {
+  const text = typeof look?.text === 'string' ? look.text.trim() : ''
+  return text === '' ? undefined : text
+}
+
+/**
+ * A kit value as the planner reads it: every field of PLANNER_DROPPED_KIT_FIELDS left out, at any depth, and every
+ * `look` given as its text.
+ */
 export function compactForPlanner(value, holder = '') {
   if (Array.isArray(value)) return value.map((v) => compactForPlanner(v, holder))
   if (value === null || typeof value !== 'object') return value
@@ -35,6 +49,11 @@ export function compactForPlanner(value, holder = '') {
     if (DROPPED.has(key)) {
       const holders = DROPPED.get(key)
       if (!holders || holders.includes(holder)) continue
+    }
+    if (key === 'look') {
+      const text = lookTextOf(v)
+      if (text !== undefined) out.look = text
+      continue
     }
     out[key] = compactForPlanner(v, key)
   }

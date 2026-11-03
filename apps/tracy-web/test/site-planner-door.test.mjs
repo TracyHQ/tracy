@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { doorEntry, LLM_DOORS } from '../src/lib/llm-catalog.js'
 import { assignDoor, readAssignments, saveModels, saveProvider } from '../src/lib/llm-store.js'
-import { SITE_PLANNER_DOOR, sitePlannerDoor } from '../src/site-planner/door.js'
+import { SITE_PLANNER_DOOR, SITE_PLANNER_MODEL, sitePlannerDoor } from '../src/site-planner/door.js'
 import { fileDb } from './_db.mjs'
 
 const db = fileDb()
@@ -14,7 +14,11 @@ after(db.close)
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const SECRET = 's'.repeat(32)
-const MODEL = 'anthropic/claude-opus-5.5'
+const MODEL = SITE_PLANNER_MODEL
+
+test('the planner runs on Claude Sonnet 5.5', () => {
+  assert.equal(SITE_PLANNER_MODEL, 'anthropic/claude-sonnet-5.5')
+})
 
 test('the catalogue has a site planner door that needs tools and vision', () => {
   const door = doorEntry(SITE_PLANNER_DOOR)
@@ -78,6 +82,7 @@ test('an unset door refuses with its reason, even when the environment has a mod
     assert.equal(found.code, 'SITE_PLANNER_DOOR_UNSET')
     assert.match(found.reason, /Site planner/)
     assert.match(found.reason, /Model & AI/)
+    assert.ok(found.reason.includes('anthropic/claude-sonnet-5.5'), 'an unset door names the planner model')
   } finally {
     if (saved === undefined) delete process.env.OPENROUTER_API_KEY
     else process.env.OPENROUTER_API_KEY = saved

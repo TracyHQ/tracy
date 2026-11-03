@@ -63,6 +63,8 @@ export const MODEL_HARNESS = Object.freeze([
       price: DEEPSEEK_FLASH_PRICE
     }
   },
+  // Claude Sonnet 5.5 (the planner's model, door.js SITE_PLANNER_MODEL) and Opus 5.5 alike: OpenRouter lists both with
+  // image input, tools, reasoning_effort, a 1h cache write price and 128000 output tokens on every endpoint (03/11/2026).
   { profile: 'anthropic', match: /^anthropic\//, harness: {} },
   {
     profile: 'deepseek-v4.1-flash',

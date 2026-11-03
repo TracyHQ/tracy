@@ -8,6 +8,7 @@ import { test } from 'node:test'
 import {
   compactForPlanner,
   firstUserMessage,
+  lookTextOf,
   KIT_TOOL_NAMES,
   kitParts,
   kitTools,
@@ -290,6 +291,105 @@ test('the first user message explains the two tools, then gives the brief; the p
   assert.equal(text.slice(at), JSON.stringify(b), 'the brief is not compact JSON')
 
   const prompt = plannerPrompt()
-  assert.ok(prompt.sha256.startsWith('1492da55'))
+  assert.ok(prompt.sha256.startsWith('b48800fb'))
   assert.ok(!prompt.text.includes('read_kit_part') && !prompt.text.includes('open_kit_image'))
+})
+
+/** An invented two-block kit of an invented template, with a look on its page and on one block (none on the other). */
+function harbourKit() {
+  const look = (image, text) => ({ image, sha256: 'a'.repeat(64), text })
+  return {
+    contract: 'harbour-test/j6/0.0.1',
+    template: { name: 'harbour_test', version: '0.0.1' },
+    images: [
+      { id: 'page-home-1440', path: 'images/page-home-1440.jpg', sha256: 'a'.repeat(64) },
+      { id: 'hero-1440', path: 'images/hero-1440.jpg', sha256: 'a'.repeat(64) },
+      { id: 'classes-1440', path: 'images/classes-1440.jpg', sha256: 'b'.repeat(64) }
+    ],
+    pageGroups: [{ id: 'group-home', pages: ['page-home'] }],
+    pages: [
+      {
+        id: 'page-home',
+        group: 'group-home',
+        path: '/',
+        inMainMenu: true,
+        blocks: ['hero', 'classes'],
+        images: { 1440: 'page-home-1440' },
+        look: look(
+          'page-home-1440',
+          'A short light page: photo hero with heading and button, then three class cards.'
+        )
+      }
+    ],
+    blocks: [
+      {
+        id: 'hero',
+        role: 'hero',
+        shared: false,
+        images: { 1440: 'hero-1440' },
+        look: look('hero-1440', '  Full width photo hero, heading and one button on the left.  '),
+        frames: [{ id: 'hero.image-1', kind: 'photo', hideEvidence: { before: 1, after: 1 } }]
+      },
+      { id: 'classes', role: 'features', shared: false, images: { 1440: 'classes-1440' } }
+    ],
+    site: {}
+  }
+}
+
+test('the planner reads each look as its text, beside the page or block it describes, in contents and in its part', () => {
+  const doc = harbourKit()
+  const parts = kitParts(doc)
+  const contents = read(parts, 'contents')
+  assert.deepEqual(contents.pages, [
+    {
+      id: 'page-home',
+      group: 'group-home',
+      path: '/',
+      inMainMenu: true,
+      look: 'A short light page: photo hero with heading and button, then three class cards.'
+    }
+  ])
+  assert.deepEqual(contents.blocks, [
+    {
+      id: 'hero',
+      role: 'hero',
+      shared: false,
+      look: 'Full width photo hero, heading and one button on the left.'
+    },
+    { id: 'classes', role: 'features', shared: false }
+  ])
+  const hero = read(parts, 'hero')
+  assert.equal(hero.look, 'Full width photo hero, heading and one button on the left.')
+  assert.deepEqual(hero.images, { 1440: 'hero-1440' }, 'the image ids stay, so an image can still be opened')
+  assert.equal(hero.frames[0].hideEvidence, undefined)
+  assert.equal(read(parts, 'page-home').look, contents.pages[0].look)
+  assert.ok(!('look' in read(parts, 'classes')), 'a block without a look reads none')
+  // The shot id and sha256 of a look are for the Road to live, not for the planner.
+  assert.ok(!parts.read('hero').includes('sha256') && !parts.read('page-home').includes('sha256'))
+  // The kit itself keeps the whole look: the Road to live and the checker read the full kit.
+  assert.equal(doc.blocks[0].look.image, 'hero-1440')
+})
+
+test('a look with no text is left out of the planner view', () => {
+  assert.equal(lookTextOf(undefined), undefined)
+  assert.equal(lookTextOf({ image: 'x-1440', sha256: 'a'.repeat(64), text: '   ' }), undefined)
+  assert.equal(lookTextOf({ text: ' Two columns. ' }), 'Two columns.')
+  assert.deepEqual(compactForPlanner({ id: 'b', look: { image: 'b-1440' } }), { id: 'b' })
+})
+
+test('the first user message says to plan from the looks when the kit has them, and opens images only by need', () => {
+  const withLooks = firstUserMessage({
+    kit: { ref: 'harbour-test/j6/0.0.1', doc: harbourKit() },
+    brief: brief()
+  })
+  assert.match(
+    withLooks,
+    /also gives the look of every page and block that has one[^\n]*plan from these looks/
+  )
+  assert.match(withLooks, /Open an image only where your instructions say a look cannot settle a decision/)
+  const bare = harbourKit()
+  for (const item of [...bare.pages, ...bare.blocks]) delete item.look
+  const without = firstUserMessage({ kit: { ref: 'harbour-test/j6/0.0.1', doc: bare }, brief: brief() })
+  assert.doesNotMatch(without, /plan from these looks/)
+  assert.match(without, /open_kit_image/)
 })

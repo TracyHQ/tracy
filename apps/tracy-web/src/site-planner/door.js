@@ -6,12 +6,18 @@ import { lookupDoor } from '../lib/llm-store.js'
 
 export const SITE_PLANNER_DOOR = 'sitePlanner'
 
+/**
+ * The model the bench's planner runs on (ADR 0041 amendment): Claude Sonnet 5.5 through OpenRouter, since the
+ * planner reads looks instead of opening kit images. The door is still set in /ops; an unset door names this model.
+ */
+export const SITE_PLANNER_MODEL = 'anthropic/claude-sonnet-5.5'
+
 const WHERE = '/ops › Model & AI'
 
 const REFUSALS = {
   unassigned: [
     'SITE_PLANNER_DOOR_UNSET',
-    `The "Site planner" door has no provider and model. Set it in ${WHERE}.`
+    `The "Site planner" door has no provider and model. Set it in ${WHERE} (the planner runs on ${SITE_PLANNER_MODEL}).`
   ],
   disabled: [
     'SITE_PLANNER_DOOR_DISABLED',
@@ -42,7 +48,7 @@ export async function sitePlannerDoor({ pool, secret }) {
     return {
       ok: false,
       code: 'SITE_PLANNER_DOOR_UNSET',
-      reason: `The "Site planner" door names no model. Set it in ${WHERE}.`
+      reason: `The "Site planner" door names no model. Set it in ${WHERE} (the planner runs on ${SITE_PLANNER_MODEL}).`
     }
   // Refuse only what the provider says is missing; an unlisted model passes, as on assignment (ops/llm.js).
   const metadata = found.snapshot.metadata

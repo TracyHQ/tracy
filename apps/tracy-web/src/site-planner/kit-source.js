@@ -6,14 +6,15 @@
 // by the id that reads it), "site.<key>" (one site-wide part in full), any other top-level list or object small enough
 // to read whole ("pageGroups", "pages", "templateGaps", ...), a page group id, a page id and a block id. A part is
 // answered as compact JSON, without the measurement and evidence fields the approved prompt never uses
-// (PLANNER_DROPPED_KIT_FIELDS); the checker still reads the whole kit. read_kit_part takes one id or a list of ids.
+// (PLANNER_DROPPED_KIT_FIELDS) and with each page's and block's look as its text, which "contents" also lists beside
+// every page and block id; the checker still reads the whole kit. read_kit_part takes one id or a list of ids.
 // open_kit_image answers one kit image from the images made ready by kit-images.js (#302); without them it says
 // images are not available.
 import { defaultContracts } from '../lib/contracts.js'
 import { kitOfContract } from '../lib/template-kit/reader.js'
-import { compactForPlanner } from './kit-planner-view.js'
+import { compactForPlanner, lookTextOf } from './kit-planner-view.js'
 
-export { compactForPlanner, PLANNER_DROPPED_KIT_FIELDS } from './kit-planner-view.js'
+export { compactForPlanner, lookTextOf, PLANNER_DROPPED_KIT_FIELDS } from './kit-planner-view.js'
 
 export const KIT_TOOL_NAMES = Object.freeze({ readPart: 'read_kit_part', openImage: 'open_kit_image' })
 
@@ -109,8 +110,19 @@ export function kitParts(kitDoc) {
     images: Array.isArray(doc.images) ? doc.images.length : 0,
     parts: listed,
     pageGroups: list(doc.pageGroups).map((g) => g.id),
-    pages: list(doc.pages).map((p) => ({ id: p.id, group: p.group, path: p.path, inMainMenu: p.inMainMenu })),
-    blocks: list(doc.blocks).map((b) => ({ id: b.id, role: b.role, shared: b.shared })),
+    pages: list(doc.pages).map((p) => ({
+      id: p.id,
+      group: p.group,
+      path: p.path,
+      inMainMenu: p.inMainMenu,
+      ...(p.look ? { look: p.look } : {})
+    })),
+    blocks: list(doc.blocks).map((b) => ({
+      id: b.id,
+      role: b.role,
+      shared: b.shared,
+      ...(b.look ? { look: b.look } : {})
+    })),
     readWholeOnlyByEntryId: tooLarge
   }
   add('contents', contents)
@@ -244,17 +256,24 @@ export function kitTools(doc, { images } = {}) {
 }
 
 /**
- * The first user message of a run: how to use the two tools (the approved prompt names neither), then the brief.
+ * The first user message of a run: how to use the two tools (the approved prompt names neither) and, when the kit
+ * has looks, where they are read, then the brief.
  * @param {{ kit: { ref: string, doc: any }, brief: object }} input
  */
 export function firstUserMessage({ kit, brief }) {
   const { readPart, openImage } = KIT_TOOL_NAMES
   const template = kit.doc.template ? ` (template ${kit.doc.template.name} ${kit.doc.template.version})` : ''
+  const hasLooks = [...list(kit.doc.pages), ...list(kit.doc.blocks)].some((item) => lookTextOf(item.look))
   return [
     `Input 2, the template kit, is ${kit.ref}${template}. It is not in this message: read it part by part with your two tools.`,
     '',
     `- ${readPart} answers parts of the kit as JSON. Start with ${readPart}("contents"): it lists what the kit holds and every part id. Then read the parts as your work reaches them: "site" (the site-wide parts; a large one is named there by its own id, such as "site.fixedTexts"), "pageGroups", "pages", a page group id, a page id or a block id. Give it one id, or several as ids (a list) to read them in one call.`,
-    `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}.`,
+    ...(hasLooks
+      ? [
+          `- ${readPart}("contents") also gives the look of every page and block that has one, and a page or block part carries its own: plan from these looks.`
+        ]
+      : []),
+    `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. Open an image only where your instructions say a look cannot settle a decision.`,
     '- You may call the tools several times in the same turn: ask for every part and image you need next at once, rather than one per turn.',
     '',
     'Input 1, the brief, is this JSON:',

@@ -5,11 +5,12 @@
 import assert from 'node:assert/strict'
 import { assignDoor, saveProvider } from '../src/lib/llm-store.js'
 import { startBenchRun } from '../src/site-planner/bench-control.js'
+import { SITE_PLANNER_MODEL } from '../src/site-planner/door.js'
 import { brief } from './_site-plan-check-inputs.mjs'
 
 export const SECRET = 's'.repeat(32)
 export const KIT_REF = 'ja-boxing/j6/1.0.10'
-export const MODEL = 'anthropic/claude-opus-5.5'
+export const MODEL = SITE_PLANNER_MODEL
 /** DeepSeek V4.1 Flash as OpenRouter lists it (the 17/10/2026 snapshot), for the one comparison run. */
 export const DEEPSEEK_FLASH = 'deepseek/deepseek-v4.1-flash-1017'
 export const API_KEY = 'sk-or-test-secret-key'

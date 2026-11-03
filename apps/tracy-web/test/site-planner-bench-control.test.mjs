@@ -213,3 +213,18 @@ test('a brief is read from a WO revision by its id', opts, async () => {
   const missing = await briefOfRevision(pool, '00000000-0000-4000-8000-000000000000')
   assert.equal(missing.code, 'SITE_PLANNER_REVISION_UNKNOWN')
 })
+
+test('the planner model, Claude Sonnet 5.5, runs on the anthropic profile with the bench harness as it is', () => {
+  // OpenRouter, read 03/11/2026: anthropic/claude-sonnet-5.5 takes text and image input, tools, reasoning and
+  // reasoning_effort, lists a 1h cache write price, and every endpoint allows 128000 output tokens.
+  const h = benchHarnessFor(MODEL, 'openrouter')
+  assert.equal(MODEL, 'anthropic/claude-sonnet-5.5')
+  assert.deepEqual(h, { ...BENCH_HARNESS, modelProfile: 'anthropic' })
+  assert.equal(h.maxTokens, 128000)
+  assert.equal(h.effort, 'medium')
+  assert.deepEqual(h.cacheTtl, { system: '1h', rolling: '1h' })
+  assert.equal(h.toolImages, 'inline')
+  assert.equal(h.cacheMarkers, true)
+  // Opus, the model of the reference runs, keeps the same profile.
+  assert.deepEqual(benchHarnessFor('anthropic/claude-opus-5.5', 'openrouter'), h)
+})

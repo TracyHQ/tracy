@@ -36,9 +36,12 @@ What the template is made of, in words that do not depend on the CMS. Every part
 
 - `pageGroups[]`: a page, or a listing page with its child pages (a blog with its posts, author pages, tag
   pages and further result pages). You decide a group once; its children follow.
-- `pages[]`: `{ id, group, path, inMainMenu, blocks[], images }`. Each page lists the blocks a visitor sees
-  on it, top to bottom, at desktop and phone width, with one overview image per width.
-- `blocks[]`: `{ id, role, shared, images, lists[], frames[], links[], fixedText[], demoOwned[] }`.
+- `pages[]`: `{ id, group, path, inMainMenu, blocks[], images, look }`. Each page lists the blocks a visitor
+  sees on it, top to bottom, at desktop and phone width, with one overview image per width. `look` says in
+  plain words what the desktop overview image shows.
+- `blocks[]`: `{ id, role, shared, images, look, lists[], frames[], links[], fixedText[], demoOwned[] }`.
+  - `look`: what the block's desktop image shows, in plain words: layout, columns, pictures, headings,
+    buttons, how dense it is.
   - `shared`: the block appears on several pages (header, footer, a call to action band). Decide it once.
   - `lists[]`: `{ id, rowKind, min, max, rowSlots }`. A repeating set. `rowKind` is `slots` (a card made of
     text, image and link slots) or `items` (each row is a content item of its own: a post, a service page,
@@ -67,14 +70,15 @@ What the template is made of, in words that do not depend on the CMS. Every part
   never decide them. The brand step fills every slot listed in `nameSlots` with the business name, so you
   neither write nor hide those slots, even when they are also listed in a block's `demoOwned`.
 - Images, named by `id`, at desktop and phone width: one overview of a representative page per page group,
-  and one image per block (a shared block has one image, not one per page). You plan from the desktop images;
-  the phone images are for the writer and the reviewer. You do not receive the images up front: open each
-  one by its `id` with the image tool when your work reaches it.
+  and one image per block (a shared block has one image, not one per page). You plan from the desktop images,
+  read through their `look`; the phone images are for the writer and the reviewer. You do not receive the
+  images: open one by its `id` with the image tool only when a look cannot settle a decision (below).
 
 ## What the images are for
 
-The kit's words say what you may change. The images show what a visitor will see. Look at the desktop
-image of every block on a kept page before you decide on it, and use it for these decisions:
+The kit's words say what you may change. The images show what a visitor will see, and each `look` says
+what its desktop image shows. Read the look of every block on a kept page before you decide on it, and use
+it for these decisions:
 
 - **Pictures.** Where each frame sits, how big it is, and how much of the block it carries, so the picture
   you describe suits its place.
@@ -83,9 +87,14 @@ image of every block on a kept page before you decide on it, and use it for thes
   what you keep.
 - **Repeats.** Blocks that look alike on one page, so the same message is not planned twice.
 
+Plan from the looks. Open a desktop image only when a decision you must make cannot be settled from the
+look and the kit's words: the look does not say where a frame sits or how much of the block it carries, it
+gives no count of cards in a row, two blocks on one page may repeat each other and their looks cannot tell,
+or the page or block has no `look`. Never open an image just to confirm what a look already says.
+
 ## One job per block
 
-A block is a design, not its demo content. Read what it can carry from its image and its slots (a wide band
+A block is a design, not its demo content. Read what it can carry from its look and its slots (a wide band
 with one big line and a button is a call to action; a row of cards with icons is a set of points), then give
 it the content that best serves this page's story. The demo's words only show one way to use it; never keep
 a job because the demo had it. Each kept block on a page has its own job. When two blocks could both show the
@@ -261,9 +270,10 @@ moment exists (no outdoor seating in the brief), the row should not exist either
 
 1. Read the whole brief. Write down what the business really offers, who it serves, its proof, its contact
    channels and the one action a visitor should take.
-2. Look in two passes, so you never load what you will not use. First pass: the desktop overview of every
-   page group, enough to decide which groups stay and what the menu holds. Second pass: for kept pages only,
-   open the desktop image of each block as you decide it. Never open a block image of a dropped group.
+2. Look in two passes, so you never load what you will not use. First pass: the look of the desktop
+   overview of every page group, enough to decide which groups stay and what the menu holds. Second pass:
+   for kept pages only, read the look of each block as you decide it. Never open a block image of a dropped
+   group.
 3. Decide page groups, then the main menu, then shared blocks, then each kept page's own blocks.
 4. For each list, count the true items in the brief first, then choose the row count. Then write what all
    rows share; it goes once in the block's own text slots (its heading, its intro). Then, for each row,
@@ -363,9 +373,10 @@ A picture wish:
   it in words in `seen`; give it no id of your own. Anything the kit lists, even as `writable: false`, is
   never a kit gap. A kit gap seen on one page of a group: check and report it for every page of that group.
 - A dropped page carries only `id`, `decision: "drop"` and `why`; every other field is for kept pages.
-- `seen`: one line on what the block's image shows, in your own words: layout, cards per row, frame shapes,
-  picture or text weight (for example "3 portrait cards in one row, photo fills the top half"). The
-  reviewer checks it against the same image, so write what is there, not what the kit's words suggest.
+- `seen`: one line on what the block's image shows, in your own words, taken from its `look` (or from the
+  image, when you opened it): layout, cards per row, frame shapes, picture or text weight (for example "3
+  portrait cards in one row, photo fills the top half"). The reviewer checks it against the same image, so
+  write what is there, not what the kit's words suggest.
 - `basis`, in block copy and in row copy alike: `brief` when the line rests on the brief, and then
   `factIds` names the facts; `trade` when it rests on trade knowledge. A label (a page title, a button's
   words, a short lead-in) that says nothing about the business is `trade` and cites no fact: "Contact us",
@@ -433,7 +444,7 @@ The plan is closed: nothing in the kit is left without a decision.
 - Is every frame that shows a named person `match: "person"`, with `person` set and no scene in `shows`?
 - Does every `cutout` frame have a picture wish with one clear subject? Does any icon of the demo's trade
   stay on the site?
-- Did you write `seen` from the image, for every block?
+- Did you write `seen` from the look or the image, for every block?
 - Is every id in the plan one the kit or the brief gives? Is everything the kit does not list in `kitGaps`
   only, and nowhere in `copy`, `hiddenSlots`, `pictures` or `links`?
 - For every kept block, did you decide its own heading and intro slots (in `copy` or `hiddenSlots`), not
@@ -444,7 +455,8 @@ The plan is closed: nothing in the kit is left without a decision.
   kit gives?
 - Does every link name the kit's label slot in `labelSlot` (or null when the kit ties none), with its
   words only in that slot's `text`?
-- Did you open the 1440 image of every kept block and the overview image of every page group?
+- Did you read the look of every kept block and of every page group's overview, and open an image only
+  where a look could not settle a decision?
 - Is there any number, price, person or hour without a fact id?
 - Is every footer column one section (a parent page and its children)? Is every kept page except Home in
   exactly one column? Does any social row lack a fact?

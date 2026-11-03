@@ -163,3 +163,20 @@
   output, USD per million tokens); the turn's request keeps that table and the turn reads `costSource: 'price-table'`.
   The table is assumed until checked against DeepSeek's pricing page, and the 128000 output budget is not yet measured
   on DeepSeek's own API; both live in the profile. OpenRouter runs keep the rule above: the provider's cost or none.
+- **The planner reads looks instead of opening every image (prompt change, approved by Akemi on 03/11/2026).** A
+  measured Opus run opened about 40 kit images, about $1.4 of its $5.72. Every page and block of a kit may now carry a
+  `look`, a short plain text of what its 1440 shot shows (layout, columns, pictures, headings, buttons, density), written
+  once per kit version by the packager. Akemi unlocked the prompt for this change only, on 03/11/2026: the kit shape
+  names `look`, the planner plans from the looks and opens a desktop image only when a decision cannot be settled from
+  a look and the kit's words (where a frame sits, how many cards sit in a row, two blocks that may repeat, a part with no
+  look), never just to confirm, and `seen` is taken from the look, or from the image when it was opened. Every other
+  rule and every output field is unchanged; the image tool stays. The new prompt's sha256 is
+  `b48800fb2f25e678c356bc5f6fa5548c2ca1a58da7ed550754c1f36379ebbdb8` (was `1492da55...`). `read_kit_part` gives each
+  look as its text alone, beside its page or block in `contents` and in the page or block part; the shot id and sha256
+  that keep a look current are left out of the planner's view, and the checker still reads the full kit.
+- **The planner runs on Claude Sonnet 5.5 (refines decision 4).** With looks in place of most images, the bench's
+  model is `anthropic/claude-sonnet-5.5` through OpenRouter (`SITE_PLANNER_MODEL`, named by the door's refusal when it
+  is unset); the door is still set in `/ops`. It keeps the `anthropic` profile unchanged: OpenRouter's model list and
+  endpoints, read 03/11/2026, give it text and image input, tools, `reasoning` and `reasoning_effort`, a 1h cache write
+  price, and 128000 output tokens on every endpoint, so effort medium, both 1h cache markers and the 128000 output
+  budget stay as they are.
