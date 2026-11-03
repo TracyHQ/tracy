@@ -6,9 +6,10 @@
 // The provider's own cost always wins when it sends one. Prices are USD per million tokens, matched on the model id
 // without its vendor prefix.
 //   deepseek flash: DeepSeek's pricing page at the peak rate (site-planner/bench-control.js, read 03/11/2026).
-//   gpt-6-luna and the picture model: CEILINGS, not list prices. No pricing page was read for them on 03/11/2026, so
-//   they are set above the usual rate of their class, so that an estimate overcounts toward the cap. Replace them with
-//   list prices when someone reads them.
+//   gpt-6-luna: OpenRouter's public model list, 0.10 per million input and 0.50 per million output (read 03/11/2026);
+//   no separate cache-hit rate is listed, so a cache hit counts at the input rate.
+//   picture model: OpenRouter lists it per token; a measured drawing call cost about 0.034 USD (03/11/2026). Its token
+//   rates stay a CEILING above that class and its per-call ceiling sits just above the measured call.
 import { costOf, usageOf } from '../lib/agent-over-door-wire.js'
 import { DEEPSEEK_FLASH_PRICE } from '../site-planner/bench-control.js'
 
@@ -21,8 +22,8 @@ const price = (inputCacheHit, inputCacheMiss, output, callCeiling) => ({
 
 export const BRAND_PRICES = Object.freeze([
   { match: /^deepseek-(v4\.1-)?flash/, price: { ...DEEPSEEK_FLASH_PRICE.peak, callCeiling: 0.25 } },
-  { match: /^gpt-6-luna/, price: price(0.5, 5, 30, 0.25) },
-  { match: /^gemini-3\.1-flash-lite-image/, price: price(0.1, 1, 60, 0.15) }
+  { match: /^gpt-6-luna/, price: price(0.1, 0.1, 0.5, 0.05) },
+  { match: /^gemini-3\.1-flash-lite-image/, price: price(0.1, 1, 60, 0.05) }
 ])
 
 const bare = (model) =>
