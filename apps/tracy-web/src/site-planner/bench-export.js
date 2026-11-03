@@ -1,0 +1,129 @@
+// What the site planner bench CLI shows and downloads of one run (ADR 0041, #301). Pure: a run as readRun returns it
+// and its turns in, text and files out. Nothing here carries a key: the door snapshot names the provider and model,
+// never the credential, and a turn is summarised (tool calls, sizes, usage, cost), not copied.
+
+const usd = (value) => `$${Number(value ?? 0).toFixed(4)}`
+
+function duration(run, now) {
+  const from = Date.parse(run.createdAt)
+  const to = run.finishedAt ? Date.parse(run.finishedAt) : now
+  const s = Math.max(0, Math.round((to - from) / 1000))
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${h ? `${h}h ` : ''}${pad(m)}m ${pad(s % 60)}s${run.finishedAt ? '' : ' (still running)'}`
+}
+
+function checkerLine(run) {
+  const checked = [...run.rounds].reverse().find((r) => r.checkResult?.summary)
+  if (!checked) return 'no round checked yet'
+  const { pass, fail, skip } = checked.checkResult.summary
+  return `${run.checkerVersion}: ${pass} pass, ${fail} fail, ${skip} skip (round ${checked.round})`
+}
+
+/** The status of one run, one "label  value" line each. */
+export function statusLines(run, now = Date.now()) {
+  const rows = [
+    ['run', run.id],
+    ['state', `${run.status} (step ${run.step}, round ${run.round})`],
+    ['started', `by ${run.startedBy} at ${run.createdAt}`],
+    ['brief', briefLabel(run.briefSource)],
+    ['kit', run.kitRef],
+    ['model', run.model],
+    ['turns', `${run.totals.turns} answered of ${run.totals.calls} calls`],
+    [
+      'cost',
+      `${usd(run.costUsd)} (cached tokens ${run.totals.cachedTokens}, without cost ${run.totals.turnsWithoutCost})`
+    ],
+    ['duration', duration(run, now)],
+    ['checker', checkerLine(run)],
+    ['attempts', String(run.attempts)]
+  ]
+  if (run.cancelRequestedAt) rows.push(['cancel', `asked at ${run.cancelRequestedAt}`])
+  if (run.error) rows.push(['error', run.error])
+  return rows.map(([label, value]) => `${label.padEnd(9)} ${value}`)
+}
+
+/** One line per run, newest first. */
+export function listLines(runs) {
+  if (!runs.length) return ['no runs yet']
+  return runs.map((r) =>
+    [r.id, r.status.padEnd(9), r.step.padEnd(8), usd(r.costUsd), r.kitRef, r.startedBy, r.createdAt].join(
+      '  '
+    )
+  )
+}
+
+export function briefLabel(source) {
+  if (source?.kind === 'revision') return `WO revision ${source.revisionId}`
+  if (source?.kind === 'file') return `file ${source.name}`
+  return 'unknown'
+}
+
+/** One turn, compact: what was asked of the tools, how much went each way, usage and cost. */
+export function compactTurn(turn) {
+  const content = turn.message?.content
+  return {
+    n: turn.n,
+    round: turn.round,
+    state: turn.state,
+    finishReason: turn.finishReason ?? null,
+    toolCalls: (turn.message?.tool_calls ?? []).map((c) => ({
+      name: c.function?.name ?? null,
+      arguments: c.function?.arguments ?? null
+    })),
+    answerCharacters: typeof content === 'string' ? content.length : 0,
+    reasoningCharacters: typeof turn.message?.reasoning === 'string' ? turn.message.reasoning.length : 0,
+    sent: (turn.sent ?? []).map((m) => ({
+      role: m.role,
+      ...(m.tool_call_id ? { toolCallId: m.tool_call_id } : {}),
+      characters: JSON.stringify(m.content ?? '').length
+    })),
+    usage: turn.usage ?? null,
+    costUsd: turn.cost ?? null,
+    providerModel: turn.providerModel ?? null,
+    generationId: turn.generationId ?? null,
+    ...(turn.refusal ? { refusal: turn.refusal } : {}),
+    ...(turn.error ? { error: turn.error } : {}),
+    dispatchedAt: turn.dispatchedAt,
+    answeredAt: turn.answeredAt ?? null
+  }
+}
+
+/** Every file `get` writes, as [name, text]. Round r is version r + 1 (plan-v1.json is round 0's plan). */
+export function runFiles(run, turns) {
+  const json = (value) => `${JSON.stringify(value, null, 2)}\n`
+  const { brief, rounds, ...meta } = run
+  const files = [
+    [
+      'run.json',
+      json({
+        ...meta,
+        // The round's answer, plan, check and failure list are files of their own.
+        rounds: rounds.map((r) => ({
+          round: r.round,
+          state: r.state,
+          costUsd: r.costUsd,
+          error: r.error,
+          startedAt: r.startedAt,
+          finishedAt: r.finishedAt,
+          summary: r.checkResult?.summary ?? null
+        }))
+      })
+    ],
+    ['brief.json', json(brief)]
+  ]
+  for (const r of rounds) {
+    const v = r.round + 1
+    if (r.plan) files.push([`plan-v${v}.json`, json(r.plan)])
+    else if (r.answer) files.push([`answer-v${v}.txt`, r.answer])
+    if (r.checkResult) files.push([`check-v${v}.json`, json(r.checkResult)])
+    if (r.failureList !== null && r.failureList !== undefined)
+      files.push([`failures-v${v}.txt`, r.failureList])
+  }
+  files.push([
+    'turns.jsonl',
+    turns.map((t) => JSON.stringify(compactTurn(t))).join('\n') + (turns.length ? '\n' : '')
+  ])
+  return files
+}
