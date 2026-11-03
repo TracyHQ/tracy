@@ -820,3 +820,107 @@ test('a non-Anthropic model: no cache markers, images in a user message, reasoni
   assert.deepEqual(result.turns[0].request.provider, provider)
   assert.equal(result.turns[0].request.toolImages, 'user-message')
 })
+
+// A reply as DeepSeek's own API sends it: thinking in reasoning_content, cache hits and misses in usage, no cost.
+const deepseekUsage = ({ hit = 0, miss = 1000, completion = 200 } = {}) => ({
+  prompt_tokens: hit + miss,
+  completion_tokens: completion,
+  total_tokens: hit + miss + completion,
+  prompt_tokens_details: { cached_tokens: hit },
+  completion_tokens_details: { reasoning_tokens: 50 },
+  prompt_cache_hit_tokens: hit,
+  prompt_cache_miss_tokens: miss
+})
+const deepseekReply = (reply, thinking, usage) => {
+  const { reasoning: _openRouterField, ...message } = reply.body.choices[0].message
+  return {
+    body: {
+      ...reply.body,
+      choices: [{ ...reply.body.choices[0], message: { ...message, reasoning_content: thinking } }],
+      usage
+    }
+  }
+}
+const PRICE = { inputCacheHit: 0.03, inputCacheMiss: 0.3, output: 1.2 }
+
+test('the deepseek-native wire: reasoning_effort, no OpenRouter fields, reasoning_content sent back, cost from the price table', async () => {
+  const model = scriptedModel([
+    deepseekReply(
+      toolCallReply({ calls: [['read_part', { id: 'p1' }]] }),
+      'first thought',
+      deepseekUsage({ miss: 1000, completion: 200 })
+    ),
+    deepseekReply(
+      toolCallReply({ calls: [['read_part', { id: 'p2' }]] }),
+      'second thought',
+      deepseekUsage({ hit: 900, miss: 300, completion: 100 })
+    ),
+    deepseekReply(finalReply({ content: '{"answer":"p2"}' }), 'done', deepseekUsage({ hit: 1100, miss: 100 }))
+  ])
+  const result = await runAgent({
+    door: { ...DOOR, baseUrl: 'https://api.deepseek.example.test', model: 'deepseek-flash' },
+    system: SYSTEM,
+    firstUser: FIRST,
+    tools: catalogueTools(),
+    fetchImpl: model.fetchImpl,
+    wire: 'deepseek-native',
+    toolImages: 'user-message',
+    cacheMarkers: false,
+    effort: 'high',
+    maxTokens: 64000,
+    price: PRICE
+  })
+  assert.equal(result.answer, '{"answer":"p2"}')
+  for (const { body } of model.requests) {
+    assert.equal(body.reasoning_effort, 'high')
+    assert.equal(body.max_tokens, 64000)
+    for (const absent of ['reasoning', 'usage', 'provider']) assert.equal(body[absent], undefined, absent)
+    assert.doesNotMatch(JSON.stringify(body), /cache_control/)
+  }
+  // Every earlier assistant turn goes back with its reasoning_content, as DeepSeek requires in a tool loop.
+  const assistants = (n) => model.requests[n].body.messages.filter((m) => m.role === 'assistant')
+  assert.deepEqual(
+    assistants(1).map((m) => m.reasoning_content),
+    ['first thought']
+  )
+  assert.deepEqual(
+    assistants(2).map((m) => m.reasoning_content),
+    ['first thought', 'second thought']
+  )
+  // (hit x 0.03 + miss x 0.30 + output x 1.20) per million tokens.
+  assert.deepEqual(
+    result.turns.map((t) => t.cost),
+    [0.00054, 0.000237, 0.000303]
+  )
+  assert.ok(result.turns.every((t) => t.costSource === 'price-table'))
+  assert.deepEqual(result.turns[0].request.price, PRICE)
+  assert.equal(result.turns[0].request.wire, 'deepseek-native')
+  assert.equal(result.totals.cost, 0.00108)
+  assert.equal(result.totals.turnsWithoutCost, 0)
+})
+
+test('the deepseek-native wire refuses provider routing and a malformed price table before any call', async () => {
+  const model = scriptedModel([finalReply({ content: 'ok' })])
+  const base = { door: DOOR, system: SYSTEM, firstUser: FIRST, fetchImpl: model.fetchImpl }
+  await assert.rejects(
+    runAgent({ ...base, wire: 'deepseek-native', provider: { order: ['deepseek'] } }),
+    (e) => e.code === 'AGENT_SETTINGS_INVALID'
+  )
+  await assert.rejects(
+    runAgent({ ...base, wire: 'deepseek-native', price: { output: 1 } }),
+    (e) => e.code === 'AGENT_SETTINGS_INVALID'
+  )
+  await assert.rejects(runAgent({ ...base, wire: 'grpc' }), (e) => e.code === 'AGENT_SETTINGS_INVALID')
+  assert.equal(model.requests.length, 0)
+})
+
+test('the OpenRouter wire with no price table never computes a cost', async () => {
+  const model = scriptedModel([
+    deepseekReply(finalReply({ content: 'ok' }), 'thought', deepseekUsage({ hit: 500, miss: 500 }))
+  ])
+  const result = await runAgent({ door: DOOR, system: SYSTEM, firstUser: FIRST, fetchImpl: model.fetchImpl })
+  assert.equal(result.turns[0].cost, null)
+  assert.equal(result.turns[0].costSource, undefined)
+  assert.equal(result.turns[0].request.wire, undefined)
+  assert.deepEqual(model.requests[0].body.usage, { include: true })
+})

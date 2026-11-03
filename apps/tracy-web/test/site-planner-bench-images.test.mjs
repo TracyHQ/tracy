@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { zipSync } from 'fflate'
-import { readRun } from '../src/site-planner/bench-store.js'
+import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { kitZipName } from '../src/site-planner/kit-images.js'
 import { KIT_TOOL_NAMES, openKit } from '../src/site-planner/kit-source.js'
@@ -18,6 +18,7 @@ import { plan } from './_site-plan-check.mjs'
 import {
   assignPlannerDoor,
   DEEPSEEK_FLASH,
+  DEEPSEEK_NATIVE_FLASH,
   inventedImageBytes,
   KIT_REF,
   readyKitImages,
@@ -226,5 +227,67 @@ test(
     assert.equal(typeof messages[4].content, 'string')
     assert.deepEqual(sentImages(model.requests[1]), [dataUrl('header-1440')])
     assert.equal(messages[5].content.at(-1).type, 'image_url')
+  }
+)
+
+test(
+  "a run on DeepSeek's own API sends reasoning_effort, its reasoning_content back, and costs turns from the price table",
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool, { provider: 'deepseek', model: DEEPSEEK_NATIVE_FLASH })
+    const started = await startRun(pool)
+    // DeepSeek's own answer: thinking in reasoning_content, cache hits and misses, no usage.cost.
+    const native = (reply, thinking) => {
+      const { reasoning: _openRouterField, ...message } = reply.body.choices[0].message
+      reply.body.choices[0].message = { ...message, reasoning_content: thinking }
+      reply.body.usage = {
+        prompt_tokens: 2000,
+        completion_tokens: 500,
+        prompt_cache_hit_tokens: 1500,
+        prompt_cache_miss_tokens: 500
+      }
+      return reply
+    }
+    const model = scriptedModel([
+      native(
+        toolCallReply({
+          calls: [
+            [KIT_TOOL_NAMES.readPart, { ids: ['contents', 'header'] }],
+            [KIT_TOOL_NAMES.openImage, { id: 'header-1440' }]
+          ]
+        }),
+        'the header shows a logo'
+      ),
+      native(finalReply({ content: JSON.stringify(plan()) }), 'the plan is ready')
+    ])
+    await drain(pool, model, readyKitImages())
+    const run = await readRun(pool, started.id)
+    assert.equal(run.status, 'succeeded', run.error)
+    assert.equal(run.harness.modelProfile, 'deepseek-flash-native')
+    for (const { body } of model.requests) {
+      assert.equal(body.model, DEEPSEEK_NATIVE_FLASH)
+      assert.equal(body.reasoning_effort, 'high')
+      for (const absent of ['reasoning', 'usage', 'provider']) assert.equal(body[absent], undefined, absent)
+      assert.doesNotMatch(JSON.stringify(body), /cache_control/)
+    }
+    const messages = model.requests[1].body.messages
+    assert.deepEqual(
+      messages.map((m) => m.role),
+      ['system', 'user', 'assistant', 'tool', 'tool', 'user']
+    )
+    assert.equal(messages[2].reasoning_content, 'the header shows a logo')
+    assert.equal(messages[5].content.at(-1).type, 'image_url')
+    // (1500 x 0.03 + 500 x 0.30 + 500 x 1.20) per million tokens, per turn.
+    const turns = await turnsOf(pool, started.id)
+    assert.deepEqual(
+      turns.map((t) => [t.cost, t.costSource]),
+      [
+        [0.000795, 'price-table'],
+        [0.000795, 'price-table']
+      ]
+    )
+    assert.equal(run.totals.costUsd, 0.00159)
+    assert.equal(run.totals.turnsWithoutCost, 0)
   }
 )

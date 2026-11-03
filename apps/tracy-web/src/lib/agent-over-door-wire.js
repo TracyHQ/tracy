@@ -7,8 +7,15 @@
 // (the newest tool result, or the first user message on turn 0), so each call re-reads everything the previous call
 // already paid to cache. Anthropic allows four markers; a 1h marker must come before a 5m one. With cacheMarkers
 // false (a model that caches on its own) no marker is placed and the messages go as saved.
+//
+// Two wire flavours. 'openrouter' (the default) sends OpenRouter's fields: reasoning {enabled, effort}, usage
+// {include: true} and the provider routing object. 'deepseek-native' talks to DeepSeek's own API: thinking effort is
+// the top-level reasoning_effort, and neither usage nor provider is sent (DeepSeek ignores the first, and the second
+// is OpenRouter's alone). Either way the assistant message's thinking is saved and sent back on every later turn.
 
 export const CACHE_TTLS = ['5m', '1h']
+
+export const WIRES = ['openrouter', 'deepseek-native']
 
 const marker = (ttl) => (ttl === '1h' ? { type: 'ephemeral', ttl: '1h' } : { type: 'ephemeral' })
 
@@ -34,7 +41,8 @@ export function requestBody({
   effort,
   cacheTtl,
   cacheMarkers = true,
-  provider
+  provider,
+  wire = 'openrouter'
 }) {
   const newest = messages.findLastIndex((m) => m.role !== 'assistant')
   return {
@@ -55,22 +63,30 @@ export function requestBody({
           }))
         }
       : {}),
-    // enabled makes thinking explicit; with effort alone an Anthropic model may still skip thinking on an easy turn.
-    reasoning: { enabled: true, effort },
-    max_tokens: maxTokens,
-    usage: { include: true },
-    ...(provider ? { provider } : {})
+    ...(wire === 'deepseek-native'
+      ? { reasoning_effort: effort, max_tokens: maxTokens }
+      : {
+          // enabled makes thinking explicit; with effort alone an Anthropic model may still skip thinking on an easy turn.
+          reasoning: { enabled: true, effort },
+          max_tokens: maxTokens,
+          usage: { include: true },
+          ...(provider ? { provider } : {})
+        })
   }
 }
 
-/** The assistant message as it is saved and sent back: reasoning details are kept, they sign the model's thinking. */
+/**
+ * The assistant message as it is saved and sent back: reasoning details are kept, they sign the model's thinking;
+ * reasoning_content is DeepSeek's own field for it, which its API requires back on every later turn of a tool loop.
+ */
 export function savedAssistant(m) {
   return {
     role: 'assistant',
     content: typeof m.content === 'string' || Array.isArray(m.content) ? m.content : null,
     ...(Array.isArray(m.tool_calls) && m.tool_calls.length ? { tool_calls: m.tool_calls } : {}),
     ...(typeof m.reasoning === 'string' ? { reasoning: m.reasoning } : {}),
-    ...(Array.isArray(m.reasoning_details) ? { reasoning_details: m.reasoning_details } : {})
+    ...(Array.isArray(m.reasoning_details) ? { reasoning_details: m.reasoning_details } : {}),
+    ...(typeof m.reasoning_content === 'string' ? { reasoning_content: m.reasoning_content } : {})
   }
 }
 
@@ -87,11 +103,36 @@ export function usageOf(usage) {
   }
 }
 
-/** The provider's own cost of one answer in USD, or null when it sent none (never estimated). */
-export function costOf(usage) {
-  const cost = usage?.cost
-  return typeof cost === 'number' && Number.isFinite(cost) ? cost : null
+/**
+ * The cost of one answer in USD. Without a price table: the provider's own cost, or null when it sent none (never
+ * estimated). With one (a provider that reports no cost, such as DeepSeek's own API): computed from the tokens at the
+ * table's USD per million tokens, input split into cache hits and misses; null when the usage carries no tokens.
+ * @param {object} usage
+ * @param {{ inputCacheHit: number, inputCacheMiss: number, output: number }} [price]
+ */
+export function costOf(usage, price) {
+  if (!price) {
+    const cost = usage?.cost
+    return typeof cost === 'number' && Number.isFinite(cost) ? cost : null
+  }
+  if (!usage || typeof usage !== 'object') return null
+  const prompt = count(usage.prompt_tokens)
+  const hit = count(usage.prompt_cache_hit_tokens ?? usage.prompt_tokens_details?.cached_tokens)
+  const miss =
+    usage.prompt_cache_miss_tokens != null ? count(usage.prompt_cache_miss_tokens) : Math.max(0, prompt - hit)
+  const usd =
+    (hit * price.inputCacheHit +
+      miss * price.inputCacheMiss +
+      count(usage.completion_tokens) * price.output) /
+    1e6
+  return Math.round(usd * 1e9) / 1e9
 }
+
+/** A price table is three finite, non-negative USD per million token prices. */
+export const isPriceTable = (price) =>
+  price !== null &&
+  typeof price === 'object' &&
+  ['inputCacheHit', 'inputCacheMiss', 'output'].every((k) => Number.isFinite(price[k]) && price[k] >= 0)
 
 /** Totals over every answered turn. */
 export function totalsOf(turns) {

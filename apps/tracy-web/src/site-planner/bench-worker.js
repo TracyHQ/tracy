@@ -63,7 +63,9 @@ const HARNESS_KEYS = [
   'toolImages',
   'maxTurns',
   'callTimeoutMs',
-  'retry'
+  'retry',
+  'wire',
+  'price'
 ]
 
 class LeaseLost extends Error {}

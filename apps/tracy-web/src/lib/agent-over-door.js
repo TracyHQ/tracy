@@ -19,7 +19,10 @@
 // Reasoning details are saved on every assistant message and sent back: Anthropic refuses a tool loop whose earlier
 // thinking comes back unsigned, and DeepSeek refuses one whose earlier reasoning is missing (OpenRouter turns the
 // details back into the provider's own field). cacheMarkers false sends no cache_control marker (models that cache on
-// their own, such as DeepSeek); provider is OpenRouter's provider routing object, sent as is. A cancel (signal) is honoured between turns only; a call in flight is never cut.
+// their own, such as DeepSeek); provider is OpenRouter's provider routing object, sent as is. wire 'deepseek-native'
+// talks to DeepSeek's own API (agent-over-door-wire.js): its reasoning_content is saved and sent back the same way.
+// price (USD per million tokens) computes each turn's cost from its tokens, for a provider that reports none; such a
+// turn carries costSource 'price-table'. A cancel (signal) is honoured between turns only; a call in flight is never cut.
 //
 // A call that meets a transient provider error (a 429, a 5xx, an overloaded answer, a network error before any
 // response) is tried again inside the same turn, up to `retry.attempts` times (agent-over-door-retry.js). The turn
@@ -38,12 +41,14 @@ import {
   costOf,
   IMAGE_REF,
   imageRefKey,
+  isPriceTable,
   providerReason,
   requestBody,
   savedAssistant,
   toolContent,
   totalsOf,
   usageOf,
+  WIRES,
   wireImage
 } from './agent-over-door-wire.js'
 
@@ -69,7 +74,8 @@ const DEFAULTS = {
   cacheMarkers: true,
   maxTurns: 150,
   callTimeoutMs: 20 * 60_000,
-  retry: RETRY_DEFAULTS
+  retry: RETRY_DEFAULTS,
+  wire: 'openrouter'
 }
 
 export async function runAgent({
@@ -103,6 +109,16 @@ export async function runAgent({
     throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'cacheMarkers must be true or false' })
   if (o.provider !== undefined && (o.provider === null || typeof o.provider !== 'object'))
     throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'provider must be an object' })
+  if (!WIRES.includes(o.wire))
+    throw new AgentError('AGENT_SETTINGS_INVALID', { reason: `wire must be one of ${WIRES.join(', ')}` })
+  if (o.wire === 'deepseek-native' && o.provider !== undefined)
+    throw new AgentError('AGENT_SETTINGS_INVALID', {
+      reason: 'provider routing is OpenRouter only; the deepseek-native wire sends none'
+    })
+  if (o.price !== undefined && !isPriceTable(o.price))
+    throw new AgentError('AGENT_SETTINGS_INVALID', {
+      reason: 'price needs inputCacheHit, inputCacheMiss and output, USD per million tokens'
+    })
   if (!door?.baseUrl || !door?.apiKey || !door?.model)
     throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'the door needs baseUrl, apiKey and model' })
 
@@ -131,6 +147,8 @@ export async function runAgent({
         cacheMarkers: o.cacheMarkers,
         toolImages: o.toolImages,
         ...(o.provider ? { provider: o.provider } : {}),
+        ...(o.wire !== 'openrouter' ? { wire: o.wire } : {}),
+        ...(o.price ? { price: o.price } : {}),
         tools: tools.map((t) => t.name),
         messages: messages.length + next.length + 1
       },
@@ -139,7 +157,7 @@ export async function runAgent({
     }
     turns.push(turn)
     await onTurn(structuredClone(turn))
-    const attempt = () => call(door, body, fetchImpl, o.callTimeoutMs, turn.n)
+    const attempt = () => call(door, body, fetchImpl, o.callTimeoutMs, turn.n, o.price)
     const { answer, retries } = await withRetries(attempt, { policy: o.retry, sleep, random }).catch(
       async (error) => {
         Object.assign(turn, {
@@ -166,7 +184,8 @@ export async function runAgent({
       generationId: answer.id ?? null,
       providerModel: answer.model ?? null,
       usage: withFailedUsage(usageOf(answer.usage), retries),
-      cost: withFailedCost(costOf(answer.usage), retries),
+      cost: withFailedCost(costOf(answer.usage, o.price), retries),
+      ...(o.price ? { costSource: 'price-table' } : {}),
       retries,
       ...(typeof choice.message.refusal === 'string' && choice.message.refusal
         ? { refusal: choice.message.refusal }
@@ -277,7 +296,7 @@ function withFailedCost(cost, retries) {
   return Math.round(failed.reduce((sum, c) => sum + c, cost ?? 0) * 1e9) / 1e9
 }
 
-async function call(door, body, fetchImpl, timeoutMs, n) {
+async function call(door, body, fetchImpl, timeoutMs, n, price) {
   let r
   try {
     r = await fetchImpl(`${door.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
@@ -318,7 +337,7 @@ async function call(door, body, fetchImpl, timeoutMs, n) {
     throw Object.assign(new AgentError('AGENT_PROVIDER_ERROR', { turn: n, reason: providerReason(source) }), {
       providerCode: source.error?.code,
       retryAfterMs: retryAfterMs(r.headers?.get?.('retry-after')),
-      ...(json.usage ? { usage: json.usage, cost: costOf(json.usage) } : {})
+      ...(json.usage ? { usage: json.usage, cost: costOf(json.usage, price) } : {})
     })
   }
   const m = choice?.message

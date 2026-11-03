@@ -92,7 +92,7 @@ export function compactTurn(turn, runningCostUsd = null) {
       arguments: c.function?.arguments ?? null
     })),
     answerCharacters: typeof content === 'string' ? content.length : 0,
-    reasoningCharacters: typeof turn.message?.reasoning === 'string' ? turn.message.reasoning.length : 0,
+    reasoningCharacters: reasoningCharacters(turn.message),
     sent: (turn.sent ?? []).map((m) => ({
       role: m.role,
       ...(m.tool_call_id ? { toolCallId: m.tool_call_id } : {}),
@@ -100,6 +100,7 @@ export function compactTurn(turn, runningCostUsd = null) {
     })),
     usage: turn.usage ?? null,
     costUsd: turn.cost ?? null,
+    ...(turn.costSource ? { costSource: turn.costSource } : {}),
     runningCostUsd,
     ...(turn.resendOf !== undefined ? { resendOf: turn.resendOf } : {}),
     ...(turn.retries?.length ? { retries: turn.retries } : {}),
@@ -154,3 +155,10 @@ export function runFiles(run, turns) {
   files.push(['turns.jsonl', lines.join('\n') + (lines.length ? '\n' : '')])
   return files
 }
+
+// Thinking text in either field: OpenRouter's reasoning or DeepSeek's own reasoning_content.
+const reasoningCharacters = (message) =>
+  ['reasoning', 'reasoning_content'].reduce(
+    (sum, k) => sum + (typeof message?.[k] === 'string' ? message[k].length : 0),
+    0
+  )

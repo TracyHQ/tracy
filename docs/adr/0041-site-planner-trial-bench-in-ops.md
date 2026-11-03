@@ -146,3 +146,12 @@
   cache markers; DeepSeek V4.1 Flash (`deepseek/deepseek-v4.1-flash-1017` on OpenRouter) gets images in a user message,
   no cache markers, effort high (it has no medium), the DeepSeek provider pinned for the whole run, and the same 128000
   output budget; reasoning is sent back on every later turn and cost is read from `usage.cost` as before.
+- **DeepSeek's own API is a profile of its own.** A door on the `deepseek` provider with model `deepseek-flash`
+  records the profile `deepseek-flash-native` (matched on the provider as well as the model): the same images in a
+  user message, no cache markers and effort high, sent on DeepSeek's wire, so `reasoning_effort` replaces OpenRouter's
+  `reasoning` object and no `usage` or `provider` field goes out. The assistant's `reasoning_content` is saved and sent
+  back on every later turn (DeepSeek answers 400 without it in a tool loop). DeepSeek reports no cost, so each turn's
+  cost is computed from its tokens with the price table stored in the profile (cache hit input, cache miss input,
+  output, USD per million tokens); the turn's request keeps that table and the turn reads `costSource: 'price-table'`.
+  The table is assumed until checked against DeepSeek's pricing page, and the 128000 output budget is not yet measured
+  on DeepSeek's own API; both live in the profile. OpenRouter runs keep the rule above: the provider's cost or none.

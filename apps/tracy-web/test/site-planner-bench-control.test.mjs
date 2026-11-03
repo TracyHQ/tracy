@@ -7,6 +7,7 @@ import {
   benchHarnessFor,
   briefOfRevision,
   cancelBenchRun,
+  DEEPSEEK_FLASH_PRICE,
   startBenchRun
 } from '../src/site-planner/bench-control.js'
 import { readRun } from '../src/site-planner/bench-store.js'
@@ -18,6 +19,7 @@ import {
   API_KEY,
   assignPlannerDoor,
   DEEPSEEK_FLASH,
+  DEEPSEEK_NATIVE_FLASH,
   KIT_REF,
   MODEL,
   readyKitImages,
@@ -84,6 +86,42 @@ test('a run on DeepSeek V4.1 Flash records the harness chosen for that model', o
   assert.equal(full.harness.effort, 'high')
   assert.deepEqual(full.harness.provider, { order: ['deepseek'], allow_fallbacks: false })
   assert.equal(full.harness.maxTokens, 128000)
+})
+
+test(
+  "a run on DeepSeek Flash through DeepSeek's own API records the deepseek-native harness",
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool, { provider: 'deepseek', model: DEEPSEEK_NATIVE_FLASH })
+    const run = await startRun(pool)
+    const full = await readRun(pool, run.id)
+    assert.equal(full.door.providerId, 'deepseek')
+    assert.deepEqual(full.harness, benchHarnessFor(DEEPSEEK_NATIVE_FLASH, 'deepseek'))
+    assert.equal(full.harness.modelProfile, 'deepseek-flash-native')
+  }
+)
+
+test("the deepseek-native profile: DeepSeek's wire, no provider routing, a price table, matched on the provider too", () => {
+  const h = benchHarnessFor(DEEPSEEK_NATIVE_FLASH, 'deepseek')
+  assert.equal(h.modelProfile, 'deepseek-flash-native')
+  assert.equal(h.wire, 'deepseek-native')
+  assert.equal(h.toolImages, 'user-message')
+  assert.equal(h.cacheMarkers, false)
+  assert.equal(h.effort, 'high')
+  assert.equal(h.provider, undefined)
+  assert.equal(h.maxTokens, 128000)
+  assert.deepEqual(h.price, DEEPSEEK_FLASH_PRICE)
+  // The same model id behind another provider is not DeepSeek's own API.
+  const elsewhere = benchHarnessFor(DEEPSEEK_NATIVE_FLASH, 'openrouter')
+  assert.equal(elsewhere.modelProfile, 'other')
+  assert.equal(elsewhere.wire, undefined)
+  assert.equal(elsewhere.price, undefined)
+  // OpenRouter's DeepSeek profile keeps OpenRouter's wire and its provider cost.
+  const routed = benchHarnessFor(DEEPSEEK_FLASH, 'openrouter')
+  assert.equal(routed.modelProfile, 'deepseek-v4.1-flash')
+  assert.equal(routed.wire, undefined)
+  assert.equal(routed.price, undefined)
 })
 
 test('an unlisted model that is not Anthropic gets images in user messages and no cache markers', () => {

@@ -117,6 +117,8 @@ export function turnOf(row) {
       providerModel: row.provider_model,
       usage: row.usage,
       cost: num(row.cost_usd),
+      // The request keeps the price table a cost was computed from; without one the cost is the provider's own.
+      ...(row.request?.price ? { costSource: 'price-table' } : {}),
       ...(row.refusal ? { refusal: row.refusal } : {})
     })
   if (state === 'failed') turn.error = row.error

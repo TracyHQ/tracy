@@ -13,6 +13,8 @@ export const MODEL = 'anthropic/claude-opus-5.5'
 /** DeepSeek V4.1 Flash as OpenRouter lists it (the 17/10/2026 snapshot), for the one comparison run. */
 export const DEEPSEEK_FLASH = 'deepseek/deepseek-v4.1-flash-1017'
 export const API_KEY = 'sk-or-test-secret-key'
+/** DeepSeek Flash as DeepSeek's own API lists it, for a run whose door points at DeepSeek directly. */
+export const DEEPSEEK_NATIVE_FLASH = 'deepseek-flash'
 
 /** The bytes the ready kit images give for an image id. */
 export const inventedImageBytes = (id) => Buffer.from(`invented image bytes of ${id}`)
@@ -48,14 +50,17 @@ export function readyKitImages() {
   }
 }
 
-export async function assignPlannerDoor(pool, { enabled = true, model = MODEL } = {}) {
+export async function assignPlannerDoor(
+  pool,
+  { enabled = true, model = MODEL, provider = 'openrouter' } = {}
+) {
   await saveProvider(
     pool,
-    { id: 'openrouter', presetId: 'openrouter', apiKey: API_KEY, enabled },
+    { id: provider, presetId: provider, apiKey: API_KEY, enabled },
     SECRET,
     'owner@tracy.test'
   )
-  await assignDoor(pool, 'sitePlanner', { providerId: 'openrouter', model }, 'owner@tracy.test')
+  await assignDoor(pool, 'sitePlanner', { providerId: provider, model }, 'owner@tracy.test')
 }
 
 /** Start a run and return it; fails the test when the start is refused. */

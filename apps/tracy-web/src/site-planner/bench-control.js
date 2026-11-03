@@ -33,12 +33,36 @@ export const BENCH_HARNESS = Object.freeze({
 })
 
 /**
- * What changes in the harness for the door's model, by OpenRouter model id. Read on 03/11/2026 from OpenRouter's
- * model list and endpoints (deepseek/deepseek-v4.1-flash-1017: text and image input, tools, reasoning efforts
- * max, high, low and none, the smallest endpoint output limit 131072) and DeepSeek's API docs (images only in user
- * messages, reasoning sent back in a tool loop, automatic caching). The first matching entry wins.
+ * DeepSeek's own API reports no cost, so a run on it computes one from this table, USD per million tokens.
+ * Assumed, check platform.deepseek.com pricing: input on a cache miss and output are OpenRouter's listing of
+ * DeepSeek's own endpoint for deepseek-v4.1-flash (03/11/2026); the cache hit price is an assumption.
+ */
+export const DEEPSEEK_FLASH_PRICE = Object.freeze({ inputCacheHit: 0.03, inputCacheMiss: 0.3, output: 1.2 })
+
+/**
+ * What changes in the harness for the door's model, by model id, and by the door's provider id where an entry names
+ * one (`providerId`). Read on 03/11/2026 from OpenRouter's model list and endpoints (deepseek/deepseek-v4.1-flash-1017:
+ * text and image input, tools, reasoning efforts max, high, low and none, the smallest endpoint output limit 131072)
+ * and DeepSeek's API docs (images only in user messages, reasoning sent back in a tool loop, automatic caching). The
+ * first matching entry wins.
  */
 export const MODEL_HARNESS = Object.freeze([
+  {
+    profile: 'deepseek-flash-native',
+    providerId: 'deepseek',
+    match: /^deepseek-flash$/,
+    harness: {
+      // DeepSeek's own API: reasoning_effort instead of OpenRouter's reasoning object, no usage or provider field,
+      // and reasoning_content sent back on every later turn (agent-over-door-wire.js).
+      wire: 'deepseek-native',
+      toolImages: 'user-message',
+      cacheMarkers: false,
+      effort: 'high',
+      // Not yet measured against DeepSeek's own API; kept at the bench budget until it is.
+      maxTokens: MAX_OUTPUT_TOKENS,
+      price: DEEPSEEK_FLASH_PRICE
+    }
+  },
   { profile: 'anthropic', match: /^anthropic\//, harness: {} },
   {
     profile: 'deepseek-v4.1-flash',
@@ -60,9 +84,15 @@ export const MODEL_HARNESS = Object.freeze([
 /** Any other model: images in user messages and no cache markers, the forms OpenAI-compatible models all accept. */
 const OTHER_MODEL = { profile: 'other', harness: { toolImages: 'user-message', cacheMarkers: false } }
 
-/** The harness a run on this model records: BENCH_HARNESS with the model's own settings and its profile name. */
-export function benchHarnessFor(model) {
-  const entry = MODEL_HARNESS.find((m) => m.match.test(String(model ?? ''))) ?? OTHER_MODEL
+/**
+ * The harness a run on this model records: BENCH_HARNESS with the model's own settings and its profile name.
+ * `providerId` is the door's provider (the run's door snapshot); an entry that names a provider matches only it.
+ */
+export function benchHarnessFor(model, providerId) {
+  const entry =
+    MODEL_HARNESS.find(
+      (m) => (m.providerId === undefined || m.providerId === providerId) && m.match.test(String(model ?? ''))
+    ) ?? OTHER_MODEL
   return { ...BENCH_HARNESS, ...entry.harness, modelProfile: entry.profile }
 }
 
@@ -109,7 +139,7 @@ export async function startBenchRun({
     promptSha256: plannerPrompt().sha256,
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
-    harness: benchHarnessFor(door.snapshot.model)
+    harness: benchHarnessFor(door.snapshot.model, door.snapshot.providerId)
   })
   if (created.error === SITE_PLANNER_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }
