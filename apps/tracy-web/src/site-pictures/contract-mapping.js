@@ -32,16 +32,24 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
   }
   const changes = {}
   const placedFiles = new Map() // sitePath -> upload record, one per file
+  // The Joomla door cannot hide a picture slot, so a hidden frame is only listed here, never written. The write step
+  // must hide the row itself, or the frame silently keeps its demo picture.
   const hidden = []
   const recolourable = []
 
   // The file a frame places, or null with a problem. A twin holds its source's file; an icon twin may hold the
   // source's light or its dark file (P11), and nothing else.
-  function placement(e) {
+  function placement(e, seen = new Set()) {
     if (e.source !== 'twin') return { file: e }
     const src = frames.get(e.twinOf)
     if (!src) return bad(e.frame, `twin follows ${e.twinOf}, which has no entry`) ?? null
     if (src.source === 'hide') return { hide: src }
+    // A twin of a twin follows the chain: it is hidden when the root source is hidden.
+    if (src.source === 'twin') {
+      const up = seen.has(src.frame) ? null : placement(src, new Set([...seen, e.frame]))
+      if (!up) return bad(e.frame, `twin chain from ${e.frame} has no placed source`) ?? null
+      if (up.hide) return up
+    }
     const allowed = [src, ...(src.source === 'icon' && src.dark ? [src.dark] : [])]
     if (!allowed.some((f) => f.sha256 === e.sha256))
       return bad(e.frame, `twin holds another file than ${e.twinOf}, its source`) ?? null

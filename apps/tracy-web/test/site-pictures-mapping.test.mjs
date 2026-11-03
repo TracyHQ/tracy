@@ -145,3 +145,15 @@ test('manifest problems are passed through and bad entries are not exported', ()
   assert.ok(out.problems.some((p) => p.where.includes('block-3.1')))
   assert.ok(!('module-3.1' in out.mapping.changes))
 })
+
+test('a twin of a twin is hidden when the root source is hidden', () => {
+  const input = pictures()
+  const root = input.frames.find((e) => e.frame === 'block-7.1')
+  Object.assign(root, { source: 'hide', file: null, width: null, height: null, sha256: null, sitePath: null })
+  const middle = input.frames.find((e) => e.frame === 'block-7.2')
+  const last = { ...middle, frame: 'block-7.3', twinOf: 'block-7.2' }
+  input.frames.push(last)
+  const out = run({ pictures: input })
+  assert.ok(!('module-7.3' in out.mapping.changes))
+  assert.ok(out.hidden.some((h) => h.frame === 'block-7.3'))
+})
