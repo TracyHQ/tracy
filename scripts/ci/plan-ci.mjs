@@ -221,6 +221,20 @@ function workersShards(n) {
   }))
 }
 
+/**
+ * Whether a row may open a Playwright browser, so that on GitHub-hosted it installs one first
+ * (`tracy-ci.yml`, step "Install the Playwright browser on a GitHub-hosted runner", 03/11/2026). Every
+ * row that runs a test suite does: `check-tests.ts` opens one for e2e and the EmDash themes, and
+ * `ensureWorkersBrowser` for every workers part (shards, `related`, each Turbo owner task) because
+ * `test:workers` holds browser tests (`apps/tracy-host`, `tracy-quickstart-tools`). So does the row
+ * that runs the tests with the clock moved forward: they are `test:workers` files. `checks` without
+ * that step runs no test and installs nothing.
+ * @param {{ args?: string, turbo?: string, clock?: boolean }} row
+ */
+export function opensBrowser(row) {
+  return Boolean(row.turbo) || Boolean(row.clock) || /(?:^| )--only tests(?: |$)/.test(row.args ?? '')
+}
+
 /** The title of the notice `plan` prints when a full run's tests are forced Turbo rows. */
 export const FULL_RUN_TITLE = 'full run'
 
@@ -378,7 +392,9 @@ export function planMatrix({
   const lastShard = fullRows.at(-1).group
   const clockRow =
     turbo || fullTurbo ? 'checks' : tests.some((r) => r.group === lastShard) ? lastShard : 'tests related'
-  const rows = [...include, ...tests, checks].map((r) => (r.group === clockRow ? { ...r, clock: true } : r))
+  const rows = [...include, ...tests, checks]
+    .map((r) => (r.group === clockRow ? { ...r, clock: true } : r))
+    .map((r) => (opensBrowser(r) ? { ...r, browser: true } : r))
   // A docs-only PR has no test job. The full nightly and release rows are unchanged.
   return {
     matrix: { include: rows },
