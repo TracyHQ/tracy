@@ -8,8 +8,14 @@ export const MIN_EQUAL_WORDS = 3 // W06 and W07: shortest sentence that counts a
 const clip = (words) => (words.length > 8 ? `${words.slice(0, 8).join(' ')} ...` : words.join(' '))
 
 // Sentences compared by W06: writer slots and page descriptions. Alt text, titles and labels are left out:
-// alts and titles repeat the business name on purpose, labels are the planner's words.
-export function checkW06({ R, view }) {
+// alts and titles repeat the business name on purpose, labels are the planner's words. A shared run (or a whole
+// equal sentence) that lies wholly inside the normalised value of any brief fact is not a repeat: a phone number,
+// an address or opening hours must be free to appear on every page that needs them.
+export function checkW06({ R, view, idx }) {
+  const factTexts = [...(idx?.facts?.values() ?? [])]
+    .map((v) => ` ${wordsOf(v).join(' ')} `)
+    .filter((v) => v.trim() !== '')
+  const isFact = (run) => factTexts.some((f) => f.includes(` ${run} `))
   const entries = []
   for (const s of view.slots)
     if (s.owner === 'writer') for (const t of s.items) entries.push({ where: s.slot, text: t })
@@ -25,10 +31,11 @@ export function checkW06({ R, view }) {
       const id = n++
       let hit = null
       const full = words.join(' ')
-      if (words.length >= MIN_EQUAL_WORDS && whole.has(full)) hit = { other: whole.get(full), run: full }
+      if (words.length >= MIN_EQUAL_WORDS && whole.has(full) && !isFact(full))
+        hit = { other: whole.get(full), run: full }
       for (let i = 0; !hit && i + RUN_WORDS <= words.length; i++) {
         const run = words.slice(i, i + RUN_WORDS).join(' ')
-        if (grams.has(run) && grams.get(run).id !== id) hit = { other: grams.get(run), run }
+        if (grams.has(run) && grams.get(run).id !== id && !isFact(run)) hit = { other: grams.get(run), run }
       }
       if (hit)
         R.w06.fail(

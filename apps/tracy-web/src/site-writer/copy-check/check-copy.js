@@ -13,7 +13,7 @@ import { checkW02, checkW03 } from './rules-slots.js'
 
 // Stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title, a threshold, a failure
 // text or the result shape changes, so two runs scored by different checkers are never compared as equal.
-export const CHECKER_VERSION = 'site-copy-check/1'
+export const CHECKER_VERSION = 'site-copy-check/2'
 
 const RUN_ORDER = [
   checkW02,

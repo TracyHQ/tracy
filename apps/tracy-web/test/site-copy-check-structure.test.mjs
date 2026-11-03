@@ -5,12 +5,12 @@ import { brief, breaks, ruleOf, check, copy, kit, plan, slotOf } from './_site-c
 
 test('the passing copy passes every rule and the version is frozen', () => {
   const r = check(copy())
-  assert.equal(CHECKER_VERSION, 'site-copy-check/1')
+  assert.equal(CHECKER_VERSION, 'site-copy-check/2')
   assert.deepEqual(
     r.rules.map((x) => `${x.id}:${x.status}`),
     ['W01', 'W02', 'W03', 'W04', 'W05', 'W06', 'W07', 'W08', 'W09', 'W10', 'W11'].map((id) => `${id}:pass`)
   )
-  assert.equal(r.meta.checker, 'site-copy-check/1')
+  assert.equal(r.meta.checker, 'site-copy-check/2')
   assert.deepEqual(check(copy()), r)
   assert.equal(failureListText(r), '')
 })

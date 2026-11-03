@@ -149,7 +149,7 @@ test('run, list, status and get: a finished run is downloaded with every file', 
   assert.match(status.out, /state\s+succeeded \(after round 1\)/)
   assert.match(status.out, /model\s+deepseek-flash/)
   assert.match(status.out, /balance\s+before 5\.00 USD, after 4\.98 USD/)
-  assert.match(status.out, /checker\s+site-copy-check\/1: 11 pass, 0 fail/)
+  assert.match(status.out, /checker\s+site-copy-check\/2: 11 pass, 0 fail/)
 
   const got = await cli('get', runId, '--out', 'files')
   assert.equal(got.code, 0, got.err)

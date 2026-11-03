@@ -129,6 +129,12 @@ export function brief() {
       { id: 'f-hours', field: 'hours', value: 'Open 06:00 to 21:00, Monday to Saturday', source: 'stated' },
       { id: 'f-phone', field: 'phone', value: '+000 555 0100', source: 'stated' },
       { id: 'f-email', field: 'email', value: 'hello@quay-fitness.example', source: 'stated' },
+      {
+        id: 'f-address',
+        field: 'address',
+        value: '12 Harbour Row - Quay District - Example City',
+        source: 'stated'
+      },
       { id: 'f-coach', field: 'team', value: 'Nia Brook, strength coach', source: 'stated' },
       { id: 'f-review-1', field: 'review', value: 'review one', source: 'stated' }
     ],

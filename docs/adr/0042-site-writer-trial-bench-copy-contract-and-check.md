@@ -6,6 +6,8 @@ Builds on [ADR 0041](0041-site-planner-trial-bench-in-ops.md) (the site planner 
 Amended: footer column headings are ordinary writer slots, a new `pages` key carries the pages that have no kit
 slots, and W11 only notes a long dash in a planner label (contract gaps found while drafting the writer prompt;
 version strings unchanged because nothing shipped yet).
+Amended again: W06 exempts runs wholly inside a brief fact value; the checker version moved to `site-copy-check/2`
+because bench runs scored by `/1` exist.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -58,7 +60,7 @@ A slot or page the writer cannot write truthfully from the plan's facts goes int
 writer never changes the plan (adds, drops or moves slots, pages or blocks). A returned slot may be absent from
 `slots` without failing W02. Returns are listed for the owner; nothing is sent back to the planner automatically.
 
-### 4. The copy check is `site-copy-check/1`
+### 4. The copy check is `site-copy-check/2`
 
 A pure module, `checkCopy({ copy, plan, kit, brief })`, in `apps/tracy-web/src/site-writer/copy-check/`. Same
 calling shape and result shape as the plan checker: `{ meta, inputErrors, summary, rules: [{ id, title, status:
@@ -110,6 +112,8 @@ Thresholds and decisions (named constants in the code):
   (`RUN_WORDS`), or are equal with at least 3 words. Compared across the whole site: writer slots and page
   descriptions. Alt text, titles and label slots are excluded (alts and titles repeat the business name on purpose;
   labels are the planner's words). The later place is reported and names the earlier one.
+  A shared run or an equal sentence that lies wholly inside the normalised value of any brief fact (phone, address,
+  opening hours, name) is not a repeat, so fact values may appear wherever they are needed (`site-copy-check/2`).
 - **W07 demo leftovers.** Demo sentences are the kit slot samples, split into sentences of at least 3 words.
   Demo proper names are the template name, the logo and title name samples in `site.nameSlots`, and the samples of
   `person.name` slots. A name is matched as a whole phrase, case-insensitive, in every written text.

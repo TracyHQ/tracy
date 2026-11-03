@@ -92,6 +92,34 @@ test('W06 fails a sentence repeated or nearly repeated anywhere on the site', ()
   assert.equal(status(c, 'W06'), 'pass')
 })
 
+test('W06 lets a fact value repeat: phone, address and hours run through the site', () => {
+  const c = copy()
+  slotOf(c, 'block-3.6').text = 'Early sessions are the calm ones. +000 555 0100'
+  c.pages[1].body = ['Ask at the desk. +000 555 0100']
+  c.pages[0].body.push('The studio is at 12 Harbour Row, Quay District, Example City.')
+  c.seo[1].description = 'Meet the coach: 12 Harbour Row, Quay District, Example City.'
+  c.seo[2].description = 'We are open 06:00 to 21:00, Monday to Saturday, if you need us.'
+  assert.equal(status(c, 'W06'), 'pass', JSON.stringify(check(c).rules.find((x) => x.id === 'W06').failures))
+})
+
+test('W06 still fails prose repeated around a fact value or with no fact in it', () => {
+  breaks(
+    'W06',
+    (c) => {
+      c.pages[1].body = ['Call +000 555 0100 to reserve your place before you come.']
+    },
+    /notFound.*block-2\.2/
+  )
+  breaks(
+    'W06',
+    (c) => {
+      slotOf(c, 'block-3.6').text = 'Our coaches bring a patient teaching style to every class.'
+      c.pages[1].body = ['Here too, coaches bring a patient teaching style to every class.']
+    },
+    /notFound.*block-3\.6/
+  )
+})
+
 test('W07 fails a demo sentence or a demo proper name left in the copy', () => {
   breaks(
     'W07',
