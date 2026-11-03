@@ -55,7 +55,7 @@ export async function activeRun(pool) {
   return rows[0] ? summaryOf(rows[0]) : null
 }
 
-/** What the run is doing, for the screen. Written only under the run's lease. */
+/** What the run is doing, for the bench CLI's status. Written only under the run's lease. */
 export async function setProgress(pool, { runId, step, round, leaseToken = null }) {
   const { rowCount } = await pool.query(
     `update site_planner_run set step = $2, round = $3, updated_at = now()

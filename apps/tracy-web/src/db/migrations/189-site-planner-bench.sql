@@ -4,7 +4,7 @@
 
 -- One bench run. The row is also the durable queue's row (website-opportunities/src/durable-queue.js): `status` stays
 -- 'queued' while the run waits or a worker holds its lease, and becomes the verdict; `step` and `round` say what it
--- is doing for the screen. The inputs (brief as used, kit, prompt hash, checker version, door snapshot, harness
+-- is doing, for the bench CLI's `status`. The inputs (brief as used, kit, prompt hash, checker version, door snapshot, harness
 -- settings) are frozen once stored, so a run always says exactly what it ran.
 create table if not exists site_planner_run (
   id uuid primary key default gen_random_uuid(),
@@ -72,9 +72,11 @@ create table if not exists site_planner_round (
 
 -- One model call, append-only: inserted as 'dispatched' before the call goes out, then finished once as 'answered',
 -- 'refused' (the provider's content filter) or 'failed'. A dispatched row with no answer is the proof that a call may
--- have been charged, so a resumed run never sends it again. `sent` is what the call added to the conversation (the
--- first user message, or the tool results), `request` a summary of the request, `message` the assistant's answer
--- with its reasoning details.
+-- have been charged: a resumed run marks it abandoned and sends its request once more as a new turn, and a resend
+-- lost again ends the run (190-site-planner-fix-rounds.sql). `sent` is what the call added to the conversation (the
+-- first user message, the tool results, or a fix round's failure list; an opened kit image is kept as a reference to
+-- the image cache, never as bytes), `request` a summary of the request, `message` the assistant's answer with its
+-- reasoning details.
 create table if not exists site_planner_turn (
   run_id uuid not null references site_planner_run(id) on delete cascade,
   n integer not null check (n >= 0),
