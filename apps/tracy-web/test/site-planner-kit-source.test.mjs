@@ -393,3 +393,23 @@ test('the first user message says to plan from the looks when the kit has them, 
   assert.doesNotMatch(without, /plan from these looks/)
   assert.match(without, /open_kit_image/)
 })
+
+test('a model given no images is offered only read_kit_part, and the first user message never tells it to open one', () => {
+  const kit = { ref: 'harbour-test/j6/0.0.1', doc: harbourKit() }
+  const tools = kitTools(kit.doc, { images: null, imageTool: false })
+  assert.deepEqual(
+    tools.map((t) => t.name),
+    [KIT_TOOL_NAMES.readPart]
+  )
+  assert.deepEqual(
+    kitTools(kit.doc).map((t) => t.name),
+    [KIT_TOOL_NAMES.readPart, KIT_TOOL_NAMES.openImage]
+  )
+  const text = firstUserMessage({ kit, brief: brief(), imageTool: false })
+  assert.doesNotMatch(text, /open_kit_image/)
+  assert.doesNotMatch(text, /two tools/)
+  assert.match(text, /Kit images are not available to you in this run, and there is no image tool/)
+  assert.match(text, /plan from the looks instead/)
+  assert.match(text, /plan from these looks/)
+  assert.ok(text.endsWith(JSON.stringify(brief())), 'the brief still closes the message')
+})

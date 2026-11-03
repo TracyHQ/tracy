@@ -208,11 +208,14 @@ export const LLM_DOORS = [
     label: 'Site planner',
     where: 'this process',
     blurb:
-      'WO New Flow Test: the site planner bench, started from a command line on the server. An agent plans a whole site from a brief and a template kit, reading the kit with tool calls and its pictures by sight.',
+      'WO New Flow Test: the site planner bench, started from a command line on the server. An agent plans a whole site from a brief and a template kit, reading the kit with tool calls, and its pictures by sight when the model can.',
     needsModel: true,
-    // Both REQUIRED: the planner reads the kit only through tool calls and judges each block from its picture.
-    // No effort setting: the bench fixes it in code and records it on each run (ADR 0041, #301).
-    requires: ['tools', 'vision']
+    // Tool calls are REQUIRED: the planner reads the kit only through them. Vision is preferred, not required: a
+    // text-only model (the default, deepseek-v4-pro) plans from the kit's looks, and the bench refuses it at run start
+    // for a kit missing any look (site-planner/door.js). No effort setting: the bench fixes it in code and records it
+    // on each run (ADR 0041, #301).
+    requires: ['tools'],
+    prefers: ['vision']
   }
 ]
 

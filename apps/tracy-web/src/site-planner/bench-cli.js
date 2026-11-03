@@ -18,7 +18,10 @@ export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
   status <runId>                          state, step, turns, cost, duration, checker summary
   get <runId> --out <dir>                 write every plan version, the check and failure list of each round,
                                           the failures still standing, run meta and turns
-  cancel <runId>                          stop a run (a held run stops between model calls)`
+  cancel <runId>                          stop a run (a held run stops between model calls)
+The model is the "Site planner" door in /ops > Model & AI: deepseek-v4-pro on the deepseek provider by default
+(text only: the kit needs a current look for every shot); anthropic/claude-sonnet-5.5 or anthropic/claude-opus-5.5
+on the openrouter provider also run.`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
 

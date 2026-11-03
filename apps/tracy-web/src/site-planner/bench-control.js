@@ -40,6 +40,12 @@ export const BENCH_HARNESS = Object.freeze({
 export const DEEPSEEK_FLASH_PRICE = Object.freeze({ inputCacheHit: 0.03, inputCacheMiss: 0.3, output: 1.2 })
 
 /**
+ * The same for deepseek-v4-pro on DeepSeek's own API, USD per million tokens.
+ * Assumed from OpenRouter third-party listings on 2026-11-03; check platform.deepseek.com pricing.
+ */
+export const DEEPSEEK_V4_PRO_PRICE = Object.freeze({ inputCacheHit: 0.1, inputCacheMiss: 1, output: 2.5 })
+
+/**
  * What changes in the harness for the door's model, by model id, and by the door's provider id where an entry names
  * one (`providerId`). Read on 03/11/2026 from OpenRouter's model list and endpoints (deepseek/deepseek-v4.1-flash-1017:
  * text and image input, tools, reasoning efforts max, high, low and none, the smallest endpoint output limit 131072)
@@ -63,7 +69,24 @@ export const MODEL_HARNESS = Object.freeze([
       price: DEEPSEEK_FLASH_PRICE
     }
   },
-  // Claude Sonnet 5.5 (the planner's model, door.js SITE_PLANNER_MODEL) and Opus 5.5 alike: OpenRouter lists both with
+  {
+    profile: 'deepseek-v4-pro-native',
+    providerId: 'deepseek',
+    match: /^deepseek-v4-pro$/,
+    harness: {
+      wire: 'deepseek-native',
+      // DeepSeek's own API lists this model as text only (03/11/2026): it plans from the kit's looks, is offered no
+      // image tool, and the door lets it in only for a kit with a current look for every shot (door.js).
+      images: false,
+      toolImages: 'user-message',
+      cacheMarkers: false,
+      effort: 'high',
+      // A planner-sized call (231k prompt tokens, 20.8k out) answered in 191 s with this budget (03/11/2026).
+      maxTokens: 128000,
+      price: DEEPSEEK_V4_PRO_PRICE
+    }
+  },
+  // Claude Sonnet 5.5 and Opus 5.5 alike (alternatives to the planner's default model, door.js SITE_PLANNER_MODEL): OpenRouter lists both with
   // image input, tools, reasoning_effort, a 1h cache write price and 128000 output tokens on every endpoint (03/11/2026).
   { profile: 'anthropic', match: /^anthropic\//, harness: {} },
   {
@@ -98,6 +121,9 @@ export function benchHarnessFor(model, providerId) {
   return { ...BENCH_HARNESS, ...entry.harness, modelProfile: entry.profile }
 }
 
+/** Whether a run's harness sends images to this model: false for a text-only profile. */
+export const sendsImages = (model, providerId) => benchHarnessFor(model, providerId).images !== false
+
 const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })
 
 /**
@@ -126,13 +152,17 @@ export async function startBenchRun({
       'SITE_PLANNER_KIT_UNKNOWN',
       `No readable kit "${kitRef}". Readable kits: ${kits.map((k) => k.ref).join(', ') || 'none'}.`
     )
-  const door = await sitePlannerDoor({ pool, secret })
+  const opened = openKit(kitRef, index ? { index } : {})
+  const door = await sitePlannerDoor({ pool, secret, kit: opened, sendsImages })
   if (!door.ok) return refuse(door.code, door.reason, door.lacking ? { lacking: door.lacking } : {})
   const active = await activeRun(pool)
   if (active) return activeRefusal(active)
   // Last, since the first use of a kit version downloads its image zip: a kit whose images are unusable never queues.
-  const images = await kitImages.ensure(openKit(kitRef, index ? { index } : {}))
-  if (!images.ok) return refuse(images.code, images.reason)
+  // A model given no images plans from the looks alone, so its run needs no image zip.
+  if (door.snapshot.images) {
+    const images = await kitImages.ensure(opened)
+    if (!images.ok) return refuse(images.code, images.reason)
+  }
   const created = await createRun(pool, {
     startedBy,
     brief,

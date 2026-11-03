@@ -8,6 +8,8 @@ import {
   briefOfRevision,
   cancelBenchRun,
   DEEPSEEK_FLASH_PRICE,
+  DEEPSEEK_V4_PRO_PRICE,
+  sendsImages,
   startBenchRun
 } from '../src/site-planner/bench-control.js'
 import { readRun } from '../src/site-planner/bench-store.js'
@@ -18,9 +20,12 @@ import { brief } from './_site-plan-check-inputs.mjs'
 import {
   API_KEY,
   assignPlannerDoor,
+  assignTextOnlyDoor,
   DEEPSEEK_FLASH,
   DEEPSEEK_NATIVE_FLASH,
+  DEEPSEEK_PRO,
   KIT_REF,
+  kitIndexWithLooks,
   MODEL,
   readyKitImages,
   SECRET,
@@ -214,7 +219,7 @@ test('a brief is read from a WO revision by its id', opts, async () => {
   assert.equal(missing.code, 'SITE_PLANNER_REVISION_UNKNOWN')
 })
 
-test('the planner model, Claude Sonnet 5.5, runs on the anthropic profile with the bench harness as it is', () => {
+test('Claude Sonnet 5.5, an alternative planner model, runs on the anthropic profile with the bench harness as it is', () => {
   // OpenRouter, read 03/11/2026: anthropic/claude-sonnet-5.5 takes text and image input, tools, reasoning and
   // reasoning_effort, lists a 1h cache write price, and every endpoint allows 128000 output tokens.
   const h = benchHarnessFor(MODEL, 'openrouter')
@@ -227,4 +232,66 @@ test('the planner model, Claude Sonnet 5.5, runs on the anthropic profile with t
   assert.equal(h.cacheMarkers, true)
   // Opus, the model of the reference runs, keeps the same profile.
   assert.deepEqual(benchHarnessFor('anthropic/claude-opus-5.5', 'openrouter'), h)
+})
+
+test("the deepseek-v4-pro-native profile: DeepSeek's wire, no images, effort high, 128000 out, an assumed price table", () => {
+  const h = benchHarnessFor(DEEPSEEK_PRO, 'deepseek')
+  assert.equal(h.modelProfile, 'deepseek-v4-pro-native')
+  assert.equal(h.wire, 'deepseek-native')
+  assert.equal(h.images, false)
+  assert.equal(h.cacheMarkers, false)
+  assert.equal(h.effort, 'high')
+  assert.equal(h.maxTokens, 128000)
+  assert.equal(h.provider, undefined)
+  assert.deepEqual(h.price, { inputCacheHit: 0.1, inputCacheMiss: 1, output: 2.5 })
+  assert.deepEqual(h.price, DEEPSEEK_V4_PRO_PRICE)
+  assert.equal(sendsImages(DEEPSEEK_PRO, 'deepseek'), false)
+  assert.equal(sendsImages(MODEL, 'openrouter'), true)
+  assert.equal(benchHarnessFor(DEEPSEEK_PRO, 'openrouter').modelProfile, 'other')
+})
+
+test(
+  'a text-only model starts a run on a kit with every look, records no images and needs no image zip',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignTextOnlyDoor(pool)
+    const kit = kitIndexWithLooks()
+    try {
+      const kitImages = readyKitImages()
+      const started = await start(pool, { index: kit.index, kitImages })
+      assert.equal(started.ok, true, JSON.stringify(started))
+      const full = await readRun(pool, started.run.id)
+      assert.equal(full.door.model, DEEPSEEK_PRO)
+      assert.equal(full.door.images, false)
+      assert.equal(full.harness.modelProfile, 'deepseek-v4-pro-native')
+      assert.equal(full.harness.images, false)
+      assert.equal(kitImages.calls.ensure, 0)
+    } finally {
+      kit.done()
+    }
+  }
+)
+
+test(
+  'a text-only model is refused on a kit missing looks, naming the kit, nothing queued',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignTextOnlyDoor(pool)
+    const refused = await start(pool)
+    assert.equal(refused.ok, false)
+    assert.equal(refused.code, 'SITE_PLANNER_MODEL_LACKS')
+    assert.deepEqual(refused.lacking, ['vision'])
+    assert.ok(refused.reason.includes(KIT_REF))
+    assert.match(refused.reason, /no current look for \d+ of its 1440 shots/)
+    assert.equal((await pool.query('select count(*)::int as n from site_planner_run')).rows[0].n, 0)
+  }
+)
+
+test('a model that reads pictures records that images were given', opts, async () => {
+  const { pool } = db
+  await assignPlannerDoor(pool)
+  const run = await startRun(pool)
+  assert.equal((await readRun(pool, run.id)).door.images, true)
 })

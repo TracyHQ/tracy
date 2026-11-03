@@ -20,7 +20,8 @@
 // attempt, so the retry limit is high. A cancel is honoured between two model calls and between two rounds.
 //
 // Before any model call of a claim, the kit's images are made ready (kit-images.js): a kit whose zip is missing or
-// whose images do not match the kit fails the run with that code and reason. The saved turns keep a reference for
+// whose images do not match the kit fails the run with that code and reason. A model the door gives no images (a
+// text-only model on a kit with every look, door.js) skips this and is offered no image tool. The saved turns keep a reference for
 // each opened image, and the images are read back from the cache when the run resumes or a fix round replays them.
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { AgentError, runAgent } from '../lib/agent-over-door.js'
@@ -279,9 +280,9 @@ async function ask(deps, { row, ready, round, history, followUp, leaseToken, mus
     return await runAgent({
       door: ready.door,
       system: ready.prompt.text,
-      firstUser: firstUserMessage({ kit: ready.kit, brief: row.brief }),
-      tools: kitTools(ready.kit.doc, { images: ready.images }),
-      resolveImage: ready.images.resolve,
+      firstUser: firstUserMessage({ kit: ready.kit, brief: row.brief, imageTool: Boolean(ready.images) }),
+      tools: kitTools(ready.kit.doc, { images: ready.images, imageTool: Boolean(ready.images) }),
+      resolveImage: ready.images?.resolve,
       history,
       followUp,
       fetchImpl: deps.fetchImpl,
@@ -319,7 +320,12 @@ async function prepare({ pool, secret, index, kitImages }, row) {
   const kit = openKit(row.kit?.ref, index ? { index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_PLANNER_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
-  const door = await sitePlannerDoor({ pool, secret })
+  const door = await sitePlannerDoor({
+    pool,
+    secret,
+    kit,
+    sendsImages: () => row.harness?.images !== false
+  })
   if (!door.ok) return door
   const same = ['providerId', 'model', 'endpointHost'].every((k) => door.snapshot[k] === row.door?.[k])
   if (!same)
@@ -328,6 +334,8 @@ async function prepare({ pool, secret, index, kitImages }, row) {
       code: 'SITE_PLANNER_DOOR_CHANGED',
       reason: `the door now uses ${door.snapshot.providerId} ${door.snapshot.model}, the run was started on ${row.door?.providerId} ${row.door?.model}`
     }
+  // A model given no images (door.js) plans from the looks: no image zip, no image tool.
+  if (!door.snapshot.images) return { ok: true, prompt, kit, door: door.door, images: null }
   const images = await kitImages.ensure(kit)
   if (!images.ok) return images
   return { ok: true, prompt, kit, door: door.door, images: images.images }

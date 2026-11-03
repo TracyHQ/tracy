@@ -17,10 +17,13 @@ import { fileDb } from './_db.mjs'
 import { plan } from './_site-plan-check.mjs'
 import {
   assignPlannerDoor,
+  assignTextOnlyDoor,
   DEEPSEEK_FLASH,
   DEEPSEEK_NATIVE_FLASH,
+  DEEPSEEK_PRO,
   inventedImageBytes,
   KIT_REF,
+  kitIndexWithLooks,
   readyKitImages,
   SECRET,
   startRun
@@ -45,7 +48,7 @@ const sentImages = (request) =>
   )
 
 /** One worker process runs what is queued; killOn: it dies while waiting for that request (1-based). */
-async function drain(pool, model, kitImages, { killOn } = {}) {
+async function drain(pool, model, kitImages, { killOn, index } = {}) {
   let count = 0
   const fetchImpl = async (url, init) => {
     if (++count === killOn) {
@@ -61,7 +64,8 @@ async function drain(pool, model, kitImages, { killOn } = {}) {
     fetchImpl,
     kitImages,
     log: quiet,
-    retry: { attempts: 1 }
+    retry: { attempts: 1 },
+    ...(index ? { index } : {})
   })
     .drain()
     .catch(() => {})
@@ -289,5 +293,82 @@ test(
     )
     assert.equal(run.totals.costUsd, 0.00159)
     assert.equal(run.totals.turnsWithoutCost, 0)
+  }
+)
+
+test(
+  "a run on DeepSeek V4 Pro (text only) plans from the looks: no image tool, no image, DeepSeek's wire and price table",
+  opts,
+  async () => {
+    const { pool } = db
+    await assignTextOnlyDoor(pool)
+    const kit = kitIndexWithLooks()
+    try {
+      const kitImages = readyKitImages()
+      const started = await startRun(pool, { index: kit.index, kitImages })
+      const native = (reply) => {
+        const { reasoning: _openRouterField, ...message } = reply.body.choices[0].message
+        reply.body.choices[0].message = { ...message, reasoning_content: 'thinking' }
+        reply.body.usage = {
+          prompt_tokens: 2000,
+          completion_tokens: 500,
+          prompt_cache_hit_tokens: 1000,
+          prompt_cache_miss_tokens: 1000
+        }
+        return reply
+      }
+      const model = scriptedModel([
+        // A call to the image tool it was never offered is answered as an unknown tool, with no image.
+        native(
+          toolCallReply({
+            calls: [
+              [KIT_TOOL_NAMES.readPart, { id: 'contents' }],
+              [KIT_TOOL_NAMES.openImage, { id: 'header-1440' }]
+            ]
+          })
+        ),
+        native(finalReply({ content: JSON.stringify(plan()) }))
+      ])
+      await drain(pool, model, kitImages, { index: kit.index })
+      const run = await readRun(pool, started.id)
+      assert.equal(run.status, 'succeeded', run.error)
+      assert.equal(run.harness.modelProfile, 'deepseek-v4-pro-native')
+      assert.equal(run.door.images, false)
+      assert.equal(kitImages.calls.ensure, 0)
+      assert.deepEqual(kitImages.calls.open, [])
+      for (const request of model.requests) {
+        const { body } = request
+        assert.equal(body.model, DEEPSEEK_PRO)
+        assert.equal(body.reasoning_effort, 'high')
+        assert.equal(body.max_tokens, 128000)
+        for (const absent of ['reasoning', 'usage', 'provider']) assert.equal(body[absent], undefined, absent)
+        assert.doesNotMatch(JSON.stringify(body), /cache_control/)
+        assert.deepEqual(
+          body.tools.map((t) => t.function.name),
+          [KIT_TOOL_NAMES.readPart]
+        )
+        assert.deepEqual(sentImages(request), [])
+      }
+      const first = model.requests[0].body.messages[1].content
+      assert.doesNotMatch(first, /open_kit_image/)
+      assert.match(first, /there is no image tool/)
+      const messages = model.requests[1].body.messages
+      assert.deepEqual(
+        messages.map((m) => m.role),
+        ['system', 'user', 'assistant', 'tool', 'tool']
+      )
+      assert.match(messages[4].content, /UNKNOWN_TOOL/)
+      // (1000 x 0.10 + 1000 x 1.00 + 500 x 2.50) per million tokens, per turn.
+      const turns = await turnsOf(pool, started.id)
+      assert.deepEqual(
+        turns.map((t) => [t.cost, t.costSource]),
+        [
+          [0.00235, 'price-table'],
+          [0.00235, 'price-table']
+        ]
+      )
+    } finally {
+      kit.done()
+    }
   }
 )

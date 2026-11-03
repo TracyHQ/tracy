@@ -1,11 +1,19 @@
-// The site planner door (ADR 0041, #301): a door of its own that needs tools and vision, and a resolver that refuses
-// an unset, disabled or unreadable door with its reason instead of falling back to the environment.
+// The site planner door (ADR 0041, #301): a door of its own that needs tools and prefers vision, and a resolver that
+// refuses an unset, disabled or unreadable door with its reason instead of falling back to the environment. A model
+// that cannot read pictures is let in only for a kit with a current look for every 1440 shot.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { doorEntry, LLM_DOORS } from '../src/lib/llm-catalog.js'
 import { assignDoor, readAssignments, saveModels, saveProvider } from '../src/lib/llm-store.js'
-import { SITE_PLANNER_DOOR, SITE_PLANNER_MODEL, sitePlannerDoor } from '../src/site-planner/door.js'
+import {
+  SITE_PLANNER_DOOR,
+  SITE_PLANNER_MODEL,
+  SITE_PLANNER_PROVIDER,
+  sitePlannerDoor
+} from '../src/site-planner/door.js'
+import { openKit } from '../src/site-planner/kit-source.js'
 import { fileDb } from './_db.mjs'
+import { KIT_REF, MODEL, withAllLooks } from './_site-planner-bench.mjs'
 
 const db = fileDb()
 before(db.open)
@@ -14,19 +22,21 @@ after(db.close)
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const SECRET = 's'.repeat(32)
-const MODEL = SITE_PLANNER_MODEL
+const PRO = SITE_PLANNER_MODEL
 
-test('the planner runs on Claude Sonnet 5.5', () => {
-  assert.equal(SITE_PLANNER_MODEL, 'anthropic/claude-sonnet-5.5')
+test("the planner runs on DeepSeek V4 Pro on DeepSeek's own API by default", () => {
+  assert.equal(SITE_PLANNER_MODEL, 'deepseek-v4-pro')
+  assert.equal(SITE_PLANNER_PROVIDER, 'deepseek')
 })
 
-test('the catalogue has a site planner door that needs tools and vision', () => {
+test('the catalogue has a site planner door that needs tools and prefers vision', () => {
   const door = doorEntry(SITE_PLANNER_DOOR)
   assert.equal(SITE_PLANNER_DOOR, 'sitePlanner')
   assert.equal(door.label, 'Site planner')
   assert.equal(door.where, 'this process')
   assert.equal(door.needsModel, true)
-  assert.deepEqual(door.requires, ['tools', 'vision'])
+  assert.deepEqual(door.requires, ['tools'])
+  assert.deepEqual(door.prefers, ['vision'])
   assert.equal(door.configurableEffort, undefined)
 })
 
@@ -46,6 +56,17 @@ test('the WO doors are unchanged by the new door', () => {
     { requires: ['vision'], prefers: ['json'] }
   )
 })
+
+async function deepseek(pool, models) {
+  await saveProvider(
+    pool,
+    { id: 'deepseek', presetId: 'deepseek', apiKey: 'sk-ds-test', enabled: true },
+    SECRET,
+    'owner@tracy.test'
+  )
+  await saveModels(pool, 'deepseek', models)
+  await assignDoor(pool, 'sitePlanner', { providerId: 'deepseek', model: PRO }, 'me')
+}
 
 async function openRouter(pool, { enabled = true, models } = {}) {
   await saveProvider(
@@ -82,7 +103,10 @@ test('an unset door refuses with its reason, even when the environment has a mod
     assert.equal(found.code, 'SITE_PLANNER_DOOR_UNSET')
     assert.match(found.reason, /Site planner/)
     assert.match(found.reason, /Model & AI/)
-    assert.ok(found.reason.includes('anthropic/claude-sonnet-5.5'), 'an unset door names the planner model')
+    assert.ok(
+      found.reason.includes('deepseek-v4-pro on the deepseek provider'),
+      'an unset door names the planner model'
+    )
   } finally {
     if (saved === undefined) delete process.env.OPENROUTER_API_KEY
     else process.env.OPENROUTER_API_KEY = saved
@@ -139,3 +163,77 @@ test('a ready door answers its credential and a snapshot that carries no key', o
   assert.equal(typeof found.snapshot.assignmentRevision, 'number')
   assert.ok(!JSON.stringify(found.snapshot).includes('sk-or-test'), 'the key reached the snapshot')
 })
+
+test('a ready door with a model that reads pictures records that images are given', opts, async () => {
+  const { pool } = db
+  await openRouter(pool, { models: [{ id: MODEL, tools: true, vision: true }] })
+  await assignDoor(pool, 'sitePlanner', { providerId: 'openrouter', model: MODEL }, 'me')
+  const found = await sitePlannerDoor({ pool, secret: SECRET, kit: openKit(KIT_REF) })
+  assert.equal(found.ok, true)
+  assert.equal(found.snapshot.images, true)
+})
+
+test(
+  'a text-only model is let in for a kit with a current look for every 1440 shot, given no images',
+  opts,
+  async () => {
+    const { pool } = db
+    await deepseek(pool, [{ id: PRO, tools: true, vision: false }])
+    const kit = { ref: KIT_REF, doc: withAllLooks(openKit(KIT_REF).doc) }
+    const found = await sitePlannerDoor({ pool, secret: SECRET, kit })
+    assert.equal(found.ok, true, JSON.stringify(found))
+    assert.equal(found.door.model, PRO)
+    assert.equal(found.snapshot.providerId, 'deepseek')
+    assert.equal(found.snapshot.images, false)
+  }
+)
+
+test(
+  'a text-only model is refused for a kit missing looks, naming the kit, and without a kit',
+  opts,
+  async () => {
+    const { pool } = db
+    await deepseek(pool, [{ id: PRO, tools: true, vision: false }])
+    const doc = withAllLooks(openKit(KIT_REF).doc)
+    delete doc.pages[0].look
+    const found = await sitePlannerDoor({ pool, secret: SECRET, kit: { ref: KIT_REF, doc } })
+    assert.deepEqual(
+      { ok: found.ok, code: found.code, lacking: found.lacking },
+      { ok: false, code: 'SITE_PLANNER_MODEL_LACKS', lacking: ['vision'] }
+    )
+    assert.match(found.reason, /cannot do reading pictures/)
+    assert.ok(found.reason.includes(KIT_REF), 'the refusal names the kit')
+    assert.match(found.reason, /no current look for 1 of its 1440 shots/)
+    assert.ok(found.reason.includes(doc.pages[0].id), 'the refusal names the part without a look')
+    assert.match(found.reason, /Model & AI/)
+    const unnamed = await sitePlannerDoor({ pool, secret: SECRET })
+    assert.equal(unnamed.code, 'SITE_PLANNER_MODEL_LACKS')
+    assert.match(unnamed.reason, /cannot do reading pictures/)
+  }
+)
+
+test('a model that cannot call tools is refused even on a kit with every look', opts, async () => {
+  const { pool } = db
+  await deepseek(pool, [{ id: PRO, tools: false, vision: false }])
+  const kit = { ref: KIT_REF, doc: withAllLooks(openKit(KIT_REF).doc) }
+  const found = await sitePlannerDoor({ pool, secret: SECRET, kit })
+  assert.deepEqual(found.lacking, ['tools', 'vision'])
+  assert.match(found.reason, /tool calls or reading pictures/)
+})
+
+test(
+  'a harness that sends no images needs the same complete looks, even for a model the provider did not list',
+  opts,
+  async () => {
+    const { pool } = db
+    await deepseek(pool, [])
+    const noImages = () => false
+    const bare = await sitePlannerDoor({ pool, secret: SECRET, kit: openKit(KIT_REF), sendsImages: noImages })
+    assert.equal(bare.code, 'SITE_PLANNER_MODEL_LACKS')
+    assert.match(bare.reason, /is given no pictures/)
+    const kit = { ref: KIT_REF, doc: withAllLooks(openKit(KIT_REF).doc) }
+    const found = await sitePlannerDoor({ pool, secret: SECRET, kit, sendsImages: noImages })
+    assert.equal(found.ok, true)
+    assert.equal(found.snapshot.images, false)
+  }
+)

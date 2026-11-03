@@ -180,3 +180,15 @@
   endpoints, read 03/11/2026, give it text and image input, tools, `reasoning` and `reasoning_effort`, a 1h cache write
   price, and 128000 output tokens on every endpoint, so effort medium, both 1h cache markers and the 128000 output
   budget stay as they are.
+- **The planner runs on DeepSeek V4 Pro by default, from text alone (refines the bullet above, 03/11/2026).** For its
+  cost, the default door is model `deepseek-v4-pro` on the `deepseek` provider (`SITE_PLANNER_PROVIDER`,
+  `SITE_PLANNER_MODEL`); Claude Sonnet 5.5 and Opus 5.5 through OpenRouter stay as alternatives on the `anthropic`
+  profile. DeepSeek lists it as text only, so the door now requires tool calls and only prefers vision: a model that
+  cannot read pictures (or whose profile sends none) is let in at run start only when the kit has a current look for
+  every packed 1440 shot (`looksMissingOf`), and is refused naming the kit and the parts without a look otherwise. Such
+  a run is offered no image tool, its first message says there are no images and the looks stand in for them, no image
+  zip is fetched, and the door snapshot records `images: false`. Its profile `deepseek-v4-pro-native` sends DeepSeek's
+  wire with effort high, no cache markers and 128000 output tokens (a 231k-token planner call answered in 191 s), and
+  computes cost from a price table assumed from OpenRouter's third-party listings until checked against DeepSeek's own
+  pricing. DeepSeek's overload answers are retried with backoff: a 503 `service_unavailable_error`, the same code in a
+  200 body, and a 200 whose body is not JSON (cut while overloaded), whose first 300 characters are kept in the reason.

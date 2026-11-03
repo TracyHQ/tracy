@@ -190,10 +190,11 @@ function list(value) {
 /**
  * The two tools the planner works with, in the shape runAgent takes.
  * @param {any} doc the kit
- * @param {{ images?: { open: (id: string) => Promise<any> } }} [options] the kit's images, made ready by
- *   kit-images.js `ensure`; without them open_kit_image answers that images are not available
+ * @param {{ images?: { open: (id: string) => Promise<any> } | null, imageTool?: boolean }} [options] the kit's
+ *   images, made ready by kit-images.js `ensure`; without them open_kit_image answers that images are not available.
+ *   `imageTool: false` (a model given no images, door.js) leaves open_kit_image out: only read_kit_part is offered.
  */
-export function kitTools(doc, { images } = {}) {
+export function kitTools(doc, { images, imageTool = true } = {}) {
   const parts = kitParts(doc)
   const imageIds = new Set(list(doc.images).map((image) => image.id))
   const idParameter = (description) => ({
@@ -204,7 +205,7 @@ export function kitTools(doc, { images } = {}) {
   })
   const badId = (tool) =>
     JSON.stringify({ error: 'INVALID_ARGUMENTS', tool, detail: 'id must be a non-empty string' })
-  return [
+  const tools = [
     {
       name: KIT_TOOL_NAMES.readPart,
       description:
@@ -253,19 +254,21 @@ export function kitTools(doc, { images } = {}) {
               })
     }
   ]
+  return imageTool ? tools : tools.slice(0, 1)
 }
 
 /**
  * The first user message of a run: how to use the two tools (the approved prompt names neither) and, when the kit
- * has looks, where they are read, then the brief.
- * @param {{ kit: { ref: string, doc: any }, brief: object }} input
+ * has looks, where they are read, then the brief. `imageTool: false` (a model given no images, door.js): only the
+ * part tool is described, and the message says there are no images and the looks stand in for them.
+ * @param {{ kit: { ref: string, doc: any }, brief: object, imageTool?: boolean }} input
  */
-export function firstUserMessage({ kit, brief }) {
+export function firstUserMessage({ kit, brief, imageTool = true }) {
   const { readPart, openImage } = KIT_TOOL_NAMES
   const template = kit.doc.template ? ` (template ${kit.doc.template.name} ${kit.doc.template.version})` : ''
   const hasLooks = [...list(kit.doc.pages), ...list(kit.doc.blocks)].some((item) => lookTextOf(item.look))
   return [
-    `Input 2, the template kit, is ${kit.ref}${template}. It is not in this message: read it part by part with your two tools.`,
+    `Input 2, the template kit, is ${kit.ref}${template}. It is not in this message: read it part by part with your ${imageTool ? 'two tools' : 'tool'}.`,
     '',
     `- ${readPart} answers parts of the kit as JSON. Start with ${readPart}("contents"): it lists what the kit holds and every part id. Then read the parts as your work reaches them: "site" (the site-wide parts; a large one is named there by its own id, such as "site.fixedTexts"), "pageGroups", "pages", a page group id, a page id or a block id. Give it one id, or several as ids (a list) to read them in one call.`,
     ...(hasLooks
@@ -273,8 +276,15 @@ export function firstUserMessage({ kit, brief }) {
           `- ${readPart}("contents") also gives the look of every page and block that has one, and a page or block part carries its own: plan from these looks.`
         ]
       : []),
-    `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. Open an image only where your instructions say a look cannot settle a decision.`,
-    '- You may call the tools several times in the same turn: ask for every part and image you need next at once, rather than one per turn.',
+    ...(imageTool
+      ? [
+          `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. Open an image only where your instructions say a look cannot settle a decision.`,
+          '- You may call the tools several times in the same turn: ask for every part and image you need next at once, rather than one per turn.'
+        ]
+      : [
+          '- Kit images are not available to you in this run, and there is no image tool. Where your instructions say to open an image, plan from the looks instead: every page and block has one.',
+          `- You may call ${readPart} several times in the same turn: ask for every part you need next at once, rather than one per turn.`
+        ]),
     '',
     'Input 1, the brief, is this JSON:',
     '',
