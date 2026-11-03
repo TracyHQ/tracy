@@ -115,7 +115,7 @@ test("the deepseek-native profile: DeepSeek's wire, no provider routing, a price
   assert.equal(h.wire, 'deepseek-native')
   assert.equal(h.toolImages, 'user-message')
   assert.equal(h.cacheMarkers, false)
-  assert.equal(h.effort, 'high')
+  assert.equal(h.effort, 'low')
   assert.equal(h.provider, undefined)
   assert.equal(h.maxTokens, 128000)
   assert.deepEqual(h.price, DEEPSEEK_FLASH_PRICE)

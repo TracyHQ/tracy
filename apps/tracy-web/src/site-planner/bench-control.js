@@ -89,7 +89,9 @@ export const MODEL_HARNESS = Object.freeze([
       wire: 'deepseek-native',
       toolImages: 'user-message',
       cacheMarkers: false,
-      effort: 'high',
+      // DeepSeek's efforts are low, high and max. A measured Flash run at high spent about two thirds of its 10.5
+      // minutes thinking (about 70k reasoning tokens of 105k output); low is being measured against it.
+      effort: 'low',
       // Not yet measured against DeepSeek's own API; kept at the bench budget until it is.
       maxTokens: MAX_OUTPUT_TOKENS,
       price: DEEPSEEK_FLASH_PRICE
