@@ -58,7 +58,8 @@ test('a finer change that names nothing, or the wrong shape, is refused and noth
     [{ block: 'block-190', add: 'why', with: {} }, /not a list/],
     [{ block: 'block-190', field: 'copy', add: 'copy', with: [] }, /exactly one/],
     [{ slot: 'block-190.99', remove: true }, /slot that does not exist/],
-    [{ slot: 'block-190.12', remove: 'yes' }, /remove must be true/],
+    [{ slot: 'block-190.14', remove: 1 }, /remove must be true or a path/],
+    [{ slot: 'block-190.14', remove: 'nowhere' }, /does not exist/],
     [{ slot: 'block-190.12', remove: true, with: {} }, /keys it should not/],
     [{ page: 'page-about-us', remove: true }, /cannot be removed/]
   ]

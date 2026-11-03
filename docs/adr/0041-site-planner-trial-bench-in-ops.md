@@ -142,6 +142,14 @@
 - **Finer change lists (cost cut).** A fix round change may replace one field of a block, add one entry to a block's
   list, or remove one slot, link, frame or list entry, so unhiding a few slots no longer resends whole blocks; whole
   parts, sections and a whole plan are still accepted.
+- **Fix rounds edit, they do not resend (cost cut).** A measured run answered 51 failures with two whole-section
+  replacements, 108k characters and about 48k output tokens. A change now names any part or section and edits one value
+  at a dotted path inside it (`field`), adds one entry to a list in it (`add`) or removes one value (`remove`), so every
+  place a failure names (a block, a slot, a page's story, a page group, `site.footerMenu[1]`, `mainMenu[2]`) is reached
+  without replacing what holds it; the instruction asks for whole replacement only for a part that must be rewritten
+  whole. A change list with a replacement over 4 KB of which at least half is already in the plan at the same place is
+  not applied once: the model is told how many KB it resent unchanged and asked for field edits, in the same round. A
+  second such list is applied (correctness over speed) and the round records it in `reading.bigReplacementsApplied`.
 - **The harness follows the model.** A run records a model profile: Anthropic models keep inline tool images and the two
   cache markers; DeepSeek V4.1 Flash (`deepseek/deepseek-v4.1-flash-1017` on OpenRouter) gets images in a user message,
   no cache markers, effort high (it has no medium), the DeepSeek provider pinned for the whole run, and the same 128000

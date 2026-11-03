@@ -7,6 +7,7 @@ import { after, before, beforeEach, test } from 'node:test'
 import { runFiles } from '../src/site-planner/bench-export.js'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { createSitePlannerQueue, NOT_A_PLAN_MESSAGE } from '../src/site-planner/bench-worker.js'
+import { smallEditsMessage } from '../src/site-planner/plan-change-size.js'
 import { applyChanges, CHANGES_INSTRUCTION, WHOLE_PLAN_MESSAGE } from '../src/site-planner/plan-changes.js'
 import { finalReply, scriptedModel, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
@@ -197,6 +198,80 @@ test('a redeploy while the whole plan is asked for resends that ask in the same 
   assert.equal(lastUserText(model.requests[0]), WHOLE_PLAN_MESSAGE)
   assert.equal(run.rounds[1].state, 'checked')
   assert.ok(run.rounds[1].reading.wholePlanAsked)
+})
+
+/** A fix of the broken block resent as the whole pages section: large, and almost all of it unchanged. */
+function wastefulFix() {
+  const { good, bad, block } = brokenBlock()
+  const changes = [{ section: 'pages', with: good.pages }]
+  return { good, bad, block, changes }
+}
+
+test(
+  'a large replacement that is mostly unchanged is sent back once, and field edits fix the round',
+  opts,
+  async () => {
+    const { pool } = db
+    const { good, bad, block, changes } = wastefulFix()
+    const edits = [{ block: block.block, field: 'copy', with: block.copy }]
+    const { run, model } = await runOnce(pool, [reply(bad), reply({ changes }), reply({ changes: edits })])
+    assert.equal(run.status, 'succeeded', run.error)
+    assert.equal(model.requests.length, 3)
+    const asked = run.rounds[1].reading.smallEditsAsked
+    assert.ok(asked, 'the round does not record the ask for small edits')
+    assert.equal(lastUserText(model.requests[2]), asked.message)
+    assert.equal(asked.message, smallEditsMessage(asked.replacements))
+    assert.match(asked.message, /change 0 replaces section pages: [\d.]+ KB, of which [\d.]+ KB is unchanged/)
+    assert.deepEqual(
+      run.rounds.map((r) => [r.round, r.state]),
+      [
+        [0, 'checked'],
+        [1, 'checked']
+      ]
+    )
+    assert.deepEqual(run.rounds[1].plan, good)
+    assert.equal(run.rounds[1].failureList, '')
+    assert.deepEqual(run.rounds[1].changes, edits)
+    assert.equal(run.rounds[1].reading.bigReplacementsApplied, undefined)
+  }
+)
+
+test('a second large replacement in the same round is applied and recorded on the round', opts, async () => {
+  const { pool } = db
+  const { good, bad, changes } = wastefulFix()
+  const { run, model } = await runOnce(pool, [reply(bad), reply({ changes }), reply({ changes })])
+  assert.equal(run.status, 'succeeded', run.error)
+  assert.equal(model.requests.length, 3)
+  assert.equal(run.rounds[1].state, 'checked')
+  assert.deepEqual(run.rounds[1].plan, good)
+  assert.ok(run.rounds[1].reading.smallEditsAsked)
+  const applied = run.rounds[1].reading.bigReplacementsApplied
+  assert.equal(applied.length, 1)
+  assert.equal(applied[0].target, 'section pages')
+  assert.ok(applied[0].unchangedBytes >= applied[0].bytes / 2)
+})
+
+test('a redeploy while small edits are asked for resends that ask in the same round', opts, async () => {
+  const { pool } = db
+  await assignPlannerDoor(pool)
+  const started = await startRun(pool)
+  const { good, bad, changes } = wastefulFix()
+  await drain(pool, scriptedModel([reply(bad), reply({ changes })]), { killOn: 3 })
+  await pool.query(`update site_planner_run set lease_until = now() - interval '1 second' where id = $1`, [
+    started.id
+  ])
+  let run = await readRun(pool, started.id)
+  assert.equal(run.rounds[1].state, 'planning')
+  const { message } = run.rounds[1].reading.smallEditsAsked
+
+  const model = scriptedModel([reply({ changes })])
+  await drain(pool, model)
+  run = await readRun(pool, started.id)
+  assert.equal(run.status, 'succeeded', run.error)
+  assert.equal(model.requests.length, 1)
+  assert.equal(lastUserText(model.requests[0]), message)
+  assert.deepEqual(run.rounds[1].plan, good)
+  assert.ok(run.rounds[1].reading.bigReplacementsApplied)
 })
 
 test(

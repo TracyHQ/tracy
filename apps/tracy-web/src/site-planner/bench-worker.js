@@ -5,7 +5,10 @@
 // changed parts, goes back as the next user turn of the same conversation (reasoning and tool turns kept whole). The
 // server applies the change list to the previous plan and scores the merged plan; a whole plan is accepted as well.
 // At most two fix rounds, then any failure still standing is stored on the run. A change list that cannot be applied
-// gets one short message asking for the whole plan, and that answer belongs to the same round. An answer that is not
+// gets one short message asking for the whole plan, and that answer belongs to the same round. A change list whose
+// replacements resend a large part of the plan mostly unchanged (plan-change-size.js) is not applied once: a short
+// message asks for field edits instead, in the same round; a second such list is applied, and the round records it
+// (reading.bigReplacementsApplied). An answer that is not
 // one JSON object (one fenced block in it is read, the text around it dropped and recorded) is a round that is not a
 // plan: a short message asking for the whole plan as one JSON object is sent back instead, and it counts as a fix
 // round.
@@ -34,6 +37,7 @@ import {
 import { sitePlannerDoor } from './door.js'
 import { kitImagesFor } from './kit-images.js'
 import { firstUserMessage, kitTools, openKit } from './kit-source.js'
+import { oversizedReplacements, smallEditsMessage } from './plan-change-size.js'
 import {
   applyChanges,
   CHANGES_INSTRUCTION,
@@ -186,6 +190,9 @@ async function playRound(deps, { row, ready, round, followUp, base, reading: pri
     lost.state = 'abandoned'
   }
   let askedWhole = await roundSent(pool, runId, round, WHOLE_PLAN_MESSAGE)
+  // The ask for small edits is recorded before it goes out; it counts once it was sent.
+  const smallAsk = prior?.smallEditsAsked?.message
+  let askedSmall = Boolean(smallAsk) && (await roundSent(pool, runId, round, smallAsk))
   const reading = { ...prior }
   for (;;) {
     const result = await ask(deps, { row, ready, round, history, followUp, leaseToken, must })
@@ -229,6 +236,18 @@ async function playRound(deps, { row, ready, round, followUp, base, reading: pri
         askedWhole = true
         continue
       }
+      const oversized = oversizedReplacements(applied.replacements)
+      if (oversized.length && !askedSmall) {
+        const message = smallEditsMessage(oversized)
+        reading.smallEditsAsked = { message, replacements: oversized, answer: result.answer }
+        await save('planning', { changes: read.value.changes, reading })
+        history = result.turns
+        followUp = message
+        askedSmall = true
+        continue
+      }
+      // Correctness over speed: a second oversized list is applied, and the round says so.
+      if (oversized.length) reading.bigReplacementsApplied = oversized
       plan = applied.plan
       changes = read.value.changes
     }
