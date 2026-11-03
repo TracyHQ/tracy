@@ -17,7 +17,7 @@
  */
 import { createHash } from 'node:crypto'
 import { createChargeable } from 'website-opportunities/src/cost-ledger.js'
-import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
+import { ceilingCents, visionCostExactCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import { photographsOnly } from 'website-opportunities/domain/pictures/brief-media.mjs'
 import { closedListDigest, ownershipOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
@@ -202,7 +202,7 @@ export function createBriefPictureLabels({
           operation: model,
           // The first round's calls and, at most, as many again for the retry.
           maxCents: (1 + RETRY) * Math.ceil(pictures.length / BATCH) * ceilingCents('vision', model),
-          actualCents: (r) => visionCostCents(model, r.usage),
+          actualCents: (r) => visionCostExactCents(model, r.usage),
           purpose: 'picture-labels',
           payer: accountId ? { kind: 'account', accountId } : null,
           tokens: (r) => modelTokensOf((r.usage?.requests ?? []).map((q) => q.usage))
