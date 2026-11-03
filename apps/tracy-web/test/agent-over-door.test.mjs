@@ -756,3 +756,67 @@ test('a reply body padded with leading whitespace (provider keep-alive) is read 
   assert.equal(result.answer, 'ok')
   assert.equal(result.turns[0].cost, 0.001)
 })
+
+test('a non-Anthropic model: no cache markers, images in a user message, reasoning sent back, provider routing passed', async () => {
+  const png = 'iVBORw0KGgo='
+  const door = { ...DOOR, model: 'deepseek/deepseek-v4.1-flash-1017' }
+  const details = [{ type: 'reasoning.text', text: 'the image shows a ring', format: 'unknown' }]
+  const tools = [
+    ...catalogueTools(),
+    {
+      name: 'open_image',
+      description: 'Open one image.',
+      parameters: { type: 'object', properties: {} },
+      run: async () => ({ text: 'image i1, 4x4', images: [{ mediaType: 'image/png', base64: png }] })
+    }
+  ]
+  const model = scriptedModel([
+    toolCallReply({
+      calls: [
+        ['read_part', { id: 'p1' }],
+        ['open_image', {}]
+      ],
+      reasoningDetails: details
+    }),
+    finalReply({ content: '{"answer":"p1"}' })
+  ])
+  const provider = { order: ['deepseek'], allow_fallbacks: false }
+  const result = await runAgent({
+    door,
+    system: SYSTEM,
+    firstUser: FIRST,
+    tools,
+    fetchImpl: model.fetchImpl,
+    toolImages: 'user-message',
+    cacheMarkers: false,
+    effort: 'high',
+    provider
+  })
+  assert.equal(result.answer, '{"answer":"p1"}')
+  for (const { body } of model.requests) {
+    assert.doesNotMatch(JSON.stringify(body), /cache_control/)
+    assert.equal(body.messages[0].content, SYSTEM)
+    assert.deepEqual(body.provider, provider)
+    assert.deepEqual(body.reasoning, { enabled: true, effort: 'high' })
+    assert.equal(body.model, 'deepseek/deepseek-v4.1-flash-1017')
+  }
+  const second = model.requests[1].body.messages
+  assert.deepEqual(
+    second.map((m) => m.role),
+    ['system', 'user', 'assistant', 'tool', 'tool', 'user']
+  )
+  // The assistant turn goes back with its reasoning, as the provider requires in a tool loop.
+  assert.deepEqual(second[2].reasoning_details, details)
+  assert.equal(second[2].reasoning, 'thinking text')
+  assert.ok(
+    second.slice(3, 5).every((m) => typeof m.content === 'string'),
+    'an image stayed in a tool result'
+  )
+  assert.deepEqual(second[5].content.at(-1), {
+    type: 'image_url',
+    image_url: { url: `data:image/png;base64,${png}` }
+  })
+  assert.deepEqual(result.turns[0].request.cacheMarkers, false)
+  assert.deepEqual(result.turns[0].request.provider, provider)
+  assert.equal(result.turns[0].request.toolImages, 'user-message')
+})

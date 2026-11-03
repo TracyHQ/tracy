@@ -26,10 +26,45 @@ export const BENCH_HARNESS = Object.freeze({
   effort: 'medium',
   cacheTtl: Object.freeze({ system: '1h', rolling: '1h' }),
   toolImages: 'inline',
+  cacheMarkers: true,
   maxTurns: 150,
   callTimeoutMs: 45 * 60_000,
   retry: RETRY_DEFAULTS
 })
+
+/**
+ * What changes in the harness for the door's model, by OpenRouter model id. Read on 03/11/2026 from OpenRouter's
+ * model list and endpoints (deepseek/deepseek-v4.1-flash-1017: text and image input, tools, reasoning efforts
+ * max, high, low and none, the smallest endpoint output limit 131072) and DeepSeek's API docs (images only in user
+ * messages, reasoning sent back in a tool loop, automatic caching). The first matching entry wins.
+ */
+export const MODEL_HARNESS = Object.freeze([
+  { profile: 'anthropic', match: /^anthropic\//, harness: {} },
+  {
+    profile: 'deepseek-v4.1-flash',
+    match: /^deepseek\/deepseek-v4\.1-flash/,
+    harness: {
+      // DeepSeek takes images in user messages only, never inside a tool result.
+      toolImages: 'user-message',
+      // DeepSeek caches on its own; Anthropic's cache_control markers are left out.
+      cacheMarkers: false,
+      // The model offers low, high and max but no medium; high is its default.
+      effort: 'high',
+      // One provider for the whole run: each provider caches on its own, and DeepSeek's own endpoint is the one
+      // whose image handling its docs describe.
+      provider: Object.freeze({ order: Object.freeze(['deepseek']), allow_fallbacks: false })
+    }
+  }
+])
+
+/** Any other model: images in user messages and no cache markers, the forms OpenAI-compatible models all accept. */
+const OTHER_MODEL = { profile: 'other', harness: { toolImages: 'user-message', cacheMarkers: false } }
+
+/** The harness a run on this model records: BENCH_HARNESS with the model's own settings and its profile name. */
+export function benchHarnessFor(model) {
+  const entry = MODEL_HARNESS.find((m) => m.match.test(String(model ?? ''))) ?? OTHER_MODEL
+  return { ...BENCH_HARNESS, ...entry.harness, modelProfile: entry.profile }
+}
 
 const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })
 
@@ -74,7 +109,7 @@ export async function startBenchRun({
     promptSha256: plannerPrompt().sha256,
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
-    harness: BENCH_HARNESS
+    harness: benchHarnessFor(door.snapshot.model)
   })
   if (created.error === SITE_PLANNER_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }

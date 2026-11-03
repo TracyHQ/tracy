@@ -2,26 +2,28 @@
 // (brief shape, kit, door), one run is active at a time and a refusal names it, and cancel stops a waiting run at once.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
-import { readRun } from '../src/site-planner/bench-store.js'
 import {
   BENCH_HARNESS,
+  benchHarnessFor,
   briefOfRevision,
   cancelBenchRun,
   startBenchRun
 } from '../src/site-planner/bench-control.js'
+import { readRun } from '../src/site-planner/bench-store.js'
 import { CHECKER_VERSION } from '../src/site-planner/plan-check/check-plan.js'
 import { plannerPrompt } from '../src/site-planner/planner-prompt.js'
+import { fileDb } from './_db.mjs'
+import { brief } from './_site-plan-check-inputs.mjs'
 import {
   API_KEY,
   assignPlannerDoor,
+  DEEPSEEK_FLASH,
   KIT_REF,
   MODEL,
   readyKitImages,
   SECRET,
   startRun
 } from './_site-planner-bench.mjs'
-import { brief } from './_site-plan-check-inputs.mjs'
-import { fileDb } from './_db.mjs'
 
 const db = fileDb()
 before(db.open)
@@ -56,12 +58,41 @@ test('a started run stores what it will run on, and never the key', opts, async 
   assert.equal(full.checkerVersion, CHECKER_VERSION)
   assert.equal(full.door.model, MODEL)
   assert.equal(full.door.providerId, 'openrouter')
-  assert.deepEqual(full.harness, BENCH_HARNESS)
+  assert.deepEqual(full.harness, benchHarnessFor(MODEL))
+  assert.deepEqual(full.harness, { ...BENCH_HARNESS, modelProfile: 'anthropic' })
+  assert.equal(full.harness.toolImages, 'inline')
+  assert.equal(full.harness.cacheMarkers, true)
   // Parity with the Claude Code harness of the reference run: its output budget, a call long enough for it, retries.
   assert.equal(full.harness.maxTokens, 128000)
   assert.equal(full.harness.callTimeoutMs, 45 * 60_000)
   assert.deepEqual([full.harness.retry.attempts, full.harness.retry.maxWaitMs], [5, 60_000])
   assert.equal(JSON.stringify(full).includes(API_KEY), false)
+})
+
+test('a run on DeepSeek V4.1 Flash records the harness chosen for that model', opts, async () => {
+  const { pool } = db
+  await assignPlannerDoor(pool, { model: DEEPSEEK_FLASH })
+  const run = await startRun(pool)
+  const full = await readRun(pool, run.id)
+  assert.equal(full.door.model, DEEPSEEK_FLASH)
+  assert.deepEqual(full.harness, benchHarnessFor(DEEPSEEK_FLASH))
+  assert.equal(full.harness.modelProfile, 'deepseek-v4.1-flash')
+  // Images only in user messages, no cache markers (DeepSeek caches on its own), effort high (the model has no
+  // medium), one provider for the whole run, and an output budget every endpoint of the model allows.
+  assert.equal(full.harness.toolImages, 'user-message')
+  assert.equal(full.harness.cacheMarkers, false)
+  assert.equal(full.harness.effort, 'high')
+  assert.deepEqual(full.harness.provider, { order: ['deepseek'], allow_fallbacks: false })
+  assert.equal(full.harness.maxTokens, 128000)
+})
+
+test('an unlisted model that is not Anthropic gets images in user messages and no cache markers', () => {
+  const h = benchHarnessFor('vendor/some-model')
+  assert.equal(h.modelProfile, 'other')
+  assert.equal(h.toolImages, 'user-message')
+  assert.equal(h.cacheMarkers, false)
+  assert.equal(h.provider, undefined)
+  assert.equal(h.effort, BENCH_HARNESS.effort)
 })
 
 test('a brief of the wrong shape is refused with its problems, nothing queued', opts, async () => {

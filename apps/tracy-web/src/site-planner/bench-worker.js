@@ -54,7 +54,17 @@ export const NOT_A_PLAN_MESSAGE =
 /** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
 export const BENCH_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })
 
-const HARNESS_KEYS = ['maxTokens', 'effort', 'cacheTtl', 'toolImages', 'maxTurns', 'callTimeoutMs', 'retry']
+const HARNESS_KEYS = [
+  'maxTokens',
+  'effort',
+  'cacheTtl',
+  'cacheMarkers',
+  'provider',
+  'toolImages',
+  'maxTurns',
+  'callTimeoutMs',
+  'retry'
+]
 
 class LeaseLost extends Error {}
 

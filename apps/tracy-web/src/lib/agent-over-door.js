@@ -17,7 +17,9 @@
 // - last turn answered but truncated (AGENT_TRUNCATED) or refused by the model's content filter (AGENT_REFUSED): the
 //   same error again, nothing is sent.
 // Reasoning details are saved on every assistant message and sent back: Anthropic refuses a tool loop whose earlier
-// thinking comes back unsigned. A cancel (signal) is honoured between turns only; a call in flight is never cut.
+// thinking comes back unsigned, and DeepSeek refuses one whose earlier reasoning is missing (OpenRouter turns the
+// details back into the provider's own field). cacheMarkers false sends no cache_control marker (models that cache on
+// their own, such as DeepSeek); provider is OpenRouter's provider routing object, sent as is. A cancel (signal) is honoured between turns only; a call in flight is never cut.
 //
 // A call that meets a transient provider error (a 429, a 5xx, an overloaded answer, a network error before any
 // response) is tried again inside the same turn, up to `retry.attempts` times (agent-over-door-retry.js). The turn
@@ -64,6 +66,7 @@ const DEFAULTS = {
   effort: 'high',
   cacheTtl: { system: '1h', rolling: '5m' },
   toolImages: 'inline',
+  cacheMarkers: true,
   maxTurns: 150,
   callTimeoutMs: 20 * 60_000,
   retry: RETRY_DEFAULTS
@@ -96,6 +99,10 @@ export async function runAgent({
     })
   if (!['inline', 'user-message'].includes(o.toolImages))
     throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'toolImages must be inline or user-message' })
+  if (typeof o.cacheMarkers !== 'boolean')
+    throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'cacheMarkers must be true or false' })
+  if (o.provider !== undefined && (o.provider === null || typeof o.provider !== 'object'))
+    throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'provider must be an object' })
   if (!door?.baseUrl || !door?.apiKey || !door?.model)
     throw new AgentError('AGENT_SETTINGS_INVALID', { reason: 'the door needs baseUrl, apiKey and model' })
 
@@ -121,6 +128,9 @@ export async function runAgent({
         maxTokens: o.maxTokens,
         effort: o.effort,
         cacheTtl: o.cacheTtl,
+        cacheMarkers: o.cacheMarkers,
+        toolImages: o.toolImages,
+        ...(o.provider ? { provider: o.provider } : {}),
         tools: tools.map((t) => t.name),
         messages: messages.length + next.length + 1
       },

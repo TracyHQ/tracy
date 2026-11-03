@@ -14,15 +14,16 @@ import { kitZipName } from '../src/site-planner/kit-images.js'
 import { KIT_TOOL_NAMES, openKit } from '../src/site-planner/kit-source.js'
 import { finalReply, scriptedModel, toolCallReply } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
+import { plan } from './_site-plan-check.mjs'
 import {
   assignPlannerDoor,
+  DEEPSEEK_FLASH,
   inventedImageBytes,
   KIT_REF,
   readyKitImages,
   SECRET,
   startRun
 } from './_site-planner-bench.mjs'
-import { plan } from './_site-plan-check.mjs'
 
 const db = fileDb()
 before(db.open)
@@ -182,5 +183,48 @@ test(
     // Round 0 had the bytes in memory; the fix round read each image back once.
     assert.deepEqual(images.calls.open, ['header-1440', 'page-home-1440'])
     assert.deepEqual(images.calls.resolve, ['header-1440', 'page-home-1440'])
+  }
+)
+
+test(
+  'a run on DeepSeek V4.1 Flash sends images in a user message, no cache markers, one provider, and its reasoning back',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool, { model: DEEPSEEK_FLASH })
+    const started = await startRun(pool)
+    const details = [{ type: 'reasoning.text', text: 'the header shows a logo', format: 'unknown' }]
+    const model = scriptedModel([
+      toolCallReply({
+        calls: [
+          [KIT_TOOL_NAMES.readPart, { ids: ['contents', 'header'] }],
+          [KIT_TOOL_NAMES.openImage, { id: 'header-1440' }]
+        ],
+        reasoningDetails: details
+      }),
+      finalReply({ content: JSON.stringify(plan()) })
+    ])
+    await drain(pool, model, readyKitImages())
+    const run = await readRun(pool, started.id)
+    assert.equal(run.status, 'succeeded', run.error)
+    assert.equal(run.harness.modelProfile, 'deepseek-v4.1-flash')
+    for (const { body } of model.requests) {
+      assert.equal(body.model, DEEPSEEK_FLASH)
+      assert.doesNotMatch(JSON.stringify(body), /cache_control/)
+      assert.deepEqual(body.provider, { order: ['deepseek'], allow_fallbacks: false })
+      assert.deepEqual(body.reasoning, { enabled: true, effort: 'high' })
+      assert.equal(body.max_tokens, 128000)
+    }
+    const messages = model.requests[1].body.messages
+    assert.deepEqual(
+      messages.map((m) => m.role),
+      ['system', 'user', 'assistant', 'tool', 'tool', 'user']
+    )
+    assert.deepEqual(messages[2].reasoning_details, details)
+    const both = JSON.parse(messages[3].content)
+    assert.deepEqual(Object.keys(both), ['contents', 'header'])
+    assert.equal(typeof messages[4].content, 'string')
+    assert.deepEqual(sentImages(model.requests[1]), [dataUrl('header-1440')])
+    assert.equal(messages[5].content.at(-1).type, 'image_url')
   }
 )

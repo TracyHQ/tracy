@@ -5,7 +5,8 @@
 // prompt up to and including that part. Two markers are placed on every request, never stored in the conversation:
 // one on the system prompt (its TTL chosen by the caller), and one rolling marker on the newest non-assistant message
 // (the newest tool result, or the first user message on turn 0), so each call re-reads everything the previous call
-// already paid to cache. Anthropic allows four markers; a 1h marker must come before a 5m one.
+// already paid to cache. Anthropic allows four markers; a 1h marker must come before a 5m one. With cacheMarkers
+// false (a model that caches on its own) no marker is placed and the messages go as saved.
 
 export const CACHE_TTLS = ['5m', '1h']
 
@@ -24,16 +25,28 @@ function withMarker(content, ttl) {
 }
 
 /** The JSON body of one call. `messages` is the saved conversation without the system prompt. */
-export function requestBody({ model, system, messages, tools, maxTokens, effort, cacheTtl }) {
+export function requestBody({
+  model,
+  system,
+  messages,
+  tools,
+  maxTokens,
+  effort,
+  cacheTtl,
+  cacheMarkers = true,
+  provider
+}) {
   const newest = messages.findLastIndex((m) => m.role !== 'assistant')
   return {
     model,
-    messages: [
-      { role: 'system', content: withMarker(system, cacheTtl.system) },
-      ...messages.map((m, i) =>
-        i === newest ? { ...m, content: withMarker(m.content, cacheTtl.rolling) } : m
-      )
-    ],
+    messages: cacheMarkers
+      ? [
+          { role: 'system', content: withMarker(system, cacheTtl.system) },
+          ...messages.map((m, i) =>
+            i === newest ? { ...m, content: withMarker(m.content, cacheTtl.rolling) } : m
+          )
+        ]
+      : [{ role: 'system', content: system }, ...messages],
     ...(tools.length
       ? {
           tools: tools.map((t) => ({
@@ -45,7 +58,8 @@ export function requestBody({ model, system, messages, tools, maxTokens, effort,
     // enabled makes thinking explicit; with effort alone an Anthropic model may still skip thinking on an easy turn.
     reasoning: { enabled: true, effort },
     max_tokens: maxTokens,
-    usage: { include: true }
+    usage: { include: true },
+    ...(provider ? { provider } : {})
   }
 }
 

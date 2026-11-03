@@ -10,6 +10,8 @@ import { brief } from './_site-plan-check-inputs.mjs'
 export const SECRET = 's'.repeat(32)
 export const KIT_REF = 'ja-boxing/j6/1.0.10'
 export const MODEL = 'anthropic/claude-opus-5.5'
+/** DeepSeek V4.1 Flash as OpenRouter lists it (the 17/10/2026 snapshot), for the one comparison run. */
+export const DEEPSEEK_FLASH = 'deepseek/deepseek-v4.1-flash-1017'
 export const API_KEY = 'sk-or-test-secret-key'
 
 /** The bytes the ready kit images give for an image id. */
@@ -46,14 +48,14 @@ export function readyKitImages() {
   }
 }
 
-export async function assignPlannerDoor(pool, { enabled = true } = {}) {
+export async function assignPlannerDoor(pool, { enabled = true, model = MODEL } = {}) {
   await saveProvider(
     pool,
     { id: 'openrouter', presetId: 'openrouter', apiKey: API_KEY, enabled },
     SECRET,
     'owner@tracy.test'
   )
-  await assignDoor(pool, 'sitePlanner', { providerId: 'openrouter', model: MODEL }, 'owner@tracy.test')
+  await assignDoor(pool, 'sitePlanner', { providerId: 'openrouter', model }, 'owner@tracy.test')
 }
 
 /** Start a run and return it; fails the test when the start is refused. */
