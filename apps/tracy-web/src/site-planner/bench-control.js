@@ -16,12 +16,14 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 /**
  * How every bench run calls the model, stored on the run (parity with the reference run, ADR 0041). The output
  * budget is Claude Code's (thinking counts against it, and the reference plan alone is about 50k tokens); a call
- * that long, not streamed, can take well over 20 minutes, hence 45. Transient provider errors are retried.
+ * that long, not streamed, can take well over 20 minutes, hence 45. Transient provider errors are retried. Both cache
+ * markers (system and rolling) live one hour: an answer can take longer than 5 minutes, and a 5 minute rolling marker
+ * then expires before the next call, which writes the whole conversation to the cache again.
  */
 export const BENCH_HARNESS = Object.freeze({
   maxTokens: MAX_OUTPUT_TOKENS,
   effort: 'high',
-  cacheTtl: Object.freeze({ system: '1h', rolling: '5m' }),
+  cacheTtl: Object.freeze({ system: '1h', rolling: '1h' }),
   toolImages: 'inline',
   maxTurns: 150,
   callTimeoutMs: 45 * 60_000,
