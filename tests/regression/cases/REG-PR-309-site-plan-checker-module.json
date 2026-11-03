@@ -1,0 +1,65 @@
+{
+  "id": "REG-PR-309-site-plan-checker-module",
+  "kind": "feat",
+  "title": "The site plan checker is a pure module: each rule R00 to R19 passes a good plan and fails a plan that breaks exactly that rule, and the fix-round failure list keeps the approved line format",
+  "pr": 309,
+  "area": "site-planner/plan-check",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run the command in `run.cmd`.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": ["0 failures.", "Every test named in run.tests reports ok."],
+  "selectors": {
+    "function": "apps/tracy-web/src/site-planner/plan-check/check-plan.js checkPlan, failureListText",
+    "test": "apps/tracy-web/test/site-plan-check-structure.test.mjs, site-plan-check-closure.test.mjs, site-plan-check-content.test.mjs"
+  },
+  "fence": "One pure function per rule over invented plan, brief and the JA Boxing 1.0.10 kit; no database, no network.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-plan-check-structure.test.mjs",
+      "apps/tracy-web/test/site-plan-check-closure.test.mjs",
+      "apps/tracy-web/test/site-plan-check-content.test.mjs"
+    ],
+    "tests": [
+      "the base plan passes every rule the script can check; R10h is left to a reviewer",
+      "R00 a field the Output shape does not have",
+      "R01 a copy slot id the kit does not give for the block",
+      "R02 a fact id that is not in the brief",
+      "R03 a frame the kit marks canHide:false is hidden",
+      "R04 a slug that is not lowercase words joined by hyphens",
+      "R05 a list whose rows disagree with its items",
+      "R06 a maxCharacters above the kit limit",
+      "R07 a demo slot of a kept block is neither replaced nor hidden",
+      "R08 a kept footer still shows the CMS notice",
+      "R09 a language that is not a BCP 47 tag",
+      "R11 a form on a kept page that site.forms does not decide",
+      "R10a a kit page group the plan does not decide",
+      "R10b a link of a kept block that is neither decided nor hidden",
+      "R10b a hidden link may share a label slot another block owns while a kept link still uses it",
+      "R10b a hidden link still fails when every link using the shared label slot is hidden",
+      "R10c a picture wish on a twin frame",
+      "R10d a not-found page that leads to a dropped page",
+      "R10e a kept page that no footer column lists",
+      "R10f a trade line that states a number without a brief fact",
+      "R10g a slot hidden twice in one block",
+      "R10h is always left to a reviewer, with its judgement items listed",
+      "R12 a block names a phone call but links elsewhere",
+      "R12 skips a contact setting slot even when its copy says phone",
+      "R13 a link that leads to the page it is shown on",
+      "R14 a picture wish whose kind differs from the kit frame kind",
+      "R15 a picture wish that offers alternatives",
+      "R16 a row line that cites a fact about the whole business",
+      "R17 a picture in a person row that is not matched as a person",
+      "R18 two full wishes for frames that show the same picture",
+      "R19 a map button hidden while the brief has an address",
+      "the fix-round failure list: one line per failure, in rule order, \"<id> | <title> | <where> | <detail>\"",
+      "missing inputs: every rule is listed and skipped with the reason, nothing throws"
+    ]
+  }
+}

@@ -111,6 +111,7 @@ Numbering rules and the inheritance register: [adr/README.md](adr/README.md).
 | [ADR 0038 — Slot roles live in the content map; the Road to live checks them under Content coverage](adr/0038-slot-roles-live-in-content-map.md) | ADR 0038 — Slot roles live in the content map; the Road to live checks them under Content coverage |
 | [ADR 0039 — Slot fit lives in the content map, measured at capture; a picture's keep flag follows its measured kind](adr/0039-slot-fit-lives-in-content-map.md) | ADR 0039 — Slot fit lives in the content map, measured at capture; a picture's keep flag follows its measured kind |
 | [ADR 0040 — Place content roles v3: the slot role is the only decider of keep or replace](adr/0040-place-content-roles-v3-role-is-the-single-keep-decider.md) | ADR 0040 — Place content roles v3: the slot role is the only decider of keep or replace |
+| [ADR 0041 — The site planner runs first on a trial bench in /ops, as a tool-using agent, apart from the WO build](adr/0041-site-planner-trial-bench-in-ops.md) | ADR 0041 — The site planner runs first on a trial bench in /ops, as a tool-using agent, apart from the WO build |
 
 ## READMEs next to the code
 
