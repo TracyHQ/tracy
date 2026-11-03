@@ -195,6 +195,11 @@
         "390": "page-home-390",
         "1440": "page-home-1440"
       },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "77e0be01e99995f72ef26880f88ae5691271d19e8758c0f566a96cf50422872d",
+        "text": "A long dark home page: photo hero with heading and button; centred intro with button and four icon features; split section of text, avatars and four class cards with photos; full width trial banner; four trainer cards; photo with tabbed list; mixed photo gallery with a stat; newsletter and four column footer."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -244,6 +249,11 @@
       "images": {
         "390": "page-pages_users_login-form-390",
         "1440": "page-pages_users_login-form-1440"
+      },
+      "look": {
+        "image": "page-pages_users_login-form-1440",
+        "sha256": "ed33882559dbe0af063b2dfe0e2adc8d60eaa1836854389c48bc0eb03162c18b",
+        "text": "Header with logo, menu, a button and a theme toggle; a dark photo banner with a large two line heading and a two line intro; a centred boxed login form with two fields, a checkbox, one wide button and three small links; footer with a newsletter signup row, social icons and three columns of contact details and links."
       },
       "aliases": [
         "/pages/users/user-profile"
@@ -297,6 +307,11 @@
         "390": "page-pages_users_registration-form-390",
         "1440": "page-pages_users_registration-form-1440"
       },
+      "look": {
+        "image": "page-pages_users_registration-form-1440",
+        "sha256": "c99600bb075413086d18112385911e98a66d8365ee43e7046daa7f5c37034469",
+        "text": "Page: header with menu and button; dark photo banner with a two line centred heading and a two line intro; a narrow centred panel with a long single column registration form in three headed parts, radio choices and two buttons; footer with a newsletter strip, social icons and three columns of contact details and links."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -348,6 +363,11 @@
       "images": {
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -401,6 +421,11 @@
         "390": "page-pages_j-content_featured-articles-390",
         "1440": "page-pages_j-content_featured-articles-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_featured-articles-1440",
+        "sha256": "c306ddf8ada00f5557c231a73551c477643a36c8b40029fda131011ef153903a",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with breadcrumbs, a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and paragraph, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -452,6 +477,11 @@
       "images": {
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
       },
       "aliases": [],
       "from": [
@@ -505,6 +535,11 @@
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -557,6 +592,11 @@
         "390": "page-classes-390",
         "1440": "page-classes-1440"
       },
+      "look": {
+        "image": "page-classes-1440",
+        "sha256": "1cccc169d9e7b7e32afb3976d4dc5c9571bc160aeefcc1a7fa0081d0fc53015c",
+        "text": "Page: header with menu and button; dark photo banner with a two line heading, intro paragraph and a row of round avatars; four class cards in two staggered columns, each with a heading, small button, text, schedule boxes and a wide photo; a centred heading over a photo mosaic with one stat card; a centred button; footer with newsletter strip and four link columns."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -607,6 +647,11 @@
         "390": "page-about-us_contact-390",
         "1440": "page-about-us_contact-1440"
       },
+      "look": {
+        "image": "page-about-us_contact-1440",
+        "sha256": "0830954719c804f4250208f6519a6ec884dae8b3708bce44f6b1d4779a226200",
+        "text": "A dark contact page: header with logo, menu, a button and a theme toggle; a dark photo banner with a centred two line heading and a short line. Then three columns: contact text with phone and email, an address and map link, and a message form with four fields, a text box and a submit button. A newsletter strip with email field and button, and a footer with social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -656,6 +701,11 @@
       "images": {
         "390": "page-plans-390",
         "1440": "page-plans-1440"
+      },
+      "look": {
+        "image": "page-plans-1440",
+        "sha256": "ecf57728f8b5947302d66449a91b9e993767ae595d77ee6c958d367c359594a4",
+        "text": "A dark pricing page: header, a title banner with centred heading, intro and three text tabs; four equal pricing columns, each with icons, a large price, plan name, a list of seven to ten bulleted features and a button; a centred heading with two gift card boxes with buttons; then newsletter bar and footer with columns."
       },
       "aliases": [],
       "from": [
@@ -713,6 +763,11 @@
         "390": "page-about-us-390",
         "1440": "page-about-us-1440"
       },
+      "look": {
+        "image": "page-about-us-1440",
+        "sha256": "ed981409e971cf5b794bde3f7d9529aff67637d73aac6ee133b40b94b118c595",
+        "text": "A long dark page: header with logo, menu and button; a story block with heading, wide photo and two column quote and text; four icon columns; four trainer photo cards; two split photo and text rows; a photo grid with a stat box and button; a newsletter bar and four column footer."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -762,6 +817,11 @@
       "images": {
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
+      },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -815,6 +875,11 @@
         "390": "page-about-us_our-trainers-390",
         "1440": "page-about-us_our-trainers-1440"
       },
+      "look": {
+        "image": "page-about-us_our-trainers-1440",
+        "sha256": "70cceac2b70e3d5c380968e82c2ca8e060ce091dccf06f9831a63460f710efef",
+        "text": "Header with logo, menu and a button; a dark photo banner with a two line heading and intro; a grid of eight trainer cards, four per row, with photo, name and social icons, and a button; a centred heading and a masonry gallery of photos with one stat card and a button; footer with newsletter form and three link columns."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -867,6 +932,11 @@
         "390": "page-about-us_our-trainers-390",
         "1440": "page-about-us_our-trainers-1440"
       },
+      "look": {
+        "image": "page-about-us_our-trainers-1440",
+        "sha256": "70cceac2b70e3d5c380968e82c2ca8e060ce091dccf06f9831a63460f710efef",
+        "text": "Header with logo, menu and a button; a dark photo banner with a two line heading and intro; a grid of eight trainer cards, four per row, with photo, name and social icons, and a button; a centred heading and a masonry gallery of photos with one stat card and a button; footer with newsletter form and three link columns."
+      },
       "aliases": [],
       "from": [
         "content-map",
@@ -916,6 +986,11 @@
       "images": {
         "390": "page-classes-390",
         "1440": "page-classes-1440"
+      },
+      "look": {
+        "image": "page-classes-1440",
+        "sha256": "1cccc169d9e7b7e32afb3976d4dc5c9571bc160aeefcc1a7fa0081d0fc53015c",
+        "text": "Page: header with menu and button; dark photo banner with a two line heading, intro paragraph and a row of round avatars; four class cards in two staggered columns, each with a heading, small button, text, schedule boxes and a wide photo; a centred heading over a photo mosaic with one stat card; a centred button; footer with newsletter strip and four link columns."
       },
       "aliases": [],
       "from": [
@@ -967,6 +1042,11 @@
         "390": "page-classes-390",
         "1440": "page-classes-1440"
       },
+      "look": {
+        "image": "page-classes-1440",
+        "sha256": "1cccc169d9e7b7e32afb3976d4dc5c9571bc160aeefcc1a7fa0081d0fc53015c",
+        "text": "Page: header with menu and button; dark photo banner with a two line heading, intro paragraph and a row of round avatars; four class cards in two staggered columns, each with a heading, small button, text, schedule boxes and a wide photo; a centred heading over a photo mosaic with one stat card; a centred button; footer with newsletter strip and four link columns."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1016,6 +1096,11 @@
       "images": {
         "390": "page-classes-390",
         "1440": "page-classes-1440"
+      },
+      "look": {
+        "image": "page-classes-1440",
+        "sha256": "1cccc169d9e7b7e32afb3976d4dc5c9571bc160aeefcc1a7fa0081d0fc53015c",
+        "text": "Page: header with menu and button; dark photo banner with a two line heading, intro paragraph and a row of round avatars; four class cards in two staggered columns, each with a heading, small button, text, schedule boxes and a wide photo; a centred heading over a photo mosaic with one stat card; a centred button; footer with newsletter strip and four link columns."
       },
       "aliases": [],
       "from": [
@@ -1067,6 +1152,11 @@
         "390": "page-classes-390",
         "1440": "page-classes-1440"
       },
+      "look": {
+        "image": "page-classes-1440",
+        "sha256": "1cccc169d9e7b7e32afb3976d4dc5c9571bc160aeefcc1a7fa0081d0fc53015c",
+        "text": "Page: header with menu and button; dark photo banner with a two line heading, intro paragraph and a row of round avatars; four class cards in two staggered columns, each with a heading, small button, text, schedule boxes and a wide photo; a centred heading over a photo mosaic with one stat card; a centred button; footer with newsletter strip and four link columns."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1116,6 +1206,11 @@
       "images": {
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -1167,6 +1262,11 @@
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/category-blog",
@@ -1216,6 +1316,11 @@
       "images": {
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -1267,6 +1372,11 @@
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/category-blog",
@@ -1316,6 +1426,11 @@
       "images": {
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -1367,6 +1482,11 @@
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/category-blog",
@@ -1416,6 +1536,11 @@
       "images": {
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -1467,6 +1592,11 @@
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/category-blog",
@@ -1516,6 +1646,11 @@
       "images": {
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -1569,6 +1704,11 @@
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/category-blog"
@@ -1620,6 +1760,11 @@
         "390": "page-pages_j-content_featured-articles-390",
         "1440": "page-pages_j-content_featured-articles-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_featured-articles-1440",
+        "sha256": "c306ddf8ada00f5557c231a73551c477643a36c8b40029fda131011ef153903a",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with breadcrumbs, a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and paragraph, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/featured-articles"
@@ -1667,6 +1812,11 @@
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/author-listting"
@@ -1711,6 +1861,11 @@
       "images": {
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
       },
       "aliases": [],
       "from": [
@@ -1758,6 +1913,11 @@
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/author-listting"
@@ -1803,6 +1963,11 @@
       "images": {
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
       },
       "aliases": [],
       "from": [
@@ -1850,6 +2015,11 @@
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/author-listting"
@@ -1895,6 +2065,11 @@
       "images": {
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
       },
       "aliases": [],
       "from": [
@@ -1942,6 +2117,11 @@
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/author-listting"
@@ -1987,6 +2167,11 @@
       "images": {
         "390": "page-pages_j-content_author-listting-390",
         "1440": "page-pages_j-content_author-listting-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_author-listting-1440",
+        "sha256": "439fdcbc9e498f3ec2c5db7d9e6d4e864840e5806c673e25450ca26c1749115c",
+        "text": "A dark page: header with logo, menu and button, a breadcrumb and a centred two line heading with a short line over a dim photo. Then a grid of eight cards in two rows of four, each a square portrait photo, a name and four round social icons. Newsletter bar and four column footer close it."
       },
       "aliases": [],
       "from": [
@@ -2035,6 +2220,11 @@
       "images": {
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
+      },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -2086,6 +2276,11 @@
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
       },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/about-us/learning-center",
@@ -2135,6 +2330,11 @@
       "images": {
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
+      },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -2186,6 +2386,11 @@
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
       },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/about-us/learning-center",
@@ -2235,6 +2440,11 @@
       "images": {
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
+      },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -2286,6 +2496,11 @@
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
       },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/about-us/learning-center",
@@ -2335,6 +2550,11 @@
       "images": {
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
+      },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -2386,6 +2606,11 @@
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
       },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/about-us/learning-center",
@@ -2435,6 +2660,11 @@
       "images": {
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
+      },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -2486,6 +2716,11 @@
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
       },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/about-us/learning-center",
@@ -2536,6 +2771,11 @@
         "390": "page-about-us_learning-center-390",
         "1440": "page-about-us_learning-center-1440"
       },
+      "look": {
+        "image": "page-about-us_learning-center-1440",
+        "sha256": "9e313a51598b0a43575543e744ccdc8e8dd9b82537350a2bcf781400dc743f48",
+        "text": "A dark page: top bar with logo, menu, button and theme toggle; a photo backed banner with a centred two line heading and a short line. Then a two column grid of six article cards with photo, heading and excerpt, a list of more article links and pagination. Footer with logo, newsletter form, social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/about-us/learning-center"
@@ -2584,6 +2824,11 @@
       "images": {
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
+      },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
       },
       "aliases": [],
       "from": [
@@ -2635,6 +2880,11 @@
         "390": "page-pages_j-content_category-blog-390",
         "1440": "page-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "page-pages_j-content_category-blog-1440",
+        "sha256": "8df8c473e8248dfec3659220633c64cd2cf2aa98bb1b6f5fef93d1069991dfd6",
+        "text": "A dark blog category page: header with logo, menu, a button and a theme toggle; breadcrumbs over a dark photo banner with a centred two line heading and a short line. Then six article cards in a two column grid, each a wide photo, a bold title and a grey excerpt, a list of more article links and a pager. A newsletter strip with an email field and a footer with social icons and three link columns."
+      },
       "aliases": [],
       "from": [
         "/pages/j-content/category-blog?start=6",
@@ -2662,6 +2912,11 @@
       "images": {
         "390": "header-390",
         "1440": "header-1440"
+      },
+      "look": {
+        "image": "header-1440",
+        "sha256": "714a2c08ba55cae0b971f6fe1a033c31df162bda053605c1eb3cc291d7659746",
+        "text": "A dark full width header bar: logo with icon on the left, five menu links in the centre (two with dropdown arrows, the active one in an accent colour), and on the right a dark button with an arrow plus a square theme toggle icon button."
       },
       "slots": [
         {
@@ -3015,6 +3270,11 @@
       "images": {
         "390": "block-176-390",
         "1440": "block-176-1440"
+      },
+      "look": {
+        "image": "block-176-1440",
+        "sha256": "ebea4f82247b61d2cd860d7f6b60986887245b44071563ddc56ed8e1b3aad1b9",
+        "text": "A compact header action area: one dark rectangular button with a short label and an arrow, next to a square icon button with a sun icon for switching the colour mode."
       },
       "slots": [
         {
@@ -3673,6 +3933,11 @@
         "390": "block-156-390",
         "1440": "block-156-1440"
       },
+      "look": {
+        "image": "block-156-1440",
+        "sha256": "d83b1b63ce5f44d660be2505a65789cd1540a11b4b571a86637f3a1edb809282",
+        "text": "A full width dark hero with a large cutout photo of an athlete on the right over diagonal red stripes. On the left a large two line heading with one accent word, a short intro line, one dark button with an arrow and a small line of text below it."
+      },
       "slots": [
         {
           "id": "block-156.3",
@@ -4015,6 +4280,11 @@
       "images": {
         "390": "block-157-390",
         "1440": "block-157-1440"
+      },
+      "look": {
+        "image": "block-157-1440",
+        "sha256": "4368a121a7e816244b478b5e8482e8e853cc715c05b4b9a8a1a53b19759bc1a3",
+        "text": "A dark full width block with a centred two line heading, a short paragraph and one small button. Below, four equal columns split by thin lines, each with a round line icon, a bold heading and a few lines of muted text; airy spacing."
       },
       "slots": [
         {
@@ -4892,6 +5162,11 @@
       "images": {
         "390": "block-160-390",
         "1440": "block-160-1440"
+      },
+      "look": {
+        "image": "block-160-1440",
+        "sha256": "b17fb40f461316ad562e3b3b6e62744a78013c48546a5608aaa1d63914ba242d",
+        "text": "A dark split block: on the left a two line heading, a short paragraph, a row of round avatars with a one line note and one button. On the right a stacked list of four class cards, each with a title, a button, a short text, one or two schedule boxes, and a wide photo below it."
       },
       "slots": [
         {
@@ -6015,6 +6290,11 @@
         "390": "block-161-390",
         "1440": "block-161-1440"
       },
+      "look": {
+        "image": "block-161-1440",
+        "sha256": "a41ac550f5eeed2e15fd0c2f3d18d34324f8ba95efda4ca2c4516e33dfadb60a",
+        "text": "A full width dark photo banner with a large centred heading, a short subheading flanked by small cross marks, and one button with an arrow below; airy, centred layout."
+      },
       "slots": [],
       "lists": [
         {
@@ -6247,6 +6527,11 @@
       "images": {
         "390": "block-163-390",
         "1440": "block-163-1440"
+      },
+      "look": {
+        "image": "block-163-1440",
+        "sha256": "840d3c5fd3e19b1e64b588240557b4da913ed0df3db9547db9daabac05ee0e9d",
+        "text": "A dark team block: a centred two line heading and a short intro line, then four equal cards in a row, each with a square portrait photo, a name and four round social icons. One centred button sits below the row."
       },
       "slots": [
         {
@@ -7285,6 +7570,11 @@
         "390": "block-165-390",
         "1440": "block-165-1440"
       },
+      "look": {
+        "image": "block-165-1440",
+        "sha256": "bbfc45c1ac313b8b5ef1de5964c0dd7c584461c591d54da7f5022f9e26f1b797",
+        "text": "A two column block on a dark background: on the left a large cut out portrait photo set in a round frame with a red striped graphic; on the right a two line heading, a row of four tabs with the first one active, a grey paragraph and a list of five items with diamond bullets."
+      },
       "slots": [
         {
           "id": "block-165.0",
@@ -7704,6 +7994,11 @@
       "images": {
         "390": "block-166-390",
         "1440": "block-166-1440"
+      },
+      "look": {
+        "image": "block-166-1440",
+        "sha256": "30ad52f44e46e5973043811d25ae313abd122a5a78739996d2fb050d2d82f38e",
+        "text": "A centred two line heading with a short intro line, then a three column photo gallery on a dark background: tall photos in the side columns, and in the middle a wide photo, a stat card with a large number, a small heading and two lines of text, and another photo. One centred button below."
       },
       "slots": [
         {
@@ -8671,6 +8966,11 @@
         "390": "block-170-390",
         "1440": "block-170-1440"
       },
+      "look": {
+        "image": "block-170-1440",
+        "sha256": "1dcdc7933444a6fd0ef970145c893ebb0b1187d798fc40d165d818a7c4136fd8",
+        "text": "A small logo on a dark background: an illustrated mark on the left with a bold wordmark and a smaller tagline line beneath it."
+      },
       "slots": [],
       "lists": [],
       "frames": [
@@ -8807,6 +9107,11 @@
         "390": "block-169-390",
         "1440": "block-169-1440"
       },
+      "look": {
+        "image": "block-169-1440",
+        "sha256": "db08e4fde121a13702ec56a395f92ac4867018b3a295413e8aa03b9c64a16c9a",
+        "text": "A compact single row newsletter strip: on the left a heading with one highlighted word and two lines of text, on the right a wide email field joined to a filled subscribe button."
+      },
       "slots": [
         {
           "id": "block-169.0",
@@ -8885,6 +9190,11 @@
       "images": {
         "390": "block-171-390",
         "1440": "block-171-1440"
+      },
+      "look": {
+        "image": "block-171-1440",
+        "sha256": "6d2ca451bfa48f7b58c69947d8b6caa7d089a478318d5871559c01fccdb1a744",
+        "text": "A small row of four round social media icon buttons on a dark background, with no text."
       },
       "slots": [],
       "lists": [
@@ -9240,6 +9550,11 @@
         "390": "block-175-390",
         "1440": "block-175-1440"
       },
+      "look": {
+        "image": "block-175-1440",
+        "sha256": "8927fef553e46d45e40226fc9c34004f0382cad4c7eba223f746a554de4ed705",
+        "text": "A small footer contact block on a dark background: a short uppercase heading, a phone line in an accent colour, a two line address and an underlined email link; compact, text only."
+      },
       "slots": [
         {
           "id": "block-175.5",
@@ -9329,6 +9644,11 @@
       "images": {
         "390": "block-173-390",
         "1440": "block-173-1440"
+      },
+      "look": {
+        "image": "block-173-1440",
+        "sha256": "aa64c213fb60352a9ed1e86624d7180813b71747a0ade7013090fa190aaf4b3b",
+        "text": "A small footer link column on a dark background: a short heading on top and a list of five plain text links below it."
       },
       "slots": [
         {
@@ -9513,6 +9833,11 @@
         "390": "block-174-390",
         "1440": "block-174-1440"
       },
+      "look": {
+        "image": "block-174-1440",
+        "sha256": "890175915590f947dee8b30a65f0bc073b368d48d71906378a95f016f97b50f0",
+        "text": "A small footer column with a short heading and a vertical list of four plain text links; no images."
+      },
       "slots": [
         {
           "id": "block-174.0",
@@ -9667,6 +9992,11 @@
         "390": "block-168-390",
         "1440": "block-168-1440"
       },
+      "look": {
+        "image": "block-168-1440",
+        "sha256": "300dade5f45193509894234fd3dc9d49348404987b4fc0addd065a0a7e66c940",
+        "text": "A small footer copyright note: two to three short lines of small text with two inline links, on a dark background."
+      },
       "slots": [],
       "lists": [],
       "frames": [],
@@ -9753,6 +10083,11 @@
       "images": {
         "390": "block-162-390",
         "1440": "block-162-1440"
+      },
+      "look": {
+        "image": "block-162-1440",
+        "sha256": "43df314e79a23d314373689f40e7f4d446b3d0b16cb7475e1c645d74f038e581",
+        "text": "A full width page title banner over a dark, dimmed gym photo. A centred two line heading, the second line in an accent colour, with a short two line intro under it; no buttons, airy spacing."
       },
       "slots": [],
       "lists": [
@@ -10449,6 +10784,11 @@
         "390": "body-pages_users_login-form-390",
         "1440": "body-pages_users_login-form-1440"
       },
+      "look": {
+        "image": "body-pages_users_login-form-1440",
+        "sha256": "1524ef76bded238994368fe9ae9fa367ef4e8be230c5d696fa4222997ba6ed1d",
+        "text": "A centred boxed login form over a dark photo background: username and password fields, a remember me checkbox, one full width button, and three small text links below."
+      },
       "slots": [
         {
           "id": "languageString-44242957.0",
@@ -10863,6 +11203,11 @@
       "images": {
         "390": "body-pages_users_registration-form-390",
         "1440": "body-pages_users_registration-form-1440"
+      },
+      "look": {
+        "image": "body-pages_users_registration-form-1440",
+        "sha256": "ef72ea0d00c6ba4fdaabff379204fa5d673f4b7951599618d5ae2d9931d39155",
+        "text": "A narrow centred dark panel holding a long single column form: a heading with five account fields, a second heading with about ten profile fields, a text area and a date picker, radio choices, a terms heading with one line of text, and two buttons side by side at the end."
       },
       "slots": [
         {
@@ -11711,6 +12056,11 @@
         "390": "block-17-390",
         "1440": "block-17-1440"
       },
+      "look": {
+        "image": "block-17-1440",
+        "sha256": "0b8384739bbd0601c0a313ca9705c16f358cd3e1fd3765dda93cb9f2148411cb",
+        "text": "A thin full width breadcrumb bar on a dark background: four small text links in one row separated by chevron arrows, left aligned; very compact."
+      },
       "slots": [
         {
           "id": "menuItem-163.0",
@@ -11904,6 +12254,11 @@
       "images": {
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_category-blog-1440",
+        "sha256": "62ecdc37dfde6127dd4247e14294c9d42bc05978ecc1d38be79596522c0a9693",
+        "text": "A blog list on a dark background: six article cards in a two column grid, each with a wide photo on top, a bold title and three lines of grey excerpt text. Below, a small heading with a list of four more article links, then a numbered pager on the left and a page count label on the right."
       },
       "slots": [
         {
@@ -12520,6 +12875,11 @@
         "390": "body-pages_j-content_featured-articles-390",
         "1440": "body-pages_j-content_featured-articles-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_featured-articles-1440",
+        "sha256": "83e41d3aebc12c7f8426eeccc28637d1714a5f964064fdeb0921ad47f649e486",
+        "text": "A two column grid of six article cards in three rows, each with a wide photo, a heading and a paragraph of text. Below, a small heading with a list of four linked article titles, then a numbered pagination bar on the left and a page counter on the right."
+      },
       "slots": [
         {
           "id": "article-8.15",
@@ -13134,6 +13494,11 @@
       "images": {
         "390": "body-pages_j-content_author-listting-390",
         "1440": "body-pages_j-content_author-listting-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_author-listting-1440",
+        "sha256": "b00cfceb9fdd98d5e7102227eec60387fb8f885540dd4209e982edc75c6ceb8d",
+        "text": "A dark grid of eight author cards, four per row in two rows, each with a square portrait photo, a centred bold name and a row of four round social icons below; compact spacing."
       },
       "slots": [
         {
@@ -14473,6 +14838,11 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
+      },
       "slots": [
         {
           "id": "article-6.15",
@@ -15207,6 +15577,11 @@
         "390": "block-158-390",
         "1440": "block-158-1440"
       },
+      "look": {
+        "image": "block-158-1440",
+        "sha256": "132297b0b3554b24adb525ec71fa3f83918f231970b166633f166122c7957195",
+        "text": "A dark section with a centred two line heading, the second line in an accent colour, and a short intro line. Below, two equal cards side by side, each with a wide photo on top, a bold title and three lines of grey excerpt text; no buttons, airy spacing."
+      },
       "slots": [
         {
           "id": "block-158.0",
@@ -15337,6 +15712,11 @@
       "images": {
         "390": "body-classes-390",
         "1440": "body-classes-1440"
+      },
+      "look": {
+        "image": "body-classes-1440",
+        "sha256": "a53b8584d17fdb6a60ffaa4d31d25a717093e5f5d1aeb040ae97b682e6368d3c",
+        "text": "A two column grid of four dark class cards, staggered, each with a heading and a button on the same line, a muted paragraph, a small subheading and one or two bordered schedule boxes with day and time lines, then a wide photo under each card."
       },
       "slots": [
         {
@@ -16029,6 +16409,11 @@
         "390": "body-about-us_contact-390",
         "1440": "body-about-us_contact-1440"
       },
+      "look": {
+        "image": "body-about-us_contact-1440",
+        "sha256": "eea34ec57b80b30d25bfa3b8d1e526db9b1c547bef85b358137034e4abde639f",
+        "text": "A boxed three column contact block: a heading with a short paragraph, a phone line and an email; a heading with a three line address and a text link to a map; a wider column with a heading and a form of four fields in two rows, a large message box and a submit button."
+      },
       "slots": [
         {
           "id": "menuItem-168.0",
@@ -16499,6 +16884,11 @@
       "images": {
         "390": "block-184-390",
         "1440": "block-184-1440"
+      },
+      "look": {
+        "image": "block-184-1440",
+        "sha256": "6082260dcf00518c3cdf94c41c6c6a043388c033ce5804ffaf69558d60082d19",
+        "text": "A pricing block: a dark photo banner with a centred two line heading, an intro line and three text tabs, then four equal columns. Each column has a row of small cross icons, a large price, a plan title and subline, a list of seven to ten features with diamond bullets and a button at the bottom; compact and dense."
       },
       "slots": [
         {
@@ -18680,6 +19070,11 @@
         "390": "block-172-390",
         "1440": "block-172-1440"
       },
+      "look": {
+        "image": "block-172-1440",
+        "sha256": "58f0e8a73682fd192a044ba5cb38040904a922357ac3745be70185b80852570b",
+        "text": "A centred two line heading and a short intro line on a dark background, then a boxed pair of side by side cards. Each card has a large price figure, a small heading, one line of text and a button with an arrow; airy spacing."
+      },
       "slots": [
         {
           "id": "block-172.11",
@@ -19058,6 +19453,11 @@
       "images": {
         "390": "block-183-390",
         "1440": "block-183-1440"
+      },
+      "look": {
+        "image": "block-183-1440",
+        "sha256": "ef108622a432d19ee9f881fecda9ac29ea0d62dee07301fb7c6774e2f3d4670a",
+        "text": "A dark story block: a centred two line heading and paragraph over a dim photo background, then a wide action photo. Below, two columns: on the left a quote mark, a large uppercase quote, a signature, a name and role; on the right two paragraphs of muted text."
       },
       "slots": [
         {
@@ -19460,6 +19860,11 @@
       "images": {
         "390": "block-190-390",
         "1440": "block-190-1440"
+      },
+      "look": {
+        "image": "block-190-1440",
+        "sha256": "4368a121a7e816244b478b5e8482e8e853cc715c05b4b9a8a1a53b19759bc1a3",
+        "text": "A centred two line heading, a four line paragraph and one button on a dark background, then a row of four equal columns divided by thin lines. Each column has a round dark icon badge, a two line heading and a short paragraph."
       },
       "slots": [
         {
@@ -20315,6 +20720,11 @@
         "390": "block-177-390",
         "1440": "block-177-1440"
       },
+      "look": {
+        "image": "block-177-1440",
+        "sha256": "78c596e0be6989383442845053e95bc02a7342079ab57b6fc21008e73893da52",
+        "text": "Two alternating split rows on a dark background: first a photo on the left with a two line heading, a paragraph and three short contact lines on the right; then a heading, a paragraph and two contact lines on the left with a photo on the right. Contact values are in an accent colour; no buttons."
+      },
       "slots": [
         {
           "id": "menuItem-190.0",
@@ -20997,6 +21407,11 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_category-blog-1440",
+        "sha256": "62ecdc37dfde6127dd4247e14294c9d42bc05978ecc1d38be79596522c0a9693",
+        "text": "A blog list on a dark background: six article cards in a two column grid, each with a wide photo on top, a bold title and three lines of grey excerpt text. Below, a small heading with a list of four more article links, then a numbered pager on the left and a page count label on the right."
+      },
       "slots": [
         {
           "id": "article-24.12",
@@ -21526,6 +21941,11 @@
       "images": {
         "390": "block-178-390",
         "1440": "block-178-1440"
+      },
+      "look": {
+        "image": "block-178-1440",
+        "sha256": "9ccba45fb7e549b420bcce77ab17e58bafcd76b00649c05266449747c7932856",
+        "text": "A full width grid of eight team cards in two rows of four. Each card has a square portrait photo on top, a centred name heading and a row of four round social icons below. One centred button under the grid."
       },
       "slots": [
         {
@@ -23471,6 +23891,11 @@
         "390": "block-180-390",
         "1440": "block-180-1440"
       },
+      "look": {
+        "image": "block-180-1440",
+        "sha256": "d35b3aa395f2c8360a55ed8e31fc1f9dcb30a436c227f4a2541adde3f56bff38",
+        "text": "A dark banner with a large centred two line name heading, then a two column profile: on the left a heading, a long paragraph, a list of four short items with diamond markers and four round social icons; on the right a large portrait photo."
+      },
       "slots": [],
       "lists": [
         {
@@ -24039,6 +24464,11 @@
       "images": {
         "390": "block-181-390",
         "1440": "block-181-1440"
+      },
+      "look": {
+        "image": "block-181-1440",
+        "sha256": "5142cb8cba216e989a39747d0dd49c1203523bbb6d3021c8f6edaaa50143e653",
+        "text": "A centred two line heading with the second line highlighted and a two line intro, then a grid of six tall photo cards in three columns and two rows, each with a round play icon, a small number and a title at the bottom, and one centred button below."
       },
       "slots": [
         {
@@ -24953,6 +25383,11 @@
       "images": {
         "390": "block-182-390",
         "1440": "block-182-1440"
+      },
+      "look": {
+        "image": "block-182-1440",
+        "sha256": "ba8717d3005ced9c3ba5d77e9e7fcc369892b5946727d963d84065e247f3d2d9",
+        "text": "A dark team block: a centred two line heading with an accent second line and a short intro, then four equal cards in a row, each a square portrait photo, a name and four round social icons, with one centred button below."
       },
       "slots": [
         {
@@ -25979,6 +26414,11 @@
       "images": {
         "390": "body-classes_advanced-boxing-390",
         "1440": "body-classes_advanced-boxing-1440"
+      },
+      "look": {
+        "image": "body-classes_advanced-boxing-1440",
+        "sha256": "992a20637106a2e3b75f31d1ea64b4e432d3fb219cde2424f8a9aea41765de55",
+        "text": "A class detail body on a dark background: a centred two line heading and intro over a wide photo with a play button, then a short heading beside two paragraphs. Next a centred heading with four icon columns, each a round line icon, a small title and short text. Then a heading over four cards in a two by two grid, each a photo with a play button beside a title and a bullet list and a Prev link."
       },
       "slots": [
         {
@@ -27872,6 +28312,11 @@
         "390": "block-159-390",
         "1440": "block-159-1440"
       },
+      "look": {
+        "image": "block-159-1440",
+        "sha256": "36dda675cd96d62d65f4b8a3bc07c2cba31e029c4775158e794e3f8588f3a2ab",
+        "text": "A centred two line heading and a short paragraph on a dark background, then two equal side by side cards. Each card has a heading with a small button on the right, two lines of text, a label and a boxed schedule entry with an icon, and a wide photo filling the bottom of the card."
+      },
       "slots": [
         {
           "id": "block-159.0",
@@ -28309,6 +28754,11 @@
       "images": {
         "390": "body-classes_advanced-boxing-390",
         "1440": "body-classes_advanced-boxing-1440"
+      },
+      "look": {
+        "image": "body-classes_advanced-boxing-1440",
+        "sha256": "992a20637106a2e3b75f31d1ea64b4e432d3fb219cde2424f8a9aea41765de55",
+        "text": "A class detail body on a dark background: a centred two line heading and intro over a wide photo with a play button, then a short heading beside two paragraphs. Next a centred heading with four icon columns, each a round line icon, a small title and short text. Then a heading over four cards in a two by two grid, each a photo with a play button beside a title and a bullet list and a Prev link."
       },
       "slots": [
         {
@@ -29800,6 +30250,11 @@
       "images": {
         "390": "body-classes_group-boxing-390",
         "1440": "body-classes_group-boxing-1440"
+      },
+      "look": {
+        "image": "body-classes_group-boxing-1440",
+        "sha256": "a6fb24b8a76c2a4487520ec99a56e6d0157df2188fae1a4758c20d9ad446fc76",
+        "text": "A page body with a photo backed intro: centred heading, paragraph and button, then a large video frame with a play button and a two column text row. Next a heading with four icon columns, then a heading over a two by two grid of cards, each a photo with play button beside a heading and a short ticked list. One button at the end."
       },
       "slots": [
         {
@@ -31774,6 +32229,11 @@
         "390": "body-classes_advanced-boxing-390",
         "1440": "body-classes_advanced-boxing-1440"
       },
+      "look": {
+        "image": "body-classes_advanced-boxing-1440",
+        "sha256": "992a20637106a2e3b75f31d1ea64b4e432d3fb219cde2424f8a9aea41765de55",
+        "text": "A class detail body on a dark background: a centred two line heading and intro over a wide photo with a play button, then a short heading beside two paragraphs. Next a centred heading with four icon columns, each a round line icon, a small title and short text. Then a heading over four cards in a two by two grid, each a photo with a play button beside a title and a bullet list and a Prev link."
+      },
       "slots": [
         {
           "id": "article-15.0",
@@ -33264,6 +33724,11 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
+      },
       "slots": [
         {
           "id": "article-1.15",
@@ -33742,6 +34207,11 @@
         "390": "block-191-390",
         "1440": "block-191-1440"
       },
+      "look": {
+        "image": "block-191-1440",
+        "sha256": "355c546fb61d8e3247823528ca2224285510dd5b86d2fd05194e44ed13fe39d5",
+        "text": "A dark blog block: a centred two line heading and a short intro line, then two equal cards side by side, each with a wide photo on top, a bold title and three lines of excerpt text."
+      },
       "slots": [
         {
           "id": "block-191.0",
@@ -33872,6 +34342,11 @@
       "images": {
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
       },
       "slots": [
         {
@@ -34450,6 +34925,11 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
+      },
       "slots": [
         {
           "id": "article-4.15",
@@ -35026,6 +35506,11 @@
       "images": {
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
       },
       "slots": [
         {
@@ -35608,6 +36093,11 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
+      },
       "slots": [
         {
           "id": "article-7.15",
@@ -36189,6 +36679,11 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
+      },
       "slots": [
         {
           "id": "article-8.15",
@@ -36769,6 +37264,11 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
+      },
       "slots": [
         {
           "id": "article-9.15",
@@ -37348,6 +37848,11 @@
       "images": {
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
       },
       "slots": [
         {
@@ -37930,6 +38435,11 @@
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
+      },
       "slots": [
         {
           "id": "article-11.15",
@@ -38507,6 +39017,11 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_category-blog-1440",
+        "sha256": "62ecdc37dfde6127dd4247e14294c9d42bc05978ecc1d38be79596522c0a9693",
+        "text": "A blog list on a dark background: six article cards in a two column grid, each with a wide photo on top, a bold title and three lines of grey excerpt text. Below, a small heading with a list of four more article links, then a numbered pager on the left and a page count label on the right."
+      },
       "slots": [
         {
           "id": "article-8.15",
@@ -39083,6 +39598,11 @@
         "390": "body-pages_j-content_featured-articles-390",
         "1440": "body-pages_j-content_featured-articles-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_featured-articles-1440",
+        "sha256": "83e41d3aebc12c7f8426eeccc28637d1714a5f964064fdeb0921ad47f649e486",
+        "text": "A two column grid of six article cards in three rows, each with a wide photo, a heading and a paragraph of text. Below, a small heading with a list of four linked article titles, then a numbered pagination bar on the left and a page counter on the right."
+      },
       "slots": [
         {
           "id": "article-8.15",
@@ -39658,6 +40178,11 @@
       "images": {
         "390": "body-pages_j-content_author-listting_author_admin-390",
         "1440": "body-pages_j-content_author-listting_author_admin-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_author-listting_author_admin-1440",
+        "sha256": "c9312489067ffc83135e5ce120a459d1b91597bca30a5413add97ba91fef91d2",
+        "text": "A split author profile: on the left a small label, a heading, two paragraphs, a list of four short items and four round social icons; on the right a tall portrait photo. Below, three text only cards in a row, then three cards with a photo on top, a heading and a short excerpt."
       },
       "slots": [
         {
@@ -40572,6 +41097,11 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_author-listting_author_drew_stokes-1440",
+        "sha256": "2bad5ae06c2e22d5fdc4acd7304fef73a3d4c81df86f988592e9975a1d49b48d",
+        "text": "A dark profile block split in two: on the left a small label, a name heading, two paragraphs, a list of four bulleted items and four round social icons; on the right a tall portrait photo. Below, two article cards side by side, each with a photo, a heading and a short excerpt."
+      },
       "slots": [],
       "lists": [
         {
@@ -40854,6 +41384,11 @@
       "images": {
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_author-listting_author_drew_stokes-1440",
+        "sha256": "2bad5ae06c2e22d5fdc4acd7304fef73a3d4c81df86f988592e9975a1d49b48d",
+        "text": "A dark profile block split in two: on the left a small label, a name heading, two paragraphs, a list of four bulleted items and four round social icons; on the right a tall portrait photo. Below, two article cards side by side, each with a photo, a heading and a short excerpt."
       },
       "slots": [],
       "lists": [
@@ -41138,6 +41673,11 @@
       "images": {
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_author-listting_author_drew_stokes-1440",
+        "sha256": "2bad5ae06c2e22d5fdc4acd7304fef73a3d4c81df86f988592e9975a1d49b48d",
+        "text": "A dark profile block split in two: on the left a small label, a name heading, two paragraphs, a list of four bulleted items and four round social icons; on the right a tall portrait photo. Below, two article cards side by side, each with a photo, a heading and a short excerpt."
       },
       "slots": [],
       "lists": [
@@ -41457,6 +41997,11 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_author-listting_author_drew_stokes-1440",
+        "sha256": "2bad5ae06c2e22d5fdc4acd7304fef73a3d4c81df86f988592e9975a1d49b48d",
+        "text": "A dark profile block split in two: on the left a small label, a name heading, two paragraphs, a list of four bulleted items and four round social icons; on the right a tall portrait photo. Below, two article cards side by side, each with a photo, a heading and a short excerpt."
+      },
       "slots": [],
       "lists": [
         {
@@ -41773,6 +42318,11 @@
       "images": {
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_author-listting_author_drew_stokes-1440",
+        "sha256": "2bad5ae06c2e22d5fdc4acd7304fef73a3d4c81df86f988592e9975a1d49b48d",
+        "text": "A dark profile block split in two: on the left a small label, a name heading, two paragraphs, a list of four bulleted items and four round social icons; on the right a tall portrait photo. Below, two article cards side by side, each with a photo, a heading and a short excerpt."
       },
       "slots": [],
       "lists": [
@@ -42091,6 +42641,11 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_author-listting_author_drew_stokes-1440",
+        "sha256": "2bad5ae06c2e22d5fdc4acd7304fef73a3d4c81df86f988592e9975a1d49b48d",
+        "text": "A dark profile block split in two: on the left a small label, a name heading, two paragraphs, a list of four bulleted items and four round social icons; on the right a tall portrait photo. Below, two article cards side by side, each with a photo, a heading and a short excerpt."
+      },
       "slots": [],
       "lists": [
         {
@@ -42408,6 +42963,11 @@
         "390": "body-pages_j-content_author-listting_author_drew_stokes-390",
         "1440": "body-pages_j-content_author-listting_author_drew_stokes-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_author-listting_author_drew_stokes-1440",
+        "sha256": "2bad5ae06c2e22d5fdc4acd7304fef73a3d4c81df86f988592e9975a1d49b48d",
+        "text": "A dark profile block split in two: on the left a small label, a name heading, two paragraphs, a list of four bulleted items and four round social icons; on the right a tall portrait photo. Below, two article cards side by side, each with a photo, a heading and a short excerpt."
+      },
       "slots": [],
       "lists": [
         {
@@ -42691,6 +43251,11 @@
       "images": {
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
+      },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
       },
       "slots": [
         {
@@ -43525,6 +44090,11 @@
       "images": {
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
+      },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
       },
       "slots": [
         {
@@ -44417,6 +44987,11 @@
       "images": {
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
+      },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
       },
       "slots": [
         {
@@ -45673,6 +46248,11 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
+      },
       "slots": [
         {
           "id": "article-21.12",
@@ -46564,6 +47144,11 @@
       "images": {
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
+      },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
       },
       "slots": [
         {
@@ -47461,6 +48046,11 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
+      },
       "slots": [
         {
           "id": "article-23.12",
@@ -48352,6 +48942,11 @@
       "images": {
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
+      },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
       },
       "slots": [
         {
@@ -49245,6 +49840,11 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
+      },
       "slots": [
         {
           "id": "article-25.12",
@@ -50136,6 +50736,11 @@
       "images": {
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
+      },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
       },
       "slots": [
         {
@@ -51029,6 +51634,11 @@
         "390": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-390",
         "1440": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440"
       },
+      "look": {
+        "image": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy-1440",
+        "sha256": "ac165d25197348060286b5eaefc4487e2f1b82bb5406ea75d866ededa34e2784",
+        "text": "A dark article page: a centred heading and intro over a wide photo, then two columns with paragraphs on the left and a list of eight bulleted items on the right, prev and next buttons, then a centred heading and a grid of six tall photo cards in two rows, each with a play icon, a number and a title."
+      },
       "slots": [
         {
           "id": "article-27.12",
@@ -51818,6 +52428,11 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
+      "look": {
+        "image": "body-pages_j-content_category-blog-1440",
+        "sha256": "62ecdc37dfde6127dd4247e14294c9d42bc05978ecc1d38be79596522c0a9693",
+        "text": "A blog list on a dark background: six article cards in a two column grid, each with a wide photo on top, a bold title and three lines of grey excerpt text. Below, a small heading with a list of four more article links, then a numbered pager on the left and a page count label on the right."
+      },
       "slots": [
         {
           "id": "article-24.12",
@@ -52246,6 +52861,11 @@
       "images": {
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
       },
       "slots": [
         {
@@ -52827,6 +53447,11 @@
       "images": {
         "390": "body-pages_j-content_blog-detail-390",
         "1440": "body-pages_j-content_blog-detail-1440"
+      },
+      "look": {
+        "image": "body-pages_j-content_blog-detail-1440",
+        "sha256": "4f30f2cb5bfa48446004a2a8f75e31ab15872c58189210ada9547fd128a7ca85",
+        "text": "A dark single article in a centred narrow column: a large heading and intro over a dim background, a wide lead photo, a subheading with dense text and a bulleted list, two photos side by side, another subheading, a boxed quote, more paragraphs, and Prev and Next buttons."
       },
       "slots": [
         {
