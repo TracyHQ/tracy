@@ -223,6 +223,7 @@ import { createSitePlannerQueue } from './site-planner/bench-worker.js'
 import { createSiteWriterQueue } from './site-writer/bench-worker.js'
 import { createSitePicturesQueue } from './site-pictures/bench-worker.js'
 import { defaultStoreDir } from './site-pictures/file-store.js'
+import { releaseWebroot } from './site-pictures/icon-step.js'
 import { createBrandQueue } from './brand-step/brand-worker.js'
 import { productionWiring } from './brand-step/brand-wiring.js'
 import { kitImagesFor } from './site-planner/kit-images.js'
@@ -1198,6 +1199,11 @@ export function buildApp(deps) {
           objects:
             deps.websiteOpportunitiesObjects ?? placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
           storeDir: defaultStoreDir(),
+          webroot: releaseWebroot({
+            pool: deps.pool,
+            config: deps.config,
+            fetchImpl: deps.fetchImpl ?? fetch
+          }),
           fetchImpl: deps.fetchImpl ?? fetch,
           log: deps.log ?? console
         })

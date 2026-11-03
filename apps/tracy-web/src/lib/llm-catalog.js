@@ -242,6 +242,18 @@ export const LLM_DOORS = [
     prefers: []
   },
   {
+    id: 'pictureIconRanker',
+    label: 'Picture icon ranker',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the picture bench, started from a command line on the server. One cheap text call per site ranks the icon names code shortlisted for each icon frame; it never invents a name. Without it the shortlist order decides.',
+    needsModel: true,
+    // Text only: no tools, no pictures (site-pictures/icon-step.js). Meant for openai/gpt-6-luna through OpenRouter
+    // (icons/icon-ranker.js ICON_RANKER_MODEL). An unset door never stops a run (#345).
+    requires: [],
+    prefers: ['json']
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',

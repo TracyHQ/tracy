@@ -38,7 +38,8 @@ reader uses that module.
 | `refusedPhotos` | `[{ asset, reason }]`: brief assets no frame may take (not a still, lettering, another business, a label that is unknown, blurry, no bytes with its hash). |
 | `altNotes` | `[{ frame, alt, seen }]`: the writer's alt next to what the picture actually shows; filled only when a writer copy file is given to the run. |
 | `usage` | `[{ asset, frames }]`: per brief photo, how many frames use it. |
-| `cost`, `timing` | Objects keyed by role (picker, drawer, looker, background removal, icon ranking). |
+| `cost`, `timing` | Objects keyed by role: `code` (always 0 USD; the time code took), `iconRanking` (the ranking call's cost as the provider reports it, 0 without a call, and its time in milliseconds), and later the drawer, looker and background removal. The picker's cost is the cost of the run's turns, one row per call, with the provider balance before and after on the run. |
+| `iconRanking` | `{ model, notes }`: the model that ranked the icon names (`null` when the shortlist order decided) and why it did not, when it did not (no `pictureIconRanker` door, the demo icons not read, no usable answer). |
 
 A frame entry:
 

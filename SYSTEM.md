@@ -2282,6 +2282,10 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   shortlist per specific frame, never a demo picture of the kit. A run whose plan has no specific frame needs no door
   and calls no model. Fix rounds send back only the picker's failing frames (at most two); the DeepSeek balance is read
   before and after, as on the other benches. Migration 199 adds the door to the door check.
+- **Icons** (#345): icon frames get a Phosphor icon; the names code shortlists are ranked by one text call through the
+  `pictureIconRanker` door (`openai/gpt-6-luna`; unset, the shortlist order decides, migration 200), and the weight,
+  colour and plate are measured from the kit's demo icons, read once per kit release from the release's webroot tar.gz
+  (through the releases credential) and cached in the bench's file store.
 
 ## 9. Sign-in, seats, permissions
 

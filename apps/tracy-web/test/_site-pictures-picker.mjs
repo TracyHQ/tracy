@@ -85,10 +85,10 @@ export function balances(totals) {
     )
 }
 
-/** Run what is queued with one worker that can open the picker door. */
+/** Run what is queued with one worker that can open the picker door (and read a release webroot, `webroot`). */
 export async function drainPicker(
   pool,
-  { index, dir, fetchImpl, balanceFetch = balances([]), retry = { attempts: 1 } }
+  { index, dir, fetchImpl, balanceFetch = balances([]), retry = { attempts: 1 }, webroot }
 ) {
   await createSitePicturesQueue({
     pool,
@@ -98,6 +98,7 @@ export async function drainPicker(
     fetchImpl,
     balanceFetch,
     retry,
+    ...(webroot ? { webroot } : {}),
     log: quiet
   })
     .drain()

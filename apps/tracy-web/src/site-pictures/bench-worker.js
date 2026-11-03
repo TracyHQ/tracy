@@ -23,6 +23,7 @@ import { kitIdOf } from '../site-writer/bench-worker.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
 import { picturePickerDoor } from './door.js'
 import { fileStore } from './file-store.js'
+import { iconStepFor } from './icon-step.js'
 import { fillFrames } from './fill-frames.js'
 import { openKitWithMap } from './kit-with-map.js'
 import { PICTURES_VERSION } from './manifest-shape.js'
@@ -100,10 +101,12 @@ export const SITE_PICTURES_STEP = Object.freeze({
 
 /**
  * @param {{ pool: import('pg').Pool, secret?: string, objects?: { get: Function } | null, storeDir?: string,
+ *   webroot?: (release: string) => Promise<object>,
  *   fetchImpl?: typeof fetch, balanceFetch?: typeof fetch, index?: Map<string, object>, log?: Console,
  *   now?: () => number, retry?: object }} deps `secret` opens the picker door's key; `objects`: the media store a
  *   revision's photos are read from; `storeDir`: the bench's file store; `index`: the contracts to find kits in
- *   (tests); `retry` replaces the run's retry policy (tests)
+ *   (tests); `retry` replaces the run's retry policy (tests); `webroot` downloads a release's webroot tar.gz, where
+ *   the kit's demo icons are read (icon-step.js releaseWebroot)
  */
 export function createSitePicturesQueue({ log = console, now, ...deps }) {
   return createBenchQueue(SITE_PICTURES_STEP, { ...deps, log, now })
@@ -138,7 +141,25 @@ async function prepare(deps, row) {
   const store = fileStore(deps.storeDir)
   const started = Date.now()
   const photoBytes = await ownerPhotoBytes({ ...deps, store }, row)
-  const filled = await fillFrames({ plan: row.plan, brief: row.brief, kit: kit.doc, photoBytes })
+  // The icon step (#345): library icons ranked by a text model, styled like the kit's demo icons.
+  const iconStep = await iconStepFor({
+    pool: deps.pool,
+    secret: deps.secret,
+    fetchImpl: deps.fetchImpl,
+    storeDir: store.dir,
+    runId: row.id,
+    webroot: deps.webroot ?? null,
+    kit,
+    business: typeof row.plan?.site?.name === 'string' ? row.plan.site.name : null
+  })
+  const filled = await fillFrames({
+    plan: row.plan,
+    brief: row.brief,
+    kit: kit.doc,
+    photoBytes,
+    icons: iconStep.icons
+  })
+  const iconsDone = iconStep.report()
   const { files: made, refused, ...parts } = filled
   const idx = indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief, files: {} })
   let picker = null
@@ -177,8 +198,9 @@ async function prepare(deps, row) {
     altNotes: [],
     refusedPhotos: refused,
     // The picker's cost is the cost of the run's turns (one row per call), and its balance is read around the run.
-    cost: { code: 0 },
-    timing: { code: Date.now() - started }
+    cost: { code: 0, iconRanking: iconsDone.cost },
+    timing: { code: Date.now() - started - iconsDone.timing, iconRanking: iconsDone.timing },
+    iconRanking: iconsDone.ranking
   }
   const ready = { ok: true, kit, door: door.door ?? undefined, files, idx, base, parts, picker }
   ready.manifest = manifestFor(ready, new Map())
