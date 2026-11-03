@@ -1,5 +1,5 @@
 // The three tone definitions (`plain | warm | bold`, TCH #1013) live twice: in the seeder (`tracy-seeder/src/tone.mjs`,
-// WordPress and Joomla) and in the EmDash tool (`tools/personalize.mjs` `TONE_RULES`, three templates and the kit), which
+// WordPress and Joomla) and in the EmDash tool (`tools/personalize.mjs` `TONE_RULES`, four templates and the kit), which
 // may not import the seeder (ADR 0006). Only TCH sees both, so the check that they say the same thing lives here.
 
 import assert from 'node:assert/strict'

@@ -3,7 +3,8 @@
  *
  * 🔒 A SITE WRITTEN IN VIETNAMESE IS DRAWN IN VIETNAMESE LETTERS (LANG-2, TCH #1013, g62). Measured 11/10/2026 on dev
  * g61-biz-emd-full (Tracy Business 1.7.9): Archivo and Newsreader were downloaded in `latin` and `latin-ext` only, so the
- * page had no face for ệ ể ụ ầ ế ố ủ ớ, and the browser built them from a base letter and a loose accent. Both families
+ * page had no face for U+1EC7, U+1EC3, U+1EE5, U+1EA7, U+1EBF, U+1ED1, U+1EE7 or U+1EDB, and the browser built them
+ * from a base letter and a loose accent. Both families
  * have a `vietnamese` subset on Google Fonts; the design simply never named it. The language is chosen when a customer
  * builds a site, long after the template is built, so every font carries the subsets of the languages Tracy writes whose
  * letters `latin` and `latin-ext` leave out. A face of a subset has a `unicode-range`: a page that prints none of those

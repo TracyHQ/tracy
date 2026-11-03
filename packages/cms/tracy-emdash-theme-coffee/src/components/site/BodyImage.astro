@@ -1,0 +1,38 @@
+---
+/**
+ * Portable Text `image` block for the article/page body. Same figure markup as EmDash's default
+ * (`.emdash-image`, optional figcaption, lazy, intrinsic size), but the src is `bodyImageUrl()`:
+ * local media on the viewing origin, so a direct preview or a private proxy decodes it. The
+ * default component builds an absolute URL on the configured public origin (D33).
+ */
+import { bodyImageUrl } from '@/lib/media'
+
+interface Props {
+  node: {
+    _type: 'image'
+    _key: string
+    asset?: { _ref?: string; url?: string; provider?: string; meta?: Record<string, unknown> }
+    alt?: string
+    caption?: string
+    width?: number
+    height?: number
+    displayWidth?: number
+    displayHeight?: number
+    dominantColor?: string
+    alignment?: 'left' | 'center' | 'right' | 'wide' | 'full'
+  }
+}
+const { node } = Astro.props
+const src = bodyImageUrl(node?.asset)
+const { alt = '', caption, alignment } = node ?? {}
+const width = node?.displayWidth ?? node?.width
+const height = node?.displayHeight ?? node?.height
+const dominantColor = node?.dominantColor ?? (node?.asset?.meta?.dominantColor as string | undefined)
+---
+
+{src && (
+	<figure class:list={["emdash-image", alignment && `emdash-image--align-${alignment}`]}>
+		<img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" style={dominantColor ? `background-color: ${dominantColor};` : undefined} />
+		{caption && <figcaption>{caption}</figcaption>}
+	</figure>
+)}

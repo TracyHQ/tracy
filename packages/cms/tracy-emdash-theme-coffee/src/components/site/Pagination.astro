@@ -1,0 +1,33 @@
+---
+import { DEFAULT_LOCALE } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+
+interface Props {
+  page: number
+  pages: number
+  url: (n: number) => string
+  meta?: string
+  prevLabel?: string
+  nextLabel?: string
+}
+// One stored locale (`LOCALES`), so the page's words are the default locale's display language (`src/lib/ui.ts`).
+const { w } = ui(DEFAULT_LOCALE)
+const { page, pages, url, meta, prevLabel = w.previous, nextLabel = w.next } = Astro.props
+const nums: Array<number | '…'> = []
+for (let n = 1; n <= pages; n++) {
+  if (n === 1 || n === pages || Math.abs(n - page) <= 1) nums.push(n)
+  else if (nums[nums.length - 1] !== '…') nums.push('…')
+}
+const box = 'flex h-10 min-w-10 items-center justify-center rounded-full px-3 text-[14px]'
+---
+
+{pages > 1 && (
+	<nav class="mt-14 flex flex-wrap items-center justify-between gap-6 border-t border-line-soft pt-6" aria-label={w.pagination}>
+		<div class="flex gap-1.5">
+			{page > 1 ? <a href={url(page - 1)} class={`${box} shadow-ring text-fg`} aria-label={prevLabel}>‹</a> : <span class={`${box} text-fg-meta opacity-40`} aria-disabled="true">‹</span>}
+			{nums.map((n) => (n === "…" ? <span class={`${box} text-fg-meta`}>…</span> : n === page ? <span class={`${box} bg-accent font-semibold text-accent-on`} aria-current="page">{n}</span> : <a href={url(n)} class={`${box} shadow-ring text-fg hover:text-accent`}>{n}</a>))}
+			{page < pages ? <a href={url(page + 1)} class={`${box} shadow-ring text-fg`} aria-label={nextLabel}>›</a> : <span class={`${box} text-fg-meta opacity-40`} aria-disabled="true">›</span>}
+		</div>
+		{meta && <div class="text-[13.5px] text-fg-meta">{meta}</div>}
+	</nav>
+)}

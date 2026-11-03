@@ -21,7 +21,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import { publishedTagOf } from './local-releases.js'
+import { emdashTemplateIdOf, publishedTagOf } from './local-releases.js'
 import { distinctReferoNames } from './refero-names.js'
 import { readDesignAssets } from '../config.js'
 import { designAssets, designAssetFingerprint } from './design-assets.js'
@@ -143,10 +143,9 @@ export function templateKeyOf({ platform, stylesheet, template, quickstartTag })
     return t ? `joomla/${t === 'tracy' ? 'tracy-base' : t}` : null
   }
   if (platform === 'emdash') {
-    const first = String(quickstartTag ?? '')
-      .split('/')[0]
-      ?.trim()
-    return first ? `emdash/${first}` : null
+    // A local pack (`local/tracy-coffee/emdash-0.x`) names the template it is a candidate for.
+    const id = emdashTemplateIdOf(String(quickstartTag ?? '').trim()).trim()
+    return id ? `emdash/${id}` : null
   }
   return null
 }

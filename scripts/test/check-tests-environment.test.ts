@@ -502,7 +502,7 @@ test('a package script is run with its own flags and globs, the reporter in betw
     'scripts/test/*.test.mjs',
     'packages/*/*/test/*.test.mjs'
   ])
-  for (const theme of ['base', 'business', 'saas']) {
+  for (const theme of ['base', 'business', 'saas', 'coffee']) {
     const rel = `packages/cms/tracy-emdash-theme-${theme}`
     assert.deepEqual(reportedScript(rel, 'test', read(rel)), ['--test', ...rep, 'tests/*.test.mjs'], rel)
   }

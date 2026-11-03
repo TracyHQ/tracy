@@ -1,6 +1,6 @@
 // tools/personalize.mjs, a label the model hands back in the template's words (TCH #1013, LANG-2, g63). On g62-biz-emd-full
 // (Tracy Business 1.7.10, a bakery written in Vietnamese) the contact page's branch lines read "Lipetsk SEZ, 6 Tekhnologichesky
-// proezd" and "Fabrication yard, Zavolzhye IP" in English, where g61 read "Khu kinh tế đặc biệt Lipetsk" and "Xưởng chế tạo":
+// proezd" and "Fabrication yard, Zavolzhye IP" in English, where g61 had read them in Vietnamese:
 // the labels question was asked, the model returned those two lines unchanged (it read them as an address to keep), and an
 // unchanged answer was dropped without a word. A line of words that comes back unchanged is asked again, alone with the
 // others like it and then one at a time; one still unchanged is named in the report. On g63-biz-emd-full (1.7.11) the same

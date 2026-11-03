@@ -203,7 +203,7 @@ test('slotRolesOf resolves EmDash seed files when laid out as in the tracy-web D
   t.after(() => rmSync(imgRoot, { recursive: true, force: true }))
 
   const dockerfile = readFileSync(path.join(ROOT, 'apps/tracy-web/Dockerfile'), 'utf8')
-  for (const slug of ['tracy-business', 'tracy-saas', 'tracy-base']) {
+  for (const slug of ['tracy-business', 'tracy-saas', 'tracy-base', 'tracy-coffee']) {
     const pkg = slug.replace(/^tracy-/, 'tracy-emdash-theme-')
     assert.ok(
       dockerfile.includes(`packages/cms/${pkg}/seed/field-map.json`),

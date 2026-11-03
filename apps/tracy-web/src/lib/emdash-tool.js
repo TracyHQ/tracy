@@ -8,7 +8,7 @@
  *
  * 🔒 THIS PROCESS CANNOT IMPORT `packages/` IN THE IMAGE (`Dockerfile`: the image carries `apps/tracy-web` alone), so the
  * tool and each template's seed are COPYed to `src/emdash-tool/`, as the seeder's modules are to `src/seeder/`; a checkout
- * reads the packages in place. The three templates ship one byte-identical tool (`test/emdash-tool.test.mjs` holds them equal).
+ * reads the packages in place. The templates ship one byte-identical tool (`test/emdash-tool.test.mjs` holds them equal).
  */
 import { spawn } from 'node:child_process'
 import { existsSync } from 'node:fs'
@@ -24,7 +24,8 @@ const IN_CHECKOUT = fileURLToPath(new URL('../../../../packages/cms/', import.me
 const PACKAGE = Object.freeze({
   'tracy-business': 'tracy-emdash-theme-business',
   'tracy-saas': 'tracy-emdash-theme-saas',
-  'tracy-base': 'tracy-emdash-theme-base'
+  'tracy-base': 'tracy-emdash-theme-base',
+  'tracy-coffee': 'tracy-emdash-theme-coffee'
 })
 
 /**

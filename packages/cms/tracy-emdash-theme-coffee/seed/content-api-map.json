@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "scope": "entry-scalars",
+  "collections": {
+    "site": {
+      "type": "shared",
+      "urlPattern": null
+    },
+    "home": {
+      "type": "page",
+      "urlPattern": "/"
+    },
+    "menu_page": {
+      "type": "page",
+      "urlPattern": "/menu"
+    },
+    "menu_items": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "blog": {
+      "type": "page",
+      "urlPattern": "/blog"
+    },
+    "posts": {
+      "type": "article",
+      "urlPattern": "/blog/{slug}"
+    },
+    "about": {
+      "type": "page",
+      "urlPattern": "/about"
+    },
+    "contact": {
+      "type": "page",
+      "urlPattern": "/contact"
+    }
+  },
+  "chrome": {
+    "collection": "site",
+    "slug": "site"
+  }
+}

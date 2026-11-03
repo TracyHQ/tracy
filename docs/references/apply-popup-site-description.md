@@ -411,7 +411,7 @@ Details worth remembering:
 - **EmDash**: the tool runs as a child process with **its own environment** (not one secret of this process leaks
   in), the site's agent token taken from the host (`/_host/agent-token`, written to a temporary 0600 file), talking to the site only over HTTP.
   The template only serves locales that have a published `site` entry, so `--hide-chrome-only` is enough to "hide" a locale nobody asked for.
-  The three templates ship **the same** `personalize.mjs` byte for byte (`test/emdash-tool.test.mjs` keeps them equal; the gate
+  The four templates ship **the same** `personalize.mjs` byte for byte (`test/emdash-tool.test.mjs` keeps them equal; the gate
   `emdash-kit-sync` keeps the kit copy).
 
 ### 8.4. Further cleanup: form mail, social networks, menus, menu labels and many sites at once (measured 03/10/2026, after #780)
@@ -474,7 +474,7 @@ record through the open door. §9's keyword count does not see the following, be
 - **EmDash: the `value` of form options** (`personalize.mjs`). The tool renamed option labels ("Cake order") but kept the demo's `value`
   ("Construction quote"): `value` is what the submission stores and mails, so a visitor choosing "Cake order" sent the site owner "Request type: Construction quote". Now
   `value` follows the label, and a list of 2–8 options is trusted even when the count differs from the demo's (before, a different count dropped the whole answer, so sometimes the form
-  kept the demo text). Test: `personalize-apply.test.mjs` (the kit, copied into the three templates).
+  kept the demo text). Test: `personalize-apply.test.mjs` (the kit, copied into the four templates).
 - **WordPress: page titles and subtitles** (`wordpress.js`, `wp-residue.js`). The News page title "News & engineering notes" is not in the
   template but in the **page meta** `tracy_page_heading` (the theme's `home.title` filler reads it before the title), and the sentence "Project updates, corporate
   disclosures…" is the **page excerpt** (`post_excerpt`); both can be written through the open door (`postmeta`, `post`). On every kept page these two are read,
@@ -651,7 +651,7 @@ pages; Joomla removed 17 menu items, 8 reachable pages, 0 demo words.
 
 ## 12. Running and checking
 
-- Tests: `apps/tracy-web/test/brief-*.test.mjs` (`brief-joomla`, `brief-emdash` with menus, `brief-wp-leaves` with raw HTML…), `site-brief*.test.mjs`, `emdash-tool.test.mjs`, `seed-model.test.mjs`, plus `tests/personalize*.test.mjs` of the three EmDash themes
+- Tests: `apps/tracy-web/test/brief-*.test.mjs` (`brief-joomla`, `brief-emdash` with menus, `brief-wp-leaves` with raw HTML…), `site-brief*.test.mjs`, `emdash-tool.test.mjs`, `seed-model.test.mjs`, plus `tests/personalize*.test.mjs` of the four EmDash themes
   (DB-backed: `TEST_DATABASE_URL=postgres://…`), plus `sites-route.test.mjs` for the create/poll door.
 - A local fake of the image-model door: `~/tracy-bench-work/picture-stub` (see its README); `deploy/` needs no change.
 - Measuring: create sites through the same door the wizard uses (`POST /api/sites`, then poll `jobs/:id` until `done`), compare `Apply` with `later`,
