@@ -219,6 +219,7 @@ import {
   inventoryInvariant,
   picturesWhere
 } from './sites/agent-demo-inventory.js'
+import { createSitePlannerQueue } from './site-planner/bench-worker.js'
 import { presign, signedCall } from './sites/artifacts.js'
 import { readBrandFile } from './sites/brand-files.js'
 import { createBriefBuilds } from './sites/brief-build.js'
@@ -1158,6 +1159,17 @@ export function buildApp(deps) {
   // through this app's own `POST /api/sites` with the caller's cookie, as the widget's do.
   let readAgentNativeInventory = null
   let clientDemoService = null
+  // The site planner bench's worker (ADR 0041, #301): one run at a time, started and stopped by server.js; runs are
+  // started and read from the bench CLI (scripts/site-planner-bench.mjs).
+  app.sitePlannerQueue =
+    deps.config && deps.pool
+      ? createSitePlannerQueue({
+          pool: deps.pool,
+          secret: deps.config.sessionSecret,
+          fetchImpl: deps.fetchImpl ?? fetch,
+          log: deps.log ?? console
+        })
+      : null
   app.opportunityTick = null
   app.demoQaTick = null
   app.siteChecksTick = null
