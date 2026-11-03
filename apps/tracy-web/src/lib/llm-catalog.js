@@ -202,6 +202,17 @@ export const LLM_DOORS = [
     // Choosing a different model for the agent means touching `agent-default-model` inside the
     // dsh image, which is a different job from rotating a credential.
     needsModel: false
+  },
+  {
+    id: 'sitePlanner',
+    label: 'Site planner',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the site planner bench in /ops. An agent plans a whole site from a brief and a template kit, reading the kit with tool calls and its pictures by sight.',
+    needsModel: true,
+    // Both REQUIRED: the planner reads the kit only through tool calls and judges each block from its picture.
+    // No effort setting: the bench fixes it in code and records it on each run (ADR 0041, #301).
+    requires: ['tools', 'vision']
   }
 ]
 

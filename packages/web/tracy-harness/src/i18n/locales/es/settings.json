@@ -78,6 +78,8 @@
   "settings.model.door.seedImage.label": "Imágenes para un site construido",
   "settings.model.door.seedText.blurb": "Entradas de blog, secciones de página y traducciones escritas en el site nuevo de un cliente.",
   "settings.model.door.seedText.label": "Texto para un site construido",
+  "settings.model.door.sitePlanner.blurb": "WO New Flow Test: el banco de pruebas del site planner en /ops. Un agent planifica un site completo a partir de un brief y un kit de template: lee el kit con llamadas a herramientas y mira sus imágenes.",
+  "settings.model.door.sitePlanner.label": "Site planner",
   "settings.model.door.vision.blurb": "Website Opportunities: analizar las fotos de origen y revisar capturas de las páginas renderizadas. Requiere una prueba de píxeles aparte; dibujar imágenes no demuestra esta capacidad.",
   "settings.model.door.vision.label": "Leer imágenes",
   "settings.model.door.web.blurb": "La página pública Design templates y los borradores de tarjetas de quickstart.",
