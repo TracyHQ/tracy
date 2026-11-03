@@ -19,8 +19,28 @@ export function fakeFontFetch() {
   return { fetchImpl, seen }
 }
 
-/** The reviewer: passes every check of every image it is shown. */
-export function passingReviewer(body) {
+/** The picture model of the seedImage door, and its answer: an OpenRouter-like reply carrying a PNG as a data URI. */
+export const PICTURE_MODEL = 'vendor/picture-model'
+export const pictureReply = (png) => ({
+  model: PICTURE_MODEL,
+  choices: [
+    {
+      finish_reason: 'stop',
+      message: {
+        role: 'assistant',
+        content: 'Here is the icon.',
+        images: [{ type: 'image_url', image_url: { url: `data:image/png;base64,${png.toString('base64')}` } }]
+      }
+    }
+  ],
+  usage: { prompt_tokens: 80, completion_tokens: 1200, cost: 0.034 }
+})
+
+/** The reviewer: passes every check of every image it is shown; in blind mode it also guesses the industry. */
+export function passingReviewer(
+  body,
+  guesses = ['swimming school', 'public swimming pool', 'swimwear shop']
+) {
   const parts = body.messages.at(-1).content
   const images = parts.filter((p) => p.type === 'image_url').length
   const checks =
@@ -29,7 +49,9 @@ export function passingReviewer(body) {
       .text.split('Checks:\n')[1]
       ?.split('\n')
       .filter(Boolean) ?? []
+  const blind = parts.find((p) => p.type === 'text').text.includes('Nobody tells you what business')
   const answer = {
+    ...(blind ? { business: { answer: guesses[0], guesses, reason: 'a swimmer in goggles' } } : {}),
     images: Array.from({ length: images }, (_, i) => ({
       image: i + 1,
       checks: checks.map((c) => ({ check: c.replace(/^\d+\.\s*/, ''), verdict: 'pass', reason: 'it reads' }))

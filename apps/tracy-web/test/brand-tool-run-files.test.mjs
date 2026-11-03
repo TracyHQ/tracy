@@ -70,6 +70,7 @@ test('the tool list: names match the approved prompt, each with a schema and a r
       'set_name',
       'compose_logo',
       'fit_logo',
+      'make_icon',
       'make_lettermark',
       'make_favicon',
       'name_slots',

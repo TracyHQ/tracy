@@ -42,6 +42,11 @@ export function productionWiring(config, { fetchImpl = fetch } = {}) {
     ])
     loaded = {
       tools: brandTools,
+      /** The drawing door for make_icon: the picture door `seedImage` (brand-draw.js). */
+      async drawFor({ pool, secret, fetchImpl: modelFetch }) {
+        const { createDraw } = await import('./brand-draw.js')
+        return createDraw({ pool, secret, fetchImpl: modelFetch })
+      },
       filesFor: (runId) => diskRunFiles(brandRunDir(config, runId)),
       /** The kit's heading font, or null with the reason in `refusal` when the template does not give it. */
       async fontFor(kit) {

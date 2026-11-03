@@ -1,13 +1,11 @@
-// A scripted words-only brand agent for the end-to-end test (brand step trial bench, #320): a fake model that reads the
-// conversation it is sent and calls the REAL tools in a plausible order, a fake reviewer that passes every check it is
-// asked, and a fake Google Fonts that serves the Teko face already in the repo. No network, no real model.
+// What the scripted words-only brand agent reads from the conversation and writes as its brand file (the script itself is
+// _brand-bench-script.mjs). Used by the end-to-end test (brand step trial bench, #320). No network, no real model.
 import { faviconBlockOf } from '../src/brand-step/brand-safe-version.js'
-import { finalReply, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 
-const CHECKS = ['the name reads exactly as given', 'nothing but the mark and the name is in it']
-const NAME = 'Glen Bay Swim Academy'
+export const CHECKS = ['the name reads exactly as given', 'nothing but the mark and the name is in it']
+export const NAME = 'Glen Bay Swim Academy'
 /** What each tool answered so far, by tool name, read back from the conversation the model is sent. */
-function resultsOf(messages) {
+export function resultsOf(messages) {
   const names = new Map()
   for (const m of messages) for (const c of m.tool_calls ?? []) names.set(c.id, c.function.name)
   const out = {}
@@ -25,8 +23,13 @@ function resultsOf(messages) {
   return out
 }
 
+/** The icon make_icon drew, when one came out; else null (every call failed and the lettermark is the fallback). */
+export const iconOf = (r) => (r.make_icon ?? []).find((x) => x.ok) ?? null
+/** The mark file of the brand: the icon, else the lettermark. */
+export const markFileOf = (r) => iconOf(r)?.file ?? r.make_lettermark[0].file
+
 /** The look_logo files for what the spots show: each shown variant on the ground of its spot, once. */
-function looksOf(kit, r) {
+export function looksOf(kit, r) {
   const composed = r.compose_logo[0].sides
   const seen = new Map()
   r.fit_logo.forEach((fit, i) => {
@@ -37,7 +40,7 @@ function looksOf(kit, r) {
         ? composed[side].file
         : fit.shows === 'logo-2-lines'
           ? composed[side].variants.twoLines.file
-          : r.make_lettermark[0].file
+          : markFileOf(r)
     seen.set(`${file}@${spot.ground.colour}`, { file, ground: spot.ground.colour })
   })
   return [...seen.values()]
@@ -47,7 +50,8 @@ function looksOf(kit, r) {
 export function brandFileFrom(kit, r) {
   const accent = kit.site.brandColours.primary.value
   const set = r.set_name[0]
-  const mark = r.make_lettermark[0]
+  const mark = { file: markFileOf(r) }
+  const icon = iconOf(r)
   const composed = r.compose_logo[0].sides
   const logos = { light: null, dark: null, twoLines: null }
   const spots = r.fit_logo.map((fit, i) => {
@@ -86,9 +90,11 @@ export function brandFileFrom(kit, r) {
     logo: {
       material: null,
       mark: {
-        decision: 'lettermark',
-        why: 'Four make_icon calls gave no icon, so the initials are the last fallback.',
-        letters: 'GB',
+        decision: icon ? 'icon' : 'lettermark',
+        why: icon
+          ? 'There is no logo, so an icon in the site accent shows what the business does.'
+          : 'Four make_icon calls gave no icon, so the initials are the last fallback.',
+        letters: icon ? null : 'GB',
         icon: {
           businessType: 'swim school',
           businessTypeFrom: 'brand.name',
@@ -96,15 +102,12 @@ export function brandFileFrom(kit, r) {
           neighbour: 'surf school',
           neighbourAccept: [],
           distinguishing: 'a swimmer in goggles',
-          subject: 'a swimmer in goggles',
+          subject: icon ? icon.subject : 'a swimmer in goggles',
           colours: [accent],
           coloursFrom: 'accent',
-          provider: 'none',
-          model: 'none',
-          attempts: [1, 2, 3, 4].map((n) => ({
-            verdict: 'tool-failed',
-            subject: `a swimmer in goggles, try ${n}`
-          }))
+          provider: icon ? icon.provider : 'none',
+          model: icon ? icon.model : 'none',
+          attempts: icon ? [iconAttempt(icon, r)] : toolFailures(r)
         },
         file: mark.file,
         recoloured: { light: null, dark: null }
@@ -117,7 +120,13 @@ export function brandFileFrom(kit, r) {
       },
       logos,
       look: r.look_logo.flatMap((l) =>
-        l.results.map(({ file, ground, verdict, checks }) => ({ file, ground, verdict, checks }))
+        l.results.map(({ file, ground, verdict, checks, shownAt }) => ({
+          file,
+          ground,
+          verdict,
+          checks,
+          ...(shownAt ? { shownAt } : {})
+        }))
       ),
       spots
     },
@@ -125,42 +134,33 @@ export function brandFileFrom(kit, r) {
     ownerTasks: [
       {
         kind: 'replace-temporary-logo',
-        say: 'This is a temporary logo made from the initials of the name. Replace it with your own logo when you have one.'
+        say: icon
+          ? 'This is a temporary logo: an icon in the site colour beside your name. Replace it with your own logo when you have one.'
+          : 'This is a temporary logo made from the initials of the name. Replace it with your own logo when you have one.'
       }
     ]
   }
 }
 
-/** The scripted agent: each request gets the next step, chosen by how many assistant turns the conversation holds. */
-export function scriptedAgent(kit, { wrongName = false } = {}) {
-  const steps = [
-    () => [
-      ['open_image', { id: 'page-home-1440' }],
-      ['set_name', { text: NAME }]
-    ],
-    () => [1, 2, 3, 4].map((n) => ['make_icon', { subject: `a swimmer in goggles, try ${n}` }]),
-    () => [['make_lettermark', { letters: 'GB', accent: kit.site.brandColours.primary.value }]],
-    (r) => [['compose_logo', { mark: r.make_lettermark[0].file, name: r.set_name[0].sidecar }]],
-    (r) =>
-      kit.site.logoSpots.map((spot) => [
-        'fit_logo',
-        { logo: r.compose_logo[0].sides[spot.ground.side].file, spot: spot.id }
-      ]),
-    (r) => [['look_logo', { files: looksOf(kit, r), checks: CHECKS }]],
-    (r) => [['make_favicon', { mark: r.make_lettermark[0].file }]],
-    () => [['name_slots', {}]],
-    (r) => {
-      const brandFile = brandFileFrom(kit, r)
-      if (wrongName) brandFile.name.value = 'Another Name'
-      return [['save_brand_file', { brandFile }]]
+/** The icon's attempt record, with its blind look (the first look_logo, in blind mode). */
+function iconAttempt(icon, r) {
+  const blind = r.look_logo.find((l) => l.blind).blind
+  return {
+    file: icon.file,
+    raw: icon.raw,
+    subject: icon.subject,
+    verdict: 'pass',
+    plate: icon.plate,
+    blind: {
+      answer: blind.answer,
+      guesses: blind.guesses,
+      verdict: blind.verdict,
+      matchedPosition: blind.matchedPosition,
+      size: blind.size
     }
-  ]
-  return (body) => {
-    const turn = body.messages.filter((m) => m.role === 'assistant').length
-    const usage = usageOf({ cost: 0.01 })
-    const step = steps[turn]
-    return step
-      ? toolCallReply({ calls: step(resultsOf(body.messages)), usage }).body
-      : finalReply({ content: 'Saved.', usage }).body
   }
 }
+
+/** Every make_icon call failed: four tool failures, none a drawing attempt. */
+const toolFailures = (r) =>
+  (r.make_icon ?? []).map((x, i) => ({ verdict: 'tool-failed', subject: x.subject ?? `try ${i + 1}` }))

@@ -150,7 +150,15 @@ async function prepare(deps, row) {
     kit,
     agent: doors.agent,
     tools: wiring.tools,
-    ctx: { files, kit: kit.doc, brief: row.brief, font, runId: row.id, kitImage },
+    ctx: {
+      files,
+      kit: kit.doc,
+      brief: row.brief,
+      font,
+      runId: row.id,
+      kitImage,
+      draw: await wiring.drawFor?.({ pool, secret, fetchImpl: deps.fetchImpl })
+    },
     reviewFor: ({ spend, tool }) =>
       createReview({ door: doors.reviewer.door, fetchImpl: deps.fetchImpl, spend, tool })
   }

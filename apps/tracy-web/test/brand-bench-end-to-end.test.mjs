@@ -7,82 +7,29 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { runCli } from '../src/brand-step/brand-cli.js'
-import { brandRunDir, productionWiring } from '../src/brand-step/brand-wiring.js'
 import { roundsOf } from '../src/brand-step/brand-round-store.js'
-import { readRun } from '../src/brand-step/brand-store.js'
-import { createBrandQueue } from '../src/brand-step/brand-worker.js'
+import { brandRunDir } from '../src/brand-step/brand-wiring.js'
+import { SECRET, REVIEWER_MODEL } from './_brand-bench.mjs'
+import { PICTURE_MODEL } from './_brand-bench-doors.mjs'
+import { wordsOnlyRun } from './_brand-e2e-run.mjs'
 import { fileDb } from './_db.mjs'
-import { assignBrandDoors, quiet, REVIEWER_MODEL, SECRET, startRun } from './_brand-bench.mjs'
-import { scriptedAgent } from './_brand-bench-agent.mjs'
-import { fakeFontFetch, passingReviewer } from './_brand-bench-doors.mjs'
-import { loadCase } from './_brand-gate-files.mjs'
-import sharp from 'sharp'
 
 const db = fileDb()
 before(db.open)
 beforeEach(db.reset)
 after(db.close)
-/** Kit images that are real pictures (the shared fake serves invented bytes, which no tool can open). */
-async function pictureKitImages() {
-  const png = await sharp({ create: { width: 1440, height: 900, channels: 3, background: '#223344' } })
-    .png()
-    .toBuffer()
-  return {
-    async ensure(kit) {
-      const image = { mediaType: 'image/png', base64: png.toString('base64') }
-      return {
-        ok: true,
-        images: {
-          open: async (id) => ({
-            text: JSON.stringify({ id }),
-            images: [{ ...image, ref: { kit: kit.ref, image: id } }]
-          }),
-          resolve: async () => image
-        }
-      }
-    }
-  }
-}
-
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 
-/** Start a words-only run on the real wiring and let a worker run it to its end. */
-async function wordsOnlyRun(pool, dir, agentOptions) {
-  const kitImages = await pictureKitImages()
-  const config = { readinessDir: path.join(dir, 'readiness') }
-  const font = fakeFontFetch()
-  const wiring = productionWiring(config, { fetchImpl: font.fetchImpl })
-  const c = await loadCase('3-no-logo')
-  await assignBrandDoors(pool)
-  const started = await startRun(pool, c, { wiring, kitImages })
-  const agent = scriptedAgent(c.kit, agentOptions)
-  const requests = []
-  const fetchImpl = async (_url, init) => {
-    const body = JSON.parse(init.body)
-    requests.push(body.model)
-    const reply = body.model === REVIEWER_MODEL ? passingReviewer(body) : agent(body)
-    return new Response(JSON.stringify(reply), { headers: { 'content-type': 'application/json' } })
-  }
-  await createBrandQueue({
-    pool,
-    secret: SECRET,
-    fetchImpl,
-    kitImages,
-    wiring,
-    log: quiet,
-    retry: { attempts: 1 }
-  }).drain()
-  return { id: started.id, run: await readRun(pool, started.id), config, font, requests, kitImages, wiring }
-}
-
 test(
-  'a words-only brief ends with a brand file the gate accepts, and get exports all of it',
+  'a words-only brief ends with a brand file the gate accepts, with an icon drawn through the picture door, and get exports all of it',
   opts,
   async () => {
     const { pool } = db
     const dir = mkdtempSync(path.join(tmpdir(), 'brand-e2e-'))
     try {
-      const { id, run, config, font, requests, kitImages, wiring } = await wordsOnlyRun(pool, dir)
+      const { id, run, config, font, requests, kitImages, wiring } = await wordsOnlyRun(pool, dir, {
+        icon: true
+      })
       assert.equal(run.error, null)
       const rounds = await roundsOf(pool, id)
       assert.equal(run.outcome, 'brand-file', JSON.stringify(rounds.map((r) => r.gateResult?.rejected ?? r)))
@@ -94,10 +41,18 @@ test(
       assert.equal(font.seen.length, 2, 'the heading font is fetched once (stylesheet, file) and then cached')
       assert.equal(
         requests.filter((m) => m === REVIEWER_MODEL).length,
-        1,
-        'one reviewer look for all the logos'
+        2,
+        'one blind look at the icon and one look for all the logos'
       )
+      assert.equal(requests.filter((m) => m === PICTURE_MODEL).length, 1, 'one drawing')
       assert.ok(run.cost.agent > 0 && run.cost.reviewer > 0, JSON.stringify(run.cost))
+      assert.equal(run.cost.drawing, 0.034, 'the drawing is counted in the run cost')
+      const calls = (
+        await pool.query('select kind, tool, model, state from brand_call where kind = $1', ['drawing'])
+      ).rows
+      assert.deepEqual(calls, [
+        { kind: 'drawing', tool: 'make_icon', model: PICTURE_MODEL, state: 'answered' }
+      ])
 
       const out = path.join(dir, 'out')
       const lines = []
@@ -123,12 +78,37 @@ test(
       ])
         assert.ok(files.includes(f), f)
       const brand = JSON.parse(readFileSync(path.join(out, 'brand-file.json'), 'utf8'))
+      assert.equal(brand.logo.mark.decision, 'icon')
+      assert.equal(brand.logo.mark.icon.attempts[0].blind.verdict, 'pass')
       for (const f of [brand.favicon.png32, brand.favicon.ico, brand.logo.mark.file])
         assert.ok(existsSync(path.join(out, f)), `${f} is exported beside the brand file`)
       const turns = JSON.parse(readFileSync(path.join(out, 'turns.json'), 'utf8'))
       assert.ok(turns.some((t) => t.toolCalls.includes('compose_logo')))
       const split = JSON.parse(readFileSync(path.join(out, 'cost.json'), 'utf8'))
       assert.ok(split.agent > 0 && split.reviewer > 0)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  }
+)
+
+test(
+  'when every icon drawing fails the tool failures are not attempts and the lettermark is accepted',
+  opts,
+  async () => {
+    const { pool } = db
+    const dir = mkdtempSync(path.join(tmpdir(), 'brand-e2e-'))
+    try {
+      const { id, run, requests } = await wordsOnlyRun(pool, dir, {}, { picture: 'fails' })
+      const rounds = await roundsOf(pool, id)
+      assert.equal(run.outcome, 'brand-file', JSON.stringify(rounds.map((r) => r.gateResult?.rejected ?? r)))
+      assert.equal(run.brandFile.logo.mark.decision, 'lettermark')
+      assert.deepEqual(
+        run.brandFile.logo.mark.icon.attempts.map((t) => t.verdict),
+        Array(4).fill('tool-failed')
+      )
+      assert.equal(requests.filter((m) => m === PICTURE_MODEL).length, 4, 'four calls, four tool failures')
+      assert.equal(run.cost.drawing, 0, 'a failed drawing costs nothing')
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
