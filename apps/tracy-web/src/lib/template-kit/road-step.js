@@ -10,7 +10,8 @@
  *   blocked   the contract is not passed yet: the kit sits beside it (`kit-waiting`);
  *   todo      no kit (`kit-missing`), unreadable (`kit-invalid`), captured for another quickstart version
  *             (`kit-stale`), without pages or blocks or a picture at either width, or with a self-check of its own
- *             above 0 (`kit-incomplete`), with template
+ *             above 0, or a packed 1440 shot of a page or block without a current text look (`kit-incomplete`,
+ *             `missingLooks`: written by `cli.mjs looks`), with template
  *             gaps the kit measured that carry no accepted reason (`kit-gaps`, judged like the holes of Content
  *             coverage), not approved (`kit-not-approved`), or approved on another image set (`kit-approval-stale`);
  *   warn      the same on a release already published: it is never taken off for it, as Content coverage does.
@@ -18,7 +19,15 @@
 import { contractFor } from '../contracts.js'
 import { COVERAGE_POLICY } from '../content-coverage/judge.js'
 import { shownOnInspiration } from '../quickstart-releases.js'
-import { imagesDigest, KIT_FILE, KIT_WIDTHS, kitOfContract, notShownWidthsOf, widthsOf } from './reader.js'
+import {
+  imagesDigest,
+  KIT_FILE,
+  KIT_WIDTHS,
+  kitOfContract,
+  looksMissingOf,
+  notShownWidthsOf,
+  widthsOf
+} from './reader.js'
 
 /** Kinds the kit may record that are not template gaps: an empty logo is the owner's choice, never a defect. */
 const NOT_A_GAP = new Set(['logo-empty-shows-nothing-in-header'])
@@ -152,6 +161,24 @@ function incompleteOf(doc) {
 }
 
 /**
+ * The shots a planner would still have to open: every packed 1440 shot of a page or block needs a current look
+ * (`looksMissingOf`), written by the packager's own Claude Code with `cli.mjs looks`. Null when every one has it.
+ * @param {any} doc
+ */
+function looksIncompleteOf(doc) {
+  const missing = looksMissingOf(doc)
+  if (missing.length === 0) return null
+  const named = missing
+    .slice(0, SHOWN_GAPS)
+    .map((m) => `${m.kind} ${m.id}${m.why === 'stale' ? ' (stale)' : ''}`)
+    .join(', ')
+  return {
+    reason: `${missing.length} ${missing.length === 1 ? 'page or block has no current look of its' : 'pages and blocks have no current look of their'} 1440 shot: ${named}${missing.length > SHOWN_GAPS ? ', ...' : ''}`,
+    missing: missing.slice(0, SHOWN_GAPS)
+  }
+}
+
+/**
  * @param {(step: string, state: any, code: string, params?: Record<string, unknown>, blockedBy?: string) => unknown} put
  * @param {(steps: string[]) => string | undefined} waitingOn
  * @param {{ release: any, version: string | null, contractId?: string | null, kit: import('./reader.js').Kit, policy?: any }} input
@@ -203,6 +230,14 @@ export function templateKitStep(
   const gaps = templateGapsOf(doc, policy)
   const judged = { ...params, ...gaps }
   if (gaps.gaps > 0) return put(KIT_STEP, failing, 'kit-gaps', judged)
+  // Looks are text, outside the approval's image digest: judged here, after the pictures and gaps they describe.
+  const looks = looksIncompleteOf(doc)
+  if (looks)
+    return put(KIT_STEP, failing, 'kit-incomplete', {
+      ...judged,
+      reason: looks.reason,
+      missingLooks: looks.missing
+    })
   const approval = doc.approval
   if (!approval || typeof approval !== 'object' || typeof approval.imagesSha256 !== 'string')
     return put(KIT_STEP, failing, 'kit-not-approved', judged)
@@ -227,6 +262,8 @@ export function templateKitRefusal(step) {
       case 'kit-stale':
         return `The template kit is out of date: ${String(p.reason ?? 'it was captured for another version')}. Capture it again for ${version} and commit ${KIT_FILE}.`
       case 'kit-incomplete':
+        if (Array.isArray(p.missingLooks) && p.missingLooks.length > 0)
+          return `The template kit of ${version} is incomplete: ${String(p.reason)}. Describe each shot with \`template-kit looks\` (skill quickstart-contract, references/image-looks.md) and commit ${KIT_FILE} again.`
         return `The template kit of ${version} is incomplete: ${String(p.reason ?? 'pictures are missing')}. Capture it again so every page and block has a picture at 1440 and 390.`
       case 'kit-gaps': {
         const count = Number(p.gaps ?? 0)

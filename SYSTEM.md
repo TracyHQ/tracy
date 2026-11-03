@@ -36,6 +36,11 @@ sources:
   - packages/wo/website-opportunities/src/executor.js
   - apps/tracy-web/src/lib/customize-readiness.js
   - apps/tracy-web/src/lib/design-system-readiness.js
+  - apps/tracy-web/src/site-planner/bench-worker.js
+  - apps/tracy-web/src/site-planner/bench-cli.js
+  - apps/tracy-web/src/site-planner/kit-images.js
+  - apps/tracy-web/src/lib/agent-over-door.js
+  - apps/tracy-web/scripts/site-planner-bench.mjs
   - apps/tracy-host/src/app.js
   - apps/tracy-host/src/jobs.js
   - packages/bundle/tracy-native/cordis.patch.yml
@@ -792,6 +797,10 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `account_seen_hint` keeps the seen marks for step 2 of the tour (`site-tour`) and the voice hint (`voice-tip`), primary
   key `(account_id, hint)`, first time `seen_at`, deleted automatically when the account is deleted; the closed list of names
   is checked at the write door and by an SQL constraint. The existing `assistant_tip_seen` still keeps the separate `/help` hint.
+  Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
+  row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
+  failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,
+  never as bytes). Apart from the WO quality tables.
   Website Opportunities (migration 125, §8): `wo_preference`, `wo_opportunity`, `wo_job`, `wo_job_attempt`,
   `wo_source`, `wo_media`, `wo_profile`, `wo_revision` (immutable, a trigger blocks UPDATE), `wo_build`. Migration 126: `wo_media.caption/alt/dhash/labels`, `wo_build.pictures` (immutable picture plan + receipts).
   Migration 175 (`/v1/demos`): `wo_public_demo` (one request: `Idempotency-Key`, fingerprint of the whole body, body snapshot, opportunity + demo action, `sponsored`/`reserved_cents`, cancellation), `wo_sponsor_setting` (one row: number of live demos per account, model budget), `wo_demo_usage.kind` adds `external`.
@@ -2190,6 +2199,38 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   Coverage is not counted as passing while `required-unresolved` remains; support for the whole quickstart is not inferred
   just because the inventoried regions were written successfully. The list of the three existing EmDash templates is unchanged.
   Backend checks/CMS reads do not replace paid E2E or acceptance of the three demos.
+
+### Site planner bench (03/11/2026, [ADR 0041](docs/adr/0041-site-planner-trial-bench-in-ops.md))
+
+A trial bench for the first step of the new brief-built flow: the approved planner prompt turns one brief into one site
+plan for one template kit, and the deterministic checker scores it. It builds no site and has **no screen, route or API
+endpoint**.
+
+- **Started and read from a command line** inside the tracy-web container:
+  [`scripts/site-planner-bench.mjs`](apps/tracy-web/scripts/site-planner-bench.mjs) (`kits`, `run`, `list`, `status`, `get`,
+  `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-planner/bench-cli.js)). It calls the bench service directly with the
+  container's `DATABASE_URL` and `SESSION_SECRET`. A plan is read off the server with the approved plan reader script.
+- **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-planner/bench-worker.js)) is a durable queue over
+  `site_planner_run` inside the tracy-web process (`app.sitePlannerQueue`, started by `server.js`): one run at a time, a
+  lease renewed every minute, 20 claims, so a redeploy mid-run resumes from the last saved turn. A call dispatched with no
+  answer is marked abandoned and sent once more; a second loss fails the run. A failing plan gets at most two fix rounds in
+  the same conversation.
+- **The model** is called through the `sitePlanner` door (`/ops` › Model & AI; by default `deepseek-flash` on the
+  `deepseek` provider, with `deepseek-v4-pro` and Claude through OpenRouter as alternatives) by
+  [`agent-over-door.js`](apps/tracy-web/src/lib/agent-over-door.js): an OpenAI-compatible `/chat/completions` tool loop
+  with the reasoning effort of the model's profile, reasoning sent back, and per call the provider's own cost or, on
+  DeepSeek's own API (streamed), one computed from DeepSeek's published prices. DeepSeek Flash reads the kit's text
+  looks with tool calls, at reasoning effort max. A run whose model reads no pictures (DeepSeek V4 Pro on DeepSeek's own API) gets the whole kit in its first message and
+  no tools; a run that reads with tools is told to write after 20 reading calls or a read of parts it already had. Every
+  run stops past its cost budget (2 USD by default). On DeepSeek's own API the bench also reads the account balance
+  (`GET /user/balance`) before and after a run and stores it on the run.
+- **Kit images** ([`kit-images.js`](apps/tracy-web/src/site-planner/kit-images.js)): the first time a kit version is needed,
+  tracy-web **downloads the kit zip from GitHub** (the `template-kit-<template>-<version>.zip` asset of the kit's quickstart
+  release, found through `quickstart_releases`, read with the releases credential), checks every image against the sha256 the
+  kit lists, and caches the images on disk in `<TRACY_READINESS_DIR>/site-planner-kit-images/<kit>/<digest>/`. Later runs
+  reuse the cache, checked again on use. A missing zip or any mismatch refuses `run` and fails a queued run with the reason,
+  before any model call. Turn rows keep a reference to each opened image; the bytes are read back from the cache when a run
+  resumes or a fix round replays the conversation. Images are never committed.
 
 ## 9. Sign-in, seats, permissions
 

@@ -35,6 +35,7 @@ import {
   interopArgs,
   NOT_RUN_HERE,
   reportedScript,
+  standaloneArgs,
   vendorArgs,
   workersShardArgs
 } from '../check-tests.ts'
@@ -532,6 +533,25 @@ test('a package script is run with its own flags and globs, the reporter in betw
     assert.match(got.error, /^pkg\/package\.json: script "test"/)
   }
   assert.ok(!Array.isArray(reportedScript('pkg/package.json', 'test', {})), 'a missing script is refused')
+})
+
+test('an EmDash template suite runs with --test-force-exit, so a file left holding a server cannot hang the row', () => {
+  const rep = reporterArgs()
+  const scripts = (rel: string): Record<string, unknown> =>
+    (
+      JSON.parse(readFileSync(join(ROOT, rel, 'package.json'), 'utf8')) as {
+        scripts: Record<string, unknown>
+      }
+    ).scripts
+  for (const theme of ['base', 'business', 'saas']) {
+    const rel = `packages/cms/tracy-emdash-theme-${theme}`
+    const args = reportedScript(rel, 'test', scripts(rel))
+    assert.ok(Array.isArray(args), rel)
+    assert.deepEqual(standaloneArgs(args), ['--test', '--test-force-exit', ...rep, 'tests/*.test.mjs'], rel)
+  }
+  // A script that already asks for it gets it once.
+  const own = ['--test', '--test-force-exit', ...rep, 'tests/*.test.mjs']
+  assert.deepEqual(standaloneArgs(own), own)
 })
 
 /** The gate as a command over a throwaway tree (the harness of `check-tests-parts.test.ts`). */

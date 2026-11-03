@@ -25,7 +25,7 @@
 4. **Model access on dev, measured 02/11/2026.** The dev server has two providers, OpenRouter and DeepSeek, and no
    Anthropic key of its own. A probe through the OpenRouter key reached `anthropic/claude-opus-5.5`, which answered
    with a correct tool call. No door uses an Anthropic model today.
-5. **Kit images are not in the repo.** The kit JSON lists 112 images (about 17 MB) with their sha256; the images ship
+5. **Kit images are not in the repo.** The kit JSON lists 110 images (about 17 MB) with their sha256; the images ship
    in the `template-kit-<template>-<version>.zip` asset of the quickstart's GitHub release. No code fetches them.
 6. **The quality run tables belong to the WO build.** `wo_quality_run` allows one run per brief revision and freezes its
    input, and every row stands for a site being built for a customer.
@@ -83,10 +83,148 @@
 
 ## Alternatives rejected
 
-- **One call with every image in the prompt.** Up to 112 images per pass, and the prompt's way of working (open what
+- **One call with every image in the prompt.** Up to 110 images per pass, and the prompt's way of working (open what
   you need, when you need it) would have to be rewritten, so results would no longer compare with the approved run.
 - **Reuse the `woEditorial` door.** Changing its model would change the WO build too.
 - **Store runs in `wo_quality_run`.** One run per revision, a frozen input, and rows that read as customer builds.
 - **Commit the kit images.** 17 MB per template version in a public repo, out of step with how kits ship.
 - **Place the bench under "Website opportunities" or "Builds".** The new flow gets its own group so later steps land
   together and the running groups stay as they are.
+
+## Amendment 03/11/2026: no UI, and how a lost call and a fix round are sent (settled by Akemi)
+
+- **Who decided, when.** Akemi (COO), on 03/11/2026, while the tickets were cut (#299, #301, #303).
+- **No UI.** Decisions 1, 2, 9 and 11 lose their screens: the bench has no `/ops` group, list, run page, route or API
+  endpoint. Runs are started, read and cancelled with a command-line script inside the tracy-web container
+  (`kits`, `run`, `list`, `status`, `get`, `cancel`), which calls the bench service directly. Access is whoever can run
+  commands in that container. `get` downloads every plan version, the checker result and the failure list of every
+  round, the failures still standing, the run meta and a compact turns log. A plan is read and approved off the server:
+  the team turns `plan.json` into a page on their own machine with the approved plan reader script. No plan reader is
+  built into Tracy. The "site planner" door (decision 4) is still set in `/ops` like every other door.
+- **A lost call is sent once more (refines decision 7).** A call recorded as dispatched with no answer (the process
+  died while waiting) is marked abandoned and its request is sent once more as a new turn naming it; a model call has no
+  effect besides its cost. If that resend is lost too, the run fails. Nothing else is ever replayed.
+- **A fix round is the next user turn (refines decision 5).** The failure list goes back as the next user message of
+  the same conversation, with every reasoning and tool turn kept. An answer that is not one JSON object is not scored:
+  a short message asking for the whole plan as one JSON object goes back instead, and it counts as a fix round.
+- **Images are stored by reference (refines decision 8).** A saved turn keeps a reference to each opened image (kit,
+  image id, sha256), never its bytes; every request still sends the full images, read back from the cache when a run
+  resumes or a fix round replays the conversation. A kit whose images are not usable is refused before any model call.
+- **Images reach the model fitted inside 2000x2000 px (refines decision 3's "full size").** The provider refuses a side
+  over 8000 px, and over 2000 px once a request carries more than 20 images; full-page captures are up to 10000 px
+  tall, so each is scaled down (aspect kept, never enlarged) as the reference run's harness also did, and the fitted
+  copy is cached by image id and sha256 while the sha256 check stays on the original.
+- **Output budget of 128000 tokens and a 45 minute call (parity with the reference harness).** Claude Code ran the
+  reference runs with 128000 output tokens, thinking included, and the reference plan alone is about 50k tokens; the
+  bench records the same budget on every run, and a call that long, not streamed, gets 45 minutes.
+- **Transient provider errors are retried inside the turn (parity with the reference harness).** A 408, 409, 425, 429,
+  500, 502, 503, 504 or 529, an overloaded or rate limit error in a 200 body, or a network error before any response
+  is tried again up to 5 attempts with exponential backoff and jitter (Retry-After honoured, 60 s at most per wait);
+  400, 401, 403, 404 and content filter refusals never are. Each failed attempt is recorded on the turn and shown in
+  the turns log.
+- **A fix round answers with only the changed parts (refines decision 5).** After the failure list the server asks for
+  `{"changes": [...]}`, each change replacing one whole part named by its id or one top-level section; it applies them
+  to the previous plan, records the list (`changes-vN.json`) and scores the merged plan. A whole plan is still
+  accepted; a list that cannot be applied gets one ask for the whole plan within the same round.
+- **A plan after a prose lead-in is read.** An answer with text around exactly one fenced JSON block is read as that
+  block, and the dropped text is recorded on the round; two fenced blocks or none stay not a plan.
+- **Both cache markers live one hour.** An answer can take longer than 5 minutes, so the rolling marker is 1h like the
+  system one (two markers per request, within Anthropic's four), recorded in the run's harness settings.
+- **Thinking effort is medium (parity with the reference harness).** The Claude Code runs that produced the approved
+  reference plans sent effort medium on every call; high made the first pass about 4.5 minutes longer, almost all of
+  it thinking tokens, with the same output speed.
+- **The planner reads a leaner kit (cost cut).** `read_kit_part` leaves out the fields that only record how a value was
+  measured or proved (`PLANNER_DROPPED_KIT_FIELDS`, none named by the prompt), about 36% of the block text a run reads;
+  the checker still reads the full kit.
+- **Several kit parts in one call (cost cut).** `read_kit_part` takes a list of ids (bounded at 150000 characters per
+  answer), and the first user message asks for every part and image needed next in the same turn instead of one per
+  call; the brief goes as compact JSON.
+- **Finer change lists (cost cut).** A fix round change may replace one field of a block, add one entry to a block's
+  list, or remove one slot, link, frame or list entry, so unhiding a few slots no longer resends whole blocks; whole
+  parts, sections and a whole plan are still accepted.
+- **Fix rounds edit, they do not resend (cost cut).** A measured run answered 51 failures with two whole-section
+  replacements, 108k characters and about 48k output tokens. A change now names any part or section and edits one value
+  at a dotted path inside it (`field`), adds one entry to a list in it (`add`) or removes one value (`remove`), so every
+  place a failure names (a block, a slot, a page's story, a page group, `site.footerMenu[1]`, `mainMenu[2]`) is reached
+  without replacing what holds it; the instruction asks for whole replacement only for a part that must be rewritten
+  whole. A change list with a replacement over 4 KB of which at least half is already in the plan at the same place is
+  not applied once: the model is told how many KB it resent unchanged and asked for field edits, in the same round. A
+  second such list is applied (correctness over speed) and the round records it in `reading.bigReplacementsApplied`.
+- **The harness follows the model.** A run records a model profile: Anthropic models keep inline tool images and the two
+  cache markers; DeepSeek V4.1 Flash (`deepseek/deepseek-v4.1-flash-1017` on OpenRouter) gets images in a user message,
+  no cache markers, effort high (it has no medium), the DeepSeek provider pinned for the whole run, and the same 128000
+  output budget; reasoning is sent back on every later turn and cost is read from `usage.cost` as before.
+- **DeepSeek's own API is a profile of its own.** A door on the `deepseek` provider with model `deepseek-flash`
+  records the profile `deepseek-flash-native` (matched on the provider as well as the model): the same images in a
+  user message, no cache markers and effort max, sent on DeepSeek's wire, so `reasoning_effort` replaces OpenRouter's
+  `reasoning` object and no `usage` or `provider` field goes out. The assistant's `reasoning_content` is saved and sent
+  back on every later turn (DeepSeek answers 400 without it in a tool loop). DeepSeek reports no cost, so each turn's
+  cost is computed from its tokens with the price table stored in the profile (cache hit input, cache miss input,
+  output, USD per million tokens); the turn's request keeps that table and the turn reads `costSource: 'price-table'`.
+  The table is assumed until checked against DeepSeek's pricing page, and the 128000 output budget is not yet measured
+  on DeepSeek's own API; both live in the profile. OpenRouter runs keep the rule above: the provider's cost or none.
+- **The planner reads looks instead of opening every image (prompt change, approved by Akemi on 03/11/2026).** A
+  measured Opus run opened about 40 kit images, about $1.4 of its $5.72. Every page and block of a kit may now carry a
+  `look`, a short plain text of what its 1440 shot shows (layout, columns, pictures, headings, buttons, density), written
+  once per kit version by the packager. Akemi unlocked the prompt for this change only, on 03/11/2026: the kit shape
+  names `look`, the planner plans from the looks and opens a desktop image only when a decision cannot be settled from
+  a look and the kit's words (where a frame sits, how many cards sit in a row, two blocks that may repeat, a part with no
+  look), never just to confirm, and `seen` is taken from the look, or from the image when it was opened. Every other
+  rule and every output field is unchanged; the image tool stays. The new prompt's sha256 is
+  `b48800fb2f25e678c356bc5f6fa5548c2ca1a58da7ed550754c1f36379ebbdb8` (was `1492da55...`). `read_kit_part` gives each
+  look as its text alone, beside its page or block in `contents` and in the page or block part; the shot id and sha256
+  that keep a look current are left out of the planner's view, and the checker still reads the full kit.
+- **The planner runs on Claude Sonnet 5.5 (refines decision 4).** With looks in place of most images, the bench's
+  model is `anthropic/claude-sonnet-5.5` through OpenRouter (`SITE_PLANNER_MODEL`, named by the door's refusal when it
+  is unset); the door is still set in `/ops`. It keeps the `anthropic` profile unchanged: OpenRouter's model list and
+  endpoints, read 03/11/2026, give it text and image input, tools, `reasoning` and `reasoning_effort`, a 1h cache write
+  price, and 128000 output tokens on every endpoint, so effort medium, both 1h cache markers and the 128000 output
+  budget stay as they are.
+- **The planner runs on DeepSeek V4 Pro by default, from text alone (refines the bullet above, 03/11/2026).** For its
+  cost, the default door is model `deepseek-v4-pro` on the `deepseek` provider (`SITE_PLANNER_PROVIDER`,
+  `SITE_PLANNER_MODEL`); Claude Sonnet 5.5 and Opus 5.5 through OpenRouter stay as alternatives on the `anthropic`
+  profile. DeepSeek lists it as text only, so the door now requires tool calls and only prefers vision: a model that
+  cannot read pictures (or whose profile sends none) is let in at run start only when the kit has a current look for
+  every packed 1440 shot (`looksMissingOf`), and is refused naming the kit and the parts without a look otherwise. Such
+  a run is offered no image tool, its first message says there are no images and the looks stand in for them, no image
+  zip is fetched, and the door snapshot records `images: false`. Its profile `deepseek-v4-pro-native` sends DeepSeek's
+  wire with effort high, no cache markers and 128000 output tokens (a 231k-token planner call answered in 191 s), and
+  computes cost from a price table assumed from OpenRouter's third-party listings until checked against DeepSeek's own
+  pricing. DeepSeek's overload answers are retried with backoff: a 503 `service_unavailable_error`, the same code in a
+  200 body, and a 200 whose body is not JSON (cut while overloaded), whose first 300 characters are kept in the reason.
+- **Calls on DeepSeek's own API are streamed, and a silent one is cut (03/11/2026).** The longest call writes the
+  whole plan (55k to 80k output tokens, over ten minutes), and unstreamed nothing shows while it writes, so "still
+  writing" and "the provider hung" looked the same until the 45 minute call timeout. The `deepseek-native` wire now
+  sends `stream: true` with `stream_options.include_usage` and puts the chunks back together into the same message,
+  usage and cost the unstreamed answer gives (`agent-over-door-stream.js`). A call with no byte at all, data or
+  keep-alive, for `idleMs` (3 minutes, recorded in the run's harness) is cut and retried as a timeout; the 45 minute
+  total stays. Every 15 s the call in flight records what it has received on its dispatched turn row (column
+  `progress`, migration 193), and `status` shows it as a `call` line ("turn 7 (round 0) writing: 41k chars of answer,
+  10k of reasoning, 12s since last byte"). The OpenRouter wire (Claude) stays unstreamed: its `reasoning_details`
+  carry Anthropic thinking signatures that must come back byte for byte, and how OpenRouter splits them over chunks
+  cannot be proven equal to the unstreamed shape without a paid call.
+- **A text-only planner gets the whole kit at once; every run is guarded (03/11/2026).** A measured DeepSeek V4 Pro run
+  read kit parts for 85 calls, re-reading parts it had (prompt 170k to 555k tokens), and never wrote a plan; with tools
+  in a request DeepSeek adds every earlier turn's reasoning to the context. A run whose model is given no images now
+  sends no tools: its first message is the kit block (the whole planner view of the kit, the same bytes for every run on
+  that kit version, so DeepSeek's prefix cache can reuse it), then the brief, then an instruction to write the plan in
+  one fenced json block (about 790k characters on JA Boxing 1.0.10). A run that reads with tools gets `contents` in its
+  first message, a short "already sent in call N" for a part read twice, and `tool_choice: "none"` with the same
+  instruction after 20 reading answers or one made only of repeats. A run past 2.00 USD stops with
+  `SITE_PLANNER_BUDGET`. DeepSeek turns are costed at its published peak or off-peak price by UTC dispatch time
+  (holidays ignored), and a DeepSeek run records the account balance before and after (migration 194). The approved
+  prompt is unchanged.
+- **The planner runs on DeepSeek Flash by default, at max effort (refines the two bullets above, 03/11/2026).** Four
+  runs on dev, one brief (not in the repo), the same frozen checker: `deepseek-flash` at effort high (the earlier default), reading the kit's looks with
+  tool calls and opening no image, took 10.5 minutes and about 0.04 USD, 62 failures in the first draft and none after
+  the fix rounds, with sound page judgement; at effort low it took 7.6 minutes but left 202 failures in the first draft
+  and 2 after the last fix round, with weaker page judgement; at effort max it took about 10.3 minutes of model time (a
+  redeploy interrupted that run once), 46 failures in the first draft and none at the end, fix rounds of about 30
+  seconds, about 0.05 USD: max thinks more while reading the kit, so the first draft misses less and the fix rounds are
+  shorter, and the owner chose it over high; `deepseek-v4-pro` (text only, kit preloaded) took 33.5
+  minutes and about 0.41 USD, 186 failures in the first draft and a weak page judgement. The default door is now model
+  `deepseek-flash` on the `deepseek` provider (`SITE_PLANNER_PROVIDER`, `SITE_PLANNER_MODEL`), profile
+  `deepseek-flash-native` at effort max. DeepSeek lists Flash with image input, so the door lets it in on any kit and
+  offers it the image tool; it reads the looks first and opens an image only when a look cannot settle a decision. `deepseek-v4-pro` (text only, needs every look) and Claude Sonnet 5.5
+  or Opus 5.5 through OpenRouter stay as alternatives. A fix round applies the valid changes of an answer and sends back
+  only the invalid ones.

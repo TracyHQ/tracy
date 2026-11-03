@@ -4,8 +4,9 @@
  * `ci:self-hosted` to go back to our runners. There the full workers suite is three rows, not two.
  *
  * A job that may run on `ubuntu-latest` lands on a fresh VM without what the self-hosted runner image
- * carried: Node at `.node-version`, `php` cli, and (for `build-check`) a PostgreSQL that the
- * database variable points at. Each is installed in a step gated on `runner.environment ==
+ * carried: Node at `.node-version`, `php` cli, (for `build-check`) a PostgreSQL that the
+ * database variable points at, and (on the `build-check` rows that open a browser) Playwright's
+ * Chromium. Each is installed in a step gated on `runner.environment ==
  * 'github-hosted'`, so our runners skip it. This pins that wiring; which events pick the hosted path
  * is evaluated in `ci-nightly-tree.test.mjs` (it has the expression evaluator), the lane and fork rules
  * in `ci-public-repo.test.mjs` and `ci-runner-arch.test.mjs`, the merge rule in `check-pr-merge.test.mjs`.
@@ -26,7 +27,8 @@ import { fileURLToPath } from 'node:url'
 
 import { load } from 'js-yaml'
 
-import { planMatrix } from '../ci/plan-ci.mjs'
+import { opensBrowser, planMatrix } from '../ci/plan-ci.mjs'
+import { lockVersions, playwrightVersions, STANDALONE_LOCKS } from '../ci/playwright-browsers.mjs'
 import { DATABASE_MARK } from '../ci/related-tests.mjs'
 import { labelSets, runnerPaths } from '../test-support/runs-on.mjs'
 
@@ -366,4 +368,96 @@ test('the hosted pnpm bootstrap activates the checkout pin globally before askin
   })
   assert.equal(result.status, 0, result.stderr)
   assert.equal(readFileSync(output, 'utf8'), `path=${dir}/content store\ndsh=${'d'.repeat(40)}\n`)
+})
+
+const BROWSER_STEPS = [
+  'Look up the Playwright versions on a GitHub-hosted runner',
+  'Cache the Playwright browsers on a GitHub-hosted runner',
+  'Install the Playwright browser on a GitHub-hosted runner'
+]
+
+test("build-check installs Playwright's Chromium on GitHub-hosted, only on rows that open a browser", () => {
+  const job = jobs['build-check']
+  const at = BROWSER_STEPS.map((name) => indexOf(job, name))
+  for (const [i, name] of BROWSER_STEPS.entries()) {
+    assert.ok(at[i] !== -1, name)
+    // Hosted only, and only on a row `plan` marked: our runners and the `checks` row skip all three.
+    assert.equal(job.steps[at[i]].if, `${HOSTED_ONLY} && matrix.browser`, name)
+  }
+  assert.deepEqual(
+    [...at].sort((a, b) => a - b),
+    at,
+    'look up, cache, install — in that order'
+  )
+  // After the install (the root's own `playwright` bin), before anything runs a test.
+  assert.ok(indexOf(job, 'Install dependencies') < at[0])
+  for (const later of ['Turbo tests', 'Build check', 'Tests with the clock moved forward'])
+    assert.ok(at[2] < indexOf(job, later), later)
+  const [lookup, cache, install] = at.map((i) => job.steps[i])
+  assert.equal(lookup.id, 'playwright')
+  assert.match(lookup.run, /node scripts\/ci\/playwright-browsers\.mjs --print/)
+  assert.match(lookup.run, />> "\$GITHUB_OUTPUT"$/)
+  assert.match(cache.uses, /^actions\/cache@[0-9a-f]{40}$/)
+  assert.equal(cache.with.path, '~/.cache/ms-playwright')
+  for (const part of ['runner.os', 'runner.arch', 'steps.playwright.outputs.versions'])
+    assert.ok(cache.with.key.includes(part), part)
+  assert.equal(install.run, 'node scripts/ci/playwright-browsers.mjs --install')
+  // No other job installs a browser this way.
+  for (const [name, other] of Object.entries(jobs))
+    if (name !== 'build-check')
+      assert.ok(!JSON.stringify(other.steps ?? []).includes('playwright-browsers.mjs'), name)
+})
+
+test('plan marks every row that runs tests as a browser row, and `checks` only when it carries the clock', () => {
+  const rowsOf = (input) => planMatrix(input).matrix.include
+  for (const hosted of [true, false]) {
+    const rows = rowsOf({ event: 'workflow_dispatch', changed: null, allFiles: [], hosted })
+    for (const row of rows)
+      assert.equal(Boolean(row.browser), row.group !== 'checks', `${row.group} (hosted=${String(hosted)})`)
+    assert.ok(rows.some((r) => r.group === 'tests emdash-base' && r.browser))
+    assert.ok(rows.some((r) => r.group === 'tests e2e' && r.browser))
+  }
+  // The rule itself, on the row shapes the planner builds.
+  assert.equal(opensBrowser({ group: 'checks', args: '--skip tests' }), false)
+  assert.equal(opensBrowser({ group: 'checks', args: '--only presets --only lint' }), false)
+  assert.equal(opensBrowser({ group: 'checks', args: '--skip tests', clock: true }), true)
+  assert.equal(opensBrowser({ group: 'tests related', args: '--only tests --tests-part related' }), true)
+  assert.equal(opensBrowser({ group: 'tests packages', args: '', turbo: 'test:ci' }), true)
+  assert.equal(opensBrowser({ group: 'x', args: '--only testsuite' }), false)
+})
+
+test('the Playwright versions come from the gated importers and the three template lockfiles', () => {
+  const lock = (importers) => JSON.stringify({ lockfileVersion: '9.0', importers })
+  const pw = (version) => ({ specifier: version, version })
+  const root = lock({
+    '.': { devDependencies: { '@playwright/test': pw('1.63.0') } },
+    'apps/tracy-host': { dependencies: { playwright: pw('1.63.0') } },
+    'packages/ui/x': {
+      devDependencies: { playwright: { specifier: '^1.64.0', version: '1.64.1(react@19.0.0)' } }
+    },
+    // dsh's own suites are not the gate's: their pin installs nothing.
+    'vendor/tracy/deepseek-harness/apps/web': { devDependencies: { playwright: pw('1.50.0') } },
+    'packages/ui/no-browser': { dependencies: { react: pw('19.0.0') } }
+  })
+  assert.deepEqual(lockVersions(root), ['1.63.0', '1.63.0', '1.64.1'])
+  const files = {
+    'pnpm-lock.yaml': root,
+    [STANDALONE_LOCKS[0]]: lock({ '.': { devDependencies: { playwright: pw('1.62.0') } } }),
+    [STANDALONE_LOCKS[1]]: lock({ '.': { devDependencies: { playwright: pw('1.63.0') } } }),
+    [STANDALONE_LOCKS[2]]: lock({
+      '.': { devDependencies: { playwright: pw('1.63.0') } },
+      sub: { dependencies: { playwright: pw('9.9.9') } }
+    })
+  }
+  assert.deepEqual(
+    playwrightVersions((rel) => files[rel]),
+    ['1.62.0', '1.63.0', '1.64.1']
+  )
+  assert.deepEqual(
+    STANDALONE_LOCKS,
+    ['base', 'business', 'saas'].map((t) => `packages/cms/tracy-emdash-theme-${t}/pnpm-lock.yaml`)
+  )
+  assert.throws(() => playwrightVersions(() => lock({})), /no lockfile resolves playwright/)
+  // The real tree resolves at least one version, each a plain semver.
+  for (const v of playwrightVersions()) assert.match(v, /^\d+\.\d+\.\d+/)
 })

@@ -8,7 +8,7 @@ body {
   --card-foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
   --popover: var(--dsw-alias-bg-layer-2, oklch(1 0 0));
   --popover-foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
-  --primary: oklch(0.588 0.136 37.4);
+  --primary: oklch(0.565 0.136 37.4);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.588 0.136 37.4);
   --secondary: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));

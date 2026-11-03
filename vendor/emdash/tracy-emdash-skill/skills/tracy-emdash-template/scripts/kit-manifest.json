@@ -126,8 +126,8 @@
         "measureAxis",
         "import ./visual-lib.mjs",
         "report",
-        "stmt:9c85c0f848",
-        "stmt:d4ba9e2d49"
+        "stmt:3752e43b2c",
+        "stmt:30c2ba4849"
       ],
       "why": "⚠ THE COARSEST ENTRY HERE, AND THE REASON IS A LIMIT OF THE CHECK, NOT A DECISION. This tool's whole run is ONE top-level statement, so declaration-level granularity cannot separate its parts: any edit anywhere inside the loop changes the key. What is genuinely this template's: its own HINT table (product vocabulary; a customer running the kit gets the kit's) and a measureAxis that knows this template's section markup. What was RECONCILED on 19/09 rather than hidden behind this entry: the lazy-image scroll and networkidle pass, which lived only in the kit and base and is now here too. What is STILL open: this copy defaults `rendered` to design.images.sourceSlot + data-filled while the kit defaults to plain `img` — the kit's comment argues this copy's form asks a custom element whether it decoded, which it never did. Changing it alters what this template MEASURES and moves contractHash, so it belongs to the template's owner, not to a sync pass."
     }

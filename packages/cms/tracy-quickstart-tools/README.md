@@ -340,6 +340,17 @@ in a block's `source`.
    the image set is the same. A block a page lists with no shot at a width it is shown at fails the pack (exit 1). The
    zip carries a fixed date, so the same files give the same sha256.
 6. `cli.mjs approve --out <kit dir> --by <login>` (a person, after the review sheet) seals the pack's image set.
+7. Write the **looks** (skill `quickstart-contract`, [`references/image-looks.md`](../../../.agents/skills/quickstart-contract/references/image-looks.md)):
+   one to three plain English sentences per packed 1440 page and block shot, `look: { image, sha256, text }` on the
+   page or block, so the planner reads text instead of opening every image. Written by the packager's own Claude Code
+   (subagents open the image files), never a paid API; the tool makes no model or network call.
+   `cli.mjs looks --kit <kit dir>/template-kit.json --list [--to <file>]` lists the shots without a current look
+   (missing, or a `sha256` other than the shot's) with their absolute file paths; `cli.mjs looks --kit ... --apply
+   <looks.json>` checks every `{image, sha256, text}` entry (a 1440 shot of a page or block, its current sha256,
+   40 to 400 ASCII characters) and writes all or none, keeping the file's indent and key order. Then `pack` again:
+   it copies a look to the pages and blocks drawn by another one's shot (`fullShotOf`, `shotOf`) and keeps the
+   approval, which covers images only. A rebuild keeps the look of every unchanged shot. On /ops the Template kit
+   step reads `kit-incomplete` (`missingLooks`) until every packed 1440 shot has a current look.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
 shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one
