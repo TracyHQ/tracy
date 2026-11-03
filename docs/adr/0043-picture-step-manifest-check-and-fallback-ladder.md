@@ -61,7 +61,7 @@ A frame entry:
 | `darkened` | A dark overlay was baked in so the heading over it stays readable. |
 | `recolourable` | Initials and icons the write step may repaint in the brand colours. |
 | `seen` | One sentence from the looker saying what the picture actually shows. |
-| `looker` | The look of the picture (section 3b): `{ verdict: "pass" \| "fail", faults: [...], seen }`, the fault names from the fixed list; `{ verdict: null, faults: [], seen: null, problem }` when the look could not be read. Absent when the frame was not looked at. |
+| `looker` | The look of the picture (section 3b): `{ verdict: "pass" \| "fail", faults: [...], seen }`, the fault names from the fixed list; `{ verdict: "fail", faults: ["look unreadable"], seen: null, problem }` when the look could not be read twice. Absent when the frame is not looked at (icons, initials, hidden frames). |
 | `reason` | Why this picture, or why hidden. |
 
 Twins (a kit frame with `twinOf`, the light or dark copy of another frame, and a plan frame with `sameAs`, a second
@@ -179,13 +179,19 @@ Thresholds and readings (named constants in the code):
 - **Extended photos** (`owner-photo-extended`, extending comes with #344): when the entry carries `realPart`, a box on
   the finished file, that box is outlined in magenta on the picture and the message says the outlined part is the
   owner's real photo, so the looker looks for a drawing seam at its border.
-- **Its model must be of another maker than the picker's**: the maker is the vendor prefix of the model id, else the
-  provider. Like the icon ranker's door, the looker's door never stops a run: unset, disabled, unreadable, a model the
-  provider says cannot read pictures, or the picker's maker means no picture is looked at, and `looker.note` in the
-  manifest says why.
-- **Its answer** is `{ verdict, faults, seen }`. A fault name outside the fixed list is dropped and noted; any fault
-  makes the verdict `fail`. The look is stored on the entry as `looker` (above) and its sentence as `seen`. An answer
-  that cannot be read is a note, never a failure.
+- **The looker is mandatory, and its model must be of another maker than the picker's** (the maker is the vendor
+  prefix of the model id, else the provider). Like the picker's door, an unset, disabled or unreadable looker door, a
+  model the provider says cannot read pictures, or the picker's maker refuses the run at its start
+  (`SITE_PICTURES_LOOKER_UNSET`, `_DISABLED`, `_UNREADABLE`, `_MODEL_LACKS`, `_SAME_MAKER`) and again when a worker
+  claims it, as does a door changed since the start (`SITE_PICTURES_LOOKER_CHANGED`). The run stores the door's
+  snapshot as `door.looker`.
+- **Its answer** is `{ verdict, faults, seen }`. The fixed fault list has seven names: the six the model may name
+  (wrong subject, forbidden item, subject cut off, distorted face or body, stray lettering, visible drawing seam) and
+  `look unreadable`, which only code records. A name outside the model's six is dropped and noted; any fault makes the
+  verdict `fail`. The look is stored on the entry as `looker` (above) and its sentence as `seen`.
+- **An unreadable look is asked once more.** A failed call or an answer out of form is retried once, both calls
+  counted (a file gone from the store is not retried); still unreadable, the picture fails with `look unreadable`, so L01 never passes a
+  picture nobody looked at. An unreadable look is not kept, so the next round asks again.
 - **Rejections join the fix rounds.** A rejection is a failure of rule `L01` (the looker passes every finished picture)
   at the frame, its detail naming the faults and the seen sentence. L01 is added by the bench step to the round's
   picture check result, outside the frozen rules P01 to P13, so `site-pictures-check/1` is unchanged. The result is then
@@ -193,9 +199,12 @@ Thresholds and readings (named constants in the code):
   other rejection stays in `notForPicker` for the fallback ladder. The shared run loop checks a round synchronously and
   is not changed; the looks run where a checked round is saved (the step wraps its store's `saveRound`).
 - **Recorded**: the manifest's `looker` holds the door's model and snapshot (never the key), the looker prompt's hash and
-  one record per call (frame, file hash, model, time, cost, cached). Each look is kept in the bench's file store by a
-  hash of the picture, its display size, the words, the model and the prompt, so a later round or a resumed run pays
-  once per picture.
+  one record per picture (frame, file hash, model, time, cost, cached). Each readable look is kept in the bench's file
+  store by a hash of the picture, its display size, the words, the model and the prompt, so a later round or a resumed
+  run pays once per picture.
+- **The run's cost holds every role.** The run's `costUsd` adds the looks paid for (cached ones excluded) and the icon
+  ranking call to the picker's turns; the round's cost stays the cost of its picker turns, and the split per role is in
+  the manifest's `cost` and `timing`.
 - **Alt notes**: a run started with a writer copy file (`--copy-file`, `site-copy/1`; only its alts, its hash and its
   name are stored on the run) gets one note per frame with both an alt and a seen sentence. The comparison is code,
   not a model call: both texts are cut into content words (lower case, three letters or more, common little words

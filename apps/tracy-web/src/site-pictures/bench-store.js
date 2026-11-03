@@ -105,3 +105,17 @@ export async function filesOf(pool, runId) {
     costUsd: Number(r.cost_usd)
   }))
 }
+
+/**
+ * Add what a role other than the picker spent (the looker, the icon ranker) to the run's cost, which the picker's turns
+ * already add to (lib/bench-turn-store.js), so a run's `costUsd` is the cost of every role. With a lease token, only
+ * while the run is still held with it.
+ */
+export async function addRunCost(pool, { runId, usd, leaseToken = null }) {
+  if (!(usd > 0)) return
+  await pool.query(
+    `update site_picture_run set cost_usd = cost_usd + $2, updated_at = now()
+      where id = $1 and ($3::bigint is null or lease_token = $3::bigint)`,
+    [runId, usd, leaseToken]
+  )
+}

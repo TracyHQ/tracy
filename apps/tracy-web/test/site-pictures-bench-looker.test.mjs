@@ -7,16 +7,28 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import sharp from 'sharp'
-import { assignDoor, saveProvider } from '../src/lib/llm-store.js'
+import { assignDoor, clearDoor } from '../src/lib/llm-store.js'
+import { startPictureRun } from '../src/site-pictures/bench-control.js'
 import { readRun } from '../src/site-pictures/bench-store.js'
 import { picturePrompts } from '../src/site-pictures/picture-prompts.js'
 import { fileDb } from './_db.mjs'
-import { kitIndex, startRun, storeDir } from './_site-pictures-bench.mjs'
+import {
+  brief,
+  KIT_REF,
+  kitIndex,
+  assignLookerDoor,
+  LOOKER_MODEL as LOOKER,
+  photoFolder,
+  plan,
+  startRun,
+  storeDir
+} from './_site-pictures-bench.mjs'
 import {
   assignPickerDoor,
   drainPicker,
   lastUserText,
   pickerView,
+  pickerPlan,
   reply,
   SECRET,
   startPickerRun
@@ -34,27 +46,16 @@ const store = storeDir()
 after(store.done)
 const where = { index: kits.index, dir: store.dir }
 
-const LOOKER = 'openai/gpt-6-luna'
 const SEEN = 'A mechanic trues a bicycle wheel on a repair stand in a workshop.'
 const json = (body) => new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json' } })
 const entries = (m) => [...m.frames, ...m.siteSettings]
 const byFrame = (m) => new Map(entries(m).map((e) => [e.frame, e]))
 
-async function assignLookerDoor(pool, model = LOOKER) {
-  await saveProvider(
-    pool,
-    { id: 'openrouter', presetId: 'openrouter', apiKey: 'sk-test-looker-key', enabled: true },
-    SECRET,
-    'owner@tracy.test'
-  )
-  await assignDoor(pool, 'pictureLooker', { providerId: 'openrouter', model }, 'owner@tracy.test')
-}
-
 // The frame a look is about: the picker plan writes the frame id into the words it shows.
 const shownFrame = (body) =>
   /"shows": "the workshop, (block-[\d.]+)"/.exec(body.messages[1].content[0].text)?.[1]
 
-/** A fake looker: `judge(body, n)` gives { verdict, faults, seen }; it counts calls in flight. */
+/** A fake looker: `judge(body, n)` gives { verdict, faults, seen }, or { raw } sent as is; it counts calls in flight. */
 function fakeLooker(judge) {
   const calls = []
   let inFlight = 0
@@ -68,7 +69,7 @@ function fakeLooker(judge) {
     inFlight--
     return json({
       model: LOOKER,
-      choices: [{ message: { role: 'assistant', content: JSON.stringify(said) } }],
+      choices: [{ message: { role: 'assistant', content: said.raw ?? JSON.stringify(said) } }],
       usage: { prompt_tokens: 900, completion_tokens: 40, cost: 0.0002 }
     })
   }
@@ -83,7 +84,6 @@ test(
   async () => {
     const { pool } = db
     await assignPickerDoor(pool)
-    await assignLookerDoor(pool)
     const started = await startPickerRun(pool, where)
     const looker = fakeLooker((body) => {
       // The hero is rejected while it holds the first photo the picker chose for it.
@@ -100,7 +100,6 @@ test(
     const picker = []
     const fetchImpl = async (url, init) => {
       const body = JSON.parse(init.body)
-      if (String(url).includes('openrouter')) return looker.answer(body)
       picker.push({ body })
       const view = pickerView(picker[0])
       const [hero, feature, about] = ['block-2.0', 'block-6.1', 'block-5.1'].map(
@@ -121,7 +120,7 @@ test(
         reply({ picks: [{ frame: 'block-2.0', photo: 'none', reason: 'no other photo fits' }] }).body
       )
     }
-    await drainPicker(pool, { ...where, fetchImpl })
+    await drainPicker(pool, { ...where, fetchImpl, looker: looker.answer })
 
     const run = await readRun(pool, started.id)
     assert.equal(run.status, 'succeeded', run.error)
@@ -180,6 +179,10 @@ test(
       'round 1 reads the kept looks'
     )
     assert.equal(r1.failureList.includes('L01'), false)
+    // The run's cost holds every role: the picker's turns and the looks paid for (cached looks are not paid again).
+    const paid = [r0, r1].flatMap((r) => r.pictures.looker.calls).filter((c) => !c.cached).length * 0.0002
+    assert.ok(paid > 0)
+    assert.ok(Math.abs(run.costUsd - (r0.costUsd + r1.costUsd + paid)) < 1e-9, `${run.costUsd}`)
     // No copy file: no alt notes.
     assert.deepEqual(r1.pictures.altNotes, [])
 
@@ -191,6 +194,23 @@ test(
     assert.equal(picker[1].body.tools, undefined)
   }
 )
+
+/** Start a run with the looker door as it stands (no door assigned by the helper); returns the refusal or the run. */
+const start = (pool, over = {}) =>
+  startPictureRun({
+    pool,
+    secret: SECRET,
+    plan: plan(),
+    planSource: { kind: 'file', name: 'p.json' },
+    brief: brief(),
+    briefSource: { kind: 'file', name: 'b.json' },
+    kitRef: KIT_REF,
+    startedBy: 'cli',
+    photos: photoFolder(),
+    storeDir: store.dir,
+    index: kits.index,
+    ...over
+  })
 
 const copyFile = (alts) => ({
   value: {
@@ -211,11 +231,12 @@ test(
   opts,
   async () => {
     const { pool } = db
-    await assignLookerDoor(pool)
     const looker = fakeLooker(() => pass)
-    const fetchImpl = async (url, init) => looker.answer(JSON.parse(init.body))
-    const plain = await startRun(pool, where, { secret: SECRET })
-    await drainPicker(pool, { ...where, fetchImpl })
+    const fetchImpl = async (url) => {
+      throw new Error(`only the looker is called, not ${url}`)
+    }
+    const plain = await startRun(pool, where)
+    await drainPicker(pool, { ...where, fetchImpl, looker: looker.answer })
     const first = await readRun(pool, plain.id)
     assert.equal(first.status, 'succeeded', first.error)
     const placed = entries(first.rounds[0].pictures).filter((e) => e.seen)
@@ -224,13 +245,12 @@ test(
 
     const [a, b] = placed.map((e) => e.frame)
     const withCopy = await startRun(pool, where, {
-      secret: SECRET,
       copy: copyFile([
         { frame: a, text: 'Mechanic truing a bicycle wheel on the stand' },
         { frame: b, text: 'Two hikers on a snowy mountain ridge' }
       ])
     })
-    await drainPicker(pool, { ...where, fetchImpl })
+    await drainPicker(pool, { ...where, fetchImpl, looker: looker.answer })
     const second = await readRun(pool, withCopy.id)
     const notes = new Map(second.rounds[0].pictures.altNotes.map((n) => [n.frame, n]))
     assert.equal(notes.size, 2)
@@ -244,26 +264,19 @@ test(
 
 test('a copy file that is not site-copy/1 is refused at the start', opts, async () => {
   const { pool } = db
-  const { startPictureRun } = await import('../src/site-pictures/bench-control.js')
-  const { plan, brief, photoFolder, KIT_REF } = await import('./_site-pictures-bench.mjs')
-  const refused = await startPictureRun({
-    pool,
-    plan: plan(),
-    planSource: { kind: 'file', name: 'p.json' },
-    brief: brief(),
-    briefSource: { kind: 'file', name: 'b.json' },
-    kitRef: KIT_REF,
-    startedBy: 'cli',
-    photos: photoFolder(),
-    copy: { value: { version: 'site-plan/3' }, source: { kind: 'file', name: 'c.json' } },
-    storeDir: store.dir,
-    index: kits.index
+  const refused = await start(pool, {
+    copy: { value: { version: 'site-plan/3' }, source: { kind: 'file', name: 'c.json' } }
   })
   assert.equal(refused.code, 'SITE_PICTURES_COPY_SHAPE')
 })
 
-test('a looker of the picker maker looks at nothing and says why', opts, async () => {
+test('a run does not start without a usable looker door, nor run when it changed', opts, async () => {
   const { pool } = db
+  // Unset: refused at the start, nothing queued.
+  const unset = await start(pool)
+  assert.equal(unset.code, 'SITE_PICTURES_LOOKER_UNSET')
+  assert.match(unset.reason, /"Picture looker" door has no provider and model/)
+  // The picker's maker: refused.
   await assignPickerDoor(pool)
   await assignDoor(
     pool,
@@ -271,21 +284,57 @@ test('a looker of the picker maker looks at nothing and says why', opts, async (
     { providerId: 'deepseek', model: 'deepseek-flash' },
     'owner@tracy.test'
   )
-  const started = await startPickerRun(pool, where)
-  const picker = []
-  const fetchImpl = async (url, init) => {
-    picker.push({ body: JSON.parse(init.body) })
-    const view = pickerView(picker[0])
-    const picks = [...view.frames.keys()].map((frame) => ({ frame, photo: 'none', reason: 'none fits' }))
-    return json(reply({ picks }).body)
-  }
-  await drainPicker(pool, { ...where, fetchImpl })
+  const same = await start(pool, { plan: pickerPlan() })
+  assert.equal(same.code, 'SITE_PICTURES_LOOKER_SAME_MAKER')
+  // Started, then the door is cleared before a worker claims the run: the run fails and says why.
+  const started = await startRun(pool, where)
+  assert.equal((await readRun(pool, started.id)).status, 'queued')
+  await clearDoor(pool, 'pictureLooker')
+  await drainPicker(pool, { ...where, fetchImpl: async () => assert.fail('no call') })
   const run = await readRun(pool, started.id)
-  assert.equal(run.status, 'succeeded', run.error)
-  assert.equal(picker.length, 1, 'only the picker was called')
-  assert.match(run.rounds[0].pictures.looker.note, /same maker as the picker/)
-  assert.equal(run.rounds[0].checkResult.rules.find((r) => r.id === 'L01').status, 'skip')
+  assert.equal(run.status, 'failed')
+  assert.match(run.error, /^SITE_PICTURES_LOOKER_UNSET/)
 })
+
+test(
+  'an unreadable look is asked once more, and still unreadable fails the picture as "look unreadable"',
+  opts,
+  async () => {
+    const { pool } = db
+    const asked = new Map()
+    const looker = fakeLooker((body) => {
+      const key = body.messages[1].content[1].image_url.url
+      const n = (asked.get(key) ?? 0) + 1
+      asked.set(key, n)
+      // The first picture never answers in form; every other one answers in form the second time.
+      if ([...asked.keys()][0] === key) return { raw: 'I think it is fine.' }
+      return n === 1 ? { raw: 'no json here' } : pass
+    })
+    const started = await startRun(pool, where)
+    await drainPicker(pool, {
+      ...where,
+      fetchImpl: async () => assert.fail('no call'),
+      looker: looker.answer
+    })
+    const run = await readRun(pool, started.id)
+    assert.equal(run.status, 'succeeded', run.error)
+    const r0 = run.rounds[0]
+    const looked = entries(r0.pictures).filter((e) => e.looker && e.source !== 'twin')
+    assert.ok(looked.length >= 2)
+    for (const n of asked.values()) assert.equal(n, 2, 'every picture asked exactly twice')
+    const unreadable = looked.filter((e) => e.looker.faults.includes('look unreadable'))
+    assert.equal(unreadable.length, 1)
+    assert.equal(unreadable[0].looker.verdict, 'fail')
+    assert.match(unreadable[0].looker.problem, /asked again/)
+    assert.ok(looked.filter((e) => e !== unreadable[0]).every((e) => e.looker.verdict === 'pass'))
+    const rule = r0.checkResult.rules.find((r) => r.id === 'L01')
+    assert.equal(rule.status, 'fail')
+    assert.match(rule.failures[0].detail, /could not look at the picture \(look unreadable\)/)
+    // Both calls of every picture are counted on the run.
+    assert.ok(Math.abs(run.costUsd - looker.calls.length * 0.0002) < 1e-9, `${run.costUsd}`)
+    assert.equal(r0.pictures.looker.calls.length, looked.length)
+  }
+)
 
 test(
   'the command line takes a writer copy file with --copy-file and stores its alts on the run',
@@ -296,7 +345,6 @@ test(
     const path = await import('node:path')
     const { runCli } = await import('../src/site-pictures/bench-cli.js')
     const { inputsOf } = await import('../src/site-pictures/bench-store.js')
-    const { brief, photoFolder, plan, KIT_REF } = await import('./_site-pictures-bench.mjs')
     const cwd = mkdtempSync(path.join(tmpdir(), 'site-pictures-looker-cli-'))
     try {
       writeFileSync(path.join(cwd, 'plan.json'), JSON.stringify(plan()))
@@ -314,6 +362,7 @@ test(
         const args = ['run', '--plan-file', 'plan.json', '--kit', KIT_REF, '--brief-file', 'brief.json']
         const code = await runCli([...args, '--photos', 'photos', ...extra], {
           pool: db.pool,
+          secret: SECRET,
           cwd,
           storeDir: store.dir,
           index: kits.index,
@@ -322,6 +371,7 @@ test(
         })
         return { code, out, err }
       }
+      await assignLookerDoor(db.pool)
       const bad = await cli(['--copy-file', 'plan-as-copy.json'])
       assert.equal(bad.code, 1)
       assert.match(bad.err.join('\n'), /SITE_PICTURES_COPY_SHAPE/)

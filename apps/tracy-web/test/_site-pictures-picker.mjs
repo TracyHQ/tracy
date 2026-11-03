@@ -4,9 +4,9 @@
 // _agent-over-door-fake.mjs: no real model is called.
 import { assignDoor, saveProvider } from '../src/lib/llm-store.js'
 import { createSitePicturesQueue } from '../src/site-pictures/bench-worker.js'
-import { plan, quiet, startRun } from './_site-pictures-bench.mjs'
+import { isLook, lookReply, plan, quiet, SECRET, startRun } from './_site-pictures-bench.mjs'
 
-export const SECRET = 's'.repeat(32)
+export { SECRET }
 
 /** The picker door on DeepSeek Flash. */
 export async function assignPickerDoor(pool) {
@@ -85,17 +85,25 @@ export function balances(totals) {
     )
 }
 
-/** Run what is queued with one worker that can open the picker door (and read a release webroot, `webroot`). */
+/**
+ * Run what is queued with one worker that can open the picker door (and read a release webroot, `webroot`). Looks go
+ * to `looker` (a function of the request body; by default every picture passes), every other call to `fetchImpl`.
+ */
 export async function drainPicker(
   pool,
-  { index, dir, fetchImpl, balanceFetch = balances([]), retry = { attempts: 1 }, webroot }
+  { index, dir, fetchImpl, balanceFetch = balances([]), retry = { attempts: 1 }, webroot, looker }
 ) {
+  const routed = async (url, init) => {
+    const body = init?.body ? JSON.parse(init.body) : null
+    if (!isLook(body)) return fetchImpl(url, init)
+    return looker ? looker(body) : lookReply()
+  }
   await createSitePicturesQueue({
     pool,
     secret: SECRET,
     index,
     storeDir: dir,
-    fetchImpl,
+    fetchImpl: routed,
     balanceFetch,
     retry,
     ...(webroot ? { webroot } : {}),

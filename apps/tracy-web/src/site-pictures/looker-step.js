@@ -8,17 +8,21 @@
 // seen }` (what the reading page reads). A rejection is a failure of rule L01 at the frame, with its fault names, added
 // to the round's picture check result; the result is split again (picker-picks.js splitForPicker), so a rejected frame
 // the picker placed goes back to the picker in the next fix round, and any other rejection stays in `notForPicker`. A
-// look that could not be read is a note, never a failure. The manifest's `looker` holds the door's model, the prompt
-// hash and one record per call (frame, file hash, time, cost, cached); `cost.looker` and `timing.looker` are their sums.
+// look that could not be read (a failed call, an answer out of form) is asked once more; still unreadable (or its file
+// gone from the store), it is a fail with the fault "look unreadable", so L01 never passes a picture nobody looked at. The
+// manifest's `looker` holds the door's model and snapshot, the prompt hash and one record per picture (frame, file hash,
+// time, cost, cached); `cost.looker` and `timing.looker` are their sums, and `paid` (what this save spent, cached looks
+// excluded) is added to the run's cost by the caller.
 // When the run was given a writer copy file, `altNotes` compares its alts with the seen sentences (alt-notes.js).
 //
-// The looks run where a checked round is saved (looker-round.js withLooker). Every look is kept in the bench's file store (runs/<run id>/looks/<key>.json, the key a hash of the picture, its
-// display size, the words, the model and the prompt), so a resumed run or a later round pays once per picture.
+// The looks run where a checked round is saved (looker-round.js withLooker). Every readable look is kept in the bench's
+// file store (runs/<run id>/looks/<key>.json, the key a hash of the picture, its display size, the words, the model and
+// the prompt), so a resumed run or a later round pays once per picture.
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { altNotesFor } from './alt-notes.js'
 import { fileStore, sha256Hex } from './file-store.js'
-import { askLooker, lookImage, lookWords } from './looker-call.js'
+import { askLooker, LOOK_UNREADABLE, lookImage, lookWords } from './looker-call.js'
 
 export const LOOK_CONCURRENCY = 4
 /** The sources whose picture the looker checks. */
@@ -43,14 +47,13 @@ async function inParallel(items, n, work) {
 
 /**
  * The looker of one run.
- * @param {{ door: object | null, snapshot?: object | null, note: string | null, prompt: { text: string, sha256: string }, storeDir: string,
+ * @param {{ door: object, snapshot?: object | null, prompt: { text: string, sha256: string }, storeDir: string,
  *   runId: string, idx: object, alts: Array<{ frame: string, text: string }> | null, fetchImpl?: typeof fetch,
  *   concurrency?: number }} input `idx` the picture check's index of plan and kit; `alts` the writer's alts, or null
  */
 export function createLooker({
   door,
   snapshot = null,
-  note,
   prompt,
   storeDir,
   runId,
@@ -73,27 +76,44 @@ export function createLooker({
       .catch(() => null)
     if (before) return { list, entry, said: before, cached: true }
     const bytes = await store.readPicture(path.basename(entry.file))
-    if (!bytes)
-      return {
-        list,
-        entry,
-        said: { verdict: null, faults: [], seen: null, problem: 'the file is not in the store' }
-      }
-    const image = await lookImage(bytes, box, realPart)
-    const said = await askLooker({
-      door,
-      system: prompt.text,
-      words,
-      image,
-      outlined: Boolean(realPart),
-      fetchImpl
+    const unreadable = (problem, spent = {}) => ({
+      verdict: 'fail',
+      faults: [LOOK_UNREADABLE],
+      seen: null,
+      problem,
+      model: door.model,
+      ms: spent.ms ?? 0,
+      costUsd: spent.costUsd ?? null
     })
-    // A failed call is not kept: the next round or a resumed run asks again.
-    if (said.verdict) {
-      await mkdir(path.dirname(kept(key)), { recursive: true })
-      await writeFile(kept(key), JSON.stringify(said))
+    if (!bytes) return { list, entry, said: unreadable('the file is not in the store'), cached: false }
+    const image = await lookImage(bytes, box, realPart)
+    const ask = () =>
+      askLooker({ door, system: prompt.text, words, image, outlined: Boolean(realPart), fetchImpl })
+    const first = await ask()
+    if (first.verdict) return { list, entry, said: await keep(key, first), cached: false }
+    // Asked once more; both calls are counted.
+    const second = await ask()
+    const spent = {
+      ms: first.ms + second.ms,
+      costUsd:
+        first.costUsd === null && second.costUsd === null
+          ? null
+          : (first.costUsd ?? 0) + (second.costUsd ?? 0)
     }
-    return { list, entry, said, cached: false }
+    if (second.verdict) return { list, entry, said: await keep(key, { ...second, ...spent }), cached: false }
+    // An unreadable look is not kept: the next round or a resumed run asks again.
+    return {
+      list,
+      entry,
+      said: unreadable(`${first.problem}; asked again: ${second.problem}`, spent),
+      cached: false
+    }
+  }
+
+  async function keep(key, said) {
+    await mkdir(path.dirname(kept(key)), { recursive: true })
+    await writeFile(kept(key), JSON.stringify(said))
+    return said
   }
 
   /** The manifest with every look written on it, and the looker's rule result. Never modifies `doc`. */
@@ -103,66 +123,63 @@ export function createLooker({
       siteSettings: doc.siteSettings.map((e) => ({ ...e }))
     }
     const failures = []
-    const notes = note ? [note] : []
+    const notes = []
     const calls = []
-    let checked = 0
-    if (door) {
-      const todo = Object.entries(lists).flatMap(([list, entries]) =>
-        entries.filter((e) => LOOKED_SOURCES.has(e.source) && e.file).map((e) => [list, e])
-      )
-      const looks = await inParallel(todo, concurrency ?? LOOK_CONCURRENCY, ([list, e]) => lookAt(list, e))
-      for (const { list, entry, said, cached } of looks) {
-        calls.push({
-          frame: entry.frame,
-          sha256: entry.sha256,
-          model: said.model ?? door.model,
-          ms: said.ms ?? 0,
-          costUsd: said.costUsd ?? null,
-          cached: Boolean(cached)
-        })
-        if (!said.verdict) {
-          notes.push(`${entry.frame}: not looked at, ${said.problem}`)
-          entry.looker = { verdict: null, faults: [], seen: null, problem: said.problem }
-          continue
-        }
-        checked++
-        entry.seen = said.seen
-        entry.looker = { verdict: said.verdict, faults: said.faults, seen: said.seen }
-        if (said.dropped?.length)
-          notes.push(`${entry.frame}: fault names outside the list dropped: ${said.dropped.join(', ')}`)
-        if (said.verdict === 'fail')
-          failures.push({
-            where: whereOf(list, entry.frame),
-            detail: `the looker rejected the picture (${said.faults.join(', ') || 'no fault named'}); it saw: ${said.seen}`,
-            cause: 'looker'
-          })
+    const todo = Object.entries(lists).flatMap(([list, entries]) =>
+      entries.filter((e) => LOOKED_SOURCES.has(e.source) && e.file).map((e) => [list, e])
+    )
+    const looks = await inParallel(todo, concurrency ?? LOOK_CONCURRENCY, ([list, e]) => lookAt(list, e))
+    for (const { list, entry, said, cached } of looks) {
+      calls.push({
+        frame: entry.frame,
+        sha256: entry.sha256,
+        model: said.model ?? door.model,
+        ms: said.ms ?? 0,
+        costUsd: said.costUsd ?? null,
+        cached: Boolean(cached)
+      })
+      entry.seen = said.seen
+      entry.looker = {
+        verdict: said.verdict,
+        faults: said.faults,
+        seen: said.seen,
+        ...(said.problem ? { problem: said.problem } : {})
       }
-      // Twins take their source's look.
-      const bySource = new Map(lists.frames.map((e) => [e.frame, e]))
-      for (const e of lists.frames)
-        if (e.source === 'twin' && bySource.get(e.twinOf)?.looker?.verdict) {
-          const src = bySource.get(e.twinOf)
-          e.seen = src.seen
-          e.looker = { ...src.looker }
-        }
+      if (said.dropped?.length)
+        notes.push(`${entry.frame}: fault names outside the list dropped: ${said.dropped.join(', ')}`)
+      if (said.verdict === 'fail')
+        failures.push({
+          where: whereOf(list, entry.frame),
+          detail: said.problem
+            ? `the looker could not look at the picture (${LOOK_UNREADABLE}): ${said.problem}`
+            : `the looker rejected the picture (${said.faults.join(', ') || 'no fault named'}); it saw: ${said.seen}`,
+          cause: 'looker'
+        })
     }
-    const sum = (key) => calls.reduce((n, c) => n + (Number.isFinite(c[key]) ? c[key] : 0), 0)
+    // Twins take their source's look.
+    const bySource = new Map(lists.frames.map((e) => [e.frame, e]))
+    for (const e of lists.frames)
+      if (e.source === 'twin' && bySource.get(e.twinOf)?.looker) {
+        const src = bySource.get(e.twinOf)
+        e.seen = src.seen
+        e.looker = { ...src.looker }
+      }
+    const sum = (key, of = calls) => of.reduce((n, c) => n + (Number.isFinite(c[key]) ? c[key] : 0), 0)
     const out = {
       ...doc,
       frames: lists.frames,
       siteSettings: lists.siteSettings,
       altNotes: altNotesFor(alts, [...lists.frames, ...lists.siteSettings]),
       looker: {
-        model: door?.model ?? null,
+        model: door.model,
         door: snapshot,
         promptSha256: prompt.sha256,
-        note: note ?? null,
         calls
       },
       cost: { ...doc.cost, looker: sum('costUsd') },
       timing: { ...doc.timing, looker: sum('ms') }
     }
-    const status = failures.length ? 'fail' : checked ? 'pass' : 'skip'
+    const status = failures.length ? 'fail' : calls.length ? 'pass' : 'skip'
     const rule = {
       ...LOOKER_RULE,
       status,
@@ -171,7 +188,14 @@ export function createLooker({
       failures,
       notes: status === 'skip' && !notes.length ? ['no picture to look at'] : notes
     }
-    return { doc: out, rule }
+    return {
+      doc: out,
+      rule,
+      paid: sum(
+        'costUsd',
+        calls.filter((c) => !c.cached)
+      )
+    }
   }
 
   return { look }

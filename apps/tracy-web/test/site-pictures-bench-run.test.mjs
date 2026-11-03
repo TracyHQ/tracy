@@ -97,9 +97,12 @@ test(
     )
     assert.deepEqual(manifest.pending, [])
     // Cost and time per role are recorded; a code only run spends nothing and reads no balance.
-    // With no looker door no picture is looked at, and the manifest says why (#343).
+    // Every placed owner photo was looked at by the (free, passing) fake looker (#343).
     assert.deepEqual(manifest.cost, { code: 0, iconRanking: 0, looker: 0 })
-    assert.match(manifest.looker.note, /no picture was looked at: the "Picture looker" door is unassigned/)
+    assert.ok(manifest.looker.calls.length > 0)
+    assert.ok(
+      manifest.frames.filter((e) => e.source === 'owner-photo').every((e) => e.looker?.verdict === 'pass')
+    )
     assert.ok(Number.isInteger(manifest.timing.code) && manifest.timing.code >= 0)
     assert.equal(run.costUsd, 0)
     assert.equal(run.totals.calls, 0)

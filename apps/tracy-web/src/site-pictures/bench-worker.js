@@ -27,7 +27,7 @@ import { kitIdOf } from '../site-writer/bench-worker.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
 import { picturePickerDoor } from './door.js'
 import { fileStore } from './file-store.js'
-import { pictureLookerDoor } from './looker-door.js'
+import { runLookerDoor } from './looker-door.js'
 import { withLooker } from './looker-round.js'
 import { createLooker } from './looker-step.js'
 import { iconStepFor } from './icon-step.js'
@@ -146,6 +146,8 @@ async function prepare(deps, row) {
     return { ok: false, code: 'SITE_PICTURES_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
   const door = await doorOf(deps, row)
   if (!door.ok) return door
+  const lookerDoor = await runLookerDoor({ ...deps, picker: door.door ?? null }, row.door?.looker)
+  if (!lookerDoor.ok) return lookerDoor
   const rounds = await SITE_PICTURES_STORE.roundsOf(deps.pool, row.id)
   const recorded = rounds.some((r) => r.state === 'checked')
   const store = fileStore(deps.storeDir)
@@ -212,13 +214,9 @@ async function prepare(deps, row) {
     timing: { code: Date.now() - started - iconsDone.timing, iconRanking: iconsDone.timing },
     iconRanking: iconsDone.ranking
   }
-  const lookerDoor = await pictureLookerDoor({
-    pool: deps.pool,
-    secret: deps.secret,
-    picker: door.door ?? null
-  })
   const looker = createLooker({
-    ...lookerDoor,
+    door: lookerDoor.door,
+    snapshot: lookerDoor.snapshot,
     prompt: { text: picturePrompts().looker, sha256: picturePrompts().roles.looker },
     storeDir: store.dir,
     runId: row.id,

@@ -24,8 +24,8 @@ export const USAGE = `usage: node scripts/site-pictures-bench.mjs <command>
                                           round, the failures still standing, run meta, plan and turns
   cancel <runId>                          stop a run
 A plan with frames that need a specific picture calls the picker through the "Picture picker" door (/ops, Model & AI);
-one without calls no model. Every finished picture is checked by the looker through the "Picture looker" door; without
-that door no picture is looked at and the manifest says why. The drawer comes later.`
+one without calls no picker. Every finished picture is checked by the looker through the "Picture looker" door, which
+every run needs (a model of another maker than the picker's). The drawer comes later.`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
 

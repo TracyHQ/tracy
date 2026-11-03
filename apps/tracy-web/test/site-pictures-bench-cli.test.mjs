@@ -9,7 +9,17 @@ import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { runCli } from '../src/site-pictures/bench-cli.js'
 import { fileDb } from './_db.mjs'
-import { brief, drain, KIT_REF, kitIndex, photoFolder, plan, storeDir } from './_site-pictures-bench.mjs'
+import {
+  assignLookerDoor,
+  brief,
+  drain,
+  KIT_REF,
+  kitIndex,
+  photoFolder,
+  plan,
+  SECRET,
+  storeDir
+} from './_site-pictures-bench.mjs'
 
 const db = fileDb()
 before(db.open)
@@ -36,10 +46,13 @@ function workFolder() {
 }
 
 async function cli(argv, cwd) {
+  // Every run needs the looker door (#343).
+  await assignLookerDoor(db.pool)
   const out = []
   const err = []
   const code = await runCli(argv, {
     pool: db.pool,
+    secret: SECRET,
     cwd,
     storeDir: store.dir,
     index: kits.index,

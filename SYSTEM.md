@@ -2287,10 +2287,11 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   colour and plate are measured from the kit's demo icons, read once per kit release from the release's webroot tar.gz
   (through the releases credential) and cached in the bench's file store.
 - **The looker** (#343) checks every finished owner photo or drawn picture through the `pictureLooker` door
-  (`openai/gpt-6-luna` through OpenRouter; another maker than the picker's, else no look): one fresh call per picture,
-  4 at a time, with only the picture at display size and the plan's words. Its verdict, faults and seen sentence are
-  stored on the entry; rejections are rule L01 failures that go back to the picker in the fix rounds. Unset, no picture
-  is looked at and the manifest says why. `run --copy-file` passes a writer copy file whose alts are compared with the
+  (`openai/gpt-6-luna` through OpenRouter; mandatory, another maker than the picker's, else the run is refused): one
+  fresh call per picture, 4 at a time, with only the picture at display size and the plan's words; an unreadable look
+  is asked once more, then fails as "look unreadable". Its verdict, faults and seen sentence are stored on the entry;
+  rejections are rule L01 failures that go back to the picker in the fix rounds. The run's cost adds the looks and the
+  icon ranking to the picker's turns. `run --copy-file` passes a writer copy file whose alts are compared with the
   seen sentences (`altNotes`). Migration 201 adds the door to the door check and the run's `copy` column.
 
 ## 9. Sign-in, seats, permissions

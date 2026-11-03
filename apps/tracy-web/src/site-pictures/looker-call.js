@@ -4,15 +4,16 @@
 // (`owner-photo-extended`, #344) the real part is outlined on the picture and the message says so.
 //
 // The answer is held to a fixed form: a verdict, faults from the fixed list (FAULTS) and one `seen` sentence. A fault
-// name outside the list is dropped and noted; any fault makes the verdict "fail". An answer that cannot be read, or a
-// call that fails, is a look with no verdict and its reason: it never fails the frame and never stops the run.
+// name outside the model's list is dropped and noted; any fault makes the verdict "fail". An answer that cannot be read,
+// or a call that fails, is a look with no verdict and its reason; the caller asks once more, then records the fault
+// "look unreadable" (looker-step.js). It never stops the run.
 import sharp from 'sharp'
 import { jsonObjectIn } from '../sites/brief-engines/shared.js'
 import { costOf } from '../lib/agent-over-door-wire.js'
 import { costOfCall, priceFor } from '../brand-step/brand-prices.js'
 
-/** The faults a looker may name, exactly as written. */
-export const FAULTS = Object.freeze([
+/** The faults the looker model may name, exactly as written. */
+export const MODEL_FAULTS = Object.freeze([
   'wrong subject',
   'forbidden item',
   'subject cut off',
@@ -20,6 +21,10 @@ export const FAULTS = Object.freeze([
   'stray lettering',
   'visible drawing seam'
 ])
+/** The fault code records when the looker could not look at a picture, twice: it fails the picture. */
+export const LOOK_UNREADABLE = 'look unreadable'
+/** The fixed fault list of a look: the model's faults and the one code records. */
+export const FAULTS = Object.freeze([...MODEL_FAULTS, LOOK_UNREADABLE])
 
 /** How long one look may take. */
 export const LOOK_MS = 90_000
@@ -69,7 +74,7 @@ export function lookMessage({ words, image, outlined }) {
           "The part outlined in magenta is the owner's real photo; the rest was extended by drawing. The outline is not part of the picture."
         ]
       : []),
-    `Faults you may name: ${FAULTS.map((f) => `"${f}"`).join(', ')}.`,
+    `Faults you may name: ${MODEL_FAULTS.map((f) => `"${f}"`).join(', ')}.`,
     'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>" }'
   ].join('\n')
   return [
@@ -85,8 +90,8 @@ export function readLook(text) {
   const seen = typeof answer.seen === 'string' ? answer.seen.trim() : ''
   if (!seen) return { problem: 'the answer has no seen sentence' }
   const named = Array.isArray(answer.faults) ? answer.faults.map((f) => String(f).trim().toLowerCase()) : []
-  const faults = FAULTS.filter((f) => named.includes(f))
-  const dropped = named.filter((f) => !FAULTS.includes(f))
+  const faults = MODEL_FAULTS.filter((f) => named.includes(f))
+  const dropped = named.filter((f) => !MODEL_FAULTS.includes(f))
   if (answer.verdict !== 'pass' && answer.verdict !== 'fail')
     return { problem: `the verdict must be "pass" or "fail", found ${JSON.stringify(answer.verdict)}` }
   const verdict = faults.length ? 'fail' : answer.verdict

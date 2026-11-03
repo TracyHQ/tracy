@@ -4,6 +4,7 @@
 // looker's rule L01 to the round's check result and splits it again for the picker (picker-picks.js splitForPicker).
 // The stored manifest, check result and failure list therefore hold the looks, and the next fix round sends back the
 // rejected frames the picker placed, with their fault names.
+import { addRunCost } from './bench-store.js'
 import { LOOKER_RULE } from './looker-step.js'
 import { splitForPicker } from './picker-picks.js'
 
@@ -38,6 +39,9 @@ export function withLooker(step) {
         const looker = readyOf.get(args.runId)?.looker
         if (args.state !== 'checked' || !args.pictures || !looker) return store.saveRound(pool, args)
         const looked = await looker.look(args.pictures)
+        // The run's cost holds every role: what these looks spent is added to the picker's turns.
+        if (looked.paid > 0)
+          await addRunCost(pool, { runId: args.runId, usd: looked.paid, leaseToken: args.leaseToken })
         const checkResult = withLookerRule(args.checkResult, looked.rule, looked.doc)
         return store.saveRound(pool, {
           ...args,

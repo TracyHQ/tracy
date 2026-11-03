@@ -4,7 +4,8 @@
 // The ranking model is reached through its own door `pictureIconRanker` (by default openai/gpt-6-luna through
 // OpenRouter, icons/icon-ranker.js ICON_RANKER_MODEL). Like the ranking itself, the door never stops a run: an unset,
 // disabled or unreadable door means the icons follow the shortlist order, and the manifest says why. The call's cost
-// (as the provider reports it) and time are recorded in the manifest's `cost` and `timing` under `iconRanking`.
+// (as the provider reports it) and time are recorded in the manifest's `cost` and `timing` under `iconRanking`, and the
+// cost is added to the run's cost (#343).
 //
 // A run is prepared again on every claim (a redeploy) and before its fix rounds; the ranking is asked once per run and
 // its answer kept in the bench's file store (runs/<run id>/icon-ranking.json), so a resumed run gets the same icons
@@ -12,6 +13,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { lookupDoor } from '../lib/llm-store.js'
+import { addRunCost } from './bench-store.js'
 import { readReleases } from '../lib/quickstart-releases.js'
 import { releaseKitZip } from '../lib/template-kit-images.js'
 import { demoIconReader } from './demo-icons.js'
@@ -115,6 +117,8 @@ export async function iconStepFor({
         usage = said?.usage ?? null
         await mkdir(path.dirname(kept), { recursive: true })
         await writeFile(kept, JSON.stringify({ said, ms, usage }))
+        // The run's cost holds every role (bench-store.js addRunCost); a kept ranking was counted when it was paid.
+        await addRunCost(pool, { runId, usd: Number(usage?.cost) })
         return said
       }
     : null

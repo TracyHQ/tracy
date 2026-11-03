@@ -138,6 +138,8 @@ test(
       assert.doesNotMatch(icon.reason, /no demo icon to measure/)
       assert.ok(icon.dark?.file)
       assert.equal(manifest.cost.iconRanking, 0.00012)
+      // The run's cost holds every role (#343): the ranking call is added to the picker's turns (the looks are free).
+      assert.ok(Math.abs(run.costUsd - (run.rounds.reduce((n, r) => n + r.costUsd, 0) + 0.00012)) < 1e-9)
       assert.ok(Number.isInteger(manifest.timing.iconRanking) && manifest.timing.iconRanking >= 0)
       assert.deepEqual(manifest.iconRanking, { model: RANKER, notes: [] })
       assert.equal(releases.length, 1)

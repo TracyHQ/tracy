@@ -5,10 +5,12 @@ import { test } from 'node:test'
 import sharp from 'sharp'
 import { altNotesFor, altsOfCopy, compareAlt } from '../src/site-pictures/alt-notes.js'
 import { makerOf } from '../src/site-pictures/looker-door.js'
-import { FAULTS, lookImage, lookMessage, readLook } from '../src/site-pictures/looker-call.js'
+import { FAULTS, lookImage, lookMessage, MODEL_FAULTS, readLook } from '../src/site-pictures/looker-call.js'
 
 test('an answer is held to the fixed fault list, and any fault fails the picture', () => {
-  assert.equal(FAULTS.length, 6)
+  // The model names six faults; the seventh, "look unreadable", only code records.
+  assert.equal(MODEL_FAULTS.length, 6)
+  assert.deepEqual(FAULTS, [...MODEL_FAULTS, 'look unreadable'])
   const said = readLook(
     'Here: {"verdict":"pass","faults":["Subject cut off","too dark"],"seen":"A rider on a gravel road."}'
   )

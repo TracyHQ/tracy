@@ -7,7 +7,7 @@ import { after, before, beforeEach, test } from 'node:test'
 import { filesOf, readRun } from '../src/site-pictures/bench-store.js'
 import { createSitePicturesQueue } from '../src/site-pictures/bench-worker.js'
 import { fileDb } from './_db.mjs'
-import { drain, kitIndex, noModel, quiet, startRun, storeDir } from './_site-pictures-bench.mjs'
+import { drain, kitIndex, noModel, quiet, SECRET, startRun, storeDir } from './_site-pictures-bench.mjs'
 
 const db = fileDb()
 before(db.open)
@@ -39,6 +39,7 @@ async function drainDying(pool, dies) {
   })
   await createSitePicturesQueue({
     pool: watched,
+    secret: SECRET,
     index: kits.index,
     storeDir: store.dir,
     fetchImpl: noModel,
