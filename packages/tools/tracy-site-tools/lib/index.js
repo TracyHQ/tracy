@@ -2323,10 +2323,14 @@ async function sweptCheck(send, { signal, sleep, now, sweep }) {
       return heard(answer, sweeps);
     const refused3 = [];
     let sent = 0;
-    const sendOne = sweepRound(sweep);
-    for (const call of calls) {
-      if (signal?.aborted) return stoppedAnswer({ lastReceipt: heard(answer, []) });
-      const answered = await sendOne(call);
+    const answers = await sendRound(calls, sweepRound(sweep), {
+      inFlight: answer.sweep.inFlight,
+      shown: answer.sweep.shown,
+      signal
+    });
+    if (answers === null) return stoppedAnswer({ lastReceipt: heard(answer, []) });
+    for (const [at, call] of calls.entries()) {
+      const answered = answers[at];
       const rows = Array.isArray(answered?.pairs) ? answered.pairs : [{ find: call.params?.find ?? null, done: answered }];
       for (const { find, done } of rows) {
         sent++;
@@ -2389,31 +2393,34 @@ function heard(answer, sweeps) {
 var wordsKey = (text6) => String(text6 ?? "").toLowerCase().replace(/\s+/g, " ").trim();
 function sweepRound(sweep) {
   const written = [];
+  let next = 0;
   const sent = (call) => sweep(call).catch((failure) => ({
     ok: false,
     code: "SWEEP_CALL_FAILED",
     error: String(failure?.message ?? failure)
   }));
-  const one = async (call) => {
+  const one = async (call, at) => {
     const done = await sent(call);
     if (call.action !== "content.replace") return done;
-    return heldBy(call.params?.find, done);
+    return heldBy(call.params?.find, done, at);
   };
-  const heldBy = (words, done) => {
+  const heldBy = (words, done, at) => {
     const find = wordsKey(words);
-    if (done?.ok === true) written.push(find);
-    else if (done?.code === "NOT_FOUND" && find !== "") {
-      const by = written.find((w) => w.includes(find));
-      if (by !== void 0) return { ok: true, count: 0, cleared: by };
+    if (done?.ok === true) {
+      const after = written.findIndex((w) => w.at > at);
+      written.splice(after === -1 ? written.length : after, 0, { at, words: find });
+    } else if (done?.code === "NOT_FOUND" && find !== "") {
+      const by = written.find((w) => w.words.includes(find));
+      if (by !== void 0) return { ok: true, count: 0, cleared: by.words };
     }
     return done;
   };
-  return async (call) => {
+  return async (call, at = next++) => {
     const changes = call.action === "content.replace" ? call.params?.changes : void 0;
-    if (!Array.isArray(changes)) return one(call);
-    return { ok: true, pairs: await batch(call, changes) };
+    if (!Array.isArray(changes)) return one(call, at);
+    return { ok: true, pairs: await batch(call, changes, at) };
   };
-  async function batch(call, changes) {
+  async function batch(call, changes, at) {
     const { changes: _changes, ...base3 } = call.params;
     const alone = (pair) => ({ action: call.action, params: { ...base3, ...pair } });
     const rows = [];
@@ -2424,27 +2431,108 @@ function sweepRound(sweep) {
         queue.length === 1 ? alone(queue[0]) : { action: call.action, params: { ...base3, changes: queue } }
       );
       if (done?.ok === true) {
-        for (const pair of queue) rows.push({ find: pair.find, done: heldBy(pair.find, done) });
+        for (const pair of queue) rows.push({ find: pair.find, done: heldBy(pair.find, done, at) });
         break;
       }
       if (!refusedBeforeWrite(done)) {
         for (const pair of queue) rows.push({ find: pair.find, done });
         break;
       }
-      const at = queue.length === 1 ? 0 : Number.isInteger(done?.change) && done.change >= 0 && done.change < queue.length ? done.change : null;
-      if (at === null) {
-        for (const pair of queue) rows.push({ find: pair.find, done: await one(alone(pair)) });
+      const refusedAt = queue.length === 1 ? 0 : Number.isInteger(done?.change) && done.change >= 0 && done.change < queue.length ? done.change : null;
+      if (refusedAt === null) {
+        for (const pair of queue) rows.push({ find: pair.find, done: await one(alone(pair), at) });
         break;
       }
-      if (queue.length > 1 && done?.code === "BAD_PARAMS") after.push(queue[at]);
-      else rows.push({ find: queue[at].find, done: heldBy(queue[at].find, done) });
-      queue = queue.filter((_pair, i) => i !== at);
+      if (queue.length > 1 && done?.code === "BAD_PARAMS") after.push(queue[refusedAt]);
+      else rows.push({ find: queue[refusedAt].find, done: heldBy(queue[refusedAt].find, done, at) });
+      queue = queue.filter((_pair, i) => i !== refusedAt);
     }
     const known = rows.every((r) => r.done?.ok === true || refusedBeforeWrite(r.done));
-    for (const pair of after) rows.push({ find: pair.find, done: known ? await one(alone(pair)) : NOT_SENT });
+    for (const pair of after)
+      rows.push({ find: pair.find, done: known ? await one(alone(pair), at) : NOT_SENT });
     return rows;
   }
 }
+var SWEEP_IN_FLIGHT_MAX = 4;
+function sendRound(calls, sendOne, { inFlight: inFlight2 = 1, shown: shown3 = [], signal = null } = {}) {
+  const limit = typeof inFlight2 === "number" && Number.isInteger(inFlight2) && inFlight2 > 1 ? Math.min(inFlight2, SWEEP_IN_FLIGHT_MAX) : 1;
+  const waits = limit > 1 ? roundOrder(calls, shown3) : calls.map((_, i) => i > 0 ? [i - 1] : []);
+  const pending = waits.map((w) => w.length);
+  const freed = calls.map(() => []);
+  for (const [i, w] of waits.entries()) for (const j of w) freed[j].push(i);
+  const answers = Array.from({ length: calls.length });
+  const sentAlready = calls.map(() => false);
+  let flying = 0;
+  let stopped = false;
+  const send = async (at) => {
+    try {
+      return await sendOne(calls[at], at);
+    } catch (failure) {
+      return {
+        ok: false,
+        code: "SWEEP_CALL_FAILED",
+        error: String(
+          /** @type {any} */
+          failure?.message ?? failure
+        )
+      };
+    }
+  };
+  return new Promise((resolve) => {
+    const pump = () => {
+      for (let at = 0; at < calls.length && flying < limit && !stopped; at++) {
+        if (sentAlready[at] || pending[at] > 0) continue;
+        if (signal?.aborted) {
+          stopped = true;
+          break;
+        }
+        sentAlready[at] = true;
+        flying += 1;
+        void send(at).then((done) => {
+          answers[at] = done;
+          flying -= 1;
+          for (const i of freed[at]) pending[i] -= 1;
+          pump();
+        });
+      }
+      if (flying === 0) resolve(stopped ? null : answers);
+    };
+    pump();
+  });
+}
+function roundOrder(calls, shown3 = []) {
+  const keys2 = calls.map(pageWordsOf);
+  const read = [];
+  for (const key of Array.isArray(shown3) ? shown3 : []) {
+    const at = typeof key === "string" ? key.indexOf("\0") : -1;
+    const words = at > 0 ? wordsKey(key.slice(at + 1)) : "";
+    if (words !== "") read.push({ path: pageKey(key.slice(0, at)), words: [words] });
+  }
+  const seen = [...keys2, ...read];
+  const shared = keys2.map(
+    (k) => k !== null && seen.some((o) => o !== null && o.path !== k.path && overlaps(k.words, o.words))
+  );
+  return keys2.map((k, i) => {
+    const waits = [];
+    for (let j = 0; j < i; j++) {
+      const o = keys2[j];
+      if (k === null || o === null || o.path === k.path || overlaps(k.words, o.words) || shared[i] && shared[j])
+        waits.push(j);
+    }
+    return waits;
+  });
+}
+function pageWordsOf(call) {
+  const p = call?.params;
+  if (call?.action !== "content.replace" || !p || p.href || p.all === true || typeof p.path !== "string")
+    return null;
+  const finds = Array.isArray(p.changes) ? p.changes.map((c) => c?.find) : [p.find];
+  const words = finds.map((f) => typeof f === "string" ? wordsKey(f) : "");
+  if (words.length === 0 || words.includes("")) return null;
+  return { path: pageKey(p.path), words };
+}
+var pageKey = (path22) => path22.trim().toLowerCase().replace(/[?#].*$/, "").replace(/\/+$/, "") || "/";
+var overlaps = (a, b) => a.some((x) => b.some((y) => x.includes(y) || y.includes(x)));
 function onTheWay(answer) {
   return ["COWORK_WEB_UNREACHABLE", "COWORK_WEB_BAD_RESPONSE"].includes(answer?.code) || typeof answer?.httpStatus === "number" && answer.httpStatus >= 500;
 }
@@ -16969,7 +17057,7 @@ function buildsSite(call) {
     /** @type {{ operation?: unknown } | null} */
     args?.operation
   );
-  return operation === "plan.save" || operation === "plan.add" || operation === "copy.write" || operation === "copy.apply" || operation === "media.import" || operation === "check" || operation === "check.start";
+  return operation === "plan.save" || operation === "plan.fix" || operation === "plan.add" || operation === "copy.write" || operation === "copy.apply" || operation === "media.import" || operation === "check" || operation === "check.start";
 }
 var BUILD_CHECKS = 8;
 var HEAD_KEY = /"([\w$]+)":("(?:[^"\\]|\\.)*"|-?\d[\d.eE+-]*|true|false|null)([,}])/y;
@@ -17022,6 +17110,7 @@ function buildChecks(events) {
         if (typeof answer?.pass === "boolean") {
           checks += 1;
           lastPass = answer.pass;
+          if (typeof answer.stopped === "string") exhausted = true;
         } else if (answer?.code === "DEMO_CHECK_BUDGET_EXHAUSTED") exhausted = true;
       }
     }
@@ -17228,7 +17317,13 @@ function planIssuesNext(answer) {
   const issues = answer.detail?.issues;
   if (!Array.isArray(issues) || issues.length === 0) return null;
   const n = issues.length;
-  return `${n} issue${n === 1 ? "" : "s"} of this draft, each at its row: fix exactly those and send plan.save again now, every other row as it was. Do not reply to the customer before the plan is saved: nobody answers a question in this chat, and a turn that ends here ends the build with nothing written.`;
+  const wait = "Do not reply to the customer before the plan is saved: nobody answers a question in this chat, and a turn that ends here ends the build with nothing written.";
+  const draft = answer.detail?.draft;
+  if (draft && Array.isArray(draft.refusedRows)) {
+    const rows = draft.refusedRows.length ? `rows ${draft.refusedRows.join(", ")}` : "no single row (add the rows or unplaced the issues ask for)";
+    return `${n} issue${n === 1 ? "" : "s"} of this draft; the other ${draft.kept} rows are kept. Fix ${rows} and send only those now: tracy_demo {operation:"plan.fix", fix:{"<rowIndex>": <the corrected row> | null}, rows:[<rows to add>], unplaced:[...]} \u2014 never the whole plan again. ${wait}`;
+  }
+  return `${n} issue${n === 1 ? "" : "s"} of this draft, each at its row: fix exactly those and send plan.save again now, every other row as it was. ${wait}`;
 }
 function changesSite(call) {
   if (call?.name === "edit" || call?.name === "write") return true;
@@ -51068,6 +51163,7 @@ ${text6}`);
             "structure.read",
             "plan.read",
             "plan.save",
+            "plan.fix",
             "plan.add",
             "copy.write",
             "copy.apply",
@@ -51115,7 +51211,13 @@ ${text6}`);
         rows: {
           type: "array",
           items: { type: "object", additionalProperties: true },
-          description: "plan.add: rows appended after the saved ones."
+          description: "plan.add: rows appended after the saved ones. plan.fix: rows added to the kept draft."
+        },
+        // `plan.fix` (#296): only the refused rows of a kept draft, by index, never the whole plan again.
+        fix: {
+          type: "object",
+          additionalProperties: true,
+          description: `plan.fix: {"<rowIndex>": <the corrected row> | null} for the rows a refused plan.save named; null drops the row. Indexes are the draft's.`
         },
         images: {
           type: "object",
@@ -51232,7 +51334,7 @@ ${text6}`);
         stopped
       );
       const verdict2 = answer;
-      if (args?.operation === "check" && verdict2?.pass === false) {
+      if (args?.operation === "check" && verdict2?.pass === false && typeof verdict2.stopped !== "string") {
         const next = checkAgainNext(
           { checks: buildChecks(events).checks + 1 },
           BUILD_CHECKS,
