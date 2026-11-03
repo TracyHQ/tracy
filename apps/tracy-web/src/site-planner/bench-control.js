@@ -89,11 +89,12 @@ export const MODEL_HARNESS = Object.freeze([
       wire: 'deepseek-native',
       toolImages: 'user-message',
       cacheMarkers: false,
-      // DeepSeek's efforts are low, high and max. Measured on the same brief and checker (03/11/2026): at high, 10.5
-      // minutes and about 0.04 USD, 62 failures in the first draft and none after the fix rounds; at low, 7.6 minutes
-      // (faster per call) but 202 failures in the first draft, still 2 after the second fix round, and a weaker page
-      // judgement. Low omits far more and does not converge in two fix rounds, so high stays.
-      effort: 'high',
+      // DeepSeek's efforts are low, high and max. Four dev runs on one brief with the same frozen checker (03/11/2026):
+      // low took 7.6 minutes, 202 failures in the first draft and 2 still failing after the last fix round; high took
+      // 10.5 minutes, 62 first-draft failures and none at the end; max took about 10.3 minutes of model time (a redeploy
+      // interrupted that run once), 46 first-draft failures and none at the end, fix rounds of about 30 seconds, about
+      // 0.05 USD. Max thinks more while reading the kit, so the first draft misses less and the fix rounds are shorter.
+      effort: 'max',
       // Not yet measured against DeepSeek's own API; kept at the bench budget until it is.
       maxTokens: MAX_OUTPUT_TOKENS,
       price: DEEPSEEK_FLASH_PRICE

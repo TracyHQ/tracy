@@ -156,7 +156,7 @@
   output budget; reasoning is sent back on every later turn and cost is read from `usage.cost` as before.
 - **DeepSeek's own API is a profile of its own.** A door on the `deepseek` provider with model `deepseek-flash`
   records the profile `deepseek-flash-native` (matched on the provider as well as the model): the same images in a
-  user message, no cache markers and effort high, sent on DeepSeek's wire, so `reasoning_effort` replaces OpenRouter's
+  user message, no cache markers and effort max, sent on DeepSeek's wire, so `reasoning_effort` replaces OpenRouter's
   `reasoning` object and no `usage` or `provider` field goes out. The assistant's `reasoning_content` is saved and sent
   back on every later turn (DeepSeek answers 400 without it in a tool loop). DeepSeek reports no cost, so each turn's
   cost is computed from its tokens with the price table stored in the profile (cache hit input, cache miss input,
@@ -214,14 +214,17 @@
   `SITE_PLANNER_BUDGET`. DeepSeek turns are costed at its published peak or off-peak price by UTC dispatch time
   (holidays ignored), and a DeepSeek run records the account balance before and after (migration 194). The approved
   prompt is unchanged.
-- **The planner runs on DeepSeek Flash by default, at high effort (refines the two bullets above, 03/11/2026).** Three
-  runs on dev, one brief (not in the repo), the same frozen checker: `deepseek-flash` at effort high, reading the kit's looks with
+- **The planner runs on DeepSeek Flash by default, at max effort (refines the two bullets above, 03/11/2026).** Four
+  runs on dev, one brief (not in the repo), the same frozen checker: `deepseek-flash` at effort high (the earlier default), reading the kit's looks with
   tool calls and opening no image, took 10.5 minutes and about 0.04 USD, 62 failures in the first draft and none after
   the fix rounds, with sound page judgement; at effort low it took 7.6 minutes but left 202 failures in the first draft
-  and 2 after the last fix round, with weaker page judgement; `deepseek-v4-pro` (text only, kit preloaded) took 33.5
+  and 2 after the last fix round, with weaker page judgement; at effort max it took about 10.3 minutes of model time (a
+  redeploy interrupted that run once), 46 failures in the first draft and none at the end, fix rounds of about 30
+  seconds, about 0.05 USD: max thinks more while reading the kit, so the first draft misses less and the fix rounds are
+  shorter, and the owner chose it over high; `deepseek-v4-pro` (text only, kit preloaded) took 33.5
   minutes and about 0.41 USD, 186 failures in the first draft and a weak page judgement. The default door is now model
   `deepseek-flash` on the `deepseek` provider (`SITE_PLANNER_PROVIDER`, `SITE_PLANNER_MODEL`), profile
-  `deepseek-flash-native` at effort high. DeepSeek lists Flash with image input, so the door lets it in on any kit and
+  `deepseek-flash-native` at effort max. DeepSeek lists Flash with image input, so the door lets it in on any kit and
   offers it the image tool; it reads the looks first and opens an image only when a look cannot settle a decision. `deepseek-v4-pro` (text only, needs every look) and Claude Sonnet 5.5
   or Opus 5.5 through OpenRouter stay as alternatives. A fix round applies the valid changes of an answer and sends back
   only the invalid ones.
