@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-311-new-article-after-taken-delete",
+  "kind": "fix",
+  "title": "After a pushed article is deleted on live and synced, a new copy article is pushed as a create",
+  "pr": 311,
+  "area": "sync/push",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-push-flow case for #223/#307: push a new article, delete it on live, Sync from live, make another article on the copy, preview Sync to live."
+  ],
+  "expect": [
+    "The id map no longer names the deleted article, the new article takes a higher number, and the preview lists it as article:new:<id> create with no live-record refusal."
+  ],
+  "selectors": {},
+  "evidence": "Issue #307 steps 1-5 on Joomla 5.4.10",
+  "fence": "webroot-sync.sh remember_read idMap, live_push.py known_live",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#223",
+      "packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs"
+    ],
+    "tests": [
+      "an article a push created and the customer then deleted on the live site goes from the copy too"
+    ]
+  }
+}

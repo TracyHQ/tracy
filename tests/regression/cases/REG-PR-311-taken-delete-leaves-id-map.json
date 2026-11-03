@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-311-taken-delete-leaves-id-map",
+  "kind": "fix",
+  "title": "A record whose live delete the sync took leaves the id map, keeps its number used, and takes its copy-only rows along",
+  "pr": 311,
+  "area": "sync/merge",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-sync-pushed cases for #307 (real MariaDB): a Joomla article the push made is deleted on live with the copy unchanged; the same with Tracy having changed it; a WordPress post with a copy-only revision and meta deleted on live."
+  ],
+  "expect": [
+    "Taken delete: idMap has no content entry, idMapForgotten names it, jos_content AUTO_INCREMENT stays 2 or more, the copy-only versions are gone (orphansRemoved 2). Kept delete: the entry, the versions and the workflow row stay. WordPress: the post, its meta, terms and copy-only revision are gone."
+  ],
+  "selectors": {},
+  "evidence": "Issue #307: content {1: 1} stayed in the id map, the next copy article took id 1 and was refused as live-record",
+  "fence": "live_sync.py IdMap.forget_gone, take_table, drop_owned",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#307",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs"
+    ],
+    "tests": [
+      "Joomla: an article a push made and the live site deleted for good leaves the id map",
+      "Joomla: an article the merge keeps",
+      "WordPress: a picture Tracy retitled and the live site deleted for good"
+    ]
+  }
+}
