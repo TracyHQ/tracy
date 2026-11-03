@@ -66,6 +66,10 @@ const FIELDS = {
   // fetching the link is not counted): the link's `utm_*` source and the host of the page that linked
   // here, when there were any; neither is a direct visit. No account, no address.
   'login.visited': ['source', 'medium', 'campaign', 'content', 'referrer'],
+  // The signed-in half of the same count: a person who already holds a session opened `/` from a link
+  // with `utm_*` and went straight in, so `/login` never ran (`workspace/route.js`). One per person and
+  // source each half hour. A mail scanner carries no session cookie, so it never reaches this.
+  'link.visited': ['source', 'medium', 'campaign', 'content'],
   // The two ways a signed-out person starts signing in (`identity/route.js` `recordSignInStart`): an email
   // code asked for, and a Google or GitHub sign-in begun. No account, no address: the source, and the provider.
   'login.code_requested': ['source', 'medium', 'campaign', 'content'],
