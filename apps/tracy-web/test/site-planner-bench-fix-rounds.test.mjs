@@ -6,11 +6,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { readRun } from '../src/site-planner/bench-store.js'
-import {
-  createSitePlannerQueue,
-  MAX_FIX_ROUNDS,
-  NOT_A_PLAN_MESSAGE
-} from '../src/site-planner/bench-worker.js'
+import { createSitePlannerQueue, NOT_A_PLAN_MESSAGE } from '../src/site-planner/bench-worker.js'
 import { openKit } from '../src/site-planner/kit-source.js'
 import { CHANGES_INSTRUCTION } from '../src/site-planner/plan-changes.js'
 import { checkPlan, failureListText } from '../src/site-planner/plan-check/check-plan.js'
@@ -120,7 +116,6 @@ test(
   async () => {
     const { pool } = db
     const { run, model } = await runOnce(pool, [answer(badPlan()), answer(badPlan()), answer(badPlan())])
-    assert.equal(MAX_FIX_ROUNDS, 2)
     assert.equal(run.status, 'succeeded', run.error)
     assert.equal(run.step, 'done')
     assert.equal(model.requests.length, 3)

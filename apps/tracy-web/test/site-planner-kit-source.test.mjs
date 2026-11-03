@@ -265,7 +265,6 @@ test('read_kit_part reads several ids in one call, and leaves the rest for anoth
 test('read_kit_part reads by id, refuses a missing id, and open_kit_image without images says they are not available', async () => {
   const kit = boxing()
   const [readPart, openImage] = kitTools(kit.doc)
-  assert.deepEqual(KIT_TOOL_NAMES, { readPart: 'read_kit_part', openImage: 'open_kit_image' })
   assert.equal(readPart.name, 'read_kit_part')
   assert.equal(readPart.parameters.required, undefined)
   assert.equal(await readPart.run({ id: 'page-home' }), kitParts(kit.doc).read('page-home'))
@@ -301,7 +300,6 @@ test('the first user message explains the two tools, then gives the kit contents
   assert.ok(at > text.indexOf('open_kit_image'), 'the contents come before the tools are explained')
   assert.ok(text.endsWith(JSON.stringify(b)), 'the brief is not compact JSON at the end')
   assert.ok(at < text.lastIndexOf(JSON.stringify(b)), 'the brief comes before the kit contents')
-  assert.deepEqual(FIRST_MESSAGE_PARTS, ['contents'])
 
   const prompt = plannerPrompt()
   assert.ok(prompt.sha256.startsWith('b48800fb'))
@@ -480,6 +478,7 @@ test('a preloaded first message: the kit block first (the same bytes for every b
   const other = preloadedFirstMessage({ kit, brief: { ...brief(), invented: 'another brief' } })
   assert.ok(one.startsWith(block) && other.startsWith(block), 'the message does not open with the kit block')
   assert.ok(one.endsWith(`${JSON.stringify(brief())}\n\n${WRITE_PLAN_INSTRUCTION}`))
+  // test-quality: contract the model reads this wording and the plan parser expects one json fenced block; changing it must be a deliberate change of both
   assert.equal(
     WRITE_PLAN_INSTRUCTION,
     'Write the complete plan now as one JSON object in a single ```json fenced block; no tool calls.'

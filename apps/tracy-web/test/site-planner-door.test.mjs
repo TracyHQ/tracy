@@ -5,12 +5,7 @@ import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { doorEntry, LLM_DOORS } from '../src/lib/llm-catalog.js'
 import { assignDoor, readAssignments, saveModels, saveProvider } from '../src/lib/llm-store.js'
-import {
-  SITE_PLANNER_DOOR,
-  SITE_PLANNER_MODEL,
-  SITE_PLANNER_PROVIDER,
-  sitePlannerDoor
-} from '../src/site-planner/door.js'
+import { SITE_PLANNER_DOOR, SITE_PLANNER_MODEL, sitePlannerDoor } from '../src/site-planner/door.js'
 import { sendsImages } from '../src/site-planner/bench-control.js'
 import { openKit } from '../src/site-planner/kit-source.js'
 import { fileDb } from './_db.mjs'
@@ -26,14 +21,8 @@ const SECRET = 's'.repeat(32)
 /** DeepSeek V4 Pro, an alternative planner model that DeepSeek's own API lists as text only. */
 const PRO = 'deepseek-v4-pro'
 
-test("the planner runs on DeepSeek Flash on DeepSeek's own API by default", () => {
-  assert.equal(SITE_PLANNER_MODEL, 'deepseek-flash')
-  assert.equal(SITE_PLANNER_PROVIDER, 'deepseek')
-})
-
 test('the catalogue has a site planner door that needs tools and prefers vision', () => {
   const door = doorEntry(SITE_PLANNER_DOOR)
-  assert.equal(SITE_PLANNER_DOOR, 'sitePlanner')
   assert.equal(door.label, 'Site planner')
   assert.equal(door.where, 'this process')
   assert.equal(door.needsModel, true)

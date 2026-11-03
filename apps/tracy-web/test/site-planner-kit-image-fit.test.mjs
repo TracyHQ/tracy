@@ -10,7 +10,6 @@ import path from 'node:path'
 import { afterEach, before, beforeEach, test } from 'node:test'
 import { zipSync } from 'fflate'
 import sharp from 'sharp'
-import { MAX_IMAGE_SIDE } from '../src/site-planner/kit-image-fit.js'
 import { createKitImages } from '../src/site-planner/kit-images.js'
 
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex')
@@ -61,10 +60,6 @@ beforeEach(() => {
   dir = mkdtempSync(path.join(tmpdir(), 'kit-image-fit-'))
 })
 afterEach(() => rmSync(dir, { recursive: true, force: true }))
-
-test('the limit is the many-images limit of the provider, 2000 px a side', () => {
-  assert.equal(MAX_IMAGE_SIDE, 2000)
-})
 
 test('a tall full-page capture reaches the model at most 2000 px on each side, aspect ratio kept', async () => {
   const images = await ready()
