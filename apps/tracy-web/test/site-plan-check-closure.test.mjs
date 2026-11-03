@@ -98,6 +98,19 @@ test('R10f a trade line that states a number without a brief fact', () => {
   )
 })
 
+test('R10f a thing named free-weight is not a price, but a free first session is', () => {
+  const line = (says) => {
+    const p = plan()
+    decisionOf(p, 'block-190').copy.push({ slot: 'block-190.20', says, basis: 'trade', maxCharacters: 60 })
+    return ruleOf(p, 'R10f')
+  }
+  assert.equal(line('free-weight drills for Harbour Sport Club members').failures.length, 0)
+  assert.match(
+    JSON.stringify(line('a free first session').failures),
+    /trade line must cite the activity fact/
+  )
+})
+
 test('R10g a slot hidden twice in one block', () => {
   breaks(
     'R10g',

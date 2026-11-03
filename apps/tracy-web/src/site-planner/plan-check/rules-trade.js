@@ -37,7 +37,7 @@ export function checkR10f(ctx) {
   }
   // "free" counts only when it means no charge: not "free weights", "free-standing", "freestyle", "free kick" etc.
   const FREE_NAME =
-    /^(?:\s+(?:weights?|standing|kicks?|style|throws?|flow|play|form|hand|range)\b|-standing\b)/i
+    /^(?:[\s-]+(?:weights?|standing|kicks?|style|throws?|flow|play|form|hand|range)\b|-standing\b)/i
   const hasFreeOfCharge = (text) => {
     const re = /\bfree\b/gi
     let m
