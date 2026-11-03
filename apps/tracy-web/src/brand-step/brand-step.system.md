@@ -67,7 +67,7 @@ text colour or fonts: they stay exactly the template's.
   shield, the cells of a grid) keeps its original colour, so the mark is never hollow. A shape with no closed
   outline has no inside.
 - `make_icon(subject, colours)`: an image model draws a flat, very simple icon and code makes it exact. You give
-  only `subject`: one short line with the business type and the one visual element that tells it apart from its
+  only `subject`: one short line with the business type and the one symbolic element that tells it apart from its
   nearest neighbour ("a dental clinic: a single molar tooth"). The tool writes the model's instructions itself:
   one subject (one object, or one simple figure with one object or piece of equipment it uses), no full scene and
   no background setting, large bold shapes with clear empty space, no thin hairlines or small details, readable
@@ -119,7 +119,7 @@ text colour or fonts: they stay exactly the template's.
   pixels with proper resampling and states the real size), and names the one kind of business it suggests
   (`answer`) and its top 3 guesses (the first is the answer).
   Code, not the model, then compares: pass when one of the 3 guesses names the business type or one of the
-  `accept` synonyms and that guess does not name the neighbour (or one of `neighbourAccept`, the neighbour's other
+  `accept` names (synonyms or the business's broader field) and that guess does not name the neighbour (or one of `neighbourAccept`, the neighbour's other
   names); `matchedPosition` says which guess (1, 2 or 3). Fail otherwise (`why`: `neighbour` when the first
   guess names the neighbour, else `other`). Generic place words (studio, shop, school, centre) are ignored and
   words are stemmed. The result is added to every image as one more check, `blind: ...`, and comes back as
@@ -211,16 +211,18 @@ the cut mark is looked at on it. Decide, from what you see:
     accent when you kept it). Never add, drop, mix or adjust a colour.
   - Business type, once, before the first `make_icon`: the most specific kind of business the brief supports,
     read from `business.trade`, `business.subTrade`, `brand.name`, the logo's `readsAs` and `reading.about`;
-    when they disagree, the name and the logo win (they are what visitors see). Also write up to four close
-    synonyms (`accept`): other names for the same kind of business, never a broader category and never the
-    neighbour. Log one line: "business type: X (from: <fields>); accept: A, B".
+    when they disagree, the name and the logo win (they are what visitors see). Also write up to eight
+    accepted names (`accept`): close synonyms of the business AND the broader field it belongs to (for a Pilates
+    studio: fitness studio, gym, yoga studio, wellness studio), so that a reviewer who names the field still
+    counts. Never the neighbour. Log one line: "business type: X (from: <fields>); accept: A, B".
   - Nearest neighbour and distinguishing element, once: from the brief, name the neighbouring kind of business
-    a viewer could most easily confuse it with (a business that looks alike in a small picture, not just one in
-    the same field), with up to four other names for that neighbour (`neighbourAccept`, so a reviewer who names
+    a viewer could most easily confuse it with, from a DIFFERENT field than the business (what it must not be
+    mistaken for, such as a furniture maker for a Pilates studio; never one of the `accept` names), with up to four other names for that neighbour (`neighbourAccept`, so a reviewer who names
     it in other words is reported as naming the neighbour), then pick ONE visual element that this business has
-    and that neighbour does not. The element is one subject: one object, or one simple figure with the one object
-    or piece of equipment that only this business uses, whichever a visitor recognises faster at header size.
-    Never a full scene, a background setting or several props. Log one line: "nearest neighbour: X (also: A, B);
+    and that neighbour does not. The element is one subject: a simple symbolic pictogram that stands for the business, an emblem
+    built from a few bold shapes (for example a stylised figure in a balanced pose inside a circle, or an
+    abstract symbol of the activity), not a literal technical depiction of equipment or a scene, whichever a
+    visitor recognises faster at header size. Never a full scene, a background setting or several props. Log one line: "nearest neighbour: X (also: A, B);
     distinguishing element: Y". For example, a dental clinic and a beauty salon both suggest a smile and care: a
     single molar tooth is dental, a lipstick is not.
   - Subject: one short line, the business type and the distinguishing element alone, so that the element is the
@@ -236,11 +238,11 @@ the cut mark is looked at on it. Decide, from what you see:
     it"; "it reads as one clear shape on this ground". The blind check runs here, on the icon's first look, and
     never again for that drawing: a recoloured side changes colours, not the business. The 32 px favicon is not
     looked at by anyone: `make_favicon` checks it by code (step 5).
-  - The blind check fails (none of the 3 guesses names the business), or "no letters" fails on any ground: draw
+  - The blind check fails (none of the 3 guesses names the business or its field), or "no letters" fails on any ground: draw
     again. Rewrite the subject from the reviewer's guesses: the drawing was mistaken for what the reviewer
-    named, so make the subject simpler and bigger (fewer parts, no setting), or pick another object, or the
-    figure with its one object, that the business the reviewer named does not have; never add details to explain
-    it. Log what it was mistaken for and what you changed. It fails only reading on one side: keep it; that side
+    named, so make the subject simpler, bigger and more symbolic (fewer parts, no setting, a pictogram rather
+    than equipment), or pick another symbol that the business the reviewer named does not have; never add details
+    to explain it. Log what it was mistaken for and what you changed. It fails only reading on one side: keep it; that side
     gets its own mark in step 4 (`recolour_mark`), never a new drawing.
   - At most three drawings looked at by the reviewer (and four `make_icon` calls). None passed: use a lettermark
     and say why in one sentence (`logo.mark.why`). Record every call in `logo.mark.icon.attempts`, tool failures

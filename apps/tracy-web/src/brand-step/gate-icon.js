@@ -50,7 +50,10 @@ export function checkIcon(ctx) {
         bad(`logo.mark.icon.${k}`, 'written once at step start (see the prompt, step 3 Icon)')
     }
     if (!Array.isArray(IC.accept))
-      bad('logo.mark.icon.accept', 'array of close synonyms of the business type (may be empty)')
+      bad(
+        'logo.mark.icon.accept',
+        'array of accepted names: close synonyms and the broader field of the business type (may be empty)'
+      )
     if (!Array.isArray(IC.neighbourAccept))
       bad(
         'logo.mark.icon.neighbourAccept',

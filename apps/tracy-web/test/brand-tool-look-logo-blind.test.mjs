@@ -107,3 +107,29 @@ test('blind match rule: stemming, generic words dropped, three guesses, neighbou
     'a guess naming the neighbour never counts'
   )
 })
+
+test('blind match rule: a guess naming the business field passes, a guess naming the neighbour fails', () => {
+  const t = {
+    businessType: 'pilates studio',
+    accept: ['fitness studio', 'gym', 'yoga studio', 'wellness studio'],
+    neighbour: 'furniture maker',
+    neighbourAccept: ['woodworking', 'carpentry']
+  }
+  const v = blindVerdict({
+    answer: 'indoor rowing',
+    guesses: ['indoor rowing', 'fitness center', 'gym'],
+    ...t
+  })
+  assert.equal(v.verdict, 'pass')
+  assert.equal(v.matchedPosition, 2)
+  assert.equal(
+    blindVerdict({ answer: 'woodworking', guesses: ['woodworking', 'carpentry', 'furniture maker'], ...t })
+      .verdict,
+    'fail'
+  )
+  assert.equal(
+    blindVerdict({ answer: 'woodworking', guesses: ['woodworking', 'gym', 'yoga studio'], ...t })
+      .matchedPosition,
+    2
+  )
+})
