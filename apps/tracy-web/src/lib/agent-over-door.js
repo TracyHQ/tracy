@@ -19,11 +19,18 @@
 // Reasoning details are saved on every assistant message and sent back: Anthropic refuses a tool loop whose earlier
 // thinking comes back unsigned. A cancel (signal) is honoured between turns only; a call in flight is never cut.
 //
+// A call that meets a transient provider error (a 429, a 5xx, an overloaded answer, a network error before any
+// response) is tried again inside the same turn, up to `retry.attempts` times (agent-over-door-retry.js). The turn
+// keeps one dispatched and one answered or failed save; each failed attempt is recorded in its `retries`, and the
+// usage and cost a failed attempt reported are added to the turn's own.
+//
 // Images: a tool may return images with a `ref` (any JSON value naming the image). The saved turn then keeps only
 // that reference, never the bytes, and every request carries the full bytes again: an image opened in this process
 // is held in memory once, and a reference read back from saved turns (a resume, a fix round) is turned into bytes by
 // the caller's resolveImage(ref). A reference that cannot be resolved stops the run with AGENT_IMAGE_UNAVAILABLE
 // before the call is dispatched. An image without a ref is saved inline, as it is sent.
+
+import { RETRY_DEFAULTS, retryAfterMs, withRetries } from './agent-over-door-retry.js'
 import {
   CACHE_TTLS,
   costOf,
@@ -49,13 +56,17 @@ export class AgentError extends Error {
   }
 }
 
+/** The output budget of one call: thinking and the answer both count against it (Claude Code runs with the same). */
+export const MAX_OUTPUT_TOKENS = 128_000
+
 const DEFAULTS = {
-  maxTokens: 64000,
+  maxTokens: MAX_OUTPUT_TOKENS,
   effort: 'high',
   cacheTtl: { system: '1h', rolling: '5m' },
   toolImages: 'inline',
   maxTurns: 150,
-  callTimeoutMs: 20 * 60_000
+  callTimeoutMs: 20 * 60_000,
+  retry: RETRY_DEFAULTS
 }
 
 export async function runAgent({
@@ -69,9 +80,16 @@ export async function runAgent({
   signal,
   followUp,
   resolveImage,
+  sleep,
+  random,
   ...options
 }) {
-  const o = { ...DEFAULTS, ...options, cacheTtl: { ...DEFAULTS.cacheTtl, ...options.cacheTtl } }
+  const o = {
+    ...DEFAULTS,
+    ...options,
+    cacheTtl: { ...DEFAULTS.cacheTtl, ...options.cacheTtl },
+    retry: { ...DEFAULTS.retry, ...options.retry }
+  }
   if (!CACHE_TTLS.includes(o.cacheTtl.system) || !CACHE_TTLS.includes(o.cacheTtl.rolling))
     throw new AgentError('AGENT_SETTINGS_INVALID', {
       reason: `cache TTL must be one of ${CACHE_TTLS.join(', ')}`
@@ -111,20 +129,25 @@ export async function runAgent({
     }
     turns.push(turn)
     await onTurn(structuredClone(turn))
-    const answer = await call(door, body, fetchImpl, o.callTimeoutMs, turn.n).catch(async (error) => {
-      Object.assign(turn, {
-        state: 'failed',
-        error: {
-          code: error.code,
-          reason: error.reason,
-          status: error.status,
-          uncertain: error.uncertain === true
-        },
-        answeredAt: new Date().toISOString()
-      })
-      await onTurn(structuredClone(turn))
-      throw error
-    })
+    const attempt = () => call(door, body, fetchImpl, o.callTimeoutMs, turn.n)
+    const { answer, retries } = await withRetries(attempt, { policy: o.retry, sleep, random }).catch(
+      async (error) => {
+        Object.assign(turn, {
+          state: 'failed',
+          error: {
+            code: error.code,
+            reason: error.reason,
+            status: error.status,
+            uncertain: error.uncertain === true,
+            attempts: (error.retries?.length ?? 0) + 1
+          },
+          retries: error.retries ?? [],
+          answeredAt: new Date().toISOString()
+        })
+        await onTurn(structuredClone(turn))
+        throw error
+      }
+    )
     const choice = answer.choices[0]
     Object.assign(turn, {
       state: 'answered',
@@ -132,8 +155,9 @@ export async function runAgent({
       finishReason: choice.finish_reason ?? null,
       generationId: answer.id ?? null,
       providerModel: answer.model ?? null,
-      usage: usageOf(answer.usage),
-      cost: costOf(answer.usage),
+      usage: withFailedUsage(usageOf(answer.usage), retries),
+      cost: withFailedCost(costOf(answer.usage), retries),
+      retries,
       ...(typeof choice.message.refusal === 'string' && choice.message.refusal
         ? { refusal: choice.message.refusal }
         : {}),
@@ -227,6 +251,22 @@ function outcomeOf(turn) {
   return { final: text }
 }
 
+// What a failed attempt reported it used (a 200 body carrying an error may say), added to the answer's own.
+function withFailedUsage(usage, retries) {
+  for (const r of retries) {
+    if (!r.usage) continue
+    const failed = usageOf(r.usage)
+    for (const k of Object.keys(usage)) usage[k] += failed[k]
+  }
+  return usage
+}
+
+function withFailedCost(cost, retries) {
+  const failed = retries.map((r) => r.cost).filter((c) => typeof c === 'number')
+  if (!failed.length) return cost
+  return Math.round(failed.reduce((sum, c) => sum + c, cost ?? 0) * 1e9) / 1e9
+}
+
 async function call(door, body, fetchImpl, timeoutMs, n) {
   let r
   try {
@@ -252,19 +292,25 @@ async function call(door, body, fetchImpl, timeoutMs, n) {
     json = JSON.parse(text)
   } catch {}
   if (!r.ok)
-    throw new AgentError('AGENT_PROVIDER_HTTP', {
-      turn: n,
-      status: r.status,
-      reason: providerReason(json ?? text)
-    })
+    throw Object.assign(
+      new AgentError('AGENT_PROVIDER_HTTP', {
+        turn: n,
+        status: r.status,
+        reason: providerReason(json ?? text)
+      }),
+      { retryAfterMs: retryAfterMs(r.headers?.get?.('retry-after')) }
+    )
   if (!json || typeof json !== 'object')
     throw Object.assign(new AgentError('AGENT_PROVIDER_JSON', { turn: n }), { uncertain: true })
   const choice = json.choices?.[0]
-  if (json.error || choice?.finish_reason === 'error' || choice?.error)
-    throw new AgentError('AGENT_PROVIDER_ERROR', {
-      turn: n,
-      reason: providerReason(choice?.error ? choice : json)
+  if (json.error || choice?.finish_reason === 'error' || choice?.error) {
+    const source = choice?.error ? choice : json
+    throw Object.assign(new AgentError('AGENT_PROVIDER_ERROR', { turn: n, reason: providerReason(source) }), {
+      providerCode: source.error?.code,
+      retryAfterMs: retryAfterMs(r.headers?.get?.('retry-after')),
+      ...(json.usage ? { usage: json.usage, cost: costOf(json.usage) } : {})
     })
+  }
   const m = choice?.message
   if (!m || typeof m !== 'object' || (m.tool_calls != null && !Array.isArray(m.tool_calls)))
     throw Object.assign(new AgentError('AGENT_MESSAGE_SHAPE', { turn: n }), { uncertain: true })

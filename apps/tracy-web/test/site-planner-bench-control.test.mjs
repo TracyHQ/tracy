@@ -57,6 +57,10 @@ test('a started run stores what it will run on, and never the key', opts, async 
   assert.equal(full.door.model, MODEL)
   assert.equal(full.door.providerId, 'openrouter')
   assert.deepEqual(full.harness, BENCH_HARNESS)
+  // Parity with the Claude Code harness of the reference run: its output budget, a call long enough for it, retries.
+  assert.equal(full.harness.maxTokens, 128000)
+  assert.equal(full.harness.callTimeoutMs, 45 * 60_000)
+  assert.deepEqual([full.harness.retry.attempts, full.harness.retry.maxWaitMs], [5, 60_000])
   assert.equal(JSON.stringify(full).includes(API_KEY), false)
 })
 

@@ -98,7 +98,8 @@ export function turnRow(turn, round) {
     cost_usd: turn.cost ?? null,
     dispatched_at: turn.dispatchedAt,
     answered_at: turn.answeredAt ?? null,
-    resend_of: turn.resendOf ?? null
+    resend_of: turn.resendOf ?? null,
+    retries: turn.retries ?? null
   }
 }
 
@@ -107,6 +108,7 @@ export function turnOf(row) {
   const state = row.state === 'refused' ? 'answered' : row.state
   const turn = { n: row.n, state, sent: row.sent, request: row.request, dispatchedAt: iso(row.dispatched_at) }
   if (row.resend_of !== null && row.resend_of !== undefined) turn.resendOf = row.resend_of
+  if (Array.isArray(row.retries)) turn.retries = row.retries
   if (state === 'answered')
     Object.assign(turn, {
       message: row.message,
@@ -142,7 +144,8 @@ export async function saveTurn(pool, { runId, round, turn, leaseToken = null }) 
   const { rowCount } = await pool.query(
     `with t as (
        update site_planner_turn set state = $3, message = $4, finish_reason = $5, generation_id = $6,
-         provider_model = $7, refusal = $8, error = $9, usage = $10, cost_usd = $11, answered_at = $12
+         provider_model = $7, refusal = $8, error = $9, usage = $10, cost_usd = $11, answered_at = $12,
+         retries = $14::jsonb
        where run_id = $1 and n = $2 and state = 'dispatched' and ${fenced(1, 13)}
        returning cost_usd)
      update site_planner_run set cost_usd = cost_usd + coalesce((select cost_usd from t), 0), updated_at = now()
@@ -160,7 +163,8 @@ export async function saveTurn(pool, { runId, round, turn, leaseToken = null }) 
       json(r.usage),
       r.cost_usd,
       r.answered_at,
-      leaseToken
+      leaseToken,
+      json(r.retries)
     ]
   )
   return rowCount === 1

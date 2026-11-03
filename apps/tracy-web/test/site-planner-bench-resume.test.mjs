@@ -71,7 +71,9 @@ async function drain(pool, model, { killOn, dieOnFixing } = {}) {
     secret: SECRET,
     fetchImpl,
     kitImages: readyKitImages(),
-    log: quiet
+    log: quiet,
+    // A killed process retries nothing: one attempt per call.
+    retry: { attempts: 1 }
   })
     .drain()
     .catch(() => {})

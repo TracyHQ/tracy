@@ -2,8 +2,10 @@
 // it is queued (the brief's shape, the kit, the door, the kit's images) and stores what the run will use, so a refused start leaves
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
-import { briefShapeProblems } from './brief-shape.js'
+import { MAX_OUTPUT_TOKENS } from '../lib/agent-over-door.js'
+import { RETRY_DEFAULTS } from '../lib/agent-over-door-retry.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
+import { briefShapeProblems } from './brief-shape.js'
 import { sitePlannerDoor } from './door.js'
 import { openKit, readableKits } from './kit-source.js'
 import { CHECKER_VERSION } from './plan-check/check-plan.js'
@@ -11,14 +13,19 @@ import { plannerPrompt } from './planner-prompt.js'
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-/** How every bench run calls the model, stored on the run (parity with the reference run, ADR 0041). */
+/**
+ * How every bench run calls the model, stored on the run (parity with the reference run, ADR 0041). The output
+ * budget is Claude Code's (thinking counts against it, and the reference plan alone is about 50k tokens); a call
+ * that long, not streamed, can take well over 20 minutes, hence 45. Transient provider errors are retried.
+ */
 export const BENCH_HARNESS = Object.freeze({
-  maxTokens: 64000,
+  maxTokens: MAX_OUTPUT_TOKENS,
   effort: 'high',
   cacheTtl: Object.freeze({ system: '1h', rolling: '5m' }),
   toolImages: 'inline',
   maxTurns: 150,
-  callTimeoutMs: 20 * 60_000
+  callTimeoutMs: 45 * 60_000,
+  retry: RETRY_DEFAULTS
 })
 
 const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })

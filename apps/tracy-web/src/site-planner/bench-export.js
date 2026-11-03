@@ -102,6 +102,7 @@ export function compactTurn(turn, runningCostUsd = null) {
     costUsd: turn.cost ?? null,
     runningCostUsd,
     ...(turn.resendOf !== undefined ? { resendOf: turn.resendOf } : {}),
+    ...(turn.retries?.length ? { retries: turn.retries } : {}),
     providerModel: turn.providerModel ?? null,
     generationId: turn.generationId ?? null,
     ...(turn.refusal ? { refusal: turn.refusal } : {}),

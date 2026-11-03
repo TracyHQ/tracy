@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { runAgent } from '../src/lib/agent-over-door.js'
+import { compactTurn } from '../src/site-planner/bench-export.js'
 import {
   activeRun,
   createRun,
@@ -58,6 +59,7 @@ async function conversation(pool, runId, replies, { leaseToken = null, round = 0
     firstUser: 'first',
     tools,
     fetchImpl: model.fetchImpl,
+    retry: { attempts: 1 },
     onTurn: async (turn) => assert.equal(await saveTurn(pool, { runId, round, turn, leaseToken }), true)
   }).catch((error) => ({ error }))
   return { ...result, model }
@@ -88,13 +90,15 @@ test('a turn and its row convert both ways without losing a field', () => {
       reasoningTokens: 0
     },
     cost: 0.04609,
+    retries: [{ attempt: 1, code: 'AGENT_PROVIDER_HTTP', status: 429, reason: 'rate limited', waitMs: 2000 }],
     answeredAt: '2026-11-03T05:00:09.000Z'
   }
   const refused = { ...answered, finishReason: 'content_filter', refusal: 'filtered' }
   const failed = {
     ...dispatched,
     state: 'failed',
-    error: { code: 'AGENT_PROVIDER_HTTP', reason: 'bad gateway', status: 502, uncertain: false },
+    error: { code: 'AGENT_PROVIDER_HTTP', reason: 'bad gateway', status: 502, uncertain: false, attempts: 1 },
+    retries: [],
     answeredAt: '2026-11-03T05:00:09.000Z'
   }
   for (const turn of [dispatched, answered, refused, failed]) assert.deepEqual(turnOf(turnRow(turn, 1)), turn)
@@ -275,6 +279,46 @@ test('a refused answer is stored as refused and read back as the same turn', opt
   )
   assert.equal(again.requests.length, 0)
 })
+
+test(
+  'a call answered after a retry is one turn: its retries are stored and shown in the turns log',
+  opts,
+  async () => {
+    const { pool } = db
+    const { run } = await createRun(pool, input())
+    const model = scriptedModel([
+      {
+        status: 503,
+        body: { error: { code: 503, message: 'Service unavailable' } },
+        headers: { 'retry-after': '3' }
+      },
+      finalReply({ content: '{}', usage: usageOf({ cost: 0.01 }) })
+    ])
+    const waits = []
+    await runAgent({
+      door: DOOR,
+      system: 's',
+      firstUser: 'first',
+      tools,
+      fetchImpl: model.fetchImpl,
+      sleep: async (ms) => {
+        waits.push(ms)
+      },
+      onTurn: async (turn) => assert.equal(await saveTurn(pool, { runId: run.id, round: 0, turn }), true)
+    })
+    assert.deepEqual(waits, [3000])
+    const [turn, ...more] = await turnsOf(pool, run.id)
+    assert.equal(more.length, 0)
+    assert.equal(turn.state, 'answered')
+    assert.deepEqual(
+      turn.retries.map((r) => [r.attempt, r.status, r.waitMs]),
+      [[1, 503, 3000]]
+    )
+    assert.match(turn.retries[0].reason, /Service unavailable/)
+    assert.deepEqual(compactTurn(turn).retries, turn.retries)
+    assert.equal((await readRun(pool, run.id)).costUsd, 0.01)
+  }
+)
 
 test('a finished turn cannot be rewritten, and a stale lease writes no turn', opts, async () => {
   const { pool } = db

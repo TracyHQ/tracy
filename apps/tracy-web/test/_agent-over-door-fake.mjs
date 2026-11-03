@@ -17,7 +17,7 @@ export function scriptedModel(replies) {
     if (next.throw) throw next.throw
     const status = next.status ?? 200
     const text = typeof next.body === 'string' ? next.body : JSON.stringify(next.body)
-    return new Response(text, { status, headers: { 'content-type': 'application/json' } })
+    return new Response(text, { status, headers: { 'content-type': 'application/json', ...next.headers } })
   }
   return { fetchImpl, requests, left: () => queue.length }
 }

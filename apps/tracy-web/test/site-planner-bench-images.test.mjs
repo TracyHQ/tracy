@@ -52,7 +52,15 @@ async function drain(pool, model, kitImages, { killOn } = {}) {
     }
     return model.fetchImpl(url, init)
   }
-  await createSitePlannerQueue({ pool, secret: SECRET, fetchImpl, kitImages, log: quiet })
+  // A killed process retries nothing: one attempt per call.
+  await createSitePlannerQueue({
+    pool,
+    secret: SECRET,
+    fetchImpl,
+    kitImages,
+    log: quiet,
+    retry: { attempts: 1 }
+  })
     .drain()
     .catch(() => {})
 }

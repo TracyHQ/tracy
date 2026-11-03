@@ -3,6 +3,9 @@ import { test } from 'node:test'
 import { AgentError, runAgent } from '../src/lib/agent-over-door.js'
 import { DOOR, finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 
+// A call that fails once is not tried again here: these tests read how a failure is saved.
+const ONCE = { attempts: 1 }
+
 const SYSTEM = 'You answer questions about a small invented catalogue.'
 const FIRST = 'Which part is called beta? Read the parts first.'
 const DETAILS_1 = [{ type: 'reasoning.encrypted', data: 'opaque-signature-1', format: 'anthropic-claude-v1' }]
@@ -79,7 +82,7 @@ test('a two tool call conversation ends in the final answer, each turn saved bef
   assert.equal(first.headers.authorization, 'Bearer test-key')
   assert.equal(first.body.model, 'vendor/test-model')
   assert.deepEqual(first.body.reasoning, { enabled: true, effort: 'high' })
-  assert.ok(first.body.max_tokens >= 64000)
+  assert.equal(first.body.max_tokens, 128000)
   assert.deepEqual(first.body.tools, [
     {
       type: 'function',
@@ -213,6 +216,7 @@ test('a provider 5xx is an error with the provider reason, and the turn is saved
       firstUser: FIRST,
       tools: [],
       fetchImpl: model.fetchImpl,
+      retry: ONCE,
       onTurn: (t) => saved.push(t)
     }),
     (e) =>
@@ -321,6 +325,7 @@ test('a network failure is saved as failed and uncertain: the provider may have 
       firstUser: FIRST,
       tools: [],
       fetchImpl: model.fetchImpl,
+      retry: ONCE,
       onTurn: (t) => saved.push(t)
     }),
     (e) => e instanceof AgentError && e.code === 'AGENT_NETWORK'
@@ -452,6 +457,7 @@ test('a saved turn that was dispatched but never answered is refused, and nothin
       firstUser: FIRST,
       tools: [],
       fetchImpl: scriptedModel([{ throw: new TypeError('fetch failed') }]).fetchImpl,
+      retry: ONCE,
       onTurn: (t) => saved.push(structuredClone(t))
     })
   )
@@ -481,6 +487,7 @@ test('a saved turn the provider refused for sure is sent again as the next turn'
       firstUser: FIRST,
       tools: [],
       fetchImpl: scriptedModel([{ status: 502, body: 'bad gateway' }]).fetchImpl,
+      retry: ONCE,
       onTurn: (t) => saved.push(structuredClone(t))
     })
   )

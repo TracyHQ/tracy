@@ -43,14 +43,16 @@ export const NOT_A_PLAN_MESSAGE =
 /** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
 export const BENCH_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })
 
-const HARNESS_KEYS = ['maxTokens', 'effort', 'cacheTtl', 'toolImages', 'maxTurns', 'callTimeoutMs']
+const HARNESS_KEYS = ['maxTokens', 'effort', 'cacheTtl', 'toolImages', 'maxTurns', 'callTimeoutMs', 'retry']
 
 class LeaseLost extends Error {}
 
 /**
  * @param {{ pool: import('pg').Pool, secret: string, config: any, fetchImpl?: typeof fetch,
- *   index?: Map<string, object>, kitImages?: { ensure: Function }, log?: Console, now?: () => number }} deps
- *   `config` locates the image cache and the releases credential; `kitImages` replaces the release zips (tests).
+ *   index?: Map<string, object>, kitImages?: { ensure: Function }, log?: Console, now?: () => number,
+ *   retry?: object }} deps
+ *   `config` locates the image cache and the releases credential; `kitImages` replaces the release zips (tests);
+ *   `retry` replaces the run's retry policy (tests that kill the process mid call, which no retry may outlive).
  */
 export function createSitePlannerQueue({
   pool,
@@ -60,7 +62,8 @@ export function createSitePlannerQueue({
   index,
   kitImages = kitImagesFor({ pool, config, fetchImpl }),
   log = console,
-  now
+  now,
+  retry
 }) {
   return createDurableQueue({
     pool,
@@ -70,7 +73,7 @@ export function createSitePlannerQueue({
     ...BENCH_QUEUE,
     log,
     ...(now ? { now } : {}),
-    run: (row, lease) => runBenchRun({ pool, secret, fetchImpl, index, kitImages }, row, lease)
+    run: (row, lease) => runBenchRun({ pool, secret, fetchImpl, index, kitImages, retry }, row, lease)
   })
 }
 
@@ -161,6 +164,7 @@ async function playRound(deps, { row, ready, round, followUp, leaseToken, must }
       fetchImpl: deps.fetchImpl,
       signal: stop.signal,
       ...harnessOf(row.harness),
+      ...(deps.retry ? { retry: deps.retry } : {}),
       onTurn: async (turn) => {
         await must(saveTurn(pool, { runId, round, turn, leaseToken }))
         if (turn.state === 'answered' && (await cancelAsked(pool, runId))) stop.abort()

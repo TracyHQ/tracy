@@ -45,7 +45,8 @@ async function runOnce(pool, replies, { wrap } = {}) {
     secret: SECRET,
     fetchImpl,
     kitImages: readyKitImages(),
-    log: quiet
+    log: quiet,
+    retry: { attempts: 1 }
   }).drain()
   return { run: await readRun(pool, run.id), model }
 }
@@ -83,7 +84,7 @@ test(
     const [first, second] = model.requests.map((r) => r.body)
     assert.equal(first.model, MODEL)
     assert.equal(first.messages[0].content[0].text, plannerPrompt().text)
-    assert.equal(first.max_tokens, 64000)
+    assert.equal(first.max_tokens, 128000)
     const toolResult = second.messages.find((m) => m.role === 'tool')
     assert.match(JSON.stringify(toolResult.content), /pageGroups/)
     assert.equal(model.requests[0].headers.authorization, `Bearer ${API_KEY}`)
