@@ -10,6 +10,9 @@
 // An opened image carries a reference (kit ref, image id, sha256). The saved conversation keeps that reference, never
 // the bytes (agent-over-door.js), and resolve(ref) reads the same bytes back from the cache when a run resumes or a
 // fix round replays the conversation; a reference to another kit, or to bytes the kit no longer lists, is not read.
+//
+// What reaches the model is the image fitted inside MAX_IMAGE_SIDE (kit-image-fit.js): the original is checked against
+// its sha256 on every use, and the fitted copy is cached in `fit-<side>/` of the same folder, once per kit version.
 import { createHash, randomBytes } from 'node:crypto'
 import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -17,6 +20,7 @@ import path from 'node:path'
 import { unzipSync } from 'fflate'
 import { readReleases, RELEASES_REPO, releasesToken } from '../lib/quickstart-releases.js'
 import { imagesDigest } from '../lib/template-kit/reader.js'
+import { fittedImage, MAX_IMAGE_SIDE } from './kit-image-fit.js'
 
 const API = 'https://api.github.com'
 /** The JA Boxing zip is about 18 MB; a slow link must not hold a run start for ever. */
@@ -206,12 +210,23 @@ function opener(kitRef, list, folder) {
       return null
     }
   }
+  /** The checked original, fitted for the model; the fitted copy is named by image id and original sha256. */
+  const deliver = async (image) => {
+    const bytes = await bytesOf(image)
+    if (!bytes) return null
+    const name = `${image.id.replace(/[^A-Za-z0-9._-]+/g, '_')}-${image.sha256}`
+    return fittedImage({
+      bytes,
+      mediaType: image.mediaType,
+      cacheFile: path.join(folder, `fit-${MAX_IMAGE_SIDE}`, name)
+    })
+  }
   return {
     async resolve(ref) {
       const image = ref?.kit === kitRef ? byId.get(ref?.image) : undefined
       if (!image || image.sha256 !== ref.sha256) return null
-      const bytes = await bytesOf(image)
-      return bytes ? { mediaType: image.mediaType, base64: bytes.toString('base64') } : null
+      const sent = await deliver(image)
+      return sent ? { mediaType: sent.mediaType, base64: sent.bytes.toString('base64') } : null
     },
     async open(id) {
       const image = byId.get(id)
@@ -222,18 +237,27 @@ function opener(kitRef, list, folder) {
           detail:
             'No kit image has this id. Use an id a page or a block lists under "images", such as "page-home-1440".'
         })
-      const bytes = await bytesOf(image)
-      if (!bytes)
+      const sent = await deliver(image)
+      if (!sent)
         return JSON.stringify({
           error: 'IMAGE_UNAVAILABLE',
           id,
           detail: 'This image could not be read from the server cache. Continue from the kit text.'
         })
+      const { bytes, mediaType, width, height, original } = sent
       return {
-        text: JSON.stringify({ id, path: image.path, mediaType: image.mediaType, bytes: bytes.length }),
+        text: JSON.stringify({
+          id,
+          path: image.path,
+          mediaType,
+          bytes: bytes.length,
+          width,
+          height,
+          original
+        }),
         images: [
           {
-            mediaType: image.mediaType,
+            mediaType,
             base64: bytes.toString('base64'),
             ref: { kit: kitRef, image: image.id, sha256: image.sha256 }
           }
