@@ -121,12 +121,13 @@ export function runFiles(run, turns) {
       'run.json',
       json({
         ...meta,
-        // The round's answer, plan, check and failure list are files of their own.
+        // The round's answer, change list, plan, check and failure list are files of their own.
         rounds: rounds.map((r) => ({
           round: r.round,
           state: r.state,
           costUsd: r.costUsd,
           error: r.error,
+          reading: r.reading ?? null,
           startedAt: r.startedAt,
           finishedAt: r.finishedAt,
           summary: r.checkResult?.summary ?? null
@@ -137,6 +138,7 @@ export function runFiles(run, turns) {
   ]
   for (const r of rounds) {
     const v = r.round + 1
+    if (r.changes) files.push([`changes-v${v}.json`, json(r.changes)])
     if (r.plan) files.push([`plan-v${v}.json`, json(r.plan)])
     else if (r.answer) files.push([`answer-v${v}.txt`, r.answer])
     if (r.checkResult) files.push([`check-v${v}.json`, json(r.checkResult)])

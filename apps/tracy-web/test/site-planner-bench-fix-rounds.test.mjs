@@ -1,7 +1,8 @@
 // Fix rounds of the site planner bench (ADR 0041, #303), at the bench-run seam: a failing plan's failure list goes
-// back to the same conversation as the next user turn, the planner answers with the whole plan again, and it is
-// scored again; at most two fix rounds, then the failures still standing are stored on the run. An answer that is
-// not one JSON object is a round that is not a plan. The model is a scripted fake.
+// back to the same conversation as the next user turn, with the change list instruction after it; a whole plan in
+// answer is accepted and scored again (change lists: site-planner-bench-change-lists.test.mjs); at most two fix
+// rounds, then the failures still standing are stored on the run. An answer that is not one JSON object is a round
+// that is not a plan. The model is a scripted fake.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { readRun } from '../src/site-planner/bench-store.js'
@@ -11,11 +12,12 @@ import {
   NOT_A_PLAN_MESSAGE
 } from '../src/site-planner/bench-worker.js'
 import { openKit } from '../src/site-planner/kit-source.js'
+import { CHANGES_INSTRUCTION } from '../src/site-planner/plan-changes.js'
 import { checkPlan, failureListText } from '../src/site-planner/plan-check/check-plan.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { assignPlannerDoor, KIT_REF, readyKitImages, SECRET, startRun } from './_site-planner-bench.mjs'
 import { brief, plan } from './_site-plan-check.mjs'
+import { assignPlannerDoor, KIT_REF, readyKitImages, SECRET, startRun } from './_site-planner-bench.mjs'
 
 const db = fileDb()
 before(db.open)
@@ -97,7 +99,7 @@ test(
     // Round 1 opens with the failure list as a user turn after the whole round 0 conversation.
     assert.equal(model.requests.length, 4)
     const third = model.requests[2]
-    assert.equal(lastUserText(third), failures)
+    assert.equal(lastUserText(third), failures + CHANGES_INSTRUCTION)
     assert.deepEqual(
       third.body.messages.map((m) => m.role),
       ['system', 'user', 'assistant', 'tool', 'assistant', 'user']
@@ -130,8 +132,12 @@ test(
       ]
     )
     assert.equal(run.standingFailures, failuresOf(badPlan()))
-    assert.equal(lastUserText(model.requests[1]), failuresOf(badPlan()))
-    assert.equal(lastUserText(model.requests[2]), failuresOf(badPlan()))
+    assert.equal(lastUserText(model.requests[1]), failuresOf(badPlan()) + CHANGES_INSTRUCTION)
+    assert.equal(lastUserText(model.requests[2]), failuresOf(badPlan()) + CHANGES_INSTRUCTION)
+    assert.deepEqual(
+      run.rounds.map((r) => r.reading?.form),
+      ['plan', 'plan', 'plan']
+    )
   }
 )
 
@@ -185,13 +191,24 @@ test('a plan wrapped in one markdown code fence is read as the plan', opts, asyn
   }
 })
 
-test('text around a fence, or two fences, is not a plan', opts, async () => {
+test('prose then one fenced plan is read as the plan, and the dropped text is recorded', opts, async () => {
+  const { pool } = db
+  const content = `I fixed the two slots.\n\n\`\`\`json\n${JSON.stringify(plan(), null, 2)}\n\`\`\`\nDone.`
+  const { run } = await runOnce(pool, [finalReply({ content })])
+  assert.equal(run.status, 'succeeded', run.error)
+  assert.equal(run.rounds[0].state, 'checked')
+  assert.deepEqual(run.rounds[0].plan, plan())
+  assert.deepEqual(run.rounds[0].reading, { form: 'plan', droppedText: true })
+})
+
+test('two fenced blocks, or a fence that is not one object, are not a plan', opts, async () => {
   const { pool } = db
   const one = `\`\`\`json\n${JSON.stringify(plan())}\n\`\`\``
-  for (const content of [`Plan:\n${one}`, `${one}\n${one}`]) {
+  for (const content of [`${one}\n${one}`, `Plan:\n${one}\nand\n${one}`, 'Plan:\n```json\n[1, 2]\n```']) {
     await db.reset()
-    const { run } = await runOnce(pool, [finalReply({ content }), answer(plan())])
+    const { run, model } = await runOnce(pool, [finalReply({ content }), answer(plan())])
     assert.equal(run.rounds[0].state, 'not_a_plan', content.slice(0, 20))
+    assert.equal(lastUserText(model.requests[1]), NOT_A_PLAN_MESSAGE)
   }
 })
 

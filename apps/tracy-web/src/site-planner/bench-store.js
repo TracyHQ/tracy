@@ -198,6 +198,15 @@ export async function turnCountOf(pool, runId, round) {
   return rows[0].n
 }
 
+/** Whether a turn of this round already sent the given user message (a resumed round must not send it twice). */
+export async function roundSent(pool, runId, round, content) {
+  const { rows } = await pool.query(
+    `select exists (select 1 from site_planner_turn where run_id = $1 and round = $2 and sent @> $3::jsonb) as sent`,
+    [runId, round, JSON.stringify([{ role: 'user', content }])]
+  )
+  return rows[0].sent
+}
+
 /** Every saved turn of a run in order: the history runAgent resumes from. */
 export async function turnsOf(pool, runId) {
   const { rows } = await pool.query('select * from site_planner_turn where run_id = $1 order by n', [runId])
@@ -212,12 +221,13 @@ export async function turnsOf(pool, runId) {
  */
 export async function saveRound(pool, input) {
   const { runId, round, state, answer, plan, checkResult, failureList, error, leaseToken = null } = input
+  const { changes, reading } = input
   const { rowCount } = await pool.query(
     `insert into site_planner_round as o (run_id, round, state, answer, plan, check_result, failure_list, error,
-                                         cost_usd, finished_at)
+                                         cost_usd, finished_at, changes, reading)
      select $1::uuid, $2::int, $3::text, $4::text, $5::jsonb, $6::jsonb, $7::text, $8::text,
             coalesce((select sum(cost_usd) from site_planner_turn where run_id = $1::uuid and round = $2::int), 0),
-            case when $3::text = 'planning' then null else now() end
+            case when $3::text = 'planning' then null else now() end, $14::jsonb, $15::jsonb
      where ${fenced(1, 13)}
      on conflict (run_id, round) do update set
        state = excluded.state,
@@ -225,6 +235,8 @@ export async function saveRound(pool, input) {
        plan = case when $10::boolean then excluded.plan else o.plan end,
        check_result = case when $11::boolean then excluded.check_result else o.check_result end,
        failure_list = case when $12::boolean then excluded.failure_list else o.failure_list end,
+       changes = case when $16::boolean then excluded.changes else o.changes end,
+       reading = case when $17::boolean then excluded.reading else o.reading end,
        error = excluded.error,
        cost_usd = excluded.cost_usd,
        finished_at = excluded.finished_at`,
@@ -241,7 +253,11 @@ export async function saveRound(pool, input) {
       plan !== undefined,
       checkResult !== undefined,
       failureList !== undefined,
-      leaseToken
+      leaseToken,
+      json(changes),
+      json(reading),
+      changes !== undefined,
+      reading !== undefined
     ]
   )
   return rowCount === 1
@@ -324,6 +340,8 @@ function roundOf(r) {
     plan: r.plan,
     checkResult: r.check_result,
     failureList: r.failure_list,
+    changes: r.changes ?? null,
+    reading: r.reading ?? null,
     costUsd: Number(r.cost_usd),
     error: r.error,
     startedAt: iso(r.started_at),
