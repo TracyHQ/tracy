@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-03: Template kit looks
+
+Staff-only doors under `/api/ops`. Changed: step `template-kit` in `road` of `GET /api/ops/quickstarts` reads `kit-incomplete` while a packed 1440 shot of a page or block has no current look (a short text of what the shot shows, written with `template-kit looks`), with new `params.missingLooks` `[{ kind, id, image, why: "missing" | "stale" }]` (the first eight) and a `reason` naming them; `POST /api/ops/quickstart/inspiration/publish` refuses with `TEMPLATE_KIT_NOT_READY` on it like any incomplete kit. Judged after the template gaps and before the approval; the approval still names only the images.
+
 ## 2026-11-01: Template kit on the Road to live
 
 Staff-only doors under `/api/ops`. Added: step `template-kit` in `road` on each row of `GET /api/ops/quickstarts`, between `content-coverage` and `customize` (eleven steps), read from `template-kit.json` beside the contract that seals the release's version. Codes `kit-not-needed`, `kit-waiting`, `kit-missing`, `kit-invalid`, `kit-stale`, `kit-incomplete`, `kit-gaps`, `kit-not-approved`, `kit-approval-stale`, `kit-approved`; `params` `{ version, platform, contract, live, kitVersion, kitQuickstartVersion, templateVersion, images, pages, blocks, errors, approvedBy, approvedAt, reason, missingPictures, gaps, gapsByKind, gapsShown, gapsAccepted, gapsAcceptedShown }` (the fields each code carries). Changed: `POST /api/ops/quickstart/inspiration/publish` refuses with `TEMPLATE_KIT_NOT_READY` while a release not yet published has no kit of its own version, an incomplete one, template gaps the kit measured (a page without an h1, a dead link or page path, a row packed to the left) without an accepted reason, or one not approved on the images it lists; a published release only warns.

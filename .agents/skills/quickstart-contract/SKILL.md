@@ -580,6 +580,15 @@ a second PR after the gate goes red.
   the trial bind must **place** the profile into the component copy itself. Details:
   `packages/cms/tracy-quickstart-tools/README.md`.
 
+### 7d. Template kit looks (once per kit version)
+
+Every packed 1440 page and block shot of the template kit carries a short text of what it shows (`look`), so the
+site planner reads text instead of opening every image. **Write them with your own Claude Code, never a paid API**:
+`template-kit looks --list`, subagents (model `opus`, about 10 shots each, at most 2 at a time) open each image and
+write its text, `template-kit looks --apply`, list again until empty, then `pack` and commit the pack's
+`template-kit.json` beside the contract. **/ops holds the kit at `kit-incomplete` until every shot has a current
+look.** Steps, the subagent task and the style guide: [`references/image-looks.md`](references/image-looks.md).
+
 **The batch path stops here.**
 
 ## 8. Ship the contract

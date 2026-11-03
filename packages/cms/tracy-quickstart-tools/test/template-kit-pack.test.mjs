@@ -9,6 +9,7 @@ import { test } from 'node:test'
 import { inflateRawSync } from 'node:zlib'
 
 import { applyLayouts } from '../template-kit/lib/layouts.mjs'
+import { applyLooks, lookWorklist } from '../template-kit/lib/looks.mjs'
 import { approvePack, packKitFolder, packPlan, representativeOf } from '../template-kit/lib/pack.mjs'
 
 const W = (id) => ({ 1440: `${id}-1440`, 390: `${id}-390` })
@@ -170,7 +171,23 @@ test('the pack is what /ops reads: every page points at a packed shot, approval 
           kit: { state: 'read', doc }
         }
       )
-    assert.equal(judge(packed).code, 'kit-not-approved')
+    assert.equal(judge(packed).code, 'kit-incomplete', 'no shot has its look yet')
+    // The packager's Claude Code describes every shot the list names, on the full kit, then packs again.
+    const fullFile = join(out, 'template-kit.json')
+    const full = JSON.parse(readFileSync(fullFile, 'utf8'))
+    const work = lookWorklist(full, out)
+    assert.deepEqual(work.problems, [])
+    const looks = work.need.map((n) => ({
+      image: n.image,
+      sha256: n.sha256,
+      text: `A made-up description of ${n.image}: one wide row of text over a light background.`
+    }))
+    assert.deepEqual(applyLooks(full, looks).errors, [])
+    writeFileSync(fullFile, JSON.stringify(full))
+    packKitFolder(out)
+    const described = JSON.parse(readFileSync(packFile, 'utf8'))
+    assert.equal(described.approval, null)
+    assert.equal(judge(described).code, 'kit-not-approved', 'looks are text: they never need an approval')
     const { pack } = approvePack(out, 'a-reviewer', '2031-01-01T00:00:00.000Z')
     assert.notEqual(pack.sha256, first.sha256, 'the approval is in the zip')
     const approved = JSON.parse(readFileSync(packFile, 'utf8'))
