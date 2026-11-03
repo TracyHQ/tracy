@@ -244,12 +244,15 @@ const notJoined = (/** @type {string | string[]} */ list) =>
  * @param {any} profile
  * @param {Record<string, string>} base
  * @param {Record<string, any>} contract
- * @param {{ brand?: boolean }} [options]
+ * `options.accentOnly`: accent-only mode (brand mode's page and band accent handling, on a profile built by
+ * `brandProfile(..., { accentOnly: true })`): only the accent family differs from the template's own palette.
+ * @param {{ brand?: boolean, accentOnly?: boolean }} [options]
  * @returns {{ html: string, css: string, sheet: string, fontsHref: string | null, adjusted: string[] } | { refused: string[] }}
  */
 export function joomlaSlot(profile, base, contract, options = {}) {
-  const brand = options?.brand === true
-  const g = gate(profile)
+  const accentOnly = options?.accentOnly === true
+  const brand = options?.brand === true || accentOnly
+  const g = gate(profile, { keepOwnText: accentOnly })
   if (!g.ok) return { refused: g.reasons }
   const href = fontsHref(profile)
   const head = `/* tracy-ds-slot: ${profile.id.replace(/[^a-z0-9:-]/gi, '')} */`
@@ -261,13 +264,15 @@ export function joomlaSlot(profile, base, contract, options = {}) {
   let mode
   if (contract.modes === true) {
     // a template with a light/dark switch (sides.mjs): both modes, the switch kept
-    const two = twoSides(profile, (p) => joomlaSheet(p, base, contract, brand), contract, { shared: true })
+    const two = twoSides(profile, (p) => joomlaSheet(p, base, contract, brand, accentOnly), contract, {
+      shared: true
+    })
     css = `${head}\n${two.css}`
     sheet = `${head}\n${two.shared}`
     adjusted = [...two.own.adjusted, ...two.derived.adjusted.map((a) => `derived:${a}`)]
     mode = two.mode
   } else {
-    const one = joomlaSheet(profile, base, contract, brand)
+    const one = joomlaSheet(profile, base, contract, brand, accentOnly)
     css = `${head}\n${one.css}`
     sheet = css
     adjusted = one.adjusted
@@ -362,10 +367,10 @@ function trailingNot(s) {
 /**
  * The module sheet for one profile, without its header line. A one-look contract hides the
  * template's switch; a two-mode one (`modes`) leaves it, each side written by its own call.
- * `brandMode`: brand mode (joomlaSlot).
+ * `brandMode`: brand mode (joomlaSlot). `accentOnly`: accent-only mode (joomlaSlot), which also keeps the ink band.
  * @returns {{ css: string, adjusted: string[] }}
  */
-function joomlaSheet(profile, base, contract, brandMode = false) {
+function joomlaSheet(profile, base, contract, brandMode = false, accentOnly = false) {
   const { tokens, text, palette: wornPalette } = tokens56(profile, base)
   const sv = slotVars(profile, templateSizes(contract))
   const sel = contract.selectors ?? {}
@@ -491,7 +496,7 @@ function joomlaSheet(profile, base, contract, brandMode = false) {
   // every standard role variable the sheet does not write yet (role-values.mjs), as literals of this
   // side: a template that reads the roles finds a whole set, a template that does not reads none of
   // them; ink, its words and the accent on it always together, from the same ink, on every contract
-  addWornRoles(vars, { tokens, text, palette: wornPalette }, sv, facesOf(profile))
+  addWornRoles(vars, { tokens, text, palette: wornPalette, keepInk: accentOnly }, sv, facesOf(profile))
   // an optional role the template does not read, left out where the module has no bytes to spare
   // (`omit`, as on EmDash): JA Impact two-mode sat 17 bytes under MODULE_MAX_BYTES before
   // --ds-c-surface-hover (20/10/2026). Only optional roles: a required one is always written
