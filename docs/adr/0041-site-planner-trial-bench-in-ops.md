@@ -215,7 +215,7 @@
   (holidays ignored), and a DeepSeek run records the account balance before and after (migration 194). The approved
   prompt is unchanged.
 - **The planner runs on DeepSeek Flash by default, at high effort (refines the two bullets above, 03/11/2026).** Three
-  runs on dev, one invented brief, the same frozen checker: `deepseek-flash` at effort high, reading the kit's looks with
+  runs on dev, one brief (not in the repo), the same frozen checker: `deepseek-flash` at effort high, reading the kit's looks with
   tool calls and opening no image, took 10.5 minutes and about 0.04 USD, 62 failures in the first draft and none after
   the fix rounds, with sound page judgement; at effort low it took 7.6 minutes but left 202 failures in the first draft
   and 2 after the last fix round, with weaker page judgement; `deepseek-v4-pro` (text only, kit preloaded) took 33.5
