@@ -53,6 +53,7 @@ async function runOnce(pool, replies, { wrap } = {}) {
 }
 
 test('the queue survives redeploys: one run at a time, many claims allowed', () => {
+  // test-quality: contract one run at a time is the limit set for the paid model API (spend and rate limits); raising it is a decision, not a refactor
   assert.equal(BENCH_QUEUE.concurrency, 1)
   assert.ok(BENCH_QUEUE.maxAttempts >= 10)
 })

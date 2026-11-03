@@ -225,7 +225,6 @@ test('Claude Sonnet 5.5, an alternative planner model, runs on the anthropic pro
   // OpenRouter, read 03/11/2026: anthropic/claude-sonnet-5.5 takes text and image input, tools, reasoning and
   // reasoning_effort, lists a 1h cache write price, and every endpoint allows 128000 output tokens.
   const h = benchHarnessFor(MODEL, 'openrouter')
-  assert.equal(MODEL, 'anthropic/claude-sonnet-5.5')
   assert.deepEqual(h, { ...BENCH_HARNESS, modelProfile: 'anthropic' })
   assert.equal(h.maxTokens, 128000)
   assert.equal(h.effort, 'medium')
@@ -258,7 +257,7 @@ test("the deepseek-v4-pro-native profile: DeepSeek's wire, no images, effort hig
     }
   })
   assert.deepEqual(h.price, DEEPSEEK_V4_PRO_PRICE)
-  assert.deepEqual(DEEPSEEK_FLASH_PRICE, {
+  assert.deepEqual(benchHarnessFor(DEEPSEEK_NATIVE_FLASH, 'deepseek').price, {
     peak: { inputCacheHit: 0.006, inputCacheMiss: 0.3, output: 1.2 },
     offPeak: { inputCacheHit: 0.003, inputCacheMiss: 0.15, output: 0.6 },
     peakUtc: {

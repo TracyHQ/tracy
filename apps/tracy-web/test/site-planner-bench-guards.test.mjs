@@ -4,7 +4,6 @@
 // and after. The model and the balance endpoint are fakes: no real model or account is called.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
-import { BENCH_HARNESS } from '../src/site-planner/bench-control.js'
 import { statusLines } from '../src/site-planner/bench-export.js'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { createSitePlannerQueue, WRITE_STEP_MESSAGE } from '../src/site-planner/bench-worker.js'
@@ -52,7 +51,6 @@ test('a run whose calls already cost more than its budget stops before the next 
   const { pool } = db
   await assignPlannerDoor(pool)
   const started = await startRun(pool)
-  assert.equal(BENCH_HARNESS.budgetUsd, 2)
   const model = scriptedModel([
     read(['site'], 1.5),
     read(['header'], 1.5),
