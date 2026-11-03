@@ -9,8 +9,8 @@ import { initialsOf } from 'website-opportunities/domain/person-avatar.mjs'
 import { initialsAvatar } from '../lib/initials-avatar.js'
 import { cutPhoto, outputSizeFor } from './cut-photo.js'
 import { addTwins, hiddenEntry, pendingEntry, placedEntry } from './frame-entries.js'
-import { indexInputs } from './picture-check/inputs-index.js'
 import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
+import { indexInputs } from './picture-check/inputs-index.js'
 
 /** What each later step fills; a pending entry names it. */
 export const WAITS_FOR = Object.freeze({ picker: 'picker', icons: 'icons', cutout: 'cut-out' })
@@ -27,13 +27,14 @@ function personName(brief, factId) {
 
 /**
  * Decide every planned frame by code.
- * @param {{ plan: object, brief: object, kit: object, photoBytes: Map<string, Buffer> }} input `kit` with its content
- *   map under `contentMap`; `photoBytes` the owner photos by brief asset id, their hashes already checked
+ * @param {{ plan: object, brief: object, kit: object, photoBytes: Map<string, Buffer>, icons?: { fill: Function } | null }} input
+ *   `kit` with its content map under `contentMap`; `photoBytes` the owner photos by brief asset id, their hashes already
+ *   checked; `icons` the icon step (icons/fill-icons.js createIconFiller), without it icon frames stay pending
  * @returns {Promise<{ frames: object[], siteSettings: object[], returns: object[], pending: object[],
  *   usage: object[], refused: object[], files: Map<string, { bytes: Buffer, ext: string, width: number,
  *   height: number, sha256: string }> }>} `files` by their manifest path
  */
-export async function fillFrames({ plan, brief, kit, photoBytes }) {
+export async function fillFrames({ plan, brief, kit, photoBytes, icons = null }) {
   const idx = indexInputs({ plan, kit, brief, files: {} })
   const { usable, refused } = usablePhotos(brief, photoBytes)
   const usage = new Map(usable.map((a) => [a.id, 0]))
@@ -46,6 +47,7 @@ export async function fillFrames({ plan, brief, kit, photoBytes }) {
   const keep = (made) => files.set(`files/${made.sha256}.${made.ext}`, made)
 
   const work = []
+  const iconJobs = []
   for (const [frameId, wish] of idx.wishes) {
     const frame = idx.frames.get(frameId)
     if (!frame) {
@@ -63,6 +65,7 @@ export async function fillFrames({ plan, brief, kit, photoBytes }) {
     const list = frame.writable === false ? 'siteSettings' : 'frames'
     if (frame.kind === 'logo')
       returns.push({ frame: frameId, reason: 'a logo frame belongs to the brand step' })
+    else if (frame.kind === 'icon' && icons) iconJobs.push({ frameId, wish, frame, list })
     else if (frame.kind === 'icon')
       pending.push(
         pendingEntry(
@@ -164,6 +167,13 @@ export async function fillFrames({ plan, brief, kit, photoBytes }) {
     else returns.push({ frame: frameId, reason: `${why}, and the frame cannot be hidden` })
   }
 
+  if (iconJobs.length) {
+    // The icon step (icons/fill-icons.js): library icons ranked by a text model, light and dark files, their twins.
+    const done = await icons.fill({ jobs: iconJobs, idx, accent })
+    for (const e of done.entries) entries.set(e.entry.frame, e)
+    done.files.forEach(keep)
+    returns.push(...done.returns)
+  }
   addTwins({ idx, entries, returns, pending })
   const of = (list) => [...entries.values()].filter((e) => e.list === list).map((e) => e.entry)
   return {
