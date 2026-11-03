@@ -26,6 +26,8 @@ export async function startRunCommand(d, values) {
     throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
   if (Boolean(values['agent-model']) !== Boolean(values['agent-model-reason']))
     throw new Usage('--agent-model and --agent-model-reason go together')
+  if (values['reviewer-model'] && !values['agent-model'])
+    throw new Usage('--reviewer-model goes with --agent-model')
   let brief
   let briefSource
   if (file) {
@@ -58,7 +60,13 @@ export async function startRunCommand(d, values) {
     kitImages: d.kitImages,
     wiring: d.wiring,
     ...(values['agent-model']
-      ? { agentModel: { model: values['agent-model'], reason: values['agent-model-reason'] } }
+      ? {
+          agentModel: {
+            model: values['agent-model'],
+            reason: values['agent-model-reason'],
+            ...(values['reviewer-model'] ? { reviewerModel: values['reviewer-model'] } : {})
+          }
+        }
       : {}),
     ...(d.index ? { index: d.index } : {})
   })

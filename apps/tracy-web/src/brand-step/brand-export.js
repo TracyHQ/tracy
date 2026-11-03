@@ -42,7 +42,7 @@ export function statusLines(run, calls, now = Date.now()) {
     `duration ${seconds(end - Date.parse(run.createdAt))}`,
     `kit ${run.kitRef}, prompt sha256 ${run.promptSha256}`,
     `agent ${run.door.agent.providerId} ${run.door.agent.model}${run.door.agent.override ? ` (one-off: ${run.door.agent.override.reason})` : ''}`,
-    `reviewer ${run.door.reviewer.providerId} ${run.door.reviewer.model}`,
+    `reviewer ${run.door.reviewer.providerId} ${run.door.reviewer.model}${run.door.reviewer.override ? ` (one-off, replaces ${run.door.reviewer.override.replaces}: ${run.door.reviewer.override.reason})` : ''}`,
     `harness cache ${run.harness.cacheTtl.system}, images ${run.harness.imageLongEdge}px, max tokens ${run.harness.maxTokens}, cap ${money(run.harness.capUsd)}`,
     `cost ${money(run.costUsd)} (agent ${money(run.cost.agent)}, drawing ${money(run.cost.drawing)}, reviewer ${money(run.cost.reviewer)}), ${calls.length} model calls`
   ]

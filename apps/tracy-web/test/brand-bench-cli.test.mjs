@@ -81,6 +81,11 @@ test('run queues a run from a brief file and prints its id; refusals say why and
     await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json', '--agent-model', 'x/y']),
     2
   )
+  assert.equal(
+    await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json', '--reviewer-model', 'x/y']),
+    2,
+    '--reviewer-model goes with --agent-model'
+  )
   assert.equal(await k.run(['cancel', id]), 0)
   assert.match(k.out.at(-1), /cancelled/)
   k.done()

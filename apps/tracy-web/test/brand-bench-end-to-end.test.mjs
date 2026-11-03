@@ -11,7 +11,10 @@ import { roundsOf } from '../src/brand-step/brand-round-store.js'
 import { brandRunDir } from '../src/brand-step/brand-wiring.js'
 import { SECRET, REVIEWER_MODEL } from './_brand-bench.mjs'
 import { PICTURE_MODEL } from './_brand-bench-doors.mjs'
+import { symbolAgent } from './_brand-bench-symbol.mjs'
 import { wordsOnlyRun } from './_brand-e2e-run.mjs'
+import { faviconBlockOf } from '../src/brand-step/brand-safe-version.js'
+import { ringMaterialPng } from './_brand-tool-fixtures.mjs'
 import { fileDb } from './_db.mjs'
 
 const db = fileDb()
@@ -140,6 +143,53 @@ test(
         safe.favicon.png32,
         safe.favicon.ico,
         ...safe.logo.spots.map((x) => x.file)
+      ])
+        assert.ok(existsSync(path.join(folder, f)), `${f} is in the run folder`)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  }
+)
+
+test(
+  'a found logo with a symbol: cut_mark, recolour_mark, compose, fit, favicon and looks end with the gate accepting',
+  opts,
+  async () => {
+    const { pool } = db
+    const dir = mkdtempSync(path.join(tmpdir(), 'brand-e2e-'))
+    try {
+      // the invented logo: a dark ring around a grey bar above a text-like bar, on white
+      const material = await ringMaterialPng('#ffffff', '#1a1a1a', '#8a8a8a')
+      const { id, run, config, requests } = await wordsOnlyRun(
+        pool,
+        dir,
+        {},
+        {
+          caseId: '4-black-grey-symbol',
+          material,
+          agentFor: (kit) =>
+            symbolAgent(kit, {
+              brief: {
+                brand: { logo: 'c3f2e4d6-9d50-4e7b-8c83-4fb0719d2e35', name: 'Northgate Racquet House' }
+              },
+              faviconBlockOf
+            })
+        }
+      )
+      const rounds = await roundsOf(pool, id)
+      assert.equal(run.error, null)
+      assert.equal(run.outcome, 'brand-file', JSON.stringify(rounds.map((r) => r.gateResult?.rejected ?? r)))
+      const mark = run.brandFile.logo.mark
+      assert.equal(mark.decision, 'cut')
+      assert.equal(mark.file, 'mark/cut-mark.png')
+      assert.equal(mark.recoloured.dark, 'mark/recoloured.dark.png')
+      assert.equal(requests.filter((m) => m === REVIEWER_MODEL).length, 3, 'three looks, no icon')
+      const folder = brandRunDir(config, id)
+      for (const f of [
+        mark.file,
+        'mark/cut-mark.mask.png',
+        mark.recoloured.dark,
+        run.brandFile.favicon.png32
       ])
         assert.ok(existsSync(path.join(folder, f)), `${f} is in the run folder`)
     } finally {

@@ -5,7 +5,7 @@
 //   2. "tile": the opening side's mark on a rounded tile (radius 22%, 14% margin) filled with the template's opening
 //      background; checked as the mark against the tile (the tile edge vs the tab is advice).
 //   3. "tile" with a favicon-only recolour: the opening side's mark recoloured for the opening side by the
-//      recolour_mark tool (ctx.recolourMark, ticket #321), on the same tile. The logo is not changed.
+//      recolour_mark tool, on the same tile (ctx.recolourMark replaces the tool in tests). The logo is not changed.
 //   None passes: ok false with every measurement. Every candidate's 32 px png and measurement is kept and reported.
 //   apple-touch-icon-180.png: the opening side's mark on a SOLID square of the template's opening background (kit
 //   brandColours.opensOn.ground); no look: that mark already passed look_logo on that ground.
@@ -14,6 +14,7 @@ import { checkFavicon } from '../favicon-check.js'
 import { sideText } from '../kit-grounds.js'
 import { BrandToolError, imageBytes, imagePath, runOf, runSuffix, sharp } from './common.js'
 import { pngsToIco } from './ico.js'
+import { tool as recolourTool } from './recolour-mark.js'
 
 const NONE = { r: 0, g: 0, b: 0, alpha: 0 }
 
@@ -82,26 +83,24 @@ export const tool = {
       chosen = { tabIcons: 'tile', tileMark: phoneMark, recoloured: false }
     let recolour = null
     if (!chosen) {
-      if (typeof ctx.recolourMark !== 'function') {
-        recolour = { ok: false, error: 'recolour_mark is not available in this run' }
-      } else {
-        try {
-          recolour = await ctx.recolourMark({
-            mark: phoneMark,
-            side: opens,
-            nameHint: `favicon/tile-mark.${opens}${SUF}.png`
-          })
-        } catch (e) {
-          recolour = { ok: false, error: String(e?.message ?? e).slice(0, 400) }
-        }
-        if (
-          recolour?.ok !== false &&
-          recolour?.file &&
-          files.has(recolour.file) &&
-          (await tryCandidate('tile-recoloured', recolour.file, tile, ground))
-        )
-          chosen = { tabIcons: 'tile', tileMark: recolour.file, recoloured: true }
+      // ctx.recolourMark is a seam for tests; a run uses the recolour_mark tool itself.
+      const recolourMark = ctx.recolourMark ?? ((input) => recolourTool.run(input, ctx))
+      try {
+        recolour = await recolourMark({
+          mark: phoneMark,
+          side: opens,
+          nameHint: `favicon/tile-mark.${opens}${SUF}.png`
+        })
+      } catch (e) {
+        recolour = { ok: false, error: String(e?.message ?? e).slice(0, 400) }
       }
+      if (
+        recolour?.ok !== false &&
+        recolour?.file &&
+        files.has(recolour.file) &&
+        (await tryCandidate('tile-recoloured', recolour.file, tile, ground))
+      )
+        chosen = { tabIcons: 'tile', tileMark: recolour.file, recoloured: true }
     }
     const why = !chosen
       ? 'no candidate passed the code check'

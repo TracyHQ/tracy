@@ -68,8 +68,10 @@ test('the tool list: names match the approved prompt, each with a schema and a r
       'open_image',
       'measure_logo',
       'set_name',
+      'cut_mark',
       'compose_logo',
       'fit_logo',
+      'recolour_mark',
       'make_icon',
       'make_lettermark',
       'make_favicon',
@@ -84,5 +86,5 @@ test('the tool list: names match the approved prompt, each with a schema and a r
     assert.equal(typeof t.run, 'function')
     assert.equal(toolByName(t.name), t)
   }
-  assert.equal(toolByName('cut_mark'), undefined)
+  for (const name of ['cut_mark', 'recolour_mark']) assert.equal(toolByName(name).name, name)
 })

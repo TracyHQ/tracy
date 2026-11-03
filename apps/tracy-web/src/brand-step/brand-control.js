@@ -33,8 +33,8 @@ export const toolInfo = (tools) => tools.map((t) => ({ name: t.name, version: t.
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
  *   startedBy: string, kitImages: { ensure: Function }, wiring: Function, index?: Map<string, object>,
- *   agentModel?: { model: string, reason: string } }} input `agentModel`: a one-off agent model for this run,
- *   recorded with its reason; `wiring` gives the tools and the template font (brand-wiring.js).
+ *   agentModel?: { model: string, reason: string, reviewerModel?: string } }} input `agentModel`: a one-off agent model
+ *   for this run (and, when given, an explicit reviewer model), recorded with its reason; `wiring` gives the tools and the template font (brand-wiring.js).
  */
 export async function startBrandRun({
   pool,

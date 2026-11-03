@@ -2,7 +2,7 @@
 // version suffix that keeps a tool from overwriting a file. Ported from the approved lab's lib.mjs.
 import path from 'node:path'
 import sharp from 'sharp'
-import { contrastHex, hex } from '../colour-math.js'
+import { contrastHex, hex, parseHexColour } from '../colour-math.js'
 import { sideText } from '../kit-grounds.js'
 
 export { sharp }
@@ -103,4 +103,4 @@ export const sideGrounds = (kit, side, extra = []) => [
 /** Per-side heading colours and the side the template opens on, from the kit. */
 export const sideColours = (kit) => ({ ...sideText(kit), from: COLOURS_FROM })
 
-export { contrastHex, hex }
+export { contrastHex, hex, parseHexColour }

@@ -76,3 +76,23 @@ export const materialPng = (ground = '#f4efe6', ink = '#1d3b2f') => {
     return g
   })
 }
+
+/**
+ * Found material with a standalone symbol: a ring (a "shield" with a closed outline) in `ink` with a grey bar inside
+ * it, on a solid `ground`, above two text-like bars. The ground inside the ring is enclosed by the figure.
+ * The symbol box is { x: 100, y: 20, w: 200, h: 200 }.
+ */
+export const ringMaterialPng = (ground = '#f4efe6', ink = '#1d3b2f', inside = '#8a8f98') => {
+  const g = [...rgb(ground), 255]
+  const c = [...rgb(ink), 255]
+  const s = [...rgb(inside), 255]
+  return encode(400, 300, (x, y) => {
+    const d = (x - 200) ** 2 + (y - 120) ** 2
+    if (d < 100 ** 2 && d > 70 ** 2) return c
+    if (d < 70 ** 2 && Math.abs(x - 200) < 12 && Math.abs(y - 120) < 40) return s
+    if (y > 235 && y < 260 && x > 80 && x < 320) return c
+    if (y > 275 && y < 285 && x > 120 && x < 280) return c
+    return g
+  })
+}
+export const RING_BOX = { x: 100, y: 20, w: 200, h: 200 }

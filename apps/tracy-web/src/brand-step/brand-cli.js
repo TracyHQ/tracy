@@ -16,6 +16,8 @@ export const USAGE = `usage: node scripts/brand-bench.mjs <command>
       [--by <label>]                      who started it (stored as cli:<label>)
       [--agent-model <model> --agent-model-reason <text>]
                                           use another agent model for this run only; the reason is recorded
+      [--reviewer-model <model>]          also use another reviewer model for this run only (explicit, recorded with
+                                          the reason); the two must still differ
   list [--limit <n>]                      the newest runs
   status <runId>                          state, round, gate verdict, cost split, duration
   get <runId> --out <dir>                 write the brand file, its images, every rejected attempt, the gate results
@@ -45,7 +47,8 @@ export async function runCli(argv, deps) {
         limit: { type: 'string' },
         out: { type: 'string' },
         'agent-model': { type: 'string' },
-        'agent-model-reason': { type: 'string' }
+        'agent-model-reason': { type: 'string' },
+        'reviewer-model': { type: 'string' }
       }
     })
     const [command, runId] = positionals
