@@ -41,6 +41,32 @@ Field kinds: `text` · `prose` · `number` · `boolean` · `date` · `url` · `e
 `link` · `group` · `reference`. The source says **what** a value is, not which widget edits it — choosing the
 widget is the compiler's job, and each CMS chooses differently.
 
+## Without a database — what the `rendered` road gives up
+
+Moved here from `SKILL.md` §Getting started, which keeps the four-road table.
+
+⚠ **Do not overstate the database — the main job can still be done without it.**
+
+A Joomla site has articles, categories, menus, and (if it runs T4) page sections that are ACM modules **with named
+fields**. Reading them is faster and more accurate: the field names are given, not guessed.
+
+But **building a template does not need a database**, and the proof is the two templates that already exist: Tracy
+Business (24 routes · 14 collections) and the T4 template `tracy` were both built from a design folder, not
+from any DB. What this skill produces is **the outfit** — layout, components, CSS, tokens — and the outfit can be read
+from what the site renders.
+
+Without a DB, the **content** part is more expensive, not impossible:
+
+| Available from rendered HTML | Only available by reading the DB |
+|---|---|
+| titles, body text, images on the page, dates, breadcrumb → category, the menu in `<nav>` | the real ACM field names (`heading`, `items[]`, `btn-1-link`…) instead of inferring them from markup |
+| section type, guessable with `detectSectionType()` from the WordPress kit | unpublished posts, drafts, pages not in the menu |
+| | original image files (HTML only has resized versions) |
+
+So the right statement is: **with a DB it is cheaper; without one you still do it, and record what had to be inferred**. Only when the job
+is a **faithful content migration** — not building a template — is a missing DB something
+to put to the user for a decision.
+
 ## Where to get the two sibling-repo scripts
 
 The `contract` road runs two scripts that **are not in this repo**:

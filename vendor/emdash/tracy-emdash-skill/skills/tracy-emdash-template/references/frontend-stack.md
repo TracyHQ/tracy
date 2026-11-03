@@ -68,15 +68,10 @@ form's `confirmationMessage`.
 
 ## Fast Gate in P3 and P5
 
-Stopping P3 at "two independent sites render" is not enough: run **Fast Gate** on the slice built so far
-(`node tools/fast-gate.mjs plan` → `visual-qa.mjs --scope fast-gate` → lenses → fix → `fast-gate.mjs
-verdict`, [qa-lenses.md](qa-lenses.md) §8). The shared frame (Header, Footer, `global.css`, tokens) fixed here
-is fixed for every page; multiplying while the frame still has defects multiplies the defects. The contract in P3 has only a few pages — the plan
-picks among them and records the scope; don't declare pages not built yet.
-
-P5, for each family added: declare `layouts[]` (+ `family`) and `pages[].render.view`, run
-`fast-gate.mjs plan --changed <file just added/edited>` to know which cases must rerun, then
-`visual-qa.mjs --scope fast-gate --reuse <previous run>` — only pages whose hash changed are recaptured.
+Stopping P3 at "two independent sites render" is not enough: the shared frame (Header, Footer, `global.css`, tokens)
+fixed here is fixed for every page, and multiplying while the frame still has defects multiplies the defects. When and
+how to run Fast Gate in P3 (the slice built so far, only pages that exist) and P5 (each family added: `layouts[]` +
+`family`, `plan --changed`, `--reuse`) is stated once, in [qa-lenses.md](qa-lenses.md) §8 "When to run".
 
 ## Pages (P5) — checklist per family
 

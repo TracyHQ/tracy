@@ -96,7 +96,7 @@ The kit is copied into a template and runs from there, against that template's `
 cd skills/tracy-emdash-template
 npm install                 # playwright
 npx playwright install chrome
-npm test                    # the negative fixtures: the gate must be able to fail
+npm test                    # docs counts + links (test:docs), then the negative fixtures: the gate must be able to fail
 ```
 
 System Chrome is used by the visual pass (`channel: "chrome"`); Playwright's bundled Chromium is
