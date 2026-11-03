@@ -76,8 +76,7 @@ export async function fillFrames({ plan, brief, kit, photoBytes }) {
       pending.push(
         pendingEntry(wish, frame, WAITS_FOR.cutout, 'a cut-out needs background removal and the looker')
       )
-    else if (wish.match === 'any-real' || (wish.match === 'person' && list === 'frames'))
-      work.push({ frameId, wish, frame, list })
+    else if (wish.match === 'any-real' || wish.match === 'person') work.push({ frameId, wish, frame, list })
     else
       pending.push(pendingEntry(wish, frame, WAITS_FOR.picker, 'a specific picture is chosen by the picker'))
   }
@@ -146,6 +145,7 @@ export async function fillFrames({ plan, brief, kit, photoBytes }) {
         })
         continue
       }
+      tried = null
     } else {
       const ranked = rankForFrame(usable, wish, frame, usage).map((r) => r.a)
       tried = await placePhoto(
@@ -156,7 +156,9 @@ export async function fillFrames({ plan, brief, kit, photoBytes }) {
       )
       if (!tried) continue
     }
-    const why = `no fitting real photo${tried.length ? ` (tried ${tried.join(', ')})` : ''}`
+    const why = !tried
+      ? 'no confirmed portrait and no name to draw initials from'
+      : `no fitting real photo${tried.length ? ` (tried ${tried.join(', ')})` : ''}`
     if (list === 'frames' && frame.canHide === true)
       entries.set(frameId, { list, entry: hiddenEntry(frameId, why) })
     else returns.push({ frame: frameId, reason: `${why}, and the frame cannot be hidden` })
