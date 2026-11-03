@@ -2723,6 +2723,7 @@ export function buildsSite(call) {
   const operation = /** @type {{ operation?: unknown } | null} */ (args)?.operation
   return (
     operation === 'plan.save' ||
+    operation === 'plan.fix' ||
     operation === 'plan.add' ||
     operation === 'copy.write' ||
     operation === 'copy.apply' ||
@@ -2813,6 +2814,8 @@ export function buildChecks(events) {
         if (typeof answer?.pass === 'boolean') {
           checks += 1
           lastPass = answer.pass
+          // The server stopped the checking (#296: two checks in a row found no fewer faults): none remains.
+          if (typeof answer.stopped === 'string') exhausted = true
         } else if (answer?.code === 'DEMO_CHECK_BUDGET_EXHAUSTED') exhausted = true
       }
     }
@@ -3150,7 +3153,18 @@ export function planIssuesNext(answer) {
   const issues = answer.detail?.issues
   if (!Array.isArray(issues) || issues.length === 0) return null
   const n = issues.length
-  return `${n} issue${n === 1 ? '' : 's'} of this draft, each at its row: fix exactly those and send plan.save again now, every other row as it was. Do not reply to the customer before the plan is saved: nobody answers a question in this chat, and a turn that ends here ends the build with nothing written.`
+  const wait =
+    'Do not reply to the customer before the plan is saved: nobody answers a question in this chat, and a turn that ends here ends the build with nothing written.'
+  // 🔒 THE DRAFT IS KEPT; ONLY ITS REFUSED ROWS GO BACK (#296, 02/11/2026): re-sending the whole plan was 40–60 % of a
+  // build's output tokens.
+  const draft = answer.detail?.draft
+  if (draft && Array.isArray(draft.refusedRows)) {
+    const rows = draft.refusedRows.length
+      ? `rows ${draft.refusedRows.join(', ')}`
+      : 'no single row (add the rows or unplaced the issues ask for)'
+    return `${n} issue${n === 1 ? '' : 's'} of this draft; the other ${draft.kept} rows are kept. Fix ${rows} and send only those now: tracy_demo {operation:"plan.fix", fix:{"<rowIndex>": <the corrected row> | null}, rows:[<rows to add>], unplaced:[...]} — never the whole plan again. ${wait}`
+  }
+  return `${n} issue${n === 1 ? '' : 's'} of this draft, each at its row: fix exactly those and send plan.save again now, every other row as it was. ${wait}`
 }
 
 /**

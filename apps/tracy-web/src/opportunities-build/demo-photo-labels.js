@@ -10,7 +10,7 @@
  * 🔒 NO MODEL, NO LABEL, NO FAILURE. Without a vision door, over the cost cap or when the model fails, a photo has no
  * label and the build goes on as before: the agent still sees the sheet, the check judges only what is labelled.
  */
-import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
+import { ceilingCents, visionCostExactCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import { labelWithVision, visionKey } from '../lib/picture-vision.js'
 
@@ -93,7 +93,7 @@ export function createDemoPhotoLabels({
               provider: 'vision',
               operation: door.model,
               maxCents: Math.ceil(pictures.length / 8) * ceilingCents('vision', door.model),
-              actualCents: (r) => visionCostCents(door.model, r.usage),
+              actualCents: (r) => visionCostExactCents(door.model, r.usage),
               purpose: 'picture-labels',
               payer,
               buildId,

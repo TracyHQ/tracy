@@ -135,11 +135,24 @@ export function ceilingCents(provider, operation) {
 }
 
 /**
- * What a vision call cost from the usage its answer reports, rounded up to a whole cent.
+ * What a vision call cost from the usage its answer reports, rounded up to a whole cent: a ceiling, for a reservation
+ * (`maxCents`) or a per-call figure that must be whole. What the ledger records as spent is {@link visionCostExactCents}.
  * @param {string} model @param {{promptTokens: number, completionTokens: number}} usage
  */
-export function visionCostCents(model, { promptTokens, completionTokens }) {
+export function visionCostCents(model, usage) {
+  return Math.ceil(visionCostExactCents(model, usage))
+}
+
+/**
+ * What a vision call cost from the usage its answer reports, in cents, unrounded (#296, 02/11/2026).
+ * 🔒 THE LEDGER RECORDS THIS, NOT THE CEILING. A build's look makes 650–800 calls of ~1.9K prompt and 18–64 completion
+ * tokens: ~0.12 ¢ each, booked at 1 ¢ when every call was rounded up, so a build read $6.5–8 for well under $1 spent.
+ * @param {string} model @param {{promptTokens: number, completionTokens: number}} usage
+ */
+export function visionCostExactCents(model, { promptTokens, completionTokens }) {
   const rate = VISION_MODELS[model] ?? VISION_MODELS.unknown
-  const cents = (promptTokens * rate.inCentsPerM + completionTokens * rate.outCentsPerM) / 1_000_000
-  return Math.ceil(cents)
+  return (
+    ((Number(promptTokens) || 0) * rate.inCentsPerM + (Number(completionTokens) || 0) * rate.outCentsPerM) /
+    1_000_000
+  )
 }

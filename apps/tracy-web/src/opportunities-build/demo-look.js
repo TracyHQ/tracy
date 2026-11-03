@@ -23,8 +23,10 @@
  */
 import sharp from 'sharp'
 import { createVisionChallenge, IMAGE_CODE_INSTRUCTION, imageCodeMatches } from '../lib/vision-challenge.js'
+import { postVisionDoor } from '../lib/picture-vision.js'
+import { noReasoningBody } from '../lib/seed-model.js'
 import { createHash } from 'node:crypto'
-import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
+import { ceilingCents, visionCostExactCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 
 /**
@@ -58,6 +60,12 @@ const KINDS = new Set(['text', 'photo', 'repeat', 'leftover', 'layout', 'languag
 const FAULTS_MAX = 30
 /** One vision call's time; an answer takes a few seconds, and a provider that hangs must not hold the look. */
 const CALL_MS = 90_000
+/**
+ * One call's answer, bounded (02/11/2026): `{"faults": []}` and the image code are 18–64 tokens (local), a fault ~80, so
+ * this holds some fifty faults for three tiles. The model is asked not to reason (`postVisionDoor`): dev's
+ * `deepseek-flash` reasoned 5–7K tokens a call, ~36 s, for the same answer.
+ */
+const LOOK_MAX_TOKENS = 4096
 
 export const DEMO_LOOK_SYSTEM = `You check screenshots of a demo website Tracy built for a real local business by filling a ready-made template with that business's own facts, photos and reviews. Each picture is a viewport tile of a page at desktop width (scaled) or phone width (390 px), labelled with its page path, viewport and vertical range. Tiles overlap and follow top to bottom. Content cut at a tile edge continues in its neighbour: that capture boundary is never a page clipping fault. Sticky headers may recur between tiles.
 
@@ -310,12 +318,17 @@ export function createDemoLook({
         { type: 'image_url', image_url: { url: tile.image } }
       ])
     ]
-    const requestFor = (batch, challenge) =>
+    // The provider's own words for "do not reason" (`postVisionDoor` sends them, and drops them for a provider that
+    // refuses them).
+    const quiet = noReasoningBody(door.url)
+    const requestFor = (batch, challenge, fields = quiet) =>
       JSON.stringify({
         model: door.model,
         temperature: 0,
+        max_tokens: LOOK_MAX_TOKENS,
         response_format: { type: 'json_object' },
-        messages: [{ role: 'user', content: contentFor(batch, challenge) }]
+        messages: [{ role: 'user', content: contentFor(batch, challenge) }],
+        ...fields
       })
     // Reserve room for the next fresh PNG; every real request is also checked before sending.
     const emptyRequestBytes = Buffer.byteLength(requestFor([], firstChallenge)) + 64 * 1024
@@ -325,8 +338,17 @@ export function createDemoLook({
     let stopCalls = new AbortController()
     let visionFailed = false
     // Where a look's seconds go, one line a look (29/10/2026): calls held at the limit, or the browser idle while a
-    // stream's last answers come back before the next stream starts.
-    const spent = { held: 0, drained: 0, calls: 0, callMs: 0, streams: 0 }
+    // stream's last answers come back before the next stream starts. With the completion tokens every answer reported,
+    // and how many of them were reasoning (02/11/2026): a slow call that wrote thousands is a model reasoning.
+    const spent = {
+      held: 0,
+      drained: 0,
+      calls: 0,
+      callMs: 0,
+      streams: 0,
+      completionTokens: 0,
+      reasoningTokens: 0
+    }
     const timed = async (key, fn) => {
       const from = now()
       try {
@@ -601,7 +623,7 @@ export function createDemoLook({
     if (lookTimer) clearTimeout(lookTimer)
     const secs = (ms) => (ms / 1000).toFixed(1)
     console.info(
-      `[demo-look] ${site?.site_key ?? site?.label ?? 'site'}: ${layouts.length} page(s) in ${spent.streams} stream(s), ${pictures} tiles, ${spent.calls} call(s)${spent.calls ? ` of ${secs(spent.callMs / spent.calls)}s on average` : ''} (${inFlight} at once); ${secs(now() - started)}s, ${secs(spent.held)}s held at the call limit, ${secs(spent.drained)}s waiting for answers at stream ends`
+      `[demo-look] ${site?.site_key ?? site?.label ?? 'site'}: ${layouts.length} page(s) in ${spent.streams} stream(s), ${pictures} tiles, ${spent.calls} call(s)${spent.calls ? ` of ${secs(spent.callMs / spent.calls)}s on average` : ''} (${inFlight} at once), ${spent.completionTokens} completion tokens (${spent.reasoningTokens} reasoning); ${secs(now() - started)}s, ${secs(spent.held)}s held at the call limit, ${secs(spent.drained)}s waiting for answers at stream ends`
     )
     /**
      * 🔒 A PAGE IS SEEN AS SOON AS EVERY TILE OF IT IS ANSWERED (#247). A page counted only when its whole stream of four
@@ -685,16 +707,20 @@ export function createDemoLook({
             payer: accountId ? { kind: 'account', accountId } : null,
             tokens: (b) => modelTokensOf([b?.usage]),
             actualCents: (b) =>
-              visionCostCents(door.model, {
+              visionCostExactCents(door.model, {
                 promptTokens: Number(b?.usage?.prompt_tokens) || 0,
                 completionTokens: Number(b?.usage?.completion_tokens) || 0
               })
           },
           async () => {
-            const res = await fetchImpl(door.url, {
-              method: 'POST',
-              headers: { authorization: `Bearer ${door.key}`, 'content-type': 'application/json' },
-              body: requestBody,
+            const res = await postVisionDoor({
+              door,
+              // The body `ask` built and measured; the same without the no-reasoning field when the provider refuses it.
+              bodyFor: (fields) =>
+                Object.keys(fields).length === Object.keys(quiet).length
+                  ? requestBody
+                  : requestFor(pairs, challenge, fields),
+              fetchImpl,
               signal: AbortSignal.any([
                 AbortSignal.timeout(CALL_MS),
                 ...(callSignal ? [callSignal] : []),
@@ -705,6 +731,8 @@ export function createDemoLook({
             return res.json()
           }
         )
+        spent.completionTokens += Number(body?.usage?.completion_tokens) || 0
+        spent.reasoningTokens += Number(body?.usage?.completion_tokens_details?.reasoning_tokens) || 0
       } catch (error) {
         const budgetHit = error?.code === 'BUDGET_EXCEEDED' || error?.name === 'BudgetExceededError'
         const said = String(error?.message ?? error).slice(0, 160)

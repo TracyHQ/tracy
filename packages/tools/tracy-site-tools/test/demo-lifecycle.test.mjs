@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { demoToolNeedsReady, runDemoLifecycle, sweepRound } from '../src/host/demo-lifecycle.mjs'
+import {
+  demoToolNeedsReady,
+  roundOrder,
+  runDemoLifecycle,
+  sendRound,
+  sweepRound
+} from '../src/host/demo-lifecycle.mjs'
 
 test('native wait polls finite real status and never starts a provision or sends a prompt', async () => {
   let calls = 0,
@@ -735,4 +741,325 @@ test("a sweep row whose write's answer was lost says unknown: never one to write
   const prewrite = result.swept[0].refused.find((r) => r.code === 'COUNT_MISMATCH')
   assert.equal(prewrite.unknown, undefined)
   assert.equal('unknown' in prewrite, false)
+})
+
+// ── A round's calls several at a time where the site's door takes them (02/11/2026) ─────────────────────────────
+
+/**
+ * A site of records, each page showing its own and the shared footer. The replace job reads the page's records, waits
+ * as a real job does (its reads, the write exec), then writes each record it changes under that record's revision: a
+ * record another write changed since the read is refused `STORE_CHANGED`, never overwritten (EmDash's `_rev`). Each
+ * call's time on the door is logged, so a test can say which calls were in flight together.
+ */
+function revisedSite() {
+  const records = {
+    home: { text: 'Our story began in 1998 · Welcome to Bistro Template', v: 0 },
+    menu: { text: 'Smoked Venison Burger with fries · Smoked Venison', v: 0 },
+    about: { text: 'Meet chef Anna Doe', v: 0 },
+    team: { text: 'Anna Doe · John Roe', v: 0 },
+    hours: { text: 'Open daily from nine to five', v: 0 },
+    visit: { text: 'Free parking behind the bistro', v: 0 },
+    footer: { text: '398 North Street · M. +201 382', v: 0 },
+    post: { text: '2021-09-10', v: 0 }
+  }
+  const shows = {
+    '/': ['home', 'footer'],
+    '/menu/': ['menu', 'footer'],
+    '/about/': ['about', 'footer'],
+    '/team/': ['team', 'footer'],
+    '/hours/': ['hours', 'footer'],
+    '/visit/': ['visit', 'footer']
+  }
+  // The first calls are the slowest: a round sent in its order with nothing held back would be overtaken.
+  const slow = { '/': 30, '/menu/': 20, '/about/': 12, '/team/': 4, '/hours/': 8, '/visit/': 2 }
+  const spans = []
+  let clock = 0
+  let flying = 0
+  const site = { records, shows, spans, most: 0 }
+  site.job = async (call) => {
+    const span = { call, from: clock++, to: Number.POSITIVE_INFINITY }
+    spans.push(span)
+    site.most = Math.max(site.most, ++flying)
+    try {
+      if (call.action !== 'content.replace') {
+        await new Promise((resolve) => setTimeout(resolve, 3))
+        records.post = { text: call.params.fields.date, v: records.post.v + 1 }
+        return { ok: true }
+      }
+      const { path, changes: list, ...one } = call.params
+      const changes = list ?? [{ find: one.find, replace: one.replace, expect: one.expect }]
+      const named = (i) => (changes.length > 1 ? { change: i } : {})
+      const read = shows[path].map((id) => ({ id, ...records[id] }))
+      await new Promise((resolve) => setTimeout(resolve, slow[path]))
+      const count = (find) => read.reduce((n, r) => n + r.text.split(find).length - 1, 0)
+      for (const [i, c] of changes.entries()) {
+        const n = count(c.find)
+        if (n === 0) return { ok: false, code: 'NOT_FOUND', ...named(i) }
+        if (c.expect !== undefined && n !== c.expect)
+          return { ok: false, code: 'COUNT_MISMATCH', count: n, ...named(i) }
+      }
+      const touched = read.filter((r) => changes.some((c) => r.text.includes(c.find)))
+      if (touched.some((r) => records[r.id].v !== r.v)) return { ok: false, code: 'STORE_CHANGED' }
+      for (const r of touched) {
+        let text = r.text
+        for (const c of changes) text = text.replaceAll(c.find, c.replace)
+        records[r.id] = { text, v: r.v + 1 }
+      }
+      return { ok: true, count: changes.reduce((n, c) => n + count(c.find), 0) }
+    } finally {
+      flying -= 1
+      span.to = clock++
+    }
+  }
+  return site
+}
+
+/** One round as tracy-web plans it for the site above: every page's first calls, then the later ones (`onePerPage`). */
+const revisedRound = () => [
+  pageCall('/', [
+    { find: 'Our story began in 1998', replace: 'Our story', expect: 1 },
+    { find: '398 North Street', replace: '12 Market Lane', expect: 1 }
+  ]),
+  pageCall('/menu/', [
+    { find: 'Smoked Venison Burger with fries', replace: 'Menu item', expect: 1 },
+    { find: '398 North Street', replace: '12 Market Lane', expect: 1 }
+  ]),
+  pageCall('/hours/', [{ find: 'Open daily from nine to five', replace: 'Open every day', expect: 1 }]),
+  pageCall('/visit/', [{ find: 'Free parking behind the bistro', replace: 'Parking nearby', expect: 1 }]),
+  pageCall('/about/', [{ find: 'Meet chef Anna Doe', replace: 'Meet the chef', expect: 1 }]),
+  pageCall('/team/', [{ find: 'Anna Doe', replace: 'Our chef', expect: 1 }]),
+  pageCall('/team/', [{ find: 'John Roe', replace: 'Our cook', expect: 1 }]),
+  pageCall('/menu/', [{ find: 'Smoked Venison', replace: 'Menu item', expect: 1 }]),
+  // The round's cap took the footer's phone on /visit/ alone; the read showed it on every page (`shown`). Sent beside
+  // the write on / it would meet the footer's revision moved under it.
+  pageCall('/visit/', [{ find: 'M. +201 382', replace: 'Call us', expect: 1 }]),
+  { action: 'content.update', params: { kind: 'post', id: 11, fields: { date: '2026-11-02' } } },
+  pageCall('/', [{ find: 'Welcome to Bistro Template', replace: 'Welcome', expect: 1 }])
+]
+
+/** Every page's words the read before the round showed, cap or not: the round's, and the footer's on every page. */
+const revisedShown = (site) => [
+  ...revisedRound().flatMap((call) =>
+    (call.params.changes ?? []).map((c) => `${call.params.path}\u0000${c.find}`)
+  ),
+  ...Object.keys(site.shows).flatMap((path) => [`${path}\u0000398 North Street`, `${path}\u0000M. +201 382`])
+]
+
+/** The check of the site above: the round's calls first, then nothing left. `inFlight` is what tracy-web allows. */
+async function sweptSite(inFlight) {
+  const site = revisedSite()
+  let checks = 0
+  const result = await runDemoLifecycle(
+    { operation: 'check' },
+    async () =>
+      ++checks === 1
+        ? {
+            ok: true,
+            pass: false,
+            checks: [],
+            sweep: {
+              calls: revisedRound(),
+              unresolved: [],
+              shown: revisedShown(site),
+              ...(inFlight ? { inFlight } : {})
+            }
+          }
+        : { ok: true, pass: true, checks: [] },
+    { sweep: site.job }
+  )
+  return { site, result }
+}
+
+/** Whether two logged calls were on the door at the same time. */
+const together = (a, b) => a.from < b.to && b.from < a.to
+
+test('a round tracy-web allows four at a time ends as the same site and report as one call at a time', async () => {
+  const serial = await sweptSite(undefined)
+  const parallel = await sweptSite(4)
+  // Without `inFlight` (a WordPress or Joomla site, or a tracy-web from before): one call at a time, as always.
+  assert.equal(serial.site.most, 1)
+  assert.ok(parallel.site.most > 1, `in flight at most ${parallel.site.most}`)
+  assert.ok(parallel.site.most <= 4)
+  // The same records, each change written once, none refused for a revision another call moved meanwhile.
+  assert.deepEqual(parallel.site.records, serial.site.records)
+  assert.equal(parallel.site.records.footer.text, '12 Market Lane · Call us')
+  assert.equal(parallel.site.records.menu.text, 'Menu item · Menu item')
+  assert.deepEqual(parallel.result.swept, serial.result.swept)
+  assert.equal(parallel.result.pass, true)
+  // The shared footer's words on /menu/ answer cleared by the write on / before them, in both.
+  assert.equal(parallel.result.swept[0].cleared, 1)
+  assert.deepEqual(parallel.result.swept[0].refused, [])
+})
+
+test("in a round sent several at a time, a page's calls, words one holds of another's and a shared part's words keep their order", async () => {
+  const { site } = await sweptSite(4)
+  const spans = site.spans
+  const of = (path, find) =>
+    spans.filter(
+      (s) =>
+        s.call.params.path === path && (s.call.params.changes ?? [s.call.params]).some((c) => c.find === find)
+    )
+  const before = (a, b) => a.length > 0 && b.length > 0 && a.every((x) => b.every((y) => x.to < y.from))
+  // A page's calls: its second call starts once its first has answered.
+  assert.ok(before(of('/menu/', 'Smoked Venison Burger with fries'), of('/menu/', 'Smoked Venison')))
+  assert.ok(before(of('/team/', 'Anna Doe'), of('/team/', 'John Roe')))
+  // Words one call holds of another's, on another page: in the round's order.
+  assert.ok(before(of('/about/', 'Meet chef Anna Doe'), of('/team/', 'Anna Doe')))
+  // A shared part's words on two pages, and words the read showed on several pages, one call after the other.
+  assert.ok(before(of('/', '398 North Street'), of('/menu/', '398 North Street')))
+  assert.ok(before(of('/menu/', '398 North Street'), of('/visit/', 'M. +201 382')))
+  // A call that is not a page's words waits for every call before it, and every call after waits for it.
+  const update = spans.filter((s) => s.call.action === 'content.update')
+  assert.equal(update.length, 1)
+  for (const s of spans)
+    if (s !== update[0]) assert.ok(!together(s, update[0]), JSON.stringify(s.call.params))
+  assert.ok(before(update, of('/', 'Welcome to Bistro Template')))
+  // A page with its own words only went beside the others.
+  const [hours] = of('/hours/', 'Open daily from nine to five')
+  assert.ok(spans.some((s) => s !== hours && together(s, hours)))
+})
+
+test('what each call of a round waits for: its page, overlapping words, words several pages show, any other call', () => {
+  const calls = [
+    pageCall('/a/', [{ find: 'Footer line', replace: 'x' }]),
+    pageCall('/b/', [{ find: 'Footer line', replace: 'x' }]),
+    pageCall('/c/', [{ find: 'Own words of c', replace: 'x' }]),
+    pageCall('/d/', [{ find: 'Phone 555', replace: 'x' }]),
+    pageCall('/e/', [{ find: 'Phone 555 or email', replace: 'x' }]),
+    pageCall('/c', [{ find: 'More of c', replace: 'x' }]),
+    // The round planned these words on /g/ alone; the read showed them on /h/ too.
+    pageCall('/g/', [{ find: 'Banner words', replace: 'x' }]),
+    {
+      action: 'content.replace',
+      params: { path: '/f/', find: 'https://template.test/', replace: '/', href: true }
+    },
+    pageCall('/k/', [{ find: 'Own words of k', replace: 'x' }])
+  ]
+  const shown = ['/h/\u0000Banner words']
+  assert.deepEqual(roundOrder(calls, shown), [
+    [],
+    // The same words on another page.
+    [0],
+    // Words its page alone shows: nothing before it.
+    [],
+    // Words several pages show wait for every call before them with such words, whatever the words.
+    [0, 1],
+    [0, 1, 3],
+    // The same page, with or without its last slash.
+    [2],
+    [0, 1, 3, 4],
+    // A link (and any call that is not a page's words) waits for every call before it…
+    [0, 1, 2, 3, 4, 5, 6],
+    // …and every call after it waits for it.
+    [7]
+  ])
+  // Without the read's list, /g/'s words are its page's own.
+  assert.deepEqual(roundOrder(calls)[6], [])
+})
+
+test('a round never has more than four calls in flight, whatever tracy-web asks; a bad number is one at a time', async () => {
+  const calls = Array.from({ length: 12 }, (_, i) =>
+    pageCall(`/p${i}/`, [{ find: `Own words ${i}`, replace: 'x' }])
+  )
+  for (const [asked, most] of [
+    [16, 4],
+    [4, 4],
+    [2, 2],
+    [1, 1],
+    [0, 1],
+    ['4', 1],
+    [2.5, 1],
+    [undefined, 1]
+  ]) {
+    let flying = 0
+    let seen = 0
+    const order = []
+    const answers = await sendRound(
+      calls,
+      async (_call, at) => {
+        order.push(at)
+        seen = Math.max(seen, ++flying)
+        await new Promise((resolve) => setTimeout(resolve, 12 - at))
+        flying -= 1
+        return { ok: true, at }
+      },
+      { inFlight: asked }
+    )
+    assert.equal(seen, most, `asked ${asked}`)
+    // Each answer at its call's place, whichever came back first; the calls started in the round's order.
+    assert.deepEqual(
+      answers.map((a) => a.at),
+      calls.map((_, i) => i)
+    )
+    assert.deepEqual(
+      order,
+      calls.map((_, i) => i)
+    )
+  }
+})
+
+test('Stop in a round sent several at a time sends nothing more, lets the calls in flight answer, and stops', async () => {
+  const stop = new AbortController()
+  const calls = Array.from({ length: 8 }, (_, i) =>
+    pageCall(`/p${i}/`, [{ find: `Own words ${i}`, replace: 'x' }])
+  )
+  const started = []
+  const finished = []
+  const answers = await sendRound(
+    calls,
+    async (_call, at) => {
+      started.push(at)
+      if (at === 1) stop.abort()
+      await new Promise((resolve) => setTimeout(resolve, 5))
+      finished.push(at)
+      return { ok: true }
+    },
+    { inFlight: 4, signal: stop.signal }
+  )
+  assert.equal(answers, null)
+  assert.deepEqual(started, [0, 1])
+  assert.deepEqual(finished.sort(), [0, 1])
+  // Through the check: the stopped answer, and no check after it.
+  const stopping = new AbortController()
+  let checks = 0
+  const result = await runDemoLifecycle(
+    { operation: 'check' },
+    async () => {
+      checks += 1
+      return { ok: true, pass: false, checks: [], sweep: { calls, unresolved: [], inFlight: 4 } }
+    },
+    {
+      signal: stopping.signal,
+      sweep: async (call) => {
+        if (call.params.path === '/p0/') stopping.abort()
+        return { ok: true }
+      }
+    }
+  )
+  assert.equal(result.code, 'TURN_STOPPED')
+  assert.equal(checks, 1)
+})
+
+test('words an earlier write of the round holds answer cleared by that write, whichever answer came back first', async () => {
+  // /about/'s passage is the round's first call and the slowest; /x/'s words come back first. Both hold the phone
+  // the third call looks for on /about/, which waits for both: one at a time, the first write named it.
+  const pages = { '/about/': 'Call M. +201 382 today', '/x/': 'M. +201 382 or email' }
+  const { job } = pageJob(pages)
+  const slowJob = async (call) => {
+    await new Promise((resolve) => setTimeout(resolve, call.params.path === '/about/' ? 20 : 1))
+    return job(call)
+  }
+  const calls = [
+    pageCall('/about/', [{ find: 'Call M. +201 382 today', replace: 'Call us', expect: 1 }]),
+    pageCall('/x/', [{ find: 'M. +201 382 or email', replace: 'Write to us', expect: 1 }]),
+    pageCall('/about/', [{ find: 'M. +201 382', replace: '+1 555', expect: 1 }])
+  ]
+  const cleared = async (inFlight) =>
+    (await sendRound(calls, sweepRound(slowJob), { inFlight })).map(
+      (a) => a.pairs[0].done.cleared ?? (a.pairs[0].done.ok ? 'ok' : a.pairs[0].done.code)
+    )
+  const serial = await cleared(1)
+  Object.assign(pages, { '/about/': 'Call M. +201 382 today', '/x/': 'M. +201 382 or email' })
+  assert.deepEqual(serial, ['ok', 'ok', 'call m. +201 382 today'])
+  assert.deepEqual(await cleared(4), serial)
 })

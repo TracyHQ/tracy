@@ -63,6 +63,14 @@ test(
         'alter table wo_cost_ledger add column account_id uuid,add column action_id uuid,add column build_id uuid'
       )
       await isolated.query(migration)
+      // The cost to the thousandth of a cent and the budget a charge counts against (#296): every image migrates before
+      // its ledger runs, standalone too (WO schema 0011).
+      await isolated.query(
+        readFileSync(
+          new URL('../src/db/migrations/195-wo-cost-ledger-exact-and-build.sql', import.meta.url),
+          'utf8'
+        )
+      )
       assert.equal(
         (
           await isolated.query(

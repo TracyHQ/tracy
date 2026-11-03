@@ -65,6 +65,9 @@ export const DEFAULT_WO_OPS_SETTINGS = Object.freeze({
   // cents. A call is reserved at its ceiling before it goes out. 0 stops paid research.
   researchDailyCapCents: 2000,
   researchJobCapCents: 200,
+  // What every build of one UTC day may cost together (its look, page words, pictures, photo labels), in US cents, apart
+  // from research (#296): a day of builds never stops research, nor the other way round. 0 stops a build's paid calls.
+  buildDailyCapCents: 2000,
   // Abuse limit, not a cost quota: how many places never researched before one account may send to
   // research a day (`apify-budget.js` newPlacesDaySpent).
   newPlacesPerAccountPerDay: 40,
@@ -203,7 +206,7 @@ export const SOCIAL_STATS_BUDGETS = Object.freeze(
 const SOCIAL_STATS_CAP_MAX = 1_000_000
 /** $1,000,000: a research cap above this is a typo, not a budget. */
 const RESEARCH_CAP_MAX_CENTS = 100_000_000
-const RESEARCH_CAPS = ['researchDailyCapCents', 'researchJobCapCents']
+const RESEARCH_CAPS = ['researchDailyCapCents', 'researchJobCapCents', 'buildDailyCapCents']
 
 const VALID_MAP_DISCOVERY_PROVIDERS = new Set(['auto', 'google', 'apify', 'osm'])
 const VALID_WEB_SEARCH_PROVIDERS = new Set(['auto', 'deepseek', 'jina', 'firecrawl', 'off'])
@@ -311,6 +314,12 @@ export function normalizeWoOpsSettings(raw) {
       0,
       RESEARCH_CAP_MAX_CENTS,
       DEFAULT_WO_OPS_SETTINGS.researchJobCapCents
+    ),
+    buildDailyCapCents: clampInt(
+      src.buildDailyCapCents,
+      0,
+      RESEARCH_CAP_MAX_CENTS,
+      DEFAULT_WO_OPS_SETTINGS.buildDailyCapCents
     ),
     newPlacesPerAccountPerDay: clampInt(
       src.newPlacesPerAccountPerDay,

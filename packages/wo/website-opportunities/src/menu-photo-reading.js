@@ -16,7 +16,7 @@ import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 import { modelTokensOf } from './wo-model-tokens.js'
 import { BudgetExceededError } from './cost-ledger.js'
-import { visionCostCents } from './cost-prices.js'
+import { visionCostCents, visionCostExactCents } from './cost-prices.js'
 import { currencyMinorDigits, plainPrice } from './menu-items.js'
 import { controlError } from './google-maps-research.js'
 import { requireHost } from './host.js'
@@ -537,7 +537,7 @@ export async function readMenuPhotos({
           operation: model.model,
           maxCents: menuPhotoCeilingCents(model.model),
           actualCents: (r) =>
-            visionCostCents(model.model, {
+            visionCostExactCents(model.model, {
               promptTokens: r.promptTokens,
               completionTokens: r.completionTokens
             }),

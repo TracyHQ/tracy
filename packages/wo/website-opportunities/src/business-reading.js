@@ -19,7 +19,7 @@ import {
   withListedServiceParts
 } from '../domain/business-reading.mjs'
 import { BudgetExceededError } from './cost-ledger.js'
-import { visionCostCents } from './cost-prices.js'
+import { visionCostCents, visionCostExactCents } from './cost-prices.js'
 import { controlError } from './google-maps-research.js'
 import { requireHost } from './host.js'
 import { modelTokensOf } from './wo-model-tokens.js'
@@ -155,7 +155,7 @@ export async function readBusiness({
         operation: ready.model,
         maxCents: businessReadingCeilingCents(ready.model, prompt, businessReadingMaxTokens(ready)),
         actualCents: (r) =>
-          visionCostCents(ready.model, {
+          visionCostExactCents(ready.model, {
             promptTokens: r.promptTokens,
             completionTokens: r.completionTokens
           }),

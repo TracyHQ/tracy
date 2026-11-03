@@ -1649,6 +1649,16 @@ test('a sweep goes on while each round plans fewer calls, and stops on no progre
   assert.match(sweepStopped(sweep, 'no-progress', 2).unresolved[1].why, /round 2 cleared nothing/)
 })
 
+test("02/11/2026: a sweep round's calls go four at a time on EmDash, one at a time where the site has one writer", async () => {
+  const { sweepInFlightOf, SWEEP_IN_FLIGHT } = await import('../src/opportunities-build/client-demo.js')
+  assert.equal(SWEEP_IN_FLIGHT, 4)
+  assert.equal(sweepInFlightOf('emdash'), 4)
+  // WordPress and Joomla: the Claude Cowork engine's write lock refuses a second writer; no number, one at a time.
+  assert.equal(sweepInFlightOf('wordpress'), null)
+  assert.equal(sweepInFlightOf('joomla'), null)
+  assert.equal(sweepInFlightOf(undefined), null)
+})
+
 test("dev 27/10/2026: the check after a sweep round keeps every page the sweep left unchanged; a new build's first check reads all", async () => {
   const { checkIsIncremental, renamedBeforeOf } = await import('../src/opportunities-build/client-demo.js')
   // The agent's first check reads every page: nothing was read before it.

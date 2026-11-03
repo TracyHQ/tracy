@@ -8,7 +8,7 @@
  * 🔒 NEVER IN THE WAY OF THE BRIEF. No observable photo, a refused budget or a failed call: no observed fact, and the note
  * says why. This step never throws.
  */
-import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
+import { ceilingCents, visionCostExactCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import {
   heldObservedFacts,
@@ -60,7 +60,7 @@ export async function observeBriefPictures({
         provider: 'vision',
         operation: model,
         maxCents: ceilingCents('vision', model),
-        actualCents: (r) => visionCostCents(model, r.usage),
+        actualCents: (r) => visionCostExactCents(model, r.usage),
         // Part of labelling the brief's pictures, counted with it on /ops (`ops-usage-research.js`).
         purpose: 'picture-labels',
         payer: accountId ? { kind: 'account', accountId } : null,

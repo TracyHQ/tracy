@@ -22,7 +22,7 @@
  * issue says so; the agent writes it as before.
  */
 
-import { visionCostCents } from 'website-opportunities/src/cost-prices.js'
+import { visionCostCents, visionCostExactCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 
 import { noReasoningBody } from '../lib/seed-model.js'
@@ -348,7 +348,7 @@ export function createDemoCopy({ doorFor, chargeable = (_s, fn) => fn(), fetchIm
       operation: door.words,
       maxCents: visionCostCents(door.words, { promptTokens: 40_000, completionTokens: 6_000 }),
       actualCents: (b) =>
-        visionCostCents(door.words, {
+        visionCostExactCents(door.words, {
           promptTokens: Number(b?.usage?.prompt_tokens) || 0,
           completionTokens: Number(b?.usage?.completion_tokens) || 0
         }),

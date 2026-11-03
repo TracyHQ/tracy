@@ -25,8 +25,9 @@ export const RESEARCH_PAYERS = Object.freeze([
   'unrecorded'
 ])
 
-// What a row cost: a settled call its cost, an open or unreconciled one its ceiling (as the ledger counts it).
-const COST = `case l.state when 'settled' then coalesce(l.actual_cents, l.reserved_cents)
+// What a row cost: a settled call its cost, to the thousandth of a cent where it was recorded so (#296), an open or
+// unreconciled one its ceiling (as the ledger counts it). Summed unrounded; a total is rounded once where it is shown.
+const COST = `case l.state when 'settled' then coalesce(l.actual_millicents / 1000.0, l.actual_cents, l.reserved_cents)
   else greatest(l.reserved_cents, coalesce(l.actual_cents, 0)) end`
 
 /**
@@ -38,7 +39,7 @@ export async function readResearchUsage(pool, query) {
   try {
     return (
       await pool.query(
-        `select l.created_at, l.purpose, l.payer, lower(a.email) as email, l.tokens, (${COST})::int as cents
+        `select l.created_at, l.purpose, l.payer, lower(a.email) as email, l.tokens, (${COST})::float8 as cents
          from wo_cost_ledger l left join account a on a.id = l.payer_account_id
          where (l.purpose is not null or l.provider = 'vision') and l.state <> 'released'
            and l.created_at >= $1 and l.created_at < $2`,
@@ -80,7 +81,7 @@ function figures(rows, { minForMedian, minForP90 }) {
       median: measured.length >= minForMedian ? nearestRank(totals, 0.5) : null,
       p90: measured.length >= minForP90 ? nearestRank(totals, 0.9) : null
     },
-    cents: rows.reduce((a, r) => a + (Number(r.cents) || 0), 0)
+    cents: Math.ceil(rows.reduce((a, r) => a + (Number(r.cents) || 0), 0))
   }
 }
 
