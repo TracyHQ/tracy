@@ -45,7 +45,18 @@ test('the catalogue has a site planner door that needs tools and prefers vision'
 test('the WO doors are unchanged by the new door', () => {
   assert.deepEqual(
     LLM_DOORS.map((d) => d.id),
-    ['web', 'assistant', 'seedText', 'woEditorial', 'vision', 'seedImage', 'agent', 'sitePlanner']
+    [
+      'web',
+      'assistant',
+      'seedText',
+      'woEditorial',
+      'vision',
+      'seedImage',
+      'agent',
+      'sitePlanner',
+      'brandAgent',
+      'brandReviewer'
+    ]
   )
   const wo = doorEntry('woEditorial')
   assert.deepEqual(

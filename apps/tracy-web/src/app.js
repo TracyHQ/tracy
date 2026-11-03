@@ -220,6 +220,9 @@ import {
   picturesWhere
 } from './sites/agent-demo-inventory.js'
 import { createSitePlannerQueue } from './site-planner/bench-worker.js'
+import { createBrandQueue } from './brand-step/brand-worker.js'
+import { productionWiring } from './brand-step/brand-wiring.js'
+import { kitImagesFor } from './site-planner/kit-images.js'
 import { presign, signedCall } from './sites/artifacts.js'
 import { readBrandFile } from './sites/brand-files.js'
 import { createBriefBuilds } from './sites/brief-build.js'
@@ -1168,6 +1171,24 @@ export function buildApp(deps) {
           secret: deps.config.sessionSecret,
           config: deps.config,
           fetchImpl: deps.fetchImpl ?? fetch,
+          log: deps.log ?? console
+        })
+      : null
+  // The brand bench's worker (`brand-step/brand-worker.js`, #320): its own queue, one run at a time, parallel to the
+  // planner bench; runs are started and read from the bench CLI (scripts/brand-bench.mjs).
+  app.brandQueue =
+    deps.config && deps.pool
+      ? createBrandQueue({
+          pool: deps.pool,
+          secret: deps.config.sessionSecret,
+          config: deps.config,
+          fetchImpl: deps.fetchImpl ?? fetch,
+          kitImages: kitImagesFor({
+            pool: deps.pool,
+            config: deps.config,
+            fetchImpl: deps.fetchImpl ?? fetch
+          }),
+          wiring: productionWiring(deps.config),
           log: deps.log ?? console
         })
       : null
