@@ -227,6 +227,47 @@ def _has_table(sql, schema: str, table: str) -> bool:
                         f" AND table_name = {sql_str(table)};"))
 
 
+# A size or the original of an upload, as `_wp_attachment_metadata` names it: `s:4:"file";s:N:"<name>"`
+# (each size's file, a name in the upload's own folder) and `original_image` (a scaled upload's source).
+_MEDIA_FILE = re.compile(rb's:\d+:"(?:file|original_image)";s:\d+:"([^"]+)"')
+
+
+def kept_media_files(sql, names: dict, prefix: str, uploads: str = "wp-content/uploads") -> list[str]:
+    """The files of the Media Library items the merge kept though the live site deleted them (Tracy
+    changed them, #223): the upload (`_wp_attached_file`), its original and every size, under the
+    webroot. The file merge took the live site's delete of them, not knowing the database kept the
+    item: a kept picture with no file was broken in the copy's Media Library."""
+    posts, meta = prefix + "posts", prefix + "postmeta"
+    if not all(_has_table(sql, names[side], posts) for side in ("base", "ours", "theirs")):
+        return []
+    if not _has_table(sql, names["ours"], meta):
+        return []
+    ours, base, theirs = (q(names[side]) for side in ("ours", "base", "theirs"))
+    rows = sql.run(
+        f"SELECT m.post_id, m.meta_key, HEX(m.meta_value) FROM {ours}.{q(meta)} m"
+        f" JOIN {ours}.{q(posts)} r ON r.ID = m.post_id WHERE r.post_type = 'attachment'"
+        " AND m.meta_key IN ('_wp_attached_file', '_wp_attachment_metadata')"
+        f" AND EXISTS (SELECT 1 FROM {base}.{q(posts)} b WHERE b.ID = r.ID)"
+        f" AND NOT EXISTS (SELECT 1 FROM {theirs}.{q(posts)} t WHERE t.ID = r.ID);")
+    found: dict[str, dict[str, bytes]] = {}
+    for post_id, key, value in rows:
+        found.setdefault(post_id, {})[key] = bytes.fromhex(value or "")
+    out: set[str] = set()
+    for item in found.values():
+        attached = item.get("_wp_attached_file", b"").decode("utf-8", "replace").strip("/")
+        if not attached or ".." in attached.split("/"):
+            continue
+        folder = attached.rsplit("/", 1)[0] + "/" if "/" in attached else ""
+        out.add(f"{uploads}/{attached}")
+        # A size's or the original's name is in the upload's folder; the metadata's own `file` is the
+        # whole relative path, the upload again.
+        for name in _MEDIA_FILE.findall(item.get("_wp_attachment_metadata", b"")):
+            name = name.decode("utf-8", "replace")
+            if name and "/" not in name and name != "..":
+                out.add(f"{uploads}/{folder}{name}")
+    return sorted(out)
+
+
 def counting_policy(sql, names: dict, prefix: str) -> dict:
     """Count the authoritative WooCommerce store when all three reads agree on its mode.
     A mode transition keeps per-table counts; an ID alone never proves a backup order."""
@@ -839,6 +880,16 @@ POLICY = {
     },
     # Stamped by every save: when both sites saved one post, the live site's stamp, not a conflict.
     "volatileColumns": {"post_modified", "post_modified_gmt", "link_updated"},
+    # Rows that belong to a post (live_sync.py `dependents`): a post the merge keeps though the live
+    # site deleted it (Tracy changed it) keeps its meta and its terms, which the live site deleted
+    # with it — a Media Library item kept without its `_wp_attached_file` was a broken picture
+    # (#223) — and a post the merge deletes takes the copy's own of them along (#307).
+    "dependents": {
+        "posts": [("postmeta", "post_id", None, None),
+                  ("term_relationships", "object_id", TT_OF_POST, None)],
+    },
+    # A post's own revisions, rows of its own table: they go with a post the merge deletes (#307).
+    "ownedRows": {"posts": [("posts", "post_parent", "post_type = 'revision'")]},
     # A column of a table the adapter does not know, named as if it held a post's, a user's, a term's
     # or a comment's number (a WooCommerce lookup's `product_id`, an SEO plugin's `object_id`).
     "refName": re.compile(r"(^|_)(post|object|user|author|term|term_taxonomy|comment|product|order|attachment)_?id$",

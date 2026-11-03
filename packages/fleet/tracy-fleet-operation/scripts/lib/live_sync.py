@@ -1502,6 +1502,30 @@ class IdMap:
     def as_json(self) -> dict:
         return {t: {str(k): v for k, v in m.items()} for t, m in self.map.items() if m}
 
+    def forget_gone(self, ours: str, theirs: str) -> list[dict]:
+        """After the merge: the map's records that neither the live read (renumbered into the copy's
+        numbers) nor the merged copy holds any more — a live delete the merge took — leave the map.
+        Kept, the copy's next record under that number read as the live site's own and was never
+        pushed (#307); and a live site that numbers again from a lower top (MySQL 5.7 after a restart)
+        would have its next record taken for the deleted one. A record the merge held (the copy still
+        has it) keeps its entry. Answers what left, one entry each."""
+        tables = [t for t, m in self.map.items() if m]
+        if not tables:
+            return []
+        present = {(r[0], r[1]) for r in self.sql.run(
+            "SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema IN"
+            f" ({sql_str(ours)}, {sql_str(theirs)});")}
+        tables = [t for t in tables if all((s, self.table(t)) in present for s in (ours, theirs))]
+        held = self.ids_of([(s, t) for t in tables for s in (ours, theirs)])
+        gone = []
+        for t in tables:
+            still = held[(ours, t)] | held[(theirs, t)]
+            for live, copy in sorted(self.map[t].items()):
+                if copy not in still:
+                    del self.map[t][live]
+                    gone.append({"table": t, "live": live, "copy": copy})
+        return gone
+
 
 class DbMerge:
     """Merge `theirs` into `ours` (a scratch schema holding a frozen copy of the copy's database),
@@ -1615,12 +1639,16 @@ class DbMerge:
         self.sql.run(f"DROP DATABASE IF EXISTS {q(self.work)}; CREATE DATABASE {q(self.work)};")
         try:
             locks = self.keep_session_columns(M)
+            owned = self.owned_snapshot(M)
             for table in self.merge_order(set(B.columns) | set(M.columns) | set(T.columns)):
                 at = time.monotonic()
                 self.tables[table] = self.merge_table(table, B, M, T)
                 if time.monotonic() - at > 1:
                     print(f"==> db merge: {table} {self.tables[table]} took {time.monotonic() - at:.1f}s", file=sys.stderr)
             phase("tables merged")
+            removed = self.drop_owned(owned, B, M, T)
+            if removed:
+                phase(f"{removed} copy-only row(s) of deleted records removed")
             self.restore_session_columns(locks)
         finally:
             self.sql.run(f"DROP DATABASE IF EXISTS {q(self.work)};")
@@ -1628,9 +1656,15 @@ class DbMerge:
             existing = {row[0] for row in self.sql.run(
                 f"SELECT table_name FROM information_schema.tables WHERE table_schema = {sql_str(self.names['ours'])};")}
             self.rebuild.intersection_update(existing)
+        forgotten = self.ids.forget_gone(self.names["ours"], self.names["theirs"])
+        if forgotten:
+            phase(f"{len(forgotten)} deleted record(s) left the id map")
+        keep_files = _WORDPRESS.kept_media_files(self.sql, self.names, self.prefix) if self.platform == "wordpress" else []
         return {"ok": True, "tables": {k: v for k, v in self.tables.items() if v != "same"},
                 "conflicts": self.conflicts, "rebuild": sorted(self.rebuild), "counts": self.counts,
                 "renumbered": self.ids.added, "idMap": self.ids.as_json(), "held": self.ids.held,
+                **({"idMapForgotten": forgotten} if forgotten else {}),
+                **({"keepFiles": keep_files} if keep_files else {}),
                 "skipped": self.skipped[:SKIPPED_LIMIT], **({"pushedSeeded": self.seeded} if self.pushed else {})}
 
     # ── one record under two numbers ─────────────────────────────────────────────────────────────
@@ -2012,6 +2046,96 @@ class DbMerge:
         if script:
             self.sql.run("\n".join(script))
 
+    # ── what a record the merge deleted leaves behind ────────────────────────────────────────────
+
+    def owned_rules(self) -> dict[str, list[tuple[str, str, str | None, str | None, str | None]]]:
+        """Per record table, the rows that belong to one of its records: (table, column, condition,
+        the record's column the row names — its number when None, a name template with `{id}`).
+        From `dependents`, `ownedRows` (rows of the record's own table: a WordPress post's
+        revisions) and the entities' `names` (a Joomla article's asset and versions)."""
+        out: dict[str, list] = {}
+        for parent, rules in self.policy.get("dependents", {}).items():
+            for table, column, where, holds in rules:
+                out.setdefault(parent, []).append((table, column, where, holds, None))
+        for parent, rules in self.policy.get("ownedRows", {}).items():
+            for table, column, where in rules:
+                out.setdefault(parent, []).append((table, column, where, None, None))
+        for parent, rule in self.policy.get("entities", []):
+            for table, column, template in rule.get("names", []):
+                if template.count("{id}") == 1 and "{" not in template.replace("{id}", ""):
+                    out.setdefault(parent, []).append((table, column, None, None, template))
+        return out
+
+    def owned_snapshot(self, M: Schema) -> dict[str, str]:
+        """Each record table's numbers (and the columns its rows name) in the copy before anything is
+        merged, set aside in the work schema: `{record table: set-aside table}`."""
+        aside, script = {}, []
+        for parent, rules in self.owned_rules().items():
+            full = self.prefix + parent
+            key = self.ids.key(parent)
+            have = {c for c, _ in M.columns.get(full, [])}
+            if key not in have:
+                continue
+            cols = sorted({key} | {h for _, _, _, h, _ in rules if h and h in have})
+            name = f"{q(self.work)}.{q('o_' + hashlib.sha1(full.encode()).hexdigest()[:16])}"
+            aside[parent] = name
+            script.append(f"CREATE TABLE {name} AS SELECT {', '.join(q(c) for c in cols)} FROM {self.ref('ours', full)};")
+        if script:
+            self.sql.run("\n".join(script))
+        return aside
+
+    def drop_owned(self, aside: dict[str, str], B: Schema, M: Schema, T: Schema) -> int:
+        """The copy's own rows of a record this merge deleted (a live delete it took): rows neither
+        read of the live site holds — versions and revisions Tracy's edits made, meta numbered apart
+        from the live site's. Rows the live site had go or stay with the merge as before; only these
+        were left behind, naming a record that no longer exists, and inherited by the next record
+        given its number (#307). Answers how many rows went."""
+        rules = self.owned_rules()
+        removed = 0
+        now = {r[0] for r in self.sql.run("SELECT table_name FROM information_schema.tables WHERE table_schema ="
+                                          f" {sql_str(self.names['ours'])};")}
+        for parent, snapshot in aside.items():
+            full = self.prefix + parent
+            if full not in now:
+                continue
+            key = q(self.ids.key(parent))
+            gone = f"{snapshot[:-1]}_g`"
+            self.sql.run(f"CREATE TABLE {gone} AS SELECT s.* FROM {snapshot} s WHERE NOT EXISTS"
+                         f" (SELECT 1 FROM {self.ref('ours', full)} p WHERE p.{key} = s.{key});")
+            if not self.sql.run(f"SELECT 1 FROM {gone} LIMIT 1;"):
+                continue
+            have = {c for c, _ in M.columns.get(full, [])}
+            for table, column, where, holds, template in rules.get(parent, []):
+                child = self.prefix + table
+                if child not in now or child not in M.columns or column not in {c for c, _ in M.columns[child]}:
+                    continue
+                if holds and holds not in have:
+                    continue
+                pk = M.primary.get(child) or self.policy.get("naturalKeys", {}).get(table)
+                if not pk:
+                    continue
+                if template:
+                    head, tail = template.split("{id}")
+                    named = f"CONCAT({sql_str(head)}, g.{key}, {sql_str(tail)})"
+                else:
+                    named = f"g.{q(holds) if holds else key}"
+                cond = [f"r.{q(column)} IN (SELECT {named} FROM {gone} g)"]
+                if where:
+                    cond.append(f"({self.ids.cond(self.names['ours'], where)})")
+                for side, schema in (("base", B), ("theirs", T)):
+                    if child in schema.columns:
+                        on = " AND ".join(f"x.{q(c)} <=> r.{q(c)}" for c in pk)
+                        cond.append(f"NOT EXISTS (SELECT 1 FROM {self.ref(side, child)} x WHERE {on})")
+                got = self.sql.run(f"DELETE r FROM {self.ref('ours', child)} r WHERE {' AND '.join(cond)};"
+                                   " SELECT ROW_COUNT();")
+                n = int(got[-1][0]) if got else 0
+                if n:
+                    removed += n
+                    self.mark_rebuild(child)
+        if removed:
+            self.counts["orphansRemoved"] = removed
+        return removed
+
     def merge_order(self, tables: set[str]) -> list[str]:
         """The tables in the order they are merged: the records' own tables before the tables of rows
         that belong to them (`dependents`), which read what the merge kept of their record; the rest
@@ -2065,8 +2189,15 @@ class DbMerge:
         self.rebuild.update(self.prefix + target for target in self.policy.get("rebuildDependencies", {}).get(name, ()))
 
     def take_table(self, table: str) -> None:
-        """The live site's whole table, structure included, in place of the copy's."""
+        """The live site's whole table, structure included, in place of the copy's. Its next number
+        stays where it was on either side: `CREATE TABLE … LIKE` starts it again above the rows it
+        holds, and the copy's next record took the number of one the live site deleted — read as
+        that record from then on (#307), and heir to its versions and revisions."""
         m, t = self.ref("ours", table), self.ref("theirs", table)
+        counter = self.sql.run(
+            "SELECT MAX(auto_increment) FROM information_schema.tables WHERE table_name = "
+            f"{sql_str(table)} AND table_schema IN ({sql_str(self.names['ours'])}, {sql_str(self.names['theirs'])});")
+        top = int(counter[0][0]) if counter and counter[0][0] not in (None, "", "NULL") else 0
         keys = [k for k in self.foreign_keys if k["table"] == table]
         writable = self.sql.run(f"SELECT column_name FROM information_schema.columns WHERE table_schema = {sql_str(self.names['theirs'])}"
                                 f" AND table_name = {sql_str(table)} AND extra NOT LIKE '%VIRTUAL GENERATED%'"
@@ -2080,7 +2211,9 @@ class DbMerge:
             insert = "\n".join(f"INSERT INTO {m} () VALUES " + ",".join("()" for _ in range(min(1000, count - start))) + ";"
                                for start in range(0, count, 1000))
         self.sql.run(f"DROP TABLE IF EXISTS {m}; CREATE TABLE {m} LIKE {t};" + insert
-                     + "\n".join(foreign_key_sql(rebase_foreign_key(k, self.names["theirs"], self.names["ours"])) for k in keys))
+                     + "\n".join(foreign_key_sql(rebase_foreign_key(k, self.names["theirs"], self.names["ours"])) for k in keys)
+                     # Never below the rows it holds: the server keeps the larger of the two.
+                     + (f"\nALTER TABLE {m} AUTO_INCREMENT = {top};" if top > 1 else ""))
         self.counts["tablesFromTheirs"] += 1
         self.mark_rebuild(table)
 
