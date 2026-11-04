@@ -4,7 +4,7 @@
 // account's own), and the reader checks the hash. A run on a brief file reads the copies the bench CLI put in the
 // bench's file store when the run started (file-store.js readPhoto checks the hash again). A photo whose bytes are
 // missing or changed is left out; the shortlist then says so for that photo.
-import { briefPictureBytes } from '../opportunities-build/brief-picture-labels.js'
+import { briefPictureBytes } from '../lib/brief-picture-bytes.js'
 import { UUID } from '../lib/bench-sql.js'
 
 const HEX64 = /^[0-9a-f]{64}$/

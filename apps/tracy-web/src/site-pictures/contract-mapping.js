@@ -14,7 +14,7 @@
 // A drawn cut-out with a backdrop (the disc and bands its demo has behind the figure) is placed as it is, the figure
 // alone, and also listed in `painted` (kind `backdrop`) with the recipe: step 9 paints the backdrop behind the figure
 // in the brand's colours (a file of both, or the backdrop behind the slot), and its preview is only for review.
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/content-map-key.js'
 import { readPictures } from './manifest-shape.js'
 import { paintKindOf } from './paint.js'
 

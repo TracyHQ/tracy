@@ -5,7 +5,7 @@
 import { readdir, readFile, stat } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
-import { blockImageFinder } from '../../site-writer/reading-page/load-run.js'
+import { blockImageFinder } from '../../lib/kit-block-images.js'
 
 async function readJson(file, required) {
   let text

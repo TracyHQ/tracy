@@ -1,6 +1,8 @@
 // The "Copy around this picture" panel of a frame card (copy-around.js). A body longer than TRIM characters is cut
 // at a word with the whole text one click away, so a card stays a card.
-import { esc } from '../../site-writer/reading-page/render.js'
+import { escapeHtml } from '../../lib/html.js'
+
+const esc = (v) => escapeHtml(v ?? '')
 
 const TRIM = 300
 

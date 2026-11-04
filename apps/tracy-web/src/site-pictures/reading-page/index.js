@@ -4,7 +4,7 @@
 // the page.
 import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { readCopy } from '../../site-writer/copy-check/copy-view.js'
+import { readCopy } from '../../lib/site-copy-view.js'
 import { copyAround } from './copy-around.js'
 import { loadRunFolder, pictureFinders } from './load-run.js'
 import { buildModel } from './model.js'

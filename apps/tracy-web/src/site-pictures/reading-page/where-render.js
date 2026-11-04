@@ -1,7 +1,9 @@
 // The "where on the template" strip of a frame card (#341): the template shot cropped around the frame with its box
 // outlined, beside the same crop with the finished picture in the box. The crop links to the full shot, which the
 // page script opens with the box marked. A frame the kit cannot place says so instead of showing a box.
-import { esc } from '../../site-writer/reading-page/render.js'
+import { escapeHtml } from '../../lib/html.js'
+
+const esc = (v) => escapeHtml(v ?? '')
 
 const SHOWN_OTHERS = 6
 

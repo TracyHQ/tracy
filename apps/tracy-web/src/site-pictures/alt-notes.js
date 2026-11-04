@@ -6,7 +6,7 @@
 // trimmed), and the alt "agrees" when at least one of its content words is in the seen sentence and at least a third of
 // them are. Anything else "differs": the note asks the writer to read the picture again. The note lists the shared
 // words, so a reader sees why. Frames with no alt, or no seen sentence, get no note.
-import { COPY_VERSION } from '../site-writer/copy-check/copy-view.js'
+import { COPY_VERSION } from '../lib/site-copy-view.js'
 
 const STOP = new Set(
   (

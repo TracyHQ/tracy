@@ -5,7 +5,7 @@
 // failures: [{ where, detail, cause }], notes }] }. `files` maps a file path to { sha256, width, height } (an object,
 // a Map or a function); `icons` lists the icon library's names and is optional. Inputs are never modified, a
 // malformed manifest is reported under P01 and never throws, and the same input gives the same result.
-import { failureListText } from '../../site-writer/copy-check/check-copy.js'
+import { failureListText } from '../../lib/failure-list-text.js'
 import { readPictures } from '../manifest-shape.js'
 import { indexInputs } from './inputs-index.js'
 import { createRuleSet, finishRules } from './rule-set.js'

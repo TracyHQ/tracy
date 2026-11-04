@@ -5,7 +5,7 @@
 // object, null (the template paints none) or "unknown" (the frame's picture element could not be read). Without a
 // quickstart every overlay is "unknown"; the text over a picture is known from the kit alone. `behindTitle`: the
 // template also paints this article picture dimmed behind the page title (behind-title.js), shown on the reading page.
-import { contentMapKey } from '../../site-writer/contract-mapping.js'
+import { contentMapKey } from '../../lib/content-map-key.js'
 import { acmFieldOf, acmLayoutOf, pictureElementIn } from './acm-markup.js'
 import { behindTitleFrames } from './behind-title.js'
 import { overlayOver, rulesOf } from './css-overlays.js'

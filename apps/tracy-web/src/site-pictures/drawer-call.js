@@ -12,7 +12,7 @@
 // twice by this module (one drawing is one paid call). Its cost is the provider's figure, else its tokens at the model's
 // price (brand-step/brand-prices.js), else null.
 import { costOf } from '../lib/agent-over-door-wire.js'
-import { costOfCall, priceFor } from '../brand-step/brand-prices.js'
+import { costOfCall, priceFor } from '../lib/brand-prices.js'
 
 export const DRAW_MODES = Object.freeze(['scene', 'object', 'outpaint', 'cutout'])
 /** How long one drawing may take: the model answers in 10 to 25 s. */

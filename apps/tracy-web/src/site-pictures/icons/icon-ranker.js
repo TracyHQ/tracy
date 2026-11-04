@@ -6,7 +6,7 @@
 // The door is a port: an async function `({ system, user, signal }) => { text, model?, usage? }`. Tests pass a fake;
 // `seederTextDoor` builds the real one from a provider credential and the seeder's `chat` (the call the other text
 // steps make). The credential comes from the provider book, never from this file.
-import { jsonObjectIn } from '../../sites/brief-engines/shared.js'
+import { jsonObjectIn } from '../../lib/json-object-in.js'
 import { validRanking } from './icon-shortlist.js'
 
 /**

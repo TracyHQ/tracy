@@ -10,7 +10,7 @@ import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { readableKits } from '../lib/template-kit-source.js'
-import { planShapeProblems } from '../site-writer/bench-control.js'
+import { planShapeProblems } from '../lib/plan-shape.js'
 import {
   activeRun,
   createRun,

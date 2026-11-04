@@ -1,6 +1,6 @@
 // Indexes the plan, the kit and the brief for the picture check rules (ADR 0043). Reads tolerantly: a missing or
 // oddly shaped part yields an empty index and never throws. Nothing here modifies an input.
-import { contentMapKey } from '../../site-writer/contract-mapping.js'
+import { contentMapKey } from '../../lib/content-map-key.js'
 import { galleryIndex } from '../gallery-tiles.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])

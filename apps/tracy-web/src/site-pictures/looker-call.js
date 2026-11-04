@@ -17,9 +17,9 @@
 // or a call that fails, is a look with no verdict and its reason; the caller asks once more, then records the fault
 // "look unreadable" (looker-step.js). It never stops the run.
 import sharp from 'sharp'
-import { costOfCall, priceFor } from '../brand-step/brand-prices.js'
+import { costOfCall, priceFor } from '../lib/brand-prices.js'
 import { costOf } from '../lib/agent-over-door-wire.js'
-import { jsonObjectIn } from '../sites/brief-engines/shared.js'
+import { jsonObjectIn } from '../lib/json-object-in.js'
 import { overlayCovers } from './frame-surface/surface.js'
 
 /** The faults the looker may name on any picture, exactly as written. */

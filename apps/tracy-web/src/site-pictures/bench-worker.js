@@ -28,7 +28,7 @@
 
 import sharp from 'sharp'
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
-import { kitIdOf } from '../site-writer/bench-worker.js'
+import { kitIdOf } from '../lib/kit-id.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
 import { demoPictureReader } from './demo-pictures.js'
 import { picturePickerDoor } from './door.js'

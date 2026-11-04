@@ -1,5 +1,5 @@
 // The picture reading page's stylesheet: the copy reading page's tokens and base (light and dark), plus the frame cards.
-import { CSS as BASE, ZOOM_JS } from '../../site-writer/reading-page/styles.js'
+import { CSS as BASE, ZOOM_JS } from '../../lib/reading-page-styles.js'
 
 export { ZOOM_JS }
 

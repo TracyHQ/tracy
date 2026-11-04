@@ -1,10 +1,12 @@
 // Renders the picture reading page's model (model.js) as one HTML string: a script only for the click-to-enlarge.
 // Every value from a plan, a manifest or a brief goes through esc(). Pictures arrive as { src, width, height } (src a
 // path relative to the page) or null when the file is not there, which the page shows as missing and never hides.
-import { esc } from '../../site-writer/reading-page/render.js'
+import { escapeHtml } from '../../lib/html.js'
 import { aroundHtml } from './around-render.js'
 import { CSS, WHERE_JS, ZOOM_JS } from './styles.js'
 import { surfaceHtml, whereHtml } from './where-render.js'
+
+const esc = (v) => escapeHtml(v ?? '')
 
 const slug = (id) => `g-${String(id).replace(/[^a-zA-Z0-9]+/g, '-')}`
 const money = (n) => (typeof n === 'number' ? `$${n.toFixed(4)}` : 'not recorded')
