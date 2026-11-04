@@ -55,7 +55,7 @@ function settleShared(orders, values) {
       continue
     }
     for (const key of keys) values.set(key, round[0].url)
-    for (const order of round) Object.assign(order, { via: 'slot', keys: [keys[0]] })
+    for (const order of round) Object.assign(order, { via: 'slot', keys: [keys[0]], alsoKeys: keys.slice(1) })
   }
 }
 

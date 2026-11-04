@@ -40,7 +40,7 @@ export function readLastReport(report) {
   // A line with its own read went through another door; a slot in a contract call is read on its key.
   for (const entry of taken.values())
     if (typeof entry.key === 'string' && entry.status === 'written' && !entry.readFrom && standing(entry))
-      keys.set(entry.key, entry.ordered)
+      for (const key of [entry.key, ...(entry.alsoKeys ?? [])]) keys.set(key, entry.ordered)
   return {
     active: true,
     report,

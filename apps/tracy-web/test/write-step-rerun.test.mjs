@@ -5,6 +5,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { hideDoor, hideKit } from './_write-step-hide.mjs'
 import { keptSite, menuRow, runInTurn } from './_write-step-rewrite.mjs'
+import { contentMapKey } from '../src/site-writer/contract-mapping.js'
 import { copy, fakeSite, plan } from './_write-step-run.mjs'
 
 const lineOf = (report, slot) => report.slots.find((s) => s.slot === slot)
@@ -24,6 +25,15 @@ function assertNothingChanged({ kept, second }) {
   assert.equal(second.counts.written, 0)
   assert.equal(second.counts.hidden, 0)
 }
+
+const siteSlotsOf = (kit) =>
+  kit.doc.blocks
+    .flatMap((b) => [
+      ...(b.slots ?? []),
+      ...(b.lists ?? []).flatMap((l) => l.rows?.flatMap((r) => r.slots) ?? [])
+    ])
+    .map((s) => ({ key: contentMapKey(s.id), canHide: 'unmeasured' }))
+    .concat({ key: 'module-6.2', canHide: 'unmeasured' })
 
 const withLink = (kit, link) => {
   kit.doc.blocks.find((b) => b.id === 'block-2').links = [link]
@@ -179,4 +189,63 @@ test('two doorless links for one stored address cannot say which one left: both 
   const { first } = await twice({ kit, contentMap, site, steps: [{ plan: p }] })
   assert.equal(lineOf(first, 'block-2.link-2').status, 'failed')
   assert.equal(lineOf(first, 'block-2.link-3').status, 'failed')
+})
+
+test('links sharing one address leave no key to send again: every address they wrote is remembered', async () => {
+  const kit = hideKit()
+  kit.doc.pages[1].path = '/about-us'
+  kit.doc.blocks.find((b) => b.id === 'block-2').links = [
+    { id: 'block-2.link-1', target: '/about-us', action: 'navigation' },
+    { id: 'block-2.link-2', target: '/about-us', action: 'navigation' }
+  ]
+  const p = plan()
+  p.pages[0].blocks[0].links = [
+    { link: 'block-2.link-1', leadsTo: 'page-home', labelSlot: null },
+    { link: 'block-2.link-2', leadsTo: 'page-home', labelSlot: null }
+  ]
+  const address = (key) => ({
+    key,
+    entity: 'module-2',
+    type: 'url',
+    sample: 'index.php?Itemid=102',
+    current: 'index.php?Itemid=102'
+  })
+  const site = { slots: [address('module-2.40'), address('module-2.41'), ...siteSlotsOf(kit)] }
+  const run = await twice({ kit, site, steps: [{ plan: p }, { plan: p }] })
+  assert.equal(lineOf(run.first, 'block-2.link-1').status, 'written')
+  assert.equal(run.fake.held['module-2.41'], 'index.php?Itemid=101', 'the first run moved both')
+  assertNothingChanged(run)
+})
+
+test('a real change of a shared address is still sent, to every key of it', async () => {
+  const kit = hideKit()
+  kit.doc.pages[1].path = '/about-us'
+  kit.doc.blocks.find((b) => b.id === 'block-2').links = [
+    { id: 'block-2.link-1', target: '/about-us', action: 'navigation' },
+    { id: 'block-2.link-2', target: '/about-us', action: 'navigation' }
+  ]
+  const leading = (page) => {
+    const p = plan()
+    p.pages[0].blocks[0].links = ['block-2.link-1', 'block-2.link-2'].map((link) => ({
+      link,
+      leadsTo: page,
+      labelSlot: null
+    }))
+    return p
+  }
+  const address = (key) => ({
+    key,
+    entity: 'module-2',
+    type: 'url',
+    sample: 'index.php?Itemid=102',
+    current: 'index.php?Itemid=102'
+  })
+  const site = { slots: [address('module-2.40'), address('module-2.41'), ...siteSlotsOf(kit)] }
+  const run = await twice({
+    kit,
+    site,
+    steps: [{ plan: leading('page-home') }, { plan: leading('page-about') }]
+  })
+  const [apply] = run.kept.writes().filter((c) => c.params.operation === 'apply')
+  assert.deepEqual(Object.keys(apply.params.changes).sort(), ['module-2.40', 'module-2.41'])
 })

@@ -84,9 +84,16 @@ export function lineResult(order, done) {
     const [key] = order.keys
     if (refused.has(key))
       return failed(refusalWords(refused.get(key)), { key, refusal: refused.get(key), ordered: order.url })
-    return written.has(key)
-      ? { status: 'written', reason: null, key, ordered: order.url }
-      : { status: 'skipped', reason: ENDED, key }
+    if (!written.has(key)) return { status: 'skipped', reason: ENDED, key }
+    // The other keys of a shared address go in the same call: the next run needs to know they hold it too.
+    const alsoKeys = (order.alsoKeys ?? []).filter((other) => written.has(other))
+    return {
+      status: 'written',
+      reason: null,
+      key,
+      ordered: order.url,
+      ...(alsoKeys.length ? { alsoKeys } : {})
+    }
   }
   if (order.via === 'label') return labelResult(order, hides)
   if (order.via === 'control') return controlResult(order, hides)
