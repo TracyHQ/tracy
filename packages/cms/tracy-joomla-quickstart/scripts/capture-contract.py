@@ -366,6 +366,28 @@ def declare_everything(kind,row,add):
   except ValueError:params={}
   v=params.get('hint') if isinstance(params,dict) else None
   if isinstance(v,str) and v.strip():add('params','text',v,jsonPath=['hint'],label=title+' / hint',customize='keep')
+# One page masthead per `menuitem_config` entry of mod_jamasthead: `item_id`, `title`, `description` and `background`
+# are objects keyed by the entry number. The background is the page's banner picture (a video file stays as it is),
+# grouped per page; the title and description are the words printed over it.
+MASTHEAD_VIDEO=re.compile(r'\.(mp4|ogg|webm)$',re.I)
+def declare_masthead(row,add):
+ try:params=json.loads(row.get('params') or '{}')
+ except ValueError:return
+ cfg=params.get('menuitem_config') if isinstance(params,dict) else None
+ if not isinstance(cfg,dict):return
+ def column(name):
+  v=cfg.get(name)
+  return v if isinstance(v,dict) else dict(enumerate(v)) if isinstance(v,list) else {}
+ items,titles,descriptions,backgrounds=(column(n) for n in ('item_id','title','description','background'))
+ for k in sorted({*titles,*descriptions,*backgrounds},key=lambda x:(not str(x).isdigit(),int(x) if str(x).isdigit() else 0,str(x))):
+  ids=items.get(k);ids=[str(i) for i in ids] if isinstance(ids,list) else [str(ids)] if ids not in (None,'') else []
+  page=f'{row["title"]} / menu item {",".join(ids) or k}'
+  bg=backgrounds.get(k)
+  if isinstance(bg,str) and bg.strip() and not MASTHEAD_VIDEO.search(bg.split('#')[0]):
+   add('params','image',bg,jsonPath=['menuitem_config','background',k],label=page+' / background',role='business.hero_image',group={'id':f'module-{row["id"]}.masthead-{k}','item':0,'kind':'business'})
+  for name,role in (('title','editorial.heading'),('description','editorial.paragraph')):
+   v=(titles if name=='title' else descriptions).get(k)
+   if isinstance(v,str) and v.strip():add('params','text',v,jsonPath=['menuitem_config',name,k],label=page+' / '+name,role=role)
 # A T3 style param naming a logo picture (the kit's `joomla-t3.mjs` T3_LOGO_KEY reads the same names).
 T3_LOGO_KEY=re.compile(r'logo[a-z]*image(?:_[a-z]+)?')
 volatile={'id','asset_id','checked_out','checked_out_time','created','created_by','created_by_alias','modified','modified_by','hits','version','lft','rgt'}
@@ -463,6 +485,10 @@ for kind,table in tables.items():
     add('params','image',sample,jsonPath=[k],label=f'{k} (template style {row["title"]})',customize='keep',requiresEvidence=False,role='business.logo',group={'id':'site-logo.business','item':0,'kind':'business'})
   # Row icons (--repeat-icons) come after every other slot of the entity, so no key an older rule made moves.
   for node,path,name in icons:add('params','text',node,jsonPath=path,nestedJson='jatools-config',label=row['title']+' / '+name+' '+str(path[-1]+1),customize='keep')
+  # The JA masthead (--full-coverage): mod_jamasthead shows, per menu item, the background, title and description of
+  # its `menuitem_config` entry (helper.php matches `item_id` to the active item), else default-title/description.
+  # They come last, so no key an older rule made moves.
+  if a.full_coverage and kind=='module' and row.get('module')=='mod_jamasthead':declare_masthead(row,add)
 # Authors (--full-coverage): a visitor reads each post's author name, and on the author pages the picture, bio and job
 # title. A `user` entity per author of a captured article (identity: username; only name and username are kept, never
 # the account), and a `userProfile` entity per profile value the plugin lists (\UserProfileKey: user_id x 100 + the
