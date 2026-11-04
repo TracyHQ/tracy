@@ -93,6 +93,25 @@ test('a link whose words the plan hides takes the placeholder address its entity
   assert.match(claims[0].why, /address left|words of the link/)
 })
 
+test('a placeholder address the kit knows is a slot of the plan’s, and stays out of this', () => {
+  const claims = storedDemoClaims({
+    plan: planWith({
+      links: [{ link: 'body-rowing.link-1', leadsTo: 'page-home', labelSlot: 'languageString-5.0' }],
+      hiddenSlots: [{ slot: 'languageString-5.0', why: 'no words' }]
+    }),
+    kit: {
+      ...kit,
+      blocks: [
+        { ...kit.blocks[0], source: { entity: 'module-4' }, slots: [{ id: 'block-4.2', type: 'url' }] }
+      ]
+    },
+    contentMap: { slots: [{ key: 'module-4.2', entity: 'module-4', type: 'text', sample: '#' }] },
+    filled: new Set(['article-8.7', 'article-9.7']),
+    file: 'kit.json'
+  })
+  assert.deepEqual(claims, [])
+})
+
 test('with the words kept, a placeholder address stays', () => {
   const claims = storedDemoClaims({
     plan: planWith({

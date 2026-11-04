@@ -6,7 +6,10 @@
 // is emptied, and the words a file owns stand.
 //
 // A link's address can live apart from its words. When the plan hides the words, a placeholder address (`#`) kept on the same
-// entity still draws a button with nothing in it, so it goes too.
+// entity still draws a button with nothing in it, so it goes too. One the kit knows is a slot the plan speaks for, so only an
+// address outside the kit counts.
+import { kitSlotIds } from './kit-slot-ids.js'
+
 const each = (value) => (Array.isArray(value) ? value : [])
 
 const keptDecisions = (plan) =>
@@ -31,6 +34,7 @@ function unprintedSlots(kit) {
 /** The placeholder addresses on the entities of the blocks where a link's words are hidden. */
 function leftAddresses({ plan, kit, contentMap }) {
   const blocks = new Map(each(kit?.blocks).map((b) => [b?.id, b]))
+  const known = kitSlotIds(kit)
   const out = new Set()
   for (const decision of keptDecisions(plan)) {
     const hidden = new Set(each(decision.hiddenSlots).map((h) => h?.slot))
@@ -38,7 +42,12 @@ function leftAddresses({ plan, kit, contentMap }) {
     const entity = blocks.get(decision.block)?.source?.entity
     if (!entity) continue
     for (const slot of each(contentMap?.slots))
-      if (slot?.entity === entity && String(slot.sample ?? '').trim() === '#') out.add(slot.key)
+      if (
+        slot?.entity === entity &&
+        String(slot.sample ?? '').trim() === '#' &&
+        !known.has(String(slot.key).replace(/^module-/, 'block-'))
+      )
+        out.add(slot.key)
   }
   return out
 }

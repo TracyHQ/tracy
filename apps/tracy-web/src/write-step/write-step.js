@@ -24,6 +24,7 @@ import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { routeChanges } from './kit-slot-routes.js'
+import { closeForms } from './form-close.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { kitSlotIds } from './kit-slot-ids.js'
 import { prepareLinks } from './link-stage.js'
@@ -424,7 +425,7 @@ export async function runWriteStep(input) {
     isCancelled,
     last
   })
-  shareLines = shared.lines
+  shareLines = [...shared.lines, ...(await closeForms({ door, siteKey, plan, kit: kit.doc }))]
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
   return finish('done', null, written, wrote.refused)
