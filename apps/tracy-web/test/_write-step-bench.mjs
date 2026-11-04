@@ -1,5 +1,8 @@
 // Fixtures for the write step bench's site creator: a fake site door that records every call, and an in-memory run
 // store with the same interface as the Postgres one. Every name here is made up.
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 
 /** A kit as the creator reads it: the quickstart tag to create and the contract the new site must answer. */
 export const SPEC = Object.freeze({ quickstart: 'demo-gym/j6', contract: 'demo-gym/j6/1.2.3' })
@@ -63,8 +66,11 @@ export function memoryStore(seed = []) {
     async others(id) {
       return rows.filter((r) => r.id !== id && r.status !== 'removed').map((r) => ({ ...r }))
     },
-    async list() {
-      return rows.map((r) => ({ ...r }))
+    async list({ limit = 20 } = {}) {
+      return rows
+        .map((r) => ({ ...r }))
+        .reverse()
+        .slice(0, limit)
     }
   }
 }
@@ -73,4 +79,26 @@ export function memoryStore(seed = []) {
 export function fakeClock(start = 1_000_000) {
   let t = start
   return { now: () => t, sleep: async (ms) => void (t += ms), advance: (ms) => void (t += ms) }
+}
+
+/**
+ * A contract index holding a made-up kit in a temporary folder, as the shipped kits are read. `done()` removes it.
+ * @param {{ release?: string, contract?: string }} [over]
+ */
+export function kitIndex({ release = 'demo-gym/j6', contract = SPEC.contract } = {}) {
+  const dir = mkdtempSync(path.join(tmpdir(), 'write-step-kit-'))
+  const version = contract.split('/').at(-1)
+  writeFileSync(
+    path.join(dir, 'template-kit.json'),
+    JSON.stringify({
+      kit: 'tracy-template-kit/2',
+      contract,
+      quickstart: { version },
+      images: [{ id: 'block-1-1440', path: 'images/block-1-1440.jpg', sha256: 'e'.repeat(64) }]
+    })
+  )
+  return {
+    index: new Map([[`${release}@${version}`, { id: contract, dir, platform: 'joomla' }]]),
+    done: () => rmSync(dir, { recursive: true, force: true })
+  }
 }
