@@ -44,13 +44,39 @@ export function fakeSite(script = {}) {
       pages: [],
       slots: script.slots ?? siteSlots(KIT().doc, ['module-6.2', ...(script.extraKeys ?? [])])
     }
+  // Records behind content.list / content.get / content.update, by kind and id: `script.records` seeds them and
+  // `script.refuseUpdate(kind, id, fields)` may return an answer that refuses one write.
+  const records = new Map((script.records ?? []).map((r) => [`${r.kind}-${r.id}`, { ...r }]))
+  const recordDoor = (call) => {
+    const { kind, id } = call.params
+    if (call.action === 'content.list')
+      return {
+        ok: true,
+        items: [...records.values()].filter((r) => r.kind === kind).map((r) => ({ ...r, kind: undefined }))
+      }
+    if (call.action === 'content.get') {
+      const row = records.get(`${kind}-${id}`)
+      return row ? { ok: true, item: row } : { ok: false, error: 'not_found', message: `no ${kind} ${id}` }
+    }
+    if (call.action === 'content.update') {
+      const refused = script.refuseUpdate?.(kind, id, call.params.fields)
+      if (refused) return refused
+      const row = records.get(`${kind}-${id}`) ?? { kind, id }
+      records.set(`${kind}-${id}`, { ...row, ...call.params.fields })
+      return { ok: true }
+    }
+    return { ok: false, error: 'unexpected_action' }
+  }
   return {
     calls,
     held,
+    records,
+    updates: () => calls.filter((c) => c.action === 'content.update'),
     applies: () => calls.filter((c) => c.params.operation === 'apply'),
     door: {
       async apply(call) {
         calls.push(call)
+        if (call.action.startsWith('content.') && call.action !== 'content.contract') return recordDoor(call)
         if (call.action !== 'content.contract') return { ok: false, error: 'unexpected_action' }
         if (call.params.operation === 'inspect') return state()
         const next = answers.shift()

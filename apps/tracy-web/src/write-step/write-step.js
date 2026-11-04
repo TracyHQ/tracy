@@ -17,6 +17,7 @@ import { writeContract } from './contract-write.js'
 import { readFrozenFiles } from './input-files.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { kitSlotIds } from './kit-slot-ids.js'
+import { runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
 
@@ -65,6 +66,7 @@ function siteProblem({ reading, contract, changes }) {
  * @param {{ door: { apply: Function }, siteKey: string, kit: { ref: string, doc: object }, contentMap?: object | null,
  *   files: { plan: string, copy: string, brief?: string, brand?: string },
  *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
+ *   place?: { latitude: unknown, longitude: unknown } | null,
  *   onPhase?: (phase: string) => Promise<void>, now?: () => number, sleep?: (ms: number) => Promise<void> }} input
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
@@ -97,6 +99,8 @@ export async function runWriteStep(input) {
   let routes = { routed: new Map(), deferred: new Map() }
   let ordered = {}
   let brand = { active: false, lines: () => [] }
+  let sent = {}
+  let settled = new Map()
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -109,6 +113,7 @@ export async function runWriteStep(input) {
         refused,
         ordered,
         brandLines: brand.lines({ written, refused }),
+        settled,
         ...routes
       })
       report.counts = countsOf(report.slots)
@@ -186,6 +191,7 @@ export async function runWriteStep(input) {
     const { changes, ...found } = routeChanges(exported.mapping.changes, kit.doc, view.slots)
     routes = found
     ordered = changes
+    sent = exported.mapping.changes
     return {
       mapping: {
         ...exported.mapping,
@@ -237,5 +243,11 @@ export async function runWriteStep(input) {
   report.rounds = wrote.rounds
   if (wrote.cancelled) return finish('cancelled', null, [], wrote.refused)
   if (wrote.stop) return finish('stopped', wrote.stop, [], wrote.refused)
+  // Last: the page settings, which the contract door does not take (page-settings-stage.js).
+  const settings = await timed('settings', () =>
+    runPageSettings({ door, siteKey, kit: kit.doc, sent, extras, place: input.place ?? null, isCancelled })
+  )
+  settled = settings.results
+  if (settings.cancelled) return finish('cancelled', null, wrote.written, wrote.refused)
   return finish('done', null, wrote.written, wrote.refused)
 }

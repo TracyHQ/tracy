@@ -15,19 +15,21 @@ export const CHECK_VERSION = 'site-check/1'
 export const SITE_CHECK_GROUPS = [readBackGroup]
 
 const READ_OPERATIONS = new Set(['inspect', 'read'])
+/** Actions that only read by what they are (the plugin marks `content.get` as writing nothing) and take no operation. */
+const READ_ACTIONS = new Set(['content.get'])
 
 /** The only way a group reaches the site. */
 function readsOnly(door, siteKey) {
   const answers = new Map()
   return async (action, params = {}) => {
-    if (!READ_OPERATIONS.has(params.operation))
+    if (!READ_OPERATIONS.has(params.operation) && !READ_ACTIONS.has(action))
       throw new GroupUnmeasured(`The site check only reads; ${action} ${params.operation} was not sent.`)
     const id = JSON.stringify([action, params])
     if (!answers.has(id)) answers.set(id, door.apply({ siteKey, action, params }))
     const answer = await answers.get(id)
     if (!answer?.ok)
       throw new GroupUnmeasured(
-        `${action} ${params.operation} was refused: ${answer?.message ?? answer?.error ?? answer?.code ?? 'no answer'}`
+        `${action} ${params.operation ?? ''} was refused: ${answer?.message ?? answer?.error ?? answer?.code ?? 'no answer'}`
       )
     return answer
   }

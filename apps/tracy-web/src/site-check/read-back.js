@@ -24,7 +24,16 @@ function pageIndex(pages) {
   return routes
 }
 
-const valueAt = (answer, path) => path.reduce((value, step) => value?.[step], answer)
+// A step into a string reads it as JSON first: a menu item keeps its settings in one JSON column (`params`).
+const asObject = (value) => {
+  if (typeof value !== 'string') return value
+  try {
+    return JSON.parse(value)
+  } catch {
+    return undefined
+  }
+}
+const valueAt = (answer, path) => path.reduce((value, step) => asObject(value)?.[step], answer)
 const readName = ({ action, params }) => `${action} ${params?.operation ?? ''}`.trim()
 
 function tally() {
@@ -120,7 +129,13 @@ async function run({ report, read }) {
       const answer = await read(line.readFrom.action, line.readFrom.params)
       const value = valueAt(answer, line.readFrom.path ?? [])
       const about = `${readName(line.readFrom)} at ${(line.readFrom.path ?? []).join('.')}`
-      return { found: true, page: null, value: value ?? null, why: about, slot: { type: line.readFrom.type } }
+      return {
+        found: true,
+        page: null,
+        value: typeof value === 'number' ? String(value) : (value ?? null),
+        why: about,
+        slot: { type: line.readFrom.type }
+      }
     }
     reads.add(INSPECT)
     const slot = slots.get(line.key)

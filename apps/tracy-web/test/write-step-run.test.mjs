@@ -57,15 +57,18 @@ test('the plan owns hide decisions and link targets: reported as skipped until t
   assert.equal(report.status, 'done')
 })
 
-test('extras are reported as skipped and never written', async () => {
+test('extras with no path on this site are reported as skipped and never written', async () => {
   const { report, site } = await run()
   const parts = (part) => report.slots.filter((s) => s.part === part)
   assert.deepEqual(
     parts('alt').map((s) => [s.slot, s.status, s.owner]),
     [['block-2.f1', 'skipped', 'writer']]
   )
-  assert.equal(parts('page-meta').length, 3)
+  assert.equal(parts('page-title').length, 3)
+  assert.equal(parts('page-description').length, 3)
   assert.equal(parts('page-body').length, 2)
+  assert.ok(report.slots.filter((s) => s.part).every((s) => s.status === 'skipped' && s.reason))
+  assert.equal(site.updates().length, 0, 'the kit names no page, so nothing is put on a page')
   assert.equal(site.applies().length, 1)
   assert.equal(Object.keys(site.applies()[0].params.changes).length, 9)
 })
