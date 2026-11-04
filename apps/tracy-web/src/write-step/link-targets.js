@@ -66,7 +66,8 @@ function factAddress(channel, fact) {
 
 /**
  * @param {string} leadsTo
- * @param {{ plan: object, kit: object, facts: Map<string, object>, rows: object[], articles: Map<number, object> }} site
+ * @param {{ plan: object, kit: object, facts: Map<string, object>, rows: object[], articles: Map<number, object>,
+ *   createdPages?: Map<string, { url?: string, reason?: string }> }} site
  * @returns {{ kind: string, url?: string, page?: object, row?: number, alive?: object, reason?: string }} `kind` is "failed"
  *   with `reason` when there is no address; `alive` is how to read that a page is still there
  */
@@ -84,10 +85,13 @@ export function linkTarget(leadsTo, site) {
   if (target.startsWith('legal:')) {
     const legal = each(plan?.site?.legalPages).find((l) => l?.id === target || `legal:${l?.kind}` === target)
     if (!legal) return failed(`${target} is not a legal page of the plan`)
-    if (legal.use === 'create')
+    if (legal.use === 'create') {
+      const made = site.createdPages?.get(legal.id ?? `legal:${legal.kind}`)
+      if (made?.url) return { kind: 'created', url: made.url }
       return failed(
-        `the plan creates ${target}, and no door creates a page yet, so this link has nowhere to go`
+        `the plan creates ${target}, and it was not created (${made?.reason ?? 'the run did not reach it'}), so this link has nowhere to go`
       )
+    }
     return linkTarget(legal.use, site)
   }
   if (ADDRESS.test(target)) return { kind: 'address', url: target }

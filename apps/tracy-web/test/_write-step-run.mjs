@@ -6,10 +6,17 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { contentMapKey } from '../src/site-writer/contract-mapping.js'
 import { runWriteStep } from '../src/write-step/write-step.js'
-import { copy as baseCopy, kit as baseKit, plan as basePlan } from './_site-copy-check.mjs'
+import { copy as baseCopy, kit as baseKit, plan as checkedPlan } from './_site-copy-check.mjs'
 
 export const CONTRACT = 'demo-gym/j6/1.0.0'
 export const SITE = 'write-bench-abc.sites.example'
+
+/** The invented plan, with its privacy page on a kit page: only the tests of a created page ask for one (`_write-step-pages.mjs`). */
+function basePlan() {
+  const plan = checkedPlan()
+  plan.site.legalPages = plan.site.legalPages.map((page) => ({ ...page, use: 'page-about' }))
+  return plan
+}
 
 export const KIT = () => ({ ref: CONTRACT, doc: { ...baseKit(), contract: CONTRACT } })
 
@@ -54,13 +61,41 @@ export function fakeSite(script = {}) {
   // Records behind content.list / content.get / content.update, by kind and id: `script.records` seeds them and
   // `script.refuseUpdate(kind, id, fields)` may return an answer that refuses one write.
   const records = new Map((script.records ?? []).map((r) => [`${r.kind}-${r.id}`, { ...r }]))
+  // `content.batch` as the plugin answers it: the same request again answers the same rows, and `script.refuseBatch(kind, fields)`
+  // may return a refusal. A list of articles names no note unless the rows are asked for whole.
+  const replays = new Map()
+  let nextId = 500
+  const batchDoor = ({ apply_id: applyId, request_id: requestId, operations }) => {
+    if (!applyId || !requestId)
+      return { ok: false, error: 'bad_params', message: 'apply_id, request_id required' }
+    const name = `${applyId} ${requestId}`
+    if (replays.has(name)) return replays.get(name)
+    const ids = {}
+    for (const { kind, id, key, fields } of operations) {
+      const refused = script.refuseBatch?.(kind, fields)
+      if (refused) return refused
+      const made = id || nextId++
+      records.set(`${kind}-${made}`, { kind, id: made, ...fields })
+      ids[key] = made
+    }
+    const answer = { ok: true, ids }
+    replays.set(name, answer)
+    return answer
+  }
   const recordDoor = (call) => {
     const { kind, id } = call.params
+    if (call.action === 'content.batch') return batchDoor(call.params)
     if (call.action === 'content.list')
       return (
         script.overList ?? {
           ok: true,
-          items: [...records.values()].filter((r) => r.kind === kind).map((r) => ({ ...r, kind: undefined }))
+          items: [...records.values()]
+            .filter((r) => r.kind === kind)
+            .map((r) => {
+              const row = { ...r, kind: undefined }
+              if (kind === 'article' && !call.params.include_body) delete row.note
+              return row
+            })
         }
       )
     if (call.action === 'content.get') {
@@ -87,7 +122,8 @@ export function fakeSite(script = {}) {
     door: {
       async apply(call) {
         calls.push(call)
-        if (call.action === 'info') return script.info ?? { ok: true, info: { hide_ops: { version: 1 } } }
+        if (call.action === 'info')
+          return script.info ?? { ok: true, info: { hide_ops: { version: 1 }, page_create: { version: 1 } } }
         if (call.action.startsWith('content.') && call.action !== 'content.contract') return recordDoor(call)
         const hideAnswer = script.hideDoor?.(call, { state, records, revision })
         if (hideAnswer) return hideAnswer
