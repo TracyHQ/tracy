@@ -22,6 +22,7 @@ import { kitSlotIds } from './kit-slot-ids.js'
 import { runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { preparePictureStage } from './picture-stage.js'
+import { runShareStage } from './share-stage.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
 
 /** What one contract call takes (the seeder's and the plugin's own limits); more is refused whole, so it is said first. */
@@ -107,6 +108,7 @@ export async function runWriteStep(input) {
   let pictures = { active: false, lines: () => [] }
   let hide = null
   let emptied = []
+  let shareLines = []
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -124,6 +126,7 @@ export async function runWriteStep(input) {
         pictureLines: pictures.lines({ written, refused }),
         hides: hidden?.hides,
         frameLines: hidden?.lines,
+        shareLines,
         ...routes
       })
       report.counts = countsOf(report.slots)
@@ -309,5 +312,19 @@ export async function runWriteStep(input) {
   )
   settled = new Map([...settings.results, ...hide.held])
   if (settings.cancelled) return finish('cancelled', null, wrote.written, wrote.refused)
+  // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).
+  // It has no phase of its own: it makes a few calls, and the phase list is what callers already know.
+  const shared = await runShareStage({
+    door,
+    siteKey,
+    kit: kit.doc,
+    pageIds: (plan.pages ?? []).filter((p) => p?.decision === 'keep').map((p) => p.id),
+    menutype: hide.settingsExtras?.mainMenu?.menutype ?? null,
+    pictureLines: pictures.lines({ written: wrote.written, refused: wrote.refused }),
+    brandLines: brand.lines({ written: wrote.written, refused: wrote.refused }),
+    isCancelled
+  })
+  shareLines = shared.lines
+  if (shared.cancelled) return finish('cancelled', null, wrote.written, wrote.refused)
   return finish('done', null, wrote.written, wrote.refused)
 }
