@@ -656,7 +656,14 @@ say "==> seeding the profile from $IMAGE"
 "$SEED" "$IMAGE" "$DESK_HOME_DIR"
 # The site agent's notes store, dsh's own (host-dsh-init.sh step 2): a host initialised before it
 # existed gets it here, on its next deploy (#210). Idempotent; it only ever creates or fixes ownership.
-install -d -m 0700 -o 33 -g 33 "$SITES_ROOT/.site-notes" \
+# 🔒 THROUGH DOCKER, AS EVERY OTHER WRITE UNDER $SITES_ROOT (resync_access): this script runs in the CI
+# runner's container, which mounts /opt/tracy-fleet, /srv/tracy and /etc/tracy but not the sites. A plain
+# `install -d` made the folder in the runner's own filesystem and answered 0 (dev, 04/11/2026: no
+# /srv/tracy-sites/.site-notes on the host after the deploy, one inside tracy-runner), so no host that
+# was initialised before #210 ever kept a site note.
+docker run --rm --pull never --network none --user 0:0 --entrypoint install \
+  --mount "type=bind,source=$SITES_ROOT,target=/site" \
+  "$IMAGE" -d -m 0700 -o 33 -g 33 /site/.site-notes \
   || warn "could not make $SITES_ROOT/.site-notes dsh's — site notes are not kept on this host"
 
 # ── 4. From here on the host is changed, so from here on there is a way back ───────────────────
