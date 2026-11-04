@@ -46,3 +46,7 @@ overrides:
   "undici@>=8.0.0 <8.12.2": 8.12.2
 # vite 8.3.0 to 8.3.2: GHSA-587h-7wmj-h5pm (high) and five moderate or low ones.
   "vite@>=8.3.0 <8.3.3": 8.3.3
+# deepmerge 4.2.0 to 4.3.1 has GHSA-gcqx-w48m-w2h4 (prototype poisoning in mergeObject) and no patched
+# release; only the shadcn CLI (a dev tool for adding UI primitives) uses it, so it takes 4.1.1, the last
+# release before the affected range.
+  "deepmerge@>=4.2.0 <=4.3.1": 4.1.1
