@@ -33,7 +33,7 @@ function staged(base, result) {
 }
 
 /** A line for each claim, from what the write did. */
-function claimLine(claim, { written, refused, routed, deferred, ordered, settled, hides }) {
+function claimLine(claim, { written, refused, routed, deferred, ordered, settled, hides, links }) {
   const slotKey = contentMapKey(claim.slot)
   const key = routed.get(slotKey) ?? slotKey
   if (claim.kind === 'hide')
@@ -42,13 +42,16 @@ function claimLine(claim, { written, refused, routed, deferred, ordered, settled
       ...hides.get(claim.slot)
     }
   if (claim.kind === 'link')
-    return line(
-      claim.slot,
-      key,
-      claim.owner,
-      'skipped',
-      `the plan sends this link to ${claim.content}; link targets are not written yet`
-    )
+    return {
+      ...line(
+        claim.slot,
+        key,
+        claim.owner,
+        'skipped',
+        `the plan sends this link to ${claim.content}; the run ended before it was written`
+      ),
+      ...links.get(claim.slot)
+    }
   if (settled.has(claim.slot))
     return staged(
       line(claim.slot, key, claim.owner, 'skipped', deferred.get(key) ?? null),
@@ -93,9 +96,10 @@ function extraLines(extras, owners, settled) {
  * @param {{ owners: Map<string, object>, unowned: object[], extras: object, written: Iterable<string>,
  *   refused: Map<string, object>, routed?: Map<string, string>, deferred?: Map<string, string>,
  *   ordered?: Record<string, string>, brandLines?: object[], pictureLines?: object[], settled?: Map<string, object>,
- *   hides?: Map<string, object>, frameLines?: object[] }} input `ordered`: what the mapping sent, by content map key;
+ *   hides?: Map<string, object>, frameLines?: object[], links?: Map<string, object> }} input `ordered`: what the mapping sent, by content map key;
  *   `brandLines` and `pictureLines`: each stage's own lines, which stand for its claims; `settled`: what the page settings
- *   stage did, by line slot; `hides`: what the hide stage did to a hide claim; `frameLines`: its lines of blocks and pages
+ *   stage did, by line slot; `hides`: what the hide stage did to a hide claim; `frameLines`: its lines of blocks and pages;
+ *   `links`: what the link stage did to a link claim
  */
 export function slotLines({
   owners,
@@ -110,9 +114,10 @@ export function slotLines({
   settled = new Map(),
   pictureLines = [],
   hides = new Map(),
-  frameLines = []
+  frameLines = [],
+  links = new Map()
 }) {
-  const done = { written: new Set(written), refused, routed, deferred, ordered, settled, hides }
+  const done = { written: new Set(written), refused, routed, deferred, ordered, settled, hides, links }
   return [
     ...frameLines,
     ...brandLines,
