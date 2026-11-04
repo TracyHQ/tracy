@@ -4,7 +4,9 @@
 // (`owner-photo-extended`, #344) the real part is outlined on the picture and the message says so. A cut-out (#346) is
 // shown over grey and white checks where it is transparent, and the message says so, says whether the site's text sits
 // over or beside the picture box, and how much of the box the template's own figure and this one cover; the cut-out
-// faults are named only then.
+// faults are named only then. An `any-real` frame (spec #336) takes any real owner photo that fits it: the looker is told
+// so, is given only the plan's `avoid` and `mood` for it, and may not name "wrong subject" there; code drops that fault
+// if the model names it anyway (readLook), so a model slip never fails a gallery photo for its scene.
 //
 // The answer is held to a fixed form: a verdict, faults from the fixed list (FAULTS) and one `seen` sentence. A fault
 // name outside the model's list is dropped and noted; any fault makes the verdict "fail". An answer that cannot be read,
@@ -48,13 +50,30 @@ export const LOOK_MAX_TOKENS = 4000
 const OUTLINE = '#ff00ff'
 const CHECK = 16
 
-/** The plan's words for a frame, as the looker reads them. */
-export const lookWords = (wish) => ({
-  shows: wish?.shows ?? null,
-  mustInclude: Array.isArray(wish?.mustInclude) ? wish.mustInclude : [],
-  avoid: Array.isArray(wish?.avoid) ? wish.avoid : [],
-  mood: wish?.mood ?? null
-})
+/** The fault an `any-real` frame never fails for: it takes any real owner photo, whatever its scene. */
+export const WRONG_SUBJECT = 'wrong subject'
+/** Whether a frame's wish takes any real owner photo (spec #336). */
+export const isAnyReal = (wish) => wish?.match === 'any-real'
+
+/**
+ * The plan's words for a frame, as the looker reads them. An any-real frame gets no subject words (`shows`,
+ * `mustInclude`), only what applies to any picture in it, so the looker is not led to judge its scene.
+ */
+export const lookWords = (wish) => {
+  const avoid = Array.isArray(wish?.avoid) ? wish.avoid : []
+  const mood = wish?.mood ?? null
+  if (isAnyReal(wish)) return { match: 'any-real', avoid, mood }
+  return {
+    shows: wish?.shows ?? null,
+    mustInclude: Array.isArray(wish?.mustInclude) ? wish.mustInclude : [],
+    avoid,
+    mood
+  }
+}
+
+/** The faults the model may name for a picture. */
+export const faultsFor = ({ cutout = null, anyReal = false } = {}) =>
+  (cutout ? MODEL_FAULTS : PICTURE_FAULTS).filter((f) => !(anyReal && f === WRONG_SUBJECT))
 
 /**
  * The picture as the site shows it: resized to fit the frame's display box (never enlarged), as a PNG, with the real
@@ -108,9 +127,16 @@ function cutoutLines(cutout) {
   ]
 }
 
-/** The look's only user message. `cutout`: { textOver, figure, demoFigure } for a cut-out, else null. */
-export function lookMessage({ words, image, outlined, cutout = null }) {
-  const faults = cutout ? MODEL_FAULTS : PICTURE_FAULTS
+const ANY_REAL_LINES = [
+  'This frame accepts any real photo of the business (a gallery, background or atmosphere picture): it does not ask for a particular scene, so never fail it for what it shows. Fail it only for a fault in the list below that is visible in it.'
+]
+
+/**
+ * The look's only user message. `cutout`: { textOver, figure, demoFigure } for a cut-out, else null; `anyReal` for a
+ * frame that takes any real owner photo.
+ */
+export function lookMessage({ words, image, outlined, cutout = null, anyReal = false }) {
+  const faults = faultsFor({ cutout, anyReal })
   const text = [
     `The plan's words for this frame:`,
     JSON.stringify(words, null, 2),
@@ -122,6 +148,7 @@ export function lookMessage({ words, image, outlined, cutout = null }) {
         ]
       : []),
     ...(cutout ? cutoutLines(cutout) : []),
+    ...(anyReal ? ANY_REAL_LINES : []),
     `Faults you may name: ${faults.map((f) => `"${f}"`).join(', ')}.`,
     'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>" }'
   ].join('\n')
@@ -131,18 +158,23 @@ export function lookMessage({ words, image, outlined, cutout = null }) {
   ]
 }
 
-/** The looker's answer held to the fixed form: { verdict, faults, seen, dropped } or { problem }. */
-export function readLook(text) {
+/**
+ * The looker's answer held to the fixed form: { verdict, faults, seen, dropped } or { problem }. For an any-real frame
+ * (`anyReal`) "wrong subject" is dropped like a name outside the list, and a fail that named nothing else passes.
+ */
+export function readLook(text, { anyReal = false } = {}) {
   const answer = jsonObjectIn(text)
   if (!answer || typeof answer !== 'object') return { problem: 'the answer holds no JSON object' }
   const seen = typeof answer.seen === 'string' ? answer.seen.trim() : ''
   if (!seen) return { problem: 'the answer has no seen sentence' }
   const named = Array.isArray(answer.faults) ? answer.faults.map((f) => String(f).trim().toLowerCase()) : []
-  const faults = MODEL_FAULTS.filter((f) => named.includes(f))
-  const dropped = named.filter((f) => !MODEL_FAULTS.includes(f))
+  const allowed = anyReal ? MODEL_FAULTS.filter((f) => f !== WRONG_SUBJECT) : MODEL_FAULTS
+  const faults = allowed.filter((f) => named.includes(f))
+  const dropped = named.filter((f) => !allowed.includes(f))
   if (answer.verdict !== 'pass' && answer.verdict !== 'fail')
     return { problem: `the verdict must be "pass" or "fail", found ${JSON.stringify(answer.verdict)}` }
-  const verdict = faults.length ? 'fail' : answer.verdict
+  const slipOnly = anyReal && !faults.length && named.includes(WRONG_SUBJECT)
+  const verdict = faults.length ? 'fail' : slipOnly ? 'pass' : answer.verdict
   return { verdict, faults, seen, dropped }
 }
 
@@ -158,6 +190,7 @@ export async function askLooker({
   image,
   outlined,
   cutout = null,
+  anyReal = false,
   fetchImpl = fetch,
   ms = LOOK_MS
 }) {
@@ -191,7 +224,7 @@ export async function askLooker({
         model: door.model,
         messages: [
           { role: 'system', content: system },
-          { role: 'user', content: lookMessage({ words, image, outlined, cutout }) }
+          { role: 'user', content: lookMessage({ words, image, outlined, cutout, anyReal }) }
         ],
         max_tokens: LOOK_MAX_TOKENS,
         temperature: 0,
@@ -211,7 +244,7 @@ export async function askLooker({
     })
   }
   const choice = json.choices?.[0]
-  const read = readLook(choice?.message?.content ?? '')
+  const read = readLook(choice?.message?.content ?? '', { anyReal })
   // An answer the cap cut off says so, so a too small cap is not mistaken for a model that ignores the form.
   if (read.problem && choice?.finish_reason === 'length')
     return done(

@@ -146,7 +146,7 @@ test(
       assert.equal(body.messages[0].content, picturePrompts().looker)
       const [text, image] = body.messages[1].content
       assert.doesNotMatch(text.text, /secret picker reason|the bench|P\d/)
-      assert.match(text.text, /"mustInclude"/)
+      assert.match(text.text, /"avoid"/)
       const bytes = Buffer.from(image.image_url.url.split(',')[1], 'base64')
       const meta = await sharp(bytes).metadata()
       if (shownFrame(body) === 'block-2.0')

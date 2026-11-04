@@ -193,6 +193,16 @@ Thresholds and readings (named constants in the code):
   (`SITE_PICTURES_LOOKER_UNSET`, `_DISABLED`, `_UNREADABLE`, `_MODEL_LACKS`, `_SAME_MAKER`) and again when a worker
   claims it, as does a door changed since the start (`SITE_PICTURES_LOOKER_CHANGED`). The run stores the door's
   snapshot as `door.looker`.
+- **An `any-real` frame is never failed for its scene** (spec #336): a gallery, background or atmosphere frame takes
+  any real owner photo that fits it, so the message says the frame accepts any real photo of the business, its words
+  carry only `match`, `avoid` and `mood` (never `shows` or `mustInclude`), and `wrong subject` is left out of the faults
+  it may name. Code drops `wrong subject` for such a frame if the model names it anyway (noted like a name outside the
+  list), and a fail that named nothing else passes, so a model slip cannot hide a real photo. Every other fault still
+  fails it: a thing to avoid, stray lettering or another business's branding, a distorted face or body, a crop that
+  leaves no readable subject. Sharpness and darkness under text are code's gates (the sharpness gate when a photo is
+  cut, the dark overlay), not the looker's. A `specific` frame keeps the full subject check. Real run 3 measured why:
+  every owner photo placed in a six-frame gallery shown on every page was rejected, mostly as `wrong subject`, and the
+  site ended with no owner photo. One look per picture stays, with one retry only for an unreadable answer; no voting.
 - **Its answer** is `{ verdict, faults, seen }`. The fixed fault list has seven names: the six the model may name
   (wrong subject, forbidden item, subject cut off, distorted face or body, stray lettering, visible drawing seam) and
   `look unreadable`, which only code records. A name outside the model's six is dropped and noted; any fault makes the

@@ -20,6 +20,14 @@ Look at the picture first, then compare it with the words. The picture fails whe
 - visible drawing seam: a line, a change of light or style, or a repeated pattern shows where a picture was extended or
   drawn onto.
 
+When the message says the frame accepts any real photo of the business, it is a gallery, background or atmosphere
+frame: any real photo of the business that fits the frame is right for it, whatever scene it shows, and the plan's
+words give no "shows" or "mustInclude" for it. Then "wrong subject" is not a fault: never fail the picture for what it
+shows. It still fails for every other fault that is visible: a thing in "avoid", readable text, a logo, a watermark or
+another business's branding, a distorted face or body, or a crop that cuts the subject so that what is left cannot be
+read (only a sliver or a meaningless part of something). A photo that simply shows another part of the business, its
+place, its people at work or its equipment passes.
+
 When the message says part of the picture is outlined, the outlined part is the owner's real photo and the rest was
 extended by drawing. Look hardest at the border of the outline for a visible drawing seam.
 

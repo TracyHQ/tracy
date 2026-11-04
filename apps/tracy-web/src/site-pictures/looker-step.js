@@ -23,7 +23,7 @@ import path from 'node:path'
 import { altNotesFor } from './alt-notes.js'
 import { fileStore, sha256Hex } from './file-store.js'
 import { wantsDark } from './darken.js'
-import { askLooker, LOOK_UNREADABLE, lookImage, lookWords } from './looker-call.js'
+import { askLooker, isAnyReal, LOOK_UNREADABLE, lookImage, lookWords } from './looker-call.js'
 
 export const LOOK_CONCURRENCY = 4
 /** The sources whose picture the looker checks. */
@@ -82,7 +82,10 @@ export function createLooker({
 
   async function lookAt(list, entry, memo) {
     const frame = idx.frames.get(entry.frame)
-    const words = lookWords(idx.wishes.get(entry.frame))
+    const wish = idx.wishes.get(entry.frame)
+    const words = lookWords(wish)
+    // An any-real frame takes any real owner photo (spec #336): never failed for its scene.
+    const anyReal = isAnyReal(wish)
     const box = { width: frame?.width ?? entry.width, height: frame?.height ?? entry.height }
     const realPart = entry.source === 'owner-photo-extended' ? (entry.realPart ?? null) : null
     const cutout = entry.cutout ? cutoutFacts(frame, entry) : null
@@ -94,17 +97,18 @@ export function createLooker({
         realPart,
         door.model,
         prompt.sha256,
-        ...(cutout ? [cutout] : [])
+        ...(cutout ? [cutout] : []),
+        ...(anyReal ? ['any-real'] : [])
       ])
     )
     // A look already taken in this save (the fallback ladder looks again after each rung), readable or not.
     if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true }
-    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout })
+    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal })
     memo?.set(key, looked.said)
     return looked
   }
 
-  async function lookFresh(list, entry, { key, words, box, realPart, cutout }) {
+  async function lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal }) {
     const before = await readFile(kept(key), 'utf8')
       .then(JSON.parse)
       .catch(() => null)
@@ -122,7 +126,16 @@ export function createLooker({
     if (!bytes) return { list, entry, said: unreadable('the file is not in the store'), cached: false }
     const image = await lookImage(bytes, box, realPart, { checks: Boolean(cutout) })
     const ask = () =>
-      askLooker({ door, system: prompt.text, words, image, outlined: Boolean(realPart), cutout, fetchImpl })
+      askLooker({
+        door,
+        system: prompt.text,
+        words,
+        image,
+        outlined: Boolean(realPart),
+        cutout,
+        anyReal,
+        fetchImpl
+      })
     const first = await ask()
     if (first.verdict) return { list, entry, said: await keep(key, first), cached: false }
     // Asked once more; both calls are counted.

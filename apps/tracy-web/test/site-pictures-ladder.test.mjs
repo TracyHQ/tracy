@@ -95,7 +95,8 @@ function kit() {
   }
 }
 
-// The frame id is in the words of every wish, so the fakes know which frame a request is about.
+// The frame id is in the words of every wish, so the fakes know which frame a request is about (in the mood too: the
+// looker is not given the subject words of an any-real frame).
 const wish = (f, match, extra = {}) => ({
   frame: f,
   kind: 'photo',
@@ -104,7 +105,7 @@ const wish = (f, match, extra = {}) => ({
   shows: `the workshop, ${f}`,
   mustInclude: ['a bicycle'],
   avoid: ['lettering'],
-  mood: 'calm',
+  mood: `calm, ${f}`,
   factIds: [],
   ...extra
 })
@@ -182,8 +183,10 @@ function fakeDoors({ reject, bright = new Set() }) {
     const text = body.messages[1].content[0].text
     const f = frameOf(text)
     looks.push({ frame: f, text, model: body.model })
+    // An any-real frame is never failed for its subject (spec #336), so it is rejected for a thing to avoid.
+    const fault = /accepts any real photo/.test(text) ? 'forbidden item' : 'wrong subject'
     const said = reject.has(f)
-      ? { verdict: 'fail', faults: ['wrong subject'], seen: 'A shop sign over a door.' }
+      ? { verdict: 'fail', faults: [fault], seen: 'A shop sign over a door.' }
       : { verdict: 'pass', faults: [], seen: 'A bicycle in a workshop.' }
     return json({
       model: LOOKER_MODEL,
