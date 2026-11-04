@@ -96,7 +96,9 @@ const STANDALONE = [
   // Tracy SaaS (JA Kinetic), in the repo since 29/09/2026; its suite measured 179/179 that day.
   'packages/cms/tracy-emdash-theme-saas',
   // Tracy Coffee, the 3D coffee-shop template copied from Tracy Base.
-  'packages/cms/tracy-emdash-theme-coffee'
+  'packages/cms/tracy-emdash-theme-coffee',
+  // JA Restaurant (EmDash port of the JA Restaurant Joomla site): same shape as the four above.
+  'packages/cms/tracy-emdash-theme-restaurant'
 ] as const
 
 /** One run group: the command that runs it, and the test files that command picks up. */
@@ -117,7 +119,8 @@ const GROUPS: readonly CoverageGroup[] = [
   { run: 'dsh-passwords', files: /^vendor\/tracy\/dsh-passwords\/test\/.+\.test\.ts$/ },
   {
     run: 'standalone',
-    files: /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee)\/tests\/[^/]+\.test\.mjs$/
+    files:
+      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant)\/tests\/[^/]+\.test\.mjs$/
   }
 ]
 
@@ -147,6 +150,7 @@ const PARTS = [
   'standalone:business',
   'standalone:saas',
   'standalone:coffee',
+  'standalone:restaurant',
   'vendor',
   'rest',
   'owner'
@@ -1673,6 +1677,7 @@ function main(): void {
       else if (spec.part === 'standalone:business') runStandalone(STANDALONE[1])
       else if (spec.part === 'standalone:saas') runStandalone(STANDALONE[2])
       else if (spec.part === 'standalone:coffee') runStandalone(STANDALONE[3])
+      else if (spec.part === 'standalone:restaurant') runStandalone(STANDALONE[4])
       else if (spec.part === 'vendor') runVendor()
       else if (spec.part === 'owner') runOwner(spec.owner ?? '', spec.shard)
       else {

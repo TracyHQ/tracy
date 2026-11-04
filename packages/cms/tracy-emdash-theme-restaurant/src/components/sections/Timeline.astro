@@ -1,0 +1,32 @@
+---
+/** "Our History": a vertical line with dated cards alternating left and right. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+
+interface Props {
+  entry: Row
+}
+const { entry } = Astro.props
+const $t = stampFor(Astro.request, 'timeline', { id: entry.id, slug: entry.slug })
+---
+
+<section class="rs-section rs-timeline">
+	<div class="rs-wrap">
+		<h2 class="rs-display rs-section-title" {...$t('title')}>{entry.title}</h2>
+		{entry.section_intro && <p class="rs-section-desc" {...$t('section_intro')}>{entry.section_intro}</p>}
+		<ol class="rs-timeline-list">
+			{(entry.items ?? []).map((it: any, i: number) => (
+				<li class:list={['rs-timeline-item', i % 2 === 1 && 'is-left']}>
+					<span class="rs-timeline-icon" aria-hidden="true"></span>
+					<time class="rs-timeline-date" datetime={it.date} {...$t(`items[${i}].date`)}>{it.date}</time>
+					<div class="rs-timeline-card">
+						{mediaUrl(it.image) && <img src={mediaUrl(it.image)!} alt="" width="290" height="145" loading="lazy" decoding="async" {...$t(`items[${i}].image`)} />}
+						<h3 class="rs-timeline-title" {...$t(`items[${i}].title`)}>{it.title}</h3>
+						<p {...$t(`items[${i}].description`)}>{it.description}</p>
+					</div>
+				</li>
+			))}
+		</ol>
+	</div>
+</section>

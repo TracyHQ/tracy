@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "tracy-personalize/v1",
+  "note": "What tools/personalize.mjs changes on a customer's copy of THIS template from their questionnaire answers (seed/questions.json). Five kinds, and the difference between them is what may be INVENTED: `identity` is the customer's own words, written exactly (an answer they did not give EMPTIES the field — it never keeps the demo value); `replace` rewrites the demo brand everywhere it appears; `copy` is prose a model writes for their sector, with the demo text as the length-and-register reference; `rewrite` does the same for whole demo entries; `facts` are CLAIMS about a real business — counts, founding years, certifications, named clients, prices — and those are REMOVED, never written, because a made-up \"380 projects since 2004\" is a lie in the customer's name. `hide` unpublishes pages that are nothing but claims and drops their menu items. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}; a rule whose value needs an answer the customer did not give is skipped and reported, never guessed. Fill every list for this template's own collections, slugs and fields — an empty map means a customer's site keeps the demo words.",
+  "settings": {
+    "title": "{name}"
+  },
+  "identity": [
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "brand_name",
+      "value": "{name}"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "copyright",
+      "value": {
+        "en": "Copyright © {year} {name}. All Rights Reserved. Designed by JoomlArt.com.",
+        "vi": "Bản quyền © {year} {name}. Bảo lưu mọi quyền. Thiết kế bởi JoomlArt.com.",
+        "de": "Copyright © {year} {name}. Alle Rechte vorbehalten. Gestaltet von JoomlArt.com.",
+        "fr": "Copyright © {year} {name}. Tous droits réservés. Conçu par JoomlArt.com.",
+        "it": "Copyright © {year} {name}. Tutti i diritti riservati. Progettato da JoomlArt.com.",
+        "nl": "Copyright © {year} {name}. Alle rechten voorbehouden. Ontworpen door JoomlArt.com.",
+        "es": "Copyright © {year} {name}. Todos los derechos reservados. Diseñado por JoomlArt.com.",
+        "zh": "版权所有 © {year} {name}。保留所有权利。由 JoomlArt.com 设计。"
+      }
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_address",
+      "value": "{address}",
+      "unanswered": "keep-demo"
+    }
+  ],
+  "replace": [
+    {
+      "find": "RES\nBar & Restaurant",
+      "with": "{name}"
+    },
+    {
+      "find": "RES Bar & Restaurant",
+      "with": "{name}"
+    },
+    {
+      "find": "JA Restaurant",
+      "with": "{name}"
+    },
+    {
+      "find": " RES ",
+      "with": " {name} "
+    },
+    {
+      "find": "RES opened",
+      "with": "{name} opened"
+    }
+  ],
+  "copy": [
+    {
+      "collection": "features_intro",
+      "slug": "special-offers",
+      "field": "section_intro",
+      "brief": "one sentence under the Special Offers heading: this week's chef specials, cooked in small batches while the market lasts",
+      "maxWords": 28
+    },
+    {
+      "collection": "teams",
+      "slug": "our-team",
+      "field": "section_intro",
+      "brief": "two short lines under the Our Team heading about what makes a good chef and the people in this kitchen",
+      "maxWords": 30
+    }
+  ],
+  "rewrite": [],
+  "facts": [
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "topbar_text",
+      "why": "opening hours of the demo restaurant"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_hours",
+      "why": "opening hours of the demo restaurant"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_contact",
+      "why": "phone, fax and email of the demo restaurant"
+    },
+    {
+      "collection": "statistics",
+      "slug": "you-re-in-good-restaurant",
+      "field": "items",
+      "why": "counts of the demo restaurant (guests, dishes, years)"
+    },
+    {
+      "collection": "timeline",
+      "slug": "our-history",
+      "field": "items",
+      "why": "the demo restaurant's history"
+    },
+    {
+      "collection": "teams",
+      "slug": "our-team",
+      "field": "items",
+      "why": "named chefs of the demo restaurant"
+    },
+    {
+      "collection": "opentime",
+      "slug": "open-daily",
+      "field": "oclock_begin",
+      "why": "opening hour of the demo restaurant"
+    },
+    {
+      "collection": "opentime",
+      "slug": "open-daily",
+      "field": "oclock_end",
+      "why": "closing hour of the demo restaurant"
+    }
+  ],
+  "hide": [],
+  "brand": {
+    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, from the kit's brand PR; a tool without it ignores this block): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none. Name the chrome entry the header and footer read (references/brand-and-pages.md).",
+    "logoDark": {
+      "collection": "site",
+      "slug": "site",
+      "field": "logo_dark",
+      "label": "Logo for dark backgrounds"
+    }
+  }
+}

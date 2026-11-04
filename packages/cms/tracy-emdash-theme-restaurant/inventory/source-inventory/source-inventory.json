@@ -1,0 +1,1914 @@
+{
+  "source": "source/snapshot",
+  "generatedAt": "2026-11-03T13:47:44.197Z",
+  "files": [
+    {
+      "path": "crawl.json",
+      "bytes": 40238,
+      "sha256": "0c3dbcb9d97b9214e155965589f17a048c98719724962010ea92da3dfbe2e966",
+      "ext": ".json"
+    },
+    {
+      "path": "images/joomlart/404-page.jpg",
+      "bytes": 11631,
+      "sha256": "1d0611cd8b3c2a4db566111c776177c8a5e75c94ccac326603aa0b5403e03ece",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/avatars/avt-1.jpg",
+      "bytes": 4464,
+      "sha256": "41de7f64c1f6a4cf7d293f23d5695acb2e787a72e410b7b388dfa7f330f7ee79",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/avatars/avt-2.jpg",
+      "bytes": 6058,
+      "sha256": "52b24dfe6053b74bf3fe9fd6babb4696daa59b66e775b5c113e33a1a268fd7f3",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/avatars/chef-1.jpg",
+      "bytes": 9448,
+      "sha256": "6c50019af31af664bd741c0709212683b537fa2d8b0b369a20ceb40a48f323b3",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/avatars/chef-2.jpg",
+      "bytes": 11080,
+      "sha256": "ce95b6a1a2f8ba9716ea6c1d3030be2660a8839f530eae1e894f41c923f6c20f",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/avatars/chef-3.jpg",
+      "bytes": 7106,
+      "sha256": "0be9a95ccb8882b4e571e86effb6ddb5f14a919a5a3da636eddf472c56513e4c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/avatars/chef-4.jpg",
+      "bytes": 8337,
+      "sha256": "6a94c5965b131ce1f7d5c58c67673a2a937579c4a78693540631abecae56901d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/background/acymailing.jpg",
+      "bytes": 112715,
+      "sha256": "8a0fabdca33217139a1cf871d0011be462c185d365c7bbda8c790ed024070682",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/background/features-intro-1.jpg",
+      "bytes": 230413,
+      "sha256": "6e245ad396163cd6d03306ddddfa65f0dd42e190af7b1cdf5482d11ee160f150",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/background/tab-1.jpg",
+      "bytes": 578050,
+      "sha256": "03d3df46c9c616ab68a84ce2f67157b100422f5da669fe9fbd382b9aa47dbed2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/banner/banner-1.jpg",
+      "bytes": 77733,
+      "sha256": "62d7ecad2b0b9f4870cabfe9155bc7fea7fc33eacf79e9b6d8624b72f4af39aa",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/bd-bg.png",
+      "bytes": 43327,
+      "sha256": "76f47079d8f531bdb0cec8d662aeecb9a0d09b181f21c0c14680b82e2462d26e",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/blog/rest-1.jpg",
+      "bytes": 275817,
+      "sha256": "1240a24173f04c9d55b21f7fee03c91e9f22e737817907af54fca75854427255",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blog/rest-2.jpg",
+      "bytes": 124479,
+      "sha256": "4898c4793dafc7f4985b8f76da18059f700b1e73c2e1a167c466c66517714785",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blog/rest-3.jpg",
+      "bytes": 282046,
+      "sha256": "8c7d1c52254aa0302e7e2eab0179d4e9d214226766808882f7405fbd15d836c2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blog/rest-4.jpg",
+      "bytes": 96881,
+      "sha256": "88428deaef196191cf09222640199563c82d080bd397ba5fd06fc22cfafdd79e",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blog/rest-5.jpg",
+      "bytes": 214560,
+      "sha256": "b81da7b85f4b42e06cd7daffce6240c42bca9f7909dd53a6c5a6d87a01edfcc4",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blog/rest-6.jpg",
+      "bytes": 161032,
+      "sha256": "2bbb5d851ae3bcb3de6d22703b8ccbd5f15c9d510b52be419a56d651d1c5115c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blog/rest-7.jpg",
+      "bytes": 228011,
+      "sha256": "cc5615318faea6265032693b0834e7170594dd2bc3c76f802a8575e3eb2cd0a0",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blog/rest-8.jpg",
+      "bytes": 96838,
+      "sha256": "70c6290bbd193c97efc87000dac83d993ef6ec41bfbf41f89ab1c333d5f79cbb",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/features-intro/intro-1.jpg",
+      "bytes": 35658,
+      "sha256": "b10bc1581223aa5db3093f5462711cf355360aaba3882907b86b242cfa835867",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/features-intro/intro-2.jpg",
+      "bytes": 55062,
+      "sha256": "f1cfb310ed7fe0575b586e39d52c8d0101e8e6c8fd8d4267b14ec98863c806f3",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/features-intro/intro-3.jpg",
+      "bytes": 135443,
+      "sha256": "4a1db16189c1935c0a25b9660c6159f05f175b329b006e8efc93808c3c569560",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/features-intro/intro-4.jpg",
+      "bytes": 346684,
+      "sha256": "5469922a97eb0841d211e5408ed6e1e25b22cafd233d7f80d15e31e440510669",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/features-intro/intro-5.jpg",
+      "bytes": 112715,
+      "sha256": "8a0fabdca33217139a1cf871d0011be462c185d365c7bbda8c790ed024070682",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/features-intro/intro-6.jpg",
+      "bytes": 111146,
+      "sha256": "9e8a95a467216e56b3d3ebd98ed1e42183d208b42ac3a57b186bd0d6d5f6b254",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/features-intro/intro-7.jpg",
+      "bytes": 279051,
+      "sha256": "969ea7ff9741bddf30f8de7d16a887369ca43cb45367e7c968e7135792010520",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/features-intro/intro-8.jpg",
+      "bytes": 265666,
+      "sha256": "f955f8ff728a2e037909ad6ca188630d08010c556338cfb10a83c517019ce6ba",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/food/fd-1.jpg",
+      "bytes": 17294,
+      "sha256": "0a0ddfd814031deca6809a922a229eb52c11fa251bd80dd91ff7972c395467f4",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/food/fd-2.jpg",
+      "bytes": 20296,
+      "sha256": "668a6c9a6e53c683aa5394e8264fb1babaa97336c831e96cef7ec98cdcc6e75a",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/food/fd-3.jpg",
+      "bytes": 27595,
+      "sha256": "ddf85499b5af557325f72d8557729b1f6b18b33e7816cf5a960437caeb632cd4",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/food/fd-4.jpg",
+      "bytes": 26355,
+      "sha256": "2079eb1f41c88abd8e1e880642b5f0d6a2105b29a475f9aa23212ccf1dc1fbed",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/food/fd-5.jpg",
+      "bytes": 23425,
+      "sha256": "df6808ed4f7330ed285153a390ee29171c334effcfa92d1109bd69dbaf43c194",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/food/fd-6.jpg",
+      "bytes": 16374,
+      "sha256": "b607b9b4715837684f1904337f594cf63e87e647bc6b8a24abbcb9681b532c87",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/food/fd-7.jpg",
+      "bytes": 13852,
+      "sha256": "7ae0c96e70b578d30ab40c38ae0a8adf6c9fc9f98b64f9ce3be438bad7e06c8b",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/big-photo-1.jpg",
+      "bytes": 120552,
+      "sha256": "156b5c78767ae0df0543921de281e119cccef22d402c8a7657e76138f2a9b52c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/big-photo-2.jpg",
+      "bytes": 194099,
+      "sha256": "ff1b9585a4d622002919008a9df112ef243d60c175217fc625decfdebcdd3474",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/big-photo-3.jpg",
+      "bytes": 364631,
+      "sha256": "3a6b554095f0348c970d4242a80fc86941f5a5331db4414a22984d74fc86c954",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/intro-1.jpg",
+      "bytes": 107787,
+      "sha256": "e627cd3e565041fed7202ffcf064a761f981f621b9bf7078b102bca35191744b",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/intro-2.jpg",
+      "bytes": 258387,
+      "sha256": "9bd9c91255b721641a6e2ae455d67426e86af7772238ec433d75af2d77939bbc",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/intro-3.jpg",
+      "bytes": 122750,
+      "sha256": "5a33909bc77fd695a4e0d07f63143bab9d6cc798942cd39ad559d0f9515b0215",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/intro-4.jpg",
+      "bytes": 287356,
+      "sha256": "380b8761d1428b237c17cd3adb3e7f1b98cd9a293dd8ec7d81a16c4ea96b3f86",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/intro-5.jpg",
+      "bytes": 102410,
+      "sha256": "8fe069b69f7f48f9dcb9e0e13ede6e1c00b1da1fb155d1f6fddab05dc279bc7d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/intro-6.jpg",
+      "bytes": 230195,
+      "sha256": "e898dc2062eeefdbd359316e663b28d4ef48b09c01b9723fde9828d77c57bffe",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/intro-7.jpg",
+      "bytes": 104244,
+      "sha256": "dc65d5d777870e67a1123ee80a899025971b31530927b402bbf6479df10b5a88",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/gallery/intro-8.jpg",
+      "bytes": 70363,
+      "sha256": "ec938617812f067533fbe4f2143497bb8c82f1f4779353ac3f9d5afe0b804dcc",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/happyhours/hp-bg-1.jpg",
+      "bytes": 288102,
+      "sha256": "81e35ffcc905c15663ffac310ef53f666f2b3b3a3f057996d69fa474fd61c925",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/happyhours/hp-bg-2.jpg",
+      "bytes": 362086,
+      "sha256": "20f2356b9a625234387c33ecfe6d6143b36932c1653ca30dc116279c2e13e1f0",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/happyhours/hp-bg-3.jpg",
+      "bytes": 144851,
+      "sha256": "9e715f01cfa5cd1d982295528aba07617d5c31f78175b0fb8aa7c9e7c1015b1d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/hero/background.png",
+      "bytes": 78133,
+      "sha256": "c0200a485696499f8c964e695fcf6e56f1ed7d020015556c1afb564717c4659e",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/hero/chef.png",
+      "bytes": 6080,
+      "sha256": "63e943eb387d76e5f0773a5ed8d0668e5aa3e38255e7a12e55aa703255d70991",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/hero/sam-1.jpg",
+      "bytes": 22406,
+      "sha256": "c48a2df84c99bfdc953852cb1e7455dc4bcf48acb5d8b8dddd81b3c2df9b6347",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/hero/sam-1.png",
+      "bytes": 59419,
+      "sha256": "d92b3619311605eac56f169721a3efeb9ee9571dd3b59b6ebe5a113490d494b5",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icream/ic-1.jpg",
+      "bytes": 14584,
+      "sha256": "b9fa5344ba110051db1d899d0fac359948aaf3c27c41fdfbe503ac57c3402afe",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-10.jpg",
+      "bytes": 10077,
+      "sha256": "487612e6695428c62853be4ca87c294f8ae445bdae0725f3ec90e86c7a8138df",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-11.jpg",
+      "bytes": 10313,
+      "sha256": "d04912cef545f1472bd72d44235c6eaba43083eb91866a90ccb9eb58e92a13ae",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-2.jpg",
+      "bytes": 18158,
+      "sha256": "b8419f4d38d810a9bf387bf907ef35178ef6e1e417aa70844ea74505c9f47440",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-3.jpg",
+      "bytes": 20799,
+      "sha256": "b817e8f2eaf1eac10ddfb8f9f98752fb11ef51f925ff6f9a85ffca3f97cfa1d6",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-4.jpg",
+      "bytes": 23526,
+      "sha256": "3fb9a0eeb16efd170208363439121ea99e1bbcf28eb34b6fca1db86ed343b83b",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-6.jpg",
+      "bytes": 24702,
+      "sha256": "b562ac8bf2642523254ba5d86493a32837d270dcdba9d923eab655239702445f",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-7.jpg",
+      "bytes": 14922,
+      "sha256": "a12b3a15eefbe157b3949c7378f3ee4df9149aac20bcfac2acd4c70897682335",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-8.jpg",
+      "bytes": 20859,
+      "sha256": "90a1987fdbb410ed1dcf7caa6692278d0f8746e27f06c1005b6615d73b2c192c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icream/ic-9.jpg",
+      "bytes": 12555,
+      "sha256": "a3d5a51780ab77029340ddfe866c5c86f7c591639a5a872760c1932ab36183db",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/logo.png",
+      "bytes": 6496,
+      "sha256": "0b7ae443816e877c6c8c3b28797d71fbb855aaeddbc91751a6009abe2d32b92c",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logos/blue-sm.png",
+      "bytes": 2812,
+      "sha256": "bc4c43c9bb31ec58f54e5db6405cde0bfde12fb0e71adc3949f21b759a855342",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logos/blue.png",
+      "bytes": 6492,
+      "sha256": "456ce0b472a7b92a4823ae6ecf292f981e38ec35ee58ae880b3116bce781c72d",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logos/green-sm.png",
+      "bytes": 2805,
+      "sha256": "a04e363efd0b853b5ce39a5d8999fe69bc578c56c9e2d99abc51071177934c50",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logos/green.png",
+      "bytes": 6521,
+      "sha256": "bd1a5e05bc7ed0f75486526e70aae91c8a11dc7c0fb1e59b74212b7d232e6b9b",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logos/pink-sm.png",
+      "bytes": 2805,
+      "sha256": "3a95467dc16966239c844daafb7c4709462a440a739725519f4f24a515d9eb7b",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logos/pink.png",
+      "bytes": 6511,
+      "sha256": "18c62fd3aaf0e64b875fa8cd24de6e6b3188f293ec195b84db57ec95b363c3f4",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logos/purple-sm.png",
+      "bytes": 2811,
+      "sha256": "06f0682ada5b82e86babe9c3f7f2aeb70f81a5e113a1754a8854d9d4e7001fc6",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logos/purple.png",
+      "bytes": 6497,
+      "sha256": "799c9704d2d843be865aa6c897c7c6e96c9557a683a309a882d4b13c2fcaa314",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/map-contact.jpg",
+      "bytes": 355379,
+      "sha256": "19f8900890ae64fce085800e64b1d8255ebe9ceff683a6b1d51f3f439aea0e55",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/masthead/masthead-aboutus.jpg",
+      "bytes": 200927,
+      "sha256": "b555eaa924d92d849a3eebb73c7fe0285b522364555ac022464944f01ac06347",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/masthead/masthead-blog.jpg",
+      "bytes": 525083,
+      "sha256": "51a2bbeda7663908fdf92e9354b69a62c080f0cd74cf8fd228c8c625cea56ebb",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/masthead/masthead-chefs.jpg",
+      "bytes": 204596,
+      "sha256": "8f0e39c8dcb3afd3da1647b8f585a35227aefe149f4eed8b7915e84c9d08e0f4",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/masthead/masthead-contact.jpg",
+      "bytes": 99122,
+      "sha256": "6077b49c52749460c5635bf7ffb3305a6d3700e70f7ba6450e2723c2ecd3f11e",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/masthead/masthead-menu.jpg",
+      "bytes": 235887,
+      "sha256": "646cb200c82fae94ac094e1271443868f6905c058f84e6e8ed1790a92ec52232",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/offline-page.jpg",
+      "bytes": 16369,
+      "sha256": "d9768f950ec06d5af377b7ddff86c5f7a37d4dd97e335a553b6e910f8be873e7",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/pink-bd-bg.png",
+      "bytes": 33534,
+      "sha256": "e4cac866ab30f8cdd436140b1c4a1d4188e83eb485349929015cfdd34a3ffcb1",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/slideshow/slide-1.jpg",
+      "bytes": 275572,
+      "sha256": "ab86280444fe67e1df0e8ee101270e266d226bcb77a42ad8bd8b7a7306c377f0",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/slideshow/slide-2.jpg",
+      "bytes": 172590,
+      "sha256": "1acad53695b8cf4d66a017183362c7ceb607628b7301d4c16a51ba079e1184e9",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/slideshow/slide-3.jpg",
+      "bytes": 213980,
+      "sha256": "165eb41a1d0316f5f7eb8f29fa58bd2cf2ae9ec94cc6332c33b497df5153494b",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/small-logo.png",
+      "bytes": 2831,
+      "sha256": "f0d854e141f0eebbae81f293a0c801dea390d9f9e26bbef3b0f390d828c2a102",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/vik/menus/daily.jpg",
+      "bytes": 151026,
+      "sha256": "1f2967d684742d500874443f0218450e2de37962be482e8c1bbe19f9cf61bb7d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/menus/wines.jpg",
+      "bytes": 61985,
+      "sha256": "a934e7fbe764996c4e38b18515b5fbfb7c9758eb1e99a4462605cbf2b81e0c5d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/1084hd650x433_wm.jpg",
+      "bytes": 65366,
+      "sha256": "110ba92f3e01852d0d83f226553552a45a799fdc9d729fd5c0fb66de870fbe68",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/1481pizza-margherita-1.jpg",
+      "bytes": 395430,
+      "sha256": "39e30bd7229384c9e2a77ba4a1894d259b498009eec0389bee089284e5f09575",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/hd450x300-2.jpg",
+      "bytes": 25948,
+      "sha256": "45923234f005e6f3467dea33ffd8f5ffe86ae3aae18056d15e60c496a7667b96",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/hd450x300-3.jpg",
+      "bytes": 23142,
+      "sha256": "90dd64b6eb257461a307e422046e3e3e1340f72ccf9fe81d534f22f7ecd99aa8",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/hd450x300-4.jpg",
+      "bytes": 22785,
+      "sha256": "7e325df709d09f48061e8467248cf06be59c59b73b947f41abdef89c66ca7c1e",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/hd450x300.jpg",
+      "bytes": 28531,
+      "sha256": "cae5771b6f77fa2d6f0032812b0deae1d1ea33f2f672cf9811bcc973a85392e2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/hd650x433_wm-2.jpg",
+      "bytes": 67044,
+      "sha256": "ce22acf4d23825742e30ce0442958ff4dcd7b6a7668c10321df7db6dce9f70ad",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/hd650x433_wm-3.jpg",
+      "bytes": 47724,
+      "sha256": "e619453e587a64ff95ce4d1f6bd5afaa9388cd97c46f218da41118a914c3add3",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/hd650x433_wm-4.jpg",
+      "bytes": 40833,
+      "sha256": "92428de7ae18fe0b565a08187e198d7ed6a3997d0a9bfe161ba7c660876e3aaf",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/hd650x433_wm.jpg",
+      "bytes": 37282,
+      "sha256": "0dce1dead0e14a356c80720464e5019d368c29ca5367b19370b1c48b70c051c9",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/mammas_brick_oven_pizza_-_pepperoni_pizza.jpg",
+      "bytes": 293270,
+      "sha256": "cd61b717a594c8a98fa445363a86bbf956ff69ba9f0de294ceaa07b4392de2c8",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/products/swedish-capricciosa-ham-cheese-and-mushroom-pizza.jpg",
+      "bytes": 423751,
+      "sha256": "607dfce925ad7ee098ba93c6ba1090472d8fcca1ffffec8c5478bf2a49c5dcb2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/rooms/1024_thick_green_grass.jpg",
+      "bytes": 476156,
+      "sha256": "4915a714b7defca1c28cbe5f6ae6a772ff8d53ee720da27d16c724d63ece1beb",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/vik/rooms/texture_parquet.jpg",
+      "bytes": 85508,
+      "sha256": "b9e58289eacd4d944c3e1b392f235a96d7da4c597e835c19e3292849c9e71a6c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "index.html",
+      "bytes": 64932,
+      "sha256": "fecaccb5658948ce9ad23057ca718ed9d51cd4acac5ed6c1649b56a3ff8e207f",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/about-us/index.html",
+      "bytes": 32325,
+      "sha256": "08cc0112c75d770f729dcfc47ed310532400546cfef09b72e4518096cea9ab2a",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/about-us/our-history/index.html",
+      "bytes": 32539,
+      "sha256": "3286e202d0ecef0860d83ebedba0f5b73dffcedcfe484d22068e595b8b84452e",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/11-restaurant-news/5-indies-aren-t-sold-on-tech/index.html",
+      "bytes": 33627,
+      "sha256": "54a6569f9d56454a88578dc32120c92cee4b7829f495360eba0b48c6e2d84808",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/11-restaurant-news/index.html",
+      "bytes": 32377,
+      "sha256": "22a66e9972a7a5b3f3ae4800a572fe734e4abffc402e5cbb6f03e5c0bed462c5",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/12-restaurant-guide/10-fish-sauces-seep-onto-all-sorts-of-menus/index.html",
+      "bytes": 35217,
+      "sha256": "478571cb3bdb3e32df5c5fb2455db6405fbae7b2798664204231108c7df245bb",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/12-restaurant-guide/11-tortas-pambazos/index.html",
+      "bytes": 34896,
+      "sha256": "95b2e63a9a86b1b903b6bb0807cef3063dbcc2943e4b80ddf261b655a3234cf0",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/12-restaurant-guide/12-blt-on-pimento-cheese-biscuit/index.html",
+      "bytes": 34038,
+      "sha256": "1a92904217accdf123d3c00cc81e72b10d631c5c5870bfa0ac78975b9302c217",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/12-restaurant-guide/8-starbucks-faces-a-big-recall/index.html",
+      "bytes": 34564,
+      "sha256": "5a1a41d3febdd39d5ec189c7d7f3a79d5543e8d00f4ed0bf10f1723d2f93592a",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/12-restaurant-guide/9-logan-s-said-to-be-weighing-bankruptcy/index.html",
+      "bytes": 34866,
+      "sha256": "297521c30d396e9f2469d007ba08db56dd92d74442a7c242e374c226875cc0bd",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/12-restaurant-guide/index.html",
+      "bytes": 43730,
+      "sha256": "7dc99aac5cac7b38a4d66a60a2db413bba650e8d49792070ecc3966c31a99850",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/8-restaurant-business/2-8-habits-that-can-improve-your-customer-service/index.html",
+      "bytes": 34606,
+      "sha256": "c6d471c56c2b0b4c68d0ee60bd5be39dcd2e3fa6d9483bb3a3a40c426c5f5c58",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/8-restaurant-business/6-starbucks-brings-under-armour-exec-on-board/index.html",
+      "bytes": 34745,
+      "sha256": "f54d7c826db8a8d80b020e70d28bd3a3390fdbf4c192c207c472d14b7dc89f5e",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/8-restaurant-business/7-4-trends-trickling-down-to-mainstream-menus/index.html",
+      "bytes": 34842,
+      "sha256": "ed650ca00fa962145d313975112402108aabbd10c3a52a1434d371fd44fd8c66",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/8-restaurant-business/index.html",
+      "bytes": 38341,
+      "sha256": "f0a811c36ff8d6244da8f153c9681c4c591f2728879c9ee4a8e9dda4af7afea0",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/9-restaurant-marketing/13-mcdonald-s-makes-clean-tweaks-to-some-menu-items/index.html",
+      "bytes": 34519,
+      "sha256": "339621d4054ea26982e0fb2598fa70ecc07981aed467fca2cc24bede954599b7",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/9-restaurant-marketing/14-how-the-gop-and-dems-differ-on-restaurant-issues/index.html",
+      "bytes": 34803,
+      "sha256": "474f37518e3c8e51bea8c81069043a581832a18ca41ca9950beb70e5d15314be",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/9-restaurant-marketing/3-chipotle-to-launch-burger-spinoff-this-fall/index.html",
+      "bytes": 34322,
+      "sha256": "530724d9aa03ad9b5d5afc8d52c5843e74ecb6595a0779529b15dbf62b8ac32b",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/9-restaurant-marketing/4-how-to-help-your-chef-achieve-a-better-work-life-balance/index.html",
+      "bytes": 34884,
+      "sha256": "8f472141f00d000106de0688be85d71866ba90cf198a0c1738538858c5aa1d53",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/9-restaurant-marketing/index.html",
+      "bytes": 41268,
+      "sha256": "47f5cf9290a087abfba8866ce614500b9c9e303edf7da3e5411bf1d91a760b5f",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/blog/index.html",
+      "bytes": 38497,
+      "sha256": "e7890b12424551e4ab530d5446f6fa0157d258bac2550022495a9e6737edb906",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/component/tags/tag/fish/index.html",
+      "bytes": 29804,
+      "sha256": "b815499a4e14a6de46450183034f16820d79124a942e066c9fbc067cb2783d84",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/component/tags/tag/menus/index.html",
+      "bytes": 30448,
+      "sha256": "119f6781edcdb04a8e5581ccf38746489108238b93c9902358780b0bf7dee24d",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/component/tags/tag/seep/index.html",
+      "bytes": 28939,
+      "sha256": "7bb27caf5d1a897971e56b126d4a64704716facbebe37fbf325c9f945ce5b932",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/contact/contact-us/index.html",
+      "bytes": 33976,
+      "sha256": "6c14bd9520a8339e46d3c0306b7c145edb61043012e128b63b1413ef27c1ed0f",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/contact/phone-reservation/index.html",
+      "bytes": 28947,
+      "sha256": "1a34656db5700c3e134c9425d271f9b1e1ff2fb98330f8788e283a9819685988",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/bonus-pages/erro-page/index.html",
+      "bytes": 27372,
+      "sha256": "909222e7c755c6b02aae5c680a8a5bf10d955185c344b5683fd0b6d9ac880518",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/bonus-pages/offline-page/index.html",
+      "bytes": 27407,
+      "sha256": "543e23b918d0085cf466db70a94085774df8676af0fe06a5874d232500c9c74b",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/all-categories/index.html",
+      "bytes": 28786,
+      "sha256": "621baad9aa568fdff4a9f41444bd5904cd68c4fab11c95341a019868a6ba0838",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/category-blog/index.html",
+      "bytes": 59900,
+      "sha256": "f1b68aa507cf84e45658f75514952755a78e499452b5889882eb53d85c7fb80c",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/featured-articles/index.html",
+      "bytes": 35738,
+      "sha256": "c66c77ef6715e9fcdf3b2093b6f22cd43afdf12c421233c8cf2768e48d258964",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/login/index.html",
+      "bytes": 30147,
+      "sha256": "fb0a1b6149acfbc6e62d3b57b0b4ba09a03a8f59a96a55a92f4abaf57ed01bda",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/registration/index.html",
+      "bytes": 31685,
+      "sha256": "64a2de20692305b41cd5de94e6479a52af67439aaf88ada0f15757cbf2e896a9",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/reminder/index.html",
+      "bytes": 27882,
+      "sha256": "db4367a60b7b0437ab78e6fc44694704e4e64acea17e8acc677c63528a7def8e",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/reset-password/index.html",
+      "bytes": 27929,
+      "sha256": "1fbf004111ed4b65625f9a0047ef22ed138ef11a4d5206700d4510830896622b",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/smart-search/index.html",
+      "bytes": 36940,
+      "sha256": "9220336e2628f55add893734023c2763ef92d7628765a5afac3b98d0446cc6e5",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/j-pages/tagged-items/index.html",
+      "bytes": 34383,
+      "sha256": "980f42fd8c3365281a6f16bdb00de806330c0009f5b89ce3a35f03f4e2539c4c",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/themes/blue-color/index.html",
+      "bytes": 64372,
+      "sha256": "f60f3a9cf1f17c40fee9fd0ed7f4fdb350ae57b2fd815d7892a39191745076f7",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/themes/green-color/index.html",
+      "bytes": 64376,
+      "sha256": "ee2e44943356da01792816627a5da307c7e293688e744fb121a06d79df0f9f6b",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/themes/pink-color/index.html",
+      "bytes": 64436,
+      "sha256": "7b5f874a1a52d0ae97fb76615c10f84948b8378f6a18ba675578a7be16f7a9d3",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/explore/themes/purple-color/index.html",
+      "bytes": 64380,
+      "sha256": "911dd267cdf99954f257e0dde78c1208122aa9bb1cdd159ae55f339537dac696",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/gallery/18-sample-album-1/index.html",
+      "bytes": 33126,
+      "sha256": "4a43ab11cea491d47390a2e2f0156e676225b6f045b6022d752ea49fe6f3b63d",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/gallery/19-sample-album-2/index.html",
+      "bytes": 33478,
+      "sha256": "f17ed68bea5575efe70e13d4ac76839f47fddca468dfd26088b9e4fda9507f49",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/gallery/20-sample-album-3/index.html",
+      "bytes": 33478,
+      "sha256": "a9bdffcd680aa82ec9d8f5080aaea73797ad567e5fa19e3bb28f42e0d6c5c32c",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/gallery/21-sample-album-4/index.html",
+      "bytes": 32896,
+      "sha256": "b428c0f7bf4c7c949823208849fd747e992d3130ce9161109e2f686084661ca5",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/gallery/22-sample-album-5/index.html",
+      "bytes": 32605,
+      "sha256": "4223d18154a2450a1b3639f3e0debe2dfe0fa19ef046f4ad6b1b711e0153af90",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/gallery/23-sample-album-6/index.html",
+      "bytes": 33478,
+      "sha256": "9242a79390ccb947e8a9212c5f0e0caa6990e3727ee691c496c3e121bba381a5",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/gallery/24-sample-album-7/index.html",
+      "bytes": 33133,
+      "sha256": "b2a57d748b986b9a7dff62b0f30323438bab7d7eb4399c5e9dfa9022c43f04f9",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/gallery/index.html",
+      "bytes": 38664,
+      "sha256": "2381138f2199a33f1ff682b006448eddb9c884c24340c05f4e50eb53c777c2dc",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/menu/2-column-menu/index.html",
+      "bytes": 30833,
+      "sha256": "a39a3472b1c5893e45f34d4331aa92f11eaef6f9fa0e531954b332d07656c27b",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/menu/index.html",
+      "bytes": 37293,
+      "sha256": "e7fe333a5bafefdbe331883c48d28ca8ff97d4e4d956f97367d8fe8b4dfdacc4",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/menu/menu-with-image/index.html",
+      "bytes": 29693,
+      "sha256": "0138b79651378879018641d83ff12565b38c4fe5015dca6af2b6044be4f532b6",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/menu/simple-menu/index.html",
+      "bytes": 29540,
+      "sha256": "c51a39f50bfb322da71d08b16cb50cd6f2321bc7758ee70fac5b73f37a5cd899",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/nope-404/index.html",
+      "bytes": 1506,
+      "sha256": "58881e41e44b69d3c6e90f1e3558f82e7895510f14252063f81fb98f63a03ece",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/offers/index.html",
+      "bytes": 30934,
+      "sha256": "be37e76d728ca7263db9b976fd3b980136ed6d33630a65c98f3102dcbaebcded",
+      "ext": ".html"
+    },
+    {
+      "path": "media/com_acym/css/fonts/acymicon.svg",
+      "bytes": 83781,
+      "sha256": "e4e8283290d70632e0f3f33c752c0d15d9906651d7e66dca4ce7a1a1a126ebc8",
+      "ext": ".svg"
+    },
+    {
+      "path": "media/com_acym/css/fonts/acymicon.ttf",
+      "bytes": 26592,
+      "sha256": "10d5d2923fb911a15f67bf47ed89bdac7362ab6b2af1f34e2cb018c669666dae",
+      "ext": ".ttf"
+    },
+    {
+      "path": "media/com_acym/css/fonts/acymicon.woff",
+      "bytes": 26668,
+      "sha256": "9b0f3df5b444e18762d51cde94686c869d125e2e30b078e0d2221384573f883f",
+      "ext": ".woff"
+    },
+    {
+      "path": "media/com_acym/js/module.min.js",
+      "bytes": 10239,
+      "sha256": "52ab46e2bb6dc6b6d43f9aa84beff69a98b7117a282044d0744686b1946a54cb",
+      "ext": ".js"
+    },
+    {
+      "path": "media/com_finder/css/finder.min.css",
+      "bytes": 1765,
+      "sha256": "0376f10fb61436bda3ba56b432ee050ba691a3483118ab57aa7dc07eb42ea4cd",
+      "ext": ".css"
+    },
+    {
+      "path": "media/com_finder/js/finder.min.js",
+      "bytes": 1381,
+      "sha256": "a3ccb2cd02bb4362be9d0b1f737aec5f7304af71730a1e4017ba003854fce5d6",
+      "ext": ".js"
+    },
+    {
+      "path": "media/com_tags/js/tag-default.min.js",
+      "bytes": 486,
+      "sha256": "7c97dc019c350c50f44a79b631a853a7c9dc409c2d252394eaab8201dcd25d27",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/core.min.js",
+      "bytes": 7786,
+      "sha256": "045181e3f5ea2f3afd09831dd18ea871b8a98fcb8cb3233af395fe123bdd3934",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/fields/passwordstrength.min.js",
+      "bytes": 2795,
+      "sha256": "7ad7aae67c8026bfee3db6f01fe3a2cfae4589d09b203ae374d259c2b5139e26",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/fields/passwordview.min.js",
+      "bytes": 1237,
+      "sha256": "1ba2fcc7648c62b2c7cf2d539092cec381ee03631114f3e5a851b398a2c8ff25",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/fields/validate.min.js",
+      "bytes": 8574,
+      "sha256": "2eb3c772ac894af82059fcf115b2ee545599cacf490eae2826c6e71a069c1f37",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/joomla-hidden-mail.min.js",
+      "bytes": 1569,
+      "sha256": "1aacba2d5d0e5f070a52691efbf51b7183bba1fe42c6569ed5f2025c6e409f19",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/keepalive.min.js",
+      "bytes": 741,
+      "sha256": "983c4e677c121da92edce183d530881200e0ce545ddca1174bdb3eedb7588619",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/messages.min.js",
+      "bytes": 5542,
+      "sha256": "09426cb3251a9408374f3f37bb5ec75a921c2e71d8717a83e7ab0acf16addf0a",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/awesomplete/css/awesomplete.css",
+      "bytes": 1755,
+      "sha256": "8570c166966479f18cd0be77bb56947a3abc05b914257698134e652274b5ffa8",
+      "ext": ".css"
+    },
+    {
+      "path": "media/vendor/awesomplete/js/awesomplete.min.js",
+      "bytes": 8003,
+      "sha256": "b88cd20ce7955245180991050108b764c14a17986e7eae2daee92273eb7f75df",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/collapse.min.js",
+      "bytes": 3994,
+      "sha256": "c8ac77219eafa1a75f2d2060d075796203c3520c3859ea238a08efa3736adfd6",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/modal.min.js",
+      "bytes": 7319,
+      "sha256": "50c0c2240ea9a43cc099194e1b3987fca6b8a7e9a2b1105be6c95e12266b6766",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/popover.min.js",
+      "bytes": 11363,
+      "sha256": "31e5bb91bbbd5c0645c1501f7d9e6caf20696dfba0bfa4e0ead979df8c6da025",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
+      "bytes": 210792,
+      "sha256": "808443ae6c8204395add8543da8a90a60b9376fb0f87ed8e8ea37d109596d805",
+      "ext": ".ttf"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
+      "bytes": 118684,
+      "sha256": "d7236a19bf23cbb2027280e8f51dc99d6c45976a2ed60de73382b034b18a2b68",
+      "ext": ".woff2"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
+      "bytes": 68064,
+      "sha256": "54cf6086f7bb21f9d072ad494a19b4681fa516dd0a14cee52da01d3651a913a3",
+      "ext": ".ttf"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
+      "bytes": 25472,
+      "sha256": "e3456d1283b9d75337a773dfd147bf908fd02c01b4bf48576d8603a69b13cbe5",
+      "ext": ".woff2"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
+      "bytes": 426112,
+      "sha256": "d2f0593540b0e33ba6de255a54f272d466e31144806956bea8cfdbf7edffc9bd",
+      "ext": ".ttf"
+    },
+    {
+      "path": "media/vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+      "bytes": 158220,
+      "sha256": "aa75998623a391e61c6901794ace832e3ecdd288b56d608f21bea0411acc0b8e",
+      "ext": ".woff2"
+    },
+    {
+      "path": "media/vendor/joomla-custom-elements/css/joomla-alert.min.css",
+      "bytes": 3654,
+      "sha256": "df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb",
+      "ext": ".css"
+    },
+    {
+      "path": "media/vendor/jquery/js/jquery-noconflict.min.js",
+      "bytes": 30,
+      "sha256": "b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/jquery/js/jquery.min.js",
+      "bytes": 87533,
+      "sha256": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a",
+      "ext": ".js"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.ttf",
+      "bytes": 45404,
+      "sha256": "e395044093757d82afcb138957d06a1ea9361bdcf0b442d06a18a8051af57456",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.woff",
+      "bytes": 23424,
+      "sha256": "a26394f7ede100ca118eff2eda08596275a9839b959c226e15439557a5a80742",
+      "ext": ".woff"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.woff2",
+      "bytes": 18028,
+      "sha256": "fe185d11a49676890d47bb783312a0cda5a44c4039214094e7957b4c040ef11c",
+      "ext": ".woff2"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/fonts/font-awesome/css/font-awesome-base.css",
+      "bytes": 31181,
+      "sha256": "e245536ad67af96de8ffb12352b93d3e84cd21e8a8e39507510fa6ee4a5e76be",
+      "ext": ".css"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/fonts/font-awesome/font/fontawesome-webfont.ttf",
+      "bytes": 79076,
+      "sha256": "14dcb8f02b3b81c2baab230610c349a94282bbd976693759e9b4a8694d486451",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/fonts/font-awesome/font/fontawesome-webfont.woff",
+      "bytes": 43572,
+      "sha256": "18e6b5ff511b90edf098e62ac45ed9d6673a3eee10165d0de4164d4d02a3a77f",
+      "ext": ".woff"
+    },
+    {
+      "path": "plugins/system/t3/base-bs3/js/respond.min.js",
+      "bytes": 4377,
+      "sha256": "83a8807ef669fa70d0d9375347f5552897f76c6ae8e2e6f97ef592595462d8d1",
+      "ext": ".js"
+    },
+    {
+      "path": "t3-assets/css/css-08890-03652.css",
+      "bytes": 191886,
+      "sha256": "6a88e378307e79a834622862f14ff3c6965ddeb6dec034728a31475ba163cc67",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-2630e-03652.css",
+      "bytes": 117343,
+      "sha256": "d951a8ab624c1348906f7770923a62561381c10843f1bfd4ae67e4b810f8f0b6",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-26f69-03652.css",
+      "bytes": 129519,
+      "sha256": "53000ce7bcbbd9a9945366f02195ec45b2ffa1a5c1cfa74537781f7c6c9750ff",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-443de-03652.css",
+      "bytes": 123065,
+      "sha256": "74c137618ad159cef5f7b3076c9e31c55b7131a57eb44ff825a52c7762bf8c40",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-53582-03652.css",
+      "bytes": 125201,
+      "sha256": "2e8098f4ae3a0506a6bb33928219253c85deda8211dbd1aee79b5ddc39fdfdb4",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-6414e-03652.css",
+      "bytes": 151761,
+      "sha256": "73f673d4a513a3e58ae517711a3f949516edb56d9de059bdd03bcf3b3107715d",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-67cae-47102.css",
+      "bytes": 102804,
+      "sha256": "3d7cf8e47b91b4ebfaf91b3a08471fe2e0ecee04b805a0815e07828b6522d6df",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-6cd02-03652.css",
+      "bytes": 144606,
+      "sha256": "90982466f808d7b6b41fde34b6c27bb19002980925573a98e3d46cc1319a81fe",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-716d8-03652.css",
+      "bytes": 143695,
+      "sha256": "de612dfba1f82ce434a26317db101d96fbcf24f1c1aeb398b6bae4dcd7a7d53d",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-72166-03652.css",
+      "bytes": 143751,
+      "sha256": "9b54d4181b2cd721d7632d89592f86d47b4e34f5e5a9f1137d8ae8219cab0aa9",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-7fa27-03652.css",
+      "bytes": 191907,
+      "sha256": "2d75016df746c3740df5b62a1a341ed17996177c81e1839c231e544f20a64064",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-85606-03652.css",
+      "bytes": 143751,
+      "sha256": "b88f127e917cfb6f46f3c416fec1823ec9116896a1e2ea38c693edb9c39a5578",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-8e27b-03652.css",
+      "bytes": 119958,
+      "sha256": "fb63369840e03658a2ee053fd73794156f560c63781d91053e9549b0bfdb6f91",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-9a6bd-03652.css",
+      "bytes": 118235,
+      "sha256": "62b52fb9dd89a8377ab70825556a8b06b544c027c57f282f3db06bf456f65c35",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-aa685-03652.css",
+      "bytes": 143737,
+      "sha256": "e3939d1d5696fe98c70065c1e520284dd85a7b4aa0126e052bdc7ffcdef5e984",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-ab8f0-03652.css",
+      "bytes": 144628,
+      "sha256": "864802eafccb630a5b80f18a6c21793f600d354c943c4c47df9e893c32b450a2",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-ae56d-03652.css",
+      "bytes": 153388,
+      "sha256": "b1732c160f345c5e21eb6f389625a6f2ba26828a98cf10b5a4bae9b6bdc8a1ee",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-b483b-03652.css",
+      "bytes": 120262,
+      "sha256": "4a004d23a8e17eade30c7c4aafe0fa24cc7e26f4e522a9245696e6c70a86fd53",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-b6d3f-03652.css",
+      "bytes": 144509,
+      "sha256": "80130e111f5d7dd4952189aedf95fbc34928b6f8a87d9e5586338df9980c3455",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-d07b7-03652.css",
+      "bytes": 191912,
+      "sha256": "f6f3a208a9590c0f7e7a14ad4e758a5d79641b5e500430194103d1c0b421dd21",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-d1244-03652.css",
+      "bytes": 126333,
+      "sha256": "23f036c57aba55568b8fc8dd90dd9d0fa55940a3f87d3dfce130a66b4a8f81e8",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-d6ccc-03652.css",
+      "bytes": 123528,
+      "sha256": "3eac6aff61bce1f0f4e448a055f3feb4a4c364028b1c7a7ce1d6aff1277e7e47",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-d9423-03652.css",
+      "bytes": 144638,
+      "sha256": "b76c28a35eabfe2a07bad57e844a18e7bddb26ca29d6e96f0bb5bf17b392a8ce",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-ef073-51896.css",
+      "bytes": 54040,
+      "sha256": "6d3ba5a78b4640ea1366b733d2d0b0ef0ac9f23bfeb29a7fe34c01e88faaf4ef",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-f8988-03652.css",
+      "bytes": 191871,
+      "sha256": "005fb60470bc9fe9de3767563a8ff2dd14dc7fa9830b70cb90751d60fdadecc4",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-fa32a-03652.css",
+      "bytes": 144606,
+      "sha256": "a7480e86e7dc82b65268f4dafee03d779393fcddde98a382a9d03cb37ca41796",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/css/css-fef1c-03652.css",
+      "bytes": 191886,
+      "sha256": "7d4d607be565c65f7cd7ae7223f5ed2a87d58ad1bcfcbec047087a9871aab25e",
+      "ext": ".css"
+    },
+    {
+      "path": "t3-assets/js/js-2ef91-51896.js",
+      "bytes": 172,
+      "sha256": "e6e5d88142cd871944150df3b8a6080e98f48e819057cb8e4b3425edebe131a6",
+      "ext": ".js"
+    },
+    {
+      "path": "t3-assets/js/js-3ce15-51895.js",
+      "bytes": 4513,
+      "sha256": "eefde916788f0d3ea219f87d19020d3e79930f5598599de96b5084c42055e408",
+      "ext": ".js"
+    },
+    {
+      "path": "t3-assets/js/js-58c87-51896.js",
+      "bytes": 135365,
+      "sha256": "6d7079e4dfb30d178c2fcec3d6d4b7ea111800a38ffa612b6d16d44ffa3bc60f",
+      "ext": ".js"
+    },
+    {
+      "path": "t3-assets/js/js-6675c-51896.js",
+      "bytes": 34001,
+      "sha256": "ee7fc6f83bb14acb33390b516ff690d09400399aadecba9c366da2697af28868",
+      "ext": ".js"
+    },
+    {
+      "path": "t3-assets/js/js-9e46a-51896.js",
+      "bytes": 134960,
+      "sha256": "51d341b31eb5f3b4ceffa38e4541534ba517709a078ab544f257f079dcb25a83",
+      "ext": ".js"
+    },
+    {
+      "path": "t3-assets/js/js-b31a9-51896.js",
+      "bytes": 167995,
+      "sha256": "1a00d74900edf30eedd88cde6b8fdf181f7bef0e65676faf22937bfa5e52cd96",
+      "ext": ".js"
+    },
+    {
+      "path": "templates/ja_restaurant/acm/features-intro/images/decor.png",
+      "bytes": 1010,
+      "sha256": "0a80ddd437da7e3e88cfaae83ffe740f3981ab3ff52b23cc96dfb59472551196",
+      "ext": ".png"
+    },
+    {
+      "path": "templates/ja_restaurant/acm/hero/images/stars.png",
+      "bytes": 1235,
+      "sha256": "5a0e5eaf4f55f5be2713deee76d1850339feda209d564c5863fe7d4bb234447e",
+      "ext": ".png"
+    },
+    {
+      "path": "templates/ja_restaurant/favicon.ico",
+      "bytes": 1150,
+      "sha256": "0e626ccb9a1ad74985a5813c6741d8702ff7a1a864e3f7d9fe99969d2468d1ce",
+      "ext": ".ico"
+    },
+    {
+      "path": "templates/ja_restaurant/fonts/font-awesome/fonts/fontawesome-webfont.svg",
+      "bytes": 391622,
+      "sha256": "8e3586389bb4cd01b3f85bb3b622739bde6627f28bba63a020c223ca9cf1b9ae",
+      "ext": ".svg"
+    },
+    {
+      "path": "templates/ja_restaurant/fonts/font-awesome/fonts/fontawesome-webfont.ttf",
+      "bytes": 152796,
+      "sha256": "ae19e2e4c04f2b04bf030684c4c1db8faf5c8fe3ee03d1e0c409046608b38912",
+      "ext": ".ttf"
+    },
+    {
+      "path": "templates/ja_restaurant/fonts/font-awesome/fonts/fontawesome-webfont.woff",
+      "bytes": 90412,
+      "sha256": "adbc4f95eb6d7f2738959cf0ecbc374672fce47e856050a8e9791f457623ac2c",
+      "ext": ".woff"
+    },
+    {
+      "path": "templates/ja_restaurant/fonts/font-awesome/fonts/fontawesome-webfont.woff2",
+      "bytes": 71896,
+      "sha256": "7dacf83f51179de8d7980a513e67ab3a08f2c6272bb5946df8fd77c0d1763b73",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_restaurant/fonts/ionicons/fonts/ionicons.svg",
+      "bytes": 333834,
+      "sha256": "a627d9068c1235d9b3c95c405eb6ecb64a290b159cf5e926c0d96d89b24cd5fc",
+      "ext": ".svg"
+    },
+    {
+      "path": "templates/ja_restaurant/fonts/ionicons/fonts/ionicons.ttf",
+      "bytes": 188508,
+      "sha256": "2ba7f20b1d8990e17a47fe3d88e4c766628aaa2baf1dd30fca0a0db59836f5f9",
+      "ext": ".ttf"
+    },
+    {
+      "path": "templates/ja_restaurant/fonts/ionicons/fonts/ionicons.woff",
+      "bytes": 67904,
+      "sha256": "709f2789daaff440820ebb975d3ae409af45121bdec47e39e83523490b1bc0fc",
+      "ext": ".woff"
+    },
+    {
+      "path": "templates/ja_restaurant/images/logo.png",
+      "bytes": 6496,
+      "sha256": "0b7ae443816e877c6c8c3b28797d71fbb855aaeddbc91751a6009abe2d32b92c",
+      "ext": ".png"
+    },
+    {
+      "path": "templates/ja_restaurant/images/masthead-default.jpg",
+      "bytes": 624214,
+      "sha256": "66d203711e83ff5fa6e884a06c67a9fbb304181777453e9ff1f9b3cde5cce5b4",
+      "ext": ".jpg"
+    },
+    {
+      "path": "templates/ja_restaurant/images/subscribe-decor.png",
+      "bytes": 1558,
+      "sha256": "5d17eada5dd28ddd290e1e1ad2d92f2a4a0bccef71af3120f13bbc033057843a",
+      "ext": ".png"
+    },
+    {
+      "path": "templates/ja_restaurant/js/img/loading.gif",
+      "bytes": 5975,
+      "sha256": "eb07b925279357eea326468ff41e49ab0db82abfce728b63965083de702523cf",
+      "ext": ".gif"
+    },
+    {
+      "path": "templates/ja_restaurant/js/img/play-pause.svg",
+      "bytes": 564,
+      "sha256": "9846a5acd578ead13bef41286fb05f01801de965e3738014e13f5f510de9b639",
+      "ext": ".svg"
+    },
+    {
+      "path": "templates/ja_restaurant/js/owl-carousel/AjaxLoader.gif",
+      "bytes": 1517,
+      "sha256": "e1da1b5e724cd444319ab4c55e7637b99034b448955ddbe56150b24200a61cde",
+      "ext": ".gif"
+    },
+    {
+      "path": "templates/ja_restaurant/js/owl-carousel/grabbing.png",
+      "bytes": 116,
+      "sha256": "1d2314051fac5fdc37afc9cc275e5840dba27c3a94c207a37ba882e466393970",
+      "ext": ".png"
+    }
+  ],
+  "pages": [
+    {
+      "file": "index.html",
+      "sha256": "fecaccb5658948ce9ad23057ca718ed9d51cd4acac5ed6c1649b56a3ff8e207f",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Joomla Template - JA Restaurant"
+    },
+    {
+      "file": "index.php/about-us/index.html",
+      "sha256": "08cc0112c75d770f729dcfc47ed310532400546cfef09b72e4518096cea9ab2a",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "About us"
+    },
+    {
+      "file": "index.php/about-us/our-history/index.html",
+      "sha256": "3286e202d0ecef0860d83ebedba0f5b73dffcedcfe484d22068e595b8b84452e",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "History"
+    },
+    {
+      "file": "index.php/blog/11-restaurant-news/5-indies-aren-t-sold-on-tech/index.html",
+      "sha256": "54a6569f9d56454a88578dc32120c92cee4b7829f495360eba0b48c6e2d84808",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Indies aren't sold on tech"
+    },
+    {
+      "file": "index.php/blog/11-restaurant-news/index.html",
+      "sha256": "22a66e9972a7a5b3f3ae4800a572fe734e4abffc402e5cbb6f03e5c0bed462c5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant News"
+    },
+    {
+      "file": "index.php/blog/12-restaurant-guide/10-fish-sauces-seep-onto-all-sorts-of-menus/index.html",
+      "sha256": "478571cb3bdb3e32df5c5fb2455db6405fbae7b2798664204231108c7df245bb",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Fish sauces seep onto all sorts of menus"
+    },
+    {
+      "file": "index.php/blog/12-restaurant-guide/11-tortas-pambazos/index.html",
+      "sha256": "95b2e63a9a86b1b903b6bb0807cef3063dbcc2943e4b80ddf261b655a3234cf0",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Denny’s adopts a pancake guarantee"
+    },
+    {
+      "file": "index.php/blog/12-restaurant-guide/12-blt-on-pimento-cheese-biscuit/index.html",
+      "sha256": "1a92904217accdf123d3c00cc81e72b10d631c5c5870bfa0ac78975b9302c217",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "BLT on Pimento Cheese Biscuit"
+    },
+    {
+      "file": "index.php/blog/12-restaurant-guide/8-starbucks-faces-a-big-recall/index.html",
+      "sha256": "5a1a41d3febdd39d5ec189c7d7f3a79d5543e8d00f4ed0bf10f1723d2f93592a",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Starbucks faces a big recall"
+    },
+    {
+      "file": "index.php/blog/12-restaurant-guide/9-logan-s-said-to-be-weighing-bankruptcy/index.html",
+      "sha256": "297521c30d396e9f2469d007ba08db56dd92d74442a7c242e374c226875cc0bd",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Logan's said to be weighing bankruptcy"
+    },
+    {
+      "file": "index.php/blog/12-restaurant-guide/index.html",
+      "sha256": "7dc99aac5cac7b38a4d66a60a2db413bba650e8d49792070ecc3966c31a99850",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Guide"
+    },
+    {
+      "file": "index.php/blog/8-restaurant-business/2-8-habits-that-can-improve-your-customer-service/index.html",
+      "sha256": "c6d471c56c2b0b4c68d0ee60bd5be39dcd2e3fa6d9483bb3a3a40c426c5f5c58",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "4 Habits That Can Improve Your Customer Service"
+    },
+    {
+      "file": "index.php/blog/8-restaurant-business/6-starbucks-brings-under-armour-exec-on-board/index.html",
+      "sha256": "f54d7c826db8a8d80b020e70d28bd3a3390fdbf4c192c207c472d14b7dc89f5e",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Starbucks brings Under Armour exec on board"
+    },
+    {
+      "file": "index.php/blog/8-restaurant-business/7-4-trends-trickling-down-to-mainstream-menus/index.html",
+      "sha256": "ed650ca00fa962145d313975112402108aabbd10c3a52a1434d371fd44fd8c66",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "8 trends trickling down to mainstream menus"
+    },
+    {
+      "file": "index.php/blog/8-restaurant-business/index.html",
+      "sha256": "f0a811c36ff8d6244da8f153c9681c4c591f2728879c9ee4a8e9dda4af7afea0",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Business"
+    },
+    {
+      "file": "index.php/blog/9-restaurant-marketing/13-mcdonald-s-makes-clean-tweaks-to-some-menu-items/index.html",
+      "sha256": "339621d4054ea26982e0fb2598fa70ecc07981aed467fca2cc24bede954599b7",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "McDonald’s makes 'clean' tweaks to some menu items"
+    },
+    {
+      "file": "index.php/blog/9-restaurant-marketing/14-how-the-gop-and-dems-differ-on-restaurant-issues/index.html",
+      "sha256": "474f37518e3c8e51bea8c81069043a581832a18ca41ca9950beb70e5d15314be",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "How the GOP and Dems differ on restaurant issues"
+    },
+    {
+      "file": "index.php/blog/9-restaurant-marketing/3-chipotle-to-launch-burger-spinoff-this-fall/index.html",
+      "sha256": "530724d9aa03ad9b5d5afc8d52c5843e74ecb6595a0779529b15dbf62b8ac32b",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Chipotle to launch burger spinoff this fall"
+    },
+    {
+      "file": "index.php/blog/9-restaurant-marketing/4-how-to-help-your-chef-achieve-a-better-work-life-balance/index.html",
+      "sha256": "8f472141f00d000106de0688be85d71866ba90cf198a0c1738538858c5aa1d53",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "How To Help Your Chef Achieve A Better Work-Life Balance"
+    },
+    {
+      "file": "index.php/blog/9-restaurant-marketing/index.html",
+      "sha256": "47f5cf9290a087abfba8866ce614500b9c9e303edf7da3e5411bf1d91a760b5f",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Marketing"
+    },
+    {
+      "file": "index.php/blog/index.html",
+      "sha256": "e7890b12424551e4ab530d5446f6fa0157d258bac2550022495a9e6737edb906",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Blog"
+    },
+    {
+      "file": "index.php/component/tags/tag/fish/index.html",
+      "sha256": "b815499a4e14a6de46450183034f16820d79124a942e066c9fbc067cb2783d84",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Joomla Template - JA Restaurant"
+    },
+    {
+      "file": "index.php/component/tags/tag/menus/index.html",
+      "sha256": "119f6781edcdb04a8e5581ccf38746489108238b93c9902358780b0bf7dee24d",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Joomla Template - JA Restaurant"
+    },
+    {
+      "file": "index.php/component/tags/tag/seep/index.html",
+      "sha256": "7bb27caf5d1a897971e56b126d4a64704716facbebe37fbf325c9f945ce5b932",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Joomla Template - JA Restaurant"
+    },
+    {
+      "file": "index.php/contact/contact-us/index.html",
+      "sha256": "6c14bd9520a8339e46d3c0306b7c145edb61043012e128b63b1413ef27c1ed0f",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Contact Us"
+    },
+    {
+      "file": "index.php/contact/phone-reservation/index.html",
+      "sha256": "1a34656db5700c3e134c9425d271f9b1e1ff2fb98330f8788e283a9819685988",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Phone Reservation"
+    },
+    {
+      "file": "index.php/explore/bonus-pages/erro-page/index.html",
+      "sha256": "909222e7c755c6b02aae5c680a8a5bf10d955185c344b5683fd0b6d9ac880518",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "404 page"
+    },
+    {
+      "file": "index.php/explore/bonus-pages/offline-page/index.html",
+      "sha256": "543e23b918d0085cf466db70a94085774df8676af0fe06a5874d232500c9c74b",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Offline page"
+    },
+    {
+      "file": "index.php/explore/j-pages/all-categories/index.html",
+      "sha256": "621baad9aa568fdff4a9f41444bd5904cd68c4fab11c95341a019868a6ba0838",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "All Categories"
+    },
+    {
+      "file": "index.php/explore/j-pages/category-blog/index.html",
+      "sha256": "f1b68aa507cf84e45658f75514952755a78e499452b5889882eb53d85c7fb80c",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Typography"
+    },
+    {
+      "file": "index.php/explore/j-pages/featured-articles/index.html",
+      "sha256": "c66c77ef6715e9fcdf3b2093b6f22cd43afdf12c421233c8cf2768e48d258964",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Featured Articles"
+    },
+    {
+      "file": "index.php/explore/j-pages/login/index.html",
+      "sha256": "fb0a1b6149acfbc6e62d3b57b0b4ba09a03a8f59a96a55a92f4abaf57ed01bda",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Login"
+    },
+    {
+      "file": "index.php/explore/j-pages/registration/index.html",
+      "sha256": "64a2de20692305b41cd5de94e6479a52af67439aaf88ada0f15757cbf2e896a9",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Registration"
+    },
+    {
+      "file": "index.php/explore/j-pages/reminder/index.html",
+      "sha256": "db4367a60b7b0437ab78e6fc44694704e4e64acea17e8acc677c63528a7def8e",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Reminder"
+    },
+    {
+      "file": "index.php/explore/j-pages/reset-password/index.html",
+      "sha256": "1fbf004111ed4b65625f9a0047ef22ed138ef11a4d5206700d4510830896622b",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Reset your password"
+    },
+    {
+      "file": "index.php/explore/j-pages/smart-search/index.html",
+      "sha256": "9220336e2628f55add893734023c2763ef92d7628765a5afac3b98d0446cc6e5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Smart Search"
+    },
+    {
+      "file": "index.php/explore/j-pages/tagged-items/index.html",
+      "sha256": "980f42fd8c3365281a6f16bdb00de806330c0009f5b89ce3a35f03f4e2539c4c",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Tagged Items"
+    },
+    {
+      "file": "index.php/explore/themes/blue-color/index.html",
+      "sha256": "f60f3a9cf1f17c40fee9fd0ed7f4fdb350ae57b2fd815d7892a39191745076f7",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Joomla Template - JA Restaurant"
+    },
+    {
+      "file": "index.php/explore/themes/green-color/index.html",
+      "sha256": "ee2e44943356da01792816627a5da307c7e293688e744fb121a06d79df0f9f6b",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Joomla Template - JA Restaurant"
+    },
+    {
+      "file": "index.php/explore/themes/pink-color/index.html",
+      "sha256": "7b5f874a1a52d0ae97fb76615c10f84948b8378f6a18ba675578a7be16f7a9d3",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Joomla Template - JA Restaurant"
+    },
+    {
+      "file": "index.php/explore/themes/purple-color/index.html",
+      "sha256": "911dd267cdf99954f257e0dde78c1208122aa9bb1cdd159ae55f339537dac696",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Restaurant Joomla Template - JA Restaurant"
+    },
+    {
+      "file": "index.php/gallery/18-sample-album-1/index.html",
+      "sha256": "4a43ab11cea491d47390a2e2f0156e676225b6f045b6022d752ea49fe6f3b63d",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Sample Album 1"
+    },
+    {
+      "file": "index.php/gallery/19-sample-album-2/index.html",
+      "sha256": "f17ed68bea5575efe70e13d4ac76839f47fddca468dfd26088b9e4fda9507f49",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Sample Album 2"
+    },
+    {
+      "file": "index.php/gallery/20-sample-album-3/index.html",
+      "sha256": "a9bdffcd680aa82ec9d8f5080aaea73797ad567e5fa19e3bb28f42e0d6c5c32c",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Sample Album 3"
+    },
+    {
+      "file": "index.php/gallery/21-sample-album-4/index.html",
+      "sha256": "b428c0f7bf4c7c949823208849fd747e992d3130ce9161109e2f686084661ca5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Sample Album 4"
+    },
+    {
+      "file": "index.php/gallery/22-sample-album-5/index.html",
+      "sha256": "4223d18154a2450a1b3639f3e0debe2dfe0fa19ef046f4ad6b1b711e0153af90",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Sample Album 5"
+    },
+    {
+      "file": "index.php/gallery/23-sample-album-6/index.html",
+      "sha256": "9242a79390ccb947e8a9212c5f0e0caa6990e3727ee691c496c3e121bba381a5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Sample Album 6"
+    },
+    {
+      "file": "index.php/gallery/24-sample-album-7/index.html",
+      "sha256": "b2a57d748b986b9a7dff62b0f30323438bab7d7eb4399c5e9dfa9022c43f04f9",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Sample Album 7"
+    },
+    {
+      "file": "index.php/gallery/index.html",
+      "sha256": "2381138f2199a33f1ff682b006448eddb9c884c24340c05f4e50eb53c777c2dc",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Gallery"
+    },
+    {
+      "file": "index.php/menu/2-column-menu/index.html",
+      "sha256": "a39a3472b1c5893e45f34d4331aa92f11eaef6f9fa0e531954b332d07656c27b",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "2 Column Menu"
+    },
+    {
+      "file": "index.php/menu/index.html",
+      "sha256": "e7fe333a5bafefdbe331883c48d28ca8ff97d4e4d956f97367d8fe8b4dfdacc4",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Menu"
+    },
+    {
+      "file": "index.php/menu/menu-with-image/index.html",
+      "sha256": "0138b79651378879018641d83ff12565b38c4fe5015dca6af2b6044be4f532b6",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Menu with Image"
+    },
+    {
+      "file": "index.php/menu/simple-menu/index.html",
+      "sha256": "c51a39f50bfb322da71d08b16cb50cd6f2321bc7758ee70fac5b73f37a5cd899",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Simple Menu"
+    },
+    {
+      "file": "index.php/nope-404/index.html",
+      "sha256": "58881e41e44b69d3c6e90f1e3558f82e7895510f14252063f81fb98f63a03ece",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "404 - Error: 404"
+    },
+    {
+      "file": "index.php/offers/index.html",
+      "sha256": "be37e76d728ca7263db9b976fd3b980136ed6d33630a65c98f3102dcbaebcded",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Offers"
+    }
+  ],
+  "totals": {
+    "files": 241,
+    "bytes": 21604915,
+    "html": 55,
+    "byExt": {
+      ".json": 1,
+      ".jpg": 86,
+      ".png": 20,
+      ".html": 55,
+      ".svg": 4,
+      ".ttf": 8,
+      ".woff": 5,
+      ".js": 23,
+      ".css": 31,
+      ".woff2": 5,
+      ".ico": 1,
+      ".gif": 2
+    },
+    "dataScripts": 0
+  }
+}

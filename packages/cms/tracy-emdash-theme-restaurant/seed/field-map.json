@@ -1,0 +1,790 @@
+{
+	"generatedAt": "2026-11-04T02:33:51.029Z",
+	"fields": {
+		"pages.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"pages.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"pages.view": {
+			"source": "text",
+			"target": "string",
+			"label": "View"
+		},
+		"pages.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image"
+		},
+		"pages.caption": {
+			"source": "text",
+			"target": "string",
+			"label": "Caption"
+		},
+		"pages.lead_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Lead title"
+		},
+		"pages.lead_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Lead text"
+		},
+		"pages.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"pages.sections": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Sections"
+		},
+		"posts.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"posts.excerpt": {
+			"source": "prose",
+			"target": "text",
+			"label": "Excerpt"
+		},
+		"posts.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"posts.date": {
+			"source": "date",
+			"target": "datetime",
+			"label": "Date"
+		},
+		"posts.cover": {
+			"source": "image",
+			"target": "image",
+			"label": "Cover"
+		},
+		"posts.featured": {
+			"source": "boolean",
+			"target": "boolean",
+			"label": "Featured"
+		},
+		"posts.featured_order": {
+			"source": "number",
+			"target": "integer",
+			"label": "Featured order"
+		},
+		"posts.list_order": {
+			"source": "number",
+			"target": "integer",
+			"label": "List order"
+		},
+		"posts.photos": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Photos"
+		},
+		"posts.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"slideshow.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"slideshow.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"slideshow.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"slideshow.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"slideshow.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"hero.hero_heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Hero heading"
+		},
+		"hero.hero_intro": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Hero intro"
+		},
+		"hero.hero_img": {
+			"source": "text",
+			"target": "image",
+			"label": "Hero img"
+		},
+		"hero.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"hero.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"hero.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"hero.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"features_intro.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"features_intro.description": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Description"
+		},
+		"features_intro.img_features": {
+			"source": "text",
+			"target": "image",
+			"label": "Img features"
+		},
+		"features_intro.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"features_intro.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"features_intro.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"features_intro.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"menu.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"menu.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"menu.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"menu.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"menu.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"tabs.heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Heading"
+		},
+		"tabs.position": {
+			"source": "text",
+			"target": "string",
+			"label": "Position"
+		},
+		"tabs.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"tabs.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"tabs.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"tabs.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"testimonials.block_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Block intro"
+		},
+		"testimonials.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"testimonials.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"testimonials.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"testimonials.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"testimonials.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"statistics.button_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Button title"
+		},
+		"statistics.button_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Button link"
+		},
+		"statistics.button_icon": {
+			"source": "text",
+			"target": "string",
+			"label": "Button icon"
+		},
+		"statistics.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"statistics.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"statistics.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"statistics.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"statistics.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"teams.number_col": {
+			"source": "text",
+			"target": "string",
+			"label": "Number col"
+		},
+		"teams.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"teams.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"teams.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"teams.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"teams.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"timeline.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"timeline.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"timeline.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"timeline.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"timeline.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"opentime.oclock_begin": {
+			"source": "text",
+			"target": "string",
+			"label": "Oclock begin"
+		},
+		"opentime.oclock_end": {
+			"source": "text",
+			"target": "string",
+			"label": "Oclock end"
+		},
+		"opentime.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"opentime.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"opentime.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"opentime.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"opentable.ot_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Ot desc"
+		},
+		"opentable.ot_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Ot id"
+		},
+		"opentable.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"happyhours.hp_bg": {
+			"source": "text",
+			"target": "image",
+			"label": "Hp bg"
+		},
+		"happyhours.hp_brand": {
+			"source": "text",
+			"target": "image",
+			"label": "Hp brand"
+		},
+		"happyhours.hp_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp title"
+		},
+		"happyhours.hp_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp desc"
+		},
+		"happyhours.hp_info": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp info"
+		},
+		"happyhours.hp_badge": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp badge"
+		},
+		"happyhours.hp_link_text": {
+			"source": "url",
+			"target": "string",
+			"label": "Hp link text"
+		},
+		"happyhours.hp_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Hp link"
+		},
+		"happyhours.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"happyhours.hp_other_info": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp other info"
+		},
+		"happyhours.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"happyhours.section_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Section style"
+		},
+		"happyhours.section_intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Section intro"
+		},
+		"chrome.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"chrome.brand_name": {
+			"source": "text",
+			"target": "string",
+			"label": "Brand name"
+		},
+		"chrome.topbar_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Topbar text"
+		},
+		"chrome.logo_dark": {
+			"source": "image",
+			"target": "image",
+			"label": "Logo dark"
+		},
+		"chrome.footer_location_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer location title"
+		},
+		"chrome.footer_address": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer address"
+		},
+		"chrome.footer_map_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer map label"
+		},
+		"chrome.footer_map_url": {
+			"source": "url",
+			"target": "string",
+			"label": "Footer map url"
+		},
+		"chrome.footer_hours_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer hours title"
+		},
+		"chrome.footer_hours": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Footer hours"
+		},
+		"chrome.footer_contact_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer contact title"
+		},
+		"chrome.footer_contact": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Footer contact"
+		},
+		"chrome.copyright": {
+			"source": "text",
+			"target": "string",
+			"label": "Copyright"
+		},
+		"chrome.skip_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Skip label"
+		},
+		"chrome.menu_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Menu label"
+		},
+		"chrome.appearance_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Appearance label"
+		},
+		"chrome.categories_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Categories title"
+		},
+		"chrome.prev_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Prev label"
+		},
+		"chrome.next_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Next label"
+		},
+		"chrome.more_label": {
+			"source": "text",
+			"target": "string",
+			"label": "More label"
+		},
+		"chrome.photos_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Photos label"
+		},
+		"chrome.gallery_link_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Gallery link label"
+		},
+		"chrome.not_found_code": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found code"
+		},
+		"chrome.not_found_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found title"
+		},
+		"chrome.not_found_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found text"
+		},
+		"chrome.not_found_back_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found back label"
+		},
+		"masthead.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"masthead.description": {
+			"source": "text",
+			"target": "string",
+			"label": "Description"
+		},
+		"masthead.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"banner.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"banner.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image"
+		},
+		"banner.price": {
+			"source": "text",
+			"target": "string",
+			"label": "Price"
+		},
+		"banner.points": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Points"
+		},
+		"banner.button_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Button label"
+		},
+		"banner.button_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Button link"
+		},
+		"category_info.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"category_info.description": {
+			"source": "text",
+			"target": "string",
+			"label": "Description"
+		},
+		"category_info.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image"
+		},
+		"subscribe.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"subscribe.intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Intro"
+		},
+		"subscribe.placeholder": {
+			"source": "text",
+			"target": "string",
+			"label": "Placeholder"
+		},
+		"subscribe.button": {
+			"source": "text",
+			"target": "string",
+			"label": "Button"
+		},
+		"subscribe.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		},
+		"contact.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"contact.form_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Form title"
+		},
+		"contact.form_note": {
+			"source": "text",
+			"target": "string",
+			"label": "Form note"
+		},
+		"contact.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		},
+		"contact.card_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Card title"
+		},
+		"contact.card_text": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Card text"
+		},
+		"contact.details_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Details title"
+		},
+		"contact.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image"
+		},
+		"contact.address": {
+			"source": "text",
+			"target": "string",
+			"label": "Address"
+		},
+		"contact.phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Phone"
+		},
+		"contact.mobile": {
+			"source": "text",
+			"target": "string",
+			"label": "Mobile"
+		},
+		"reservation.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"reservation.intro": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Intro"
+		},
+		"reservation.blocks": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Blocks"
+		},
+		"reservation.online_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Online title"
+		},
+		"reservation.online_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Online text"
+		},
+		"reservation.online_button": {
+			"source": "text",
+			"target": "string",
+			"label": "Online button"
+		},
+		"reservation.online_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Online link"
+		}
+	}
+}

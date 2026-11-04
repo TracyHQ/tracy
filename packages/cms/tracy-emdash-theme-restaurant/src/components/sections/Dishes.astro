@@ -1,0 +1,34 @@
+---
+/** One menu entry as a list of dishes. Style 1 = name · price · short text; 2 = picture beside the text; 3 = two columns of cards. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+
+interface Props {
+  menu: Row
+  style: 1 | 2 | 3
+}
+const { menu, style } = Astro.props
+const $m = stampFor(Astro.request, 'menu', { id: menu.id, slug: menu.slug })
+const items: any[] = menu.items ?? []
+---
+
+<div class:list={['rs-dishes', `is-style-${style}`]}>
+	{items.map((d, i) => {
+		const img = style > 1 ? mediaUrl(d.dish_image) : null
+		return (
+			<div class="rs-dish-item">
+				<div class="rs-dish-inner">
+					{img && style === 3 && <span class="rs-dish-img"><img src={img} alt="" width="123" height="123" loading="lazy" decoding="async" /></span>}
+					{img && style === 2 && <img class="rs-dish-photo" src={img} alt="" width="250" height="158" loading="lazy" decoding="async" />}
+					<h3 class="rs-dish-name" {...$m(`items[${i}].dish_name`)}>
+						{d.dish_name?.trim()}
+						{style === 2 && d.dish_extra_class && <span class:list={['rs-badge', `is-${String(d.dish_extra_class).toLowerCase()}`]}>{d.dish_extra_class}</span>}
+					</h3>
+					<span class="rs-dish-cost" {...$m(`items[${i}].dish_price`)}>{d.dish_price}</span>
+					{d.dish_description && <p class="rs-dish-desc" {...$m(`items[${i}].dish_description`)}>{d.dish_description}</p>}
+				</div>
+			</div>
+		)
+	})}
+</div>

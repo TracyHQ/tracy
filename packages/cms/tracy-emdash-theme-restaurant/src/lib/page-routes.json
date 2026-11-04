@@ -1,0 +1,82 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "slug": "home",
+      "view": "front-page"
+    },
+    {
+      "path": "/about-us",
+      "slug": "about-us",
+      "view": "page"
+    },
+    {
+      "path": "/menu",
+      "slug": "menu",
+      "view": "page"
+    },
+    {
+      "path": "/explore/j-pages/featured-articles",
+      "slug": "featured-articles",
+      "view": "page-landing"
+    },
+    {
+      "path": "/explore/j-pages/all-categories",
+      "slug": "all-categories",
+      "view": "page"
+    },
+    {
+      "path": "/about-us/our-history",
+      "slug": "our-history",
+      "view": "page"
+    },
+    {
+      "path": "/contact/phone-reservation",
+      "slug": "phone-reservation",
+      "view": "page"
+    },
+    {
+      "path": "/contact/contact-us",
+      "slug": "contact-us",
+      "view": "page-contact"
+    },
+    {
+      "path": "/menu/simple-menu",
+      "slug": "simple-menu",
+      "view": "page-landing"
+    },
+    {
+      "path": "/menu/menu-with-image",
+      "slug": "menu-with-image",
+      "view": "page-landing"
+    },
+    {
+      "path": "/menu/2-column-menu",
+      "slug": "2-column-menu",
+      "view": "page-landing"
+    },
+    {
+      "path": "/offers",
+      "slug": "offers",
+      "view": "page-landing"
+    }
+  ],
+  "lists": [
+    {
+      "path": "/blog",
+      "type": "posts"
+    },
+    {
+      "path": "/explore/j-pages/smart-search",
+      "type": "posts"
+    },
+    {
+      "path": "/gallery",
+      "type": "posts"
+    },
+    {
+      "path": "/explore/j-pages/tagged-items",
+      "type": "posts"
+    }
+  ]
+}

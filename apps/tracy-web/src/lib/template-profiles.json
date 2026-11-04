@@ -3561,6 +3561,14 @@
         "note": "Copied from Tracy Base 0.5.6 (template.config.json id tracy-coffee); read off the 0.1.0 pack source 30/10/2026: Logo.astro byte-identical to Base 0.5.6, settings.logo in the light header and site.logo_dark in the dark one, the template icon (/favicon.svg) only while settings.favicon is empty (Base.astro templateIconWanted). Only the header's page list and the theme toggle's stored key (tracy-coffee-theme) differ from Base."
       }
     },
+    "tracy-restaurant/emdash-0.x": {
+      "1.0.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "Read off the 1.0.0 pack source: the header is the only logo spot (BrandLogo with logoSpots); settings.logo in the light header and the chrome entry's logo_dark in the dark one, switched by the ◐ toggle and the visitor system; the template icon only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      }
+    },
     "tracy-saas/emdash-0.x": {
       "1.3.0": {
         "logos": "pair",
