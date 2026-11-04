@@ -5,6 +5,7 @@ import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import type { Row } from '@/lib/content'
 import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   locale: Locale
@@ -73,7 +74,7 @@ const items: any[] = testimonials?.items ?? []
 			<ul class="rs-banner-points">
 				{(banner.points ?? []).map((p: any, i: number) => <li {...$b(`points[${i}].text`)}>{p.text}</li>)}
 			</ul>
-			{banner.button_label && live(banner.button_link) && <div class="rs-banner-actions"><a class="rs-btn" href={href(locale, banner.button_link || '/')} {...$b('button_label')}>{banner.button_label}</a></div>}
+			{banner.button_label && live(banner.button_link) && <div class="rs-banner-actions"><a class="rs-btn" href={dataHref(banner.button_link || '/', (p) => href(locale, p))} {...$b('button_label')}>{banner.button_label}</a></div>}
 		</div>
 	)}
 </aside>

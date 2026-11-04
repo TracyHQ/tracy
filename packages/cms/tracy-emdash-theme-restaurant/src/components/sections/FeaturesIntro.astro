@@ -6,6 +6,7 @@ import { mediaUrl } from '@/lib/media'
 import { stampBlocks, stampFor } from '@/lib/stamps'
 import type { Row } from '@/lib/content'
 import { liveBlocks, liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   entry: Row
@@ -25,7 +26,7 @@ const text = await liveBlocks(Astro.request, locale, blocks.filter((b) => !isBut
 const button = blocks.find(isButton)
 const link = button ? (button.markDefs ?? []).find((m: any) => m._key === button.children[0].marks[0]) : null
 const img = mediaUrl(entry.img_features)
-const to = (u: string) => (u.startsWith('#') ? u : href(locale, u))
+const to = (u: string) => dataHref(u, (p) => href(locale, p)) ?? '/'
 const live = await liveLinks(Astro.request, locale, [link?.href])
 ---
 

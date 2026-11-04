@@ -95,6 +95,13 @@
     {
       "collection": "hero",
       "slug": "welcome-to-res-bar-restaurant-2",
+      "field": "hero_heading",
+      "brief": "a short heading that introduces the kitchen team of this restaurant, in two short lines",
+      "maxWords": 6
+    },
+    {
+      "collection": "hero",
+      "slug": "welcome-to-res-bar-restaurant-2",
       "field": "hero_intro",
       "brief": "two sentences inviting guests to eat here, about the food and the welcome, with no year, address or number",
       "maxWords": 40

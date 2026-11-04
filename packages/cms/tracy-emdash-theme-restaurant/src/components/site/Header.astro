@@ -9,6 +9,7 @@ import BrandLogo from '@/components/site/BrandLogo.astro'
 import { DEMO_LOGO, DEMO_LOGO_SMALL } from '@/lib/demo-logo'
 import { liveLinks } from '@/lib/link-gate'
 import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   chrome: Chrome
@@ -59,7 +60,7 @@ const rest = primary.filter((i) => i !== home)
 			<div class="rs-nav-inner">
 				{home && (
 					<div class="rs-nav-home">
-						<a href={href(locale, home.url)} aria-label={home.label} class:list={[active(home) && 'is-active']} style="padding:0">
+						<a href={dataHref(home.url, (p) => href(locale, p))} aria-label={home.label} class:list={[active(home) && 'is-active']} style="padding:0">
 							<svg width="30" height="30" viewBox="0 0 576 512" aria-hidden="true"><path fill="currentColor" d="M280 148 96 300v164a16 16 0 0 0 16 16h112V344h128v136h112a16 16 0 0 0 16-16V300L296 148a12 12 0 0 0-16 0zm292 88L488 166V44a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72L318 38a48 48 0 0 0-60 0L4 236a12 12 0 0 0-1.6 17l25.5 31a12 12 0 0 0 17 1.6L288 82l243 203a12 12 0 0 0 17-1.6l25.5-31a12 12 0 0 0-1.6-17z"/></svg>
 						</a>
 					</div>
@@ -67,17 +68,17 @@ const rest = primary.filter((i) => i !== home)
 				<ul class="rs-nav-main">
 					{rest.map((item) => (
 						<li class:list={[item.children.length > 0 && 'has-sub', active(item) && 'is-active']}>
-							{item.url && item.url !== '' ? <a href={href(locale, item.url)}>{item.label}</a> : <span class="rs-nav-label" tabindex={item.children.length ? 0 : undefined}>{item.label}</span>}
+							{item.url && item.url !== '' ? <a href={dataHref(item.url, (p) => href(locale, p))}>{item.label}</a> : <span class="rs-nav-label" tabindex={item.children.length ? 0 : undefined}>{item.label}</span>}
 							{item.children.length > 0 && (
 								<div class="rs-sub">
 									<ul>
 										{item.children.map((child) => (
 											<li>
-												{child.url ? <a href={href(locale, child.url)}>{child.label}</a> : <span class="rs-nav-label">{child.label}</span>}
+												{child.url ? <a href={dataHref(child.url, (p) => href(locale, p))}>{child.label}</a> : <span class="rs-nav-label">{child.label}</span>}
 												{child.children.length > 0 && (
 													<ul>
 														{child.children.map((leaf) => (
-															<li><a href={href(locale, leaf.url)}>{leaf.label}</a></li>
+															<li><a href={dataHref(leaf.url, (p) => href(locale, p))}>{leaf.label}</a></li>
 														))}
 													</ul>
 												)}
@@ -98,16 +99,16 @@ const rest = primary.filter((i) => i !== home)
 			<ul>
 				{primary.map((item) => (
 					<li>
-						{item.url ? <a href={href(locale, item.url)}>{item.label}</a> : <span class="rs-nav-label">{item.label}</span>}
+						{item.url ? <a href={dataHref(item.url, (p) => href(locale, p))}>{item.label}</a> : <span class="rs-nav-label">{item.label}</span>}
 						{item.children.length > 0 && (
 							<ul>
 								{item.children.map((child) => (
 									<li>
-										{child.url ? <a href={href(locale, child.url)}>{child.label}</a> : <span class="rs-nav-label">{child.label}</span>}
+										{child.url ? <a href={dataHref(child.url, (p) => href(locale, p))}>{child.label}</a> : <span class="rs-nav-label">{child.label}</span>}
 										{child.children.length > 0 && (
 											<ul>
 												{child.children.map((leaf) => (
-													<li><a href={href(locale, leaf.url)}>{leaf.label}</a></li>
+													<li><a href={dataHref(leaf.url, (p) => href(locale, p))}>{leaf.label}</a></li>
 												))}
 											</ul>
 										)}

@@ -5,6 +5,7 @@ import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import type { Row } from '@/lib/content'
 import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   entry: Row
@@ -26,7 +27,7 @@ const live = await liveLinks(Astro.request, locale, items.map((it) => it.btn_lin
 					<div class="rs-collage-card">
 						<h2 class="rs-display" {...$f(`items[${i}].title`)}>{it.title}</h2>
 						<p {...$f(`items[${i}].description`)}>{it.description}</p>
-						{it.btn_value && live(it.btn_link) && <a class="rs-btn rs-btn-outline" href={href(locale, it.btn_link || '/')} {...$f(`items[${i}].btn_value`)}>{it.btn_value}</a>}
+						{it.btn_value && live(it.btn_link) && <a class="rs-btn rs-btn-outline" href={dataHref(it.btn_link || '/', (p) => href(locale, p))} {...$f(`items[${i}].btn_value`)}>{it.btn_value}</a>}
 					</div>
 					{i % 2 === 0 && mediaUrl(it.img_icon) && <div class="rs-collage-img"><img src={mediaUrl(it.img_icon)!} alt="" width="500" height="300" loading="lazy" decoding="async" {...$f(`items[${i}].img_icon`)} /></div>}
 				</div>

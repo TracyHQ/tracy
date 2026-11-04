@@ -22,22 +22,46 @@ export function isScriptUrl(url: unknown): boolean {
   return scheme === 'javascript' || scheme === 'vbscript' || scheme === 'data'
 }
 
+/** The host of an origin (`https://site.test:8443` -> `site.test:8443`). */
+const hostOf = (origin: string): string | null => {
+  try {
+    return new URL(origin).host
+  } catch {
+    return null
+  }
+}
+
 /**
  * The gate passes an external link (http(s) to another host), `tel:`, `mailto:` and an in-page `#` link unchanged and gates a
- * same-site path. This reads the URL as the path it opens on THIS site: a path as it is, an absolute http(s) URL of one of
- * `origins` as its path, anything else (another host, another scheme, `#`, `//host`) as null, which the gate always passes.
+ * same-site path. This reads the URL as the path it opens on THIS site: a path as it is; an absolute http(s) URL or a
+ * protocol-relative `//host/...` URL whose host is one of `origins` (any scheme: `http://site.test/menu` on an https site is
+ * still `/menu`) as its path; anything else (another host, another scheme, `#`) as null, which the gate always passes.
  */
 export function sameSitePath(url: unknown, origins: readonly string[]): string | null {
   if (typeof url !== 'string' || isScriptUrl(url)) return null
   const raw = url.trim()
   if (raw.startsWith('/') && !raw.startsWith('//')) return raw
-  if (!/^https?:\/\//i.test(raw)) return null
+  if (!/^(https?:)?\/\//i.test(raw)) return null
   try {
-    const u = new URL(raw)
-    return origins.includes(u.origin) ? `${u.pathname}${u.search}${u.hash}` : null
+    const u = new URL(raw.startsWith('//') ? `https:${raw}` : raw)
+    const own = origins.map(hostOf)
+    return own.includes(u.host) ? `${u.pathname}${u.search}${u.hash}` : null
   } catch {
     return null
   }
+}
+
+/**
+ * The `href` to print for a link that comes from data. Only a same-site path takes the locale prefix (`prefix`, the theme's
+ * `href(locale, path)`); an external link, a protocol-relative one, `tel:`, `mailto:`, `#` and any other scheme are printed as
+ * written. A script URL is not printed at all (null): the caller draws the words alone.
+ */
+export function dataHref(url: unknown, prefix: (path: string) => string): string | null {
+  if (typeof url !== 'string' || url.trim() === '') return null
+  if (isScriptUrl(url)) return null
+  const raw = url.trim()
+  if (raw.startsWith('#') || raw.startsWith('//') || schemeOf(raw) !== null) return raw
+  return prefix(raw)
 }
 
 type Mark = string

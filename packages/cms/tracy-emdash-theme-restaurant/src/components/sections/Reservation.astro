@@ -6,6 +6,7 @@ import { section } from '@/lib/content'
 import { mediaUrl } from '@/lib/media'
 import { stampBlocks, stampFor } from '@/lib/stamps'
 import { liveBlocks, liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   locale: Locale
@@ -14,7 +15,7 @@ const { locale } = Astro.props
 const r = await section('reservation', 'reservation', locale)
 const $r = stampFor(Astro.request, 'reservation', r ? { id: r.id, slug: r.slug } : null)
 const intro = r ? await liveBlocks(Astro.request, locale, stampBlocks($r, 'intro', r.intro)) : []
-const to = (u: string) => (/^(tel:|mailto:|https?:)/.test(u) ? u : href(locale, u))
+const to = (u: string) => dataHref(u || '/', (p) => href(locale, p)) ?? '/'
 const live = await liveLinks(Astro.request, locale, [...(r?.blocks ?? []).map((b: any) => b.button_link), r?.online_link])
 const br = (t: string) => String(t ?? '').split('\n')
 ---

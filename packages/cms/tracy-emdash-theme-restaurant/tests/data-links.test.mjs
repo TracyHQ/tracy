@@ -6,7 +6,14 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { gateBlocks, isScriptUrl, linkHrefs, sameSitePath, schemeOf } from '../src/lib/data-links.ts'
+import {
+  dataHref,
+  gateBlocks,
+  isScriptUrl,
+  linkHrefs,
+  sameSitePath,
+  schemeOf
+} from '../src/lib/data-links.ts'
 import { cleanHtml } from '../src/lib/html.ts'
 import { linkChecker } from '../src/lib/page-records.ts'
 import { withParents } from '../src/lib/parent-gate.ts'
@@ -246,4 +253,83 @@ test('cleanHtml drops a script URL from href however it is spelled, and from an 
   assert.match(cleanHtml('<a href="https://example.com">x</a>'), /href="https:\/\/example\.com"/)
   assert.doesNotMatch(cleanHtml('<img src="javascript:alert(1)" alt="a">'), /src=/)
   assert.match(cleanHtml('<img src="/brand/logo.png" alt="a">'), /src="\/brand\/logo\.png"/)
+})
+
+// ── own-host URLs are same-site paths, whatever the scheme (sameSitePath) ───────────────────────────────────────────────
+test('an absolute or protocol-relative URL on the own host is a same-site path; another host is not', async () => {
+  const origins = ['https://site.test', 'http://127.0.0.1:4321']
+  for (const own of [
+    '//site.test/menu',
+    'https://site.test/menu',
+    'http://site.test/menu',
+    'HTTPS://SITE.TEST/menu'
+  ])
+    assert.equal(sameSitePath(own, origins), '/menu', own)
+  assert.equal(sameSitePath('//site.test/menu/simple-menu?x=1#y', origins), '/menu/simple-menu?x=1#y')
+  assert.equal(sameSitePath('http://127.0.0.1:4321/menu', origins), '/menu')
+  for (const other of [
+    '//cdn.test/menu',
+    'https://site.test.evil.test/menu',
+    'http://site.test:8080/menu',
+    '//site.test.evil.test/menu'
+  ])
+    assert.equal(sameSitePath(other, origins), null, other)
+  // and the gate then asks about the path: a protocol-relative link to the own Menu goes with Menu
+  const table = { menu: { collection: 'pages', slug: 'menu' } }
+  const check = withParents(
+    linkChecker(async ({ slug }) => slug !== 'menu', table, ['en']),
+    table,
+    ['en']
+  )
+  const asPath = (u) => sameSitePath(u, origins) ?? u
+  const urls = ['//site.test/menu', 'http://site.test/menu/simple-menu', '//cdn.test/menu']
+  const live = await check(urls.map(asPath))
+  assert.deepEqual(
+    urls.map((u) => live(asPath(u))),
+    [false, false, true]
+  )
+})
+
+// ── what is printed: only a same-site path takes the locale prefix (dataHref) ───────────────────────────────────────────────
+test('only a same-site path takes the locale prefix; every other kind of link is printed as written', () => {
+  const vi = (p) => `/vi${p === '/' ? '' : p}`
+  assert.equal(dataHref('/menu', vi), '/vi/menu')
+  assert.equal(dataHref('/', vi), '/vi')
+  assert.equal(dataHref('menu', vi), vi('menu'), 'a bare path is handed to the prefix function as it is')
+  for (const asWritten of [
+    'https://example.com/a',
+    'http://example.com',
+    '//cdn.test/a',
+    '#about',
+    'tel:+1 212 555 0110',
+    'mailto:a@b.test',
+    'sms:123',
+    'ftp://h/x'
+  ])
+    assert.equal(dataHref(asWritten, vi), asWritten, asWritten)
+  assert.equal(dataHref('  https://example.com/a ', vi), 'https://example.com/a', 'trimmed')
+  for (const none of ['javascript:alert(1)', ' JaVaScript:x', 'data:text/html,x', '', '   ', null, undefined])
+    assert.equal(dataHref(none, vi), null, String(none))
+})
+
+test('every data href is printed through dataHref, so no external or fragment link is prefixed', () => {
+  for (const file of [
+    'src/components/sections/Slideshow.astro',
+    'src/components/sections/Stats.astro',
+    'src/components/sections/HappyHours.astro',
+    'src/components/sections/FeaturesCollage.astro',
+    'src/components/sections/FeaturesIntro.astro',
+    'src/components/sections/Reservation.astro',
+    'src/components/sections/Sidebar.astro',
+    'src/components/site/Header.astro'
+  ])
+    assert.match(read(file), /dataHref\(/, file)
+  // what is left of `href(locale, …)` is built by code from a route (a post, a category, the gallery), never from a field
+  const left = astroFiles('src').flatMap((f) =>
+    [...read(f).matchAll(/href=\{href\(locale, ([^)]*\)?)\)\}/g)].map((m) => `${f}: ${m[1]}`)
+  )
+  const fromField = left.filter((l) =>
+    /\b(s|it|b|r|entry|banner|c|item|child|leaf|home)\.(\w*(link|url)\w*)/.test(l)
+  )
+  assert.deepEqual(fromField, [])
 })
