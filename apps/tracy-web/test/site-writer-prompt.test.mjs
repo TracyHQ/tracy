@@ -6,9 +6,10 @@ import { RULE_TITLES } from '../src/site-writer/copy-check/rule-set.js'
 import { WRITER_PROMPT_FILE, writerPrompt } from '../src/site-writer/writer-prompt.js'
 
 // The owner approved this prompt on 2026-11-03 after reading real output on dev (#334), and ruled the plan label rule
-// in on 2026-11-04 (a plan label is a suggestion the writer keeps or rewrites); its bytes change only with a new
+// in on 2026-11-04 (a plan label is a suggestion the writer keeps or rewrites, a created page title is its on-page
+// heading); its bytes change only with a new
 // approval from the owner, recorded in ADR 0042.
-const APPROVED_SHA256 = '496adc2ecd9595914cc5f3f9a97fc2e1fbecabb25cf9441c89151c0e897c375f'
+const APPROVED_SHA256 = '5aee1a5fffbfdbc0cc431ee8cea7c9c54c2b9aa9e7e581735116bb6606c17b7f'
 
 test('the shipped writer prompt is the approved one, byte for byte', () => {
   const bytes = readFileSync(WRITER_PROMPT_FILE)
@@ -54,6 +55,7 @@ test("the prompt says where footer headings go, how pages entries work and that 
     assert.ok(text.includes(s), `prompt mentions ${s}`)
   assert.match(text, /`text` on a label slot is a suggestion, not the final text/)
   assert.match(text, /Rewrite it when the demo `sample`/)
+  assert.match(text, /`title` is the heading printed on that page/)
   assert.match(text, /body.*non-empty list/s)
 })
 

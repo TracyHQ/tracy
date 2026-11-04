@@ -12,7 +12,8 @@ export const RULE_TITLES = [
   ['w09', 'W09', 'Alt, page title and page description present, within length, titles unique'],
   ['w10', 'W10', 'No sentence about the page or section itself'],
   ['w11', 'W11', 'No long dash'],
-  ['w12', 'W12', 'Slots printed as one sentence read as one sentence when joined']
+  ['w12', 'W12', 'Slots printed as one sentence read as one sentence when joined'],
+  ['w13', 'W13', 'A created page title is its on-page heading, not a browser title']
 ]
 
 function rule(list, id, title) {

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { breaks, check, copy, slotOf } from './_site-copy-check.mjs'
+import { breaks, check, copy, ruleOf, slotOf } from './_site-copy-check.mjs'
 
 const EM = String.fromCharCode(0x2014)
 const EN = String.fromCharCode(0x2013)
@@ -350,4 +350,25 @@ test('W11 reports a long dash in a planner label as a note, not a failure', () =
     w11.notes.some((n) => /block-1\.1/.test(n) && /planner label, return to planner/.test(n)),
     w11.notes.join('\n')
   )
+})
+
+test('W13 fails a created page title written as a browser title, and passes an on-page heading', () => {
+  const page = (c) => c.pages.find((p) => p.page === 'legal:privacy')
+  breaks(
+    'W13',
+    (c) => {
+      page(c).title = 'Privacy | Acme'
+    },
+    /legal:privacy: title "Privacy \| Acme" holds a " \| " separator/
+  )
+  breaks(
+    'W13',
+    (c) => {
+      page(c).title = 'Privacy policy, Quay Fitness Studio'
+    },
+    /legal:privacy: title .* ends with the business name/
+  )
+  const c = copy()
+  page(c).title = 'Privacy policy'
+  assert.equal(ruleOf(c, 'W13').status, 'pass')
 })

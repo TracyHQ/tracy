@@ -11,7 +11,7 @@ test('the passing copy passes every rule and the version is frozen', () => {
     r.rules.map((x) => `${x.id}:${x.status}`),
     ['W01', 'W02', 'W03', 'W04', 'W05', 'W06', 'W07', 'W08', 'W09', 'W10', 'W11']
       .map((id) => `${id}:pass`)
-      .concat('W12:skip')
+      .concat('W12:skip', 'W13:pass')
   )
   assert.equal(r.meta.checker, 'site-copy-check/5')
   assert.deepEqual(check(copy()), r)
@@ -172,7 +172,7 @@ test('oddly shaped plan, kit and brief parts never throw', () => {
       kit: { blocks: [null, { slots: 5 }] },
       brief: { facts: 'x', missing: [7] }
     })
-    assert.equal(r.rules.length, 12)
+    assert.equal(r.rules.length, 13)
   }
 })
 

@@ -15,8 +15,9 @@ dev; `apps/tracy-web/src/site-writer/writer-prompt.md` has sha256
 `bd4a4f3a1087a109496251b3e971d064775d9730fb16b657744d204a92f987c5`, pinned by `test/site-writer-prompt.test.mjs`.
 Changing a byte of it needs the owner's approval and a new hash here. Fix round answers are read as in section 5.
 Amended a fifth time (2026-11-04, owner's ruling): a plan label is a suggestion the writer keeps or rewrites
-(section 7). The prompt gained that rule; its sha256 is now
-`496adc2ecd9595914cc5f3f9a97fc2e1fbecabb25cf9441c89151c0e897c375f`. The checker version moved to `site-copy-check/5`.
+(section 7), and a created page's title is its on-page heading, never a browser title (section 8). The prompt gained
+both rules; its sha256 is now
+`5aee1a5fffbfdbc0cc431ee8cea7c9c54c2b9aa9e7e581735116bb6606c17b7f`. The checker version moved to `site-copy-check/5`.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -218,6 +219,21 @@ a stat row (demo "Our Classes", limit 18, role `editorial.menu_label`), so the p
 - A return of a label slot stays rejected: to give the plan's words back, the writer writes them as the text.
 - The site check's `unfinished-heading` (ADR 0044) is blamed on step 6 (copy), whoever's words the heading holds,
   since the writer now owns the final text of every slot.
+
+### 8. A created page's title is its heading on the page (2026-11-04)
+
+A writer wrote the created privacy page's `pages[].title` in browser title style (the page name, " | ", the business
+name), and the write step printed it as that page's main heading. The owner ruled that the browser title is never
+printed on the page as a heading.
+
+- `pages[].title` (a created legal page, `notFound`) is the heading printed on that page: short, no " | " separator,
+  no business name added. The browser title stays in `seo[]`. The prompt says so.
+- **W13** fails a `pages` title that holds " | " or ends with the business name (a brief fact whose field is `name`
+  or `business.name`), unless the title is the name alone.
+- The write step (`page-create-stage.js`) writes the heading to the article title, the menu item title and the item's
+  `page_heading` param; `page_title` (Joomla's browser title) keeps the seo title. The look guard allows
+  `page_heading` on a created page's item only. A kept page's menu item is not changed here.
+- The site check's `heading-separator` measure stays as it is, blamed on step 6.
 
 ## Consequences
 

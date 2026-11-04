@@ -16,7 +16,8 @@ const ACCENT_MARK = 'id="tracy-ds-slot"'
 /** What a page of the template may take in its settings: its words for search and sharing, and the plan closing its form. */
 const MENU_PARAMS = new Set(['page_title', 'menu-meta_description', 'og_img', 'show_email_form'])
 const ARTICLE_ATTRIBS = new Set(['article_page_title', 'og_img'])
-const CREATED_SETTINGS = new Set([...Object.keys(NOT_A_POST), 'menu_show'])
+// A created page's item also takes its on-page heading (`page_heading`, page-create-stage.js).
+const CREATED_SETTINGS = new Set([...Object.keys(NOT_A_POST), 'menu_show', 'page_heading'])
 
 const CREATED_FIELDS = {
   article: new Set([

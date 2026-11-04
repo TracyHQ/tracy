@@ -203,6 +203,20 @@ test('the item goes in the menu of the plan link and is left out of what that me
   assert.equal(JSON.parse(item.params).page_title, 'Privacy policy of Quay Fitness Studio')
 })
 
+test('the page heading goes to the article title, the item title and page_heading; the seo title only to page_title', async () => {
+  const site = pagesSite()
+  await runOn(site)
+  const item = site.rows('menuItem').find((r) => r.note)
+  const article = site.rows('article').find((r) => r.note)
+  const heading = copy().pages.find((p) => p.page === 'legal:privacy').title
+  const params = JSON.parse(item.params)
+  assert.deepEqual(
+    [article.title, item.title, params.page_heading, params.page_title],
+    [heading, heading, heading, 'Privacy policy of Quay Fitness Studio']
+  )
+  assert.notEqual(heading, params.page_title)
+})
+
 test('a page no menu link leads to takes the menu of the home item', async () => {
   const site = pagesSite()
   await runOn(site, { over: { plan: pagesPlan('page-about') } })

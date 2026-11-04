@@ -105,10 +105,13 @@ function menutypeFor(page, { owners, kit, rows }) {
   throw new Error('the site has no home menu item, so no menu to hold this page')
 }
 
+// The item's title and `page_heading` carry the page heading (the copy's `pages[].title`); `page_title` is Joomla's browser title,
+// so it carries the seo title. A template or patch that prints `page_heading` then prints the short heading, never the tab title.
 const itemParams = (order, kept = {}) => ({
   ...kept,
   ...NOT_A_POST,
   menu_show: 0,
+  page_heading: order.title,
   ...(order.seo ? { page_title: order.seo.title, 'menu-meta_description': order.seo.description } : {})
 })
 const articleLink = (id) => `index.php?option=com_content&view=article&id=${id}`

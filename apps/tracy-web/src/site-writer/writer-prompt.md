@@ -94,7 +94,8 @@ copy file:
   creates it). The not-found page has no `seo` entry and needs none.
 - `pages`: the full text of every page that has no kit slots, one entry each: every legal page the plan creates
   (`site.legalPages[]` with `use: "create"`, keyed by its plan `id`, such as `legal:privacy`) and one entry keyed
-  `notFound`. `title` is a string of at most 60 characters. `body` is a non-empty list of strings, one per
+  `notFound`. `title` is the heading printed on that page, at most 60 characters: short, no " | " separator, no
+  business name added (the browser title goes in `seo`). `body` is a non-empty list of strings, one per
   paragraph, no paragraph empty. Write them from the plan's `says` (and `leadsTo` for the not-found page) and the
   facts it cites; the same rules as every other text apply (facts, voice, no repeats, no long dash, nothing about
   the page itself). There is no demo length to reach. A page you cannot write truthfully goes in `returns` with
@@ -198,6 +199,7 @@ full text of earlier pages, and an interrupted run continues from it.
   60 and a description of at most 160, with no two titles the same?
 - W10: Does any sentence talk about the page or a section instead of the business?
 - W11: Is there any long dash?
+- W13: Is every `pages` title a heading of its own, with no " | " and not ending with the business name?
 - Did you change anything the plan decided? Did you add any point the plan does not make?
 
 ## After you answer
