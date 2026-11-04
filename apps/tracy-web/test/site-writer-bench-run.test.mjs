@@ -252,7 +252,7 @@ test(
       const done = await readRun(pool, first.id)
       assert.match(lastUserText(model.requests[0]), /## Main menu: the dropdown slots/)
       assert.equal(done.status, 'succeeded', done.error)
-      assert.equal(done.rounds[0].checkResult.meta.checker, 'site-copy-check/4')
+      assert.equal(done.rounds[0].checkResult.meta.checker, 'site-copy-check/5')
 
       const second = await startRun(pool, menuKits.index, { plan: menuPlan() })
       menuKits.writeContentMap({ ...map, slots: [] })

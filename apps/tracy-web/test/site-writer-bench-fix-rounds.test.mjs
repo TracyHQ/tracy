@@ -58,11 +58,11 @@ test(
     const started = await startRun(pool, kits.index)
     const model = scriptedModel([
       reply(failingAnswer()),
-      // One valid slot, one label slot the writer may not write, one valid seo title.
+      // One valid slot, one slot the plan does not have, one valid seo title.
       reply({
         slots: [
           { slot: 'block-2.1', text: 'Train with a coach who knows you' },
-          { slot: 'block-1.1', text: 'Join' }
+          { slot: 'block-9.9', text: 'Join' }
         ],
         seo: [{ page: 'page-about', title: 'Our coach at Quay Fitness Studio' }]
       }),
@@ -81,12 +81,13 @@ test(
     assert.ok(lines.some((l) => l.startsWith('W03') && l.includes('block-2.1')))
     assert.ok(lines.some((l) => l.startsWith('W09') && l.includes('page-about')))
     assert.equal(lastUserText(model.requests[1]), `${r0.failureList}${CHANGES_INSTRUCTION}`)
-    // The label entry was sent back alone, once.
+    // The unknown slot was sent back alone, once.
     const third = lastUserText(model.requests[2])
     assert.match(third, /2 of your changes were applied\. 1 could not be applied/)
-    assert.match(third, /block-1\.1 is a label/)
+    assert.match(third, /block-9\.9 is not a slot the plan keeps/)
     assert.ok(!third.includes('block-2.1'))
-    // Round 1: the valid entries applied, the label still the plan's words, every other entry as the writer wrote it.
+    // Round 1: the valid entries applied, the label the writer left alone still the plan's words, every other entry as
+    // the writer wrote it.
     assert.equal(r1.state, 'checked')
     assert.equal(r1.failureList, '')
     assert.equal(slotText(r1.copy, 'block-2.1'), 'Train with a coach who knows you')

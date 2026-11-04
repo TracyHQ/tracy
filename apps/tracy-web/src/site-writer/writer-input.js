@@ -12,8 +12,11 @@
 //   (`kit.site.nameSlots` printed at the document title and the meta description).
 // - From the content map (when the template has one), the main menu dropdown slots the writer writes, grouped under
 //   their parent's label slot (main-menu.js).
+// - Every plan label slot (plan-labels.js): the planner's label as a suggestion, its `says`, and from the kit the demo
+//   sample, role, limit and where the slot prints, so the writer keeps the label or rewrites it (2026-11-04).
 // No image: the writer reads the block look text instead.
 import { mainMenuOf } from './main-menu.js'
+import { planLabelSlots } from './plan-labels.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
@@ -201,6 +204,7 @@ export function writerInput({ plan, brief, kit, contentMap = null }) {
       .map((id) => slimBlock(blocks.get(id))),
     footerHeadings: footerHeadings(plan, kit),
     nameSlots: nameSlots(kit),
+    labels: planLabelSlots({ plan, kit, contentMap }),
     mainMenu: mainMenuSection(mainMenuOf({ plan, kit, contentMap }))
   }
 }

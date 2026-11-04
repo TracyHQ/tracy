@@ -34,7 +34,7 @@ function slotHtml(s) {
   return `<div class="slot${bad ? ' bad' : ''}" id="${slugOf(s.slot)}">
 <div><span class="id">${esc(s.slot)}</span>${s.label ? ` <span class="chip">${esc(s.label)}</span>` : ''}${
     s.owner === 'plan-label' ? ' <span class="chip">label from the plan</span>' : ''
-  }${s.basis ? ` <span class="chip">${esc(s.basis)}</span>` : ''} ${count}</div>
+  }${s.replacedPlanLabel ? ` <span class="chip">replaces the plan label "${esc(s.replacedPlanLabel)}"</span>` : ''}${s.basis ? ` <span class="chip">${esc(s.basis)}</span>` : ''} ${count}</div>
 ${s.says ? `<div class="note">Plan: ${esc(s.says)}</div>` : ''}
 ${s.facts.length ? `<div class="facts">${s.facts.map(factLine).join('')}</div>` : ''}
 ${text}${failLines(s.failures)}</div>`

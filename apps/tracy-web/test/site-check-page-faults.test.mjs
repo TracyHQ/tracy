@@ -273,15 +273,19 @@ test('the sentence group without a kit is unmeasured, with a kit of no groups it
   assert.equal(none.groups[0].failures[0].level, 'warn')
 })
 
-test('an unfinished heading names who owns its words: a label the planner, a line of copy the writer', async () => {
+test('an unfinished heading is the writer step, which owns the final text of every slot, kept labels included', async () => {
   const measures = () => [{ path: '/', width: 1440, headings: ['COACHING FOR'] }]
   const line = (owner) => ({
     slots: [{ slot: 'b.1', key: 'k', owner, status: 'written', ordered: 'Coaching for' }]
   })
   const step = async (owner) =>
     (await run(measures, 'unfinished-heading', line(owner))).groups[0].failures[0].causingStep
-  assert.equal(await step('plan-label'), 3)
+  assert.equal(await step('plan-label'), 6)
   assert.equal(await step('writer'), 6)
+  assert.equal(
+    (await run(measures, 'unfinished-heading', { slots: [] })).groups[0].failures[0].causingStep,
+    6
+  )
 })
 
 test('a button going nowhere has the wrong target, which the plan owns', async () => {

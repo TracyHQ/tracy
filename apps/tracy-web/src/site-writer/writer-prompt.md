@@ -41,6 +41,8 @@ The fixed part, given once:
   slot id you write the heading under) and `heading` (the demo heading text).
 - **The two name slots the brand step hands over:** the home page's document title and meta description. You
   write them as the home page's `seo` entry.
+- **The label slots:** each slot the plan gives `text`, with that `planLabel`, the plan's `says`, and from the kit
+  the demo `sample`, `role`, `maxCharacters` and where it `prints`.
 
 Then you write in turns. Each turn names the pages to write now (the shared blocks count as one page,
 `shared`) and carries the copy notebook so far. The order is: shared blocks (header, menu, footer, shared
@@ -73,10 +75,12 @@ copy file:
   the kit shows.
 - `factIds`: the slot's `factIds` from the plan, copied. Add a fact id only when a detail you wrote rests on a
   fact you were given that the plan did not list for the slot.
-- **Labels.** Do not write label slots (the plan gives them `text`: menu items, buttons, tabs, social links).
-  Code copies the plan's words into them as `owner: "plan-label"`. Leave them out of your answer. A label is the
-  planner's words, not yours: if one has a flaw (a long dash, say), the check reports it as a planner label to
-  return to the planner, never as your failure.
+- **Labels.** The plan's `text` on a label slot is a suggestion, not the final text. Keep it when it already fits
+  the slot (a menu item, a button: "Home", "Book your spot"): leave the slot out, and code copies the plan's words
+  in as `owner: "plan-label"`. Rewrite it when the demo `sample` and the block's `look` show the slot is something
+  else, such as a heading that must stand alone: write it in `slots` like any other slot, within its limit, and
+  code records it as `owner: "writer"` with the label it replaced. A label you keep is the planner's words: if it
+  has a flaw (a long dash, say), the check reports it as a planner label to return to the planner.
 - **Footer headings.** The heading of each footer column is an ordinary slot: the plan decides what it says in
   `site.footerMenu[].heading.says`, never in `copy`, and the kit names its slot in `titleSlot` of the navigation
   group with the same id as the menu's `group`. Write it in `slots` under that `titleSlot` id with
@@ -98,7 +102,7 @@ copy file:
 - `notebook`: one entry per page of the turn (below).
 - `returns`: each slot or page you could not write truthfully, with the reason in one line. At least one of
   `slot` and `page`. A returned slot is left out of `slots`. Empty when nothing is returned.
-- `version`, `fingerprint` and the label entries are added by code when the file is put together.
+- `version`, `fingerprint` and the label entries you leave out are added by code when the file is put together.
 
 ## Write only what the facts allow
 
@@ -181,8 +185,8 @@ full text of earlier pages, and an interrupted run continues from it.
 - W01: Is the answer one JSON object in the shape above, every text a string or a list of strings, every `pages`
   body a non-empty list?
 - W02: Is every kept slot of the turn's pages written exactly once (or returned), footer headings included, no
-  hidden slot written, no slot the plan does not have, no label slot written? Is there one `pages` entry for each
-  created legal page and one for `notFound`?
+  hidden slot written, no slot the plan does not have, and every label you left out one that fits its slot as it
+  is? Is there one `pages` entry for each created legal page and one for `notFound`?
 - W03: Is every text within its limit, above its floor, with no more items than the kit shows? Is every `pages`
   title at most 60 characters and no paragraph empty?
 - W04: Does every number, time, price, phone, email and web address appear in a fact the slot cites?

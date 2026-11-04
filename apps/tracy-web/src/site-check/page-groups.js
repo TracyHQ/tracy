@@ -15,7 +15,7 @@
 //   unowned-slots      block  3 planner     new: unowned slots that still hold their demo; a warning when no visitor sees one
 //   empty-controls     block  9 write       new: a button with no words or going nowhere, a form field nothing names
 //   glued-words        block  9 write       new: words run into a highlight with no space
-//   unfinished-heading block  3 or 6        new: a heading that stops on a small word; whoever owns its words (label: planner, copy: writer)
+//   unfinished-heading block  6 writer      new: a heading that stops on a small word; the writer owns the final text of every slot, labels included
 //   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
 //   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
 //   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes (3:1 for brand accent words)
@@ -44,7 +44,6 @@ import {
   findTextOverflow,
   findUnfinishedHeadings
 } from './page-measures.js'
-import { ownerStep } from './steps.js'
 import { unownedShownGroup } from './unowned-shown.js'
 
 /** A group over the browser measures the host adds to its answer. Without them it could not tell, so it is unmeasured. */
@@ -138,18 +137,10 @@ export const PAGE_CHECK_GROUPS = [
   measuredGroup({
     name: 'unfinished-heading',
     level: 'block',
-    causingStep: 3,
-    // The words' owner is who fixes them: a label is the planner's, a line of copy the writer's. Words no line wrote stay the plan's.
-    find: (read, { report }) => {
-      const lines = (report?.slots ?? []).filter(
-        (s) => s.status === 'written' && typeof s.ordered === 'string'
-      )
-      const said = (text) => String(text).replace(/\s+/g, ' ').trim().toLowerCase()
-      return findUnfinishedHeadings(read.measures).map((f) => ({
-        ...f,
-        causingStep: ownerStep(lines.find((s) => said(s.ordered) === said(f.measured))?.owner) ?? 3
-      }))
-    }
+    // The writer owns the final text of every slot since 2026-11-04: it rewrites a plan label that cannot stand alone
+    // (ADR 0042), so a kept label that stops on a small word is a heading the writer let through.
+    causingStep: 6,
+    find: (read) => findUnfinishedHeadings(read.measures)
   }),
   measuredGroup({
     name: 'main-heading',

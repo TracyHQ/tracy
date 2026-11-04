@@ -45,19 +45,22 @@ export function checkW02({ R, view, idx }) {
     const exp = idx.expected.get(s.slot)
     const text = s.items.join(' ')
     if (exp) {
-      if (exp.label !== null && s.owner !== 'plan-label')
+      // A label slot is the plan's words (plan-label) or the writer's text with the plan label it replaced.
+      if (exp.label !== null && s.owner === 'writer' && s.replacedPlanLabel !== exp.label)
         R.w02.fail(
           s.slot,
-          `${s.slot}: owner is "writer" but the plan gives this label slot its words`,
+          `${s.slot}: owner is "writer" on a label slot without the plan label it replaced ("${exp.label}")`,
           'owner'
         )
+      else if (exp.label === null && s.replacedPlanLabel !== undefined)
+        R.w02.fail(s.slot, `${s.slot}: replacedPlanLabel on a slot the plan gives no label words`, 'owner')
       else if (exp.label === null && s.owner === 'plan-label')
         R.w02.fail(
           s.slot,
           `${s.slot}: owner is "plan-label" but the plan gives no label words for this slot`,
           'owner'
         )
-      else if (exp.label !== null && text !== exp.label)
+      else if (exp.label !== null && s.owner === 'plan-label' && text !== exp.label)
         R.w02.fail(
           s.slot,
           `${s.slot}: label differs from the plan's words: "${text}" instead of "${exp.label}"`,

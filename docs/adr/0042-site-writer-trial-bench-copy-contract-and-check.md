@@ -14,6 +14,9 @@ Amended a fourth time (#334): the writer prompt is locked. The owner approved it
 dev; `apps/tracy-web/src/site-writer/writer-prompt.md` has sha256
 `bd4a4f3a1087a109496251b3e971d064775d9730fb16b657744d204a92f987c5`, pinned by `test/site-writer-prompt.test.mjs`.
 Changing a byte of it needs the owner's approval and a new hash here. Fix round answers are read as in section 5.
+Amended a fifth time (2026-11-04, owner's ruling): a plan label is a suggestion the writer keeps or rewrites
+(section 7). The prompt gained that rule; its sha256 is now
+`496adc2ecd9595914cc5f3f9a97fc2e1fbecabb25cf9441c89151c0e897c375f`. The checker version moved to `site-copy-check/5`.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -51,8 +54,9 @@ page have no kit slots at all, so their words live in `pages`; the created legal
 `notFound` has none.
 
 Not in the file: hidden slots, link targets, label propagation to other menus and URL slots. The plan and the kit
-already hold them. Label slots (the plan gives them `text`) are filled by code from the plan and carry
-`owner: "plan-label"`; every other slot has `owner: "writer"`. Every slot has exactly one owner.
+already hold them. Label slots (the plan gives them `text`) keep the plan's words as `owner: "plan-label"` unless the
+writer rewrote them, which is `owner: "writer"` with `replacedPlanLabel` (section 7); every other slot has
+`owner: "writer"`. Every slot has exactly one owner.
 
 **Main menu dropdowns.** The kit's header block names only the top-level menu items, and the kit has no menu tree.
 The tree lives in the template's content map (`content-map.json` beside `template-kit.json` in the contract folder,
@@ -194,6 +198,26 @@ steps would then block each other through one active run index. The state words 
 `checked`, `not_a_plan`; steps `waiting`, `planning`, `fixing`, `checking`, `done`) are part of the shape and are
 reused as they are. Starting a run (its insert) stays the step's own, since each step is started on different
 inputs.
+
+### 7. A plan label is a suggestion (2026-11-04)
+
+The writer used to skip label slots and code copied the planner's words in unchanged. On one example site 27 of 159
+text slots were labels and 26 were fine; the one that was not was a page masthead whose kit slot the kit grouped into
+a stat row (demo "Our Classes", limit 18, role `editorial.menu_label`), so the planner wrote half of a stat
+("Coaching for") and the template printed it alone as the page's big heading.
+
+- The writer reads every label slot (`plan-labels.js`, the fixed part's "Label slots" list): the planner's label
+  (`planLabel`), the plan's `says`, and from the kit the demo `sample`, `role`, `maxCharacters` and where it
+  `prints` (its block and block role, the menus and page titles it also changes, a content map menu item).
+- It keeps the label when it fits (menus, buttons) by leaving the slot out, and rewrites it when the sample shows
+  the slot is something else, such as a heading that must stand alone.
+- Code records what happened, in a whole answer and in a fix round alike: a text equal to the label (spaces aside)
+  or a left out slot is `owner: "plan-label"` with the plan's words; any other text is `owner: "writer"` with
+  `replacedPlanLabel` set to the label it replaced. W02 fails a writer entry on a label slot without that trace, and
+  a trace on a slot the plan gives no label. A rewritten label is the writer's text, so W03 to W12 judge it.
+- A return of a label slot stays rejected: to give the plan's words back, the writer writes them as the text.
+- The site check's `unfinished-heading` (ADR 0044) is blamed on step 6 (copy), whoever's words the heading holds,
+  since the writer now owns the final text of every slot.
 
 ## Consequences
 

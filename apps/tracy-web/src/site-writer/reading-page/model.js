@@ -113,6 +113,7 @@ export function buildModel({
       basis: entry.basis ?? null,
       facts: factsOf(entry.factIds),
       owner: w?.owner ?? null,
+      replacedPlanLabel: typeof w?.replacedPlanLabel === 'string' ? w.replacedPlanLabel : null,
       items,
       chars: sum(items),
       limit: entry.maxCharacters ?? (limitText ? Number(limitText) : null),
