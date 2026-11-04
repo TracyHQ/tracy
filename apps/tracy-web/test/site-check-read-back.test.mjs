@@ -405,3 +405,53 @@ test('an icon reads back from the text slot it was routed to, as the class it wa
   const [failure] = failuresOf(await check(afterWrite(site), rep))
   assert.deepEqual([failure.slot, failure.key, failure.measured], ['block-2.8', 'module-2.9', 'fa fa-other'])
 })
+
+test('a read that steps into a JSON column, or answers a number, is compared as words', async () => {
+  const title = written('page-home:title', null, 'Quay Studio', {
+    part: 'page-title',
+    readFrom: {
+      action: 'content.get',
+      params: { kind: 'menuItem', id: 1 },
+      path: ['item', 'params', 'page_title']
+    }
+  })
+  const hide = written('menuItem-3', null, '0', {
+    part: 'menu-hide',
+    readFrom: { action: 'content.get', params: { kind: 'menuItem', id: 3 }, path: ['item', 'published'] }
+  })
+  const item = { params: JSON.stringify({ page_title: 'Quay Studio' }), published: 0 }
+  const green = await check(
+    checkSite({}, { answers: { 'content.get': { ok: true, item } } }),
+    report([title, hide])
+  )
+  assert.equal(green.status, 'green')
+  assert.equal(group(green).checked, 2)
+  const stale = { params: JSON.stringify({ page_title: 'Demo' }), published: 1 }
+  const red = await check(
+    checkSite({}, { answers: { 'content.get': { ok: true, item: stale } } }),
+    report([title, hide])
+  )
+  assert.deepEqual(
+    failuresOf(red)
+      .map((f) => f.measured)
+      .sort(),
+    ['1', 'Demo']
+  )
+})
+
+test('a write report from the write step is read back whole: pages, settings and hidden items', async () => {
+  const { report: written_, site } = await runStep(
+    {},
+    { records: [{ kind: 'menuItem', id: 101, published: 1, home: 1, path: 'home', params: '{}' }] },
+    {
+      kit: Object.assign(KIT(), {
+        doc: { ...KIT().doc, pages: [{ id: 'page-home', path: '/' }] }
+      })
+    }
+  )
+  assert.equal(written_.slots.find((s) => s.slot === 'page-home:title').status, 'written')
+  const result = await check(site, written_)
+  const mine = (name) => group(result).lines?.[name]
+  assert.equal(mine('page-home:title'), 'match')
+  assert.equal(mine('page-home:description'), 'match')
+})
