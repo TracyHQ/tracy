@@ -74,6 +74,15 @@ function judge(line, held) {
     }
   if (typeof held.value !== 'string')
     return { result: 'unread', failure: { ...base, reason: `The read gave no current value (${held.why})` } }
+  // A slot gone with its unpublished block or menu item is read on that row (`published`), not on the slot, which still holds
+  // its words in a row no page prints.
+  if (line.status === 'hidden' && line.readFrom)
+    return String(held.value) === String(line.ordered)
+      ? { result: 'match' }
+      : {
+          result: 'differs',
+          failure: { ...base, reason: 'The plan hides this and what holds it is still published' }
+        }
   if (line.status === 'hidden')
     return held.value.trim() === ''
       ? { result: 'match' }

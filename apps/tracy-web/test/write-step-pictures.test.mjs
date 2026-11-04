@@ -298,16 +298,13 @@ test('a slot in the picture package no longer reads as having no owner', async (
   assert.ok(!report.unowned.some((u) => u.slot === 'block-2.pic'))
 })
 
-test('a hidden frame is reported as skipped until hiding arrives, and never sent', async () => {
-  const { site, line } = await runPictures()
+test('a hidden frame belongs to the hide stage: one line, its picture never sent', async () => {
+  const { report, site, line } = await runPictures()
   const hidden = line('block-2.gone')
-  assert.equal(hidden.status, 'skipped')
+  assert.equal(report.slots.filter((s) => s.slot === 'block-2.gone').length, 1)
+  assert.notEqual(hidden.status, 'written')
   assert.equal(hidden.owner, 'picture')
-  assert.equal(hidden.part, 'picture-hidden')
   assert.equal(hidden.key, 'module-2.gone')
-  assert.match(hidden.reason, /#362/)
-  assert.match(hidden.reason, /row or block/)
-  assert.match(hidden.reason, /no picture of the owner fits this frame/)
   assert.equal(contractCalls(site)[0].params.changes['module-2.gone'], undefined)
 })
 
@@ -428,7 +425,7 @@ test('a cancelled run stops between the pictures and the contract call', async (
   const { report, site } = await runPictures({
     deps: {
       onPhase: async (phase) => void seen.push(phase),
-      isCancelled: async () => ++asked >= 3
+      isCancelled: async () => ++asked >= 4
     }
   })
   assert.equal(report.status, 'cancelled')
@@ -472,9 +469,9 @@ test('a brand file and a picture package go together: brand first, one contract 
 test('without a picture package nothing about the run changes', async () => {
   const seen = []
   const { report, site } = await runStep({}, {}, { onPhase: async (phase) => void seen.push(phase) })
-  assert.deepEqual(seen, ['check', 'inspect', 'write', 'settings'])
+  assert.deepEqual(seen, ['check', 'inspect', 'hide', 'write', 'settings'])
   assert.equal(report.status, 'done')
-  assert.ok(!site.calls.some((c) => c.action !== 'content.contract'))
+  assert.ok(!site.calls.some((c) => c.action !== 'content.contract' && c.action !== 'info'))
   assert.equal(site.calls.filter((c) => c.params.operation === 'inspect').length, 1)
   assert.ok(!report.slots.some((s) => s.owner === 'picture'))
 })

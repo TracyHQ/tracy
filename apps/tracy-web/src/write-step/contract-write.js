@@ -22,18 +22,20 @@ export function refusalWords(entry) {
 }
 
 /** The refused entries by slot when every one names a slot we sent, otherwise null. */
-function attributable(errors, changes) {
+function attributable(errors, changes, emptySlots) {
   if (!Array.isArray(errors) || !errors.length) return null
-  if (!errors.every((e) => typeof slotOf(e) === 'string' && slotOf(e) in changes)) return null
+  const sent = (key) => key in changes || emptySlots.includes(key)
+  if (!errors.every((e) => typeof slotOf(e) === 'string' && sent(slotOf(e)))) return null
   return new Map(errors.map((e) => [slotOf(e), e]))
 }
 
 /**
  * @param {{ applyJoomlaContract: Function, apply: Function, siteKey: string, reading: object,
- *   mapping: { contract: string, changes: Record<string,string>, evidence: Record<string,string> },
+ *   mapping: { contract: string, changes: Record<string,string>, evidence: Record<string,string>, emptySlots?: string[] },
  *   isCancelled: () => Promise<boolean>, sleep: (ms: number) => Promise<void> }} input
- * @returns {Promise<{ written: string[], refused: Map<string, object>, rounds: number, cancelled?: boolean,
- *   stop?: { code: string, reason: string } }>} `written` stays empty unless a call was accepted
+ * @returns {Promise<{ written: string[], emptied?: string[], refused: Map<string, object>, rounds: number,
+ *   cancelled?: boolean, stop?: { code: string, reason: string } }>} `written` and `emptied` stay empty unless a call was
+ *   accepted
  */
 export async function writeContract({
   applyJoomlaContract,
@@ -46,12 +48,13 @@ export async function writeContract({
 }) {
   const changes = { ...mapping.changes }
   const evidence = { ...mapping.evidence }
+  let emptySlots = [...(mapping.emptySlots ?? [])]
   const refused = new Map()
   const door = (call) => (call.params?.operation === 'inspect' ? reading : apply(call))
   let rounds = 0
   let busy = 0
   for (;;) {
-    if (!Object.keys(changes).length) return { written: [], refused, rounds }
+    if (!Object.keys(changes).length && !emptySlots.length) return { written: [], refused, rounds }
     rounds += 1
     try {
       await applyJoomlaContract({
@@ -63,17 +66,18 @@ export async function writeContract({
           changes,
           evidence,
           emptyLinks: [],
+          emptySlots,
           pending: []
         }
       })
-      return { written: Object.keys(changes), refused, rounds }
+      return { written: Object.keys(changes), emptied: emptySlots, refused, rounds }
     } catch (error) {
       if (isBusy(error) && busy < BUSY_WAITS_MS.length) {
         await sleep(BUSY_WAITS_MS[busy++])
       } else if (isBusy(error)) {
         return { written: [], refused, rounds, stop: { code: 'WRITER_BUSY', reason: error.message } }
       } else {
-        const named = attributable(error?.errors, changes)
+        const named = attributable(error?.errors, changes, emptySlots)
         if (!named)
           return {
             written: [],
@@ -85,6 +89,7 @@ export async function writeContract({
           refused.set(key, entry)
           delete changes[key]
           delete evidence[key]
+          emptySlots = emptySlots.filter((slot) => slot !== key)
         }
       }
       if (await isCancelled()) return { written: [], refused, rounds, cancelled: true }

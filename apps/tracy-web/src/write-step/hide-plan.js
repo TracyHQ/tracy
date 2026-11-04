@@ -1,0 +1,174 @@
+// What the hide stage orders (ADR 0044, decisions 2 and 4), from the plan, the kit and one reading of the site; nothing here
+// writes. Each hide decision gets one order: it goes with its dropped block or its menu item, by the kit's language constant,
+// as an emptied slot, or it cannot be taken and says why. A menu item a kept page depends on is left published and reported:
+// Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
+import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { iconsOf } from './kit-slot-routes.js'
+
+const each = (value) => (Array.isArray(value) ? value : [])
+const slashless = (path) => String(path ?? '').replace(/^\/+|\/+$/g, '')
+const blocksOfPage = (page) => [...new Set(Object.values(page?.blocks ?? {}).flat())]
+const MODULE = /^module-\d+$/
+const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
+
+/** A hide the plugin cannot take needs a contract that captures the whole unit. */
+export const NEW_CONTRACT = 'TracyHQ/tracy#369'
+
+/** The kit's blocks the plan drops whole, as module keys: no kept page keeps or shows one. */
+function droppedBlocks(plan, kit) {
+  const kitBlocks = new Map(each(kit?.blocks).map((b) => [b?.id, b]))
+  const kept = each(plan?.pages).filter((p) => p?.decision === 'keep')
+  const shared = each(plan?.sharedBlocks)
+  const decisions = [...shared, ...kept.flatMap((p) => each(p.blocks))]
+  const hides = new Set(decisions.filter((d) => d?.decision === 'hide').map((d) => d.block))
+  const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
+  const dropped = new Map()
+  for (const block of hides) {
+    const module = kitBlocks.get(block)?.source?.entity
+    if (!MODULE.test(String(module))) continue
+    if (decisions.some((d) => d?.block === block && d.decision !== 'hide')) continue
+    const sharedHide = shared.some((d) => d?.block === block)
+    const shownOnKept = kept.some(
+      (p) =>
+        blocksOfPage(kitPages.get(p.id)).includes(block) && !each(p.blocks).some((d) => d?.block === block)
+    )
+    if (!sharedHide && shownOnKept) continue
+    dropped.set(block, module)
+  }
+  return dropped
+}
+
+/** What keeps a menu item at this path published: a kept page at or under it, or a kept link to one. */
+export function pageDependingOn(path, { plan, kit }) {
+  const item = slashless(path)
+  if (item === '') return 'the home page'
+  const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, slashless(p?.path)]))
+  const needs = (target) => target === item || target?.startsWith(`${item}/`)
+  const kept = each(plan?.pages).filter((p) => p?.decision === 'keep')
+  for (const page of kept)
+    if (kitPages.has(page.id) && needs(kitPages.get(page.id)))
+      return `the kept page ${page.id} (/${kitPages.get(page.id)})`
+  const decisions = [...each(plan?.sharedBlocks), ...kept.flatMap((p) => each(p.blocks))]
+  for (const decision of decisions.filter((d) => d?.decision !== 'hide'))
+    for (const link of each(decision?.links))
+      if (kitPages.has(link?.leadsTo) && needs(kitPages.get(link.leadsTo)))
+        return `the kept link ${link.link} (/${kitPages.get(link.leadsTo)})`
+  return null
+}
+
+/** The main menu items the plan hides, parted by whether unpublishing one would break a kept page. */
+function menuOrders({ plan, kit, hide }) {
+  const orders = new Map()
+  for (const entry of each(hide)) {
+    const depends = pageDependingOn(entry.path, { plan, kit })
+    orders.set(entry.slot, {
+      item: entry.item,
+      path: entry.path,
+      ...(depends
+        ? {
+            refused: `leaves the main menu, but ${depends} needs ${entry.path}: an unpublished item takes its page with it, so it stays published and stays in the menu`
+          }
+        : {})
+    })
+  }
+  return orders
+}
+
+/** Every fixed sentence of the kit that a plan can name, by its id. */
+function fixedTexts(kit) {
+  const out = new Map()
+  for (const block of each(kit?.blocks))
+    for (const text of each(block?.fixedText)) if (typeof text?.id === 'string') out.set(text.id, text)
+  return out
+}
+
+/** The language constants that take a kit's fixed sentence away, or the reason there are none. */
+function fixedOrder(text, template) {
+  if (text.canHide !== true)
+    return { reason: `the kit measured that this sentence cannot leave the page alone (${text.id})` }
+  const constants = [text.hiddenBy?.constant ?? text.source?.constants ?? text.source?.constant]
+    .flat()
+    .filter((c) => typeof c === 'string' && c)
+  if (!constants.length)
+    return { reason: 'the template prints these words itself: no language constant holds them' }
+  if (typeof template !== 'string' || !template)
+    return { reason: 'the kit names no template to write the override for' }
+  return { constants }
+}
+
+/** Why the plugin cannot empty this slot of the site, in terms of the slot. */
+function notEmptiable(key, slot) {
+  if (!slot)
+    return `${key} is no slot of this site, so nothing can empty it; a new contract would need one: ${NEW_CONTRACT}`
+  if (ADDRESS_MOVES.test(String(slot.xpath ?? '')))
+    return `the plugin does not empty one text node or attribute of an HTML field, because its address would move: this needs a contract that captures the whole unit: ${NEW_CONTRACT}`
+  const where = slot.column ? `the column ${slot.column} of ${slot.entity ?? key}` : key
+  return `the plugin's review for this contract does not list ${where}, so it cannot be emptied: this needs a new contract: ${NEW_CONTRACT}`
+}
+
+/**
+ * @param {{ plan: object, kit: object, owners: Map<string, object>, extras: object, reading: object,
+ *   changes: Record<string, string>, cannotHide: string | null }} input `cannotHide`: why this plugin takes no hide order,
+ *   or null when it does
+ * @returns {{ orders: Map<string, object>, blocks: Map<string, string>, emptySlots: string[],
+ *   strings: Record<string, string>, pages: object[], menu: Map<string, object> }} `orders`: by the line's slot, each with a
+ *   `via`; `blocks`: block id to module key
+ */
+export function hideOrders({ plan, kit, owners, extras, reading, changes, cannotHide }) {
+  const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
+  const icons = iconsOf(kit)
+  const fixed = fixedTexts(kit)
+  const menu = menuOrders({ plan, kit, hide: extras?.mainMenu?.hide })
+  const blocks = droppedBlocks(plan, kit)
+  const gone = new Set(blocks.values())
+  const orders = new Map()
+  const emptySlots = []
+  const strings = {}
+  const fixedPart = { key: null, part: 'fixed-text' }
+  for (const claim of owners.values()) {
+    if (claim.kind !== 'hide') continue
+    const { slot } = claim
+    if (menu.has(slot)) {
+      orders.set(slot, { via: 'menu', ...menu.get(slot) })
+      continue
+    }
+    if (fixed.has(slot)) {
+      const order = cannotHide ? { reason: cannotHide } : fixedOrder(fixed.get(slot), kit?.template?.name)
+      if (order.reason) orders.set(slot, { via: 'failed', ...fixedPart, reason: order.reason })
+      else {
+        for (const constant of order.constants) strings[constant] = ''
+        orders.set(slot, { via: 'fixed', constants: order.constants })
+      }
+      continue
+    }
+    const icon = icons.get(slot)
+    const key = contentMapKey(icon?.field ?? slot)
+    const failedAs = (reason) => orders.set(slot, { via: 'failed', key, reason })
+    const held = onSite.get(key)
+    const entity = key.slice(0, key.lastIndexOf('.'))
+    if (gone.has(entity)) {
+      if (cannotHide) failedAs(cannotHide)
+      else orders.set(slot, { via: 'block', key, module: entity })
+    } else if (typeof held?.current === 'string' && held.current.trim() === '') {
+      orders.set(slot, { via: 'empty', key })
+    } else if (cannotHide) {
+      failedAs(cannotHide)
+    } else if (key in changes) {
+      failedAs(`the write step also writes ${key}, so it cannot be emptied as well`)
+    } else if (icon && !icon.field) {
+      failedAs(notEmptiable(key, null))
+    } else if (held?.canHide) {
+      emptySlots.push(key)
+      orders.set(slot, { via: 'slot', key })
+    } else {
+      failedAs(notEmptiable(key, held))
+    }
+  }
+  const taken = new Set(each(extras?.mainMenu?.hide).map((h) => slashless(h.path)))
+  const pages = each(plan?.pages)
+    .filter((p) => p?.decision === 'drop')
+    .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
+    .filter((page) => page && !taken.has(slashless(page.path)))
+    .map((page) => ({ page, depends: pageDependingOn(page.path, { plan, kit }) }))
+  return { orders, blocks, emptySlots: [...new Set(emptySlots)], strings, pages, menu }
+}

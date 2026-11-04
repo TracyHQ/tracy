@@ -23,7 +23,7 @@ function paramsOf(value) {
 }
 
 /** Every menu item, whole rows, a page of the door at a time. */
-async function menuRows(call) {
+export async function menuRows(call) {
   const rows = []
   for (let offset = 0; offset < 5000; offset += PAGE_ROWS) {
     const answer = await call('content.list', {
@@ -40,7 +40,7 @@ async function menuRows(call) {
 }
 
 /** The published items that open this kit page: the home item for the root path, else the item at the path. */
-function rowsOpening(page, rows, menutype) {
+export function rowsOpening(page, rows, menutype = null) {
   const path = slashless(page.path)
   const found = rows.filter(
     (row) =>

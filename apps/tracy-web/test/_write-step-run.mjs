@@ -23,26 +23,33 @@ function siteSlots(kit, extra) {
     ])
   ])
   const keys = new Set([...ids.map((s) => contentMapKey(s.id)), ...extra])
-  return [...keys].map((key) => ({ key, entity: key.slice(0, key.lastIndexOf('.')) }))
+  return [...keys].map((key) => ({ key, entity: key.slice(0, key.lastIndexOf('.')), canHide: 'unmeasured' }))
 }
 
 /**
  * A site behind the door. `refuse` maps a content map key to the entry the plugin lists for it; while a refused key is in
  * the changes the whole apply is refused and nothing lands. `answers` overrides the next apply answers, in order.
+ * The hide orders (write-step/hide-stage.js) are answered as the plugin does, see `hideDoor` in `_write-step-hide.mjs`.
  * @param {{ refuse?: Record<string, object>, answers?: object[], contract?: string, slots?: object[],
- *   inspect?: object, extraKeys?: string[] }} [script]
+ *   inspect?: object, extraKeys?: string[], hideDoor?: Function, overSlot?: (slot: object) => object }} [script]
  */
 export function fakeSite(script = {}) {
   const calls = []
   const held = {}
   const answers = [...(script.answers ?? [])]
+  const revision = { now: 'rev-1' }
   const state = () =>
     script.inspect ?? {
       ok: true,
       contract: script.contract ?? CONTRACT,
-      revision: 'rev-1',
+      revision: revision.now,
       pages: [],
-      slots: script.slots ?? siteSlots(KIT().doc, ['module-6.2', ...(script.extraKeys ?? [])])
+      slots: (script.slots ?? siteSlots(KIT().doc, ['module-6.2', ...(script.extraKeys ?? [])])).map(
+        (slot) => ({
+          ...slot,
+          ...script.overSlot?.(slot)
+        })
+      )
     }
   // Records behind content.list / content.get / content.update, by kind and id: `script.records` seeds them and
   // `script.refuseUpdate(kind, id, fields)` may return an answer that refuses one write.
@@ -50,10 +57,12 @@ export function fakeSite(script = {}) {
   const recordDoor = (call) => {
     const { kind, id } = call.params
     if (call.action === 'content.list')
-      return {
-        ok: true,
-        items: [...records.values()].filter((r) => r.kind === kind).map((r) => ({ ...r, kind: undefined }))
-      }
+      return (
+        script.overList ?? {
+          ok: true,
+          items: [...records.values()].filter((r) => r.kind === kind).map((r) => ({ ...r, kind: undefined }))
+        }
+      )
     if (call.action === 'content.get') {
       const row = records.get(`${kind}-${id}`)
       return row ? { ok: true, item: row } : { ok: false, error: 'not_found', message: `no ${kind} ${id}` }
@@ -72,17 +81,28 @@ export function fakeSite(script = {}) {
     calls,
     held,
     records,
+    revision,
     updates: () => calls.filter((c) => c.action === 'content.update'),
     applies: () => calls.filter((c) => c.params.operation === 'apply'),
     door: {
       async apply(call) {
         calls.push(call)
+        if (call.action === 'info') return script.info ?? { ok: true, info: { hide_ops: { version: 1 } } }
         if (call.action.startsWith('content.') && call.action !== 'content.contract') return recordDoor(call)
+        const hideAnswer = script.hideDoor?.(call, { state, records, revision })
+        if (hideAnswer) return hideAnswer
         if (call.action !== 'content.contract') return { ok: false, error: 'unexpected_action' }
         if (call.params.operation === 'inspect') return state()
+        if (!call.params.apply_id) return { ok: false, error: 'bad_params', message: 'apply_id required' }
         const next = answers.shift()
         if (next) return next
-        const refused = Object.keys(call.params.changes ?? {}).filter((k) => script.refuse?.[k])
+        // Only where a hide order can move the revision; other fixtures answer their own inspect.
+        if (script.hideDoor && call.params.expected_revision !== revision.now)
+          return { ok: false, error: 'contract_failed', message: 'Content changed; inspect again' }
+        const emptied = call.params.empty_slots ?? []
+        const refused = [...Object.keys(call.params.changes ?? {}), ...emptied].filter(
+          (k) => script.refuse?.[k]
+        )
         if (refused.length)
           return {
             ok: false,
@@ -91,6 +111,7 @@ export function fakeSite(script = {}) {
             errors: refused.map((k) => ({ ...script.refuse[k], field: { slotKey: k } }))
           }
         Object.assign(held, call.params.changes)
+        for (const key of emptied) held[key] = ''
         return { ok: true }
       }
     }

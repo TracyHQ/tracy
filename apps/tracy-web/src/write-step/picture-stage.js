@@ -14,8 +14,6 @@ import { refusalWords } from './contract-write.js'
 import { packageProblems, PICTURE_OWNER, readPackageFiles } from './picture-package.js'
 
 const ENDED = 'the run ended before this picture was written'
-const HIDING =
-  'hiding arrives with #362: a frame cannot be hidden alone, so its row or block goes then, and until that it keeps its demo picture'
 const PAINTING =
   'painted from the brand colours, which arrives with #367; the file beside it is a preview in neutral colours and is not written'
 
@@ -194,9 +192,6 @@ export async function preparePictureStage({ pictures, picturesPath, inputs, kit,
       ...Object.keys(changes).map((key) => frameLine(key, wrote, refused)),
       ...oneEach.map(settingLine),
       ...settings.left.map((l) => line(l.frame, null, 'skipped', l.reason, 'body-background')),
-      ...pictures.hidden.map((h) =>
-        line(h.frame, h.key, 'skipped', `${HIDING} (${h.reason})`, 'picture-hidden')
-      ),
       ...pictures.painted.map((p) =>
         p.kind === 'backdrop'
           ? line(`${p.frame}.backdrop`, null, 'skipped', PAINTING, 'picture-painted')

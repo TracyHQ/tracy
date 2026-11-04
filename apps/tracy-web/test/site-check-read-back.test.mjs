@@ -241,6 +241,25 @@ test('a hidden line is green when the slot is empty and red while it still holds
   assert.equal(failuresOf(red)[0].measured, 'Demo words')
 })
 
+test('a hidden line gone with its block is read on the block: green unpublished, red while still published', async () => {
+  const hidden = {
+    ...written('block-4.1', 'module-4.1'),
+    status: 'hidden',
+    ordered: '0',
+    readFrom: { action: 'content.get', params: { kind: 'module', id: 4 }, path: ['item', 'published'] }
+  }
+  const site = (published) =>
+    checkSite(
+      { 'module-4.1': 'Demo words stay in a row no page prints' },
+      { answers: { 'content.get': { ok: true, item: { published } } } }
+    )
+  assert.equal((await check(site(0), report([hidden]))).status, 'green')
+  const red = await check(site(1), report([hidden]))
+  assert.equal(red.status, 'red')
+  assert.match(failuresOf(red)[0].reason, /still published/)
+  assert.equal(failuresOf(red)[0].measured, '1')
+})
+
 test('skipped lines are counted, not compared', async () => {
   const skipped = {
     ...written('block-2.4', 'module-2.4'),
@@ -354,7 +373,7 @@ test('a report from the write step reads back green on the site it wrote, and re
   assert.equal(rep.slots.find((s) => s.slot === 'block-2.1').ordered, 'Train with a coach who knows you')
   const green = await check(afterWrite(site), rep)
   assert.equal(green.status, 'green')
-  assert.equal(group(green).checked, rep.counts.written)
+  assert.equal(group(green).checked, rep.counts.written + rep.counts.hidden)
   site.held['module-2.1'] = 'Changed by hand'
   const red = await check(afterWrite(site), rep)
   assert.equal(red.status, 'red')

@@ -41,19 +41,18 @@ test('the report carries input hashes and file names, never a path, and per-stag
   for (const stage of ['check', 'inspect', 'write']) assert.equal(typeof report.timings[stage], 'number')
 })
 
-test('the plan owns hide decisions and link targets: reported as skipped until those writes exist', async () => {
+test('the plan owns hide decisions and link targets: a link is reported as skipped until those writes exist', async () => {
   const p = plan()
   p.pages[0].blocks[0].links = [{ link: 'block-2.link-1', leadsTo: 'page-about', labelSlot: 'block-2.1' }]
-  const { report, site, line } = await run({ plan: p })
+  const { report, line } = await run({ plan: p })
   assert.deepEqual(
     [line('block-2.3').owner, line('block-2.3').status],
-    ['plan', 'skipped'],
+    ['plan', 'hidden'],
     'a slot the plan hides'
   )
   assert.match(line('block-2.3').reason, /hid/)
   assert.deepEqual([line('block-2.link-1').owner, line('block-2.link-1').status], ['plan', 'skipped'])
   assert.match(line('block-2.link-1').reason, /page-about/)
-  assert.equal(site.held['module-2.3'], undefined)
   assert.equal(report.status, 'done')
 })
 
@@ -214,12 +213,12 @@ test('a cancel is honoured between phases: nothing is written after it', async (
   const late = await run(
     {},
     { refuse: { 'module-2.1': { code: 'SLOT_TOO_LONG' } } },
-    { isCancelled: async () => ++asked > 2, onPhase: async (p) => void seen.push(p) }
+    { isCancelled: async () => ++asked > 3, onPhase: async (p) => void seen.push(p) }
   )
   assert.equal(late.report.status, 'cancelled')
   assert.equal(late.site.applies().length, 1)
   assert.equal(late.report.counts.written, 0)
-  assert.deepEqual(seen, ['check', 'inspect', 'write'])
+  assert.deepEqual(seen, ['check', 'inspect', 'hide', 'write'])
 })
 
 test('a door that throws stops the run and the report carries the words', async () => {
