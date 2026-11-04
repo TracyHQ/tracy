@@ -31,6 +31,8 @@ model and no rebuild**; when they pick none, the template keeps its own look. Pl
 | `scripts/lane-shell.mjs` | Child processes of one `lane.mjs` run: each step is a process group (local or on the Docker host); when the run dies, the whole tree + its Chrome is killed |
 | `scripts/template-css.mjs` | Compile a JA template's `css/*.css` from the joomlart-products source (T4 SCSS with sass 1.97.3, T3 LESS with lessc 4.2.0), compare with the shipped CSS (`same`), `--write` to write |
 
+**A brand does not wear this sheet.** A customer's brand changes only the template's accent family (#378): the brand tool still uses `brandProfile` and `joomlaSlot` with `accentOnly` to work out the colours, but what a site gets is built by `apps/tracy-web/src/brand-step/accent-module.js` from the stylesheets the template serves. The Design system picker is unchanged.
+
 **Rules:** source data is read-only · applied without a model · empty slot = old look (control measures 0
 difference) · no invented values. Templates that can wear a system today:
 

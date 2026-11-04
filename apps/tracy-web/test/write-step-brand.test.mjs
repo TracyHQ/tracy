@@ -489,3 +489,57 @@ test('a refused brand item keeps the read-back red', async () => {
   assert.equal(result.status, 'red')
   assert.ok(readBackOf(result).failures.some((f) => /the name is not clean/.test(f.reason)))
 })
+
+// Accent-only mode (#378): what reaches the site is built from the stylesheets the template serves.
+const SERVED = [':root{--brand-main:#f0a000}.btn{background:var(--brand-main);color:#111}a{color:#f0a000}']
+const accentColours = (b) => {
+  b.colours = { ...b.colours, accent: '#0f7a6b', replaces: '#f0a000', shifts: [] }
+  return b
+}
+const withSheets = (templateSheets) => ({
+  files: { brand: accentColours(brandFile()) },
+  deps: { templateSheets }
+})
+
+test('the module the site gets is built from the served sheets, whatever the brand file holds', async () => {
+  let asked = 0
+  const { line, site } = await runBrand(
+    withSheets(async ({ door, siteKey }) => {
+      asked++
+      assert.equal(siteKey, SITE)
+      assert.equal(typeof door.apply, 'function')
+      return SERVED
+    })
+  )
+  assert.equal(asked, 1)
+  const written = site
+    .of('content.update')
+    .find((c) => c.params.kind === 'module' && c.params.fields?.module === 'mod_custom')
+  const html = written.params.fields.content
+  assert.match(html, /<style id="tracy-ds-slot">\/\* tracy-ds-slot: brand:accent-only-0f7a6b/)
+  assert.match(html, /:root\{--brand-main:var\(--tracy-accent\)\}/)
+  assert.doesNotMatch(html, /--ds-c-[a-z-]+:/)
+  assert.equal(line('accent').status, 'written')
+  assert.equal(line('accent').ordered, html)
+})
+
+test('stylesheets that cannot be read, or that never paint the accent, stop the run before anything is written', async () => {
+  const unread = await runBrand(withSheets(async () => Promise.reject(new Error('no answer'))))
+  assert.equal(unread.report.status, 'stopped')
+  assert.equal(unread.report.cause.code, 'TEMPLATE_CSS_UNREADABLE')
+  assert.equal(unread.site.of('content.update').length, 0)
+  const foreign = await runBrand(withSheets(async () => ['a{color:#123456}']))
+  assert.equal(foreign.report.cause.code, 'BAD_ACCENT')
+  assert.match(foreign.report.cause.reason, /do not paint its accent #f0a000/)
+})
+
+test('with no sheets to read, a whole design-system style is refused, so it can never reach a site again', async () => {
+  const { report } = await runBrand({
+    files: {
+      module:
+        '<style id="tracy-ds-slot">/* tracy-ds-slot: brand:121111-ffffff-0f884d */ a{border-radius:18px}</style>'
+    }
+  })
+  assert.equal(report.status, 'stopped')
+  assert.match(report.cause.reason, /whole design-system style/)
+})

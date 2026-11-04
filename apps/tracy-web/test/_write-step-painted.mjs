@@ -27,7 +27,7 @@ export const TEXT = '#333333'
 
 /** A Design system module with both sides, in the form the slot emits it. */
 export const moduleHtml = (accent = ACCENT) =>
-  `<style id="tracy-ds-slot">/* tracy-ds-slot: brand */ ` +
+  `<style id="tracy-ds-slot">/* tracy-ds-slot: brand:accent-only-test */ ` +
   `:root:where(:not(:has(> body.dark-active))) body{--ds-c-bg:#ffffff;--ds-c-surface:#f5f5f5;--ds-c-fg:${TEXT};--ds-c-accent:${accent};--ds-c-accent-on:#ffffff}` +
   `:root:where(:has(> body.dark-active)) body{--ds-c-bg:#101010;--ds-c-surface:${SURFACE};--ds-c-fg:${ON_DARK};--ds-c-accent:${accent};--ds-c-accent-on:#ffffff}</style>`
 
