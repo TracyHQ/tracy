@@ -7,7 +7,7 @@ import { BUSY_WAITS_MS } from './contract-write.js'
 
 const FOLDER = 'images/tracy-brand'
 
-const said = (answer) =>
+export const said = (answer) =>
   [answer?.error ?? answer?.code, answer?.message].filter(Boolean).join(': ') || 'the site gave no answer'
 const roleOf = (order) => order.slot.replace(/^.*[:.]/, '').replace(/[^\w-]/g, '-')
 const extOf = (file) => file.slice(file.lastIndexOf('.') + 1).toLowerCase()

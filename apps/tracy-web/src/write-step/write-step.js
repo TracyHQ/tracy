@@ -5,8 +5,8 @@
 //   apply({ siteKey, action, params }) -> the plugin's answer
 // No template and no version is written here: the contract comes from the kit, the slots from the files and the site.
 //
-// This slice writes the brand file (brand-stage.js) and the site copy's mapping through `content.contract`. The later write
-// stages of the ADR go in as further phases, and pictures as a further claim list (owner-table.js).
+// This slice writes the brand file (brand-stage.js), the picture package (picture-stage.js) and the site copy's mapping
+// through `content.contract`. The later write stages of the ADR go in as further phases.
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../site-writer/bench-control.js'
 import { indexInputs } from '../site-writer/copy-check/inputs-index.js'
@@ -18,6 +18,7 @@ import { readFrozenFiles } from './input-files.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { kitSlotIds } from './kit-slot-ids.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
+import { preparePictureStage } from './picture-stage.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
 
 /** What one contract call takes (the seeder's and the plugin's own limits); more is refused whole, so it is said first. */
@@ -63,7 +64,7 @@ function siteProblem({ reading, contract, changes }) {
 
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: { ref: string, doc: object }, contentMap?: object | null,
- *   files: { plan: string, copy: string, brief?: string, brand?: string },
+ *   files: { plan: string, copy: string, brief?: string, brand?: string, pictures?: string },
  *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
  *   onPhase?: (phase: string) => Promise<void>, now?: () => number, sleep?: (ms: number) => Promise<void> }} input
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
@@ -97,6 +98,7 @@ export async function runWriteStep(input) {
   let routes = { routed: new Map(), deferred: new Map() }
   let ordered = {}
   let brand = { active: false, lines: () => [] }
+  let pictures = { active: false, lines: () => [] }
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -109,6 +111,7 @@ export async function runWriteStep(input) {
         refused,
         ordered,
         brandLines: brand.lines({ written, refused }),
+        pictureLines: pictures.lines({ written, refused }),
         ...routes
       })
       report.counts = countsOf(report.slots)
@@ -139,6 +142,14 @@ export async function runWriteStep(input) {
       accentPlace: input.accentPlace
     })
     if (brand.stop) return { stop: brand.stop }
+    pictures = await preparePictureStage({
+      pictures: read.values.pictures,
+      picturesPath: files.pictures,
+      inputs: read.inputs.pictures,
+      kit: kit.doc,
+      contract
+    })
+    if (pictures.stop) return { stop: pictures.stop }
     const problems = fileProblems({ plan, copy, kitRef: kit.ref }, readCopy(copy).problems)
     if (problems.length)
       return { stop: { code: 'BAD_FILE', reason: `The files cannot be written: ${problems.join('; ')}` } }
@@ -156,6 +167,7 @@ export async function runWriteStep(input) {
     const { view } = readCopy(copy)
     table = ownerTable([
       ...brand.claims,
+      ...pictures.claims,
       ...copyClaims(view.slots, read.inputs.copy.file),
       ...planClaims(
         { plan, hidden: index.hidden, menuHide: extras.mainMenu?.hide, filled: index.expected },
@@ -189,8 +201,8 @@ export async function runWriteStep(input) {
     return {
       mapping: {
         ...exported.mapping,
-        changes: { ...changes, ...brand.changes },
-        evidence: { ...exported.mapping.evidence, ...brand.evidence }
+        changes: { ...changes, ...brand.changes, ...pictures.changes },
+        evidence: { ...exported.mapping.evidence, ...brand.evidence, ...pictures.evidence }
       }
     }
   })
@@ -219,6 +231,14 @@ export async function runWriteStep(input) {
     if (branded.stop) return stopped(branded.stop)
     reading = branded.reading
     for (const key of branded.dropped) delete mapping.changes[key]
+    if (await isCancelled()) return finish('cancelled', null)
+  }
+
+  if (pictures.active) {
+    const placed = await timed('pictures', () => pictures.write({ apply, siteKey, sleep }))
+    if (placed.stop) return stopped(placed.stop)
+    reading = placed.reading
+    for (const key of placed.dropped) delete mapping.changes[key]
     if (await isCancelled()) return finish('cancelled', null)
   }
 
