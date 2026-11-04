@@ -263,6 +263,7 @@ test('a link whose words the plan hides leaves with them and says so; if they st
   assert.match(gone.reason, /page-a/)
   assert.match(gone.reason, /block-1\.4/)
   assert.equal(gone.conflict, true)
+  assert.equal(gone.key, 'module-1.4', 'its read is the read of its words')
   const stays = lineResult(order, {
     hides: new Map([['block-1.4', { status: 'failed', reason: 'refused', key: 'module-1.4' }]]),
     written: new Set(),

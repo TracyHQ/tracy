@@ -120,7 +120,7 @@ function labelResult({ label, leadsTo }, hides) {
   return {
     status,
     conflict: true,
-    key: null,
+    key: key ?? null,
     reason: `${conflict}: with no words it would be an empty box, so it left with them`,
     ...(ordered === undefined ? {} : { ordered }),
     ...(readFrom ? { readFrom } : {})
