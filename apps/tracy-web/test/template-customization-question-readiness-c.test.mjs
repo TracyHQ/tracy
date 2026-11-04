@@ -350,6 +350,62 @@ test('ABOUT-1: an attribute never prints text: data-copy={hero.hero_heading} on 
   assert.equal(c.status, 'pass', c.message)
 })
 
+test('ABOUT-1: the field must come from the entry the stamp is bound to', async () => {
+  const wrong = `---\n${STAMPS}\nconst other = { hero_heading: 'x' }\n---\n<h1 {...$hero('hero_heading')}>{other.hero_heading}</h1>\n<div {...$hero("hero_intro")}>{hero.hero_intro}</div>`
+  const a = await run(about1HomeHeading, stampedHome(wrong, bothRules))
+  assert.equal(a.status, 'fail', a.message)
+  assert.match(a.message, /the home <h1> stamps hero\.hero_heading but its text prints none of them/)
+  const wrongIntro = wrong
+    .replace('{other.hero_heading}', '{hero.hero_heading}')
+    .replace('{hero.hero_intro}', '{other.hero_intro}')
+  const b = await run(about1HomeHeading, stampedHome(wrongIntro, bothRules))
+  assert.equal(b.status, 'fail', b.message)
+  // an alias of the entry, and a variable built from it, are the entry
+  const alias = `---\n${STAMPS}\nconst d = hero.data\nconst lines2 = String(d.hero_heading).split('\\n')\n---\n<h1 {...$hero('hero_heading')}>{lines2.map((l) => l)}</h1>\n<div {...$hero("hero_intro")}>{d.hero_intro}</div>`
+  const c = await run(about1HomeHeading, stampedHome(alias, bothRules))
+  assert.equal(c.status, 'pass', c.message)
+  // `{ data: site } as any` binds the stamp to `site`
+  const site = `---\nconst $site = stampFor(Astro.request, 'site', { data: site } as any)\n---\n<h1 {...$site("brand_name")}>{site.brand_name}</h1>\n<p {...$site("tagline")}>{site.tagline}</p>`
+  const d = await run(
+    about1HomeHeading,
+    businessEmdash({
+      'src/views/Home.astro': site,
+      'seed/seed.json': JSON.stringify({
+        defaultLocale: 'en',
+        content: { site: [{ slug: 'site', data: { brand_name: 'A', tagline: 'B' } }] }
+      }),
+      'seed/personalize.json': JSON.stringify({
+        identity: ['brand_name', 'tagline'].map((field) => ({
+          collection: 'site',
+          slug: 'site',
+          field,
+          value: '{name}'
+        }))
+      })
+    })
+  )
+  assert.equal(d.status, 'pass', d.message)
+  const e = await run(
+    about1HomeHeading,
+    businessEmdash({
+      'src/views/Home.astro': site.replace('{site.tagline}', '{page.tagline}'),
+      'seed/seed.json': JSON.stringify({
+        defaultLocale: 'en',
+        content: { site: [{ slug: 'site', data: { brand_name: 'A', tagline: 'B' } }] }
+      }),
+      'seed/personalize.json': JSON.stringify({
+        identity: ['brand_name', 'tagline'].map((field) => ({
+          collection: 'site',
+          slug: 'site',
+          field,
+          value: '{name}'
+        }))
+      })
+    })
+  )
+  assert.equal(e.status, 'fail', e.message)
+})
+
 test('ABOUT-1: a variable derived from the field in the frontmatter counts, a chain of them too', async () => {
   const chain = `---
 ${STAMPS}

@@ -19,7 +19,8 @@
  *   against the first entry of its collection that holds the field. The `<h1>` and the element under it must EACH
  *   print such a field (a static `<p>` standing first fails); with no element after the `<h1>` the heading alone is
  *   judged. A stamp alone proves nothing: the element's text expressions (`{x.f}`, a PortableText `value={… x.f …}`)
- *   must reach the field, directly or through the frontmatter `const` / `let` variables they use.
+ *   must reach the field OF THE ENTRY THE STAMP IS BOUND TO (the third argument of its `stampFor`: `hero`), through that
+ *   variable, a variable derived from it, or a frontmatter variable built from either: `{other.hero_heading}` does not count.
  */
 import {
   contractOf,
@@ -143,6 +144,55 @@ function stampCollections(view) {
   )
 }
 
+/**
+ * The variables each stamp is bound to: the third argument of `stampFor(Astro.request, 'c', <entry>)` names the entry it
+ * stamps (`hero ? { id: hero.id, slug: hero.slug } : null` -> `hero`, `{ data: site } as any` -> `site`).
+ * @param {string} view
+ * @returns {Map<string, Set<string>>} stamp name -> the entry variables
+ */
+function stampRoots(view) {
+  const out = new Map()
+  for (const m of view.matchAll(/const\s+(\$\w+)\s*=\s*stampFor\(\s*Astro\.request\s*,\s*["']\w+["']\s*,/g)) {
+    // the argument runs to the `)` that closes the call
+    let depth = 1
+    let i = m.index + m[0].length
+    const start = i
+    for (; i < view.length && depth > 0; i++) depth += view[i] === '(' ? 1 : view[i] === ')' ? -1 : 0
+    const arg = view
+      .slice(start, i - 1)
+      .replace(/\bas\s+[\w.<>[\], ]+/g, ' ')
+      .replace(/\b[A-Za-z_$][\w$]*\s*:/g, ' ')
+    out.set(m[1], new Set(rootsIn(arg)))
+  }
+  return out
+}
+
+const NOT_VARIABLES = new Set(['null', 'undefined', 'true', 'false', 'new', 'typeof', 'await', 'as', 'any'])
+/** The variables an expression reads: identifiers that are not property names or keywords. */
+function rootsIn(/** @type {string} */ code) {
+  return [...code.matchAll(/(?<![.\w$])([A-Za-z_$][\w$]*)/g)]
+    .map((m) => m[1])
+    .filter((id) => !NOT_VARIABLES.has(id))
+}
+
+/**
+ * The frontmatter variables derived from `roots` through `const` / `let` assignments: `h = entry.data`, then anything
+ * built from `h`, and so on.
+ * @param {Set<string>} roots @param {Map<string, string>} declared
+ */
+function derivedFrom(roots, declared) {
+  const known = new Set(roots)
+  for (let grew = true; grew; ) {
+    grew = false
+    for (const [name, init] of declared)
+      if (!known.has(name) && rootsIn(init).some((id) => known.has(id))) {
+        known.add(name)
+        grew = true
+      }
+  }
+  return known
+}
+
 /** A field printed through a stamp: `$X("f")` or `$X('f')`. */
 const STAMPED = /(\$\w+)\(\s*["'](\w+)["']\s*\)/g
 
@@ -150,19 +200,24 @@ const STAMPED = /(\$\w+)\(\s*["'](\w+)["']\s*\)/g
  * The (collection, field) pairs a piece of Home.astro prints: through a declared stamp, through an undeclared `$page`
  * (the `home` entry, as the Tracy templates write it), or as `{ h.f }` (also `home`).
  * @param {string} text @param {Map<string, string>} stamps
- * @returns {{ collection: string, field: string }[]}
+ * @returns {{ collection: string, field: string, stamp: string | null }[]}
  */
 function printedFields(text, stamps) {
-  /** @type {{ collection: string, field: string }[]} */
+  /** @type {{ collection: string, field: string, stamp: string | null }[]} */
   const out = []
-  const add = (/** @type {string} */ collection, /** @type {string} */ field) => {
-    if (!out.some((o) => o.collection === collection && o.field === field)) out.push({ collection, field })
+  const add = (
+    /** @type {string} */ collection,
+    /** @type {string} */ field,
+    /** @type {string | null} */ stamp
+  ) => {
+    if (!out.some((o) => o.collection === collection && o.field === field))
+      out.push({ collection, field, stamp })
   }
   for (const m of text.matchAll(STAMPED)) {
     const collection = stamps.get(m[1]) ?? (m[1] === '$page' ? 'home' : null)
-    if (collection) add(collection, m[2])
+    if (collection) add(collection, m[2], m[1])
   }
-  for (const m of text.matchAll(/\{\s*h\.(\w+)\s*\}/g)) add('home', m[1])
+  for (const m of text.matchAll(/\{\s*h\.(\w+)\s*\}/g)) add('home', m[1], null)
   return out
 }
 
@@ -300,9 +355,21 @@ function printedCode(fragment, declared) {
   return code.join('\n')
 }
 
-/** Whether `code` reaches the field: `x.f`, `x?.f` or `x['f']`. */
-const reaches = (/** @type {string} */ code, /** @type {string} */ field) =>
-  new RegExp(`(?:\\?\\.|\\.)\\s*${field}\\b|\\[\\s*["']${field}["']\\s*\\]`).test(code)
+/**
+ * Whether `code` reaches the field of the entry: `r.f`, `r?.f` or `r['f']`, where `r` is one of `roots` (the entry the
+ * stamp is bound to, or a variable derived from it). With no roots (a stamp the view does not declare) any `x.f` does.
+ */
+const reaches = (
+  /** @type {string} */ code,
+  /** @type {string} */ field,
+  /** @type {Set<string> | null} */ roots
+) => {
+  const owner =
+    roots && roots.size
+      ? `(?<![.\\w$])(?:${[...roots].map((r) => r.replace(/\$/g, '\\$')).join('|')})\\s*`
+      : '[\\w$)\\]]\\s*'
+  return new RegExp(`${owner}(?:\\?\\.|\\.)\\s*${field}\\b|${owner}\\[\\s*["']${field}["']\\s*\\]`).test(code)
+}
 
 /** @param {import('../index.js').RuleContext} context */
 async function emdash(context) {
@@ -320,11 +387,15 @@ async function emdash(context) {
   const stamps = stampCollections(view)
   const under = underHeading(view.slice(h1.index + h1[0].length))
   const declared = declarations(view)
+  const roots = stampRoots(view)
   /** The fields an element stamps and really prints: its text expression reaches them. */
   const read = (/** @type {string} */ element) => {
     const stamped = printedFields(element, stamps)
     const code = printedCode(element, declared)
-    const printed = stamped.filter((f) => reaches(code, f.field))
+    const printed = stamped.filter((f) => {
+      const bound = f.stamp ? roots.get(f.stamp) : null
+      return reaches(code, f.field, bound ? derivedFrom(bound, declared) : null)
+    })
     return { stamped, printed }
   }
   const heading = read(h1[0])
