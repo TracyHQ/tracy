@@ -47,7 +47,6 @@ test('kit block ids become module keys and values are site paths', () => {
   assert.equal(mapping.changes['module-2.0'], path('hero.png'))
   assert.equal(mapping.changes['module-2.1'], path('cutout.png'))
   assert.equal(mapping.changes['module-3.1'], path('shelf.png'))
-  assert.equal(mapping.changes['module-4.1'], path('initials.png'))
   assert.ok(!Object.keys(mapping.changes).some((k) => k.startsWith('block-')))
 })
 
@@ -60,10 +59,47 @@ test('a hidden frame is not in the fill table and is listed as hidden', () => {
   assert.deepEqual(out.mapping.pending, [])
 })
 
-test('an icon maps to its light file and its dark twin slot to the dark file', () => {
-  const { mapping } = run()
-  assert.equal(mapping.changes['module-5.1'], path('icon-light.png'))
-  assert.equal(mapping.changes['module-5.9'], path('icon-dark.png'))
+test('initials and icons are not final uploads: they leave the fill table for the painted list', () => {
+  const { mapping, uploads } = run()
+  for (const key of ['module-4.1', 'module-5.1', 'module-5.9']) assert.ok(!(key in mapping.changes), key)
+  const sent = uploads.map((u) => u.sha256)
+  for (const name of ['initials.png', 'icon-light.png', 'icon-dark.png'])
+    assert.ok(!sent.includes(sha(name)), name)
+})
+
+test('the painted list hands the write step the roles, what to draw and the preview files', () => {
+  const { painted } = run()
+  const by = new Map(painted.map((p) => [p.key, p]))
+  assert.deepEqual([...by.keys()].sort(), ['module-4.1', 'module-5.1', 'module-5.9'])
+  const initials = by.get('module-4.1')
+  assert.deepEqual(
+    { kind: initials.kind, paint: initials.paint, holds: initials.holds, draw: initials.draw },
+    {
+      kind: 'initials',
+      paint: { background: 'accent', foreground: 'on-accent' },
+      holds: null,
+      draw: { letters: 'RV' }
+    }
+  )
+  assert.equal(initials.preview.sitePath, path('initials.png'))
+  const icon = by.get('module-5.1')
+  assert.equal(icon.kind, 'icon')
+  assert.deepEqual(icon.paint, {
+    light: { glyph: 'accent', plate: null },
+    dark: { glyph: 'on-dark', plate: null }
+  })
+  assert.deepEqual(icon.draw, { icon: 'paint-brush', set: '@phosphor-icons/core@2.1.1', weight: 'regular' })
+  assert.equal(icon.holds, 'light')
+  assert.equal(icon.preview.sha256, sha('icon-light.png'))
+  assert.equal(icon.previewDark.sha256, sha('icon-dark.png'))
+  // The dark twin slot is drawn from its source icon, in the dark variant.
+  const twin = by.get('module-5.9')
+  assert.deepEqual([twin.kind, twin.holds, twin.draw.icon], ['icon', 'dark', 'paint-brush'])
+  assert.equal(twin.preview.sha256, sha('icon-dark.png'))
+  assert.ok(
+    !JSON.stringify(painted.map((p) => [p.paint, p.draw])).includes('#'),
+    'roles only, no colour value'
+  )
 })
 
 test('a twin follows its source: same file, and hidden when its source is hidden', () => {
@@ -98,9 +134,7 @@ test('uploads list each file once by hash and only files that are placed', () =>
   assert.equal(new Set(hashes).size, hashes.length)
   assert.deepEqual(
     uploads.map((u) => u.sitePath).sort(),
-    ['hero', 'cutout', 'shelf', 'initials', 'icon-light', 'icon-dark', 'drawn']
-      .map((n) => path(`${n}.png`))
-      .sort()
+    ['hero', 'cutout', 'shelf', 'drawn'].map((n) => path(`${n}.png`)).sort()
   )
   const hero = uploads.find((u) => u.sha256 === sha('hero.png'))
   assert.equal(hero.file, 'out/hero.png')
@@ -110,7 +144,7 @@ test('uploads list each file once by hash and only files that are placed', () =>
 test('two frames sharing one file upload it once', () => {
   const input = pictures()
   const a = input.frames.find((e) => e.frame === 'block-3.1')
-  const b = input.frames.find((e) => e.frame === 'block-4.1')
+  const b = input.frames.find((e) => e.frame === 'block-2.1')
   Object.assign(b, { file: a.file, sha256: a.sha256, sitePath: a.sitePath })
   const { uploads } = run({ pictures: input })
   assert.equal(uploads.filter((u) => u.sha256 === a.sha256).length, 1)
@@ -126,8 +160,9 @@ test('site settings stay separate, marked as having no write door, never in the 
   assert.ok(!Object.values(out.mapping.changes).includes(path('band.png')))
 })
 
-test('recolourable frames (initials, icons) are listed by key', () => {
-  assert.deepEqual(run().recolourable.sort(), ['module-4.1', 'module-5.1', 'module-5.9'])
+test('the painted list is the only record of painted frames', () => {
+  const out = run()
+  assert.ok(!('recolourable' in out))
 })
 
 test('a frame the kit has no image slot for is left out with a problem', () => {

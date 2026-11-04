@@ -9,6 +9,7 @@ import { after, before, beforeEach, test } from 'node:test'
 import sharp from 'sharp'
 import { assignDoor, saveProvider } from '../src/lib/llm-store.js'
 import { readRun } from '../src/site-pictures/bench-store.js'
+import { PHOSPHOR_SET } from '../src/site-pictures/icons/phosphor-set.js'
 import { fileDb } from './_db.mjs'
 import { kitIndex, plan, startRun, storeDir } from './_site-pictures-bench.mjs'
 import { assignPickerDoor, drainPicker, reply, SECRET } from './_site-pictures-picker.mjs'
@@ -133,7 +134,14 @@ test(
       const manifest = run.rounds[0].pictures
       const icon = manifest.frames.find((e) => e.frame === 'block-9.1')
       assert.equal(icon.source, 'icon')
-      assert.deepEqual(icon.icon, { light: chosen, dark: chosen })
+      assert.deepEqual(icon.icon, {
+        light: chosen,
+        dark: chosen,
+        set: PHOSPHOR_SET,
+        weight: icon.icon.weight
+      })
+      assert.equal(icon.preview, true)
+      assert.ok(!JSON.stringify(icon.paint).includes('#'), 'colour roles, never a colour')
       assert.match(icon.reason, /ranked by the text model/)
       assert.doesNotMatch(icon.reason, /no demo icon to measure/)
       assert.ok(icon.dark?.file)

@@ -38,6 +38,7 @@ export const CSS = `${BASE}
 .ground.light{background:#fff;color:#555}.ground.dark{background:#16130f;color:#bbb}.ground img{max-width:72px;max-height:72px;width:auto}
 .seen{padding:8px 16px 12px;font-size:13.5px;border-top:1px solid var(--line)}.seen .empty{color:var(--muted);font-style:italic}
 .note.ret{color:var(--ink)}
+.paint{margin-top:6px;font-size:12.5px}
 .where{padding:12px 16px 4px;border-bottom:1px solid var(--line)}.where h4{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
 .where h4 code,.where h4 .small{text-transform:none;letter-spacing:0}
 .where .pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:6px}

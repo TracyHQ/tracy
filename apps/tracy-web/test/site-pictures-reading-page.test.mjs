@@ -22,7 +22,7 @@ const file = (name, width, height) => ({
   sha256: SHA('a'),
   sitePath: `images/tracy-content/${name}.png`
 })
-const flags = { darkened: false, recolourable: false, seen: null, enlarge: null, sharpness: null, crop: null }
+const flags = { darkened: false, seen: null, enlarge: null, sharpness: null, crop: null }
 
 const plan = {
   sharedBlocks: [{ id: 'block-1', pictures: [{ frame: 'logo', kind: 'icon', shows: 'The studio mark' }] }],
@@ -84,8 +84,10 @@ const manifest = {
       source: 'icon',
       ...file('logo-light', 64, 64),
       dark: file('logo-dark', 64, 64),
-      icon: { light: 'flame', dark: 'flame' },
+      icon: { light: 'flame', dark: 'flame', set: '@phosphor-icons/core@2.1.1', weight: 'regular' },
       ...flags,
+      paint: { light: { glyph: 'accent', plate: null }, dark: { glyph: 'on-dark', plate: null } },
+      preview: true,
       reason: 'library icon'
     },
     {
@@ -100,7 +102,16 @@ const manifest = {
       seen: 'A potter shapes a bowl',
       reason: 'chosen'
     },
-    { frame: 'team-1', source: 'initials', ...file('mara', 150, 150), ...flags, reason: 'initials MQ' },
+    {
+      frame: 'team-1',
+      source: 'initials',
+      letters: 'MQ',
+      ...file('mara', 150, 150),
+      ...flags,
+      paint: { background: 'accent', foreground: 'on-accent' },
+      preview: true,
+      reason: 'initials MQ'
+    },
     {
       frame: 'gallery-1',
       source: 'owner-photo-extended',
@@ -284,8 +295,20 @@ test('the request, flags, cut box, icon grounds, looker blanks, summary and cost
       'the finished picture is drawn at the kit frame width'
     )
     assert.match(hero, /src="run\/files\/hero\.png"/)
-    assert.match(articleOf(html, 'team-1'), /not looked at yet/)
+    const team = articleOf(html, 'team-1')
+    assert.match(team, /not looked at yet/)
+    // A painted frame shows its colour roles and says its file is only a preview.
+    assert.match(
+      team,
+      /<b>Colour:<\/b> accent, letters on-accent <span class="muted">\(decided when written\)/
+    )
+    assert.match(team, /Preview, neutral colours/)
+    assert.doesNotMatch(team, /Finished picture/)
     const logo = articleOf(html, 'logo')
+    assert.match(
+      logo,
+      /<b>Colour:<\/b> accent, other theme on-dark <span class="muted">\(decided when written\)/
+    )
     assert.equal(logo.match(/class="ground light"/g).length, 2)
     assert.equal(logo.match(/class="ground dark"/g).length, 2)
     assert.match(html, /<b>1<\/b>twin|<b>2<\/b>twin/)

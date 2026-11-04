@@ -74,6 +74,51 @@ test('P01 fails a missing or repeated planned frame, an unplanned frame and a ma
   assert.deepEqual(r.inputErrors, ['files is missing'])
 })
 
+test('initials and icons carry colour roles only: a colour value, a missing recipe or a final file fail the shape', () => {
+  // The broken entry is left out of the view, so P01 fails with the shape problem (a twin of a dropped icon may fail
+  // P11 as well).
+  const shapeFails = (mutate, detail) => {
+    const i = inputs()
+    mutate(i)
+    const r = ruleOf(i, 'P01')
+    assert.equal(r.status, 'fail')
+    assert.ok(
+      r.failures.some((f) => detail.test(f.detail)),
+      r.failures.map((f) => `${f.where}: ${f.detail}`).join('\n')
+    )
+  }
+  shapeFails((i) => {
+    entryOf(i, 'block-4.1').paint = { background: '#f44141', foreground: 'on-accent' }
+  }, /paint\.background must be a colour role/)
+  shapeFails((i) => {
+    entryOf(i, 'block-5.1').paint = {
+      light: { glyph: '#f44141', plate: null },
+      dark: { glyph: 'on-dark', plate: null }
+    }
+  }, /paint\.light\.glyph must be a colour role/)
+  shapeFails((i) => {
+    entryOf(i, 'block-5.1').paint = {
+      light: { glyph: 'accent', plate: { colour: '#000000', opacity: 1 } },
+      dark: { glyph: 'on-dark', plate: null }
+    }
+  }, /plate must name a role/)
+  shapeFails((i) => {
+    delete entryOf(i, 'block-4.1').paint
+  }, /initials needs "paint"/)
+  shapeFails((i) => {
+    entryOf(i, 'block-5.1').preview = false
+  }, /only a preview/)
+  shapeFails((i) => {
+    entryOf(i, 'block-5.9').paint = { ...entryOf(i, 'block-5.9').paint, holds: undefined }
+  }, /holds/)
+  shapeFails((i) => {
+    entryOf(i, 'block-2.0').paint = { background: 'accent', foreground: 'on-accent' }
+  }, /no paint recipe/)
+  shapeFails((i) => {
+    delete entryOf(i, 'block-5.1').icon.set
+  }, /icon\.set/)
+})
+
 test('P02 fails a frame id the kit does not have', () => {
   breaks(
     'P02',
@@ -196,19 +241,30 @@ test('P07 fails a drawn or extended picture in an any-real frame', () => {
 
 test('P08 passes a confirmed portrait and fails a drawn person or a photo not labelled as that person', () => {
   const i = inputs()
-  Object.assign(entryOf(i, 'block-4.1'), { source: 'owner-photo', asset: 'a-rhea', letters: undefined })
+  Object.assign(entryOf(i, 'block-4.1'), {
+    source: 'owner-photo',
+    asset: 'a-rhea',
+    letters: undefined,
+    paint: undefined,
+    preview: undefined
+  })
   assert.equal(ruleOf(i, 'P08').status, 'pass')
   breaks(
     'P08',
     (x) => {
-      Object.assign(entryOf(x, 'block-4.1'), { source: 'drawn' })
+      Object.assign(entryOf(x, 'block-4.1'), { source: 'drawn', paint: undefined, preview: undefined })
     },
     /found drawn/
   )
   breaks(
     'P08',
     (x) => {
-      Object.assign(entryOf(x, 'block-4.1'), { source: 'owner-photo', asset: 'a-kiln' })
+      Object.assign(entryOf(x, 'block-4.1'), {
+        source: 'owner-photo',
+        asset: 'a-kiln',
+        paint: undefined,
+        preview: undefined
+      })
     },
     /a-kiln is not labelled as a portrait of f-teacher/
   )
@@ -317,7 +373,6 @@ test('P12 fails hiding a frame that cannot hide and a demo picture left in a fra
               source: 'hide',
               file: null,
               darkened: false,
-              recolourable: false,
               reason: 'x'
             }
           : e
@@ -408,7 +463,6 @@ test('P11 lets a twin be hidden with its hidden or returned source', () => {
             source: 'hide',
             file: null,
             darkened: false,
-            recolourable: false,
             reason: 'source gone'
           }
         : e

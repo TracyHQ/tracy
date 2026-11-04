@@ -51,9 +51,9 @@ A frame entry:
 | `frame` | The kit frame id. |
 | `source` | `owner-photo`, `owner-photo-extended` (a real photo extended sideways by the image model), `drawn`, `icon`, `initials`, `hide` or `twin`. |
 | `asset` | The brief asset id, for `owner-photo` and `owner-photo-extended`; `null` otherwise. |
-| `icon` | `{ light, dark }` icon names, for `icon`. |
+| `icon` | `{ light, dark, set, weight }` for `icon`: the icon names, the icon set with its version (`@phosphor-icons/core@2.1.1`) and the weight, enough to draw the icon again from data alone. |
 | `letters` | The initials, for `initials` (an entry of another source leaves it out). |
-| `twinOf` | The source frame, for `twin` (an entry of another source leaves it out). A twin copies its source's file fields, `crop`, `enlarge`, `sharpness`, `darkened` and `recolourable`. |
+| `twinOf` | The source frame, for `twin` (an entry of another source leaves it out). A twin copies its source's file fields, `crop`, `enlarge`, `sharpness`, `darkened`, and its `paint` and `preview` when the source is painted (section 1a). |
 | `writeDoor` | `"none"`, on every `siteSettings` entry only. |
 | `file`, `width`, `height`, `sha256` | The cut file, its pixel size and hash. `null` file for `hide`. |
 | `sitePath` | `images/tracy-content/<sha256>.<ext>`: where the write step uploads it. |
@@ -65,7 +65,8 @@ A frame entry:
 | `overlay` | `{ colour, strength, before, after }` when `darkened`: the overlay's colour and opacity, and the picture's mean luminance (0 to 1) before and after. |
 | `realPart` | `{ x, y, width, height }` on the file, for `owner-photo-extended`: the part that is the owner's own pixels. |
 | `drawing` | `{ mode, attempt }` for `drawn` and `owner-photo-extended`: `scene`, `object` or `outpaint`, and 1 or 2 (the redraw). |
-| `recolourable` | Initials and icons the write step may repaint in the brand colours. |
+| `paint` | The colour recipe of `initials`, `icon` and their twins, in colour roles only, never a colour value (section 1a); absent on every other entry. |
+| `preview` | `true` on every painted entry: its file is a preview in a neutral palette, not the picture the site gets. Absent otherwise. |
 | `seen` | One sentence from the looker saying what the picture actually shows. |
 | `looker` | The look of the picture (section 3b): `{ verdict: "pass" \| "fail", faults: [...], seen }`, the fault names from the fixed list; `{ verdict: "fail", faults: ["look unreadable"], seen: null, problem }` when the look could not be read twice. Absent when the frame is not looked at (icons, initials, hidden frames). |
 | `reason` | Why this picture, or why hidden. |
@@ -76,6 +77,38 @@ frame of one item showing the same file) are written with source `twin` and foll
 The mapping export (a later ticket) turns the manifest into the fill table the existing Joomla write door takes: kit
 `block-` ids become content map `module-` keys, values are the `sitePath`s, plus an upload list and the
 `siteSettings` section. The bench never uploads.
+
+### 1a. Colour roles: initials and icons are painted when written (owner decision 04/11/2026)
+
+The picture step never bakes a brand colour into an initials tile or an icon. It runs beside the brand step, so the
+only accent it knows is the template's (measured on a real run: a padel club's trainer tiles came out in the boxing
+template's red), and even the right colour baked into a file goes wrong as soon as the customer changes the Design
+system. So the colour of a painted picture is a ROLE, resolved when the site is written.
+
+- **The roles** (`site-pictures/paint.js`, the smallest set that covers the template's demo icons and tiles):
+  `accent` (the Design system accent), `on-accent` (words on the accent), `text` (the dark neutral of body text),
+  `on-dark` (the light neutral of words on a dark ground).
+- **Initials**: `paint: { background: "accent", foreground: "on-accent" }`, with `letters`.
+- **Icons**: `paint: { light: { glyph, plate }, dark: { glyph, plate } }`, `light` for the entry's `file` and `dark`
+  for its `dark` file. A glyph's role is measured from the kit's demo icon: the template accent or close to it is
+  `accent`, any other ink the neutral of its lightness; with no demo to read, `accent`. The other theme flips a
+  neutral (`text` and `on-dark`) and keeps the accent, unless a kit twin's own demo says otherwise. `plate` is `null`
+  or the demo's disc or tile as `{ role, opacity, radius, box, glyph }` (shape and place, never its colour). A twin's
+  paint adds `holds: "light" | "dark"`, the variant its file is.
+- **Files are previews**: drawn in a neutral stand-in palette (slate accent, white, near black, near white), marked
+  `preview: true`. Neutral on purpose: a preview in the template accent reads as a decision on the reading page and
+  could be shipped by mistake. The check grades their size and hash as for any file; no rule and no look judges their
+  colour (initials and icons are not looked at).
+- **The shape check fails** an initials or icon entry without a recipe, a role that is not in the list (a hex value
+  above all), a plate that names a colour, a painted entry not marked `preview`, an icon twin without `holds`, and a
+  recipe on any other source.
+- **What step 9 receives**: the mapping export leaves painted frames out of `changes` and `uploads` and lists them
+  in `painted`, one item per frame: `{ frame, key, kind, paint, holds, draw, width, height, preview, previewDark }`,
+  `draw` being `{ letters }` or `{ icon, set, weight }` (a twin's from its source). Step 9 chooses: where the slot
+  takes HTML, markup that uses the Design system accent variable; where it only takes an image path, a file drawn from
+  the brand's colours, recorded so it is drawn again when the Design system changes. `painted` is the one record of a
+  painted frame (it replaces the earlier `recolourable` list). A painted template setting keeps its recipe in
+  `siteSettings`.
 
 ### 2. The picture check is `site-pictures-check/1`
 

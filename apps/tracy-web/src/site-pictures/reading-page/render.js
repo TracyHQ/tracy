@@ -44,11 +44,23 @@ function iconFig(f, pics) {
         `<div class="ground ${ground}">${pic ? `<img src="${esc(pic.src)}" alt="Icon ${esc(file)} on a ${ground} ground">` : '<span>missing</span>'}<span>${ground} ground</span></div>`
     )
   )
-  return `<div class="fig"><h4>Icon on light and dark grounds</h4><div class="grounds">${tiles.join('')}</div>${
+  return `<div class="fig"><h4>Icon previews on light and dark grounds</h4><div class="grounds">${tiles.join('')}</div>${
     f.entry.icon
       ? `<div class="muted small">light ${esc(f.entry.icon.light)}, dark ${esc(f.entry.icon.dark)}</div>`
       : ''
   }</div>`
+}
+
+// A painted picture's colour roles (paint.js): the colour is the Design system's, decided when the site is written.
+function paintHtml(e) {
+  const p = e?.paint
+  if (!p) return ''
+  const variant = (v) => `${v.glyph}${v.plate ? ` on a ${v.plate.role} plate` : ''}`
+  const roles =
+    'light' in p
+      ? `${variant(p.light)}${JSON.stringify(p.dark) !== JSON.stringify(p.light) ? `, other theme ${variant(p.dark)}` : ''}${p.holds ? `; this frame holds the ${p.holds} file` : ''}`
+      : `${p.background}, letters ${p.foreground}`
+  return `<div class="paint"><b>Colour:</b> ${esc(roles)} <span class="muted">(decided when written)</span></div>`
 }
 
 function finishedFig(f, pic, displayWidth) {
@@ -62,9 +74,10 @@ function finishedFig(f, pic, displayWidth) {
   else if (e.source === 'hide') body = gone(`Hidden: ${esc(e.reason)}`)
   else if (!pic) body = gone(`File missing: ${esc(e.file)}`, true)
   else
-    body = `<span class="frame-img" style="width:${displayWidth ?? pic.width ?? 320}px">${img(pic, `Finished picture of ${f.frame}`)}</span>`
+    body = `<span class="frame-img" style="width:${displayWidth ?? pic.width ?? 320}px">${img(pic, `${e.paint ? 'Preview' : 'Finished picture'} of ${f.frame}`)}</span>`
   const size = e?.width ? ` <span class="muted small">${esc(e.width)} x ${esc(e.height)} px</span>` : ''
-  return `<div class="fig"><h4>Finished picture${size}</h4>${body}</div>`
+  const title = e?.paint ? 'Preview, neutral colours' : 'Finished picture'
+  return `<div class="fig"><h4>${title}${size}</h4>${body}${paintHtml(e)}</div>`
 }
 
 function requestHtml(w) {
@@ -91,6 +104,7 @@ const chips = (f) => {
   if (f.setting) out.push('<span class="chip">template setting</span>')
   if (e?.enlarge && e.enlarge > 1) out.push(`<span class="chip">enlarged x${esc(e.enlarge)}</span>`)
   if (e?.darkened) out.push('<span class="chip">darkened</span>')
+  if (e?.paint) out.push('<span class="chip">preview, colour decided when written</span>')
   if (e?.sharpness && e.sharpness.passed === false) out.push('<span class="chip warn">not sharp</span>')
   return out.join('')
 }

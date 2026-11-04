@@ -247,7 +247,6 @@ export function placed(frameId, source, name, extra = {}) {
     enlarge: null,
     sharpness: null,
     darkened: false,
-    recolourable: false,
     seen: 'what the looker saw',
     reason: 'why this picture',
     ...extra
@@ -258,9 +257,14 @@ const hidden = (frameId) => ({
   source: 'hide',
   file: null,
   darkened: false,
-  recolourable: false,
   seen: null,
   reason: 'no fitting real photo left'
+})
+
+/** The colour roles of the fixture icon: the accent in the light theme, the light neutral in the dark one. */
+export const ICON_PAINT = Object.freeze({
+  light: { glyph: 'accent', plate: null },
+  dark: { glyph: 'on-dark', plate: null }
 })
 
 // The picture manifest that passes every rule.
@@ -283,13 +287,27 @@ export function pictures() {
       placed('block-2.1', 'owner-photo', 'cutout.png', { asset: 'a-potter', enlarge: 0.4 }),
       placed('block-3.1', 'owner-photo', 'shelf.png', { asset: 'a-shelf', enlarge: 0.2 }),
       hidden('block-3.2'),
-      placed('block-4.1', 'initials', 'initials.png', { letters: 'RV', recolourable: true }),
-      placed('block-5.1', 'icon', 'icon-light.png', {
-        icon: { light: 'paint-brush', dark: 'paint-brush' },
-        dark: { file: dark.file, width: 64, height: 64, sha256: dark.sha256, sitePath: dark.sitePath },
-        recolourable: true
+      placed('block-4.1', 'initials', 'initials.png', {
+        letters: 'RV',
+        paint: { background: 'accent', foreground: 'on-accent' },
+        preview: true
       }),
-      placed('block-5.9', 'twin', 'icon-dark.png', { twinOf: 'block-5.1', recolourable: true }),
+      placed('block-5.1', 'icon', 'icon-light.png', {
+        icon: {
+          light: 'paint-brush',
+          dark: 'paint-brush',
+          set: '@phosphor-icons/core@2.1.1',
+          weight: 'regular'
+        },
+        dark: { file: dark.file, width: 64, height: 64, sha256: dark.sha256, sitePath: dark.sitePath },
+        paint: ICON_PAINT,
+        preview: true
+      }),
+      placed('block-5.9', 'twin', 'icon-dark.png', {
+        twinOf: 'block-5.1',
+        paint: { ...ICON_PAINT, holds: 'dark' },
+        preview: true
+      }),
       placed('block-7.1', 'drawn', 'drawn.png'),
       placed('block-7.2', 'twin', 'drawn.png', { twinOf: 'block-7.1' })
     ],

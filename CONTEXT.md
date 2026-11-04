@@ -211,6 +211,12 @@ hash, and what the looker saw; plus template level pictures, returns to planner 
 ([ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md)).
 _Avoid_: image list, picture plan
 
+**Colour role**:
+The name of a colour a code drawn picture (an initials tile, an icon) is painted in, `accent`, `on-accent`, `text` or
+`on-dark`, never a colour value. The picture step records roles and draws only previews; the write step paints them
+from the Design system ([ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md) section 1a).
+_Avoid_: brand colour, recolourable
+
 **Picture check**:
 The script-only grader of a picture manifest (`site-pictures-check/1`, rules P01 to P13). It reads the files' recorded
 hashes and sizes, never judges how a picture looks, and never changes a picture.

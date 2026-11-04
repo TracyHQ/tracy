@@ -5,8 +5,15 @@
 //
 // The door has no way to hide a picture slot (`emptyLinks` takes link slots only, and `pending` makes it refuse the
 // whole mapping), so a hidden frame is left out of `changes` and listed in `hidden` for the write step.
+//
+// A painted frame (initials, an icon, a twin of one) is not final either: its colours are roles (paint.js) and its file
+// a preview in a neutral palette. It is left out of `changes` and `uploads` and listed in `painted` with all the write
+// step needs to finish it from data alone: where the slot takes HTML, markup that uses the Design system accent
+// variable; where it only takes an image path, a file drawn in the brand's colours (and recorded so it is drawn again
+// when the Design system changes). This export does not choose; `painted` is the one place a frame is said to be painted.
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { readPictures } from './manifest-shape.js'
+import { paintKindOf } from './paint.js'
 
 export { contentMapKey }
 
@@ -16,7 +23,10 @@ export { contentMapKey }
  *   mapping: { contract: string, revision: string, changes: Record<string,string>, evidence: {}, pending: [], emptyLinks: [] },
  *   uploads: { sitePath: string, file: string, sha256: string, width: number, height: number }[],
  *   hidden: { frame: string, key: string, reason: string }[],
- *   recolourable: string[],
+ *   painted: { frame: string, key: string, kind: 'initials' | 'icon', paint: object, holds: 'light' | 'dark' | null,
+ *     draw: { letters: string } | { icon: string, set: string, weight: string }, width: number, height: number,
+ *     preview: { sitePath: string, file: string, sha256: string, width: number, height: number },
+ *     previewDark: object | null }[],
  *   siteSettings: object[],
  *   problems: { where: string, detail: string }[]
  * }}
@@ -36,7 +46,44 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
   // The Joomla door cannot hide a picture slot, so a hidden frame is only listed here, never written. The write step
   // must hide the row itself, or the frame silently keeps its demo picture.
   const hidden = []
-  const recolourable = []
+  const painted = []
+  const previewOf = (f) => ({
+    sitePath: f.sitePath,
+    file: f.file,
+    sha256: f.sha256,
+    width: f.width,
+    height: f.height
+  })
+  // What step 9 needs to draw a painted frame again: the letters, or the icon's name, set and weight (a twin's are its
+  // root source's).
+  function paintedOf(e, key) {
+    let root = e
+    for (const seen = new Set(); root.source === 'twin' && !seen.has(root.frame); ) {
+      seen.add(root.frame)
+      root = frames.get(root.twinOf) ?? root
+    }
+    const kind = paintKindOf(e.paint)
+    const draw =
+      root.source === 'initials'
+        ? { letters: root.letters }
+        : root.source === 'icon'
+          ? { icon: root.icon.light, set: root.icon.set, weight: root.icon.weight }
+          : null
+    if (!draw) return bad(e.frame, `painted twin ${e.frame} has no initials or icon source`) ?? null
+    const { holds = null, ...paint } = e.paint
+    return {
+      frame: e.frame,
+      key,
+      kind,
+      paint,
+      holds: kind === 'icon' ? (holds ?? 'light') : null,
+      draw,
+      width: e.width,
+      height: e.height,
+      preview: previewOf(e),
+      previewDark: e.source === 'icon' && e.dark ? previewOf(e.dark) : null
+    }
+  }
 
   // The file a frame places, or null with a problem. A twin holds its source's file; an icon twin may hold the
   // source's light or its dark file (P11), and nothing else.
@@ -78,8 +125,12 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
       bad(e.frame, `the kit has no image slot ${key}`)
       continue
     }
+    if (e.paint) {
+      const p = paintedOf(e, key)
+      if (p) painted.push(p)
+      continue
+    }
     changes[key] = e.sitePath
-    if (e.recolourable) recolourable.push(key)
     if (!placedFiles.has(e.sha256))
       placedFiles.set(e.sha256, {
         sitePath: e.sitePath,
@@ -101,13 +152,15 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
       sha256: e.sha256,
       sitePath: e.sitePath,
       darkened: e.darkened,
+      paint: e.paint,
+      preview: e.preview,
       reason: e.reason
     }))
   return {
     mapping: { contract, revision, changes, evidence: {}, pending: [], emptyLinks: [] },
     uploads: [...placedFiles.values()],
     hidden,
-    recolourable,
+    painted,
     siteSettings,
     problems
   }

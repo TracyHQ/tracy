@@ -10,6 +10,7 @@ import { iconColourOf } from '../src/site-pictures/icons/icon-ink.js'
 import { iconStyleOf } from '../src/site-pictures/icons/icon-style.js'
 import { hasPhosphorIcon, phosphorNames } from '../src/site-pictures/icons/phosphor-set.js'
 import { PICTURES_VERSION } from '../src/site-pictures/manifest-shape.js'
+import { PREVIEW_PALETTE } from '../src/site-pictures/paint.js'
 import { checkPictures } from '../src/site-pictures/picture-check/check-pictures.js'
 
 const frame = (id, extra = {}) => ({
@@ -116,7 +117,7 @@ const ASK = (text) => async () => ({
   usage: { total: 1 }
 })
 
-test('every icon frame gets a real library name, light and dark files of the frame size, marked recolourable', async () => {
+test('every icon frame gets a real library name, light and dark previews of the frame size, colour roles only', async () => {
   const { got } = await run({
     door: ASK({ items: { 'block-2.1': ['wrench', 'made-up-icon'], 'block-2.2': ['wrench', 'gear'] } }),
     demos: [
@@ -134,7 +135,10 @@ test('every icon frame gets a real library name, light and dark files of the fra
       hasPhosphorIcon(e.icon.light) && hasPhosphorIcon(e.icon.dark),
       `${id} ${JSON.stringify(e.icon)}`
     )
-    assert.equal(e.recolourable, true)
+    assert.equal(e.preview, true)
+    assert.ok(['accent', 'text', 'on-dark'].includes(e.paint.light.glyph), JSON.stringify(e.paint))
+    assert.ok(!JSON.stringify(e.paint).includes('#'), `${id} paint holds no colour value`)
+    assert.deepEqual([e.icon.set, typeof e.icon.weight], ['@phosphor-icons/core@2.1.1', 'string'])
     assert.deepEqual([e.width, e.height, e.dark.width, e.dark.height], [64, 64, 64, 64])
     assert.match(e.file, /^files\/[0-9a-f]{64}\.png$/)
     assert.match(e.dark.file, /^files\/[0-9a-f]{64}\.png$/)
@@ -174,24 +178,41 @@ test('without a usable model the shortlist order decides and the run still fills
   assert.equal(byFrame(got, 'block-2.1').icon.light, 'wrench')
 })
 
-test('the weight and the colour are measured from the demo icons of the block', async () => {
+// Two colours within a few steps of each other (the glyph's anti-aliased edge shifts the measured mean a little).
+const near = (a, b) =>
+  [1, 3, 5].every(
+    (i) => Math.abs(Number.parseInt(a.slice(i, i + 2), 16) - Number.parseInt(b.slice(i, i + 2), 16)) < 12
+  )
+
+test('the weight is measured from the demo icons of the block, the colour only as a role', async () => {
   const { got } = await run({
     door: null,
     demos: [
-      ['block-2.1', '#2f5d8a', 8],
-      ['block-2.2', '#2f5d8a', 8],
-      ['block-2.3', '#2f5d8a', 8]
+      ['block-2.1', '#1b2a41', 8],
+      ['block-2.2', '#1b2a41', 8],
+      ['block-2.3', '#1b2a41', 8]
     ]
   })
   const e = byFrame(got, 'block-2.1')
   assert.equal((await iconStyleOf(got.files.get(e.file).bytes))?.weight, 'bold')
-  const ink = await iconColourOf(got.files.get(e.file).bytes)
-  const [r, g, b] = [1, 3, 5].map((i) => Number.parseInt(ink.slice(i, i + 2), 16))
-  assert.ok(Math.abs(r - 0x2f) < 16 && Math.abs(g - 0x5d) < 16 && Math.abs(b - 0x8a) < 16, ink)
-  // The block with no demo to read is drawn regular in the template accent.
+  // A dark demo ink is the dark neutral; the other theme the light one; the preview is drawn in the neutral palette.
+  assert.deepEqual(e.paint, {
+    light: { glyph: 'text', plate: null },
+    dark: { glyph: 'on-dark', plate: null }
+  })
+  assert.ok(near(await iconColourOf(got.files.get(e.file).bytes), PREVIEW_PALETTE.text))
+  // The block with no demo to read is drawn regular, in the accent role, its preview in the stand-in accent, never
+  // the template accent.
   const plain = byFrame(got, 'block-3.1')
   assert.equal((await iconStyleOf(got.files.get(plain.file).bytes))?.weight, 'regular')
   assert.match(plain.reason, /no demo icon to measure/)
+  assert.deepEqual(plain.paint.light, { glyph: 'accent', plate: null })
+  assert.ok(near(await iconColourOf(got.files.get(plain.file).bytes), PREVIEW_PALETTE.accent))
+})
+
+test('a demo icon in the template accent plays the accent role', async () => {
+  const { got } = await run({ door: null, demos: [['block-2.1', '#2f6f8f', 5]] })
+  assert.equal(byFrame(got, 'block-2.1').paint.light.glyph, 'accent')
 })
 
 test('the dark file is a different colour of the same icon, and a kit twin holds the variant of its own demo', async () => {
@@ -208,6 +229,7 @@ test('the dark file is a different colour of the same icon, and a kit twin holds
   assert.equal(twin.source, 'twin')
   assert.equal(twin.twinOf, 'block-2.1')
   assert.equal(twin.sha256, e.dark.sha256)
+  assert.equal(twin.paint.holds, 'dark')
   const lum = async (file) => {
     const { data, info } = await pixelsOf(got, file)
     let sum = 0

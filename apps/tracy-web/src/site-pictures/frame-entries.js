@@ -23,7 +23,6 @@ export const placedEntry = (frame, source, made, extra = {}) => ({
   enlarge: made.enlarge ?? null,
   sharpness: made.sharpness ?? null,
   darkened: false,
-  recolourable: false,
   seen: null,
   ...extra
 })
@@ -37,7 +36,6 @@ export const hiddenEntry = (frame, reason) => ({
   enlarge: null,
   sharpness: null,
   darkened: false,
-  recolourable: false,
   seen: null,
   reason
 })
@@ -50,6 +48,14 @@ export const pendingEntry = (wish, frame, waitsFor, reason) => ({
   waitsFor,
   reason
 })
+
+// A copy of a painted source (initials, icon) carries its recipe and stays a preview; a copy of an icon holds the
+// light file (its \`file\`), unless the source is itself a twin that says which it holds.
+function paintOf(src) {
+  if (!src.paint) return {}
+  const icon = src.source === 'icon' || 'light' in src.paint
+  return { paint: icon ? { ...src.paint, holds: src.paint.holds ?? 'light' } : src.paint, preview: true }
+}
 
 const copyOf = (twin, sourceFrame, src) => ({
   frame: twin,
@@ -65,7 +71,7 @@ const copyOf = (twin, sourceFrame, src) => ({
   sharpness: src.sharpness,
   darkened: src.darkened,
   ...(src.overlay ? { overlay: src.overlay } : {}),
-  recolourable: src.recolourable,
+  ...paintOf(src),
   seen: null,
   reason: `follows ${sourceFrame}`
 })

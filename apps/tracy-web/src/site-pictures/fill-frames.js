@@ -1,7 +1,7 @@
 // The code half of the picture step (#340, ADR 0043 section 3): every picture frame of the plan decided by code alone,
 // with no model. Owner photos are cut for any-real frames (the shortlist's order: same offering, unused first; never
 // drawn) and for person frames that have a confirmed portrait; other person frames get initials drawn by code in the
-// template accent (recolourable); a frame with no fitting photo is hidden where the kit allows, else returned to the
+// as a colour recipe of roles with a neutral preview file (paint.js: the brand colour is decided when written); a frame with no fitting photo is hidden where the kit allows, else returned to the
 // planner; frames the kit marks not writable are returned, except a picture painted behind blocks, which goes into
 // siteSettings; twins copy their source. A frame with text over its picture tries darker photos first (the overlay a
 // picture still too bright gets is baked when the round is finished, ladder-step.js). Specific, icon and cut-out frames are left as pending entries for the steps
@@ -12,6 +12,7 @@ import { cutPhoto, outputSizeFor } from './cut-photo.js'
 import { darkerFirst } from './darken.js'
 import { addTwins, hiddenEntry, pendingEntry, placedEntry } from './frame-entries.js'
 import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
+import { INITIALS_PAINT, previewColour } from './paint.js'
 import { indexInputs } from './picture-check/inputs-index.js'
 
 /** What each later step fills; a pending entry names it. */
@@ -128,7 +129,8 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
         continue
       }
       const cut = await cutPhoto(photoBytes.get(a.id), a, frame, idx.demoSize(frameId), {
-        matches: wish.match === 'person' || sameService(a, wish)
+        matches: wish.match === 'person' || sameService(a, wish),
+        anyReal: wish.match === 'any-real'
       })
       if (!cut.ok) {
         tried.push(`${a.id} ${cut.refused}`)
@@ -162,14 +164,21 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
       const letters = initialsOf(personName(brief, wish.person))
       if (letters) {
         const size = outputSizeFor(idx.demoSize(frameId), frame, frame.width)
-        const made = await initialsAvatar({ ...size, initials: letters, colours: accent ? [accent] : [] })
+        // A preview only: the tile's colours are roles the write step resolves from the Design system.
+        const made = await initialsAvatar({
+          ...size,
+          initials: letters,
+          colours: [previewColour(INITIALS_PAINT.background)]
+        })
         keep(made)
         entries.set(frameId, {
           list,
           entry: placedEntry(frameId, 'initials', made, {
             letters,
-            recolourable: true,
-            reason: 'no brief photo is labelled as this person; initials in the template accent'
+            paint: { ...INITIALS_PAINT },
+            preview: true,
+            reason:
+              'no brief photo is labelled as this person; initials on the accent, the colour decided when written'
           })
         })
         continue
@@ -202,7 +211,8 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
   }
 
   if (iconJobs.length) {
-    // The icon step (icons/fill-icons.js): library icons ranked by a text model, light and dark files, their twins.
+    // The icon step (icons/fill-icons.js): library icons ranked by a text model, light and dark previews, their twins;
+    // the template accent only tells which measured demo colour plays the accent role.
     const done = await icons.fill({ jobs: iconJobs, idx, accent })
     for (const e of done.entries) entries.set(e.entry.frame, e)
     done.files.forEach(keep)

@@ -74,11 +74,12 @@ test(
     assert.equal(new Set(homeAssets).size, homeAssets.length)
     // The gallery ran out of fitting photos: what is left is hidden, which the kit allows.
     assert.ok(['block-3.1', 'block-3.2', 'block-3.3', 'block-3.4'].some((f) => e.get(f).source === 'hide'))
-    // Person frames: the confirmed portrait, and initials in the template accent for the person without one.
+    // Person frames: the confirmed portrait, and initials as colour roles for the person without one.
     assert.equal(e.get('block-4.1').source, 'owner-photo')
     assert.equal(e.get('block-4.1').asset, 'p-owner')
     assert.deepEqual([e.get('block-4.2').source, e.get('block-4.2').letters], ['initials', 'TB'])
-    assert.equal(e.get('block-4.2').recolourable, true)
+    assert.deepEqual(e.get('block-4.2').paint, { background: 'accent', foreground: 'on-accent' })
+    assert.equal(e.get('block-4.2').preview, true)
     // Twins: the plan's sameAs and the kit's twin copy their source's file.
     assert.deepEqual([e.get('block-5.2').source, e.get('block-5.2').twinOf], ['twin', 'block-5.1'])
     assert.equal(e.get('block-5.2').sha256, e.get('block-5.1').sha256)

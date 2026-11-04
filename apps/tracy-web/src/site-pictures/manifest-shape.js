@@ -1,6 +1,7 @@
 // The picture manifest `site-pictures/1` (ADR 0043): the one place its shape is defined. The picture step writes it,
 // the picture check grades it, and the mapping export and the write step read it. readPictures never throws: it returns
 // the valid entries as a "view" and every problem it found, so one bad entry cannot hide or crash the rules.
+import { paintKindOf, paintProblem } from './paint.js'
 export const PICTURES_VERSION = 'site-pictures/1'
 
 /** Where a frame's picture came from. */
@@ -62,6 +63,10 @@ function readEntry(e, list) {
     return { problem: `${source} needs the brief asset id in "asset"` }
   if (source === 'icon' && !(isObject(e.icon) && isNonEmpty(e.icon.light) && isNonEmpty(e.icon.dark)))
     return { problem: 'icon needs "icon": { light, dark } icon names' }
+  if (source === 'icon' && !(isNonEmpty(e.icon.set) && isNonEmpty(e.icon.weight)))
+    return {
+      problem: 'icon needs "icon.set" (the icon set and its version) and "icon.weight" to be drawn again'
+    }
   if (source === 'initials' && !isNonEmpty(e.letters)) return { problem: 'initials needs "letters"' }
   if (source === 'twin' && !isNonEmpty(e.twinOf)) return { problem: 'twin needs "twinOf", its source frame' }
   if (source === 'hide') {
@@ -81,8 +86,18 @@ function readEntry(e, list) {
     return { problem: 'enlarge must be null or a positive number' }
   if (e.sharpness != null && !(isObject(e.sharpness) && typeof e.sharpness.passed === 'boolean'))
     return { problem: 'sharpness must be null or { passed: boolean, ... }' }
-  for (const key of ['darkened', 'recolourable'])
-    if (typeof e[key] !== 'boolean') return { problem: `${key} must be true or false` }
+  if (typeof e.darkened !== 'boolean') return { problem: 'darkened must be true or false' }
+  // Initials and icons carry colour roles, never a colour, and their file is only a preview (paint.js); a twin of one
+  // carries its source's recipe. No other picture is painted.
+  const painted = source === 'initials' || source === 'icon' || (source === 'twin' && e.paint != null)
+  if (painted) {
+    const kind = source === 'twin' ? paintKindOf(e.paint) : source
+    const p = paintProblem(e.paint, kind, { twin: source === 'twin' })
+    if (p) return { problem: p }
+    if (e.preview !== true)
+      return { problem: 'a painted picture file is only a preview: "preview" must be true' }
+  } else if (e.paint != null || e.preview != null)
+    return { problem: `a ${source} picture has no paint recipe and no preview mark` }
   if (e.seen != null && typeof e.seen !== 'string') return { problem: 'seen must be a string or null' }
   if (typeof e.reason !== 'string') return { problem: 'reason must be a string' }
   return {
@@ -91,7 +106,10 @@ function readEntry(e, list) {
       frame: e.frame,
       source,
       asset: isNonEmpty(e.asset) ? e.asset : null,
-      icon: source === 'icon' ? { light: e.icon.light, dark: e.icon.dark } : null,
+      icon:
+        source === 'icon'
+          ? { light: e.icon.light, dark: e.icon.dark, set: e.icon.set, weight: e.icon.weight }
+          : null,
       letters: source === 'initials' ? e.letters : null,
       twinOf: source === 'twin' ? e.twinOf : null,
       ...(source === 'hide'
@@ -102,7 +120,8 @@ function readEntry(e, list) {
       enlarge: e.enlarge ?? null,
       sharpness: e.sharpness ?? null,
       darkened: e.darkened,
-      recolourable: e.recolourable,
+      paint: painted ? e.paint : null,
+      preview: painted,
       seen: e.seen ?? null,
       reason: e.reason
     }
