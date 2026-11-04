@@ -17,6 +17,8 @@ import { fakeHost, pagedSite, pageRead, writtenReport } from './_site-check-page
 const BAND = [31, 30, 30]
 const RED = [244, 65, 65, 1]
 const GREEN = [14, 127, 72, 1]
+/** An accent darker still: 2.89:1 on the band, under the brand accent bar of 3:1. */
+const DIM = [13, 117, 68, 1]
 const WHITE = [255, 255, 255, 1]
 const entry = (side, read, over = {}) => ({
   path: '/',
@@ -36,12 +38,23 @@ const words = (w) => ({
 })
 
 test('accent words the brand made unreadable on a band are red and name the brand', () => {
-  assert.equal(contrast(GREEN, BAND).toFixed(2), '3.28')
-  const [f, ...rest] = judgeBandContrast([entry('light', { words: [words()] })])
+  assert.equal(contrast(DIM, BAND).toFixed(2), '2.89')
+  const [f, ...rest] = judgeBandContrast([entry('light', { words: [words({ fg: DIM })] })])
   assert.equal(rest.length, 0)
   assert.equal(f.level, undefined, 'a block by default')
-  assert.match(f.measured, /reads 3\.28:1, 4\.5:1 before the brand style/)
-  assert.match(f.reason, /light theme/)
+  assert.match(f.measured, /reads 2\.89:1, 4\.5:1 before the brand style/)
+  assert.match(f.reason, /under 3:1 in the light theme/)
+})
+
+test('accent words the brand coloured pass from 3:1, under the 4.5:1 the template words keep', () => {
+  assert.equal(contrast(GREEN, BAND).toFixed(2), '3.28')
+  assert.deepEqual(judgeBandContrast([entry('light', { words: [words()] })]), [])
+  const [own] = judgeBandContrast([entry('dark', { words: [words({ fg: GREEN, fgOff: GREEN })] })])
+  assert.deepEqual(
+    [own.level, own.causingStep],
+    ['warn', 0],
+    'the same colour as the template own still warns at 4.5:1'
+  )
 })
 
 test('the same accent on a ground it reads on, and large words at 3:1, are green', () => {
@@ -68,8 +81,8 @@ test('a colour the brand did not make worse is the template fault, a warning sai
 
 test('the same footer words on every page are said once', () => {
   const f = judgeBandContrast([
-    entry('light', { words: [words()] }),
-    entry('light', { words: [words()] }, { path: '/about' })
+    entry('light', { words: [words({ fg: DIM })] }),
+    entry('light', { words: [words({ fg: DIM })] }, { path: '/about' })
   ])
   assert.equal(f.length, 1)
 })
@@ -206,7 +219,7 @@ test('through the entry point a finding says its step by name, and a switch noth
     {
       path: '/',
       width: 1440,
-      look: { switchSeen: true, sides: { only: { words: [words()], over: [], logos: [] } } }
+      look: { switchSeen: true, sides: { only: { words: [words({ fg: DIM })], over: [], logos: [] } } }
     }
   ]
   const check = await runSiteCheck({

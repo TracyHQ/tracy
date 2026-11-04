@@ -18,7 +18,7 @@
 //   unfinished-heading block  3 or 6        new: a heading that stops on a small word; whoever owns its words (label: planner, copy: writer)
 //   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
 //   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
-//   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes
+//   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes (3:1 for brand accent words)
 //   words-over-picture block  8, 2 or 0     theme-reads.js: words against the picture region under them, in both themes
 //   logo-readable      block  2 or 0        theme-reads.js: a logo's pixels against its ground, in both themes
 //   self-links         block  3 or 6        page-faults.js: a button that leads to the page it is on

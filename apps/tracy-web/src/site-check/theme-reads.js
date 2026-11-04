@@ -22,6 +22,12 @@ export const LOGO_GONE_RATIO = 2
 export const LOGO_FAINT_RATIO = 3
 
 const WORST_SHOWN = 6
+/**
+ * The bar for words the brand style coloured with its accent: 3:1, WCAG's level for large text and controls. An accent reads as a
+ * highlight, a link or a button label, and the owner ruled 3.28:1 on a dark footer no fault (04/11/2026). The template's own words keep
+ * 4.5:1 (`needed`).
+ */
+export const BRAND_ACCENT_BAR = 3
 const rgb = (c) => (c ? `rgb(${c.slice(0, 3).join(', ')})` : null)
 const round = (n) => Number(n.toFixed(2))
 
@@ -45,6 +51,7 @@ export function judgeBandContrast(entries) {
           own.push({ ratio, w })
           continue
         }
+        if (ratio >= BRAND_ACCENT_BAR) continue
         // A footer's words are the same words on every page: said once, on the first page they were read.
         const id = `${side} ${w.selector} ${w.fg} ${w.bg}`
         if (seen.has(id)) continue
@@ -53,7 +60,7 @@ export function judgeBandContrast(entries) {
           page: m.path,
           width: m.width,
           measured: `${w.selector} "${w.text}" ${rgb(w.fg)} on ${rgb(w.bg)} reads ${round(ratio)}:1, ${round(before)}:1 before the brand style`,
-          reason: `The brand style makes these words read under ${needed(w.large)}:1 in the ${side} theme.`
+          reason: `The brand style makes these words read under ${BRAND_ACCENT_BAR}:1 in the ${side} theme.`
         })
       }
       const id = `${m.path} ${side} own`
