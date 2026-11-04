@@ -6,6 +6,7 @@
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { planShapeProblems } from '../lib/plan-shape.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } from './bench-store.js'
 import { openContentMap } from './content-map-source.js'
@@ -17,20 +18,6 @@ import { DEFAULT_PAGES_PER_TURN, pagesPerTurnProblem } from './writer-turns.js'
 export { briefOfRevision }
 
 const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })
-const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v)
-
-/** Every problem that keeps a plan off the writer bench; empty when it may run. The plan checker is not re-run. */
-export function planShapeProblems(plan, kitRef) {
-  if (!isObject(plan)) return ['the plan is not a JSON object']
-  const problems = []
-  if (!isObject(plan.site)) problems.push('site must be an object')
-  if (!Array.isArray(plan.pages) || !plan.pages.length) problems.push('pages must be a non-empty list')
-  if (plan.sharedBlocks !== undefined && !Array.isArray(plan.sharedBlocks))
-    problems.push('sharedBlocks must be a list')
-  if (typeof plan.kit === 'string' && kitRef && !plan.kit.split(/\s+/).includes(kitRef))
-    problems.push(`the plan was made on the kit "${plan.kit}", not ${kitRef}`)
-  return problems
-}
 
 /**
  * Queue one run, or refuse it with a reason and nothing written.
@@ -127,3 +114,5 @@ export async function cancelWriterRun(pool, runId) {
   if (!run) return refuse('SITE_WRITER_RUN_NOT_FOUND', `No run ${runId}.`)
   return refuse('SITE_WRITER_RUN_NOT_ACTIVE', `Run ${runId} has already ended (${run.status}).`)
 }
+
+export { planShapeProblems }

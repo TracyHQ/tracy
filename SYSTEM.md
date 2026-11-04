@@ -2255,6 +2255,71 @@ A trial bench for the writer step (#326): one agent writes the copy of a whole s
   the reviews it quotes, a slim view of the kit blocks it uses (with their look text) and the two handed-over name slots.
   Code adds version, fingerprint and the plan's label slots; fix rounds apply only the writer's corrected entries.
 
+### Picture bench (03/11/2026, [ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md))
+
+A trial bench for the picture step (#336): every picture frame of a frozen site plan gets a file cut to the size the
+site needs, a hide, a return to the planner or a pending entry, written as one `site-pictures/1` manifest that the
+picture check grades. It builds no site, writes nothing to one and has **no screen, route or API endpoint**.
+
+- **Started and read from a command line** inside the tracy-web container:
+  [`scripts/site-pictures-bench.mjs`](apps/tracy-web/scripts/site-pictures-bench.mjs) (`run --plan-file --kit
+  --brief-file --photos | --brief-revision`, `list`, `status`, `get`, `cancel`;
+  [`bench-cli.js`](apps/tracy-web/src/site-pictures/bench-cli.js)). `get` copies the manifest, the picture files, each
+  round's check and the turns to an output folder.
+- **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-pictures/bench-worker.js)) is the picture step as a step
+  of the shared bench run loop, its own durable queue over `site_picture_run` (`app.sitePicturesQueue`, started by
+  `server.js`, migration 198), one picture run at a time.
+- **Owner photo bytes** of a WO revision are read through the brief asset reader (`briefPictureBytes`,
+  `opportunities-build/brief-picture-labels.js`) from the media store, hash checked; a run on a brief file reads a folder
+  of files named by their sha256, which the CLI copies into the bench's file store when the run starts.
+- **A new store on disk**: the bench's file store ([`file-store.js`](apps/tracy-web/src/site-pictures/file-store.js)),
+  a folder in the container (`TRACY_PICTURE_BENCH_DIR`, default in the system's temporary directory) where every
+  picture file is named by its sha256, with one `site_picture_file` row per file (path, hash, bytes, cost). It is a
+  cache: a file gone from it is reported by `get`, never invented.
+- **Code first** (#340): any-real frames take owner photos by code, person frames a confirmed portrait or initials,
+  twins copy their source, frames the kit marks not writable are returned (a picture painted behind blocks is listed
+  in `siteSettings`); icon and cut-out frames stay pending for their own steps (#345, #346).
+- **The picker** (#342) is called through the `picturePicker` door (`/ops` › Model & AI; by default `deepseek-flash` on
+  the `deepseek` provider, effort max, no tools): one call per run with the owner photos as 512 px thumbnails and a code
+  shortlist per specific frame, never a demo picture of the kit. A run whose plan has no specific frame needs no door
+  and calls no model. Fix rounds send back only the picker's failing frames (at most two); the DeepSeek balance is read
+  before and after, as on the other benches. Migration 199 adds the door to the door check.
+- **Icons** (#345): icon frames get a Phosphor icon; the names code shortlists are ranked by one text call through the
+  `pictureIconRanker` door (`openai/gpt-6-luna`; unset, the shortlist order decides, migration 200), and the weight,
+  colour and plate are measured from the kit's demo icons, read once per kit release from the release's webroot tar.gz
+  (through the releases credential) and cached in the bench's file store.
+- **The looker** (#343) checks every finished owner photo or drawn picture through the `pictureLooker` door
+  (`openai/gpt-6-luna` through OpenRouter; mandatory, another maker than the picker's, else the run is refused): one
+  fresh call per picture, 4 at a time, with only the picture at display size and the plan's words; an unreadable look
+  is asked once more, then fails as "look unreadable". Its verdict, faults and seen sentence are stored on the entry;
+  rejections are rule L01 failures that go back to the picker in the fix rounds. The run's cost adds the looks and the
+  icon ranking to the picker's turns. `run --copy-file` passes a writer copy file whose alts are compared with the
+  seen sentences (`altNotes`). Migration 201 adds the door to the door check and the run's `copy` column.
+- **The drawer and the fallback ladder** (#344) finish every checked round before it is saved
+  ([`ladder-step.js`](apps/tracy-web/src/site-pictures/ladder-step.js), wrapped around the store's `saveRound` like the
+  looker, so the shared loop is unchanged). A specific frame no owner photo fits (or the picker answered "none") is
+  drawn through the `pictureDrawer` door (`google/gemini-3.1-flash-lite-image` through OpenRouter, about 0.034 USD a
+  picture, 4 at a time) from a fixed template filled only with the plan's words
+  ([`drawing-prompt.md`](apps/tracy-web/src/site-pictures/drawing-prompt.md)), or, for a wide band with a portrait owner
+  photo of its own offering, that photo is extended sideways (`owner-photo-extended`, its real part kept and recorded as
+  `realPart`). A run on a plan with specific frames does not start without the door, nor run when it changed. Frames with
+  text over the picture take darker photos first; a picture still too bright gets a dark overlay baked in (`darkened`,
+  `overlay`). A rejected frame then climbs its ladder: one redraw with the fault names, up to two other photos, one row
+  fewer (where the kit's list allows), hidden (where the kit allows), returned to the planner; any-real frames never
+  draw, person frames only hide or return. Each rung is recorded in `ladder`, dropped rows in `rows`, every drawing in
+  `drawer` and `cost.drawer`; the run's cost adds the drawings, and each drawn file's row its cost. Drawings and looks are
+  kept in the file store by key, so a later round or a resumed run pays once. Migration 202 adds the door.
+- **Cut-out frames** (#346) are drawn in the same finishing pass: a `specific` cut-out is drawn by the drawer on a flat
+  plain ground of one colour code chooses from the plan's words (chroma green, else magenta, else chroma blue), and code
+  removes the ground ([`cutout-ground.js`](apps/tracy-web/src/site-pictures/cutout-ground.js): a colour difference key
+  with a soft edge, colour unmixing and spill suppression), writing a PNG with alpha at the frame's size; a ground it
+  cannot remove cleanly (not plain, its colour in the figure, the figure touching the top or a side) is a failed draw.
+  The entry is `drawn` with `cutout: { ground, groundRemoved, ... }`; the looker sees it over checks and may name the
+  cut-out faults (rough edge, leftover ground, missing part, covers the text). A rejected cut-out is redrawn once, then
+  hidden where the kit allows, else returned; person and any-real cut-outs are never drawn. No background removal model,
+  no owner photo cut out, never a demo figure. A run on a plan with a specific cut-out does not start without the drawer
+  door.
+
 ### Write step bench (04/11/2026, [ADR 0044](docs/adr/0044-write-step-and-site-check.md))
 
 A trial bench for step 9 of the new build flow, run only from `apps/tracy-web/scripts/write-step-bench.mjs` inside the

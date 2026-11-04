@@ -7,9 +7,7 @@
 // (main-menu.js) into `extras.mainMenu.hide` for step 9, which the write door does not take today.
 import { readCopy } from './copy-check/copy-view.js'
 import { mainMenuOf } from './main-menu.js'
-
-/** Kit id to content map key: `block-163.4` -> `module-163.4`. Article and menu item ids stay as they are. */
-export const contentMapKey = (id) => String(id ?? '').replace(/^block-/, 'module-')
+import { contentMapKey } from '../lib/content-map-key.js'
 
 const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragraphs) > 0)
 
@@ -151,3 +149,5 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
     problems
   }
 }
+
+export { contentMapKey }

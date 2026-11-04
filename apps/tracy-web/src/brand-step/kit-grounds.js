@@ -1,4 +1,5 @@
 // What the gate reads from a template kit: the kit id and the grounds the template opens on. Pure functions.
+import { homeShotOf } from './brand-first-message.js'
 
 /** The kit's quickstart id as the brand file writes it: "<product>@<version>", e.g. "ja-boxing@1.0.10". */
 export const kitId = (k) => `${k.quickstart?.product}@${k.quickstart?.version}`
@@ -52,5 +53,18 @@ export function kitProblem(k) {
   ) {
     return 'the kit has no usable site.brandColours (primary, opensOn, sides, tokens)'
   }
+  return null
+}
+
+/**
+ * Why a kit cannot feed the brand step, or null: what the gate reads, the favicon, the home shot at 1440. The brand
+ * bench refuses a run on it (brand-control.js), and Template kit on the Road to live holds Publish on it
+ * (lib/template-kit/flow-reads.js), so a kit /ops passes is a kit the brand step accepts.
+ */
+export function brandKitProblem(doc) {
+  const problem = kitProblem(doc)
+  if (problem) return problem
+  if (!doc.site.favicon) return 'the kit has no site.favicon'
+  if (!homeShotOf({ doc })) return 'the kit has no home page shot at 1440'
   return null
 }

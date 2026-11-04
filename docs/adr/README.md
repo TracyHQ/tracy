@@ -69,6 +69,7 @@ ambiguous, and there is no way to detect it by machine.
 | [0040](0040-place-content-roles-v3-role-is-the-single-keep-decider.md) | Place content roles v3: new roles, the decorative picture split, repeatable lists; the slot role is the only decider of keep or replace, `customize` and `fit.replace` derive from it | (binding) |
 | [0041](0041-site-planner-trial-bench-in-ops.md) | The site planner runs first on a trial bench in /ops (group "WO New Flow Test"), as a tool-using Opus 5.5 agent with the approved prompt, checked by the R00 to R18 module with at most two fix rounds, apart from the WO build | (binding) |
 | [0042](0042-site-writer-trial-bench-copy-contract-and-check.md) | Site writer trial bench: the `site-copy/1` copy file, the copy notebook, returns to planner, and the script-only copy check `site-copy-check/2` (W01 to W11); code never edits writer text, two fix rounds | (binding) |
+| [0043](0043-picture-step-manifest-check-and-fallback-ladder.md) | Picture step: the `site-pictures/1` picture manifest, the script-only picture check `site-pictures-check/1` (P01 to P13), the code and AI split (picker, drawer, looker) and the fallback ladder after two fix rounds | (binding) |
 | [0044](0044-write-step-and-site-check.md) | Write step and site check: one writer with several plugin actions, hidden means removed, one owner per slot, a fresh bench site per run with the contract read from the kit, partial rewrite by difference, read-back in the site check | (binding) |
 
 ## Inheritance — `tracy-infra` ADRs still binding here

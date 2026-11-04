@@ -1,0 +1,18 @@
+---
+/**
+ * A run of quote-styled Portable Text blocks, grouped by EmDash into one `<blockquote>`, with each
+ * paragraph keeping its own provenance stamp (`stampBlocks()`, `src/lib/stamps.ts`). EmDash's own
+ * group renderer drops node properties, so its stamps would be lost. Passed only on a stamped
+ * request; the markup is EmDash's: one `<blockquote>`, a `<p>` per block.
+ */
+import { PortableText } from 'emdash/ui'
+import ProseBlock from './ProseBlock.astro'
+
+const { node } = Astro.props
+const paragraphs = (node?.blocks ?? []).map((block: Record<string, unknown>) => ({
+  ...block,
+  style: 'normal'
+}))
+---
+
+<blockquote><PortableText value={paragraphs} components={{ block: ProseBlock }} /></blockquote>

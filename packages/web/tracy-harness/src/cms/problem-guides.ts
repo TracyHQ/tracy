@@ -562,6 +562,29 @@ const KIT_DOC = { label: KIT_TOOL, href: `${DOCS}${KIT_TOOL}` }
  * The Template kit fix as ONE prompt: capture the kit of this version with the template kit tool, commit
  * template-kit.json beside the contract, and leave the approval to a person who looked at the pictures.
  */
+/** What each flow gap asks of the kit, one line per gap the server sends in `flowGaps` (flow-reads.js). */
+const FLOW_GAP_FIX: Record<string, string> = {
+  'kit-logo-unsettable': 'give each logo spot the template setting or the content map frame that writes it',
+  'kit-brand-colour-from-link':
+    'read the accent from the template colour setting or its primary stylesheet token',
+  'kit-navigation-missing': 'list a navigation group for every menu block of the content map',
+  'kit-map-mismatch': 'capture the kit on the content map of this contract',
+  'kit-front-page-group': 'give the front page its own group and shot',
+  'kit-brand-unreadable': 'complete the site part the brand step reads',
+  'kit-zip-missing': 'pack the kit images and attach the zip to the release',
+  'kit-setting-slot-missing': 'give the map button or the frame painted behind its setting slot'
+}
+
+function flowGapLines(p: Record<string, unknown>): string[] {
+  const gaps = (Array.isArray(p.flowGaps) ? p.flowGaps : []) as { code?: string; reason?: string }[]
+  if (gaps.length === 0) return []
+  return [
+    `What the Website opportunity flow cannot use: ${gaps
+      .map((gap) => `${str(gap.reason) ?? gap.code} (${FLOW_GAP_FIX[String(gap.code)] ?? 'fix it'})`)
+      .join('; ')}.`
+  ]
+}
+
 function kitOutside(
   ctx: GuideContext,
   p: Record<string, unknown>,
@@ -574,6 +597,7 @@ function kitOutside(
     text: [
       `The template kit of the release ${ctx.tag} (${ctx.cms} ${version}) ${problem}`,
       ...extra,
+      ...flowGapLines(p),
       `Work in a tch checkout. The kit is captured once per quickstart version with the template kit tool (${KIT_TOOL}; read its usage first): build a local site from this release (tracy-dev restore), capture every page and every block at 1440 and 390, and write template-kit.json beside the contract of ${version}${str(p.contract) ? ` (${str(p.contract)})` : ''}.`,
       'Check that quickstart.version in template-kit.json is the release version, that every page and block has a picture at both widths, and that every image has its sha256.',
       'Do not write the approval yourself. Show me the pictures and wait: a person approves them, and the approval names the image set it saw (approval.imagesSha256).',
@@ -1300,6 +1324,16 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
           `it names the template ${JSON.stringify(str(p.template) ?? '')}, which is not an id (letters, digits, dashes and underscores only).`
         )
       })
+    case 'install-file-sha-mismatch': {
+      const files = list(p.files)
+      return g(tr('cms-readiness.installFile.invalid'), {
+        detail: str(p.reason) ?? undefined,
+        outside: installFileOutside(
+          ctx,
+          `it pins a sha256 for ${files.join(', ')} that GitHub does not state for the asset of that name, so a build would refuse the download. Attach the files it was written from, or write it again from the files the release has.`
+        )
+      })
+    }
     case 'asset-missing': {
       const files = list(p.files)
       return g(tr('cms-readiness.installFile.assetMissing'), {
@@ -1437,6 +1471,23 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
           ctx,
           p,
           'is captured but nobody approved it yet. Show me its pictures for approval.'
+        )
+      })
+    // What the Website opportunity flow reads from the kit (flow-reads.js): the server words each gap in `reason`.
+    case 'kit-logo-unsettable':
+    case 'kit-brand-colour-from-link':
+    case 'kit-navigation-missing':
+    case 'kit-map-mismatch':
+    case 'kit-front-page-group':
+    case 'kit-brand-unreadable':
+    case 'kit-zip-missing':
+    case 'kit-setting-slot-missing':
+      return g(tr('cms-readiness.kit.incomplete'), {
+        detail: kitDetail(p, tr('cms-readiness.kit.incomplete.detail')),
+        outside: kitOutside(
+          ctx,
+          p,
+          `cannot be used by the Website opportunity flow: ${str(p.reason) ?? 'a part the flow reads is missing'}.`
         )
       })
     case 'kit-approval-stale':

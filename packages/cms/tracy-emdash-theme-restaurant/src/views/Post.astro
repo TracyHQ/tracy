@@ -1,0 +1,84 @@
+---
+/** A blog post: masthead (the Blog page's) · article · prev/next · sidebar. Route: /<category>/<slug>. */
+import { getEmDashEntry, getEntryTerms, getTaxonomyTerms } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Masthead from '@/components/sections/Masthead.astro'
+import Sidebar from '@/components/sections/Sidebar.astro'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { section } from '@/lib/content'
+import { PortableText } from 'emdash/ui'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuote from '@/components/site/ProseQuote.astro'
+import { mediaUrl } from '@/lib/media'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+  category: string
+}
+const { chrome, locale, slug, category } = Astro.props
+const { site } = chrome
+const { entry } = await getEmDashEntry('posts', slug, { locale })
+const terms = entry ? await getEntryTerms('posts', (entry.data as any).id, 'category', { locale }) : []
+const tags = entry ? await getEntryTerms('posts', (entry.data as any).id, 'tag', { locale }) : []
+// The address is /<category>/<slug>: another category in the URL is another page, so it answers 404.
+if (!entry || terms[0]?.slug !== category) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const a = entry.data as Record<string, any>
+const [masthead, all, cats, banner] = await Promise.all([
+  section('masthead', 'blog', locale),
+  loadPosts(locale),
+  getTaxonomyTerms('category', { locale }),
+  section('banner', 'banner', locale)
+])
+const $post = stampFor(Astro.request, 'posts', { id: a.id, slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const list = blogPosts(all)
+const idx = list.findIndex((p) => p.slug === slug)
+const older = idx >= 0 ? list[idx + 1] : undefined
+const newer = idx > 0 ? list[idx - 1] : undefined
+const categories = (cats as any[]).filter((c) => BLOG_SIDEBAR.includes(c.slug))
+const cover = mediaUrl(a.cover)
+const dateTag = ui(locale).tag
+// On a stamped request each text block names itself and is printed by a renderer that carries the stamp.
+const body = stampBlocks($post, 'body', a.body)
+const bodyComponents = $post.owner
+  ? { block: ProseBlock, listItem: ProseListItem, type: { blockquoteGroup: ProseQuote } }
+  : {}
+---
+
+<Base chrome={chrome} title={a.title} description={a.excerpt || undefined} image={cover} currentPath="/blog" type="article" content={{ collection: 'posts', id: a.id, slug, toPath: () => `/${category}/${slug}` }}>
+	<Masthead masthead={masthead} fallbackTitle={a.title} heading={false} />
+	<main id="main" class="rs-wrap rs-main">
+		<PageOwner stamp={$post} />
+		<div class="rs-main-grid">
+			<article class="rs-article">
+				<h1 {...$post('title')}>{a.title}</h1>
+				<div class="rs-meta">
+					{terms[0] && <a href={href(locale, `/${terms[0].slug}`)}>{terms[0].label}</a>} <span aria-hidden="true">/</span> <time datetime={a.date}>{formatDate(a.date, dateTag)}</time>
+				</div>
+				{cover && <img class="rs-article-cover" src={cover} alt="" width="743" height="420" {...$post('cover')} />}
+				{tags.length > 0 && (
+					<div class="rs-tags">
+						{tags.map((t: any) => <span class="rs-tag">{t.label}</span>)}
+					</div>
+				)}
+				<div class="rs-prose" {...$post('body')}><PortableText value={body} components={bodyComponents} /></div>
+				<nav class="rs-pager" aria-label="Posts">
+					{older && <a class="is-prev" href={href(locale, postPath(older))} {...$c('prev_label')}>{site.prev_label}</a>}
+					{newer && <a class="is-next" href={href(locale, postPath(newer))} {...$c('next_label')}>{site.next_label}</a>}
+				</nav>
+			</article>
+			<Sidebar locale={locale} categories={categories} banner={banner} title={site.categories_title} prevLabel={site.prev_label} nextLabel={site.next_label} chromeEntry={chrome.entry} />
+		</div>
+	</main>
+</Base>

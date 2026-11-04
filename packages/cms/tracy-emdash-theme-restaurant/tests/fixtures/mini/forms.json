@@ -1,0 +1,16 @@
+{
+  "forms": [
+    {
+      "slug": "anfrage-de",
+      "name": "Anfrage (DE)",
+      "pages": [{ "fields": [{ "name": "email", "type": "email", "label": "E-Mail", "required": true }] }],
+      "settings": { "successMessage": "Danke" }
+    },
+    {
+      "slug": "anfrage-fr",
+      "name": "Demande (FR)",
+      "pages": [{ "fields": [{ "name": "email", "type": "email", "label": "E-mail", "required": true }] }],
+      "settings": { "successMessage": "Merci" }
+    }
+  ]
+}

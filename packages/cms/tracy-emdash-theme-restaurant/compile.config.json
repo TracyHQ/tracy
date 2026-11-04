@@ -1,0 +1,81 @@
+{
+  "fields": {
+    "posts.body": {
+      "type": "portableText"
+    },
+    "hero.hero_intro": {
+      "type": "portableText"
+    },
+    "features_intro.description": {
+      "type": "portableText"
+    },
+    "hero.hero_img": {
+      "type": "image"
+    },
+    "features_intro.img_features": {
+      "type": "image"
+    },
+    "features_intro.items.img_icon": {
+      "type": "image"
+    },
+    "testimonials.items.author_img": {
+      "type": "image"
+    },
+    "happyhours.hp_bg": {
+      "type": "image"
+    },
+    "happyhours.hp_brand": {
+      "type": "image"
+    },
+    "timeline.items.icon": {
+      "type": "string"
+    },
+    "pages.body": {
+      "type": "portableText"
+    },
+    "banner.image": {
+      "type": "image"
+    },
+    "category_info.image": {
+      "type": "image"
+    },
+    "contact.image": {
+      "type": "image"
+    },
+    "contact.card_text": {
+      "type": "portableText"
+    },
+    "reservation.intro": {
+      "type": "portableText"
+    },
+    "reservation.blocks.image": {
+      "type": "image"
+    },
+    "pages.image": {
+      "type": "image"
+    },
+    "posts.photos.image": {
+      "type": "image"
+    }
+  },
+  "collections": {
+    "posts": {
+      "label": "Posts",
+      "labelSingular": "Post",
+      "sortOrder": 2,
+      "routable": true,
+      "supports": ["revisions", "search"],
+      "editLocking": false,
+      "description": "Articles, albums and the Chefs page. `path` records the address the post is served at: changing it does not move the post."
+    },
+    "pages": {
+      "label": "Pages",
+      "labelSingular": "Page",
+      "sortOrder": 1,
+      "routable": false,
+      "supports": ["revisions"],
+      "editLocking": false,
+      "description": "One entry per page of the site. `path` and `sections` record where the page is served and which section entries its template prints, for Tracy's Content API: changing them does not move or change the page."
+    }
+  }
+}

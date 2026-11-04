@@ -122,7 +122,7 @@ export function editedDatabaseTests(changed, present, readText) {
  * @property {boolean} applies - the event is a pull request into `develop`.
  * @property {boolean} labelsKnown - `labels` was a list; false = unreadable (and nothing is opted out).
  * @property {string[]} labels
- * @property {boolean} e2eLeftOut - the browser rows do not exist in this run (no `ci:e2e`): `tests e2e` and the four EmDash rows.
+ * @property {boolean} e2eLeftOut - the browser rows do not exist in this run (no `ci:e2e`): `tests e2e` and the five EmDash rows.
  * @property {boolean} e2eForced - the `tests e2e` row exists whatever the paths say (`ci:e2e`); the EmDash rows follow their paths.
  * @property {boolean} skipDb - the workers files that read the database are left out of the run.
  * @property {number | null} dbFiles - how many such files the tree holds; null when not counted.

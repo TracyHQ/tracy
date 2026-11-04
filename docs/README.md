@@ -113,6 +113,7 @@ Numbering rules and the inheritance register: [adr/README.md](adr/README.md).
 | [ADR 0040 — Place content roles v3: the slot role is the only decider of keep or replace](adr/0040-place-content-roles-v3-role-is-the-single-keep-decider.md) | ADR 0040 — Place content roles v3: the slot role is the only decider of keep or replace |
 | [ADR 0041 — The site planner runs first on a trial bench in /ops, as a tool-using agent, apart from the WO build](adr/0041-site-planner-trial-bench-in-ops.md) | ADR 0041 — The site planner runs first on a trial bench in /ops, as a tool-using agent, apart from the WO build |
 | [0042. Site writer trial bench: the site-copy/1 contract and the copy check](adr/0042-site-writer-trial-bench-copy-contract-and-check.md) | 0042. Site writer trial bench: the site-copy/1 contract and the copy check |
+| [0043. Picture step: the site-pictures/1 manifest, the picture check and the fallback ladder](adr/0043-picture-step-manifest-check-and-fallback-ladder.md) | 0043. Picture step: the site-pictures/1 manifest, the picture check and the fallback ladder |
 
 ## READMEs next to the code
 
@@ -126,6 +127,7 @@ Read the one nearest to what you are editing — they hold local conventions and
 | [Tracy Base (`@tracy/emdash-theme-base`)](../packages/cms/tracy-emdash-theme-base/README.md) | Tracy Base (`@tracy/emdash-theme-base`) |
 | [Tracy Business (`@tracy/emdash-theme-business`)](../packages/cms/tracy-emdash-theme-business/README.md) | Tracy Business (`@tracy/emdash-theme-business`) |
 | [Tracy Coffee (`@tracy/emdash-theme-coffee`)](../packages/cms/tracy-emdash-theme-coffee/README.md) | Tracy Coffee (`@tracy/emdash-theme-coffee`) |
+| [JA Restaurant (`@tracy/emdash-theme-restaurant`)](../packages/cms/tracy-emdash-theme-restaurant/README.md) | JA Restaurant (`@tracy/emdash-theme-restaurant`) |
 | [Tracy SaaS (`@tracy/emdash-theme-saas`)](../packages/cms/tracy-emdash-theme-saas/README.md) | Tracy SaaS (`@tracy/emdash-theme-saas`) |
 | [@tracy/joomla-template — `tpl_tracy`](../packages/cms/tracy-joomla-template/README.md) | @tracy/joomla-template — `tpl_tracy` |
 | [@tracy/quickstart-tools](../packages/cms/tracy-quickstart-tools/README.md) | @tracy/quickstart-tools |
