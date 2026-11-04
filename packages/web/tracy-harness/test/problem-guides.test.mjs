@@ -1071,7 +1071,7 @@ test('Customize your site sends each fix where its file lives: the contract in t
     em,
     /fix in the template package in the tch repository \(packages\/cms\/tracy-emdash-theme-business\)/
   )
-  for (const template of ['tracy-business', 'tracy-saas', 'tracy-base'])
+  for (const template of ['tracy-business', 'tracy-saas', 'tracy-base', 'tracy-coffee'])
     assert.ok(
       existsSync(
         path.join(here, '..', '..', '..', 'cms', `tracy-emdash-theme-${template.replace(/^tracy-/, '')}`)

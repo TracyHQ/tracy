@@ -136,7 +136,13 @@ test('release pull requests, the nightly and manual runs force every Turbo row; 
     assert.equal(plan.matrix.include.find((r) => r.clock)?.group, 'checks')
     assert.equal(plan.matrix.include.find((r) => r.group === 'checks').taskAudits, true)
     // The conditional rows stay: a full run runs every EmDash suite and e2e.
-    for (const group of ['tests e2e', 'tests emdash-base', 'tests emdash-business', 'tests emdash-saas'])
+    for (const group of [
+      'tests e2e',
+      'tests emdash-base',
+      'tests emdash-business',
+      'tests emdash-coffee',
+      'tests emdash-saas'
+    ])
       assert.ok(
         plan.matrix.include.some((r) => r.group === group),
         `${event} ${baseRef}: ${group}`
@@ -171,7 +177,13 @@ test('release pull requests, the nightly and manual runs force every Turbo row; 
 
 test('the full row sets: the shards or the forced Turbo rows, each with checks and every conditional row', () => {
   const { legacy, hosted, turbo } = fullRowSets()
-  const conditional = ['tests e2e', 'tests emdash-base', 'tests emdash-business', 'tests emdash-saas']
+  const conditional = [
+    'tests e2e',
+    'tests emdash-base',
+    'tests emdash-business',
+    'tests emdash-coffee',
+    'tests emdash-saas'
+  ]
   assert.deepEqual([...legacy].sort(), ['checks', ...conditional, 'tests 1/2', 'tests 2/2'].sort())
   // The same fallback on GitHub-hosted runners: three shards (30/10/2026).
   assert.deepEqual(

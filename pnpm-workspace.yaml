@@ -19,6 +19,8 @@ packages:
   - '!packages/cms/tracy-emdash-theme-base'
   # Same shape, same reason: Tracy SaaS, the EmDash template built from the JA Kinetic Joomla site.
   - '!packages/cms/tracy-emdash-theme-saas'
+  # Same shape, same reason: Tracy Coffee, the 3D coffee-shop EmDash template copied from Tracy Base.
+  - '!packages/cms/tracy-emdash-theme-coffee'
   # SPIKE: dsh as workspace source instead of registry.
   - vendor/tracy/dsh-better-locale
   - vendor/tracy/dsh-better-sidebar

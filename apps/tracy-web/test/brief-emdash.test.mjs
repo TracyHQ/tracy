@@ -464,8 +464,8 @@ test('the name and the languages are the ones the normalizer read as typed: its 
   )
 })
 
-test('the template’s tool and seed are found for the three templates that ship one, and for no other', () => {
-  for (const id of ['tracy-business', 'tracy-saas', 'tracy-base']) {
+test('the template’s tool and seed are found for the templates that ship one, and for no other', () => {
+  for (const id of ['tracy-business', 'tracy-saas', 'tracy-base', 'tracy-coffee']) {
     const found = emdashToolFor(`${id}/emdash-0.x`)
     assert.ok(found && existsSync(found.tool) && existsSync(path.join(found.seedDir, 'seed.json')), id)
   }

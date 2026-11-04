@@ -1,0 +1,56 @@
+---
+/**
+ * /about — four ACM blocks in an article, all on the canvas, each with its own band rhythm:
+ * chapter (its statement is the page's h1) · figures · flipped chapter · team · CTA.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import Chapter from '@/components/sections/Chapter.astro'
+import StatsBand from '@/components/sections/StatsBand.astro'
+import TeamGrid from '@/components/sections/TeamGrid.astro'
+import CtaBand from '@/components/sections/CtaBand.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('about', 'about', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const d = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'about', entry)
+---
+
+<Base chrome={chrome} title={d.title} description={d.chapter1_support} image={mediaUrl(d.chapter1_image)} currentPath="/about" content={{ collection: "about", id: entry.data.id, slug: "about", toPath: () => "/about" }}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<section class="band">
+			<Chapter as="h1" statement={d.chapter1_statement} support={d.chapter1_support} image={d.chapter1_image} imageAlt={d.chapter1_image_alt} linkLabel={d.chapter1_link_label} linkUrl={d.chapter1_link_url} linkStyle={d.chapter1_link_style} stamp={$page} fields={{ statement: "chapter1_statement", support: "chapter1_support", image: "chapter1_image", linkLabel: "chapter1_link_label" }} />
+		</section>
+		{(d.stats_figures ?? []).length > 0 && (
+		<section class="band">
+			<div class="wrap"><StatsBand variant="plain" align="center" eyebrow={d.stats_eyebrow} heading={d.stats_heading} items={d.stats_figures ?? []} stamp={$page} fields={{ eyebrow: "stats_eyebrow", heading: "stats_heading", items: "stats_figures" }} /></div>
+		</section>
+		)}
+		<section class="band">
+			<Chapter statement={d.chapter2_statement} support={d.chapter2_support} image={d.chapter2_image} imageAlt={d.chapter2_image_alt} linkLabel={d.chapter2_link_label} linkUrl={d.chapter2_link_url} linkStyle={d.chapter2_link_style} flip stamp={$page} fields={{ statement: "chapter2_statement", support: "chapter2_support", image: "chapter2_image", linkLabel: "chapter2_link_label" }} />
+		</section>
+		{(d.team_members ?? []).length > 0 && (
+		<section class="band">
+			<TeamGrid eyebrow={d.team_eyebrow} heading={d.team_heading} linkLabel={d.team_link_label} members={d.team_members ?? []} stamp={$page} fields={{ eyebrow: "team_eyebrow", heading: "team_heading", linkLabel: "team_link_label", members: "team_members" }} />
+		</section>
+		)}
+		<section class="band">
+			<CtaBand variant="capsule" title={d.cta_statement} text={d.cta_support} btnLabel={d.cta_btn_label} btnUrl={d.cta_btn_url} linkLabel={d.cta_link_label} linkUrl={d.cta_link_url} stamp={$page} fields={{ title: "cta_statement", text: "cta_support", btnLabel: "cta_btn_label", linkLabel: "cta_link_label" }} />
+		</section>
+	</main>
+</Base>

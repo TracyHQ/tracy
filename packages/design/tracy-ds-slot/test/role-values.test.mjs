@@ -41,7 +41,8 @@ test('the EmDash emitter writes every role variable on both sides, for every EmD
     'emdash-tracy-business-roles',
     'emdash-base',
     'emdash-base-roles',
-    'emdash-tracy-saas'
+    'emdash-tracy-saas',
+    'emdash-tracy-coffee'
   ])
     for (const id of Object.values(SYSTEMS))
       for (const [scheme, vars] of Object.entries(sides(id, name))) {

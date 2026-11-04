@@ -1634,8 +1634,8 @@ export async function writeCopy({
     .filter(Boolean)
   if (items.length === 0) return {}
   const language = languageNameOfWritten(locale, writtenAs)
-  // 🔒 THE LANGUAGE IS THE CUSTOMER'S ANSWER, NOT THE NAME'S. "Tiệm hoa Mai Vàng" at "45 Hàng Lược,
-  // Hà Nội" pulled the whole page into Vietnamese on a site the customer asked for in English
+  // 🔒 THE LANGUAGE IS THE CUSTOMER'S ANSWER, NOT THE NAME'S. A Vietnamese shop name at a Hanoi street address
+  // pulled the whole page into Vietnamese on a site the customer asked for in English
   // (measured 15/09) — every prompt says so, not only the entries'.
   const system = [
     `You write website copy in ${language} for a small business. Answer with ONE JSON object: key → text, nothing else.`,
@@ -2392,8 +2392,8 @@ export function labelDestinations({ seed, locale, menus, chromeLabels, rowOf }) 
 }
 
 /**
- * 🔒 ONE PAGE, ONE NAME, IN ONE LANGUAGE (TCH #1013, PAGE-5, g65). On g64-biz-emd-full the menu called /about "Giới
- * thiệu" and the footer "Về chúng tôi": "About" and "About us" were translated as two labels. A label that leads to a
+ * 🔒 ONE PAGE, ONE NAME, IN ONE LANGUAGE (TCH #1013, PAGE-5, g65). On g64-biz-emd-full the menu named /about in
+ * Vietnamese one way and the footer another: "About" and "About us" were translated as two labels. A label that leads to a
  * page whose name is already chosen (the first translated label for that URL) and that names the same thing (a word in
  * common, a plural `s` aside) takes that name; a label to the same page that names something else (a service in the
  * footer's list of services) keeps its own translation.
@@ -2507,9 +2507,9 @@ export async function translateLabels({
   // skipped without a word. A key left out, or a value of two words or more given back as it was, is asked again with the
   // others like it, then one at a time; one still unchanged is handed to `kept` for the caller's report. One word given
   // back (a network, a product name) stands. A root written in English has nothing to ask again.
-  // 🔒 HALF TRANSLATED IS UNCHANGED TOO (g64): on g63-biz-emd-full (1.7.11) the same lines came back "7/22 Derbenevskaya emb.,
-  // tầng 8" and "Khu xưởng Fabrication, Zavolzhye IP": a common word of the template's language left in a short line of
-  // another language (`wordsLeft`) is asked again like a line given back whole.
+  // 🔒 HALF TRANSLATED IS UNCHANGED TOO (g64): on g63-biz-emd-full (1.7.11) the same lines came back as English
+  // addresses that kept the Vietnamese for "floor 8" and "workshop area": a common word of the template's language
+  // left in a short line of another language (`wordsLeft`) is asked again like a line given back whole.
   // 🔒 A CAPITALISED ADDRESS IS NOT A NAME (g65): on g64-biz-emd-full (1.7.12) "Vorsino Industrial Park, lô 12" passed as
   // done, "Industrial Park" read as part of a name. A line is a name only when it is one name; the capitalised words after
   // the first of a run in a longer line are words (`wordsLeft`). A word of the customer's own answers is theirs, never left.

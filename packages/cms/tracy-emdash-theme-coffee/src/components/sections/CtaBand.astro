@@ -1,0 +1,74 @@
+---
+/**
+ * The closing call to action. `variant="accent"` is the OpenDesign final block (accent, 28px
+ * radius, centred); `variant="capsule"` is the ACM `cta-capsule` (surface, left aligned, statement
+ * + support beside the buttons; the copy is capped at 500px so the actions keep their row at 1440).
+ */
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  title: string
+  text?: string
+  btnLabel?: string
+  btnUrl?: string
+  linkLabel?: string
+  linkUrl?: string
+  tail?: string
+  variant?: 'accent' | 'capsule'
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: Partial<Record<'title' | 'text' | 'btnLabel' | 'linkLabel' | 'tail', string>>
+}
+const {
+  title,
+  text,
+  btnLabel,
+  btnUrl,
+  linkLabel,
+  linkUrl,
+  tail,
+  variant = 'accent',
+  stamp,
+  fields
+} = Astro.props
+const none = {}
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [btnUrl, linkUrl])
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+---
+
+{variant === "accent" ? (
+	<section class="wrap" data-block="final-cta">
+		<div class="band-accent relative overflow-hidden rounded-[var(--ds-card-radius,clamp(18px,2.4vw,28px))] px-[clamp(24px,5vw,64px)] py-[clamp(48px,7vw,84px)] text-center">
+			<span class="pointer-events-none absolute -right-24 -top-32 h-[520px] w-[520px] rounded-full bg-on-accent-band/10" aria-hidden="true"></span>
+			<span class="pointer-events-none absolute -bottom-28 -left-20 h-[360px] w-[360px] rounded-full bg-on-accent-band/10" aria-hidden="true"></span>
+			<h2 class="h-section mx-auto mb-5 max-w-[445px]" {...at("title")}>{title}</h2>
+			{text && <p class="on-accent-soft mx-auto mb-8 max-w-[540px] text-[21px] leading-[1.47]" {...at("text")}>{text}</p>}
+			<div class="flex flex-wrap items-center justify-center gap-3">
+				{btnLabel && live(btnUrl) && <a href={btnUrl || "#"} class="btn btn-on-accent" {...at("btnLabel")}>{btnLabel}</a>}
+				{linkLabel && live(linkUrl) && <a href={linkUrl || "#"} class="btn on-accent-soft hover:text-on-accent-band" {...at("linkLabel")}>{linkLabel} <span aria-hidden="true">→</span></a>}
+			</div>
+			{tail && <p class="on-accent-muted mt-6 text-[13px]" {...at("tail")}>{tail}</p>}
+		</div>
+	</section>
+) : (
+	<section class="wrap" data-block="cta-capsule">
+		<div class="flex flex-wrap items-center justify-between gap-8 rounded-[var(--ds-card-radius,18px)] bg-surface p-6 lg:p-12">
+			{/* the text and its two calls fit one line at 1440 with 2px to spare in the template's face; a worn system's wider face
+			    (Figma's Inter: the calls 21px wider) dropped the calls under the text, so a worn system takes 20px off the text column */}
+			<div class="max-w-[500px] [[data-ds-worn]_&]:max-w-[480px]">
+				<h2 class="h-section mb-2" {...at("title")}>{title}</h2>
+				{text && <p class="lead" {...at("text")}>{text}</p>}
+			</div>
+			<div class="flex flex-wrap items-center gap-4">
+				{btnLabel && live(btnUrl) && <a href={btnUrl || "#"} class="btn btn-primary" {...at("btnLabel")}>{btnLabel}</a>}
+				{linkLabel && live(linkUrl) && <a href={linkUrl || "#"} class="text-[17px] font-medium text-accent hover:text-accent-hover" {...at("linkLabel")}>{linkLabel} <span aria-hidden="true">→</span></a>}
+			</div>
+		</div>
+	</section>
+)}

@@ -1,0 +1,28 @@
+---
+import Base from '@/layouts/Base.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+const $site = stampFor(Astro.request, 'site', site)
+Astro.response.status = 404
+---
+
+<Base chrome={chrome} title={site.not_found_title ?? "404"} currentPath="/404" robots="noindex, nofollow">
+	<main id="main" class="wrap flex min-h-[60vh] flex-col items-center justify-center py-[var(--band-y)] text-center">
+		<div class="nf-code mb-4 text-[clamp(64px,10vw,120px)] font-semibold leading-none tracking-[-0.03em] text-accent" {...$site("not_found_code")}>{site.not_found_code}</div>
+		<h1 class="h-section mb-6" {...$site("not_found_title")}>{site.not_found_title}</h1>
+		<form action={href(locale, "/search")} method="get" class="mb-8 flex w-full max-w-[420px] gap-2" role="search">
+			<input type="search" name="q" placeholder={site.search_placeholder} aria-label={site.search_title} {...$site("search_placeholder")} class="h-12 min-w-0 flex-1 rounded-full border border-line bg-bg px-5 text-[17px] text-fg" />
+			<button type="submit" class="btn btn-primary" {...$site("search_button")}>{site.search_button}</button>
+		</form>
+		<a href={href(locale, "/")} class="btn btn-secondary" {...$site("not_found_back_label")}>{site.not_found_back_label}</a>
+	</main>
+</Base>

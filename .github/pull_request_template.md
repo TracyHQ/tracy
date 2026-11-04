@@ -43,7 +43,7 @@ a silent one is not.
 If there is a regression case, point to its id (REG-PR-<PR number>-<slug>, older cases REG-NNN) instead of
 repeating the steps.
 
-PRs into develop: the browser E2E rows (including the three EmDash theme rows) and the worker tests that need
+PRs into develop: the browser E2E rows (including the four EmDash theme rows) and the worker tests that need
 a database (read TEST_DATABASE_URL) run ONLY when the PR has the `ci:e2e` / `ci:integration` label
 (docs/references/gates-ci-runners.md). If your change touches either suite (EmDash themes, test/e2e,
 tracy-design-inspiration), add the label (while still a draft, or right after Ready — CI re-runs by itself)

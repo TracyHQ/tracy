@@ -1,0 +1,55 @@
+---
+/**
+ * The ACM `team` block: a quiet head and one ringed card per member — round 96px portrait (or the
+ * initials when there is no photo), name, role, bio, and a link only when both the member URL and
+ * the block's link label exist.
+ */
+import Photo from '@/components/site/Photo.astro'
+import type { Stamp } from '@/lib/stamps'
+interface Props {
+  eyebrow?: string
+  heading?: string
+  linkLabel?: string
+  members: Array<{ image?: any; name?: string; role?: string; text?: string; url?: string }>
+  columns?: 3 | 4
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { eyebrow?: string; heading?: string; linkLabel?: string; members?: string }
+}
+const { eyebrow, heading, linkLabel, members, columns = 4, stamp, fields } = Astro.props
+const none = {}
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+const row = stamp && fields?.members ? stamp.block(fields.members) : none
+const sub = (k: string) => (stamp && fields?.members ? stamp(`${fields.members}.${k}`) : none)
+const list = members.filter((m) => m?.name || m?.role)
+const initials = (n: string) =>
+  n
+    .split(/\s+/)
+    .map((w) => w[0] ?? '')
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+---
+
+<div class="wrap" data-block="team">
+	{(eyebrow || heading) && (
+		<div class="mb-8 max-w-[717px] lg:mb-12">
+			{eyebrow && <p class="eyebrow eyebrow--acm text-fg-meta" {...at("eyebrow")}>{eyebrow}</p>}
+			{heading && <h2 class="h-card max-sm:text-[28px] max-sm:tracking-[-0.015em]" {...at("heading")}>{heading}</h2>}
+		</div>
+	)}
+	<ul class:list={["grid gap-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-8 lg:gap-y-12", columns === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"]}>
+		{list.map((m) => (
+			<li class="flex flex-col items-start gap-2 rounded-[var(--ds-card-radius,18px)] bg-bg p-4 shadow-ring-card sm:p-6" {...row}>
+				{m.image ? <Photo image={m.image} stamp={sub("image")} alt={m.name ?? ""} class="mb-2 h-24 w-24 rounded-full" width={400} height={400} /> : m.name && <span class="mb-2 inline-flex h-24 w-24 items-center justify-center rounded-full bg-surface text-[21px] font-semibold text-fg-2" aria-hidden="true">{initials(m.name)}</span>}
+				{m.name && <h3 class="text-[21px] font-semibold leading-[1.05] tracking-[-0.015em]" {...sub("name")}>{m.name}</h3>}
+				{m.role && <p class="text-[14px] text-fg-meta" {...sub("role")}>{m.role}</p>}
+				{m.text && <p class="mt-2 text-[14px] leading-[1.47] text-fg-muted" {...sub("text")}>{m.text}</p>}
+				{m.url && linkLabel && <a href={m.url} class="mt-2 text-[14px] font-medium text-fg hover:underline hover:underline-offset-4" {...at("linkLabel")}>{linkLabel}<span class="sr-only"> — {m.name}</span></a>}
+			</li>
+		))}
+	</ul>
+</div>

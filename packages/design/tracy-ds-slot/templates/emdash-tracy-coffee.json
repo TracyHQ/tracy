@@ -1,0 +1,45 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-coffee",
+  "minVersion": {
+    "tracy-coffee/emdash-0.x": "0.1.0"
+  },
+  "maxVersion": {
+    "tracy-coffee/emdash-0.x": "0.1.0"
+  },
+  "maxVersionNote": "0.1.0 (30/10/2026) is Tracy Base 0.5.6 copied as Tracy Coffee, minus the page kinds a coffee shop does not use; src/lib/ds-slot.ts and Logo.astro byte-identical to Base 0.5.6, the theme toggle's stored key renamed tracy-coffee-theme",
+  "release": "tracy-coffee/emdash-0.x@0.1.0",
+  "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
+  "readsComponents": true,
+  "readsRoles": true,
+  "readsRolesNote": "as emdash-base-roles.json: the stylesheets are Base 0.5.6's, which read every standard role variable themselves",
+  "modes": true,
+  "modesNote": "the light/dark switch of Base 0.5.6 ([data-tracy-theme-toggle] in Header.astro); a choice made under a system is stored under tracy-coffee-theme@<id>",
+  "selectors": {
+    "themeToggle": "[data-tracy-theme-toggle]"
+  },
+  "roles": {
+    "page": "body",
+    "display": ".h-hero",
+    "heading": ".h-section",
+    "body": "main p:not(.eyebrow)",
+    "button-primary": ".btn-primary",
+    "button-secondary": ".btn-secondary",
+    "card": ".card",
+    "container": ".wrap",
+    "section": ".band:not([data-block=\"hero\"])",
+    "input": ".ec-form-input"
+  },
+  "contrast": {
+    "accent-text": "main .text-accent, main .eyebrow",
+    "muted": "main .text-fg-muted",
+    "meta": "main .text-fg-meta",
+    "card-text": "main .card p",
+    "body": "main p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": true,
+  "readyNote": "measured 30/10/2026 with flow.mjs --cms emdash on a site built from the 0.1.0 source: the 15 featured systems at 1440 and 390, every view matches its system (roles 100%, page follows 100%), every text reads at least as well as on the template, 4 controls 0 differences, the cup keeps its own colours; screenshots read by a person. Measurement: contracts/0.1.0/design-system-measurement.json. On a Docker Desktop bind mount a few steps were served on the second request (~140 ms) instead of the first; re-run alone they pass on the first"
+}
