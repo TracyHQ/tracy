@@ -133,7 +133,8 @@ export function pictureSite({
   moves = false,
   throwsOn,
   contract = {},
-  settings
+  settings,
+  info = {}
 } = {}) {
   const site = brandSite({
     settings,
@@ -148,7 +149,7 @@ export function pictureSite({
         throw new Error('connect ECONNREFUSED')
       if (call.action === 'info') {
         site.log.push(call)
-        return { ok: true, info: { component } }
+        return { ok: true, info: { component, ...info } }
       }
       if (call.action === 'media.upload' && refusePath[call.params.path]) {
         site.log.push(call)

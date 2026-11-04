@@ -7,9 +7,12 @@
 // drawn again when the Design system changes. The line's recipe and size are all that takes.
 //
 // What the slot's content map entry forbids is not sent: a picture the template keeps (`fit.replace: "keep"`) needs
-// `replace_kept`, the customer's own words asking for that picture, and a package holds none.
+// `replace_kept`, the customer's own words asking for that picture, and a package holds none. A kept icon goes when the plugin
+// on the site says it takes a transparent drawing there (`info.slot_corrections`, slot-corrections.js); it refuses anything
+// opaque itself. `replace_kept` is never written for it: no customer said those words.
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
+import { isKeptIcon } from './slot-corrections.js'
 
 const NO_BRAND =
   'no brand file in this run, so its colours are not known; the file beside it is a neutral preview and is not written'
@@ -51,11 +54,11 @@ async function roleColours(brand, brandPath) {
 }
 
 /** Why this frame is not drawn, or null. */
-function gate(item, slot, colours) {
+function gate(item, slot, colours, takesIcons) {
   if (!colours) return { status: 'skipped', reason: NO_BRAND }
   if (slot && slot.type !== 'image') return { status: 'failed', reason: NEITHER }
-  if (slot?.fit?.replace === 'keep') return { status: 'skipped', reason: KEPT }
-  return null
+  if (slot?.fit?.replace !== 'keep') return null
+  return takesIcons && item.kind === 'icon' && isKeptIcon(slot) ? null : { status: 'skipped', reason: KEPT }
 }
 
 const recipeOf = ({ kind, paint, holds, draw, width, height }) => ({
@@ -69,19 +72,22 @@ const recipeOf = ({ kind, paint, holds, draw, width, height }) => ({
 
 /**
  * @param {{ painted: object[], brand?: object, brandPath?: string, contentMap?: { slots?: object[] } | null,
- *   figures: Map<string, Buffer> }} input `figures`: the package's files by site path
+ *   figures: Map<string, Buffer>, corrections?: () => Promise<{ icons: boolean }> }} input `figures`: the package's files by
+ *   site path; `corrections`: what the plugin on the site takes, asked only when a kept icon needs the answer
  * @returns {Promise<{ changes: Record<string, string>, files: Map<string, Buffer>, replaced: Set<string>,
  *   recipes: Map<string, object>, left: object[] }>} `changes`: key to drawn file; `files`: what to upload; `replaced`: the
  *   figures a drawn file took the slot of; `recipes`: each drawn frame's report record by key; `left`: the frames that are not
  *   drawn, each with its status, reason and record
  */
-export async function preparePainted({ painted, brand, brandPath, contentMap, figures }) {
+export async function preparePainted({ painted, brand, brandPath, contentMap, figures, corrections }) {
   const out = { changes: {}, files: new Map(), replaced: new Set(), recipes: new Map(), left: [] }
   const slots = new Map(each(contentMap?.slots).map((s) => [s.key, s]))
   const colours = brand === undefined ? null : await roleColours(brand, brandPath)
   const leave = (item, status, reason) => out.left.push({ item, status, reason, record: recipeOf(item) })
+  const asksForIcon = painted.some((item) => item.kind === 'icon' && isKeptIcon(slots.get(item.key)))
+  const takesIcons = colours && asksForIcon && corrections ? (await corrections()).icons : false
   const open = painted.filter((item) => {
-    const stop = gate(item, slots.get(item.key), colours)
+    const stop = gate(item, slots.get(item.key), colours, takesIcons)
     if (stop) leave(item, stop.status, stop.reason)
     return !stop
   })
