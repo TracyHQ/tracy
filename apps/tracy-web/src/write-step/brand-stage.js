@@ -9,6 +9,7 @@ import { exportBrandOrders } from '../brand-step/brand-write-orders.js'
 import { dsSlotModule } from '../lib/ds-slot.js'
 import { brandAsker, picturePath, writeBrand } from './brand-writes.js'
 import { refusalWords } from './contract-write.js'
+import { accentRoutesOf } from './look-guard-css.js'
 import { kitSlotIds } from './kit-slot-ids.js'
 import { lineId } from './last-report.js'
 import { NO_LAST } from './no-last-report.js'
@@ -45,7 +46,8 @@ async function builtAccent({ templateSheets, brand, place }) {
     return { stop: { code: 'TEMPLATE_CSS_UNREADABLE', reason } }
   }
   const built = accentModule({ sheets, colours: brand.colours, darkHook: place.darkHook ?? null })
-  return built.problem ? { stop: { code: 'BAD_ACCENT', reason: `brand: ${built.problem}` } } : built
+  if (built.problem) return { stop: { code: 'BAD_ACCENT', reason: `brand: ${built.problem}` } }
+  return { ...built, routes: accentRoutesOf(sheets, brand.colours.replaces) }
 }
 
 /** Every file the orders name, read and hashed; a stop names the first that cannot be used. */
@@ -114,6 +116,7 @@ export async function prepareBrandStage({
   const { pictures } = read
   const accentOrder = orders.find((o) => o.via === 'module')
   let accent = null
+  let routes = null
   if (accentOrder) {
     const held = pictures.get(accentOrder.file).toString('utf8')
     if (!held.includes(MODULE_MARK))
@@ -128,6 +131,7 @@ export async function prepareBrandStage({
       const built = await builtAccent({ templateSheets, brand, place: accent })
       if (built.stop) return stoppedBy(built.stop)
       pictures.set(accentOrder.file, Buffer.from(built.html))
+      routes = built.routes
     } else if (!held.includes(`tracy-ds-slot: ${ACCENT_SLOT_PREFIX}`))
       return stoppedBy({
         code: 'BAD_FILE',
@@ -218,5 +222,14 @@ export async function prepareBrandStage({
     })
   }
 
-  return { active: true, claims, changes, evidence, write, lines }
+  // What the look guard judges before the first write: the accent module, known whole from here.
+  const planned = accentOrder
+    ? [
+        {
+          action: 'content.update',
+          params: { kind: 'module', fields: { content: pictures.get(accentOrder.file).toString('utf8') } }
+        }
+      ]
+    : []
+  return { active: true, claims, changes, evidence, write, lines, routes, planned }
 }

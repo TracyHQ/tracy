@@ -121,6 +121,7 @@ export function brandKit() {
       kitSpot('logo-footer-1', 'footer', 'dark', null, 'block-88.1')
     ],
     favicon: { mechanism: { setting: 'template site setting other_faviconFile' } },
+    nameSlots: [{ kind: 'setting', setting: 'template site setting site_name (a file)' }],
     head: { injection: { maxBytes: 65535, position: { block: 'block-88' } } }
   }
   return kit

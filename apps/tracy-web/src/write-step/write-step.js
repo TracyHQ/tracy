@@ -25,6 +25,7 @@ import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
+import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
 import { kitSlotIds } from './kit-slot-ids.js'
@@ -91,7 +92,10 @@ function siteProblem({ reading, contract, changes }) {
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
 export async function runWriteStep(input) {
-  const { door, siteKey, kit, contentMap = null, files } = input
+  const { siteKey, kit, contentMap = null, files } = input
+  // Every write of the run goes through this door (look-guard.js), and what it refuses is never sent.
+  const guard = lookGuard({ kit: kit.doc, contentMap })
+  const door = guard.door(input.door)
   const {
     isCancelled = async () => false,
     onPhase = async () => {},
@@ -130,9 +134,14 @@ export async function runWriteStep(input) {
   let shareLines = []
   let links = null
   let created = { pages: new Map(), results: [], lines: [], kept: [] }
-  const finish = (status, cause, written = [], refused = new Map()) => {
+  const finish = (runStatus, runCause, written = [], refused = new Map()) => {
+    // A stage takes a refusal as any other refused write and goes on; the run has stopped all the same, and this says why.
+    const refusedLook = guard.cause()
+    const status = refusedLook ? 'stopped' : runStatus
+    const cause = refusedLook ?? runCause
     report.status = status
     report.cause = cause
+    report.guard = { refused: guard.refused() }
     let lines = []
     if (table) {
       const hidden = hide?.results({ emptied, refused, settled })
@@ -203,6 +212,7 @@ export async function runWriteStep(input) {
       last
     })
     if (pictures.stop) return { stop: pictures.stop }
+    guard.refuse(pictures.refused ?? [])
     const problems = fileProblems({ plan, copy, kitRef: kit.ref }, readCopy(copy).problems)
     if (problems.length)
       return { stop: { code: 'BAD_FILE', reason: `The files cannot be written: ${problems.join('; ')}` } }
@@ -272,6 +282,7 @@ export async function runWriteStep(input) {
       })
     ])
     extras = withEveryMenuHide({ extras, owners: table.owners, contentMap })
+    guard.know({ owners: table.owners, routes: brand.routes ?? null })
     report.keptPages = keptPagesOf(plan, kit.doc)
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
@@ -336,6 +347,14 @@ export async function runWriteStep(input) {
   })
   if (inspected.stop) return stopped(inspected.stop)
   if (await isCancelled()) return finish('cancelled', null)
+
+  // Before the first write: what the run already knows it will send, so a refusal leaves the site as it was.
+  guard.check({
+    action: 'content.contract',
+    params: { operation: 'apply', changes: mapping.changes }
+  })
+  for (const call of brand.planned ?? []) guard.check(call)
+  if (guard.cause()) return finish('stopped', null)
 
   // First of all the writes: a link to a created page needs its address (page-create-stage.js).
   created = await createPages({ door, siteKey, kit: kit.doc, plan, owners: table.owners, extras, last })

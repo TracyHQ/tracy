@@ -4,9 +4,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { iconLookOf, looksDiffer } from '../src/site-pictures/icons/template-icon-look.js'
-import { runSiteCheck } from '../src/site-check/site-check.js'
 import { templateIcon } from './_template-icon-fixtures.mjs'
-import { CONTRACT } from './_write-step-run.mjs'
+import { preparePainted } from '../src/write-step/painted-stage.js'
 import { ACCENT, coloursIn, iconItem, runPainted } from './_write-step-painted.mjs'
 
 const TEMPLATE_ACCENT = '#d83a3a'
@@ -110,102 +109,58 @@ test('a slot with no template icon draws its recipe, and its line says there was
   assert.equal(line('block-3.icon').painted.template, null)
 })
 
-/** The guard through the site check's entry point, over a run's report and the files the fake site holds. */
-async function guard(got, { frames = [], boxes = [], reportOf = (r) => r, file = null } = {}) {
-  const held = got.template?.files ?? new Map()
-  const report = reportOf(got.report)
-  const pictureBoxes = boxes
-  const host = async () => ({
-    checks: [],
-    visited: [],
-    pageMeasures: [{ path: '/', width: 1440, pictureBoxes }]
+test('an icon that replaces a template icon is refused when nothing can read that icon', async () => {
+  const { report, uploaded } = await runPainted({ items, contentMap, templateAccent: TEMPLATE_ACCENT })
+  assert.equal(report.status, 'stopped')
+  assert.equal(report.cause.code, 'LOOK_GUARD')
+  assert.equal(report.cause.stepName, 'pictures')
+  assert.match(report.cause.reason, /no reader of the site's files/)
+  assert.deepEqual(uploaded, [], 'nothing went out')
+})
+
+/** The painted stage with a drawing code that gets it wrong, to see the guard refuse what it draws. */
+async function paintedWith(wrong) {
+  const template = await templateFiles()
+  const bytes = await templateIcon(wrong)
+  return preparePainted({
+    painted: [iconItem('block-3.icon')],
+    brand: { colours: { accent: ACCENT } },
+    brandPath: '/nowhere/brand.json',
+    contentMap,
+    figures: new Map(),
+    templateFile: (file) => template.read({ file }),
+    templateAccent: TEMPLATE_ACCENT,
+    draw: async () => ({
+      bytes,
+      ext: 'png',
+      width: 150,
+      height: 150,
+      sha256: 'abc',
+      drawnIn: { glyph: ACCENT, plate: '#17171b', plateFollows: 'template' }
+    })
   })
-  const door = {
-    apply: async (call) =>
-      call.action === 'content.contract'
-        ? {
-            ok: true,
-            contract: CONTRACT,
-            revision: 'r',
-            pages: [{ route: 'home', entity: 'menuItem-1' }],
-            slots: []
-          }
-        : { ok: false }
-  }
-  const siteFile = async (path) => file?.(path) ?? held.get(path) ?? got.bytesAt(path)
-  const { iconLookGroup } = await import('../src/site-check/icon-look.js')
-  const check = await runSiteCheck({
-    door,
-    report,
-    host,
-    siteFile,
-    baseline: { iconFrames: frames },
-    groups: [iconLookGroup]
-  })
-  return check.groups[0]
 }
 
-test('the site check passes a replaced icon that keeps the look', async () => {
-  const got = await run()
-  const painted = got.report.slots.find((s) => s.slot === 'block-3.icon').ordered
-  const group = await guard(got, {
-    frames: [{ page: '/', file: DARK_FILE, width: 100, height: 100 }],
-    boxes: [{ src: `http://site.test/${painted}`, width: 100, height: 100 }]
-  })
-  assert.equal(group.status, 'green', JSON.stringify(group))
-  assert.equal(group.checked, 2)
+test('what is painted is held to the template file: same disc, weight and file, green', async () => {
+  const { refused } = await paintedWith({ disc: '#17171b', stroke: 3 })
+  assert.deepEqual(refused, [])
 })
 
-test('the site check blocks a replaced icon drawn bare, and names the picture step', async () => {
-  const bare = await runPainted({ items, contentMap, templateAccent: TEMPLATE_ACCENT })
-  const group = await guard(bare, { frames: [] })
-  assert.equal(group.status, 'red')
-  assert.equal(group.failures[0].causingStep, 8)
-  assert.match(group.failures[0].reason, /picture step/)
-})
-
-test('the site check blocks a file whose backing, size or weight moved from the template icon', async () => {
-  const got = await run()
-  const path = got.report.slots.find((s) => s.slot === 'block-3.icon').ordered
+test('a drawn icon whose backing, line, colour or file size moved from the template icon is refused, naming the picture step', async () => {
   for (const [what, wrong, words] of [
     ['no backing', { stroke: 3 }, /no backing/],
     ['another weight', { disc: '#17171b', stroke: 8 }, /line is/],
     ['another backing', { disc: '#17171b', stroke: 3, opacity: 0.5 }, /opacity/],
-    ['another colour', { disc: '#e8e8f0', stroke: 3 }, /should be #17171b/]
+    ['another colour', { disc: '#e8e8f0', stroke: 3 }, /should be #17171b/],
+    [
+      'another file size',
+      { disc: '#17171b', stroke: 3, size: 300 },
+      /its file is 300x300, the template's 150x150/
+    ]
   ]) {
-    const bytes = await templateIcon(wrong)
-    const twin = got.report.slots.find((s) => s.slot === 'block-3.twin').ordered
-    const group = await guard(got, {
-      file: (p) => (p === path || (what === 'another weight' && p === twin) ? bytes : null)
-    })
-    assert.equal(group.status, 'red', what)
-    const failure = group.failures.find((f) => f.slot === 'block-3.icon')
-    assert.match(failure.measured, words, what)
-    assert.equal(failure.causingStep, 8)
+    const { refused } = await paintedWith(wrong)
+    assert.ok(refused.length, what)
+    assert.equal(refused[0].step, 8, what)
+    assert.match(refused.map((r) => r.reason).join(' '), words, what)
   }
-})
-
-test('the site check blocks an icon drawn at another size on the page', async () => {
-  const got = await run()
-  const painted = got.report.slots.find((s) => s.slot === 'block-3.icon').ordered
-  const group = await guard(got, {
-    frames: [{ page: '/', file: DARK_FILE, width: 100, height: 100 }],
-    boxes: [{ src: `/${painted}`, width: 180, height: 180 }]
-  })
-  assert.equal(group.status, 'red')
-  assert.match(group.failures[0].measured, /180x180, the template's 100x100/)
-})
-
-test('a baseline without icon boxes is not green: the sizes were not measured', async () => {
-  const got = await run()
-  const { iconLookGroup } = await import('../src/site-check/icon-look.js')
-  const check = await runSiteCheck({
-    door: { apply: async () => ({ ok: true, contract: CONTRACT, revision: 'r', pages: [], slots: [] }) },
-    report: got.report,
-    host: async () => ({ checks: [], visited: [], pageMeasures: [] }),
-    siteFile: async (path) => got.template.files.get(path) ?? got.bytesAt(path),
-    baseline: {},
-    groups: [iconLookGroup]
-  })
-  assert.equal(check.groups[0].status, 'unmeasured')
 })

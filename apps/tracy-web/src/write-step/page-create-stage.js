@@ -31,7 +31,7 @@ const CATEGORY_NOTE = `${MARK}category`
 const ROUTE_NOTE = `${MARK}route`
 const PAGE_ROWS = 25
 // What an article prints around its words by default. A page of the site is not a post: no author, date or category.
-const NOT_A_POST = Object.fromEntries(
+export const NOT_A_POST = Object.fromEntries(
   [
     'show_category',
     'show_parent_category',

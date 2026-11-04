@@ -25,11 +25,11 @@ export const SURFACE = '#1c1c20'
 export const ON_DARK = '#eeeeee'
 export const TEXT = '#333333'
 
-/** A Design system module with both sides, in the form the slot emits it. */
+/** A Design system module with both sides, its colours in the comment the picture step reads, in the form the brand step writes it. */
 export const moduleHtml = (accent = ACCENT) =>
-  `<style id="tracy-ds-slot">/* tracy-ds-slot: brand:accent-only-test */ ` +
+  `<style id="tracy-ds-slot">/* tracy-ds-slot: brand:accent-only-test */ /* picture roles: ` +
   `:root:where(:not(:has(> body.dark-active))) body{--ds-c-bg:#ffffff;--ds-c-surface:#f5f5f5;--ds-c-fg:${TEXT};--ds-c-accent:${accent};--ds-c-accent-on:#ffffff}` +
-  `:root:where(:has(> body.dark-active)) body{--ds-c-bg:#101010;--ds-c-surface:${SURFACE};--ds-c-fg:${ON_DARK};--ds-c-accent:${accent};--ds-c-accent-on:#ffffff}</style>`
+  `:root:where(:has(> body.dark-active)) body{--ds-c-bg:#101010;--ds-c-surface:${SURFACE};--ds-c-fg:${ON_DARK};--ds-c-accent:${accent};--ds-c-accent-on:#ffffff} */</style>`
 
 /** A transparent picture with an opaque square in its middle, as a cut-out figure is. */
 export async function makeFigure(size = 40) {

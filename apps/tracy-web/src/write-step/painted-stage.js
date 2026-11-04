@@ -15,6 +15,7 @@
 // which can run without the template's files (`plate: null`, "no demo icon to measure"), so the template's own icon is read here,
 // from the site, and what it shows decides them. The file named by the slot stays on the site, so a second run reads the same
 // bytes, draws the same file and writes nothing. An icon whose template icon cannot be read is not drawn: the template's own stays.
+// What is drawn is then held to that same file (painted-look-guard.js), and a drawing that moved from it is refused, not written.
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { isKeptIcon } from './slot-corrections.js'
@@ -28,6 +29,8 @@ const NEITHER =
 const REDRAW = 'when the design system changes'
 const TEMPLATE_UNREAD = (file) =>
   `the template's icon ${file} could not be read, so what it looks like is not known; the template's own stays`
+const NO_READER = (file) =>
+  `This icon replaces the template icon ${file}, and no reader of the site's files was given, so it cannot be held to that icon's look.`
 const TEMPLATE_FILE = /^(?!.*\.\.)[\w./-]+\.(?:png|webp|jpe?g|gif|svg)$/i
 
 const each = (x) => (Array.isArray(x) ? x : [])
@@ -122,10 +125,11 @@ async function readTemplateLooks(icons, slots, templateFile) {
  *   figures: Map<string, Buffer>, corrections?: () => Promise<{ icons: boolean }>,
  *   templateFile?: (file: string) => Promise<Buffer | null>, templateAccent?: string | null }} input `figures`: the package's
  *   files by site path; `corrections`: what the plugin on the site takes, asked only when a kept icon needs the answer;
- *   `templateFile`: reads a file of the site; without it an icon is drawn as its recipe says and its line holds no `template`,
- *   which the site check does not pass; `templateAccent`: the accent the template's icons were drawn in
+ *   `templateFile`: reads a file of the site; without it an icon that replaces a template's own is refused;
+ *   `templateAccent`: the accent the template's icons were drawn in; `draw`: draws a frame (`drawPainted`)
  * @returns {Promise<{ changes: Record<string, string>, files: Map<string, Buffer>, replaced: Set<string>,
- *   recipes: Map<string, object>, left: object[] }>} `changes`: key to drawn file; `files`: what to upload; `replaced`: the
+ *   recipes: Map<string, object>, left: object[], refused: object[] }>} `refused`: what the look guard refuses, before anything is
+ *   sent; `changes`: key to drawn file; `files`: what to upload; `replaced`: the
  *   figures a drawn file took the slot of; `recipes`: each drawn frame's report record by key; `left`: the frames that are not
  *   drawn, each with its status, reason and record
  */
@@ -137,9 +141,17 @@ export async function preparePainted({
   figures,
   corrections,
   templateFile,
-  templateAccent = null
+  templateAccent = null,
+  draw
 }) {
-  const out = { changes: {}, files: new Map(), replaced: new Set(), recipes: new Map(), left: [] }
+  const out = {
+    changes: {},
+    files: new Map(),
+    replaced: new Set(),
+    recipes: new Map(),
+    left: [],
+    refused: []
+  }
   const slots = new Map(each(contentMap?.slots).map((s) => [s.key, s]))
   const colours = brand === undefined ? null : await roleColours(brand, brandPath)
   const leave = (item, status, reason) => out.left.push({ item, status, reason, record: recipeOf(item) })
@@ -152,7 +164,9 @@ export async function preparePainted({
   })
   if (!open.length) return out
   // Loaded only when there is something to draw: it brings sharp and the icon set.
-  const { drawPainted } = await import('./painted-draw.js')
+  const drawPainted = draw ?? (await import('./painted-draw.js')).drawPainted
+  const { iconGuard, PICTURE_STEP } = await import('./painted-look-guard.js')
+  const guard = iconGuard()
   const template = templateFile
     ? await readTemplateLooks(
         open.filter((item) => item.kind === 'icon'),
@@ -166,6 +180,11 @@ export async function preparePainted({
       continue
     }
     const held = template.looks.get(item.frame)
+    const unreadable = !templateFile && item.kind === 'icon' ? templateFileOf(slots.get(item.key)) : null
+    if (unreadable) {
+      out.refused.push({ step: PICTURE_STEP, what: item.frame, reason: NO_READER(unreadable) })
+      continue
+    }
     const made = await drawPainted(item, colours, {
       fit: slots.get(item.key)?.fit,
       figures,
@@ -176,6 +195,7 @@ export async function preparePainted({
       leave(item, 'failed', made.problem)
       continue
     }
+    if (item.kind === 'icon' && held?.look) await guard.judge(item, made, held.look)
     const sitePath = `images/tracy-content/${made.sha256}.${made.ext}`
     out.changes[item.key] = sitePath
     out.files.set(sitePath, made.bytes)
@@ -192,5 +212,6 @@ export async function preparePainted({
       redraw: REDRAW
     })
   }
+  out.refused.push(...guard.refused())
   return out
 }

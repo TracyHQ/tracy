@@ -248,5 +248,13 @@ export async function preparePictureStage({
     ]
   }
 
-  return { active: true, claims, changes, evidence: pictures.mapping.evidence ?? {}, write, lines }
+  return {
+    active: true,
+    claims,
+    changes,
+    evidence: pictures.mapping.evidence ?? {},
+    write,
+    lines,
+    refused: drawn.refused
+  }
 }
