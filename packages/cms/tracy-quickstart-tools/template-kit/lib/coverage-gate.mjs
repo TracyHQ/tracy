@@ -14,6 +14,8 @@ import { neutralKey } from './ids.mjs'
 import { pageTitleChecks, settlePageTitles } from './page-titles.mjs'
 import { settleSettingSlots } from './setting-slots.mjs'
 import { settleSentenceGroups } from './sentence-groups.mjs'
+import { settleButtons } from './button-slots.mjs'
+import { settleContentPages } from './content-pages.mjs'
 import { settleStoredFields, storedFieldReport } from './stored-fields.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
@@ -166,6 +168,8 @@ export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = 
   settlePageTitles(kit, { map, drives })
   settleSentenceGroups(kit, { map })
   settleStoredFields(kit, { map, drives })
+  settleButtons(kit, { map })
+  settleContentPages(kit, { map })
   whatElseChanges(kit)
   return kit
 }

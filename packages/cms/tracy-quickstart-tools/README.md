@@ -312,6 +312,8 @@ The coverage gate (run by `cli.mjs assemble`) settles three things from what the
 
 - `pages[].titleSlot`: the one slot that prints the page title. Part `pageTitleSlots` fails a page with none or with a tie.
 - `blocks[].sentences`: pieces of one stored field in one element, printed as one sentence around a highlight. The copy check (W12) reads them joined.
+- `blocks[].buttons`: every button a visitor can see, with `labelSlot`, `urlSlot`, `label`, `link`, `target`. Each block's button stands here even when a link's `labelId` names another block's field of the same words. A write step hides one no file speaks for.
+- `site.contentPages[]`: how the template presents a content page: the category menu item its item pages are opened under (`menuItem`, `route`, `layout`, `pages`). A page the write step creates takes that route.
 - `storedFields[]`: every text, url or image field the template stores, with `listedIn` (its block, or null). `coverage.fields` reports `notListed` and `drivingSeveralControls`, and does not block.
 
 What a stored field really drives is measured on a **throwaway restored site**, never one in use: the command writes a marker into each field, reads the pages, and puts the value back.
