@@ -10,6 +10,7 @@ import { FAULTS, lookImage, lookMessage, MODEL_FAULTS, readLook } from '../src/s
 test('an answer is held to the fixed fault list, and any fault fails the picture', () => {
   // The model names eight faults on any picture (face cut added after real run 4, no clear subject after real run 6) and four more on a cut-out (#346);
   // "look unreadable" only code records.
+  // test-quality: contract the fault list is the looker's fixed vocabulary (ADR 0043); adding a fault is a deliberate change
   assert.equal(MODEL_FAULTS.length, 13)
   assert.deepEqual(FAULTS, [...MODEL_FAULTS, 'look unreadable'])
   const said = readLook(

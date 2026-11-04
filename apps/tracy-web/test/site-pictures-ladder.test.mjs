@@ -160,7 +160,7 @@ function plan() {
 const TALL = await scene('bakery', 700, 1000, 9)
 function brief() {
   const b = kestrelBrief()
-  const owner = b.assets.find((a) => a.id === 'p-workbench')
+  const owner = b.assets.find((a) => a.id === 'p-repair-desk')
   b.assets.push({ ...owner, id: 'p-bench-tall', sha256: sha(TALL), width: 700, height: 1000 })
   return b
 }

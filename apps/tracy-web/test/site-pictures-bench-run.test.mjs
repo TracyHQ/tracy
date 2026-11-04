@@ -62,7 +62,7 @@ test(
 
     // Any-real frames: owner photos, the hero takes the photo of its own offering; never drawn.
     assert.equal(e.get('block-2.0').source, 'owner-photo')
-    assert.equal(e.get('block-2.0').asset, 'p-workbench')
+    assert.equal(e.get('block-2.0').asset, 'p-repair-desk')
     assert.equal(e.get('block-6.1').asset, 'p-wheels')
     for (const entry of manifest.frames) assert.ok(!['drawn', 'owner-photo-extended'].includes(entry.source))
     // Never a photo with lettering, a blurry one, or a video.

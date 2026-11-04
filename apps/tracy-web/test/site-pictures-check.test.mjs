@@ -12,6 +12,7 @@ const ALL = ['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10
 
 test('the passing manifest passes every rule and the version is frozen', () => {
   const r = checkPictures(inputs())
+  // test-quality: contract ADR 0043 freezes the checker name; a rule change must bump it on purpose
   assert.equal(CHECKER_VERSION, 'site-pictures-check/1')
   assert.equal(r.meta.checker, 'site-pictures-check/1')
   assert.deepEqual(
