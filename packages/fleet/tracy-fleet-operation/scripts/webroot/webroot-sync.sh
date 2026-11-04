@@ -821,7 +821,9 @@ keep_media_files() { # ours_commit
   GIT_INDEX_FILE="$index" g read-tree "$tree" || return 1
   while IFS= read -r path; do
     [[ -n "$path" ]] || continue
-    entry="$(g ls-tree -z "$1" -- "$path" | tr '\0' '\n' | head -1)"
+    # One NUL-ended entry for one path, read whole: no reader in a pipe that stops early (pipefail).
+    entry=""
+    IFS= read -r -d '' entry < <(g ls-tree -z "$1" -- "$path") || true
     [[ -n "$entry" ]] || continue
     mode="${entry%% *}"
     blob="$(g rev-parse --verify --quiet "$1:$path")" || continue
