@@ -156,6 +156,20 @@ export function joomlaAdapter(source) {
         : files.map((f) => ({ file: f, text: readFile(f) }))
       return t3ColourVariables(texts, state.template)
     },
+    /**
+     * The template styles that paint another colour theme than the home style (T3: a style whose `theme` param names
+     * another `less/themes/<theme>` than the home style's): `['templateStyle-10', ...]`. Pages on such a style are
+     * the template's colour showcase, never the brand. Empty for any other framework.
+     */
+    themeVariantStyles() {
+      if (!t3 || !query || !/^[\w-]+$/.test(state.template ?? '')) return []
+      const home = String(t3.params.theme ?? '')
+      return query(
+        `SELECT id, params FROM ${state.prefix}template_styles WHERE client_id = 0 AND template = '${state.template}'`
+      )
+        .filter((r) => String(safeJson(r.params).theme ?? '') !== home)
+        .map((r) => `templateStyle-${r.id}`)
+    },
     favicon(icons) {
       const set = t4?.values.other_faviconFile ?? null
       const own = state.template && readFile ? readFile(`templates/${state.template}/favicon.ico`) : null

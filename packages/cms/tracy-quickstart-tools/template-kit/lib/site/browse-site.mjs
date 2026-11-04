@@ -29,24 +29,29 @@ export function stylesOfHtml(html, siteUrl, aliasHosts = []) {
   return { links, inline }
 }
 
-/** Every stylesheet the pages serve, fetched once: `[{from, css}]` (inline blocks named by their page). */
+/** Every stylesheet the pages serve, fetched once: `[{from, css, pages}]` (inline blocks named by their page). */
 export async function fetchStyles({ pages, siteUrl, hostHeader }) {
   const fetchPage = httpFetcher({ siteUrl, hostHeader })
   const aliasHosts = hostHeader ? [hostHeader] : []
   const styles = []
-  const seen = new Set()
+  const seen = new Map()
   const htmls = []
   for (const p of pages) {
     const r = await fetchPage(urlOfPath(p.path, siteUrl))
     if (r.status !== 200) continue
     htmls.push({ pageId: p.pageId, html: r.html })
     const { links, inline } = stylesOfHtml(r.html, siteUrl, aliasHosts)
-    for (const [i, css] of inline.entries()) styles.push({ from: `${p.path} inline style ${i + 1}`, css })
+    for (const [i, css] of inline.entries())
+      styles.push({ from: `${p.path} inline style ${i + 1}`, css, pages: [p.path] })
     for (const href of links) {
-      if (seen.has(href)) continue
-      seen.add(href)
+      if (seen.has(href)) {
+        seen.get(href)?.pages.push(p.path)
+        continue
+      }
       const s = await fetchPage(new URL(href, siteUrl).href)
-      if (s.status === 200) styles.push({ from: href.split('?')[0], css: s.html })
+      const style = s.status === 200 ? { from: href.split('?')[0], css: s.html, pages: [p.path] } : null
+      seen.set(href, style)
+      if (style) styles.push(style)
     }
   }
   return { styles, htmls }
