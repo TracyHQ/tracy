@@ -132,6 +132,7 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
   if (pool) app.sitePlannerQueue?.start()
   if (pool) app.brandQueue?.start()
   if (pool) app.siteWriterQueue?.start()
+  if (pool) app.sitePicturesQueue?.start()
   const server = await new Promise((resolve) => {
     const s = serve(
       { fetch: app.fetch, port: Number(env.PORT ?? 8080), hostname: '0.0.0.0', createServer },
@@ -223,6 +224,7 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
       app.sitePlannerQueue?.stop()
       app.brandQueue?.stop()
       app.siteWriterQueue?.stop()
+      app.sitePicturesQueue?.stop()
       await support.stop()
       await app.betaLogin?.stop()
       await new Promise((r) => server.close(r))

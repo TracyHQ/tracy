@@ -11,6 +11,7 @@ import { checkW09, checkW10, checkW11, checkW08 } from './rules-bans.js'
 import { checkW04, checkW05 } from './rules-facts.js'
 import { checkW06, checkW07 } from './rules-repeat.js'
 import { checkW02, checkW03 } from './rules-slots.js'
+import { failureListText } from '../../lib/failure-list-text.js'
 
 // Stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title, a threshold, a failure
 // text or the result shape changes, so two runs scored by different checkers are never compared as equal.
@@ -63,11 +64,4 @@ export function checkCopy({ copy, plan, kit, brief, contentMap } = {}) {
   return { meta, inputErrors, ...finishRules(list) }
 }
 
-// The failure list a fix round sends back to the writer: one line per failure, in rule order,
-// "<rule id> | <rule title> | <where> | <detail>", ending with a newline. Empty when nothing failed.
-export function failureListText(result) {
-  const lines = []
-  for (const r of result?.rules ?? [])
-    for (const f of r.failures ?? []) lines.push([r.id, r.title, f.where, f.detail].join(' | '))
-  return lines.length ? `${lines.join('\n')}\n` : ''
-}
+export { failureListText }

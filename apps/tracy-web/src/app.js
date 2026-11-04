@@ -221,6 +221,10 @@ import {
 } from './sites/agent-demo-inventory.js'
 import { createSitePlannerQueue } from './site-planner/bench-worker.js'
 import { createSiteWriterQueue } from './site-writer/bench-worker.js'
+import { createSitePicturesQueue } from './site-pictures/bench-worker.js'
+import { defaultStoreDir } from './site-pictures/file-store.js'
+import { releaseKitZip } from './lib/template-kit-images.js'
+import { releaseWebroot } from './site-pictures/icon-step.js'
 import { createBrandQueue } from './brand-step/brand-worker.js'
 import { productionWiring } from './brand-step/brand-wiring.js'
 import { kitImagesFor } from './site-planner/kit-images.js'
@@ -1182,6 +1186,30 @@ export function buildApp(deps) {
       ? createSiteWriterQueue({
           pool: deps.pool,
           secret: deps.config.sessionSecret,
+          fetchImpl: deps.fetchImpl ?? fetch,
+          log: deps.log ?? console
+        })
+      : null
+  // The picture bench's worker (`site-pictures/bench-worker.js`, #340): its own queue, one run at a time; runs are started
+  // and read from the bench CLI (scripts/site-pictures-bench.mjs). A revision's owner photos are read from the media store.
+  app.sitePicturesQueue =
+    deps.config && deps.pool
+      ? createSitePicturesQueue({
+          pool: deps.pool,
+          secret: deps.config.sessionSecret,
+          objects:
+            deps.websiteOpportunitiesObjects ?? placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
+          storeDir: defaultStoreDir(),
+          webroot: releaseWebroot({
+            pool: deps.pool,
+            config: deps.config,
+            fetchImpl: deps.fetchImpl ?? fetch
+          }),
+          quickstart: releaseKitZip({
+            pool: deps.pool,
+            config: deps.config,
+            fetchImpl: deps.fetchImpl ?? fetch
+          }),
           fetchImpl: deps.fetchImpl ?? fetch,
           log: deps.log ?? console
         })

@@ -230,6 +230,54 @@ export const LLM_DOORS = [
     prefers: []
   },
   {
+    id: 'picturePicker',
+    label: 'Picture picker',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the picture bench, started from a command line on the server. One call per site looks at the owner photos as small thumbnails and chooses one for every frame of the site plan that needs a specific picture.',
+    needsModel: true,
+    // Vision is REQUIRED: the picker judges the owner photos by sight (site-pictures/door.js). No tools. No effort
+    // setting: the bench fixes it in code (max on DeepSeek Flash) and records it on each run (#342).
+    requires: ['vision'],
+    prefers: []
+  },
+  {
+    id: 'pictureIconRanker',
+    label: 'Picture icon ranker',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the picture bench, started from a command line on the server. One cheap text call per site ranks the icon names code shortlisted for each icon frame; it never invents a name. Without it the shortlist order decides.',
+    needsModel: true,
+    // Text only: no tools, no pictures (site-pictures/icon-step.js). Meant for openai/gpt-6-luna through OpenRouter
+    // (icons/icon-ranker.js ICON_RANKER_MODEL). An unset door never stops a run (#345).
+    requires: [],
+    prefers: ['json']
+  },
+  {
+    id: 'pictureLooker',
+    label: 'Picture looker',
+    where: 'this process',
+    blurb:
+      "WO New Flow Test: the picture bench, started from a command line on the server. One call per finished picture, in a fresh context, checks it at display size against the plan's words and says what it shows. Its model must be of another maker than the picker's. A picture run does not start without it.",
+    needsModel: true,
+    // Vision is REQUIRED: the looker judges each picture by sight (site-pictures/looker-door.js). No tools, no effort
+    // setting. Meant for openai/gpt-6-luna through OpenRouter, as the brand step's reviewer (#343).
+    requires: ['vision'],
+    prefers: ['json']
+  },
+  {
+    id: 'pictureDrawer',
+    label: 'Picture drawer',
+    where: 'this process',
+    blurb:
+      "WO New Flow Test: the picture bench, started from a command line on the server. Draws a picture the plan asks for when no owner photo fits, from a fixed template filled with the plan's words, or extends a real photo sideways for a wide band. Never draws a person. A picture run that may need a drawing does not start without it.",
+    needsModel: true,
+    // Drawing is REQUIRED: a model that answers only text gives no picture (site-pictures/drawer-door.js). Meant for
+    // google/gemini-3.1-flash-lite-image through OpenRouter, about 0.034 USD a picture (#344).
+    requires: ['draws'],
+    drawsPictures: true
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',
