@@ -80,10 +80,15 @@ function overall(groups) {
   return groups.some((g) => g.status === 'unmeasured') ? 'unmeasured' : 'green'
 }
 
+/** With `allGroups`, a run that a group would have stopped is never green, whatever the later groups say. */
+const notGreenAfter = (status, stoppedBy) => (stoppedBy && status === 'green' ? stoppedBy.status : status)
+
 /**
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
- *   baseline?: object | null }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
- *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`)
+ *   baseline?: object | null, allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
+ *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
+ *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
+ *   stopping group made it (never green)
  * @returns {Promise<object>} `site-check/1`
  */
 export async function runSiteCheck({
@@ -92,14 +97,15 @@ export async function runSiteCheck({
   host,
   baseline = null,
   groups = host ? [...SITE_CHECK_GROUPS, ...PAGE_CHECK_GROUPS] : SITE_CHECK_GROUPS,
-  now = Date.now
+  now = Date.now,
+  allGroups = false
 }) {
   const siteKey = report.site
   const context = { report, siteKey, now, host, baseline, read: readsOnly(door, siteKey) }
   const results = []
   let stoppedBy = null
   for (const group of groups) {
-    if (stoppedBy) {
+    if (stoppedBy && !allGroups) {
       results.push({
         name: group.name,
         status: 'not-run',
@@ -110,15 +116,16 @@ export async function runSiteCheck({
       continue
     }
     const result = await measure(group, context)
-    results.push(result)
-    if (group.stopsLaterWhenRed && result.status !== 'green') stoppedBy = result
+    results.push(stoppedBy ? { ...result, ranDespite: `${stoppedBy.name} is ${stoppedBy.status}` } : result)
+    if (!stoppedBy && group.stopsLaterWhenRed && result.status !== 'green') stoppedBy = result
   }
   const every = results.flatMap((g) => g.failures)
   return {
     version: CHECK_VERSION,
-    status: overall(results),
+    status: notGreenAfter(overall(results), stoppedBy),
     site: siteKey,
     pageGroups: Boolean(host),
+    allGroups,
     kit: report.kit ?? null,
     contract: report.contract ?? null,
     counts: {

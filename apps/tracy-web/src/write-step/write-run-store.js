@@ -72,6 +72,15 @@ export function pgWriteRunStore(pool) {
         JSON.stringify(report)
       ])
     },
+    /** The newest run on a site that has ended, whichever way: its report is what a rewrite compares with. */
+    async latestEnded(siteKey) {
+      const { rows } = await pool.query(
+        `select * from write_bench_run where site_key = $1 and status <> 'running'
+           order by created_at desc limit 1`,
+        [siteKey]
+      )
+      return rows[0] ? recordOf(rows[0]) : null
+    },
     /** Asks a running run to stop, or ends it when it went silent. The row as it is now; null when there is no such run. */
     async requestCancel(id) {
       if (!UUID.test(String(id))) return null

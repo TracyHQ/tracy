@@ -4,12 +4,16 @@
 //
 // A package says `writeDoor: "none"` on a setting entry: it was frozen before the door existed, and it is the kit that says
 // how a frame is written (`site.settingSlots`: `writable` and `writeTo`), so the field is not read.
+//
+// A frame's value is its path, which names the sha256 of its bytes, so comparing it with the last report compares the picture. A
+// painted frame is drawn every time: its path says whether a colour it uses has changed.
 import path from 'node:path'
 import {
   BODY_BACKGROUND_KEY,
   writeT4BodyBackground
 } from '../sites/brief-engines/joomla-t4-body-background.js'
 import { brandAsker, said } from './brand-writes.js'
+import { NO_LAST } from './no-last-report.js'
 import { refusalWords } from './contract-write.js'
 import { preparePainted } from './painted-stage.js'
 import { packageProblems, PICTURE_OWNER, readPackageFiles } from './picture-package.js'
@@ -59,7 +63,7 @@ function readSettings(entries, kit) {
 
 /**
  * @param {{ pictures?: object, picturesPath?: string, inputs?: { file: string, sha256: string }, kit: object,
- *   contract: string, brand?: object, brandPath?: string, contentMap?: object | null }} input
+ *   contract: string, brand?: object, brandPath?: string, contentMap?: object | null, last?: object }} input
  * @returns {Promise<object>} the stage; `stop` says why it cannot run
  */
 export async function preparePictureStage({
@@ -70,7 +74,8 @@ export async function preparePictureStage({
   contract,
   brand,
   brandPath,
-  contentMap
+  contentMap,
+  last = NO_LAST
 }) {
   if (pictures === undefined) return idle
   const problems = packageProblems(pictures, contract)
@@ -145,15 +150,26 @@ export async function preparePictureStage({
   }
 
   /** @returns {Promise<{ stop?: object, reading?: object, dropped?: string[] }>} `reading`: the site after the stage */
-  const write = async ({ apply, siteKey, sleep }) => {
+  const write = async ({ apply, siteKey, sleep, reading: current }) => {
     const ask = brandAsker({ apply, siteKey, applyId: `pictures-${inputs.sha256.slice(0, 32)}`, sleep })
     const readSite = (action, params) => apply({ siteKey, action, params })
+    const freshOrders = oneEach.filter((o) => !last.same(o.slot, o.entry.sitePath))
+    for (const order of oneEach.filter((o) => !freshOrders.includes(o)))
+      settingResults.set(order.slot, { readFrom: last.line(order.slot).readFrom })
+    const wanted = new Set([
+      ...Object.keys(changes)
+        .filter((key) => !last.sameKey(key, changes[key]))
+        .map((key) => changes[key]),
+      ...freshOrders.map((o) => o.entry.sitePath)
+    ])
+    const uploads = [...files].filter(([sitePath]) => !last.active || wanted.has(sitePath))
+    if (last.active && !uploads.length && !freshOrders.length) return { reading: current, dropped: [] }
     try {
-      for (const [sitePath, bytes] of files) {
+      for (const [sitePath, bytes] of uploads) {
         const answer = await ask('media.upload', { path: sitePath, content_b64: bytes.toString('base64') })
         if (!answer || answer.ok === false) failedUploads.set(sitePath, said(answer))
       }
-      for (const order of oneEach)
+      for (const order of freshOrders)
         settingResults.set(order.slot, await writeSetting(order, { ask, read: readSite }))
       // The contract call must name the revision the site has now, whatever this stage moved.
       const reading = await readSite('content.contract', { operation: 'inspect' })

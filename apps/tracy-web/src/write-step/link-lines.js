@@ -121,6 +121,7 @@ function wordsResult({ key, leadsTo }, hiddenKeys, hides) {
     status,
     reason,
     key,
+    ...(status === 'hidden' ? { leftWith: key } : {}),
     ...(ordered === undefined ? {} : { ordered }),
     ...(readFrom ? { readFrom } : {})
   }
@@ -149,6 +150,7 @@ function leftMenu(item, settled) {
       status: 'hidden',
       reason: `the plan takes ${item} off the site, and this link leaves with it`,
       key: null,
+      leftWith: item,
       ordered: done.ordered,
       readFrom: done.readFrom
     }

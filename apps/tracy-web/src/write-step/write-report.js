@@ -2,7 +2,8 @@
 // null until the site check fills it in; nothing here reads the site. A line's `part` says what kind of thing it is when
 // it is not a content slot of the mapping. A written or refused line keeps in `ordered` the value that was sent, which is
 // what the site check compares the site with. A line written through a door other than the contract names its read in
-// `readFrom` (site-check/read-back.js).
+// `readFrom` (site-check/read-back.js). In a rewrite a line that was not sent carries `unchanged: true` and keeps its status and
+// `ordered`, since they still say what the site holds (last-report.js); `counts` tells those apart from what this run wrote.
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { refusalWords } from './contract-write.js'
 import { PICTURE_OWNER } from './picture-package.js'
@@ -135,7 +136,7 @@ export function slotLines({
 }
 
 export function countsOf(slots) {
-  const counts = { written: 0, hidden: 0, skipped: 0, failed: 0 }
-  for (const s of slots) counts[s.status] += 1
+  const counts = { written: 0, hidden: 0, skipped: 0, failed: 0, unchanged: 0 }
+  for (const s of slots) counts[s.unchanged ? 'unchanged' : s.status] += 1
   return counts
 }

@@ -13,7 +13,8 @@ function groupLine(g) {
   const size = g.status === 'not-run' ? '' : ` ${g.checked ?? 0} checked`
   const skipped = g.skipped ? `, ${g.skipped} skipped` : ''
   const why = g.reason ? ` (${g.reason})` : ''
-  return `${g.name}: ${g.status}${size}${skipped}${why}${readsOf(g.reads)}`
+  const despite = g.ranDespite ? ` (ran although ${g.ranDespite})` : ''
+  return `${g.name}: ${g.status}${size}${skipped}${why}${despite}${readsOf(g.reads)}`
 }
 
 function failureLine(f) {

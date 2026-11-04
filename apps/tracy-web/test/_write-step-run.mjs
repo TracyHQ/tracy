@@ -201,6 +201,10 @@ export function memoryRunStore(seed = []) {
       const row = find(id)
       return row ? { ...row } : null
     },
+    async latestEnded(siteKey) {
+      const row = rows.filter((r) => r.siteKey === siteKey && r.status !== 'running').at(-1)
+      return row ? { ...row } : null
+    },
     async list({ limit = 20 } = {}) {
       return rows
         .map((r) => ({ ...r }))

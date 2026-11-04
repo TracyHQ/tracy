@@ -2,8 +2,10 @@
 // contract door does not take: the kit's setting slots (a contact's mobile line, the map a page prints), each page's
 // title and description, and the main menu items the plan hides. It follows the kit's own fields (`writable`, `writeTo`,
 // `valueFormat`) and names no id or template. Every item gets a result by line slot; a refusal is `failed` in the
-// plugin's words and does not stop the rest. The legal pages and the 404 page have no door yet and are reported skipped.
+// plugin's words and does not stop the rest. The legal pages and the 404 page have no door yet and are reported skipped. What
+// the last report says the site holds is not written again, and reads as written.
 import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { NO_LAST } from './no-last-report.js'
 import { writePageMeta } from './page-meta-write.js'
 import { doorCall, readRow } from './settings-door.js'
 
@@ -47,13 +49,21 @@ function settingWrite(setting, value, place) {
   }
 }
 
-async function writeSettings({ call, kit, sent, place, results }) {
+async function writeSettings({ call, kit, sent, place, results, last }) {
   for (const setting of each(kit?.site?.settingSlots)) {
     const value = sent[contentMapKey(setting.id)]
     if (typeof value !== 'string') continue
     const order = settingWrite(setting, value, place)
     if (order.reason) {
       results.set(setting.id, { status: 'skipped', reason: order.reason })
+      continue
+    }
+    if (last.same(setting.id, order.value)) {
+      results.set(setting.id, {
+        status: 'written',
+        ordered: order.value,
+        readFrom: readRow(order.kind, order.id, order.column)
+      })
       continue
     }
     try {
@@ -88,7 +98,7 @@ function pagesWithoutDoor(pages, results) {
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, sent: Record<string, string>,
  *   extras: { pageMeta?: object, pages?: object, mainMenu?: { menutype?: string | null, hide?: object[] } },
- *   place?: { latitude: unknown, longitude: unknown } | null, isCancelled?: () => Promise<boolean> }} input
+ *   place?: { latitude: unknown, longitude: unknown } | null, isCancelled?: () => Promise<boolean>, last?: object }} input
  *   `sent`: the mapping's changes before routing, by content map key
  * @returns {Promise<{ results: Map<string, object>, cancelled: boolean }>} results by report line slot
  */
@@ -99,7 +109,8 @@ export async function runPageSettings({
   sent,
   extras,
   place = null,
-  isCancelled = async () => false
+  isCancelled = async () => false,
+  last = NO_LAST
 }) {
   const read = doorCall(door, siteKey)
   // The door requires an apply id on a write; a record of one stage shares one, so the site's log reads as one change.
@@ -107,7 +118,7 @@ export async function runPageSettings({
   const call = (action, params) =>
     read(action, action === 'content.update' ? { apply_id: applyId, ...params } : params)
   const results = new Map()
-  await writeSettings({ call, kit, sent, place, results })
+  await writeSettings({ call, kit, sent, place, results, last })
   pagesWithoutDoor(extras.pages, results)
   if (await isCancelled()) return { results, cancelled: true }
   await writePageMeta({
@@ -116,7 +127,8 @@ export async function runPageSettings({
     pageMeta: extras.pageMeta,
     hide: extras.mainMenu?.hide,
     menutype: extras.mainMenu?.menutype ?? null,
-    results
+    results,
+    last
   })
   return { results, cancelled: false }
 }

@@ -33,6 +33,10 @@ function fixedResult(order, words) {
 /** What became of one hide claim, or null while nothing did, which the report reads as the run having ended first. */
 function claimResult(order, { blocks, words, gone, refused, settled }) {
   const { via, key } = order
+  if (via === 'kept') {
+    const { status, reason, key: heldKey, ordered, readFrom, part } = order.line
+    return { status, reason, key: heldKey, ordered, readFrom, part }
+  }
   if (via === 'failed')
     return { status: 'failed', reason: order.reason, key, ...(order.part ? { part: order.part } : {}) }
   if (via === 'fixed') return fixedResult(order, words)
@@ -87,7 +91,10 @@ export function hideLines({ order, words, blocks, pages, cannotHide, emptied, re
   })
   const lines = [...pages].map(([page, result]) => frameLine(page, 'page-drop', result))
   for (const [block, module] of order.blocks) {
-    const done = cannotHide ? { status: 'failed', reason: cannotHide } : blockResult(blocks, module)
+    const done =
+      cannotHide && blocks.get(module) !== true
+        ? { status: 'failed', reason: cannotHide }
+        : blockResult(blocks, module)
     const hidden = { reason: `the plan drops this block: ${module} is unpublished` }
     lines.push(
       frameLine(

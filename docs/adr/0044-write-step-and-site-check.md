@@ -78,8 +78,8 @@ rejected: restore time is unmeasured, and anything left behind would make result
 
 ### 6. Partial rewrite by difference
 
-Given new files and the site, the write step compares them with its last report, writes only the slots that differ
-and step 11 reads back only those. Showing a slot that was emptied needs a new site, because the plugin refuses to
+Given new files and the site, the write step compares them with its last report and writes only the slots that differ.
+Its report still holds every line, the ones not sent marked unchanged with their value, and step 11 reads back all of them. Showing a slot that was emptied needs a new site, because the plugin refuses to
 fill an empty slot.
 
 ### 7. Read-back belongs to the site check

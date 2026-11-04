@@ -7,7 +7,9 @@
 // no `og:image`. That image is the home page's top picture: a logo is too small for a social network to show on most sites.
 // The picture of a page is read from the lines the picture stage reports: only a picture written to the site can be named,
 // never one it refused, failed to upload or skipped. A page with neither a place nor a picture is reported skipped with the
-// reason. Each written line names its read, so the site check can read it back.
+// reason. Each written line names its read, so the site check can read it back. What the last report says the site holds is
+// not written again, and the page's picture is still worked out from the whole site.
+import { NO_LAST } from './no-last-report.js'
 import { articleOfPage, menuRows, paramsOf, rowsOpening } from './page-meta-write.js'
 import { doorCall, readRow } from './settings-door.js'
 
@@ -141,7 +143,7 @@ async function writeImage({ call, opening, path, reason = null }) {
 
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, pageIds: string[], menutype?: string | null,
- *   pictureLines: object[], brandLines: object[], isCancelled?: () => Promise<boolean> }} input
+ *   pictureLines: object[], brandLines: object[], isCancelled?: () => Promise<boolean>, last?: object }} input
  *   `pageIds`: the pages the plan keeps; the lines are the picture stage's and the brand stage's own report lines
  * @returns {Promise<{ lines: object[], cancelled: boolean }>} report lines: `<page>:share-image`, `site:share-image`
  */
@@ -153,7 +155,8 @@ export async function runShareStage({
   menutype = null,
   pictureLines,
   brandLines,
-  isCancelled = async () => false
+  isCancelled = async () => false,
+  last = NO_LAST
 }) {
   const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
   const pages = each(pageIds).filter((id) => kitPages.has(id))
@@ -188,28 +191,44 @@ export async function runShareStage({
     )
   if (!wanted.length) return finish(false)
 
+  const reasonOf = (p) =>
+    p.from === 'logo'
+      ? `the page shows no picture of its own, so the logo is shared. ${SWITCH_WORDS}`
+      : SWITCH_WORDS
+  const fresh = wanted.filter((p) => !last.same(`${p.id}:share-image`, p.path))
+  for (const p of wanted.filter((x) => !fresh.includes(x)))
+    results.set(`${p.id}:share-image`, {
+      status: 'written',
+      reason: reasonOf(p),
+      ordered: p.path,
+      readFrom: last.line(`${p.id}:share-image`).readFrom
+    })
   if (await isCancelled()) return finish(true)
   const home = plans.find((p) => slashless(kitPages.get(p.id)?.path) === '')
   const siteImage = home?.path ?? logo
-  if (siteImage) await writeSiteImage({ call: write, kit, path: siteImage, results })
+  if (last.same(SITE_LINE, siteImage))
+    results.set(SITE_LINE, {
+      status: 'written',
+      ordered: siteImage,
+      readFrom: last.line(SITE_LINE).readFrom
+    })
+  else if (siteImage) await writeSiteImage({ call: write, kit, path: siteImage, results })
+  if (!fresh.length) return finish(false)
 
   let rows
   try {
     rows = await menuRows(call)
   } catch (error) {
-    for (const p of wanted)
+    for (const p of fresh)
       results.set(`${p.id}:share-image`, failed(`the menu could not be read: ${error.message}`))
     return finish(false)
   }
   if (await isCancelled()) return finish(true)
-  for (const p of wanted) {
+  for (const p of fresh) {
     const page = kitPages.get(p.id)
     const opening = rowsOpening(page, rows, menutype)
     const article = opening.length ? null : articleOfPage(page, kit)
-    const reason =
-      p.from === 'logo'
-        ? `the page shows no picture of its own, so the logo is shared. ${SWITCH_WORDS}`
-        : SWITCH_WORDS
+    const reason = reasonOf(p)
     let result
     if (opening.length) result = await writeImage({ call: write, opening, path: p.path, reason })
     else if (article !== null)

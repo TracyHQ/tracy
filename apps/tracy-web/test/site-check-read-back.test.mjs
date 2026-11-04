@@ -88,6 +88,57 @@ test('a red read-back stops the later groups and they say so', async () => {
   assert.equal(result.status, 'red')
 })
 
+test('allGroups runs the later groups after a red read-back, says so, and the check stays red', async () => {
+  let ran = 0
+  const later = {
+    name: 'later',
+    causingStep: 6,
+    run: async () => {
+      ran += 1
+      return { checked: 3, failures: [] }
+    }
+  }
+  const result = await check(
+    checkSite({ 'module-2.1': 'Changed' }),
+    report([written('block-2.1', 'module-2.1', 'Ordered')]),
+    { groups: [...SITE_CHECK_GROUPS, later], allGroups: true }
+  )
+  assert.equal(ran, 1)
+  assert.equal(group(result, 'later').status, 'green')
+  assert.equal(group(result, 'later').checked, 3)
+  assert.match(group(result, 'later').ranDespite, /read-back is red/)
+  assert.equal(result.allGroups, true)
+  assert.equal(result.status, 'red')
+})
+
+test('allGroups never turns an unmeasured read-back green', async () => {
+  const site = checkSite({}, { inspect: { ok: false, code: 'COMPONENT_UNREACHABLE', message: 'No answer' } })
+  const later = { name: 'later', causingStep: 6, run: async () => ({ checked: 1, failures: [] }) }
+  const result = await check(site, report([written('block-2.1', 'module-2.1', 'Ordered')]), {
+    groups: [...SITE_CHECK_GROUPS, later],
+    allGroups: true
+  })
+  assert.equal(group(result, 'later').status, 'green')
+  assert.equal(result.status, 'unmeasured')
+})
+
+test('a default run does not say allGroups, and a green read-back adds no ranDespite', async () => {
+  const later = { name: 'later', causingStep: 6, run: async () => ({ checked: 1, failures: [] }) }
+  const result = await check(
+    checkSite({ 'module-2.1': 'Ordered' }),
+    report([written('block-2.1', 'module-2.1', 'Ordered')]),
+    { groups: [...SITE_CHECK_GROUPS, later], allGroups: true }
+  )
+  assert.equal(result.status, 'green')
+  assert.equal(group(result, 'later').ranDespite, undefined)
+  const plain = await check(
+    checkSite({ 'module-2.1': 'Ordered' }),
+    report([written('block-2.1', 'module-2.1', 'Ordered')]),
+    { groups: [...SITE_CHECK_GROUPS, later] }
+  )
+  assert.equal(plain.allGroups, false)
+})
+
 test('a green read-back lets later groups run, and a later group is added without touching the check', async () => {
   const later = {
     name: 'later',

@@ -3,10 +3,12 @@
 // (contract-write.js), so this stage only hands over their list. The main menu items the plan hides stay the page settings
 // stage's, which keeps them from being unpublished twice; an item a kept page depends on is taken out of its list here and
 // reported. An older plugin silently ignores `empty_slots`, so `info.hide_ops` is read first and every hide line it cannot
-// take is failed instead of pretended. Whatever is refused is failed in the plugin's words and the rest goes.
+// take is failed instead of pretended. Whatever is refused is failed in the plugin's words and the rest goes. What the last
+// report says is off the site already is not ordered off it again, and its line reads as it did.
 import { hideLines } from './hide-lines.js'
 import { hideOrders } from './hide-plan.js'
 import { dropPages, emptyConstants, hideOpsProblem, unpublishBlocks } from './hide-writes.js'
+import { NO_LAST } from './no-last-report.js'
 import { answerWords } from './settings-door.js'
 
 const MAX_SLOTS = 1500
@@ -24,17 +26,17 @@ function settingsPart(extras, menu) {
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, owners: Map<string, object>,
  *   extras: object, reading: object, changes: Record<string, string>, contract: string,
- *   sleep: (ms: number) => Promise<void> }} input
+ *   sleep: (ms: number) => Promise<void>, last?: object }} input
  * @returns {Promise<{ stop?: object, reading?: object, emptySlots?: string[], settingsExtras?: object, held?: Map<string, object>,
  *   results?: (done: { emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object> }) =>
  *   { hides: Map<string, object>, lines: object[] } }>} `settingsExtras`: the extras without the menu items left published;
  *   `held`: what happened to those, by line slot; `results`: the report's view once the later stages have run
  */
 export async function runHideStage(input) {
-  const { door, siteKey, kit, plan, owners, extras, changes, contract, sleep } = input
+  const { door, siteKey, kit, plan, owners, extras, changes, contract, sleep, last = NO_LAST } = input
   const asksToHide = [...owners.values()].some((c) => c.kind === 'hide')
   const cannotHide = asksToHide ? await hideOpsProblem(door, siteKey) : null
-  const order = hideOrders({ plan, kit, owners, extras, reading: input.reading, changes, cannotHide })
+  const order = hideOrders({ plan, kit, owners, extras, reading: input.reading, changes, cannotHide, last })
   const total = Object.keys(changes).length + order.emptySlots.length
   if (total > MAX_SLOTS)
     return {
@@ -44,7 +46,13 @@ export async function runHideStage(input) {
       }
     }
   const pages = new Map()
-  let wrote = await dropPages({ door, siteKey, pages: order.pages, results: pages })
+  const gonePage = ({ page }) => last.hidden(page.id)
+  for (const entry of order.pages.filter(gonePage)) {
+    const { status, reason, ordered, readFrom } = last.line(entry.page.id)
+    pages.set(entry.page.id, { status, reason, ordered, readFrom })
+  }
+  const toDrop = order.pages.filter((entry) => !gonePage(entry))
+  let wrote = await dropPages({ door, siteKey, pages: toDrop, results: pages })
   let words = { refusedAll: null, refused: new Map() }
   if (Object.keys(order.strings).length) {
     const template = kit?.template?.name
@@ -59,14 +67,15 @@ export async function runHideStage(input) {
     return answer
   }
   let reading = input.reading
-  let blocks = new Map()
-  const modules = cannotHide ? [] : [...order.blocks.values()]
+  const gone = [...order.blocks].filter(([block]) => last.hidden(block)).map(([, module]) => module)
+  let blocks = new Map(gone.map((module) => [module, true]))
+  const modules = cannotHide ? [] : [...order.blocks.values()].filter((module) => !gone.includes(module))
   try {
     if (modules.length) {
       if (wrote) reading = await fresh()
       const { revision } = reading
       const unpublished = await unpublishBlocks({ door, siteKey, modules, revision, contract, sleep })
-      blocks = unpublished.done
+      blocks = new Map([...blocks, ...unpublished.done])
       wrote = wrote || unpublished.wrote
     }
     if (wrote) reading = await fresh()

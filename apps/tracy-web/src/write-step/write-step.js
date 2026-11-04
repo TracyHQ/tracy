@@ -8,6 +8,9 @@
 // This slice writes the plan's hide decisions (hide-stage.js), the brand file (brand-stage.js), the picture package
 // (picture-stage.js) and the site copy's mapping through `content.contract`. The later write stages of the ADR go in as
 // further phases.
+//
+// Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
+// had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../site-writer/bench-control.js'
 import { indexInputs } from '../site-writer/copy-check/inputs-index.js'
@@ -17,6 +20,7 @@ import { prepareBrandStage } from './brand-stage.js'
 import { writeContract } from './contract-write.js'
 import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
+import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { kitSlotIds } from './kit-slot-ids.js'
 import { prepareLinks } from './link-stage.js'
@@ -70,9 +74,11 @@ function siteProblem({ reading, contract, changes }) {
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: { ref: string, doc: object }, contentMap?: object | null,
  *   files: { plan: string, copy: string, brief?: string, brand?: string, pictures?: string },
+ *   last?: object | null, lastRun?: string | null,
  *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
  *   place?: { latitude: unknown, longitude: unknown } | null,
  *   onPhase?: (phase: string) => Promise<void>, now?: () => number, sleep?: (ms: number) => Promise<void> }} input
+ *   `last`: the report of the last run on this site, to write only what differs; `lastRun`: that run's id, for the report
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
 export async function runWriteStep(input) {
@@ -84,6 +90,8 @@ export async function runWriteStep(input) {
     sleep = sleepFor
   } = input
   const contract = kit.doc?.contract ?? kit.ref
+  const last = readLastReport(input.last)
+  const started = now()
   const timings = {}
   const report = {
     version: REPORT_VERSION,
@@ -114,9 +122,10 @@ export async function runWriteStep(input) {
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
+    let lines = []
     if (table) {
       const hidden = hide?.results({ emptied, refused, settled })
-      report.slots = slotLines({
+      lines = slotLines({
         owners: table.owners,
         unowned: report.unowned,
         extras,
@@ -132,8 +141,12 @@ export async function runWriteStep(input) {
         links: links?.results({ written, refused, settled, hides: hidden?.hides ?? new Map() }),
         ...routes
       })
-      report.counts = countsOf(report.slots)
     }
+    const against = last.active ? againstLast(lines, last, status) : { slots: lines }
+    report.slots = against.slots
+    report.counts = countsOf(report.slots)
+    if (last.active) report.rewrite = { from: input.lastRun ?? null, left: against.left }
+    timings.total = now() - started
     return report
   }
   const stopped = (cause) => finish('stopped', cause)
@@ -148,6 +161,8 @@ export async function runWriteStep(input) {
   }
 
   const checked = await timed('check', async () => {
+    const wrongReport = lastReportProblem(last, { siteKey, contract })
+    if (wrongReport) return { stop: wrongReport }
     const read = await readFrozenFiles(files)
     report.inputs = read.inputs
     if (read.stop) return { stop: read.stop }
@@ -157,7 +172,8 @@ export async function runWriteStep(input) {
       brandPath: files.brand,
       inputs: read.inputs.brand,
       kit: kit.doc,
-      accentPlace: input.accentPlace
+      accentPlace: input.accentPlace,
+      last
     })
     if (brand.stop) return { stop: brand.stop }
     pictures = await preparePictureStage({
@@ -168,7 +184,8 @@ export async function runWriteStep(input) {
       contract,
       brand: read.values.brand,
       brandPath: files.brand,
-      contentMap
+      contentMap,
+      last
     })
     if (pictures.stop) return { stop: pictures.stop }
     const problems = fileProblems({ plan, copy, kitRef: kit.ref }, readCopy(copy).problems)
@@ -220,12 +237,21 @@ export async function runWriteStep(input) {
     routes = found
     ordered = changes
     sent = exported.mapping.changes
+    const allChanges = { ...changes, ...brand.changes, ...pictures.changes }
+    const refusal = needsNewSite(last, {
+      plan,
+      kit: kit.doc,
+      owners: table.owners,
+      extras,
+      changes: allChanges
+    })
+    if (refusal) return { stop: refusal }
     return {
       plan,
       brief,
       mapping: {
         ...exported.mapping,
-        changes: { ...changes, ...brand.changes, ...pictures.changes },
+        changes: allChanges,
         evidence: { ...exported.mapping.evidence, ...brand.evidence, ...pictures.evidence }
       }
     }
@@ -261,7 +287,8 @@ export async function runWriteStep(input) {
         owners: table.owners,
         reading: inspected.reading,
         extras,
-        taken: mapping.changes
+        taken: mapping.changes,
+        last
       })
     )
     Object.assign(mapping.changes, links.changes)
@@ -280,7 +307,8 @@ export async function runWriteStep(input) {
       reading: inspected.reading,
       changes: mapping.changes,
       contract,
-      sleep
+      sleep,
+      last
     })
   )
   if (hiding.stop) return stopped(hiding.stop)
@@ -290,7 +318,7 @@ export async function runWriteStep(input) {
 
   let reading = hide.reading
   if (brand.active) {
-    const branded = await timed('brand', () => brand.write({ apply, siteKey, sleep }))
+    const branded = await timed('brand', () => brand.write({ apply, siteKey, sleep, reading }))
     if (branded.stop) return stopped(branded.stop)
     reading = branded.reading
     for (const key of branded.dropped) delete mapping.changes[key]
@@ -298,13 +326,19 @@ export async function runWriteStep(input) {
   }
 
   if (pictures.active) {
-    const placed = await timed('pictures', () => pictures.write({ apply, siteKey, sleep }))
+    const placed = await timed('pictures', () => pictures.write({ apply, siteKey, sleep, reading }))
     if (placed.stop) return stopped(placed.stop)
     reading = placed.reading
     for (const key of placed.dropped) delete mapping.changes[key]
     if (await isCancelled()) return finish('cancelled', null)
   }
 
+  // What the site already holds stays out of the one call, and its lines read as written.
+  const held = Object.keys(mapping.changes).filter((key) => last.sameKey(key, mapping.changes[key]))
+  for (const key of held) {
+    delete mapping.changes[key]
+    delete mapping.evidence?.[key]
+  }
   const wrote = await timed('write', async () => {
     const { applyJoomlaContract } = await seeder('apply-joomla-contract')
     return writeContract({
@@ -321,6 +355,7 @@ export async function runWriteStep(input) {
   emptied = wrote.emptied ?? []
   if (wrote.cancelled) return finish('cancelled', null, [], wrote.refused)
   if (wrote.stop) return finish('stopped', wrote.stop, [], wrote.refused)
+  const written = [...wrote.written, ...held]
   // Last: the page settings, which the contract door does not take (page-settings-stage.js).
   const settings = await timed('settings', () =>
     runPageSettings({
@@ -330,11 +365,12 @@ export async function runWriteStep(input) {
       sent,
       extras: hide.settingsExtras,
       place: input.place ?? null,
-      isCancelled
+      isCancelled,
+      last
     })
   )
   settled = new Map([...settings.results, ...hide.held])
-  if (settings.cancelled) return finish('cancelled', null, wrote.written, wrote.refused)
+  if (settings.cancelled) return finish('cancelled', null, written, wrote.refused)
   // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).
   // It has no phase of its own: it makes a few calls, and the phase list is what callers already know.
   const shared = await runShareStage({
@@ -343,12 +379,13 @@ export async function runWriteStep(input) {
     kit: kit.doc,
     pageIds: (plan.pages ?? []).filter((p) => p?.decision === 'keep').map((p) => p.id),
     menutype: hide.settingsExtras?.mainMenu?.menutype ?? null,
-    pictureLines: pictures.lines({ written: wrote.written, refused: wrote.refused }),
-    brandLines: brand.lines({ written: wrote.written, refused: wrote.refused }),
-    isCancelled
+    pictureLines: pictures.lines({ written, refused: wrote.refused }),
+    brandLines: brand.lines({ written, refused: wrote.refused }),
+    isCancelled,
+    last
   })
   shareLines = shared.lines
-  if (shared.cancelled) return finish('cancelled', null, wrote.written, wrote.refused)
+  if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
-  return finish('done', null, wrote.written, wrote.refused)
+  return finish('done', null, written, wrote.refused)
 }

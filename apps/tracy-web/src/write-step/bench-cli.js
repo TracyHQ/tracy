@@ -16,15 +16,17 @@ import { runWriteStep } from './write-step.js'
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
       [--brief-file <path>] [--brand-file <path>] [--pictures-file <path>] [--by <label>]    write the frozen files to a site this bench made; runs in this process,
-                                              prints the run id first and the counts last
+                                              prints the run id first and the counts last. On a site written before, it
+                                              compares with the last report and writes only what differs
   list [--limit <n>]                          the newest runs
   status <runId>                              state, phase, counts and the cause of a stop
   get <runId> --out <dir>                     write the run's site-write-report.json
   cancel <runId>                              stop a run between phases
-  check --run <runId> --account <email> [--out <dir>]
+  check --run <runId> --account <email> [--out <dir>] [--all-groups]
                                               measure the run's site against its report (site-check/1): reads only,
                                               runs in this process, keeps the result on the run's report; --out also
-                                              writes site-check.json. Exit 0 green, 1 red or unmeasured
+                                              writes site-check.json. Exit 0 green, 1 red or unmeasured.
+                                              --all-groups runs the page groups even when read-back is red (never green)
 ${SITE_USAGE}`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
@@ -34,7 +36,8 @@ const refused = (d, message) => {
   d.err(message)
   return 1
 }
-const countsLine = (c) => `${c.written} written, ${c.hidden} hidden, ${c.skipped} skipped, ${c.failed} failed`
+const countsLine = (c) =>
+  `${c.written} written, ${c.hidden} hidden, ${c.skipped} skipped, ${c.failed} failed${c.unchanged ? `, ${c.unchanged} unchanged` : ''}`
 const causeOf = (r) => (r.code ? `${r.code}: ${r.reason}` : '')
 
 /**
@@ -63,7 +66,8 @@ export async function runCli(argv, deps) {
         by: { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' },
-        run: { type: 'string' }
+        run: { type: 'string' },
+        'all-groups': { type: 'boolean' }
       }
     })
     const [command, runId] = positionals
@@ -123,6 +127,13 @@ async function startRun(d, values) {
   if (!site || site.status !== 'ready' || !isBenchSite(site))
     return refused(d, `NOT_A_BENCH_SITE: ${values.site} is not a ready site this bench made.`)
 
+  // What the last run on this site left is what this one compares with. A run that left no report wrote nobody knows what.
+  const lastRun = await d.runs.latestEnded(values.site)
+  if (lastRun && !lastRun.report)
+    return refused(
+      d,
+      `NEEDS_NEW_SITE: run ${lastRun.id} on ${values.site} ended ${lastRun.status} with no report, so what the site holds is not known. This needs a new site.`
+    )
   const begun = await d.runs.begin({
     siteKey: values.site,
     kit: values.kit,
@@ -140,6 +151,8 @@ async function startRun(d, values) {
       siteKey: values.site,
       kit: { ref: values.kit, doc: opened.doc },
       contentMap: map?.doc ?? null,
+      last: lastRun?.report ?? null,
+      lastRun: lastRun?.id ?? null,
       files: {
         plan: inCwd(values['plan-file']),
         copy: inCwd(values['copy-file']),
@@ -164,7 +177,7 @@ async function startRun(d, values) {
     report
   })
   if (report.status === 'done') {
-    d.out(`done: ${countsLine(report.counts)}`)
+    d.out(`done: ${countsLine(report.counts)}${report.rewrite ? ` in ${report.timings.total} ms` : ''}`)
     return 0
   }
   return refused(
@@ -241,6 +254,7 @@ async function checkRun(d, values) {
     // The page groups need the site's host and the demo baseline of the quickstart; both are optional (site-check.js).
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
     baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
+    allGroups: values['all-groups'] === true,
     ...(d.now ? { now: d.now } : {})
   })
   await d.runs.saveReport(r.id, withReadBack(r.report, check))
