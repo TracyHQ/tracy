@@ -1,6 +1,6 @@
 # Installed template: agent instructions
 
-Template `tracy-restaurant` ("JA Restaurant", npm `@tracy/emdash-theme-restaurant` 1.0.0): a port of the Joomla/T3 template JA Restaurant j6 1.0.6. Runtime: EmDash 1.1.0, Astro 7.2.8 (SSR, Node standalone adapter), Tailwind 4.3.3, Node >= 22.16, SQLite in `data/` and media in `uploads/`. One locale (`en`). Every page family of the source is built (Home, Blog and category lists, post detail, Chefs, Gallery with albums, About us, Our History, Menu in four styles, Offers, Phone Reservation, Contact, Search, Tagged Items, 404).
+Template `tracy-restaurant` ("JA Restaurant", npm `@tracy/emdash-theme-restaurant` 1.0.0): a port of the Joomla/T3 template JA Restaurant j6 1.0.6. Runtime: EmDash 1.1.0, Astro 7.3.3 (SSR, Node standalone adapter), Tailwind 4.3.3, Node >= 22.16, SQLite in `data/` and media in `uploads/`. One locale (`en`). Every page family of the source is built (Home, Blog and category lists, post detail, Chefs, Gallery with albums, About us, Our History, Menu in four styles, Offers, Phone Reservation, Contact, Search, Tagged Items, 404).
 
 Read docs/architecture.md before changing the application. Use docs/install.md for
 an empty-target install and docs/content-api.md before touching CMS state. Identify
