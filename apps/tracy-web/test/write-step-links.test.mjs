@@ -8,7 +8,13 @@ import { brief as baseBrief } from './_site-copy-check.mjs'
 
 const HOME_ROW = { kind: 'menuItem', id: 101, path: 'home', home: 1, published: 1, type: 'component' }
 const ABOUT_ROW = { kind: 'menuItem', id: 12, path: 'about', published: 1, type: 'component' }
-const SPIN_ARTICLE = { kind: 'article', id: 7, state: 1, url: '/index.php/classes/spin' }
+// The plugin names an article's address with the host the door reached it at, which a visitor's browser cannot reach.
+const SPIN_ARTICLE = {
+  kind: 'article',
+  id: 7,
+  state: 1,
+  url: 'http://demo-site-web-1/index.php/classes/spin'
+}
 const RECORDS = [HOME_ROW, ABOUT_ROW, SPIN_ARTICLE]
 
 const urlSlot = (key, over = {}) => ({

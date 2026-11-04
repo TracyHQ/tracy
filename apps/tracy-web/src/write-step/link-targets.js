@@ -1,7 +1,7 @@
 // What a plan link leads to, as an address the site can hold (TracyHQ/tracy#371). `leadsTo` names a kept page, a contact fact
 // (`<channel>:<factId>`), a legal page (`legal:<kind>`) or an address as it is. Nothing here makes up an address: whatever cannot
 // be resolved comes back with the reason, and its line is failed.
-import { rowsOpening } from './page-meta-write.js'
+import { articleOfPage, rowsOpening } from './page-meta-write.js'
 import { readRow } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -11,15 +11,13 @@ const FACT = /^(phone|whatsapp|email|social|map):(.+)$/
 const failed = (reason) => ({ kind: 'failed', reason })
 const digitsOf = (value) => String(value).replace(/[^0-9]/g, '')
 
-/** The article a kit page prints as its body, as its row id; a page that is a menu item has none of its own. */
-export function articleOfPage(page, kit) {
-  const blocks = new Map(each(kit?.blocks).map((b) => [b?.id, b]))
-  const ids = new Set(Object.values(page?.blocks ?? {}).flat())
-  for (const id of ids) {
-    const match = /^article-(\d+)$/.exec(String(blocks.get(id)?.source?.owner ?? ''))
-    if (match && blocks.get(id).source.ownerKind === 'article') return Number(match[1])
-  }
-  return null
+/**
+ * An address a visitor can open: the plugin names an article's address with the host the door reached it at, which on a
+ * hosted site is a container name no browser can reach, so only its path is kept.
+ */
+function sitePath(url) {
+  const absolute = /^https?:\/\/[^/]+(\/.*)?$/i.exec(url)
+  return absolute ? (absolute[1] ?? '/') : url
 }
 
 /** The address of a kit page on this site and how to read that it is still there, or the reason there is none. */
@@ -38,7 +36,7 @@ function pageAddress(page, { kit, rows, articles }) {
   const id = articleOfPage(page, kit)
   const article = id === null ? null : articles.get(id)
   if (typeof article?.url === 'string' && article.url)
-    return { kind: 'page', page, url: article.url, alive: readRow('article', id, 'state') }
+    return { kind: 'page', page, url: sitePath(article.url), alive: readRow('article', id, 'state') }
   return failed(`no published menu item or article on the site opens ${page.id} (${page.path})`)
 }
 
@@ -101,3 +99,5 @@ export function linkTarget(leadsTo, site) {
     return failed(`${target} is neither a kept page, a contact fact, a legal page nor an address`)
   return pageAddress(page, site)
 }
+
+export { articleOfPage }

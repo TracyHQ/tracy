@@ -2,7 +2,9 @@
 // description live in its menu item's `params` (`page_title`, `menu-meta_description`), one JSON column written whole,
 // so every other setting of the item is kept as read. The kit says which path a page opens; the live menu says which
 // item has that path. A menu item the plan hides is unpublished through the same `content.update` door that hides a
-// module. Nothing here names a template: a page with no menu item is reported skipped, never guessed.
+// module. A page that is an article routed under a category's menu item has no item of its own: its title and description
+// live on the article (`attribs.article_page_title`, `metadesc`), which Joomla prefers when the active item is not the
+// article's. Nothing here names a template: a page with neither is reported skipped, never guessed.
 import { readRow } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -13,7 +15,7 @@ const slashless = (path) =>
 const PAGE_ROWS = 25
 
 /** A row's params as an object; a column that is not JSON counts as empty and is written over. */
-function paramsOf(value) {
+export function paramsOf(value) {
   try {
     const read = typeof value === 'string' ? JSON.parse(value) : value
     return read && typeof read === 'object' && !Array.isArray(read) ? read : {}
@@ -52,8 +54,45 @@ export function rowsOpening(page, rows, menutype = null) {
   return inMenu.length ? inMenu : found
 }
 
+/** The article a kit page prints as its body, as its row id; a page that is a menu item has none of its own. */
+export function articleOfPage(page, kit) {
+  const blocks = new Map(each(kit?.blocks).map((b) => [b?.id, b]))
+  const ids = new Set(Object.values(page?.blocks ?? {}).flat())
+  for (const id of ids) {
+    const match = /^article-(\d+)$/.exec(String(blocks.get(id)?.source?.owner ?? ''))
+    if (match && blocks.get(id).source.ownerKind === 'article') return Number(match[1])
+  }
+  return null
+}
+
 const skipped = (reason) => ({ status: 'skipped', reason })
 const failed = (reason) => ({ status: 'failed', reason })
+
+/** Title and description on the article a page prints; its other settings stay as read. */
+async function writeArticleMeta({ call, id, page, meta, results }) {
+  try {
+    const answer = await call('content.get', { kind: 'article', id })
+    const attribs = { ...paramsOf(answer?.item?.attribs), article_page_title: meta.title }
+    await call('content.update', {
+      kind: 'article',
+      id,
+      fields: { attribs: JSON.stringify(attribs), metadesc: meta.description }
+    })
+    results.set(`${page}:title`, {
+      status: 'written',
+      ordered: meta.title,
+      readFrom: readRow('article', id, 'attribs', ['article_page_title'])
+    })
+    results.set(`${page}:description`, {
+      status: 'written',
+      ordered: meta.description,
+      readFrom: readRow('article', id, 'metadesc')
+    })
+  } catch (error) {
+    results.set(`${page}:title`, failed(error.message))
+    results.set(`${page}:description`, failed(error.message))
+  }
+}
 
 /**
  * @param {{ call: (action: string, params: object) => Promise<any>, kit: object,
@@ -88,7 +127,13 @@ export async function writePageMeta({ call, kit, pageMeta, hide, menutype = null
   for (const [page, meta] of rows ? mappable : []) {
     const opening = rowsOpening(pages.get(page), rows, menutype)
     if (!opening.length) {
-      reasons(page, 'no published menu item opens this page, and a page title lives in its menu item')
+      const article = articleOfPage(pages.get(page), kit)
+      if (article === null)
+        reasons(
+          page,
+          'no published menu item or article opens this page, so a page title has no place to live'
+        )
+      else await writeArticleMeta({ call, id: article, page, meta, results })
       continue
     }
     let written = null

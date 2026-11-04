@@ -24,29 +24,28 @@ const menuRow = (id, over) => ({
   params: JSON.stringify({ page_title: 'Quay', show_icon: 1 }),
   ...over
 })
-const styleRow = (id, over) => ({
-  id,
-  template: 'demo_gym',
-  client_id: 0,
-  params: JSON.stringify({ system_t4frontendedit: '1' }),
-  ...over
-})
-
 export const MENU = () => [menuRow(101, { home: 1, path: 'home' }), menuRow(102, { path: 'about-us/coach' })]
-export const STYLES = () => [styleRow(11), styleRow(12), styleRow(13, { client_id: 1, template: 'admin_x' })]
 
 /** The picture site, plus the records the share stage lists, reads and updates. `refuse` maps `kind` to an answer. */
-export function shareSite({ menu = MENU(), styles = STYLES(), refuseKind = {}, ...over } = {}) {
+export function shareSite({
+  menu = MENU(),
+  articles = [],
+  refuseKind = {},
+  refuseShare = null,
+  ...over
+} = {}) {
   const site = pictureSite(over)
   const inner = site.door
   const rows = new Map([
     ...menu.map((r) => [`menuItem-${r.id}`, r]),
-    ...styles.map((r) => [`templateStyle-${r.id}`, r])
+    ...articles.map((r) => [`article-${r.id}`, r])
   ])
-  const kept = (kind) => ['menuItem', 'templateStyle'].includes(kind)
+  const kept = (kind) => ['menuItem', 'article'].includes(kind)
   const door = {
     async apply(call) {
       const { action, params = {} } = call
+      if (refuseShare && action === 'template.siteSettings' && params.fields?.other_shareImage)
+        return refuseShare
       if (!action.startsWith('content.') || action === 'content.contract' || !kept(params.kind)) {
         if (action === 'content.update' && kept(params.kind)) return { ok: true }
         return inner.apply(call)

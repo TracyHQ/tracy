@@ -113,6 +113,33 @@ test('a page no menu item opens, and a page the kit does not know, are skipped w
   assert.match(privacy.reason, /kit has no page/)
 })
 
+test('a page that is an article under a menu item keeps its title and description on the article', async () => {
+  const kit = kitWith()
+  kit.doc.blocks = [
+    ...(kit.doc.blocks ?? []),
+    { id: 'article-7-body', source: { owner: 'article-7', ownerKind: 'article' } }
+  ]
+  kit.doc.pages.push({ id: 'page-spin', path: '/classes/spin', blocks: { 1440: ['article-7-body'] } })
+  const c = copy()
+  c.seo.push({ page: 'page-spin', title: 'Spin classes at Quay', description: 'Spin on the quay.' })
+  const row = { kind: 'article', id: 7, attribs: JSON.stringify({ show_title: '1', article_page_title: '' }) }
+  const { report, site } = await runStep({ copy: c }, { records: [...records(), row] }, { kit })
+  const title = report.slots.find((s) => s.slot === 'page-spin:title')
+  const description = report.slots.find((s) => s.slot === 'page-spin:description')
+  assert.equal(title.status, 'written', title.reason)
+  assert.deepEqual(title.readFrom.path, ['item', 'attribs', 'article_page_title'])
+  assert.deepEqual(title.readFrom.params, { kind: 'article', id: 7 })
+  assert.equal(description.status, 'written', description.reason)
+  assert.deepEqual(description.readFrom.path, ['item', 'metadesc'])
+  const update = site.calls.find(
+    (call) => call.action === 'content.update' && call.params?.kind === 'article'
+  )
+  assert.equal(update.params.fields.metadesc, 'Spin on the quay.')
+  const attribs = JSON.parse(update.params.fields.attribs)
+  assert.equal(attribs.article_page_title, 'Spin classes at Quay')
+  assert.equal(attribs.show_title, '1', 'the article keeps its other settings')
+})
+
 test('the contact mobile line and the map are written from the kit fields and reported with a read', async () => {
   const { report, site } = await runStep({ copy: withSettings() }, { records: records() }, { kit: kitWith() })
   assert.equal(site.records.get('contact-1').mobile, '+000 555 0199')
