@@ -16,6 +16,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
+import { readContractMap } from './lib/contract-read.mjs'
 import { pageIdOf } from './lib/ids.mjs'
 import { pathOfRoute, slugOfPath } from './lib/kit-paths.mjs'
 import { indexMap } from './lib/map-index.mjs'
@@ -65,7 +66,7 @@ export function pagesToRead(map, captureIndex, cap) {
  * @param {{o: object, out: string, chromium: object, capture?: object|null, log?: Function}} a
  */
 export async function runSite({ o, out, chromium, capture = null, log: say = log }) {
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const manifest = readJson(join(o.contract, 'manifest.json'))
   const hostHeader = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
   const str = (v) => (typeof v === 'string' ? v : undefined)

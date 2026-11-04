@@ -224,3 +224,23 @@ test('a sort control: a link to the same listing in another order, by query or b
     ['sort-control', 'sort-control', null]
   )
 })
+
+test("a step word cut short from a word of the fixed text is the template's own words", () => {
+  const block = {
+    id: 'body-tide-tables',
+    slots: [],
+    links: [
+      {
+        id: 'body-tide-tables.link-3',
+        label: 'PREVIOUS ARTICLE: SPRING TIDES PREV',
+        target: '/news/spring-tides',
+        action: 'go-to-item'
+      },
+      { id: 'body-tide-tables.link-4', label: 'PREVIOUS ARTICLE: SPRING TIDES BOOK', target: '/book' }
+    ],
+    fixedText: [{ text: 'Previous article: Spring Tides', source: null }]
+  }
+  fixedLinkLabels({ pages: [], blocks: [block], checks: {}, errors: [] })
+  assert.equal(block.links[0].fixedLabel?.rule, 'template-words')
+  assert.equal(block.links[1].fixedLabel, undefined)
+})

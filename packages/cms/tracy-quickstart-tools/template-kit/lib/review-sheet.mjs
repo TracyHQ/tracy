@@ -25,7 +25,7 @@ export function reviewRows(kit, fixes = []) {
       : ''
   for (const b of kit.blocks)
     for (const f of b.frames)
-      if (f.hideEvidence)
+      if (f.hideEvidence?.checks)
         for (const w of kit.widths.map(String)) {
           const m = f.hideEvidence.measured?.[w]
           const key = `${f.hideEvidence.measuredAs === 'row-slot' ? b.id : f.id}:${w}:${f.hideEvidence.checks[w]}`

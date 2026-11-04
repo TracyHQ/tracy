@@ -41,7 +41,8 @@ const wordsOf = (s) => s.match(/[\p{L}\p{N}']+/gu) ?? []
 
 /**
  * True when the label is made only of the block's fixed texts (each whole, or the label is a piece of one). Words
- * left over that repeat a word of a fixed text found in the label are its step word ("Next article: X" and "Next").
+ * left over that repeat a word of a fixed text found in the label, whole or cut short, are its step word
+ * ("Next article: X" and "Next", "Previous article: X" and "Prev").
  */
 function fixedWords(label, fixed) {
   const n = normText(label)
@@ -54,8 +55,11 @@ function fixedWords(label, fixed) {
       rest = rest.split(f).join(' ')
     }
   if (!hasWords(rest)) return true
-  const seen = new Set(found.flatMap(wordsOf))
-  return found.length > 0 && wordsOf(rest).every((w) => seen.has(w))
+  const seen = found.flatMap(wordsOf)
+  return (
+    found.length > 0 &&
+    wordsOf(rest).every((w) => seen.some((s) => s === w || (w.length >= 3 && s.startsWith(w))))
+  )
 }
 
 const iconName = (l) =>
