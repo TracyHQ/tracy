@@ -169,6 +169,61 @@ test('links to take off are sent as empty_links, alone or beside changes', async
   assert.notEqual(both[1].params.request_id, calls[1].params.request_id)
 })
 
+// Slots to empty are named the same way (`empty_slots`, TracyHQ/tracy#362). The plugin judges them, so no inspect mark is asked.
+test('slots to empty are sent as empty_slots, alone or beside changes, and join the request id only when sent', async () => {
+  const calls = []
+  await applyJoomlaContract({
+    siteKey: 'customer.test',
+    mapping: { contract: 'apple/1', revision: 'rev1', changes: {}, emptySlots: ['row.link'] },
+    apply: linkDoor(calls)
+  })
+  assert.deepEqual(calls[1].params.empty_slots, ['row.link'])
+  assert.equal(calls[1].params.changes, undefined)
+  const both = []
+  await applyJoomlaContract({
+    siteKey: 'customer.test',
+    mapping: { ...mapping, emptySlots: ['row.link'] },
+    apply: linkDoor(both)
+  })
+  assert.deepEqual(both[1].params.changes, mapping.changes)
+  assert.deepEqual(both[1].params.empty_slots, ['row.link'])
+  const none = []
+  await applyJoomlaContract({
+    siteKey: 'customer.test',
+    mapping: { ...mapping, emptySlots: [] },
+    apply: linkDoor(none)
+  })
+  assert.equal(none[1].params.empty_slots, undefined)
+  const before = []
+  await applyJoomlaContract({ siteKey: 'customer.test', mapping, apply: linkDoor(before) })
+  assert.equal(
+    none[1].params.request_id,
+    before[1].params.request_id,
+    'an empty list replays as it always did'
+  )
+  assert.notEqual(both[1].params.request_id, before[1].params.request_id)
+})
+
+test('a slot cannot be both changed and emptied, and the list shares the slot limit', async () => {
+  const [key] = Object.keys(mapping.changes)
+  await assert.rejects(
+    applyJoomlaContract({
+      siteKey: 'customer.test',
+      mapping: { ...mapping, emptySlots: [key] },
+      apply: linkDoor([])
+    }),
+    /both changed and emptied/
+  )
+  await assert.rejects(
+    applyJoomlaContract({
+      siteKey: 'customer.test',
+      mapping: { ...mapping, emptySlots: Array.from({ length: 1500 }, (_, i) => `row.${i}`) },
+      apply: linkDoor([])
+    }),
+    /at most 1500/
+  )
+})
+
 test('a mapping without links to take off keeps the request it always had', async () => {
   const before = []
   const after = []
