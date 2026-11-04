@@ -246,12 +246,49 @@ function declarations(view) {
 }
 
 /**
- * The code a fragment prints: its `{...}` expressions (the stamp spreads `{...$X("f")}` are attributes, not text) and, for
+ * A JSX fragment without its tags: what is left between them, `{...}` expressions included. A tag's attributes (the open tag
+ * of the element itself, a nested HTML element's) never print text, so `data-copy={hero.hero_heading}` proves nothing. A tag
+ * inside an expression stays with it.
+ * @param {string} jsx
+ */
+function childrenOf(jsx) {
+  let out = ''
+  let depth = 0
+  for (let i = 0; i < jsx.length; i++) {
+    const c = jsx[i]
+    if (depth === 0 && c === '<' && /[A-Za-z/]/.test(jsx[i + 1] ?? '')) {
+      // skip the tag: to the first `>` outside braces and quotes
+      let braces = 0
+      let j = i + 1
+      for (; j < jsx.length; j++) {
+        const d = jsx[j]
+        if (d === '"' || d === "'" || d === '`') {
+          const end = jsx.indexOf(d, j + 1)
+          if (end < 0) break
+          j = end
+        } else if (d === '{') braces++
+        else if (d === '}') braces--
+        else if (d === '>' && braces === 0) break
+      }
+      // a component's props are its content (`<PortableText value={x.f} />`); an HTML element's attributes are not text
+      out += /^<[A-Z]/.test(jsx.slice(i, i + 2)) ? jsx.slice(i, j + 1) : ' '
+      i = j
+      continue
+    }
+    if (c === '{') depth++
+    else if (c === '}') depth--
+    out += c
+  }
+  return out
+}
+
+/**
+ * The code a fragment prints: the `{...}` expressions of its children (`childrenOf`: attributes are not text) and, for
  * each frontmatter variable they use, that variable's initialiser, and so on down the chain.
  * @param {string} fragment @param {Map<string, string>} declared
  */
 function printedCode(fragment, declared) {
-  const own = expressionsOf(fragment.replace(/\{\s*\.\.\.\$\w+\([^)]*\)\s*\}/g, ''))
+  const own = expressionsOf(childrenOf(fragment))
   const seen = new Set()
   const code = [...own]
   for (let i = 0; i < code.length; i++)

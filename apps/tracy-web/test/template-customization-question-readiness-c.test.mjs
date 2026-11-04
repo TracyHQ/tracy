@@ -337,6 +337,19 @@ test('ABOUT-1: a stamp alone proves nothing, the element text must reach the fie
   )
 })
 
+test('ABOUT-1: an attribute never prints text: data-copy={hero.hero_heading} on a static element fails', async () => {
+  const attr = `---\n${STAMPS}\n---\n<h1 {...$hero('hero_heading')} data-copy={hero.hero_heading}>Static</h1>\n<div {...$hero("hero_intro")}>{hero.hero_intro}</div>`
+  const a = await run(about1HomeHeading, stampedHome(attr, bothRules))
+  assert.equal(a.status, 'fail', a.message)
+  assert.match(a.message, /the home <h1> stamps hero\.hero_heading but its text prints none of them/)
+  const nested = `---\n${STAMPS}\n---\n<h1 {...$hero('hero_heading')}><em title={hero.hero_heading}>Static</em></h1>\n<div {...$hero("hero_intro")}>{hero.hero_intro}</div>`
+  const b = await run(about1HomeHeading, stampedHome(nested, bothRules))
+  assert.equal(b.status, 'fail', "a nested element's attribute is no text either")
+  const arrow = `---\n${STAMPS}\n---\n<h1 {...$hero('hero_heading')} onclick={() => go()}>{hero.hero_heading}</h1>\n<div {...$hero("hero_intro")}>{hero.hero_intro}</div>`
+  const c = await run(about1HomeHeading, stampedHome(arrow, bothRules))
+  assert.equal(c.status, 'pass', c.message)
+})
+
 test('ABOUT-1: a variable derived from the field in the frontmatter counts, a chain of them too', async () => {
   const chain = `---
 ${STAMPS}
