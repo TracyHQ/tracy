@@ -1,7 +1,7 @@
 // The picture manifest `site-pictures/1` (ADR 0043): the one place its shape is defined. The picture step writes it,
 // the picture check grades it, and the mapping export and the write step read it. readPictures never throws: it returns
 // the valid entries as a "view" and every problem it found, so one bad entry cannot hide or crash the rules.
-import { paintKindOf, paintProblem } from './paint.js'
+import { backdropProblem, paintKindOf, paintProblem } from './paint.js'
 export const PICTURES_VERSION = 'site-pictures/1'
 
 /** Where a frame's picture came from. */
@@ -100,6 +100,14 @@ function readEntry(e, list) {
       return { problem: 'a painted picture file is only a preview: "preview" must be true' }
   } else if (e.paint != null || e.preview != null)
     return { problem: `a ${source} picture has no paint recipe and no preview mark` }
+  // A drawn cut-out may carry the backdrop its demo picture has behind the figure (section 1a): shape and roles, and
+  // a review composite marked as a preview. The file stays the figure alone.
+  if (e.backdrop != null) {
+    if (source !== 'drawn')
+      return { problem: `a ${source} picture has no backdrop: only a drawn cut-out has one` }
+    const p = backdropProblem(e.backdrop)
+    if (p) return { problem: p }
+  }
   // A gallery tile filled by its reuse or any-photo rung names the rung and the frames of the page that also show the
   // photo (ADR 0043 section 4); the reuse rung always names at least one.
   if (
@@ -162,6 +170,7 @@ function readEntry(e, list) {
       templateOverlay: o === undefined ? 'unknown' : o,
       paint: painted ? e.paint : null,
       preview: painted,
+      backdrop: e.backdrop ?? null,
       seen: e.seen ?? null,
       reason: e.reason
     }

@@ -67,6 +67,7 @@ A frame entry:
 | `drawing` | `{ mode, attempt }` for `drawn` and `owner-photo-extended`: `scene`, `object` or `outpaint`, and 1 or 2 (the redraw). |
 | `paint` | The colour recipe of `initials`, `icon` and their twins, in colour roles only, never a colour value (section 1a); absent on every other entry. |
 | `preview` | `true` on every painted entry: its file is a preview in a neutral palette, not the picture the site gets. Absent otherwise. |
+| `backdrop` | On a `drawn` cut-out whose demo picture has one: `{ shape, paint, preview }`, the disc and bands the demo has behind its figure, in shape units and colour roles (section 1a). Absent otherwise. |
 | `seen` | One sentence from the looker saying what the picture actually shows. |
 | `looker` | The look of the picture (section 3b): `{ verdict: "pass" \| "fail", faults: [...], seen }`, the fault names from the fixed list; `{ verdict: "fail", faults: ["look unreadable"], seen: null, problem }` when the look could not be read twice. Absent when the frame is not looked at (icons, initials, hidden frames). |
 | `reason` | Why this picture, or why hidden. |
@@ -87,7 +88,8 @@ system. So the colour of a painted picture is a ROLE, resolved when the site is 
 
 - **The roles** (`site-pictures/paint.js`, the smallest set that covers the template's demo icons and tiles):
   `accent` (the Design system accent), `on-accent` (words on the accent), `text` (the dark neutral of body text),
-  `on-dark` (the light neutral of words on a dark ground).
+  `on-dark` (the light neutral of words on a dark ground), `surface` (the dark surface of the Design system, the
+  ground of its dark sections; a cut-out backdrop's disc).
 - **Initials**: `paint: { background: "accent", foreground: "on-accent" }`, with `letters`.
 - **Icons**: `paint: { light: { glyph, plate }, dark: { glyph, plate } }`, `light` for the entry's `file` and `dark`
   for its `dark` file. A glyph's role is measured from the kit's demo icon: the template accent or close to it is
@@ -109,6 +111,24 @@ system. So the colour of a painted picture is a ROLE, resolved when the site is 
   the brand's colours, recorded so it is drawn again when the Design system changes. `painted` is the one record of a
   painted frame (it replaces the earlier `recolourable` list). A painted template setting keeps its recipe in
   `siteSettings`.
+- **The backdrop behind a cut-out figure** (owner decision 04/11/2026): some demo cut-outs bake a graphic into the
+  picture behind the figure (JA Boxing's hero figure, `images/joomlart/hero/item-2.png`, 768x800: a near-black disc
+  filling the width, centre at 0.5 / 0.52 of the picture, and three red chevron bands at 45 degrees in its lower part,
+  speckled darker). The drawn figure is cut out alone and looks bare without it, so code draws it again
+  (`cutout-backdrop.js` reads it, `cutout-backdrop-draw.js` draws it). It is read from the frame's demo picture only
+  when that picture has transparent corners, a disc of one near-uniform colour filling at least 97 percent of its
+  inside, and, for the bands, pixels in the accent's hue on both sides of the figure that line up at one angle; any
+  other demo gets no backdrop (`backdrop` absent): code never invents one. The entry's `backdrop` is
+  `{ shape: { circle: { x, y, r }, stripes: null | { pattern: "chevron", angle, apex: { x, y }, band, gap, count,
+  texture: null | { kind: "speckle", share, shade } } }, paint: { circle, stripes }, preview }`: the disc in fractions
+  of the picture (radius of its width), the bands in disc radii from its centre, the disc's role `surface` (or the
+  role its colour measures as), the bands' role `accent`. The placed file stays the figure alone (transparent).
+  `preview` is a review composite, the figure over the backdrop, `{ file, width, height, sha256, drawnIn, preview:
+  true }`: the disc in the neutral palette and, by owner decision, the bands in the template accent so the owner can
+  judge them (`drawnIn` names both); it is kept with the run's files and never uploaded. The mapping export places
+  the figure as usual and adds a `painted` item of kind `backdrop`, `draw: { backdrop: <shape>, figure: <site path> }`:
+  step 9 paints the backdrop in the brand's colours behind the figure. The shape check fails a backdrop on any other
+  source, a role that is not in the list, and a preview not marked as one.
 
 ### 2. The picture check is `site-pictures-check/1`
 

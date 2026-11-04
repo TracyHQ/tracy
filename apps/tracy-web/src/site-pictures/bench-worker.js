@@ -30,6 +30,7 @@ import sharp from 'sharp'
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { kitIdOf } from '../site-writer/bench-worker.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
+import { demoPictureReader } from './demo-pictures.js'
 import { picturePickerDoor } from './door.js'
 import { runDrawerDoor } from './drawer-door.js'
 import { fileStore } from './file-store.js'
@@ -38,7 +39,6 @@ import { joinSurface } from './frame-surface/surface.js'
 import { surfaceFor } from './frame-surface/surface-cache.js'
 import { iconStepFor } from './icon-step.js'
 import { openKitWithMap } from './kit-with-map.js'
-import { demoPictureReader } from './demo-pictures.js'
 import { createDrawing } from './ladder-draw.js'
 import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
@@ -271,6 +271,7 @@ async function prepare(deps, row) {
           runId: row.id,
           photoBytes,
           readDemo: cutoutDemos?.readDemo ?? null,
+          accent: kit.doc?.site?.brandColours?.primary?.value ?? null,
           fetchImpl: deps.fetchImpl
         })
       : null,

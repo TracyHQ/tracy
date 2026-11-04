@@ -11,7 +11,10 @@
 //   with the looker fault the redraw names. When the kit's demo picture of the frame can be read (`readDemo`), it is
 //   attached as a style reference only (flattened on a light grey, at most STYLE_MAX px): the template's `style` part
 //   tells the model to copy its framing, scale, pose energy, light and attitude and nothing of its subject. The call
-//   record names it by its sha256 (`styleSha256`).
+//   record names it by its sha256 (`styleSha256`). When that demo picture has a backdrop behind its figure (a disc and
+//   accent bands, cutout-backdrop.js), the entry records its recipe in `backdrop`, with a review composite of the
+//   figure over it (the disc in the neutral preview palette, the bands in the template accent, marked `preview`); the
+//   placed file stays the figure alone and step 9 paints the backdrop in the brand's colours.
 //
 // Every drawing is kept in the bench's file store (runs/<run id>/draws/<key>.json, the key a hash of the mode, the
 // text, the real photo, the size, the model and the template), so a later round or a resumed run pays once per
@@ -20,9 +23,12 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
 import { outputSizeFor } from './cut-photo.js'
+import { backdropOf } from './cutout-backdrop.js'
+import { backdropComposite } from './cutout-backdrop-draw.js'
 import { cutoutFile, groundFor } from './cutout-ground.js'
-import { aspectRatioFor, askDrawer, drawingText } from './drawer-call.js'
+import { askDrawer, aspectRatioFor, drawingText } from './drawer-call.js'
 import { fileStore, sha256Hex } from './file-store.js'
+import { PREVIEW_PALETTE, previewColour } from './paint.js'
 
 /** A frame at least this many times wider than tall is a wide band, which a portrait owner photo may be extended to. */
 export const WIDE_BAND = 2
@@ -41,7 +47,8 @@ export const modeOf = (frame) => (/illustration|product/.test(String(frame?.role
  * The drawer of one run.
  * @param {{ door: object, prompt: { parts: Record<string, string>, sha256: string }, storeDir: string, runId: string,
  *   photoBytes: Map<string, Buffer>, readDemo?: ((frame: object) => Promise<Buffer | null>) | null,
- *   fetchImpl?: typeof fetch }} input `readDemo`: the kit's demo picture of a frame (demo-pictures.js), or null
+ *   accent?: string | null, fetchImpl?: typeof fetch }} input `readDemo`: the kit's demo picture of a frame
+ *   (demo-pictures.js), or null; `accent` the template accent, the colour a backdrop preview's bands are drawn in
  */
 export function createDrawing({
   door,
@@ -50,6 +57,7 @@ export function createDrawing({
   runId,
   photoBytes,
   readDemo = null,
+  accent = null,
   fetchImpl = fetch
 }) {
   const store = fileStore(storeDir)
@@ -91,13 +99,14 @@ export function createDrawing({
     const demo = readDemo ? await readDemo(frame).catch(() => null) : null
     if (!demo?.length) return null
     try {
+      const backdrop = await backdropOf(demo, { accent })
       const sent = await sharp(Buffer.from(demo), { failOn: 'none' })
         .rotate()
         .flatten({ background: STYLE_GROUND })
         .resize(STYLE_MAX, STYLE_MAX, { fit: 'inside', withoutEnlargement: true })
         .png()
         .toBuffer()
-      return { sent, sha256: sha256Hex(demo) }
+      return { sent, sha256: sha256Hex(demo), backdrop }
     } catch {
       return null
     }
@@ -133,7 +142,7 @@ export function createDrawing({
       .then(JSON.parse)
       .catch(() => null)
     if (before && (await store.readPicture(before.name)))
-      return {
+      return withBackdrop(style, {
         made: before,
         extra: before.cutout ? { cutout: before.cutout } : extra,
         call: {
@@ -144,7 +153,7 @@ export function createDrawing({
           costUsd: before.costUsd,
           cached: true
         }
-      }
+      })
     const answer = await askDrawer({
       door,
       text,
@@ -162,7 +171,7 @@ export function createDrawing({
     }
     if (!answer.bytes)
       return { made: null, problem: answer.problem, call: { ...call, problem: answer.problem }, extra }
-    if (ground) return cutoutOf(answer.bytes, ground, out, call, key)
+    if (ground) return withBackdrop(style, await cutoutOf(answer.bytes, ground, out, call, key))
     let fitted
     try {
       fitted = sharp(answer.bytes, { failOn: 'none' })
@@ -204,6 +213,33 @@ export function createDrawing({
     }
     const stored = await keep(key, cut.png, 'png', out, call, { cutout: cut.cutout })
     return { ...stored, extra: { cutout: cut.cutout } }
+  }
+
+  // A placed cut-out whose demo has a backdrop: the recipe in the entry, and the review composite stored beside it
+  // (`backdropFile`, which the ladder keeps with the run's files). A composite that cannot be made leaves it out.
+  async function withBackdrop(style, res) {
+    const recipe = style?.backdrop
+    if (!res.made || !recipe) return res
+    try {
+      const figure = await store.readPicture(res.made.name)
+      // The review colours: the disc in the neutral preview palette, the bands in the template accent so the owner
+      // can judge them (labelled in `drawnIn`; step 9 uses the brand's accent).
+      const drawnIn = {
+        circle: previewColour(recipe.paint.circle),
+        stripes: accent && /^#[0-9a-f]{6}$/i.test(accent) ? accent : PREVIEW_PALETTE.accent
+      }
+      const { png, width, height } = await backdropComposite(figure, recipe, drawnIn)
+      const name = await store.putPicture(png, 'png')
+      const sha256 = name.split('.')[0]
+      const preview = { file: `files/${name}`, width, height, sha256, drawnIn, preview: true }
+      return {
+        ...res,
+        backdropFile: { name, ext: 'png', sha256, width, height },
+        extra: { ...res.extra, backdrop: { shape: recipe.shape, paint: recipe.paint, preview } }
+      }
+    } catch {
+      return res
+    }
   }
 
   // Store the finished file and its record (by the drawing's key), so a later round reads it instead of paying again.

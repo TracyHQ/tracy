@@ -3,7 +3,7 @@
 // has two cut-out frames like a boxing studio's hero figures (one the kit lets hide, with text over it; one it does
 // not), and two person cut-outs. Code drawn pictures, no real model, no database.
 import assert from 'node:assert/strict'
-import { test, after } from 'node:test'
+import { after, test } from 'node:test'
 import sharp from 'sharp'
 import { fileStore } from '../src/site-pictures/file-store.js'
 import { fillFrames } from '../src/site-pictures/fill-frames.js'
@@ -13,10 +13,10 @@ import { createFinisher } from '../src/site-pictures/ladder-step.js'
 import { createLooker } from '../src/site-pictures/looker-step.js'
 import { PICTURES_VERSION } from '../src/site-pictures/manifest-shape.js'
 import { usablePhotos } from '../src/site-pictures/photo-shortlist.js'
+import { manifestFor } from '../src/site-pictures/picker-picks.js'
 import { checkPictures } from '../src/site-pictures/picture-check/check-pictures.js'
 import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
 import { picturePrompts } from '../src/site-pictures/picture-prompts.js'
-import { manifestFor } from '../src/site-pictures/picker-picks.js'
 import {
   brief,
   DRAW_COST,
@@ -147,7 +147,7 @@ function fakeDoors({ rejects = new Map(), flatFirst = new Set() } = {}) {
   return { drawings, looks, fetchImpl }
 }
 
-async function setUp(doors, runId, { withDrawer = true, readDemo = null } = {}) {
+async function setUp(doors, runId, { withDrawer = true, readDemo = null, accent = null } = {}) {
   const k = kit()
   const p = plan()
   const b = brief()
@@ -208,6 +208,7 @@ async function setUp(doors, runId, { withDrawer = true, readDemo = null } = {}) 
           runId,
           photoBytes: PHOTO_BYTES,
           readDemo,
+          accent,
           fetchImpl: doors.fetchImpl
         })
       : null,
@@ -436,4 +437,38 @@ test('the demo picture of a cut-out frame is attached as a style reference only,
   const call = m.drawer.calls.find((c) => c.frame === 'block-s.1')
   assert.match(call.styleSha256, /^[0-9a-f]{64}$/)
   assert.equal(byFrame(m).get('block-s.1').cutout.groundRemoved, true)
+})
+
+test('a cut-out whose demo has a disc and accent bands behind the figure records the backdrop and a review composite', async () => {
+  // An invented demo: a dark disc with chevron bands in the kit accent's hue behind a grey figure, transparent corners.
+  const bands = [0, 1, 2, 3]
+    .map((k) => {
+      const top = 90 + k * 70
+      return `<polygon points="-300,${top + 450} 150,${top} 600,${top + 450} 600,${top + 512} 150,${top + 62} -300,${top + 512}"/>`
+    })
+    .join('')
+  const demo = await sharp(
+    Buffer.from(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="320"><defs><clipPath id="c"><circle cx="150" cy="168" r="150"/></clipPath></defs><circle cx="150" cy="168" r="150" fill="#1b1a1a"/><g clip-path="url(#c)" fill="#2f6f8f">${bands}</g><ellipse cx="150" cy="190" rx="50" ry="120" fill="#5a5a5a"/></svg>`
+    )
+  )
+    .png()
+    .toBuffer()
+  const readDemo = async (f) => (f.id === 'block-s.1' ? demo : null)
+  const doors = fakeDoors()
+  const { doc, finisher, check } = await setUp(doors, 'run-cut-backdrop', { readDemo, accent: '#2f6f8f' })
+  const out = await finisher.finish(doc, { lastRound: true })
+  const s = byFrame(out.doc).get('block-s.1')
+  assert.equal(s.source, 'drawn')
+  assert.deepEqual(s.backdrop.paint, { circle: 'surface', stripes: 'accent' })
+  assert.equal(s.backdrop.shape.stripes.pattern, 'chevron')
+  assert.equal(s.backdrop.preview.preview, true)
+  assert.deepEqual(s.backdrop.preview.drawnIn, { circle: '#2a2c30', stripes: '#2f6f8f' })
+  // The placed file is the figure alone; the composite is kept with the run's files, at the figure's size.
+  assert.notEqual(s.backdrop.preview.sha256, s.sha256)
+  const kept = out.files.find((f) => f.sha256 === s.backdrop.preview.sha256)
+  assert.deepEqual([kept?.width, kept?.height], [s.width, s.height])
+  // A frame whose demo cannot be read gets no backdrop, and the round still passes its check.
+  assert.equal(byFrame(out.doc).get('block-h.1').backdrop, undefined)
+  assert.deepEqual(failedRules(check(out)), [])
 })

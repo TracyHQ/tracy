@@ -11,6 +11,9 @@
 // step needs to finish it from data alone: where the slot takes HTML, markup that uses the Design system accent
 // variable; where it only takes an image path, a file drawn in the brand's colours (and recorded so it is drawn again
 // when the Design system changes). This export does not choose; `painted` is the one place a frame is said to be painted.
+// A drawn cut-out with a backdrop (the disc and bands its demo has behind the figure) is placed as it is, the figure
+// alone, and also listed in `painted` (kind `backdrop`) with the recipe: step 9 paints the backdrop behind the figure
+// in the brand's colours (a file of both, or the backdrop behind the slot), and its preview is only for review.
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { readPictures } from './manifest-shape.js'
 import { paintKindOf } from './paint.js'
@@ -23,8 +26,9 @@ export { contentMapKey }
  *   mapping: { contract: string, revision: string, changes: Record<string,string>, evidence: {}, pending: [], emptyLinks: [] },
  *   uploads: { sitePath: string, file: string, sha256: string, width: number, height: number }[],
  *   hidden: { frame: string, key: string, reason: string }[],
- *   painted: { frame: string, key: string, kind: 'initials' | 'icon', paint: object, holds: 'light' | 'dark' | null,
- *     draw: { letters: string } | { icon: string, set: string, weight: string }, width: number, height: number,
+ *   painted: { frame: string, key: string, kind: 'initials' | 'icon' | 'backdrop', paint: object,
+ *     holds: 'light' | 'dark' | null, draw: { letters: string } | { icon: string, set: string, weight: string }
+ *     | { backdrop: object, figure: string }, width: number, height: number,
  *     preview: { sitePath: string, file: string, sha256: string, width: number, height: number },
  *     previewDark: object | null }[],
  *   siteSettings: object[],
@@ -131,6 +135,19 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
       continue
     }
     changes[key] = e.sitePath
+    if (e.backdrop)
+      painted.push({
+        frame: e.frame,
+        key,
+        kind: 'backdrop',
+        paint: e.backdrop.paint,
+        holds: null,
+        draw: { backdrop: e.backdrop.shape, figure: e.sitePath },
+        width: e.width,
+        height: e.height,
+        preview: e.backdrop.preview,
+        previewDark: null
+      })
     if (!placedFiles.has(e.sha256))
       placedFiles.set(e.sha256, {
         sitePath: e.sitePath,

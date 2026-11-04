@@ -75,6 +75,7 @@ async function drawRung(ctx, s, frameId, p, rung) {
   if (!res.made && res.faults?.length) p.faults = res.faults
   if (!res.made) return { skip: res.problem }
   s.keepFile(res.made, res.call.cached ? 0 : (res.call.costUsd ?? 0))
+  if (res.backdropFile) s.keepFile(res.backdropFile, 0)
   const extended = p.mode === 'outpaint'
   const list = s.listOf(frame)
   const cut = res.extra.cutout
