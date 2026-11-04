@@ -112,6 +112,30 @@ test('a placeholder address the kit knows is a slot of the plan’s, and stays o
   assert.deepEqual(claims, [])
 })
 
+test('an address inside HTML is no stored field: it holds a link of the page, and stays', () => {
+  const claims = storedDemoClaims({
+    plan: planWith({
+      links: [{ link: 'body-rowing.link-1', leadsTo: 'page-home', labelSlot: 'languageString-5.0' }],
+      hiddenSlots: [{ slot: 'languageString-5.0', why: 'no words' }]
+    }),
+    kit,
+    contentMap: {
+      slots: [
+        {
+          key: 'article-8.12',
+          entity: 'article-8',
+          type: 'url',
+          sample: '#',
+          xpath: '/html/body/div/a[1]/@href'
+        }
+      ]
+    },
+    filled: new Set(['article-8.7', 'article-9.7']),
+    file: 'kit.json'
+  })
+  assert.deepEqual(claims, [])
+})
+
 test('with the words kept, a placeholder address stays', () => {
   const claims = storedDemoClaims({
     plan: planWith({

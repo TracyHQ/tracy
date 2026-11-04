@@ -7,7 +7,7 @@
 //
 // A link's address can live apart from its words. When the plan hides the words, a placeholder address (`#`) kept on the same
 // entity still draws a button with nothing in it, so it goes too. One the kit knows is a slot the plan speaks for, so only an
-// address outside the kit counts.
+// address outside the kit counts, and only one stored as a field of its own: one inside HTML is a link of the page.
 import { kitSlotIds } from './kit-slot-ids.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -44,6 +44,8 @@ function leftAddresses({ plan, kit, contentMap }) {
     for (const slot of each(contentMap?.slots))
       if (
         slot?.entity === entity &&
+        slot.jsonPath &&
+        !slot.xpath &&
         String(slot.sample ?? '').trim() === '#' &&
         !known.has(String(slot.key).replace(/^module-/, 'block-'))
       )
