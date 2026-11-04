@@ -10,6 +10,7 @@ import { ui } from '@/lib/ui'
 import { fillWords } from '@/lib/ui-words'
 import { section } from '@/lib/content'
 import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
 
 interface Props {
   chrome: Chrome
@@ -26,7 +27,7 @@ const q = (Astro.url.searchParams.get('q') ?? '').trim()
 const found = q
   ? (await search(q, { collections: ['posts'], locale, status: 'published', limit: 50 })).items
   : []
-const all = blogPosts(await loadPosts(locale))
+const all = await livePosts(Astro.request, locale, blogPosts(await loadPosts(locale)))
 const categories = BLOG_SIDEBAR.map((slug) => ({
   slug,
   label: all.find((p) => p.category?.slug === slug)?.category?.label ?? slug

@@ -119,6 +119,20 @@
       "why": "The base entry above, for Tracy Coffee (copied from Tracy Base 0.5.6, 30/10/2026), with one difference: Coffee was built in its own repo, outside a tracy checkout, so it cannot import the two Tracy modules by ../../../ path. It loads them at run time from the checkout TRACY_CHECKOUT names, or, copied into a checkout as packages/cms/<this>/, from the checkout it sits in (import node:url, TRACY_CHECKOUT = that choice, stmt:e58717643b = the refusal when neither gives a checkout, fromTracy, and the two destructured awaits keyed ? and ?'), then uses them exactly as base does. NAMED, not whole-file: every other statement of this file must still match the kit."
     },
     {
+      "file": "tools/release.mjs",
+      "template": "tracy-emdash-theme-restaurant",
+      "declarations": [
+        "import node:url",
+        "TRACY_CHECKOUT",
+        "stmt:e58717643b",
+        "sitePagesModule",
+        "stmt:913570538c",
+        "?",
+        "sitePagesFor"
+      ],
+      "why": "The base entry, for Tracy Restaurant, with one difference: the list of pages a customer may keep or hide (tracy_site_pages.json) is the one Tracy's readiness check holds the file to (REL-2), so sitePagesFor asks the rule itself. The kit's sitePagesFor reads level 1 of the primary menu only, and a theme whose menu has submenus (JA Restaurant: Menu > three styles, Reservation > Phone Reservation, Contact Us) lists 6 pages of 13. The rule is read at run time from the checkout TRACY_CHECKOUT names (apps/tracy-web/src/lib/template-customization-question-readiness/site-pages/emdash-menu.js, which ports tracy-dev's site-pages), or from the checkout the template sits in (import node:url, TRACY_CHECKOUT, stmt:e58717643b = the refusal when neither gives a checkout, sitePagesModule, stmt:913570538c = the refusal when the module is missing, and the destructured await keyed ?). NAMED, not whole-file: every other statement of this file must still match the kit. The kit should take this version for every theme (perf/skill-findings.md SF-51 of the restaurant template)."
+    },
+    {
       "file": "tools/visual-qa.mjs",
       "template": "tracy-emdash-theme-business",
       "declarations": [

@@ -16,6 +16,7 @@ import ProseQuote from '@/components/site/ProseQuote.astro'
 import { mediaUrl } from '@/lib/media'
 import { stampBlocks, stampFor } from '@/lib/stamps'
 import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
 
 interface Props {
   chrome: Chrome
@@ -42,7 +43,7 @@ const [masthead, all, cats, banner] = await Promise.all([
 ])
 const $post = stampFor(Astro.request, 'posts', { id: a.id, slug })
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
-const list = blogPosts(all)
+const list = await livePosts(Astro.request, locale, blogPosts(all))
 const idx = list.findIndex((p) => p.slug === slug)
 const older = idx >= 0 ? list[idx + 1] : undefined
 const newer = idx > 0 ? list[idx - 1] : undefined

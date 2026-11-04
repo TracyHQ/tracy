@@ -26,6 +26,7 @@ import { stampBlocks } from '@/lib/stamps'
 import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import { BLOG_SIDEBAR, blogPosts, loadPosts } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
 import { getEmDashEntry, getTaxonomyTerms } from 'emdash'
 
 interface Props {
@@ -51,10 +52,10 @@ const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 
 const $hero = stampFor(Astro.request, 'hero', hero ? { id: hero.id, slug: hero.slug } : null)
 const $off = stampFor(Astro.request, 'features_intro', offers ? { id: offers.id, slug: offers.slug } : null)
 // the front page lists the posts Joomla flags as featured, in its own order (enrich-model.mjs carries both)
-const posts = blogPosts(all)
+const posts = (await livePosts(Astro.request, locale, blogPosts(all)))
   .filter((p) => p.featured)
   .sort((a, b) => a.featuredOrder - b.featuredOrder)
-const albums = all.filter((p) => p.category?.slug === 'gallery')
+const albums = await livePosts(Astro.request, locale, all.filter((p) => p.category?.slug === 'gallery'))
 const categories = (cats as any[]).filter((c) => BLOG_SIDEBAR.includes(c.slug))
 const heroComponents = $hero.owner ? { block: ProseBlock, listItem: ProseListItem } : {}
 const heroLines = hero ? lines(hero.hero_heading) : []

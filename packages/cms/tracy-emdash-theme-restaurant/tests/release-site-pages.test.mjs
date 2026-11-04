@@ -1,5 +1,6 @@
 // tools/release.mjs writes tracy_site_pages.json (Tracy's "Pages" question) from seed/site-model.json:
-// the primary menu's level 1, each path resolved to its page record slug, the front page marked home.
+// every content page of the primary menu at any depth (Tracy's own rule, read from the checkout: REL-2), each path
+// resolved to its page record slug, the front page marked home.
 // `release.mjs --site-pages <dir>` prints that file without cutting a release.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
@@ -63,7 +64,7 @@ test('primary menu level 1 -> page record slugs, front page marked home', () => 
   })
 })
 
-test('a heading at level 1 is skipped and said; its child at "/" names Home', () => {
+test('a heading at level 1 is no page; its child at "/" is the front page, named by the heading', () => {
   const { doc, stderr } = pagesOf({
     ...base,
     menus: [
@@ -85,7 +86,44 @@ test('a heading at level 1 is skipped and said; its child at "/" names Home', ()
     { id: 'home', label: 'Home', home: true },
     { id: 'about', label: 'About' }
   ])
-  assert.match(stderr, /"Home" is a heading, not a page \(children: Terminal\)/)
+  assert.match(stderr, /no "primary" menu: used "mainmenu"/)
+})
+
+test('the pages under a submenu heading are offered too, system pages are not (REL-2)', () => {
+  const { doc, stderr } = pagesOf({
+    ...base,
+    records: [
+      ...base.records,
+      rec('pages', 'simple-menu'),
+      rec('pages', 'smart-search'),
+      rec('pages', 'menu')
+    ],
+    menus: [
+      {
+        name: 'primary',
+        items: [
+          { label: { en: 'Home' }, path: '/' },
+          {
+            label: { en: 'Menu' },
+            path: '/menu',
+            children: [{ label: { en: 'Simple Menu' }, path: '/menu/simple-menu' }]
+          },
+          {
+            label: { en: 'Explore' },
+            children: [{ label: { en: 'Smart Search' }, path: '/explore/smart-search' }]
+          },
+          { label: { en: 'About' }, path: '/about' }
+        ]
+      }
+    ]
+  })
+  assert.deepEqual(doc.pages, [
+    { id: 'home', label: 'Home', home: true },
+    { id: 'menu', label: 'Menu' },
+    { id: 'simple-menu', label: 'Simple Menu' },
+    { id: 'about', label: 'About' }
+  ])
+  assert.match(stderr, /skipped as system pages: Smart Search/)
 })
 
 test('a path two page records answer is not guessed: skipped and said', () => {

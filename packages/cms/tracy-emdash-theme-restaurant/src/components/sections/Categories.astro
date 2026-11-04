@@ -7,6 +7,7 @@ import { ui } from '@/lib/ui'
 import { fillWords } from '@/lib/ui-words'
 import { stampFor } from '@/lib/stamps'
 import { BLOG_SIDEBAR, blogPosts, loadPosts } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
 
 interface Props {
   locale: Locale
@@ -14,7 +15,7 @@ interface Props {
 const { locale } = Astro.props
 const { w } = ui(locale)
 const [cats, all] = await Promise.all([sections('category_info', locale), loadPosts(locale)])
-const posts = blogPosts(all)
+const posts = await livePosts(Astro.request, locale, blogPosts(all))
 const order = BLOG_SIDEBAR
 cats.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug))
 ---

@@ -6,6 +6,7 @@ import { href } from '@/lib/i18n'
 import { brandLogos, logoSpots } from '@/lib/brand'
 import { getSiteSettings } from 'emdash'
 import BrandLogo from '@/components/site/BrandLogo.astro'
+import { DEMO_LOGO, DEMO_LOGO_SMALL } from '@/lib/demo-logo'
 
 interface Props {
   chrome: Chrome
@@ -16,7 +17,6 @@ const { site, locale } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const settings = await getSiteSettings()
 const logos = brandLogos(settings, site.logo_dark, site.brand_name)
-const spots = logoSpots(logos, 'themed')
 // a leaf that points home (the Themes menu's "Default Color") must not light its parent on the home page
 const active = (item: ChromeMenuItem): boolean => {
   const u = item.url
@@ -40,9 +40,9 @@ const rest = chrome.primary.filter((i) => i !== home)
 <header class="rs-header">
 		<div class="rs-header-logo">
 			<a href={href(locale, '/')} aria-label={site.brand_name}>
-				<BrandLogo spots={spots} alt={logos.alt || site.brand_name} imgClass="rs-logo-lg">
-					<img class="rs-logo-lg" src="/brand/logo.png" alt={site.brand_name} width="178" height="110" />
-					<img class="rs-logo-sm" src="/brand/small-logo.png" alt={site.brand_name} width="78" height="50" />
+				<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="rs-logo-lg">
+					<img class="rs-logo-lg" src={DEMO_LOGO} alt={site.brand_name} width="178" height="110" />
+					<img class="rs-logo-sm" src={DEMO_LOGO_SMALL} alt={site.brand_name} width="78" height="50" />
 				</BrandLogo>
 			</a>
 		</div>
