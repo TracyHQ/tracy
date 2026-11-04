@@ -40,7 +40,11 @@ export const FAULTS = Object.freeze([...MODEL_FAULTS, LOOK_UNREADABLE])
 
 /** How long one look may take. */
 export const LOOK_MS = 90_000
-const MAX_TOKENS = 600
+/**
+ * The answer's token cap. A reasoning model (gpt-6-luna) spends its thinking from the same budget, measured at 300 to
+ * 900 reasoning tokens before a 50 token answer: a cap of 600 cut about one look in five off before its JSON object.
+ */
+export const LOOK_MAX_TOKENS = 4000
 const OUTLINE = '#ff00ff'
 const CHECK = 16
 
@@ -189,7 +193,7 @@ export async function askLooker({
           { role: 'system', content: system },
           { role: 'user', content: lookMessage({ words, image, outlined, cutout }) }
         ],
-        max_tokens: MAX_TOKENS,
+        max_tokens: LOOK_MAX_TOKENS,
         temperature: 0,
         usage: { include: true }
       }),
@@ -206,6 +210,13 @@ export async function askLooker({
       problem: `the looker could not be reached: ${String(error?.message ?? error).slice(0, 200)}`
     })
   }
-  const read = readLook(json.choices?.[0]?.message?.content ?? '')
+  const choice = json.choices?.[0]
+  const read = readLook(choice?.message?.content ?? '')
+  // An answer the cap cut off says so, so a too small cap is not mistaken for a model that ignores the form.
+  if (read.problem && choice?.finish_reason === 'length')
+    return done(
+      { problem: `${read.problem}: the answer was cut off at the token cap (${LOOK_MAX_TOKENS})` },
+      json
+    )
   return done(read.problem ? { problem: read.problem } : read, json)
 }

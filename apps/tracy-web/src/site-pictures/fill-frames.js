@@ -91,6 +91,24 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
     else
       pending.push(pendingEntry(wish, frame, WAITS_FOR.picker, 'a specific picture is chosen by the picker'))
   }
+  // The photos the picker may need: every usable photo that cuts well for a frame waiting for it, by page. An any-real
+  // frame tries these last, so a small frame shown on every page (a gallery strip) does not take the only photo a
+  // large specific frame can be cut from: that frame would then never reach the picker and be drawn instead.
+  const forPicker = new Set()
+  for (const p of pending) {
+    if (p.waitsFor !== WAITS_FOR.picker) continue
+    const wish = idx.wishes.get(p.frame)
+    const frame = idx.frames.get(p.frame)
+    for (const { a } of rankForFrame(usable, wish, frame, usage)) {
+      if ([...wish.pages].every((pg) => forPicker.has(`${pg} ${a.id}`))) continue
+      const cut = await cutPhoto(photoBytes.get(a.id), a, frame, idx.demoSize(p.frame), {
+        matches: sameService(a, wish)
+      })
+      if (cut.ok) for (const pg of wish.pages) forPicker.add(`${pg} ${a.id}`)
+    }
+  }
+  const pickerWants = (a, wish) => [...wish.pages].some((pg) => forPicker.has(`${pg} ${a.id}`))
+
   // Person frames first (their photos are fixed by the brief), then the largest frames take the best photos; a
   // template setting picture (siteSettings, no write door yet) comes after every frame of the site.
   work.sort(
@@ -165,6 +183,8 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
         photoBytes,
         luminance
       )
+      // The photos a frame waiting for the picker could take come last (stable: each half keeps its order).
+      ranked.sort((x, y) => Number(pickerWants(x, wish)) - Number(pickerWants(y, wish)))
       tried = await placePhoto(
         job,
         ranked,

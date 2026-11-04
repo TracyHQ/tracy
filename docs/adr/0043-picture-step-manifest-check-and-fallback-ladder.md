@@ -139,7 +139,9 @@ Thresholds and readings (named constants in the code):
 ### 3. Code and AI split the work
 
 - **Code** shortlists candidates per frame (big enough, sharp enough, no lettering, no other business), fills
-  `any-real` frames from labels (same offering first, unused first, never drawn), matches icons from the icon library
+  `any-real` frames from labels (same offering first, unused first, never drawn; a photo that cuts well for a frame
+  waiting for the picker on one of the frame's pages is tried last, so a small frame shown on every page does not
+  take the only photo a large `specific` frame can be cut from), matches icons from the icon library
   (a cheap text model only ranks the shortlist, never invents a name), cuts every picture around its subject and faces,
   measures sharpness at display size, enforces no repeat on a page, copies twins, renders initials, and checks the
   manifest with the picture check.
@@ -196,7 +198,9 @@ Thresholds and readings (named constants in the code):
   `look unreadable`, which only code records. A name outside the model's six is dropped and noted; any fault makes the
   verdict `fail`. The look is stored on the entry as `looker` (above) and its sentence as `seen`.
 - **An unreadable look is asked once more.** A failed call or an answer out of form is retried once, both calls
-  counted (a file gone from the store is not retried); still unreadable, the picture fails with `look unreadable`, so L01 never passes a
+  counted (a file gone from the store is not retried). The answer's token cap (4000) leaves room for a reasoning
+  model's thinking, which counts against it (gpt-6-luna measured 300 to 900 reasoning tokens before a 50 token
+  answer; a cap of 600 cut about one look in five off); an answer cut off at the cap says so. Still unreadable, the picture fails with `look unreadable`, so L01 never passes a
   picture nobody looked at. An unreadable look is not kept, so the next round asks again.
 - **Rejections join the fix rounds.** A rejection is a failure of rule `L01` (the looker passes every finished picture)
   at the frame, its detail naming the faults and the seen sentence. L01 is added by the bench step to the round's
