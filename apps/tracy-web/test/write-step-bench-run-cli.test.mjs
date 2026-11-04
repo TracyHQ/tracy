@@ -37,7 +37,8 @@ function harness({
   site = fakeSite(),
   sites = memoryStore([benchSite()]),
   runs = memoryRunStore(),
-  kits = index
+  kits = index,
+  makeHost
 } = {}) {
   const out = []
   const err = []
@@ -48,6 +49,7 @@ function harness({
       store: sites,
       index: kits,
       makeDoor: (input) => (accounts.push(input), site.door),
+      ...(makeHost ? { makeHost } : {}),
       out: (l) => out.push(l),
       err: (l) => err.push(l),
       sleep: async () => {}
@@ -243,6 +245,31 @@ test('check exits 1 on red, printing the page, the slot, the step, and --out kee
   assert.equal(saved.status, 'red')
   assert.equal(h.runs.rows[0].report.slots.find((s) => s.slot === 'block-2.1').readBack, 'differs')
   rmSync(dir, { recursive: true, force: true })
+})
+
+test('check --all-groups runs the page groups after a red read-back; a default check does not', async () => {
+  const host = async () => ({ checks: [], pageMeasures: [] })
+  for (const [flags, wantAll] of [
+    [['--all-groups'], true],
+    [[], false]
+  ]) {
+    const h = await ranRun()
+    h.site.held['module-2.1'] = 'Changed by hand'
+    const asked = []
+    const again = harness({
+      site: h.site,
+      runs: h.runs,
+      makeHost: async () => (p) => (asked.push(p), host(p))
+    })
+    assert.equal(await again.cli(checkArgs(flags)), 1)
+    const stopped = again.out.some((l) => /not-run/.test(l))
+    assert.equal(stopped, !wantAll)
+    assert.equal(
+      again.out.some((l) => /ran although read-back is red/.test(l)),
+      wantAll
+    )
+    assert.equal(again.out.at(-1), 'site-check: red (1 block, 0 warn)')
+  }
 })
 
 test('check says plainly when there is no run, no report, a run still going, or wrong usage', async () => {
