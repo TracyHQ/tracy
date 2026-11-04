@@ -16,9 +16,9 @@
  *   `copy`, `blocks` or `rewrite` rule and exist in the seed. A field is read through a stamp the view declares
  *   (`const $hero = stampFor(Astro.request, 'hero', …)` makes `$hero("f")` / `$hero('f')` a field of collection
  *   `hero`; an undeclared `$page` and `{ h.f }` mean the `home` entry, as in Tracy Business). Each is checked
- *   against the first entry of its collection that holds the field. The `<h1>` and the element under it must EACH
+ *   against EVERY default-locale entry of its collection that holds the field (the view's entry is not knowable here). The `<h1>` and the element under it must EACH
  *   print such a field (a static `<p>` standing first fails); with no element after the `<h1>` the heading alone is
- *   judged. A stamp alone proves nothing: the element's text expressions (`{x.f}`, a PortableText `value={… x.f …}`)
+ *   an `<h1>` with nothing after it fails too. A stamp alone proves nothing: the element's text expressions (`{x.f}`, a PortableText `value={… x.f …}`)
  *   must reach the field OF THE ENTRY THE STAMP IS BOUND TO (the third argument of its `stampFor`: `hero`), through that
  *   variable, a variable derived from it, or a frontmatter variable built from either: `{other.hero_heading}` does not count.
  */
@@ -411,24 +411,34 @@ async function emdash(context) {
   const entries = defaultEntries(t.seed)
   const problems = []
   for (const { collection, field } of fields) {
-    // the entry that holds the field (the first one when several do); the front page entry when the collection is absent
-    const holder = entries.find((e) => e.collection === collection && field in e.data)
+    // The entry the view renders is not knowable here, so EVERY default-locale entry of the collection that holds the field
+    // must be covered (a slug-scoped rule covers only its slug). A `home` collection the seed lacks is judged as before.
+    const holders = entries.filter((e) => e.collection === collection && field in e.data)
     const own = entries.some((e) => e.collection === collection)
-    const slug = holder?.slug ?? entries.find((e) => e.collection === collection)?.slug ?? collection
-    if (!covered(collection, slug, field).some((k) => ['identity', 'copy', 'blocks', 'rewrite'].includes(k)))
-      problems.push(`${collection}.${field} has no identity, copy, blocks or rewrite rule`)
-    if ((own || collection !== 'home') && !holder)
+    for (const holder of holders.length
+      ? holders
+      : [{ slug: entries.find((e) => e.collection === collection)?.slug ?? collection }])
+      if (
+        !covered(collection, holder.slug, field).some((k) =>
+          ['identity', 'copy', 'blocks', 'rewrite'].includes(k)
+        )
+      )
+        problems.push(
+          `${collection}.${field} has no identity, copy, blocks or rewrite rule${holders.length > 1 || own ? ` (entry ${collection}/${holder.slug})` : ''}`
+        )
+    if ((own || collection !== 'home') && !holders.length)
       problems.push(`${collection}.${field} is not in seed/seed.json`)
   }
-  // Both must be written: a covered heading does not excuse a static paragraph under it, nor the reverse. A home with
-  // no element after the <h1> is judged on the heading alone (as before).
+  // Both must be written: a covered heading does not excuse a static paragraph under it, nor the reverse, and a home with
+  // nothing after the <h1> has no paragraph to write (the Joomla half asks for a paragraph slot the same way).
   if (!headingFields.length)
     problems.push(
       heading.stamped.length
         ? `the home <h1> stamps ${named(heading.stamped)} but its text prints none of them`
         : 'the home <h1> prints no field of the home entry'
     )
-  if (under && !paragraphFields.length)
+  if (!under) problems.push('nothing under the home heading prints a field of the home entry')
+  else if (!paragraphFields.length)
     problems.push(
       paragraph.stamped.length
         ? `the element under the home heading stamps ${named(paragraph.stamped)} but its text prints none of them`
