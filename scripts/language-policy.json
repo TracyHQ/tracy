@@ -14334,6 +14334,48 @@
       "sha256": "d5ac2f907d81c66d19a8014bb8b92f6844ba21fb829781be4ccc872b19f26131",
       "count": 1,
       "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "apps/tracy-web/test/site-check-page-chunks.test.mjs",
+      "sha256": "573db36fadaabe283a1a0ecb4d10f5001a20d12bb1cd960bf16819c9e91b7d4c",
+      "count": 1,
+      "reason": "Exact line of an earlier commit of the site check page path test: an invented path with one accented letter whose percent-encoding the test checks. The current file spells that letter as an escape; the line stays in the branch history."
+    },
+    {
+      "path": "apps/tracy-web/test/site-check-page-chunks.test.mjs",
+      "sha256": "8d8ee126c4547b9f8a7fa2804f72a58debc968fd6c319c1ae5504fd44a45d505",
+      "count": 1,
+      "reason": "Exact line of an earlier commit of the site check page path test: an invented path with one accented letter whose percent-encoding the test checks. The current file spells that letter as an escape; the line stays in the branch history."
+    },
+    {
+      "path": "apps/tracy-web/test/site-check-page-chunks.test.mjs",
+      "sha256": "99d211152a9f29eed17589751bdb110708e961303106c3e9676d50cd18403686",
+      "count": 1,
+      "reason": "Exact line of an earlier commit of the site check page path test: an invented path with one accented letter whose percent-encoding the test checks. The current file spells that letter as an escape; the line stays in the branch history."
+    },
+    {
+      "path": "apps/tracy-web/test/site-check-page-chunks.test.mjs",
+      "sha256": "f0f9790687efced9773e2defcac23fef64edca43fa18b253b2ae825832380a85",
+      "count": 1,
+      "reason": "Exact line of an earlier commit of the site check page path test: an invented path with one accented letter whose percent-encoding the test checks. The current file spells that letter as an escape; the line stays in the branch history."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.10/template-kit.json",
+      "sha256": "8111c94e7a49d9a288901db8d6408bdf6306c4d2b124054fe0596a31dc0aa1ec",
+      "count": 1,
+      "reason": "Exact line of the approved JA Boxing 1.0.10 template kit: the template's own English demo text, which contains a proper name with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.10/template-kit.json",
+      "sha256": "c4bccfc376d0df0c5c9323c91307eb34d608763c34b914c45a46e2971dc0e8f7",
+      "count": 1,
+      "reason": "Exact line of the approved JA Boxing 1.0.10 template kit: the template's own English demo text, which contains a proper name with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.10/template-kit.json",
+      "sha256": "e064778f79f16e7bdcc1c62f0b4d6772465bfbc4a441bd65d84936ef5da2939e",
+      "count": 1,
+      "reason": "Exact line of the approved JA Boxing 1.0.10 template kit: the template's own English demo text, which contains a proper name with an accent. The kit is sealed by its approval digest, so the file is not edited."
     }
   ],
   "objects": [
