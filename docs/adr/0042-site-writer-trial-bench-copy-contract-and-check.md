@@ -15,9 +15,9 @@ dev; `apps/tracy-web/src/site-writer/writer-prompt.md` has sha256
 `bd4a4f3a1087a109496251b3e971d064775d9730fb16b657744d204a92f987c5`, pinned by `test/site-writer-prompt.test.mjs`.
 Changing a byte of it needs the owner's approval and a new hash here. Fix round answers are read as in section 5.
 Amended a fifth time (2026-11-04, owner's ruling): a plan label is a suggestion the writer keeps or rewrites
-(section 7), and a created page's title is its on-page heading, never a browser title (section 8). The prompt gained
-both rules; its sha256 is now
-`5aee1a5fffbfdbc0cc431ee8cea7c9c54c2b9aa9e7e581735116bb6606c17b7f`. The checker version moved to `site-copy-check/5`.
+(section 7), a created page's title is its on-page heading, never a browser title (section 8), and a created privacy
+page is a complete policy (section 9). The prompt gained these rules; its sha256 is now
+`925896a07c9d7ebacb483305fd4fbe7bf725391d3f426318209cf80d2ec30380`. The checker version moved to `site-copy-check/5`.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -234,6 +234,23 @@ printed on the page as a heading.
   `page_heading` param; `page_title` (Joomla's browser title) keeps the seo title. The look guard allows
   `page_heading` on a created page's item only. A kept page's menu item is not changed here.
 - The site check's `heading-separator` measure stays as it is, blamed on step 6.
+
+### 9. A created privacy page is a complete policy (2026-11-04)
+
+The plan's line for a created privacy page said the site collects no personal data itself, and the writer retold it
+in two sentences. A customer expects a policy for the kind of business it is. The planner prompt is locked, so the
+plan's `says` stays one input and the writer does the rest.
+
+- The prompt asks for a policy built from the brief facts (what the business is, who its customers are, how they
+  reach it, whether it has forms) covering what is collected and when, photos and videos only with consent (children
+  named when the business serves them), sharing with third parties, how long data is kept, the customer's rights and
+  how to get in touch. Policy promises are not business facts; facts (addresses, named officers, laws) are still never
+  invented. The `body[]` shape is unchanged: the write step prints each item as one paragraph, so a section opens with
+  a short heading sentence.
+- **W14**, only when the plan creates a privacy page (`site.legalPages[]` with `kind: "privacy"`, `use: "create"`):
+  fails a body under 5 paragraphs, or one that names fewer than 4 of six themes by keyword (collect or data; photo,
+  video or image; share or third party; retain, keep or retention; right, request or delete; contact). No site check
+  measure is added.
 
 ## Consequences
 

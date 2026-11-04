@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { breaks, check, copy, ruleOf, slotOf } from './_site-copy-check.mjs'
+import { checkCopy } from '../src/site-writer/copy-check/check-copy.js'
+import { breaks, brief, check, copy, kit, plan, ruleOf, slotOf } from './_site-copy-check.mjs'
 
 const EM = String.fromCharCode(0x2014)
 const EN = String.fromCharCode(0x2013)
@@ -301,7 +302,7 @@ test('W08, W10 and W11 read pages entries', () => {
   breaks(
     'W08',
     (c) => {
-      c.pages[0].body = ['Every member gets a free trial.']
+      c.pages[0].body = [...c.pages[0].body, 'Every member gets a free trial.']
     },
     /legal:privacy.*free trial/
   )
@@ -371,4 +372,41 @@ test('W13 fails a created page title written as a browser title, and passes an o
   const c = copy()
   page(c).title = 'Privacy policy'
   assert.equal(ruleOf(c, 'W13').status, 'pass')
+})
+
+test('W14 fails a thin created privacy page and passes a fuller policy', () => {
+  const page = (c) => c.pages.find((p) => p.page === 'legal:privacy')
+  breaks(
+    'W14',
+    (c) => {
+      page(c).body = [
+        'The studio runs no newsletter and no contact form.',
+        'Call the desk if you have a question.'
+      ]
+    },
+    /legal:privacy: 2 paragraphs, a privacy policy needs at least 5/
+  )
+  breaks(
+    'W14',
+    (c) => {
+      page(c).body = [
+        'We note your data when you book a class.',
+        'The coaches welcome every member.',
+        'Classes run in small groups.',
+        'Contact the desk with any question.',
+        'Bring water and a towel.'
+      ]
+    },
+    /names 2 of the privacy themes, at least 4 are needed/
+  )
+  assert.equal(ruleOf(copy(), 'W14').status, 'pass')
+  // A plan that links an existing privacy page instead of creating one leaves W14 nothing to check.
+  const linked = plan()
+  linked.site.legalPages[0].use = 'link'
+  const thin = copy()
+  thin.pages.find((p) => p.page === 'legal:privacy').body = ['Call the desk.']
+  const w14 = checkCopy({ copy: thin, plan: linked, kit: kit(), brief: brief() }).rules.find(
+    (r) => r.id === 'W14'
+  )
+  assert.equal(w14.status, 'skip')
 })

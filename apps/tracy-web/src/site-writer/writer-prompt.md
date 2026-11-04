@@ -100,6 +100,14 @@ copy file:
   facts it cites; the same rules as every other text apply (facts, voice, no repeats, no long dash, nothing about
   the page itself). There is no demo length to reach. A page you cannot write truthfully goes in `returns` with
   `page` set.
+- **A created privacy page** is a complete policy for this kind of business, not a retelling of the plan's line.
+  Build it from the brief facts (what the business is, who its customers are, how they reach it, whether it has
+  forms) and cover, at least five paragraphs in all: what data is collected and when (bookings, enquiries, visits);
+  photos and videos of customers only with consent (children named when the business serves them); sharing with
+  third parties; how long data is kept; the customer's rights (access, correction, deletion); how to get in touch.
+  Contradict nothing the plan's `says` states, but do not stop there. The policy's promises are not facts about the
+  business; facts still are never invented (no address, no named officer, no law the brief does not give). Each
+  paragraph may open with a short heading sentence ("Your rights.").
 - `notebook`: one entry per page of the turn (below).
 - `returns`: each slot or page you could not write truthfully, with the reason in one line. At least one of
   `slot` and `page`. A returned slot is left out of `slots`. Empty when nothing is returned.
@@ -200,6 +208,8 @@ full text of earlier pages, and an interrupted run continues from it.
 - W10: Does any sentence talk about the page or a section instead of the business?
 - W11: Is there any long dash?
 - W13: Is every `pages` title a heading of its own, with no " | " and not ending with the business name?
+- W14: Does a created privacy page have at least five paragraphs covering at least four of: data collected, photos
+  and videos, sharing, how long data is kept, rights, contact?
 - Did you change anything the plan decided? Did you add any point the plan does not make?
 
 ## After you answer

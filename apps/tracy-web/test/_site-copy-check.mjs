@@ -313,8 +313,12 @@ export function copy() {
         page: 'legal:privacy',
         title: 'Privacy policy',
         body: [
-          'Your message is read by the studio team and used only to reply to you.',
-          'Nobody outside the studio ever receives them.'
+          'What we collect. When you book a class by phone or at the desk, we note your name and how to reach you.',
+          'Photos and videos. We take pictures of members only with their consent, and of children only with a parent saying yes.',
+          'Sharing. Your details are never sold or passed to third parties.',
+          'How long we keep it. Your details stay with us while you train here and are removed once you stop.',
+          'Your rights. You may ask to see, correct or delete what we hold about you at any time.',
+          'Questions. To contact us about your details, call the studio or ask the coach at the desk.'
         ]
       },
       {

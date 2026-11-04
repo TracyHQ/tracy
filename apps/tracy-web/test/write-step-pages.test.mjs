@@ -6,8 +6,10 @@ import { readBackGroup } from '../src/site-check/read-back.js'
 import { LINK, pagesKit, pagesPlan, pagesSite, runOn } from './_write-step-pages.mjs'
 import { copy } from './_write-step-run.mjs'
 
-const BODY =
-  '<p>Your message is read by the studio team and used only to reply to you.</p>\n<p>Nobody outside the studio ever receives them.</p>'
+const BODY = copy()
+  .pages.find((p) => p.page === 'legal:privacy')
+  .body.map((t) => `<p>${t}</p>`)
+  .join('\n')
 
 test('the check stops before anything is written when a page to create has no words in the copy', async () => {
   const site = pagesSite()

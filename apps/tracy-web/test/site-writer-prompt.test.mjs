@@ -7,9 +7,9 @@ import { WRITER_PROMPT_FILE, writerPrompt } from '../src/site-writer/writer-prom
 
 // The owner approved this prompt on 2026-11-03 after reading real output on dev (#334), and ruled the plan label rule
 // in on 2026-11-04 (a plan label is a suggestion the writer keeps or rewrites, a created page title is its on-page
-// heading); its bytes change only with a new
+// heading, a created privacy page is a complete policy); its bytes change only with a new
 // approval from the owner, recorded in ADR 0042.
-const APPROVED_SHA256 = '5aee1a5fffbfdbc0cc431ee8cea7c9c54c2b9aa9e7e581735116bb6606c17b7f'
+const APPROVED_SHA256 = '925896a07c9d7ebacb483305fd4fbe7bf725391d3f426318209cf80d2ec30380'
 
 test('the shipped writer prompt is the approved one, byte for byte', () => {
   const bytes = readFileSync(WRITER_PROMPT_FILE)
@@ -56,6 +56,7 @@ test("the prompt says where footer headings go, how pages entries work and that 
   assert.match(text, /`text` on a label slot is a suggestion, not the final text/)
   assert.match(text, /Rewrite it when the demo `sample`/)
   assert.match(text, /`title` is the heading printed on that page/)
+  assert.match(text, /A created privacy page\*\* is a complete policy for this kind of business/)
   assert.match(text, /body.*non-empty list/s)
 })
 

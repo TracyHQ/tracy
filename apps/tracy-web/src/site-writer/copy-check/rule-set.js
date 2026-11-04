@@ -13,7 +13,8 @@ export const RULE_TITLES = [
   ['w10', 'W10', 'No sentence about the page or section itself'],
   ['w11', 'W11', 'No long dash'],
   ['w12', 'W12', 'Slots printed as one sentence read as one sentence when joined'],
-  ['w13', 'W13', 'A created page title is its on-page heading, not a browser title']
+  ['w13', 'W13', 'A created page title is its on-page heading, not a browser title'],
+  ['w14', 'W14', 'A created privacy page is a complete policy, not a retelling of the plan']
 ]
 
 function rule(list, id, title) {

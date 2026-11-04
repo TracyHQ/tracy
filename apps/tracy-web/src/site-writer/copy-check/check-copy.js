@@ -12,6 +12,7 @@ import { checkW04, checkW05 } from './rules-facts.js'
 import { checkW06, checkW07 } from './rules-repeat.js'
 import { checkW12 } from './rules-sentences.js'
 import { checkW13 } from './rules-page-headings.js'
+import { checkW14 } from './rules-privacy.js'
 import { checkW02, checkW03 } from './rules-slots.js'
 import { failureListText } from '../../lib/failure-list-text.js'
 
@@ -31,7 +32,8 @@ const RUN_ORDER = [
   checkW10,
   checkW11,
   checkW12,
-  checkW13
+  checkW13,
+  checkW14
 ]
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 
