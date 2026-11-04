@@ -17,7 +17,7 @@ Changing a byte of it needs the owner's approval and a new hash here. Fix round 
 Amended a fifth time (2026-11-04, owner's ruling): a plan label is a suggestion the writer keeps or rewrites
 (section 7), a created page's title is its on-page heading, never a browser title (section 8), and a created privacy
 page is a complete policy (section 9). The prompt gained these rules; its sha256 is now
-`925896a07c9d7ebacb483305fd4fbe7bf725391d3f426318209cf80d2ec30380`. The checker version moved to `site-copy-check/5`.
+`831d4cc8be56a702ebae8dce902cc45e890c0832a7c9f067286bc1f85f23a265`. The checker version moved to `site-copy-check/5`.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 

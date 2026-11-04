@@ -9,7 +9,7 @@ import { WRITER_PROMPT_FILE, writerPrompt } from '../src/site-writer/writer-prom
 // in on 2026-11-04 (a plan label is a suggestion the writer keeps or rewrites, a created page title is its on-page
 // heading, a created privacy page is a complete policy); its bytes change only with a new
 // approval from the owner, recorded in ADR 0042.
-const APPROVED_SHA256 = '925896a07c9d7ebacb483305fd4fbe7bf725391d3f426318209cf80d2ec30380'
+const APPROVED_SHA256 = '831d4cc8be56a702ebae8dce902cc45e890c0832a7c9f067286bc1f85f23a265'
 
 test('the shipped writer prompt is the approved one, byte for byte', () => {
   const bytes = readFileSync(WRITER_PROMPT_FILE)

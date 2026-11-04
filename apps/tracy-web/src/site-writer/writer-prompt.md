@@ -207,6 +207,8 @@ full text of earlier pages, and an interrupted run continues from it.
   60 and a description of at most 160, with no two titles the same?
 - W10: Does any sentence talk about the page or a section instead of the business?
 - W11: Is there any long dash?
+- W12: When the kit marks several slots as pieces of one printed sentence (`blocks[].sentences`), do the pieces read
+  as one sentence when joined: a space where pieces meet, no capital in mid sentence?
 - W13: Is every `pages` title a heading of its own, with no " | " and not ending with the business name?
 - W14: Does a created privacy page have at least five paragraphs covering at least four of: data collected, photos
   and videos, sharing, how long data is kept, rights, contact?
