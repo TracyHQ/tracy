@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-385-site-agent-recheck",
   "kind": "fix",
-  "title": "Site agent re-check 04/11: phone links follow, the home page card, per-turn apply ids, the step budget after a question, one-language page lists",
+  "title": "Site agent re-check 04/11: phone links follow, the home page card, per-turn apply ids, the step budget after a question, one-language page lists, the site notes store on the host",
   "pr": 385,
   "area": "site-agent",
   "cms": ["wp", "jo", "em"],
@@ -12,18 +12,20 @@
     "Run the chat-input card test: a turns-door answer whose content target is { kind: post, title: demo title, front: true }.",
     "Run the site-call test: the same model-named apply_id on two writes of one turn, then on a write of the next turn, then apply.revert of the name.",
     "Run the step budget tests: nine looks, an answered ask_user_question of 479 s, one look; and ten looks after a settled change.",
-    "Run the page-list tests: a 40-language site walked with no locale and no link, and its compact view in site tools."
+    "Run the page-list tests: a 40-language site walked with no locale and no link, and its compact view in site tools.",
+    "Run the dsh deploy with a stubbed docker on PATH and HOST_SITES_ROOT=/data/sites, to the end of a new tag."
   ],
   "expect": [
     "The link follows: tel:+78005506700 for 8 800 550-67-00, tel:+12125550199 for (212) 555-0199; a number of another shape is linked as written.",
     "The card reads 'Content · the home page'; front: 'yes' marks nothing.",
     "Both writes of one turn go out under one id phone-link-109-<mint>, the next turn under another, and the revert of 'phone-link-109' is sent under the newest.",
     "The answered question restarts the run (no notice), and a run after a change answers changed: true, worded 'since your last change to the site'.",
-    "The walk asks one listing of every language then the default language alone, answers locale 'en', and the agent's list names the road to another language."
+    "The walk asks one listing of every language then the default language alone, answers locale 'en', and the agent's list names the road to another language.",
+    "The notes store is made by a docker run of the deployed image with /data/sites bind-mounted at /site (install -d -m 0700 -o 33 -g 33 /site/.site-notes), before up, and nothing says 'could not make'."
   ],
   "selectors": {},
-  "evidence": "Dev 04/11/2026 on develop f48f5d667: elite-smiles-dental (Joomla) tel:+12125550147 left after 'change our phone everywhere', Undo 'mixed with another request's' (phone-link-109 on 29/10 and 04/11), '497 s of tool time' after a 479 s answer; los-tacos-no-1 (WordPress) card 'Content · Read the latest News + Blog'; mr-holmes-bakehouse (EmDash, 40 languages) {view:'pages'} 81.5 s.",
-  "fence": "replace.mjs followHref; turn-undo readTarget; call-memory ownApplyId + normalize ensureApplyId; site-context stepBudget; content-pages walkListing oneLanguageOf + read-compact compactPageList",
+  "evidence": "Dev 04/11/2026 on develop f48f5d667: elite-smiles-dental (Joomla) tel:+12125550147 left after 'change our phone everywhere', Undo 'mixed with another request's' (phone-link-109 on 29/10 and 04/11), '497 s of tool time' after a 479 s answer; los-tacos-no-1 (WordPress) card 'Content · Read the latest News + Blog'; mr-holmes-bakehouse (EmDash, 40 languages) {view:'pages'} 81.5 s. Site notes: no /srv/tracy-sites/.site-notes on the dev host after the deploy, one inside the tracy-runner container.",
+  "fence": "replace.mjs followHref; turn-undo readTarget; call-memory ownApplyId + normalize ensureApplyId; site-context stepBudget; content-pages walkListing oneLanguageOf + read-compact compactPageList; deploy-host-dsh.sh notes store through the daemon",
   "run": {
     "cmd": [
       "node",
@@ -35,7 +37,8 @@
       "packages/tools/tracy-site-tools/test/site-call.test.mjs",
       "packages/tools/tracy-site-tools/test/site-context.test.mjs",
       "packages/tools/tracy-site-tools/test/read-compact.test.mjs",
-      "apps/tracy-web/test/content-pages.test.mjs"
+      "apps/tracy-web/test/content-pages.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/deploy-same-tag.test.mjs"
     ],
     "tests": [
       "followLink: a number written with no trunk keeps the link",
@@ -45,7 +48,8 @@
       "stepBudget: an answered question restarts the run, and a run after a change says so",
       "stepBudgetNotice: a run after a change is \"since your last change\"",
       "a list the relay walked in one language because the site serves many says so",
-      "a site in more than eight languages is walked in its default one"
+      "a site in more than eight languages is walked in its default one",
+      "a new tag: the site notes store is made through the daemon"
     ]
   }
 }
