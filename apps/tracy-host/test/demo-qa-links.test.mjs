@@ -160,3 +160,73 @@ test('only http and https addresses of the site resolve to a target', () => {
   assert.equal(target('ftp://shop.test/x'), null)
   assert.equal(target('not a url'), null)
 })
+
+// ── A first answer that never comes in time (alarm: a picture link "answers nothing" while it answers 200 afterwards) ──────────
+import { createServer } from 'node:http'
+
+/** A real local server; `slowFirst` paths stay silent past the timeout on their first request only, `dead` paths are 404. */
+async function serve({ slowFirst = [], resetFirst = [], dead = [] }) {
+  const seen = new Map()
+  const server = createServer((req, res) => {
+    const n = (seen.get(req.url) ?? 0) + 1
+    seen.set(req.url, n)
+    if (resetFirst.includes(req.url) && n === 1) return req.socket.destroy()
+    if (slowFirst.includes(req.url) && n <= 2) return void setTimeout(() => res.end(), 400)
+    res.statusCode = dead.includes(req.url) ? 404 : 200
+    res.setHeader('content-type', 'image/jpeg')
+    res.end()
+  })
+  await new Promise((r) => server.listen(0, '127.0.0.1', r))
+  const base = `http://127.0.0.1:${server.address().port}/`
+  return { base, seen, close: () => new Promise((r) => server.close(r)) }
+}
+
+test('a picture link whose first answer is too slow is asked once more, so a link that answers is not dead', async () => {
+  const s = await serve({ slowFirst: ['/images/a1.jpg'] })
+  try {
+    const { measures } = await withLinkStatus(
+      [entry('/a', 1440, [`${s.base}images/a1.jpg`]), entry('/b', 1440, [`${s.base}images/a1.jpg`])],
+      { base: s.base, requestTimeoutMs: 150 }
+    )
+    assert.deepEqual(
+      measures.map((m) => m.links[0].status),
+      [200, 200]
+    )
+  } finally {
+    await s.close()
+  }
+})
+
+test('a connection reset on the first try is asked again', async () => {
+  const s = await serve({ resetFirst: ['/images/b2.jpg'] })
+  try {
+    const { measures } = await withLinkStatus([entry('/a', 1440, [`${s.base}images/b2.jpg`])], {
+      base: s.base,
+      requestTimeoutMs: 150
+    })
+    assert.equal(measures[0].links[0].status, 200)
+  } finally {
+    await s.close()
+  }
+})
+
+test('a picture link that is truly dead stays dead: a 404, and an address nobody answers', async () => {
+  const s = await serve({ dead: ['/images/gone.jpg'] })
+  const dark = await serve({})
+  const darkBase = dark.base
+  await dark.close()
+  try {
+    const { measures } = await withLinkStatus([entry('/a', 1440, [`${s.base}images/gone.jpg`])], {
+      base: s.base,
+      requestTimeoutMs: 150
+    })
+    assert.equal(measures[0].links[0].status, 404)
+    const refused = await withLinkStatus([entry('/a', 1440, [`${darkBase}images/x.jpg`])], {
+      base: darkBase,
+      requestTimeoutMs: 150
+    })
+    assert.equal(refused.measures[0].links[0].status, null)
+  } finally {
+    await s.close()
+  }
+})

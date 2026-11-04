@@ -90,10 +90,12 @@ const PAGES = {
   '/noswitch':
     '<!doctype html><html><body><div class="ja-dark-mode">Mode</div><p>Plain words here</p></body></html>',
   '/faults': `<!doctype html><html><head><title>Quay | About</title><style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style></head><body class="view-article">
+    <header><a class="btn" href="/faults">Contact us</a></header>
     <nav><a class="btn" href="/faults">About</a></nav>
     <h1 class="sr">About | Quay</h1><h2>Privacy | Quay</h2>
     <main><a class="btn" href="/faults">About us</a><a class="btn" href="/faults#team">Team</a><a class="btn" href="#">Nowhere</a><a class="btn" href="/other">Other</a>
     <ul class="share"><li><a class="facebook" href="https://x.example/s">facebook</a></li></ul><p>Read <a href="/other">more</a></p></main>
+    <footer><a class="button" href="/faults">Back to top page</a></footer>
     </body></html>`
 }
 function site() {
@@ -227,7 +229,7 @@ test('self links, hidden headings and content controls are read as a visitor has
     assert.deepEqual(
       m.selfLinks.map((l) => l.text),
       ['About us'],
-      'not the menu item, not a fragment, not a bare #, not another page'
+      'not the menu item, not the site-wide header or footer, not a fragment, not a bare #, not another page'
     )
     assert.deepEqual(m.hiddenHeadings, ['About | Quay'])
     assert.deepEqual(m.headings, ['Privacy | Quay'])

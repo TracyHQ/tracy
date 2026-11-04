@@ -273,6 +273,10 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (selfLinks.length >= caps.selfLinks) break
     if (!shown(a) || clippedAway(a, getComputedStyle(a))) continue
     if (a.closest(MENU) || a.hasAttribute('aria-current')) continue
+    // The site-wide header and footer are on every page, so a button there points to its own page on that page by design.
+    // A header or footer inside the page's own content (an article's heading block) is the page's, not shared.
+    const shared = a.closest('header,footer,[role="banner"],[role="contentinfo"]')
+    if (shared && !shared.closest('main,article,section,[role="main"]')) continue
     // A bare # goes nowhere, which is its own finding (`controls`).
     if (a.href.includes('#')) continue
     let to

@@ -36,6 +36,10 @@ const oncePerPage = (measures, listOf, findingOf) => {
 
 // ── Self links ────────────────────────────────────────────────────────────────────────────────────────────────────
 
+/** A slot of the header or the footer: every page of the site carries it, so on its own target page it points to itself on purpose. */
+const SHARED_SLOT = /^(?:block-|module-)?(?:header|footer)(?:[.:_-]|$)/i
+const sharedSlot = (...names) => names.some((n) => SHARED_SLOT.test(String(n ?? '')))
+
 /**
  * Who owns a button: the slot of a link with its words, through the write report. A link no line wrote, in a slot no step owns, is the
  * planner's (as `unowned-slots`); a link in no slot at all is the template's.
@@ -55,11 +59,12 @@ export function selfLinkOwner({ text, page }, { slots = [], lines = [], unowned 
             String(w.xpath ?? '').startsWith(`${String(s.xpath).replace(/\/@href$/, '')}/text()`))
       )
   )
-  if (!link) return { step: TEMPLATE_STEP, slot: null }
+  if (!link) return { step: TEMPLATE_STEP, slot: null, shared: false }
   const line = lines.find((l) => l.key === link.key && l.status === 'written')
-  if (line) return { step: ownerStep(line.owner) ?? 3, slot: line.slot }
+  if (line)
+    return { step: ownerStep(line.owner) ?? 3, slot: line.slot, shared: sharedSlot(line.slot, link.key) }
   const free = unowned.find((u) => String(u.slot).replace(/^block-/, 'module-') === link.key)
-  return { step: 3, slot: free?.slot ?? link.key, page }
+  return { step: 3, slot: free?.slot ?? link.key, page, shared: sharedSlot(free?.slot, link.key) }
 }
 
 export const selfLinksGroup = {
@@ -78,14 +83,17 @@ export const selfLinksGroup = {
       const reading = await context.read('content.contract', { operation: 'inspect' })
       slots = each(reading.slots)
     }
+    const ownerOf = (l, m) =>
+      selfLinkOwner(
+        { text: l.text, page: m.path },
+        { slots, lines: each(context.report?.slots), unowned: each(context.report?.unowned) }
+      )
+    // A control of the site-wide header or footer points to its own page on that page: not a fault.
     const failures = oncePerPage(
       known,
-      (m) => m.selfLinks,
+      (m) => m.selfLinks.filter((l) => !ownerOf(l, m).shared),
       (l, m) => {
-        const { step, slot } = selfLinkOwner(
-          { text: l.text, page: m.path },
-          { slots, lines: each(context.report?.slots), unowned: each(context.report?.unowned) }
-        )
+        const { step, slot } = ownerOf(l, m)
         return {
           measured: l.text || l.selector,
           slot,

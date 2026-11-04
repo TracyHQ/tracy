@@ -52,14 +52,17 @@ export function siteLinkTarget({ base, serveFrom = null, serveFromIsProxy = fals
 }
 
 /** One request's answer: HEAD, then GET when that answers an error or fails. Status null when nothing answered. */
-async function ask(t, { fetchImpl, signal, proxySiteLabel, serveFromIsProxy }) {
+async function ask(
+  t,
+  { fetchImpl, signal, proxySiteLabel, serveFromIsProxy, requestTimeoutMs = REQUEST_TIMEOUT_MS }
+) {
   for (const method of ['HEAD', 'GET']) {
     try {
       const res = await fetchImpl(t.url, {
         method,
         redirect: 'manual',
         headers: t.headers,
-        signal: AbortSignal.any([AbortSignal.timeout(REQUEST_TIMEOUT_MS), ...(signal ? [signal] : [])])
+        signal: AbortSignal.any([AbortSignal.timeout(requestTimeoutMs), ...(signal ? [signal] : [])])
       })
       await res.body?.cancel().catch(() => {})
       // A proxied answer that is not the site's own is no answer of the site.
@@ -79,6 +82,19 @@ async function ask(t, { fetchImpl, signal, proxySiteLabel, serveFromIsProxy }) {
   return { status: null, location: null }
 }
 
+/**
+ * A silent address is asked a second time, with twice the time: one slow or dropped first answer (a picture made on first use, a
+ * connection limit) is no proof the link is dead, and its status is shared by every page that carries the link. An address that
+ * answers an error status is not asked again; one that stays silent twice stays without a status.
+ */
+async function askTwice(t, how) {
+  const first = await ask(t, how)
+  if (first.status !== null) return first
+  how.signal?.throwIfAborted()
+  await new Promise((r) => setTimeout(r, 100))
+  return ask(t, { ...how, requestTimeoutMs: (how.requestTimeoutMs ?? REQUEST_TIMEOUT_MS) * 2 })
+}
+
 /** One address's final status, a redirect to another address of the site followed for a few hops. */
 async function statusOf(href, target, how) {
   let at = href
@@ -86,7 +102,7 @@ async function statusOf(href, target, how) {
   for (let hop = 0; hop <= REDIRECT_HOPS; hop++) {
     const t = target(at)
     if (!t) break
-    answer = await ask(t, how)
+    answer = await askTwice(t, how)
     if (answer.status === null || answer.status < 300 || answer.status >= 400 || !answer.location) break
     let next = null
     try {
@@ -111,6 +127,7 @@ export async function withLinkStatus(
     now = Date.now,
     deadlineAt = Infinity,
     maxChecked = MAX_LINKS_CHECKED,
+    requestTimeoutMs = REQUEST_TIMEOUT_MS,
     ...site
   }
 ) {
@@ -143,7 +160,7 @@ export async function withLinkStatus(
         continue
       }
       signal?.throwIfAborted()
-      const s = await statusOf(item.href, target, { fetchImpl, signal, ...site })
+      const s = await statusOf(item.href, target, { fetchImpl, signal, requestTimeoutMs, ...site })
       status.set(item.url, s)
       summary.checked++
     }

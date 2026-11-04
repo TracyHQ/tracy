@@ -47,6 +47,54 @@ test('a self link is named by who owned its slot: the plan, the writer, nobody, 
   assert.equal(owner({ slots: [] }).step, 0, 'the template prints it')
 })
 
+test('a self link in a slot the site shares (header or footer) is no fault; the same words in a body slot are', async () => {
+  const shared = owner({
+    lines: [{ key: 'module-5.2', status: 'written', owner: 'plan', slot: 'header.link-7' }]
+  })
+  assert.equal(shared.shared, true)
+  const footer = owner({
+    lines: [{ key: 'module-5.2', status: 'written', owner: 'plan', slot: 'footer.link-2' }]
+  })
+  assert.equal(footer.shared, true)
+  const body = owner({
+    lines: [{ key: 'module-5.2', status: 'written', owner: 'plan', slot: 'block-5.2' }]
+  })
+  assert.equal(body.shared, false)
+  assert.equal(owner({ slots: [] }).shared, false)
+})
+
+test('a button in the shared header is not reported by the self-links group, one in the body is', async () => {
+  const slots = [
+    { key: 'header.link-7', type: 'url', current: 'x', group: { id: 'h' } },
+    { key: 'header.text-7', type: 'text', current: 'Contact us', group: { id: 'h' } },
+    { key: 'module-5.2', type: 'url', current: 'x', group: { id: 'b' } },
+    { key: 'module-5.1', type: 'text', current: 'Get in touch', group: { id: 'b' } }
+  ]
+  const lines = [
+    { key: 'header.link-7', status: 'written', owner: 'plan', slot: 'header.link-7' },
+    { key: 'module-5.2', status: 'written', owner: 'plan', slot: 'block-5.2' }
+  ]
+  const result = await run(
+    () => [
+      {
+        path: '/contact',
+        width: 1440,
+        selfLinks: [
+          { selector: 'a.btn', text: 'Contact us', href: 'http://site.test/contact' },
+          { selector: 'a.cta', text: 'Get in touch', href: 'http://site.test/contact' }
+        ]
+      }
+    ],
+    'self-links',
+    { slots: lines },
+    { door: pagedSite(1, {}, slots).door }
+  )
+  assert.deepEqual(
+    result.groups[0].failures.map((f) => f.measured),
+    ['Get in touch']
+  )
+})
+
 const run = (measures, groupName, reportOver = {}, extra = {}) =>
   runSiteCheck({
     door: pagedSite(1).door,
