@@ -13,13 +13,23 @@ const MAX_SHEETS = 40
 const TIMEOUT_MS = 20_000
 const BRAND_STYLE = /<style\b[^>]*\bid=["']tracy-ds-slot["'][^>]*>[\s\S]*?<\/style>/gi
 
+/** Removes every match, again until nothing changes, so a tag split by another tag cannot survive one pass. */
+export function stripAll(text, re) {
+  let out = text
+  for (let prev = null; prev !== out; ) {
+    prev = out
+    out = out.replace(re, '')
+  }
+  return out
+}
+
 const attr = (tag, name) => new RegExp(`\\b${name}=["']([^"']+)["']`, 'i').exec(tag)?.[1] ?? null
 
 /** Each stylesheet link and each inline style of a page's markup, in page order, the brand's own style left out. */
 export function sheetsOfPage(html) {
   const links = []
   const inline = []
-  const clean = String(html).replace(BRAND_STYLE, '')
+  const clean = stripAll(String(html), BRAND_STYLE)
   for (const tag of clean.match(/<link\b[^>]*>/gi) ?? [])
     if (/\brel=["']?stylesheet/i.test(tag) && attr(tag, 'href')) links.push(attr(tag, 'href'))
   for (const m of clean.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) inline.push(m[1])

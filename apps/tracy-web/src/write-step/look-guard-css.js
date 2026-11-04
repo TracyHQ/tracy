@@ -4,6 +4,7 @@
 import { coloursIn, tripleIn } from '../lib/brand-accent/accent-colours.js'
 import { accentRoutes } from '../lib/brand-accent/accent-routes.js'
 import { readRules } from '../lib/brand-accent/css-rules.js'
+import { stripAll } from './site-sheets.js'
 
 const TONES = new Set(['--tracy-accent', '--tracy-accent-text'])
 const HEX = /^#[0-9a-f]{6}$/i
@@ -169,6 +170,6 @@ export function stylesOf(html) {
   const text = String(html ?? '')
   return {
     blocks: [...text.matchAll(STYLE_BLOCK)].map((m) => ({ whole: m[0], css: m[1] })),
-    rest: text.replace(STYLE_BLOCK, '')
+    rest: stripAll(text, STYLE_BLOCK)
   }
 }

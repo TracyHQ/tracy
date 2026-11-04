@@ -15,7 +15,7 @@ const MODULE = /^module-\d+$/
 const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
 
 /** The pointer every refusal carries: a hide the plugin cannot take needs a contract that captures the whole unit. */
-export const NEW_CONTRACT = 'tracked as issue 369'
+export const NEW_CONTRACT = 'tracked as issue #369'
 
 /** The kit's blocks the plan drops whole, as module keys: no kept page keeps or shows one. */
 export function droppedBlocks(plan, kit) {
