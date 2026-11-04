@@ -524,3 +524,88 @@ test('the model counts every frame once by label; usage errors and a bad run fol
   assert.equal(bad.code, 1)
   assert.match(bad.err[0], /cannot open the run folder/)
 })
+
+// A made-up pottery studio: block-2 has its own copy, two team rows with their own copy and one gallery tile with none.
+const copyPlan = {
+  sharedBlocks: [],
+  pages: [
+    {
+      id: 'home',
+      decision: 'keep',
+      blocks: [
+        {
+          block: 'block-2',
+          why: 'The first screen says who the studio is.',
+          message: 'Hand made pots, taught in small groups.',
+          copy: [
+            { says: 'the hero heading, the studio claim', slot: 'block-2.1' },
+            { says: 'the hero intro', slot: 'block-2.2' },
+            { says: 'the hero button', slot: 'block-2.3' }
+          ],
+          pictures: [{ frame: 'hero', shows: 'A potter at the wheel' }],
+          lists: [
+            {
+              list: 'block-2.team',
+              items: [
+                {
+                  about: 'Mara, the teacher',
+                  copy: [{ says: 'name', slot: 'block-2.10' }],
+                  pictures: [{ frame: 'team-1' }]
+                },
+                {
+                  about: 'Joss, the glazer',
+                  copy: [{ says: 'name', slot: 'block-2.11' }],
+                  pictures: [{ frame: 'team-2' }]
+                },
+                { about: 'a bowl', copy: [], pictures: [{ frame: 'gallery-1' }] }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+const longBody = `${'Clay is patient. '.repeat(40)}The end.`
+const siteCopy = {
+  version: 'site-copy/1',
+  slots: [
+    { slot: 'block-2.1', owner: 'writer', text: 'Pots made by hand', factIds: [] },
+    { slot: 'block-2.2', owner: 'writer', text: ['First line.', longBody], factIds: [] },
+    { slot: 'block-2.3', owner: 'plan-label', text: 'Book a <b>class</b>', factIds: [] },
+    { slot: 'block-2.10', owner: 'writer', text: 'Mara', factIds: [] },
+    { slot: 'block-2.11', owner: 'writer', text: 'Joss', factIds: [] }
+  ],
+  alts: [{ frame: 'team-2', text: 'Joss at the glaze bench' }],
+  seo: [],
+  pages: []
+}
+
+test('--copy adds a "Copy around this picture" panel with the block role, block text, the card text and the alt', async () => {
+  const s = await setup()
+  await writeFile(path.join(s.run, 'plan.json'), JSON.stringify(copyPlan))
+  const copyFile = path.join(s.root, 'site-copy.json')
+  await writeFile(copyFile, JSON.stringify(siteCopy))
+  const plain = await run(['--run', s.run, '--out', s.out])
+  assert.equal(plain.code, 0)
+  assert.ok(!(await readFile(s.out, 'utf8')).includes('Copy around this picture'), 'no panel without --copy')
+  const r = await run(['--run', s.run, '--out', s.out, '--copy', copyFile])
+  assert.equal(r.code, 0, r.err.join())
+  const html = await readFile(s.out, 'utf8')
+  const hero = articleOf(html, 'hero')
+  assert.match(hero, /Copy around this picture/)
+  assert.match(hero, /The first screen says who the studio is\./)
+  assert.match(hero, /Pots made by hand/)
+  assert.match(hero, /Book a &lt;b&gt;class&lt;\/b&gt;/, 'text is escaped')
+  assert.match(hero, /<details/, 'a long body is trimmed with a more control')
+  assert.ok(hero.indexOf('Pots made by hand') < hero.indexOf('Book a'), 'plan order')
+  const team = articleOf(html, 'team-2')
+  assert.match(team, /Joss/)
+  assert.ok(!/>Mara</.test(team), 'the other row is not shown')
+  assert.match(team, /Joss at the glaze bench/, 'the frame alt')
+  assert.match(team, /Pots made by hand/, 'the block text is shown too')
+  const tile = articleOf(html, 'gallery-1')
+  assert.match(tile, /no text of its own/)
+  const bad = await run(['--run', s.run, '--out', s.out, '--copy', path.join(s.root, 'nope.json')])
+  assert.equal(bad.code, 1)
+})

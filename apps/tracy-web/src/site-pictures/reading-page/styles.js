@@ -47,7 +47,15 @@ export const CSS = `${BASE}
 .where-shot{display:block;max-width:100%;cursor:zoom-in}.where-shot:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .wl{cursor:default}.wl-inner{position:relative;max-width:1100px;margin:24px auto}.wl-inner img{width:100%;border-radius:0}
 .wl-box{position:absolute;outline:4px solid #ff2bd6;box-shadow:0 0 0 9999px rgba(0,0,0,.35);pointer-events:none}
+.around{padding:10px 16px 12px;border-bottom:1px solid var(--line);font-size:13.5px;background:var(--note)}
+.around h4{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.around h4 code{text-transform:none;letter-spacing:0}.around h5{margin:10px 0 4px;font-size:12px;color:var(--muted);font-weight:650}
+.around .row{display:grid;grid-template-columns:210px minmax(0,1fr);gap:2px 12px;padding:3px 0;border-top:1px solid var(--line)}
+.around .lab{color:var(--muted);font-size:12.5px}.around .val p{margin:0 0 4px;overflow-wrap:anywhere}.around .val p:last-child{margin:0}
+.around .empty{color:var(--muted);font-style:italic}.around .alt{overflow-wrap:anywhere}
+.around summary{cursor:pointer;list-style:none}.around summary::-webkit-details-marker{display:none}
+.around .more{color:var(--accent);font-size:12px;white-space:nowrap}.around details[open] .cut-text,.around details[open] .more{display:none}
 .sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:16px 0}
 .sum .stat{min-width:0}.sum .stat.zero{opacity:.55}
-@media (max-width:760px){.req{grid-template-columns:1fr}.req dt{margin-top:6px}.figs{padding:12px}}
+@media (max-width:760px){.around .row{grid-template-columns:1fr}.req{grid-template-columns:1fr}.req dt{margin-top:6px}.figs{padding:12px}}
 `

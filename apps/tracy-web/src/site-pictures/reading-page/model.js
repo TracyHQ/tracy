@@ -17,9 +17,10 @@ export const SOURCE_LABELS = Object.freeze({
 export const LABEL_ORDER = Object.freeze([...Object.values(SOURCE_LABELS), 'returned', 'pending', 'no entry'])
 
 // Every picture wish of one plan block, in order (the block's own, then its list items').
+// Each wish comes with the plan list item it sits in (null for the block's own pictures), which the copy panel reads.
 const wishesOf = (d) => [
-  ...arr(d?.pictures),
-  ...arr(d?.lists).flatMap((l) => arr(l?.items).flatMap((i) => arr(i?.pictures)))
+  ...arr(d?.pictures).map((w) => ({ w, item: null })),
+  ...arr(d?.lists).flatMap((l) => arr(l?.items).flatMap((i) => arr(i?.pictures).map((w) => ({ w, item: i }))))
 ]
 
 /** Plan frames in plan order as groups: shared blocks first, then every kept page; a frame belongs to its first group. */
@@ -30,10 +31,11 @@ function groupsOf(plan) {
     const frames = []
     for (const d of blocks) {
       if (!isObject(d) || d.decision === 'hide') continue
-      for (const w of wishesOf(d)) {
+      for (const { w, item } of wishesOf(d)) {
         if (!isObject(w) || typeof w.frame !== 'string' || seen.has(w.frame)) continue
         seen.add(w.frame)
-        frames.push({ wish: w, block: typeof d.id === 'string' ? d.id : null })
+        const id = typeof d.id === 'string' ? d.id : typeof d.block === 'string' ? d.block : null
+        frames.push({ wish: w, block: id, plan: d, item })
       }
     }
     groups.push({ id, title, frames })
@@ -102,13 +104,15 @@ export function buildModel({ plan, brief = null, manifest, run = null }) {
   )
   const counts = Object.fromEntries(LABEL_ORDER.map((l) => [l, 0])) // other labels join as they appear
   for (const g of groups)
-    g.frames = g.frames.map(({ wish, block }) => {
+    g.frames = g.frames.map(({ wish, block, plan: blockPlan = null, item = null }) => {
       const state = stateOf(wish.frame, entries, returns, pending)
       counts[state.label] = (counts[state.label] ?? 0) + 1
       const asset = state.entry?.asset ? (assets.get(state.entry.asset) ?? null) : null
       return {
         frame: wish.frame,
         block,
+        blockPlan,
+        item,
         wish,
         ...state,
         sha256: asset?.sha256 ?? null,

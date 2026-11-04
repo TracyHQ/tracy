@@ -2,8 +2,10 @@
 // owner photos and the kit's demo pictures, in; one HTML file out. Built outside the server, like the copy reading
 // page. Pictures are linked by a path relative to the output file, never embedded: nothing of an owner is copied into
 // the page.
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { readCopy } from '../../site-writer/copy-check/copy-view.js'
+import { copyAround } from './copy-around.js'
 import { loadRunFolder, pictureFinders } from './load-run.js'
 import { buildModel } from './model.js'
 import { renderPage } from './render.js'
@@ -22,10 +24,22 @@ export async function buildPicturesPage({
   kitImagesDir = null,
   kitFile = null,
   webrootDir = null,
+  copyFile = null,
   outFile
 }) {
   const files = await loadRunFolder(runDir)
   const model = buildModel(files)
+  // With a site-copy/1 file, each frame gets the "copy around this picture" panel; without it the page is as before.
+  if (copyFile) {
+    let copy
+    try {
+      copy = JSON.parse(await readFile(copyFile, 'utf8'))
+    } catch (error) {
+      throw new Error(`cannot read the copy file ${copyFile}: ${error.message}`)
+    }
+    const { view } = readCopy(copy)
+    for (const g of model.groups) for (const f of g.frames) f.around = copyAround(f, view)
+  }
   const find = await pictureFinders({ runDir, photosDir, kitImagesDir, kitFile, webrootDir })
   const base = path.dirname(path.resolve(outFile))
   const link = (found) =>
