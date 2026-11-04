@@ -196,3 +196,41 @@ test('a link the site has not marked, or one also changed, is refused by name be
     assert.equal(calls.length, 1)
   }
 })
+
+// The write step drops exactly the slots the plugin refuses, so a thrown refusal keeps what the plugin said per slot. The
+// sentence stays what every other caller reads.
+test('a refused apply keeps the per-slot errors and the answer, with the same sentence as before', async () => {
+  const errors = [{ code: 'SLOT_TOO_LONG', severity: 'recoverable', field: { slotKey: 'hero.title' } }]
+  const answer = { ok: false, error: 'contract_failed', message: 'Review the slots', errors }
+  const apply = async (call) => (call.params.operation === 'inspect' ? state : answer)
+  await assert.rejects(
+    () => applyJoomlaContract({ apply, siteKey: 'customer.test', mapping }),
+    (error) => {
+      assert.equal(error.message, 'Review the slots')
+      assert.deepEqual(error.errors, errors)
+      assert.equal(error.answer.error, 'contract_failed')
+      return true
+    }
+  )
+})
+
+test('a refusal with no per-slot list has no errors, and a slot this adapter refuses names itself', async () => {
+  const silent = async (call) =>
+    call.params.operation === 'inspect' ? state : { ok: false, error: 'writer_busy' }
+  await assert.rejects(
+    () => applyJoomlaContract({ apply: silent, siteKey: 'customer.test', mapping }),
+    (error) => error.errors === undefined && error.answer.error === 'writer_busy'
+  )
+  const proof = {
+    ...state,
+    slots: [{ key: 'hero.title', entity: 'hero', requiresEvidence: true }]
+  }
+  await assert.rejects(
+    () => applyJoomlaContract({ apply: async () => proof, siteKey: 'customer.test', mapping }),
+    (error) =>
+      error.message === 'Customer evidence is missing for hero.title' &&
+      error.errors[0].code === 'SLOT_EVIDENCE_REQUIRED' &&
+      error.errors[0].field.slotKey === 'hero.title' &&
+      error.errors[0].message === error.message
+  )
+})
