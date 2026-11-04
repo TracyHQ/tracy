@@ -65,6 +65,13 @@ export function pgWriteRunStore(pool) {
         [id, status, code, reason, report === null ? null : JSON.stringify(report)]
       )
     },
+    /** The site check writes its results onto the report of a run that has ended. */
+    async saveReport(id, report) {
+      await pool.query('update write_bench_run set report = $2, updated_at = now() where id = $1', [
+        id,
+        JSON.stringify(report)
+      ])
+    },
     /** Asks a running run to stop, or ends it when it went silent. The row as it is now; null when there is no such run. */
     async requestCancel(id) {
       if (!UUID.test(String(id))) return null

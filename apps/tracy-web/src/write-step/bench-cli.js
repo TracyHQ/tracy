@@ -5,6 +5,9 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
+import { checkLines } from '../site-check/check-lines.js'
+import { withReadBack } from '../site-check/read-back.js'
+import { runSiteCheck } from '../site-check/site-check.js'
 import { openContentMap } from '../site-writer/content-map-source.js'
 import { isBenchSite } from './bench-site-creator.js'
 import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './bench-site-cli.js'
@@ -18,6 +21,10 @@ export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   status <runId>                              state, phase, counts and the cause of a stop
   get <runId> --out <dir>                     write the run's site-write-report.json
   cancel <runId>                              stop a run between phases
+  check --run <runId> --account <email> [--out <dir>]
+                                              measure the run's site against its report (site-check/1): reads only,
+                                              runs in this process, keeps the result on the run's report; --out also
+                                              writes site-check.json. Exit 0 green, 1 red or unmeasured
 ${SITE_USAGE}`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
@@ -53,7 +60,8 @@ export async function runCli(argv, deps) {
         account: { type: 'string' },
         by: { type: 'string' },
         limit: { type: 'string' },
-        out: { type: 'string' }
+        out: { type: 'string' },
+        run: { type: 'string' }
       }
     })
     const [command, runId] = positionals
@@ -76,7 +84,8 @@ const COMMANDS = {
   list: { run: listRuns },
   status: { needsId: true, run: statusOf },
   get: { needsId: true, run: getReport },
-  cancel: { needsId: true, run: cancelRun }
+  cancel: { needsId: true, run: cancelRun },
+  check: { run: checkRun }
 }
 
 async function startRun(d, values) {
@@ -213,4 +222,26 @@ async function cancelRun(d, _values, id) {
     return 0
   }
   return refused(d, `Run ${id} has already ended (${r.status}).`)
+}
+
+async function checkRun(d, values) {
+  if (!values.run) throw new Usage('check needs --run <runId>')
+  if (!values.account) throw new Usage('check needs --account')
+  const r = await d.runs.read(values.run)
+  if (!r) return refused(d, `No run ${values.run}.`)
+  if (r.status === 'running') return refused(d, `Run ${r.id} is still going.`)
+  if (!r.report) return refused(d, `Run ${r.id} left no report.`)
+  const check = await runSiteCheck({
+    door: d.makeDoor({ account: values.account, platform: 'joomla' }),
+    report: r.report,
+    ...(d.now ? { now: d.now } : {})
+  })
+  await d.runs.saveReport(r.id, withReadBack(r.report, check))
+  if (values.out) {
+    const dir = path.resolve(d.cwd ?? process.cwd(), values.out)
+    await mkdir(dir, { recursive: true })
+    await writeFile(path.join(dir, 'site-check.json'), `${JSON.stringify(check, null, 2)}\n`)
+  }
+  for (const line of checkLines(check)) d.out(line)
+  return check.status === 'green' ? 0 : 1
 }

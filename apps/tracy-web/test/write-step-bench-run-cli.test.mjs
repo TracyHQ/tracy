@@ -187,3 +187,67 @@ test('wrong usage exits 2; the site commands keep working from the same command'
   assert.equal(await h.cli(['site-list']), 0)
   assert.ok(h.out.some((l) => l.startsWith('site-1')))
 })
+
+// The check command: reads the site of a run that ended, prints the result, and keeps it on the run's report.
+function checkedSite() {
+  const site = fakeSite()
+  const door = {
+    async apply(call) {
+      const answer = await site.door.apply(call)
+      if (call.params.operation !== 'inspect') return answer
+      return { ...answer, slots: answer.slots.map((s) => ({ ...s, current: site.held[s.key] ?? '' })) }
+    }
+  }
+  return { ...site, door }
+}
+
+async function ranRun() {
+  const frozen = frozenFiles()
+  const h = harness({ site: checkedSite() })
+  await h.cli(runArgs(frozen.files))
+  frozen.done()
+  h.out.length = 0
+  return h
+}
+
+const checkArgs = (over = []) => ['check', '--run', 'run-1', '--account', 'bench@example.test', ...over]
+
+test('check prints the group and the verdict, exits 0 on green and writes nothing to the site', async () => {
+  const h = await ranRun()
+  const before = h.site.calls.filter((c) => c.params.operation !== 'inspect').length
+  assert.equal(await h.cli(checkArgs()), 0)
+  assert.match(h.out[0], /^read-back: green 9 checked, \d+ skipped reads: content\.contract inspect \(9\)$/)
+  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn)')
+  assert.equal(h.site.calls.filter((c) => c.params.operation !== 'inspect').length, before)
+  const { report } = h.runs.rows[0]
+  assert.equal(report.siteCheck.version, 'site-check/1')
+  assert.equal(report.slots.find((s) => s.slot === 'block-2.1').readBack, 'match')
+})
+
+test('check exits 1 on red, printing the page, the slot, the step, and --out keeps the result', async () => {
+  const h = await ranRun()
+  h.site.held['module-2.1'] = 'Changed by hand'
+  const dir = mkdtempSync(path.join(tmpdir(), 'write-step-check-'))
+  assert.equal(await h.cli(checkArgs(['--out', dir])), 1)
+  const line = h.out.find((l) => l.includes('slot=block-2.1'))
+  assert.match(line, /block step 9 page=- slot=block-2\.1 key=module-2\.1 measured="Changed by hand"/)
+  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn)')
+  const saved = JSON.parse(readFileSync(path.join(dir, 'site-check.json'), 'utf8'))
+  assert.equal(saved.status, 'red')
+  assert.equal(h.runs.rows[0].report.slots.find((s) => s.slot === 'block-2.1').readBack, 'differs')
+  rmSync(dir, { recursive: true, force: true })
+})
+
+test('check says plainly when there is no run, no report, a run still going, or wrong usage', async () => {
+  const h = harness({ site: checkedSite() })
+  assert.equal(await h.cli(checkArgs()), 1)
+  assert.match(h.err.at(-1), /No run run-1/)
+  await h.runs.begin({ siteKey: SITE, kit: 'k', startedBy: 'cli' })
+  assert.equal(await h.cli(checkArgs()), 1)
+  assert.match(h.err.at(-1), /still going/)
+  await h.runs.finish('run-1', { status: 'stopped', code: 'X', reason: 'y' })
+  assert.equal(await h.cli(checkArgs()), 1)
+  assert.match(h.err.at(-1), /left no report/)
+  assert.equal(await h.cli(['check', '--account', 'a@example.test']), 2)
+  assert.equal(await h.cli(['check', '--run', 'run-1']), 2)
+})

@@ -17,7 +17,15 @@ test('the site copy reaches the site in one contract call, and the report says s
   assert.equal(site.held['module-1.1'], 'Join us')
   assert.deepEqual(
     { ...line('block-2.1') },
-    { slot: 'block-2.1', key: 'module-2.1', owner: 'writer', status: 'written', reason: null, readBack: null }
+    {
+      slot: 'block-2.1',
+      key: 'module-2.1',
+      owner: 'writer',
+      status: 'written',
+      reason: null,
+      readBack: null,
+      ordered: 'Train with a coach who knows you'
+    }
   )
   assert.equal(line('block-1.1').owner, 'plan-label')
   assert.equal(report.counts.written, 9)

@@ -93,6 +93,7 @@ export async function runWriteStep(input) {
   let table = null
   let extras = {}
   let routes = { routed: new Map(), deferred: new Map() }
+  let ordered = {}
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -103,6 +104,7 @@ export async function runWriteStep(input) {
         extras,
         written,
         refused,
+        ordered,
         ...routes
       })
       report.counts = countsOf(report.slots)
@@ -170,6 +172,7 @@ export async function runWriteStep(input) {
       }
     const { changes, ...found } = routeChanges(exported.mapping.changes, kit.doc, view.slots)
     routes = found
+    ordered = changes
     return { mapping: { ...exported.mapping, changes } }
   })
   if (checked.stop) return stopped(checked.stop)

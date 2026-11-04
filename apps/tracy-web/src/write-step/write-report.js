@@ -1,6 +1,8 @@
 // The write report `site-write-report/1` (ADR 0044): one line per slot with its owner, status and reason. `readBack` is
 // null until the site check fills it in; nothing here reads the site. A line's `part` says what kind of thing it is when
-// it is not a content slot of the mapping.
+// it is not a content slot of the mapping. A written or refused line keeps in `ordered` the value that was sent, which is
+// what the site check compares the site with. A line written through a door other than the contract names its read in
+// `readFrom` (site-check/read-back.js).
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { refusalWords } from './contract-write.js'
 
@@ -17,7 +19,7 @@ const line = (slot, key, owner, status, reason, extra = {}) => ({
 })
 
 /** A line for each claim, from what the write did. */
-function claimLine(claim, { written, refused, routed, deferred }) {
+function claimLine(claim, { written, refused, routed, deferred, ordered }) {
   const slotKey = contentMapKey(claim.slot)
   const key = routed.get(slotKey) ?? slotKey
   if (claim.kind === 'hide')
@@ -39,9 +41,12 @@ function claimLine(claim, { written, refused, routed, deferred }) {
   if (deferred.has(key)) return line(claim.slot, key, claim.owner, 'skipped', deferred.get(key))
   if (refused.has(key)) {
     const entry = refused.get(key)
-    return line(claim.slot, key, claim.owner, 'failed', refusalWords(entry), { refusal: entry })
+    return line(claim.slot, key, claim.owner, 'failed', refusalWords(entry), {
+      refusal: entry,
+      ordered: ordered[key]
+    })
   }
-  if (written.has(key)) return line(claim.slot, key, claim.owner, 'written', null)
+  if (written.has(key)) return line(claim.slot, key, claim.owner, 'written', null, { ordered: ordered[key] })
   return line(claim.slot, key, claim.owner, 'skipped', 'the run ended before this slot was written')
 }
 
@@ -67,7 +72,8 @@ function extraLines(extras, owners) {
 /**
  * The slot lines of a report.
  * @param {{ owners: Map<string, object>, unowned: object[], extras: object, written: Iterable<string>,
- *   refused: Map<string, object>, routed?: Map<string, string>, deferred?: Map<string, string> }} input
+ *   refused: Map<string, object>, routed?: Map<string, string>, deferred?: Map<string, string>,
+ *   ordered?: Record<string, string> }} input `ordered`: what the mapping sent, by content map key
  */
 export function slotLines({
   owners,
@@ -76,9 +82,10 @@ export function slotLines({
   written,
   refused,
   routed = new Map(),
-  deferred = new Map()
+  deferred = new Map(),
+  ordered = {}
 }) {
-  const done = { written: new Set(written), refused, routed, deferred }
+  const done = { written: new Set(written), refused, routed, deferred, ordered }
   return [
     ...[...owners.values()].map((claim) => claimLine(claim, done)),
     ...unowned.map((u) =>

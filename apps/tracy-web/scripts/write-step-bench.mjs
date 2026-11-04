@@ -7,6 +7,7 @@
  *
  *   node scripts/write-step-bench.mjs create-site --kit <contract id> --account <bench account email>
  *   node scripts/write-step-bench.mjs run --site <site key> --kit <contract id> --plan-file <path> --copy-file <path> --account <email>
+ *   node scripts/write-step-bench.mjs check --run <run> --account <email> [--out <dir>]
  *   node scripts/write-step-bench.mjs list | status <run> | get <run> --out <dir> | cancel <run>
  *
  * Every command and its options: `node scripts/write-step-bench.mjs` with no command (src/write-step/bench-cli.js).

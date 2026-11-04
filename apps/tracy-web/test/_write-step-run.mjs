@@ -140,6 +140,9 @@ export function memoryRunStore(seed = []) {
     async finish(id, fields) {
       Object.assign(find(id), fields, { phase: 'done' })
     },
+    async saveReport(id, report) {
+      find(id).report = report
+    },
     async requestCancel(id) {
       const row = find(id)
       if (row?.status !== 'running') return row ? { ...row } : null

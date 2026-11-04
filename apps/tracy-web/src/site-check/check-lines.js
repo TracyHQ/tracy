@@ -1,0 +1,37 @@
+// What the check command prints: one line per group, one per failure, and the verdict last.
+const LONGEST = 160
+const shown = (value) => {
+  if (value === null || value === undefined) return '(nothing)'
+  const text = JSON.stringify(value)
+  return text.length > LONGEST ? `${text.slice(0, LONGEST)}...` : text
+}
+
+const readsOf = (reads) =>
+  reads?.length ? ` reads: ${reads.map((r) => `${r.read} (${r.lines})`).join(', ')}` : ''
+
+function groupLine(g) {
+  const size = g.status === 'not-run' ? '' : ` ${g.checked ?? 0} checked`
+  const skipped = g.skipped ? `, ${g.skipped} skipped` : ''
+  const why = g.reason ? ` (${g.reason})` : ''
+  return `${g.name}: ${g.status}${size}${skipped}${why}${readsOf(g.reads)}`
+}
+
+function failureLine(f) {
+  const where = [
+    `page=${f.page ?? '-'}`,
+    `slot=${f.slot ?? '-'}`,
+    ...(f.key && f.key !== f.slot ? [`key=${f.key}`] : []),
+    ...(f.width ? [`width=${f.width}`] : [])
+  ]
+  const order = f.ordered === undefined || f.ordered === null ? '' : ` ordered=${shown(f.ordered)}`
+  const words = f.reason ? `: ${f.reason}` : ''
+  return `  ${f.level} step ${f.causingStep} ${where.join(' ')} measured=${shown(f.measured)}${order}${words}`
+}
+
+/** @param {object} check `site-check/1` */
+export function checkLines(check) {
+  return [
+    ...check.groups.flatMap((g) => [groupLine(g), ...g.failures.map(failureLine)]),
+    `site-check: ${check.status} (${check.counts.block} block, ${check.counts.warn} warn)`
+  ]
+}
