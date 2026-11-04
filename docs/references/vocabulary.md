@@ -413,6 +413,7 @@ from the block below, and the block must not keep dead names. `scripts/check-voc
 @tracy/emdash-theme-base
 @tracy/emdash-theme-business
 @tracy/emdash-theme-coffee
+@tracy/emdash-theme-restaurant
 @tracy/emdash-theme-saas
 @tracy/harness-web
 @tracy/host
