@@ -81,7 +81,8 @@ test('a page that is an article under a menu item keeps its share picture on the
   assert.deepEqual(written.readFrom.params, { kind: 'article', id: 7 })
   assert.deepEqual(written.readFrom.path, ['item', 'attribs', 'og_img'])
   const attribs = JSON.parse(site.held('article', 7).attribs)
-  assert.match(attribs.og_img, LOGO)
+  assert.match(attribs.og_img, /^images\/tracy-content\//, "the article's own picture, not the logo")
+  assert.equal(attribs.og_img, written.ordered)
   assert.equal(attribs.show_title, '1', 'the article keeps its other settings')
 })
 
