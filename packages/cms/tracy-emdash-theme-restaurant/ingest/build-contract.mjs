@@ -8,7 +8,7 @@
 //   node ingest/build-contract.mjs --site http://127.0.0.1:18301 [--out qa.contract.json]
 // Run it from the package root after `node tools/qa-contract.mjs init source/snapshot qa.contract.json --config template.config.json`.
 import { readFileSync, writeFileSync } from 'node:fs'
-import { decodeWith, stripTags } from './text.mjs'
+import { decodeWith } from './text.mjs'
 import { launchBrowser } from '../tools/qa-browser.mjs'
 
 const args = process.argv.slice(2)

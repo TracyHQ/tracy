@@ -7,7 +7,7 @@
 		"version": "1.0.0"
 	},
 	"demoContent": "JA Restaurant",
-	"generatedAt": "2026-11-04T08:18:31.262Z",
+	"generatedAt": "2026-11-04T10:21:45.568Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,7 +75,7 @@
 		"docs/content-model.md": "sha256:3541ffd1f706968c4da04642937ba8b268294b3395ede921476f59586abc6fa6",
 		"docs/content-rules.md": "sha256:3e558db93f8e949e84759b03b9df9529247a23607aa9eaf816f60bed86ad4f91",
 		"docs/design-system.md": "sha256:ef68f4b375faaa5c7ee867ecd6a2b7b08673b62a51095b08a848bda6c29cc685",
-		"docs/generated/inventory.json": "sha256:825e3e2ecb358befbedf98a7f8cbe00e356f17688dac42def16e2e831610c1dd",
+		"docs/generated/inventory.json": "sha256:aaeccad91cb6efd8df5277ea6bb0320a840d3cd3335bdb25d801a4349ffac1e1",
 		"docs/generated/inventory.md": "sha256:a0ab8a6aff59a230609c8178a0a09a6561fe40e9b77ec5e973b9e90a1b4a52be",
 		"docs/install.md": "sha256:22180adf7e455262788c863f54e007e3bc54548f11eea650cbeaa412c624c1a6",
 		"docs/languages.md": "sha256:04b96e69bafea8a38ca630452e5f418578e42bf198a4f8e53b848425f0bc7590",
@@ -83,7 +83,7 @@
 		"seed/seed.json": "sha256:9ede6bcb1b0a7be94bd0887e2132020dac74c3477386a79d5984cd5adfe3b01a",
 		"seed/media-map.json": "sha256:1895398acdcc04fa80dcdb2a8c765fbe9764fac43bf130606dead6f6ae8047a5",
 		"seed/field-map.json": "sha256:07548f5b68d4202be58338db9ada012c70e8f8845f81f962ef190e0682e14a15",
-		"pnpm-lock.yaml": "sha256:b7052e521e4b52c40749eec0a9dcfe12c0cf9a90a54a0aa379ecb737faaffeca",
+		"pnpm-lock.yaml": "sha256:b3a2938a0dd56c8b63dece77de38120093ea2b3c3d98faf5516c244729f5f13d",
 		"tools/forms.json": "sha256:762e87a9fda1fba307ee2e2ebf2f9535c23d93c4b97801b11e91731dca548777",
 		"seed/media/*": "sha256:281a31fb658d188bb5cb3bee1264043c9a63bceacf643b17eae2021863e84276 (66 files)"
 	}
