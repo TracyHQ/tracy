@@ -11,11 +11,12 @@ import {
 } from '../sites/brief-engines/joomla-t4-body-background.js'
 import { brandAsker, said } from './brand-writes.js'
 import { refusalWords } from './contract-write.js'
+import { preparePainted } from './painted-stage.js'
 import { packageProblems, PICTURE_OWNER, readPackageFiles } from './picture-package.js'
 
 const ENDED = 'the run ended before this picture was written'
-const PAINTING =
-  'painted from the brand colours, which arrives with #367; the file beside it is a preview in neutral colours and is not written'
+const PAINTED_SETTING =
+  'a template setting with colour roles is not drawn yet; the file beside it is a preview in neutral colours and is not written'
 
 /** Content map key to kit slot id, the reverse of `contentMapKey`. */
 const slotOfKey = (key) => key.replace(/^module-/, 'block-')
@@ -48,7 +49,7 @@ function readSettings(entries, kit) {
   const left = []
   for (const entry of entries) {
     const setting = entry.preview || entry.paint ? null : settingOf(entry.frame, kit)
-    if (entry.preview || entry.paint) left.push({ frame: entry.frame, reason: PAINTING })
+    if (entry.preview || entry.paint) left.push({ frame: entry.frame, reason: PAINTED_SETTING })
     else if (!setting)
       left.push({ frame: entry.frame, reason: 'the kit names no writable setting for this frame' })
     else orders.push({ ...setting, frame: entry.frame, entry })
@@ -58,10 +59,19 @@ function readSettings(entries, kit) {
 
 /**
  * @param {{ pictures?: object, picturesPath?: string, inputs?: { file: string, sha256: string }, kit: object,
- *   contract: string }} input
+ *   contract: string, brand?: object, brandPath?: string, contentMap?: object | null }} input
  * @returns {Promise<object>} the stage; `stop` says why it cannot run
  */
-export async function preparePictureStage({ pictures, picturesPath, inputs, kit, contract }) {
+export async function preparePictureStage({
+  pictures,
+  picturesPath,
+  inputs,
+  kit,
+  contract,
+  brand,
+  brandPath,
+  contentMap
+}) {
   if (pictures === undefined) return idle
   const problems = packageProblems(pictures, contract)
   if (problems.length)
@@ -94,6 +104,18 @@ export async function preparePictureStage({ pictures, picturesPath, inputs, kit,
       .filter((p) => p.kind !== 'backdrop')
       .map((p) => claim(p.frame, 'painted', `painted ${p.kind}`))
   ]
+  const drawn = await preparePainted({
+    painted: pictures.painted,
+    brand,
+    brandPath,
+    contentMap,
+    figures: files
+  })
+  Object.assign(changes, drawn.changes)
+  for (const [sitePath, bytes] of drawn.files) files.set(sitePath, bytes)
+  // A figure now inside a drawn file has no slot of its own left, unless another frame holds it.
+  const held = new Set(Object.values(changes))
+  for (const figure of drawn.replaced) if (!held.has(figure)) files.delete(figure)
   const oneEach = [...new Map(settings.orders.map((o) => [o.slot, o])).values()]
   const failedUploads = new Map()
   const settingResults = new Map()
@@ -189,13 +211,17 @@ export async function preparePictureStage({ pictures, picturesPath, inputs, kit,
   const lines = ({ written, refused }) => {
     const wrote = new Set(written)
     return [
-      ...Object.keys(changes).map((key) => frameLine(key, wrote, refused)),
+      ...Object.keys(changes).map((key) => {
+        const frame = frameLine(key, wrote, refused)
+        const painted = drawn.recipes.get(key)
+        return painted ? { ...frame, part: 'picture-painted', painted } : frame
+      }),
       ...oneEach.map(settingLine),
       ...settings.left.map((l) => line(l.frame, null, 'skipped', l.reason, 'body-background')),
-      ...pictures.painted.map((p) =>
-        p.kind === 'backdrop'
-          ? line(`${p.frame}.backdrop`, null, 'skipped', PAINTING, 'picture-painted')
-          : line(p.frame, p.key, 'skipped', PAINTING, 'picture-painted')
+      ...drawn.left.map(({ item, status, reason, record }) =>
+        item.kind === 'backdrop'
+          ? line(`${item.frame}.backdrop`, null, status, reason, 'picture-painted', { painted: record })
+          : line(item.frame, item.key, status, reason, 'picture-painted', { painted: record })
       )
     ]
   }
