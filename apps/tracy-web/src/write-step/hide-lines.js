@@ -30,12 +30,31 @@ function fixedResult(order, words) {
   }
 }
 
+/** How a slot taken out of the stored field is read back: on the list of what the plugin removed. */
+const removedRead = (key) => ({
+  ordered: 'removed',
+  readFrom: { action: 'content.contract', params: { operation: 'inspect' }, path: ['removedSlots', key] }
+})
+
+function removedResult({ key, already }, removed) {
+  const done = already ? true : removed.get(key)
+  if (done === true)
+    return {
+      status: 'hidden',
+      key,
+      reason: `${PLAN_HIDES}: it left the stored field with its row or element, and comes back only on a new site`,
+      ...removedRead(key)
+    }
+  return typeof done === 'string' ? { status: 'failed', key, reason: done } : null
+}
+
 /** What became of one hide claim, or null while nothing did, which the report reads as the run having ended first. */
-function claimResult(order, { blocks, words, gone, refused, settled }) {
+function claimResult(order, { blocks, words, gone, refused, settled, removed }) {
   const { via, key } = order
   if (via === 'failed')
     return { status: 'failed', reason: order.reason, key, ...(order.part ? { part: order.part } : {}) }
   if (via === 'fixed') return fixedResult(order, words)
+  if (via === 'removed') return removedResult(order, removed)
   if (via === 'empty')
     return { status: 'hidden', key, reason: `${PLAN_HIDES}: it is already empty on the site` }
   if (via === 'block') {
@@ -67,11 +86,22 @@ function claimResult(order, { blocks, words, gone, refused, settled }) {
 
 /**
  * @param {{ order: object, words: object, blocks: Map<string, true | string>, pages: Map<string, object>,
- *   cannotHide: string | null, emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object> }} input
+ *   cannotHide: string | null, emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object>,
+ *   removed?: Map<string, true | string> }} input
  * @returns {{ hides: Map<string, object>, lines: object[] }}
  */
-export function hideLines({ order, words, blocks, pages, cannotHide, emptied, refused, settled }) {
-  const seen = { blocks, words, gone: new Set(emptied), refused, settled }
+export function hideLines({
+  order,
+  words,
+  blocks,
+  pages,
+  cannotHide,
+  emptied,
+  refused,
+  settled,
+  removed = new Map()
+}) {
+  const seen = { blocks, words, gone: new Set(emptied), refused, settled, removed }
   const hides = new Map()
   for (const [slot, claim] of order.orders) {
     const result = claimResult(claim, seen)

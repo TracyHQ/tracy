@@ -15,6 +15,7 @@ import { readCopy } from '../site-writer/copy-check/copy-view.js'
 import { exportContractMapping } from '../site-writer/contract-mapping.js'
 import { prepareBrandStage } from './brand-stage.js'
 import { writeContract } from './contract-write.js'
+import { goneRowSlots } from './hide-rows.js'
 import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
 import { routeChanges } from './kit-slot-routes.js'
@@ -191,7 +192,13 @@ export async function runWriteStep(input) {
       ...pictures.claims,
       ...copyClaims(view.slots, read.inputs.copy.file),
       ...planClaims(
-        { plan, hidden: index.hidden, menuHide: extras.mainMenu?.hide, filled: index.expected },
+        {
+          plan,
+          hidden: index.hidden,
+          menuHide: extras.mainMenu?.hide,
+          filled: index.expected,
+          rowsGone: goneRowSlots({ plan, kit: kit.doc, filled: index.expected })
+        },
         read.inputs.plan.file
       )
     ])

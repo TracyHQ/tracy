@@ -28,23 +28,38 @@ export function keptBlocks(plan) {
 /**
  * The plan's claims: link targets and hide decisions. `hidden` is the copy check's reading of the plan (a slot the plan
  * also fills elsewhere is not hidden), and the main menu items to hide are hide decisions as well. A target the plan gives
- * a link wins over a hide the plan gives it elsewhere, as a filled slot does.
+ * a link wins over a hide the plan gives it elsewhere, as a filled slot does. Within one block it does not: a plan lists every
+ * link a block has, so a link the same block hides, or one on a row of `rowsGone` (hide-rows.js), is that row's to lose.
  */
-export function planClaims({ plan, hidden, menuHide, filled = new Set() }, file) {
+export function planClaims({ plan, hidden, menuHide, filled = new Set(), rowsGone = new Set() }, file) {
   const claims = []
   const linked = new Set()
-  for (const d of keptBlocks(plan))
+  const leaving = new Set()
+  for (const d of keptBlocks(plan)) {
+    const hiddenHere = new Set(arr(d.hiddenSlots).map((h) => h?.slot))
     for (const l of arr(d.links))
       if (isObject(l) && typeof l.link === 'string') {
+        if (hiddenHere.has(l.link) || rowsGone.has(l.link)) {
+          leaving.add(l.link)
+          continue
+        }
         linked.add(l.link)
-        claims.push({ slot: l.link, owner: 'plan', file, kind: 'link', content: String(l.leadsTo ?? '') })
+        claims.push({
+          slot: l.link,
+          owner: 'plan',
+          file,
+          kind: 'link',
+          content: String(l.leadsTo ?? ''),
+          ...(typeof l.labelSlot === 'string' ? { label: l.labelSlot } : {})
+        })
       }
+  }
   // A main menu item the plan takes out of the dropdown can share its label slot with a link a kept page shows. The
   // plan fills that slot, so the words stay; leaving the dropdown is a page frame order, not a claim on the slot.
   const menuHides = arr(menuHide)
     .map((m) => m?.slot)
     .filter((slot) => !filled.has(slot))
-  const hides = new Set([...hidden, ...menuHides])
+  const hides = new Set([...hidden, ...menuHides, ...leaving])
   for (const slot of hides)
     if (typeof slot === 'string' && !linked.has(slot))
       claims.push({ slot, owner: 'plan', file, kind: 'hide', content: '(hide)' })

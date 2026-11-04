@@ -11,17 +11,24 @@ const digest = (value) => createHash('sha256').update(JSON.stringify(value)).dig
 /** How a thing taken off the site is read back: its row, unpublished. */
 export const unpublishedRead = (kind, id) => ({ ordered: '0', readFrom: readRow(kind, id, 'published') })
 
-/** Why this site's plugin takes no hide order, or null when it does. */
-export async function hideOpsProblem(door, siteKey) {
+/** Why this site's plugin takes no hide order, or null when it does; `rowsRemove`: whether it has the `rows.remove` door. */
+export async function hideOpsOf(door, siteKey) {
   const older =
     'the plugin on this site is older than the hide orders (info.hide_ops), which it would ignore, so nothing was hidden'
   try {
     const answer = await door.apply({ siteKey, action: 'info', params: {} })
     if (answer?.ok === false)
-      return `the plugin could not say whether it takes hide orders: ${answerWords(answer)}`
-    return Number(answer?.info?.hide_ops?.version) >= 1 ? null : older
+      return {
+        problem: `the plugin could not say whether it takes hide orders: ${answerWords(answer)}`,
+        rowsRemove: false
+      }
+    const ops = answer?.info?.hide_ops
+    return { problem: Number(ops?.version) >= 1 ? null : older, rowsRemove: Number(ops?.rows_remove) >= 1 }
   } catch (error) {
-    return `the plugin could not say whether it takes hide orders: ${String(error?.message ?? error)}`
+    return {
+      problem: `the plugin could not say whether it takes hide orders: ${String(error?.message ?? error)}`,
+      rowsRemove: false
+    }
   }
 }
 
@@ -126,6 +133,48 @@ export async function unpublishBlocks({ door, siteKey, modules, revision, contra
     if (answer?.ok !== false) {
       for (const key of left) done.set(key, true)
       return { done, wrote: true }
+    }
+    const named = (Array.isArray(answer.errors) ? answer.errors : []).filter((e) =>
+      left.includes(e?.field?.slotKey)
+    )
+    if (!named.length) {
+      for (const key of left) done.set(key, answerWords(answer))
+      return { done, wrote: false }
+    }
+    for (const entry of named) done.set(entry.field.slotKey, refusalWords(entry))
+    left = left.filter((key) => !done.has(key))
+  }
+  return { done, wrote: false }
+}
+
+/**
+ * `rows.remove`, dropping what the plugin names: it answers all or nothing, so a retry goes without exactly those. By slot key:
+ * true, or the words that refused it. A slot the plugin takes along unnamed is not listed: it had no owner.
+ */
+export async function removeRows({ door, siteKey, slots, keep, revision, contract, sleep }) {
+  const done = new Map()
+  let left = [...slots]
+  while (left.length) {
+    const hash = digest({ siteKey, contract, revision, slots: left, keep })
+    const answer = await asked(
+      door,
+      {
+        siteKey,
+        action: 'content.contract',
+        params: {
+          operation: 'rows.remove',
+          apply_id: `contract-${hash.slice(0, 48)}`,
+          request_id: hash,
+          expected_revision: revision,
+          slots: left,
+          keep
+        }
+      },
+      sleep
+    )
+    if (answer?.ok !== false) {
+      for (const key of left) done.set(key, true)
+      return { done, wrote: answer?.unchanged !== true }
     }
     const named = (Array.isArray(answer.errors) ? answer.errors : []).filter((e) =>
       left.includes(e?.field?.slotKey)
