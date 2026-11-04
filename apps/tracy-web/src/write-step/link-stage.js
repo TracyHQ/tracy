@@ -64,7 +64,18 @@ function settleShared(orders, values) {
  * @returns {Promise<{ changes: Record<string, string>, evidence: Record<string, string>, writeMenu: () => Promise<void>,
  *   results: (done: object) => Map<string, object> }>} `results` gives each link line once the writes are done, by slot
  */
-export async function prepareLinks({ door, siteKey, kit, plan, brief, owners, reading, extras, taken }) {
+export async function prepareLinks({
+  door,
+  siteKey,
+  kit,
+  plan,
+  brief,
+  owners,
+  reading,
+  extras,
+  taken,
+  contentMap
+}) {
   const claims = [...owners.values()].filter((c) => c.kind === 'link')
   const call = doorCall(door, siteKey)
   let site
@@ -80,7 +91,7 @@ export async function prepareLinks({ door, siteKey, kit, plan, brief, owners, re
     }
   }
   const facts = new Map(each(brief?.facts).map((f) => [f?.id, f]))
-  const doorOf = linkDoors({ kit, reading, rows: site.rows })
+  const doorOf = linkDoors({ kit, reading, rows: site.rows, contentMap })
   const hiddenKeys = new Map(
     [...owners.values()].filter((c) => c.kind === 'hide').map((c) => [contentMapKey(c.slot), c.slot])
   )

@@ -260,6 +260,7 @@ export async function runWriteStep(input) {
   if ([...table.owners.values()].some((claim) => claim.kind === 'link')) {
     links = await timed('links', () =>
       prepareLinks({
+        contentMap,
         door,
         siteKey,
         kit: kit.doc,

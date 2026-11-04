@@ -5,6 +5,7 @@ import { test } from 'node:test'
 import { hideOrders } from '../src/write-step/hide-plan.js'
 import { hideLines } from '../src/write-step/hide-lines.js'
 import { goneRowSlots, slotsToRemove } from '../src/write-step/hide-rows.js'
+import { linkDoors } from '../src/write-step/link-doors.js'
 import { lineOrder, lineResult } from '../src/write-step/link-lines.js'
 import { planClaims } from '../src/write-step/owner-table.js'
 
@@ -281,4 +282,29 @@ test('a menu link keeps its own way out: the plan takes its item off the site', 
     { hiddenKeys: new Map([['menuItem-1.0', 'menuItem-1.0']]), leaving: new Set(['menuItem-1']) }
   )
   assert.equal(order.via, 'menu')
+})
+
+test('a link inside words an earlier run removed is still found, so a second run reports it the same', () => {
+  const block = {
+    id: 'block-1',
+    source: { entity: 'module-1' },
+    links: [
+      { id: 'block-1.link-1', position: 1 },
+      { id: 'block-1.link-2', position: 2 }
+    ]
+  }
+  const words = {
+    key: 'module-1.3',
+    entity: 'module-1',
+    column: 'params',
+    type: 'text',
+    sample: '<a href="#">One</a><a href="#">Two</a>'
+  }
+  const kitWithLinks = { blocks: [block] }
+  const first = linkDoors({ kit: kitWithLinks, reading: { slots: [words] }, rows: [] })
+  assert.deepEqual([first('block-1.link-2').via, first('block-1.link-2').key], ['words', 'module-1.3'])
+  const reading = { slots: [], removedSlots: { 'module-1.3': 'removed' } }
+  assert.equal(linkDoors({ kit: kitWithLinks, reading, rows: [] })('block-1.link-2').via, 'none')
+  const second = linkDoors({ kit: kitWithLinks, reading, rows: [], contentMap: { slots: [words] } })
+  assert.deepEqual([second('block-1.link-2').via, second('block-1.link-2').key], ['words', 'module-1.3'])
 })
