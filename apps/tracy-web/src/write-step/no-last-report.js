@@ -6,6 +6,6 @@ export const NO_LAST = {
   same: () => false,
   sameKey: () => false,
   hidden: () => false,
-  part: () => [],
+  allDone: () => null,
   held: () => []
 }

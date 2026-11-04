@@ -16,9 +16,10 @@ export const lineId = ({ slot, spot }) => (spot ? `${slot}@${spot}` : slot)
  * @param {object | null | undefined} report the last run's write report on this site, however that run ended
  * @returns {{ active: boolean, report: object | null, line: (id: string) => object | null,
  *   same: (id: string, value: unknown) => boolean, sameKey: (key: string, value: string) => boolean,
- *   hidden: (id: string) => boolean, part: (part: string) => object[], held: () => object[] }} `line`: the done line of
+ *   hidden: (id: string) => boolean, allDone: (part: string) => object[] | null, held: () => object[] }} `line`: the done line of
  *   this id, unless the site check found the site different; `same`: that line holds this value; `sameKey`: the last contract
- *   call wrote this value to this content map key; `part`: such lines of one part; `held`: every line the site took
+ *   call wrote this value to this content map key; `allDone`: the lines of one part when there are some and every one is done;
+ *   `held`: every line the site took
  */
 export function readLastReport(report) {
   if (!report) return NO_LAST
@@ -47,7 +48,10 @@ export function readLastReport(report) {
     same: (id, value) => value !== undefined && line(id)?.ordered === value,
     sameKey: (key, value) => keys.get(key) === value,
     hidden: (id) => line(id)?.status === 'hidden',
-    part: (part) => [...taken.values()].filter((entry) => entry.part === part && standing(entry)),
+    allDone: (part) => {
+      const lines = slots.filter((entry) => entry.part === part)
+      return lines.length && lines.every((entry) => line(lineId(entry))) ? lines : null
+    },
     held: () => [...taken.values()]
   }
 }

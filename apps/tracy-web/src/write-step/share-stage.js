@@ -4,7 +4,9 @@
 // So this stage turns the switch on in the template styles and writes `og_img` on the menu item that opens each kept page.
 // The picture of a page is read from the lines the picture stage reports: only a picture written to the site can be named,
 // never one it refused, failed to upload or skipped. A page with no menu item, or with neither a picture nor a logo, is
-// reported skipped with the reason. Each written line names its read, so the site check can read it back.
+// reported skipped with the reason. Each written line names its read, so the site check can read it back. What the last report
+// says the site holds is not written again, and the page's picture is still worked out from the whole site.
+import { NO_LAST } from './no-last-report.js'
 import { menuRows, rowsOpening } from './page-meta-write.js'
 import { doorCall, readRow } from './settings-door.js'
 
@@ -80,7 +82,7 @@ async function styleRows(call, kit) {
 }
 
 /** Turn the template's Open Graph switch on in every style that has it off. One line a style. */
-async function switchOn({ call, kit, lines }) {
+async function switchOn({ call, kit, lines, last }) {
   let rows
   try {
     rows = await styleRows(call, kit)
@@ -95,6 +97,14 @@ async function switchOn({ call, kit, lines }) {
   let every = true
   for (const row of rows) {
     const slot = `share-switch:templateStyle-${row.id}`
+    if (last.same(slot, '1')) {
+      lines.set(slot, {
+        status: 'written',
+        ordered: '1',
+        readFrom: readRow('templateStyle', Number(row.id), 'params', [SWITCH])
+      })
+      continue
+    }
     try {
       await call('content.update', {
         kind: 'templateStyle',
@@ -141,7 +151,7 @@ async function writeImage({ call, opening, path, reason = null }) {
 
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, pageIds: string[], menutype?: string | null,
- *   pictureLines: object[], brandLines: object[], isCancelled?: () => Promise<boolean> }} input
+ *   pictureLines: object[], brandLines: object[], isCancelled?: () => Promise<boolean>, last?: object }} input
  *   `pageIds`: the pages the plan keeps; the lines are the picture stage's and the brand stage's own report lines
  * @returns {Promise<{ lines: object[], cancelled: boolean }>} report lines: `<page>:share-image`, `share-switch:<style>`
  */
@@ -153,7 +163,8 @@ export async function runShareStage({
   menutype = null,
   pictureLines,
   brandLines,
-  isCancelled = async () => false
+  isCancelled = async () => false,
+  last = NO_LAST
 }) {
   const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
   const pages = each(pageIds).filter((id) => kitPages.has(id))
@@ -188,18 +199,37 @@ export async function runShareStage({
     )
   if (!wanted.length) return finish(false)
 
-  let rows
+  const LOGO_SHARED = 'the page shows no picture of its own, so the logo is shared'
+  const fresh = wanted.filter((p) => !last.same(`${p.id}:share-image`, p.path))
+  for (const p of wanted.filter((x) => !fresh.includes(x)))
+    results.set(`${p.id}:share-image`, {
+      status: 'written',
+      reason: p.from === 'logo' ? LOGO_SHARED : null,
+      ordered: p.path,
+      readFrom: last.line(`${p.id}:share-image`).readFrom
+    })
+  const switched = last.allDone('share-switch')
+  const replaySwitch = () => {
+    for (const { slot, ordered, readFrom } of switched)
+      results.set(slot, { status: 'written', reason: null, ordered, readFrom })
+  }
+  if (!fresh.length && switched) {
+    replaySwitch()
+    return finish(false)
+  }
+  let rows = []
   try {
-    rows = await menuRows(call)
+    if (fresh.length) rows = await menuRows(call)
   } catch (error) {
-    for (const p of wanted)
+    for (const p of fresh)
       results.set(`${p.id}:share-image`, failed(`the menu could not be read: ${error.message}`))
     return finish(false)
   }
   if (await isCancelled()) return finish(true)
   // The switch first: a menu picture on a template that prints no Open Graph tags would read back and still not show.
-  await switchOn({ call: write, kit, lines: results })
-  for (const p of wanted) {
+  if (switched) replaySwitch()
+  else await switchOn({ call: write, kit, lines: results, last })
+  for (const p of fresh) {
     const opening = rowsOpening(kitPages.get(p.id), rows, menutype)
     results.set(
       `${p.id}:share-image`,
@@ -208,7 +238,7 @@ export async function runShareStage({
             call: write,
             opening,
             path: p.path,
-            reason: p.from === 'logo' ? 'the page shows no picture of its own, so the logo is shared' : null
+            reason: p.from === 'logo' ? LOGO_SHARED : null
           })
         : skipped('no published menu item opens this page, and a share picture lives in its menu item')
     )

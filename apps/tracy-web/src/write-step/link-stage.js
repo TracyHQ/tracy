@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto'
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
+import { NO_LAST } from './no-last-report.js'
 import { articleOfPage, linkTarget } from './link-targets.js'
 import { menuRows, rowsOpening } from './page-meta-write.js'
 import { doorCall } from './settings-door.js'
@@ -60,11 +61,23 @@ function settleShared(orders, values) {
 
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, brief?: object, owners: Map<string, object>,
- *   reading: object, extras: object, taken: Record<string, string> }} input `taken`: what other files send to the contract call
+ *   reading: object, extras: object, taken: Record<string, string>, last?: object }} input `taken`: what other files send to the
+ *   contract call; `last`: the last report, whose menu targets are not written again
  * @returns {Promise<{ changes: Record<string, string>, evidence: Record<string, string>, writeMenu: () => Promise<void>,
  *   results: (done: object) => Map<string, object> }>} `results` gives each link line once the writes are done, by slot
  */
-export async function prepareLinks({ door, siteKey, kit, plan, brief, owners, reading, extras, taken }) {
+export async function prepareLinks({
+  door,
+  siteKey,
+  kit,
+  plan,
+  brief,
+  owners,
+  reading,
+  extras,
+  taken,
+  last = NO_LAST
+}) {
   const claims = [...owners.values()].filter((c) => c.kind === 'link')
   const call = doorCall(door, siteKey)
   let site
@@ -123,12 +136,10 @@ export async function prepareLinks({ door, siteKey, kit, plan, brief, owners, re
   }
 
   const menuDone = new Map()
-  const menuOrders = [...orders.values()].filter(
-    (o) => o.via === 'menu' && !leaving.has(`menuItem-${o.item}`)
-  )
+  const menuOrders = [...orders].filter(([, o]) => o.via === 'menu' && !leaving.has(`menuItem-${o.item}`))
   const writeMenu = async () => {
     const seen = new Map()
-    for (const order of menuOrders) {
+    for (const [slot, order] of menuOrders) {
       const { item, url } = order
       if (seen.has(item)) {
         menuDone.set(
@@ -138,6 +149,10 @@ export async function prepareLinks({ door, siteKey, kit, plan, brief, owners, re
         continue
       }
       seen.set(item, url)
+      if (last.same(slot, url)) {
+        menuDone.set(order, 'done')
+        continue
+      }
       const applyId = `links-${createHash('sha256').update(`${item} ${url}`).digest('hex').slice(0, 32)}`
       try {
         await call('content.update', { apply_id: applyId, kind: 'menuItem', id: item, fields: { link: url } })

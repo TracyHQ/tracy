@@ -9,10 +9,15 @@ import { dsSlotModule } from '../lib/ds-slot.js'
 import { brandAsker, picturePath, writeBrand } from './brand-writes.js'
 import { refusalWords } from './contract-write.js'
 import { kitSlotIds } from './kit-slot-ids.js'
+import { lineId } from './last-report.js'
+import { NO_LAST } from './no-last-report.js'
 
 export const BRAND_OWNER = 'brand'
 const MODULE_MARK = '<style id="tracy-ds-slot"'
 const ENDED = 'the run ended before this item was written'
+
+/** The ways an order reaches the site apart from a word in the one contract call, which the contract call compares itself. */
+const OWN_WRITE = new Set(['identity', 'profile', 'small-logo', 'head', 'module'])
 
 const PARTS = { name: 'brand-name', logo: 'brand-logo', favicon: 'brand-favicon', accent: 'brand-accent' }
 
@@ -59,10 +64,17 @@ const stoppedBy = (stop) => ({ ...idle, stop })
 
 /**
  * @param {{ brand?: object, brandPath?: string, inputs?: { file: string }, kit: object,
- *   accentPlace?: (contract: string) => Promise<object | null> }} input
+ *   accentPlace?: (contract: string) => Promise<object | null>, last?: object }} input
  * @returns {Promise<object>} the stage; `stop` says why it cannot run
  */
-export async function prepareBrandStage({ brand, brandPath, inputs, kit, accentPlace = placeFromLibrary }) {
+export async function prepareBrandStage({
+  brand,
+  brandPath,
+  inputs,
+  kit,
+  accentPlace = placeFromLibrary,
+  last = NO_LAST
+}) {
   if (brand === undefined) return idle
   const plan = exportBrandOrders({ brand, kit })
   if (plan.problems.length)
@@ -106,12 +118,24 @@ export async function prepareBrandStage({ brand, brandPath, inputs, kit, accentP
       content: o.file ? `picture ${o.file}` : JSON.stringify([o.value])
     }))
   const results = new Map()
+  const writesItself = (o) => OWN_WRITE.has(o.via) || (o.via === 'contract' && o.file)
+  const orderedOf = (o) => {
+    if (o.via === 'module') return pictures.get(o.file).toString('utf8')
+    return valueOf(o)
+  }
+  // What the site holds already, by order: a picture's path names its bytes, so this compares the picture.
+  const kept = new Map(
+    orders
+      .filter((o) => writesItself(o) && last.same(lineId(o), orderedOf(o)))
+      .map((o) => [o, last.line(lineId(o))])
+  )
 
   /** @returns {Promise<{ stop?: object, reading?: object, dropped?: string[] }>} `reading`: the site after the brand */
-  const write = async ({ apply, siteKey, sleep }) => {
+  const write = async ({ apply, siteKey, sleep, reading: current }) => {
     const ask = brandAsker({ apply, siteKey, applyId: `brand-${inputs.sha256.slice(0, 32)}`, sleep })
     try {
-      await writeBrand({ orders, plan, pictures, accent, ask, results })
+      await writeBrand({ orders, plan, pictures, accent, ask, results, kept })
+      if (!orders.some((o) => writesItself(o) && !kept.has(o))) return { reading: current, dropped: [] }
       // The head block and the accent moved the site's revision, and the contract call must name the current one.
       const reading = await apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } })
       if (!reading?.ok)

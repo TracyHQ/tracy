@@ -1,6 +1,7 @@
 // The brand stage's calls to the site (ADR 0044, decision 4): the name, the pictures, the template's site profile, the
 // head block and the accent module, one action at a time and through the site door only. A plugin refusal fails the items
-// that needed that call, in the plugin's words, and the others still go; a door that throws ends the stage.
+// that needed that call, in the plugin's words, and the others still go; a door that throws ends the stage. An order the site
+// holds already is not sent. The head block is one value, so when one thing in it differs the whole block goes again.
 import { createHash } from 'node:crypto'
 import { headBlock, menuCssFor, withBlock } from './brand-head-block.js'
 import { BUSY_WAITS_MS } from './contract-write.js'
@@ -18,11 +19,12 @@ export const picturePath = (order, bytes) =>
 
 /**
  * @param {{ orders: object[], plan: object, pictures: Map<string, Buffer>, accent: object | null, ask: Function,
- *   results: Map<object, object> }} input `ask(action, params)` answers as the plugin does; `results` takes each order's
- *   outcome as it is known, so a stage that ends early still reports what it did
+ *   results: Map<object, object>, kept?: Map<object, object> }} input `ask(action, params)` answers as the plugin does;
+ *   `results` takes each order's outcome as it is known, so a stage that ends early still reports what it did; `kept`: the
+ *   orders the site holds already, each with its line in the last report
  * @returns {Promise<void>}
  */
-export async function writeBrand({ orders, plan, pictures, accent, ask, results }) {
+export async function writeBrand({ orders, plan, pictures, accent, ask, results, kept = new Map() }) {
   const done = (order, ordered, readFrom, reason = null) =>
     results.set(order, { status: 'written', reason, ordered, readFrom })
   const fail = (list, answer) => {
@@ -31,8 +33,12 @@ export async function writeBrand({ orders, plan, pictures, accent, ask, results 
   }
   const by = (via) => orders.filter((o) => o.via === via)
   const refused = (answer) => !answer || answer.ok === false
+  const ready = (list) => list.filter((o) => !results.has(o))
+  const fresh = (o) => !kept.has(o)
+  for (const [order, line] of kept)
+    if (order.via !== 'contract') done(order, line.ordered, line.readFrom, line.reason ?? null)
 
-  const identity = by('identity')
+  const identity = ready(by('identity'))
   if (identity.length) {
     const fields = Object.fromEntries(identity.map((o) => [o.key, o.value]))
     const answer = await ask('site.identity', { operation: 'set', fields })
@@ -50,6 +56,10 @@ export async function writeBrand({ orders, plan, pictures, accent, ask, results 
   const uploaded = new Map()
   for (const order of orders.filter((o) => o.file && o.via !== 'module')) {
     const path = picturePath(order, pictures.get(order.file))
+    if (kept.has(order)) {
+      order.path = path
+      continue
+    }
     if (!uploaded.has(path)) {
       const content_b64 = pictures.get(order.file).toString('base64')
       uploaded.set(path, await ask('media.upload', { path, content_b64 }))
@@ -57,17 +67,25 @@ export async function writeBrand({ orders, plan, pictures, accent, ask, results 
     if (refused(uploaded.get(path))) fail([order], uploaded.get(path))
     else order.path = path
   }
-  const ready = (list) => list.filter((o) => !results.has(o))
-
   const settings = ready(by('profile'))
-  const small = ready(by('small-logo'))
-  const inCss = await writeProfiles({ settings, small, plan, ask, done, fail })
-
-  const links = ready(by('head'))
+  const small = by('small-logo').filter((o) => kept.has(o) || !results.has(o))
+  const heads = by('head').filter((o) => o.path)
+  const links = heads.filter(fresh)
   const ico = by('profile').find((o) => o.link === 'ico' && o.path)
+  const icoMoved = Boolean(ico) && fresh(ico)
+  // The block is written whole, so a small logo it already holds as CSS must be known even when that logo did not change.
+  const readProfiles =
+    settings.length > 0 || small.some(fresh) || (small.length > 0 && (links.length > 0 || icoMoved))
+  const profiled = readProfiles
+    ? await writeProfiles({ settings, small, kept, plan, ask, done, fail })
+    : { inCss: [], unread: false }
+  const { inCss } = profiled
   const css = inCss.length ? menuCssFor(Object.fromEntries(inCss.map((o) => [o.side, o.path]))) : null
-  if (links.length || css) {
-    const paths = Object.fromEntries(links.map((o) => [o.link, o.path]))
+  const blockMoved = links.length > 0 || icoMoved || inCss.some(fresh)
+  if (profiled.unread && small.some((o) => kept.has(o))) {
+    fail(links, 'the template profile could not be read, so the head block cannot be written whole')
+  } else if ((heads.length > 0 || css) && blockMoved) {
+    const paths = Object.fromEntries(heads.map((o) => [o.link, o.path]))
     if (ico) paths.ico = ico.path
     const failure = await writeHeadBlock({ plan, block: headBlock(paths, css), ask })
     // The contract call saves this block's module again in its own form, so a line reads back as "the path is in it".
@@ -77,16 +95,16 @@ export async function writeBrand({ orders, plan, pictures, accent, ask, results 
       path: ['item', 'content'],
       type: 'contains'
     }
-    if (failure) fail([...links, ...inCss], failure)
+    if (failure) fail([...links, ...inCss.filter(fresh)], failure)
     else {
       for (const order of links) done(order, order.path, inBlock)
-      for (const order of inCss)
+      for (const order of inCss.filter(fresh))
         done(order, order.path, inBlock, 'through CSS: the profile has no small-logo setting')
     }
   }
 
   const [module] = by('module')
-  if (module) {
+  if (module && !results.has(module)) {
     const html = pictures.get(module.file).toString('utf8')
     const { failure, id } = await writeAccent({ html, place: accent, ask })
     if (failure) fail([module], failure)
@@ -99,19 +117,24 @@ export async function writeBrand({ orders, plan, pictures, accent, ask, results 
   }
 }
 
-/** One `set` with each profile's own values. @returns the small-logo orders no profile has a setting for */
-async function writeProfiles({ settings, small, plan, ask, done, fail }) {
-  if (!settings.length && !small.length) return []
-  const all = [...settings, ...small]
+/**
+ * One `set` with each profile's own values, of what differs only; none differs, no `set`.
+ * @returns {Promise<{ inCss: object[], unread: boolean }>} `inCss`: the small-logo orders no profile has a setting for;
+ *   `unread`: the profile could not be read or written
+ */
+async function writeProfiles({ settings, small, kept, plan, ask, done, fail }) {
+  if (!settings.length && !small.length) return { inCss: [], unread: false }
+  const fresh = small.filter((o) => !kept.has(o))
+  const all = [...settings, ...fresh]
   const read = await ask('template.siteSettings', { template: plan.templateFolder })
   if (!read || read.ok === false) {
     fail(all, read)
-    return []
+    return { inCss: [], unread: true }
   }
   const profiles = Object.entries(read.profiles ?? {})
   if (!profiles.length) {
     fail(all, 'the template has no site profile to write')
-    return []
+    return { inCss: [], unread: true }
   }
   const inProfile = new Set()
   const byProfile = {}
@@ -121,12 +144,14 @@ async function writeProfiles({ settings, small, plan, ask, done, fail }) {
     // T4 honours a small-logo key once it is set, so one the profile has is reason enough to set both sides.
     if (small.some((order) => order.key in have))
       for (const order of small) {
-        values[order.key] = order.path
+        if (!kept.has(order)) values[order.key] = order.path
         inProfile.add(order)
       }
     byProfile[name] = values
   }
-  const sent = [...settings, ...small.filter((o) => inProfile.has(o))]
+  const sent = [...settings, ...fresh.filter((o) => inProfile.has(o))]
+  const inCss = small.filter((o) => !inProfile.has(o))
+  if (!sent.length) return { inCss, unread: false }
   const answer = await ask('template.siteSettings', {
     operation: 'set',
     template: plan.templateFolder,
@@ -134,7 +159,7 @@ async function writeProfiles({ settings, small, plan, ask, done, fail }) {
   })
   if (!answer || answer.ok === false) {
     fail(all, answer)
-    return []
+    return { inCss: [], unread: true }
   }
   // Every profile got the same values, so one reads back for all; `default` is always among them when it exists.
   const shown = byProfile.default ? 'default' : profiles[0][0]
@@ -145,7 +170,7 @@ async function writeProfiles({ settings, small, plan, ask, done, fail }) {
       path: ['profiles', shown, 'settings', order.key],
       ...(order.path ? { type: 'image' } : {})
     })
-  return small.filter((o) => !inProfile.has(o))
+  return { inCss, unread: false }
 }
 
 /** @returns {Promise<object | string | null>} what went wrong, or null */
