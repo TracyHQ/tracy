@@ -14,6 +14,7 @@ import { neutralKey } from './ids.mjs'
 import { pageTitleChecks, settlePageTitles } from './page-titles.mjs'
 import { settleSettingSlots } from './setting-slots.mjs'
 import { settleSentenceGroups } from './sentence-groups.mjs'
+import { settleStoredFields, storedFieldReport } from './stored-fields.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
 
@@ -164,6 +165,7 @@ export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = 
   mainMenuRow(kit, mapOf, rowFit)
   settlePageTitles(kit, { map, drives })
   settleSentenceGroups(kit, { map })
+  settleStoredFields(kit, { map, drives })
   whatElseChanges(kit)
   return kit
 }
@@ -262,7 +264,8 @@ export function coverageGate(kit, { map, readings = new Map() }) {
   // 7. Every page has exactly one title slot (page-titles.mjs).
   parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p) ? pageTitleChecks(kit, fail) : 0
   // How many shown text slots part 1 checked, so a gate at 0 over nothing is told from a covered kit.
-  kit.coverage = { shownTextSlots: checked, parts, failures }
+  const fields = storedFieldReport(kit)
+  kit.coverage = { shownTextSlots: checked, parts, failures, ...(fields ? { fields } : {}) }
   for (const f of failures)
     kit.errors.push({ kind: 'coverage-gate', part: f.part, field: f.where, reason: f.reason })
   return Object.values(parts).reduce((a, n) => a + n, 0)

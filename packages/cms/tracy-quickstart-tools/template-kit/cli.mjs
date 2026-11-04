@@ -23,6 +23,12 @@
 //                 (the setting slots of the template-kit.json in --out settled again: the map a button opens, read
 //                 from the site's database, the contact's mobile line, and with --webroot the picture the template
 //                 paints behind its pages; no browser, no capture, no image)
+//   cli.mjs slot-roles --out <dir> --contract <dir>   (the template-kit.json in --out settled again from the content
+//                 map and field-drives.json: page title slots, sentence groups, stored fields, the gate counted
+//                 again; no browser, no capture, no image; it only adds, no slot id, list or role moves)
+//   cli.mjs measure-fields --site <url> --out <dir> --contract <dir> --db-command '<client prefix>' --scratch-site
+//                 [--host-header <host>]   (WRITES to the site, each field set to a marker and put back: only on a
+//                 throwaway site rebuilt from the quickstart, which --scratch-site says it is; field-drives.json)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
 //   cli.mjs looks --kit <template-kit.json> [--images <dir>] --list [--to <worklist.json>]
@@ -47,6 +53,8 @@ import { measureMin } from './lib/measure-min.mjs'
 import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
 import { settleSettingSlots } from './lib/setting-slots.mjs'
+import { settleSlotRoles } from './lib/slot-roles.mjs'
+import { runFieldMeasure } from './lib/site/measure-fields.mjs'
 import { writeSheets } from './lib/sheets.mjs'
 import { adapterFor } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
@@ -62,9 +70,11 @@ const COMMANDS = [
   'pack',
   'relabel',
   'setting-slots',
+  'slot-roles',
+  'measure-fields',
   'looks'
 ]
-const NO_SITE = ['sheet', 'approve', 'pack', 'relabel', 'setting-slots']
+const NO_SITE = ['sheet', 'approve', 'pack', 'relabel', 'setting-slots', 'slot-roles']
 
 export function parseArgs(argv) {
   const o = { _: [] }
@@ -110,6 +120,40 @@ function pack(out) {
   for (const m of p.blocksWithoutImage) console.error(`block ${m.block} has no shot at ${m.width}`)
   for (const u of p.unknownImages) console.error(`packed image ${u} is not in the kit's images`)
   return p.blocksWithoutImage.length || p.unknownImages.length ? 1 : 0
+}
+
+/** Settle page titles, sentence groups and stored fields of the kit in `out` again; exit 1 when a page has no one title. */
+function slotRoles(o, out) {
+  const file = join(out, 'template-kit.json')
+  const kit = readJson(file)
+  const r = settleSlotRoles(kit, {
+    map: readJson(join(o.contract, 'content-map.json')),
+    drives: readIf(join(out, 'field-drives.json')) ?? {}
+  })
+  writeJson(file, kit)
+  console.log(JSON.stringify(r, null, 1))
+  for (const f of kit.coverage.failures.filter((x) => x.part === 'pageTitleSlots'))
+    console.error(`${f.where}: ${f.reason}`)
+  return r.pageTitleSlots ? 1 : 0
+}
+
+/** Measure what each stored field drives on a throwaway site, into field-drives.json. */
+async function measureFields(o, out) {
+  if (o['scratch-site'] !== true || !str(o['db-command']))
+    throw new Error(
+      'measure-fields writes to the site: it needs --db-command and --scratch-site, on a throwaway site rebuilt from the quickstart'
+    )
+  const drives = await runFieldMeasure({
+    chromium: await chromiumOf(),
+    siteUrl: o.site,
+    hostHeader: str(o['host-header']),
+    dbCommand: o['db-command'],
+    kit: readJson(join(out, 'template-kit.json')),
+    map: readJson(join(o.contract, 'content-map.json')),
+    log
+  })
+  writeJson(join(out, 'field-drives.json'), drives)
+  return Object.values(drives).some((d) => d.error) ? 1 : 0
 }
 
 /** Settle the link labels of the kit in `out` again (link-label-reasons.mjs); exit 1 when some link has neither. */
@@ -200,7 +244,7 @@ async function main() {
     !o.out ||
     !COMMANDS.includes(cmd) ||
     (needSite && !o.site) ||
-    ((needSite || cmd === 'relabel' || cmd === 'setting-slots') && !o.contract)
+    ((needSite || cmd === 'relabel' || cmd === 'setting-slots' || cmd === 'slot-roles') && !o.contract)
   ) {
     console.error(
       `usage: cli.mjs ${COMMANDS.join('|')} --out <dir> [--site <url> --contract <dir>] (see the head of this file)`
@@ -214,6 +258,8 @@ async function main() {
   if (cmd === 'pack') return pack(out)
   if (cmd === 'relabel') return relabel(o, out)
   if (cmd === 'setting-slots') return settingSlots(o, out)
+  if (cmd === 'slot-roles') return slotRoles(o, out)
+  if (cmd === 'measure-fields') return measureFields(o, out)
   const map = readJson(join(o.contract, 'content-map.json'))
   const hostHeader = str(o['host-header'])
   const widths = String(o.widths ?? '1440,390')

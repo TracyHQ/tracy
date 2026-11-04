@@ -306,6 +306,24 @@ back as it was (fixed CMS text, below). One file, `template-kit.json`, beside
 `images/`, in CMS-neutral words: a block is `block-<n>`, `header` or `body-<page>`; the content map key stays only
 in a block's `source`.
 
+### Page titles, sentences and stored fields
+
+The coverage gate (run by `cli.mjs assemble`) settles three things from what the page prints; none moves a slot, a list or a role.
+
+- `pages[].titleSlot`: the one slot that prints the page title. Part `pageTitleSlots` fails a page with none or with a tie.
+- `blocks[].sentences`: pieces of one stored field in one element, printed as one sentence around a highlight. The copy check (W12) reads them joined.
+- `storedFields[]`: every text, url or image field the template stores, with `listedIn` (its block, or null). `coverage.fields` reports `notListed` and `drivingSeveralControls`, and does not block.
+
+What a stored field really drives is measured on a **throwaway restored site**, never one in use: the command writes a marker into each field, reads the pages, and puts the value back.
+
+```
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs measure-fields --site <url> --out <kit dir> \
+  --contract <contract dir> --db-command "<database client prefix>" --scratch-site
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs slot-roles --out <kit dir> --contract <contract dir>
+```
+
+Run `pack` after. Without a measurement a tie between two slots of a page stays a failure of `pageTitleSlots`, by name.
+
 ### Make a kit for a new template
 
 1. Restore the template's quickstart into a local site (skill `tracy-dev:restore`); never use the public demo.
