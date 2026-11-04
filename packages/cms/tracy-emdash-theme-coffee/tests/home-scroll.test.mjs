@@ -23,7 +23,11 @@ test('the section is the one whose middle is nearest the middle of the window', 
 
 test('six sections, six poses, in the order of the story', () => {
   const home = readFileSync(new URL('../src/views/Home.astro', import.meta.url), 'utf8')
-  assert.equal(POSES.length, home.match(/data-section="\d+"/g).length, 'one pose for each section of the home page')
+  assert.equal(
+    POSES.length,
+    home.match(/data-section="\d+"/g).length,
+    'one pose for each section of the home page'
+  )
   const [one, two, three, four] = [1, 2, 3, 4].map((n) => at(centres[n - 1]))
   assert.notEqual(one.tilt, 0, 'section 1 leans')
   assert.equal(two.tilt, 0, 'section 2 stands up')
