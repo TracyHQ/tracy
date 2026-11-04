@@ -232,3 +232,13 @@ test('measureSlotFit writes menuBlocks with the lock, nothing without it', () =>
   assert.equal(out.summary.menuBlocks, 2)
   assert.equal(measureSlotFit({ map, findings }).map.menuBlocks, undefined)
 })
+
+test('an item only a signed-in account may see is no item of the block a visitor is shown', () => {
+  const { map, lock, findings } = fixture()
+  // Access levels: 1 public and 5 guest are shown to a visitor; 2 registered and 6 super users are not.
+  Object.assign(lock.entities['menuItem-502'], { access: '2' })
+  Object.assign(lock.entities['menuItem-503'], { access: '6' })
+  Object.assign(lock.entities['menuItem-505'], { access: '5' })
+  const items = menuBlocksOf({ map, lock, findings }).menuBlocks['module-80'].items.map((i) => i.item)
+  assert.deepEqual(items, ['menuItem-501', 'menuItem-504', 'menuItem-506', 'menuItem-505'])
+})

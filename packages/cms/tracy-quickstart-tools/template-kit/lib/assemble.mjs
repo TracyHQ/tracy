@@ -6,6 +6,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
+import { readContractCoverage, readContractMap } from './contract-read.mjs'
 import { applyCoverage, coverageGate } from './coverage-gate.mjs'
 import { slotShapeChecks } from './slot-shape-checks.mjs'
 import { keepEmbeddedMaps, reachChecks } from './reach-checks.mjs'
@@ -54,14 +55,14 @@ export async function assembleKit(o, out, tool) {
   })
   if (typeof o['quickstart-version'] === 'string') stamp.quickstart.version = o['quickstart-version']
   const host = typeof o['host-header'] === 'string' ? o['host-header'] : null
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const siteDoc = readIf(join(out, 'site.json'))
   const wordsLinks = readIf(join(out, 'words-links.json')) ?? {}
   const kit = buildKit({
     map,
     capture,
     stamp,
-    coverage: readIf(join(o.contract, 'content-coverage.json')),
+    coverage: readContractCoverage(o.contract),
     minEvidence: readIf(join(out, 'min-evidence.json')) ?? {},
     cardFields: readIf(join(out, 'card-fields.json')) ?? {},
     frameKit: {

@@ -51,6 +51,7 @@ import { dirname, join, resolve } from 'node:path'
 
 import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
+import { readContractMap } from './lib/contract-read.mjs'
 import { contactFieldChecks } from './lib/coverage-gate.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
@@ -208,7 +209,7 @@ async function measureFields(o, out) {
 function relabel(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const r = relabelKit(kit, { map, linkLabelSlots })
   writeJson(file, settled(kit, map, o))
   const links = kit.blocks.flatMap((b) => b.links ?? [])
@@ -227,7 +228,7 @@ function relabel(o, out) {
 function settingSlots(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const manifest = readJson(join(o.contract, 'manifest.json'))
   const source = siteSource({
     db: str(o.db),
@@ -310,7 +311,7 @@ async function main() {
   if (cmd === 'slot-roles') return slotRoles(o, out)
   if (cmd === 'samples') return samples(o, out)
   if (cmd === 'measure-fields') return measureFields(o, out)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const hostHeader = str(o['host-header'])
   const widths = String(o.widths ?? '1440,390')
     .split(',')

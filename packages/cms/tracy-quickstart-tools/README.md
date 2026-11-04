@@ -198,6 +198,11 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   User) is found by its page's last path part against the dump's accounts (`contentUsers`: login and display name
   only; `--report-only` with `--db-dump` records both too); a page tied to no shipped user and `?start=` pages declare
   nothing (`content-coverage/lib/author-lists.mjs`).
+- **Tag pages (`--fit`).** A tag link on an item opens the page of every item with that tag, which has no menu item
+  of its own; the crawl ties it to the tag twice: its last path part is the tag's alias and its heading is the tag's
+  title. It gets `itemLists["<tag>.items"]` (`block` and `page` null, `pagePath`, `source.kind: "tag"`; `max` the
+  demo count). Every article is a candidate, as on the featured page; only the page body counts. A menu page showing
+  several tags and `?start=` pages declare nothing (`content-coverage/lib/tag-lists.mjs`).
 - **The stand's own accounts.** With `--db-dump`, the audit never follows a link to the author page of a user the
   release database lacks (a local admin added to the stand) and drops that user's entry from author lists
   (`content-coverage/lib/stand-users.mjs`).
@@ -206,7 +211,9 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   lock's `lft`, else `item-id`: depth first, siblings by id) and `items[]`: `item`, `level`, `parent`, `type`,
   `label` (`slot`, `text`, `maxCharacters` with `limitFrom` `slot-fit` or `store`) and `target` (`kind` `page`,
   `alias`, `link`, `url`, `heading`, `separator` or `none`; `page`, `path`, `link` or `url`; `alive` and `status`
-  from the crawl, `alive: null` when the crawl did not reach it). Source: `content-coverage/lib/menu-blocks.mjs`.
+  from the crawl, `alive: null` when the crawl did not reach it). Only items a visitor who has not signed in sees
+  (access level public or guest) are listed: "Your Profile" or "Site Settings" of a user menu are never drawn on the
+  pages a site build plans. Source: `content-coverage/lib/menu-blocks.mjs`.
 - **Page hygiene, same crawl.** Things a customer must never see, one line per distinct problem in
   the `hygiene` list of `content-coverage.json` (`kind`, `value`, `where`, `visible`, `pages`,
   `firstPage`), and a Page hygiene card in `report.html`: `language-constant` (a raw Joomla key such
@@ -453,7 +460,9 @@ list, kept by every later run).
   with `icon` when the link draws one: `mechanism`, `classes`/`file`,
   `network`; `labelId`, the one place that says which text slot is the link's label (no slot carries a copy), or
   `fixedLabel: {rule, reason}` when its words are not the customer's: `template-words` (the block's fixed text),
-  `icon-name` (an icon-only link's accessible name) or `pagination` (a CMS page number or step)), `slots[]` (planner rule 5),
+  `icon-name` (an icon-only link's accessible name), `pagination` (a CMS page number or step), `control-value` (a
+  number on a link to no page: a rating star, a slide dot) or `sort-control` (the same listing in another order)),
+  `slots[]` (planner rule 5),
   `fixedText[]`, `demoOwned[]`), `checks` (counts that must all be 0, or /ops marks the kit
   `kit-incomplete` and it cannot be approved: `itemsListsWithoutCardFields` (a listing's items list takes the content
   map's list and its card fields, a further result page takes page 1's), and the planner rules below:
@@ -501,6 +510,9 @@ list, kept by every later run).
      group. The check names a group holding a second listing or an unrelated page.
      A detail page (a person, an item) that a repeated list on the page one path level up links to is one of that
      page's items, even with a menu item of its own (`checks.detailPagesOutsideListing` names one grouped elsewhere).
+     A page that itself lists pages one level down (a shop category of products) is a listing by its structure,
+     never a detail page of the page above it; a page one level down of a kind that listing lists, shown on no list
+     (the demo's list is cut short), is one of its items too.
      A group's root, its listing page, is its representative: its full-page shot stands for the group
      (`checks.representativesNotListing` names a group with items represented by another page).
   4. *A slot belongs to one block* (`lib/slot-owners.mjs`, `checks.slotsInTwoBlocks`): a slot listed by several
@@ -545,8 +557,10 @@ list, kept by every later run).
      generator gives each further element the next slot with those words, in content map order);
      `linksWithoutTarget`, every clickable element without an address (`details.clickables`: a button, a tab, a
      menu heading, a submit) whose label a slot of its block prints is a link of the block with what it opens
-     (`links[].opens`: `modal` or `panel` with its `element` (a tab's own `#fragment` included), `submenu`, `form`
-     with its `action`, `script`; a modal drawing a map says `writable: true` with the `slotId` of its setting
+     (`links[].opens`: `modal` or `panel` with its `element` (a tab's own `#fragment` included), `slide` with the
+     carousel its `data-slide` control moves, `submenu`, `form` with its `action` (a `#` link inside a form, such
+     as the stars of a rating form, included), `action` with the address of the site it runs (`?task=`, `tmpl=` or
+     another action key: a question form opened in a modal, a print view), `script`; a modal drawing a map says `writable: true` with the `slotId` of its setting
      slot when exactly one map setting is assigned to the page, else `writable: false` with the reason);
      `linksWithoutLabelSlot` (`lib/link-label-slots.mjs`), every link whose shown words a slot prints names it
      (`links[].labelId`): the text slot of the link's own address group first, then a slot the block declares or
@@ -599,7 +613,7 @@ list, kept by every later run).
   names an entry without an id or two with one id.
 - **Template gaps** (`templateGaps[]`: `id, kind, where, detail, evidence, accepted`): real defects of the template
   or its demo, for /ops to judge: `page-without-h1`, `dead-link` (a block link to nothing, `#`, or a path that
-  does not answer 200; one per target and block), `dead-path` (a content map page that does not answer 200) and
+  does not answer 200, unless it opens something on the page or runs an action; one per target and block), `dead-path` (a content map page that does not answer 200) and
   `sparse-row-left-packed` (each proposed template fix). The id hashes kind and place, so it survives a rebuild.
 - **Site part** (`site`, from `site-cli.mjs`). `navigationGroups[]`: every menu block of the content map
   (`menuBlocks`), each item with `label`, `maxCharacters`, `target` (`kind`, `page`/`path`), `alive` and `status`;
@@ -662,8 +676,10 @@ list, kept by every later run).
   `business.logo` slots and every logo spot's frame; who owns it is the brand step's, so `fixed` is null). An
   `<img>` kept at opacity 0 while its holder paints a mask or background over it is shown through that painter
   (`paintedBy`) and measured from it. A frame in a closed tab, slide or accordion is opened first, the way a
-  visitor would (`revealed`); a picture not in its own block is looked for in the other blocks of the pages
-  (`measuredIn`). `canHide`, in the DOM only: the picture and its painters (mask, pseudo-element, holder background)
+  visitor would (`revealed`, read again once a moving slide has settled); a picture not in its own block is looked
+  for in the other blocks of the pages, then in the page region that holds it (`measuredIn`, a logo the template's
+  own footer prints). A frame shown at phone width only takes its box there (`sizeAt`). A frame whose picture the demo
+  leaves empty (`emptyInDemo`) can hide: the block already shows without it. `canHide`, in the DOM only: the picture and its painters (mask, pseudo-element, holder background)
   are emptied in the browser and the block read again at every width, once per layout (a frame in the same place on
   a page of the same layout takes it: `canHideFrom`); a picture repeated by every row of a list is emptied in every
   row at once (`measuredAs: "row-slot"`, one verdict for the slot). The numbers are kept (`hideEvidence.measured`:
@@ -677,7 +693,12 @@ list, kept by every later run).
   in the block's `demoOwned`. Twins follow their main frame.
 - **Listing maximum.** A listing page's `items` list takes the page size: from the pager when a later list position
   exists (`?start=N`: `maxSource: "page-size"`), else the item rows the demo shows (`captured-rows`; item rows are
-  the biggest set whose every row opens a different content item). `maxEvidence` says which.
+  the biggest set whose every row opens a different content item, through the first item link of the row; rows of a
+  block nested in the listing are that block's). Without a later position the page-size control the listing prints
+  (`select[name=limit]`, its selected number) is the page size (`page-size-control`). `maxEvidence` says which.
+  Zebra classes (`row0`/`row1`, `odd`/`even`) are row state, not shape. A width where the listing shows no row (a
+  collapsed sidebar) is not judged for the minimum. An items list whose page shows too few rows to measure takes the
+  minimum measured on the page of its layout that shows the most rows (`minSource: "layout"`, `minFrom`).
 - **`contact-sheet/`**: every block image on HTML sheets (no screenshot), to spot
   images that are misaligned, blank, cut by a header or doubled.
 

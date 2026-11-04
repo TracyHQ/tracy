@@ -40,8 +40,12 @@ export function labelLinks({ links, menuBlocks = {}, mapSlots = [], siteUrl, ali
       Object.assign(l, { labelId: neutralKey(it.label.slot), menuItem: it.item, menu: menu.key })
       continue
     }
-    const same = mapSlots.filter((s) => s.type === 'text' && words(s.sample) === w)
-    const pick = same.find((s) => LABEL_ROLE.test(s.role ?? ''))
+    // Links repeating the same words (a "View more" button per section) take each its own twin slot, in map order.
+    const same = mapSlots.filter(
+      (s) => s.type === 'text' && words(s.sample) === w && LABEL_ROLE.test(s.role ?? '')
+    )
+    const named = new Set(links.map((x) => x.labelId).filter(Boolean))
+    const pick = same.find((s) => !named.has(neutralKey(s.key))) ?? same[0]
     if (pick) l.labelId = neutralKey(pick.key)
   }
   return menu?.key ?? null
@@ -49,7 +53,8 @@ export function labelLinks({ links, menuBlocks = {}, mapSlots = [], siteUrl, ali
 
 /**
  * Self-check: every link the kit reads as a menu item (`menuItem`) names its label slot, and every top-level item
- * of a site menu group (`groups`: site.navigationGroups) is the label of some link of the kit. Returns how many fail.
+ * of a site menu group (`groups`: site.navigationGroups) but a heading is the label of some link of the kit. Returns
+ * how many fail.
  * @param {{blocks: object[], groups?: object[], errors: object[]}} o
  */
 export function menuLinkChecks({ blocks, groups = [], errors }) {
@@ -69,7 +74,9 @@ export function menuLinkChecks({ blocks, groups = [], errors }) {
     }
   for (const g of groups)
     for (const it of g.items ?? []) {
-      if (it.level !== 1 || !it.labelSlot || named.has(it.labelSlot)) continue
+      // A menu heading opens nothing: its label is a text slot of the menu, never the label of a link.
+      if (it.level !== 1 || !it.labelSlot || named.has(it.labelSlot) || it.target?.kind === 'heading')
+        continue
       missing++
       errors.push({
         kind: 'menu-link-without-label-slot',

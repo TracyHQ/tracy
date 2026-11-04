@@ -51,6 +51,65 @@ export function canonicalPath(href, siteUrl, aliasHosts = []) {
   return path.toLowerCase() + query
 }
 
+/**
+ * An address of the site that runs a task rather than showing a page (`?task=askquestion`, a print or component
+ * view): its path and query, without the `/index.php` prefix, for a link that opens that action. Null for anything
+ * else (a page, an outside address, a #fragment).
+ */
+export function actionAddress(href, siteUrl, aliasHosts = []) {
+  const raw = String(href ?? '')
+    .trim()
+    .replace(/&amp;/g, '&')
+  if (!raw || /^(#|mailto:|tel:|javascript:|data:)/i.test(raw)) return null
+  let u
+  let base
+  try {
+    base = new URL(siteUrl)
+    u = new URL(raw, base)
+  } catch {
+    return null
+  }
+  const hosts = new Set([base.host, ...aliasHosts.map((h) => h.toLowerCase())])
+  if (
+    !/^https?:$/.test(u.protocol) ||
+    (!hosts.has(u.host.toLowerCase()) && !hosts.has(u.hostname.toLowerCase()))
+  )
+    return null
+  if (![...u.searchParams.keys()].some((k) => ACTION_KEYS.has(k.toLowerCase()))) return null
+  const path = u.pathname.replace(/\/{2,}/g, '/').replace(/^(\/index\.php)+(?=\/|$)/i, '') || '/'
+  return path + u.search
+}
+
+/**
+ * A same-site address as a path with its query, the host it was read on left out, or null when the address is not of
+ * this site. A template that prints its own addresses absolute (a shop's form actions, a product picture link) would
+ * otherwise carry the capture machine's host into the kit.
+ * @param {string} href the address as written in the page
+ * @param {string} siteUrl the address the site is reached at
+ * @param {string[]} [aliasHosts] other host names the site answers to
+ */
+export function siteAddress(href, siteUrl, aliasHosts = []) {
+  const raw = String(href ?? '')
+    .trim()
+    .replace(/&amp;/g, '&')
+  if (!raw || /^(#|mailto:|tel:|javascript:|data:)/i.test(raw)) return null
+  let u
+  let base
+  try {
+    base = new URL(siteUrl)
+    u = new URL(raw, base)
+  } catch {
+    return null
+  }
+  const hosts = new Set([base.host, ...aliasHosts.map((h) => h.toLowerCase())])
+  if (
+    !/^https?:$/.test(u.protocol) ||
+    (!hosts.has(u.host.toLowerCase()) && !hosts.has(u.hostname.toLowerCase()))
+  )
+    return null
+  return u.pathname.replace(/\/{2,}/g, '/') + u.search
+}
+
 /** The address to request for a canonical path (this site has no URL rewrite: pages live under /index.php). */
 export function urlOfPath(path, siteUrl) {
   const base = new URL(siteUrl)

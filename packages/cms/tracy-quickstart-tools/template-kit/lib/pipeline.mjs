@@ -6,6 +6,7 @@ import { existsSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { runSite } from '../site-cli.mjs'
+import { readContractMap } from './contract-read.mjs'
 import { assembleKit, readIf, readJson, writeJson } from './assemble.mjs'
 import { captureSite, phase, reshootChanged } from './capture-site.mjs'
 import { crawlSite, httpFetcher } from './crawl.mjs'
@@ -132,7 +133,7 @@ async function classifyKitIcons({ kit, out, trade, log, site }) {
  * @param {{o: object, out: string, tool: string, chromium: object, log: Function}} a
  */
 export async function runFull({ o, out, tool, chromium, log }) {
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const host = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
   const hosts = host ? [host] : []
   const widths = String(o.widths ?? '1440,390')

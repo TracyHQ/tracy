@@ -16,7 +16,10 @@ export const SCHEMA = 'tracy-content-coverage/v1'
 //   `judgedBy` and carries no model, calls or cents.
 // 1.6.0 (01/11/2026): the site map (`sitePages`: whether each map page opens and where it sits in the menus) and the
 //   `header` a visitor sees (logo, menu items, buttons, text); a 1.5.0 file has neither.
-export const TOOL_VERSION = '1.6.0'
+// 1.7.0 (04/11/2026): an all-numeric date a layout prints (06.09.2021) is core like a written one; label rules R4, R7 and
+//   R8 read cards (a mailto: link labelled by its email, info cards of different contact facts, names of two cards side
+//   by side).
+export const TOOL_VERSION = '1.7.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */

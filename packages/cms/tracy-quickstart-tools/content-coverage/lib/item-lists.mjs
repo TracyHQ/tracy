@@ -89,8 +89,10 @@ function fieldOf(slot) {
   return { field: `custom:${path || slot.column}`, kind: 'custom' }
 }
 
-/** Is a findings item inside the block whose id is `id`? Joomla chrome ids: `Mod160`, `mod-articles-160`, `module-160`. */
-const scopeTest = (id) => new RegExp(`^(?:mod|module)[-_a-z]*0*${id}$`, 'i')
+/** Is a findings item inside the block whose id is `id`? Joomla chrome ids: `Mod160`, `mod-articles-160`, `module-160`;
+ * the JA module chrome wraps a module in `Section<id>`, no separator (JA Diner's latest news, `#Section103`); a page
+ * section's own `section-2` is not a module. */
+const scopeTest = (id) => new RegExp(`^(?:(?:mod|module)[-_a-z]*|section)0*${id}$`, 'i')
 
 /** The findings items of a block on a page (`by: "block"`), else the whole page when it is assigned there. */
 export const blockPool = (block, assigned) => (items) => {

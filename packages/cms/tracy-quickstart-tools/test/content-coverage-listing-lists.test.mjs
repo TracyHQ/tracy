@@ -236,3 +236,64 @@ test('a card title an off-canvas menu also prints is still the body copy, read b
   ]
   assert.equal(listingListsOf({ map, lock, findings }).itemLists['menuItem-304.items'], undefined)
 })
+
+test('a sub-category page no menu item names declares its own list, and its items name it as their category page', () => {
+  const { map, lock, findings } = fixture()
+  // Category 32 sits under the Workshops blog; its page is reached at `/workshops/32-evening` from the blog's links.
+  map.entities.push(
+    {
+      key: 'category-32',
+      kind: 'category',
+      identity: { path: 'workshops/evening', alias: 'evening' },
+      sourceId: 32
+    },
+    { key: 'article-43', kind: 'article', sourceId: 43, identityReferences: { catid: 'category-32' } }
+  )
+  map.slots.push(
+    slot('category-32.0', 'title', 'text', 'Evening', 'editorial.heading'),
+    slot('article-43.0', 'title', 'text', 'Night Stretch', 'offering.name')
+  )
+  findings.pages[0].items.push(
+    text('Night Stretch', ['article-43.0'], at(0, 500, 300, 30), {
+      href: '/workshops/32-evening/43-night-stretch'
+    })
+  )
+  findings.pages.push({
+    url: 'http://site.invalid/index.php/workshops/32-evening',
+    mapPages: [],
+    items: [
+      text('Night Stretch', ['article-43.0'], at(0, 100, 300, 30), {
+        href: '/workshops/32-evening/43-night-stretch'
+      })
+    ]
+  })
+  const { itemLists, itemPages } = listingListsOf({ map, lock, findings })
+  const list = itemLists['category-32.items']
+  assert.equal(list.page, null)
+  assert.equal(list.pagePath, '/workshops/32-evening')
+  assert.deepEqual(list.source, {
+    kind: 'category',
+    id: 'category-32',
+    title: 'Evening',
+    page: null,
+    route: 'workshops/32-evening'
+  })
+  assert.deepEqual(list.shown, ['article-43'])
+  // The bounds come from the blog page the category page sits under.
+  assert.deepEqual([list.max, list.maxFrom], [4, 'view-setting'])
+  assert.deepEqual(
+    list.rowSlots.map((r) => r.field),
+    ['title', 'link']
+  )
+  // The blog lists it too, but its own category and that category's page are named.
+  assert.deepEqual(
+    {
+      category: itemPages['article-43'].category,
+      categoryPage: itemPages['article-43'].categoryPage,
+      categoryRoute: itemPages['article-43'].categoryRoute
+    },
+    { category: 'category-32', categoryPage: null, categoryRoute: 'workshops/32-evening' }
+  )
+  // An item of the blog's own category keeps the blog page.
+  assert.equal(itemPages['article-41'].categoryRoute, 'workshops')
+})

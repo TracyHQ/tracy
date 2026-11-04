@@ -3,14 +3,17 @@
 // filling last line is right, a hole is not, a short last line pressed to the left is tried again with a centering
 // rule injected and taken out. One page load per list. Read-only on the site: rows go in the browser only.
 import { openFrozen, openKitContext } from './capture.mjs'
-import { tryRowFix } from './row-fix.js'
-import { readRowContext } from './row-context.js'
-import { firstLineSpans, layoutCheck, matchRepeat, minOfCounts } from './rows.mjs'
+import { openRowsPanel } from './open-rows-panel.js'
 import { readDetails } from './read-details.js'
+import { readRowContext } from './row-context.js'
+import { tryRowFix } from './row-fix.js'
+import { firstLineSpans, layoutCheck, matchRepeat, minOfCounts } from './rows.mjs'
 
 /** Runs INSIDE the page: keep the first `keep` rows of the set, remove the rest, return the boxes left. */
 export function keepRows({ block, path, shape, css, keep }) {
-  const STATE = /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$/
+  // Zebra classes (`cat-list-row0` / `cat-list-row1`, `odd` / `even`) alternate between rows of one set: state too.
+  const STATE =
+    /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$|(?:^|-)row\d$|^(?:odd|even)$/
   const sig = (el) =>
     `${el.tagName}.${[...el.classList]
       .filter((c) => !STATE.test(c))
@@ -70,6 +73,9 @@ export async function measureMin({
   const centered = {}
   const contexts = {}
   let fix = null
+  // Widths at which the full set shows no row (rows in a panel a phone closes, a column it hides): the visitor sees
+  // no rows there, so no count is judged at that width.
+  const unseen = new Set()
   try {
     const ctx = await openKitContext(browser, { width: widths[0], siteUrl, hostHeader })
     const opened = await openFrozen(ctx, url, assigned, hide, { wake: 'quick' })
@@ -80,6 +86,8 @@ export async function measureMin({
       if (!repeat) throw new Error(`no row set of ${max} rows in ${source}; pass --rows <css>`)
     }
     const args = { block: source, path: repeat?.path ?? [], shape: repeat?.shape, css }
+    // Rows in a closed tab or accordion are opened the way a visitor opens them, then measured.
+    if ((await page.evaluate(openRowsPanel, args)).opened) await page.waitForTimeout(600)
     for (let keep = max; keep >= 1; keep--) {
       const left = await page.evaluate(keepRows, { ...args, keep })
       if (!left) throw new Error(`block ${source} not found on ${url}`)
@@ -89,6 +97,11 @@ export async function measureMin({
         await page.setViewportSize({ width, height: 900 })
         await page.waitForTimeout(250)
         const after = await page.evaluate(keepRows, { ...args, keep })
+        if (keep === max && !after.rows.length) unseen.add(width)
+        if (unseen.has(width)) {
+          ;(checks[keep] ??= {})[width] = { ok: null, reason: 'no row is shown at this width: not judged' }
+          continue
+        }
         // How the content around the rows is aligned, read once per width on the full set.
         if (keep === max) {
           const around = await page.evaluate(readRowContext, args)
@@ -116,15 +129,18 @@ export async function measureMin({
   } finally {
     await browser.close()
   }
+  const judged = widths.filter((w) => !unseen.has(w))
   const okCounts = Object.keys(checks)
     .map(Number)
-    .filter((n) => widths.every((w) => checks[n][w]?.ok))
+    .filter((n) => judged.length && judged.every((w) => checks[n][w]?.ok))
     .sort((a, b) => a - b)
   // Every count from 1 to the maximum was measured: the minimum is the smallest that looks right.
   const { min, layoutOkContiguous } = minOfCounts(okCounts, max)
   const counts = Object.keys(checks).map(Number)
-  const okIfCentered = counts.filter((n) =>
-    widths.every((w) => checks[n][w]?.ok || (checks[n][w]?.leftPacked && centered[n]?.[w]?.ok))
+  const okIfCentered = counts.filter(
+    (n) =>
+      judged.length &&
+      judged.every((w) => checks[n][w]?.ok || (checks[n][w]?.leftPacked && centered[n]?.[w]?.ok))
   )
   const packed = counts.some((n) => widths.some((w) => checks[n][w]?.leftPacked))
   const centers = counts.some((n) => widths.some((w) => /centered/.test(checks[n][w]?.reason ?? '')))
@@ -135,13 +151,14 @@ export async function measureMin({
     context: contexts,
     fix: fix && {
       ...fix,
-      verified: counts.every((n) => widths.every((w) => !checks[n][w]?.leftPacked || centered[n]?.[w]?.ok))
+      verified: counts.every((n) => judged.every((w) => !checks[n][w]?.leftPacked || centered[n]?.[w]?.ok))
     },
     listId,
     measuredBy: 'dom',
     max,
     min,
     okCounts,
+    ...(unseen.size ? { notShownAt: [...unseen].map(String) } : {}),
     layoutOkContiguous,
     checks,
     inSlider: repeat?.inSlider ?? null,
