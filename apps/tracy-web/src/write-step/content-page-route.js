@@ -1,10 +1,15 @@
 // How this template presents a content page, for the pages the write step creates (TracyHQ/tracy#379). What a page looks like comes
-// from how Joomla reaches it, not from any setting on the page: an article opened under a category's menu item takes that item's
-// `layout`, and a framework may give such a page a layout of its own (T4's sub layout). So the same words under a menu item of the
-// article itself print whatever that template's default article prints, a second heading and share buttons among them. A created page
-// therefore takes the route the template's own content pages take. The kit records it (`site.contentPages`, content-pages.mjs); a kit
-// from before that record says the same through its article pages and the live menu. Nothing here names a template or a layout.
-import { articleOfPage } from './page-meta-write.js'
+// from how Joomla reaches it, on two counts:
+// - The page's frame: a framework may give an article opened under a category's menu item a layout of its own (T4's sub layout).
+// - The file that prints the article: Joomla's article view takes `article_layout` from the article's `attribs`, else from the active
+//   menu item's `params`, else from the component's setting. A category link's `layout=` only picks the category's own file and never
+//   reaches an article, and neither does `layout=` in the address.
+// So the same words anywhere else print whatever that template's default article prints, a second heading and share buttons among
+// them. A created page therefore takes the route the template's own content pages take, with the file they print through. The kit
+// records the route (`site.contentPages`, content-pages.mjs); a kit from before that record says the same through its article pages
+// and the live menu. The file is read from the site, since a content map holds no menu settings. Nothing here names a template or a
+// layout.
+import { articleOfPage, paramsOf } from './page-meta-write.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const slashless = (path) =>
@@ -45,8 +50,9 @@ export function mayHaveContentRoute({ plan, kit }) {
 /**
  * The route of the template's content pages: the presentation most of the plan's kept pages use, else the kit's first.
  * @param {{ plan: object, kit: object, rows: object[] }} input `rows`: the site's menu
- * @returns {{ layout: string | null, from: string } | null} `layout`: what the category item names; null when the template's content
- *   pages are not opened under a category, and the page keeps a menu item of its own
+ * @returns {{ layout: string | null, from: string, item: object | null, articles: number[] } | null} `layout`: what the category item's
+ *   link names; `item`: that menu row; `articles`: the content pages under it. Null when the template's content pages are not opened
+ *   under a category, and the page keeps a menu item of its own
  */
 export function contentPageRoute({ plan, kit, rows }) {
   const recorded = each(kit?.site?.contentPages)
@@ -58,16 +64,46 @@ export function contentPageRoute({ plan, kit, rows }) {
     )
     const score = (entry) => each(entry?.pages).filter((id) => kept.has(id)).length
     const best = [...recorded].sort((a, b) => score(b) - score(a))[0]
-    return { layout: best.layout ?? null, from: `the kit's content pages under ${best.route}` }
+    const itemId = Number(String(best.menuItem ?? '').replace(/^menuItem-/, ''))
+    return {
+      layout: best.layout ?? null,
+      from: `the kit's content pages under ${best.route}`,
+      item: each(rows).find((r) => Number(r?.id) === itemId) ?? null,
+      articles: each(best.articles).map((a) => Number(String(a).replace(/^article-/, '')))
+    }
   }
   const groups = new Map()
   for (const page of keptArticlePages({ plan, kit })) {
     const row = categoryRowOver(page.path, each(rows))
-    if (row) groups.set(row, (groups.get(row) ?? 0) + 1)
+    if (row) groups.set(row, [...(groups.get(row) ?? []), articleOfPage(page, kit)])
   }
   if (!groups.size) return null
-  const [row] = [...groups].sort((a, b) => b[1] - a[1])[0]
-  return { layout: queryOf(row.link).get('layout'), from: `the kept pages under ${slashless(row.path)}` }
+  const [row, articles] = [...groups].sort((a, b) => b[1].length - a[1].length)[0]
+  return {
+    layout: queryOf(row.link).get('layout'),
+    from: `the kept pages under ${slashless(row.path)}`,
+    item: row,
+    articles
+  }
+}
+
+const named = (value) => (typeof value === 'string' && value.trim() ? value.trim() : null)
+
+/**
+ * The file the template's content pages print through, as Joomla's article view picks it: an article's own `article_layout` wins over
+ * its menu item's. An article that cannot be read says nothing, and the item answers.
+ * @param {{ layout: string | null, item: object | null, articles: number[] }} route
+ * @param {(action: string, params: object) => Promise<object>} call
+ * @returns {Promise<string | null>} null: they name none and print through the component's setting, as a created page will
+ */
+export async function articleLayoutOf(route, call) {
+  const [first] = route.articles
+  if (first) {
+    const answer = await call('content.get', { kind: 'article', id: first }).catch(() => null)
+    const own = named(paramsOf(answer?.item?.attribs).article_layout)
+    if (own) return own
+  }
+  return named(paramsOf(route.item?.params).article_layout)
 }
 
 /** The link of the menu item a created page is opened under. */

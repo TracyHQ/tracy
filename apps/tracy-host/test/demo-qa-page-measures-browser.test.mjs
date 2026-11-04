@@ -230,3 +230,29 @@ test(
     }
   }
 )
+
+test(
+  'a control with a CSS transition counts as shown at both widths, though the logo read has just painted the page hidden',
+  opts,
+  async () => {
+    const { server, base } = await site()
+    PAGES['/transition'] = `${head}<style>.share a{display:inline-block;transition:all 1s}</style>
+      <header><a href="/" class="custom-logo-link"><img class="custom-logo" src="/wide.png" width="200" height="50" alt="Quay"></a></header>
+      <main><h1>A page of the site</h1><div class="share"><a class="button-first" href="/fine">Share it</a></div></main>`
+    const browser = await playwright.chromium.launch({ headless: true })
+    try {
+      const page = await (await browser.newContext()).newPage()
+      const r = await readDemoPage(page, `${base}/transition`, '/transition', { measurePages: true })
+      assert.deepEqual(
+        r.measures.map((m) => [m.width, m.contentControls.some((c) => c.key.includes('button-first'))]),
+        [
+          [1440, true],
+          [390, true]
+        ]
+      )
+    } finally {
+      await browser.close()
+      server.close()
+    }
+  }
+)

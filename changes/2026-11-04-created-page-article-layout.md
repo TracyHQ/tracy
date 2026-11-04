@@ -1,0 +1,5 @@
+- **A created page prints through the file the template's content pages print through; the desktop page measures see controls with a CSS transition** — Akemi (with Claude) · #379 · `feat/created-page-no-share` · 2026-11-04
+
+  Joomla's article view picks its file from the article's `attribs.article_layout`, else the active menu item's `params.article_layout`, else the component's setting. A category link's `layout=` never reaches an article. The write step now copies the value the template's content pages use onto the hidden `site-pages` item, and reports it in a `<page>:layout` line. On the host, the look read paints a page hidden to shoot a logo at 1440, and the measures that followed at once counted any element with a CSS transition as not shown; they now wait for transitions to finish.
+
+  **Affects:** the write report (new `page-layout` line, `articleLayout` on the `page-route` line). The first run on a site an earlier run wrote updates the route item once. `apps/tracy-host` must be redeployed for the measure change; measures at 1440 may then find more than they did, in every group that reads what is shown.

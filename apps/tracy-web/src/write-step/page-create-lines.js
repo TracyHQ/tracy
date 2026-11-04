@@ -24,7 +24,7 @@ export function orderOf(page, { pages, pageMeta }) {
 
 /** The report's words on one page: `results` stand for the lines the copy already gives it, `lines` are its own. */
 export function linesOf(order, done) {
-  const { articleId, itemId, reason, routeLink } = done
+  const { articleId, itemId, reason, routeLink, articleLayout = null } = done
   const result = (ordered, read) =>
     reason
       ? { status: 'failed', reason, ordered }
@@ -62,7 +62,21 @@ export function linesOf(order, done) {
       own(`${order.id}:heading`, 'page-heading', result(order.title, readRow('article', articleId, 'title'))),
       own(`${order.id}:address`, 'page-address', result('1', readRow('menuItem', itemId, 'published'))),
       ...(routeLink
-        ? [own(`${order.id}:route`, 'page-route', result(routeLink, readRow('menuItem', itemId, 'link')))]
+        ? [
+            own(`${order.id}:route`, 'page-route', {
+              ...result(routeLink, readRow('menuItem', itemId, 'link')),
+              articleLayout
+            })
+          ]
+        : []),
+      ...(routeLink && articleLayout
+        ? [
+            own(
+              `${order.id}:layout`,
+              'page-layout',
+              result(articleLayout, readRow('menuItem', itemId, 'params', ['article_layout']))
+            )
+          ]
         : [])
     ]
   }
@@ -70,7 +84,8 @@ export function linesOf(order, done) {
 
 /**
  * The page's rows as the last report says the site holds them, when every line of it stands and this order changes none. `routed`:
- * the template's content pages have a route of their own, and a report without a route line is of a page not yet on it.
+ * the template's content pages have a route of their own, and a report without a route line is of a page not yet on it, as one whose
+ * route line does not say the article's layout is of a route that does not print as they do yet.
  */
 export function heldByLast(order, last, routed = false) {
   const same =
@@ -82,10 +97,10 @@ export function heldByLast(order, last, routed = false) {
   const address = last.line(`${order.id}:address`)
   if (!same || !address) return null
   const route = last.line(`${order.id}:route`)
-  if (routed && !route) return null
+  if (routed && route?.articleLayout === undefined) return null
   return {
     articleId: last.line(order.id).readFrom.params.id,
     itemId: address.readFrom.params.id,
-    ...(route ? { routeLink: route.ordered } : {})
+    ...(route ? { routeLink: route.ordered, articleLayout: route.articleLayout ?? null } : {})
   }
 }

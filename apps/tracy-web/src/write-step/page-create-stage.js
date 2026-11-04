@@ -9,10 +9,11 @@
 // a template can list any category it ships (JA Boxing's plans page lists Uncategorised).
 //
 // When the template's content pages are opened under a category's menu item (content-page-route.js), a created page takes the same
-// route, under one hidden item of its own category that holds the same layout: it then prints as they do. It has no item of its own
-// then, so its title lives on the article, and an item an earlier run made for it is unpublished.
+// route, under one hidden item of its own category that holds the same category layout and the same article layout: it then prints
+// as they do. It has no item of its own then, so its title lives on the article, and an item an earlier run made for it is unpublished.
 import { createHash } from 'node:crypto'
 import {
+  articleLayoutOf,
   contentPageRoute,
   mayHaveContentRoute,
   ROUTE_ALIAS,
@@ -215,7 +216,7 @@ async function writeRoutedPage({ order, call, write, make, rows, owners, kit, ca
   const item = await routeItem(order, { owners, kit, rows })
   // Left published, the earlier item would still print the page the old way at its old address.
   if (own && Number(own.published) !== 0) await write('menuItem', Number(own.id), { published: 0 })
-  return { articleId, itemId: item.id, routeLink: item.link }
+  return { articleId, itemId: item.id, routeLink: item.link, articleLayout: item.articleLayout }
 }
 
 /**
@@ -282,6 +283,8 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
   }
   // A kept page of a route the template does not use names no category: the page keeps its own item.
   const route = contentPageRoute({ plan, kit, rows })
+  const articleLayout = route ? await articleLayoutOf(route, call) : null
+  const printsAs = articleLayout ? { article_layout: articleLayout } : {}
   let categoryId = null
   let routeRow = null
   for (const order of fresh) {
@@ -312,7 +315,7 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
       const link = routeLink(route, await category())
       routeRow ??= rows.find((row) => row.note === ROUTE_NOTE) ?? null
       if (!routeRow) {
-        const params = JSON.stringify({ ...NOT_A_POST, menu_show: 0 })
+        const params = JSON.stringify({ ...NOT_A_POST, menu_show: 0, ...printsAs })
         const id = await make('menuItem', {
           title: 'Site pages',
           alias: ROUTE_ALIAS,
@@ -328,11 +331,14 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
         routeRow = { id, link, published: 1, note: ROUTE_NOTE, params }
       }
       const fields = differing(routeRow, { link, published: 1 })
+      const held = paramsOf(routeRow.params)
+      if (articleLayout && held.article_layout !== articleLayout)
+        fields.params = JSON.stringify({ ...held, ...printsAs })
       if (Object.keys(fields).length) {
         await write('menuItem', Number(routeRow.id), fields)
         routeRow = { ...routeRow, ...fields }
       }
-      return { id: Number(routeRow.id), link }
+      return { id: Number(routeRow.id), link, articleLayout }
     }
     try {
       const context = { order, call, write, make, rows, owners, kit, category }
