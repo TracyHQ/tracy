@@ -159,7 +159,8 @@ Thresholds and readings (named constants in the code):
   asset's `quality`. A `quality: low` owner photo fills only a small frame, whose display box has no side longer than
   `SMALL_FRAME_MAX` (600 px; gallery tiles are about 450), even when the gate passed.
 - **P06 identity.** An owner photo is its brief asset, whatever the crop; a drawn picture is its file hash. A shared
-  block counts on every kept page. Twins, icons, initials and hidden frames are not counted.
+  block counts on every kept page. Twins, icons, initials and hidden frames are not counted. The only repeat allowed is
+  a gallery tile's reuse (section 4): marked `reuse`, not next to the other showing, the cuts sharing at most 30%.
 - **P08 portrait.** The brief asset's `portraitOf` id must be the plan's `person` fact id, or an id that fact names
   for its person. No face recognition anywhere.
 - **P09 labels.** The brief asset labels `hasTextOrWatermark` and `showsOtherBusiness` (true, false or null). When a
@@ -348,7 +349,8 @@ Looker rejections and check failures go back to the picker for the failing frame
 **2 fix rounds**. Then, per frame, a fixed ladder:
 
 1. a `specific` frame is drawn (one redraw with the fault names);
-2. an `any-real` frame takes the next photo, then the row count drops or the frame is hidden;
+2. an `any-real` frame takes the next photo, then the row count drops or the frame is hidden (a gallery tile is never
+   hidden alone: it reuses an owner photo of its page cut to another region, else it is returned);
 3. a drawing still rejected is hidden when the kit allows hiding;
 4. a frame that cannot be hidden is returned to the planner.
 
@@ -366,8 +368,17 @@ climb. The rungs, in order:
 | redraw | `specific` | once more, the template's redraw part naming the looker's faults |
 | next photo | `specific`, `any-real` | code cuts the next owner photo in the any-real order (darker first in a dark frame) not yet tried and not on the frame's pages; at most 2 per frame |
 | fewer rows | `specific`, `any-real` | the frame's list row is dropped when the kit lists the list, its rows are not content items of their own, one fewer is still at least its `min` (1 when none), and every frame of the row may hide; the row's frames are hidden and the list's new count is in `rows` |
-| hide | every match | the frame is hidden when the kit allows hiding and it is not a template setting |
+| reuse | gallery tiles only | an owner photo already shown on the tile's pages, never one shown in a neighbouring tile of the same list (index one apart, or directly above or below when the kit gives the list's columns), cut by code to a region of the frame's shape that shares at most 30% of the smaller cut's area with every other cut of that photo and runs through no head, written and looked at like any cut; at most 2 per tile; the entry says `reuse: { with, overlap }` |
+| hide | every match but gallery tiles | the frame is hidden when the kit allows hiding and it is not a template setting |
 | return | every match | the frame is returned to the planner (`returns`) |
+
+A **gallery tile** is an `any-real` photo frame that is one row of a kit list in which at least two rows hold an image
+slot (a gallery, a row of cards); it is read from the kit's list structure, never from `canHide`. It climbs next photo,
+fewer rows, reuse and return, and code that finds no free photo for it leaves it waiting for this ladder instead of
+hiding it. Why (owner decision 04/11/2026, run 5): the kit marks gallery tiles `canHide` because the block keeps its
+size, but one hidden tile leaves a visible hole in the grid; so the rule lives in the picture step, the kit and its
+`canHide` data are unchanged. P06 accepts a photo twice on a page only for an entry that took the reuse rung, in a
+gallery tile, not next to the other showing, with the two cuts sharing at most 30%; any other repeat still fails.
 
 A `person` frame climbs only hide and return (no other person's photo, never a drawing). A `specific` cut-out frame
 climbs draw, redraw, hide and return; any other cut-out only hide and return (section 3d). A frame waiting for the drawer

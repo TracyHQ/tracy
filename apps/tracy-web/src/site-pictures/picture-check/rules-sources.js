@@ -1,4 +1,5 @@
 // P06 repeats on a page, P07 any-real frames, P08 person frames, P09 owner photo labels, P10 icons, P11 twins.
+import { cropOverlap, neighbours, REUSE_MAX_OVERLAP } from '../gallery-tiles.js'
 import { OWNER_SOURCES as OWNER } from '../manifest-shape.js'
 
 const MADE_UP = new Set(['drawn', 'owner-photo-extended'])
@@ -6,7 +7,20 @@ const where = (e) => (e.list === 'siteSettings' ? `siteSettings ${e.frame}` : e.
 const framesOnly = (view) => view.entries.filter((e) => e.list === 'frames')
 
 // P06. One photo appears at most once per page. A photo is the brief asset for an owner photo (whatever the crop) and
-// the file for a drawn picture. Twins, icons, initials and hidden frames are not photos here.
+// the file for a drawn picture. Twins, icons, initials and hidden frames are not photos here. The one exception is a
+// gallery tile that took the reuse rung (ADR 0043 section 4): its entry says `reuse`, the frame is a gallery tile, and
+// against every other showing of the photo on the page its cut shares at most REUSE_MAX_OVERLAP of the smaller cut and
+// the two tiles are not neighbours. Two showings neither of which took the reuse rung always fail.
+function reuseAllowed(idx, a, b) {
+  const reused = a.reuse ? a : b.reuse ? b : null
+  if (!reused || !idx.galleryTile(reused.frame) || !a.crop || !b.crop) return false
+  if (neighbours(idx.gallery(a.frame), idx.gallery(b.frame))) return false
+  const crop = (e) => ({ x: e.crop.x, y: e.crop.y, width: e.crop.width, height: e.crop.height })
+  return cropOverlap(crop(a), crop(b)) <= REUSE_MAX_OVERLAP + 1e-9
+}
+
+const REUSE_RULE = ` (a reuse must be a gallery tile, not next to the other tile, its cut sharing at most ${REUSE_MAX_OVERLAP * 100}% of the smaller cut)`
+
 export function checkP06({ R, view, idx }) {
   const r = R.p06
   const seen = new Map()
@@ -20,11 +34,14 @@ export function checkP06({ R, view, idx }) {
     if (!key || !pages) continue
     let repeated = false
     for (const page of pages) {
-      const first = seen.get(`${page} ${key}`)
-      if (first) {
-        r.fail(e.frame, `${key} is already shown in ${first} on ${page}`, 'pictures')
+      const before = seen.get(`${page} ${key}`) ?? []
+      const clash = before.find((x) => !(OWNER.has(e.source) && reuseAllowed(idx, x, e)))
+      if (clash) {
+        const why = e.reuse || clash.reuse ? REUSE_RULE : ''
+        r.fail(e.frame, `${key} is already shown in ${clash.frame} on ${page}${why}`, 'pictures')
         repeated = true
-      } else seen.set(`${page} ${key}`, e.frame)
+      }
+      seen.set(`${page} ${key}`, [...before, e])
     }
     if (!repeated) r.ok()
   }

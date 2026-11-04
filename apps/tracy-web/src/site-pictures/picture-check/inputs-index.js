@@ -1,6 +1,7 @@
 // Indexes the plan, the kit and the brief for the picture check rules (ADR 0043). Reads tolerantly: a missing or
 // oddly shaped part yields an empty index and never throws. Nothing here modifies an input.
 import { contentMapKey } from '../../site-writer/contract-mapping.js'
+import { galleryIndex } from '../gallery-tiles.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
@@ -42,7 +43,10 @@ function indexKit(kit) {
     const s = slots.get(contentMapKey(frameId))
     return s ? demoFileSize(s) : null
   }
-  return { frames, twinsOf, demoPaths, demoHashes, demoSize }
+  // The picture lists a frame sits in (gallery-tiles.js): its block, list and row.
+  const galleries = galleryIndex(kit)
+  const gallery = (frameId) => galleries.get(frameId) ?? null
+  return { frames, twinsOf, demoPaths, demoHashes, demoSize, gallery }
 }
 
 // Every picture wish of the plan, with the pages it shows on. A shared block shows on every kept page.
@@ -91,14 +95,19 @@ function fileReader(files) {
 }
 
 export function indexInputs({ plan, kit, brief, files, icons }) {
+  const kitIndex = indexKit(kit)
+  const planIndex = indexPlan(plan)
   const assets = new Map(
     arr(brief?.assets)
       .filter((a) => isObject(a) && typeof a.id === 'string')
       .map((a) => [a.id, a])
   )
   return {
-    ...indexKit(kit),
-    ...indexPlan(plan),
+    ...kitIndex,
+    ...planIndex,
+    /** A gallery tile: an any-real frame of a picture list (gallery-tiles.js); it is never hidden alone. */
+    galleryTile: (frameId) =>
+      planIndex.wishes.get(frameId)?.match === 'any-real' ? kitIndex.gallery(frameId) : null,
     assets,
     personIds: (factId) => personIds(brief, factId),
     readFile: fileReader(files),

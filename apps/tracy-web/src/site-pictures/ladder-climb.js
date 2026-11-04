@@ -5,7 +5,8 @@ import { cutPhoto } from './cut-photo.js'
 import { darkerFirst } from './darken.js'
 import { hiddenEntry, placedEntry } from './frame-entries.js'
 import { modeOf, WIDE_BAND } from './ladder-draw.js'
-import { fewerRowsRefusal, rowOf, rungsOf } from './ladder-rungs.js'
+import { reuseRung } from './ladder-reuse.js'
+import { fewerRowsRefusal, rowOf, rungsFor } from './ladder-rungs.js'
 import { inParallel } from './looker-step.js'
 import { rankForFrame, sameService } from './photo-shortlist.js'
 
@@ -166,13 +167,14 @@ function runRung(ctx, s, frameId, p, rung) {
   if (rung === 'next-photo') return nextPhotoRung(ctx, s, frameId, p)
   if (rung === 'fewer-rows') return fewerRowsRung(ctx, s, frameId)
   if (rung === 'hide') return hideRung(ctx, s, frameId)
+  if (rung === 'reuse') return reuseRung(ctx, s, frameId, p)
   return { ret: true }
 }
 
 // Climb a frame's ladder from where it stands until a rung places a picture or ends the frame.
 async function climb(ctx, s, frameId, firstResult = null) {
   const p = s.progress.get(frameId)
-  const rungs = rungsOf(ctx.idx.wishes.get(frameId), ctx.idx.frames.get(frameId))
+  const rungs = rungsFor(ctx.idx, frameId)
   let result = firstResult
   for (;;) {
     if (p.done) return
@@ -182,8 +184,8 @@ async function climb(ctx, s, frameId, firstResult = null) {
       s.entries.set(frameId, { list: result.list, entry: result.entry })
       s.note(frameId, rung, 'placed', result.entry.sha256.slice(0, 12))
       p.last = rung
-      // The next photo rung stays where it is: a rejected photo is followed by another, up to NEXT_PHOTO_TRIES.
-      if (rung !== 'next-photo') p.at += 1
+      // The next photo and reuse rungs stay where they are: a rejected photo is followed by another, up to their tries.
+      if (rung !== 'next-photo' && rung !== 'reuse') p.at += 1
       return
     }
     if (result.done) return s.note(frameId, rung, 'done')
@@ -198,7 +200,9 @@ async function climb(ctx, s, frameId, firstResult = null) {
         s.entries.delete(frameId)
         s.returns.push({
           frame: frameId,
-          reason: `no picture is left for this frame after: ${s.story(frameId)}`
+          reason: ctx.idx.galleryTile?.(frameId)
+            ? `a gallery tile is never hidden alone, and no owner photo is left for it after: ${s.story(frameId)}`
+            : `no picture is left for this frame after: ${s.story(frameId)}`
         })
       }
       p.done = true
@@ -217,7 +221,7 @@ async function climb(ctx, s, frameId, firstResult = null) {
  *   drawing: { draw: Function } | null, luminance: Map<string, number> }} ctx
  */
 export async function climbAll(ctx, s, frameIds) {
-  const rungOf = (f) => rungsOf(ctx.idx.wishes.get(f), ctx.idx.frames.get(f))[s.progress.get(f).at]
+  const rungOf = (f) => rungsFor(ctx.idx, f)[s.progress.get(f).at]
   const drawsFirst = frameIds.filter((f) => ['draw', 'redraw'].includes(rungOf(f)))
   const drawn = await inParallel(drawsFirst, DRAW_CONCURRENCY, (f) =>
     drawRung(ctx, s, f, s.progress.get(f), rungOf(f))

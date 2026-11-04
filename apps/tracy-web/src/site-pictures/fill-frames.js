@@ -2,7 +2,7 @@
 // with no model. Owner photos are cut for any-real frames (the shortlist's order: same offering, unused first; never
 // drawn) and for person frames that have a confirmed portrait; other person frames get initials drawn by code in the
 // as a colour recipe of roles with a neutral preview file (paint.js: the brand colour is decided when written); a frame with no fitting photo is hidden where the kit allows, else returned to the
-// planner; frames the kit marks not writable are returned, except a picture painted behind blocks, which goes into
+// planner (a gallery tile, gallery-tiles.js, is never hidden alone: it waits for the ladder); frames the kit marks not writable are returned, except a picture painted behind blocks, which goes into
 // siteSettings; twins copy their source. A frame with text over its picture tries darker photos first (the overlay a
 // picture still too bright gets is baked when the round is finished, ladder-step.js). Specific, icon and cut-out frames are left as pending entries for the steps
 // that come later (the picker, the icons, the cut-outs, ladder-step.js): never a demo picture. No owner photo is shown twice on a page.
@@ -11,12 +11,17 @@ import { initialsAvatar } from '../lib/initials-avatar.js'
 import { cutPhoto, outputSizeFor } from './cut-photo.js'
 import { darkerFirst } from './darken.js'
 import { addTwins, hiddenEntry, pendingEntry, placedEntry } from './frame-entries.js'
-import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
 import { INITIALS_PAINT, previewColour } from './paint.js'
+import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
 import { indexInputs } from './picture-check/inputs-index.js'
 
 /** What each later step fills; a pending entry names it. */
-export const WAITS_FOR = Object.freeze({ picker: 'picker', icons: 'icons', cutout: 'cut-out' })
+export const WAITS_FOR = Object.freeze({
+  picker: 'picker',
+  icons: 'icons',
+  cutout: 'cut-out',
+  ladder: 'ladder'
+})
 
 const area = (f) => (Number(f.width) || 0) * (Number(f.height) || 0)
 
@@ -205,7 +210,12 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
     const why = !tried
       ? 'no confirmed portrait and no name to draw initials from'
       : `no fitting real photo${tried.length ? ` (tried ${tried.join(', ')})` : ''}`
-    if (list === 'frames' && frame.canHide === true)
+    // A gallery tile is never hidden alone (gallery-tiles.js): it climbs its ladder (fewer rows, reuse, return).
+    if (idx.galleryTile(frameId))
+      pending.push(
+        pendingEntry(wish, frame, WAITS_FOR.ladder, `a gallery tile is never hidden alone; ${why}`)
+      )
+    else if (list === 'frames' && frame.canHide === true)
       entries.set(frameId, { list, entry: hiddenEntry(frameId, why) })
     else returns.push({ frame: frameId, reason: `${why}, and the frame cannot be hidden` })
   }

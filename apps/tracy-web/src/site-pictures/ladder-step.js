@@ -10,7 +10,9 @@
 // 2. A picture in a frame with text over it that is still too bright gets a dark overlay baked in (darken.js).
 // 3. The looker looks at every finished picture (looker-step.js).
 // 4. Each rejected frame climbs its ladder (ladder-rungs.js): draw, one redraw with the fault names, the next photo,
-//    fewer rows (where the kit allows), hidden (where the kit allows), returned to the planner. After each rung the
+//    fewer rows (where the kit allows), hidden (where the kit allows), returned to the planner. A gallery tile is never
+//    hidden alone: after fewer rows it reuses an owner photo of its page cut to another region (ladder-reuse.js), and a
+//    gallery tile code found no photo for waits for this ladder. After each rung the
 //    changed pictures are looked at again. A frame the picker placed climbs only in the last round (and then also when
 //    it still fails the picture check): before it, the picker gets it back with its fault names. A look that could not
 //    be read is no rejection: the picture fails L01 and the next round asks again.
@@ -22,13 +24,13 @@
 // cached), which the caller adds to the run's cost; `files` the files it made.
 import path from 'node:path'
 import { darkenPicture, wantsDark } from './darken.js'
+import { WAITS_FOR } from './fill-frames.js'
 import { fileFields } from './frame-entries.js'
 import { climbAll, DRAW_CONCURRENCY, NEXT_PHOTO_TRIES } from './ladder-climb.js'
 import { ladderState } from './ladder-state.js'
 import { LOOK_UNREADABLE } from './looker-call.js'
 import { LOOKED_SOURCES } from './looker-step.js'
 import { OWNER_SOURCES } from './manifest-shape.js'
-import { WAITS_FOR } from './fill-frames.js'
 import { WAITS_FOR_DRAWER } from './picker-picks.js'
 
 export { DRAW_CONCURRENCY, NEXT_PHOTO_TRIES }
@@ -104,6 +106,10 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
         s.note(f, 'draw', 'skipped', `a ${match} cut-out is never drawn, and no owner photo is cut out`)
     }
     jobs.push(...cutouts)
+    // A gallery tile code found no photo for climbs its own ladder (next photo, fewer rows, reuse, return): never hidden.
+    jobs.push(
+      ...s.pending.filter((p) => p.waitsFor === WAITS_FOR.ladder && climbable(p.frame)).map((p) => p.frame)
+    )
     for (const f of jobs) s.progress.set(f, { at: 0, tried: new Set(), photos: 0 })
     s.pending = s.pending.filter((p) => !jobs.includes(p.frame))
     // In the last round, a frame the picker placed that still fails the check gets no other picker round: it climbs.

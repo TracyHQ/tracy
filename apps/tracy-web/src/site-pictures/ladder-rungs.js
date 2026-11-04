@@ -6,22 +6,31 @@
 // at the next photo. A `person` frame is never drawn and never takes another photo: it is hidden or returned.
 // A cut-out frame (#346) never takes an owner photo (no photo is cut out): a `specific` one is drawn on a plain ground,
 // redrawn once, then hidden or returned; any other cut-out (a person, any real photo) is never drawn: hidden or returned.
+// A gallery tile (an any-real frame of a picture list, gallery-tiles.js) is never hidden alone: after the next photo
+// and fewer rows it reuses an owner photo already on its page, cut to another region, then it is returned.
 
 /** The rungs per plan match. */
 export const RUNGS = Object.freeze({
   specific: Object.freeze(['draw', 'redraw', 'next-photo', 'fewer-rows', 'hide', 'return']),
   'any-real': Object.freeze(['next-photo', 'fewer-rows', 'hide', 'return']),
   person: Object.freeze(['hide', 'return']),
-  cutout: Object.freeze(['draw', 'redraw', 'hide', 'return'])
+  cutout: Object.freeze(['draw', 'redraw', 'hide', 'return']),
+  gallery: Object.freeze(['next-photo', 'fewer-rows', 'reuse', 'return'])
 })
 
 /**
  * The rungs of a plan wish in its kit frame (an unknown match climbs only the rungs that place nothing new).
+ * `galleryTile`: the frame is a gallery tile (the picture check index's galleryTile).
  */
-export function rungsOf(wish, frame = null) {
+export function rungsOf(wish, frame = null, galleryTile = false) {
   if (frame?.kind === 'cutout') return wish?.match === 'specific' ? RUNGS.cutout : RUNGS.person
+  if (galleryTile && wish?.match === 'any-real') return RUNGS.gallery
   return RUNGS[wish?.match] ?? RUNGS.person
 }
+
+/** The rungs of one frame of the round's index. */
+export const rungsFor = (idx, frameId) =>
+  rungsOf(idx.wishes.get(frameId), idx.frames.get(frameId), Boolean(idx.galleryTile?.(frameId)))
 
 /**
  * Whether a plan has a cut-out frame that is drawn (a `specific` one the kit lets be written, no twin): such a run

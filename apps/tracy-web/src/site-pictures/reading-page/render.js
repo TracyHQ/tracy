@@ -105,6 +105,7 @@ const chips = (f) => {
   if (f.setting) out.push('<span class="chip">template setting</span>')
   if (e?.enlarge && e.enlarge > 1) out.push(`<span class="chip">enlarged x${esc(e.enlarge)}</span>`)
   if (e?.darkened) out.push('<span class="chip">darkened</span>')
+  if (e?.reuse?.with) out.push(`<span class="chip">reused, also in ${esc(e.reuse.with.join(', '))}</span>`)
   if (e?.paint) out.push('<span class="chip">preview, colour decided when written</span>')
   if (e?.sharpness && e.sharpness.passed === false) out.push('<span class="chip warn">not sharp</span>')
   return out.join('')

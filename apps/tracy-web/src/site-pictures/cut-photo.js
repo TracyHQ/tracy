@@ -10,9 +10,9 @@
 import sharp from 'sharp'
 import { subjectCrop } from 'website-opportunities/domain/pictures/subject-crop.mjs'
 import { judgePhoto, SHARPNESS_VERSION } from '../lib/photo-sharpness.js'
+import { sha256Hex } from './file-store.js'
 import { headBoxesOf } from './head-boxes.js'
 import { MAX_ENLARGE, SMALL_FRAME_MAX } from './picture-check/rules-files.js'
-import { sha256Hex } from './file-store.js'
 
 export { MAX_ENLARGE, SMALL_FRAME_MAX }
 
@@ -56,8 +56,8 @@ export function slotClassOfFrame(frame) {
   return { kind: width <= 400 ? 'small' : width <= 600 ? 'medium' : 'large', width }
 }
 
-// The photo's pixel size as shown (EXIF turned).
-async function sizeOf(bytes) {
+/** The photo's pixel size as shown (EXIF turned). */
+export async function sizeOf(bytes) {
   const meta = await open(bytes).metadata()
   const turned = (meta.orientation ?? 1) >= 5
   return { width: turned ? meta.height : meta.width, height: turned ? meta.width : meta.height }
@@ -111,10 +111,24 @@ export async function cutPhoto(bytes, asset, frame, demo, { matches = false, any
     { min: 1, matches, wide: anyReal || shape.width / shape.height >= WIDE_ASPECT }
   )
   if (placed.refused) return { ok: false, refused: placed.refused }
-  const out = outputSizeFor(demo, box, placed.crop.source.width)
-  const enlarge = Number((out.width / placed.crop.source.width).toFixed(4))
-  if (enlarge > MAX_ENLARGE) return { ok: false, refused: 'too-small' }
   const rect = await rectOf(bytes, size, placed.crop)
+  return writeRect(bytes, rect, frame, demo, low)
+}
+
+/**
+ * Write one rectangle of an owner photo for a frame: at the demo file's aspect and at least the display box, enlarged at
+ * most MAX_ENLARGE times and only through the sharpness gate (a low quality photo always goes through it).
+ * @param {Uint8Array} bytes the owner photo
+ * @param {{left: number, top: number, width: number, height: number}} rect on the photo as shown (EXIF turned)
+ * @param {{width: number, height: number}} frame the kit frame (its display box)
+ * @param {{width: number, height: number} | null} demo
+ * @param {boolean} low the photo is labelled low quality
+ */
+export async function writeRect(bytes, rect, frame, demo, low) {
+  const box = { width: Number(frame.width), height: Number(frame.height) }
+  const out = outputSizeFor(demo, box, rect.width)
+  const enlarge = Number((out.width / rect.width).toFixed(4))
+  if (enlarge > MAX_ENLARGE) return { ok: false, refused: 'too-small' }
   let cut = await open(bytes).rotate().extract(rect).jpeg(OWN_JPEG).toBuffer()
   let sharpness = null
   if (enlarge > 1 || low) {

@@ -98,6 +98,19 @@ function readEntry(e, list) {
       return { problem: 'a painted picture file is only a preview: "preview" must be true' }
   } else if (e.paint != null || e.preview != null)
     return { problem: `a ${source} picture has no paint recipe and no preview mark` }
+  // A gallery tile that reused an owner photo of its page names the frames that also show it (ADR 0043 section 4).
+  if (
+    e.reuse != null &&
+    !(
+      source === 'owner-photo' &&
+      isObject(e.reuse) &&
+      Array.isArray(e.reuse.with) &&
+      e.reuse.with.length > 0 &&
+      e.reuse.with.every(isNonEmpty) &&
+      isNumber(e.reuse.overlap)
+    )
+  )
+    return { problem: 'reuse must be null or, on an owner photo, { with: [frames], overlap: number }' }
   if (e.seen != null && typeof e.seen !== 'string') return { problem: 'seen must be a string or null' }
   if (typeof e.reason !== 'string') return { problem: 'reason must be a string' }
   return {
@@ -119,6 +132,7 @@ function readEntry(e, list) {
       crop: e.crop ?? null,
       enlarge: e.enlarge ?? null,
       sharpness: e.sharpness ?? null,
+      reuse: e.reuse ? { with: [...e.reuse.with], overlap: e.reuse.overlap } : null,
       darkened: e.darkened,
       paint: painted ? e.paint : null,
       preview: painted,

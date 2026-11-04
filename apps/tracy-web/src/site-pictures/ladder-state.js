@@ -57,6 +57,17 @@ export function ladderState(idx, doc) {
       }
       return used
     },
+    /** The cuts of each owner photo shown on a page of this frame by any other frame: asset -> [{ frame, crop }]. */
+    cutsOn(frameId) {
+      const pages = idx.wishes.get(frameId)?.pages ?? new Set()
+      const cuts = new Map()
+      for (const [id, { entry }] of entries) {
+        if (id === frameId || !OWNER_SOURCES.has(entry.source)) continue
+        if (![...(idx.wishes.get(id)?.pages ?? [])].some((p) => pages.has(p))) continue
+        cuts.set(entry.asset, [...(cuts.get(entry.asset) ?? []), { frame: id, crop: entry.crop }])
+      }
+      return cuts
+    },
     /** Record a file made in this save (stored already), with what making it cost. */
     keepFile(made, costUsd = 0) {
       s.files.push({
