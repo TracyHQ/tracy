@@ -368,9 +368,11 @@ def declare_everything(kind,row,add):
   if isinstance(v,str) and v.strip():add('params','text',v,jsonPath=['hint'],label=title+' / hint',customize='keep')
 # One page masthead per `menuitem_config` entry of mod_jamasthead: `item_id`, `title`, `description` and `background`
 # are objects keyed by the entry number. The background is the page's banner picture (a video file stays as it is),
-# grouped per page; the title and description are the words printed over it.
+# grouped per page; the title and description are the words printed over it. An entry for a menu item that does not
+# exist is left out.
 MASTHEAD_VIDEO=re.compile(r'\.(mp4|ogg|webm)$',re.I)
 def declare_masthead(row,add):
+ menu_ids={str(r.get('id')) for r in inv.get('menu',[])}
  try:params=json.loads(row.get('params') or '{}')
  except ValueError:return
  cfg=params.get('menuitem_config') if isinstance(params,dict) else None
@@ -381,6 +383,8 @@ def declare_masthead(row,add):
  items,titles,descriptions,backgrounds=(column(n) for n in ('item_id','title','description','background'))
  for k in sorted({*titles,*descriptions,*backgrounds},key=lambda x:(not str(x).isdigit(),int(x) if str(x).isdigit() else 0,str(x))):
   ids=items.get(k);ids=[str(i) for i in ids] if isinstance(ids,list) else [str(ids)] if ids not in (None,'') else []
+  # An entry whose menu items are all gone never shows (the helper matches the active item): no slot.
+  if not any(i in menu_ids for i in ids):continue
   page=f'{row["title"]} / menu item {",".join(ids) or k}'
   bg=backgrounds.get(k)
   if isinstance(bg,str) and bg.strip() and not MASTHEAD_VIDEO.search(bg.split('#')[0]):

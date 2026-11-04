@@ -1827,12 +1827,23 @@ test(
   needsPhp,
   () => {
     const config = {
-      item_id: { 0: ['117'], 1: ['108'], 2: ['130'] },
-      title: { 0: 'Contact', 1: 'Our Blog', 2: 'Video' },
-      description: { 0: 'Find us', 1: '', 2: 'Watch' },
-      background: { 0: 'images/bg-contact.jpg', 1: 'images/banner-blog.jpg', 2: 'images/intro.mp4' }
+      item_id: { 0: ['117'], 1: ['108'], 2: ['130'], 3: ['124'] },
+      title: { 0: 'Contact', 1: 'Our Blog', 2: 'Video', 3: 'Gone' },
+      description: { 0: 'Find us', 1: '', 2: 'Watch', 3: 'Gone too' },
+      background: {
+        0: 'images/bg-contact.jpg',
+        1: 'images/banner-blog.jpg',
+        2: 'images/intro.mp4',
+        3: 'images/bg-gone.jpg'
+      }
     }
     const inv = clean()
+    // Menu item 124 does not exist: its entry never shows, so it declares nothing.
+    inv.menu.push(
+      menu('117', { path: 'contact' }),
+      menu('108', { path: 'blog' }),
+      menu('130', { path: 'video' })
+    )
     inv.modules = [
       module('20', {
         title: 'Masthead',
@@ -1924,7 +1935,7 @@ test(
           'Masthead / menu item 130 / description'
         ]
       ],
-      'an empty description and a video background are not slots'
+      'an empty description, a video background and an entry for a missing menu item are not slots'
     )
     // One group per page, so each page's banner is replaced on its own.
     assert.deepEqual(

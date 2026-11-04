@@ -312,9 +312,17 @@ export function measureSlotFit({ map, findings, lock }) {
     Object.assign(itemLists, listings.itemLists)
     for (const [item, row] of Object.entries(listings.itemPages)) {
       if (!itemPages[item]) itemPages[item] = row
-      else
+      else {
         for (const from of row.linkedFrom)
           if (!itemPages[item].linkedFrom.includes(from)) itemPages[item].linkedFrom.push(from)
+        // A category page the block's list could not name (no menu item: `/our-blog/2-restaurant-business`).
+        if (row.categoryRoute && !itemPages[item].categoryRoute)
+          Object.assign(itemPages[item], {
+            category: row.category,
+            categoryPage: row.categoryPage,
+            categoryRoute: row.categoryRoute
+          })
+      }
     }
     // Author pages (one author's articles, reached from an author list) too.
     Object.assign(itemLists, authorListsOf({ map: out, lock, findings }).itemLists)
