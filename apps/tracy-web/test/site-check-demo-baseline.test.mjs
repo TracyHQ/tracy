@@ -175,29 +175,71 @@ test('page groups join the default groups only when a host is given', () => {
   )
 })
 
-test('a baseline keeps the drawn box of each small picture, once a page, and the host is asked for them', async () => {
+test('the look of a written site is held at the write, so no group compares it with an untouched site', () => {
+  const names = PAGE_CHECK_GROUPS.map((g) => g.name)
+  for (const gone of ['template-look', 'icon-look']) assert.equal(names.includes(gone), false, gone)
+  for (const kept of ['logo-readable', 'band-contrast', 'words-over-picture', 'demo-words', 'demo-pictures'])
+    assert.equal(names.includes(kept), true, kept)
+})
+
+test('a baseline keeps the words over a picture, and no element look and no icon boxes', async () => {
   const dir = await temp()
   try {
-    const small = {
-      src: 'http://site.test/images/demo/icon.png',
-      sha256: 'cc33',
-      width: 100,
-      height: 100,
-      broken: false,
-      kind: 'img',
-      selector: 'main img'
+    const under = { p15: 0.2, p50: 0.25, p85: 0.3 }
+    const asked = []
+    const host = async (payload) => {
+      asked.push(payload)
+      return {
+        baseline: { texts: ['a'], labels: [], pictures: { files: [], shas: [] }, read: ['/'], unread: [] },
+        pageMeasures: [
+          {
+            path: '/',
+            width: 1440,
+            look: {
+              sides: {
+                dark: {
+                  over: [
+                    { key: 'k', fg: '#ffffff', under, large: true },
+                    { key: 'unshot', fg: '#ffffff' }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        visited: []
+      }
     }
-    const { host, calls } = fakeHost({ '/': demoRead('/', { images: [small, small] }) })
     const { baseline } = await ensureBaseline({
       host,
       pages: ['/'],
       version: VERSION,
       store: fileBaselineStore(dir)
     })
-    assert.equal(calls[0].measureFrames, true)
-    assert.deepEqual(baseline.iconFrames, [
-      { page: '/', file: 'images/demo/icon.png', width: 100, height: 100 }
+    assert.deepEqual(baseline.over, [
+      { page: '/', width: 1440, side: 'dark', key: 'k', fg: '#ffffff', under, large: true }
     ])
+    assert.equal('look' in baseline, false)
+    assert.equal('iconFrames' in baseline, false)
+    assert.equal('measureFrames' in asked[0], false)
+    assert.equal(asked[0].measurePages, true)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('a site wearing a brand style is no baseline', async () => {
+  const dir = await temp()
+  try {
+    const host = async () => ({
+      baseline: { texts: ['a'], labels: [], pictures: { files: [], shas: [] }, read: ['/'], unread: [] },
+      pageMeasures: [{ path: '/', width: 1440, look: { worn: true, sides: {} } }],
+      visited: []
+    })
+    await assert.rejects(
+      ensureBaseline({ host, pages: ['/'], version: VERSION, store: fileBaselineStore(dir) }),
+      /not untouched/
+    )
   } finally {
     await rm(dir, { recursive: true, force: true })
   }

@@ -196,7 +196,6 @@ test('the new measures at both widths, as groups: levels and causing steps', asy
 })
 
 test('warnings alone leave the check green and are counted', async () => {
-  const styles = { table: [], keys: {} }
   const answers = { selfLinks: [], hiddenHeadings: [], shownText: 'Lessons' }
   const measures = () =>
     BOTH('/', {
@@ -204,7 +203,7 @@ test('warnings alone leave the check green and are counted', async () => {
         ...answers,
         blocks: [{ selector: 'section.long', height: 4000 }],
         mainHeadings: ['Lessons'],
-        look: { props: [], sides: { only: { styles, words: [], over: [], logos: [] } } }
+        look: { sides: { only: { words: [], over: [], logos: [] } } }
       },
       390: {
         ...answers,
@@ -216,7 +215,7 @@ test('warnings alone leave the check green and are counted', async () => {
     texts: [],
     labels: [],
     pictures: { files: [], shas: [] },
-    look: { props: [], pages: { '/': { sides: { only: { styles } } } }, over: [] }
+    over: []
   }
   const check = await runSiteCheck({
     door: pagedSite(1).door,

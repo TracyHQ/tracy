@@ -198,7 +198,7 @@ test(
           ['Read on']
         )
         assert.deepEqual(m.shownPictures, [`${base}/wide.png`])
-        assert.deepEqual(m.pictureBoxes, [{ src: `${base}/wide.png`, width: 200, height: 50 }])
+        assert.equal('pictureBoxes' in m, false)
       }
     } finally {
       await browser.close()

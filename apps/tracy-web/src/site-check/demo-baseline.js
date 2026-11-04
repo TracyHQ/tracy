@@ -64,9 +64,6 @@ export function baselineFromKit(kit, { version }) {
   }
 }
 
-/** A picture this narrow on the page may be an icon: its drawn box is what the site check holds a replaced icon to. */
-const ICON_FRAME_MAX = 400
-
 /** One spelling for a page, however a call named it: no `/index.php`, no trailing slash, spaces encoded, lower case. */
 const pageKey = (p) => {
   const key = hostPath(p)
@@ -74,17 +71,6 @@ const pageKey = (p) => {
     .replace(/\/+$/, '')
     .toLowerCase()
   return key === '' ? '/' : key
-}
-
-/** Each small picture the untouched site drew, where and how large, once. */
-function iconFramesOf(measured) {
-  const seen = new Map()
-  for (const f of each(measured?.imageFrames)) {
-    if (!(f?.width > 0 && f.width <= ICON_FRAME_MAX && f.path)) continue
-    const key = `${f.route} ${f.path}`
-    if (!seen.has(key)) seen.set(key, { page: f.route, file: f.path, width: f.width, height: f.height })
-  }
-  return [...seen.values()]
 }
 
 /** The site answered, and not with this page: the page is broken, the read is not. Anything else is a failed read. */
@@ -129,7 +115,6 @@ export function baselineFromHost(measured, { version, measuredAt }) {
     ...(measuredAt ? { measuredAt } : {}),
     texts: [...new Set(each(measured.texts))].sort(),
     labels: [...new Set(each(measured.labels))].sort(),
-    iconFrames: iconFramesOf(measured),
     pictures: {
       files: [...new Set(each(measured.pictures?.files))].sort(),
       shas: [...new Set(each(measured.pictures?.shas))].sort()
@@ -164,19 +149,17 @@ export const forHost = (baseline) => ({
 })
 
 /**
- * The look of an untouched site out of the host's page measures: per page and side of the template's switch, each element's
- * computed look and each logo's reading, and at each width the words on a picture with what lay under them. A site wearing a brand style is no baseline.
+ * The words on a picture of an untouched site, per page, width and side of the template's switch, with what lay under them: what
+ * `words-over-picture` holds a written site's to. A site wearing a brand style is no baseline.
  * @param {object[]} measures the host's `pageMeasures`
- * @returns {{ props: string[], pages: Record<string, object> } | null}
+ * @returns {object[]}
  */
-export function lookFromHost(measures) {
-  const pages = {}
+export function overFromHost(measures) {
   const over = []
-  let props = null
   for (const m of each(measures)) {
     if (!m?.look?.sides) continue
     if (m.look.worn)
-      throw new Error(`The site is not untouched: ${m.path} wears a brand style, so its look is no baseline.`)
+      throw new Error(`The site is not untouched: ${m.path} wears a brand style, so it is no baseline.`)
     for (const [side, read] of Object.entries(m.look.sides))
       for (const w of each(read.over))
         if (w.under)
@@ -189,18 +172,8 @@ export function lookFromHost(measures) {
             under: w.under,
             large: w.large
           })
-    if (!m.look.props) continue
-    props = m.look.props
-    pages[m.path] = {
-      sides: Object.fromEntries(
-        Object.entries(m.look.sides).map(([side, read]) => [
-          side,
-          { styles: read.styles, truncated: read.truncated === true, logos: read.logos }
-        ])
-      )
-    }
   }
-  return props ? { props, pages, over } : null
+  return over
 }
 
 const fileOf = (dir, version) => path.join(dir, `${String(version).replace(/[^a-zA-Z0-9._-]+/g, '_')}.json`)
@@ -253,7 +226,6 @@ function joined(parts) {
     texts: union((p) => p.texts),
     labels: union((p) => p.labels),
     pictures: { files: union((p) => p.pictures?.files), shas: union((p) => p.pictures?.shas) },
-    imageFrames: parts.flatMap((p) => each(p.imageFrames)),
     read: union((p) => p.read),
     unread: parts.flatMap((p) => each(p.unread))
   }
@@ -277,7 +249,6 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
       ...callPages(chunk),
       discover: false,
       measurePages: true,
-      measureFrames: true,
       budgetMs: CALL_BUDGET_MS,
       timeoutMs: CALL_TIMEOUT_MS
     })
@@ -290,7 +261,7 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
   const measured = settled(joined(parts), visited, pages)
   const baseline = {
     ...baselineFromHost(measured, { version, measuredAt: now().toISOString() }),
-    look: lookFromHost(measures)
+    over: overFromHost(measures)
   }
   await store.save(version, baseline)
   return { baseline, measured: true }

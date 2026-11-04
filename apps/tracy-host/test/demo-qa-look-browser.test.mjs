@@ -184,32 +184,17 @@ test('words on a picture are shot against the region under them, on both sides',
   })
 })
 
-test(
-  'the look of each element is read at the desktop width, once per value, and not at the phone width',
-  opts,
-  async () => {
-    await withPage('/plain', async (page) => {
-      const look = await readLook(page, 1440)
-      const { styles } = look.sides.dark
-      const n = look.props.indexOf('border-top-left-radius')
-      const key = Object.keys(styles.keys).find((k) => k.startsWith('#Mod1|section.card'))
-      assert.deepEqual(
-        styles.keys[key][n].map((i) => styles.table[i]),
-        ['4px']
-      )
-      const m = look.props.indexOf('color')
-      const accent = Object.keys(styles.off).find((k) => k.includes('.accent'))
-      assert.deepEqual(
-        styles.off[accent][m].map((i) => styles.table[i]),
-        ['rgb(244, 65, 65)'],
-        'with the style off'
-      )
-      const phone = await readLook(page, 390)
-      assert.equal(phone.sides.dark.styles, undefined)
-      assert.deepEqual(phone.sides.dark.logos, [])
-    })
-  }
-)
+test('no look per element is read: logos at the desktop width only, and words at both', opts, async () => {
+  await withPage('/plain', async (page) => {
+    const look = await readLook(page, 1440)
+    assert.equal('props' in look, false)
+    assert.equal('styles' in look.sides.dark, false)
+    const phone = await readLook(page, 390)
+    assert.equal('styles' in phone.sides.dark, false)
+    assert.deepEqual(phone.sides.dark.logos, [])
+    assert.ok(Array.isArray(phone.sides.dark.words))
+  })
+})
 
 test('a switch of a kind this read does not know is said, and only one side is read', opts, async () => {
   await withPage('/noswitch', async (page) => {

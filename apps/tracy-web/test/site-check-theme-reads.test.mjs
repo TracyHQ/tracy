@@ -120,13 +120,20 @@ test('a brand colour failing where the template colour passes names the brand, w
 })
 
 test('words that read as badly on the untouched site, or on its own picture, are the template fault and warn', () => {
-  const look = {
-    over: [
-      { page: '/', width: 1440, side: 'dark', key: 'k', fg: GREY, under: { p15: 0.2, p50: 0.25, p85: 0.28 } }
-    ]
-  }
-  const same = judgeWordsOverPicture([entry('dark', { over: [over()] })], { baseline: { look } }).failures[0]
+  const untouched = [
+    { page: '/', width: 1440, side: 'dark', key: 'k', fg: GREY, under: { p15: 0.2, p50: 0.25, p85: 0.28 } }
+  ]
+  const same = judgeWordsOverPicture([entry('dark', { over: [over()] })], { baseline: { over: untouched } })
+    .failures[0]
   assert.deepEqual([same.level, same.causingStep], ['warn', 0])
+  const stored = judgeWordsOverPicture([entry('dark', { over: [over()] })], {
+    baseline: { look: { over: untouched } }
+  }).failures[0]
+  assert.deepEqual(
+    [stored.level, stored.causingStep],
+    ['warn', 0],
+    'a baseline kept from before still answers'
+  )
   const own = judgeWordsOverPicture(
     [entry('dark', { over: [over({ underSrc: 'http://site.test/images/hero.jpg' })] })],
     { baseline: { pictures: { files: ['images/hero.jpg'] } } }

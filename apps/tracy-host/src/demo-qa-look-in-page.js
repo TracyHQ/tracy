@@ -32,7 +32,6 @@ export function beginLookInPage({ freezeId, switchSelector }) {
     opening,
     sides: hasClassMark || attr ? ['dark', 'light'] : ['only'],
     worn: Boolean(style?.sheet),
-    head: style ? style.textContent.slice(0, 400) : null,
     // A switch on the page with no mark this read knows: only the side it opens on is read, and the judge says so.
     switchSeen: !hasClassMark && !attr && Boolean(document.querySelector(switchSelector))
   }
@@ -69,12 +68,11 @@ export function endLookInPage({ freezeId, opening, attrs }) {
 }
 
 /**
- * One side of the switch at one width: the computed look per element (`styles`, the desktop width only), the words on a plain
- * ground, the words on a picture and the logos (those two tagged for the host to shoot).
- * @param {{ caps: object, props: string[], withStyles: boolean, withLogos: boolean, overAttr: string, logoAttr: string,
+ * One side of the switch at one width: the words on a plain ground, the words on a picture and the logos (those two tagged for the host to shoot).
+ * @param {{ caps: object, withLogos: boolean, overAttr: string, logoAttr: string,
  *   logoSelector: string }} arg
  */
-export function readLookSideInPage({ caps, props, withStyles, withLogos, overAttr, logoAttr, logoSelector }) {
+export function readLookSideInPage({ caps, withLogos, overAttr, logoAttr, logoSelector }) {
   const started = performance.now()
   const late = () => performance.now() - started > caps.sideMs
   const sheet = document.getElementById('tracy-ds-slot')?.sheet ?? null
@@ -161,66 +159,6 @@ export function readLookSideInPage({ caps, props, withStyles, withLogos, overAtt
       !(el.ownerSVGElement ?? el.closest('svg')?.contains(el.parentElement))
   )
   const side = { truncated: false }
-
-  // ── The look per element ────────────────────────────────────────────────────────────────────────────────────────
-  if (withStyles) {
-    const normal = (prop, value) =>
-      prop === 'background-image' ? value.replace(/url\([^)]*\)/g, 'url()') : value
-    const readEach = (into) => {
-      let count = 0
-      for (const el of every) {
-        if (count >= caps.styled || late()) {
-          side.truncated = true
-          break
-        }
-        if (!shown(el)) continue
-        count++
-        const key = keyOf(el)
-        const put = (name, cs) => {
-          let sets = into.get(name)
-          if (!sets) into.set(name, (sets = props.map(() => new Set())))
-          props.forEach((prop, n) => sets[n].add(normal(prop, cs.getPropertyValue(prop))))
-        }
-        put(key, getComputedStyle(el))
-        for (const pseudo of ['::before', '::after']) {
-          const cs = getComputedStyle(el, pseudo)
-          if (cs.content !== 'none' && cs.display !== 'none') put(`${key}${pseudo}`, cs)
-        }
-      }
-      return count
-    }
-    const on = new Map()
-    const elements = readEach(on)
-    const off = new Map()
-    if (sheet) {
-      sheet.disabled = true
-      readEach(off)
-      sheet.disabled = false
-    }
-    // Every value once in a table, so a page of a thousand elements stays a small answer.
-    const table = []
-    const at = new Map()
-    const index = (value) => {
-      if (!at.has(value)) {
-        at.set(value, table.length)
-        table.push(value.slice(0, caps.valueLength))
-      }
-      return at.get(value)
-    }
-    const keys = {}
-    const offKeys = {}
-    for (const [key, sets] of on) {
-      keys[key] = sets.map((s) => [...s].map(index))
-      const without = off.get(key)
-      if (!without) continue
-      const moved = {}
-      without.forEach((s, n) => {
-        if (s.size !== sets[n].size || [...s].some((v) => !sets[n].has(v))) moved[n] = [...s].map(index)
-      })
-      if (Object.keys(moved).length) offKeys[key] = moved
-    }
-    side.styles = { elements, table, keys, off: offKeys }
-  }
 
   // ── Words, against what is painted behind them ──────────────────────────────────────────────────────────────────
   const PICTURES = ['IMG', 'VIDEO', 'CANVAS', 'PICTURE', 'IFRAME', 'svg']

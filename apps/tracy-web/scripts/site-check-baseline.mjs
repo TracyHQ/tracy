@@ -7,7 +7,7 @@
  *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --site <site key> --version <contract id> --pages-file <json> [--force]
  *
  * `--pages-file` is a JSON array of the site's paths (the kit's `pages[].path`). It reads them through the host, fifteen per call, and stores texts, labels and picture files
- * and hashes, and per page and theme each element's computed look (for the template look group). Nothing else of the site is kept.
+ * and hashes, and the words on a picture with what lay under them. Nothing else of the site is kept.
  * A page the untouched template itself breaks is named as having no demo and the baseline is kept; a page the host could not reach,
  * a broken home, or a site mostly answering errors exits non zero and keeps nothing.
  */
@@ -56,7 +56,7 @@ export async function main(argv, env = process.env) {
       force: values.force === true
     })
     console.log(
-      `${measured ? 'measured' : 'kept'} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, the look of ${Object.keys(baseline.look?.pages ?? {}).length} pages, ${baseline.unread?.length ?? 0} pages with no demo${baseline.unread?.length ? ` (${baseline.unread.map((u) => `${u.path}: ${u.why}`).join('; ')})` : ''}`
+      `${measured ? 'measured' : 'kept'} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, ${baseline.over?.length ?? 0} words over pictures, ${baseline.unread?.length ?? 0} pages with no demo${baseline.unread?.length ? ` (${baseline.unread.map((u) => `${u.path}: ${u.why}`).join('; ')})` : ''}`
     )
     return 0
   } finally {

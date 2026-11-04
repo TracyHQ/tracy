@@ -116,8 +116,8 @@ function picturesKnown(report, baseline) {
 }
 
 /** The same words on the untouched site at this width and side, across pages when this page has none: their best reading. */
-function untouchedRatio(look, { path, width, side, key }) {
-  const same = each(look?.over).filter((w) => w.key === key && w.width === width && w.side === side)
+function untouchedRatio(over, { path, width, side, key }) {
+  const same = each(over).filter((w) => w.key === key && w.width === width && w.side === side)
   const here = same.filter((w) => pathOfMeasure(w.page) === pathOfMeasure(path))
   const pool = here.length ? here : same
   return pool.length ? Math.max(...pool.map((w) => overPictureRatio(w.fg, w.under))) : null
@@ -150,7 +150,13 @@ export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
         if (seen.has(id)) continue
         seen.add(id)
         const before = w.fgOff ? overPictureRatio(w.fgOff, w.under) : ratio
-        const was = untouchedRatio(baseline?.look, { path: m.path, width: m.width, side, key: w.key })
+        // A baseline kept from before `over` moved up holds it under `look`.
+        const was = untouchedRatio(baseline?.over ?? baseline?.look?.over, {
+          path: m.path,
+          width: m.width,
+          side,
+          key: w.key
+        })
         const base = {
           page: m.path,
           width: m.width,
@@ -264,7 +270,7 @@ export const logoReadableGroup = {
   async run(context) {
     const { entries } = await lookEntries(context, 'the logos')
     const { themes, themeFailures } = sidesSaid(entries)
-    const desktop = entries.filter((m) => m.look.props)
+    const desktop = entries.filter((m) => m.width === 1440)
     const { failures, read, unread } = judgeLogos(desktop, context)
     const failuresAll = [...failures, ...themeFailures]
     if (unread)

@@ -107,6 +107,20 @@ is on `develop`. Locked prompts are not changed without the owner's approval. Au
 whole flow is wired, when real failures show what it must carry. For now each failure names its causing step, and the
 loop is proven by hand: edit one slot in a file, rewrite it, the check turns green.
 
+### 10. The template's look is held at the write, not measured after it
+
+A written site may change the template's accent, icons, pictures, words and logo; corners, lines, fonts, sizes and grounds
+stay. A guard on the door every write passes through (`write-step/look-guard.js`) enforces that before anything is sent: a
+closed list of operations and settings, injected CSS limited to colours on the accent routes read from the template's own
+stylesheets, written text with no new style or class, and an icon held to the size and backing of the template file it
+replaces. A refusal names the step at fault and no further write is sent. An exception states its reason in the guard, such
+as a created page copying the template's own article layout.
+
+This replaces the `template-look` and `icon-look` groups, and the computed look of every element they needed measured on an
+untouched site: a heavy read that compared effects and left the write that caused them to be found. The baseline keeps words,
+hashes and the words over a picture. What the guard cannot see is what the plugin does with a write and what the words or a
+picture's shape do to the layout; those stay with the remaining page groups and step 12.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

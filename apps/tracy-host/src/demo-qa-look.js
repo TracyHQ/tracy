@@ -1,6 +1,5 @@
 /**
- * The site check's look read: a page on each side of the template's light and dark switch. It answers, per side, the computed
- * look per element (desktop only, compared with an untouched site's by `template-look.js` in tracy-web), the words on a plain
+ * The site check's look read: a page on each side of the template's light and dark switch. It answers, per side, the words on a plain
  * ground with the brand style on and off, the words on a picture against the picture region under them, and each logo's
  * pixels against its ground. The judging stays in `apps/tracy-web/src/site-check/`.
  *
@@ -17,67 +16,21 @@ import {
   readLookSideInPage
 } from './demo-qa-look-in-page.js'
 
-/** The desktop width: the look and the logos are read there, the words at both widths. */
+/** The desktop width: the logos are read there, the words at both widths. */
 export const LOOK_WIDTH = 1440
 /** What one side of one page may report or spend, so an odd page cannot make the answer huge or the read long. */
 export const LOOK_CAPS = Object.freeze({
-  styled: 2500,
   textWalk: 2500,
   textRead: 400,
   words: 150,
   over: 14,
   logos: 6,
-  valueLength: 300,
   sideMs: 6000
 })
 /** A whole page's read at one width stops starting shots after this: what it could not reach is `truncated`. */
 export const LOOK_MS = 18_000
 const SETTLE_MS = 180
 const LOGO_PIXELS = 40_000
-
-/**
- * What the template look compares. Sizes, positions and display follow the words and what is hidden, so they are left out;
- * side margins are left out because `auto` computes to a number that follows a box's width.
- */
-export const LOOK_PROPS = Object.freeze([
-  'border-top-left-radius',
-  'border-top-right-radius',
-  'border-bottom-left-radius',
-  'border-bottom-right-radius',
-  'font-family',
-  'font-size',
-  'font-weight',
-  'font-style',
-  'letter-spacing',
-  'line-height',
-  'text-transform',
-  'text-align',
-  'text-decoration-line',
-  'color',
-  'background-color',
-  'background-image',
-  'border-top-width',
-  'border-right-width',
-  'border-bottom-width',
-  'border-left-width',
-  'border-top-style',
-  'border-right-style',
-  'border-bottom-style',
-  'border-left-style',
-  'border-top-color',
-  'border-right-color',
-  'border-bottom-color',
-  'border-left-color',
-  'box-shadow',
-  'padding-top',
-  'padding-right',
-  'padding-bottom',
-  'padding-left',
-  'margin-top',
-  'margin-bottom',
-  'row-gap',
-  'column-gap'
-])
 
 const FREEZE_ID = 'tracy-qa-look-freeze'
 const OVER_ATTR = 'data-tracy-look-over'
@@ -167,8 +120,6 @@ export async function readLook(page, width) {
       }
       const read = await page.evaluate(readLookSideInPage, {
         caps: LOOK_CAPS,
-        props: [...LOOK_PROPS],
-        withStyles: width === LOOK_WIDTH,
         withLogos: width === LOOK_WIDTH,
         overAttr: OVER_ATTR,
         logoAttr: LOGO_ATTR,
@@ -204,10 +155,8 @@ export async function readLook(page, width) {
       sides[side] = read
     }
     return {
-      props: width === LOOK_WIDTH ? LOOK_PROPS : undefined,
       opening: opened.opening,
       worn: opened.worn,
-      head: opened.head,
       switchSeen: opened.switchSeen,
       sides
     }

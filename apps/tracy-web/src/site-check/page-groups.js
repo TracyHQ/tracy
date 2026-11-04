@@ -18,8 +18,6 @@
 //   unfinished-heading block  3 or 6        new: a heading that stops on a small word; whoever owns its words (label: planner, copy: writer)
 //   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
 //   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
-//   icon-look          block  8 pictures    new: a replaced icon keeps the drawn size, line weight and backing of the one it replaced
-//   template-look      block  2 or 9        template-look.js: the look per element, against the untouched site, in both themes
 //   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes
 //   words-over-picture block  8, 2 or 0     theme-reads.js: words against the picture region under them, in both themes
 //   logo-readable      block  2 or 0        theme-reads.js: a logo's pixels against its ground, in both themes
@@ -32,12 +30,10 @@
 import { brandAccentGroup } from './brand-accent.js'
 import { createdControlsGroup, headingSeparatorGroup, selfLinksGroup } from './page-faults.js'
 import { brokenSentenceGroup } from './printed-sentences.js'
-import { templateLookGroup } from './template-look.js'
 import { bandContrastGroup, logoReadableGroup, wordsOverPictureGroup } from './theme-reads.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead, WIDTHS } from './host-pages.js'
 import { hostVerdictGroup } from './host-verdicts.js'
-import { iconLookGroup } from './icon-look.js'
 import {
   findDeadLinks,
   findEmptyControls,
@@ -167,9 +163,7 @@ export const PAGE_CHECK_GROUPS = [
     }
   }),
   brandAccentGroup,
-  iconLookGroup,
   unownedShownGroup,
-  templateLookGroup,
   bandContrastGroup,
   wordsOverPictureGroup,
   logoReadableGroup,
