@@ -9,7 +9,7 @@ import { copy, fakeSite, KIT, plan, SITE } from './_write-step-run.mjs'
 
 export const NAME = 'Quay Fitness Studio'
 export const ACCENT_HTML =
-  '<style id="tracy-ds-slot">/* tracy-ds-slot: brand:121111--0f7a6b */ :root{}</style>'
+  '<style id="tracy-ds-slot">/* tracy-ds-slot: brand:accent-only-0f7a6b */ :root{}</style>'
 
 const spotFile = (id) => `spots/${id}.png`
 const SPOTS = [
@@ -208,7 +208,8 @@ export function frozenWithBrand({
   brand = brandFile(),
   planFile = plan(),
   copyFile = copy(),
-  missing = []
+  missing = [],
+  module = ACCENT_HTML
 } = {}) {
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-brand-'))
   const put = (name, value) => {
@@ -225,7 +226,7 @@ export function frozenWithBrand({
   const pictures = [...SPOTS.map(([id]) => spotFile(id)), ...Object.values(brandFile().favicon)]
   for (const name of pictures)
     if (!missing.includes(name)) put(name, Buffer.from(`invented bytes of ${name}`))
-  if (!missing.includes('module-build-1.html')) put('module-build-1.html', ACCENT_HTML)
+  if (!missing.includes('module-build-1.html')) put('module-build-1.html', module)
   return { files, done: () => rmSync(dir, { recursive: true, force: true }) }
 }
 

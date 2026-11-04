@@ -16,6 +16,8 @@
 //   empty-controls     block  9 write       new: a button with no words or going nowhere, a form field nothing names
 //   glued-words        block  9 write       new: words run into a highlight with no space
 //   unfinished-heading block  3 planner     new: a heading that stops on a small word
+//   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
+import { brandAccentGroup } from './brand-accent.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead, WIDTHS } from './host-pages.js'
 import { hostVerdictGroup } from './host-verdicts.js'
@@ -124,5 +126,6 @@ export const PAGE_CHECK_GROUPS = [
     causingStep: 3,
     find: (read) => findUnfinishedHeadings(read.measures)
   }),
+  brandAccentGroup,
   unownedShownGroup
 ]

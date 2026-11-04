@@ -183,7 +183,8 @@ export async function runWriteStep(input) {
       inputs: read.inputs.brand,
       kit: kit.doc,
       accentPlace: input.accentPlace,
-      last
+      last,
+      templateSheets: input.templateSheets && (() => input.templateSheets({ door, siteKey }))
     })
     if (brand.stop) return { stop: brand.stop }
     const corrections = correctionsReader(door, siteKey, contract)

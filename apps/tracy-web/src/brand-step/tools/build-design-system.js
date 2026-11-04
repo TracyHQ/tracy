@@ -5,10 +5,13 @@
 // light colour with a visible hue is a real brand colour: when it reads under 3:1 on the template's opening ground,
 // liftAccent moves its HSL lightness (hue and saturation kept) until it reads, aiming at both sides' grounds. The
 // agent never picks the numbers. The result reports `brandColour`, `lift` and `accent` (the colour built).
-// Inside: the Design system slot in accent-only mode (tracy-ds-slot): brandProfile({ accent }, ..., { accentOnly: true })
-// then joomlaSlot(profile, base, contract, { accentOnly: true }).
+// Inside: the Design system slot in accent-only mode (tracy-ds-slot) works out the colours: brandProfile({ accent }, ...,
+// { accentOnly: true }) then joomlaSlot(profile, base, contract, { accentOnly: true }). The slot's sheet is not what a site
+// wears. The file written is the accent's seed (accent-module.js): the write step, which can read the stylesheets the
+// template serves, makes the whole override from the same colours, and only the accent family changes (#378).
 // Guard (kept from the lab): the same build with the template's own accent is made too; every non-accent role of
 // every side must be identical in both, else the tool fails (the brand would have changed something besides the accent).
+import { accentSeedModule } from '../accent-module.js'
 import { contrastHex, liftAccent, neutralReason } from '../colour-math.js'
 import { templateGrounds } from '../kit-grounds.js'
 import { BrandToolError } from './common.js'
@@ -47,6 +50,17 @@ function contractOf(ctx, library) {
   throw new BrandToolError(
     `the Design system has no template contract for ${product}: no accent can be built`
   )
+}
+
+/** The roles the picture step reads from the module file (`painted-stage.js`), as a comment: they paint nothing on the page. */
+const pictureRoles = (sides) => {
+  const rule = ([side, w]) =>
+    `${side === 'light' ? ':root:where(:not(:has(> body.dark-active)))' : ':root:where(:has(> body.dark-active))'}{${Object.entries(
+      w
+    )
+      .map(([role, value]) => `--ds-c-${role}:${value}`)
+      .join(';')}}`
+  return `/* picture roles: ${Object.entries(sides).map(rule).join(' ')} */\n`
 }
 
 export const tool = {
@@ -117,8 +131,6 @@ export const tool = {
         { brandColour, refusedBy: 'guard', accentTried: accent, lift, nonAccentChanged }
       )
 
-    const file = ctx.files.write('design-system/module.html', Buffer.from(brand.s.html))
-    const bytes = Buffer.byteLength(brand.s.html)
     const opens = brand.opens
     const accentOf = (w) => Object.fromEntries(ACCENT_ROLES.filter((k) => w[k]).map((k) => [k, w[k]]))
     const sides = Object.fromEntries(
@@ -137,6 +149,14 @@ export const tool = {
             on: w.bg,
             ratio: contrastHex(w[colour], w.bg)
           })
+
+    const html = accentSeedModule({
+      colours: { accent, replaces: tplAccent, shifts },
+      darkHook: contract.modeHook ?? null,
+      note: pictureRoles(brand.sides)
+    })
+    const file = ctx.files.write('design-system/module.html', Buffer.from(html))
+    const bytes = Buffer.byteLength(html)
 
     const { contrast, contrastOk } = contrastTable(brand.sides)
     const slotDrift = slotDriftOf(K, baseline.sides)

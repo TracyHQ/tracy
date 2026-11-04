@@ -4,6 +4,7 @@
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
+import { ACCENT_SLOT_PREFIX, accentModule } from '../brand-step/accent-module.js'
 import { exportBrandOrders } from '../brand-step/brand-write-orders.js'
 import { dsSlotModule } from '../lib/ds-slot.js'
 import { brandAsker, picturePath, writeBrand } from './brand-writes.js'
@@ -21,13 +22,30 @@ const OWN_WRITE = new Set(['identity', 'profile', 'small-logo', 'head', 'module'
 
 const PARTS = { name: 'brand-name', logo: 'brand-logo', favicon: 'brand-favicon', accent: 'brand-accent' }
 
-/** Where the slot contract places its Design system module, or null when this server does not have that contract. */
+/**
+ * Where the slot contract places its Design system module and how it marks a template's dark side, or null when this
+ * server does not have that contract.
+ */
 async function placeFromLibrary(contract) {
   try {
-    return (await dsSlotModule('library')).loadContract(contract)?.module ?? null
+    const found = (await dsSlotModule('library')).loadContract(contract)
+    return found?.module ? { ...found.module, darkHook: found.modeHook ?? null } : null
   } catch {
     return null
   }
+}
+
+/** The module this site wears: only its template's accent changes, read from the stylesheets the template serves (#378). */
+async function builtAccent({ templateSheets, brand, place }) {
+  let sheets
+  try {
+    sheets = await templateSheets()
+  } catch (error) {
+    const reason = `brand: the template's stylesheets could not be read (${error?.message ?? error})`
+    return { stop: { code: 'TEMPLATE_CSS_UNREADABLE', reason } }
+  }
+  const built = accentModule({ sheets, colours: brand.colours, darkHook: place.darkHook ?? null })
+  return built.problem ? { stop: { code: 'BAD_ACCENT', reason: `brand: ${built.problem}` } } : built
 }
 
 /** Every file the orders name, read and hashed; a stop names the first that cannot be used. */
@@ -64,7 +82,9 @@ const stoppedBy = (stop) => ({ ...idle, stop })
 
 /**
  * @param {{ brand?: object, brandPath?: string, inputs?: { file: string }, kit: object,
- *   accentPlace?: (contract: string) => Promise<object | null>, last?: object }} input
+ *   accentPlace?: (contract: string) => Promise<object | null>, last?: object,
+ *   templateSheets?: () => Promise<string[]> }} input `templateSheets`: the stylesheets the site's template serves. Without
+ *   it the brand file's own module must already be accent-only, since a whole design-system style is never written
  * @returns {Promise<object>} the stage; `stop` says why it cannot run
  */
 export async function prepareBrandStage({
@@ -73,7 +93,8 @@ export async function prepareBrandStage({
   inputs,
   kit,
   accentPlace = placeFromLibrary,
-  last = NO_LAST
+  last = NO_LAST,
+  templateSheets
 }) {
   if (brand === undefined) return idle
   const plan = exportBrandOrders({ brand, kit })
@@ -94,13 +115,23 @@ export async function prepareBrandStage({
   const accentOrder = orders.find((o) => o.via === 'module')
   let accent = null
   if (accentOrder) {
-    if (!pictures.get(accentOrder.file).toString('utf8').includes(MODULE_MARK))
+    const held = pictures.get(accentOrder.file).toString('utf8')
+    if (!held.includes(MODULE_MARK))
       return stoppedBy({ code: 'BAD_FILE', reason: `brand: ${accentOrder.file} has no tracy-ds-slot mark` })
     accent = await accentPlace(accentOrder.contract)
     if (!accent)
       return stoppedBy({
         code: 'BAD_FILE',
         reason: `brand: this server has no slot contract ${accentOrder.contract}`
+      })
+    if (templateSheets) {
+      const built = await builtAccent({ templateSheets, brand, place: accent })
+      if (built.stop) return stoppedBy(built.stop)
+      pictures.set(accentOrder.file, Buffer.from(built.html))
+    } else if (!held.includes(`tracy-ds-slot: ${ACCENT_SLOT_PREFIX}`))
+      return stoppedBy({
+        code: 'BAD_FILE',
+        reason: `brand: ${accentOrder.file} is a whole design-system style and no stylesheets were given to build the accent from`
       })
   }
   const valueOf = (o) => (o.file ? picturePath(o, pictures.get(o.file)) : o.value)

@@ -8,6 +8,9 @@
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
+import { readBrandStyle } from './demo-qa-brand-style.js'
+
+const BRAND_STYLE_WIDTH = 1440
 /** A box counts as overflowed only past this many pixels (the same tolerance the judge applies). */
 export const OVERFLOW_TOLERANCE_PX = 2
 /** A drawn picture is reported only when its ratio is this far from the file's (the judge decides at its own bound). */
@@ -231,6 +234,8 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
 
 /** One width's measures, read in the page; null when the page would not answer (the entry is then left out). */
 export async function readPageMeasures(page, width) {
+  // Only colours can differ by the brand style, so one width answers for both, and a desktop page shows more of the template.
+  const brandStyle = width === BRAND_STYLE_WIDTH ? await readBrandStyle(page) : null
   const measured = await page
     .evaluate(measurePageInPage, {
       tolerance: OVERFLOW_TOLERANCE_PX,
@@ -238,5 +243,5 @@ export async function readPageMeasures(page, width) {
       caps: MEASURE_CAPS
     })
     .catch(() => null)
-  return measured ? { width, ...measured } : null
+  return measured ? { width, ...measured, ...(brandStyle ? { brandStyle } : {}) } : null
 }

@@ -22,6 +22,7 @@ import { hostMeasure } from '../src/site-check/host-measure.js'
 import { readReleases, templateOfTag } from '../src/lib/quickstart-releases.js'
 import { runCli } from '../src/write-step/bench-cli.js'
 import { httpSiteDoor } from '../src/write-step/bench-site-door.js'
+import { siteSheetsReader } from '../src/write-step/site-sheets.js'
 import { pgBenchSiteStore } from '../src/write-step/bench-site-store.js'
 import { pgWriteRunStore } from '../src/write-step/write-run-store.js'
 
@@ -43,6 +44,11 @@ export async function main(argv, env = process.env) {
         if (!site) throw new Error(`No site ${siteKey}`)
         return hostMeasure({ hostCall, config: readConfig(env), site, selfNames: demoSelfNames })
       },
+      // The stylesheets the site's template serves, which the brand's accent module is built from.
+      templateSheets: siteSheetsReader({
+        siteOf: (siteKey) => siteByKey(pool, siteKey),
+        config: readConfig(env)
+      }),
       ...(env.WRITE_BENCH_BASELINE_DIR ? { baselines: fileBaselineStore(env.WRITE_BENCH_BASELINE_DIR) } : {}),
       runs: pgWriteRunStore(pool),
       makeDoor: ({ account, platform }) =>

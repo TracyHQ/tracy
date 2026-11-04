@@ -137,7 +137,7 @@ test('brand: a small logo held as CSS stays in the head block when an icon chang
 test('brand: a changed accent module writes that module alone', async () => {
   const kept = keptBrand()
   const first = await brandRun(kept, null)
-  const html = '<style id="tracy-ds-slot">/* tracy-ds-slot: brand:121111--7a2f9c */ :root{}</style>'
+  const html = '<style id="tracy-ds-slot">/* tracy-ds-slot: brand:accent-only-7a2f9c */ :root{}</style>'
   const second = await brandRun(kept, first, {
     change: (dir) => writeFileSync(path.join(dir, 'module-build-1.html'), html)
   })

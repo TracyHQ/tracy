@@ -160,6 +160,7 @@ async function startRun(d, values) {
         ...(values['brand-file'] ? { brand: inCwd(values['brand-file']) } : {}),
         ...(values['pictures-file'] ? { pictures: inCwd(values['pictures-file']) } : {})
       },
+      ...(d.templateSheets ? { templateSheets: d.templateSheets } : {}),
       onPhase: (phase) => d.runs.phase(id, phase),
       onNoWayOut: async (named) => {
         if (named.length) d.out(`no way to leave: ${named.map((n) => `${n.slot}: ${n.reason}`).join('; ')}`)
