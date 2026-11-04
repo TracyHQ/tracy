@@ -5,6 +5,7 @@ import { test } from 'node:test'
 import { coverageGate } from '../template-kit/lib/coverage-gate.mjs'
 import { measureFieldDrives, measurableFields } from '../template-kit/lib/field-drives.mjs'
 import { joomlaFieldWriter } from '../template-kit/lib/site/adapters/joomla-field-writer.mjs'
+import { pagesOfEntity } from '../template-kit/lib/site/measure-fields.mjs'
 import { settleSlotRoles } from '../template-kit/lib/slot-roles.mjs'
 import { settleStoredFields } from '../template-kit/lib/stored-fields.mjs'
 
@@ -247,4 +248,24 @@ test('settling a written kit only adds: every id, list and role stays, and the g
   assert.equal(r.pageTitleSlots, 1)
   settleSlotRoles(k, { map: MAP })
   assert.equal(k.coverage.failures.length, 2, 'settling twice does not count twice')
+})
+
+test('the pages of an entity read a list that counts its rows, not only one that names its items', () => {
+  const kit = {
+    pages: [
+      { path: '/lessons', blocks: { 1440: ['block-1'] } },
+      { path: '/rates', blocks: { 1440: ['block-2'] } }
+    ],
+    blocks: [
+      { id: 'block-1', lists: [{ id: 'block-1.rows', shown: ['article-3'] }] },
+      {
+        id: 'block-2',
+        lists: [
+          { id: 'block-2.rows', shown: 0 },
+          { id: 'block-2.more', shown: 4 }
+        ]
+      }
+    ]
+  }
+  assert.deepEqual(pagesOfEntity(kit, {})({ entity: 'article-3' }), ['/lessons'])
 })

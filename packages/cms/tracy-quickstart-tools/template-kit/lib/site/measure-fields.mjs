@@ -17,8 +17,10 @@ export function pagesOfEntity(kit, map) {
   for (const b of kit.blocks) {
     for (const e of [b.source?.entity, ...(b.source?.contains ?? [])].filter(Boolean))
       blocksOf.set(e, [...(blocksOf.get(e) ?? []), b.id])
+    // `shown` names a list's items, or only counts its rows when they are no items of their own.
     for (const l of b.lists ?? [])
-      for (const item of l.shown ?? []) blocksOf.set(item, [...(blocksOf.get(item) ?? []), b.id])
+      for (const item of Array.isArray(l.shown) ? l.shown : [])
+        blocksOf.set(item, [...(blocksOf.get(item) ?? []), b.id])
   }
   return (field) => {
     const blocks = new Set(blocksOf.get(neutralKey(field.entity)) ?? blocksOf.get(field.entity) ?? [])
