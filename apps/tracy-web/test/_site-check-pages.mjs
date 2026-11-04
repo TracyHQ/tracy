@@ -76,7 +76,9 @@ export function fakeHost(reads, { measures, fail } = {}) {
       }
     })
     const paths = out.pages
-    return { ...out, ...(measures ? { pageMeasures: measures(paths) } : {}) }
+    // The real read now answers `pageMeasures` itself; a host given no `measures` stands for one that predates them.
+    const { pageMeasures: _own, ...bare } = out
+    return { ...bare, ...(measures ? { pageMeasures: measures(paths) } : {}) }
   }
   return { host, calls }
 }
