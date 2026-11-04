@@ -1,7 +1,7 @@
 // Tests for the site-copy/1 to Joomla contract mapping export (ADR 0042, #331).
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { contentMapKey, exportContractMapping } from '../src/site-writer/contract-mapping.js'
+import { contentMapKey, exportContractMapping, joinItems } from '../src/site-writer/contract-mapping.js'
 import { applyJoomlaContract } from '../../../packages/cms/tracy-seeder/src/apply-joomla-contract.mjs'
 import { brief, copy, kit } from './_site-copy-check.mjs'
 
@@ -123,4 +123,25 @@ test('the real applyJoomlaContract accepts the mapping in a dry run', async () =
   const out = await applyJoomlaContract({ apply, siteKey: 'demo', mapping, dry: true })
   assert.deepEqual(out.params.changes, mapping.changes)
   assert.deepEqual(out.params.evidence, mapping.evidence)
+})
+
+// A slot whose template sample holds a list is written in the sample's own form (same list tag and class).
+test('several items follow the sample list form: lead paragraph, then list items with the same class', () => {
+  const sample =
+    '((p))Lead words((/p))\n\n((ul class="list-star"))\n\t((li))A((/li))\n\t((li))B((/li))\n((/ul))'
+  const items = ['Lead', 'One', 'Two']
+  assert.equal(
+    joinItems(items, { paragraphs: 1, bullets: 2 }, sample),
+    '((p))Lead((/p))\n((ul class="list-star"))\n((li))One((/li))\n((li))Two((/li))\n((/ul))'
+  )
+  assert.equal(
+    joinItems(['One', 'Two'], { bullets: 2 }, '((ul class="list-star"))((li))A((/li))((/ul))'),
+    '((ul class="list-star"))\n((li))One((/li))\n((li))Two((/li))\n((/ul))'
+  )
+  assert.equal(joinItems(['Only'], {}, sample), 'Only')
+  assert.equal(joinItems(['One', 'Two'], { paragraphs: 2 }, '((p))x((/p))'), '((p))One((/p))\n((p))Two((/p))')
+  assert.equal(
+    joinItems(['One', 'Two'], { bullets: 2 }, ''),
+    '((ul))\n((li))One((/li))\n((li))Two((/li))\n((/ul))'
+  )
 })

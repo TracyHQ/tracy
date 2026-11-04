@@ -17,10 +17,33 @@ const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragra
 // list `((ul))` with one `((li))text((/li))` per item (see the ja-tour and ja-seven content maps). A slot written as
 // one string is exported as is. A list of strings is joined by the slot's format: bullets when the kit shows only
 // bullets, otherwise paragraphs. Without a kit, a list is read as paragraphs, the common case.
-export function joinItems(items, kitSlot) {
+export function joinItems(items, kitSlot, sample = '') {
   if (items.length === 1) return items[0]
+  const form = listFormOf(sample)
+  if (form) {
+    const lead = form.lead ? [`${form.lead}${items[0]}((/p))`] : []
+    const rest = form.lead ? items.slice(1) : items
+    return [
+      ...lead,
+      `${form.open}\n${rest.map((t) => `((li))${t}((/li))`).join('\n')}\n((/${form.tag}))`
+    ].join('\n')
+  }
   if (BULLET_ALL(kitSlot)) return `((ul))\n${items.map((t) => `((li))${t}((/li))`).join('\n')}\n((/ul))`
   return items.map((t) => `((p))${t}((/p))`).join('\n')
+}
+
+/**
+ * The form of a template sample that holds a list: the list tag with its own attributes (`((ul class="x"))`), and the
+ * opening of the paragraph that leads it, if the sample has text before the list. Null when the sample has no list.
+ */
+export function listFormOf(sample) {
+  const text = String(sample ?? '')
+  const list = /\(\(\s*(ul|ol)((?:\s[^()]*)?)\s*\)\)/i.exec(text)
+  if (!list) return null
+  const before = text.slice(0, list.index)
+  const lead = /\(\(\s*p(?:\s[^()]*)?\s*\)\)/i.exec(before)
+  const tag = list[1].toLowerCase()
+  return { tag, open: list[0], lead: lead && before.replace(/\(\([^()]*\)\)/g, '').trim() ? lead[0] : null }
 }
 
 function kitSlotIndex(kit) {
@@ -99,12 +122,13 @@ export function mainMenuExport({ plan, kit, contentMap, copy }) {
 export function exportContractMapping({ copy, contract, revision, kit, brief, plan, contentMap }) {
   const { view, problems } = readCopy(copy)
   const kitSlots = kitSlotIndex(kit)
+  const samples = new Map((contentMap?.slots ?? []).map((c) => [c?.key, c?.sample]))
   const facts = new Map((brief?.facts ?? []).map((f) => [f.id, f.value]))
   const changes = {}
   const evidence = {}
   for (const s of view.slots) {
     const key = contentMapKey(s.slot)
-    changes[key] = joinItems(s.items, kitSlots.get(s.slot))
+    changes[key] = joinItems(s.items, kitSlots.get(s.slot), samples.get(key))
     if (s.factIds.length) {
       const cited = s.factIds.map((id) => (facts.has(id) ? `${id}: ${facts.get(id)}` : id))
       evidence[key] = `Brief facts: ${cited.join('; ')}`
