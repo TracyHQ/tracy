@@ -12,21 +12,11 @@ import { logoIdOf, stageLogo } from './brand-logo.js'
 import { brandHarnessFor } from './brand-harness.js'
 import { brandPrompt } from './brand-prompt.js'
 import { activeRun, BRAND_RUN_ACTIVE, createRun, readRun, requestCancel, UUID } from './brand-store.js'
-import { homeShotOf } from './brand-first-message.js'
-import { kitProblem } from './kit-grounds.js'
+import { brandKitProblem } from './kit-grounds.js'
 
-export { briefOfRevision }
+export { brandKitProblem, briefOfRevision }
 
 const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })
-
-/** Why a kit cannot feed the brand step, or null: what the gate reads, the favicon, the home shot at 1440. */
-export function brandKitProblem(doc) {
-  const problem = kitProblem(doc)
-  if (problem) return problem
-  if (!doc.site.favicon) return 'the kit has no site.favicon'
-  if (!homeShotOf({ doc })) return 'the kit has no home page shot at 1440'
-  return null
-}
 
 /** The brand tools as a run records them: names and versions only. */
 export const toolInfo = (tools) => tools.map((t) => ({ name: t.name, version: t.version ?? null }))

@@ -74,7 +74,13 @@ import {
 } from './quickstart-releases.js'
 import { summarizeReadiness } from './template-customization-question-readiness/severity.js'
 import { summarizeDsReadiness } from './template-design-system-readiness/severity.js'
-import { KIT_STEP, kitOfRelease, templateKitRefusal, templateKitStep } from './template-kit/road-step.js'
+import {
+  KIT_STEP,
+  kitMapOfRelease,
+  kitOfRelease,
+  templateKitRefusal,
+  templateKitStep
+} from './template-kit/road-step.js'
 
 export const ROAD_STEPS = Object.freeze([
   'release',
@@ -107,6 +113,7 @@ const DEMO_CODES = new Set(['no-demo', 'demo-failed', 'demo-version'])
 const INSTALL_CODES = new Set(['asset-missing', 'template-not-an-id'])
 
 const passed = (s) => s.state === 'done' || s.state === 'warn'
+const list = (/** @type {unknown} */ x) => (Array.isArray(x) ? x.join(', ') : '')
 
 /**
  * `quickstart/ja-nova/j6` → `ja-nova`, `tracy-base/wp7` → `tracy-base`: the segment before the cut,
@@ -144,6 +151,28 @@ function batchScopeOf(release) {
 }
 
 /**
+ * The install parts whose sha256 differs from the digest GitHub states for the asset of that name (`sha256:<hex>`,
+ * stated since 2025). A part or an asset without one is not judged: nothing can be compared.
+ * @returns {string[]}
+ */
+function installDigestsDiffering(release) {
+  const install = release.setting?.install
+  if (release.local || !install || typeof install !== 'object') return []
+  const stated = new Map(
+    (release.assets ?? [])
+      .filter((a) => typeof a?.digest === 'string' && a.digest.startsWith('sha256:'))
+      .map((a) => [a.name, a.digest.slice('sha256:'.length).toLowerCase()])
+  )
+  const out = []
+  for (const part of Object.values(install)) {
+    const { file, sha256 } = /** @type {any} */ (part) ?? {}
+    if (typeof file !== 'string' || typeof sha256 !== 'string' || !stated.has(file)) continue
+    if (stated.get(file) !== sha256.toLowerCase()) out.push(file)
+  }
+  return out
+}
+
+/**
  * The road of one release, or null for a design pack (it is never offered on Design inspiration,
  * so it has no road to walk).
  * @param {any} release one row of `readReleases`
@@ -159,7 +188,8 @@ function batchScopeOf(release) {
  *   coverage?: import('./content-coverage/reader.js').Coverage,
  *   roles?: import('./content-coverage/roles.js').Roles,
  *   fit?: import('./content-coverage/fit.js').Fit,
- *   templateKit?: import('./template-kit/reader.js').Kit
+ *   templateKit?: import('./template-kit/reader.js').Kit,
+ *   kitMap?: import('./template-kit/flow-reads.js').KitMap | null
  * }} world this server's live demo of the release, its failed demo job, the pictures it holds,
  *   the contract index, every choosable release of the same template (the door asks a contract of
  *   each of them), and the stored Customize your site and Design system checks of this release's version.
@@ -167,6 +197,7 @@ function batchScopeOf(release) {
  *   `roles`: its slot roles, the third group of Content coverage; read the same way when left out.
  *   `fit`: the Slot fit of its content map, the fourth group (ADR 0039); read the same way when left out.
  *   `templateKit`: the template kit beside the sealing contract; read from its folder when left out.
+ *   `kitMap`: what the flow reads of the content map beside that kit; read from the same folder when left out.
  * @returns {{ step: string, state: 'done' | 'blocked' | 'todo' | 'warn' | 'checking', code: string, params: Record<string, unknown>, blockedBy?: string }[] | null}
  */
 export function roadOf(
@@ -184,7 +215,8 @@ export function roadOf(
     coverage = undefined,
     roles = undefined,
     fit = undefined,
-    templateKit = undefined
+    templateKit = undefined,
+    kitMap = undefined
   }
 ) {
   if (!release || release.kind === 'design-pack') return null
@@ -227,7 +259,16 @@ export function roadOf(
         if (typeof file === 'string' && file !== '' && !names.has(file)) missing.push(file)
       }
     }
+    // The host downloads each part and refuses bytes whose sha256 is not the one the install file pins
+    // (`quickstart.py`): a part GitHub states another digest for cannot be installed.
+    const differing = installDigestsDiffering(release)
     if (missing.length > 0) put('install-file', 'warn', 'asset-missing', { files: missing })
+    else if (differing.length > 0)
+      put('install-file', shownOnInspiration(release) ? 'warn' : 'todo', 'install-file-sha-mismatch', {
+        version,
+        files: differing,
+        reason: `GitHub states another sha256 for ${differing.join(', ')} than the install file pins`
+      })
     else put('install-file', 'done', 'install-file-ready', { version })
   }
 
@@ -283,7 +324,8 @@ export function roadOf(
     release,
     version,
     contractId: own.profile,
-    kit: templateKit ?? kitOfRelease(release, contracts)
+    kit: templateKit ?? kitOfRelease(release, contracts),
+    map: kitMap === undefined ? kitMapOfRelease(release, contracts) : kitMap
   })
 
   // 4. Customize your site: the stored readiness check of this version (see the 🔒 above).
@@ -402,6 +444,11 @@ export function publishRefusalOf(road, release) {
   if (!published || published.state === 'done') return null
   if (published.state === 'blocked') {
     const by = road.find((s) => s.step === published.blockedBy)
+    if (published.blockedBy === 'install-file' && by?.code === 'install-file-sha-mismatch')
+      return {
+        error: 'NOT_A_CARD',
+        reason: `The install file pins a sha256 that GitHub does not state for ${list(by.params.files)}: a build would refuse the download. Attach the files the install file names, or write their sha256 into it again.`
+      }
     if (published.blockedBy === 'release' || published.blockedBy === 'install-file')
       return { error: 'NOT_A_CARD', reason: cardRefusal(release) ?? 'This release cannot be a listing.' }
     if (published.blockedBy === 'listing' && by?.code === 'listing-incomplete')

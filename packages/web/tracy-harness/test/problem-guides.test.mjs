@@ -308,6 +308,15 @@ const EVERY_CODE = [
   ['install-file', 'no-template', {}],
   ['install-file', 'template-not-an-id', { template: 'JA Restaurant' }],
   ['install-file', 'asset-missing', { files: ['w.tar.gz'] }],
+  [
+    'install-file',
+    'install-file-sha-mismatch',
+    {
+      version: '1.0.2',
+      files: ['w.tar.gz'],
+      reason: 'GitHub states another sha256 for w.tar.gz than the install file pins'
+    }
+  ],
   ['content-coverage', 'coverage-not-needed', {}],
   ['content-coverage', 'coverage-waiting', {}],
   ['content-coverage', 'coverage-not-measured', COVERAGE_BASE],
@@ -399,6 +408,23 @@ const EVERY_CODE = [
   ['template-kit', 'kit-gaps', { ...KIT_GAPS, live: true }],
   ['template-kit', 'kit-not-approved', { ...KIT_BASE, approvedBy: null }],
   ['template-kit', 'kit-approval-stale', KIT_BASE],
+  ...[
+    [
+      'kit-logo-unsettable',
+      '1 logo spot the page shows has no setting and no content map frame: logo-header-1'
+    ],
+    ['kit-brand-colour-from-link', 'the template accent #203060 is read from the link colour only'],
+    ['kit-navigation-missing', '1 menu block of the content map has no navigation group in the kit: block-7'],
+    ['kit-map-mismatch', '1 kit slot is not in the content map beside it: article-3.4'],
+    ['kit-front-page-group', 'the front page has no group and shot of its own: it sits in group group-blog'],
+    ['kit-brand-unreadable', 'the kit has no site.nameSlots'],
+    ['kit-zip-missing', 'the release has no asset template-kit-ja-restaurant-1.0.2.zip'],
+    ['kit-setting-slot-missing', '1 map button (block-7) point at no setting slot']
+  ].map(([code, reason]) => [
+    'template-kit',
+    code,
+    { ...KIT_BASE, reason, flowGaps: [{ code, severity: 'todo', reason }] }
+  ]),
   ['customize', 'customize-waiting', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-not-checked', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-checking', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
