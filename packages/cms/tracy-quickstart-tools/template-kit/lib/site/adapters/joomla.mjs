@@ -240,7 +240,9 @@ export function joomlaAdapter(source) {
         kind,
         column,
         max: 1,
-        printed: `${main}\n${address}`.includes(`item->${column}`) && setting(sw) === '1',
+        // The layout reads the contact as `$this->item` (Joomla 4 and later) or `$this->contact` (older overrides).
+        printed:
+          new RegExp(`->(?:item|contact)->${column}\\b`).test(`${main}\n${address}`) && setting(sw) === '1',
         filled: Boolean(String(row[column] ?? '').trim()),
         setting: `cms contact setting ${sw}`
       }))

@@ -2,8 +2,8 @@
 // template's own layout files. Fabricated site: a swim club with one contact.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { joomlaAdapter } from '../template-kit/lib/site/adapters/joomla.mjs'
 import { mergeSite } from '../template-kit/lib/kit-site.mjs'
+import { joomlaAdapter } from '../template-kit/lib/site/adapters/joomla.mjs'
 
 const ADDRESS = `<?php if ($this->item->telephone && $this->params->get('show_telephone')) : ?>
 <?php echo $this->item->telephone; ?><?php endif; ?>
@@ -121,4 +121,15 @@ test('the kit says on the contact block what it accepts', () => {
   assert.deepEqual(own.accepts, accepts)
   assert.equal(other.accepts, undefined, 'a block of its own words is not a CMS contact')
   assert.equal(kit.site.contactChannels, undefined, 'read once, said on the block')
+})
+
+test('a layout that names the contact as $this->contact (an older template override) still prints its fields', () => {
+  const src = fakeSource()
+  const read = src.readFile
+  src.readFile = (rel) => read(rel)?.replaceAll('$this->item->', '$this->contact->') ?? null
+  const c = joomlaAdapter(src).contactChannels('contact-3')
+  assert.deepEqual(
+    c.fields.filter((f) => f.printed).map((f) => f.kind),
+    ['address', 'phone', 'mobile', 'email']
+  )
 })
