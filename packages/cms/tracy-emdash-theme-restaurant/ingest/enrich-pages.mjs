@@ -10,6 +10,7 @@
 //    (title, description and picture of each blog category), `contact` (the Joomla contact record), `reservation` (the
 //    "Phone Reservation" article, which is a layout, not prose), a default masthead, the History article, album photos.
 import { readFileSync, writeFileSync } from 'node:fs'
+import { decodeWith, stripTags } from './text.mjs'
 
 const [sectionsFile, modelFile, inventoryFile, albumsFile] = process.argv.slice(2)
 if (!sectionsFile || !modelFile || !inventoryFile || !albumsFile) {
@@ -21,18 +22,9 @@ const model = JSON.parse(readFileSync(modelFile, 'utf8'))
 const inv = JSON.parse(readFileSync(inventoryFile, 'utf8'))
 const albums = JSON.parse(readFileSync(albumsFile, 'utf8')).albums
 const locale = model.locales.default
-const decode = (s) =>
-  s
-    .replace(/&amp;/g, '&')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&#039;|&#39;/g, "'")
-    .replace(/&quot;/g, '"')
+const decode = decodeWith({ '&amp;': '&', '&nbsp;': ' ', '&#039;': "'", '&#39;': "'", '&quot;': '"' })
 const text = (html) =>
-  decode(
-    String(html ?? '')
-      .replace(/<br\s*\/?>/gi, '\n')
-      .replace(/<[^>]+>/g, ' ')
-  )
+  decode(stripTags(String(html ?? '').replace(/<br\s*\/?>/gi, '\n'), ' '))
     .replace(/[ \t]+/g, ' ')
     .replace(/ ?\n ?/g, '\n')
     .trim()
@@ -307,7 +299,6 @@ rec('masthead', 'default', {
     .replace(/<p>\s*<i class="fas[^"]*"><\/i>\s*([\s\S]*?)<\/p>/g, '<li>$1</li>')
     .replace(/((?:<li>[\s\S]*?<\/li>\s*)+)/, '<ul>$1</ul>')
     .replace(/<\/?i>/g, '')
-    .replace(/<h1>/g, '<h1>')
   const rec2 = model.records.find((r) => r.type === 'pages' && r.slug === 'our-history')
   rec2.values.body = body.trim()
   rec2.values.image = fig?.[1] ?? ''

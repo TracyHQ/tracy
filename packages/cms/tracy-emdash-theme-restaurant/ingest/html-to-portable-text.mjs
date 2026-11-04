@@ -5,6 +5,7 @@
 // Also turns the `<br>` of five short plain-text fields into newlines (PLAIN). Handles what the source bodies use: p, h1-h6, blockquote, ul/ol/li, strong/b, em/i, a, br. Any other tag is
 // dropped but its text kept; the counts are printed. Keys are deterministic (`b<n>`/`s<n>`), so a rerun writes the same seed.
 import { readFileSync, writeFileSync } from 'node:fs'
+import { stripTags } from './text.mjs'
 
 const file = process.argv[2]
 if (!file) {
@@ -30,11 +31,7 @@ const PLAIN = [
   'happyhours.hp_other_info'
 ]
 export const plainText = (html) =>
-  decode(
-    String(html)
-      .replace(/\s*<br\s*\/?>\s*/gi, '\n')
-      .replace(/<[^>]+>/g, '')
-  )
+  decode(stripTags(String(html).replace(/\s*<br\s*\/?>\s*/gi, '\n')))
     .split('\n')
     .map((l) => l.replace(/[ \t]+/g, ' ').trim())
     .filter(Boolean)

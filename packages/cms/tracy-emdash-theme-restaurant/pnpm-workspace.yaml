@@ -13,3 +13,7 @@ minimumReleaseAgeExclude:
   - '@emdash-cms/plugin-audit-log@0.2.3'
   - '@emdash-cms/plugin-forms@0.2.9'
   - emdash@1.1.0
+# Every zod below 4.6.6 has GHSA-mrhx-c7xc-m3w5 (memory exhaustion on oversized constrained
+# collections) and 3.x has no patched release, so all of them resolve to 4.6.6.
+overrides:
+  'zod@<4.6.6': 4.6.6
