@@ -161,6 +161,7 @@ async function startRun(d, values) {
         ...(values['pictures-file'] ? { pictures: inCwd(values['pictures-file']) } : {})
       },
       ...(d.templateSheets ? { templateSheets: d.templateSheets } : {}),
+      ...(d.templateFiles ? { templateFiles: d.templateFiles } : {}),
       onPhase: (phase) => d.runs.phase(id, phase),
       onNoWayOut: async (named) => {
         if (named.length) d.out(`no way to leave: ${named.map((n) => `${n.slot}: ${n.reason}`).join('; ')}`)
@@ -258,6 +259,7 @@ async function checkRun(d, values) {
     // The page groups need the site's host and the demo baseline of the quickstart; both are optional (site-check.js).
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
     baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
+    ...(d.templateFiles ? { siteFile: (file) => d.templateFiles({ siteKey: r.report.site, file }) } : {}),
     allGroups: values['all-groups'] === true,
     ...(d.now ? { now: d.now } : {})
   })

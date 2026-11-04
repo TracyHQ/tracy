@@ -64,6 +64,20 @@ export function baselineFromKit(kit, { version }) {
   }
 }
 
+/** A picture this narrow on the page may be an icon: its drawn box is what the site check holds a replaced icon to. */
+const ICON_FRAME_MAX = 400
+
+/** Each small picture the untouched site drew, where and how large, once. */
+function iconFramesOf(measured) {
+  const seen = new Map()
+  for (const f of each(measured?.imageFrames)) {
+    if (!(f?.width > 0 && f.width <= ICON_FRAME_MAX && f.path)) continue
+    const key = `${f.route} ${f.path}`
+    if (!seen.has(key)) seen.set(key, { page: f.route, file: f.path, width: f.width, height: f.height })
+  }
+  return [...seen.values()]
+}
+
 /**
  * What the host measured on an untouched site, cut to what the demo measures use.
  * @param {object} measured the `baseline` of a host `demo-qa` answer
@@ -82,6 +96,7 @@ export function baselineFromHost(measured, { version, measuredAt }) {
     ...(measuredAt ? { measuredAt } : {}),
     texts: [...new Set(each(measured.texts))].sort(),
     labels: [...new Set(each(measured.labels))].sort(),
+    iconFrames: iconFramesOf(measured),
     pictures: {
       files: [...new Set(each(measured.pictures?.files))].sort(),
       shas: [...new Set(each(measured.pictures?.shas))].sort()
@@ -125,6 +140,7 @@ function joined(parts) {
     texts: union((p) => p.texts),
     labels: union((p) => p.labels),
     pictures: { files: union((p) => p.pictures?.files), shas: union((p) => p.pictures?.shas) },
+    imageFrames: parts.flatMap((p) => each(p.imageFrames)),
     read: union((p) => p.read),
     unread: parts.flatMap((p) => each(p.unread))
   }
@@ -142,7 +158,12 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
   }
   const parts = []
   for (const chunk of chunksOf(pages)) {
-    const answer = await host({ ...callPages(chunk), discover: false, budgetMs: CALL_BUDGET_MS })
+    const answer = await host({
+      ...callPages(chunk),
+      discover: false,
+      budgetMs: CALL_BUDGET_MS,
+      measureFrames: true
+    })
     if (!answer?.baseline)
       throw new Error(`The host gave no baseline: ${answer?.code ?? answer?.error ?? 'no answer'}`)
     parts.push(answer.baseline)

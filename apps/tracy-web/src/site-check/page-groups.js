@@ -18,10 +18,12 @@
 //   unfinished-heading block  3 planner     new: a heading that stops on a small word
 //   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
 //   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
+//   icon-look          block  8 pictures    new: a replaced icon keeps the drawn size, line weight and backing of the one it replaced
 import { brandAccentGroup } from './brand-accent.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead, WIDTHS } from './host-pages.js'
 import { hostVerdictGroup } from './host-verdicts.js'
+import { iconLookGroup } from './icon-look.js'
 import {
   findDeadLinks,
   findEmptyControls,
@@ -140,5 +142,6 @@ export const PAGE_CHECK_GROUPS = [
     }
   }),
   brandAccentGroup,
+  iconLookGroup,
   unownedShownGroup
 ]

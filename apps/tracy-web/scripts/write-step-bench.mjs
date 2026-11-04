@@ -22,6 +22,7 @@ import { hostMeasure } from '../src/site-check/host-measure.js'
 import { readReleases, templateOfTag } from '../src/lib/quickstart-releases.js'
 import { runCli } from '../src/write-step/bench-cli.js'
 import { httpSiteDoor } from '../src/write-step/bench-site-door.js'
+import { siteFileReader } from '../src/write-step/site-file.js'
 import { siteSheetsReader } from '../src/write-step/site-sheets.js'
 import { pgBenchSiteStore } from '../src/write-step/bench-site-store.js'
 import { pgWriteRunStore } from '../src/write-step/write-run-store.js'
@@ -46,6 +47,11 @@ export async function main(argv, env = process.env) {
       },
       // The stylesheets the site's template serves, which the brand's accent module is built from.
       templateSheets: siteSheetsReader({
+        siteOf: (siteKey) => siteByKey(pool, siteKey),
+        config: readConfig(env)
+      }),
+      // A file of the site as a visitor reads it: the picture stage reads the look of the template's icons from there.
+      templateFiles: siteFileReader({
         siteOf: (siteKey) => siteByKey(pool, siteKey),
         config: readConfig(env)
       }),

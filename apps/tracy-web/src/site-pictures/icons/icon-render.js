@@ -13,8 +13,10 @@ export const FALLBACK_ICON = 'check-circle'
  * An icon as a transparent PNG. With `ground` (the demo's own disc or tile, measured by `icon-style.js`), the glyph is set
  * on a ground of the same shape, colour, opacity and size, in the demo glyph's place: the content changes, never the
  * template's style.
+ * With `glyphBox` and no ground, the glyph takes that place in the file: a template icon with no backing rarely fills its box.
  * @param {{glyph: string, weight?: string, width: number, height: number, colour?: string,
- *   ground?: import('./icon-ground.js').GroundShape | null}} input
+ *   ground?: import('./icon-ground.js').GroundShape | null,
+ *   glyphBox?: {x: number, y: number, w: number, h: number} | null}} input
  * @returns {Promise<{bytes: Buffer, ext: 'png', width: number, height: number, sha256: string}>}
  */
 export async function iconPicture({
@@ -23,7 +25,8 @@ export async function iconPicture({
   width,
   height,
   colour = '#222222',
-  ground = null
+  ground = null,
+  glyphBox = null
 }) {
   const source = await phosphorSvg(hasPhosphorIcon(glyph) ? glyph : FALLBACK_ICON, weight)
   // The icon fills the box as the demo's icons do; its one colour is the demo's (a duotone's tint is that colour at 20%).
@@ -31,8 +34,9 @@ export async function iconPicture({
     source
       .replace('<svg ', `<svg width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet" `)
       .replaceAll('currentColor', colour)
-  const bytes = ground
-    ? await onGround({ svg: sized(512, 512), width, height, ground })
+  const placed = ground ?? (glyphBox ? { glyph: glyphBox } : null)
+  const bytes = placed
+    ? await onGround({ svg: sized(512, 512), width, height, ground: placed })
     : await sharp(Buffer.from(sized(width, height)))
         .resize(width, height, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
         .png()
@@ -49,10 +53,11 @@ const CLEAR = { r: 0, g: 0, b: 0, alpha: 0 }
  */
 async function onGround({ svg, width, height, ground }) {
   const { box, glyph } = ground
-  const gw = box.w * width
-  const gh = box.h * height
-  const rx = ground.radius * Math.min(gw, gh)
-  const base = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><rect x="${box.x * width}" y="${box.y * height}" width="${gw}" height="${gh}" rx="${rx}" ry="${rx}" fill="${ground.colour}" fill-opacity="${ground.opacity}"/></svg>`
+  // With no ground (`box` absent) the file is clear behind the glyph.
+  const rect = box
+    ? `<rect x="${box.x * width}" y="${box.y * height}" width="${box.w * width}" height="${box.h * height}" rx="${ground.radius * Math.min(box.w * width, box.h * height)}" ry="${ground.radius * Math.min(box.w * width, box.h * height)}" fill="${ground.colour}" fill-opacity="${ground.opacity}"/>`
+    : ''
+  const base = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">${rect}</svg>`
   const { data, info } = await sharp(Buffer.from(svg))
     .ensureAlpha()
     .raw()

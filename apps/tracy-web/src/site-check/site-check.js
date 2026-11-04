@@ -88,7 +88,7 @@ const notGreenAfter = (status, stoppedBy) => (stoppedBy && status === 'green' ? 
  *   baseline?: object | null, allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
  *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
  *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
- *   stopping group made it (never green)
+ *   stopping group made it (never green). `siteFile(file)` reads a file of the site for the group that looks at its bytes
  * @returns {Promise<object>} `site-check/1`
  */
 export async function runSiteCheck({
@@ -96,12 +96,13 @@ export async function runSiteCheck({
   report,
   host,
   baseline = null,
+  siteFile,
   groups = host ? [...SITE_CHECK_GROUPS, ...PAGE_CHECK_GROUPS] : SITE_CHECK_GROUPS,
   now = Date.now,
   allGroups = false
 }) {
   const siteKey = report.site
-  const context = { report, siteKey, now, host, baseline, read: readsOnly(door, siteKey) }
+  const context = { report, siteKey, now, host, baseline, siteFile, read: readsOnly(door, siteKey) }
   const results = []
   let stoppedBy = null
   for (const group of groups) {

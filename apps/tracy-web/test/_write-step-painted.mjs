@@ -138,7 +138,10 @@ export async function runPainted({
   brand,
   module,
   contentMap = null,
-  site: over = {}
+  site: over = {},
+  templateFiles,
+  templateAccent = null,
+  last
 }) {
   const figure = await makeFigure()
   const painted = items(figure)
@@ -168,6 +171,7 @@ export async function runPainted({
   const frozen = frozenWithPictures({ pictures, files: [HERO, figure, BACKGROUND, PREVIEW] })
   const kit = brandKit()
   kit.doc.site = { ...pictureKit().doc.site, ...kit.doc.site }
+  if (templateAccent) kit.doc.site.brandColours = { primary: { value: templateAccent } }
   try {
     const report = await runWriteStep({
       door: site.door,
@@ -176,6 +180,8 @@ export async function runPainted({
       contentMap,
       files: { ...withBrand.files, pictures: frozen.files.pictures },
       sleep: async () => {},
+      ...(templateFiles ? { templateFiles } : {}),
+      ...(last ? { last } : {}),
       accentPlace: async () => ({ title: 'Tracy design system', position: 'top-a', ordering: 0 })
     })
     return {

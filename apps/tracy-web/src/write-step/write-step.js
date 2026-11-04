@@ -191,6 +191,7 @@ export async function runWriteStep(input) {
     const corrections = correctionsReader(door, siteKey, contract)
     pictures = await preparePictureStage({
       corrections,
+      templateFile: input.templateFiles && ((file) => input.templateFiles({ siteKey, file })),
       pictures: read.values.pictures,
       picturesPath: files.pictures,
       inputs: read.inputs.pictures,

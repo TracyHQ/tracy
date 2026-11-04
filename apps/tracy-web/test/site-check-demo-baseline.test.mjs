@@ -173,3 +173,31 @@ test('page groups join the default groups only when a host is given', () => {
     false
   )
 })
+
+test('a baseline keeps the drawn box of each small picture, once a page, and the host is asked for them', async () => {
+  const dir = await temp()
+  try {
+    const small = {
+      src: 'http://site.test/images/demo/icon.png',
+      sha256: 'cc33',
+      width: 100,
+      height: 100,
+      broken: false,
+      kind: 'img',
+      selector: 'main img'
+    }
+    const { host, calls } = fakeHost({ '/': demoRead('/', { images: [small, small] }) })
+    const { baseline } = await ensureBaseline({
+      host,
+      pages: ['/'],
+      version: VERSION,
+      store: fileBaselineStore(dir)
+    })
+    assert.equal(calls[0].measureFrames, true)
+    assert.deepEqual(baseline.iconFrames, [
+      { page: '/', file: 'images/demo/icon.png', width: 100, height: 100 }
+    ])
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})

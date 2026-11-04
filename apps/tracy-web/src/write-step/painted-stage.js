@@ -10,6 +10,11 @@
 // `replace_kept`, the customer's own words asking for that picture, and a package holds none. A kept icon goes when the plugin
 // on the site says it takes a transparent drawing there (`info.slot_corrections`, slot-corrections.js); it refuses anything
 // opaque itself. `replace_kept` is never written for it: no customer said those words.
+//
+// An icon may be replaced; its look may not change (#380). A recipe's size, weight and plate were decided by the picture step,
+// which can run without the template's files (`plate: null`, "no demo icon to measure"), so the template's own icon is read here,
+// from the site, and what it shows decides them. The file named by the slot stays on the site, so a second run reads the same
+// bytes, draws the same file and writes nothing. An icon whose template icon cannot be read is not drawn: the template's own stays.
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { isKeptIcon } from './slot-corrections.js'
@@ -21,6 +26,9 @@ const KEPT =
 const NEITHER =
   'this frame fits neither way: its slot takes neither HTML nor an image path, and the package says it is a picture'
 const REDRAW = 'when the design system changes'
+const TEMPLATE_UNREAD = (file) =>
+  `the template's icon ${file} could not be read, so what it looks like is not known; the template's own stays`
+const TEMPLATE_FILE = /^(?!.*\.\.)[\w./-]+\.(?:png|webp|jpe?g|gif|svg)$/i
 
 const each = (x) => (Array.isArray(x) ? x : [])
 
@@ -70,16 +78,67 @@ const recipeOf = ({ kind, paint, holds, draw, width, height }) => ({
   height
 })
 
+/** The site path of the template icon a slot holds, or null when it holds none. */
+function templateFileOf(slot) {
+  const file = String(slot?.sample ?? '')
+    .split('#')[0]
+    .replace(/^\/+/, '')
+  return TEMPLATE_FILE.test(file) ? file : null
+}
+
+/**
+ * Each open icon's template look. A file is read once, however many frames show it.
+ * @returns {Promise<{ looks: Map<string, { file: string | null, look: object | null }>, unread: Map<string, string> }>} by frame
+ */
+async function readTemplateLooks(icons, slots, templateFile) {
+  const { iconLookOf, sectionLooks } = await import('../site-pictures/icons/template-icon-look.js')
+  const ofFile = new Map()
+  const unread = new Map()
+  const found = new Map()
+  for (const item of icons) {
+    const file = templateFileOf(slots.get(item.key))
+    if (!file) continue
+    if (!ofFile.has(file)) {
+      const bytes = await templateFile(file).catch(() => null)
+      ofFile.set(file, bytes ? await iconLookOf(bytes) : null)
+    }
+    if (ofFile.get(file)) found.set(item.frame, ofFile.get(file))
+    else unread.set(item.frame, file)
+  }
+  const whole = sectionLooks(found)
+  const looks = new Map(
+    icons
+      .filter((item) => !unread.has(item.frame))
+      .map((item) => [
+        item.frame,
+        { file: templateFileOf(slots.get(item.key)), look: whole.get(item.frame) ?? null }
+      ])
+  )
+  return { looks, unread }
+}
+
 /**
  * @param {{ painted: object[], brand?: object, brandPath?: string, contentMap?: { slots?: object[] } | null,
- *   figures: Map<string, Buffer>, corrections?: () => Promise<{ icons: boolean }> }} input `figures`: the package's files by
- *   site path; `corrections`: what the plugin on the site takes, asked only when a kept icon needs the answer
+ *   figures: Map<string, Buffer>, corrections?: () => Promise<{ icons: boolean }>,
+ *   templateFile?: (file: string) => Promise<Buffer | null>, templateAccent?: string | null }} input `figures`: the package's
+ *   files by site path; `corrections`: what the plugin on the site takes, asked only when a kept icon needs the answer;
+ *   `templateFile`: reads a file of the site; without it an icon is drawn as its recipe says and its line holds no `template`,
+ *   which the site check does not pass; `templateAccent`: the accent the template's icons were drawn in
  * @returns {Promise<{ changes: Record<string, string>, files: Map<string, Buffer>, replaced: Set<string>,
  *   recipes: Map<string, object>, left: object[] }>} `changes`: key to drawn file; `files`: what to upload; `replaced`: the
  *   figures a drawn file took the slot of; `recipes`: each drawn frame's report record by key; `left`: the frames that are not
  *   drawn, each with its status, reason and record
  */
-export async function preparePainted({ painted, brand, brandPath, contentMap, figures, corrections }) {
+export async function preparePainted({
+  painted,
+  brand,
+  brandPath,
+  contentMap,
+  figures,
+  corrections,
+  templateFile,
+  templateAccent = null
+}) {
   const out = { changes: {}, files: new Map(), replaced: new Set(), recipes: new Map(), left: [] }
   const slots = new Map(each(contentMap?.slots).map((s) => [s.key, s]))
   const colours = brand === undefined ? null : await roleColours(brand, brandPath)
@@ -94,8 +153,25 @@ export async function preparePainted({ painted, brand, brandPath, contentMap, fi
   if (!open.length) return out
   // Loaded only when there is something to draw: it brings sharp and the icon set.
   const { drawPainted } = await import('./painted-draw.js')
+  const template = templateFile
+    ? await readTemplateLooks(
+        open.filter((item) => item.kind === 'icon'),
+        slots,
+        templateFile
+      )
+    : { looks: new Map(), unread: new Map() }
   for (const item of open) {
-    const made = await drawPainted(item, colours, { fit: slots.get(item.key)?.fit, figures })
+    if (template.unread.has(item.frame)) {
+      leave(item, 'failed', TEMPLATE_UNREAD(template.unread.get(item.frame)))
+      continue
+    }
+    const held = template.looks.get(item.frame)
+    const made = await drawPainted(item, colours, {
+      fit: slots.get(item.key)?.fit,
+      figures,
+      look: held?.look ?? null,
+      templateAccent
+    })
     if (made.problem) {
       leave(item, 'failed', made.problem)
       continue
@@ -111,6 +187,7 @@ export async function preparePainted({ painted, brand, brandPath, contentMap, fi
       file: sitePath,
       sha256: made.sha256,
       drawnIn: made.drawnIn,
+      ...(held ? { template: held.look ? { file: held.file, look: held.look } : null } : {}),
       takes: 'image-path',
       redraw: REDRAW
     })

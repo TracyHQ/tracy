@@ -4,7 +4,8 @@
  * and the links a page holds. They are read at 1440 and again at 390 on every page the run keeps, and answered as
  * `pageMeasures`, one entry per page and width:
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], pictures: [...], controls: [...],
- *     fields: [...], glued: [...], headings: [...], mainHeadings: [...], shownText, shownLinks: [...], shownPictures: [...] }
+ *     fields: [...], glued: [...], headings: [...], mainHeadings: [...], shownText, shownLinks: [...], shownPictures: [...],
+ *     pictureBoxes: [...] }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
@@ -27,6 +28,7 @@ export const MEASURE_CAPS = Object.freeze({
   headings: 40,
   shownLinks: 300,
   shownPictures: 100,
+  pictureBoxes: 100,
   shownText: 30000
 })
 
@@ -253,6 +255,18 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (shownPictures.length >= caps.shownPictures) break
     if (shown(img)) shownPictures.push((img.currentSrc || img.src).slice(0, 300))
   }
+  // Each small picture as it is drawn: a replaced icon is held to the box of the one it replaced.
+  const pictureBoxes = []
+  for (const img of document.body.querySelectorAll('img')) {
+    if (pictureBoxes.length >= caps.pictureBoxes) break
+    const r = img.getBoundingClientRect()
+    if (!shown(img) || r.width > 400) continue
+    pictureBoxes.push({
+      src: (img.currentSrc || img.src).slice(0, 300),
+      width: Math.round(r.width),
+      height: Math.round(r.height)
+    })
+  }
   const shownText = (document.body.innerText ?? '').replace(/\s+/g, ' ').trim().slice(0, caps.shownText)
   return {
     links,
@@ -266,7 +280,8 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     mainHeadings,
     shownText,
     shownLinks,
-    shownPictures
+    shownPictures,
+    pictureBoxes
   }
 }
 

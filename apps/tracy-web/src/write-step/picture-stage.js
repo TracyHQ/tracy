@@ -64,7 +64,7 @@ function readSettings(entries, kit) {
 /**
  * @param {{ pictures?: object, picturesPath?: string, inputs?: { file: string, sha256: string }, kit: object,
  *   contract: string, brand?: object, brandPath?: string, contentMap?: object | null, last?: object,
- *   corrections?: () => Promise<{ icons: boolean }> }} input
+ *   corrections?: () => Promise<{ icons: boolean }>, templateFile?: (file: string) => Promise<Buffer | null> }} input
  * @returns {Promise<object>} the stage; `stop` says why it cannot run
  */
 export async function preparePictureStage({
@@ -77,7 +77,8 @@ export async function preparePictureStage({
   brandPath,
   contentMap,
   last = NO_LAST,
-  corrections
+  corrections,
+  templateFile
 }) {
   if (pictures === undefined) return idle
   const problems = packageProblems(pictures, contract)
@@ -117,7 +118,9 @@ export async function preparePictureStage({
     brandPath,
     contentMap,
     figures: files,
-    corrections
+    corrections,
+    templateFile,
+    templateAccent: kit?.site?.brandColours?.primary?.value ?? null
   })
   Object.assign(changes, drawn.changes)
   for (const [sitePath, bytes] of drawn.files) files.set(sitePath, bytes)
