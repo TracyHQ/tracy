@@ -253,6 +253,84 @@ test('ABOUT-1: Tracy Business WordPress 1.3.4 and EmDash 1.7.2 pass; JA Essence 
   assert.equal(j6.status, 'live-only', j6.message)
 })
 
+/** An EmDash home whose heading and intro come through the stamps its view declares (a hero section, not a `home` entry). */
+const stampedHome = (
+  home,
+  rules,
+  data = { hero_heading: 'Welcome', hero_intro: 'Come in and eat well here' }
+) =>
+  businessEmdash({
+    'src/views/Home.astro': home,
+    'seed/seed.json': JSON.stringify({ defaultLocale: 'en', content: { hero: [{ slug: 'welcome', data }] } }),
+    'seed/personalize.json': JSON.stringify({ copy: rules })
+  })
+const HERO_VIEW = `---
+const $hero = stampFor(Astro.request, 'hero', hero)
+const $page = stampFor(Astro.request, 'pages', pageEntry)
+---
+<section>
+<h1 class="big" {...$hero("hero_heading")}>{hero.hero_heading}</h1>
+<div class="stars">*****</div>
+<div class="intro" {...$hero('hero_intro')}>{hero.hero_intro}</div>
+<p class="later" {...$page("title")}>a later section</p>
+</section>`
+const heroRule = (field) => ({ collection: 'hero', slug: 'welcome', field, brief: 'b', maxWords: 8 })
+
+test('ABOUT-1: a heading and intro read through a stamp of collection hero pass when copy rules cover them', async () => {
+  const r = await run(
+    about1HomeHeading,
+    stampedHome(HERO_VIEW, [heroRule('hero_heading'), heroRule('hero_intro')])
+  )
+  assert.equal(r.status, 'pass', r.message)
+  assert.match(r.message, /hero\.hero_heading, hero\.hero_intro/)
+})
+
+test('ABOUT-1: the same view fails when the single-quoted intro field has no rule, or the heading has none', async () => {
+  const intro = await run(about1HomeHeading, stampedHome(HERO_VIEW, [heroRule('hero_heading')]))
+  assert.equal(intro.status, 'fail', intro.message)
+  assert.match(JSON.stringify(intro), /hero\.hero_intro has no identity, copy, blocks or rewrite rule/)
+  const heading = await run(about1HomeHeading, stampedHome(HERO_VIEW, [heroRule('hero_intro')]))
+  assert.equal(heading.status, 'fail', heading.message)
+  assert.match(JSON.stringify(heading), /hero\.hero_heading has no identity/)
+})
+
+test('ABOUT-1: a rule on another collection or entry does not cover a stamped field, and a field missing from the seed fails', async () => {
+  const other = await run(
+    about1HomeHeading,
+    stampedHome(HERO_VIEW, [{ ...heroRule('hero_heading'), collection: 'home' }, heroRule('hero_intro')])
+  )
+  assert.equal(other.status, 'fail', other.message)
+  const absent = await run(
+    about1HomeHeading,
+    stampedHome(HERO_VIEW, [heroRule('hero_heading'), heroRule('hero_intro')], { hero_heading: 'Welcome' })
+  )
+  assert.equal(absent.status, 'fail', absent.message)
+  assert.match(JSON.stringify(absent), /hero\.hero_intro is not in seed\/seed\.json/)
+})
+
+test('ABOUT-1: an h1 that prints no stamped field still fails, and an undeclared $page is still the home entry', async () => {
+  const plain = `<h1 class="big">Welcome</h1><div class="intro">Come in</div><p>text</p>`
+  const none = await run(about1HomeHeading, stampedHome(plain, []))
+  assert.equal(none.status, 'fail', none.message)
+  assert.match(JSON.stringify(none), /prints no field of the home entry/)
+  const page = `<h1 {...$page("title")}>{h.title}</h1><p {...$page("lead")}>{h.lead}</p>`
+  const ok = await run(
+    about1HomeHeading,
+    businessEmdash({
+      'src/views/Home.astro': page,
+      'seed/seed.json': JSON.stringify({
+        defaultLocale: 'en',
+        content: { home: [{ slug: 'home', data: { title: 'T', lead: 'L' } }] }
+      }),
+      'seed/personalize.json': JSON.stringify({
+        copy: ['title', 'lead'].map((field) => ({ collection: 'home', slug: 'home', field, brief: 'b' }))
+      })
+    })
+  )
+  assert.equal(ok.status, 'pass', ok.message)
+  assert.match(ok.message, /fields title, lead/)
+})
+
 test('ABOUT-2: an ACM field holding button classes is a setting, not demo prose (JA Symphony j6 module 102)', () => {
   const lock = JSON.parse(
     readFileSync(
