@@ -76,7 +76,7 @@ test('run writes the copy inside the command and prints the run id and the count
   frozen.done()
   assert.equal(code, 0)
   assert.equal(h.out[0], 'run-1')
-  assert.ok(h.out.some((l) => /^done: 9 written, 0 hidden, \d+ skipped, 0 failed$/.test(l)))
+  assert.ok(h.out.some((l) => /^done: 9 written, 2 hidden, \d+ skipped, 0 failed$/.test(l)))
   assert.equal(h.site.held['module-5.1'], 'Nia Brook')
   assert.deepEqual(h.accounts, [{ account: 'bench@example.test', platform: 'joomla' }])
   const row = h.runs.rows[0]
@@ -222,7 +222,7 @@ test('check prints the group and the verdict, exits 0 on green and writes nothin
   const h = await ranRun()
   const before = h.site.calls.filter((c) => c.params.operation !== 'inspect').length
   assert.equal(await h.cli(checkArgs()), 0)
-  assert.match(h.out[0], /^read-back: green 9 checked, \d+ skipped reads: content\.contract inspect \(9\)$/)
+  assert.match(h.out[0], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
   assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn)')
   assert.equal(h.site.calls.filter((c) => c.params.operation !== 'inspect').length, before)
   const { report } = h.runs.rows[0]

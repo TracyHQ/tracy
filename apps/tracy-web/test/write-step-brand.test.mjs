@@ -213,7 +213,7 @@ test('a brand file that keeps the template accent writes no module and says so',
 test('a run writes in the ADR order: site read, brand, a fresh read, then the one contract call', async () => {
   const seen = []
   const { site, report } = await runBrand({ deps: { onPhase: async (p) => void seen.push(p) } })
-  assert.deepEqual(seen, ['check', 'inspect', 'brand', 'write', 'settings'])
+  assert.deepEqual(seen, ['check', 'inspect', 'hide', 'brand', 'write', 'settings'])
   assert.equal(typeof report.timings.brand, 'number')
   const names = site.log.map((c) => (c.action === 'content.contract' ? c.params.operation : c.action))
   assert.equal(names[0], 'inspect')
@@ -250,8 +250,8 @@ test('a copy-only run keeps working: no brand action, no brand line, no brand ph
   })
   frozen.done()
   assert.equal(report.status, 'done')
-  assert.deepEqual(seen, ['check', 'inspect', 'write', 'settings'])
-  assert.ok(site.log.every((c) => c.action === 'content.contract'))
+  assert.deepEqual(seen, ['check', 'inspect', 'hide', 'write', 'settings'])
+  assert.ok(site.log.every((c) => ['content.contract', 'info'].includes(c.action)))
   assert.ok(!report.slots.some((s) => String(s.part ?? '').startsWith('brand')))
   assert.equal(report.inputs.brand, undefined)
 })
@@ -408,7 +408,7 @@ test('a cancel before the brand writes nothing, and one after it skips the contr
   assert.equal(before.report.status, 'cancelled')
   assert.deepEqual(before.site.writes(), [])
   let again = 0
-  const after = await runBrand({ deps: { isCancelled: async () => ++again > 2 } })
+  const after = await runBrand({ deps: { isCancelled: async () => ++again > 3 } })
   assert.equal(after.report.status, 'cancelled')
   assert.equal(after.site.of('site.identity', 'set').length, 1)
   assert.equal(after.site.of('content.contract', 'apply').length, 0)

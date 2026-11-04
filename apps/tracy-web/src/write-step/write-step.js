@@ -5,8 +5,9 @@
 //   apply({ siteKey, action, params }) -> the plugin's answer
 // No template and no version is written here: the contract comes from the kit, the slots from the files and the site.
 //
-// This slice writes the brand file (brand-stage.js) and the site copy's mapping through `content.contract`. The later write
-// stages of the ADR go in as further phases, and pictures as a further claim list (owner-table.js).
+// This slice writes the plan's hide decisions (hide-stage.js), the brand file (brand-stage.js) and the site copy's mapping
+// through `content.contract`. The later write stages of the ADR go in as further phases, and pictures as a further claim
+// list (owner-table.js).
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../site-writer/bench-control.js'
 import { indexInputs } from '../site-writer/copy-check/inputs-index.js'
@@ -14,6 +15,7 @@ import { readCopy } from '../site-writer/copy-check/copy-view.js'
 import { exportContractMapping } from '../site-writer/contract-mapping.js'
 import { prepareBrandStage } from './brand-stage.js'
 import { writeContract } from './contract-write.js'
+import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { kitSlotIds } from './kit-slot-ids.js'
@@ -101,10 +103,13 @@ export async function runWriteStep(input) {
   let brand = { active: false, lines: () => [] }
   let sent = {}
   let settled = new Map()
+  let hide = null
+  let emptied = []
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
     if (table) {
+      const hidden = hide?.results({ emptied, refused, settled })
       report.slots = slotLines({
         owners: table.owners,
         unowned: report.unowned,
@@ -114,6 +119,8 @@ export async function runWriteStep(input) {
         ordered,
         brandLines: brand.lines({ written, refused }),
         settled,
+        hides: hidden?.hides,
+        frameLines: hidden?.lines,
         ...routes
       })
       report.counts = countsOf(report.slots)
@@ -193,6 +200,7 @@ export async function runWriteStep(input) {
     ordered = changes
     sent = exported.mapping.changes
     return {
+      plan,
       mapping: {
         ...exported.mapping,
         changes: { ...changes, ...brand.changes },
@@ -201,7 +209,7 @@ export async function runWriteStep(input) {
     }
   })
   if (checked.stop) return stopped(checked.stop)
-  const { mapping } = checked
+  const { mapping, plan } = checked
   if (await isCancelled()) return finish('cancelled', null)
 
   const apply = (call) => door.apply(call)
@@ -219,7 +227,27 @@ export async function runWriteStep(input) {
   if (inspected.stop) return stopped(inspected.stop)
   if (await isCancelled()) return finish('cancelled', null)
 
-  let reading = inspected.reading
+  // Page frame first: the blocks and pages the plan drops; the hidden slots go with the contract call.
+  const hiding = await timed('hide', () =>
+    runHideStage({
+      door,
+      siteKey,
+      kit: kit.doc,
+      plan,
+      owners: table.owners,
+      extras,
+      reading: inspected.reading,
+      changes: mapping.changes,
+      contract,
+      sleep
+    })
+  )
+  if (hiding.stop) return stopped(hiding.stop)
+  hide = hiding
+  mapping.emptySlots = hide.emptySlots
+  if (await isCancelled()) return finish('cancelled', null)
+
+  let reading = hide.reading
   if (brand.active) {
     const branded = await timed('brand', () => brand.write({ apply, siteKey, sleep }))
     if (branded.stop) return stopped(branded.stop)
@@ -241,13 +269,22 @@ export async function runWriteStep(input) {
     })
   })
   report.rounds = wrote.rounds
+  emptied = wrote.emptied ?? []
   if (wrote.cancelled) return finish('cancelled', null, [], wrote.refused)
   if (wrote.stop) return finish('stopped', wrote.stop, [], wrote.refused)
   // Last: the page settings, which the contract door does not take (page-settings-stage.js).
   const settings = await timed('settings', () =>
-    runPageSettings({ door, siteKey, kit: kit.doc, sent, extras, place: input.place ?? null, isCancelled })
+    runPageSettings({
+      door,
+      siteKey,
+      kit: kit.doc,
+      sent,
+      extras: hide.settingsExtras,
+      place: input.place ?? null,
+      isCancelled
+    })
   )
-  settled = settings.results
+  settled = new Map([...settings.results, ...hide.held])
   if (settings.cancelled) return finish('cancelled', null, wrote.written, wrote.refused)
   return finish('done', null, wrote.written, wrote.refused)
 }

@@ -148,6 +148,7 @@ export function brandSite(over = {}) {
       log.push(call)
       if (over.throws === call.action) throw new Error('connect ECONNREFUSED')
       const { action, params } = call
+      if (action === 'info') return inner.door.apply(call)
       if (action === 'content.contract') {
         const answer = await inner.door.apply(call)
         return params.operation === 'inspect' && answer.ok

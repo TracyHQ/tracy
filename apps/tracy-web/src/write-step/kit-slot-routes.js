@@ -6,7 +6,7 @@ import { contentMapKey } from '../site-writer/contract-mapping.js'
 const each = (value) => (Array.isArray(value) ? value : [])
 
 /** Every icon of the kit by slot id, with the classes of its list's rows by network name. */
-function iconsOf(kit) {
+export function iconsOf(kit) {
   const icons = new Map()
   for (const block of each(kit?.blocks))
     for (const list of each(block?.lists)) {

@@ -32,17 +32,14 @@ function staged(base, result) {
 }
 
 /** A line for each claim, from what the write did. */
-function claimLine(claim, { written, refused, routed, deferred, ordered, settled }) {
+function claimLine(claim, { written, refused, routed, deferred, ordered, settled, hides }) {
   const slotKey = contentMapKey(claim.slot)
   const key = routed.get(slotKey) ?? slotKey
   if (claim.kind === 'hide')
-    return line(
-      claim.slot,
-      key,
-      claim.owner,
-      'skipped',
-      'the plan hides this slot; hiding is not written yet'
-    )
+    return {
+      ...line(claim.slot, key, claim.owner, 'skipped', 'the run ended before this slot was hidden'),
+      ...hides.get(claim.slot)
+    }
   if (claim.kind === 'link')
     return line(
       claim.slot,
@@ -94,9 +91,10 @@ function extraLines(extras, owners, settled) {
  * The slot lines of a report.
  * @param {{ owners: Map<string, object>, unowned: object[], extras: object, written: Iterable<string>,
  *   refused: Map<string, object>, routed?: Map<string, string>, deferred?: Map<string, string>,
- *   ordered?: Record<string, string>, brandLines?: object[], settled?: Map<string, object> }} input `ordered`: what the
- *   mapping sent, by content map key; `brandLines`: the brand stage's own lines, which stand for the brand's claims;
- *   `settled`: what the page settings stage did, by line slot
+ *   ordered?: Record<string, string>, brandLines?: object[], settled?: Map<string, object>,
+ *   hides?: Map<string, object>, frameLines?: object[] }} input `ordered`: what the mapping sent, by content map key;
+ *   `brandLines`: the brand stage's own lines, which stand for the brand's claims; `settled`: what the page settings stage
+ *   did, by line slot; `hides`: what the hide stage did to a hide claim; `frameLines`: its lines of blocks and pages
  */
 export function slotLines({
   owners,
@@ -108,10 +106,13 @@ export function slotLines({
   deferred = new Map(),
   ordered = {},
   brandLines = [],
-  settled = new Map()
+  settled = new Map(),
+  hides = new Map(),
+  frameLines = []
 }) {
-  const done = { written: new Set(written), refused, routed, deferred, ordered, settled }
+  const done = { written: new Set(written), refused, routed, deferred, ordered, settled, hides }
   return [
+    ...frameLines,
     ...brandLines,
     ...[...owners.values()].filter((c) => c.owner !== 'brand').map((claim) => claimLine(claim, done)),
     ...unowned.map((u) =>

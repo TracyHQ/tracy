@@ -41,7 +41,7 @@ test('a slot refused in a later round is dropped too, and the refused retry does
   assert.equal(report.counts.written, 7)
 })
 
-test('when every slot is refused nothing is written, the run ends and says so', async () => {
+test('when every slot of the copy is refused no words are written, the hidden slots still go and the run says so', async () => {
   const c = copy()
   c.slots = c.slots.slice(0, 1)
   const refuse = { 'module-1.1': { code: 'SLOT_LOCKED_BY_USER' } }
@@ -49,7 +49,9 @@ test('when every slot is refused nothing is written, the run ends and says so', 
   assert.equal(report.status, 'done')
   assert.equal(report.counts.written, 0)
   assert.equal(report.counts.failed >= 1, true)
-  assert.equal(site.applies().length, 1)
+  assert.equal(site.applies().length, 2)
+  assert.equal(site.applies()[1].params.changes, undefined)
+  assert.ok(site.applies()[1].params.empty_slots.length)
 })
 
 test('a refusal not attributable to a slot stops the run and quotes the plugin', async () => {
