@@ -359,14 +359,17 @@ cut-out frame (kind `cutout`) is filled by drawing:
   completely flat ground of one named colour, no shadow, nothing of that colour in the figure. The figure is the hero:
   it fills about 90% of the picture's height with a small margin above and at its sides (it may stand on the bottom
   edge), as an athlete of the sport the wish names, in that sport's sportswear and a confident active stance, under
-  strong directional studio light (a rim light is allowed, the ground stays one flat colour). The first wording asked
+  strong directional studio light (a rim light is allowed, the ground stays one flat colour, with no cast shadow
+  under the feet). It does what the wish says the figure does and how it holds things, and leaves out any place the
+  wish names (a cut-out has no place). The first wording asked
   for lots of clear ground and even light, and drew a small, passive figure in flat catalogue light that looked weak
   beside the template's demo figure (run 6, JA Boxing block-165.1). Code chooses the colour from the plan's words: chroma
   green `#00b140`, unless the words name something green (grass, a tennis ball), then magenta `#ff00ff`, then chroma
   blue `#0047bb` (`site-pictures/cutout-ground.js` `groundFor`).
 - **The demo picture as a style reference**: when the kit's demo picture of the frame can be read (the frame's
-  `picture` path in the release webroot, `site-pictures/demo-pictures.js`, cached beside the demo icons and matched by
-  `pictureSha256` when the kit records one), it is attached to the drawing, flattened on light grey and at most 768 px,
+  `picture` path, read from the quickstart installer zip the contract names, checked against its sha256, else from the
+  release webroot, `site-pictures/demo-pictures.js`, cached per kit and matched by `pictureSha256` when the kit records
+  one), it is attached to the drawing, flattened on light grey and at most 768 px,
   with the template's `style` part: copy only its framing, the figure's scale, the pose energy, the light and the
   attitude; never the person, the sport, the clothes, any equipment, the background graphics or colours. The subject
   comes only from the wish. The call record names the reference by `styleSha256`, and the reference is part of the kept

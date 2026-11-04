@@ -268,11 +268,12 @@ test('both specific cut-outs are drawn on a plain ground, the ground removed, an
   assert.match(hDraw.text, /plain background of one single colour:\s+chroma green \(#00b140\)/)
   assert.match(hDraw.text, /racket/)
   // The figure fills the height in an athletic stance under studio light; with no demo picture, no style reference.
-  assert.match(hDraw.text, /fills about 90% of the picture's height/)
-  assert.match(hDraw.text, /athletic sportswear/)
-  assert.match(hDraw.text, /strong directional\s+key light/)
+  assert.match(hDraw.text, /fills\s+about\s+90%\s+of\s+the\s+picture's\s+height/)
+  assert.match(hDraw.text, /athletic\s+sportswear/)
+  assert.match(hDraw.text, /strong\s+directional\s+key\s+light/)
   assert.doesNotMatch(hDraw.text, /clear background on its left|Even light/)
   assert.doesNotMatch(hDraw.text, /style reference/)
+  assert.match(hDraw.text, /leave\s+out\s+any\s+place/)
   assert.equal(hDraw.image, null)
   const hLook = doors.looks.find((l) => l.frame === 'block-h.1')
   assert.match(hLook.text, /This picture is a cut-out/)
@@ -412,12 +413,12 @@ test('the demo picture of a cut-out frame is attached as a style reference only,
   const m = (await finisher.finish(doc, { lastRound: true })).doc
   assert.deepEqual(asked.sort(), ['block-h.1', 'block-s.1'])
   const s = doors.drawings.find((d) => d.frame === 'block-s.1')
-  assert.match(s.text, /ONLY as a style reference/)
+  assert.match(s.text, /ONLY\s+as\s+a\s+style\s+reference/)
   assert.match(
     s.text,
-    /Never copy the person, the sport, the clothes, any equipment, the background graphics/
+    /Never\s+copy\s+the\s+person,\s+the\s+sport,\s+the\s+clothes,\s+any\s+equipment,\s+the\s+background\s+graphics/
   )
-  assert.match(s.text, /come only from "It must show"/)
+  assert.match(s.text, /come\s+only\s+from\s+"It\s+must\s+show"/)
   assert.ok(s.image?.startsWith('data:image/png;base64,'), 'the demo picture is attached')
   // Sent flattened (no alpha) and no larger than STYLE_MAX.
   const sent = await sharp(Buffer.from(s.image.split(',')[1], 'base64')).metadata()

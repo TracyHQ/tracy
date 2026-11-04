@@ -248,8 +248,12 @@ async function prepare(deps, row) {
   const prompts = picturePrompts()
   // The demo pictures of the cut-out frames, sent to the drawer as a style reference only (ladder-draw.js).
   const cutoutDemos =
-    drawerDoor.door && deps.webroot
-      ? await demoPictureReader({ dir: store.dir, webroot: deps.webroot }).forKit(kit)
+    drawerDoor.door && (deps.quickstart || deps.webroot)
+      ? await demoPictureReader({
+          dir: store.dir,
+          quickstart: deps.quickstart ?? null,
+          webroot: deps.webroot ?? null
+        }).forKit(kit)
       : null
   const finisher = createFinisher({
     idx,

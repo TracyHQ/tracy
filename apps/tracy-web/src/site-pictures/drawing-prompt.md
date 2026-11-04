@@ -41,16 +41,19 @@ photograph ends.
 ## cutout
 
 Make a realistic studio photograph of one figure alone on a completely flat, plain background of one single colour:
-{{ground}}. The background is exactly that colour everywhere: no gradient, no floor, no horizon, no shadow, no
-reflection, no texture, no smoke or glow and no other thing on it. Nothing in the figure is that colour, not even a
-small part. The figure is the hero of the picture: it fills about 90% of the picture's height, with only a small margin
-of background above it and at its left and right, and it may stand on the bottom edge. Show the whole figure: every
-hand, arm, leg and foot, and everything the figure holds or wears (gloves, a racket, a ball, a tool), is whole, inside
-the picture and sharp against the background. The figure looks like an athlete of the sport or activity it must show,
-in fitted athletic sportswear for that sport, in a confident, active stance typical of that sport, full of energy and
-attitude, never a stiff or passive catalogue pose. Light it like a dramatic sports studio portrait: strong directional
-key light with deep shadows on the figure, and a rim light on its edges is welcome, while the background stays one
-flat, even colour with no light spill, glow or gradient on it. Crisp edges, no motion blur.
+{{ground}}. The background is exactly that colour everywhere: no gradient, no floor, no horizon, no shadow (not even a
+small cast shadow under the feet), no reflection, no texture, no smoke or glow and no other thing on it. A cut-out has
+no place: leave out any place "It must show" names (a court, a room, a street) and show only the figure and what it
+holds. Nothing in the figure is that colour, not even a small part. The figure is the hero of the picture: it fills
+about 90% of the picture's height, with only a small margin of background above it and at its left and right, and it may
+stand on the bottom edge. Show the whole figure: every hand, arm, leg and foot, and everything the figure holds or wears
+(gloves, a racket, a ball, a tool), is whole, inside the picture and sharp against the background. The figure looks like
+an athlete of the sport or activity it must show, in fitted athletic sportswear for that sport. Do exactly what "It must
+show" says the figure does and how it holds things (a racket under one arm stays under one arm), in a confident, active
+stance typical of that sport, full of energy and attitude, never a stiff or passive catalogue pose. Light it like a
+dramatic sports studio portrait: strong directional key light with deep shadows on the figure, and a rim light on its
+edges is welcome, while the background stays one flat, even colour with no light spill, glow or gradient on it. Crisp
+edges, no motion blur.
 
 ## style
 

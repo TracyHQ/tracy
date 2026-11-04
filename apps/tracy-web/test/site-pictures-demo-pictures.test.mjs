@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { after, test } from 'node:test'
 import { gzipSync } from 'node:zlib'
+import { zipSync } from 'fflate'
 import { demoCutoutPaths, demoPictureReader } from '../src/site-pictures/demo-pictures.js'
 import { storeDir } from './_site-pictures-bench.mjs'
 
@@ -94,4 +95,45 @@ test('a webroot that cannot be read leaves every frame without a demo picture, w
   }).forKit(kit)
   assert.match(reader.note, /could not be read: no webroot asset/)
   assert.equal(await reader.readDemo(doc.blocks[0].frames[0]), null)
+})
+
+test('the installer zip the contract names is read first, and one whose hash does not match falls back to the webroot', async () => {
+  const zip = Buffer.from(
+    zipSync({
+      'images/demo/figure-a.png': new Uint8Array(FIGURE),
+      'images/demo/photo.jpg': new Uint8Array(Buffer.from('a photo'))
+    })
+  )
+  const asked = []
+  const quickstart = async (a) => {
+    asked.push(a)
+    return { ok: true, bytes: zip }
+  }
+  const frame = doc.blocks[0].frames[0]
+  const good = {
+    ref: 'demo-bikes/j6/1.0.2',
+    release: 'demo-bikes',
+    doc,
+    installer: { file: 'qs.zip', sha256: sha(zip) }
+  }
+  const fromZip = await demoPictureReader({
+    dir: store.dir,
+    quickstart,
+    webroot: async () => assert.fail('the webroot is not needed')
+  }).forKit(good)
+  assert.deepEqual(asked, [{ release: 'demo-bikes', name: 'qs.zip' }])
+  assert.equal(sha(await fromZip.readDemo(frame)), sha(FIGURE))
+  const other = Buffer.from('another invented figure')
+  const bad = { ...good, ref: 'demo-bikes/j6/1.0.3', installer: { file: 'qs.zip', sha256: 'e'.repeat(64) } }
+  const fromWebroot = await demoPictureReader({
+    dir: store.dir,
+    quickstart,
+    webroot: async () => ({ ok: true, bytes: tarGz([['images/demo/figure-a.png', other]]) })
+  }).forKit(bad)
+  assert.equal(sha(await fromWebroot.readDemo(frame)), sha(other))
+  const neither = await demoPictureReader({ dir: store.dir, quickstart, webroot: null }).forKit({
+    ...bad,
+    ref: 'demo-bikes/j6/1.0.4'
+  })
+  assert.match(neither.note, /does not match the sha256 its contract records/)
 })
