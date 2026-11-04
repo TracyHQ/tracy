@@ -14,7 +14,7 @@
  * 🔒 THE UNDO IS THE PLUGIN'S: one step per `set`, recorded under the brand apply id (plugin README "A template's logo,
  * name and favicon").
  */
-import { darkSpotsOf, roleOf, variantFor } from './brand-joomla-places.js'
+import { darkSpotsOf, roleOf, variantFor } from '../../lib/brand-joomla-places.js'
 
 const SMALL_KEYS = ['site_logo_small', 'site_logo_dark_small']
 

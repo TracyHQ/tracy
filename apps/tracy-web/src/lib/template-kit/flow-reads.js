@@ -10,7 +10,7 @@
  *                                     recolour links and leave every button and fill in the demo colour
  *   kit-navigation-missing      todo  a menu block of the content map has no navigation group: the planner and the
  *                                     writer read footer columns and the main menu row limit from them
- *                                     (`site-writer/contract-mapping.js`, `site-planner/plan-check/rules-menu.js`)
+ *                                     (`lib/site-copy/contract-mapping.js`, `site-planner/plan-check/rules-menu.js`)
  *   kit-map-mismatch            todo  kit slots the content map beside it does not hold: the writer exports a copy
  *                                     slot under its content map key (`contract-mapping.js`), so the write door has
  *                                     no row for it. A kit captured on another map (a seed contract) shows here

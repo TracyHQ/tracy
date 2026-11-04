@@ -3,7 +3,7 @@
 export const RULE_TITLES = [
   ['w01', 'W01', 'The file matches the site-copy/1 shape'],
   ['w02', 'W02', 'Every kept slot exactly once, none hidden or unknown, labels equal the plan'],
-  ['w03', 'W03', 'Text within the slot limit, above the demo floor, within the paragraph count'],
+  ['w03', 'W03', 'Text between 80% of the demo and the demo, within the slot limit and the paragraph count'],
   ['w04', 'W04', 'Numbers, times, prices, phones, emails and links come from the cited facts'],
   ['w05', 'W05', 'Quoted reviews are exact passages of a review in the brief'],
   ['w06', 'W06', 'No sentence repeats or nearly repeats another anywhere on the site'],
@@ -11,7 +11,12 @@ export const RULE_TITLES = [
   ['w08', 'W08', 'No phrase from the avoid, forbidden or missing lists'],
   ['w09', 'W09', 'Alt, page title and page description present, within length, titles unique'],
   ['w10', 'W10', 'No sentence about the page or section itself'],
-  ['w11', 'W11', 'No long dash']
+  ['w11', 'W11', 'No long dash'],
+  ['w12', 'W12', 'Slots printed as one sentence read as one sentence when joined'],
+  ['w13', 'W13', 'A created page title is its on-page heading, not a browser title'],
+  ['w14', 'W14', 'A created privacy page is a complete policy, not a retelling of the plan'],
+  ['w15', 'W15', 'A lead and points slot is a lead paragraph followed by short points'],
+  ['w16', 'W16', 'A slot whose demo draws words in the accent colour names its own, and no other slot does']
 ]
 
 function rule(list, id, title) {

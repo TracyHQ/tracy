@@ -1,7 +1,7 @@
 // The picture manifest `site-pictures/1` (ADR 0043): the one place its shape is defined. The picture step writes it,
 // the picture check grades it, and the mapping export and the write step read it. readPictures never throws: it returns
 // the valid entries as a "view" and every problem it found, so one bad entry cannot hide or crash the rules.
-import { backdropProblem, paintKindOf, paintProblem } from './paint.js'
+import { backdropProblem, paintKindOf, paintProblem } from '../lib/picture-paint/paint.js'
 export const PICTURES_VERSION = 'site-pictures/1'
 
 /** Where a frame's picture came from. */

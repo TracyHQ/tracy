@@ -11,7 +11,7 @@ const block = (title, value) => [`## ${title}`, '', JSON.stringify(value), '']
 
 /**
  * The fixed part: the whole plan, the cited facts, the quoted reviews, the slim kit view, the name slots and, when
- * there are any, the main menu dropdown slots.
+ * there are any, the plan label slots and the main menu dropdown slots.
  */
 export function fixedPart(input) {
   return [
@@ -28,6 +28,12 @@ export function fixedPart(input) {
       'The name slots the brand step hands over (write them as the home page seo entry)',
       input.nameSlots
     ),
+    ...(input.labels?.length
+      ? block(
+          "Label slots: the plan's label is a suggestion; keep it when it fits the slot, rewrite it when it does not",
+          input.labels
+        )
+      : []),
     ...(input.mainMenu?.length
       ? block('Main menu: the dropdown slots to write in the shared turn, under their parent', input.mainMenu)
       : [])

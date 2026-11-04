@@ -1,5 +1,5 @@
 // Formatted text slots: how many paragraphs and bullets each one shows, measured on the page (the content map's
-// markup when the page does not show it), and a sample that gives the first words of every part. Fabricated studio.
+// markup when the page does not show it), and a sample that gives every part whole, with its lengths. Fabricated studio.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { formatOf, formatTextSlots, partsOf, textFormatChecks } from '../template-kit/lib/text-format.mjs'
@@ -37,15 +37,15 @@ test('a sample splits into its paragraphs and bullets, whatever markup the CMS s
   assert.deepEqual(partsOf('Training ((br/))((span))route((/span))'), [{ kind: 'p', text: 'Training route' }])
 })
 
-test('counts come from the page when it shows the slot; the sample gives the first words of every part', () => {
+test('counts come from the page when it shows the slot; the sample gives every part whole', () => {
   const f = formatOf(QUOTE, { paragraphs: [P1, P2, 'Another block words'], bullets: [], texts: [P1, P2] })
   assert.equal(f.paragraphs, 2)
   assert.equal(f.bullets, 0)
   assert.equal(f.formatFrom, 'page')
   const lines = f.sample.split('\n')
   assert.equal(lines.length, 2)
-  assert.match(lines[1], /^We opened the Harbour Studio/)
-  assert.ok(lines[0].endsWith('…'), 'a long paragraph is cut after its first words')
+  assert.deepEqual(lines, [P1, P2], 'each paragraph whole, one per line, never cut')
+  assert.deepEqual(f.demoChars, { total: P1.length + 1 + P2.length, lead: null, bullets: [] })
 })
 
 test('a tab the page does not show is counted from the content map', () => {

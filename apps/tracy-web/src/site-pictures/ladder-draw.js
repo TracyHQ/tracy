@@ -24,11 +24,11 @@ import path from 'node:path'
 import sharp from 'sharp'
 import { outputSizeFor } from './cut-photo.js'
 import { backdropOf } from './cutout-backdrop.js'
-import { backdropComposite } from './cutout-backdrop-draw.js'
+import { backdropComposite } from '../lib/picture-paint/cutout-backdrop-draw.js'
 import { cutoutFile, groundFor } from './cutout-ground.js'
 import { askDrawer, aspectRatioFor, drawingText } from './drawer-call.js'
 import { fileStore, sha256Hex } from './file-store.js'
-import { PREVIEW_PALETTE, previewColour } from './paint.js'
+import { PREVIEW_PALETTE, previewColour } from '../lib/picture-paint/paint.js'
 
 /** A frame at least this many times wider than tall is a wide band, which a portrait owner photo may be extended to. */
 export const WIDE_BAND = 2

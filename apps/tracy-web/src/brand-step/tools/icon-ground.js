@@ -1,5 +1,5 @@
 // The plain ground the icon drawing is asked to sit on. Ported from the approved lab's icon-quantize.
-import { parseHexColour } from '../colour-math.js'
+import { parseHexColour } from '../../lib/brand-accent/colour-math.js'
 
 /**
  * Ground to use behind the icon when asking the model: the plain ground farthest from every requested colour,

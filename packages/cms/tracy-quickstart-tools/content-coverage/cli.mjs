@@ -26,8 +26,9 @@
 //
 // Exit: 0 the policy passes · 1 holes, page problems (or an incomplete run) hold Publish · 2 usage or run error.
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { COVERAGE_POLICY, judgeCoverage } from '../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
@@ -41,7 +42,9 @@ import { annotate, count } from './lib/items.mjs'
 import { createMatcher } from './lib/match.mjs'
 import { buildReport } from './lib/report-html.mjs'
 import { groupByCause } from './lib/root-cause.mjs'
+import { inlineMarkupBlock, inlineMarkupOf } from './lib/inline-markup.mjs'
 import { createShrinker } from './lib/shrink.mjs'
+import { readDump } from './lib/sql-dump.mjs'
 import { readSiteConfig } from './lib/site-config.mjs'
 import { measureSlotFit } from './lib/slot-fit.mjs'
 import { buildSourceIndex } from './lib/sources.mjs'
@@ -106,6 +109,24 @@ function reclassify(result, contract, siteUrl, o) {
   result.summary = summarize(result.pages)
   result.reclassifiedAt = new Date().toISOString()
   return result
+}
+
+/**
+ * A Joomla contract's inline markup against the database dump (lib/inline-markup.mjs), measured only: the map is not
+ * resampled here (resample.mjs does that). Null without a dump, on WordPress, or when php cannot run (said on stderr).
+ */
+function measureInlineMarkup(o, contract) {
+  const dump = o['db-dump']
+  if (contract.platform !== 'joomla' || typeof dump !== 'string' || !existsSync(dump)) return null
+  try {
+    const { tables } = readDump(dump, { changes: true })
+    const r = inlineMarkupOf({ map: structuredClone(contract.map), tables })
+    const sha256 = createHash('sha256').update(readFileSync(dump)).digest('hex')
+    return inlineMarkupBlock(r, { dump: { file: basename(dump), sha256 } })
+  } catch (error) {
+    console.error(`[content-coverage] inline markup not measured: ${error.message}`)
+    return null
+  }
 }
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
@@ -215,7 +236,13 @@ async function main() {
   const coverageFiles = [join(outDir, COVERAGE_FILE), ...(o.write ? [target] : [])]
   const judge = await runLabelJudge({ o, result, contract, outDir, chromium, previous, coverageFiles })
   const labelJudge = judge.block
-  const doc = buildCoverageFile({ result, contract, previous, labelJudge })
+  const doc = buildCoverageFile({
+    result,
+    contract,
+    previous,
+    labelJudge,
+    inlineMarkup: measureInlineMarkup(o, contract)
+  })
   writeFileSync(join(outDir, COVERAGE_FILE), `${JSON.stringify(doc, null, 2)}\n`)
   if (o.write) writeFileSync(target, `${JSON.stringify(doc, null, 2)}\n`)
   const verdict = judgeCoverage(doc, COVERAGE_POLICY)

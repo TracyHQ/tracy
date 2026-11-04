@@ -11,7 +11,12 @@ import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
 import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
 import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
 import { neutralKey } from './ids.mjs'
+import { pagesNotForCustomers, pageTitleChecks, settlePageTitles } from './page-titles.mjs'
 import { settleSettingSlots } from './setting-slots.mjs'
+import { settleSentenceGroups } from './sentence-groups.mjs'
+import { settleButtons } from './button-slots.mjs'
+import { settleContentPages } from './content-pages.mjs'
+import { settleStoredFields, storedFieldReport } from './stored-fields.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
 
@@ -25,7 +30,7 @@ function ownEntries(b) {
   return out.filter((s) => s?.id)
 }
 
-const FORMAT = ['type', 'role', 'sample', 'paragraphs', 'bullets', 'formatFrom']
+const FORMAT = ['type', 'role', 'sample', 'demoChars', 'inline', 'paragraphs', 'bullets', 'formatFrom']
 
 /** Each link's label is a slot of the block holding the link: its own, or a reference to the owning block's. */
 function labelSlots(kit, mapOf) {
@@ -147,9 +152,9 @@ function mainMenuRow(kit, mapOf, rowFit) {
 /**
  * Complete the kit from the contract: link label slots, contact fields, one limit per slot, the main menu row.
  * @param {object} kit changed in place
- * @param {{map: object, textFit?: object, rowFit?: object}} o
+ * @param {{map: object, textFit?: object, rowFit?: object, drives?: object}} o
  */
-export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = new Map() }) {
+export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = new Map(), drives = {} }) {
   const mapSlots = map.slots ?? []
   const mapOf = new Map(mapSlots.map((s) => [neutralKey(s.key), s]))
   linkLabelSlots(kit, map)
@@ -160,6 +165,11 @@ export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = 
   // After the limits: a setting slot borrows the limit of the line the page prints it beside.
   settleSettingSlots(kit, { map })
   mainMenuRow(kit, mapOf, rowFit)
+  settlePageTitles(kit, { map, drives })
+  settleSentenceGroups(kit, { map })
+  settleStoredFields(kit, { map, drives })
+  settleButtons(kit, { map })
+  settleContentPages(kit, { map })
   whatElseChanges(kit)
   return kit
 }
@@ -255,8 +265,18 @@ export function coverageGate(kit, { map, readings = new Map() }) {
   parts.contactFieldsUnresolved = contactFieldChecks(kit, fail)
   // 6. Shown words from a slot declared nowhere (the orphan check, counted here too).
   parts.orphanTexts = kit.checks?.orphanTexts ?? 0
+  // 7. Every page for customers has exactly one title slot (page-titles.mjs).
+  parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p) ? pageTitleChecks(kit, fail, { map }) : 0
   // How many shown text slots part 1 checked, so a gate at 0 over nothing is told from a covered kit.
-  kit.coverage = { shownTextSlots: checked, parts, failures }
+  const fields = storedFieldReport(kit)
+  const notForCustomers = pagesNotForCustomers(kit, map)
+  kit.coverage = {
+    shownTextSlots: checked,
+    parts,
+    failures,
+    ...(notForCustomers.length ? { notForCustomers } : {}),
+    ...(fields ? { fields } : {})
+  }
   for (const f of failures)
     kit.errors.push({ kind: 'coverage-gate', part: f.part, field: f.where, reason: f.reason })
   return Object.values(parts).reduce((a, n) => a + n, 0)

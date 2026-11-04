@@ -83,6 +83,8 @@ COPY apps/tracy-web/scripts/site-writer-bench.mjs ./scripts/site-writer-bench.mj
 COPY apps/tracy-web/scripts/site-pictures-bench.mjs ./scripts/site-pictures-bench.mjs
 #   site-pictures-reading-page.mjs: the reading page of a picture run's files (it needs sharp, which is here).
 COPY apps/tracy-web/scripts/site-pictures-reading-page.mjs ./scripts/site-pictures-reading-page.mjs
+#   write-step-bench.mjs: the write step bench, its trial sites and its runs (ADR 0044; bench only, the bench has no screen).
+COPY apps/tracy-web/scripts/write-step-bench.mjs ./scripts/write-step-bench.mjs
 # The design registry decides which Joomla template a picked inspiration actually builds with, and
 # the CANONICAL copy ships with the fleet's provision scripts (`tracy-host` carries that directory
 # whole) because that is where it is executed. This process only resolves against it, so it gets

@@ -804,6 +804,8 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   Site writer bench (migration 197, §8 *Site writer bench*): `site_writer_run` (plan, brief, kit and the rest of its inputs
   frozen by a trigger; at most one queued row), `site_writer_round` (rounds 0 to 2: the `copy` file, check, failure list
   sent, corrected entries applied), `site_writer_turn` (one row per model call, append-only), with the planner bench's shape.
+  Write step bench (migration 198, §8 *Write step bench*): `write_bench_site` (every trial site the bench made),
+  `write_bench_run` (one run with its write report; at most one running row per site).
   Website Opportunities (migration 125, §8): `wo_preference`, `wo_opportunity`, `wo_job`, `wo_job_attempt`,
   `wo_source`, `wo_media`, `wo_profile`, `wo_revision` (immutable, a trigger blocks UPDATE), `wo_build`. Migration 126: `wo_media.caption/alt/dhash/labels`, `wo_build.pictures` (immutable picture plan + receipts).
   Migration 175 (`/v1/demos`): `wo_public_demo` (one request: `Idempotency-Key`, fingerprint of the whole body, body snapshot, opportunity + demo action, `sponsored`/`reserved_cents`, cancellation), `wo_sponsor_setting` (one row: number of live demos per account, model budget), `wo_demo_usage.kind` adds `external`.
@@ -2317,6 +2319,20 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   hidden where the kit allows, else returned; person and any-real cut-outs are never drawn. No background removal model,
   no owner photo cut out, never a demo figure. A run on a plan with a specific cut-out does not start without the drawer
   door.
+
+### Write step bench (04/11/2026, [ADR 0044](docs/adr/0044-write-step-and-site-check.md))
+
+A trial bench for step 9 of the new build flow, run only from `apps/tracy-web/scripts/write-step-bench.mjs` inside the
+tracy-web container; no customer flow reaches it. `create-site` makes a trial site by the customer's doors and records it.
+`run` takes frozen files and one of those sites and writes them through the Apply door as the bench account, in the
+command's own process: no worker and no server route of its own. It checks the files and builds the owner table first, so
+a bad file or a dispute writes nothing, then sends one `content.contract` apply. Slots the plugin refuses are dropped and
+the rest sent again, since that door is all or nothing; a refusal that names no slot stops the run. This slice writes the
+site copy's mapping only: hide decisions, link targets and the export's extras are reported as `skipped`. The result is the
+write report `site-write-report/1`, kept on the run row. `cancel` sets a flag on the row, read between phases, and the
+row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tracy-web/src/write-step/`, its command line
+`apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
+(`site-copy/`, `brand-accent/`, `picture-paint/`).
 
 ## 9. Sign-in, seats, permissions
 

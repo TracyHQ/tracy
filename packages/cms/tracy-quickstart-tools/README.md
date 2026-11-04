@@ -273,6 +273,32 @@ are allowed, the audit version a file needs: 1.1.0 measures page hygiene, so a 1
 file measured on another map or lock is stale and counts as not measured. A release already
 published only warns.
 
+### `content-coverage/resample.mjs`: the inline markup of the samples, from the demo database
+
+A whole-unit text slot (`capture-contract.py --whole-units`: a title merged from several text pieces) captured before
+`--inline-markup` holds its words only: `More<br><span>Blogs</span>` became `More Blogs`, so the kit cannot tell that
+the template draws "Blogs" on a second line in the accent colour. This reads each text slot's stored value from the
+quickstart's database dump (the installer's `installation/sql/mysql/custom.sql` or a `database.sql[.gz]`, with the
+UPDATE and DELETE fixes appended after its INSERTs applied), takes the markup of the slot's element
+(`tracy-joomla-quickstart/scripts/unit-markup.php`, which loads HTML as the plugin's helper does) and counts
+`inlineMarkupLost`: a text slot whose stored value marks words inline (`br`, `span`, `strong`, `em`, `b`, `i`) while
+its sample marks none. No stand, no browser; it needs `php`.
+
+```
+node packages/cms/tracy-quickstart-tools/content-coverage/resample.mjs \
+  --contract <contract dir> --db-dump <custom.sql | database.sql[.gz]> [--write]
+```
+
+With `--write` it rewrites only the `sample` of the slots whose markup reads as the same words
+(`More((br/)) ((span))Blogs((/span))`; keys, roles, groups, limits and fits stay) and writes the `inlineMarkup` block
+(`checked`, `lost`, `lostSlots`, `mismatched`, the dump's name and sha256) into `content-coverage.json`. A coverage
+file that was current for the map is restamped to the new map (`restampedFrom` names the old digest): the audit
+compares samples by their words, so a new audit can only match more. A slot whose stored value is not its words is
+named (`mismatched`) and never written. A full audit given `--db-dump` measures the same block; without one it carries
+the previous block while the map is unchanged. Then settle the kit: `template-kit/cli.mjs samples` and
+`slot-roles --only sentences`, then `pack`. Exit: 0 nothing lost, 1 a slot still loses its markup or a stored value
+is not its words, 2 usage or file error. `test/content-coverage-inline-markup.test.mjs` covers it.
+
 ### `content-coverage/verify-viewer.mjs` — look at the content map on the real pages
 
 A page for a person to check a content map with their eyes, run after `--fit` has written the map. One block
@@ -312,6 +338,32 @@ the kit must match the contract it describes). Read-only on the site, but for on
 back as it was (fixed CMS text, below). One file, `template-kit.json`, beside
 `images/`, in CMS-neutral words: a block is `block-<n>`, `header` or `body-<page>`; the content map key stays only
 in a block's `source`.
+
+### Page titles, sentences and stored fields
+
+The coverage gate (run by `cli.mjs assemble`) settles three things from what the page prints; none moves a slot, a list or a role.
+
+- `pages[].titleSlot`: the one slot that prints the page title. Part `pageTitleSlots` fails a page with none or with a tie.
+- `blocks[].sentences`: pieces of one stored field in one element, printed as one sentence around a highlight. The copy check (W12) reads them joined.
+- `blocks[].buttons`: every button a visitor can see, with `labelSlot`, `urlSlot`, `label`, `link`, `target`. Each block's button stands here even when a link's `labelId` names another block's field of the same words. A write step hides one no file speaks for.
+- `site.contentPages[]`: how the template presents a content page: the category menu item its item pages are opened under (`menuItem`, `route`, `layout`, `pages`). A page the write step creates takes that route.
+- `storedFields[]`: every text, url or image field the template stores, with `listedIn` (its block, or null). `coverage.fields` reports `notListed` and `drivingSeveralControls`, and does not block.
+
+What a stored field really drives is measured on a **throwaway restored site**, never one in use: the command writes a marker into each field, reads the pages, and puts the value back.
+
+```
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs measure-fields --site <url> --out <kit dir> \
+  --contract <contract dir> --db-command "<database client prefix>" --scratch-site
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs slot-roles --out <kit dir> --contract <contract dir>
+```
+
+`samples --out <kit dir> --contract <contract dir>` gives every text slot of a written kit its whole demo text and
+`demoChars` and `inline` from the content map (kits made before 3.1.0 carry samples cut at their first words); `slot-roles --only
+sentences` settles only the sentence groups. A content map captured without `--inline-markup` is resampled first
+(`content-coverage/resample.mjs --write`): the kit can only list the inline marks the map's samples hold. Every settle command stamps the kit's `tool` (version in
+`template-kit/lib/version.mjs`) and `settledAt`; none touches an image, so an approval stays valid.
+
+Run `pack` after. Without a measurement a tie between two slots of a page stays a failure of `pageTitleSlots`, by name.
 
 ### Make a kit for a new template
 
@@ -417,7 +469,19 @@ list, kept by every later run).
   `listLimitsDiffering`, `showcasePagesNotExcluded`, `mixedPageGroups`, `detailPagesOutsideListing`,
   `representativesNotListing`, `slotsInTwoBlocks`, `orphanTexts`, `paragraphsMissing`, `fixedTextIdsInvalid`, the
   coverage gate `slotCoverage`, and `linksWithoutLabel` (`lib/link-label-reasons.mjs`: a link that shows words with
-  neither a `labelId` naming a slot of its own block nor a `fixedLabel` reason)),
+  neither a `labelId` naming a slot of its own block nor a `fixedLabel` reason), and the slot shape checks counted
+  against the content map (`lib/slot-shape-checks.mjs`, by `build` and every settle command, their first failing
+  slots or blocks in `coverage.failures`): `samplesCut` (a text slot whose `sample` or `demoChars` is not the whole
+  demo text), `sentenceGroupsUnsettled` (a block whose `sentences` differ from what the sentence-groups pass gives),
+  `inlineEmphasisMissing` (a text slot whose demo marks words inline with no matching `inline`) and
+  `inlineMarkupLost` (content map text slots whose stored value marks words inline while their sample does not, read
+  from the `inlineMarkup` block `content-coverage/resample.mjs` writes into `content-coverage.json`; a map with a
+  whole-unit text slot and no such block counts 1), and the reach checks (`lib/reach-checks.mjs`, by `build` and every settle
+  command, from the kit alone): `deadControls` (a link with words that acts inside the page and has no door: nothing it opens, no
+  address, no menu item; the template prints it with a dead address, so a plan cannot send it anywhere), `mapLocationUnmapped`
+  (a button that opens a map with no `slotId`, or a block whose read found an embedded map, `embeddedMaps` from the read pass's
+  `maps`, with no map-location setting slot on its entity) and `phoneNotCallable` (a `contact.phone` slot, or a contact block's
+  printed phone or mobile field, that no link of its block shows as its words, so no address can make it `tel:`)),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the
@@ -510,8 +574,13 @@ list, kept by every later run).
      (`<block>.picture-N`, `shownAs`, `painter`, `paintedBehind`, `twinOf` when the same painter shows it in an
      earlier block, `canHide: true` for a background, which takes no room) with `writable: false` and the reason,
      since no content map slot holds it, unless a setting slot does (a template background, below);
-     `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom` and a sample with the first
-     words of each paragraph and bullet (`lib/text-format.mjs`), read from the block's real page, including the row
+     `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom`, a `sample` with the whole
+     demo text, one paragraph or `- ` bullet per line (cut only past 1500 characters), and `demoChars` (`total`,
+     `lead`, `bullets`: plain-text lengths of the whole text, the paragraphs before the list, each bullet), so a writer
+     aims at the demo's real length, and `inline` when the demo marks words inside the text (`[{tag, attrs, text,
+     at}]` for a `span`, `strong` and the like, `at` being `start`, `end` or `inside`; `{tag: 'br'}` for a line break;
+     `lib/inline-marks.mjs`) so the writer can mark the same words (`lib/text-format.mjs`; `cli.mjs samples` settles a
+     written kit again), read from the block's real page, including the row
      template of a list with no sample row and the items of a card field; `mainMenuRowLimitMissing`, the main menu
      group has `rowLimit`: every top-level label filled together in the page until one wraps, drops to another row
      or pushes past the header, at 1440 and every narrower width down to where the row folds (`read-row-fit.js`,
@@ -535,7 +604,7 @@ list, kept by every later run).
   (`body_bg_img` in `etc/site/<profile>.json`, read by the adapter): one slot `site.body-background` with
   `writeTo: {action: "template.siteSettings", template, key, file}`, `canHide: true` and the `frames` it covers; every
   frame painted behind with that picture says `writable: true` and `slotId`, its twins included. Tracy writes it with
-  `apps/tracy-web/src/sites/brief-engines/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
+  `apps/tracy-web/src/lib/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
   `cli.mjs setting-slots --out <dir> --contract <dir> --db-command <prefix> [--webroot <dir>]` settles a written kit
   again (no browser, no image; without `--webroot` the background slot the kit has is kept), then `pack`.
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and

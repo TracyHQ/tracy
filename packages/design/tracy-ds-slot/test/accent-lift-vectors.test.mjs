@@ -1,6 +1,6 @@
 // The brand step's neutral rule and accent lift (03/11/2026, #317/#318). The vector table below is repeated
 // VERBATIM in apps/tracy-web/test/brand-gate-colour-math.test.mjs: the slot (colour-lift.mjs) and the gate
-// (brand-step/colour-math.js) are twins of one approved rule, and the same table in both suites is what stops them
+// (lib/brand-accent/colour-math.js) are twins of one approved rule, and the same table in both suites is what stops them
 // drifting. The expected values come from running the approved lab lift on these grounds.
 import assert from 'node:assert/strict'
 import { dirname, resolve } from 'node:path'

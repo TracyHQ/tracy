@@ -16,6 +16,7 @@
         "$TURBO_ROOT$/packages/wo/website-opportunities/**",
         "$TURBO_ROOT$/scripts/slot-roles/**",
         "$TURBO_ROOT$/packages/cms/tracy-wordpress-quickstart/scripts/**",
+        "$TURBO_ROOT$/packages/cms/tracy-joomla-quickstart/scripts/**",
         "$TURBO_ROOT$/packages/cms/tracy-seeder/src/apply-wordpress-contract.mjs",
         "!$TURBO_ROOT$/**/.turbo/**",
         "!$TURBO_ROOT$/**/node_modules/**",

@@ -1,6 +1,6 @@
 /**
  * The brand step's neutral test and accent lift: a frozen port of the approved lab rules, re-exported by
- * colour.mjs. Its twin is `apps/tracy-web/src/brand-step/colour-math.js` (the save_brand_file gate recomputes the
+ * colour.mjs. Its twin is `apps/tracy-web/src/lib/brand-accent/colour-math.js` (the save_brand_file gate recomputes the
  * same lift); the shared vector table in both test suites is the drift guard. Change both or neither.
  * Strict #rrggbb only, rounding exactly as the lab does (contrast to two decimals).
  */

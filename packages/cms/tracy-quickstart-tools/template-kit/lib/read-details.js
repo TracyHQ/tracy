@@ -327,10 +327,20 @@ export function readDetails() {
       .filter((li) => shown(li) && !li.querySelector('li'))
       .map((li) => (li.innerText || '').replace(/\s+/g, ' ').trim())
       .filter((t) => t.length >= 2)
+    // An embedded map in the block: a frame opening a maps address, or an element carrying coordinates (reach-checks.mjs).
+    const MAPS_URL =
+      /(?:google\.[a-z.]+\/maps|maps\.google\.|openstreetmap\.org|maps\.apple\.com|bing\.com\/maps)/i
+    const maps = []
+    for (const f of root.querySelectorAll('iframe[src]'))
+      if (MAPS_URL.test(f.getAttribute('src') || ''))
+        maps.push({ what: `iframe ${String(f.getAttribute('src')).slice(0, 120)}` })
+    for (const el of root.querySelectorAll('[data-lat],[data-latitude],[data-lng],[data-longitude]'))
+      maps.push({ what: `${el.tagName.toLowerCase()} with coordinates` })
     // A listing's page-size control (`limit`, the CMS's own name for it): the number of items a page shows.
     const limit = root.querySelector('select[name="limit"], select[name$="[limit]"]')
     const pageSizeControl = limit && Number(limit.value) > 0 ? Number(limit.value) : null
     out[root.getAttribute('data-kit-block')] = {
+      maps: maps.slice(0, 5),
       ...(pageSizeControl ? { pageSizeControl } : {}),
       links,
       texts: [...texts],

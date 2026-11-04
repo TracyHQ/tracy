@@ -17,6 +17,8 @@ import { DemoReadCache, keptForFinding, pagesWithFindings } from './demo-read-ca
 import { qaDeadline } from './demo-qa-deadline.js'
 import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, READ_AT_ONCE, runDemoQa } from './demo-qa.js'
 import { readResidueInPage } from './demo-residue-page.js'
+import { withLinkStatus } from './demo-qa-links.js'
+import { readPageMeasures } from './demo-qa-page-measures.js'
 import { selfNamedServer } from './self-named.js'
 import { visionSlot } from './vision-stream.js'
 import {
@@ -77,6 +79,7 @@ export async function readDemoPage(
     discover = false,
     wordmark = null,
     logoPicture = null,
+    measurePages = false,
     loadCapMs = DEMO_QA_LOAD_CAP_MS,
     gotoMs = GOTO_MS,
     previous = null
@@ -346,6 +349,9 @@ export async function readDemoPage(
     read.extraLinks = navPathsOf(read.extraHrefs ?? [], url, ownHosts, 12)
     delete read.navHrefs
     delete read.extraHrefs
+    // The site check's page measures at the desktop width, taken here and again at the phone width below.
+    const measures = []
+    if (measurePages) measures.push(await readPageMeasures(page, 1440))
     await measureOverImage(page, read.contrast ?? [], 'under')
     await page.setViewportSize({ width: 390, height: 844 })
     await page.waitForTimeout(500)
@@ -387,6 +393,10 @@ export async function readDemoPage(
         return { scrollWidth: document.documentElement.scrollWidth, widest, phoneImages }
       })
     )
+    if (measurePages) {
+      measures.push(await readPageMeasures(page, 390))
+      read.measures = measures.filter(Boolean)
+    }
     // Said to the read cache only (`makeDemoQa` takes it off the read): whether this page's read may stand for a finding.
     read.dynamic = dynamic
     return read
@@ -423,18 +433,29 @@ const OVER_HIDE = 'data-tracy-qa-hide'
  * @param {import('playwright').Page} page
  * @param {{overImage?: boolean, over?: number}[]} contrast - the page read's probes; `key` is added to each.
  * @param {'under' | 'underPhone'} key
+ * @param {{ attr?: string, max?: number, ownWords?: boolean }} [options] the attribute the probes are tagged with, how many are
+ *   shot, and whether the shot covers the element's own words only rather than all it holds
  */
-async function measureOverImage(page, contrast, key) {
-  const probes = contrast.filter((s) => s.overImage && Number.isInteger(s.over)).slice(0, OVER_IMAGE_MAX)
+export async function measureOverImage(
+  page,
+  contrast,
+  key,
+  { attr = 'data-tracy-qa-over', max = OVER_IMAGE_MAX, ownWords = false } = {}
+) {
+  const probes = contrast.filter((s) => s.overImage && Number.isInteger(s.over)).slice(0, max)
   for (const s of probes) {
     try {
       const box = await page.evaluate(
-        ([n, hide]) => {
-          const el = document.querySelector(`[data-tracy-qa-over="${n}"]`)
+        ([n, hide, tag, own]) => {
+          const el = document.querySelector(`[${tag}="${n}"]`)
           if (!el) return null
           el.scrollIntoView({ block: 'center', inline: 'nearest' })
           const range = document.createRange()
-          range.selectNodeContents(el)
+          // A button inside the same box is no part of the ground under the words.
+          const node =
+            own && [...el.childNodes].find((c) => c.nodeType === 3 && c.textContent.trim().length > 1)
+          if (node) range.selectNode(node)
+          else range.selectNodeContents(el)
           const r = range.getBoundingClientRect()
           const left = Math.max(0, r.left)
           const top = Math.max(0, r.top)
@@ -480,7 +501,7 @@ async function measureOverImage(page, contrast, key) {
           el.setAttribute(hide, '')
           return { clip: { x: left, y: top, width, height }, frame }
         },
-        [s.over, OVER_HIDE]
+        [s.over, OVER_HIDE, attr, ownWords]
       )
       if (box === null) continue
       let shot = null
@@ -929,8 +950,15 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
   // A <summary> is an FAQ's question: template copy like any heading.
   const BLOCK = 'p,h1,h2,h3,h4,h5,h6,li,td,th,figcaption,blockquote,dt,dd,address,summary'
   const blocks = []
-  for (const el of document.body.querySelectorAll(BLOCK)) {
+  // A div holding words of its own is read too: a template prints a whole hero heading in one (JA Boxing's service pages,
+  // 04/11/2026), and a baseline of paragraphs and headings only never sees it.
+  for (const el of document.body.querySelectorAll(`${BLOCK},div`)) {
     if (blocks.length >= 800 || !visible(el) || el.querySelector(BLOCK)) continue
+    if (
+      el.tagName === 'DIV' &&
+      !Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim())
+    )
+      continue
     const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
     // A form's own words (labels, consent, sign-in prompts) are the form working, not the template's copy.
     const count = text ? text.split(' ').length : 0
@@ -997,6 +1025,8 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     const opens = nav && Boolean(a.closest('li')?.querySelector(SUBMENU))
     // A button inside a form submits it from script (`javascript:void(0)`): it goes to the form's own action.
     const submits = Boolean(a.closest('form'))
+    // A click handler in the markup is where this link goes: `href` only keeps it a link.
+    const scripted = Boolean(a.getAttribute('onclick')?.trim())
     ctas.push({
       href: a.getAttribute('href') ?? '',
       text: text.slice(0, 80),
@@ -1006,6 +1036,7 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       navigation,
       ...(opens ? { opens } : {}),
       ...(submits ? { submits } : {}),
+      ...(scripted ? { scripted } : {}),
       ...(nav &&
       a.matches(
         '[role="button"][aria-expanded], [aria-controls][aria-expanded], [data-toggle="dropdown"], [data-bs-toggle="dropdown"]'
@@ -1750,6 +1781,17 @@ export async function makeDemoQa({
         asked,
         base,
         readAtOnce: tabsAtOnce,
+        // Link status is asked of the site at the address the pages were read from (`demo-qa-links.js`).
+        checkLinks: (measures, { deadlineAt }) =>
+          withLinkStatus(measures, {
+            signal,
+            deadlineAt,
+            base,
+            serveFrom,
+            serveFromIsProxy,
+            proxySiteLabel,
+            siteHosts: asked.host ? [asked.host] : []
+          }),
         read: async (url, path, options) => {
           signal.throwIfAborted()
           const page = await context.newPage()
@@ -1760,7 +1802,8 @@ export async function makeDemoQa({
             options?.discover === true,
             options?.wordmark ?? null,
             options?.logoPicture ?? null,
-            options?.sentinels ?? null
+            options?.sentinels ?? null,
+            options?.measurePages === true
           ])
           // A full read reads every page anew; it still says which had not changed since their last read (#247).
           const held = lastReads.get(key)

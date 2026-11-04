@@ -86,7 +86,7 @@ only accent it knows is the template's (measured on a real run: a padel club's t
 template's red), and even the right colour baked into a file goes wrong as soon as the customer changes the Design
 system. So the colour of a painted picture is a ROLE, resolved when the site is written.
 
-- **The roles** (`site-pictures/paint.js`, the smallest set that covers the template's demo icons and tiles):
+- **The roles** (`lib/picture-paint/paint.js`, the smallest set that covers the template's demo icons and tiles):
   `accent` (the Design system accent), `on-accent` (words on the accent), `text` (the dark neutral of body text),
   `on-dark` (the light neutral of words on a dark ground), `surface` (the dark surface of the Design system, the
   ground of its dark sections; a cut-out backdrop's disc).

@@ -1,8 +1,13 @@
 // Read a contract's content map and coverage file for the kit tool. The site's front page may carry any alias
 // ("homepage"), and its address is still `/`; the presentation lock says which menu item is the front page. Every
 // page path in the tool starts from a map route, so the route is settled here once, on the way in.
+// A released content map is sealed (ADR 0038 decision 6, ADR 0044): the demo's inline markup it lost is carried beside it,
+// in content-coverage.json `inlineMarkup.samples`, and taken here as the slot's sample when the map's own has none.
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+
+import { normText } from '../../content-coverage/lib/normalize.mjs'
+import { inlineOf } from './inline-marks.mjs'
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 const readIf = (file) => (existsSync(file) ? readJson(file) : null)
@@ -58,12 +63,41 @@ export function coverageWithHomeRoute(coverage, map, lock) {
   }
 }
 
+/** The tags whose loss changes what a visitor sees of a title, as `content-coverage/lib/inline-markup.mjs` counts them. */
+const KEPT_TAGS = new Set(['br', 'span', 'strong', 'em', 'b', 'i'])
+const marks = (sample) => inlineOf(String(sample ?? '')).some((m) => KEPT_TAGS.has(m.tag))
+
+/**
+ * The content map with each text slot's inline markup taken from the map first and from the coverage file's
+ * `inlineMarkup.samples` second: a sidecar sample replaces a map sample only when the map's marks nothing and both read
+ * as the same words. A map that needs nothing comes back as it is.
+ * @param {object} map
+ * @param {object | null} coverage content-coverage.json
+ */
+export function withInlineMarkup(map, coverage) {
+  const samples = coverage?.inlineMarkup?.samples
+  if (!samples || typeof samples !== 'object') return map
+  let taken = 0
+  const slots = (map.slots ?? []).map((s) => {
+    const markup = samples[s.key]
+    if (s.type !== 'text' || typeof markup !== 'string' || marks(s.sample)) return s
+    if (normText(markup) !== normText(s.sample)) return s
+    taken++
+    return { ...s, sample: markup }
+  })
+  return taken ? { ...map, slots } : map
+}
+
+/** @param {string} contract the contract folder: its content map with the inline markup carried beside it */
+export const readContractSamples = (contract) =>
+  withInlineMarkup(
+    readJson(join(contract, 'content-map.json')),
+    readIf(join(contract, 'content-coverage.json'))
+  )
+
 /** @param {string} contract the contract folder */
 export const readContractMap = (contract) =>
-  withHomeRoute(
-    readJson(join(contract, 'content-map.json')),
-    readIf(join(contract, 'presentation-lock.json'))
-  )
+  withHomeRoute(readContractSamples(contract), readIf(join(contract, 'presentation-lock.json')))
 
 /** @param {string} contract the contract folder */
 export const readContractCoverage = (contract) =>

@@ -184,6 +184,8 @@ export function demoQaBody(body) {
     // A check after the first: pages whose document did not change keep their last read (`readDemoPage` `previous`).
     incremental: body.incremental === true,
     measureFrames: body.measureFrames === true,
+    // The site check's browser measures (`pageMeasures`): off unless asked, so no other caller gets or pays for them.
+    measurePages: body.measurePages === true,
     plan: planned,
     routes: [
       ...new Set(
@@ -2626,8 +2628,8 @@ export function checkCtaReal(
       }
       if (href === '' || href === '#' || /^javascript:/i.test(href)) {
         // A nav item that opens its own submenu goes somewhere: the submenu (`demo-qa-browser.js` `opens`); a
-        // button inside a form submits that form.
-        if ((cta.nav && cta.opens) || cta.submits) continue
+        // button inside a form submits that form; a link with a click handler runs it.
+        if ((cta.nav && cta.opens) || cta.submits || cta.scripted) continue
         findings.push({ ...where, problem: 'goes nowhere' })
         continue
       }
@@ -3989,7 +3991,14 @@ function judgeWith(reads, asked, routeReads = []) {
  */
 export const READ_AT_ONCE = 1
 
-export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce = READ_AT_ONCE }) {
+export async function runDemoQa({
+  asked,
+  base,
+  read,
+  now = Date.now,
+  readAtOnce = READ_AT_ONCE,
+  checkLinks = null
+}) {
   const started = now()
   const origin = new URL(base).origin
   const sentinels = Object.fromEntries(
@@ -4009,7 +4018,8 @@ export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce 
     sentinels,
     discover: asked.discover,
     wordmark: asked.wordmark ?? null,
-    logoPicture: asked.logoPicture ?? null
+    logoPicture: asked.logoPicture ?? null,
+    measurePages: asked.measurePages === true
   }
   const pages = [...asked.pages]
   /** @type {Map<string, 'home' | 'asked' | 'plan' | 'nav' | 'extra'>} */
@@ -4105,7 +4115,7 @@ export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce 
     !reads.some((r) => routeKey(r.path) === routeKey(post)) &&
     now() - started <= (asked.budgetMs ?? Infinity)
   ) {
-    const r = await read(new URL(post, base).href, post, { ...options, discover: false })
+    const r = await read(new URL(post, base).href, post, { ...options, discover: false, measurePages: false })
     const skipped = notAPage(r, post, 'post')
     visited.push({
       path: post,
@@ -4140,7 +4150,9 @@ export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce 
     const results = await Promise.all(
       wave.map((path) => {
         const url = new URL(path, base)
-        return url.origin === origin ? read(url.href, path, { ...options, discover: false }) : null
+        return url.origin === origin
+          ? read(url.href, path, { ...options, discover: false, measurePages: false })
+          : null
       })
     )
     for (const [k, path] of wave.entries()) {
@@ -4162,7 +4174,11 @@ export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce 
   const wordmark = reads.find((r) => r.wordmark)?.wordmark ?? null
   const fittedLogo = reads.find((r) => r.fittedLogo)?.fittedLogo ?? null
   const postFindings = postRouteFindings(asked.postRoutes ?? [], visited, reads)
+  const measured = asked.measurePages
+    ? await pageMeasuresOf(reads, { checkLinks, deadlineAt: started + (asked.budgetMs ?? 240_000) + 10_000 })
+    : null
   return {
+    ...measured,
     checks: judgeWith(reads, { ...asked, residue, postRouteFindings: postFindings }, routeReads),
     ...(residue ? { residue } : {}),
     ...(wordmark ? { wordmark } : {}),
@@ -4180,6 +4196,20 @@ export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce 
     visited,
     durationMs: now() - started
   }
+}
+
+/**
+ * One entry per page read and width (`demo-qa-page-measures.js`), the same-site links with their status when a checker
+ * is given (`demo-qa-links.js`). A page with no measures (it did not open) has no entry: the judge sees the page in
+ * `visited`.
+ */
+async function pageMeasuresOf(reads, { checkLinks, deadlineAt }) {
+  const entries = reads
+    .filter((r) => !r.post)
+    .flatMap((r) => (r.measures ?? []).map((m) => ({ path: r.path, ...m })))
+  if (!checkLinks) return { pageMeasures: entries.map((e) => ({ ...e, links: [] })) }
+  const { measures, summary } = await checkLinks(entries, { deadlineAt })
+  return { pageMeasures: measures, pageMeasuresSummary: summary }
 }
 
 /** The site's path of the first post a card of these reads links (its title's or its date's), or null. */

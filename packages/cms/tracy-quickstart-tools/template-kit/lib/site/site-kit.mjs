@@ -134,7 +134,7 @@ export function buildSite({ map, adapter, reads, logoReads, notFound, styles, ht
     pageId: r.pageId,
     path: r.path,
     ...h1Source({
-      h1s: r.h1s,
+      h1s: r.h1s?.map((h) => ({ ...h, block: h.block ? idOf(h.block, r) : null })),
       titleShownAs: r.titleShownAs
         ? { ...r.titleShownAs, block: r.titleShownAs.block ? idOf(r.titleShownAs.block, r) : null }
         : null,

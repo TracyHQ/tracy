@@ -11,7 +11,7 @@ import { initialsAvatar } from '../lib/initials-avatar.js'
 import { cutPhoto, outputSizeFor } from './cut-photo.js'
 import { darkerFirst } from './darken.js'
 import { addTwins, hiddenEntry, pendingEntry, placedEntry } from './frame-entries.js'
-import { INITIALS_PAINT, previewColour } from './paint.js'
+import { INITIALS_PAINT, previewColour } from '../lib/picture-paint/paint.js'
 import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
 import { indexInputs } from './picture-check/inputs-index.js'
 

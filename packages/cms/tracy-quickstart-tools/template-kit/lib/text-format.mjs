@@ -1,11 +1,12 @@
-// Formatted text slots: how many paragraphs and bullets a text slot shows, and a sample a planner can read whole.
-// A slot of several paragraphs or a bullet list gives the first words of every part, never one cut of its first
-// characters, so a planner sees how the content is laid out before writing it. Counted on the page (the read pass's
-// shown paragraphs and bullets) when the page shows the slot, else from the content map's markup.
+// Formatted text slots: how many paragraphs and bullets a text slot shows, and its whole demo text as a sample. A slot
+// of several paragraphs or a bullet list gives one part per line, a bullet marked `- `, so a planner sees how the
+// content is laid out and how long each part is; `demoChars` counts the plain text of each part. Counted on the page
+// (the read pass's shown paragraphs and bullets) when the page shows the slot, else from the content map's markup.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
+import { inlineOf } from './inline-marks.mjs'
 
-const WORDS = 8 // first words of each part in the sample
-const WHOLE = 60 // a single short part is given whole
+// A sample longer than this (a long article body) is cut, with an ellipsis; `demoChars` still counts the whole text.
+export const SAMPLE_CAP = 1500
 
 const clean = (s) =>
   String(s ?? '')
@@ -34,20 +35,39 @@ export function partsOf(sample) {
   return parts
 }
 
-/** The sample a planner reads: every part's first words, a bullet marked `- `, one part per line. */
-function sampleOfParts(parts) {
-  if (parts.length === 1 && parts[0].kind === 'p' && parts[0].text.length <= WHOLE) return parts[0].text
-  return parts
-    .map((p) => {
-      const words = p.text.split(' ')
-      const head = words.slice(0, WORDS).join(' ') + (words.length > WORDS ? '…' : '')
-      return p.kind === 'li' ? `- ${head}` : head
-    })
-    .join('\n')
+/** The sample a planner reads: every part whole, a bullet marked `- `, one part per line; cut at SAMPLE_CAP. */
+export function sampleOfParts(parts) {
+  const text = parts.map((p) => (p.kind === 'li' ? `- ${p.text}` : p.text)).join('\n')
+  return text.length > SAMPLE_CAP ? `${text.slice(0, SAMPLE_CAP).trimEnd()}…` : text
 }
 
 /**
- * `{paragraphs, bullets, formatFrom, sample}` of a text slot. `page`: the block's shown paragraphs and bullets
+ * The lengths of the demo text, on plain text with markup removed (as the writer's limit counts): `total` of every
+ * part joined by one space, `lead` of the paragraphs before the bullet list (null without a list or without words
+ * before it), `bullets` of each bullet.
+ * @param {{kind: 'p'|'li', text: string}[]} parts
+ */
+export function demoCharsOf(parts) {
+  const first = parts.findIndex((p) => p.kind === 'li')
+  const before = first > 0 ? parts.slice(0, first).map((p) => p.text) : []
+  return {
+    total: parts.map((p) => p.text).join(' ').length,
+    lead: before.length ? before.join(' ').length : null,
+    bullets: parts.filter((p) => p.kind === 'li').map((p) => p.text.length)
+  }
+}
+
+/** A kit sample read back into parts: one per line, a line starting `- ` a bullet (what `sampleOfParts` writes). */
+export function partsOfSample(sample) {
+  return String(sample ?? '')
+    .split('\n')
+    .map((l) => l.replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .map((l) => (l.startsWith('- ') ? { kind: 'li', text: l.slice(2) } : { kind: 'p', text: l }))
+}
+
+/**
+ * `{paragraphs, bullets, formatFrom, sample, demoChars}` of a text slot. `page`: the block's shown paragraphs and bullets
  * (whole) and shown texts from the read pass. A shown paragraph or bullet belongs to the slot when its words are in
  * the slot's sample; a slot shown as a single text (a heading) is one paragraph.
  * @param {string} sample
@@ -71,7 +91,12 @@ export function formatOf(sample, page = {}) {
     const x = normText(t)
     return x === n || (x.length >= 12 && n.includes(x))
   })
-  const base = { sample: sampleOfParts(parts) }
+  const inline = inlineOf(sample)
+  const base = {
+    sample: sampleOfParts(parts),
+    demoChars: demoCharsOf(parts),
+    ...(inline.length ? { inline } : {})
+  }
   const li = parts.filter((p) => p.kind === 'li').length
   if (n && (shownP || shownLi || shownText)) {
     // A reading that did not list bullets says nothing about them: the content map's count stands.
@@ -94,6 +119,12 @@ export function textSlotsOf(b) {
     ]),
     ...(b.demoOwned ?? [])
   ].filter((s) => s.type === 'text')
+}
+
+/** The sample of a text slot from a raw content map sample: every part whole, its lengths and its inline marks. */
+export const sampleOf = (raw) => {
+  const parts = partsOf(raw)
+  return { sample: sampleOfParts(parts), demoChars: demoCharsOf(parts), inline: inlineOf(raw) }
 }
 
 /** Self-check: a declared text slot without its paragraph and bullet counts. Returns how many. */

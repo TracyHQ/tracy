@@ -18,7 +18,7 @@ import { isChangeList } from '../lib/bench-answer.js'
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { openKit } from '../lib/template-kit-source.js'
 import { SITE_WRITER_STORE } from './bench-store.js'
-import { openContentMap } from './content-map-source.js'
+import { openContentMap } from '../lib/content-map-source.js'
 import {
   applyValidChanges,
   asChangeList,
@@ -29,7 +29,7 @@ import {
   WHOLE_COPY_MESSAGE
 } from './copy-changes.js'
 import { CHECKER_VERSION, checkCopy, failureListText } from './copy-check/check-copy.js'
-import { indexInputs } from './copy-check/inputs-index.js'
+import { indexInputs } from '../lib/site-copy/inputs-index.js'
 import { siteWriterDoor } from './door.js'
 import { writerInput } from './writer-input.js'
 import { writerPrompt } from './writer-prompt.js'

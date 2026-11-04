@@ -13,6 +13,7 @@ import { measuredMin } from './min-evidence.mjs'
 import { matchRepeat, ruleOneMin } from './rows.mjs'
 import { addIconSlots } from './icon-slots.mjs'
 import { networkOf } from './site/helpers.mjs'
+import { sampleOf } from './text-format.mjs'
 
 const esc = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -22,6 +23,9 @@ const short = (s, n = 60) => {
     .trim()
   return t ? t.slice(0, n) : null
 }
+// A text slot's sample is the whole demo text (cut only past SAMPLE_CAP, a long article body): the writer aims its
+// length at it. Formatted samples (one part per line) are set later by formatTextSlots; an image path stays short.
+const sampleOfSlot = (x) => (x.type === 'text' ? sampleOf(x.sample).sample || null : short(x.sample))
 
 /**
  * The block's shown links, one per position (links repeating a label and an address are each kept), each with the
@@ -105,7 +109,7 @@ export function buildBlock({
           .filter((s) => String(s.group?.id ?? '') === gid)
           .map((s) => ({
             ...slotOut(s),
-            ...(s.type === 'image' || s.type === 'url' ? {} : { sample: short(s.sample) })
+            ...(s.type === 'image' || s.type === 'url' ? {} : { sample: sampleOfSlot(s) })
           }))
       }))
       const mapMax = g.max ?? g.items ?? null
@@ -293,13 +297,13 @@ export function buildBlock({
   })
   const demoOwned = slots
     .filter((s) => isFactRole(s.role) || (id === 'header' && String(s.role ?? '').startsWith('business.')))
-    .map((s) => ({ id: neutralKey(s.key), role: s.role, sample: short(s.sample) }))
+    .map((s) => ({ id: neutralKey(s.key), role: s.role, sample: sampleOfSlot(s) }))
   for (const { slot, text, how } of shownContent)
     if (!demoOwned.some((d) => d.id === neutralKey(slot.key)))
       demoOwned.push({
         id: neutralKey(slot.key),
         role: slot.role ?? null,
-        sample: short(slot.sample),
+        sample: sampleOfSlot({ ...slot, type: 'text' }),
         kind: 'text',
         shownAs: short(text),
         matched: how
@@ -425,7 +429,7 @@ const slotOut = (x) => ({
   role: x.role ?? null,
   type: x.type,
   ...(x.maxCharacters != null ? { maxCharacters: x.maxCharacters } : {}),
-  ...(x.type === 'url' ? {} : { sample: short(x.sample) })
+  ...(x.type === 'url' ? {} : { sample: sampleOfSlot(x) })
 })
 
 /** The path of the map page an entity opens, or null. */

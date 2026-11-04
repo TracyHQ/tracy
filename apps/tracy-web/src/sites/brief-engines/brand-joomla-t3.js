@@ -14,7 +14,7 @@
  *
  * 🔒 EVERY OTHER PARAM IS KEPT: the row is read, the few keys changed, and the whole params written back.
  */
-import { darkSpotsOf, roleOf, variantFor } from './brand-joomla-places.js'
+import { darkSpotsOf, roleOf, variantFor } from '../../lib/brand-joomla-places.js'
 
 /** Template folders of Joomla itself, never the site's design. */
 const CORE = new Set(['atum', 'cassiopeia', 'cassiopeia_extended', 'system'])

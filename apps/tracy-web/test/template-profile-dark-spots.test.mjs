@@ -7,7 +7,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { profileTableProblems, TEMPLATE_PROFILES, templateProfileOf } from '../src/lib/template-profiles.js'
-import { darkSpotsOf } from '../src/sites/brief-engines/brand-joomla-places.js'
+import { darkSpotsOf } from '../src/lib/brand-joomla-places.js'
 
 /** The engine's own table as it stood before the move (07/10/2026), frozen here as the golden answer. */
 const BEFORE = {

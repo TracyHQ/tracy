@@ -51,6 +51,8 @@ export function readPage({ siteName, contactPattern }) {
   const h1s = [...document.querySelectorAll('h1')].map((h) => ({
     text: clean(h.innerText || h.textContent),
     shown: shown(h),
+    // On the page for search engines but cut to a pixel (visually-hidden): the visitor reads another element as the title.
+    clipped: h.getBoundingClientRect().width <= 2 || h.getBoundingClientRect().height <= 2,
     block: blockOf(h),
     region: regionOf(h),
     inPageHeader: !!h.closest('.page-header, .page-heading, .entry-header'),

@@ -95,7 +95,10 @@ export function menuLinkChecks({ blocks, groups = [], errors }) {
 export function whatElseChanges(kit) {
   const titles = new Map()
   for (const p of kit.pages ?? [])
-    if (p.h1?.slot) titles.set(p.h1.slot, [...(titles.get(p.h1.slot) ?? []), p.id])
+    if (p.titleSlot ?? p.h1?.slot) {
+      const id = p.titleSlot ?? p.h1.slot
+      titles.set(id, [...(titles.get(id) ?? []), p.id])
+    }
   const menus = new Map()
   for (const g of kit.site?.navigationGroups ?? [])
     for (const it of g.items ?? [])

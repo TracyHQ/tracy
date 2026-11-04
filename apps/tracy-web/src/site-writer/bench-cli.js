@@ -10,7 +10,7 @@ import { openKit } from '../lib/template-kit-source.js'
 import { briefOfRevision, cancelWriterRun, startWriterRun } from './bench-control.js'
 import { listLines, runFiles, standingLines, statusLines } from './bench-export.js'
 import { listRuns, planOf, readRun } from './bench-store.js'
-import { openContentMap } from './content-map-source.js'
+import { openContentMap } from '../lib/content-map-source.js'
 
 export const USAGE = `usage: node scripts/site-writer-bench.mjs <command>
   run --plan-file <path> --kit <ref> --brief-file <path>     queue a run on a plan and a brief JSON file

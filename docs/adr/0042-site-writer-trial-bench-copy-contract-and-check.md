@@ -14,6 +14,18 @@ Amended a fourth time (#334): the writer prompt is locked. The owner approved it
 dev; `apps/tracy-web/src/site-writer/writer-prompt.md` has sha256
 `bd4a4f3a1087a109496251b3e971d064775d9730fb16b657744d204a92f987c5`, pinned by `test/site-writer-prompt.test.mjs`.
 Changing a byte of it needs the owner's approval and a new hash here. Fix round answers are read as in section 5.
+Amended a fifth time (2026-11-04, owner's ruling): a plan label is a suggestion the writer keeps or rewrites
+(section 7), a created page's title is its on-page heading, never a browser title (section 8), and a created privacy
+page is a complete policy (section 9). The prompt gained these rules; its sha256 is now
+`831d4cc8be56a702ebae8dce902cc45e890c0832a7c9f067286bc1f85f23a265`. The checker version moved to `site-copy-check/5`.
+Amended a sixth time (2026-11-04, owner's ruling): a text follows the demo's length part by part, between 80% and
+100% of it, and a slot whose demo is a lead paragraph followed by points is written in that shape (section 10). The
+prompt's sha256 is now `50b69c79498fe4aa219f2abf17267f3a8e0e535c7d9a1f19e59b9b10a5979229` (it also carries the inline
+emphasis rule of section 11); the checker version moved to `site-copy-check/6`, once for sections 10 and 11.
+Noted 2026-11-05 (planner side, ADR 0041 decisions 12 and 13): the planner prompt, sha256
+`ec160022e152e5c66db6eb168a64a5923e9def4781d2e39ec7ee3b263cd58612`, now keeps a section that shows how the trade works
+(how a session, a visit or an order runs) as `basis: "trade"` lines without numbers, so the writer receives such
+sections where it used to receive hidden slots; the writer prompt, its hash and the copy check are unchanged.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -51,15 +63,16 @@ page have no kit slots at all, so their words live in `pages`; the created legal
 `notFound` has none.
 
 Not in the file: hidden slots, link targets, label propagation to other menus and URL slots. The plan and the kit
-already hold them. Label slots (the plan gives them `text`) are filled by code from the plan and carry
-`owner: "plan-label"`; every other slot has `owner: "writer"`. Every slot has exactly one owner.
+already hold them. Label slots (the plan gives them `text`) keep the plan's words as `owner: "plan-label"` unless the
+writer rewrote them, which is `owner: "writer"` with `replacedPlanLabel` (section 7); every other slot has
+`owner: "writer"`. Every slot has exactly one owner.
 
 **Main menu dropdowns.** The kit's header block names only the top-level menu items, and the kit has no menu tree.
 The tree lives in the template's content map (`content-map.json` beside `template-kit.json` in the contract folder,
 the file step 9 writes into): `entities[]` of kind `menuItem`, each with `identity.menutype` and `identity.path`. The
 main menu is the menu type of the top-level labels the kit's header block shows; an item's parent is the item whose
 path is its path minus the last segment. Plan pages map to menu items through the kit's `pages[].path`
-(`/about-us/our-trainers` opens the item with path `about-us/our-trainers`). Code (`site-writer/main-menu.js`) then
+(`/about-us/our-trainers` opens the item with path `about-us/our-trainers`). Code (`lib/site-copy/main-menu.js`) then
 decides:
 
 - an item under a kept top-level item (its label slot is in a kept block decision, not hidden), whose parent is
@@ -105,7 +118,7 @@ on every run. Bump `CHECKER_VERSION` on any change to a rule, a threshold, a fai
 |---|---|
 | W01 | the file does not match section 1 (including the `pages` entries) |
 | W02 | a kept slot is missing (and not returned) or written twice; a hidden slot has text; a slot is unknown to the plan; a label differs from the plan's words; the owner does not match (label or not); a `pages` entry is missing (and not returned), written twice or unknown to the plan; the plan gives one slot different text in two places (two labels, or a label and a writer slot) |
-| W03 | text is empty, over the limit, under the floor, or has more paragraphs than the kit allows; a `pages` title is over 60 characters or empty, or a `pages` paragraph is empty |
+| W03 | text is empty, over the limit, under the floor or over the demo (section 10), or has more paragraphs than the kit allows; a `pages` title is over 60 characters or empty, or a `pages` paragraph is empty |
 | W04 | a number, time, price, phone, email or link is not in the facts the slot cites (a `pages` text cites no fact: see W04 details) |
 | W05 | a quoted review passage is not an exact passage of a review in the brief |
 | W06 | a sentence equals or nearly equals another sentence on the site |
@@ -118,9 +131,9 @@ on every run. Bump `CHECKER_VERSION` on any change to a rule, a threshold, a fai
 Thresholds and decisions (named constants in the code):
 
 - **W03 limit.** The kit and the plan give a character limit; the smaller applies. For a slot with several
-  paragraphs the limit applies to the total of all items joined with one space. **Floor:** 60% of the demo text
-  length (`FLOOR_RATIO`), only when the demo text is longer than 40 characters (`FLOOR_DEMO_MIN`), never above the
-  limit. Paragraph count allowed: the larger of the kit's `paragraphs` and `bullets`, at least 1.
+  paragraphs the limit applies to the total of all items joined with one space. **Floor and ceiling:** section 10
+  (the floor was 60% of the cut sample until `site-copy-check/6`). Paragraph count allowed: the larger of the kit's
+  `paragraphs` and `bullets`, at least 1; for a lead and points slot, the lead plus every point.
 - **Footer heading limits.** The limit is the kit slot's `maxCharacters` (the smaller of it and the plan's, as for
   any slot). When the kit lists no limit for the `titleSlot`, the fallback is `HEADING_LIMIT_FACTOR` (2) times the
   demo heading length, at least `HEADING_LIMIT_MIN` (20) characters.
@@ -194,6 +207,106 @@ steps would then block each other through one active run index. The state words 
 `checked`, `not_a_plan`; steps `waiting`, `planning`, `fixing`, `checking`, `done`) are part of the shape and are
 reused as they are. Starting a run (its insert) stays the step's own, since each step is started on different
 inputs.
+
+### 7. A plan label is a suggestion (2026-11-04)
+
+The writer used to skip label slots and code copied the planner's words in unchanged. On one example site 27 of 159
+text slots were labels and 26 were fine; the one that was not was a page masthead whose kit slot the kit grouped into
+a stat row (demo "Our Classes", limit 18, role `editorial.menu_label`), so the planner wrote half of a stat
+("Coaching for") and the template printed it alone as the page's big heading.
+
+- The writer reads every label slot (`plan-labels.js`, the fixed part's "Label slots" list): the planner's label
+  (`planLabel`), the plan's `says`, and from the kit the demo `sample`, `role`, `maxCharacters` and where it
+  `prints` (its block and block role, the menus and page titles it also changes, a content map menu item).
+- It keeps the label when it fits (menus, buttons) by leaving the slot out, and rewrites it when the sample shows
+  the slot is something else, such as a heading that must stand alone.
+- Code records what happened, in a whole answer and in a fix round alike: a text equal to the label (spaces aside)
+  or a left out slot is `owner: "plan-label"` with the plan's words; any other text is `owner: "writer"` with
+  `replacedPlanLabel` set to the label it replaced. W02 fails a writer entry on a label slot without that trace, and
+  a trace on a slot the plan gives no label. A rewritten label is the writer's text, so W03 to W12 judge it.
+- A return of a label slot stays rejected: to give the plan's words back, the writer writes them as the text.
+- The site check's `unfinished-heading` (ADR 0044) is blamed on step 6 (copy), whoever's words the heading holds,
+  since the writer now owns the final text of every slot.
+
+### 8. A created page's title is its heading on the page (2026-11-04)
+
+A writer wrote the created privacy page's `pages[].title` in browser title style (the page name, " | ", the business
+name), and the write step printed it as that page's main heading. The owner ruled that the browser title is never
+printed on the page as a heading.
+
+- `pages[].title` (a created legal page, `notFound`) is the heading printed on that page: short, no " | " separator,
+  no business name added. The browser title stays in `seo[]`. The prompt says so.
+- **W13** fails a `pages` title that holds " | " or ends with the business name (a brief fact whose field is `name`
+  or `business.name`), unless the title is the name alone.
+- The write step (`page-create-stage.js`) writes the heading to the article title, the menu item title and the item's
+  `page_heading` param; `page_title` (Joomla's browser title) keeps the seo title. The look guard allows
+  `page_heading` on a created page's item only. A kept page's menu item is not changed here.
+- The site check's `heading-separator` measure stays as it is, blamed on step 6.
+
+### 9. A created privacy page is a complete policy (2026-11-04)
+
+The plan's line for a created privacy page said the site collects no personal data itself, and the writer retold it
+in two sentences. A customer expects a policy for the kind of business it is. The planner prompt is locked, so the
+plan's `says` stays one input and the writer does the rest.
+
+- The prompt asks for a policy built from the brief facts (what the business is, who its customers are, how they
+  reach it, whether it has forms) covering what is collected and when, photos and videos only with consent (children
+  named when the business serves them), sharing with third parties, how long data is kept, the customer's rights and
+  how to get in touch. Policy promises are not business facts; facts (addresses, named officers, laws) are still never
+  invented. The `body[]` shape is unchanged: the write step prints each item as one paragraph, so a section opens with
+  a short heading sentence.
+- **W14**, only when the plan creates a privacy page (`site.legalPages[]` with `kind: "privacy"`, `use: "create"`):
+  fails a body under 5 paragraphs, or one that names fewer than 4 of six themes by keyword (collect or data; photo,
+  video or image; share or third party; retain, keep or retention; right, request or delete; contact). No site check
+  measure is added.
+
+### 10. A text follows the demo's length and shape (2026-11-04)
+
+Measured on the frozen run of JA Boxing 1.0.10: of 60 writer slots whose demo text is over 40 characters, 36 were under
+60% of it (median 55%). The kit cut every `sample` at 60 characters, and the writer's "aim near the sample, floor
+60%" and W03 both measured that cut sample. A step description whose demo is a lead paragraph and five short bullets
+came out as three equal sentences of 78 to 97 characters, which `joinItems()` printed as one paragraph and two long
+bullets.
+
+- **The numbers.** The kit gives every text slot `demoChars: { total, lead, bullets[] }`, measured on the uncut demo
+  text. `apps/tracy-web/src/lib/site-copy/slot-shape.js` reads them (or, for an older kit without them, measures the
+  `sample` as W03 did: the whole sample less a closing ellipsis, the lines before the first `- ` line as the lead) and
+  derives `shape: { lead, points, leadChars, pointChars { min, max } }`. The writer's input and the copy check use the
+  same module. The writer gets `demoChars`, `shape` and only the first 160 characters of the `sample`.
+- **The prompt.** A text whose demo is over 40 characters is written between 80% and 100% of the demo length, part by
+  part (the lead near `leadChars`, each point near the demo points, the whole near `total`), never over the demo and
+  never over `maxCharacters`. The top is the demo itself, never 110%. When `shape.lead` is true, `items[0]` is the
+  lead paragraph and every later item one of the plan's numbered points, a short phrase, not a sentence.
+- **W03.** For a demo over `SHORT_DEMO_MAX` (40) characters: the total between `DEMO_FLOOR_RATIO` (80%) of the demo
+  and the demo plus `DEMO_CEILING_TOLERANCE` (3 characters for rounding), never above the slot limit (cause `under`
+  or `over-demo`). For a lead and points slot, also the lead against the demo lead, and the average point against
+  the average demo point, with the same bounds. A slot written with fewer points than the demo shows (the plan gives
+  fewer) is compared with the demo lead plus that many average demo points, so a shorter list is never pushed into
+  longer sentences. A short heading (demo of 40 characters or less) keeps only its limit.
+- **W15** (`rules-shape.js`), only when `shape.lead` is true: fails a slot with fewer than 2 items, a lead outside
+  80% to 100% (+3) of the demo lead, a point of more than one sentence, or a point over `POINT_STRETCH_MAX` (1.5)
+  times the longest demo point.
+- `joinItems()` is unchanged: it is right once the input is shaped. The site check's `text-fill` (ADR 0044) measures
+  the result on the page.
+
+### 11. Words the demo draws in the accent colour (2026-11-04)
+
+A template title paints a `span` inside it with the accent variable, which the brand style maps to the customer's accent: the
+demo heading `((span))NO1((/span)) BOXING STUDIO since 2008` prints "NO1" in the accent; the written heading had no span and
+printed in one colour.
+
+- The kit lists such marks beside the plain sample, `inline: [{ tag, attrs, text, at }]` (`at`: start, end or inside;
+  a `br` is listed too and never reproduced). `apps/tracy-web/src/lib/site-copy/inline-emphasis.js` reads them; a kit
+  without `inline` changes nothing.
+- The writer gets a note per slot whose demo has a span ("the demo draws "NO1" in the accent colour, at the start") and
+  answers an `emphasis` on that slot entry: exact words of one item of its plain `text`. A copy slot entry may carry
+  `emphasis` (a non-empty string) on either owner; a kept plan label carries it too.
+- **W16** (`rules-emphasis.js`): fails a span slot without `emphasis`, an `emphasis` that is not words of the text
+  (case-sensitive), longer than twice the demo's marked words (at least 12 characters of room), or half the text or
+  more, and an `emphasis` on a slot whose demo has no span.
+- The export (`contract-mapping.js`) wraps the emphasis in the demo's tag and attributes, in content map notation, in
+  the first item holding it: `European Coaching in ((span))Dubai((/span))`. A slot without a span mark ignores it.
+- The site check's `accent-emphasis` (ADR 0044 decision 19) measures the printed heading.
 
 ## Consequences
 

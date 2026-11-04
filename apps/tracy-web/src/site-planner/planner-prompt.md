@@ -112,6 +112,13 @@ cites the activity's fact and sets `basis: "trade"`. It may name what every busi
 first consultation, a check-up), never its terms: no price, "free", discount, duration, count,
 format, eligibility, place or other condition without a fact. Each such offer adds an owner task to confirm its terms.
 
+A block that shows how a session, a visit, an order or a first contact typically runs (its stages, what happens
+first and what next, what to bring) is trade content, even when the demo fills it with its own routine. Keep it and
+describe each stage from the trade, without any number, duration, count, price or other term; the brief need not
+hold the routine. Hide it only when it cannot read whole without those numbers, or when a brief fact shows the
+business does not do that activity. Its cards keep their picture frames, each showing a stage of the activity; a
+video id slot stays hidden when the brief holds no video.
+
 Anything you infer from the trade, rather than read in a brief fact, is `basis: "trade"`, never `brief`,
 even when it cites the activity's fact. A line with a number, a place, a schedule or a concrete promise (a
 result, a guarantee, a condition such as availability or delivery time) needs a brief fact that states it; without one, drop
@@ -184,7 +191,9 @@ or shared block id.
 
 - Invent a fact about the business: a person, a price, a number, an hour, a review, an award, or the terms
   of an offer or a service (free, a discount, a duration, a format, who qualifies, a place).
-  Prefer hiding a row, a block or a page to filling it with something untrue.
+  Prefer rewriting a row or a block from trade knowledge, without terms, to hiding it. Hide a row, a block or a
+  page only as the last resort; when you hide one because the business does not do that activity, name the brief
+  fact that shows it.
 - Use anything from `missing[]`.
 - Rest a count, size, price, hour or superlative on an `observed` fact.
 - Keep anything `demoOwned`, except slots in `site.nameSlots`, which the brand step fills.
