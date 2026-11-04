@@ -194,3 +194,36 @@ test('the kit list structure, not canHide, makes a gallery tile; the reuse regio
     null
   )
 })
+
+// Real run 6: the last rung cut a bush and a fence out of an owner photo, because every region holding the subject was
+// the very cut of another tile. A reuse or any-photo region keeps the photo's main subject, or is not offered.
+test('the any-photo region keeps the subject even when the subject cut is taken and empty foliage is free', () => {
+  const size = { width: 2000, height: 1000 }
+  const square = { width: 300, height: 300 }
+  // The subject sits in the top left corner; the rest of the photo is empty foliage.
+  const subject = [0.02, 0.05, 0.12, 0.25]
+  const box = { x: 40, y: 50, width: 240, height: 250 }
+  const taken = [{ x: 0, y: 0, width: 1000, height: 1000 }]
+  const last = { heads: [], subject, minWidth: 200, maxOverlap: 1, distinct: true }
+  // The reuse rule (at most 30% shared) leaves only the empty right half: without the rule that is what was cut.
+  const reuse = { heads: [], subject, minWidth: 200 }
+  const empty = reuseRegion(size, square, taken, reuse)
+  assert.equal(cropOverlap(empty, box), 0, JSON.stringify(empty))
+  assert.equal(reuseRegion(size, square, taken, { ...reuse, keepSubject: true }), null)
+  const r = reuseRegion(size, square, taken, { ...last, keepSubject: true })
+  assert.ok(r, 'a region is offered')
+  assert.ok(cropOverlap(r, box) >= 0.5, JSON.stringify(r))
+  // Never the very cut of another tile.
+  assert.notDeepEqual(r, taken[0])
+})
+
+test('a photo with no detected subject is cut only when the region covers most of the photo', () => {
+  const size = { width: 1000, height: 2000 }
+  const square = { width: 300, height: 300 }
+  const opts = { heads: [], subject: null, minWidth: 200, keepSubject: true }
+  // Only a small region is free: refused.
+  assert.equal(reuseRegion(size, square, [{ x: 0, y: 500, width: 1000, height: 1000 }], opts), null)
+  // A region that is half of the photo (the largest square of a 1:2 photo) is enough.
+  const r = reuseRegion(size, square, [{ x: 0, y: 0, width: 1000, height: 1000 }], opts)
+  assert.ok(r && r.width * r.height >= 0.5 * size.width * size.height, JSON.stringify(r))
+})

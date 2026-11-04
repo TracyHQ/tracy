@@ -180,3 +180,39 @@ test('the looker prompt names the face cut fault and holds it for any-real frame
   )
   assert.match(anyReal, /face cut/)
 })
+
+// Real run 6: a gallery tile got a crop of a bush and a fence. An any-real frame is not judged on its scene, but a crop
+// that shows no clear subject at all is a fault of its own, distinct from "wrong subject".
+const noSubject = {
+  verdict: 'fail',
+  faults: ['no clear subject'],
+  seen: 'A bush against a wooden fence.'
+}
+
+test('an any-real frame fails a crop with no clear subject, and is offered the fault', async () => {
+  const { looked, sent } = await lookOnce('any-real', noSubject)
+  assert.equal(looked.rule.status, 'fail')
+  assert.deepEqual(looked.doc.frames[0].looker.faults, ['no clear subject'])
+  assert.match(sent[0], /"no clear subject"/)
+  assert.doesNotMatch(sent[0], /"wrong subject"/)
+  const both = await lookOnce('any-real', { ...noSubject, faults: ['wrong subject', 'no clear subject'] })
+  assert.deepEqual(both.looked.doc.frames[0].looker.faults, ['no clear subject'])
+  assert.deepEqual(readLook(JSON.stringify(noSubject), { anyReal: true }).faults, ['no clear subject'])
+})
+
+test('a specific frame is offered the no clear subject fault too', async () => {
+  const { looked, sent } = await lookOnce('specific', noSubject)
+  assert.equal(looked.rule.status, 'fail')
+  assert.match(sent[0], /"no clear subject"/)
+})
+
+test('the looker prompt names the no clear subject fault apart from wrong subject, for any-real frames too', async () => {
+  const { readFile } = await import('node:fs/promises')
+  const text = await readFile(new URL('../src/site-pictures/looker-prompt.md', import.meta.url), 'utf8')
+  assert.match(text, /^- no clear subject: /m)
+  const anyReal = text.slice(
+    text.indexOf('accepts any real photo'),
+    text.indexOf('When the message says part')
+  )
+  assert.match(anyReal, /no clear subject/)
+})

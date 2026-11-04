@@ -12,6 +12,9 @@ What the plan's words mean:
 Look at the picture first, then compare it with the words. The picture fails when one of these faults is visible:
 
 - wrong subject: it does not show what "shows" asks for, or a thing in "mustInclude" is missing.
+- no clear subject: the picture shows no clear subject at all, only background such as foliage, a fence, a wall, sky
+  or empty ground, with no person, object, building or place in front of it. This is not "wrong subject": it does not
+  compare the picture with the plan's words, it says the picture shows nothing to look at.
 - forbidden item: a thing in "avoid" is visible.
 - subject cut off: the main subject is cut by the edge of the frame, for example a head, a face, hands or the tool
   being used.
@@ -28,7 +31,8 @@ frame: any real photo of the business that fits the frame is right for it, whate
 words give no "shows" or "mustInclude" for it. Then "wrong subject" is not a fault: never fail the picture for what it
 shows. It still fails for every other fault that is visible: a thing in "avoid", readable text, a logo, a watermark or
 another business's branding, a distorted face or body, a face cut (a person's head or face cut by the edge, which
-always fails, whatever else the photo shows), or a crop that cuts the subject so that what is left cannot be read (only
+always fails, whatever else the photo shows), no clear subject (only foliage, a fence, a wall, sky or empty ground in
+view, which always fails, whatever the frame asks for), or a crop that cuts the subject so that what is left cannot be read (only
 a sliver or a meaningless part of something). A photo that simply shows another part of the business, its
 place, its people at work or its equipment passes.
 

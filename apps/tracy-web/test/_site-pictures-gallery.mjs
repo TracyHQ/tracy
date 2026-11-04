@@ -146,7 +146,9 @@ function brief(photos) {
       showsOtherBusiness: false,
       isOwnPhoto: true,
       portraitOf: null,
-      subjectBox: [0.3, 0.35, 0.4, 0.3],
+      // No labelled subject: a reused cut then has to cover most of the photo (reuse-crop.js NO_SUBJECT_COVER), which a
+      // square of a 1:2 photo just does; two clear cuts cannot both hold one small subject box.
+      subjectBox: null,
       faceBoxes: []
     }))
   }

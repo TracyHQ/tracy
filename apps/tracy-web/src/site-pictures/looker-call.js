@@ -25,6 +25,7 @@ import { overlayCovers } from './frame-surface/surface.js'
 /** The faults the looker may name on any picture, exactly as written. */
 export const PICTURE_FAULTS = Object.freeze([
   'wrong subject',
+  'no clear subject',
   'forbidden item',
   'subject cut off',
   'face cut',

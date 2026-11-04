@@ -14,6 +14,17 @@ import { headBoxesOf } from './head-boxes.js'
 const SCALES = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.42, 0.35]
 /** Positions tried along each free side. */
 const STEPS = 12
+/**
+ * The share of the labelled subject box a reused region must hold. Half: a tall subject cannot always sit whole in a
+ * landscape tile, but a region with less than half of it shows a part nobody would call the subject.
+ */
+export const SUBJECT_KEPT = 0.5
+/**
+ * The share of the photo a region must cover when the photo has no detected subject. Most of the photo (more than
+ * half is not asked, the largest square of a 1:2 photo is exactly half): with nothing labelled, a small window onto the
+ * photo is as likely to be a bush or a fence as the subject.
+ */
+export const NO_SUBJECT_COVER = 0.5
 
 const toPixels = ([x, y, w, h], size) => ({
   x: x * size.width,
@@ -23,6 +34,11 @@ const toPixels = ([x, y, w, h], size) => ({
 })
 const inside = (h, r) =>
   h.x >= r.x && h.y >= r.y && h.x + h.width <= r.x + r.width && h.y + h.height <= r.y + r.height
+const kept = (box, r) => {
+  const w = Math.min(box.x + box.width, r.x + r.width) - Math.max(box.x, r.x)
+  const h = Math.min(box.y + box.height, r.y + r.height) - Math.max(box.y, r.y)
+  return w > 0 && h > 0 ? (w * h) / (box.width * box.height) : 0
+}
 const apart = (h, r) => cropOverlap(h, r) === 0
 // Scores compared in order: the first that differs decides.
 const same = (a, b) => a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height
@@ -38,18 +54,25 @@ const better = (a, b) => {
  * @param {{x: number, y: number, width: number, height: number}[]} avoid the other cuts of the photo, in pixels
  * @param {{ heads: number[][], subject: number[] | null, minWidth: number, maxOverlap?: number, distinct?: boolean }}
  *   labels heads and subject as fractions; `minWidth` the narrowest region the size limit allows; `maxOverlap` the most
- *   a region may share with a cut to avoid (REUSE_MAX_OVERLAP by default); `distinct` the region is never one of them
+ *   a region may share with a cut to avoid (REUSE_MAX_OVERLAP by default); `distinct` the region is never one of them;
+ *   `keepSubject` the region holds the subject (SUBJECT_KEPT of its box, or a whole head), or, when no subject is
+ *   labelled, covers NO_SUBJECT_COVER of the photo: a region that shows only background is never offered
  */
 export function reuseRegion(
   size,
   shape,
   avoid,
-  { heads, subject, minWidth, maxOverlap = REUSE_MAX_OVERLAP, distinct = false }
+  { heads, subject, minWidth, maxOverlap = REUSE_MAX_OVERLAP, distinct = false, keepSubject = false }
 ) {
   const aspect = shape.width / shape.height
   const maxW = Math.min(size.width, size.height * aspect)
   const headPx = heads.map((h) => toPixels(h, size))
   const subjectPx = subject ? toPixels(subject, size) : null
+  const photo = size.width * size.height
+  const showsSubject = (r) =>
+    subjectPx || headPx.length
+      ? (subjectPx && kept(subjectPx, r) >= SUBJECT_KEPT) || headPx.some((h) => inside(h, r))
+      : r.width * r.height >= NO_SUBJECT_COVER * photo
   for (const scale of SCALES) {
     const width = Math.floor(maxW * scale)
     const height = Math.round(width / aspect)
@@ -67,6 +90,7 @@ export function reuseRegion(
         if (avoid.some((a) => cropOverlap(r, a) > maxOverlap)) continue
         if (distinct && avoid.some((a) => same(r, a))) continue
         if (!headPx.every((h) => inside(h, r) || apart(h, r))) continue
+        if (keepSubject && !showsSubject(r)) continue
         const score = [
           headPx.filter((h) => inside(h, r)).length,
           subjectPx ? cropOverlap(r, subjectPx) : 0,
@@ -86,7 +110,7 @@ export function reuseRegion(
  * @param {{width: number, height: number}} frame the kit frame
  * @param {{width: number, height: number} | null} demo
  * @param {{x: number, y: number, width: number, height: number}[]} avoid the photo's other cuts on the tile's pages
- * @param {{ maxOverlap?: number, distinct?: boolean }} [opts] reuseRegion's, for the last rung
+ * @param {{ maxOverlap?: number, distinct?: boolean }} [opts] reuseRegion's, for the last rung; the subject is always kept
  * @returns {Promise<object>} cut-photo.js's result, with `overlap`: the most the cut shares with another cut
  */
 export async function cutPhotoAway(bytes, asset, frame, demo, avoid, { maxOverlap, distinct } = {}) {
@@ -101,7 +125,8 @@ export async function cutPhotoAway(bytes, asset, frame, demo, avoid, { maxOverla
     subject: Array.isArray(asset.subjectBox) ? asset.subjectBox : null,
     minWidth,
     maxOverlap,
-    distinct
+    distinct,
+    keepSubject: true
   })
   if (!r) return { ok: false, refused: 'no-clear-region' }
   const cut = await writeRect(

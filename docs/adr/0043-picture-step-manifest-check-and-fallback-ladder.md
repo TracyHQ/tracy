@@ -245,13 +245,15 @@ Thresholds and readings (named constants in the code):
   it may name. Code drops `wrong subject` for such a frame if the model names it anyway (noted like a name outside the
   list), and a fail that named nothing else passes, so a model slip cannot hide a real photo. Every other fault still
   fails it: a thing to avoid, stray lettering or another business's branding, a distorted face or body, a face cut (a
-  person's head or face cut by the frame edge, which fails every picture frame), a crop that leaves no readable subject. Sharpness and darkness under text are code's gates (the sharpness gate when a photo is
+  person's head or face cut by the frame edge, which fails every picture frame), no clear subject (the crop shows only
+  background such as foliage, a fence, a wall, sky or empty ground; distinct from `wrong subject`, which compares the
+  picture with the plan's words and is never named for an any-real frame), a crop that leaves no readable subject. Sharpness and darkness under text are code's gates (the sharpness gate when a photo is
   cut, the dark overlay), not the looker's. A `specific` frame keeps the full subject check. Real run 3 measured why:
   every owner photo placed in a six-frame gallery shown on every page was rejected, mostly as `wrong subject`, and the
   site ended with no owner photo. One look per picture stays, with one retry only for an unreadable answer; no voting.
-- **Its answer** is `{ verdict, faults, seen }`. The fixed fault list has eight names: the seven the model may name
-  (wrong subject, forbidden item, subject cut off, face cut, distorted face or body, stray lettering, visible drawing
-  seam) and `look unreadable`, which only code records. A name outside the model's seven is dropped and noted; any fault makes the
+- **Its answer** is `{ verdict, faults, seen }`. The fixed fault list has nine names: the eight the model may name
+  (wrong subject, no clear subject, forbidden item, subject cut off, face cut, distorted face or body, stray lettering, visible drawing
+  seam) and `look unreadable`, which only code records. A name outside the model's eight is dropped and noted; any fault makes the
   verdict `fail`. The look is stored on the entry as `looker` (above) and its sentence as `seen`.
 - **An unreadable look is asked once more.** A failed call or an answer out of form is retried once, both calls
   counted (a file gone from the store is not retried). The answer's token cap (4000) leaves room for a reasoning
@@ -410,7 +412,7 @@ climb. The rungs, in order:
 | next photo | `specific`, `any-real` | code cuts the next owner photo in the any-real order (darker first in a dark frame) not yet tried and not on the frame's pages; at most 2 per frame |
 | fewer rows | `specific`, `any-real` | the frame's list row is dropped when the kit lists the list, its rows are not content items of their own, one fewer is still at least its `min` (1 when none), and every frame of the row may hide; the row's frames are hidden and the list's new count is in `rows` |
 | reuse | gallery tiles only | an owner photo already shown on the tile's pages, never one shown in a neighbouring tile of the same list (index one apart, or directly above or below when the kit gives the list's columns), cut by code to a region of the frame's shape that shares at most 30% of the smaller cut's area with every other cut of that photo and runs through no head, written and looked at like any cut; at most 2 per tile; the entry says `reuse: { with, overlap }` |
-| any photo | gallery tiles only | always fills while the brief has at least 2 usable owner photos: any usable owner photo (used on other pages or already twice), least used first, any region of the frame's shape, keeping only the hard rules: heads whole, never the photo of a neighbouring tile, never the very cut another frame of the page shows; looked at like any cut, a rejection followed by the next photo until every photo is tried; the entry says `reuse: { rung: "any-photo", with, overlap }` (the reuse rung writes `rung: "reuse"`) |
+| any photo | gallery tiles only | always fills while the brief has at least 2 usable owner photos: any usable owner photo (used on other pages or already twice), least used first, any region of the frame's shape, keeping only the hard rules: heads whole, never the photo of a neighbouring tile, never the very cut another frame of the page shows, and the photo's main subject kept (real run 6: a tile got a crop of a bush and a fence): the region holds at least half of the labelled subject box or a whole head, or, when no subject is labelled, covers at least half of the photo; a photo with no such region is skipped for the next one (the reuse rung keeps the same rule); looked at like any cut, a rejection followed by the next photo until every photo is tried; the entry says `reuse: { rung: "any-photo", with, overlap }` (the reuse rung writes `rung: "reuse"`) |
 | hide | every match but gallery tiles | the frame is hidden when the kit allows hiding and it is not a template setting |
 | return | every match | the frame is returned to the planner (`returns`) |
 
