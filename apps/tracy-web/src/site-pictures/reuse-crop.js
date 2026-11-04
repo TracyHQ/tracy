@@ -3,7 +3,8 @@
 // the smaller area with every other cut of the photo, never runs through a head (each head lies wholly inside or wholly
 // outside it), and is written like any cut: at the demo aspect, enlarged at most MAX_ENLARGE times, through the
 // sharpness gate. Among the regions that qualify, the largest wins; at one size, the one holding the most whole heads,
-// then the most of the labelled subject.
+// then the most of the labelled subject. The last rung of a gallery tile ("any-photo") asks only for a cut that is not
+// the very cut of another tile (`maxOverlap` 1, `distinct`): heads stay whole all the same.
 
 import { MAX_ENLARGE, outputSizeFor, sizeOf, writeRect } from './cut-photo.js'
 import { cropOverlap, REUSE_MAX_OVERLAP } from './gallery-tiles.js'
@@ -24,6 +25,7 @@ const inside = (h, r) =>
   h.x >= r.x && h.y >= r.y && h.x + h.width <= r.x + r.width && h.y + h.height <= r.y + r.height
 const apart = (h, r) => cropOverlap(h, r) === 0
 // Scores compared in order: the first that differs decides.
+const same = (a, b) => a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height
 const better = (a, b) => {
   const k = a.findIndex((v, i) => v !== b[i])
   return k >= 0 && a[k] > b[k]
@@ -34,10 +36,16 @@ const better = (a, b) => {
  * @param {{width: number, height: number}} size the photo as shown
  * @param {{width: number, height: number}} shape the demo file (or display box)
  * @param {{x: number, y: number, width: number, height: number}[]} avoid the other cuts of the photo, in pixels
- * @param {{ heads: number[][], subject: number[] | null, minWidth: number }} labels heads and subject as fractions;
- *   `minWidth` the narrowest region the size limit allows
+ * @param {{ heads: number[][], subject: number[] | null, minWidth: number, maxOverlap?: number, distinct?: boolean }}
+ *   labels heads and subject as fractions; `minWidth` the narrowest region the size limit allows; `maxOverlap` the most
+ *   a region may share with a cut to avoid (REUSE_MAX_OVERLAP by default); `distinct` the region is never one of them
  */
-export function reuseRegion(size, shape, avoid, { heads, subject, minWidth }) {
+export function reuseRegion(
+  size,
+  shape,
+  avoid,
+  { heads, subject, minWidth, maxOverlap = REUSE_MAX_OVERLAP, distinct = false }
+) {
   const aspect = shape.width / shape.height
   const maxW = Math.min(size.width, size.height * aspect)
   const headPx = heads.map((h) => toPixels(h, size))
@@ -56,7 +64,8 @@ export function reuseRegion(size, shape, avoid, { heads, subject, minWidth }) {
           width,
           height
         }
-        if (avoid.some((a) => cropOverlap(r, a) > REUSE_MAX_OVERLAP)) continue
+        if (avoid.some((a) => cropOverlap(r, a) > maxOverlap)) continue
+        if (distinct && avoid.some((a) => same(r, a))) continue
         if (!headPx.every((h) => inside(h, r) || apart(h, r))) continue
         const score = [
           headPx.filter((h) => inside(h, r)).length,
@@ -77,9 +86,10 @@ export function reuseRegion(size, shape, avoid, { heads, subject, minWidth }) {
  * @param {{width: number, height: number}} frame the kit frame
  * @param {{width: number, height: number} | null} demo
  * @param {{x: number, y: number, width: number, height: number}[]} avoid the photo's other cuts on the tile's pages
+ * @param {{ maxOverlap?: number, distinct?: boolean }} [opts] reuseRegion's, for the last rung
  * @returns {Promise<object>} cut-photo.js's result, with `overlap`: the most the cut shares with another cut
  */
-export async function cutPhotoAway(bytes, asset, frame, demo, avoid) {
+export async function cutPhotoAway(bytes, asset, frame, demo, avoid, { maxOverlap, distinct } = {}) {
   const size = await sizeOf(bytes)
   if (!size.width || !size.height) return { ok: false, refused: 'unreadable' }
   const box = { width: Number(frame.width), height: Number(frame.height) }
@@ -89,7 +99,9 @@ export async function cutPhotoAway(bytes, asset, frame, demo, avoid) {
   const r = reuseRegion(size, shape, avoid, {
     heads: headBoxesOf(asset),
     subject: Array.isArray(asset.subjectBox) ? asset.subjectBox : null,
-    minWidth
+    minWidth,
+    maxOverlap,
+    distinct
   })
   if (!r) return { ok: false, refused: 'no-clear-region' }
   const cut = await writeRect(

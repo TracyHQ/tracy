@@ -35,7 +35,8 @@ import { WAITS_FOR_DRAWER } from './picker-picks.js'
 
 export { DRAW_CONCURRENCY, NEXT_PHOTO_TRIES }
 
-const MAX_PASSES = 12
+// A gallery tile's any-photo rung may try every owner photo of the brief, one look per pass.
+const MAX_PASSES = 40
 const NOT_DRAWN_KINDS = new Set(['icon', 'logo'])
 const DRAWN_SOURCES = new Set(['drawn', 'owner-photo-extended'])
 

@@ -45,7 +45,8 @@ export function checkP02({ R, view, idx }) {
   }
 }
 
-// P12. A frame is hidden only where the kit says the block still looks whole without it, and no placed file is a demo
+// P12. A frame is hidden only where the kit says the block still looks whole without it (a gallery tile only with its
+// dropped row), and no placed file is a demo
 // picture of the template (same path as a kit demo picture, or the same sha256 when the kit records one).
 export function checkP12({ R, view, idx }) {
   const r = R.p12
@@ -53,8 +54,16 @@ export function checkP12({ R, view, idx }) {
     const f = idx.frames.get(e.frame)
     if (!f) continue
     if (e.source === 'hide') {
-      if (f.canHide === true) r.ok()
-      else r.fail(where(e), 'hidden, but the kit frame cannot be hidden (canHide is not true)', 'pictures')
+      if (f.canHide !== true)
+        r.fail(where(e), 'hidden, but the kit frame cannot be hidden (canHide is not true)', 'pictures')
+      // A gallery tile leaves a hole in its grid: hidden only with its whole list row (ADR 0043 section 4).
+      else if (idx.galleryTile(e.frame) && !view.dropped?.has(e.frame))
+        r.fail(
+          where(e),
+          'hidden, but a gallery tile is never hidden alone (only with its dropped row)',
+          'pictures'
+        )
+      else r.ok()
       continue
     }
     const files = [e, e.dark].filter(Boolean)

@@ -10,16 +10,21 @@ const framesOnly = (view) => view.entries.filter((e) => e.list === 'frames')
 // the file for a drawn picture. Twins, icons, initials and hidden frames are not photos here. The one exception is a
 // gallery tile that took the reuse rung (ADR 0043 section 4): its entry says `reuse`, the frame is a gallery tile, and
 // against every other showing of the photo on the page its cut shares at most REUSE_MAX_OVERLAP of the smaller cut and
-// the two tiles are not neighbours. Two showings neither of which took the reuse rung always fail.
+// the two tiles are not neighbours; a tile filled by the last rung (`reuse.rung` "any-photo") is not next to the other
+// showing and not its very cut. Two showings neither of which took one of these rungs always fail.
 function reuseAllowed(idx, a, b) {
   const reused = a.reuse ? a : b.reuse ? b : null
   if (!reused || !idx.galleryTile(reused.frame) || !a.crop || !b.crop) return false
   if (neighbours(idx.gallery(a.frame), idx.gallery(b.frame))) return false
   const crop = (e) => ({ x: e.crop.x, y: e.crop.y, width: e.crop.width, height: e.crop.height })
-  return cropOverlap(crop(a), crop(b)) <= REUSE_MAX_OVERLAP + 1e-9
+  const [x, y] = [crop(a), crop(b)]
+  // The any-photo rung asks only for another cut; the reuse rung for a clearly different one.
+  if (reused.reuse.rung === 'any-photo')
+    return !(x.x === y.x && x.y === y.y && x.width === y.width && x.height === y.height)
+  return cropOverlap(x, y) <= REUSE_MAX_OVERLAP + 1e-9
 }
 
-const REUSE_RULE = ` (a reuse must be a gallery tile, not next to the other tile, its cut sharing at most ${REUSE_MAX_OVERLAP * 100}% of the smaller cut)`
+const REUSE_RULE = ` (a reuse must be a gallery tile, not next to the other tile, its cut sharing at most ${REUSE_MAX_OVERLAP * 100}% of the smaller cut, or after the any-photo rung not the same cut)`
 
 export function checkP06({ R, view, idx }) {
   const r = R.p06

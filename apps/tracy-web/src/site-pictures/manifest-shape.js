@@ -16,6 +16,8 @@ export const SOURCES = Object.freeze([
 ])
 /** The sources that place a brief photo of the owner (and name it in `asset`). */
 export const OWNER_SOURCES = new Set(['owner-photo', 'owner-photo-extended'])
+/** The ladder rungs that may show an owner photo a second time on a page (a gallery tile's, ADR 0043 section 4). */
+export const REUSE_RUNGS = new Set(['reuse', 'any-photo'])
 /** The roles whose prompt hashes the fingerprint records. */
 export const PROMPT_ROLES = Object.freeze(['picker', 'drawing', 'looker'])
 /** The folder of the site every placed picture is uploaded to, named by its sha256. */
@@ -98,19 +100,24 @@ function readEntry(e, list) {
       return { problem: 'a painted picture file is only a preview: "preview" must be true' }
   } else if (e.paint != null || e.preview != null)
     return { problem: `a ${source} picture has no paint recipe and no preview mark` }
-  // A gallery tile that reused an owner photo of its page names the frames that also show it (ADR 0043 section 4).
+  // A gallery tile filled by its reuse or any-photo rung names the rung and the frames of the page that also show the
+  // photo (ADR 0043 section 4); the reuse rung always names at least one.
   if (
     e.reuse != null &&
     !(
       source === 'owner-photo' &&
       isObject(e.reuse) &&
+      REUSE_RUNGS.has(e.reuse.rung) &&
       Array.isArray(e.reuse.with) &&
-      e.reuse.with.length > 0 &&
+      (e.reuse.rung !== 'reuse' || e.reuse.with.length > 0) &&
       e.reuse.with.every(isNonEmpty) &&
       isNumber(e.reuse.overlap)
     )
   )
-    return { problem: 'reuse must be null or, on an owner photo, { with: [frames], overlap: number }' }
+    return {
+      problem:
+        'reuse must be null or, on an owner photo, { rung: "reuse" | "any-photo", with: [frames], overlap: number }'
+    }
   if (e.seen != null && typeof e.seen !== 'string') return { problem: 'seen must be a string or null' }
   if (typeof e.reason !== 'string') return { problem: 'reason must be a string' }
   return {
@@ -132,7 +139,7 @@ function readEntry(e, list) {
       crop: e.crop ?? null,
       enlarge: e.enlarge ?? null,
       sharpness: e.sharpness ?? null,
-      reuse: e.reuse ? { with: [...e.reuse.with], overlap: e.reuse.overlap } : null,
+      reuse: e.reuse ? { rung: e.reuse.rung, with: [...e.reuse.with], overlap: e.reuse.overlap } : null,
       darkened: e.darkened,
       paint: painted ? e.paint : null,
       preview: painted,
@@ -144,11 +151,11 @@ function readEntry(e, list) {
 
 /**
  * Reads a site-pictures/1 manifest. The view holds the valid entries of `frames` and `siteSettings` (in that order in
- * `entries`), `returns`, `altNotes` and `usage`; `problems` lists `{ where, detail }` for everything left out.
+ * `entries`), `returns`, `altNotes`, `usage` and `dropped` (the frames of dropped list rows); `problems` lists `{ where, detail }` for everything left out.
  */
 export function readPictures(pictures) {
   const problems = []
-  const view = { entries: [], returns: [], altNotes: [], usage: [] }
+  const view = { entries: [], returns: [], altNotes: [], usage: [], dropped: new Set() }
   const bad = (where, detail) => problems.push({ where, detail })
   if (!isObject(pictures)) {
     bad('file', 'the picture manifest is not a JSON object')
@@ -193,6 +200,9 @@ export function readPictures(pictures) {
       view.usage.push({ asset: u.asset, frames: u.frames })
     else bad(`usage[${i}]`, 'usage entry needs an asset id and a frame count')
   })
+  // The frames of list rows the ladder dropped (`rows`, optional): hidden with their whole row.
+  for (const r of Array.isArray(pictures.rows) ? pictures.rows : [])
+    for (const f of Array.isArray(r?.dropped) ? r.dropped : []) if (isNonEmpty(f)) view.dropped.add(f)
   for (const key of ['cost', 'timing'])
     if (!isObject(pictures[key])) bad(key, `${key} must be an object keyed by role`)
   return { view, problems }

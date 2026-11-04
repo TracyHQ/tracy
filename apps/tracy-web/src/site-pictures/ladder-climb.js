@@ -5,7 +5,7 @@ import { cutPhoto } from './cut-photo.js'
 import { darkerFirst } from './darken.js'
 import { hiddenEntry, placedEntry } from './frame-entries.js'
 import { modeOf, WIDE_BAND } from './ladder-draw.js'
-import { reuseRung } from './ladder-reuse.js'
+import { anyPhotoRung, reuseRung } from './ladder-reuse.js'
 import { fewerRowsRefusal, rowOf, rungsFor } from './ladder-rungs.js'
 import { inParallel } from './looker-step.js'
 import { rankForFrame, sameService } from './photo-shortlist.js'
@@ -13,6 +13,8 @@ import { rankForFrame, sameService } from './photo-shortlist.js'
 export const DRAW_CONCURRENCY = 4
 /** How many other owner photos the "next photo" rung places for one frame before it gives up. */
 export const NEXT_PHOTO_TRIES = 2
+/** The rungs a frame stays on after a placement: the looker's rejection is followed by the rung's next photo. */
+const STAYS = new Set(['next-photo', 'reuse', 'any-photo'])
 
 // The picture of a frame for its drawing rungs: a wide band is extended from a portrait owner photo of its own offering
 // that no other frame on its pages shows; any other frame is drawn.
@@ -168,6 +170,7 @@ function runRung(ctx, s, frameId, p, rung) {
   if (rung === 'fewer-rows') return fewerRowsRung(ctx, s, frameId)
   if (rung === 'hide') return hideRung(ctx, s, frameId)
   if (rung === 'reuse') return reuseRung(ctx, s, frameId, p)
+  if (rung === 'any-photo') return anyPhotoRung(ctx, s, frameId, p)
   return { ret: true }
 }
 
@@ -184,8 +187,8 @@ async function climb(ctx, s, frameId, firstResult = null) {
       s.entries.set(frameId, { list: result.list, entry: result.entry })
       s.note(frameId, rung, 'placed', result.entry.sha256.slice(0, 12))
       p.last = rung
-      // The next photo and reuse rungs stay where they are: a rejected photo is followed by another, up to their tries.
-      if (rung !== 'next-photo' && rung !== 'reuse') p.at += 1
+      // The photo rungs stay where they are: a rejected photo is followed by another, up to their tries.
+      if (!STAYS.has(rung)) p.at += 1
       return
     }
     if (result.done) return s.note(frameId, rung, 'done')

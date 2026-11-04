@@ -7,7 +7,8 @@
 // A cut-out frame (#346) never takes an owner photo (no photo is cut out): a `specific` one is drawn on a plain ground,
 // redrawn once, then hidden or returned; any other cut-out (a person, any real photo) is never drawn: hidden or returned.
 // A gallery tile (an any-real frame of a picture list, gallery-tiles.js) is never hidden alone: after the next photo
-// and fewer rows it reuses an owner photo already on its page, cut to another region, then it is returned.
+// and fewer rows it reuses an owner photo already on its page, cut to another region, then takes any usable owner
+// photo (any-photo, heads whole, not its neighbour's photo, not another tile's very cut); returned only after that.
 
 /** The rungs per plan match. */
 export const RUNGS = Object.freeze({
@@ -15,7 +16,7 @@ export const RUNGS = Object.freeze({
   'any-real': Object.freeze(['next-photo', 'fewer-rows', 'hide', 'return']),
   person: Object.freeze(['hide', 'return']),
   cutout: Object.freeze(['draw', 'redraw', 'hide', 'return']),
-  gallery: Object.freeze(['next-photo', 'fewer-rows', 'reuse', 'return'])
+  gallery: Object.freeze(['next-photo', 'fewer-rows', 'reuse', 'any-photo', 'return'])
 })
 
 /**
