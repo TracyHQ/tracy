@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-383-ja-diner-j6-1-0-5-pinned",
+  "kind": "feat",
+  "title": "JA Diner (Joomla 6) 1.0.5 is sealed with the contract, the kit and the plugin it was released with: ja-diner/j6/1.0.5 is the contract Claude Cowork for Joomla 0.24.80 carries, its approved template kit sits beside it, and both quickstarts.json pin quickstart/ja-diner/j6 at 1.0.5 on 0.24.80 with the installer of the manifest",
+  "pr": 383,
+  "area": "quickstart/contracts",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: SHA-256 of packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/{content-map,manifest,presentation-lock,showcase-nav-map}.json, its coworkContractVersion, and the approval of template-kit.json beside it.",
+    "S2: the quickstart/ja-diner/j6 entry of both quickstarts.json.",
+    "S3: pnpm exec tsx scripts/check-all.ts --only contracts --only quickstart-overrides."
+  ],
+  "expect": [
+    "S1: the four hashes are those Claude Cowork for Joomla 0.24.80 carries (007259d9…, 019455ae…, e8de147c…, b70293ee…); floor 0.24.80, quickstart version 1.0.5; template-kit.json approved by Akemi0x for 1.0.5.",
+    "S2: version 1.0.5, contract ja-diner/j6/1.0.5, Claude Cowork 0.24.80, installer file, bytes and sha256 equal to the manifest's installer part with a GitHub asset id, every pinned contract file hash equal to the repository file's.",
+    "S3: both gates pass."
+  ],
+  "selectors": {
+    "contracts": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy"
+  },
+  "evidence": "changes/2026-11-04-ja-diner-j6-1-0-5-flow-ready.md",
+  "fence": "What this repository seals and pins for JA Diner on Joomla 6.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-383-ja-diner-j6-1-0-5-pinned.mjs"],
+    "needs": []
+  }
+}
