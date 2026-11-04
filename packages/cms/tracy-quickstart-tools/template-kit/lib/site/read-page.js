@@ -166,6 +166,9 @@ export function readPage({ siteName, contactPattern }) {
     contacts,
     textLines,
     bodyClass: document.body.className,
+    // One article as the page's own content, for a template that marks no view on the body: Joomla's article
+    // view wraps it in `.item-page` (every version), one per page.
+    articleView: document.querySelectorAll('.item-page').length === 1,
     hasHeader: !!document.querySelector('header, #t4-header, .t4-header, #t3-header, .t3-header'),
     texts: [...new Set(ownTexts)].slice(0, 12),
     links: ownLinks.slice(0, 12)

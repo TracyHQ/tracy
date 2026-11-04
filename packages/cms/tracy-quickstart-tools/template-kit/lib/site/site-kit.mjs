@@ -104,6 +104,7 @@ export function buildSite({ map, adapter, reads, logoReads, notFound, styles, ht
       path: r.path,
       title: r.head?.title,
       bodyClass: r.bodyClass,
+      articleView: r.articleView,
       blockCount: r.blockCount
     })),
     notFound

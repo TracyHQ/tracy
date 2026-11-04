@@ -1,5 +1,6 @@
 // The browser side of the site part: every page opened read-only at desktop width, read in the theme it opens in and
-// again after switching to the template's other theme (in this browser only), plus one address that does not exist.
+// again after switching to the template's other theme (in this browser only), its logos read at phone width too,
+// plus one address that does not exist.
 // Also fetches the stylesheets the pages serve, for the colour measure.
 import { openFrozen, openKitContext } from '../capture.mjs'
 import { httpFetcher } from '../crawl.mjs'
@@ -9,6 +10,7 @@ import { readLogos, switchTheme } from './read-logos.js'
 import { readPage } from './read-page.js'
 import { CONTACT_PATTERN } from './site-parts.mjs'
 
+const PHONE = 390
 const STYLE_LINK = /<link\b[^>]*rel\s*=\s*["']?stylesheet[^>]*>/gi
 const INLINE_STYLE = /<style\b[^>]*>([\s\S]*?)<\/style>/gi
 
@@ -27,24 +29,29 @@ export function stylesOfHtml(html, siteUrl, aliasHosts = []) {
   return { links, inline }
 }
 
-/** Every stylesheet the pages serve, fetched once: `[{from, css}]` (inline blocks named by their page). */
+/** Every stylesheet the pages serve, fetched once: `[{from, css, pages}]` (inline blocks named by their page). */
 export async function fetchStyles({ pages, siteUrl, hostHeader }) {
   const fetchPage = httpFetcher({ siteUrl, hostHeader })
   const aliasHosts = hostHeader ? [hostHeader] : []
   const styles = []
-  const seen = new Set()
+  const seen = new Map()
   const htmls = []
   for (const p of pages) {
     const r = await fetchPage(urlOfPath(p.path, siteUrl))
     if (r.status !== 200) continue
     htmls.push({ pageId: p.pageId, html: r.html })
     const { links, inline } = stylesOfHtml(r.html, siteUrl, aliasHosts)
-    for (const [i, css] of inline.entries()) styles.push({ from: `${p.path} inline style ${i + 1}`, css })
+    for (const [i, css] of inline.entries())
+      styles.push({ from: `${p.path} inline style ${i + 1}`, css, pages: [p.path] })
     for (const href of links) {
-      if (seen.has(href)) continue
-      seen.add(href)
+      if (seen.has(href)) {
+        seen.get(href)?.pages.push(p.path)
+        continue
+      }
       const s = await fetchPage(new URL(href, siteUrl).href)
-      if (s.status === 200) styles.push({ from: href.split('?')[0], css: s.html })
+      const style = s.status === 200 ? { from: href.split('?')[0], css: s.html, pages: [p.path] } : null
+      seen.set(href, style)
+      if (style) styles.push(style)
     }
   }
   return { styles, htmls }
@@ -90,6 +97,13 @@ export async function browseSite({
           blockCount: opened.blocks.filter((b) => b.visible).length
         })
         logoReads.push({ pageId: p.pageId, theme, opening: true, logos: first.logos })
+        // A logo the template shows only on a phone (a smaller mark in the bar) is read at phone width.
+        await page.setViewportSize({ width: PHONE, height: 900 })
+        await page.waitForTimeout(250)
+        const phone = await page.evaluate(readLogos, { logoFiles, siteName, brand: [] })
+        logoReads.push({ pageId: p.pageId, theme, opening: true, width: PHONE, logos: phone.logos })
+        await page.setViewportSize({ width: 1440, height: 900 })
+        await page.waitForTimeout(250)
         const other = await page.evaluate(switchTheme)
         if (other) {
           await page.waitForTimeout(250)

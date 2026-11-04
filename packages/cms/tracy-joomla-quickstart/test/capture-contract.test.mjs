@@ -1778,6 +1778,177 @@ test(
 )
 
 test(
+  '--template-style-logos declares the default picture a T3 style prints when its logo param is empty',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.template_styles = [
+      style('9', {
+        home: '1',
+        params: JSON.stringify({ logotype: 'image', logoimage: '', enable_logoimage_sm: '1', sitename: '' })
+      }),
+      style('10', { title: 'Tracy - Text', params: JSON.stringify({ logotype: 'text', logoimage: '' }) })
+    ]
+    // The template ships its own logo.png but no logo-sm.png, so the small one comes from the T3 base.
+    const run = capture(inv, {
+      args: ['--template-style-logos'],
+      files: { 'templates/tracy/images/logo.png': 'png' }
+    })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.entity.startsWith('templateStyle-'))
+    assert.deepEqual(
+      slots.map((s) => [s.key, s.jsonPath, s.sample, s.role, s.customize, s.requiresEvidence]),
+      [
+        [
+          'templateStyle-9.0',
+          ['logoimage'],
+          'templates/tracy/images/logo.png',
+          'business.logo',
+          'keep',
+          false
+        ],
+        [
+          'templateStyle-9.1',
+          ['logoimage_sm'],
+          'plugins/system/t3/base/images/logo-sm.png',
+          'business.logo',
+          'keep',
+          false
+        ]
+      ],
+      'a style whose logotype is text prints no picture, so it declares none'
+    )
+    assert.deepEqual(slots[0].group, { id: 'site-logo.business', item: 0, kind: 'business' })
+  }
+)
+
+test(
+  '--full-coverage declares each page masthead of mod_jamasthead: its background, title and description',
+  needsPhp,
+  () => {
+    const config = {
+      item_id: { 0: ['117'], 1: ['108'], 2: ['130'], 3: ['124'] },
+      title: { 0: 'Contact', 1: 'Our Blog', 2: 'Video', 3: 'Gone' },
+      description: { 0: 'Find us', 1: '', 2: 'Watch', 3: 'Gone too' },
+      background: {
+        0: 'images/bg-contact.jpg',
+        1: 'images/banner-blog.jpg',
+        2: 'images/intro.mp4',
+        3: 'images/bg-gone.jpg'
+      }
+    }
+    const inv = clean()
+    // Menu item 124 does not exist: its entry never shows, so it declares nothing.
+    inv.menu.push(
+      menu('117', { path: 'contact' }),
+      menu('108', { path: 'blog' }),
+      menu('130', { path: 'video' })
+    )
+    inv.modules = [
+      module('20', {
+        title: 'Masthead',
+        module: 'mod_jamasthead',
+        position: 'masthead',
+        params: JSON.stringify({ 'default-title': 'Diner', menuitem_config: config })
+      }),
+      // Another module type with the same param name declares nothing from it.
+      module('21', {
+        title: 'Other',
+        module: 'mod_other',
+        params: JSON.stringify({ menuitem_config: config })
+      })
+    ]
+    const plain = capture(inv)
+    assertWritten(plain)
+    assert.equal(
+      plain.read('content-map.json').slots.some((s) => s.jsonPath?.[0] === 'menuitem_config'),
+      false,
+      'off without --full-coverage: a published profile re-captures byte for byte'
+    )
+    const run = capture(inv, { args: ['--full-coverage'] })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.jsonPath?.[0] === 'menuitem_config')
+    assert.deepEqual(
+      slots.map((s) => [s.entity, s.column, s.type, s.jsonPath.join('|'), s.sample, s.role, s.label]),
+      [
+        [
+          'module-20',
+          'params',
+          'image',
+          'menuitem_config|background|0',
+          'images/bg-contact.jpg',
+          'business.hero_image',
+          'Masthead / menu item 117 / background'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|title|0',
+          'Contact',
+          'editorial.heading',
+          'Masthead / menu item 117 / title'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|description|0',
+          'Find us',
+          'editorial.paragraph',
+          'Masthead / menu item 117 / description'
+        ],
+        [
+          'module-20',
+          'params',
+          'image',
+          'menuitem_config|background|1',
+          'images/banner-blog.jpg',
+          'business.hero_image',
+          'Masthead / menu item 108 / background'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|title|1',
+          'Our Blog',
+          'editorial.heading',
+          'Masthead / menu item 108 / title'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|title|2',
+          'Video',
+          'editorial.heading',
+          'Masthead / menu item 130 / title'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|description|2',
+          'Watch',
+          'editorial.paragraph',
+          'Masthead / menu item 130 / description'
+        ]
+      ],
+      'an empty description, a video background and an entry for a missing menu item are not slots'
+    )
+    // One group per page, so each page's banner is replaced on its own.
+    assert.deepEqual(
+      slots.filter((s) => s.type === 'image').map((s) => s.group),
+      [
+        { id: 'module-20.masthead-0', item: 0, kind: 'business' },
+        { id: 'module-20.masthead-1', item: 0, kind: 'business' }
+      ]
+    )
+  }
+)
+
+test(
   '--skip-trashed-menu-items leaves a trashed menu item out of the entities and the pages',
   needsPhp,
   () => {

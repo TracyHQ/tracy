@@ -161,6 +161,25 @@ test('a price is demo content: numeric-only text is not ignored, and is found in
   assert.equal(byValue(items, '28').class, 'c')
 })
 
+test('an all-numeric date a layout prints is core like a written one; a phone number is not', () => {
+  const { items } = audit([
+    { kind: 'text', value: '06.09.2021' },
+    { kind: 'text', value: '2021/09/06' },
+    { kind: 'text', value: '6 September 2021' },
+    { kind: 'text', value: '(084) 555-0110' }
+  ])
+  assert.deepEqual(
+    items.slice(0, 3).map((i) => [i.value, i.class]),
+    [
+      ['06.09.2021', 'c'],
+      ['2021/09/06', 'c'],
+      ['6 September 2021', 'c']
+    ]
+  )
+  // A phone number has the digits but not the shape: never core.
+  assert.notEqual(byValue(items, '(084) 555-0110').class, 'c')
+})
+
 test('a capture hole says whether the presentation lock pins its field (locked) or nothing declares it', () => {
   const { items } = audit([
     { kind: 'text', value: 'Join over 100k of inspiring creatives' },

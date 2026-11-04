@@ -9,12 +9,15 @@
 
 /**
  * Tag and measure the frames `{id, path}` inside block `block`; with no block, inside any block of the page
- * (`host` names the block where the picture was found). Pixel reads need same-site pictures.
+ * (`host` names the block where the picture was found). With `anywhere`, a picture outside every block (a footer
+ * logo the template's own layout prints) is found in the page region that holds it (`header`, `footer`, `aside`,
+ * `nav`, `main`, else the body), which is tagged `region-<tag>` so it can be judged like a block. Pixel reads need
+ * same-site pictures.
  */
-export async function readFrames({ block, frames }) {
+export async function readFrames({ block, frames, anywhere = false }) {
   const roots = block
     ? [document.querySelector(`[data-kit-block="${block}"]`)].filter(Boolean)
-    : [...document.querySelectorAll('[data-kit-block]')]
+    : [...document.querySelectorAll('[data-kit-block]'), ...(anywhere ? [document.body] : [])]
   if (!roots.length) return { found: false, frames: {} }
   const fileOf = (u) => {
     try {
@@ -150,6 +153,12 @@ export async function readFrames({ block, frames }) {
       if (via && (p === via.el || p.contains(via.el))) return false
       return overlap(b, box(p)) >= 0.5
     })
+    if (root === document.body) {
+      const region = el.closest('header, footer, aside, nav, main') ?? document.body
+      if (!region.hasAttribute('data-kit-block'))
+        region.setAttribute('data-kit-block', `region-${region.tagName.toLowerCase()}`)
+      root = region
+    }
     out[f.id] = {
       found: true,
       host: root.getAttribute('data-kit-block'),

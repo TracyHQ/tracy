@@ -9,7 +9,9 @@
  * set lives in a slider or in tabs (then only one line or one tab shows at a time).
  */
 export function readDetails() {
-  const STATE = /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$/
+  // Zebra classes (`cat-list-row0` / `cat-list-row1`, `odd` / `even`) alternate between rows of one set: state too.
+  const STATE =
+    /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$|(?:^|-)row\d$|^(?:odd|even)$/
   const SLIDER =
     '.owl-carousel, .swiper, .swiper-container, .slick-slider, .carousel, .splide, [data-ride="carousel"]'
   const TABS_PARENT = '.tab-content, .nav-tabs, .nav-pills, [role="tablist"]'
@@ -193,7 +195,7 @@ export function readDetails() {
     // input) with its label and what it opens: a modal or panel it targets, the form it sends, or a script.
     const clickables = []
     for (const el of root.querySelectorAll(
-      'button, [role="button"], [role="tab"], a:not([href]), a[href^="#"][data-bs-toggle], a[href^="javascript:" i], input[type="submit"], input[type="button"]'
+      'button, [role="button"], [role="tab"], a:not([href]), a[href^="#"][data-bs-toggle], a[href^="#"][data-toggle], a[href^="#"][data-bs-slide], a[href^="#"][data-slide], form a[href="#"], a[href^="javascript:" i], input[type="submit"], input[type="button"]'
     )) {
       if (!shown(el)) continue
       const label = (
@@ -209,11 +211,16 @@ export function readDetails() {
       // A link with a real address is read as a link, even when it also toggles a menu.
       const href = el.tagName === 'A' ? (el.getAttribute('href') ?? '').trim() : ''
       if (href && !/^(#|javascript:)/i.test(href)) continue
-      // A toggle names its panel by data-bs-target, aria-controls, or (a tab or collapse link) its own #fragment.
+      // A toggle names its panel by data-bs-target, aria-controls, or (a tab or collapse link) its own #fragment;
+      // Bootstrap 3 and 4 (a T3 template) spell the attributes without "bs-".
+      const toggle = el.getAttribute('data-bs-toggle') || el.getAttribute('data-toggle')
+      // A carousel control (`data-bs-slide`, `data-slide`) moves the carousel its #fragment names.
+      const slide = el.getAttribute('data-bs-slide') || el.getAttribute('data-slide')
       const opens =
         el.getAttribute('data-bs-target') ||
+        el.getAttribute('data-target') ||
         el.getAttribute('aria-controls') ||
-        (el.getAttribute('data-bs-toggle') && /^#[\w-]/.test(href) ? href : null) ||
+        ((toggle || slide) && /^#[\w-]/.test(href) ? href : null) ||
         null
       // A menu heading opens the submenu next to it.
       const submenu =
@@ -228,13 +235,18 @@ export function readDetails() {
         } catch {}
         const map = !!held?.querySelector('iframe[src*="map"], [id*="map" i], [class*="map" i]')
         target = {
-          kind: el.getAttribute('data-bs-toggle') || 'panel',
+          kind: toggle || (slide ? 'slide' : 'panel'),
           element: opens,
           shows: map ? 'map' : null
         }
       } else if (el.type === 'submit' && el.form)
         target = { kind: 'form', action: el.form.getAttribute('action') }
-      else if (el.getAttribute('onclick')) target = { kind: 'script' }
+      // A `#` link inside a form (the stars of a rating form) is a control of that form: its script sends it.
+      else if (el.tagName === 'A' && href === '#' && el.closest('form'))
+        target = { kind: 'form', action: el.closest('form').getAttribute('action') }
+      // A handler in its own attribute, or an address that only runs a script (`javascript:void(0)`, bound by the
+      // template's script): either way a script decides what it does.
+      else if (el.getAttribute('onclick') || /^javascript:/i.test(href)) target = { kind: 'script' }
       clickables.push({ position: clickables.length, label, tag: el.tagName.toLowerCase(), target })
     }
     const repeats = []
@@ -264,7 +276,14 @@ export function readDetails() {
           container: box(parent),
           rows: boxes,
           // The first link of every row: tells a set of content items (each row opens a page) from the rest.
-          rowLinks: rows.map((r) => (r.matches('a[href]') ? r : r.querySelector('a[href]'))?.href ?? null)
+          rowLinks: rows.map((r) => (r.matches('a[href]') ? r : r.querySelector('a[href]'))?.href ?? null),
+          // Every link of every row (a card may lead with its category before its title link), at most six.
+          rowHrefs: rows.map((r) =>
+            (r.matches('a[href]') ? [r] : [...r.querySelectorAll('a[href]')]).slice(0, 6).map((a) => a.href)
+          ),
+          // Rows inside another tagged block nested in this one (a sidebar module in the component area) are
+          // that block's rows, not this block's.
+          nested: parent.closest('[data-kit-block]') !== root
         })
       }
       if (repeats.length >= 40) break
@@ -308,7 +327,11 @@ export function readDetails() {
       .filter((li) => shown(li) && !li.querySelector('li'))
       .map((li) => (li.innerText || '').replace(/\s+/g, ' ').trim())
       .filter((t) => t.length >= 2)
+    // A listing's page-size control (`limit`, the CMS's own name for it): the number of items a page shows.
+    const limit = root.querySelector('select[name="limit"], select[name$="[limit]"]')
+    const pageSizeControl = limit && Number(limit.value) > 0 ? Number(limit.value) : null
     out[root.getAttribute('data-kit-block')] = {
+      ...(pageSizeControl ? { pageSizeControl } : {}),
       links,
       texts: [...texts],
       textCounts,

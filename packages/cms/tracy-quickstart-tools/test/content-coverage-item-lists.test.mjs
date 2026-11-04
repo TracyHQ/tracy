@@ -356,3 +356,15 @@ test('a card title whose words also fill a footer menu link still anchors its ca
   const title42 = list.rowSlots.find((r) => r.field === 'title').items[0]
   assert.deepEqual([title42.item, title42.slot], ['article-42', 'article-42.0'])
 })
+
+test('a block the JA module chrome wraps in Section<id> is found by that id; a page section-<n> is not a module', () => {
+  const { map, lock, findings } = fixture()
+  for (const it of findings.pages[0].items)
+    if (it.scopes?.includes('Mod70')) it.scopes = ['latestnews-70', 'Section70', 't3-section-top']
+  const list = itemListsOf({ map, lock, findings }).itemLists['module-70.items']
+  assert.deepEqual(list.shown, ['article-42', 'article-41', 'article-43'])
+  assert.equal(list.observedBy, 'block')
+  // `section-2` names a page section, never block 2.
+  for (const it of findings.pages[0].items) if (it.scopes?.includes('Section70')) it.scopes = ['section-70']
+  assert.deepEqual(itemListsOf({ map, lock, findings }).itemLists['module-70.items'].shown, [])
+})

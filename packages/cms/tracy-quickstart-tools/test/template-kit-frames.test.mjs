@@ -453,3 +453,35 @@ test('the pipeline measures every list it can find rows for, and groups template
     reason: 'the last line is centered'
   })
 })
+
+test('a frame only a phone shows is sized there; a picture field the demo leaves empty is no measurement to miss', () => {
+  const slots = [
+    { key: 'templateStyle-9.2', type: 'image', sample: 'images/logo-mobile.png', role: 'business.logo' },
+    { key: 'module-5.1', type: 'image', sample: '', role: 'editorial.illustration' }
+  ]
+  const shown = { found: true, shown: true, box: { width: 60, height: 60 }, pixels: { share: 0 } }
+  const evidence = {
+    'templateStyle-9.2': {
+      block: 'header',
+      widths: {
+        1440: { found: true, shown: false, box: { width: 0, height: 0 } },
+        390: { ...shown, hidden: { check: { ok: true, reason: 'the header kept its size' } } }
+      }
+    }
+  }
+  const errors = []
+  const { frames } = buildFrames({
+    blockId: 'header',
+    slots,
+    evidence,
+    classes: {},
+    review: {},
+    widths: ['1440', '390'],
+    errors,
+    logoIds: new Set(['templateStyle-9.2'])
+  })
+  const [phone, empty] = frames
+  assert.deepEqual([phone.width, phone.height, phone.sizeAt, phone.canHide], [60, 60, 390, true])
+  assert.deepEqual([empty.emptyInDemo, empty.canHide, empty.kind, empty.width], [true, true, null, null])
+  assert.deepEqual(errors, [])
+})

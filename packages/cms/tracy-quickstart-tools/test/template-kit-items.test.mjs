@@ -7,7 +7,7 @@ import { test } from 'node:test'
 import { noMinReason } from '../template-kit/lib/min-evidence.mjs'
 import { matchRepeat } from '../template-kit/lib/rows.mjs'
 
-import { itemListsOf } from '../template-kit/lib/kit-item-lists.mjs'
+import { itemListsOf, joinMeasuredTwins } from '../template-kit/lib/kit-item-lists.mjs'
 import { groupPages } from '../template-kit/lib/kit.mjs'
 import { minPlan } from '../template-kit/lib/pipeline.mjs'
 
@@ -174,4 +174,23 @@ test('rows in a closed tab count but lose to shown rows, and a list with no mini
     /every count from 1 to 2 leaves a hole.*min 1 once centered/
   )
   assert.match(noMinReason({ checks: { 1: {} }, max: 2 }, 2), /none lays out without a hole/)
+})
+
+test('a list measured under the map list id joins the map list and leaves, keeping its measured minimum', () => {
+  const measured = { id: 'tag-4.items', rowKind: 'items', min: 2, minFrom: 'measured', max: 3, rowSlots: [] }
+  const other = { id: 'module-9.items', rowKind: 'items', min: 1, rowSlots: [] }
+  const blockLists = [measured, other]
+  const fromMap = {
+    id: 'tag-4.items',
+    rowKind: 'items',
+    min: null,
+    minFrom: 'unknown',
+    max: 3,
+    rowSlots: [{ field: 'title' }]
+  }
+  joinMeasuredTwins(blockLists, [fromMap])
+  assert.deepEqual(blockLists, [other])
+  assert.equal(fromMap.min, 2)
+  assert.equal(fromMap.minFrom, 'measured')
+  assert.deepEqual(fromMap.rowSlots, [{ field: 'title' }])
 })

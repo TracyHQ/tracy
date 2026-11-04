@@ -5,7 +5,7 @@ import { shownParagraphs } from './orphan-text.mjs'
 import { isFactRole } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { imageIdOf, neutralKey } from './ids.mjs'
-import { canonicalPath, pathOfRoute } from './kit-paths.mjs'
+import { actionAddress, canonicalPath, pathOfRoute, siteAddress } from './kit-paths.mjs'
 import { slotsOfBlock } from './block-slots.mjs'
 import { buildFrames } from './kit-frames.mjs'
 import { itemListsOf } from './kit-item-lists.mjs'
@@ -179,7 +179,8 @@ export function buildBlock({
   const links = shownLinks(desk?.links, linkIcons).map((l, i) => {
     const target =
       canonicalPath(l.href, siteUrl, aliasHosts) ??
-      (/^(https?:|mailto:|tel:)/i.test(l.href ?? '') && !aliasHosts.some((h) => l.href.includes(h))
+      // A same-site address that is no page (a picture file) has no target, on whatever host it was read.
+      (/^(https?:|mailto:|tel:)/i.test(l.href ?? '') && siteAddress(l.href, siteUrl, aliasHosts) === null
         ? l.href
         : null)
     const icon = l.icon ?? null
@@ -193,11 +194,15 @@ export function buildBlock({
     const paired = pair ? neutralKey(pair.key) : null
     const linkId = paired && !usedIds.has(paired) ? paired : `${id}.link-${i + 1}`
     usedIds.add(linkId)
+    // An address of the site that runs a task (a question form opened in a modal, a print view) is no page: the link
+    // opens that action.
+    const action = target ? null : actionAddress(l.href, siteUrl, aliasHosts)
     return {
       id: linkId,
       position: l.position ?? i,
       label: l.label || null,
       target,
+      ...(action ? { opens: { kind: 'action', action } } : {}),
       ...(icon ? { icon: { ...icon, network } } : {})
     }
   })
@@ -212,7 +217,7 @@ export function buildBlock({
     label: c.label,
     target: null,
     element: c.tag,
-    opens: opensOf(c.target)
+    opens: opensOf(c.target, siteUrl, aliasHosts)
   }))
   labelLinks({ links: buttons, menuBlocks: {}, mapSlots: idx.map.slots, siteUrl, aliasHosts })
   for (const b of buttons) {
@@ -397,12 +402,13 @@ const pagesOf = (rec, widths) => new Set(widths.flatMap((w) => rec.widths[w]?.pa
  * page's settings, which no content map slot holds, says so), a tab or collapse panel, a menu heading's submenu, the
  * form it sends, or a script.
  */
-function opensOf(t) {
+function opensOf(t, siteUrl, aliasHosts) {
   if (!t) return null
-  if (t.kind === 'form') return { kind: 'form', action: t.action ?? null }
+  if (t.kind === 'form')
+    return { kind: 'form', action: siteAddress(t.action, siteUrl, aliasHosts) ?? t.action ?? null }
   if (t.kind === 'script') return { kind: 'script' }
   if (t.kind === 'submenu') return { kind: 'submenu' }
-  const out = { kind: t.kind === 'modal' ? 'modal' : 'panel', element: t.element }
+  const out = { kind: t.kind === 'modal' || t.kind === 'slide' ? t.kind : 'panel', element: t.element }
   if (t.shows === 'map')
     Object.assign(out, {
       shows: 'map',

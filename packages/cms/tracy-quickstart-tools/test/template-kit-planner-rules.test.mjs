@@ -7,7 +7,7 @@ import { test } from 'node:test'
 import { chromium } from '@playwright/test'
 
 import { detailPageChecks, groupPages, mixedGroupChecks } from '../template-kit/lib/page-groups.mjs'
-import { representativeChecks } from '../template-kit/lib/pack.mjs'
+import { representativeChecks, representativeOf } from '../template-kit/lib/pack.mjs'
 import { readTextFit } from '../template-kit/lib/read-text-fit.js'
 import { judgeShowcase, showcaseChecks } from '../template-kit/lib/showcase-pages.mjs'
 import { assignSlotOwners, slotOwnerChecks } from '../template-kit/lib/slot-owners.mjs'
@@ -268,4 +268,94 @@ test('self-check: a group with items whose representative is not its listing pag
   const stale = [{ ...groups[0], representative: 'page-blog_jab' }]
   assert.equal(representativeChecks({ pages, pageGroups: stale, errors }), 1)
   assert.equal(errors[0].kind, 'representative-not-listing')
+})
+
+test('a listing listed by the page above it stays its own group: a shop of categories, each with its products', () => {
+  // A made-up kite shop: the shop page lists its categories, each category lists its products one level down; one
+  // product is shown on no list (the demo's list is cut at six) and still joins its category.
+  const pages = [
+    page('page-shop', '/shop', 'shop home', { inMainMenu: true }),
+    page('page-shop_kites', '/shop/kites', 'shop category', { inMainMenu: true }),
+    page('page-shop_kites_delta', '/shop/kites/delta-detail', 'unknown'),
+    page('page-shop_kites_box', '/shop/kites/box-detail', 'unknown'),
+    page('page-shop_kites_sled', '/shop/kites/sled-detail', 'unknown'),
+    page('page-shop_reels', '/shop/reels', 'shop category', { inMainMenu: true }),
+    page('page-shop_reels_hand', '/shop/reels/hand-detail', 'unknown'),
+    page('page-help', '/help', 'category listing', { inMainMenu: true }),
+    page('page-help_faq', '/help/faq', 'category listing', { inMainMenu: true }),
+    page('page-help_faq_one', '/help/faq/one', 'article')
+  ]
+  const listedBy = new Map([
+    ['/shop/kites', new Set(['/shop'])],
+    ['/shop/reels', new Set(['/shop'])],
+    ['/shop/kites/delta-detail', new Set(['/shop/kites', '/'])],
+    ['/shop/kites/box-detail', new Set(['/shop/kites'])],
+    ['/shop/reels/hand-detail', new Set(['/shop/reels'])],
+    ['/help/faq', new Set(['/help'])],
+    ['/help/faq/one', new Set(['/help/faq'])]
+  ])
+  const groups = groupPages(pages, new Map(), { listedBy })
+  const of = (root) => groups.find((g) => g.root === root)?.children
+  assert.deepEqual(of('page-shop'), [])
+  assert.deepEqual(of('page-shop_kites'), [
+    'page-shop_kites_delta',
+    'page-shop_kites_box',
+    'page-shop_kites_sled'
+  ])
+  assert.deepEqual(of('page-shop_reels'), ['page-shop_reels_hand'])
+  assert.deepEqual(of('page-help_faq'), ['page-help_faq_one'])
+  assert.equal(mixedGroupChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 0)
+  assert.equal(detailPageChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 0)
+})
+
+test('a further result page of a listed listing stays with it, and the group does not mix', () => {
+  const pages = [
+    page('page-guide', '/guide', 'article', { inMainMenu: true }),
+    page('page-guide_tips', '/guide/tips', 'category listing', { inMainMenu: true }),
+    page('page-guide_tips--start-5', '/guide/tips?start=5', 'category listing (list position 5)', {
+      from: ['/guide/tips']
+    })
+  ]
+  const listedBy = new Map([['/guide/tips', new Set(['/guide'])]])
+  const groups = groupPages(pages, new Map(), { listedBy })
+  assert.deepEqual(groups.find((g) => g.root === 'page-guide')?.children, [
+    'page-guide_tips',
+    'page-guide_tips--start-5'
+  ])
+  assert.equal(mixedGroupChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 0)
+})
+
+test("the front page keeps its own group and shot when its menu item points to a category's article", () => {
+  const pages = [
+    page('page-home', '/', 'article', { inMainMenu: true, from: ['/news'] }),
+    page('page-news', '/news', 'category listing', { inMainMenu: true }),
+    page('page-news_first', '/news/first', 'article')
+  ]
+  const itemParent = new Map([
+    ['/', '/news'],
+    ['/news/first', '/news']
+  ])
+  const groups = groupPages(pages, itemParent)
+  assert.deepEqual(groups.find((g) => g.root === 'page-home')?.children, [])
+  assert.deepEqual(groups.find((g) => g.root === 'page-news')?.children, ['page-news_first'])
+  assert.equal(pages[0].group, 'group-home')
+  const byId = new Map(pages.map((p) => [p.id, p]))
+  const home = groups.find((g) => g.root === 'page-home')
+  assert.equal(representativeOf(home, byId)?.page, 'page-home')
+})
+
+test('a front page held in another group is a mixed group, even as an item of that category', () => {
+  const pages = [
+    page('page-home', '/', 'article', { inMainMenu: true }),
+    page('page-news', '/news', 'category listing', { inMainMenu: true })
+  ]
+  const errors = []
+  const mixed = mixedGroupChecks({
+    pages,
+    pageGroups: [{ id: 'group-news', root: 'page-news', children: ['page-home'] }],
+    itemParent: new Map([['/', '/news']]),
+    errors
+  })
+  assert.equal(mixed, 1)
+  assert.match(errors[0].reason, /the front page/)
 })

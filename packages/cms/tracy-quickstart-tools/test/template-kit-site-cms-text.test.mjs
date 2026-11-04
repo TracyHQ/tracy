@@ -1,7 +1,7 @@
 // Template kit, site part: the sentences a CMS prints from its language files (fixed text and the site name line),
 // the override that hides one, and the write path that may only touch the override folder. Made-up studio data.
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
@@ -16,7 +16,7 @@ import {
   stringPattern,
   withNameSource
 } from '../template-kit/lib/site/cms-strings.mjs'
-import { judgeHide, withEmptyOverride } from '../template-kit/lib/site/hide-cms-text.mjs'
+import { judgeHide, wholeWordCount, withEmptyOverride } from '../template-kit/lib/site/hide-cms-text.mjs'
 
 const FOOTER_INI = [
   '; a comment',
@@ -146,4 +146,10 @@ test('the writer only touches the override folder, and the source reads many fil
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
+})
+
+test('whole words: a sentence ending in punctuation counts against the control set beside it', () => {
+  assert.equal(wholeWordCount('SORT BY\nNAME\n MANUFACTURER:SELECT MANUFACTURER', 'MANUFACTURER:'), 1)
+  assert.equal(wholeWordCount('Previous page', 'Prev'), 0)
+  assert.equal(wholeWordCount('Start Prev 1 2 Next End', 'End'), 1)
 })

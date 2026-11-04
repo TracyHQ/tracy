@@ -440,6 +440,15 @@ test('owners, roles and shapes', () => {
   })
   assert.deepEqual(ownerOfPath(idx, '/component/tags/tag/3-gloves'), { owner: 'tag-3', kind: 'tag listing' })
   assert.equal(ownerOfPath(idx, '/blog/author/alex').owner, null)
+  // A category view of another component (a category of news feeds) is not a category of content items.
+  const feeds = indexMap({
+    ...MAP,
+    pages: [
+      ...(MAP.pages ?? []),
+      { route: 'feeds', link: 'index.php?option=com_newsfeeds&view=category&id=5' }
+    ]
+  })
+  assert.deepEqual(ownerOfPath(feeds, '/feeds'), { owner: null, kind: 'newsfeeds category' })
   assert.equal(roleOf({ id: 'x', kind: 'module' }, 'footnav-2'), 'footer')
   assert.equal(shapeOfBox(160, 100).name, 'landscape')
   assert.equal(shapeOfBox(50, 100).name, 'portrait')
@@ -550,4 +559,39 @@ test('rows of uneven shapes with no row set to measure take the demo count as th
   assert.deepEqual([masonry.min, masonry.minSource], [2, 'demo count (not measured)'])
   const kit = buildKit({ map, capture, stamp: STAMP, siteUrl: SITE, aliasHosts: [] })
   assert.ok(!kit.errors.some((e) => e.field === 'blocks[block-11].lists[block-11.person].min'))
+})
+
+test('listing rows: a nested block is not the listing, a card opens its item through any link, a size control', () => {
+  const item = (p) => p.startsWith('/news/')
+  const at = (...paths) => paths.map((p) => `${SITE}${p}`)
+  const repeats = [
+    // A card that leads with its category link: its item is its second link.
+    {
+      path: [0, 0],
+      shape: 'DIV.leading',
+      count: 3,
+      rowLinks: at('/news', '/news', '/news'),
+      rowHrefs: [at('/news', '/news/a'), at('/news', '/news/b'), at('/news', '/news/c')]
+    },
+    // A latest-articles module in the sidebar, nested in the listing's block: never the listing's rows.
+    {
+      path: [1, 0],
+      shape: 'LI.',
+      count: 5,
+      nested: true,
+      rowLinks: at('/news/a', '/news/b', '/news/c', '/news/d', '/news/e'),
+      rowHrefs: [at('/news/a'), at('/news/b'), at('/news/c'), at('/news/d'), at('/news/e')]
+    }
+  ]
+  assert.equal(itemRows(repeats, { isItemPage: item, siteUrl: SITE }).shape, 'DIV.leading')
+  const one = listingMax({
+    repeats,
+    isItemPage: item,
+    siteUrl: SITE,
+    path: '/tag',
+    pagePaths: ['/tag'],
+    pageSizeControl: 20
+  })
+  assert.deepEqual([one.max, one.maxSource, one.maxEvidence.rowsShown], [20, 'page-size-control', 3])
+  assert.equal(matchRepeat(repeats, 5), null, 'a nested row set is not a block row set')
 })

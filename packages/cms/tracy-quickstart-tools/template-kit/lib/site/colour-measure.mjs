@@ -1,7 +1,8 @@
 // What a template paints its brand with, measured in the stylesheets a site serves:
 //
 //   primary    the colour the framework role rules resolve to (links, the primary button, `.text-primary`, `.bg-primary`,
-//              the primary/link/accent theme variables), voted; with every role it was found in
+//              the primary/link/accent theme variables), voted; with every role it was found in. A winner only
+//              links are painted with gives way to the colour that fills the primary button or ground
 //   secondary  the same from the secondary roles, kept only when its hue stands apart from the primary
 //   status     the status colours (danger, warning, success, info), never brand
 //   on         the words the template writes on the primary colour, most used first
@@ -26,6 +27,10 @@ const ROLE_RULES = [
   [/^(?:\.btn)?\.btn-secondary$/, ['background-color', 'background'], 'secondary', 'button-fill'],
   [/^\.(?:text|bg)-secondary$/, ['color', 'background-color', 'background'], 'secondary', 'text-or-fill']
 ]
+/** The primary roles that paint a ground (a button, a panel), not only words. */
+const FILL_ROLES = new Set(['button-fill', 'fill'])
+/** A role that paints links only: the link rule, or a variable named after links. */
+const LINK_ROLE = /link/i
 const PRIMARY_VAR =
   /^--(?!ds-)(?:[a-z0-9]+-)*(?:(?:primary|brand|accent)(?:-colou?r)?|link(?:-hover|-active)?-colou?r)$/
 const SECONDARY_VAR = /^--(?!ds-)(?:[a-z0-9]+-)*secondary(?:-colou?r)?$/
@@ -104,7 +109,16 @@ export function measureBrandColours(styles, { variables = [] } = {}) {
     else if (DECLARED_SECONDARY.test(name)) vote('secondary', value, 1, `variable ${name}`)
   }
   const top = (m) => [...m.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
-  const primary = top(votes.primary)
+  // A colour only links are painted with is a link colour, not the brand: a colour that fills the primary button or
+  // the primary ground wins over it, however many link rules vote for the link colour.
+  const rolesOf = (hex) => [...(roles.primary.get(hex) ?? [])]
+  const linkOnly = (hex) => rolesOf(hex).every((r) => LINK_ROLE.test(r))
+  const filler = () =>
+    [...votes.primary.entries()]
+      .filter(([hex]) => rolesOf(hex).some((r) => FILL_ROLES.has(r)))
+      .sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
+  const voted = top(votes.primary)
+  const primary = voted && linkOnly(voted) ? (filler() ?? voted) : voted
   for (const hex of votes.secondary.keys())
     if (!primary || hueGapOf(/** @type {any} */ (rgbOf(hex)), /** @type {any} */ (rgbOf(primary))) < 20)
       votes.secondary.delete(hex)
