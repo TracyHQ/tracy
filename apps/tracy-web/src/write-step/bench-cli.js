@@ -22,10 +22,11 @@ export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   status <runId>                              state, phase, counts and the cause of a stop
   get <runId> --out <dir>                     write the run's site-write-report.json
   cancel <runId>                              stop a run between phases
-  check --run <runId> --account <email> [--out <dir>]
+  check --run <runId> --account <email> [--out <dir>] [--all-groups]
                                               measure the run's site against its report (site-check/1): reads only,
                                               runs in this process, keeps the result on the run's report; --out also
-                                              writes site-check.json. Exit 0 green, 1 red or unmeasured
+                                              writes site-check.json. Exit 0 green, 1 red or unmeasured.
+                                              --all-groups runs the page groups even when read-back is red (never green)
 ${SITE_USAGE}`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
@@ -65,7 +66,8 @@ export async function runCli(argv, deps) {
         by: { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' },
-        run: { type: 'string' }
+        run: { type: 'string' },
+        'all-groups': { type: 'boolean' }
       }
     })
     const [command, runId] = positionals
@@ -252,6 +254,7 @@ async function checkRun(d, values) {
     // The page groups need the site's host and the demo baseline of the quickstart; both are optional (site-check.js).
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
     baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
+    allGroups: values['all-groups'] === true,
     ...(d.now ? { now: d.now } : {})
   })
   await d.runs.saveReport(r.id, withReadBack(r.report, check))

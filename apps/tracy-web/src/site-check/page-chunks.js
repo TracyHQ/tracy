@@ -12,8 +12,15 @@ export const CALL_TIMEOUT_MS = 260_000
 export const chunksOf = (paths, size = PAGES_PER_CALL) =>
   Array.from({ length: Math.ceil(paths.length / size) }, (_, i) => paths.slice(i * size, (i + 1) * size))
 
+/**
+ * A path as the host's page-path rule takes it (no whitespace, no backslash): a space, a non-ASCII letter or a backslash is
+ * percent-encoded, anything already encoded or plain is left alone. A kit path with a space ("/team/jo bloggs") otherwise
+ * made the host refuse the whole call as BAD_REQUEST.
+ */
+export const hostPath = (p) => String(p).replace(/[^\x21-\x7e]|\\/gu, (ch) => encodeURIComponent(ch))
+
 /** A call's pages as the host takes them: the first ASKED_PER_CALL asked for, the rest planned. */
 export const callPages = (chunk) => ({
-  pages: chunk.slice(0, ASKED_PER_CALL),
-  plan: chunk.slice(ASKED_PER_CALL)
+  pages: chunk.slice(0, ASKED_PER_CALL).map(hostPath),
+  plan: chunk.slice(ASKED_PER_CALL).map(hostPath)
 })
