@@ -7,6 +7,7 @@
 export const LISTING = /^(category listing|featured articles|tag listing|author listing)/
 const ITEM = /^article/
 const LED = /^(tag listing|author listing)/
+const FRONT_PAGE = '/'
 
 const parentPath = (path) => path.split('/').slice(0, -1).join('/') || '/'
 
@@ -57,6 +58,8 @@ export function groupPages(pages, itemParent = new Map(), { listedBy = new Map()
     .filter((p) => LISTING.test(p.kind) && !p.path.includes('?'))
     .sort((a, b) => b.path.length - a.path.length)
   const rootOf = (p) => {
+    // The front page is its own group and shot whatever its menu item points to: an article of a category, a tag.
+    if (p.path === FRONT_PAGE) return null
     // A content item's detail page belongs to its category's page (the map's itemPages), whatever menu holds it.
     const parent = byPath.get(itemParent.get(p.path))
     if (parent && parent !== p) return parent
@@ -128,6 +131,7 @@ export function mixedGroupChecks({
       LED.test(c.kind) ||
       listerOf(c, listedBy, byPath, listers) === root
     const strangers = members.filter((c) => {
+      if (c.path === FRONT_PAGE) return true
       if (c.path.split('?')[0] === root.path && c.path.includes('?')) return false
       // A further result page of a page the group lists (a listed listing's `?start=5`).
       const base = byPath.get(c.path.split('?')[0])
@@ -148,7 +152,7 @@ export function mixedGroupChecks({
     errors.push({
       kind: 'mixed-page-group',
       field: `pageGroups[${g.id}]`,
-      reason: `the group of ${root.path} holds pages that are not its own items: ${strangers.map((c) => c.path).join(', ')}`
+      reason: `the group of ${root.path} holds pages that are not its own items: ${strangers.map((c) => (c.path === FRONT_PAGE ? 'the front page /' : c.path)).join(', ')}`
     })
   }
   return mixed

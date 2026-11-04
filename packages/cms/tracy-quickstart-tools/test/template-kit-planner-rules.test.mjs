@@ -7,7 +7,7 @@ import { test } from 'node:test'
 import { chromium } from '@playwright/test'
 
 import { detailPageChecks, groupPages, mixedGroupChecks } from '../template-kit/lib/page-groups.mjs'
-import { representativeChecks } from '../template-kit/lib/pack.mjs'
+import { representativeChecks, representativeOf } from '../template-kit/lib/pack.mjs'
 import { readTextFit } from '../template-kit/lib/read-text-fit.js'
 import { judgeShowcase, showcaseChecks } from '../template-kit/lib/showcase-pages.mjs'
 import { assignSlotOwners, slotOwnerChecks } from '../template-kit/lib/slot-owners.mjs'
@@ -323,4 +323,39 @@ test('a further result page of a listed listing stays with it, and the group doe
     'page-guide_tips--start-5'
   ])
   assert.equal(mixedGroupChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 0)
+})
+
+test("the front page keeps its own group and shot when its menu item points to a category's article", () => {
+  const pages = [
+    page('page-home', '/', 'article', { inMainMenu: true, from: ['/news'] }),
+    page('page-news', '/news', 'category listing', { inMainMenu: true }),
+    page('page-news_first', '/news/first', 'article')
+  ]
+  const itemParent = new Map([
+    ['/', '/news'],
+    ['/news/first', '/news']
+  ])
+  const groups = groupPages(pages, itemParent)
+  assert.deepEqual(groups.find((g) => g.root === 'page-home')?.children, [])
+  assert.deepEqual(groups.find((g) => g.root === 'page-news')?.children, ['page-news_first'])
+  assert.equal(pages[0].group, 'group-home')
+  const byId = new Map(pages.map((p) => [p.id, p]))
+  const home = groups.find((g) => g.root === 'page-home')
+  assert.equal(representativeOf(home, byId)?.page, 'page-home')
+})
+
+test('a front page held in another group is a mixed group, even as an item of that category', () => {
+  const pages = [
+    page('page-home', '/', 'article', { inMainMenu: true }),
+    page('page-news', '/news', 'category listing', { inMainMenu: true })
+  ]
+  const errors = []
+  const mixed = mixedGroupChecks({
+    pages,
+    pageGroups: [{ id: 'group-news', root: 'page-news', children: ['page-home'] }],
+    itemParent: new Map([['/', '/news']]),
+    errors
+  })
+  assert.equal(mixed, 1)
+  assert.match(errors[0].reason, /the front page/)
 })
