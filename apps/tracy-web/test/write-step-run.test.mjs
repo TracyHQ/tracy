@@ -1,6 +1,8 @@
 // The write step through its entry point (ADR 0044): frozen files in, orders to a fake site door and the write report out.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { routeChanges } from '../src/write-step/kit-slot-routes.js'
+import { planClaims } from '../src/write-step/owner-table.js'
 import { copy, KIT, plan, runStep as run, SITE } from './_write-step-run.mjs'
 
 test('the site copy reaches the site in one contract call, and the report says so per slot', async () => {
@@ -69,6 +71,21 @@ test('an unknown slot id stops the run before the site is written, and the repor
   assert.match(report.cause.reason, /block-99\.1/)
   assert.equal(site.applies().length, 0)
   assert.equal(report.counts.written, 0)
+})
+
+test('a slot the kit names only in a demo list, a link label, a page h1 or a setting slot is a kit slot', async () => {
+  const kit = KIT()
+  kit.doc.blocks[0].demoOwned = [{ id: 'block-2.91' }]
+  kit.doc.blocks[0].links = [{ labelId: 'block-2.92' }]
+  kit.doc.pages = [...(kit.doc.pages ?? []), { h1: { slot: 'block-2.93' } }]
+  kit.doc.site = { ...kit.doc.site, settingSlots: [{ id: 'block-2.94' }] }
+  const c = copy()
+  for (const slot of ['block-2.91', 'block-2.92', 'block-2.93', 'block-2.94'])
+    c.slots.push({ slot, owner: 'writer', text: 'Words for this slot', factIds: [] })
+  const { report } = await run({ copy: c }, {}, { kit })
+  // Past the kit check: the only one left to refuse them is the site, whose inspect here does not list them.
+  assert.equal(report.cause.code, 'UNKNOWN_SLOT')
+  assert.match(report.cause.reason, /the site does not have/i)
 })
 
 test('a slot the kit knows and the site does not stops the run with nothing written', async () => {
@@ -217,4 +234,53 @@ test('another kit and contract id flow through with no change: nothing is pinned
   const { report } = await run({ plan: p, copy: c }, { contract: 'made-up/x9/7.7.7' }, { kit })
   assert.equal(report.status, 'done')
   assert.equal(report.contract, 'made-up/x9/7.7.7')
+})
+
+test('a menu item leaving the dropdown claims no slot the plan fills elsewhere', () => {
+  const claims = planClaims(
+    {
+      plan: { pages: [] },
+      hidden: new Set(),
+      menuHide: [{ slot: 'menuItem-7.0' }, { slot: 'menuItem-8.0' }],
+      filled: new Map([['menuItem-7.0', {}]])
+    },
+    'plan.json'
+  )
+  assert.deepEqual(
+    claims.map((c) => c.slot),
+    ['menuItem-8.0']
+  )
+})
+
+test('an icon goes to its field as the class of the named network, and a setting slot is set aside', () => {
+  const icon = (id, network, field) => ({ id, type: 'icon', network, field, fieldValue: `fa fa-${network}` })
+  const kit = {
+    site: { settingSlots: [{ id: 'contact-1.mobile' }] },
+    blocks: [
+      {
+        lists: [
+          {
+            rows: [
+              { slots: [icon('block-9.1.icon', 'facebook', 'block-9.3')] },
+              { slots: [icon('block-9.2.icon', 'instagram', 'block-9.4')] }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  const { changes, routed, deferred } = routeChanges(
+    {
+      'module-9.1.icon': 'Instagram',
+      'module-9.2.icon': 'Myspace',
+      'contact-1.mobile': '+1',
+      'module-9.5': 'Kept'
+    },
+    kit,
+    ['block-9.1.icon', 'block-9.2.icon', 'contact-1.mobile', 'block-9.5'].map((slot) => ({ slot }))
+  )
+  assert.deepEqual(changes, { 'module-9.3': 'fa fa-instagram', 'module-9.5': 'Kept' })
+  assert.equal(routed.get('module-9.1.icon'), 'module-9.3')
+  assert.match(deferred.get('module-9.2.icon'), /no icon for "Myspace"/)
+  assert.match(deferred.get('contact-1.mobile'), /page settings/)
 })

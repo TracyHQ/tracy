@@ -17,8 +17,9 @@ const line = (slot, key, owner, status, reason, extra = {}) => ({
 })
 
 /** A line for each claim, from what the write did. */
-function claimLine(claim, { written, refused }) {
-  const key = contentMapKey(claim.slot)
+function claimLine(claim, { written, refused, routed, deferred }) {
+  const slotKey = contentMapKey(claim.slot)
+  const key = routed.get(slotKey) ?? slotKey
   if (claim.kind === 'hide')
     return line(
       claim.slot,
@@ -35,6 +36,7 @@ function claimLine(claim, { written, refused }) {
       'skipped',
       `the plan sends this link to ${claim.content}; link targets are not written yet`
     )
+  if (deferred.has(key)) return line(claim.slot, key, claim.owner, 'skipped', deferred.get(key))
   if (refused.has(key)) {
     const entry = refused.get(key)
     return line(claim.slot, key, claim.owner, 'failed', refusalWords(entry), { refusal: entry })
@@ -65,10 +67,18 @@ function extraLines(extras, owners) {
 /**
  * The slot lines of a report.
  * @param {{ owners: Map<string, object>, unowned: object[], extras: object, written: Iterable<string>,
- *   refused: Map<string, object> }} input
+ *   refused: Map<string, object>, routed?: Map<string, string>, deferred?: Map<string, string> }} input
  */
-export function slotLines({ owners, unowned, extras, written, refused }) {
-  const done = { written: new Set(written), refused }
+export function slotLines({
+  owners,
+  unowned,
+  extras,
+  written,
+  refused,
+  routed = new Map(),
+  deferred = new Map()
+}) {
+  const done = { written: new Set(written), refused, routed, deferred }
   return [
     ...[...owners.values()].map((claim) => claimLine(claim, done)),
     ...unowned.map((u) =>

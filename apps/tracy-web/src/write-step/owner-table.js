@@ -30,7 +30,7 @@ export function keptBlocks(plan) {
  * also fills elsewhere is not hidden), and the main menu items to hide are hide decisions as well. A target the plan gives
  * a link wins over a hide the plan gives it elsewhere, as a filled slot does.
  */
-export function planClaims({ plan, hidden, menuHide }, file) {
+export function planClaims({ plan, hidden, menuHide, filled = new Set() }, file) {
   const claims = []
   const linked = new Set()
   for (const d of keptBlocks(plan))
@@ -39,7 +39,12 @@ export function planClaims({ plan, hidden, menuHide }, file) {
         linked.add(l.link)
         claims.push({ slot: l.link, owner: 'plan', file, kind: 'link', content: String(l.leadsTo ?? '') })
       }
-  const hides = new Set([...hidden, ...arr(menuHide).map((m) => m?.slot)])
+  // A main menu item the plan takes out of the dropdown can share its label slot with a link a kept page shows. The
+  // plan fills that slot, so the words stay; leaving the dropdown is a page frame order, not a claim on the slot.
+  const menuHides = arr(menuHide)
+    .map((m) => m?.slot)
+    .filter((slot) => !filled.has(slot))
+  const hides = new Set([...hidden, ...menuHides])
   for (const slot of hides)
     if (typeof slot === 'string' && !linked.has(slot))
       claims.push({ slot, owner: 'plan', file, kind: 'hide', content: '(hide)' })

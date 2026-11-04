@@ -14,6 +14,8 @@ import { readCopy } from '../site-writer/copy-check/copy-view.js'
 import { exportContractMapping } from '../site-writer/contract-mapping.js'
 import { writeContract } from './contract-write.js'
 import { readFrozenFiles } from './input-files.js'
+import { routeChanges } from './kit-slot-routes.js'
+import { kitSlotIds } from './kit-slot-ids.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
 
@@ -90,11 +92,19 @@ export async function runWriteStep(input) {
   }
   let table = null
   let extras = {}
+  let routes = { routed: new Map(), deferred: new Map() }
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
     if (table) {
-      report.slots = slotLines({ owners: table.owners, unowned: report.unowned, extras, written, refused })
+      report.slots = slotLines({
+        owners: table.owners,
+        unowned: report.unowned,
+        extras,
+        written,
+        refused,
+        ...routes
+      })
       report.counts = countsOf(report.slots)
     }
     return report
@@ -132,11 +142,16 @@ export async function runWriteStep(input) {
     const { view } = readCopy(copy)
     table = ownerTable([
       ...copyClaims(view.slots, read.inputs.copy.file),
-      ...planClaims({ plan, hidden: index.hidden, menuHide: extras.mainMenu?.hide }, read.inputs.plan.file)
+      ...planClaims(
+        { plan, hidden: index.hidden, menuHide: extras.mainMenu?.hide, filled: index.expected },
+        read.inputs.plan.file
+      )
     ])
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
-    const unknown = view.slots.map((s) => s.slot).filter((slot) => !index.kitSlots.has(slot))
+    const known = kitSlotIds(kit.doc)
+    for (const slot of index.kitSlots.keys()) known.add(slot)
+    const unknown = view.slots.map((s) => s.slot).filter((slot) => !known.has(slot))
     if (unknown.length)
       return {
         stop: {
@@ -153,7 +168,9 @@ export async function runWriteStep(input) {
             .join('; ')
         }
       }
-    return { mapping: exported.mapping }
+    const { changes, ...found } = routeChanges(exported.mapping.changes, kit.doc, view.slots)
+    routes = found
+    return { mapping: { ...exported.mapping, changes } }
   })
   if (checked.stop) return stopped(checked.stop)
   const { mapping } = checked
