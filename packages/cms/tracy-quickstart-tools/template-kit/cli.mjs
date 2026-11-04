@@ -51,7 +51,7 @@ import { dirname, join, resolve } from 'node:path'
 
 import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
-import { readContractMap } from './lib/contract-read.mjs'
+import { readContractMap, readContractSamples } from './lib/contract-read.mjs'
 import { contactFieldChecks } from './lib/coverage-gate.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
@@ -152,7 +152,7 @@ function pack(out) {
 function slotRoles(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractSamples(o.contract)
   if (o.only === 'sentences') {
     settleSentenceGroups(kit, { map })
     writeJson(file, settled(kit, map, o))
@@ -173,7 +173,7 @@ function slotRoles(o, out) {
 function samples(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractSamples(o.contract)
   const r = settleSamples(kit, { map })
   writeJson(file, settled(kit, map, o))
   const { samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing, inlineMarkupLost } = kit.checks
@@ -198,7 +198,7 @@ async function measureFields(o, out) {
     hostHeader: str(o['host-header']),
     dbCommand: o['db-command'],
     kit: readJson(join(out, 'template-kit.json')),
-    map: readJson(join(o.contract, 'content-map.json')),
+    map: readContractSamples(o.contract),
     log
   })
   writeJson(join(out, 'field-drives.json'), drives)

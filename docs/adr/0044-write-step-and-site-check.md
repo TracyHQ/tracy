@@ -295,6 +295,19 @@ printed number, its digits, whether a `tel:` link holds it, and where). `phone-c
 on its last 9 digits) printed outside a `tel:` link: the template prints it as text, and the write step never puts markup in a text
 slot to make it a link. Another number on the page is not judged.
 
+### 25. A released contract's inline markup lives beside its sealed content map until the next contract version
+
+A heading such as `More<br><span>Blogs</span>` was captured as words only, so the kit could not list the line break and the
+accent span the template draws (decision 19). A released `content-map.json` is sealed: the Claude Cowork plugin binds every site
+to its hash, and changing one byte answers "Installed content contract changed" (ADR 0038 context 8 and decision 6, ADR 0039
+decision 6). So the markup of a released contract is never written into its map. `content-coverage/resample.mjs --sidecar`
+measures it against the installer's dump and writes it into `content-coverage.json` as `inlineMarkup.samples` (slot key to
+sample), a file the plugin does not hash and the seeder does not pin. The template kit takes a slot's sample from the content map
+first and from that sidecar second, only when the map's sample marks nothing and both read as the same words
+(`template-kit/lib/contract-read.mjs`); `inlineMarkupLost` counts the slots neither carries. The next contract version captures the
+markup into its map (`capture-contract.py --inline-markup`) and drops the sidecar. JA Boxing 1.0.10 is the first: 64 samples in
+the sidecar, its map back at the sealed bytes the 0.24.79 to 0.24.81 plugin carries; 1.0.11 takes them into its map.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

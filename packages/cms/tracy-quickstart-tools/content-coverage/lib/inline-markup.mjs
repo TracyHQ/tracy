@@ -124,8 +124,11 @@ export function inlineMarkupOf({ map, tables, write = false, markupOf = unitMark
   return { checked: measured.length, resampled, mismatched, lostBefore, lost, unread }
 }
 
-/** The block `content-coverage.json` carries (read by the template kit's `inlineMarkupLost`). */
-export function inlineMarkupBlock(r, { dump, measuredAt = new Date().toISOString() }) {
+/**
+ * The block `content-coverage.json` carries (read by the template kit's `inlineMarkupLost`). `samples` (slot key ->
+ * sample with its markup) is the sidecar of a sealed map, `resample.mjs --sidecar`; left out otherwise.
+ */
+export function inlineMarkupBlock(r, { dump, measuredAt = new Date().toISOString(), samples }) {
   return {
     measuredAt,
     dump,
@@ -134,6 +137,7 @@ export function inlineMarkupBlock(r, { dump, measuredAt = new Date().toISOString
     lost: r.lost.length,
     lostSlots: r.lost.slice(0, NAMED),
     mismatched: r.mismatched.length,
-    mismatchedSlots: r.mismatched.slice(0, NAMED)
+    mismatchedSlots: r.mismatched.slice(0, NAMED),
+    ...(samples ? { samples } : {})
   }
 }
