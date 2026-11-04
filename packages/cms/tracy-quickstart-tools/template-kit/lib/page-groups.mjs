@@ -11,10 +11,29 @@ const LED = /^(tag listing|author listing)/
 const parentPath = (path) => path.split('/').slice(0, -1).join('/') || '/'
 
 /** The page one path level up whose repeated list links to `p`, or null. */
-function listerOf(p, listedBy, byPath) {
+function upperLister(p, listedBy, byPath) {
   const up = parentPath(p.path)
   if (up === '/' || up === p.path || !listedBy.get(p.path)?.has(up)) return null
   return byPath.get(up) ?? null
+}
+
+/**
+ * The pages that list detail pages one path level down (a category of products, a team page): a listing by its
+ * structure, whatever its view is called. Such a page is never a detail page of the page above it.
+ */
+function listersOf(pages, listedBy, byPath) {
+  const out = new Set()
+  for (const p of pages) {
+    const up = upperLister(p, listedBy, byPath)
+    if (up) out.add(up.path)
+  }
+  return out
+}
+
+/** The page one path level up that lists `p`, when `p` lists no pages of its own; else null. */
+function listerOf(p, listedBy, byPath, listers = listersOf([...byPath.values()], listedBy, byPath)) {
+  if (listers.has(p.path)) return null
+  return upperLister(p, listedBy, byPath)
 }
 
 /**
@@ -24,6 +43,16 @@ function listerOf(p, listedBy, byPath) {
  */
 export function groupPages(pages, itemParent = new Map(), { listedBy = new Map() } = {}) {
   const byPath = new Map(pages.map((p) => [p.path, p]))
+  const listers = listersOf(pages, listedBy, byPath)
+  // The page kinds each lister's list links to: a page of that kind one level down that no list shows (the demo
+  // list is cut short) is one of its items too.
+  const listedKinds = new Map()
+  for (const p of pages) {
+    const up = listerOf(p, listedBy, byPath, listers)
+    if (!up) continue
+    if (!listedKinds.has(up.path)) listedKinds.set(up.path, new Set())
+    listedKinds.get(up.path).add(p.kind)
+  }
   const roots = pages
     .filter((p) => LISTING.test(p.kind) && !p.path.includes('?'))
     .sort((a, b) => b.path.length - a.path.length)
@@ -34,8 +63,17 @@ export function groupPages(pages, itemParent = new Map(), { listedBy = new Map()
     if (p.path.includes('?')) return byPath.get(p.path.split('?')[0]) ?? null
     // A detail page (a person, an item) whose page one level up lists it is one of that page's items, even with a
     // menu item of its own.
-    const up = listerOf(p, listedBy, byPath)
+    const up = listerOf(p, listedBy, byPath, listers)
     if (up) return up
+    const parent1 = byPath.get(parentPath(p.path))
+    if (
+      parent1 &&
+      !p.inMainMenu &&
+      !listers.has(p.path) &&
+      !LISTING.test(p.kind) &&
+      listedKinds.get(parent1.path)?.has(p.kind)
+    )
+      return parent1
     const from = byPath.get(p.from?.find((f) => byPath.has(f)))
     const base = from?.path.includes('?') ? (byPath.get(from.path.split('?')[0]) ?? from) : from
     // An author or tag page joins the page that leads to it (they share one layout).
@@ -74,20 +112,37 @@ export function mixedGroupChecks({
 }) {
   const byId = new Map(pages.map((p) => [p.id, p]))
   const byPath = new Map(pages.map((p) => [p.path, p]))
+  const listers = listersOf(pages, listedBy, byPath)
+  const kindsOf = new Map()
+  for (const p of pages) {
+    const up = listerOf(p, listedBy, byPath, listers)
+    if (up) kindsOf.set(up.path, (kindsOf.get(up.path) ?? new Set()).add(p.kind))
+  }
   let mixed = 0
   for (const g of pageGroups) {
     const root = byId.get(g.root)
     if (!root) continue
-    const strangers = g.children
-      .map((id) => byId.get(id))
-      .filter(Boolean)
-      .filter((c) => {
-        if (c.path.split('?')[0] === root.path && c.path.includes('?')) return false
-        if (itemParent.get(c.path) === root.path) return false
-        if (LED.test(c.kind)) return false
-        if (listerOf(c, listedBy, byPath) === root) return false
-        return !(ITEM.test(c.kind) && !c.inMainMenu)
-      })
+    const members = g.children.map((id) => byId.get(id)).filter(Boolean)
+    const ownItem = (c) =>
+      itemParent.get(c.path) === root.path ||
+      LED.test(c.kind) ||
+      listerOf(c, listedBy, byPath, listers) === root
+    const strangers = members.filter((c) => {
+      if (c.path.split('?')[0] === root.path && c.path.includes('?')) return false
+      // A further result page of a page the group lists (a listed listing's `?start=5`).
+      const base = byPath.get(c.path.split('?')[0])
+      if (c.path.includes('?') && base && members.includes(base) && ownItem(base)) return false
+      if (ownItem(c)) return false
+      // An item of the kind the root lists, one level down, that the demo's cut-short list does not show.
+      if (
+        parentPath(c.path) === root.path &&
+        !c.inMainMenu &&
+        !listers.has(c.path) &&
+        kindsOf.get(root.path)?.has(c.kind)
+      )
+        return false
+      return !(ITEM.test(c.kind) && !c.inMainMenu)
+    })
     if (!strangers.length) continue
     mixed++
     errors.push({
@@ -100,16 +155,17 @@ export function mixedGroupChecks({
 }
 
 /**
- * Self-check: a detail page that the page one path level up lists (`listedBy`) is in that page's group. Returns how
- * many are not.
+ * Self-check: a detail page that the page one path level up lists (`listedBy`) is in that page's group; a page that
+ * lists pages of its own is a listing, not a detail page. Returns how many are not.
  */
 export function detailPageChecks({ pages, pageGroups, listedBy = new Map(), errors }) {
   const byPath = new Map(pages.map((p) => [p.path, p]))
   const groupOf = new Map()
   for (const g of pageGroups) for (const id of [g.root, ...(g.children ?? [])]) groupOf.set(id, g)
+  const listers = listersOf(pages, listedBy, byPath)
   let wrong = 0
   for (const p of pages) {
-    const lister = listerOf(p, listedBy, byPath)
+    const lister = listerOf(p, listedBy, byPath, listers)
     if (!lister || groupOf.get(p.id)?.root === lister.id) continue
     wrong++
     errors.push({

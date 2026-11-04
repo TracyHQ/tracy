@@ -269,3 +269,58 @@ test('self-check: a group with items whose representative is not its listing pag
   assert.equal(representativeChecks({ pages, pageGroups: stale, errors }), 1)
   assert.equal(errors[0].kind, 'representative-not-listing')
 })
+
+test('a listing listed by the page above it stays its own group: a shop of categories, each with its products', () => {
+  // A made-up kite shop: the shop page lists its categories, each category lists its products one level down; one
+  // product is shown on no list (the demo's list is cut at six) and still joins its category.
+  const pages = [
+    page('page-shop', '/shop', 'shop home', { inMainMenu: true }),
+    page('page-shop_kites', '/shop/kites', 'shop category', { inMainMenu: true }),
+    page('page-shop_kites_delta', '/shop/kites/delta-detail', 'unknown'),
+    page('page-shop_kites_box', '/shop/kites/box-detail', 'unknown'),
+    page('page-shop_kites_sled', '/shop/kites/sled-detail', 'unknown'),
+    page('page-shop_reels', '/shop/reels', 'shop category', { inMainMenu: true }),
+    page('page-shop_reels_hand', '/shop/reels/hand-detail', 'unknown'),
+    page('page-help', '/help', 'category listing', { inMainMenu: true }),
+    page('page-help_faq', '/help/faq', 'category listing', { inMainMenu: true }),
+    page('page-help_faq_one', '/help/faq/one', 'article')
+  ]
+  const listedBy = new Map([
+    ['/shop/kites', new Set(['/shop'])],
+    ['/shop/reels', new Set(['/shop'])],
+    ['/shop/kites/delta-detail', new Set(['/shop/kites', '/'])],
+    ['/shop/kites/box-detail', new Set(['/shop/kites'])],
+    ['/shop/reels/hand-detail', new Set(['/shop/reels'])],
+    ['/help/faq', new Set(['/help'])],
+    ['/help/faq/one', new Set(['/help/faq'])]
+  ])
+  const groups = groupPages(pages, new Map(), { listedBy })
+  const of = (root) => groups.find((g) => g.root === root)?.children
+  assert.deepEqual(of('page-shop'), [])
+  assert.deepEqual(of('page-shop_kites'), [
+    'page-shop_kites_delta',
+    'page-shop_kites_box',
+    'page-shop_kites_sled'
+  ])
+  assert.deepEqual(of('page-shop_reels'), ['page-shop_reels_hand'])
+  assert.deepEqual(of('page-help_faq'), ['page-help_faq_one'])
+  assert.equal(mixedGroupChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 0)
+  assert.equal(detailPageChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 0)
+})
+
+test('a further result page of a listed listing stays with it, and the group does not mix', () => {
+  const pages = [
+    page('page-guide', '/guide', 'article', { inMainMenu: true }),
+    page('page-guide_tips', '/guide/tips', 'category listing', { inMainMenu: true }),
+    page('page-guide_tips--start-5', '/guide/tips?start=5', 'category listing (list position 5)', {
+      from: ['/guide/tips']
+    })
+  ]
+  const listedBy = new Map([['/guide/tips', new Set(['/guide'])]])
+  const groups = groupPages(pages, new Map(), { listedBy })
+  assert.deepEqual(groups.find((g) => g.root === 'page-guide')?.children, [
+    'page-guide_tips',
+    'page-guide_tips--start-5'
+  ])
+  assert.equal(mixedGroupChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 0)
+})

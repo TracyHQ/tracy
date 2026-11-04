@@ -440,6 +440,15 @@ test('owners, roles and shapes', () => {
   })
   assert.deepEqual(ownerOfPath(idx, '/component/tags/tag/3-gloves'), { owner: 'tag-3', kind: 'tag listing' })
   assert.equal(ownerOfPath(idx, '/blog/author/alex').owner, null)
+  // A category view of another component (a category of news feeds) is not a category of content items.
+  const feeds = indexMap({
+    ...MAP,
+    pages: [
+      ...(MAP.pages ?? []),
+      { route: 'feeds', link: 'index.php?option=com_newsfeeds&view=category&id=5' }
+    ]
+  })
+  assert.deepEqual(ownerOfPath(feeds, '/feeds'), { owner: null, kind: 'newsfeeds category' })
   assert.equal(roleOf({ id: 'x', kind: 'module' }, 'footnav-2'), 'footer')
   assert.equal(shapeOfBox(160, 100).name, 'landscape')
   assert.equal(shapeOfBox(50, 100).name, 'portrait')

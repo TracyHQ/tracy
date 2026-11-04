@@ -46,6 +46,11 @@ test('demo copy is content: cut short, split by markup, a hole where a link was,
   assert.ok(s.slotOf('meet our coaches of the season'), 'two slots printed by one element')
   assert.equal(s.slotOf('remember me'), null, 'template words are no slot')
   assert.equal(wordsInOrder('quisque morbi', 'quisque varius morbi'), false, 'too few words to say')
+  // One word of one sample and a number ("Harbour" is a menu item; "Harbour 2.4.1" a release in a news feed) says
+  // nothing about where the words came from.
+  const one = sampleIndex({ slots: [...MAP.slots, { key: 'menuItem-3.0', type: 'text', sample: 'Harbour' }] })
+  assert.equal(one.slotOf('harbour 2.4.1'), null, 'one word and a number is no slot')
+  assert.equal(one.slotOf('harbour')?.key, 'menuItem-3.0')
 })
 
 test('links: social profiles and ways to reach the business, even on a demo whose addresses are #', () => {

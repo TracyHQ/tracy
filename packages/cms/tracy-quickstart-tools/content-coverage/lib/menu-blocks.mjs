@@ -130,6 +130,8 @@ function itemsOfMenu(rows, settings) {
   return { orderFrom: 'item-id', kept: out }
 }
 
+const VISITOR_ACCESS = new Set(['1', '5'])
+
 /**
  * Menu blocks of a content map, from its presentation lock (block settings, menu rows) and the audit's findings.
  * @param {{map: any, lock: any, findings: any}} input
@@ -137,8 +139,14 @@ function itemsOfMenu(rows, settings) {
  */
 export function menuBlocksOf({ map, lock, findings }) {
   const lockRows = Object.entries(lock?.entities ?? {})
+  // A visitor who has not signed in sees the items of the public (1) and guest (5) access levels only: an item for
+  // registered users or administrators ("Your Profile", "Site Settings") is never drawn on the pages a site build plans.
   const menuRows = lockRows.filter(
-    ([k, r]) => k.startsWith('menuItem-') && r?.menutype && String(r.published ?? PUBLISHED) === PUBLISHED
+    ([k, r]) =>
+      k.startsWith('menuItem-') &&
+      r?.menutype &&
+      String(r.published ?? PUBLISHED) === PUBLISHED &&
+      VISITOR_ACCESS.has(String(r.access ?? '1'))
   )
   const menus = new Set(menuRows.map(([, r]) => r.menutype))
   const slots = map.slots ?? []

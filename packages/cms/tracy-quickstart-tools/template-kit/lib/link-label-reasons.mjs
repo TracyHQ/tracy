@@ -5,7 +5,11 @@
 //                   password?", a copyright line, the "Previous article: ..." line of an article page;
 //   icon-name       the link shows an icon only and its words are the icon's accessible name ("facebook");
 //   pagination      a page number or "Go to next page" of the CMS pagination, linking the same listing at another
-//                   result page.
+//                   result page;
+//   control-value   a link with no address that shows only a number: the value of an in-page control (a rating
+//                   star "1" to "5", a slide dot), which the control's script reads;
+//   sort-control    a link opening the same listing in another order (`?orderby=`, `/by,name/dirdesc`): its words
+//                   name a column the CMS sorts by.
 // `linkLabelChecks` counts a link with words and neither, or with a `labelId` that is not a slot of its block.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 
@@ -33,13 +37,25 @@ export function blockSlotIds(kit) {
   return out
 }
 
-/** True when the label is made only of the block's fixed texts (each whole, or the label is a piece of one). */
+const wordsOf = (s) => s.match(/[\p{L}\p{N}']+/gu) ?? []
+
+/**
+ * True when the label is made only of the block's fixed texts (each whole, or the label is a piece of one). Words
+ * left over that repeat a word of a fixed text found in the label are its step word ("Next article: X" and "Next").
+ */
 function fixedWords(label, fixed) {
   const n = normText(label)
   if (fixed.some((f) => f.includes(n))) return true
   let rest = n
-  for (const f of [...fixed].sort((a, b) => b.length - a.length)) rest = rest.split(f).join(' ')
-  return !hasWords(rest)
+  const found = []
+  for (const f of [...fixed].sort((a, b) => b.length - a.length))
+    if (rest.includes(f)) {
+      found.push(f)
+      rest = rest.split(f).join(' ')
+    }
+  if (!hasWords(rest)) return true
+  const seen = new Set(found.flatMap(wordsOf))
+  return found.length > 0 && wordsOf(rest).every((w) => seen.has(w))
 }
 
 const iconName = (l) =>
@@ -68,12 +84,36 @@ function paginationLink(l, pagePaths) {
   })
 }
 
+/** A link to no page (none, `#` or `javascript:`) whose words are digits only: a control's value. */
+const controlValue = (l) =>
+  (!l.target || /^(?:#|javascript:)/i.test(String(l.target))) &&
+  /^[\p{N}\s.,/]+$/u.test(String(l.label ?? '').trim())
+
+const ORDER_WORDS =
+  /(?:^|[?&/,_])(?:order(?:by|ing)?|sort(?:by)?|dir(?:asc|desc)?|filter_order(?:_dir)?|by)(?:[=,/]|$)/i
+
+/** The link opens one of the block's pages again in another order: the page path, then order words only. */
+function sortLink(l, pagePaths) {
+  if (!l.target) return false
+  const to = String(l.target)
+  return pagePaths.some((p) => {
+    const base = String(p).split('?')[0].replace(/\/$/, '')
+    if (!base || !to.startsWith(base) || to === String(p)) return false
+    const rest = to.slice(base.length)
+    return /^[/?]/.test(rest) && ORDER_WORDS.test(rest)
+  })
+}
+
 const REASONS = {
   'template-words':
     "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes",
   'icon-name': "the link shows an icon only; its words are the icon's accessible name, not a slot",
   pagination:
-    'a CMS pagination control: a page number or step word linking the same listing at another result page'
+    'a CMS pagination control: a page number or step word linking the same listing at another result page',
+  'control-value':
+    'an in-page control with no address (a rating star, a slide dot): its number is the value the script reads',
+  'sort-control':
+    "a listing's sort control: it opens the same listing in another order and names the CMS column"
 }
 
 /**
@@ -95,11 +135,15 @@ export function fixedLinkLabels(kit) {
       if (l.labelId || !hasWords(normText(l.label ?? ''))) continue
       const rule = paginationLink(l, pathsOf.get(b.id) ?? [])
         ? 'pagination'
-        : iconName(l)
-          ? 'icon-name'
-          : texts.length && fixedWords(l.label, texts)
-            ? 'template-words'
-            : null
+        : controlValue(l)
+          ? 'control-value'
+          : sortLink(l, pathsOf.get(b.id) ?? [])
+            ? 'sort-control'
+            : iconName(l)
+              ? 'icon-name'
+              : texts.length && fixedWords(l.label, texts)
+                ? 'template-words'
+                : null
       if (!rule) continue
       l.fixedLabel = { rule, reason: REASONS[rule] }
       fixed++

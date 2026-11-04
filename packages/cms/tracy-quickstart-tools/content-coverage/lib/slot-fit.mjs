@@ -25,6 +25,7 @@ import { authorListsOf } from './author-lists.mjs'
 import { itemListsOf } from './item-lists.mjs'
 import { listingListsOf } from './listing-lists.mjs'
 import { menuBlocksOf } from './menu-blocks.mjs'
+import { tagListsOf } from './tag-lists.mjs'
 
 const round4 = (n) => Math.round(n * 10000) / 10000
 const fileOf = (sample) =>
@@ -317,6 +318,8 @@ export function measureSlotFit({ map, findings, lock }) {
     }
     // Author pages (one author's articles, reached from an author list) too.
     Object.assign(itemLists, authorListsOf({ map: out, lock, findings }).itemLists)
+    // Tag pages (the items with one tag, reached from a tag link) too.
+    Object.assign(itemLists, tagListsOf({ map: out, findings }).itemLists)
     if (Object.keys(itemLists).length) {
       out.itemLists = itemLists
       out.itemPages = itemPages
