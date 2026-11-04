@@ -42,6 +42,11 @@ const countsLine = (c) =>
   `${c.written} written, ${c.hidden} hidden, ${c.skipped} skipped, ${c.failed} failed${c.unchanged ? `, ${c.unchanged} unchanged` : ''}`
 const printedLine = ({ counts, viaFallback }) =>
   `printed: ${counts.printed} of ${counts.checked} printed, ${counts.viaFallback} via fallback${viaFallback.length ? ` (${viaFallback.map((f) => f.slot).join(', ')})` : ''}, ${counts.notPrinted} not printed, ${counts.writes} fallback writes`
+const routesLine = (routes) => {
+  const count = (outcome) => routes.filter((r) => r.outcome === outcome).length
+  const refused = routes.filter((r) => r.outcome === 'refused')
+  return `routes: ${count('written')} renamed, ${count('already')} already at their slug, ${refused.length} refused${refused.length ? ` (${refused.map((r) => `${r.pageId}: ${r.reason}`).join('; ')})` : ''}`
+}
 const causeOf = (r) => (r.code ? `${r.code}: ${r.reason}` : '')
 
 /**
@@ -188,6 +193,7 @@ async function startRun(d, values) {
   })
   if (report.status === 'done') {
     if (report.printed) d.out(printedLine(report.printed))
+    if (report.routes?.length) d.out(routesLine(report.routes))
     d.out(`done: ${countsLine(report.counts)}${report.rewrite ? ` in ${report.timings.total} ms` : ''}`)
     return 0
   }

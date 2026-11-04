@@ -14,6 +14,7 @@
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { kitVersionGroup } from './kit-version.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
+import { baselineAtRoutes, hasRouteTable, pageSlugGroup } from './page-slug.js'
 import { readBackGroup } from './read-back.js'
 import { writtenNotPrintedGroup } from './written-not-printed.js'
 
@@ -22,6 +23,8 @@ export const CHECK_VERSION = 'site-check/1'
 export const KIT_GROUPS = [kitVersionGroup]
 /** The groups that need no browser. With a host, `PAGE_CHECK_GROUPS` (page-groups.js) follow them. */
 export const SITE_CHECK_GROUPS = [readBackGroup]
+/** With a route table in the report (the write step renamed kept pages), after read-back: each page ends with its plan slug. */
+export const ROUTE_GROUPS = [pageSlugGroup]
 /** The groups that read pages as a visitor's browser gets them, with no browser: they run when a page reader is given. */
 export const PAGE_READ_GROUPS = [writtenNotPrintedGroup]
 
@@ -109,6 +112,7 @@ export async function runSiteCheck({
   groups = [
     ...(kit ? KIT_GROUPS : []),
     ...SITE_CHECK_GROUPS,
+    ...(hasRouteTable(report) ? ROUTE_GROUPS : []),
     ...(pageHtml ? PAGE_READ_GROUPS : []),
     ...(host ? PAGE_CHECK_GROUPS : [])
   ],
@@ -116,7 +120,17 @@ export async function runSiteCheck({
   allGroups = false
 }) {
   const siteKey = report.site
-  const context = { report, siteKey, now, host, pageHtml, baseline, kit, read: readsOnly(door, siteKey) }
+  const context = {
+    report,
+    siteKey,
+    now,
+    host,
+    pageHtml,
+    // Measured at the demo's addresses; the kept pages answer at the plan's now (page-slug.js).
+    baseline: baselineAtRoutes(baseline, report.routes),
+    kit,
+    read: readsOnly(door, siteKey)
+  }
   const results = []
   let stoppedBy = null
   for (const group of groups) {

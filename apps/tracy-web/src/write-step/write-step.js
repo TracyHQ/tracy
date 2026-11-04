@@ -10,6 +10,7 @@
 // further phases.
 //
 // Last, given a page reader (`pageHtml`), the printed check reads the pages back and prints a gated picture itself (printed-stage.js).
+// After it, the kept pages take the plan's slugs (page-route-stage.js); a rerun first gives them their demo addresses back.
 //
 // Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
 // had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
@@ -34,6 +35,8 @@ import { kitSlotIds } from './kit-slot-ids.js'
 import { withEveryMenuHide } from './menu-hides.js'
 import { prepareLinks } from './link-stage.js'
 import { createPages, pagesWithoutCopy } from './page-create-stage.js'
+import { routeLines } from './page-route-lines.js'
+import { hasPlanSlugs, restoreRoutes, runRouteStage } from './page-route-stage.js'
 import { runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { preparePictureStage } from './picture-stage.js'
@@ -139,6 +142,8 @@ export async function runWriteStep(input) {
   let shareLines = []
   let links = null
   let created = { pages: new Map(), results: [], lines: [], kept: [] }
+  let restored = []
+  let renamedLines = null
   const finish = (runStatus, runCause, written = [], refused = new Map()) => {
     // A stage takes a refusal as any other refused write and goes on; the run has stopped all the same, and this says why.
     const refusedLook = guard.cause()
@@ -162,7 +167,7 @@ export async function runWriteStep(input) {
         pictureLines: pictures.lines({ written, refused }),
         hides: hidden?.hides,
         frameLines: hidden?.lines,
-        shareLines: [...created.lines, ...shareLines],
+        shareLines: [...created.lines, ...shareLines, ...pageRouteLines()],
         links: links?.results({ written, refused, settled, hides: hidden?.hides ?? new Map() }),
         ...routes
       })
@@ -175,6 +180,18 @@ export async function runWriteStep(input) {
     return report
   }
   const stopped = (cause) => finish('stopped', cause)
+  // A page the run gave its demo address back and did not rename again is said to be at the demo address, never carried as renamed.
+  const pageRouteLines = () =>
+    renamedLines ??
+    routeLines(
+      restored.map(({ article: _article, ...route }) => ({
+        ...route,
+        to: route.from,
+        outcome: 'refused',
+        reason:
+          'the run gave this page its demo address back for the rewrite and ended before it took its slug again'
+      }))
+    )
   const timed = async (stage, job) => {
     await onPhase(stage)
     const from = now()
@@ -362,6 +379,11 @@ export async function runWriteStep(input) {
   for (const call of brand.planned ?? []) guard.check(call)
   if (guard.cause()) return finish('stopped', null)
 
+  // A rerun on pages the last run renamed: they answer at their demo addresses again, which every stage before the route stage reads.
+  const restoring = await restoreRoutes({ door, siteKey, routes: input.last?.routes })
+  restored = restoring.restored
+  if (restoring.stop) return stopped(restoring.stop)
+
   // First of all the writes: a link to a created page needs its address (page-create-stage.js).
   created = await createPages({ door, siteKey, kit: kit.doc, plan, owners: table.owners, extras, last })
   settled = new Map(created.results)
@@ -488,24 +510,33 @@ export async function runWriteStep(input) {
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
   const done = finish('done', null, written, wrote.refused)
-  if (!input.pageHtml || done.status !== 'done') return done
-  report.printed = await timed('printed', () =>
-    runPrintedStage({
-      door,
-      siteKey,
-      kit: kit.doc,
-      lines: done.slots,
-      keptPages: done.keptPages ?? [],
-      pageHtml: (path) => input.pageHtml({ siteKey, path })
-    })
-  )
-  // A fallback block the look guard refuses stops the run as any refused write does.
-  const refusedLook = guard.cause()
-  if (refusedLook) {
-    report.status = 'stopped'
-    report.cause = refusedLook
-    report.guard = { refused: guard.refused() }
+  if (input.pageHtml && done.status === 'done')
+    report.printed = await timed('printed', () =>
+      runPrintedStage({
+        door,
+        siteKey,
+        kit: kit.doc,
+        lines: done.slots,
+        keptPages: done.keptPages ?? [],
+        pageHtml: (path) => input.pageHtml({ siteKey, path })
+      })
+    )
+  // Last of the writes, once every page was found and read back at its demo address: the kept pages take the plan's slugs.
+  // A fallback block the look guard refused in the printed check stops the run first, as any refused write does.
+  if (!guard.cause() && report.status === 'done' && hasPlanSlugs(plan)) {
+    const routed = await timed('routes', () =>
+      runRouteStage({
+        door,
+        siteKey,
+        kit: kit.doc,
+        plan,
+        keptPages: report.keptPages ?? [],
+        menutype: hide.settingsExtras?.mainMenu?.menutype ?? null
+      })
+    )
+    renamedLines = routed.lines
+    report.keptPages = routed.keptPages
+    if (routed.routes.length) report.routes = routed.routes
   }
-  timings.total = now() - started
-  return report
+  return finish('done', null, written, wrote.refused)
 }

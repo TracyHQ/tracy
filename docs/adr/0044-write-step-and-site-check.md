@@ -214,6 +214,33 @@ The export writes the demo's line break too: when the kit slot's `inline` has a 
 text, the exported value puts `((br/))` before the wrapped emphasis (`Our((br/))((span))Classes((/span))`), so the title
 prints on two lines as the demo does. A demo without that break gets none.
 
+### 20. Kept pages take the plan's slug at the end of the write step; the site check blocks a kept page whose menu link does not end with its plan slug
+
+The planner names every kept page after what it holds (`plan.pages[].slug`), and the site kept serving it at the demo's address:
+on a JA Boxing bench site 6 of 8 kept pages (a tennis page at `/classes/group-boxing`, its parent at `/classes` for `services`).
+The route stage (`write-step/page-route-stage.js`) runs last of the writes, after the printed check read the pages back, since every
+stage before it and the kit find a page by its demo address. For each kept page with a plan slug, the home page aside, the published
+menu item that opens it (the main menu's first) takes the slug as its `alias` through `content.update`, and so does the article it
+prints when its link is a single article. The slug is ASCII, lower case, joined by hyphens; a sibling already holding it is said
+before anything is sent. The plugin (Claude Cowork for Joomla, from 0.24.81) renames the item's branch with an `alias` undo entry,
+refuses an alias a sibling holds and the home item, and answers the alias it holds now. A plugin from before ignores or refuses the
+field: the line is failed with the release it needs, so read-back blocks on step 9 and no page reads as renamed. A category or tag
+alias is not renamed: no kept page of a single-article menu item shows one in its address.
+
+The report keeps a route table, `routes: [{ pageId, slug, itemId, articleId, from, to, outcome, reason?, evidence?, article? }]`
+(`outcome` written, already or refused; `to` is where the page answers now), the lines `<page>:slug` and `<page>:article-slug`
+(`part` page-slug and article-slug, owner plan, each read back on its row), and `keptPages` at the new addresses, which the site check
+opens. On a rerun the last report's route table is played back first: each renamed item takes its demo alias again, a refusal stops
+the run (`ROUTE_RESTORE_FAILED`), and the stage renames it again at the end. The look guard opens `alias` on a template menu item and
+article, as a slug only: an address restyles nothing.
+
+`page-slug` (block, step 9) runs after read-back on a report with a route table: each page's menu item, as inspect lists its route
+(or its row, when inspect does not), must end with the plan slug. A page the site answers nothing for is unmeasured (decision 18).
+With a host, a kept page that does not answer at its new address blocks too; an old demo address answering 404 is what a rename
+leaves and is not opened. The demo baseline is moved to the new addresses before the page measures compare with it. A report from
+before this stage has no route table, and the measure does not run on it. Links the template holds as literal demo addresses (not
+`index.php?Itemid=`) are not rewritten; `dead-links` finds them.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

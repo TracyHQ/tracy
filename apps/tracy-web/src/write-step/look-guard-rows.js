@@ -48,10 +48,13 @@ const CREATED_FIELDS = {
   ]),
   category: new Set(['title', 'published', 'language', 'access', 'note'])
 }
+// `alias` is the address a kept page answers at: the route stage gives it the plan's slug (page-route-stage.js). An address
+// restyles nothing, so it is open, and only as a slug, which can hold no markup and no other setting.
 const TEMPLATE_FIELDS = {
-  article: new Set(['metadesc', 'attribs']),
-  menuItem: new Set(['published', 'link', 'params'])
+  article: new Set(['metadesc', 'attribs', 'alias']),
+  menuItem: new Set(['published', 'link', 'params', 'alias'])
 }
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const ACCENT_FIELDS = new Set([
   'title',
   'module',
@@ -155,6 +158,10 @@ function rowFaults(kind, id, fields, { state, created, kitNamed }) {
       )
     else if (name === 'published' && !created && Number(value) !== 0)
       faults.push(fault(WRITE, `${what} published`, 'a template row can only be taken off, by the plan'))
+    else if (name === 'alias' && !SLUG.test(String(value)))
+      faults.push(
+        fault(WRITE, `${what} alias`, 'an alias is a slug: lower case letters and digits joined by hyphens')
+      )
     else if (name === 'note' && !String(value).startsWith(MARK))
       faults.push(fault(WRITE, `${what} note`, 'a row the write step makes carries its mark'))
     else if (name === 'introtext' || name === 'fulltext')
