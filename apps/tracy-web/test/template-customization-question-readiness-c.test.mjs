@@ -317,6 +317,49 @@ test('ABOUT-1: a home with no element after the h1 is judged on the heading alon
   assert.equal(r.status, 'pass', r.message)
 })
 
+const STAMPS = `const $hero = stampFor(Astro.request, 'hero', hero)`
+const bothRules = [heroRule('hero_heading'), heroRule('hero_intro')]
+
+test('ABOUT-1: a stamp alone proves nothing, the element text must reach the field', async () => {
+  const staticH1 = `---\n${STAMPS}\n---\n<h1 {...$hero('hero_heading')}>Static</h1>\n<div {...$hero("hero_intro")}>{hero.hero_intro}</div>`
+  const a = await run(about1HomeHeading, stampedHome(staticH1, bothRules))
+  assert.equal(a.status, 'fail', a.message)
+  assert.match(a.message, /the home <h1> stamps hero\.hero_heading but its text prints none of them/)
+  const other = `---\n${STAMPS}\nconst other = 'x'\n---\n<h1 {...$hero('hero_heading')}>{other}</h1>\n<div {...$hero("hero_intro")}>{hero.hero_intro}</div>`
+  const b = await run(about1HomeHeading, stampedHome(other, bothRules))
+  assert.equal(b.status, 'fail', b.message)
+  const staticIntro = `---\n${STAMPS}\n---\n<h1 {...$hero('hero_heading')}>{hero.hero_heading}</h1>\n<div {...$hero("hero_intro")}>Static words</div>`
+  const c = await run(about1HomeHeading, stampedHome(staticIntro, bothRules))
+  assert.equal(c.status, 'fail', c.message)
+  assert.match(
+    c.message,
+    /the element under the home heading stamps hero\.hero_intro but its text prints none of them/
+  )
+})
+
+test('ABOUT-1: a variable derived from the field in the frontmatter counts, a chain of them too', async () => {
+  const chain = `---
+${STAMPS}
+const heroLines = hero ? lines(hero.hero_heading) : []
+const shown = heroLines
+  .map((l) => l.trim())
+---
+<h1 {...$hero('hero_heading')}>{shown.map((l) => <b>{l}</b>)}</h1>
+<div class="intro" {...$hero("hero_intro")}><span>{blocks}</span></div>`
+  const unrelated = chain.replace('<span>{blocks}</span>', '<span>{hero.hero_intro}</span>')
+  const ok = await run(about1HomeHeading, stampedHome(unrelated, bothRules))
+  assert.equal(ok.status, 'pass', ok.message)
+  const broken = await run(about1HomeHeading, stampedHome(chain, bothRules))
+  assert.equal(broken.status, 'fail', 'an unrelated {blocks} is not the intro')
+})
+
+test('ABOUT-1: a PortableText value that holds the field counts', async () => {
+  const pt = `---\n${STAMPS}\n---\n<h1 {...$hero("hero_heading")}>{hero.hero_heading}</h1>
+<div {...$hero('hero_intro')}><PortableText value={stampBlocks($hero, 'hero_intro', hero.hero_intro)} components={c} /></div>`
+  const r = await run(about1HomeHeading, stampedHome(pt, bothRules))
+  assert.equal(r.status, 'pass', r.message)
+})
+
 test('ABOUT-1: a rule on another collection or entry does not cover a stamped field, and a field missing from the seed fails', async () => {
   const other = await run(
     about1HomeHeading,

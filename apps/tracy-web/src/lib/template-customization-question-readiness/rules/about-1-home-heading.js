@@ -18,7 +18,8 @@
  *   `hero`; an undeclared `$page` and `{ h.f }` mean the `home` entry, as in Tracy Business). Each is checked
  *   against the first entry of its collection that holds the field. The `<h1>` and the element under it must EACH
  *   print such a field (a static `<p>` standing first fails); with no element after the `<h1>` the heading alone is
- *   judged.
+ *   judged. A stamp alone proves nothing: the element's text expressions (`{x.f}`, a PortableText `value={… x.f …}`)
+ *   must reach the field, directly or through the frontmatter `const` / `let` variables they use.
  */
 import {
   contractOf,
@@ -167,8 +168,7 @@ function printedFields(text, stamps) {
 
 /**
  * The element "under" the heading: the first `<p>` after it, or the first element that prints a stamped field, whichever
- * comes first (a hero's intro is often a `<div>` holding rich text, not a `<p>`). A `<p>` is read to its end, any other
- * element by its opening tag.
+ * comes first (a hero's intro is often a `<div>` holding rich text, not a `<p>`). Either is read whole, to its closing tag.
  * @param {string} rest what follows the `</h1>`
  */
 function underHeading(rest) {
@@ -178,11 +178,94 @@ function underHeading(rest) {
   if (stamped) {
     const open = rest.lastIndexOf('<', stamped.index)
     const close = rest.indexOf('>', stamped.index)
-    if (open >= 0 && close > open) stampedTag = { at: open, text: rest.slice(open, close + 1) }
+    if (open >= 0 && close > open) stampedTag = { at: open, text: elementFrom(rest, open, close) }
   }
   if (p && (!stampedTag || p.index <= stampedTag.at)) return p[0]
   return stampedTag?.text ?? ''
 }
+
+/**
+ * The element whose opening tag is `rest[open..close]`, to its matching closing tag (same-name tags nest); a void or
+ * self-closing tag, or one never closed, is the tag alone.
+ * @param {string} rest @param {number} open @param {number} close
+ */
+function elementFrom(rest, open, close) {
+  const name = /^<([A-Za-z][\w.-]*)/.exec(rest.slice(open, close + 1))?.[1]
+  if (!name || rest[close - 1] === '/') return rest.slice(open, close + 1)
+  const tag = new RegExp(`<(/?)${name.replace(/[.]/g, '\\.')}(?=[\\s>/])[^>]*?(/?)>`, 'g')
+  tag.lastIndex = close + 1
+  let depth = 1
+  for (let m = tag.exec(rest); m; m = tag.exec(rest)) {
+    if (m[2] === '/') continue
+    depth += m[1] ? -1 : 1
+    if (depth === 0) return rest.slice(open, m.index + m[0].length)
+  }
+  return rest.slice(open, close + 1)
+}
+
+/** `{ ... }` expressions of a JSX fragment: the code it prints, its static text left out. Braces nest; strings are skipped. */
+function expressionsOf(/** @type {string} */ jsx) {
+  /** @type {string[]} */
+  const out = []
+  for (let i = 0; i < jsx.length; i++) {
+    if (jsx[i] !== '{') continue
+    let depth = 0
+    let j = i
+    for (; j < jsx.length; j++) {
+      const c = jsx[j]
+      if (c === '"' || c === "'" || c === '`') {
+        const end = jsx.indexOf(c, j + 1)
+        if (end < 0) break
+        j = end
+      } else if (c === '{') depth++
+      else if (c === '}' && --depth === 0) break
+    }
+    out.push(jsx.slice(i + 1, j))
+    i = j
+  }
+  return out
+}
+
+/**
+ * The frontmatter's `const` / `let` initialisers by name: `heroLines` -> `hero ? lines(hero.hero_heading) : []`. A
+ * statement runs to the next line that starts another declaration.
+ * @param {string} view
+ */
+function declarations(view) {
+  const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(view)?.[1] ?? ''
+  /** @type {Map<string, string>} */
+  const out = new Map()
+  const starts = [...fm.matchAll(/^(?:const|let|var)\s+(\w+)\s*(?::[^=\n]+)?=/gm)]
+  const next = /^(?:const|let|var|import|export|function|async function)\b/gm
+  for (const m of starts) {
+    next.lastIndex = m.index + m[0].length
+    const end = next.exec(fm)?.index ?? fm.length
+    out.set(m[1], fm.slice(m.index + m[0].length, end))
+  }
+  return out
+}
+
+/**
+ * The code a fragment prints: its `{...}` expressions (the stamp spreads `{...$X("f")}` are attributes, not text) and, for
+ * each frontmatter variable they use, that variable's initialiser, and so on down the chain.
+ * @param {string} fragment @param {Map<string, string>} declared
+ */
+function printedCode(fragment, declared) {
+  const own = expressionsOf(fragment.replace(/\{\s*\.\.\.\$\w+\([^)]*\)\s*\}/g, ''))
+  const seen = new Set()
+  const code = [...own]
+  for (let i = 0; i < code.length; i++)
+    for (const [, id] of code[i].matchAll(/(?<![.\w$])([A-Za-z_$][\w$]*)/g))
+      if (declared.has(id) && !seen.has(id)) {
+        seen.add(id)
+        code.push(/** @type {string} */ (declared.get(id)))
+      }
+  return code.join('\n')
+}
+
+/** Whether `code` reaches the field: `x.f`, `x?.f` or `x['f']`. */
+const reaches = (/** @type {string} */ code, /** @type {string} */ field) =>
+  new RegExp(`(?:\\?\\.|\\.)\\s*${field}\\b|\\[\\s*["']${field}["']\\s*\\]`).test(code)
 
 /** @param {import('../index.js').RuleContext} context */
 async function emdash(context) {
@@ -199,8 +282,20 @@ async function emdash(context) {
     return { status: 'live-only', message: 'src/views/Home.astro prints no <h1> of its own', problems: [] }
   const stamps = stampCollections(view)
   const under = underHeading(view.slice(h1.index + h1[0].length))
-  const headingFields = printedFields(h1[0], stamps)
-  const paragraphFields = printedFields(under, stamps)
+  const declared = declarations(view)
+  /** The fields an element stamps and really prints: its text expression reaches them. */
+  const read = (/** @type {string} */ element) => {
+    const stamped = printedFields(element, stamps)
+    const code = printedCode(element, declared)
+    const printed = stamped.filter((f) => reaches(code, f.field))
+    return { stamped, printed }
+  }
+  const heading = read(h1[0])
+  const paragraph = read(under)
+  const headingFields = heading.printed
+  const paragraphFields = paragraph.printed
+  const named = (/** @type {{ collection: string, field: string }[]} */ list) =>
+    list.map((f) => (f.collection === 'home' ? f.field : `${f.collection}.${f.field}`)).join(', ')
   const fields = [...headingFields, ...paragraphFields].filter(
     (f, i, all) => all.findIndex((o) => o.collection === f.collection && o.field === f.field) === i
   )
@@ -219,9 +314,18 @@ async function emdash(context) {
   }
   // Both must be written: a covered heading does not excuse a static paragraph under it, nor the reverse. A home with
   // no element after the <h1> is judged on the heading alone (as before).
-  if (!headingFields.length) problems.push('the home <h1> prints no field of the home entry')
+  if (!headingFields.length)
+    problems.push(
+      heading.stamped.length
+        ? `the home <h1> stamps ${named(heading.stamped)} but its text prints none of them`
+        : 'the home <h1> prints no field of the home entry'
+    )
   if (under && !paragraphFields.length)
-    problems.push('the element under the home heading (<p>) prints no field of the home entry')
+    problems.push(
+      paragraph.stamped.length
+        ? `the element under the home heading stamps ${named(paragraph.stamped)} but its text prints none of them`
+        : 'the element under the home heading (<p>) prints no field of the home entry'
+    )
   return {
     status: problems.length ? 'fail' : 'pass',
     message: `home heading and paragraph fields ${fields.map((f) => (f.collection === 'home' ? f.field : `${f.collection}.${f.field}`)).join(', ')}`,
