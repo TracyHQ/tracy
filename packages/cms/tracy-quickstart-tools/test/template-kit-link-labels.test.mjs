@@ -133,3 +133,33 @@ test('links repeating the same words take each its own twin slot, in content map
     ['article-40.3', 'article-40.8', 'article-40.13']
   )
 })
+
+test('self-check: a top-level menu heading is a text slot of the menu, not a link label', () => {
+  const groups = [
+    {
+      id: 'nav-drawer',
+      items: [
+        { level: 1, label: 'Sample pages', labelSlot: 'menuItem-18.0', target: { kind: 'heading' } },
+        {
+          level: 2,
+          label: 'Login',
+          labelSlot: 'menuItem-19.0',
+          target: { kind: 'page', page: 'menuItem-19' }
+        },
+        {
+          level: 1,
+          label: 'Contact',
+          labelSlot: 'menuItem-23.0',
+          target: { kind: 'page', page: 'menuItem-23' }
+        }
+      ]
+    }
+  ]
+  const drawer = { id: 'drawer', links: [{ id: 'drawer.link-2', label: 'Login', labelId: 'menuItem-19.0' }] }
+  const errors = []
+  assert.equal(menuLinkChecks({ blocks: [drawer], groups, errors }), 1)
+  assert.deepEqual(
+    errors.map((e) => e.field),
+    ['site.navigationGroups[nav-drawer].items[Contact]']
+  )
+})

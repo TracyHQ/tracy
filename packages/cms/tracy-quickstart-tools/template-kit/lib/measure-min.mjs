@@ -3,6 +3,7 @@
 // filling last line is right, a hole is not, a short last line pressed to the left is tried again with a centering
 // rule injected and taken out. One page load per list. Read-only on the site: rows go in the browser only.
 import { openFrozen, openKitContext } from './capture.mjs'
+import { openRowsPanel } from './open-rows-panel.js'
 import { readDetails } from './read-details.js'
 import { readRowContext } from './row-context.js'
 import { tryRowFix } from './row-fix.js'
@@ -85,6 +86,8 @@ export async function measureMin({
       if (!repeat) throw new Error(`no row set of ${max} rows in ${source}; pass --rows <css>`)
     }
     const args = { block: source, path: repeat?.path ?? [], shape: repeat?.shape, css }
+    // Rows in a closed tab or accordion are opened the way a visitor opens them, then measured.
+    if ((await page.evaluate(openRowsPanel, args)).opened) await page.waitForTimeout(600)
     for (let keep = max; keep >= 1; keep--) {
       const left = await page.evaluate(keepRows, { ...args, keep })
       if (!left) throw new Error(`block ${source} not found on ${url}`)

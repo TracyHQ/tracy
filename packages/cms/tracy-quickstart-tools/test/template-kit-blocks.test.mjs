@@ -220,3 +220,26 @@ test('a short last line packed to the left is caught, and the centering fix is p
     rmSync(out, { recursive: true, force: true })
   }
 })
+
+test('rows in a closed tab are opened by the tab control, then measured', async (t) => {
+  const browser = await launch()
+  if (!browser) return t.skip('no Chromium available')
+  await browser.close()
+  const page = pathToFileURL(
+    join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'template-kit', 'rows-closed-tab.html')
+  ).href
+  const r = await measureMin({
+    chromium,
+    siteUrl: 'http://site.example',
+    url: page,
+    assigned: [],
+    source: 'module-52',
+    listId: 'block-52.dish',
+    max: 4,
+    css: '#desserts .dish',
+    widths: [1440, 390]
+  })
+  assert.deepEqual(r.okCounts, [1, 2, 3, 4])
+  assert.equal(r.min, 1)
+  assert.notEqual(r.checks[4][1440].ok, null, 'the rows were shown, so judged')
+})
