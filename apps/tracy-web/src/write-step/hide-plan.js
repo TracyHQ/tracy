@@ -4,6 +4,7 @@
 // Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { iconsOf } from './kit-slot-routes.js'
+import { NO_LAST } from './no-last-report.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const slashless = (path) => String(path ?? '').replace(/^\/+|\/+$/g, '')
@@ -15,7 +16,7 @@ const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
 export const NEW_CONTRACT = 'TracyHQ/tracy#369'
 
 /** The kit's blocks the plan drops whole, as module keys: no kept page keeps or shows one. */
-function droppedBlocks(plan, kit) {
+export function droppedBlocks(plan, kit) {
   const kitBlocks = new Map(each(kit?.blocks).map((b) => [b?.id, b]))
   const kept = each(plan?.pages).filter((p) => p?.decision === 'keep')
   const shared = each(plan?.sharedBlocks)
@@ -108,13 +109,13 @@ function notEmptiable(key, slot) {
 
 /**
  * @param {{ plan: object, kit: object, owners: Map<string, object>, extras: object, reading: object,
- *   changes: Record<string, string>, cannotHide: string | null }} input `cannotHide`: why this plugin takes no hide order,
- *   or null when it does
+ *   changes: Record<string, string>, cannotHide: string | null, last?: object }} input `cannotHide`: why this plugin takes no
+ *   hide order, or null when it does; `last`: the last report, whose hidden lines are off the site already
  * @returns {{ orders: Map<string, object>, blocks: Map<string, string>, emptySlots: string[],
  *   strings: Record<string, string>, pages: object[], menu: Map<string, object> }} `orders`: by the line's slot, each with a
  *   `via`; `blocks`: block id to module key
  */
-export function hideOrders({ plan, kit, owners, extras, reading, changes, cannotHide }) {
+export function hideOrders({ plan, kit, owners, extras, reading, changes, cannotHide, last = NO_LAST }) {
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const icons = iconsOf(kit)
   const fixed = fixedTexts(kit)
@@ -128,6 +129,10 @@ export function hideOrders({ plan, kit, owners, extras, reading, changes, cannot
   for (const claim of owners.values()) {
     if (claim.kind !== 'hide') continue
     const { slot } = claim
+    if (last.hidden(slot)) {
+      orders.set(slot, { via: 'kept', line: last.line(slot) })
+      continue
+    }
     if (menu.has(slot)) {
       orders.set(slot, { via: 'menu', ...menu.get(slot) })
       continue
