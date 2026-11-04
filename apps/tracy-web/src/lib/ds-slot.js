@@ -48,7 +48,7 @@ const remoteAssets = assetSettings
  * `measurement` scores its built-site rules from a release's measurement file; `role-variables` is the
  * one list of role variables its rule VARS-1 judges a release's role scan against; `preview-probe-version`
  * is the probe version its built-site rules name in an unmeasured message; `brand-check` judges a release's
- * brand-mode measurement (BRAND-3).
+ * brand-mode measurement (BRAND-3); `brand` builds a brand profile for the brand bench's build_design_system tool.
  */
 export const DS_SLOT_MODULES = Object.freeze([
   'library',
@@ -63,7 +63,8 @@ export const DS_SLOT_MODULES = Object.freeze([
   'role-variables',
   'preview-probe-version',
   'text-roles',
-  'brand-check'
+  'brand-check',
+  'brand'
 ])
 
 /** @type {Map<string, Promise<any>>} */

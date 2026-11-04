@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-350-template-kit-t3",
+  "kind": "feat",
+  "title": "A template kit of a Joomla T3 template finds its blocks by T3 markup and module ids, reads its logo and name from the template style params, and takes its brand primary from the template's LESS variables",
+  "pr": 350,
+  "area": "quickstart/template-kit",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout (no stand, no site) run: node --test --test-concurrency=1 packages/cms/tracy-quickstart-tools/test/template-kit-t3.test.mjs packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs apps/tracy-web/test/brand-kit-problem.test.mjs",
+    "S2: Read the summary lines `pass` and `fail`."
+  ],
+  "expect": [
+    "S2: fail 0.",
+    "findBlocks on invented T3 markup finds a module by an element id ending in -<module id>, and only when exactly one element carries that number.",
+    "A declared @brand-primary stays the primary although the CSS reuses it for a status rule.",
+    "capture-contract with --template-style-logos makes the T3 logo params business.logo image slots; with --skip-trashed-menu-items a published = -2 menu item leaves the contract; without the flags the output is unchanged.",
+    "kitProblem passes the JA Boxing kit and refuses a kit with no tokens, no sides, no name slots, or a shown logo spot without a frame."
+  ],
+  "selectors": {
+    "blocks": "template-kit.json blocks[] (kind module-id)",
+    "logos": "site.logoSpots[].frameId, site.logoSpots[].emptyShows",
+    "brand": "site.brandColours.primary, site.brandColours.tokens"
+  },
+  "evidence": "JA Cagox 1.0.2 kit before the change: 4 logo spots with no frame, 0 brand tokens, primary #a4321e instead of @brand-primary #da4e35.",
+  "fence": "Unit tests over invented T3 markup and files; the JA Cagox rebuild ran on a local site, not in this case.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-t3.test.mjs",
+      "packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs",
+      "apps/tracy-web/test/brand-kit-problem.test.mjs"
+    ]
+  }
+}

@@ -68,6 +68,7 @@ ambiguous, and there is no way to detect it by machine.
 | [0039](0039-slot-fit-lives-in-content-map.md) | Slot fit (box, kind, transparency, text limits) lives on each slot of the content map, measured at capture; a picture's keep flag follows its measured kind | (binding) — **decision 3 superseded by 0040 for `place-content-roles/3` maps** |
 | [0040](0040-place-content-roles-v3-role-is-the-single-keep-decider.md) | Place content roles v3: new roles, the decorative picture split, repeatable lists; the slot role is the only decider of keep or replace, `customize` and `fit.replace` derive from it | (binding) |
 | [0041](0041-site-planner-trial-bench-in-ops.md) | The site planner runs first on a trial bench in /ops (group "WO New Flow Test"), as a tool-using Opus 5.5 agent with the approved prompt, checked by the R00 to R18 module with at most two fix rounds, apart from the WO build | (binding) |
+| [0042](0042-site-writer-trial-bench-copy-contract-and-check.md) | Site writer trial bench: the `site-copy/1` copy file, the copy notebook, returns to planner, and the script-only copy check `site-copy-check/2` (W01 to W11); code never edits writer text, two fix rounds | (binding) |
 
 ## Inheritance — `tracy-infra` ADRs still binding here
 

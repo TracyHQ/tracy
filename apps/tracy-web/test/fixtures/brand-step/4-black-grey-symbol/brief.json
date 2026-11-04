@@ -1,0 +1,27 @@
+{
+  "brand": {
+    "logo": "c3f2e4d6-9d50-4e7b-8c83-4fb0719d2e35",
+    "name": "Northgate Racquet House",
+    "fonts": [],
+    "voice": "English; informal tone",
+    "accent": {
+      "hex": "#8a8a8a",
+      "share": 0.12,
+      "source": "logo"
+    },
+    "colors": [
+      {
+        "hex": "#1a1a1a",
+        "role": "primary"
+      },
+      {
+        "hex": "#8a8a8a",
+        "role": "accent"
+      }
+    ],
+    "origin": "social",
+    "official": false,
+    "colorsFrom": "logo"
+  },
+  "missing": []
+}

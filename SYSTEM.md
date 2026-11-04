@@ -801,6 +801,9 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,
   never as bytes). Apart from the WO quality tables.
+  Site writer bench (migration 197, §8 *Site writer bench*): `site_writer_run` (plan, brief, kit and the rest of its inputs
+  frozen by a trigger; at most one queued row), `site_writer_round` (rounds 0 to 2: the `copy` file, check, failure list
+  sent, corrected entries applied), `site_writer_turn` (one row per model call, append-only), with the planner bench's shape.
   Website Opportunities (migration 125, §8): `wo_preference`, `wo_opportunity`, `wo_job`, `wo_job_attempt`,
   `wo_source`, `wo_media`, `wo_profile`, `wo_revision` (immutable, a trigger blocks UPDATE), `wo_build`. Migration 126: `wo_media.caption/alt/dhash/labels`, `wo_build.pictures` (immutable picture plan + receipts).
   Migration 175 (`/v1/demos`): `wo_public_demo` (one request: `Idempotency-Key`, fingerprint of the whole body, body snapshot, opportunity + demo action, `sponsored`/`reserved_cents`, cancellation), `wo_sponsor_setting` (one row: number of live demos per account, model budget), `wo_demo_usage.kind` adds `external`.
@@ -2231,6 +2234,24 @@ endpoint**.
   reuse the cache, checked again on use. A missing zip or any mismatch refuses `run` and fails a queued run with the reason,
   before any model call. Turn rows keep a reference to each opened image; the bytes are read back from the cache when a run
   resumes or a fix round replays the conversation. Images are never committed.
+
+### Site writer bench (03/11/2026, [ADR 0042](docs/adr/0042-site-writer-trial-bench-copy-contract-and-check.md))
+
+A trial bench for the writer step (#326): one agent writes the copy of a whole site from a frozen site plan into one
+`site-copy/1` file, and the copy check grades it. It builds no site and has **no screen, route or API endpoint**.
+
+- **Started and read from a command line** inside the tracy-web container:
+  [`scripts/site-writer-bench.mjs`](apps/tracy-web/scripts/site-writer-bench.mjs) (`run --plan-file --kit
+  --brief-file|--brief-revision`, `list`, `status`, `get`, `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-writer/bench-cli.js)).
+  `get` also writes the final `site-copy.json` and its Joomla contract mapping export (`mapping.json`).
+- **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-writer/bench-worker.js)) is the writer as a step of the shared
+  bench run loop (`lib/bench-run-loop.js`), its own durable queue over `site_writer_run` (`app.siteWriterQueue`, started
+  by `server.js`), one writer run at a time, parallel to the planner bench. Same guards: retries, resume from the last
+  saved turn, a 2 USD fuse, the DeepSeek balance before and after.
+- **The model** is called through the `siteWriter` door (`/ops` › Model & AI; by default `deepseek-flash` on the
+  `deepseek` provider, effort max), with no tools and no image: the first message carries the plan, the facts it cites,
+  the reviews it quotes, a slim view of the kit blocks it uses (with their look text) and the two handed-over name slots.
+  Code adds version, fingerprint and the plan's label slots; fix rounds apply only the writer's corrected entries.
 
 ## 9. Sign-in, seats, permissions
 

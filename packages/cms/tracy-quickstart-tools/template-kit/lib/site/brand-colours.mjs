@@ -62,14 +62,26 @@ export function colourTokensOf(sides, primary, secondary) {
 }
 
 /**
- * @param {{styles: Array<{css: string, from?: string}>, pages?: Array<{html: string}>, seen?: {opensOn?: object, inlineIcons?: object[], pictures?: object[]}}} o
+ * The colour variables a template declares outside its stylesheets (`[{name, value, declaredIn}]`, a T3 template's
+ * LESS) as tokens of the side the page opens on.
+ */
+export function declaredTokensOf(variables, primary, secondary) {
+  return variables.map(({ name, value, declaredIn }) => {
+    const brand = value === primary ? 'primary' : value === secondary ? 'secondary' : null
+    return { name, value, side: 'base', declaredIn: declaredIn ?? null, ...(brand ? { brand } : {}) }
+  })
+}
+
+/**
+ * @param {{styles: Array<{css: string, from?: string}>, pages?: Array<{html: string}>, seen?: {opensOn?: object, inlineIcons?: object[], pictures?: object[]}, variables?: Array<{name: string, value: string, declaredIn?: string}>}} o
+ *   `variables`: the colour variables the CMS adapter read from the template's own source (adapter.colourVariables)
  * @returns {{brandColours: object, errors: object[]}}
  */
-export function buildBrandColours({ styles, pages = [], seen = {} }) {
+export function buildBrandColours({ styles, pages = [], seen = {}, variables = [] }) {
   const errors = []
   const missing = (field, reason) =>
     errors.push({ kind: 'missing', field: `site.brandColours.${field}`, reason })
-  const m = measureBrandColours(styles)
+  const m = measureBrandColours(styles, { variables })
   if (!styles.length) missing('primary', 'no stylesheet of the site could be read')
   else if (!m.primary)
     missing('primary', 'no framework role rule or primary variable resolves to a strong colour')
@@ -84,6 +96,8 @@ export function buildBrandColours({ styles, pages = [], seen = {} }) {
   }))
   for (const s of sides)
     if (!s.ground) missing(`sides[${s.marker}].ground`, 'no rule paints the page ground on this side')
+  if (styles.length && ![...m.sides.values()].some((s) => s.own.size) && !variables.length)
+    missing('tokens', 'the stylesheets declare no colour variable and the template source gave none')
   const { scopes, overlays } = pictureScopesOf(m.rules, pages)
   const brand = [m.primary, m.secondary].filter(Boolean)
   const inlineIcons = (seen.inlineIcons ?? []).filter((i) => i.paints?.some((p) => brand.includes(p)))
@@ -98,7 +112,10 @@ export function buildBrandColours({ styles, pages = [], seen = {} }) {
       statusColours: m.status.filter((h) => strong(rgbOf(h))),
       opensOn: seen.opensOn ?? null,
       sides,
-      tokens: colourTokensOf(m.sides, m.primary, m.secondary),
+      tokens: [
+        ...colourTokensOf(m.sides, m.primary, m.secondary),
+        ...declaredTokensOf(variables, m.primary, m.secondary)
+      ],
       onPictureScopes: { selectors: scopeNames(scopes), judgedOn: pictureGround(overlays) },
       dataUriIcons: dataUriIconsOf(m.rules, brand),
       inlineIcons,

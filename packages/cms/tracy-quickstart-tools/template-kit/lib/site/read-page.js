@@ -8,9 +8,11 @@
  * @param {{siteName: string|null, contactPattern: string}} o
  */
 export function readPage({ siteName, contactPattern }) {
-  const OFF = '.t4-offcanvas, .t4-off-canvas, .js-offcanvas, .offcanvas, .off-canvas, [id^="off-canvas"]'
+  const OFF =
+    '.t4-offcanvas, .t4-off-canvas, .t3-off-canvas, .js-offcanvas, .offcanvas, .off-canvas, [id^="off-canvas"]'
   const FOOTER = 'footer, [class*="footer"], [class*="footnav"]'
-  const HEADER = 'header, #t4-header, .t4-header, .site-header, #masthead, [role="banner"]'
+  const HEADER =
+    'header, #t4-header, .t4-header, #t3-header, .t3-header, .site-header, #masthead, [role="banner"]'
   const clean = (s) =>
     String(s ?? '')
       .replace(/\s+/g, ' ')
@@ -145,7 +147,7 @@ export function readPage({ siteName, contactPattern }) {
     if (text.length >= 2 && text.length <= 400) textLines.push({ block: blockOf(el), text })
   }
   // The words and links of the page's own area (outside header, footer and menus), for pages such as not-found.
-  const own = document.querySelector('#t4-main-body, main, [role="main"]') ?? document.body
+  const own = document.querySelector('#t4-main-body, #t3-mainbody, main, [role="main"]') ?? document.body
   const ownTexts = []
   const ownLinks = []
   for (const el of own.querySelectorAll('h2, h3, p, li, div, span, a')) {
@@ -164,7 +166,7 @@ export function readPage({ siteName, contactPattern }) {
     contacts,
     textLines,
     bodyClass: document.body.className,
-    hasHeader: !!document.querySelector('header, #t4-header, .t4-header'),
+    hasHeader: !!document.querySelector('header, #t4-header, .t4-header, #t3-header, .t3-header'),
     texts: [...new Set(ownTexts)].slice(0, 12),
     links: ownLinks.slice(0, 12)
   }

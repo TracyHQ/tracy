@@ -6,7 +6,7 @@
 //
 //   cli.mjs build --site <url> [--host-header <host>] --contract <dir> --out <dir> --full
 //                 [--reuse-capture] [--trade <words>] [--widths 1440,390] [--max-pages 400] [--only /,/a]
-//                 [--template-version x.y.z] [--exclude-path '/test-*,/other']
+//                 [--template-version x.y.z] [--exclude-path '/test-*,/other']  (a comma inside a pattern: \,)
 //                 [--db-command '<client prefix>' | --db mysql://...] [--files-command '<prefix>' --webroot <dir>]
 //       --full: the whole pipeline (README "Make a kit for a new template"); without it, read + shoot + assemble only.
 //       The database and file reads feed the site part (site-cli.mjs); without them it reads the pages only.
@@ -35,19 +35,19 @@ import { dirname, join, resolve } from 'node:path'
 
 import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
-import { urlOfPath } from './lib/kit-paths.mjs'
-import { assignedAt, indexMap } from './lib/map-index.mjs'
-import { linkLabelSlots } from './lib/link-label-slots.mjs'
-import { relabelKit } from './lib/link-label-reasons.mjs'
 import { contactFieldChecks } from './lib/coverage-gate.mjs'
-import { settleSettingSlots } from './lib/setting-slots.mjs'
-import { adapterFor } from './lib/site/adapters/index.mjs'
-import { siteSource } from './lib/site/adapters/source.mjs'
-import { indentOf, applyLooks, lookWorklist } from './lib/looks.mjs'
+import { urlOfPath } from './lib/kit-paths.mjs'
+import { relabelKit } from './lib/link-label-reasons.mjs'
+import { linkLabelSlots } from './lib/link-label-slots.mjs'
+import { applyLooks, indentOf, lookWorklist } from './lib/looks.mjs'
+import { assignedAt, indexMap } from './lib/map-index.mjs'
 import { measureMin } from './lib/measure-min.mjs'
 import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
+import { settleSettingSlots } from './lib/setting-slots.mjs'
 import { writeSheets } from './lib/sheets.mjs'
+import { adapterFor } from './lib/site/adapters/index.mjs'
+import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 
 const TOOL = 'template-kit 3.0.0'

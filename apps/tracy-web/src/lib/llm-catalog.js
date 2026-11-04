@@ -216,6 +216,39 @@ export const LLM_DOORS = [
     // on each run (ADR 0041, #301).
     requires: ['tools'],
     prefers: ['vision']
+  },
+  {
+    id: 'siteWriter',
+    label: 'Site writer',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the site writer bench, started from a command line on the server. An agent writes the copy of a whole site from a checked site plan, the facts it cites and a slim view of the template kit.',
+    needsModel: true,
+    // The writer reads everything from its first message: no tool calls, no pictures (it reads the kit's block looks).
+    // No effort setting: the bench fixes it in code (max on DeepSeek Flash) and records it on each run (#329).
+    requires: [],
+    prefers: []
+  },
+  {
+    id: 'brandAgent',
+    label: 'Brand agent',
+    where: 'this process',
+    blurb:
+      'Brand bench: the agent that builds a site’s brand file (accent colour, logos, favicon, name slots) from a brief and a template kit, with tool calls and by looking at pictures. Never an Anthropic model; never the same model as the Brand reviewer.',
+    needsModel: true,
+    // Both REQUIRED: the agent works only through tool calls and judges the template by sight (brand-step/brand-doors.js).
+    requires: ['tools', 'vision'],
+    prefers: []
+  },
+  {
+    id: 'brandReviewer',
+    label: 'Brand reviewer',
+    where: 'this process',
+    blurb:
+      'Brand bench: answers questions about logo and icon pictures for the brand agent, and names the business an icon suggests when it is not told the business. Never an Anthropic model; never the same model as the Brand agent.',
+    needsModel: true,
+    requires: ['vision'],
+    prefers: []
   }
 ]
 

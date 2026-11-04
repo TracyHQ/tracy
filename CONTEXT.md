@@ -183,6 +183,27 @@ whether it needs a transparent ground; a text's characters and lines per screen 
 when the contract is captured, never written by hand ([ADR 0039](docs/adr/0039-slot-fit-lives-in-content-map.md)).
 _Avoid_: slot size, frame spec
 
+**Site copy**:
+The file `site-copy/1` a writer produces for a whole site: the text of every kept text slot (keyed by kit slot id, with
+its owner and the facts it rests on), the alt text of every planned picture, a title and a description for every
+kept page, a copy notebook and returns to planner ([ADR 0042](docs/adr/0042-site-writer-trial-bench-copy-contract-and-check.md)).
+_Avoid_: content file, site text
+
+**Copy notebook**:
+Per page, the main points, opening lines, calls to action and notable phrases the writer has used. Later pages are
+written from it so the site does not repeat itself, and an interrupted run continues from it.
+_Avoid_: memory, summary
+
+**Returns to planner**:
+The list of slots or pages the writer could not write truthfully from the plan's facts, each with a reason. The
+writer never changes the plan; the list shows plan gaps instead of hiding them.
+_Avoid_: questions, blockers
+
+**Copy check**:
+The script-only grader of a site copy file (`site-copy-check/1`, rules W01 to W11). It reports failures with measured
+numbers and never edits the writer's text.
+_Avoid_: copy review, linter
+
 ---
 
 **Read next:** [`SYSTEM.md`](SYSTEM.md) (how the system runs) · [`CLAUDE.md`](CLAUDE.md) (boundary
