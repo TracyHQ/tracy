@@ -6760,7 +6760,31 @@
         "contains": [],
         "position": "section-2",
         "pages": 1
-      }
+      },
+      "sentences": [
+        {
+          "id": "block-160.sentence-1",
+          "slots": [
+            "block-160.3",
+            "block-160.4",
+            "block-160.5"
+          ],
+          "sample": "Join over 100k of inspiring creatives",
+          "pieces": [
+            "Join over",
+            "100k",
+            "of inspiring creatives"
+          ],
+          "joins": [
+            " ",
+            " "
+          ],
+          "kept": [
+            true,
+            true
+          ]
+        }
+      ]
     },
     {
       "id": "block-161",
@@ -11928,7 +11952,31 @@
         "contains": [],
         "position": "masthead",
         "pages": 16
-      }
+      },
+      "sentences": [
+        {
+          "id": "block-162.sentence-1",
+          "slots": [
+            "block-162.33",
+            "block-162.34",
+            "block-162.35"
+          ],
+          "sample": "Join over 100k of inspiring creatives",
+          "pieces": [
+            "Join over",
+            "100k",
+            "of inspiring creatives"
+          ],
+          "joins": [
+            " ",
+            " "
+          ],
+          "kept": [
+            true,
+            true
+          ]
+        }
+      ]
     },
     {
       "id": "body-pages_users_login-form",
@@ -46708,7 +46756,39 @@
         "pages": 1,
         "owner": null,
         "ownerKind": "author listing (no map entity)"
-      }
+      },
+      "sentences": [
+        {
+          "id": "body-pages_j-content_author-listting_author_admin.sentence-1",
+          "slots": [
+            "article-29.0",
+            "article-29.1",
+            "article-29.2",
+            "article-29.3",
+            "article-29.4"
+          ],
+          "sample": "Each JA Joomla Template has its own matching 404 page. Below is the screenshot of 404 page style.",
+          "pieces": [
+            "Each",
+            "JA Joomla Template",
+            "has its own matching 404 page. Below is the screenshot of",
+            "404 page style",
+            "."
+          ],
+          "joins": [
+            " ",
+            " ",
+            " ",
+            ""
+          ],
+          "kept": [
+            true,
+            true,
+            true,
+            false
+          ]
+        }
+      ]
     },
     {
       "id": "body-pages_j-content_author-listting_author_drew_stokes",
@@ -72313,5 +72393,5 @@
     "images": 110,
     "note": "the full set is made again by `cli.mjs build`"
   },
-  "settledAt": "2026-11-04T19:16:09.395Z"
+  "settledAt": "2026-11-04T19:16:09.835Z"
 }
