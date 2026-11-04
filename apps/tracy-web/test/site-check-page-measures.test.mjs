@@ -196,17 +196,34 @@ test('the new measures at both widths, as groups: levels and causing steps', asy
 })
 
 test('warnings alone leave the check green and are counted', async () => {
+  const styles = { table: [], keys: {} }
+  const answers = { selfLinks: [], hiddenHeadings: [], shownText: 'Lessons' }
   const measures = () =>
     BOTH('/', {
-      1440: { blocks: [{ selector: 'section.long', height: 4000 }], mainHeadings: ['Lessons'] },
-      390: { mainHeadings: ['Lessons'] }
+      1440: {
+        ...answers,
+        blocks: [{ selector: 'section.long', height: 4000 }],
+        mainHeadings: ['Lessons'],
+        look: { props: [], sides: { only: { styles, words: [], over: [], logos: [] } } }
+      },
+      390: {
+        ...answers,
+        mainHeadings: ['Lessons'],
+        look: { sides: { only: { words: [], over: [], logos: [] } } }
+      }
     })
-  const baseline = { texts: [], labels: [], pictures: { files: [], shas: [] } }
+  const baseline = {
+    texts: [],
+    labels: [],
+    pictures: { files: [], shas: [] },
+    look: { props: [], pages: { '/': { sides: { only: { styles } } } }, over: [] }
+  }
   const check = await runSiteCheck({
     door: pagedSite(1).door,
     report: writtenReport(),
     host: fakeHost({ '/': pageRead('/') }, { measures }).host,
-    baseline
+    baseline,
+    kit: { blocks: [{ sentences: [{ id: 'one', slots: ['block-2.1'] }] }] }
   })
   assert.equal(check.status, 'green')
   assert.deepEqual(check.counts, { block: 0, warn: 1 })

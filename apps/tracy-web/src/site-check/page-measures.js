@@ -7,7 +7,8 @@
 //     pictures: [{ selector, src, naturalWidth, naturalHeight, width, height, fit }],
 //     controls: [{ selector, fault: 'wordless' | 'nowhere', href, text }], fields: [{ selector, name }],
 //     glued: [{ selector, text, around }], headings: [text], mainHeadings: [text], shownText,
-//     shownLinks: [{ href, text }], shownPictures: [src] }
+//     minorHeadings: [text], hiddenHeadings: [text], selfLinks: [{ selector, text, href }], contentControls: [{ key, text }], view,
+//     title, shownLinks: [{ href, text }], shownPictures: [src], brandStyle?, look? }
 
 /** A box counts as overflowed only past this many pixels, so rounding in the browser is no finding. */
 export const OVERFLOW_TOLERANCE_PX = 2
@@ -105,7 +106,9 @@ export function findEmptyControls(measures) {
       (c) => ({
         measured: c.fault === 'nowhere' ? clip(c.text, 80) : `${c.selector} -> ${c.href ?? '(no address)'}`,
         reason: reasons[c.fault] ?? 'A button cannot be used',
-        selector: c.selector
+        selector: c.selector,
+        // A button going nowhere has the wrong link target, and the plan owns link targets (as `demo-links` says).
+        ...(c.fault === 'nowhere' ? { causingStep: 3 } : {})
       })
     ),
     ...oncePerPage(

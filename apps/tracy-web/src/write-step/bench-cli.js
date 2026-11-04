@@ -258,6 +258,7 @@ async function checkRun(d, values) {
     // The page groups need the site's host and the demo baseline of the quickstart; both are optional (site-check.js).
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
     baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
+    kit: openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null,
     allGroups: values['all-groups'] === true,
     ...(d.now ? { now: d.now } : {})
   })

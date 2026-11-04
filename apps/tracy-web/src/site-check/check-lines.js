@@ -1,4 +1,6 @@
 // What the check command prints: one line per group, one per failure, and the verdict last.
+import { stepName } from './steps.js'
+
 const LONGEST = 160
 const shown = (value) => {
   if (value === null || value === undefined) return '(nothing)'
@@ -26,7 +28,7 @@ function failureLine(f) {
   ]
   const order = f.ordered === undefined || f.ordered === null ? '' : ` ordered=${shown(f.ordered)}`
   const words = f.reason ? `: ${f.reason}` : ''
-  return `  ${f.level} step ${f.causingStep} ${where.join(' ')} measured=${shown(f.measured)}${order}${words}`
+  return `  ${f.level} step ${f.causingStep} (${stepName(f.causingStep)}) ${where.join(' ')} measured=${shown(f.measured)}${order}${words}`
 }
 
 /** @param {object} check `site-check/1` */

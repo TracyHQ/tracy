@@ -7,7 +7,7 @@
  *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --site <site key> --version <contract id> --pages-file <json> [--force]
  *
  * `--pages-file` is a JSON array of the site's paths (the kit's `pages[].path`). It reads them through the host, fifteen per call, and stores texts, labels and picture files
- * and hashes. Nothing else of the site is kept.
+ * and hashes, and per page and theme each element's computed look (for the template look group). Nothing else of the site is kept.
  */
 import { readFile } from 'node:fs/promises'
 import { parseArgs } from 'node:util'
@@ -54,7 +54,7 @@ export async function main(argv, env = process.env) {
       force: values.force === true
     })
     console.log(
-      `${measured ? 'measured' : 'kept'} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files`
+      `${measured ? 'measured' : 'kept'} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, the look of ${Object.keys(baseline.look?.pages ?? {}).length} pages`
     )
     return 0
   } finally {

@@ -10,7 +10,7 @@
 import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { callPages, CALL_BUDGET_MS, chunksOf } from './page-chunks.js'
+import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from './page-chunks.js'
 
 export const BASELINE_SCHEMA = 'demo-baseline/1'
 
@@ -97,6 +97,46 @@ export const forHost = (baseline) => ({
   pictures: baseline.pictures
 })
 
+/**
+ * The look of an untouched site out of the host's page measures: per page and side of the template's switch, each element's
+ * computed look and each logo's reading, and at each width the words on a picture with what lay under them. A site wearing a brand style is no baseline.
+ * @param {object[]} measures the host's `pageMeasures`
+ * @returns {{ props: string[], pages: Record<string, object> } | null}
+ */
+export function lookFromHost(measures) {
+  const pages = {}
+  const over = []
+  let props = null
+  for (const m of each(measures)) {
+    if (!m?.look?.sides) continue
+    if (m.look.worn)
+      throw new Error(`The site is not untouched: ${m.path} wears a brand style, so its look is no baseline.`)
+    for (const [side, read] of Object.entries(m.look.sides))
+      for (const w of each(read.over))
+        if (w.under)
+          over.push({
+            page: m.path,
+            width: m.width,
+            side,
+            key: w.key,
+            fg: w.fg,
+            under: w.under,
+            large: w.large
+          })
+    if (!m.look.props) continue
+    props = m.look.props
+    pages[m.path] = {
+      sides: Object.fromEntries(
+        Object.entries(m.look.sides).map(([side, read]) => [
+          side,
+          { styles: read.styles, truncated: read.truncated === true, logos: read.logos }
+        ])
+      )
+    }
+  }
+  return props ? { props, pages, over } : null
+}
+
 const fileOf = (dir, version) => path.join(dir, `${String(version).replace(/[^a-zA-Z0-9._-]+/g, '_')}.json`)
 
 /** One baseline per quickstart version, kept as a file in a folder that is not in the repo. */
@@ -141,13 +181,24 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
     if (kept) return { baseline: kept, measured: false }
   }
   const parts = []
+  const measures = []
   for (const chunk of chunksOf(pages)) {
-    const answer = await host({ ...callPages(chunk), discover: false, budgetMs: CALL_BUDGET_MS })
+    const answer = await host({
+      ...callPages(chunk),
+      discover: false,
+      measurePages: true,
+      budgetMs: CALL_BUDGET_MS,
+      timeoutMs: CALL_TIMEOUT_MS
+    })
     if (!answer?.baseline)
       throw new Error(`The host gave no baseline: ${answer?.code ?? answer?.error ?? 'no answer'}`)
     parts.push(answer.baseline)
+    measures.push(...each(answer.pageMeasures))
   }
-  const baseline = baselineFromHost(joined(parts), { version, measuredAt: now().toISOString() })
+  const baseline = {
+    ...baselineFromHost(joined(parts), { version, measuredAt: now().toISOString() }),
+    look: lookFromHost(measures)
+  }
   await store.save(version, baseline)
   return { baseline, measured: true }
 }

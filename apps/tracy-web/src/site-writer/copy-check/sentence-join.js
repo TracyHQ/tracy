@@ -28,3 +28,27 @@ export function printedSentence(group, textOf) {
   })
   return { text: pieces.map((p) => p.printed).join(''), pieces, missing }
 }
+
+const CAPITALISED = /^["'(]?(\p{Lu}\p{Ll}[\p{L}'-]*)/u
+
+/**
+ * What breaks a sentence group when read joined: no space where two pieces meet and nothing puts one back, or a capital in the
+ * middle. A capital stays when the sentence ended before it, when the template's own demo has one there, or when `isName` says
+ * the word is a name. One function, so the copy check and the site check cannot judge the same sentence differently.
+ * @param {{slots?: string[], joins?: string[], kept?: boolean[], pieces?: string[]}} group
+ * @param {(slot: string) => string} textOf
+ * @param {(word: string, piece: {slot: string}) => boolean} isName
+ * @returns {{text: string, pieces: object[], faults: {cause: 'missing-space' | 'capital-mid-sentence', at: number, word?: string}[]}}
+ */
+export function sentenceFaults(group, textOf, isName) {
+  const { text, pieces, missing } = printedSentence(group, textOf)
+  const faults = missing.map((at) => ({ cause: 'missing-space', at }))
+  pieces.forEach((piece, i) => {
+    if (i === 0) return
+    const word = CAPITALISED.exec(piece.text.trimStart())?.[1]
+    if (!word || /[.!?:]["')]?\s*$/.test(pieces[i - 1].text)) return
+    if (/^\p{Lu}/u.test(arr(group.pieces)[piece.at] ?? '')) return
+    if (!isName(word, piece)) faults.push({ cause: 'capital-mid-sentence', at: i, word })
+  })
+  return { text, pieces, faults }
+}
