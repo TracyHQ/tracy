@@ -1,7 +1,7 @@
 // Tests for the site-copy/1 to Joomla contract mapping export (ADR 0042, #331).
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { contentMapKey, exportContractMapping, joinItems } from '../src/site-writer/contract-mapping.js'
+import { contentMapKey, exportContractMapping, joinItems } from '../src/lib/site-copy/contract-mapping.js'
 import { applyJoomlaContract } from '../../../packages/cms/tracy-seeder/src/apply-joomla-contract.mjs'
 import { brief, copy, kit } from './_site-copy-check.mjs'
 

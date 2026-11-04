@@ -1,6 +1,6 @@
 // A link line of the write report (TracyHQ/tracy#371): `lineOrder` says what the link stage will do with a plan link, whose door and
 // address are known, and `lineResult` says what became of it once the writes are done.
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { refusalWords } from './contract-write.js'
 import { actsInsidePage, slashless } from './link-doors.js'
 import { readRow } from './settings-door.js'

@@ -2,7 +2,7 @@
 // page prints. The write step does not run the copy check, so without this nothing on the site reports a broken sentence. The judging
 // is W12's own (`sentenceFaults`). The one difference: the copy check knows a capital is a name from the facts a line cites, which the
 // site does not hold, so here a word is a name when another written line has it with a capital past its first word.
-import { sentenceFaults } from '../site-writer/copy-check/sentence-join.js'
+import { sentenceFaults } from '../lib/site-copy/sentence-join.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead } from './host-pages.js'
 

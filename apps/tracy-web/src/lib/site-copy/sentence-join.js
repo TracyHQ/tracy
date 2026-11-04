@@ -1,3 +1,4 @@
+// Shared: the site writer's copy check and the site check read it, so it lives in lib/ (module-graph.test.mjs).
 // A sentence group (template-kit sentence-groups.mjs) as the page prints it: the written pieces in order, with the space
 // the write step keeps by itself where the group says so (write-step stored-demo.js keepSpaceAround).
 const arr = (x) => (Array.isArray(x) ? x : [])

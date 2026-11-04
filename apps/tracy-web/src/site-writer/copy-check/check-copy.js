@@ -5,7 +5,7 @@
 // pass|fail|skip, cause, causes, failures: [{ where, detail, cause }], notes }] }. Inputs are never modified, a
 // malformed copy file is reported under W01 and never throws, and the same input gives the same result.
 import { readCopy } from './copy-view.js'
-import { indexInputs } from './inputs-index.js'
+import { indexInputs } from '../../lib/site-copy/inputs-index.js'
 import { createRuleSet, finishRules } from './rule-set.js'
 import { checkW09, checkW10, checkW11, checkW08 } from './rules-bans.js'
 import { checkW04, checkW05 } from './rules-facts.js'

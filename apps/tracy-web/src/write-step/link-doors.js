@@ -1,7 +1,7 @@
 // Which door holds a kit link on this site (TracyHQ/tracy#371): nothing here writes. A link's address is held by its own link slot,
 // by the link slot of its label's row or anchor, by a link slot of its block that holds the address the kit measured, by a menu
 // item when a menu module prints it, or inside a slot of words. Several links can share one address (a card's picture and name).
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { ownTwin } from './kit-buttons.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])

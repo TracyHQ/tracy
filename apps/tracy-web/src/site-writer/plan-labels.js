@@ -4,7 +4,7 @@
 // planner's `says`, keeps it when it fits and rewrites it when the slot is something else (a heading that must stand
 // alone). Code records what happened on the copy entry: `owner: "plan-label"` when the plan's words are kept,
 // `owner: "writer"` with `replacedPlanLabel` when the writer's text replaced them. Pure: inputs in, new objects out.
-import { planCopyEntries } from './main-menu.js'
+import { planCopyEntries } from '../lib/site-copy/main-menu.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)

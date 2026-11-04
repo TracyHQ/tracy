@@ -1,3 +1,4 @@
+// Shared: the site writer, the write step and the brand step read it, so it lives in lib/ (module-graph.test.mjs).
 // Exports a site-copy/1 file (ADR 0042) as the mapping the Joomla content contract write door accepts
 // (`applyJoomlaContract`): { contract, revision, changes: { <content map key>: string }, evidence, pending, emptyLinks }.
 // Pure: no I/O, no network, no site. Nothing is written anywhere; the caller decides what to do with the result.
@@ -5,9 +6,9 @@
 // The main menu dropdown labels are copy slots like any other (`menuItem-195.0` in `changes`). The menu items to hide
 // are not words, so they are not in the copy file: given the plan and the content map, the export derives them
 // (main-menu.js) into `extras.mainMenu.hide` for step 9, which the write door does not take today.
-import { readCopy } from './copy-check/copy-view.js'
+import { readCopy } from '../site-copy-view.js'
 import { mainMenuOf } from './main-menu.js'
-import { contentMapKey } from '../lib/content-map-key.js'
+import { contentMapKey } from '../content-map-key.js'
 
 const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragraphs) > 0)
 

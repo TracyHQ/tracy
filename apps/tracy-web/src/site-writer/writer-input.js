@@ -15,7 +15,7 @@
 // - Every plan label slot (plan-labels.js): the planner's label as a suggestion, its `says`, and from the kit the demo
 //   sample, role, limit and where the slot prints, so the writer keeps the label or rewrites it (2026-11-04).
 // No image: the writer reads the block look text instead.
-import { mainMenuOf } from './main-menu.js'
+import { mainMenuOf } from '../lib/site-copy/main-menu.js'
 import { planLabelSlots } from './plan-labels.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])

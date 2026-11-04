@@ -1,7 +1,7 @@
 // W08, W09, W10 and W11 (ADR 0042): banned phrases, page meta, self-describing sentences, long dashes.
 import { allTexts } from './copy-view.js'
-import { bannedPhrases } from './inputs-index.js'
-import { hasPhrase } from './text-tools.js'
+import { bannedPhrases } from '../../lib/site-copy/inputs-index.js'
+import { hasPhrase } from '../../lib/site-copy/text-tools.js'
 
 export const ALT_MAX = 125
 export const TITLE_MAX = 60

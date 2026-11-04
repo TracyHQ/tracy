@@ -1,3 +1,4 @@
+// Shared: the site writer and the write step bench read it, so it lives in lib/ (module-graph.test.mjs).
 // The content map of a kit's contract, for the main menu dropdowns (main-menu.js). It is read the way the kit is
 // (lib/template-kit-source.js openKit): from the contract folder the contract index names, where content-map.json
 // sits beside template-kit.json (the image ships both through the same Dockerfile COPY). A run stores the sha256 of
@@ -5,7 +6,7 @@
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { defaultContracts } from '../lib/contracts.js'
+import { defaultContracts } from './contracts.js'
 
 export const CONTENT_MAP_FILE = 'content-map.json'
 

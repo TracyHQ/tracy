@@ -1,3 +1,4 @@
+// Shared with the copy inputs index (inputs-index.js), so it lives in lib/ with it (module-graph.test.mjs).
 // Small text helpers shared by the copy check rules. Pure, no input is modified.
 const WORD = '[\\p{L}\\p{N}]'
 

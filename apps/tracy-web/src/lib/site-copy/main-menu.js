@@ -1,3 +1,4 @@
+// Shared: the site writer and the write step read it, so it lives in lib/ (module-graph.test.mjs).
 // The main menu with its dropdowns (ADR 0042 section 1, "Main menu dropdowns"). The kit's header block names only the
 // top-level menu items; the tree under them lives in the template's content map (the same file step 9 writes into).
 // This module matches that tree with the plan's mainMenu: each item under a kept top-level item whose page the plan

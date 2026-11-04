@@ -1,6 +1,7 @@
+// Shared: the site writer's copy check and the write step read it, so it lives in lib/ (module-graph.test.mjs).
 // Indexes the plan, the kit and the brief for the copy check rules (ADR 0042). Reads tolerantly: a missing or
 // oddly shaped part yields an empty index and never throws. Nothing here modifies an input.
-import { mainMenuOf, planCopyEntries } from '../main-menu.js'
+import { mainMenuOf, planCopyEntries } from './main-menu.js'
 import { sentencesOf, stripEllipsis, textOfValue, wordsOf } from './text-tools.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])

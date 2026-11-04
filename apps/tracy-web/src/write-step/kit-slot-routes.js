@@ -1,7 +1,7 @@
 // Slots of a site copy that are not plain content slots of the contract door. A setting slot lives in a CMS row the
 // page settings stage writes. An icon slot holds a network's name in the copy, while the site holds the icon class in
 // the text slot the kit names as its `field`, so the name is turned into that class and written there.
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 

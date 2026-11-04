@@ -2,7 +2,7 @@
 // writes. Each hide decision gets one order: it goes with its dropped block or its menu item, by the kit's language constant,
 // as an emptied slot, or it cannot be taken and says why. A menu item a kept page depends on is left published and reported:
 // Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { goneRowSlots, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
 import { menuItemOfLabel } from './menu-hides.js'

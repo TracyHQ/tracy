@@ -10,7 +10,7 @@
 //   module      the accent-only Design system module, on every page
 //   follows     nothing to write: the page prints it from the site name
 //   none        nothing to write, with the reason
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 // The major in the release name does not change the folder, so any stands in for it.
 import { templateFolderOf } from '../sites/brief-engines/brand-joomla-places.js'
 

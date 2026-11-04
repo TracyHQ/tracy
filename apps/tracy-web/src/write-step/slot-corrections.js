@@ -2,7 +2,7 @@
 // icon that takes a transparent drawing, and a gallery alt that may fill its empty sample. A site's plugin decides, per
 // contract, so it is read from the site. An older plugin says nothing and answers as it always did, so nothing is sent
 // that it would refuse. Read at most once a run, and only when a frame needs the answer.
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 
 const NONE = { icons: false, alts: false }
 

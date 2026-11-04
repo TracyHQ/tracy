@@ -5,7 +5,7 @@
 // plugin's words and does not stop the rest. The 404 page has no door yet and is reported skipped, and the pages a plan creates
 // are page-create-stage.js's, whose results stand over these. What
 // the last report says the site holds is not written again, and reads as written.
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { NO_LAST } from './no-last-report.js'
 import { writePageMeta } from './page-meta-write.js'
 import { doorCall, readRow } from './settings-door.js'

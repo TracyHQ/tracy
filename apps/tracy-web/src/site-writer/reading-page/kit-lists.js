@@ -4,7 +4,7 @@
 // A kit list comes in two shapes: rowKind "slots" (rowSlots are slots, rows[] the demo rows with their own slots) and
 // rowKind "items" (rowSlots are fields, each listing one slot per item the list pulls, e.g. one article per card).
 // Only text slots are listed: image and video fields are the media step's, links and icons are not copy.
-import { printedSentence } from '../copy-check/sentence-join.js'
+import { printedSentence } from '../../lib/site-copy/sentence-join.js'
 
 const asArray = (x) => (Array.isArray(x) ? x : [])
 // Text slots only: links, icons and images are not copy, and a video id or an image field is the media step's.

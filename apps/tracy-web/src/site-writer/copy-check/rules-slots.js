@@ -4,7 +4,7 @@ export const FLOOR_DEMO_MIN = 40 // ... when the demo text is longer than this m
 
 export const PAGE_TITLE_MAX = 60 // W03: a pages entry title.
 
-import { stripEllipsis } from './text-tools.js'
+import { stripEllipsis } from '../../lib/site-copy/text-tools.js'
 
 const lengthOf = (items) => items.join(' ').trim().length
 

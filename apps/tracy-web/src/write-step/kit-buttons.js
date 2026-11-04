@@ -5,7 +5,7 @@
 // A plan that gives such a button a label names the other block's slot, so the words it wrote never reached this button: that is the
 // plan speaking, and the words go to this block's own field too. A button the plan says nothing of keeps the template's demo words and
 // address, so it leaves through the hide routes.
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const LABEL = /(?:button|cta)_label$/

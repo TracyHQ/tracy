@@ -3,7 +3,7 @@
 // page settings stage, which knows the items that left the site. A link that cannot be resolved or that no door holds is failed
 // with the reason, so the site check goes red; nothing is guessed.
 import { createHash } from 'node:crypto'
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
 import { NO_LAST } from './no-last-report.js'

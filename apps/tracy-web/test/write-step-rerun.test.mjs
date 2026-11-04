@@ -5,7 +5,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { hideDoor, hideKit } from './_write-step-hide.mjs'
 import { keptSite, menuRow, runInTurn } from './_write-step-rewrite.mjs'
-import { contentMapKey } from '../src/site-writer/contract-mapping.js'
+import { contentMapKey } from '../src/lib/site-copy/contract-mapping.js'
 import { copy, fakeSite, plan } from './_write-step-run.mjs'
 
 const lineOf = (report, slot) => report.slots.find((s) => s.slot === slot)

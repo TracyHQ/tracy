@@ -4,7 +4,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { contentMapKey } from '../src/site-writer/contract-mapping.js'
+import { contentMapKey } from '../src/lib/site-copy/contract-mapping.js'
 import { runWriteStep } from '../src/write-step/write-step.js'
 import { copy as baseCopy, kit as baseKit, plan as checkedPlan } from './_site-copy-check.mjs'
 

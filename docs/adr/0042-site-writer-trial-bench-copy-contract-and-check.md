@@ -64,7 +64,7 @@ The tree lives in the template's content map (`content-map.json` beside `templat
 the file step 9 writes into): `entities[]` of kind `menuItem`, each with `identity.menutype` and `identity.path`. The
 main menu is the menu type of the top-level labels the kit's header block shows; an item's parent is the item whose
 path is its path minus the last segment. Plan pages map to menu items through the kit's `pages[].path`
-(`/about-us/our-trainers` opens the item with path `about-us/our-trainers`). Code (`site-writer/main-menu.js`) then
+(`/about-us/our-trainers` opens the item with path `about-us/our-trainers`). Code (`lib/site-copy/main-menu.js`) then
 decides:
 
 - an item under a kept top-level item (its label slot is in a kept block decision, not hidden), whose parent is

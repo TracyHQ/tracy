@@ -4,7 +4,7 @@
 // what the site check compares the site with. A line written through a door other than the contract names its read in
 // `readFrom` (site-check/read-back.js). In a rewrite a line that was not sent carries `unchanged: true` and keeps its status and
 // `ordered`, since they still say what the site holds (last-report.js); `counts` tells those apart from what this run wrote.
-import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { refusalWords } from './contract-write.js'
 import { PICTURE_OWNER } from './picture-package.js'
 

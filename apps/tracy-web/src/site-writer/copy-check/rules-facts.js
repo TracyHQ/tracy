@@ -1,6 +1,6 @@
 // W04 and W05 (ADR 0042): every checkable detail in the copy comes from the brief.
 import { allTexts } from './copy-view.js'
-import { escapeRegExp } from './text-tools.js'
+import { escapeRegExp } from '../../lib/site-copy/text-tools.js'
 
 const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g
 const URL_RE = /\b(?:https?:\/\/|www\.)[^\s"'<>)]+/gi

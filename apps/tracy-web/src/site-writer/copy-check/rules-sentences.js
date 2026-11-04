@@ -1,7 +1,7 @@
 // W12: slots the kit marks as one sentence (`blocks[].sentences`, template-kit sentence-groups.mjs) are read joined, as
 // the page prints them. Each piece may read well alone and the sentence still break: no space where two pieces meet
 // and nothing puts one back, or a capital in the middle.
-import { sentenceFaults } from './sentence-join.js'
+import { sentenceFaults } from '../../lib/site-copy/sentence-join.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 

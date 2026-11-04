@@ -33,7 +33,7 @@ const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 const isText = (x) => typeof x === 'string' && x.trim() !== ''
 
 /**
- * The site-copy/1 file of one whole answer. `index` is the copy check's index of the plan (copy-check/inputs-index.js
+ * The site-copy/1 file of one whole answer. `index` is the copy check's index of the plan (lib/site-copy/inputs-index.js
  * indexInputs): its `expected` slots carry `label` (the plan's words) on label slots.
  * @param {object} answer the writer's answer as one JSON object
  * @param {{ fingerprint: object, index: { expected: Map<string, object> } }} context

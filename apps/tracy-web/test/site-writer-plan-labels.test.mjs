@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { applyValidChanges, assembleCopy } from '../src/site-writer/copy-changes.js'
-import { indexInputs } from '../src/site-writer/copy-check/inputs-index.js'
+import { indexInputs } from '../src/lib/site-copy/inputs-index.js'
 import { planLabelSlots } from '../src/site-writer/plan-labels.js'
 import { writerInput } from '../src/site-writer/writer-input.js'
 import { firstUserMessage } from '../src/site-writer/writer-turns.js'
