@@ -17,3 +17,6 @@ minimumReleaseAgeExclude:
 # collections) and 3.x has no patched release, so all of them resolve to 4.6.6.
 overrides:
   'zod@<4.6.6': 4.6.6
+# body-parser 2.0.0 to 2.3.x has GHSA-27r3-jxmh-p828 (denial of service via trailing bytes after a
+# compressed request body); 2.4.0 is the first patched release.
+  "body-parser@>=2.0.0 <2.4.0": 2.4.0
