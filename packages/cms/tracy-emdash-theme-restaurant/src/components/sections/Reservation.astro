@@ -5,6 +5,7 @@ import { href, type Locale } from '@/lib/i18n'
 import { section } from '@/lib/content'
 import { mediaUrl } from '@/lib/media'
 import { stampBlocks, stampFor } from '@/lib/stamps'
+import { liveBlocks, liveLinks } from '@/lib/link-gate'
 
 interface Props {
   locale: Locale
@@ -12,8 +13,9 @@ interface Props {
 const { locale } = Astro.props
 const r = await section('reservation', 'reservation', locale)
 const $r = stampFor(Astro.request, 'reservation', r ? { id: r.id, slug: r.slug } : null)
-const intro = r ? stampBlocks($r, 'intro', r.intro) : []
+const intro = r ? await liveBlocks(Astro.request, locale, stampBlocks($r, 'intro', r.intro)) : []
 const to = (u: string) => (/^(tel:|mailto:|https?:)/.test(u) ? u : href(locale, u))
+const live = await liveLinks(Astro.request, locale, [...(r?.blocks ?? []).map((b: any) => b.button_link), r?.online_link])
 const br = (t: string) => String(t ?? '').split('\n')
 ---
 
@@ -28,14 +30,14 @@ const br = (t: string) => String(t ?? '').split('\n')
 					<h3 {...$r(`blocks[${i}].title`)}>{b.title}</h3>
 					<p {...$r(`blocks[${i}].text`)}>{b.text}</p>
 					<ul {...$r(`blocks[${i}].points`)}>{br(b.points).filter(Boolean).map((l) => <li>{l}</li>)}</ul>
-					{b.button_label && <a class="rs-btn" href={to(b.button_link || '/')} {...$r(`blocks[${i}].button_label`)}>{b.button_label}</a>}
+					{b.button_label && live(b.button_link) && <a class="rs-btn" href={to(b.button_link || '/')} {...$r(`blocks[${i}].button_label`)}>{b.button_label}</a>}
 				</div>
 			</div>
 		))}
 		<div class="rs-reserve-online">
 			<h3 class="rs-display" {...$r('online_title')}>{r.online_title}</h3>
 			<p {...$r('online_text')}>{br(r.online_text).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
-			{r.online_button && <a class="rs-btn rs-btn-lg" href={to(r.online_link || '/')} {...$r('online_button')}>{r.online_button}</a>}
+			{r.online_button && live(r.online_link) && <a class="rs-btn rs-btn-lg" href={to(r.online_link || '/')} {...$r('online_button')}>{r.online_button}</a>}
 		</div>
 	</div>
 )}

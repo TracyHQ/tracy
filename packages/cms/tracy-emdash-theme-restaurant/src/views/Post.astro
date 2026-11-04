@@ -16,7 +16,7 @@ import ProseQuote from '@/components/site/ProseQuote.astro'
 import { mediaUrl } from '@/lib/media'
 import { stampBlocks, stampFor } from '@/lib/stamps'
 import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
-import { livePosts } from '@/lib/link-gate'
+import { liveBlocks, livePosts } from '@/lib/link-gate'
 
 interface Props {
   chrome: Chrome
@@ -51,7 +51,7 @@ const categories = (cats as any[]).filter((c) => BLOG_SIDEBAR.includes(c.slug))
 const cover = mediaUrl(a.cover)
 const dateTag = ui(locale).tag
 // On a stamped request each text block names itself and is printed by a renderer that carries the stamp.
-const body = stampBlocks($post, 'body', a.body)
+const body = await liveBlocks(Astro.request, locale, stampBlocks($post, 'body', a.body))
 const bodyComponents = $post.owner
   ? { block: ProseBlock, listItem: ProseListItem, type: { blockquoteGroup: ProseQuote } }
   : {}
