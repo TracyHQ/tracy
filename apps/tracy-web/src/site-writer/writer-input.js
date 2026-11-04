@@ -76,6 +76,12 @@ function quotedReviews(plan, brief, factIds) {
     .map((r) => ({ id: r.id ?? null, text: r.text ?? r.quote ?? r.body ?? '' }))
 }
 
+/** Slots the page prints as one sentence, with what the demo prints there; input data, the prompt is not touched. */
+const SENTENCE_NOTE =
+  'These slots print run together as one sentence, in this order, with nothing added between them. Write them so the joined text reads as one sentence: each piece carries its own spaces, and only the first starts with a capital unless a word needs one.'
+const slimSentences = (groups) =>
+  arr(groups).map((g) => ({ slots: g.slots, demoPrints: g.sample, note: SENTENCE_NOTE }))
+
 const slimSlot = (s) => ({
   id: s.id,
   role: s.role ?? null,
@@ -83,7 +89,8 @@ const slimSlot = (s) => ({
   maxCharacters: s.maxCharacters ?? null,
   sample: s.sample ?? '',
   paragraphs: s.paragraphs ?? 0,
-  bullets: s.bullets ?? 0
+  bullets: s.bullets ?? 0,
+  ...(arr(s.pageTitleOf).length ? { pageTitleOf: s.pageTitleOf } : {})
 })
 const textSlots = (slots) =>
   arr(slots)
@@ -108,7 +115,8 @@ function slimBlock(b) {
           .map((r) => ({ index: r.index ?? null, slots: textSlots(r.slots).filter((s) => !named.has(s.id)) }))
           .filter((r) => r.slots.length)
         return { id: l.id, rowSlots, ...(rows.length ? { rows } : {}) }
-      })
+      }),
+    ...(arr(b.sentences).length ? { sentences: slimSentences(b.sentences) } : {})
   }
 }
 

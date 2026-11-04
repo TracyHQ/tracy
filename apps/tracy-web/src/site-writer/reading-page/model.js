@@ -165,7 +165,8 @@ export function buildModel({
       pictures,
       hidden: asArray(b.hiddenSlots).map((h) => ({ slot: h.slot, why: h.why ?? null })),
       links: linksOf(b),
-      lists: kitIdx.listsOf(b.block)
+      lists: kitIdx.listsOf(b.block),
+      sentences: kitIdx.sentencesOf(b.block)
     }
   }
   // The plan's links of a block, in plan order: the label from the copy (wherever its slot was written), the target

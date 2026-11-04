@@ -13,6 +13,7 @@ import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
 import { neutralKey } from './ids.mjs'
 import { pageTitleChecks, settlePageTitles } from './page-titles.mjs'
 import { settleSettingSlots } from './setting-slots.mjs'
+import { settleSentenceGroups } from './sentence-groups.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
 
@@ -162,6 +163,7 @@ export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = 
   settleSettingSlots(kit, { map })
   mainMenuRow(kit, mapOf, rowFit)
   settlePageTitles(kit, { map, drives })
+  settleSentenceGroups(kit, { map })
   whatElseChanges(kit)
   return kit
 }

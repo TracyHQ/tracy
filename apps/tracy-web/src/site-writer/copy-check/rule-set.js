@@ -11,7 +11,8 @@ export const RULE_TITLES = [
   ['w08', 'W08', 'No phrase from the avoid, forbidden or missing lists'],
   ['w09', 'W09', 'Alt, page title and page description present, within length, titles unique'],
   ['w10', 'W10', 'No sentence about the page or section itself'],
-  ['w11', 'W11', 'No long dash']
+  ['w11', 'W11', 'No long dash'],
+  ['w12', 'W12', 'Slots printed as one sentence read as one sentence when joined']
 ]
 
 function rule(list, id, title) {

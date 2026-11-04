@@ -10,11 +10,12 @@ import { createRuleSet, finishRules } from './rule-set.js'
 import { checkW09, checkW10, checkW11, checkW08 } from './rules-bans.js'
 import { checkW04, checkW05 } from './rules-facts.js'
 import { checkW06, checkW07 } from './rules-repeat.js'
+import { checkW12 } from './rules-sentences.js'
 import { checkW02, checkW03 } from './rules-slots.js'
 
 // Stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title, a threshold, a failure
 // text or the result shape changes, so two runs scored by different checkers are never compared as equal.
-export const CHECKER_VERSION = 'site-copy-check/3'
+export const CHECKER_VERSION = 'site-copy-check/4'
 
 const RUN_ORDER = [
   checkW02,
@@ -26,7 +27,8 @@ const RUN_ORDER = [
   checkW08,
   checkW09,
   checkW10,
-  checkW11
+  checkW11,
+  checkW12
 ]
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 

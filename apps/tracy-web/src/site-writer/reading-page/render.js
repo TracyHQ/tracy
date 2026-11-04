@@ -81,6 +81,16 @@ function cellHtml(c) {
   }</div>`
 }
 
+// The block's slots printed as one sentence, as the page will print them.
+function sentencesHtml(sentences) {
+  return (sentences ?? [])
+    .map(
+      (g) =>
+        `<div class="slot"><span class="id">${esc(g.slots.join(' + '))}</span> <q>${esc(g.written)}</q> <span class="muted">one sentence on the page; demo: ${esc(g.demo)}</span></div>`
+    )
+    .join('')
+}
+
 // The kit's lists of a block, row by row, each row slot resolved from the copy wherever it was written.
 function listsHtml(lists) {
   return (lists ?? [])
@@ -104,7 +114,7 @@ function blockHtml(b, imageSrc) {
     ? `<div class="muted small">Hidden slots: ${b.hidden.map((h) => `${esc(h.slot)} (${esc(h.why)})`).join('; ')}</div>`
     : ''
   return `<section class="block"><header><h3>${esc(b.id)}</h3><span class="muted small">${esc(b.why)}</span></header>
-<div class="body"><div class="shot">${shot}</div><div class="slots">${b.slots.map(slotHtml).join('')}${linksHtml(b.links)}${listsHtml(b.lists)}${b.pictures.map(pictureHtml).join('')}${hidden}</div></div></section>`
+<div class="body"><div class="shot">${shot}</div><div class="slots">${b.slots.map(slotHtml).join('')}${linksHtml(b.links)}${listsHtml(b.lists)}${sentencesHtml(b.sentences)}${b.pictures.map(pictureHtml).join('')}${hidden}</div></div></section>`
 }
 
 const seoHtml = (s) =>

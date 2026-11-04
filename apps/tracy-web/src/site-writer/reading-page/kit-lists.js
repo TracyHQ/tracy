@@ -60,6 +60,19 @@ export function kitListsIndex({ kit, written, hiddenWhy, returned }) {
       id: l.id,
       rows: rowsOf(l).map((r) => ({ item: r.item, cells: r.slots.map(cell) }))
     }))
+  /** The block's slots printed as one sentence, joined as the page prints them. */
+  const sentencesOf = (blockId) =>
+    asArray(blocks.get(blockId)?.sentences).map((g) => ({
+      id: g.id,
+      slots: g.slots,
+      demo: g.sample,
+      written: asArray(g.slots)
+        .map((id) => {
+          const w = written.get(id)
+          return Array.isArray(w?.text) ? w.text.join(' ') : String(w?.text ?? '')
+        })
+        .join('')
+    }))
   /** Every text slot of the kept blocks that keeps its demo text, once, in block order. */
   const unhandled = (blockIds) => {
     const seen = new Set()
@@ -79,5 +92,5 @@ export function kitListsIndex({ kit, written, hiddenWhy, returned }) {
     }
     return out
   }
-  return { available: blocks.size > 0, listsOf, unhandled }
+  return { available: blocks.size > 0, listsOf, sentencesOf, unhandled }
 }
