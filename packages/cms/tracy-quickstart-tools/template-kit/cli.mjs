@@ -19,8 +19,10 @@
 //   cli.mjs relabel --out <dir> --contract <dir>   (the link labels of the template-kit.json in --out settled
 //                 again from the content map: labelId or a fixed-text reason per link; no browser, no capture, no image)
 //   cli.mjs setting-slots --out <dir> --contract <dir> [--db-command '<client prefix>' | --db mysql://...]
+//                 [--files-command '<prefix>'] [--webroot <dir>]
 //                 (the setting slots of the template-kit.json in --out settled again: the map a button opens, read
-//                 from the site's database, and the contact's mobile line; no browser, no capture, no image)
+//                 from the site's database, the contact's mobile line, and with --webroot the picture the template
+//                 paints behind its pages; no browser, no capture, no image)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
 //   cli.mjs looks --kit <template-kit.json> [--images <dir>] --list [--to <worklist.json>]
@@ -134,17 +136,25 @@ function settingSlots(o, out) {
   const kit = readJson(file)
   const map = readJson(join(o.contract, 'content-map.json'))
   const manifest = readJson(join(o.contract, 'manifest.json'))
-  const source = siteSource({ db: str(o.db), dbCommand: str(o['db-command']) })
-  const mapSettings = adapterFor(manifest.platform, source).mapSettings?.() ?? null
+  const source = siteSource({
+    db: str(o.db),
+    dbCommand: str(o['db-command']),
+    filesCommand: str(o['files-command']),
+    webroot: str(o.webroot)
+  })
+  const adapter = adapterFor(manifest.platform, source)
+  const mapSettings = adapter.mapSettings?.() ?? null
   if (!mapSettings) throw new Error('setting-slots needs the site database (--db-command or --db)')
-  const r = settleSettingSlots(kit, { map, mapSettings })
+  // Without --webroot nothing is read, and the background slots the kit has are kept.
+  const backgroundSettings = adapter.backgroundSettings?.() ?? null
+  const r = settleSettingSlots(kit, { map, mapSettings, backgroundSettings })
   const failures = []
   const wrong = contactFieldChecks(kit, (part, where, reason) => failures.push({ part, where, reason }))
   if (kit.coverage?.parts) kit.coverage.parts.contactFieldsUnresolved = wrong
   writeJson(file, kit)
   const maps = kit.blocks.flatMap((b) => (b.links ?? []).filter((l) => l.opens?.shows === 'map'))
   console.log(
-    `${r.slots} setting slots: ${r.tied} of ${maps.length} map buttons tied, ${r.mobile} mobile lines opened; contactFieldsUnresolved ${wrong}`
+    `${r.slots} setting slots: ${r.tied} of ${maps.length} map buttons tied, ${r.mobile} mobile lines opened, ${r.backgrounds} frames painted behind tied${backgroundSettings ? '' : ' (no --webroot: background slots kept)'}; contactFieldsUnresolved ${wrong}`
   )
   for (const f of failures) console.error(`${f.where}: ${f.reason}`)
   return wrong || r.tied < maps.length ? 1 : 0

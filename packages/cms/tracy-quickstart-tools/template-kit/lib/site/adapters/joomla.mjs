@@ -64,6 +64,7 @@ export function joomlaAdapter(source) {
     const style = styles[0]
     state.template = style?.template ?? null
     state.styleParams = safeJson(style?.params)
+    state.siteProfile = state.styleParams['typelist-site'] || 'default'
     state.menus = menus.map((r) => ({ ...r, params: safeJson(r.params) }))
     state.schemaPlugin = schema[0]
     const langParams = langs[0]?.params
@@ -267,6 +268,20 @@ export function joomlaAdapter(source) {
     mapSettings() {
       if (!query || !state.prefix) return null
       return query(mapRowsSql(state.prefix)).map(mapSettingOf).filter(Boolean)
+    },
+    /**
+     * The picture a T4 template paints behind the blocks of its pages from its site profile (`body_bg_img`, the
+     * media field's `#joomlaImage` suffix dropped): `[{key, value, template, file}]`, `[]` when the template has none
+     * (or is not T4), null without the database and the web root to read it from.
+     */
+    backgroundSettings() {
+      if (!query || !readFile) return null
+      // The profile the home style names (`typelist-site`), which need not be `default`.
+      const own = t4
+        ? (t4Settings(readFile, state.template, 'site', state.siteProfile ?? 'default') ?? t4)
+        : null
+      const value = String(own?.values.body_bg_img ?? '').split('#')[0]
+      return own && value ? [{ key: 'body_bg_img', value, template: state.template, file: own.file }] : []
     },
     /** Map entities that are free HTML blocks (no slots but their HTML). */
     isFreeHtml: (entity) => entity?.kind === 'module' && entity.identity?.module === 'mod_custom'

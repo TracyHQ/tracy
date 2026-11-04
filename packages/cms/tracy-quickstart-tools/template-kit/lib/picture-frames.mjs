@@ -8,6 +8,10 @@ import { neutralKey } from './ids.mjs'
 import { shapeOfBox } from './kit-frames.mjs'
 import { declaredIn } from './page-coverage.mjs'
 
+/** Why a picture painted behind a block is not writable, until a setting slot (background-slot.mjs) holds it. */
+export const PAINTED_BEHIND_REASON =
+  "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract"
+
 const norm = (f) =>
   String(f ?? '')
     .replace(/^\/+/, '')
@@ -93,7 +97,7 @@ export function pictureFrames(kit, map, readings) {
         paintedBehind: !!p.behind,
         writable: false,
         writableReason: p.behind
-          ? "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract"
+          ? PAINTED_BEHIND_REASON
           : 'no content map slot holds this picture; a planner cannot replace it through the contract',
         ...(slotFiles.has(norm(p.file))
           ? {
