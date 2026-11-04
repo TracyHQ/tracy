@@ -75595,6 +75595,3274 @@
       "demoOwned": [],
       "observedBy": "body",
       "observedOn": "/index.php?Itemid=155"
+    },
+    "tag-2.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/style",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-2",
+        "title": "style",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 19,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-26",
+        "article-24",
+        "article-61",
+        "article-31",
+        "article-45",
+        "article-38",
+        "article-48",
+        "article-56",
+        "article-20",
+        "article-39",
+        "article-65",
+        "article-15",
+        "article-46",
+        "article-16",
+        "article-64",
+        "article-76",
+        "article-32",
+        "article-21",
+        "article-12"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-26",
+              "slot": "article-26.26",
+              "maxCharacters": 51,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-24",
+              "slot": "article-24.26",
+              "maxCharacters": 100,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-61",
+              "slot": "article-61.28",
+              "maxCharacters": 34,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-31",
+              "slot": "article-31.26",
+              "maxCharacters": 38,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-45",
+              "slot": "article-45.26",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-38",
+              "slot": "article-38.18",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-48",
+              "slot": "article-48.26",
+              "maxCharacters": 63,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-56",
+              "slot": "article-56.26",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-20",
+              "slot": "article-20.30",
+              "maxCharacters": 39,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-39",
+              "slot": "article-39.6",
+              "maxCharacters": 35,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-65",
+              "slot": "article-65.26",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-15",
+              "slot": "article-15.26",
+              "maxCharacters": 34,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-46",
+              "slot": "article-46.6",
+              "maxCharacters": 32,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.28",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-64",
+              "slot": "article-64.6",
+              "maxCharacters": 38,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-76",
+              "slot": "article-76.26",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-32",
+              "slot": "article-32.28",
+              "maxCharacters": 42,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-21",
+              "slot": "article-21.26",
+              "maxCharacters": 32,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-12",
+              "slot": "article-12.28",
+              "maxCharacters": 64,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-26",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-2/26-a-great-wardrobe-success-rests-with-quality-basics"
+            },
+            {
+              "item": "article-24",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-2/24-a-local-boutique-is-working-with-designers-to-bring-capsule-wardrobes-to-shoppers-next-year"
+            },
+            {
+              "item": "article-61",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-5/61-ageless-style-dress-for-yourself"
+            },
+            {
+              "item": "article-31",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/31-behind-the-seams-a-day-in-the-atelier"
+            },
+            {
+              "item": "article-45",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-4/45-boutique-visits-jumped-51-this-year"
+            },
+            {
+              "item": "article-38",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/38-camouflage-prints-grown-up"
+            },
+            {
+              "item": "article-48",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-4/48-city-hall-says-it-will-order-action-to-aid-local-designers"
+            },
+            {
+              "item": "article-56",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-5/56-classic-stripes-reimagined"
+            },
+            {
+              "item": "article-20",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/20-dressing-for-a-night-at-the-theatre"
+            },
+            {
+              "item": "article-39",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/39-driving-shoes-made-for-weekends"
+            },
+            {
+              "item": "article-65",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-5/65-easy-weekend-outfits-for-the-family"
+            },
+            {
+              "item": "article-15",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/15-five-ways-to-style-a-white-shirt"
+            },
+            {
+              "item": "article-46",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-4/46-five-ways-to-wear-neutral-tones"
+            },
+            {
+              "item": "article-16",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/16-from-a-dream-wedding-to-a-sweet-honeymoon"
+            },
+            {
+              "item": "article-64",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-5/64-from-plant-to-fabric-natural-dyes"
+            },
+            {
+              "item": "article-76",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-6/76-how-she-built-a-wardrobe-in-a-year"
+            },
+            {
+              "item": "article-32",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/32-japanese-minimalism-in-everyday-dressing"
+            },
+            {
+              "item": "article-21",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-2/21-knitwear-picks-for-cooler-days"
+            },
+            {
+              "item": "article-12",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/12-life-and-style-the-fashion-experts-guide-to-christmas-style"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.button_label",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-26",
+              "slot": "article-26.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-24",
+              "slot": "article-24.0",
+              "maxCharacters": 325,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-61",
+              "slot": "article-61.0",
+              "maxCharacters": 213,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-31",
+              "slot": "article-31.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-45",
+              "slot": "article-45.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-38",
+              "slot": "article-38.0",
+              "maxCharacters": 292,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-48",
+              "slot": "article-48.0",
+              "maxCharacters": 325,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-56",
+              "slot": "article-56.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-20",
+              "slot": "article-20.1",
+              "maxCharacters": 392,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-39",
+              "slot": "article-39.0",
+              "maxCharacters": 336,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-65",
+              "slot": "article-65.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-15",
+              "slot": "article-15.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-46",
+              "slot": "article-46.0",
+              "maxCharacters": 336,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.0",
+              "maxCharacters": 213,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-64",
+              "slot": "article-64.0",
+              "maxCharacters": 336,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-76",
+              "slot": "article-76.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-32",
+              "slot": "article-32.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-21",
+              "slot": "article-21.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-12",
+              "slot": "article-12.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/style"
+    },
+    "tag-3.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/minimal",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-3",
+        "title": "minimal",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 20,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-55",
+        "article-61",
+        "article-31",
+        "article-56",
+        "article-16",
+        "article-76",
+        "article-6",
+        "article-32",
+        "article-12",
+        "article-36",
+        "article-29",
+        "article-11",
+        "article-30",
+        "article-49",
+        "article-54",
+        "article-25",
+        "article-75",
+        "article-53",
+        "article-71",
+        "article-79"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-55",
+              "slot": "article-55.11",
+              "maxCharacters": 40,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-61",
+              "slot": "article-61.28",
+              "maxCharacters": 34,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-31",
+              "slot": "article-31.26",
+              "maxCharacters": 38,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-56",
+              "slot": "article-56.26",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.28",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-76",
+              "slot": "article-76.26",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.14",
+              "maxCharacters": 33,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-32",
+              "slot": "article-32.28",
+              "maxCharacters": 42,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-12",
+              "slot": "article-12.28",
+              "maxCharacters": 64,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-36",
+              "slot": "article-36.28",
+              "maxCharacters": 31,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-29",
+              "slot": "article-29.28",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.26",
+              "maxCharacters": 72,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-30",
+              "slot": "article-30.26",
+              "maxCharacters": 75,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-49",
+              "slot": "article-49.28",
+              "maxCharacters": 32,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-54",
+              "slot": "article-54.26",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-25",
+              "slot": "article-25.28",
+              "maxCharacters": 50,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-75",
+              "slot": "article-75.28",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-53",
+              "slot": "article-53.28",
+              "maxCharacters": 31,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-71",
+              "slot": "article-71.28",
+              "maxCharacters": 31,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-79",
+              "slot": "article-79.18",
+              "maxCharacters": 38,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-55",
+              "path": "/index.php/blog/55-4-reasons-to-invest-in-a-good-coat"
+            },
+            {
+              "item": "article-61",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-5/61-ageless-style-dress-for-yourself"
+            },
+            {
+              "item": "article-31",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/31-behind-the-seams-a-day-in-the-atelier"
+            },
+            {
+              "item": "article-56",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-5/56-classic-stripes-reimagined"
+            },
+            {
+              "item": "article-16",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/16-from-a-dream-wedding-to-a-sweet-honeymoon"
+            },
+            {
+              "item": "article-76",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-6/76-how-she-built-a-wardrobe-in-a-year"
+            },
+            {
+              "item": "article-6",
+              "path": "/index.php/blog/6-how-to-care-for-linen-so-it-lasts"
+            },
+            {
+              "item": "article-32",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/32-japanese-minimalism-in-everyday-dressing"
+            },
+            {
+              "item": "article-12",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/12-life-and-style-the-fashion-experts-guide-to-christmas-style"
+            },
+            {
+              "item": "article-36",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/36-mixing-prints-with-confidence"
+            },
+            {
+              "item": "article-29",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-2/29-mother-and-daughter-style-swap"
+            },
+            {
+              "item": "article-11",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/11-our-muse-named-the-greatest-modeling-fashion-icon-of-all-time"
+            },
+            {
+              "item": "article-30",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-2/30-our-muse-named-the-greatest-modeling-fashion-icon-of-all-time-again"
+            },
+            {
+              "item": "article-49",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-4/49-secrets-from-a-master-tailor"
+            },
+            {
+              "item": "article-54",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-4/54-silk-scarves-tied-five-ways"
+            },
+            {
+              "item": "article-25",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-2/25-the-capsule-wardrobe-is-coming-to-every-closet"
+            },
+            {
+              "item": "article-75",
+              "path": "/index.php"
+            },
+            {
+              "item": "article-53",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-4/53-wedding-guest-outfits-that-work"
+            },
+            {
+              "item": "article-71",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-6/71-weekend-looks-in-soft-knits"
+            },
+            {
+              "item": "article-79",
+              "path": "/index.php/blog/79-what-to-wear-to-a-gallery-opening"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-55",
+              "slot": "article-55.0",
+              "maxCharacters": 162,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-61",
+              "slot": "article-61.0",
+              "maxCharacters": 213,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-31",
+              "slot": "article-31.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-56",
+              "slot": "article-56.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.0",
+              "maxCharacters": 213,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-76",
+              "slot": "article-76.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-32",
+              "slot": "article-32.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-12",
+              "slot": "article-12.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-36",
+              "slot": "article-36.0",
+              "maxCharacters": 213,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-29",
+              "slot": "article-29.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-30",
+              "slot": "article-30.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-49",
+              "slot": "article-49.0",
+              "maxCharacters": 213,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-54",
+              "slot": "article-54.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-25",
+              "slot": "article-25.0",
+              "maxCharacters": 213,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-75",
+              "slot": "article-75.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-53",
+              "slot": "article-53.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-71",
+              "slot": "article-71.0",
+              "maxCharacters": 213,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-79",
+              "slot": "article-79.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-55",
+              "slot": "article-55.12",
+              "inferred": true
+            },
+            {
+              "item": "article-61",
+              "slot": "article-61.29",
+              "inferred": true
+            },
+            {
+              "item": "article-31",
+              "slot": "article-31.27",
+              "inferred": true
+            },
+            {
+              "item": "article-56",
+              "slot": "article-56.27",
+              "inferred": true
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.29",
+              "inferred": true
+            },
+            {
+              "item": "article-76",
+              "slot": "article-76.27",
+              "inferred": true
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.15",
+              "inferred": true
+            },
+            {
+              "item": "article-32",
+              "slot": "article-32.29",
+              "inferred": true
+            },
+            {
+              "item": "article-12",
+              "slot": "article-12.29",
+              "inferred": true
+            },
+            {
+              "item": "article-36",
+              "slot": "article-36.29",
+              "inferred": true
+            },
+            {
+              "item": "article-29",
+              "slot": "article-29.29",
+              "inferred": true
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.27",
+              "inferred": true
+            },
+            {
+              "item": "article-30",
+              "slot": "article-30.27"
+            },
+            {
+              "item": "article-49",
+              "slot": "article-49.29",
+              "inferred": true
+            },
+            {
+              "item": "article-54",
+              "slot": "article-54.27",
+              "inferred": true
+            },
+            {
+              "item": "article-25",
+              "slot": "article-25.29",
+              "inferred": true
+            },
+            {
+              "item": "article-75",
+              "slot": "article-75.29",
+              "inferred": true
+            },
+            {
+              "item": "article-53",
+              "slot": "article-53.29",
+              "inferred": true
+            },
+            {
+              "item": "article-71",
+              "slot": "article-71.29",
+              "inferred": true
+            },
+            {
+              "item": "article-79",
+              "slot": "article-79.19",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-55",
+              "slot": "article-55.13",
+              "inferred": true
+            },
+            {
+              "item": "article-61",
+              "slot": "article-61.30",
+              "inferred": true
+            },
+            {
+              "item": "article-31",
+              "slot": "article-31.28",
+              "inferred": true
+            },
+            {
+              "item": "article-56",
+              "slot": "article-56.28",
+              "inferred": true
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.30",
+              "inferred": true
+            },
+            {
+              "item": "article-76",
+              "slot": "article-76.28",
+              "inferred": true
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.16",
+              "inferred": true
+            },
+            {
+              "item": "article-32",
+              "slot": "article-32.30",
+              "inferred": true
+            },
+            {
+              "item": "article-12",
+              "slot": "article-12.30",
+              "inferred": true
+            },
+            {
+              "item": "article-36",
+              "slot": "article-36.30",
+              "inferred": true
+            },
+            {
+              "item": "article-29",
+              "slot": "article-29.30",
+              "inferred": true
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.28",
+              "inferred": true
+            },
+            {
+              "item": "article-30",
+              "slot": "article-30.28"
+            },
+            {
+              "item": "article-49",
+              "slot": "article-49.30",
+              "inferred": true
+            },
+            {
+              "item": "article-54",
+              "slot": "article-54.28",
+              "inferred": true
+            },
+            {
+              "item": "article-25",
+              "slot": "article-25.30",
+              "inferred": true
+            },
+            {
+              "item": "article-75",
+              "slot": "article-75.30",
+              "inferred": true
+            },
+            {
+              "item": "article-53",
+              "slot": "article-53.30",
+              "inferred": true
+            },
+            {
+              "item": "article-71",
+              "slot": "article-71.30",
+              "inferred": true
+            },
+            {
+              "item": "article-79",
+              "slot": "article-79.20",
+              "inferred": true
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/minimal"
+    },
+    "tag-6.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/brunch",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-6",
+        "title": "brunch",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 9,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-55",
+        "article-41",
+        "article-28",
+        "article-6",
+        "article-52",
+        "article-33",
+        "article-74",
+        "article-13",
+        "article-58"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-55",
+              "slot": "article-55.11",
+              "maxCharacters": 40,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-41",
+              "slot": "article-41.6",
+              "maxCharacters": 48,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-28",
+              "slot": "article-28.19",
+              "maxCharacters": 32,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.14",
+              "maxCharacters": 33,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-52",
+              "slot": "article-52.19",
+              "maxCharacters": 27,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-33",
+              "slot": "article-33.19",
+              "maxCharacters": 36,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-74",
+              "slot": "article-74.19",
+              "maxCharacters": 17,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-13",
+              "slot": "article-13.19",
+              "maxCharacters": 36,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-58",
+              "slot": "article-58.19",
+              "maxCharacters": 36,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-55",
+              "path": "/index.php/blog/55-4-reasons-to-invest-in-a-good-coat"
+            },
+            {
+              "item": "article-41",
+              "path": "/index.php/blog/41-6-things-to-know-before-you-buy-a-leather-bag"
+            },
+            {
+              "item": "article-28",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-2/28-film-wardrobes-we-still-love"
+            },
+            {
+              "item": "article-6",
+              "path": "/index.php/blog/6-how-to-care-for-linen-so-it-lasts"
+            },
+            {
+              "item": "article-52",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-4/52-layering-lightly-for-spring"
+            },
+            {
+              "item": "article-33",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/33-quick-fixes-for-wardrobe-emergencies"
+            },
+            {
+              "item": "article-74",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-6/74-road-trip-style"
+            },
+            {
+              "item": "article-13",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/13-spring-color-trends-worth-trying"
+            },
+            {
+              "item": "article-58",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-5/58-winter-boots-that-handle-the-cold"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-55",
+              "slot": "article-55.0",
+              "maxCharacters": 162,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-41",
+              "slot": "article-41.0",
+              "maxCharacters": 216,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-28",
+              "slot": "article-28.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-52",
+              "slot": "article-52.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-33",
+              "slot": "article-33.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-74",
+              "slot": "article-74.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-13",
+              "slot": "article-13.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-58",
+              "slot": "article-58.0",
+              "maxCharacters": 288,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/brunch"
+    },
+    "tag-4.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/trends",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-4",
+        "title": "trends",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 7,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-41",
+        "article-9",
+        "article-73",
+        "article-14",
+        "article-51",
+        "article-34",
+        "article-27"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-41",
+              "slot": "article-41.6",
+              "maxCharacters": 48,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-9",
+              "slot": "article-9.10",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-73",
+              "slot": "article-73.18",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.18",
+              "maxCharacters": 46,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-51",
+              "slot": "article-51.18",
+              "maxCharacters": 39,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-34",
+              "slot": "article-34.18",
+              "maxCharacters": 30,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-27",
+              "slot": "article-27.18",
+              "maxCharacters": 34,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-41",
+              "path": "/index.php/blog/41-6-things-to-know-before-you-buy-a-leather-bag"
+            },
+            {
+              "item": "article-9",
+              "path": "/index.php/blog/9-bangs-or-no-bangs-a-guide-by-face-shape"
+            },
+            {
+              "item": "article-73",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-6/73-crisp-cotton-shirts-for-warm-days"
+            },
+            {
+              "item": "article-14",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-1/14-fashion-highlight-autumn-winter-in-milan"
+            },
+            {
+              "item": "article-51",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-4/51-style-resolutions-for-the-new-year"
+            },
+            {
+              "item": "article-34",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-3/34-the-cropped-jacket-comes-back"
+            },
+            {
+              "item": "article-27",
+              "path": "/index.php/joomla/content-page/all-categories/sample-category-2/27-the-joy-of-a-well-edited-closet"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-41",
+              "slot": "article-41.0",
+              "maxCharacters": 216,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-9",
+              "slot": "article-9.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-73",
+              "slot": "article-73.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-51",
+              "slot": "article-51.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-34",
+              "slot": "article-34.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            },
+            {
+              "item": "article-27",
+              "slot": "article-27.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-41",
+              "slot": "article-41.7",
+              "inferred": true
+            },
+            {
+              "item": "article-9",
+              "slot": "article-9.11"
+            },
+            {
+              "item": "article-73",
+              "slot": "article-73.19",
+              "inferred": true
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.19",
+              "inferred": true
+            },
+            {
+              "item": "article-51",
+              "slot": "article-51.19",
+              "inferred": true
+            },
+            {
+              "item": "article-34",
+              "slot": "article-34.19",
+              "inferred": true
+            },
+            {
+              "item": "article-27",
+              "slot": "article-27.19",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-41",
+              "slot": "article-41.8",
+              "inferred": true
+            },
+            {
+              "item": "article-9",
+              "slot": "article-9.12"
+            },
+            {
+              "item": "article-73",
+              "slot": "article-73.20",
+              "inferred": true
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.20",
+              "inferred": true
+            },
+            {
+              "item": "article-51",
+              "slot": "article-51.20",
+              "inferred": true
+            },
+            {
+              "item": "article-34",
+              "slot": "article-34.20",
+              "inferred": true
+            },
+            {
+              "item": "article-27",
+              "slot": "article-27.20",
+              "inferred": true
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/trends"
+    },
+    "tag-17.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/care",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-17",
+        "title": "care",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 3,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-42",
+        "article-44",
+        "article-8"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "slot": "article-42.16",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-44",
+              "slot": "article-44.15",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-8",
+              "slot": "article-8.16",
+              "maxCharacters": 43,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "path": "/index.php/blog/42-dressing-for-brunch-with-friends"
+            },
+            {
+              "item": "article-44",
+              "path": "/index.php/blog/44-five-accessories-that-finish-any-outfit"
+            },
+            {
+              "item": "article-8",
+              "path": "/index.php/blog/8-keep-what-you-love-let-go-of-the-rest"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "slot": "article-42.0",
+              "maxCharacters": 174,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-44",
+              "slot": "article-44.0",
+              "maxCharacters": 150,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-8",
+              "slot": "article-8.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "slot": "article-42.17",
+              "inferred": true
+            },
+            {
+              "item": "article-44",
+              "slot": "article-44.16",
+              "inferred": true
+            },
+            {
+              "item": "article-8",
+              "slot": "article-8.17"
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "slot": "article-42.18",
+              "inferred": true
+            },
+            {
+              "item": "article-44",
+              "slot": "article-44.17",
+              "inferred": true
+            },
+            {
+              "item": "article-8",
+              "slot": "article-8.18"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/care"
+    },
+    "tag-21.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/liquid",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-21",
+        "title": "liquid",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 3,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-42",
+        "article-10",
+        "article-43"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "slot": "article-42.16",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.24",
+              "maxCharacters": 58,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.18",
+              "maxCharacters": 41,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "path": "/index.php/blog/42-dressing-for-brunch-with-friends"
+            },
+            {
+              "item": "article-10",
+              "path": "/index.php/blog/10-how-to-wear-the-new-liquid-makeup-without-overdoing-it"
+            },
+            {
+              "item": "article-43",
+              "path": "/index.php/blog/43-online-or-in-store-getting-the-fit-right"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "slot": "article-42.0",
+              "maxCharacters": 174,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.0",
+              "maxCharacters": 168,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.0",
+              "maxCharacters": 174,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "slot": "article-42.17",
+              "inferred": true
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.25"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.19",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-42",
+              "slot": "article-42.18",
+              "inferred": true
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.26"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.20",
+              "inferred": true
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/liquid"
+    },
+    "tag-7.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/workwear",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-7",
+        "title": "workwear",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-6",
+        "article-43"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-6",
+              "slot": "article-6.14",
+              "maxCharacters": 33,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.18",
+              "maxCharacters": 41,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-6",
+              "path": "/index.php/blog/6-how-to-care-for-linen-so-it-lasts"
+            },
+            {
+              "item": "article-43",
+              "path": "/index.php/blog/43-online-or-in-store-getting-the-fit-right"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-6",
+              "slot": "article-6.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.0",
+              "maxCharacters": 174,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/workwear"
+    },
+    "tag-8.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/make-up",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-8",
+        "title": "make-up",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-5",
+        "article-10"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.8",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.24",
+              "maxCharacters": 58,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "path": "/index.php/blog/5-5-makeup-tricks-for-a-fresh-daytime-look"
+            },
+            {
+              "item": "article-10",
+              "path": "/index.php/blog/10-how-to-wear-the-new-liquid-makeup-without-overdoing-it"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.0",
+              "maxCharacters": 168,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.9"
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.25"
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.10"
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.26"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/make-up"
+    },
+    "tag-9.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/hair",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-9",
+        "title": "hair",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-5",
+        "article-42"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.8",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-42",
+              "slot": "article-42.16",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "path": "/index.php/blog/5-5-makeup-tricks-for-a-fresh-daytime-look"
+            },
+            {
+              "item": "article-42",
+              "path": "/index.php/blog/42-dressing-for-brunch-with-friends"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-42",
+              "slot": "article-42.0",
+              "maxCharacters": 174,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.9"
+            },
+            {
+              "item": "article-42",
+              "slot": "article-42.17",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.10"
+            },
+            {
+              "item": "article-42",
+              "slot": "article-42.18",
+              "inferred": true
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/hair"
+    },
+    "tag-11.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/tricks",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-11",
+        "title": "tricks",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-5",
+        "article-2"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.8",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-2",
+              "slot": "article-2.19",
+              "maxCharacters": 44,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "path": "/index.php/blog/5-5-makeup-tricks-for-a-fresh-daytime-look"
+            },
+            {
+              "item": "article-2",
+              "path": "/index.php/blog/2-the-five-minute-morning-skin-routine"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-2",
+              "slot": "article-2.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.9"
+            },
+            {
+              "item": "article-2",
+              "slot": "article-2.20"
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.10"
+            },
+            {
+              "item": "article-2",
+              "slot": "article-2.23"
+            }
+          ]
+        },
+        {
+          "field": "custom:image_intro_alt",
+          "kind": "custom",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.21",
+              "maxCharacters": 70,
+              "limitFrom": "store"
+            }
+          ]
+        },
+        {
+          "field": "custom:image_intro_caption",
+          "kind": "custom",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.22",
+              "maxCharacters": 70,
+              "limitFrom": "store"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/tricks"
+    },
+    "tag-15.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/sneakers",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-15",
+        "title": "sneakers",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-4",
+        "article-66"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.16",
+              "maxCharacters": 47,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-66",
+              "slot": "article-66.10",
+              "maxCharacters": 48,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "path": "/index.php/blog/4-10-ways-to-dress-from-studio-to-street"
+            },
+            {
+              "item": "article-66",
+              "path": "/index.php/blog/66-day-to-night-one-dress-two-looks"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-66",
+              "slot": "article-66.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/sneakers"
+    },
+    "tag-16.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/accessories",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-16",
+        "title": "accessories",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-4",
+        "article-44"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.16",
+              "maxCharacters": 47,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-44",
+              "slot": "article-44.15",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "path": "/index.php/blog/4-10-ways-to-dress-from-studio-to-street"
+            },
+            {
+              "item": "article-44",
+              "path": "/index.php/blog/44-five-accessories-that-finish-any-outfit"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-44",
+              "slot": "article-44.0",
+              "maxCharacters": 150,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/accessories"
+    },
+    "tag-22.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/dress",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-22",
+        "title": "dress",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-10",
+        "article-43"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-10",
+              "slot": "article-10.24",
+              "maxCharacters": 58,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.18",
+              "maxCharacters": 41,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-10",
+              "path": "/index.php/blog/10-how-to-wear-the-new-liquid-makeup-without-overdoing-it"
+            },
+            {
+              "item": "article-43",
+              "path": "/index.php/blog/43-online-or-in-store-getting-the-fit-right"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-10",
+              "slot": "article-10.0",
+              "maxCharacters": 168,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.0",
+              "maxCharacters": 174,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-10",
+              "slot": "article-10.25"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.19",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-10",
+              "slot": "article-10.26"
+            },
+            {
+              "item": "article-43",
+              "slot": "article-43.20",
+              "inferred": true
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/dress"
+    },
+    "tag-19.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/icons",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-19",
+        "title": "icons",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-9",
+        "article-42"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "slot": "article-9.10",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-42",
+              "slot": "article-42.16",
+              "maxCharacters": 37,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "path": "/index.php/blog/9-bangs-or-no-bangs-a-guide-by-face-shape"
+            },
+            {
+              "item": "article-42",
+              "path": "/index.php/blog/42-dressing-for-brunch-with-friends"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "slot": "article-9.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-42",
+              "slot": "article-42.0",
+              "maxCharacters": 174,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "slot": "article-9.11"
+            },
+            {
+              "item": "article-42",
+              "slot": "article-42.17",
+              "inferred": true
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "slot": "article-9.12"
+            },
+            {
+              "item": "article-42",
+              "slot": "article-42.18",
+              "inferred": true
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/icons"
+    },
+    "tag-10.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/tips",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-10",
+        "title": "tips",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-5"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.8",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "path": "/index.php/blog/5-5-makeup-tricks-for-a-fresh-daytime-look"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.9"
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.10"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/tips"
+    },
+    "tag-20.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/beauty",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-20",
+        "title": "beauty",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-9"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "slot": "article-9.10",
+              "maxCharacters": 45,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "path": "/index.php/blog/9-bangs-or-no-bangs-a-guide-by-face-shape"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "slot": "article-9.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "slot": "article-9.11"
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-9",
+              "slot": "article-9.12"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/beauty"
+    },
+    "tag-18.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/wardrobe",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-18",
+        "title": "wardrobe",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-8"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-8",
+              "slot": "article-8.16",
+              "maxCharacters": 43,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-8",
+              "path": "/index.php/blog/8-keep-what-you-love-let-go-of-the-rest"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-8",
+              "slot": "article-8.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-8",
+              "slot": "article-8.17"
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-8",
+              "slot": "article-8.18"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/wardrobe"
+    },
+    "tag-14.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/activewear",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-14",
+        "title": "activewear",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-4"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.16",
+              "maxCharacters": 47,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "path": "/index.php/blog/4-10-ways-to-dress-from-studio-to-street"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/activewear"
+    },
+    "tag-12.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/basics",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-12",
+        "title": "basics",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-2"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.19",
+              "maxCharacters": 44,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "path": "/index.php/blog/2-the-five-minute-morning-skin-routine"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "custom:image_intro_alt",
+          "kind": "custom",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.21",
+              "maxCharacters": 70,
+              "limitFrom": "store"
+            }
+          ]
+        },
+        {
+          "field": "custom:image_intro_caption",
+          "kind": "custom",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.22",
+              "maxCharacters": 70,
+              "limitFrom": "store"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.20"
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.23"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/basics"
+    },
+    "tag-13.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/index.php/component/tags/tag/outerwear",
+      "rowKind": "items",
+      "source": {
+        "kind": "tag",
+        "id": "tag-13",
+        "title": "outerwear",
+        "page": null,
+        "route": null
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count",
+      "shown": [
+        "article-2"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.19",
+              "maxCharacters": 44,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "path": "/index.php/blog/2-the-five-minute-morning-skin-routine"
+            }
+          ]
+        },
+        {
+          "field": "summary",
+          "kind": "summary",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.0",
+              "maxCharacters": 171,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "custom:image_intro_alt",
+          "kind": "custom",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.21",
+              "maxCharacters": 70,
+              "limitFrom": "store"
+            }
+          ]
+        },
+        {
+          "field": "custom:image_intro_caption",
+          "kind": "custom",
+          "type": "text",
+          "role": "editorial.paragraph",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.22",
+              "maxCharacters": 70,
+              "limitFrom": "store"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.20"
+            }
+          ]
+        },
+        {
+          "field": "image:image_fulltext",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-2",
+              "slot": "article-2.23"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/component/tags/tag/outerwear"
     }
   },
   "itemPages": {
@@ -76836,111 +80104,6 @@
             "kind": "page",
             "page": "menuItem-599",
             "path": "/index.php/contact",
-            "alive": true,
-            "status": 200
-          }
-        }
-      ]
-    },
-    "module-91": {
-      "block": "module-91",
-      "menu": "usermenu",
-      "titleSlot": "module-91.0",
-      "startLevel": 1,
-      "endLevel": 0,
-      "orderFrom": "item-id",
-      "items": [
-        {
-          "item": "menuItem-102",
-          "level": 1,
-          "parent": null,
-          "type": "component",
-          "label": {
-            "slot": "menuItem-102.0",
-            "text": "Your Profile",
-            "maxCharacters": 44,
-            "limitFrom": "store"
-          },
-          "target": {
-            "kind": "page",
-            "page": "menuItem-102",
-            "path": null,
-            "alive": true,
-            "status": 200
-          }
-        },
-        {
-          "item": "menuItem-103",
-          "level": 1,
-          "parent": null,
-          "type": "url",
-          "label": {
-            "slot": "menuItem-103.0",
-            "text": "Site Administrator",
-            "maxCharacters": 56,
-            "limitFrom": "store"
-          },
-          "target": {
-            "kind": "link",
-            "link": "administrator",
-            "path": null,
-            "alive": null,
-            "status": null
-          }
-        },
-        {
-          "item": "menuItem-104",
-          "level": 1,
-          "parent": null,
-          "type": "component",
-          "label": {
-            "slot": "menuItem-104.0",
-            "text": "Submit an Article",
-            "maxCharacters": 54,
-            "limitFrom": "store"
-          },
-          "target": {
-            "kind": "page",
-            "page": "menuItem-104",
-            "path": null,
-            "alive": true,
-            "status": 200
-          }
-        },
-        {
-          "item": "menuItem-106",
-          "level": 1,
-          "parent": null,
-          "type": "component",
-          "label": {
-            "slot": "menuItem-106.0",
-            "text": "Template Settings",
-            "maxCharacters": 54,
-            "limitFrom": "store"
-          },
-          "target": {
-            "kind": "page",
-            "page": "menuItem-106",
-            "path": null,
-            "alive": true,
-            "status": 200
-          }
-        },
-        {
-          "item": "menuItem-107",
-          "level": 1,
-          "parent": null,
-          "type": "component",
-          "label": {
-            "slot": "menuItem-107.0",
-            "text": "Site Settings",
-            "maxCharacters": 46,
-            "limitFrom": "store"
-          },
-          "target": {
-            "kind": "page",
-            "page": "menuItem-107",
-            "path": null,
             "alive": true,
             "status": 200
           }
