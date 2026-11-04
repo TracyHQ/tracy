@@ -251,7 +251,7 @@ test('a setting entry that is a neutral preview is not written', async () => {
   const { site, line } = await runPictures({ files: { pictures } })
   assert.equal(site.of('template.siteSettings', 'set').length, 0)
   assert.equal(line('block-3.bg').status, 'skipped')
-  assert.match(line('block-3.bg').reason, /#367/)
+  assert.match(line('block-3.bg').reason, /not drawn yet/)
 })
 
 test('a picture on a slot the copy fills is a dispute that names both files, with nothing written', async () => {
@@ -311,12 +311,12 @@ test('a hidden frame is reported as skipped until hiding arrives, and never sent
   assert.equal(contractCalls(site)[0].params.changes['module-2.gone'], undefined)
 })
 
-test('a painted frame is reported as skipped for #367 and its preview never reaches the site', async () => {
+test('with no brand file a painted frame is skipped and its preview never reaches the site', async () => {
   const { site, line } = await runPictures()
   const icon = line('block-3.icon')
   assert.equal(icon.status, 'skipped')
   assert.equal(icon.part, 'picture-painted')
-  assert.match(icon.reason, /#367/)
+  assert.match(icon.reason, /no brand file/)
   assert.ok(!uploadedPaths(site).includes(PREVIEW.entry.sitePath))
   assert.equal(contractCalls(site)[0].params.changes['module-3.icon'], undefined)
 })
@@ -329,7 +329,7 @@ test('a backdrop is its own skipped line: the figure is written and is no disput
   assert.equal(backdrop.status, 'skipped')
   assert.equal(backdrop.part, 'picture-painted')
   assert.equal(backdrop.key, null, 'nothing was ordered on the slot by this line')
-  assert.match(backdrop.reason, /#367/)
+  assert.match(backdrop.reason, /no brand file/)
 })
 
 const stopsWithNothingSent = async (files, code, words) => {

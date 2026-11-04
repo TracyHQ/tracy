@@ -152,7 +152,10 @@ export async function runWriteStep(input) {
       picturesPath: files.pictures,
       inputs: read.inputs.pictures,
       kit: kit.doc,
-      contract
+      contract,
+      brand: read.values.brand,
+      brandPath: files.brand,
+      contentMap
     })
     if (pictures.stop) return { stop: pictures.stop }
     const problems = fileProblems({ plan, copy, kitRef: kit.ref }, readCopy(copy).problems)
