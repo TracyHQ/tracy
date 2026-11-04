@@ -9,7 +9,7 @@ import { runCli } from '../src/write-step/bench-cli.js'
 import { memoryStore } from './_write-step-bench.mjs'
 import { brandFile, brandKit, brandSite, frozenWithBrand } from './_write-step-brand.mjs'
 import { frozenWithPictures, HERO, pictureKit, pictureSite } from './_write-step-pictures.mjs'
-import { copy, fakeSite, frozenFiles, KIT, memoryRunStore } from './_write-step-run.mjs'
+import { copy, fakeSite, frozenFiles, KIT, memoryRunStore, plan } from './_write-step-run.mjs'
 
 const SITE = 'write-bench-abc.sites.example'
 const benchSite = () => ({
@@ -319,4 +319,72 @@ test('without --pictures-file a run sends no upload', async () => {
   } finally {
     frozen.done()
   }
+})
+
+test('a second run on the same site compares with the last report and writes only what differs', async () => {
+  const h = harness()
+  const frozen = frozenFiles()
+  await h.cli(runArgs(frozen.files))
+  frozen.done()
+  const c = copy()
+  c.slots.find((s) => s.slot === 'block-2.1').text = 'Train with a coach you trust'
+  const changed = frozenFiles({ copy: c })
+  h.out.length = 0
+  h.site.calls.length = 0
+  assert.equal(await h.cli(runArgs(changed.files)), 0)
+  changed.done()
+  const applies = h.site.calls.filter((call) => call.params.operation === 'apply')
+  assert.deepEqual(applies[0].params.changes, { 'module-2.1': 'Train with a coach you trust' })
+  assert.ok(
+    h.out.some((l) => /^done: 1 written, 0 hidden, \d+ skipped, 0 failed, 10 unchanged in \d+ ms$/.test(l)),
+    h.out.join('\n')
+  )
+  assert.equal(h.runs.rows[1].report.rewrite.from, 'run-1')
+  assert.equal(typeof h.runs.rows[1].report.timings.total, 'number')
+})
+
+test('a change that needs a new site is refused in plain words and recorded, and the run after it still compares', async () => {
+  const h = harness({ site: fakeSite() })
+  const frozen = frozenFiles()
+  await h.cli(runArgs(frozen.files))
+  const shown = plan()
+  shown.pages[0].blocks[0].hiddenSlots = []
+  const refused = frozenFiles({ plan: shown })
+  h.site.calls.length = 0
+  assert.equal(await h.cli(runArgs(refused.files)), 1)
+  refused.done()
+  assert.equal(h.site.calls.length, 0)
+  assert.match(h.err.at(-1), /NEEDS_NEW_SITE/)
+  assert.match(h.err.at(-1), /block-2\.3/)
+  assert.equal(h.runs.rows[1].code, 'NEEDS_NEW_SITE')
+  assert.equal(await h.cli(runArgs(frozen.files)), 0)
+  frozen.done()
+  assert.equal(h.site.calls.filter((call) => call.params.operation === 'apply').length, 0)
+  assert.equal(h.runs.rows[2].report.counts.written, 0)
+})
+
+test('a run that left no report makes the site unknown, so the next run is refused before it begins', async () => {
+  const h = harness()
+  const frozen = frozenFiles()
+  await h.cli(runArgs(frozen.files))
+  h.runs.rows[0].report = null
+  h.runs.rows[0].status = 'stopped'
+  h.runs.rows[0].code = 'CRASHED'
+  h.site.calls.length = 0
+  assert.equal(await h.cli(runArgs(frozen.files)), 1)
+  frozen.done()
+  assert.match(h.err.at(-1), /NEEDS_NEW_SITE/)
+  assert.match(h.err.at(-1), /run-1/)
+  assert.equal(h.runs.rows.length, 1, 'no run is recorded')
+  assert.equal(h.site.calls.length, 0)
+})
+
+test('a run still going on the site is what a new run is told about, not its older report', async () => {
+  const h = harness()
+  const frozen = frozenFiles()
+  await h.cli(runArgs(frozen.files))
+  await h.runs.begin({ siteKey: SITE, kit: 'demo-gym/j6/1.0.0', startedBy: 'cli' })
+  assert.equal(await h.cli(runArgs(frozen.files)), 1)
+  frozen.done()
+  assert.match(h.err.at(-1), /RUN_ACTIVE/)
 })
