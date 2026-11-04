@@ -3,7 +3,8 @@
 The drawer's fixed template (ADR 0043, #344). Code fills the `{{...}}` places from the site plan's words for one frame
 (shows, mustInclude, avoid, mood, size) and nothing else, and for a cut-out frame (#346) the plain ground colour code
 chose and will remove (cutout-ground.js), joins the `common` part with the part of the mode code chose,
-and adds the `redraw` part on the one redraw after the looker rejected a drawing. Only the text under the `##` headings
+adds the `style` part when the kit's demo picture of a cut-out frame is attached as a style reference, and adds the
+`redraw` part on the one redraw after the looker rejected a drawing. Only the text under the `##` headings
 is sent; this paragraph is not.
 
 ## common
@@ -39,12 +40,25 @@ photograph ends.
 
 ## cutout
 
-Make a realistic photograph of one figure alone on a completely flat, plain background of one single colour:
+Make a realistic studio photograph of one figure alone on a completely flat, plain background of one single colour:
 {{ground}}. The background is exactly that colour everywhere: no gradient, no floor, no horizon, no shadow, no
 reflection, no texture, no smoke or glow and no other thing on it. Nothing in the figure is that colour, not even a
-small part. Keep the whole figure inside the picture with clear background on its left, its right and above it; it may
-stand on the bottom edge. Every hand, arm, leg and foot, and everything the figure holds or wears (gloves, a racket, a
-ball, a tool), is whole and sharp against the background. Even light, crisp edges, no motion blur.
+small part. The figure is the hero of the picture: it fills about 90% of the picture's height, with only a small margin
+of background above it and at its left and right, and it may stand on the bottom edge. Show the whole figure: every
+hand, arm, leg and foot, and everything the figure holds or wears (gloves, a racket, a ball, a tool), is whole, inside
+the picture and sharp against the background. The figure looks like an athlete of the sport or activity it must show,
+in fitted athletic sportswear for that sport, in a confident, active stance typical of that sport, full of energy and
+attitude, never a stiff or passive catalogue pose. Light it like a dramatic sports studio portrait: strong directional
+key light with deep shadows on the figure, and a rim light on its edges is welcome, while the background stays one
+flat, even colour with no light spill, glow or gradient on it. Crisp edges, no motion blur.
+
+## style
+
+The attached picture is the website's original picture for this frame, given ONLY as a style reference. Copy only its
+framing, the scale of the figure (how much of the height it fills), the energy of the pose, the lighting and the
+attitude. Never copy the person, the sport, the clothes, any equipment, the background graphics, shapes or colours of
+the attached picture: the subject, the sport and what the figure holds come only from "It must show" above, and the
+background is only the one plain colour named above.
 
 ## redraw
 

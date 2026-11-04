@@ -8,7 +8,10 @@
 // - `cutout` (#346): the figure of a cut-out frame drawn on a flat plain ground of one colour (cutout-ground.js
 //   groundFor); code removes the ground and contains the figure in the frame's size as a PNG with alpha. The entry
 //   records the ground and that it was removed in `cutout`. A ground that cannot be removed cleanly is a failed draw,
-//   with the looker fault the redraw names.
+//   with the looker fault the redraw names. When the kit's demo picture of the frame can be read (`readDemo`), it is
+//   attached as a style reference only (flattened on a light grey, at most STYLE_MAX px): the template's `style` part
+//   tells the model to copy its framing, scale, pose energy, light and attitude and nothing of its subject. The call
+//   record names it by its sha256 (`styleSha256`).
 //
 // Every drawing is kept in the bench's file store (runs/<run id>/draws/<key>.json, the key a hash of the mode, the
 // text, the real photo, the size, the model and the template), so a later round or a resumed run pays once per
@@ -25,6 +28,9 @@ import { fileStore, sha256Hex } from './file-store.js'
 export const WIDE_BAND = 2
 /** The longest side of the picture sent to be extended. */
 const SEND_MAX = 1536
+/** The longest side of a demo picture sent as a style reference. */
+export const STYLE_MAX = 768
+const STYLE_GROUND = { r: 220, g: 220, b: 220 }
 const GREY = { r: 128, g: 128, b: 128 }
 const JPEG = { quality: 86, mozjpeg: false }
 
@@ -34,9 +40,18 @@ export const modeOf = (frame) => (/illustration|product/.test(String(frame?.role
 /**
  * The drawer of one run.
  * @param {{ door: object, prompt: { parts: Record<string, string>, sha256: string }, storeDir: string, runId: string,
- *   photoBytes: Map<string, Buffer>, fetchImpl?: typeof fetch }} input
+ *   photoBytes: Map<string, Buffer>, readDemo?: ((frame: object) => Promise<Buffer | null>) | null,
+ *   fetchImpl?: typeof fetch }} input `readDemo`: the kit's demo picture of a frame (demo-pictures.js), or null
  */
-export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetchImpl = fetch }) {
+export function createDrawing({
+  door,
+  prompt,
+  storeDir,
+  runId,
+  photoBytes,
+  readDemo = null,
+  fetchImpl = fetch
+}) {
   const store = fileStore(storeDir)
   const kept = (key) => path.join(store.dir, 'runs', String(runId), 'draws', `${key}.json`)
 
@@ -71,6 +86,23 @@ export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetch
     }
   }
 
+  /** The kit's demo picture of a cut-out frame as a style reference, or null when it cannot be read. */
+  async function styleOf(frame) {
+    const demo = readDemo ? await readDemo(frame).catch(() => null) : null
+    if (!demo?.length) return null
+    try {
+      const sent = await sharp(Buffer.from(demo), { failOn: 'none' })
+        .rotate()
+        .flatten({ background: STYLE_GROUND })
+        .resize(STYLE_MAX, STYLE_MAX, { fit: 'inside', withoutEnlargement: true })
+        .png()
+        .toBuffer()
+      return { sent, sha256: sha256Hex(demo) }
+    } catch {
+      return null
+    }
+  }
+
   /**
    * Draw one frame. `asset` (outpaint only) the owner photo to extend; `faults` the looker's fault names on a redraw.
    * @returns {Promise<{ made: object | null, call: object, extra: object, problem?: string, faults?: string[] }>}
@@ -88,11 +120,12 @@ export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetch
         extra: {}
       }
     const ground = mode === 'cutout' ? groundFor(wish) : null
-    const text = drawingText(prompt.parts, mode, wish, faults, ground)
+    const style = mode === 'cutout' ? await styleOf(frame) : null
+    const text = drawingText(prompt.parts, mode, wish, faults, ground, { style: Boolean(style) })
     const key = sha256Hex(
-      JSON.stringify([mode, text, band?.photoSha ?? null, out, door.model, prompt.sha256])
+      JSON.stringify([mode, text, band?.photoSha ?? style?.sha256 ?? null, out, door.model, prompt.sha256])
     )
-    const base = { frame: frameId, mode, attempt }
+    const base = { frame: frameId, mode, attempt, ...(style ? { styleSha256: style.sha256 } : {}) }
     const extra = band
       ? { asset: asset.id, realPart: band.realPart, crop: band.crop, enlarge: band.enlarge }
       : {}
@@ -115,7 +148,7 @@ export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetch
     const answer = await askDrawer({
       door,
       text,
-      image: band?.sent ?? null,
+      image: band?.sent ?? style?.sent ?? null,
       aspect: aspectRatioFor(out.width, out.height),
       fetchImpl
     })

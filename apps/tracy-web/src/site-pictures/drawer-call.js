@@ -5,7 +5,8 @@
 // on a quiet background) and `outpaint` (a real owner photo placed in the middle of a wide band, its sides extended).
 // The one redraw after a looker rejection adds the template's `redraw` part with the fault names. A fourth mode,
 // `cutout` (#346), draws the figure of a cut-out frame on a flat plain ground of one colour code names and removes
-// afterwards (cutout-ground.js).
+// afterwards (cutout-ground.js). When the kit holds the frame's demo picture, a cut-out drawing is sent it as a style
+// reference (the template's `style` part says to copy only framing, scale, pose energy, light and attitude).
 //
 // A call that fails or answers no picture is a drawing with no bytes and its reason; it never throws and is never sent
 // twice by this module (one drawing is one paid call). Its cost is the provider's figure, else its tokens at the model's
@@ -34,12 +35,14 @@ const listed = (x) => (Array.isArray(x) && x.length ? x.map(String).join(', ') :
 const said = (x) => (typeof x === 'string' && x.trim() ? x.trim() : 'not stated')
 
 /**
- * The text of one drawing: the template's common part, the mode's part and, on a redraw, the redraw part; every place
- * filled from the plan's words (`wish`) or, for the redraw, the fault names; a cut-out's from its `ground`.
+ * The text of one drawing: the template's common part, the mode's part, the style part when a style reference is
+ * attached and, on a redraw, the redraw part; every place filled from the plan's words (`wish`) or, for the redraw,
+ * the fault names; a cut-out's from its `ground`.
  * @param {Record<string, string>} parts picture-prompts.js drawingParts
  * @param {{ name: string, hex: string } | null} [ground] the plain ground of a cut-out (cutout-ground.js GROUNDS)
+ * @param {{ style?: boolean }} [options] `style`: the demo picture is attached as a style reference
  */
-export function drawingText(parts, mode, wish, faults = null, ground = null) {
+export function drawingText(parts, mode, wish, faults = null, ground = null, { style = false } = {}) {
   if (!DRAW_MODES.includes(mode)) throw new Error(`not a drawing mode: ${mode}`)
   const values = {
     shows: said(wish?.shows),
@@ -51,7 +54,14 @@ export function drawingText(parts, mode, wish, faults = null, ground = null) {
     ground: ground ? `${ground.name} (${ground.hex})` : ''
   }
   const fill = (text) => String(text ?? '').replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '')
-  return [parts.common, parts[mode], ...(faults?.length ? [parts.redraw] : [])].map(fill).join('\n\n')
+  return [
+    parts.common,
+    parts[mode],
+    ...(style ? [parts.style] : []),
+    ...(faults?.length ? [parts.redraw] : [])
+  ]
+    .map(fill)
+    .join('\n\n')
 }
 
 /** The supported aspect ratio nearest to a width and height (compared on a log scale). */
@@ -81,7 +91,8 @@ function pictureOf(message) {
 /**
  * Draw once.
  * @param {{ door: { baseUrl: string, apiKey: string, model: string }, text: string, image?: Buffer | null,
- *   aspect: string, fetchImpl?: typeof fetch, ms?: number }} input `image`: the picture to extend (PNG), for outpaint
+ *   aspect: string, fetchImpl?: typeof fetch, ms?: number }} input `image`: the attached picture (PNG), the band to extend for
+ *   outpaint or the demo picture as a style reference for a cut-out
  * @returns {Promise<{ bytes: Buffer | null, problem?: string, model: string, ms: number, costUsd: number | null,
  *   costEstimated: boolean }>}
  */

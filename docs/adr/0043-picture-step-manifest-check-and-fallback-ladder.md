@@ -356,10 +356,22 @@ cut-out frame (kind `cutout`) is filled by drawing:
 
 - **Drawn on a plain ground**: a `specific` cut-out frame is drawn through the drawer door in mode `cutout`, the
   template's `cutout` part (`drawing-prompt.md`, hashed with the rest into `prompts.drawing`): one figure, whole, on a
-  completely flat ground of one named colour, with clear ground on its left, right and above it (it may stand on the
-  bottom edge), no shadow, nothing of that colour in the figure. Code chooses the colour from the plan's words: chroma
+  completely flat ground of one named colour, no shadow, nothing of that colour in the figure. The figure is the hero:
+  it fills about 90% of the picture's height with a small margin above and at its sides (it may stand on the bottom
+  edge), as an athlete of the sport the wish names, in that sport's sportswear and a confident active stance, under
+  strong directional studio light (a rim light is allowed, the ground stays one flat colour). The first wording asked
+  for lots of clear ground and even light, and drew a small, passive figure in flat catalogue light that looked weak
+  beside the template's demo figure (run 6, JA Boxing block-165.1). Code chooses the colour from the plan's words: chroma
   green `#00b140`, unless the words name something green (grass, a tennis ball), then magenta `#ff00ff`, then chroma
   blue `#0047bb` (`site-pictures/cutout-ground.js` `groundFor`).
+- **The demo picture as a style reference**: when the kit's demo picture of the frame can be read (the frame's
+  `picture` path in the release webroot, `site-pictures/demo-pictures.js`, cached beside the demo icons and matched by
+  `pictureSha256` when the kit records one), it is attached to the drawing, flattened on light grey and at most 768 px,
+  with the template's `style` part: copy only its framing, the figure's scale, the pose energy, the light and the
+  attitude; never the person, the sport, the clothes, any equipment, the background graphics or colours. The subject
+  comes only from the wish. The call record names the reference by `styleSha256`, and the reference is part of the kept
+  drawing's key. No demo picture, no reference: the drawing goes on without one. This is the one place a demo picture
+  is sent to a model, and never as content: it never reaches the picker or the looker.
 - **Code removes the ground**: the ground as painted is measured on the picture's border near the asked colour; each
   pixel's alpha comes from how much the ground's own channels dominate it (a colour difference key), soft between 0.15
   and 0.85 of the ground's dominance; its colour is unmixed from the ground and the ground's spill suppressed, so the

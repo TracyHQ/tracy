@@ -125,7 +125,9 @@ function fakeDoors({ rejects = new Map(), flatFirst = new Set() } = {}) {
     const body = JSON.parse(init.body)
     if (isDraw(body)) {
       const f = frameOf(drawText(body))
-      drawings.push({ frame: f, text: drawText(body) })
+      const c = body.messages[0].content
+      const image = Array.isArray(c) ? (c.find((x) => x.type === 'image_url')?.image_url.url ?? null) : null
+      drawings.push({ frame: f, text: drawText(body), image })
       const flat = flatFirst.has(f) && drawings.filter((d) => d.frame === f).length === 1
       return drawReply(body, flat ? { colour: { r: 120, g: 120, b: 120 } } : {})
     }
@@ -145,7 +147,7 @@ function fakeDoors({ rejects = new Map(), flatFirst = new Set() } = {}) {
   return { drawings, looks, fetchImpl }
 }
 
-async function setUp(doors, runId, { withDrawer = true } = {}) {
+async function setUp(doors, runId, { withDrawer = true, readDemo = null } = {}) {
   const k = kit()
   const p = plan()
   const b = brief()
@@ -205,6 +207,7 @@ async function setUp(doors, runId, { withDrawer = true } = {}) {
           storeDir: store.dir,
           runId,
           photoBytes: PHOTO_BYTES,
+          readDemo,
           fetchImpl: doors.fetchImpl
         })
       : null,
@@ -264,6 +267,13 @@ test('both specific cut-outs are drawn on a plain ground, the ground removed, an
   const hDraw = doors.drawings.find((d) => d.frame === 'block-h.1')
   assert.match(hDraw.text, /plain background of one single colour:\s+chroma green \(#00b140\)/)
   assert.match(hDraw.text, /racket/)
+  // The figure fills the height in an athletic stance under studio light; with no demo picture, no style reference.
+  assert.match(hDraw.text, /fills about 90% of the picture's height/)
+  assert.match(hDraw.text, /athletic sportswear/)
+  assert.match(hDraw.text, /strong directional\s+key light/)
+  assert.doesNotMatch(hDraw.text, /clear background on its left|Even light/)
+  assert.doesNotMatch(hDraw.text, /style reference/)
+  assert.equal(hDraw.image, null)
   const hLook = doors.looks.find((l) => l.frame === 'block-h.1')
   assert.match(hLook.text, /This picture is a cut-out/)
   assert.match(hLook.text, /text sit over part of this picture box/)
@@ -376,4 +386,48 @@ test('with no drawer door a cut-out frame is hidden or returned, never left with
   ])
   noDemoFigure(m)
   assert.deepEqual(failedRules(check(out)), [])
+})
+
+test('the demo picture of a cut-out frame is attached as a style reference only, and keys the kept drawing', async () => {
+  // An invented demo figure with a transparent ground: a dark disc and a red band, as a template decorates its figure.
+  const demo = await sharp({
+    create: { width: 300, height: 320, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } }
+  })
+    .composite([
+      {
+        input: Buffer.from(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="320"><circle cx="150" cy="170" r="140" fill="#181717"/><rect x="20" y="200" width="260" height="40" fill="#b00909"/></svg>'
+        )
+      }
+    ])
+    .png()
+    .toBuffer()
+  const asked = []
+  const readDemo = async (f) => {
+    asked.push(f.id)
+    return f.id === 'block-s.1' ? demo : null
+  }
+  const doors = fakeDoors()
+  const { doc, finisher } = await setUp(doors, 'run-cut-style', { readDemo })
+  const m = (await finisher.finish(doc, { lastRound: true })).doc
+  assert.deepEqual(asked.sort(), ['block-h.1', 'block-s.1'])
+  const s = doors.drawings.find((d) => d.frame === 'block-s.1')
+  assert.match(s.text, /ONLY as a style reference/)
+  assert.match(
+    s.text,
+    /Never copy the person, the sport, the clothes, any equipment, the background graphics/
+  )
+  assert.match(s.text, /come only from "It must show"/)
+  assert.ok(s.image?.startsWith('data:image/png;base64,'), 'the demo picture is attached')
+  // Sent flattened (no alpha) and no larger than STYLE_MAX.
+  const sent = await sharp(Buffer.from(s.image.split(',')[1], 'base64')).metadata()
+  assert.deepEqual([sent.hasAlpha, sent.width <= 768, sent.height <= 768], [false, true, true])
+  // The frame whose demo picture cannot be read is drawn without one.
+  const h = doors.drawings.find((d) => d.frame === 'block-h.1')
+  assert.equal(h.image, null)
+  assert.doesNotMatch(h.text, /style reference/)
+  // The call names the reference by its hash; the cut-out is placed as before.
+  const call = m.drawer.calls.find((c) => c.frame === 'block-s.1')
+  assert.match(call.styleSha256, /^[0-9a-f]{64}$/)
+  assert.equal(byFrame(m).get('block-s.1').cutout.groundRemoved, true)
 })

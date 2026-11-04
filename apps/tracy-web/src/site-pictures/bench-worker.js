@@ -38,6 +38,7 @@ import { joinSurface } from './frame-surface/surface.js'
 import { surfaceFor } from './frame-surface/surface-cache.js'
 import { iconStepFor } from './icon-step.js'
 import { openKitWithMap } from './kit-with-map.js'
+import { demoPictureReader } from './demo-pictures.js'
 import { createDrawing } from './ladder-draw.js'
 import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
@@ -245,6 +246,11 @@ async function prepare(deps, row) {
     fetchImpl: deps.fetchImpl
   })
   const prompts = picturePrompts()
+  // The demo pictures of the cut-out frames, sent to the drawer as a style reference only (ladder-draw.js).
+  const cutoutDemos =
+    drawerDoor.door && deps.webroot
+      ? await demoPictureReader({ dir: store.dir, webroot: deps.webroot }).forKit(kit)
+      : null
   const finisher = createFinisher({
     idx,
     plan: row.plan,
@@ -260,6 +266,7 @@ async function prepare(deps, row) {
           storeDir: store.dir,
           runId: row.id,
           photoBytes,
+          readDemo: cutoutDemos?.readDemo ?? null,
           fetchImpl: deps.fetchImpl
         })
       : null,

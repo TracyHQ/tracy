@@ -431,7 +431,15 @@ test('a frame the picker placed climbs only in the last round; an any-real frame
 
 test('the drawing text is the fixed template filled from the plan words only', () => {
   const parts = picturePrompts().drawing
-  assert.deepEqual(Object.keys(parts).sort(), ['common', 'cutout', 'object', 'outpaint', 'redraw', 'scene'])
+  assert.deepEqual(Object.keys(parts).sort(), [
+    'common',
+    'cutout',
+    'object',
+    'outpaint',
+    'redraw',
+    'scene',
+    'style'
+  ])
   const w = {
     shows: 'a wheel on a stand',
     mustInclude: ['spokes', 'a stand'],
@@ -452,6 +460,9 @@ test('the drawing text is the fixed template filled from the plan words only', (
   assert.match(text, /wide, 1440 x 480/)
   assert.doesNotMatch(text, /f-secret|f-owner|secret|\{\{/)
   assert.match(drawingText(parts, 'object', w), /product photograph/)
+  // The style part is added only when a style reference is attached.
+  assert.doesNotMatch(drawingText(parts, 'cutout', w), /style reference/)
+  assert.match(drawingText(parts, 'cutout', w, null, null, { style: true }), /ONLY as a style reference/)
   assert.throws(() => drawingText(parts, 'portrait', w), /not a drawing mode/)
   assert.equal(aspectRatioFor(1440, 480), '21:9')
   assert.equal(aspectRatioFor(400, 300), '4:3')
