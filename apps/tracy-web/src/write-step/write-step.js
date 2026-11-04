@@ -19,6 +19,7 @@ import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { kitSlotIds } from './kit-slot-ids.js'
+import { prepareLinks } from './link-stage.js'
 import { runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { preparePictureStage } from './picture-stage.js'
@@ -109,6 +110,7 @@ export async function runWriteStep(input) {
   let hide = null
   let emptied = []
   let shareLines = []
+  let links = null
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -127,6 +129,7 @@ export async function runWriteStep(input) {
         hides: hidden?.hides,
         frameLines: hidden?.lines,
         shareLines,
+        links: links?.results({ written, refused, settled, hides: hidden?.hides ?? new Map() }),
         ...routes
       })
       report.counts = countsOf(report.slots)
@@ -219,6 +222,7 @@ export async function runWriteStep(input) {
     sent = exported.mapping.changes
     return {
       plan,
+      brief,
       mapping: {
         ...exported.mapping,
         changes: { ...changes, ...brand.changes, ...pictures.changes },
@@ -227,7 +231,7 @@ export async function runWriteStep(input) {
     }
   })
   if (checked.stop) return stopped(checked.stop)
-  const { mapping, plan } = checked
+  const { mapping, plan, brief } = checked
   if (await isCancelled()) return finish('cancelled', null)
 
   const apply = (call) => door.apply(call)
@@ -244,6 +248,25 @@ export async function runWriteStep(input) {
   })
   if (inspected.stop) return stopped(inspected.stop)
   if (await isCancelled()) return finish('cancelled', null)
+
+  // Before the hide stage: a slot a kept link writes is not emptied as well.
+  if ([...table.owners.values()].some((claim) => claim.kind === 'link')) {
+    links = await timed('links', () =>
+      prepareLinks({
+        door,
+        siteKey,
+        kit: kit.doc,
+        plan,
+        brief,
+        owners: table.owners,
+        reading: inspected.reading,
+        extras,
+        taken: mapping.changes
+      })
+    )
+    Object.assign(mapping.changes, links.changes)
+    Object.assign(mapping.evidence, links.evidence)
+  }
 
   // Page frame first: the blocks and pages the plan drops; the hidden slots go with the contract call.
   const hiding = await timed('hide', () =>
@@ -326,5 +349,6 @@ export async function runWriteStep(input) {
   })
   shareLines = shared.lines
   if (shared.cancelled) return finish('cancelled', null, wrote.written, wrote.refused)
+  if (links) await timed('link-menus', () => links.writeMenu())
   return finish('done', null, wrote.written, wrote.refused)
 }

@@ -41,7 +41,7 @@ test('the report carries input hashes and file names, never a path, and per-stag
   for (const stage of ['check', 'inspect', 'write']) assert.equal(typeof report.timings[stage], 'number')
 })
 
-test('the plan owns hide decisions and link targets: a link is reported as skipped until those writes exist', async () => {
+test('the plan owns hide decisions and link targets: a link the kit does not list is failed and names its target', async () => {
   const p = plan()
   p.pages[0].blocks[0].links = [{ link: 'block-2.link-1', leadsTo: 'page-about', labelSlot: 'block-2.1' }]
   const { report, line } = await run({ plan: p })
@@ -51,8 +51,8 @@ test('the plan owns hide decisions and link targets: a link is reported as skipp
     'a slot the plan hides'
   )
   assert.match(line('block-2.3').reason, /hid/)
-  assert.deepEqual([line('block-2.link-1').owner, line('block-2.link-1').status], ['plan', 'skipped'])
-  assert.match(line('block-2.link-1').reason, /page-about/)
+  assert.deepEqual([line('block-2.link-1').owner, line('block-2.link-1').status], ['plan', 'failed'])
+  assert.match(line('block-2.link-1').reason, /block-2\.link-1/)
   assert.equal(report.status, 'done')
 })
 
