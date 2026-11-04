@@ -37,6 +37,7 @@ import { dirname, join, resolve } from 'node:path'
 
 import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
+import { readContractMap } from './lib/contract-read.mjs'
 import { contactFieldChecks } from './lib/coverage-gate.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
@@ -116,7 +117,7 @@ function pack(out) {
 function relabel(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const r = relabelKit(kit, { map: readJson(join(o.contract, 'content-map.json')), linkLabelSlots })
+  const r = relabelKit(kit, { map: readContractMap(o.contract), linkLabelSlots })
   writeJson(file, kit)
   const links = kit.blocks.flatMap((b) => b.links ?? [])
   console.log(
@@ -134,7 +135,7 @@ function relabel(o, out) {
 function settingSlots(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const manifest = readJson(join(o.contract, 'manifest.json'))
   const source = siteSource({
     db: str(o.db),
@@ -214,7 +215,7 @@ async function main() {
   if (cmd === 'pack') return pack(out)
   if (cmd === 'relabel') return relabel(o, out)
   if (cmd === 'setting-slots') return settingSlots(o, out)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const hostHeader = str(o['host-header'])
   const widths = String(o.widths ?? '1440,390')
     .split(',')

@@ -212,3 +212,13 @@ test('a link with no address that opens something on the page (a tab, a menu hea
     ['link "Lanes" has no target']
   )
 })
+
+test('the review opens a kit whose frame is empty in the demo: no measured numbers to show', () => {
+  const frame = {
+    id: 'b.1',
+    kind: 'picture',
+    hideEvidence: { judgedBy: 'the demo leaves the picture field empty' }
+  }
+  const rows = reviewRows({ widths: [1440, 390], images: [], blocks: [{ id: 'b', frames: [frame] }] })
+  assert.ok(Array.isArray(rows))
+})
