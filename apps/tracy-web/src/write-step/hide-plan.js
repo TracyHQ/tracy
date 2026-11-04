@@ -3,6 +3,7 @@
 // as an emptied slot, or it cannot be taken and says why. A menu item a kept page depends on is left published and reported:
 // Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
 import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { goneRowSlots, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
 import { NO_LAST } from './no-last-report.js'
 
@@ -107,21 +108,58 @@ function notEmptiable(key, slot) {
   return `the plugin's review for this contract does not list ${where}, so it cannot be emptied: this needs a new contract: ${NEW_CONTRACT}`
 }
 
+/** What the door takes and what it must leave: every other claim keeps its slot, but a link whose words go leaves with them. */
+function removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gone }) {
+  const hidden = new Set()
+  const keep = new Set(Object.keys(changes))
+  const hiddenIds = new Set([...owners.values()].filter((c) => c.kind === 'hide').map((c) => c.slot))
+  for (const claim of owners.values()) {
+    const key = contentMapKey(icons.get(claim.slot)?.field ?? claim.slot)
+    if (claim.kind !== 'hide') {
+      if (claim.kind !== 'link' || !hiddenIds.has(claim.label)) keep.add(key)
+      continue
+    }
+    if (menu.has(claim.slot) || fixed.has(claim.slot)) continue
+    if (!gone.has(key.slice(0, key.lastIndexOf('.'))) && !(key in changes)) hidden.add(key)
+  }
+  const goneKeys = new Set(
+    [...goneRowSlots({ plan, kit })].map((id) => contentMapKey(icons.get(id)?.field ?? id))
+  )
+  const remove = slotsToRemove({ hidden, keep, gone: goneKeys, onSite })
+  return { remove, keep: [...keep].filter((key) => onSite.has(key)) }
+}
+
 /**
  * @param {{ plan: object, kit: object, owners: Map<string, object>, extras: object, reading: object,
- *   changes: Record<string, string>, cannotHide: string | null, last?: object }} input `cannotHide`: why this plugin takes no
- *   hide order, or null when it does; `last`: the last report, whose hidden lines are off the site already
- * @returns {{ orders: Map<string, object>, blocks: Map<string, string>, emptySlots: string[],
- *   strings: Record<string, string>, pages: object[], menu: Map<string, object> }} `orders`: by the line's slot, each with a
- *   `via`; `blocks`: block id to module key
+ *   changes: Record<string, string>, cannotHide: string | null, rowsRemove?: boolean, last?: object }} input `cannotHide`: why
+ *   this plugin takes no hide order, or null when it does; `rowsRemove`: whether it has the door that takes a row or an element;
+ *   `last`: the last report, whose hidden lines are off the site already
+ * @returns {{ orders: Map<string, object>, blocks: Map<string, string>, emptySlots: string[], removeSlots: string[],
+ *   keepSlots: string[], strings: Record<string, string>, pages: object[], menu: Map<string, object> }} `orders`: by the line's
+ *   slot, each with a `via`; `blocks`: block id to module key; `removeSlots`, `keepSlots`: what `rows.remove` is sent
  */
-export function hideOrders({ plan, kit, owners, extras, reading, changes, cannotHide, last = NO_LAST }) {
+export function hideOrders({
+  plan,
+  kit,
+  owners,
+  extras,
+  reading,
+  changes,
+  cannotHide,
+  rowsRemove = false,
+  last = NO_LAST
+}) {
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const icons = iconsOf(kit)
   const fixed = fixedTexts(kit)
   const menu = menuOrders({ plan, kit, hide: extras?.mainMenu?.hide })
   const blocks = droppedBlocks(plan, kit)
   const gone = new Set(blocks.values())
+  const removal =
+    cannotHide || !rowsRemove
+      ? null
+      : removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gone })
+  const removedAlready = reading?.removedSlots ?? {}
   const orders = new Map()
   const emptySlots = []
   const strings = {}
@@ -151,7 +189,10 @@ export function hideOrders({ plan, kit, owners, extras, reading, changes, cannot
     const failedAs = (reason) => orders.set(slot, { via: 'failed', key, reason })
     const held = onSite.get(key)
     const entity = key.slice(0, key.lastIndexOf('.'))
-    if (gone.has(entity)) {
+    if (key in removedAlready || removal?.remove.has(key)) {
+      if (key in changes) failedAs(`the write step also writes ${key}, so it cannot be removed as well`)
+      else orders.set(slot, { via: 'removed', key, ...(key in removedAlready ? { already: true } : {}) })
+    } else if (gone.has(entity)) {
       if (cannotHide) failedAs(cannotHide)
       else orders.set(slot, { via: 'block', key, module: entity })
     } else if (typeof held?.current === 'string' && held.current.trim() === '') {
@@ -175,5 +216,16 @@ export function hideOrders({ plan, kit, owners, extras, reading, changes, cannot
     .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
     .filter((page) => page && !taken.has(slashless(page.path)))
     .map((page) => ({ page, depends: pageDependingOn(page.path, { plan, kit }) }))
-  return { orders, blocks, emptySlots: [...new Set(emptySlots)], strings, pages, menu }
+  const removeSlots = [...orders.values()].filter((o) => o.via === 'removed' && !o.already).map((o) => o.key)
+  const keepSlots = removal ? [...removal.keep] : []
+  return {
+    orders,
+    blocks,
+    emptySlots: [...new Set(emptySlots)],
+    removeSlots: [...new Set(removeSlots)],
+    keepSlots,
+    strings,
+    pages,
+    menu
+  }
 }

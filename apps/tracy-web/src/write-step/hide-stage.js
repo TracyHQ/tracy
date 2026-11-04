@@ -2,12 +2,13 @@
 // items of dropped pages, the fixed sentences, the dropped blocks. The hidden slots themselves go with the one contract call
 // (contract-write.js), so this stage only hands over their list. The main menu items the plan hides stay the page settings
 // stage's, which keeps them from being unpublished twice; an item a kept page depends on is taken out of its list here and
-// reported. An older plugin silently ignores `empty_slots`, so `info.hide_ops` is read first and every hide line it cannot
-// take is failed instead of pretended. Whatever is refused is failed in the plugin's words and the rest goes. What the last
-// report says is off the site already is not ordered off it again, and its line reads as it did.
+// reported. A slot whose row or element can go leaves the stored field with it (`rows.remove`), so its box goes too; that cannot
+// be undone on the site. An older plugin silently ignores `empty_slots`, so `info.hide_ops` is read first and every hide line it
+// cannot take is failed instead of pretended. Whatever is refused is failed in the plugin's words and the rest goes. What the
+// last report says is off the site already is not ordered off it again, and its line reads as it did.
 import { hideLines } from './hide-lines.js'
 import { hideOrders } from './hide-plan.js'
-import { dropPages, emptyConstants, hideOpsProblem, unpublishBlocks } from './hide-writes.js'
+import { dropPages, emptyConstants, hideOpsOf, removeRows, unpublishBlocks } from './hide-writes.js'
 import { NO_LAST } from './no-last-report.js'
 import { answerWords } from './settings-door.js'
 
@@ -35,8 +36,19 @@ function settingsPart(extras, menu) {
 export async function runHideStage(input) {
   const { door, siteKey, kit, plan, owners, extras, changes, contract, sleep, last = NO_LAST } = input
   const asksToHide = [...owners.values()].some((c) => c.kind === 'hide')
-  const cannotHide = asksToHide ? await hideOpsProblem(door, siteKey) : null
-  const order = hideOrders({ plan, kit, owners, extras, reading: input.reading, changes, cannotHide, last })
+  const ops = asksToHide ? await hideOpsOf(door, siteKey) : { problem: null, rowsRemove: false }
+  const cannotHide = ops.problem
+  const order = hideOrders({
+    plan,
+    kit,
+    owners,
+    extras,
+    reading: input.reading,
+    changes,
+    cannotHide,
+    rowsRemove: ops.rowsRemove,
+    last
+  })
   const total = Object.keys(changes).length + order.emptySlots.length
   if (total > MAX_SLOTS)
     return {
@@ -69,6 +81,7 @@ export async function runHideStage(input) {
   let reading = input.reading
   const gone = [...order.blocks].filter(([block]) => last.hidden(block)).map(([, module]) => module)
   let blocks = new Map(gone.map((module) => [module, true]))
+  let removed = new Map()
   const modules = cannotHide ? [] : [...order.blocks.values()].filter((module) => !gone.includes(module))
   try {
     if (modules.length) {
@@ -78,6 +91,20 @@ export async function runHideStage(input) {
       blocks = new Map([...blocks, ...unpublished.done])
       wrote = wrote || unpublished.wrote
     }
+    if (order.removeSlots.length) {
+      if (wrote) reading = await fresh()
+      const taken = await removeRows({
+        door,
+        siteKey,
+        slots: order.removeSlots,
+        keep: order.keepSlots,
+        revision: reading.revision,
+        contract,
+        sleep
+      })
+      removed = taken.done
+      wrote = taken.wrote
+    }
     if (wrote) reading = await fresh()
   } catch (error) {
     return { stop: { code: 'INSPECT_REFUSED', reason: String(error?.message ?? error) } }
@@ -86,6 +113,6 @@ export async function runHideStage(input) {
     reading,
     emptySlots: order.emptySlots,
     ...settingsPart(extras, order.menu),
-    results: (done) => hideLines({ order, words, blocks, pages, cannotHide, ...done })
+    results: (done) => hideLines({ order, words, blocks, pages, cannotHide, removed, ...done })
   }
 }

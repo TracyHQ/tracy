@@ -60,13 +60,15 @@ function anchorsOfBlock(block, slots) {
 }
 
 /**
- * @param {{ kit: object, reading: object, rows: object[] }} input
+ * @param {{ kit: object, reading: object, rows: object[], contentMap?: object }} input
  * @returns {(id: string) => { via: string, link?: object, block?: object, keys?: string[], key?: string, item?: number, row?: object }}
  *   `via`: "slot" (`keys` holds the address), "shared" (`keys` hold one address several links show), "menu", "words" (`key`
  *   holds it among its words), "words-only" (the plan names a slot of words), "none" (no door) or "no-kit-link"
  */
-export function linkDoors({ kit, reading, rows }) {
+export function linkDoors({ kit, reading, rows, contentMap }) {
   const slotList = each(reading?.slots)
+  // A slot an earlier run removed is not read any more, but the links of its words still are the links the kit lists.
+  const removed = each(contentMap?.slots).filter((s) => s?.key in (reading?.removedSlots ?? {}))
   const slots = new Map(slotList.map((s) => [s?.key, s]))
   const rowsById = new Map(rows.map((r) => [Number(r.id), r]))
   const byId = new Map()
@@ -78,7 +80,7 @@ export function linkDoors({ kit, reading, rows }) {
     }
   const anchorCache = new Map()
   const anchorsOf = (block) => {
-    if (!anchorCache.has(block)) anchorCache.set(block, anchorsOfBlock(block, slotList))
+    if (!anchorCache.has(block)) anchorCache.set(block, anchorsOfBlock(block, [...slotList, ...removed]))
     return anchorCache.get(block)
   }
 

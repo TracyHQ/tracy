@@ -1,5 +1,6 @@
 // A link line of the write report (TracyHQ/tracy#371): `lineOrder` says what the link stage will do with a plan link, whose door and
 // address are known, and `lineResult` says what became of it once the writes are done.
+import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { refusalWords } from './contract-write.js'
 import { actsInsidePage, slashless } from './link-doors.js'
 import { readRow } from './settings-door.js'
@@ -12,6 +13,8 @@ export function lineOrder(claim, door, target, { hiddenKeys, leaving }) {
   const { slot: id, content: leadsTo } = claim
   const { link } = door
   if (door.via === 'menu' && leaving.has(link.menuItem)) return { via: 'menu', item: door.item }
+  const label = claim.label ? hiddenKeys.get(contentMapKey(claim.label)) : null
+  if (label && door.via !== 'menu') return { via: 'label', label, leadsTo }
   if (door.via === 'no-kit-link')
     return failed(`the kit lists no link ${id}, so nothing says where it is on the site`)
   if (door.via === 'words-only')
@@ -85,6 +88,7 @@ export function lineResult(order, done) {
       ? { status: 'written', reason: null, key, ordered: order.url }
       : { status: 'skipped', reason: ENDED, key }
   }
+  if (order.via === 'label') return labelResult(order, hides)
   if (order.via === 'words') return wordsResult(order, hiddenKeys, hides)
   if (order.via === 'map') return mapResult(order, settled)
   const id = `menuItem-${order.item}`
@@ -100,6 +104,27 @@ export function lineResult(order, done) {
         readFrom: readRow('menuItem', order.item, 'link')
       }
     : failed(words, { key: null, ordered: order.url })
+}
+
+/** The plan sends a link somewhere and hides the words it shows: a link with no words is an empty box, so it goes with them. */
+function labelResult({ label, leadsTo }, hides) {
+  const hidden = hides?.get(label)
+  if (!hidden) return { status: 'skipped', reason: ENDED, key: null }
+  const conflict = `the plan sends this link to ${leadsTo} but hides ${label}, the words it shows`
+  const { status, key, ordered, readFrom } = hidden
+  if (status !== 'hidden')
+    return failed(`${conflict}, and they could not be hidden, so the link stays: ${hidden.reason}`, {
+      key: key ?? null,
+      conflict: true
+    })
+  return {
+    status,
+    conflict: true,
+    key: key ?? null,
+    reason: `${conflict}: with no words it would be an empty box, so it left with them`,
+    ...(ordered === undefined ? {} : { ordered }),
+    ...(readFrom ? { readFrom } : {})
+  }
 }
 
 /** A link printed inside a slot of words: it leaves with that slot, and nothing rewrites one address among the words. */

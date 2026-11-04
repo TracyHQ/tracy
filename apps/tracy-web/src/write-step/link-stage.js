@@ -76,7 +76,8 @@ export async function prepareLinks({
   reading,
   extras,
   taken,
-  last = NO_LAST
+  last = NO_LAST,
+  contentMap
 }) {
   const claims = [...owners.values()].filter((c) => c.kind === 'link')
   const call = doorCall(door, siteKey)
@@ -93,7 +94,7 @@ export async function prepareLinks({
     }
   }
   const facts = new Map(each(brief?.facts).map((f) => [f?.id, f]))
-  const doorOf = linkDoors({ kit, reading, rows: site.rows })
+  const doorOf = linkDoors({ kit, reading, rows: site.rows, contentMap })
   const hiddenKeys = new Map(
     [...owners.values()].filter((c) => c.kind === 'hide').map((c) => [contentMapKey(c.slot), c.slot])
   )
