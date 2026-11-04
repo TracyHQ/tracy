@@ -7,11 +7,15 @@
 // reason? }, with `level` defaulting to block and `causingStep` to the group's own. `read(action, params)` asks the site
 // through the door. Only reads pass, answers are shared between groups, and a refused read makes the group unmeasured.
 //
+// Context also holds `host(payload)` (reads pages in a browser) and `baseline` (the demo baseline), both optional.
+//
 // Statuses: green, red (a block failure), unmeasured (it could not tell), and not-run for a group stopped by an earlier one.
 import { GroupUnmeasured } from './group-unmeasured.js'
+import { PAGE_CHECK_GROUPS } from './page-groups.js'
 import { readBackGroup } from './read-back.js'
 
 export const CHECK_VERSION = 'site-check/1'
+/** The groups that need no browser. With a host, `PAGE_CHECK_GROUPS` (page-groups.js) follow them. */
 export const SITE_CHECK_GROUPS = [readBackGroup]
 
 const READ_OPERATIONS = new Set(['inspect', 'read'])
@@ -77,13 +81,21 @@ function overall(groups) {
 }
 
 /**
- * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number }} input `report` is
- *   `site-write-report/1`; its `site` says which site to read
+ * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
+ *   baseline?: object | null }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
+ *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`)
  * @returns {Promise<object>} `site-check/1`
  */
-export async function runSiteCheck({ door, report, groups = SITE_CHECK_GROUPS, now = Date.now }) {
+export async function runSiteCheck({
+  door,
+  report,
+  host,
+  baseline = null,
+  groups = host ? [...SITE_CHECK_GROUPS, ...PAGE_CHECK_GROUPS] : SITE_CHECK_GROUPS,
+  now = Date.now
+}) {
   const siteKey = report.site
-  const context = { report, siteKey, now, read: readsOnly(door, siteKey) }
+  const context = { report, siteKey, now, host, baseline, read: readsOnly(door, siteKey) }
   const results = []
   let stoppedBy = null
   for (const group of groups) {
@@ -106,6 +118,7 @@ export async function runSiteCheck({ door, report, groups = SITE_CHECK_GROUPS, n
     version: CHECK_VERSION,
     status: overall(results),
     site: siteKey,
+    pageGroups: Boolean(host),
     kit: report.kit ?? null,
     contract: report.contract ?? null,
     counts: {

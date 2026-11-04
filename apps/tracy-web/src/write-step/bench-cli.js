@@ -238,6 +238,9 @@ async function checkRun(d, values) {
   const check = await runSiteCheck({
     door: d.makeDoor({ account: values.account, platform: 'joomla' }),
     report: r.report,
+    // The page groups need the site's host and the demo baseline of the quickstart; both are optional (site-check.js).
+    ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
+    baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
     ...(d.now ? { now: d.now } : {})
   })
   await d.runs.saveReport(r.id, withReadBack(r.report, check))

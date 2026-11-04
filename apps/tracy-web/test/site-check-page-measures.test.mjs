@@ -1,0 +1,252 @@
+// The measures the site check adds to the host's: dead links, text overflow, tall blocks, stretched pictures, and unowned
+// slots that still show. Pages are invented. Dead links and text overflow are new; each has a case that fails without it.
+import assert from 'node:assert/strict'
+import { test } from 'node:test'
+import {
+  findDeadLinks,
+  findStretchedPictures,
+  findTallBlocks,
+  findTextOverflow
+} from '../src/site-check/page-measures.js'
+import { runSiteCheck } from '../src/site-check/site-check.js'
+import { fakeHost, pageRead, pagedSite, writtenReport } from './_site-check-pages.mjs'
+
+const BOTH = (path, entry) => [
+  { path, width: 1440, ...entry[1440] },
+  { path, width: 390, ...entry[390] }
+]
+const group = (check, name) => check.groups.find((g) => g.name === name)
+
+test('a kept page the host could not open is a dead link', () => {
+  const f = findDeadLinks(
+    [
+      { path: '/', status: 200 },
+      { path: '/classes', status: 404 },
+      { path: '/gone', status: null, skipped: 'not found' }
+    ],
+    []
+  )
+  assert.deepEqual(
+    f.map((x) => x.page),
+    ['/classes', '/gone']
+  )
+})
+
+test('a link that answers an error, or nothing, is dead; a redirect and an answer are not', () => {
+  const links = [
+    { href: '/ok', text: 'Fine', status: 200 },
+    { href: '/moved', text: 'Moved', status: 301 },
+    { href: '/missing', text: 'Missing', status: 404 },
+    { href: 'https://x.example/', text: 'Away', status: 0 },
+    { href: '/slow', text: 'Slow', status: null }
+  ]
+  const f = findDeadLinks(
+    [],
+    [
+      { path: '/', width: 1440, links },
+      { path: '/', width: 390, links }
+    ]
+  )
+  assert.deepEqual(
+    f.map((x) => x.measured),
+    [404, 0, 'no answer']
+  )
+  assert.equal(f.length, 3, 'the same link at the two widths is one finding')
+  assert.ok(f.every((x) => x.page === '/'))
+})
+
+test('text cut by its box, or running past the screen edge, overflows, at the width it was seen', () => {
+  const box = {
+    selector: 'h2.title',
+    text: 'A very long heading that does not fit',
+    boxWidth: 300,
+    boxHeight: 40
+  }
+  const measures = [
+    {
+      path: '/',
+      width: 1440,
+      textBoxes: [{ ...box, contentWidth: 300, contentHeight: 40, clips: true, right: 600 }]
+    },
+    {
+      path: '/',
+      width: 390,
+      textBoxes: [{ ...box, contentWidth: 380, contentHeight: 40, clips: true, right: 380 }]
+    }
+  ]
+  const f = findTextOverflow(measures)
+  assert.equal(f.length, 1)
+  assert.deepEqual([f[0].page, f[0].width, f[0].selector], ['/', 390, 'h2.title'])
+  const past = findTextOverflow([
+    {
+      path: '/x',
+      width: 390,
+      textBoxes: [{ ...box, contentWidth: 300, contentHeight: 40, clips: false, right: 450 }]
+    }
+  ])
+  assert.match(past[0].reason, /60 px past the right edge/)
+  assert.equal(
+    findTextOverflow([
+      {
+        path: '/',
+        width: 390,
+        textBoxes: [{ ...box, contentWidth: 301, contentHeight: 41, clips: true, right: 300 }]
+      }
+    ]).length,
+    0
+  )
+})
+
+test('a block over three screens high is unusual, judged against the screen of its width', () => {
+  const tall = findTallBlocks([
+    {
+      path: '/',
+      width: 1440,
+      blocks: [
+        { selector: 'section.a', height: 2701 },
+        { selector: 'section.b', height: 2600 }
+      ]
+    },
+    { path: '/', width: 390, blocks: [{ selector: 'section.b', height: 2600 }] }
+  ])
+  assert.deepEqual(
+    tall.map((x) => [x.selector, x.width]),
+    [
+      ['section.a', 1440],
+      ['section.b', 390]
+    ]
+  )
+})
+
+test('a picture drawn in another ratio than its file, with nothing to crop it, is stretched', () => {
+  const pic = (over) => ({
+    selector: 'img',
+    src: 'a.jpg',
+    naturalWidth: 800,
+    naturalHeight: 400,
+    width: 400,
+    height: 200,
+    fit: 'fill',
+    ...over
+  })
+  const f = findStretchedPictures([
+    {
+      path: '/',
+      width: 1440,
+      pictures: [pic({}), pic({ height: 300 }), pic({ height: 300, fit: 'cover' }), pic({ height: 205 })]
+    }
+  ])
+  assert.equal(f.length, 1)
+  assert.match(f[0].reason, /400x300 from a 800x400/)
+})
+
+test('the new measures at both widths, as groups: levels and causing steps', async () => {
+  const measures = () => [
+    ...BOTH('/', {
+      1440: {
+        links: [{ href: '/missing', text: 'Missing', status: 404 }],
+        blocks: [{ selector: 'section.long', height: 4000 }],
+        pictures: [
+          {
+            selector: 'img.hero',
+            src: 'a.jpg',
+            naturalWidth: 800,
+            naturalHeight: 400,
+            width: 400,
+            height: 400,
+            fit: 'fill'
+          }
+        ]
+      },
+      390: {
+        textBoxes: [
+          {
+            selector: 'h1',
+            text: 'Overflowing heading',
+            boxWidth: 300,
+            boxHeight: 30,
+            contentWidth: 420,
+            contentHeight: 30,
+            clips: true,
+            right: 420
+          }
+        ]
+      }
+    })
+  ]
+  const check = await runSiteCheck({
+    door: pagedSite(1).door,
+    report: writtenReport(),
+    host: fakeHost({ '/': pageRead('/') }, { measures }).host,
+    baseline: null
+  })
+  const got = (name) => group(check, name).failures.map((f) => [f.level, f.causingStep, f.page, f.width])
+  assert.deepEqual(got('dead-links'), [['block', 3, '/', null]])
+  assert.deepEqual(got('text-overflow'), [['block', 6, '/', 390]])
+  assert.deepEqual(got('tall-blocks'), [['warn', 6, '/', 1440]])
+  assert.deepEqual(got('stretched-pictures'), [['warn', 8, '/', 1440]])
+  assert.equal(group(check, 'tall-blocks').status, 'green', 'a warning does not turn a group red')
+  assert.deepEqual(check.counts.warn, 2)
+  assert.ok(check.counts.block >= 2)
+})
+
+test('warnings alone leave the check green and are counted', async () => {
+  const measures = () =>
+    BOTH('/', { 1440: { blocks: [{ selector: 'section.long', height: 4000 }] }, 390: {} })
+  const baseline = { texts: [], labels: [], pictures: { files: [], shas: [] } }
+  const check = await runSiteCheck({
+    door: pagedSite(1).door,
+    report: writtenReport(),
+    host: fakeHost({ '/': pageRead('/') }, { measures }).host,
+    baseline
+  })
+  assert.equal(check.status, 'green')
+  assert.deepEqual(check.counts, { block: 0, warn: 1 })
+})
+
+test('when the host answers no page measures, the groups that need them are unmeasured and dead pages are still found', async () => {
+  const check = await runSiteCheck({
+    door: pagedSite(2).door,
+    report: writtenReport(),
+    host: fakeHost({ '/': pageRead('/') }).host,
+    baseline: null
+  })
+  for (const name of ['text-overflow', 'tall-blocks', 'stretched-pictures']) {
+    assert.equal(group(check, name).status, 'unmeasured', name)
+    assert.match(group(check, name).reason, /pageMeasures/)
+  }
+  const dead = group(check, 'dead-links')
+  assert.equal(dead.status, 'red')
+  assert.equal(dead.failures[0].page, '/page-1')
+})
+
+test('an unowned slot on a kept page that still holds words is a warning on the plan (step 3)', async () => {
+  const site = pagedSite(1, { 'module-5.0': 'Become the fittest', 'module-6.0': '' }, [
+    { key: 'module-7.0', entity: 'module-7', type: 'text', current: 'On no page' }
+  ])
+  site.door.apply = ((apply) => async (call) => {
+    const answer = await apply(call)
+    if (call.action === 'content.contract')
+      answer.pages[0].assignedModules.push({ entity: 'module-5' }, { entity: 'module-6' })
+    return answer
+  })(site.door.apply)
+  const report = writtenReport({
+    unowned: [
+      { slot: 'block-5.0', type: 'text', block: 'block-5' },
+      { slot: 'block-6.0', type: 'text', block: 'block-6' },
+      { slot: 'block-7.0', type: 'text', block: 'block-7' }
+    ]
+  })
+  const check = await runSiteCheck({
+    door: site.door,
+    report,
+    host: fakeHost({ '/': pageRead('/') }).host,
+    baseline: null
+  })
+  const g = group(check, 'unowned-slots')
+  assert.deepEqual(
+    g.failures.map((f) => [f.level, f.causingStep, f.page, f.slot]),
+    [['warn', 3, '/', 'block-5.0']]
+  )
+  assert.equal(g.status, 'green')
+})

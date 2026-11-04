@@ -32,6 +32,9 @@ function failureLine(f) {
 export function checkLines(check) {
   return [
     ...check.groups.flatMap((g) => [groupLine(g), ...g.failures.map(failureLine)]),
+    ...(check.pageGroups === false
+      ? ['page groups: not run (no host was given, so no page was opened)']
+      : []),
     `site-check: ${check.status} (${check.counts.block} block, ${check.counts.warn} warn)`
   ]
 }
