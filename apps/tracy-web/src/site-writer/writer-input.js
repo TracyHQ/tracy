@@ -78,9 +78,14 @@ function quotedReviews(plan, brief, factIds) {
 
 /** Slots the page prints as one sentence, with what the demo prints there; input data, the prompt is not touched. */
 const SENTENCE_NOTE =
-  'These slots print run together as one sentence, in this order, with nothing added between them. Write them so the joined text reads as one sentence: each piece carries its own spaces, and only the first starts with a capital unless a word needs one.'
+  'These slots print run together as one sentence, in this order, with nothing added between them. Write them so the joined text reads as one sentence: only the first starts with a capital unless a word needs one. A slot under endWithASpace must end with a space; every other space between them is kept for you.'
 const slimSentences = (groups) =>
-  arr(groups).map((g) => ({ slots: g.slots, demoPrints: g.sample, note: SENTENCE_NOTE }))
+  arr(groups).map((g) => ({
+    slots: g.slots,
+    demoPrints: g.sample,
+    note: SENTENCE_NOTE,
+    endWithASpace: arr(g.slots).filter((_, i) => arr(g.joins)[i] === ' ' && !arr(g.kept)[i])
+  }))
 
 const slimSlot = (s) => ({
   id: s.id,

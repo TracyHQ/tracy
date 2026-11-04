@@ -37,7 +37,8 @@ test('a bare text and its inline highlight in one stored field are one sentence,
     slots: ['block-3.0', 'block-3.1', 'block-3.2'],
     sample: 'Swim with over 900 happy members',
     pieces: ['Swim with over', '900', 'happy members'],
-    joins: [' ', ' ']
+    joins: [' ', ' '],
+    kept: [true, true]
   })
 })
 
@@ -77,7 +78,16 @@ test('the kit lists a group on the block that shows it, and no group the kit doe
       slots: ['block-3.0', 'block-3.1', 'block-3.2'],
       sample: 'Swim with over 900 happy members',
       pieces: ['Swim with over', '900', 'happy members'],
-      joins: [' ', ' ']
+      joins: [' ', ' '],
+      kept: [true, true]
     }
   ])
+})
+
+test('a space on a lone text node is one the write step does not put back', () => {
+  const map = {
+    slots: [slot('module-7.0', `${P}/text()`, 'Swim '), slot('module-7.1', `${P}/b/text()`, 'daily')]
+  }
+  assert.deepEqual(sentenceGroupsOf(map)[0].joins, [' '])
+  assert.deepEqual(sentenceGroupsOf(map)[0].kept, [false])
 })

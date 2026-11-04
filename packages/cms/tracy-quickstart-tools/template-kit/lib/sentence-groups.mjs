@@ -6,6 +6,7 @@ import { neutralKey } from './ids.mjs'
 
 const INLINE = /^(span|strong|em|b|i|u|mark|small|sup|sub|abbr|code|a)(\[\d+\])?$/
 const TEXT_NODE = /^text\(\)(\[\d+\])?$/
+const NUMBERED = /\/text\(\)\[\d+\]$/
 const clean = (s) => String(s ?? '').replace(/\s+/g, ' ')
 
 /** The element a text address prints in, and whether the text is bare in it or inside inline markup. */
@@ -21,7 +22,7 @@ function placeOf(xpath) {
 /**
  * Every group of the content map, in map order: its slot ids, the sentence the demo prints, each piece, and between each two
  * pieces the space the demo prints there ('' for a word split by a coloured letter).
- * @returns {{slots: string[], sample: string, pieces: string[], joins: string[]}[]}
+ * @returns {{slots: string[], sample: string, pieces: string[], joins: string[], kept: boolean[]}[]}
  */
 export function sentenceGroupsOf(map) {
   const groups = new Map()
@@ -41,7 +42,12 @@ export function sentenceGroupsOf(map) {
       slots: pieces.map((p) => neutralKey(p.slot.key)),
       sample: samples.join('').trim(),
       pieces: samples.map((t) => t.trim()),
-      joins: samples.slice(1).map((next, i) => (/\s$/.test(samples[i]) || /^\s/.test(next) ? ' ' : ''))
+      joins: samples.slice(1).map((next, i) => (/\s$/.test(samples[i]) || /^\s/.test(next) ? ' ' : '')),
+      // Where the write step puts the demo's space back by itself: at a numbered text node beside an element.
+      kept: samples.slice(1).map((next, i) => {
+        const before = NUMBERED.test(pieces[i].slot.xpath) && /\s$/.test(samples[i])
+        return before || (NUMBERED.test(pieces[i + 1].slot.xpath) && /^\s/.test(next))
+      })
     })
   }
   return out

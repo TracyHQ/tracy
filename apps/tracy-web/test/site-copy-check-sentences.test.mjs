@@ -11,7 +11,8 @@ const GROUP = {
   id: 'block-2.sentence-1',
   slots: ['block-2.1', 'block-3.6'],
   sample: 'Become the fittest version of yourself today',
-  joins: [' ']
+  joins: [' '],
+  kept: [false]
 }
 const sentenced = (extra = {}) => {
   const k = kit()
@@ -37,6 +38,16 @@ test('W12 flags a missing space where the demo prints one, quoting the joined se
   assert.equal(rule.failures[0].cause, 'missing-space')
   assert.match(rule.failures[0].detail, /"Train with a coachwho knows you"/)
   assert.match(rule.failures[0].detail, /block-2\.1 and block-3\.6/)
+})
+
+test('W12 reads the space the write step keeps as printed, and does not ask for it', () => {
+  const rule = w12('Train with a coach', 'Every day', sentenced({ kept: [true] }))
+  assert.deepEqual(
+    rule.failures.map((f) => f.cause),
+    ['capital-mid-sentence']
+  )
+  assert.match(rule.failures[0].detail, /"Train with a coach Every day"/)
+  assert.equal(w12('Train with a coach', 'who knows you', sentenced({ kept: [true] })).status, 'pass')
 })
 
 test('W12 leaves a word the demo itself prints without a space', () => {
@@ -79,6 +90,7 @@ test('the writer input shows the whole group and which page a slot titles', () =
   assert.deepEqual(block.sentences[0].slots, GROUP.slots)
   assert.equal(block.sentences[0].demoPrints, GROUP.sample)
   assert.match(block.sentences[0].note, /one sentence/)
+  assert.deepEqual(block.sentences[0].endWithASpace, ['block-2.1'], 'nothing else puts that space back')
 })
 
 test('the reading page reads a group joined, as it will print', () => {

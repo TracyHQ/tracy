@@ -4,6 +4,8 @@
 // A kit list comes in two shapes: rowKind "slots" (rowSlots are slots, rows[] the demo rows with their own slots) and
 // rowKind "items" (rowSlots are fields, each listing one slot per item the list pulls, e.g. one article per card).
 // Only text slots are listed: image and video fields are the media step's, links and icons are not copy.
+import { printedSentence } from '../copy-check/sentence-join.js'
+
 const asArray = (x) => (Array.isArray(x) ? x : [])
 // Text slots only: links, icons and images are not copy, and a video id or an image field is the media step's.
 const isText = (s) =>
@@ -66,12 +68,10 @@ export function kitListsIndex({ kit, written, hiddenWhy, returned }) {
       id: g.id,
       slots: g.slots,
       demo: g.sample,
-      written: asArray(g.slots)
-        .map((id) => {
-          const w = written.get(id)
-          return Array.isArray(w?.text) ? w.text.join(' ') : String(w?.text ?? '')
-        })
-        .join('')
+      written: printedSentence(g, (id) => {
+        const w = written.get(id)
+        return Array.isArray(w?.text) ? w.text.join(' ') : String(w?.text ?? '')
+      }).text
     }))
   /** Every text slot of the kept blocks that keeps its demo text, once, in block order. */
   const unhandled = (blockIds) => {
