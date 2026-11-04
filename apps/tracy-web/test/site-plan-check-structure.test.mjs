@@ -5,7 +5,7 @@ import { test } from 'node:test'
 import { base, breaks, decisionOf, keepHidingAll, kit } from './_site-plan-check.mjs'
 
 test('the base plan passes every rule the script can check; R10h is left to a reviewer, R20 to a kit with page titles', () => {
-  assert.deepEqual(base().summary, { pass: 26, fail: 0, skip: 2 })
+  assert.deepEqual(base().summary, { pass: 27, fail: 0, skip: 2 })
   assert.deepEqual(base().inputErrors, [])
 })
 

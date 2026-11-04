@@ -228,3 +228,27 @@
   offers it the image tool; it reads the looks first and opens an image only when a look cannot settle a decision. `deepseek-v4-pro` (text only, needs every look) and Claude Sonnet 5.5
   or Opus 5.5 through OpenRouter stay as alternatives. A fix round applies the valid changes of an answer and sends back
   only the invalid ones.
+
+## Amendment 05/11/2026: a section that shows how the trade works is kept (settled by Akemi)
+
+12. **Trade sections are written without terms, not hidden (prompt change, approved by Akemi on 05/11/2026).** On all
+    three rounds of a frozen Flash max run on JA Boxing 1.0.10, the planner hid the section of each class page that
+    shows a typical session (a heading, an intro and four clip cards of stages), 21 slots per page, as "would be
+    invented", because "Prefer hiding a row, a block or a page to filling it with something untrue" and the rule that a
+    line with a number needs a fact pulled against the Trade knowledge section. Akemi unlocked the prompt for this
+    change only. Trade knowledge now says a block that shows how a session, a visit, an order or a first contact
+    typically runs is trade content: it is kept and each stage is described without any number, duration, count, price
+    or other term; it is hidden only when it cannot read whole without those numbers, or when a brief fact shows the
+    business does not do that activity. Its cards keep their picture frames (each shows a stage); a video id slot stays
+    hidden without a video in the brief. The line in "What you must never do" now prefers rewriting from trade
+    knowledge to hiding, hides only as the last resort, and names the brief fact when an activity is absent. Every
+    other rule is unchanged. The prompt's sha256 is
+    `ec160022e152e5c66db6eb168a64a5923e9def4781d2e39ec7ee3b263cd58612` (was `b48800fb...`).
+13. **Plan check R21 (`rules-trade-hidden.js`), checker `site-plan-check/3`.** Inside a kept block (page block or
+    shared block), two or more `hiddenSlots` whose `why` says the brief holds no fact for them or that they would be
+    invented ("no fact", "holds no", "invent...", "not in the brief", a demo routine or drill) fail, once per block,
+    asking the planner to rewrite them as trade content without numbers or to name the brief fact that shows the
+    activity is absent. Not counted: a `why` that names a fact id the brief holds, `demoOwned` slots, fixed texts with
+    `canHide`, CMS notices, video id slots and `site.nameSlots`. Numbers inside kept trade lines stay with R10f. R20
+    was already taken by the page title rule, so the new rule is R21; the approved rules R00 to R19 are unchanged. On
+    the frozen run's three plans R21 fails exactly the four class page bodies and nothing else.

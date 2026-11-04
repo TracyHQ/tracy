@@ -22,6 +22,10 @@ Amended a sixth time (2026-11-04, owner's ruling): a text follows the demo's len
 100% of it, and a slot whose demo is a lead paragraph followed by points is written in that shape (section 10). The
 prompt's sha256 is now `50b69c79498fe4aa219f2abf17267f3a8e0e535c7d9a1f19e59b9b10a5979229` (it also carries the inline
 emphasis rule of section 11); the checker version moved to `site-copy-check/6`, once for sections 10 and 11.
+Noted 2026-11-05 (planner side, ADR 0041 decisions 12 and 13): the planner prompt, sha256
+`ec160022e152e5c66db6eb168a64a5923e9def4781d2e39ec7ee3b263cd58612`, now keeps a section that shows how the trade works
+(how a session, a visit or an order runs) as `basis: "trade"` lines without numbers, so the writer receives such
+sections where it used to receive hidden slots; the writer prompt, its hash and the copy check are unchanged.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
