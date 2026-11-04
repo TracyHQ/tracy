@@ -609,3 +609,109 @@ test('--copy adds a "Copy around this picture" panel with the block role, block 
   const bad = await run(['--run', s.run, '--out', s.out, '--copy', path.join(s.root, 'nope.json')])
   assert.equal(bad.code, 1)
 })
+
+// A made-up band block: no block copy of its own, its heading and notice in a one-row list, its button label named by
+// the link (the shape of a call-to-action band).
+const bandPlan = {
+  sharedBlocks: [],
+  pages: [
+    {
+      id: 'home',
+      decision: 'keep',
+      blocks: [
+        {
+          block: 'block-2',
+          why: 'A pause that repeats the booking action.',
+          links: [{ link: 'block-2.4', leadsTo: 'page-contact', labelSlot: 'block-2.3' }],
+          lists: [
+            {
+              list: 'block-2.claim',
+              items: [
+                {
+                  about: 'the band heading',
+                  copy: [
+                    { says: 'short invitation', slot: 'block-2.0' },
+                    { says: 'what the studio teaches', slot: 'block-2.1' }
+                  ]
+                }
+              ]
+            }
+          ],
+          pictures: [{ frame: 'hero', shows: 'A kiln at night' }]
+        }
+      ]
+    }
+  ]
+}
+
+test('a band picture shows its list copy and link label, the template overlay over it and the title background note', async () => {
+  const s = await setup()
+  try {
+    await writeFile(path.join(s.run, 'plan.json'), JSON.stringify(bandPlan))
+    const copyFile = path.join(s.root, 'band-copy.json')
+    await writeFile(
+      copyFile,
+      JSON.stringify({
+        version: 'site-copy/1',
+        slots: [
+          { slot: 'block-2.0', owner: 'writer', text: 'Ready to throw a pot?', factIds: [] },
+          { slot: 'block-2.1', owner: 'writer', text: 'Wheel, glaze and kiln.', factIds: [] },
+          { slot: 'block-2.3', owner: 'writer', text: 'Book your seat', factIds: [] }
+        ],
+        alts: [],
+        seo: [],
+        pages: []
+      })
+    )
+    const surfaceFile = path.join(s.root, 'surface.json')
+    await writeFile(
+      surfaceFile,
+      JSON.stringify({
+        version: 'frame-surface/1',
+        frames: {
+          hero: {
+            textOver: true,
+            textOverFrom: 'derived',
+            overlay: { colour: 'rgba(0,0,0,0.8)', strength: 0.8, from: '.acm-band.style-1:before' },
+            behindTitle: { layout: 'course', menuPath: '/courses/' }
+          }
+        }
+      })
+    )
+    const kitFile = path.join(s.root, 'shot-kit.json')
+    await writeFile(kitFile, JSON.stringify(shotKit))
+    await writeShots(path.join(s.root, 'shots'))
+    const r = await run([
+      '--run',
+      s.run,
+      '--out',
+      s.out,
+      '--kit',
+      kitFile,
+      '--kit-images',
+      path.join(s.root, 'shots'),
+      '--copy',
+      copyFile,
+      '--surface',
+      surfaceFile
+    ])
+    assert.equal(r.code, 0, r.err.join('\n'))
+    const hero = articleOf(await readFile(s.out, 'utf8'), 'hero')
+    assert.ok(!/gives this block no text/.test(hero), 'the list copy is block text')
+    for (const t of ['Ready to throw a pot?', 'Wheel, glaze and kiln.', 'Book your seat'])
+      assert.ok(hero.includes(t), `shows ${t}`)
+    assert.match(hero, /link label \(leads to page-contact\)/)
+    assert.match(hero, /Our picture in the box, template overlay 80% black drawn/)
+    assert.match(hero, /Text sits over this picture \(derived/)
+    assert.match(hero, /no overlay is baked in for it/)
+    assert.match(hero, /Also shown dimmed behind the page title \(course article layout/)
+    // Our picture (#8a5a44) under 80% black, at the box centre of the crop.
+    near(
+      await pixel(path.join(s.root, 'reading-where', 'hero-after.jpg'), 300, 240),
+      [28, 18, 14],
+      'the template overlay is drawn over our picture'
+    )
+  } finally {
+    await rm(s.root, { recursive: true, force: true })
+  }
+})

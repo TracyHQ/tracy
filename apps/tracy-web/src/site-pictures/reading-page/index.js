@@ -25,9 +25,31 @@ export async function buildPicturesPage({
   kitFile = null,
   webrootDir = null,
   copyFile = null,
+  surfaceFile = null,
   outFile
 }) {
   const files = await loadRunFolder(runDir)
+  // A frame-surface/1 file (scripts/site-pictures-frame-surface.mjs): the template's overlay over each picture, text
+  // over it, and an article picture also painted behind the title. A manifest entry's own record wins.
+  let surface = null
+  if (surfaceFile) {
+    try {
+      surface = JSON.parse(await readFile(surfaceFile, 'utf8'))
+    } catch (error) {
+      throw new Error(`cannot read the frame surface file ${surfaceFile}: ${error.message}`)
+    }
+  }
+  const surfaceOf = (f) => {
+    const s = surface?.frames?.[f.frame] ?? null
+    const own = f.entry && 'templateOverlay' in f.entry ? f.entry.templateOverlay : undefined
+    const overlay = own !== undefined && own !== 'unknown' ? own : (s?.overlay ?? own ?? 'unknown')
+    return {
+      overlay,
+      textOver: f.entry?.textOver === true || s?.textOver === true,
+      textOverFrom: s?.textOverFrom ?? null,
+      behindTitle: s?.behindTitle ?? null
+    }
+  }
   const model = buildModel(files)
   // With a site-copy/1 file, each frame gets the "copy around this picture" panel; without it the page is as before.
   if (copyFile) {
@@ -60,20 +82,30 @@ export async function buildPicturesPage({
     const shot = find.shot(place.shot)
     const kind = find.kitFrame(f.frame)?.kind
     const fit = FIT_CONTAIN.has(kind) || f.entry?.source === 'icon' ? 'contain' : 'cover'
+    const overlay = f.surface.overlay && typeof f.surface.overlay === 'object' ? f.surface.overlay : null
     const drawn = await drawWhere({
       shotFile: shot.file,
       shotSize: place.shotSize,
       box: place.box,
       pictureFile: f.entry?.source !== 'hide' ? (out?.file ?? null) : null,
       fit,
+      overlay,
       outDir: whereDir,
       name: f.frame.replace(/[^a-zA-Z0-9._-]+/g, '-')
     })
-    return { place, fit, shot: link(shot), before: link(drawn.before), after: link(drawn.after) }
+    return {
+      place,
+      fit,
+      shot: link(shot),
+      before: link(drawn.before),
+      after: link(drawn.after),
+      overlay: drawn.overlayDrawn ? overlay : null
+    }
   }
   let missing = 0
   for (const g of model.groups)
     for (const f of g.frames) {
+      f.surface = surfaceOf(f)
       const e = f.entry
       const [demo, out, dark, original] = await Promise.all([
         find.demo(f.frame),

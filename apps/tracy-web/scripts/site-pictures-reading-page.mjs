@@ -11,6 +11,10 @@
  * picture is drawn at the frame's width. --kit-images is only a fallback: a folder of images named after frame ids. Pictures are linked by a path relative to --out, so keep the page
  * and the folders where they are; a picture that is not found is shown as missing.
  *
+ * --surface is a frame-surface/1 file (scripts/site-pictures-frame-surface.mjs): "Our picture in the box" then draws
+ * the template's own overlay over the pasted picture, and each card says whether text sits over the picture and whether
+ * the template also paints it behind the page title. A manifest entry's own templateOverlay wins over the file.
+ *
  * --copy is a site-copy/1 file of the site writer (ADR 0042): every card then also shows the text the writer decided
  * for the block the picture sits in, the text of the same card, the block's role in the plan and the picture's alt.
  *
@@ -23,7 +27,7 @@ import { parseArgs } from 'node:util'
 import { buildPicturesPage } from '../src/site-pictures/reading-page/index.js'
 
 const USAGE =
-  'usage: node scripts/site-pictures-reading-page.mjs --run <run folder> --out <file.html> [--photos <folder>] [--kit <template-kit.json> --webroot <folder>] [--kit-images <folder>] [--copy <site-copy.json>]'
+  'usage: node scripts/site-pictures-reading-page.mjs --run <run folder> --out <file.html> [--photos <folder>] [--kit <template-kit.json> --webroot <folder>] [--kit-images <folder>] [--copy <site-copy.json>] [--surface <frame-surface.json>]'
 
 export async function main(argv, io = { out: console.log, err: console.error }) {
   let values
@@ -37,7 +41,8 @@ export async function main(argv, io = { out: console.log, err: console.error }) 
         kit: { type: 'string' },
         webroot: { type: 'string' },
         'kit-images': { type: 'string' },
-        copy: { type: 'string' }
+        copy: { type: 'string' },
+        surface: { type: 'string' }
       }
     }))
   } catch (error) {
@@ -56,6 +61,7 @@ export async function main(argv, io = { out: console.log, err: console.error }) 
       kitFile: values.kit ?? null,
       webrootDir: values.webroot ?? null,
       copyFile: values.copy ?? null,
+      surfaceFile: values.surface ?? null,
       outFile: values.out
     })
     io.out(`wrote ${values.out}: ${r.frames} frames, ${r.missing} files missing, ${r.bytes} bytes`)

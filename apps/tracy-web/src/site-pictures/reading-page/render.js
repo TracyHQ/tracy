@@ -4,7 +4,7 @@
 import { esc } from '../../site-writer/reading-page/render.js'
 import { aroundHtml } from './around-render.js'
 import { CSS, WHERE_JS, ZOOM_JS } from './styles.js'
-import { whereHtml } from './where-render.js'
+import { surfaceHtml, whereHtml } from './where-render.js'
 
 const slug = (id) => `g-${String(id).replace(/[^a-zA-Z0-9]+/g, '-')}`
 const money = (n) => (typeof n === 'number' ? `$${n.toFixed(4)}` : 'not recorded')
@@ -139,7 +139,7 @@ function frameHtml(f, media) {
   return `<article class="frame${gap ? ' gap' : ''}" id="${slug(f.frame)}"><header><span class="id">${esc(f.frame)}</span>${
     f.block ? `<span class="muted small">${esc(f.block)}</span>` : ''
   }${f.wish.kind ? `<span class="chip">${esc(f.wish.kind)}</span>` : ''}${chips(f)}</header>
-${requestHtml(f.wish)}${aroundHtml(f.around)}${f.reason && !f.entry ? `<div class="note ret">${esc(f.reason)}</div>` : ''}
+${requestHtml(f.wish)}${surfaceHtml(f)}${aroundHtml(f.around)}${f.reason && !f.entry ? `<div class="note ret">${esc(f.reason)}</div>` : ''}
 ${whereHtml(f, pics.where)}<div class="figs">${figs.join('')}</div>${lookerHtml(f)}</article>`
 }
 

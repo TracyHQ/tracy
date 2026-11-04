@@ -1,6 +1,8 @@
 // The "where on the template" pictures of the reading page (#341): a crop of the template shot around a frame's box,
 // the box outlined, and the same crop with the finished picture pasted into the box the way the site fits it (cover;
-// contain for icons and logos). Small JPEGs written beside the page; the full shot is only linked.
+// contain for icons and logos), with the template's own overlay drawn over it when the template paints one (ADR 0043
+// section 3e), so the owner sees what the site will show. Small JPEGs written beside the page; the full shot is only
+// linked.
 import { mkdir } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
@@ -56,10 +58,20 @@ async function groundColour(shotFile, box, crop) {
   return { r: Math.round(channels[0].mean), g: Math.round(channels[1].mean), b: Math.round(channels[2].mean) }
 }
 
+// An rgba() overlay as an SVG rectangle over the box; null for any other paint (a gradient is not drawn).
+function overlaySvg(b, size, overlay) {
+  const m = /^rgba\((\d+),(\d+),(\d+),([\d.]+)\)$/.exec(String(overlay?.colour ?? '').replace(/\s+/g, ''))
+  if (!m) return null
+  return Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size.width}" height="${size.height}"><rect x="${b.left}" y="${b.top}" width="${b.width}" height="${b.height}" fill="rgb(${m[1]},${m[2]},${m[3]})" fill-opacity="${Number(overlay.strength)}"/></svg>`
+  )
+}
+
 /**
  * Writes "<name>-before.jpg" and, given a finished picture, "<name>-after.jpg" into outDir.
  * @param {{ shotFile: string, shotSize: { width: number, height: number }, box: object, pictureFile?: string | null,
- *   fit?: 'cover' | 'contain', outDir: string, name: string }} options
+ *   fit?: 'cover' | 'contain', overlay?: { colour: string, strength: number } | null, outDir: string, name: string }} options
+ *   `overlay` the template's own overlay over the picture, drawn over the pasted picture
  * @returns {Promise<{ before: object, after: object | null, crop: object }>} files with their pixel sizes
  */
 export async function drawWhere({
@@ -68,6 +80,7 @@ export async function drawWhere({
   box,
   pictureFile = null,
   fit = 'cover',
+  overlay = null,
   outDir,
   name
 }) {
@@ -91,6 +104,7 @@ export async function drawWhere({
   )
   if (!pictureFile) return { before, after: null, crop }
   const ground = await groundColour(shotFile, b, crop)
+  const veil = overlay ? overlaySvg(b, crop, overlay) : null
   const placed = await sharp(pictureFile)
     .resize(b.width, b.height, { fit, position: 'centre', background: { ...ground, alpha: 0 } })
     .png()
@@ -105,11 +119,12 @@ export async function drawWhere({
           top: b.top
         },
         { input: placed, left: b.left, top: b.top },
+        ...(veil ? [{ input: veil, left: 0, top: 0 }] : []),
         { input: outlineSvg(b, crop, scale), left: 0, top: 0 }
       ])
       .png()
       .toBuffer(),
     'after'
   )
-  return { before, after, crop }
+  return { before, after, crop, overlayDrawn: Boolean(veil) }
 }

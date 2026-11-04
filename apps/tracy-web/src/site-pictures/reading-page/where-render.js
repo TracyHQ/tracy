@@ -20,6 +20,42 @@ const afterText = (f) => {
   return f.entry.file ? `File missing: ${esc(f.entry.file)}` : 'No finished picture to place.'
 }
 
+// "80% black" for rgba(0,0,0,0.8); the colour as written for any other.
+export function overlayName(o) {
+  const pct = `${Math.round(Number(o.strength) * 100)}%`
+  const m = /^rgba\((\d+),(\d+),(\d+),/.exec(String(o.colour).replace(/\s+/g, ''))
+  const name =
+    m && m[1] === '0' && m[2] === '0' && m[3] === '0'
+      ? 'black'
+      : m && m.slice(1, 4).every((x) => x === '255')
+        ? 'white'
+        : o.colour
+  return `${pct} ${name}`
+}
+
+/** The frame's surface (ADR 0043 section 3e): text over its picture, the template's overlay, the title background. */
+export function surfaceHtml(f) {
+  const s = f.surface
+  if (!s) return ''
+  const lines = []
+  if (s.textOver)
+    lines.push(
+      `Text sits over this picture${s.textOverFrom === 'derived' ? ' (derived: the picture fills its block, which has text)' : ''}.`
+    )
+  if (s.overlay && typeof s.overlay === 'object')
+    lines.push(
+      `Template overlay: ${esc(overlayName(s.overlay))} over the picture (<code>${esc(s.overlay.from)}</code>); no overlay is baked in for it.`
+    )
+  else if (s.overlay === 'unknown' && s.textOver) lines.push('Template overlay: not known for this frame.')
+  else if (s.overlay === null && s.textOver)
+    lines.push('Template overlay: none, the picture itself must carry the text.')
+  if (s.behindTitle)
+    lines.push(
+      `Also shown dimmed behind the page title (${esc(s.behindTitle.layout)} article layout, <code>.bg-mask</code>).`
+    )
+  return lines.length ? `<div class="note surface">${lines.map((l) => `<div>${l}</div>`).join('')}</div>` : ''
+}
+
 /**
  * @param {object} f a frame of the model
  * @param {{ place: object, shot?: object | null, before?: object | null, after?: object | null } | null | undefined} w
@@ -37,5 +73,5 @@ export function whereHtml(f, w) {
   const after = w.after
     ? `<button type="button" class="zoom" title="Click to enlarge"><img src="${esc(w.after.src)}" alt="Finished picture of ${esc(f.frame)} in the box" loading="lazy" width="${w.after.width}"></button>`
     : `<div class="gone">${afterText(f)}</div>`
-  return `<div class="where">${head}<div class="pair"><figure><figcaption>Demo, box outlined</figcaption>${before}</figure><figure><figcaption>Our picture in the box</figcaption>${after}</figure></div>${w.after ? `<div class="muted small">Pasted at the box size, ${w.fit === 'contain' ? 'whole picture shown' : 'cropped to fill'}; text the site lays over a picture is not redrawn.</div>` : ''}${othersHtml(p.others)}</div>`
+  return `<div class="where">${head}<div class="pair"><figure><figcaption>Demo, box outlined</figcaption>${before}</figure><figure><figcaption>Our picture in the box${w.overlay ? `, template overlay ${esc(overlayName(w.overlay))} drawn` : ''}</figcaption>${after}</figure></div>${w.after ? `<div class="muted small">Pasted at the box size, ${w.fit === 'contain' ? 'whole picture shown' : 'cropped to fill'}${w.overlay ? `; the template's own overlay (${esc(overlayName(w.overlay))}, <code>${esc(w.overlay.from)}</code>) is drawn over it as the site shows it` : ''}; text the site lays over a picture is not redrawn.</div>` : ''}${othersHtml(p.others)}</div>`
 }
