@@ -95,7 +95,8 @@ function extraLines(extras, owners, settled) {
  *   ordered?: Record<string, string>, brandLines?: object[], pictureLines?: object[], settled?: Map<string, object>,
  *   hides?: Map<string, object>, frameLines?: object[] }} input `ordered`: what the mapping sent, by content map key;
  *   `brandLines` and `pictureLines`: each stage's own lines, which stand for its claims; `settled`: what the page settings
- *   stage did, by line slot; `hides`: what the hide stage did to a hide claim; `frameLines`: its lines of blocks and pages
+ *   stage did, by line slot; `hides`: what the hide stage did to a hide claim; `frameLines`: its lines of blocks and pages; `shareLines`: the
+ *   share stage's own lines
  */
 export function slotLines({
   owners,
@@ -110,13 +111,15 @@ export function slotLines({
   settled = new Map(),
   pictureLines = [],
   hides = new Map(),
-  frameLines = []
+  frameLines = [],
+  shareLines = []
 }) {
   const done = { written: new Set(written), refused, routed, deferred, ordered, settled, hides }
   return [
     ...frameLines,
     ...brandLines,
     ...pictureLines,
+    ...shareLines,
     ...[...owners.values()]
       .filter((c) => c.owner !== 'brand' && (c.owner !== PICTURE_OWNER || c.kind === 'hide'))
       .map((claim) => claimLine(claim, done)),
