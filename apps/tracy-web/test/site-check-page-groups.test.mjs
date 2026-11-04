@@ -5,7 +5,7 @@ import { test } from 'node:test'
 import { baselineFromKit } from '../src/site-check/demo-baseline.js'
 import { checkLines } from '../src/site-check/check-lines.js'
 import { PAGES_PER_CALL } from '../src/site-check/page-chunks.js'
-import { keptPaths } from '../src/site-check/host-pages.js'
+import { keptPaths } from '../src/lib/site-kept-paths.js'
 import { runSiteCheck } from '../src/site-check/site-check.js'
 import { DEMO_WORDS, demoRead, fakeHost, pagedSite, pageRead, writtenReport } from './_site-check-pages.mjs'
 

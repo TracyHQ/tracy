@@ -22,7 +22,8 @@ import {
 } from './content-page-route.js'
 import { NO_LAST } from './no-last-report.js'
 import { heldByLast, linesOf, MARK, orderOf } from './page-create-lines.js'
-import { menuRows, paramsOf } from './page-meta-write.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
+import { paramsOf } from './page-meta-write.js'
 import { answerWords, doorCall } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])

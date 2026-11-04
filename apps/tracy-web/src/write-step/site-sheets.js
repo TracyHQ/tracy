@@ -1,9 +1,13 @@
 // The stylesheets a site's template serves, read as a visitor reads them from every page the site lists, since a template can
 // merge a different sheet for each page. The brand's own style is left out, so a run on a site written before reads the same
 // template as the first run did. Reads only; it never goes past the site's own address.
-import { keptPaths } from '../site-check/host-pages.js'
-import { designSystemSiteReaders } from '../sites/design-system-site-readers.js'
+import { keptPaths } from '../lib/site-kept-paths.js'
 
+/**
+ * Where a site is read and served (sites/design-system-site-readers.js), passed in by the caller so the write step does not
+ * import the sites domain.
+ * @typedef {{ readOrigin: (site: object) => string | URL, publicOf: (site: object) => string }} Readers
+ */
 const MAX_PAGES = 40
 const MAX_SHEETS = 40
 const TIMEOUT_MS = 20_000
@@ -64,11 +68,10 @@ export async function readSiteSheets({ origin, publicOrigin = null, platform, pa
 
 /**
  * The bench's reader: the pages the site lists, at the address the site is read at.
- * @param {{ siteOf: (siteKey: string) => Promise<object | null>, config: object, fetchImpl?: typeof fetch }} deps
+ * @param {{ siteOf: (siteKey: string) => Promise<object | null>, readers: Readers, fetchImpl?: typeof fetch }} deps
  * @returns {(input: { door: { apply: Function }, siteKey: string }) => Promise<string[]>}
  */
-export function siteSheetsReader({ siteOf, config, fetchImpl = fetch }) {
-  const readers = designSystemSiteReaders({ config, fetchImpl })
+export function siteSheetsReader({ siteOf, readers, fetchImpl = fetch }) {
   return async ({ door, siteKey }) => {
     const site = await siteOf(siteKey)
     if (!site) throw new Error(`no site ${siteKey}`)
@@ -98,11 +101,10 @@ const PAGE_MAX = 3_000_000
 /**
  * A page of a site as a visitor reads it, at the same address the sheets are read at: for the write step's printed check and the site
  * check's `written-not-printed`. Reads only, and only the site's own pages.
- * @param {{ siteOf: (siteKey: string) => Promise<object | null>, config: object, fetchImpl?: typeof fetch }} deps
+ * @param {{ siteOf: (siteKey: string) => Promise<object | null>, readers: Readers, fetchImpl?: typeof fetch }} deps
  * @returns {(input: { siteKey: string, path: string }) => Promise<string | null>} null for a page that does not answer 200
  */
-export function sitePageReader({ siteOf, config, fetchImpl = fetch }) {
-  const readers = designSystemSiteReaders({ config, fetchImpl })
+export function sitePageReader({ siteOf, readers, fetchImpl = fetch }) {
   return async ({ siteKey, path }) => {
     const site = await siteOf(siteKey)
     if (!site) throw new Error(`no site ${siteKey}`)

@@ -12,7 +12,7 @@ import {
 } from '../src/lib/printed-in-body.js'
 import { checkLines } from '../src/site-check/check-lines.js'
 import { PAGE_READ_GROUPS, runSiteCheck } from '../src/site-check/site-check.js'
-import { isStep, stepName } from '../src/site-check/steps.js'
+import { isStep, stepName } from '../src/lib/site-build-steps.js'
 import { writtenNotPrintedGroup } from '../src/site-check/written-not-printed.js'
 import { keptPages, POSTER, printedKit, printedLines, printedSite, SITE } from './_printed-page.mjs'
 

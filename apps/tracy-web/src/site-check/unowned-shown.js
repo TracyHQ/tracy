@@ -5,11 +5,12 @@
 //
 // Whose it is: the planner's, unless the slot is the light or dark twin of a frame the write report hid (`twinOf` in the kit). The
 // plan hides only the original; carrying the hide to its twin is the write step's job (owner-table.js `hiddenTwins`).
-import { menuRows } from '../write-step/page-meta-write.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
-import { keptPaths, pagesRead } from './host-pages.js'
+import { keptPaths } from '../lib/site-kept-paths.js'
+import { pagesRead } from './host-pages.js'
 import { whereShown } from './page-measures.js'
-import { WRITE_STEP } from './steps.js'
+import { WRITE_STEP } from '../lib/site-build-steps.js'
 
 const keyOf = (slot) => String(slot ?? '').replace(/^block-/, 'module-')
 const entityOf = (key) => key.slice(0, key.lastIndexOf('.'))

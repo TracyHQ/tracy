@@ -8,7 +8,8 @@ import { linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
 import { NO_LAST } from './no-last-report.js'
 import { articleOfPage, linkTarget } from './link-targets.js'
-import { menuRows, rowsOpening } from './page-meta-write.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
+import { rowsOpening } from './page-meta-write.js'
 import { doorCall } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])

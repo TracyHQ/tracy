@@ -7,13 +7,13 @@
 // article's. Nothing here names a template: a page with neither is reported skipped, never guessed.
 import { NO_LAST } from './no-last-report.js'
 import { readRow } from './settings-door.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const slashless = (path) =>
   String(path ?? '')
     .replace(/^\/+|\/+$/g, '')
     .toLowerCase()
-const PAGE_ROWS = 25
 const FIELDS = [
   ['title', 'page_title'],
   ['description', 'menu-meta_description']
@@ -27,23 +27,6 @@ export function paramsOf(value) {
   } catch {
     return {}
   }
-}
-
-/** Every menu item, whole rows, a page of the door at a time. */
-export async function menuRows(call) {
-  const rows = []
-  for (let offset = 0; offset < 5000; offset += PAGE_ROWS) {
-    const answer = await call('content.list', {
-      kind: 'menuItem',
-      limit: PAGE_ROWS,
-      offset,
-      include_body: true
-    })
-    const items = each(answer?.items)
-    rows.push(...items)
-    if (items.length < PAGE_ROWS) break
-  }
-  return rows
 }
 
 /** The published items that open this kit page: the home item for the root path, else the item at the path. */

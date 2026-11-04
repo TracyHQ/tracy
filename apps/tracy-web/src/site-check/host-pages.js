@@ -5,30 +5,10 @@
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { forHost } from './demo-baseline.js'
 import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from './page-chunks.js'
+import { keptPaths } from '../lib/site-kept-paths.js'
 
 export const WIDTHS = [1440, 390]
 const IMAGE = /\.(?:jpe?g|png|webp|gif|svg|avif)(?:#|\?|$)/i
-
-/**
- * A kept page's path as the host opens it: Joomla's home menu item is `home`, every other route is its path. The write report
- * says which pages the plan keeps; the site's own list also holds every route of the quickstart, the dropped ones too.
- */
-export function keptPaths(inspect, report = {}) {
-  const paths = []
-  if (Array.isArray(report?.keptPages) && report.keptPages.length) {
-    for (const page of report.keptPages) {
-      const p = `/${String(page?.path ?? '').replace(/^\/+/, '')}`
-      if (!paths.includes(p)) paths.push(p)
-    }
-    return paths
-  }
-  for (const page of Array.isArray(inspect?.pages) ? inspect.pages : []) {
-    const route = String(page?.route ?? '').replace(/^\/+/, '')
-    const p = route === '' || route === 'home' ? '/' : `/${route}`
-    if (!paths.includes(p)) paths.push(p)
-  }
-  return paths
-}
 
 /** An address or a piece of markup a run wrote: the slug of a kept demo route in one must not read as the customer's word. */
 const NOT_WORDS = /^(?:\/|#|<|index\.php|[a-z][a-z0-9+.-]*:)/i

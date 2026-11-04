@@ -3,7 +3,7 @@
 // refused before it is sent, naming the step at fault. The list is closed: an action, an operation, a parameter or a setting that is
 // not on it is refused by name, so a new channel fails loudly. Nothing here names a template; what a template may take is read from
 // its kit, its content map and its own stylesheets. Everything it cannot see is listed in the ADR.
-import { ownerStep, stepName } from '../site-check/steps.js'
+import { ownerStep, stepName } from '../lib/site-build-steps.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
 import { MARK } from './page-create-lines.js'

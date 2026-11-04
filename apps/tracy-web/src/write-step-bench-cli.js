@@ -1,17 +1,19 @@
+// Wiring: its check command runs the site check on a write step run, so it sits beside app.js, outside the domain
+// directories, which import only lib/ and db/ (module-graph.test.mjs).
 // BENCH ONLY. The write step bench's command line (ADR 0044), with the commands of the other benches. A run executes in
 // this process and needs no worker in the server; other shells read it or stop it through its row (write-run-store.js).
 // Exit codes: 0 done, 1 refused, stopped, cancelled or not found, 2 wrong usage.
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
-import { openKit, readableKits } from '../lib/template-kit-source.js'
-import { checkLines } from '../site-check/check-lines.js'
-import { withReadBack } from '../site-check/read-back.js'
-import { runSiteCheck } from '../site-check/site-check.js'
-import { openContentMap } from '../lib/content-map-source.js'
-import { isBenchSite } from './bench-site-creator.js'
-import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './bench-site-cli.js'
-import { runWriteStep } from './write-step.js'
+import { openKit, readableKits } from './lib/template-kit-source.js'
+import { checkLines } from './site-check/check-lines.js'
+import { withReadBack } from './site-check/read-back.js'
+import { runSiteCheck } from './site-check/site-check.js'
+import { openContentMap } from './lib/content-map-source.js'
+import { isBenchSite } from './write-step/bench-site-creator.js'
+import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './write-step/bench-site-cli.js'
+import { runWriteStep } from './write-step/write-step.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>

@@ -1,5 +1,5 @@
 // What the check command prints: one line per group, one per failure, and the verdict last.
-import { stepName } from './steps.js'
+import { stepName } from '../lib/site-build-steps.js'
 
 const LONGEST = 160
 const shown = (value) => {

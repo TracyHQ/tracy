@@ -1,3 +1,4 @@
+// Shared: the site check names a finding's step with it and the write step's look guard too, so it is in lib/.
 // The steps a finding can send a site back to (ADR 0044). Step 0 is the template itself: nothing in a build fixes it, and it needs
 // a template release. Step 12 is the person with eyes, for faults that need the meaning understood; the site check names none.
 const NAMES = {

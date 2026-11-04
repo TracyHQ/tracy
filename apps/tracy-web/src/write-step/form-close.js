@@ -4,7 +4,8 @@
 // last report says is closed is not closed again, and its line reads as it did.
 import { createHash } from 'node:crypto'
 import { NO_LAST } from './no-last-report.js'
-import { menuRows, paramsOf, rowsOpening } from './page-meta-write.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
+import { paramsOf, rowsOpening } from './page-meta-write.js'
 import { doorCall, readRow } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])

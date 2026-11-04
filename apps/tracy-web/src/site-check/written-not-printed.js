@@ -5,7 +5,7 @@
 // wrote a value that does not reach the page, and printing it, or saying why it cannot, is its job.
 import { printedSlotsOf, sitePrints, slotsOnPages } from '../lib/printed-in-body.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
-import { WRITE_STEP } from './steps.js'
+import { WRITE_STEP } from '../lib/site-build-steps.js'
 
 export const writtenNotPrintedGroup = {
   name: 'written-not-printed',

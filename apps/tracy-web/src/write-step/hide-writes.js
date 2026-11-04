@@ -3,7 +3,8 @@
 // the apply id the door requires, and a refusal never stops the others.
 import { createHash } from 'node:crypto'
 import { BUSY_WAITS_MS, refusalWords } from './contract-write.js'
-import { menuRows, rowsOpening } from './page-meta-write.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
+import { rowsOpening } from './page-meta-write.js'
 import { answerWords, doorCall, readRow } from './settings-door.js'
 
 const digest = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex')

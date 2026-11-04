@@ -1,15 +1,18 @@
 // One file of a site, as a visitor reads it. Reads only, and only from the site's own address.
-import { designSystemSiteReaders } from '../sites/design-system-site-readers.js'
 
+/**
+ * Where a site is read and served (sites/design-system-site-readers.js), passed in by the caller so the write step does not
+ * import the sites domain.
+ * @typedef {{ readOrigin: (site: object) => string | URL, publicOf: (site: object) => string }} Readers
+ */
 const TIMEOUT_MS = 20_000
 const MOST_BYTES = 5_000_000
 
 /**
- * @param {{ siteOf: (siteKey: string) => Promise<object | null>, config: object, fetchImpl?: typeof fetch }} deps
+ * @param {{ siteOf: (siteKey: string) => Promise<object | null>, readers: Readers, fetchImpl?: typeof fetch }} deps
  * @returns {(input: { siteKey: string, file: string }) => Promise<Buffer | null>} null when the site does not answer with it
  */
-export function siteFileReader({ siteOf, config, fetchImpl = fetch }) {
-  const readers = designSystemSiteReaders({ config, fetchImpl })
+export function siteFileReader({ siteOf, readers, fetchImpl = fetch }) {
   return async ({ siteKey, file }) => {
     const site = await siteOf(siteKey)
     if (!site) throw new Error(`no site ${siteKey}`)

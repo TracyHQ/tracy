@@ -14,7 +14,7 @@ import {
   truncatedFailures
 } from './look-reads.js'
 import { pathOfMeasure } from './page-faults.js'
-import { TEMPLATE_STEP } from './steps.js'
+import { TEMPLATE_STEP } from '../lib/site-build-steps.js'
 
 /**
  * The share of a logo's ink that reads under LOGO_GONE_RATIO against its ground: over LOGO_BLOCK_SHARE the logo is gone (a block),

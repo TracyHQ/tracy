@@ -1,7 +1,8 @@
 // Which pages the site check opens, and whose words judge a demo heading. Every fixture is invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { keptPaths, writtenWords } from '../src/site-check/host-pages.js'
+import { keptPaths } from '../src/lib/site-kept-paths.js'
+import { writtenWords } from '../src/site-check/host-pages.js'
 import { findDeadLinks } from '../src/site-check/page-measures.js'
 import { checkNoDemoWords, textKey } from '../../tracy-host/src/demo-qa.js'
 

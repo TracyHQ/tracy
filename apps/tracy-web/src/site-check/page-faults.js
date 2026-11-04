@@ -2,7 +2,7 @@
 // page title printed as a heading, and a created page showing controls the template's content pages do not.
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead } from './host-pages.js'
-import { ownerStep, TEMPLATE_STEP } from './steps.js'
+import { ownerStep, TEMPLATE_STEP } from '../lib/site-build-steps.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const squashed = (text) =>

@@ -10,7 +10,8 @@
 // reason. Each written line names its read, so the site check can read it back. What the last report says the site holds is
 // not written again, and the page's picture is still worked out from the whole site.
 import { NO_LAST } from './no-last-report.js'
-import { articleOfPage, menuRows, paramsOf, rowsOpening } from './page-meta-write.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
+import { articleOfPage, paramsOf, rowsOpening } from './page-meta-write.js'
 import { doorCall, readRow } from './settings-door.js'
 
 export const SHARE_OWNER = 'share'

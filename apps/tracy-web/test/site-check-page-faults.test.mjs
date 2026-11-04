@@ -12,7 +12,7 @@ import {
 import { PAGE_CHECK_GROUPS } from '../src/site-check/page-groups.js'
 import { judgeSentences } from '../src/site-check/printed-sentences.js'
 import { runSiteCheck, SITE_CHECK_GROUPS } from '../src/site-check/site-check.js'
-import { isStep } from '../src/site-check/steps.js'
+import { isStep } from '../src/lib/site-build-steps.js'
 import { checkLines } from '../src/site-check/check-lines.js'
 import { fakeHost, pagedSite, pageRead, writtenReport } from './_site-check-pages.mjs'
 
