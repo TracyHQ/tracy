@@ -7,7 +7,18 @@
 // it only gives the page its route, and the row a visitor sees is the template's own, which the link stage points at it. It lives in
 // the menu of the plan's link, or the home item's when no menu prints that link. The article sits in a category of its own, since
 // a template can list any category it ships (JA Boxing's plans page lists Uncategorised).
+//
+// When the template's content pages are opened under a category's menu item (content-page-route.js), a created page takes the same
+// route, under one hidden item of its own category that holds the same layout: it then prints as they do. It has no item of its own
+// then, so its title lives on the article, and an item an earlier run made for it is unpublished.
 import { createHash } from 'node:crypto'
+import {
+  contentPageRoute,
+  mayHaveContentRoute,
+  ROUTE_ALIAS,
+  routedAddress,
+  routeLink
+} from './content-page-route.js'
 import { NO_LAST } from './no-last-report.js'
 import { heldByLast, linesOf, MARK, orderOf } from './page-create-lines.js'
 import { menuRows, paramsOf } from './page-meta-write.js'
@@ -16,6 +27,7 @@ import { answerWords, doorCall } from './settings-door.js'
 const each = (value) => (Array.isArray(value) ? value : [])
 const digest = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 32)
 const CATEGORY_NOTE = `${MARK}category`
+const ROUTE_NOTE = `${MARK}route`
 const PAGE_ROWS = 25
 // What an article prints around its words by default. A page of the site is not a post: no author, date or category.
 const NOT_A_POST = Object.fromEntries(
@@ -165,6 +177,47 @@ async function writePage({ order, call, write, make, rows, owners, kit, category
   return { articleId, itemId: Number(item.id) }
 }
 
+/** A page on the template's route: its article under the one hidden item of the category, no item of its own. */
+async function writeRoutedPage({ order, call, write, make, rows, owners, kit, category, routeItem }) {
+  const own = rows.find((row) => row.note === order.note)
+  const catid = await category()
+  const wanted = {
+    title: order.title,
+    introtext: order.html,
+    metadesc: order.seo?.description ?? '',
+    state: 1,
+    catid
+  }
+  const pageTitle = order.seo ? { article_page_title: order.seo.title } : {}
+  const article = articleOfLink(own?.link)
+    ? ((await call('content.get', { kind: 'article', id: articleOfLink(own.link) }))?.item ?? null)
+    : ((await wholeRows(call, 'article')).find((row) => row.note === order.note) ?? null)
+  const articleId = article
+    ? Number(article.id)
+    : await make('article', {
+        ...wanted,
+        alias: order.slug,
+        fulltext: '',
+        featured: 0,
+        language: '*',
+        access: 1,
+        attribs: JSON.stringify({ ...NOT_A_POST, ...pageTitle }),
+        note: order.note
+      })
+  if (article) {
+    const fields = differing(article, wanted)
+    const kept = paramsOf(article.attribs)
+    const next = { ...kept, ...NOT_A_POST, ...pageTitle }
+    if (Object.keys(next).some((name) => String(kept[name]) !== String(next[name])))
+      fields.attribs = JSON.stringify(next)
+    if (Object.keys(fields).length) await write('article', articleId, fields)
+  }
+  const item = await routeItem(order, { owners, kit, rows })
+  // Left published, the earlier item would still print the page the old way at its old address.
+  if (own && Number(own.published) !== 0) await write('menuItem', Number(own.id), { published: 0 })
+  return { articleId, itemId: item.id, routeLink: item.link }
+}
+
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, owners: Map<string, object>, extras: object,
  *   last?: object }} input
@@ -178,16 +231,28 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
     const words = linesOf(order, done)
     out.results.push(...words.results)
     out.lines.push(...words.lines)
+    const category = articleOfLink(done.routeLink)
     out.pages.set(
       order.id,
-      done.reason ? { reason: done.reason } : { url: `index.php?Itemid=${done.itemId}` }
+      done.reason
+        ? { reason: done.reason }
+        : {
+            url: done.routeLink
+              ? routedAddress({ articleId: done.articleId, category, itemId: done.itemId })
+              : `index.php?Itemid=${done.itemId}`
+          }
     )
-    if (!done.reason) out.kept.push({ id: order.id, path: `/${order.slug}` })
+    if (!done.reason)
+      out.kept.push({
+        id: order.id,
+        path: done.routeLink ? `/${ROUTE_ALIAS}/${order.slug}` : `/${order.slug}`
+      })
   }
   const orders = pagesToCreate(plan).map((page) => orderOf(page, extras))
+  const routed = mayHaveContentRoute({ plan, kit })
   const fresh = []
   for (const order of orders) {
-    const held = heldByLast(order, last)
+    const held = heldByLast(order, last, routed)
     if (held) finish(order, held)
     else fresh.push(order)
   }
@@ -215,7 +280,10 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
     for (const order of fresh) finish(order, { reason: `the menu could not be read: ${error.message}` })
     return out
   }
+  // A kept page of a route the template does not use names no category: the page keeps its own item.
+  const route = contentPageRoute({ plan, kit, rows })
   let categoryId = null
+  let routeRow = null
   for (const order of fresh) {
     const applyId = `page-${digest(order.id)}`
     const write = (kind, id, fields) => call('content.update', { apply_id: applyId, kind, id, fields })
@@ -240,8 +308,35 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
         }))
       return categoryId
     }
+    const routeItem = async (page, where) => {
+      const link = routeLink(route, await category())
+      routeRow ??= rows.find((row) => row.note === ROUTE_NOTE) ?? null
+      if (!routeRow) {
+        const params = JSON.stringify({ ...NOT_A_POST, menu_show: 0 })
+        const id = await make('menuItem', {
+          title: 'Site pages',
+          alias: ROUTE_ALIAS,
+          menutype: menutypeFor(page, where),
+          type: 'component',
+          link,
+          published: 1,
+          language: '*',
+          access: 1,
+          note: ROUTE_NOTE,
+          params
+        })
+        routeRow = { id, link, published: 1, note: ROUTE_NOTE, params }
+      }
+      const fields = differing(routeRow, { link, published: 1 })
+      if (Object.keys(fields).length) {
+        await write('menuItem', Number(routeRow.id), fields)
+        routeRow = { ...routeRow, ...fields }
+      }
+      return { id: Number(routeRow.id), link }
+    }
     try {
-      finish(order, await writePage({ order, call, write, make, rows, owners, kit, category }))
+      const context = { order, call, write, make, rows, owners, kit, category }
+      finish(order, await (route ? writeRoutedPage({ ...context, routeItem }) : writePage(context)))
     } catch (error) {
       finish(order, { reason: error.message })
     }

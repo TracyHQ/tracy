@@ -24,7 +24,7 @@ export function orderOf(page, { pages, pageMeta }) {
 
 /** The report's words on one page: `results` stand for the lines the copy already gives it, `lines` are its own. */
 export function linesOf(order, done) {
-  const { articleId, itemId, reason } = done
+  const { articleId, itemId, reason, routeLink } = done
   const result = (ordered, read) =>
     reason
       ? { status: 'failed', reason, ordered }
@@ -35,11 +35,22 @@ export function linesOf(order, done) {
       ? [
           [
             `${order.id}:title`,
-            result(order.seo.title, readRow('menuItem', itemId, 'params', ['page_title']))
+            result(
+              order.seo.title,
+              // Opened under a category's item, the page's title lives on the article (page-meta-write.js).
+              routeLink
+                ? readRow('article', articleId, 'attribs', ['article_page_title'])
+                : readRow('menuItem', itemId, 'params', ['page_title'])
+            )
           ],
           [
             `${order.id}:description`,
-            result(order.seo.description, readRow('menuItem', itemId, 'params', ['menu-meta_description']))
+            result(
+              order.seo.description,
+              routeLink
+                ? readRow('article', articleId, 'metadesc')
+                : readRow('menuItem', itemId, 'params', ['menu-meta_description'])
+            )
           ]
         ]
       : [])
@@ -49,13 +60,19 @@ export function linesOf(order, done) {
     results,
     lines: [
       own(`${order.id}:heading`, 'page-heading', result(order.title, readRow('article', articleId, 'title'))),
-      own(`${order.id}:address`, 'page-address', result('1', readRow('menuItem', itemId, 'published')))
+      own(`${order.id}:address`, 'page-address', result('1', readRow('menuItem', itemId, 'published'))),
+      ...(routeLink
+        ? [own(`${order.id}:route`, 'page-route', result(routeLink, readRow('menuItem', itemId, 'link')))]
+        : [])
     ]
   }
 }
 
-/** The page's rows as the last report says the site holds them, when every line of it stands and this order changes none. */
-export function heldByLast(order, last) {
+/**
+ * The page's rows as the last report says the site holds them, when every line of it stands and this order changes none. `routed`:
+ * the template's content pages have a route of their own, and a report without a route line is of a page not yet on it.
+ */
+export function heldByLast(order, last, routed = false) {
   const same =
     last.same(order.id, order.html) &&
     last.same(`${order.id}:heading`, order.title) &&
@@ -64,5 +81,11 @@ export function heldByLast(order, last) {
         last.same(`${order.id}:description`, order.seo.description)))
   const address = last.line(`${order.id}:address`)
   if (!same || !address) return null
-  return { articleId: last.line(order.id).readFrom.params.id, itemId: address.readFrom.params.id }
+  const route = last.line(`${order.id}:route`)
+  if (routed && !route) return null
+  return {
+    articleId: last.line(order.id).readFrom.params.id,
+    itemId: address.readFrom.params.id,
+    ...(route ? { routeLink: route.ordered } : {})
+  }
 }

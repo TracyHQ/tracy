@@ -229,6 +229,21 @@ export function hideOrders({
       failedAs(notEmptiable(key, held))
     }
   }
+  // A button leaves whole or not at all: words gone and an address left draw an empty button, and the other way a dead one.
+  const buttons = new Map()
+  for (const claim of owners.values())
+    if (claim.kind === 'hide' && claim.button)
+      buttons.set(claim.button, [...(buttons.get(claim.button) ?? []), claim.slot])
+  const stuck = new Set()
+  for (const slots of buttons.values()) {
+    const refused = slots.map((slot) => orders.get(slot)).find((o) => o?.via === 'failed')
+    if (!refused) continue
+    for (const slot of slots) {
+      const key = orders.get(slot)?.key
+      stuck.add(key)
+      orders.set(slot, { via: 'failed', key, reason: `this button cannot leave whole: ${refused.reason}` })
+    }
+  }
   const taken = new Set(each(extras?.mainMenu?.hide).map((h) => slashless(h.path)))
   const pages = each(plan?.pages)
     .filter((p) => p?.decision === 'drop')
@@ -240,7 +255,7 @@ export function hideOrders({
   return {
     orders,
     blocks,
-    emptySlots: [...new Set(emptySlots)],
+    emptySlots: [...new Set(emptySlots)].filter((key) => !stuck.has(key)),
     removeSlots: [...new Set(removeSlots)],
     keepSlots,
     strings,

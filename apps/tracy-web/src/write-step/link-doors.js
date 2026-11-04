@@ -2,6 +2,7 @@
 // by the link slot of its label's row or anchor, by a link slot of its block that holds the address the kit measured, by a menu
 // item when a menu module prints it, or inside a slot of words. Several links can share one address (a card's picture and name).
 import { contentMapKey } from '../site-writer/contract-mapping.js'
+import { ownTwin } from './kit-buttons.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const slashless = (path) =>
@@ -84,9 +85,13 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
     return anchorCache.get(block)
   }
 
+  /** A label slot of another block standing for this block's own button: the slot its own field is, or null. */
+  const twinOf = (link, block) => (link?.labelId ? ownTwin(link.labelId, block, contentMap) : null)
+
   /** The link slot of the label's row, or of the same anchor of an HTML field. */
-  function byItsLabel(link) {
-    const label = slots.get(contentMapKey(link?.labelId))
+  function byItsLabel(link, block) {
+    const twin = twinOf(link, block)
+    const label = slots.get(twin?.key ?? contentMapKey(link?.labelId))
     if (!label) return null
     const group = label.group?.id
     const inRow = group ? slotList.filter((s) => s.group?.id === group && holdsAddress(s)) : []
@@ -106,7 +111,10 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
   /** The link slots of its block that hold the address the kit measured on the link. */
   function byItsAddress(link, block) {
     if (!link?.target) return []
-    const entities = new Set([block?.source?.entity, slots.get(contentMapKey(link.labelId))?.entity])
+    const entities = new Set([
+      block?.source?.entity,
+      ...(twinOf(link, block) ? [] : [slots.get(contentMapKey(link.labelId))?.entity])
+    ])
     const wanted = slashless(link.target)
     return slotList
       .filter(
@@ -123,7 +131,7 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
     const found = byId.get(id) ?? byLabel.get(id)
     if (!found) return own ? { via: 'words-only', key } : { via: 'no-kit-link' }
     const { link, block } = found
-    const labelled = byItsLabel(link)
+    const labelled = byItsLabel(link, block)
     if (labelled) return { via: 'slot', keys: [labelled], ...found }
     const shared = byItsAddress(link, block)
     if (shared.length) return { via: 'shared', keys: shared, ...found }

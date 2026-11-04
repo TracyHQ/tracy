@@ -16,7 +16,7 @@ import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../site-writer/bench-control.js'
 import { indexInputs } from '../site-writer/copy-check/inputs-index.js'
 import { readCopy } from '../site-writer/copy-check/copy-view.js'
-import { exportContractMapping } from '../site-writer/contract-mapping.js'
+import { contentMapKey, exportContractMapping } from '../site-writer/contract-mapping.js'
 import { prepareBrandStage } from './brand-stage.js'
 import { writeContract } from './contract-write.js'
 import { goneRowSlots } from './hide-rows.js'
@@ -26,6 +26,7 @@ import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './
 import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
+import { buttonClaims } from './kit-buttons.js'
 import { kitSlotIds } from './kit-slot-ids.js'
 import { withEveryMenuHide } from './menu-hides.js'
 import { prepareLinks } from './link-stage.js'
@@ -254,13 +255,17 @@ export async function runWriteStep(input) {
       ...alts.claims,
       ...fromPlan.filter((claim) => !altSlots.has(claim.slot))
     ]
+    const buttons = buttonClaims({ plan, kit: kit.doc, contentMap, claims: filing, file: kit.ref })
+    for (const [slot, source] of buttons.twins)
+      exported.mapping.changes[contentMapKey(slot)] = exported.mapping.changes[contentMapKey(source)]
+    const speaking = [...filing, ...buttons.claims]
     table = ownerTable([
-      ...filing,
+      ...speaking,
       ...storedDemoClaims({
         plan,
         kit: kit.doc,
         contentMap,
-        filled: new Set(filing.map((claim) => claim.slot)),
+        filled: new Set(speaking.map((claim) => claim.slot)),
         file: kit.ref
       })
     ])
@@ -355,6 +360,8 @@ export async function runWriteStep(input) {
     )
     Object.assign(mapping.changes, links.changes)
     Object.assign(mapping.evidence, links.evidence)
+    // A slot a plan link writes has an owner, though the plan names the link and not the slot.
+    report.unowned = report.unowned.filter((u) => !(contentMapKey(u.slot) in links.changes))
   }
 
   // Page frame first: the blocks and pages the plan drops; the hidden slots go with the contract call.

@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readBackGroup } from '../src/site-check/read-back.js'
-import { LINK, pagesPlan, pagesSite, runOn } from './_write-step-pages.mjs'
+import { LINK, pagesKit, pagesPlan, pagesSite, runOn } from './_write-step-pages.mjs'
 import { copy } from './_write-step-run.mjs'
 
 const BODY =
@@ -259,4 +259,130 @@ test('what the site holds of a page reads back as ordered', async () => {
     LINK
   ])
     assert.equal(check.lines[slot], 'match', slot)
+})
+
+// A template whose kept content page is an article opened under a category's menu item (TracyHQ/tracy#379).
+const COURSES = {
+  kind: 'menuItem',
+  id: 60,
+  path: 'courses',
+  published: 1,
+  type: 'component',
+  menutype: 'mainmenu',
+  link: 'index.php?option=com_content&view=category&layout=quay:course&id=9'
+}
+function routedKit({ recorded = false } = {}) {
+  const kit = pagesKit()
+  kit.doc.blocks.push({ id: 'body-rowing', source: { owner: 'article-8', ownerKind: 'article' }, slots: [] })
+  kit.doc.pages = [
+    ...(kit.doc.pages ?? []),
+    { id: 'page-rowing', path: '/courses/rowing', blocks: { 1440: ['body-rowing'] } }
+  ]
+  if (recorded)
+    kit.doc.site = {
+      ...kit.doc.site,
+      contentPages: [
+        { route: 'other', layout: 'other', pages: [] },
+        { route: 'courses', layout: 'quay:recorded', pages: ['page-rowing'] }
+      ]
+    }
+  return kit
+}
+function routedPlan() {
+  const p = pagesPlan()
+  p.pages.push({ id: 'page-rowing', decision: 'keep', blocks: [] })
+  return p
+}
+const routedRun = (site, options = {}) =>
+  runOn(site, { kit: routedKit(options), over: { plan: routedPlan() }, last: options.last ?? null })
+const routedSite = () => {
+  const site = pagesSite()
+  site.records.set('menuItem-60', { ...COURSES })
+  return site
+}
+
+test('a created page takes the route of the template content pages: its article under a hidden item with the same layout', async () => {
+  const site = routedSite()
+  const { report, line } = await routedRun(site)
+  assert.equal(report.status, 'done')
+  const [category] = site.rows('category')
+  const [article] = site.rows('article')
+  const item = site.rows('menuItem').find((r) => r.note === 'tracy-page:route')
+  assert.equal(item.link, `index.php?option=com_content&view=category&layout=quay:course&id=${category.id}`)
+  assert.equal(JSON.parse(item.params).menu_show, 0)
+  assert.equal(article.catid, category.id)
+  assert.equal(JSON.parse(article.attribs).article_page_title, 'Privacy policy of Quay Fitness Studio')
+  // No item of its own: under one, the template prints its default article.
+  assert.equal(site.rows('menuItem').filter((r) => r.note === 'tracy-page:legal:privacy').length, 0)
+  const address = `index.php?option=com_content&view=article&id=${article.id}&catid=${category.id}&Itemid=${item.id}`
+  assert.deepEqual([line(LINK).status, line(LINK).ordered], ['written', address])
+  assert.equal(line('legal:privacy:route').ordered, item.link)
+  assert.deepEqual(report.keptPages.at(-1), { id: 'legal:privacy', path: '/site-pages/privacy-policy' })
+  // Every line of the report is what the site holds: title and description on the article, the route on its item.
+  const check = await readBackGroup.run({
+    report,
+    read: async (action, params) => site.door.apply({ siteKey: 's', action, params })
+  })
+  for (const slot of [
+    LINK,
+    'legal:privacy',
+    'legal:privacy:heading',
+    'legal:privacy:address',
+    'legal:privacy:title',
+    'legal:privacy:description',
+    'legal:privacy:route'
+  ])
+    assert.equal(check.lines[slot], 'match', slot)
+})
+
+test('what the kit records of the template content pages is what a created page follows', async () => {
+  const site = routedSite()
+  await routedRun(site, { recorded: true })
+  const item = site.rows('menuItem').find((r) => r.note === 'tracy-page:route')
+  assert.match(item.link, /layout=quay:recorded&/)
+})
+
+test('a routed page makes no write on a rerun, with its report and without one', async () => {
+  const site = routedSite()
+  const first = await routedRun(site)
+  const rows = countRows(site)
+  reset(site)
+  const again = await routedRun(site, { last: first.report })
+  assert.deepEqual(pageWrites(site), [])
+  assert.deepEqual(countRows(site), rows)
+  assert.deepEqual(
+    [again.line('legal:privacy:route').status, again.line('legal:privacy:route').unchanged],
+    ['written', true]
+  )
+  assert.equal(again.line(LINK).ordered, first.line(LINK).ordered)
+  assert.equal(again.report.keptPages.at(-1).path, '/site-pages/privacy-policy')
+  reset(site)
+  await routedRun(site)
+  assert.deepEqual(pageWrites(site), [])
+  assert.deepEqual(countRows(site), rows)
+})
+
+test('a page an earlier run gave its own item moves onto the route, and the old item stops printing it', async () => {
+  const site = routedSite()
+  site.records.delete('menuItem-60')
+  const before = await runOn(site, { kit: pagesKit() })
+  const own = site.rows('menuItem').find((r) => r.note === 'tracy-page:legal:privacy')
+  assert.equal(before.report.keptPages.at(-1).path, '/privacy-policy')
+  site.records.set('menuItem-60', { ...COURSES })
+  reset(site)
+  const after = await routedRun(site, { last: before.report })
+  assert.equal(after.report.status, 'done')
+  assert.equal(Number(site.records.get(`menuItem-${own.id}`).published), 0)
+  assert.equal(after.report.keptPages.at(-1).path, '/site-pages/privacy-policy')
+  assert.equal(site.rows('article').length, 1)
+  reset(site)
+  await routedRun(site, { last: after.report })
+  assert.deepEqual(pageWrites(site), [])
+})
+
+test('a template whose content pages have no category route keeps the item of its own', async () => {
+  const site = pagesSite()
+  const { report } = await runOn(site, { kit: routedKit(), over: { plan: routedPlan() } })
+  assert.equal(report.keptPages.at(-1).path, '/privacy-policy')
+  assert.equal(site.rows('menuItem').filter((r) => r.note === 'tracy-page:route').length, 0)
 })
