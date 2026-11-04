@@ -1,4 +1,4 @@
-// The write step bench's command line (ADR 0044), site creator part: create-site, status, list. The site door and the
+// The write step bench's command line (ADR 0044), site creator part: create-site, site-status, site-list. The site door and the
 // run store are fakes; the kit is a made-up one read from a temporary contract folder.
 import assert from 'node:assert/strict'
 import { after, test } from 'node:test'
@@ -80,15 +80,15 @@ test('a second create-site names the previous site it removed', async () => {
   assert.ok(first)
 })
 
-test('status and list read the record; usage errors exit 2', async () => {
+test('site-status and site-list read the record; usage errors exit 2', async () => {
   const store = memoryStore()
   await cli(['create-site', '--kit', 'demo-gym/j6/1.2.3', '--account', 'a@example.test'], { store })
-  const status = await cli(['status'], { store })
+  const status = await cli(['site-status'], { store })
   assert.equal(status.code, 0)
   assert.match(status.out[0], /ready/)
-  assert.equal((await cli(['status', 'missing'], { store })).code, 1)
-  assert.equal((await cli(['list'], { store })).out.length, 1)
+  assert.equal((await cli(['site-status', 'missing'], { store })).code, 1)
+  assert.equal((await cli(['site-list'], { store })).out.length, 1)
   assert.equal((await cli(['create-site', '--kit', 'x'])).code, 2)
   assert.equal((await cli([])).code, 2)
-  assert.equal((await cli(['list', '--limit', '0'])).code, 2)
+  assert.equal((await cli(['site-list', '--limit', '0'])).code, 2)
 })

@@ -102,6 +102,23 @@ export function httpSiteDoor(input) {
       const contract = b.contract ?? b.result?.contract ?? b.data?.contract
       return { ok: true, contract: typeof contract === 'string' ? contract : null }
     },
+    /**
+     * One call through the Apply door, for the write step: the plugin's answer as it came, `errors[]` included. An answer
+     * the door gave instead of the plugin is shaped as a refusal, so the caller reads one kind of answer.
+     */
+    async apply({ siteKey, action, params }) {
+      const answer = await call('POST', `${keyPath(siteKey)}/apply`, { action, params })
+      const b = answer.body ?? {}
+      if (answer.status < 400 && answer.body) return b
+      const nested = typeof b.error === 'object' && b.error !== null ? b.error : null
+      return {
+        ...b,
+        ok: false,
+        status: answer.status,
+        code: b.code ?? nested?.code ?? `HTTP_${answer.status}`,
+        ...(nested ? { error: nested.code, message: nested.message } : {})
+      }
+    },
     async remove(siteKey) {
       for (let attempt = 0; attempt < 30; attempt++) {
         const answer = await call('DELETE', keyPath(siteKey))

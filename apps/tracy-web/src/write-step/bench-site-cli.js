@@ -1,16 +1,15 @@
 // BENCH ONLY. The write step bench's command line, site creator part (ADR 0044): the bench has no screen, so it runs
 // from inside the tracy-web container (scripts/write-step-bench.mjs), in the shape of the other benches' commands.
-// Exit codes: 0 done, 1 refused or not found, 2 wrong usage. Later tickets add the write itself.
+// Exit codes: 0 done, 1 refused or not found, 2 wrong usage. The write itself is in bench-cli.js, which calls this.
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { createBenchSite, specOfKit } from './bench-site-creator.js'
 
-export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
-  create-site --kit <ref> --account <email>   create a trial site from the kit's quickstart by the customer's path,
+export const USAGE = `  create-site --kit <ref> --account <email>   create a trial site from the kit's quickstart by the customer's path,
       [--by <label>]                          prove its contract is the kit's, keep it as the bench's one site and
                                               delete the previous run's; prints the creation time
-  status [id]                                 the latest (or the named) bench site record
-  list [--limit <n>]                          the newest bench site records
+  site-status [id]                            the latest (or the named) bench site record
+  site-list [--limit <n>]                     the newest bench site records
 The quickstart and the contract come from the kit. Only sites this bench made are ever deleted.`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
@@ -45,14 +44,17 @@ export async function runCli(argv, deps) {
   } catch (error) {
     if (error instanceof Usage || error?.code?.startsWith?.('ERR_PARSE_ARGS')) {
       if (error.message) io.err(error.message)
-      io.err(USAGE)
+      io.err(`usage: node scripts/write-step-bench.mjs <command>\n${USAGE}`)
       return 2
     }
     throw error
   }
 }
 
-const COMMANDS = { 'create-site': createSite, status, list }
+const COMMANDS = { 'create-site': createSite, 'site-status': status, 'site-list': list }
+
+/** The commands this module answers, for the bench's command line (bench-cli.js). */
+export const SITE_COMMANDS = new Set(Object.keys(COMMANDS))
 
 async function createSite(d, values) {
   if (!values.kit) throw new Usage('create-site needs --kit')

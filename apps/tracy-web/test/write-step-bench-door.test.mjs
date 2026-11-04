@@ -91,3 +91,26 @@ test('remove waits through a pending delete until the site is removed', async ()
   const refused = door([[403, { code: 'NOT_SITE_OWNER' }]])
   assert.equal((await refused.door.remove('k.sites.example')).ok, false)
 })
+
+test('apply hands back the plugin answer, per-slot errors included, and shapes a door refusal as a refusal', async () => {
+  const refusal = {
+    ok: false,
+    error: 'contract_failed',
+    errors: [{ code: 'A', field: { slotKey: 'module-1.1' } }]
+  }
+  const { seen, door: d } = door([
+    [200, refusal],
+    [403, { code: 'TOOLSET_NOT_GRANTED', role: 'viewer' }],
+    [400, { error: { code: 'CONTENT_BAD_QUERY', message: 'bad query' } }],
+    [200, { ok: true, contract: 'demo-gym/j6/1.2.3' }]
+  ])
+  const call = { siteKey: 'a.sites.example', action: 'content.contract', params: { operation: 'apply' } }
+  assert.deepEqual(await d.apply(call), refusal)
+  assert.equal(seen[0].url, 'http://app.test/api/sites/a.sites.example/apply')
+  assert.deepEqual(JSON.parse(seen[0].init.body), { action: call.action, params: call.params })
+  const noSeat = await d.apply(call)
+  assert.deepEqual([noSeat.ok, noSeat.code, noSeat.status], [false, 'TOOLSET_NOT_GRANTED', 403])
+  const nested = await d.apply(call)
+  assert.deepEqual([nested.ok, nested.code, nested.message], [false, 'CONTENT_BAD_QUERY', 'bad query'])
+  assert.equal((await d.apply(call)).contract, 'demo-gym/j6/1.2.3')
+})

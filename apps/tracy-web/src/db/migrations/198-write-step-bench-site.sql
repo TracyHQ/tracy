@@ -19,3 +19,24 @@ create table if not exists write_bench_site (
   updated_at timestamptz not null default now()
 );
 create index if not exists write_bench_site_status_idx on write_bench_site (status, created_at desc);
+
+-- One row per write step run, on a site the table above names. The run happens in the bench command's own process, so
+-- this row is how another shell reads it or asks it to stop: `cancel_requested_at` is checked between phases. One run at a
+-- time per site. Its report holds the customer's words of the trial, so removing the bench removes this table too.
+create table if not exists write_bench_run (
+  id uuid primary key default gen_random_uuid(),
+  site_key text not null,
+  kit text not null,
+  started_by text not null,
+  status text not null default 'running' check (status in ('running', 'done', 'stopped', 'cancelled')),
+  phase text not null default 'waiting',
+  cancel_requested_at timestamptz,
+  code text,
+  reason text,
+  report jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  finished_at timestamptz
+);
+create unique index if not exists write_bench_run_one_active on write_bench_run (site_key) where status = 'running';
+create index if not exists write_bench_run_created_idx on write_bench_run (created_at desc);
