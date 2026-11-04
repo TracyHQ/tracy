@@ -27,14 +27,27 @@ function settingsPart(extras, menu) {
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, owners: Map<string, object>,
  *   extras: object, reading: object, changes: Record<string, string>, contract: string,
- *   sleep: (ms: number) => Promise<void>, last?: object }} input
+ *   sleep: (ms: number) => Promise<void>, last?: object,
+ *   onNoWayOut?: (named: { slot: string, reason: string }[]) => Promise<void> }} input `onNoWayOut`: told before anything is written
  * @returns {Promise<{ stop?: object, reading?: object, emptySlots?: string[], settingsExtras?: object, held?: Map<string, object>,
  *   results?: (done: { emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object> }) =>
  *   { hides: Map<string, object>, lines: object[] } }>} `settingsExtras`: the extras without the menu items left published;
  *   `held`: what happened to those, by line slot; `results`: the report's view once the later stages have run
  */
 export async function runHideStage(input) {
-  const { door, siteKey, kit, plan, owners, extras, changes, contract, sleep, last = NO_LAST } = input
+  const {
+    door,
+    siteKey,
+    kit,
+    plan,
+    owners,
+    extras,
+    changes,
+    contract,
+    sleep,
+    last = NO_LAST,
+    onNoWayOut = async () => {}
+  } = input
   const asksToHide = [...owners.values()].some((c) => c.kind === 'hide')
   const ops = asksToHide ? await hideOpsOf(door, siteKey) : { problem: null, rowsRemove: false }
   const cannotHide = ops.problem
@@ -49,6 +62,7 @@ export async function runHideStage(input) {
     rowsRemove: ops.rowsRemove,
     last
   })
+  await onNoWayOut(order.noWayOut)
   const total = Object.keys(changes).length + order.emptySlots.length
   if (total > MAX_SLOTS)
     return {

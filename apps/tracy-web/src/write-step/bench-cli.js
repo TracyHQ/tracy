@@ -161,6 +161,9 @@ async function startRun(d, values) {
         ...(values['pictures-file'] ? { pictures: inCwd(values['pictures-file']) } : {})
       },
       onPhase: (phase) => d.runs.phase(id, phase),
+      onNoWayOut: async (named) => {
+        if (named.length) d.out(`no way to leave: ${named.map((n) => `${n.slot}: ${n.reason}`).join('; ')}`)
+      },
       isCancelled: () => d.runs.cancelRequested(id),
       ...(d.now ? { now: d.now } : {}),
       ...(d.sleep ? { sleep: d.sleep } : {})

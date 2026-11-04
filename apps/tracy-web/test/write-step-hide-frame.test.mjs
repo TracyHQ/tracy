@@ -170,3 +170,109 @@ test('a menu that cannot be read fails the dropped page, and the run goes on', a
   assert.match(lineOf(report, 'page-old').reason, /read_failed/)
   assert.ok(site.calls.some((c) => c.params.operation === 'apply'))
 })
+
+const otherEntity = (n, path) => ({
+  key: `menuItem-${n}`,
+  kind: 'menuItem',
+  identity: { menutype: 'other', path }
+})
+const hidingLabel = (fixture, n) => {
+  fixture.plan.pages[0].blocks[0].hiddenSlots.push({ slot: `menuItem-${n}.0`, why: 'not in the brief' })
+  return fixture
+}
+
+test('an item of another menu the plan hides is unpublished, since its title cannot be emptied', async () => {
+  const fixture = hidingLabel(menuFixture([otherEntity(103, 'free-intro')]), 103)
+  const { report, site } = await RUN(fixture, [
+    menuRow(101, 'home'),
+    menuRow(103, 'free-intro', { menutype: 'other' })
+  ])
+  assert.equal(unpublished(site, 103).length, 1)
+  const emptied = site.calls.find((c) => c.params.operation === 'apply').params.empty_slots ?? []
+  assert.ok(!emptied.includes('menuItem-103.0'))
+  const label = lineOf(report, 'menuItem-103.0')
+  assert.deepEqual([label.status, label.ordered], ['hidden', '0'])
+  assert.deepEqual(label.readFrom.params, { kind: 'menuItem', id: 103 })
+  assert.equal(lineOf(report, 'menuItem-103').status, 'written')
+})
+
+test('an item of another menu a kept page depends on stays published, and the line names the page', async () => {
+  const fixture = hidingLabel(menuFixture([otherEntity(103, 'free-intro')]), 103)
+  fixture.kit.doc.pages[1].path = '/free-intro/child'
+  const { report, site } = await RUN(fixture, [
+    menuRow(101, 'home'),
+    menuRow(103, 'free-intro', { menutype: 'other' })
+  ])
+  assert.equal(unpublished(site, 103).length, 0)
+  const line = lineOf(report, 'menuItem-103.0')
+  assert.equal(line.status, 'failed')
+  assert.match(line.reason, /page-about/)
+  assert.ok(!/main menu/.test(line.reason), 'it is not the main menu')
+})
+
+test('a second run does not unpublish it again, and keeping it after all needs a new site', async () => {
+  const fixture = hidingLabel(menuFixture([otherEntity(103, 'free-intro')]), 103)
+  const first = await RUN(fixture, [menuRow(101, 'home'), menuRow(103, 'free-intro', { menutype: 'other' })])
+  const rows = [menuRow(101, 'home'), menuRow(103, 'free-intro', { menutype: 'other', published: 0 })]
+  const second = await runHide({
+    kit: fixture.kit,
+    files: { plan: fixture.plan, copy: fixture.copy },
+    deps: { contentMap: fixture.contentMap, last: first.report },
+    site: { records: rows, extraKeys: ['menuItem-101.0', 'menuItem-103.0'] }
+  })
+  assert.equal(second.report.status, 'done', JSON.stringify(second.report.cause))
+  assert.equal(unpublished(second.site, 103).length, 0)
+  assert.equal(lineOf(second.report, 'menuItem-103.0').unchanged, true)
+  const kept = menuFixture([otherEntity(103, 'free-intro')])
+  const refused = await runHide({
+    kit: kept.kit,
+    files: { plan: kept.plan, copy: kept.copy },
+    deps: { contentMap: kept.contentMap, last: first.report },
+    site: { records: rows, extraKeys: ['menuItem-101.0', 'menuItem-103.0'] }
+  })
+  assert.equal(refused.report.cause?.code, 'NEEDS_NEW_SITE', JSON.stringify(refused.report.cause))
+  assert.match(refused.report.cause.reason, /menuItem-103 \(a menu item that was unpublished\)/)
+})
+
+test('a menu item no content map knows has no way to leave, and the report names it', async () => {
+  const fixture = hidingLabel(menuFixture([]), 103)
+  const { report } = await RUN(fixture, [menuRow(101, 'home')])
+  assert.equal(lineOf(report, 'menuItem-103.0').status, 'failed')
+  assert.deepEqual(
+    report.noWayOut.map((n) => n.slot),
+    ['menuItem-103.0']
+  )
+  assert.match(report.noWayOut[0].reason, /menuItem-103/)
+})
+
+test('whatever has no way out is named before the first write, an item a kept page needs among them', async () => {
+  const fixture = hidingLabel(menuFixture([otherEntity(103, 'free-intro')]), 103)
+  fixture.kit.doc.pages[1].path = '/free-intro/child'
+  const seen = []
+  const writesAtNaming = []
+  const run = await runHide({
+    kit: fixture.kit,
+    files: { plan: fixture.plan, copy: fixture.copy },
+    deps: {
+      contentMap: fixture.contentMap,
+      onNoWayOut: async (named) => {
+        seen.push(named.map((n) => n.slot))
+      }
+    },
+    site: {
+      records: [
+        menuRow(101, 'home'),
+        menuRow(103, 'free-intro', { menutype: 'other' }),
+        menuRow(120, 'about-us/old', { menutype: 'other' })
+      ],
+      extraKeys: ['menuItem-101.0', 'menuItem-103.0'],
+      refuseUpdate: () => {
+        writesAtNaming.push(seen.length)
+        return null
+      }
+    }
+  })
+  assert.deepEqual(seen, [['menuItem-103.0']])
+  assert.ok(writesAtNaming.length > 0 && writesAtNaming.every((n) => n === 1), 'named before any write')
+  assert.equal(run.report.noWayOut[0].slot, 'menuItem-103.0')
+})

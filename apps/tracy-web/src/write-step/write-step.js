@@ -27,6 +27,7 @@ import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { kitSlotIds } from './kit-slot-ids.js'
+import { withEveryMenuHide } from './menu-hides.js'
 import { prepareLinks } from './link-stage.js'
 import { runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
@@ -81,8 +82,10 @@ function siteProblem({ reading, contract, changes }) {
  *   last?: object | null, lastRun?: string | null,
  *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
  *   place?: { latitude: unknown, longitude: unknown } | null,
- *   onPhase?: (phase: string) => Promise<void>, now?: () => number, sleep?: (ms: number) => Promise<void> }} input
- *   `last`: the report of the last run on this site, to write only what differs; `lastRun`: that run's id, for the report
+ *   onPhase?: (phase: string) => Promise<void>, onNoWayOut?: (named: { slot: string, reason: string }[]) => Promise<void>,
+ *   now?: () => number, sleep?: (ms: number) => Promise<void> }} input
+ *   `last`: the report of the last run on this site, to write only what differs; `lastRun`: that run's id, for the report;
+ *   `onNoWayOut`: told what the plan hides and cannot take off, before anything is written
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
 export async function runWriteStep(input) {
@@ -90,6 +93,7 @@ export async function runWriteStep(input) {
   const {
     isCancelled = async () => false,
     onPhase = async () => {},
+    onNoWayOut = async () => {},
     now = Date.now,
     sleep = sleepFor
   } = input
@@ -250,6 +254,7 @@ export async function runWriteStep(input) {
         file: kit.ref
       })
     ])
+    extras = withEveryMenuHide({ extras, owners: table.owners, contentMap })
     report.keptPages = keptPagesOf(plan, kit.doc)
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
@@ -349,7 +354,11 @@ export async function runWriteStep(input) {
       changes: mapping.changes,
       contract,
       sleep,
-      last
+      last,
+      onNoWayOut: async (named) => {
+        report.noWayOut = named
+        await onNoWayOut(named)
+      }
     })
   )
   if (hiding.stop) return stopped(hiding.stop)

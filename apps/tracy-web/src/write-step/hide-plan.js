@@ -5,6 +5,7 @@
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { goneRowSlots, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
+import { menuItemOfLabel } from './menu-hides.js'
 import { NO_LAST } from './no-last-report.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -58,7 +59,7 @@ export function pageDependingOn(path, { plan, kit }) {
   return null
 }
 
-/** The main menu items the plan hides, parted by whether unpublishing one would break a kept page. */
+/** The menu items the plan hides, parted by whether unpublishing one would break a kept page. */
 function menuOrders({ plan, kit, hide }) {
   const orders = new Map()
   for (const entry of each(hide)) {
@@ -68,7 +69,7 @@ function menuOrders({ plan, kit, hide }) {
       path: entry.path,
       ...(depends
         ? {
-            refused: `leaves the main menu, but ${depends} needs ${entry.path}: an unpublished item takes its page with it, so it stays published and stays in the menu`
+            refused: `leaves its menu, but ${depends} needs ${entry.path}: an unpublished item takes its page with it, so it stays published and stays in the menu`
           }
         : {})
     })
@@ -108,6 +109,19 @@ function notEmptiable(key, slot) {
   return `the plugin's review for this contract does not list ${where}, so it cannot be emptied: this needs a new contract: ${NEW_CONTRACT}`
 }
 
+/** What a plan hides and cannot take off the site, each with the reason: the check's answer before anything is written. */
+function noWayOutOf(orders, pages) {
+  const out = []
+  for (const [slot, order] of orders) {
+    if (order.via === 'failed') out.push({ slot, reason: order.reason })
+    else if (order.via === 'menu' && order.refused) out.push({ slot, reason: order.refused })
+  }
+  for (const { page, depends } of pages)
+    if (depends)
+      out.push({ slot: page.id, reason: `the plan drops this page, but ${depends} needs its path` })
+  return out
+}
+
 /** What the door takes and what it must leave: every other claim keeps its slot, but a link whose words go leaves with them. */
 function removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gone }) {
   const hidden = new Set()
@@ -135,8 +149,9 @@ function removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gon
  *   this plugin takes no hide order, or null when it does; `rowsRemove`: whether it has the door that takes a row or an element;
  *   `last`: the last report, whose hidden lines are off the site already
  * @returns {{ orders: Map<string, object>, blocks: Map<string, string>, emptySlots: string[], removeSlots: string[],
- *   keepSlots: string[], strings: Record<string, string>, pages: object[], menu: Map<string, object> }} `orders`: by the line's
- *   slot, each with a `via`; `blocks`: block id to module key; `removeSlots`, `keepSlots`: what `rows.remove` is sent
+ *   keepSlots: string[], strings: Record<string, string>, pages: object[], menu: Map<string, object>,
+ *   noWayOut: { slot: string, reason: string }[] }} `orders`: by the line's slot, each with a `via`; `blocks`: block id to module
+ *   key; `removeSlots`, `keepSlots`: what `rows.remove` is sent; `noWayOut`: what the plan hides and cannot take off
  */
 export function hideOrders({
   plan,
@@ -203,6 +218,10 @@ export function hideOrders({
       failedAs(`the write step also writes ${key}, so it cannot be emptied as well`)
     } else if (icon && !icon.field) {
       failedAs(notEmptiable(key, null))
+    } else if (menuItemOfLabel(slot)) {
+      failedAs(
+        `Joomla needs the title of ${menuItemOfLabel(slot)}, so it cannot be emptied, and the content map does not know this item, so nothing says what depends on it if it were unpublished`
+      )
     } else if (held?.canHide) {
       emptySlots.push(key)
       orders.set(slot, { via: 'slot', key })
@@ -226,6 +245,7 @@ export function hideOrders({
     keepSlots,
     strings,
     pages,
-    menu
+    menu,
+    noWayOut: noWayOutOf(orders, pages)
   }
 }
