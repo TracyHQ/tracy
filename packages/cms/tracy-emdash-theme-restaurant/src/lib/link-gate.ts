@@ -7,7 +7,7 @@
 import { getEmDashEntry } from 'emdash'
 import { LOCALES } from './i18n'
 import { linkChecker, type PageRecord, type RecordTable } from './page-records'
-import { gateBlocks, linkHrefs, sameSitePath } from './data-links.ts'
+import { gateBlocks, isScriptUrl, linkHrefs, sameSitePath } from './data-links.ts'
 import { publicOrigin } from './public-origin.ts'
 import { withParents } from './parent-gate.ts'
 import { BLOG_CATEGORIES, postPath, type PostRow } from './posts'
@@ -73,7 +73,8 @@ export async function liveLinks(request: Request, locale: string, urls: readonly
     byLocale.set(locale, check)
   }
   const live = await check(urls.map(asPath))
-  return (url: unknown) => live(asPath(url))
+  // a script URL is never live, whatever the pages say: the link goes, its words stay
+  return (url: unknown) => !isScriptUrl(url) && live(asPath(url))
 }
 
 /** Whether a path is reachable: the page record it lands on is published (a path no record owns always is). */

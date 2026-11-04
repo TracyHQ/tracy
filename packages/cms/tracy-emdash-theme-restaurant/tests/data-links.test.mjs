@@ -6,7 +6,8 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { gateBlocks, linkHrefs, sameSitePath } from '../src/lib/data-links.ts'
+import { gateBlocks, isScriptUrl, linkHrefs, sameSitePath, schemeOf } from '../src/lib/data-links.ts'
+import { cleanHtml } from '../src/lib/html.ts'
 import { linkChecker } from '../src/lib/page-records.ts'
 import { withParents } from '../src/lib/parent-gate.ts'
 
@@ -175,4 +176,74 @@ test('the footer map and contact links are gated: a map link of /menu with Menu 
     'a dead contact link keeps its words as a span'
   )
   assert.match(read('src/lib/link-gate.ts'), /sameSitePath\(url, origins\) \?\? url/)
+})
+
+// ── a data href never renders a script URL ──────────────────────────────────────────────────────────────────────────────────
+const SCRIPT_URLS = [
+  'javascript:alert(1)',
+  ' JaVaScript:alert(1)',
+  '\tjavascript:alert(1)',
+  '\n\u0001 javascript:alert(1)',
+  'java\tscript:alert(1)',
+  'jav\nascript:alert(1)',
+  'VBScript:msgbox(1)',
+  'data:text/html,<script>alert(1)</script>',
+  ' DATA:text/html;base64,PHNjcmlwdD4='
+]
+
+test('javascript:, vbscript: and data: are script URLs however a browser would read them', () => {
+  for (const url of SCRIPT_URLS) assert.equal(isScriptUrl(url), true, JSON.stringify(url))
+  for (const fine of [
+    '/menu',
+    'https://example.com/javascript:x',
+    'tel:+1 212 555 0110',
+    'mailto:a@b.test',
+    '#top',
+    'javascripts:x',
+    '',
+    null,
+    undefined
+  ])
+    assert.equal(isScriptUrl(fine), false, String(fine))
+  assert.equal(schemeOf(' JaVaScript:alert(1)'), 'javascript')
+  assert.equal(sameSitePath('javascript:alert(1)', ['https://site.test']), null)
+})
+
+test('a Portable Text link with a script URL loses its mark whatever the pages say', () => {
+  const value = [
+    para(
+      { text: 'click ' },
+      { text: 'here', def: link('a', ' JaVaScript:alert(1)') },
+      { text: ' or ' },
+      { text: 'there', def: link('b', 'https://example.com/x') }
+    )
+  ]
+  const out = gateBlocks(value, (u) => !isScriptUrl(u))
+  assert.deepEqual(linkHrefs(out), ['https://example.com/x'])
+  assert.equal(out[0].children.map((c) => c.text).join(''), 'click here or there', 'the words stay')
+})
+
+test('link-gate.ts never answers live for a script URL, so every gated place drops it', () => {
+  const gate = read('src/lib/link-gate.ts')
+  assert.match(gate, /!isScriptUrl\(url\) && live\(asPath\(url\)\)/)
+})
+
+test('cleanHtml drops a script URL from href however it is spelled, and from an image src', () => {
+  for (const url of [
+    'javascript:alert(1)',
+    ' JaVaScript:alert(1)',
+    'java&#9;script:alert(1)',
+    '&#106;avascript&colon;alert(1)',
+    'vbscript:x',
+    'data:text/html,x',
+    '&#x6A;avascript:alert(1)'
+  ]) {
+    const out = cleanHtml(`<a href="${url}" title="t">x</a>`)
+    assert.doesNotMatch(out, /href=/, url)
+    assert.match(out, /<a title="t">x<\/a>/, 'the words and the other attributes stay')
+  }
+  assert.match(cleanHtml('<a href="/menu">x</a>'), /href="\/menu"/)
+  assert.match(cleanHtml('<a href="https://example.com">x</a>'), /href="https:\/\/example\.com"/)
+  assert.doesNotMatch(cleanHtml('<img src="javascript:alert(1)" alt="a">'), /src=/)
+  assert.match(cleanHtml('<img src="/brand/logo.png" alt="a">'), /src="\/brand\/logo\.png"/)
 })
