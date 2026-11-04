@@ -15,8 +15,8 @@
 // accent mixed `shade` of the way toward the disc colour).
 import sharp from 'sharp'
 import { stripesOf } from './cutout-backdrop-stripes.js'
-import { hexOf } from './icons/icon-ink.js'
-import { roleOf } from './paint.js'
+import { hexOf } from '../lib/picture-paint/icons/icon-ink.js'
+import { roleOf } from '../lib/picture-paint/paint.js'
 
 /** The longest side the demo is measured at. */
 const MEASURE_MAX = 400

@@ -2,7 +2,7 @@
 // file size, its drawing's size, its line and its backing. It is judged as it is painted, against the template's own file, which the
 // painted stage has read to draw it, so no page is measured. The judgement of "the same look" is `looksDiffer`, what the drawing is
 // built to pass, so a refusal here means a drawing went wrong; the picture step answers for it.
-import { iconLookOf, looksDiffer, sectionLineDiffers } from '../site-pictures/icons/template-icon-look.js'
+import { iconLookOf, looksDiffer, sectionLineDiffers } from '../lib/picture-paint/icons/template-icon-look.js'
 
 export const PICTURE_STEP = 8
 const COLOUR_SLACK = 24
@@ -20,8 +20,8 @@ function backingColour(was, now, drawnIn) {
 }
 
 /**
- * @param {import('../site-pictures/icons/template-icon-look.js').IconLook} was the template icon
- * @param {import('../site-pictures/icons/template-icon-look.js').IconLook} now the drawn icon
+ * @param {import('../lib/picture-paint/icons/template-icon-look.js').IconLook} was the template icon
+ * @param {import('../lib/picture-paint/icons/template-icon-look.js').IconLook} now the drawn icon
  * @param {object} [drawnIn] what the drawing says it used
  * @returns {string[]} one sentence per difference
  */

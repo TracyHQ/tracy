@@ -1,3 +1,4 @@
+// Shared: the picture step and the write step's painted frames draw with it, so it is in lib/ (module-graph.test.mjs).
 // Renders one Phosphor icon as a transparent PNG file (ported from the brief build branch, #189; spec #345): the
 // weight, the one colour and the plate come from the measured demo icon, the size is the frame's. With a plate (the
 // demo's own disc or tile behind its glyph) the glyph is set on a plate of the same shape, colour, opacity and size,

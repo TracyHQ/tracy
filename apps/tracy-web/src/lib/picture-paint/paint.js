@@ -1,3 +1,4 @@
+// Shared: the picture step and the write step's painted frames draw with it, so it is in lib/ (module-graph.test.mjs).
 // Colour roles of the pictures code draws (initials tiles, icons and the backdrop behind a cut-out figure), ADR 0043 section "Colour roles". The picture
 // step never bakes a brand colour into them: it runs beside the brand step and only knows the template's accent, and a
 // baked colour goes wrong as soon as the customer changes the Design system. So an initials or icon entry carries a

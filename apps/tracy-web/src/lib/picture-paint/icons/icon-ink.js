@@ -1,3 +1,4 @@
+// Read by the drawing modules beside it, shared by the picture and write steps, so it is in lib/ (module-graph.test.mjs).
 // Colour maths and the ink colour of a demo icon (ported from the brief build branch, #189; spec #345).
 import sharp from 'sharp'
 

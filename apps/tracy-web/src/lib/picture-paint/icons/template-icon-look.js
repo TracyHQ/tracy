@@ -1,3 +1,4 @@
+// Shared: the picture step and the write step's painted frames draw with it, so it is in lib/ (module-graph.test.mjs).
 // The look of a template's icon, read from its file (#380). A replaced icon may show another drawing, and nothing else about it
 // may change: the file's pixel size, the glyph's size and place, the line weight and the backing all come from here.
 // `looksDiffer` is the one judgement of "the same look", so what the picture stage draws and what the site check holds it to

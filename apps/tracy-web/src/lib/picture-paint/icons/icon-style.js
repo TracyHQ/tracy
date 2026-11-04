@@ -1,3 +1,4 @@
+// Read by the drawing modules beside it, shared by the picture and write steps, so it is in lib/ (module-graph.test.mjs).
 // The style of a demo icon, as the Phosphor weight that matches it (ported from the brief build branch, #189; spec
 // #345): a new icon takes the look of the icon it replaces. Measured on the demo picture itself, never on a template
 // name:

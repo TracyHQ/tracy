@@ -3,10 +3,10 @@
 // another icon, a figure instead of letters or a guessed colour would be a substitute nobody chose.
 import { createHash } from 'node:crypto'
 import { initialsAvatar } from '../lib/initials-avatar.js'
-import { backdropComposite } from '../site-pictures/cutout-backdrop-draw.js'
-import { iconPicture } from '../site-pictures/icons/icon-render.js'
-import { hasPhosphorIcon, PHOSPHOR_SET } from '../site-pictures/icons/phosphor-set.js'
-import { backdropProblem, paintProblem, roleOf } from '../site-pictures/paint.js'
+import { backdropComposite } from '../lib/picture-paint/cutout-backdrop-draw.js'
+import { iconPicture } from '../lib/picture-paint/icons/icon-render.js'
+import { hasPhosphorIcon, PHOSPHOR_SET } from '../lib/picture-paint/icons/phosphor-set.js'
+import { backdropProblem, paintProblem, roleOf } from '../lib/picture-paint/paint.js'
 
 class DrawProblem extends Error {}
 
@@ -115,7 +115,7 @@ async function drawBackdrop(item, colourOf, figures) {
 /**
  * @param {object} item one entry of the package's `painted`
  * @param {Record<string, string | undefined>} colours a colour per role, `#rrggbb`; what the brand does not hold is absent
- * @param {{ fit?: object, figures: Map<string, Buffer>, look?: import('../site-pictures/icons/template-icon-look.js').IconLook | null,
+ * @param {{ fit?: object, figures: Map<string, Buffer>, look?: import('../lib/picture-paint/icons/template-icon-look.js').IconLook | null,
  *   templateAccent?: string | null }} where the slot's fit, the package's files by site path, and for an icon the look of the
  *   template icon it replaces and the accent that template was drawn in
  * @returns {Promise<{ bytes: Buffer, ext: string, width: number, height: number, sha256: string, drawnIn: object }

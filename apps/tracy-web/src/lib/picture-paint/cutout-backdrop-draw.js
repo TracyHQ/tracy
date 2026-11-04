@@ -1,3 +1,4 @@
+// Shared: the picture step and the write step's painted frames draw with it, so it is in lib/ (module-graph.test.mjs).
 // Drawing a cut-out's backdrop recipe (cutout-backdrop.js) at a picture's size, in the colours given for its roles,
 // and the review composite: the backdrop with the cut-out figure on top. The finished cut-out file stays the figure
 // alone; the composite is only a preview (ADR 0043 section 1a, the backdrop). Step 9 draws the same recipe in the

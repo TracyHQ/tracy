@@ -3,10 +3,10 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
-import { iconColourOf } from '../src/site-pictures/icons/icon-ink.js'
-import { iconPicture } from '../src/site-pictures/icons/icon-render.js'
-import { iconStyleOf, sectionWeightOf } from '../src/site-pictures/icons/icon-style.js'
-import { PHOSPHOR_WEIGHTS, phosphorCatalog } from '../src/site-pictures/icons/phosphor-set.js'
+import { iconColourOf } from '../src/lib/picture-paint/icons/icon-ink.js'
+import { iconPicture } from '../src/lib/picture-paint/icons/icon-render.js'
+import { iconStyleOf, sectionWeightOf } from '../src/lib/picture-paint/icons/icon-style.js'
+import { PHOSPHOR_WEIGHTS, phosphorCatalog } from '../src/lib/picture-paint/icons/phosphor-set.js'
 
 /** An invented demo icon: a house as a line of the given width on a 100 px box, or solid, or two-tone. */
 async function demoIcon({

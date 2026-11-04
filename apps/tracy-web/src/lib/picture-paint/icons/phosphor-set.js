@@ -1,3 +1,4 @@
+// Shared: the picture step and the write step's painted frames draw with it, so it is in lib/ (module-graph.test.mjs).
 // Phosphor Icons (`@phosphor-icons/core`, MIT, copyright Phosphor Icons; the licence text is kept beside this file in
 // PHOSPHOR-LICENSE.txt and ships inside the package): the icon library of the picture step (ADR 0043 section 3, #345).
 // 1512 icons in six weights; the catalog names each icon with its tags and categories, which the shortlist reads. The

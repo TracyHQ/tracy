@@ -94,7 +94,7 @@ function templateFileOf(slot) {
  * @returns {Promise<{ looks: Map<string, { file: string | null, look: object | null }>, unread: Map<string, string> }>} by frame
  */
 async function readTemplateLooks(icons, slots, templateFile) {
-  const { iconLookOf, sectionLooks } = await import('../site-pictures/icons/template-icon-look.js')
+  const { iconLookOf, sectionLooks } = await import('../lib/picture-paint/icons/template-icon-look.js')
   const ofFile = new Map()
   const unread = new Map()
   const found = new Map()

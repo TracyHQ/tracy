@@ -1,3 +1,4 @@
+// Read by the drawing modules beside it, shared by the picture and write steps, so it is in lib/ (module-graph.test.mjs).
 // The plate (ground) a demo icon draws behind its glyph, measured as fractions of the icon's box (ported from the
 // brief build branch, #189; spec #345). Pure pixel reading.
 /**

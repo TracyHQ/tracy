@@ -3,7 +3,7 @@
 // Every colour and picture here is invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { iconLookOf, looksDiffer } from '../src/site-pictures/icons/template-icon-look.js'
+import { iconLookOf, looksDiffer } from '../src/lib/picture-paint/icons/template-icon-look.js'
 import { templateIcon } from './_template-icon-fixtures.mjs'
 import { preparePainted } from '../src/write-step/painted-stage.js'
 import { ACCENT, coloursIn, iconItem, runPainted } from './_write-step-painted.mjs'

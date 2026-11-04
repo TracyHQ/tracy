@@ -16,7 +16,7 @@
 // in the brand's colours (a file of both, or the backdrop behind the slot), and its preview is only for review.
 import { contentMapKey } from '../lib/content-map-key.js'
 import { readPictures } from './manifest-shape.js'
-import { paintKindOf } from './paint.js'
+import { paintKindOf } from '../lib/picture-paint/paint.js'
 
 export { contentMapKey }
 

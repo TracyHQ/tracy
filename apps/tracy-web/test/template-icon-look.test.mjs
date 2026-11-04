@@ -3,13 +3,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
-import { iconPicture } from '../src/site-pictures/icons/icon-render.js'
+import { iconPicture } from '../src/lib/picture-paint/icons/icon-render.js'
 import {
   iconLookOf,
   looksDiffer,
   sectionLineDiffers,
   sectionLooks
-} from '../src/site-pictures/icons/template-icon-look.js'
+} from '../src/lib/picture-paint/icons/template-icon-look.js'
 import { templateIcon } from './_template-icon-fixtures.mjs'
 
 const near = (a, b, within, what) => assert.ok(Math.abs(a - b) <= within, `${what}: ${a} against ${b}`)
