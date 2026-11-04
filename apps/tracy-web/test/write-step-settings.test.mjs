@@ -287,11 +287,11 @@ test('a refused unpublish is failed in the plugin words and the other item still
   assert.equal(site.records.get('menuItem-103').published, 0)
 })
 
-test('the legal and 404 pages are reported skipped, each with why', async () => {
+test('a page of the copy the plan does not create, and the 404 page, are reported skipped, each with why', async () => {
   const { report } = await runStep({}, { records: records() }, { kit: kitWith() })
   const body = (page) => report.slots.find((s) => s.part === 'page-body' && s.slot === page)
   assert.equal(body('legal:privacy').status, 'skipped')
-  assert.match(body('legal:privacy').reason, /article and a menu item/)
+  assert.match(body('legal:privacy').reason, /does not ask to create it/)
   assert.match(body('notFound').reason, /404 page/)
 })
 

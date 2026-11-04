@@ -1,0 +1,68 @@
+// What a created page should hold and what the report says of it (page-create-stage.js): its order from the frozen files, its lines
+// once it is written, and whether the last report says the site holds it already. Nothing here calls the site.
+import { readRow } from './settings-door.js'
+
+/** How a row of a created page says so; the plugin holds the same mark (QuickstartContract::CREATED_PAGE_MARK). */
+export const MARK = 'tracy-page:'
+const each = (value) => (Array.isArray(value) ? value : [])
+const escaped = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+/** What one page should hold on the site, from the frozen files. */
+export function orderOf(page, { pages, pageMeta }) {
+  const { title, body } = pages[page.id]
+  return {
+    ...page,
+    note: `${MARK}${page.id}`,
+    title,
+    html: each(body)
+      .filter((paragraph) => paragraph.trim())
+      .map((paragraph) => `<p>${escaped(paragraph)}</p>`)
+      .join('\n'),
+    seo: pageMeta?.[page.id] ?? null
+  }
+}
+
+/** The report's words on one page: `results` stand for the lines the copy already gives it, `lines` are its own. */
+export function linesOf(order, done) {
+  const { articleId, itemId, reason } = done
+  const result = (ordered, read) =>
+    reason
+      ? { status: 'failed', reason, ordered }
+      : { status: 'written', reason: null, ordered, readFrom: read }
+  const results = [
+    [order.id, result(order.html, readRow('article', articleId, 'introtext'))],
+    ...(order.seo
+      ? [
+          [
+            `${order.id}:title`,
+            result(order.seo.title, readRow('menuItem', itemId, 'params', ['page_title']))
+          ],
+          [
+            `${order.id}:description`,
+            result(order.seo.description, readRow('menuItem', itemId, 'params', ['menu-meta_description']))
+          ]
+        ]
+      : [])
+  ]
+  const own = (slot, part, value) => ({ slot, key: null, owner: 'writer', part, readBack: null, ...value })
+  return {
+    results,
+    lines: [
+      own(`${order.id}:heading`, 'page-heading', result(order.title, readRow('article', articleId, 'title'))),
+      own(`${order.id}:address`, 'page-address', result('1', readRow('menuItem', itemId, 'published')))
+    ]
+  }
+}
+
+/** The page's rows as the last report says the site holds them, when every line of it stands and this order changes none. */
+export function heldByLast(order, last) {
+  const same =
+    last.same(order.id, order.html) &&
+    last.same(`${order.id}:heading`, order.title) &&
+    (!order.seo ||
+      (last.same(`${order.id}:title`, order.seo.title) &&
+        last.same(`${order.id}:description`, order.seo.description)))
+  const address = last.line(`${order.id}:address`)
+  if (!same || !address) return null
+  return { articleId: last.line(order.id).readFrom.params.id, itemId: address.readFrom.params.id }
+}

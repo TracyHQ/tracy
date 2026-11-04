@@ -29,6 +29,7 @@ import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js
 import { kitSlotIds } from './kit-slot-ids.js'
 import { withEveryMenuHide } from './menu-hides.js'
 import { prepareLinks } from './link-stage.js'
+import { createPages, pagesWithoutCopy } from './page-create-stage.js'
 import { runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { preparePictureStage } from './picture-stage.js'
@@ -127,6 +128,7 @@ export async function runWriteStep(input) {
   let emptied = []
   let shareLines = []
   let links = null
+  let created = { pages: new Map(), results: [], lines: [], kept: [] }
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -145,7 +147,7 @@ export async function runWriteStep(input) {
         pictureLines: pictures.lines({ written, refused }),
         hides: hidden?.hides,
         frameLines: hidden?.lines,
-        shareLines,
+        shareLines: [...created.lines, ...shareLines],
         links: links?.results({ written, refused, settled, hides: hidden?.hides ?? new Map() }),
         ...routes
       })
@@ -211,6 +213,14 @@ export async function runWriteStep(input) {
       contentMap
     })
     extras = exported.extras
+    const wordless = pagesWithoutCopy(plan, extras.pages)
+    if (wordless.length)
+      return {
+        stop: {
+          code: 'PAGE_WITHOUT_COPY',
+          reason: `The plan creates these pages and the copy holds no words for them: ${named(wordless)}.`
+        }
+      }
     const index = indexInputs({ plan, kit: kit.doc, brief, contentMap: contentMap ?? undefined })
     const { view } = readCopy(copy)
     const fromPlan = planClaims(
@@ -320,6 +330,11 @@ export async function runWriteStep(input) {
   if (inspected.stop) return stopped(inspected.stop)
   if (await isCancelled()) return finish('cancelled', null)
 
+  // First of all the writes: a link to a created page needs its address (page-create-stage.js).
+  created = await createPages({ door, siteKey, kit: kit.doc, plan, owners: table.owners, extras, last })
+  settled = new Map(created.results)
+  report.keptPages.push(...created.kept)
+
   // Before the hide stage: a slot a kept link writes is not emptied as well.
   if ([...table.owners.values()].some((claim) => claim.kind === 'link')) {
     links = await timed('links', () =>
@@ -334,7 +349,8 @@ export async function runWriteStep(input) {
         reading: inspected.reading,
         extras,
         taken: mapping.changes,
-        last
+        last,
+        createdPages: created.pages
       })
     )
     Object.assign(mapping.changes, links.changes)
@@ -419,7 +435,7 @@ export async function runWriteStep(input) {
       last
     })
   )
-  settled = new Map([...settings.results, ...hide.held])
+  settled = new Map([...settings.results, ...hide.held, ...created.results])
   if (settings.cancelled) return finish('cancelled', null, written, wrote.refused)
   // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).
   // It has no phase of its own: it makes a few calls, and the phase list is what callers already know.

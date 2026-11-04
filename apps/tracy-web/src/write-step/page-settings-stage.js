@@ -2,7 +2,8 @@
 // contract door does not take: the kit's setting slots (a contact's mobile line, the map a page prints), each page's
 // title and description, and the main menu items the plan hides. It follows the kit's own fields (`writable`, `writeTo`,
 // `valueFormat`) and names no id or template. Every item gets a result by line slot; a refusal is `failed` in the
-// plugin's words and does not stop the rest. The legal pages and the 404 page have no door yet and are reported skipped. What
+// plugin's words and does not stop the rest. The 404 page has no door yet and is reported skipped, and the pages a plan creates
+// are page-create-stage.js's, whose results stand over these. What
 // the last report says the site holds is not written again, and reads as written.
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { NO_LAST } from './no-last-report.js'
@@ -83,7 +84,7 @@ async function writeSettings({ call, kit, sent, place, results, last }) {
   }
 }
 
-/** Legal pages and the 404 page: nothing writes them yet, and each says so. */
+/** Pages of the copy with no kit page: the 404 page, which nothing writes yet, and any the plan does not ask to create. */
 function pagesWithoutDoor(pages, results) {
   for (const page of Object.keys(pages ?? {}))
     results.set(page, {
@@ -91,7 +92,7 @@ function pagesWithoutDoor(pages, results) {
       reason:
         page === 'notFound'
           ? 'the 404 page is the template error page, not a page of the site, and no door writes it yet'
-          : 'a created legal page needs an article and a menu item, and no door creates them yet'
+          : 'the copy holds this page and the plan does not ask to create it'
     })
 }
 

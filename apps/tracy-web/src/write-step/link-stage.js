@@ -95,8 +95,9 @@ function settleControls(orders, doors, owners) {
 
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, brief?: object, owners: Map<string, object>,
- *   reading: object, extras: object, taken: Record<string, string>, last?: object }} input `taken`: what other files send to the
- *   contract call; `last`: the last report, whose menu targets are not written again
+ *   reading: object, extras: object, taken: Record<string, string>, last?: object, createdPages?: Map<string, object> }} input
+ *   `taken`: what other files send to the contract call; `last`: the last report, whose menu targets are not written again;
+ *   `createdPages`: what became of each page the plan creates (page-create-stage.js)
  * @returns {Promise<{ changes: Record<string, string>, evidence: Record<string, string>, writeMenu: () => Promise<void>,
  *   results: (done: object) => Map<string, object> }>} `results` gives each link line once the writes are done, by slot
  */
@@ -111,7 +112,8 @@ export async function prepareLinks({
   extras,
   taken,
   last = NO_LAST,
-  contentMap
+  contentMap,
+  createdPages
 }) {
   const claims = [...owners.values()].filter((c) => c.kind === 'link')
   const call = doorCall(door, siteKey)
@@ -138,10 +140,15 @@ export async function prepareLinks({
   for (const claim of claims)
     orders.set(
       claim.slot,
-      lineOrder(claim, doors.get(claim.slot), linkTarget(claim.content, { plan, kit, facts, ...site }), {
-        hiddenKeys,
-        leaving
-      })
+      lineOrder(
+        claim,
+        doors.get(claim.slot),
+        linkTarget(claim.content, { plan, kit, facts, createdPages, ...site }),
+        {
+          hiddenKeys,
+          leaving
+        }
+      )
     )
   settleControls(orders, doors, owners)
 

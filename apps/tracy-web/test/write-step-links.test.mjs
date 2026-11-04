@@ -181,7 +181,6 @@ for (const [name, leadsTo, reason, facts] of [
     /https/,
     [{ id: 'f-bare', field: 'socials', value: 'just a handle' }]
   ],
-  ['a created legal page no door creates', 'legal:privacy', /creates/],
   ['nothing the write step knows', 'somewhere nice', /neither/]
 ])
   test(`a link to ${name} is failed with the reason, sends nothing, and turns read-back red`, async () => {
