@@ -247,6 +247,18 @@ A black layer of recorded strength code bakes into a picture whose frame has tex
 bright for light text; the entry says `darkened`.
 _Avoid_: dimming, tint
 
+**Template overlay**:
+The layer a template's own CSS paints over a picture whatever picture is put in it (a covering `::before` with a dark
+colour, a brightness filter), read from the quickstart, recorded with its colour and strength. A frame whose template
+overlay is strong enough is never given a dark overlay of ours.
+_Avoid_: mask, scrim, dark overlay (that is the one code bakes in)
+
+**Frame surface**:
+What sits on top of a picture frame on the site: whether the block's text sits over it (`textOver`, from the kit, or
+derived when the picture fills its block) and the template overlay. Picture step data computed once per kit version
+and quickstart; never a change of the kit.
+_Avoid_: frame context, frame style
+
 **Fallback ladder**:
 The fixed order a rejected frame walks down: draw, one redraw, next photo, fewer rows, hide, return to planner. Every
 rung it took is recorded. A demo picture is never kept, a person is never drawn, an any-real frame never drawn.

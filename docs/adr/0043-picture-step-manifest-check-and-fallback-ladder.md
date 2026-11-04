@@ -309,6 +309,44 @@ Thresholds and readings (named constants in the code):
   gets a black overlay baked in, its opacity the least that brings it to that level, between 0.15 and 0.6, recorded as
   `overlay` with `darkened: true`. The looker sees the darkened picture.
 
+### 3e. Text over a picture and the template overlay (owner decision 04/11/2026)
+
+- **Why.** On JA Boxing the call-to-action band (block-161.2, 1440 x 512) has its heading, notice and button over its
+  picture, and the template lays `.acm-cta.style-1:before { background: rgba(0,0,0,.8) }` over whatever picture is
+  there. The kit says `overPicture: false` for that frame, so the picture step neither preferred a dark photo nor knew
+  that 80% black already darkens it, and the reading page showed the picture without the overlay.
+- **Not from the plan, not from the kit.** The plan states what a picture shows, not what the template paints over it;
+  the kit and its tool are not changed for this (owner decision 04/11/2026). The answer is picture step data, the
+  **frame surface**, computed once per kit version and quickstart installer and kept in the bench's file store
+  (`kit-surface/<kit>/<installer sha256>.json`, `frame-surface/1`), joined into the kit's frames when a run is prepared.
+- **Text over (`textOver`, `textOverFrom`).** The kit's own word is kept when it says yes (`overPicture`, a frame shown
+  as a background, `textOver`). Where it says no, code derives it: the frame's box fits inside its block's measured box
+  and covers at least 85% of it, and the block has text (a text slot, demo text, a text row slot or a link). On JA Boxing
+  1.0.10 that flips two frames: the hero picture block-156.0 and the band picture block-161.2.
+- **Template overlay (`templateOverlay`).** Read from the quickstart installer the contract names (sha256 checked): the
+  content map slot gives the ACM field and module, the module's demo data row its layout, the layout's PHP markup the
+  element carrying the picture (a tag whose style prints it: that tag; an img src: its parent). The template's
+  stylesheets (outside `@media`, or in a min-width query a 1440 page meets) are searched for a covering `::before` or
+  `::after` of that element with a colour or gradient background (a gradient counts its clearest stop), or a
+  `filter: brightness()` on it or its img. A rule that needs anything the module does not print (a body class, a theme
+  attribute, `:hover`) is left out. Result per frame: `{ colour, strength, from }`, `null` (the template paints none)
+  or `"unknown"` (the element could not be read: article pictures, icons printed by a helper, a frame with no content
+  map slot), never a guess. On JA Boxing (measured on the 1.0.8 installer, the base 1.0.10 is built from; the rule is
+  the same in the 1.0.10 template source): 2 frames with an overlay (block-156.0 `.acm-hero.style-1:before` and
+  block-161.2 `.acm-cta.style-1:before`, both 80% black), 36 with none, 226 unknown.
+- **Use.** A frame with text over its picture and no template overlay of at least 0.45 (`OVERLAY_COVERS`) prefers dark
+  photos and gets the dark overlay baked in (section 3c). A frame whose template overlay is at least 0.45 is never
+  darkened again and never prefers dark photos. The looker is told when a template overlay covers the picture (do not
+  judge its brightness) and, when text sits over it with no overlay, may name `text would not read`; code drops that
+  fault on any other look. Every manifest entry records `textOver` and `templateOverlay`; the shape check holds them.
+- **Behind the title (`behindTitle`).** The JA Boxing class-article layout (`html/com_content/article/classes.php`)
+  copies the article's `.item-image img` into `.bg-mask`, so the article's full text picture also shows dimmed behind the
+  page title. Found from the quickstart (a layout whose script does this, a menu item opening a category with that
+  layout, a full text article image on a kit page under its path): article-2.6, 14.6, 15.6 and 16.6. Shown on the
+  reading page only.
+- **Reading page.** `--surface <frame-surface.json>` (scripts/site-pictures-frame-surface.mjs writes it): "Our picture
+  in the box" draws the template overlay over the pasted picture, and each card says whether text sits over it.
+
 ### 3d. Cut-out frames (#346)
 
 A trial showed a background removal model needs too much memory and never cuts racket strings, so there is none. A
