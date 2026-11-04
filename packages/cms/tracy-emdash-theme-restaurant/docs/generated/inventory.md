@@ -329,7 +329,7 @@ Declared pins only; enabled plugin registration is owned by astro.config.mjs. Na
 | @emdash-cms/plugin-forms | 0.2.9 |
 | @phosphor-icons/react | 2.1.10 |
 | @tailwindcss/vite | 4.3.3 |
-| astro | 7.2.8 |
+| astro | 7.3.3 |
 | better-sqlite3 | 12.11.1 |
 | class-variance-authority | 0.7.1 |
 | clsx | 2.1.1 |

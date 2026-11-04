@@ -6,7 +6,7 @@ port of JoomlArt's Joomla template JA Restaurant (j6 1.0.6): home with slideshow
 menus in three styles, Offers (Happy Hours), Phone Reservation, Contact and Subscribe forms, 404. English only.
 Identity, form bindings, mail defaults and the SEO audit policy live in `template.config.json`; every tool reads it.
 
-Built with **EmDash 1.1.0** on **Astro 7.2.8** (SSR, Node adapter), **Tailwind CSS 4.3.3**. All copy, images, menus and
+Built with **EmDash 1.1.0** on **Astro 7.3.3** (SSR, Node adapter), **Tailwind CSS 4.3.3**. All copy, images, menus and
 figures are editable in the EmDash admin; the layout is the template's. A dark theme (derived from the source palette) is reachable through the ◐ toggle. Provenance: `PROVENANCE.md`.
 
 ## Requirements
