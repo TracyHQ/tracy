@@ -16,7 +16,9 @@
  *   `copy`, `blocks` or `rewrite` rule and exist in the seed. A field is read through a stamp the view declares
  *   (`const $hero = stampFor(Astro.request, 'hero', …)` makes `$hero("f")` / `$hero('f')` a field of collection
  *   `hero`; an undeclared `$page` and `{ h.f }` mean the `home` entry, as in Tracy Business). Each is checked
- *   against the first entry of its collection that holds the field. An `<h1>` that prints no stamped field fails.
+ *   against the first entry of its collection that holds the field. The `<h1>` and the element under it must EACH
+ *   print such a field (a static `<p>` standing first fails); with no element after the `<h1>` the heading alone is
+ *   judged.
  */
 import {
   contractOf,
@@ -196,10 +198,12 @@ async function emdash(context) {
   if (!h1)
     return { status: 'live-only', message: 'src/views/Home.astro prints no <h1> of its own', problems: [] }
   const stamps = stampCollections(view)
-  const fields = [
-    ...printedFields(h1[0], stamps),
-    ...printedFields(underHeading(view.slice(h1.index + h1[0].length)), stamps)
-  ].filter((f, i, all) => all.findIndex((o) => o.collection === f.collection && o.field === f.field) === i)
+  const under = underHeading(view.slice(h1.index + h1[0].length))
+  const headingFields = printedFields(h1[0], stamps)
+  const paragraphFields = printedFields(under, stamps)
+  const fields = [...headingFields, ...paragraphFields].filter(
+    (f, i, all) => all.findIndex((o) => o.collection === f.collection && o.field === f.field) === i
+  )
   const covered = coverageOf(t.personalize)
   const entries = defaultEntries(t.seed)
   const problems = []
@@ -213,7 +217,11 @@ async function emdash(context) {
     if ((own || collection !== 'home') && !holder)
       problems.push(`${collection}.${field} is not in seed/seed.json`)
   }
-  if (!fields.length) problems.push('the home <h1> prints no field of the home entry')
+  // Both must be written: a covered heading does not excuse a static paragraph under it, nor the reverse. A home with
+  // no element after the <h1> is judged on the heading alone (as before).
+  if (!headingFields.length) problems.push('the home <h1> prints no field of the home entry')
+  if (under && !paragraphFields.length)
+    problems.push('the element under the home heading (<p>) prints no field of the home entry')
   return {
     status: problems.length ? 'fail' : 'pass',
     message: `home heading and paragraph fields ${fields.map((f) => (f.collection === 'home' ? f.field : `${f.collection}.${f.field}`)).join(', ')}`,
