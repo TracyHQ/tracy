@@ -6,7 +6,8 @@
 // over or beside the picture box, and how much of the box the template's own figure and this one cover; the cut-out
 // faults are named only then. An `any-real` frame (spec #336) takes any real owner photo that fits it: the looker is told
 // so, is given only the plan's `avoid` and `mood` for it, and may not name "wrong subject" there; code drops that fault
-// if the model names it anyway (readLook), so a model slip never fails a gallery photo for its scene.
+// if the model names it anyway (readLook), so a model slip never fails a gallery photo for its scene. "face cut" (a
+// person's head or face cut by the frame edge) fails every picture frame, any-real ones included.
 //
 // The answer is held to a fixed form: a verdict, faults from the fixed list (FAULTS) and one `seen` sentence. A fault
 // name outside the model's list is dropped and noted; any fault makes the verdict "fail". An answer that cannot be read,
@@ -22,6 +23,7 @@ export const PICTURE_FAULTS = Object.freeze([
   'wrong subject',
   'forbidden item',
   'subject cut off',
+  'face cut',
   'distorted face or body',
   'stray lettering',
   'visible drawing seam'

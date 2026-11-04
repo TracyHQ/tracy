@@ -107,7 +107,8 @@ async function nextPhotoRung({ idx, usable, photoBytes, store, luminance }, s, f
     if (p.tried.has(a.id) || used.has(a.id)) continue
     p.tried.add(a.id)
     const cut = await cutPhoto(photoBytes.get(a.id), a, frame, idx.demoSize(frameId), {
-      matches: sameService(a, wish)
+      matches: sameService(a, wish),
+      anyReal: wish.match === 'any-real'
     })
     if (!cut.ok) {
       tried.push(`${a.id} ${cut.refused}`)

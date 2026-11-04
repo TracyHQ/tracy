@@ -8,8 +8,9 @@ import { makerOf } from '../src/site-pictures/looker-door.js'
 import { FAULTS, lookImage, lookMessage, MODEL_FAULTS, readLook } from '../src/site-pictures/looker-call.js'
 
 test('an answer is held to the fixed fault list, and any fault fails the picture', () => {
-  // The model names six faults on any picture and four more on a cut-out (#346); "look unreadable" only code records.
-  assert.equal(MODEL_FAULTS.length, 10)
+  // The model names seven faults on any picture (face cut added after real run 4) and four more on a cut-out (#346);
+  // "look unreadable" only code records.
+  assert.equal(MODEL_FAULTS.length, 11)
   assert.deepEqual(FAULTS, [...MODEL_FAULTS, 'look unreadable'])
   const said = readLook(
     'Here: {"verdict":"pass","faults":["Subject cut off","too dark"],"seen":"A rider on a gravel road."}'

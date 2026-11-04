@@ -1,6 +1,6 @@
 // One owner photo cut for one kit frame (#340, ADR 0043 section 3): the largest box of the frame's shape, placed
-// around the photo's subject and never through a face (the fill plan's subjectCrop, website-opportunities
-// pictures/subject-crop.mjs), written at EXACTLY the aspect of the demo file the site holds for the frame (the content
+// around the photo's subject and never through a head (the fill plan's subjectCrop, website-opportunities
+// pictures/subject-crop.mjs, given the heads of head-boxes.js as the boxes it keeps whole), written at EXACTLY the aspect of the demo file the site holds for the frame (the content
 // map slot's fit.source; the write door compares with it) and at least the frame's display box on both sides.
 //
 // 🔒 ENLARGED AT MOST MAX_ENLARGE (1.5) TIMES, AND ONLY THROUGH THE SHARPNESS GATE. A crop smaller than the size it must
@@ -10,6 +10,7 @@
 import sharp from 'sharp'
 import { subjectCrop } from 'website-opportunities/domain/pictures/subject-crop.mjs'
 import { judgePhoto, SHARPNESS_VERSION } from '../lib/photo-sharpness.js'
+import { headBoxesOf } from './head-boxes.js'
 import { MAX_ENLARGE, SMALL_FRAME_MAX } from './picture-check/rules-files.js'
 import { sha256Hex } from './file-store.js'
 
@@ -83,15 +84,18 @@ async function rectOf(bytes, size, crop) {
 /**
  * Cut one owner photo for one frame.
  * @param {Uint8Array} bytes the owner photo, its hash already checked
- * @param {{subjectBox?: number[], faceBoxes?: number[][], quality?: string}} asset the brief asset's labels
+ * @param {{subjectBox?: number[], faceBoxes?: number[][], peopleCount?: number | null, quality?: string}} asset the
+ *   brief asset's labels
  * @param {{width: number, height: number, shownAs?: string}} frame the kit frame (its display box)
  * @param {{width: number, height: number} | null} demo the demo file size the site holds for the frame
- * @param {{matches?: boolean}} [options] `matches`: the photo shows the frame's own offering or person
+ * @param {{matches?: boolean, anyReal?: boolean}} [options] `matches`: the photo shows the frame's own offering or
+ *   person; `anyReal`: the frame takes any real owner photo (spec #336), so the cut may lose as much of the photo as a
+ *   wide band may (subjectCrop's WIDE_MAX_LOSS), only when the labelled subject and every head stay whole
  * @returns {Promise<{ok: true, bytes: Buffer, ext: 'jpg', width: number, height: number, sha256: string,
  *   crop: {x: number, y: number, width: number, height: number}, enlarge: number, sharpness: object | null}
  *   | {ok: false, refused: string, sharpness?: object}>}
  */
-export async function cutPhoto(bytes, asset, frame, demo, { matches = false } = {}) {
+export async function cutPhoto(bytes, asset, frame, demo, { matches = false, anyReal = false } = {}) {
   const size = await sizeOf(bytes)
   if (!size.width || !size.height) return { ok: false, refused: 'unreadable' }
   const box = { width: Number(frame.width), height: Number(frame.height) }
@@ -100,10 +104,11 @@ export async function cutPhoto(bytes, asset, frame, demo, { matches = false } = 
   if (low && Math.max(box.width, box.height) > SMALL_FRAME_MAX)
     return { ok: false, refused: 'low-quality-in-a-large-frame' }
   const placed = subjectCrop(
-    { ...size, subjectBox: asset.subjectBox, faceBoxes: asset.faceBoxes },
+    // Heads, not the tight face boxes: a crop flush with a face box takes off the forehead (head-boxes.js).
+    { ...size, subjectBox: asset.subjectBox, faceBoxes: headBoxesOf(asset) },
     shape,
     // min 1: the size limit is this module's own (MAX_ENLARGE, through the gate), not the fill plan's.
-    { min: 1, matches, wide: shape.width / shape.height >= WIDE_ASPECT }
+    { min: 1, matches, wide: anyReal || shape.width / shape.height >= WIDE_ASPECT }
   )
   if (placed.refused) return { ok: false, refused: placed.refused }
   const out = outputSizeFor(demo, box, placed.crop.source.width)

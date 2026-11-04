@@ -15,6 +15,9 @@ Look at the picture first, then compare it with the words. The picture fails whe
 - forbidden item: a thing in "avoid" is visible.
 - subject cut off: the main subject is cut by the edge of the frame, for example a head, a face, hands or the tool
   being used.
+- face cut: the edge of the frame cuts through a person's head or face, even only the top of the head, the forehead,
+  the chin or a cap, or a person is shown with no head at all. Look at every person in the picture, in the background
+  too.
 - distorted face or body: a face, hand or body looks malformed, melted, doubled or missing parts.
 - stray lettering: readable text, a logo, a watermark or another business's branding is in the picture.
 - visible drawing seam: a line, a change of light or style, or a repeated pattern shows where a picture was extended or
@@ -24,8 +27,9 @@ When the message says the frame accepts any real photo of the business, it is a 
 frame: any real photo of the business that fits the frame is right for it, whatever scene it shows, and the plan's
 words give no "shows" or "mustInclude" for it. Then "wrong subject" is not a fault: never fail the picture for what it
 shows. It still fails for every other fault that is visible: a thing in "avoid", readable text, a logo, a watermark or
-another business's branding, a distorted face or body, or a crop that cuts the subject so that what is left cannot be
-read (only a sliver or a meaningless part of something). A photo that simply shows another part of the business, its
+another business's branding, a distorted face or body, a face cut (a person's head or face cut by the edge, which
+always fails, whatever else the photo shows), or a crop that cuts the subject so that what is left cannot be read (only
+a sliver or a meaningless part of something). A photo that simply shows another part of the business, its
 place, its people at work or its equipment passes.
 
 When the message says part of the picture is outlined, the outlined part is the owner's real photo and the rest was

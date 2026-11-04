@@ -145,3 +145,38 @@ test('the pure parts: words, message and reading follow the frame match', () => 
   })
   assert.equal(readLook(JSON.stringify(wrongSubject)).verdict, 'fail')
 })
+
+// A real run passed a gallery photo with two people cut at the chin: the any-real rules let a cut through the subject
+// pass unless "what is left cannot be read", and no fault named a cut head. "face cut" fails any picture frame.
+const faceCut = {
+  verdict: 'fail',
+  faults: ['face cut'],
+  seen: 'Two tennis players on a clay court, cut at the chin.'
+}
+
+test('an any-real frame fails a picture whose edge cuts a head, and is offered the fault', async () => {
+  const { looked, sent } = await lookOnce('any-real', faceCut)
+  assert.equal(looked.rule.status, 'fail')
+  assert.deepEqual(looked.doc.frames[0].looker.faults, ['face cut'])
+  assert.match(sent[0], /"face cut"/)
+  const both = await lookOnce('any-real', { ...faceCut, faults: ['wrong subject', 'face cut'] })
+  assert.deepEqual(both.looked.doc.frames[0].looker.faults, ['face cut'])
+})
+
+test('a specific frame fails a cut head too', async () => {
+  const { looked, sent } = await lookOnce('specific', faceCut)
+  assert.equal(looked.rule.status, 'fail')
+  assert.match(sent[0], /"face cut"/)
+})
+
+test('the looker prompt names the face cut fault and holds it for any-real frames', async () => {
+  const { readFile } = await import('node:fs/promises')
+  const text = await readFile(new URL('../src/site-pictures/looker-prompt.md', import.meta.url), 'utf8')
+  assert.match(text, /^- face cut: /m)
+  // The any-real paragraph lists it among the faults that still fail the picture.
+  const anyReal = text.slice(
+    text.indexOf('accepts any real photo'),
+    text.indexOf('When the message says part')
+  )
+  assert.match(anyReal, /face cut/)
+})

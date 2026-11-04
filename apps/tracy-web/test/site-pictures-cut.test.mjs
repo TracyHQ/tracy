@@ -94,3 +94,93 @@ test('a low quality photo goes through the gate even when not enlarged, and neve
   )
   assert.deepEqual(large, { ok: false, refused: 'low-quality-in-a-large-frame' })
 })
+
+// A tall phone photo of two people on a court: one labelled face (tight, brow to chin), one person seen from behind with
+// no face label, the subject box taller than a square crop can hold. Shaped after a real run where the square cut kept
+// the labelled face box but took off both heads.
+const twoPlayers = (extra = {}) =>
+  labels({
+    subjectBox: [0.1, 0.2, 0.85, 0.75],
+    faceBoxes: [[0.72, 0.3, 0.08, 0.05]],
+    peopleCount: 2,
+    ...extra
+  })
+
+test('a crop keeps the whole head above a labelled face, not only the face box', async () => {
+  const bytes = await scene('dental', 1166, 2048)
+  const got = await cutPhoto(bytes, twoPlayers({ peopleCount: 1 }), { width: 448, height: 437 }, null)
+  assert.equal(got.ok, true, JSON.stringify(got))
+  // A head reaches about one face height above the brow: the crop starts at or above 0.30 - 0.05 of the photo.
+  assert.ok(got.crop.y <= (0.3 - 0.05) * 2048, JSON.stringify(got.crop))
+})
+
+test('a person with no face label keeps the head at the top of the subject: the crop starts at the subject top', async () => {
+  const bytes = await scene('dental', 1166, 2048)
+  const got = await cutPhoto(bytes, twoPlayers(), { width: 448, height: 437 }, null)
+  assert.equal(got.ok, true, JSON.stringify(got))
+  assert.ok(got.crop.y <= 0.2 * 2048, JSON.stringify(got.crop))
+})
+
+test('when no crop of the shape holds every head, the photo is refused rather than a head cut', async () => {
+  const bytes = await scene('dental', 1166, 2048)
+  // Heads at the top and near the bottom of a tall photo: a square crop cannot hold both.
+  const apart = labels({
+    subjectBox: [0.1, 0.1, 0.8, 0.85],
+    faceBoxes: [
+      [0.2, 0.12, 0.1, 0.05],
+      [0.6, 0.85, 0.1, 0.05]
+    ],
+    peopleCount: 2
+  })
+  const got = await cutPhoto(bytes, apart, { width: 448, height: 437 }, null)
+  assert.deepEqual(got, { ok: false, refused: 'cuts-a-face' })
+})
+
+test('the recorded crop is exactly the region the finished picture was cut from', async () => {
+  const bytes = await scene('bakery', 1166, 2048)
+  const got = await cutPhoto(bytes, twoPlayers(), { width: 448, height: 437 }, null)
+  assert.equal(got.ok, true, JSON.stringify(got))
+  const grey = (img) => img.resize(48, 48, { fit: 'fill' }).greyscale().raw().toBuffer()
+  const finished = await grey(sharp(got.bytes))
+  const region = await grey(
+    sharp(bytes)
+      .rotate()
+      .extract({ left: got.crop.x, top: got.crop.y, width: got.crop.width, height: got.crop.height })
+  )
+  let diff = 0
+  for (let i = 0; i < finished.length; i++) diff += Math.abs(finished[i] - region[i])
+  assert.ok(diff / finished.length < 4, `mean difference ${diff / finished.length}`)
+  // A crop 10% lower is plainly different, so the comparison can tell.
+  const lower = await grey(
+    sharp(bytes)
+      .rotate()
+      .extract({
+        left: got.crop.x,
+        top: got.crop.y + Math.round(got.crop.height / 10),
+        width: got.crop.width,
+        height: got.crop.height
+      })
+  )
+  let off = 0
+  for (let i = 0; i < finished.length; i++) off += Math.abs(finished[i] - lower[i])
+  assert.ok(off / finished.length > diff / finished.length + 2, `shifted ${off / finished.length}`)
+})
+
+test('an any-real frame may cut more of a photo, only when the subject and every head stay whole', async () => {
+  const bytes = await scene('dental', 1166, 2048)
+  const small = labels({
+    subjectBox: [0.2, 0.3, 0.5, 0.25],
+    faceBoxes: [[0.4, 0.35, 0.1, 0.05]],
+    peopleCount: 1
+  })
+  const landscape = { width: 448, height: 277 }
+  assert.deepEqual(await cutPhoto(bytes, small, landscape, null), { ok: false, refused: 'crop-loss' })
+  const loose = await cutPhoto(bytes, small, landscape, null, { anyReal: true })
+  assert.equal(loose.ok, true, JSON.stringify(loose))
+  assert.ok(
+    loose.crop.y <= 0.3 * 2048 && loose.crop.y + loose.crop.height >= 0.55 * 2048,
+    JSON.stringify(loose.crop)
+  )
+  // The tall subject of two players cannot stay whole in a landscape cut: still refused.
+  assert.equal((await cutPhoto(bytes, twoPlayers(), landscape, null, { anyReal: true })).ok, false)
+})

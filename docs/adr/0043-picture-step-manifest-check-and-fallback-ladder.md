@@ -175,8 +175,8 @@ Thresholds and readings (named constants in the code):
   `any-real` frames from labels (same offering first, unused first, never drawn; a photo that cuts well for a frame
   waiting for the picker on one of the frame's pages is tried last, so a small frame shown on every page does not
   take the only photo a large `specific` frame can be cut from), matches icons from the icon library
-  (a cheap text model only ranks the shortlist, never invents a name), cuts every picture around its subject and faces,
-  measures sharpness at display size, enforces no repeat on a page, copies twins, renders initials, and checks the
+  (a cheap text model only ranks the shortlist, never invents a name), cuts every picture around its subject and the
+  people's heads (below), measures sharpness at display size, enforces no repeat on a page, copies twins, renders initials, and checks the
   manifest with the picture check.
 - **The picker** (one call for the whole site) looks at the owner's photos once, as labelled thumbnails, and chooses a
   photo for every `specific` frame. It never sees the kit's demo pictures.
@@ -185,9 +185,19 @@ Thresholds and readings (named constants in the code):
 - **Cut-out frames** (#346, section 3d) are drawn by the drawer on a flat plain ground of one known colour, and code
   removes that ground. No model removes a background, and no owner photo is cut out.
 - **The looker** (a model of another maker than the picker) checks every finished picture alone, in a fresh context,
-  against the plan's words, with a fixed list of fault names (wrong subject, forbidden item, subject cut off, distorted
-  face or body, stray lettering, visible drawing seam; on a cut-out also rough cut-out edge, leftover ground, missing
+  against the plan's words, with a fixed list of fault names (wrong subject, forbidden item, subject cut off, face cut,
+  distorted face or body, stray lettering, visible drawing seam; on a cut-out also rough cut-out edge, leftover ground, missing
   part, covers the text), and writes the `seen` sentence. It never sees the picker's reasons.
+
+- **A cut never takes off a head** (`site-pictures/head-boxes.js`). The brief's face boxes are tight (brow to chin)
+  and often a little low, and a person seen from behind has none. The cut keeps whole a head box grown from every
+  face box (1.2 face heights above, 0.3 below, 0.3 face widths each side) and, when the labels count more people than
+  faces, the top of the subject box (its top 30%, from 5% of the photo above it), where standing people hold their
+  heads. When no crop of the frame's shape holds them all, the photo is refused (`cuts-a-face`) and the frame takes
+  another photo. Real run 4 measured why: a square gallery cut of a tall photo of two players kept the labelled face
+  box flush at its top edge and took off both heads; on its twenty owner photos, 4 of 15 square cuts took off a head
+  before, none after. An `any-real` frame may lose as much of a photo as a wide band (`WIDE_MAX_LOSS`), only when the
+  labelled subject and every head stay whole. The recorded `crop` is the region cut (one rectangle, used for both).
 
 ### 3a. The picker (#342)
 
@@ -231,14 +241,14 @@ Thresholds and readings (named constants in the code):
   carry only `match`, `avoid` and `mood` (never `shows` or `mustInclude`), and `wrong subject` is left out of the faults
   it may name. Code drops `wrong subject` for such a frame if the model names it anyway (noted like a name outside the
   list), and a fail that named nothing else passes, so a model slip cannot hide a real photo. Every other fault still
-  fails it: a thing to avoid, stray lettering or another business's branding, a distorted face or body, a crop that
-  leaves no readable subject. Sharpness and darkness under text are code's gates (the sharpness gate when a photo is
+  fails it: a thing to avoid, stray lettering or another business's branding, a distorted face or body, a face cut (a
+  person's head or face cut by the frame edge, which fails every picture frame), a crop that leaves no readable subject. Sharpness and darkness under text are code's gates (the sharpness gate when a photo is
   cut, the dark overlay), not the looker's. A `specific` frame keeps the full subject check. Real run 3 measured why:
   every owner photo placed in a six-frame gallery shown on every page was rejected, mostly as `wrong subject`, and the
   site ended with no owner photo. One look per picture stays, with one retry only for an unreadable answer; no voting.
-- **Its answer** is `{ verdict, faults, seen }`. The fixed fault list has seven names: the six the model may name
-  (wrong subject, forbidden item, subject cut off, distorted face or body, stray lettering, visible drawing seam) and
-  `look unreadable`, which only code records. A name outside the model's six is dropped and noted; any fault makes the
+- **Its answer** is `{ verdict, faults, seen }`. The fixed fault list has eight names: the seven the model may name
+  (wrong subject, forbidden item, subject cut off, face cut, distorted face or body, stray lettering, visible drawing
+  seam) and `look unreadable`, which only code records. A name outside the model's seven is dropped and noted; any fault makes the
   verdict `fail`. The look is stored on the entry as `looker` (above) and its sentence as `seen`.
 - **An unreadable look is asked once more.** A failed call or an answer out of form is retried once, both calls
   counted (a file gone from the store is not retried). The answer's token cap (4000) leaves room for a reasoning
