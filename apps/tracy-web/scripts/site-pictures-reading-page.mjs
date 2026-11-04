@@ -10,6 +10,11 @@
  * site's images/... (a quickstart webroot): a frame's demo picture is webroot + the frame's `picture`, and the finished
  * picture is drawn at the frame's width. --kit-images is only a fallback: a folder of images named after frame ids. Pictures are linked by a path relative to --out, so keep the page
  * and the folders where they are; a picture that is not found is shown as missing.
+ *
+ * With --kit and its shots (the kit pack's images, found in --kit-images or at the paths the kit lists), every card
+ * also shows where the frame sits on the template: the page shot cropped around the frame's box, outlined, beside the
+ * same crop with the finished picture in the box. Those crops are small JPEGs written to "<out name>-where/" beside
+ * the page; a frame whose box cannot be placed on a shot says "position not measured".
  */
 import { parseArgs } from 'node:util'
 import { buildPicturesPage } from '../src/site-pictures/reading-page/index.js'

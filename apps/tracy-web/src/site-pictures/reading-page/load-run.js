@@ -44,15 +44,47 @@ export async function loadRunFolder(dir) {
   return { plan, brief, run, manifest }
 }
 
-/** The frames of a template kit JSON (blocks[].frames[]) by id; an unreadable kit gives none. */
-async function readKitFrames(kitFile) {
+/** The template kit JSON and its frames (blocks[].frames[]) by id; no kit gives none. */
+async function readKit(kitFile) {
   const frames = new Map()
-  if (!kitFile) return frames
+  if (!kitFile) return { kit: null, frames }
   const kit = await readJson(kitFile, true)
   for (const b of Array.isArray(kit?.blocks) ? kit.blocks : [])
     for (const f of Array.isArray(b?.frames) ? b.frames : [])
       if (f && typeof f.id === 'string' && !frames.has(f.id)) frames.set(f.id, f)
-  return frames
+  return { kit, frames }
+}
+
+// The kit's shots (page, block and body images) by image id: a file named after the id in the kit images folder,
+// else the path the kit lists beside its JSON. Only files that exist, each with its size.
+async function kitShots(kit, kitFile, kitImagesDir) {
+  const shots = new Map()
+  const listed = new Map(
+    (Array.isArray(kit?.images) ? kit.images : [])
+      .filter((i) => i && typeof i.id === 'string' && typeof i.path === 'string')
+      .map((i) => [i.id, i.path])
+  )
+  const ids = new Set(listed.keys())
+  for (const x of [...(kit?.pages ?? []), ...(kit?.blocks ?? [])])
+    if (typeof x?.images?.['1440'] === 'string') ids.add(x.images['1440'])
+  const kitDir = kitFile ? path.dirname(path.resolve(kitFile)) : null
+  for (const id of ids) {
+    if (!id.endsWith('-1440')) continue
+    const candidates = [
+      ...(kitImagesDir ? ['.jpg', '.png', '.webp'].map((x) => path.join(kitImagesDir, `${id}${x}`)) : []),
+      // A listed path outside the kit folder is not read.
+      listed.has(id) && kitDir && path.resolve(kitDir, listed.get(id)).startsWith(`${kitDir}${path.sep}`)
+        ? path.resolve(kitDir, listed.get(id))
+        : null
+    ].filter(Boolean)
+    for (const file of candidates)
+      if (await isFile(file)) {
+        const size = await sizeOf(file)
+        if (size) shots.set(id, { file, ...size })
+        break
+      }
+  }
+  return shots
 }
 
 /** The pixel size of an image file, or null. */
@@ -82,7 +114,8 @@ export async function pictureFinders({
   kitFile = null,
   webrootDir = null
 }) {
-  const kitFrames = await readKitFrames(kitFile)
+  const { kit, frames: kitFrames } = await readKit(kitFile)
+  const shots = await kitShots(kit, kitFile, kitImagesDir)
   const photoNames = photosDir ? await readdir(photosDir).catch(() => []) : []
   const demo = await blockImageFinder(kitImagesDir)
   const withSize = async (file) => (file ? { file, ...(await sizeOf(file)) } : null)
@@ -101,6 +134,10 @@ export async function pictureFinders({
       )
       return sha256 && name ? withSize(path.join(photosDir, name)) : null
     },
+    /** The template kit JSON, or null. */
+    kit,
+    /** A kit shot by image id ("page-home-1440"): { file, width, height }, or null. */
+    shot: (imageId) => shots.get(imageId) ?? null,
     /** The kit frame (its display size), or null. */
     kitFrame: (frameId) => kitFrames.get(frameId) ?? null,
     /** The kit's demo picture of a frame: webroot + the frame's `picture`, else (fallback) an image named after the frame id. */

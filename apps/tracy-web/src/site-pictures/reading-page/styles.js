@@ -2,6 +2,22 @@
 import { CSS as BASE, ZOOM_JS } from '../../site-writer/reading-page/styles.js'
 
 export { ZOOM_JS }
+
+// Opens a "where" crop's full shot in a light box with the frame's box marked, scrolled to it. Without the script the
+// link opens the bare shot.
+export const WHERE_JS = `
+(function(){var lb=null;function close(){if(lb){lb.remove();lb=null}}
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('.where-shot');
+if(lb&&!a){if(!e.target.closest('.wl-inner')||e.target.closest('button'))close();return}if(!a)return;e.preventDefault();close();
+var b=a.dataset.box.split(',').map(Number),s=a.dataset.size.split(',').map(Number);
+lb=document.createElement('div');lb.className='lb wl';var inner=document.createElement('div');inner.className='wl-inner';
+var im=document.createElement('img');im.src=a.getAttribute('href');im.alt='Whole shot';var m=document.createElement('span');m.className='wl-box';
+m.style.left=(b[0]/s[0]*100)+'%';m.style.top=(b[1]/s[1]*100)+'%';m.style.width=(b[2]/s[0]*100)+'%';m.style.height=(b[3]/s[1]*100)+'%';
+var x=document.createElement('button');x.type='button';x.textContent='\\u00d7';x.setAttribute('aria-label','Close');
+inner.appendChild(im);inner.appendChild(m);lb.appendChild(inner);lb.appendChild(x);document.body.appendChild(lb);
+im.addEventListener('load',function(){m.scrollIntoView({block:'center'})})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')close()})})();
+`
 export const CSS = `${BASE}
 .frame{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
 .frame>header{padding:10px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
@@ -22,6 +38,14 @@ export const CSS = `${BASE}
 .ground.light{background:#fff;color:#555}.ground.dark{background:#16130f;color:#bbb}.ground img{max-width:72px;max-height:72px;width:auto}
 .seen{padding:8px 16px 12px;font-size:13.5px;border-top:1px solid var(--line)}.seen .empty{color:var(--muted);font-style:italic}
 .note.ret{color:var(--ink)}
+.where{padding:12px 16px 4px;border-bottom:1px solid var(--line)}.where h4{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.where h4 code,.where h4 .small{text-transform:none;letter-spacing:0}
+.where .pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:6px}
+.where figure{margin:0;min-width:0}.where figcaption{font-size:12px;color:var(--muted);margin-bottom:4px}
+.where img{display:block;max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:var(--note)}
+.where-shot{display:block;max-width:100%;cursor:zoom-in}.where-shot:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wl{cursor:default}.wl-inner{position:relative;max-width:1100px;margin:24px auto}.wl-inner img{width:100%;border-radius:0}
+.wl-box{position:absolute;outline:4px solid #ff2bd6;box-shadow:0 0 0 9999px rgba(0,0,0,.35);pointer-events:none}
 .sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:16px 0}
 .sum .stat{min-width:0}.sum .stat.zero{opacity:.55}
 @media (max-width:760px){.req{grid-template-columns:1fr}.req dt{margin-top:6px}.figs{padding:12px}}

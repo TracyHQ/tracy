@@ -343,6 +343,145 @@ test('the kit images folder is only a fallback, and a picture outside the webroo
   }
 })
 
+// A tiny kit with page and block shots drawn by code: a grey page with a blue demo picture where the hero box is.
+const box = (left, top, width, height) => ({ left, top, width, height })
+const ev = (b, measuredIn = null) => ({ kindEvidence: { measuredIn, box: b } })
+const shotKit = {
+  pages: [
+    { id: 'p-home', path: '/', blocks: { 1440: ['block-2'] }, images: { 1440: 'p-home-1440' } },
+    {
+      id: 'p-about',
+      path: '/about',
+      blocks: { 1440: ['block-2', 'block-4'] },
+      images: { 1440: 'p-about-1440' }
+    },
+    { id: 'p-copy', path: '/copy', blocks: { 1440: ['block-3', 'block-5'] }, images: { 1440: 'p-home-1440' } }
+  ],
+  blocks: [
+    {
+      id: 'block-2',
+      frames: [
+        { id: 'hero', kind: 'photo', ...ev(box(100, 300, 400, 200)) },
+        { id: 'team-1', kind: 'photo', ...ev(box(100, 300, 400, 200), 'main-body') }
+      ]
+    },
+    {
+      id: 'block-3',
+      images: { 1440: 'block-3-1440' },
+      frames: [
+        {
+          id: 'banner',
+          kind: 'photo',
+          ...ev(box(50, 550, 200, 100)),
+          hideEvidence: { measured: { 1440: { blockBefore: box(0, 500, 600, 300) } } }
+        },
+        { id: 'badge', kind: 'photo', ...ev(box(300, 550, 100, 100)) }
+      ]
+    },
+    { id: 'block-4', frames: [{ id: 'about-pic', kind: 'photo', twinOf: 'hero', ...ev(box(0, 0, 0, 0)) }] },
+    { id: 'block-5', frames: [{ id: 'gallery-1', kind: 'photo', ...ev(box(10, 10, 50, 50)) }] }
+  ]
+}
+
+async function writeShots(dir) {
+  await mkdir(dir, { recursive: true })
+  const page = (demo) =>
+    sharp({ create: { width: 800, height: 1200, channels: 3, background: '#808080' } }).composite([
+      { input: { create: { width: 400, height: 200, channels: 3, background: demo } }, left: 100, top: 300 }
+    ])
+  await page('#0000ff').jpeg().toFile(path.join(dir, 'p-home-1440.jpg'))
+  await page('#00ff00').jpeg().toFile(path.join(dir, 'p-about-1440.jpg'))
+  await sharp({ create: { width: 600, height: 300, channels: 3, background: '#404040' } })
+    .jpeg()
+    .toFile(path.join(dir, 'block-3-1440.jpg'))
+}
+
+// The colour of one pixel of an image file.
+async function pixel(file, x, y) {
+  const { data } = await sharp(file)
+    .extract({ left: x, top: y, width: 1, height: 1 })
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  return [...data.subarray(0, 3)]
+}
+const near = (got, want, what) =>
+  assert.ok(
+    got.every((c, i) => Math.abs(c - want[i]) < 40),
+    `${what}: ${got} is not near ${want}`
+  )
+
+test('where on the template: the box on the page shot, our picture in it, and frames that cannot be placed', async () => {
+  const s = await setup()
+  try {
+    const kitFile = path.join(s.root, 'shot-kit.json')
+    await writeFile(kitFile, JSON.stringify(shotKit))
+    await writeShots(path.join(s.root, 'shots'))
+    const r = await run([
+      '--run',
+      s.run,
+      '--out',
+      s.out,
+      '--kit',
+      kitFile,
+      '--kit-images',
+      path.join(s.root, 'shots')
+    ])
+    assert.equal(r.code, 0, r.err.join('\n'))
+    const html = await readFile(s.out, 'utf8')
+    const hero = articleOf(html, 'hero')
+    assert.match(hero, /Where on the template: <code>\/<\/code>/, 'the first page holding the block')
+    assert.match(hero, /href="shots\/p-home-1440\.jpg" data-box="100,300,400,200" data-size="800,1200"/)
+    assert.match(hero, /Also on 1 other page: <code>\/about<\/code>/)
+    assert.match(hero, /src="reading-where\/hero-before\.jpg"/)
+    assert.match(hero, /src="reading-where\/hero-after\.jpg"/)
+    // The crop keeps 140 px around the box (0.35 of its 400 px side), cut at the page's left edge: the box sits at
+    // 100, 140 in the crop and its centre at 300, 240.
+    const where = path.join(s.root, 'reading-where')
+    near(
+      await pixel(path.join(where, 'hero-before.jpg'), 300, 240),
+      [0, 0, 255],
+      'the demo is inside the box'
+    )
+    near(
+      await pixel(path.join(where, 'hero-after.jpg'), 300, 240),
+      [0x8a, 0x5a, 0x44],
+      'our picture fills the box'
+    )
+    near(
+      await pixel(path.join(where, 'hero-before.jpg'), 101, 240),
+      [0xff, 0x2b, 0xd6],
+      'the box is outlined'
+    )
+    near(await pixel(path.join(where, 'hero-before.jpg'), 50, 240), [128, 128, 128], 'the page is around it')
+    assert.match(articleOf(html, 'about-pic'), /position of its twin hero/)
+    assert.match(articleOf(html, 'about-pic'), /data-box="100,300,400,200"/)
+    const banner = articleOf(html, 'banner')
+    assert.match(banner, /<code>\/copy<\/code> <span class="muted small">\(block shot\)<\/span>/)
+    assert.match(
+      banner,
+      /href="shots\/block-3-1440\.jpg" data-box="50,50,200,100"/,
+      'offset by the block box'
+    )
+    assert.match(banner, /File missing: files\/banner-gone\.png/)
+    assert.match(articleOf(html, 'badge'), /Hidden: the frame is taken off the page\./)
+    assert.match(articleOf(html, 'team-1'), /Position not measured: the box was measured inside main-body/)
+    assert.match(articleOf(html, 'gallery-1'), /Position not measured: the shot of \/copy shows another page/)
+    assert.ok(
+      !/data-box/.test(articleOf(html, 'gallery-1')),
+      'no box is drawn for a frame that cannot be placed'
+    )
+    assert.ok(
+      !/Where on the template/.test(articleOf(html, 'unlisted')),
+      'a frame the kit lacks has no strip'
+    )
+    const plain = path.join(s.root, 'plain.html')
+    await run(['--run', s.run, '--out', plain])
+    assert.ok(!(await readFile(plain, 'utf8')).includes('Where on the template'), 'no kit, no strip')
+  } finally {
+    await rm(s.root, { recursive: true, force: true })
+  }
+})
+
 test('the model counts every frame once by label; usage errors and a bad run folder exit non-zero', async () => {
   const m = buildModel({ plan, brief, manifest })
   assert.equal(m.total, 11)

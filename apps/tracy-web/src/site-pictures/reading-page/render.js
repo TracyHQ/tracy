@@ -2,7 +2,8 @@
 // Every value from a plan, a manifest or a brief goes through esc(). Pictures arrive as { src, width, height } (src a
 // path relative to the page) or null when the file is not there, which the page shows as missing and never hides.
 import { esc } from '../../site-writer/reading-page/render.js'
-import { CSS, ZOOM_JS } from './styles.js'
+import { CSS, WHERE_JS, ZOOM_JS } from './styles.js'
+import { whereHtml } from './where-render.js'
 
 const slug = (id) => `g-${String(id).replace(/[^a-zA-Z0-9]+/g, '-')}`
 const money = (n) => (typeof n === 'number' ? `$${n.toFixed(4)}` : 'not recorded')
@@ -123,7 +124,7 @@ function frameHtml(f, media) {
     f.block ? `<span class="muted small">${esc(f.block)}</span>` : ''
   }${f.wish.kind ? `<span class="chip">${esc(f.wish.kind)}</span>` : ''}${chips(f)}</header>
 ${requestHtml(f.wish)}${f.reason && !f.entry ? `<div class="note ret">${esc(f.reason)}</div>` : ''}
-<div class="figs">${figs.join('')}</div>${lookerHtml(f)}</article>`
+${whereHtml(f, pics.where)}<div class="figs">${figs.join('')}</div>${lookerHtml(f)}</article>`
 }
 
 const table = (head, rows) =>
@@ -181,6 +182,6 @@ ${groups}
 <h2 id="returns">Returns to planner</h2>${returns}
 <h2 id="alts">Alt notes</h2>${alts}
 <h2 id="costs">Cost and time per role</h2>${costs}
-</main><script>${ZOOM_JS}</script></body></html>
+</main><script>${ZOOM_JS}${WHERE_JS}</script></body></html>
 `
 }

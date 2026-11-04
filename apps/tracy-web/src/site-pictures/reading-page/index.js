@@ -7,6 +7,10 @@ import path from 'node:path'
 import { loadRunFolder, pictureFinders } from './load-run.js'
 import { buildModel } from './model.js'
 import { renderPage } from './render.js'
+import { framePlaces } from './where.js'
+import { drawWhere } from './where-images.js'
+
+const FIT_CONTAIN = new Set(['icon', 'logo'])
 
 /**
  * @param {{ runDir: string, photosDir?: string | null, kitImagesDir?: string | null, outFile: string }} options
@@ -31,6 +35,28 @@ export async function buildPicturesPage({
       height: found.height
     }
   const media = new Map()
+  // "Where on the template": with a kit and its shots, each frame's box on a page (or block) shot, drawn into small
+  // JPEGs in "<page name>-where/" beside the page.
+  const places = find.kit ? framePlaces(find.kit, (id) => find.shot(id)) : null
+  const whereDir = path.join(base, `${path.parse(outFile).name}-where`)
+  const whereOf = async (f, out) => {
+    const place = places?.(f.frame) ?? null
+    if (!place) return null
+    if (place.how === 'none') return { place }
+    const shot = find.shot(place.shot)
+    const kind = find.kitFrame(f.frame)?.kind
+    const fit = FIT_CONTAIN.has(kind) || f.entry?.source === 'icon' ? 'contain' : 'cover'
+    const drawn = await drawWhere({
+      shotFile: shot.file,
+      shotSize: place.shotSize,
+      box: place.box,
+      pictureFile: f.entry?.source !== 'hide' ? (out?.file ?? null) : null,
+      fit,
+      outDir: whereDir,
+      name: f.frame.replace(/[^a-zA-Z0-9._-]+/g, '-')
+    })
+    return { place, fit, shot: link(shot), before: link(drawn.before), after: link(drawn.after) }
+  }
   let missing = 0
   for (const g of model.groups)
     for (const f of g.frames) {
@@ -47,7 +73,8 @@ export async function buildPicturesPage({
         demo: link(demo),
         out: link(out),
         dark: link(dark),
-        original: link(original)
+        original: link(original),
+        where: await whereOf(f, out)
       })
     }
   const html = renderPage(model, (frame) => media.get(frame))
