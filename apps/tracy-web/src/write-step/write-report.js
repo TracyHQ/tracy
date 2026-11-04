@@ -37,11 +37,14 @@ function staged(base, result) {
 function claimLine(claim, { written, refused, routed, deferred, ordered, settled, hides, links }) {
   const slotKey = contentMapKey(claim.slot)
   const key = routed.get(slotKey) ?? slotKey
-  if (claim.kind === 'hide')
-    return {
+  if (claim.kind === 'hide') {
+    const done = {
       ...line(claim.slot, key, claim.owner, 'skipped', 'the run ended before this slot was hidden'),
       ...hides.get(claim.slot)
     }
+    // A hide no plan ordered says its own reason: the hide stage speaks for the plan.
+    return claim.why && done.status === 'hidden' ? { ...done, reason: claim.why } : done
+  }
   if (claim.kind === 'link')
     return {
       ...line(

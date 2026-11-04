@@ -24,6 +24,7 @@ import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { routeChanges } from './kit-slot-routes.js'
+import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { kitSlotIds } from './kit-slot-ids.js'
 import { prepareLinks } from './link-stage.js'
 import { runPageSettings } from './page-settings-stage.js'
@@ -231,13 +232,24 @@ export async function runWriteStep(input) {
     extras = { ...extras, alts: alts.left }
     // The slot prints only as its kept picture's alt, so a plan's hide of it hides nothing: the alt stands.
     const altSlots = new Set(alts.claims.map((claim) => claim.slot))
-    table = ownerTable([
+    const filing = [
       ...brand.claims,
       ...pictures.claims,
       ...copyClaims(view.slots, read.inputs.copy.file),
       ...alts.claims,
       ...fromPlan.filter((claim) => !altSlots.has(claim.slot))
+    ]
+    table = ownerTable([
+      ...filing,
+      ...storedDemoClaims({
+        plan,
+        kit: kit.doc,
+        contentMap,
+        filled: new Set(filing.map((claim) => claim.slot)),
+        file: kit.ref
+      })
     ])
+    report.keptPages = keptPagesOf(plan, kit.doc)
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
     const known = kitSlotIds(kit.doc)
@@ -261,9 +273,10 @@ export async function runWriteStep(input) {
       }
     const { changes, ...found } = routeChanges(exported.mapping.changes, kit.doc, view.slots)
     routes = found
-    ordered = { ...changes, ...alts.changes }
+    const spaced = keepSpaceAround(changes, contentMap)
+    ordered = { ...spaced, ...alts.changes }
     sent = exported.mapping.changes
-    const allChanges = { ...changes, ...alts.changes, ...brand.changes, ...pictures.changes }
+    const allChanges = { ...spaced, ...alts.changes, ...brand.changes, ...pictures.changes }
     const refusal = needsNewSite(last, {
       plan,
       kit: kit.doc,
