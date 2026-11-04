@@ -13,10 +13,21 @@
 //   tall-blocks        warn   6 writer      new
 //   stretched-pictures warn   8 pictures    new
 //   unowned-slots      warn   3 planner     new: unowned slots that still hold their demo
+//   empty-controls     block  9 write       new: a button with no words or going nowhere, a form field nothing names
+//   glued-words        block  9 write       new: words run into a highlight with no space
+//   unfinished-heading block  3 planner     new: a heading that stops on a small word
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead, WIDTHS } from './host-pages.js'
 import { hostVerdictGroup } from './host-verdicts.js'
-import { findDeadLinks, findStretchedPictures, findTallBlocks, findTextOverflow } from './page-measures.js'
+import {
+  findDeadLinks,
+  findEmptyControls,
+  findGluedWords,
+  findStretchedPictures,
+  findTallBlocks,
+  findTextOverflow,
+  findUnfinishedHeadings
+} from './page-measures.js'
 import { unownedShownGroup } from './unowned-shown.js'
 
 /** A group over the browser measures the host adds to its answer. Without them it could not tell, so it is unmeasured. */
@@ -94,6 +105,24 @@ export const PAGE_CHECK_GROUPS = [
     level: 'warn',
     causingStep: 8,
     find: (read) => findStretchedPictures(read.measures)
+  }),
+  measuredGroup({
+    name: 'empty-controls',
+    level: 'block',
+    causingStep: 9,
+    find: (read) => findEmptyControls(read.measures)
+  }),
+  measuredGroup({
+    name: 'glued-words',
+    level: 'block',
+    causingStep: 9,
+    find: (read) => findGluedWords(read.measures)
+  }),
+  measuredGroup({
+    name: 'unfinished-heading',
+    level: 'block',
+    causingStep: 3,
+    find: (read) => findUnfinishedHeadings(read.measures)
   }),
   unownedShownGroup
 ]

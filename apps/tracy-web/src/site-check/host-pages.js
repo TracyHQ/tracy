@@ -9,9 +9,19 @@ import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from './page-chu
 export const WIDTHS = [1440, 390]
 const IMAGE = /\.(?:jpe?g|png|webp|gif|svg|avif)(?:#|\?|$)/i
 
-/** A kept page's path as the host opens it: Joomla's home menu item is `home`, every other route is its path. */
-export function keptPaths(inspect) {
+/**
+ * A kept page's path as the host opens it: Joomla's home menu item is `home`, every other route is its path. The write report
+ * says which pages the plan keeps; the site's own list also holds every route of the quickstart, the dropped ones too.
+ */
+export function keptPaths(inspect, report = {}) {
   const paths = []
+  if (Array.isArray(report?.keptPages) && report.keptPages.length) {
+    for (const page of report.keptPages) {
+      const p = `/${String(page?.path ?? '').replace(/^\/+/, '')}`
+      if (!paths.includes(p)) paths.push(p)
+    }
+    return paths
+  }
   for (const page of Array.isArray(inspect?.pages) ? inspect.pages : []) {
     const route = String(page?.route ?? '').replace(/^\/+/, '')
     const p = route === '' || route === 'home' ? '/' : `/${route}`
@@ -20,11 +30,17 @@ export function keptPaths(inspect) {
   return paths
 }
 
+/** An address or a piece of markup a run wrote: the slug of a kept demo route in one must not read as the customer's word. */
+const NOT_WORDS = /^(?:\/|#|<|index\.php|[a-z][a-z0-9+.-]*:)/i
+
 /** What the write step wrote, as the host judges it: its words are the brief's, its picture files are Tracy's own. */
 export function writtenWords(report) {
   const written = (report.slots ?? []).filter((s) => s.status === 'written' && typeof s.ordered === 'string')
   return {
-    briefProse: written.map((s) => s.ordered).join('\n'),
+    briefProse: written
+      .map((s) => s.ordered)
+      .filter((value) => !IMAGE.test(value) && !NOT_WORDS.test(value.trim()))
+      .join('\n'),
     placed: written
       .filter((s) => IMAGE.test(s.ordered))
       .map((s) => s.ordered.split('#')[0].replace(/^\/+/, ''))
@@ -55,7 +71,7 @@ async function readPages(context) {
   if (typeof context.host !== 'function')
     throw new GroupUnmeasured('No host was given, and only the host has a browser to read the pages.')
   const inspect = await context.read('content.contract', { operation: 'inspect' })
-  const paths = keptPaths(inspect)
+  const paths = keptPaths(inspect, context.report)
   if (!paths.length) throw new GroupUnmeasured('The site lists no page, so there was nothing to open.')
   const words = writtenWords(context.report)
   const answers = []

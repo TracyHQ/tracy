@@ -939,8 +939,15 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
   // A <summary> is an FAQ's question: template copy like any heading.
   const BLOCK = 'p,h1,h2,h3,h4,h5,h6,li,td,th,figcaption,blockquote,dt,dd,address,summary'
   const blocks = []
-  for (const el of document.body.querySelectorAll(BLOCK)) {
+  // A div holding words of its own is read too: a template prints a whole hero heading in one (JA Boxing's service pages,
+  // 04/11/2026), and a baseline of paragraphs and headings only never sees it.
+  for (const el of document.body.querySelectorAll(`${BLOCK},div`)) {
     if (blocks.length >= 800 || !visible(el) || el.querySelector(BLOCK)) continue
+    if (
+      el.tagName === 'DIV' &&
+      !Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim())
+    )
+      continue
     const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
     // A form's own words (labels, consent, sign-in prompts) are the form working, not the template's copy.
     const count = text ? text.split(' ').length : 0

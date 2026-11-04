@@ -4,6 +4,9 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
   findDeadLinks,
+  findEmptyControls,
+  findGluedWords,
+  findUnfinishedHeadings,
   findStretchedPictures,
   findTallBlocks,
   findTextOverflow
@@ -249,4 +252,48 @@ test('an unowned slot on a kept page that still holds words is a warning on the 
     [['warn', 3, '/', 'block-5.0']]
   )
   assert.equal(g.status, 'green')
+})
+
+test('a button with no words or going nowhere and a field nothing names are found once per page', () => {
+  const controls = [
+    { selector: 'a.btn', fault: 'wordless', href: '/next', text: '' },
+    { selector: 'a.btn', fault: 'wordless', href: '/next', text: '' },
+    { selector: 'a#go.btn', fault: 'nowhere', href: '#', text: 'Book a seat' }
+  ]
+  const fields = [{ selector: 'input#blank', name: 'blank' }]
+  const f = findEmptyControls([
+    { path: '/', width: 1440, controls, fields },
+    { path: '/', width: 390, controls, fields },
+    { path: '/other', width: 1440, controls: [], fields: [] }
+  ])
+  assert.deepEqual(
+    f.map((x) => x.measured),
+    ['a.btn -> /next', 'Book a seat', 'input#blank']
+  )
+  assert.ok(f.every((x) => x.page === '/'))
+  assert.match(f[0].reason, /no words/)
+  assert.match(f[1].reason, /goes nowhere/)
+  assert.match(f[2].reason, /nothing names/)
+})
+
+test('words glued to a highlight are found once per page', () => {
+  const glued = [{ selector: 'div#a', text: 'to|Every', around: 'Open to|Every age' }]
+  const f = findGluedWords([
+    { path: '/', width: 1440, glued },
+    { path: '/', width: 390, glued }
+  ])
+  assert.equal(f.length, 1)
+  assert.equal(f[0].measured, 'Open to|Every age')
+  assert.match(f[0].reason, /no space/)
+})
+
+test('a heading that stops on a small word is unfinished; a whole one is not', () => {
+  const f = findUnfinishedHeadings([
+    { path: '/', width: 1440, headings: ['Rowing for', 'Rowing for every age', 'What we stand for?'] },
+    { path: '/', width: 390, headings: ['Rowing for'] }
+  ])
+  assert.deepEqual(
+    f.map((x) => x.measured),
+    ['Rowing for']
+  )
 })

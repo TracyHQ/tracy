@@ -3,7 +3,8 @@
  * `POST /_host/demo-qa`): text that overflows its box, blocks far taller than a screen, pictures drawn out of shape,
  * and the links a page holds. They are read at 1440 and again at 390 on every page the run keeps, and answered as
  * `pageMeasures`, one entry per page and width:
- *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], pictures: [...] }
+ *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], pictures: [...], controls: [...],
+ *     fields: [...], glued: [...], headings: [...] }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
@@ -12,7 +13,16 @@ export const OVERFLOW_TOLERANCE_PX = 2
 /** A drawn picture is reported only when its ratio is this far from the file's (the judge decides at its own bound). */
 export const STRETCH_REPORT_RATIO = 0.05
 /** What one page and width may report, so an odd page cannot make the answer huge. */
-export const MEASURE_CAPS = Object.freeze({ links: 300, textBoxes: 40, blocks: 20, pictures: 40 })
+export const MEASURE_CAPS = Object.freeze({
+  links: 300,
+  textBoxes: 40,
+  blocks: 20,
+  pictures: 40,
+  controls: 40,
+  fields: 40,
+  glued: 20,
+  headings: 40
+})
 
 /**
  * Runs inside the page (serialised by Playwright): it may use nothing from this module.
@@ -32,6 +42,18 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       (el.checkVisibility ? el.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : true)
     )
   }
+
+  // A visually hidden element is there for a screen reader: clipped to nothing, so no visitor sees its text run past its box.
+  const clippedAway = (el, cs) => {
+    const r = el.getBoundingClientRect()
+    return (
+      cs.clip === 'rect(0px, 0px, 0px, 0px)' ||
+      cs.clipPath === 'inset(50%)' ||
+      (r.width <= 1 && r.height <= 1)
+    )
+  }
+  const saidBy = (el) =>
+    (el.innerText || el.value || el.getAttribute('aria-label') || el.title || '').replace(/\s+/g, ' ').trim()
 
   // Links: every anchor to a web address, once per address, fragment dropped. A hidden menu's link is still a link.
   const links = []
@@ -63,7 +85,7 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     const own = Array.from(el.childNodes).filter((n) => n.nodeType === 3 && n.textContent.trim())
     if (!own.length) continue
     const cs = getComputedStyle(el)
-    if (cs.display === 'inline' || cs.display === 'contents' || !shown(el)) continue
+    if (cs.display === 'inline' || cs.display === 'contents' || !shown(el) || clippedAway(el, cs)) continue
     const clipX = cs.overflowX === 'hidden' || cs.overflowX === 'clip'
     const clipY = cs.overflowY === 'hidden' || cs.overflowY === 'clip'
     // A clamp or an ellipsis cuts the text on purpose.
@@ -141,7 +163,70 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       fit
     })
   }
-  return { links, textBoxes, blocks, pictures }
+
+  // Buttons a visitor cannot read or that lead nowhere. A drawing can be the words; a script's own toggle may hold `#`.
+  const controls = []
+  for (const el of document.body.querySelectorAll(
+    'a.btn,a.button,button,input[type=submit],input[type=button],[role=button]'
+  )) {
+    if (controls.length >= caps.controls) break
+    if (!shown(el) || clippedAway(el, getComputedStyle(el))) continue
+    const text = saidBy(el)
+    const drawn = el.querySelector('img,svg,i,[class*="icon"],[class*="toggler"]')
+    const href = el.getAttribute('href')
+    const scripted = Array.from(el.attributes).some((a) => a.name.startsWith('data-') || a.name === 'onclick')
+    if (!text && !drawn) controls.push({ selector: selectorOf(el), fault: 'wordless', href, text })
+    else if (el.tagName === 'A' && href === '#' && !scripted)
+      controls.push({ selector: selectorOf(el), fault: 'nowhere', href, text: text.slice(0, 80) })
+  }
+
+  // Form fields nothing names: no label with words, no hint, no accessible name.
+  const fields = []
+  for (const el of document.body.querySelectorAll(
+    'input:not([type=hidden],[type=submit],[type=button],[type=checkbox],[type=radio]),textarea,select'
+  )) {
+    if (fields.length >= caps.fields) break
+    if (!shown(el)) continue
+    const label = Array.from(el.labels ?? []).some((l) => l.innerText?.trim())
+    if (label || el.placeholder?.trim() || el.getAttribute('aria-label')?.trim() || el.title?.trim()) continue
+    fields.push({ selector: selectorOf(el), name: el.name ?? '' })
+  }
+
+  // Words that run into an inline highlight with no space between them. One letter set apart is a drop cap, not a word.
+  const glued = []
+  const LETTER_END = /\p{L}{2}$/u
+  const LETTER_START = /^\p{L}{2}/u
+  for (const el of document.body.querySelectorAll('*')) {
+    if (glued.length >= caps.glued) break
+    if (SKIP.has(el.tagName.toUpperCase()) || !shown(el)) continue
+    const nodes = Array.from(el.childNodes)
+    nodes.forEach((node, at) => {
+      if (node.nodeType !== 1 || getComputedStyle(node).display !== 'inline') return
+      const inner = node.textContent ?? ''
+      const before = nodes[at - 1]
+      const next = nodes[at + 1]
+      const add = (left, right) =>
+        glued.push({
+          selector: selectorOf(el),
+          text: `${left.slice(-20)}|${right.slice(0, 20)}`,
+          around: el.textContent.replace(/\s+/g, ' ').trim().slice(0, 80)
+        })
+      if (before?.nodeType === 3 && LETTER_END.test(before.textContent) && LETTER_START.test(inner))
+        add(before.textContent, inner)
+      if (next?.nodeType === 3 && LETTER_END.test(inner) && LETTER_START.test(next.textContent))
+        add(inner, next.textContent)
+    })
+  }
+
+  // The headings a visitor reads, for the judge to see whether one stops halfway.
+  const headings = []
+  for (const el of document.body.querySelectorAll('h1,h2')) {
+    if (headings.length >= caps.headings) break
+    if (!shown(el) || clippedAway(el, getComputedStyle(el))) continue
+    const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
+    if (text) headings.push(text.slice(0, 120))
+  }
+  return { links, textBoxes, blocks, pictures, controls, fields, glued, headings }
 }
 
 /** One width's measures, read in the page; null when the page would not answer (the entry is then left out). */

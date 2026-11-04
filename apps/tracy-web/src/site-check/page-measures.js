@@ -4,7 +4,9 @@
 //   { path, width, links: [{ href, text, status }],
 //     textBoxes: [{ selector, text, boxWidth, boxHeight, contentWidth, contentHeight, clips, right }],
 //     blocks: [{ selector, height }],
-//     pictures: [{ selector, src, naturalWidth, naturalHeight, width, height, fit }] }
+//     pictures: [{ selector, src, naturalWidth, naturalHeight, width, height, fit }],
+//     controls: [{ selector, fault: 'wordless' | 'nowhere', href, text }], fields: [{ selector, name }],
+//     glued: [{ selector, text, around }], headings: [text] }
 
 /** A box counts as overflowed only past this many pixels, so rounding in the browser is no finding. */
 export const OVERFLOW_TOLERANCE_PX = 2
@@ -72,6 +74,69 @@ export function findTextOverflow(measures) {
       })
     }
   return failures
+}
+
+/** One finding per page and what was seen: the two widths read the same page. */
+function oncePerPage(measures, listOf, findingOf) {
+  const seen = new Set()
+  const failures = []
+  for (const m of each(measures))
+    for (const item of listOf(m)) {
+      const finding = { page: m.path, ...findingOf(item) }
+      const id = `${m.path} ${finding.measured}`
+      if (seen.has(id)) continue
+      seen.add(id)
+      failures.push(finding)
+    }
+  return failures
+}
+
+/** A button with no words, a button going nowhere, a form field nothing names: a visitor cannot use them. */
+export function findEmptyControls(measures) {
+  const reasons = {
+    wordless: 'A button has no words',
+    nowhere: 'A button goes nowhere (its address is #)'
+  }
+  return [
+    ...oncePerPage(
+      measures,
+      (m) => each(m.controls),
+      (c) => ({
+        measured: c.fault === 'nowhere' ? clip(c.text, 80) : `${c.selector} -> ${c.href ?? '(no address)'}`,
+        reason: reasons[c.fault] ?? 'A button cannot be used',
+        selector: c.selector
+      })
+    ),
+    ...oncePerPage(
+      measures,
+      (m) => each(m.fields),
+      (f) => ({ measured: f.selector, reason: 'A form field that nothing names', selector: f.selector })
+    )
+  ]
+}
+
+/** Words that run into a highlight beside them. */
+export function findGluedWords(measures) {
+  return oncePerPage(
+    measures,
+    (m) => each(m.glued),
+    (g) => ({
+      measured: clip(g.around, 80),
+      reason: `Words run together with no space (${clip(g.text, 50)})`,
+      selector: g.selector
+    })
+  )
+}
+
+const UNFINISHED = /(?:^|\s)(?:a|an|and|at|by|for|from|in|of|on|or|our|the|to|with|your)$/i
+
+/** A heading that stops on a small word: the rest of it is missing. */
+export function findUnfinishedHeadings(measures) {
+  return oncePerPage(
+    measures,
+    (m) => each(m.headings).filter((h) => UNFINISHED.test(String(h).trim())),
+    (h) => ({ measured: clip(h, 80), reason: 'A heading stops halfway' })
+  )
 }
 
 /** A block more than TALL_SCREENS screens high at its width: a warning, since a long list is legitimate. */
