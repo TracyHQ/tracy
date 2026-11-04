@@ -1,0 +1,2 @@
+- **Language policy approves the exact JA Cagox 1.0.3 coverage objects** — Akemi (agent) · chore/ja-cagox-103-language-policy · 2026-11-04
+  **Affects:** the JA Cagox 1.0.3 contract PR (`feat/ja-cagox-j6-103`): its content coverage file lists VirtueMart's country names as the demo prints them (Åland Islands, Côte d'Ivoire, Curaçao, Réunion, Saint Barthélemy). The two object ids the branch commits are approved exactly; different bytes need a new review. The gate reads the policy from the PR base, so this must be on `develop` before that PR.
