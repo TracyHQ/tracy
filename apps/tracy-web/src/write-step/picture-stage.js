@@ -8,10 +8,7 @@
 // A frame's value is its path, which names the sha256 of its bytes, so comparing it with the last report compares the picture. A
 // painted frame is drawn every time: its path says whether a colour it uses has changed.
 import path from 'node:path'
-import {
-  BODY_BACKGROUND_KEY,
-  writeT4BodyBackground
-} from '../sites/brief-engines/joomla-t4-body-background.js'
+import { BODY_BACKGROUND_KEY, writeT4BodyBackground } from '../lib/joomla-t4-body-background.js'
 import { brandAsker, said } from './brand-writes.js'
 import { NO_LAST } from './no-last-report.js'
 import { refusalWords } from './contract-write.js'

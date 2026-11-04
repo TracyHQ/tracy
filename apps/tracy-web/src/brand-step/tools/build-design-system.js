@@ -11,8 +11,8 @@
 // template serves, makes the whole override from the same colours, and only the accent family changes (#378).
 // Guard (kept from the lab): the same build with the template's own accent is made too; every non-accent role of
 // every side must be identical in both, else the tool fails (the brand would have changed something besides the accent).
-import { accentSeedModule } from '../accent-module.js'
-import { contrastHex, liftAccent, neutralReason } from '../colour-math.js'
+import { accentSeedModule } from '../../lib/brand-accent/accent-module.js'
+import { contrastHex, liftAccent, neutralReason } from '../../lib/brand-accent/colour-math.js'
 import { templateGrounds } from '../kit-grounds.js'
 import { BrandToolError } from './common.js'
 import { contrastTable, slotDriftOf } from './design-system-report.js'

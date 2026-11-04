@@ -1,3 +1,4 @@
+// Shared: the brief engines' brand writers and the write step's brand orders read it, so it lives in lib/ (module-graph.test.mjs).
 /**
  * Where a Joomla template shows a logo, and the two writes every Joomla logo shares: the upload and the footer image slot
  * (plan `tasks/plan-ten-logo-favicon.md`, T19, T20; measured 07/10/2026 from the release webroots of `joomlart-products`).

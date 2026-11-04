@@ -1,6 +1,6 @@
 // Gate section: the attempts of the icon record (at most 3 drawn, 4 make_icon calls), each with its verdict and
 // plate fallback.
-import { PLATE_MIN_RATIO, contrastHex } from './colour-math.js'
+import { PLATE_MIN_RATIO, contrastHex } from '../lib/brand-accent/colour-math.js'
 
 export function checkAttempts(ctx, IC) {
   const { bad, mk, same, fileOk, iconColours } = ctx

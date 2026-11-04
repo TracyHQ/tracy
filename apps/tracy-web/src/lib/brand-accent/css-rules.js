@@ -1,3 +1,4 @@
+// Shared: the accent routes and the write step's look guard read it, so it lives in lib/ (module-graph.test.mjs).
 // A small reader for compiled stylesheets, enough to find which declarations paint a colour: it keeps each rule's selector,
 // its declarations and the @media or @supports blocks around it, in source order. Pure. It is not a validator: what it cannot
 // read it skips, and the site check then measures the page itself.

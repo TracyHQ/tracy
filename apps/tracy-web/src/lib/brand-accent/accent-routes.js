@@ -1,3 +1,4 @@
+// Shared: the brand step and the write step read it, so it lives in lib/ (module-graph.test.mjs).
 // The routes a template's accent takes through its compiled stylesheets, read from those stylesheets and nothing else, so no
 // template is named here: which custom properties hold it, which rules write it by hand, which read it for words and which
 // for fills. Pure. `accent-module.js` turns the routes into the override.

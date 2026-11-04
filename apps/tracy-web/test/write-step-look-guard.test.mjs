@@ -2,7 +2,7 @@
 // so a write that could touch anything else is refused before it is sent. Everything here is invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { accentModule } from '../src/brand-step/accent-module.js'
+import { accentModule } from '../src/lib/brand-accent/accent-module.js'
 import { headBlock, menuCssFor, withBlock } from '../src/write-step/brand-head-block.js'
 import { lookGuard } from '../src/write-step/look-guard.js'
 import { accentRoutesOf, cssFaults } from '../src/write-step/look-guard-css.js'

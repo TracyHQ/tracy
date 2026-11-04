@@ -1,3 +1,4 @@
+// Shared: the brand step and the write step build it, so it lives in lib/ (module-graph.test.mjs).
 // Accent-only mode: the module a site wears so that only the template's accent family changes (#378). Corners, fonts, weights,
 // sizes, borders, grounds and body text stay the template's, because nothing here names them: the override is made of the
 // routes `accent-routes.js` read from the template's own stylesheets, plus the attribute forms a page can write in its markup.

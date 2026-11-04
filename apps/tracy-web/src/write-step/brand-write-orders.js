@@ -12,7 +12,7 @@
 //   none        nothing to write, with the reason
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 // The major in the release name does not change the folder, so any stands in for it.
-import { templateFolderOf } from '../sites/brief-engines/brand-joomla-places.js'
+import { templateFolderOf } from '../lib/brand-joomla-places.js'
 
 const BRAND_VERSION = 10
 const SMALL_KEY = { site_logo: 'site_logo_small', site_logo_dark: 'site_logo_dark_small' }

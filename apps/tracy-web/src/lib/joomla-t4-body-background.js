@@ -13,8 +13,7 @@
  * older plugin is refused here before any call, with a message naming that release, and a plugin whose version cannot
  * be read is tried and its `unsupported` read the same way. The undo is the plugin's: one step under the apply id.
  */
-import { atLeast } from './brand-joomla.js'
-import { componentOf } from './brand-share.js'
+import { componentOf, versionAtLeast } from './plugin-version.js'
 
 /** The first Claude Cowork for Joomla release whose `template.siteSettings` writes `body_bg_img`. */
 export const BODY_BACKGROUND_SINCE = '0.24.78'
@@ -48,7 +47,7 @@ export async function writeT4BodyBackground({ template, path, read, write, apply
   if (value && (!PICTURE.test(value) || /(^|\/)\.{1,2}(\/|$)/.test(value)))
     return { ok: false, reason: `${value.slice(0, 120)} is not a picture under images/ on the site` }
   const component = await componentOf(read)
-  if (atLeast(component, BODY_BACKGROUND_SINCE) === false)
+  if (versionAtLeast(component, BODY_BACKGROUND_SINCE) === false)
     return { ok: false, reason: tooOld(component), tooOld: true }
   try {
     const answer = await write('template.siteSettings', {

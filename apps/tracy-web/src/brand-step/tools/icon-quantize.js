@@ -2,7 +2,7 @@
 // exactly one of the given colours (1 or 2), anti-aliased edges kept through alpha, crop to content, centred in a
 // transparent 512 square (6% margin, same geometry as cut-mark and make-lettermark). Ported from the approved lab's
 // icon-quantize; it takes and returns bytes (the run folder is the tool's business).
-import { hex, parseHexColour } from '../colour-math.js'
+import { hex, parseHexColour } from '../../lib/brand-accent/colour-math.js'
 import { dist, groundOf, raw, sharp } from './common.js'
 import { labelPixels, relabelEdges, removeSpecks, STRAY_RES } from './icon-labels.js'
 

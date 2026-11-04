@@ -2,7 +2,7 @@
 // site door and report lines out. The kit and the brand file are made up.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { exportBrandOrders } from '../src/brand-step/brand-write-orders.js'
+import { exportBrandOrders } from '../src/write-step/brand-write-orders.js'
 import { runSiteCheck } from '../src/site-check/site-check.js'
 import { runWriteStep } from '../src/write-step/write-step.js'
 import { copy, frozenFiles, plan, SITE } from './_write-step-run.mjs'

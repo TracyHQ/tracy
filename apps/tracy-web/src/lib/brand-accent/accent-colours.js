@@ -1,3 +1,4 @@
+// Shared: the brand step, the write step and the site check read it, so it lives in lib/ (module-graph.test.mjs).
 // Which colours in a stylesheet value belong to the template's accent, and how to swap them. Pure.
 import { hslToHex, parseHexColour } from './colour-math.js'
 

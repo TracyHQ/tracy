@@ -541,7 +541,7 @@ list, kept by every later run).
   (`body_bg_img` in `etc/site/<profile>.json`, read by the adapter): one slot `site.body-background` with
   `writeTo: {action: "template.siteSettings", template, key, file}`, `canHide: true` and the `frames` it covers; every
   frame painted behind with that picture says `writable: true` and `slotId`, its twins included. Tracy writes it with
-  `apps/tracy-web/src/sites/brief-engines/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
+  `apps/tracy-web/src/lib/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
   `cli.mjs setting-slots --out <dir> --contract <dir> --db-command <prefix> [--webroot <dir>]` settles a written kit
   again (no browser, no image; without `--webroot` the background slot the kit has is kept), then `pack`.
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and

@@ -1,9 +1,9 @@
 // The look guard's judgement of a stylesheet we inject (ADR 0044, decision 10). Only colour may change, and only where the template
 // itself paints its accent, so a declaration passes when the template's own stylesheets hold the same selector and property with
 // the same value apart from its colours. A corner, a font, a size or a border width is in no such route. Pure.
-import { coloursIn, tripleIn } from '../brand-step/accent-colours.js'
-import { accentRoutes } from '../brand-step/accent-routes.js'
-import { readRules } from '../brand-step/css-rules.js'
+import { coloursIn, tripleIn } from '../lib/brand-accent/accent-colours.js'
+import { accentRoutes } from '../lib/brand-accent/accent-routes.js'
+import { readRules } from '../lib/brand-accent/css-rules.js'
 
 const TONES = new Set(['--tracy-accent', '--tracy-accent-text'])
 const HEX = /^#[0-9a-f]{6}$/i

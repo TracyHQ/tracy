@@ -2,7 +2,7 @@
 // template's switch, computed styles may differ only in the accent family, and the template's accent must be gone. The host
 // measures (`demo-qa-brand-style.js`); the judging is here and is pure. A style that does not say which accent it replaces
 // (a whole design-system style) has no family, so everything it changes blocks.
-import { colourOfComputed, COMPUTED_COLOUR, isAccent, isShade } from '../brand-step/accent-colours.js'
+import { colourOfComputed, COMPUTED_COLOUR, isAccent, isShade } from '../lib/brand-accent/accent-colours.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead } from './host-pages.js'
 

@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
-import { contrastHex, hex } from '../src/brand-step/colour-math.js'
+import { contrastHex, hex } from '../src/lib/brand-accent/colour-math.js'
 import { BrandToolError, toolByName } from '../src/brand-step/tools/index.js'
 import { KIT, makeCtx, markPng, RING_BOX, ringMaterialPng } from './_brand-tool-fixtures.mjs'
 

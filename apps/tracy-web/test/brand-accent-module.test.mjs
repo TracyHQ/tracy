@@ -2,8 +2,8 @@
 // nothing but the accent family. Every template here is invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { accentModule, accentSeedModule } from '../src/brand-step/accent-module.js'
-import { accentRoutes } from '../src/brand-step/accent-routes.js'
+import { accentModule, accentSeedModule } from '../src/lib/brand-accent/accent-module.js'
+import { accentRoutes } from '../src/lib/brand-accent/accent-routes.js'
 
 const SEED = '#7a3ff2'
 const TEMPLATE = `
