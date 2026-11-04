@@ -92,7 +92,8 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed }) 
  * @param {{ order: object, words: object, blocks: Map<string, true | string>, pages: Map<string, object>,
  *   cannotHide: string | null, emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object>,
  *   removed?: Map<string, true | string> }} input
- * @returns {{ hides: Map<string, object>, lines: object[] }}
+ * @returns {{ hides: Map<string, object>, lines: object[], removed: Map<string, true | string>, rows: object[],
+ *   rowKeys: Set<string> }} `rows`: rows kept against the plan per list; `rowKeys`: the unclaimed slots of given-up rows
  */
 export function hideLines({
   order,
@@ -120,6 +121,7 @@ export function hideLines({
     ...result
   })
   const lines = [...pages].map(([page, result]) => frameLine(page, 'page-drop', result))
+  lines.push(...rowRestLines(order, removed))
   for (const [block, module] of order.blocks) {
     const done =
       cannotHide && blocks.get(module) !== true
@@ -134,5 +136,43 @@ export function hideLines({
       )
     )
   }
-  return { hides, lines }
+  return {
+    hides,
+    lines,
+    removed,
+    rows: rowsKept(order, removed),
+    rowKeys: new Set(order.rowLined ?? order.rowRest ?? [])
+  }
+}
+
+/** The slots of a given-up row no hide claim names: each leaves with its row, and its line says so. */
+function rowRestLines(order, removed) {
+  return (order.rowLined ?? order.rowRest ?? []).map((key) => {
+    const done = removed.get(key)
+    const base = { slot: key, key, owner: 'plan', readBack: null, part: 'row' }
+    if (done === true)
+      return {
+        ...base,
+        status: 'hidden',
+        reason: 'the plan keeps fewer rows of this list: this slot left the stored field with its row',
+        ...removedRead(key)
+      }
+    if (typeof done === 'string') return { ...base, status: 'failed', reason: done }
+    return { ...base, status: 'skipped', reason: 'the run ended before this row was removed' }
+  })
+}
+
+/**
+ * Rows kept against the plan, per list (ADR 0044, decision 22): the demo's rows less the given-up rows the door took. A row counts
+ * as gone when any of its slots left the stored field, in this run or an earlier one.
+ */
+function rowsKept(order, removed) {
+  const already = new Set(
+    [...(order.orders?.values() ?? [])].filter((o) => o?.via === 'removed' && o.already).map((o) => o.key)
+  )
+  const left = (key) => removed.get(key) === true || already.has(key)
+  return (order.rowLists ?? []).map(({ block, list, plan, demo, gone, keptKeys = [] }) => {
+    const taken = gone.filter((row) => row.some(left)).length
+    return { block, list, plan, demo, kept: demo - taken, keptKeys }
+  })
 }

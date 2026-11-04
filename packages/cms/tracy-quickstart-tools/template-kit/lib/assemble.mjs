@@ -8,6 +8,7 @@ import { join } from 'node:path'
 
 import { applyCoverage, coverageGate } from './coverage-gate.mjs'
 import { slotShapeChecks } from './slot-shape-checks.mjs'
+import { keepEmbeddedMaps, reachChecks } from './reach-checks.mjs'
 import { httpFetcher } from './crawl.mjs'
 import { buildKit } from './kit.mjs'
 import { fixedLinkLabels, linkLabelChecks } from './link-label-reasons.mjs'
@@ -95,6 +96,9 @@ export async function assembleKit(o, out, tool) {
   kit.checks.slotCoverage = coverageGate(kit, { map, readings })
   // Text slot shape against the content map: whole samples, sentence groups, inline marks (slot-shape-checks.mjs).
   slotShapeChecks(kit, { map, contentCoverage: readIf(join(o.contract, 'content-coverage.json')) ?? null })
+  // What a visitor reaches: a button with no door, a map no slot moves, a phone outside a link (reach-checks.mjs).
+  keepEmbeddedMaps(kit, readings)
+  reachChecks(kit)
   // One source for a link's label: its labelId, or the reason its words are fixed (link-label-reasons.mjs).
   fixedLinkLabels(kit)
   kit.checks.linksWithoutLabel = linkLabelChecks({ kit, errors: kit.errors })

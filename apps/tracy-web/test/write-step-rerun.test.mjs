@@ -174,7 +174,7 @@ test('a control whose address could not leave stays a failed link that says why'
   assert.match(line.reason, /no door holds this link/)
 })
 
-test('two doorless links for one stored address cannot say which one left: both stay failed', async () => {
+test('two doorless links for one stored address cannot say which one left: both stay refused', async () => {
   const { kit, plan: p, contentMap, site } = controlFixture()
   kit.doc.blocks
     .find((b) => b.id === 'block-2')
@@ -187,8 +187,8 @@ test('two doorless links for one stored address cannot say which one left: both 
     })
   p.pages[0].blocks[0].links.push({ link: 'block-2.link-3', leadsTo: 'page-about', labelSlot: 'block-2.2' })
   const { first } = await twice({ kit, contentMap, site, steps: [{ plan: p }] })
-  assert.equal(lineOf(first, 'block-2.link-2').status, 'failed')
-  assert.equal(lineOf(first, 'block-2.link-3').status, 'failed')
+  assert.equal(lineOf(first, 'block-2.link-2').status, 'refused')
+  assert.equal(lineOf(first, 'block-2.link-3').status, 'refused')
 })
 
 test('links sharing one address leave no key to send again: every address they wrote is remembered', async () => {

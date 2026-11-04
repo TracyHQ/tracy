@@ -34,10 +34,11 @@ import { buttonClaims } from './kit-buttons.js'
 import { kitSlotIds } from './kit-slot-ids.js'
 import { withEveryMenuHide } from './menu-hides.js'
 import { prepareLinks } from './link-stage.js'
+import { planLinkTable } from './plan-link-table.js'
 import { createPages, pagesWithoutCopy } from './page-create-stage.js'
 import { routeLines } from './page-route-lines.js'
 import { hasPlanSlugs, restoreRoutes, runRouteStage } from './page-route-stage.js'
-import { runPageSettings } from './page-settings-stage.js'
+import { coordinatesOf, runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { preparePictureStage } from './picture-stage.js'
 import { runPrintedStage } from './printed-stage.js'
@@ -140,6 +141,7 @@ export async function runWriteStep(input) {
   let hide = null
   let emptied = []
   let shareLines = []
+  let settingLines = []
   let links = null
   let created = { pages: new Map(), results: [], lines: [], kept: [] }
   let restored = []
@@ -157,7 +159,8 @@ export async function runWriteStep(input) {
       const hidden = hide?.results({ emptied, refused, settled })
       lines = slotLines({
         owners: table.owners,
-        unowned: report.unowned,
+        // A slot of a row the plan gave up has its own line, as it left with its row.
+        unowned: report.unowned.filter((u) => !hidden?.rowKeys?.has(contentMapKey(u.slot))),
         extras,
         written,
         refused,
@@ -167,13 +170,24 @@ export async function runWriteStep(input) {
         pictureLines: pictures.lines({ written, refused }),
         hides: hidden?.hides,
         frameLines: hidden?.lines,
-        shareLines: [...created.lines, ...shareLines, ...pageRouteLines()],
-        links: links?.results({ written, refused, settled, hides: hidden?.hides ?? new Map() }),
+        shareLines: [...created.lines, ...settingLines, ...shareLines, ...pageRouteLines()],
+        links: links?.results({
+          written,
+          refused,
+          settled,
+          hides: hidden?.hides ?? new Map(),
+          removed: hidden?.removed ?? new Map()
+        }),
         ...routes
       })
     }
     const against = last.active ? againstLast(lines, last, status) : { slots: lines }
     report.slots = against.slots
+    // Rows kept against the plan, per list (hide-lines.js): what the site check's list-rows holds the printed list to.
+    if (table && hide) {
+      const rows = hide.results({ emptied, refused, settled }).rows
+      if (rows.length) report.rows = rows
+    }
     report.counts = countsOf(report.slots)
     if (last.active) report.rewrite = { from: input.lastRun ?? null, left: against.left }
     timings.total = now() - started
@@ -354,6 +368,13 @@ export async function runWriteStep(input) {
   })
   if (checked.stop) return stopped(checked.stop)
   const { mapping, plan, brief } = checked
+  // What the site check holds the printed pages to: the plan's kept links and end actions, the brief's phones, where the business is.
+  const planned = planLinkTable({ plan, kit: kit.doc, brief })
+  if (planned.planLinks.length) report.planLinks = planned.planLinks
+  if (planned.endActions.length) report.endActions = planned.endActions
+  if (planned.phones.length) report.phones = planned.phones
+  const coordinates = coordinatesOf(input.place ?? null, brief)
+  if (coordinates) report.place = coordinates
   if (await isCancelled()) return finish('cancelled', null)
 
   const apply = (call) => door.apply(call)
@@ -487,10 +508,12 @@ export async function runWriteStep(input) {
       sent,
       extras: hide.settingsExtras,
       place: input.place ?? null,
+      brief,
       isCancelled,
       last
     })
   )
+  settingLines = settings.lines ?? []
   settled = new Map([...settings.results, ...hide.held, ...created.results])
   if (settings.cancelled) return finish('cancelled', null, written, wrote.refused)
   // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).

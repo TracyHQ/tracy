@@ -139,7 +139,8 @@ export function slotLines({
 }
 
 export function countsOf(slots) {
-  const counts = { written: 0, hidden: 0, skipped: 0, failed: 0, unchanged: 0 }
+  // `refused`: a line the step declined because nothing can carry it to the site (a kept link no door holds), named with the need.
+  const counts = { written: 0, hidden: 0, skipped: 0, failed: 0, refused: 0, unchanged: 0 }
   for (const s of slots) counts[s.unchanged ? 'unchanged' : s.status] += 1
   return counts
 }

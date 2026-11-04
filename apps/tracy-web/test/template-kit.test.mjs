@@ -235,6 +235,26 @@ test('a content map that lost the demo inline markup holds the kit, named in wor
   assert.notDeepEqual(verdictOf(kit({ checks: { inlineMarkupLost: 0 } })), ['todo', 'kit-incomplete'])
 })
 
+test('a button with no address, a map no slot moves and a phone outside a link hold the kit, named in words', () => {
+  const k = kit({
+    checks: { deadControls: 2, mapLocationUnmapped: 1, phoneNotCallable: 1 },
+    coverage: {
+      parts: {},
+      failures: [{ part: 'deadControls', where: 'links[block-4.link-2]', reason: 'made up' }]
+    }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: buttons with no address 2, map stays at the demo place 1, phones not callable 1 (deadControls links[block-4.link-2])'
+  )
+  assert.notDeepEqual(
+    verdictOf(kit({ checks: { deadControls: 0, mapLocationUnmapped: 0, phoneNotCallable: 0 } })),
+    ['todo', 'kit-incomplete']
+  )
+})
+
 test('a kit failing a coverage gate part is incomplete, and the step names the part and the slot', () => {
   for (const [part, where] of [
     ['limitsBelowDemo', 'slots[block-1.2]'],

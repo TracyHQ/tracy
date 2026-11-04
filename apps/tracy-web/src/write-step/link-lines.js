@@ -9,7 +9,7 @@ const ENDED = 'the run ended before this link was written'
 export const failed = (reason, extra = {}) => ({ status: 'failed', reason, key: null, ...extra })
 
 /** What becomes of a link whose door is known and whose address is `target`, before the writes. */
-export function lineOrder(claim, door, target, { hiddenKeys, leaving }) {
+export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys = new Set() }) {
   const { slot: id, content: leadsTo } = claim
   const { link } = door
   if (door.via === 'menu' && leaving.has(link.menuItem)) return { via: 'menu', item: door.item }
@@ -30,8 +30,12 @@ export function lineOrder(claim, door, target, { hiddenKeys, leaving }) {
     }
   if (target.kind === 'failed') return failed(target.reason)
   if (door.via === 'slot' || door.via === 'shared') {
-    const keys = door.keys.filter((key) => !hiddenKeys.has(key))
-    if (!keys.length) return { via: 'words', key: door.keys[0], leadsTo }
+    const keys = door.keys.filter((key) => !hiddenKeys.has(key) && !goneKeys.has(key))
+    if (!keys.length) {
+      const row = door.keys.find((key) => goneKeys.has(key) && !hiddenKeys.has(key))
+      if (row) return { via: 'row', key: row, leadsTo }
+      return { via: 'words', key: door.keys[0], leadsTo }
+    }
     return { via: door.via, keys, url: target.url }
   }
   if (door.via === 'words') return { via: 'words', key: door.key, leadsTo }
@@ -53,10 +57,20 @@ const alive = (target) => ({
   readFrom: target.alive
 })
 
+/**
+ * A kept link no door holds is refused, never skipped (ADR 0044, decision 21): the template prints it with the demo's address, and
+ * the site check's `plan-links` blocks on it. A control the template prints with no address names the template as what must change.
+ */
+export const refusedLine = (reason, extra = {}) => ({ status: 'refused', reason, key: null, ...extra })
+
 function noDoor(link, leadsTo) {
   const keeps = link?.target ? ` and it keeps opening ${link.target}` : ''
-  return failed(
-    `no door holds this link: the template prints it${keeps}, so the plan's ${leadsTo} cannot reach the site`
+  const dead = !link?.target && link?.action === 'page-control'
+  return refusedLine(
+    `no door holds this link: the template prints it${keeps}${dead ? ' with no address' : ''}, so the plan's ${leadsTo} cannot reach the site${
+      dead ? '; the template must print it as a link with an address the site holds' : ''
+    }`,
+    dead ? { deadControl: true } : {}
   )
 }
 
@@ -99,6 +113,7 @@ export function lineResult(order, done) {
   if (order.via === 'control') return controlResult(order, hides)
   if (order.via === 'words') return wordsResult(order, hiddenKeys, hides)
   if (order.via === 'map') return mapResult(order, settled)
+  if (order.via === 'row') return rowResult(order, done.removed ?? new Map())
   const id = `menuItem-${order.item}`
   if (leaving.has(id)) return leftMenu(id, settled)
   const words = menuDone.get(order)
@@ -178,8 +193,31 @@ function wordsResult({ key, leadsTo }, hiddenKeys, hides) {
   }
 }
 
+/** The link's address is held in a row the plan gives up: it leaves with the row, which the hide stage removes whole. */
+function rowResult({ key, leadsTo }, removed) {
+  const done = removed.get(key)
+  if (done === undefined) return { status: 'skipped', reason: ENDED, key }
+  if (done !== true)
+    return failed(`this link is held in a row the plan gives up, and the row could not leave: ${done}`, {
+      key
+    })
+  return {
+    status: 'hidden',
+    key,
+    leftWith: key,
+    reason: `this link is held in a row the plan gives up, so the plan's ${leadsTo} is not written and the link left with its row`,
+    ordered: 'removed',
+    readFrom: { action: 'content.contract', params: { operation: 'inspect' }, path: ['removedSlots', key] }
+  }
+}
+
+/** What a map no slot holds needs before it can move: named on the line, so the owner can route it. */
+export const MAP_NEEDS =
+  'the map it opens is drawn from settings no slot holds (the map plugin params): it needs a door for those params in the Claude Cowork plugin, or a template that prints the map from a slot or links to the address'
+
 function mapResult({ slotId }, settled) {
-  const done = slotId ? settled.get(slotId) : null
+  if (!slotId) return refusedLine(`this button opens a map that stays at the demo place: ${MAP_NEEDS}`)
+  const done = settled.get(slotId)
   if (!done)
     return {
       status: 'skipped',

@@ -10,7 +10,12 @@ const NEARBY = 4
 
 /** What a report line came to, for the owner: failed, ok, unchecked (written, not read back) or skipped. */
 export function stateOf(line) {
-  if (line.status === 'failed' || (line.status === 'written' && line.readBack === 'failed')) return 'failed'
+  if (
+    line.status === 'failed' ||
+    line.status === 'refused' ||
+    (line.status === 'written' && line.readBack === 'failed')
+  )
+    return 'failed'
   if (line.status === 'written') return line.readBack === 'match' ? 'ok' : 'unchecked'
   return 'skipped'
 }

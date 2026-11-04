@@ -62,6 +62,9 @@ function judge(line, held) {
     measured: held.value,
     ordered: line.ordered ?? null
   }
+  // A line the write step refused never reached the site: it blocks as a refused write does, in the step's own words.
+  if (line.status === 'refused')
+    return { result: 'failed', failure: { ...base, reason: `The write step refused this: ${line.reason}` } }
   if (line.status === 'failed')
     return {
       result: 'failed',
@@ -96,7 +99,7 @@ function judge(line, held) {
 }
 
 async function run({ report, read }) {
-  const compared = report.slots.filter((s) => ['written', 'failed', 'hidden'].includes(s.status))
+  const compared = report.slots.filter((s) => ['written', 'failed', 'refused', 'hidden'].includes(s.status))
   const noOrder = compared.filter((s) => s.status === 'written' && s.ordered === undefined)
   if (noOrder.length)
     throw new GroupUnmeasured(
@@ -157,7 +160,7 @@ async function run({ report, read }) {
     }
   }
   for (const line of compared) {
-    if (line.part && !line.key && !line.readFrom && line.status !== 'failed') {
+    if (line.part && !line.key && !line.readFrom && line.status !== 'failed' && line.status !== 'refused') {
       reads.add('none', line.part)
       lines[line.slot] = 'unread'
       failures.push({

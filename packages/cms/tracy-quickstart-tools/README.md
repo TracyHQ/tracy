@@ -467,7 +467,12 @@ list, kept by every later run).
   `inlineEmphasisMissing` (a text slot whose demo marks words inline with no matching `inline`) and
   `inlineMarkupLost` (content map text slots whose stored value marks words inline while their sample does not, read
   from the `inlineMarkup` block `content-coverage/resample.mjs` writes into `content-coverage.json`; a map with a
-  whole-unit text slot and no such block counts 1)),
+  whole-unit text slot and no such block counts 1), and the reach checks (`lib/reach-checks.mjs`, by `build` and every settle
+  command, from the kit alone): `deadControls` (a link with words that acts inside the page and has no door: nothing it opens, no
+  address, no menu item; the template prints it with a dead address, so a plan cannot send it anywhere), `mapLocationUnmapped`
+  (a button that opens a map with no `slotId`, or a block whose read found an embedded map, `embeddedMaps` from the read pass's
+  `maps`, with no map-location setting slot on its entity) and `phoneNotCallable` (a `contact.phone` slot, or a contact block's
+  printed phone or mobile field, that no link of its block shows as its words, so no address can make it `tel:`)),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the

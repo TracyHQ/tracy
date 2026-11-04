@@ -208,6 +208,26 @@ export function textBlocksFromHost(measures) {
   )
 }
 
+/**
+ * The maps an untouched site draws, per page and width, with the coordinates or address each names: what `map-location` holds a
+ * written site's to (a map still at the demo's place). A host from before it read maps answers none, and the measure then compares
+ * with the brief only.
+ * @param {object[]} measures the host's `pageMeasures`
+ */
+export function mapsFromHost(measures) {
+  return each(measures).flatMap((m) =>
+    each(m?.maps)
+      .filter((x) => Number.isFinite(x?.lat) || typeof x?.address === 'string')
+      .map((x) => ({
+        page: m.path,
+        width: m.width,
+        kind: x.kind,
+        ...(Number.isFinite(x.lat) && Number.isFinite(x.lng) ? { lat: x.lat, lng: x.lng } : {}),
+        ...(typeof x.address === 'string' ? { address: x.address } : {})
+      }))
+  )
+}
+
 const fileOf = (dir, version) => path.join(dir, `${String(version).replace(/[^a-zA-Z0-9._-]+/g, '_')}.json`)
 
 /** One baseline per quickstart version, kept as a file in a folder that is not in the repo. */
@@ -295,7 +315,8 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
     ...baselineFromHost(measured, { version, measuredAt: now().toISOString() }),
     over: overFromHost(measures),
     blocks: blocksFromHost(measures),
-    textBlocks: textBlocksFromHost(measures)
+    textBlocks: textBlocksFromHost(measures),
+    maps: mapsFromHost(measures)
   }
   await store.save(version, baseline)
   return { baseline, measured: true }

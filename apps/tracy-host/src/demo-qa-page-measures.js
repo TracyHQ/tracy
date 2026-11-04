@@ -6,7 +6,8 @@
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], textBlocks: [...], pictures: [...], controls: [...],
  *     fields: [...], glued: [...], headingSpans: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
  *     selfLinks: [...], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
- *     brandStyle?, look? }
+ *     lists: [{ selector, items: [{ chars, text, pictures }] }], maps: [{ kind, lat?, lng?, address?, from }],
+ *     phones: [{ text, digits, inTel, selector }], brandStyle?, look? }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
@@ -35,7 +36,10 @@ export const MEASURE_CAPS = Object.freeze({
   contentControls: 150,
   shownLinks: 300,
   shownPictures: 100,
-  shownText: 30000
+  shownText: 30000,
+  lists: 60,
+  maps: 10,
+  phones: 40
 })
 
 /**
@@ -381,6 +385,127 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (shown(img)) shownPictures.push((img.currentSrc || img.src).slice(0, 300))
   }
   const shownText = (document.body.innerText ?? '').replace(/\s+/g, ' ').trim().slice(0, caps.shownText)
+
+  // Lists a visitor sees as rows of items: two or more shown siblings of one shape (tag and classes, state classes aside), with
+  // the words and pictures of each item, for the judge to count a list's printed items and find an empty one (`list-rows`).
+  const STATE =
+    /^(?:active|current|show|open|in|fade|selected|is-.*|.*-active|aos-.*|swiper-slide-.*|slick-.*|owl-.*)$|\d{2,}/
+  const shapeOf = (el) =>
+    `${el.tagName.toLowerCase()}${[...el.classList]
+      .filter((c) => !STATE.test(c))
+      .sort()
+      .map((c) => `.${c}`)
+      .join('')}`
+  const picturesIn = (el) =>
+    [...el.querySelectorAll('img')].filter(
+      (img) => (img.currentSrc || img.getAttribute('src') || '').trim() && shown(img)
+    ).length +
+    [el, ...el.querySelectorAll('*')].filter(
+      (n) => /url\(/.test(getComputedStyle(n).backgroundImage) && shown(n)
+    ).length
+  const lists = []
+  for (const parent of document.body.querySelectorAll('*')) {
+    if (lists.length >= caps.lists) break
+    if (SKIP.has(parent.tagName.toUpperCase()) || parent.children.length < 2) continue
+    const groups = new Map()
+    for (const c of parent.children) {
+      if (SKIP.has(c.tagName.toUpperCase()) || !shown(c)) continue
+      const shape = shapeOf(c)
+      groups.set(shape, [...(groups.get(shape) ?? []), c])
+    }
+    for (const [shape, items] of groups) {
+      if (items.length < 2 || lists.length >= caps.lists) continue
+      lists.push({
+        selector: `${selectorOf(parent)}>${shape}`,
+        items: items.slice(0, caps.listItems).map((it) => ({
+          chars: (it.innerText ?? '').replace(/\s+/g, ' ').trim().length,
+          text: (it.innerText ?? '').replace(/\s+/g, ' ').trim().slice(0, 60),
+          pictures: picturesIn(it)
+        }))
+      })
+    }
+  }
+
+  // Maps the page draws: a frame or link opening a maps address, an element carrying coordinates, or a script configuring one,
+  // with the coordinates or address each names, for the judge to hold them to the demo's and the brief's (`map-location`).
+  const MAPS_URL =
+    /(?:google\.[a-z.]+\/maps|maps\.google\.|openstreetmap\.org|maps\.apple\.com|bing\.com\/maps)/i
+  const NUM = '(-?\\d{1,3}\\.\\d{3,})'
+  const pairIn = (text) => {
+    const t = String(text ?? '')
+    const pair = (lat, lng) => ({ lat: Number(lat), lng: Number(lng) })
+    const at = /@(-?\d{1,3}\.\d{3,}),(-?\d{1,3}\.\d{3,})/.exec(t)
+    if (at) return pair(at[1], at[2])
+    const q = /[?&](?:q|ll|center|query)=(-?\d{1,3}\.\d{3,})(?:,|%2C)\s*(-?\d{1,3}\.\d{3,})/i.exec(t)
+    if (q) return pair(q[1], q[2])
+    const place = /!3d(-?\d{1,3}\.\d{3,})!4d(-?\d{1,3}\.\d{3,})/.exec(t)
+    if (place) return pair(place[1], place[2])
+    const embed = /!2d(-?\d{1,3}\.\d{3,})!3d(-?\d{1,3}\.\d{3,})/.exec(t)
+    if (embed) return pair(embed[2], embed[1])
+    // A script names them in its own shape ("latitude":{"0":"12.5"}, lat: 12.5): the first number of each key, near it.
+    const lat = new RegExp(`lat(?:itude)?\\b[^\\n]{0,24}?${NUM}`, 'i').exec(t)
+    const lng = new RegExp(`(?:lng|lon|longitude)\\b[^\\n]{0,24}?${NUM}`, 'i').exec(t)
+    return lat && lng ? { lat: Number(lat[1]), lng: Number(lng[1]) } : null
+  }
+  const addressIn = (url) => {
+    try {
+      const q =
+        new URL(url, location.href).searchParams.get('q') ??
+        new URL(url, location.href).searchParams.get('query')
+      return q && !/^\s*-?\d{1,3}\.\d+\s*,/.test(q) ? q.slice(0, 120) : null
+    } catch {
+      return null
+    }
+  }
+  const maps = []
+  const addMap = (kind, pair, address, from) => {
+    if (maps.length < caps.maps && (pair || address))
+      maps.push({
+        kind,
+        ...(pair ? { lat: pair.lat, lng: pair.lng } : {}),
+        ...(address ? { address } : {}),
+        from: from.slice(0, 120)
+      })
+  }
+  for (const f of document.querySelectorAll('iframe[src]')) {
+    const src = f.getAttribute('src') || ''
+    if (MAPS_URL.test(src)) addMap('frame', pairIn(src), addressIn(src), src)
+  }
+  for (const a of document.querySelectorAll('a[href]')) {
+    const href = a.getAttribute('href') || ''
+    if (MAPS_URL.test(href)) addMap('link', pairIn(href), addressIn(href), href)
+  }
+  for (const el of document.querySelectorAll('[data-lat],[data-latitude]')) {
+    const lat = Number(el.getAttribute('data-lat') ?? el.getAttribute('data-latitude'))
+    const lng = Number(
+      el.getAttribute('data-lng') ?? el.getAttribute('data-lon') ?? el.getAttribute('data-longitude')
+    )
+    if (Number.isFinite(lat) && Number.isFinite(lng)) addMap('element', { lat, lng }, null, selectorOf(el))
+  }
+  for (const sc of document.querySelectorAll('script:not([src])')) {
+    const text = sc.textContent ?? ''
+    if (!/map/i.test(text) || !/lat/i.test(text)) continue
+    addMap('script', pairIn(text), null, 'inline script')
+  }
+
+  // Phone numbers the page prints, and whether each sits inside a tel: link (`phone-callable`).
+  const phones = []
+  const PHONE = /\+?\d[\d\s().-]{6,}\d/g
+  const phoneWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+  for (
+    let node = phoneWalker.nextNode();
+    node && phones.length < caps.phones;
+    node = phoneWalker.nextNode()
+  ) {
+    const host = node.parentElement
+    if (!host || SKIP.has(host.tagName.toUpperCase()) || !shown(host)) continue
+    for (const m of String(node.textContent).matchAll(PHONE)) {
+      const digits = m[0].replace(/\D/g, '')
+      if (digits.length < 7 || digits.length > 15) continue
+      const tel = host.closest('a[href^="tel:"]')
+      phones.push({ text: m[0].trim().slice(0, 40), digits, inTel: Boolean(tel), selector: selectorOf(host) })
+    }
+  }
   return {
     links,
     textBoxes,
@@ -401,7 +526,10 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     title: document.title,
     shownText,
     shownLinks,
-    shownPictures
+    shownPictures,
+    lists,
+    maps,
+    phones
   }
 }
 

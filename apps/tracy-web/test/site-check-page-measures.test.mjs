@@ -197,7 +197,7 @@ test('the new measures at both widths, as groups: levels and causing steps', asy
 })
 
 test('warnings alone leave the check green and are counted', async () => {
-  const answers = { selfLinks: [], hiddenHeadings: [], shownText: 'Lessons' }
+  const answers = { selfLinks: [], hiddenHeadings: [], shownText: 'Lessons', maps: [] }
   const measures = () =>
     BOTH('/', {
       1440: {
@@ -217,11 +217,12 @@ test('warnings alone leave the check green and are counted', async () => {
     labels: [],
     pictures: { files: [], shas: [] },
     over: [],
+    maps: [],
     blocks: [{ page: '/', width: 1440, selector: 'section.long', height: 3000 }]
   }
   const check = await runSiteCheck({
     door: pagedSite(1).door,
-    report: writtenReport(),
+    report: { ...writtenReport(), planLinks: [], endActions: [] },
     host: fakeHost({ '/': pageRead('/') }, { measures }).host,
     baseline,
     kit: { tool: 'template-kit 3.1.0', blocks: [{ sentences: [{ id: 'one', slots: ['block-2.1'] }] }] }

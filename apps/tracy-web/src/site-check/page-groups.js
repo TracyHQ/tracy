@@ -27,6 +27,10 @@
 //   broken-sentence    block  6 writer      printed-sentences.js: copy rule W12, read as the page prints it
 //   accent-emphasis    block  6, 9 or 0     accent-emphasis.js: a heading the demo marks with an accent span prints one in the brand accent
 //   created-controls   block  9 write       page-faults.js: a created page shows controls the template's content pages do not
+//   plan-links         block  9 or 0        plan-links.js: every kept plan link and end action prints, with its words, to its target
+//   list-rows          block  9 write       reach-measures.js: a list prints the rows the plan keeps, and no empty item
+//   map-location       block  9 write       reach-measures.js: a map is not at the demo's place, and near the business
+//   phone-callable     block  0 template    reach-measures.js: a brief phone the page prints sits inside a tel: link
 //
 // Faults that need the meaning understood (does an icon suit the words, is a sentence clumsy) are step 12's, a person with eyes.
 import { accentEmphasisGroup } from './accent-emphasis.js'
@@ -48,6 +52,8 @@ import {
   findTextOverflow,
   findUnfinishedHeadings
 } from './page-measures.js'
+import { planLinksGroup } from './plan-links.js'
+import { listRowsGroup, mapLocationGroup, phoneCallableGroup } from './reach-measures.js'
 import { unownedShownGroup } from './unowned-shown.js'
 
 /** A group over the browser measures the host adds to its answer. Without them it could not tell, so it is unmeasured. */
@@ -172,5 +178,9 @@ export const PAGE_CHECK_GROUPS = [
   headingSeparatorGroup,
   brokenSentenceGroup,
   accentEmphasisGroup,
-  createdControlsGroup
+  createdControlsGroup,
+  planLinksGroup,
+  listRowsGroup,
+  mapLocationGroup,
+  phoneCallableGroup
 ]

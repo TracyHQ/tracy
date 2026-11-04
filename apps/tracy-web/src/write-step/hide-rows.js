@@ -50,9 +50,10 @@ export function goneRowSlots({ plan, kit, filled = new Set() }) {
 }
 
 /**
- * The hidden slots the door takes. A row goes when nothing of it stays and either the plan gave it up or every word and picture
- * in it is hidden; a row holding only a hidden link keeps its words. A slot of an HTML field goes in any case: the plugin takes
- * its own element or text, and refuses by name what holds a slot that stays.
+ * The hidden slots the door takes. A row the plan gave up goes whole when nothing of it is written or kept: every slot of it on the
+ * site, hidden or not, so a url slot or empty slots left in it never print an empty box (ADR 0044, decision 22). Any other row goes
+ * when nothing of it stays and every word and picture in it is hidden; a row holding only a hidden link keeps its words. A slot of
+ * an HTML field goes in any case: the plugin takes its own element or text, and refuses by name what holds a slot that stays.
  * @param {{ hidden: Set<string>, keep: Set<string>, gone: Set<string>, onSite: Map<string, object> }} input content map keys
  * @returns {Set<string>}
  */
@@ -60,16 +61,45 @@ export function slotsToRemove({ hidden, keep, gone, onSite }) {
   const rows = new Map()
   for (const slot of onSite.values()) if (slot?.row) rows.set(slot.row, [...(rows.get(slot.row) ?? []), slot])
   const held = (slot) => String(slot.current ?? '').trim() !== ''
+  const stays = (members) => members.some((s) => keep.has(s.key))
+  const givenUp = (members) => members.some((s) => gone.has(s.key))
   const going = (members) =>
-    !members.some((s) => keep.has(s.key)) &&
-    (members.some((s) => gone.has(s.key)) ||
-      members.filter((s) => s.type !== 'url' && held(s)).every((s) => hidden.has(s.key)))
+    !stays(members) &&
+    (givenUp(members) || members.filter((s) => s.type !== 'url' && held(s)).every((s) => hidden.has(s.key)))
   const out = new Set()
+  for (const members of rows.values())
+    if (givenUp(members) && !stays(members)) for (const s of members) out.add(s.key)
   for (const key of hidden) {
     const slot = onSite.get(key)
     if (!slot || keep.has(key)) continue
     if (slot.xpath) out.add(key)
     else if (slot.row && going(rows.get(slot.row))) out.add(key)
+  }
+  return out
+}
+
+/**
+ * Each list the plan gives a row count, with the content map keys of every row it gives up: what the report's `rows` counts
+ * (rows kept against the plan) once the door has answered.
+ * @param {{ plan: object, kit: object }} input
+ * @returns {{ block: string, list: string, plan: number, demo: number, gone: string[][], keptKeys: string[] }[]}
+ */
+export function listRowCounts({ plan, kit }, keyOf = (id) => id) {
+  const blocks = new Map(each(kit?.blocks).map((b) => [b?.id, b]))
+  const out = []
+  for (const decision of keptDecisions(plan)) {
+    if (decision?.decision === 'hide') continue
+    for (const list of each(decision?.lists)) {
+      const rows = each(each(blocks.get(decision.block)?.lists).find((l) => l?.id === list?.list)?.rows)
+      if (!Number.isInteger(list?.rows) || !rows.length) continue
+      const goneIds = goneRowSlots({ plan: { sharedBlocks: [{ ...decision, lists: [list] }] }, kit })
+      const all = rows.map((row) => each(row?.slots).map(idOf))
+      const gone = all.filter((ids) => ids.some((id) => goneIds.has(id))).map((ids) => ids.map(keyOf))
+      const keptKeys = all
+        .filter((ids) => !ids.some((id) => goneIds.has(id)))
+        .flatMap((ids) => ids.map(keyOf))
+      out.push({ block: decision.block, list: list.list, plan: list.rows, demo: rows.length, gone, keptKeys })
+    }
   }
   return out
 }

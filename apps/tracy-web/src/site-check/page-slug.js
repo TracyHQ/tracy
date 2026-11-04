@@ -109,7 +109,7 @@ export function baselineAtRoutes(baseline, routes) {
   if (!moved.size) return baseline
   const at = (path) => moved.get(pathOfMeasure(path)) ?? path
   const out = { ...baseline }
-  for (const name of ['blocks', 'textBlocks', 'over'])
+  for (const name of ['blocks', 'textBlocks', 'over', 'maps'])
     if (Array.isArray(baseline[name])) out[name] = baseline[name].map((b) => ({ ...b, page: at(b.page) }))
   if (Array.isArray(baseline.unread)) out.unread = baseline.unread.map((u) => ({ ...u, path: at(u.path) }))
   if (Array.isArray(baseline.read)) out.read = baseline.read.map((p) => (typeof p === 'string' ? at(p) : p))

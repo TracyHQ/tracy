@@ -241,6 +241,60 @@ leaves and is not opened. The demo baseline is moved to the new addresses before
 before this stage has no route table, and the measure does not run on it. Links the template holds as literal demo addresses (not
 `index.php?Itemid=`) are not rewritten; `dead-links` finds them.
 
+### 21. Every link the plan keeps leads where the plan says, and a button with no address is the template's fault
+
+The kit counts `deadControls` (`template-kit/lib/reach-checks.mjs`): a link read as a page control with words but no address, no
+menu item and no target the site holds. Above 0 the kit is `kit-incomplete`, and /ops names it "buttons with no address". The
+write step no longer leaves such a link as a skipped line: a kept link with no door is `refused`, with the reason, and for a dead
+control the reason says the template must print it as a link with an address the site holds (`deadControl: true`). Read-back fails a
+refused line on step 9, and the counts carry `refused`.
+
+The report keeps `planLinks: [{ link, block, pages, leadsTo, target, labelSlot, deadControl? }]`, `endActions: [{ page, leadsTo,
+target }]` and `phones` (`write-step/plan-link-table.js`): the target is a kept page, a `tel:` number, a `mailto:` or an https
+address from the brief facts; a map, a legal page or a lightbox has none and is not measured. `plan-links` (block, step 9, step 0 for
+a dead control) opens each kept page the link shows on and needs a shown link to its target with the plan label's words; an end
+action needs any shown link to its target on its page. A link whose line went with its row is not held. A report without the table
+or a host without `shownLinks` leaves the group unmeasured (decision 18).
+
+### 22. A list keeps exactly the plan's rows, removed whole
+
+Measured on a bench site with the JA Boxing kit: a list the plan cut to 2 rows printed 4, two of them empty. The cause was the
+shared link door. A kept link whose address the demo held in a url slot of a later row (`byItsAddress`) wrote that slot, so the
+slot was in `changes`, so in `keep` (`hide-plan.js`, `const keep = new Set(Object.keys(changes))`), and the row rule
+(`hide-rows.js`, `!members.some((s) => keep.has(s.key))`) kept the row: its words were emptied instead of the row removed.
+
+Now the rows the plan drops are decided before any claim: a link claim whose slot sits in a gone row is not kept (its line reads
+`via: 'row'`, hidden with the row), and every member of an on-site row with a gone member and no kept member goes through
+`rows.remove`, its url and picture slots included (`rowRest`, a `row` line each when no claim names it). A written slot still holds
+its row. The report keeps `rows: [{ block, list, plan, demo, kept, keptKeys }]`, rows kept against the plan per list.
+
+The host now answers `lists` per page (sibling groups by tag and classes, each item's characters, words and pictures). `list-rows`
+(block, step 9) finds the printed list holding the written words of a list's kept rows and blocks when it prints another number of
+items than the plan keeps (the plan's count, or the demo's when fewer), or an item with no words and no picture. A list printed
+nowhere leaves the group unmeasured.
+
+### 23. A map is drawn at the business, not at the demo's place
+
+The kit reads the maps each block prints (an embedded maps frame, an element carrying latitude and longitude) and counts
+`mapLocationUnmapped`: a link that opens a map, or a block that embeds one, with no map-location slot to write. /ops names it "map
+stays at the demo place". The page settings stage writes a map-location setting from the copy, else from the brief's address fact,
+with coordinates when the place, a location fact or the Google place has them; with neither it is `refused` and says so. A link that
+opens a map no slot holds is refused with what it needs (`MAP_NEEDS`): a door in the Claude Cowork plugin for the map plugin's
+parameters, or a template that prints the map from a slot or links to the address.
+
+The host answers `maps` per page (frame, link, element or script, with latitude, longitude or address), and the demo baseline keeps
+them, moved with the kept pages (decision 20). `map-location` (block, step 9) blocks a map within 0.5 km of a demo map, or at the
+same address, and one more than 50 km from the business when the report holds its coordinates (`place`). With no demo maps and no
+coordinates it is unmeasured.
+
+### 24. A phone a visitor reads can be called
+
+The kit counts `phoneNotCallable`: a phone slot no link of its block uses as its label, and a contact form or contact field of the
+phone or mobile kind the template prints as text. /ops names it "phones not callable". The host answers `phones` per page (the
+printed number, its digits, whether a `tel:` link holds it, and where). `phone-callable` (block, step 0) blocks a brief phone (matched
+on its last 9 digits) printed outside a `tel:` link: the template prints it as text, and the write step never puts markup in a text
+slot to make it a link. Another number on the page is not judged.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

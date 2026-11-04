@@ -3,7 +3,7 @@
 // as an emptied slot, or it cannot be taken and says why. A menu item a kept page depends on is left published and reported:
 // Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
-import { goneRowSlots, slotsToRemove } from './hide-rows.js'
+import { goneRowSlots, listRowCounts, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
 import { menuItemOfLabel } from './menu-hides.js'
 import { NO_LAST } from './no-last-report.js'
@@ -127,18 +127,20 @@ function removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gon
   const hidden = new Set()
   const keep = new Set(Object.keys(changes))
   const hiddenIds = new Set([...owners.values()].filter((c) => c.kind === 'hide').map((c) => c.slot))
+  const goneKeys = new Set(
+    [...goneRowSlots({ plan, kit })].map((id) => contentMapKey(icons.get(id)?.field ?? id))
+  )
   for (const claim of owners.values()) {
     const key = contentMapKey(icons.get(claim.slot)?.field ?? claim.slot)
     if (claim.kind !== 'hide') {
+      // A plan link on a row the plan gives up writes nothing there (link-stage.js): it does not hold the row.
+      if (claim.kind === 'link' && goneKeys.has(key)) continue
       if (claim.kind !== 'link' || !hiddenIds.has(claim.label)) keep.add(key)
       continue
     }
     if (menu.has(claim.slot) || fixed.has(claim.slot)) continue
     if (!gone.has(key.slice(0, key.lastIndexOf('.'))) && !(key in changes)) hidden.add(key)
   }
-  const goneKeys = new Set(
-    [...goneRowSlots({ plan, kit })].map((id) => contentMapKey(icons.get(id)?.field ?? id))
-  )
   const remove = slotsToRemove({ hidden, keep, gone: goneKeys, onSite })
   return { remove, keep: [...keep].filter((key) => onSite.has(key)) }
 }
@@ -149,7 +151,7 @@ function removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gon
  *   this plugin takes no hide order, or null when it does; `rowsRemove`: whether it has the door that takes a row or an element;
  *   `last`: the last report, whose hidden lines are off the site already
  * @returns {{ orders: Map<string, object>, blocks: Map<string, string>, emptySlots: string[], removeSlots: string[],
- *   keepSlots: string[], strings: Record<string, string>, pages: object[], menu: Map<string, object>,
+ *   keepSlots: string[], rowRest: string[], rowLists: object[], strings: Record<string, string>, pages: object[], menu: Map<string, object>,
  *   noWayOut: { slot: string, reason: string }[] }} `orders`: by the line's slot, each with a `via`; `blocks`: block id to module
  *   key; `removeSlots`, `keepSlots`: what `rows.remove` is sent; `noWayOut`: what the plan hides and cannot take off
  */
@@ -250,7 +252,20 @@ export function hideOrders({
     .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
     .filter((page) => page && !taken.has(slashless(page.path)))
     .map((page) => ({ page, depends: pageDependingOn(page.path, { plan, kit }) }))
-  const removeSlots = [...orders.values()].filter((o) => o.via === 'removed' && !o.already).map((o) => o.key)
+  const claimed = new Set(
+    [...owners.values()]
+      .filter((c) => c.kind === 'hide')
+      .map((c) => contentMapKey(icons.get(c.slot)?.field ?? c.slot))
+  )
+  // The rest of a row the plan gives up, which no hide claim names (a url slot, an empty slot, the address a plan link would have
+  // written): it goes with the row, and is named so its line can say so.
+  const rowRest = removal
+    ? [...removal.remove].filter((key) => !claimed.has(key) && !(key in removedAlready) && !stuck.has(key))
+    : []
+  const removeSlots = [
+    ...[...orders.values()].filter((o) => o.via === 'removed' && !o.already).map((o) => o.key),
+    ...rowRest
+  ]
   const keepSlots = removal ? [...removal.keep] : []
   return {
     orders,
@@ -258,6 +273,12 @@ export function hideOrders({
     emptySlots: [...new Set(emptySlots)].filter((key) => !stuck.has(key)),
     removeSlots: [...new Set(removeSlots)],
     keepSlots,
+    rowRest,
+    // Those of them no claim at all names get a line of their own; a plan link's line already speaks for its address.
+    rowLined: rowRest.filter(
+      (key) => ![...owners.values()].some((c) => contentMapKey(icons.get(c.slot)?.field ?? c.slot) === key)
+    ),
+    rowLists: listRowCounts({ plan, kit }, (id) => contentMapKey(icons.get(id)?.field ?? id)),
     strings,
     pages,
     menu,

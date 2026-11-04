@@ -315,3 +315,26 @@ test('a menu that cannot be read fails the page lines with the reason and leaves
   assert.match(title.reason, /menu_locked: the menu is locked/)
   assert.equal(report.slots.find((s) => s.slot === 'contact-1.mobile').status, 'written')
 })
+
+test('a map setting no copy names is written from the brief address, with the coordinates the brief carries', async () => {
+  const brief = {
+    facts: [{ id: 'f-address', field: 'address', value: '9 Quay Lane, Harbourtown', onSite: true }],
+    googlePlace: { placeId: 'invented-place', location: { latitude: 12.5, longitude: -3.25 } }
+  }
+  const { report, site } = await runStep({ brief }, { records: records() }, { kit: kitWith() })
+  const map = site.records.get('module-2').content
+  assert.match(map, /"0":"9 Quay Lane, Harbourtown"/)
+  assert.match(map, /"latitude":\{"0":"12.5"\},"longitude":\{"0":"-3.25"\}/)
+  const line = report.slots.find((s) => s.slot === 'block-2.map-location')
+  assert.deepEqual([line.status, line.part, line.ordered], ['written', 'map-location', map])
+  assert.deepEqual(line.readFrom.path, ['item', 'content'])
+})
+
+test('a map setting with no copy value and no address fact is refused with the reason, never silent', async () => {
+  const { report, site } = await runStep({}, { records: records() }, { kit: kitWith() })
+  assert.equal(site.records.get('module-2').content, 'old map')
+  const line = report.slots.find((s) => s.slot === 'block-2.map-location')
+  assert.equal(line.status, 'refused')
+  assert.match(line.reason, /demo place/)
+  assert.equal(report.counts.refused >= 1, true)
+})

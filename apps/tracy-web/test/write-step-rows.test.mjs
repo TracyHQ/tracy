@@ -125,8 +125,8 @@ test('a row goes when nothing in it stays and the plan gave it up or hid all its
   })
   assert.deepEqual(
     [...out].sort(),
-    ['module-1.0', 'module-1.6'],
-    'a: its words all go; d: the plan gave it up'
+    ['module-1.0', 'module-1.6', 'module-1.7'],
+    'a: its words all go; d: the plan gave it up, so all of it goes'
   )
 })
 
@@ -334,4 +334,119 @@ test('a rewrite does not send what the last report says left the site back to th
   })
   assert.deepEqual(out.orders.get('block-1.2'), { via: 'kept', line })
   assert.deepEqual(out.removeSlots, ['module-1.6'])
+})
+
+test('a row the plan gives up goes whole, its url slot and empty slots too, and the rows kept are counted per list', () => {
+  const reading = {
+    slots: [
+      slot('module-1.0', { row: 'r0' }),
+      slot('module-1.4', { row: 'r0', type: 'url', current: 'index.php?Itemid=9' }),
+      slot('module-1.1', { row: 'r1' }),
+      slot('module-1.5', { row: 'r1', type: 'url', current: 'index.php?Itemid=9' }),
+      slot('module-1.2', { row: 'r2', current: '' }),
+      slot('module-1.6', { row: 'r2', type: 'url', current: 'index.php?Itemid=9' }),
+      slot('module-1.3', { row: 'r3', current: '' }),
+      slot('module-1.7', { row: 'r3', type: 'url', current: 'index.php?Itemid=9' })
+    ]
+  }
+  // Only the words of the rows past the count are hidden; their addresses have no claim, and a plan link claims one.
+  const owners = new Map([
+    ['block-1.2', { slot: 'block-1.2', kind: 'hide' }],
+    ['block-1.3', { slot: 'block-1.3', kind: 'hide' }],
+    ['block-1.6', { slot: 'block-1.6', kind: 'link', content: 'page-a' }]
+  ])
+  const out = hideOrders({
+    plan: plan(),
+    kit,
+    owners,
+    extras: {},
+    reading,
+    changes: {},
+    cannotHide: null,
+    rowsRemove: true
+  })
+  assert.deepEqual(out.removeSlots.sort(), ['module-1.2', 'module-1.3', 'module-1.6', 'module-1.7'])
+  assert.deepEqual(out.rowRest.sort(), ['module-1.6', 'module-1.7'], 'what no hide claim names is named too')
+  assert.equal(out.keepSlots.includes('module-1.6'), false)
+  const removed = new Map(out.removeSlots.map((key) => [key, true]))
+  const done = hideLines({
+    order: out,
+    words: { refused: new Map() },
+    blocks: new Map(),
+    pages: new Map(),
+    cannotHide: null,
+    emptied: [],
+    refused: new Map(),
+    settled: new Map(),
+    removed
+  })
+  assert.deepEqual(done.rows, [
+    {
+      block: 'block-1',
+      list: 'block-1.card',
+      plan: 2,
+      demo: 4,
+      kept: 2,
+      keptKeys: ['module-1.0', 'module-1.4', 'module-1.1', 'module-1.5']
+    }
+  ])
+  const rest = done.lines.find((l) => l.slot === 'module-1.7')
+  assert.equal(rest.status, 'hidden')
+  assert.equal(rest.part, 'row')
+  assert.deepEqual(rest.readFrom.path, ['removedSlots', 'module-1.7'])
+  const half = hideLines({
+    order: out,
+    words: { refused: new Map() },
+    blocks: new Map(),
+    pages: new Map(),
+    cannotHide: null,
+    emptied: [],
+    refused: new Map(),
+    settled: new Map(),
+    removed: new Map([
+      ['module-1.2', true],
+      ['module-1.6', true]
+    ])
+  })
+  assert.equal(half.rows[0].kept, 3, 'a row the door did not take still counts')
+})
+
+test('a written slot holds its row: a given-up row with words the run writes stays, and nothing of it goes', () => {
+  const onSite = new Map(
+    [slot('module-1.2', { row: 'r2' }), slot('module-1.6', { row: 'r2', type: 'url' })].map((s) => [s.key, s])
+  )
+  const out = slotsToRemove({
+    hidden: new Set(),
+    keep: new Set(['module-1.2']),
+    gone: new Set(['module-1.2', 'module-1.6']),
+    onSite
+  })
+  assert.deepEqual([...out], [])
+})
+
+test('a link whose shared address sits in a given-up row writes nothing there and leaves with the row', () => {
+  const claim = { slot: 'block-1.link-9', content: 'page-a', label: null }
+  const order = lineOrder(
+    claim,
+    { via: 'shared', keys: ['module-1.6', 'module-1.7'], link: {} },
+    { kind: 'page', url: 'index.php?Itemid=3' },
+    { hiddenKeys: new Map(), leaving: new Set(), goneKeys: new Set(['module-1.6', 'module-1.7']) }
+  )
+  assert.deepEqual(order, { via: 'row', key: 'module-1.6', leadsTo: 'page-a' })
+  const base = { hides: new Map(), written: new Set(), refused: new Map(), settled: new Map() }
+  const left = lineResult(order, { ...base, removed: new Map([['module-1.6', true]]) })
+  assert.equal(left.status, 'hidden')
+  assert.match(left.reason, /row the plan gives up/)
+  assert.deepEqual(left.readFrom.path, ['removedSlots', 'module-1.6'])
+  assert.equal(
+    lineResult(order, { ...base, removed: new Map([['module-1.6', 'REFUSED: kept markup']]) }).status,
+    'failed'
+  )
+  const kept = lineOrder(
+    claim,
+    { via: 'shared', keys: ['module-1.4', 'module-1.6'], link: {} },
+    { kind: 'page', url: 'index.php?Itemid=3' },
+    { hiddenKeys: new Map(), leaving: new Set(), goneKeys: new Set(['module-1.6']) }
+  )
+  assert.deepEqual(kept.keys, ['module-1.4'], 'a kept row still takes the address')
 })

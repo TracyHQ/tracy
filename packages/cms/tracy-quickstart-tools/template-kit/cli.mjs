@@ -65,6 +65,7 @@ import { settleSamples } from './lib/slot-samples.mjs'
 import { settleSentenceGroups } from './lib/sentence-groups.mjs'
 import { settleSlotRoles } from './lib/slot-roles.mjs'
 import { slotShapeChecks } from './lib/slot-shape-checks.mjs'
+import { reachChecks } from './lib/reach-checks.mjs'
 import { stampSettled, TOOL } from './lib/version.mjs'
 import { runFieldMeasure } from './lib/site/measure-fields.mjs'
 import { writeSheets } from './lib/sheets.mjs'
@@ -106,6 +107,7 @@ const contentCoverageOf = (o) => readIf(join(o.contract, 'content-coverage.json'
 /** A settled kit: its slot shape checks counted again from the content map, and the tool that settled it. */
 const settled = (kit, map, o) => {
   slotShapeChecks(kit, { map, contentCoverage: contentCoverageOf(o) })
+  reachChecks(kit)
   return stampSettled(kit)
 }
 

@@ -4,6 +4,8 @@
 // with the reason, so the site check goes red; nothing is guessed.
 import { createHash } from 'node:crypto'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { goneRowSlots } from './hide-rows.js'
+import { iconsOf } from './kit-slot-routes.js'
 import { linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
 import { NO_LAST } from './no-last-report.js'
@@ -79,7 +81,7 @@ function settleControls(orders, doors, owners) {
     if (
       door.via === 'none' &&
       !door.link?.target &&
-      orders.get(slot)?.status === 'failed' &&
+      orders.get(slot)?.status === 'refused' &&
       leaving.has(entity)
     )
       doorless.set(entity, [...(doorless.get(entity) ?? []), slot])
@@ -136,6 +138,11 @@ export async function prepareLinks({
     [...owners.values()].filter((c) => c.kind === 'hide').map((c) => [contentMapKey(c.slot), c.slot])
   )
   const leaving = new Set(each(extras?.mainMenu?.hide).map((h) => h.item))
+  // The address slots of rows the plan gives up: the hide stage removes those rows whole, so no link writes there (decision 22).
+  const icons = iconsOf(kit)
+  const goneKeys = new Set(
+    [...goneRowSlots({ plan, kit })].map((id) => contentMapKey(icons.get(id)?.field ?? id))
+  )
   const orders = new Map()
   const doors = new Map(claims.map((claim) => [claim.slot, doorOf(claim.slot)]))
   for (const claim of claims)
@@ -147,7 +154,8 @@ export async function prepareLinks({
         linkTarget(claim.content, { plan, kit, facts, createdPages, ...site }),
         {
           hiddenKeys,
-          leaving
+          leaving,
+          goneKeys
         }
       )
     )

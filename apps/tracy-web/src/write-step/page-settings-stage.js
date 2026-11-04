@@ -50,13 +50,61 @@ function settingWrite(setting, value, place) {
   }
 }
 
-async function writeSettings({ call, kit, sent, place, results, last }) {
+/** The brief's address, when it may go on the site: what a map setting no copy names is written from. */
+function addressOf(brief) {
+  const fact = each(brief?.facts).find(
+    (f) => f?.field === 'address' && f.onSite !== false && typeof f.value === 'string' && f.value.trim()
+  )
+  return fact ? fact.value.trim() : null
+}
+
+const pairOf = (v) => {
+  const lat = Number(v?.latitude ?? v?.lat)
+  const lng = Number(v?.longitude ?? v?.lng)
+  return Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180
+    ? { latitude: lat, longitude: lng }
+    : null
+}
+
+/**
+ * The coordinates of the business: the run's place, else a coordinates fact of the brief, else the Google place record's location.
+ * Null when none says where it is: the map then looks the address up itself.
+ */
+export function coordinatesOf(place, brief) {
+  if (pairOf(place)) return pairOf(place)
+  for (const f of each(brief?.facts))
+    if (
+      /^(?:location|coordinates|geo)$/.test(String(f?.field ?? '')) &&
+      f.onSite !== false &&
+      pairOf(f.value)
+    )
+      return pairOf(f.value)
+  return pairOf(brief?.googlePlace?.location)
+}
+
+/** A map setting the run cannot write is refused with the need, never left silent (ADR 0044, decision 23). */
+const mapRefused = (reason) => ({ status: 'refused', reason })
+
+async function writeSettings({ call, kit, sent, place, results, last, brief = null }) {
+  const coordinates = coordinatesOf(place, brief)
   for (const setting of each(kit?.site?.settingSlots)) {
-    const value = sent[contentMapKey(setting.id)]
-    if (typeof value !== 'string') continue
-    const order = settingWrite(setting, value, place)
+    const named = sent[contentMapKey(setting.id)]
+    const isMap = setting.kind === 'map-location'
+    // A map setting no copy names still moves to the business: its address is the brief's address fact.
+    const value = typeof named === 'string' ? named : isMap ? addressOf(brief) : null
+    if (typeof value !== 'string') {
+      if (isMap)
+        results.set(
+          setting.id,
+          mapRefused(
+            'the map stays at the demo place: no copy value and no address fact of the brief to write it from'
+          )
+        )
+      continue
+    }
+    const order = settingWrite(setting, value, coordinates)
     if (order.reason) {
-      results.set(setting.id, { status: 'skipped', reason: order.reason })
+      results.set(setting.id, isMap ? mapRefused(order.reason) : { status: 'skipped', reason: order.reason })
       continue
     }
     if (last.same(setting.id, order.value)) {
@@ -101,7 +149,8 @@ function pagesWithoutDoor(pages, results) {
  *   extras: { pageMeta?: object, pages?: object, mainMenu?: { menutype?: string | null, hide?: object[] } },
  *   place?: { latitude: unknown, longitude: unknown } | null, isCancelled?: () => Promise<boolean>, last?: object }} input
  *   `sent`: the mapping's changes before routing, by content map key
- * @returns {Promise<{ results: Map<string, object>, cancelled: boolean }>} results by report line slot
+ * @returns {Promise<{ results: Map<string, object>, cancelled: boolean, lines?: object[] }>} results by report line slot; `lines`:
+ *   one per map setting no copy names, which no claim's line carries
  */
 export async function runPageSettings({
   door,
@@ -111,7 +160,8 @@ export async function runPageSettings({
   extras,
   place = null,
   isCancelled = async () => false,
-  last = NO_LAST
+  last = NO_LAST,
+  brief = null
 }) {
   const read = doorCall(door, siteKey)
   // The door requires an apply id on a write; a record of one stage shares one, so the site's log reads as one change.
@@ -119,7 +169,7 @@ export async function runPageSettings({
   const call = (action, params) =>
     read(action, action === 'content.update' ? { apply_id: applyId, ...params } : params)
   const results = new Map()
-  await writeSettings({ call, kit, sent, place, results, last })
+  await writeSettings({ call, kit, sent, place, results, last, brief })
   pagesWithoutDoor(extras.pages, results)
   if (await isCancelled()) return { results, cancelled: true }
   await writePageMeta({
@@ -131,5 +181,21 @@ export async function runPageSettings({
     results,
     last
   })
-  return { results, cancelled: false }
+  return { results, cancelled: false, lines: mapLines(kit, sent, results) }
+}
+
+/** A line for each map setting no copy names: its result would otherwise go on no line of the report. */
+function mapLines(kit, sent, results) {
+  return each(kit?.site?.settingSlots)
+    .filter(
+      (s) => s?.kind === 'map-location' && typeof sent[contentMapKey(s.id)] !== 'string' && results.has(s.id)
+    )
+    .map((s) => ({
+      slot: s.id,
+      key: null,
+      owner: 'plan',
+      part: 'map-location',
+      readBack: null,
+      ...results.get(s.id)
+    }))
 }

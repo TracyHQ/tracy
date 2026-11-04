@@ -39,7 +39,7 @@ const refused = (d, message) => {
   return 1
 }
 const countsLine = (c) =>
-  `${c.written} written, ${c.hidden} hidden, ${c.skipped} skipped, ${c.failed} failed${c.unchanged ? `, ${c.unchanged} unchanged` : ''}`
+  `${c.written} written, ${c.hidden} hidden, ${c.skipped} skipped, ${c.failed} failed${c.refused ? `, ${c.refused} refused` : ''}${c.unchanged ? `, ${c.unchanged} unchanged` : ''}`
 const printedLine = ({ counts, viaFallback }) =>
   `printed: ${counts.printed} of ${counts.checked} printed, ${counts.viaFallback} via fallback${viaFallback.length ? ` (${viaFallback.map((f) => f.slot).join(', ')})` : ''}, ${counts.notPrinted} not printed, ${counts.writes} fallback writes`
 const routesLine = (routes) => {

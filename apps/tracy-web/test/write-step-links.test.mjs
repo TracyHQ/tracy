@@ -460,15 +460,18 @@ test('a link with no door that already opens the plan page is written with a rea
   assert.equal(check.lines['block-2.link-2'], 'match')
 })
 
-test('a link no door holds and that opens something else is failed, naming the demo address it keeps', async () => {
+test('a link no door holds and that opens something else is refused, naming the demo address it keeps', async () => {
   const done = await run({
     links: [{ id: 'block-2.link-1', target: 'mailto:demo@template.example', action: 'contact' }],
     leads: { 'block-2.link-1': 'page-about' }
   })
   const line = done.line('block-2.link-1')
-  assert.equal(line.status, 'failed')
+  assert.equal(line.status, 'refused')
   assert.match(line.reason, /no door/)
   assert.match(line.reason, /mailto:demo@template\.example/)
+  assert.equal(done.report.counts.refused, 1)
+  const check = await readBack(done)
+  assert.equal(check.lines['block-2.link-1'], 'failed', 'a refused link blocks at read-back')
 })
 
 test('a control acting inside the page has no address: skipped with the reason, not failed', async () => {
@@ -490,9 +493,11 @@ test('a control acting inside the page has no address: skipped with the reason, 
   }
   assert.equal(
     line('block-2.link-2').status,
-    'failed',
-    'a dead anchor with words is a link that goes nowhere'
+    'refused',
+    'a dead anchor with words is a link that goes nowhere: refused, never skipped'
   )
+  assert.equal(line('block-2.link-2').deadControl, true)
+  assert.match(line('block-2.link-2').reason, /the template must print it as a link/)
 })
 
 test('a map link is the page settings stage: it follows that line, and says so when there is none', async () => {
