@@ -53,6 +53,12 @@ export function topPicture(page, shown) {
   return null
 }
 
+/** The picture a page shares: its top block's, or for an article page the first written picture of its article. */
+export function pagePicture(page, kit, shown) {
+  const article = articleOfPage(page, kit)
+  return topPicture(page, shown) ?? (article === null ? null : (shown.get(`article-${article}`) ?? null))
+}
+
 /** The brand logo written to the site, as a site path, or null when the brand stage wrote none to a site profile. */
 export function writtenLogo(brandLines) {
   const found = new Map()
@@ -171,7 +177,7 @@ export async function runShareStage({
   const shown = shownPictures({ pictureLines, kit })
   const logo = writtenLogo(brandLines)
   const plans = pages.map((id) => {
-    const picture = topPicture(kitPages.get(id), shown)
+    const picture = pagePicture(kitPages.get(id), kit, shown)
     return { id, path: picture ?? logo, from: picture ? 'picture' : 'logo' }
   })
   const wanted = plans.filter((p) => p.path)

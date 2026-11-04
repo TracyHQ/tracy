@@ -4,7 +4,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { runSiteCheck } from '../src/site-check/site-check.js'
-import { runShareStage, shownPictures, topPicture, writtenLogo } from '../src/write-step/share-stage.js'
+import {
+  pagePicture,
+  runShareStage,
+  shownPictures,
+  topPicture,
+  writtenLogo
+} from '../src/write-step/share-stage.js'
 import { HERO, picturePackage, pictureKit } from './_write-step-pictures.mjs'
 import { runShare, shareKit, shareSite } from './_write-step-share.mjs'
 
@@ -77,6 +83,15 @@ test('a page that is an article under a menu item keeps its share picture on the
   const attribs = JSON.parse(site.held('article', 7).attribs)
   assert.match(attribs.og_img, LOGO)
   assert.equal(attribs.show_title, '1', 'the article keeps its other settings')
+})
+
+test('an article page shares the first written picture of its article, not the logo', () => {
+  const kit = { blocks: [{ id: 'body-spin', source: { owner: 'article-7', ownerKind: 'article' } }] }
+  const page = { blocks: { 1440: ['header', 'body-spin'] } }
+  const shown = new Map([['article-7', 'images/tracy-content/spin.jpg']])
+  assert.equal(pagePicture(page, kit, shown), 'images/tracy-content/spin.jpg')
+  assert.equal(pagePicture(page, kit, new Map()), null)
+  assert.equal(pagePicture({ blocks: { 1440: ['header'] } }, kit, shown), null)
 })
 
 test('the share lines read back through the site check', async () => {
