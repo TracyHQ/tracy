@@ -82,13 +82,9 @@ export const brokenSentenceGroup = {
     if (!read.measures.some((m) => typeof m.shownText === 'string'))
       throw new GroupUnmeasured('The host answered no page text, so no sentence was read as printed.')
     const groups = each(kit.blocks).flatMap((b) => each(b.sentences))
+    // Nothing measured is not green (ADR 0044, 2026-11-04): a kit settled before the tool knew sentence groups holds none.
     if (!groups.length)
-      return {
-        checked: 0,
-        failures: [
-          { level: 'warn', reason: 'The kit names no sentence groups, so no joined sentence was read.' }
-        ]
-      }
+      throw new GroupUnmeasured('The kit has no sentence groups, so no joined sentence was read.')
     const reading = await door('content.contract', { operation: 'inspect' })
     const hidden = new Set(
       each(report.slots)

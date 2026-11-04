@@ -1,9 +1,9 @@
-// Measures the site check adds to the host's own: dead links, text that overflows its box, blocks far taller than on the demo
-// and pictures drawn out of shape. Each is a pure function of what the host read in its browser (`pageMeasures`, one entry per
+// Measures the site check adds to the host's own: dead links, text that overflows its box, blocks far taller than on the demo,
+// blocks that print far less or far more text than on the demo, and pictures drawn out of shape. Each is a pure function of what the host read in its browser (`pageMeasures`, one entry per
 // kept page and width), so each is tested on invented pages. The host's answer carries:
 //   { path, width, links: [{ href, text, status }],
 //     textBoxes: [{ selector, text, boxWidth, boxHeight, contentWidth, contentHeight, clips, right }],
-//     blocks: [{ selector, height }],
+//     blocks: [{ selector, height }], textBlocks: [{ selector, chars, items?: [chars] }],
 //     pictures: [{ selector, src, naturalWidth, naturalHeight, width, height, fit }],
 //     controls: [{ selector, fault: 'wordless' | 'nowhere', href, text }], fields: [{ selector, name }],
 //     glued: [{ selector, text, around }], headings: [text], mainHeadings: [text], shownText,
@@ -17,6 +17,18 @@ export const OVERFLOW_TOLERANCE_PX = 2
  * ruled a 2721 px home block no fault when the demo's was taller still (04/11/2026).
  */
 export const TALLER_THAN_DEMO = 0.25
+/**
+ * A block prints less than TEXT_FILL_MIN or more than TEXT_FILL_MAX of the text the same block prints on the demo (ADR 0044,
+ * 2026-11-04). The writer writes between 80% and 100% of each slot's demo, so a whole block outside these bounds is copy that does
+ * not follow the demo, or text the block lost or gained. Only blocks whose demo prints over TEXT_FILL_DEMO_MIN characters.
+ */
+export const TEXT_FILL_MIN = 0.6
+export const TEXT_FILL_MAX = 1.1
+export const TEXT_FILL_DEMO_MIN = 40
+/** A list warns with this share of the demo's items or fewer, or with a median item this many times the demo's or longer. */
+export const LIST_ITEMS_MIN_SHARE = 0.5
+export const LIST_ITEM_LONGER = 2
+
 /** A picture drawn with its width and height ratio this far from the file's own is stretched (fit `fill` only). */
 export const STRETCH_TOLERANCE = 0.1
 
@@ -263,5 +275,82 @@ export function findStretchedPictures(measures) {
         file: clip(p.src, 160)
       })
     }
+  return failures
+}
+
+const median = (list) => {
+  const sorted = [...list].sort((a, b) => a - b)
+  const mid = Math.floor(sorted.length / 2)
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2
+}
+
+/** The text blocks of one page and width by selector, leaving out a selector the page holds twice: it cannot be matched. */
+function uniqueBySelector(list) {
+  const seen = new Map()
+  for (const b of each(list)) {
+    if (typeof b?.selector !== 'string' || !(b.chars >= 0)) continue
+    seen.set(b.selector, seen.has(b.selector) ? null : b)
+  }
+  return seen
+}
+
+/** What is wrong with a block's text against the same block on the demo, or null. */
+function fillFault(b, was) {
+  if (was.chars > TEXT_FILL_DEMO_MIN) {
+    const share = b.chars / was.chars
+    if (share < TEXT_FILL_MIN || share > TEXT_FILL_MAX)
+      return {
+        measured: `${b.chars} characters`,
+        reason: `A block prints ${b.chars} characters, ${Math.round(share * 100)}% of the ${was.chars} it prints on the template's demo (${TEXT_FILL_MIN * 100}% to ${TEXT_FILL_MAX * 100}% expected)`
+      }
+  }
+  const items = each(b.items)
+  const demoItems = each(was.items)
+  if (!Array.isArray(b.items) || demoItems.length < 2) return null
+  if (items.length <= demoItems.length * LIST_ITEMS_MIN_SHARE)
+    return {
+      measured: `${items.length} items`,
+      reason: `A list shows ${items.length} items where the template's demo shows ${demoItems.length}`
+    }
+  const now = median(items)
+  const then = median(demoItems)
+  if (then > 0 && now >= then * LIST_ITEM_LONGER)
+    return {
+      measured: `median item ${now} characters`,
+      reason: `A list's items run ${now} characters (median), ${Math.round((now / then) * 10) / 10} times the template demo's ${then}`
+    }
+  return null
+}
+
+/**
+ * A block (page, width and selector, a selector the page holds once) that prints far less or far more text than the same block on
+ * the untouched demo, and a list with half the demo's items or items twice as long: warnings, one line per block for the whole run.
+ * A block the baseline holds no text for says nothing (a baseline measured before the host read text blocks holds none).
+ * @param {object[]} measures the written site's
+ * @param {{ page: string, width: number, selector: string, chars: number, items?: number[] }[]} [demoBlocks] the baseline's
+ *   `textBlocks`
+ */
+export function findTextFill(measures, demoBlocks = []) {
+  const demo = new Map()
+  for (const d of each(demoBlocks)) {
+    const key = `${pathOfMeasure(d.page)} ${d.width}`
+    if (!demo.has(key)) demo.set(key, [])
+    demo.get(key).push(d)
+  }
+  const said = new Set()
+  const failures = []
+  for (const m of each(measures)) {
+    const was = uniqueBySelector(demo.get(`${pathOfMeasure(m.path)} ${m.width}`))
+    if (!was.size) continue
+    for (const [selector, b] of uniqueBySelector(m.textBlocks)) {
+      const before = was.get(selector)
+      if (!b || !before) continue
+      const fault = fillFault(b, before)
+      const id = `${pathOfMeasure(m.path)} ${selector}`
+      if (!fault || said.has(id)) continue
+      said.add(id)
+      failures.push({ page: m.path, width: m.width, selector, ...fault })
+    }
+  }
   return failures
 }

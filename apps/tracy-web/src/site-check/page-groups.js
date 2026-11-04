@@ -11,6 +11,7 @@
 //   cms-errors         block  9 write       host no-cms-error-leak, no-raw-placeholders
 //   text-overflow      block  6 writer      new: text cut by or past its box
 //   tall-blocks        warn   6 writer      new: a block over 25% taller than the same block on the demo baseline; silent without one
+//   text-fill          warn   6 writer      new: a block printing under 60% or over 110% of its demo text, a list with half the demo's items or items twice as long; silent without a baseline
 //   stretched-pictures warn   8 pictures    new
 //   unowned-slots      block  3 or 9        new: unowned slots that still hold their demo (a template picture blocks unless the kit says it never prints); 9 for a twin of a hidden frame
 //   empty-controls     block  9 write       new: a button with no words or going nowhere, a form field nothing names
@@ -41,6 +42,7 @@ import {
   findMainHeadings,
   findStretchedPictures,
   findTallBlocks,
+  findTextFill,
   findTextOverflow,
   findUnfinishedHeadings
 } from './page-measures.js'
@@ -115,6 +117,12 @@ export const PAGE_CHECK_GROUPS = [
     level: 'warn',
     causingStep: 6,
     find: (read, context) => findTallBlocks(read.measures, context.baseline?.blocks)
+  }),
+  measuredGroup({
+    name: 'text-fill',
+    level: 'warn',
+    causingStep: 6,
+    find: (read, context) => findTextFill(read.measures, context.baseline?.textBlocks)
   }),
   measuredGroup({
     name: 'stretched-pictures',

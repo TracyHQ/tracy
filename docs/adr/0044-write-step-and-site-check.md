@@ -178,6 +178,24 @@ The comparison standard for a run is the quickstart version the customer receive
 untouched site (decision 8). The template's public demo site is not a standard: where it differs from the quickstart, in sizes or in
 spacing at narrow widths, the difference is not a fault of the run.
 
+### 17. A block's text is compared with the same block on the demo
+
+`text-fill` (step 6, a warning) compares the characters each block prints (page, width, selector the page holds once) with the same
+block on the demo baseline: under 60% (`TEXT_FILL_MIN`) or over 110% (`TEXT_FILL_MAX`) of a demo over 40 characters warns, and so
+does a list showing half the demo's items or fewer, or with a median item twice the demo's or longer. One line per block for the whole
+run, silent when the baseline holds no block text. The host answers `textBlocks: [{ selector, chars, items? }]` beside `blocks`, and
+the baseline keeps them (`textBlocks`). The writer's own rule (ADR 0042 section 10) is tighter, 80% to 100% per slot; this is the
+page-level net, which also sees text a block lost or gained around the slots.
+
+### 18. Nothing measured is not green, and an older kit is refused
+
+A group that measured nothing is `unmeasured`, never green: `broken-sentence` when the kit names no sentence groups,
+`written-not-printed` when no written slot the kit places on a kept page was read, `unowned-slots` when the write report carries no
+unowned list (or no slot at all). The check's `counts` gain `unmeasured` (groups), printed in the last line. With a kit, the first
+group is `kit-version`: a kit whose `tool` names a template-kit older than `KIT_TOOL_MIN` (3.1.0), or no version, blocks the run on
+step 0 ("settle it again"), since the later groups read data such a kit lacks. The committed ja-boxing 1.0.10 kit was settled before
+the tool knew sentence groups, and `broken-sentence` read green on 0 slots.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

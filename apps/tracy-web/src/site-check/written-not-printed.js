@@ -24,6 +24,11 @@ export const writtenNotPrintedGroup = {
     if (unread.length === pages.size) throw new GroupUnmeasured(`No page answered: ${unread.join(', ')}.`)
     const values = new Map(slots.map((s) => [s.slot, s]))
     const result = sitePrints({ onPages, pages, slots })
+    // Nothing measured is not green (ADR 0044, 2026-11-04).
+    if (!result.printed.size && !result.notPrinted.length)
+      throw new GroupUnmeasured(
+        'No written slot the kit places on a kept page was found to read, so nothing was measured.'
+      )
     return {
       checked: result.printed.size + result.notPrinted.length,
       skipped: result.unread.length,

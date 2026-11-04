@@ -24,6 +24,7 @@ const contractDir = mkdtempSync(path.join(tmpdir(), 'write-step-contract-'))
 const made = {
   ...KIT().doc,
   kit: 'tracy-template-kit/2',
+  tool: 'template-kit 3.1.0',
   quickstart: { version: '1.0.0' },
   images: [{ id: 'block-1-1440', path: 'images/block-1-1440.jpg', sha256: 'e'.repeat(64) }]
 }
@@ -225,8 +226,9 @@ test('check prints the group and the verdict, exits 0 on green and writes nothin
   const h = await ranRun()
   const before = h.site.calls.filter((c) => c.params.operation !== 'inspect').length
   assert.equal(await h.cli(checkArgs()), 0)
-  assert.match(h.out[0], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
-  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn)')
+  assert.equal(h.out[0], 'kit-version: green 1 checked')
+  assert.match(h.out[1], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
+  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn, 0 unmeasured)')
   assert.equal(h.site.calls.filter((c) => c.params.operation !== 'inspect').length, before)
   const { report } = h.runs.rows[0]
   assert.equal(report.siteCheck.version, 'site-check/1')
@@ -243,7 +245,7 @@ test('check exits 1 on red, printing the page, the slot, the step, and --out kee
     line,
     /block step 9 \(write\) page=- slot=block-2\.1 key=module-2\.1 measured="Changed by hand"/
   )
-  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn)')
+  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn, 0 unmeasured)')
   const saved = JSON.parse(readFileSync(path.join(dir, 'site-check.json'), 'utf8'))
   assert.equal(saved.status, 'red')
   assert.equal(h.runs.rows[0].report.slots.find((s) => s.slot === 'block-2.1').readBack, 'differs')
@@ -271,7 +273,13 @@ test('check --all-groups runs the page groups after a red read-back; a default c
       again.out.some((l) => /ran although read-back is red/.test(l)),
       wantAll
     )
-    assert.equal(again.out.at(-1), 'site-check: red (1 block, 0 warn)')
+    // The page groups the host answers nothing for are unmeasured, and counted when they ran.
+    assert.match(
+      again.out.at(-1),
+      wantAll
+        ? /^site-check: red \(1 block, 0 warn, [1-9]\d* unmeasured\)$/
+        : /^site-check: red \(1 block, 0 warn, 0 unmeasured\)$/
+    )
   }
 })
 

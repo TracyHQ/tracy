@@ -224,10 +224,14 @@ test('warnings alone leave the check green and are counted', async () => {
     report: writtenReport(),
     host: fakeHost({ '/': pageRead('/') }, { measures }).host,
     baseline,
-    kit: { blocks: [{ sentences: [{ id: 'one', slots: ['block-2.1'] }] }] }
+    kit: { tool: 'template-kit 3.1.0', blocks: [{ sentences: [{ id: 'one', slots: ['block-2.1'] }] }] }
   })
-  assert.equal(check.status, 'green')
-  assert.deepEqual(check.counts, { block: 0, warn: 1 })
+  assert.equal(
+    check.status,
+    'green',
+    JSON.stringify(check.groups.filter((g) => g.status !== 'green').map((g) => [g.name, g.reason]))
+  )
+  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 0 })
 })
 
 test('when the host answers no page measures, the groups that need them are unmeasured and dead pages are still found', async () => {

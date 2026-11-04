@@ -265,12 +265,15 @@ test('the sentence that reads as one is green, a name another line prints with a
   assert.deepEqual([unseen.read, unseen.failures.length], [0, 0])
 })
 
-test('the sentence group without a kit is unmeasured, with a kit of no groups it says so', async () => {
+test('the sentence group without a kit, or with a kit of no sentence groups, is unmeasured and never green', async () => {
   const measures = () => [{ path: '/', width: 1440, shownText: 'x' }]
   assert.equal((await run(measures, 'broken-sentence')).status, 'unmeasured')
+  // A kit settled before the tool knew sentence groups measured 0 slots: that is no green (ADR 0044, 2026-11-04).
   const none = await run(measures, 'broken-sentence', {}, { kit: { blocks: [] } })
-  assert.equal(none.status, 'green')
-  assert.equal(none.groups[0].failures[0].level, 'warn')
+  assert.equal(none.status, 'unmeasured')
+  assert.equal(none.groups[0].status, 'unmeasured')
+  assert.match(none.groups[0].reason, /the kit has no sentence groups/i)
+  assert.equal(none.counts.unmeasured, 1)
 })
 
 test('an unfinished heading is the writer step, which owns the final text of every slot, kept labels included', async () => {

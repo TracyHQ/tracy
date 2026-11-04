@@ -1,9 +1,9 @@
 /**
  * The measures a site check asks of the host's browser besides its verdicts (`measurePages: true` on
- * `POST /_host/demo-qa`): text that overflows its box, blocks far taller than a screen, pictures drawn out of shape,
- * and the links a page holds. They are read at 1440 and again at 390 on every page the run keeps, and answered as
+ * `POST /_host/demo-qa`): text that overflows its box, blocks far taller than a screen, how much text each block prints
+ * (with the item lengths of a list), pictures drawn out of shape, and the links a page holds. They are read at 1440 and again at 390 on every page the run keeps, and answered as
  * `pageMeasures`, one entry per page and width:
- *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], pictures: [...], controls: [...],
+ *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], textBlocks: [...], pictures: [...], controls: [...],
  *     fields: [...], glued: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
  *     selfLinks: [...], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
  *     brandStyle?, look? }
@@ -23,6 +23,8 @@ export const MEASURE_CAPS = Object.freeze({
   links: 300,
   textBoxes: 40,
   blocks: 20,
+  textBlocks: 80,
+  listItems: 40,
   pictures: 40,
   controls: 40,
   fields: 40,
@@ -152,6 +154,25 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (getComputedStyle(el).position === 'fixed' || !shown(el)) continue
     const height = Math.round(el.getBoundingClientRect().height)
     if (height > viewHeight * 2) blocks.push({ selector: selectorOf(el), height })
+  }
+
+  // The text each block prints, and for a list the length of each item: the judge holds them to the same block on the demo
+  // (`text-fill`). Characters of the shown text, spaces squashed.
+  const textBlocks = []
+  const said = (el) => (el.innerText ?? '').replace(/\s+/g, ' ').trim().length
+  for (const el of candidates) {
+    if (textBlocks.length >= caps.textBlocks) break
+    if (getComputedStyle(el).position === 'fixed' || !shown(el)) continue
+    const chars = said(el)
+    if (!chars) continue
+    const list = /^(UL|OL)$/.test(el.tagName.toUpperCase())
+    const items = list
+      ? Array.from(el.children)
+          .filter((li) => li.tagName.toUpperCase() === 'LI' && shown(li))
+          .slice(0, caps.listItems)
+          .map(said)
+      : null
+    textBlocks.push({ selector: selectorOf(el), chars, ...(items ? { items } : {}) })
   }
 
   // Pictures drawn with a ratio other than their file's, where nothing crops them.
@@ -344,6 +365,7 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     links,
     textBoxes,
     blocks,
+    textBlocks,
     pictures,
     controls,
     fields,

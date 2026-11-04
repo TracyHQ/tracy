@@ -12,11 +12,14 @@
 //
 // Statuses: green, red (a block failure), unmeasured (it could not tell), and not-run for a group stopped by an earlier one.
 import { GroupUnmeasured } from './group-unmeasured.js'
+import { kitVersionGroup } from './kit-version.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
 import { readBackGroup } from './read-back.js'
 import { writtenNotPrintedGroup } from './written-not-printed.js'
 
 export const CHECK_VERSION = 'site-check/1'
+/** With a kit, the first group: a kit older than the check expects stops the run (kit-version.js). */
+export const KIT_GROUPS = [kitVersionGroup]
 /** The groups that need no browser. With a host, `PAGE_CHECK_GROUPS` (page-groups.js) follow them. */
 export const SITE_CHECK_GROUPS = [readBackGroup]
 /** The groups that read pages as a visitor's browser gets them, with no browser: they run when a page reader is given. */
@@ -91,7 +94,7 @@ const notGreenAfter = (status, stoppedBy) => (stoppedBy && status === 'green' ? 
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
  *   pageHtml?: (path: string) => Promise<string | null>, baseline?: object | null, kit?: object | null, allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
  *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
- *   `pageHtml` reads a page's markup: without it `written-not-printed` does not run.
+ *   `pageHtml` reads a page's markup: without it `written-not-printed` does not run. A `kit` adds `kit-version` first.
  *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
  *   stopping group made it (never green).
  * @returns {Promise<object>} `site-check/1`
@@ -103,7 +106,12 @@ export async function runSiteCheck({
   pageHtml,
   baseline = null,
   kit = null,
-  groups = [...SITE_CHECK_GROUPS, ...(pageHtml ? PAGE_READ_GROUPS : []), ...(host ? PAGE_CHECK_GROUPS : [])],
+  groups = [
+    ...(kit ? KIT_GROUPS : []),
+    ...SITE_CHECK_GROUPS,
+    ...(pageHtml ? PAGE_READ_GROUPS : []),
+    ...(host ? PAGE_CHECK_GROUPS : [])
+  ],
   now = Date.now,
   allGroups = false
 }) {
@@ -137,7 +145,9 @@ export async function runSiteCheck({
     contract: report.contract ?? null,
     counts: {
       block: every.filter((f) => f.level === 'block').length,
-      warn: every.filter((f) => f.level === 'warn').length
+      warn: every.filter((f) => f.level === 'warn').length,
+      // Groups that could not tell: never counted as green (ADR 0044, 2026-11-04).
+      unmeasured: results.filter((g) => g.status === 'unmeasured').length
     },
     groups: results
   }

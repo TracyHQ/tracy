@@ -74,7 +74,12 @@ function labelOf(held, slots) {
 
 async function run(context) {
   const { report, read } = context
-  const unowned = Array.isArray(report.unowned) ? report.unowned : []
+  // Nothing measured is not green (ADR 0044, 2026-11-04): a report without its unowned list, or with no slot at all, says nothing.
+  if (!Array.isArray(report.unowned))
+    throw new GroupUnmeasured('The write report has no unowned list, so no unowned slot was measured.')
+  if (!each(report.slots).length && !report.unowned.length)
+    throw new GroupUnmeasured('The write report lists no slot, so no unowned slot was measured.')
+  const unowned = report.unowned
   const reading = await read('content.contract', { operation: 'inspect' })
   if (!Array.isArray(reading.slots)) throw new GroupUnmeasured('The site listed no slots.')
   const slots = new Map(reading.slots.map((s) => [s?.key, s]))

@@ -25,7 +25,7 @@ test('every written line holding what was ordered is green, with the reads it us
   assert.equal(group(result).status, 'green')
   assert.equal(group(result).checked, 2)
   assert.deepEqual(group(result).reads, [{ read: 'content.contract inspect', lines: 2 }])
-  assert.deepEqual(result.counts, { block: 0, warn: 0 })
+  assert.deepEqual(result.counts, { block: 0, warn: 0, unmeasured: 0 })
 })
 
 test('a slot changed by hand is red, naming the page, the slot, the measured value and step 9', async () => {
@@ -49,7 +49,7 @@ test('a slot changed by hand is red, naming the page, the slot, the measured val
   assert.equal(failure.ordered, 'Train with us')
   assert.equal(failure.level, 'block')
   assert.equal(failure.causingStep, 9)
-  assert.deepEqual(result.counts, { block: 1, warn: 0 })
+  assert.deepEqual(result.counts, { block: 1, warn: 0, unmeasured: 0 })
 })
 
 test('a line the plugin refused stays red, in the plugin words, even when the site holds the ordered value', async () => {
@@ -163,7 +163,7 @@ test('a green read-back lets later groups run, and a later group is added withou
   const [block, warn] = group(result, 'later').failures
   assert.deepEqual([block.level, block.causingStep, block.width, block.group], ['block', 6, 390, 'later'])
   assert.deepEqual([warn.level, warn.causingStep], ['warn', 8])
-  assert.deepEqual(result.counts, { block: 1, warn: 1 })
+  assert.deepEqual(result.counts, { block: 1, warn: 1, unmeasured: 0 })
   assert.equal(result.status, 'red')
   assert.equal(site.calls.length, 1, 'one inspect is shared by every group')
 })
@@ -179,7 +179,7 @@ test('warnings alone keep a group and the check green', async () => {
   }
   const result = await check(checkSite({}), report([]), { groups: [warns] })
   assert.equal(result.status, 'green')
-  assert.deepEqual(result.counts, { block: 0, warn: 1 })
+  assert.deepEqual(result.counts, { block: 0, warn: 1, unmeasured: 0 })
 })
 
 test('nothing on the site changes: only inspect is asked, and a group cannot write through the check', async () => {

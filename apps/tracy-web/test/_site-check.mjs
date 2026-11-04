@@ -22,6 +22,8 @@ export const report = (slots, over = {}) => ({
   kit: CONTRACT,
   contract: CONTRACT,
   slots,
+  // A write report always carries its unowned list; unowned-slots is unmeasured without one.
+  unowned: [],
   ...over
 })
 

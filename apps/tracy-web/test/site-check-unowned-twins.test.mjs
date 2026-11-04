@@ -14,6 +14,7 @@ const picture = (key, current) => ({
   current
 })
 const KIT = {
+  tool: 'template-kit 3.1.0',
   blocks: [
     {
       id: 'block-8',

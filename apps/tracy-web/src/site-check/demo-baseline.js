@@ -189,6 +189,25 @@ export function blocksFromHost(measures) {
   )
 }
 
+/**
+ * The text each block of an untouched site prints, per page and width, and the item lengths of a list: what `text-fill` holds a
+ * written site's to. A host from before it read text blocks answers none, and the measure then says nothing.
+ * @param {object[]} measures the host's `pageMeasures`
+ */
+export function textBlocksFromHost(measures) {
+  return each(measures).flatMap((m) =>
+    each(m?.textBlocks)
+      .filter((b) => typeof b?.selector === 'string' && b.chars > 0)
+      .map((b) => ({
+        page: m.path,
+        width: m.width,
+        selector: b.selector,
+        chars: b.chars,
+        ...(Array.isArray(b.items) ? { items: b.items } : {})
+      }))
+  )
+}
+
 const fileOf = (dir, version) => path.join(dir, `${String(version).replace(/[^a-zA-Z0-9._-]+/g, '_')}.json`)
 
 /** One baseline per quickstart version, kept as a file in a folder that is not in the repo. */
@@ -275,7 +294,8 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
   const baseline = {
     ...baselineFromHost(measured, { version, measuredAt: now().toISOString() }),
     over: overFromHost(measures),
-    blocks: blocksFromHost(measures)
+    blocks: blocksFromHost(measures),
+    textBlocks: textBlocksFromHost(measures)
   }
   await store.save(version, baseline)
   return { baseline, measured: true }
