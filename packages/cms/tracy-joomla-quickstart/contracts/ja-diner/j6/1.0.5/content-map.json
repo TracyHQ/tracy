@@ -383,7 +383,8 @@
       "sourceId": 2,
       "identityReferences": {
         "catid": "category-12"
-      }
+      },
+      "demoOnly": true
     },
     {
       "key": "article-3",
@@ -1586,6 +1587,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / image",
       "role": "editorial.illustration",
+      "group": {
+        "id": "module-94.slide.0",
+        "item": 0,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -1628,6 +1634,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / image",
       "role": "editorial.illustration",
+      "group": {
+        "id": "module-94.slide.1",
+        "item": 1,
+        "kind": "contact"
+      },
       "fit": {
         "measured": false,
         "kind": "photo",
@@ -1656,6 +1667,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / title",
       "role": "editorial.heading",
+      "group": {
+        "id": "module-94.slide.0",
+        "item": 0,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -1697,6 +1713,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / title",
       "role": "editorial.heading",
+      "group": {
+        "id": "module-94.slide.1",
+        "item": 1,
+        "kind": "contact"
+      },
       "fit": {
         "measured": false
       }
@@ -1717,6 +1738,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / desc",
       "role": "editorial.paragraph",
+      "group": {
+        "id": "module-94.slide.0",
+        "item": 0,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -1758,6 +1784,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / desc",
       "role": "editorial.paragraph",
+      "group": {
+        "id": "module-94.slide.1",
+        "item": 1,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -1800,7 +1831,7 @@
       "label": "Slideshow / button1",
       "role": "contact.cta_label",
       "group": {
-        "id": "module-94.cta.1",
+        "id": "module-94.slide.0",
         "item": 0,
         "kind": "contact"
       },
@@ -1846,8 +1877,8 @@
       "label": "Slideshow / button1",
       "role": "contact.cta_label",
       "group": {
-        "id": "module-94.cta.1",
-        "item": 0,
+        "id": "module-94.slide.1",
+        "item": 1,
         "kind": "contact"
       },
       "fit": {
@@ -1892,7 +1923,7 @@
       "label": "Slideshow / btn-link1",
       "role": "contact.cta_url",
       "group": {
-        "id": "module-94.cta.1",
+        "id": "module-94.slide.0",
         "item": 0,
         "kind": "contact"
       }
@@ -1914,8 +1945,8 @@
       "label": "Slideshow / btn-link1",
       "role": "contact.cta_url",
       "group": {
-        "id": "module-94.cta.1",
-        "item": 0,
+        "id": "module-94.slide.1",
+        "item": 1,
         "kind": "contact"
       }
     },
@@ -1935,6 +1966,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / button2",
       "role": "editorial.button_label",
+      "group": {
+        "id": "module-94.slide.0",
+        "item": 0,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -1976,6 +2012,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / button2",
       "role": "editorial.button_label",
+      "group": {
+        "id": "module-94.slide.1",
+        "item": 1,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -2017,6 +2058,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / btn-link2",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-94.slide.0",
+        "item": 0,
+        "kind": "contact"
+      },
       "customize": "keep"
     },
     {
@@ -2035,6 +2081,11 @@
       "nestedJson": "jatools-config",
       "label": "Slideshow / btn-link2",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-94.slide.1",
+        "item": 1,
+        "kind": "contact"
+      },
       "customize": "keep"
     },
     {
@@ -2167,6 +2218,11 @@
       "nestedJson": "jatools-config",
       "label": "Meet Three Broomsticks. / ft-img",
       "role": "editorial.illustration",
+      "group": {
+        "id": "module-95.section.0",
+        "item": 0,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -2209,6 +2265,11 @@
       "nestedJson": "jatools-config",
       "label": "Meet Three Broomsticks. / ft-img",
       "role": "editorial.illustration",
+      "group": {
+        "id": "module-95.section.1",
+        "item": 1,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -2251,6 +2312,11 @@
       "nestedJson": "jatools-config",
       "label": "Meet Three Broomsticks. / title",
       "role": "editorial.heading",
+      "group": {
+        "id": "module-95.section.0",
+        "item": 0,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -2292,6 +2358,11 @@
       "nestedJson": "jatools-config",
       "label": "Meet Three Broomsticks. / title",
       "role": "editorial.heading",
+      "group": {
+        "id": "module-95.section.1",
+        "item": 1,
+        "kind": "contact"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -2912,7 +2983,14 @@
         0
       ],
       "nestedJson": "jatools-config",
-      "label": "Gallery. / link"
+      "label": "Gallery. / link",
+      "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-96.dish.0",
+        "item": 0,
+        "kind": "menu_item"
+      },
+      "customize": "keep"
     },
     {
       "key": "module-96.8",
@@ -2929,7 +3007,14 @@
         1
       ],
       "nestedJson": "jatools-config",
-      "label": "Gallery. / link"
+      "label": "Gallery. / link",
+      "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-96.dish.1",
+        "item": 1,
+        "kind": "menu_item"
+      },
+      "customize": "keep"
     },
     {
       "key": "module-96.9",
@@ -2999,7 +3084,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Discover Our Menu. / image-intro",
-      "role": "editorial.illustration",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-97.business",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "kind": "cutout",
@@ -7816,114 +7906,6 @@
       "entity": "module-106",
       "column": "params",
       "type": "image",
-      "sample": "images/joomlart/other/bg-search.jpg",
-      "maxCharacters": 255,
-      "requiresEvidence": false,
-      "jsonPath": [
-        "menuitem_config",
-        "background",
-        "1"
-      ],
-      "label": "JA Masthead / menu item 124 / background",
-      "role": "business.hero_image",
-      "group": {
-        "id": "module-106.masthead-1",
-        "item": 0,
-        "kind": "business"
-      },
-      "fit": {
-        "measured": false,
-        "kind": "photo",
-        "replace": "photo",
-        "transparent": null,
-        "source": null
-      }
-    },
-    {
-      "key": "module-106.7",
-      "entity": "module-106",
-      "column": "params",
-      "type": "text",
-      "sample": "Search",
-      "maxCharacters": 40,
-      "requiresEvidence": false,
-      "jsonPath": [
-        "menuitem_config",
-        "title",
-        "1"
-      ],
-      "label": "JA Masthead / menu item 124 / title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 138,
-            "height": 54
-          },
-          "phone": {
-            "width": 138,
-            "height": 54
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 111,
-          "phone": 43
-        },
-        "maxCharacters": 43,
-        "casing": "upper",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "module-106.8",
-      "entity": "module-106",
-      "column": "params",
-      "type": "text",
-      "sample": "Responsive joomla template for restaurant",
-      "maxCharacters": 102,
-      "requiresEvidence": false,
-      "jsonPath": [
-        "menuitem_config",
-        "description",
-        "1"
-      ],
-      "label": "JA Masthead / menu item 124 / description",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 1176,
-            "height": 29
-          },
-          "phone": {
-            "width": 306,
-            "height": 48
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 2
-        },
-        "maxChars": {
-          "desktop": 127,
-          "phone": 78
-        },
-        "maxCharacters": 78,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "module-106.9",
-      "entity": "module-106",
-      "column": "params",
-      "type": "image",
       "sample": "images/joomlart/other/bg-martsearch.jpg",
       "maxCharacters": 255,
       "requiresEvidence": false,
@@ -7966,7 +7948,7 @@
       }
     },
     {
-      "key": "module-106.10",
+      "key": "module-106.7",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8006,7 +7988,7 @@
       }
     },
     {
-      "key": "module-106.11",
+      "key": "module-106.8",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8046,7 +8028,7 @@
       }
     },
     {
-      "key": "module-106.12",
+      "key": "module-106.9",
       "entity": "module-106",
       "column": "params",
       "type": "image",
@@ -8092,7 +8074,7 @@
       }
     },
     {
-      "key": "module-106.13",
+      "key": "module-106.10",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8137,7 +8119,7 @@
       }
     },
     {
-      "key": "module-106.14",
+      "key": "module-106.11",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8177,7 +8159,7 @@
       }
     },
     {
-      "key": "module-106.15",
+      "key": "module-106.12",
       "entity": "module-106",
       "column": "params",
       "type": "image",
@@ -8223,7 +8205,7 @@
       }
     },
     {
-      "key": "module-106.16",
+      "key": "module-106.13",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8268,7 +8250,7 @@
       }
     },
     {
-      "key": "module-106.17",
+      "key": "module-106.14",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8308,7 +8290,7 @@
       }
     },
     {
-      "key": "module-106.18",
+      "key": "module-106.15",
       "entity": "module-106",
       "column": "params",
       "type": "image",
@@ -8354,7 +8336,7 @@
       }
     },
     {
-      "key": "module-106.19",
+      "key": "module-106.16",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8394,7 +8376,7 @@
       }
     },
     {
-      "key": "module-106.20",
+      "key": "module-106.17",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8434,7 +8416,7 @@
       }
     },
     {
-      "key": "module-106.21",
+      "key": "module-106.18",
       "entity": "module-106",
       "column": "params",
       "type": "image",
@@ -8480,7 +8462,7 @@
       }
     },
     {
-      "key": "module-106.22",
+      "key": "module-106.19",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8520,7 +8502,7 @@
       }
     },
     {
-      "key": "module-106.23",
+      "key": "module-106.20",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8560,7 +8542,7 @@
       }
     },
     {
-      "key": "module-106.24",
+      "key": "module-106.21",
       "entity": "module-106",
       "column": "params",
       "type": "image",
@@ -8606,7 +8588,7 @@
       }
     },
     {
-      "key": "module-106.25",
+      "key": "module-106.22",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8646,7 +8628,7 @@
       }
     },
     {
-      "key": "module-106.26",
+      "key": "module-106.23",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8686,7 +8668,7 @@
       }
     },
     {
-      "key": "module-106.27",
+      "key": "module-106.24",
       "entity": "module-106",
       "column": "params",
       "type": "image",
@@ -8732,7 +8714,7 @@
       }
     },
     {
-      "key": "module-106.28",
+      "key": "module-106.25",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8772,7 +8754,7 @@
       }
     },
     {
-      "key": "module-106.29",
+      "key": "module-106.26",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8812,7 +8794,7 @@
       }
     },
     {
-      "key": "module-106.30",
+      "key": "module-106.27",
       "entity": "module-106",
       "column": "params",
       "type": "image",
@@ -8858,7 +8840,7 @@
       }
     },
     {
-      "key": "module-106.31",
+      "key": "module-106.28",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -8898,7 +8880,7 @@
       }
     },
     {
-      "key": "module-106.32",
+      "key": "module-106.29",
       "entity": "module-106",
       "column": "params",
       "type": "text",
@@ -9611,7 +9593,7 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Happy Hours Style 3 / hp-info",
-      "role": "event.date_or_year",
+      "role": "offering.schedule",
       "group": {
         "id": "module-115.event.0",
         "item": 0,
@@ -9703,7 +9685,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Happy Hours Style 3 / hp-link-text",
-      "role": "editorial.button_label",
+      "role": "offering.cta_label",
+      "group": {
+        "id": "module-115.event.0",
+        "item": 0,
+        "kind": "event"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -9743,7 +9730,13 @@
         0
       ],
       "nestedJson": "jatools-config",
-      "label": "Happy Hours Style 3 / hp-link"
+      "label": "Happy Hours Style 3 / hp-link",
+      "role": "offering.cta_url",
+      "group": {
+        "id": "module-115.event.0",
+        "item": 0,
+        "kind": "event"
+      }
     },
     {
       "key": "module-115.7",
@@ -9934,7 +9927,7 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Happy Hours Style 1 / hp-info",
-      "role": "event.date_or_year",
+      "role": "offering.schedule",
       "group": {
         "id": "module-116.event.0",
         "item": 0,
@@ -10026,7 +10019,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Happy Hours Style 1 / hp-link-text",
-      "role": "editorial.button_label",
+      "role": "offering.cta_label",
+      "group": {
+        "id": "module-116.event.0",
+        "item": 0,
+        "kind": "event"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -10066,7 +10064,13 @@
         0
       ],
       "nestedJson": "jatools-config",
-      "label": "Happy Hours Style 1 / hp-link"
+      "label": "Happy Hours Style 1 / hp-link",
+      "role": "offering.cta_url",
+      "group": {
+        "id": "module-116.event.0",
+        "item": 0,
+        "kind": "event"
+      }
     },
     {
       "key": "module-116.7",
@@ -10257,7 +10261,7 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Happy Hours Style 2 / hp-info",
-      "role": "event.date_or_year",
+      "role": "offering.schedule",
       "group": {
         "id": "module-117.event.0",
         "item": 0,
@@ -10349,7 +10353,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Happy Hours Style 2 / hp-link-text",
-      "role": "editorial.button_label",
+      "role": "offering.cta_label",
+      "group": {
+        "id": "module-117.event.0",
+        "item": 0,
+        "kind": "event"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -10389,7 +10398,13 @@
         0
       ],
       "nestedJson": "jatools-config",
-      "label": "Happy Hours Style 2 / hp-link"
+      "label": "Happy Hours Style 2 / hp-link",
+      "role": "offering.cta_url",
+      "group": {
+        "id": "module-117.event.0",
+        "item": 0,
+        "kind": "event"
+      }
     },
     {
       "key": "module-117.7",
@@ -10529,7 +10544,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Features Style 4 / img",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "module-121.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -10572,7 +10592,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Features Style 4 / img",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "module-121.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -10615,7 +10640,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Features Style 4 / img",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "module-121.gallery.2",
+        "item": 2,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -10658,7 +10688,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Features Style 4 / img",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "module-121.gallery.3",
+        "item": 3,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -10702,6 +10737,11 @@
       "nestedJson": "jatools-config",
       "label": "Features Style 4 / link-img",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-121.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "customize": "keep",
       "fit": {
         "measured": false
@@ -10724,6 +10764,11 @@
       "nestedJson": "jatools-config",
       "label": "Features Style 4 / link-img",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-121.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "customize": "keep",
       "fit": {
         "measured": false
@@ -10746,6 +10791,11 @@
       "nestedJson": "jatools-config",
       "label": "Features Style 4 / link-img",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-121.gallery.2",
+        "item": 2,
+        "kind": "gallery"
+      },
       "customize": "keep",
       "fit": {
         "measured": false
@@ -10768,6 +10818,11 @@
       "nestedJson": "jatools-config",
       "label": "Features Style 4 / link-img",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-121.gallery.3",
+        "item": 3,
+        "kind": "gallery"
+      },
       "customize": "keep",
       "fit": {
         "measured": false
@@ -10985,7 +11040,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Features Style 5 / img",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "module-122.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -11028,7 +11088,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Features Style 5 / img",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "module-122.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -11071,7 +11136,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Features Style 5 / img",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "module-122.gallery.2",
+        "item": 2,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -11114,7 +11184,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Features Style 5 / img",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "module-122.gallery.3",
+        "item": 3,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -11158,6 +11233,11 @@
       "nestedJson": "jatools-config",
       "label": "Features Style 5 / link-img",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-122.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "customize": "keep",
       "fit": {
         "measured": false
@@ -11180,6 +11260,11 @@
       "nestedJson": "jatools-config",
       "label": "Features Style 5 / link-img",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-122.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "customize": "keep",
       "fit": {
         "measured": false
@@ -11202,6 +11287,11 @@
       "nestedJson": "jatools-config",
       "label": "Features Style 5 / link-img",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-122.gallery.2",
+        "item": 2,
+        "kind": "gallery"
+      },
       "customize": "keep",
       "fit": {
         "measured": false
@@ -11224,6 +11314,11 @@
       "nestedJson": "jatools-config",
       "label": "Features Style 5 / link-img",
       "role": "editorial.navigation_url",
+      "group": {
+        "id": "module-122.gallery.3",
+        "item": 3,
+        "kind": "gallery"
+      },
       "customize": "keep",
       "fit": {
         "measured": false
@@ -38253,7 +38348,7 @@
       "entity": "article-28",
       "column": "introtext",
       "type": "url",
-      "sample": "#",
+      "sample": "/index.php/offers",
       "maxCharacters": 2048,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div/div[1]/div[2]/div/div[1]/div/div[4]/a/@href",
@@ -39593,7 +39688,12 @@
       "maxCharacters": 2048,
       "requiresEvidence": true,
       "label": "Ja Diner / webpage",
-      "customize": "keep"
+      "role": "contact.social_url",
+      "group": {
+        "id": "contact-1.contact",
+        "item": 0,
+        "kind": "contact"
+      }
     },
     {
       "key": "contact-1.6",
@@ -46173,6 +46273,26 @@
       "max": 1,
       "maxFrom": "demo-count"
     },
+    "module-121.gallery": {
+      "items": 4,
+      "shown": 4,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 4,
+      "maxFrom": "demo-count"
+    },
+    "module-122.gallery": {
+      "items": 4,
+      "shown": 4,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 4,
+      "maxFrom": "demo-count"
+    },
     "module-123.member": {
       "items": 8,
       "shown": 8,
@@ -46183,20 +46303,20 @@
       "max": 8,
       "maxFrom": "demo-count"
     },
-    "module-94.cta": {
-      "items": 1,
-      "shown": 1,
+    "module-94.slide": {
+      "items": 2,
+      "shown": 2,
       "uniform": true,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
-      "max": 1,
+      "max": 2,
       "maxFrom": "demo-count"
     },
     "module-95.section": {
       "items": 2,
       "shown": 2,
-      "uniform": true,
+      "uniform": false,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
@@ -46234,11 +46354,102 @@
       "minFrom": "unknown",
       "max": 4,
       "maxFrom": "block-setting",
-      "shown": [],
-      "rowSlots": [],
+      "shown": [
+        "article-3",
+        "article-4",
+        "article-5",
+        "article-6"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-3",
+              "slot": "article-3.6",
+              "maxCharacters": 68,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-4",
+              "slot": "article-4.23",
+              "maxCharacters": 56,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-5",
+              "slot": "article-5.23",
+              "maxCharacters": 52,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.23",
+              "maxCharacters": 43,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [
+            "Read More"
+          ],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-3",
+              "path": "/index.php/our-blog/10-restaurant-news/3-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays"
+            },
+            {
+              "item": "article-4",
+              "path": "/index.php/our-blog/2-restaurant-business/4-we-ve-been-nominated-for-the-britain-restaurant-awards"
+            },
+            {
+              "item": "article-5",
+              "path": "/index.php/our-blog/11-restaurant-guide/5-three-broomsticks-welcomes-new-chef-caleb-nunez"
+            },
+            {
+              "item": "article-6",
+              "path": "/index.php/our-blog/10-restaurant-news/6-three-broomsticks-s-autumn-menu-unveiled"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-3",
+              "slot": "article-3.7"
+            },
+            {
+              "item": "article-4",
+              "slot": "article-4.24"
+            },
+            {
+              "item": "article-5",
+              "slot": "article-5.24"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.24"
+            }
+          ]
+        }
+      ],
       "demoOwned": [],
-      "observedBy": null,
-      "observedOn": null
+      "observedBy": "block",
+      "observedOn": "/index.php?Itemid=101"
     },
     "module-108.items": {
       "block": "module-108",
@@ -47244,6 +47455,533 @@
       "demoOwned": [],
       "observedBy": "body",
       "observedOn": "/index.php?Itemid=148"
+    },
+    "category-2.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/our-blog/2-restaurant-business",
+      "rowKind": "items",
+      "source": {
+        "kind": "category",
+        "id": "category-2",
+        "title": "Restaurant Business",
+        "page": null,
+        "route": "our-blog/2-restaurant-business"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 12,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-4",
+        "article-10",
+        "article-11",
+        "article-12",
+        "article-13",
+        "article-14"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.23",
+              "maxCharacters": 56,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.23",
+              "maxCharacters": 54,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.23",
+              "maxCharacters": 54,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-12",
+              "slot": "article-12.23",
+              "maxCharacters": 52,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-13",
+              "slot": "article-13.23",
+              "maxCharacters": 56,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.23",
+              "maxCharacters": 64,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [
+            "Read more …"
+          ],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "path": "/index.php/our-blog/2-restaurant-business/4-we-ve-been-nominated-for-the-britain-restaurant-awards"
+            },
+            {
+              "item": "article-10",
+              "path": "/index.php/our-blog/2-restaurant-business/10-4-habits-that-can-improve-your-customer-service"
+            },
+            {
+              "item": "article-11",
+              "path": "/index.php/our-blog/2-restaurant-business/11-8-trends-trickling-down-to-mainstream-menus"
+            },
+            {
+              "item": "article-12",
+              "path": "/index.php/our-blog/2-restaurant-business/12-starbucks-brings-under-armour-exec-on-board"
+            },
+            {
+              "item": "article-13",
+              "path": "/index.php/our-blog/2-restaurant-business/13-inside-olive-garden-s-never-ending-pasta-pass"
+            },
+            {
+              "item": "article-14",
+              "path": "/index.php/our-blog/2-restaurant-business/14-century-old-nathan-s-famous-aims-for-youth-with-new-look"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-4",
+              "slot": "article-4.24"
+            },
+            {
+              "item": "article-10",
+              "slot": "article-10.24"
+            },
+            {
+              "item": "article-11",
+              "slot": "article-11.24"
+            },
+            {
+              "item": "article-12",
+              "slot": "article-12.24"
+            },
+            {
+              "item": "article-13",
+              "slot": "article-13.24"
+            },
+            {
+              "item": "article-14",
+              "slot": "article-14.24"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/our-blog/2-restaurant-business"
+    },
+    "category-9.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/our-blog/9-restaurant-marketing",
+      "rowKind": "items",
+      "source": {
+        "kind": "category",
+        "id": "category-9",
+        "title": "Restaurant Marketing",
+        "page": null,
+        "route": "our-blog/9-restaurant-marketing"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 12,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-15",
+        "article-16",
+        "article-17",
+        "article-18"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-15",
+              "slot": "article-15.23",
+              "maxCharacters": 56,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.23",
+              "maxCharacters": 56,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-17",
+              "slot": "article-17.23",
+              "maxCharacters": 66,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-18",
+              "slot": "article-18.23",
+              "maxCharacters": 36,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [
+            "Read more …"
+          ],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-15",
+              "path": "/index.php/our-blog/9-restaurant-marketing/15-did-ihop-s-publicity-stunt-hurt-applebee-s"
+            },
+            {
+              "item": "article-16",
+              "path": "/index.php/our-blog/9-restaurant-marketing/16-buffalo-wild-wings-considers-adding-sports-betting"
+            },
+            {
+              "item": "article-17",
+              "path": "/index.php/our-blog/9-restaurant-marketing/17-this-week-s-restaurant-nightmares-language-people"
+            },
+            {
+              "item": "article-18",
+              "path": "/index.php/our-blog/9-restaurant-marketing/18-jason-alexander-is-kfc-s-new-colonel"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-15",
+              "slot": "article-15.24"
+            },
+            {
+              "item": "article-16",
+              "slot": "article-16.24"
+            },
+            {
+              "item": "article-17",
+              "slot": "article-17.24"
+            },
+            {
+              "item": "article-18",
+              "slot": "article-18.24"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/our-blog/9-restaurant-marketing"
+    },
+    "category-10.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/our-blog/10-restaurant-news",
+      "rowKind": "items",
+      "source": {
+        "kind": "category",
+        "id": "category-10",
+        "title": "Restaurant News",
+        "page": null,
+        "route": "our-blog/10-restaurant-news"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 12,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-3",
+        "article-6",
+        "article-19",
+        "article-20",
+        "article-21",
+        "article-22",
+        "article-23"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-3",
+              "slot": "article-3.6",
+              "maxCharacters": 68,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.23",
+              "maxCharacters": 43,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-19",
+              "slot": "article-19.23",
+              "maxCharacters": 39,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-20",
+              "slot": "article-20.23",
+              "maxCharacters": 66,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-21",
+              "slot": "article-21.23",
+              "maxCharacters": 64,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-22",
+              "slot": "article-22.23",
+              "maxCharacters": 56,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-23",
+              "slot": "article-23.23",
+              "maxCharacters": 58,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [
+            "Read more …"
+          ],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-3",
+              "path": "/index.php/our-blog/10-restaurant-news/3-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays"
+            },
+            {
+              "item": "article-6",
+              "path": "/index.php/our-blog/10-restaurant-news/6-three-broomsticks-s-autumn-menu-unveiled"
+            },
+            {
+              "item": "article-19",
+              "path": "/index.php/our-blog/10-restaurant-news/19-10-most-alluring-ltos-on-menus-in-july"
+            },
+            {
+              "item": "article-20",
+              "path": "/index.php/our-blog/10-restaurant-news/20-newk-s-eatery-steals-a-dinner-booster-from-supermarkets"
+            },
+            {
+              "item": "article-21",
+              "path": "/index.php/our-blog/10-restaurant-news/21-this-week-s-5-head-spinning-restaurant-moments-1-more-inch"
+            },
+            {
+              "item": "article-22",
+              "path": "/index.php/our-blog/10-restaurant-news/22-5-of-the-summer-s-craziest-restaurant-marketing-stunts"
+            },
+            {
+              "item": "article-23",
+              "path": "/index.php/our-blog/10-restaurant-news/23-burger-king-takes-a-stand-on-the-pink-tax"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-3",
+              "slot": "article-3.7"
+            },
+            {
+              "item": "article-6",
+              "slot": "article-6.24"
+            },
+            {
+              "item": "article-19",
+              "slot": "article-19.24"
+            },
+            {
+              "item": "article-20",
+              "slot": "article-20.24"
+            },
+            {
+              "item": "article-21",
+              "slot": "article-21.24"
+            },
+            {
+              "item": "article-22",
+              "slot": "article-22.24"
+            },
+            {
+              "item": "article-23",
+              "slot": "article-23.24"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/our-blog/10-restaurant-news"
+    },
+    "category-11.items": {
+      "block": null,
+      "page": null,
+      "pagePath": "/our-blog/11-restaurant-guide",
+      "rowKind": "items",
+      "source": {
+        "kind": "category",
+        "id": "category-11",
+        "title": "Restaurant Guide",
+        "page": null,
+        "route": "our-blog/11-restaurant-guide"
+      },
+      "min": null,
+      "minFrom": "unknown",
+      "max": 12,
+      "maxFrom": "view-setting",
+      "shown": [
+        "article-5",
+        "article-24",
+        "article-25",
+        "article-26"
+      ],
+      "rowSlots": [
+        {
+          "field": "title",
+          "kind": "title",
+          "type": "text",
+          "role": "article.title",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.23",
+              "maxCharacters": 52,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-24",
+              "slot": "article-24.23",
+              "maxCharacters": 61,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-25",
+              "slot": "article-25.23",
+              "maxCharacters": 64,
+              "limitFrom": "slot-fit"
+            },
+            {
+              "item": "article-26",
+              "slot": "article-26.23",
+              "maxCharacters": 66,
+              "limitFrom": "slot-fit"
+            }
+          ]
+        },
+        {
+          "field": "link",
+          "kind": "link",
+          "target": "item-page",
+          "labels": [
+            "Read more …"
+          ],
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "path": "/index.php/our-blog/11-restaurant-guide/5-three-broomsticks-welcomes-new-chef-caleb-nunez"
+            },
+            {
+              "item": "article-24",
+              "path": "/index.php/our-blog/11-restaurant-guide/24-efforts-to-curb-soda-consumption-bring-results-on-both-coasts"
+            },
+            {
+              "item": "article-25",
+              "path": "/index.php/our-blog/11-restaurant-guide/25-how-restaurants-can-promote-a-james-beard-recognition"
+            },
+            {
+              "item": "article-26",
+              "path": "/index.php/our-blog/11-restaurant-guide/26-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal"
+            }
+          ]
+        },
+        {
+          "field": "image:image_intro",
+          "kind": "image",
+          "type": "image",
+          "role": "article.image",
+          "demoOwned": false,
+          "items": [
+            {
+              "item": "article-5",
+              "slot": "article-5.24"
+            },
+            {
+              "item": "article-24",
+              "slot": "article-24.24"
+            },
+            {
+              "item": "article-25",
+              "slot": "article-25.24"
+            },
+            {
+              "item": "article-26",
+              "slot": "article-26.24"
+            }
+          ]
+        }
+      ],
+      "demoOwned": [],
+      "observedBy": "body",
+      "observedOn": "/index.php/our-blog/11-restaurant-guide"
     },
     "tag-4.items": {
       "block": null,
@@ -48261,37 +48999,13 @@
     }
   },
   "itemPages": {
-    "article-4": {
-      "path": "/index.php/our-blog/2-restaurant-business/4-we-ve-been-nominated-for-the-britain-restaurant-awards",
-      "category": "category-2",
-      "categoryPage": null,
-      "categoryRoute": null,
-      "linkedFrom": [
-        "module-108",
-        "menuItem-101",
-        "menuItem-108",
-        "menuItem-145",
-        "menuItem-146",
-        "menuItem-147",
-        "menuItem-148"
-      ]
-    },
-    "article-10": {
-      "path": "/index.php/our-blog/2-restaurant-business/10-4-habits-that-can-improve-your-customer-service",
-      "category": "category-2",
-      "categoryPage": null,
-      "categoryRoute": null,
-      "linkedFrom": [
-        "module-108",
-        "menuItem-108"
-      ]
-    },
     "article-3": {
       "path": "/index.php/our-blog/10-restaurant-news/3-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
       "category": "category-10",
       "categoryPage": null,
-      "categoryRoute": null,
+      "categoryRoute": "our-blog/10-restaurant-news",
       "linkedFrom": [
+        "module-103",
         "module-108",
         "menuItem-101",
         "menuItem-108",
@@ -48301,12 +49015,13 @@
         "menuItem-148"
       ]
     },
-    "article-6": {
-      "path": "/index.php/our-blog/10-restaurant-news/6-three-broomsticks-s-autumn-menu-unveiled",
-      "category": "category-10",
+    "article-4": {
+      "path": "/index.php/our-blog/2-restaurant-business/4-we-ve-been-nominated-for-the-britain-restaurant-awards",
+      "category": "category-2",
       "categoryPage": null,
-      "categoryRoute": null,
+      "categoryRoute": "our-blog/2-restaurant-business",
       "linkedFrom": [
+        "module-103",
         "module-108",
         "menuItem-101",
         "menuItem-108",
@@ -48320,8 +49035,9 @@
       "path": "/index.php/our-blog/11-restaurant-guide/5-three-broomsticks-welcomes-new-chef-caleb-nunez",
       "category": "category-11",
       "categoryPage": null,
-      "categoryRoute": null,
+      "categoryRoute": "our-blog/11-restaurant-guide",
       "linkedFrom": [
+        "module-103",
         "module-108",
         "menuItem-101",
         "menuItem-128",
@@ -48331,20 +49047,46 @@
         "menuItem-148"
       ]
     },
+    "article-6": {
+      "path": "/index.php/our-blog/10-restaurant-news/6-three-broomsticks-s-autumn-menu-unveiled",
+      "category": "category-10",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/10-restaurant-news",
+      "linkedFrom": [
+        "module-103",
+        "module-108",
+        "menuItem-101",
+        "menuItem-108",
+        "menuItem-145",
+        "menuItem-146",
+        "menuItem-147",
+        "menuItem-148"
+      ]
+    },
+    "article-10": {
+      "path": "/index.php/our-blog/2-restaurant-business/10-4-habits-that-can-improve-your-customer-service",
+      "category": "category-2",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/2-restaurant-business",
+      "linkedFrom": [
+        "module-108",
+        "menuItem-108"
+      ]
+    },
     "article-11": {
       "path": "/index.php/our-blog/2-restaurant-business/11-8-trends-trickling-down-to-mainstream-menus",
-      "category": "category-8",
-      "categoryPage": "menuItem-108",
-      "categoryRoute": "our-blog",
+      "category": "category-2",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/2-restaurant-business",
       "linkedFrom": [
         "menuItem-108"
       ]
     },
     "article-12": {
       "path": "/index.php/our-blog/2-restaurant-business/12-starbucks-brings-under-armour-exec-on-board",
-      "category": "category-8",
-      "categoryPage": "menuItem-108",
-      "categoryRoute": "our-blog",
+      "category": "category-2",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/2-restaurant-business",
       "linkedFrom": [
         "menuItem-108",
         "menuItem-128"
@@ -48352,36 +49094,36 @@
     },
     "article-13": {
       "path": "/index.php/our-blog/2-restaurant-business/13-inside-olive-garden-s-never-ending-pasta-pass",
-      "category": "category-8",
-      "categoryPage": "menuItem-108",
-      "categoryRoute": "our-blog",
+      "category": "category-2",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/2-restaurant-business",
       "linkedFrom": [
         "menuItem-108"
       ]
     },
     "article-14": {
       "path": "/index.php/our-blog/2-restaurant-business/14-century-old-nathan-s-famous-aims-for-youth-with-new-look",
-      "category": "category-8",
-      "categoryPage": "menuItem-108",
-      "categoryRoute": "our-blog",
+      "category": "category-2",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/2-restaurant-business",
       "linkedFrom": [
         "menuItem-108"
       ]
     },
     "article-15": {
       "path": "/index.php/our-blog/9-restaurant-marketing/15-did-ihop-s-publicity-stunt-hurt-applebee-s",
-      "category": "category-8",
-      "categoryPage": "menuItem-108",
-      "categoryRoute": "our-blog",
+      "category": "category-9",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/9-restaurant-marketing",
       "linkedFrom": [
         "menuItem-108"
       ]
     },
     "article-16": {
       "path": "/index.php/our-blog/9-restaurant-marketing/16-buffalo-wild-wings-considers-adding-sports-betting",
-      "category": "category-8",
-      "categoryPage": "menuItem-108",
-      "categoryRoute": "our-blog",
+      "category": "category-9",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/9-restaurant-marketing",
       "linkedFrom": [
         "menuItem-108",
         "menuItem-128"
@@ -48389,18 +49131,18 @@
     },
     "article-17": {
       "path": "/index.php/our-blog/9-restaurant-marketing/17-this-week-s-restaurant-nightmares-language-people",
-      "category": "category-8",
-      "categoryPage": "menuItem-108",
-      "categoryRoute": "our-blog",
+      "category": "category-9",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/9-restaurant-marketing",
       "linkedFrom": [
         "menuItem-108"
       ]
     },
     "article-18": {
       "path": "/index.php/our-blog/9-restaurant-marketing/18-jason-alexander-is-kfc-s-new-colonel",
-      "category": "category-8",
-      "categoryPage": "menuItem-108",
-      "categoryRoute": "our-blog",
+      "category": "category-9",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/9-restaurant-marketing",
       "linkedFrom": [
         "menuItem-108"
       ]
@@ -48411,7 +49153,59 @@
       "listingRoute": "joomla-content/fetured-articles",
       "linkedFrom": [
         "menuItem-128"
-      ]
+      ],
+      "category": "category-10",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/10-restaurant-news"
+    },
+    "article-19": {
+      "path": "/index.php/our-blog/10-restaurant-news/19-10-most-alluring-ltos-on-menus-in-july",
+      "category": "category-10",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/10-restaurant-news",
+      "linkedFrom": []
+    },
+    "article-21": {
+      "path": "/index.php/our-blog/10-restaurant-news/21-this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+      "category": "category-10",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/10-restaurant-news",
+      "linkedFrom": []
+    },
+    "article-22": {
+      "path": "/index.php/our-blog/10-restaurant-news/22-5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+      "category": "category-10",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/10-restaurant-news",
+      "linkedFrom": []
+    },
+    "article-23": {
+      "path": "/index.php/our-blog/10-restaurant-news/23-burger-king-takes-a-stand-on-the-pink-tax",
+      "category": "category-10",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/10-restaurant-news",
+      "linkedFrom": []
+    },
+    "article-24": {
+      "path": "/index.php/our-blog/11-restaurant-guide/24-efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+      "category": "category-11",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/11-restaurant-guide",
+      "linkedFrom": []
+    },
+    "article-25": {
+      "path": "/index.php/our-blog/11-restaurant-guide/25-how-restaurants-can-promote-a-james-beard-recognition",
+      "category": "category-11",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/11-restaurant-guide",
+      "linkedFrom": []
+    },
+    "article-26": {
+      "path": "/index.php/our-blog/11-restaurant-guide/26-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+      "category": "category-11",
+      "categoryPage": null,
+      "categoryRoute": "our-blog/11-restaurant-guide",
+      "linkedFrom": []
     }
   },
   "menuBlocks": {

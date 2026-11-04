@@ -2,14 +2,14 @@
   "schemaVersion": "tracy-content-coverage/v1",
   "tool": {
     "name": "@tracy/quickstart-tools content-coverage",
-    "version": "1.6.0"
+    "version": "1.7.0"
   },
   "contract": {
     "id": "ja-diner/j6/1.0.5",
-    "contentMapSha256": "7acbb1c25e303e963cb5eccfb87fce2fb5742a3a78f5dceaf4c4c21bb8211316",
-    "presentationLockSha256": "91dc2405925dcdd673a5cc399f76849e91fcd244ddf2cfa2ef7915f7cbbd103b"
+    "contentMapSha256": "007259d97a25603720db82d46bdb59c2fb5804bced36146eccb2787fc2f106e2",
+    "presentationLockSha256": "e8de147cd2daa6fe4d302649cae046c1fe8bf003794dce2e258ec0549c5af40e"
   },
-  "measuredAt": "2026-11-04T14:53:18.293Z",
+  "measuredAt": "2026-11-04T16:11:07.689Z",
   "viewports": ["desktop", "phone"],
   "pages": {
     "audited": 73,
@@ -21,13 +21,13 @@
   "counts": {
     "text": {
       "total": 570,
-      "matched": 435,
+      "matched": 433,
       "locked": 0,
       "capture": 14,
       "captureLocked": 12,
       "template": 1,
-      "core": 106,
-      "unknown": 14,
+      "core": 109,
+      "unknown": 13,
       "catalogue": 0,
       "ignored": 10
     },
@@ -57,7 +57,7 @@
     }
   },
   "coverage": {
-    "text": 93.8,
+    "text": 93.9,
     "images": 98.7,
     "links": 94.7
   },
@@ -247,16 +247,6 @@
       "pages": 73,
       "firstPage": "/index.php?Itemid=101",
       "accepted": "Placeholder of the AcyMailing subscription form, printed from its own Email field label (acymailing_fields); TPL_TITLE_EMAIL in the template language file is used by no layout."
-    },
-    {
-      "kind": "text",
-      "value": "06.09.2021",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/index.php?Itemid=101",
-      "accepted": "Publish date of a sample post printed by the mod_articles_latest layout; it is the article's date, not words a slot carries, and changes when the owner writes the post."
     },
     {
       "kind": "text",
@@ -849,43 +839,30 @@
     "roleVocabularyVersion": "place-content-roles/3",
     "applies": true,
     "r1": {
-      "facts": 201,
-      "slots": 920,
-      "percent": 21.8
+      "facts": 212,
+      "slots": 915,
+      "percent": 23.2
     },
     "rules": {
       "R2": {
         "title": "fact-like sample without a contact or price role",
-        "count": 3,
-        "keys": ["module-115.3", "module-116.3", "module-117.3"]
+        "count": 0,
+        "keys": []
       },
       "R3": {
         "title": "URL slot without a role",
-        "count": 6,
-        "keys": ["module-96.7", "module-96.8", "module-115.6", "module-116.6", "module-117.6", "contact-1.5"]
+        "count": 0,
+        "keys": []
       },
       "R4": {
         "title": "repeat or CTA not grouped",
-        "count": 37,
-        "keys": [
-          "module-94.0",
-          "module-94.1",
-          "module-94.2",
-          "module-94.3",
-          "module-94.4",
-          "module-94.5",
-          "module-94.6",
-          "module-94.7",
-          "module-94.8",
-          "module-94.9",
-          "module-94.10",
-          "module-94.11"
-        ]
+        "count": 0,
+        "keys": []
       },
       "R5": {
         "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
-        "count": 1,
-        "keys": ["module-97.0"]
+        "count": 0,
+        "keys": []
       },
       "R6": {
         "title": "link or list item inside a fact slot",
@@ -894,27 +871,18 @@
       },
       "R7": {
         "title": "siblings with different roles",
-        "count": 1,
-        "keys": ["module-95.8"]
+        "count": 0,
+        "keys": []
       },
       "R8": {
         "title": "adjacent short slots on one line (a cut heading)",
-        "count": 8,
-        "keys": [
-          "module-123.10 + module-123.11",
-          "module-123.14 + module-123.15",
-          "module-123.11 + module-123.12",
-          "module-123.19 + module-123.20",
-          "module-123.15 + module-123.16",
-          "module-123.12 + module-123.13",
-          "module-123.20 + module-123.21",
-          "module-123.16 + module-123.17"
-        ]
+        "count": 0,
+        "keys": []
       },
       "R9": {
         "title": "fact-like hole",
-        "count": 1,
-        "keys": ["06.09.2021"]
+        "count": 0,
+        "keys": []
       }
     }
   },
@@ -926,12 +894,12 @@
     "state": "judged",
     "reason": null,
     "counts": {
-      "slots": 1122,
-      "located": 855,
-      "notLocated": 267,
-      "judged": 855,
+      "slots": 1119,
+      "located": 853,
+      "notLocated": 266,
+      "judged": 853,
       "notJudged": 0,
-      "right": 855,
+      "right": 853,
       "wrongGroup": 0,
       "mismatch": 0
     },
@@ -4478,7 +4446,7 @@
       },
       {
         "key": "module-106.10",
-        "hash": "c2af7c807ff09aa9",
+        "hash": "6e89375726b534fd",
         "verdict": "right"
       },
       {
@@ -4488,7 +4456,7 @@
       },
       {
         "key": "module-106.12",
-        "hash": "abf94b5666c3959a",
+        "hash": "5d32d3b12e88c532",
         "verdict": "right"
       },
       {
@@ -4503,12 +4471,7 @@
       },
       {
         "key": "module-106.15",
-        "hash": "1f666c66fee7c267",
-        "verdict": "right"
-      },
-      {
-        "key": "module-106.16",
-        "hash": "bca4925e72022d57",
+        "hash": "5ba3e156ff3ac8a2",
         "verdict": "right"
       },
       {
@@ -4518,7 +4481,7 @@
       },
       {
         "key": "module-106.18",
-        "hash": "6fc2917250ebdae1",
+        "hash": "09f062610cb731e9",
         "verdict": "right"
       },
       {
@@ -4533,7 +4496,7 @@
       },
       {
         "key": "module-106.21",
-        "hash": "29ce0fb58fbb3fee",
+        "hash": "fbdb666d1b02b260",
         "verdict": "right"
       },
       {
@@ -4543,7 +4506,7 @@
       },
       {
         "key": "module-106.24",
-        "hash": "e12050a039d91d57",
+        "hash": "196899f522a168b8",
         "verdict": "right"
       },
       {
@@ -4553,7 +4516,12 @@
       },
       {
         "key": "module-106.27",
-        "hash": "3d599748cca93402",
+        "hash": "33fbde2da79606dd",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.28",
+        "hash": "b2c9f29f4216bacf",
         "verdict": "right"
       },
       {
@@ -4567,21 +4535,6 @@
         "verdict": "right"
       },
       {
-        "key": "module-106.30",
-        "hash": "8332fe2972d0fce1",
-        "verdict": "right"
-      },
-      {
-        "key": "module-106.31",
-        "hash": "1c0b43a5f50e6239",
-        "verdict": "right"
-      },
-      {
-        "key": "module-106.32",
-        "hash": "4f7d26710c9eb825",
-        "verdict": "right"
-      },
-      {
         "key": "module-106.4",
         "hash": "29f4e1388172f33e",
         "verdict": "right"
@@ -4592,8 +4545,13 @@
         "verdict": "right"
       },
       {
+        "key": "module-106.6",
+        "hash": "a4384d3cc3c47990",
+        "verdict": "right"
+      },
+      {
         "key": "module-106.7",
-        "hash": "54c7cba0e9501f9b",
+        "hash": "8a5e413a531ea443",
         "verdict": "right"
       },
       {
@@ -4603,7 +4561,7 @@
       },
       {
         "key": "module-106.9",
-        "hash": "02b3be193cc29449",
+        "hash": "3a8e6380b59bc877",
         "verdict": "right"
       },
       {
@@ -4688,7 +4646,7 @@
       },
       {
         "key": "module-116.3",
-        "hash": "4143e7064528cb3f",
+        "hash": "74e369def9e74109",
         "verdict": "right"
       },
       {
@@ -4698,7 +4656,7 @@
       },
       {
         "key": "module-116.5",
-        "hash": "cf40f1ce38440269",
+        "hash": "6ddcc6266c92de82",
         "verdict": "right"
       },
       {
@@ -4723,7 +4681,7 @@
       },
       {
         "key": "module-117.5",
-        "hash": "b3227c019cdaf82a",
+        "hash": "3bf36a72bafd6405",
         "verdict": "right"
       },
       {
@@ -4743,12 +4701,12 @@
       },
       {
         "key": "module-121.0",
-        "hash": "374be6eb84a015fb",
+        "hash": "512a4cb70ad72ba0",
         "verdict": "right"
       },
       {
         "key": "module-121.1",
-        "hash": "975baf349cd11a50",
+        "hash": "b907c1657af890b6",
         "verdict": "right"
       },
       {
@@ -4768,12 +4726,12 @@
       },
       {
         "key": "module-121.2",
-        "hash": "daab077592432e04",
+        "hash": "b8dbf742d3597897",
         "verdict": "right"
       },
       {
         "key": "module-121.3",
-        "hash": "9a9cb6aac45ebc7a",
+        "hash": "5118ea11318ec7ba",
         "verdict": "right"
       },
       {
@@ -4788,12 +4746,12 @@
       },
       {
         "key": "module-122.0",
-        "hash": "5edcb23094129b4c",
+        "hash": "027b58ee0607f011",
         "verdict": "right"
       },
       {
         "key": "module-122.1",
-        "hash": "0c726cb06bd53c95",
+        "hash": "81b5c115c13a7aee",
         "verdict": "right"
       },
       {
@@ -4808,12 +4766,12 @@
       },
       {
         "key": "module-122.2",
-        "hash": "1d0de06ca5e84bae",
+        "hash": "27e4bb7be0321611",
         "verdict": "right"
       },
       {
         "key": "module-122.3",
-        "hash": "7ae3a200e3bd32e5",
+        "hash": "37a66a4f4d802fbd",
         "verdict": "right"
       },
       {
@@ -5018,42 +4976,42 @@
       },
       {
         "key": "module-94.0",
-        "hash": "ea1199b6526e810d",
+        "hash": "1d38b6cb3bb74565",
         "verdict": "right"
       },
       {
         "key": "module-94.10",
-        "hash": "7204e48a1950096a",
+        "hash": "04b4b4223e780bf3",
         "verdict": "right"
       },
       {
         "key": "module-94.11",
-        "hash": "3f766c121d33eeee",
+        "hash": "3237a90fdd552539",
         "verdict": "right"
       },
       {
         "key": "module-94.2",
-        "hash": "b70ef58c3c8bc8d5",
+        "hash": "8450a86131df8bad",
         "verdict": "right"
       },
       {
         "key": "module-94.4",
-        "hash": "d626b0841dc92d25",
+        "hash": "33e91a2a2301736f",
         "verdict": "right"
       },
       {
         "key": "module-94.5",
-        "hash": "f5a21dbae208b03e",
+        "hash": "6aae6e7ee845c9df",
         "verdict": "right"
       },
       {
         "key": "module-94.6",
-        "hash": "2e8decf3f486d5f1",
+        "hash": "d4eb100a8ec781da",
         "verdict": "right"
       },
       {
         "key": "module-94.7",
-        "hash": "cfb5678137e5ea57",
+        "hash": "5e35e74903002c08",
         "verdict": "right"
       },
       {
@@ -5083,22 +5041,22 @@
       },
       {
         "key": "module-95.3",
-        "hash": "edea714df76ea575",
+        "hash": "e47c043f356c8d34",
         "verdict": "right"
       },
       {
         "key": "module-95.4",
-        "hash": "0df1e3837e6729c7",
+        "hash": "00ad5519662e00cd",
         "verdict": "right"
       },
       {
         "key": "module-95.5",
-        "hash": "8b0c317f6575d701",
+        "hash": "e9ca2ca490393325",
         "verdict": "right"
       },
       {
         "key": "module-95.6",
-        "hash": "39143e7dbb7eb802",
+        "hash": "9f63cd3920917ec5",
         "verdict": "right"
       },
       {
@@ -5158,7 +5116,7 @@
       },
       {
         "key": "module-97.0",
-        "hash": "22cfc0f5e8b1c619",
+        "hash": "23068bd7fe1ddf4e",
         "verdict": "right"
       },
       {
