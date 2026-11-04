@@ -294,6 +294,29 @@ test('ABOUT-1: the same view fails when the single-quoted intro field has no rul
   assert.match(JSON.stringify(heading), /hero\.hero_heading has no identity/)
 })
 
+test('ABOUT-1: both the heading and the paragraph under it must print a field Tracy writes', async () => {
+  const rules = [heroRule('hero_heading'), heroRule('hero_intro')]
+  const staticParagraph = `<h1 {...$hero("hero_heading")}>{hero.hero_heading}</h1><p class="lede">Static words</p>
+<div {...$hero('hero_intro')}>{hero.hero_intro}</div>`
+  const p = await run(
+    about1HomeHeading,
+    stampedHome(`const $hero = stampFor(Astro.request, 'hero', hero)\n${staticParagraph}`, rules)
+  )
+  assert.equal(p.status, 'fail', p.message)
+  assert.match(p.message, /the element under the home heading \(<p>\) prints no field/)
+  const staticHeading = `const $hero = stampFor(Astro.request, 'hero', hero)
+<h1 class="big">Static heading</h1><div {...$hero('hero_intro')}>{hero.hero_intro}</div>`
+  const h = await run(about1HomeHeading, stampedHome(staticHeading, rules))
+  assert.equal(h.status, 'fail', h.message)
+  assert.match(h.message, /the home <h1> prints no field of the home entry/)
+})
+
+test('ABOUT-1: a home with no element after the h1 is judged on the heading alone, as before', async () => {
+  const only = `const $hero = stampFor(Astro.request, 'hero', hero)\n<h1 {...$hero("hero_heading")}>{hero.hero_heading}</h1>`
+  const r = await run(about1HomeHeading, stampedHome(only, [heroRule('hero_heading')]))
+  assert.equal(r.status, 'pass', r.message)
+})
+
 test('ABOUT-1: a rule on another collection or entry does not cover a stamped field, and a field missing from the seed fails', async () => {
   const other = await run(
     about1HomeHeading,
