@@ -1,0 +1,51 @@
+---
+/** The photo slideshow under the menu: fade slides with a title, numbered buttons, auto-advance unless motion is reduced. */
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+
+interface Props {
+  entry: Row
+  locale: Locale
+  /** The gallery's slideshow carries no title. */
+  titles?: boolean
+}
+const { entry, locale, titles = true } = Astro.props
+const $show = stampFor(Astro.request, 'slideshow', { id: entry.id, slug: entry.slug })
+const slides: any[] = entry.items ?? []
+---
+
+<section class:list={['rs-slideshow', !titles && 'is-plain']} aria-roledescription="carousel" aria-label={entry.title} data-slideshow>
+	{slides.map((s, i) => (
+		<div class:list={['rs-slide', i === 0 && 'is-active']} data-slide={i}>
+			{mediaUrl(s.image) && <img src={mediaUrl(s.image)!} alt="" width="1440" height="720" loading="eager" fetchpriority={i === 0 ? 'high' : undefined} {...$show(`items[${i}].image`)} />}
+			{titles && s.slide_title && (
+				<div class="rs-slide-title" {...$show(`items[${i}].slide_title`)}>
+					{s.slide_link ? <a href={href(locale, s.slide_link)}>{s.slide_title}</a> : s.slide_title}
+				</div>
+			)}
+		</div>
+	))}
+	{titles && <div class="rs-slide-bar" aria-hidden="true"></div>}
+	<div class="rs-slide-pages">
+		{slides.map((_, i) => <button type="button" class:list={[i === 0 && 'is-active']} data-go={i} aria-label={`${i + 1}`}>{i + 1}</button>)}
+	</div>
+</section>
+
+<script>
+	document.querySelectorAll('[data-slideshow]').forEach((root) => {
+		const slides = root.querySelectorAll('.rs-slide')
+		const pages = root.querySelectorAll('.rs-slide-pages button')
+		let cur = 0
+		const go = (i: number) => {
+			slides[cur].classList.remove('is-active')
+			pages[cur].classList.remove('is-active')
+			cur = i
+			slides[cur].classList.add('is-active')
+			pages[cur].classList.add('is-active')
+		}
+		pages.forEach((b, i) => b.addEventListener('click', () => go(i)))
+		if (slides.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => go((cur + 1) % slides.length), 6000)
+	})
+</script>

@@ -1,0 +1,105 @@
+---
+import Glyph from '../components/site/Glyph.astro'
+/** The gallery: the photo slideshow, then one card per album (cover, number of photos, title); and one album's page. */
+import { getEmDashEntry, getEntryTerms } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Slideshow from '@/components/sections/Slideshow.astro'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { section } from '@/lib/content'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { loadPosts } from '@/lib/posts'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  /** Album slug; absent on the list. */
+  slug?: string
+  path: string
+}
+const { chrome, locale, slug, path } = Astro.props
+const { site } = chrome
+const { tag } = ui(locale)
+const [all, slideshow] = await Promise.all([loadPosts(locale), section('slideshow', 'gallery', locale)])
+const albums = all.filter((p) => p.category?.slug === 'gallery')
+const album = slug ? albums.find((a) => a.slug === slug) : undefined
+if (slug && !album) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const entry = album ? (await getEmDashEntry('posts', album.slug, { locale })).entry : null
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const $post = stampFor(Astro.request, 'posts', album ? { id: album.id, slug: album.slug } : null)
+const photos = album?.photos ?? []
+const idx = album ? albums.findIndex((a) => a.slug === album.slug) : -1
+const next = idx >= 0 ? albums[idx + 1] : undefined
+// the list is titled by the Gallery category's own name
+const listTitle = albums[0]?.category?.label ?? ''
+const title = album?.title ?? listTitle
+---
+
+<Base chrome={chrome} title={title} currentPath="/gallery" type={album ? 'article' : 'website'} content={album ? { collection: 'posts', id: album.id, slug: album.slug, toPath: () => `/gallery/${album.slug}` } : null}>
+	{slideshow && <Slideshow entry={slideshow} locale={locale} titles={false} />}
+	<main id="main" class="rs-wrap rs-main rs-gallery">
+		<PageOwner stamp={$post} />
+		{album ? (
+			<article class="rs-album">
+				<h1 class="rs-album-title" {...$post('title')}>{album.title}</h1>
+				<div class="rs-meta">
+					{album.category && <a href={href(locale, '/gallery')}>{album.category.label}</a>} <span aria-hidden="true">/</span> <time datetime={album.date}>{formatDate(album.date, tag)}</time>
+				</div>
+				<div class="rs-album-viewer" data-album>
+					<div class="rs-album-stage"><div class="rs-album-track">
+						{photos.map((p, i) => mediaUrl(p.image) && <img src={mediaUrl(p.image)!} alt="" width="750" height="750" loading="eager" decoding="async" {...$post(`photos[${i}].image`)} />)}
+					</div></div>
+					{photos.length > 1 && (
+						<>
+							<button type="button" class="rs-album-prev" aria-label={site.prev_label} data-step="-1"><Glyph name="prev" /></button>
+							<button type="button" class="rs-album-next" aria-label={site.next_label} data-step="1"><Glyph name="next" /></button>
+							<div class="rs-album-dots">{photos.map((_, i) => <button type="button" class:list={[i === 0 && 'is-active']} data-go={i} aria-label={`${i + 1}`}>{i + 1}</button>)}</div>
+						</>
+					)}
+				</div>
+				<nav class="rs-pager" aria-label={site.categories_title}>
+					{next && <a class="is-next" href={href(locale, `/gallery/${next.slug}`)} {...$c('next_label')}>{site.next_label}</a>}
+				</nav>
+			</article>
+		) : (
+			<>
+				<h1 class="rs-display rs-list-title">{listTitle}</h1>
+				<ul class="rs-albums">
+					{albums.map((a) => (
+						<li class="rs-album-card">
+							<a href={href(locale, `/gallery/${a.slug}`)}>
+								<span class="rs-album-cover">
+									{mediaUrl(a.cover) && <img src={mediaUrl(a.cover)!} alt="" width="240" height="240" loading="lazy" decoding="async" />}
+									<span class="rs-photos-badge">{a.photos.length} {site.photos_label}</span>
+								</span>
+								<span class="rs-album-name">{a.title}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</>
+		)}
+	</main>
+</Base>
+
+<script>
+	document.querySelectorAll('[data-album]').forEach((root) => {
+		const imgs = root.querySelectorAll<HTMLImageElement>('.rs-album-stage img')
+		const track = root.querySelector<HTMLElement>('.rs-album-track')
+		const dots = root.querySelectorAll('.rs-album-dots button')
+		let cur = 0
+		const go = (i: number) => {
+			cur = (i + imgs.length) % imgs.length
+			if (track) track.style.transform = `translateX(-${cur * 100}%)`
+			dots.forEach((d, k) => d.classList.toggle('is-active', k === cur))
+		}
+		root.querySelectorAll<HTMLElement>('[data-step]').forEach((b) => b.addEventListener('click', () => go(cur + Number(b.dataset.step))))
+		dots.forEach((d, i) => d.addEventListener('click', () => go(i)))
+	})
+</script>

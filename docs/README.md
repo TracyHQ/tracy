@@ -126,6 +126,7 @@ Read the one nearest to what you are editing — they hold local conventions and
 | [Tracy Base (`@tracy/emdash-theme-base`)](../packages/cms/tracy-emdash-theme-base/README.md) | Tracy Base (`@tracy/emdash-theme-base`) |
 | [Tracy Business (`@tracy/emdash-theme-business`)](../packages/cms/tracy-emdash-theme-business/README.md) | Tracy Business (`@tracy/emdash-theme-business`) |
 | [Tracy Coffee (`@tracy/emdash-theme-coffee`)](../packages/cms/tracy-emdash-theme-coffee/README.md) | Tracy Coffee (`@tracy/emdash-theme-coffee`) |
+| [JA Restaurant (`@tracy/emdash-theme-restaurant`)](../packages/cms/tracy-emdash-theme-restaurant/README.md) | JA Restaurant (`@tracy/emdash-theme-restaurant`) |
 | [Tracy SaaS (`@tracy/emdash-theme-saas`)](../packages/cms/tracy-emdash-theme-saas/README.md) | Tracy SaaS (`@tracy/emdash-theme-saas`) |
 | [@tracy/joomla-template — `tpl_tracy`](../packages/cms/tracy-joomla-template/README.md) | @tracy/joomla-template — `tpl_tracy` |
 | [@tracy/quickstart-tools](../packages/cms/tracy-quickstart-tools/README.md) | @tracy/quickstart-tools |

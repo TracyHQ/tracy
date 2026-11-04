@@ -1,0 +1,37 @@
+---
+/** "All Categories": one card per category — picture, name, number of articles and its description. */
+import { href, type Locale } from '@/lib/i18n'
+import { sections } from '@/lib/content'
+import { mediaUrl } from '@/lib/media'
+import { ui } from '@/lib/ui'
+import { fillWords } from '@/lib/ui-words'
+import { stampFor } from '@/lib/stamps'
+import { BLOG_SIDEBAR, blogPosts, loadPosts } from '@/lib/posts'
+
+interface Props {
+  locale: Locale
+}
+const { locale } = Astro.props
+const { w } = ui(locale)
+const [cats, all] = await Promise.all([sections('category_info', locale), loadPosts(locale)])
+const posts = blogPosts(all)
+const order = BLOG_SIDEBAR
+cats.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug))
+---
+
+<div class="rs-wrap rs-categories">
+	{cats.map((c) => {
+		const $c = stampFor(Astro.request, 'category_info', { id: c.id, slug: c.slug })
+		const n = posts.filter((p) => p.category?.slug === c.slug).length
+		return (
+			<div class="rs-category-card">
+				{mediaUrl(c.image) && <img src={mediaUrl(c.image)!} alt="" width="500" height="250" loading="lazy" decoding="async" {...$c('image')} />}
+				<h3>
+					<a href={href(locale, `/${c.slug}`)} {...$c('title')}>{c.title}</a>
+					<span class="rs-count">{fillWords(n === 1 && w.countArticlesOne ? w.countArticlesOne : w.countArticles, { count: n })}</span>
+				</h3>
+				<p {...$c('description')}>{c.description}</p>
+			</div>
+		)
+	})}
+</div>
