@@ -269,7 +269,26 @@ const COURSES = {
   published: 1,
   type: 'component',
   menutype: 'mainmenu',
-  link: 'index.php?option=com_content&view=category&layout=quay:course&id=9'
+  link: 'index.php?option=com_content&view=category&layout=quay:course&id=9',
+  // As a real row holds it: the file its articles print through is here, and the link's `layout` says nothing of it.
+  params: JSON.stringify({
+    layout_type: 'blog',
+    article_layout: 'quay:course-page',
+    show_title: '',
+    menu_show: 1
+  })
+}
+const ROWING = {
+  kind: 'article',
+  id: 8,
+  catid: 9,
+  attribs: JSON.stringify({ article_layout: '', show_title: '' })
+}
+
+/** Which file Joomla's article view prints an article through: the article's, else its active menu item's, else the component's. */
+const printedThrough = (article, item, component = '_:default') => {
+  const own = (json, name) => JSON.parse(json ?? '{}')[name]
+  return own(article.attribs, 'article_layout') || own(item.params, 'article_layout') || component
 }
 function routedKit({ recorded = false } = {}) {
   const kit = pagesKit()
@@ -283,7 +302,13 @@ function routedKit({ recorded = false } = {}) {
       ...kit.doc.site,
       contentPages: [
         { route: 'other', layout: 'other', pages: [] },
-        { route: 'courses', layout: 'quay:recorded', pages: ['page-rowing'] }
+        {
+          menuItem: 'menuItem-60',
+          route: 'courses',
+          layout: 'quay:recorded',
+          pages: ['page-rowing'],
+          articles: ['article-8']
+        }
       ]
     }
   return kit
@@ -298,6 +323,7 @@ const routedRun = (site, options = {}) =>
 const routedSite = () => {
   const site = pagesSite()
   site.records.set('menuItem-60', { ...COURSES })
+  site.records.set('article-8', { ...ROWING })
   return site
 }
 
@@ -306,7 +332,7 @@ test('a created page takes the route of the template content pages: its article 
   const { report, line } = await routedRun(site)
   assert.equal(report.status, 'done')
   const [category] = site.rows('category')
-  const [article] = site.rows('article')
+  const article = createdArticleOf(site)
   const item = site.rows('menuItem').find((r) => r.note === 'tracy-page:route')
   assert.equal(item.link, `index.php?option=com_content&view=category&layout=quay:course&id=${category.id}`)
   assert.equal(JSON.parse(item.params).menu_show, 0)
@@ -330,9 +356,83 @@ test('a created page takes the route of the template content pages: its article 
     'legal:privacy:address',
     'legal:privacy:title',
     'legal:privacy:description',
-    'legal:privacy:route'
+    'legal:privacy:route',
+    'legal:privacy:layout'
   ])
     assert.equal(check.lines[slot], 'match', slot)
+})
+
+const routeItemOf = (site) => site.rows('menuItem').find((r) => r.note === 'tracy-page:route')
+const createdArticleOf = (site) => site.rows('article').find((r) => r.note === 'tracy-page:legal:privacy')
+
+test('a created page prints through the file the template content pages print through, the one their menu item names', async () => {
+  const site = routedSite()
+  await routedRun(site)
+  assert.equal(printedThrough(ROWING, COURSES), 'quay:course-page')
+  assert.equal(printedThrough(createdArticleOf(site), routeItemOf(site)), 'quay:course-page')
+})
+
+test("when the template's articles name the file themselves, a created page prints through that one", async () => {
+  const site = routedSite()
+  const rowing = { ...ROWING, attribs: JSON.stringify({ article_layout: 'quay:rowing-page' }) }
+  site.records.set('article-8', rowing)
+  await routedRun(site)
+  assert.equal(printedThrough(rowing, COURSES), 'quay:rowing-page')
+  assert.equal(printedThrough(createdArticleOf(site), routeItemOf(site)), 'quay:rowing-page')
+})
+
+test('a route an earlier run made with no file gets it in one write, keeps its settings, and a rerun then writes nothing', async () => {
+  const site = routedSite()
+  const first = await routedRun(site)
+  const item = routeItemOf(site)
+  // What a run before this fix left: the item as it made it, and a report whose route line does not say the file.
+  const { article_layout: _gone, ...before } = JSON.parse(item.params)
+  site.records.set(`menuItem-${item.id}`, { ...item, params: JSON.stringify({ ...before, kept: 'yes' }) })
+  const older = structuredClone(first.report)
+  older.slots = older.slots.filter((l) => l.slot !== 'legal:privacy:layout')
+  for (const l of older.slots) if (l.slot === 'legal:privacy:route') delete l.articleLayout
+  reset(site)
+  const moved = await routedRun(site, { last: older })
+  assert.equal(moved.report.status, 'done')
+  const writes = pageWrites(site)
+  assert.deepEqual(
+    writes.map((c) => [c.action, c.params.kind, c.params.id]),
+    [['content.update', 'menuItem', item.id]]
+  )
+  const params = JSON.parse(writes[0].params.fields.params)
+  assert.deepEqual([params.article_layout, params.kept, params.menu_show], ['quay:course-page', 'yes', 0])
+  assert.equal(moved.line('legal:privacy:layout').ordered, 'quay:course-page')
+  reset(site)
+  const again = await routedRun(site, { last: moved.report })
+  assert.deepEqual(pageWrites(site), [])
+  assert.deepEqual(
+    site.calls.filter((c) => c.action === 'content.get'),
+    []
+  )
+  assert.equal(again.line('legal:privacy:layout').unchanged, true)
+  assert.equal(again.line('legal:privacy:route').articleLayout, 'quay:course-page')
+  reset(site)
+  await routedRun(site)
+  assert.deepEqual(pageWrites(site), [])
+})
+
+test('a template whose content pages name no file sets none, and its report still holds on a rerun', async () => {
+  const site = routedSite()
+  site.records.set('menuItem-60', {
+    ...COURSES,
+    params: JSON.stringify({ article_layout: '', menu_show: 1 })
+  })
+  const first = await routedRun(site)
+  assert.equal(JSON.parse(routeItemOf(site).params).article_layout, undefined)
+  assert.equal(first.line('legal:privacy:layout'), undefined)
+  assert.equal(first.line('legal:privacy:route').articleLayout, null)
+  reset(site)
+  await routedRun(site, { last: first.report })
+  assert.deepEqual(pageWrites(site), [])
+  assert.deepEqual(
+    site.calls.filter((c) => c.action === 'content.get'),
+    []
+  )
 })
 
 test('what the kit records of the template content pages is what a created page follows', async () => {
@@ -374,7 +474,7 @@ test('a page an earlier run gave its own item moves onto the route, and the old 
   assert.equal(after.report.status, 'done')
   assert.equal(Number(site.records.get(`menuItem-${own.id}`).published), 0)
   assert.equal(after.report.keptPages.at(-1).path, '/site-pages/privacy-policy')
-  assert.equal(site.rows('article').length, 1)
+  assert.equal(site.rows('article').filter((r) => r.note).length, 1)
   reset(site)
   await routedRun(site, { last: after.report })
   assert.deepEqual(pageWrites(site), [])

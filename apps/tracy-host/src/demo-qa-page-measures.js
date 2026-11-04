@@ -372,11 +372,31 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   }
 }
 
+/** How long a page's own transitions may hold back a measure. */
+export const TRANSITIONS_MS = 1500
+
+/**
+ * The look read paints whole pages hidden to shoot a logo, and an element with a CSS transition comes back over time. Read at once,
+ * such an element, a share button with `transition: all` for one, counts as not shown. Runs inside the page: it may use nothing from
+ * this module. A looping animation is no transition, and does not hold this back.
+ */
+export const transitionsDoneInPage = (maxMs) =>
+  Promise.race([
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a instanceof CSSTransition)
+        .map((a) => a.finished.catch(() => {}))
+    ),
+    new Promise((resolve) => setTimeout(resolve, maxMs))
+  ]).then(() => {})
+
 /** One width's measures, read in the page; null when the page would not answer (the entry is then left out). */
 export async function readPageMeasures(page, width) {
   // Only colours can differ by the brand style, so one width answers for both, and a desktop page shows more of the template.
   const brandStyle = width === BRAND_STYLE_WIDTH ? await readBrandStyle(page) : null
   const look = await readLook(page, width)
+  await page.evaluate(transitionsDoneInPage, TRANSITIONS_MS).catch(() => {})
   const measured = await page
     .evaluate(measurePageInPage, {
       tolerance: OVERFLOW_TOLERANCE_PX,
