@@ -442,9 +442,25 @@ for kind,table in tables.items():
   if kind=='templateStyle' and a.template_style_logos:
    try:style_params=json.loads(row.get('params') or '{}')
    except ValueError:style_params={}
-   for k,v in (style_params.items() if isinstance(style_params,dict) else []):
-    if T3_LOGO_KEY.fullmatch(k) and isinstance(v,str) and v.strip():
-     add('params','image',v,jsonPath=[k],label=f'{k} (template style {row["title"]})',customize='keep',requiresEvidence=False,role='business.logo',group={'id':'site-logo.business','item':0,'kind':'business'})
+   if not isinstance(style_params,dict):style_params={}
+   # An empty logo param is not "no logo": with logotype image the T3 header prints the template's default picture
+   # (tpls/blocks/header.php: params->get('logoimage', T3Path::getUrl('images/logo.png'))), so the slot is declared
+   # with the path the page really prints; logoimage_sm only when enable_logoimage_sm is on.
+   t3_defaults={}
+   if style_params.get('logotype')=='image':
+    t3_defaults['logoimage']='images/logo.png'
+    if str(style_params.get('enable_logoimage_sm',''))=='1':t3_defaults['logoimage_sm']='images/logo-sm.png'
+   def t3_default_logo(rel):
+    own=f'templates/{a.template}/{rel}'
+    return own if (root/own).is_file() else f'plugins/system/t3/base/{rel}'
+   seen=set()
+   for k,v in list(style_params.items())+[(k,None) for k in t3_defaults if k not in style_params]:
+    if not T3_LOGO_KEY.fullmatch(k) or k in seen:continue
+    seen.add(k)
+    if isinstance(v,str) and v.strip():sample=v
+    elif k in t3_defaults:sample=t3_default_logo(t3_defaults[k])
+    else:continue
+    add('params','image',sample,jsonPath=[k],label=f'{k} (template style {row["title"]})',customize='keep',requiresEvidence=False,role='business.logo',group={'id':'site-logo.business','item':0,'kind':'business'})
   # Row icons (--repeat-icons) come after every other slot of the entity, so no key an older rule made moves.
   for node,path,name in icons:add('params','text',node,jsonPath=path,nestedJson='jatools-config',label=row['title']+' / '+name+' '+str(path[-1]+1),customize='keep')
 # Authors (--full-coverage): a visitor reads each post's author name, and on the author pages the picture, bio and job

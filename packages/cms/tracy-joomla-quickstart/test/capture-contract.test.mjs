@@ -1778,6 +1778,51 @@ test(
 )
 
 test(
+  '--template-style-logos declares the default picture a T3 style prints when its logo param is empty',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.template_styles = [
+      style('9', {
+        home: '1',
+        params: JSON.stringify({ logotype: 'image', logoimage: '', enable_logoimage_sm: '1', sitename: '' })
+      }),
+      style('10', { title: 'Tracy - Text', params: JSON.stringify({ logotype: 'text', logoimage: '' }) })
+    ]
+    // The template ships its own logo.png but no logo-sm.png, so the small one comes from the T3 base.
+    const run = capture(inv, {
+      args: ['--template-style-logos'],
+      files: { 'templates/tracy/images/logo.png': 'png' }
+    })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.entity.startsWith('templateStyle-'))
+    assert.deepEqual(
+      slots.map((s) => [s.key, s.jsonPath, s.sample, s.role, s.customize, s.requiresEvidence]),
+      [
+        [
+          'templateStyle-9.0',
+          ['logoimage'],
+          'templates/tracy/images/logo.png',
+          'business.logo',
+          'keep',
+          false
+        ],
+        [
+          'templateStyle-9.1',
+          ['logoimage_sm'],
+          'plugins/system/t3/base/images/logo-sm.png',
+          'business.logo',
+          'keep',
+          false
+        ]
+      ],
+      'a style whose logotype is text prints no picture, so it declares none'
+    )
+    assert.deepEqual(slots[0].group, { id: 'site-logo.business', item: 0, kind: 'business' })
+  }
+)
+
+test(
   '--skip-trashed-menu-items leaves a trashed menu item out of the entities and the pages',
   needsPhp,
   () => {
