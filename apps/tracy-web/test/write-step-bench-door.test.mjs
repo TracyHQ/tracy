@@ -21,6 +21,7 @@ function door(answers) {
       secret: SECRET,
       email: 'Bench@Example.test',
       platform: 'joomla',
+      templateOf: async (quickstart) => (quickstart === 'no-card/j6' ? null : 'demo-gym'),
       fetchImpl,
       sleep: async () => {}
     })
@@ -38,9 +39,18 @@ test('create posts the customer request as the bench account and wants a 202 wit
   assert.deepEqual(JSON.parse(seen[0].init.body), {
     label: 'write-bench-abc',
     platform: 'joomla',
+    design: 'demo-gym',
     quickstart: 'demo-gym/j6'
   })
   assert.equal(await sessionFromCookieHeader(seen[0].init.headers.cookie, SECRET), 'bench@example.test')
+})
+
+test('a quickstart no template card installs is refused before anything is asked of the server', async () => {
+  const { seen, door: d } = door([])
+  const made = await d.create({ label: 'write-bench-abc', quickstart: 'no-card/j6' })
+  assert.equal(made.ok, false)
+  assert.equal(made.code, 'NO_TEMPLATE_CARD')
+  assert.equal(seen.length, 0)
 })
 
 test('a refused create keeps the code', async () => {

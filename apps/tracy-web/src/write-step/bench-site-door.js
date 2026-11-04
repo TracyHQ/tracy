@@ -1,6 +1,7 @@
 // BENCH ONLY. The real site door of the write step bench's site creator: the same HTTP doors a customer's browser
 // uses, called as the bench account with a session cookie minted from the server secret. Nothing here is a shortcut
-// around the product: create is POST /api/sites (answers 202 with a job id), the job is read from
+// around the product: create is POST /api/sites naming the template card a customer presses and its quickstart
+// (answers 202 with a job id), the job is read from
 // GET /api/sites/:key/jobs/:id, the contract from the Apply door (content.contract inspect), and the delete is
 // DELETE /api/sites/:key, which only the site's owner may call.
 import { mintSession } from '../lib/session.js'
@@ -9,12 +10,22 @@ const sleepFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  * @param {{ baseUrl: string, hostHeader?: string, secret: string, email: string, platform: string,
- *   fetchImpl?: typeof fetch, sleep?: (ms: number) => Promise<void>, now?: () => number }} input
+ *   templateOf: (quickstart: string) => Promise<string | null>, fetchImpl?: typeof fetch, sleep?: (ms: number) => Promise<void>, now?: () => number }} input
  *   `baseUrl`: where the web app answers (inside its container, the loopback address and its port);
- *   `hostHeader`: the public host name when `baseUrl` is not it.
+ *   `hostHeader`: the public host name when `baseUrl` is not it;
+ *   `templateOf`: the template card of a quickstart, since a customer's site starts from a card.
  */
 export function httpSiteDoor(input) {
-  const { baseUrl, hostHeader, secret, email, platform, fetchImpl = fetch, sleep = sleepFor } = input
+  const {
+    baseUrl,
+    hostHeader,
+    secret,
+    email,
+    platform,
+    templateOf,
+    fetchImpl = fetch,
+    sleep = sleepFor
+  } = input
   async function call(method, path, body) {
     const token = await mintSession(email, secret)
     const response = await fetchImpl(`${baseUrl}${path}`, {
@@ -37,7 +48,14 @@ export function httpSiteDoor(input) {
 
   return {
     async create({ label, quickstart }) {
-      const answer = await call('POST', '/api/sites', { label, platform, quickstart })
+      const design = await templateOf(quickstart)
+      if (!design)
+        return {
+          ok: false,
+          code: 'NO_TEMPLATE_CARD',
+          reason: `no template card installs ${quickstart} on this server`
+        }
+      const answer = await call('POST', '/api/sites', { label, platform, design, quickstart })
       const b = answer.body ?? {}
       if (answer.status !== 202 || !b.siteKey || !b.jobId)
         return {

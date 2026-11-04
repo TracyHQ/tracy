@@ -11,6 +11,7 @@
  * Every command and its options: `node scripts/write-step-bench.mjs` with no command (src/write-step/bench-site-cli.js).
  */
 import { createPool } from '../src/db/index.js'
+import { readReleases, templateOfTag } from '../src/lib/quickstart-releases.js'
 import { runCli } from '../src/write-step/bench-site-cli.js'
 import { httpSiteDoor } from '../src/write-step/bench-site-door.js'
 import { pgBenchSiteStore } from '../src/write-step/bench-site-store.js'
@@ -32,7 +33,8 @@ export async function main(argv, env = process.env) {
           ...(env.TRACY_ORIGIN ? { hostHeader: new URL(env.TRACY_ORIGIN).host } : {}),
           secret: env.SESSION_SECRET,
           email: account,
-          platform
+          platform,
+          templateOf: async (quickstart) => templateOfTag(await readReleases(pool), quickstart)
         })
     })
   } finally {
