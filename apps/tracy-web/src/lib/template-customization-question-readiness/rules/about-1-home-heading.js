@@ -11,8 +11,12 @@
  * - WordPress: the first level-1 heading of the front page (else its first heading) and the first
  *   paragraph after it. A named block (`metadata.name`) must have a slot targeting that name; an
  *   unnamed one passes, because Tracy rewrites unnamed text itself (`wp-leaves.js`).
- * - EmDash: the fields `src/views/Home.astro` prints inside its `<h1>` and the paragraph after it
- *   must each have an `identity`, `copy`, `blocks` or `rewrite` rule and exist in the seed.
+ * - EmDash: the fields `src/views/Home.astro` prints inside its `<h1>` and in the element under it (the first
+ *   `<p>`, or the first element printing a stamped field, whichever comes first) must each have an `identity`,
+ *   `copy`, `blocks` or `rewrite` rule and exist in the seed. A field is read through a stamp the view declares
+ *   (`const $hero = stampFor(Astro.request, 'hero', …)` makes `$hero("f")` / `$hero('f')` a field of collection
+ *   `hero`; an undeclared `$page` and `{ h.f }` mean the `home` entry, as in Tracy Business). Each is checked
+ *   against the first entry of its collection that holds the field. An `<h1>` that prints no stamped field fails.
  */
 import {
   contractOf,
@@ -123,6 +127,61 @@ async function wordpress(
   }
 }
 
+/**
+ * The collection each stamp of a view names: `const $hero = stampFor(Astro.request, 'hero', …)` -> `$hero: hero`.
+ * @param {string} view
+ */
+function stampCollections(view) {
+  return new Map(
+    [...view.matchAll(/const\s+(\$\w+)\s*=\s*stampFor\(\s*Astro\.request\s*,\s*["'](\w+)["']/g)].map((m) => [
+      m[1],
+      m[2]
+    ])
+  )
+}
+
+/** A field printed through a stamp: `$X("f")` or `$X('f')`. */
+const STAMPED = /(\$\w+)\(\s*["'](\w+)["']\s*\)/g
+
+/**
+ * The (collection, field) pairs a piece of Home.astro prints: through a declared stamp, through an undeclared `$page`
+ * (the `home` entry, as the Tracy templates write it), or as `{ h.f }` (also `home`).
+ * @param {string} text @param {Map<string, string>} stamps
+ * @returns {{ collection: string, field: string }[]}
+ */
+function printedFields(text, stamps) {
+  /** @type {{ collection: string, field: string }[]} */
+  const out = []
+  const add = (/** @type {string} */ collection, /** @type {string} */ field) => {
+    if (!out.some((o) => o.collection === collection && o.field === field)) out.push({ collection, field })
+  }
+  for (const m of text.matchAll(STAMPED)) {
+    const collection = stamps.get(m[1]) ?? (m[1] === '$page' ? 'home' : null)
+    if (collection) add(collection, m[2])
+  }
+  for (const m of text.matchAll(/\{\s*h\.(\w+)\s*\}/g)) add('home', m[1])
+  return out
+}
+
+/**
+ * The element "under" the heading: the first `<p>` after it, or the first element that prints a stamped field, whichever
+ * comes first (a hero's intro is often a `<div>` holding rich text, not a `<p>`). A `<p>` is read to its end, any other
+ * element by its opening tag.
+ * @param {string} rest what follows the `</h1>`
+ */
+function underHeading(rest) {
+  const p = /<p\b[\s\S]*?<\/p>/i.exec(rest)
+  const stamped = new RegExp(STAMPED.source).exec(rest)
+  let stampedTag = null
+  if (stamped) {
+    const open = rest.lastIndexOf('<', stamped.index)
+    const close = rest.indexOf('>', stamped.index)
+    if (open >= 0 && close > open) stampedTag = { at: open, text: rest.slice(open, close + 1) }
+  }
+  if (p && (!stampedTag || p.index <= stampedTag.at)) return p[0]
+  return stampedTag?.text ?? ''
+}
+
 /** @param {import('../index.js').RuleContext} context */
 async function emdash(context) {
   const t = await emdashTemplate(context)
@@ -136,28 +195,28 @@ async function emdash(context) {
   const h1 = /<h1\b[\s\S]*?<\/h1>/i.exec(view)
   if (!h1)
     return { status: 'live-only', message: 'src/views/Home.astro prints no <h1> of its own', problems: [] }
-  const rest = view.slice(h1.index + h1[0].length)
-  const p = /<p\b[\s\S]*?<\/p>/i.exec(rest)
-  const fieldsOf = (/** @type {string} */ s) => [
-    ...new Set([...s.matchAll(/\$page\("(\w+)"\)|\{\s*h\.(\w+)\s*\}/g)].map((m) => m[1] ?? m[2]))
-  ]
-  const fields = [...fieldsOf(h1[0]), ...(p ? fieldsOf(p[0]) : [])]
+  const stamps = stampCollections(view)
+  const fields = [
+    ...printedFields(h1[0], stamps),
+    ...printedFields(underHeading(view.slice(h1.index + h1[0].length)), stamps)
+  ].filter((f, i, all) => all.findIndex((o) => o.collection === f.collection && o.field === f.field) === i)
   const covered = coverageOf(t.personalize)
-  const home = defaultEntries(t.seed).find((e) => e.collection === 'home')
+  const entries = defaultEntries(t.seed)
   const problems = []
-  for (const field of fields) {
-    if (
-      !covered('home', home?.slug ?? 'home', field).some((k) =>
-        ['identity', 'copy', 'blocks', 'rewrite'].includes(k)
-      )
-    )
-      problems.push(`home.${field} has no identity, copy, blocks or rewrite rule`)
-    if (home && !(field in home.data)) problems.push(`home.${field} is not in seed/seed.json`)
+  for (const { collection, field } of fields) {
+    // the entry that holds the field (the first one when several do); the front page entry when the collection is absent
+    const holder = entries.find((e) => e.collection === collection && field in e.data)
+    const own = entries.some((e) => e.collection === collection)
+    const slug = holder?.slug ?? entries.find((e) => e.collection === collection)?.slug ?? collection
+    if (!covered(collection, slug, field).some((k) => ['identity', 'copy', 'blocks', 'rewrite'].includes(k)))
+      problems.push(`${collection}.${field} has no identity, copy, blocks or rewrite rule`)
+    if ((own || collection !== 'home') && !holder)
+      problems.push(`${collection}.${field} is not in seed/seed.json`)
   }
   if (!fields.length) problems.push('the home <h1> prints no field of the home entry')
   return {
     status: problems.length ? 'fail' : 'pass',
-    message: `home heading and paragraph fields ${fields.join(', ')}`,
+    message: `home heading and paragraph fields ${fields.map((f) => (f.collection === 'home' ? f.field : `${f.collection}.${f.field}`)).join(', ')}`,
     problems
   }
 }
