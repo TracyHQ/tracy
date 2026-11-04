@@ -324,6 +324,11 @@ node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs measure-fields --s
 node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs slot-roles --out <kit dir> --contract <contract dir>
 ```
 
+`samples --out <kit dir> --contract <contract dir>` gives every text slot of a written kit its whole demo text and
+`demoChars` from the content map (kits made before 3.1.0 carry samples cut at their first words); `slot-roles --only
+sentences` settles only the sentence groups. Every settle command stamps the kit's `tool` (version in
+`template-kit/lib/version.mjs`) and `settledAt`; none touches an image, so an approval stays valid.
+
 Run `pack` after. Without a measurement a tie between two slots of a page stays a failure of `pageTitleSlots`, by name.
 
 ### Make a kit for a new template
@@ -516,8 +521,10 @@ list, kept by every later run).
      (`<block>.picture-N`, `shownAs`, `painter`, `paintedBehind`, `twinOf` when the same painter shows it in an
      earlier block, `canHide: true` for a background, which takes no room) with `writable: false` and the reason,
      since no content map slot holds it, unless a setting slot does (a template background, below);
-     `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom` and a sample with the first
-     words of each paragraph and bullet (`lib/text-format.mjs`), read from the block's real page, including the row
+     `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom`, a `sample` with the whole
+     demo text, one paragraph or `- ` bullet per line (cut only past 1500 characters), and `demoChars` (`total`,
+     `lead`, `bullets`: plain-text lengths of the whole text, the paragraphs before the list, each bullet), so a writer
+     aims at the demo's real length (`lib/text-format.mjs`; `cli.mjs samples` settles a written kit again), read from the block's real page, including the row
      template of a list with no sample row and the items of a card field; `mainMenuRowLimitMissing`, the main menu
      group has `rowLimit`: every top-level label filled together in the page until one wraps, drops to another row
      or pushes past the header, at 1440 and every narrower width down to where the row folds (`read-row-fit.js`,

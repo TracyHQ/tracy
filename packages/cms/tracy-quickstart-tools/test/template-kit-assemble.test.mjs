@@ -318,7 +318,8 @@ test('blocks: role, shared, lists with min sources, frames, links, template word
         paragraphs: 1,
         bullets: 0,
         formatFrom: 'page',
-        sample: 'Book a session'
+        sample: 'Book a session',
+        demoChars: { total: 14, lead: null, bullets: [] }
       },
       { id: 'block-10.2', role: 'contact.cta_url', type: 'url' }
     ],
