@@ -239,7 +239,10 @@ test('check exits 1 on red, printing the page, the slot, the step, and --out kee
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-check-'))
   assert.equal(await h.cli(checkArgs(['--out', dir])), 1)
   const line = h.out.find((l) => l.includes('slot=block-2.1'))
-  assert.match(line, /block step 9 page=- slot=block-2\.1 key=module-2\.1 measured="Changed by hand"/)
+  assert.match(
+    line,
+    /block step 9 \(write\) page=- slot=block-2\.1 key=module-2\.1 measured="Changed by hand"/
+  )
   assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn)')
   const saved = JSON.parse(readFileSync(path.join(dir, 'site-check.json'), 'utf8'))
   assert.equal(saved.status, 'red')

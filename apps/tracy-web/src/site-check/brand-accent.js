@@ -22,7 +22,7 @@ export function factsOf(head) {
 const inFamily = (hex, family) => family.some((seed) => isAccent(hex, seed))
 
 /** Whether one computed value moved only from the template's accent family to the brand's. */
-function onlyAccent({ prop, with: worn, without }, facts) {
+export function onlyAccent({ prop, with: worn, without }, facts) {
   if (!facts) return false
   const shape = (value) => value.replace(COMPUTED_COLOUR, '#')
   if (shape(worn) !== shape(without)) return false

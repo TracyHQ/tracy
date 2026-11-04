@@ -433,18 +433,29 @@ const OVER_HIDE = 'data-tracy-qa-hide'
  * @param {import('playwright').Page} page
  * @param {{overImage?: boolean, over?: number}[]} contrast - the page read's probes; `key` is added to each.
  * @param {'under' | 'underPhone'} key
+ * @param {{ attr?: string, max?: number, ownWords?: boolean }} [options] the attribute the probes are tagged with, how many are
+ *   shot, and whether the shot covers the element's own words only rather than all it holds
  */
-async function measureOverImage(page, contrast, key) {
-  const probes = contrast.filter((s) => s.overImage && Number.isInteger(s.over)).slice(0, OVER_IMAGE_MAX)
+export async function measureOverImage(
+  page,
+  contrast,
+  key,
+  { attr = 'data-tracy-qa-over', max = OVER_IMAGE_MAX, ownWords = false } = {}
+) {
+  const probes = contrast.filter((s) => s.overImage && Number.isInteger(s.over)).slice(0, max)
   for (const s of probes) {
     try {
       const box = await page.evaluate(
-        ([n, hide]) => {
-          const el = document.querySelector(`[data-tracy-qa-over="${n}"]`)
+        ([n, hide, tag, own]) => {
+          const el = document.querySelector(`[${tag}="${n}"]`)
           if (!el) return null
           el.scrollIntoView({ block: 'center', inline: 'nearest' })
           const range = document.createRange()
-          range.selectNodeContents(el)
+          // A button inside the same box is no part of the ground under the words.
+          const node =
+            own && [...el.childNodes].find((c) => c.nodeType === 3 && c.textContent.trim().length > 1)
+          if (node) range.selectNode(node)
+          else range.selectNodeContents(el)
           const r = range.getBoundingClientRect()
           const left = Math.max(0, r.left)
           const top = Math.max(0, r.top)
@@ -490,7 +501,7 @@ async function measureOverImage(page, contrast, key) {
           el.setAttribute(hide, '')
           return { clip: { x: left, y: top, width, height }, frame }
         },
-        [s.over, OVER_HIDE]
+        [s.over, OVER_HIDE, attr, ownWords]
       )
       if (box === null) continue
       let shot = null

@@ -7,7 +7,8 @@
 // reason? }, with `level` defaulting to block and `causingStep` to the group's own. `read(action, params)` asks the site
 // through the door. Only reads pass, answers are shared between groups, and a refused read makes the group unmeasured.
 //
-// Context also holds `host(payload)` (reads pages in a browser) and `baseline` (the demo baseline), both optional.
+// Context also holds `host(payload)` (reads pages in a browser), `baseline` (the demo baseline) and `kit` (the template kit's
+// document), all optional: a group that needs one and has none is unmeasured.
 //
 // Statuses: green, red (a block failure), unmeasured (it could not tell), and not-run for a group stopped by an earlier one.
 import { GroupUnmeasured } from './group-unmeasured.js'
@@ -85,7 +86,7 @@ const notGreenAfter = (status, stoppedBy) => (stoppedBy && status === 'green' ? 
 
 /**
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
- *   baseline?: object | null, allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
+ *   baseline?: object | null, kit?: object | null, allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
  *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
  *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
  *   stopping group made it (never green). `siteFile(file)` reads a file of the site for the group that looks at its bytes
@@ -96,13 +97,14 @@ export async function runSiteCheck({
   report,
   host,
   baseline = null,
+  kit = null,
   siteFile,
   groups = host ? [...SITE_CHECK_GROUPS, ...PAGE_CHECK_GROUPS] : SITE_CHECK_GROUPS,
   now = Date.now,
   allGroups = false
 }) {
   const siteKey = report.site
-  const context = { report, siteKey, now, host, baseline, siteFile, read: readsOnly(door, siteKey) }
+  const context = { report, siteKey, now, host, baseline, kit, siteFile, read: readsOnly(door, siteKey) }
   const results = []
   let stoppedBy = null
   for (const group of groups) {

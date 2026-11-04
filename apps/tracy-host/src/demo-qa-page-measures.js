@@ -4,12 +4,14 @@
  * and the links a page holds. They are read at 1440 and again at 390 on every page the run keeps, and answered as
  * `pageMeasures`, one entry per page and width:
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], pictures: [...], controls: [...],
- *     fields: [...], glued: [...], headings: [...], mainHeadings: [...], shownText, shownLinks: [...], shownPictures: [...],
- *     pictureBoxes: [...] }
+ *     fields: [...], glued: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
+ *     selfLinks: [...], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
+ *     pictureBoxes: [...], brandStyle?, look? }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
 import { readBrandStyle } from './demo-qa-brand-style.js'
+import { readLook } from './demo-qa-look.js'
 
 const BRAND_STYLE_WIDTH = 1440
 /** A box counts as overflowed only past this many pixels (the same tolerance the judge applies). */
@@ -26,6 +28,8 @@ export const MEASURE_CAPS = Object.freeze({
   fields: 40,
   glued: 20,
   headings: 40,
+  selfLinks: 20,
+  contentControls: 150,
   shownLinks: 300,
   shownPictures: 100,
   pictureBoxes: 100,
@@ -235,6 +239,83 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (text) headings.push(text.slice(0, 120))
   }
 
+  // The smaller headings a visitor reads, and the main ones kept for a screen reader: what a separator is looked for in.
+  const minorHeadings = []
+  for (const el of document.body.querySelectorAll('h3,h4,h5,h6')) {
+    if (minorHeadings.length >= caps.headings) break
+    if (!shown(el) || clippedAway(el, getComputedStyle(el))) continue
+    const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
+    if (text) minorHeadings.push(text.slice(0, 120))
+  }
+  const hiddenHeadings = []
+  for (const el of document.body.querySelectorAll('h1,h2')) {
+    if (hiddenHeadings.length >= caps.headings) break
+    const cs = getComputedStyle(el)
+    if (shown(el) && !clippedAway(el, cs)) continue
+    if (cs.display === 'none' || el.closest('[hidden]')) continue
+    const text = (el.textContent ?? '').replace(/\s+/g, ' ').trim()
+    if (text) hiddenHeadings.push(text.slice(0, 120))
+  }
+
+  // Buttons that lead to the page they are on. A menu marks the current page on purpose, and a fragment moves down the page.
+  const selfLinks = []
+  const pathOf = (u) =>
+    u.pathname
+      .replace(/^\/index\.php(?=\/|$)/, '')
+      .replace(/\/+$/, '')
+      .toLowerCase() + u.search
+  const herePath = pathOf(new URL(location.href))
+  const MENU =
+    'nav,[role="navigation"],.navbar,.nav,.menu,.mod-menu,.t4-megamenu,.t3-megamenu,.breadcrumb,.pagination,.wp-block-navigation'
+  for (const a of document.body.querySelectorAll(
+    'a.btn,a.button,a[class*="btn"],a[class*="button"],a[role="button"],a.readmore,.readmore a'
+  )) {
+    if (selfLinks.length >= caps.selfLinks) break
+    if (!shown(a) || clippedAway(a, getComputedStyle(a))) continue
+    if (a.closest(MENU) || a.hasAttribute('aria-current')) continue
+    // A bare # goes nowhere, which is its own finding (`controls`).
+    if (a.href.includes('#')) continue
+    let to
+    try {
+      to = new URL(a.href)
+    } catch {
+      continue
+    }
+    if (to.origin !== location.origin || pathOf(to) !== herePath) continue
+    selfLinks.push({ selector: selectorOf(a), text: saidBy(a).slice(0, 80), href: a.href })
+  }
+
+  // The controls of the page's own content, named by what holds them, for the judge to compare a page the write step created
+  // with the template's content pages. Not the header, the footer or a menu, which every page shares; not a plain link in a line.
+  const contentControls = []
+  const seenControls = new Set()
+  const NOT_NAME =
+    /^(?:active|current|show|open|in|fade|collapsed|loaded|lazy|lazyloaded|animated|wow|hover|focus|disabled|selected|aos-.*|is-.*|.*-active|.*-current)$|\d{3,}/
+  const nameOf = (el) =>
+    el.tagName.toLowerCase() +
+    [...el.classList]
+      .filter((c) => !NOT_NAME.test(c))
+      .sort()
+      .map((c) => `.${c}`)
+      .join('')
+  const SHARED = `header,footer,[role="banner"],[role="contentinfo"],#t4-header,#t4-footer,.t4-header,.t4-footer,${MENU}`
+  for (const el of document.body.querySelectorAll(
+    'a[href],button,[role="button"],input:not([type=hidden]),select,textarea'
+  )) {
+    if (contentControls.length >= caps.contentControls) break
+    if (el.closest(SHARED) || !shown(el) || clippedAway(el, getComputedStyle(el))) continue
+    if (el.tagName === 'A' && !el.classList.length && el.closest('p,td,blockquote')) continue
+    const up = el.parentElement
+    const key = [up?.parentElement, up, el]
+      .filter((n) => n && n !== document.body)
+      .map(nameOf)
+      .join('>')
+    if (seenControls.has(key)) continue
+    seenControls.add(key)
+    contentControls.push({ key, text: saidBy(el).slice(0, 60) })
+  }
+  const views = [...document.body.classList].filter((c) => c.startsWith('view-')).sort()
+
   // The main headings a visitor reads: a page should print one.
   const mainHeadings = []
   for (const el of document.body.querySelectorAll('h1')) {
@@ -278,6 +359,12 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     glued,
     headings,
     mainHeadings,
+    minorHeadings,
+    hiddenHeadings,
+    selfLinks,
+    contentControls,
+    view: views.join(' '),
+    title: document.title,
     shownText,
     shownLinks,
     shownPictures,
@@ -289,6 +376,7 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
 export async function readPageMeasures(page, width) {
   // Only colours can differ by the brand style, so one width answers for both, and a desktop page shows more of the template.
   const brandStyle = width === BRAND_STYLE_WIDTH ? await readBrandStyle(page) : null
+  const look = await readLook(page, width)
   const measured = await page
     .evaluate(measurePageInPage, {
       tolerance: OVERFLOW_TOLERANCE_PX,
@@ -296,5 +384,7 @@ export async function readPageMeasures(page, width) {
       caps: MEASURE_CAPS
     })
     .catch(() => null)
-  return measured ? { width, ...measured, ...(brandStyle ? { brandStyle } : {}) } : null
+  return measured
+    ? { width, ...measured, ...(brandStyle ? { brandStyle } : {}), ...(look ? { look } : {}) }
+    : null
 }

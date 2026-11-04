@@ -260,6 +260,7 @@ async function checkRun(d, values) {
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
     baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
     ...(d.templateFiles ? { siteFile: (file) => d.templateFiles({ siteKey: r.report.site, file }) } : {}),
+    kit: openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null,
     allGroups: values['all-groups'] === true,
     ...(d.now ? { now: d.now } : {})
   })
