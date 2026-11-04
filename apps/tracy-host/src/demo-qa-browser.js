@@ -17,6 +17,8 @@ import { DemoReadCache, keptForFinding, pagesWithFindings } from './demo-read-ca
 import { qaDeadline } from './demo-qa-deadline.js'
 import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, READ_AT_ONCE, runDemoQa } from './demo-qa.js'
 import { readResidueInPage } from './demo-residue-page.js'
+import { withLinkStatus } from './demo-qa-links.js'
+import { readPageMeasures } from './demo-qa-page-measures.js'
 import { selfNamedServer } from './self-named.js'
 import { visionSlot } from './vision-stream.js'
 import {
@@ -77,6 +79,7 @@ export async function readDemoPage(
     discover = false,
     wordmark = null,
     logoPicture = null,
+    measurePages = false,
     loadCapMs = DEMO_QA_LOAD_CAP_MS,
     gotoMs = GOTO_MS,
     previous = null
@@ -346,6 +349,9 @@ export async function readDemoPage(
     read.extraLinks = navPathsOf(read.extraHrefs ?? [], url, ownHosts, 12)
     delete read.navHrefs
     delete read.extraHrefs
+    // The site check's page measures at the desktop width, taken here and again at the phone width below.
+    const measures = []
+    if (measurePages) measures.push(await readPageMeasures(page, 1440))
     await measureOverImage(page, read.contrast ?? [], 'under')
     await page.setViewportSize({ width: 390, height: 844 })
     await page.waitForTimeout(500)
@@ -387,6 +393,10 @@ export async function readDemoPage(
         return { scrollWidth: document.documentElement.scrollWidth, widest, phoneImages }
       })
     )
+    if (measurePages) {
+      measures.push(await readPageMeasures(page, 390))
+      read.measures = measures.filter(Boolean)
+    }
     // Said to the read cache only (`makeDemoQa` takes it off the read): whether this page's read may stand for a finding.
     read.dynamic = dynamic
     return read
@@ -1750,6 +1760,17 @@ export async function makeDemoQa({
         asked,
         base,
         readAtOnce: tabsAtOnce,
+        // Link status is asked of the site at the address the pages were read from (`demo-qa-links.js`).
+        checkLinks: (measures, { deadlineAt }) =>
+          withLinkStatus(measures, {
+            signal,
+            deadlineAt,
+            base,
+            serveFrom,
+            serveFromIsProxy,
+            proxySiteLabel,
+            siteHosts: asked.host ? [asked.host] : []
+          }),
         read: async (url, path, options) => {
           signal.throwIfAborted()
           const page = await context.newPage()
@@ -1760,7 +1781,8 @@ export async function makeDemoQa({
             options?.discover === true,
             options?.wordmark ?? null,
             options?.logoPicture ?? null,
-            options?.sentinels ?? null
+            options?.sentinels ?? null,
+            options?.measurePages === true
           ])
           // A full read reads every page anew; it still says which had not changed since their last read (#247).
           const held = lastReads.get(key)
