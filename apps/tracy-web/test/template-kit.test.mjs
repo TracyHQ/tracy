@@ -15,12 +15,13 @@ import { readContracts } from '../src/lib/contracts.js'
 import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
 import { imagesDigest, kitOfContract } from '../src/lib/template-kit/reader.js'
 import { KIT_STEP, templateKitRefusal } from '../src/lib/template-kit/road-step.js'
+import { FLOW_SITE, frontGroup } from './_template-kit-flow-site.mjs'
 
 const TAG = 'quickstart/ja-sample/j6'
 const sha = (s) => createHash('sha256').update(s).digest('hex')
 
 const IMAGES = [
-  { path: 'pages/home-1440.png', sha256: sha('home-1440') },
+  { id: 'page-home-1440', path: 'pages/home-1440.png', sha256: sha('home-1440') },
   { path: 'pages/home-390.png', sha256: sha('home-390') },
   { path: 'blocks/hero-1440.png', sha256: sha('hero-1440') },
   { path: 'blocks/hero-390.png', sha256: sha('hero-390') }
@@ -30,13 +31,14 @@ const IMAGES = [
 const kit = (over = {}) => ({
   kitVersion: '1.0.0',
   template: { name: 'ja_sample', version: '1.1.0' },
-  quickstart: { slug: 'ja-sample', version: '1.0.2' },
+  quickstart: { slug: 'ja-sample', product: 'ja-sample', version: '1.0.2' },
   images: IMAGES,
-  pageGroups: [{ id: 'main' }],
+  site: FLOW_SITE,
+  pageGroups: [frontGroup('home')],
   pages: [
     {
       id: 'home',
-      group: 'main',
+      group: 'group-home',
       path: '/',
       inMainMenu: true,
       blocks: ['hero'],
@@ -120,7 +122,7 @@ const release = (over = {}) => ({
   kind: 'quickstart',
   github: 'published',
   tracy: 'ready',
-  assets: [{ name: 'w.tar.gz' }],
+  assets: [{ name: 'w.tar.gz' }, { name: 'template-kit-ja-sample-1.0.2.zip' }],
   setting: {
     platform: 'joomla',
     version: '1.0.2',

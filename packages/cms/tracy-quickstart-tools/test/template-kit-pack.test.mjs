@@ -49,8 +49,29 @@ function kitOf() {
   ]
   return {
     template: { name: 'studio_demo', version: '2.0.0' },
-    quickstart: { version: '2.0.1' },
+    quickstart: { product: 'studio-demo', version: '2.0.1' },
     widths: [1440, 390],
+    // The site part the brand step reads (Template kit holds Publish without it), all made up.
+    site: {
+      logoSpots: [
+        { id: 'logo-header-1', frameId: 'siteSetting-1.0', setting: 'site_logo', shownIn: ['base'] }
+      ],
+      nameSlots: [
+        { kind: 'setting', scope: 'cms', setting: 'global configuration sitename', value: 'Studio' }
+      ],
+      favicon: {
+        currentFile: '/favicon.ico',
+        mechanism: { setting: 'template setting favicon', value: null }
+      },
+      brandColours: {
+        primary: { value: '#a04020', roles: ['button-fill', 'link'] },
+        opensOn: { markers: [], ground: '#ffffff' },
+        sides: [{ marker: 'base', ground: '#ffffff', groundSide: 'light' }],
+        tokens: [{ name: '--color-primary', value: '#a04020', side: 'base' }]
+      },
+      navigationGroups: [],
+      settingSlots: []
+    },
     pageGroups: [
       { id: 'group-home', root: 'page-home', children: [] },
       {
