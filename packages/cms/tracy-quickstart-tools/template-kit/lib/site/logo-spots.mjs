@@ -56,7 +56,20 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
     for (const l of r.logos ?? []) {
       const block = l.block && l.block !== 'header' ? l.block : null
       const key = `${l.region}|${block ?? ''}|${l.themeClass ?? ''}|${l.file ?? ''}`
-      const g = groups.get(key) ?? { ...l, block, pages: new Set(), shownIn: new Set(), at: null }
+      // A phone read only sizes a logo the desktop reads found but never showed (`sizeAt`); it adds no place.
+      if (r.width) {
+        const g = groups.get(key)
+        if (g && l.shown && !g.phone) g.phone = { ...l, at: r.width, theme: r.theme }
+        continue
+      }
+      const g = groups.get(key) ?? {
+        ...l,
+        block,
+        pages: new Set(),
+        shownIn: new Set(),
+        at: null,
+        phone: null
+      }
       g.pages.add(r.pageId)
       if (l.shown) {
         g.shownIn.add(r.theme ?? 'base')
@@ -75,7 +88,8 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
     const entity = g.block ? entities.get(g.block) : null
     let emptyShows = setting?.prints.find((p) => p.where === where)?.emptyShows ?? null
     if (!emptyShows && entity && isFreeHtml(entity) && g.blockTextOnly) emptyShows = 'nothing'
-    const m = g.at ?? g
+    const viaPhone = !g.at && g.phone
+    const m = g.at ?? (viaPhone ? g.phone : g)
     const spot = {
       id: `logo-${where}-${spots.filter((s) => s.where === where).length + 1}`,
       frameId: slot ? neutralKey(slot.key) : null,
@@ -86,9 +100,10 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
         side: m.ground?.colour ? sideOfGround(m.ground.colour) : null,
         ...(m.ground?.picture ? { onPicture: true } : {})
       },
-      width: g.at ? m.width : null,
-      height: g.at ? m.height : null,
-      shownIn: [...g.shownIn],
+      width: g.at || viaPhone ? m.width : null,
+      height: g.at || viaPhone ? m.height : null,
+      ...(viaPhone ? { sizeAt: g.phone.at } : {}),
+      shownIn: viaPhone ? [g.phone.theme ?? 'base'] : [...g.shownIn],
       twinOf: null,
       emptyShows,
       demoFiles: g.file ? [g.file] : [],
@@ -104,7 +119,8 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
       missing('emptyShows', 'neither a template layout nor the block shows what prints without it')
     if (!spot.ground.colour)
       missing('ground', spot.ground.onPicture ? 'the logo sits on a picture' : 'no opaque ground')
-    if (spot.width == null) missing('width', 'the logo is never shown in any theme of the template')
+    if (spot.width == null)
+      missing('width', 'the logo is never shown in any theme of the template, at any width')
     spots.push(spot)
   }
   // Light and dark twins: same place and block, other theme marker; the one shown as the page opens is the main one.

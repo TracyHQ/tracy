@@ -53,7 +53,8 @@ export function layoutCheck(rows, container, tol = 6, context = null) {
 export function matchRepeat(repeats, items, used = new Set()) {
   const key = (r) => r.path.join('.')
   // A set of rows the page shows wins over one it keeps hidden (rows in a closed tab, read since they count too).
-  const free = (repeats ?? []).filter((r) => r.count === items && !used.has(key(r)))
+  // Rows of a block nested in this one (a sidebar module inside the component area) are never this block's.
+  const free = (repeats ?? []).filter((r) => r.count === items && !r.nested && !used.has(key(r)))
   const hit = free.find((r) => r.shownCount !== 0) ?? free[0]
   if (hit) used.add(key(hit))
   return hit ?? null

@@ -1,5 +1,6 @@
 // Site-wide parts measured on the pages: summary contact blocks (how many lines of each kind the demo shows), forms
 // (by kind), footer link columns (with what each holds). Pure: they take what the browser read on every page.
+import { isSocialProfile } from './helpers.mjs'
 
 /** A loose pattern for a block that may hold contact details (read in the browser to pick the blocks). */
 export const CONTACT_PATTERN =
@@ -115,7 +116,8 @@ export function buildForms(reads, { idOf = (b) => b } = {}) {
 
 /**
  * Footer link columns and what each holds: `offerings` when its heading names a listing page of the site (the column
- * lists that page's items), `pages` when most of its labels are names of the site's own main menu pages.
+ * lists that page's items), `socialProfiles` when every link is a profile on a social network, `pages` when most of
+ * its labels are names of the site's own main menu pages.
  * @param {{listingTitles: Map<string, string>, menuLabels: Set<string>, idOf?: Function}} ctx listing title -> page id
  */
 export function buildNavigationGroups(reads, { listingTitles, menuLabels, idOf = (b) => b }) {
@@ -132,7 +134,16 @@ export function buildNavigationGroups(reads, { listingTitles, menuLabels, idOf =
       const named = labels.filter((l) =>
         [l, `${l}s`, `${l}es`, l.replace(/e?s$/, '')].some((x) => menuLabels.has(x))
       ).length
-      const holds = listing ? 'offerings' : named * 2 >= labels.length ? 'pages' : null
+      // A column whose every link is a profile on a social network holds the business's social profiles (the
+      // vocabulary of a list's `holds`, helpers.mjs), not pages of the site.
+      const social = g.links.length > 0 && g.links.every((l) => isSocialProfile(l.href))
+      const holds = listing
+        ? 'offerings'
+        : social
+          ? 'socialProfiles'
+          : named * 2 >= labels.length
+            ? 'pages'
+            : null
       const group = {
         id: `footer-${by.size + 1}`,
         block: id,

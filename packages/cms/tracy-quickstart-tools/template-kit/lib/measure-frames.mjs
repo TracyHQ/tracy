@@ -128,7 +128,11 @@ async function reveal(page, block, f) {
     if (!r.did) return null
     await page.waitForTimeout(500)
     const m = (await page.evaluate(readFrames, { block, frames: [f] })).frames[f.id]
-    if (m?.shown) return { ...m, revealed: r.how }
+    if (!m?.shown) continue
+    // A slide shows while it still moves in: read it again once the transition has ended.
+    await page.waitForTimeout(1000)
+    const settled = (await page.evaluate(readFrames, { block, frames: [f] })).frames[f.id]
+    return { ...(settled?.shown ? settled : m), revealed: r.how }
   }
   return null
 }
@@ -173,10 +177,13 @@ async function measureBlock({ page, job, width, evidence, missing, inherit = new
   }
 }
 
-/** Frames whose picture is not in their own block, looked for in any block of this page. */
+/**
+ * Frames whose picture is not in their own block, looked for in any block of this page, then in the page region
+ * that holds it when no block does (a logo the template's own footer layout prints).
+ */
 async function findElsewhere({ page, path, width, evidence, missing }) {
   const frames = [...missing.values()].map((x) => x.frame)
-  const read = await page.evaluate(readFrames, { block: null, frames })
+  const read = await page.evaluate(readFrames, { block: null, frames, anywhere: true })
   for (const f of frames) {
     const m = read.frames[f.id]
     if (!m?.found || !m.shown) continue

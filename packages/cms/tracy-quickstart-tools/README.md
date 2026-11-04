@@ -607,8 +607,10 @@ list, kept by every later run).
   `business.logo` slots and every logo spot's frame; who owns it is the brand step's, so `fixed` is null). An
   `<img>` kept at opacity 0 while its holder paints a mask or background over it is shown through that painter
   (`paintedBy`) and measured from it. A frame in a closed tab, slide or accordion is opened first, the way a
-  visitor would (`revealed`); a picture not in its own block is looked for in the other blocks of the pages
-  (`measuredIn`). `canHide`, in the DOM only: the picture and its painters (mask, pseudo-element, holder background)
+  visitor would (`revealed`, read again once a moving slide has settled); a picture not in its own block is looked
+  for in the other blocks of the pages, then in the page region that holds it (`measuredIn`, a logo the template's
+  own footer prints). A frame shown at phone width only takes its box there (`sizeAt`). A frame whose picture the demo
+  leaves empty (`emptyInDemo`) can hide: the block already shows without it. `canHide`, in the DOM only: the picture and its painters (mask, pseudo-element, holder background)
   are emptied in the browser and the block read again at every width, once per layout (a frame in the same place on
   a page of the same layout takes it: `canHideFrom`); a picture repeated by every row of a list is emptied in every
   row at once (`measuredAs: "row-slot"`, one verdict for the slot). The numbers are kept (`hideEvidence.measured`:
@@ -622,7 +624,12 @@ list, kept by every later run).
   in the block's `demoOwned`. Twins follow their main frame.
 - **Listing maximum.** A listing page's `items` list takes the page size: from the pager when a later list position
   exists (`?start=N`: `maxSource: "page-size"`), else the item rows the demo shows (`captured-rows`; item rows are
-  the biggest set whose every row opens a different content item). `maxEvidence` says which.
+  the biggest set whose every row opens a different content item, through the first item link of the row; rows of a
+  block nested in the listing are that block's). Without a later position the page-size control the listing prints
+  (`select[name=limit]`, its selected number) is the page size (`page-size-control`). `maxEvidence` says which.
+  Zebra classes (`row0`/`row1`, `odd`/`even`) are row state, not shape. A width where the listing shows no row (a
+  collapsed sidebar) is not judged for the minimum. An items list whose page shows too few rows to measure takes the
+  minimum measured on the page of its layout that shows the most rows (`minSource: "layout"`, `minFrom`).
 - **`contact-sheet/`**: every block image on HTML sheets (no screenshot), to spot
   images that are misaligned, blank, cut by a header or doubled.
 
