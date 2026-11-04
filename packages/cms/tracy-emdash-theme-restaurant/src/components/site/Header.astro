@@ -7,6 +7,8 @@ import { brandLogos, logoSpots } from '@/lib/brand'
 import { getSiteSettings } from 'emdash'
 import BrandLogo from '@/components/site/BrandLogo.astro'
 import { DEMO_LOGO, DEMO_LOGO_SMALL } from '@/lib/demo-logo'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
 
 interface Props {
   chrome: Chrome
@@ -26,8 +28,11 @@ const active = (item: ChromeMenuItem): boolean => {
     item.children.some((c) => c.url !== '/' && active(c))
   )
 }
-const home = chrome.primary.find((i) => i.url === '/')
-const rest = chrome.primary.filter((i) => i !== home)
+// the menu without the pages the customer unticked, and the pages under them
+const live = await liveLinks(Astro.request, locale, menuUrls(chrome.primary))
+const primary = pruneMenu(chrome.primary, live)
+const home = primary.find((i) => i.url === '/')
+const rest = primary.filter((i) => i !== home)
 ---
 
 <div class="rs-topbar">
@@ -91,7 +96,7 @@ const rest = chrome.primary.filter((i) => i !== home)
 		</div>
 		<div class="rs-mobile-nav" id="mobile-nav">
 			<ul>
-				{chrome.primary.map((item) => (
+				{primary.map((item) => (
 					<li>
 						{item.url ? <a href={href(locale, item.url)}>{item.label}</a> : <span class="rs-nav-label">{item.label}</span>}
 						{item.children.length > 0 && (

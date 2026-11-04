@@ -39,7 +39,7 @@ long text is `portableText` for `posts.body`, `pages.body`, `hero.hero_intro`, `
 - Blog list, category list, Featured Articles, Tagged Items (`BlogList.astro`): `posts` (`list_order`, `featured_order`), `masthead/blog|featured-articles|tagged-items`, `banner/banner`.
 - Post (`Post.astro`): `posts/<slug>`, `masthead/blog`, `banner`, all posts (prev/next). Chefs is a post in category `pages`.
 - Gallery and album (`Gallery.astro`): `slideshow/gallery`, album posts (`cover`, `photos`).
-- Page family (`Page.astro`): About us `features_intro/about-us`, `statistics/you-re-in-good-restaurant`, `teams/our-team`; Menu `tabs/our-menu` + `menu/dessert-117`, `sea-food`, `icream-and-juice`; menu styles `menu/simple-menu`, `menu-with-image`, `2-column-menu`; Offers `happyhours/happy-hours-style-1..3`; Our History `pages/our-history` + `timeline/our-history`; Phone Reservation `reservation/reservation`; Contact `contact/contact`; All Categories `category_info/*`.
+- Page family (`Page.astro`): About us `features_intro/about-us`, `statistics/you-re-in-good-restaurant`, `teams/our-team`; Menu `tabs/our-menu` + `menu/dessert-117`, `sea-food`, `icream-and-juice`; menu styles `menu/simple-menu`, `menu-with-image`, `2-column-menu`; Offers `happyhours/happy-hours-style-1..3`; Our History `pages/our-history` + `timeline/our-history-timeline`; Phone Reservation `reservation/reservation`; Contact `contact/contact`; All Categories `category_info/*`.
 - Search (`Search.astro`): the search index over posts.
 - Every page: `chrome`, `subscribe/subscribe`; Search and Home also read `testimonials`.
 - 404: `chrome` fields `not_found_*`.

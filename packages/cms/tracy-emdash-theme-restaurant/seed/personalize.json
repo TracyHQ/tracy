@@ -273,7 +273,7 @@
     },
     {
       "collection": "timeline",
-      "slug": "our-history",
+      "slug": "our-history-timeline",
       "field": "items",
       "why": "the demo restaurant's history"
     },
@@ -309,7 +309,7 @@
     },
     {
       "collection": "timeline",
-      "slug": "our-history",
+      "slug": "our-history-timeline",
       "field": "section_intro",
       "why": "the history of the demo restaurant"
     },
