@@ -333,6 +333,20 @@ export function doorOps({ apply, siteKey, applyId }) {
     async setContent(id, content) {
       await call('content.update', { apply_id: applyId, kind: 'post', id, fields: { post_content: content } })
     },
+    /** The stored markup of a template part (`header`, `footer`), by its slug, or null when the door holds none. */
+    async readPart(slug) {
+      const answer = await call('content.get', { kind: 'templatePart', key: slug })
+      const content = /** @type {any} */ (answer.item)?.content
+      return typeof content === 'string' ? content : null
+    },
+    async setPart(slug, content) {
+      await call('content.update', {
+        apply_id: applyId,
+        kind: 'templatePart',
+        key: slug,
+        fields: { content }
+      })
+    },
     async category() {
       // No door reads terms by name yet, and inventing a category id would file the blog under
       // somebody else's. The posts are written either way; they are simply uncategorised until

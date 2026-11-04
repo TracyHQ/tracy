@@ -36,7 +36,8 @@
  * table cell, cite and menu label that has no `metadata.name` (or repeats one), and a url slot for each link in them.
  * Such a slot is addressed by position (`target.blockType` + `target.occurrence`, see `capture-all-text.mjs`); a named
  * first block keeps its name key and target. Off by default so every released profile re-captures byte for byte.
- * `--role-vocabulary 3` writes version 3 roles (default 2), as the Joomla capture does.
+ * `--role-vocabulary 3` writes version 3 roles (default 2), as the Joomla capture does. With `--all-text` the header and
+ * the footer the theme stores are captured too, each a `templatePart` entity (`partSlots`, TracyHQ/tracy#139).
  *
  * SLOT ROLES (ADR 0038): every text and image slot of the map carries a `role` and a `group`. A recapture passes the
  * previous version's content map as --previous-map: a slot whose key AND sample are unchanged keeps its role and group
@@ -200,6 +201,64 @@ export function pageSlots({ content, entityKey, prefix, allText = false }) {
   return { slots, skipped }
 }
 
+/** The template parts a theme prints on every page, captured as content map entities with every text (#139). */
+export const CAPTURED_PARTS = ['header', 'footer']
+
+/** The rows of a table, or none when the dump has no such table (an older dump without terms). */
+const rowsOf = (sql, name) => {
+  try {
+    return tableRows(sql, name)
+  } catch (error) {
+    // Only a table the dump does not have reads as none; any other failure of the reader is the dump's and is said.
+    if (error instanceof Error && error.message === `the dump has no table ${name}`) return []
+    throw error
+  }
+}
+
+/**
+ * The header and the footer the active theme stores in the database (`wp_template_part`, its `wp_theme` term), each a
+ * `templatePart` entity found by its slug, as the Claude Cowork plugin's contract finds one, with a slot for every text
+ * (`allTextSlots`: by name, else by position). A part the theme keeps only as a file is not in the dump and is not
+ * captured; the build's sweep keeps handling it.
+ * @param {{ sql: string, prefix: string, posts: any[], stylesheet: string }} input
+ */
+export function partSlots({ sql, prefix, posts, stylesheet }) {
+  const terms = new Map(rowsOf(sql, `${prefix}terms`).map((t) => [t.term_id, t.slug]))
+  const themeTerms = new Map(
+    rowsOf(sql, `${prefix}term_taxonomy`)
+      .filter((tt) => tt.taxonomy === 'wp_theme')
+      .map((tt) => [tt.term_taxonomy_id, terms.get(tt.term_id)])
+  )
+  const themeOf = new Map(
+    rowsOf(sql, `${prefix}term_relationships`)
+      .filter((r) => themeTerms.has(r.term_taxonomy_id))
+      .map((r) => [r.object_id, themeTerms.get(r.term_taxonomy_id)])
+  )
+  const entities = []
+  const slots = []
+  const skipped = []
+  for (const slug of CAPTURED_PARTS) {
+    const rows = posts.filter(
+      (p) =>
+        p.post_type === 'wp_template_part' &&
+        p.post_status === 'publish' &&
+        p.post_name === slug &&
+        themeOf.get(p.ID) === stylesheet
+    )
+    if (rows.length !== 1) {
+      if (rows.length > 1) skipped.push(`part-${slug} (${rows.length} rows of the theme)`)
+      continue
+    }
+    const key = `part-${slug}`
+    const got = pageSlots({ content: rows[0].post_content, entityKey: key, prefix: key, allText: true })
+    skipped.push(...got.skipped)
+    if (got.slots.length === 0) continue
+    entities.push({ key, kind: 'templatePart', identity: { slug } })
+    slots.push(...got.slots)
+  }
+  return { entities, slots, skipped }
+}
+
 /**
  * The fields of a release's `manifest.json` this tool reads, whichever of the two shapes it has: the
  * older one (`webroot`/`database` at the top, `wpVersion`, `phpVersion`, `theme` as a name or object)
@@ -291,6 +350,13 @@ export function deriveProfile({
     }
     entities.push({ key, kind: 'page', identity: { postType: 'page', slug: p.post_name } })
     slots.push(...got.slots)
+  }
+  if (allText) {
+    const got = partSlots({ sql, prefix, posts, stylesheet })
+    entities.push(...got.entities)
+    slots.push(...got.slots)
+    coverage.skipped.push(...got.skipped)
+    coverage.parts = got.entities.map((e) => e.identity.slug)
   }
   const keys = new Set()
   for (const s of slots) {
