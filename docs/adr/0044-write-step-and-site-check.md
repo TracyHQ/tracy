@@ -141,11 +141,16 @@ through a block and lists those not printed. Any other unprinted slot is only re
 The site check's `written-not-printed` group applies the same rule on its own reading of the pages and blocks on every written
 value no page prints, naming step 9.
 
-### 12. Brand accent words are held to 3:1
+### 12. Brand accent words are held to 3:1, and a logo blocks only when most of it fades
 
 `band-contrast` blocks words the brand style made worse than the template only when they read under 3:1, WCAG's level for large
 text and controls: an accent marks a link, a highlight or a button label, and the owner ruled a brand green at 3.28:1 on a dark
-footer no fault. Words the brand style did not touch keep 4.5:1 and stay the template's warning; every other measure keeps its bar.
+footer no fault. Words the brand style did not touch keep 4.5:1 and stay the template's warning.
+
+`logo-readable` keeps its measurement and changes its verdict: a logo blocks when over 60% of its ink reads under 2:1 against its
+ground, warns from 40%, and passes below. The owner ruled logos with 31% to 34% of their ink under 2:1 no fault, since the name stayed
+readable and only the dark part of the mark faded. The fault still goes to step 2 for the brand's logo file and to the template for
+its own. Every other measure keeps its bar.
 
 ## Consequences
 

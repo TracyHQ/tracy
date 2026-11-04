@@ -16,10 +16,14 @@ import {
 import { pathOfMeasure } from './page-faults.js'
 import { TEMPLATE_STEP } from './steps.js'
 
-/** A logo counts as unreadable when this share of its ink reads under the ratio: its words can be gone while its mark stays. */
-export const LOGO_SHARE = 0.25
+/**
+ * The share of a logo's ink that reads under LOGO_GONE_RATIO against its ground: over LOGO_BLOCK_SHARE the logo is gone (a block),
+ * from LOGO_WARN_SHARE it needs a person's eye (a warning), under it the logo still reads. The owner ruled a logo with 31% to 34% of
+ * its ink under 2:1 no fault (04/11/2026): the club name stayed readable and only the dark part of the mark faded.
+ */
 export const LOGO_GONE_RATIO = 2
-export const LOGO_FAINT_RATIO = 3
+export const LOGO_BLOCK_SHARE = 0.6
+export const LOGO_WARN_SHARE = 0.4
 
 const WORST_SHOWN = 6
 /**
@@ -216,8 +220,8 @@ export function judgeLogos(entries, { report } = {}) {
         }
         read++
         if (logo.plate) continue
-        const gone = logo.under2 >= LOGO_SHARE
-        if (!gone && logo.under3 < LOGO_SHARE) continue
+        const gone = logo.under2 > LOGO_BLOCK_SHARE
+        if (!gone && logo.under2 < LOGO_WARN_SHARE) continue
         const file = fileOf(logo.src)
         // A logo is the same logo on every page: said once per file and theme, on the first page it was read.
         const id = `${side} ${file}`
@@ -230,10 +234,10 @@ export function judgeLogos(entries, { report } = {}) {
           width: m.width,
           level: gone ? 'block' : 'warn',
           causingStep: brands ? 2 : TEMPLATE_STEP,
-          measured: `${logo.selector} ${file}: ${Math.round((gone ? logo.under2 : logo.under3) * 100)}% of its ink under ${gone ? LOGO_GONE_RATIO : LOGO_FAINT_RATIO}:1${logo.faintInk ? `, ${rgb(logo.faintInk)} on ${rgb(logo.faintGround)}` : ''}`,
+          measured: `${logo.selector} ${file}: ${Math.round(logo.under2 * 100)}% of its ink under ${LOGO_GONE_RATIO}:1${logo.faintInk ? `, ${rgb(logo.faintInk)} on ${rgb(logo.faintGround)}` : ''}`,
           reason: gone
             ? `Part of this logo vanishes into its ground in the ${side} theme.`
-            : `Part of this logo is faint on its ground in the ${side} theme.`
+            : `Much of this logo is faint on its ground in the ${side} theme.`
         })
       }
   return { failures, read, unread }

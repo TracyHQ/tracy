@@ -164,8 +164,8 @@ const logo = (l) => ({
   src: 'http://site.test/images/tracy-brand/logo-footer.png',
   ink: 900,
   share: 0.3,
-  under2: 0.6,
-  under3: 0.6,
+  under2: 0.7,
+  under3: 0.7,
   plate: false,
   faintInk: WHITE.slice(0, 3),
   faintGround: [250, 250, 250],
@@ -190,9 +190,18 @@ test('a logo file the template holds names the template; faint warns; a plate ca
     entry('light', { logos: [logo({ src: 'http://site.test/images/joomlart/logo.png' })] })
   ])
   assert.equal(template.failures[0].causingStep, 0)
-  const faint = judgeLogos([entry('light', { logos: [logo({ under2: 0.1, under3: 0.4 })] })])
-  assert.equal(faint.failures[0].level, 'warn')
   assert.deepEqual(judgeLogos([entry('light', { logos: [logo({ plate: true })] })]).failures, [])
+})
+
+test('a logo blocks over 60% of its ink under 2:1, warns from 40%, and passes below: 34% passes, 50% warns, 70% blocks', () => {
+  const verdict = (under2) => judgeLogos([entry('dark', { logos: [logo({ under2, under3: 0.9 })] })]).failures
+  assert.deepEqual(verdict(0.34), [])
+  const [warned] = verdict(0.5)
+  assert.deepEqual([warned.level, warned.causingStep], ['warn', 2])
+  assert.match(warned.measured, /50% of its ink under 2:1/)
+  const [blocked] = verdict(0.7)
+  assert.deepEqual([blocked.level, blocked.causingStep], ['block', 2])
+  assert.match(blocked.reason, /dark theme/)
 })
 
 test('a logo the host could not shoot is counted as unread, not green', () => {
