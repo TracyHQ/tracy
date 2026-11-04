@@ -1,0 +1,2 @@
+- **The write step takes a hidden item of any menu off the site, and a second run with the same files changes nothing** — Akemi · #374 · `feat/write-step-bench` · 2026-11-04
+  **Affects:** the write step bench. Same files on the same site now write nothing and ask for no new site, whichever way a slot left (a removed row, an emptied field, a closed form, an unpublished item). A real change that needs a removed slot or a closed form back is refused by name.

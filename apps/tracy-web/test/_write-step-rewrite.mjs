@@ -3,7 +3,7 @@
 import { runWriteStep } from '../src/write-step/write-step.js'
 import { copy as baseCopy, frozenFiles, KIT, plan as basePlan, SITE } from './_write-step-run.mjs'
 
-const WRITE_OPERATIONS = new Set(['apply', 'set', 'setSource', 'blocks.unpublish'])
+const WRITE_OPERATIONS = new Set(['apply', 'set', 'setSource', 'blocks.unpublish', 'rows.remove'])
 
 /** Whether a door call changes the site. */
 export const isWrite = (call) =>

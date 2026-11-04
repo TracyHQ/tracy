@@ -83,6 +83,11 @@ function broughtBack(last, { plan, kit, owners, extras, changes }) {
     (Array.isArray(plan?.pages) ? plan.pages : []).filter((p) => p?.decision === 'drop').map((p) => p.id)
   )
   const items = new Set((extras?.mainMenu?.hide ?? []).map((h) => h.item))
+  const forms = new Set(
+    (Array.isArray(plan?.site?.forms) ? plan.site.forms : [])
+      .filter((f) => f?.decision === 'hide')
+      .map((f) => f.block)
+  )
   const out = []
   for (const line of last.held()) {
     const { slot, part } = line
@@ -92,8 +97,11 @@ function broughtBack(last, { plan, kit, owners, extras, changes }) {
       if (!dropped.has(slot)) out.push(`${slot} (a page that was dropped)`)
     } else if (part === 'menu-hide') {
       if (!items.has(slot)) out.push(`${slot} (a menu item that was unpublished)`)
-    } else if (line.status === 'hidden' && !line.leftWith && !line.readFrom) {
-      // A line gone with its block or menu item, or a link gone with what holds it, is decided by that one's own line.
+    } else if (part === 'form') {
+      if (!forms.has(slot)) out.push(`${slot} (a form that was closed)`)
+    } else if (line.status === 'hidden' && !line.leftWith && (!line.readFrom || line.ordered === 'removed')) {
+      // A line gone with its block or menu item, or a link gone with what holds it, is decided by that one's own line. A slot
+      // taken out of the stored field reads back on the plugin's list, and it is its own line all the same.
       if (owners.get(slot)?.kind !== 'hide' || line.key in changes)
         out.push(
           `${slot} (${part === 'fixed-text' ? 'a sentence that was emptied' : 'a slot that was emptied'})`

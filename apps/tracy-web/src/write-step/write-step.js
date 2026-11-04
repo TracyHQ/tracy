@@ -425,7 +425,7 @@ export async function runWriteStep(input) {
     isCancelled,
     last
   })
-  shareLines = [...shared.lines, ...(await closeForms({ door, siteKey, plan, kit: kit.doc }))]
+  shareLines = [...shared.lines, ...(await closeForms({ door, siteKey, plan, kit: kit.doc, last }))]
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
   return finish('done', null, written, wrote.refused)
