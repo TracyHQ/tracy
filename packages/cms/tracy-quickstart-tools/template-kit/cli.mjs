@@ -29,8 +29,11 @@
 //                 [--only sentences]: only the sentence groups (a kit whose page titles are not settled yet keeps its gate)
 //   cli.mjs samples --out <dir> --contract <dir>   (the text slot samples of the template-kit.json in --out settled
 //                 again from the content map: every text slot's whole demo text as `sample` and its lengths as
-//                 `demoChars`; no browser, no capture, no image; nothing else moves, so an approval stays valid)
-//   Every settle command (samples, slot-roles, relabel, setting-slots) stamps the kit's `tool` and `settledAt`.
+//                 `demoChars`, its inline emphasis as `inline`; no browser, no capture, no image; nothing else moves, so
+//                 an approval stays valid)
+//   Every settle command (samples, slot-roles, relabel, setting-slots) counts the slot shape checks again
+//   (lib/slot-shape-checks.mjs: samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing) and stamps `tool` and
+//   `settledAt`.
 //   cli.mjs measure-fields --site <url> --out <dir> --contract <dir> --db-command '<client prefix>' --scratch-site
 //                 [--host-header <host>]   (WRITES to the site, each field set to a marker and put back: only on a
 //                 throwaway site rebuilt from the quickstart, which --scratch-site says it is; field-drives.json)
@@ -61,6 +64,7 @@ import { settleSettingSlots } from './lib/setting-slots.mjs'
 import { settleSamples } from './lib/slot-samples.mjs'
 import { settleSentenceGroups } from './lib/sentence-groups.mjs'
 import { settleSlotRoles } from './lib/slot-roles.mjs'
+import { slotShapeChecks } from './lib/slot-shape-checks.mjs'
 import { stampSettled, TOOL } from './lib/version.mjs'
 import { runFieldMeasure } from './lib/site/measure-fields.mjs'
 import { writeSheets } from './lib/sheets.mjs'
@@ -94,6 +98,12 @@ export function parseArgs(argv) {
     else o[a.slice(2)] = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true
   }
   return o
+}
+
+/** A settled kit: its slot shape checks counted again from the content map, and the tool that settled it. */
+const settled = (kit, map) => {
+  slotShapeChecks(kit, { map })
+  return stampSettled(kit)
 }
 
 const str = (v) => (typeof v === 'string' ? v : undefined)
@@ -136,34 +146,36 @@ function pack(out) {
 function slotRoles(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
+  const map = readJson(join(o.contract, 'content-map.json'))
   if (o.only === 'sentences') {
-    settleSentenceGroups(kit, { map: readJson(join(o.contract, 'content-map.json')) })
-    writeJson(file, stampSettled(kit))
+    settleSentenceGroups(kit, { map })
+    writeJson(file, settled(kit, map))
     console.log(`${kit.blocks.flatMap((b) => b.sentences ?? []).length} sentence groups`)
     return 0
   }
   if (o.only !== undefined) throw new Error('slot-roles --only takes: sentences')
-  const r = settleSlotRoles(kit, {
-    map: readJson(join(o.contract, 'content-map.json')),
-    drives: readIf(join(out, 'field-drives.json')) ?? {}
-  })
-  writeJson(file, stampSettled(kit))
+  const r = settleSlotRoles(kit, { map, drives: readIf(join(out, 'field-drives.json')) ?? {} })
+  writeJson(file, settled(kit, map))
   console.log(JSON.stringify(r, null, 1))
   for (const f of kit.coverage.failures.filter((x) => x.part === 'pageTitleSlots'))
     console.error(`${f.where}: ${f.reason}`)
   return r.pageTitleSlots ? 1 : 0
 }
 
-/** Settle every text slot's sample and demoChars of the kit in `out` again (slot-samples.mjs); exit 0. */
+/** Settle every text slot's sample, demoChars and inline of the kit in `out` again (slot-samples.mjs); exit 1 when a
+ * slot shape check still fails. */
 function samples(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const r = settleSamples(kit, { map: readJson(join(o.contract, 'content-map.json')) })
-  writeJson(file, stampSettled(kit))
+  const map = readJson(join(o.contract, 'content-map.json'))
+  const r = settleSamples(kit, { map })
+  writeJson(file, settled(kit, map))
+  const { samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing } = kit.checks
   console.log(
-    `${r.slots} text slots, ${r.changed} entries rewritten; cut before ${r.cutBefore}, after ${r.cutAfter} (${r.capped} cut at the length cap); ${r.withoutMapSlot.length} without a content map slot`
+    `${r.slots} text slots, ${r.changed} entries rewritten; cut before ${r.cutBefore}, after ${r.cutAfter} (${r.capped} cut at the length cap); ${r.inline} with inline marks; ${r.withoutMapSlot.length} without a content map slot`
   )
-  return 0
+  console.log(JSON.stringify({ samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing }))
+  return samplesCut || inlineEmphasisMissing ? 1 : 0
 }
 
 /** Measure what each stored field drives on a throwaway site, into field-drives.json. */
@@ -189,8 +201,9 @@ async function measureFields(o, out) {
 function relabel(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const r = relabelKit(kit, { map: readJson(join(o.contract, 'content-map.json')), linkLabelSlots })
-  writeJson(file, stampSettled(kit))
+  const map = readJson(join(o.contract, 'content-map.json'))
+  const r = relabelKit(kit, { map, linkLabelSlots })
+  writeJson(file, settled(kit, map))
   const links = kit.blocks.flatMap((b) => b.links ?? [])
   console.log(
     `${links.filter((l) => l.labelId).length} links name their label slot, ${links.filter((l) => l.fixedLabel).length} carry a fixed-text reason (${r.set} label slots named now), linksWithoutLabel ${r.wrong}`
@@ -224,7 +237,7 @@ function settingSlots(o, out) {
   const failures = []
   const wrong = contactFieldChecks(kit, (part, where, reason) => failures.push({ part, where, reason }))
   if (kit.coverage?.parts) kit.coverage.parts.contactFieldsUnresolved = wrong
-  writeJson(file, stampSettled(kit))
+  writeJson(file, settled(kit, map))
   const maps = kit.blocks.flatMap((b) => (b.links ?? []).filter((l) => l.opens?.shows === 'map'))
   console.log(
     `${r.slots} setting slots: ${r.tied} of ${maps.length} map buttons tied, ${r.mobile} mobile lines opened, ${r.backgrounds} frames painted behind tied${backgroundSettings ? '' : ' (no --webroot: background slots kept)'}; contactFieldsUnresolved ${wrong}`

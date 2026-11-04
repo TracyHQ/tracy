@@ -7,6 +7,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { applyCoverage, coverageGate } from './coverage-gate.mjs'
+import { slotShapeChecks } from './slot-shape-checks.mjs'
 import { httpFetcher } from './crawl.mjs'
 import { buildKit } from './kit.mjs'
 import { fixedLinkLabels, linkLabelChecks } from './link-label-reasons.mjs'
@@ -92,6 +93,8 @@ export async function assembleKit(o, out, tool) {
   kit.checks.listLimitsDiffering = limitChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotsInTwoBlocks = slotOwnerChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotCoverage = coverageGate(kit, { map, readings })
+  // Text slot shape against the content map: whole samples, sentence groups, inline marks (slot-shape-checks.mjs).
+  slotShapeChecks(kit, { map })
   // One source for a link's label: its labelId, or the reason its words are fixed (link-label-reasons.mjs).
   fixedLinkLabels(kit)
   kit.checks.linksWithoutLabel = linkLabelChecks({ kit, errors: kit.errors })

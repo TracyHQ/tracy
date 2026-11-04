@@ -325,7 +325,7 @@ node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs slot-roles --out <
 ```
 
 `samples --out <kit dir> --contract <contract dir>` gives every text slot of a written kit its whole demo text and
-`demoChars` from the content map (kits made before 3.1.0 carry samples cut at their first words); `slot-roles --only
+`demoChars` and `inline` from the content map (kits made before 3.1.0 carry samples cut at their first words); `slot-roles --only
 sentences` settles only the sentence groups. Every settle command stamps the kit's `tool` (version in
 `template-kit/lib/version.mjs`) and `settledAt`; none touches an image, so an approval stays valid.
 
@@ -433,7 +433,11 @@ list, kept by every later run).
   `listLimitsDiffering`, `showcasePagesNotExcluded`, `mixedPageGroups`, `detailPagesOutsideListing`,
   `representativesNotListing`, `slotsInTwoBlocks`, `orphanTexts`, `paragraphsMissing`, `fixedTextIdsInvalid`, the
   coverage gate `slotCoverage`, and `linksWithoutLabel` (`lib/link-label-reasons.mjs`: a link that shows words with
-  neither a `labelId` naming a slot of its own block nor a `fixedLabel` reason)),
+  neither a `labelId` naming a slot of its own block nor a `fixedLabel` reason), and the slot shape checks counted
+  against the content map (`lib/slot-shape-checks.mjs`, by `build` and every settle command, their first failing
+  slots or blocks in `coverage.failures`): `samplesCut` (a text slot whose `sample` or `demoChars` is not the whole
+  demo text), `sentenceGroupsUnsettled` (a block whose `sentences` differ from what the sentence-groups pass gives)
+  and `inlineEmphasisMissing` (a text slot whose demo marks words inline with no matching `inline`)),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the
@@ -524,7 +528,10 @@ list, kept by every later run).
      `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom`, a `sample` with the whole
      demo text, one paragraph or `- ` bullet per line (cut only past 1500 characters), and `demoChars` (`total`,
      `lead`, `bullets`: plain-text lengths of the whole text, the paragraphs before the list, each bullet), so a writer
-     aims at the demo's real length (`lib/text-format.mjs`; `cli.mjs samples` settles a written kit again), read from the block's real page, including the row
+     aims at the demo's real length, and `inline` when the demo marks words inside the text (`[{tag, attrs, text,
+     at}]` for a `span`, `strong` and the like, `at` being `start`, `end` or `inside`; `{tag: 'br'}` for a line break;
+     `lib/inline-marks.mjs`) so the writer can mark the same words (`lib/text-format.mjs`; `cli.mjs samples` settles a
+     written kit again), read from the block's real page, including the row
      template of a list with no sample row and the items of a card field; `mainMenuRowLimitMissing`, the main menu
      group has `rowLimit`: every top-level label filled together in the page until one wraps, drops to another row
      or pushes past the header, at 1440 and every narrower width down to where the row folds (`read-row-fit.js`,

@@ -3,6 +3,7 @@
 // content is laid out and how long each part is; `demoChars` counts the plain text of each part. Counted on the page
 // (the read pass's shown paragraphs and bullets) when the page shows the slot, else from the content map's markup.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
+import { inlineOf } from './inline-marks.mjs'
 
 // A sample longer than this (a long article body) is cut, with an ellipsis; `demoChars` still counts the whole text.
 export const SAMPLE_CAP = 1500
@@ -90,7 +91,12 @@ export function formatOf(sample, page = {}) {
     const x = normText(t)
     return x === n || (x.length >= 12 && n.includes(x))
   })
-  const base = { sample: sampleOfParts(parts), demoChars: demoCharsOf(parts) }
+  const inline = inlineOf(sample)
+  const base = {
+    sample: sampleOfParts(parts),
+    demoChars: demoCharsOf(parts),
+    ...(inline.length ? { inline } : {})
+  }
   const li = parts.filter((p) => p.kind === 'li').length
   if (n && (shownP || shownLi || shownText)) {
     // A reading that did not list bullets says nothing about them: the content map's count stands.
@@ -115,10 +121,10 @@ export function textSlotsOf(b) {
   ].filter((s) => s.type === 'text')
 }
 
-/** The sample of a text slot from a raw content map sample: every part whole, and its lengths. */
+/** The sample of a text slot from a raw content map sample: every part whole, its lengths and its inline marks. */
 export const sampleOf = (raw) => {
   const parts = partsOf(raw)
-  return { sample: sampleOfParts(parts), demoChars: demoCharsOf(parts) }
+  return { sample: sampleOfParts(parts), demoChars: demoCharsOf(parts), inline: inlineOf(raw) }
 }
 
 /** Self-check: a declared text slot without its paragraph and bullet counts. Returns how many. */

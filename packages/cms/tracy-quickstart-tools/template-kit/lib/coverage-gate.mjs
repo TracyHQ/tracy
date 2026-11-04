@@ -30,7 +30,7 @@ function ownEntries(b) {
   return out.filter((s) => s?.id)
 }
 
-const FORMAT = ['type', 'role', 'sample', 'demoChars', 'paragraphs', 'bullets', 'formatFrom']
+const FORMAT = ['type', 'role', 'sample', 'demoChars', 'inline', 'paragraphs', 'bullets', 'formatFrom']
 
 /** Each link's label is a slot of the block holding the link: its own, or a reference to the owning block's. */
 function labelSlots(kit, mapOf) {
