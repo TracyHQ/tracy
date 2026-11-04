@@ -12,7 +12,13 @@
  *
  * Every command and its options: `node scripts/write-step-bench.mjs` with no command (src/write-step/bench-cli.js).
  */
+import { readConfig } from '../src/config.js'
 import { createPool } from '../src/db/index.js'
+import { hostCall } from '../src/host/client.js'
+import { demoSelfNames } from '../src/ops/quickstarts.js'
+import { siteByKey } from '../src/sites/store.js'
+import { fileBaselineStore } from '../src/site-check/demo-baseline.js'
+import { hostMeasure } from '../src/site-check/host-measure.js'
 import { readReleases, templateOfTag } from '../src/lib/quickstart-releases.js'
 import { runCli } from '../src/write-step/bench-cli.js'
 import { httpSiteDoor } from '../src/write-step/bench-site-door.js'
@@ -30,6 +36,14 @@ export async function main(argv, env = process.env) {
   try {
     return await runCli(argv, {
       store: pgBenchSiteStore(pool),
+      // The site check's page groups: the site's host reads the pages, against a demo baseline kept per quickstart version
+      // in WRITE_BENCH_BASELINE_DIR (outside the repo). Neither is needed by the other commands.
+      makeHost: async (siteKey) => {
+        const site = await siteByKey(pool, siteKey)
+        if (!site) throw new Error(`No site ${siteKey}`)
+        return hostMeasure({ hostCall, config: readConfig(env), site, selfNames: demoSelfNames })
+      },
+      ...(env.WRITE_BENCH_BASELINE_DIR ? { baselines: fileBaselineStore(env.WRITE_BENCH_BASELINE_DIR) } : {}),
       runs: pgWriteRunStore(pool),
       makeDoor: ({ account, platform }) =>
         httpSiteDoor({
