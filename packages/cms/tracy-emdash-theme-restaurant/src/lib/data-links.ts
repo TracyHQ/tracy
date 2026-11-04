@@ -5,12 +5,30 @@
  */
 
 /**
+ * The scheme of a URL as a browser reads it: leading control characters and spaces are dropped and tabs and line breaks
+ * inside are ignored, so ` JaVaScript:alert(1)` and `java\tscript:` are both `javascript`. Null when it has none.
+ */
+export function schemeOf(url: unknown): string | null {
+  if (typeof url !== 'string') return null
+  const raw = url.replace(/[\t\n\r]/g, '')
+  let start = 0
+  while (start < raw.length && raw.charCodeAt(start) <= 0x20) start++
+  return /^([a-z][a-z0-9+.-]*):/i.exec(raw.slice(start))?.[1].toLowerCase() ?? null
+}
+
+/** A URL that runs code or carries a document: `javascript:`, `vbscript:` and `data:`. No data link may render one. */
+export function isScriptUrl(url: unknown): boolean {
+  const scheme = schemeOf(url)
+  return scheme === 'javascript' || scheme === 'vbscript' || scheme === 'data'
+}
+
+/**
  * The gate passes an external link (http(s) to another host), `tel:`, `mailto:` and an in-page `#` link unchanged and gates a
  * same-site path. This reads the URL as the path it opens on THIS site: a path as it is, an absolute http(s) URL of one of
  * `origins` as its path, anything else (another host, another scheme, `#`, `//host`) as null, which the gate always passes.
  */
 export function sameSitePath(url: unknown, origins: readonly string[]): string | null {
-  if (typeof url !== 'string') return null
+  if (typeof url !== 'string' || isScriptUrl(url)) return null
   const raw = url.trim()
   if (raw.startsWith('/') && !raw.startsWith('//')) return raw
   if (!/^https?:\/\//i.test(raw)) return null
