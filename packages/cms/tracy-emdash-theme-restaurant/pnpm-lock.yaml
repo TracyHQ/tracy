@@ -20,6 +20,7 @@ overrides:
   undici@>=7.0.0 <7.30.1: 7.30.1
   undici@>=8.0.0 <8.12.2: 8.12.2
   vite@>=8.3.0 <8.3.3: 8.3.3
+  deepmerge@>=4.2.0 <=4.3.1: 4.1.1
 
 importers:
 
@@ -3076,8 +3077,8 @@ packages:
     resolution: {integrity: sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==}
     engines: {node: '>=4.0.0'}
 
-  deepmerge@4.3.1:
-    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
+  deepmerge@4.1.1:
+    resolution: {integrity: sha512-+qO5WbNBKBaZez95TffdUDnGIo4+r5kmsX8aOb7PDHvXsTbghAmleuxjs6ytNaf5Eg4FGBXDS5vqO61TRi6BMg==}
     engines: {node: '>=0.10.0'}
 
   default-browser-id@5.0.1:
@@ -8696,7 +8697,7 @@ snapshots:
 
   deep-extend@0.6.0: {}
 
-  deepmerge@4.3.1: {}
+  deepmerge@4.1.1: {}
 
   default-browser-id@5.0.1: {}
 
@@ -10420,7 +10421,7 @@ snapshots:
       commander: 14.0.3
       cosmiconfig: 9.0.2(typescript@5.9.3)
       dedent: 1.7.2
-      deepmerge: 4.3.1
+      deepmerge: 4.1.1
       diff: 8.0.4
       execa: 9.6.1
       fast-glob: 3.3.3
