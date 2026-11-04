@@ -646,3 +646,14 @@ test('a run that only replaces words goes through the guard untouched', async ()
   assert.deepEqual(report.guard.refused, [])
   assert.equal(site.applies().length, 1)
 })
+
+test('a template that mixes its accent itself keeps the mix, and only its colour may change', () => {
+  const own = accentRoutesOf(
+    ['.dot::before{background-color:color-mix(in srgb,var(--dot-accent,#ab1234) 10%,transparent)}'],
+    '#ab1234'
+  )
+  const rule = (share) =>
+    `.dot::before{background-color:color-mix(in srgb,var(--dot-accent,var(--tracy-accent)) ${share}%,transparent)}`
+  assert.deepEqual(cssFaults(rule(10), { routes: own }), [])
+  assert.equal(cssFaults(rule(40), { routes: own }).length, 1)
+})

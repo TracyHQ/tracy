@@ -53,9 +53,10 @@ function withoutMixes(text) {
 }
 
 /** A value with its colours gone: what must stay the template's. */
-function shapeOf(value) {
+function shapeOf(value, { keepMixes = false } = {}) {
   if (tripleIn(value)) return '#'
-  const text = withoutMixes(String(value)).replace(/var\(--tracy-accent(?:-text)?\)/g, '#')
+  const kept = keepMixes ? String(value) : withoutMixes(String(value))
+  const text = kept.replace(/var\(--tracy-accent(?:-text)?\)/g, '#')
   let out = ''
   let from = 0
   for (const c of coloursIn(text)) {
@@ -119,9 +120,12 @@ function declFault(rule, decl, routes) {
   if (markupForm(rule.selector, decl)) return null
   const allowed = routes?.decls.get(keyOf(rule.at, rule.selector, decl.prop))
   if (allowed)
-    return allowed.has(shapeOf(decl.value))
+    // A template that mixes its accent itself keeps its mix: only the colour inside it changes.
+    return allowed.has(shapeOf(decl.value)) || allowed.has(shapeOf(decl.value, { keepMixes: true }))
       ? null
-      : fault(`${decl.prop} changes more than its colour: it differs from the template's own value`)
+      : fault(
+          `${decl.prop} changes more than its colour: it differs from the template's own value (${rule.selector.slice(0, 80)}: ${decl.value.slice(0, 80)})`
+        )
   const isColour = COLOUR_PROP.test(decl.prop) || (decl.prop.startsWith('--') && shapeOf(decl.value) === '#')
   return fault(
     isColour
