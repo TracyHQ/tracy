@@ -1,15 +1,6 @@
 {
-  "$comment": "Comment and scripts/ string hits per file that predate check-language pass six (26/10/2026). Shrink-only: `pnpm exec tsx scripts/check-language.ts --strike` lowers it; never add rows.",
+  "$comment": "Comment and scripts/ string hits per file that predate check-language pass six (26/10/2026), and owned vendor/ hits that predate pass seven (27/10/2026). Shrink-only: `pnpm exec tsx scripts/check-language.ts --strike` lowers it; never add rows.",
   "files": {
-    "packages/cms/tracy-emdash-theme-base/src/lib/font-subsets.mjs": 1,
-    "packages/cms/tracy-emdash-theme-base/tests/personalize-labels-echoed.test.mjs": 1,
-    "packages/cms/tracy-emdash-theme-base/tools/personalize.mjs": 5,
-    "packages/cms/tracy-emdash-theme-business/src/lib/font-subsets.mjs": 1,
-    "packages/cms/tracy-emdash-theme-business/tests/personalize-labels-echoed.test.mjs": 1,
-    "packages/cms/tracy-emdash-theme-business/tools/personalize.mjs": 5,
-    "packages/cms/tracy-emdash-theme-saas/src/lib/font-subsets.mjs": 1,
-    "packages/cms/tracy-emdash-theme-saas/tests/personalize-labels-echoed.test.mjs": 1,
-    "packages/cms/tracy-emdash-theme-saas/tools/personalize.mjs": 5,
     "packages/cms/tracy-joomla-quickstart/template-patches/tracy-base/scss/_chrome.scss": 1,
     "packages/cms/tracy-joomla-quickstart/template-patches/tracy/scss/_chrome.scss": 1,
     "packages/cms/tracy-joomla-quickstart/template-patches/tracy_business/scss/_chrome.scss": 1,

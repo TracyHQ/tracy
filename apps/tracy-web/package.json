@@ -17,9 +17,11 @@
   },
   "dependencies": {
     "@hono/node-server": "2.1.3",
+    "@phosphor-icons/core": "2.1.1",
     "acorn": "8.18.0",
     "css-tree": "3.2.1",
     "fflate": "0.8.3",
+    "fontkit": "2.0.4",
     "hono": "4.13.11",
     "impit": "0.14.7",
     "papaparse": "5.5.3",

@@ -54,6 +54,15 @@ Recorded in `render-manifest.json`: scrollWidth/overflow, fonts loaded, body col
 **The source's overflow is a fact** (e.g. Northgate: RU 390 = 425px, Style guide 659px): the rebuilt site
 must not overflow, and REPORT records it as a deliberate fix relative to the source.
 
+### P1 exit check — source sanity before P2 freezes the reference
+
+Before P2, read `render-manifest.json` for every rendered page and theme: fonts loaded (no family missing, no
+fallback serif where the source names a web font), no console error, body colour right per theme, overflow as
+recorded. A defect in **how the source is served** (a missing font file path, a stylesheet the local server does not
+find) is fixed in the serving and the source re-rendered; a defect **in the source itself** goes to `content-gaps.md`
+with its evidence, so the two-sided comparison is not read as the target. Do not edit the source folder (it is
+immutable). Why: [`execution-rules.md`](execution-rules.md) §Before the build loop.
+
 ## P1 outputs
 
 - `routes.json`: each route has `path`, `kind` (page/list/archive/detail/system/kit), `source.page` +

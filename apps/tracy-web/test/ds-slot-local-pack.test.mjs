@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { contractFor, versionKeyOf } from '../src/lib/ds-slot.js'
+import { contractFor, templateKeyOf, versionKeyOf } from '../src/lib/ds-slot.js'
 
 test('a Joomla site built from a local pack is keyed by the tag the pack stands for', () => {
   assert.deepEqual(
@@ -33,4 +33,17 @@ test('a local pack inside the contract range wears a system', () => {
     quickstartVersion: '1.3.1'
   })
   assert.ok('contract' in contractFor('joomla/tracy-base', apple))
+})
+
+test('an EmDash site built from a local pack is keyed by its template, not by the local namespace', () => {
+  assert.equal(
+    templateKeyOf({ platform: 'emdash', quickstartTag: 'local/tracy-coffee/emdash-0.x' }),
+    'emdash/tracy-coffee'
+  )
+  // a published tag is kept as it is
+  assert.equal(
+    templateKeyOf({ platform: 'emdash', quickstartTag: 'tracy-coffee/emdash-0.x' }),
+    'emdash/tracy-coffee'
+  )
+  assert.equal(templateKeyOf({ platform: 'emdash', quickstartTag: '' }), null)
 })

@@ -1126,7 +1126,8 @@ test('Tracy CI runs it on the one row the planner marks with clock, and on the f
       group: 'tests related',
       label: 'tracy-check',
       args: '--only tests --tests-part related',
-      clock: true
+      clock: true,
+      browser: true
     }
   )
   const nightlyPlan = planMatrix({ event: 'schedule', allFiles: [file] })
@@ -1136,7 +1137,8 @@ test('Tracy CI runs it on the one row the planner marks with clock, and on the f
       group: 'tests 2/2',
       label: 'tracy-check',
       args: '--only tests --tests-part workers:2/2,rest',
-      clock: true
+      clock: true,
+      browser: true
     }
   )
 

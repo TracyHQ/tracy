@@ -15,12 +15,13 @@ import { readContracts } from '../src/lib/contracts.js'
 import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
 import { imagesDigest, kitOfContract } from '../src/lib/template-kit/reader.js'
 import { KIT_STEP, templateKitRefusal } from '../src/lib/template-kit/road-step.js'
+import { FLOW_SITE, frontGroup } from './_template-kit-flow-site.mjs'
 
 const TAG = 'quickstart/ja-sample/j6'
 const sha = (s) => createHash('sha256').update(s).digest('hex')
 
 const IMAGES = [
-  { path: 'pages/home-1440.png', sha256: sha('home-1440') },
+  { id: 'page-home-1440', path: 'pages/home-1440.png', sha256: sha('home-1440') },
   { path: 'pages/home-390.png', sha256: sha('home-390') },
   { path: 'blocks/hero-1440.png', sha256: sha('hero-1440') },
   { path: 'blocks/hero-390.png', sha256: sha('hero-390') }
@@ -30,17 +31,23 @@ const IMAGES = [
 const kit = (over = {}) => ({
   kitVersion: '1.0.0',
   template: { name: 'ja_sample', version: '1.1.0' },
-  quickstart: { slug: 'ja-sample', version: '1.0.2' },
+  quickstart: { slug: 'ja-sample', product: 'ja-sample', version: '1.0.2' },
   images: IMAGES,
-  pageGroups: [{ id: 'main' }],
+  site: FLOW_SITE,
+  pageGroups: [frontGroup('home')],
   pages: [
     {
       id: 'home',
-      group: 'main',
+      group: 'group-home',
       path: '/',
       inMainMenu: true,
       blocks: ['hero'],
-      images: { 1440: 'pages/home-1440.png', 390: 'pages/home-390.png' }
+      images: { 1440: 'pages/home-1440.png', 390: 'pages/home-390.png' },
+      look: {
+        image: 'pages/home-1440.png',
+        sha256: sha('home-1440'),
+        text: 'A wide photo banner with a heading and one button, then three cards in a row.'
+      }
     }
   ],
   blocks: [
@@ -49,6 +56,11 @@ const kit = (over = {}) => ({
       role: 'hero',
       shared: false,
       images: { 1440: 'blocks/hero-1440.png', 390: 'blocks/hero-390.png' },
+      look: {
+        image: 'blocks/hero-1440.png',
+        sha256: sha('hero-1440'),
+        text: 'A full width photo with a large centred heading and one button below it.'
+      },
       lists: [],
       frames: [],
       links: [],
@@ -110,7 +122,7 @@ const release = (over = {}) => ({
   kind: 'quickstart',
   github: 'published',
   tracy: 'ready',
-  assets: [{ name: 'w.tar.gz' }],
+  assets: [{ name: 'w.tar.gz' }, { name: 'template-kit-ja-sample-1.0.2.zip' }],
   setting: {
     platform: 'joomla',
     version: '1.0.2',
@@ -284,9 +296,43 @@ test('an approval of another image set does not count', () => {
     }
   })
   assert.deepEqual(verdictOf(other), ['todo', 'kit-approval-stale'])
-  // a changed picture under the same name is a different set too
-  const changed = kit({ images: [{ ...IMAGES[0], sha256: sha('home-1440-v2') }, ...IMAGES.slice(1)] })
+  // a changed picture under the same name is a different set too (a 390 one: a 1440 one also stales its look)
+  const changed = kit({
+    images: [IMAGES[0], { ...IMAGES[1], sha256: sha('home-390-v2') }, ...IMAGES.slice(2)]
+  })
   assert.deepEqual(verdictOf(changed), ['todo', 'kit-approval-stale'])
+})
+
+test('every 1440 shot needs a current look; looks are text, so writing them keeps the approval', () => {
+  const stepFor = (k) => stepOf(roadOf(release(), world(contractsWith(k))))
+  const [home] = kit().pages
+  const [hero] = kit().blocks
+  const missing = stepFor(kit({ pages: [{ ...home, look: undefined }] }))
+  assert.deepEqual([missing.state, missing.code], ['todo', 'kit-incomplete'])
+  assert.match(missing.params.reason, /^1 page or block has no current look of its 1440 shot: page home$/)
+  assert.deepEqual(missing.params.missingLooks, [
+    { kind: 'page', id: 'home', image: 'pages/home-1440.png', why: 'missing' }
+  ])
+  // a look of other bytes than the shot holds now, or of another shot, is stale
+  const stale = stepFor(
+    kit({
+      pages: [{ ...home, look: { ...home.look, sha256: sha('home-1440-old') } }],
+      blocks: [{ ...hero, look: { ...hero.look, image: 'pages/home-1440.png' } }]
+    })
+  )
+  assert.equal(stale.code, 'kit-incomplete')
+  assert.equal(
+    stale.params.reason,
+    '2 pages and blocks have no current look of their 1440 shot: page home (stale), block hero (stale)'
+  )
+  const refusal = templateKitRefusal(stale)
+  assert.equal(refusal.error, 'TEMPLATE_KIT_NOT_READY')
+  assert.match(refusal.reason, /template-kit looks/)
+  // a shot the image list does not hold has no file to describe: nothing to ask for
+  const unlisted = { ...hero, images: { 1440: 'blocks/elsewhere-1440.png', 390: 'blocks/hero-390.png' } }
+  assert.deepEqual(verdictOf(kit({ blocks: [{ ...unlisted, look: undefined }] })), ['done', 'kit-approved'])
+  // the approval names only the images: the same approval holds with and without looks
+  assert.deepEqual(verdictOf(kit()), ['done', 'kit-approved'])
 })
 
 test('the image digest does not depend on the order the images are listed in', () => {

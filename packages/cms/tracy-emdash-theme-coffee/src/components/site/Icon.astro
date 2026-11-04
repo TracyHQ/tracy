@@ -1,0 +1,12 @@
+---
+import { ICONS } from '@/lib/icons'
+interface Props {
+  name: string
+  class?: string
+  size?: number
+}
+const { name, class: className = '', size = 22 } = Astro.props
+const icon = ICONS[name]
+---
+
+{icon && (icon.sketch ? <svg viewBox={icon.viewBox} width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true" class={className} set:html={icon.body} /> : <svg viewBox={icon.viewBox} width={size} height={size} aria-hidden="true" class={className} set:html={icon.body} />)}

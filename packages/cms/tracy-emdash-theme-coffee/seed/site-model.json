@@ -1,0 +1,2063 @@
+{
+  "$schema": "tracy-site-model/v1",
+  "source": {
+    "kind": "canvas",
+    "parity": "measured",
+    "origin": "Ember Roasters",
+    "capturedAt": "2026-10-30T08:42:22.501Z"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "site": {
+    "title": {
+      "en": "Ember Roasters"
+    },
+    "tagline": {
+      "en": "Small-batch coffee, roasted daily"
+    },
+    "postsPerPage": 9
+  },
+  "types": [
+    {
+      "name": "posts",
+      "mode": "list",
+      "label": {
+        "en": "Blog"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "name": "excerpt",
+          "type": "prose",
+          "label": "Summary",
+          "searchable": true
+        },
+        {
+          "name": "image",
+          "type": "image"
+        },
+        {
+          "name": "image_alt",
+          "type": "text"
+        },
+        {
+          "name": "image_caption",
+          "type": "text"
+        },
+        {
+          "name": "author",
+          "type": "text"
+        },
+        {
+          "name": "date",
+          "type": "date",
+          "indexed": true
+        },
+        {
+          "name": "content",
+          "type": "prose",
+          "label": "Body"
+        },
+        {
+          "name": "featured",
+          "type": "boolean",
+          "defaultValue": false
+        },
+        {
+          "name": "sort",
+          "type": "number",
+          "label": "Sort order (ties on the same date)",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "site",
+      "mode": "single",
+      "label": {
+        "en": "Site chrome"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "brand_name",
+          "type": "text"
+        },
+        {
+          "name": "brand_tagline",
+          "type": "text"
+        },
+        {
+          "name": "phone",
+          "type": "text"
+        },
+        {
+          "name": "address",
+          "type": "text"
+        },
+        {
+          "name": "hours",
+          "type": "text",
+          "label": "Opening hours"
+        },
+        {
+          "name": "contact_label",
+          "type": "text",
+          "label": "Header button label"
+        },
+        {
+          "name": "contact_url",
+          "type": "text",
+          "label": "Header button URL"
+        },
+        {
+          "name": "theme_dark_label",
+          "type": "text",
+          "label": "Theme toggle: dark"
+        },
+        {
+          "name": "theme_light_label",
+          "type": "text",
+          "label": "Theme toggle: light"
+        },
+        {
+          "name": "menu_label",
+          "type": "text",
+          "label": "Mobile menu label"
+        },
+        {
+          "name": "mega_read_title",
+          "type": "text",
+          "label": "Mega Resources: Read & learn title"
+        },
+        {
+          "name": "mega_help_title",
+          "type": "text",
+          "label": "Mega Resources: Help & support title"
+        },
+        {
+          "name": "mega_resources_eyebrow",
+          "type": "text",
+          "label": "Mega Resources: feature eyebrow"
+        },
+        {
+          "name": "mega_resources_heading",
+          "type": "text",
+          "label": "Mega Resources: feature title"
+        },
+        {
+          "name": "mega_resources_text",
+          "type": "prose",
+          "label": "Mega Resources: feature text"
+        },
+        {
+          "name": "mega_resources_action",
+          "type": "text",
+          "label": "Mega Resources: feature link label"
+        },
+        {
+          "name": "mega_resources_url",
+          "type": "text",
+          "label": "Mega Resources: feature link URL"
+        },
+        {
+          "name": "mega_resources_image",
+          "type": "image",
+          "label": "Mega Resources: feature image"
+        },
+        {
+          "name": "mega_resources_image_alt",
+          "type": "text",
+          "label": "Mega Resources: feature image alt"
+        },
+        {
+          "name": "mega_latest_title",
+          "type": "text",
+          "label": "Mega Resources: latest posts title"
+        },
+        {
+          "name": "mega_search_label",
+          "type": "text",
+          "label": "Mega Resources: search label"
+        },
+        {
+          "name": "footer_resources_title",
+          "type": "text",
+          "label": "Footer column 2 title"
+        },
+        {
+          "name": "footer_company_title",
+          "type": "text",
+          "label": "Footer column 3 title"
+        },
+        {
+          "name": "social_heading",
+          "type": "text"
+        },
+        {
+          "name": "social_handle",
+          "type": "text"
+        },
+        {
+          "name": "social",
+          "type": "group",
+          "label": "Social profiles",
+          "fields": [
+            {
+              "name": "platform",
+              "type": "text",
+              "label": "Platform"
+            },
+            {
+              "name": "url",
+              "type": "text",
+              "label": "URL"
+            }
+          ]
+        },
+        {
+          "name": "notice",
+          "type": "prose",
+          "label": "Demo notice (footer)"
+        },
+        {
+          "name": "breadcrumb_home",
+          "type": "text",
+          "label": "Breadcrumb: home label"
+        },
+        {
+          "name": "not_found_code",
+          "type": "text",
+          "label": "404: code"
+        },
+        {
+          "name": "not_found_title",
+          "type": "text",
+          "label": "404: title"
+        },
+        {
+          "name": "not_found_back_label",
+          "type": "text",
+          "label": "404: back link label"
+        },
+        {
+          "name": "search_title",
+          "type": "text",
+          "label": "Search: page title"
+        },
+        {
+          "name": "search_placeholder",
+          "type": "text",
+          "label": "Search: placeholder"
+        },
+        {
+          "name": "search_button",
+          "type": "text",
+          "label": "Search: button label"
+        },
+        {
+          "name": "search_results_line",
+          "type": "text",
+          "label": "Search: results line ({count}, {query})"
+        },
+        {
+          "name": "search_empty",
+          "type": "text",
+          "label": "Search: no results line"
+        },
+        {
+          "name": "read_more",
+          "type": "text",
+          "label": "Read more label"
+        },
+        {
+          "name": "count_label",
+          "type": "text",
+          "label": "List count label ({count})"
+        },
+        {
+          "name": "page_meta",
+          "type": "text",
+          "label": "Pagination label ({page}, {pages})"
+        },
+        {
+          "name": "prev_label",
+          "type": "text",
+          "label": "Previous label"
+        },
+        {
+          "name": "next_label",
+          "type": "text"
+        },
+        {
+          "name": "related_title",
+          "type": "text",
+          "label": "Related posts title"
+        },
+        {
+          "name": "latest_title",
+          "type": "text",
+          "label": "Latest posts title"
+        },
+        {
+          "name": "sections_title",
+          "type": "text",
+          "label": "Blog sections title"
+        },
+        {
+          "name": "sitemap_title",
+          "type": "text"
+        },
+        {
+          "name": "skip_label",
+          "type": "text",
+          "label": "Skip to content label"
+        },
+        {
+          "name": "back_to_top",
+          "type": "text",
+          "label": "Back to top label"
+        }
+      ]
+    },
+    {
+      "name": "home",
+      "mode": "single",
+      "label": {
+        "en": "Home page"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Page title",
+          "required": true
+        },
+        {
+          "name": "cup_model",
+          "type": "file",
+          "label": "Cup model (.glb)",
+          "validation": {
+            "allowedMimeTypes": [
+              "model/gltf-binary"
+            ]
+          }
+        },
+        {
+          "name": "cup_still",
+          "type": "image",
+          "label": "Cup still image (transparent PNG or WebP)"
+        },
+        {
+          "name": "intro_lead",
+          "type": "prose",
+          "label": "Section 1 · invitation"
+        },
+        {
+          "name": "intro_cta_label",
+          "type": "text",
+          "label": "Section 1 · button"
+        },
+        {
+          "name": "intro_cta_url",
+          "type": "text",
+          "label": "Section 1 · button URL"
+        },
+        {
+          "name": "story_title",
+          "type": "text",
+          "label": "Section 2 · story title"
+        },
+        {
+          "name": "story_left",
+          "type": "prose",
+          "label": "Section 2 · story, left"
+        },
+        {
+          "name": "story_right",
+          "type": "prose",
+          "label": "Section 2 · story, right"
+        },
+        {
+          "name": "why_title",
+          "type": "text",
+          "label": "Section 3 · title"
+        },
+        {
+          "name": "why_items",
+          "type": "group",
+          "label": "Section 3 · reasons (four)",
+          "fields": [
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Title"
+            },
+            {
+              "name": "text",
+              "type": "prose",
+              "label": "Text"
+            }
+          ]
+        },
+        {
+          "name": "detail_title",
+          "type": "text",
+          "label": "Section 4 · title"
+        },
+        {
+          "name": "detail_labels",
+          "type": "group",
+          "label": "Section 4 · labels pointing at the cup (top to bottom)",
+          "fields": [
+            {
+              "name": "label",
+              "type": "text",
+              "label": "Label"
+            },
+            {
+              "name": "text",
+              "type": "text",
+              "label": "Text"
+            }
+          ]
+        },
+        {
+          "name": "featured_title",
+          "type": "text",
+          "label": "Section 5 · title"
+        },
+        {
+          "name": "featured_lead",
+          "type": "prose",
+          "label": "Section 5 · line under the title"
+        },
+        {
+          "name": "featured_cta_label",
+          "type": "text",
+          "label": "Section 5 · button"
+        },
+        {
+          "name": "featured_cta_url",
+          "type": "text",
+          "label": "Section 5 · button URL"
+        },
+        {
+          "name": "space_title",
+          "type": "text",
+          "label": "Section 6 · photos title"
+        },
+        {
+          "name": "space_photos",
+          "type": "group",
+          "label": "Section 6 · photos of the shop (three or four)",
+          "fields": [
+            {
+              "name": "image",
+              "type": "image",
+              "label": "Photo"
+            },
+            {
+              "name": "alt",
+              "type": "text",
+              "label": "Alt text"
+            }
+          ]
+        },
+        {
+          "name": "visit_title",
+          "type": "text",
+          "label": "Section 6 · visit title"
+        },
+        {
+          "name": "hours_label",
+          "type": "text",
+          "label": "Section 6 · opening hours label (the hours are the shop hours)"
+        },
+        {
+          "name": "contact_label",
+          "type": "text",
+          "label": "Section 6 · button"
+        },
+        {
+          "name": "contact_url",
+          "type": "text",
+          "label": "Section 6 · button URL"
+        }
+      ]
+    },
+    {
+      "name": "menu_page",
+      "mode": "single",
+      "label": {
+        "en": "Menu page"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Page title",
+          "required": true
+        },
+        {
+          "name": "intro",
+          "type": "prose"
+        },
+        {
+          "name": "order_label",
+          "type": "text",
+          "label": "Order button label"
+        },
+        {
+          "name": "order_url",
+          "type": "text",
+          "label": "Order button link (empty hides the button)"
+        },
+        {
+          "name": "call_label",
+          "type": "text",
+          "label": "Call button label (the phone number is the shop phone)"
+        },
+        {
+          "name": "more_label",
+          "type": "text",
+          "label": "Group name for items with no group"
+        }
+      ]
+    },
+    {
+      "name": "menu_items",
+      "mode": "list",
+      "label": {
+        "en": "Menu items"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Name",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "name": "excerpt",
+          "type": "prose",
+          "label": "Description",
+          "searchable": true
+        },
+        {
+          "name": "price",
+          "type": "text",
+          "label": "Price (free text)"
+        },
+        {
+          "name": "image",
+          "type": "image"
+        },
+        {
+          "name": "image_alt",
+          "type": "text"
+        },
+        {
+          "name": "featured",
+          "type": "boolean",
+          "defaultValue": false
+        },
+        {
+          "name": "sort",
+          "type": "number",
+          "label": "Sort order",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "blog",
+      "mode": "single",
+      "label": {
+        "en": "Blog page"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Page title",
+          "required": true
+        },
+        {
+          "name": "intro",
+          "type": "prose"
+        },
+        {
+          "name": "topics_title",
+          "type": "text",
+          "label": "Topics page title"
+        },
+        {
+          "name": "topics_intro",
+          "type": "prose"
+        },
+        {
+          "name": "all_label",
+          "type": "text",
+          "label": "All articles label"
+        }
+      ]
+    },
+    {
+      "name": "about",
+      "mode": "single",
+      "label": {
+        "en": "About page"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Page title",
+          "required": true
+        },
+        {
+          "name": "chapter1_statement",
+          "type": "text",
+          "label": "Statement"
+        },
+        {
+          "name": "chapter1_support",
+          "type": "prose",
+          "label": "Supporting text"
+        },
+        {
+          "name": "chapter1_image",
+          "type": "image",
+          "label": "Image"
+        },
+        {
+          "name": "chapter1_image_alt",
+          "type": "text",
+          "label": "Image alt"
+        },
+        {
+          "name": "chapter1_link_label",
+          "type": "text",
+          "label": "Link label"
+        },
+        {
+          "name": "chapter1_link_url",
+          "type": "text",
+          "label": "Link URL"
+        },
+        {
+          "name": "chapter1_link_style",
+          "type": "text",
+          "label": "Link style",
+          "validation": {
+            "options": [
+              "secondary",
+              "primary",
+              "text"
+            ]
+          },
+          "defaultValue": "secondary"
+        },
+        {
+          "name": "stats_eyebrow",
+          "type": "text",
+          "label": "Eyebrow"
+        },
+        {
+          "name": "stats_heading",
+          "type": "text",
+          "label": "Heading"
+        },
+        {
+          "name": "stats_figures",
+          "type": "group",
+          "label": "Figures",
+          "fields": [
+            {
+              "name": "value",
+              "type": "text",
+              "label": "Value"
+            },
+            {
+              "name": "caption",
+              "type": "text",
+              "label": "Caption"
+            }
+          ]
+        },
+        {
+          "name": "chapter2_statement",
+          "type": "text",
+          "label": "Statement"
+        },
+        {
+          "name": "chapter2_support",
+          "type": "prose",
+          "label": "Supporting text"
+        },
+        {
+          "name": "chapter2_image",
+          "type": "image",
+          "label": "Image"
+        },
+        {
+          "name": "chapter2_image_alt",
+          "type": "text",
+          "label": "Image alt"
+        },
+        {
+          "name": "chapter2_link_label",
+          "type": "text",
+          "label": "Link label"
+        },
+        {
+          "name": "chapter2_link_url",
+          "type": "text",
+          "label": "Link URL"
+        },
+        {
+          "name": "chapter2_link_style",
+          "type": "text",
+          "label": "Link style",
+          "validation": {
+            "options": [
+              "secondary",
+              "primary",
+              "text"
+            ]
+          },
+          "defaultValue": "secondary"
+        },
+        {
+          "name": "team_eyebrow",
+          "type": "text",
+          "label": "Eyebrow"
+        },
+        {
+          "name": "team_heading",
+          "type": "text",
+          "label": "Heading"
+        },
+        {
+          "name": "team_link_label",
+          "type": "text",
+          "label": "Link label"
+        },
+        {
+          "name": "team_members",
+          "type": "group",
+          "label": "Members",
+          "fields": [
+            {
+              "name": "image",
+              "type": "image",
+              "label": "Portrait"
+            },
+            {
+              "name": "name",
+              "type": "text",
+              "label": "Name"
+            },
+            {
+              "name": "role",
+              "type": "text",
+              "label": "Role"
+            },
+            {
+              "name": "text",
+              "type": "prose",
+              "label": "Bio"
+            },
+            {
+              "name": "url",
+              "type": "text",
+              "label": "Profile URL"
+            }
+          ]
+        },
+        {
+          "name": "cta_statement",
+          "type": "text",
+          "label": "Statement"
+        },
+        {
+          "name": "cta_support",
+          "type": "prose",
+          "label": "Supporting text"
+        },
+        {
+          "name": "cta_btn_label",
+          "type": "text",
+          "label": "Button label"
+        },
+        {
+          "name": "cta_btn_url",
+          "type": "text",
+          "label": "Button URL"
+        },
+        {
+          "name": "cta_link_label",
+          "type": "text",
+          "label": "Link label"
+        },
+        {
+          "name": "cta_link_url",
+          "type": "text",
+          "label": "Link URL"
+        }
+      ]
+    },
+    {
+      "name": "contact",
+      "mode": "single",
+      "label": {
+        "en": "Contact page"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Page title",
+          "required": true
+        },
+        {
+          "name": "intro",
+          "type": "prose"
+        },
+        {
+          "name": "form_id",
+          "type": "text",
+          "label": "Form (Forms plugin id)"
+        },
+        {
+          "name": "form_title",
+          "type": "text",
+          "label": "Form heading"
+        },
+        {
+          "name": "required_note",
+          "type": "text",
+          "label": "Required-field legend"
+        },
+        {
+          "name": "info_heading",
+          "type": "text",
+          "label": "Information heading"
+        },
+        {
+          "name": "phone_label",
+          "type": "text"
+        },
+        {
+          "name": "address_label",
+          "type": "text"
+        },
+        {
+          "name": "hours_label",
+          "type": "text",
+          "label": "Opening hours label"
+        },
+        {
+          "name": "directions_label",
+          "type": "text",
+          "label": "Directions button label"
+        },
+        {
+          "name": "email",
+          "type": "text"
+        },
+        {
+          "name": "email_label",
+          "type": "text"
+        },
+        {
+          "name": "notice",
+          "type": "prose"
+        },
+        {
+          "name": "social_heading",
+          "type": "text"
+        },
+        {
+          "name": "unavailable_label",
+          "type": "text"
+        },
+        {
+          "name": "social",
+          "type": "group",
+          "label": "Social links",
+          "fields": [
+            {
+              "name": "label",
+              "type": "text",
+              "label": "Label"
+            },
+            {
+              "name": "url",
+              "type": "text",
+              "label": "URL"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "label": {
+        "en": "Categories"
+      },
+      "labelSingular": {
+        "en": "Category"
+      },
+      "hierarchical": false,
+      "appliesTo": [
+        "posts"
+      ],
+      "terms": [
+        {
+          "slug": "coffee-stories",
+          "label": {
+            "en": "Coffee stories"
+          }
+        },
+        {
+          "slug": "brew-guides",
+          "label": {
+            "en": "Brew guides"
+          }
+        },
+        {
+          "slug": "offers",
+          "label": {
+            "en": "Offers"
+          }
+        },
+        {
+          "slug": "shop-news",
+          "label": {
+            "en": "Shop news"
+          }
+        }
+      ]
+    },
+    {
+      "name": "menu_group",
+      "label": {
+        "en": "Menu groups"
+      },
+      "labelSingular": {
+        "en": "Menu group"
+      },
+      "hierarchical": false,
+      "appliesTo": [
+        "menu_items"
+      ],
+      "terms": [
+        {
+          "slug": "coffee",
+          "label": {
+            "en": "Coffee"
+          }
+        },
+        {
+          "slug": "tea",
+          "label": {
+            "en": "Tea"
+          }
+        },
+        {
+          "slug": "iced-drinks",
+          "label": {
+            "en": "Iced drinks"
+          }
+        },
+        {
+          "slug": "pastries",
+          "label": {
+            "en": "Pastries"
+          }
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "type": "posts",
+      "slug": "where-our-beans-come-from",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "coffee-stories"
+        ]
+      },
+      "values": {
+        "title": "Where our beans come from",
+        "excerpt": "Six single-origin coffees sit on our bar. Here is how we choose them and who grows them.",
+        "image": null,
+        "image_alt": "Green coffee beans in a roasting drum beside a burlap sack",
+        "image_caption": "",
+        "author": "The Ember team",
+        "date": "2026-10-12T00:00:00.000Z",
+        "content": [
+          {
+            "_type": "block",
+            "_key": "e1",
+            "style": "h2",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e2",
+                "text": "Six farms, one roastery",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e3",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e4",
+                "text": "Every coffee on our bar comes from a single farm or co-operative. We taste dozens of samples each season and keep only the ones we would happily drink all morning.",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e5",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e6",
+                "text": "We pay above the market price and buy the same lots year after year, so the farms can plan and we can follow how each crop changes. The bag always names the farm and the harvest.",
+                "marks": []
+              }
+            ]
+          }
+        ],
+        "featured": true,
+        "sort": 0
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "a-morning-at-the-roastery",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "coffee-stories"
+        ]
+      },
+      "values": {
+        "title": "A morning at the roastery",
+        "excerpt": "Roasting day starts before the doors open. Here is what happens between the green bag and the cup.",
+        "image": null,
+        "image_alt": "Freshly roasted beans pouring into the cooling tray",
+        "image_caption": "",
+        "author": "The Ember team",
+        "date": "2026-10-05T00:00:00.000Z",
+        "content": [
+          {
+            "_type": "block",
+            "_key": "e7",
+            "style": "h2",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e8",
+                "text": "Before the doors open",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e9",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "ea",
+                "text": "Roasting days begin at six. The drum is warmed, the first batch is weighed and Maya listens for the first crack, the sound that tells her the beans are close.",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "eb",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "ec",
+                "text": "Each batch is cooled, tasted and logged before it is bagged. Anything that is not right goes back into the notes for next time, never onto the shelf.",
+                "marks": []
+              }
+            ]
+          }
+        ],
+        "featured": false,
+        "sort": 0
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "brewing-a-better-pour-over",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "brew-guides"
+        ]
+      },
+      "values": {
+        "title": "Brewing a better pour-over at home",
+        "excerpt": "Four small habits that make a pour-over taste cleaner and sweeter.",
+        "image": null,
+        "image_alt": "Hot water poured from a gooseneck kettle over a pour-over dripper",
+        "image_caption": "",
+        "author": "The Ember team",
+        "date": "2026-09-28T00:00:00.000Z",
+        "content": [
+          {
+            "_type": "block",
+            "_key": "ed",
+            "style": "h2",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "ee",
+                "text": "Four habits that matter",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "ef",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e10",
+                "text": "Weigh the coffee and the water instead of guessing: sixty grams of coffee to a litre of water is a good place to start. Grind just before you brew, and rinse the paper filter so it does not leave a taste.",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e11",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e12",
+                "text": "Pour in slow circles, and let the bed of coffee drain a little between pours. If the cup tastes sour, grind finer; if it tastes bitter, grind coarser.",
+                "marks": []
+              }
+            ]
+          }
+        ],
+        "featured": false,
+        "sort": 0
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "cold-brew-in-five-steps",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "brew-guides"
+        ]
+      },
+      "values": {
+        "title": "Cold brew in five easy steps",
+        "excerpt": "You need coarse coffee, cold water, a jar and a night in the fridge.",
+        "image": null,
+        "image_alt": "Jars of cold brew steeping on a wooden shelf",
+        "image_caption": "",
+        "author": "The Ember team",
+        "date": "2026-09-15T00:00:00.000Z",
+        "content": [
+          {
+            "_type": "block",
+            "_key": "e13",
+            "style": "h2",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e14",
+                "text": "Start tonight, drink tomorrow",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e15",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e16",
+                "text": "Stir coarsely ground coffee into cold water in a clean jar, using one part coffee to five parts water. Cover it and leave it in the fridge for twelve to sixteen hours.",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e17",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e18",
+                "text": "Strain through a paper filter, then dilute to taste with water or milk over ice. The concentrate keeps for a week in the fridge.",
+                "marks": []
+              }
+            ]
+          }
+        ],
+        "featured": false,
+        "sort": 0
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "the-spiced-maple-latte-is-back",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "offers"
+        ]
+      },
+      "values": {
+        "title": "The spiced maple latte is back",
+        "excerpt": "Our autumn favourite returns this week with real maple and a pinch of cinnamon.",
+        "image": null,
+        "image_alt": "A spiced maple latte with a cinnamon stick",
+        "image_caption": "",
+        "author": "The Ember team",
+        "date": "2026-10-20T00:00:00.000Z",
+        "content": [
+          {
+            "_type": "block",
+            "_key": "e19",
+            "style": "h2",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e1a",
+                "text": "Autumn at the counter",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e1b",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e1c",
+                "text": "The spiced maple latte is on the menu again from this Monday, made with espresso, steamed milk, maple syrup and a pinch of cinnamon.",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e1d",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e1e",
+                "text": "Order a medium one with any pastry before ten in the morning and the pastry is half price until the end of the month.",
+                "marks": []
+              }
+            ]
+          }
+        ],
+        "featured": false,
+        "sort": 0
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "new-seats-by-the-window",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "shop-news"
+        ]
+      },
+      "values": {
+        "title": "New seats by the window",
+        "excerpt": "We have added a long window bench for slow mornings and laptop afternoons.",
+        "image": null,
+        "image_alt": "New wooden window seats with cushions",
+        "image_caption": "",
+        "author": "The Ember team",
+        "date": "2026-10-27T00:00:00.000Z",
+        "content": [
+          {
+            "_type": "block",
+            "_key": "e1f",
+            "style": "h2",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e20",
+                "text": "More room to stay",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e21",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e22",
+                "text": "A long bench now runs along the front window, with a socket under every second seat, so there is room to stay when the counter is busy.",
+                "marks": []
+              }
+            ]
+          },
+          {
+            "_type": "block",
+            "_key": "e23",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_type": "span",
+                "_key": "e24",
+                "text": "Bring a book or a friend. The window seats are the quietest, and they catch the morning sun.",
+                "marks": []
+              }
+            ]
+          }
+        ],
+        "featured": false,
+        "sort": 0
+      }
+    },
+    {
+      "type": "site",
+      "slug": "site",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Ember Roasters",
+        "brand_name": "Ember Roasters",
+        "brand_tagline": "Small-batch coffee, roasted daily",
+        "phone": "+1 555 0142",
+        "address": "48 Kiln Street, Maplewood",
+        "hours": "Mon–Fri 7am–6pm, Sat–Sun 8am–4pm",
+        "contact_label": "Order",
+        "contact_url": "/menu",
+        "theme_dark_label": "Dark",
+        "theme_light_label": "Light",
+        "menu_label": "Menu",
+        "mega_read_title": "Read & learn",
+        "mega_help_title": "Help & support",
+        "mega_resources_eyebrow": "From the roastery",
+        "mega_resources_heading": "Stories, guides and offers",
+        "mega_resources_text": "Where our beans come from, how to brew them well and what is new at the shop.",
+        "mega_resources_action": "Read the news",
+        "mega_resources_url": "/blog",
+        "mega_resources_image": null,
+        "mega_resources_image_alt": "Green coffee beans in a roasting drum beside a burlap sack",
+        "mega_latest_title": "Latest from the blog",
+        "mega_search_label": "Search",
+        "footer_resources_title": "News",
+        "footer_company_title": "The shop",
+        "social_heading": "Find us online",
+        "social_handle": "@emberroasters",
+        "social": [
+          {
+            "platform": "instagram",
+            "url": "https://www.instagram.com/"
+          },
+          {
+            "platform": "facebook",
+            "url": "https://www.facebook.com/"
+          },
+          {
+            "platform": "linkedin",
+            "url": "https://www.linkedin.com/"
+          },
+          {
+            "platform": "youtube",
+            "url": "https://www.youtube.com/"
+          }
+        ],
+        "notice": "Ember Roasters is a demo café. The address, opening hours, team, numbers and offers shown here are illustrative, not a real business.",
+        "breadcrumb_home": "Home",
+        "not_found_code": "404",
+        "not_found_title": "Page not found",
+        "not_found_back_label": "Back to Ember Roasters",
+        "search_title": "Search",
+        "search_placeholder": "Search",
+        "search_button": "Search",
+        "search_results_line": "{count} results for “{query}”",
+        "search_empty": "No results for “{query}”.",
+        "read_more": "Read more",
+        "count_label": "{count} articles",
+        "page_meta": "Page {page} of {pages}",
+        "prev_label": "Previous",
+        "next_label": "Next",
+        "related_title": "Related articles",
+        "latest_title": "Latest articles",
+        "sections_title": "Sections",
+        "sitemap_title": "Sitemap",
+        "skip_label": "Skip to content",
+        "back_to_top": "Back to top"
+      }
+    },
+    {
+      "type": "home",
+      "slug": "home",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Home",
+        "intro_lead": "Small-batch coffee, roasted in the shop and poured the way you like it.",
+        "intro_cta_label": "View the menu",
+        "intro_cta_url": "/menu",
+        "story_title": "Our story",
+        "story_left": "We started with one small roaster and a counter by the window, roasting a little coffee every day so every cup is fresh.",
+        "story_right": "The counter is longer now and the regulars know each other by name, but the coffee is still roasted slowly, by hand, a few steps from your table.",
+        "why_title": "Why people come back",
+        "why_items": [
+          {
+            "title": "The beans",
+            "text": "Green coffee chosen with care and bought fresh through the year."
+          },
+          {
+            "title": "The roast",
+            "text": "Small batches roasted in the shop, so your coffee is days old, not months."
+          },
+          {
+            "title": "The brew",
+            "text": "Espresso, filter or cold brew, each made to a recipe we dial in every morning."
+          },
+          {
+            "title": "The space",
+            "text": "Big tables, good light and a quiet corner when you need one."
+          }
+        ],
+        "detail_title": "A closer look",
+        "detail_labels": [
+          {
+            "label": "Sip lid",
+            "text": "Sits tight, so nothing spills on the way."
+          },
+          {
+            "label": "Kraft sleeve",
+            "text": "Kind to your hands, hot or iced."
+          },
+          {
+            "label": "Inside",
+            "text": "Milk coffee over ice, made to order."
+          }
+        ],
+        "featured_title": "Favourites from the counter",
+        "featured_lead": "A few things our regulars order again and again.",
+        "featured_cta_label": "See the full menu",
+        "featured_cta_url": "/menu",
+        "space_title": "Inside the shop",
+        "space_photos": [
+          {
+            "image": null,
+            "alt": "The counter and the espresso machine in the morning light"
+          },
+          {
+            "image": null,
+            "alt": "Big wooden tables by the window"
+          },
+          {
+            "image": null,
+            "alt": "The small roaster at the back of the shop"
+          },
+          {
+            "image": null,
+            "alt": "A quiet corner with a bench and a shelf of beans"
+          }
+        ],
+        "visit_title": "Come and visit",
+        "hours_label": "Opening hours",
+        "contact_label": "Order now",
+        "contact_url": "/menu"
+      }
+    },
+    {
+      "type": "blog",
+      "slug": "blog",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "News",
+        "intro": "Stories from the roastery, brewing guides and what is new at the shop.",
+        "topics_title": "Topics",
+        "topics_intro": "Coffee stories, brew guides, offers and shop news.",
+        "all_label": "All articles"
+      }
+    },
+    {
+      "type": "about",
+      "slug": "about",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "About",
+        "chapter1_statement": "Coffee roasted here, served here.",
+        "chapter1_support": "Ember Roasters began as a one-barrel roastery with a counter in front. We still roast in small batches every week and pour what we roast, so you taste the coffee within days of the fire.",
+        "chapter1_image": null,
+        "chapter1_image_alt": "A barista pouring steamed milk into a cup at the counter",
+        "chapter1_link_label": "",
+        "chapter1_link_url": "",
+        "chapter1_link_style": "secondary",
+        "stats_eyebrow": "The shop in numbers",
+        "stats_heading": "Small batches, steady habits.",
+        "stats_figures": [
+          {
+            "value": "2014",
+            "caption": "The year we opened"
+          },
+          {
+            "value": "6",
+            "caption": "Single-origin coffees on the bar"
+          },
+          {
+            "value": "3",
+            "caption": "Roasting days every week"
+          },
+          {
+            "value": "9",
+            "caption": "Baristas and bakers on the team"
+          }
+        ],
+        "chapter2_statement": "A neighbourhood table with a good cup on it.",
+        "chapter2_support": "Stay for a slow morning or take a bag home. The counter is open to questions about beans, grind sizes and brewing, and the pastries come from the bakery down the street.",
+        "chapter2_image": null,
+        "chapter2_image_alt": "A table in the shop with a coffee, a pastry and a notebook",
+        "chapter2_link_label": "",
+        "chapter2_link_url": "",
+        "chapter2_link_style": "secondary",
+        "team_eyebrow": "The people",
+        "team_heading": "The people behind the counter.",
+        "team_link_label": "",
+        "team_members": [
+          {
+            "image": null,
+            "name": "Maya Ortiz",
+            "role": "Head Roaster",
+            "text": "Chooses the beans and roasts every batch, tasting each one before it goes on the shelf.",
+            "url": ""
+          },
+          {
+            "image": null,
+            "name": "Daniel Cho",
+            "role": "Lead Barista",
+            "text": "Dials in the espresso each morning and trains the bar team.",
+            "url": ""
+          },
+          {
+            "image": null,
+            "name": "Priya Nair",
+            "role": "Pastry Chef",
+            "text": "Bakes the croissants and cakes that sit next to the coffee.",
+            "url": ""
+          },
+          {
+            "image": null,
+            "name": "Tom Becker",
+            "role": "Shop Manager",
+            "text": "Keeps the doors open on time and the regulars well looked after.",
+            "url": ""
+          }
+        ],
+        "cta_statement": "Come in for a cup.",
+        "cta_support": "Call ahead for a bulk order, or send a message and we will write back.",
+        "cta_btn_label": "Contact us",
+        "cta_btn_url": "/contact",
+        "cta_link_label": "",
+        "cta_link_url": ""
+      }
+    },
+    {
+      "type": "contact",
+      "slug": "contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Visit or get in touch",
+        "intro": "Drop in for a coffee, call the shop, or send us a message below.",
+        "form_id": "",
+        "form_title": "",
+        "required_note": "* Required field",
+        "info_heading": "Visit us",
+        "phone_label": "Phone",
+        "address_label": "Address",
+        "hours_label": "Opening hours",
+        "directions_label": "Get directions",
+        "email": "hello@ember-roasters.example",
+        "email_label": "Email · demo address",
+        "notice": "This is a demo café. Replace the recipient email and the shop details before enabling enquiries for your own shop.",
+        "social_heading": "Find us online",
+        "unavailable_label": "Not configured",
+        "social": []
+      }
+    },
+    {
+      "type": "menu_page",
+      "slug": "menu_page",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Menu",
+        "intro": "Everything we pour and bake, made fresh every day.",
+        "order_label": "Order online",
+        "order_url": "https://example.com/order",
+        "call_label": "Call us",
+        "more_label": "More"
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "espresso",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "coffee"
+        ]
+      },
+      "values": {
+        "title": "Espresso",
+        "excerpt": "A double shot of our house blend, thick with crema.",
+        "price": "$3.00",
+        "image": null,
+        "image_alt": "A double espresso with golden crema in a cream ceramic cup",
+        "featured": false,
+        "sort": 1
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "flat-white",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "coffee"
+        ]
+      },
+      "values": {
+        "title": "Flat white",
+        "excerpt": "Espresso under silky steamed milk.",
+        "price": "$4.20",
+        "image": null,
+        "image_alt": "A flat white with a leaf pattern in a wide cream cup",
+        "featured": true,
+        "sort": 2
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "pour-over",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "coffee"
+        ]
+      },
+      "values": {
+        "title": "Pour-over",
+        "excerpt": "Single-origin filter coffee, brewed to order.",
+        "price": "$4.80",
+        "image": null,
+        "image_alt": "Pour-over filter coffee in a glass server under a ceramic dripper",
+        "featured": false,
+        "sort": 3
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "jasmine-green-tea",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "tea"
+        ]
+      },
+      "values": {
+        "title": "Jasmine green tea",
+        "excerpt": "Light, floral and gently sweet.",
+        "price": "$3.50",
+        "image": null,
+        "image_alt": "A glass teapot and a small cup of jasmine green tea",
+        "featured": false,
+        "sort": 4
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "masala-chai",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "tea"
+        ]
+      },
+      "values": {
+        "title": "Masala chai",
+        "excerpt": "Black tea simmered with ginger, cardamom and milk.",
+        "price": "$4.00",
+        "image": null,
+        "image_alt": "A glass of creamy masala chai with a cinnamon stick and star anise",
+        "featured": false,
+        "sort": 5
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "earl-grey",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "tea"
+        ]
+      },
+      "values": {
+        "title": "Earl Grey",
+        "excerpt": "Black tea scented with bergamot.",
+        "price": "$3.50",
+        "image": null,
+        "image_alt": "A cup of Earl Grey tea with a lemon slice and a small teapot",
+        "featured": false,
+        "sort": 6
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "cold-brew",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "iced-drinks"
+        ]
+      },
+      "values": {
+        "title": "Cold brew",
+        "excerpt": "Steeped for sixteen hours and served over ice.",
+        "price": "$4.50",
+        "image": null,
+        "image_alt": "A tall glass of dark cold brew over ice",
+        "featured": true,
+        "sort": 7
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "iced-latte",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "iced-drinks"
+        ]
+      },
+      "values": {
+        "title": "Iced latte",
+        "excerpt": "Chilled espresso and milk over ice.",
+        "price": "$4.80",
+        "image": null,
+        "image_alt": "A tall glass of iced latte with layers of milk and coffee",
+        "featured": false,
+        "sort": 8
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "espresso-tonic",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "iced-drinks"
+        ]
+      },
+      "values": {
+        "title": "Espresso tonic",
+        "excerpt": "A shot of espresso poured over sparkling tonic.",
+        "price": "$5.00",
+        "image": null,
+        "image_alt": "A tumbler of espresso tonic with ice and an orange twist",
+        "featured": false,
+        "sort": 9
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "butter-croissant",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "pastries"
+        ]
+      },
+      "values": {
+        "title": "Butter croissant",
+        "excerpt": "Flaky layers, baked each morning.",
+        "price": "$3.60",
+        "image": null,
+        "image_alt": "A golden butter croissant on a cream plate",
+        "featured": true,
+        "sort": 10
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "cardamom-bun",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "pastries"
+        ]
+      },
+      "values": {
+        "title": "Cardamom bun",
+        "excerpt": "A soft, spiced bun with a sugar crust.",
+        "price": "$3.80",
+        "image": null,
+        "image_alt": "A swirled cardamom bun with pearl sugar on kraft paper",
+        "featured": false,
+        "sort": 11
+      }
+    },
+    {
+      "type": "menu_items",
+      "slug": "banana-bread",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "menu_group": [
+          "pastries"
+        ]
+      },
+      "values": {
+        "title": "Banana bread",
+        "excerpt": "Moist and dense, with a toasted walnut top.",
+        "price": "$3.40",
+        "image": null,
+        "image_alt": "Two slices of banana bread on a small plate",
+        "featured": false,
+        "sort": 12
+      }
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": {
+        "en": "Primary navigation"
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Home"
+          },
+          "path": "/"
+        },
+        {
+          "label": {
+            "en": "Menu"
+          },
+          "path": "/menu"
+        },
+        {
+          "label": {
+            "en": "About"
+          },
+          "path": "/about"
+        },
+        {
+          "label": {
+            "en": "News"
+          },
+          "path": "/blog"
+        },
+        {
+          "label": {
+            "en": "Contact"
+          },
+          "path": "/contact"
+        }
+      ]
+    },
+    {
+      "name": "resources_read",
+      "label": {
+        "en": "Resources: Read & learn"
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Topics"
+          },
+          "path": "/blog/topics"
+        },
+        {
+          "label": {
+            "en": "News"
+          },
+          "path": "/blog"
+        },
+        {
+          "label": {
+            "en": "Coffee stories"
+          },
+          "path": "/blog/category/coffee-stories"
+        },
+        {
+          "label": {
+            "en": "Brew guides"
+          },
+          "path": "/blog/category/brew-guides"
+        },
+        {
+          "label": {
+            "en": "Offers"
+          },
+          "path": "/blog/category/offers"
+        }
+      ]
+    },
+    {
+      "name": "resources_help",
+      "label": {
+        "en": "Resources: Help & support"
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Search"
+          },
+          "path": "/search"
+        },
+        {
+          "label": {
+            "en": "Contact us"
+          },
+          "path": "/contact"
+        }
+      ]
+    },
+    {
+      "name": "footer_resources",
+      "label": {
+        "en": "Footer: Resources"
+      },
+      "items": [
+        {
+          "label": {
+            "en": "News"
+          },
+          "path": "/blog"
+        },
+        {
+          "label": {
+            "en": "Coffee stories"
+          },
+          "path": "/blog/category/coffee-stories"
+        }
+      ]
+    },
+    {
+      "name": "footer_company",
+      "label": {
+        "en": "Footer: Company"
+      },
+      "items": [
+        {
+          "label": {
+            "en": "About"
+          },
+          "path": "/about"
+        },
+        {
+          "label": {
+            "en": "Contact us"
+          },
+          "path": "/contact"
+        }
+      ]
+    }
+  ],
+  "routes": [],
+  "redirects": [],
+  "media": [],
+  "tokens": {},
+  "facts": []
+}

@@ -11,6 +11,8 @@
         "$TURBO_ROOT$/scripts/ci/related-tests.mjs",
         "$TURBO_ROOT$/packages/cms/tracy-emdash-theme-base/**",
         "$TURBO_ROOT$/packages/cms/tracy-emdash-theme-business/**",
+        "$TURBO_ROOT$/packages/cms/tracy-emdash-theme-coffee/**",
+        "$TURBO_ROOT$/packages/cms/tracy-emdash-theme-restaurant/**",
         "$TURBO_ROOT$/packages/cms/tracy-emdash-theme-saas/**",
         "$TURBO_ROOT$/packages/core/tracy-core/**",
         "$TURBO_ROOT$/packages/site/tracy-site-build-core/**",

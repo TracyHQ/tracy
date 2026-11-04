@@ -1,0 +1,62 @@
+---
+/**
+ * A coffee tool drawn into an empty corner of a page (`src/assets/decor/`, how each was drawn in `how-drawn.md` there).
+ * A fixed picture of the template, not content: no admin field, no role. Screen readers skip it and a worn design
+ * system does not tint it. It flies in, floats, steps aside from the mouse and reacts to a click
+ * (`src/lib/decor-motion.mjs`); for a reader who turned motion off it stands still and never takes the pointer.
+ * The page places it (`class`) where no text, button, photo or cup goes, with room for its moves;
+ * `tests/browser/cup-stage.mjs` measures that.
+ */
+import beans from '@/assets/decor/beans.webp'
+import espresso from '@/assets/decor/espresso.webp'
+import greenBeans from '@/assets/decor/green-beans.webp'
+import kettle from '@/assets/decor/kettle.webp'
+import moka from '@/assets/decor/moka.webp'
+import pour from '@/assets/decor/pour.webp'
+import roastedBeans from '@/assets/decor/roasted-beans.webp'
+import roaster from '@/assets/decor/roaster.webp'
+import spoon from '@/assets/decor/spoon.webp'
+import tableCup from '@/assets/decor/table-cup.webp'
+
+const pictures = {
+  beans,
+  espresso,
+  'green-beans': greenBeans,
+  kettle,
+  moka,
+  pour,
+  'roasted-beans': roastedBeans,
+  roaster,
+  spoon,
+  'table-cup': tableCup
+}
+interface Props {
+  name: keyof typeof pictures
+  class?: string
+}
+const { name, class: placed } = Astro.props
+---
+
+<img src={pictures[name].src} width={pictures[name].width} height={pictures[name].height} alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" class:list={["decor", placed]} data-decor={name} />
+
+<script>
+	import { liven } from '@/lib/decor-motion.mjs'
+	liven()
+</script>
+
+<style>
+	.decor {
+		position: absolute;
+		z-index: 0;
+		height: auto;
+		max-width: none;
+		pointer-events: none;
+		user-select: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+	.decor.is-live {
+		pointer-events: auto;
+		cursor: pointer;
+		will-change: transform, opacity;
+	}
+</style>

@@ -13,7 +13,7 @@ Licences other than MIT that appear in this repository:
 
 | Licence | Where |
 |---|---|
-| GPL-2.0-or-later | JoomlArt code and assets (T4 Framework, T4 shared layer, JA Kinetic, `wp-ja-*` theme ports, JoomlArt quickstart content), `packages/cms/tracy-joomla-template`, `tracy-wordpress-theme`, `tracy-joomla-quickstart`, `tracy-wordpress-quickstart`, `tracy-emdash-theme-saas` |
+| GPL-2.0-or-later | JoomlArt code and assets (T4 Framework, T4 shared layer, JA Kinetic, `wp-ja-*` theme ports, JoomlArt quickstart content), `packages/cms/tracy-joomla-template`, `tracy-wordpress-theme`, `tracy-joomla-quickstart`, `tracy-wordpress-quickstart`, `tracy-emdash-theme-saas`, `tracy-emdash-theme-restaurant` |
 | GPL-3.0-or-later | `vendor/emdash/emdash-theme-bravada` and its derivatives (`emdash-theme-tracy-editorial`, `emdash-theme-tracy-coral`), `packages/cms/tracy-emdash-theme-business`, `tracy-emdash-theme-base`, Akeeba Backup/Kickstart |
 | GPL-3.0-only | `vendor/tracy/dsh-passwords` |
 | AGPL-3.0 | `vendor/tracy/dsh-better-locale` |

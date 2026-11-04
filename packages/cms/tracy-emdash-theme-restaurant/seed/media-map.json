@@ -1,0 +1,1422 @@
+{
+	"generatedAt": "2026-11-04T01:19:58.593Z",
+	"source": "JA Restaurant j6 1.0.6 webroot",
+	"items": [
+		{
+			"key": "images/joomlart/blog/rest-8",
+			"file": "images/joomlart/blog/rest-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "70c6290bbd193c97efc87000dac83d993ef6ec41bfbf41f89ab1c333d5f79cbb",
+			"targets": [
+				{
+					"collection": "pages",
+					"slug": "our-history",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/rest-3",
+			"file": "images/joomlart/blog/rest-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8c7d1c52254aa0302e7e2eab0179d4e9d214226766808882f7405fbd15d836c2",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "4-habits-that-can-improve-your-customer-service",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "denny-s-adopts-a-pancake-guarantee",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "category_info",
+					"slug": "restaurant-business",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/rest-7",
+			"file": "images/joomlart/blog/rest-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "cc5615318faea6265032693b0834e7170594dd2bc3c76f802a8575e3eb2cd0a0",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "chipotle-to-launch-burger-spinoff-this-fall",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "mcdonald-s-makes-clean-tweaks-to-some-menu-items",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/rest-2",
+			"file": "images/joomlart/blog/rest-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4898c4793dafc7f4985b8f76da18059f700b1e73c2e1a167c466c66517714785",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-to-help-your-chef-achieve-a-better-work-life-balance",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "logan-s-said-to-be-weighing-bankruptcy",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/rest-6",
+			"file": "images/joomlart/blog/rest-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2bbb5d851ae3bcb3de6d22703b8ccbd5f15c9d510b52be419a56d651d1c5115c",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "indies-aren-t-sold-on-tech",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "blt-on-pimento-cheese-biscuit",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "category_info",
+					"slug": "restaurant-guide",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/rest-1",
+			"file": "images/joomlart/blog/rest-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1240a24173f04c9d55b21f7fee03c91e9f22e737817907af54fca75854427255",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "starbucks-brings-under-armour-exec-on-board",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "starbucks-faces-a-big-recall",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "category_info",
+					"slug": "restaurant-marketing",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/rest-5",
+			"file": "images/joomlart/blog/rest-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b81da7b85f4b42e06cd7daffce6240c42bca9f7909dd53a6c5a6d87a01edfcc4",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "8-trends-trickling-down-to-mainstream-menus",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "fish-sauces-seep-onto-all-sorts-of-menus",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/rest-4",
+			"file": "images/joomlart/blog/rest-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "88428deaef196191cf09222640199563c82d080bd397ba5fd06fc22cfafdd79e",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-the-gop-and-dems-differ-on-restaurant-issues",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "category_info",
+					"slug": "restaurant-news",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/intro-6",
+			"file": "images/joomlart/gallery/intro-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e898dc2062eeefdbd359316e663b28d4ef48b09c01b9723fde9828d77c57bffe",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "sample-album-1",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-1",
+					"locale": "en",
+					"path": "photos[0].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/intro-4",
+			"file": "images/joomlart/gallery/intro-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "380b8761d1428b237c17cd3adb3e7f1b98cd9a293dd8ec7d81a16c4ea96b3f86",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "sample-album-1",
+					"locale": "en",
+					"path": "photos[1].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-2",
+					"locale": "en",
+					"path": "photos[1].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-3",
+					"locale": "en",
+					"path": "photos[1].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-6",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-6",
+					"locale": "en",
+					"path": "photos[0].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-7",
+					"locale": "en",
+					"path": "photos[2].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/intro-3",
+			"file": "images/joomlart/gallery/intro-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "5a33909bc77fd695a4e0d07f63143bab9d6cc798942cd39ad559d0f9515b0215",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "sample-album-1",
+					"locale": "en",
+					"path": "photos[2].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-2",
+					"locale": "en",
+					"path": "photos[2].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-3",
+					"locale": "en",
+					"path": "photos[2].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-4",
+					"locale": "en",
+					"path": "photos[1].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-6",
+					"locale": "en",
+					"path": "photos[2].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-7",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-7",
+					"locale": "en",
+					"path": "photos[0].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/intro-2",
+			"file": "images/joomlart/gallery/intro-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9bd9c91255b721641a6e2ae455d67426e86af7772238ec433d75af2d77939bbc",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "sample-album-1",
+					"locale": "en",
+					"path": "photos[3].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-2",
+					"locale": "en",
+					"path": "photos[3].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-3",
+					"locale": "en",
+					"path": "photos[3].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-4",
+					"locale": "en",
+					"path": "photos[2].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-5",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-5",
+					"locale": "en",
+					"path": "photos[0].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-6",
+					"locale": "en",
+					"path": "photos[3].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-7",
+					"locale": "en",
+					"path": "photos[3].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/intro-1",
+			"file": "images/joomlart/gallery/intro-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e627cd3e565041fed7202ffcf064a761f981f621b9bf7078b102bca35191744b",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "sample-album-1",
+					"locale": "en",
+					"path": "photos[4].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-2",
+					"locale": "en",
+					"path": "photos[4].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-3",
+					"locale": "en",
+					"path": "photos[4].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-4",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-4",
+					"locale": "en",
+					"path": "photos[0].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-5",
+					"locale": "en",
+					"path": "photos[1].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-6",
+					"locale": "en",
+					"path": "photos[4].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-7",
+					"locale": "en",
+					"path": "photos[4].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/intro-8",
+			"file": "images/joomlart/gallery/intro-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ec938617812f067533fbe4f2143497bb8c82f1f4779353ac3f9d5afe0b804dcc",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "sample-album-2",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-2",
+					"locale": "en",
+					"path": "photos[0].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/intro-5",
+			"file": "images/joomlart/gallery/intro-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8fe069b69f7f48f9dcb9e0e13ede6e1c00b1da1fb155d1f6fddab05dc279bc7d",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "sample-album-3",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-3",
+					"locale": "en",
+					"path": "photos[0].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-6",
+					"locale": "en",
+					"path": "photos[1].image"
+				},
+				{
+					"collection": "posts",
+					"slug": "sample-album-7",
+					"locale": "en",
+					"path": "photos[1].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/slide-1",
+			"file": "images/joomlart/slideshow/slide-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ab86280444fe67e1df0e8ee101270e266d226bcb77a42ad8bd8b7a7306c377f0",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "slideshow",
+					"locale": "en",
+					"path": "items[0].image"
+				},
+				{
+					"collection": "timeline",
+					"slug": "our-history",
+					"locale": "en",
+					"path": "items[1].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/slide-2",
+			"file": "images/joomlart/slideshow/slide-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1acad53695b8cf4d66a017183362c7ceb607628b7301d4c16a51ba079e1184e9",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "slideshow",
+					"locale": "en",
+					"path": "items[1].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/slide-3",
+			"file": "images/joomlart/slideshow/slide-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "165eb41a1d0316f5f7eb8f29fa58bd2cf2ae9ec94cc6332c33b497df5153494b",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "slideshow",
+					"locale": "en",
+					"path": "items[2].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/big-photo-2",
+			"file": "images/joomlart/gallery/big-photo-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ff1b9585a4d622002919008a9df112ef243d60c175217fc625decfdebcdd3474",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "gallery",
+					"locale": "en",
+					"path": "items[0].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/big-photo-1",
+			"file": "images/joomlart/gallery/big-photo-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "156b5c78767ae0df0543921de281e119cccef22d402c8a7657e76138f2a9b52c",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "gallery",
+					"locale": "en",
+					"path": "items[1].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/big-photo-3",
+			"file": "images/joomlart/gallery/big-photo-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3a6b554095f0348c970d4242a80fc86941f5a5331db4414a22984d74fc86c954",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "gallery",
+					"locale": "en",
+					"path": "items[2].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/chef",
+			"file": "images/joomlart/hero/chef.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "63e943eb387d76e5f0773a5ed8d0668e5aa3e38255e7a12e55aa703255d70991",
+			"targets": [
+				{
+					"collection": "hero",
+					"slug": "welcome-to-res-bar-restaurant",
+					"locale": "en",
+					"path": "hero_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/background",
+			"file": "images/joomlart/hero/background.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "c0200a485696499f8c964e695fcf6e56f1ed7d020015556c1afb564717c4659e",
+			"targets": [
+				{
+					"collection": "hero",
+					"slug": "welcome-to-res-bar-restaurant",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/background/features-intro-1",
+			"file": "images/joomlart/background/features-intro-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6e245ad396163cd6d03306ddddfa65f0dd42e190af7b1cdf5482d11ee160f150",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-intro",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features-intro/intro-2",
+			"file": "images/joomlart/features-intro/intro-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "f1cfb310ed7fe0575b586e39d52c8d0101e8e6c8fd8d4267b14ec98863c806f3",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-intro",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				},
+				{
+					"collection": "timeline",
+					"slug": "our-history",
+					"locale": "en",
+					"path": "items[2].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features-intro/intro-1",
+			"file": "images/joomlart/features-intro/intro-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b10bc1581223aa5db3093f5462711cf355360aaba3882907b86b242cfa835867",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "features-intro",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features-intro/intro-3",
+			"file": "images/joomlart/features-intro/intro-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4a1db16189c1935c0a25b9660c6159f05f175b329b006e8efc93808c3c569560",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "special-offers",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features-intro/intro-4",
+			"file": "images/joomlart/features-intro/intro-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "5469922a97eb0841d211e5408ed6e1e25b22cafd233d7f80d15e31e440510669",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "special-offers",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features-intro/intro-5",
+			"file": "images/joomlart/features-intro/intro-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8a0fabdca33217139a1cf871d0011be462c185d365c7bbda8c790ed024070682",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "special-offers",
+					"locale": "en",
+					"path": "items[2].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/sam-1",
+			"file": "images/joomlart/hero/sam-1.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "d92b3619311605eac56f169721a3efeb9ee9571dd3b59b6ebe5a113490d494b5",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-us",
+					"locale": "en",
+					"path": "img_features"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/food/fd-1",
+			"file": "images/joomlart/food/fd-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0a0ddfd814031deca6809a922a229eb52c11fa251bd80dd91ff7972c395467f4",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "sea-food",
+					"locale": "en",
+					"path": "items[0].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-with-image",
+					"locale": "en",
+					"path": "items[0].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/food/fd-2",
+			"file": "images/joomlart/food/fd-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "668a6c9a6e53c683aa5394e8264fb1babaa97336c831e96cef7ec98cdcc6e75a",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "sea-food",
+					"locale": "en",
+					"path": "items[1].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-with-image",
+					"locale": "en",
+					"path": "items[1].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/food/fd-3",
+			"file": "images/joomlart/food/fd-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ddf85499b5af557325f72d8557729b1f6b18b33e7816cf5a960437caeb632cd4",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "sea-food",
+					"locale": "en",
+					"path": "items[2].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-with-image",
+					"locale": "en",
+					"path": "items[2].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/food/fd-4",
+			"file": "images/joomlart/food/fd-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2079eb1f41c88abd8e1e880642b5f0d6a2105b29a475f9aa23212ccf1dc1fbed",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "sea-food",
+					"locale": "en",
+					"path": "items[3].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-with-image",
+					"locale": "en",
+					"path": "items[3].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/food/fd-5",
+			"file": "images/joomlart/food/fd-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "df6808ed4f7330ed285153a390ee29171c334effcfa92d1109bd69dbaf43c194",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "sea-food",
+					"locale": "en",
+					"path": "items[4].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-with-image",
+					"locale": "en",
+					"path": "items[4].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/food/fd-6",
+			"file": "images/joomlart/food/fd-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b607b9b4715837684f1904337f594cf63e87e647bc6b8a24abbcb9681b532c87",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "sea-food",
+					"locale": "en",
+					"path": "items[5].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-with-image",
+					"locale": "en",
+					"path": "items[5].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/food/fd-7",
+			"file": "images/joomlart/food/fd-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "7ae0c96e70b578d30ab40c38ae0a8adf6c9fc9f98b64f9ce3be438bad7e06c8b",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "sea-food",
+					"locale": "en",
+					"path": "items[6].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-with-image",
+					"locale": "en",
+					"path": "items[6].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-1",
+			"file": "images/joomlart/icream/ic-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b9fa5344ba110051db1d899d0fac359948aaf3c27c41fdfbe503ac57c3402afe",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[0].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[0].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-2",
+			"file": "images/joomlart/icream/ic-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b8419f4d38d810a9bf387bf907ef35178ef6e1e417aa70844ea74505c9f47440",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[1].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[1].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-3",
+			"file": "images/joomlart/icream/ic-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b817e8f2eaf1eac10ddfb8f9f98752fb11ef51f925ff6f9a85ffca3f97cfa1d6",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[2].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[2].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-4",
+			"file": "images/joomlart/icream/ic-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3fb9a0eeb16efd170208363439121ea99e1bbcf28eb34b6fca1db86ed343b83b",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[3].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[3].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-6",
+			"file": "images/joomlart/icream/ic-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b562ac8bf2642523254ba5d86493a32837d270dcdba9d923eab655239702445f",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[4].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[4].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-7",
+			"file": "images/joomlart/icream/ic-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a12b3a15eefbe157b3949c7378f3ee4df9149aac20bcfac2acd4c70897682335",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[5].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[5].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-8",
+			"file": "images/joomlart/icream/ic-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "90a1987fdbb410ed1dcf7caa6692278d0f8746e27f06c1005b6615d73b2c192c",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[6].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[6].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-9",
+			"file": "images/joomlart/icream/ic-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a3d5a51780ab77029340ddfe866c5c86f7c591639a5a872760c1932ab36183db",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[7].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[7].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-10",
+			"file": "images/joomlart/icream/ic-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "487612e6695428c62853be4ca87c294f8ae445bdae0725f3ec90e86c7a8138df",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[8].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[8].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icream/ic-11",
+			"file": "images/joomlart/icream/ic-11.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d04912cef545f1472bd72d44235c6eaba43083eb91866a90ccb9eb58e92a13ae",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "icream-and-juice",
+					"locale": "en",
+					"path": "items[9].dish_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "2-column-menu",
+					"locale": "en",
+					"path": "items[9].dish_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/background/tab-1",
+			"file": "images/joomlart/background/tab-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "03d3df46c9c616ab68a84ce2f67157b100422f5da669fe9fbd382b9aa47dbed2",
+			"targets": [
+				{
+					"collection": "tabs",
+					"slug": "discover-our-menu",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "statistics",
+					"slug": "you-re-in-good-restaurant",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/avatars/avt-1",
+			"file": "images/joomlart/avatars/avt-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "41de7f64c1f6a4cf7d293f23d5695acb2e787a72e410b7b388dfa7f330f7ee79",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "happy-customers",
+					"locale": "en",
+					"path": "items[0].author_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/avatars/avt-2",
+			"file": "images/joomlart/avatars/avt-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "52b24dfe6053b74bf3fe9fd6babb4696daa59b66e775b5c113e33a1a268fd7f3",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "happy-customers",
+					"locale": "en",
+					"path": "items[1].author_img"
+				},
+				{
+					"collection": "testimonials",
+					"slug": "happy-customers",
+					"locale": "en",
+					"path": "items[2].author_img"
+				},
+				{
+					"collection": "testimonials",
+					"slug": "happy-customers",
+					"locale": "en",
+					"path": "items[3].author_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/avatars/chef-1",
+			"file": "images/joomlart/avatars/chef-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6c50019af31af664bd741c0709212683b537fa2d8b0b369a20ceb40a48f323b3",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "our-team",
+					"locale": "en",
+					"path": "items[0].member_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/avatars/chef-2",
+			"file": "images/joomlart/avatars/chef-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ce95b6a1a2f8ba9716ea6c1d3030be2660a8839f530eae1e894f41c923f6c20f",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "our-team",
+					"locale": "en",
+					"path": "items[1].member_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/avatars/chef-3",
+			"file": "images/joomlart/avatars/chef-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0be9a95ccb8882b4e571e86effb6ddb5f14a919a5a3da636eddf472c56513e4c",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "our-team",
+					"locale": "en",
+					"path": "items[2].member_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/avatars/chef-4",
+			"file": "images/joomlart/avatars/chef-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6a94c5965b131ce1f7d5c58c67673a2a937579c4a78693540631abecae56901d",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "our-team",
+					"locale": "en",
+					"path": "items[3].member_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/map-contact",
+			"file": "images/joomlart/map-contact.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "19f8900890ae64fce085800e64b1d8255ebe9ceff683a6b1d51f3f439aea0e55",
+			"targets": [
+				{
+					"collection": "timeline",
+					"slug": "our-history",
+					"locale": "en",
+					"path": "items[0].image"
+				},
+				{
+					"collection": "contact",
+					"slug": "contact",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/happyhours/hp-bg-1",
+			"file": "images/joomlart/happyhours/hp-bg-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "81e35ffcc905c15663ffac310ef53f666f2b3b3a3f057996d69fa474fd61c925",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-1",
+					"locale": "en",
+					"path": "hp_bg"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/logo",
+			"file": "images/joomlart/logo.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "0b7ae443816e877c6c8c3b28797d71fbb855aaeddbc91751a6009abe2d32b92c",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-1",
+					"locale": "en",
+					"path": "hp_brand"
+				},
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-2",
+					"locale": "en",
+					"path": "hp_brand"
+				},
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-3",
+					"locale": "en",
+					"path": "hp_brand"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/happyhours/hp-bg-2",
+			"file": "images/joomlart/happyhours/hp-bg-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "20f2356b9a625234387c33ecfe6d6143b36932c1653ca30dc116279c2e13e1f0",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-2",
+					"locale": "en",
+					"path": "hp_bg"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/happyhours/hp-bg-3",
+			"file": "images/joomlart/happyhours/hp-bg-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9e715f01cfa5cd1d982295528aba07617d5c31f78175b0fb8aa7c9e7c1015b1d",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "happy-hours-style-3",
+					"locale": "en",
+					"path": "hp_bg"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/masthead/masthead-blog",
+			"file": "images/joomlart/masthead/masthead-blog.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "51a2bbeda7663908fdf92e9354b69a62c080f0cd74cf8fd228c8c625cea56ebb",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "blog",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "tagged-items",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "smart-search",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "all-categories",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "featured-articles",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/masthead/masthead-aboutus",
+			"file": "images/joomlart/masthead/masthead-aboutus.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b555eaa924d92d849a3eebb73c7fe0285b522364555ac022464944f01ac06347",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "about-us",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/masthead/masthead-chefs",
+			"file": "images/joomlart/masthead/masthead-chefs.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8f0e39c8dcb3afd3da1647b8f585a35227aefe149f4eed8b7915e84c9d08e0f4",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "our-history",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/masthead/masthead-menu",
+			"file": "images/joomlart/masthead/masthead-menu.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "646cb200c82fae94ac094e1271443868f6905c058f84e6e8ed1790a92ec52232",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "menu",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "phone-reservation",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "offers",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/banner/banner-1",
+			"file": "images/joomlart/banner/banner-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "62d7ecad2b0b9f4870cabfe9155bc7fea7fc33eacf79e9b6d8624b72f4af39aa",
+			"targets": [
+				{
+					"collection": "banner",
+					"slug": "banner",
+					"locale": "en",
+					"path": "image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features-intro/intro-7",
+			"file": "images/joomlart/features-intro/intro-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "969ea7ff9741bddf30f8de7d16a887369ca43cb45367e7c968e7135792010520",
+			"targets": [
+				{
+					"collection": "reservation",
+					"slug": "reservation",
+					"locale": "en",
+					"path": "blocks[0].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features-intro/intro-8",
+			"file": "images/joomlart/features-intro/intro-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "f955f8ff728a2e037909ad6ca188630d08010c556338cfb10a83c517019ce6ba",
+			"targets": [
+				{
+					"collection": "reservation",
+					"slug": "reservation",
+					"locale": "en",
+					"path": "blocks[1].image"
+				}
+			]
+		}
+	]
+}

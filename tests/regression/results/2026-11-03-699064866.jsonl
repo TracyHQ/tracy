@@ -1,0 +1,1 @@
+{"id":"REG-PR-315-signed-in-link-visit","verdict":"PASS","commit":"699064866dd5ffb23070fc31d372512f873904d0","ran_at":"2026-11-03T11:51:14.491Z","evidence":"tests/regression/.runs/2026-11-03-699064866/REG-PR-315-signed-in-link-visit.log"}

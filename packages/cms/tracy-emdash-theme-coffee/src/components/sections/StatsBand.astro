@@ -1,0 +1,55 @@
+---
+/**
+ * Figures on the accent band (OpenDesign) or on a plain grid (ACM `statistics`). The plain grid's
+ * `align="center"` is the ACM block as rendered: centred quiet head, centred figures, no rules.
+ */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  eyebrow?: string
+  heading?: string
+  items: Array<{ value: string; caption?: string; label?: string }>
+  variant?: 'band' | 'plain'
+  align?: 'left' | 'center'
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { eyebrow?: string; heading?: string; items?: string }
+}
+const { eyebrow, heading, items, variant = 'band', align = 'left', stamp, fields } = Astro.props
+const none = {}
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+const row = stamp && fields?.items ? stamp.block(fields.items) : none
+const sub = (k: string) => (stamp && fields?.items ? stamp(`${fields.items}.${k}`) : none)
+// The caption line prints `caption`, or `label` when a row has no caption.
+const captionOf = (s: { caption?: string }) => sub(s.caption != null ? 'caption' : 'label')
+const cols = items.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-4'
+const center = align === 'center'
+---
+
+{variant === "band" ? (
+	<section class="band-accent py-16" data-block="statistics">
+		<div class:list={["wrap grid grid-cols-2 gap-8 text-center", cols]}>
+			{items.map((s) => (
+				<div {...row}>
+					<div class="text-[30px] font-semibold leading-[1.05] tracking-[-0.02em] lg:text-[46px]" {...sub("value")}>{s.value}</div>
+					<div class="on-accent-muted mt-1 text-[12px]" {...captionOf(s)}>{s.caption ?? s.label}</div>
+				</div>
+			))}
+		</div>
+	</section>
+) : (
+	<div data-block="statistics">
+		{(eyebrow || heading) && <div class:list={["mb-8 lg:mb-12", center && "text-center"]}>{eyebrow && <span class:list={["eyebrow eyebrow--acm", center && "text-fg-meta"]} {...at("eyebrow")}>{eyebrow}</span>}{heading && <h2 class={center ? "h-card max-sm:text-[28px] max-sm:tracking-[-0.015em]" : "h-section"} {...at("heading")}>{heading}</h2>}</div>}
+		<div class:list={["grid grid-cols-2", cols, center ? "gap-x-6 gap-y-8 text-center lg:gap-x-8 lg:gap-y-12" : "gap-8"]}>
+			{items.map((s) => (
+				<div class:list={[!center && "border-t border-line-soft pt-5"]} {...row}>
+					<div class:list={["font-semibold leading-[1.05] tracking-[-0.015em]", center ? "text-[28px] sm:text-[40px]" : "text-[28px] sm:text-[40px]"]} {...sub("value")}>{s.value}</div>
+					<div class:list={["text-[14px] text-fg-muted", center ? "mt-2" : "mt-1"]} {...captionOf(s)}>{s.caption ?? s.label}</div>
+				</div>
+			))}
+		</div>
+	</div>
+)}

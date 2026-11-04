@@ -7,7 +7,7 @@
  * Returns how many elements were frozen.
  */
 export function freezeFloating() {
-  const OFF = '.t4-offcanvas, .t4-off-canvas, [class*="off-canvas"], [class*="offcanvas"]'
+  const OFF = '.t4-offcanvas, .t4-off-canvas, .t3-off-canvas, [class*="off-canvas"], [class*="offcanvas"]'
   let frozen = 0
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   const vw = window.innerWidth
@@ -37,17 +37,22 @@ export function freezeFloating() {
 }
 
 /**
- * The blocks of the page with their boxes in page coordinates.
+ * The blocks of the page with their boxes in page coordinates, on a T4 or a T3 template.
  * - modules wrapped as `#Mod<N>`;
  * - ACM blocks that only carry `#acm-<name>-<N>` (a hero rendered without the module wrapper);
- * - modules assigned to the page whose position renders with no wrapper (`.t4-<position>`), from `assigned`;
- * - the template header (`#t4-header`) and the component area (`#t4-main-body`, or `main` when it holds
- *   only the component and not the whole page).
+ * - a module assigned to the page that prints with no wrapper but an id of its own ending in `-<module id>` (a T3 ACM
+ *   block `#block-slideshow-101`, a raw-chrome module `#mod-105`), from `assigned`: only the outermost such element,
+ *   and only when it is the one element of the page whose id ends in that number;
+ * - modules assigned to the page whose position renders with no wrapper (`.t4-<position>`, `.t3-<position>`);
+ * - the template header (`#t4-header`, `#t3-header`) and the component area (`#t4-main-body`, `#t3-mainbody`, or
+ *   `main` when it holds only the component and not the whole page).
  * A block inside the off-canvas menu, hidden, or without size is recorded with `visible: false`.
  * @param {{entity: string, position: string}[]} assigned
  */
 export function findBlocks(assigned) {
-  const OFF = '.t4-offcanvas, .t4-off-canvas, [class*="off-canvas"], .offcanvas'
+  const OFF = '.t4-offcanvas, .t4-off-canvas, .t3-off-canvas, [class*="off-canvas"], .offcanvas'
+  const HEADER = '#t4-header, .t4-header, #t3-header, .t3-header'
+  const WRAPPED = '[id^="Mod"], [id^="acm-"]'
   const box = (el) => {
     const r = el.getBoundingClientRect()
     return {
@@ -85,10 +90,28 @@ export function findBlocks(assigned) {
     if (el.parentElement?.closest('[id^="acm-"], [id^="Mod"]')) continue
     add(el, `module-${m[1]}`, 'acm')
   }
+  // A module printed with no wrapper but its own id ending in `-<module id>`. The number alone proves nothing (an
+  // article, a product or a menu entry can end in the same digits), so: an id of words then the number, a module
+  // ASSIGNED to this page with that id, outside every block found so far, and no second element of its own elsewhere
+  // (the outermost one counts; an inner `#block-slider-104` of `#block-slideshow-104` is the same block).
+  const assignedIds = new Set(
+    (assigned ?? []).map((a) => /^module-(\d+)$/.exec(a.entity ?? '')?.[1]).filter(Boolean)
+  )
+  const byId = new Map()
+  for (const el of document.querySelectorAll('[id]')) {
+    const m = /^[a-z][a-z0-9_]*(?:-[a-z][a-z0-9_]*)*-(\d+)$/i.exec(el.id)
+    if (!m || !assignedIds.has(m[1]) || taken.has(`module-${m[1]}`)) continue
+    if (el.closest('[data-kit-block]')) continue
+    const list = byId.get(m[1]) ?? []
+    if (!list.some((x) => x.contains(el))) list.push(el)
+    byId.set(m[1], list)
+  }
+  for (const [id, list] of byId) if (list.length === 1) add(list[0], `module-${id}`, 'module-id')
   for (const a of assigned ?? []) {
     if (taken.has(a.entity) || !a.position) continue
-    const el = document.querySelector(`.t4-${CSS.escape(a.position)}, #t4-${CSS.escape(a.position)}`)
-    if (!el || el.querySelector('[id^="Mod"], [id^="acm-"]')) continue
+    const p = CSS.escape(a.position)
+    const el = document.querySelector(`.t4-${p}, #t4-${p}, .t3-${p}, #t3-${p}`)
+    if (!el || el.querySelector(`${WRAPPED}, [data-kit-block]`)) continue
     // Two modules in one bare position cannot be told apart: name the position, not a guess.
     const same = (assigned ?? []).filter((x) => x.position === a.position && !taken.has(x.entity))
     if (same.length > 1) continue
@@ -105,11 +128,11 @@ export function findBlocks(assigned) {
       }
     if (inner.size) rec.contains = [...inner]
   }
-  const header = document.querySelector('#t4-header, .t4-header')
+  const header = document.querySelector(HEADER)
   if (header) add(header, 'header', 'template-header')
-  const body = document.querySelector('#t4-main-body')
+  const body = document.querySelector('#t4-main-body, #t3-mainbody')
   const main = body ?? document.querySelector('main')
-  if (main && (body || !main.querySelector('#t4-header, [id^="Mod"], [id^="acm-"]'))) {
+  if (main && (body || !main.querySelector(`${HEADER}, ${WRAPPED}`))) {
     add(main, 'main-body', 'component')
   } else {
     out.push({

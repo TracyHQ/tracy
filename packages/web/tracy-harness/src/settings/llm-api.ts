@@ -67,7 +67,7 @@ export interface CapabilityMeta {
 }
 
 export interface Door {
-  id: 'web' | 'assistant' | 'seedText' | 'seedImage' | 'vision' | 'woEditorial' | 'agent'
+  id: 'web' | 'assistant' | 'seedText' | 'seedImage' | 'vision' | 'woEditorial' | 'agent' | 'sitePlanner'
   label: string
   where: string
   blurb: string

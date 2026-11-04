@@ -83,14 +83,14 @@ test('a stale template is red, named, shows the generator output and the fix; th
 })
 
 test('a missing package or a missing generator is red, not skipped, and the generator is never run for it', () => {
-  const [a, b, c] = TEMPLATES
+  const [a, b, ...rest] = TEMPLATES
   const r = decide({ missing: [a], noGenerator: [b] })
   assert.equal(r.bad, 2)
   assert.match(r.text, new RegExp(`${a}: package directory missing`))
   assert.match(r.text, new RegExp(`${b}: ${GENERATOR.replace('.', '\\.')} missing`))
   assert.deepEqual(
     r.calls.map((call) => call.cwd),
-    [`/fake/packages/cms/${c}`]
+    rest.map((t) => `/fake/packages/cms/${t}`)
   )
 })
 

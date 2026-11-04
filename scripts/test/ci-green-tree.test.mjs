@@ -57,7 +57,7 @@ const fullJobs = () => [
 const inspector = (byId) => async (r) =>
   byId[r.id] ?? { jobs: fullJobs(), testedTree: TREE, testedScope: 'full' }
 
-test('the full row set is the release set: checks, both test shards, three EmDash suites, e2e', () => {
+test('the full row set is the release set: checks, both test shards, five EmDash suites, e2e', () => {
   assert.deepEqual([...fullRowJobs()].sort(), [
     'build check (checks)',
     'build check (tests 1/2)',
@@ -65,6 +65,8 @@ test('the full row set is the release set: checks, both test shards, three EmDas
     'build check (tests e2e)',
     'build check (tests emdash-base)',
     'build check (tests emdash-business)',
+    'build check (tests emdash-coffee)',
+    'build check (tests emdash-restaurant)',
     'build check (tests emdash-saas)'
   ])
 })

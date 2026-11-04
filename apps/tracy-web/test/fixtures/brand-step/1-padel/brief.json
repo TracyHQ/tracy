@@ -1,0 +1,27 @@
+{
+  "brand": {
+    "logo": "a1f0c2d4-7b3e-4c59-8a61-2d9e5f7b0c13",
+    "name": "Palm Terrace Padel Club",
+    "fonts": [],
+    "voice": "English; informal tone",
+    "accent": {
+      "hex": "#a78f45",
+      "share": 0.047,
+      "source": "logo"
+    },
+    "colors": [
+      {
+        "hex": "#042515",
+        "role": "primary"
+      },
+      {
+        "hex": "#a78f45",
+        "role": "accent"
+      }
+    ],
+    "origin": "social",
+    "official": false,
+    "colorsFrom": "logo"
+  },
+  "missing": []
+}

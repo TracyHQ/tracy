@@ -6,7 +6,7 @@
 //
 //   cli.mjs build --site <url> [--host-header <host>] --contract <dir> --out <dir> --full
 //                 [--reuse-capture] [--trade <words>] [--widths 1440,390] [--max-pages 400] [--only /,/a]
-//                 [--template-version x.y.z] [--exclude-path '/test-*,/other']
+//                 [--template-version x.y.z] [--exclude-path '/test-*,/other']  (a comma inside a pattern: \,)
 //                 [--db-command '<client prefix>' | --db mysql://...] [--files-command '<prefix>' --webroot <dir>]
 //       --full: the whole pipeline (README "Make a kit for a new template"); without it, read + shoot + assemble only.
 //       The database and file reads feed the site part (site-cli.mjs); without them it reads the pages only.
@@ -19,33 +19,51 @@
 //   cli.mjs relabel --out <dir> --contract <dir>   (the link labels of the template-kit.json in --out settled
 //                 again from the content map: labelId or a fixed-text reason per link; no browser, no capture, no image)
 //   cli.mjs setting-slots --out <dir> --contract <dir> [--db-command '<client prefix>' | --db mysql://...]
+//                 [--files-command '<prefix>'] [--webroot <dir>]
 //                 (the setting slots of the template-kit.json in --out settled again: the map a button opens, read
-//                 from the site's database, and the contact's mobile line; no browser, no capture, no image)
+//                 from the site's database, the contact's mobile line, and with --webroot the picture the template
+//                 paints behind its pages; no browser, no capture, no image)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
+//   cli.mjs looks --kit <template-kit.json> [--images <dir>] --list [--to <worklist.json>]
+//                 (the packed 1440 page and block shots without a current look: id, sha256, absolute file path;
+//                 --images is the folder the image paths are relative to, the kit's own folder by default)
+//   cli.mjs looks --kit <template-kit.json> --apply <looks.json>   (merge [{image, sha256, text}] written by the
+//                 packager's own Claude Code: all entries checked, none written when one is wrong; lib/looks.mjs)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
-import { mkdirSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
 
 import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
-import { urlOfPath } from './lib/kit-paths.mjs'
-import { assignedAt, indexMap } from './lib/map-index.mjs'
-import { linkLabelSlots } from './lib/link-label-slots.mjs'
-import { relabelKit } from './lib/link-label-reasons.mjs'
 import { contactFieldChecks } from './lib/coverage-gate.mjs'
-import { settleSettingSlots } from './lib/setting-slots.mjs'
-import { adapterFor } from './lib/site/adapters/index.mjs'
-import { siteSource } from './lib/site/adapters/source.mjs'
+import { urlOfPath } from './lib/kit-paths.mjs'
+import { relabelKit } from './lib/link-label-reasons.mjs'
+import { linkLabelSlots } from './lib/link-label-slots.mjs'
+import { applyLooks, indentOf, lookWorklist } from './lib/looks.mjs'
+import { assignedAt, indexMap } from './lib/map-index.mjs'
 import { measureMin } from './lib/measure-min.mjs'
 import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
+import { settleSettingSlots } from './lib/setting-slots.mjs'
 import { writeSheets } from './lib/sheets.mjs'
+import { adapterFor } from './lib/site/adapters/index.mjs'
+import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 
 const TOOL = 'template-kit 3.0.0'
-const COMMANDS = ['build', 'assemble', 'measure-min', 'sheet', 'approve', 'pack', 'relabel', 'setting-slots']
+const COMMANDS = [
+  'build',
+  'assemble',
+  'measure-min',
+  'sheet',
+  'approve',
+  'pack',
+  'relabel',
+  'setting-slots',
+  'looks'
+]
 const NO_SITE = ['sheet', 'approve', 'pack', 'relabel', 'setting-slots']
 
 export function parseArgs(argv) {
@@ -118,25 +136,65 @@ function settingSlots(o, out) {
   const kit = readJson(file)
   const map = readJson(join(o.contract, 'content-map.json'))
   const manifest = readJson(join(o.contract, 'manifest.json'))
-  const source = siteSource({ db: str(o.db), dbCommand: str(o['db-command']) })
-  const mapSettings = adapterFor(manifest.platform, source).mapSettings?.() ?? null
+  const source = siteSource({
+    db: str(o.db),
+    dbCommand: str(o['db-command']),
+    filesCommand: str(o['files-command']),
+    webroot: str(o.webroot)
+  })
+  const adapter = adapterFor(manifest.platform, source)
+  const mapSettings = adapter.mapSettings?.() ?? null
   if (!mapSettings) throw new Error('setting-slots needs the site database (--db-command or --db)')
-  const r = settleSettingSlots(kit, { map, mapSettings })
+  // Without --webroot nothing is read, and the background slots the kit has are kept.
+  const backgroundSettings = adapter.backgroundSettings?.() ?? null
+  const r = settleSettingSlots(kit, { map, mapSettings, backgroundSettings })
   const failures = []
   const wrong = contactFieldChecks(kit, (part, where, reason) => failures.push({ part, where, reason }))
   if (kit.coverage?.parts) kit.coverage.parts.contactFieldsUnresolved = wrong
   writeJson(file, kit)
   const maps = kit.blocks.flatMap((b) => (b.links ?? []).filter((l) => l.opens?.shows === 'map'))
   console.log(
-    `${r.slots} setting slots: ${r.tied} of ${maps.length} map buttons tied, ${r.mobile} mobile lines opened; contactFieldsUnresolved ${wrong}`
+    `${r.slots} setting slots: ${r.tied} of ${maps.length} map buttons tied, ${r.mobile} mobile lines opened, ${r.backgrounds} frames painted behind tied${backgroundSettings ? '' : ' (no --webroot: background slots kept)'}; contactFieldsUnresolved ${wrong}`
   )
   for (const f of failures) console.error(`${f.where}: ${f.reason}`)
   return wrong || r.tied < maps.length ? 1 : 0
 }
 
+/**
+ * Looks (lib/looks.mjs): `--list` prints the shots that still need a look (exit 1 when a file is missing or differs
+ * from its sha256); `--apply` merges a looks file into the kit in place, keeping its indent and key order (exit 1,
+ * nothing written, when any entry is wrong). No browser, no network, no model call.
+ */
+function looks(o) {
+  if (!str(o.kit) || (!o.list && !str(o.apply)))
+    throw new Error('looks needs --kit <template-kit.json> and --list or --apply <looks.json>')
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  if (o.list) {
+    const w = lookWorklist(kit, resolve(str(o.images) ?? dirname(file)))
+    const body = `${JSON.stringify({ kit: file, width: w.width, need: w.need }, null, 2)}\n`
+    if (str(o.to)) writeFileSync(resolve(o.to), body)
+    else process.stdout.write(body)
+    console.error(`${w.need.length} shots need a look, ${w.current} current`)
+    for (const p of w.problems) console.error(p)
+    return w.problems.length ? 1 : 0
+  }
+  const r = applyLooks(kit, JSON.parse(readFileSync(resolve(o.apply), 'utf8')))
+  for (const e of r.errors) console.error(e)
+  if (r.errors.length) {
+    console.error(`nothing written: ${r.errors.length} wrong entr${r.errors.length === 1 ? 'y' : 'ies'}`)
+    return 1
+  }
+  if (r.set) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  console.log(`${r.set} looks written, ${r.unchanged} already current`)
+  return 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
+  if (cmd === 'looks') return looks(o)
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||

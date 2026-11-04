@@ -4,6 +4,14 @@
 // writes. Another CMS gets an adapter of the same shape.
 import { languageFilesOf } from '../cms-strings.mjs'
 import { mapRowsSql, mapSettingOf } from './joomla-map.mjs'
+import {
+  isT3,
+  t3ColourVariables,
+  t3LessFiles,
+  t3LogoLayouts,
+  t3LogoSettings,
+  t3NameFallsBack
+} from './joomla-t3.mjs'
 import { emptyShowsOf, logoLayouts, t4PrintsOpenGraph, t4Settings, variableOf } from './joomla-t4.mjs'
 
 /** The most bytes Joomla stores in one module's content (`Table\Module::check`). */
@@ -55,6 +63,8 @@ export function joomlaAdapter(source) {
     ])
     const style = styles[0]
     state.template = style?.template ?? null
+    state.styleParams = safeJson(style?.params)
+    state.siteProfile = state.styleParams['typelist-site'] || 'default'
     state.menus = menus.map((r) => ({ ...r, params: safeJson(r.params) }))
     state.schemaPlugin = schema[0]
     const langParams = langs[0]?.params
@@ -65,10 +75,20 @@ export function joomlaAdapter(source) {
     state.site = t4
     state.global = t4Settings(readFile, state.template, 'global')
   }
+  // A T3 template keeps its logo and name in the params of its home style; read only when it is not T4.
+  const t3 =
+    !t4 && state.template && readFile && isT3(readFile(`templates/${state.template}/templateDetails.xml`))
+      ? { params: state.styleParams ?? {}, layouts: t3LogoLayouts(readFile, state.template) }
+      : null
+  const templateHas = (rel) => {
+    const dir = `templates/${state.template}/${rel.split('/').slice(0, -1).join('/')}`.replace(/\/$/, '')
+    if (source.listDir) return source.listDir(dir).includes(rel.split('/').pop())
+    return readFile?.(`templates/${state.template}/${rel}`) != null
+  }
   const siteName = state.config.sitename ?? null
   return {
     cms: 'joomla',
-    framework: t4 ? 't4' : null,
+    framework: t4 ? 't4' : t3 ? 't3' : null,
     template: state.template,
     errors,
     siteName,
@@ -96,10 +116,21 @@ export function joomlaAdapter(source) {
           value: t4.values.site_name ?? '',
           whenEmpty: 'prints the CMS site name'
         })
+      if (t3) {
+        const header = t3.layouts.find((l) => l.where === 'header')
+        out.push({
+          kind: 'setting',
+          scope: 'template',
+          setting: 'template style param sitename (home style)',
+          value: String(t3.params.sitename ?? ''),
+          whenEmpty: header && t3NameFallsBack(header.php) ? 'prints the CMS site name' : null
+        })
+      }
       return out
     },
     /** The template-level logo settings: `{key, value, file, prints: [{where, emptyShows}]}`. */
     logoSettings() {
+      if (t3) return t3LogoSettings({ params: t3.params, layouts: t3.layouts, templateHas })
       if (!t4) return []
       const layouts = logoLayouts(readFile, state.template)
       return Object.entries(t4.values)
@@ -112,6 +143,18 @@ export function joomlaAdapter(source) {
             return { where: l.where, layout: l.file, emptyShows: v ? emptyShowsOf(l.php, v) : null }
           })
         }))
+    },
+    /**
+     * The colour variables the template declares outside its stylesheets (T3: LESS, compiled away before a browser
+     * sees it): `[{name, value, declaredIn}]`; empty for a template whose stylesheets carry their own variables.
+     */
+    colourVariables() {
+      if (!t3) return []
+      const files = t3LessFiles(state.template, t3.params.theme || null)
+      const texts = source.readMany
+        ? source.readMany(files)
+        : files.map((f) => ({ file: f, text: readFile(f) }))
+      return t3ColourVariables(texts, state.template)
     },
     favicon(icons) {
       const set = t4?.values.other_faviconFile ?? null
@@ -225,6 +268,20 @@ export function joomlaAdapter(source) {
     mapSettings() {
       if (!query || !state.prefix) return null
       return query(mapRowsSql(state.prefix)).map(mapSettingOf).filter(Boolean)
+    },
+    /**
+     * The picture a T4 template paints behind the blocks of its pages from its site profile (`body_bg_img`, the
+     * media field's `#joomlaImage` suffix dropped): `[{key, value, template, file}]`, `[]` when the template has none
+     * (or is not T4), null without the database and the web root to read it from.
+     */
+    backgroundSettings() {
+      if (!query || !readFile) return null
+      // The profile the home style names (`typelist-site`), which need not be `default`.
+      const own = t4
+        ? (t4Settings(readFile, state.template, 'site', state.siteProfile ?? 'default') ?? t4)
+        : null
+      const value = String(own?.values.body_bg_img ?? '').split('#')[0]
+      return own && value ? [{ key: 'body_bg_img', value, template: state.template, file: own.file }] : []
     },
     /** Map entities that are free HTML blocks (no slots but their HTML). */
     isFreeHtml: (entity) => entity?.kind === 'module' && entity.identity?.module === 'mod_custom'

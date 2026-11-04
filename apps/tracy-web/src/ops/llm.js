@@ -35,6 +35,7 @@ import {
   saveModels,
   saveProvider
 } from '../lib/llm-store.js'
+import { doorRefusesModel } from '../lib/llm-door-policy.js'
 import { foreignMakerIn } from '../lib/model-providers.js'
 import { admit, denied } from './admit.js'
 
@@ -324,6 +325,17 @@ export function llmRoutes({ pool, config, fetchImpl = fetch, deps = {} }) {
       if (typeof b.value.model !== 'string' || b.value.model.length > 200 || /\s/.test(b.value.model))
         return c.json({ error: 'INVALID_MODEL' }, 400)
     }
+    // The brand step never uses Anthropic models (lib/llm-door-policy.js; brand-step/brand-doors.js refuses them at run time too); saying no
+    // here means the screen cannot show a configured door that every run would refuse.
+    if (doorRefusesModel(doorId, b.value.providerId, b.value.model))
+      return c.json(
+        {
+          error: 'MODEL_NOT_ALLOWED',
+          model: b.value.model,
+          reason: `${b.value.model} is an Anthropic model. The brand step never uses Opus or Sonnet (the cost has to be multipliable); pick another model.`
+        },
+        400
+      )
     if (meta.requires?.length && b.value.model) {
       const { rows } = await pool.query('select models from llm_provider where id = $1', [b.value.providerId])
       const known = (rows[0]?.models ?? []).find((m) => m.id === b.value.model)

@@ -1,6 +1,6 @@
 # tracy-emdash-template
 
-Turn a folder of design HTML into a **running EmDash 0.37 website** — Astro SSR, Tailwind CSS 4,
+Turn a folder of design HTML into a **running EmDash website** (pinned: emdash 1.1.0 on Astro 7) — Astro SSR, Tailwind CSS 4,
 shadcn/ui — where every word, picture, menu and figure is editable in the CMS admin, the import is
 repeatable, the acceptance gate is measured by machine, and the package rebuilds itself on a clean
 site.
@@ -31,8 +31,10 @@ different design, in different languages, with different collections.
 ```
 skills/tracy-emdash-template/
   SKILL.md                    the router: phases, gates, the eleven invariants, stop conditions
-  references/                 one packet per phase — read one at a time, not all at once
-    runtime.md                EmDash 0.37 measured facts, pinned versions, project shape
+  references/                 22 packets — the router names one per phase; read one at a time, not all at once
+    execution-rules.md        cost, sessions, foreground fan-out, model per role, token report
+    tools.md                  every kit tool, its flags and its phase
+    runtime.md                EmDash 1.1 / Astro 7 pins and measured facts (0.37 → 1.1 history), project shape
     source-inventory.md       hashing, page classification, asset resolution
     content-model.md          collections, i18n (row per locale), plugins
     frontend-stack.md         Astro + Tailwind + shadcn, the storefront/admin CSS boundary
@@ -42,9 +44,16 @@ skills/tracy-emdash-template/
     qa-and-packaging.md       the acceptance matrix and what ships
     package-docs.md           the eight documents a shipped package carries
     release-regressions.md    the failures a release must still be able to detect
+    qa-lenses.md              tiered visual QA, lenses, notes as todos, Fast Gate, loop caps
+    site-model.md             site-model.json, the neutral source contract
+    brand-and-pages.md        personalization and the seven customer questions
+    content-api.md            Content API reader and provenance stamps
+    inputs/                   one packet per source kind (html, url, brief, frames, wp-spec)
   scripts/tools/              the kit a template copies into its own tools/
   scripts/tests/              regression tests: the gate must be able to FAIL
   scripts/new-template.sh     start a new template package from this kit
+  scripts/check-docs-numbers.mjs  the counts these docs quote, measured (npm run test:docs)
+  scripts/perf/token-report.mjs   tokens per Claude Code session (skill-level, not copied)
   examples/northgate.md       the first build, with its measurements and its costs
 ```
 

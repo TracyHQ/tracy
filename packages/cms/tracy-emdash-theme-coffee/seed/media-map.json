@@ -1,0 +1,460 @@
+{
+	"generatedAt": "2026-10-30T08:38:30.871Z",
+	"source": "Tracy Coffee demo pictures drawn with Codex (seed/media/images/coffee/how-drawn.md)",
+	"items": [
+		{
+			"key": "images/coffee/menu/espresso",
+			"file": "images/coffee/menu/espresso.webp",
+			"alt": "A double espresso with golden crema in a cream ceramic cup",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "espresso",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "b9f579515c02e75b70d2bc219aa67b5da37c101c6a92ce02234e03fb5b631ecd",
+			"copied": "media/images/coffee/menu/espresso.webp"
+		},
+		{
+			"key": "images/coffee/menu/flat-white",
+			"file": "images/coffee/menu/flat-white.webp",
+			"alt": "A flat white with a leaf pattern in a wide cream cup",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "flat-white",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "7147a9494051a4094ce252a57b1c171337def5b6fbf7842bd6361324b5aa3bca",
+			"copied": "media/images/coffee/menu/flat-white.webp"
+		},
+		{
+			"key": "images/coffee/menu/pour-over",
+			"file": "images/coffee/menu/pour-over.webp",
+			"alt": "Pour-over filter coffee in a glass server under a ceramic dripper",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "pour-over",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "099ceb25e2e00bc47e30c4f00d70a065f535ec04eb71e28999439d9cccf6f835",
+			"copied": "media/images/coffee/menu/pour-over.webp"
+		},
+		{
+			"key": "images/coffee/menu/jasmine-green-tea",
+			"file": "images/coffee/menu/jasmine-green-tea.webp",
+			"alt": "A glass teapot and a small cup of jasmine green tea",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "jasmine-green-tea",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "af9379172f1672b6d2fa60061c1fe8591fb575630599bfb813b3002ac6320816",
+			"copied": "media/images/coffee/menu/jasmine-green-tea.webp"
+		},
+		{
+			"key": "images/coffee/menu/masala-chai",
+			"file": "images/coffee/menu/masala-chai.webp",
+			"alt": "A glass of creamy masala chai with a cinnamon stick and star anise",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "masala-chai",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "fe00859abca79ec43264544c5b7146a09730ca103196332085b490e8865482f6",
+			"copied": "media/images/coffee/menu/masala-chai.webp"
+		},
+		{
+			"key": "images/coffee/menu/earl-grey",
+			"file": "images/coffee/menu/earl-grey.webp",
+			"alt": "A cup of Earl Grey tea with a lemon slice and a small teapot",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "earl-grey",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "ab2d9e5ac8024ecaf541f12cb452f75a17822df5938fe7165cac492f9238fb4f",
+			"copied": "media/images/coffee/menu/earl-grey.webp"
+		},
+		{
+			"key": "images/coffee/menu/cold-brew",
+			"file": "images/coffee/menu/cold-brew.webp",
+			"alt": "A tall glass of dark cold brew over ice",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "cold-brew",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "4b0ba47cbaffcd674320cced2b2e2b15b59e6b47f4c51149bc0e4a0a5c366697",
+			"copied": "media/images/coffee/menu/cold-brew.webp"
+		},
+		{
+			"key": "images/coffee/menu/iced-latte",
+			"file": "images/coffee/menu/iced-latte.webp",
+			"alt": "A tall glass of iced latte with layers of milk and coffee",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "iced-latte",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "64b70cc5decdcc350ad6505cdf56fd95b47157fcc81fab607abc0d207d83bad2",
+			"copied": "media/images/coffee/menu/iced-latte.webp"
+		},
+		{
+			"key": "images/coffee/menu/espresso-tonic",
+			"file": "images/coffee/menu/espresso-tonic.webp",
+			"alt": "A tumbler of espresso tonic with ice and an orange twist",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "espresso-tonic",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "971b421ae0d85cf7778bb28691a9482cf85b10e190a9411fdf382782ddf19918",
+			"copied": "media/images/coffee/menu/espresso-tonic.webp"
+		},
+		{
+			"key": "images/coffee/menu/butter-croissant",
+			"file": "images/coffee/menu/butter-croissant.webp",
+			"alt": "A golden butter croissant on a cream plate",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "butter-croissant",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "5d1c4dccbfbcd4ae9a4985cece5e9de4ea6c0537085167f89dc3834692582d52",
+			"copied": "media/images/coffee/menu/butter-croissant.webp"
+		},
+		{
+			"key": "images/coffee/menu/cardamom-bun",
+			"file": "images/coffee/menu/cardamom-bun.webp",
+			"alt": "A swirled cardamom bun with pearl sugar on kraft paper",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "cardamom-bun",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "53da61dca2c7b9ae0972e1fcf5fd985c30725ef1032edc0b08e5f0916b82de8b",
+			"copied": "media/images/coffee/menu/cardamom-bun.webp"
+		},
+		{
+			"key": "images/coffee/menu/banana-bread",
+			"file": "images/coffee/menu/banana-bread.webp",
+			"alt": "Two slices of banana bread on a small plate",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "menu_items",
+					"slug": "banana-bread",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "73aa6ce629fd690630d5ee766b95705ea97af45e545440f881ebc13f5766160c",
+			"copied": "media/images/coffee/menu/banana-bread.webp"
+		},
+		{
+			"key": "images/coffee/space/space-counter",
+			"file": "images/coffee/space/space-counter.webp",
+			"alt": "The counter and the espresso machine in the morning light",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "home",
+					"slug": "home",
+					"locale": "en",
+					"path": "space_photos[0].image"
+				}
+			],
+			"sha256": "36f66353b2a799335d562285c6f7172c56fc0e98165101474d8c95e68e05ec97",
+			"copied": "media/images/coffee/space/space-counter.webp"
+		},
+		{
+			"key": "images/coffee/space/space-tables",
+			"file": "images/coffee/space/space-tables.webp",
+			"alt": "Big wooden tables by the window",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "home",
+					"slug": "home",
+					"locale": "en",
+					"path": "space_photos[1].image"
+				}
+			],
+			"sha256": "4dac292163275734d2c5994d74200de3464ab238b532defb69d74221fd3b7494",
+			"copied": "media/images/coffee/space/space-tables.webp"
+		},
+		{
+			"key": "images/coffee/space/space-roaster",
+			"file": "images/coffee/space/space-roaster.webp",
+			"alt": "The small roaster at the back of the shop",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "home",
+					"slug": "home",
+					"locale": "en",
+					"path": "space_photos[2].image"
+				}
+			],
+			"sha256": "cb6c3171735c006a478e0130673ee0ec3d28c08f8e3b4570c45367514930548c",
+			"copied": "media/images/coffee/space/space-roaster.webp"
+		},
+		{
+			"key": "images/coffee/space/space-corner",
+			"file": "images/coffee/space/space-corner.webp",
+			"alt": "A quiet corner with a bench and a shelf of beans",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "home",
+					"slug": "home",
+					"locale": "en",
+					"path": "space_photos[3].image"
+				}
+			],
+			"sha256": "436a60e62711f68cd151d9f639fc2bac2e871f7fdcfd2ee92064dc145043165f",
+			"copied": "media/images/coffee/space/space-corner.webp"
+		},
+		{
+			"key": "images/coffee/about/about-story",
+			"file": "images/coffee/about/about-story.webp",
+			"alt": "A barista pouring steamed milk into a cup at the counter",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "chapter1_image"
+				}
+			],
+			"sha256": "a8b793e5f1af2bd5651e883cedab753aaad3dcf523e18efad002b4d3d7d7a8ab",
+			"copied": "media/images/coffee/about/about-story.webp"
+		},
+		{
+			"key": "images/coffee/about/about-table",
+			"file": "images/coffee/about/about-table.webp",
+			"alt": "A table in the shop with a coffee, a pastry and a notebook",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "chapter2_image"
+				}
+			],
+			"sha256": "7b736e82a65fc737c00cb7ae3ff47ec7356655bf9ed9d1b0f62faf0bae9a797e",
+			"copied": "media/images/coffee/about/about-table.webp"
+		},
+		{
+			"key": "images/coffee/team/team-roaster",
+			"file": "images/coffee/team/team-roaster.webp",
+			"alt": "Illustrative portrait of the head roaster",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "team_members[0].image"
+				}
+			],
+			"sha256": "be3035a4cd83e85c5844ad68b98dad549c404dd5411699e5fcd601d1465fdecc",
+			"copied": "media/images/coffee/team/team-roaster.webp"
+		},
+		{
+			"key": "images/coffee/team/team-barista",
+			"file": "images/coffee/team/team-barista.webp",
+			"alt": "Illustrative portrait of the lead barista",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "team_members[1].image"
+				}
+			],
+			"sha256": "0bc44230f55bdceb049dee68441c6cc4170cd9b04d47f04557be9c13d55abb2f",
+			"copied": "media/images/coffee/team/team-barista.webp"
+		},
+		{
+			"key": "images/coffee/team/team-pastry",
+			"file": "images/coffee/team/team-pastry.webp",
+			"alt": "Illustrative portrait of the pastry chef",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "team_members[2].image"
+				}
+			],
+			"sha256": "e104947359401f8b78038a9e4da5b63bab7fb708029055d170bf44e0386d4f80",
+			"copied": "media/images/coffee/team/team-pastry.webp"
+		},
+		{
+			"key": "images/coffee/team/team-manager",
+			"file": "images/coffee/team/team-manager.webp",
+			"alt": "Illustrative portrait of the shop manager",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "team_members[3].image"
+				}
+			],
+			"sha256": "e1a97082ad247ffdc4ef59438ceb09d558931dd71bd8a7d553e609d32330632d",
+			"copied": "media/images/coffee/team/team-manager.webp"
+		},
+		{
+			"key": "images/coffee/news/news-beans",
+			"file": "images/coffee/news/news-beans.webp",
+			"alt": "Green coffee beans in a roasting drum beside a burlap sack",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "where-our-beans-come-from",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "site",
+					"slug": "site",
+					"locale": "en",
+					"path": "mega_resources_image"
+				}
+			],
+			"sha256": "e88cb1b249c82141fbd173d394577c99f37879903f9f83b2b69700c5e8fc37b2",
+			"copied": "media/images/coffee/news/news-beans.webp"
+		},
+		{
+			"key": "images/coffee/news/news-roastery",
+			"file": "images/coffee/news/news-roastery.webp",
+			"alt": "Freshly roasted beans pouring into the cooling tray",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "a-morning-at-the-roastery",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "3b228ade26a857ae7692db911c7d335d8e010365dc36010b0407422e4037691f",
+			"copied": "media/images/coffee/news/news-roastery.webp"
+		},
+		{
+			"key": "images/coffee/news/news-pourover",
+			"file": "images/coffee/news/news-pourover.webp",
+			"alt": "Hot water poured from a gooseneck kettle over a pour-over dripper",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "brewing-a-better-pour-over",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "06ed14a90b80f60a7e388507bb0aa354f8771df3acf84ea93568c45e5c5e8950",
+			"copied": "media/images/coffee/news/news-pourover.webp"
+		},
+		{
+			"key": "images/coffee/news/news-coldbrew",
+			"file": "images/coffee/news/news-coldbrew.webp",
+			"alt": "Jars of cold brew steeping on a wooden shelf",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "cold-brew-in-five-steps",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "2ad3d6826797a07656832a21b6c44b0c891e8a4d4bf682936cabd107e416dd1c",
+			"copied": "media/images/coffee/news/news-coldbrew.webp"
+		},
+		{
+			"key": "images/coffee/news/news-maple-latte",
+			"file": "images/coffee/news/news-maple-latte.webp",
+			"alt": "A spiced maple latte with a cinnamon stick",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "the-spiced-maple-latte-is-back",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "a30a6f70432732d303c75073138a3c3fa9d68389afc0b064b4ed8d4cf79936ce",
+			"copied": "media/images/coffee/news/news-maple-latte.webp"
+		},
+		{
+			"key": "images/coffee/news/news-seats",
+			"file": "images/coffee/news/news-seats.webp",
+			"alt": "New wooden window seats with cushions",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "new-seats-by-the-window",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "b057b48d8ce48f7f9269f784576672391aee3f9ddcaab2ef34ff94ae8e16a85d",
+			"copied": "media/images/coffee/news/news-seats.webp"
+		}
+	]
+}

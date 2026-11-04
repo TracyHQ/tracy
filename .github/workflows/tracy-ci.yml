@@ -112,7 +112,7 @@ concurrency:
 on:
   workflow_dispatch:
   # 🔒 NIGHTLY, 02:30 Vietnam time (19:30 UTC), added 29/09/2026. Routine pull requests into
-  # `develop` no longer pay for the browser/e2e suite and the three EmDash suites (each runs only
+  # `develop` no longer pay for the browser/e2e suite and the four EmDash suites (each runs only
   # when its own package is touched, see `plan`); this run still exercises all of them against
   # `develop` every day. A `schedule` event runs the DEFAULT branch's copy of this file (`main`) and
   # its `github.ref_name` is `main` — which would pick the PRODUCTION runner lane and check out
@@ -190,7 +190,8 @@ jobs:
   # there (run 41028805223). What the runner image gave is set up explicitly on a fresh VM, in steps
   # gated on `runner.environment == 'github-hosted'`: Node from `.node-version` (the assert after it
   # still compares), `php` 8.3 cli, and for `build-check` a PostgreSQL 16 service with
-  # TEST_DATABASE_URL. Secrets and the deploy key are the same-repo ones as before; the Turbo cache is
+  # TEST_DATABASE_URL and, on the rows `plan` marks `browser` (every row that runs tests), Playwright's
+  # Chromium for each version the lockfiles pin, `--with-deps` (03/11/2026). Secrets and the deploy key are the same-repo ones as before; the Turbo cache is
   # this repository's GitHub Actions cache on either kind of runner (no secret since 30/10/2026).
   # `check-pr-merge.mjs` accepts such a job by its one label `ubuntu-latest` AND runner group
   # `GitHub Actions`.
@@ -710,7 +711,7 @@ jobs:
   #
   # A routine PR into develop now runs only the related workers files in one row. The two full
   # shards above still run for release PRs, manual runs and the nightly. The browser-driven suites
-  # — `e2e` and the three EmDash themes — remain conditional by path on develop PRs.
+  # — `e2e` and the four EmDash themes — remain conditional by path on develop PRs.
   #
   # THREE SHARDS ON GITHUB-HOSTED — 30/10/2026. A pull request's rows run on `ubuntu-latest` by
   # default (`dsh-lib`), and there a full run's workers suite is `tests 1/3`, `tests 2/3` and
@@ -982,6 +983,31 @@ jobs:
       - name: Install dependencies
         id: install
         run: pnpm install --frozen-lockfile
+
+      # 🔒 PLAYWRIGHT'S CHROMIUM ON A FRESH VM — GitHub-hosted browser rows only (03/11/2026). Our
+      # runners' image carries it; `ubuntu-latest` carries Google Chrome, which no suite launches (run
+      # 41581075192: 86 e2e tests red with `Executable doesn't exist at …/chromium_headless_shell-1243/…`,
+      # and the EmDash rows red in two minutes). `matrix.browser` is `plan-ci.mjs`'s `opensBrowser`:
+      # every row that runs tests or the moved clock; `checks` alone installs nothing. The versions are
+      # the lockfiles' (`scripts/ci/playwright-browsers.mjs`: the workspace and the three EmDash
+      # templates, one install per distinct version), `--with-deps` adds the system libraries, and the
+      # download is cached by those versions. The gate still probes and installs by itself
+      # (`ensureBrowser` in `check-tests.ts`); after this step its probe opens a browser and it does not.
+      - name: Look up the Playwright versions on a GitHub-hosted runner
+        id: playwright
+        if: runner.environment == 'github-hosted' && matrix.browser
+        run: echo "versions=$(node scripts/ci/playwright-browsers.mjs --print | tr ' ' '-')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the Playwright browsers on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted' && matrix.browser
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.versions }}
+
+      - name: Install the Playwright browser on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted' && matrix.browser
+        run: node scripts/ci/playwright-browsers.mjs --install
 
       - name: Start the Turbo remote cache
         if: matrix.turbo

@@ -19,7 +19,8 @@
  *     "pageGroups": [ ... ],
  *     "pages":      [ { "id", "group", "path", "inMainMenu", "blocks": [...], "images": <by width> } ],
  *     "blocks":     [ { "id", "role", "shared", "images": <by width>, "visibleAt": ["1440"], "notShownAt": ["390"],
- *                       "notShownBecause": "<why>", "lists", "frames", "links", "fixedText", "demoOwned" } ],
+ *                       "notShownBecause": "<why>", "lists", "frames", "links", "fixedText", "demoOwned",
+ *                       "look": { "image", "sha256", "text" } } ],      look optional, on a page too (below)
  *     "templateGaps": [ { "id", "kind", "where": { "pageId" | "blockId" | "path" | "selector" }, "detail",
  *                         "evidence": [<image id>], "accepted": null | { "reason", "by" } } ],   optional
  *     "errors":     [ ... ],
@@ -29,6 +30,12 @@
  * `images` of a page or a block names its screenshot at each width, as an object keyed by width
  * (`{ "1440": "<image id>", "390": "<image id>" }`) or a list of `{ width, id }` (a bare string counts for the width
  * its name carries). The step reads only which widths are present.
+ *
+ * `look` of a page or a block is a short plain text of what its 1440 shot shows (layout, columns, media, headings and
+ * buttons, density), written once per kit version by the packager's own Claude Code (`cli.mjs looks`), so a planner
+ * reads text instead of opening every shot. `image` names the shot it describes and `sha256` is that image's sha256 in
+ * `images`: a recaptured shot leaves its look stale. `looksMissingOf` lists the shots without a current look; the
+ * approval does not cover looks (they are text, not images), so writing them never makes an approval stale.
  *
  * 🔒 AN APPROVAL COUNTS ONLY FOR THE IMAGE SET IT SAW. `approval.imagesSha256` is `imagesDigest(images)`: the sha256 of
  * the image list in the `sha256sum` line format (`<sha256>  <path>\n`), sorted by path. Capture the kit again and any
@@ -112,6 +119,68 @@ export function notShownWidthsOf(block) {
   if (typeof because !== 'string' || because.trim() === '' || !Array.isArray(block?.notShownAt))
     return new Set()
   return new Set(block.notShownAt.map(Number).filter((w) => KIT_WIDTHS.includes(w)))
+}
+
+/** The width a look describes: the planner reads the desktop shot. */
+export const LOOK_WIDTH = 1440
+
+/**
+ * The image reference a page or block names at `width` (see the shape above), or null.
+ * @param {unknown} images
+ * @param {number} width
+ * @returns {string | null}
+ */
+export function imageAt(images, width) {
+  if (Array.isArray(images)) {
+    for (const entry of images) {
+      if (entry && typeof entry === 'object' && Number(/** @type {any} */ (entry).width) === width) {
+        const id = /** @type {any} */ (entry).id
+        if (typeof id === 'string' && id) return id
+      } else if (typeof entry === 'string' && new RegExp(`(^|\\D)${width}(\\D|$)`).test(entry)) return entry
+    }
+    return null
+  }
+  if (images && typeof images === 'object') {
+    const ref = /** @type {any} */ (images)[String(width)]
+    return typeof ref === 'string' && ref ? ref : null
+  }
+  return null
+}
+
+/**
+ * Every page and block whose 1440 shot has no current look: none, or one naming another shot or another sha256 than
+ * the image record holds, or with no text. A shot the kit's `images` does not hold has no file to describe and is
+ * left out (the pack guarantees every shot it names is in `images`).
+ * @param {any} doc
+ * @returns {{ kind: 'page' | 'block', id: string, image: string, why: 'missing' | 'stale' }[]}
+ */
+export function looksMissingOf(doc) {
+  const records = new Map()
+  for (const image of Array.isArray(doc?.images) ? doc.images : []) {
+    if (typeof image?.id === 'string') records.set(image.id, image)
+    if (typeof image?.path === 'string') records.set(image.path, image)
+  }
+  /** @type {{ kind: 'page' | 'block', id: string, image: string, why: 'missing' | 'stale' }[]} */
+  const out = []
+  for (const [kind, list] of /** @type {const} */ ([
+    ['page', doc?.pages],
+    ['block', doc?.blocks]
+  ]))
+    for (const item of Array.isArray(list) ? list : []) {
+      const image = imageAt(item?.images, LOOK_WIDTH)
+      const record = image ? records.get(image) : undefined
+      if (!image || !record) continue
+      const look = item.look
+      const hasText = typeof look?.text === 'string' && look.text.trim() !== ''
+      if (!look || typeof look !== 'object' || !hasText) {
+        out.push({ kind, id: String(item.id ?? '?'), image, why: 'missing' })
+        continue
+      }
+      const sameShot = records.get(look.image) === record
+      const sameBytes = String(look.sha256 ?? '').toLowerCase() === String(record.sha256).toLowerCase()
+      if (!sameShot || !sameBytes) out.push({ kind, id: String(item.id ?? '?'), image, why: 'stale' })
+    }
+  return out
 }
 
 /** @type {Map<string, { stamp: string, readAt: number, value: Kit }>} */

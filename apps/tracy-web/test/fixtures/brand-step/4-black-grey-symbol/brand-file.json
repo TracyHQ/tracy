@@ -1,0 +1,421 @@
+{
+  "kind": "brand-file",
+  "version": 10,
+  "kit": "ja-boxing@1.0.10",
+  "name": {
+    "value": "Northgate Racquet House",
+    "from": "brief.brand.name",
+    "slots": [
+      {
+        "id": "setting:global configuration sitename",
+        "kind": "setting",
+        "where": "cms",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Northgate Racquet House",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "setting:template site setting site_name (templates/ja_boxing/etc/site/default.json)",
+        "kind": "setting",
+        "where": "template",
+        "current": "",
+        "status": "written",
+        "value": "Northgate Racquet House",
+        "handOff": null,
+        "pattern": "empty-setting",
+        "reason": "empty setting that prints the CMS site name: gets the business name"
+      },
+      {
+        "id": "slot:block-162.0",
+        "kind": "slot",
+        "where": "block-162.0",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Northgate Racquet House",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:text:block-168",
+        "kind": "printed",
+        "where": "text",
+        "current": "Copyright © 2026 JA Boxing. All Rights Reserved.",
+        "status": "written",
+        "value": "Copyright © 2026 Northgate Racquet House. All Rights Reserved.",
+        "handOff": null,
+        "pattern": "legal-line",
+        "reason": "fixed legal or attribution pattern: only the template name is replaced"
+      },
+      {
+        "id": "printed:title-attribute:offcanvas",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Northgate Racquet House",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:offcanvas",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Northgate Racquet House",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:title-attribute:header",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Northgate Racquet House",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:header",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Northgate Racquet House",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:document-title:page",
+        "kind": "printed",
+        "where": "document-title",
+        "current": "JA Boxing - Gym, Fitness, and Boxing Studio Joomla Template",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      },
+      {
+        "id": "printed:meta description:page",
+        "kind": "printed",
+        "where": "meta description",
+        "current": "Elevate your gym, fitness center, or boxing studio website with JA Boxing Joomla template. Engage your audience with a stunning design and powerful features",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      }
+    ]
+  },
+  "colours": {
+    "decision": "kept-template",
+    "why": "Both brand colours, #1a1a1a and #8a8a8a, have no visible hue, so the template accent stays and nothing is built.",
+    "brandColour": null,
+    "lift": null,
+    "accent": "#f44141",
+    "replaces": "#f44141",
+    "keeps": "template",
+    "builds": 0,
+    "shifts": [],
+    "module": null
+  },
+  "logo": {
+    "material": {
+      "mediaId": "c3f2e4d6-9d50-4e7b-8c83-4fb0719d2e35",
+      "width": 1080,
+      "height": 1080,
+      "hasAlpha": false,
+      "readsAs": "NORTHGATE RACQUET HOUSE",
+      "ground": "#ffffff"
+    },
+    "mark": {
+      "decision": "cut",
+      "why": "The logo has a standalone symbol (a crescent and a racket) above the words, so it was cut out.",
+      "letters": null,
+      "icon": null,
+      "file": "mark.png",
+      "recoloured": {
+        "light": null,
+        "dark": "recoloured/mark.dark.png"
+      }
+    },
+    "name": {
+      "text": "Northgate Racquet House",
+      "rendersAs": "NORTHGATE RACQUET HOUSE",
+      "files": {
+        "light": "name/name.light.png",
+        "dark": "name/name.dark.png"
+      },
+      "twoLines": {
+        "lines": ["Northgate", "Racquet House"],
+        "files": {
+          "light": "name/name-2l.light.png",
+          "dark": "name/name-2l.dark.png"
+        }
+      }
+    },
+    "logos": {
+      "light": "logo/logo.light.png",
+      "dark": "logo/logo.dark.v2.png",
+      "twoLines": null
+    },
+    "look": [
+      {
+        "file": "mark.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the whole symbol is there, nothing cut off",
+            "verdict": "pass",
+            "reason": "The crescent and racket, including the handle, are fully visible."
+          },
+          {
+            "check": "no ground or words left around it",
+            "verdict": "pass",
+            "reason": "Only the symbol appears on a clean white background; no words or stray marks."
+          },
+          {
+            "check": "it is the same symbol as in the original",
+            "verdict": "pass",
+            "reason": "The gray crescent and black racket match the original symbol."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo.light.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Northgate Racquet House` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The name reads NORTHGATE RACQUET HOUSE."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The racket-and-crescent mark and dark lettering are clear on white."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the mark and name are visible."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo.dark.png",
+        "ground": "#121111",
+        "verdict": "fail",
+        "checks": [
+          {
+            "check": "the name reads exactly `Northgate Racquet House` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The name reads NORTHGATE RACQUET HOUSE."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The white name and gray racket-and-crescent mark are visible on dark."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "fail",
+            "reason": "A faint dotted outline is visible around the racket head."
+          }
+        ]
+      },
+      {
+        "file": "mark.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The gray crescent and black racket stand out clearly on white."
+          }
+        ]
+      },
+      {
+        "file": "mark.png",
+        "ground": "#121111",
+        "verdict": "fail",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this ground",
+            "verdict": "fail",
+            "reason": "The black racket frame and handle blend into the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo.dark.v2.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Northgate Racquet House` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The text reads “NORTHGATE RACQUET HOUSE.”"
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The white name and gray-and-white mark stand out clearly against the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the racket-and-crescent mark and the name are visible."
+          }
+        ]
+      },
+      {
+        "file": "recoloured/mark.dark.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The gray crescent and white racket stand out clearly against the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "favicon/apple-touch-icon-180.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The gray crescent and white racket are clearly visible against the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "favicon/favicon-32.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this tab; when it sits on a rounded tile, judge the mark on its tile (the tile edge may blend into a tab of a similar colour)",
+            "verdict": "pass",
+            "reason": "The light, Q-like loop and stem are visible against the dark tile."
+          }
+        ]
+      },
+      {
+        "file": "favicon/favicon-32.png",
+        "ground": "#202124",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this tab; when it sits on a rounded tile, judge the mark on its tile (the tile edge may blend into a tab of a similar colour)",
+            "verdict": "pass",
+            "reason": "The light, Q-like loop and stem remain visible against the dark tile."
+          }
+        ]
+      }
+    ],
+    "spots": [
+      {
+        "spot": "logo-header-1",
+        "file": "spots/logo-header-1.png",
+        "shows": "logo",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-header-2",
+        "file": "spots/logo-header-2.v2.png",
+        "shows": "logo",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-1",
+        "file": "spots/logo-offcanvas-1.png",
+        "shows": "mark",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-2",
+        "file": "spots/logo-offcanvas-2.v2.png",
+        "shows": "mark",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-footer-1",
+        "file": "spots/logo-footer-1.v2.png",
+        "shows": "logo",
+        "ground": "#1f1e1e",
+        "writable": false
+      }
+    ]
+  },
+  "favicon": {
+    "from": "mark",
+    "mark": "mark.png",
+    "phoneMark": "recoloured/mark.dark.png",
+    "phoneGround": "#121111",
+    "tabIcons": "tile",
+    "tileGround": "#121111",
+    "ico": "favicon/favicon.ico",
+    "png32": "favicon/favicon-32.png",
+    "png512": "favicon/favicon-512.png",
+    "phone180": "favicon/apple-touch-icon-180.png",
+    "tileMark": "recoloured/mark.dark.png",
+    "tileMarkRecoloured": false,
+    "check": {
+      "final": {
+        "bboxShare": 0.25,
+        "contrastShare": {
+          "#ffffff": 1,
+          "#202124": 1
+        },
+        "pass": true
+      },
+      "candidates": [
+        {
+          "kind": "tile",
+          "png32": "favicon/favicon-32.png",
+          "bboxShare": 0.25,
+          "contrastShare": {
+            "#ffffff": 1,
+            "#202124": 1
+          },
+          "pass": true
+        }
+      ]
+    }
+  },
+  "ownerTasks": [
+    {
+      "kind": "approve-rebuilt-logo",
+      "say": "Your site logo was rebuilt from your logo's symbol and your name; please check it and tell us if you want it changed."
+    }
+  ]
+}

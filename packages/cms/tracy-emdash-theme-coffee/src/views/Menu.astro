@@ -1,0 +1,146 @@
+---
+/**
+ * /menu — the shop's menu: a bar of groups that jumps to each group, then every group with its items (photo, name,
+ * price, description). Page title, intro and the two buttons come from `menu_page`; the items are the published
+ * `menu_items`, put into the groups of the `menu_group` taxonomy (an item may sit in several, one with none goes to a
+ * last group). There is no page per item. The buttons live in `src/lib/menu.ts`: an empty cell hides its button.
+ */
+import { getEmDashCollection, getEmDashEntry, getTaxonomyTerms, getTermsForEntries } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Decor from '@/components/site/Decor.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Photo from '@/components/site/Photo.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+import { MORE_GROUP, groupMenu, menuButtons } from '@/lib/menu'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry }, { entries }, terms] = await Promise.all([
+  getEmDashEntry('menu_page', 'menu_page', { locale }),
+  getEmDashCollection('menu_items', { locale, status: 'published', limit: 500 } as any),
+  getTaxonomyTerms('menu_group', { locale, includeCounts: false })
+])
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const m = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'menu_page', entry)
+
+// `entry.id` of a live-collection entry is the SLUG; the row id is `entry.data.id` (measured on 0.37).
+const chosen = await getTermsForEntries(
+  'menu_items',
+  (entries as any[]).map((e) => e.data.id),
+  'menu_group',
+  { locale }
+)
+const items = (entries as any[])
+  .map((e) => ({
+    id: e.data.id as string,
+    slug: e.slug as string,
+    data: e.data as Record<string, any>,
+    groups: (chosen.get(e.data.id) ?? []).map((t: any) => t.slug as string)
+  }))
+  .sort((a, b) => (a.data.sort ?? 0) - (b.data.sort ?? 0))
+const groups = groupMenu(items, terms, m.more_label)
+const asked = menuButtons({
+  orderLabel: m.order_label,
+  orderUrl: m.order_url,
+  callLabel: m.call_label,
+  phone: chrome.site.phone
+})
+// A button into a page the customer unticked goes on its own, like any link in content (TCH #1013).
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  asked.map((b) => b.href)
+)
+const buttons = asked.filter((b) => live(b.href))
+// An item in several groups gets its anchor (the target of a search result) in the first group only.
+const anchored = new Set<string>()
+---
+
+<Base chrome={chrome} title={m.title} description={m.intro} currentPath="/menu" content={{ collection: "menu_page", id: entry.data.id, slug: "menu_page", toPath: () => "/menu" }}>
+	<main id="main" class="wrap relative pb-[var(--band-y)] pt-[var(--band-y)]">
+		<PageOwner stamp={$page} />
+		<Decor name="moka" class="decor-moka" />
+		<header class="mb-8 max-w-[720px]">
+			<h1 class="h-page" {...$page("title")}>{m.title}</h1>
+			{m.intro && <p class="lead mt-4" {...$page("intro")}>{m.intro}</p>}
+			{buttons.length > 0 && (
+				<p class="mt-6 flex flex-wrap gap-3">
+					{buttons.map((b) => b.kind === "order"
+						? <a class="btn btn-primary" href={b.href} rel="noopener noreferrer" {...$page("order_label")}>{b.label}</a>
+						: <a class="btn btn-secondary" href={b.href} {...$page("call_label")}>{b.label}</a>)}
+				</p>
+			)}
+		</header>
+		{groups.length > 1 && (
+			<nav aria-label={m.title} class="mb-10 flex flex-wrap gap-2">
+				{groups.map((g) => <a class="btn btn-ghost btn-sm" href={`#${g.anchor}`}>{g.label}</a>)}
+			</nav>
+		)}
+		{groups.map((g) => (
+			<section id={g.anchor} class="mb-12 scroll-mt-24" data-menu-group>
+				<h2 class="h-card mb-2" {...(g.slug === MORE_GROUP && g.anchor === "menu-ungrouped" ? $page("more_label") : {})}>{g.label}</h2>
+				{g.description && <p class="mb-6 max-w-[640px] text-fg-2">{g.description}</p>}
+				<ul class="grid gap-x-10 gap-y-8 md:grid-cols-2">
+					{g.items.map((i) => {
+						const $i = stampFor(Astro.request, "menu_items", i)
+						const d = i.data
+						const first = !anchored.has(i.slug)
+						anchored.add(i.slug)
+						return (
+							<li id={first ? `item-${i.slug}` : undefined} class="menu-item flex gap-5" {...$i()}>
+								{d.image && <Photo image={d.image} stamp={$i("image")} alt={d.image_alt ?? ""} class="aspect-square w-24 shrink-0 rounded-[var(--ds-card-radius,20px)]" />}
+								<div class="min-w-0 flex-1">
+									<div class="flex items-baseline justify-between gap-4">
+										<h3 class="h-card-sm" {...$i("title")}>{d.title}</h3>
+										{d.price && <span class="shrink-0 font-semibold text-fg" {...$i("price")}>{d.price}</span>}
+									</div>
+									{d.excerpt && <p class="mt-1 text-[17px] leading-[1.47] text-fg-2" {...$i("excerpt")}>{d.excerpt}</p>}
+								</div>
+							</li>
+						)
+					})}
+				</ul>
+			</section>
+		))}
+	</main>
+</Base>
+
+<style>
+	/* A moka pot (Decor.astro) right of the menu's title, wide screens only: on a phone the intro takes the width. */
+	:global(.decor-moka) {
+		top: var(--band-y);
+		right: max(16px, 3vw);
+		width: clamp(120px, 13vw, 190px);
+	}
+	/* An item lifts and its photo leans in under the mouse */
+	@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+		.menu-item {
+			transition: translate 0.35s ease;
+		}
+		.menu-item :global(.ng-photo) {
+			transition: scale 0.6s ease;
+		}
+		.menu-item:hover {
+			translate: 0 -4px;
+		}
+		.menu-item:hover :global(.ng-photo) {
+			scale: 1.08;
+		}
+	}
+	@media (max-width: 767.98px) {
+		:global(.decor-moka) {
+			display: none;
+		}
+	}
+</style>

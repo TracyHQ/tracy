@@ -294,9 +294,12 @@ describe('F12 — visual-qa on a mock site', { concurrency: CONCURRENCY }, () =>
     assert.equal(
       r.code,
       0,
-      JSON.stringify(r.report?.pages.flatMap((p) => p.findings) ?? r.out.slice(-3000)).slice(0, 3000)
+      JSON.stringify(r.report?.pages.flatMap((p) => p.findings) ?? r.log.slice(-3000)).slice(0, 3000)
     )
     assert.equal(r.report.summary.axes, 2)
+    // quiet by default: one summary line with the path of the full result; no per-axis lines
+    assert.match(r.log, /^visual-qa run: status=pass scope=full pages=1 axes=2 .* -> .*VISUAL\.md$/m)
+    assert.doesNotMatch(r.log, /^(ok {2}|FAIL|same |== stage)/m)
     assert.ok(r.report.summary.components >= 4)
     assert.equal(r.report.summary.unclassified, 0)
     const dark = r.report.pages[0].axes.find((a) => a.theme === 'dark')
@@ -719,8 +722,12 @@ describe('F15 — tiles: a full-page picture is cut so a lens can read it', () =
           { id: 'dark', variants: ['desktop-dark'] }
         ]
       }
-      const first = await visual(site, c, ['--tile-height', '300'])
+      const first = await visual(site, c, ['--tile-height', '300', '--verbose'])
       assert.equal(first.code, 0, `${JSON.stringify(first.kinds)}\n${first.log.slice(-800)}`)
+      // --verbose restores the per-axis and per-stage lines, and the summary line still closes the run
+      assert.match(first.log, /^ok +home desktop-light /m)
+      assert.match(first.log, /^== stage dark: pass /m)
+      assert.match(first.log, /^visual-qa run: status=pass .*stages=light:pass,dark:pass -> /m)
       const idx = JSON.parse(readFileSync(path.join(first.out, 'index.json'), 'utf8'))
       const home = idx.shots.find((s) => s.side === 'site' && s.variant === 'desktop-light')
       assert.ok(
@@ -1170,8 +1177,10 @@ it('hidden responsive nav and CTA are absent on both sides, but a visible source
 })
 
 it('same-document fragment navigation verifies the real HTTP status, including a 404 document', async () => {
-  const site = await serve()
+  // The browser first: a launch that throws must not leave a listening server behind, which keeps
+  // this file alive and the whole `node --test` run waiting with it.
   const browser = await launchBrowser()
+  const site = await serve()
   try {
     const page = await browser.newPage()
     await navigate(page, `${site.origin}/tiny#drawer`)

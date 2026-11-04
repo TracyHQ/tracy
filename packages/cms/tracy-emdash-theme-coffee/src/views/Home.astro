@@ -1,0 +1,799 @@
+---
+/**
+ * / — a brewing scene, then six sections, that scroll past one sticky stage with the cup on it (`CupStage.astro`); the cup
+ * takes one pose per section (`src/lib/home-scroll.mjs`). Before section 1, on the 3D route only, the brewing scene
+ * (`[data-brew]`, `src/lib/brew-shot.mjs`): an espresso machine on a bar counter pulls a shot into the cup as the page
+ * scrolls, then the cup flies into section 1; its first screen carries a menu sheet pinned on the brick wall, drawn (no item names), and a small menu button
+ * under it, both a link to the menu; the shop name stays in the header. 1 the shop name, huge, behind the cup, an invitation and a button to the menu ·
+ * 2 a short story either side of the cup · 3 four reasons around it · 4 a close-up with labels pointing at the cup ·
+ * 5 three featured menu items, the cup settling into the first card (no published item: the shop's name and tagline,
+ * the cup small beside them) · 6 photos of the shop, opening hours and an order
+ * button into the menu. Every block is `[data-section]`, numbered 1–6, and starts a line of the served HTML (`{nl}`: Astro
+ * compresses the template onto one line) so a line count of the page counts the sections. The shop name and the hours are the site's own fields
+ * (`site.brand_name`, `site.hours`); the cards are the published `menu_items` (`featuredItems`).
+ */
+import { getEmDashCollection, getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Photo from '@/components/site/Photo.astro'
+import CupStage from '@/components/sections/CupStage.astro'
+import Decor from '@/components/site/Decor.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+import { featuredItems } from '@/lib/menu'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry }, { entries }] = await Promise.all([
+  getEmDashEntry('home', 'home', { locale }),
+  getEmDashCollection('menu_items', { locale, status: 'published', limit: 500 } as any)
+])
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const h = entry.data as Record<string, any>
+const site = chrome.site as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'home', entry)
+const $site = stampFor(Astro.request, 'site', { data: site } as any)
+const cards = featuredItems(
+  (entries as any[]).map((e) => ({ slug: e.slug as string, data: e.data as Record<string, any> }))
+)
+const why = (h.why_items ?? []).filter((i: any) => i.title || i.text)
+// The picture beside each of the first four reasons, by its place in the list, not by its words.
+const WHY_DECOR = ['green-beans', 'roasted-beans', 'pour', 'table-cup'] as const
+const labels = (h.detail_labels ?? []).filter((l: any) => l.label || l.text)
+const photos = (h.space_photos ?? []).filter((p: any) => mediaUrl(p.image))
+const menuHref = (slug: string) => href(locale, `/menu#item-${slug}`)
+// A button or card link into a page the customer unticked goes on its own, like any link in content (TCH #1013).
+const live = await liveLinks(Astro.request, locale, [
+  h.intro_cta_url,
+  h.featured_cta_url,
+  h.contact_url,
+  ...cards.map((c) => menuHref(c.slug))
+])
+const nl = '\n'
+---
+
+<Base chrome={chrome} title={h.title} description={h.intro_lead} currentPath="/" content={{ collection: "home", id: entry.data.id, slug: "home", toPath: () => "/" }}>
+	<main id="main" class="home-runway" data-home-runway>
+		<PageOwner stamp={$page} />
+		<CupStage model={h.cup_model} still={h.cup_still} labels={labels} name={site.brand_name} />
+		<div class="home-track">
+			{/* no script, no 3D: the page opens on section 1. A noscript rule, so a page with script never reflows. */}
+			<noscript><style is:inline>.home-brew{display:none}</style></noscript>
+			<div class="home-brew" data-brew>
+				<div class="home-front home-brew__first">
+					{h.intro_cta_label && live(h.intro_cta_url) && (
+						<a class="home-brew__menu" href={h.intro_cta_url}>
+							<span class="home-brew__sheet" aria-hidden="true">
+								<span class="home-brew__head" />
+								{[0, 1, 2, 3, 4].map(() => <span class="home-brew__row" />)}
+							</span>
+							<span class="home-brew__btn" {...$page("intro_cta_label")}>{h.intro_cta_label}</span>
+						</a>
+					)}
+				</div>
+			</div>
+			{nl}<section class="home-section home-intro" data-section="1">
+				<h1 class="home-name" data-cup-roof {...$site("brand_name")}>{site.brand_name || h.title}</h1>
+				<div class="home-front wrap home-intro__foot" data-cup-floor>
+					{h.intro_lead && <p class="lead" {...$page("intro_lead")}>{h.intro_lead}</p>}
+					{h.intro_cta_label && live(h.intro_cta_url) && <a class="btn btn-primary" href={h.intro_cta_url} {...$page("intro_cta_label")}>{h.intro_cta_label}</a>}
+				</div>
+				<Decor name="beans" class="decor-beans" />
+				<Decor name="espresso" class="decor-espresso" />
+			</section>
+			{nl}<section class="home-section home-story" data-section="2">
+				<div class="home-front wrap">
+					<div class="home-split">
+						<div>
+							{h.story_title && <h2 class="h-section" {...$page("story_title")}>{h.story_title}</h2>}
+							{h.story_left && <p class="home-copy" {...$page("story_left")}>{h.story_left}</p>}
+						</div>
+						<div class="home-split__right">
+							{h.story_right && <p class="home-copy" {...$page("story_right")}>{h.story_right}</p>}
+						</div>
+					</div>
+				</div>
+				<Decor name="roaster" class="decor-roaster" />
+			</section>
+			{nl}<section class="home-section" data-section="3">
+				<div class="home-front wrap">
+					{h.why_title && <h2 class="h-section home-why__title" {...$page("why_title")}>{h.why_title}</h2>}
+					<ul class="home-split home-why">
+						{[why.slice(0, Math.ceil(why.length / 2)), why.slice(Math.ceil(why.length / 2))].map((side, s) => (
+							<li class:list={[s === 1 && "home-split__right"]}>
+								<ul class="home-why__list">
+									{side.map((it: any, i: number) => (
+										<li class="home-why__item" {...$page.block("why_items")}>
+											{it.title && <h3 class="h-card-sm" {...$page("why_items.title")}>{it.title}</h3>}
+											{it.text && <p class="home-copy" {...$page("why_items.text")}>{it.text}</p>}
+											{WHY_DECOR[s * Math.ceil(why.length / 2) + i] && <Decor name={WHY_DECOR[s * Math.ceil(why.length / 2) + i]} class={s === 0 ? "decor-why-left" : "decor-why-right"} />}
+										</li>
+									))}
+								</ul>
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+			{nl}<section class="home-section home-detail" data-section="4">
+				<div class="home-front wrap">
+					{h.detail_title && <h2 class="h-section" {...$page("detail_title")}>{h.detail_title}</h2>}
+					{labels.length > 0 && (
+						<ul class="home-labels">
+							{labels.map((l: any) => (
+								<li {...$page.block("detail_labels")}>
+									{l.label && <strong {...$page("detail_labels.label")}>{l.label}</strong>}
+									{l.text && <span {...$page("detail_labels.text")}>{l.text}</span>}
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
+			</section>
+			{nl}<section class="home-section home-featured" data-section="5">
+				<div class="home-front wrap">
+					<Decor name="spoon" class="decor-spoon" />
+					{cards.length > 0 ? (
+						<>
+							{h.featured_title && <h2 class="h-section" {...$page("featured_title")}>{h.featured_title}</h2>}
+							{h.featured_lead && <p class="lead mt-3" {...$page("featured_lead")}>{h.featured_lead}</p>}
+							<ul class="home-cards">
+								{cards.map((c, i) => {
+									const $i = stampFor(Astro.request, "menu_items", c as any)
+									const d = c.data
+									const link = live(menuHref(c.slug)) ? menuHref(c.slug) : undefined
+									const Card = link ? 'a' : 'div'
+									return (
+										<li class="home-card" {...$i()}>
+											<Card href={link} class="home-card__link">
+												<div class="home-card__media" data-cup-dock={i === 0 ? "" : undefined}>
+													<Photo image={d.image} alt={d.image_alt ?? ""} stamp={$i("image")} class="home-card__photo" />
+												</div>
+												<span class="home-card__head">
+													<span class="h-card-sm" {...$i("title")}>{d.title}</span>
+													{d.price && <span class="home-card__price" {...$i("price")}>{d.price}</span>}
+												</span>
+												{d.excerpt && <span class="home-card__text" {...$i("excerpt")}>{d.excerpt}</span>}
+											</Card>
+										</li>
+									)
+								})}
+							</ul>
+							{h.featured_cta_label && live(h.featured_cta_url) && <p class="mt-8"><a class="btn btn-secondary" href={h.featured_cta_url} {...$page("featured_cta_label")}>{h.featured_cta_label}</a></p>}
+						</>
+					) : (
+						<div class="home-about">
+							<div>
+								{site.brand_name && <h2 class="h-section" {...$site("brand_name")}>{site.brand_name}</h2>}
+								{site.brand_tagline && <p class="lead mt-3" {...$site("brand_tagline")}>{site.brand_tagline}</p>}
+							</div>
+							<div class="home-about__cup" data-cup-dock></div>
+						</div>
+					)}
+				</div>
+			</section>
+			{nl}<section class="home-section home-visit band" data-section="6">
+				<div class="home-front wrap">
+					{photos.length > 0 && (
+						<>
+							{h.space_title && <h2 class="h-section" {...$page("space_title")}>{h.space_title}</h2>}
+							<ul class="home-photos">
+								{photos.map((p: any) => (
+									<li {...$page.block("space_photos")}><Photo image={p.image} alt={p.alt ?? ""} stamp={$page("space_photos.image")} class="home-photos__photo" /></li>
+								))}
+							</ul>
+						</>
+					)}
+					<div class="home-visit__card">
+						{h.visit_title && <h2 class="h-section" {...$page("visit_title")}>{h.visit_title}</h2>}
+						{site.hours && (
+							<p class="home-copy">
+								{h.hours_label && <strong class="home-visit__label" {...$page("hours_label")}>{h.hours_label}</strong>}
+								<span {...$site("hours")}>{site.hours}</span>
+							</p>
+						)}
+						{h.contact_label && live(h.contact_url) && <a class="btn btn-primary" href={h.contact_url} {...$page("contact_label")}>{h.contact_label}</a>}
+					</div>
+					<Decor name="kettle" class="decor-kettle" />
+				</div>
+			</section>
+		</div>
+	</main>
+</Base>
+
+<style>
+	/* The runway: the sticky stage (z 1) and the sections drawn over it. Nothing here makes a stacking context, so
+	   the shop name (z 0) sits behind the cup and every other block (z 2) in front of it. */
+	.home-runway {
+		position: relative;
+		--cup-gap: clamp(280px, 34vw, 500px);
+	}
+	/* Mid-width: the cup is drawn smaller (home-scroll.mjs MID) and takes a wider gap between the columns. */
+	@media (min-width: 768px) and (max-width: 1099.98px) {
+		.home-runway {
+			--cup-gap: 40vw;
+		}
+	}
+	.home-track {
+		margin-top: -100vh;
+	}
+	.home-section {
+		min-height: 100vh;
+		display: grid;
+		align-items: center;
+		padding-block: 96px 64px;
+	}
+	.home-front {
+		position: relative;
+		z-index: 2;
+		width: 100%;
+	}
+	.home-copy {
+		margin-top: 12px;
+		font-size: 19px;
+		line-height: 1.5;
+		color: var(--color-fg-2);
+	}
+
+	/* 0 — the brewing scene: four screens less the header (brew-shot.mjs; the last of them is section 1 coming up while
+	   the cup flies into it). Its first screen: a menu sheet on the wall and a small menu button. Only on the
+	   3D route: reduced motion, no WebGL, data saving or a file that fails take the still route and open on section 1; without
+	   script the noscript rule above the scene hides it. */
+	.home-brew {
+		height: calc(400vh - 81px);
+	}
+	.home-runway[data-cup-route]:not([data-cup-route="3d"]) .home-brew {
+		display: none;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.home-brew {
+			display: none;
+		}
+	}
+	/* to the window's edge, like the line under the scene (CupStage.astro), not the header's column: on a wide window
+	   the column's edge comes close to the machine */
+	.home-brew__first {
+		display: flex;
+		justify-content: flex-end;
+		padding: 28px max(24px, 5vw) 0;
+	}
+	/* A menu sheet pinned on the wall above the machine, drawn: blurred lines with a price stub, no readable item
+	   (any shop's menu fits it), then a small game-like button. The sheet and the button are one link. */
+	.home-brew__menu {
+		display: grid;
+		justify-items: center;
+		gap: 14px;
+		color: inherit;
+		text-decoration: none;
+	}
+	.home-brew__sheet {
+		position: relative;
+		display: grid;
+		align-content: start;
+		gap: 10px;
+		width: 150px;
+		padding: 22px 18px 20px;
+		background: var(--color-surface-warm);
+		border: 1px solid var(--color-line);
+		border-radius: 3px; /* ds-keep: a paper sheet's corner, not a component radius */
+		box-shadow: var(--shadow-raised);
+		transform: rotate(-2.5deg);
+		transition: transform 200ms var(--ease-standard);
+	}
+	/* the pin */
+	.home-brew__sheet::before {
+		content: "";
+		position: absolute;
+		top: 7px;
+		left: 50%;
+		width: 9px;
+		height: 9px;
+		margin-left: -4.5px;
+		border-radius: 50%;
+		background: var(--color-accent);
+	}
+	.home-brew__head {
+		justify-self: center;
+		width: 60%;
+		height: 9px;
+		margin-bottom: 4px;
+		border-radius: var(--radius-pill);
+		background: var(--color-fg-2);
+		filter: blur(1px);
+	}
+	.home-brew__row {
+		display: flex;
+		justify-content: space-between;
+		gap: 10px;
+		filter: blur(0.8px);
+	}
+	.home-brew__row::before,
+	.home-brew__row::after {
+		content: "";
+		height: 5px;
+		border-radius: var(--radius-pill);
+		background: var(--color-fg-muted);
+	}
+	.home-brew__row::before {
+		width: 72%;
+	}
+	.home-brew__row:nth-child(odd)::before {
+		width: 56%;
+	}
+	.home-brew__row::after {
+		width: 14%;
+	}
+	.home-brew__btn {
+		padding: 6px 14px;
+		border-radius: var(--radius-sm);
+		background: var(--color-accent);
+		color: var(--color-accent-on);
+		font-size: 13px;
+		font-weight: 700;
+		line-height: 1.2;
+		letter-spacing: 0.02em;
+		box-shadow: 0 3px 0 var(--color-accent-active);
+		transition: transform 120ms var(--ease-standard), box-shadow 120ms var(--ease-standard);
+	}
+	.home-brew__menu:hover .home-brew__sheet {
+		transform: rotate(-1deg) translateY(-2px);
+	}
+	.home-brew__menu:hover .home-brew__btn {
+		background: var(--color-accent-hover);
+	}
+	.home-brew__menu:active .home-brew__btn {
+		transform: translateY(2px);
+		box-shadow: 0 1px 0 var(--color-accent-active);
+	}
+	.home-brew__menu:focus-visible {
+		outline: none;
+	}
+	.home-brew__menu:focus-visible .home-brew__btn {
+		box-shadow: var(--shadow-focus);
+	}
+	/* a phone: the wall above the machine is short, so the sheet shrinks */
+	@media (max-width: 767px) {
+		.home-brew__first {
+			padding-top: 14px;
+		}
+		.home-brew__menu {
+			gap: 10px;
+		}
+		.home-brew__sheet {
+			gap: 6px;
+			width: 84px;
+			padding: 14px 10px 12px;
+		}
+		.home-brew__head {
+			height: 6px;
+			margin-bottom: 2px;
+		}
+		.home-brew__row::before,
+		.home-brew__row::after {
+			height: 3px;
+		}
+		.home-brew__btn {
+			padding: 5px 10px;
+			font-size: 12px;
+		}
+	}
+
+	/* 1 — the shop name behind the cup, the invitation under it */
+	/* One screen under the sticky header (Header.astro: `h-20` + its 1 px border), so the invitation and the
+	   espresso machine are in the first screen at every size */
+	.home-intro {
+		min-height: calc(100vh - 81px);
+		grid-template-rows: 1fr auto;
+		align-items: stretch;
+		padding-bottom: 48px;
+	}
+	.home-name {
+		position: relative;
+		z-index: 0;
+		align-self: center;
+		margin: 0;
+		padding-inline: 16px;
+		text-align: center;
+		font-size: clamp(64px, 15vw, 240px);
+		font-weight: 700;
+		line-height: 0.88;
+		letter-spacing: -0.045em;
+		color: var(--color-fg);
+		overflow-wrap: anywhere;
+	}
+	.home-intro__foot {
+		display: grid;
+		justify-items: center;
+		gap: 20px;
+		text-align: center;
+	}
+	.home-intro__foot .lead {
+		max-width: 560px;
+	}
+
+	/* 2, 3 — text on either side of the cup */
+	.home-split {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) var(--cup-gap) minmax(0, 1fr);
+		align-items: center;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.home-split > :first-child {
+		grid-column: 1;
+	}
+	.home-split__right {
+		grid-column: 3;
+	}
+	.home-why__title {
+		max-width: calc((100% - var(--cup-gap)) / 2);
+		margin-bottom: 32px;
+	}
+	.home-why__list {
+		display: grid;
+		gap: 36px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.home-runway[data-cup-route="none"] .home-split {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 48px;
+	}
+	.home-runway[data-cup-route="none"] .home-split__right {
+		grid-column: 2;
+	}
+	.home-runway[data-cup-route="none"] .home-why__title {
+		max-width: none;
+	}
+
+	/* 4 — the title top left; the labels are drawn on the stage beside the 3D cup, listed here otherwise */
+	.home-detail {
+		align-items: start;
+	}
+	.home-labels {
+		display: grid;
+		gap: 16px;
+		max-width: 320px;
+		margin: 24px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.home-labels li {
+		display: grid;
+		gap: 2px;
+		color: var(--color-fg-2);
+	}
+	.home-labels strong {
+		color: var(--color-fg);
+	}
+	@media (min-width: 768px) {
+		.home-runway[data-cup-route="3d"] .home-labels {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+		}
+	}
+
+	/* 5 — the featured cards; the cup settles into the first card's picture */
+	.home-cards {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 24px;
+		margin: 40px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.home-card__link {
+		display: grid;
+		gap: 8px;
+		height: 100%;
+		padding: 16px 16px 24px;
+		border-radius: var(--ds-card-radius, 18px);
+		background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+		box-shadow: inset 0 0 0 1px var(--color-line-soft);
+		color: inherit;
+		text-decoration: none;
+	}
+	.home-card__media {
+		aspect-ratio: 4 / 3;
+		border-radius: calc(var(--ds-card-radius, 18px) - 6px);
+		background: var(--color-surface);
+		overflow: hidden;
+		margin-bottom: 8px;
+	}
+	.home-card__media :global(.home-card__photo) {
+		width: 100%;
+		height: 100%;
+	}
+	.home-runway[data-cup-route="3d"] [data-cup-dock] :global(.home-card__photo) {
+		visibility: hidden;
+	}
+	/* No menu item yet: a short word about the shop, the cup docked small beside it (3D only; the still and the
+	   empty routes have no cup here, so the text takes the width) */
+	.home-about {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) min(240px, 28vw);
+		align-items: center;
+		gap: 48px;
+	}
+	.home-about__cup {
+		aspect-ratio: 3 / 4;
+	}
+	.home-runway:not([data-cup-route="3d"]) .home-about {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.home-runway:not([data-cup-route="3d"]) .home-about__cup {
+		display: none;
+	}
+	.home-card__head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 16px;
+	}
+	.home-card__price {
+		flex-shrink: 0;
+		font-weight: 600;
+	}
+	.home-card__text {
+		font-size: 15px;
+		line-height: 1.45;
+		color: var(--color-fg-2);
+	}
+
+	/* 6 — photos of the shop, then the hours and the order button */
+	.home-visit {
+		min-height: auto;
+		background: var(--color-bg);
+		position: relative;
+		z-index: 2;
+	}
+	.home-photos {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+		gap: 16px;
+		margin: 32px 0 56px;
+		padding: 0;
+		list-style: none;
+	}
+	.home-photos :global(.home-photos__photo) {
+		aspect-ratio: 4 / 5;
+		height: auto;
+		border-radius: var(--ds-card-radius, 18px);
+	}
+	.home-visit__card {
+		display: grid;
+		justify-items: start;
+		gap: 16px;
+	}
+	.home-visit__label {
+		display: block;
+		color: var(--color-fg);
+	}
+
+	/* The coffee tools (Decor.astro), in corners no text, button, photo or cup reaches, with room for their moves
+	   (decor-motion.mjs REACH): the beans and the espresso machine either side of the shop name, the roaster under the
+	   story, a picture beside each of the four reasons, the spoon right of the featured title, the kettle right of the
+	   visit card. Wide screens only, but the kettle, which has room beside the order button on a phone too. */
+	.home-intro,
+	.home-story {
+		position: relative;
+	}
+	:global(.decor-espresso) {
+		top: 120px;
+		right: max(16px, 3vw);
+		width: clamp(110px, 11vw, 180px);
+	}
+	:global(.decor-roaster) {
+		left: max(24px, 4vw);
+		bottom: 48px;
+		width: clamp(130px, 12vw, 200px);
+	}
+	/* The four reasons: a large faded number behind each, a picture in the margin beside it where the margin is wide */
+	.home-why {
+		counter-reset: why;
+	}
+	.home-why__item {
+		position: relative;
+		counter-increment: why;
+	}
+	.home-why__item::before {
+		content: counter(why) / "";
+		position: absolute;
+		z-index: -1;
+		top: -0.5em;
+		left: -0.2em;
+		font-family: var(--font-display);
+		font-size: clamp(104px, 11vw, 168px);
+		font-weight: 700;
+		line-height: 1;
+		color: color-mix(in srgb, var(--color-fg) 12%, transparent);
+		pointer-events: none;
+	}
+	:global(.decor-why-left),
+	:global(.decor-why-right) {
+		top: -8px;
+		width: clamp(84px, 7vw, 124px);
+	}
+	:global(.decor-why-left) {
+		right: calc(100% + 44px);
+	}
+	:global(.decor-why-right) {
+		left: calc(100% + 44px);
+	}
+	@media (max-width: 1359.98px) {
+		:global(.decor-why-left),
+		:global(.decor-why-right) {
+			display: none;
+		}
+	}
+	/* The featured cards lift and their photo leans in under the mouse; the card the cup stands in holds still */
+	@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+		.home-card__link {
+			transition:
+				translate 0.35s ease,
+				box-shadow 0.35s ease;
+		}
+		.home-card__media :global(.ng-photo) {
+			transition: scale 0.6s ease;
+		}
+		.home-card:not(:has([data-cup-dock])) .home-card__link:hover {
+			translate: 0 -6px;
+			box-shadow:
+				inset 0 0 0 1px var(--color-line),
+				var(--shadow-raised);
+		}
+		.home-card:not(:has([data-cup-dock])) .home-card__link:hover :global(.ng-photo) {
+			scale: 1.06;
+		}
+	}
+	:global(.decor-beans) {
+		top: 120px;
+		left: max(16px, 3vw);
+		width: clamp(110px, 11vw, 180px);
+	}
+	/* Wide screens have room low right of the shop name, where the sample's beans fly in from */
+	@media (min-width: 1100px) {
+		:global(.decor-beans) {
+			top: auto;
+			left: auto;
+			right: max(24px, 6vw);
+			bottom: 72px;
+			width: clamp(150px, 13vw, 210px);
+		}
+		:global(.decor-espresso) {
+			top: auto;
+			right: auto;
+			left: max(24px, 6vw);
+			bottom: 64px;
+			/* a short window brings the shop name down to the machine: it shrinks with the height too */
+			width: clamp(140px, min(14vw, 20vh), 230px);
+		}
+	}
+	:global(.decor-spoon) {
+		top: -84px;
+		right: 24px;
+		width: clamp(130px, 13vw, 180px);
+	}
+	:global(.decor-kettle) {
+		right: 24px;
+		bottom: 0;
+		width: clamp(180px, 22vw, 320px);
+	}
+
+	/* Narrow screens: the cup stays in the upper part of the stage (home-scroll.mjs), the text in the lower part */
+	@media (max-width: 767.98px) {
+		.home-section {
+			align-items: end;
+			padding-block: 52vh 40px;
+		}
+		.home-intro {
+			padding-top: 72px;
+		}
+		.home-name {
+			align-self: start;
+			margin-top: 6vh;
+			font-size: clamp(56px, 20vw, 120px);
+		}
+		.home-split,
+		.home-runway[data-cup-route="none"] .home-split {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 16px;
+		}
+		.home-split__right,
+		.home-runway[data-cup-route="none"] .home-split__right {
+			grid-column: 1;
+		}
+		.home-why__list {
+			gap: 16px;
+		}
+		.home-why {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			gap: 16px;
+			align-items: start;
+		}
+		/* The two halves share two rows, so reason 3 starts level with reason 1 */
+		.home-why > li,
+		.home-why > .home-split__right {
+			grid-column: auto;
+			grid-row: span 2;
+			display: grid;
+			grid-template-rows: subgrid;
+		}
+		.home-why__list {
+			grid-row: span 2;
+			grid-template-rows: subgrid;
+		}
+		.home-why .home-copy {
+			font-size: 15px;
+		}
+		.home-why__title {
+			max-width: none;
+			margin-bottom: 16px;
+		}
+		.home-copy {
+			font-size: 17px;
+		}
+		.home-detail {
+			align-items: end;
+		}
+		.home-featured {
+			padding-top: 96px;
+			align-items: start;
+		}
+		.home-cards {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 12px;
+			margin-top: 24px;
+		}
+		.home-card__link {
+			grid-template-columns: 96px minmax(0, 1fr);
+			column-gap: 16px;
+			row-gap: 4px;
+			padding: 12px;
+		}
+		.home-about {
+			grid-template-columns: minmax(0, 1fr) 112px;
+			gap: 16px;
+		}
+		.home-card__media {
+			grid-row: span 2;
+			aspect-ratio: 1;
+			margin: 0;
+		}
+		.home-visit {
+			padding-block: var(--band-y);
+		}
+		:global(.decor-beans),
+		:global(.decor-espresso),
+		:global(.decor-roaster),
+		:global(.decor-spoon) {
+			display: none;
+		}
+		.home-why__item::before {
+			top: -0.3em;
+			right: 0;
+			left: auto;
+			font-size: 64px;
+		}
+		:global(.decor-kettle) {
+			right: 16px;
+			bottom: -36px;
+			width: 104px;
+		}
+	}
+</style>

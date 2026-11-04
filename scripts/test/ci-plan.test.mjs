@@ -47,7 +47,7 @@ test('PR into develop touching an app runs its related tests and checks', () => 
     allFiles
   })
   assert.deepEqual(groups(p), RELATED)
-  assert.equal(p.skipped.length, 4)
+  assert.equal(p.skipped.length, 6)
 })
 
 test('PR touching an e2e-owning package adds only the e2e row', () => {
@@ -68,7 +68,15 @@ test('PR moving the dsh fork pointer uses every row', () => {
     const p = planMatrix({ event: 'pull_request', baseRef: 'develop', changed, allFiles })
     assert.deepEqual(
       groups(p),
-      ['tests emdash-business', 'tests emdash-saas', 'tests emdash-base', 'tests e2e', ...ALWAYS],
+      [
+        'tests emdash-business',
+        'tests emdash-saas',
+        'tests emdash-base',
+        'tests emdash-coffee',
+        'tests emdash-restaurant',
+        'tests e2e',
+        ...ALWAYS
+      ],
       JSON.stringify(changed)
     )
   }
@@ -85,6 +93,8 @@ test('an unknown vendor path fails closed to every row', () => {
     'tests emdash-business',
     'tests emdash-saas',
     'tests emdash-base',
+    'tests emdash-coffee',
+    'tests emdash-restaurant',
     'tests e2e',
     ...ALWAYS
   ])
@@ -154,7 +164,15 @@ test('a workspace dependency change runs a dependent owner’s e2e suite', () =>
 })
 
 test('fails closed: every row on staging and main PRs, manual, nightly, unreadable or empty diff', () => {
-  const all = ['tests emdash-business', 'tests emdash-saas', 'tests emdash-base', 'tests e2e', ...ALWAYS]
+  const all = [
+    'tests emdash-business',
+    'tests emdash-saas',
+    'tests emdash-base',
+    'tests emdash-coffee',
+    'tests emdash-restaurant',
+    'tests e2e',
+    ...ALWAYS
+  ]
   for (const input of [
     { event: 'pull_request', baseRef: 'main', changed: ['docs/a.md'] },
     { event: 'pull_request', baseRef: 'staging', changed: ['docs/a.md'] },
@@ -250,19 +268,19 @@ test('a data file renamed, a missing mapped test, an unmapped vendor path and re
   assert.deepEqual(groups(renamed), ['tests e2e', ...RELATED])
   const missing = planOf([DATA], { allFiles: dataFiles.filter((f) => f !== MAPPED[0]) })
   assert.equal(missing.runsAll, true)
-  assert.equal(groups(missing).length, 7)
-  assert.equal(groups(planOf(['vendor/unmapped/example.md'])).length, 7)
-  assert.equal(groups(planOf([DATA, 'scripts/check-tests.ts'])).length, 7)
+  assert.equal(groups(missing).length, 9)
+  assert.equal(groups(planOf(['vendor/unmapped/example.md'])).length, 9)
+  assert.equal(groups(planOf([DATA, 'scripts/check-tests.ts'])).length, 9)
   for (const extra of [
     { baseRef: 'main' },
     { baseRef: 'staging' },
     { event: 'workflow_dispatch' },
     { event: 'schedule' }
   ]) {
-    assert.equal(groups(planOf([DATA, `${SKILL}SKILL.md`], extra)).length, 7, JSON.stringify(extra))
+    assert.equal(groups(planOf([DATA, `${SKILL}SKILL.md`], extra)).length, 9, JSON.stringify(extra))
   }
-  assert.equal(groups(planOf(null)).length, 7)
-  assert.equal(groups(planOf([])).length, 7)
+  assert.equal(groups(planOf(null)).length, 9)
+  assert.equal(groups(planOf([])).length, 9)
 })
 
 test('a journal entry under changes/ never forces the full suite', () => {
@@ -333,6 +351,8 @@ test('the EmDash CMS and the Bravada theme still run the EmDash suites; a look-a
       'tests emdash-business',
       'tests emdash-saas',
       'tests emdash-base',
+      'tests emdash-coffee',
+      'tests emdash-restaurant',
       'checks'
     ])
   }
@@ -344,14 +364,14 @@ test('a lost declared reader, a deleted skill reader and release events run ever
     allFiles: dataFiles.filter((f) => !T4.readers.includes(f))
   })
   assert.equal(lost.runsAll, true)
-  assert.equal(groups(lost).length, 7)
+  assert.equal(groups(lost).length, 9)
   for (const extra of [
     { baseRef: 'main' },
     { baseRef: 'staging' },
     { event: 'workflow_dispatch' },
     { event: 'schedule' }
   ]) {
-    assert.equal(groups(planOf([`${T4.prefix}SKILL.md`, `${EMDASH_SKILL}SKILL.md`], extra)).length, 7)
+    assert.equal(groups(planOf([`${T4.prefix}SKILL.md`, `${EMDASH_SKILL}SKILL.md`], extra)).length, 9)
   }
 })
 
@@ -379,7 +399,15 @@ const optPlan = (labels, over = {}) =>
     labels,
     ...over
   })
-const FULL_ROWS = ['tests emdash-business', 'tests emdash-saas', 'tests emdash-base', 'tests e2e', ...ALWAYS]
+const FULL_ROWS = [
+  'tests emdash-business',
+  'tests emdash-saas',
+  'tests emdash-base',
+  'tests emdash-coffee',
+  'tests emdash-restaurant',
+  'tests e2e',
+  ...ALWAYS
+]
 
 test('without a label, a pull request into develop gets no e2e row and no database test', () => {
   const p = optPlan([])
@@ -522,7 +550,7 @@ test('the opt-in applies when the planner would have run every row, except for t
   // the rule. With the rule, the e2e row is still a label's to ask for.
   const p = optPlan([], { changed: ['pnpm-lock.yaml'] })
   assert.equal(p.runsAll, true)
-  // The three EmDash rows open Chromium like the e2e row, so they are the label's to ask for as well.
+  // The five EmDash rows open Chromium like the e2e row, so they are the label's to ask for as well.
   assert.deepEqual(groups(p), ALWAYS)
   assert.deepEqual(
     p.leftOut.map((r) => [r.group, r.wouldRun]),
@@ -530,6 +558,8 @@ test('the opt-in applies when the planner would have run every row, except for t
       ['tests emdash-business', true],
       ['tests emdash-saas', true],
       ['tests emdash-base', true],
+      ['tests emdash-coffee', true],
+      ['tests emdash-restaurant', true],
       ['tests e2e', true]
     ]
   )
@@ -623,7 +653,12 @@ test('without ci:e2e a pull request into develop that touches a theme gets no Em
   )
   assert.ok(p.scope.e2eLeftOut)
   assert.equal(p.scope.record, 'partial:db+e2e')
-  assert.deepEqual(p.skipped.map((s) => s.group).sort(), ['tests emdash-business', 'tests emdash-saas'])
+  assert.deepEqual(p.skipped.map((s) => s.group).sort(), [
+    'tests emdash-business',
+    'tests emdash-coffee',
+    'tests emdash-restaurant',
+    'tests emdash-saas'
+  ])
   // The summary and the notice say it: a person reads why the row is missing, and which label adds it.
   const notes = scopeNotes(p)
   assert.match(notes.notices.join('\n'), /SKIPPED tests emdash-base: opt-in .*ci:e2e/)
@@ -660,7 +695,14 @@ test('release pull requests, the nightly and manual runs still run every EmDash 
     { event: 'schedule', changed: null }
   ]) {
     const p = planMatrix({ ...input, allFiles: optFiles, readText: optText, labels: [] })
-    for (const g of ['tests emdash-business', 'tests emdash-saas', 'tests emdash-base', 'tests e2e'])
+    for (const g of [
+      'tests emdash-business',
+      'tests emdash-saas',
+      'tests emdash-base',
+      'tests emdash-coffee',
+      'tests emdash-restaurant',
+      'tests e2e'
+    ])
       assert.ok(groups(p).includes(g), `${g} for ${JSON.stringify(input)}`)
     assert.equal(p.leftOut.length, 0)
   }

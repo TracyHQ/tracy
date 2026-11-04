@@ -1,0 +1,23 @@
+---
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+
+interface Props {
+  masthead: Row | null
+  fallbackTitle: string
+  /** false when the page prints its own title as the h1 (one h1 per page): the masthead keeps the look, not the heading. */
+  heading?: boolean
+}
+const { masthead, fallbackTitle, heading = true } = Astro.props
+const Title = heading ? 'h1' : 'div'
+const $m = stampFor(Astro.request, 'masthead', masthead ? { id: masthead.id, slug: masthead.slug } : null)
+const bgUrl = mediaUrl(masthead?.background) ?? '/brand/masthead-default.jpg'
+---
+
+<section class="rs-masthead" style={bgUrl ? `background-image:url('${bgUrl}')` : undefined}>
+	<div class="rs-masthead-detail">
+		<Title class={heading ? undefined : 'rs-masthead-title'} {...$m('title')}>{masthead?.title || fallbackTitle}</Title>
+		{masthead?.description && <p {...$m('description')}>{masthead.description}</p>}
+	</div>
+</section>

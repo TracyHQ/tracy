@@ -1,0 +1,303 @@
+---
+/**
+ * The stage the cup stands on: sticky behind the home page's brewing scene and six sections (`src/views/Home.astro`).
+ * The server resolves the two home page fields ("Cup model", "Cup still image") and the stored size of
+ * the model; the browser adds what it can draw and `src/lib/cup-route.mjs` picks the route;
+ * `src/lib/home-scroll.mjs` runs the scroll timeline. The route, the section, the fitted pose and the
+ * pose asked for are written on the stage (`data-cup-route`, `data-cup-section`, `data-cup-pose`,
+ * `data-cup-motion`) for tests and acceptance scripts. On the 3D route the brewing scene above section 1 (`[data-brew]`,
+ * `src/lib/brew-shot.mjs`) is drawn on this stage too, its line in `[data-brew-caption]`; every other route hides it.
+ */
+import { handleMediaGet } from 'emdash'
+import { getDb } from 'emdash/runtime'
+import { mediaUrl } from '@/lib/media'
+import { storedModelSize } from '@/lib/cup-route.mjs'
+
+interface Props {
+  /** The "Cup model (.glb)" file field value, or empty for the default cup. */
+  model?: any
+  /** The "Cup still image" image field value. */
+  still?: any
+  /** Section 4's labels, drawn beside the 3D cup with a line to the point they name (top to bottom). */
+  labels?: { label?: string; text?: string }[]
+  /** The shop name the header shows (`site.brand_name`), printed on the default cup's sleeve. */
+  name?: string
+}
+const { model, still, labels = [], name = '' } = Astro.props
+const modelUrl = mediaUrl(model)
+// Public pages get no db on `locals.emdash`; `getDb()` is the per-request db the loader uses.
+const size = modelUrl
+  ? await storedModelSize(model, async (id) => {
+      const found = await handleMediaGet(await getDb(), id)
+      return found.success ? found.data.item.size : null
+    })
+  : null
+const fields = { model: modelUrl ? { url: modelUrl, size } : null, still: mediaUrl(still) }
+// The default still image is drawn from the default cup by its own command; until it exists the
+// glob is empty and the still route shows no image instead of a broken one.
+const stills = import.meta.glob<string>('../../assets/default-cup-still.webp', {
+  eager: true,
+  query: '?url',
+  import: 'default'
+})
+const defaults = { model: '/models/default-cup.glb', still: Object.values(stills)[0] ?? null }
+const shown = labels.filter((l) => l.label || l.text)
+// Only the default cup gets the name: an owner's cup carries its own print.
+const shop = modelUrl ? undefined : name
+---
+
+<div class="cup-stage" data-cup-stage data-cup-section="1" data-cup-fields={JSON.stringify(fields)} data-cup-defaults={JSON.stringify(defaults)} data-cup-labels={shown.length} data-cup-shop={shop}>
+	<div class="cup-stage__glow" aria-hidden="true"></div>
+	<img class="cup-stage__still" alt="" hidden />
+	<p class="cup-stage__caption" data-brew-caption aria-hidden="true"></p>
+	{shown.length > 0 && (
+		<ul class="cup-stage__labels" aria-hidden="true">
+			{shown.map((l, i) => (
+				<li class:list={["cup-label", i % 2 === 0 ? "cup-label--right" : "cup-label--left"]} style={`--x: var(--anchor-${i}-x, 50%); --y: var(--anchor-${i}-y, 50%)`}>
+					<span class="cup-label__line"></span>
+					<span class="cup-label__box">
+						{l.label && <strong>{l.label}</strong>}
+						{l.text && <span>{l.text}</span>}
+					</span>
+				</li>
+			))}
+		</ul>
+	)}
+</div>
+
+<script>
+	import { cupRoute, cupStill } from '@/lib/cup-route.mjs'
+	import { driveHome } from '@/lib/home-scroll.mjs'
+
+	const webgl = () => {
+		try {
+			const gl = document.createElement('canvas').getContext('webgl2') ?? document.createElement('canvas').getContext('webgl')
+			gl?.getExtension('WEBGL_lose_context')?.loseContext()
+			return Boolean(gl)
+		} catch {
+			return false
+		}
+	}
+
+	for (const stage of document.querySelectorAll<HTMLElement & { cupScene?: unknown }>('[data-cup-stage]')) {
+		const runway = stage.closest<HTMLElement>('[data-home-runway]') ?? stage
+		const fields = JSON.parse(stage.dataset.cupFields ?? '{}')
+		const defaults = JSON.parse(stage.dataset.cupDefaults ?? '{}')
+		const signals = {
+			reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+			webgl: webgl(),
+			saveData: (navigator as any).connection?.saveData === true,
+			fileError: false
+		}
+		const show = (route: ReturnType<typeof cupRoute>) => {
+			stage.dataset.cupRoute = runway.dataset.cupRoute = route.route
+			const img = stage.querySelector('img')!
+			// The 3D route shows the plain still while the cup loads, then fades it into the cup (CSS below).
+			const image = route.route === '3d' ? cupStill(fields, defaults) : route.route === 'still' ? route.image : null
+			if (image) {
+				img.src = image
+				img.hidden = false
+			}
+			if (route.route === '3d') {
+				const fallBack = () => {
+					stage.cupScene = undefined
+					show(cupRoute(fields, defaults, { ...signals, fileError: true }))
+				}
+				import('@/lib/cup-scene.mjs').then(({ mountCupScene }) => {
+					stage.cupScene = mountCupScene(stage, route.model, fallBack, {
+						labels: Number(stage.dataset.cupLabels) || 0,
+						still: Boolean(image),
+						brew: (runway.querySelector<HTMLElement>('[data-brew]')?.offsetHeight ?? 0) > 0 && (window as any).__cupCapture !== true,
+						// `tools/capture-default-still.mjs` draws the still image of the plain sleeve.
+						name: (window as any).__cupCapture === true ? undefined : stage.dataset.cupShop
+					})
+					stage.dispatchEvent(new Event('cup:scene'))
+				}, fallBack)
+			}
+		}
+		show(cupRoute(fields, defaults, signals))
+		driveHome(runway, stage)
+	}
+</script>
+
+<style>
+	/* The scene's colours (cup-scene.mjs): the floor shadow darkens the page (in dark the page's own
+	   black, never a light patch), the bounce is the page around the cup, the rim light the accent. */
+	.cup-stage {
+		--cup-shadow: var(--color-fg);
+		--cup-bounce: var(--color-bg);
+		--cup-rim: var(--color-accent);
+		/* The brewing scene's wall (brew-scene.mjs): the page's own colour, so it fades into the page, with faint
+		   brick lines in the text colour. */
+		--brew-wall: var(--color-bg);
+		--brew-brick: color-mix(in srgb, var(--color-fg) 9%, var(--color-bg));
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		height: 100vh;
+		overflow: hidden;
+		pointer-events: none;
+	}
+	.cup-stage :global(.cup-stage__canvas) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		transition: opacity 0.5s ease;
+	}
+	:global(html[data-theme="dark"]) .cup-stage {
+		--cup-shadow: var(--color-bg);
+	}
+	.cup-stage:global(.is-ready) :global(.cup-stage__canvas) {
+		opacity: 1;
+	}
+	/* The halo behind the close-up (section 4), in the accent colour, centred on the cup. */
+	.cup-stage__glow {
+		position: absolute;
+		left: var(--cup-cx, 50%);
+		top: var(--cup-cy, 50%);
+		width: min(90vh, 90vw);
+		aspect-ratio: 1;
+		translate: -50% -50%;
+		border-radius: 50%;
+		background: radial-gradient(closest-side, color-mix(in srgb, var(--color-accent) 38%, transparent), transparent);
+		opacity: var(--glow, 0);
+	}
+	/* The still cup stands where the 3D cup stands in section 1, as large (home-scroll.mjs STILL_SHARE). */
+	.cup-stage__still {
+		position: absolute;
+		left: calc(50% + var(--still-x, 0px));
+		top: calc(50% + var(--still-y, 0px));
+		width: var(--still-side, 100vmin);
+		max-width: none; /* wider than a narrow window: the image's empty sides run off the stage */
+		height: var(--still-side, 100vmin);
+		translate: -50% -50%;
+		object-fit: contain;
+		transition: opacity 0.5s ease;
+	}
+	.cup-stage[data-cup-route="3d"]:global(.is-ready) .cup-stage__still {
+		opacity: 0;
+	}
+	/* Over the brewing scene the still (section 1's cup) is not shown while the scene loads: the cup is on the tray. */
+	.cup-stage[data-cup-brew] .cup-stage__still {
+		visibility: hidden;
+	}
+	/* The brewing scene's line, low left, clear of the machine and the cup (brew-shot.mjs CAPTIONS). */
+	.cup-stage__caption {
+		/* to the window, not the stage: at the page top the stage still sits a header's height lower */
+		position: fixed;
+		z-index: 1; /* over the canvas, appended after it */
+		left: max(24px, 5vw);
+		bottom: max(40px, 6vh);
+		max-width: min(420px, 60vw);
+		margin: 0;
+		padding: 6px 14px;
+		border-radius: var(--ds-pill-radius, var(--radius-sm));
+		background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+		color: var(--color-fg);
+		font-family: var(--font-display);
+		font-size: clamp(16px, 2.2vmin, 22px);
+		font-style: italic;
+		letter-spacing: 0.02em;
+		opacity: 0;
+	}
+	.cup-stage__caption:empty {
+		display: none;
+	}
+	/* In the cards the cup is in front: it settles into the first card's picture, over the card. */
+	.cup-stage[data-cup-section="5"],
+	.cup-stage[data-cup-section="6"] {
+		z-index: 3;
+	}
+	.cup-stage[data-cup-section="5"] .cup-stage__still,
+	.cup-stage[data-cup-section="6"] .cup-stage__still {
+		visibility: hidden;
+	}
+	/* Section 4's labels: each at the height of the point it names, a line running to that point. */
+	.cup-stage__labels {
+		display: none;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.cup-stage[data-cup-route="3d"] .cup-stage__labels {
+		display: block;
+		opacity: var(--labels, 0);
+	}
+	.cup-label {
+		--gap: clamp(56px, 7vw, 120px);
+		position: absolute;
+		top: var(--y);
+		height: 0;
+	}
+	/* The line runs the gap from the point it names, or on to the object's edge when that is further. */
+	.cup-label--right {
+		left: var(--x);
+		--w: max(var(--gap), calc(var(--cup-r, 0px) - var(--x)));
+		width: var(--w);
+	}
+	.cup-label--left {
+		right: calc(100% - var(--x));
+		--w: max(var(--gap), calc(var(--x) - var(--cup-l, 0px)));
+		width: var(--w);
+	}
+	.cup-label__line {
+		position: absolute;
+		inset: 0;
+		border-top: 1px solid var(--color-fg-muted);
+	}
+	.cup-label__line::after {
+		content: "";
+		position: absolute;
+		top: -4px;
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--color-accent);
+	}
+	.cup-label--right .cup-label__line::after {
+		left: -3px;
+	}
+	.cup-label--left .cup-label__line::after {
+		right: -3px;
+	}
+	.cup-label__box {
+		position: absolute;
+		top: 0;
+		translate: 0 -50%;
+		width: max-content;
+		max-width: min(240px, 24vw);
+		display: grid;
+		gap: 2px;
+		font-size: 15px;
+		line-height: 1.35;
+		color: var(--color-fg-2);
+	}
+	.cup-label__box strong {
+		font-size: 17px;
+		color: var(--color-fg);
+	}
+	/* The text never runs off the window: it wraps into the room left beside the line. */
+	.cup-label--right .cup-label__box {
+		left: calc(100% + 12px);
+		max-width: min(240px, 24vw, calc(100vw - var(--x) - var(--w) - 28px));
+	}
+	.cup-label--left .cup-label__box {
+		right: calc(100% + 12px);
+		max-width: min(240px, 24vw, calc(var(--x) - var(--w) - 28px));
+		text-align: right;
+	}
+	@media (max-width: 767.98px) {
+		.cup-stage[data-cup-route="3d"] .cup-stage__labels {
+			display: none;
+		}
+		.cup-stage__caption {
+			left: 50%;
+			translate: -50% 0;
+			max-width: calc(100vw - 32px);
+			bottom: 24px;
+			white-space: nowrap;
+		}
+	}
+</style>

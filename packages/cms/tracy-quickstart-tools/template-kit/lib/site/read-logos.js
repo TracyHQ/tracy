@@ -9,8 +9,10 @@
  * @param {{logoFiles: string[], siteName: string|null, brand: string[]}} o
  */
 export function readLogos({ logoFiles, siteName, brand }) {
-  const OFF = '.t4-offcanvas, .t4-off-canvas, .js-offcanvas, .offcanvas, .off-canvas, [id^="off-canvas"]'
-  const HEADER = 'header, #t4-header, .t4-header, .site-header, #masthead, [role="banner"]'
+  const OFF =
+    '.t4-offcanvas, .t4-off-canvas, .t3-off-canvas, .js-offcanvas, .offcanvas, .off-canvas, [id^="off-canvas"]'
+  const HEADER =
+    'header, #t4-header, .t4-header, #t3-header, .t3-header, .site-header, #masthead, [role="banner"]'
   const FOOTER = 'footer, [class*="footer"], [class*="footnav"]'
   const LOGO_BOX = '.navbar-brand, .site-logo, .custom-logo-link, [class*="logo"]'
   const MODE = /^(?:dark|light)-(?:active|mode|theme)$|^theme-(?:dark|light)$/

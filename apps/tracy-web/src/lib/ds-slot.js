@@ -21,7 +21,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import { publishedTagOf } from './local-releases.js'
+import { emdashTemplateIdOf, publishedTagOf } from './local-releases.js'
 import { distinctReferoNames } from './refero-names.js'
 import { readDesignAssets } from '../config.js'
 import { designAssets, designAssetFingerprint } from './design-assets.js'
@@ -48,7 +48,7 @@ const remoteAssets = assetSettings
  * `measurement` scores its built-site rules from a release's measurement file; `role-variables` is the
  * one list of role variables its rule VARS-1 judges a release's role scan against; `preview-probe-version`
  * is the probe version its built-site rules name in an unmeasured message; `brand-check` judges a release's
- * brand-mode measurement (BRAND-3).
+ * brand-mode measurement (BRAND-3); `brand` builds a brand profile for the brand bench's build_design_system tool.
  */
 export const DS_SLOT_MODULES = Object.freeze([
   'library',
@@ -63,7 +63,8 @@ export const DS_SLOT_MODULES = Object.freeze([
   'role-variables',
   'preview-probe-version',
   'text-roles',
-  'brand-check'
+  'brand-check',
+  'brand'
 ])
 
 /** @type {Map<string, Promise<any>>} */
@@ -143,10 +144,9 @@ export function templateKeyOf({ platform, stylesheet, template, quickstartTag })
     return t ? `joomla/${t === 'tracy' ? 'tracy-base' : t}` : null
   }
   if (platform === 'emdash') {
-    const first = String(quickstartTag ?? '')
-      .split('/')[0]
-      ?.trim()
-    return first ? `emdash/${first}` : null
+    // A local pack (`local/tracy-coffee/emdash-0.x`) names the template it is a candidate for.
+    const id = emdashTemplateIdOf(String(quickstartTag ?? '').trim()).trim()
+    return id ? `emdash/${id}` : null
   }
   return null
 }

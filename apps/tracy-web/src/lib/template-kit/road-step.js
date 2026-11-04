@@ -10,15 +10,33 @@
  *   blocked   the contract is not passed yet: the kit sits beside it (`kit-waiting`);
  *   todo      no kit (`kit-missing`), unreadable (`kit-invalid`), captured for another quickstart version
  *             (`kit-stale`), without pages or blocks or a picture at either width, or with a self-check of its own
- *             above 0 (`kit-incomplete`), with template
+ *             above 0, or a packed 1440 shot of a page or block without a current text look (`kit-incomplete`,
+ *             `missingLooks`: written by `cli.mjs looks`), with template
  *             gaps the kit measured that carry no accepted reason (`kit-gaps`, judged like the holes of Content
  *             coverage), not approved (`kit-not-approved`), or approved on another image set (`kit-approval-stale`);
- *   warn      the same on a release already published: it is never taken off for it, as Content coverage does.
+ *             A kit the flow cannot use holds Publish too, whatever its pictures: a fact a flow step reads that the kit
+ *             gets wrong (`flow-reads.js`: a logo spot nothing can write, an accent read from links, a menu without a
+ *             navigation group, slots the content map beside it lacks, a front page without its own group, a kit the
+ *             brand step refuses, no image zip on the release). Every such gap rides along as `flowGaps` on the
+ *             step's params from the version check on, so the first code never hides the others;
+ *   warn      the same on a release already published: it is never taken off for it, as Content coverage does; or a
+ *             gap the flow only works around (`kit-setting-slot-missing`) on a kit otherwise approved.
  */
 import { contractFor } from '../contracts.js'
 import { COVERAGE_POLICY } from '../content-coverage/judge.js'
 import { shownOnInspiration } from '../quickstart-releases.js'
-import { imagesDigest, KIT_FILE, KIT_WIDTHS, kitOfContract, notShownWidthsOf, widthsOf } from './reader.js'
+import { flowGapsOf } from './flow-reads.js'
+import {
+  imagesDigest,
+  KIT_FILE,
+  KIT_WIDTHS,
+  kitOfContract,
+  looksMissingOf,
+  notShownWidthsOf,
+  widthsOf
+} from './reader.js'
+
+export { kitMapOfRelease } from './flow-reads.js'
 
 /** Kinds the kit may record that are not template gaps: an empty logo is the owner's choice, never a defect. */
 const NOT_A_GAP = new Set(['logo-empty-shows-nothing-in-header'])
@@ -152,16 +170,35 @@ function incompleteOf(doc) {
 }
 
 /**
+ * The shots a planner would still have to open: every packed 1440 shot of a page or block needs a current look
+ * (`looksMissingOf`), written by the packager's own Claude Code with `cli.mjs looks`. Null when every one has it.
+ * @param {any} doc
+ */
+function looksIncompleteOf(doc) {
+  const missing = looksMissingOf(doc)
+  if (missing.length === 0) return null
+  const named = missing
+    .slice(0, SHOWN_GAPS)
+    .map((m) => `${m.kind} ${m.id}${m.why === 'stale' ? ' (stale)' : ''}`)
+    .join(', ')
+  return {
+    reason: `${missing.length} ${missing.length === 1 ? 'page or block has no current look of its' : 'pages and blocks have no current look of their'} 1440 shot: ${named}${missing.length > SHOWN_GAPS ? ', ...' : ''}`,
+    missing: missing.slice(0, SHOWN_GAPS)
+  }
+}
+
+/**
  * @param {(step: string, state: any, code: string, params?: Record<string, unknown>, blockedBy?: string) => unknown} put
  * @param {(steps: string[]) => string | undefined} waitingOn
- * @param {{ release: any, version: string | null, contractId?: string | null, kit: import('./reader.js').Kit, policy?: any }} input
+ * @param {{ release: any, version: string | null, contractId?: string | null, kit: import('./reader.js').Kit, map?: import('./flow-reads.js').KitMap | null, policy?: any }} input
  *   `kit`: the kit beside the contract that seals this version (`kitOfRelease`)
+ *   `map`: what the flow reads of the content map beside it (`kitMapOfRelease`); null skips the checks that need it
  *   `policy`: the Content coverage policy, whose `rolesPlatforms` are the platforms with a content map
  */
 export function templateKitStep(
   put,
   waitingOn,
-  { release, version, contractId = null, kit, policy = COVERAGE_POLICY }
+  { release, version, contractId = null, kit, map = null, policy = COVERAGE_POLICY }
 ) {
   const plain = { version, platform: release.platform, contract: contractId }
   // A kit summarises the content map, so it applies where Content coverage judges a content map (ADR 0038).
@@ -193,21 +230,43 @@ export function templateKitStep(
       ...params,
       reason: `it was captured for ${doc.quickstart.version}, not ${String(version)}`
     })
+  // A kit names the contract it was built on: one built on another contract of the same version (a seed) is stale.
+  if (typeof doc.contract === 'string' && contractId && doc.contract !== contractId)
+    return put(KIT_STEP, failing, 'kit-stale', {
+      ...params,
+      reason: `it was built on the contract ${doc.contract}, not ${contractId}`
+    })
+  const flowGaps = flowGapsOf(doc, { map, release })
+  const flow = flowGaps.length > 0 ? { flowGaps } : {}
   const incomplete = incompleteOf(doc)
   if (incomplete)
     return put(KIT_STEP, failing, 'kit-incomplete', {
       ...params,
+      ...flow,
       reason: incomplete.reason,
       missingPictures: incomplete.missing
     })
   const gaps = templateGapsOf(doc, policy)
-  const judged = { ...params, ...gaps }
+  const judged = { ...params, ...gaps, ...flow }
   if (gaps.gaps > 0) return put(KIT_STEP, failing, 'kit-gaps', judged)
+  // Looks are text, outside the approval's image digest: judged here, after the pictures and gaps they describe.
+  const looks = looksIncompleteOf(doc)
+  if (looks)
+    return put(KIT_STEP, failing, 'kit-incomplete', {
+      ...judged,
+      reason: looks.reason,
+      missingLooks: looks.missing
+    })
+  // What the flow reads, before the approval: an approval covers pictures, never a kit no flow step can use.
+  const blocking = flowGaps.find((g) => g.severity === 'todo')
+  if (blocking) return put(KIT_STEP, failing, blocking.code, { ...judged, reason: blocking.reason })
   const approval = doc.approval
   if (!approval || typeof approval !== 'object' || typeof approval.imagesSha256 !== 'string')
     return put(KIT_STEP, failing, 'kit-not-approved', judged)
   if (approval.imagesSha256.toLowerCase() !== imagesDigest(doc.images))
     return put(KIT_STEP, failing, 'kit-approval-stale', judged)
+  const warning = flowGaps[0]
+  if (warning) return put(KIT_STEP, 'warn', warning.code, { ...judged, reason: warning.reason })
   return put(KIT_STEP, 'done', 'kit-approved', judged)
 }
 
@@ -227,6 +286,8 @@ export function templateKitRefusal(step) {
       case 'kit-stale':
         return `The template kit is out of date: ${String(p.reason ?? 'it was captured for another version')}. Capture it again for ${version} and commit ${KIT_FILE}.`
       case 'kit-incomplete':
+        if (Array.isArray(p.missingLooks) && p.missingLooks.length > 0)
+          return `The template kit of ${version} is incomplete: ${String(p.reason)}. Describe each shot with \`template-kit looks\` (skill quickstart-contract, references/image-looks.md) and commit ${KIT_FILE} again.`
         return `The template kit of ${version} is incomplete: ${String(p.reason ?? 'pictures are missing')}. Capture it again so every page and block has a picture at 1440 and 390.`
       case 'kit-gaps': {
         const count = Number(p.gaps ?? 0)
@@ -239,6 +300,20 @@ export function templateKitRefusal(step) {
         return `The template kit of ${version} is not approved yet. Look at its pictures and record the approval in ${KIT_FILE}.`
       case 'kit-approval-stale':
         return `The template kit of ${version} was approved on a different set of pictures. Look at the current pictures and approve them again.`
+      case 'kit-logo-unsettable':
+        return `The template kit of ${version} has a logo spot nothing can write: ${String(p.reason)}. Give each spot the template setting or the content map frame that holds its logo, and capture the kit again.`
+      case 'kit-brand-colour-from-link':
+        return `The template kit of ${version} reads its accent from links: ${String(p.reason)}. Read the accent from the template colour setting or its primary stylesheet token, and capture the kit again.`
+      case 'kit-navigation-missing':
+        return `The template kit of ${version} misses menus: ${String(p.reason)}. Capture the kit again on the content map that declares them.`
+      case 'kit-map-mismatch':
+        return `The template kit of ${version} was captured on another content map: ${String(p.reason)}. Capture it again on the content map of this contract.`
+      case 'kit-front-page-group':
+        return `The template kit of ${version} has no front page group: ${String(p.reason)}. Capture it again with the current template kit tool.`
+      case 'kit-brand-unreadable':
+        return `The brand step cannot read the template kit of ${version}: ${String(p.reason)}. Capture the kit again so its site part is complete.`
+      case 'kit-zip-missing':
+        return `The template kit of ${version} has no image zip on the release: ${String(p.reason)}. Pack the kit and attach the zip to the release.`
       default:
         return `The template kit of ${version} is missing. ${CAPTURE} Then approve it.`
     }

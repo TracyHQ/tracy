@@ -15,7 +15,6 @@
  * 🔒 NEVER IN THE WAY OF THE BRIEF. No model, a refused budget, a failed call or an unreadable store: nothing is labelled,
  * the claims go back for a later build, and the note says why. This step never throws.
  */
-import { createHash } from 'node:crypto'
 import { createChargeable } from 'website-opportunities/src/cost-ledger.js'
 import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
@@ -25,6 +24,7 @@ import { labelWithVision } from '../lib/picture-vision.js'
 import { observeWithModel } from '../lib/picture-observations.js'
 import { observeBriefPictures } from './brief-picture-observations.js'
 import { claimAnalyses, doneAnalyses, reopenAnalyses, settleAnalysis } from './media-analysis.js'
+import { briefPictureBytes } from '../lib/brief-picture-bytes.js'
 
 export const BRIEF_VISION_MAX_PICTURES = 60
 /** Who published a photo, in the order photos are labelled. */
@@ -33,7 +33,6 @@ const OWNERSHIP_RANK = { owner: 0, unknown: 1, customer: 2 }
 const BATCH = 8
 /** A picture smaller than this on its long side is never shown to the model: no place on a site takes it. */
 const MIN_EDGE = 480
-const PICTURE_MAX_BYTES = 25 * 1024 * 1024
 
 /** Rounds a failed call is sent again; the charge's ceiling covers them. */
 const RETRY = 1
@@ -57,38 +56,7 @@ export function createBriefPictureLabels({
   observe = observeWithModel,
   log = console
 }) {
-  /** The stored bytes of each picture, read by id and checked against its sha256. */
-  async function bytesOf(rows, accountId) {
-    const place = rows.filter((r) => r.origin === 'place').map((r) => r.id)
-    const own = rows.filter((r) => r.origin !== 'place').map((r) => r.id)
-    const keys = new Map()
-    if (place.length) {
-      const { rows: got } = await pool.query(
-        `select id, sha256, object_key from wo_place_media
-         where id = any($1::uuid[]) and status = 'stored' and revoked_at is null`,
-        [place]
-      )
-      for (const r of got) keys.set(r.id, r)
-    }
-    if (own.length && accountId) {
-      const { rows: got } = await pool.query(
-        `select id, sha256, object_key from wo_media where id = any($1::uuid[]) and account_id = $2 and status = 'stored'`,
-        [own, accountId]
-      )
-      for (const r of got) keys.set(r.id, r)
-    }
-    const pictures = []
-    for (const r of rows) {
-      const held = keys.get(r.id)
-      if (!held?.object_key || held.sha256 !== r.sha256 || !objects) continue
-      const res = await objects.get(held.object_key).catch(() => null)
-      if (!res?.ok) continue
-      const bytes = Buffer.from(await res.arrayBuffer())
-      if (bytes.length > PICTURE_MAX_BYTES) continue
-      if (createHash('sha256').update(bytes).digest('hex') === r.sha256) pictures.push({ id: r.id, bytes })
-    }
-    return pictures
-  }
+  const bytesOf = (rows, accountId) => briefPictureBytes({ pool, objects }, rows, accountId)
 
   /**
    * @param {{media: any[], brand: any, accountId: string | null, trade: string | null,
@@ -278,3 +246,5 @@ function commonest(reasons) {
   for (const [r, n] of counts) if (!best || n > counts.get(best)) best = r
   return best
 }
+
+export { briefPictureBytes }

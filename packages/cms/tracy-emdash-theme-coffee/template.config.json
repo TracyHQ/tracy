@@ -1,0 +1,51 @@
+{
+  "id": "tracy-coffee",
+  "label": "Tracy Coffee",
+  "version": "0.1.0",
+  "locales": ["en"],
+  "defaultLocale": "en",
+  "site": {
+    "title": "Ember Roasters",
+    "tagline": "Small-batch coffee, roasted daily"
+  },
+  "contentOrder": ["site", "menu_items", "posts", "home", "menu_page", "blog", "about", "contact"],
+  "forms": {
+    "file": "tools/forms.json",
+    "bindings": [
+      {
+        "form": "contact-{locale}",
+        "collection": "contact",
+        "slug": "contact",
+        "field": "form_id"
+      }
+    ]
+  },
+  "mail": {
+    "fromEmail": "no-reply@ember-roasters.example",
+    "fromName": "Ember Roasters",
+    "notifyTest": "hello@ember-roasters.example"
+  },
+  "audit": {
+    "indexable": ["^/(?!search)(?!404$).*"],
+    "noindex": ["^/search"],
+    "notFound": ["^/404$"],
+    "canonicalQuery": ["page"],
+    "unknownProbes": ["/menu/nope", "/blog/nope", "/blog/category/nope"],
+    "alternates": "all-locales"
+  },
+  "qa": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": "light",
+        "dark": "dark"
+      },
+      "storageKey": "tracy-coffee-theme"
+    },
+    "expectedStatus": {
+      "/404": 404
+    }
+  },
+  "$comment": "Template identity and site-specific wiring read by the generic tools (tools/*.mjs, *.sh). Demo content is the Ember Roasters café; the template product is Tracy Coffee."
+}

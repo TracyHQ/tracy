@@ -126,11 +126,12 @@ const SUBSETS = new Set(['latin', 'latin-ext', 'vietnamese'])
  * The @font-face rules a Google Fonts css2 link stands for, as theme.json `fontFace` entries — the
  * subsets a Tracy site's eight languages need (latin, latin-ext, vietnamese). I/O: one request.
  * @param {string | null} href
+ * @param {typeof fetch} [fetchImpl] the request door; tests pass a fake, nothing else needs to
  */
-export async function googleFontFaces(href) {
+export async function googleFontFaces(href, fetchImpl = fetch) {
   if (!href) return []
   if (!href.startsWith('https://fonts.googleapis.com/css2?')) throw new Error('not a Google Fonts css2 link')
-  const res = await fetch(href, { headers: { 'user-agent': CHROME_UA } })
+  const res = await fetchImpl(href, { headers: { 'user-agent': CHROME_UA } })
   if (!res.ok) throw new Error(`Google Fonts answered ${res.status}`)
   const css = await res.text()
   const faces = []

@@ -1,0 +1,128 @@
+---
+/**
+ * Home: slideshow · welcome · special offers · menu tabs · latest posts + sidebar.
+ * Composition (which entry fills which band) is the spec-pack's page-map for the front page (DECISIONS D5):
+ *   slideshow = slideshow/slideshow · hero = hero/welcome-to-res-bar-restaurant · offers = features_intro/special-offers
+ *   tabs = tabs/discover-our-menu with menu/{snacks-x-salads,entrees,dessert} · sidebar = testimonials/happy-customers
+ * Not yet built (P5): features collage, subscribe, gallery strip.
+ */
+import Base from '@/layouts/Base.astro'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Slideshow from '@/components/sections/Slideshow.astro'
+import MenuTabs from '@/components/sections/MenuTabs.astro'
+import PostCard from '@/components/site/PostCard.astro'
+import FeaturesCollage from '@/components/sections/FeaturesCollage.astro'
+import GalleryStrip from '@/components/sections/GalleryStrip.astro'
+import Sidebar from '@/components/sections/Sidebar.astro'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { section, sections } from '@/lib/content'
+import { PortableText } from 'emdash/ui'
+import { lines } from '@/lib/html'
+import { stampBlocks } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { BLOG_SIDEBAR, blogPosts, loadPosts } from '@/lib/posts'
+import { getEmDashEntry, getTaxonomyTerms } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, slideshow, hero, offers, collage, tabs, testimonials, menus, all, cats] =
+  await Promise.all([
+    getEmDashEntry('pages', 'home', { locale }),
+    section('slideshow', 'slideshow', locale),
+    section('hero', 'welcome-to-res-bar-restaurant', locale),
+    section('features_intro', 'special-offers', locale),
+    section('features_intro', 'features-intro', locale),
+    section('tabs', 'discover-our-menu', locale),
+    section('testimonials', 'happy-customers', locale),
+    sections('menu', locale, ['snacks-x-salads', 'entrees', 'dessert']),
+    loadPosts(locale),
+    getTaxonomyTerms('category', { locale })
+  ])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'home' } : null)
+const $hero = stampFor(Astro.request, 'hero', hero ? { id: hero.id, slug: hero.slug } : null)
+const $off = stampFor(Astro.request, 'features_intro', offers ? { id: offers.id, slug: offers.slug } : null)
+// the front page lists the posts Joomla flags as featured, in its own order (enrich-model.mjs carries both)
+const posts = blogPosts(all)
+  .filter((p) => p.featured)
+  .sort((a, b) => a.featuredOrder - b.featuredOrder)
+const albums = all.filter((p) => p.category?.slug === 'gallery')
+const categories = (cats as any[]).filter((c) => BLOG_SIDEBAR.includes(c.slug))
+const heroComponents = $hero.owner ? { block: ProseBlock, listItem: ProseListItem } : {}
+const heroLines = hero ? lines(hero.hero_heading) : []
+const slides: any[] = slideshow?.items ?? []
+const bg = (v: unknown) => {
+  const u = mediaUrl(v as any)
+  return u ? `background-image:url('${u}')` : ''
+}
+const dateTag = ui(locale).tag
+---
+
+<Base chrome={chrome} title={page.title ?? hero?.title ?? chrome.site.brand_name} currentPath="/" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'home', toPath: () => '/' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		{slides.length > 0 && <Slideshow entry={slideshow!} locale={locale} />}
+
+		{hero && (
+			<section class="rs-section rs-hero" style={mediaUrl(hero.background) ? `--hero-bg:url('${mediaUrl(hero.background)}')` : undefined}>
+				<div class="rs-wrap">
+					<div class="rs-hero-content">
+						<h1 class="rs-display" {...$hero('hero_heading')}>{heroLines.map((l, i) => (i === 0 && heroLines.length > 1 ? <><span class="rs-mark">{l}</span>{' '}<br /></> : <>{l}{' '}{i < heroLines.length - 1 && <br />}</>))}</h1>
+						<div class="rs-hero-stars" aria-hidden="true">★★★★★</div>
+						<div class="rs-hero-intro" {...$hero('hero_intro')}><PortableText value={stampBlocks($hero, 'hero_intro', hero.hero_intro)} components={heroComponents} /></div>
+						{mediaUrl(hero.hero_img) && <div class="rs-hero-img" style={`--hero-img-url:url('${mediaUrl(hero.hero_img)}')`}><img src={mediaUrl(hero.hero_img)!} alt="" width="222" height="181" loading="lazy" decoding="async" {...$hero('hero_img')} /></div>}
+					</div>
+				</div>
+			</section>
+		)}
+
+		{collage && <FeaturesCollage entry={collage} locale={locale} />}
+
+		{offers && (
+			<section class="rs-section rs-offers" style={bg(offers.background)}>
+				<h2 class="rs-display rs-section-title" {...$off('title')}>{offers.title}</h2>
+				{offers.section_intro && <p class="rs-section-desc" {...$off('section_intro')}>{offers.section_intro}</p>}
+				<div class="rs-wrap">
+					<div class="rs-offers-grid">
+						{(offers.items ?? []).map((it: any, i: number) => (
+							<div class:list={['rs-offer', i % 2 === 1 && 'is-flip']}>
+								<div class="rs-offer-photo">
+									{mediaUrl(it.img_icon) && <img src={mediaUrl(it.img_icon)!} alt="" loading="lazy" decoding="async" {...$off(`items[${i}].img_icon`)} />}
+									{it.price && <div class="rs-offer-price" {...$off(`items[${i}].price`)}>{it.price}</div>}
+								</div>
+								<div class="rs-offer-text">
+									<div>
+										<h3 {...$off(`items[${i}].title`)}>{it.title}</h3>
+										{it.short_desc && <div class="rs-offer-short" {...$off(`items[${i}].short_desc`)}>{it.short_desc}</div>}
+										<p {...$off(`items[${i}].description`)}>{it.description}</p>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+		)}
+
+		{tabs && menus.length > 0 && <MenuTabs tabs={tabs} menus={menus} />}
+
+		<div class="rs-wrap rs-main">
+			<div class="rs-main-grid">
+				<div>
+					<h2 class="rs-display" {...$page('title')}>{page.title}</h2>
+					{posts.map((p) => <PostCard post={p} locale={locale} tag={dateTag} tags />)}
+				</div>
+				<Sidebar locale={locale} categories={categories} testimonials={testimonials} title={chrome.site.categories_title} prevLabel={chrome.site.prev_label} nextLabel={chrome.site.next_label} chromeEntry={chrome.entry} />
+			</div>
+		</div>
+	</main>
+	<GalleryStrip slot="after-subscribe" albums={albums} locale={locale} photosLabel={chrome.site.photos_label} linkLabel={chrome.site.gallery_link_label} />
+</Base>

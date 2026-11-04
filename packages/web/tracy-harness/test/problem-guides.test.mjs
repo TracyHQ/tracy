@@ -292,6 +292,13 @@ const KIT_GAPS = {
   ]
 }
 
+/** Template kit shots without a current look, as `template-kit/road-step.js` sends them. */
+const KIT_LOOKS = {
+  ...KIT_BASE,
+  reason: '1 page or block has no current look of its 1440 shot: block hero',
+  missingLooks: [{ kind: 'block', id: 'hero', image: 'hero-1440', why: 'missing' }]
+}
+
 const EVERY_CODE = [
   ['release', 'release-published', {}],
   ['release', 'release-draft', {}],
@@ -301,6 +308,15 @@ const EVERY_CODE = [
   ['install-file', 'no-template', {}],
   ['install-file', 'template-not-an-id', { template: 'JA Restaurant' }],
   ['install-file', 'asset-missing', { files: ['w.tar.gz'] }],
+  [
+    'install-file',
+    'install-file-sha-mismatch',
+    {
+      version: '1.0.2',
+      files: ['w.tar.gz'],
+      reason: 'GitHub states another sha256 for w.tar.gz than the install file pins'
+    }
+  ],
   ['content-coverage', 'coverage-not-needed', {}],
   ['content-coverage', 'coverage-waiting', {}],
   ['content-coverage', 'coverage-not-measured', COVERAGE_BASE],
@@ -387,10 +403,28 @@ const EVERY_CODE = [
       missingPictures: [{ kind: 'block', id: 'hero', missing: [390] }]
     }
   ],
+  ['template-kit', 'kit-incomplete', KIT_LOOKS],
   ['template-kit', 'kit-gaps', KIT_GAPS],
   ['template-kit', 'kit-gaps', { ...KIT_GAPS, live: true }],
   ['template-kit', 'kit-not-approved', { ...KIT_BASE, approvedBy: null }],
   ['template-kit', 'kit-approval-stale', KIT_BASE],
+  ...[
+    [
+      'kit-logo-unsettable',
+      '1 logo spot the page shows has no setting and no content map frame: logo-header-1'
+    ],
+    ['kit-brand-colour-from-link', 'the template accent #203060 is read from the link colour only'],
+    ['kit-navigation-missing', '1 menu block of the content map has no navigation group in the kit: block-7'],
+    ['kit-map-mismatch', '1 kit slot is not in the content map beside it: article-3.4'],
+    ['kit-front-page-group', 'the front page has no group and shot of its own: it sits in group group-blog'],
+    ['kit-brand-unreadable', 'the kit has no site.nameSlots'],
+    ['kit-zip-missing', 'the release has no asset template-kit-ja-restaurant-1.0.2.zip'],
+    ['kit-setting-slot-missing', '1 map button (block-7) point at no setting slot']
+  ].map(([code, reason]) => [
+    'template-kit',
+    code,
+    { ...KIT_BASE, reason, flowGaps: [{ code, severity: 'todo', reason }] }
+  ]),
   ['customize', 'customize-waiting', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-not-checked', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-checking', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
@@ -647,6 +681,13 @@ test('Template kit: a short title per verdict, live only warns, ONE prompt that 
   )
   assert.equal(done.outside, undefined)
   assert.match(done.detail, /reviewer-one/)
+  const looks = mod.guideOf(
+    { step: 'template-kit', state: 'todo', code: 'kit-incomplete', params: KIT_LOOKS },
+    JOOMLA
+  )
+  assert.match(looks.detail, /no current look/)
+  assert.match(looks.outside.text, /looks command/)
+  assert.match(looks.outside.text, /do not capture it again/)
   for (const [step, code, params] of EVERY_CODE.filter(([s]) => s === 'template-kit')) {
     const g = mod.guideOf({ step, state: 'todo', code, params }, JOOMLA)
     for (const w of [g.title, g.why, g.detail ?? '']) assert.doesNotMatch(w, /module/i, `${code}: "${w}"`)
@@ -1056,7 +1097,7 @@ test('Customize your site sends each fix where its file lives: the contract in t
     em,
     /fix in the template package in the tch repository \(packages\/cms\/tracy-emdash-theme-business\)/
   )
-  for (const template of ['tracy-business', 'tracy-saas', 'tracy-base'])
+  for (const template of ['tracy-business', 'tracy-saas', 'tracy-base', 'tracy-coffee', 'tracy-restaurant'])
     assert.ok(
       existsSync(
         path.join(here, '..', '..', '..', 'cms', `tracy-emdash-theme-${template.replace(/^tracy-/, '')}`)

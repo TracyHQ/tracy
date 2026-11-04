@@ -129,6 +129,30 @@ Tracy's Pages question lists the pages a customer may keep or hide, from the ass
 `identity`/`copy`/`rewrite` rules of `seed/personalize.json` cover the home page's hero and intro (P2: name
 the fields). The tool reads `about` and `tone` itself; nothing for the template beyond listing those fields.
 
+## Personalization — three files, and no package ships without them (P4.5)
+
+Moved here from `SKILL.md`, which keeps the phase row (P4.5) and the gate names.
+
+A Tracy template must turn the customer's copy into **the customer's** site: business name, sector,
+address, hotline in place of the demo text. That is done by **three files inside the package itself**, not by
+Tracy from the outside:
+
+| File | What it is |
+|---|---|
+| `seed/questions.json` | The questionnaire the customer answers before the site is built (`tracy-questions/v1`). The `name` question is mandatory; every label must have **every language** listed in `languages`, otherwise a Vietnamese form gets an English line wedged in. `tools/release.mjs` pushes this very file to the release as `tracy_site_question.json` — Tracy reads the questionnaire there (ADR 0017) |
+| `seed/personalize.json` | The map: which answer lands in which collection/slug/field. Six kinds — `identity` (written verbatim; a missing answer **leaves it empty**, it does not keep the demo text), `replace` (demo brand name → customer name, everywhere), `copy` (the model writes for the sector), `rewrite` (rewrite the whole entry), `facts` (**delete**: project counts, founding year, certifications, client names — inventing them is lying in the customer's name), `trim` (`[{collection, keep, why, leadsTo, list}]`: demo rows beyond `keep` leave the site **before** anything is written into them — no PUT, no republish; with no model, every collection in `rewrite` keeps **0** rows and the `list` page is hidden; links to removed rows are changed to `leadsTo`) |
+| `tools/personalize.mjs` | The kit tool that reads the two files above and writes to the site through the Admin API (draft → publish, with receipts, rerunning changes nothing more). Copy it from `scripts/tools/`, do not rewrite it. Model: `TRACY_SEED_TEXT_PROVIDER` (the one `/ops` assigns) → `TRACY_MODEL_URL` → DeepSeek → OpenRouter; the report records the `model` actually used. The report separates `errors` (failed writes — exit code **4**), `unanswered` (missing answers), `skipped` (valid skips). Each mutation writes two lines to `data/personalize-journal.jsonl` (before/after, with `before`, `after`, `rev`, `origin`); a `generated` cell without `evidence` is rejected at the write door. `--inspect --json` reads the journal against the live site; `--revert <applyId> --json` returns the latest run to `before`, refusing when a cell was hand-edited afterwards |
+
+`scripts/new-template.sh` puts the two `seed/*` files in place as **placeholders**; filling them is the
+template author's job. Left as is, `tools/release.mjs` refuses to package — on purpose.
+
+🔒 **Why this is a gate and not advice.** Until 19/09/2026 the kit had no such tool and
+did not mention the other two files. `tracy-saas` 1.0.0 therefore shipped a release with none of the three — and
+**nothing went red**: the package was valid, every gate green, the built site ran. The customer was still asked the questionnaire
+(Tracy falls back to the CMS default set when a release lacks `tracy_site_question.json`), typed in the business
+name, and then got back the sentence *"this template has no personalization tool"* on a site still full of the
+template's demo text.
+
 ## Checklist (before P8)
 
 - [ ] `settings.title: "{name}"` and an `identity` rule for every brand-name field of the chrome

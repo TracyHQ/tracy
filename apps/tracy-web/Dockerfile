@@ -73,6 +73,16 @@ COPY apps/tracy-web/scripts/seed-admin-seats.mjs ./scripts/seed-admin-seats.mjs
 COPY apps/tracy-web/scripts/copy-place-media-to-shared-bucket.mjs ./scripts/copy-place-media-to-shared-bucket.mjs
 #   push-wo-places.mjs — push places to a master's ingest door (plan-wo-shared-places §6).
 COPY apps/tracy-web/scripts/push-wo-places.mjs ./scripts/push-wo-places.mjs
+#   site-planner-bench.mjs — start, read and cancel site planner bench runs (ADR 0041; the bench has no screen).
+COPY apps/tracy-web/scripts/site-planner-bench.mjs ./scripts/site-planner-bench.mjs
+#   brand-bench.mjs — start, read and cancel brand bench runs (brand step trial bench; the bench has no screen).
+COPY apps/tracy-web/scripts/brand-bench.mjs ./scripts/brand-bench.mjs
+#   site-writer-bench.mjs: start, read and cancel site writer bench runs (ADR 0042, #329; the bench has no screen).
+COPY apps/tracy-web/scripts/site-writer-bench.mjs ./scripts/site-writer-bench.mjs
+#   site-pictures-bench.mjs: start, read and cancel picture bench runs (ADR 0043, #340; the bench has no screen).
+COPY apps/tracy-web/scripts/site-pictures-bench.mjs ./scripts/site-pictures-bench.mjs
+#   site-pictures-reading-page.mjs: the reading page of a picture run's files (it needs sharp, which is here).
+COPY apps/tracy-web/scripts/site-pictures-reading-page.mjs ./scripts/site-pictures-reading-page.mjs
 # The design registry decides which Joomla template a picked inspiration actually builds with, and
 # the CANONICAL copy ships with the fleet's provision scripts (`tracy-host` carries that directory
 # whole) because that is where it is executed. This process only resolves against it, so it gets
@@ -100,6 +110,7 @@ COPY packages/cms/tracy-wordpress-quickstart/contracts ./src/contracts
 COPY packages/cms/tracy-emdash-theme-business/contracts ./src/contracts/tracy-business/emdash-0.x
 COPY packages/cms/tracy-emdash-theme-base/contracts ./src/contracts/tracy-base/emdash-0.x
 COPY packages/cms/tracy-emdash-theme-saas/contracts ./src/contracts/tracy-saas/emdash-0.x
+COPY packages/cms/tracy-emdash-theme-coffee/contracts ./src/contracts/tracy-coffee/emdash-0.x
 # What a Joomla quickstart ships translated for its own demo copy, beside the contracts (same release/version folders):
 # "Apply" with a language the template does not carry translates what the site holds, and a string the template already
 # translated is not asked of a model again (`tracy-seeder/src/shipped-translations.mjs`, `lib/seeder.js` `seederDataDir`).
@@ -109,7 +120,7 @@ COPY packages/cms/tracy-joomla-quickstart/translations ./src/translations
 # on this server after every read of the releases.
 COPY packages/cms/tracy-joomla-quickstart/plugins/plg_system_tracyidentity/src/Identity.php ./src/identity-plugin/Identity.php
 # The EmDash template's own personalize tool and each template's seed (`lib/emdash-tool.js`): "Apply" in the Add site popup
-# writes an EmDash site's words with the tool the Build runs, as a client of the site's HTTP API. The three templates ship
+# writes an EmDash site's words with the tool the Build runs, as a client of the site's HTTP API. The five templates ship
 # ONE byte-identical tool (`test/emdash-tool.test.mjs` holds them equal), so one copy; the seed (the demo content the tool
 # plans against, 5.4 MB for Business) and `template.config.json` are each template's own. The tool reads
 # `<seed>/../template.config.json`, hence the layout. `media-map.json` says which link fields the importer fills with a
@@ -127,14 +138,22 @@ COPY packages/cms/tracy-emdash-theme-saas/seed/seed.json packages/cms/tracy-emda
 COPY packages/cms/tracy-emdash-theme-saas/template.config.json ./src/emdash-tool/tracy-saas/template.config.json
 COPY packages/cms/tracy-emdash-theme-base/seed/seed.json packages/cms/tracy-emdash-theme-base/seed/personalize.json packages/cms/tracy-emdash-theme-base/seed/questions.json packages/cms/tracy-emdash-theme-base/seed/media-map.json packages/cms/tracy-emdash-theme-base/seed/field-map.json ./src/emdash-tool/tracy-base/seed/
 COPY packages/cms/tracy-emdash-theme-base/template.config.json ./src/emdash-tool/tracy-base/template.config.json
+COPY packages/cms/tracy-emdash-theme-coffee/seed/seed.json packages/cms/tracy-emdash-theme-coffee/seed/personalize.json packages/cms/tracy-emdash-theme-coffee/seed/questions.json packages/cms/tracy-emdash-theme-coffee/seed/media-map.json packages/cms/tracy-emdash-theme-coffee/seed/field-map.json ./src/emdash-tool/tracy-coffee/seed/
+COPY packages/cms/tracy-emdash-theme-coffee/template.config.json ./src/emdash-tool/tracy-coffee/template.config.json
+COPY packages/cms/tracy-emdash-theme-restaurant/seed/seed.json packages/cms/tracy-emdash-theme-restaurant/seed/personalize.json packages/cms/tracy-emdash-theme-restaurant/seed/questions.json packages/cms/tracy-emdash-theme-restaurant/seed/media-map.json packages/cms/tracy-emdash-theme-restaurant/seed/field-map.json ./src/emdash-tool/tracy-restaurant/seed/
+COPY packages/cms/tracy-emdash-theme-restaurant/template.config.json ./src/emdash-tool/tracy-restaurant/template.config.json
 # Image-only placement measures and hashes the release's original demo files; metadata maps alone cannot prove ownership.
-# These are template seed files (about 16 MB across the three templates), never collected customer media.
+# These are template seed files (about 32 MB across the five templates), never collected customer media.
 COPY packages/cms/tracy-emdash-theme-business/seed/media ./src/emdash-tool/tracy-business/seed/media
 COPY packages/cms/tracy-emdash-theme-business/seed/content-api-map.json ./src/emdash-tool/tracy-business/seed/content-api-map.json
 COPY packages/cms/tracy-emdash-theme-saas/seed/media ./src/emdash-tool/tracy-saas/seed/media
 COPY packages/cms/tracy-emdash-theme-saas/seed/content-api-map.json ./src/emdash-tool/tracy-saas/seed/content-api-map.json
 COPY packages/cms/tracy-emdash-theme-base/seed/media ./src/emdash-tool/tracy-base/seed/media
 COPY packages/cms/tracy-emdash-theme-base/seed/content-api-map.json ./src/emdash-tool/tracy-base/seed/content-api-map.json
+COPY packages/cms/tracy-emdash-theme-coffee/seed/media ./src/emdash-tool/tracy-coffee/seed/media
+COPY packages/cms/tracy-emdash-theme-coffee/seed/content-api-map.json ./src/emdash-tool/tracy-coffee/seed/content-api-map.json
+COPY packages/cms/tracy-emdash-theme-restaurant/seed/media ./src/emdash-tool/tracy-restaurant/seed/media
+COPY packages/cms/tracy-emdash-theme-restaurant/seed/content-api-map.json ./src/emdash-tool/tracy-restaurant/seed/content-api-map.json
 # The content seeder's own modules (`lib/seeder.js`): "Apply" in the Add site popup writes a new site's words
 # with the planners and the door calls the seeder uses, not a second copy of their rules. Only the leaf
 # modules are loaded at run time (the plan-* / apply-* / model / picture ones: they import nothing outside
@@ -186,6 +205,12 @@ COPY packages/cms/tracy-emdash-theme-business/seed/content-api-map.json ./src/em
 # (tracy-base ships no site model; the reader reads what is there and says so.)
 COPY packages/cms/tracy-emdash-theme-base/artifact.json ./src/emdash-templates/tracy-base/artifact.json
 COPY packages/cms/tracy-emdash-theme-base/seed/personalize.json ./src/emdash-templates/tracy-base/seed/personalize.json
+COPY packages/cms/tracy-emdash-theme-coffee/artifact.json ./src/emdash-templates/tracy-coffee/artifact.json
+COPY packages/cms/tracy-emdash-theme-coffee/seed/personalize.json ./src/emdash-templates/tracy-coffee/seed/personalize.json
+COPY packages/cms/tracy-emdash-theme-coffee/seed/site-model.json ./src/emdash-templates/tracy-coffee/seed/site-model.json
+COPY packages/cms/tracy-emdash-theme-restaurant/artifact.json ./src/emdash-templates/tracy-restaurant/artifact.json
+COPY packages/cms/tracy-emdash-theme-restaurant/seed/personalize.json ./src/emdash-templates/tracy-restaurant/seed/personalize.json
+COPY packages/cms/tracy-emdash-theme-restaurant/seed/site-model.json ./src/emdash-templates/tracy-restaurant/seed/site-model.json
 COPY packages/fleet/tracy-fleet-operation/scripts/provision/emdash/personalize ./src/emdash-templates
 # The built harness SPA (Plan 4 Task 2) — `dist/` is gitignored (built with `pnpm --filter
 # @tracy/harness-web build`, same reasoning RULE #3 (CLAUDE.md §2) gives `lib/client.js`: this one is NOT a

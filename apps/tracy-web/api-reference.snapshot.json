@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-10-27",
+  "recorded": "2026-11-04",
   "public": {
     "components": {
       "schemas": {
@@ -5567,6 +5567,10 @@
                             "fields": {
                               "additionalProperties": false,
                               "properties": {
+                                "body_bg_img": {
+                                  "maxLength": 4096,
+                                  "type": "string"
+                                },
                                 "other_faviconFile": {
                                   "maxLength": 4096,
                                   "type": "string"
@@ -14518,6 +14522,10 @@
                     "fields": {
                       "additionalProperties": false,
                       "properties": {
+                        "body_bg_img": {
+                          "maxLength": 4096,
+                          "type": "string"
+                        },
                         "other_faviconFile": {
                           "maxLength": 4096,
                           "type": "string"
@@ -35748,6 +35756,10 @@
                             "fields": {
                               "additionalProperties": false,
                               "properties": {
+                                "body_bg_img": {
+                                  "maxLength": 4096,
+                                  "type": "string"
+                                },
                                 "other_faviconFile": {
                                   "maxLength": 4096,
                                   "type": "string"
@@ -44699,6 +44711,10 @@
                     "fields": {
                       "additionalProperties": false,
                       "properties": {
+                        "body_bg_img": {
+                          "maxLength": 4096,
+                          "type": "string"
+                        },
                         "other_faviconFile": {
                           "maxLength": 4096,
                           "type": "string"

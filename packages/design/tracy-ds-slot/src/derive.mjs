@@ -19,10 +19,16 @@ const val = (f) => (f && f.s !== 'empty' && typeof f.v === 'string' && parseHex(
 /** The side of light a profile is on, from its page colour. */
 export const modeOf = (profile) => (L(val(profile.colors?.bg) ?? '#ffffff') < 0.3 ? 'dark' : 'light')
 
-/** Every strict hex the system itself names. */
+/**
+ * Every strict hex the system itself names. In accent-only mode (`profile.accentOnly`, brand.mjs) the accent and
+ * the words on it are left out: the other side's neutrals must not depend on the accent (a white on-accent
+ * made the derived light ground white instead of the template's own paper).
+ */
 const ownColours = (profile) => [
   ...new Set(
-    Object.values(profile.colors ?? {})
+    Object.entries(profile.colors ?? {})
+      .filter(([k]) => !(profile.accentOnly === true && (k === 'accent' || k === 'accentOn')))
+      .map(([, f]) => f)
       .map(val)
       .filter(Boolean)
       .map((h) => h.toLowerCase())
