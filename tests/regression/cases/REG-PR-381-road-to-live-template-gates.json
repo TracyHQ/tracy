@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-381-road-to-live-template-gates",
+  "kind": "feat",
+  "title": "Template kit holds Publish on a kit the Website opportunity flow cannot use, and the install file on a part GitHub states another sha256 for",
+  "pr": 381,
+  "area": "road-to-live/template-kit",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test apps/tracy-web/test/template-kit-flow-reads.test.mjs apps/tracy-web/test/road-to-live.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "Each flow gap code (kit-logo-unsettable, kit-brand-colour-from-link, kit-navigation-missing, kit-map-mismatch, kit-front-page-group, kit-brand-unreadable, kit-zip-missing) is todo on an otherwise approved kit; kit-setting-slot-missing only warns.",
+    "A seed shaped T3 kit gives kit-logo-unsettable, kit-brand-colour-from-link and kit-navigation-missing.",
+    "The JA Boxing 1.0.10 kit committed in the repo has no flow gap and stays kit-approved.",
+    "An install part whose sha256 GitHub states otherwise is todo install-file-sha-mismatch and the publish door refuses NOT_A_CARD naming the file."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/lib/template-kit/flow-reads.js flowGapsOf, kitMapOf; apps/tracy-web/src/lib/template-kit/road-step.js templateKitStep; apps/tracy-web/src/lib/road-to-live.js roadOf, publishRefusalOf",
+    "test": "apps/tracy-web/test/template-kit-flow-reads.test.mjs; apps/tracy-web/test/road-to-live.test.mjs"
+  },
+  "evidence": "A T3 seed kit passed Template kit while its header logo spot had no setting or frame, its accent was the link colour and a menu block had no navigation group: the brand step, the planner and the writer could not use it.",
+  "fence": "templateKitStep runs flowGapsOf after the version check: a todo flow gap holds Publish before the approval, and every gap rides along as flowGaps; roadOf compares install part sha256 with the asset digest GitHub states.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/template-kit-flow-reads.test.mjs",
+      "apps/tracy-web/test/road-to-live.test.mjs"
+    ],
+    "tests": [
+      "kit-logo-unsettable: a shown logo spot with no setting and a frame the content map lacks",
+      "kit-brand-colour-from-link: an accent that paints links only, with the stylesheet primary named",
+      "kit-navigation-missing: a menu block of the content map with no navigation group",
+      "kit-map-mismatch: kit slots the content map beside it does not hold (a kit of another map)",
+      "kit-front-page-group: the front page inside another group, or not its representative",
+      "kit-brand-unreadable: the very check the brand bench refuses a run on",
+      "kit-zip-missing: the release lacks the kit image zip; a local pack is not asked",
+      "kit-setting-slot-missing only warns: a map button or a frame painted behind with no setting slot",
+      "a seed shaped T3 kit: logo with no setting, accent from links, a menu with no group",
+      "the JA Boxing 1.0.10 kit committed in this repo has no flow gap and stays approved",
+      "an install part whose sha256 GitHub states otherwise holds Publish: the host would refuse the download"
+    ]
+  }
+}
