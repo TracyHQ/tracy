@@ -3048,7 +3048,7 @@
       "entity": "module-157",
       "column": "params",
       "type": "text",
-      "sample": "THE WORKOUT",
+      "sample": "THE((br/)) ((span))WORKOUT((/span))",
       "maxCharacters": 42,
       "requiresEvidence": false,
       "jsonPath": [
@@ -3181,7 +3181,7 @@
       "entity": "module-158",
       "column": "params",
       "type": "text",
-      "sample": "More Blogs",
+      "sample": "More((br/)) ((span))Blogs((/span))",
       "maxCharacters": 40,
       "requiresEvidence": false,
       "jsonPath": [
@@ -3258,7 +3258,7 @@
       "entity": "module-159",
       "column": "params",
       "type": "text",
-      "sample": "More For You",
+      "sample": "More((br/)) ((span))For You((/span))",
       "maxCharacters": 44,
       "requiresEvidence": false,
       "jsonPath": [
@@ -3335,7 +3335,7 @@
       "entity": "module-160",
       "column": "params",
       "type": "text",
-      "sample": "Our Classes",
+      "sample": "Our((br/)) ((span)) Classes ((/span))",
       "maxCharacters": 42,
       "requiresEvidence": false,
       "jsonPath": [
@@ -3871,7 +3871,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Today Contact Us",
+      "sample": "Today ((span))Contact Us((/span))",
       "maxCharacters": 52,
       "requiresEvidence": false,
       "jsonPath": [
@@ -3911,7 +3911,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Login Form",
+      "sample": "Login((span))Form((/span))",
       "maxCharacters": 40,
       "requiresEvidence": false,
       "jsonPath": [
@@ -3951,7 +3951,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Registration Form",
+      "sample": "Registration((span))Form((/span))",
       "maxCharacters": 54,
       "requiresEvidence": false,
       "jsonPath": [
@@ -3991,7 +3991,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "User Profile",
+      "sample": "User((span))Profile((/span))",
       "maxCharacters": 44,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4037,7 +4037,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Offline Pages",
+      "sample": "Offline((span))Pages((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4083,7 +4083,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Error Pages",
+      "sample": "Error((span))Pages((/span))",
       "maxCharacters": 42,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4168,7 +4168,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Category Blog",
+      "sample": "Category((span))Blog((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4214,7 +4214,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Featured Articles",
+      "sample": "Featured((span))Articles((/span))",
       "maxCharacters": 54,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4260,7 +4260,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Author Listing",
+      "sample": "Author((span))Listing((/span))",
       "maxCharacters": 48,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4300,7 +4300,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Blog Detail",
+      "sample": "Blog((span))Detail((/span))",
       "maxCharacters": 42,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4346,7 +4346,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Smart Search",
+      "sample": "Smart((span))Search((/span))",
       "maxCharacters": 44,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4386,7 +4386,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Our Trainers",
+      "sample": "Our((span))Trainers((/span))",
       "maxCharacters": 44,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4432,7 +4432,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Learning Center",
+      "sample": "Learning((span))Center((/span))",
       "maxCharacters": 50,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4472,7 +4472,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Our Classes",
+      "sample": "Our((span))Classes((/span))",
       "maxCharacters": 42,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4518,7 +4518,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4564,7 +4564,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4610,7 +4610,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4656,7 +4656,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4702,7 +4702,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4748,7 +4748,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4794,7 +4794,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4840,7 +4840,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4886,7 +4886,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4932,7 +4932,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -4978,7 +4978,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -5024,7 +5024,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -5070,7 +5070,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -5116,7 +5116,7 @@
       "entity": "module-162",
       "column": "params",
       "type": "text",
-      "sample": "Don’t worry, one you step in to Boxing studio, you are part of the family!",
+      "sample": "Don’t worry, one you step in to Boxing studio, ((br/)) you are part of the family!",
       "maxCharacters": 168,
       "requiresEvidence": false,
       "jsonPath": [
@@ -5910,7 +5910,7 @@
       "entity": "module-163",
       "column": "params",
       "type": "text",
-      "sample": "Our trainers",
+      "sample": "Our ((br/))((span))trainers((/span))",
       "maxCharacters": 44,
       "requiresEvidence": false,
       "jsonPath": [
@@ -7118,7 +7118,7 @@
       "entity": "module-166",
       "column": "params",
       "type": "text",
-      "sample": "Boxing Studio",
+      "sample": "Boxing ((br/))((span))Studio((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -8326,7 +8326,7 @@
       "entity": "module-169",
       "column": "params",
       "type": "text",
-      "sample": "Sign up for the Boxing newsletter",
+      "sample": "Sign up for the ((span))Boxing((/span)) newsletter",
       "maxCharacters": 86,
       "requiresEvidence": false,
       "jsonPath": [
@@ -9233,7 +9233,7 @@
       "entity": "module-172",
       "column": "params",
       "type": "text",
-      "sample": "Gift card",
+      "sample": "Gift((br/)) ((span))card((/span))",
       "maxCharacters": 40,
       "requiresEvidence": false,
       "jsonPath": [
@@ -9434,7 +9434,7 @@
       "entity": "module-175",
       "column": "content",
       "type": "text",
-      "sample": "4517 Washington Ave. Manchester, Kentucky 39495",
+      "sample": "4517 Washington Ave.((br/))Manchester, Kentucky 39495",
       "maxCharacters": 114,
       "requiresEvidence": false,
       "xpath": "/html/body/div/p",
@@ -12434,7 +12434,7 @@
       "entity": "module-180",
       "column": "params",
       "type": "text",
-      "sample": "Darlene Robertson",
+      "sample": "Darlene((br/)) ((span))Robertson((/span))",
       "maxCharacters": 54,
       "requiresEvidence": false,
       "jsonPath": [
@@ -13252,7 +13252,7 @@
       "entity": "module-181",
       "column": "params",
       "type": "text",
-      "sample": "Video Trainer",
+      "sample": "Video((br/)) ((span))Trainer((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -13971,7 +13971,7 @@
       "entity": "module-182",
       "column": "params",
       "type": "text",
-      "sample": "More trainers",
+      "sample": "More ((br/))((span))trainers((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -14402,7 +14402,7 @@
       "entity": "module-183",
       "column": "params",
       "type": "text",
-      "sample": "Our Story",
+      "sample": "Our((br/)) ((span))Story((/span))",
       "maxCharacters": 40,
       "requiresEvidence": false,
       "jsonPath": [
@@ -14514,7 +14514,7 @@
       "entity": "module-184",
       "column": "params",
       "type": "text",
-      "sample": "Memberships workshops",
+      "sample": "Memberships((br/)) ((span))workshops((/span))",
       "maxCharacters": 62,
       "requiresEvidence": false,
       "jsonPath": [
@@ -17265,7 +17265,7 @@
       "entity": "module-190",
       "column": "params",
       "type": "text",
-      "sample": "THE WORKOUT",
+      "sample": "THE((br/)) ((span))WORKOUT((/span))",
       "maxCharacters": 42,
       "requiresEvidence": false,
       "jsonPath": [
@@ -17398,7 +17398,7 @@
       "entity": "module-191",
       "column": "params",
       "type": "text",
-      "sample": "More Blogs",
+      "sample": "More((br/)) ((span))Blogs((/span))",
       "maxCharacters": 40,
       "requiresEvidence": false,
       "jsonPath": [
@@ -18407,7 +18407,7 @@
       "entity": "article-2",
       "column": "attribs",
       "type": "text",
-      "sample": "Group Boxing",
+      "sample": "Group ((br/))((span))Boxing((/span))",
       "maxCharacters": 44,
       "requiresEvidence": false,
       "jsonPath": [
@@ -18752,7 +18752,7 @@
       "entity": "article-2",
       "column": "attribs",
       "type": "text",
-      "sample": "WHAT TO BRING",
+      "sample": "WHAT((br/))((span))TO BRING((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -19388,7 +19388,7 @@
       "entity": "article-2",
       "column": "attribs",
       "type": "text",
-      "sample": "Typical Boxing Exercises",
+      "sample": "Typical ((br/))((span))Boxing Exercises((/span))",
       "maxCharacters": 68,
       "requiresEvidence": false,
       "jsonPath": [
@@ -28002,7 +28002,7 @@
       "entity": "article-14",
       "column": "attribs",
       "type": "text",
-      "sample": "Beginner Boxing",
+      "sample": "Beginner ((br/))((span))Boxing((/span))",
       "maxCharacters": 50,
       "requiresEvidence": false,
       "jsonPath": [
@@ -28240,7 +28240,7 @@
       "entity": "article-14",
       "column": "attribs",
       "type": "text",
-      "sample": "WHAT TO BRING",
+      "sample": "WHAT((br/))((span))TO BRING((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -28876,7 +28876,7 @@
       "entity": "article-14",
       "column": "attribs",
       "type": "text",
-      "sample": "Typical Boxing Exercises",
+      "sample": "Typical ((br/))((span))Boxing Exercises((/span))",
       "maxCharacters": 68,
       "requiresEvidence": false,
       "jsonPath": [
@@ -30285,7 +30285,7 @@
       "entity": "article-15",
       "column": "attribs",
       "type": "text",
-      "sample": "Private Training",
+      "sample": "Private ((br/))((span))Training((/span))",
       "maxCharacters": 52,
       "requiresEvidence": false,
       "jsonPath": [
@@ -30433,7 +30433,7 @@
       "entity": "article-15",
       "column": "attribs",
       "type": "text",
-      "sample": "WHAT TO BRING",
+      "sample": "WHAT((br/))((span))TO BRING((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -31069,7 +31069,7 @@
       "entity": "article-15",
       "column": "attribs",
       "type": "text",
-      "sample": "Typical Boxing Exercises",
+      "sample": "Typical ((br/))((span))Boxing Exercises((/span))",
       "maxCharacters": 68,
       "requiresEvidence": false,
       "jsonPath": [
@@ -32478,7 +32478,7 @@
       "entity": "article-16",
       "column": "attribs",
       "type": "text",
-      "sample": "Advanced Boxing",
+      "sample": "Advanced((br/))((span)) Boxing ((/span))",
       "maxCharacters": 50,
       "requiresEvidence": false,
       "jsonPath": [
@@ -32716,7 +32716,7 @@
       "entity": "article-16",
       "column": "attribs",
       "type": "text",
-      "sample": "WHAT TO BRING",
+      "sample": "WHAT((br/))((span))TO BRING((/span))",
       "maxCharacters": 46,
       "requiresEvidence": false,
       "jsonPath": [
@@ -33352,7 +33352,7 @@
       "entity": "article-16",
       "column": "attribs",
       "type": "text",
-      "sample": "Typical Boxing Exercises",
+      "sample": "Typical ((br/))((span))Boxing Exercises((/span))",
       "maxCharacters": 68,
       "requiresEvidence": false,
       "jsonPath": [
@@ -35024,7 +35024,7 @@
       "entity": "article-17",
       "column": "introtext",
       "type": "text",
-      "sample": "You can use the mark tag to highlight text.",
+      "sample": "You can use the mark tag to ((mark))highlight((/mark)) text.",
       "maxCharacters": 106,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div[1]/div[2]/div/p[2]",
@@ -36130,7 +36130,7 @@
       "entity": "article-17",
       "column": "introtext",
       "type": "text",
-      "sample": "Example heading New",
+      "sample": "Example heading ((span class=\"badge bg-primary\"))New((/span))",
       "maxCharacters": 58,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div[3]/div/div[2]/div[1]/p[1]",
@@ -36145,7 +36145,7 @@
       "entity": "article-17",
       "column": "introtext",
       "type": "text",
-      "sample": "Example heading New",
+      "sample": "Example heading ((span class=\"badge bg-secondary\"))New((/span))",
       "maxCharacters": 58,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div[3]/div/div[2]/div[1]/p[2]",
@@ -36160,7 +36160,7 @@
       "entity": "article-17",
       "column": "introtext",
       "type": "text",
-      "sample": "Example heading New",
+      "sample": "Example heading ((span class=\"badge bg-success\"))New((/span))",
       "maxCharacters": 58,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div[3]/div/div[2]/div[1]/p[3]",
@@ -36175,7 +36175,7 @@
       "entity": "article-17",
       "column": "introtext",
       "type": "text",
-      "sample": "Example heading New",
+      "sample": "Example heading ((span class=\"badge bg-danger\"))New((/span))",
       "maxCharacters": 58,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div[3]/div/div[2]/div[1]/p[4]",
@@ -36190,7 +36190,7 @@
       "entity": "article-17",
       "column": "introtext",
       "type": "text",
-      "sample": "Example heading New",
+      "sample": "Example heading ((span class=\"badge bg-warning text-dark\"))New((/span))",
       "maxCharacters": 58,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div[3]/div/div[2]/div[1]/p[5]",
@@ -36205,7 +36205,7 @@
       "entity": "article-17",
       "column": "introtext",
       "type": "text",
-      "sample": "Example heading New",
+      "sample": "Example heading ((span class=\"badge bg-info text-dark\"))New((/span))",
       "maxCharacters": 58,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div[3]/div/div[2]/div[1]/p[6]",
@@ -36220,7 +36220,7 @@
       "entity": "article-17",
       "column": "introtext",
       "type": "text",
-      "sample": "Example heading New",
+      "sample": "Example heading ((span class=\"badge bg-dark\"))New((/span))",
       "maxCharacters": 58,
       "requiresEvidence": false,
       "xpath": "/html/body/div/div[3]/div/div[2]/div[1]/p[7]",

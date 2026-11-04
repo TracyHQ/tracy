@@ -6,7 +6,7 @@
   },
   "contract": {
     "id": "ja-boxing/j6/1.0.10",
-    "contentMapSha256": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
+    "contentMapSha256": "f17cf0806e93f26a03d7087b920dd31ee58561249032cff5ad4bac019b87905a",
     "presentationLockSha256": "62352a206b2084372c42e45c69602a705982738975c291b2d257bc6d8b2674ec"
   },
   "measuredAt": "2026-11-01T20:28:26.887Z",
@@ -5049,5 +5049,19 @@
         "verdict": "right"
       }
     ]
+  },
+  "inlineMarkup": {
+    "measuredAt": "2026-11-04T19:55:42.467Z",
+    "dump": {
+      "file": "custom.sql",
+      "sha256": "5f8d625543fe6c846c5cd325f877da2bc25bc3340a7ca04f9a66b59c77fef8ad"
+    },
+    "checked": 591,
+    "unread": 36,
+    "lost": 0,
+    "lostSlots": [],
+    "mismatched": 0,
+    "mismatchedSlots": [],
+    "restampedFrom": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d"
   }
 }

@@ -4484,7 +4484,18 @@
             "total": 11,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "WORKOUT",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-157.21",
@@ -5438,7 +5449,18 @@
             "total": 11,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Classes",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-160.1",
@@ -5781,7 +5803,18 @@
                     "total": 15,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Boxing",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "item": "article-14",
@@ -5797,7 +5830,18 @@
                     "total": 15,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Boxing",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "item": "article-2",
@@ -5813,7 +5857,18 @@
                     "total": 12,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Boxing",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "item": "article-15",
@@ -5829,7 +5884,18 @@
                     "total": 16,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Training",
+                      "at": "end"
+                    }
+                  ]
                 }
               ],
               "printed": false,
@@ -7095,7 +7161,18 @@
             "total": 12,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "trainers",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-163.17",
@@ -8807,7 +8884,18 @@
             "total": 13,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Studio",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-166.18",
@@ -10004,7 +10092,15 @@
             "total": 33,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Boxing",
+              "at": "inside"
+            }
+          ]
         },
         {
           "id": "block-169.1",
@@ -10557,7 +10653,12 @@
             "total": 47,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            }
+          ]
         },
         {
           "id": "block-175.4",
@@ -11118,7 +11219,15 @@
                 "total": 16,
                 "lead": null,
                 "bullets": []
-              }
+              },
+              "inline": [
+                {
+                  "tag": "span",
+                  "attrs": "",
+                  "text": "Contact Us",
+                  "at": "end"
+                }
+              ]
             },
             {
               "id": "block-162.17",
@@ -11134,7 +11243,12 @@
                 "total": 74,
                 "lead": null,
                 "bullets": []
-              }
+              },
+              "inline": [
+                {
+                  "tag": "br"
+                }
+              ]
             }
           ],
           "shown": 14,
@@ -11159,7 +11273,15 @@
                     "total": 16,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Contact Us",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.17",
@@ -11175,7 +11297,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11196,7 +11323,15 @@
                     "total": 10,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Form",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.18",
@@ -11212,7 +11347,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11233,7 +11373,15 @@
                     "total": 17,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Form",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.19",
@@ -11249,7 +11397,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11270,7 +11423,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11291,7 +11449,15 @@
                     "total": 13,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Pages",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.21",
@@ -11307,7 +11473,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11328,7 +11499,15 @@
                     "total": 11,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Pages",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.22",
@@ -11344,7 +11523,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11381,7 +11565,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11402,7 +11591,15 @@
                     "total": 13,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Blog",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.24",
@@ -11418,7 +11615,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11439,7 +11641,15 @@
                     "total": 17,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Articles",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.25",
@@ -11455,7 +11665,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11476,7 +11691,15 @@
                     "total": 14,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Listing",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.26",
@@ -11492,7 +11715,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11513,7 +11741,15 @@
                     "total": 11,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Detail",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.27",
@@ -11529,7 +11765,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11550,7 +11791,15 @@
                     "total": 12,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Search",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.28",
@@ -11566,7 +11815,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11587,7 +11841,15 @@
                     "total": 12,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Trainers",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.29",
@@ -11603,7 +11865,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             },
@@ -11624,7 +11891,15 @@
                     "total": 15,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Center",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "id": "block-162.30",
@@ -11640,7 +11915,12 @@
                     "total": 74,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    }
+                  ]
                 }
               ]
             }
@@ -11667,7 +11947,15 @@
                 "total": 11,
                 "lead": null,
                 "bullets": []
-              }
+              },
+              "inline": [
+                {
+                  "tag": "span",
+                  "attrs": "",
+                  "text": "Classes",
+                  "at": "end"
+                }
+              ]
             },
             {
               "id": "block-162.31",
@@ -12460,7 +12748,15 @@
             "total": 12,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Profile",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "field-1.0",
@@ -17193,7 +17489,18 @@
             "total": 10,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Blogs",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-158.1",
@@ -17543,7 +17850,18 @@
                     "total": 12,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Boxing",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "item": "article-14",
@@ -17559,7 +17877,18 @@
                     "total": 15,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Boxing",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "item": "article-15",
@@ -17575,7 +17904,18 @@
                     "total": 16,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Training",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "item": "article-16",
@@ -17591,7 +17931,18 @@
                     "total": 15,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Boxing",
+                      "at": "end"
+                    }
+                  ]
                 }
               ],
               "printed": false,
@@ -22728,7 +23079,18 @@
             "total": 9,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Story",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-183.1",
@@ -23180,7 +23542,18 @@
             "total": 11,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "WORKOUT",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-190.21",
@@ -27680,7 +28053,18 @@
                 "total": 17,
                 "lead": null,
                 "bullets": []
-              }
+              },
+              "inline": [
+                {
+                  "tag": "br"
+                },
+                {
+                  "tag": "span",
+                  "attrs": "",
+                  "text": "Robertson",
+                  "at": "end"
+                }
+              ]
             }
           ],
           "shown": 1,
@@ -28245,7 +28629,18 @@
             "total": 17,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Robertson",
+              "at": "end"
+            }
+          ]
         }
       ],
       "source": {
@@ -28289,7 +28684,18 @@
             "total": 13,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Trainer",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-181.19",
@@ -29263,7 +29669,18 @@
             "total": 13,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "trainers",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-182.17",
@@ -30427,7 +30844,18 @@
             "total": 13,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "TO BRING",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "article-16.14",
@@ -30539,7 +30967,18 @@
             "total": 24,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Boxing Exercises",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "article-16.32",
@@ -32511,7 +32950,18 @@
             "total": 12,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "For You",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-159.1",
@@ -32655,7 +33105,18 @@
                     "total": 15,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Boxing",
+                      "at": "end"
+                    }
+                  ]
                 },
                 {
                   "item": "article-14",
@@ -32671,7 +33132,18 @@
                     "total": 15,
                     "lead": null,
                     "bullets": []
-                  }
+                  },
+                  "inline": [
+                    {
+                      "tag": "br"
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": "",
+                      "text": "Boxing",
+                      "at": "end"
+                    }
+                  ]
                 }
               ],
               "printed": false,
@@ -33082,7 +33554,18 @@
             "total": 13,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "TO BRING",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "article-14.14",
@@ -33194,7 +33677,18 @@
             "total": 24,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Boxing Exercises",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "article-14.32",
@@ -34829,7 +35323,18 @@
             "total": 13,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "TO BRING",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "article-2.17",
@@ -34941,7 +35446,18 @@
             "total": 24,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Boxing Exercises",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "article-2.35",
@@ -37036,7 +37552,18 @@
             "total": 13,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "TO BRING",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "article-15.12",
@@ -37148,7 +37675,18 @@
             "total": 24,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Boxing Exercises",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "article-15.30",
@@ -39271,7 +39809,18 @@
             "total": 10,
             "lead": null,
             "bullets": []
-          }
+          },
+          "inline": [
+            {
+              "tag": "br"
+            },
+            {
+              "tag": "span",
+              "attrs": "",
+              "text": "Blogs",
+              "at": "end"
+            }
+          ]
         },
         {
           "id": "block-191.1",
@@ -61135,7 +61684,8 @@
     "linksWithoutLabel": 0,
     "samplesCut": 0,
     "sentenceGroupsUnsettled": 0,
-    "inlineEmphasisMissing": 0
+    "inlineEmphasisMissing": 0,
+    "inlineMarkupLost": 0
   },
   "images": [
     {
@@ -72646,5 +73196,5 @@
     "images": 110,
     "note": "the full set is made again by `cli.mjs build`"
   },
-  "settledAt": "2026-11-04T19:30:03.324Z"
+  "settledAt": "2026-11-04T19:56:48.037Z"
 }
