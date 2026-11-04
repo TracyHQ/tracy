@@ -231,6 +231,11 @@ The image model role that draws a specific picture no owner photo fits, from a f
 plan's words, or extends a real owner photo sideways for a wide band. It never draws a person or an any-real frame.
 _Avoid_: generator, illustrator
 
+**Cut-out**:
+A picture frame whose figure stands on the page with no background of its own. Its figure is drawn on a flat plain
+ground of one known colour, and code removes that ground, leaving a PNG with alpha. No owner photo is cut out.
+_Avoid_: background removal, matte, sticker
+
 **Dark overlay**:
 A black layer of recorded strength code bakes into a picture whose frame has text over it, when the picture is too
 bright for light text; the entry says `darkened`.

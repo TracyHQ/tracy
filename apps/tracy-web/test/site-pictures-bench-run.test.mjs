@@ -158,7 +158,7 @@ test(
 )
 
 test(
-  'cut-out frames are left pending, never as demo pictures; a specific frame no photo fits is drawn; icons are placed',
+  'a cut-out frame is drawn on a plain ground and its ground removed, never a demo picture; a specific frame no photo fits is drawn; icons are placed',
   opts,
   async () => {
     const { pool } = db
@@ -175,30 +175,26 @@ test(
     const run = await readRun(pool, started.id)
     assert.equal(run.status, 'succeeded', run.error)
     const manifest = run.rounds[0].pictures
-    assert.deepEqual(
-      manifest.pending.map((p) => [p.frame, p.waitsFor]),
-      [['block-9.2', 'cut-out']]
-    )
+    assert.deepEqual(manifest.pending, [])
     const placed = new Map([...manifest.frames, ...manifest.siteSettings].map((x) => [x.frame, x]))
-    assert.ok(!placed.has('block-9.2'))
     assert.equal(placed.get('block-9.0').source, 'drawn')
-    assert.equal(manifest.drawer.count, 1)
+    // The cut-out (#346): drawn on a plain ground that code removed, a PNG with alpha, looked at.
+    const cut = placed.get('block-9.2')
+    assert.equal(cut.source, 'drawn')
+    assert.match(cut.file, /\.png$/)
+    assert.deepEqual([cut.cutout.ground, cut.cutout.groundRemoved], ['#00b140', true])
+    assert.equal(cut.looker.verdict, 'pass')
+    assert.equal(manifest.drawer.count, 2)
     // The icon step (#345) placed the icon frame: a library icon, light and dark.
     assert.equal(manifest.frames.find((x) => x.frame === 'block-9.1')?.source, 'icon')
-    // The picture check counts the pending cut-out as unfilled, and nothing else fails; it is not the picker's to fix,
-    // so no fix round runs and the failure is kept on the round's check result.
+    // Nothing fails, so no fix round runs.
     const failing = run.rounds[0].checkResult.rules.filter((r) => r.status === 'fail')
     assert.deepEqual(
-      failing.map((r) => r.id),
-      ['P01']
-    )
-    assert.deepEqual(
-      failing[0].failures.map((f) => f.where),
-      ['block-9.2']
+      failing.map((r) => [r.id, r.failures]),
+      []
     )
     assert.equal(model.requests.length, 1)
     assert.equal(run.rounds.length, 1)
-    assert.match(run.rounds[0].checkResult.notForPicker, /block-9\.2/)
   }
 )
 

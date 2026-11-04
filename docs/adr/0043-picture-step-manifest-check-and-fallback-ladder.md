@@ -147,12 +147,12 @@ Thresholds and readings (named constants in the code):
   photo for every `specific` frame. It never sees the kit's demo pictures.
 - **The drawer** (an image model) draws only where a `specific` picture is needed and no owner photo fits, from a fixed
   template with the plan's fields, or extends a real photo sideways for a wide band. It never draws a person frame.
-- **Background removal** cuts the owner's photo for cut-out frames; code checks the alpha coverage against the
-  subject box.
+- **Cut-out frames** (#346, section 3d) are drawn by the drawer on a flat plain ground of one known colour, and code
+  removes that ground. No model removes a background, and no owner photo is cut out.
 - **The looker** (a model of another maker than the picker) checks every finished picture alone, in a fresh context,
   against the plan's words, with a fixed list of fault names (wrong subject, forbidden item, subject cut off, distorted
-  face or body, stray lettering, visible drawing seam), and writes the `seen` sentence. It never sees the picker's
-  reasons.
+  face or body, stray lettering, visible drawing seam; on a cut-out also rough cut-out edge, leftover ground, missing
+  part, covers the text), and writes the `seen` sentence. It never sees the picker's reasons.
 
 ### 3a. The picker (#342)
 
@@ -234,8 +234,8 @@ Thresholds and readings (named constants in the code):
   (`realPart`, outlined for the looker, section 3b). Otherwise `object` for a frame whose kit role names an illustration
   or a product, else `scene`. The answer is fitted to the size the frame's picture is written at (the demo file's aspect,
   at least the display box).
-- **Never** for an `any-real` or a `person` frame, and never for icon, logo or cut-out frames (background removal is its
-  own step, #346): those frames never reach the drawer, whatever waits.
+- **Never** for an `any-real` or a `person` frame, and never for icon or logo frames: those frames never reach the
+  drawer, whatever waits. A cut-out frame is drawn in its own mode (section 3d).
 - **The door is mandatory when drawing may be needed**: a run whose plan has a frame for the picker refuses at its start,
   and again when a worker claims it, an unset, disabled or unreadable drawer door or a model its provider says cannot
   draw (`SITE_PICTURES_DRAWER_UNSET`, `_DISABLED`, `_UNREADABLE`, `_MODEL_LACKS`), and a door changed since the start
@@ -248,6 +248,42 @@ Thresholds and readings (named constants in the code):
   photos whose mean luminance is at most 0.42 first (`DARK_ENOUGH`); a placed, extended or drawn picture still brighter
   gets a black overlay baked in, its opacity the least that brings it to that level, between 0.15 and 0.6, recorded as
   `overlay` with `darkened: true`. The looker sees the darkened picture.
+
+### 3d. Cut-out frames (#346)
+
+A trial showed a background removal model needs too much memory and never cuts racket strings, so there is none. A
+cut-out frame (kind `cutout`) is filled by drawing:
+
+- **Drawn on a plain ground**: a `specific` cut-out frame is drawn through the drawer door in mode `cutout`, the
+  template's `cutout` part (`drawing-prompt.md`, hashed with the rest into `prompts.drawing`): one figure, whole, on a
+  completely flat ground of one named colour, with clear ground on its left, right and above it (it may stand on the
+  bottom edge), no shadow, nothing of that colour in the figure. Code chooses the colour from the plan's words: chroma
+  green `#00b140`, unless the words name something green (grass, a tennis ball), then magenta `#ff00ff`, then chroma
+  blue `#0047bb` (`site-pictures/cutout-ground.js` `groundFor`).
+- **Code removes the ground**: the ground as painted is measured on the picture's border near the asked colour; each
+  pixel's alpha comes from how much the ground's own channels dominate it (a colour difference key), soft between 0.15
+  and 0.85 of the ground's dominance; its colour is unmixed from the ground and the ground's spill suppressed, so the
+  edge keeps no fringe of the ground colour. The figure is then contained in the size the frame's picture is written at
+  (never cropped, transparent around it) as a PNG with alpha.
+- **A ground that cannot be removed cleanly is a failed draw**: less than half the border is the asked ground, more
+  than 6% of the picture is only partly removed (a ground that is not plain, a shadow, the ground's colour in the
+  figure), less than 5% ground or 3% figure is left, or the figure touches the top, left or right edge (more than 2% of
+  that edge). The call is recorded and paid; the redraw is told the matching fault (`leftover ground`, `subject cut
+  off`, `missing part`).
+- **Recorded**: source `drawn`, a `.png` file, `drawing: { mode: "cutout", attempt }` and
+  `cutout: { ground, groundName, measured, groundRemoved: true, soft, figure }` (`figure` the share of the file the
+  figure covers). The drawings count in `drawer` and `cost.drawer` like every other drawing. A cut-out is never
+  darkened (its transparency stays).
+- **Looked at as a cut-out**: the looker sees it over grey and white checks, is told it is a cut-out, whether the site's
+  text sits over its box (the kit measured text over the picture, `kindEvidence.overPicture`, or the frame has text over
+  it) or beside it, and how much of the box the template's own figure (`1 - kindEvidence.clearShare`) and this one
+  cover; it may then name the cut-out faults `rough cut-out edge`, `leftover ground`, `missing part` (a hand, limb or
+  held equipment lost) and `covers the text`.
+- **Its ladder**: draw, one redraw with the fault names, hidden when the kit allows it (`canHide`), else returned to the
+  planner. Never another owner photo, never fewer rows. A `person` or `any-real` cut-out is never drawn: hidden when
+  allowed, else returned. No cut-out frame ever keeps the kit's demo figure, and a run without a drawer door hides or
+  returns its cut-out frames.
+- **The door is mandatory** for a run whose plan has a `specific` cut-out frame, as for a frame for the picker.
 
 ### 4. Fix rounds and the fallback ladder
 
@@ -276,7 +312,8 @@ climb. The rungs, in order:
 | hide | every match | the frame is hidden when the kit allows hiding and it is not a template setting |
 | return | every match | the frame is returned to the planner (`returns`) |
 
-A `person` frame climbs only hide and return (no other person's photo, never a drawing). A frame waiting for the drawer
+A `person` frame climbs only hide and return (no other person's photo, never a drawing). A `specific` cut-out frame
+climbs draw, redraw, hide and return; any other cut-out only hide and return (section 3d). A frame waiting for the drawer
 starts at draw; a frame code placed starts at its first rung after the placement; a frame the picker placed climbs only
 in the last round (no picker round follows), from draw, when the looker rejects it or it still fails the check. A look
 that could not be read is no rejection: the picture fails L01 and the next round asks again. Each rung is recorded in

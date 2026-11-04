@@ -22,6 +22,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { altNotesFor } from './alt-notes.js'
 import { fileStore, sha256Hex } from './file-store.js'
+import { wantsDark } from './darken.js'
 import { askLooker, LOOK_UNREADABLE, lookImage, lookWords } from './looker-call.js'
 
 export const LOOK_CONCURRENCY = 4
@@ -30,6 +31,20 @@ export const LOOKED_SOURCES = new Set(['owner-photo', 'owner-photo-extended', 'd
 export const LOOKER_RULE = Object.freeze({ id: 'L01', title: 'The looker passes every finished picture' })
 
 const whereOf = (list, frame) => (list === 'siteSettings' ? `siteSettings ${frame}` : frame)
+
+/**
+ * What the looker is told about a cut-out (#346): whether the site's text sits over its box (the kit measured text
+ * over the picture, or marks it), and how much of the box the template's figure (the kit's clear share) and this one
+ * cover.
+ */
+export function cutoutFacts(frame, entry) {
+  const clear = frame?.kindEvidence?.clearShare
+  return {
+    textOver: frame?.kindEvidence?.overPicture === true || wantsDark(frame),
+    figure: Number.isFinite(entry.cutout?.figure) ? entry.cutout.figure : null,
+    demoFigure: Number.isFinite(clear) ? Math.round((1 - clear) * 1000) / 1000 : null
+  }
+}
 
 /** Run `work` over `items`, at most `n` at a time, keeping the order of the results. */
 export async function inParallel(items, n, work) {
@@ -70,15 +85,26 @@ export function createLooker({
     const words = lookWords(idx.wishes.get(entry.frame))
     const box = { width: frame?.width ?? entry.width, height: frame?.height ?? entry.height }
     const realPart = entry.source === 'owner-photo-extended' ? (entry.realPart ?? null) : null
-    const key = sha256Hex(JSON.stringify([entry.sha256, box, words, realPart, door.model, prompt.sha256]))
+    const cutout = entry.cutout ? cutoutFacts(frame, entry) : null
+    const key = sha256Hex(
+      JSON.stringify([
+        entry.sha256,
+        box,
+        words,
+        realPart,
+        door.model,
+        prompt.sha256,
+        ...(cutout ? [cutout] : [])
+      ])
+    )
     // A look already taken in this save (the fallback ladder looks again after each rung), readable or not.
     if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true }
-    const looked = await lookFresh(list, entry, { key, words, box, realPart })
+    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout })
     memo?.set(key, looked.said)
     return looked
   }
 
-  async function lookFresh(list, entry, { key, words, box, realPart }) {
+  async function lookFresh(list, entry, { key, words, box, realPart, cutout }) {
     const before = await readFile(kept(key), 'utf8')
       .then(JSON.parse)
       .catch(() => null)
@@ -94,9 +120,9 @@ export function createLooker({
       costUsd: spent.costUsd ?? null
     })
     if (!bytes) return { list, entry, said: unreadable('the file is not in the store'), cached: false }
-    const image = await lookImage(bytes, box, realPart)
+    const image = await lookImage(bytes, box, realPart, { checks: Boolean(cutout) })
     const ask = () =>
-      askLooker({ door, system: prompt.text, words, image, outlined: Boolean(realPart), fetchImpl })
+      askLooker({ door, system: prompt.text, words, image, outlined: Boolean(realPart), cutout, fetchImpl })
     const first = await ask()
     if (first.verdict) return { list, entry, said: await keep(key, first), cached: false }
     // Asked once more; both calls are counted.

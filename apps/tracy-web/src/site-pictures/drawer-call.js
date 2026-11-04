@@ -3,7 +3,9 @@
 // door in a fresh conversation over an OpenAI-compatible /chat/completions endpoint (OpenRouter's image output). Three
 // modes, chosen by code (ladder-step.js): `scene` (a photograph of a place and what happens there), `object` (one thing
 // on a quiet background) and `outpaint` (a real owner photo placed in the middle of a wide band, its sides extended).
-// The one redraw after a looker rejection adds the template's `redraw` part with the fault names.
+// The one redraw after a looker rejection adds the template's `redraw` part with the fault names. A fourth mode,
+// `cutout` (#346), draws the figure of a cut-out frame on a flat plain ground of one colour code names and removes
+// afterwards (cutout-ground.js).
 //
 // A call that fails or answers no picture is a drawing with no bytes and its reason; it never throws and is never sent
 // twice by this module (one drawing is one paid call). Its cost is the provider's figure, else its tokens at the model's
@@ -11,7 +13,7 @@
 import { costOf } from '../lib/agent-over-door-wire.js'
 import { costOfCall, priceFor } from '../brand-step/brand-prices.js'
 
-export const DRAW_MODES = Object.freeze(['scene', 'object', 'outpaint'])
+export const DRAW_MODES = Object.freeze(['scene', 'object', 'outpaint', 'cutout'])
 /** How long one drawing may take: the model answers in 10 to 25 s. */
 export const DRAW_MS = 90_000
 /** The aspect ratios the image model takes (OpenRouter `image_config.aspect_ratio`). */
@@ -33,10 +35,11 @@ const said = (x) => (typeof x === 'string' && x.trim() ? x.trim() : 'not stated'
 
 /**
  * The text of one drawing: the template's common part, the mode's part and, on a redraw, the redraw part; every place
- * filled from the plan's words (`wish`) or, for the redraw, the fault names.
+ * filled from the plan's words (`wish`) or, for the redraw, the fault names; a cut-out's from its `ground`.
  * @param {Record<string, string>} parts picture-prompts.js drawingParts
+ * @param {{ name: string, hex: string } | null} [ground] the plain ground of a cut-out (cutout-ground.js GROUNDS)
  */
-export function drawingText(parts, mode, wish, faults = null) {
+export function drawingText(parts, mode, wish, faults = null, ground = null) {
   if (!DRAW_MODES.includes(mode)) throw new Error(`not a drawing mode: ${mode}`)
   const values = {
     shows: said(wish?.shows),
@@ -44,7 +47,8 @@ export function drawingText(parts, mode, wish, faults = null) {
     avoid: listed(wish?.avoid),
     mood: said(wish?.mood),
     size: said(wish?.size),
-    faults: listed(faults)
+    faults: listed(faults),
+    ground: ground ? `${ground.name} (${ground.hex})` : ''
   }
   const fill = (text) => String(text ?? '').replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '')
   return [parts.common, parts[mode], ...(faults?.length ? [parts.redraw] : [])].map(fill).join('\n\n')

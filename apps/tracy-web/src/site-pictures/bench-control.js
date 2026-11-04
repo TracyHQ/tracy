@@ -3,7 +3,8 @@
 // refused start leaves nothing behind and an accepted one says exactly what it ran: plan, brief as used, where its
 // owner photos come from, kit, prompt hashes and checker version, and, when the plan has a frame for the picker (#342),
 // the picker door's snapshot (never the key) and the harness settings, and the drawer door's (#344, `door.drawer`): a
-// frame the picker cannot fill is drawn, so such a run does not start without the drawer. Always the looker door's
+// frame the picker cannot fill is drawn, so such a run does not start without the drawer; nor does a run whose plan has
+// a specific cut-out frame, which is always drawn (#346). Always the looker door's
 // snapshot (#343, `door.looker`): a run does not start without the looker. The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
 import { benchHarnessFor } from '../lib/bench-harness.js'
@@ -27,6 +28,7 @@ import { altsOfCopy } from './alt-notes.js'
 import { briefImages } from './owner-photos.js'
 import { CHECKER_VERSION } from './picture-check/check-pictures.js'
 import { indexInputs } from './picture-check/inputs-index.js'
+import { drawsCutouts } from './ladder-rungs.js'
 import { needsPicker } from './picker-input.js'
 import { picturePrompts } from './picture-prompts.js'
 
@@ -91,9 +93,10 @@ export async function startPictureRun({
   // Every run needs the looker (#343): it checks every finished picture.
   const looker = await pictureLookerDoor({ pool, secret, picker: door?.door ?? null })
   if (!looker.ok) return refuse(looker.code, looker.reason)
-  // The picker's frames may need a drawing (no owner photo fits, or the picker answers "none"): the drawer door too.
+  // The picker's frames may need a drawing (no owner photo fits, or the picker answers "none"), and a specific cut-out
+  // frame is always drawn (#346): the drawer door too.
   let drawer = null
-  if (specific) {
+  if (specific || drawsCutouts(indexInputs({ plan, kit: kit.doc, brief, files: {} }))) {
     drawer = await pictureDrawerDoor({ pool, secret })
     if (!drawer.ok) return refuse(drawer.code, drawer.reason)
   }

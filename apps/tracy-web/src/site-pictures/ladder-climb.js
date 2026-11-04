@@ -18,6 +18,12 @@ export const NEXT_PHOTO_TRIES = 2
 function chooseMode({ idx, usable }, s, frameId, p) {
   if (p.mode) return
   const frame = idx.frames.get(frameId)
+  // A cut-out is drawn on a plain ground (cutout-ground.js), never extended from a photo.
+  if (frame?.kind === 'cutout') {
+    p.mode = 'cutout'
+    p.asset = null
+    return
+  }
   const wish = idx.wishes.get(frameId)
   const shape = idx.demoSize(frameId) ?? frame
   const used = s.onPages(frameId)
@@ -62,18 +68,24 @@ async function drawRung(ctx, s, frameId, p, rung) {
     res = await ask()
   }
   if (res.call) s.draws.push(res.call)
+  // A cut-out whose ground could not be removed: the redraw is told the fault, as after a rejection.
+  if (!res.made && res.faults?.length) p.faults = res.faults
   if (!res.made) return { skip: res.problem }
   s.keepFile(res.made, res.call.cached ? 0 : (res.call.costUsd ?? 0))
   const extended = p.mode === 'outpaint'
   const list = s.listOf(frame)
+  const cut = res.extra.cutout
+  const reason = extended
+    ? `owner photo ${p.asset.id} extended sideways to fill the wide band`
+    : cut
+      ? `drawn as a cut-out on a plain ${cut.groundName} ground (${cut.ground}), the ground removed by code: no owner photo is cut out`
+      : `drawn (${p.mode}): no owner photo fits`
   return {
     list,
     entry: placedEntry(frameId, extended ? 'owner-photo-extended' : 'drawn', res.made, {
       ...res.extra,
       drawing: { mode: p.mode, attempt },
-      reason: extended
-        ? `owner photo ${p.asset.id} extended sideways to fill the wide band`
-        : `drawn (${p.mode}): no owner photo fits`,
+      reason,
       ...s.extraOf(list)
     })
   }
@@ -159,7 +171,7 @@ function runRung(ctx, s, frameId, p, rung) {
 // Climb a frame's ladder from where it stands until a rung places a picture or ends the frame.
 async function climb(ctx, s, frameId, firstResult = null) {
   const p = s.progress.get(frameId)
-  const rungs = rungsOf(ctx.idx.wishes.get(frameId))
+  const rungs = rungsOf(ctx.idx.wishes.get(frameId), ctx.idx.frames.get(frameId))
   let result = firstResult
   for (;;) {
     if (p.done) return
@@ -204,7 +216,7 @@ async function climb(ctx, s, frameId, firstResult = null) {
  *   drawing: { draw: Function } | null, luminance: Map<string, number> }} ctx
  */
 export async function climbAll(ctx, s, frameIds) {
-  const rungOf = (f) => rungsOf(ctx.idx.wishes.get(f))[s.progress.get(f).at]
+  const rungOf = (f) => rungsOf(ctx.idx.wishes.get(f), ctx.idx.frames.get(f))[s.progress.get(f).at]
   const drawsFirst = frameIds.filter((f) => ['draw', 'redraw'].includes(rungOf(f)))
   const drawn = await inParallel(drawsFirst, DRAW_CONCURRENCY, (f) =>
     drawRung(ctx, s, f, s.progress.get(f), rungOf(f))

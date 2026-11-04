@@ -8,8 +8,8 @@ import { makerOf } from '../src/site-pictures/looker-door.js'
 import { FAULTS, lookImage, lookMessage, MODEL_FAULTS, readLook } from '../src/site-pictures/looker-call.js'
 
 test('an answer is held to the fixed fault list, and any fault fails the picture', () => {
-  // The model names six faults; the seventh, "look unreadable", only code records.
-  assert.equal(MODEL_FAULTS.length, 6)
+  // The model names six faults on any picture and four more on a cut-out (#346); "look unreadable" only code records.
+  assert.equal(MODEL_FAULTS.length, 10)
   assert.deepEqual(FAULTS, [...MODEL_FAULTS, 'look unreadable'])
   const said = readLook(
     'Here: {"verdict":"pass","faults":["Subject cut off","too dark"],"seen":"A rider on a gravel road."}'
@@ -57,6 +57,19 @@ test('the picture is shown at display size, never enlarged, and an extended phot
   const text = lookMessage({ words: { shows: 'x' }, image: outlined, outlined: true })[0].text
   assert.match(text, /outlined in magenta is the owner's real photo/)
   assert.doesNotMatch(lookMessage({ words: {}, image: big, outlined: false })[0].text, /outlined/)
+  // The cut-out faults are named only for a cut-out.
+  assert.doesNotMatch(
+    lookMessage({ words: {}, image: big, outlined: false })[0].text,
+    /leftover ground|cut-out/
+  )
+  const cut = lookMessage({
+    words: {},
+    image: big,
+    outlined: false,
+    cutout: { textOver: false, figure: null, demoFigure: null }
+  })
+  assert.match(cut[0].text, /This picture is a cut-out/)
+  assert.match(cut[0].text, /"rough cut-out edge", "leftover ground", "missing part", "covers the text"/)
 })
 
 test('the maker of a model is its vendor prefix, else its provider', () => {

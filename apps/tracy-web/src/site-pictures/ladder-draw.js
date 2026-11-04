@@ -5,6 +5,10 @@
 // - `outpaint`: a portrait owner photo placed in the middle of a wide band at the band's height (never enlarged), the
 //   sides grey; the model extends the sides, and code pastes the real photo back over the middle of its answer, so the
 //   real part is the owner's own pixels. The entry records that box as `realPart`, which the looker outlines.
+// - `cutout` (#346): the figure of a cut-out frame drawn on a flat plain ground of one colour (cutout-ground.js
+//   groundFor); code removes the ground and contains the figure in the frame's size as a PNG with alpha. The entry
+//   records the ground and that it was removed in `cutout`. A ground that cannot be removed cleanly is a failed draw,
+//   with the looker fault the redraw names.
 //
 // Every drawing is kept in the bench's file store (runs/<run id>/draws/<key>.json, the key a hash of the mode, the
 // text, the real photo, the size, the model and the template), so a later round or a resumed run pays once per
@@ -13,6 +17,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
 import { outputSizeFor } from './cut-photo.js'
+import { cutoutFile, groundFor } from './cutout-ground.js'
 import { aspectRatioFor, askDrawer, drawingText } from './drawer-call.js'
 import { fileStore, sha256Hex } from './file-store.js'
 
@@ -68,8 +73,9 @@ export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetch
 
   /**
    * Draw one frame. `asset` (outpaint only) the owner photo to extend; `faults` the looker's fault names on a redraw.
-   * @returns {Promise<{ made: object | null, call: object, extra: object, problem?: string }>} `made` the stored file
-   *   ({ name, ext, sha256, width, height }); `call` the record of the call; `extra` the entry fields of an extension
+   * @returns {Promise<{ made: object | null, call: object, extra: object, problem?: string, faults?: string[] }>}
+   *   `made` the stored file ({ name, ext, sha256, width, height }); `call` the record of the call; `extra` the entry
+   *   fields of an extension or a cut-out; `faults` the looker faults of a cut-out whose ground could not be removed
    */
   async function draw({ frameId, wish, frame, demo, mode, asset = null, faults = null, attempt = 1 }) {
     const out = outputSizeFor(demo, frame, 2 * Number(frame.width))
@@ -81,7 +87,8 @@ export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetch
         call: null,
         extra: {}
       }
-    const text = drawingText(prompt.parts, mode, wish, faults)
+    const ground = mode === 'cutout' ? groundFor(wish) : null
+    const text = drawingText(prompt.parts, mode, wish, faults, ground)
     const key = sha256Hex(
       JSON.stringify([mode, text, band?.photoSha ?? null, out, door.model, prompt.sha256])
     )
@@ -95,7 +102,7 @@ export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetch
     if (before && (await store.readPicture(before.name)))
       return {
         made: before,
-        extra,
+        extra: before.cutout ? { cutout: before.cutout } : extra,
         call: {
           ...base,
           sha256: before.sha256,
@@ -122,6 +129,7 @@ export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetch
     }
     if (!answer.bytes)
       return { made: null, problem: answer.problem, call: { ...call, problem: answer.problem }, extra }
+    if (ground) return cutoutOf(answer.bytes, ground, out, call, key)
     let fitted
     try {
       fitted = sharp(answer.bytes, { failOn: 'none' })
@@ -136,20 +144,52 @@ export function createDrawing({ door, prompt, storeDir, runId, photoBytes, fetch
       const problem = `the drawer's picture cannot be read: ${String(error?.message ?? error).slice(0, 200)}`
       return { made: null, problem, call: { ...call, problem }, extra }
     }
-    const name = await store.putPicture(fitted, 'jpg')
+    return { ...(await keep(key, fitted, 'jpg', out, call)), extra }
+  }
+
+  // The drawing's ground removed (cutout-ground.js); a ground that cannot be removed cleanly is a failed draw.
+  async function cutoutOf(bytes, ground, out, call, key) {
+    let cut
+    try {
+      cut = await cutoutFile(bytes, ground, out)
+    } catch (error) {
+      cut = {
+        ok: false,
+        reason: `it cannot be read: ${String(error?.message ?? error).slice(0, 200)}`,
+        fault: null
+      }
+    }
+    if (!cut.ok) {
+      const problem = `the ground of the drawing could not be removed cleanly: ${cut.reason}`
+      return {
+        made: null,
+        problem,
+        faults: cut.fault ? [cut.fault] : null,
+        call: { ...call, problem },
+        extra: {}
+      }
+    }
+    const stored = await keep(key, cut.png, 'png', out, call, { cutout: cut.cutout })
+    return { ...stored, extra: { cutout: cut.cutout } }
+  }
+
+  // Store the finished file and its record (by the drawing's key), so a later round reads it instead of paying again.
+  async function keep(key, bytes, ext, out, call, more = {}) {
+    const name = await store.putPicture(bytes, ext)
     const made = {
       name,
-      ext: 'jpg',
+      ext,
       sha256: name.split('.')[0],
       width: out.width,
       height: out.height,
-      model: answer.model,
-      ms: answer.ms,
-      costUsd: answer.costUsd
+      model: call.model,
+      ms: call.ms,
+      costUsd: call.costUsd,
+      ...more
     }
     await mkdir(path.dirname(kept(key)), { recursive: true })
     await writeFile(kept(key), JSON.stringify(made))
-    return { made, extra, call: { ...call, sha256: made.sha256 } }
+    return { made, call: { ...call, sha256: made.sha256 } }
   }
 
   return { draw }

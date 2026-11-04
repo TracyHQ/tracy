@@ -1,7 +1,10 @@
 // One look (#343, ADR 0043 section 3): one finished picture, shown to the looker at its display size, with the plan's
 // words for its frame and nothing else (not the picker's reason, not the other frames, not the brief). A fresh
 // conversation every time: one system message (the looker prompt) and one user message. For an extended owner photo
-// (`owner-photo-extended`, #344) the real part is outlined on the picture and the message says so.
+// (`owner-photo-extended`, #344) the real part is outlined on the picture and the message says so. A cut-out (#346) is
+// shown over grey and white checks where it is transparent, and the message says so, says whether the site's text sits
+// over or beside the picture box, and how much of the box the template's own figure and this one cover; the cut-out
+// faults are named only then.
 //
 // The answer is held to a fixed form: a verdict, faults from the fixed list (FAULTS) and one `seen` sentence. A fault
 // name outside the model's list is dropped and noted; any fault makes the verdict "fail". An answer that cannot be read,
@@ -12,8 +15,8 @@ import { jsonObjectIn } from '../sites/brief-engines/shared.js'
 import { costOf } from '../lib/agent-over-door-wire.js'
 import { costOfCall, priceFor } from '../brand-step/brand-prices.js'
 
-/** The faults the looker model may name, exactly as written. */
-export const MODEL_FAULTS = Object.freeze([
+/** The faults the looker may name on any picture, exactly as written. */
+export const PICTURE_FAULTS = Object.freeze([
   'wrong subject',
   'forbidden item',
   'subject cut off',
@@ -21,6 +24,15 @@ export const MODEL_FAULTS = Object.freeze([
   'stray lettering',
   'visible drawing seam'
 ])
+/** The faults it may name on a cut-out besides those (#346). */
+export const CUTOUT_FAULTS = Object.freeze([
+  'rough cut-out edge',
+  'leftover ground',
+  'missing part',
+  'covers the text'
+])
+/** Every fault the looker model may name. */
+export const MODEL_FAULTS = Object.freeze([...PICTURE_FAULTS, ...CUTOUT_FAULTS])
 /** The fault code records when the looker could not look at a picture, twice: it fails the picture. */
 export const LOOK_UNREADABLE = 'look unreadable'
 /** The fixed fault list of a look: the model's faults and the one code records. */
@@ -30,6 +42,7 @@ export const FAULTS = Object.freeze([...MODEL_FAULTS, LOOK_UNREADABLE])
 export const LOOK_MS = 90_000
 const MAX_TOKENS = 600
 const OUTLINE = '#ff00ff'
+const CHECK = 16
 
 /** The plan's words for a frame, as the looker reads them. */
 export const lookWords = (wish) => ({
@@ -41,9 +54,9 @@ export const lookWords = (wish) => ({
 
 /**
  * The picture as the site shows it: resized to fit the frame's display box (never enlarged), as a PNG, with the real
- * part of an extended photo outlined. `realPart` is a box on the finished file.
+ * part of an extended photo outlined, and a cut-out over grey and white checks. `realPart` is a box on the finished file.
  */
-export async function lookImage(bytes, { width, height }, realPart = null) {
+export async function lookImage(bytes, { width, height }, realPart = null, { checks = false } = {}) {
   // Turned upright first, so the outline and its box are on the picture as shown.
   const upright = await sharp(Buffer.from(bytes), { failOn: 'none' }).rotate().toBuffer()
   const img = sharp(upright)
@@ -55,15 +68,45 @@ export async function lookImage(bytes, { width, height }, realPart = null) {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${meta.width}" height="${meta.height}"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="${OUTLINE}" stroke-width="${line}"/></svg>`
     pipeline = sharp(upright).composite([{ input: Buffer.from(svg) }])
   }
-  const sized = await sharp(await pipeline.png().toBuffer())
+  let sized = await sharp(await pipeline.png().toBuffer())
     .resize(width, height, { fit: 'inside', withoutEnlargement: true })
     .png()
     .toBuffer({ resolveWithObject: true })
+  if (checks) sized = await overChecks(sized.data, sized.info)
   return { base64: sized.data.toString('base64'), width: sized.info.width, height: sized.info.height }
 }
 
-/** The look's only user message. */
-export function lookMessage({ words, image, outlined }) {
+// A cut-out laid over grey and white checks, so its transparent part, its edges and any ground left are seen.
+async function overChecks(png, { width, height }) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><defs><pattern id="c" width="${2 * CHECK}" height="${2 * CHECK}" patternUnits="userSpaceOnUse"><rect width="${2 * CHECK}" height="${2 * CHECK}" fill="#ffffff"/><rect width="${CHECK}" height="${CHECK}" fill="#c8c8c8"/><rect x="${CHECK}" y="${CHECK}" width="${CHECK}" height="${CHECK}" fill="#c8c8c8"/></pattern></defs><rect width="${width}" height="${height}" fill="url(#c)"/></svg>`
+  const laid = await sharp(Buffer.from(svg))
+    .composite([{ input: png }])
+    .png()
+    .toBuffer()
+  // Composited last by sharp, so the alpha is dropped in a second pass.
+  return sharp(laid).removeAlpha().png().toBuffer({ resolveWithObject: true })
+}
+
+const percent = (x) => `${Math.round(x * 100)}%`
+
+// The lines a cut-out adds to the message.
+function cutoutLines(cutout) {
+  return [
+    'This picture is a cut-out: the figure was drawn on a plain ground that code removed. The grey and white checks show where the picture is transparent on the site; they are not part of the picture.',
+    cutout.textOver
+      ? "On the site, the page's heading and text sit over part of this picture box, on the part the figure leaves clear."
+      : "On the site, the page's heading and text sit beside this picture.",
+    ...(Number.isFinite(cutout.demoFigure) && Number.isFinite(cutout.figure)
+      ? [
+          `The template's own figure covers about ${percent(cutout.demoFigure)} of the box; this figure covers about ${percent(cutout.figure)}.`
+        ]
+      : [])
+  ]
+}
+
+/** The look's only user message. `cutout`: { textOver, figure, demoFigure } for a cut-out, else null. */
+export function lookMessage({ words, image, outlined, cutout = null }) {
+  const faults = cutout ? MODEL_FAULTS : PICTURE_FAULTS
   const text = [
     `The plan's words for this frame:`,
     JSON.stringify(words, null, 2),
@@ -74,7 +117,8 @@ export function lookMessage({ words, image, outlined }) {
           "The part outlined in magenta is the owner's real photo; the rest was extended by drawing. The outline is not part of the picture."
         ]
       : []),
-    `Faults you may name: ${MODEL_FAULTS.map((f) => `"${f}"`).join(', ')}.`,
+    ...(cutout ? cutoutLines(cutout) : []),
+    `Faults you may name: ${faults.map((f) => `"${f}"`).join(', ')}.`,
     'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>" }'
   ].join('\n')
   return [
@@ -103,7 +147,16 @@ export function readLook(text) {
  * @returns {Promise<{ verdict: 'pass' | 'fail' | null, faults: string[], seen: string | null, problem?: string,
  *   dropped?: string[], model: string, ms: number, costUsd: number | null, costEstimated: boolean }>}
  */
-export async function askLooker({ door, system, words, image, outlined, fetchImpl = fetch, ms = LOOK_MS }) {
+export async function askLooker({
+  door,
+  system,
+  words,
+  image,
+  outlined,
+  cutout = null,
+  fetchImpl = fetch,
+  ms = LOOK_MS
+}) {
   const started = Date.now()
   const done = (fields, json = null) => {
     const price = priceFor(door.model)
@@ -134,7 +187,7 @@ export async function askLooker({ door, system, words, image, outlined, fetchImp
         model: door.model,
         messages: [
           { role: 'system', content: system },
-          { role: 'user', content: lookMessage({ words, image, outlined }) }
+          { role: 'user', content: lookMessage({ words, image, outlined, cutout }) }
         ],
         max_tokens: MAX_TOKENS,
         temperature: 0,

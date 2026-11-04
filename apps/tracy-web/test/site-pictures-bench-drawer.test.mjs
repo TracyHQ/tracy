@@ -1,7 +1,8 @@
 // The drawer of the picture bench (#344), at the bench-run seam: a run whose plan may need a drawing does not start
-// without a usable drawer door, nor run when the door changed; a frame the picker gives up on is drawn through the
-// fake drawer door (gemini flash lite image through OpenRouter, scripted), and what each drawing cost is on its file row,
-// in the manifest's drawer record and in the run's cost. Invented Kestrel Row Bike Workshop data, no real model.
+// without a usable drawer door (nor one with a specific cut-out frame, #346), nor run when the door changed; a frame
+// the picker gives up on is drawn through the fake drawer door (gemini flash lite image through OpenRouter, scripted),
+// and what each drawing cost is on its file row, in the manifest's drawer record and in the run's cost. Invented
+// Kestrel Row Bike Workshop data, no real model.
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { assignDoor, clearDoor, saveModels } from '../src/lib/llm-store.js'
@@ -19,6 +20,7 @@ import {
   KIT_REF,
   kitIndex,
   photoFolder,
+  plan,
   storeDir
 } from './_site-pictures-bench.mjs'
 import {
@@ -44,11 +46,11 @@ after(store.done)
 const where = { index: kits.index, dir: store.dir }
 const json = (body) => new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json' } })
 
-const start = (pool) =>
+const start = (pool, over = {}) =>
   startPictureRun({
     pool,
     secret: SECRET,
-    plan: pickerPlan(),
+    plan: over.plan ?? pickerPlan(),
     planSource: { kind: 'file', name: 'p.json' },
     brief: brief(),
     briefSource: { kind: 'file', name: 'b.json' },
@@ -58,6 +60,33 @@ const start = (pool) =>
     storeDir: store.dir,
     index: kits.index
   })
+
+// The bench plan with one picture frame for the drawer: the specific cut-out block-9.2 (#346), no frame for the picker.
+function cutoutOnlyPlan() {
+  const p = plan({ later: true })
+  for (const page of p.pages)
+    for (const b of page.blocks ?? [])
+      if (b.block === 'block-9') b.pictures = b.pictures.filter((w) => w.frame === 'block-9.2')
+  return p
+}
+
+test(
+  'a run whose plan has a specific cut-out frame does not start without the drawer door',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignLookerDoor(pool)
+    const unset = await start(pool, { plan: cutoutOnlyPlan() })
+    assert.equal(unset.code, 'SITE_PICTURES_DRAWER_UNSET')
+    await assignDrawerDoor(pool)
+    const started = await start(pool, { plan: cutoutOnlyPlan() })
+    assert.equal(started.ok, true, JSON.stringify(started))
+    const { rows } = await pool.query('select door from site_picture_run where id = $1', [started.run.id])
+    assert.equal(rows[0].door.drawer.model, DRAWER_MODEL)
+    // No frame for the picker: no picker door is stored.
+    assert.equal(rows[0].door.providerId, undefined)
+  }
+)
 
 test(
   'a run that may need a drawing does not start without a drawer that draws, nor run when it changed',

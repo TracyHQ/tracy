@@ -4,16 +4,38 @@
 // A `specific` frame is drawn (one redraw with the looker's fault names), then takes the next owner photo, then its row
 // is dropped, then it is hidden, then returned to the planner. An `any-real` frame is never drawn or extended: it starts
 // at the next photo. A `person` frame is never drawn and never takes another photo: it is hidden or returned.
+// A cut-out frame (#346) never takes an owner photo (no photo is cut out): a `specific` one is drawn on a plain ground,
+// redrawn once, then hidden or returned; any other cut-out (a person, any real photo) is never drawn: hidden or returned.
 
 /** The rungs per plan match. */
 export const RUNGS = Object.freeze({
   specific: Object.freeze(['draw', 'redraw', 'next-photo', 'fewer-rows', 'hide', 'return']),
   'any-real': Object.freeze(['next-photo', 'fewer-rows', 'hide', 'return']),
-  person: Object.freeze(['hide', 'return'])
+  person: Object.freeze(['hide', 'return']),
+  cutout: Object.freeze(['draw', 'redraw', 'hide', 'return'])
 })
 
-/** The rungs of a plan wish (an unknown match climbs only the rungs that place nothing new). */
-export const rungsOf = (wish) => RUNGS[wish?.match] ?? RUNGS.person
+/**
+ * The rungs of a plan wish in its kit frame (an unknown match climbs only the rungs that place nothing new).
+ */
+export function rungsOf(wish, frame = null) {
+  if (frame?.kind === 'cutout') return wish?.match === 'specific' ? RUNGS.cutout : RUNGS.person
+  return RUNGS[wish?.match] ?? RUNGS.person
+}
+
+/**
+ * Whether a plan has a cut-out frame that is drawn (a `specific` one the kit lets be written, no twin): such a run
+ * needs the drawer door.
+ * @param {object} idx the picture check's index of plan and kit (picture-check/inputs-index.js)
+ */
+export function drawsCutouts(idx) {
+  for (const [frameId, wish] of idx.wishes) {
+    const frame = idx.frames.get(frameId)
+    if (frame?.kind !== 'cutout' || frame.writable === false || frame.twinOf || wish.sameAs) continue
+    if (wish.match === 'specific') return true
+  }
+  return false
+}
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 

@@ -4,7 +4,9 @@
 // 1. Every frame that waits for the drawer (a `specific` frame no owner photo fits, or that the picker answered "none")
 //    is drawn, at most DRAW_CONCURRENCY at a time: a wide band with a portrait owner photo of the frame's own offering
 //    is extended from it (`owner-photo-extended`), any other frame drawn as a scene or an object (`drawn`). An
-//    `any-real` or `person` frame is never drawn or extended, and a cut-out frame stays pending for its own step.
+//    `any-real` or `person` frame is never drawn or extended. Every cut-out frame (#346) starts its own ladder too: a
+//    `specific` one is drawn on a plain ground whose colour code removes (cutout-ground.js), any other is hidden or
+//    returned at once (never a demo figure, never an owner photo cut out).
 // 2. A picture in a frame with text over it that is still too bright gets a dark overlay baked in (darken.js).
 // 3. The looker looks at every finished picture (looker-step.js).
 // 4. Each rejected frame climbs its ladder (ladder-rungs.js): draw, one redraw with the fault names, the next photo,
@@ -26,12 +28,13 @@ import { ladderState } from './ladder-state.js'
 import { LOOK_UNREADABLE } from './looker-call.js'
 import { LOOKED_SOURCES } from './looker-step.js'
 import { OWNER_SOURCES } from './manifest-shape.js'
+import { WAITS_FOR } from './fill-frames.js'
 import { WAITS_FOR_DRAWER } from './picker-picks.js'
 
 export { DRAW_CONCURRENCY, NEXT_PHOTO_TRIES }
 
 const MAX_PASSES = 12
-const NOT_DRAWN_KINDS = new Set(['cutout', 'icon', 'logo'])
+const NOT_DRAWN_KINDS = new Set(['icon', 'logo'])
 const DRAWN_SOURCES = new Set(['drawn', 'owner-photo-extended'])
 
 const sum = (list, key) => list.reduce((n, c) => n + (Number.isFinite(c[key]) ? c[key] : 0), 0)
@@ -55,7 +58,8 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
   async function darkenAll(s, darkChecked) {
     for (const held of s.entries.values()) {
       const e = held.entry
-      if (!LOOKED_SOURCES.has(e.source) || e.darkened || darkChecked.has(e.sha256)) continue
+      // A cut-out keeps its transparency: it is never darkened.
+      if (!LOOKED_SOURCES.has(e.source) || e.darkened || e.cutout || darkChecked.has(e.sha256)) continue
       if (!wantsDark(idx.frames.get(e.frame))) continue
       const bytes = await store.readPicture(path.basename(e.file))
       const dark = bytes ? await darkenPicture(bytes) : null
@@ -90,6 +94,16 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
       .filter((p) => p.waitsFor === WAITS_FOR_DRAWER && climbable(p.frame))
       .filter((p) => idx.wishes.get(p.frame).match === 'specific')
       .map((p) => p.frame)
+    // Every cut-out frame climbs its own ladder (ladder-rungs.js): drawn when specific, else hidden or returned.
+    const cutouts = s.pending
+      .filter((p) => p.waitsFor === WAITS_FOR.cutout && climbable(p.frame))
+      .map((p) => p.frame)
+    for (const f of cutouts) {
+      const match = idx.wishes.get(f).match
+      if (match !== 'specific')
+        s.note(f, 'draw', 'skipped', `a ${match} cut-out is never drawn, and no owner photo is cut out`)
+    }
+    jobs.push(...cutouts)
     for (const f of jobs) s.progress.set(f, { at: 0, tried: new Set(), photos: 0 })
     s.pending = s.pending.filter((p) => !jobs.includes(p.frame))
     // In the last round, a frame the picker placed that still fails the check gets no other picker round: it climbs.

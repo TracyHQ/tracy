@@ -5,7 +5,7 @@
 // planner; frames the kit marks not writable are returned, except a picture painted behind blocks, which goes into
 // siteSettings; twins copy their source. A frame with text over its picture tries darker photos first (the overlay a
 // picture still too bright gets is baked when the round is finished, ladder-step.js). Specific, icon and cut-out frames are left as pending entries for the steps
-// that come later (the picker, the icons, the cut-outs): never a demo picture. No owner photo is shown twice on a page.
+// that come later (the picker, the icons, the cut-outs, ladder-step.js): never a demo picture. No owner photo is shown twice on a page.
 import { initialsOf } from 'website-opportunities/domain/person-avatar.mjs'
 import { initialsAvatar } from '../lib/initials-avatar.js'
 import { cutPhoto, outputSizeFor } from './cut-photo.js'
@@ -80,7 +80,12 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
       )
     else if (frame.kind === 'cutout')
       pending.push(
-        pendingEntry(wish, frame, WAITS_FOR.cutout, 'a cut-out needs background removal and the looker')
+        pendingEntry(
+          wish,
+          frame,
+          WAITS_FOR.cutout,
+          'a cut-out is drawn on a plain ground that code removes, then looked at'
+        )
       )
     else if (wish.match === 'any-real' || wish.match === 'person') work.push({ frameId, wish, frame, list })
     else

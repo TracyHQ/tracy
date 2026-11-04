@@ -428,7 +428,7 @@ test('a frame the picker placed climbs only in the last round; an any-real frame
 
 test('the drawing text is the fixed template filled from the plan words only', () => {
   const parts = picturePrompts().drawing
-  assert.deepEqual(Object.keys(parts).sort(), ['common', 'object', 'outpaint', 'redraw', 'scene'])
+  assert.deepEqual(Object.keys(parts).sort(), ['common', 'cutout', 'object', 'outpaint', 'redraw', 'scene'])
   const w = {
     shows: 'a wheel on a stand',
     mustInclude: ['spokes', 'a stand'],

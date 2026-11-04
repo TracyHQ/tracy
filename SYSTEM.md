@@ -2276,7 +2276,7 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   cache: a file gone from it is reported by `get`, never invented.
 - **Code first** (#340): any-real frames take owner photos by code, person frames a confirmed portrait or initials,
   twins copy their source, frames the kit marks not writable are returned (a picture painted behind blocks is listed
-  in `siteSettings`); icon and cut-out frames stay pending for their tickets.
+  in `siteSettings`); icon and cut-out frames stay pending for their own steps (#345, #346).
 - **The picker** (#342) is called through the `picturePicker` door (`/ops` › Model & AI; by default `deepseek-flash` on
   the `deepseek` provider, effort max, no tools): one call per run with the owner photos as 512 px thumbnails and a code
   shortlist per specific frame, never a demo picture of the kit. A run whose plan has no specific frame needs no door
@@ -2307,6 +2307,16 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   draw, person frames only hide or return. Each rung is recorded in `ladder`, dropped rows in `rows`, every drawing in
   `drawer` and `cost.drawer`; the run's cost adds the drawings, and each drawn file's row its cost. Drawings and looks are
   kept in the file store by key, so a later round or a resumed run pays once. Migration 202 adds the door.
+- **Cut-out frames** (#346) are drawn in the same finishing pass: a `specific` cut-out is drawn by the drawer on a flat
+  plain ground of one colour code chooses from the plan's words (chroma green, else magenta, else chroma blue), and code
+  removes the ground ([`cutout-ground.js`](apps/tracy-web/src/site-pictures/cutout-ground.js): a colour difference key
+  with a soft edge, colour unmixing and spill suppression), writing a PNG with alpha at the frame's size; a ground it
+  cannot remove cleanly (not plain, its colour in the figure, the figure touching the top or a side) is a failed draw.
+  The entry is `drawn` with `cutout: { ground, groundRemoved, ... }`; the looker sees it over checks and may name the
+  cut-out faults (rough edge, leftover ground, missing part, covers the text). A rejected cut-out is redrawn once, then
+  hidden where the kit allows, else returned; person and any-real cut-outs are never drawn. No background removal model,
+  no owner photo cut out, never a demo figure. A run on a plan with a specific cut-out does not start without the drawer
+  door.
 
 ## 9. Sign-in, seats, permissions
 

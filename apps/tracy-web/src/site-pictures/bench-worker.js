@@ -22,7 +22,8 @@
 // Every checked round is then finished (#343, #344, ladder-step.js): the frames waiting for the drawer are drawn or
 // extended through the drawer's own door, pictures with text over them are darkened, the looker checks each finished
 // picture through its own door, and every rejected frame the picker does not get back climbs the fallback ladder (one
-// redraw, the next photo, fewer rows, hidden, returned to the planner). The looker's rejections join the round's
+// redraw, the next photo, fewer rows, hidden, returned to the planner). Cut-out frames (#346) are drawn there too, on a
+// plain ground that code removes, then looked at; one redraw, then hidden or returned. The looker's rejections join the round's
 // failures, so a rejected frame the picker placed goes back in the next fix round with its fault names.
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { kitIdOf } from '../site-writer/bench-worker.js'

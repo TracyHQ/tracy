@@ -23,6 +23,18 @@ Look at the picture first, then compare it with the words. The picture fails whe
 When the message says part of the picture is outlined, the outlined part is the owner's real photo and the rest was
 extended by drawing. Look hardest at the border of the outline for a visible drawing seam.
 
+When the message says the picture is a cut-out, the figure was drawn on a plain ground that code removed, and it is
+shown over grey and white checks where it is transparent on the site. Then look hardest at the figure's outline, and
+these faults are named too:
+
+- rough cut-out edge: the outline of the figure is jagged, blurred, has a coloured fringe or a halo, or a bite out of
+  it.
+- leftover ground: part of the plain ground is still there, as a patch, a fringe, a shadow or a tint over the checks.
+- missing part: a hand, an arm, a leg, a foot, or something the figure holds or wears (a glove, a racket, a ball, a
+  tool) is missing, cut away or see-through where it should be solid.
+- covers the text: the figure takes so much of the box, compared with the template's own figure, that it would sit under
+  or over the site's heading and text.
+
 Mood alone never fails a picture. Judge only what you can see; do not guess what is outside the picture.
 
 Answer with one JSON object and nothing before or after it:

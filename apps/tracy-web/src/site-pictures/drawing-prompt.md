@@ -1,7 +1,8 @@
 # Drawing prompt of the picture step
 
 The drawer's fixed template (ADR 0043, #344). Code fills the `{{...}}` places from the site plan's words for one frame
-(shows, mustInclude, avoid, mood, size) and nothing else, joins the `common` part with the part of the mode code chose,
+(shows, mustInclude, avoid, mood, size) and nothing else, and for a cut-out frame (#346) the plain ground colour code
+chose and will remove (cutout-ground.js), joins the `common` part with the part of the mode code chose,
 and adds the `redraw` part on the one redraw after the looker rejected a drawing. Only the text under the `##` headings
 is sent; this paragraph is not.
 
@@ -35,6 +36,15 @@ of the same place: the same light, colours, perspective and grain. Keep the midd
 change, move, redraw or recolour anything in it. Add no new person and no new subject; continue only the surroundings
 (walls, floor, background, the room or the street). No visible line, change of light or repeated pattern where the
 photograph ends.
+
+## cutout
+
+Make a realistic photograph of one figure alone on a completely flat, plain background of one single colour:
+{{ground}}. The background is exactly that colour everywhere: no gradient, no floor, no horizon, no shadow, no
+reflection, no texture, no smoke or glow and no other thing on it. Nothing in the figure is that colour, not even a
+small part. Keep the whole figure inside the picture with clear background on its left, its right and above it; it may
+stand on the bottom edge. Every hand, arm, leg and foot, and everything the figure holds or wears (gloves, a racket, a
+ball, a tool), is whole and sharp against the background. Even light, crisp edges, no motion blur.
 
 ## redraw
 
