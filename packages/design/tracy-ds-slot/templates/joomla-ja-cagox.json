@@ -260,7 +260,7 @@
       }
     }
   },
-  "bandsNote": "Plain headers and slideshow grounds follow the page. Photo text and outline buttons are paired to the actual photograph ground, including the bright landing photograph whose source class is dark-style. Its right-hand caption and all phone hero captions wear opaque paired system panels where words otherwise cross both pale and dark areas of a photograph. The footer wears its own paired band colours.",
+  "bandsNote": "Plain headers and slideshow grounds follow the page. Photo text and outline buttons are paired to the actual photograph ground, including the bright landing photograph whose source class is dark-style. Its right-hand caption and all phone hero captions wear opaque paired system panels where words otherwise cross both pale and dark areas of a photograph. The footer wears its own paired band colours. A photo slide's own ground, shown while its photograph loads and wherever it does not reach, matches the photograph its words are paired to: a light slide wears a light system colour (the page under a light system, the page text under a dark one) and a dark slide a dark one (the system's ink under a light system, the page under a dark one). That ground is drawn as a one-colour picture layer as well as a colour: it stands in for the photograph, so it is never read as a band of its own, and the words over it are judged against the photograph.",
   "maxVersionNote": "1.0.3 is rebuilt from template 2.0.3 with release-joomla.mjs. Release-specific measurements accompany the content contract; older source versions are outside this measured range.",
   "followRules": {
     ".t3-header, .t3-slideshow": {
@@ -275,7 +275,7 @@
     ".checkout-button-top": {
       "border-color": "border-soft!"
     },
-    ".block-slideshow-item, .block-slideshow .slick-slider": {
+    ".block-slideshow .slick-slider": {
       "background-color": "bg!"
     },
     ".block-slideshow.style-1:has(.block-slideshow-item.active.light-style) .carousel-indicators li": {
@@ -317,16 +317,26 @@
   "measureStill": true,
   "sideRules": {
     "light": {
-      ".block-slideshow-item": {
-        "background-color": "var(--ds-c-bg)!important"
+      ".block-slideshow-item:not(.dark-style)": {
+        "background-color": "var(--ds-c-bg)!important",
+        "background-image": "linear-gradient(var(--ds-c-bg), var(--ds-c-bg))!important"
+      },
+      ".block-slideshow-item.dark-style": {
+        "background-color": "var(--ds-c-ink)!important",
+        "background-image": "linear-gradient(var(--ds-c-ink), var(--ds-c-ink))!important"
       },
       ".t3-header.dark-style .logo-img[src$=\"/images/joomlart/logo/logo-default-light.png\"], .t3-header.dark-style .logo-img-sm[src$=\"/images/joomlart/logo/logo-mobile-light.png\"], .t3-header.dark-style .vmCartModule .total_products::before": {
         "filter": "invert(1) hue-rotate(180deg)!important"
       }
     },
     "dark": {
-      ".block-slideshow-item": {
-        "background-color": "var(--ds-c-bg)!important"
+      ".block-slideshow-item:not(.dark-style)": {
+        "background-color": "var(--ds-c-fg)!important",
+        "background-image": "linear-gradient(var(--ds-c-fg), var(--ds-c-fg))!important"
+      },
+      ".block-slideshow-item.dark-style": {
+        "background-color": "var(--ds-c-bg)!important",
+        "background-image": "linear-gradient(var(--ds-c-bg), var(--ds-c-bg))!important"
       }
     }
   }
