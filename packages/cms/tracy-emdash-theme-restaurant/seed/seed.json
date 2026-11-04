@@ -1913,7 +1913,7 @@
 						},
 						{
 							"collection": "timeline",
-							"entry": "our-history"
+							"entry": "our-history-timeline"
 						}
 					]
 				}
@@ -4346,8 +4346,8 @@
 		],
 		"timeline": [
 			{
-				"id": "timeline:our-history:en",
-				"slug": "our-history",
+				"id": "timeline:our-history-timeline:en",
+				"slug": "our-history-timeline",
 				"status": "published",
 				"locale": "en",
 				"data": {

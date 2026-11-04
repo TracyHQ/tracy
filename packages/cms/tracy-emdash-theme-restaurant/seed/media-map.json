@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-04T01:19:58.593Z",
+	"generatedAt": "2026-11-04T15:28:39.663Z",
 	"source": "JA Restaurant j6 1.0.6 webroot",
 	"items": [
 		{
@@ -482,7 +482,7 @@
 				},
 				{
 					"collection": "timeline",
-					"slug": "our-history",
+					"slug": "our-history-timeline",
 					"locale": "en",
 					"path": "items[1].image"
 				}
@@ -623,7 +623,7 @@
 				},
 				{
 					"collection": "timeline",
-					"slug": "our-history",
+					"slug": "our-history-timeline",
 					"locale": "en",
 					"path": "items[2].image"
 				}
@@ -1193,7 +1193,7 @@
 			"targets": [
 				{
 					"collection": "timeline",
-					"slug": "our-history",
+					"slug": "our-history-timeline",
 					"locale": "en",
 					"path": "items[0].image"
 				},

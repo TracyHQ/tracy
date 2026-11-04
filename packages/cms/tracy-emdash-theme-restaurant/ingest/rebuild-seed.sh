@@ -9,6 +9,7 @@ cp "$W/spec/site-model.json" seed/site-model.json
 node ingest/prune-trashed-menu.mjs "$W/j6/inventory.json" seed/site-model.json
 node ingest/enrich-model.mjs "$W/spec/sections.json" seed/site-model.json "$W/j6/inventory.json"
 node ingest/enrich-pages.mjs "$W/spec/sections.json" seed/site-model.json "$W/j6/inventory.json" ingest/albums.json
+node ingest/rename-slug.mjs seed/site-model.json timeline our-history our-history-timeline
 node ingest/bind-paths.mjs seed/site-model.json
 node tools/compile-seed.mjs seed/site-model.json seed --config compile.config.json
 node ingest/normalize-seed-dates.mjs seed/seed.json

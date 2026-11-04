@@ -7,6 +7,7 @@
 import { getEmDashEntry } from 'emdash'
 import { LOCALES } from './i18n'
 import { linkChecker, type PageRecord, type RecordTable } from './page-records'
+import { withParents } from './parent-gate.ts'
 import { BLOG_CATEGORIES, postPath, type PostRow } from './posts'
 
 const page = (slug: string): PageRecord => ({ collection: 'pages', slug })
@@ -34,16 +35,23 @@ const RECORDS: RecordTable = {
 }
 
 /** One checker per request and locale, so each record is read once however many components ask. */
-const perRequest = new WeakMap<Request, Map<string, ReturnType<typeof linkChecker>>>()
+const perRequest = new WeakMap<Request, Map<string, ReturnType<typeof withParents>>>()
 
-/** Read the page records `urls` land on; returns `live(url)`, false only for a URL whose page is off. */
+/**
+ * Read the page records `urls` land on, and those of their parents (`parent-gate.ts`); returns `live(url)`, false for a URL
+ * whose page is off or that hangs under a page that is off: a child of an unticked page is unreachable and never linked.
+ */
 export function liveLinks(request: Request, locale: string, urls: readonly unknown[]) {
   let byLocale = perRequest.get(request)
   if (!byLocale) perRequest.set(request, (byLocale = new Map()))
   let check = byLocale.get(locale)
   if (!check) {
-    check = linkChecker(
-      async ({ collection, slug }) => Boolean((await getEmDashEntry(collection, slug, { locale })).entry),
+    check = withParents(
+      linkChecker(
+        async ({ collection, slug }) => Boolean((await getEmDashEntry(collection, slug, { locale })).entry),
+        RECORDS,
+        LOCALES
+      ),
       RECORDS,
       LOCALES
     )

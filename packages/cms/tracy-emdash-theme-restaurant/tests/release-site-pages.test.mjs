@@ -4,7 +4,7 @@
 // `release.mjs --site-pages <dir>` prints that file without cutting a release.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -149,4 +149,35 @@ test('no seed/site-model.json stops the release', () => {
   const r = spawnSync(process.execPath, [RELEASE, '--site-pages', dir], { encoding: 'utf8' })
   assert.equal(r.status, 1)
   assert.match(r.stderr, /tracy_site_pages\.json: .*site-model\.json is missing/)
+})
+
+test("the generated list holds every nested page of this template's own seed, Our History included (REL-2)", () => {
+  const r = spawnSync(process.execPath, [RELEASE, '--site-pages', path.join(import.meta.dirname, '..')], {
+    encoding: 'utf8'
+  })
+  assert.equal(r.status, 0, r.stderr)
+  const ids = JSON.parse(r.stdout).pages.map((p) => p.id)
+  for (const id of [
+    'our-history',
+    'simple-menu',
+    'menu-with-image',
+    '2-column-menu',
+    'phone-reservation',
+    'contact-us'
+  ])
+    assert.ok(ids.includes(id), `${id} is listed`)
+  assert.doesNotMatch(r.stderr, /matches 2 page records/, 'no path is answered by two records')
+})
+
+test('no section that holds one entry shares its slug with a page: the page rule would count both as page records', () => {
+  const model = JSON.parse(
+    readFileSync(path.join(import.meta.dirname, '..', 'seed', 'site-model.json'), 'utf8')
+  )
+  const perType = {}
+  for (const r of model.records) perType[r.type] = (perType[r.type] ?? 0) + 1
+  const pages = new Set(model.records.filter((r) => r.type === 'pages').map((r) => r.slug))
+  const clash = model.records
+    .filter((r) => !['pages', 'site'].includes(r.type) && perType[r.type] === 1 && pages.has(r.slug))
+    .map((r) => `${r.type}/${r.slug}`)
+  assert.deepEqual(clash, [])
 })

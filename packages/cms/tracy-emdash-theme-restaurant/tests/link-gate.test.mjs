@@ -112,3 +112,86 @@ test('the router answers 404 for a path whose page is off, and the lists draw no
   ])
     assert.match(read(file), /await livePosts\(Astro\.request, locale,/, file)
 })
+
+// ── a nested page hangs under its parent (parent-gate.ts) ──────────────────────────────────────────────────────────
+import { withParents } from '../src/lib/parent-gate.ts'
+import { menuUrls, pruneMenu } from '../src/lib/menu-gate.ts'
+
+const NESTED = {
+  menu: { collection: 'pages', slug: 'menu' },
+  'menu/simple-menu': { collection: 'pages', slug: 'simple-menu' },
+  'about-us': { collection: 'pages', slug: 'about-us' },
+  'about-us/our-history': { collection: 'pages', slug: 'our-history' }
+}
+const published =
+  (off) =>
+  async ({ slug }) =>
+    !off.includes(slug)
+
+test('the longest key alone lets a child outlive its unticked parent (the defect)', async () => {
+  const plain = await linkChecker(published(['menu']), NESTED, ['en'])(['/menu', '/menu/simple-menu'])
+  assert.equal(plain('/menu'), false)
+  assert.equal(plain('/menu/simple-menu'), true, 'what the kit checker answers: the child is its own record')
+})
+
+test('a child of an unticked page is unreachable, a child of a kept page stays, and the parent of a kept child is its own', async () => {
+  const check = withParents(linkChecker(published(['menu']), NESTED, ['en']), NESTED, ['en'])
+  const live = await check([
+    '/menu',
+    '/menu/simple-menu',
+    '/en/menu/simple-menu',
+    '/about-us/our-history',
+    '/about-us'
+  ])
+  assert.equal(live('/menu'), false)
+  assert.equal(live('/menu/simple-menu'), false, 'under the unticked Menu')
+  assert.equal(live('/en/menu/simple-menu'), false, 'through a locale prefix')
+  assert.equal(live('/about-us'), true)
+  assert.equal(live('/about-us/our-history'), true)
+  const childOff = await withParents(linkChecker(published(['simple-menu']), NESTED, ['en']), NESTED, ['en'])(
+    ['/menu', '/menu/simple-menu']
+  )
+  assert.equal(childOff('/menu'), true, 'unticking a child leaves its parent')
+  assert.equal(childOff('/menu/simple-menu'), false)
+})
+
+test('the router asks the page and its parents (link-gate.ts wires withParents)', () => {
+  const gate = read('src/lib/link-gate.ts')
+  assert.match(gate, /withParents\(\s*linkChecker\(/)
+})
+
+// ── the main menu draws no link to an unticked page (menu-gate.ts) ─────────────────────────────────────────────────────
+test('the menu drops an unticked page with everything under it, and a heading with nothing left', async () => {
+  const menu = [
+    { label: 'Home', url: '/', children: [] },
+    { label: 'Menu', url: '/menu', children: [{ label: 'Simple', url: '/menu/simple-menu', children: [] }] },
+    {
+      label: 'About',
+      url: '/about-us',
+      children: [{ label: 'History', url: '/about-us/our-history', children: [] }]
+    },
+    { label: 'Explore', url: '', children: [{ label: 'Menu again', url: '/menu/simple-menu', children: [] }] }
+  ]
+  const check = withParents(linkChecker(published(['menu']), NESTED, ['en']), NESTED, ['en'])
+  const live = await check(menuUrls(menu))
+  const kept = pruneMenu(menu, live)
+  assert.deepEqual(
+    kept.map((i) => i.label),
+    ['Home', 'About'],
+    'Menu goes with its child; Explore had only that child'
+  )
+  assert.deepEqual(
+    kept[1].children.map((c) => c.label),
+    ['History']
+  )
+  const all = pruneMenu(menu, () => true)
+  assert.equal(all.length, 4)
+})
+
+test('the header draws the menu through the gate, and no other component renders menu URLs', () => {
+  const header = read('src/components/site/Header.astro')
+  assert.match(header, /pruneMenu\(chrome\.primary, live\)/)
+  assert.doesNotMatch(header, /chrome\.primary\.(map|find|filter)/, 'every draw reads the pruned menu')
+  for (const file of ['src/components/site/Footer.astro', 'src/layouts/Base.astro'])
+    assert.doesNotMatch(read(file), /chrome\.primary|getMenu\(/, file)
+})
