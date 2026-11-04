@@ -12,6 +12,7 @@ const check = (kit, extra = {}) =>
   runSiteCheck({ door: pagedSite(1).door, report: writtenReport(), kit, ...extra })
 
 test('a kit settled by template-kit 3.0.0, or naming no tool, blocks the run on step 0', async () => {
+  // test-quality: contract the site check needs a kit settled by template-kit 3.1.0 or newer (ADR 0044, 2026-11-04)
   assert.equal(KIT_TOOL_MIN, '3.1.0')
   for (const kit of [{ tool: 'template-kit 3.0.0', blocks: [] }, { blocks: [] }]) {
     const r = await check(kit)

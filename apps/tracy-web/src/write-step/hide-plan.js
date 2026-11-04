@@ -14,8 +14,8 @@ const blocksOfPage = (page) => [...new Set(Object.values(page?.blocks ?? {}).fla
 const MODULE = /^module-\d+$/
 const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
 
-/** A hide the plugin cannot take needs a contract that captures the whole unit. */
-export const NEW_CONTRACT = 'TracyHQ/tracy#369'
+/** The pointer every refusal carries: a hide the plugin cannot take needs a contract that captures the whole unit. */
+export const NEW_CONTRACT = 'tracked as issue 369'
 
 /** The kit's blocks the plan drops whole, as module keys: no kept page keeps or shows one. */
 export function droppedBlocks(plan, kit) {
@@ -102,11 +102,11 @@ function fixedOrder(text, template) {
 /** Why the plugin cannot empty this slot of the site, in terms of the slot. */
 function notEmptiable(key, slot) {
   if (!slot)
-    return `${key} is no slot of this site, so nothing can empty it; a new contract would need one: ${NEW_CONTRACT}`
+    return `${key} is no slot of this site, so nothing can empty it; a new contract would need one (${NEW_CONTRACT})`
   if (ADDRESS_MOVES.test(String(slot.xpath ?? '')))
-    return `the plugin does not empty one text node or attribute of an HTML field, because its address would move: this needs a contract that captures the whole unit: ${NEW_CONTRACT}`
+    return `the plugin does not empty one text node or attribute of an HTML field, because its address would move: this needs a contract that captures the whole unit (${NEW_CONTRACT})`
   const where = slot.column ? `the column ${slot.column} of ${slot.entity ?? key}` : key
-  return `the plugin's review for this contract does not list ${where}, so it cannot be emptied: this needs a new contract: ${NEW_CONTRACT}`
+  return `the plugin's review for this contract does not list ${where}, so it cannot be emptied: this needs a new contract (${NEW_CONTRACT})`
 }
 
 /** What a plan hides and cannot take off the site, each with the reason: the check's answer before anything is written. */

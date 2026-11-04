@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { brandAccentGroup, factsOf, judgeBrandStyle } from '../src/site-check/brand-accent.js'
+import { stepName } from '../src/lib/site-build-steps.js'
 
 const HEAD =
   '/* tracy-ds-slot: brand:accent-only-0a7d6e */\n/* accent-only: replaces=#7a3ff2 accent=#0a7d6e light-text=#0a6f62 dark-text=#12a892 family=#7a3ff2,#6530d0 */'
@@ -138,7 +139,7 @@ test('the group blocks by page, stays green on a clean page, and says when it co
       ['/about', 1440, "The template's accent is still painted w"]
     ]
   )
-  assert.equal(brandAccentGroup.causingStep, 2)
+  assert.equal(stepName(brandAccentGroup.causingStep), 'brand')
 })
 
 test('the group: no read at all is unmeasured after a brand write, and nothing to check without one', async () => {

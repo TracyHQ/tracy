@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { judgePlanLinks, leadsTo, planLinksGroup } from '../src/site-check/plan-links.js'
+import { stepName } from '../src/lib/site-build-steps.js'
 import {
   judgeListRows,
   judgeMapLocation,
@@ -207,6 +208,6 @@ test('the groups: an older report or host is unmeasured, nothing to hold is no m
     ),
     /no maps/
   )
-  assert.equal(planLinksGroup.causingStep, 9)
-  assert.equal(phoneCallableGroup.causingStep, 0)
+  assert.equal(stepName(planLinksGroup.causingStep), 'write')
+  assert.equal(stepName(phoneCallableGroup.causingStep), 'template')
 })

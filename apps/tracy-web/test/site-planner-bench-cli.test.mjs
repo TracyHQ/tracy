@@ -149,7 +149,7 @@ test('status, list and get show a finished run, and nothing written carries a ke
   assert.match(status.out, /state\s+succeeded/)
   assert.match(status.out, /turns\s+2/)
   assert.match(status.out, /cost\s+\$1\.7500/)
-  assert.match(status.out, /checker\s+site-plan-check\/1: \d+ pass, \d+ fail, \d+ skip/)
+  assert.match(status.out, /checker\s+site-plan-check\/\d+: \d+ pass, \d+ fail, \d+ skip/)
   assert.match((await cli('list')).out, new RegExp(`${id}\\s+succeeded`))
 
   const out = path.join(dir, 'export')

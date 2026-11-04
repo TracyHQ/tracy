@@ -4,7 +4,7 @@
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { ACCENT_SLOT_PREFIX, accentModule } from '../lib/brand-accent/accent-module.js'
+import { ACCENT_SLOT_STEM, accentModule } from '../lib/brand-accent/accent-module.js'
 import { exportBrandOrders } from './brand-write-orders.js'
 import { dsSlotModule } from '../lib/ds-slot.js'
 import { brandAsker, picturePath, writeBrand } from './brand-writes.js'
@@ -132,7 +132,7 @@ export async function prepareBrandStage({
       if (built.stop) return stoppedBy(built.stop)
       pictures.set(accentOrder.file, Buffer.from(built.html))
       routes = built.routes
-    } else if (!held.includes(`tracy-ds-slot: ${ACCENT_SLOT_PREFIX}`))
+    } else if (!held.includes(`tracy-ds-slot: ${ACCENT_SLOT_STEM}`))
       return stoppedBy({
         code: 'BAD_FILE',
         reason: `brand: ${accentOrder.file} is a whole design-system style and no stylesheets were given to build the accent from`

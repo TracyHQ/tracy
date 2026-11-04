@@ -8,7 +8,7 @@ import { accentRoutes } from './accent-routes.js'
 import { contrastHex } from './colour-math.js'
 
 export const ACCENT_MODULE_LIMIT = 64000
-export const ACCENT_SLOT_PREFIX = 'brand:accent-only-'
+export const ACCENT_SLOT_STEM = 'brand:accent-only-'
 const FILL = '--tracy-accent'
 const WORD = '--tracy-accent-text'
 const WORDS_MIN = 3
@@ -147,7 +147,7 @@ export function accentModule({ sheets, colours, darkHook = null }) {
 
 /** The style itself: the slot line older readers look for, the facts the site check judges by, the side a template opens on. */
 function moduleText({ lines, tones, opens, accent, seed, family, words, note = '' }) {
-  const slot = `${ACCENT_SLOT_PREFIX}${accent.slice(1)}`
+  const slot = `${ACCENT_SLOT_STEM}${accent.slice(1)}`
   const facts = [
     `replaces=${seed}`,
     `accent=${accent}`,
