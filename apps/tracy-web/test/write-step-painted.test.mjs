@@ -5,6 +5,7 @@ import { test } from 'node:test'
 import sharp from 'sharp'
 import { runSiteCheck } from '../src/site-check/site-check.js'
 import { brandFile } from './_write-step-brand.mjs'
+import { CONTRACT } from './_write-step-run.mjs'
 import {
   ACCENT,
   backdropItem,
@@ -36,6 +37,15 @@ function readBackDoor(site, report) {
     }
   }
 }
+
+const KEPT_ICONS = {
+  slots: [{ key: 'module-3.icon', type: 'image', fit: { kind: 'icon', replace: 'keep', transparent: true } }]
+}
+const takes = (entry = { limits: 0, icons: 1, alts: 0 }, contract = CONTRACT) => ({
+  info: { slot_corrections: { version: 1, contracts: { [contract]: entry } } }
+})
+const runKeptIcon = (site, contentMap = KEPT_ICONS) =>
+  runPainted({ items: () => [iconItem('block-3.icon')], contentMap, site })
 
 const SITE_PATH = /^images\/tracy-content\/([0-9a-f]{64})\.(png|jpg)$/
 
@@ -280,6 +290,50 @@ test('a brand file with no accent fails the painted frames in words and writes t
   assert.equal(line('block-3.icon').status, 'failed')
   assert.match(line('block-3.icon').reason, /accent/)
   assert.equal(sent['module-2.pic'], HERO.entry.sitePath)
+})
+
+test('a kept icon is drawn and sent when the plugin says it takes one, with no words nobody said', async () => {
+  const { line, sent, uploaded, site, report, bytesAt } = await runKeptIcon(takes())
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  const path = sent['module-3.icon']
+  assert.match(path, SITE_PATH)
+  assert.ok(uploaded.includes(path))
+  assert.equal(line('block-3.icon').status, 'written')
+  assert.equal(line('block-3.icon').part, 'picture-painted')
+  assert.equal(site.of('content.contract', 'apply').at(-1).params.replace_kept, undefined)
+  const { data, info } = await sharp(bytesAt(path)).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const corners = [0, info.width - 1, (info.height - 1) * info.width, info.width * info.height - 1]
+  assert.deepEqual(
+    corners.map((c) => data[c * info.channels + 3]),
+    [0, 0, 0, 0],
+    'the plugin reads a clear corner'
+  )
+})
+
+for (const [why, site] of [
+  ['an older plugin', {}],
+  ['a plugin that corrects another contract', takes(undefined, 'other/j6/1.0.0')],
+  ['a plugin whose list opens no icon here', takes({ limits: 5, icons: 0, alts: 0 })]
+])
+  test(`${why} keeps today's line and sends nothing`, async () => {
+    const { line, sent } = await runKeptIcon(site)
+    assert.equal(line('block-3.icon').status, 'skipped')
+    assert.match(line('block-3.icon').reason, /replace_kept/)
+    assert.equal(sent['module-3.icon'], undefined)
+  })
+
+test('a kept picture that is not a transparent icon stays kept whatever the plugin says', async () => {
+  const fits = [
+    { kind: 'icon', replace: 'keep' },
+    { kind: 'cutout', replace: 'keep', transparent: true }
+  ]
+  for (const fit of fits) {
+    const { line, sent } = await runKeptIcon(takes(), {
+      slots: [{ key: 'module-3.icon', type: 'image', fit }]
+    })
+    assert.equal(line('block-3.icon').status, 'skipped')
+    assert.equal(sent['module-3.icon'], undefined)
+  }
 })
 
 test('a refused upload fails the frames that use the drawn file and keeps them out of the call', async () => {

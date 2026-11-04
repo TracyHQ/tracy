@@ -11,6 +11,7 @@
 //
 // Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
 // had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
+import { correctionsReader, galleryAlts } from './slot-corrections.js'
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../site-writer/bench-control.js'
 import { indexInputs } from '../site-writer/copy-check/inputs-index.js'
@@ -176,7 +177,9 @@ export async function runWriteStep(input) {
       last
     })
     if (brand.stop) return { stop: brand.stop }
+    const corrections = correctionsReader(door, siteKey, contract)
     pictures = await preparePictureStage({
+      corrections,
       pictures: read.values.pictures,
       picturesPath: files.pictures,
       inputs: read.inputs.pictures,
@@ -203,14 +206,28 @@ export async function runWriteStep(input) {
     extras = exported.extras
     const index = indexInputs({ plan, kit: kit.doc, brief, contentMap: contentMap ?? undefined })
     const { view } = readCopy(copy)
+    const fromPlan = planClaims(
+      { plan, hidden: index.hidden, menuHide: extras.mainMenu?.hide, filled: index.expected },
+      read.inputs.plan.file
+    )
+    // An alt goes through the door only where the plugin says it opens its slot; any other keeps its skipped line.
+    const placed = galleryAlts({
+      alts: extras.alts ?? {},
+      contentMap,
+      hidden: new Set([...pictures.claims, ...fromPlan].filter((c) => c.kind === 'hide').map((c) => c.slot)),
+      file: read.inputs.copy.file
+    })
+    const alts =
+      placed.claims.length && !(await corrections()).alts
+        ? { claims: [], changes: {}, left: extras.alts ?? {} }
+        : placed
+    extras = { ...extras, alts: alts.left }
     table = ownerTable([
       ...brand.claims,
       ...pictures.claims,
       ...copyClaims(view.slots, read.inputs.copy.file),
-      ...planClaims(
-        { plan, hidden: index.hidden, menuHide: extras.mainMenu?.hide, filled: index.expected },
-        read.inputs.plan.file
-      )
+      ...alts.claims,
+      ...fromPlan
     ])
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
@@ -235,9 +252,9 @@ export async function runWriteStep(input) {
       }
     const { changes, ...found } = routeChanges(exported.mapping.changes, kit.doc, view.slots)
     routes = found
-    ordered = changes
+    ordered = { ...changes, ...alts.changes }
     sent = exported.mapping.changes
-    const allChanges = { ...changes, ...brand.changes, ...pictures.changes }
+    const allChanges = { ...changes, ...alts.changes, ...brand.changes, ...pictures.changes }
     const refusal = needsNewSite(last, {
       plan,
       kit: kit.doc,
