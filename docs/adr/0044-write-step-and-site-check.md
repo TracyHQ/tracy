@@ -196,6 +196,18 @@ group is `kit-version`: a kit whose `tool` names a template-kit older than `KIT_
 step 0 ("settle it again"), since the later groups read data such a kit lacks. The committed ja-boxing 1.0.10 kit was settled before
 the tool knew sentence groups, and `broken-sentence` read green on 0 slots.
 
+### 19. A heading the demo marks with an accent span prints one in the brand accent
+
+`accent-emphasis` (block) reads, for every written slot whose kit slot has a span `inline` (ADR 0042 section 11), the printed
+heading with the same words (`headingSpans: [{ text, color, spans: [{ text, color }] }]`, which the host now answers). No span is a
+block on step 6 when the written value holds no span (the copy named no emphasis) and on step 9 when it does. A span not painted in
+the brand accent the style names (or its word colour, or a shade of it) is a step 0 warning: the template colours it with a fixed
+value. Written headings that no page prints as a heading leave the group unmeasured (decision 18).
+
+The Road to live step "Template kit" names three kit counters in words, first, so /ops shows them within its 90 characters:
+`samplesCut` "demo samples cut", `sentenceGroupsUnsettled` "sentence groups not settled", `inlineEmphasisMissing` "inline
+emphasis missing". Any of them above 0 keeps the kit `kit-incomplete`, as every self-check counter does.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

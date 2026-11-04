@@ -100,13 +100,22 @@ const joined = (text) =>
  * @param {{ label: string, factIds: string[] }} planned the plan's label slot (copy check index entry)
  */
 export function labelSlotEntry(written, planned) {
+  // An emphasis rides along either way: a kept label may still mark its accent words (ADR 0042 section 11).
+  const emphasis = typeof written.emphasis === 'string' ? { emphasis: written.emphasis } : {}
   if (joined(written.text) === joined(planned.label))
-    return { slot: written.slot, owner: 'plan-label', text: planned.label, factIds: [...planned.factIds] }
+    return {
+      slot: written.slot,
+      owner: 'plan-label',
+      text: planned.label,
+      factIds: [...planned.factIds],
+      ...emphasis
+    }
   return {
     slot: written.slot,
     owner: 'writer',
     text: written.text,
     factIds: Array.isArray(written.factIds) ? written.factIds : [...planned.factIds],
-    [REPLACED_PLAN_LABEL]: planned.label
+    [REPLACED_PLAN_LABEL]: planned.label,
+    ...emphasis
   }
 }

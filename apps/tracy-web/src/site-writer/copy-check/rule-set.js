@@ -15,7 +15,8 @@ export const RULE_TITLES = [
   ['w12', 'W12', 'Slots printed as one sentence read as one sentence when joined'],
   ['w13', 'W13', 'A created page title is its on-page heading, not a browser title'],
   ['w14', 'W14', 'A created privacy page is a complete policy, not a retelling of the plan'],
-  ['w15', 'W15', 'A lead and points slot is a lead paragraph followed by short points']
+  ['w15', 'W15', 'A lead and points slot is a lead paragraph followed by short points'],
+  ['w16', 'W16', 'A slot whose demo draws words in the accent colour names its own, and no other slot does']
 ]
 
 function rule(list, id, title) {

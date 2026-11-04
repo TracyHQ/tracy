@@ -101,6 +101,19 @@ export function kitOfRelease(release, contracts) {
 }
 
 /**
+ * The self-checks the copy and the site check depend on, worded for /ops (2026-11-04): a kit settled before the tool cut no
+ * sample, settled its sentence groups and listed inline emphasis reads as complete to everything else. Named first, in this
+ * order, so the 90 characters /ops shows of the reason name them; any other counter keeps its own name.
+ */
+export const KIT_CHECK_LABELS = Object.freeze({
+  samplesCut: 'demo samples cut',
+  sentenceGroupsUnsettled: 'sentence groups not settled',
+  inlineEmphasisMissing: 'inline emphasis missing'
+})
+const checkName = (name) => KIT_CHECK_LABELS[name] ?? name
+const labelledFirst = ([a], [b]) => (a in KIT_CHECK_LABELS ? 0 : 1) - (b in KIT_CHECK_LABELS ? 0 : 1)
+
+/**
  * The kit's own self-checks (`checks`: counts that must be 0 for a planner to use the kit, such as a slot listed by
  * two blocks or a showcase page left in): a kit with any of them above 0 is incomplete. The coverage gate
  * (`checks.slotCoverage`) lists its failures in `coverage.failures` (`{part, where, reason}`); the first ones of
@@ -109,7 +122,9 @@ export function kitOfRelease(release, contracts) {
  */
 function failingChecksOf(doc) {
   const checks = doc.checks && typeof doc.checks === 'object' ? doc.checks : {}
-  const failing = Object.entries(checks).filter(([, n]) => typeof n === 'number' && n > 0)
+  const failing = Object.entries(checks)
+    .filter(([, n]) => typeof n === 'number' && n > 0)
+    .sort(labelledFirst)
   if (failing.length === 0) return null
   const failures = Array.isArray(doc.coverage?.failures) ? doc.coverage.failures : []
   // Taken part by part in turn (the first failure of each part, then the second...), so a part with hundreds of
@@ -127,7 +142,7 @@ function failingChecksOf(doc) {
     .slice(0, Math.max(SHOWN_GAPS, byPart.size))
     .map((f) => `${String(f?.part)} ${String(f?.where)}`)
   return {
-    reason: `its self-checks fail: ${failing.map(([name, n]) => `${name} ${n}`).join(', ')}${
+    reason: `its self-checks fail: ${failing.map(([name, n]) => `${checkName(name)} ${n}`).join(', ')}${
       named.length ? ` (${named.join(', ')}${failures.length > named.length ? ', ...' : ''})` : ''
     }`,
     missing: []

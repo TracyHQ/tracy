@@ -9,6 +9,7 @@
 import { readCopy } from '../site-copy-view.js'
 import { mainMenuOf } from './main-menu.js'
 import { contentMapKey } from '../content-map-key.js'
+import { withEmphasis } from './inline-emphasis.js'
 
 const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragraphs) > 0)
 
@@ -127,7 +128,9 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
   const evidence = {}
   for (const s of view.slots) {
     const key = contentMapKey(s.slot)
-    changes[key] = joinItems(s.items, kitSlots.get(s.slot), samples.get(key))
+    // The writer's emphasis is wrapped in the demo's span; a slot whose demo marks no span ignores it (ADR 0042 section 11).
+    const kitSlot = kitSlots.get(s.slot)
+    changes[key] = joinItems(withEmphasis(s.items, s.emphasis, kitSlot), kitSlot, samples.get(key))
     if (s.factIds.length) {
       const cited = s.factIds.map((id) => (facts.has(id) ? `${id}: ${facts.get(id)}` : id))
       evidence[key] = `Brief facts: ${cited.join('; ')}`

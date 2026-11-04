@@ -94,6 +94,8 @@ function entryProblem(change, index) {
     if (!planned) return `slot ${key} is not a slot the plan keeps`
     if (change.factIds !== undefined && !(Array.isArray(change.factIds) && change.factIds.every(isText)))
       return `slot ${key}: factIds must be a list of fact ids`
+    if (change.emphasis !== undefined && !(isText(change.emphasis) && change.emphasis.trim()))
+      return `slot ${key}: emphasis must be a non-empty string`
     return textProblem(change.text) && `slot ${key}: ${textProblem(change.text)}`
   }
   if (list === 'alts') {
@@ -174,10 +176,17 @@ function applyEntry(doc, change, index) {
       return
     }
     if (!at.length)
-      doc.slots.push({ slot: entry.slot, owner: 'writer', text: entry.text, factIds: entry.factIds ?? [] })
+      doc.slots.push({
+        slot: entry.slot,
+        owner: 'writer',
+        text: entry.text,
+        factIds: entry.factIds ?? [],
+        ...(entry.emphasis !== undefined ? { emphasis: entry.emphasis } : {})
+      })
     for (const e of at) {
       e.text = entry.text
       if (entry.factIds !== undefined) e.factIds = entry.factIds
+      if (entry.emphasis !== undefined) e.emphasis = entry.emphasis
     }
     return
   }

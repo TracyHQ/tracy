@@ -45,12 +45,16 @@ export function readCopy(copy) {
     // A writer text that replaced a plan label names the label it replaced (ADR 0042, 2026-11-04).
     if (s.replacedPlanLabel !== undefined && !(s.owner === 'writer' && isNonEmpty(s.replacedPlanLabel)))
       return bad(s.slot, 'replacedPlanLabel must be a non-empty string, on a writer entry only')
+    // The words of the text drawn in the accent colour (ADR 0042 section 11): plain text, judged by W16.
+    if (s.emphasis !== undefined && !isNonEmpty(s.emphasis))
+      return bad(s.slot, 'emphasis must be a non-empty string')
     view.slots.push({
       slot: s.slot,
       owner: s.owner,
       items: Array.isArray(s.text) ? s.text : [s.text],
       factIds: s.factIds,
-      ...(s.replacedPlanLabel !== undefined ? { replacedPlanLabel: s.replacedPlanLabel } : {})
+      ...(s.replacedPlanLabel !== undefined ? { replacedPlanLabel: s.replacedPlanLabel } : {}),
+      ...(s.emphasis !== undefined ? { emphasis: s.emphasis } : {})
     })
   })
   list('alts').forEach((a, i) => {

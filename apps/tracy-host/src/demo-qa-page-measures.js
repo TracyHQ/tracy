@@ -4,7 +4,7 @@
  * (with the item lengths of a list), pictures drawn out of shape, and the links a page holds. They are read at 1440 and again at 390 on every page the run keeps, and answered as
  * `pageMeasures`, one entry per page and width:
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], textBlocks: [...], pictures: [...], controls: [...],
- *     fields: [...], glued: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
+ *     fields: [...], glued: [...], headingSpans: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
  *     selfLinks: [...], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
  *     brandStyle?, look? }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
@@ -25,6 +25,7 @@ export const MEASURE_CAPS = Object.freeze({
   blocks: 20,
   textBlocks: 80,
   listItems: 40,
+  headingSpans: 60,
   pictures: 40,
   controls: 40,
   fields: 40,
@@ -277,6 +278,25 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (text) hiddenHeadings.push(text.slice(0, 120))
   }
 
+  // Headings and titles with the words a span in them paints, and its colour: the judge holds a heading the demo marks with an
+  // accent span to one (`accent-emphasis`). A title is a heading tag, or an element classed as a title outside one.
+  const headingSpans = []
+  for (const el of document.body.querySelectorAll('h1,h2,h3,h4,h5,h6,[class*="title"],[class*="heading"]')) {
+    if (headingSpans.length >= caps.headingSpans) break
+    if (!/^H[1-6]$/.test(el.tagName.toUpperCase()) && el.closest('h1,h2,h3,h4,h5,h6')) continue
+    if (!shown(el) || clippedAway(el, getComputedStyle(el))) continue
+    const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
+    if (!text || text.length > 300) continue
+    const spans = Array.from(el.querySelectorAll('span'))
+      .filter((sp) => shown(sp) && (sp.innerText ?? '').trim())
+      .slice(0, 6)
+      .map((sp) => ({
+        text: sp.innerText.replace(/\s+/g, ' ').trim().slice(0, 80),
+        color: getComputedStyle(sp).color
+      }))
+    headingSpans.push({ text: text.slice(0, 200), color: getComputedStyle(el).color, spans })
+  }
+
   // Buttons that lead to the page they are on. A menu marks the current page on purpose, and a fragment moves down the page.
   const selfLinks = []
   const pathOf = (u) =>
@@ -366,6 +386,7 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     textBoxes,
     blocks,
     textBlocks,
+    headingSpans,
     pictures,
     controls,
     fields,

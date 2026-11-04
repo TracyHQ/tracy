@@ -198,6 +198,23 @@ test('a kit whose self-checks count anything is incomplete, and the step names t
   assert.notDeepEqual(verdictOf(kit({ checks: { slotsInTwoBlocks: 0 } })), ['todo', 'kit-incomplete'])
 })
 
+test('the counters the copy and the site check depend on are named in words, first, so /ops shows them', () => {
+  const k = kit({
+    checks: { slotsInTwoBlocks: 1, samplesCut: 2, sentenceGroupsUnsettled: 0, inlineEmphasisMissing: 2 }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: demo samples cut 2, inline emphasis missing 2, slotsInTwoBlocks 1'
+  )
+  const settled = kit({ checks: { sentenceGroupsUnsettled: 2 } })
+  assert.match(
+    String(stepOf(roadOf(release(), world(contractsWith(settled)))).params.reason),
+    /^its self-checks fail: sentence groups not settled 2$/
+  )
+})
+
 test('a kit failing a coverage gate part is incomplete, and the step names the part and the slot', () => {
   for (const [part, where] of [
     ['limitsBelowDemo', 'slots[block-1.2]'],

@@ -15,6 +15,7 @@ import { checkW13 } from './rules-page-headings.js'
 import { checkW14 } from './rules-privacy.js'
 import { checkW02, checkW03 } from './rules-slots.js'
 import { checkW15 } from './rules-shape.js'
+import { checkW16 } from './rules-emphasis.js'
 import { failureListText } from '../../lib/failure-list-text.js'
 
 // Stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title, a threshold, a failure
@@ -35,7 +36,8 @@ const RUN_ORDER = [
   checkW12,
   checkW13,
   checkW14,
-  checkW15
+  checkW15,
+  checkW16
 ]
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 

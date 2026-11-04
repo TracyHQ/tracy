@@ -20,8 +20,8 @@ page is a complete policy (section 9). The prompt gained these rules; its sha256
 `831d4cc8be56a702ebae8dce902cc45e890c0832a7c9f067286bc1f85f23a265`. The checker version moved to `site-copy-check/5`.
 Amended a sixth time (2026-11-04, owner's ruling): a text follows the demo's length part by part, between 80% and
 100% of it, and a slot whose demo is a lead paragraph followed by points is written in that shape (section 10). The
-prompt's sha256 is now `b7dc79e3f565286c8ee1ded219b3f362dd94f5f415635e23be718eabd108193a`; the checker version moved
-to `site-copy-check/6`.
+prompt's sha256 is now `50b69c79498fe4aa219f2abf17267f3a8e0e535c7d9a1f19e59b9b10a5979229` (it also carries the inline
+emphasis rule of section 11); the checker version moved to `site-copy-check/6`, once for sections 10 and 11.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -284,6 +284,25 @@ bullets.
   times the longest demo point.
 - `joinItems()` is unchanged: it is right once the input is shaped. The site check's `text-fill` (ADR 0044) measures
   the result on the page.
+
+### 11. Words the demo draws in the accent colour (2026-11-04)
+
+A template title paints a `span` inside it with the accent variable, which the brand style maps to the customer's accent: the
+demo heading `((span))NO1((/span)) BOXING STUDIO since 2008` prints "NO1" in the accent; the written heading had no span and
+printed in one colour.
+
+- The kit lists such marks beside the plain sample, `inline: [{ tag, attrs, text, at }]` (`at`: start, end or inside;
+  a `br` is listed too and never reproduced). `apps/tracy-web/src/lib/site-copy/inline-emphasis.js` reads them; a kit
+  without `inline` changes nothing.
+- The writer gets a note per slot whose demo has a span ("the demo draws "NO1" in the accent colour, at the start") and
+  answers an `emphasis` on that slot entry: exact words of one item of its plain `text`. A copy slot entry may carry
+  `emphasis` (a non-empty string) on either owner; a kept plan label carries it too.
+- **W16** (`rules-emphasis.js`): fails a span slot without `emphasis`, an `emphasis` that is not words of the text
+  (case-sensitive), longer than twice the demo's marked words (at least 12 characters of room), or half the text or
+  more, and an `emphasis` on a slot whose demo has no span.
+- The export (`contract-mapping.js`) wraps the emphasis in the demo's tag and attributes, in content map notation, in
+  the first item holding it: `European Coaching in ((span))Dubai((/span))`. A slot without a span mark ignores it.
+- The site check's `accent-emphasis` (ADR 0044 decision 19) measures the printed heading.
 
 ## Consequences
 

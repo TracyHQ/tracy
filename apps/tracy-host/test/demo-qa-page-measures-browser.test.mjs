@@ -58,7 +58,7 @@ const PAGES = {
     <img id="fine" src="/wide.png" style="width:200px;height:50px" alt="">`,
   '/clean': `${head}<nav><a href="/fine">Fine</a></nav><p>Short and sound.</p><section style="height:300px">Block</section>
     <img src="/wide.png" style="width:200px;height:50px" alt="">`,
-  '/list': `${head}<section id="steps"><p>Warm up first.</p><ul id="points"><li>Jog</li><li>Pads and bags</li><li style="display:none">Hidden</li></ul></section>`,
+  '/list': `${head}<style>.hero-title span{color:rgb(191,91,61)}</style><h1 class="hero-title"><span>NO1</span> Boxing studio</h1><section id="steps"><p>Warm up first.</p><ul id="points"><li>Jog</li><li>Pads and bags</li><li style="display:none">Hidden</li></ul></section>`,
   '/fine': `${head}<p>Fine</p>`
 }
 
@@ -142,6 +142,8 @@ test(
       for (const m of r.measures) {
         const list = m.textBlocks.find((b) => b.selector === 'ul#points')
         assert.deepEqual(list, { selector: 'ul#points', chars: 17, items: [3, 13] })
+        assert.deepEqual(m.headingSpans[0].spans, [{ text: 'NO1', color: 'rgb(191, 91, 61)' }])
+        assert.equal(m.headingSpans[0].text, 'NO1 Boxing studio')
         const section = m.textBlocks.find((b) => b.selector === 'section#steps')
         assert.ok(section.chars >= 31 && !('items' in section), JSON.stringify(section))
       }

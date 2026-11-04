@@ -25,9 +25,11 @@
 //   self-links         block  3 or 6        page-faults.js: a button that leads to the page it is on
 //   heading-separator  block  6 writer      page-faults.js: a page title printed as a heading, separator and all
 //   broken-sentence    block  6 writer      printed-sentences.js: copy rule W12, read as the page prints it
+//   accent-emphasis    block  6, 9 or 0     accent-emphasis.js: a heading the demo marks with an accent span prints one in the brand accent
 //   created-controls   block  9 write       page-faults.js: a created page shows controls the template's content pages do not
 //
 // Faults that need the meaning understood (does an icon suit the words, is a sentence clumsy) are step 12's, a person with eyes.
+import { accentEmphasisGroup } from './accent-emphasis.js'
 import { brandAccentGroup } from './brand-accent.js'
 import { createdControlsGroup, headingSeparatorGroup, selfLinksGroup } from './page-faults.js'
 import { brokenSentenceGroup } from './printed-sentences.js'
@@ -169,5 +171,6 @@ export const PAGE_CHECK_GROUPS = [
   selfLinksGroup,
   headingSeparatorGroup,
   brokenSentenceGroup,
+  accentEmphasisGroup,
   createdControlsGroup
 ]

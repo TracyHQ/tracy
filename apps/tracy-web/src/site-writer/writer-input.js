@@ -8,7 +8,8 @@
 // - From the kit, a slim view of every block the plan uses (every block decision but "hide", on shared blocks and
 //   kept pages): its look text and, per text slot, id, role, type, maxCharacters, a preview of the sample (its first
 //   SAMPLE_PREVIEW characters), demoChars and shape (lib/site-copy/slot-shape.js: the demo's lengths, which the copy
-//   check judges against; 2026-11-04), paragraphs and bullets; per
+//   check judges against; 2026-11-04), paragraphs and bullets, and `inline`, a note naming the words the demo draws in the
+//   accent colour when it marks some with a span (lib/site-copy/inline-emphasis.js); per
 //   list, its row slots and the slots of demo rows the row slots do not name. Also the footer column headings
 //   (the kit's navigation group of each `site.footerMenu[].group`) and the two name slots the brand step hands over
 //   (`kit.site.nameSlots` printed at the document title and the meta description).
@@ -18,6 +19,7 @@
 //   sample, role, limit and where the slot prints, so the writer keeps the label or rewrites it (2026-11-04).
 // No image: the writer reads the block look text instead.
 import { mainMenuOf } from '../lib/site-copy/main-menu.js'
+import { emphasisNoteOf } from '../lib/site-copy/inline-emphasis.js'
 import { demoCharsOf, slotShape } from '../lib/site-copy/slot-shape.js'
 import { planLabelSlots } from './plan-labels.js'
 
@@ -114,7 +116,8 @@ const slimSlot = (s) => ({
   shape: slotShape(s),
   paragraphs: s.paragraphs ?? 0,
   bullets: s.bullets ?? 0,
-  ...(arr(s.pageTitleOf).length ? { pageTitleOf: s.pageTitleOf } : {})
+  ...(arr(s.pageTitleOf).length ? { pageTitleOf: s.pageTitleOf } : {}),
+  ...(emphasisNoteOf(s) ? { inline: emphasisNoteOf(s) } : {})
 })
 const textSlots = (slots) =>
   arr(slots)
