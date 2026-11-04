@@ -2330,7 +2330,9 @@ a bad file or a dispute writes nothing, then sends one `content.contract` apply.
 the rest sent again, since that door is all or nothing; a refusal that names no slot stops the run. This slice writes the
 site copy's mapping only: hide decisions, link targets and the export's extras are reported as `skipped`. The result is the
 write report `site-write-report/1`, kept on the run row. `cancel` sets a flag on the row, read between phases, and the
-row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tracy-web/src/write-step/`.
+row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tracy-web/src/write-step/`, its command line
+`apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
+(`site-copy/`, `brand-accent/`, `picture-paint/`).
 
 ## 9. Sign-in, seats, permissions
 
