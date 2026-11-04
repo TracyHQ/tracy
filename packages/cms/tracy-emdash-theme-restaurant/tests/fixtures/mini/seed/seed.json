@@ -1,0 +1,54 @@
+{
+  "version": "1",
+  "defaultLocale": "de",
+  "meta": {
+    "name": "Mini Atelier fixture",
+    "description": "Non-Northgate fixture: DE/FR, two collections",
+    "author": "Tracy"
+  },
+  "settings": { "title": "Atelier Nord", "tagline": "Möbel aus Holz" },
+  "collections": [
+    {
+      "slug": "seiten",
+      "label": "Seiten",
+      "labelSingular": "Seite",
+      "routable": true,
+      "fields": [
+        { "slug": "titel", "label": "Titel", "type": "string", "required": true },
+        { "slug": "text", "label": "Text", "type": "text" },
+        { "slug": "bild", "label": "Bild", "type": "image" }
+      ]
+    },
+    {
+      "slug": "kontakt",
+      "label": "Kontakt",
+      "labelSingular": "Kontakt",
+      "routable": false,
+      "fields": [
+        { "slug": "titel", "label": "Titel", "type": "string", "required": true },
+        { "slug": "formular_id", "label": "Formular", "type": "string" }
+      ]
+    }
+  ],
+  "content": {
+    "seiten": [
+      {
+        "slug": "start",
+        "locale": "de",
+        "status": "published",
+        "data": { "titel": "Willkommen", "text": "Handgefertigte Möbel." }
+      },
+      {
+        "slug": "start",
+        "locale": "fr",
+        "status": "published",
+        "translationOf": "seiten:start:de",
+        "data": { "titel": "Bienvenue", "text": "Meubles faits main." }
+      }
+    ],
+    "kontakt": [
+      { "slug": "kontakt", "locale": "de", "status": "published", "data": { "titel": "Kontakt" } },
+      { "slug": "kontakt", "locale": "fr", "status": "published", "data": { "titel": "Contact" } }
+    ]
+  }
+}

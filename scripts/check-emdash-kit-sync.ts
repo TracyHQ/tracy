@@ -26,7 +26,8 @@ const TEMPLATES = [
   'tracy-emdash-theme-base',
   'tracy-emdash-theme-business',
   'tracy-emdash-theme-saas',
-  'tracy-emdash-theme-coffee'
+  'tracy-emdash-theme-coffee',
+  'tracy-emdash-theme-restaurant'
 ]
 
 if (!existsSync(CHECK)) {

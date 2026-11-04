@@ -1,0 +1,32 @@
+---
+/** The Subscribe box printed under every page (AcyMailing module 147 in the source). The form posts to the Forms plugin. */
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import type { Locale } from '@/lib/i18n'
+
+interface Props {
+  locale: Locale
+}
+const { locale } = Astro.props
+const sub = await section('subscribe', 'subscribe', locale)
+const $s = stampFor(Astro.request, 'subscribe', sub ? { id: sub.id, slug: sub.slug } : null)
+---
+
+{sub && (
+	<section class="rs-subscribe" aria-labelledby="rs-subscribe-title">
+		<div class="rs-subscribe-box">
+			<h2 class="rs-display rs-section-title" id="rs-subscribe-title" {...$s('title')}>{sub.title}</h2>
+			{sub.intro && <p class="rs-subscribe-intro" {...$s('intro')}>{sub.intro}</p>}
+			{sub.form_id ? (
+				<form class="rs-subscribe-form" method="post" action="/_emdash/api/plugins/emdash-forms/submit" data-form-id={sub.form_id}>
+					<input type="email" name="email" required placeholder={sub.placeholder} aria-label={sub.placeholder} {...$s('placeholder')} />
+					<input type="text" name="_hp" tabindex="-1" autocomplete="off" class="rs-hp" aria-hidden="true" />
+					<input type="hidden" name="formId" value={sub.form_id} />
+					<button type="submit" class="rs-btn" {...$s('button')}>{sub.button}</button>
+					<p class="rs-subscribe-status" aria-live="polite"></p>
+				</form>
+			) : null}
+		</div>
+	</section>
+)}
+<script src="@/lib/newsletter-client.ts"></script>

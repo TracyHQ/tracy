@@ -171,3 +171,20 @@ export function editorialRoleOf(slot, { vocabulary3 = false } = {}) {
   if (slot.type === 'text') return editorialTextRole(slot, vocabulary3)
   return null
 }
+
+/**
+ * The row of a repeatable Joomla field a slot sits in, or `null` outside one: its entity, its json path with the row's
+ * own field name dropped from the last name (`social-intro[font-icon]` and `social-intro[title]` are both the row
+ * `social-intro`; `hero[social-intro][font-icon]` is `hero[social-intro]`), and the row's index. Two slots with the
+ * same row are the parts of one repeated item: a social network's label, link and icon.
+ * @param {any} slot a content map slot
+ * @returns {string | null}
+ */
+export function repeatedRowOf(slot) {
+  if (!slot || !inRepeatedRow(slot) || slot.jsonPath.length < 2) return null
+  const field = slot.jsonPath.at(-2)
+  if (typeof field !== 'string') return null
+  const row = field.replace(/\[[^\][]*\]$/, '')
+  if (row === field) return null
+  return JSON.stringify([slot.entity ?? '', ...slot.jsonPath.slice(0, -2), row, slot.jsonPath.at(-1)])
+}

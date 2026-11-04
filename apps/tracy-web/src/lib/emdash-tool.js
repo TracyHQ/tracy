@@ -25,7 +25,8 @@ const PACKAGE = Object.freeze({
   'tracy-business': 'tracy-emdash-theme-business',
   'tracy-saas': 'tracy-emdash-theme-saas',
   'tracy-base': 'tracy-emdash-theme-base',
-  'tracy-coffee': 'tracy-emdash-theme-coffee'
+  'tracy-coffee': 'tracy-emdash-theme-coffee',
+  'tracy-restaurant': 'tracy-emdash-theme-restaurant'
 })
 
 /**

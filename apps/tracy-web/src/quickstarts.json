@@ -1607,6 +1607,32 @@
     "multilingual": false,
     "contract": "ja-diner/j6/1.0.5"
   },
+  "quickstart/ja-boxing/j6": {
+    "platform": "joomla",
+    "version": "1.0.10",
+    "installer": {
+      "file": "ja-boxing-j6-quickstart-1.0.10.zip",
+      "bytes": 67424832,
+      "sha256": "8161bcf324a8a61e1ee021d6cd2e7663ed36c9e96fd2cdd170a3083b2a7222de",
+      "githubAssetId": 701352867,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-boxing%2Fj6/ja-boxing-j6-quickstart-1.0.10.zip"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.79.zip",
+      "version": "0.24.79",
+      "bytes": 544398,
+      "sha256": "eed7f4ecf63f7bb56db6deeb7dc71912c07d15bf38066a61d19f6c09a96b3cf6",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.79/pkg_claudecowork-0.24.79.zip",
+      "contractFiles": {
+        "content-map.json": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
+        "manifest.json": "c6cfd80ec71910f6e7ed126b22f417fe663e971be316d8d58063f367a8194efe",
+        "presentation-lock.json": "62352a206b2084372c42e45c69602a705982738975c291b2d257bc6d8b2674ec",
+        "showcase-nav-map.json": "2d26177c33755743fa0a4ef3c1bd3e37e35c7785fe557ad833a2ea86245090c8"
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-boxing/j6/1.0.10"
+  },
   "quickstart/ja-diner/wp7": {
     "platform": "wordpress",
     "version": "1.0.1",

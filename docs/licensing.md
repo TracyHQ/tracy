@@ -23,7 +23,7 @@ Lee, owner of JoomlArt, released JoomlArt's parts of this repository for publica
 
 - JoomlArt PHP, Joomla and WordPress code and assets — the T4 Framework zip, the T4 shared layer,
   `vendor/joomla/html/ja_kinetic/`, the JoomlArt template ports (`wp-ja-*`), JoomlArt quickstart
-  content and contracts, `packages/cms/tracy-emdash-theme-saas` — under **GPL-2.0-or-later**.
+  content and contracts, `packages/cms/tracy-emdash-theme-saas`, `packages/cms/tracy-emdash-theme-restaurant` — under **GPL-2.0-or-later**.
 - JoomlArt skill documentation (`joomlart-t4-skill`, `tracy-emdash-skill`) under **MIT**.
 
 The grant supersedes the older "Copyrighted Commercial Software … may not be redistributed" headers
@@ -53,6 +53,7 @@ GPL-2.0-or-later includes that version, so both readings allow the same use.
 | `packages/cms/tracy-joomla-quickstart` | Tracy patches, contracts and content for JoomlArt and Tracy Joomla quickstarts | GPL-2.0-or-later | Tracy's own + JoomlArt grant | `LICENSE`, JoomlArt headers (`@copyright … JoomlArt.com`), `tracy-business-fonts-OFL.txt` |
 | `packages/cms/tracy-wordpress-quickstart` | Tracy contracts and content edits for JoomlArt and Tracy WordPress quickstarts | GPL-2.0-or-later | Tracy's own + JoomlArt grant | `LICENSE` |
 | `packages/cms/tracy-emdash-theme-saas` | EmDash port of the JA Kinetic Joomla 6 quickstart (design, demo content, seed images by JoomlArt) | GPL-2.0-or-later | JoomlArt grant | `LICENSE`, `PROVENANCE.md`, `src/components/ui/PROVENANCE.md` (shadcn/ui, MIT) |
+| `packages/cms/tracy-emdash-theme-restaurant` | EmDash port of the JA Restaurant Joomla (T3) quickstart (design, demo content and photographs by JoomlArt; code Tracy's) | GPL-2.0-or-later | JoomlArt grant | `LICENSE`, `PROVENANCE.md` |
 | `packages/cms/tracy-emdash-theme-business` | Tracy (design "Northgate Industrial", Tracy/Lee's own demo content) | GPL-3.0-or-later | Owner decision 14/09/2026 (`PROVENANCE.md`) | `LICENSE`, `PROVENANCE.md` |
 | `packages/cms/tracy-emdash-theme-base` | Tracy (snapshot of the "Tracy Base" Joomla site) | GPL-3.0-or-later | Owner decision 16/09/2026 (`PROVENANCE.md`) | `LICENSE`, `PROVENANCE.md`; `public/marketing/` keeps its Apache-2.0 `LICENSE` + `NOTICE` (OpenDesign) |
 | `packages/cms/tracy-cms-sections`, `tracy-cms-motion`, `tracy-cms-preview`, `tracy-content-api`, `tracy-quickstart-tools`, `tracy-seeder` | Tracy | MIT | Tracy's own | — (MIT output is GPL-compatible, so it may be written into the GPL themes) |

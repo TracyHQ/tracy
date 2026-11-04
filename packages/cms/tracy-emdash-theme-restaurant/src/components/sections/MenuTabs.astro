@@ -1,0 +1,58 @@
+---
+/** "Discover our menu" / "Our menu": a dark box with tabs, one menu entry per tab. Without `styles` the rows are the home page's compact list. */
+import Dishes from './Dishes.astro'
+import { stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+
+interface Props {
+  tabs: Row
+  menus: Row[]
+  styles?: Array<1 | 2 | 3>
+}
+const { tabs, menus, styles } = Astro.props
+const $tabs = stampFor(Astro.request, 'tabs', { id: tabs.id, slug: tabs.slug })
+const $menus = menus.map((m) => stampFor(Astro.request, 'menu', { id: m.id, slug: m.slug }))
+---
+
+<section class:list={['rs-section', 'rs-tabs-section', styles && 'is-flat']}>
+	<div class="rs-tabs-box rs-wrap" data-tabs>
+		<h2 class="rs-display" {...$tabs('heading')}>{tabs.heading || tabs.title}</h2>
+		<div class="rs-tablist" role="tablist">
+			{menus.map((m, i) => <button type="button" role="tab" id={`tab-${m.slug}`} aria-controls={`panel-${m.slug}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} {...$menus[i]('title')}>{m.title}</button>)}
+		</div>
+		{menus.map((m, i) => (
+			<div class="rs-tabpanel" role="tabpanel" id={`panel-${m.slug}`} aria-labelledby={`tab-${m.slug}`} hidden={i !== 0}>
+				{styles ? (
+					<Dishes menu={m} style={styles[i] ?? 1} />
+				) : (
+					(m.items ?? []).map((d: any, j: number) => (
+						<div class="rs-dish">
+							<div>
+								<h3 {...$menus[i](`items[${j}].dish_name`)}>{d.dish_name?.trim()}</h3>
+								<p {...$menus[i](`items[${j}].dish_description`)}>{d.dish_description}</p>
+							</div>
+							<div class="rs-dish-price" {...$menus[i](`items[${j}].dish_price`)}>{d.dish_price}</div>
+						</div>
+					))
+				)}
+			</div>
+		))}
+	</div>
+</section>
+
+<script>
+	document.querySelectorAll('[data-tabs]').forEach((root) => {
+		const tabs = root.querySelectorAll<HTMLElement>('[role=tab]')
+		tabs.forEach((t) =>
+			t.addEventListener('click', () =>
+				tabs.forEach((o) => {
+					const on = o === t
+					o.setAttribute('aria-selected', on ? 'true' : 'false')
+					o.tabIndex = on ? 0 : -1
+					const panel = document.getElementById(o.getAttribute('aria-controls') ?? '')
+					if (panel) panel.hidden = !on
+				})
+			)
+		)
+	})
+</script>

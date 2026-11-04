@@ -1,0 +1,1010 @@
+{
+  "note": "path = the route the EmDash site serves (site-model routes). source.url = what the running Joomla answers for it, when the crawl met it; the model drops the article id and the category segment Joomla keeps, so many detail routes have no equal path on the source.",
+  "unknownRouteBehaviour": {
+    "status": 404,
+    "chrome": true,
+    "view": "NotFound"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "home",
+        "found": true
+      },
+      "source": {
+        "url": "/",
+        "joomla": {
+          "menuId": "101",
+          "joomlaPath": "/homepage",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "front-page",
+        "sections": [
+          {
+            "position": "slideshow",
+            "via": "layout",
+            "modules": ["98"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["142", "100", "101", "108", "103"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147", "116"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/about-us",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "about-us",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/about-us",
+        "joomla": {
+          "menuId": "131",
+          "joomlaPath": "/about-us",
+          "option": "com_content",
+          "view": "article",
+          "id": "17"
+        },
+        "view": "page",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["121", "126", "128"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/menu",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "menu",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/menu",
+        "joomla": {
+          "menuId": "133",
+          "joomlaPath": "/menu",
+          "option": "com_content",
+          "view": "article",
+          "id": "17"
+        },
+        "view": "page",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["118"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          },
+          {
+            "position": "food-menu",
+            "via": "menu-assignment",
+            "modules": ["117", "119", "120"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/explore/j-pages/featured-articles",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "featured-articles",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/explore/j-pages/featured-articles",
+        "joomla": {
+          "menuId": "135",
+          "joomlaPath": "/explore/j-pages/featured-articles",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/explore/j-pages/all-categories",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "all-categories",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/explore/j-pages/all-categories",
+        "joomla": {
+          "menuId": "136",
+          "joomlaPath": "/explore/j-pages/all-categories",
+          "option": "com_content",
+          "view": "categories",
+          "id": "10"
+        },
+        "view": "page",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/about-us/our-history",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "our-history",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/about-us/our-history",
+        "joomla": {
+          "menuId": "138",
+          "joomlaPath": "/about-us/our-history",
+          "option": "com_content",
+          "view": "article",
+          "id": "26"
+        },
+        "view": "page",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["130", "132", "147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/contact/phone-reservation",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "phone-reservation",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/contact/phone-reservation",
+        "joomla": {
+          "menuId": "160",
+          "joomlaPath": "/contact/phone-reservation",
+          "option": "com_content",
+          "view": "article",
+          "id": "28"
+        },
+        "view": "page",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/contact/contact-us",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "contact-us",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/contact/contact-us",
+        "joomla": {
+          "menuId": "162",
+          "joomlaPath": "/contact/contact-us",
+          "option": "com_contact",
+          "view": "contact",
+          "id": "1"
+        },
+        "view": "page-contact",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["114"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/menu/simple-menu",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "simple-menu",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/menu/simple-menu",
+        "joomla": {
+          "menuId": "163",
+          "joomlaPath": "/menu/simple-menu",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["139"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/menu/menu-with-image",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "menu-with-image",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/menu/menu-with-image",
+        "joomla": {
+          "menuId": "164",
+          "joomlaPath": "/menu/menu-with-image",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["140"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/menu/2-column-menu",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "2-column-menu",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/menu/2-column-menu",
+        "joomla": {
+          "menuId": "165",
+          "joomlaPath": "/menu/2-column-menu",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["141"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/offers",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "offers",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/offers",
+        "joomla": {
+          "menuId": "167",
+          "joomlaPath": "/offers",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["143", "144", "145"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog",
+      "kind": "list",
+      "cms": {
+        "collection": "posts",
+        "slug": "blog",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog",
+        "joomla": {
+          "menuId": "108",
+          "joomlaPath": "/blog",
+          "option": "com_content",
+          "view": "category",
+          "id": "10"
+        },
+        "view": "category",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/explore/j-pages/smart-search",
+      "kind": "list",
+      "cms": {
+        "collection": "posts",
+        "slug": "smart-search",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/explore/j-pages/smart-search",
+        "joomla": {
+          "menuId": "122",
+          "joomlaPath": "/explore/j-pages/smart-search",
+          "option": "com_finder",
+          "view": "search",
+          "id": null
+        },
+        "view": "search",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery",
+      "kind": "list",
+      "cms": {
+        "collection": "posts",
+        "slug": "gallery",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/gallery",
+        "joomla": {
+          "menuId": "132",
+          "joomlaPath": "/gallery",
+          "option": "com_content",
+          "view": "category",
+          "id": "14"
+        },
+        "view": "category",
+        "sections": [
+          {
+            "position": "slideshow",
+            "via": "layout",
+            "modules": ["115"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/explore/j-pages/tagged-items",
+      "kind": "list",
+      "cms": {
+        "collection": "posts",
+        "slug": "tagged-items",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/explore/j-pages/tagged-items",
+        "joomla": {
+          "menuId": "134",
+          "joomlaPath": "/explore/j-pages/tagged-items",
+          "option": "com_tags",
+          "view": "tag",
+          "id": "3"
+        },
+        "view": "tag",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["99"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["147"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/4-habits-that-can-improve-your-customer-service",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "4-habits-that-can-improve-your-customer-service",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-marketing/chipotle-to-launch-burger-spinoff-this-fall",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "chipotle-to-launch-burger-spinoff-this-fall",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/9-restaurant-marketing/3-chipotle-to-launch-burger-spinoff-this-fall",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-marketing/how-to-help-your-chef-achieve-a-better-work-life-balance",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "how-to-help-your-chef-achieve-a-better-work-life-balance",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/9-restaurant-marketing/4-how-to-help-your-chef-achieve-a-better-work-life-balance",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-news/indies-aren-t-sold-on-tech",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "indies-aren-t-sold-on-tech",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/11-restaurant-news/5-indies-aren-t-sold-on-tech",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/starbucks-brings-under-armour-exec-on-board",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "starbucks-brings-under-armour-exec-on-board",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/8-restaurant-business/6-starbucks-brings-under-armour-exec-on-board",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-business/8-trends-trickling-down-to-mainstream-menus",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "8-trends-trickling-down-to-mainstream-menus",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/starbucks-faces-a-big-recall",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "starbucks-faces-a-big-recall",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/12-restaurant-guide/8-starbucks-faces-a-big-recall",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/logan-s-said-to-be-weighing-bankruptcy",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "logan-s-said-to-be-weighing-bankruptcy",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/12-restaurant-guide/9-logan-s-said-to-be-weighing-bankruptcy",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/fish-sauces-seep-onto-all-sorts-of-menus",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "fish-sauces-seep-onto-all-sorts-of-menus",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/12-restaurant-guide/10-fish-sauces-seep-onto-all-sorts-of-menus",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/denny-s-adopts-a-pancake-guarantee",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "denny-s-adopts-a-pancake-guarantee",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-guide/blt-on-pimento-cheese-biscuit",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "blt-on-pimento-cheese-biscuit",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/12-restaurant-guide/12-blt-on-pimento-cheese-biscuit",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-marketing/mcdonald-s-makes-clean-tweaks-to-some-menu-items",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "mcdonald-s-makes-clean-tweaks-to-some-menu-items",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/9-restaurant-marketing/13-mcdonald-s-makes-clean-tweaks-to-some-menu-items",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/restaurant-marketing/how-the-gop-and-dems-differ-on-restaurant-issues",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "how-the-gop-and-dems-differ-on-restaurant-issues",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/blog/9-restaurant-marketing/14-how-the-gop-and-dems-differ-on-restaurant-issues",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery/sample-album-1",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "sample-album-1",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/gallery/18-sample-album-1",
+        "joomla": {
+          "articleId": "18",
+          "joomlaPath": "/gallery/18-sample-album-1",
+          "reason": "no route renders a single post; the representative post stands in"
+        },
+        "view": "single",
+        "sections": []
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery/sample-album-2",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "sample-album-2",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/gallery/19-sample-album-2",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery/sample-album-3",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "sample-album-3",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/gallery/20-sample-album-3",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery/sample-album-4",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "sample-album-4",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/gallery/21-sample-album-4",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery/sample-album-5",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "sample-album-5",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/gallery/22-sample-album-5",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery/sample-album-6",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "sample-album-6",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/gallery/23-sample-album-6",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery/sample-album-7",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "sample-album-7",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/gallery/24-sample-album-7",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/pages/chefs",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "chefs",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/404",
+      "kind": "system",
+      "cms": {
+        "collection": null,
+        "slug": null,
+        "found": false
+      },
+      "source": {
+        "url": "/index.php/nope-404",
+        "joomla": null,
+        "view": "error",
+        "sections": null
+      },
+      "expected": {
+        "status": 404
+      }
+    }
+  ]
+}

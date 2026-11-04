@@ -1,0 +1,28 @@
+# Content gaps — source defects and missing/contradictory data
+
+Evidence is a file under `inventory/`, `perf/` or the source release; nothing here is invented to fill a hole.
+
+| Code | What | Evidence | Handling |
+|---|---|---|---|
+| G-1 | Source defect: `@headings-font-family = "Teko)"` (stray `)`) in `templates/ja_restaurant/less/variables.less` for all five styles; the compiled CSS is right (Teko loads: computed `font-family` of `h1` = `Teko`). | `spec/source-fonts.json` (from-joomla), computed style in `inventory/measured.json` | not a port blocker; heading font stays Teko |
+| G-2 | Source defect: 5 template assets 404 (`templates/ja_restaurant/js/img/error.png|error.svg|play-pause.png|video-play.png|video-play.svg`) — referenced by the slideshow plugin CSS, never shipped. | `source-snapshot/crawl.json` `failures` | not ported (owl-carousel video/error icons are not used on the demo) |
+| G-3 | `VERIFICATION.json` says `pages.checked 37, ok 36, differ []`, naming no page. On the stand all 58 internal pages crawled answer 200, except `/explore/j-pages/user-profile` (303 → login) and the deliberate 404 probe. The not-ok page is not identifiable from the release; the likeliest are the profile redirect or the error document. The defect is **in the source release, identical in 1.0.5** (`sameAsReleased 37`). | `crawl.txt`, VERIFICATION.json | recorded; no action |
+| G-4 | Contradiction: top bar says `7.00am - 6.30pm Monday to Sunday`; footer Hours says `Mon - Thu 9 AM - 5 PM / Fri - Sat 10 AM - 3 PM / Sun 10AM - 1PM`. | `spec/sections.json` modules 94, 123 | both kept in `chrome` (`topbar_text`, `footer_hours`); each spot shows what the source shows there, the owner chose to record it as a source content gap, not to pick one (session 2, DECISIONS D25) |
+| G-5 | Article alias ≠ title: URL `…/2-8-habits-that-can-improve-your-customer-service` vs title "4 Habits That Can Improve Your Customer Service"; `…/7-4-trends-trickling-down…` vs "8 trends trickling down…"; demo-content edits changed titles, not aliases. | `inventory/routes.json` (routes without a source URL) | model slug = title-derived; redirects from the Joomla alias are not generated |
+| G-6 | `ctm_article_style`, `ctm_content_type`, `ctm_gallery` article custom fields (gallery albums' photo lists) are not placed by the adapter. | adapter note in `from-joomla` output | P5 (gallery) reads the album photos from the post body / these fields; open |
+| G-7 | Menu: trashed items (Chefs, Vik Restaurant ×7, Open Table, Vik Restaurants Reservation, Happy Hours) are not in the public navigation. | SF-6 | pruned |
+| G-8 | Third-party features of the demo: OpenTable booking iframe (`ot_id` empty — `secure.opentable.com/frontdoor/default.aspx?rid=&restref=`), Vik Restaurants, AcyMailing form, Google Maps iframe (`[Contact] Map`), mod_search on Home. | `spec/sections.json`, render console | not ported (D12); contact map left as a link to Google Maps from `chrome.footer_map_url` |
+| G-9 | 5 of 7 `posts` cover images, 35 of 42 cited images have no entry in the model's `media[]`. | `inventory/assets.json` | P4 extends the media map |
+| G-10 | Image rights: `images/joomlart/**` stock photographs; no licence text in the release (`templateDetails.xml`: GNU/GPLv3 covers the template, not demo photographs). | `templates/ja_restaurant/templateDetails.xml` | D13 `[LEE]` |
+| G-11 | The source has no dark mode; `html[data-theme=dark]` leaves body colours unchanged. | `render-src/render-manifest.json` (`bodyBg` equal in light/dark) | D8 |
+| G-12 | The source home page prints a `t3-assets` PHP notice **only** on a stand whose `t3-assets/` is not writable (SF-14). | first render set | stand fixed, not a source defect |
+| G-13 | The source images carry no alt text (model `media[].alt` is `{}`); every image is `alt=""` (decorative) until an editor writes one. | `seed/media-map.json` | P4/P7 content pass |
+| G-14 | Sidebar modules Most Read (mod_articles_popular, hit-ordered), banner "Only $5.99" (custom module 107) and the Login module are not in the model. | `spec/sections.json` | P5 |
+| G-15 | Author, hits and tags of the articles are in the dump (`jd_users`, `jd_content.hits`, `jd_tags`). Tags: ported as the `tag` taxonomy and shown where the source shows them (not as links). Hits: not shown, a view counter would be invented. Author "Admin": no byline, it is the demo login name (DECISIONS D19). | `j6/inventory.json` | decided (owner, session 2) |
+| G-16 | Not in the source: the Subscribe box's confirmation line (the Forms plugin's default is used), and the contact form's "Send a copy to yourself" has no counterpart in the Forms plugin (not drawn). | `tools/forms.json` | DECISIONS D27 |
+| G-17 | "Most Read" sidebar module (module 109) is ordered by hit counts; not drawn. | `spec/sections.json` | DECISIONS D26 |
+| G-18 | Icon glyphs of the source (Font Awesome / Ionicons: paper plane, camera, TripAdvisor owl, timeline clock, contact and history icons) are not drawn: the template loads no icon font. | rendered source | DECISIONS D33 |
+| G-19 | The Contact page's Google Map (module 114) is an external service iframe; not drawn, so the page has no masthead. The source's own render shows an empty gap there. | `spec/sections.json` | DECISIONS D12, D30 |
+| G-20 | Smart Search's advanced panel (type, author, language, date filters) and Tagged Items' filter bar are Joomla client forms; not drawn. | rendered source | DECISIONS D32, D34 |
+| G-21 | The source's parallax section photographs (subscribe band, home sections) render at some widths only (768); the site draws the plain ground. The History line (module 130) is white on cream in the source: drawn on an ink band. | rendered source | DECISIONS D30, D33 |
+

@@ -1,0 +1,31 @@
+---
+/** The kitchen team: a grid of cards (picture, name, role, a few words). Anchor #our-team is where the intro button lands. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { lines } from '@/lib/html'
+import type { Row } from '@/lib/content'
+
+interface Props {
+  entry: Row
+}
+const { entry } = Astro.props
+const $t = stampFor(Astro.request, 'teams', { id: entry.id, slug: entry.slug })
+const intro = lines(entry.section_intro)
+---
+
+<section class="rs-section rs-team" id="our-team">
+	<div class="rs-wrap">
+		<h2 class="rs-display rs-section-title" {...$t('title')}>{entry.title}</h2>
+		{intro.length > 0 && <p class="rs-section-desc" {...$t('section_intro')}>{intro.map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>}
+		<div class="rs-team-grid">
+			{(entry.items ?? []).map((m: any, i: number) => (
+				<div class="rs-team-card">
+					{mediaUrl(m.member_image) && <div class="rs-team-photo"><img src={mediaUrl(m.member_image)!} alt={m.member_name} width="288" height="288" loading="lazy" decoding="async" {...$t(`items[${i}].member_image`)} /></div>}
+					<h3 class="rs-team-name" {...$t(`items[${i}].member_name`)}>{m.member_name}</h3>
+					<div class="rs-team-role" {...$t(`items[${i}].member_position`)}>{m.member_position}</div>
+					<p {...$t(`items[${i}].member_desc`)}>{m.member_desc}</p>
+				</div>
+			))}
+		</div>
+	</div>
+</section>

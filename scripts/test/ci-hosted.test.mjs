@@ -426,7 +426,7 @@ test('plan marks every row that runs tests as a browser row, and `checks` only w
   assert.equal(opensBrowser({ group: 'x', args: '--only testsuite' }), false)
 })
 
-test('the Playwright versions come from the gated importers and the three template lockfiles', () => {
+test('the Playwright versions come from the gated importers and the four template lockfiles', () => {
   const lock = (importers) => JSON.stringify({ lockfileVersion: '9.0', importers })
   const pw = (version) => ({ specifier: version, version })
   const root = lock({
@@ -447,7 +447,8 @@ test('the Playwright versions come from the gated importers and the three templa
     [STANDALONE_LOCKS[2]]: lock({
       '.': { devDependencies: { playwright: pw('1.63.0') } },
       sub: { dependencies: { playwright: pw('9.9.9') } }
-    })
+    }),
+    [STANDALONE_LOCKS[3]]: lock({ '.': { devDependencies: { playwright: pw('1.63.0') } } })
   }
   assert.deepEqual(
     playwrightVersions((rel) => files[rel]),
@@ -455,7 +456,9 @@ test('the Playwright versions come from the gated importers and the three templa
   )
   assert.deepEqual(
     STANDALONE_LOCKS,
-    ['base', 'business', 'saas'].map((t) => `packages/cms/tracy-emdash-theme-${t}/pnpm-lock.yaml`)
+    ['base', 'business', 'saas', 'restaurant'].map(
+      (t) => `packages/cms/tracy-emdash-theme-${t}/pnpm-lock.yaml`
+    )
   )
   assert.throws(() => playwrightVersions(() => lock({})), /no lockfile resolves playwright/)
   // The real tree resolves at least one version, each a plain semver.

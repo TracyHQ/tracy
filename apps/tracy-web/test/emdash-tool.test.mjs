@@ -10,12 +10,13 @@ import { runNode } from '../src/lib/emdash-tool.js'
 const CMS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../packages/cms')
 
 test('the templates ship ONE personalize tool: the image carries a single copy, so they must not differ', () => {
-  const [business, saas, base, coffee] = ['business', 'saas', 'base', 'coffee'].map((t) =>
-    readFileSync(path.join(CMS, `tracy-emdash-theme-${t}`, 'tools', 'personalize.mjs'))
+  const [business, saas, base, coffee, restaurant] = ['business', 'saas', 'base', 'coffee', 'restaurant'].map(
+    (t) => readFileSync(path.join(CMS, `tracy-emdash-theme-${t}`, 'tools', 'personalize.mjs'))
   )
   assert.ok(business.equals(saas), 'saas differs from business')
   assert.ok(business.equals(base), 'base differs from business')
   assert.ok(business.equals(coffee), 'coffee differs from business')
+  assert.ok(business.equals(restaurant), 'restaurant differs from business')
 })
 
 test('the image carries every seed file the tool reads, for every template that ships it (DEMO FILE LINKS)', () => {
@@ -32,7 +33,8 @@ test('the image carries every seed file the tool reads, for every template that 
     ['tracy-business', 'tracy-emdash-theme-business'],
     ['tracy-saas', 'tracy-emdash-theme-saas'],
     ['tracy-base', 'tracy-emdash-theme-base'],
-    ['tracy-coffee', 'tracy-emdash-theme-coffee']
+    ['tracy-coffee', 'tracy-emdash-theme-coffee'],
+    ['tracy-restaurant', 'tracy-emdash-theme-restaurant']
   ]) {
     const copied = new Set(
       dockerfile
@@ -103,7 +105,7 @@ test('image-only placement reads the seed files shipped by the Dockerfile, witho
   try {
     const repo = path.resolve(CMS, '..', '..')
     const lines = readFileSync(path.join(repo, 'apps/tracy-web/Dockerfile'), 'utf8').split('\n')
-    for (const name of ['business', 'saas', 'base', 'coffee']) {
+    for (const name of ['business', 'saas', 'base', 'coffee', 'restaurant']) {
       const target = `./src/emdash-tool/tracy-${name}/seed`
       const dir = path.join(root, name)
       mkdirSync(dir)

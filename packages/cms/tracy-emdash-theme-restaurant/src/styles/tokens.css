@@ -1,0 +1,79 @@
+/*
+ * JA Restaurant design tokens. Light values are the source template's own
+ * (templates/ja_restaurant/less/variables.less: @body-bg, @text-color, @brand-primary, @brand-secondary;
+ * measured values: inventory/measured-home-1440.json). Every colour reads its Design-system role first
+ * (`--ds-c-<role>`, the names of design-system-roles.json) and keeps the template's own value as the
+ * fallback, so with no system worn the site looks exactly as designed.
+ * Dark values are NOT in the source (DECISIONS D8): derived from the same warm brown ink.
+ */
+@theme {
+	--font-display: var(--ds-font-display, var(--font-teko), "Teko", "Arial Narrow", sans-serif);
+	--font-body: var(--ds-font-body, var(--font-noticia-text), "Noticia Text", Georgia, serif);
+	--font-ui: var(--ds-font-ui, var(--font-roboto-mono), "Roboto Mono", ui-monospace, monospace);
+
+	--color-bg: var(--ds-c-bg, #f4f2e7);
+	--color-surface: var(--ds-c-surface, #ffffff);
+	--color-fg: var(--ds-c-fg, #3a352f);
+	--color-heading: var(--ds-c-heading, #333333);
+	--color-meta: var(--ds-c-meta, #555555);
+	--color-muted: var(--ds-c-muted, #6b655c);
+	--color-line: var(--ds-c-border, #d9d4c3);
+	--color-line-soft: var(--ds-c-border-soft, #e6e1d0);
+
+	--color-accent: var(--ds-c-accent, #d24a24);
+	--color-accent-on: var(--ds-c-accent-on, #ffffff);
+	--color-accent-hover: var(--ds-c-accent-hover, #b93d1b);
+	--color-accent-text: var(--ds-c-accent-text, #bc4220);
+	--color-secondary: var(--ds-c-secondary, #ffd33d);
+
+	/* the dark panels (navbar, footer, menu tabs, testimonial block) and the words on them */
+	--color-ink: var(--ds-c-ink, #3a352f);
+	--color-on-ink: var(--ds-c-on-ink, #ffffff);
+	--color-on-ink-soft: var(--ds-c-on-ink-soft, rgba(255, 255, 255, 0.8));
+	--color-ink-line: rgba(255, 255, 255, 0.22); /* ds-keep: hairline on the ink band: depth, not a role */
+	/* the cream plate the logo sits on, in both themes */
+	--color-logo-ground: #f4f2e7;
+
+	/* shadcn semantic tokens, mapped onto the design */
+	--color-background: var(--color-bg);
+	--color-foreground: var(--color-fg);
+	--color-primary: var(--color-accent);
+	--color-primary-foreground: var(--color-accent-on);
+	--color-card: var(--color-surface);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+	--color-ring: var(--color-accent);
+	--color-popover: var(--color-surface);
+	--color-popover-foreground: var(--color-fg);
+	--color-muted-foreground: var(--color-muted);
+	--color-destructive: var(--ds-c-danger-text, #d9534f);
+
+	--radius: var(--ds-card-radius, 0px);
+	--container-site: 1190px;
+	--gutter: 25px;
+	--ease-standard: cubic-bezier(0.28, 0, 0.22, 1);
+}
+
+html[data-theme="dark"] {
+	--color-bg: var(--ds-c-bg, #1d1a17);
+	--color-surface: var(--ds-c-surface, #26221e);
+	--color-fg: var(--ds-c-fg, #e9e3d4);
+	--color-heading: var(--ds-c-heading, #f4f2e7);
+	--color-meta: var(--ds-c-meta, #aaa392);
+	--color-muted: var(--ds-c-muted, #b4ad9c);
+	--color-line: var(--ds-c-border, #3d3730);
+	--color-line-soft: var(--ds-c-border-soft, #332e28);
+	--color-accent-text: var(--ds-c-accent-text, #f08a68);
+	--color-ink: var(--ds-c-ink, #2b2622);
+	--color-ink-line: rgba(255, 255, 255, 0.16); /* ds-keep: hairline on the ink band: depth, not a role */
+	--color-background: var(--color-bg);
+	--color-foreground: var(--color-fg);
+	--color-card: var(--color-surface);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+	--color-popover: var(--color-surface);
+	--color-popover-foreground: var(--color-fg);
+	--color-muted-foreground: var(--color-muted);
+}
