@@ -9,7 +9,7 @@ const PATHS = [
   '/',
   '/shop/item one',
   '/team/jo bloggs',
-  '/café/menu',
+  '/müller/menu',
   '/a\\b',
   '/already%20coded/x',
   '/plain/page?x=1#top'
@@ -17,7 +17,7 @@ const PATHS = [
 
 test('a path with a space or other unsafe character is sent percent-encoded', () => {
   assert.equal(hostPath('/shop/item one'), '/shop/item%20one')
-  assert.equal(hostPath('/café/menu'), '/caf%C3%A9/menu')
+  assert.equal(hostPath('/müller/menu'), '/m%C3%BCller/menu')
   assert.equal(hostPath('/a\\b'), '/a%5Cb')
 })
 
