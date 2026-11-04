@@ -311,12 +311,29 @@ test('ABOUT-1: both the heading and the paragraph under it must print a field Tr
   assert.match(h.message, /the home <h1> prints no field of the home entry/)
 })
 
-test('ABOUT-1: a home with no element after the h1 is judged on the heading alone, as before', async () => {
+test('ABOUT-1: a home with nothing after the h1 fails, as the Joomla half asks for a paragraph', async () => {
   const only = `const $hero = stampFor(Astro.request, 'hero', hero)\n<h1 {...$hero("hero_heading")}>{hero.hero_heading}</h1>`
   const r = await run(about1HomeHeading, stampedHome(only, [heroRule('hero_heading')]))
-  assert.equal(r.status, 'pass', r.message)
+  assert.equal(r.status, 'fail', r.message)
+  assert.match(r.message, /nothing under the home heading prints a field of the home entry/)
 })
 
+/** The hero view with two entries in the seed; the view renders one of them. */
+const twoHeroes = (rules) =>
+  businessEmdash({
+    'src/views/Home.astro': HERO_VIEW,
+    'seed/seed.json': JSON.stringify({
+      defaultLocale: 'en',
+      content: {
+        hero: [
+          { slug: 'first', data: { hero_heading: 'A', hero_intro: 'B' } },
+          { slug: 'second', data: { hero_heading: 'C', hero_intro: 'D' } }
+        ]
+      }
+    }),
+    'seed/personalize.json': JSON.stringify({ copy: rules })
+  })
+const ruleFor = (slug, field) => ({ collection: 'hero', slug, field, brief: 'b', maxWords: 8 })
 const STAMPS = `const $hero = stampFor(Astro.request, 'hero', hero)`
 const bothRules = [heroRule('hero_heading'), heroRule('hero_intro')]
 
@@ -427,6 +444,32 @@ test('ABOUT-1: a PortableText value that holds the field counts', async () => {
 <div {...$hero('hero_intro')}><PortableText value={stampBlocks($hero, 'hero_intro', hero.hero_intro)} components={c} /></div>`
   const r = await run(about1HomeHeading, stampedHome(pt, bothRules))
   assert.equal(r.status, 'pass', r.message)
+})
+
+test('ABOUT-1: every entry of the collection that holds the field must be covered, named in the message', async () => {
+  const firstOnly = await run(
+    about1HomeHeading,
+    twoHeroes([ruleFor('first', 'hero_heading'), ruleFor('first', 'hero_intro')])
+  )
+  assert.equal(firstOnly.status, 'fail', firstOnly.message)
+  assert.match(
+    firstOnly.message,
+    /hero\.hero_heading has no identity, copy, blocks or rewrite rule \(entry hero\/second\)/
+  )
+  assert.match(firstOnly.message, /hero\.hero_intro has no identity.*\(entry hero\/second\)/)
+  const both = await run(
+    about1HomeHeading,
+    twoHeroes(
+      ['first', 'second'].flatMap((slug) => [ruleFor(slug, 'hero_heading'), ruleFor(slug, 'hero_intro')])
+    )
+  )
+  assert.equal(both.status, 'pass', both.message)
+  // a rule with no slug covers every entry of its collection
+  const all = await run(
+    about1HomeHeading,
+    twoHeroes([ruleFor(undefined, 'hero_heading'), ruleFor(undefined, 'hero_intro')])
+  )
+  assert.equal(all.status, 'pass', all.message)
 })
 
 test('ABOUT-1: a rule on another collection or entry does not cover a stamped field, and a field missing from the seed fails', async () => {
