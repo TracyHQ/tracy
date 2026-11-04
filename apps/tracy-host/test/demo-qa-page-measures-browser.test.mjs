@@ -173,3 +173,60 @@ test(
     }
   }
 )
+
+test(
+  'what a visitor sees: one main heading of three in the markup, and only what shows reads as shown',
+  opts,
+  async () => {
+    const { server, base } = await site()
+    PAGES['/shown'] =
+      `${head}<style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}</style>
+    <h1 class="sr">For readers only</h1><h1 style="display:none">Switched off</h1><h1>The main heading</h1>
+    <p>Words on the page</p><p style="display:none">Words off the page</p>
+    <a href="/fine">Read on</a><a href="/missing" style="display:none">Hidden link</a>
+    <img src="/wide.png" style="width:200px;height:50px" alt=""><img src="/fine?hidden" style="display:none" alt="">`
+    const browser = await playwright.chromium.launch({ headless: true })
+    try {
+      const page = await (await browser.newContext()).newPage()
+      const r = await readDemoPage(page, `${base}/shown`, '/shown', { measurePages: true })
+      for (const m of r.measures) {
+        assert.deepEqual(m.mainHeadings, ['The main heading'])
+        assert.match(m.shownText, /Words on the page/)
+        assert.doesNotMatch(m.shownText, /Words off the page/)
+        assert.deepEqual(
+          m.shownLinks.map((l) => l.text),
+          ['Read on']
+        )
+        assert.deepEqual(m.shownPictures, [`${base}/wide.png`])
+      }
+    } finally {
+      await browser.close()
+      server.close()
+    }
+  }
+)
+
+test(
+  'a link with a click handler in its markup is read as scripted, and one without is not',
+  opts,
+  async () => {
+    const { server, base } = await site()
+    PAGES['/buttons'] =
+      `${head}<a class="btn" href="javascript:;" onclick="window.opened = 1">Share</a> <a class="btn" href="javascript:;">Dead</a>`
+    const browser = await playwright.chromium.launch({ headless: true })
+    try {
+      const page = await (await browser.newContext()).newPage()
+      const r = await readDemoPage(page, `${base}/buttons`, '/buttons')
+      assert.deepEqual(
+        r.ctas.map((c) => [c.text, c.scripted ?? false]),
+        [
+          ['Share', true],
+          ['Dead', false]
+        ]
+      )
+    } finally {
+      await browser.close()
+      server.close()
+    }
+  }
+)

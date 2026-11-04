@@ -12,10 +12,11 @@
 //   text-overflow      block  6 writer      new: text cut by or past its box
 //   tall-blocks        warn   6 writer      new
 //   stretched-pictures warn   8 pictures    new
-//   unowned-slots      warn   3 planner     new: unowned slots that still hold their demo
+//   unowned-slots      block  3 planner     new: unowned slots that still hold their demo; a warning when no visitor sees one
 //   empty-controls     block  9 write       new: a button with no words or going nowhere, a form field nothing names
 //   glued-words        block  9 write       new: words run into a highlight with no space
 //   unfinished-heading block  3 planner     new: a heading that stops on a small word
+//   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead, WIDTHS } from './host-pages.js'
 import { hostVerdictGroup } from './host-verdicts.js'
@@ -23,6 +24,7 @@ import {
   findDeadLinks,
   findEmptyControls,
   findGluedWords,
+  findMainHeadings,
   findStretchedPictures,
   findTallBlocks,
   findTextOverflow,
@@ -123,6 +125,17 @@ export const PAGE_CHECK_GROUPS = [
     level: 'block',
     causingStep: 3,
     find: (read) => findUnfinishedHeadings(read.measures)
+  }),
+  measuredGroup({
+    name: 'main-heading',
+    level: 'block',
+    causingStep: 9,
+    find: (read) => {
+      // A host from before this measure answers the others: silence about headings is not one heading.
+      if (read.measures.length && !read.measures.some((m) => Array.isArray(m.mainHeadings)))
+        throw new GroupUnmeasured('The host answered no main headings, so this was not measured.')
+      return findMainHeadings(read.measures)
+    }
   }),
   unownedShownGroup
 ]

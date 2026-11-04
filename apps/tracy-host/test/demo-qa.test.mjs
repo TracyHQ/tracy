@@ -711,6 +711,25 @@ test("cta-real: dead, demo-service and off-site buttons fail, and booking only o
   assert.equal(url, page().url)
 })
 
+test('cta-real: a link with a click handler goes somewhere; the same link without one goes nowhere', () => {
+  const r = checkCtaReal(
+    [
+      page({
+        ctas: [
+          { href: 'javascript:;', text: 'Share', button: true, scripted: true },
+          { href: '#', text: 'Open plans', button: true, scripted: true },
+          { href: 'javascript:;', text: 'Share again', button: true }
+        ]
+      })
+    ],
+    {}
+  )
+  assert.deepEqual(
+    r.detail.map((d) => [d.text, d.problem]),
+    [['Share again', 'goes nowhere']]
+  )
+})
+
 test("cta-real: the page the build's plan made the contact page is the Contact page, whatever its slug", () => {
   const ctas = [{ href: '/index.php/lien-he/', text: 'Book a table', booking: true, button: true }]
   assert.equal(checkCtaReal([page({ ctas })]).pass, false)

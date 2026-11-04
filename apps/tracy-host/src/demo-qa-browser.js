@@ -1014,6 +1014,8 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     const opens = nav && Boolean(a.closest('li')?.querySelector(SUBMENU))
     // A button inside a form submits it from script (`javascript:void(0)`): it goes to the form's own action.
     const submits = Boolean(a.closest('form'))
+    // A click handler in the markup is where this link goes: `href` only keeps it a link.
+    const scripted = Boolean(a.getAttribute('onclick')?.trim())
     ctas.push({
       href: a.getAttribute('href') ?? '',
       text: text.slice(0, 80),
@@ -1023,6 +1025,7 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       navigation,
       ...(opens ? { opens } : {}),
       ...(submits ? { submits } : {}),
+      ...(scripted ? { scripted } : {}),
       ...(nav &&
       a.matches(
         '[role="button"][aria-expanded], [aria-controls][aria-expanded], [data-toggle="dropdown"], [data-bs-toggle="dropdown"]'

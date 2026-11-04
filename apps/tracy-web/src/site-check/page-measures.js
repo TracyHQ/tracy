@@ -6,7 +6,8 @@
 //     blocks: [{ selector, height }],
 //     pictures: [{ selector, src, naturalWidth, naturalHeight, width, height, fit }],
 //     controls: [{ selector, fault: 'wordless' | 'nowhere', href, text }], fields: [{ selector, name }],
-//     glued: [{ selector, text, around }], headings: [text] }
+//     glued: [{ selector, text, around }], headings: [text], mainHeadings: [text], shownText,
+//     shownLinks: [{ href, text }], shownPictures: [src] }
 
 /** A box counts as overflowed only past this many pixels, so rounding in the browser is no finding. */
 export const OVERFLOW_TOLERANCE_PX = 2
@@ -137,6 +138,70 @@ export function findUnfinishedHeadings(measures) {
     (m) => each(m.headings).filter((h) => UNFINISHED.test(String(h).trim())),
     (h) => ({ measured: clip(h, 80), reason: 'A heading stops halfway' })
   )
+}
+
+/**
+ * A page should print one main heading a visitor reads. Two read as the title said twice, which blocks. None is a warning: a template
+ * can draw its big words in something else, and a heading kept for a screen reader is no fault a visitor sees.
+ */
+export function findMainHeadings(measures) {
+  const known = each(measures).filter((m) => Array.isArray(m.mainHeadings))
+  return [
+    ...oncePerPage(
+      known.filter((m) => m.mainHeadings.length > 1),
+      (m) => [m.mainHeadings],
+      (h) => ({ measured: clip(h.join(' / '), 120), reason: `${h.length} main headings on one page` })
+    ),
+    ...oncePerPage(
+      known.filter((m) => m.mainHeadings.length === 0),
+      () => ['no main heading'],
+      (h) => ({ measured: h, level: 'warn', reason: 'No main heading a visitor can read' })
+    )
+  ]
+}
+
+const squashed = (text) =>
+  String(text ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+const pathOfHref = (href) => {
+  try {
+    return new URL(href).pathname
+      .replace(/^\/index\.php(?=\/|$)/, '')
+      .replace(/\/+$/, '')
+      .toLowerCase()
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Where a visitor sees a stored value, or null. Words are read in the page's rendered text, a picture among its shown pictures, an
+ * address among its shown links: with the words beside it when it has any, else alone, and only when no written line also sends a link
+ * there, since then the page cannot tell the two apart.
+ * @param {object[]} measures
+ * @param {{ type: string, value: string, path?: string | null, label?: string | null, claimed?: boolean }} slot `path`: where an
+ *   address opens; `label`: the words of its button; `claimed`: a written line goes to the same address
+ * @returns {{ page: string, width: number } | null}
+ */
+export function whereShown(measures, { type, value, path = null, label = null, claimed = false }) {
+  const seen = (m) => {
+    if (type === 'image') {
+      const file = String(value).split('#')[0].replace(/^\/+/, '')
+      return each(m.shownPictures).some((src) => decodeURI(String(src)).includes(file))
+    }
+    if (type === 'url') {
+      if (path === null) return false
+      return each(m.shownLinks).some(
+        (l) => pathOfHref(l.href) === path && (label ? squashed(l.text) === squashed(label) : !claimed)
+      )
+    }
+    const words = squashed(value)
+    return words !== '' && squashed(m.shownText).includes(words)
+  }
+  const at = each(measures).find(seen)
+  return at ? { page: at.path, width: at.width } : null
 }
 
 /** A block more than TALL_SCREENS screens high at its width: a warning, since a long list is legitimate. */

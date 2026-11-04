@@ -6,10 +6,12 @@ import {
   findDeadLinks,
   findEmptyControls,
   findGluedWords,
+  findMainHeadings,
   findUnfinishedHeadings,
   findStretchedPictures,
   findTallBlocks,
-  findTextOverflow
+  findTextOverflow,
+  whereShown
 } from '../src/site-check/page-measures.js'
 import { runSiteCheck } from '../src/site-check/site-check.js'
 import { fakeHost, pageRead, pagedSite, writtenReport } from './_site-check-pages.mjs'
@@ -195,7 +197,10 @@ test('the new measures at both widths, as groups: levels and causing steps', asy
 
 test('warnings alone leave the check green and are counted', async () => {
   const measures = () =>
-    BOTH('/', { 1440: { blocks: [{ selector: 'section.long', height: 4000 }] }, 390: {} })
+    BOTH('/', {
+      1440: { blocks: [{ selector: 'section.long', height: 4000 }], mainHeadings: ['Lessons'] },
+      390: { mainHeadings: ['Lessons'] }
+    })
   const baseline = { texts: [], labels: [], pictures: { files: [], shas: [] } }
   const check = await runSiteCheck({
     door: pagedSite(1).door,
@@ -295,5 +300,105 @@ test('a heading that stops on a small word is unfinished; a whole one is not', (
   assert.deepEqual(
     f.map((x) => x.measured),
     ['Rowing for']
+  )
+})
+
+test('two main headings on a page block; none is a warning; a page the host did not read for them says nothing', () => {
+  const f = findMainHeadings([
+    { path: '/twice', width: 1440, mainHeadings: ['Our rules', 'Our rules'] },
+    { path: '/twice', width: 390, mainHeadings: ['Our rules', 'Our rules'] },
+    { path: '/none', width: 1440, mainHeadings: [] },
+    { path: '/fine', width: 1440, mainHeadings: ['Lessons'] },
+    { path: '/older', width: 1440 }
+  ])
+  assert.deepEqual(
+    f.map((x) => [x.page, x.level ?? 'block']),
+    [
+      ['/twice', 'block'],
+      ['/none', 'warn']
+    ]
+  )
+})
+
+test('what a visitor sees of a stored value: words, a picture, a button by its words, a bare address only when nothing else goes there', () => {
+  const measures = [
+    {
+      path: '/about',
+      width: 1440,
+      shownText: 'WELCOME TO QUAY Read more',
+      shownPictures: ['http://site.test/images/demo/sign.png?width=120'],
+      shownLinks: [{ href: 'http://site.test/index.php/about', text: 'READ MORE' }]
+    }
+  ]
+  assert.equal(whereShown(measures, { type: 'text', value: 'Welcome to  Quay' }).page, '/about')
+  assert.equal(whereShown(measures, { type: 'text', value: 'Hidden words' }), null)
+  assert.equal(
+    whereShown(measures, { type: 'image', value: 'images/demo/sign.png#joomlaImage://x' }).page,
+    '/about'
+  )
+  assert.equal(whereShown(measures, { type: 'image', value: 'images/demo/other.png' }), null)
+  const url = { type: 'url', value: 'index.php?Itemid=7', path: '/about' }
+  assert.equal(whereShown(measures, { ...url, label: 'Read more' }).page, '/about')
+  assert.equal(whereShown(measures, { ...url, label: 'View more' }), null)
+  assert.equal(whereShown(measures, url).page, '/about')
+  assert.equal(whereShown(measures, { ...url, claimed: true }), null)
+})
+
+test('an unowned slot a visitor sees blocks; one that shows nowhere stays a warning', async () => {
+  const site = pagedSite(1, { 'module-5.0': 'Demo button words', 'module-6.0': 'Words in no element' })
+  site.door.apply = ((apply) => async (call) => {
+    const answer = await apply(call)
+    if (call.action === 'content.contract')
+      answer.pages[0].assignedModules.push({ entity: 'module-5' }, { entity: 'module-6' })
+    return answer
+  })(site.door.apply)
+  const report = writtenReport({
+    unowned: [
+      { slot: 'block-5.0', type: 'text', block: 'block-5' },
+      { slot: 'block-6.0', type: 'text', block: 'block-6' }
+    ]
+  })
+  const shown = { shownText: 'DEMO BUTTON WORDS and more', shownLinks: [], shownPictures: [] }
+  const check = await runSiteCheck({
+    door: site.door,
+    report,
+    host: fakeHost({ '/': pageRead('/') }, { measures: () => BOTH('/', { 1440: shown, 390: shown }) }).host,
+    baseline: null
+  })
+  const g = group(check, 'unowned-slots')
+  assert.deepEqual(
+    g.failures.map((f) => [f.level, f.page, f.slot]),
+    [
+      ['block', '/', 'block-5.0'],
+      ['warn', '/', 'block-6.0']
+    ]
+  )
+  assert.equal(g.status, 'red')
+})
+
+test('a host from before the main heading measure leaves that group unmeasured, not green', async () => {
+  const check = await runSiteCheck({
+    door: pagedSite(1).door,
+    report: writtenReport(),
+    host: fakeHost({ '/': pageRead('/') }, { measures: () => BOTH('/', { 1440: {}, 390: {} }) }).host,
+    baseline: null
+  })
+  assert.equal(group(check, 'main-heading').status, 'unmeasured')
+  assert.match(group(check, 'main-heading').reason, /main headings/)
+})
+
+test('two main headings on a page fail the check through its group', async () => {
+  const twice = { mainHeadings: ['Our rules', 'Our rules'] }
+  const check = await runSiteCheck({
+    door: pagedSite(1).door,
+    report: writtenReport(),
+    host: fakeHost({ '/': pageRead('/') }, { measures: () => BOTH('/', { 1440: twice, 390: twice }) }).host,
+    baseline: null
+  })
+  const g = group(check, 'main-heading')
+  assert.equal(g.status, 'red')
+  assert.deepEqual(
+    g.failures.map((f) => [f.level, f.causingStep, f.page]),
+    [['block', 9, '/']]
   )
 })

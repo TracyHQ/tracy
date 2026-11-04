@@ -2628,8 +2628,8 @@ export function checkCtaReal(
       }
       if (href === '' || href === '#' || /^javascript:/i.test(href)) {
         // A nav item that opens its own submenu goes somewhere: the submenu (`demo-qa-browser.js` `opens`); a
-        // button inside a form submits that form.
-        if ((cta.nav && cta.opens) || cta.submits) continue
+        // button inside a form submits that form; a link with a click handler runs it.
+        if ((cta.nav && cta.opens) || cta.submits || cta.scripted) continue
         findings.push({ ...where, problem: 'goes nowhere' })
         continue
       }

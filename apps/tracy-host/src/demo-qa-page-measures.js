@@ -4,7 +4,7 @@
  * and the links a page holds. They are read at 1440 and again at 390 on every page the run keeps, and answered as
  * `pageMeasures`, one entry per page and width:
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], pictures: [...], controls: [...],
- *     fields: [...], glued: [...], headings: [...] }
+ *     fields: [...], glued: [...], headings: [...], mainHeadings: [...], shownText, shownLinks: [...], shownPictures: [...] }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
@@ -21,7 +21,10 @@ export const MEASURE_CAPS = Object.freeze({
   controls: 40,
   fields: 40,
   glued: 20,
-  headings: 40
+  headings: 40,
+  shownLinks: 300,
+  shownPictures: 100,
+  shownText: 30000
 })
 
 /**
@@ -226,7 +229,42 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
     if (text) headings.push(text.slice(0, 120))
   }
-  return { links, textBoxes, blocks, pictures, controls, fields, glued, headings }
+
+  // The main headings a visitor reads: a page should print one.
+  const mainHeadings = []
+  for (const el of document.body.querySelectorAll('h1')) {
+    if (!shown(el) || clippedAway(el, getComputedStyle(el))) continue
+    const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
+    if (text) mainHeadings.push(text.slice(0, 120))
+  }
+
+  // What a visitor can see at all, for the judge to tell a stored field on the page from one that prints nowhere.
+  const shownLinks = []
+  for (const a of document.body.querySelectorAll('a[href]')) {
+    if (shownLinks.length >= caps.shownLinks) break
+    if (!shown(a) || clippedAway(a, getComputedStyle(a))) continue
+    shownLinks.push({ href: a.href, text: saidBy(a).slice(0, 80) })
+  }
+  const shownPictures = []
+  for (const img of document.body.querySelectorAll('img')) {
+    if (shownPictures.length >= caps.shownPictures) break
+    if (shown(img)) shownPictures.push((img.currentSrc || img.src).slice(0, 300))
+  }
+  const shownText = (document.body.innerText ?? '').replace(/\s+/g, ' ').trim().slice(0, caps.shownText)
+  return {
+    links,
+    textBoxes,
+    blocks,
+    pictures,
+    controls,
+    fields,
+    glued,
+    headings,
+    mainHeadings,
+    shownText,
+    shownLinks,
+    shownPictures
+  }
 }
 
 /** One width's measures, read in the page; null when the page would not answer (the entry is then left out). */
