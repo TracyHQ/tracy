@@ -7,7 +7,8 @@
 import { getEmDashEntry } from 'emdash'
 import { LOCALES } from './i18n'
 import { linkChecker, type PageRecord, type RecordTable } from './page-records'
-import { gateBlocks, linkHrefs } from './data-links.ts'
+import { gateBlocks, linkHrefs, sameSitePath } from './data-links.ts'
+import { publicOrigin } from './public-origin.ts'
 import { withParents } from './parent-gate.ts'
 import { BLOG_CATEGORIES, postPath, type PostRow } from './posts'
 
@@ -40,9 +41,22 @@ const perRequest = new WeakMap<Request, Map<string, ReturnType<typeof withParent
 
 /**
  * Read the page records `urls` land on, and those of their parents (`parent-gate.ts`); returns `live(url)`, false for a URL
- * whose page is off or that hangs under a page that is off: a child of an unticked page is unreachable and never linked.
+ * whose page is off or that hangs under a page that is off (a link to this site's own origin counts as its path; an external
+ * link, `tel:`, `mailto:` and `#` always pass): a child of an unticked page is unreachable and never linked.
  */
-export function liveLinks(request: Request, locale: string, urls: readonly unknown[]) {
+/** The origins this site answers on: the request's and the configured public one. */
+function ownOrigins(request: Request): string[] {
+  const own = new URL(request.url).origin
+  try {
+    return [own, publicOrigin(new URL(request.url))]
+  } catch {
+    return [own]
+  }
+}
+
+export async function liveLinks(request: Request, locale: string, urls: readonly unknown[]) {
+  const origins = ownOrigins(request)
+  const asPath = (url: unknown) => sameSitePath(url, origins) ?? url
   let byLocale = perRequest.get(request)
   if (!byLocale) perRequest.set(request, (byLocale = new Map()))
   let check = byLocale.get(locale)
@@ -58,7 +72,8 @@ export function liveLinks(request: Request, locale: string, urls: readonly unkno
     )
     byLocale.set(locale, check)
   }
-  return check(urls)
+  const live = await check(urls.map(asPath))
+  return (url: unknown) => live(asPath(url))
 }
 
 /** Whether a path is reachable: the page record it lands on is published (a path no record owns always is). */

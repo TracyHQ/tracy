@@ -4,6 +4,24 @@
  * This is the pure half for rich text; `link-gate.ts` answers which URLs are live.
  */
 
+/**
+ * The gate passes an external link (http(s) to another host), `tel:`, `mailto:` and an in-page `#` link unchanged and gates a
+ * same-site path. This reads the URL as the path it opens on THIS site: a path as it is, an absolute http(s) URL of one of
+ * `origins` as its path, anything else (another host, another scheme, `#`, `//host`) as null, which the gate always passes.
+ */
+export function sameSitePath(url: unknown, origins: readonly string[]): string | null {
+  if (typeof url !== 'string') return null
+  const raw = url.trim()
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw
+  if (!/^https?:\/\//i.test(raw)) return null
+  try {
+    const u = new URL(raw)
+    return origins.includes(u.origin) ? `${u.pathname}${u.search}${u.hash}` : null
+  } catch {
+    return null
+  }
+}
+
 type Mark = string
 interface Span {
   _type?: string

@@ -6,7 +6,9 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { gateBlocks, linkHrefs } from '../src/lib/data-links.ts'
+import { gateBlocks, linkHrefs, sameSitePath } from '../src/lib/data-links.ts'
+import { linkChecker } from '../src/lib/page-records.ts'
+import { withParents } from '../src/lib/parent-gate.ts'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const read = (file) => readFileSync(path.join(ROOT, file), 'utf8')
@@ -71,6 +73,12 @@ const GATED = {
     /r\.online_button && live\(r\.online_link\)/
   ],
   'src/components/sections/Contact.astro': [/liveBlocks\(/],
+  'src/components/site/Footer.astro': [
+    /site\.footer_map_url && live\(site\.footer_map_url\)/,
+    /c\.href && live\(c\.href\)/
+  ],
+  'src/components/sections/GalleryStrip.astro': [/albums\.length > 0 && live\('\/gallery'\)/],
+  'src/components/site/PostCard.astro': [/liveLinks\(Astro\.request, locale, \[postPath\(p\)\]\)/],
   'src/components/sections/Categories.astro': [/live\(`\/\$\{c\.slug\}`\) \?/],
   'src/components/sections/Sidebar.astro': [
     /categories\.filter\(\(c\) => live\(/,
@@ -82,17 +90,15 @@ const GATED = {
   'src/views/BlogList.astro': [/livePosts\(/],
   'src/views/Search.astro': [/livePosts\(/]
 }
-// files with an href the gate does not need to see, and why
+// files whose hrefs the gate does not need to ask about: each is built BY CODE from a route that is itself gated or always
+// live, never from a field. A reason that rests on what data "usually" holds is not accepted here.
 const UNGATED = {
-  'src/components/sections/GalleryStrip.astro':
-    'its albums come from livePosts (Home.astro) and its link goes to the Gallery they hang under',
-  'src/components/site/Footer.astro':
-    'the map link and the contact lines are external, tel: or mailto: values',
-  'src/components/site/Pager.astro': 'its own page numbers: ?page=n of the page being drawn',
-  'src/components/site/PostCard.astro': 'its post comes from livePosts, whichever list draws the card',
-  'src/views/Gallery.astro': 'album links under the Gallery page, which is 404 itself when Gallery is off',
-  'src/views/NotFound.astro': 'the way back to the front page',
-  'src/layouts/Base.astro': 'the skip link to #main'
+  'src/components/site/Pager.astro':
+    'built from the path of the page being drawn (?page=n), which is served only while it is live',
+  'src/views/Gallery.astro':
+    'built from /gallery and /gallery/<slug>, drawn only on those routes, which answer 404 when Gallery is off',
+  'src/views/NotFound.astro': 'the literal front page, always live',
+  'src/layouts/Base.astro': 'the literal in-page link #main'
 }
 
 test('every component that draws a link from data goes through the gate', () => {
@@ -109,4 +115,64 @@ test('a new component with an href is either gated or named, with the reason, as
     .filter((f) => !(f in GATED) && !(f in UNGATED))
   assert.deepEqual(unknown, [], 'gate it (link-gate.ts) or add it to UNGATED with the reason')
   for (const file of Object.keys(UNGATED)) assert.ok(read(file).length > 0, file)
+})
+
+// ── what the gate passes and what it gates (the footer's links are free text) ───────────────────────────────────────────────
+test('the gate gates a same-site path and passes external, tel:, mailto: and # links unchanged', async () => {
+  const origins = ['https://site.test']
+  assert.equal(sameSitePath('/menu', origins), '/menu')
+  assert.equal(
+    sameSitePath('https://site.test/menu?x=1#top', origins),
+    '/menu?x=1#top',
+    'our own origin is a path'
+  )
+  for (const external of [
+    'https://example.com/menu',
+    'http://cdn.test/menu',
+    '//cdn.test/menu',
+    'tel:+1 212 555 0110',
+    'mailto:a@b.test',
+    '#top',
+    '',
+    'javascript:void(0)'
+  ])
+    assert.equal(sameSitePath(external, origins), null, external)
+  const table = { menu: { collection: 'pages', slug: 'menu' } }
+  const check = withParents(
+    linkChecker(async ({ slug }) => slug !== 'menu', table, ['en']),
+    table,
+    ['en']
+  )
+  const asPath = (u) => sameSitePath(u, origins) ?? u
+  const urls = [
+    '/menu',
+    '/menu/simple-menu',
+    'https://site.test/menu',
+    'https://example.com/menu',
+    'tel:+12125550110',
+    'mailto:a@b.test',
+    '#top',
+    '/'
+  ]
+  const live = await check(urls.map(asPath))
+  const answers = urls.map((u) => live(asPath(u)))
+  assert.deepEqual(answers, [false, false, false, true, true, true, true, true])
+})
+
+test('the footer map and contact links are gated: a map link of /menu with Menu unticked is dropped', () => {
+  const footer = read('src/components/site/Footer.astro')
+  assert.match(
+    footer,
+    /liveLinks\(Astro\.request, chrome\.locale, \[site\.footer_map_url, \.\.\.contact\.map\(\(c\) => c\.href\)\]\)/
+  )
+  assert.match(
+    footer,
+    /site\.footer_map_url && live\(site\.footer_map_url\) && <a href=\{site\.footer_map_url\}/
+  )
+  assert.match(
+    footer,
+    /c\.href && live\(c\.href\) \? <a href=\{c\.href\}/,
+    'a dead contact link keeps its words as a span'
+  )
+  assert.match(read('src/lib/link-gate.ts'), /sameSitePath\(url, origins\) \?\? url/)
 })

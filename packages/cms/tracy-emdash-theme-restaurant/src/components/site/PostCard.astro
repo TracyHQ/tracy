@@ -3,6 +3,7 @@
 import { formatDate, href, type Locale } from '@/lib/i18n'
 import { mediaUrl } from '@/lib/media'
 import { postPath, type PostRow } from '@/lib/posts'
+import { liveLinks } from '@/lib/link-gate'
 
 interface Props {
   post: PostRow
@@ -13,15 +14,17 @@ interface Props {
 }
 const { post: p, locale, tag, tags = false } = Astro.props
 const cover = mediaUrl(p.cover)
+// the card is drawn for any list, so it asks too: its article is a child of Blog (or Gallery)
+const live = (await liveLinks(Astro.request, locale, [postPath(p)]))(postPath(p))
 ---
 
 <article class="rs-post-card">
 	<div class="rs-post-thumb">
-		{cover && <a href={href(locale, postPath(p))} tabindex="-1" aria-hidden="true"><img src={cover} alt="" width="245" height="250" loading="lazy" decoding="async" /></a>}
+		{cover && live && <a href={href(locale, postPath(p))} tabindex="-1" aria-hidden="true"><img src={cover} alt="" width="245" height="250" loading="lazy" decoding="async" /></a>}
 		{p.category && <span class="rs-cat-badge">{p.category.label}</span>}
 	</div>
 	<div>
-		<h2><a href={href(locale, postPath(p))}>{p.title}</a></h2>
+		<h2>{live ? <a href={href(locale, postPath(p))}>{p.title}</a> : p.title}</h2>
 		<div class="rs-meta"><time datetime={p.date}>{formatDate(p.date, tag)}</time></div>
 		{p.excerpt && <p>{p.excerpt}</p>}
 		{tags && p.tags.length > 0 && <div class="rs-tags">{p.tags.map((t) => <span class="rs-tag">{t.label}</span>)}</div>}
