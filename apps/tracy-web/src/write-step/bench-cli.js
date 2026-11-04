@@ -38,6 +38,8 @@ const refused = (d, message) => {
 }
 const countsLine = (c) =>
   `${c.written} written, ${c.hidden} hidden, ${c.skipped} skipped, ${c.failed} failed${c.unchanged ? `, ${c.unchanged} unchanged` : ''}`
+const printedLine = ({ counts, viaFallback }) =>
+  `printed: ${counts.printed} of ${counts.checked} printed, ${counts.viaFallback} via fallback${viaFallback.length ? ` (${viaFallback.map((f) => f.slot).join(', ')})` : ''}, ${counts.notPrinted} not printed, ${counts.writes} fallback writes`
 const causeOf = (r) => (r.code ? `${r.code}: ${r.reason}` : '')
 
 /**
@@ -162,6 +164,7 @@ async function startRun(d, values) {
       },
       ...(d.templateSheets ? { templateSheets: d.templateSheets } : {}),
       ...(d.templateFiles ? { templateFiles: d.templateFiles } : {}),
+      ...(d.pageHtml ? { pageHtml: d.pageHtml } : {}),
       onPhase: (phase) => d.runs.phase(id, phase),
       onNoWayOut: async (named) => {
         if (named.length) d.out(`no way to leave: ${named.map((n) => `${n.slot}: ${n.reason}`).join('; ')}`)
@@ -182,6 +185,7 @@ async function startRun(d, values) {
     report
   })
   if (report.status === 'done') {
+    if (report.printed) d.out(printedLine(report.printed))
     d.out(`done: ${countsLine(report.counts)}${report.rewrite ? ` in ${report.timings.total} ms` : ''}`)
     return 0
   }
@@ -258,6 +262,8 @@ async function checkRun(d, values) {
     report: r.report,
     // The page groups need the site's host and the demo baseline of the quickstart; both are optional (site-check.js).
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
+    // The pages as a visitor reads them, for `written-not-printed` (written-not-printed.js).
+    ...(d.pageHtml ? { pageHtml: (path) => d.pageHtml({ siteKey: r.report.site, path }) } : {}),
     baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
     kit: openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null,
     allGroups: values['all-groups'] === true,

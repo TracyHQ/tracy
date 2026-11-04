@@ -121,6 +121,26 @@ untouched site: a heavy read that compared effects and left the write that cause
 hashes and the words over a picture. What the guard cannot see is what the plugin does with a write and what the words or a
 picture's shape do to the layout; those stay with the remaining page groups and step 12.
 
+### 11. A written value counts only once the page prints it
+
+Read-back compares the database with the report, so it stays green when a template drops the block that would print a value: a
+video poster that JA Boxing prints only beside a video id, written while the plan hid the id. One rule decides whether a value is
+printed (`lib/printed-in-body.js`), shared by the write step and the site check: inside the page body, a picture needs an `<img>`
+or `<source>` naming its file, or an element painting it as its own background; words need the body text to hold them. The head,
+scripts (JSON-LD among them), comments, `<meta>` and `data-*` attributes do not count. Slots holding the same file on one page each
+need their own printed element, and a slot is printed when any page that shows it prints it.
+
+After its writes, given a page reader, the write step reads every kept page and applies the rule (`write-step/printed-stage.js`).
+A kept picture of an article that shares a kit list row with a slot the run hid, and that the template does not print, is printed
+by a fallback block at the top of the article's full text, where the template prints the gated block: the template's media classes,
+`tracy-fallback`, `data-slot` naming the slot, and no play button. A later run finds the block by its slot and writes nothing when
+it is right, replaces it when the picture changed, and takes it off when the template prints the slot itself again. The look guard
+lets a template article's text change by these blocks alone. The report's `printed` section counts and names the slots printed
+through a block and lists those not printed. Any other unprinted slot is only reported, since its cause is not decided.
+
+The site check's `written-not-printed` group applies the same rule on its own reading of the pages and blocks on every written
+value no page prints, naming step 9.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

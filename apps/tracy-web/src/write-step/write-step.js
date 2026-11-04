@@ -9,6 +9,8 @@
 // (picture-stage.js) and the site copy's mapping through `content.contract`. The later write stages of the ADR go in as
 // further phases.
 //
+// Last, given a page reader (`pageHtml`), the printed check reads the pages back and prints a gated picture itself (printed-stage.js).
+//
 // Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
 // had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
 import { correctionsReader, galleryAlts } from './slot-corrections.js'
@@ -35,6 +37,7 @@ import { createPages, pagesWithoutCopy } from './page-create-stage.js'
 import { runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { preparePictureStage } from './picture-stage.js'
+import { runPrintedStage } from './printed-stage.js'
 import { runShareStage } from './share-stage.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
 
@@ -86,9 +89,11 @@ function siteProblem({ reading, contract, changes }) {
  *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
  *   place?: { latitude: unknown, longitude: unknown } | null,
  *   onPhase?: (phase: string) => Promise<void>, onNoWayOut?: (named: { slot: string, reason: string }[]) => Promise<void>,
+ *   pageHtml?: (input: { siteKey: string, path: string }) => Promise<string | null>,
  *   now?: () => number, sleep?: (ms: number) => Promise<void> }} input
  *   `last`: the report of the last run on this site, to write only what differs; `lastRun`: that run's id, for the report;
- *   `onNoWayOut`: told what the plan hides and cannot take off, before anything is written
+ *   `onNoWayOut`: told what the plan hides and cannot take off, before anything is written; `pageHtml`: a page of the site as a
+ *   visitor reads it, for the printed check (without it the report has no `printed` section)
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
 export async function runWriteStep(input) {
@@ -481,5 +486,25 @@ export async function runWriteStep(input) {
   shareLines = [...shared.lines, ...(await closeForms({ door, siteKey, plan, kit: kit.doc, last }))]
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
-  return finish('done', null, written, wrote.refused)
+  const done = finish('done', null, written, wrote.refused)
+  if (!input.pageHtml || done.status !== 'done') return done
+  report.printed = await timed('printed', () =>
+    runPrintedStage({
+      door,
+      siteKey,
+      kit: kit.doc,
+      lines: done.slots,
+      keptPages: done.keptPages ?? [],
+      pageHtml: (path) => input.pageHtml({ siteKey, path })
+    })
+  )
+  // A fallback block the look guard refuses stops the run as any refused write does.
+  const refusedLook = guard.cause()
+  if (refusedLook) {
+    report.status = 'stopped'
+    report.cause = refusedLook
+    report.guard = { refused: guard.refused() }
+  }
+  timings.total = now() - started
+  return report
 }

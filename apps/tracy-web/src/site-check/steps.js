@@ -9,6 +9,8 @@ const NAMES = {
   9: 'write'
 }
 export const TEMPLATE_STEP = 0
+/** The write step: what it wrote does not reach the page (`written-not-printed`, and the groups of faults it prints itself). */
+export const WRITE_STEP = 9
 
 /** @param {number} step */
 export const stepName = (step) => NAMES[step] ?? 'unknown'

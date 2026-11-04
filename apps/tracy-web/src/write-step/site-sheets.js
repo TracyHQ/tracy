@@ -91,3 +91,27 @@ export function siteSheetsReader({ siteOf, config, fetchImpl = fetch }) {
     })
   }
 }
+
+/** The most of a page the printed check reads: a page past it is not a page a visitor waits for. */
+const PAGE_MAX = 3_000_000
+
+/**
+ * A page of a site as a visitor reads it, at the same address the sheets are read at: for the write step's printed check and the site
+ * check's `written-not-printed`. Reads only, and only the site's own pages.
+ * @param {{ siteOf: (siteKey: string) => Promise<object | null>, config: object, fetchImpl?: typeof fetch }} deps
+ * @returns {(input: { siteKey: string, path: string }) => Promise<string | null>} null for a page that does not answer 200
+ */
+export function sitePageReader({ siteOf, config, fetchImpl = fetch }) {
+  const readers = designSystemSiteReaders({ config, fetchImpl })
+  return async ({ siteKey, path }) => {
+    const site = await siteOf(siteKey)
+    if (!site) throw new Error(`no site ${siteKey}`)
+    const res = await fetchImpl(pageUrl(readers.readOrigin(site), site.platform, path), {
+      headers: { accept: 'text/html' },
+      signal: AbortSignal.timeout(TIMEOUT_MS)
+    })
+    if (!res.ok) return null
+    const html = await res.text()
+    return html.length > PAGE_MAX ? html.slice(0, PAGE_MAX) : html
+  }
+}

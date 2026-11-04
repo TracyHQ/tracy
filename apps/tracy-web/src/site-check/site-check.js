@@ -7,17 +7,20 @@
 // reason? }, with `level` defaulting to block and `causingStep` to the group's own. `read(action, params)` asks the site
 // through the door. Only reads pass, answers are shared between groups, and a refused read makes the group unmeasured.
 //
-// Context also holds `host(payload)` (reads pages in a browser), `baseline` (the demo baseline) and `kit` (the template kit's
+// Context also holds `pageHtml(path)` (a page's markup as a visitor reads it), `host(payload)` (reads pages in a browser), `baseline` (the demo baseline) and `kit` (the template kit's
 // document), all optional: a group that needs one and has none is unmeasured.
 //
 // Statuses: green, red (a block failure), unmeasured (it could not tell), and not-run for a group stopped by an earlier one.
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
 import { readBackGroup } from './read-back.js'
+import { writtenNotPrintedGroup } from './written-not-printed.js'
 
 export const CHECK_VERSION = 'site-check/1'
 /** The groups that need no browser. With a host, `PAGE_CHECK_GROUPS` (page-groups.js) follow them. */
 export const SITE_CHECK_GROUPS = [readBackGroup]
+/** The groups that read pages as a visitor's browser gets them, with no browser: they run when a page reader is given. */
+export const PAGE_READ_GROUPS = [writtenNotPrintedGroup]
 
 const READ_OPERATIONS = new Set(['inspect', 'read'])
 /** Actions that only read by what they are (the plugin marks `content.get` as writing nothing) and take no operation. */
@@ -86,8 +89,9 @@ const notGreenAfter = (status, stoppedBy) => (stoppedBy && status === 'green' ? 
 
 /**
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
- *   baseline?: object | null, kit?: object | null, allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
+ *   pageHtml?: (path: string) => Promise<string | null>, baseline?: object | null, kit?: object | null, allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
  *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
+ *   `pageHtml` reads a page's markup: without it `written-not-printed` does not run.
  *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
  *   stopping group made it (never green).
  * @returns {Promise<object>} `site-check/1`
@@ -96,14 +100,15 @@ export async function runSiteCheck({
   door,
   report,
   host,
+  pageHtml,
   baseline = null,
   kit = null,
-  groups = host ? [...SITE_CHECK_GROUPS, ...PAGE_CHECK_GROUPS] : SITE_CHECK_GROUPS,
+  groups = [...SITE_CHECK_GROUPS, ...(pageHtml ? PAGE_READ_GROUPS : []), ...(host ? PAGE_CHECK_GROUPS : [])],
   now = Date.now,
   allGroups = false
 }) {
   const siteKey = report.site
-  const context = { report, siteKey, now, host, baseline, kit, read: readsOnly(door, siteKey) }
+  const context = { report, siteKey, now, host, pageHtml, baseline, kit, read: readsOnly(door, siteKey) }
   const results = []
   let stoppedBy = null
   for (const group of groups) {

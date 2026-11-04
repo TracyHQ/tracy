@@ -1,6 +1,7 @@
 // The look guard over rows of the CMS (ADR 0044, decision 10): what `content.update` and `content.batch` may touch. A row's column or
 // setting is closed unless it is listed here, so a new one fails by name. The settings of a row are judged by what changed from what
 // was read of it, so a template's other settings, whatever they are, stay as they were and stay green.
+import { fallbackBlocksIn, isFallbackBlock, withoutFallbackBlocks } from '../lib/printed-in-body.js'
 import { HEAD_END, HEAD_START } from './brand-head-block.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
@@ -99,6 +100,18 @@ const settingsOpen = (state, created, listed) => (name, value) => {
   return false
 }
 
+/** A template article's full text may change by the picture fallback blocks alone (printed-stage.js); every other byte stays as read. */
+function fallbackFaults(what, value, held) {
+  if (typeof held !== 'string')
+    return [fault(WRITE, what, 'the article was not read first, so a change of its text cannot be judged')]
+  if (withoutFallbackBlocks(value) !== withoutFallbackBlocks(held))
+    return [fault(WRITE, what, 'only a picture fallback block may change in the text of a template article')]
+  const before = new Set(fallbackBlocksIn(held).map((b) => b.whole))
+  return fallbackBlocksIn(value)
+    .filter((b) => !before.has(b.whole) && !(isFallbackBlock(b.whole) && b.key.startsWith('images/')))
+    .map((b) => fault(WRITE, what, `this is not the picture fallback block: ${b.whole.slice(0, 80)}`))
+}
+
 /** One row's fields. `created`: a row of a page the write step made, as the mark on it or this run says. */
 function rowFaults(kind, id, fields, { state, created, kitNamed }) {
   const what = `${kind} ${id}`
@@ -106,6 +119,10 @@ function rowFaults(kind, id, fields, { state, created, kitNamed }) {
   const held = state.rows.get(`${kind}:${id}`)
   const faults = []
   for (const [name, value] of Object.entries(fields ?? {})) {
+    if (kind === 'article' && name === 'fulltext' && !created) {
+      faults.push(...fallbackFaults(`${what} fulltext`, String(value ?? ''), held?.fulltext))
+      continue
+    }
     if (kitNamed?.has(`${kind}-${id} ${name}`)) {
       if (hasMarkup(String(value)))
         faults.push(fault(WRITE, `${what} ${name}`, 'a setting slot holds words, with no markup'))

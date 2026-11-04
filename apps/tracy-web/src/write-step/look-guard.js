@@ -23,6 +23,8 @@ const EXCEPTIONS = Object.freeze({
   hide: 'taking a block, a row, a slot or a form off is the plan hide decision (decision 2): it removes an element and restyles none of those left',
   'phone-logo-css':
     'when a template has no small logo setting the head block shows it by content:url, and height:auto keeps the picture in its own proportion',
+  'picture-fallback':
+    'a kept picture the template prints only beside a field the plan hid is printed by a block of the template media classes at the top of its article text; nothing else of the text changes',
   'body-background':
     'the setting a kit names for the picture behind its pages holds a picture path, and a picture may change'
 })
