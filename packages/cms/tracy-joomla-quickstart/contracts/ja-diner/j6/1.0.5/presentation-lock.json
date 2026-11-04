@@ -190,38 +190,6 @@
       "client_id": "0",
       "language": "*"
     },
-    "module-98": {
-      "title": "Main Dishes",
-      "note": "",
-      "content": "fsdfdsf",
-      "ordering": "1",
-      "position": "menu-tab",
-      "publish_up": "2021-09-06 09:16:21",
-      "publish_down": null,
-      "published": "-2",
-      "module": "mod_custom",
-      "access": "1",
-      "showtitle": "1",
-      "params": "{\"prepare_content\":0,\"backgroundimage\":\"\",\"layout\":\"_:default\",\"moduleclass_sfx\":\"\",\"cache\":1,\"cache_time\":900,\"cachemode\":\"static\",\"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\",\"sub-heading\":\"\",\"padding-top\":\"1\",\"padding-bottom\":\"0\"}",
-      "client_id": "0",
-      "language": "*"
-    },
-    "module-99": {
-      "title": "Main Dishes (2)",
-      "note": "",
-      "content": "fsdfdsf",
-      "ordering": "1",
-      "position": "menu-tab",
-      "publish_up": "2021-09-06 09:16:21",
-      "publish_down": null,
-      "published": "-2",
-      "module": "mod_custom",
-      "access": "1",
-      "showtitle": "1",
-      "params": "{\"prepare_content\":0,\"backgroundimage\":\"\",\"layout\":\"_:default\",\"moduleclass_sfx\":\"\",\"cache\":1,\"cache_time\":900,\"cachemode\":\"static\",\"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\",\"sub-heading\":\"\",\"padding-top\":\"1\",\"padding-bottom\":\"0\"}",
-      "client_id": "0",
-      "language": "*"
-    },
     "module-100": {
       "title": "Main Dishes",
       "note": "",
@@ -475,22 +443,6 @@
       "access": "1",
       "showtitle": "1",
       "params": "{\"jatools-config\":\"{\\\":type\\\":\\\"ja_diner:happyhours\\\",\\\"happyhours\\\":{\\\"jatools-layout-happyhours\\\":\\\"style-2\\\",\\\"happyhours[hp-img]\\\":[\\\"images\\/joomlart\\/other\\/bg-offer-1.jpg\\\"],\\\"happyhours[hp-title]\\\":[\\\"Happy Hours\\\"],\\\"happyhours[hp-desc]\\\":[\\\"Disputando consectetuer ex vim, qui prima eleifend id. In qui affert persius molestiae. Usu et laudem facilisis.Ad est minim fuisset, blandit placerat ex duo.\\\"],\\\"happyhours[hp-info]\\\":[\\\"Mon. Tue. Thu. & Sun((br \\/))\\\\n12 Noon to 11 PM\\\"],\\\"happyhours[hp-badge]\\\":[\\\"Off 50%\\\"],\\\"happyhours[hp-link-text]\\\":[\\\"Don't wait\\\"],\\\"happyhours[hp-link]\\\":[\\\"https:\\/\\/www.joomlart.com\\\"]}}\",\"moduleclass_sfx\":\"\",\"cache\":\"1\",\"cache_time\":\"900\",\"cachemode\":\"itemid\",\"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\",\"sub-heading\":\"\",\"bg-module\":\"\",\"padding-top\":\"1\",\"padding-bottom\":\"0\"}",
-      "client_id": "0",
-      "language": "*"
-    },
-    "module-118": {
-      "title": "Login",
-      "note": "",
-      "content": "",
-      "ordering": "1",
-      "position": "sidebar-2",
-      "publish_up": null,
-      "publish_down": null,
-      "published": "-2",
-      "module": "mod_login",
-      "access": "1",
-      "showtitle": "1",
-      "params": "{\"pretext\":\"\",\"posttext\":\"\",\"login\":\"\",\"logout\":\"\",\"greeting\":1,\"name\":0,\"profilelink\":0,\"usesecure\":0,\"usetext\":0,\"layout\":\"_:default\",\"moduleclass_sfx\":\"\",\"cache\":0,\"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\",\"sub-heading\":\"\",\"bg-module\":\"\",\"padding-top\":\"1\",\"padding-bottom\":\"0\"}",
       "client_id": "0",
       "language": "*"
     },
@@ -1709,29 +1661,6 @@
       "publish_up": null,
       "publish_down": null
     },
-    "menuItem-143": {
-      "menutype": "joomla-pages",
-      "title": "Menu Wrap",
-      "alias": "menu-wrap",
-      "note": "",
-      "path": "menu-wrap",
-      "link": "",
-      "type": "heading",
-      "published": "-2",
-      "parent_id": "1",
-      "level": "1",
-      "component_id": "0",
-      "browserNav": "0",
-      "access": "1",
-      "img": " ",
-      "template_style_id": "0",
-      "params": "{\"menu-anchor_title\":\"\",\"menu-anchor_css\":\"\",\"menu_image\":\"\",\"menu_image_css\":\"\",\"menu_text\":1,\"menu_show\":1}",
-      "home": "0",
-      "language": "*",
-      "client_id": "0",
-      "publish_up": null,
-      "publish_down": null
-    },
     "menuItem-144": {
       "menutype": "mainmenu",
       "title": "Reservation",
@@ -2287,14 +2216,6 @@
       "menuid": "148"
     },
     {
-      "moduleid": "98",
-      "menuid": "0"
-    },
-    {
-      "moduleid": "99",
-      "menuid": "0"
-    },
-    {
       "moduleid": "100",
       "menuid": "0"
     },
@@ -2509,10 +2430,6 @@
     {
       "moduleid": "117",
       "menuid": "141"
-    },
-    {
-      "moduleid": "118",
-      "menuid": "129"
     },
     {
       "moduleid": "119",
@@ -8253,7 +8170,7 @@
   "files": {
     "templates/ja_diner/acm/container-tabs/config.xml": "e8d7c9144893f112a709e82c959bd7d38d8bcb4dcf039e5105c978fe523f1dd7",
     "templates/ja_diner/acm/container-tabs/less/style.less": "c2dc500277b159a13bf5f7a45408d53dc84fae8506e3668ae11aa7a0a087d9ec",
-    "templates/ja_diner/acm/container-tabs/tmpl/style-1.php": "2a343b0ac51ca9b53788d4adc7608191dbc761c55243a5444a2e93085f4c520e",
+    "templates/ja_diner/acm/container-tabs/tmpl/style-1.php": "293d1d96d433a57e67b61d301fb8813d5604b086c89a20c0f71b37a8bc07ec07",
     "templates/ja_diner/acm/container-tabs/tmpl/style-1.xml": "d7a023b21607b4b8c4867276791eaa4a668f04ac030f6ff776503ba82a6b2622",
     "templates/ja_diner/acm/features-intro/config.xml": "592f0e8cec3a66f418a281b48b34e71cf8aeee57d82ade2e331fa63bf8f08dc4",
     "templates/ja_diner/acm/features-intro/index.html": "0f774764181a1d850141bf64393228b7acdb6261844f0165a78839f549d7bcce",
@@ -8465,9 +8382,10 @@
     "templates/ja_diner/html/com_content/featured/default_item.php": "8a2aa7a478c55dc6a225a1b47cf7b70a25abbbeb413ce707a5f1f84956982352",
     "templates/ja_diner/html/com_content/featured/default_links.php": "60ffcf84a267400e5cf72456d4641d63adf4124e4ab7d4234a1cf662b3d83bd0",
     "templates/ja_diner/html/com_content/featured/index.html": "f70b370debd085dd9e9fb6495c796cdccf41c44574cc185dbe124f3ea8237623",
+    "templates/ja_diner/html/com_finder/search/default_form.php": "eca868b093ea10c4e3040ee64710b3189de3290e8a1f0b466c2b8e24a211f21d",
     "templates/ja_diner/html/com_tags/index.html": "0f774764181a1d850141bf64393228b7acdb6261844f0165a78839f549d7bcce",
     "templates/ja_diner/html/com_tags/tag/default.php": "f2e5925ec3530e0d603b46018a3d4da4a2012e9986d6f326604f2c7fc77521a0",
-    "templates/ja_diner/html/com_tags/tag/default_items.php": "2cea05cd3b3a8b6a0b29a5aa62547b190bc44addb7e25b431c878e513a8541e5",
+    "templates/ja_diner/html/com_tags/tag/default_items.php": "339cc9a6f6921c9211acd1ba67ace05ac1295e868823c3aa873c2c89a1929665",
     "templates/ja_diner/html/com_tags/tag/index.html": "0f774764181a1d850141bf64393228b7acdb6261844f0165a78839f549d7bcce",
     "templates/ja_diner/html/com_users/index.html": "b1f5b9c329d8f4c9bb9d4b2dc820419b8a277e2886af023777a399c9ec187a2c",
     "templates/ja_diner/html/com_users/login/default_login.php": "05bdd15f894a572d7fcb3a8c534bd74622c6bb63abc5d89058495860df0581a5",

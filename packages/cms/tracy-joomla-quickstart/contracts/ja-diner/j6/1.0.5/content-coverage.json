@@ -6,14 +6,11 @@
   },
   "contract": {
     "id": "ja-diner/j6/1.0.5",
-    "contentMapSha256": "a9d18df7fc88f37722ac762ca0212ba577b98852389b1e7fa4bb2567902ba395",
-    "presentationLockSha256": "b24e33ccec82ed7830c7353e19c43c1404d09c91749fe55122bc9e000a1fdc0e"
+    "contentMapSha256": "7acbb1c25e303e963cb5eccfb87fce2fb5742a3a78f5dceaf4c4c21bb8211316",
+    "presentationLockSha256": "91dc2405925dcdd673a5cc399f76849e91fcd244ddf2cfa2ef7915f7cbbd103b"
   },
-  "measuredAt": "2026-11-04T14:07:19.515Z",
-  "viewports": [
-    "desktop",
-    "phone"
-  ],
+  "measuredAt": "2026-11-04T14:53:18.293Z",
+  "viewports": ["desktop", "phone"],
   "pages": {
     "audited": 73,
     "inMap": 22,
@@ -23,23 +20,23 @@
   },
   "counts": {
     "text": {
-      "total": 571,
-      "matched": 431,
+      "total": 570,
+      "matched": 435,
       "locked": 0,
       "capture": 14,
       "captureLocked": 12,
-      "template": 4,
-      "core": 108,
+      "template": 1,
+      "core": 106,
       "unknown": 14,
       "catalogue": 0,
       "ignored": 10
     },
     "images": {
       "total": 90,
-      "matched": 70,
+      "matched": 78,
       "locked": 10,
-      "capture": 9,
-      "captureLocked": 9,
+      "capture": 1,
+      "captureLocked": 1,
       "template": 0,
       "core": 1,
       "unknown": 0,
@@ -60,8 +57,8 @@
     }
   },
   "coverage": {
-    "text": 93.1,
-    "images": 88.6,
+    "text": 93.8,
+    "images": 98.7,
     "links": 94.7
   },
   "holes": [
@@ -73,7 +70,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -83,7 +81,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -93,7 +92,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -103,7 +103,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -113,7 +114,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -123,7 +125,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -133,7 +136,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -143,7 +147,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -153,7 +158,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -163,87 +169,8 @@
       "cause": "article introtext not captured",
       "evidence": "content#7.introtext (contains)",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
-    },
-    {
-      "kind": "image",
-      "value": "images/joomlart/other/banner-about.jpg",
-      "class": "capture",
-      "lock": "locked",
-      "cause": "module param outside jatools-config: menuitem_config (mod_jamasthead)",
-      "evidence": "modules#106.params -> menuitem_config.background.6 (mod_jamasthead \"JA Masthead\")",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=142"
-    },
-    {
-      "kind": "image",
-      "value": "images/joomlart/other/banner-blog.jpg",
-      "class": "capture",
-      "lock": "locked",
-      "cause": "module param outside jatools-config: menuitem_config (mod_jamasthead)",
-      "evidence": "modules#106.params -> menuitem_config.background.7 (mod_jamasthead \"JA Masthead\")",
-      "pages": 28,
-      "firstPage": "/index.php?Itemid=108"
-    },
-    {
-      "kind": "image",
-      "value": "images/joomlart/other/banner-categories.jpg",
-      "class": "capture",
-      "lock": "locked",
-      "cause": "module param outside jatools-config: menuitem_config (mod_jamasthead)",
-      "evidence": "modules#106.params -> menuitem_config.background.10 (mod_jamasthead \"JA Masthead\")",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=127"
-    },
-    {
-      "kind": "image",
-      "value": "images/joomlart/other/banner-offer.jpg",
-      "class": "capture",
-      "lock": "locked",
-      "cause": "module param outside jatools-config: menuitem_config (mod_jamasthead)",
-      "evidence": "modules#106.params -> menuitem_config.background.5 (mod_jamasthead \"JA Masthead\")",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=141"
-    },
-    {
-      "kind": "image",
-      "value": "images/joomlart/other/banner-registration.jpg",
-      "class": "capture",
-      "lock": "locked",
-      "cause": "module param outside jatools-config: menuitem_config (mod_jamasthead)",
-      "evidence": "modules#106.params -> menuitem_config.background.4 (mod_jamasthead \"JA Masthead\")",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=120"
-    },
-    {
-      "kind": "image",
-      "value": "images/joomlart/other/banner-reservation.jpg",
-      "class": "capture",
-      "lock": "locked",
-      "cause": "module param outside jatools-config: menuitem_config (mod_jamasthead)",
-      "evidence": "modules#106.params -> menuitem_config.background.8 (mod_jamasthead \"JA Masthead\")",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=144"
-    },
-    {
-      "kind": "image",
-      "value": "images/joomlart/other/bg-contact-02.jpg",
-      "class": "capture",
-      "lock": "locked",
-      "cause": "module param outside jatools-config: menuitem_config (mod_jamasthead)",
-      "evidence": "modules#106.params -> menuitem_config.background.0 (mod_jamasthead \"JA Masthead\")",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=117"
-    },
-    {
-      "kind": "image",
-      "value": "images/joomlart/other/bg-martsearch.jpg",
-      "class": "capture",
-      "lock": "locked",
-      "cause": "module param outside jatools-config: menuitem_config (mod_jamasthead)",
-      "evidence": "modules#106.params -> menuitem_config.background.2 (mod_jamasthead \"JA Masthead\")",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=125"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "link",
@@ -253,7 +180,8 @@
       "cause": "module param outside jatools-config: rssurl (mod_feed)",
       "evidence": "modules#89.params -> rssurl (mod_feed \"Release News\") (contains)",
       "pages": 73,
-      "firstPage": "/index.php?Itemid=101"
+      "firstPage": "/index.php?Itemid=101",
+      "accepted": "Feed source of the core mod_feed module (rssurl): the module prints the link of the feed it reads; the owner points it at a feed in the module settings, it is not demo business content."
     },
     {
       "kind": "text",
@@ -263,7 +191,8 @@
       "cause": "module param outside jatools-config: sub-heading (mod_articles_latest)",
       "evidence": "modules#103.params -> sub-heading (mod_articles_latest \"News & Events.\")",
       "pages": 10,
-      "firstPage": "/index.php?Itemid=101"
+      "firstPage": "/index.php?Itemid=101",
+      "accepted": "Sub-heading with a highlight span: the slot exists (module-103.1), the audit reads the words with the span cut out and does not match the pieces to it (tool finding)."
     },
     {
       "kind": "text",
@@ -273,7 +202,8 @@
       "cause": "table acymailing_fields.namekey (not a contract entity kind)",
       "evidence": "acymailing_fields#2.namekey",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=117"
+      "firstPage": "/index.php?Itemid=117",
+      "accepted": "AcyMailing subscription field label (acymailing_fields): set and translated by the owner in AcyMailing, outside the template contract."
     },
     {
       "kind": "text",
@@ -283,7 +213,8 @@
       "cause": "table acymailing_fields.namekey (not a contract entity kind)",
       "evidence": "acymailing_fields#1.namekey",
       "pages": 4,
-      "firstPage": "/index.php?Itemid=117"
+      "firstPage": "/index.php?Itemid=117",
+      "accepted": "AcyMailing subscription field label (acymailing_fields): set and translated by the owner in AcyMailing, outside the template contract."
     },
     {
       "kind": "image",
@@ -293,7 +224,8 @@
       "cause": "table contact_details.image (not a contract entity kind)",
       "evidence": "contact_details#1.image",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=117"
+      "firstPage": "/index.php?Itemid=117",
+      "accepted": "Picture of the contact record (contact_details.image) shown by core com_contact; the owner changes it in Contacts, the contract declares the record's words, not its picture."
     },
     {
       "kind": "text",
@@ -303,16 +235,8 @@
       "cause": "table contact_details.params (not a contract entity kind)",
       "evidence": "contact_details#1.params -> linka",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=117"
-    },
-    {
-      "kind": "attr:alt",
-      "value": "Tab Intro Image",
-      "class": "template",
-      "cause": "template: ACM block layout/defaults (templates/ja_diner/acm/container-tabs)",
-      "evidence": "templates/ja_diner/acm/container-tabs/tmpl/style-1.php",
-      "pages": 10,
-      "firstPage": "/index.php?Itemid=101"
+      "firstPage": "/index.php?Itemid=117",
+      "accepted": "Contact link words: com_contact prints the URL itself as the words of the link; that URL is declared (contact-1 webpage and linka slots, type url), the audit compares text holes to text slots only."
     },
     {
       "kind": "attr:placeholder",
@@ -321,25 +245,8 @@
       "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_diner.ini)",
       "evidence": "language/en-GB/en-GB.tpl_ja_diner.ini TPL_TITLE_EMAIL=\"Email\"",
       "pages": 73,
-      "firstPage": "/index.php?Itemid=101"
-    },
-    {
-      "kind": "attr:aria-label",
-      "value": "COM_FINDER_SEARCH_FORM_LIST_LABEL",
-      "class": "template",
-      "cause": "template: untranslated language key printed raw (missing string in the template language file) (COM_FINDER_SEARCH_FORM_LIST_LABEL)",
-      "evidence": "COM_FINDER_SEARCH_FORM_LIST_LABEL",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=125"
-    },
-    {
-      "kind": "attr:title",
-      "value": "_filter_search_desc",
-      "class": "template",
-      "cause": "template: untranslated language key printed raw (missing string in the template language file) (whole block, around slot text) (COM_TAGS_FILTER_SEARCH_DESC)",
-      "evidence": "COM_TAGS_FILTER_SEARCH_DESC",
-      "pages": 5,
-      "firstPage": "/index.php?Itemid=129"
+      "firstPage": "/index.php?Itemid=101",
+      "accepted": "Placeholder of the AcyMailing subscription form, printed from its own Email field label (acymailing_fields); TPL_TITLE_EMAIL in the template language file is used by no layout."
     },
     {
       "kind": "text",
@@ -348,7 +255,8 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 10,
-      "firstPage": "/index.php?Itemid=101"
+      "firstPage": "/index.php?Itemid=101",
+      "accepted": "Publish date of a sample post printed by the mod_articles_latest layout; it is the article's date, not words a slot carries, and changes when the owner writes the post."
     },
     {
       "kind": "text",
@@ -357,7 +265,8 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 10,
-      "firstPage": "/index.php?Itemid=101"
+      "firstPage": "/index.php?Itemid=101",
+      "accepted": "Sub-heading with a highlight span: the slot exists (module-97.2), the audit reads the words with the span cut out and does not match the pieces to it (tool finding)."
     },
     {
       "kind": "text",
@@ -386,7 +295,8 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 10,
-      "firstPage": "/index.php?Itemid=101"
+      "firstPage": "/index.php?Itemid=101",
+      "accepted": "Sub-heading with a highlight span: the slot exists (module-96.10), the audit reads the words with the span cut out and does not match the pieces to it (tool finding)."
     },
     {
       "kind": "text",
@@ -425,7 +335,8 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 10,
-      "firstPage": "/index.php?Itemid=101"
+      "firstPage": "/index.php?Itemid=101",
+      "accepted": "Sub-heading with a highlight span: the slot exists (module-95.14), the audit reads the words with the span cut out and does not match the pieces to it (tool finding)."
     },
     {
       "kind": "text",
@@ -434,7 +345,8 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -443,7 +355,8 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=144"
+      "firstPage": "/index.php?Itemid=144",
+      "accepted": "Sub-heading with a highlight span: the slot exists (article-28.8), the audit reads the words with the span cut out and does not match the pieces to it (tool finding)."
     },
     {
       "kind": "text",
@@ -452,7 +365,8 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=132"
+      "firstPage": "/index.php?Itemid=132",
+      "accepted": "Typography style guide page (article-7, marked demoOnly): sample text that names and shows the template's own CSS classes; no business words replace it."
     },
     {
       "kind": "text",
@@ -471,29 +385,11 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
-      "firstPage": "/index.php?Itemid=144"
+      "firstPage": "/index.php?Itemid=144",
+      "accepted": "Sub-heading with a highlight span: the slot exists (article-28.3), the audit reads the words with the span cut out and does not match the pieces to it (tool finding)."
     }
   ],
-  "hygiene": [
-    {
-      "kind": "language-constant",
-      "value": "COM_FINDER_SEARCH_FORM_LIST_LABEL",
-      "where": "attr:aria-label",
-      "visible": false,
-      "evidence": "#awesomplete_list_1",
-      "pages": 2,
-      "firstPage": "/index.php?Itemid=125"
-    },
-    {
-      "kind": "language-constant",
-      "value": "COM_TAGS_FILTER_SEARCH_DESC",
-      "where": "attr:title",
-      "visible": true,
-      "evidence": "#filter-search",
-      "pages": 5,
-      "firstPage": "/index.php?Itemid=129"
-    }
-  ],
+  "hygiene": [],
   "sitePages": [
     {
       "entity": "menuItem-101",
@@ -828,19 +724,6 @@
       "inHeader": false
     },
     {
-      "entity": "menuItem-143",
-      "title": "Menu Wrap",
-      "route": "menu-wrap",
-      "menu": "joomla-pages",
-      "level": 1,
-      "parent": null,
-      "type": "heading",
-      "inMainMenu": false,
-      "opens": "unpublished",
-      "reason": "menu item not published (-2)",
-      "inHeader": false
-    },
-    {
       "entity": "menuItem-144",
       "title": "Reservation",
       "route": "reservation",
@@ -966,36 +849,20 @@
     "roleVocabularyVersion": "place-content-roles/3",
     "applies": true,
     "r1": {
-      "facts": 188,
-      "slots": 1098,
-      "percent": 17.1
+      "facts": 201,
+      "slots": 920,
+      "percent": 21.8
     },
     "rules": {
       "R2": {
         "title": "fact-like sample without a contact or price role",
-        "count": 7,
-        "keys": [
-          "module-115.3",
-          "module-116.3",
-          "module-117.3",
-          "article-7.24",
-          "article-7.28",
-          "article-7.32",
-          "article-7.34"
-        ]
+        "count": 3,
+        "keys": ["module-115.3", "module-116.3", "module-117.3"]
       },
       "R3": {
         "title": "URL slot without a role",
-        "count": 7,
-        "keys": [
-          "module-96.7",
-          "module-96.8",
-          "module-115.6",
-          "module-116.6",
-          "module-117.6",
-          "article-7.33",
-          "contact-1.5"
-        ]
+        "count": 6,
+        "keys": ["module-96.7", "module-96.8", "module-115.6", "module-116.6", "module-117.6", "contact-1.5"]
       },
       "R4": {
         "title": "repeat or CTA not grouped",
@@ -1018,9 +885,7 @@
       "R5": {
         "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
         "count": 1,
-        "keys": [
-          "module-97.0"
-        ]
+        "keys": ["module-97.0"]
       },
       "R6": {
         "title": "link or list item inside a fact slot",
@@ -1030,34 +895,26 @@
       "R7": {
         "title": "siblings with different roles",
         "count": 1,
-        "keys": [
-          "module-95.8"
-        ]
+        "keys": ["module-95.8"]
       },
       "R8": {
         "title": "adjacent short slots on one line (a cut heading)",
-        "count": 15,
+        "count": 8,
         "keys": [
-          "article-7.22 + article-7.35",
-          "article-7.60 + article-7.62",
-          "article-7.117 + article-7.139",
-          "article-7.176 + article-7.188",
-          "article-7.62 + article-7.64",
-          "article-7.68 + article-7.70",
-          "article-7.35 + article-7.42",
           "module-123.10 + module-123.11",
           "module-123.14 + module-123.15",
           "module-123.11 + module-123.12",
           "module-123.19 + module-123.20",
-          "module-123.15 + module-123.16"
+          "module-123.15 + module-123.16",
+          "module-123.12 + module-123.13",
+          "module-123.20 + module-123.21",
+          "module-123.16 + module-123.17"
         ]
       },
       "R9": {
         "title": "fact-like hole",
         "count": 1,
-        "keys": [
-          "06.09.2021"
-        ]
+        "keys": ["06.09.2021"]
       }
     }
   },
@@ -1069,12 +926,12 @@
     "state": "judged",
     "reason": null,
     "counts": {
-      "slots": 1098,
-      "located": 846,
-      "notLocated": 252,
-      "judged": 846,
+      "slots": 1122,
+      "located": 855,
+      "notLocated": 267,
+      "judged": 855,
       "notJudged": 0,
-      "right": 846,
+      "right": 855,
       "wrongGroup": 0,
       "mismatch": 0
     },
@@ -4400,16 +4257,6 @@
         "verdict": "right"
       },
       {
-        "key": "module-100.10",
-        "hash": "03958279f531df76",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.11",
-        "hash": "2655b42c2eab7676",
-        "verdict": "right"
-      },
-      {
         "key": "module-100.12",
         "hash": "56ae351236cd4f39",
         "verdict": "right"
@@ -4430,38 +4277,8 @@
         "verdict": "right"
       },
       {
-        "key": "module-100.16",
-        "hash": "f9ec8ca7a5841190",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.17",
-        "hash": "141f314ca4be93bc",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.18",
-        "hash": "20ee7c3984e7c890",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.19",
-        "hash": "ab7c65bfe6eebf11",
-        "verdict": "right"
-      },
-      {
         "key": "module-100.2",
         "hash": "9a0ed6763342bd37",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.20",
-        "hash": "27feb6c9e6a6b1d8",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.21",
-        "hash": "7885de1d575b9bb7",
         "verdict": "right"
       },
       {
@@ -4487,21 +4304,6 @@
       {
         "key": "module-100.26",
         "hash": "b5d1ad96ce9b91b8",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.27",
-        "hash": "0c12d380d2417b31",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.28",
-        "hash": "2addc425df07f2c8",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.29",
-        "hash": "5c5f1918443091da",
         "verdict": "right"
       },
       {
@@ -4532,26 +4334,6 @@
       {
         "key": "module-100.5",
         "hash": "6dd84a7c29e62a1d",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.6",
-        "hash": "7f1a43de8a933535",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.7",
-        "hash": "37df0fceb8cc8782",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.8",
-        "hash": "19711e10999efb89",
-        "verdict": "right"
-      },
-      {
-        "key": "module-100.9",
-        "hash": "3ccd28c59647a7fa",
         "verdict": "right"
       },
       {
@@ -4690,8 +4472,138 @@
         "verdict": "right"
       },
       {
+        "key": "module-106.1",
+        "hash": "350f4f1645c15a09",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.10",
+        "hash": "c2af7c807ff09aa9",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.11",
+        "hash": "383cdc56d0aa3a1b",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.12",
+        "hash": "abf94b5666c3959a",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.13",
+        "hash": "22ed67dcdf985a54",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.14",
+        "hash": "ef3609e80016ecb3",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.15",
+        "hash": "1f666c66fee7c267",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.16",
+        "hash": "bca4925e72022d57",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.17",
+        "hash": "3d577ba8b1bbfbe6",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.18",
+        "hash": "6fc2917250ebdae1",
+        "verdict": "right"
+      },
+      {
         "key": "module-106.2",
         "hash": "37dda573997fc553",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.20",
+        "hash": "5864eba1dc6cfe72",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.21",
+        "hash": "29ce0fb58fbb3fee",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.23",
+        "hash": "e9fd685af2b23e15",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.24",
+        "hash": "e12050a039d91d57",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.26",
+        "hash": "213a07e476b09d7b",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.27",
+        "hash": "3d599748cca93402",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.29",
+        "hash": "177b94d3cef4bcf7",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.3",
+        "hash": "9ff7cf7d032b0f3f",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.30",
+        "hash": "8332fe2972d0fce1",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.31",
+        "hash": "1c0b43a5f50e6239",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.32",
+        "hash": "4f7d26710c9eb825",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.4",
+        "hash": "29f4e1388172f33e",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.5",
+        "hash": "139e58ddfa45f188",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.7",
+        "hash": "54c7cba0e9501f9b",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.8",
+        "hash": "ca1119a375ec720e",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.9",
+        "hash": "02b3be193cc29449",
         "verdict": "right"
       },
       {
@@ -4817,11 +4729,6 @@
       {
         "key": "module-117.7",
         "hash": "5692e01084576ddd",
-        "verdict": "right"
-      },
-      {
-        "key": "module-118.0",
-        "hash": "15ab29cbc6ec3e13",
         "verdict": "right"
       },
       {
@@ -5262,11 +5169,6 @@
       {
         "key": "module-97.2",
         "hash": "a32b127996e38bbb",
-        "verdict": "right"
-      },
-      {
-        "key": "module-98.1",
-        "hash": "37bb832999a325db",
         "verdict": "right"
       },
       {

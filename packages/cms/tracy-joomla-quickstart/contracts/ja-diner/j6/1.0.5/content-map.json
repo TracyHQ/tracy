@@ -109,30 +109,6 @@
       "sourceId": 97
     },
     {
-      "key": "module-98",
-      "kind": "module",
-      "identity": {
-        "title": "Main Dishes",
-        "module": "mod_custom",
-        "position": "menu-tab",
-        "language": "*",
-        "client_id": "0"
-      },
-      "sourceId": 98
-    },
-    {
-      "key": "module-99",
-      "kind": "module",
-      "identity": {
-        "title": "Main Dishes (2)",
-        "module": "mod_custom",
-        "position": "menu-tab",
-        "language": "*",
-        "client_id": "0"
-      },
-      "sourceId": 99
-    },
-    {
       "key": "module-100",
       "kind": "module",
       "identity": {
@@ -326,19 +302,6 @@
       "sourceId": 117
     },
     {
-      "key": "module-118",
-      "kind": "module",
-      "identity": {
-        "title": "Login",
-        "module": "mod_login",
-        "position": "sidebar-2",
-        "language": "*",
-        "client_id": "0",
-        "id": "118"
-      },
-      "sourceId": 118
-    },
-    {
       "key": "module-119",
       "kind": "module",
       "identity": {
@@ -480,7 +443,8 @@
       "sourceId": 7,
       "identityReferences": {
         "catid": "category-12"
-      }
+      },
+      "demoOnly": true
     },
     {
       "key": "article-8",
@@ -997,17 +961,6 @@
         "client_id": "0"
       },
       "sourceId": 142
-    },
-    {
-      "key": "menuItem-143",
-      "kind": "menuItem",
-      "identity": {
-        "path": "menu-wrap",
-        "menutype": "joomla-pages",
-        "language": "*",
-        "client_id": "0"
-      },
-      "sourceId": 143
     },
     {
       "key": "menuItem-144",
@@ -3117,85 +3070,6 @@
       ],
       "xpath": "/html/body/div",
       "label": "Discover Our Menu. / sub-heading",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "module-98.0",
-      "entity": "module-98",
-      "column": "content",
-      "type": "text",
-      "sample": "fsdfdsf",
-      "maxCharacters": 40,
-      "requiresEvidence": false,
-      "xpath": "/html/body/div/text()",
-      "label": "Main Dishes",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "module-98.1",
-      "entity": "module-98",
-      "column": "title",
-      "type": "text",
-      "sample": "Main Dishes",
-      "maxCharacters": 42,
-      "requiresEvidence": false,
-      "label": "Main Dishes / title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 79,
-            "height": 21
-          },
-          "phone": {
-            "width": 79,
-            "height": 21
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 11,
-          "phone": 11
-        },
-        "maxCharacters": 11,
-        "casing": "upper",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "module-99.0",
-      "entity": "module-99",
-      "column": "content",
-      "type": "text",
-      "sample": "fsdfdsf",
-      "maxCharacters": 40,
-      "requiresEvidence": false,
-      "xpath": "/html/body/div/text()",
-      "label": "Main Dishes (2)",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "module-99.1",
-      "entity": "module-99",
-      "column": "title",
-      "type": "text",
-      "sample": "Main Dishes (2)",
-      "maxCharacters": 50,
-      "requiresEvidence": false,
-      "label": "Main Dishes (2) / title",
       "role": "editorial.heading",
       "fit": {
         "measured": false
@@ -7807,6 +7681,1263 @@
       }
     },
     {
+      "key": "module-106.3",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/bg-contact-02.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "0"
+      ],
+      "label": "JA Masthead / menu item 117 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-0",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1440,
+            "height": 389
+          },
+          "phone": {
+            "width": 390,
+            "height": 235
+          }
+        },
+        "aspect": 3.7018,
+        "tolerance": 0.02,
+        "minWidth": 2160,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.4",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "0"
+      ],
+      "label": "JA Masthead / menu item 117 / title",
+      "role": "business.name",
+      "group": {
+        "id": "module-106.business",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 128,
+            "height": 80
+          },
+          "phone": {
+            "width": 128,
+            "height": 80
+          }
+        },
+        "lines": {
+          "desktop": 5,
+          "phone": 5
+        },
+        "maxChars": {
+          "desktop": 790,
+          "phone": 225
+        },
+        "maxCharacters": 225,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.5",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "0"
+      ],
+      "label": "JA Masthead / menu item 117 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.6",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/bg-search.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "1"
+      ],
+      "label": "JA Masthead / menu item 124 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-1",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": false,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": null,
+        "source": null
+      }
+    },
+    {
+      "key": "module-106.7",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Search",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "1"
+      ],
+      "label": "JA Masthead / menu item 124 / title",
+      "role": "editorial.heading",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 138,
+            "height": 54
+          },
+          "phone": {
+            "width": 138,
+            "height": 54
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 111,
+          "phone": 43
+        },
+        "maxCharacters": 43,
+        "casing": "upper",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.8",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "1"
+      ],
+      "label": "JA Masthead / menu item 124 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.9",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/bg-martsearch.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "2"
+      ],
+      "label": "JA Masthead / menu item 125 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-2",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1440,
+            "height": 389
+          },
+          "phone": {
+            "width": 390,
+            "height": 235
+          }
+        },
+        "aspect": 3.7018,
+        "tolerance": 0.02,
+        "minWidth": 2160,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.10",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Mart Search",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "2"
+      ],
+      "label": "JA Masthead / menu item 125 / title",
+      "role": "editorial.heading",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 72
+          },
+          "phone": {
+            "width": 306,
+            "height": 43
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 40,
+          "phone": 17
+        },
+        "maxCharacters": 17,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.11",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "2"
+      ],
+      "label": "JA Masthead / menu item 125 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.12",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/bg-login.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "3"
+      ],
+      "label": "JA Masthead / menu item 119 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-3",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1260,
+            "height": 751
+          },
+          "phone": {
+            "width": 390,
+            "height": 607
+          }
+        },
+        "aspect": 1.6778,
+        "tolerance": 0.02,
+        "minWidth": 1890,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.13",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "3"
+      ],
+      "label": "JA Masthead / menu item 119 / title",
+      "role": "business.name",
+      "group": {
+        "id": "module-106.business",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 128,
+            "height": 80
+          },
+          "phone": {
+            "width": 128,
+            "height": 80
+          }
+        },
+        "lines": {
+          "desktop": 5,
+          "phone": 5
+        },
+        "maxChars": {
+          "desktop": 790,
+          "phone": 225
+        },
+        "maxCharacters": 225,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.14",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "3"
+      ],
+      "label": "JA Masthead / menu item 119 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.15",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/banner-registration.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "4"
+      ],
+      "label": "JA Masthead / menu item 120 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-4",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1440,
+            "height": 389
+          },
+          "phone": {
+            "width": 390,
+            "height": 235
+          }
+        },
+        "aspect": 3.7018,
+        "tolerance": 0.02,
+        "minWidth": 2160,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.16",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "4"
+      ],
+      "label": "JA Masthead / menu item 120 / title",
+      "role": "business.name",
+      "group": {
+        "id": "module-106.business",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 128,
+            "height": 80
+          },
+          "phone": {
+            "width": 128,
+            "height": 80
+          }
+        },
+        "lines": {
+          "desktop": 5,
+          "phone": 5
+        },
+        "maxChars": {
+          "desktop": 790,
+          "phone": 225
+        },
+        "maxCharacters": 225,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.17",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "4"
+      ],
+      "label": "JA Masthead / menu item 120 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.18",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/banner-offer.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "5"
+      ],
+      "label": "JA Masthead / menu item 141 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-5",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1440,
+            "height": 389
+          },
+          "phone": {
+            "width": 390,
+            "height": 235
+          }
+        },
+        "aspect": 3.7018,
+        "tolerance": 0.02,
+        "minWidth": 2160,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.19",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Offers",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "5"
+      ],
+      "label": "JA Masthead / menu item 141 / title",
+      "role": "editorial.heading",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 83,
+            "height": 72
+          },
+          "phone": {
+            "width": 306,
+            "height": 43
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 6,
+          "phone": 19
+        },
+        "maxCharacters": 6,
+        "casing": "upper",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.20",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "5"
+      ],
+      "label": "JA Masthead / menu item 141 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.21",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/banner-about.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "6"
+      ],
+      "label": "JA Masthead / menu item 142 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-6",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1440,
+            "height": 389
+          },
+          "phone": {
+            "width": 390,
+            "height": 235
+          }
+        },
+        "aspect": 3.7018,
+        "tolerance": 0.02,
+        "minWidth": 2160,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.22",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "About Us",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "6"
+      ],
+      "label": "JA Masthead / menu item 142 / title",
+      "role": "editorial.heading",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 97,
+            "height": 72
+          },
+          "phone": {
+            "width": 306,
+            "height": 43
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 8,
+          "phone": 17
+        },
+        "maxCharacters": 8,
+        "casing": "upper",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.23",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "6"
+      ],
+      "label": "JA Masthead / menu item 142 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.24",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/banner-blog.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "7"
+      ],
+      "label": "JA Masthead / menu item 108 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-7",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1440,
+            "height": 389
+          },
+          "phone": {
+            "width": 390,
+            "height": 235
+          }
+        },
+        "aspect": 3.7018,
+        "tolerance": 0.02,
+        "minWidth": 2160,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.25",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Our Blog",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "7"
+      ],
+      "label": "JA Masthead / menu item 108 / title",
+      "role": "editorial.heading",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 98,
+            "height": 72
+          },
+          "phone": {
+            "width": 306,
+            "height": 43
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 8,
+          "phone": 17
+        },
+        "maxCharacters": 8,
+        "casing": "upper",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.26",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "7"
+      ],
+      "label": "JA Masthead / menu item 108 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.27",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/banner-reservation.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "8"
+      ],
+      "label": "JA Masthead / menu item 144 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-8",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1440,
+            "height": 389
+          },
+          "phone": {
+            "width": 390,
+            "height": 235
+          }
+        },
+        "aspect": 3.7018,
+        "tolerance": 0.02,
+        "minWidth": 2160,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.28",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Reservation",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "8"
+      ],
+      "label": "JA Masthead / menu item 144 / title",
+      "role": "editorial.heading",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 119,
+            "height": 72
+          },
+          "phone": {
+            "width": 306,
+            "height": 43
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 11,
+          "phone": 18
+        },
+        "maxCharacters": 11,
+        "casing": "upper",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.29",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "8"
+      ],
+      "label": "JA Masthead / menu item 144 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.30",
+      "entity": "module-106",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/other/banner-categories.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "background",
+        "10"
+      ],
+      "label": "JA Masthead / menu item 127 / background",
+      "role": "business.hero_image",
+      "group": {
+        "id": "module-106.masthead-10",
+        "item": 0,
+        "kind": "business"
+      },
+      "fit": {
+        "measured": true,
+        "kind": "photo",
+        "replace": "photo",
+        "transparent": false,
+        "source": {
+          "width": 1600,
+          "height": 850,
+          "format": "jpg"
+        },
+        "boxes": {
+          "desktop": {
+            "width": 1440,
+            "height": 389
+          },
+          "phone": {
+            "width": 390,
+            "height": 235
+          }
+        },
+        "aspect": 3.7018,
+        "tolerance": 0.02,
+        "minWidth": 2160,
+        "crop": "cover"
+      }
+    },
+    {
+      "key": "module-106.31",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "All Categories",
+      "maxCharacters": 48,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "title",
+        "10"
+      ],
+      "label": "JA Masthead / menu item 127 / title",
+      "role": "editorial.heading",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 72
+          },
+          "phone": {
+            "width": 306,
+            "height": 43
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 45,
+          "phone": 19
+        },
+        "maxCharacters": 19,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "module-106.32",
+      "entity": "module-106",
+      "column": "params",
+      "type": "text",
+      "sample": "Responsive joomla template for restaurant",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "jsonPath": [
+        "menuitem_config",
+        "description",
+        "10"
+      ],
+      "label": "JA Masthead / menu item 127 / description",
+      "role": "editorial.paragraph",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1176,
+            "height": 29
+          },
+          "phone": {
+            "width": 306,
+            "height": 48
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 2
+        },
+        "maxChars": {
+          "desktop": 127,
+          "phone": 78
+        },
+        "maxCharacters": 78,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
       "key": "module-107.0",
       "entity": "module-107",
       "column": "title",
@@ -9292,41 +10423,6 @@
         },
         "maxCharacters": 25,
         "casing": "upper",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "module-118.0",
-      "entity": "module-118",
-      "column": "title",
-      "type": "text",
-      "sample": "Login",
-      "maxCharacters": 40,
-      "requiresEvidence": false,
-      "label": "Login / title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 354,
-            "height": 70
-          },
-          "phone": {
-            "width": 318,
-            "height": 70
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 10,
-          "phone": 9
-        },
-        "maxCharacters": 9,
-        "casing": "none",
         "overflow": "rewrite"
       }
     },
@@ -37992,20 +39088,6 @@
       }
     },
     {
-      "key": "menuItem-143.0",
-      "entity": "menuItem-143",
-      "column": "title",
-      "type": "text",
-      "sample": "Menu Wrap",
-      "maxCharacters": 40,
-      "requiresEvidence": false,
-      "label": "Menu Wrap",
-      "role": "editorial.menu_label",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "menuItem-144.0",
       "entity": "menuItem-144",
       "column": "title",
@@ -39280,32 +40362,6 @@
           "publishDown": null
         },
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -39477,32 +40533,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -39664,32 +40694,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -39840,32 +40844,6 @@
           "access": "1",
           "language": "*",
           "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
           "publishDown": null
         },
         {
@@ -40043,32 +41021,6 @@
           "publishDown": null
         },
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -40243,32 +41195,6 @@
           "publishDown": null
         },
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -40422,32 +41348,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -40674,32 +41574,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -40861,32 +41735,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -41019,32 +41867,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -41207,32 +42029,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -41393,32 +42189,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -41581,32 +42351,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -41768,32 +42512,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -41926,32 +42644,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -42150,32 +42842,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -42308,32 +42974,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -42532,32 +43172,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -42755,32 +43369,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -42949,19 +43537,6 @@
           "publishDown": null
         },
         {
-          "entity": "module-118",
-          "assignmentMode": "include",
-          "menuIds": [
-            129
-          ],
-          "position": "sidebar-2",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
           "entity": "module-119",
           "assignmentMode": "include",
           "menuIds": [
@@ -43018,32 +43593,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -43178,32 +43727,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -43336,32 +43859,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -43523,32 +44020,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -43750,32 +44221,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -43969,197 +44414,12 @@
       ]
     },
     {
-      "entity": "menuItem-143",
-      "route": "menu-wrap",
-      "link": "",
-      "style": "templateStyle-9",
-      "layout": null,
-      "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-100",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-101",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-102",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-109",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "footer-1",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-110",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "footer-2",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-111",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "footer-3",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-112",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "footer",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-113",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "off-canvas",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-127",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "section-bottom",
-          "published": "1",
-          "access": "1",
-          "language": "*",
-          "publishUp": null,
-          "publishDown": null
-        }
-      ],
-      "visibilityRequires": [
-        "position rendered by resolved template/block/component",
-        "module and menu publication schedule",
-        "viewer access groups",
-        "language",
-        "responsive layout conditions"
-      ]
-    },
-    {
       "entity": "menuItem-144",
       "route": "reservation",
       "link": "index.php?option=com_content&view=article&id=28",
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
@@ -44414,32 +44674,6 @@
           "publishDown": null
         },
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -44679,32 +44913,6 @@
           "access": "1",
           "language": "*",
           "publishUp": null,
-          "publishDown": null
-        },
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
           "publishDown": null
         },
         {
@@ -44950,32 +45158,6 @@
           "publishDown": null
         },
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -45218,32 +45400,6 @@
           "publishDown": null
         },
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -45415,32 +45571,6 @@
       "layout": null,
       "assignedModules": [
         {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
           "entity": "module-100",
           "assignmentMode": "all",
           "menuIds": [
@@ -45573,32 +45703,6 @@
       "style": "templateStyle-9",
       "layout": null,
       "assignedModules": [
-        {
-          "entity": "module-98",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
-        {
-          "entity": "module-99",
-          "assignmentMode": "all",
-          "menuIds": [
-            0
-          ],
-          "position": "menu-tab",
-          "published": "-2",
-          "access": "1",
-          "language": "*",
-          "publishUp": "2021-09-06 09:16:21",
-          "publishDown": null
-        },
         {
           "entity": "module-100",
           "assignmentMode": "all",
