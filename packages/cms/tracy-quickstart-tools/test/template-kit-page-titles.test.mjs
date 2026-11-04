@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { coverageGate } from '../template-kit/lib/coverage-gate.mjs'
 import { settlePageTitles } from '../template-kit/lib/page-titles.mjs'
+import { settleSlotRoles } from '../template-kit/lib/slot-roles.mjs'
 
 const slot = (key, sample, extra = {}) => ({
   key,
@@ -165,4 +166,45 @@ test('the gate names every page without exactly one title slot', () => {
   )
   assert.match(reasons[0].reason, /article-3\.0, article-3\.1/)
   assert.match(reasons[1].reason, /no page title slot/)
+})
+
+test('a page not for customers needs no title: the page of an account the content map does not declare', () => {
+  const k = kit([
+    page('page-staff', '/team/author/site-owner', null, ['header']),
+    page('page-dana', '/team/author/dana reef', null, ['header'])
+  ])
+  const map = {
+    ...MAP,
+    entities: [...MAP.entities, { key: 'user-2', kind: 'user', identity: { name: 'Dana Reef' } }]
+  }
+  settlePageTitles(k, { map })
+  coverageGate(k, { map })
+  assert.equal(k.coverage.parts.pageTitleSlots, 1, 'a declared account still owes its title')
+  assert.deepEqual(
+    k.coverage.failures.filter((f) => f.part === 'pageTitleSlots').map((f) => f.where),
+    ['pages[page-dana]']
+  )
+  assert.deepEqual(
+    k.coverage.notForCustomers.map((p) => p.path),
+    ['/team/author/site-owner']
+  )
+})
+
+test('settling the slot roles again counts the same pages out', () => {
+  const k = kit([page('page-staff', '/team/author/site-owner', null, ['header'])])
+  const r = settleSlotRoles(k, { map: MAP })
+  assert.equal(r.pageTitleSlots, 0)
+  assert.equal(k.checks.slotCoverage, 0)
+  assert.deepEqual(
+    k.coverage.notForCustomers.map((p) => p.path),
+    ['/team/author/site-owner']
+  )
+})
+
+test('a path that only looks like an account is a page of the map, and owes its title', () => {
+  const map = { ...MAP, pages: [...MAP.pages, { entity: 'menuItem-7', route: 'team/author/site-owner' }] }
+  const k = kit([page('page-menu', '/team/author/site-owner', null, ['header'])])
+  settlePageTitles(k, { map })
+  coverageGate(k, { map })
+  assert.equal(k.coverage.parts.pageTitleSlots, 1)
 })

@@ -1,5 +1,6 @@
 // A site check group that is the host's own verdict on the pages (`demo-qa` check ids), turned into failures with a level and
 // the step that caused them. The host measures; this file only names who answers for it.
+import { noDemoFaults } from './demo-baseline.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead, WIDTHS } from './host-pages.js'
 
@@ -41,6 +42,7 @@ export function hostVerdictGroup({ name, ids, level, causingStep, needsBaseline 
             reason: `${id}: ${check.expected}`
           })
       }
+      if (needsBaseline) failures.push(...noDemoFaults(context.baseline, read.paths))
       return { checked: read.paths.length, widths: WIDTHS, calls: read.calls, ids, failures }
     }
   }

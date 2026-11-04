@@ -11,7 +11,7 @@ import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
 import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
 import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
 import { neutralKey } from './ids.mjs'
-import { pageTitleChecks, settlePageTitles } from './page-titles.mjs'
+import { pagesNotForCustomers, pageTitleChecks, settlePageTitles } from './page-titles.mjs'
 import { settleSettingSlots } from './setting-slots.mjs'
 import { settleSentenceGroups } from './sentence-groups.mjs'
 import { settleButtons } from './button-slots.mjs'
@@ -265,11 +265,18 @@ export function coverageGate(kit, { map, readings = new Map() }) {
   parts.contactFieldsUnresolved = contactFieldChecks(kit, fail)
   // 6. Shown words from a slot declared nowhere (the orphan check, counted here too).
   parts.orphanTexts = kit.checks?.orphanTexts ?? 0
-  // 7. Every page has exactly one title slot (page-titles.mjs).
-  parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p) ? pageTitleChecks(kit, fail) : 0
+  // 7. Every page for customers has exactly one title slot (page-titles.mjs).
+  parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p) ? pageTitleChecks(kit, fail, { map }) : 0
   // How many shown text slots part 1 checked, so a gate at 0 over nothing is told from a covered kit.
   const fields = storedFieldReport(kit)
-  kit.coverage = { shownTextSlots: checked, parts, failures, ...(fields ? { fields } : {}) }
+  const notForCustomers = pagesNotForCustomers(kit, map)
+  kit.coverage = {
+    shownTextSlots: checked,
+    parts,
+    failures,
+    ...(notForCustomers.length ? { notForCustomers } : {}),
+    ...(fields ? { fields } : {})
+  }
   for (const f of failures)
     kit.errors.push({ kind: 'coverage-gate', part: f.part, field: f.where, reason: f.reason })
   return Object.values(parts).reduce((a, n) => a + n, 0)

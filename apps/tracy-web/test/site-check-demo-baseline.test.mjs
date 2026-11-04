@@ -12,6 +12,7 @@ import {
   ensureBaseline,
   fileBaselineStore,
   forHost,
+  noDemoFaults,
   textKey
 } from '../src/site-check/demo-baseline.js'
 import { runSiteCheck } from '../src/site-check/site-check.js'
@@ -199,5 +200,160 @@ test('a baseline keeps the drawn box of each small picture, once a page, and the
     ])
   } finally {
     await rm(dir, { recursive: true, force: true })
+  }
+})
+
+// A page broken on the untouched template itself costs that page, not the baseline.
+const hostRead = (read, unread) => ({
+  texts: ['a'],
+  labels: [],
+  pictures: { files: [], shas: [] },
+  read,
+  unread
+})
+const manyPages = (n) => Array.from({ length: n }, (_, i) => `/p${i}`)
+
+test('a page the untouched template itself breaks is recorded as unread, and the baseline is still written', () => {
+  const unread = [
+    { path: '/index.php/old-author', why: 'answered 500' },
+    { path: '/index.php/gone', why: 'answered 404' }
+  ]
+  const b = baselineFromHost(hostRead(['/', ...manyPages(8)], unread), { version: VERSION })
+  assert.deepEqual(b.unread, unread)
+  assert.deepEqual(b.texts, ['a'])
+})
+
+test('a page the host could not reach still refuses the baseline, even one among many', () => {
+  for (const why of ['did not open', 'no answer'])
+    assert.throws(
+      () => baselineFromHost(hostRead(['/', ...manyPages(30)], [{ path: '/x', why }]), { version: VERSION }),
+      /not read whole.*\/x/
+    )
+})
+
+test('a home the untouched site breaks refuses the baseline, however it is written', () => {
+  for (const path of ['/', '/index.php'])
+    assert.throws(
+      () => baselineFromHost(hostRead(manyPages(30), [{ path, why: 'answered 500' }]), { version: VERSION }),
+      /home/
+    )
+})
+
+test('most of a site answering an error refuses the baseline: that is an outage, not a broken page', () => {
+  const unread = manyPages(20).map((path) => ({ path, why: 'answered 500' }))
+  assert.throws(
+    () => baselineFromHost(hostRead(['/', '/a', '/b'], unread), { version: VERSION }),
+    /20 of 23 pages/
+  )
+  assert.doesNotThrow(
+    () =>
+      baselineFromHost(hostRead(['/'], [{ path: '/a', why: 'answered 500' }]), {
+        version: VERSION
+      }),
+    'one broken page of a small site is still one broken page'
+  )
+})
+
+test('measured through the host: an error page and a page not found, in any place of a call', async () => {
+  // Sixteen pages make two calls: /p15 opens the second, where the host holds it to a home's rule; /p3 is asked for, /p9 planned.
+  const pages = ['/', ...manyPages(15).slice(1), '/p15']
+  const reads = Object.fromEntries(pages.map((p) => [p, demoRead(p)]))
+  for (const p of ['/p3', '/p9', '/p15']) delete reads[p]
+  reads['/p5'] = demoRead('/p5', { status: 500 })
+  const dir = await temp()
+  try {
+    const { host } = fakeHost(reads)
+    const store = fileBaselineStore(dir)
+    const { baseline } = await ensureBaseline({ host, pages, version: VERSION, store })
+    assert.deepEqual(baseline.unread.map((u) => [u.path.replace('/index.php', ''), u.why]).sort(), [
+      ['/p15', 'answered 404'],
+      ['/p3', 'answered 404'],
+      ['/p5', 'answered 500'],
+      ['/p9', 'answered 404']
+    ])
+    assert.ok(baseline.texts.length > 0)
+    assert.deepEqual(baseline.pictures.files, [DEMO_PICTURE])
+    assert.deepEqual((await store.read(VERSION)).unread, baseline.unread)
+  } finally {
+    await rm(dir, { recursive: true })
+  }
+})
+
+test('a page the site sends home is no page of its own: recorded, and no failure of the read', async () => {
+  const store = { read: async () => null, save: async () => {} }
+  const host = async () => ({
+    baseline: hostRead(['/', '/a'], []),
+    visited: [
+      { path: '/', status: 200 },
+      { path: '/a', status: 200 },
+      { path: '/old', status: 200, skipped: 'redirected home' }
+    ]
+  })
+  const { baseline } = await ensureBaseline({ host, pages: ['/', '/a', '/old'], version: VERSION, store })
+  assert.deepEqual(baseline.unread, [{ path: '/old', why: 'not a page, redirected home' }])
+})
+
+test('a page the host never answered for fails the measure, and nothing is kept', async () => {
+  const saved = []
+  const store = { read: async () => null, save: async (_v, b) => saved.push(b) }
+  const host = async () => ({
+    baseline: hostRead(['/'], []),
+    visited: [{ path: '/', status: 200 }]
+  })
+  await assert.rejects(
+    ensureBaseline({ host, pages: ['/', '/never'], version: VERSION, store }),
+    /not read whole.*\/never: no answer/
+  )
+  assert.equal(saved.length, 0)
+})
+
+test('a transport failure of a whole call fails the measure', async () => {
+  const store = { read: async () => null, save: async () => assert.fail('nothing is kept') }
+  await assert.rejects(
+    ensureBaseline({
+      host: async () => ({ code: 'HOST_UNREACHABLE' }),
+      pages: ['/'],
+      version: VERSION,
+      store
+    }),
+    /gave no baseline: HOST_UNREACHABLE/
+  )
+})
+
+test('a page the baseline could not read says it has no demo to compare, spelled any way, and no other page does', () => {
+  const baseline = { unread: [{ path: '/index.php/old%20author', why: 'answered 500' }] }
+  const faults = noDemoFaults(baseline, ['/', '/old author', '/About'])
+  assert.equal(faults.length, 1)
+  assert.equal(faults[0].page, '/old author')
+  assert.equal(faults[0].level, 'warn')
+  assert.match(faults[0].reason, /answered 500 on the untouched template.*no demo to compare/)
+  assert.deepEqual(noDemoFaults({}, ['/']), [], 'a baseline from before this field names none')
+  assert.deepEqual(noDemoFaults(null, ['/']), [])
+})
+
+test('the demo groups say so for that page, and stay green on what they could judge', async () => {
+  const reads = {
+    '/': demoRead('/', { blocks: [], images: [] }),
+    '/page-1': demoRead('/page-1', { blocks: [], images: [] })
+  }
+  const baseline = {
+    ...baselineFromKit(KIT, { version: VERSION }),
+    unread: [{ path: '/index.php/page-1', why: 'answered 500' }]
+  }
+  const site = pagedSite(2)
+  const check = await runSiteCheck({
+    door: site.door,
+    report: writtenReport(),
+    host: fakeHost(reads).host,
+    baseline
+  })
+  for (const name of ['demo-words', 'demo-pictures']) {
+    const group = check.groups.find((g) => g.name === name)
+    assert.equal(group.status, 'green', name)
+    assert.deepEqual(
+      group.failures.map((f) => [f.page, f.level]),
+      [['/page-1', 'warn']],
+      name
+    )
   }
 })

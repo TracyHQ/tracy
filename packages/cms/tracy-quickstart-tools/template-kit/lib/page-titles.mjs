@@ -4,6 +4,7 @@
 // is added beside the slots (`pages[].titleSlot`, `pageTitleOf` on the slot); no slot id, list or role changes, so a
 // plan or a copy made on an earlier kit of the same contract still names everything it named.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
+import { accountOfPath, knownAccounts } from './exclude.mjs'
 import { neutralKey } from './ids.mjs'
 import { indexMap, ownerOfPath } from './map-index.mjs'
 
@@ -108,11 +109,28 @@ export function settlePageTitles(kit, { map, drives = {} }) {
   return kit
 }
 
-/** Every page has exactly one title slot. Returns how many do not, each passed to `fail`. */
-export function pageTitleChecks(kit, fail) {
+/**
+ * Pages no customer writes: the page of an account the content map does not declare (the site administrator, say) prints a
+ * name that is no slot of anything, and it has nothing to write. The rule needs no name, as `decideExclusions` does.
+ * @returns {{page: string, path: string, reason: string}[]}
+ */
+export function pagesNotForCustomers(kit, map) {
+  const routes = new Set(indexMap({ entities: [], ...map }).pageByPath.keys())
+  const known = knownAccounts(map)
+  return (kit.pages ?? []).flatMap((p) => {
+    const account = accountOfPath(p.path, routes)
+    return account && !known.has(account)
+      ? [{ page: p.id, path: p.path, reason: 'the page of an account the content map does not declare' }]
+      : []
+  })
+}
+
+/** Every page for customers has exactly one title slot. Returns how many do not, each passed to `fail`. */
+export function pageTitleChecks(kit, fail, { map } = {}) {
+  const skipped = new Set(map ? pagesNotForCustomers(kit, map).map((p) => p.page) : [])
   let wrong = 0
   for (const p of kit.pages ?? []) {
-    if (p.titleSlot) continue
+    if (p.titleSlot || skipped.has(p.id)) continue
     wrong++
     fail(
       'pageTitleSlots',

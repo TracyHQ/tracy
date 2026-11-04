@@ -10,7 +10,7 @@
 import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from './page-chunks.js'
+import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf, hostPath } from './page-chunks.js'
 
 export const BASELINE_SCHEMA = 'demo-baseline/1'
 
@@ -67,6 +67,15 @@ export function baselineFromKit(kit, { version }) {
 /** A picture this narrow on the page may be an icon: its drawn box is what the site check holds a replaced icon to. */
 const ICON_FRAME_MAX = 400
 
+/** One spelling for a page, however a call named it: no `/index.php`, no trailing slash, spaces encoded, lower case. */
+const pageKey = (p) => {
+  const key = hostPath(p)
+    .replace(/^\/index\.php(?=\/|$)/, '')
+    .replace(/\/+$/, '')
+    .toLowerCase()
+  return key === '' ? '/' : key
+}
+
 /** Each small picture the untouched site drew, where and how large, once. */
 function iconFramesOf(measured) {
   const seen = new Map()
@@ -78,17 +87,41 @@ function iconFramesOf(measured) {
   return [...seen.values()]
 }
 
+/** The site answered, and not with this page: the page is broken, the read is not. Anything else is a failed read. */
+const ANSWERED = /^(?:answered \d+$|not a page\b)/
+/** More of a site than this answering errors is an outage, or the wrong site, and no picture of the template. */
+const BROKEN_SHARE_MAX = 0.25
+
+const named = (unread) => unread.map((u) => `${u.path}: ${u.why}`).join('; ')
+
 /**
- * What the host measured on an untouched site, cut to what the demo measures use.
+ * Throw unless the unread pages are a few pages the template itself breaks: the host reached every page, the home answered,
+ * and the rest of the site is there to measure.
+ */
+function refuseUnlessSiteRead(read, unread) {
+  const failed = unread.filter((u) => !ANSWERED.test(u.why))
+  if (failed.length || !read.length)
+    throw new Error(
+      `The untouched site was not read whole (${failed.length ? named(failed) : unread.length ? named(unread) : 'no page read'})`
+    )
+  const home = unread.filter((u) => pageKey(u.path) === '/')
+  if (home.length) throw new Error(`The untouched site's home did not answer (${named(home)})`)
+  const total = read.length + unread.length
+  if (unread.length > Math.max(1, Math.floor(total * BROKEN_SHARE_MAX)))
+    throw new Error(
+      `The untouched site is not up: ${unread.length} of ${total} pages failed (${named(unread)})`
+    )
+}
+
+/**
+ * What the host measured on an untouched site, cut to what the demo measures use. A page the template itself breaks is kept
+ * as `unread`, and a measure of it says it has no demo to compare (`noDemoFaults`).
  * @param {object} measured the `baseline` of a host `demo-qa` answer
  * @param {{ version: string, measuredAt?: string }} input
  */
 export function baselineFromHost(measured, { version, measuredAt }) {
   const unread = each(measured?.unread)
-  if (unread.length || !each(measured?.read).length)
-    throw new Error(
-      `The untouched site was not read whole (${unread.length ? unread.map((u) => `${u.path}: ${u.why}`).join('; ') : 'no page read'})`
-    )
+  refuseUnlessSiteRead(each(measured?.read), unread)
   return {
     schema: BASELINE_SCHEMA,
     quickstart: version,
@@ -100,8 +133,26 @@ export function baselineFromHost(measured, { version, measuredAt }) {
     pictures: {
       files: [...new Set(each(measured.pictures?.files))].sort(),
       shas: [...new Set(each(measured.pictures?.shas))].sort()
-    }
+    },
+    unread
   }
+}
+
+/** What a demo measure says of each of these pages the baseline could not read: a warning, in place of a comparison it cannot make. */
+export function noDemoFaults(baseline, pages) {
+  const why = new Map(each(baseline?.unread).map((u) => [pageKey(u.path), u.why]))
+  return pages.flatMap((page) => {
+    const said = why.get(pageKey(page))
+    return said
+      ? [
+          {
+            page,
+            level: 'warn',
+            reason: `This page ${said} on the untouched template, so it has no demo to compare.`
+          }
+        ]
+      : []
+  })
 }
 
 /** The baseline in the form the host's request takes: no stylesheet rules are held, so the CSS checks skip. */
@@ -173,6 +224,28 @@ export function fileBaselineStore(dir) {
   }
 }
 
+/**
+ * Every page asked for gets its answer: `read` holds only pages that opened. The host's own `unread` misses a 404 it read or
+ * skipped, and holds a 404 to a home's rule when that page merely opened a call; its `visited` says what each page answered.
+ * A page it never visited is a failed read.
+ */
+function settled({ read, unread, ...rest }, visited, pages) {
+  const out = new Map(unread.map((u) => [pageKey(u.path), u]))
+  const opened = new Set()
+  for (const v of visited) {
+    const key = pageKey(v.path)
+    opened.add(key)
+    if (v.status >= 400 && !out.has(key)) out.set(key, { path: v.path, why: `answered ${v.status}` })
+    else if (v.skipped && !out.has(key)) out.set(key, { path: v.path, why: `not a page, ${v.skipped}` })
+  }
+  const known = new Set(read.map(pageKey))
+  for (const page of pages) {
+    const key = pageKey(page)
+    if (!known.has(key) && !out.has(key) && !opened.has(key)) out.set(key, { path: page, why: 'no answer' })
+  }
+  return { ...rest, read: read.filter((p) => !out.has(pageKey(p))), unread: [...out.values()] }
+}
+
 /** Several reads of one untouched site as one: words and pictures are the union, and a page unread in any is unread. */
 function joined(parts) {
   const union = (pick) => [...new Set(parts.flatMap((p) => each(pick(p))))]
@@ -198,6 +271,7 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
   }
   const parts = []
   const measures = []
+  const visited = []
   for (const chunk of chunksOf(pages)) {
     const answer = await host({
       ...callPages(chunk),
@@ -211,9 +285,11 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
       throw new Error(`The host gave no baseline: ${answer?.code ?? answer?.error ?? 'no answer'}`)
     parts.push(answer.baseline)
     measures.push(...each(answer.pageMeasures))
+    visited.push(...each(answer.visited))
   }
+  const measured = settled(joined(parts), visited, pages)
   const baseline = {
-    ...baselineFromHost(joined(parts), { version, measuredAt: now().toISOString() }),
+    ...baselineFromHost(measured, { version, measuredAt: now().toISOString() }),
     look: lookFromHost(measures)
   }
   await store.save(version, baseline)
