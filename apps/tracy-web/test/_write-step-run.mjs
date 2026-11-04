@@ -59,6 +59,7 @@ export function fakeSite(script = {}) {
       return row ? { ok: true, item: row } : { ok: false, error: 'not_found', message: `no ${kind} ${id}` }
     }
     if (call.action === 'content.update') {
+      if (!call.params.apply_id) return { ok: false, error: 'bad_params', message: 'apply_id required' }
       const refused = script.refuseUpdate?.(kind, id, call.params.fields)
       if (refused) return refused
       const row = records.get(`${kind}-${id}`) ?? { kind, id }

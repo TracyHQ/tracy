@@ -101,7 +101,11 @@ export async function runPageSettings({
   place = null,
   isCancelled = async () => false
 }) {
-  const call = doorCall(door, siteKey)
+  const read = doorCall(door, siteKey)
+  // The door requires an apply id on a write; a record of one stage shares one, so the site's log reads as one change.
+  const applyId = `settings-${Date.now().toString(36)}`
+  const call = (action, params) =>
+    read(action, action === 'content.update' ? { apply_id: applyId, ...params } : params)
   const results = new Map()
   await writeSettings({ call, kit, sent, place, results })
   pagesWithoutDoor(extras.pages, results)
