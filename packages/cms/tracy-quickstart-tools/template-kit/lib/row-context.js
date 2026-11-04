@@ -10,7 +10,9 @@
  * words within `tol` px) and none is centered.
  */
 export function readRowContext({ block, path, shape, css, tol = 8 }) {
-  const STATE = /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$/
+  // Zebra classes (`cat-list-row0` / `cat-list-row1`, `odd` / `even`) alternate between rows of one set: state too.
+  const STATE =
+    /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$|(?:^|-)row\d$|^(?:odd|even)$/
   const sig = (el) =>
     `${el.tagName}.${[...el.classList]
       .filter((c) => !STATE.test(c))

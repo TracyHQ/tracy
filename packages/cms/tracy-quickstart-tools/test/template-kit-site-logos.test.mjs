@@ -278,3 +278,30 @@ test('the whole site part from fabricated reads and a fake Joomla source', () =>
   assert.ok(errors.some((e) => e.field === 'site.systemPages.articleLayoutForNewPage'))
   assert.ok(!JSON.stringify(site).includes('module-'), 'the site part speaks of blocks, never of modules')
 })
+
+test('a logo only a phone shows is sized at phone width; a phone read adds no place', () => {
+  const mobile = {
+    ...logo('images/demo/logo-mobile.png', 'header', 'header', null, true, '#000000'),
+    width: 60,
+    height: 60
+  }
+  const reads = [
+    {
+      pageId: 'page-home',
+      theme: 'base',
+      opening: true,
+      logos: [logo('images/demo/logo-mobile.png', 'header', 'header', null, false, '#000000')]
+    },
+    {
+      pageId: 'page-home',
+      theme: 'base',
+      opening: true,
+      width: 390,
+      logos: [mobile, logo('images/demo/only-phone.png', 'offcanvas', null, null, true, '#ffffff')]
+    }
+  ]
+  const { logoSpots, errors } = buildLogoSpots({ reads, map, settings: [], isFreeHtml: () => false })
+  assert.equal(logoSpots.length, 1)
+  assert.deepEqual([logoSpots[0].width, logoSpots[0].height, logoSpots[0].sizeAt], [60, 60, 390])
+  assert.ok(!errors.some((e) => e.field.endsWith('.width')))
+})

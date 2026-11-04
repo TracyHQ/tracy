@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { applyLayouts, skeletonSimilarity } from '../template-kit/lib/layouts.mjs'
+import { applyLayouts, inheritListMins, skeletonSimilarity } from '../template-kit/lib/layouts.mjs'
 import { packPlan } from '../template-kit/lib/pack.mjs'
 import { keepSkeleton, shootPlan } from '../template-kit/lib/shoot-pass.mjs'
 
@@ -170,4 +170,32 @@ test('a reused capture: shoot only what the plan lacks, drop what it no longer w
   const { missing, unwanted } = planDiff(plan, capture)
   assert.deepEqual(missing, { 1440: { news_post: { full: true, blocks: ['body-news_post'] } } })
   assert.deepEqual(unwanted, [{ kind: 'page', id: 'news', width: '1440', file: 'images/page-news-1440.jpg' }])
+})
+
+test('an items list too short to measure takes the minimum measured on the busiest page of its layout', () => {
+  const list = (id, extra) => ({ id, rowKind: 'items', min: null, ...extra })
+  const blocks = [
+    {
+      id: 'body-tag_a',
+      lists: [list('tag-1.items', { min: 1, minSource: 'measured', maxEvidence: { rowsShown: 2 } })]
+    },
+    {
+      id: 'body-tag_b',
+      lists: [list('tag-2.items', { min: 2, minSource: 'measured', maxEvidence: { rowsShown: 4 } })]
+    },
+    { id: 'body-tag_c', lists: [list('tag-3.items')] },
+    { id: 'body-about', lists: [list('about.items')] }
+  ]
+  const layouts = new Map([
+    ['body-tag_a', { exemplar: 'body-tag_b' }],
+    ['body-tag_b', { exemplar: 'body-tag_b' }],
+    ['body-tag_c', { exemplar: 'body-tag_b' }],
+    ['body-about', { exemplar: 'body-about' }]
+  ])
+  const answered = inheritListMins(layouts, new Map(blocks.map((b) => [b.id, b])))
+  const c = blocks[2].lists[0]
+  assert.deepEqual([c.min, c.minSource, c.minFrom], [2, 'layout', 'tag-2.items'])
+  assert.equal(blocks[0].lists[0].min, 1, 'a measured list keeps its own minimum')
+  assert.equal(blocks[3].lists[0].min, null, 'a layout with nothing measured gives nothing')
+  assert.deepEqual([...answered], ['blocks[body-tag_c].lists[tag-3.items].min'])
 })

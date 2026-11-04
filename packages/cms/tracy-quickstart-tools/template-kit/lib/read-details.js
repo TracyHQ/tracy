@@ -9,7 +9,9 @@
  * set lives in a slider or in tabs (then only one line or one tab shows at a time).
  */
 export function readDetails() {
-  const STATE = /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$/
+  // Zebra classes (`cat-list-row0` / `cat-list-row1`, `odd` / `even`) alternate between rows of one set: state too.
+  const STATE =
+    /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$|(?:^|-)row\d$|^(?:odd|even)$/
   const SLIDER =
     '.owl-carousel, .swiper, .swiper-container, .slick-slider, .carousel, .splide, [data-ride="carousel"]'
   const TABS_PARENT = '.tab-content, .nav-tabs, .nav-pills, [role="tablist"]'
@@ -274,7 +276,14 @@ export function readDetails() {
           container: box(parent),
           rows: boxes,
           // The first link of every row: tells a set of content items (each row opens a page) from the rest.
-          rowLinks: rows.map((r) => (r.matches('a[href]') ? r : r.querySelector('a[href]'))?.href ?? null)
+          rowLinks: rows.map((r) => (r.matches('a[href]') ? r : r.querySelector('a[href]'))?.href ?? null),
+          // Every link of every row (a card may lead with its category before its title link), at most six.
+          rowHrefs: rows.map((r) =>
+            (r.matches('a[href]') ? [r] : [...r.querySelectorAll('a[href]')]).slice(0, 6).map((a) => a.href)
+          ),
+          // Rows inside another tagged block nested in this one (a sidebar module in the component area) are
+          // that block's rows, not this block's.
+          nested: parent.closest('[data-kit-block]') !== root
         })
       }
       if (repeats.length >= 40) break
@@ -318,7 +327,11 @@ export function readDetails() {
       .filter((li) => shown(li) && !li.querySelector('li'))
       .map((li) => (li.innerText || '').replace(/\s+/g, ' ').trim())
       .filter((t) => t.length >= 2)
+    // A listing's page-size control (`limit`, the CMS's own name for it): the number of items a page shows.
+    const limit = root.querySelector('select[name="limit"], select[name$="[limit]"]')
+    const pageSizeControl = limit && Number(limit.value) > 0 ? Number(limit.value) : null
     out[root.getAttribute('data-kit-block')] = {
+      ...(pageSizeControl ? { pageSizeControl } : {}),
       links,
       texts: [...texts],
       textCounts,

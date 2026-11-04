@@ -560,3 +560,38 @@ test('rows of uneven shapes with no row set to measure take the demo count as th
   const kit = buildKit({ map, capture, stamp: STAMP, siteUrl: SITE, aliasHosts: [] })
   assert.ok(!kit.errors.some((e) => e.field === 'blocks[block-11].lists[block-11.person].min'))
 })
+
+test('listing rows: a nested block is not the listing, a card opens its item through any link, a size control', () => {
+  const item = (p) => p.startsWith('/news/')
+  const at = (...paths) => paths.map((p) => `${SITE}${p}`)
+  const repeats = [
+    // A card that leads with its category link: its item is its second link.
+    {
+      path: [0, 0],
+      shape: 'DIV.leading',
+      count: 3,
+      rowLinks: at('/news', '/news', '/news'),
+      rowHrefs: [at('/news', '/news/a'), at('/news', '/news/b'), at('/news', '/news/c')]
+    },
+    // A latest-articles module in the sidebar, nested in the listing's block: never the listing's rows.
+    {
+      path: [1, 0],
+      shape: 'LI.',
+      count: 5,
+      nested: true,
+      rowLinks: at('/news/a', '/news/b', '/news/c', '/news/d', '/news/e'),
+      rowHrefs: [at('/news/a'), at('/news/b'), at('/news/c'), at('/news/d'), at('/news/e')]
+    }
+  ]
+  assert.equal(itemRows(repeats, { isItemPage: item, siteUrl: SITE }).shape, 'DIV.leading')
+  const one = listingMax({
+    repeats,
+    isItemPage: item,
+    siteUrl: SITE,
+    path: '/tag',
+    pagePaths: ['/tag'],
+    pageSizeControl: 20
+  })
+  assert.deepEqual([one.max, one.maxSource, one.maxEvidence.rowsShown], [20, 'page-size-control', 3])
+  assert.equal(matchRepeat(repeats, 5), null, 'a nested row set is not a block row set')
+})

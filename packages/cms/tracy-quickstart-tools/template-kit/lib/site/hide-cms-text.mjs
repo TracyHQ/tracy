@@ -3,8 +3,9 @@
 // read before and after, and the override file is put back as it was (removed when it did not exist), whatever
 // happens. Each fixed text gets `canHide` (true: the words left the page and the block's layout changed with them;
 // false: the words still show; null: nothing in the block changed), `hiddenBy` and `evidence` (the numbers).
-import { textShift } from '../empty-frame.mjs'
+
 import { openFrozen, openKitContext } from '../capture.mjs'
+import { textShift } from '../empty-frame.mjs'
 import { urlOfPath } from '../kit-paths.mjs'
 import { assignedAt } from '../map-index.mjs'
 import { layoutOf } from '../read-frames.js'
@@ -23,11 +24,19 @@ export const withEmptyOverride = (original, constant) =>
     .map((c) => `${c}=""\n`)
     .join('')}`
 
-/** How many times `text` shows as whole words in `within` ("Prev" is not inside "Previous"). */
+/**
+ * How many times `text` shows as whole words in `within` ("Prev" is not inside "Previous"). A side of the text that
+ * ends in punctuation is its own boundary: "MANUFACTURER:" counts in "MANUFACTURER:SELECT", where the page sets a
+ * label against the control it names.
+ */
 export function wholeWordCount(within, text) {
-  const want = norm(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const t = norm(text)
+  const want = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   if (!want) return 0
-  return [...norm(within).matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${want}(?![\\p{L}\\p{N}])`, 'gu'))].length
+  const word = /[\p{L}\p{N}]/u
+  const before = word.test(t[0]) ? '(?<![\\p{L}\\p{N}])' : ''
+  const after = word.test(t.at(-1)) ? '(?![\\p{L}\\p{N}])' : ''
+  return [...norm(within).matchAll(new RegExp(`${before}${want}${after}`, 'gu'))].length
 }
 
 /** The verdict of one measurement: the words left when they show fewer times, as whole words, than before. */
@@ -39,6 +48,9 @@ export function judgeHide({ textBefore, textAfter, text, changed }) {
   if (!changed) return { canHide: null, reason: 'nothing in the block changed: measurement invalid' }
   return { canHide: true, reason: 'the sentence left the page and the block changed with it' }
 }
+
+/** Whether a reading of the block shows the sentence (an unreadable block counts as showing: its error is kept). */
+const showsSentence = (read, text) => !!read?.error || wholeWordCount(read?.text, text) > 0
 
 async function readBlock(ctx, { siteUrl, idx, at }) {
   const opened = await openFrozen(ctx, urlOfPath(at.path, siteUrl), assignedAt(idx, at.path), null, {
@@ -85,6 +97,10 @@ export async function measureFixedTexts({
       // One reading of a block before any change serves every sentence it shows.
       const beforeKey = `${f.at.path}|${f.at.raw}`
       if (!befores.has(beforeKey)) befores.set(beforeKey, await readBlock(ctx, { siteUrl, idx, at: f.at }))
+      // A page whose script settles late (a pager a script shows after load) may lack the words on one reading:
+      // the block is read once more before the sentence is called absent.
+      if (!showsSentence(befores.get(beforeKey), f.text))
+        befores.set(beforeKey, await readBlock(ctx, { siteUrl, idx, at: f.at }))
       const before = befores.get(beforeKey)
       if (before.error) {
         errors.push({ kind: 'missing', field, reason: `the block could not be read: ${before.error}` })

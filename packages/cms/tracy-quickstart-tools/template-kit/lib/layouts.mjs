@@ -137,6 +137,33 @@ export function inheritedFrames(layouts, framesOf) {
  * Apply the layouts to an assembled kit (in place): `shotOf` on a body block that is not its layout's exemplar,
  * `canHide` and `canHideFrom` on a frame that has a counterpart there, and its own canHide error dropped.
  */
+/**
+ * Pages of one layout lay their item rows out the same way: an items list left without a minimum (its page shows
+ * too few rows to measure one, such as a tag with a single article) takes the minimum measured on the page of that
+ * layout that showed the most rows (`minSource: "layout"`, `minFrom`). Changes the lists in place.
+ * @returns {Set<string>} the `.min` error fields the layout answered
+ */
+export function inheritListMins(layouts, blockById) {
+  const itemsOf = (id) => (blockById.get(id)?.lists ?? []).find((l) => l.rowKind === 'items') ?? null
+  const members = new Map()
+  for (const [id, l] of layouts) members.set(l.exemplar, [...(members.get(l.exemplar) ?? []), id])
+  const answered = new Set()
+  for (const ids of members.values()) {
+    const donor = ids
+      .map((id) => itemsOf(id))
+      .filter((l) => l?.min != null && l.minSource === 'measured')
+      .sort((a, b) => (b.maxEvidence?.rowsShown ?? 0) - (a.maxEvidence?.rowsShown ?? 0))[0]
+    if (!donor) continue
+    for (const id of ids) {
+      const list = itemsOf(id)
+      if (!list || list.min != null || list === donor) continue
+      Object.assign(list, { min: donor.min, minSource: 'layout', minFrom: donor.id })
+      answered.add(`blocks[${id}].lists[${list.id}].min`)
+    }
+  }
+  return answered
+}
+
 export function applyLayouts(kit, { skeletons = new Map() } = {}) {
   const { layouts, checks } = bodyLayouts({ ...kit, skeletons })
   kit.layoutChecks = checks
@@ -162,9 +189,12 @@ export function applyLayouts(kit, { skeletons = new Map() } = {}) {
     f.canHideFrom = from
     dropped.add(id)
   }
-  // The inheriting frame's own canHide error goes when its counterpart has an answer (errors changed in place).
+  const minTaken = inheritListMins(layouts, blockById)
+  // The inheriting frame's own canHide error goes when its counterpart has an answer, and an items list's own
+  // minimum error when the layout gave it one (errors changed in place).
   const kept = kit.errors.filter((e) => {
     const m = /^blocks\[[^\]]+\]\.frames\[([^\]]+)\]\.canHide$/.exec(e.field ?? '')
+    if (minTaken.has(e.field)) return false
     return !(m && dropped.has(m[1]) && frameById.get(m[1]).canHide != null)
   })
   kit.errors.splice(0, kit.errors.length, ...kept)

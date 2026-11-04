@@ -1,5 +1,6 @@
 // The browser side of the site part: every page opened read-only at desktop width, read in the theme it opens in and
-// again after switching to the template's other theme (in this browser only), plus one address that does not exist.
+// again after switching to the template's other theme (in this browser only), its logos read at phone width too,
+// plus one address that does not exist.
 // Also fetches the stylesheets the pages serve, for the colour measure.
 import { openFrozen, openKitContext } from '../capture.mjs'
 import { httpFetcher } from '../crawl.mjs'
@@ -9,6 +10,7 @@ import { readLogos, switchTheme } from './read-logos.js'
 import { readPage } from './read-page.js'
 import { CONTACT_PATTERN } from './site-parts.mjs'
 
+const PHONE = 390
 const STYLE_LINK = /<link\b[^>]*rel\s*=\s*["']?stylesheet[^>]*>/gi
 const INLINE_STYLE = /<style\b[^>]*>([\s\S]*?)<\/style>/gi
 
@@ -90,6 +92,13 @@ export async function browseSite({
           blockCount: opened.blocks.filter((b) => b.visible).length
         })
         logoReads.push({ pageId: p.pageId, theme, opening: true, logos: first.logos })
+        // A logo the template shows only on a phone (a smaller mark in the bar) is read at phone width.
+        await page.setViewportSize({ width: PHONE, height: 900 })
+        await page.waitForTimeout(250)
+        const phone = await page.evaluate(readLogos, { logoFiles, siteName, brand: [] })
+        logoReads.push({ pageId: p.pageId, theme, opening: true, width: PHONE, logos: phone.logos })
+        await page.setViewportSize({ width: 1440, height: 900 })
+        await page.waitForTimeout(250)
         const other = await page.evaluate(switchTheme)
         if (other) {
           await page.waitForTimeout(250)
