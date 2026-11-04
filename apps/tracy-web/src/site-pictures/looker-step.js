@@ -21,9 +21,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { altNotesFor } from './alt-notes.js'
+import { hasTextOver } from './darken.js'
 import { fileStore, sha256Hex } from './file-store.js'
-import { wantsDark } from './darken.js'
-import { askLooker, isAnyReal, LOOK_UNREADABLE, lookImage, lookWords } from './looker-call.js'
+import { askLooker, isAnyReal, LOOK_UNREADABLE, lookImage, lookWords, surfaceFacts } from './looker-call.js'
 
 export const LOOK_CONCURRENCY = 4
 /** The sources whose picture the looker checks. */
@@ -40,7 +40,7 @@ const whereOf = (list, frame) => (list === 'siteSettings' ? `siteSettings ${fram
 export function cutoutFacts(frame, entry) {
   const clear = frame?.kindEvidence?.clearShare
   return {
-    textOver: frame?.kindEvidence?.overPicture === true || wantsDark(frame),
+    textOver: frame?.kindEvidence?.overPicture === true || hasTextOver(frame),
     figure: Number.isFinite(entry.cutout?.figure) ? entry.cutout.figure : null,
     demoFigure: Number.isFinite(clear) ? Math.round((1 - clear) * 1000) / 1000 : null
   }
@@ -89,6 +89,8 @@ export function createLooker({
     const box = { width: frame?.width ?? entry.width, height: frame?.height ?? entry.height }
     const realPart = entry.source === 'owner-photo-extended' ? (entry.realPart ?? null) : null
     const cutout = entry.cutout ? cutoutFacts(frame, entry) : null
+    // A cut-out says where the text sits in its own lines; any other picture is told its frame's surface (section 3e).
+    const surface = cutout ? null : surfaceFacts(frame)
     const key = sha256Hex(
       JSON.stringify([
         entry.sha256,
@@ -98,17 +100,18 @@ export function createLooker({
         door.model,
         prompt.sha256,
         ...(cutout ? [cutout] : []),
-        ...(anyReal ? ['any-real'] : [])
+        ...(anyReal ? ['any-real'] : []),
+        ...(surface ? [surface] : [])
       ])
     )
     // A look already taken in this save (the fallback ladder looks again after each rung), readable or not.
     if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true }
-    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal })
+    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface })
     memo?.set(key, looked.said)
     return looked
   }
 
-  async function lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal }) {
+  async function lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface }) {
     const before = await readFile(kept(key), 'utf8')
       .then(JSON.parse)
       .catch(() => null)
@@ -134,6 +137,7 @@ export function createLooker({
         outlined: Boolean(realPart),
         cutout,
         anyReal,
+        surface,
         fetchImpl
       })
     const first = await ask()

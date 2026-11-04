@@ -25,25 +25,27 @@
 // redraw, the next photo, fewer rows, hidden, returned to the planner). Cut-out frames (#346) are drawn there too, on a
 // plain ground that code removes, then looked at; one redraw, then hidden or returned. The looker's rejections join the round's
 // failures, so a rejected frame the picker placed goes back in the next fix round with its fault names.
+
+import sharp from 'sharp'
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { kitIdOf } from '../site-writer/bench-worker.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
 import { picturePickerDoor } from './door.js'
-import { fileStore } from './file-store.js'
 import { runDrawerDoor } from './drawer-door.js'
+import { fileStore } from './file-store.js'
+import { fillFrames } from './fill-frames.js'
+import { joinSurface } from './frame-surface/surface.js'
+import { surfaceFor } from './frame-surface/surface-cache.js'
+import { iconStepFor } from './icon-step.js'
+import { openKitWithMap } from './kit-with-map.js'
 import { createDrawing } from './ladder-draw.js'
 import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
 import { withLooker } from './looker-round.js'
 import { createLooker } from './looker-step.js'
-import { iconStepFor } from './icon-step.js'
-import { fillFrames } from './fill-frames.js'
-import { openKitWithMap } from './kit-with-map.js'
 import { PICTURES_VERSION } from './manifest-shape.js'
 import { ownerPhotoBytes } from './owner-photos.js'
-import { CHECKER_VERSION, checkPictures } from './picture-check/check-pictures.js'
-import { indexInputs } from './picture-check/inputs-index.js'
-import { picturePrompts } from './picture-prompts.js'
+import { usablePhotos } from './photo-shortlist.js'
 import { pickerFirstMessage, pickerInput, thumbnailResolver } from './picker-input.js'
 import {
   applyPicks,
@@ -55,8 +57,9 @@ import {
   splitForPicker,
   WHOLE_PICKS_MESSAGE
 } from './picker-picks.js'
-import { usablePhotos } from './photo-shortlist.js'
-import sharp from 'sharp'
+import { CHECKER_VERSION, checkPictures } from './picture-check/check-pictures.js'
+import { indexInputs } from './picture-check/inputs-index.js'
+import { picturePrompts } from './picture-prompts.js'
 
 export { BENCH_QUEUE }
 
@@ -122,7 +125,8 @@ export const SITE_PICTURES_STEP = Object.freeze({
  *   now?: () => number, retry?: object }} deps `secret` opens the picker door's key; `objects`: the media store a
  *   revision's photos are read from; `storeDir`: the bench's file store; `index`: the contracts to find kits in
  *   (tests); `retry` replaces the run's retry policy (tests); `webroot` downloads a release's webroot tar.gz, where
- *   the kit's demo icons are read (icon-step.js releaseWebroot)
+ *   the kit's demo icons are read (icon-step.js releaseWebroot); `quickstart` downloads a release asset by name, the
+ *   quickstart installer the frame surface reads (frame-surface/surface-cache.js)
  */
 export function createSitePicturesQueue({ log = console, now, ...deps }) {
   return createBenchQueue(withLooker(SITE_PICTURES_STEP), { ...deps, log, now })
@@ -147,7 +151,7 @@ async function doorOf({ pool, secret }, row) {
 // The kit, the door, the owner photos, every frame code decides, the picker's input and every file stored; or a
 // refusal. Once round 0 is checked, the files are already stored and recorded, so none is recorded again.
 async function prepare(deps, row) {
-  const kit = openKitWithMap(row.kit?.ref, deps.index ? { index: deps.index } : {})
+  let kit = openKitWithMap(row.kit?.ref, deps.index ? { index: deps.index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_PICTURES_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
   const door = await doorOf(deps, row)
@@ -159,6 +163,15 @@ async function prepare(deps, row) {
   const rounds = await SITE_PICTURES_STORE.roundsOf(deps.pool, row.id)
   const recorded = rounds.some((r) => r.state === 'checked')
   const store = fileStore(deps.storeDir)
+  // The frame surface (ADR 0043 section 3e): text over each picture and the template's own overlay over it, read once
+  // per kit version and quickstart and joined into the kit's frames; it never changes the kit itself.
+  const surface = await surfaceFor({
+    dir: store.dir,
+    kit,
+    kitId: kitIdOf(kit.doc, row.kit?.ref),
+    fetchAsset: deps.quickstart ?? null
+  })
+  kit = { ...kit, doc: joinSurface(kit.doc, surface.surface) }
   const started = Date.now()
   const photoBytes = await ownerPhotoBytes({ ...deps, store }, row)
   // The icon step (#345): library icons ranked by a text model, styled like the kit's demo icons.
@@ -218,7 +231,8 @@ async function prepare(deps, row) {
     // The picker's cost is the cost of the run's turns (one row per call), and its balance is read around the run.
     cost: { code: 0, iconRanking: iconsDone.cost },
     timing: { code: Date.now() - started - iconsDone.timing, iconRanking: iconsDone.timing },
-    iconRanking: iconsDone.ranking
+    iconRanking: iconsDone.ranking,
+    frameSurface: { quickstart: surface.surface.quickstart, note: surface.note }
   }
   const looker = createLooker({
     door: lookerDoor.door,

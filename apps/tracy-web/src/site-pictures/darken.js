@@ -1,9 +1,12 @@
 // Dark frames (#344, ADR 0043 section 1 `darkened`): a frame whose heading or text sits over its picture (the kit shows
 // it as a background, or marks it `textOver`) needs a picture dark enough for light text. Code prefers darker photos
 // when it chooses one for such a frame (fill-frames.js, ladder-step.js); a picture still too bright gets a dark overlay
-// baked in, and its entry says `darkened: true` with the overlay's strength in `overlay`.
+// baked in, and its entry says `darkened: true` with the overlay's strength in `overlay`. A frame whose template already
+// paints an overlay at least OVERLAY_COVERS strong over its picture (frame-surface/, ADR 0043 section 3e) is never
+// darkened again and never prefers dark photos: the template's own overlay carries the text.
 import sharp from 'sharp'
 import { sha256Hex } from './file-store.js'
+import { overlayCovers } from './frame-surface/surface.js'
 
 /** A picture whose mean luminance (0 black, 1 white) is at most this carries light text without an overlay. */
 export const DARK_ENOUGH = 0.42
@@ -14,7 +17,10 @@ const OVERLAY_STEP = 0.05
 const JPEG = { quality: 84, mozjpeg: false }
 
 /** Whether a kit frame has text over its picture. */
-export const wantsDark = (frame) => frame?.shownAs === 'background' || frame?.textOver === true
+export const hasTextOver = (frame) => frame?.shownAs === 'background' || frame?.textOver === true
+
+/** Whether a picture of this frame must be dark enough for light text: text over it and no template overlay doing it. */
+export const wantsDark = (frame) => hasTextOver(frame) && !overlayCovers(frame)
 
 /** The mean luminance of a picture, 0 to 1, rounded to three places. */
 export async function luminanceOf(bytes) {

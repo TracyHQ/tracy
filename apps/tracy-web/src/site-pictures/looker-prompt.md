@@ -47,6 +47,16 @@ these faults are named too:
 - covers the text: the figure takes so much of the box, compared with the template's own figure, that it would sit under
   or over the site's heading and text.
 
+When the message says the template lays its own dark overlay over the picture, the site shows the picture darkened by
+it, and you see it without the overlay. Then never judge how bright or how dark the picture is: a bright picture is
+right there.
+
+When the message says the page's heading and text sit over the picture with no overlay of the template, judge whether
+light letters over it would read. This fault is named only then:
+
+- text would not read: the picture is so bright, or so busy with detail, that white letters laid over most of it would
+  not read.
+
 Mood alone never fails a picture. Judge only what you can see; do not guess what is outside the picture.
 
 Answer with one JSON object and nothing before or after it:

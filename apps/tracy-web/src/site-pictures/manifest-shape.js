@@ -118,6 +118,23 @@ function readEntry(e, list) {
       problem:
         'reuse must be null or, on an owner photo, { rung: "reuse" | "any-photo", with: [frames], overlap: number }'
     }
+  // The frame's surface (ADR 0043 section 3e): text over the picture, and the overlay the template paints over it.
+  if (e.textOver != null && typeof e.textOver !== 'boolean')
+    return { problem: 'textOver must be true or false' }
+  const o = e.templateOverlay
+  if (
+    o != null &&
+    o !== 'unknown' &&
+    !(
+      isObject(o) &&
+      isNonEmpty(o.colour) &&
+      isNumber(o.strength) &&
+      o.strength > 0 &&
+      o.strength <= 1 &&
+      isNonEmpty(o.from)
+    )
+  )
+    return { problem: 'templateOverlay must be null, "unknown" or { colour, strength (0 to 1), from }' }
   if (e.seen != null && typeof e.seen !== 'string') return { problem: 'seen must be a string or null' }
   if (typeof e.reason !== 'string') return { problem: 'reason must be a string' }
   return {
@@ -141,6 +158,8 @@ function readEntry(e, list) {
       sharpness: e.sharpness ?? null,
       reuse: e.reuse ? { rung: e.reuse.rung, with: [...e.reuse.with], overlap: e.reuse.overlap } : null,
       darkened: e.darkened,
+      textOver: e.textOver === true,
+      templateOverlay: o === undefined ? 'unknown' : o,
       paint: painted ? e.paint : null,
       preview: painted,
       seen: e.seen ?? null,

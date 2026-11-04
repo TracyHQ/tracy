@@ -10,7 +10,7 @@ import { FAULTS, lookImage, lookMessage, MODEL_FAULTS, readLook } from '../src/s
 test('an answer is held to the fixed fault list, and any fault fails the picture', () => {
   // The model names seven faults on any picture (face cut added after real run 4) and four more on a cut-out (#346);
   // "look unreadable" only code records.
-  assert.equal(MODEL_FAULTS.length, 11)
+  assert.equal(MODEL_FAULTS.length, 12)
   assert.deepEqual(FAULTS, [...MODEL_FAULTS, 'look unreadable'])
   const said = readLook(
     'Here: {"verdict":"pass","faults":["Subject cut off","too dark"],"seen":"A rider on a gravel road."}'

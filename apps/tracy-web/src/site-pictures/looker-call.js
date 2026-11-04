@@ -7,16 +7,20 @@
 // faults are named only then. An `any-real` frame (spec #336) takes any real owner photo that fits it: the looker is told
 // so, is given only the plan's `avoid` and `mood` for it, and may not name "wrong subject" there; code drops that fault
 // if the model names it anyway (readLook), so a model slip never fails a gallery photo for its scene. "face cut" (a
-// person's head or face cut by the frame edge) fails every picture frame, any-real ones included.
+// person's head or face cut by the frame edge) fails every picture frame, any-real ones included. A frame's surface
+// (frame-surface/, ADR 0043 section 3e) is told too: when the template lays its own dark overlay over the picture the
+// looker is told not to judge its brightness; when the site's text sits over it with no such overlay, it judges whether
+// light text would read there and may name "text would not read" (only then: code drops it on any other look).
 //
 // The answer is held to a fixed form: a verdict, faults from the fixed list (FAULTS) and one `seen` sentence. A fault
 // name outside the model's list is dropped and noted; any fault makes the verdict "fail". An answer that cannot be read,
 // or a call that fails, is a look with no verdict and its reason; the caller asks once more, then records the fault
 // "look unreadable" (looker-step.js). It never stops the run.
 import sharp from 'sharp'
-import { jsonObjectIn } from '../sites/brief-engines/shared.js'
-import { costOf } from '../lib/agent-over-door-wire.js'
 import { costOfCall, priceFor } from '../brand-step/brand-prices.js'
+import { costOf } from '../lib/agent-over-door-wire.js'
+import { jsonObjectIn } from '../sites/brief-engines/shared.js'
+import { overlayCovers } from './frame-surface/surface.js'
 
 /** The faults the looker may name on any picture, exactly as written. */
 export const PICTURE_FAULTS = Object.freeze([
@@ -35,8 +39,10 @@ export const CUTOUT_FAULTS = Object.freeze([
   'missing part',
   'covers the text'
 ])
+/** The fault it may name when the site's text sits over the picture with no template overlay (section 3e). */
+export const TEXT_OVER_FAULT = 'text would not read'
 /** Every fault the looker model may name. */
-export const MODEL_FAULTS = Object.freeze([...PICTURE_FAULTS, ...CUTOUT_FAULTS])
+export const MODEL_FAULTS = Object.freeze([...PICTURE_FAULTS, ...CUTOUT_FAULTS, TEXT_OVER_FAULT])
 /** The fault code records when the looker could not look at a picture, twice: it fails the picture. */
 export const LOOK_UNREADABLE = 'look unreadable'
 /** The fixed fault list of a look: the model's faults and the one code records. */
@@ -74,8 +80,38 @@ export const lookWords = (wish) => {
 }
 
 /** The faults the model may name for a picture. */
-export const faultsFor = ({ cutout = null, anyReal = false } = {}) =>
-  (cutout ? MODEL_FAULTS : PICTURE_FAULTS).filter((f) => !(anyReal && f === WRONG_SUBJECT))
+export const faultsFor = ({ cutout = null, anyReal = false, surface = null } = {}) => [
+  ...(cutout ? [...PICTURE_FAULTS, ...CUTOUT_FAULTS] : PICTURE_FAULTS).filter(
+    (f) => !(anyReal && f === WRONG_SUBJECT)
+  ),
+  ...(judgesText(surface) ? [TEXT_OVER_FAULT] : [])
+]
+
+/** Whether a look judges how light text would read on the picture: text over it, no template overlay covering it. */
+const judgesText = (surface) => Boolean(surface?.textOver) && !surface?.overlay
+
+/**
+ * What the looker is told of a frame's surface: { textOver, overlay: { colour, strength } | null } where `overlay` is
+ * the template's own overlay strong enough to carry light text; null when the frame has neither (nothing to say).
+ */
+export function surfaceFacts(frame) {
+  const o = frame?.templateOverlay
+  const covers = overlayCovers(frame)
+  const textOver = frame?.textOver === true || frame?.shownAs === 'background'
+  if (!covers && !textOver) return null
+  return { textOver, overlay: covers ? { colour: o.colour, strength: o.strength } : null }
+}
+
+// The lines a frame's surface adds to the message.
+function surfaceLines(surface) {
+  if (surface.overlay)
+    return [
+      `On the site, the template lays its own dark overlay (${surface.overlay.colour}, ${percent(surface.overlay.strength)} strong) over this whole picture${surface.textOver ? ", and the page's heading and text sit on it" : ''}. You see the picture without it: do not judge how bright or dark the picture is.`
+    ]
+  return [
+    'On the site, the page\'s heading and text sit over this picture in light letters, with no overlay of the template over it. Judge whether light text would read on it: name "text would not read" when the picture is so bright or so busy that white letters over most of it would not read.'
+  ]
+}
 
 /**
  * The picture as the site shows it: resized to fit the frame's display box (never enlarged), as a PNG, with the real
@@ -137,8 +173,8 @@ const ANY_REAL_LINES = [
  * The look's only user message. `cutout`: { textOver, figure, demoFigure } for a cut-out, else null; `anyReal` for a
  * frame that takes any real owner photo.
  */
-export function lookMessage({ words, image, outlined, cutout = null, anyReal = false }) {
-  const faults = faultsFor({ cutout, anyReal })
+export function lookMessage({ words, image, outlined, cutout = null, anyReal = false, surface = null }) {
+  const faults = faultsFor({ cutout, anyReal, surface })
   const text = [
     `The plan's words for this frame:`,
     JSON.stringify(words, null, 2),
@@ -151,6 +187,7 @@ export function lookMessage({ words, image, outlined, cutout = null, anyReal = f
       : []),
     ...(cutout ? cutoutLines(cutout) : []),
     ...(anyReal ? ANY_REAL_LINES : []),
+    ...(surface && !cutout ? surfaceLines(surface) : []),
     `Faults you may name: ${faults.map((f) => `"${f}"`).join(', ')}.`,
     'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>" }'
   ].join('\n')
@@ -164,13 +201,15 @@ export function lookMessage({ words, image, outlined, cutout = null, anyReal = f
  * The looker's answer held to the fixed form: { verdict, faults, seen, dropped } or { problem }. For an any-real frame
  * (`anyReal`) "wrong subject" is dropped like a name outside the list, and a fail that named nothing else passes.
  */
-export function readLook(text, { anyReal = false } = {}) {
+export function readLook(text, { anyReal = false, surface = null } = {}) {
   const answer = jsonObjectIn(text)
   if (!answer || typeof answer !== 'object') return { problem: 'the answer holds no JSON object' }
   const seen = typeof answer.seen === 'string' ? answer.seen.trim() : ''
   if (!seen) return { problem: 'the answer has no seen sentence' }
   const named = Array.isArray(answer.faults) ? answer.faults.map((f) => String(f).trim().toLowerCase()) : []
-  const allowed = anyReal ? MODEL_FAULTS.filter((f) => f !== WRONG_SUBJECT) : MODEL_FAULTS
+  const allowed = MODEL_FAULTS.filter(
+    (f) => !(anyReal && f === WRONG_SUBJECT) && (f !== TEXT_OVER_FAULT || judgesText(surface))
+  )
   const faults = allowed.filter((f) => named.includes(f))
   const dropped = named.filter((f) => !allowed.includes(f))
   if (answer.verdict !== 'pass' && answer.verdict !== 'fail')
@@ -193,6 +232,7 @@ export async function askLooker({
   outlined,
   cutout = null,
   anyReal = false,
+  surface = null,
   fetchImpl = fetch,
   ms = LOOK_MS
 }) {
@@ -226,7 +266,7 @@ export async function askLooker({
         model: door.model,
         messages: [
           { role: 'system', content: system },
-          { role: 'user', content: lookMessage({ words, image, outlined, cutout, anyReal }) }
+          { role: 'user', content: lookMessage({ words, image, outlined, cutout, anyReal, surface }) }
         ],
         max_tokens: LOOK_MAX_TOKENS,
         temperature: 0,
@@ -246,7 +286,7 @@ export async function askLooker({
     })
   }
   const choice = json.choices?.[0]
-  const read = readLook(choice?.message?.content ?? '', { anyReal })
+  const read = readLook(choice?.message?.content ?? '', { anyReal, surface })
   // An answer the cap cut off says so, so a too small cap is not mistaken for a model that ignores the form.
   if (read.problem && choice?.finish_reason === 'length')
     return done(

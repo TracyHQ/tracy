@@ -4,9 +4,11 @@
 // dark overlays, looks and the ladder) before the round is written, stores the files it made, grades the finished
 // manifest again with the picture check, adds the looker's rule L01 and splits the result again for the picker
 // (picker-picks.js splitForPicker). The stored manifest, check result and failure list therefore hold the drawings and
-// the looks, and the next fix round sends back the rejected frames the picker placed, with their fault names.
+// the looks, and the next fix round sends back the rejected frames the picker placed, with their fault names. Every
+// saved manifest entry carries its frame's surface (textOver, templateOverlay; frame-surface/surface.js stampSurface).
 import sharp from 'sharp'
 import { addRunCost, saveFile } from './bench-store.js'
+import { stampSurface } from './frame-surface/surface.js'
 import { LOOKER_RULE } from './looker-step.js'
 import { splitForPicker } from './picker-picks.js'
 
@@ -38,8 +40,9 @@ export function withLooker(step) {
       ...store,
       saveRound: async (pool, args) => {
         const held = readyOf.get(args.runId)
+        const stamped = (doc) => stampSurface(doc, held?.ready.idx?.frames)
         if (args.state !== 'checked' || !args.pictures || !held?.ready.looker)
-          return store.saveRound(pool, args)
+          return store.saveRound(pool, args.pictures ? { ...args, pictures: stamped(args.pictures) } : args)
         const { ready, row } = held
         if (!ready.finisher) {
           const looked = await ready.looker.look(args.pictures)
@@ -48,7 +51,7 @@ export function withLooker(step) {
           const checkResult = withLookerRule(args.checkResult, looked.rule, looked.doc)
           return store.saveRound(pool, {
             ...args,
-            pictures: looked.doc,
+            pictures: stamped(looked.doc),
             checkResult,
             failureList: step.checker.failureListText(checkResult)
           })
@@ -81,14 +84,11 @@ export function withLooker(step) {
         // The run's cost holds every role: what these drawings and looks spent is added to the picker's turns.
         if (finished.paid > 0)
           await addRunCost(pool, { runId: args.runId, usd: finished.paid, leaseToken: args.leaseToken })
-        const checkResult = withLookerRule(
-          step.checker.check({ doc: finished.doc, row, ready }),
-          finished.rule,
-          finished.doc
-        )
+        const doc = stamped(finished.doc)
+        const checkResult = withLookerRule(step.checker.check({ doc, row, ready }), finished.rule, doc)
         return store.saveRound(pool, {
           ...args,
-          pictures: finished.doc,
+          pictures: doc,
           checkResult,
           failureList: step.checker.failureListText(checkResult)
         })
