@@ -11,6 +11,7 @@ import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
 import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
 import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
 import { neutralKey } from './ids.mjs'
+import { pageTitleChecks, settlePageTitles } from './page-titles.mjs'
 import { settleSettingSlots } from './setting-slots.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
@@ -147,9 +148,9 @@ function mainMenuRow(kit, mapOf, rowFit) {
 /**
  * Complete the kit from the contract: link label slots, contact fields, one limit per slot, the main menu row.
  * @param {object} kit changed in place
- * @param {{map: object, textFit?: object, rowFit?: object}} o
+ * @param {{map: object, textFit?: object, rowFit?: object, drives?: object}} o
  */
-export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = new Map() }) {
+export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = new Map(), drives = {} }) {
   const mapSlots = map.slots ?? []
   const mapOf = new Map(mapSlots.map((s) => [neutralKey(s.key), s]))
   linkLabelSlots(kit, map)
@@ -160,6 +161,7 @@ export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = 
   // After the limits: a setting slot borrows the limit of the line the page prints it beside.
   settleSettingSlots(kit, { map })
   mainMenuRow(kit, mapOf, rowFit)
+  settlePageTitles(kit, { map, drives })
   whatElseChanges(kit)
   return kit
 }
@@ -255,6 +257,8 @@ export function coverageGate(kit, { map, readings = new Map() }) {
   parts.contactFieldsUnresolved = contactFieldChecks(kit, fail)
   // 6. Shown words from a slot declared nowhere (the orphan check, counted here too).
   parts.orphanTexts = kit.checks?.orphanTexts ?? 0
+  // 7. Every page has exactly one title slot (page-titles.mjs).
+  parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p) ? pageTitleChecks(kit, fail) : 0
   // How many shown text slots part 1 checked, so a gate at 0 over nothing is told from a covered kit.
   kit.coverage = { shownTextSlots: checked, parts, failures }
   for (const f of failures)

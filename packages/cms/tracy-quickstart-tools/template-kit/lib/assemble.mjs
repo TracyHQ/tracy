@@ -85,7 +85,8 @@ export async function assembleKit(o, out, tool) {
     map,
     readings,
     textFit: readIf(join(out, 'text-fit.json')) ?? {},
-    rowFit: readIf(join(out, 'row-fit.json')) ?? {}
+    rowFit: readIf(join(out, 'row-fit.json')) ?? {},
+    drives: readIf(join(out, 'field-drives.json')) ?? {}
   })
   kit.errors = kit.errors.filter((e) => !/^(list-limits-differ|slot-in-two-blocks)$/.test(e.kind))
   kit.checks.listLimitsDiffering = limitChecks({ blocks: kit.blocks, errors: kit.errors })

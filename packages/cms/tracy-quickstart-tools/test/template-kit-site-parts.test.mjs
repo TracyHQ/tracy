@@ -270,3 +270,13 @@ test('navigation groups: every menu block of the map, joined with what its colum
   )
   assert.equal(menuNavigationGroups({}, read).errors[0].field, 'site.navigationGroups')
 })
+
+test('a page title reading keeps the block that printed it and whether it is hidden from the eye', () => {
+  const read = h1Source({
+    h1s: [{ text: 'Swim with us', block: 'block-9', clipped: true }],
+    slotOf: () => ({ id: 'block-4.0' })
+  })
+  assert.equal(read.block, 'block-9')
+  assert.equal(read.clipped, true)
+  assert.equal(h1Source({ h1s: [{ text: 'Welcome' }] }).block, undefined)
+})

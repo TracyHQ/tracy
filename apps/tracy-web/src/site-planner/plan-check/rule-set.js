@@ -69,6 +69,7 @@ export const RULE_TITLES = [
     'R19',
     'A map button follows the brief address: kept and led to map:<address fact> when the brief has one, hidden otherwise'
   ],
+  ['r20', 'R20', 'Every kept page has a written title: the slot the kit measured as its title, not hidden'],
   ['r10h', 'R10h', 'Judgement items (needs reviewer): listed as skip']
 ]
 
