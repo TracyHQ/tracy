@@ -4,7 +4,13 @@ import { test } from 'node:test'
 
 import { crawlSite, extractLinks } from '../template-kit/lib/crawl.mjs'
 import { accountOfPath, decideExclusions, knownAccounts, pathPattern } from '../template-kit/lib/exclude.mjs'
-import { canonicalPath, pathOfRoute, slugOfPath, urlOfPath } from '../template-kit/lib/kit-paths.mjs'
+import {
+  canonicalPath,
+  pathOfRoute,
+  siteAddress,
+  slugOfPath,
+  urlOfPath
+} from '../template-kit/lib/kit-paths.mjs'
 import { applyExclusions, seedsOf } from '../template-kit/lib/read-pass.mjs'
 
 const SITE = 'http://site.example:8080'
@@ -36,6 +42,27 @@ test('links that are not pages are left out', () => {
     '/index.php/component/users/?view=login&return=x'
   ])
     assert.equal(canonicalPath(href, SITE), null, href)
+})
+
+test('an address of the site itself loses the host it was read on, so the kit never names the capture machine', () => {
+  // A shop prints its form actions and product picture links absolute, on the host the capture reached it at.
+  assert.equal(
+    siteAddress('http://site.example:8080/index.php/blog/82-a-post', SITE),
+    '/index.php/blog/82-a-post'
+  )
+  assert.equal(
+    siteAddress('http://site.example:8080/images/shop/c-82.jpg?v=2', SITE),
+    '/images/shop/c-82.jpg?v=2'
+  )
+  assert.equal(siteAddress('http://studio.example.test/images/a.png', SITE, ALIAS), '/images/a.png')
+  assert.equal(
+    siteAddress('/index.php/contact', SITE),
+    '/index.php/contact',
+    'a relative address is already a path'
+  )
+  assert.equal(siteAddress('https://elsewhere.example/page', SITE), null, 'another site is not this one')
+  assert.equal(siteAddress('mailto:hello@example.test', SITE), null)
+  assert.equal(siteAddress('', SITE), null)
 })
 
 test('paths turn into request addresses and file names', () => {
