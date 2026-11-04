@@ -7,6 +7,7 @@
 import { getEmDashEntry } from 'emdash'
 import { LOCALES } from './i18n'
 import { linkChecker, type PageRecord, type RecordTable } from './page-records'
+import { gateBlocks, linkHrefs } from './data-links.ts'
 import { withParents } from './parent-gate.ts'
 import { BLOG_CATEGORIES, postPath, type PostRow } from './posts'
 
@@ -63,6 +64,12 @@ export function liveLinks(request: Request, locale: string, urls: readonly unkno
 /** Whether a path is reachable: the page record it lands on is published (a path no record owns always is). */
 export async function childLive(request: Request, locale: string, path: string): Promise<boolean> {
   return (await liveLinks(request, locale, [path]))(path)
+}
+
+/** A Portable Text value without the links to pages that are off (`data-links.ts`): the words stay, plain. */
+export async function liveBlocks<T>(request: Request, locale: string, blocks: T): Promise<T> {
+  const live = await liveLinks(request, locale, linkHrefs(blocks))
+  return gateBlocks(blocks, live)
 }
 
 /** The posts whose own page is reachable: with Blog (or Gallery) unticked a list draws no card that leads to a 404. */

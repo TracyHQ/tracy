@@ -372,8 +372,8 @@
   "brand": {
     "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, from the kit's brand PR; a tool without it ignores this block): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none. Name the chrome entry the header and footer read (references/brand-and-pages.md).",
     "logoDark": {
-      "collection": "site",
-      "slug": "site",
+      "collection": "chrome",
+      "slug": "chrome",
       "field": "logo_dark",
       "label": "Logo for dark backgrounds"
     }

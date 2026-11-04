@@ -4,6 +4,7 @@ import { href, type Locale } from '@/lib/i18n'
 import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import type { Row } from '@/lib/content'
+import { liveLinks } from '@/lib/link-gate'
 
 interface Props {
   entry: Row
@@ -12,6 +13,7 @@ interface Props {
 const { entry, locale } = Astro.props
 const $s = stampFor(Astro.request, 'statistics', { id: entry.id, slug: entry.slug })
 const bg = mediaUrl(entry.background)
+const live = await liveLinks(Astro.request, locale, [entry.button_link])
 ---
 
 <section class="rs-section rs-stats" style={bg ? `--rs-stats-bg:url('${bg}')` : undefined}>
@@ -35,6 +37,6 @@ const bg = mediaUrl(entry.background)
 				</li>
 			))}
 		</ul>
-		{entry.button_title && <a class="rs-btn" href={href(locale, entry.button_link || '/')} {...$s('button_title')}>{String(entry.button_title).trim()}</a>}
+		{entry.button_title && live(entry.button_link) && <a class="rs-btn" href={href(locale, entry.button_link || '/')} {...$s('button_title')}>{String(entry.button_title).trim()}</a>}
 	</div>
 </section>
