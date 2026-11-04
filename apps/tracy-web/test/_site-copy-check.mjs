@@ -49,7 +49,7 @@ export function kit() {
             'block-2.2',
             'editorial.paragraph',
             200,
-            'Join our friendly gym and train with coaches who care about every single member of the club.',
+            'Join our friendly gym and train with coaches who care about every single member of the club, from the first visit on.',
             3
           ),
           text('block-2.3', 'editorial.paragraph', 60, 'A short line the plan hides.')
@@ -68,7 +68,7 @@ export function kit() {
                 'block-3.5',
                 'editorial.paragraph',
                 120,
-                'This place changed how I train every week, I recommend it to all.'
+                'This place changed how I train every week, I recommend it to all my friends and family.'
               )
             ],
             rows: [
@@ -79,7 +79,7 @@ export function kit() {
                     'block-3.5',
                     'editorial.paragraph',
                     120,
-                    'This place changed how I train every week, I recommend it to all.'
+                    'This place changed how I train every week, I recommend it to all my friends and family.'
                   )
                 ]
               },

@@ -7,6 +7,7 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { after, before, beforeEach, test } from 'node:test'
 import { readRun } from '../src/site-writer/bench-store.js'
+import { CHECKER_VERSION } from '../src/site-writer/copy-check/check-copy.js'
 import { scriptedModel } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import {
@@ -134,6 +135,8 @@ test(
       'type',
       'maxCharacters',
       'sample',
+      'demoChars',
+      'shape',
       'paragraphs',
       'bullets'
     ])
@@ -147,6 +150,8 @@ test(
             type: 'text',
             maxCharacters: 120,
             sample: 'Another long demo review sentence from the template sits right here.',
+            demoChars: { total: 68, lead: null, bullets: [] },
+            shape: { lead: false, points: 0, leadChars: null, pointChars: null },
             paragraphs: 1,
             bullets: 0
           }
@@ -252,7 +257,7 @@ test(
       const done = await readRun(pool, first.id)
       assert.match(lastUserText(model.requests[0]), /## Main menu: the dropdown slots/)
       assert.equal(done.status, 'succeeded', done.error)
-      assert.equal(done.rounds[0].checkResult.meta.checker, 'site-copy-check/5')
+      assert.equal(done.rounds[0].checkResult.meta.checker, CHECKER_VERSION)
 
       const second = await startRun(pool, menuKits.index, { plan: menuPlan() })
       menuKits.writeContentMap({ ...map, slots: [] })

@@ -35,8 +35,11 @@ The fixed part, given once:
 - **From the brief, only what the plan cites:** each cited fact as `{ id, field, value, evidence }`, where
   `evidence` is the quote the fact was read from, and the full text of every review the plan quotes.
 - **From the template kit, a slim view of each block the plan uses:** its `look` (what the block shows, in plain
-  words) and, per text slot, `id`, `role`, `type`, `maxCharacters`, the demo text `sample`, and `paragraphs` and
-  `bullets` (how many items the demo shows in that slot); for each list, its `rowSlots`. Also the footer column
+  words) and, per text slot, `id`, `role`, `type`, `maxCharacters`, the start of the demo text `sample`,
+  `demoChars` (the length of the whole demo text: `total`, its `lead` paragraph and each of its `bullets`),
+  `shape` (`lead`, `points`, `leadChars`, `pointChars { min, max }`: whether the demo is a lead paragraph followed
+  by points, and how long they are), and `paragraphs` and `bullets` (how many items the demo shows in that slot);
+  for each list, its `rowSlots`. Also the footer column
   headings: for each `site.footerMenu[].group`, the kit's navigation group of that id gives `titleSlot` (the kit
   slot id you write the heading under) and `heading` (the demo heading text).
 - **The two name slots the brand step hands over:** the home page's document title and meta description. You
@@ -72,7 +75,9 @@ copy file:
   footer line) is written once.
 - `text`: a string. When the kit shows several paragraphs or bullets for the slot (`paragraphs` or `bullets`
   above 1), a list of strings, one per item, in the count the plan's numbered `says` gives and never more than
-  the kit shows.
+  the kit shows. When `shape.lead` is true, the demo is a lead paragraph followed by short points: the first
+  string is the lead paragraph, and every string after it is one of the plan's numbered points of `says`, one per
+  point, each a short phrase like the demo points, not a sentence.
 - `factIds`: the slot's `factIds` from the plan, copied. Add a fact id only when a detail you wrote rests on a
   fact you were given that the plan did not list for the slot.
 - **Labels.** The plan's `text` on a label slot is a suggestion, not the final text. Keep it when it already fits
@@ -145,9 +150,12 @@ cutting it into something untrue, return the slot. Never pad it, never guess.
 
 - Count characters. A slot's limit is the smaller of the kit's `maxCharacters` and the plan's. For a list
   `text`, the limit is for all items joined with one space.
-- Do not ship thin copy. Aim near the length of the demo `sample`. When the demo is longer than 40 characters,
-  the floor is 60% of its length: a shorter text fails. A short heading stays short; a paragraph slot gets a
-  paragraph.
+- Write to the length of the demo. `sample` is only the start of the demo text: its length is in `demoChars`.
+  When the demo is longer than 40 characters, a text is written between 80% and 100% of the demo length, part by
+  part: the lead paragraph near `shape.leadChars`, each point near the length of the demo points
+  (`shape.pointChars`), the whole near `demoChars.total`. Never over the demo length, and never over
+  `maxCharacters`. A slot the plan gives fewer points than the demo shows is measured against the demo lead plus
+  that many demo points of average length. A short heading stays short; a paragraph slot gets a paragraph.
 - As many items as the kit shows, never more; fewer only when the plan's `says` gives fewer points.
 - The demo shows the room, not the words. Never reuse a demo sentence, and never a name from the demo
   business (its name, its people, the template's own name).
@@ -196,8 +204,9 @@ full text of earlier pages, and an interrupted run continues from it.
 - W02: Is every kept slot of the turn's pages written exactly once (or returned), footer headings included, no
   hidden slot written, no slot the plan does not have, and every label you left out one that fits its slot as it
   is? Is there one `pages` entry for each created legal page and one for `notFound`?
-- W03: Is every text within its limit, above its floor, with no more items than the kit shows? Is every `pages`
-  title at most 60 characters and no paragraph empty?
+- W03: Is every text within its limit and, when its demo is over 40 characters, between 80% and 100% of the demo
+  length (`demoChars`), its lead and its points each near the same parts of the demo, with no more items than the
+  kit shows? Is every `pages` title at most 60 characters and no paragraph empty?
 - W04: Does every number, time, price, phone, email and web address appear in a fact the slot cites?
 - W05: Is every quote an exact passage of a review you were given?
 - W06: Does any sentence share five words in a row with another sentence on the site? Check the notebook.
@@ -212,6 +221,8 @@ full text of earlier pages, and an interrupted run continues from it.
 - W13: Is every `pages` title a heading of its own, with no " | " and not ending with the business name?
 - W14: Does a created privacy page have at least five paragraphs covering at least four of: data collected, photos
   and videos, sharing, how long data is kept, rights, contact?
+- W15: When `shape.lead` is true, is the first item the lead paragraph near `shape.leadChars`, and every item after
+  it one short point, a phrase and not a sentence, at most one and a half times the longest demo point?
 - Did you change anything the plan decided? Did you add any point the plan does not make?
 
 ## After you answer

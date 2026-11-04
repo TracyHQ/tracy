@@ -7,9 +7,10 @@ import { WRITER_PROMPT_FILE, writerPrompt } from '../src/site-writer/writer-prom
 
 // The owner approved this prompt on 2026-11-03 after reading real output on dev (#334), and ruled the plan label rule
 // in on 2026-11-04 (a plan label is a suggestion the writer keeps or rewrites, a created page title is its on-page
-// heading, a created privacy page is a complete policy); its bytes change only with a new
+// heading, a created privacy page is a complete policy), and on 2026-11-04 ruled that a text follows the demo's length
+// part by part, between 80% and 100% of it, in the demo's lead and points shape; its bytes change only with a new
 // approval from the owner, recorded in ADR 0042.
-const APPROVED_SHA256 = '831d4cc8be56a702ebae8dce902cc45e890c0832a7c9f067286bc1f85f23a265'
+const APPROVED_SHA256 = 'b7dc79e3f565286c8ee1ded219b3f362dd94f5f415635e23be718eabd108193a'
 
 test('the shipped writer prompt is the approved one, byte for byte', () => {
   const bytes = readFileSync(WRITER_PROMPT_FILE)
@@ -43,7 +44,16 @@ test('the prompt has an instruction for every copy check rule and its thresholds
   const { text } = writerPrompt()
   for (const [, id] of RULE_TITLES)
     assert.match(text, new RegExp(`^- ${id}: `, 'm'), `self-check names ${id}`)
-  for (const s of ['125 characters', 'at most 60', 'at most 160', '60%', '40 characters', 'five words'])
+  for (const s of [
+    '125 characters',
+    'at most 60',
+    'at most 160',
+    '80%',
+    '100%',
+    '40 characters',
+    'demoChars',
+    'five words'
+  ])
     assert.ok(text.includes(s), `prompt mentions ${s}`)
   assert.match(text, /word for word/)
   assert.match(text, /this section shows/)

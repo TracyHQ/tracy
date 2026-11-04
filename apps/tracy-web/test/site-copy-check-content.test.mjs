@@ -12,7 +12,8 @@ test('W04 fails numbers, times, prices, phones, emails and links the cited facts
   breaks(
     'W04',
     (c) => {
-      slotOf(c, 'block-2.2').text += ' Join for 40 dirhams.'
+      slotOf(c, 'block-2.2').text =
+        'Small group classes run every day. Open 06:00 to 21:00, Monday to Saturday, call +000 555 0100. Join for 40 dirhams.'
     },
     /block-2\.2.*40/
   )
@@ -26,7 +27,7 @@ test('W04 fails numbers, times, prices, phones, emails and links the cited facts
   breaks(
     'W04',
     (c) => {
-      slotOf(c, 'block-2.2').text = `${PAD}Call +000 555 0199 to reserve.`
+      slotOf(c, 'block-2.2').text = `${PAD}Call +000 555 0199 to reserve a place.`
     },
     /0199/
   )
@@ -235,7 +236,7 @@ test('W10 fails sentences that describe the page or section itself', () => {
   breaks(
     'W10',
     (c) => {
-      slotOf(c, 'block-3.6').text = 'Here you will find the early sessions of the club.'
+      slotOf(c, 'block-3.6').text = 'Here you will find the early sessions of the club, before work.'
     },
     /here you will find/i
   )

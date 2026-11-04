@@ -18,6 +18,10 @@ Amended a fifth time (2026-11-04, owner's ruling): a plan label is a suggestion 
 (section 7), a created page's title is its on-page heading, never a browser title (section 8), and a created privacy
 page is a complete policy (section 9). The prompt gained these rules; its sha256 is now
 `831d4cc8be56a702ebae8dce902cc45e890c0832a7c9f067286bc1f85f23a265`. The checker version moved to `site-copy-check/5`.
+Amended a sixth time (2026-11-04, owner's ruling): a text follows the demo's length part by part, between 80% and
+100% of it, and a slot whose demo is a lead paragraph followed by points is written in that shape (section 10). The
+prompt's sha256 is now `b7dc79e3f565286c8ee1ded219b3f362dd94f5f415635e23be718eabd108193a`; the checker version moved
+to `site-copy-check/6`.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 
@@ -110,7 +114,7 @@ on every run. Bump `CHECKER_VERSION` on any change to a rule, a threshold, a fai
 |---|---|
 | W01 | the file does not match section 1 (including the `pages` entries) |
 | W02 | a kept slot is missing (and not returned) or written twice; a hidden slot has text; a slot is unknown to the plan; a label differs from the plan's words; the owner does not match (label or not); a `pages` entry is missing (and not returned), written twice or unknown to the plan; the plan gives one slot different text in two places (two labels, or a label and a writer slot) |
-| W03 | text is empty, over the limit, under the floor, or has more paragraphs than the kit allows; a `pages` title is over 60 characters or empty, or a `pages` paragraph is empty |
+| W03 | text is empty, over the limit, under the floor or over the demo (section 10), or has more paragraphs than the kit allows; a `pages` title is over 60 characters or empty, or a `pages` paragraph is empty |
 | W04 | a number, time, price, phone, email or link is not in the facts the slot cites (a `pages` text cites no fact: see W04 details) |
 | W05 | a quoted review passage is not an exact passage of a review in the brief |
 | W06 | a sentence equals or nearly equals another sentence on the site |
@@ -123,9 +127,9 @@ on every run. Bump `CHECKER_VERSION` on any change to a rule, a threshold, a fai
 Thresholds and decisions (named constants in the code):
 
 - **W03 limit.** The kit and the plan give a character limit; the smaller applies. For a slot with several
-  paragraphs the limit applies to the total of all items joined with one space. **Floor:** 60% of the demo text
-  length (`FLOOR_RATIO`), only when the demo text is longer than 40 characters (`FLOOR_DEMO_MIN`), never above the
-  limit. Paragraph count allowed: the larger of the kit's `paragraphs` and `bullets`, at least 1.
+  paragraphs the limit applies to the total of all items joined with one space. **Floor and ceiling:** section 10
+  (the floor was 60% of the cut sample until `site-copy-check/6`). Paragraph count allowed: the larger of the kit's
+  `paragraphs` and `bullets`, at least 1; for a lead and points slot, the lead plus every point.
 - **Footer heading limits.** The limit is the kit slot's `maxCharacters` (the smaller of it and the plan's, as for
   any slot). When the kit lists no limit for the `titleSlot`, the fallback is `HEADING_LIMIT_FACTOR` (2) times the
   demo heading length, at least `HEADING_LIMIT_MIN` (20) characters.
@@ -251,6 +255,35 @@ plan's `says` stays one input and the writer does the rest.
   fails a body under 5 paragraphs, or one that names fewer than 4 of six themes by keyword (collect or data; photo,
   video or image; share or third party; retain, keep or retention; right, request or delete; contact). No site check
   measure is added.
+
+### 10. A text follows the demo's length and shape (2026-11-04)
+
+Measured on the frozen run of JA Boxing 1.0.10: of 60 writer slots whose demo text is over 40 characters, 36 were under
+60% of it (median 55%). The kit cut every `sample` at 60 characters, and the writer's "aim near the sample, floor
+60%" and W03 both measured that cut sample. A step description whose demo is a lead paragraph and five short bullets
+came out as three equal sentences of 78 to 97 characters, which `joinItems()` printed as one paragraph and two long
+bullets.
+
+- **The numbers.** The kit gives every text slot `demoChars: { total, lead, bullets[] }`, measured on the uncut demo
+  text. `apps/tracy-web/src/lib/site-copy/slot-shape.js` reads them (or, for an older kit without them, measures the
+  `sample` as W03 did: the whole sample less a closing ellipsis, the lines before the first `- ` line as the lead) and
+  derives `shape: { lead, points, leadChars, pointChars { min, max } }`. The writer's input and the copy check use the
+  same module. The writer gets `demoChars`, `shape` and only the first 160 characters of the `sample`.
+- **The prompt.** A text whose demo is over 40 characters is written between 80% and 100% of the demo length, part by
+  part (the lead near `leadChars`, each point near the demo points, the whole near `total`), never over the demo and
+  never over `maxCharacters`. The top is the demo itself, never 110%. When `shape.lead` is true, `items[0]` is the
+  lead paragraph and every later item one of the plan's numbered points, a short phrase, not a sentence.
+- **W03.** For a demo over `SHORT_DEMO_MAX` (40) characters: the total between `DEMO_FLOOR_RATIO` (80%) of the demo
+  and the demo plus `DEMO_CEILING_TOLERANCE` (3 characters for rounding), never above the slot limit (cause `under`
+  or `over-demo`). For a lead and points slot, also the lead against the demo lead, and the average point against
+  the average demo point, with the same bounds. A slot written with fewer points than the demo shows (the plan gives
+  fewer) is compared with the demo lead plus that many average demo points, so a shorter list is never pushed into
+  longer sentences. A short heading (demo of 40 characters or less) keeps only its limit.
+- **W15** (`rules-shape.js`), only when `shape.lead` is true: fails a slot with fewer than 2 items, a lead outside
+  80% to 100% (+3) of the demo lead, a point of more than one sentence, or a point over `POINT_STRETCH_MAX` (1.5)
+  times the longest demo point.
+- `joinItems()` is unchanged: it is right once the input is shaped. The site check's `text-fill` (ADR 0044) measures
+  the result on the page.
 
 ## Consequences
 

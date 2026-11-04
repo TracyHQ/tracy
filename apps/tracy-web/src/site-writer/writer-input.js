@@ -6,7 +6,9 @@
 //   evidence } where `evidence` lists the quotes the fact was read from; and the full text of every review the plan
 //   quotes (a `brief.reviews[]` entry whose id the plan names, or that names a cited fact as its own).
 // - From the kit, a slim view of every block the plan uses (every block decision but "hide", on shared blocks and
-//   kept pages): its look text and, per text slot, id, role, type, maxCharacters, sample, paragraphs and bullets; per
+//   kept pages): its look text and, per text slot, id, role, type, maxCharacters, a preview of the sample (its first
+//   SAMPLE_PREVIEW characters), demoChars and shape (lib/site-copy/slot-shape.js: the demo's lengths, which the copy
+//   check judges against; 2026-11-04), paragraphs and bullets; per
 //   list, its row slots and the slots of demo rows the row slots do not name. Also the footer column headings
 //   (the kit's navigation group of each `site.footerMenu[].group`) and the two name slots the brand step hands over
 //   (`kit.site.nameSlots` printed at the document title and the meta description).
@@ -16,6 +18,7 @@
 //   sample, role, limit and where the slot prints, so the writer keeps the label or rewrites it (2026-11-04).
 // No image: the writer reads the block look text instead.
 import { mainMenuOf } from '../lib/site-copy/main-menu.js'
+import { demoCharsOf, slotShape } from '../lib/site-copy/slot-shape.js'
 import { planLabelSlots } from './plan-labels.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
@@ -90,12 +93,25 @@ const slimSentences = (groups) =>
     endWithASpace: arr(g.slots).filter((_, i) => arr(g.joins)[i] === ' ' && !arr(g.kept)[i])
   }))
 
+/** The writer reads the demo's length in `demoChars` and `shape`; of the sample it needs only enough to see what kind of text it is. */
+export const SAMPLE_PREVIEW = 160
+const preview = (sample) => {
+  const text = typeof sample === 'string' ? sample : ''
+  return text.length > SAMPLE_PREVIEW ? `${text.slice(0, SAMPLE_PREVIEW).trimEnd()}…` : text
+}
+const demoCharsFor = (s) => {
+  const { total, lead, bullets } = demoCharsOf(s)
+  return { total, lead, bullets }
+}
+
 const slimSlot = (s) => ({
   id: s.id,
   role: s.role ?? null,
   type: s.type ?? null,
   maxCharacters: s.maxCharacters ?? null,
-  sample: s.sample ?? '',
+  sample: preview(s.sample),
+  demoChars: demoCharsFor(s),
+  shape: slotShape(s),
   paragraphs: s.paragraphs ?? 0,
   bullets: s.bullets ?? 0,
   ...(arr(s.pageTitleOf).length ? { pageTitleOf: s.pageTitleOf } : {})
