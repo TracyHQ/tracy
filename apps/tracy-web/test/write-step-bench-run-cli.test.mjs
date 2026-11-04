@@ -8,6 +8,7 @@ import { after, test } from 'node:test'
 import { runCli } from '../src/write-step/bench-cli.js'
 import { memoryStore } from './_write-step-bench.mjs'
 import { brandFile, brandKit, brandSite, frozenWithBrand } from './_write-step-brand.mjs'
+import { frozenWithPictures, HERO, pictureKit, pictureSite } from './_write-step-pictures.mjs'
 import { copy, fakeSite, frozenFiles, KIT, memoryRunStore } from './_write-step-run.mjs'
 
 const SITE = 'write-bench-abc.sites.example'
@@ -277,4 +278,45 @@ test('run takes a brand file and writes it before the contract call', async () =
   assert.equal(code, 0)
   assert.equal(site.of('site.identity', 'set').length, 1)
   assert.equal(site.of('content.contract', 'apply').length, 1)
+})
+
+test('run takes a picture package, relative to where it is called, and its files relative to the package', async () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'write-step-pictures-kit-'))
+  writeFileSync(path.join(dir, 'template-kit.json'), JSON.stringify({ ...made, site: pictureKit().doc.site }))
+  const kits = new Map([['demo-gym/j6@1.0.0', { id: 'demo-gym/j6/1.0.0', dir, platform: 'joomla' }]])
+  const site = pictureSite()
+  const frozen = frozenWithPictures()
+  const out = []
+  const runs = memoryRunStore()
+  try {
+    const code = await runCli(runArgs(frozen.files, ['--pictures-file', 'mapping.json']), {
+      runs,
+      store: memoryStore([benchSite()]),
+      index: kits,
+      makeDoor: () => site.door,
+      out: (l) => out.push(l),
+      err: (l) => out.push(l),
+      sleep: async () => {},
+      cwd: frozen.dir
+    })
+    assert.equal(code, 0, out.join('\n'))
+    assert.equal(site.uploads.get(HERO.entry.sitePath), HERO.bytes.toString('base64'))
+    const { report } = await runs.read('run-1')
+    assert.equal(report.inputs.pictures.file, 'mapping.json')
+    assert.equal(report.slots.find((s) => s.slot === 'block-2.pic').status, 'written')
+  } finally {
+    frozen.done()
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('without --pictures-file a run sends no upload', async () => {
+  const h = harness()
+  const frozen = frozenFiles()
+  try {
+    assert.equal(await h.cli(runArgs(frozen.files)), 0)
+    assert.ok(!h.site.calls.some((c) => c.action === 'media.upload'))
+  } finally {
+    frozen.done()
+  }
 })

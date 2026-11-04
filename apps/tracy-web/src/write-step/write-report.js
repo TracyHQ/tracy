@@ -5,6 +5,7 @@
 // `readFrom` (site-check/read-back.js).
 import { contentMapKey } from '../site-writer/contract-mapping.js'
 import { refusalWords } from './contract-write.js'
+import { PICTURE_OWNER } from './picture-package.js'
 
 export const REPORT_VERSION = 'site-write-report/1'
 
@@ -94,9 +95,9 @@ function extraLines(extras, owners, settled) {
  * The slot lines of a report.
  * @param {{ owners: Map<string, object>, unowned: object[], extras: object, written: Iterable<string>,
  *   refused: Map<string, object>, routed?: Map<string, string>, deferred?: Map<string, string>,
- *   ordered?: Record<string, string>, brandLines?: object[], settled?: Map<string, object> }} input `ordered`: what the
- *   mapping sent, by content map key; `brandLines`: the brand stage's own lines, which stand for the brand's claims;
- *   `settled`: what the page settings stage did, by line slot
+ *   ordered?: Record<string, string>, brandLines?: object[], pictureLines?: object[], settled?: Map<string, object> }} input
+ *   `ordered`: what the mapping sent, by content map key; `brandLines` and `pictureLines`: each stage's own lines, which
+ *   stand for its claims; `settled`: what the page settings stage did, by line slot
  */
 export function slotLines({
   owners,
@@ -108,12 +109,16 @@ export function slotLines({
   deferred = new Map(),
   ordered = {},
   brandLines = [],
-  settled = new Map()
+  settled = new Map(),
+  pictureLines = []
 }) {
   const done = { written: new Set(written), refused, routed, deferred, ordered, settled }
   return [
     ...brandLines,
-    ...[...owners.values()].filter((c) => c.owner !== 'brand').map((claim) => claimLine(claim, done)),
+    ...pictureLines,
+    ...[...owners.values()]
+      .filter((c) => c.owner !== 'brand' && c.owner !== PICTURE_OWNER)
+      .map((claim) => claimLine(claim, done)),
     ...unowned.map((u) =>
       line(u.slot, contentMapKey(u.slot), null, 'skipped', 'no owner: a slot in a kept block no file fills')
     ),
