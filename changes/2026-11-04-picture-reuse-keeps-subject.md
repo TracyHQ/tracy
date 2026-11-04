@@ -1,0 +1,2 @@
+- **The picture bench keeps the main subject in reused gallery crops: a reuse or any-photo region must hold the labelled subject (or a whole head), or cover most of a photo with no labelled subject, and the looker may name a new fault, "no clear subject", for a crop of only foliage, fence, wall, sky or empty ground, also on any-real frames**: Claude, for Akemi · #336 · `feat/picture-bench` · 2026-11-04
+  **Affects:** developers and operators of the picture bench only (the looker prompt hash changes, so earlier looks are asked again). No customer route or screen.

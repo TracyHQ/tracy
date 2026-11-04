@@ -204,6 +204,66 @@ The script-only grader of a site copy file (`site-copy-check/1`, rules W01 to W1
 numbers and never edits the writer's text.
 _Avoid_: copy review, linter
 
+**Picture manifest**:
+The file `site-pictures/1` the picture step produces for a whole site: per planned frame, where its picture came from
+(owner photo, extended photo, drawing, icon, initials, hidden, twin), the cut file with its size, crop, enlargement and
+hash, and what the looker saw; plus template level pictures, returns to planner and cost
+([ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md)).
+_Avoid_: image list, picture plan
+
+**Colour role**:
+The name of a colour a code drawn picture (an initials tile, an icon) is painted in, `accent`, `on-accent`, `text` or
+`on-dark`, never a colour value. The picture step records roles and draws only previews; the write step paints them
+from the Design system ([ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md) section 1a).
+_Avoid_: brand colour, recolourable
+
+**Picture check**:
+The script-only grader of a picture manifest (`site-pictures-check/1`, rules P01 to P13). It reads the files' recorded
+hashes and sizes, never judges how a picture looks, and never changes a picture.
+_Avoid_: image review, picture linter
+
+**Picker**:
+The AI role that looks at the owner's photos once, as labelled thumbnails, and chooses one for every frame that needs
+a specific picture. It never sees the template's demo pictures.
+_Avoid_: selector, matcher
+
+**Looker**:
+The AI role that checks each finished picture on its own, in a fresh context, against the plan's words, names its
+faults from a fixed list and writes one sentence of what the picture shows. A model of another maker than the picker.
+_Avoid_: reviewer, judge
+
+**Drawer**:
+The image model role that draws a specific picture no owner photo fits, from a fixed template filled only with the
+plan's words, or extends a real owner photo sideways for a wide band. It never draws a person or an any-real frame.
+_Avoid_: generator, illustrator
+
+**Cut-out**:
+A picture frame whose figure stands on the page with no background of its own. Its figure is drawn on a flat plain
+ground of one known colour, and code removes that ground, leaving a PNG with alpha. No owner photo is cut out.
+_Avoid_: background removal, matte, sticker
+
+**Dark overlay**:
+A black layer of recorded strength code bakes into a picture whose frame has text over it, when the picture is too
+bright for light text; the entry says `darkened`.
+_Avoid_: dimming, tint
+
+**Template overlay**:
+The layer a template's own CSS paints over a picture whatever picture is put in it (a covering `::before` with a dark
+colour, a brightness filter), read from the quickstart, recorded with its colour and strength. A frame whose template
+overlay is strong enough is never given a dark overlay of ours.
+_Avoid_: mask, scrim, dark overlay (that is the one code bakes in)
+
+**Frame surface**:
+What sits on top of a picture frame on the site: whether the block's text sits over it (`textOver`, from the kit, or
+derived when the picture fills its block) and the template overlay. Picture step data computed once per kit version
+and quickstart; never a change of the kit.
+_Avoid_: frame context, frame style
+
+**Fallback ladder**:
+The fixed order a rejected frame walks down: draw, one redraw, next photo, fewer rows, hide, return to planner. Every
+rung it took is recorded. A demo picture is never kept, a person is never drawn, an any-real frame never drawn.
+_Avoid_: retry policy, plan B
+
 ---
 
 **Read next:** [`SYSTEM.md`](SYSTEM.md) (how the system runs) · [`CLAUDE.md`](CLAUDE.md) (boundary
