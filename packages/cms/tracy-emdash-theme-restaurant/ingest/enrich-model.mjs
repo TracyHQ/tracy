@@ -9,6 +9,7 @@
 // It also adds the `masthead` list: the title, description and background of the banner under the menu,
 // which Joomla keeps in the params of module 99 (mod_jamasthead) per menu item, not in any article.
 import { readFileSync, writeFileSync } from 'node:fs'
+import { decodeWith, stripTags } from './text.mjs'
 
 const [sectionsFile, modelFile, inventoryFile] = process.argv.slice(2)
 if (!sectionsFile || !modelFile || !inventoryFile) {
@@ -19,11 +20,8 @@ const sections = JSON.parse(readFileSync(sectionsFile, 'utf8'))
 const model = JSON.parse(readFileSync(modelFile, 'utf8'))
 const inventory = JSON.parse(readFileSync(inventoryFile, 'utf8'))
 const mod = (id) => sections.custom.find((m) => String(m.id) === String(id))?.html ?? ''
-const decode = (s) => s.replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ')
-const text = (html) =>
-  decode(html.replace(/<[^>]+>/g, ' '))
-    .replace(/\s+/g, ' ')
-    .trim()
+const decode = decodeWith({ '&amp;': '&', '&nbsp;': ' ' })
+const text = (html) => decode(stripTags(html, ' ')).replace(/\s+/g, ' ').trim()
 
 // The demo logo is design, not content: it ships as public/brand/logo.png (+ small-logo.png) and is the default slot
 // of <BrandLogo>; `logo_dark` stays empty until a customer gives one.

@@ -8,6 +8,7 @@
 //   node ingest/build-contract.mjs --site http://127.0.0.1:18301 [--out qa.contract.json]
 // Run it from the package root after `node tools/qa-contract.mjs init source/snapshot qa.contract.json --config template.config.json`.
 import { readFileSync, writeFileSync } from 'node:fs'
+import { decodeWith, stripTags } from './text.mjs'
 import { launchBrowser } from '../tools/qa-browser.mjs'
 
 const args = process.argv.slice(2)
@@ -215,13 +216,16 @@ const PAGES_OF = {
 // page each (P7 full scope). The source file of an article is found by its <title>: Joomla's numbered folder names are
 // stale (`2-8-habits-…` is "4 Habits…"), the title is what the source says.
 const SEED = JSON.parse(readFileSync('seed/seed.json', 'utf8'))
-const decode = (t) =>
-  t
-    .replace(/&#0?39;|&apos;/g, "'")
-    .replace(/&#8217;|&rsquo;/g, '\u2019')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .trim()
+const decodeEntities = decodeWith({
+  '&#39;': "'",
+  '&#039;': "'",
+  '&apos;': "'",
+  '&#8217;': '\u2019',
+  '&rsquo;': '\u2019',
+  '&amp;': '&',
+  '&quot;': '"'
+})
+const decode = (t) => decodeEntities(t).trim()
 const srcTitles = new Map()
 for (const f of contract.source.files)
   if (/^index\.php\/(blog\/\d+-[a-z-]+\/\d+-|gallery\/\d+-sample-album)[^/]*\/index\.html$/.test(f.path)) {

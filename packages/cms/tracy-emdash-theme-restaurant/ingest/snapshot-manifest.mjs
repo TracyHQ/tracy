@@ -24,7 +24,13 @@ const sha = (p) =>
     .digest('hex')
 const have = new Set(walk(dir))
 if (cmd === 'write') {
-  writeFileSync(file, [...have].sort().map((p) => `${sha(p)}  ${p}`).join('\n') + '\n')
+  writeFileSync(
+    file,
+    [...have]
+      .sort()
+      .map((p) => `${sha(p)}  ${p}`)
+      .join('\n') + '\n'
+  )
   console.log(`snapshot-manifest: ${have.size} files`)
 } else {
   const want = Object.fromEntries(
