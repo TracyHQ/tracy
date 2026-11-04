@@ -56,6 +56,22 @@ test('latest turn that changed the site: Undo, and the line names the change as 
   assert.equal(whatOf(card.turn, say), 'Content · a page or post')
 })
 
+test('a write to the static front page reads as the home page through the turns door, never by its demo title (#257)', () => {
+  // Survey 04/11/2026: the door sent `front: true`, the card's reading dropped it, and the card said
+  // "Content · “Read the latest News + Blog”" for a home page hero edit.
+  const front = {
+    ...POST42,
+    target: { kind: 'post', id: '97', title: 'Read the latest News + Blog', front: true }
+  }
+  const a = answerOf([row(3, { content: [front], undo: { state: 'available', latest: true, reasons: [] } })])
+  const card = cardOf(a, 3)
+  assert.equal(card.turn.content[0].target.front, true)
+  assert.equal(whatOf(card.turn, say), 'Content · the home page')
+  const other = { ...POST42, target: { kind: 'post', id: '97', title: 'About', front: 'yes' } }
+  const b = answerOf([row(3, { content: [other], undo: { state: 'available', latest: true, reasons: [] } })])
+  assert.equal('front' in cardOf(b, 3).turn.content[0].target, false, 'only true marks it')
+})
+
 test('an older turn: Go back to here, counting the later turns it sweeps along', () => {
   const a = answerOf([
     row(1, { files: { count: 1, commits: ['a'.repeat(40)], zones: { design: 1 } } }),

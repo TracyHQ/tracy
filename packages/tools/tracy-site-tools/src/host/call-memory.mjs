@@ -408,6 +408,7 @@ export function createCallMemory(opts = {}) {
    *   titles: Map<string, string>, front: number | null, drift: Set<string>,
    *   receipts: Map<string, { applyIds: string[], ok: Set<string>, unknown: Set<string>, idMap: Map<string, string>, records: Map<string, Map<string, number>>, unknownRecords: Map<string, Set<string>> }>,
    *   wp: Map<string, { turn: number, base: string, n: number }>,
+   *   named: Map<string, { turn: number, id: string }>,
    *   confirms: Map<string, { askedAt: number, said: 'yes' | 'no' | null, own: boolean, facts: string[], yesAt: number, intent: 'delete' | 'hide' | null, typed?: boolean }>,
    *   declined: number,
    *   refused: Map<string, { code: string, error: string, next: string | null, turn: number, generation: number, label: string }>,
@@ -455,6 +456,7 @@ export function createCallMemory(opts = {}) {
         partKeys: new Map(),
         receipts: new Map(),
         wp: new Map(),
+        named: new Map(),
         confirms: new Map(),
         declined: 0,
         refused: new Map(),
@@ -1599,6 +1601,40 @@ export function createCallMemory(opts = {}) {
       const base = mint(prefix).slice(prefix.length + 1)
       s.wp.set(key, { turn: s.turn, base, n: 1 })
       return `${prefix}-${base}-1`
+    },
+
+    /**
+     * The apply id a write the MODEL named is sent under: its name with this turn's mint after it, the
+     * same for every write of the turn that gives that name, and kept in `idMap` so an `apply.revert` of
+     * the name reaches it (`normalize.mjs` `receipts`).
+     *
+     * 🔒 A NAME THE MODEL CHOSE IS NOT UNIQUE: IT CHOOSES IT AGAIN. "change our phone everywhere" on dev's
+     * elite-smiles-dental named its tel: link fix `phone-link-109` on 29/10 and again on 04/11/2026; the two
+     * turns shared one id, so the plugin's `apply.revert` of it would undo both, and the Undo card said "mixed
+     * with another request's" (SHARED_CHANGE, cause apply-id). Dev, 30 days to 04/11: 38 of 854 write turns
+     * held an id another turn also wrote under (`doi-tieu-de-bai-107` in three, `contact-record` on two sites).
+     * A conversation with no session keeps the name (nothing remembers it to map a revert).
+     * @param {unknown} sessionId
+     * @param {unknown} label
+     * @param {string} given - the `apply_id` the model sent.
+     * @returns {string}
+     */
+    ownApplyId(sessionId, label, given) {
+      if (!named(sessionId) || given === '') return given
+      const s = session(sessionId)
+      const key = `${labelKey(label)}\n${given}`
+      const held = s.named.get(key)
+      if (held !== undefined && held.turn === s.turn) return held.id
+      const id = `${given.slice(0, 60)}-${mint('n').slice(2)}`
+      s.named.set(key, { turn: s.turn, id })
+      const r = receiptsOf(sessionId, label)
+      r.idMap.set(given, id)
+      while (r.idMap.size > MAX_RECEIPTS * 2) {
+        const oldest = r.idMap.keys().next().value
+        if (oldest === undefined) break
+        r.idMap.delete(oldest)
+      }
+      return id
     },
 
     /**

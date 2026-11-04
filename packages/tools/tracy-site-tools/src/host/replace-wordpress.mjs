@@ -40,7 +40,6 @@ import {
   REPLACE_CALL,
   REPLACE_WHY,
   clip,
-  dialDigits,
   dryRunAnswer,
   followHref,
   isEmail,
@@ -2889,65 +2888,15 @@ function factIn(text, tel) {
 }
 
 /**
- * Do two digit runs dial the same number? Equal, or equal once a national trunk prefix (`0`, `8`) on
- * one side meets a country code (1–3 digits) or nothing on the other, with at least seven digits in
- * common: `8 800 550-67-89` is `tel:+78005506789`, `0909 123 456` is `tel:+84909123456`. Two area
- * codes (`495…` against `812…`) never pass.
- * @param {string} a
- * @param {string} b
- */
-function sameNumber(a, b) {
-  if (a === b) return a.length >= 7
-  let k = 0
-  while (k < a.length && k < b.length && a[a.length - 1 - k] === b[b.length - 1 - k]) k += 1
-  if (k < 7) return false
-  const ha = a.slice(0, a.length - k)
-  const hb = b.slice(0, b.length - k)
-  const trunk = (/** @type {string} */ h) => h === '' || h === '0' || h === '8'
-  const country = (/** @type {string} */ h) => /^[1-9]\d{0,2}$/.test(h)
-  return (trunk(ha) && (trunk(hb) || country(hb))) || (trunk(hb) && country(ha))
-}
-
-/**
- * The href a changed phone number or e-mail address carries with it, or null (`followHref` in the
- * core, which compares digits exactly).
- *
- * 🔒 THE LINK DIALS THE NUMBER IN ITS INTERNATIONAL FORM, THE PAGE SHOWS THE LOCAL ONE. Measured on
- * ja-business WordPress (header and footer parts): `<a href="tel:+78005506789">8 800 550-67-89</a>` —
- * `7` is the country code, `8` the trunk prefix, so the exact-digits rule left both links dialling the
- * old number after the hotline changed (the F3 prototype had followed them).
- *
- * 🔒 A NEW NUMBER WRITTEN THE WAY THE OLD ONE WAS KEEPS THE LINK'S INTERNATIONAL FORM. The hotline's
- * last digits changing (`8 800 550-67-89` → `8 800 550-67-00`) dials `tel:+78005506700`, as the link
- * did before; only a number of another shape (`0909 123 456`, another length or trunk) is linked as
- * written, since its country cannot be read off the old link.
+ * The href a changed phone number or e-mail address carries with it, or null: the core's `followHref`,
+ * the one rule of the three engines since 04/11/2026 (its international-form and trunk notes moved
+ * there with it).
  * @param {string} href
  * @param {string} find
  * @param {string} replace
  */
 export function followLink(href, find, replace) {
-  const exact = followHref(href, find, replace)
-  if (exact !== null) return exact
-  const h = href.trim()
-  if (!/^tel:/i.test(h) || !isPhone(find) || !isPhone(replace)) return null
-  const hd = dialDigits(h)
-  const fd = dialDigits(find)
-  const rd = dialDigits(replace)
-  if (!sameNumber(hd, fd)) return null
-  let k = 0
-  while (k < hd.length && k < fd.length && hd[hd.length - 1 - k] === fd[fd.length - 1 - k]) k += 1
-  const country = hd.slice(0, hd.length - k)
-  const trunk = fd.slice(0, fd.length - k)
-  if (
-    /^\s*tel:\s*\+/i.test(h) &&
-    /^[1-9]\d{0,2}$/.test(country) &&
-    (trunk === '0' || trunk === '8') &&
-    !replace.trim().startsWith('+') &&
-    rd.length === fd.length &&
-    rd.startsWith(trunk)
-  )
-    return `tel:+${country}${rd.slice(trunk.length)}`
-  return `tel:${replace.trim().startsWith('+') ? '+' : ''}${rd}`
+  return followHref(href, find, replace)
 }
 
 /**

@@ -3082,6 +3082,43 @@ test(
 )
 
 test(
+  'content.read view=pages on a site in forty languages, with no language or link: its default language, whole, and the answer names it',
+  opts,
+  async () => {
+    const { pool } = db
+    // Dev 04/11/2026 (EmDash Business, 40 languages): every language took 53.9 s and was cut short; the
+    // default language alone was 3.1 s and whole (`content-pages.js` `oneLanguageOf`).
+    const locales = [
+      'en-GB',
+      ...'af be bg ca cs cy da de el es et fi fr ga hr hu it ja ka lo lt lv ms nb nl pl pt ro ru sk sl sr sv ta th tr uk vi zh'.split(
+        ' '
+      )
+    ]
+    const cowork = wideCowork(800, { locales, titleBytes: 10 })
+    const harnessed = harness(pool, { fetchImpl: cowork.fetchImpl })
+    await sealedJoomlaSite(pool)
+
+    const doc = await (await contentRead(harnessed, 'owner@x.y', { view: 'pages' })).json()
+    assert.deepEqual(validateContent(doc), [])
+    assert.equal(doc.locale, 'en-GB')
+    assert.equal(doc.truncated, false)
+    assert.equal(doc.pages.length, 20, 'every page of the default language: 800 over 40 languages')
+    assert.ok(doc.pages.every((page) => page.locale === 'en-GB'))
+    assert.deepEqual(doc.later?.params, { changedSince: doc.version, locale: 'en-GB' })
+    assert.deepEqual(
+      cowork.asked.map((params) => params.locale ?? null),
+      [null, 'en-GB'],
+      'one listing names the languages, then the default language alone'
+    )
+
+    // A pasted link still walks what it needs (`localeOfLink`), and a named language is that language.
+    const vi = await (await contentRead(harnessed, 'owner@x.y', { view: 'pages', locale: 'vi' })).json()
+    assert.equal(vi.locale, undefined)
+    assert.ok(vi.pages.length > 0 && vi.pages.every((page) => page.locale === 'vi'))
+  }
+)
+
+test(
   'content.read fields: only the keys asked for come back, with the ids that address them',
   opts,
   async () => {

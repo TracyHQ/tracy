@@ -518,6 +518,17 @@ test('followLink: the international and the local form of one number are one num
   assert.equal(followLink('https://example.com', '8 800 550-67-89', '0909 123 456'), null)
 })
 
+test('followLink: a number written with no trunk keeps the link’s country code (survey 04/11/2026)', () => {
+  // elite-smiles-dental (Joomla): the call box printed "(212) 555-0147" and dialled tel:+12125550147.
+  assert.equal(followLink('tel:+12125550147', '(212) 555-0147', '(212) 555-0199'), 'tel:+12125550199')
+  assert.equal(followLink('tel:+12125550147', '(212) 555-0147', '(800) 555-0100'), 'tel:+18005550100')
+  // a new number of another shape is linked as written: its country cannot be read off the old link
+  assert.equal(followLink('tel:+12125550147', '(212) 555-0147', '0909 123 456'), 'tel:0909123456')
+  assert.equal(followLink('tel:+12125550147', '(212) 555-0147', '+44 20 7946 0018'), 'tel:+442079460018')
+  // seven digits shared are not the same number when the rest is no country code or trunk
+  assert.equal(followLink('tel:+12125550147', '555-0147', '(212) 555-0199'), null)
+})
+
 test('followLink: a trunk prefix in brackets after the country code is never dialled', () => {
   // Measured 02/10/2026 on an imported Joomla copy (Australia): the page printed "+61 (0)7 5550 6697",
   // the link dialled tel:+61755506697, and the link stayed on the old number after the change.
