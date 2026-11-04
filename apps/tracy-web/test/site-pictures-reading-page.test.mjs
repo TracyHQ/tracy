@@ -9,6 +9,7 @@ import { test } from 'node:test'
 import sharp from 'sharp'
 import { main } from '../scripts/site-pictures-reading-page.mjs'
 import { buildModel, LABEL_ORDER } from '../src/site-pictures/reading-page/model.js'
+import { drawWhere } from '../src/site-pictures/reading-page/where-images.js'
 
 const SHA = (c) => c.repeat(64)
 const png = (width, height, background) =>
@@ -713,5 +714,57 @@ test('a band picture shows its list copy and link label, the template overlay ov
     )
   } finally {
     await rm(s.root, { recursive: true, force: true })
+  }
+})
+
+test('where on the template: a transparent picture shows the page colour around the box, not a grey', async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'where-ground-'))
+  try {
+    const page = '#14161a'
+    const shotFile = path.join(dir, 'shot.png')
+    // A near-black page; the demo picture in the box is light grey, and a light strip crosses the ring on one side.
+    await sharp({ create: { width: 600, height: 400, channels: 3, background: page } })
+      .composite([
+        {
+          input: { create: { width: 200, height: 150, channels: 3, background: '#bbbbbb' } },
+          left: 200,
+          top: 120
+        },
+        {
+          input: { create: { width: 6, height: 400, channels: 3, background: '#eeeeee' } },
+          left: 194,
+          top: 0
+        }
+      ])
+      .png()
+      .toFile(shotFile)
+    // A cut-out: a small opaque square on a fully transparent file.
+    const pictureFile = path.join(dir, 'cut.png')
+    await sharp({
+      create: { width: 100, height: 75, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } }
+    })
+      .composite([
+        {
+          input: { create: { width: 10, height: 10, channels: 3, background: '#ff0000' } },
+          left: 45,
+          top: 30
+        }
+      ])
+      .png()
+      .toFile(pictureFile)
+    const r = await drawWhere({
+      shotFile,
+      shotSize: { width: 600, height: 400 },
+      box: { left: 200, top: 120, width: 200, height: 150 },
+      pictureFile,
+      fit: 'contain',
+      outDir: dir,
+      name: 'x'
+    })
+    // The box sits at 70, 70 in the crop (margin 70); a point inside it, far from the figure.
+    const got = await pixel(r.after.file, 80, 80)
+    near(got, [0x14, 0x16, 0x1a], 'the box shows the page colour')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
   }
 })

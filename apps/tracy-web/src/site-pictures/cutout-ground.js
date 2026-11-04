@@ -13,6 +13,10 @@
 //   the picture is only partly removed (a ground that is not plain, a shadow, ground colour inside the figure), no
 //   figure or no ground is left, or the figure touches the top, left or right edge (it may stand on the bottom edge).
 //   Each failure names the looker fault the redraw is told about.
+// - Faint residue is dropped (dropResidue): a leftover cast shadow or the ground's haze under the figure keys to a low,
+//   never-zero alpha and shows on the site as a grey smudge. A pixel that is faint (alpha below RESIDUE_ALPHA) and
+//   farther than a few pixels from any solid figure pixel becomes fully transparent. Edge antialiasing and hair lie
+//   within that reach of the solid body, so they stay; a wide soft blob does not, so it goes.
 //
 // The cut-out is then fitted inside the frame's output size (contained, never cropped, transparent around it) as a PNG
 // with alpha.
@@ -51,6 +55,8 @@ export const MAX_SOFT = 0.06
 /** At least this share must be ground, and at least FIGURE_MIN figure. */
 export const MIN_CLEAR = 0.05
 export const FIGURE_MIN = 0.03
+/** At most this share may be faint residue dropped from under a good figure without failing the drawing. */
+export const MAX_RESIDUE = 0.15
 /** The figure touches an edge when more than this share of that edge is figure. */
 export const EDGE_TOUCH = 0.02
 // A pixel whose ground dominance is at most KEY_LOW of the ground's is figure, at least KEY_HIGH of it ground.
@@ -58,6 +64,12 @@ const KEY_LOW = 0.15
 const KEY_HIGH = 0.85
 // A border pixel within this share of the ground's dominance of the asked colour is ground.
 const NEAR_ASKED = 0.6
+// A pixel is faint residue when its alpha is below RESIDUE_ALPHA (0..255) and no solid pixel (alpha at least
+// SOLID_ALPHA) lies within the reach (a share of the shorter side, at least RESIDUE_REACH_MIN pixels).
+export const RESIDUE_ALPHA = 160
+export const SOLID_ALPHA = 230
+const RESIDUE_REACH_SHARE = 1 / 400
+const RESIDUE_REACH_MIN = 2
 
 /** How much a pixel shows the ground's own channels over the others (green screen: green over red and blue). */
 const DOMINANCE = {
@@ -83,6 +95,59 @@ export function groundFor(wish) {
   const words = wordsOf(wish)
   const hits = (g) => (words.match(new RegExp(g.clashes.source, 'gi')) ?? []).length
   return GROUNDS.find((g) => hits(g) === 0) ?? [...GROUNDS].sort((x, y) => hits(x) - hits(y))[0]
+}
+
+/**
+ * Make faint residue fully transparent, in place, in a raw RGBA buffer. Returns how many pixels were cleared.
+ * Safe rule: only pixels below RESIDUE_ALPHA that are farther than `reach` pixels (Chebyshev) from every solid pixel.
+ * An antialiased edge or a hair is always within reach of the solid body it belongs to.
+ */
+export function dropResidue(rgba, width, height) {
+  const reach = Math.max(RESIDUE_REACH_MIN, Math.round(Math.min(width, height) * RESIDUE_REACH_SHARE))
+  const near = (src) => {
+    // Separable max filter: true where a solid pixel is within `reach` along the row, then along the column.
+    const rows = new Uint8Array(width * height)
+    for (let y = 0; y < height; y++) {
+      let last = -Infinity
+      const hit = new Int32Array(width)
+      for (let x = 0; x < width; x++) {
+        if (src[y * width + x]) last = x
+        hit[x] = last
+      }
+      let next = Infinity
+      for (let x = width - 1; x >= 0; x--) {
+        if (src[y * width + x]) next = x
+        rows[y * width + x] = x - hit[x] <= reach || next - x <= reach ? 1 : 0
+      }
+    }
+    const out = new Uint8Array(width * height)
+    for (let x = 0; x < width; x++) {
+      let last = -Infinity
+      const hit = new Int32Array(height)
+      for (let y = 0; y < height; y++) {
+        if (rows[y * width + x]) last = y
+        hit[y] = last
+      }
+      let next = Infinity
+      for (let y = height - 1; y >= 0; y--) {
+        if (rows[y * width + x]) next = y
+        out[y * width + x] = y - hit[y] <= reach || next - y <= reach ? 1 : 0
+      }
+    }
+    return out
+  }
+  const solid = new Uint8Array(width * height)
+  for (let i = 0; i < width * height; i++) solid[i] = rgba[i * 4 + 3] >= SOLID_ALPHA ? 1 : 0
+  const close = near(solid)
+  let cleared = 0
+  for (let i = 0; i < width * height; i++) {
+    const a = rgba[i * 4 + 3]
+    if (a > 0 && a < RESIDUE_ALPHA && !close[i]) {
+      rgba[i * 4 + 3] = 0
+      cleared++
+    }
+  }
+  return cleared
 }
 
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x)
@@ -116,27 +181,42 @@ export async function removeGround(bytes, ground) {
   const g = [0, 1, 2].map((c) => near.reduce((n, i) => n + data[i * 3 + c], 0) / near.length)
   const strength = dom(...g)
   const out = Buffer.alloc(width * height * 4)
-  let clear = 0
-  let soft = 0
-  let solid = 0
   for (let i = 0; i < width * height; i++) {
     const p = px(i)
     const a = clamp01((KEY_HIGH - dom(...p) / strength) / (KEY_HIGH - KEY_LOW))
     let rgb = [0, 0, 0]
     if (a > 0) rgb = DESPILL[ground.key](p.map((v, c) => (v - (1 - a) * g[c]) / a).map(byte))
     out.set([...rgb.map(byte), byte(a * 255)], i * 4)
-    if (a <= 0.02) clear++
-    else if (a >= 0.98) solid++
-    else soft++
   }
+  // Shares before the cleanup: they tell a ground that is not plain (the figure itself is only partly removed) from a
+  // faint shadow under a good figure.
+  const count = () => {
+    let clear = 0
+    let soft = 0
+    let solid = 0
+    for (let i = 0; i < width * height; i++) {
+      const a = out[i * 4 + 3] / 255
+      if (a <= 0.02) clear++
+      else if (a >= 0.98) solid++
+      else soft++
+    }
+    return { clear, soft, solid }
+  }
+  const before = count()
+  const cleared = dropResidue(out, width, height)
+  const { clear, soft, solid } = count()
+  // Residue is forgiven only under a good figure (enough solid body) and only up to MAX_RESIDUE of the picture.
+  const forgiven =
+    before.solid >= FIGURE_MIN * width * height && cleared <= MAX_RESIDUE * width * height ? cleared : 0
   const n = width * height
   const share = { clear: clear / n, soft: soft / n, figure: solid / n }
   const round = (x) => Math.round(x * 1000) / 1000
   const fail = (reason, fault) => ({ ok: false, reason, fault })
   if (share.clear < MIN_CLEAR) return fail('almost no ground is left around the figure', 'leftover ground')
-  if (share.soft > MAX_SOFT)
+  const softChecked = before.soft - forgiven
+  if (softChecked / n > MAX_SOFT)
     return fail(
-      `${Math.round(share.soft * 100)}% of the picture is only partly removed: the ground is not plain, or its colour is in the figure`,
+      `${Math.round((softChecked / n) * 100)}% of the picture is only partly removed: the ground is not plain, or its colour is in the figure`,
       'leftover ground'
     )
   if (share.figure < FIGURE_MIN) return fail('no figure is left once the ground is removed', 'missing part')

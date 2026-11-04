@@ -263,7 +263,7 @@ test('both specific cut-outs are drawn on a plain ground, the ground removed, an
     assert.equal(data[3], 0, `${f}: the corner is transparent`)
   }
   // The drawing asked for the plain ground by name and colour; the look said it is a cut-out, where the text sits, and
-  // how much of the box the figures cover, over grey and white checks.
+  // how much of the box the figures cover, over one flat colour (mid-grey when the page colour is unknown).
   const hDraw = doors.drawings.find((d) => d.frame === 'block-h.1')
   assert.match(hDraw.text, /plain background of one single colour:\s+chroma green \(#00b140\)/)
   assert.match(hDraw.text, /racket/)
@@ -284,7 +284,12 @@ test('both specific cut-outs are drawn on a plain ground, the ground removed, an
   const shown = Buffer.from(hLook.image.split(',')[1], 'base64')
   const { data, info } = await sharp(shown).raw().toBuffer({ resolveWithObject: true })
   assert.equal(info.channels, 3)
-  assert.deepEqual([...data.subarray(0, 3)], [200, 200, 200], 'the transparent corner shows the grey check')
+  assert.deepEqual([...data.subarray(0, 3)], [128, 128, 128], 'the transparent corner shows the flat grey')
+  assert.deepEqual(
+    [...data.subarray(3 * 16, 3 * 16 + 3)],
+    [128, 128, 128],
+    'no checkerboard: the same grey further along'
+  )
   // Never drawn: the person cut-outs, hidden where the kit allows it, else returned.
   assert.deepEqual(new Set(doors.drawings.map((d) => d.frame)), new Set(['block-h.1', 'block-s.1']))
   assert.equal(e.get('block-m.1').source, 'hide')

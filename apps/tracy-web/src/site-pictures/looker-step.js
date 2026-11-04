@@ -127,7 +127,10 @@ export function createLooker({
       costUsd: spent.costUsd ?? null
     })
     if (!bytes) return { list, entry, said: unreadable('the file is not in the store'), cached: false }
-    const image = await lookImage(bytes, box, realPart, { checks: Boolean(cutout) })
+    const image = await lookImage(bytes, box, realPart, {
+      checks: Boolean(cutout),
+      background: cutout?.pageBackground ?? null
+    })
     const ask = () =>
       askLooker({
         door,

@@ -2,7 +2,7 @@
 // words for its frame and nothing else (not the picker's reason, not the other frames, not the brief). A fresh
 // conversation every time: one system message (the looker prompt) and one user message. For an extended owner photo
 // (`owner-photo-extended`, #344) the real part is outlined on the picture and the message says so. A cut-out (#346) is
-// shown over grey and white checks where it is transparent, and the message says so, says whether the site's text sits
+// shown over the frame page background colour (mid-grey when unknown) where it is transparent, and the message says so, says whether the site's text sits
 // over or beside the picture box, and how much of the box the template's own figure and this one cover; the cut-out
 // faults are named only then. An `any-real` frame (spec #336) takes any real owner photo that fits it: the looker is told
 // so, is given only the plan's `avoid` and `mood` for it, and may not name "wrong subject" there; code drops that fault
@@ -57,7 +57,6 @@ export const LOOK_MS = 90_000
  */
 export const LOOK_MAX_TOKENS = 4000
 const OUTLINE = '#ff00ff'
-const CHECK = 16
 
 /** The fault an `any-real` frame never fails for: it takes any real owner photo, whatever its scene. */
 export const WRONG_SUBJECT = 'wrong subject'
@@ -116,9 +115,14 @@ function surfaceLines(surface) {
 
 /**
  * The picture as the site shows it: resized to fit the frame's display box (never enlarged), as a PNG, with the real
- * part of an extended photo outlined, and a cut-out over grey and white checks. `realPart` is a box on the finished file.
+ * part of an extended photo outlined, and a cut-out over the frame's page background colour (mid-grey when unknown). `realPart` is a box on the finished file.
  */
-export async function lookImage(bytes, { width, height }, realPart = null, { checks = false } = {}) {
+export async function lookImage(
+  bytes,
+  { width, height },
+  realPart = null,
+  { checks = false, background = null } = {}
+) {
   // Turned upright first, so the outline and its box are on the picture as shown.
   const upright = await sharp(Buffer.from(bytes), { failOn: 'none' }).rotate().toBuffer()
   const img = sharp(upright)
@@ -134,19 +138,20 @@ export async function lookImage(bytes, { width, height }, realPart = null, { che
     .resize(width, height, { fit: 'inside', withoutEnlargement: true })
     .png()
     .toBuffer({ resolveWithObject: true })
-  if (checks) sized = await overChecks(sized.data, sized.info)
+  if (checks) sized = await overBackground(sized.data, sized.info, background)
   return { base64: sized.data.toString('base64'), width: sized.info.width, height: sized.info.height }
 }
 
-// A cut-out laid over grey and white checks, so its transparent part, its edges and any ground left are seen.
-async function overChecks(png, { width, height }) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><defs><pattern id="c" width="${2 * CHECK}" height="${2 * CHECK}" patternUnits="userSpaceOnUse"><rect width="${2 * CHECK}" height="${2 * CHECK}" fill="#ffffff"/><rect width="${CHECK}" height="${CHECK}" fill="#c8c8c8"/><rect x="${CHECK}" y="${CHECK}" width="${CHECK}" height="${CHECK}" fill="#c8c8c8"/></pattern></defs><rect width="${width}" height="${height}" fill="url(#c)"/></svg>`
-  const laid = await sharp(Buffer.from(svg))
+// A cut-out laid over one flat colour: the frame's page background when known, else mid-grey. Never a checkerboard,
+// which the looker could mistake for leftover ground.
+const MID_GREY = '#808080'
+async function overBackground(png, { width, height }, background) {
+  const colour = /^#[0-9a-f]{6}$/i.test(String(background ?? '')) ? background : MID_GREY
+  return sharp({ create: { width, height, channels: 3, background: colour } })
     .composite([{ input: png }])
+    .removeAlpha()
     .png()
-    .toBuffer()
-  // Composited last by sharp, so the alpha is dropped in a second pass.
-  return sharp(laid).removeAlpha().png().toBuffer({ resolveWithObject: true })
+    .toBuffer({ resolveWithObject: true })
 }
 
 const percent = (x) => `${Math.round(x * 100)}%`
@@ -154,7 +159,7 @@ const percent = (x) => `${Math.round(x * 100)}%`
 // The lines a cut-out adds to the message.
 function cutoutLines(cutout) {
   return [
-    'This picture is a cut-out: the figure was drawn on a plain ground that code removed. The grey and white checks show where the picture is transparent on the site; they are not part of the picture.',
+    'This picture is a cut-out: the figure was drawn on a plain ground that code removed. The flat colour behind the figure is the page background of the site, shown where the picture is transparent; it is not part of the picture.',
     cutout.textOver
       ? "On the site, the page's heading and text sit over part of this picture box, on the part the figure leaves clear."
       : "On the site, the page's heading and text sit beside this picture.",

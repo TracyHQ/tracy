@@ -3,7 +3,14 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
-import { cutoutFile, GROUNDS, groundFor, removeGround } from '../src/site-pictures/cutout-ground.js'
+import {
+  cutoutFile,
+  dropResidue,
+  GROUNDS,
+  groundFor,
+  removeGround
+} from '../src/site-pictures/cutout-ground.js'
+import { lookImage } from '../src/site-pictures/looker-call.js'
 
 const [GREEN, MAGENTA, BLUE] = GROUNDS
 
@@ -115,4 +122,58 @@ test('the ground colour avoids the colours the plan words name', () => {
   assert.equal(groundFor({ shows: 'a girl in a pink dress on the grass' }), BLUE)
   // The words to avoid are not in the picture: they never rule a ground out.
   assert.equal(groundFor({ shows: 'a boxer', avoid: ['green walls'] }), GREEN)
+})
+
+test('a faint cast shadow under the figure is dropped, the soft edge of the figure stays', async () => {
+  // A wide, faint dark blob on the ground under the body, a few pixels below it (not touching the solid body).
+  const extra = '<ellipse cx="110" cy="195" rx="70" ry="4" fill="#000000" fill-opacity="0.16"/>'
+  const r = await removeGround(await figure(GREEN, { extra }), GREEN)
+  assert.equal(r.ok, true, r.reason)
+  assert.equal(pixel(r, 110, 196)[3], 0, 'the faint shadow is transparent')
+  assert.equal(pixel(r, 60, 195)[3], 0, 'the far end of the shadow is transparent')
+  assert.equal(pixel(r, 110, 130)[3], 255, 'the body stays opaque')
+  let edge = 0
+  for (let y = 60; y < 190; y++)
+    for (let x = 60; x < 160; x++) {
+      const a = pixel(r, x, y)[3]
+      if (a > 0 && a < 255) edge++
+    }
+  assert.ok(edge > 20, `the antialiased edge stays (${edge} partly transparent pixels)`)
+})
+
+test('dropResidue clears faint pixels away from the body and keeps those next to it', () => {
+  const w = 40
+  const h = 20
+  const rgba = Buffer.alloc(w * h * 4)
+  for (let y = 0; y < 10; y++) for (let x = 0; x < 10; x++) rgba.writeUInt8(255, (y * w + x) * 4 + 3)
+  rgba.writeUInt8(90, (5 * w + 11) * 4 + 3) // an edge pixel beside the body
+  rgba.writeUInt8(90, (15 * w + 30) * 4 + 3) // a faint pixel far from it
+  assert.equal(dropResidue(rgba, w, h), 1)
+  assert.equal(rgba[(5 * w + 11) * 4 + 3], 90)
+  assert.equal(rgba[(15 * w + 30) * 4 + 3], 0)
+})
+
+test('the looker sees a cut-out over one flat colour, never a checkerboard', async () => {
+  const cut = await sharp({
+    create: { width: 40, height: 40, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } }
+  })
+    .png()
+    .toBuffer()
+  const known = await sharp(
+    Buffer.from(
+      (await lookImage(cut, { width: 40, height: 40 }, null, { checks: true, background: '#102030' })).base64,
+      'base64'
+    )
+  )
+    .raw()
+    .toBuffer()
+  const colours = new Set()
+  for (let i = 0; i < known.length; i += 3) colours.add(`${known[i]},${known[i + 1]},${known[i + 2]}`)
+  assert.deepEqual([...colours], ['16,32,48'])
+  const grey = await sharp(
+    Buffer.from((await lookImage(cut, { width: 40, height: 40 }, null, { checks: true })).base64, 'base64')
+  )
+    .raw()
+    .toBuffer()
+  assert.deepEqual([...grey.subarray(0, 3)], [128, 128, 128])
 })

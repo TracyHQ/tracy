@@ -41,21 +41,34 @@ const outlineSvg = (b, size, scale) => {
   )
 }
 
-// The mean colour of a thin strip just outside the box (above it, else below), standing in for the block's ground.
-async function groundColour(shotFile, box, crop) {
-  const strip =
-    box.top >= 4
-      ? { left: box.left, top: box.top - 4, width: box.width, height: 3 }
-      : box.top + box.height + 4 <= crop.height
-        ? { left: box.left, top: box.top + box.height + 1, width: box.width, height: 3 }
-        : null
-  if (!strip) return { r: 128, g: 128, b: 128 }
-  const { channels } = await sharp(shotFile)
+// The page's own colour just outside the box: the per-channel median of a ring of pixels around it (clipped to the
+// crop), standing in for the block's ground. The median ignores a neighbouring element crossing the ring. It is what a
+// cut-out or contained picture shows through to on the site, so the preview fills the box with it, never a fixed grey.
+export async function groundColour(shotFile, box, crop) {
+  const RING = 6
+  const left = Math.max(0, box.left - RING)
+  const top = Math.max(0, box.top - RING)
+  const right = Math.min(crop.width, box.left + box.width + RING)
+  const bottom = Math.min(crop.height, box.top + box.height + RING)
+  const { data, info } = await sharp(shotFile)
     .extract({ left: crop.left, top: crop.top, width: crop.width, height: crop.height })
-    .extract(strip)
+    .extract({ left, top, width: right - left, height: bottom - top })
     .removeAlpha()
-    .stats()
-  return { r: Math.round(channels[0].mean), g: Math.round(channels[1].mean), b: Math.round(channels[2].mean) }
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  const samples = [[], [], []]
+  for (let y = 0; y < info.height; y++)
+    for (let x = 0; x < info.width; x++) {
+      const gx = left + x
+      const gy = top + y
+      const inside = gx >= box.left && gx < box.left + box.width && gy >= box.top && gy < box.top + box.height
+      if (inside) continue
+      const i = (y * info.width + x) * 3
+      for (let c = 0; c < 3; c++) samples[c].push(data[i + c])
+    }
+  if (!samples[0].length) return { r: 128, g: 128, b: 128 }
+  const median = (v) => v.sort((p, q) => p - q)[v.length >> 1]
+  return { r: median(samples[0]), g: median(samples[1]), b: median(samples[2]) }
 }
 
 // An rgba() overlay as an SVG rectangle over the box; null for any other paint (a gradient is not drawn).
