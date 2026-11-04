@@ -229,12 +229,14 @@ export async function runWriteStep(input) {
         ? { claims: [], changes: {}, left: extras.alts ?? {} }
         : placed
     extras = { ...extras, alts: alts.left }
+    // The slot prints only as its kept picture's alt, so a plan's hide of it hides nothing: the alt stands.
+    const altSlots = new Set(alts.claims.map((claim) => claim.slot))
     table = ownerTable([
       ...brand.claims,
       ...pictures.claims,
       ...copyClaims(view.slots, read.inputs.copy.file),
       ...alts.claims,
-      ...fromPlan
+      ...fromPlan.filter((claim) => !altSlots.has(claim.slot))
     ])
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })

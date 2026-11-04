@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { runSiteCheck } from '../src/site-check/site-check.js'
 import { correctionsReader, galleryAlts } from '../src/write-step/slot-corrections.js'
-import { CONTRACT, copy, runStep } from './_write-step-run.mjs'
+import { CONTRACT, copy, plan, runStep } from './_write-step-run.mjs'
 
 const row = (n) => ({ id: `module-8.gallery.${n}`, item: n, kind: 'gallery' })
 const slots = [
@@ -57,6 +57,30 @@ test('a gallery alt goes in the one contract call when the plugin opens it', asy
   assert.equal(altLine(report, 'block-8.11').ordered, ALTS[0].text)
   assert.equal(altLine(report, 'block-8.11').key, 'module-8.11')
   assert.equal(altLine(report, 'block-8.5'), undefined, 'its frame has no skipped line left')
+})
+
+test('a plan that hides the slot under a kept picture does not stop its alt: the slot prints nothing but the alt', async () => {
+  const base = plan()
+  const hiding = {
+    ...base,
+    sharedBlocks: [
+      ...(base.sharedBlocks ?? []),
+      {
+        block: 'block-8',
+        decision: 'keep',
+        hiddenSlots: [{ slot: 'block-8.11', why: 'Pictures, not captions.' }]
+      }
+    ]
+  }
+  const { report, site } = await runStep(
+    { copy: copyWithAlts(), plan: hiding },
+    { info: takes(), extraKeys: ['module-8.11', 'module-8.12'] },
+    { contentMap: CONTENT_MAP }
+  )
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.equal(site.applies().at(-1).params.changes['module-8.11'], ALTS[0].text)
+  assert.equal(altLine(report, 'block-8.11').status, 'written')
+  assert.equal(altLine(report, 'block-8.11').ordered, ALTS[0].text)
 })
 
 test('an alt with no slot beside its picture keeps its skipped line', async () => {
