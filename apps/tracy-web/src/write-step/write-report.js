@@ -73,7 +73,8 @@ function extraLines(extras, owners) {
  * The slot lines of a report.
  * @param {{ owners: Map<string, object>, unowned: object[], extras: object, written: Iterable<string>,
  *   refused: Map<string, object>, routed?: Map<string, string>, deferred?: Map<string, string>,
- *   ordered?: Record<string, string> }} input `ordered`: what the mapping sent, by content map key
+ *   ordered?: Record<string, string>, brandLines?: object[] }} input `ordered`: what the mapping sent, by content map key;
+ *   `brandLines`: the brand stage's own lines, which stand for the brand's claims
  */
 export function slotLines({
   owners,
@@ -83,11 +84,13 @@ export function slotLines({
   refused,
   routed = new Map(),
   deferred = new Map(),
-  ordered = {}
+  ordered = {},
+  brandLines = []
 }) {
   const done = { written: new Set(written), refused, routed, deferred, ordered }
   return [
-    ...[...owners.values()].map((claim) => claimLine(claim, done)),
+    ...brandLines,
+    ...[...owners.values()].filter((c) => c.owner !== 'brand').map((claim) => claimLine(claim, done)),
     ...unowned.map((u) =>
       line(u.slot, contentMapKey(u.slot), null, 'skipped', 'no owner: a slot in a kept block no file fills')
     ),

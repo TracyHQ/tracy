@@ -36,10 +36,12 @@ const pictureFile = (value) => value.split('#', 1)[0].replace(/^\/+/, '')
 /**
  * @param {string} ordered what the write report says was sent
  * @param {string} measured what the site holds now
- * @param {{ type?: string, xpath?: string }} [slot] the slot as inspect lists it
+ * @param {{ type?: string, xpath?: string }} [slot] the slot as inspect lists it, or the type a `readFrom` names
  */
 export function sameValue(ordered, measured, slot = {}) {
   const sent = isAttribute(slot) ? referencesDecoded(ordered) : ordered
+  // A value inside a block the site saves in its own form: the block holds it or does not.
+  if (slot.type === 'contains') return measured.includes(sent)
   if (slot.type === 'image') return pictureFile(sent) === pictureFile(measured)
   if (slot.type === 'url') return percentDecoded(sent.trim()) === percentDecoded(measured.trim())
   return collapsed(sent) === collapsed(measured)

@@ -7,6 +7,7 @@ import path from 'node:path'
 import { after, test } from 'node:test'
 import { runCli } from '../src/write-step/bench-cli.js'
 import { memoryStore } from './_write-step-bench.mjs'
+import { brandFile, brandKit, brandSite, frozenWithBrand } from './_write-step-brand.mjs'
 import { copy, fakeSite, frozenFiles, KIT, memoryRunStore } from './_write-step-run.mjs'
 
 const SITE = 'write-bench-abc.sites.example'
@@ -31,7 +32,12 @@ const index = new Map([
 ])
 after(() => rmSync(contractDir, { recursive: true, force: true }))
 
-function harness({ site = fakeSite(), sites = memoryStore([benchSite()]), runs = memoryRunStore() } = {}) {
+function harness({
+  site = fakeSite(),
+  sites = memoryStore([benchSite()]),
+  runs = memoryRunStore(),
+  kits = index
+} = {}) {
   const out = []
   const err = []
   const accounts = []
@@ -39,7 +45,7 @@ function harness({ site = fakeSite(), sites = memoryStore([benchSite()]), runs =
     runCli(argv, {
       runs,
       store: sites,
-      index,
+      index: kits,
       makeDoor: (input) => (accounts.push(input), site.door),
       out: (l) => out.push(l),
       err: (l) => err.push(l),
@@ -250,4 +256,25 @@ test('check says plainly when there is no run, no report, a run still going, or 
   assert.match(h.err.at(-1), /left no report/)
   assert.equal(await h.cli(['check', '--account', 'a@example.test']), 2)
   assert.equal(await h.cli(['check', '--run', 'run-1']), 2)
+})
+
+test('run takes a brand file and writes it before the contract call', async () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'write-step-brand-kit-'))
+  writeFileSync(
+    path.join(dir, 'template-kit.json'),
+    JSON.stringify({ ...brandKit().doc, kit: 'tracy-template-kit/2', images: made.images })
+  )
+  const kits = new Map([['demo-gym/j6@1.0.0', { id: 'demo-gym/j6/1.0.0', dir, platform: 'joomla' }]])
+  const site = brandSite()
+  const brand = brandFile()
+  brand.colours = { decision: 'kept-template', module: null }
+  const frozen = frozenWithBrand({ brand })
+  const h = harness({ site, kits })
+  const code = await h.cli(runArgs(frozen.files, ['--brand-file', frozen.files.brand]))
+  frozen.done()
+  rmSync(dir, { recursive: true, force: true })
+  assert.equal(h.err.join('\n'), '')
+  assert.equal(code, 0)
+  assert.equal(site.of('site.identity', 'set').length, 1)
+  assert.equal(site.of('content.contract', 'apply').length, 1)
 })

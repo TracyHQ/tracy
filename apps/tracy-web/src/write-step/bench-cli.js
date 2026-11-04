@@ -15,7 +15,7 @@ import { runWriteStep } from './write-step.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
-      [--brief-file <path>] [--by <label>]    write the frozen files to a site this bench made; runs in this process,
+      [--brief-file <path>] [--brand-file <path>] [--by <label>]    write the frozen files to a site this bench made; runs in this process,
                                               prints the run id first and the counts last
   list [--limit <n>]                          the newest runs
   status <runId>                              state, phase, counts and the cause of a stop
@@ -57,6 +57,7 @@ export async function runCli(argv, deps) {
         'plan-file': { type: 'string' },
         'copy-file': { type: 'string' },
         'brief-file': { type: 'string' },
+        'brand-file': { type: 'string' },
         account: { type: 'string' },
         by: { type: 'string' },
         limit: { type: 'string' },
@@ -141,7 +142,8 @@ async function startRun(d, values) {
       files: {
         plan: inCwd(values['plan-file']),
         copy: inCwd(values['copy-file']),
-        ...(values['brief-file'] ? { brief: inCwd(values['brief-file']) } : {})
+        ...(values['brief-file'] ? { brief: inCwd(values['brief-file']) } : {}),
+        ...(values['brand-file'] ? { brand: inCwd(values['brand-file']) } : {})
       },
       onPhase: (phase) => d.runs.phase(id, phase),
       isCancelled: () => d.runs.cancelRequested(id),

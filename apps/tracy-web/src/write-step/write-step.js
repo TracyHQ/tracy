@@ -5,13 +5,14 @@
 //   apply({ siteKey, action, params }) -> the plugin's answer
 // No template and no version is written here: the contract comes from the kit, the slots from the files and the site.
 //
-// This slice writes the site copy's mapping through `content.contract`. The later write stages of the ADR go in as
-// further phases, and pictures and brand as further claim lists (owner-table.js).
+// This slice writes the brand file (brand-stage.js) and the site copy's mapping through `content.contract`. The later write
+// stages of the ADR go in as further phases, and pictures as a further claim list (owner-table.js).
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../site-writer/bench-control.js'
 import { indexInputs } from '../site-writer/copy-check/inputs-index.js'
 import { readCopy } from '../site-writer/copy-check/copy-view.js'
 import { exportContractMapping } from '../site-writer/contract-mapping.js'
+import { prepareBrandStage } from './brand-stage.js'
 import { writeContract } from './contract-write.js'
 import { readFrozenFiles } from './input-files.js'
 import { routeChanges } from './kit-slot-routes.js'
@@ -62,7 +63,8 @@ function siteProblem({ reading, contract, changes }) {
 
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: { ref: string, doc: object }, contentMap?: object | null,
- *   files: { plan: string, copy: string, brief?: string }, isCancelled?: () => Promise<boolean>,
+ *   files: { plan: string, copy: string, brief?: string, brand?: string },
+ *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
  *   onPhase?: (phase: string) => Promise<void>, now?: () => number, sleep?: (ms: number) => Promise<void> }} input
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
@@ -94,6 +96,7 @@ export async function runWriteStep(input) {
   let extras = {}
   let routes = { routed: new Map(), deferred: new Map() }
   let ordered = {}
+  let brand = { active: false, lines: () => [] }
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -105,6 +108,7 @@ export async function runWriteStep(input) {
         written,
         refused,
         ordered,
+        brandLines: brand.lines({ written, refused }),
         ...routes
       })
       report.counts = countsOf(report.slots)
@@ -127,6 +131,14 @@ export async function runWriteStep(input) {
     report.inputs = read.inputs
     if (read.stop) return { stop: read.stop }
     const { plan, copy, brief } = read.values
+    brand = await prepareBrandStage({
+      brand: read.values.brand,
+      brandPath: files.brand,
+      inputs: read.inputs.brand,
+      kit: kit.doc,
+      accentPlace: input.accentPlace
+    })
+    if (brand.stop) return { stop: brand.stop }
     const problems = fileProblems({ plan, copy, kitRef: kit.ref }, readCopy(copy).problems)
     if (problems.length)
       return { stop: { code: 'BAD_FILE', reason: `The files cannot be written: ${problems.join('; ')}` } }
@@ -143,6 +155,7 @@ export async function runWriteStep(input) {
     const index = indexInputs({ plan, kit: kit.doc, brief, contentMap: contentMap ?? undefined })
     const { view } = readCopy(copy)
     table = ownerTable([
+      ...brand.claims,
       ...copyClaims(view.slots, read.inputs.copy.file),
       ...planClaims(
         { plan, hidden: index.hidden, menuHide: extras.mainMenu?.hide, filled: index.expected },
@@ -173,7 +186,13 @@ export async function runWriteStep(input) {
     const { changes, ...found } = routeChanges(exported.mapping.changes, kit.doc, view.slots)
     routes = found
     ordered = changes
-    return { mapping: { ...exported.mapping, changes } }
+    return {
+      mapping: {
+        ...exported.mapping,
+        changes: { ...changes, ...brand.changes },
+        evidence: { ...exported.mapping.evidence, ...brand.evidence }
+      }
+    }
   })
   if (checked.stop) return stopped(checked.stop)
   const { mapping } = checked
@@ -194,13 +213,22 @@ export async function runWriteStep(input) {
   if (inspected.stop) return stopped(inspected.stop)
   if (await isCancelled()) return finish('cancelled', null)
 
+  let reading = inspected.reading
+  if (brand.active) {
+    const branded = await timed('brand', () => brand.write({ apply, siteKey, sleep }))
+    if (branded.stop) return stopped(branded.stop)
+    reading = branded.reading
+    for (const key of branded.dropped) delete mapping.changes[key]
+    if (await isCancelled()) return finish('cancelled', null)
+  }
+
   const wrote = await timed('write', async () => {
     const { applyJoomlaContract } = await seeder('apply-joomla-contract')
     return writeContract({
       applyJoomlaContract,
       apply,
       siteKey,
-      reading: inspected.reading,
+      reading,
       mapping,
       isCancelled,
       sleep

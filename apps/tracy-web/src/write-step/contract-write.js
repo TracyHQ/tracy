@@ -3,7 +3,7 @@
 // to get past it. Refused calls change nothing, so the reading stays good for every retry and is not asked for again.
 
 /** Lock misses prove nothing ran, so waiting and asking again is safe; the waits are in milliseconds. */
-const BUSY_WAITS_MS = [5_000, 10_000, 20_000, 30_000, 30_000]
+export const BUSY_WAITS_MS = [5_000, 10_000, 20_000, 30_000, 30_000]
 
 const slotOf = (entry) => entry?.field?.slotKey
 const isBusy = (error) => error?.answer?.error === 'writer_busy'

@@ -1,7 +1,7 @@
 // The site check's first group (ADR 0044, decision 7): the site against what the write report says was ordered. It says
 // nothing about whether the result looks good. Red here belongs to step 9, and later groups do not run.
 //
-// How a line is read: a content slot through `content.contract inspect` (`slots[].current`). A line written through another
+// How a line is read: a content slot, the line's `key`, through `content.contract inspect` (`slots[].current`). A line written through another
 // door names its own read in `readFrom: { action, params, path, type? }`, and a read must be safe to repeat. A written line
 // with neither warns and is listed under `reads`, so that green never claims more than was read.
 import { GroupUnmeasured } from './group-unmeasured.js'
@@ -133,7 +133,7 @@ async function run({ report, read }) {
     }
   }
   for (const line of compared) {
-    if (line.part && !line.readFrom && line.status !== 'failed') {
+    if (line.part && !line.key && !line.readFrom && line.status !== 'failed') {
       reads.add('none', line.part)
       lines[line.slot] = 'unread'
       failures.push({
