@@ -17,6 +17,7 @@ import Gallery from '@/views/Gallery.astro'
 import Search from '@/views/Search.astro'
 import NotFound from '@/views/NotFound.astro'
 import { BLOG_SIDEBAR } from '@/lib/posts'
+import { childLive } from '@/lib/link-gate'
 
 const { locale, path } = splitPath(Astro.url.pathname)
 const chrome = await loadChrome(locale)
@@ -46,6 +47,8 @@ else if (segs.length === 2 && SLUG.test(segs[0]) && SLUG.test(segs[1]) && segs[0
 else if (segs.length === 2 && segs[0] === 'pages' && SLUG.test(segs[1]))
   view = { component: Post, props: { category: 'pages', slug: segs[1] } }
 
+// a page the customer unticked (its record is unpublished), and everything that hangs under it, answers 404
+if (view && !(await childLive(Astro.request, locale, clean))) view = null
 const Component = view?.component ?? NotFound
 if (!view) Astro.response.status = 404
 ---
