@@ -89,6 +89,7 @@ export function lineResult(order, done) {
       : { status: 'skipped', reason: ENDED, key }
   }
   if (order.via === 'label') return labelResult(order, hides)
+  if (order.via === 'control') return controlResult(order, hides)
   if (order.via === 'words') return wordsResult(order, hiddenKeys, hides)
   if (order.via === 'map') return mapResult(order, settled)
   const id = `menuItem-${order.item}`
@@ -123,6 +124,23 @@ function labelResult({ label, leadsTo }, hides) {
     key: key ?? null,
     reason: `${conflict}: with no words it would be an empty box, so it left with them`,
     leftWith: label,
+    ...(ordered === undefined ? {} : { ordered }),
+    ...(readFrom ? { readFrom } : {})
+  }
+}
+
+/** The template prints this control only with a stored address, which is leaving: the link goes with the control. */
+function controlResult({ slot, key, noDoor }, hides) {
+  const hidden = hides?.get(slot)
+  if (!hidden) return { status: 'skipped', reason: ENDED, key }
+  if (hidden.status !== 'hidden')
+    return failed(`${noDoor}; ${key} could not leave: ${hidden.reason}`, { key })
+  const { status, ordered, readFrom } = hidden
+  return {
+    status,
+    key,
+    leftWith: key,
+    reason: `its control is printed only with the stored address ${key}, which left, so this link left with its control`,
     ...(ordered === undefined ? {} : { ordered }),
     ...(readFrom ? { readFrom } : {})
   }

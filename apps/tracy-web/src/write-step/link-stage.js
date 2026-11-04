@@ -60,6 +60,40 @@ function settleShared(orders, values) {
 }
 
 /**
+ * A link no door holds, measured with no address, and a stored placeholder address of its entity that leaves: the template prints
+ * the control only with that address, so the link leaves with it. Only when each such link has its own address on that entity;
+ * otherwise nothing says which control went, and the links stay failed.
+ */
+function settleControls(orders, doors, owners) {
+  const leaving = new Map()
+  for (const claim of owners.values())
+    if (claim.kind === 'hide' && claim.storedAddress) {
+      const key = contentMapKey(claim.slot)
+      const entity = key.slice(0, key.lastIndexOf('.'))
+      leaving.set(entity, [...(leaving.get(entity) ?? []), { slot: claim.slot, key }])
+    }
+  const doorless = new Map()
+  for (const [slot, door] of doors) {
+    const entity = door.block?.source?.entity
+    if (
+      door.via === 'none' &&
+      !door.link?.target &&
+      orders.get(slot)?.status === 'failed' &&
+      leaving.has(entity)
+    )
+      doorless.set(entity, [...(doorless.get(entity) ?? []), slot])
+  }
+  for (const [entity, slots] of doorless) {
+    const addresses = leaving.get(entity)
+    if (addresses.length !== slots.length) continue
+    slots.forEach((slot, at) => {
+      const noDoor = orders.get(slot).reason
+      orders.set(slot, { via: 'control', noDoor, ...addresses[at] })
+    })
+  }
+}
+
+/**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, brief?: object, owners: Map<string, object>,
  *   reading: object, extras: object, taken: Record<string, string>, last?: object }} input `taken`: what other files send to the
  *   contract call; `last`: the last report, whose menu targets are not written again
@@ -100,14 +134,16 @@ export async function prepareLinks({
   )
   const leaving = new Set(each(extras?.mainMenu?.hide).map((h) => h.item))
   const orders = new Map()
+  const doors = new Map(claims.map((claim) => [claim.slot, doorOf(claim.slot)]))
   for (const claim of claims)
     orders.set(
       claim.slot,
-      lineOrder(claim, doorOf(claim.slot), linkTarget(claim.content, { plan, kit, facts, ...site }), {
+      lineOrder(claim, doors.get(claim.slot), linkTarget(claim.content, { plan, kit, facts, ...site }), {
         hiddenKeys,
         leaving
       })
     )
+  settleControls(orders, doors, owners)
 
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const values = new Map()

@@ -71,11 +71,13 @@ export function storedDemoClaims({ plan, kit, contentMap, filled, file }) {
           'the kit says no page prints this field and no file gives it words, so its demo words leave'
         )
       ),
-    ...[...leftAddresses({ plan, kit, contentMap })]
-      .filter(free)
-      .map((slot) =>
-        claim(slot, 'the words of the link at this placeholder address left, so the address leaves with them')
-      )
+    ...[...leftAddresses({ plan, kit, contentMap })].filter(free).map((slot) => ({
+      ...claim(
+        slot,
+        'the words of the link at this placeholder address left, so the address leaves with them'
+      ),
+      storedAddress: true
+    }))
   ]
 }
 

@@ -122,3 +122,61 @@ test('opening a form the first run closed is refused by name: nothing reopens it
   assert.equal(second.cause?.code, 'NEEDS_NEW_SITE', JSON.stringify(second.cause))
   assert.match(second.cause.reason, /block-5 \(a form that was closed\)/)
 })
+
+/** A link no door holds, measured with no address, on a block whose stored placeholder address leaves with hidden words. */
+function controlFixture() {
+  const kit = hideKit()
+  kit.doc.blocks.find((b) => b.id === 'block-2').links = [
+    { id: 'block-2.link-1', position: 0, target: null, labelId: 'block-2.3', action: 'page-control' },
+    { id: 'block-2.link-2', position: 1, target: null, labelId: 'block-2.1', action: 'page-control' }
+  ]
+  const p = plan()
+  p.pages[0].blocks[0].links = [
+    { link: 'block-2.link-1', leadsTo: 'page-about', labelSlot: 'block-2.3' },
+    { link: 'block-2.link-2', leadsTo: 'page-about', labelSlot: 'block-2.1' }
+  ]
+  const contentMap = {
+    entities: [],
+    slots: [
+      { key: 'module-2.8', entity: 'module-2', type: 'text', sample: '#', jsonPath: ['signup'] },
+      { key: 'module-2.3', entity: 'module-2', type: 'text', sample: 'Demo' }
+    ]
+  }
+  return { kit, plan: p, contentMap, site: { extraKeys: ['module-2.8'] } }
+}
+
+test('a link whose control left with its stored address reads as gone with it, and the same files change nothing', async () => {
+  const { kit, plan: p, contentMap, site } = controlFixture()
+  const run = await twice({ kit, contentMap, site, steps: [{ plan: p }, { plan: p }] })
+  const line = lineOf(run.first, 'block-2.link-2')
+  assert.deepEqual([line.status, line.key, line.leftWith], ['hidden', 'module-2.8', 'module-2.8'])
+  assert.match(line.reason, /module-2\.8/)
+  assertNothingChanged(run)
+  assert.equal(lineOf(run.second, 'block-2.link-2').unchanged, true)
+})
+
+test('a control whose address could not leave stays a failed link that says why', async () => {
+  const { kit, plan: p, contentMap, site } = controlFixture()
+  const refuse = { 'module-2.8': { code: 'NOT_HIDEABLE', message: 'not on the review' } }
+  const { first } = await twice({ kit, contentMap, site: { ...site, refuse }, steps: [{ plan: p }] })
+  const line = lineOf(first, 'block-2.link-2')
+  assert.equal(line.status, 'failed')
+  assert.match(line.reason, /no door holds this link/)
+})
+
+test('two doorless links for one stored address cannot say which one left: both stay failed', async () => {
+  const { kit, plan: p, contentMap, site } = controlFixture()
+  kit.doc.blocks
+    .find((b) => b.id === 'block-2')
+    .links.push({
+      id: 'block-2.link-3',
+      position: 2,
+      target: null,
+      labelId: 'block-2.2',
+      action: 'page-control'
+    })
+  p.pages[0].blocks[0].links.push({ link: 'block-2.link-3', leadsTo: 'page-about', labelSlot: 'block-2.2' })
+  const { first } = await twice({ kit, contentMap, site, steps: [{ plan: p }] })
+  assert.equal(lineOf(first, 'block-2.link-2').status, 'failed')
+  assert.equal(lineOf(first, 'block-2.link-3').status, 'failed')
+})
