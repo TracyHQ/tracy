@@ -6,6 +6,7 @@ import { stampFor } from '@/lib/stamps'
 import { lines } from '@/lib/html'
 import type { Row } from '@/lib/content'
 import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   entry: Row
@@ -34,7 +35,7 @@ const live = await liveLinks(Astro.request, locale, [entry.hp_link])
 			{desc.length > 0 && <p class="rs-hh-desc" {...$h('hp_desc')}>{desc.map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>}
 			{badge && style === 2 && <span class="rs-hh-badge" {...$h('hp_badge')}>{badge}</span>}
 			{info.length > 0 && <div class="rs-hh-info" {...$h('hp_info')}><div>{info.map((l, i) => <>{i > 0 && <br />}{l}</>)}</div>{badge && style === 1 && <span class="rs-hh-badge">{badge}</span>}</div>}
-			{entry.hp_link_text && live(entry.hp_link) && <div class="rs-hh-link"><a class="rs-btn" href={href(locale, entry.hp_link || '/')} {...$h('hp_link_text')}>{entry.hp_link_text}</a></div>}
+			{entry.hp_link_text && live(entry.hp_link) && <div class="rs-hh-link"><a class="rs-btn" href={dataHref(entry.hp_link || '/', (p) => href(locale, p))} {...$h('hp_link_text')}>{entry.hp_link_text}</a></div>}
 		</div>
 		{other.length > 0 && <div class="rs-hh-other" {...$h('hp_other_info')}>{other.map((l, i) => <>{i > 0 && <br />}{l}</>)}</div>}
 	</div>

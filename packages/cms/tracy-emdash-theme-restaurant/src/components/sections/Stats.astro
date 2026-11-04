@@ -5,6 +5,7 @@ import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import type { Row } from '@/lib/content'
 import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   entry: Row
@@ -37,6 +38,6 @@ const live = await liveLinks(Astro.request, locale, [entry.button_link])
 				</li>
 			))}
 		</ul>
-		{entry.button_title && live(entry.button_link) && <a class="rs-btn" href={href(locale, entry.button_link || '/')} {...$s('button_title')}>{String(entry.button_title).trim()}</a>}
+		{entry.button_title && live(entry.button_link) && <a class="rs-btn" href={dataHref(entry.button_link || '/', (p) => href(locale, p))} {...$s('button_title')}>{String(entry.button_title).trim()}</a>}
 	</div>
 </section>

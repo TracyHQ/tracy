@@ -5,6 +5,7 @@ import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import type { Row } from '@/lib/content'
 import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   entry: Row
@@ -25,7 +26,7 @@ const live = await liveLinks(Astro.request, locale, slides.map((s) => s.slide_li
 			{mediaUrl(s.image) && <img src={mediaUrl(s.image)!} alt="" width="1440" height="720" loading="eager" fetchpriority={i === 0 ? 'high' : undefined} {...$show(`items[${i}].image`)} />}
 			{titles && s.slide_title && (
 				<div class="rs-slide-title" {...$show(`items[${i}].slide_title`)}>
-					{s.slide_link && live(s.slide_link) ? <a href={href(locale, s.slide_link)}>{s.slide_title}</a> : s.slide_title}
+					{s.slide_link && live(s.slide_link) ? <a href={dataHref(s.slide_link, (p) => href(locale, p))}>{s.slide_title}</a> : s.slide_title}
 				</div>
 			)}
 		</div>
