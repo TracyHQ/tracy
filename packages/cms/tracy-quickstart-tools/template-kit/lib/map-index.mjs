@@ -47,10 +47,16 @@ export function ownerOfPath(idx, path) {
   if (page && page.link && page.link !== '#') {
     const q = queryOf(page.link)
     const view = q.view ?? ''
-    if (view === 'category' && q.id) return { owner: `category-${q.id}`, kind: `category listing${listPage}` }
-    if (view === 'contact' && q.id) return { owner: `contact-${q.id}`, kind: 'contact page' }
-    if (view === 'article' && q.id) return { owner: `article-${q.id}`, kind: 'article' }
-    if (view === 'featured') return { owner: null, kind: `featured articles${listPage}` }
+    // Content views are com_content's and a contact is com_contact's: a category of another component (news feeds)
+    // lists no content items.
+    const option = q.option ?? 'com_content'
+    const content = option === 'com_content'
+    if (content && view === 'category' && q.id)
+      return { owner: `category-${q.id}`, kind: `category listing${listPage}` }
+    if (option === 'com_contact' && view === 'contact' && q.id)
+      return { owner: `contact-${q.id}`, kind: 'contact page' }
+    if (content && view === 'article' && q.id) return { owner: `article-${q.id}`, kind: 'article' }
+    if (content && view === 'featured') return { owner: null, kind: `featured articles${listPage}` }
     const component = (q.option ?? 'unknown').replace(/^com_/, '')
     return { owner: null, kind: `${component} ${view || 'page'}`.trim() }
   }

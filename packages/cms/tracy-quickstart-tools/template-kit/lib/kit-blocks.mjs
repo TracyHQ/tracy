@@ -5,7 +5,7 @@ import { shownParagraphs } from './orphan-text.mjs'
 import { isFactRole } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { imageIdOf, neutralKey } from './ids.mjs'
-import { canonicalPath, pathOfRoute } from './kit-paths.mjs'
+import { actionAddress, canonicalPath, pathOfRoute } from './kit-paths.mjs'
 import { slotsOfBlock } from './block-slots.mjs'
 import { buildFrames } from './kit-frames.mjs'
 import { itemListsOf } from './kit-item-lists.mjs'
@@ -193,11 +193,15 @@ export function buildBlock({
     const paired = pair ? neutralKey(pair.key) : null
     const linkId = paired && !usedIds.has(paired) ? paired : `${id}.link-${i + 1}`
     usedIds.add(linkId)
+    // An address of the site that runs a task (a question form opened in a modal, a print view) is no page: the link
+    // opens that action.
+    const action = target ? null : actionAddress(l.href, siteUrl, aliasHosts)
     return {
       id: linkId,
       position: l.position ?? i,
       label: l.label || null,
       target,
+      ...(action ? { opens: { kind: 'action', action } } : {}),
       ...(icon ? { icon: { ...icon, network } } : {})
     }
   })
@@ -402,7 +406,7 @@ function opensOf(t) {
   if (t.kind === 'form') return { kind: 'form', action: t.action ?? null }
   if (t.kind === 'script') return { kind: 'script' }
   if (t.kind === 'submenu') return { kind: 'submenu' }
-  const out = { kind: t.kind === 'modal' ? 'modal' : 'panel', element: t.element }
+  const out = { kind: t.kind === 'modal' || t.kind === 'slide' ? t.kind : 'panel', element: t.element }
   if (t.shows === 'map')
     Object.assign(out, {
       shows: 'map',

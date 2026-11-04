@@ -40,8 +40,12 @@ export function labelLinks({ links, menuBlocks = {}, mapSlots = [], siteUrl, ali
       Object.assign(l, { labelId: neutralKey(it.label.slot), menuItem: it.item, menu: menu.key })
       continue
     }
-    const same = mapSlots.filter((s) => s.type === 'text' && words(s.sample) === w)
-    const pick = same.find((s) => LABEL_ROLE.test(s.role ?? ''))
+    // Links repeating the same words (a "View more" button per section) take each its own twin slot, in map order.
+    const same = mapSlots.filter(
+      (s) => s.type === 'text' && words(s.sample) === w && LABEL_ROLE.test(s.role ?? '')
+    )
+    const named = new Set(links.map((x) => x.labelId).filter(Boolean))
+    const pick = same.find((s) => !named.has(neutralKey(s.key))) ?? same[0]
     if (pick) l.labelId = neutralKey(pick.key)
   }
   return menu?.key ?? null

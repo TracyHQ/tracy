@@ -154,3 +154,18 @@ export function listingListKeys(map, path, pathOfRoute) {
     })
     .map(([key]) => key)
 }
+
+// A list measured on a listing page under the map list's own id (min-evidence.json, no card fields) is that list:
+// its measured minimum joins the map's list, which brings the card fields, and the bare measured copy leaves
+// `blockLists`. Changes both arrays in place.
+export function joinMeasuredTwins(blockLists, mapLists) {
+  for (const l of mapLists) {
+    const twin = blockLists.find((x) => x.id === l.id && !x.rowSlots?.length)
+    if (!twin) continue
+    if (l.min == null && twin.min != null) {
+      const { id: _id, rowKind: _k, rowSlots: _r, max: _m, ...measured } = twin
+      Object.assign(l, measured)
+    }
+    blockLists.splice(blockLists.indexOf(twin), 1)
+  }
+}

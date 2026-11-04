@@ -113,3 +113,23 @@ test('a label slot says what else changes with it: other blocks, page titles and
   })
   assert.equal(about.alsoChanges, undefined, 'printed nowhere else: nothing to say')
 })
+
+test('links repeating the same words take each its own twin slot, in content map order', () => {
+  // An article with three "See dates" buttons, one per section: three slots with the same words.
+  const slots = [3, 8, 13].map((n) => ({
+    key: `article-40.${n}`,
+    type: 'text',
+    role: 'editorial.button_label',
+    sample: 'See dates'
+  }))
+  const links = ['/tides', '/reefs', '/dunes'].map((target, i) => ({
+    id: `l${i}`,
+    label: 'See dates',
+    target
+  }))
+  labelLinks({ links, menuBlocks: {}, mapSlots: slots, siteUrl: SITE })
+  assert.deepEqual(
+    links.map((l) => l.labelId),
+    ['article-40.3', 'article-40.8', 'article-40.13']
+  )
+})

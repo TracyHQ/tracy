@@ -4,7 +4,7 @@ import { imagesDigest } from '../../../../../apps/tracy-web/src/lib/template-kit
 import { imageIdOf, neutralKey, pageIdOf } from './ids.mjs'
 import { buildBlock } from './kit-blocks.mjs'
 import { sampleIndex } from './sample-index.mjs'
-import { itemListsOf, itemParents, listingListKeys } from './kit-item-lists.mjs'
+import { itemListsOf, itemParents, joinMeasuredTwins, listingListKeys } from './kit-item-lists.mjs'
 import { canonicalPath, pathOfRoute } from './kit-paths.mjs'
 import { applyLayouts } from './layouts.mjs'
 import { listingMax } from './listing-rows.mjs'
@@ -195,6 +195,7 @@ export function buildKit({
           errors,
           only: keys
         })
+        joinMeasuredTwins(block.lists, r.lists)
         block.lists.push(...r.lists)
         for (const d of r.demoOwned) if (!block.demoOwned.some((x) => x.id === d.id)) block.demoOwned.push(d)
       }
@@ -348,12 +349,14 @@ export function itemsListChecks({ pages, blocks, errors }) {
   const itemsOf = (b) => b?.lists.find((l) => l.rowKind === 'items')
   for (const p of pages) {
     if (!p.paginationOf) continue
-    const list = itemsOf(bodyOf(p.id))
     const first = itemsOf(bodyOf(p.paginationOf))
-    if (list && !list.rowSlots?.length && first?.rowSlots?.length) {
-      list.rowSlots = first.rowSlots
-      list.rowSlotsFrom = first.id
-    }
+    if (!first?.rowSlots?.length) continue
+    // Every items list of the further page (its own, and one measured under page 1's list id) takes page 1's.
+    for (const list of bodyOf(p.id)?.lists ?? [])
+      if (list.rowKind === 'items' && !list.rowSlots?.length) {
+        list.rowSlots = first.rowSlots
+        list.rowSlotsFrom = first.id
+      }
   }
   let without = 0
   for (const b of blocks)

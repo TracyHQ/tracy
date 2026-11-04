@@ -52,18 +52,21 @@ export function sampleIndex(map) {
       all.push([n, s])
     }
     // One element printing several slots run together ("Join over " + a number + " of inspiring creatives"): the
-    // text is content when slot samples, longest first, leave no letter of it.
+    // text is content when slot samples, longest first, leave no letter of it. One sample of one word and the
+    // rest without letters ("Harbour 2.4.1") is a coincidence, not slots run together.
     const pieces = all
       .filter(([n]) => n.length >= 3 && /\p{L}/u.test(n))
       .sort((x, y) => y[0].length - x[0].length)
     const piecesOf = (t) => {
       let rest = t
       let first = null
+      const used = []
       for (const [n, s] of pieces) {
         if (!rest.includes(n)) continue
         rest = rest.split(n).join(' ')
         first ??= s
-        if (!/\p{L}/u.test(rest)) return first
+        used.push(n)
+        if (!/\p{L}/u.test(rest)) return used.length > 1 || words(used[0]).length > 1 ? first : null
       }
       return null
     }

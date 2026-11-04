@@ -33,7 +33,15 @@ export function settleForeignTexts(blocks) {
   const declared = declaredIds(blocks)
   for (const b of blocks)
     for (const t of b.textsShown ?? []) {
-      if (!t.foreign || declared.has(t.slot)) continue
+      if (!t.foreign) continue
+      // One word that is a piece of another item's longer sample is a coincidence ("Next" of an article step link,
+      // "... next year" in an item), even when that item's own block declares the sample.
+      if (t.how === 'piece' && oneWord(t.text) && !(b.slots ?? []).some((s) => s.id === t.slot)) {
+        t.slot = null
+        b.fixedText.push({ text: t.text, source: null })
+        continue
+      }
+      if (declared.has(t.slot)) continue
       const link = (b.links ?? []).find((l) => norm(l.label) === norm(t.text))
       if (link) link.labelId ??= t.slot
       else if (String(t.source?.key ?? '').startsWith('article-') || t.how === 'piece') {
@@ -45,6 +53,8 @@ export function settleForeignTexts(blocks) {
     }
   for (const b of blocks) for (const t of b.textsShown ?? []) delete t.foreign
 }
+
+const oneWord = (s) => (String(s ?? '').match(/[\p{L}\p{N}']+/gu) ?? []).length === 1
 
 const norm = (s) =>
   String(s ?? '')
