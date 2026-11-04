@@ -102,24 +102,25 @@ test('text cut by its box, or running past the screen edge, overflows, at the wi
   )
 })
 
-test('a block over three screens high is unusual, judged against the screen of its width', () => {
-  const tall = findTallBlocks([
-    {
-      path: '/',
-      width: 1440,
-      blocks: [
-        { selector: 'section.a', height: 2701 },
-        { selector: 'section.b', height: 2600 }
-      ]
-    },
-    { path: '/', width: 390, blocks: [{ selector: 'section.b', height: 2600 }] }
-  ])
+test('a block is unusual only when over 25% taller than the same block on the demo, never against a fixed height', () => {
+  const demo = [
+    { page: '/', width: 1440, selector: 'main.home', height: 3354 },
+    { page: '/', width: 390, selector: 'main.home', height: 3354 }
+  ]
+  const site = (height, width = 1440) => [{ path: '/', width, blocks: [{ selector: 'main.home', height }] }]
+  assert.deepEqual(findTallBlocks(site(2721), demo), [], 'shorter than the demo')
+  const [tall, ...rest] = findTallBlocks(site(4300), demo)
+  assert.equal(rest.length, 0)
+  assert.deepEqual([tall.page, tall.width, tall.selector, tall.measured], ['/', 1440, 'main.home', 4300])
+  assert.match(tall.reason, /28% taller than on the template's demo \(3354 px\)/)
+  assert.deepEqual(findTallBlocks(site(4300)), [], 'no demo height says nothing')
   assert.deepEqual(
-    tall.map((x) => [x.selector, x.width]),
-    [
-      ['section.a', 1440],
-      ['section.b', 390]
-    ]
+    findTallBlocks(
+      [{ path: '/about', width: 1440, blocks: [{ selector: 'main.home', height: 9000 }] }],
+      demo
+    ),
+    [],
+    'another page has no demo height for this block'
   )
 })
 
@@ -183,7 +184,7 @@ test('the new measures at both widths, as groups: levels and causing steps', asy
     door: pagedSite(1).door,
     report: writtenReport(),
     host: fakeHost({ '/': pageRead('/') }, { measures }).host,
-    baseline: null
+    baseline: { blocks: [{ page: '/', width: 1440, selector: 'section.long', height: 3000 }] }
   })
   const got = (name) => group(check, name).failures.map((f) => [f.level, f.causingStep, f.page, f.width])
   assert.deepEqual(got('dead-links'), [['block', 3, '/', null]])
@@ -215,7 +216,8 @@ test('warnings alone leave the check green and are counted', async () => {
     texts: [],
     labels: [],
     pictures: { files: [], shas: [] },
-    over: []
+    over: [],
+    blocks: [{ page: '/', width: 1440, selector: 'section.long', height: 3000 }]
   }
   const check = await runSiteCheck({
     door: pagedSite(1).door,

@@ -1,7 +1,7 @@
 /**
  * The site check's look read: a page on each side of the template's light and dark switch. It answers, per side, the words on a plain
- * ground with the brand style on and off, the words on a picture against the picture region under them, and each logo's
- * pixels against its ground. The judging stays in `apps/tracy-web/src/site-check/`.
+ * ground with the brand style on and off, the words on a picture against the picture region under them, each logo's
+ * pixels against its ground, and the pictures shown on that side. The judging stays in `apps/tracy-web/src/site-check/`.
  *
  * A theme is put by moving the template's own mark: on JA templates the switch's script does only that and keeps a cookie
  * (read from the template's script and compared on the page, element by element).
@@ -25,6 +25,7 @@ export const LOOK_CAPS = Object.freeze({
   words: 150,
   over: 14,
   logos: 6,
+  shownPictures: 100,
   sideMs: 6000
 })
 /** A whole page's read at one width stops starting shots after this: what it could not reach is `truncated`. */

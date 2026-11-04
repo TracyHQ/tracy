@@ -1,14 +1,34 @@
 // Unowned slots that still show: the write report lists the kept-block slots no step owns. One a visitor sees on a kept page is the
-// template's demo showing, which blocks. One that holds words or a picture and shows nowhere is a warning, as is any of them when the
-// host could not say what the pages show.
+// template's demo showing, which blocks. A picture slot that still holds a template picture blocks even when the read did not see it
+// (it may show only in the other theme, or below a width the read missed), unless the kit says its block prints at no width. Any other
+// slot that holds words or a picture and shows nowhere is a warning, as is any of them when the host could not say what the pages show.
+//
+// Whose it is: the planner's, unless the slot is the light or dark twin of a frame the write report hid (`twinOf` in the kit). The
+// plan hides only the original; carrying the hide to its twin is the write step's job (owner-table.js `hiddenTwins`).
 import { menuRows } from '../write-step/page-meta-write.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { keptPaths, pagesRead } from './host-pages.js'
 import { whereShown } from './page-measures.js'
+import { WRITE_STEP } from './steps.js'
 
 const keyOf = (slot) => String(slot ?? '').replace(/^block-/, 'module-')
 const entityOf = (key) => key.slice(0, key.lastIndexOf('.'))
 const each = (value) => (Array.isArray(value) ? value : [])
+/** The folders Tracy writes its own pictures to (theme-reads.js reads them the same way): any other file is the template's. */
+const TRACY_PICTURE = /(?:^|\/)tracy-(?:content|brand)\//
+const templatePicture = (value) => !TRACY_PICTURE.test(String(value).split('#')[0])
+
+/** The kit's frames by id, and whether a kept block prints at no width at all (`visibleAt` empty). */
+function kitFacts(kit) {
+  const blocks = each(kit?.blocks)
+  return {
+    frame: new Map(blocks.flatMap((b) => each(b?.frames)).map((f) => [f?.id, f])),
+    neverPrints: (id) => {
+      const b = blocks.find((x) => x?.id === id)
+      return Array.isArray(b?.visibleAt) && b.visibleAt.length === 0
+    }
+  }
+}
 
 /** What the host says a visitor sees on each kept page, or null when it does not say. */
 async function shownMeasures(context) {
@@ -72,6 +92,12 @@ async function run(context) {
       .filter((s) => s.status === 'written')
       .map((s) => pathOfValue(s.ordered, rows))
   )
+  const hiddenByWrite = new Set(
+    each(report.slots)
+      .filter((s) => s.status === 'hidden')
+      .map((s) => s.slot)
+  )
+  const kit = kitFacts(context.kit)
   const failures = []
   for (const u of holding) {
     const slot = held(u)
@@ -88,14 +114,19 @@ async function run(context) {
     const page = pageOf.get(slot.entity ?? entityOf(keyOf(u.slot)))
     if (!shown && !page) continue
     const holds = u.type === 'image' ? 'a picture' : 'words'
+    const demoPicture = u.type === 'image' && templatePicture(slot.current) && !kit.neverPrints(u.block)
+    const twinOf = kit.frame.get(u.slot)?.twinOf
     failures.push({
       page: shown?.page ?? page,
       slot: u.slot,
       measured: slot.current.slice(0, 120),
-      level: shown ? 'block' : 'warn',
+      level: shown || demoPicture ? 'block' : 'warn',
+      ...(typeof twinOf === 'string' && hiddenByWrite.has(twinOf) ? { causingStep: WRITE_STEP } : {}),
       reason: shown
         ? `A visitor sees this ${u.type} slot and no step owns it`
-        : `No step owns this ${u.type} slot and it still holds ${holds}`
+        : demoPicture
+          ? 'No step owns this picture slot and it still holds the template picture, on a block the kit says prints'
+          : `No step owns this ${u.type} slot and it still holds ${holds}`
     })
   }
   return { checked: unowned.length, failures }

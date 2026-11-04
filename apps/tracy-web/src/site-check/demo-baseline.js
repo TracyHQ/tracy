@@ -176,6 +176,19 @@ export function overFromHost(measures) {
   return over
 }
 
+/**
+ * The tall blocks of an untouched site, per page and width, with their height: what `tall-blocks` holds a written site's to. The
+ * host reports only blocks over two screens, so a block missing here has no demo height.
+ * @param {object[]} measures the host's `pageMeasures`
+ */
+export function blocksFromHost(measures) {
+  return each(measures).flatMap((m) =>
+    each(m?.blocks)
+      .filter((b) => typeof b?.selector === 'string' && b.height > 0)
+      .map((b) => ({ page: m.path, width: m.width, selector: b.selector, height: b.height }))
+  )
+}
+
 const fileOf = (dir, version) => path.join(dir, `${String(version).replace(/[^a-zA-Z0-9._-]+/g, '_')}.json`)
 
 /** One baseline per quickstart version, kept as a file in a folder that is not in the repo. */
@@ -261,7 +274,8 @@ export async function ensureBaseline({ host, pages, version, store, force = fals
   const measured = settled(joined(parts), visited, pages)
   const baseline = {
     ...baselineFromHost(measured, { version, measuredAt: now().toISOString() }),
-    over: overFromHost(measures)
+    over: overFromHost(measures),
+    blocks: blocksFromHost(measures)
   }
   await store.save(version, baseline)
   return { baseline, measured: true }

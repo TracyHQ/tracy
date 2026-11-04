@@ -26,12 +26,39 @@ export function keptBlocks(plan) {
 }
 
 /**
+ * The frames that follow a hidden one: a frame with `twinOf` is the light or dark copy of the frame it names, never described or
+ * hidden on its own (the planner prompt), so it leaves with that frame. Followed through chains, though no kit has one today.
+ * @returns {Map<string, string>} twin frame id to the hidden frame it follows
+ */
+export function hiddenTwins(kit, hides) {
+  const twinsOf = new Map()
+  for (const f of arr(kit?.blocks).flatMap((b) => arr(b?.frames)))
+    if (typeof f?.id === 'string' && typeof f.twinOf === 'string')
+      twinsOf.set(f.twinOf, [...(twinsOf.get(f.twinOf) ?? []), f.id])
+  const out = new Map()
+  const queue = [...hides].filter((slot) => typeof slot === 'string')
+  while (queue.length) {
+    const slot = queue.shift()
+    for (const twin of twinsOf.get(slot) ?? [])
+      if (!hides.has(twin) && !out.has(twin)) {
+        out.set(twin, slot)
+        queue.push(twin)
+      }
+  }
+  return out
+}
+
+/**
  * The plan's claims: link targets and hide decisions. `hidden` is the copy check's reading of the plan (a slot the plan
  * also fills elsewhere is not hidden), and the main menu items to hide are hide decisions as well. A target the plan gives
  * a link wins over a hide the plan gives it elsewhere, as a filled slot does. Within one block it does not: a plan lists every
  * link a block has, so a link the same block hides, or one on a row of `rowsGone` (hide-rows.js), is that row's to lose.
+ * A frame whose `twinOf` names a hidden frame is hidden with it, as the plan's claim `via: 'twin'` (`hiddenTwins`).
  */
-export function planClaims({ plan, hidden, menuHide, filled = new Set(), rowsGone = new Set() }, file) {
+export function planClaims(
+  { plan, kit = null, hidden, menuHide, filled = new Set(), rowsGone = new Set() },
+  file
+) {
   const claims = []
   const linked = new Set()
   const leaving = new Set()
@@ -63,6 +90,21 @@ export function planClaims({ plan, hidden, menuHide, filled = new Set(), rowsGon
   for (const slot of hides)
     if (typeof slot === 'string' && !linked.has(slot))
       claims.push({ slot, owner: 'plan', file, kind: 'hide', content: '(hide)' })
+  // Only a twin on a kept block: one on a block the plan drops leaves with its block.
+  const kept = new Set(keptBlocks(plan).map((d) => d.block))
+  const blockOf = new Map(arr(kit?.blocks).flatMap((b) => arr(b?.frames).map((f) => [f?.id, b?.id])))
+  for (const [slot, follows] of hiddenTwins(kit, hides))
+    if (kept.has(blockOf.get(slot)) && !linked.has(slot) && !filled.has(slot))
+      claims.push({
+        slot,
+        owner: 'plan',
+        file,
+        kind: 'hide',
+        content: '(hide)',
+        via: 'twin',
+        twinOf: follows,
+        why: `the plan hides ${follows}, and this frame is its twin in the other theme`
+      })
   return claims
 }
 

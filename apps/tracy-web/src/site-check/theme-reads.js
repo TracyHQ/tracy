@@ -25,65 +25,61 @@ export const LOGO_GONE_RATIO = 2
 export const LOGO_BLOCK_SHARE = 0.6
 export const LOGO_WARN_SHARE = 0.4
 
-const WORST_SHOWN = 6
 /**
  * The bar for words the brand style coloured with its accent: 3:1, WCAG's level for large text and controls. An accent reads as a
  * highlight, a link or a button label, and the owner ruled 3.28:1 on a dark footer no fault (04/11/2026). The template's own words keep
  * 4.5:1 (`needed`).
  */
 export const BRAND_ACCENT_BAR = 3
+/**
+ * The floor for the template's own colours, on a plain ground or over a picture: under 3:1 is a step 0 warning, at or over it nothing.
+ * The owner ruled the template's default grey body and menu text (3.55:1 to 4.30:1, the same on the template's demo) no fault
+ * (04/11/2026). The brand's bars do not move.
+ */
+export const TEMPLATE_FLOOR = 3
 const rgb = (c) => (c ? `rgb(${c.slice(0, 3).join(', ')})` : null)
 const round = (n) => Number(n.toFixed(2))
 
 /**
  * Words on a plain ground, with the brand style on and off. Worse than the template and under the bar is the brand's. Words the
- * style did not touch, or left no worse, are the template's own: a warning, one per page and side, so a template's muted text is
- * said once and blocks no customer's site.
+ * style did not touch, or left no worse, are the template's own: nothing at TEMPLATE_FLOOR or over, else a warning on step 0 said
+ * once per side, selector and colours across the whole run, so a template's muted text blocks no customer's site and is not
+ * repeated on every page.
  */
 export function judgeBandContrast(entries) {
   const failures = []
   const seen = new Set()
   for (const m of entries)
-    for (const [side, read] of Object.entries(m.look.sides)) {
-      const own = []
+    for (const [side, read] of Object.entries(m.look.sides))
       for (const w of each(read.words)) {
         if (!w.fg || !w.bg) continue
         const ratio = contrast(w.fg, w.bg)
         if (ratio >= needed(w.large)) continue
         const before = w.fgOff && w.bgOff ? contrast(w.fgOff, w.bgOff) : null
-        if (before === null || ratio >= before - 0.01) {
-          own.push({ ratio, w })
-          continue
-        }
-        if (ratio >= BRAND_ACCENT_BAR) continue
+        const template = before === null || ratio >= before - 0.01
+        if (ratio >= (template ? TEMPLATE_FLOOR : BRAND_ACCENT_BAR)) continue
         // A footer's words are the same words on every page: said once, on the first page they were read.
-        const id = `${side} ${w.selector} ${w.fg} ${w.bg}`
+        const id = `${template ? 'own' : 'brand'} ${side} ${w.selector} ${w.fg} ${w.bg}`
         if (seen.has(id)) continue
         seen.add(id)
-        failures.push({
-          page: m.path,
-          width: m.width,
-          measured: `${w.selector} "${w.text}" ${rgb(w.fg)} on ${rgb(w.bg)} reads ${round(ratio)}:1, ${round(before)}:1 before the brand style`,
-          reason: `The brand style makes these words read under ${BRAND_ACCENT_BAR}:1 in the ${side} theme.`
-        })
+        failures.push(
+          template
+            ? {
+                page: m.path,
+                width: m.width,
+                level: 'warn',
+                causingStep: TEMPLATE_STEP,
+                measured: `${w.selector} "${w.text}" ${rgb(w.fg)} on ${rgb(w.bg)} reads ${round(ratio)}:1`,
+                reason: `The template's own words read under ${TEMPLATE_FLOOR}:1 in the ${side} theme, and the brand style did not make them so.`
+              }
+            : {
+                page: m.path,
+                width: m.width,
+                measured: `${w.selector} "${w.text}" ${rgb(w.fg)} on ${rgb(w.bg)} reads ${round(ratio)}:1, ${round(before)}:1 before the brand style`,
+                reason: `The brand style makes these words read under ${BRAND_ACCENT_BAR}:1 in the ${side} theme.`
+              }
+        )
       }
-      const id = `${m.path} ${side} own`
-      if (own.length && !seen.has(id)) {
-        seen.add(id)
-        own.sort((a, b) => a.ratio - b.ratio)
-        failures.push({
-          page: m.path,
-          width: m.width,
-          level: 'warn',
-          causingStep: TEMPLATE_STEP,
-          measured: own
-            .slice(0, WORST_SHOWN)
-            .map(({ ratio, w }) => `${w.selector} ${rgb(w.fg)} on ${rgb(w.bg)} ${round(ratio)}:1`)
-            .join('; '),
-          reason: `${own.length} text colours read under the bar in the ${side} theme, and the brand style did not make them so.`
-        })
-      }
-    }
   return failures
 }
 
@@ -138,7 +134,7 @@ function untouchedRatio(over, { path, width, side, key }) {
  * Words on a picture against the region the host shot under them. A brand colour that fails where the template's passes is the
  * brand's. Otherwise the picture step answers when its picture is what makes them fail: the same words read at the bar, or clearly
  * better, on the untouched site. Words that read as badly there too, or lie on the template's own picture or a gradient, are the
- * template's, which warns.
+ * template's, which warns only under TEMPLATE_FLOOR.
  */
 export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
   const known = picturesKnown(report, baseline)
@@ -187,7 +183,7 @@ export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
             ...base,
             reason: `The picture makes these words read under ${need}:1 in the ${side} theme.`
           })
-        } else {
+        } else if (ratio < TEMPLATE_FLOOR) {
           failures.push({
             ...base,
             level: 'warn',

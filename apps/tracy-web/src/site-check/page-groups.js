@@ -10,15 +10,15 @@
 //   empty-frames       block  3 planner     host no-empty-picture-slots, no-empty-boxes (the plan owns hide decisions)
 //   cms-errors         block  9 write       host no-cms-error-leak, no-raw-placeholders
 //   text-overflow      block  6 writer      new: text cut by or past its box
-//   tall-blocks        warn   6 writer      new
+//   tall-blocks        warn   6 writer      new: a block over 25% taller than the same block on the demo baseline; silent without one
 //   stretched-pictures warn   8 pictures    new
-//   unowned-slots      block  3 planner     new: unowned slots that still hold their demo; a warning when no visitor sees one
+//   unowned-slots      block  3 or 9        new: unowned slots that still hold their demo (a template picture blocks unless the kit says it never prints); 9 for a twin of a hidden frame
 //   empty-controls     block  9 write       new: a button with no words or going nowhere, a form field nothing names
 //   glued-words        block  9 write       new: words run into a highlight with no space
 //   unfinished-heading block  6 writer      new: a heading that stops on a small word; the writer owns the final text of every slot, labels included
 //   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
 //   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
-//   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes (3:1 for brand accent words)
+//   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes (3:1 for brand accent words; the template's own warn only under 3:1)
 //   words-over-picture block  8, 2 or 0     theme-reads.js: words against the picture region under them, in both themes
 //   logo-readable      block  2 or 0        theme-reads.js: a logo's pixels against its ground, in both themes (block over 60% under 2:1, warn from 40%)
 //   self-links         block  3 or 6        page-faults.js: a button that leads to the page it is on
@@ -114,7 +114,7 @@ export const PAGE_CHECK_GROUPS = [
     name: 'tall-blocks',
     level: 'warn',
     causingStep: 6,
-    find: (read) => findTallBlocks(read.measures)
+    find: (read, context) => findTallBlocks(read.measures, context.baseline?.blocks)
   }),
   measuredGroup({
     name: 'stretched-pictures',

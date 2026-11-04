@@ -9,6 +9,7 @@ import { textKey as hostTextKey } from '../../tracy-host/src/demo-qa.js'
 import {
   baselineFromHost,
   baselineFromKit,
+  blocksFromHost,
   ensureBaseline,
   fileBaselineStore,
   forHost,
@@ -398,4 +399,21 @@ test('the demo groups say so for that page, and stay green on what they could ju
       name
     )
   }
+})
+
+test('the demo keeps each tall block with its page, width and height, for tall-blocks to compare against', () => {
+  assert.deepEqual(
+    blocksFromHost([
+      {
+        path: '/',
+        width: 1440,
+        blocks: [
+          { selector: 'main.home', height: 3354 },
+          { selector: 'nothing', height: 0 }
+        ]
+      },
+      { path: '/about', width: 390 }
+    ]),
+    [{ page: '/', width: 1440, selector: 'main.home', height: 3354 }]
+  )
 })

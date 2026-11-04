@@ -87,6 +87,11 @@ html{scroll-behavior:smooth}body{margin:0;font:16px sans-serif}
 const PAGES = {
   '/plain': THEMED(BRAND),
   '/plate': THEMED().replace('/white.png', '/plate.png'),
+  // A picture and its twin for the other theme, each shown on one side only, as a template's light and dark signatures are.
+  '/twins': THEMED('<style>.dark-active .on-light,.light-active .on-dark{display:none}</style>').replace(
+    '<footer',
+    '<p><img class="on-dark" src="/plate.png" width="120" height="30" alt=""><img class="on-light" src="/mid.png" width="120" height="30" alt=""></p><footer'
+  ),
   '/noswitch':
     '<!doctype html><html><body><div class="ja-dark-mode">Mode</div><p>Plain words here</p></body></html>',
   '/faults': `<!doctype html><html><head><title>Quay | About</title><style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style></head><body class="view-article">
@@ -123,6 +128,26 @@ async function withPage(path, run, width = 1440) {
     server.close()
   }
 }
+
+test(
+  'each side says the pictures it shows, so a twin shown only in the light theme is seen',
+  opts,
+  async () => {
+    await withPage('/twins', async (page) => {
+      const { sides } = await readLook(page, 1440)
+      const has = (side, file) => sides[side].shownPictures.some((src) => src.endsWith(file))
+      assert.deepEqual(
+        [
+          has('dark', '/plate.png'),
+          has('dark', '/mid.png'),
+          has('light', '/plate.png'),
+          has('light', '/mid.png')
+        ],
+        [true, false, false, true]
+      )
+    })
+  }
+)
 
 test('both sides are read and the page is left as it was', opts, async () => {
   await withPage('/plain', async (page) => {

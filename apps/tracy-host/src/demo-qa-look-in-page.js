@@ -68,7 +68,8 @@ export function endLookInPage({ freezeId, opening, attrs }) {
 }
 
 /**
- * One side of the switch at one width: the words on a plain ground, the words on a picture and the logos (those two tagged for the host to shoot).
+ * One side of the switch at one width: the words on a plain ground, the words on a picture and the logos (those two tagged for the host to shoot),
+ * and the pictures a visitor sees on this side.
  * @param {{ caps: object, withLogos: boolean, overAttr: string, logoAttr: string,
  *   logoSelector: string }} arg
  */
@@ -302,6 +303,14 @@ export function readLookSideInPage({ caps, withLogos, overAttr, logoAttr, logoSe
         ...(typeof src === 'string' ? { src: src.slice(0, 300) } : {})
       })
     }
+  }
+
+  // ── Pictures ────────────────────────────────────────────────────────────────────────────────────────────────────
+  // A light or dark twin of a picture shows on one side only: the judge asks whether a stored picture shows on either.
+  side.shownPictures = []
+  for (const img of document.body.querySelectorAll('img')) {
+    if (side.shownPictures.length >= caps.shownPictures) break
+    if (shown(img)) side.shownPictures.push((img.currentSrc || img.src).slice(0, 300))
   }
   return side
 }

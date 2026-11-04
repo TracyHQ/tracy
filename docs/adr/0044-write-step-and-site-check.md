@@ -152,6 +152,32 @@ ground, warns from 40%, and passes below. The owner ruled logos with 31% to 34% 
 readable and only the dark part of the mark faded. The fault still goes to step 2 for the brand's logo file and to the template for
 its own. Every other measure keeps its bar.
 
+### 13. A frame's light or dark twin follows the frame it names
+
+When the plan hides a frame, the write step hides every frame whose `twinOf` names it, through chains, as the plan's claim with
+`via: 'twin'`; the planner never hides a twin on its own. In the site check, an unowned picture slot on a kept block that still holds
+a template picture blocks even when the read did not see it, unless the kit says its block prints at no width; a picture counts as
+shown when either side of the light and dark switch shows it, and an unowned twin of a frame the write step hid names step 9.
+
+### 14. The template's own text colours are held to 3:1
+
+`band-contrast` and `words-over-picture` say nothing of words whose colour and ground are the template's own (the brand style did
+not make them worse) when they read at 3:1 or over: the owner ruled the template's default grey text at 3.55:1 to 4.30:1, the same on
+the untouched demo, no fault. Under 3:1 they stay a step 0 warning, said once per theme, selector and colours for the whole run;
+the brand's bars do not move.
+
+### 15. A tall block is compared with the same block on the demo
+
+`tall-blocks` warns only when a block is more than 25% taller than the same block (page, width, selector) on the demo baseline,
+never against a fixed height, and says nothing when the baseline holds no height for that block. A 2721 px home block was warned
+under the old 2700 px limit while the same block on the demo measured 3354 px.
+
+### 16. The quickstart is the standard, not the public demo
+
+The comparison standard for a run is the quickstart version the customer receives (for example ja-boxing 1.0.10), measured as an
+untouched site (decision 8). The template's public demo site is not a standard: where it differs from the quickstart, in sizes or in
+spacing at narrow widths, the difference is not a fault of the run.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

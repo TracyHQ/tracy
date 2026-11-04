@@ -244,6 +244,7 @@ export async function runWriteStep(input) {
     const fromPlan = planClaims(
       {
         plan,
+        kit: kit.doc,
         hidden: index.hidden,
         menuHide: extras.mainMenu?.hide,
         filled: index.expected,

@@ -49,11 +49,10 @@ test('accent words the brand made unreadable on a band are red and name the bran
 test('accent words the brand coloured pass from 3:1, under the 4.5:1 the template words keep', () => {
   assert.equal(contrast(GREEN, BAND).toFixed(2), '3.28')
   assert.deepEqual(judgeBandContrast([entry('light', { words: [words()] })]), [])
-  const [own] = judgeBandContrast([entry('dark', { words: [words({ fg: GREEN, fgOff: GREEN })] })])
   assert.deepEqual(
-    [own.level, own.causingStep],
-    ['warn', 0],
-    'the same colour as the template own still warns at 4.5:1'
+    judgeBandContrast([entry('dark', { words: [words({ fg: GREEN, fgOff: GREEN })] })]),
+    [],
+    'the same colour as the template own reads over the template floor of 3:1'
   )
 })
 
@@ -65,18 +64,42 @@ test('the same accent on a ground it reads on, and large words at 3:1, are green
   assert.deepEqual(judgeBandContrast([entry('light', { words: [words({ large: true })] })]), [])
 })
 
-test('a colour the brand did not make worse is the template fault, a warning said once per page and side', () => {
+test('the template own grey from 3:1 is no fault: nothing is said, on any ground or page', () => {
   const muted = [108, 117, 125, 1]
+  assert.equal(contrast(muted, [24, 23, 23]).toFixed(2), '3.82')
   const f = judgeBandContrast([
     entry('dark', {
       words: [
         words({ fg: muted, fgOff: muted }),
         words({ fg: muted, fgOff: muted, bg: [24, 23, 23], bgOff: [24, 23, 23] })
       ]
-    })
+    }),
+    entry('light', { words: [words({ fg: muted, fgOff: muted })] }, { path: '/about' })
+  ])
+  assert.deepEqual(f, [])
+})
+
+test('the template own grey under 3:1 is one step 0 warning for the whole run, not one per page', () => {
+  const faint = [90, 96, 102, 1]
+  assert.equal(contrast(faint, BAND).toFixed(2), '2.61')
+  const grey = words({ fg: faint, fgOff: faint, selector: 'p.note' })
+  const f = judgeBandContrast([
+    entry('dark', { words: [grey] }),
+    entry('dark', { words: [grey] }, { path: '/about' }),
+    entry('dark', { words: [grey] }, { path: '/about', width: 390 })
   ])
   assert.equal(f.length, 1)
-  assert.deepEqual([f[0].level, f[0].causingStep], ['warn', 0])
+  assert.deepEqual([f[0].level, f[0].causingStep, f[0].page], ['warn', 0, '/'])
+  assert.match(f[0].reason, /under 3:1 in the dark theme/)
+})
+
+test('words the brand made worse keep their bar: 3.77:1 under the 4.5:1 body bar is still no fault, as before', () => {
+  const brandGrey = [120, 120, 120, 1]
+  assert.equal(contrast(brandGrey, BAND).toFixed(2), '3.77')
+  assert.deepEqual(
+    judgeBandContrast([entry('dark', { words: [words({ fg: brandGrey, fgOff: WHITE })] })]),
+    []
+  )
 })
 
 test('the same footer words on every page are said once', () => {
@@ -152,6 +175,20 @@ test('words that read as badly on the untouched site, or on its own picture, are
     { baseline: { pictures: { files: ['images/hero.jpg'] } } }
   ).failures[0]
   assert.deepEqual([own.level, own.causingStep], ['warn', 0])
+})
+
+test('the template own words over a picture from 3:1 are no fault; under it they warn', () => {
+  const untouched = (fg, under) => ({
+    baseline: { over: [{ page: '/', width: 1440, side: 'dark', key: 'k', fg, under }] }
+  })
+  const ground = { p15: 0.2, p50: 0.25, p85: 0.28 }
+  const white = over({ fg: WHITE, fgOff: WHITE, under: ground })
+  assert.deepEqual(
+    judgeWordsOverPicture([entry('dark', { over: [white] })], untouched(WHITE, ground)).failures,
+    []
+  )
+  const [grey] = judgeWordsOverPicture([entry('dark', { over: [over()] })], untouched(GREY, ground)).failures
+  assert.deepEqual([grey.level, grey.causingStep], ['warn', 0])
 })
 
 test('words the host could not shoot are counted, never read as green', () => {

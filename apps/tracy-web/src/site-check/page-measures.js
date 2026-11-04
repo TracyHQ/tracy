@@ -1,4 +1,4 @@
-// Measures the site check adds to the host's own: dead links, text that overflows its box, blocks far taller than a screen
+// Measures the site check adds to the host's own: dead links, text that overflows its box, blocks far taller than on the demo
 // and pictures drawn out of shape. Each is a pure function of what the host read in its browser (`pageMeasures`, one entry per
 // kept page and width), so each is tested on invented pages. The host's answer carries:
 //   { path, width, links: [{ href, text, status }],
@@ -12,11 +12,15 @@
 
 /** A box counts as overflowed only past this many pixels, so rounding in the browser is no finding. */
 export const OVERFLOW_TOLERANCE_PX = 2
-/** A block taller than this many screens of its width is unusual. At 390 a screen is 844 px high, at 1440 it is 900. */
-export const TALL_SCREENS = 3
-export const SCREEN_HEIGHT = { 1440: 900, 390: 844 }
+/**
+ * A block taller than the same block on the template's demo by more than this share is unusual. Never a fixed height: the owner
+ * ruled a 2721 px home block no fault when the demo's was taller still (04/11/2026).
+ */
+export const TALLER_THAN_DEMO = 0.25
 /** A picture drawn with its width and height ratio this far from the file's own is stretched (fit `fill` only). */
 export const STRETCH_TOLERANCE = 0.1
+
+import { pathOfMeasure } from './page-faults.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const clip = (text, n = 120) => String(text ?? '').slice(0, n)
@@ -180,7 +184,8 @@ const pathOfHref = (href) => {
 }
 
 /**
- * Where a visitor sees a stored value, or null. Words are read in the page's rendered text, a picture among its shown pictures, an
+ * Where a visitor sees a stored value, or null. Words are read in the page's rendered text, a picture among its shown pictures in
+ * the theme the page opens on or on either side of its light and dark switch (the look read), an
  * address among its shown links: with the words beside it when it has any, else alone, and only when no written line also sends a link
  * there, since then the page cannot tell the two apart.
  * @param {object[]} measures
@@ -192,7 +197,9 @@ export function whereShown(measures, { type, value, path = null, label = null, c
   const seen = (m) => {
     if (type === 'image') {
       const file = String(value).split('#')[0].replace(/^\/+/, '')
-      return each(m.shownPictures).some((src) => decodeURI(String(src)).includes(file))
+      // The look read puts each side of the light and dark switch (theme-reads.js): a picture either side shows is shown.
+      const sides = Object.values(m.look?.sides ?? {}).flatMap((side) => each(side?.shownPictures))
+      return [...each(m.shownPictures), ...sides].some((src) => decodeURI(String(src)).includes(file))
     }
     if (type === 'url') {
       if (path === null) return false
@@ -207,21 +214,32 @@ export function whereShown(measures, { type, value, path = null, label = null, c
   return at ? { page: at.path, width: at.width } : null
 }
 
-/** A block more than TALL_SCREENS screens high at its width: a warning, since a long list is legitimate. */
-export function findTallBlocks(measures) {
-  const failures = []
-  for (const m of each(measures)) {
-    const limit = (SCREEN_HEIGHT[m.width] ?? 900) * TALL_SCREENS
-    for (const b of each(m.blocks))
-      if (b.height > limit)
-        failures.push({
-          page: m.path,
-          width: m.width,
-          measured: Math.round(b.height),
-          reason: `A block is ${Math.round(b.height)} px high, over ${TALL_SCREENS} screens (${limit} px)`,
-          selector: b.selector ?? null
-        })
+/**
+ * A block more than TALLER_THAN_DEMO taller than the same block (page, width and selector) on the untouched demo: a warning, since a
+ * long list is legitimate. A block the demo baseline holds no height for says nothing: the host keeps only blocks over two screens,
+ * and a baseline measured before it kept them holds none.
+ * @param {object[]} measures the written site's
+ * @param {{ page: string, width: number, selector: string, height: number }[]} [demoBlocks] the baseline's `blocks`
+ */
+export function findTallBlocks(measures, demoBlocks = []) {
+  const demo = new Map()
+  for (const d of each(demoBlocks)) {
+    const key = `${pathOfMeasure(d.page)} ${d.width} ${d.selector}`
+    if (d.height > 0) demo.set(key, Math.max(demo.get(key) ?? 0, d.height))
   }
+  const failures = []
+  for (const m of each(measures))
+    for (const b of each(m.blocks)) {
+      const was = demo.get(`${pathOfMeasure(m.path)} ${m.width} ${b.selector}`)
+      if (!was || b.height <= was * (1 + TALLER_THAN_DEMO)) continue
+      failures.push({
+        page: m.path,
+        width: m.width,
+        measured: Math.round(b.height),
+        reason: `A block is ${Math.round(b.height)} px high, ${Math.round((b.height / was - 1) * 100)}% taller than on the template's demo (${Math.round(was)} px)`,
+        selector: b.selector ?? null
+      })
+    }
   return failures
 }
 
