@@ -72,3 +72,29 @@ test('the export wraps the emphasis in the demo span; a slot without inline igno
     'class="hl"'
   assert.equal(out(k), 'European Coaching in ((span class="hl"))Dubai((/span))')
 })
+
+test('the export breaks the line before the emphasis only where the demo did, as a two-line title', () => {
+  const out = (inline, text, emphasis) => {
+    const c = withHeading(emphasis)
+    slotOf(c, 'block-2.1').text = text
+    const k = kit()
+    k.blocks.find((b) => b.id === 'block-2').slots.find((s) => s.id === 'block-2.1').inline = inline
+    return exportContractMapping({
+      copy: c,
+      contract: 'demo-gym/j6/1.0.0',
+      revision: 'rev-1',
+      kit: k,
+      brief: brief()
+    }).mapping.changes['module-2.1']
+  }
+  // The demo "Our((br/)) ((span))Classes((/span))": a break, then the accent words at the end.
+  const twoLines = [{ tag: 'br' }, { tag: 'span', attrs: '', text: 'Classes', at: 'end' }]
+  assert.equal(out(twoLines, 'Our Sessions', 'Sessions'), 'Our((br/))((span))Sessions((/span))')
+  // An emphasis that opens the text has no line above it.
+  assert.equal(out(twoLines, 'Sessions for everyone', 'Sessions'), '((span))Sessions((/span)) for everyone')
+  // A demo without the break, or with its break after the accent words, gets none.
+  const oneLine = [{ tag: 'span', attrs: '', text: 'Classes', at: 'end' }]
+  assert.equal(out(oneLine, 'Our Sessions', 'Sessions'), 'Our ((span))Sessions((/span))')
+  const after = [{ tag: 'span', attrs: '', text: 'NO1', at: 'start' }, { tag: 'br' }]
+  assert.equal(out(after, 'Our Sessions', 'Sessions'), 'Our ((span))Sessions((/span))')
+})

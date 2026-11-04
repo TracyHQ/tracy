@@ -100,9 +100,12 @@ export function parseArgs(argv) {
   return o
 }
 
+/** The content coverage file beside the contract (its `inlineMarkup` measurement), null when there is none. */
+const contentCoverageOf = (o) => readIf(join(o.contract, 'content-coverage.json')) ?? null
+
 /** A settled kit: its slot shape checks counted again from the content map, and the tool that settled it. */
-const settled = (kit, map) => {
-  slotShapeChecks(kit, { map })
+const settled = (kit, map, o) => {
+  slotShapeChecks(kit, { map, contentCoverage: contentCoverageOf(o) })
   return stampSettled(kit)
 }
 
@@ -149,13 +152,13 @@ function slotRoles(o, out) {
   const map = readJson(join(o.contract, 'content-map.json'))
   if (o.only === 'sentences') {
     settleSentenceGroups(kit, { map })
-    writeJson(file, settled(kit, map))
+    writeJson(file, settled(kit, map, o))
     console.log(`${kit.blocks.flatMap((b) => b.sentences ?? []).length} sentence groups`)
     return 0
   }
   if (o.only !== undefined) throw new Error('slot-roles --only takes: sentences')
   const r = settleSlotRoles(kit, { map, drives: readIf(join(out, 'field-drives.json')) ?? {} })
-  writeJson(file, settled(kit, map))
+  writeJson(file, settled(kit, map, o))
   console.log(JSON.stringify(r, null, 1))
   for (const f of kit.coverage.failures.filter((x) => x.part === 'pageTitleSlots'))
     console.error(`${f.where}: ${f.reason}`)
@@ -169,13 +172,15 @@ function samples(o, out) {
   const kit = readJson(file)
   const map = readJson(join(o.contract, 'content-map.json'))
   const r = settleSamples(kit, { map })
-  writeJson(file, settled(kit, map))
-  const { samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing } = kit.checks
+  writeJson(file, settled(kit, map, o))
+  const { samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing, inlineMarkupLost } = kit.checks
   console.log(
     `${r.slots} text slots, ${r.changed} entries rewritten; cut before ${r.cutBefore}, after ${r.cutAfter} (${r.capped} cut at the length cap); ${r.inline} with inline marks; ${r.withoutMapSlot.length} without a content map slot`
   )
-  console.log(JSON.stringify({ samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing }))
-  return samplesCut || inlineEmphasisMissing ? 1 : 0
+  console.log(
+    JSON.stringify({ samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing, inlineMarkupLost })
+  )
+  return samplesCut || inlineEmphasisMissing || inlineMarkupLost ? 1 : 0
 }
 
 /** Measure what each stored field drives on a throwaway site, into field-drives.json. */
@@ -203,7 +208,7 @@ function relabel(o, out) {
   const kit = readJson(file)
   const map = readJson(join(o.contract, 'content-map.json'))
   const r = relabelKit(kit, { map, linkLabelSlots })
-  writeJson(file, settled(kit, map))
+  writeJson(file, settled(kit, map, o))
   const links = kit.blocks.flatMap((b) => b.links ?? [])
   console.log(
     `${links.filter((l) => l.labelId).length} links name their label slot, ${links.filter((l) => l.fixedLabel).length} carry a fixed-text reason (${r.set} label slots named now), linksWithoutLabel ${r.wrong}`
@@ -237,7 +242,7 @@ function settingSlots(o, out) {
   const failures = []
   const wrong = contactFieldChecks(kit, (part, where, reason) => failures.push({ part, where, reason }))
   if (kit.coverage?.parts) kit.coverage.parts.contactFieldsUnresolved = wrong
-  writeJson(file, settled(kit, map))
+  writeJson(file, settled(kit, map, o))
   const maps = kit.blocks.flatMap((b) => (b.links ?? []).filter((l) => l.opens?.shows === 'map'))
   console.log(
     `${r.slots} setting slots: ${r.tied} of ${maps.length} map buttons tied, ${r.mobile} mobile lines opened, ${r.backgrounds} frames painted behind tied${backgroundSettings ? '' : ' (no --webroot: background slots kept)'}; contactFieldsUnresolved ${wrong}`

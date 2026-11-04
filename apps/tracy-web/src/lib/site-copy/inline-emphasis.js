@@ -32,7 +32,23 @@ export const emphasisRoomOf = (mark) =>
   Math.max(String(mark?.text ?? '').length * EMPHASIS_STRETCH, EMPHASIS_MIN_ROOM)
 
 /**
+ * The line break the demo draws right before its accent words when they end the text (`Our((br/))((span))Classes((/span))`:
+ * the kit's `inline` is `[..., {tag: 'br'}, {tag: 'span', at: 'end'}]`), in content map notation; null for any other demo.
+ * @param {object | undefined} slot the kit slot
+ */
+export function breakBeforeMarkOf(slot) {
+  const marks = Array.isArray(slot?.inline) ? slot.inline : []
+  const mark = spanMarkOf(slot)
+  const k = marks.indexOf(mark)
+  const prev = k > 0 ? marks[k - 1] : null
+  if (!mark || mark.at !== 'end' || prev?.tag !== 'br') return null
+  return prev.attrs ? `((br ${prev.attrs}/))` : '((br/))'
+}
+
+/**
  * The items with the emphasis wrapped in the demo's tag, in content map notation, in the one item that holds it (the first).
+ * When the demo breaks the line right before its accent words at the end of the text (`breakBeforeMarkOf`), the break is
+ * written before the emphasis too, so the title prints on two lines as the demo does; a demo without that break gets none.
  * Unchanged without a span mark, without an emphasis, or when no item holds it.
  * @param {string[]} items
  * @param {string | undefined} emphasis
@@ -45,6 +61,10 @@ export function withEmphasis(items, emphasis, slot) {
   if (at === -1) return items
   const open = mark.attrs ? `((${mark.tag} ${mark.attrs}))` : `((${mark.tag}))`
   const i = items[at].indexOf(emphasis)
-  const wrapped = `${items[at].slice(0, i)}${open}${emphasis}((/${mark.tag}))${items[at].slice(i + emphasis.length)}`
+  const before = items[at].slice(0, i)
+  const br = breakBeforeMarkOf(slot)
+  // The break goes between words only: an emphasis that opens the text has no line above it.
+  const lead = br && before.trim() ? `${before.trimEnd()}${br}` : before
+  const wrapped = `${lead}${open}${emphasis}((/${mark.tag}))${items[at].slice(i + emphasis.length)}`
   return items.map((t, n) => (n === at ? wrapped : t))
 }

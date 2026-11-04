@@ -1629,6 +1629,56 @@ test('C1: a fragment with no heading or paragraph at all is one slot for the who
   )
 })
 
+test('inline markup: a merged unit keeps its inline tags in the content map notation', needsPhp, () => {
+  const run = bodyRun('<h2>Strong <span class="accent">arms</span><br>calm minds</h2>', [
+    '--whole-units',
+    '--inline-markup'
+  ])
+  assertWritten(run)
+  assert.deepEqual(
+    bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+    [['text', 'Strong ((span class="accent"))arms((/span))((br/))calm minds', '/html/body/div/h2']]
+  )
+  const field = bodyRun('More<br>\r\n<span>Blogs</span>', ['--whole-units', '--inline-markup'])
+  assertWritten(field)
+  assert.deepEqual(
+    bodySlots(field).map(([, sample, xpath]) => [sample, xpath]),
+    [['More((br/)) ((span))Blogs((/span))', '/html/body/div']]
+  )
+})
+
+test('inline markup: the limit is counted on the plain text, not on the markup', needsPhp, () => {
+  const heading = '<h2>Our <span class="a-rather-long-accent-class-name">classes</span></h2>'
+  const plain = bodyRun(heading, ['--whole-units']).read('content-map.json')
+  const marked = bodyRun(heading, ['--whole-units', '--inline-markup']).read('content-map.json')
+  const slotOf = (map) => map.slots.find((s) => s.entity === 'module-2')
+  assert.equal(slotOf(plain).sample, 'Our classes')
+  assert.match(slotOf(marked).sample, /\(\(span class=/)
+  assert.equal(slotOf(marked).maxCharacters, slotOf(plain).maxCharacters)
+})
+
+test('inline markup: a role carried by --previous-map stays when only markup changed', needsPhp, () => {
+  const content = '<h2>Strong <span>arms</span> calm minds</h2>'
+  const previous = bodyRun(content, ['--whole-units']).read('content-map.json')
+  const slot = previous.slots.find((s) => s.entity === 'module-2')
+  slot.role = 'claim.heading'
+  const run = capture(bodyInventory(content), {
+    helper: PER_TEXT_HELPER,
+    args: ['--whole-units', '--inline-markup'],
+    previous
+  })
+  assertWritten(run)
+  const now = run.read('content-map.json').slots.find((s) => s.entity === 'module-2')
+  assert.equal(now.sample, 'Strong ((span))arms((/span)) calm minds')
+  assert.equal(now.role, 'claim.heading')
+})
+
+test('inline markup needs whole units', needsPhp, () => {
+  const run = bodyRun('<h2>One <b>two</b></h2>', ['--inline-markup'])
+  assert.notEqual(run.status, 0)
+  assert.match(run.stderr, /--inline-markup needs --whole-units/)
+})
+
 test('C1: loose text beside real paragraphs is not glued into one slot', needsPhp, () => {
   const run = bodyRun('lead <i>in</i><p>One</p><p>Two <b>more</b></p>', ['--whole-units'])
   assertWritten(run)

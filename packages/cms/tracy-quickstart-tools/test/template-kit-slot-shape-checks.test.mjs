@@ -107,3 +107,30 @@ test('sentenceGroupsUnsettled counts a block whose sentence groups were never se
   assert.equal(kit.blocks[0].sentences.length, 1)
   assert.equal(slotShapeChecks(kit, { map }).sentenceGroupsUnsettled, 0)
 })
+
+test('inlineMarkupLost comes from the content coverage measurement, and is 1 when a whole-unit map was not measured', () => {
+  const unitMap = {
+    slots: [
+      ...map.slots,
+      { key: 'module-8.0', type: 'text', sample: 'Our Classes', xpath: '/html/body/div', entity: 'module-8' }
+    ]
+  }
+  assert.equal('inlineMarkupLost' in slotShapeChecks(staleKit(), { map: unitMap }), false, 'not asked')
+  assert.equal(slotShapeChecks(staleKit(), { map, contentCoverage: null }).inlineMarkupLost, 0)
+  const unmeasured = staleKit()
+  assert.equal(slotShapeChecks(unmeasured, { map: unitMap, contentCoverage: null }).inlineMarkupLost, 1)
+  assert.ok(
+    unmeasured.coverage.failures.some((f) => f.part === 'inlineMarkupLost' && f.where === 'content-map')
+  )
+  const lost = staleKit()
+  const contentCoverage = { inlineMarkup: { lost: 2, lostSlots: ['module-8.0', 'module-9.1'] } }
+  assert.equal(slotShapeChecks(lost, { map: unitMap, contentCoverage }).inlineMarkupLost, 2)
+  assert.equal(lost.checks.inlineMarkupLost, 2)
+  assert.deepEqual(
+    lost.coverage.failures.filter((f) => f.part === 'inlineMarkupLost').map((f) => f.where),
+    ['contentMap.slots[module-8.0]', 'contentMap.slots[module-9.1]']
+  )
+  const settled = { inlineMarkup: { lost: 0, lostSlots: [] } }
+  assert.equal(slotShapeChecks(lost, { map: unitMap, contentCoverage: settled }).inlineMarkupLost, 0)
+  assert.equal(lost.coverage.failures.filter((f) => f.part === 'inlineMarkupLost').length, 0)
+})

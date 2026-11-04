@@ -102,13 +102,15 @@ export function kitOfRelease(release, contracts) {
 
 /**
  * The self-checks the copy and the site check depend on, worded for /ops (2026-11-04): a kit settled before the tool cut no
- * sample, settled its sentence groups and listed inline emphasis reads as complete to everything else. Named first, in this
- * order, so the 90 characters /ops shows of the reason name them; any other counter keeps its own name.
+ * sample, settled its sentence groups and listed inline emphasis reads as complete to everything else, and so does a kit
+ * on a content map whose samples lost the demo's inline markup (`inlineMarkupLost`, measured against the demo database).
+ * Named first, so the 90 characters /ops shows of the reason name them; any other counter keeps its own name.
  */
 export const KIT_CHECK_LABELS = Object.freeze({
   samplesCut: 'demo samples cut',
   sentenceGroupsUnsettled: 'sentence groups not settled',
-  inlineEmphasisMissing: 'inline emphasis missing'
+  inlineEmphasisMissing: 'inline emphasis missing',
+  inlineMarkupLost: 'inline markup lost'
 })
 const checkName = (name) => KIT_CHECK_LABELS[name] ?? name
 const labelledFirst = ([a], [b]) => (a in KIT_CHECK_LABELS ? 0 : 1) - (b in KIT_CHECK_LABELS ? 0 : 1)

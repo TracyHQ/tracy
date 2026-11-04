@@ -266,6 +266,32 @@ are allowed, the audit version a file needs: 1.1.0 measures page hygiene, so a 1
 file measured on another map or lock is stale and counts as not measured. A release already
 published only warns.
 
+### `content-coverage/resample.mjs`: the inline markup of the samples, from the demo database
+
+A whole-unit text slot (`capture-contract.py --whole-units`: a title merged from several text pieces) captured before
+`--inline-markup` holds its words only: `More<br><span>Blogs</span>` became `More Blogs`, so the kit cannot tell that
+the template draws "Blogs" on a second line in the accent colour. This reads each text slot's stored value from the
+quickstart's database dump (the installer's `installation/sql/mysql/custom.sql` or a `database.sql[.gz]`, with the
+UPDATE and DELETE fixes appended after its INSERTs applied), takes the markup of the slot's element
+(`tracy-joomla-quickstart/scripts/unit-markup.php`, which loads HTML as the plugin's helper does) and counts
+`inlineMarkupLost`: a text slot whose stored value marks words inline (`br`, `span`, `strong`, `em`, `b`, `i`) while
+its sample marks none. No stand, no browser; it needs `php`.
+
+```
+node packages/cms/tracy-quickstart-tools/content-coverage/resample.mjs \
+  --contract <contract dir> --db-dump <custom.sql | database.sql[.gz]> [--write]
+```
+
+With `--write` it rewrites only the `sample` of the slots whose markup reads as the same words
+(`More((br/)) ((span))Blogs((/span))`; keys, roles, groups, limits and fits stay) and writes the `inlineMarkup` block
+(`checked`, `lost`, `lostSlots`, `mismatched`, the dump's name and sha256) into `content-coverage.json`. A coverage
+file that was current for the map is restamped to the new map (`restampedFrom` names the old digest): the audit
+compares samples by their words, so a new audit can only match more. A slot whose stored value is not its words is
+named (`mismatched`) and never written. A full audit given `--db-dump` measures the same block; without one it carries
+the previous block while the map is unchanged. Then settle the kit: `template-kit/cli.mjs samples` and
+`slot-roles --only sentences`, then `pack`. Exit: 0 nothing lost, 1 a slot still loses its markup or a stored value
+is not its words, 2 usage or file error. `test/content-coverage-inline-markup.test.mjs` covers it.
+
 ### `content-coverage/verify-viewer.mjs` — look at the content map on the real pages
 
 A page for a person to check a content map with their eyes, run after `--fit` has written the map. One block
@@ -326,7 +352,8 @@ node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs slot-roles --out <
 
 `samples --out <kit dir> --contract <contract dir>` gives every text slot of a written kit its whole demo text and
 `demoChars` and `inline` from the content map (kits made before 3.1.0 carry samples cut at their first words); `slot-roles --only
-sentences` settles only the sentence groups. Every settle command stamps the kit's `tool` (version in
+sentences` settles only the sentence groups. A content map captured without `--inline-markup` is resampled first
+(`content-coverage/resample.mjs --write`): the kit can only list the inline marks the map's samples hold. Every settle command stamps the kit's `tool` (version in
 `template-kit/lib/version.mjs`) and `settledAt`; none touches an image, so an approval stays valid.
 
 Run `pack` after. Without a measurement a tie between two slots of a page stays a failure of `pageTitleSlots`, by name.
@@ -436,8 +463,11 @@ list, kept by every later run).
   neither a `labelId` naming a slot of its own block nor a `fixedLabel` reason), and the slot shape checks counted
   against the content map (`lib/slot-shape-checks.mjs`, by `build` and every settle command, their first failing
   slots or blocks in `coverage.failures`): `samplesCut` (a text slot whose `sample` or `demoChars` is not the whole
-  demo text), `sentenceGroupsUnsettled` (a block whose `sentences` differ from what the sentence-groups pass gives)
-  and `inlineEmphasisMissing` (a text slot whose demo marks words inline with no matching `inline`)),
+  demo text), `sentenceGroupsUnsettled` (a block whose `sentences` differ from what the sentence-groups pass gives),
+  `inlineEmphasisMissing` (a text slot whose demo marks words inline with no matching `inline`) and
+  `inlineMarkupLost` (content map text slots whose stored value marks words inline while their sample does not, read
+  from the `inlineMarkup` block `content-coverage/resample.mjs` writes into `content-coverage.json`; a map with a
+  whole-unit text slot and no such block counts 1)),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the

@@ -94,7 +94,7 @@ export async function assembleKit(o, out, tool) {
   kit.checks.slotsInTwoBlocks = slotOwnerChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotCoverage = coverageGate(kit, { map, readings })
   // Text slot shape against the content map: whole samples, sentence groups, inline marks (slot-shape-checks.mjs).
-  slotShapeChecks(kit, { map })
+  slotShapeChecks(kit, { map, contentCoverage: readIf(join(o.contract, 'content-coverage.json')) ?? null })
   // One source for a link's label: its labelId, or the reason its words are fixed (link-label-reasons.mjs).
   fixedLinkLabels(kit)
   kit.checks.linksWithoutLabel = linkLabelChecks({ kit, errors: kit.errors })

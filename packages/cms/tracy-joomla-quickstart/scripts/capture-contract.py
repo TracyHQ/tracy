@@ -118,11 +118,19 @@ p.add_argument('--previous-map',default='');p.add_argument('--unplaced-report',d
 # whole unit, so the link would lose its words; its pieces stay separate text slots as without the flag. Off by default so every
 # published profile re-captures byte for byte.
 p.add_argument('--whole-units',action='store_true')
+# Inline markup (whole units): a unit merged from several text pieces kept only their words ("More<br><span>Blogs</span>"
+# became "More Blogs"), so the kit could not tell that the template draws "Blogs" on a second line in the accent colour.
+# With this flag (it needs --whole-units) such a slot's sample is the unit's inner markup in the content map's notation,
+# `More((br/)) ((span))Blogs((/span))` (`unit-markup.php`, which loads the HTML as the plugin's helper does), and every
+# slot's `maxCharacters` is counted on its plain text, markup left out. `--previous-map` keeps a role whose sample only
+# gained markup. Off by default so every published profile re-captures byte for byte.
+p.add_argument('--inline-markup',action='store_true')
 # The role vocabulary this capture WRITES (`roleVocabularyVersion`). 2 is what every released map carries. 3 (ADR 0040)
 # adds the roles the whole-unit and list rules need to say what they found: article.title, editorial.navigation_url,
 # editorial.illustration. Off by default: switching is a release decision, made with Road to live.
 p.add_argument('--role-vocabulary',choices=['2','3'],default='2')
 a=p.parse_args()
+if a.inline_markup and not a.whole_units:p.error('--inline-markup needs --whole-units: only a merged unit keeps its markup')
 menutypes=[s for s in a.menutypes.split(',') if s]
 template=a.template
 styleTemplates=[s for s in (a.styles or template).split(',') if s]
@@ -196,7 +204,7 @@ def inside_slotted(xpath,unit,slotted):
   at=at+'/'+seg
   if at in slotted:return True
  return False
-def whole_units(hs):
+def whole_units(hs,body=''):
  """Merge the text slots the HTML helper cut out of one unit element into one slot on that element."""
  texts=[h for h in hs if h.get('type')=='text' and isinstance(h.get('xpath'),str) and '/@' not in h['xpath']]
  units={id(h):text_unit(h['xpath']) for h in texts}
@@ -218,11 +226,28 @@ def whole_units(hs):
   done.add(unit)
   sample=re.sub(r'\s+',' ',' '.join(m['sample'] for m in members[unit])).strip()
   out.append({**h,'sample':sample,'xpath':unit})
+ if a.inline_markup:
+  merged=[h for h in out if h.get('xpath') in done]
+  for h,markup in zip(merged,unit_markup(body,[h['xpath'] for h in merged])):
+   # The markup must read as the words it replaces; anything else keeps the plain sample.
+   if markup and plain_text(markup)==h['sample']:h['sample']=markup
  return out
+UNIT_MARKUP=pathlib.Path(__file__).resolve().parent/'unit-markup.php'
+def unit_markup(body,xpaths):
+ """The inner markup of each element `xpaths` names in `body`, in the content map's notation (None when none)."""
+ if not xpaths:return []
+ return json.loads(subprocess.check_output(['php',str(UNIT_MARKUP)],input=json.dumps([{'html':body,'xpath':x} for x in xpaths]).encode()))
+# The content map's notation `((tag attrs))`, `((/tag))`, `((br/))`, read as the kit reads it (text-format.mjs partsOf).
+NOTATION=re.compile(r'\(\((/?[a-zA-Z][a-zA-Z0-9]*(?:\s[^()]*)?/?)\)\)')
+def plain_text(sample):
+ """A sample's words: markup (notation or HTML) read as a space, white space collapsed."""
+ return re.sub(r'\s+',' ',re.sub(r'<[^>]*>',' ',NOTATION.sub(' ',str(sample)))).strip()
+# The length a slot's limit is counted on: its plain text under --inline-markup (markup is not what a reader counts).
+text_len=lambda sample:len(plain_text(sample)) if a.inline_markup else len(sample)
 def html_slots(body):
  script='require $argv[1]; echo json_encode(ContentSlots::htmlSlots(stream_get_contents(STDIN)));'
  hs=json.loads(subprocess.check_output(['php','-r',script,a.slots_helper],input=body.encode())) if body.strip() else []
- return whole_units(hs) if a.whole_units else hs
+ return whole_units(hs,body) if a.whole_units else hs
 def form_types(files):
  """Field name -> type from Joomla form XML (`<field>` and JoomlArt's `<item>`), first declaration wins."""
  types={}
@@ -397,7 +422,7 @@ for kind,table in tables.items():
   if kind=='article':entity['identityReferences']={'catid':'category-'+row['catid']}
   entities.append(entity)
   def add(column, typ, sample, **extra):
-   slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':2048 if typ=='url' else 255 if typ=='image' else max(40,min(2000,len(sample)*2+20)),'requiresEvidence':bool(re.search(a.evidence_pattern,row.get('title',''))),**extra})
+   slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':2048 if typ=='url' else 255 if typ=='image' else max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':bool(re.search(a.evidence_pattern,row.get('title',''))),**extra})
   if kind=='module' and row['module']=='mod_ja_acm' and row['title'].startswith(a.module_prefix):
    params=json.loads(row['params']);cfg=json.loads(params['jatools-config']);block=cfg[':type'].split(':')[-1];layout=cfg[block].get('jatools-layout-'+block,'style-1')
    xml=root/('templates/'+template+'/acm')/block/'tmpl'/f'{layout}.xml'
@@ -469,7 +494,7 @@ if a.full_coverage:
   for pr in sorted((p for p in people_rows['userProfile'] if p['user_id']==uid),key=lambda p:int(p['id'])):
    pid=f'userProfile-{pr["id"]}';plabel=label.strip()+' / '+pr['field']
    def add(column,typ,sample,**extra):
-    slots.append({'key':f'{pid}.{len([s for s in slots if s["entity"]==pid])}','entity':pid,'column':column,'type':typ,'sample':sample,'maxCharacters':255 if typ=='image' else max(40,min(2000,len(sample)*2+20)),'requiresEvidence':False,**extra})
+    slots.append({'key':f'{pid}.{len([s for s in slots if s["entity"]==pid])}','entity':pid,'column':column,'type':typ,'sample':sample,'maxCharacters':255 if typ=='image' else max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':False,**extra})
    if pr['field']=='user_avatar':declare_text(add,'value',pr['value'],plabel,'image')
    elif MARKUP.search(pr['value']):declare_html(add,'value',pr['value'],plabel)
    else:declare_text(add,'value',pr['value'],plabel)
@@ -536,7 +561,7 @@ if a.full_coverage:
   for ext,key,value in sorted(declared):
    sid=string_id(ext,tag,key);eid=f'languageString-{sid}';label=f'{key} (template string, {tag})'
    def add(column,typ,sample,**extra):
-    slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':max(40,min(2000,len(sample)*2+20)),'requiresEvidence':False,**extra})
+    slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':False,**extra})
    if MARKUP.search(value):declare_html(add,'value',value,label)
    else:declare_text(add,'value',value,label)
    if not any(sl['entity']==eid for sl in slots):continue
@@ -648,7 +673,9 @@ if a.previous_map:
  previous={s['key']:s for s in json.load(open(a.previous_map)).get('slots',[])}
  for sl in slots:
   before=previous.get(sl['key'])
-  if before and 'role' in before and before.get('sample')==sl.get('sample'):
+  # Under --inline-markup a sample that only gained or lost markup is the same words: its role stays.
+  same=before and (plain_text(before.get('sample'))==plain_text(sl.get('sample')) if a.inline_markup else before.get('sample')==sl.get('sample'))
+  if same and 'role' in before:
    sl['role']=before['role']
    if 'group' in before:sl['group']=before['group']
 # The rule tables fill in every slot still without a role; slots that kept one are left as they are.

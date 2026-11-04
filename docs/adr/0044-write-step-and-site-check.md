@@ -204,9 +204,15 @@ block on step 6 when the written value holds no span (the copy named no emphasis
 the brand accent the style names (or its word colour, or a shade of it) is a step 0 warning: the template colours it with a fixed
 value. Written headings that no page prints as a heading leave the group unmeasured (decision 18).
 
-The Road to live step "Template kit" names three kit counters in words, first, so /ops shows them within its 90 characters:
+The Road to live step "Template kit" names four kit counters in words, first, so /ops shows them within its 90 characters:
 `samplesCut` "demo samples cut", `sentenceGroupsUnsettled` "sentence groups not settled", `inlineEmphasisMissing` "inline
-emphasis missing". Any of them above 0 keeps the kit `kit-incomplete`, as every self-check counter does.
+emphasis missing", `inlineMarkupLost` "inline markup lost" (content map samples that lost the demo's inline markup, measured
+against the demo database by `content-coverage/resample.mjs`). Any of them above 0 keeps the kit `kit-incomplete`, as every
+self-check counter does.
+
+The export writes the demo's line break too: when the kit slot's `inline` has a `br` right before a span that ends the
+text, the exported value puts `((br/))` before the wrapped emphasis (`Our((br/))((span))Classes((/span))`), so the title
+prints on two lines as the demo does. A demo without that break gets none.
 
 ## Consequences
 

@@ -101,16 +101,19 @@ const emptyBucket = () => ({
 })
 
 /**
- * @param {{ result: any, contract: any, previous?: any, measuredAt?: string, labelJudge?: any }} input
+ * @param {{ result: any, contract: any, previous?: any, measuredAt?: string, labelJudge?: any, inlineMarkup?: any }} input
  *   `result` = what `runAudit` returned; `previous` = the file this run replaces (accepted reasons carry over);
- *   `labelJudge` = the label judge's block (`prepareLabelJudge`, `recordLabelJudge`), written beside `labelRules` when given
+ *   `labelJudge` = the label judge's block (`prepareLabelJudge`, `recordLabelJudge`), written beside `labelRules` when given;
+ *   `inlineMarkup` = the inline markup measurement against the dump (`inline-markup.mjs`); without it, the previous
+ *   file's block is carried over while the content map is the one it measured
  */
 export function buildCoverageFile({
   result,
   contract,
   previous = null,
   measuredAt = new Date().toISOString(),
-  labelJudge = null
+  labelJudge = null,
+  inlineMarkup = null
 }) {
   const accepted = new Map()
   for (const h of Array.isArray(previous?.holes) ? previous.holes : []) {
@@ -202,8 +205,16 @@ export function buildCoverageFile({
         }))
     }),
     // The label judge (spec #37): per slot right or wrong with a suggested role; also the cache of the next run.
-    ...(labelJudge ? { labelJudge } : {})
+    ...(labelJudge ? { labelJudge } : {}),
+    // Inline markup of the samples against the database (resample.mjs): the template kit's `inlineMarkupLost` reads it.
+    ...inlineMarkupOf(inlineMarkup, previous, contract)
   }
+}
+
+function inlineMarkupOf(measured, previous, contract) {
+  if (measured) return { inlineMarkup: measured }
+  const same = previous?.contract?.contentMapSha256 === contract.sha256?.contentMap
+  return same && previous?.inlineMarkup ? { inlineMarkup: previous.inlineMarkup } : {}
 }
 
 /** matched / (matched + every hole that needs a slot); locked design and core strings are not asked of a slot. */

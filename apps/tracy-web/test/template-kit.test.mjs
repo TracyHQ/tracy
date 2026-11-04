@@ -215,6 +215,26 @@ test('the counters the copy and the site check depend on are named in words, fir
   )
 })
 
+test('a content map that lost the demo inline markup holds the kit, named in words with its first slots', () => {
+  const k = kit({
+    checks: { slotsInTwoBlocks: 0, inlineMarkupLost: 3 },
+    coverage: {
+      parts: {},
+      failures: [
+        { part: 'inlineMarkupLost', where: 'contentMap.slots[module-8.0]', reason: 'made up' },
+        { part: 'inlineMarkupLost', where: 'contentMap.slots[module-9.0]', reason: 'made up' }
+      ]
+    }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: inline markup lost 3 (inlineMarkupLost contentMap.slots[module-8.0], inlineMarkupLost contentMap.slots[module-9.0])'
+  )
+  assert.notDeepEqual(verdictOf(kit({ checks: { inlineMarkupLost: 0 } })), ['todo', 'kit-incomplete'])
+})
+
 test('a kit failing a coverage gate part is incomplete, and the step names the part and the slot', () => {
   for (const [part, where] of [
     ['limitsBelowDemo', 'slots[block-1.2]'],
