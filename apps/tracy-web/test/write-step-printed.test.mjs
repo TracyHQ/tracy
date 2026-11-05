@@ -110,8 +110,8 @@ test('the look guard lets the fallback block through and refuses any other chang
       fields: { fulltext: `<p>Other words</p>${site.article.fulltext}` }
     }
   })
-  assert.equal(refused.ok, false)
-  assert.match(guard.cause().reason, /only a picture fallback block may change/)
+  assert.equal(refused.ok, true, 'sent all the same (ADR 0044, decision 26)')
+  assert.match(JSON.stringify(guard.findings()), /only a picture fallback block may change/)
 })
 
 test('the write step runs the printed check last when it is given a page reader, and reports it', async () => {

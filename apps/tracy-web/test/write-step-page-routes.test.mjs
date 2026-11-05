@@ -268,9 +268,11 @@ test('the look guard lets a slug through as an alias of a template row, and noth
   assert.equal((await update('menuItem', 'kayak-tours')).ok, true)
   assert.equal((await update('article', 'kayak-tours')).ok, true)
   assert.equal(sent.length, 2)
-  const refused = await update('menuItem', 'Kayak <b>tours</b>')
-  assert.equal(refused.error, 'look_guard')
-  assert.equal(sent.length, 2)
+  // A finding does not hold the write back (ADR 0044, decision 26): it is sent and kept for the site check.
+  await update('menuItem', 'Kayak <b>tours</b>')
+  assert.equal(sent.length, 3)
+  assert.match(JSON.stringify(guard.findings()), /alias/)
+  assert.equal(guard.findings().length, 1)
 })
 
 test('the write step renames kept pages last, keeps the route table, and a rerun finds the pages again', async () => {

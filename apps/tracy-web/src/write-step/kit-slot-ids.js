@@ -11,7 +11,10 @@ export function kitSlotIds(kit) {
     for (const s of each(block?.demoOwned)) add(s?.id)
     for (const l of each(block?.links)) add(l?.labelId)
     for (const list of each(block?.lists)) {
-      for (const s of each(list?.rowSlots)) add(s?.id)
+      for (const s of each(list?.rowSlots)) {
+        add(s?.id)
+        for (const nested of each(s?.slots)) add(nested?.id)
+      }
       for (const row of each(list?.rows)) for (const s of each(row?.slots)) add(s?.id)
     }
   }

@@ -57,25 +57,30 @@ function guarded(answers = () => ({ ok: true }), { owners } = {}) {
   return { guard, sent, call }
 }
 
-/** Whether this one call passes the door, and the refusal when it does not. */
+/** Whether this one call passes the door, and what the guard found on it. */
 async function verdict(action, params, { answers, reads = [], owners } = {}) {
   const { guard, sent, call } = guarded(answers, { owners })
   for (const [readAction, readParams] of reads) await call(readAction, readParams)
   const before = sent.length
   const answer = await call(action, params)
-  return { passed: sent.length > before, answer, refused: guard.refused() }
+  return { passed: sent.length > before, answer, refused: guard.findings() }
 }
 const green = async (...args) => {
   const { passed, refused } = await verdict(...args)
   assert.deepEqual(refused, [])
   assert.equal(passed, true)
 }
+// A finding (ADR 0044, decision 26): a value is sent all the same and the finding is kept for the site check; only a call on a
+// channel nobody listed is held back.
 const red = async (args, { step, names }) => {
   const { passed, answer, refused } = await verdict(...args)
-  assert.equal(passed, false, 'it was not sent')
-  assert.equal(answer.ok, false)
-  assert.equal(answer.error, 'look_guard')
-  assert.ok(refused.length, 'the refusal is kept')
+  assert.ok(refused.length, 'the finding is kept')
+  const held = refused.some((f) => f.sent === false)
+  assert.equal(passed, !held, held ? 'a channel nobody listed is not sent' : 'a value is sent all the same')
+  if (held) {
+    assert.equal(answer.ok, false)
+    assert.equal(answer.error, 'look_guard')
+  }
   const said = JSON.stringify(refused)
   assert.ok(said.includes(names), `${said} names ${names}`)
   if (step) assert.equal(refused[0].stepName, step)
@@ -107,17 +112,33 @@ test('reads pass without a judgement', async () => {
   await green('site.identity', { operation: 'read' })
 })
 
-test('after a refusal no write goes out, and reads still do', async () => {
+test('a channel nobody listed is held back, and the writes after it still go out', async () => {
   const { guard, sent, call } = guarded()
-  await call('template.fonts', {})
-  const answer = await call('media.upload', { path: 'images/a.png', content_b64: 'eA==' })
-  assert.equal(answer.ok, false)
+  const held = await call('template.fonts', {})
+  assert.equal(held.ok, false)
   assert.equal(sent.length, 0)
+  const answer = await call('media.upload', { path: 'images/a.png', content_b64: 'eA==' })
+  assert.equal(answer.ok, true)
   await call('info', {})
-  assert.equal(sent.length, 1)
+  assert.equal(sent.length, 2)
   assert.equal(guard.refused().length, 1, 'one fault, said once')
-  assert.equal(guard.cause().code, 'LOOK_GUARD')
-  assert.equal(guard.cause().stepName, 'write')
+  assert.equal(guard.refused()[0].stepName, 'write')
+  assert.equal(guard.refused()[0].sent, false)
+})
+
+test('a value with a finding is sent, and the finding is kept with its step', async () => {
+  const { guard, sent, call } = guarded(undefined, {
+    owners: new Map([['block-1.1', { owner: 'writer' }]])
+  })
+  const answer = await call('content.contract', { operation: 'apply', changes: { 'module-1.1': 'Coach' } })
+  assert.equal(answer.ok, true)
+  assert.equal(sent.length, 1)
+  assert.deepEqual(guard.refused(), [], 'nothing held back')
+  const [finding] = guard.findings()
+  assert.equal(finding.what, 'module-1.1')
+  assert.equal(finding.step, 6)
+  assert.equal(finding.sent, true)
+  assert.match(finding.reason, /list-star/)
 })
 
 test('a template setting is open only for what the kit names as a logo, a name, a favicon or a background', async () => {
@@ -192,7 +213,7 @@ test('the module the accent builds from a template is green against the routes o
   assert.deepEqual(cssFaults(styleOf(html), { routes: routes() }), [])
 })
 
-test('a design-system block of 50 KB is red before it is sent, naming the brand step and what it would change', async () => {
+test('a design-system block of 50 KB is a finding naming the brand step and what it would change, and is sent all the same', async () => {
   const content = designSystemBlock()
   assert.ok(Buffer.byteLength(content) >= 50_000)
   const guard = lookGuard({ kit, contentMap })
@@ -204,12 +225,12 @@ test('a design-system block of 50 KB is red before it is sent, naming the brand 
     action: 'content.update',
     params: { kind: 'module', id: 7, fields: { content } }
   })
-  assert.equal(answer.ok, false)
-  assert.equal(sent.length, 0)
-  const said = JSON.stringify(guard.refused())
+  assert.equal(answer.ok, true)
+  assert.equal(sent.length, 1, 'a finding does not hold the write back (decision 26)')
+  const said = JSON.stringify(guard.findings())
   for (const prop of ['border-radius', 'font-family', 'font-size', 'font-weight', 'border-width'])
     assert.ok(said.includes(prop), `${prop} is named`)
-  assert.equal(guard.refused()[0].stepName, 'brand')
+  assert.equal(guard.findings()[0].stepName, 'brand')
 })
 
 test('each kind of declaration the rule forbids is red on its own', () => {
@@ -508,10 +529,10 @@ test('rows a run created stay open to the run; a template article takes only its
     id: 8,
     fields: { metadesc: 'D', attribs: '{"a":1,"article_page_title":"T","og_img":"images/x.png"}' }
   })
-  assert.deepEqual(guard.refused(), [])
+  assert.deepEqual(guard.findings(), [])
   assert.equal(sent.filter((c) => c.action === 'content.update').length, 2)
   await call('content.update', { kind: 'article', id: 8, fields: { attribs: '{"a":1,"show_author":"0"}' } })
-  assert.ok(JSON.stringify(guard.refused()).includes('show_author'))
+  assert.ok(JSON.stringify(guard.findings()).includes('show_author'))
 })
 
 test("a template article's words and category are not open to a row write", async () => {
@@ -568,7 +589,7 @@ test('the accent module is the one row made outside a page, wearing nothing but 
   const good = run()
   await good.call({ kind: 'module', fields })
   await good.call({ kind: 'moduleAssignment', id: 44, fields: { menuids: '[0]' } })
-  assert.deepEqual(good.guard.refused(), [])
+  assert.deepEqual(good.guard.findings(), [])
   assert.equal(good.sent.length, 2)
 
   const classed = run()
@@ -576,15 +597,16 @@ test('the accent module is the one row made outside a page, wearing nothing but 
     kind: 'module',
     fields: { ...fields, params: fields.params.replace('"moduleclass_sfx":""', '"moduleclass_sfx":"big"') }
   })
-  assert.ok(JSON.stringify(classed.guard.refused()).includes('moduleclass_sfx'))
+  assert.ok(JSON.stringify(classed.guard.findings()).includes('moduleclass_sfx'))
 
   const other = run()
   await other.call({ kind: 'moduleAssignment', id: 12, fields: { menuids: '[0]' } })
-  assert.ok(JSON.stringify(other.guard.refused()).includes('moduleAssignment'))
+  assert.ok(JSON.stringify(other.guard.findings()).includes('moduleAssignment'))
 
   const words = run()
   await words.call({ kind: 'module', fields: { ...fields, content: `${html}<div class="x">y</div>` } })
-  assert.equal(words.sent.length, 0)
+  assert.equal(words.sent.length, 1, 'sent all the same (decision 26)')
+  assert.ok(words.guard.findings().length, 'and the finding is kept')
 })
 
 test('the exceptions the guard allows each say why', () => {
@@ -610,34 +632,36 @@ test('no module or stage names a template: a kit with other names is judged the 
     action: 'template.siteSettings',
     params: { operation: 'set', template: 'any', fields: { brand_mark: 'images/a.png' } }
   })
-  assert.deepEqual(guard.refused(), [])
+  assert.deepEqual(guard.findings(), [])
   await door.apply({
     siteKey: 'demo',
     action: 'template.siteSettings',
     params: { operation: 'set', template: 'any', fields: { site_logo: 'images/a.png' } }
   })
-  assert.ok(JSON.stringify(guard.refused()).includes('site_logo'))
+  assert.ok(JSON.stringify(guard.findings()).includes('site_logo'))
 })
 
 // ── Through the run ──────────────────────────────────────────────────────────────────────────────────────────────
 
-const onlyReads = (calls) =>
-  calls.every(
-    (c) => ['info', 'content.get', 'content.list'].includes(c.action) || c.params?.operation === 'inspect'
-  )
-
-test('a run whose words change a class of the template stops before its first write, naming the copy', async () => {
+test('a run whose words change a class of the template writes them all the same and keeps the finding on the line, naming the copy', async () => {
   const contentMap = {
     slots: [{ key: 'module-5.1', type: 'text', sample: '((span class="lead"))Demo((/span))' }]
   }
   const { report, site } = await runStep({}, {}, { contentMap })
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'LOOK_GUARD')
-  assert.equal(report.cause.step, 6)
-  assert.equal(report.cause.stepName, 'copy')
-  assert.match(report.cause.reason, /module-5\.1.*span\.lead/)
-  assert.equal(report.guard.refused.length, 1)
-  assert.ok(onlyReads(site.calls), JSON.stringify(site.calls.map((c) => c.action)))
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.equal(report.cause, null)
+  assert.equal(report.guard.findings.length, 1)
+  const [finding] = report.guard.findings
+  assert.equal(finding.step, 6)
+  assert.equal(finding.stepName, 'copy')
+  assert.equal(finding.sent, true)
+  assert.match(`${finding.what}: ${finding.reason}`, /module-5\.1.*span\.lead/)
+  assert.deepEqual(report.guard.refused, [])
+  assert.equal(site.applies().length, 1, 'the write goes out')
+  const line = report.slots.find((s) => s.key === 'module-5.1')
+  assert.equal(line.status, 'written')
+  assert.equal(line.guard[0].step, 6)
+  assert.match(line.guard[0].reason, /span\.lead/)
 })
 
 test('a run that only replaces words goes through the guard untouched', async () => {

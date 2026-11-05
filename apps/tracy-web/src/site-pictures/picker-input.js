@@ -85,7 +85,7 @@ export async function pickerInput({ idx, manifest, usable, photoBytes }) {
     }
     shortlisted.push({
       frame: p.frame,
-      list: frame.writable === false ? 'siteSettings' : 'frames',
+      list: idx.listOf(frame),
       wish,
       words: wordsOf(wish, frame),
       cuts

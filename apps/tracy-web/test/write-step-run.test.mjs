@@ -72,15 +72,19 @@ test('extras with no path on this site are reported as skipped and never written
   assert.equal(Object.keys(site.applies()[0].params.changes).length, 9)
 })
 
-test('an unknown slot id stops the run before the site is written, and the report names it', async () => {
+test('a copy slot the kit does not have is refused on its own line, naming the copy step, and the rest is written', async () => {
   const c = copy()
   c.slots.push({ slot: 'block-99.1', owner: 'writer', text: 'No such slot', factIds: [] })
-  const { report, site } = await run({ copy: c })
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'UNKNOWN_SLOT')
-  assert.match(report.cause.reason, /block-99\.1/)
-  assert.equal(site.applies().length, 0)
-  assert.equal(report.counts.written, 0)
+  const { report, site, line } = await run({ copy: c })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.equal(line('block-99.1').status, 'refused')
+  assert.match(line('block-99.1').reason, /the kit has no slot block-99\.1/)
+  assert.deepEqual(line('block-99.1').unaddressable, { step: 6, stepName: 'copy' })
+  assert.equal(report.unaddressable.length, 1)
+  assert.equal(site.applies().length, 1)
+  assert.ok(!('module-99.1' in site.applies()[0].params.changes), 'nothing is sent for it')
+  assert.equal(report.counts.written, 9)
+  assert.equal(report.counts.refused, 1)
 })
 
 test('a slot the kit names only in a demo list, a link label, a page h1 or a setting slot is a kit slot', async () => {
@@ -92,17 +96,27 @@ test('a slot the kit names only in a demo list, a link label, a page h1 or a set
   const c = copy()
   for (const slot of ['block-2.91', 'block-2.92', 'block-2.93', 'block-2.94'])
     c.slots.push({ slot, owner: 'writer', text: 'Words for this slot', factIds: [] })
-  const { report } = await run({ copy: c }, {}, { kit })
+  const { report, line } = await run({ copy: c }, {}, { kit })
   // Past the kit check: the only one left to refuse them is the site, whose inspect here does not list them.
-  assert.equal(report.cause.code, 'UNKNOWN_SLOT')
-  assert.match(report.cause.reason, /the site does not have/i)
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  for (const slot of ['block-2.91', 'block-2.92', 'block-2.93']) {
+    assert.equal(line(slot).status, 'refused', slot)
+    assert.match(line(slot).reason, /the site does not have/i)
+  }
+  assert.ok(
+    !report.unaddressable.some((u) => /the kit has no slot/.test(u.reason)),
+    'none is refused as unknown to the kit'
+  )
 })
 
-test('a slot the kit knows and the site does not stops the run with nothing written', async () => {
-  const { report, site } = await run({}, { slots: [{ key: 'module-2.1', entity: 'module-2' }] })
-  assert.equal(report.cause.code, 'UNKNOWN_SLOT')
-  assert.match(report.cause.reason, /module-1\.1/)
-  assert.equal(site.applies().length, 0)
+test('a slot the kit knows and the site does not is refused on its own line, and the slots the site has are written', async () => {
+  const { report, site, line } = await run({}, { slots: [{ key: 'module-2.1', entity: 'module-2' }] })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.equal(line('block-1.1').status, 'refused')
+  assert.match(line('block-1.1').reason, /module-1\.1/)
+  assert.equal(line('block-1.1').unaddressable.step, 3, 'a plan label belongs to the planner')
+  assert.equal(line('block-2.1').status, 'written')
+  assert.deepEqual(Object.keys(site.applies()[0].params.changes), ['module-2.1'])
 })
 
 for (const name of ['plan', 'copy']) {
@@ -120,11 +134,23 @@ test('a file that is not JSON, and a copy with a bad entry, stop the run', async
   assert.equal(broken.report.cause.code, 'BAD_FILE')
   assert.equal(broken.site.calls.length, 0)
   const c = copy()
-  c.slots[0].owner = 'somebody'
+  c.version = 'site-copy/0'
   const bad = await run({ copy: c })
   assert.equal(bad.report.cause.code, 'BAD_FILE')
-  assert.match(bad.report.cause.reason, /block-1\.1/)
+  assert.match(bad.report.cause.reason, /version/)
   assert.equal(bad.site.calls.length, 0)
+})
+
+test('a copy entry that is not what the copy step writes is refused on its own, naming the copy step', async () => {
+  const c = copy()
+  c.slots[0].owner = 'somebody'
+  const { report, site, line } = await run({ copy: c })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.ok(site.applies().length, 'the rest is written')
+  const refused = report.unaddressable.find((u) => u.slot === 'block-1.1')
+  assert.equal(refused.step, 6)
+  assert.match(refused.reason, /owner must be/)
+  assert.equal(line('block-1.1').owner === null || line('block-1.1').status !== 'written', true)
 })
 
 test('files made on another kit stop the run, naming both', async () => {

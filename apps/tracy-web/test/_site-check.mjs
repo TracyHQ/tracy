@@ -24,6 +24,9 @@ export const report = (slots, over = {}) => ({
   slots,
   // A write report always carries its unowned list; unowned-slots is unmeasured without one.
   unowned: [],
+  // And what its look guard found and what it left out (ADR 0044, decision 26); write-findings.js is unmeasured without them.
+  guard: { findings: [], refused: [] },
+  unaddressable: [],
   ...over
 })
 

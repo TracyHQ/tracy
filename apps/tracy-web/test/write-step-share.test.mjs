@@ -108,7 +108,7 @@ test('the share lines read back through the site check', async () => {
   assert.equal(lines.length, 3, 'two pages and the site')
   assert.ok(lines.every((s) => s.status === 'written' && s.readFrom && s.ordered !== undefined))
   const check = await runSiteCheck({ door, report })
-  const read = check.groups[0].lines
+  const read = check.groups.find((g) => g.name === 'read-back').lines
   for (const s of lines.filter((l) => l.slot !== SITE_LINE)) assert.equal(read[s.slot], 'match', s.slot)
   assert.equal(read['page-home:share-image'], 'match')
 })

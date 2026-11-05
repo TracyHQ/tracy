@@ -1,8 +1,10 @@
 // The look guard (ADR 0044, decision 10). When customer data goes into a template only the accent colour, the icons, the pictures,
 // the words and the logo may change. So everything the write step sends passes here first, and what could change anything else is
-// refused before it is sent, naming the step at fault. The list is closed: an action, an operation, a parameter or a setting that is
-// not on it is refused by name, so a new channel fails loudly. Nothing here names a template; what a template may take is read from
-// its kit, its content map and its own stylesheets. Everything it cannot see is listed in the ADR.
+// recorded as a finding, naming the step at fault. A finding on a value does not stop the run and does not hold the write back
+// (ADR 0044, decision 26): the value is sent, and the site check blocks on the finding (site-check/write-findings.js). Only a call
+// on a channel nobody listed (an action, an operation or a parameter) is never sent, so a new channel fails loudly. Nothing here
+// names a template; what a template may take is read from its kit, its content map and its own stylesheets. Everything it cannot
+// see is listed in the ADR.
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
@@ -34,6 +36,8 @@ const READ_ACTIONS = new Set(['info', 'content.get', 'content.list'])
 const READ_OPERATIONS = new Set([undefined, 'read', 'inspect'])
 
 const fault = (step, what, reason) => ({ step, what, reason })
+/** A call on a channel nobody listed: it is never sent, whatever it holds. */
+const channelFault = (what, reason) => ({ step: WRITE, what, reason, channel: true })
 
 /** Which parameters a call may carry. A parameter nobody listed may be a new way to change a page. */
 const PARAMS = {
@@ -115,7 +119,7 @@ export function lookGuard({ kit, contentMap = null }) {
     inspected: new Map()
   }
   let owners = new Map()
-  const refusals = []
+  const findings = []
 
   const stepOfKey = (key) => {
     const claim = owners.get(key.replace(/^module-/, 'block-')) ?? owners.get(key)
@@ -169,12 +173,11 @@ export function lookGuard({ kit, contentMap = null }) {
   /** What this write would be refused for: an action, operation or parameter off the list, or what its judge finds. */
   function faultsOf({ action, params = {} }) {
     const ops = PARAMS[action]
-    if (!ops) return [fault(WRITE, action, `the action ${action} is not open to the write step`)]
+    if (!ops) return [channelFault(action, `the action ${action} is not open to the write step`)]
     const listed = ops[params.operation]
     if (!listed)
       return [
-        fault(
-          WRITE,
+        channelFault(
           `${action} ${params.operation}`,
           `the operation ${params.operation} of ${action} is not open to the write step`
         )
@@ -182,23 +185,26 @@ export function lookGuard({ kit, contentMap = null }) {
     const extra = Object.keys(params).filter((name) => !listed.includes(name))
     if (extra.length)
       return extra.map((name) =>
-        fault(WRITE, `${action} ${name}`, `the parameter ${name} of ${action} is not open to the write step`)
+        channelFault(`${action} ${name}`, `the parameter ${name} of ${action} is not open to the write step`)
       )
     return JUDGES[action](params)
   }
 
-  const record = (call, faults) => {
+  /** `sent`: whether the call goes out all the same (a finding on a value) or is held back (a channel nobody listed). */
+  const record = (call, faults, sent) => {
     for (const f of faults)
-      if (!refusals.some((r) => r.what === f.what && r.reason === f.reason))
-        refusals.push({
+      if (!findings.some((r) => r.what === f.what && r.reason === f.reason))
+        findings.push({
           step: f.step,
           stepName: stepName(f.step),
           action: call.action,
           operation: call.params?.operation ?? null,
           what: f.what,
-          reason: f.reason
+          reason: f.reason,
+          sent
         })
   }
+  const heldBack = (faults) => faults.some((f) => f.channel)
 
   /** Learns from what the site answers: what a row holds, which layouts are the template's, what this run made. */
   function learn({ action, params = {} }, answer) {
@@ -243,19 +249,19 @@ export function lookGuard({ kit, contentMap = null }) {
       if (routes !== undefined) state.routes = routes
     },
 
-    /** Judges a write that is known before anything is sent. @returns {boolean} whether it would pass */
+    /** Judges a write that is known before anything is sent. @returns {boolean} whether it has no finding */
     check(call) {
       const faults = faultsOf(call)
-      record(call, faults)
+      record(call, faults, !heldBack(faults))
       return !faults.length
     },
 
-    /** Adds what another stage refused itself, such as a drawn icon. */
+    /** Adds what another stage found itself and wrote all the same, such as a drawn icon. */
     refuse(list) {
-      for (const f of list) record({ action: f.action ?? 'media.upload', params: {} }, [f])
+      for (const f of list) record({ action: f.action ?? 'media.upload', params: {} }, [f], true)
     },
 
-    /** The door every write of a run goes through. After a refusal no further write is sent; reads go on. */
+    /** The door every write of a run goes through. A finding is recorded and the write goes on; a channel nobody listed is held back. */
     door(inner) {
       const apply = async (call) => {
         if (isRead(call)) {
@@ -263,11 +269,10 @@ export function lookGuard({ kit, contentMap = null }) {
           learn(call, answer)
           return answer
         }
-        record(call, faultsOf(call))
-        if (refusals.length) {
-          const [first] = refusals
-          return { ok: false, error: 'look_guard', message: `${first.what}: ${first.reason}` }
-        }
+        const faults = faultsOf(call)
+        record(call, faults, !heldBack(faults))
+        const held = faults.find((f) => f.channel)
+        if (held) return { ok: false, error: 'look_guard', message: `${held.what}: ${held.reason}` }
         const answer = await inner.apply(call)
         learn(call, answer)
         return answer
@@ -275,20 +280,11 @@ export function lookGuard({ kit, contentMap = null }) {
       return { ...inner, apply }
     },
 
-    refused: () => [...refusals],
+    /** Every finding of the run, each with the step at fault and whether its write was sent all the same. */
+    findings: () => [...findings],
 
-    /** The run's stop, or null. */
-    cause() {
-      if (!refusals.length) return null
-      const [first] = refusals
-      const more = refusals.length > 1 ? ` (and ${refusals.length - 1} more)` : ''
-      return {
-        code: 'LOOK_GUARD',
-        step: first.step,
-        stepName: first.stepName,
-        reason: `Refused before it was sent, step ${first.step} (${first.stepName}): ${first.what}: ${first.reason}${more}`
-      }
-    }
+    /** The findings whose write was held back: calls on a channel nobody listed. */
+    refused: () => findings.filter((f) => !f.sent)
   }
 }
 
