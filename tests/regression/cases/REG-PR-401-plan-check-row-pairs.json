@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-401-plan-check-row-pairs",
+  "kind": "feat",
+  "title": "The plan checker rule R22 fails a plan that keeps a list row's text card while dropping its picture (or the reverse) when the template kit records paired slots per row, and skips when the kit has none",
+  "pr": 401,
+  "area": "site-planner/plan-check",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-timeout=60000 apps/tracy-web/test/site-plan-check-row-pairs.test.mjs",
+    "S2: Read the exit code and the fail and skipped counts."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures and 0 skipped tests.",
+    "The rule is R22 in apps/tracy-web/src/site-planner/plan-check/rules-row-pairs.js and CHECKER_VERSION is site-plan-check/4."
+  ],
+  "selectors": {
+    "rule": "R22 in apps/tracy-web/src/site-planner/plan-check/rules-row-pairs.js",
+    "registry": "the rule set in apps/tracy-web/src/site-planner/plan-check/rule-set.js"
+  },
+  "evidence": "05/11/2026: sealed plan e3635ab9 for JA Boxing dropped the pictures of class-page rows 2 to 4 (lists article-2/14/15/16.video) while keeping their text, and site-plan-check/3 passed it 27/27.",
+  "fence": "The rule on fabricated kits and plans only. Not exercised: a live planner run.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "apps/tracy-web/test/site-plan-check-row-pairs.test.mjs"
+    ],
+    "needs": []
+  }
+}

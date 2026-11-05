@@ -1609,13 +1609,13 @@
   },
   "quickstart/ja-boxing/j6": {
     "platform": "joomla",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "installer": {
-      "file": "ja-boxing-j6-quickstart-1.0.10.zip",
-      "bytes": 67424832,
-      "sha256": "8161bcf324a8a61e1ee021d6cd2e7663ed36c9e96fd2cdd170a3083b2a7222de",
-      "githubAssetId": 701352867,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-boxing%2Fj6/ja-boxing-j6-quickstart-1.0.10.zip"
+      "file": "ja-boxing-j6-quickstart-1.0.11.zip",
+      "bytes": 67430156,
+      "sha256": "d99d292e60acf0537407fb3a0dc3d7dddb22f7ed8e169281099e3c71dcc10c36",
+      "githubAssetId": 710860334,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-boxing%2Fj6/ja-boxing-j6-quickstart-1.0.11.zip"
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.82.zip",
@@ -1624,14 +1624,14 @@
       "sha256": "d145d7f06bdebeba78eb8d90f07930335a9198dcb30529e819571e228770432a",
       "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.82/pkg_claudecowork-0.24.82.zip",
       "contractFiles": {
-        "content-map.json": "6ab0ffa2d1e49ba43b3e839329572fd9572ac58b2f581345396734f563df3e4d",
-        "manifest.json": "c6cfd80ec71910f6e7ed126b22f417fe663e971be316d8d58063f367a8194efe",
-        "presentation-lock.json": "62352a206b2084372c42e45c69602a705982738975c291b2d257bc6d8b2674ec",
-        "showcase-nav-map.json": "2d26177c33755743fa0a4ef3c1bd3e37e35c7785fe557ad833a2ea86245090c8"
+        "content-map.json": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
+        "manifest.json": "0fa084ae9aa9ded5d60596ff20a000385460cfeb63365b89df3065a42be01cef",
+        "presentation-lock.json": "72b0c2ad80b2c59c3ba06e30ee3a70219d6cf9a74aae052f6489d6242527eda9",
+        "showcase-nav-map.json": "7465706cf85e67b6c1343713a0f005cf422af9dfe597b1dfe43184dc0b1e246e"
       }
     },
     "multilingual": false,
-    "contract": "ja-boxing/j6/1.0.10"
+    "contract": "ja-boxing/j6/1.0.11"
   },
   "quickstart/ja-diner/wp7": {
     "platform": "wordpress",
