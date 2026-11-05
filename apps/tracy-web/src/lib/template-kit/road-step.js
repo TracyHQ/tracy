@@ -119,22 +119,59 @@ export const KIT_CHECK_LABELS = Object.freeze({
   phoneNotCallable: 'phones not callable',
   // A list mixing a lone row with card rows where a card row pairs no text slot (row-pairs.mjs, 2026-11-05): a plan cannot
   // tell which card texts go with which picture row.
-  rowPartsUnpaired: 'card rows without paired texts'
+  rowPartsUnpaired: 'card rows without paired texts',
+  // An explanation in reach-accepts.json that matches no failure (check-accepts.mjs): a stale reason.
+  checkAcceptsUnmatched: 'explanations matching nothing'
 })
 const checkName = (name) => KIT_CHECK_LABELS[name] ?? name
 const labelledFirst = ([a], [b]) => (a in KIT_CHECK_LABELS ? 0 : 1) - (b in KIT_CHECK_LABELS ? 0 : 1)
 
 /**
+ * How many failures of each check the kit explains (`checkAccepts.<check>`: `[{where, reason, by}]`, a person's reason for
+ * a failure the template keeps, from reach-accepts.json): an entry counts when its reason is not empty, and never more
+ * than the check counts.
+ * @param {any} doc
+ * @param {string} name
+ * @param {number} count
+ */
+function explainedOf(doc, name, count) {
+  const list = doc.checkAccepts && typeof doc.checkAccepts === 'object' ? doc.checkAccepts[name] : null
+  const n = (Array.isArray(list) ? list : []).filter(
+    (a) => typeof a?.reason === 'string' && a.reason.trim().length > 0
+  ).length
+  return Math.min(n, count)
+}
+
+/**
+ * The checks whose failures the kit explains, as the kit records them: the whole count and how many carry a reason.
+ * @param {any} doc
+ */
+function checksExplainedOf(doc) {
+  const checks = doc.checks && typeof doc.checks === 'object' ? doc.checks : {}
+  return Object.entries(checks)
+    .filter(([, n]) => typeof n === 'number' && n > 0)
+    .map(([check, count]) => ({
+      check,
+      label: checkName(check),
+      count,
+      explained: explainedOf(doc, check, count)
+    }))
+    .filter((c) => c.explained > 0)
+}
+
+/**
  * The kit's own self-checks (`checks`: counts that must be 0 for a planner to use the kit, such as a slot listed by
- * two blocks or a showcase page left in): a kit with any of them above 0 is incomplete. The coverage gate
- * (`checks.slotCoverage`) lists its failures in `coverage.failures` (`{part, where, reason}`); the first ones of
+ * two blocks or a showcase page left in): a kit with any of them above what it explains is incomplete. A reach or row
+ * pair failure the template keeps may carry a reason (`checkAccepts`), so the check fails only on its unexplained rest;
+ * the reason shows the whole count and the explained share (`buttons with no address 70 (68 explained)`). The coverage
+ * gate (`checks.slotCoverage`) lists its failures in `coverage.failures` (`{part, where, reason}`); the first ones of
  * every part are named, so the failing blocks and slots show without opening the file. Null when all are 0.
  * @param {any} doc
  */
 function failingChecksOf(doc) {
   const checks = doc.checks && typeof doc.checks === 'object' ? doc.checks : {}
   const failing = Object.entries(checks)
-    .filter(([, n]) => typeof n === 'number' && n > 0)
+    .filter(([name, n]) => typeof n === 'number' && n - explainedOf(doc, name, n) > 0)
     .sort(labelledFirst)
   if (failing.length === 0) return null
   const failures = Array.isArray(doc.coverage?.failures) ? doc.coverage.failures : []
@@ -152,8 +189,12 @@ function failingChecksOf(doc) {
   const named = turns
     .slice(0, Math.max(SHOWN_GAPS, byPart.size))
     .map((f) => `${String(f?.part)} ${String(f?.where)}`)
+  const counted = ([name, n]) => {
+    const explained = explainedOf(doc, name, n)
+    return `${checkName(name)} ${n}${explained ? ` (${explained} explained)` : ''}`
+  }
   return {
-    reason: `its self-checks fail: ${failing.map(([name, n]) => `${checkName(name)} ${n}`).join(', ')}${
+    reason: `its self-checks fail: ${failing.map(counted).join(', ')}${
       named.length ? ` (${named.join(', ')}${failures.length > named.length ? ', ...' : ''})` : ''
     }`,
     missing: []
@@ -248,6 +289,8 @@ export function templateKitStep(
     pages: Array.isArray(doc.pages) ? doc.pages.length : 0,
     blocks: Array.isArray(doc.blocks) ? doc.blocks.length : 0,
     errors: Array.isArray(doc.errors) ? doc.errors.length : 0,
+    // Every check with explained failures, as the kit records it: /ops shows the count and the explained share.
+    checksExplained: checksExplainedOf(doc),
     approvedBy: typeof doc.approval?.by === 'string' ? doc.approval.by : null,
     approvedAt: typeof doc.approval?.at === 'string' ? doc.approval.at : null
   }

@@ -8,7 +8,9 @@
 //   rows[i].pairedSlots  ids of the block's text slots printed inside that card (the row's own slots left out)
 //   lists[].rowPairsFrom `measured`, or `declared` when a person wrote the pairs (never measured over)
 // Self-check `rowPartsUnpaired`: a list whose rows print in more than one part (a lone row and card rows) while a card
-// row pairs no slot, and the pairs are not declared. Count in `kit.checks`, the first lists in `kit.coverage.failures`.
+// row pairs no slot, and the pairs are not declared. Count in `kit.checks`, the first lists in `kit.coverage.failures`;
+// a list a person explained in `reach-accepts.json` (check-accepts.mjs) is still counted, listed in `kit.checkAccepts`.
+import { settleCheckParts } from './check-accepts.mjs'
 
 export const ROW_PAIR_PARTS = ['rowPartsUnpaired']
 const NAMED = 20
@@ -70,19 +72,10 @@ function unpairedOf(kit) {
 }
 
 /**
- * Count `rowPartsUnpaired` on `kit` (changed in place: `checks` and `coverage.failures`) and return the count.
+ * Count `rowPartsUnpaired` on `kit` (changed in place: `checks`, `checkAccepts` and `coverage.failures`) and return it.
  * @param {object} kit
+ * @param {{accepts?: object[]}} [o] the entries of reach-accepts.json (readCheckAccepts)
  */
-export function rowPairChecks(kit) {
-  const found = unpairedOf(kit)
-  kit.checks = { ...kit.checks, rowPartsUnpaired: found.length }
-  const coverage = kit.coverage ?? { parts: {}, failures: [] }
-  kit.coverage = {
-    ...coverage,
-    failures: [
-      ...each(coverage.failures).filter((f) => !ROW_PAIR_PARTS.includes(f.part)),
-      ...found.slice(0, NAMED).map((f) => ({ part: 'rowPartsUnpaired', ...f }))
-    ]
-  }
-  return { rowPartsUnpaired: found.length }
+export function rowPairChecks(kit, { accepts = [] } = {}) {
+  return settleCheckParts(kit, { rowPartsUnpaired: unpairedOf(kit) }, { accepts, named: NAMED })
 }

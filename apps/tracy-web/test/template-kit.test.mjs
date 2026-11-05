@@ -273,6 +273,56 @@ test('a list whose card rows pair no text slot holds the kit, named in words', (
   assert.notDeepEqual(verdictOf(kit({ checks: { rowPartsUnpaired: 0 } })), ['todo', 'kit-incomplete'])
 })
 
+test('a counter whose every failure carries a reason in the kit does not hold it, and /ops sees the count as recorded', () => {
+  const explained = (n) =>
+    Array.from({ length: n }, (_, i) => ({
+      where: `links[block-4.link-${i + 1}]`,
+      reason: 'demo placeholder button',
+      by: null
+    }))
+  const k = kit({
+    checks: { deadControls: 3, phoneNotCallable: 0 },
+    checkAccepts: { deadControls: explained(3) },
+    coverage: { parts: {}, failures: [] }
+  })
+  assert.notDeepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const step = stepOf(roadOf(release(), world(contractsWith(k))))
+  assert.deepEqual(step.params.checksExplained, [
+    { check: 'deadControls', label: 'buttons with no address', count: 3, explained: 3 }
+  ])
+})
+
+test('a counter only partly explained holds the kit, worded with its explained share and the unexplained places', () => {
+  const k = kit({
+    checks: { deadControls: 3, mapLocationUnmapped: 0 },
+    checkAccepts: {
+      deadControls: [
+        { where: 'links[block-4.link-1]', reason: 'demo placeholder button', by: null },
+        { where: 'links[block-4.link-2]', reason: 'demo placeholder button', by: null }
+      ]
+    },
+    coverage: {
+      parts: {},
+      failures: [{ part: 'deadControls', where: 'links[block-4.link-3]', reason: 'made up' }]
+    }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: buttons with no address 3 (2 explained) (deadControls links[block-4.link-3])'
+  )
+})
+
+test('an explanation with an empty reason explains nothing', () => {
+  const k = kit({
+    checks: { deadControls: 1 },
+    checkAccepts: { deadControls: [{ where: 'links[block-4.link-1]', reason: '  ', by: null }] },
+    coverage: { parts: {}, failures: [] }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+})
+
 test('the planner reads every list row with its paired slots and the part it prints in', () => {
   const row = {
     index: 1,

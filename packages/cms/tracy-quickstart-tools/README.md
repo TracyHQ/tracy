@@ -388,6 +388,18 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    true|false, "reason": "..."}}`), then `cli.mjs assemble ...`. A template gap that is right by design is
    accepted in `gap-accepts.json` (`{"<gap id>": {"reason": "...", "by": "<login>"}}`, one entry per gap id, never
   by kind, so a new dead link is never accepted unseen); the kit never accepts one.
+   A reach or row pair failure the template keeps on purpose (a demo placeholder button such as a pricing "select
+   plan", a row of technique chips the planner decides link by link) is explained in `reach-accepts.json`
+   (`lib/check-accepts.mjs`): a list of `{"check": "deadControls", "where": "links[block-20.link-1]", "reason": "...",
+   "by": "<login>"}`, where `check` is one of `deadControls`, `mapLocationUnmapped`, `phoneNotCallable`,
+   `rowPartsUnpaired`, `where` is the `where` the counter writes in `coverage.failures` (a `*` matches any run of
+   characters, `links[block-31.link-*]` for a row of chips) and `by` is optional. `assemble` and every settle command
+   read it: the counter still counts every failure in `checks.<check>`, each explained one is listed in
+   `checkAccepts.<check>` (`[{where, reason, by}]`) instead of `coverage.failures`, and an entry that matches no
+   failure is counted in `checks.checkAcceptsUnmatched` and named in `coverage.failures` (part
+   `checkAcceptsUnmatched`, with its `check`), so a stale reason holds the kit. /ops fails a check only on its
+   unexplained rest and words it as the kit records it: `buttons with no address 70 (68 explained)`; the step's
+   `checksExplained` lists every check with explained failures (`{check, label, count, explained}`).
 5. `cli.mjs pack --out <kit dir>` (`build --full` runs it last) writes `pack/` and `template-kit-<template>-<quickstart
    version>.zip`. The build shoots only what the pack holds (below): every measurement (emptied frames, fixed CMS
    text, list minimums, template fix trials) is read in the DOM and kept as numbers, so the images folder and the pack
@@ -488,7 +500,10 @@ list, kept by every later run).
   printed phone or mobile field, that no link of its block shows as its words, so no address can make it `tel:`), and
   the row pair check (`lib/row-pairs.mjs`, by `build` and every settle command): `rowPartsUnpaired` (a list whose rows
   print in more than one part, a lone row beside card rows, while a card row has no `pairedSlots` and the pairs are
-  not declared: a plan cannot tell which card texts go with which picture row)),
+  not declared: a plan cannot tell which card texts go with which picture row); a phone the demo leaves empty (a
+  contact field with `filled: false`, a phone slot whose sample has no words) prints nothing and is not counted; a
+  failure of these four explained in `reach-accepts.json` (step 4 above) still counts, and the check holds the kit
+  only on its unexplained rest (`checkAccepts`, `checkAcceptsUnmatched`)),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the

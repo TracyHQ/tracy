@@ -33,7 +33,8 @@
 //                 an approval stays valid)
 //   Every settle command (samples, slot-roles, relabel, setting-slots) counts the slot shape checks again
 //   (lib/slot-shape-checks.mjs: samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing), the reach checks and
-//   the row pair check (lib/row-pairs.mjs: rowPartsUnpaired) and stamps `tool` and `settledAt`.
+//   the row pair check (lib/row-pairs.mjs: rowPartsUnpaired), each with the reasons of reach-accepts.json in --out
+//   (lib/check-accepts.mjs), and stamps `tool` and `settledAt`.
 //   cli.mjs measure-fields --site <url> --out <dir> --contract <dir> --db-command '<client prefix>' --scratch-site
 //                 [--host-header <host>]   (WRITES to the site, each field set to a marker and put back: only on a
 //                 throwaway site rebuilt from the quickstart, which --scratch-site says it is; field-drives.json)
@@ -49,7 +50,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 
-import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
+import { assembleKit, reachAcceptsOf, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
 import { readContractMap, readContractSamples } from './lib/contract-read.mjs'
 import { contactFieldChecks } from './lib/coverage-gate.mjs'
@@ -109,8 +110,10 @@ const contentCoverageOf = (o) => readIf(join(o.contract, 'content-coverage.json'
 /** A settled kit: its slot shape checks counted again from the content map, and the tool that settled it. */
 const settled = (kit, map, o) => {
   slotShapeChecks(kit, { map, contentCoverage: contentCoverageOf(o) })
-  reachChecks(kit)
-  rowPairChecks(kit)
+  // A person's reasons for reach and row pair failures the template keeps (reach-accepts.json, lib/check-accepts.mjs).
+  const accepts = reachAcceptsOf(resolve(o.out))
+  reachChecks(kit, { accepts })
+  rowPairChecks(kit, { accepts })
   return stampSettled(kit)
 }
 
