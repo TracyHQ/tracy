@@ -26,12 +26,15 @@
       "node",
       "--test",
       "--test-reporter=tap",
-      "apps/tracy-web/test/site-pictures-setting-slot.test.mjs"
+      "apps/tracy-web/test/site-pictures-setting-slot.test.mjs",
+      "apps/tracy-web/test/write-step-kit-slot-ids.test.mjs"
     ],
     "tests": [
       "a frame of a setting slot goes to siteSettings",
       "the fallback ladder lists a setting slot frame in siteSettings too",
-      "a writable frame with a slot id the kit does not list as a setting slot stays in frames"
+      "a writable frame with a slot id the kit does not list as a setting slot stays in frames",
+      "kitSlotIds reads ids nested under rowSlots[].slots[]",
+      "kitSlotIds keeps reading the flat rowSlots, rows and block slots"
     ]
   }
 }
