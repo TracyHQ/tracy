@@ -14,7 +14,7 @@ import { LABEL } from '../../../tracy-subprocess-docker/src/route.mjs'
 // `EMDASH_READ_TOOLS` inside `refusalNext` only. One list of EmDash reads, not a second copy here.
 import { EMDASH_READ_TOOLS } from './emdash.mjs'
 import { loopbackUrl } from './exec.mjs'
-import { decodeEntities, entityText, NAMED, tameMarkup } from './html-units.mjs'
+import { decodeEntities, entityText, NAMED, tameMarkup, withoutComments } from './html-units.mjs'
 import { carriesListSearch, contentReadLists, contentReadType, listSearchCovers } from './list-search.mjs'
 
 /**
@@ -1966,6 +1966,57 @@ export const EMDASH_ROAD =
   'What Tracy wrote at the build is read and undone through the build tool: tracy_site_build_emdash ' +
   'request site.inspect, then site.revert {applyId}.'
 
+// The three readers of a site's error text below answer what their patterns answered
+// (`/tool .* not found/i`, `/content\.list serves kinds? [^;]*; "([^"]*)" is not listed/`, `/(\S+)$/`)
+// in one pass: each pattern rescanned the rest of the text from every place it could start, quadratic
+// on a long message that repeats its start, and the message is whatever the site sent.
+
+/**
+ * Whether one line of `text` names a tool and, later on that line, " not found" (any case).
+ * @param {string} text
+ */
+export function toolNotFound(text) {
+  for (const line of text.toLowerCase().split(/[\n\r\u2028\u2029]/)) {
+    const at = line.indexOf('tool ')
+    if (at !== -1 && line.lastIndexOf(' not found') >= at + 5) return true
+  }
+  return false
+}
+
+const UNLISTED_TAIL = /; "([^"]*)" is not listed/y
+
+/**
+ * The kind `content.list` refused (`… serves kind(s) …; "<kind>" is not listed`), or null.
+ * @param {string} message
+ * @returns {string | null}
+ */
+export function unlistedKind(message) {
+  let tried = -1
+  for (const m of message.matchAll(/content\.list serves kinds? /g)) {
+    // what follows the words runs to the next `;` and no further: that one `;` must open the tail. Every
+    // start before the `;` already tried shares it (no `;` lies between): never searched for again.
+    if (m.index < tried) continue
+    const semi = message.indexOf(';', m.index + m[0].length)
+    if (semi === -1) return null
+    tried = semi
+    UNLISTED_TAIL.lastIndex = semi
+    const tail = UNLISTED_TAIL.exec(message)
+    if (tail) return tail[1]
+  }
+  return null
+}
+
+/**
+ * The run of non-space characters `text` ends with, or null when it ends in a space or is empty.
+ * @param {string} text
+ * @returns {string | null}
+ */
+export function lastWord(text) {
+  let at = text.length
+  while (at > 0 && /\S/.test(text[at - 1])) at -= 1
+  return at === text.length ? null : text.slice(at)
+}
+
 /**
  * `TOOL_FAILED`: EmDash's own refusal, by its code (`[CODE] message`) or the class its text shows.
  * @param {Record<string, unknown>} a
@@ -1982,7 +2033,7 @@ function emdashFailedNext(a, ctx) {
           ? 'VALIDATION'
           : /_rev is required/.test(text)
             ? 'REV_MISSING'
-            : /tool .* not found|Method not found/i.test(text)
+            : toolNotFound(text) || /Method not found/i.test(text)
               ? 'UNKNOWN_TOOL'
               : ''))
   if (sub === 'CONFLICT')
@@ -2082,9 +2133,8 @@ function badParamsNext(message, ctx) {
   // The refused kind, in either wording a released plugin sends (`contentList`): `wordpress-v0.14.9` says
   // `serves kind "post" only; "<kind>"`, `wordpress-v0.15.3`/`0.16.0` `serves kinds "post", "templatePart" and
   // "template"; "<kind>"` (B1, 02/10/2026: matched on the first alone, every live site got the generic next).
-  const listed = /content\.list serves kinds? [^;]*; "([^"]*)" is not listed/.exec(message)
-  if (listed) {
-    const kind = listed[1]
+  const kind = unlistedKind(message)
+  if (kind !== null) {
     if (kind === 'page' || kind === 'pages')
       return 'content.list {kind:"post", post_type:"page"} lists the pages.'
     if (/^(templatePart|template_part|wp_template_part|part)$/.test(kind))
@@ -2259,7 +2309,7 @@ function contractFailedNext(message) {
   if (message.startsWith('An option has no edition'))
     return `${slot.split('::').pop()} is one for every language: send it without an edition prefix.`
   if (/^No \S+ edition of |edition has no block for /.test(message))
-    return `That language's copy of the page has no such block, so ${/(\S+)$/.exec(message)?.[1] ?? slot} cannot change there: tell the customer.`
+    return `That language's copy of the page has no such block, so ${lastWord(message) ?? slot} cannot change there: tell the customer.`
   if (message.startsWith('Unsupported link'))
     return `${slot} takes https://…, mailto:…, tel:+digits, /path or #anchor.`
   if (message.startsWith('Template directives are not content'))
@@ -2827,8 +2877,7 @@ export function readablePage(html) {
   const langMatch = /<html\b[^>]*\blang\s*=\s*["']?([^"'\s>]+)/i.exec(source)
   const titleMatch = /<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(source)
   const text = decodeEntities(
-    source
-      .replace(/<!--[\s\S]*?-->/g, '')
+    withoutComments(source)
       .replace(NOT_PROSE, ' ')
       .replace(BLOCK, '\n')
       .replace(/<[^>]*>/g, ' ')

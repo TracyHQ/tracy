@@ -1,0 +1,1 @@
+{"id":"REG-PR-402-codeql-linear-readers","verdict":"PASS","commit":"12b403bfef475a5bad792ba4e30f27f543d7e061","ran_at":"2026-11-05T09:43:48.492Z","evidence":"tests/regression/.runs/2026-11-05-12b403bfe/REG-PR-402-codeql-linear-readers.log"}

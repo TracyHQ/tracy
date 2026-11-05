@@ -822,9 +822,14 @@ for (const s of UI_SWITCHES) {
 }
 var UI_DOOR = "/api/ui";
 var PAGE_READ = Symbol.for("@tracy/core/ui-switches#page-read");
+function withoutTrailingSlashes(s) {
+  let end = s.length;
+  while (end > 0 && s[end - 1] === "/") end -= 1;
+  return s.slice(0, end);
+}
 async function switchesAtTracy(origin, options = {}) {
   if (typeof origin !== "string" || origin.trim() === "") return null;
-  const base = origin.trim().replace(/\/+$/, "");
+  const base = withoutTrailingSlashes(origin.trim());
   const call = options.fetch ?? globalThis.fetch.bind(globalThis);
   const timeoutMs = options.timeoutMs ?? 3e3;
   const hidden = await readHidden(

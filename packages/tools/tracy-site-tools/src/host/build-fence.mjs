@@ -146,9 +146,37 @@ export function buildPictureRefusal(tool, file) {
   return `site-tools: ${tool} refused: ${JSON.stringify(file)} is a picture of the site, and a build writes no picture file by hand — the template's stay as they are. Nothing ran. Put the business's picture in with tracy_demo {operation:"media.import"} and set the path it answers in the field or setting that shows it (a T4 template's logo: "site_logo" in templates/<template>/local/etc/site/<profile>.json).`
 }
 
-/** A script interpreter on a shell line. */
-const INTERPRETER =
-  /(?:^|[\s;&|(])(?:python3?|php|node|perl|ruby)(?=[\s;&|)]|$)|\bwp\s+(?:--?[\w-]+(?:=\S+)?\s+)*eval(?:-file)?\b/m
+/** A script interpreter named on a shell line. */
+const INTERPRETER_NAME = /(?:^|[\s;&|(])(?:python3?|php|node|perl|ruby)(?=[\s;&|)]|$)/m
+const WP = /\bwp\s+/g
+const WP_FLAG = /-[\w-]+(?:=\S+)?\s+/y
+const WP_EVAL = /eval(?:-file)?\b/y
+
+/**
+ * A script interpreter on a shell line: a named one, or `wp [flags] eval|eval-file`. Reads what
+ * `/…|\bwp\s+(?:--?[\w-]+(?:=\S+)?\s+)*eval(?:-file)?\b/m` read, in one pass: that pattern backtracked
+ * exponentially on a run of `--\t-` (`--?` and `[\w-]+` could split one flag many ways), and retried its
+ * flags from every `wp` inside them.
+ * @param {string} text
+ */
+export function runsInterpreter(text) {
+  if (INTERPRETER_NAME.test(text)) return true
+  WP.lastIndex = 0
+  for (let m = WP.exec(text); m !== null; m = WP.exec(text)) {
+    let at = m.index + m[0].length
+    for (;;) {
+      WP_FLAG.lastIndex = at
+      const flag = WP_FLAG.exec(text)
+      if (flag === null) break
+      at += flag[0].length
+    }
+    WP_EVAL.lastIndex = at
+    if (WP_EVAL.test(text)) return true
+    // a `wp` inside these flags reads the same flags to the same place: it cannot match either
+    WP.lastIndex = Math.max(WP.lastIndex, at)
+  }
+  return false
+}
 /** A call in a script that writes or moves a file. */
 const SCRIPT_WRITE =
   /\bopen\s*\([^)]*,\s*(?:mode\s*=\s*)?['"][wax]\+?b?['"]|\.write_(?:text|bytes)\s*\(|\bfile_put_contents\s*\(|\bwriteFile(?:Sync)?\s*\(|\bappendFile(?:Sync)?\s*\(|\bshutil\.(?:copy\w*|move)\s*\(|\bos\.(?:remove|rename|replace|unlink)\s*\(|\b(?:unlink|rename|copy)\s*\(\s*['"$]|\bFile\.write\s*\(|\bimage(?:png|jpeg|webp|gif|avif|bmp)\s*\(|\.save\s*\(|\bopen\s*\(\s*(?:my\s+)?\$?\w+\s*,\s*['"]?[>+]/
@@ -167,7 +195,7 @@ function writePlaces({ name, args, cwd, siteRoot }) {
   if (targets === null) return null
   const a = /** @type {Record<string, unknown>} */ (args !== null && typeof args === 'object' ? args : {})
   const text = typeof a.command === 'string' ? a.command : typeof a.text === 'string' ? a.text : null
-  if (text === null || !INTERPRETER.test(text) || !SCRIPT_WRITE.test(text)) return { targets, script: [] }
+  if (text === null || !runsInterpreter(text) || !SCRIPT_WRITE.test(text)) return { targets, script: [] }
   const dir = typeof a.workdir === 'string' ? path.resolve(cwd, a.workdir) : cwd
   const here = dirBeforeScript(text, dir, siteRoot)
   const script = [path.join(here, '_')]
@@ -257,7 +285,7 @@ export const BUILD_REBUILD_UNNEEDED =
 function dirBeforeScript(command, dir, siteRoot) {
   let here = dir
   for (const part of command.split(/\n|;|&&|\|\||\|/)) {
-    if (INTERPRETER.test(part)) break
+    if (runsInterpreter(part)) break
     const words = part.trim().split(/\s+/).filter(Boolean)
     if (words[0] !== 'cd') continue
     const to = words[1]?.replace(/^['"]|['"]$/g, '')

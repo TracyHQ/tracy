@@ -30,7 +30,7 @@
  * fakes.
  */
 
-import { decodeEntities, foldForMatch, renderedUnits } from './html-units.mjs'
+import { decodeEntities, foldForMatch, renderedUnits, withoutComments } from './html-units.mjs'
 import { escapeHtmlText, parseBlocks } from './replace-wordpress.mjs'
 import { blockMarkupProblem } from './site-call.mjs'
 
@@ -347,6 +347,17 @@ const blockAround = (raw, a, b) =>
     .filter((s) => s.start <= a && b <= s.end)
     .sort((x, y) => x.end - x.start - (y.end - y.start))[0] ?? null
 
+const BLOCK_DELIMITER = /\s*\/?wp:/y
+
+/**
+ * Whether the comment opening at `at` is a block delimiter (`<!-- wp:…`, `<!-- /wp:…`), which is markup.
+ * @param {string} html @param {number} at
+ */
+const blockDelimiter = (html, at) => {
+  BLOCK_DELIMITER.lastIndex = at + 4
+  return BLOCK_DELIMITER.test(html)
+}
+
 /**
  * The WordPress body: the recipe's section markup (the theme's own pattern, which the map pins) with
  * its repeated part — the innermost block holding both `<question>` and `<answer>` — once per item,
@@ -368,7 +379,7 @@ export function wordpressBody(recipe, plan) {
   })
   if (typeof recipe !== 'string') return plain()
   // A note to the reader of the map ("one more … group per further …") is not markup.
-  const raw = recipe.replace(/\n?<!--(?!\s*\/?wp:)[\s\S]*?-->/g, '')
+  const raw = withoutComments(recipe, { keep: blockDelimiter, newlineBefore: true })
   const qi = raw.indexOf(QUESTION)
   const ai = raw.indexOf(ANSWER)
   if (qi === -1 || ai === -1) return plain()

@@ -668,7 +668,7 @@ export function cssDeclarations(text) {
     const top = stack.at(-1)
     if (top === undefined || top.kind !== 'rule') return
     const raw = text.slice(seg, end)
-    const m = /^((?:\s|\/\*[\s\S]*?\*\/)*)(--[\w-]+|-?[A-Za-z][\w-]*)\s*:/.exec(raw)
+    const m = /^((?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*)(--[\w-]+|-?[A-Za-z][\w-]*)\s*:/.exec(raw)
     if (m === null) return
     let vs = seg + m[0].length
     let ve = end
