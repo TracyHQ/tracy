@@ -1,0 +1,1 @@
+{"id":"REG-PR-407-codeql-release-round2","verdict":"PASS","commit":"cf88275f774ffac366ef832dfa27ba8ffc3049ca","ran_at":"2026-11-05T16:14:57.673Z","evidence":"tests/regression/.runs/2026-11-05-cf88275f7/REG-PR-407-codeql-release-round2.log"}
