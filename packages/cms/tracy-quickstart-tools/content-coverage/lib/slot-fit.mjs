@@ -149,8 +149,9 @@ function replaceOf(slot, kind, byRole) {
  */
 function labelWordsOf(slot) {
   const label = String(slot.label ?? '')
-  if (!String(slot.entity ?? '').startsWith('article-') || !label.includes(' / ')) return label
-  return label.slice(label.lastIndexOf(' / ') + 3)
+  if (!String(slot.entity ?? '').startsWith('article-')) return label
+  // A picture in the article's own text is labelled with the title alone ("…the Changing Face of Mourning…", JA Nova).
+  return label.includes(' / ') ? label.slice(label.lastIndexOf(' / ') + 3) : ''
 }
 
 function pictureFit(slot, ev, byRole) {

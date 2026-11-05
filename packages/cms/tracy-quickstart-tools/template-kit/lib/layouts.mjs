@@ -16,8 +16,9 @@ export const SKELETON_CLOSE = 0.8
 const bodyOf = (page) => `body-${String(page.id).replace(/^page-/, '')}`
 const listed = (page) =>
   new Set(Array.isArray(page.blocks) ? page.blocks : Object.values(page.blocks ?? {}).flat())
-// A further result page's kind names its offset (`category listing (list position 6)`): the view is page 1's.
-const kindOf = (page) => String(page.kind ?? 'unknown').replace(/\s*\(list position \d+\)$/, '')
+// A further result page's kind names its offset (`category listing (list position 6)`, `author listing (list
+// position 4) (no map entity)`): the view is page 1's.
+const kindOf = (page) => String(page.kind ?? 'unknown').replace(/\s*\(list position \d+\)/, '')
 
 /** What a page's main area is, without its words: the kind of main content and the body skeleton. */
 export function layoutKey(page, skeleton = null) {
@@ -38,6 +39,17 @@ export function skeletonSimilarity(a, b) {
   let both = 0
   for (const t of x) if (y.has(t)) both++
   return Math.round((both / (x.size + y.size - both)) * 1000) / 1000
+}
+
+/** Share of the distinct pieces of skeleton `a` that `b` also has, 0..1. */
+export function skeletonContained(a, b) {
+  const parts = (s) => new Set(String(s ?? '').split(/[(),>]+/).filter(Boolean))
+  const x = parts(a)
+  const y = parts(b)
+  if (!x.size) return y.size ? 0 : 1
+  let both = 0
+  for (const t of x) if (y.has(t)) both++
+  return Math.round((both / x.size) * 1000) / 1000
 }
 
 /**
@@ -62,7 +74,9 @@ export function bodyLayouts({ pages, pageGroups, skeletons = new Map() }) {
   for (const p of withBody) {
     const first = pageByPath.get(firstPageOf(p.path))
     if (first && listed(first).has(bodyOf(first)) && kindOf(first) === kindOf(p)) {
-      const s = skeletonSimilarity(sk(first), sk(p))
+      // Page 1 may hold a part the further page lacks (a second row of items): every part of the further page
+      // being page 1's is as good as the two being close.
+      const s = Math.max(skeletonSimilarity(sk(first), sk(p)), skeletonContained(sk(p), sk(first)))
       if (s >= SKELETON_CLOSE) further.set(p.id, first)
     }
   }

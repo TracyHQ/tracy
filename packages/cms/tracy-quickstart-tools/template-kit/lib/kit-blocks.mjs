@@ -39,7 +39,8 @@ export function shownLinks(read = [], linkIcons = {}) {
     position,
     label: l.label,
     href: l.href,
-    icon: byKey[`${l.label}|${l.href}`] ?? null
+    icon: byKey[`${l.label}|${l.href}`] ?? null,
+    ...(l.current ? { current: true } : {})
   }))
 }
 
@@ -207,12 +208,13 @@ export function buildBlock({
       label: l.label || null,
       target,
       ...(action ? { opens: { kind: 'action', action } } : {}),
-      ...(icon ? { icon: { ...icon, network } } : {})
+      ...(icon ? { icon: { ...icon, network } } : {}),
+      ...(l.current ? { current: true } : {})
     }
   })
   addIconSlots(lists, links, iconProbe, slots, neutralKey)
   // The slot each text link's label comes from: the block's own menu item, or the one slot printing its words.
-  labelLinks({ links, menuBlocks: idx.map.menuBlocks, mapSlots: idx.map.slots, siteUrl, aliasHosts })
+  labelLinks({ links, menuBlocks: idx.map.menuBlocks, mapSlots: idx.map.slots, entities, siteUrl, aliasHosts })
   // A clickable element without an address (a button opening a modal or a tab panel, a form's submit) is listed like a
   // link when a slot prints its label, with what it opens (`opens`), so its label and its target are both declared.
   const buttons = (desk?.clickables ?? []).map((c) => ({
@@ -223,7 +225,7 @@ export function buildBlock({
     element: c.tag,
     opens: opensOf(c.target, siteUrl, aliasHosts)
   }))
-  labelLinks({ links: buttons, menuBlocks: {}, mapSlots: idx.map.slots, siteUrl, aliasHosts })
+  labelLinks({ links: buttons, menuBlocks: {}, mapSlots: idx.map.slots, entities, siteUrl, aliasHosts })
   for (const b of buttons) {
     const own = labelSlot.get(normText(b.label))
     if (!b.labelId && own) b.labelId = neutralKey(own.key)

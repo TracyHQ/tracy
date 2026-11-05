@@ -189,22 +189,25 @@ export function extractPage() {
       role: el ? roleOf(el) : 'head',
       zone: el ? zoneOf(el) : undefined,
       look: el && (kind === 'image' || kind === 'text') ? lookOf(kind, el, extra) : undefined,
+      // Inside a code sample (<pre>, <code>): text capture never declares, on purpose.
+      ...(el && (kind === 'text' || kind === 'link') && el.closest('pre, code') ? { inCode: true } : {}),
       ...extra
     })
   }
 
   // 1. Text grouped by block element: the text of a block minus the text of its nested blocks.
-  const ownText = (el) => {
+  // `noCode` leaves out inline <code> the way capture does (its slots never hold code text).
+  const ownText = (el, noCode) => {
     let out = ''
     for (const c of el.childNodes) {
       if (c.nodeType === 3) out += c.nodeValue
       else if (c.nodeType === 1) {
         if (SKIP.has(c.tagName)) continue
-        if (c.tagName === 'BR') {
+        if (c.tagName === 'BR' || (noCode && c.tagName === 'CODE')) {
           out += ' '
           continue
         }
-        out += blockish(c) ? ' ' : ownText(c)
+        out += blockish(c) ? ' ' : ownText(c, noCode)
       }
     }
     return out
@@ -215,7 +218,13 @@ export function extractPage() {
     const t = ownText(el).replace(/\s+/g, ' ').trim()
     if (!t) continue
     const a = el.tagName === 'A' ? el : el.querySelector(':scope > a')
-    add('text', el, { value: t, href: a ? a.getAttribute('href') : null })
+    const extra = { value: t, href: a ? a.getAttribute('href') : null }
+    // A paragraph with inline code ("hold the line: <code>status</code> is an integer"): its slot sample has no code words.
+    if (el.tagName !== 'CODE' && el.querySelector('code')) {
+      const rest = ownText(el, true).replace(/\s+/g, ' ').trim()
+      if (rest !== t) extra.outsideCode = rest
+    }
+    add('text', el, extra)
   }
   // 2. Attributes a visitor or a screen reader meets.
   for (const el of document.body.querySelectorAll(

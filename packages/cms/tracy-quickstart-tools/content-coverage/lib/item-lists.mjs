@@ -94,12 +94,15 @@ function fieldOf(slot) {
  * section's own `section-2` is not a module. */
 const scopeTest = (id) => new RegExp(`^(?:(?:mod|module)[-_a-z]*|section)0*${id}$`, 'i')
 
-/** The findings items of a block on a page (`by: "block"`), else the whole page when it is assigned there. */
-export const blockPool = (block, assigned) => (items) => {
+/** The findings items of a block on a page (`by: "block"`), else the whole page when it is assigned there. A module
+ * alone in its position, rendered with no chrome of its own, is known by the position's wrapper (`t4-section-9`), as the
+ * kit finds it. */
+export const blockPool = (block, assigned, soleAt = null) => (items) => {
   const inScope = scopeTest(block.sourceId)
+  const atPosition = soleAt ? new RegExp(`^t[34]-${soleAt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') : null
   const pool = items
     .map((it, index) => ({ it, index }))
-    .filter(({ it }) => (it.scopes ?? []).some((s) => inScope.test(s)))
+    .filter(({ it }) => (it.scopes ?? []).some((s) => inScope.test(s) || atPosition?.test(s)))
   if (pool.length) return { pool, by: 'block' }
   if (items.some((it) => Array.isArray(it.scopes)) || !assigned) return null
   return { pool: items.map((it, index) => ({ it, index })), by: 'page' }
@@ -297,7 +300,11 @@ export function itemListsOf({ map, lock, findings }) {
     }
   const itemLists = {}
   const itemPages = {}
+  const atPosition = new Map()
+  for (const e of entities.filter((x) => x.kind === 'module' && x.identity?.position))
+    atPosition.set(e.identity.position, (atPosition.get(e.identity.position) ?? 0) + 1)
   for (const block of entities.filter((e) => e.kind === 'module')) {
+    const soleAt = atPosition.get(block.identity?.position) === 1 ? block.identity.position : null
     const params = objectOf(lock?.entities?.[block.key]?.params)
     const source = sourceOf(params, categoryById)
     if (!source) continue
@@ -314,7 +321,7 @@ export function itemListsOf({ map, lock, findings }) {
     let best = null
     for (const page of findings?.pages ?? []) {
       const assigned = (page.mapPages ?? []).some((m) => assignedTo.get(block.key)?.has(m.entity))
-      const seen = cardsOnPage(page, blockPool(block, assigned), candidates, slotsByKey)
+      const seen = cardsOnPage(page, blockPool(block, assigned, soleAt), candidates, slotsByKey)
       if (!seen) continue
       if (!best || seen.cards.size > best.cards.size || (best.by === 'page' && seen.by === 'block'))
         best = { ...seen, url: page.url }

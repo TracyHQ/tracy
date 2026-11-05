@@ -160,6 +160,13 @@ export function createMatcher(contract, siteUrl) {
   return function match(item) {
     if (item.kind === 'image') return matchImage(item.value)
     if (item.kind === 'link') return matchLink(item)
-    return matchText(item.value)
+    const res = matchText(item.value)
+    // Inline code is left out of every slot on purpose (capture skips <code>): the words around it are the slot's text.
+    if (res.status === 'hole' && typeof item.outsideCode === 'string') {
+      const rest = matchText(item.outsideCode)
+      // Only a match counts: a block that is all code (<pre><code>) stays a hole, to be accepted with a reason.
+      if (rest.status === 'matched') return { ...rest, by: `text outside inline code (${rest.by})` }
+    }
+    return res
   }
 }

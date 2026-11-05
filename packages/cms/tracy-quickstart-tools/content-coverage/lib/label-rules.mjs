@@ -13,7 +13,8 @@
 //   R6  no link or list item inside a fact slot
 //   R7  siblings of a repeat share a role (info cards, one contact fact per card, may each hold their own)
 //   R8  adjacent short slots of one entity and one card on one line are flagged as a cut heading
-//   R9  a fact-like hole blocks (an accepted reason does not lift it: a fact the map misses stays the demo's)
+//   R9  a fact-like hole blocks (an accepted reason does not lift it: a fact the map misses stays the demo's), except
+//       inside a code sample (<pre>, <code>): "user@example.com" in a log line is code, not the business's
 //
 // Slots of a demo-only entity (a style-guide page, `demo-only.mjs`) are left out of R1 to R8; R9 reads every hole.
 import {
@@ -22,6 +23,7 @@ import {
   isRole
 } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { demoOnlyEntities } from './demo-only.mjs'
+import { slotHash } from './label-judge.mjs'
 import { factKindsOf } from './fact-samples.mjs'
 
 export const LABEL_RULES_VERSION = 'label-rules/1'
@@ -45,6 +47,12 @@ const isTextual = (s) => s?.type === 'text' || s?.type === 'html'
 const hasRole = (s, version) => typeof s?.role === 'string' && isRole(s.role, version)
 const roleOf = (s) => (typeof s?.role === 'string' ? s.role : '')
 const FACT_SAMPLE_ROLE = /^contact\.|\.price$|^offering\.(?:price_note|schedule)$|^package\.price$/
+/**
+ * A sum that states a result ("$4.8m in profits", "helped raise over $500 million") reads like a price but is a stat or
+ * a claim: those roles never keep the demo's words in a build (a dash or empty), so a price-like sample may carry them.
+ * A phone, email, address or hours sample still needs a contact role.
+ */
+const PRICE_LIKE_RESULT_ROLES = new Set(['stat.value', 'claim.notice'])
 const CTA_LABEL_ROLES = new Set([
   'contact.cta_label',
   'offering.cta_label',
@@ -52,18 +60,29 @@ const CTA_LABEL_ROLES = new Set([
   'editorial.button_label'
 ])
 const CTA_URL_ROLES = new Set(['contact.cta_url', 'offering.cta_url', 'package.cta_url'])
+/** A contact card whose link wraps the fact itself (`<a href="mailto:…"><h5>email</h5></a>`): the fact is the label. */
+const CONTACT_FACT_ROLES = new Set(['contact.address', 'contact.email', 'contact.phone'])
 const PERSON_LIKE = /^(?:person|quote|business)\./
 const FACE_KINDS = new Set(['avatar', 'avatar-group', 'signature', 'cutout'])
 /** Faces that prove a number ("5k happy members" beside a strip of faces) have their own role (ADR 0040). */
 const PROOF_FACE_KINDS = new Set(['avatar', 'avatar-group'])
 const PROOF_ROLE = 'stat.proof_image'
+/** A transparent picture of the design (a brush stroke) measures as a cut-out by shape; the label judge, not R5, can
+ * tell it from a person cut out of a photo. Such a slot fails R5 until the judge saw it, as it is now, and said right. */
+const DESIGN_ROLE = 'editorial.design_element'
 
 /** `['team','team[name]',2]` → the pattern `team/team[name]/#` and the index tuple `2`; null when nothing is indexed. */
 function repeatOf(slot) {
   if (!Array.isArray(slot?.jsonPath)) return null
   const idx = []
-  const parts = slot.jsonPath.map((p) => {
-    if (Number.isInteger(p)) {
+  // The sections of a T4 layout are the page's different places (hero, features, footer), not copies of one item.
+  const layoutSection = (i) =>
+    i === 2 &&
+    String(slot.entity ?? '').startsWith('templateConfig-') &&
+    slot.jsonPath[0] === 'layout' &&
+    slot.jsonPath[1] === 'sections'
+  const parts = slot.jsonPath.map((p, i) => {
+    if (Number.isInteger(p) && !layoutSection(i)) {
       idx.push(p)
       return '#'
     }
@@ -94,8 +113,14 @@ function repeatsOf(slots) {
 function r2(slots, version) {
   const out = []
   for (const s of slots) {
-    if (!isTextual(s) || factKindsOf(s.sample).length === 0) continue
-    if (!(hasRole(s, version) && FACT_SAMPLE_ROLE.test(roleOf(s)))) out.push(s.key)
+    const kinds = isTextual(s) ? factKindsOf(s.sample) : []
+    if (kinds.length === 0) continue
+    if (!hasRole(s, version)) {
+      out.push(s.key)
+      continue
+    }
+    const result = kinds.every((k) => k === 'price') && PRICE_LIKE_RESULT_ROLES.has(roleOf(s))
+    if (!result && !FACT_SAMPLE_ROLE.test(roleOf(s))) out.push(s.key)
   }
   return out
 }
@@ -126,12 +151,14 @@ function r4(slots, repeats) {
     const labels = new Set(CTA_LABEL_ROLES)
     if (/^mailto:/i.test(String(s.sample ?? ''))) labels.add('contact.email')
     if (/^tel:/i.test(String(s.sample ?? ''))) labels.add('contact.phone')
+    // A contact card's link with no address of its own wraps the fact it shows (the address, the e-mail, the number).
+    if (roleOf(s) === 'contact.cta_url' && !String(s.sample ?? '').trim()) for (const r of CONTACT_FACT_ROLES) labels.add(r)
     if (!id || !slots.some((o) => o !== s && o.group?.id === id && labels.has(roleOf(o)))) out.add(s.key)
   }
   return [...out]
 }
 
-function r5(slots) {
+function r5(slots, pending) {
   const out = []
   for (const s of slots) {
     const fact = isFactRole(s.role)
@@ -140,6 +167,8 @@ function r5(slots) {
     const proof = roleOf(s) === PROOF_ROLE && PROOF_FACE_KINDS.has(kind)
     const face = s.type === 'image' && FACE_KINDS.has(kind) && !PERSON_LIKE.test(roleOf(s)) && !proof
     if ((fact && keeps) || face) out.push(s.key)
+    if (face && kind === 'cutout' && roleOf(s) === DESIGN_ROLE)
+      pending.push({ key: s.key, hash: slotHash(s) })
   }
   return out
 }
@@ -157,6 +186,8 @@ const cardPerItem = (members) =>
   new Set(members.map(({ slot, tuple }) => `${slot.group.id}|${tuple}`)).size ===
     new Set(members.map(({ slot }) => slot.group.id)).size
 
+/** Cards of one contact block each hold a different channel (address, email, phone): one kind of sibling for R7. */
+const siblingRole = (slot) => (CONTACT_FACT_ROLES.has(roleOf(slot)) ? 'contact.fact' : roleOf(slot))
 function r7(repeats) {
   const out = []
   for (const { members } of repeats) {
@@ -164,9 +195,9 @@ function r7(repeats) {
     // differ because the facts do, not because a label slipped.
     if (cardPerItem(members) && members.every(({ slot }) => CONTACT_FACT.test(roleOf(slot)))) continue
     const counts = new Map()
-    for (const { slot } of members) counts.set(roleOf(slot), (counts.get(roleOf(slot)) ?? 0) + 1)
+    for (const { slot } of members) counts.set(siblingRole(slot), (counts.get(siblingRole(slot)) ?? 0) + 1)
     const [majority] = [...counts].sort((a, b) => b[1] - a[1])[0]
-    for (const { slot } of members) if (roleOf(slot) !== majority) out.push(slot.key)
+    for (const { slot } of members) if (siblingRole(slot) !== majority) out.push(slot.key)
   }
   return out
 }
@@ -204,6 +235,8 @@ function r8(slots, pages) {
         if (a.slot.group?.id && b.slot.group?.id && a.slot.group.id !== b.slot.group.id) continue
         if (gap < -2 || gap > height * 1.5) continue
         if (isFactRole(a.slot.role) && isFactRole(b.slot.role) && a.slot.role !== b.slot.role) continue
+        // Two items of a grouped repeat (a row of member cards) side by side: each is its own item, never half a heading.
+        if (a.slot.group?.id && b.slot.group?.id && a.slot.group.id !== b.slot.group.id) continue
         out.add(`${a.slot.key} + ${b.slot.key}`)
       }
   }
@@ -217,6 +250,7 @@ const r9 = (holes) =>
       (h) =>
         h?.class !== 'core' &&
         h?.class !== 'catalogue' &&
+        h?.inCode !== true &&
         (h.kind === 'text' || String(h.kind).startsWith('attr'))
     )
     .filter((h) => factKindsOf(h.value).length > 0)
@@ -243,11 +277,12 @@ export function labelRulesOf({ map, pages = [], holes = [] }) {
   const slots = (Array.isArray(map?.slots) ? map.slots : []).filter((s) => !demoOnly.has(s?.entity))
   const version = map?.roleVocabularyVersion ?? null
   const repeats = repeatsOf(slots)
+  const pending = []
   const found = {
     R2: r2(slots, version ?? undefined),
     R3: r3(slots, version ?? undefined),
     R4: r4(slots, repeats),
-    R5: r5(slots),
+    R5: r5(slots, pending),
     R6: r6(slots),
     R7: r7(repeats),
     R8: r8(slots, pages),
@@ -261,8 +296,36 @@ export function labelRulesOf({ map, pages = [], holes = [] }) {
     rules: Object.fromEntries(
       Object.entries(found).map(([id, keys]) => [
         id,
-        { title: TITLES[id], count: keys.length, keys: keys.slice(0, SHOWN) }
+        {
+          title: TITLES[id],
+          count: keys.length,
+          keys: keys.slice(0, SHOWN),
+          ...(id === 'R5' && pending.length ? { pendingJudge: pending, exempted: [] } : {})
+        }
       ])
     )
   }
+}
+
+/**
+ * Lift from R5 the design cut-outs (`pendingJudge`) the label judge saw as they are now (same slot hash) and said right;
+ * they are listed in `exempted`. Run when the audit writes the file and again when record-judge.mjs records verdicts.
+ * Idempotent: it starts from the failing keys plus what an earlier run exempted.
+ * @param {any} labelRules the `labelRules` block
+ * @param {any} labelJudge the `labelJudge` block, or null
+ */
+export function applyJudgeToLabelRules(labelRules, labelJudge) {
+  const r5 = labelRules?.rules?.R5
+  if (!Array.isArray(r5?.pendingJudge) || r5.pendingJudge.length === 0) return labelRules
+  const right = new Map(
+    (Array.isArray(labelJudge?.slots) ? labelJudge.slots : [])
+      .filter((v) => v?.verdict === 'right')
+      .map((v) => [v.key, v.hash])
+  )
+  const before = r5.exempted ?? []
+  const exempted = r5.pendingJudge.filter((p) => right.get(p.key) === p.hash).map((p) => p.key)
+  const lifted = new Set(exempted)
+  const keys = [...new Set([...r5.keys, ...before])].filter((k) => !lifted.has(k)).slice(0, SHOWN)
+  const count = r5.count + before.length - exempted.length
+  return { ...labelRules, rules: { ...labelRules.rules, R5: { ...r5, count, keys, exempted } } }
 }

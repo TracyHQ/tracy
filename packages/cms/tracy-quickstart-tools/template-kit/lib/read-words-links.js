@@ -49,15 +49,18 @@ export function readLinkIcons({ block }) {
   }
   const links = []
   const fonts = []
+  // A link of a block rendered inside this one is that block's, read there once. The page a pagination marks as the
+  // current one (`aria-current`, address `#`: Joomla's own pagination layout) goes nowhere by design.
   for (const a of root.querySelectorAll('a[href]')) {
-    if (!shown(a)) continue
+    if (!shown(a) || a.closest('[data-kit-block]') !== root) continue
     const label = (a.innerText || a.getAttribute('aria-label') || a.getAttribute('title') || '')
       .replace(/\s+/g, ' ')
       .trim()
     const icon = iconOf(a)
     if (icon?.el) fonts.push(icon)
     const { el: _el, ...rest } = icon ?? {}
-    links.push({ position: links.length, label, href: a.getAttribute('href'), icon: icon ? rest : null })
+    const current = /^#?$/.test(a.getAttribute('href') ?? '') && /^(true|page)$/.test(a.getAttribute('aria-current') ?? '')
+    links.push({ position: links.length, label, href: a.getAttribute('href'), icon: icon ? rest : null, ...(current ? { current: true } : {}) })
   }
   // The probe: does setting the class change the glyph?
   let probe = null

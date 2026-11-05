@@ -256,6 +256,21 @@ test('self-check: a detail page outside the group of the page that lists it is a
   )
 })
 
+test("self-check: a detail page listed one level up but in its category's group (the map's item page) is fine", () => {
+  const pages = [
+    page('page-work', '/work', 'featured articles', { inMainMenu: true }),
+    page('page-work_art', '/work/art', 'category blog', { inMainMenu: true }),
+    page('page-work_piece', '/work/piece', 'article', { inMainMenu: true })
+  ]
+  const listedBy = new Map([['/work/piece', new Set(['/work', '/work/art'])]])
+  const itemParent = new Map([['/work/piece', '/work/art']])
+  const groups = groupPages(pages, itemParent, { listedBy })
+  assert.equal(groups.find((g) => g.children.includes('page-work_piece'))?.root, 'page-work_art')
+  const errors = []
+  assert.equal(detailPageChecks({ pages, pageGroups: groups, itemParent, listedBy, errors }), 0, JSON.stringify(errors))
+  assert.equal(detailPageChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 1, 'without the map: an error')
+})
+
 test('self-check: a group with items whose representative is not its listing page is an error', () => {
   const p = (id, path, blocks) => ({ id, path, inMainMenu: true, blocks: { 1440: blocks } })
   const pages = [

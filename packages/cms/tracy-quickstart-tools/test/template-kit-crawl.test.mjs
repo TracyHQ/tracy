@@ -231,6 +231,18 @@ test('test-data pages are left out without naming them: undeclared account with 
   assert.ok(!left.has('/coaches/author/omar pike'))
   assert.ok(!left.has('/coaches/author/owner'))
   assert.ok(!left.has('/coaches/author/founder'), 'content the front page features is still its own')
+  // An undeclared account whose first page lists only what the chrome links to, its later page its own posts.
+  const later = decideExclusions({
+    pages: [
+      ...exclusionPages(),
+      { path: '/coaches/author/admin', aliases: [], links: CHROME, refs: ['/coaches'] },
+      { path: '/coaches/author/admin?start=3', aliases: [], links: [...CHROME, '/blog/jab'], refs: ['/coaches/author/admin'] }
+    ],
+    map: EXCLUSION_MAP,
+    routes
+  })
+  assert.ok(!later.has('/coaches/author/admin'))
+  assert.ok(!later.has('/coaches/author/admin?start=3'))
   const byFlag = decideExclusions({
     pages: exclusionPages(),
     map: EXCLUSION_MAP,

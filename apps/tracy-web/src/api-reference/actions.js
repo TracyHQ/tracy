@@ -71,7 +71,8 @@ const JOOMLA_KINDS = [
   // every Joomla site from the plugin release that derives imported contracts.
   'fieldValue',
   // An author's visitor-facing profile field (`#__user_profiles` `profile.aboutme`, `profile.user_jobtitle`,
-  // `profile.user_tagline`; id = user_id × 100 + field), plugin 0.24.13.
+  // `profile.user_tagline`, `profile.user_avatar`, `profile.address1` from plugin 0.24.80; id = user_id × 100 + field),
+  // plugin 0.24.13.
   'userProfile'
 ]
 // `usermeta`: an author's bio and a theme's job title or tagline (the visitor-facing user meta only), plugin 0.18.9.

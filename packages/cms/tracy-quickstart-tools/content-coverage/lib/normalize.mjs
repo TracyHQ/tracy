@@ -41,7 +41,8 @@ export function decodeEntities(s) {
 export function stripTags(s) {
   return String(s ?? '')
     .replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ')
-    .replace(/<[^>]*>/g, ' ')
+    // A tag opens with a letter, "/" or "!": a code sample's "x < 0.8 ... y > 0.9" on the page is text, not a tag.
+    .replace(/<[a-z/!][^>]*>/gi, ' ')
 }
 
 /** Canonical comparison form of a piece of visible text. */
@@ -61,8 +62,11 @@ export function normText(s) {
     .toLowerCase()
 }
 
-/** Whitespace-free form: "Offline<span>Pages</span>" renders as "OfflinePages" or "Offline Pages" depending on CSS. */
-export const compact = (norm) => norm.replace(/[\s\p{P}]+/gu, '')
+/**
+ * Whitespace-free form: "Offline<span>Pages</span>" renders as "OfflinePages" or "Offline Pages" depending on CSS.
+ * Currency signs go too: a template prints "$" before a figure field ("$<?= $raise ?>"), so "$4,500" is the slot "4,500".
+ */
+export const compact = (norm) => norm.replace(/[\s\p{P}\p{Sc}]+/gu, '')
 
 /** Count of letters (any script) in a string: a text item with fewer than 2 is not content. */
 export function letterCount(s) {

@@ -44,12 +44,18 @@ function contractDir() {
       { key: 'article-2.image', type: 'image', sample: 'images/joomlart/classes/intro-1.jpg' },
       // A whole-unit slot (capture --whole-units): the xpath names the heading, the sample joins its pieces.
       { key: 'article-2.heading', type: 'text', sample: 'Ring Ready Now', xpath: '/html/body/div/h2' },
+      // A paragraph with inline code: capture leaves the code words out of the sample.
+      { key: 'article-2.typed', type: 'text', sample: 'Assign types at ingest: is an integer, is a float.', xpath: '/html/body/div/p[3]' },
       { key: 'module-90.video', type: 'text', sample: '7CZ5I-PZjEg' },
       { key: 'module-90.email', type: 'text', sample: 'sale@getfit.com' },
       { key: 'module-90.info', type: 'html', sample: '<p>Call us: <span>(239) 555-0108</span></p>' },
       // A label and a phone number in fields of their own, printed as one list item ("or CALL: <a>number</a>").
       { key: 'module-90.phone-label', type: 'text', sample: 'or CALL:' },
-      { key: 'module-90.phone', type: 'text', sample: '(239) 555-0177' }
+      { key: 'module-90.phone', type: 'text', sample: '(239) 555-0177' },
+      // A figure field the template prints after a hard-coded currency sign ("$<?= $raise ?>").
+      { key: 'module-90.raised', type: 'text', sample: '4,500' },
+      // A store link kept in a text field of the template's extra fields.
+      { key: 'article-2.store', type: 'text', sample: 'https://music.apple.com/' }
     ],
     pages: [{ entity: 'menu-101', route: 'home' }]
   })
@@ -111,6 +117,15 @@ test('declared text, a fragment of a slot and a slot image match; a video id in 
   )
 })
 
+test('a web address kept in a text field is the slot of the link that prints it', () => {
+  const { items } = audit([
+    { kind: 'link', value: 'https://music.apple.com/', source: 'a', role: 'content' },
+    { kind: 'link', value: 'https://open.spotify.com/', source: 'a', role: 'content' }
+  ])
+  assert.equal(byValue(items, 'https://music.apple.com/').status, 'matched')
+  assert.equal(byValue(items, 'https://open.spotify.com/').status, 'hole')
+})
+
 test('a phone number declared inside a field of markup is declared: a segment with digits and no letter counts', () => {
   const { items } = audit([
     { kind: 'text', value: '(239) 555-0108' },
@@ -119,6 +134,19 @@ test('a phone number declared inside a field of markup is declared: a segment wi
   assert.equal(byValue(items, '(239) 555-0108').status, 'matched')
   // another number is not covered by it
   assert.notEqual(byValue(items, '(239) 555-0199').status, 'matched')
+})
+
+test('a figure printed after a currency sign the template writes is its slot; another figure is not', () => {
+  // JA Impact 1.0.6: donation cards print "$" + the raise field, so the page shows "$4,500" for the slot "4,500".
+  const { items } = audit([
+    { kind: 'text', value: '$4,500' },
+    { kind: 'text', value: '$40,000' }
+  ])
+  assert.deepEqual(
+    [byValue(items, '$4,500').status, byValue(items, '$4,500').slots],
+    ['matched', ['module-90.raised']]
+  )
+  assert.notEqual(byValue(items, '$40,000').status, 'matched')
 })
 
 test('a block made of a label slot and a phone slot is that pair: a figure slot with no letter still counts', () => {
@@ -146,6 +174,23 @@ test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside
   )
   assert.equal(byValue(items, 'Now').status, 'matched')
   assert.notEqual(byValue(items, 'Rea').status, 'matched')
+})
+
+test('a paragraph with inline code is its slot when the words outside the code match; a block of code alone stays a hole', () => {
+  const { items } = audit([
+    {
+      kind: 'text',
+      value: 'Assign types at ingest: status is an integer, duration_ms is a float.',
+      outsideCode: 'Assign types at ingest: is an integer, is a float.'
+    },
+    { kind: 'text', value: 'Assign types at ingest: status is a string.', outsideCode: 'Assign types at ingest: is a string.' },
+    { kind: 'text', value: 'alert "disk pressure" | when disk_used > 0.9 for 15m', outsideCode: '' }
+  ])
+  const p = items[0]
+  assert.deepEqual([p.status, p.slots], ['matched', ['article-2.typed']])
+  assert.match(p.matchBy, /^text outside inline code/)
+  assert.notEqual(items[1].status, 'matched')
+  assert.notEqual(items[2].status, 'matched')
 })
 
 test('a price is demo content: numeric-only text is not ignored, and is found in the database; a bare counter is core', () => {
@@ -178,6 +223,17 @@ test('an all-numeric date a layout prints is core like a written one; a phone nu
   )
   // A phone number has the digits but not the shape: never core.
   assert.notEqual(byValue(items, '(084) 555-0110').class, 'c')
+})
+
+test('an article date a module prints with a weekday ("Tue, Aug 2021", date_format "D, M Y") is core, like other Joomla dates', () => {
+  const { items } = audit([
+    { kind: 'text', value: 'Tue, Aug 2021' },
+    { kind: 'text', value: 'Monday, 14 June 2021' },
+    { kind: 'text', value: 'Tuesday is gig night' }
+  ])
+  assert.equal(byValue(items, 'Tue, Aug 2021').class, 'c')
+  assert.equal(byValue(items, 'Monday, 14 June 2021').class, 'c')
+  assert.notEqual(byValue(items, 'Tuesday is gig night').class, 'c')
 })
 
 test('a capture hole says whether the presentation lock pins its field (locked) or nothing declares it', () => {
@@ -333,4 +389,21 @@ test('an item VirtueMart printed on one viewport keeps its catalogue zone when t
     SITE
   )
   assert.equal(merged[0].zone, 'catalogue')
+})
+
+test('a breadcrumb that prints the page heading first keeps the heading mark when the copies merge', () => {
+  const merged = mergeViewports(
+    {
+      desktop: {
+        items: [
+          { kind: 'text', value: 'Company', tag: 'li', role: 'nav', visible: true },
+          { kind: 'text', value: 'Company', tag: 'h1', role: 'content', visible: true }
+        ]
+      }
+    },
+    SITE
+  )
+  assert.equal(merged.length, 1)
+  assert.equal(merged[0].tag, 'li')
+  assert.equal(merged[0].h1, true)
 })

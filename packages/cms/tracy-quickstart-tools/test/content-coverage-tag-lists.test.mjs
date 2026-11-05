@@ -102,3 +102,36 @@ test('a page whose path names no tag of the map declares nothing', () => {
   map.entities = map.entities.filter((e) => e.key !== 'tag-7')
   assert.deepEqual(tagListsOf({ map, findings }).itemLists, {})
 })
+
+test('a heading whose first slot is another item ("Tagged: Reefs" beside a feature named "Reefs") still ties the tag', () => {
+  const { map, findings } = fixture()
+  map.slots.push(slot('module-5.0', 'title', 'text', 'reefs', 'offering.name'))
+  findings.pages.push(
+    tagPage2('http://site.invalid/component/tags/tag/reefs', 'module-5', [
+      text('Tagged: reefs', ['module-5.0', 'tag-8.0'], at(0, 20, 300, 40), { tag: 'h1' }),
+      text('Reef Walks at Dawn', ['article-43.0'], at(0, 100, 300, 30), { href: '/news/reef-walks-at-dawn' })
+    ])
+  )
+  assert.deepEqual(Object.keys(tagListsOf({ map, findings }).itemLists), ['tag-7.items', 'tag-8.items'])
+  // The matcher gave the tag's words to the feature alone: the words still tie the tag.
+  findings.pages.at(-1).items[0].slots = ['module-5.0']
+  assert.deepEqual(Object.keys(tagListsOf({ map, findings }).itemLists), ['tag-7.items', 'tag-8.items'])
+  // A heading printing other words ties nothing.
+  map.slots.push(slot('module-6.0', 'title', 'text', 'kelp', 'offering.name'))
+  findings.pages.at(-1).items[0].slots = ['module-6.0']
+  assert.deepEqual(Object.keys(tagListsOf({ map, findings }).itemLists), ['tag-7.items'])
+})
+
+function tagPage2(url, entity, items) {
+  return { url, mapPages: [], rendersEntity: { entity }, items }
+}
+
+test('a module alone in its position, with no chrome of its own, is found by the position wrapper', async () => {
+  const { blockPool } = await import('../content-coverage/lib/item-lists.mjs')
+  const items = [
+    { kind: 'text', value: 'A', scopes: ['t4-section-9'] },
+    { kind: 'text', value: 'B', scopes: ['t4-section-10'] }
+  ]
+  assert.deepEqual(blockPool({ sourceId: 122 }, false, 'section-9')(items)?.pool.map((p) => p.it.value), ['A'])
+  assert.equal(blockPool({ sourceId: 122 }, false)(items), null, 'not alone there: no guess')
+})

@@ -107,7 +107,8 @@ export function findBlocks(assigned) {
   for (const el of assignedIds.size ? document.querySelectorAll('[id]') : []) {
     const m = /^[a-z][a-z0-9_]*(?:-[a-z][a-z0-9_]*)*-(\d+)$/i.exec(el.id)
     if (!m || LAYOUT_ID.test(el.id) || !assignedIds.has(m[1]) || taken.has(`module-${m[1]}`)) continue
-    if (el.closest('[data-kit-block]')) continue
+    // Outside every block found so far, and around none: a wrapper holding one only shares the digits.
+    if (el.closest('[data-kit-block]') || el.querySelector('[data-kit-block]')) continue
     const list = byId.get(m[1]) ?? []
     if (!list.some((x) => x.contains(el))) list.push(el)
     byId.set(m[1], list)

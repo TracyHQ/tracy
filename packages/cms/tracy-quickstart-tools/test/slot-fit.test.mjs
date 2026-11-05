@@ -537,6 +537,15 @@ test("an article's title is the demo's words, not a field name: a picture of a p
         jsonPath: ['image_intro']
       },
       {
+        key: 'article-10.11',
+        entity: 'article-10',
+        type: 'image',
+        sample: 'images/demo/blog/pic-1.jpg',
+        label: 'Digital Tributes: Examining the Changing Face of Mourning',
+        column: 'fulltext',
+        xpath: '/html/body/div/img/@src'
+      },
+      {
         key: 'module-7.2',
         entity: 'module-7',
         type: 'image',
@@ -552,6 +561,7 @@ test("an article's title is the demo's words, not a field name: a picture of a p
       {
         items: [
           image('images/demo/blog/sample-8.jpg', ['article-9.11'], { desktop: vp(608, 360) }, file),
+          image('images/demo/blog/pic-1.jpg', ['article-10.11'], { desktop: vp(494, 349) }, file),
           image(
             'images/demo/people/anna.jpg',
             ['module-7.2'],
@@ -564,6 +574,8 @@ test("an article's title is the demo's words, not a field name: a picture of a p
   }
   const fitted = measureSlotFit({ map, findings }).map
   assert.equal(slotOf(fitted, 'article-9.11').fit.kind, 'photo')
+  // a picture in the post's text is labelled with the title alone
+  assert.equal(slotOf(fitted, 'article-10.11').fit.kind, 'photo')
   // a module's title names its layout, so a testimonials avatar stays a face
   assert.equal(slotOf(fitted, 'module-7.2').fit.kind, 'avatar')
 })
