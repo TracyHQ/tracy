@@ -160,6 +160,13 @@ const execFor = (label, root) => (byKind) => async (input) => {
   return out
 }
 
+/**
+ * Whether the browser's argv carries exactly this argument: a whole-element match, never a substring of
+ * another argument (an origin guard spelled with `:80` must not pass for the bare one).
+ * @param {unknown[] | null} argv @param {string} arg
+ */
+const argvHas = (argv, arg) => Array.isArray(argv) && argv.some((a) => a === arg)
+
 const runSite = (tools, args, cwd) =>
   tools.get('tracy_site').execute(args, { agent: { session: { id: 'session-x', header: { cwd } } } })
 const runEmdash = (tools, args, cwd) =>
@@ -271,12 +278,12 @@ test("🔒 page.text: a redirect to the site's OWN public https address reads th
   assert.equal(probes.length, 2)
   assert.deepEqual(probes[1].slice(-3), ['https://demo1.tracy.site/', '2000', '127.0.0.1:80'])
   // the browser is addressed by the public origin, and told to serve it from loopback
-  assert.ok(browserArgv.includes('https://demo1.tracy.site/'), 'browser url is the public address')
-  assert.ok(browserArgv.includes('https://demo1.tracy.site'), 'origin guard is the public origin')
-  assert.ok(browserArgv.includes('TRACY_PUBLIC_VIA=127.0.0.1:80'), 'requests are served from loopback')
+  assert.ok(argvHas(browserArgv, 'https://demo1.tracy.site/'), 'browser url is the public address')
+  assert.ok(argvHas(browserArgv, 'https://demo1.tracy.site'), 'origin guard is the public origin')
+  assert.ok(argvHas(browserArgv, 'TRACY_PUBLIC_VIA=127.0.0.1:80'), 'requests are served from loopback')
   // 🔒 and the public name resolves to NOTHING in the browser: no request can leave the container
   assert.ok(
-    browserArgv.includes('TRACY_RESOLVER_RULE=--host-resolver-rules=MAP demo1.tracy.site ~NOTFOUND'),
+    argvHas(browserArgv, 'TRACY_RESOLVER_RULE=--host-resolver-rules=MAP demo1.tracy.site ~NOTFOUND'),
     'the public name must not resolve to the real site'
   )
 })
@@ -301,8 +308,8 @@ test("🔒 page.look: a redirect to the site's OWN public https address photogra
   const out = await runSite(tools, { action: 'page.look', params: {} }, cwd)
   assert.equal(out.ok, true, JSON.stringify(out))
   assert.ok(existsSync(out.file), 'the screenshot the container wrote is on the host inode')
-  assert.ok(browserArgv.includes('https://demo1.tracy.site'), 'origin guard is the public origin')
-  assert.ok(browserArgv.includes('TRACY_PUBLIC_VIA=127.0.0.1:80'))
+  assert.ok(argvHas(browserArgv, 'https://demo1.tracy.site'), 'origin guard is the public origin')
+  assert.ok(argvHas(browserArgv, 'TRACY_PUBLIC_VIA=127.0.0.1:80'))
 })
 
 test('🔒 page.text: https of a host the site does NOT own is refused', async () => {
@@ -497,11 +504,11 @@ test('🔒 page.text: a same-host canonical PORT redirect renders via the virtua
   assert.match(out.text, /Real page/)
   // 🔒 the browser was addressed by the virtual host at the canonical port…
   assert.ok(
-    browserArgv.includes('http://tracy-site.probe.invalid:51710/'),
+    argvHas(browserArgv, 'http://tracy-site.probe.invalid:51710/'),
     'browser url is the virtual authority'
   )
   assert.ok(
-    browserArgv.includes('http://tracy-site.probe.invalid:51710'),
+    argvHas(browserArgv, 'http://tracy-site.probe.invalid:51710'),
     'origin guard is the virtual authority'
   )
   // …and the ONE host-resolver rule routes exactly that authority back onto the loopback service —
@@ -545,11 +552,11 @@ test('🔒 page.text: a canonical redirect to the IMPLICIT default port 80 still
   // 🔒 the origin guard carries NO :80 — it reads as the browser reads its own final URL (URL.origin
   // drops a default port), so an implicit-80 canonical page is not a false off-site.
   assert.ok(
-    browserArgv.includes('http://tracy-site.probe.invalid'),
+    argvHas(browserArgv, 'http://tracy-site.probe.invalid'),
     'origin guard is the bare-port virtual origin'
   )
   assert.ok(
-    !browserArgv.includes('http://tracy-site.probe.invalid:80'),
+    !argvHas(browserArgv, 'http://tracy-site.probe.invalid:80'),
     'the origin guard is not spelled with :80'
   )
   // 🔒 the resolver rule pins the canonical authority back onto THIS site's own port (4321) — the port
@@ -584,11 +591,11 @@ test('🔒 page.look: a canonical redirect to the EXPLICIT port 80 renders and s
   assert.equal(out.ok, true)
   assert.ok(existsSync(out.file), 'the canonical-port screenshot the container wrote is on the host inode')
   assert.ok(
-    browserArgv.includes('http://tracy-site.probe.invalid'),
+    argvHas(browserArgv, 'http://tracy-site.probe.invalid'),
     'origin guard is the bare-port virtual origin'
   )
   assert.ok(
-    !browserArgv.includes('http://tracy-site.probe.invalid:80'),
+    !argvHas(browserArgv, 'http://tracy-site.probe.invalid:80'),
     'the origin guard is not spelled with :80'
   )
   const rule = browserArgv.find((a) => String(a).startsWith('TRACY_RESOLVER_RULE='))

@@ -1108,3 +1108,31 @@ export function unitParts(unit) {
   if (loose || parts.length < 2) return [{ text: unit.shown, link: unitLink(unit) }]
   return parts
 }
+
+/**
+ * `html` without its comments, each read as `/<!--[\s\S]*?-->/g` reads it (to the first `-->` after it; an
+ * unclosed `<!--` and all after it stay), in one linear pass: the lazy pattern rescanned to the end from
+ * every unclosed `<!--`, quadratic on a page of them.
+ * @param {string} html
+ * @param {{ keep?: ((html: string, at: number) => boolean) | null, newlineBefore?: boolean }} [options] - `keep`
+ *   leaves the comment opening at `at` where it is; `newlineBefore` drops the one `\n` right before a dropped
+ *   comment too (`/\n?<!--…-->/g`), never one an earlier comment's removal already reached.
+ * @returns {string}
+ */
+export function withoutComments(html, { keep = null, newlineBefore = false } = {}) {
+  let out = ''
+  let from = 0
+  let at = html.indexOf('<!--')
+  while (at !== -1) {
+    if (keep?.(html, at)) {
+      at = html.indexOf('<!--', at + 1)
+      continue
+    }
+    const end = html.indexOf('-->', at + 4)
+    if (end === -1) break
+    out += html.slice(from, newlineBefore && at > from && html[at - 1] === '\n' ? at - 1 : at)
+    from = end + 3
+    at = html.indexOf('<!--', from)
+  }
+  return out + html.slice(from)
+}

@@ -368,6 +368,13 @@ test("switchesAtTracy: a host reads the switches at Tracy's origin, and no answe
     }
   })
   assert.deepEqual(asked, ['https://tracy.example/api/ui'])
+  await switchesAtTracy('https://tracy.example///', {
+    fetch: async (url) => {
+      asked.push(String(url))
+      return new Response('nope', { status: 503 })
+    }
+  })
+  assert.equal(asked.at(-1), 'https://tracy.example/api/ui', 'every trailing slash is dropped')
   assert.ok(on)
   assert.equal(on('chat-design-system'), true, 'not hidden: an operator turned it on')
   assert.equal(on('toolbar-design-system'), false)
@@ -385,4 +392,23 @@ test("switchesAtTracy: a host reads the switches at Tracy's origin, and no answe
     async () => new Response(JSON.stringify({ hidden: 'all' }), { status: 200 })
   ])
     assert.equal(await switchesAtTracy('https://tracy.example', { fetch }), null)
+})
+
+test('🔒 switchesAtTracy trims an origin of slashes in linear time', async () => {
+  const refuse = async () => new Response('nope', { status: 503 })
+  /** Best of five, in milliseconds. @param {number} n */
+  const best = async (n) => {
+    const origin = `${'/'.repeat(n)}x`
+    let least = Infinity
+    for (let i = 0; i < 5; i += 1) {
+      const t0 = performance.now()
+      await switchesAtTracy(origin, { fetch: refuse })
+      least = Math.min(least, performance.now() - t0)
+    }
+    return least
+  }
+  const one = await best(80_000)
+  const two = await best(160_000)
+  // the old `replace(/\/+$/, '')` took about 3 s at 80 000 slashes and four times that at twice as many
+  assert.ok(two < 2.8 * one + 5 && two < 300, `${one.toFixed(1)} ms at n, ${two.toFixed(1)} ms at 2n`)
 })

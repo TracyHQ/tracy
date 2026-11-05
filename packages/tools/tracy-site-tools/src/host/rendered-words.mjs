@@ -552,12 +552,19 @@ export function linkTargetsOf(html) {
 }
 
 /**
+ * `s` as a JSON string body with escaped slashes spells it (PHP's `json_encode`): the backslash escaped
+ * first, so the `\` that escapes a `/` or a `"` is never read as the target's own.
+ * @param {string} s
+ */
+const jsonSlashes = (s) => s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\//g, '\\/')
+
+/**
  * A link target as a stored record may spell it: as is, entity-escaped, or JSON-escaped.
  * @param {string} href
  */
 export function storedSpellings(href) {
   const amp = href.replace(/&/g, '&amp;')
-  return [...new Set([href, amp, href.replace(/\//g, '\\/'), amp.replace(/\//g, '\\/')])]
+  return [...new Set([href, amp, jsonSlashes(href), jsonSlashes(amp)])]
 }
 
 /**
