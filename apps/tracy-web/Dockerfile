@@ -117,6 +117,7 @@ COPY packages/cms/tracy-emdash-theme-business/contracts ./src/contracts/tracy-bu
 COPY packages/cms/tracy-emdash-theme-base/contracts ./src/contracts/tracy-base/emdash-0.x
 COPY packages/cms/tracy-emdash-theme-saas/contracts ./src/contracts/tracy-saas/emdash-0.x
 COPY packages/cms/tracy-emdash-theme-coffee/contracts ./src/contracts/tracy-coffee/emdash-0.x
+COPY packages/cms/tracy-emdash-theme-restaurant/contracts ./src/contracts/tracy-restaurant/emdash-0.x
 # What a Joomla quickstart ships translated for its own demo copy, beside the contracts (same release/version folders):
 # "Apply" with a language the template does not carry translates what the site holds, and a string the template already
 # translated is not asked of a model again (`tracy-seeder/src/shipped-translations.mjs`, `lib/seeder.js` `seederDataDir`).
