@@ -252,3 +252,22 @@
     `canHide`, CMS notices, video id slots and `site.nameSlots`. Numbers inside kept trade lines stay with R10f. R20
     was already taken by the page title rule, so the new rule is R21; the approved rules R00 to R19 are unchanged. On
     the frozen run's three plans R21 fails exactly the four class page bodies and nothing else.
+
+## Amendment 05/11/2026: a list row printed in a text card follows that card (settled by Akemi)
+
+14. **Paired list rows (prompt change, approved by Akemi on 05/11/2026).** In a sealed Flash max run on JA Boxing
+    1.0.10, each class page kept the four exercise cards of its "typical session" block (a heading and its lines per
+    card) but set the block's video list to `rows: 2`, so cards two to four printed without their picture. The kit
+    tool now records, per list row, `rows[].pairedSlots` (the block's text slots printed in the same card as that
+    row's picture, empty when none) and `rows[].printsIn` (the card signature, or `block`). The prompt names
+    `rows[].pairedSlots` in the list description and adds to the row rule: keep any of a row's paired text slots and
+    the row and its picture are kept; hide them all and the row is dropped; the row count follows the cards kept,
+    never the pictures on hand. Every other rule is unchanged. The prompt's sha256 is
+    `5db969c53e4c3d3b083f42466a808d6dccf92d383b336f97cd90de6628d14a50` (was `ec160022...`).
+15. **Plan check R22 (`rules-row-pairs.js`), checker `site-plan-check/4`.** For every kept list of a kept block and
+    every kit row with non-empty `pairedSlots`, the row is kept when its picture slot is a frame of the list's
+    `items[].pictures` (or, when the items carry no frame, when its index is below `rows`), and its card is kept when
+    one paired slot is in `copy` and not in `hiddenSlots`; the two must agree, one failure per row naming the list,
+    the row, its picture and its paired slots. A hidden list is not checked, and a kit without `pairedSlots` (every kit
+    measured before the field) leaves R22 skipped. On the sealed run's plan, with the four class pages' rows paired by
+    hand in a copy of the 1.0.10 kit, R22 fails rows 2 to 4 of exactly the four video lists and nothing else.
