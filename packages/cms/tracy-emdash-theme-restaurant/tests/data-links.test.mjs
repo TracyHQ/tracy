@@ -168,7 +168,11 @@ test('the gate gates a same-site path and passes external, tel:, mailto: and # l
 })
 
 test('the footer map and contact links are gated: a map link of /menu with Menu unticked is dropped', () => {
+  // the formatter may wrap the call over several lines
   const footer = read('src/components/site/Footer.astro')
+    .replace(/\s+/g, ' ')
+    .replace(/\[ /g, '[')
+    .replace(/ \]/g, ']')
   assert.match(
     footer,
     /liveLinks\(Astro\.request, chrome\.locale, \[site\.footer_map_url, \.\.\.contact\.map\(\(c\) => c\.href\)\]\)/
