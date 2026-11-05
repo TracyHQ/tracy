@@ -22,7 +22,11 @@ const isButton = (b: any) =>
   b?._type === 'block' &&
   b.children?.length === 1 &&
   (b.markDefs ?? []).some((m: any) => m._key === b.children[0].marks?.[0])
-const text = await liveBlocks(Astro.request, locale, blocks.filter((b) => !isButton(b)))
+const text = await liveBlocks(
+  Astro.request,
+  locale,
+  blocks.filter((b) => !isButton(b))
+)
 const button = blocks.find(isButton)
 const link = button ? (button.markDefs ?? []).find((m: any) => m._key === button.children[0].marks[0]) : null
 const img = mediaUrl(entry.img_features)

@@ -95,7 +95,9 @@ const flat =
         ? { entry: twoCol, style: 3 as const }
         : null
 const history = slug === 'our-history'
-const historyBody = history ? await liveBlocks(Astro.request, locale, stampBlocks($page, 'body', page.body)) : []
+const historyBody = history
+  ? await liveBlocks(Astro.request, locale, stampBlocks($page, 'body', page.body))
+  : []
 const historyComponents = $page.owner ? { block: ProseBlock, listItem: ProseListItem } : {}
 const $f = flat?.entry ? stampFor(Astro.request, 'menu', { id: flat.entry.id, slug: flat.entry.slug }) : null
 const title = masthead?.title ?? flat?.entry?.title ?? page.title

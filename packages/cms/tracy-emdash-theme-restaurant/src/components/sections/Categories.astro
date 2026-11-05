@@ -18,7 +18,11 @@ const [cats, all] = await Promise.all([sections('category_info', locale), loadPo
 const posts = await livePosts(Astro.request, locale, blogPosts(all))
 const order = BLOG_SIDEBAR
 // a category card links to its list only while Blog (its parent) is published
-const live = await liveLinks(Astro.request, locale, cats.map((c) => `/${c.slug}`))
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  cats.map((c) => `/${c.slug}`)
+)
 cats.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug))
 ---
 

@@ -734,7 +734,10 @@
     },
     {
       "file": "images/joomlart/features-intro/intro-2.jpg",
-      "usedBy": ["features_intro/features-intro.items[0].img_icon", "timeline/our-history-timeline.items[2].image"],
+      "usedBy": [
+        "features_intro/features-intro.items[0].img_icon",
+        "timeline/our-history-timeline.items[2].image"
+      ],
       "inSnapshot": true
     },
     {

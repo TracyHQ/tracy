@@ -17,7 +17,11 @@ const { entry, locale, titles = true } = Astro.props
 const $show = stampFor(Astro.request, 'slideshow', { id: entry.id, slug: entry.slug })
 const slides: any[] = entry.items ?? []
 // a slide whose link leads to an unticked page keeps its title as plain text
-const live = await liveLinks(Astro.request, locale, slides.map((s) => s.slide_link))
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  slides.map((s) => s.slide_link)
+)
 ---
 
 <section class:list={['rs-slideshow', !titles && 'is-plain']} aria-roledescription="carousel" aria-label={entry.title} data-slideshow>
