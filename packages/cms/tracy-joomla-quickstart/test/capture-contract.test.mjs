@@ -1568,7 +1568,16 @@ test(
         label: 'Info',
         params: '{}'
       },
-      { id: '2', name: 'author_role', context: 'com_content.article', type: 'text', state: '1', title: 'Role', label: 'Role', params: '{}' }
+      {
+        id: '2',
+        name: 'author_role',
+        context: 'com_content.article',
+        type: 'text',
+        state: '1',
+        title: 'Role',
+        label: 'Role',
+        params: '{}'
+      }
     ]
     inv.fields_values = [
       { field_id: '1', item_id: '43', value: '<h5>IT Management</h5><div class="progress">90%</div>' },
@@ -2370,6 +2379,28 @@ test(
     )
     assert.equal(
       map.entities.some((e) => e.key === 'menuItem-102'),
+      false
+    )
+  }
+)
+
+test(
+  'a menu entry of type url declares the address it opens after its title; a page entry does not',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.menu.push(menu('130', { path: 'twitter', title: 'Twitter', type: 'url', link: '#' }))
+    const run = capture(inv)
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots
+    const of = (e) =>
+      slots.filter((s) => s.entity === e).map((s) => [s.column, s.type, s.sample, s.role ?? null])
+    assert.deepEqual(of('menuItem-130'), [
+      ['title', 'text', 'Twitter', 'contact.social_label'],
+      ['link', 'url', '#', 'contact.social_url']
+    ])
+    assert.equal(
+      slots.some((s) => s.entity === 'menuItem-101' && s.column === 'link'),
       false
     )
   }

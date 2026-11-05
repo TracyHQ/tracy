@@ -516,6 +516,10 @@ for kind,table in tables.items():
     for h in html_slots(body):add(col,h['type'],h['sample'],xpath=h['xpath'],label=row['title'])
   # Labels remain content; identities use stable aliases rather than mutable titles.
   if kind in ['article','menuItem']:add('title','text',row['title'],label=row['title'])
+  # A menu entry that opens an address of its own (type `url`: JA Impact's "Follow us" Twitter, Facebook…) prints that
+  # address as its link; it is the business's to write, after the title so the keys before it stay.
+  if kind=='menuItem' and row.get('type')=='url' and isinstance(row.get('link'),str) and row['link'].strip():
+   add('link','url',row['link'],label=row['title']+' / link',requiresEvidence=True)
   if a.full_coverage:declare_everything(kind,row,add)
   if kind=='templateStyle' and a.template_style_logos:
    try:style_params=json.loads(row.get('params') or '{}')

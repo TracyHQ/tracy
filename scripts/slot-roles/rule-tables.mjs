@@ -31,6 +31,7 @@ import {
 import { editorialRoleOf, repeatedRowOf } from './editorial-defaults.mjs'
 import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
 import { proposeMarkupBindings } from './rule-tables-markup.mjs'
+import { proposeJoomlaMenuLinks } from './rule-tables-joomla-menu-links.mjs'
 import { proposeWordpressLinks } from './rule-tables-wordpress-links.mjs'
 
 export { FACT_FAMILY_ROLES }
@@ -806,6 +807,23 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
         roleOnlyBySlot.set(slotKey, b.role)
         continue
       }
+      groupOf.set(b.groupId, { groupId: b.groupId, itemIndex: b.itemIndex, entityKind: b.entityKind })
+      bySlot.set(slotKey, { slotKey, ...b })
+    }
+  }
+  // A Joomla menu entry that opens a social network: its title and its link, one contact card.
+  if (cms === 'joomla') {
+    const placed = new Set([...bySlot.keys(), ...roleOnlyBySlot.keys()])
+    const menutypeOf = new Map(
+      (Array.isArray(out.entities) ? out.entities : [])
+        .filter((e) => e?.kind === 'menuItem')
+        .map((e) => [e.key, String(e.identity?.menutype ?? '')])
+    )
+    const links = proposeJoomlaMenuLinks(
+      open.filter((slot) => !placed.has(String(slot.key))),
+      menutypeOf
+    )
+    for (const [slotKey, b] of links) {
       groupOf.set(b.groupId, { groupId: b.groupId, itemIndex: b.itemIndex, entityKind: b.entityKind })
       bySlot.set(slotKey, { slotKey, ...b })
     }
