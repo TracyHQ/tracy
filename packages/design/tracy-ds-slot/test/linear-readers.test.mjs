@@ -76,6 +76,48 @@ test('replaceFlatRules: the rules the old regex found, found in one pass', () =>
   )
 })
 
+/** Milliseconds `fn` takes. @param {() => unknown} fn */
+const timed = (fn) => {
+  const t0 = performance.now()
+  fn()
+  return performance.now() - t0
+}
+
+/**
+ * Asserts `run` grows linearly: twice the input takes about twice the time (best of five each), never the
+ * four times a quadratic reader takes.
+ * @param {string} label @param {(n: number) => unknown} run @param {number} n
+ */
+const assertLinear = (label, run, n) => {
+  const best = (/** @type {number} */ k) => Math.min(...Array.from({ length: 5 }, () => timed(() => run(k))))
+  const one = best(n)
+  const two = best(2 * n)
+  assert.ok(two < 2.8 * one + 3, `${label}: ${one.toFixed(1)} ms at n, ${two.toFixed(1)} ms at 2n`)
+  assert.ok(two < 300, `${label}: ${two.toFixed(1)} ms at 2n`)
+}
+
+test('nestNots joins the blocks under one guard as its patterns joined them, at once on a run of markers', () => {
+  const G1 = ':not(.t3-header .navbar, .t3-footer .module, .kept-band-a)'
+  const G2 = ':where(.kept-band-b .btn, .kept-band-c .btn, .kept-band-d .x)'
+  // [sheet, what the marker patterns answered]
+  for (const [css, old] of [
+    [`a${G1}{color:red}b${G1}{color:blue}`, `${G1}{a&{color:red}b&{color:blue}}`],
+    [`a${G1}{color:red}\n  b${G1}{color:blue}`, `${G1}{a&{color:red}b&{color:blue}}`],
+    [`a${G1}{color:red}c{x:y}b${G1}{color:blue}`, `${G1}{a&{color:red}}c{x:y}${G1}{b&{color:blue}}`],
+    [`a${G1},b${G1}{color:red}`, `${G1}{a&,b&{color:red}}`],
+    [`a${G1},b${G2}{color:red}`, `a${G1},b${G2}{color:red}`],
+    [`/* mode: dark */\na${G1}{color:red}`, `/* mode: dark */\n${G1}{a&{color:red}}`],
+    [`p${G2}{c:d}q${G2}::before{e:f}a${G1}{g:h}`, `${G2}{p&{c:d}q&::before{e:f}}${G1}{a&{g:h}}`],
+    [`@media (x){a${G1}{color:red}b${G1}{c:d}}`, `@media (x){${G1}{a&{color:red}b&{c:d}}}`],
+    ['a:not(.short){color:red}', 'a:not(.short){color:red}'],
+    ['plain{color:red}', 'plain{color:red}']
+  ])
+    assert.equal(nestNots(css), old, css)
+  assertLinear('nestNots, \\u0000\\u0001', (n) => nestNots(`${'\u0000\u0001'.repeat(n)}a{b:c}`), 50_000)
+  assertLinear('nestNots, \\u0000', (n) => nestNots(`${'\u0000'.repeat(n)}a{b:c}`), 50_000)
+  assertLinear('nestNots, many guarded rules', (n) => nestNots(`a${G1}{color:red}\n`.repeat(n)), 4_000)
+})
+
 test('quickColours: the reference block ends at the next bold line, as before', () => {
   const read = (content) => quickColours({ customSections: [{ title: 'Agent Prompt Guide', content }] })
   assert.deepEqual(read('Quick Color Reference\n- background: #000000\n- text: #f4efd4\n'), {

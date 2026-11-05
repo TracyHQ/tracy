@@ -18,10 +18,28 @@
 const SANS_FALLBACK = ['ui-sans-serif', 'system-ui', 'sans-serif']
 const MONO_FALLBACK = ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
 
-/** The value of one custom property in a tokens.css, or null. Multi-line values (font stacks) included. @param {string} css @param {string} name */
+/**
+ * The value of one custom property in a tokens.css, or null. Multi-line values (font stacks) included.
+ * What `` new RegExp(`${name}\\s*:\\s*([^;]+);`) `` found, read in one pass with `name` as plain text: the
+ * pattern was built from the name (escaping only its `-`) and went back over a sheet with no `;` once for
+ * each place the name stood in it.
+ * @param {string} css @param {string} name
+ */
 export function tokenValue(css, name) {
-  const m = new RegExp(`${name.replace(/[-]/g, '\\-')}\\s*:\\s*([^;]+);`).exec(css)
-  return m ? m[1].replace(/\s+/g, ' ').trim() : null
+  const space = (/** @type {number} */ i) => /\s/.test(css[i] ?? '')
+  let semicolon = -1
+  for (let at = css.indexOf(name); at >= 0 && name !== ''; at = css.indexOf(name, at + 1)) {
+    let i = at + name.length
+    while (space(i)) i++
+    if (css[i] !== ':') continue
+    const colon = i++
+    while (space(i)) i++
+    if (semicolon < i) semicolon = css.indexOf(';', i)
+    if (semicolon < 0) return null
+    // the value holds one character at least: a run of spaces before the `;` is that value
+    if (semicolon > i || i > colon + 1) return css.slice(i, semicolon).replace(/\s+/g, ' ').trim()
+  }
+  return null
 }
 
 /** `#rrggbb` lowercase, or null when the token is not a plain hex (a var() alias, an rgb()). @param {string} css @param {string} name */
