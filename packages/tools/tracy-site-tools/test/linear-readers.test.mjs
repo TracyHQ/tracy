@@ -30,16 +30,39 @@ const timed = (fn) => {
 }
 
 /**
- * Asserts `run` grows linearly: twice the input takes about twice the time (best of five each), never the
- * four times a quadratic reader takes, and the larger input still answers at once.
+ * Asserts `run` grows linearly, with the same verdict under the load of test files running in parallel.
+ * After one warm-up call: twice the given size answers under 300 ms (one try of three is enough; a try
+ * over 900 ms ends them). Then the size doubles (up to 64 times the given one) until one run takes 20 ms,
+ * and four times that input must take under eight times as long, plus 10 ms (best of seven each): a
+ * linear reader takes four times as long, a quadratic one sixteen, and a few ms of scheduling or GC
+ * cannot cross that gap the way it crossed a 2.8 bound on runs of 2 ms. The comparison gets three tries.
  * @param {string} label @param {(n: number) => unknown} run @param {number} n
  */
 const assertLinear = (label, run, n) => {
-  const best = (/** @type {number} */ k) => Math.min(...Array.from({ length: 5 }, () => timed(() => run(k))))
-  const one = best(n)
-  const two = best(2 * n)
-  assert.ok(two < 2.8 * one + 3, `${label}: ${one.toFixed(1)} ms at n, ${two.toFixed(1)} ms at 2n`)
-  assert.ok(two < 300, `${label}: ${two.toFixed(1)} ms at 2n`)
+  /** Least of `tries` runs at `k`, stopping at the first run under `enough` or over `cut`. */
+  const best = (/** @type {number} */ k, tries = 7, enough = 0, cut = Infinity) => {
+    let least = Infinity
+    for (let i = 0; i < tries; i += 1) {
+      const ms = timed(() => run(k))
+      if (ms < least) least = ms
+      if (ms < enough || ms > cut) break
+    }
+    return least
+  }
+  run(n)
+  const big = best(2 * n, 3, 300, 900)
+  assert.ok(big < 300, `${label}: ${big.toFixed(1)} ms at 2n`)
+  let k = n
+  while (k < 64 * n && best(k, 3) < 20) k *= 2
+  // a pause of the whole process can still land on one side; a linear reader passes one of three tries,
+  // a quadratic one fails all three
+  let one = 0
+  let four = Infinity
+  for (let t = 0; t < 3 && !(four < 8 * one + 10); t += 1) {
+    one = best(k)
+    four = best(4 * k)
+  }
+  assert.ok(four < 8 * one + 10, `${label}: ${one.toFixed(1)} ms at ${k}, ${four.toFixed(1)} ms at ${4 * k}`)
 }
 
 /** The SHA-256 of `answers` as JSON: the old pattern's answers on many texts, checked in as one line. @param {unknown[]} answers */
