@@ -2081,3 +2081,116 @@ test('record-cut never records an undone push again, and records a create settle
   )
   assert.deepEqual(run().recorded, [], 'recorded once')
 })
+
+test('WordPress: a new picture titled otherwise than its file has its words written after the upload; an edit of one already there is sent too (#223)', () => {
+  const words = (id, fields = {}) => ({
+    ID: String(id),
+    post_title: `pic-${id}`,
+    post_name: `pic-${id}`,
+    post_excerpt: '',
+    post_content: '',
+    ...fields
+  })
+  const answer = changeset('wordpress', {
+    homes: HOMES,
+    entities: { posts: { base: [10, 50], copy: [10, 50, 60] } },
+    files: {
+      changes: [
+        { path: 'wp-content/uploads/2026/11/rt-pic.png', change: 'added', blob: 'a'.repeat(40), size: 500 }
+      ],
+      config: null
+    },
+    kinds: {
+      attachment: kind(
+        [{ ID: '50', post_title: 'pic-50', file: '2026/10/pic-50.png' }],
+        [
+          { ID: '50', post_title: 'Shop front', file: '2026/10/pic-50.png' },
+          { ID: '60', post_title: 'RT picture', file: '2026/11/rt-pic.png' }
+        ],
+        ['ID']
+      ),
+      mediaText: kind(
+        [words(50)],
+        [
+          words(50, { post_title: 'Shop front', post_excerpt: 'See https://shop-com.tracy.ai/visit' }),
+          words(60, { post_title: 'RT picture', post_name: 'rt-picture', post_content: 'Our roof' })
+        ],
+        ['ID']
+      )
+    }
+  })
+  const items = byId(answer)
+  // The new one: uploaded, then its own words, once the upload made it.
+  assert.equal(items['media:new:60'].op, 'upload')
+  const made = items['mediaText:new:60']
+  assert.ok(made, JSON.stringify(Object.keys(items)))
+  assert.equal(made.kind, 'post', 'written as a post: the engine takes these fields for any post type')
+  assert.deepEqual(made.ident, { $new: 'posts:60' })
+  assert.deepEqual(made.dependsOn, ['media:new:60'])
+  assert.deepEqual(made.write, {
+    post_title: 'RT picture',
+    post_name: 'rt-picture',
+    post_content: 'Our roof'
+  })
+  assert.deepEqual(made.expect, {})
+  assert.deepEqual(made.seed, [
+    { table: 'posts', match: { ID: 60 }, columns: ['post_title', 'post_name', 'post_content'] }
+  ])
+  assert.ok(answer.items.indexOf(items['media:new:60']) < answer.items.indexOf(made), 'the upload first')
+  // The one already there: its title and caption are sent, the caption with the live address,
+  // checked against what the live site held.
+  const edited = items['mediaText:50']
+  assert.ok(edited, JSON.stringify(Object.keys(items)))
+  assert.equal(edited.liveId, 50)
+  assert.deepEqual(edited.write, { post_title: 'Shop front', post_excerpt: 'See https://shop.example/visit' })
+  assert.deepEqual(edited.expect, { post_title: 'pic-50', post_excerpt: '' })
+  assert.equal(edited.group, 'files')
+  assert.ok(!answer.unsupported.some((u) => u.title === 'Shop front'), JSON.stringify(answer.unsupported))
+})
+
+test('WordPress: no words are written for a picture whose upload is not sent (#223)', () => {
+  const answer = changeset('wordpress', {
+    homes: HOMES,
+    entities: { posts: { base: [10], copy: [10, 60] } },
+    files: { changes: [], config: null },
+    kinds: {
+      attachment: kind([], [{ ID: '60', post_title: 'RT picture', file: '2026/11/rt-pic.png' }], ['ID']),
+      mediaText: kind(
+        [],
+        [{ ID: '60', post_title: 'RT picture', post_name: 'rt-picture', post_excerpt: '', post_content: '' }],
+        ['ID']
+      )
+    }
+  })
+  assert.deepEqual(answer.items, [])
+  assert.deepEqual(
+    answer.unsupported.map((u) => u.reason),
+    ['file-not-in-copy']
+  )
+})
+
+test('Joomla: an article a sync kept though the live site deleted it is held by its kept place, never refused as a live record (#307)', () => {
+  // The sync kept Tracy's edited article 7 the customer deleted on live, and took 7 out of the id map:
+  // the base (the live read) has no 7.
+  const data = {
+    entities: { content: { base: [1], copy: [1, 7] } },
+    kinds: { article: kind([article(1)], [article(1), article(7, { title: 'Edited by Tracy' })]) }
+  }
+  const held = changeset('joomla', data, [
+    {
+      id: 'db:jos_content:["7"]',
+      kind: 'row',
+      table: 'jos_content',
+      key: { id: '7' },
+      reason: 'delete-modify'
+    }
+  ])
+  const item = byId(held)['article:new:7']
+  assert.ok(item, JSON.stringify(held.items.map((i) => i.id)))
+  assert.equal(item.conflict?.reason, 'changed-on-both', JSON.stringify(item))
+  assert.ok(!held.unsupported.some((u) => u.why === 'live-record'), JSON.stringify(held.unsupported))
+  // Once no sync keeps it, it is Tracy's article to send, as any other.
+  const free = byId(changeset('joomla', data))['article:new:7']
+  assert.equal(free.op, 'create')
+  assert.equal(free.conflict, undefined)
+})

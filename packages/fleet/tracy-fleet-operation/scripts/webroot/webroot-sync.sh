@@ -805,7 +805,37 @@ PYERR
     answer_refusal MERGE_FAILED "the database merge stopped$(engine_said "$DIR/db.json")"; return
   fi
 
+  keep_media_files "$ours_commit" || { answer_refusal MERGE_FAILED "the kept pictures' files could not be put back"; return; }
   finish_merge "$ours_commit" "$theirs_commit" "$base_kind" "$stamp"
+}
+
+# A Media Library item the database merge kept though the live site deleted it (Tracy changed it):
+# its files stay with it, taken from the copy into the merged tree (`keepFiles`, lib/live_sync_wordpress.py
+# kept_media_files). The file merge had taken their delete, not knowing the item was kept (#223).
+keep_media_files() { # ours_commit
+  local listed index="$DIR/index-keep" tree path entry mode blob
+  listed="$(python3 -c 'import json,sys; print("\n".join(json.load(open(sys.argv[1])).get("keepFiles", [])))' "$DIR/db.json")"
+  [[ -n "$listed" ]] || return 0
+  tree="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["tree"])' "$DIR/files.json")"
+  rm -f "$index"
+  GIT_INDEX_FILE="$index" g read-tree "$tree" || return 1
+  while IFS= read -r path; do
+    [[ -n "$path" ]] || continue
+    # One NUL-ended entry for one path, read whole: no reader in a pipe that stops early (pipefail).
+    entry=""
+    IFS= read -r -d '' entry < <(g ls-tree -z "$1" -- "$path") || true
+    [[ -n "$entry" ]] || continue
+    mode="${entry%% *}"
+    blob="$(g rev-parse --verify --quiet "$1:$path")" || continue
+    GIT_INDEX_FILE="$index" g update-index --add --cacheinfo "$mode,$blob,$path" || return 1
+  done <<< "$listed"
+  tree="$(GIT_INDEX_FILE="$index" g write-tree)" || return 1
+  rm -f "$index"
+  python3 -c 'import json,sys
+f = json.load(open(sys.argv[1]))
+f["tree"] = sys.argv[2]
+json.dump(f, open(sys.argv[1], "w"))' "$DIR/files.json" "$tree"
+  echo "==> [${SECONDS}s] $(grep -c . <<< "$listed") file(s) of kept Media Library items stay" >&2
 }
 
 # 6. conflicts, or the result as a backup point — of the merge just made, or of the one a held sync

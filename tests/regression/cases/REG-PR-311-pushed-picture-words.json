@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-311-pushed-picture-words",
+  "kind": "fix",
+  "title": "A pushed picture's title, slug, caption and description are written after its upload, and edits of an existing picture are sent",
+  "pr": 311,
+  "area": "sync/push",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-push-changeset cases for #223: a new picture titled otherwise than its file, an existing picture with a new title and caption, a picture whose upload is not sent."
+  ],
+  "expect": [
+    "mediaText:new:60 is a post update on {$new: posts:60} depending on media:new:60, writing the title, slug and description, with a seed naming them; mediaText:50 writes title and caption at the live address with expect; no words for an upload not sent."
+  ],
+  "selectors": {},
+  "evidence": "Issue #223 re-test: a picture titled \"RT picture\" was kept as delete-modify; the push sent only the file",
+  "fence": "live_push.py mediaText",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#223",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": [
+      "WordPress: a new picture titled otherwise than its file",
+      "WordPress: no words are written for a picture whose upload is not sent"
+    ]
+  }
+}

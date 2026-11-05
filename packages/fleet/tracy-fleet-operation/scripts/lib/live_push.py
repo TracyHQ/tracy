@@ -351,6 +351,7 @@ W_STAMPS = frozenset({"post_modified", "post_modified_gmt", "post_date_gmt", "gu
                       "post_content_filtered", "to_ping", "pinged", "post_mime_type", "post_author",
                       "category_slugs", "tag_slugs", "tag_names"})
 W_MENU = ("title", "position", "type", "object", "object_id", "url", "parent")
+W_MEDIA_TEXT = ("post_title", "post_name", "post_excerpt", "post_content")
 # Options a person sets in Settings › General / Reading / Discussion and the Customizer's Site
 # Identity that the engine writes as one value (`content.update` `option`; PROTECTED_OPTIONS refused).
 W_OPTIONS = ("blogname", "blogdescription", "date_format", "time_format", "start_of_week", "posts_per_page",
@@ -385,6 +386,7 @@ WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": 
         "templateStyle": "setting", "option": "setting", "optionOther": "setting", "themeMods": "setting",
         "customCss": "setting", "globalStyles": "setting", "siteIdentity": "setting", "templateSettings": "setting",
         "templatePart": "templatePart", "template": "template", "postmeta": "pageDetail", "attachment": "media",
+        "mediaText": "media",
         "file": "file"}
 # Polylang's language and translation group of a post or a term (`Changeset.translation_refused`):
 # compared on their own, never written — the live engine's write door has no read of them to check
@@ -477,6 +479,15 @@ def wordpress_specs(prefix: str) -> list[Spec]:
              columns={"ID": "r.ID", "post_title": "r.post_title", "file": meta("_wp_attached_file")},
              title=("post_title", "file"), write=(), ignore=frozenset({"post_title"}), delete_absent=False,
              report="media"),
+        # A Media Library item's own words: its title, slug, caption and description, written as a post
+        # (`content.update` `post` takes them for any post type). The upload alone names a new item
+        # after its file, so a picture titled otherwise on the copy was another record on the live
+        # site and its later delete there was held (#223); an edit of one already there was never sent.
+        Spec("mediaText", "post", "posts", "posts", key=("ID",), where="r.post_type = 'attachment'",
+             columns={"ID": "r.ID", "post_title": "r.post_title", "post_name": "r.post_name",
+                      "post_excerpt": "r.post_excerpt", "post_content": "r.post_content"},
+             title=("post_title",), write=W_MEDIA_TEXT, create=None, delete_absent=False, address=True,
+             follows="attachment", group="files"),
         Spec("post", "post", "posts", "posts", key=("ID",),
              where=f"r.post_type IN ({types}) AND r.post_status NOT IN ('auto-draft', 'inherit')",
              extra={"categories": terms_of("category", "term_id"), "tags": terms_of("post_tag", "term_id"),
@@ -1614,6 +1625,18 @@ class Changeset:
                 continue
             if spec.report == "media":
                 self.upload_item(spec, c, copy_row, title)
+                continue
+            if spec.name == "mediaText":
+                # A new Media Library item's words, once its upload made it on the live site: its title
+                # and slug always (the upload names it after its file), a caption or description it has.
+                ident = int(c[0])
+                if not any(i["id"] == f"media:new:{ident}" for i in self.items):
+                    continue
+                after = self.to_live(spec, copy_row)
+                changed = {col: (None, after.get(col)) for col in spec.write
+                           if col in ("post_title", "post_name") or after.get(col)}
+                self.update_item(spec, c, (Placeholder("posts", ident),), None, changed, title,
+                                 Placeholder("posts", ident), None, created=True)
                 continue
             if spec.follows:
                 # A created module's pages: written once the module is there.

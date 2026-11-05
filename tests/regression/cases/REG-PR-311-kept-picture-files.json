@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-311-kept-picture-files",
+  "kind": "fix",
+  "title": "A picture Tracy retitled and the customer deleted for good stays whole in the copy: row, meta and files",
+  "pr": 311,
+  "area": "sync/merge",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-sync-wordpress-flow case for #223: a picture on both sides is synced, Tracy retitles it, the customer deletes its row, meta and files on live, sync again."
+  ],
+  "expect": [
+    "One kept place db:wp_posts:[\"5\"] delete-modify; the copy keeps the title, both meta rows and both files; the log says 2 files of kept Media Library items stay."
+  ],
+  "selectors": {},
+  "evidence": "Issue #223 re-test: the kept row had lost both meta rows and its file",
+  "fence": "live_sync_wordpress.py dependents, kept_media_files; webroot-sync.sh keep_media_files",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#223",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+    ],
+    "tests": [
+      "WordPress: a picture Tracy retitled and the customer deleted for good on the live site stays whole"
+    ]
+  }
+}
