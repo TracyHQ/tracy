@@ -102,9 +102,15 @@ test(
         'turns.jsonl',
         'run.json',
         'plan.json',
-        'files.json'
+        'files.json',
+        'mapping.json'
       ])
         assert.ok(names.includes(name), name)
+      // The write step's picture file, made on the run's kit: every file it uploads is in files/ with its hash.
+      const pkg = JSON.parse(readFileSync(path.join(dir, 'mapping.json'), 'utf8'))
+      assert.equal(pkg.mapping.contract, KIT_REF)
+      assert.deepEqual(pkg.problems, [])
+      for (const u of pkg.uploads) assert.equal(sha(readFileSync(path.join(dir, u.file))), u.sha256, u.file)
       const manifest = JSON.parse(readFileSync(path.join(dir, 'site-pictures.json'), 'utf8'))
       const placed = [...manifest.frames, ...manifest.siteSettings].filter((e) => e.file)
       for (const e of placed) {

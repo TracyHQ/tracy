@@ -10,6 +10,11 @@
  *   docker exec <tracy-web> node scripts/site-pictures-bench.mjs status <runId>
  *   docker exec <tracy-web> node scripts/site-pictures-bench.mjs get <runId> --out run-files
  *
+ * `get` also writes run-files/mapping.json, the write step's picture file (exportPictureMapping of the final manifest),
+ * beside site-pictures.json and the files/ both name, so the write step reads the folder as it is:
+ *
+ *   docker exec <tracy-web> node scripts/write-step-bench.mjs run ... --pictures-file run-files/mapping.json
+ *
  * Every command and its options: `node scripts/site-pictures-bench.mjs` with no command (src/site-pictures/bench-cli.js).
  * Nothing it prints or writes carries a key.
  */
