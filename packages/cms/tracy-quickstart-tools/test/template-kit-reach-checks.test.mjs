@@ -142,3 +142,14 @@ test('counting twice gives the same failures once; the maps a read found are kep
   assert.deepEqual(kit.blocks[0].embeddedMaps, [{ what: 'div with coordinates' }])
   assert.equal('embeddedMaps' in kit.blocks[1], false)
 })
+
+test('a phone the demo leaves empty is not counted: an empty contact field or an empty phone slot', () => {
+  const kit = studio()
+  kit.site.contactBlocks[0].accepts.fields[0].filled = false
+  kit.site.contactBlocks[0].accepts.fields[1].filled = false
+  kit.blocks[1].demoOwned[0].sample = ''
+  const counts = reachChecks(kit)
+  assert.equal(counts.phoneNotCallable, 0)
+  kit.site.contactBlocks[0].accepts.fields[1].filled = true
+  assert.equal(reachChecks(kit).phoneNotCallable, 1)
+})

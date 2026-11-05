@@ -1999,6 +1999,88 @@ test(
 )
 
 test(
+  '--full-coverage: a masthead title or description the module form already declares is not declared twice',
+  needsPhp,
+  () => {
+    // The module's own form declares `title` and `description`, so the generic params rule already writes
+    // menuitem_config.title.N and menuitem_config.description.N (a description with markup as fragment slots).
+    // The masthead rule then adds only the backgrounds: one slot per write target, never two.
+    const mastheadForm = `<?xml version="1.0" encoding="utf-8"?>
+<extension type="module"><config><fields name="params"><fieldset name="basic">
+  <field name="title" type="text"/>
+  <field name="description" type="textarea"/>
+</fieldset></fields></config></extension>`
+    const inv = clean()
+    inv.menu.push(menu('117', { path: 'contact' }), menu('108', { path: 'blog' }))
+    inv.modules = [
+      module('20', {
+        title: 'Masthead',
+        module: 'mod_jamasthead',
+        position: 'masthead',
+        params: JSON.stringify({
+          menuitem_config: {
+            item_id: [['117'], ['108']],
+            title: ['Reach the Lantern Bakery', 'Lantern Notes'],
+            description: ['Fresh loaves daily', 'Read <span>more</span> of our stories'],
+            background: ['images/bg-lantern.jpg', 'images/bg-notes.jpg']
+          }
+        })
+      })
+    ]
+    const run = capture(inv, {
+      args: ['--full-coverage'],
+      files: { 'modules/mod_jamasthead/mod_jamasthead.xml': mastheadForm }
+    })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.jsonPath?.[0] === 'menuitem_config')
+    const targets = slots.map((s) => `${s.jsonPath.join('|')}${s.xpath ? ` ${s.xpath}` : ''}`)
+    assert.equal(new Set(targets).size, targets.length, `one slot per write target: ${targets.join(', ')}`)
+    for (const field of ['title', 'description']) {
+      for (const k of ['0', '1']) {
+        const hits = slots.filter((s) => s.jsonPath[1] === field && String(s.jsonPath[2]) === k && !s.xpath)
+        const fragments = slots.filter(
+          (s) => s.jsonPath[1] === field && String(s.jsonPath[2]) === k && s.xpath
+        )
+        assert.ok(
+          hits.length + (fragments.length ? 1 : 0) === 1,
+          `menuitem_config.${field}.${k} is written by one rule only: ${targets.join(', ')}`
+        )
+      }
+    }
+    assert.deepEqual(
+      slots.filter((s) => s.type === 'image').map((s) => [s.key, s.jsonPath.join('|'), s.role]),
+      [
+        [
+          slots.find((s) => s.jsonPath.join('|') === 'menuitem_config|background|0').key,
+          'menuitem_config|background|0',
+          'business.hero_image'
+        ],
+        [
+          slots.find((s) => s.jsonPath.join('|') === 'menuitem_config|background|1').key,
+          'menuitem_config|background|1',
+          'business.hero_image'
+        ]
+      ],
+      'the per-page backgrounds are still declared'
+    )
+    // The masthead slots come after every generic slot, so the generic keys are numbered first and never move.
+    const index = (s) => Number(s.key.split('.')[1])
+    const masthead = slots.filter((s) => s.label.includes(' / menu item '))
+    const generic = slots.filter((s) => !masthead.includes(s))
+    assert.ok(Math.max(...generic.map(index)) < Math.min(...masthead.map(index)))
+    const keys = run
+      .read('content-map.json')
+      .slots.filter((s) => s.entity === 'module-20')
+      .map(index)
+    assert.deepEqual(
+      keys,
+      keys.map((_, i) => i),
+      'keys stay dense'
+    )
+  }
+)
+
+test(
   '--skip-trashed-menu-items leaves a trashed menu item out of the entities and the pages',
   needsPhp,
   () => {

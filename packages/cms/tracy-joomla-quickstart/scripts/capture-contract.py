@@ -394,9 +394,12 @@ def declare_everything(kind,row,add):
 # One page masthead per `menuitem_config` entry of mod_jamasthead: `item_id`, `title`, `description` and `background`
 # are objects keyed by the entry number. The background is the page's banner picture (a video file stays as it is),
 # grouped per page; the title and description are the words printed over it. An entry for a menu item that does not
-# exist is left out.
+# exist is left out. When the module's form already declares `title` / `description`, the generic params rule has a
+# slot (or fragment slots) writing that same entry, so the masthead rule skips it: one writer per `menuitem_config`
+# field, deduped by write target (the params column and jsonPath ['menuitem_config', field, entry], entry as text).
 MASTHEAD_VIDEO=re.compile(r'\.(mp4|ogg|webm)$',re.I)
-def declare_masthead(row,add):
+def declare_masthead(row,add,declared=()):
+ written={(s['jsonPath'][1],str(s['jsonPath'][2])) for s in declared if s.get('column')=='params' and isinstance(s.get('jsonPath'),list) and len(s['jsonPath'])>=3 and s['jsonPath'][0]=='menuitem_config'}
  menu_ids={str(r.get('id')) for r in inv.get('menu',[])}
  try:params=json.loads(row.get('params') or '{}')
  except ValueError:return
@@ -416,7 +419,7 @@ def declare_masthead(row,add):
    add('params','image',bg,jsonPath=['menuitem_config','background',k],label=page+' / background',role='business.hero_image',group={'id':f'module-{row["id"]}.masthead-{k}','item':0,'kind':'business'})
   for name,role in (('title','editorial.heading'),('description','editorial.paragraph')):
    v=(titles if name=='title' else descriptions).get(k)
-   if isinstance(v,str) and v.strip():add('params','text',v,jsonPath=['menuitem_config',name,k],label=page+' / '+name,role=role)
+   if isinstance(v,str) and v.strip() and (name,str(k)) not in written:add('params','text',v,jsonPath=['menuitem_config',name,k],label=page+' / '+name,role=role)
 # A T3 style param naming a logo picture (the kit's `joomla-t3.mjs` T3_LOGO_KEY reads the same names).
 T3_LOGO_KEY=re.compile(r'logo[a-z]*image(?:_[a-z]+)?')
 volatile={'id','asset_id','checked_out','checked_out_time','created','created_by','created_by_alias','modified','modified_by','hits','version','lft','rgt'}
@@ -517,7 +520,7 @@ for kind,table in tables.items():
   # The JA masthead (--full-coverage): mod_jamasthead shows, per menu item, the background, title and description of
   # its `menuitem_config` entry (helper.php matches `item_id` to the active item), else default-title/description.
   # They come last, so no key an older rule made moves.
-  if a.full_coverage and kind=='module' and row.get('module')=='mod_jamasthead':declare_masthead(row,add)
+  if a.full_coverage and kind=='module' and row.get('module')=='mod_jamasthead':declare_masthead(row,add,[s for s in slots if s['entity']==eid])
 # Authors (--full-coverage): a visitor reads each post's author name, and on the author pages the picture, bio and job
 # title. A `user` entity per author of a captured article (identity: username; only name and username are kept, never
 # the account), and a `userProfile` entity per profile value the plugin lists (\UserProfileKey: user_id x 100 + the

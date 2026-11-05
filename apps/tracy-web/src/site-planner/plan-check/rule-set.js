@@ -75,6 +75,11 @@ export const RULE_TITLES = [
     'R21',
     'A kept block does not hide a trade section for want of facts (two or more slots), unless a brief fact shows the activity is absent'
   ],
+  [
+    'r22',
+    'R22',
+    'A list row printed in the same card as text slots (kit rows[].pairedSlots) is kept exactly when one of those slots is kept'
+  ],
   ['r10h', 'R10h', 'Judgement items (needs reviewer): listed as skip']
 ]
 
