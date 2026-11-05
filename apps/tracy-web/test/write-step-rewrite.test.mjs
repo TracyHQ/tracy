@@ -168,7 +168,7 @@ test('the site check reads back the lines that were not sent, and the report tim
     }
   }
   const check = await runSiteCheck({ door, report: second })
-  const lines = check.groups[0].lines
+  const lines = check.groups.find((g) => g.name === 'read-back').lines
   assert.equal(lines['block-2.1'], 'match')
   assert.equal(lines['block-3.1'], 'match', 'not sent, and still read')
 })

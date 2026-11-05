@@ -13,7 +13,7 @@ import { brandAsker, said } from './brand-writes.js'
 import { NO_LAST } from './no-last-report.js'
 import { refusalWords } from './contract-write.js'
 import { preparePainted } from './painted-stage.js'
-import { packageProblems, PICTURE_OWNER, readPackageFiles } from './picture-package.js'
+import { packageItems, packageStops, PICTURE_OWNER, readPackageFiles } from './picture-package.js'
 
 const ENDED = 'the run ended before this picture was written'
 const PAINTED_SETTING =
@@ -28,6 +28,7 @@ const idle = {
   claims: [],
   changes: {},
   evidence: {},
+  unaddressable: [],
   lines: () => []
 }
 const stoppedBy = (stop) => ({ ...idle, stop })
@@ -78,12 +79,22 @@ export async function preparePictureStage({
   templateFile
 }) {
   if (pictures === undefined) return idle
-  const problems = packageProblems(pictures, contract)
+  const problems = packageStops(pictures, contract)
   if (problems.length)
     return stoppedBy({
       code: 'BAD_FILE',
       reason: `The files cannot be written: pictures: ${problems.join('; ')}`
     })
+  // An item with nothing to write to is left out and said as refused; the rest of the package is written (decision 26).
+  const items = packageItems(pictures)
+  const unaddressable = items.map((i) => ({
+    slot: i.frame,
+    key: i.key,
+    owner: PICTURE_OWNER,
+    part: 'picture',
+    reason: `pictures: ${i.reason}`
+  }))
+  const leftOut = new Set(items.map((i) => i.key).filter(Boolean))
   const settings = readSettings(pictures.siteSettings, kit)
   const read = await readPackageFiles(
     [...pictures.uploads, ...settings.orders.map((o) => o.entry)],
@@ -92,7 +103,9 @@ export async function preparePictureStage({
   )
   if (read.stop) return stoppedBy(read.stop)
   const { files } = read
-  const changes = { ...pictures.mapping.changes }
+  const changes = Object.fromEntries(
+    Object.entries(pictures.mapping.changes).filter(([key]) => !leftOut.has(key))
+  )
   const claim = (slot, kind, content) => ({ slot, owner: PICTURE_OWNER, file: inputs.file, kind, content })
   const shaOf = new Map(pictures.uploads.map((u) => [u.sitePath, u.sha256]))
   const claims = [
@@ -252,6 +265,7 @@ export async function preparePictureStage({
     evidence: pictures.mapping.evidence ?? {},
     write,
     lines,
+    unaddressable,
     refused: drawn.refused
   }
 }

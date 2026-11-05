@@ -188,13 +188,13 @@ test('each painted line holds its recipe, its drawn file and what makes it drawn
   assert.equal(got.painted.takes, 'image-path')
   assert.equal(got.painted.redraw, 'when the design system changes')
   const check = await runSiteCheck({ door: readBackDoor(site, report), report })
-  assert.equal(check.groups[0].lines['block-3.icon'], 'match')
+  assert.equal(check.groups.find((g) => g.name === 'read-back').lines['block-3.icon'], 'match')
 })
 
 test('a backdrop line also reads back, against the drawn file', async () => {
   const { report, site } = await runPainted({ items: (f) => [backdropItem('block-5.figure', f)] })
   const check = await runSiteCheck({ door: readBackDoor(site, report), report })
-  assert.equal(check.groups[0].lines['block-5.figure'], 'match')
+  assert.equal(check.groups.find((g) => g.name === 'read-back').lines['block-5.figure'], 'match')
 })
 
 test('a slot the template keeps stops that frame: nothing is drawn, uploaded or sent, and the line says why', async () => {

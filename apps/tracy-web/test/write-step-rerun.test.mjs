@@ -249,3 +249,18 @@ test('a real change of a shared address is still sent, to every key of it', asyn
   const [apply] = run.kept.writes().filter((c) => c.params.operation === 'apply')
   assert.deepEqual(Object.keys(apply.params.changes).sort(), ['module-2.40', 'module-2.41'])
 })
+
+test('a value the look guard found fault with and a copy slot the kit lacks change nothing on a second run (ADR 0044, decision 26)', async () => {
+  const c = copy()
+  c.slots.push({ slot: 'block-99.1', owner: 'writer', text: 'Words for a slot nobody has', factIds: [] })
+  const contentMap = {
+    slots: [{ key: 'module-2.1', type: 'text', sample: '((div class="list-social"))((/div))' }]
+  }
+  const run = await twice({ contentMap, steps: [{ copy: c }, { copy: c }] })
+  assert.equal(run.first.status, 'done', JSON.stringify(run.first.cause))
+  assert.ok(run.first.guard.findings.length, 'the first run keeps the finding')
+  assert.equal(lineOf(run.first, 'block-2.1').status, 'written')
+  assert.equal(lineOf(run.first, 'block-99.1').status, 'refused')
+  assertNothingChanged(run)
+  assert.equal(lineOf(run.second, 'block-99.1').status, 'refused', 'still said on the second run')
+})
