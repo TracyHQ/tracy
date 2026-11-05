@@ -1618,11 +1618,11 @@
       "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-boxing%2Fj6/ja-boxing-j6-quickstart-1.0.11.zip"
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.82.zip",
-      "version": "0.24.82",
-      "bytes": 570198,
-      "sha256": "d145d7f06bdebeba78eb8d90f07930335a9198dcb30529e819571e228770432a",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.82/pkg_claudecowork-0.24.82.zip",
+      "file": "pkg_claudecowork-0.24.83.zip",
+      "version": "0.24.83",
+      "bytes": 579733,
+      "sha256": "29552bb57f69feb3afec380827219c0ba2ef8d4fa70263879d681ec95503ee3f",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.83/pkg_claudecowork-0.24.83.zip",
       "contractFiles": {
         "content-map.json": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
         "manifest.json": "0fa084ae9aa9ded5d60596ff20a000385460cfeb63365b89df3065a42be01cef",
