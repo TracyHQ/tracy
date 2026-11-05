@@ -454,7 +454,11 @@ list, kept by every later run).
   tag pages), `pages[]` (`group`, `path`, `inMainMenu`, `blocks` and `images` per width), `blocks[]` (`role`, `shared`,
   `images`, `lists[]` with `rowKind`, `min`, `max`, `rowSlots`, `rows` (every row with its slots: the map's slot
   groups `<list>.<n>`, so a map that numbers each row as its own group still gives every row; `maxFrom: "slot-rows"`
-  when that raised the map's count), `iconMechanism` (how a row's link icon is drawn: `font-icon`, `inline-svg`,
+  when that raised the map's count; on each row `printsIn`, the signature of the repeated card its picture prints in
+  or `block` when it has none, and `pairedSlots`, the ids of the block's text slots printed inside that card, measured
+  by the frames pass at the first width before any frame is emptied (`lib/read-row-cards.js`, `rowCard` in
+  `frame-evidence.json`, written by `lib/row-pairs.mjs`), with `rowPairsFrom: "measured"` on the list, or
+  `"declared"` when a person wrote the pairs), `iconMechanism` (how a row's link icon is drawn: `font-icon`, `inline-svg`,
   `image-file` or `css-background`, whether it can be changed, measured by setting one row's icon class to
   another's), `frames[]`, `links[]` (every shown link by `position`, repeats of one label and address included,
   with `icon` when the link draws one: `mechanism`, `classes`/`file`,
@@ -481,7 +485,10 @@ list, kept by every later run).
   address, no menu item; the template prints it with a dead address, so a plan cannot send it anywhere), `mapLocationUnmapped`
   (a button that opens a map with no `slotId`, or a block whose read found an embedded map, `embeddedMaps` from the read pass's
   `maps`, with no map-location setting slot on its entity) and `phoneNotCallable` (a `contact.phone` slot, or a contact block's
-  printed phone or mobile field, that no link of its block shows as its words, so no address can make it `tel:`)),
+  printed phone or mobile field, that no link of its block shows as its words, so no address can make it `tel:`), and
+  the row pair check (`lib/row-pairs.mjs`, by `build` and every settle command): `rowPartsUnpaired` (a list whose rows
+  print in more than one part, a lone row beside card rows, while a card row has no `pairedSlots` and the pairs are
+  not declared: a plan cannot tell which card texts go with which picture row)),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the

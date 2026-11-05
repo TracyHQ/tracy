@@ -15,6 +15,7 @@ import { readContracts } from '../src/lib/contracts.js'
 import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
 import { imagesDigest, kitOfContract } from '../src/lib/template-kit/reader.js'
 import { KIT_STEP, templateKitRefusal } from '../src/lib/template-kit/road-step.js'
+import { compactForPlanner } from '../src/lib/template-kit-planner-view.js'
 import { FLOW_SITE, frontGroup } from './_template-kit-flow-site.mjs'
 
 const TAG = 'quickstart/ja-sample/j6'
@@ -253,6 +254,39 @@ test('a button with no address, a map no slot moves and a phone outside a link h
     verdictOf(kit({ checks: { deadControls: 0, mapLocationUnmapped: 0, phoneNotCallable: 0 } })),
     ['todo', 'kit-incomplete']
   )
+})
+
+test('a list whose card rows pair no text slot holds the kit, named in words', () => {
+  const k = kit({
+    checks: { rowPartsUnpaired: 1 },
+    coverage: {
+      parts: {},
+      failures: [{ part: 'rowPartsUnpaired', where: 'lists[block-7.clip]', reason: 'made up' }]
+    }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: card rows without paired texts 1 (rowPartsUnpaired lists[block-7.clip])'
+  )
+  assert.notDeepEqual(verdictOf(kit({ checks: { rowPartsUnpaired: 0 } })), ['todo', 'kit-incomplete'])
+})
+
+test('the planner reads every list row with its paired slots and the part it prints in', () => {
+  const row = {
+    index: 1,
+    slots: [{ id: 'block-7.10', type: 'image' }],
+    printsIn: 'DIV.card',
+    pairedSlots: ['block-7.11']
+  }
+  const seen = compactForPlanner({
+    blocks: [{ id: 'block-7', lists: [{ id: 'block-7.clip', rowPairsFrom: 'measured', rows: [row] }] }]
+  })
+  const list = seen.blocks[0].lists[0]
+  assert.equal(list.rowPairsFrom, 'measured')
+  assert.deepEqual(list.rows[0].pairedSlots, ['block-7.11'])
+  assert.equal(list.rows[0].printsIn, 'DIV.card')
 })
 
 test('a kit failing a coverage gate part is incomplete, and the step names the part and the slot', () => {
