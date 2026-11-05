@@ -32,6 +32,7 @@ import { demoDatabase } from '../readers/demo-database-tables.js'
 import { coverageOf, defaultEntries, emdashTemplate } from '../readers/emdash-personalize-coverage.js'
 import { acmStrings, firstHeadingOf, htmlTextPieces, normalText } from '../readers/joomla-row-text.js'
 import { UnreadableContent } from '../readers/release-content.js'
+import { escapeRe } from '../readers/template-source.js'
 import { blocksOf } from '../site-pages/wordpress-blocks.js'
 
 const PARAGRAPH_FIELD = /(^|[-_[])(desc|description|intro|info-desc|text|lead)([-_\]]|$)/
@@ -247,7 +248,7 @@ function underHeading(rest) {
 function elementFrom(rest, open, close) {
   const name = /^<([A-Za-z][\w.-]*)/.exec(rest.slice(open, close + 1))?.[1]
   if (!name || rest[close - 1] === '/') return rest.slice(open, close + 1)
-  const tag = new RegExp(`<(/?)${name.replace(/[.]/g, '\\.')}(?=[\\s>/])[^>]*?(/?)>`, 'g')
+  const tag = new RegExp(`<(/?)${escapeRe(name)}(?=[\\s>/])[^>]*?(/?)>`, 'g')
   tag.lastIndex = close + 1
   let depth = 1
   for (let m = tag.exec(rest); m; m = tag.exec(rest)) {
@@ -365,10 +366,9 @@ const reaches = (
   /** @type {Set<string> | null} */ roots
 ) => {
   const owner =
-    roots && roots.size
-      ? `(?<![.\\w$])(?:${[...roots].map((r) => r.replace(/\$/g, '\\$')).join('|')})\\s*`
-      : '[\\w$)\\]]\\s*'
-  return new RegExp(`${owner}(?:\\?\\.|\\.)\\s*${field}\\b|${owner}\\[\\s*["']${field}["']\\s*\\]`).test(code)
+    roots && roots.size ? `(?<![.\\w$])(?:${[...roots].map(escapeRe).join('|')})\\s*` : '[\\w$)\\]]\\s*'
+  const name = escapeRe(field)
+  return new RegExp(`${owner}(?:\\?\\.|\\.)\\s*${name}\\b|${owner}\\[\\s*["']${name}["']\\s*\\]`).test(code)
 }
 
 /** @param {import('../index.js').RuleContext} context */
