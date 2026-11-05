@@ -2,9 +2,12 @@
  * The readers rewritten for the release's CodeQL run (ReDoS and sanitising): each still answers what
  * its old pattern answered on ordinary text — the old pattern is kept here as the oracle, compared on
  * fixed cases and on random text — and answers the old pathological input at once. A slow reader
- * holds the one dsh event loop every site on the host shares.
+ * holds the one dsh event loop every site on the host shares. Where CodeQL reads the old pattern itself as
+ * live code (an unsafe sanitiser, a pattern that backtracks), its answers are checked in instead: a table
+ * for the fixed cases, and the SHA-256 of its answers on the random texts.
  */
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { test } from 'node:test'
 
 import { runsInterpreter } from '../src/host/build-fence.mjs'
@@ -27,17 +30,43 @@ const timed = (fn) => {
 }
 
 /**
- * Asserts `run` grows linearly: twice the input takes about twice the time (best of five each), never the
- * four times a quadratic reader takes, and the larger input still answers at once.
+ * Asserts `run` grows linearly, with the same verdict under the load of test files running in parallel.
+ * After one warm-up call: twice the given size answers under 300 ms (one try of three is enough; a try
+ * over 900 ms ends them). Then the size doubles (up to 64 times the given one) until one run takes 20 ms,
+ * and four times that input must take under eight times as long, plus 10 ms (best of seven each): a
+ * linear reader takes four times as long, a quadratic one sixteen, and a few ms of scheduling or GC
+ * cannot cross that gap the way it crossed a 2.8 bound on runs of 2 ms. The comparison gets three tries.
  * @param {string} label @param {(n: number) => unknown} run @param {number} n
  */
 const assertLinear = (label, run, n) => {
-  const best = (/** @type {number} */ k) => Math.min(...Array.from({ length: 5 }, () => timed(() => run(k))))
-  const one = best(n)
-  const two = best(2 * n)
-  assert.ok(two < 2.8 * one + 3, `${label}: ${one.toFixed(1)} ms at n, ${two.toFixed(1)} ms at 2n`)
-  assert.ok(two < 300, `${label}: ${two.toFixed(1)} ms at 2n`)
+  /** Least of `tries` runs at `k`, stopping at the first run under `enough` or over `cut`. */
+  const best = (/** @type {number} */ k, tries = 7, enough = 0, cut = Infinity) => {
+    let least = Infinity
+    for (let i = 0; i < tries; i += 1) {
+      const ms = timed(() => run(k))
+      if (ms < least) least = ms
+      if (ms < enough || ms > cut) break
+    }
+    return least
+  }
+  run(n)
+  const big = best(2 * n, 3, 300, 900)
+  assert.ok(big < 300, `${label}: ${big.toFixed(1)} ms at 2n`)
+  let k = n
+  while (k < 64 * n && best(k, 3) < 20) k *= 2
+  // a pause of the whole process can still land on one side; a linear reader passes one of three tries,
+  // a quadratic one fails all three
+  let one = 0
+  let four = Infinity
+  for (let t = 0; t < 3 && !(four < 8 * one + 10); t += 1) {
+    one = best(k)
+    four = best(4 * k)
+  }
+  assert.ok(four < 8 * one + 10, `${label}: ${one.toFixed(1)} ms at ${k}, ${four.toFixed(1)} ms at ${4 * k}`)
 }
+
+/** The SHA-256 of `answers` as JSON: the old pattern's answers on many texts, checked in as one line. @param {unknown[]} answers */
+const digest = (answers) => createHash('sha256').update(JSON.stringify(answers)).digest('hex')
 
 /** A deterministic random text of `n` pieces drawn from `alphabet`. @param {string[]} alphabet @param {number} seed */
 function* texts(alphabet, seed, count = 3000, n = 12) {
@@ -118,8 +147,20 @@ test('withoutTrailingSlashes drops what `/\\/+$/` dropped, at once on a run of s
 })
 
 test('withoutComments removes what the comment patterns removed, at once on unclosed comments', () => {
-  const oldAll = (/** @type {string} */ s) => s.replace(/<!--[\s\S]*?-->/g, '')
-  const oldNotes = (/** @type {string} */ s) => s.replace(/\n?<!--(?!\s*\/?wp:)[\s\S]*?-->/g, '')
+  // [text, what `/<!--[\s\S]*?-->/g` left, what `/\n?<!--(?!\s*\/?wp:)[\s\S]*?-->/g` left]
+  const OLD = [
+    ['<p>a<!-- x -->b</p>', '<p>ab</p>', '<p>ab</p>'],
+    ['<!---->', '', ''],
+    ['<!-->', '<!-->', '<!-->'],
+    ['a<!--b', 'a<!--b', 'a<!--b'],
+    ['a-->b', 'a-->b', 'a-->b'],
+    ['<!--a--><!--b-->', '', ''],
+    ['\n<!-- note -->x', '\nx', 'x'],
+    ['\n<!-- wp:group -->x<!-- /wp:group -->', '\nx', '\n<!-- wp:group -->x<!-- /wp:group -->'],
+    ['<!-- /wp:x -->\n<!--y-->', '\n', '<!-- /wp:x -->'],
+    ['<!--a<!--b-->c-->', 'c-->', 'c-->'],
+    ['x\n\n<!--\n-->y', 'x\n\ny', 'x\ny']
+  ]
   const WP = /\s*\/?wp:/y
   const keep = (/** @type {string} */ html, /** @type {number} */ at) => {
     WP.lastIndex = at + 4
@@ -130,10 +171,15 @@ test('withoutComments removes what the comment patterns removed, at once on uncl
     notes('<!-- wp:group -->\n<!-- one more group per item -->\n<p>x</p>\n<!-- /wp:group -->'),
     '<!-- wp:group -->\n<p>x</p>\n<!-- /wp:group -->'
   )
-  for (const s of texts(['<!--', '-->', '\n', ' ', 'wp:', '/', 'x', '<!-->', '-'], 11, 6000, 14)) {
-    assert.equal(withoutComments(s), oldAll(s), JSON.stringify(s))
-    assert.equal(notes(s), oldNotes(s), JSON.stringify(s))
+  for (const [s, all, kept] of OLD) {
+    assert.equal(withoutComments(s), all, JSON.stringify(s))
+    assert.equal(notes(s), kept, JSON.stringify(s))
   }
+  const random = [...texts(['<!--', '-->', '\n', ' ', 'wp:', '/', 'x', '<!-->', '-'], 11, 6000, 14)]
+  assert.equal(
+    digest(random.map((s) => [withoutComments(s), notes(s)])),
+    '94fd42ec8ec233e459362ff82ab8ef26f501bd7c7fa8aec024ab1c14f2c8302c'
+  )
   assertLinear('withoutComments', (n) => withoutComments('<!--'.repeat(n)), 50_000)
   assertLinear('withoutComments, notes', (n) => notes('\n<!--'.repeat(n)), 50_000)
   // a page of them stays readable at once too
@@ -142,25 +188,37 @@ test('withoutComments removes what the comment patterns removed, at once on uncl
 })
 
 test('runsInterpreter reads what INTERPRETER read, at once on a run of flags', () => {
-  const OLD =
-    /(?:^|[\s;&|(])(?:python3?|php|node|perl|ruby)(?=[\s;&|)]|$)|\bwp\s+(?:--?[\w-]+(?:=\S+)?\s+)*eval(?:-file)?\b/m
-  for (const s of [
-    'wp eval "echo 1;"',
-    'wp --path=/var/www/html --allow-root eval-file x.php',
-    'wp --path=/var/wp eval x',
-    'wp option get blogname',
-    'cd x && python3 - <<EOF',
-    'nodejs x.js',
-    'wp -x= eval'
-  ])
-    assert.equal(runsInterpreter(s), OLD.test(s), s)
-  for (const s of texts(
-    ['wp', ' ', '\t', '-', '--', 'x', '=', '=/a', 'eval', '-file', '\n', ';', 'php', '-wp'],
-    3,
-    8000,
-    12
-  ))
-    assert.equal(runsInterpreter(s), OLD.test(s), JSON.stringify(s))
+  // [command, what INTERPRETER answered]: an interpreter word after a shell separator, or `wp` with
+  // flags (`--x`, `-x=v`, each followed by whitespace) before `eval` or `eval-file`
+  /** @type {[string, boolean][]} */
+  const OLD = [
+    ['wp eval "echo 1;"', true],
+    ['wp --path=/var/www/html --allow-root eval-file x.php', true],
+    ['wp --path=/var/wp eval x', true],
+    ['wp option get blogname', false],
+    ['cd x && python3 - <<EOF', true],
+    ['nodejs x.js', false],
+    ['wp -x= eval', false],
+    ['(php -r 1)', true],
+    ['a;ruby x', true],
+    ['wp evaluate', false],
+    ['wpeval', false],
+    ['wp --x=a b eval', false],
+    ['x\nperl', true]
+  ]
+  for (const [s, answer] of OLD) assert.equal(runsInterpreter(s), answer, s)
+  const random = [
+    ...texts(
+      ['wp', ' ', '\t', '-', '--', 'x', '=', '=/a', 'eval', '-file', '\n', ';', 'php', '-wp'],
+      3,
+      8000,
+      12
+    )
+  ]
+  assert.equal(
+    digest(random.map((s) => runsInterpreter(s))),
+    '136edcdc4c3aae2a566ff1ad1eb20da68eddba07e7c46785d538de65cebe7ccf'
+  )
   assertLinear('runsInterpreter, flags', (n) => runsInterpreter(`wp ${'--\t-'.repeat(n)}`), 5_000)
   assertLinear('runsInterpreter, wp in flags', (n) => runsInterpreter(`wp ${'-wp '.repeat(n)}x`), 20_000)
 })
@@ -285,9 +343,16 @@ test('unescape reads an attribute address once: `&amp;quot;` stays `&quot;`', ()
 })
 
 test('stripTags removes tags as before and never joins the pieces into a new tag', () => {
-  const old = (/** @type {string} */ s) => s.replace(/<[^>]*>/g, '')
-  for (const s of ['<p>Hello <b>world</b></p>', 'a &lt; b', '<br/>x', '', 'a > b', '<a href="/x">x</a>'])
-    assert.equal(stripTags(s), old(s), s)
+  // [html, what `/<[^>]*>/g` left]
+  for (const [s, old] of [
+    ['<p>Hello <b>world</b></p>', 'Hello world'],
+    ['a &lt; b', 'a &lt; b'],
+    ['<br/>x', 'x'],
+    ['', ''],
+    ['a > b', 'a > b'],
+    ['<a href="/x">x</a>', 'x']
+  ])
+    assert.equal(stripTags(s), old, s)
   // a `<` that opens no tag reads as `<` either way
   assert.equal(stripTags('x<y'), 'x&lt;y')
   // the old reader left `<script` bare when no `>` followed, and the text written beside it may bring one

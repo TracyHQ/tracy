@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-407-codeql-release-round2",
+  "kind": "fix",
+  "title": "Design inspiration, site build core and the Joomla slot read library input in linear time; the slot-pins script carries no interpolated value (CodeQL alerts of release #395, round 2)",
+  "pr": 407,
+  "area": "readers/codeql",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run: node --test --test-reporter=tap packages/design/tracy-ds-slot/test/linear-readers.test.mjs packages/design/tracy-design-inspiration/test/linear-readers.test.mjs packages/site/tracy-site-build-core/test/linear-readers.test.mjs packages/site/tracy-site-build-emdash/test/slot-pins.test.mjs packages/tools/tracy-site-tools/test/linear-readers.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Every named test is 'ok': nestNots joins the blocks under one guard as the marker patterns did on fixed sheets, and twice a run of \\u0000\\u0001 or \\u0000 takes under 2.8 times as long (the old patterns took four times as long); withoutTrailingSlashes (design inspiration and site build core) and parseRoute answer as before and trim a run of slashes in linear time; tokenValue reads the value its pattern read, a `.` in the name as a dot, and a sheet of `--a:` with no `;` in linear time; the slot-pins script still runs and answers on the TRACY_SLOT_PINS line; the site-tools readers still match the checked-in answers of their old patterns (fixed tables and the SHA-256 over the random texts)."
+  ],
+  "selectors": {
+    "readers": "nestNots, markedPieces (tracy-ds-slot src/joomla.mjs); withoutTrailingSlashes, tokenValue (tracy-design-inspiration src/host/templates.mjs, library-brand.mjs); withoutTrailingSlashes, parseRoute (tracy-site-build-core src/host/design-systems-switch.mjs, host.ts); SLOT_PINS_SCRIPT (tracy-site-build-emdash src/host/slot-pins.mjs); withoutComments, runsInterpreter, stripTags oracles (tracy-site-tools test/linear-readers.test.mjs)"
+  },
+  "evidence": "CodeQL check of the release PR #395 after #402 and #403: polynomial regular expressions on library input in tracy-design-inspiration/lib/index.js (trailing slashes, tokenValue), tracy-site-build-emdash/lib/index.js (trailing slashes from site-build-core), tracy-ds-slot/src/joomla.mjs (the nestNots marker patterns); incomplete escaping in tokenValue; improper code sanitisation in SLOT_PINS_SCRIPT; incomplete multi-character sanitisation and an exponential pattern in the old-pattern oracles of tracy-site-tools/test/linear-readers.test.mjs. Measured: the old nestNots took 49, 178 and 711 ms on 5 000, 10 000 and 20 000 repetitions of \\u0000\\u0001; the new one under 1 ms.",
+  "fence": "Mechanism only: the readers' answers and their growth in time. Not covered: the CodeQL run itself (no CodeQL CLI on the machine).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/linear-readers.test.mjs",
+      "packages/design/tracy-design-inspiration/test/linear-readers.test.mjs",
+      "packages/site/tracy-site-build-core/test/linear-readers.test.mjs",
+      "packages/site/tracy-site-build-emdash/test/slot-pins.test.mjs",
+      "packages/tools/tracy-site-tools/test/linear-readers.test.mjs"
+    ],
+    "tests": [
+      "nestNots joins the blocks under one guard as its patterns joined them",
+      "withoutTrailingSlashes drops what",
+      "tokenValue reads the value its pattern read",
+      "parseRoute reads the door as before",
+      "the read: only the class strings the last build does not contain",
+      "withoutComments removes what the comment patterns removed",
+      "runsInterpreter reads what INTERPRETER read",
+      "stripTags removes tags as before"
+    ]
+  }
+}

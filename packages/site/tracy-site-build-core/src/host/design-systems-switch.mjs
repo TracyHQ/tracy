@@ -15,6 +15,17 @@
 import { readFileSync } from 'node:fs'
 
 /**
+ * `s` without the slashes it ends with: what `replace(/\/+$/, '')` gave, in one pass from the end (the
+ * pattern retried from every slash of a long run, quadratic on an origin of slashes).
+ * @param {string} s
+ */
+export function withoutTrailingSlashes(s) {
+  let end = s.length
+  while (end > 0 && s[end - 1] === '/') end -= 1
+  return s.slice(0, end)
+}
+
+/**
  * This dsh's Tracy: the config's word in tests, else `MCP_TRACY_ORIGIN` — the process env first,
  * then the password gate's env file, where `tracy-site-tools` and `tracy-add-site` read it too.
  * @param {{ tracyOrigin?: string }} config
@@ -43,7 +54,7 @@ export function tracyOriginOf(config) {
 export async function designSystemsShown(origin, fetchImpl = fetch) {
   if (!origin) return false
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, '')}/api/design-systems`, {
+    const response = await fetchImpl(`${withoutTrailingSlashes(origin)}/api/design-systems`, {
       headers: { accept: 'application/json' }
     })
     if (!response.ok) return false

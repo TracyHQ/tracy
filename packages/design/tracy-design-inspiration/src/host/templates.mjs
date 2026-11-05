@@ -32,6 +32,17 @@ import path from 'node:path'
 import { PICTURE, templateRows } from '../client/templates.mjs'
 
 /**
+ * `s` without the slashes it ends with: what `replace(/\/+$/, '')` gave, in one pass from the end (the
+ * pattern retried from every slash of a long run, quadratic on an origin of slashes).
+ * @param {string} s
+ */
+export function withoutTrailingSlashes(s) {
+  let end = s.length
+  while (end > 0 && s[end - 1] === '/') end -= 1
+  return s.slice(0, end)
+}
+
+/**
  * Where the catalogue is, in order of preference: beside the design catalogue in the image, then
  * the dev machine's `$DSH_HOME`.
  * @param {string | undefined} configured
@@ -78,7 +89,7 @@ export async function readQuickstarts(candidates) {
 export async function templatesFromTracy(origin, fetchImpl = fetch) {
   if (!origin) return null
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, '')}/api/templates`, {
+    const response = await fetchImpl(`${withoutTrailingSlashes(origin)}/api/templates`, {
       headers: { accept: 'application/json' }
     })
     if (!response.ok) return null
@@ -174,7 +185,7 @@ export function withBrandPlatforms(brands, templates) {
 export async function designSystemsShownFromTracy(origin, fetchImpl = fetch) {
   if (!origin) return false
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, '')}/api/design-systems`, {
+    const response = await fetchImpl(`${withoutTrailingSlashes(origin)}/api/design-systems`, {
       headers: { accept: 'application/json' }
     })
     if (!response.ok) return false
