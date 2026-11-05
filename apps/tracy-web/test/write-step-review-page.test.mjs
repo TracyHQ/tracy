@@ -196,7 +196,43 @@ test('render: both tabs, escaped words, failed first, redo buttons, theme tokens
   assert.match(html, /data-theme="dark"/)
   assert.match(html, /@media \(max-width:520px\)/)
   assert.match(html, /<img class="thumb" src="data:image\/png/)
-  assert.doesNotMatch(html.replace(/<script[\s\S]*?<\/script>/g, ''), /[–—]/)
+  // The page's own text, outside its scripts, holds no dash.
+  assert.doesNotMatch(outsideScripts(html), /[–—]/)
+})
+
+// The page with every script element cut out, found by position rather than a filtering regex: a tag named
+// `script` in any case (`<script>`, `<SCRIPT src=…>`), never a longer name (`<scripture>`), up to its end tag
+// (`</script>`, `</SCRIPT >`). A script with no end tag cuts nothing, so it hides no text after it.
+const tagAt = (html, i, name) =>
+  html.slice(i, i + name.length).toLowerCase() === name && /^[\s/>]/.test(html.charAt(i + name.length))
+function scriptEnd(html, from) {
+  for (let i = html.indexOf('<', from); i >= 0; i = html.indexOf('<', i + 1)) {
+    if (!tagAt(html, i, '</script')) continue
+    const close = html.indexOf('>', i)
+    return close < 0 ? -1 : close + 1
+  }
+  return -1
+}
+function outsideScripts(html) {
+  let out = ''
+  let at = 0
+  for (let i = html.indexOf('<'); i >= 0; i = html.indexOf('<', i + 1)) {
+    if (!tagAt(html, i, '<script')) continue
+    const end = scriptEnd(html, i + '<script'.length)
+    if (end < 0) break
+    out += html.slice(at, i)
+    at = end
+    i = end - 1
+  }
+  return out + html.slice(at)
+}
+
+test('outsideScripts: a script element is cut whatever its case; any other text, and a script never closed, stay', () => {
+  assert.equal(outsideScripts('a<script>x—</script>b'), 'ab')
+  assert.equal(outsideScripts('a<SCRIPT type="module">x—</SCRIPT >b<script src="s.js"></script>c'), 'abc')
+  assert.match(outsideScripts('<scripture>—</scripture>'), /—/)
+  assert.match(outsideScripts('<p>a</p><script>never closed — <p>b—</p>'), /b—/)
+  assert.match(outsideScripts('<script>x</scripts>—'), /—/)
 })
 
 test('images: type sniffing and data URIs', () => {

@@ -302,7 +302,7 @@ test('the first user message explains the two tools, then gives the kit contents
   assert.ok(at < text.lastIndexOf(JSON.stringify(b)), 'the brief comes before the kit contents')
 
   const prompt = plannerPrompt()
-  assert.ok(prompt.sha256.startsWith('ec160022'))
+  assert.ok(prompt.sha256.startsWith('5db969c5'))
   assert.ok(!prompt.text.includes('read_kit_part') && !prompt.text.includes('open_kit_image'))
 })
 

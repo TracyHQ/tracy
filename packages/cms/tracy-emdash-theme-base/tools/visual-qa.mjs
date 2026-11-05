@@ -52,6 +52,7 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { pathToFileURL } from 'node:url'
 import { contractHash } from './qa-contract.mjs'
+import { shownPath } from './distribution.mjs'
 import { summaryLine, takeVerbose } from './cli-output.mjs'
 import { resolveFastGate, planMarkdown } from './fast-gate.mjs'
 import {
@@ -171,7 +172,7 @@ if (fastGateRun) {
     console.error(`fast gate ${fastGateRun} is stale or not clean: ${stale.join('; ')}`)
     process.exit(2)
   }
-  fastGate = { run: path.resolve(fastGateRun), verdictAt: v.at ?? null, contractHash: v.contractHash }
+  fastGate = { run: shownPath(fastGateRun), verdictAt: v.at ?? null, contractHash: v.contractHash }
 } else if (scope.kind === 'full')
   console.error('note: no --fast-gate cited; the workflow expects a clean fast gate before a full run')
 mkdirSync(path.join(out, 'shots'), { recursive: true })

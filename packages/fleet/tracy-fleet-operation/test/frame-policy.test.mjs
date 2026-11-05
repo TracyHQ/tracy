@@ -59,8 +59,18 @@ for (const cms of ['wordpress', 'joomla', 'emdash'])
         cms === 'emdash' ? f.env : path.join(f.directory, 'apache/tracy-noindex.conf'),
         'utf8'
       )
-      assert.ok(text.includes(B))
-      assert.ok(!text.includes(A))
+      // One policy is written, the new origin's, whole: the old origin's source is gone with it.
+      const written = [
+        ...text.matchAll(
+          cms === 'emdash' ? /TRACY_FRAME_ANCESTORS="([^"\n]*)"/g : /frame-ancestors ([^"\n]*)"/g
+        )
+      ].map((m) => m[1])
+      assert.deepEqual(written, [policy(B)])
+      const origins = written[0]
+        .split(' ')
+        .filter((source) => URL.canParse(source) && new URL(source).port)
+        .map((source) => new URL(source).origin)
+      assert.deepEqual(origins, [new URL(B).origin])
       assert.ok(readFileSync(f.env, 'utf8').includes('MAIL_ENABLED=off\nDATABASE_SECRET=fixture-only\n'))
       assert.equal(
         readFileSync(path.join(f.directory, 'content.txt'), 'utf8'),

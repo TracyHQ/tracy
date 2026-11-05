@@ -26,6 +26,9 @@ Noted 2026-11-05 (planner side, ADR 0041 decisions 12 and 13): the planner promp
 `ec160022e152e5c66db6eb168a64a5923e9def4781d2e39ec7ee3b263cd58612`, now keeps a section that shows how the trade works
 (how a session, a visit or an order runs) as `basis: "trade"` lines without numbers, so the writer receives such
 sections where it used to receive hidden slots; the writer prompt, its hash and the copy check are unchanged.
+Noted 2026-11-05 (planner side, ADR 0041 decisions 14 and 15): the planner prompt, sha256
+`5db969c53e4c3d3b083f42466a808d6dccf92d383b336f97cd90de6628d14a50`, keeps a list row exactly while a text slot of its
+card (kit `rows[].pairedSlots`) is kept, checked by plan check R22 (`site-plan-check/4`); the writer side is unchanged.
 Spec: #326. This ADR is the part that stands alone and is frozen first: the file the writer produces, and the
 script that grades it.
 

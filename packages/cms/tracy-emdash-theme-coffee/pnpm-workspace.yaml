@@ -18,3 +18,6 @@ minimumReleaseAgeExclude:
 # pins 4.5.4, astro 7.2.8 asks ^4.3.6, the dev-only shadcn CLI asks ^3.24.1.
 overrides:
   'zod@<4.6.6': 4.6.6
+# body-parser 2.0.0 to 2.3.x has GHSA-27r3-jxmh-p828 (denial of service via trailing bytes after a
+# compressed request body); 2.4.0 is the first patched release.
+  "body-parser@>=2.0.0 <2.4.0": 2.4.0

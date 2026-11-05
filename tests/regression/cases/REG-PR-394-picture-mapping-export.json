@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-394-picture-mapping-export",
+  "kind": "feat",
+  "title": "The picture bench get writes mapping.json (exportPictureMapping of the final manifest on the run's kit) beside site-pictures.json and files/, and the write step's own reader accepts the folder",
+  "pr": 394,
+  "area": "site-pictures/bench",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-timeout=60000 apps/tracy-web/test/site-pictures-bench-mapping-export.test.mjs",
+    "S2: Read the exit code and the fail and skipped counts."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures and 0 skipped tests.",
+    "The exported folder holds mapping.json, site-pictures.json and files/; mapping.json has exactly the keys hidden, mapping, painted, problems, siteSettings, uploads, and packageProblems and readPackageFiles of apps/tracy-web/src/write-step/picture-package.js accept it."
+  ],
+  "selectors": {
+    "export": "runFiles in apps/tracy-web/src/site-pictures/bench-export.js",
+    "reader": "packageProblems, readPackageFiles in apps/tracy-web/src/write-step/picture-package.js"
+  },
+  "evidence": "05/11/2026: the brief to site chain could not be rerun on a new trial site because the picture bench wrote no mapping.json and the last run used a one-off export script that is gone.",
+  "fence": "The export and the write step's file reader on a fabricated run. Not exercised: the Postgres-backed get command (site-pictures-bench-cli.test.mjs covers it when TEST_DATABASE_URL is set), a real site write.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "apps/tracy-web/test/site-pictures-bench-mapping-export.test.mjs"
+    ],
+    "needs": []
+  }
+}

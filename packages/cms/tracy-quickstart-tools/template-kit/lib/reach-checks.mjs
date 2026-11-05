@@ -10,7 +10,11 @@
 //   phoneNotCallable    a phone number the page prints outside any link: a `contact.phone` slot (or a contact block's printed
 //                       mobile field) that no link of its block shows as its words, so no address can make it `tel:`
 // Each count goes to `kit.checks`; the first failing links, blocks and slots of each go to `kit.coverage.failures`
-// (`{part, where, reason}`), where the Road to live step and /ops name them.
+// (`{part, where, reason}`), where the Road to live step and /ops name them. A failure a person explained in
+// `reach-accepts.json` (check-accepts.mjs) is still counted, and listed in `kit.checkAccepts.<part>` instead.
+// A phone the demo leaves empty (a contact field with `filled: false`, a phone slot whose sample has no words) prints
+// nothing, so it is not counted.
+import { settleCheckParts } from './check-accepts.mjs'
 
 export const REACH_PARTS = ['deadControls', 'mapLocationUnmapped', 'phoneNotCallable']
 const NAMED = 20 // failures listed per part; the count says how many there are
@@ -96,7 +100,13 @@ function uncallablePhonesOf(kit) {
   for (const b of each(kit?.blocks)) {
     const named = labels(b)
     for (const s of slotsOf(b))
-      if (PHONE_ROLE.test(String(s?.role ?? '')) && s?.id && !named.has(s.id)) add(b, s.id, 'phone slot')
+      if (
+        PHONE_ROLE.test(String(s?.role ?? '')) &&
+        s?.id &&
+        !named.has(s.id) &&
+        !(typeof s.sample === 'string' && !hasWords(s.sample))
+      )
+        add(b, s.id, 'phone slot')
   }
   for (const c of each(kit?.site?.contactBlocks)) {
     const b = byBlock.get(c?.block)
@@ -106,6 +116,7 @@ function uncallablePhonesOf(kit) {
       if (
         (f?.kind === 'phone' || f?.kind === 'mobile') &&
         f.printed &&
+        f.filled !== false &&
         f.writable &&
         f.id &&
         !named.has(f.id)
@@ -116,26 +127,17 @@ function uncallablePhonesOf(kit) {
 }
 
 /**
- * Count the checks on `kit` (changed in place: `checks` and `coverage.failures`) and return the counts.
+ * Count the checks on `kit` (changed in place: `checks`, `checkAccepts` and `coverage.failures`) and return the counts.
  * @param {object} kit
+ * @param {{accepts?: object[]}} [o] the entries of reach-accepts.json (readCheckAccepts)
  */
-export function reachChecks(kit) {
+export function reachChecks(kit, { accepts = [] } = {}) {
   const found = {
     deadControls: deadControlsOf(kit),
     mapLocationUnmapped: unmappedMapsOf(kit),
     phoneNotCallable: uncallablePhonesOf(kit)
   }
-  const failures = Object.entries(found).flatMap(([part, list]) =>
-    list.slice(0, NAMED).map((f) => ({ part, ...f }))
-  )
-  const counts = Object.fromEntries(Object.entries(found).map(([part, list]) => [part, list.length]))
-  kit.checks = { ...kit.checks, ...counts }
-  const coverage = kit.coverage ?? { parts: {}, failures: [] }
-  kit.coverage = {
-    ...coverage,
-    failures: [...each(coverage.failures).filter((f) => !REACH_PARTS.includes(f.part)), ...failures]
-  }
-  return counts
+  return settleCheckParts(kit, found, { accepts, named: NAMED })
 }
 
 /** The maps a block's read found on the demo (read-details.js `maps`), kept on the block for `mapLocationUnmapped`. */

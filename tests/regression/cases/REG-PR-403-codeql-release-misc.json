@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-403-codeql-release-misc",
+  "kind": "fix",
+  "title": "Text readers of the release's CodeQL alerts read long runs in one pass and give the same results as before; page code and stored entities are read safely",
+  "pr": 403,
+  "area": "codeql/redos",
+  "cms": ["any"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. In the checkout at the commit under test (dependencies installed), run the `run.cmd` below from the repository root."
+  ],
+  "expect": [
+    "tracy-ds-slot: withoutVariableCut, replaceFlatRules/nestNots, quickColours and every prose-numbers reader give what the regex they replaced gave on seeded random texts (numbers of ten digits and more included), and each long run of one character reads in under 500 ms.",
+    "tracy-ds-slot: primaryButton reads `letter-spacing 0.1234567891em`, padding `12345678901.5px 0.12345678901px` and radius `12345678901px` whole, as before.",
+    "tracy-ds-slot: jsLiteral reads back as the value and holds no `<`, `>`, `/`, U+2028 or U+2029.",
+    "website-opportunities: opening-hours lines, a bio line's end and an observed fact's end read as before, and a long run of spaces, tabs, dashes or stops reads in under 500 ms.",
+    "tracy-web: agent-demo reads `&amp;quot;` as the text `&quot;`, never a quote; outsideScripts cuts only script elements (any case), keeps `<scripture>` and a script never closed.",
+    "Every listed test reports ok and the command exits 0."
+  ],
+  "selectors": {
+    "readers": "packages/design/tracy-ds-slot/src/prose-numbers.mjs, src/normalise.mjs quickBlock, src/fonts.mjs withoutVariableCut, src/joomla.mjs replaceFlatRules, src/js-literal.mjs; packages/wo/website-opportunities/domain/opening-hours.mjs dayAndBody/rangeOf, domain/brief.mjs stripEnd, domain/pictures/observed-facts.mjs withoutEndStops; apps/tracy-web/src/opportunities-build/agent-demo.js readText"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/linear-readers.test.mjs",
+      "packages/design/tracy-ds-slot/test/js-literal.test.mjs",
+      "packages/wo/website-opportunities/test/domain-opening-hours.test.mjs",
+      "packages/wo/website-opportunities/test/domain-observed-facts.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief-strip-end.test.mjs",
+      "apps/tracy-web/test/wo-plannable-leads.test.mjs",
+      "apps/tracy-web/test/write-step-review-page.test.mjs"
+    ],
+    "tests": [
+      "withoutVariableCut:",
+      "replaceFlatRules:",
+      "quickColours:",
+      "primaryButton:",
+      "prose-numbers:",
+      "the button padding of the shape",
+      "a plain value reads back as itself",
+      "a value cannot close the script",
+      "days and ranges read as before",
+      "the stops a value ends on are taken off",
+      "the spaces and stops a line ends on are taken off",
+      "a long run of tabs inside a line reads fast",
+      "a record’s entities are read once",
+      "outsideScripts:"
+    ]
+  }
+}

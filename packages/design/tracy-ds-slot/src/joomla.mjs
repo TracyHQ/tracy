@@ -312,7 +312,7 @@ export const MODULE_MAX_BYTES = 64000
  */
 export function nestNots(css) {
   // \u0000 guard \u0001 rules \u0002 marks a block while the neighbours are merged
-  const marked = css.replace(/([^{}]+)\{([^{}]*)\}/g, (whole, selectors, body) => {
+  const marked = replaceFlatRules(css, (whole, selectors, body) => {
     // whitespace and comments before the selectors stay where they are: a sheet's `/* mode: dark */` line
     // went into the first guard's block (JA Kinetic WordPress, whose side condition reads as a guard)
     const lead = /^(?:\s|\/\*[\s\S]*?\*\/)*/.exec(selectors)[0]
@@ -339,6 +339,46 @@ export function nestNots(css) {
       return `\u0000${guard}\u0001${rules.join('')}\u0002`
     })
     .replace(unmark, '$1{$2}')
+}
+
+/**
+ * `css.replace(/([^{}]+)\{([^{}]*)\}/g, fn)`, each rule with no block inside it handed to `fn` as
+ * (whole, selectors, body), read in one pass: the regex went back over a long text with no brace once for
+ * each place in it.
+ * @param {string} css
+ * @param {(whole: string, selectors: string, body: string) => string} fn
+ */
+export function replaceFlatRules(css, fn) {
+  const nextBrace = (from) => {
+    for (let k = from; k < css.length; k++) if (css[k] === '{' || css[k] === '}') return k
+    return -1
+  }
+  let out = ''
+  let done = 0
+  let at = 0
+  while (at < css.length) {
+    // a rule starts on a character that is not a brace and runs to the `{` its selectors end on
+    if (css[at] === '{' || css[at] === '}') {
+      at++
+      continue
+    }
+    const open = nextBrace(at)
+    if (open < 0) break
+    // every start before this brace meets the same brace: past it when it does not open a rule
+    if (css[open] === '}') {
+      at = open + 1
+      continue
+    }
+    const close = nextBrace(open + 1)
+    if (close < 0) break
+    if (css[close] === '{') {
+      at = open + 1
+      continue
+    }
+    out += css.slice(done, at) + fn(css.slice(at, close + 1), css.slice(at, open), css.slice(open + 1, close))
+    done = at = close + 1
+  }
+  return out + css.slice(done)
 }
 
 /**

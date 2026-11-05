@@ -129,6 +129,17 @@ export function designSystemArgs(args) {
 }
 
 /**
+ * `s` without the slashes it ends with: what `replace(/\/+$/, '')` gave, in one pass from the end (the
+ * pattern retried from every slash of a long run, quadratic on an origin of slashes).
+ * @param {string} s
+ */
+export function withoutTrailingSlashes(s) {
+  let end = s.length
+  while (end > 0 && s[end - 1] === '/') end -= 1
+  return s.slice(0, end)
+}
+
+/**
  * The request to the button's door, as the person who typed (or the viewer on a lane with no gate),
  * held to this conversation's site (`x-tracy-workspace-label`) and named as this conversation's
  * (`x-tracy-session`: the door tells a chat call from a press by it). Null without a plan or a key.
@@ -138,7 +149,7 @@ export function designSystemArgs(args) {
  * @returns {{ url: string, init: { method: string, headers: Record<string, string>, body?: string } } | null}
  */
 export function designSystemRequest(plan, where, call) {
-  const origin = typeof where.origin === 'string' ? where.origin.trim().replace(/\/+$/, '') : ''
+  const origin = typeof where.origin === 'string' ? withoutTrailingSlashes(where.origin.trim()) : ''
   if (!plan || origin === '' || !where.siteKey) return null
   /** @type {Record<string, string>} */
   const headers =

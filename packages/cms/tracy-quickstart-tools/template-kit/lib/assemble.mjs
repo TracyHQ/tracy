@@ -1,15 +1,18 @@
 // template-kit.json from what is on disk in the kit folder: capture-index.json, min-evidence.json,
 // frame-evidence.json, icon-classes.json, frame-review.json (a person's canHide verdicts), site.json (the site
-// part), template-fixes.json, gap-accepts.json (a person's accepted template gaps) and card-fields.json (a person's
+// part), template-fixes.json, gap-accepts.json (a person's accepted template gaps), reach-accepts.json (a person's
+// reasons for reach and row pair check failures, check-accepts.mjs) and card-fields.json (a person's
 // decision of which item field a card prints), text-fit.json (the character limit each text frame holds), plus the
 // stamp.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { readContractCoverage, readContractMap } from './contract-read.mjs'
+import { readCheckAccepts } from './check-accepts.mjs'
 import { applyCoverage, coverageGate } from './coverage-gate.mjs'
 import { slotShapeChecks } from './slot-shape-checks.mjs'
 import { keepEmbeddedMaps, reachChecks } from './reach-checks.mjs'
+import { pairListRows, rowPairChecks } from './row-pairs.mjs'
 import { httpFetcher } from './crawl.mjs'
 import { buildKit } from './kit.mjs'
 import { fixedLinkLabels, linkLabelChecks } from './link-label-reasons.mjs'
@@ -26,6 +29,8 @@ import { limitChecks } from './text-limits.mjs'
 export const readJson = (f) => JSON.parse(readFileSync(f, 'utf8'))
 export const readIf = (f) => (existsSync(f) ? readJson(f) : null)
 export const writeJson = (f, v) => writeFileSync(f, `${JSON.stringify(v, null, 1)}\n`)
+/** A person's reasons for reach and row pair check failures in the kit work folder `out` (check-accepts.mjs). */
+export const reachAcceptsOf = (out) => readCheckAccepts(join(out, 'reach-accepts.json'))
 
 /** The template version: the flag, else the one already in the kit, else templateDetails.xml read on the site. */
 async function templateVersion(o, manifest, previous) {
@@ -58,6 +63,7 @@ export async function assembleKit(o, out, tool) {
   const map = readContractMap(o.contract)
   const siteDoc = readIf(join(out, 'site.json'))
   const wordsLinks = readIf(join(out, 'words-links.json')) ?? {}
+  const frameEvidence = readIf(join(out, 'frame-evidence.json')) ?? {}
   const kit = buildKit({
     map,
     capture,
@@ -66,7 +72,7 @@ export async function assembleKit(o, out, tool) {
     minEvidence: readIf(join(out, 'min-evidence.json')) ?? {},
     cardFields: readIf(join(out, 'card-fields.json')) ?? {},
     frameKit: {
-      evidence: readIf(join(out, 'frame-evidence.json')) ?? {},
+      evidence: frameEvidence,
       classes: readIf(join(out, 'icon-classes.json')) ?? {},
       review: readIf(join(out, 'frame-review.json')) ?? {},
       logoIds: logoFrameIds(map, siteDoc?.site)
@@ -91,6 +97,8 @@ export async function assembleKit(o, out, tool) {
     rowFit: readIf(join(out, 'row-fit.json')) ?? {},
     drives: readIf(join(out, 'field-drives.json')) ?? {}
   })
+  // Which text slots print in the same card as each list row's picture (row-pairs.mjs, from the frames pass).
+  pairListRows(kit, frameEvidence)
   kit.errors = kit.errors.filter((e) => !/^(list-limits-differ|slot-in-two-blocks)$/.test(e.kind))
   kit.checks.listLimitsDiffering = limitChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotsInTwoBlocks = slotOwnerChecks({ blocks: kit.blocks, errors: kit.errors })
@@ -99,7 +107,10 @@ export async function assembleKit(o, out, tool) {
   slotShapeChecks(kit, { map, contentCoverage: readIf(join(o.contract, 'content-coverage.json')) ?? null })
   // What a visitor reaches: a button with no door, a map no slot moves, a phone outside a link (reach-checks.mjs).
   keepEmbeddedMaps(kit, readings)
-  reachChecks(kit)
+  const accepts = reachAcceptsOf(out)
+  reachChecks(kit, { accepts })
+  // A list mixing a lone row with card rows, where a card row pairs no text slot (row-pairs.mjs).
+  rowPairChecks(kit, { accepts })
   // One source for a link's label: its labelId, or the reason its words are fixed (link-label-reasons.mjs).
   fixedLinkLabels(kit)
   kit.checks.linksWithoutLabel = linkLabelChecks({ kit, errors: kit.errors })

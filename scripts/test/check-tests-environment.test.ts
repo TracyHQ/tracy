@@ -771,7 +771,7 @@ test('the fixture-gated suite: not asked → skipped; asked without a database �
     assert.equal(idle.status, 0, idle.stdout)
     assert.match(
       idle.stdout,
-      new RegExp(`check-tests: {3}SKIP ${file.replace(/[.]/g, '\\.')}:\\d+ › `),
+      new RegExp(`check-tests: {3}SKIP ${file.replace(/[\\^$.*+?()[\]{}|/]/g, '\\$&')}:\\d+ › `),
       idle.stdout
     )
     const asked = runIt({ [variable]: '/nonexistent/fixture' })
