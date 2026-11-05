@@ -99,7 +99,10 @@ function judge(line, held) {
 }
 
 async function run({ report, read }) {
-  const compared = report.slots.filter((s) => ['written', 'failed', 'refused', 'hidden'].includes(s.status))
+  // An item the write step had nothing to write to is blamed on its owning step by `unaddressable-items` (write-findings.js).
+  const compared = report.slots.filter(
+    (s) => ['written', 'failed', 'refused', 'hidden'].includes(s.status) && !s.unaddressable
+  )
   const noOrder = compared.filter((s) => s.status === 'written' && s.ordered === undefined)
   if (noOrder.length)
     throw new GroupUnmeasured(

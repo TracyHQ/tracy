@@ -113,7 +113,7 @@ A written site may change the template's accent, icons, pictures, words and logo
 stay. A guard on the door every write passes through (`write-step/look-guard.js`) enforces that before anything is sent: a
 closed list of operations and settings, injected CSS limited to colours on the accent routes read from the template's own
 stylesheets, written text with no new style or class, and an icon held to the size and backing of the template file it
-replaces. A refusal names the step at fault and no further write is sent. An exception states its reason in the guard, such
+replaces. A finding names the step at fault; since decision 26 the value is written all the same and step 11 blocks on it. An exception states its reason in the guard, such
 as a created page copying the template's own article layout.
 
 This replaces the `template-look` and `icon-look` groups, and the computed look of every element they needed measured on an
@@ -308,6 +308,44 @@ first and from that sidecar second, only when the map's sample marks nothing and
 markup into its map (`capture-contract.py --inline-markup`) and drops the sidecar. JA Boxing 1.0.10 is the first: 64 samples in
 the sidecar, its map back at the sealed bytes the 0.24.79 to 0.24.81 plugin carries; 1.0.11 takes them into its map.
 
+### 26. One item never stops the run: the write step writes everything it can, and the site check lists every fault
+
+Owner's decision, 2026-11-05. A real run stopped with nothing written three ways, each over one item: the picture package
+listed a frame "the kit has no image slot" for (`BAD_FILE`), a copy or brand slot the kit or the site did not have
+(`UNKNOWN_SLOT`), and the look guard refusing words over a cell whose demo is only a block of social icons (`LOOK_GUARD`). A
+stop hides every other fault of the run behind the first one, and the owner can only see the site once each is fixed in turn.
+
+Now the write step writes everything it can in one pass:
+
+- A value the look guard finds fault with (decision 10) is sent all the same. The finding is kept in `report.guard.findings`
+  (`step`, `stepName`, `action`, `what`, `reason`, `sent`), and the line of that cell carries it in `guard`. Only a call on a
+  channel the guard does not list (an action, an operation or a parameter) is held back (`sent: false`, also in
+  `report.guard.refused`); it is the write step's own code calling a door nobody opened, not a value, and the run goes on.
+- An item with nothing to write to is left out and said once in `report.unaddressable` (`slot`, `key`, `owner`, `step`,
+  `stepName`, `reason`), and its line reads `refused` with `unaddressable: { step, stepName }`: a copy slot the kit does not
+  have and a copy entry that is not what step 6 writes (step 6), a brand order on a slot the kit does not have (step 2), a
+  picture frame the export could not place or that holds a file the uploads do not list (step 8,
+  `write-step/picture-package.js` `packageItems`), and a slot the site does not have (the step that owns the value, by its
+  owner; the write step when no file owns it). Every other item is written.
+
+The run still stops, with nothing written, only when the whole run cannot be trusted:
+
+- an input file that is not JSON, not the shape its step writes (the copy's version, fingerprint or lists, the plan's shape,
+  a brand file the brand step did not write, a picture file that is not the export), or made on another kit or contract;
+- a file the inputs name that is outside its folder, cannot be read, is not its sha256, is not named by its sha256 under
+  `images/tracy-content/`, or is over the plugin's upload limit;
+- a site that does not answer `inspect`, answers another contract, or takes more slots than one contract call holds;
+- two owners disputing one slot (decision 3), a rewrite that needs a new site (decision 6), and a door that throws.
+
+These are kept because each says the files or the site are not what the run believes, so no item of it can be trusted, and
+because a second run with the same files must still write nothing.
+
+Step 11 gains two groups that read only the write report, and run before read-back so a red read-back never hides them
+(`site-check/write-findings.js`). `look-guard-findings` blocks on each finding and `unaddressable-items` on each item left out,
+naming the cell and the step that owns the value: copy step 6, plan step 3, pictures step 8, brand step 2, the write step
+itself step 9. A report written before this decision has neither list, and both groups are `unmeasured` (decision 18).
+Read-back leaves an `unaddressable` line to its own group, so the fault is blamed once and on the owning step.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in
@@ -318,3 +356,5 @@ the sidecar, its map back at the sealed bytes the 0.24.79 to 0.24.81 plugin carr
 - A per-page share image needs the Joomla Open Graph plugin on, untested on this release. The site-wide image is the
   fallback.
 - A failed slot is written around rather than stopping the run. That does not hide it, since step 11 fails on it.
+- Since decision 26 a look guard finding no longer protects the site before the write: a value that changes the template's
+  look reaches the site, and the site is held back by step 11 instead. The trial bench writes only to sites it created.

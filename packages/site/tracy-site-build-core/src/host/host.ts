@@ -52,7 +52,12 @@ import {
   unfinishedJobs
 } from './build.mjs'
 import { resolveCapabilities, validateCatalog } from './capabilities.mjs'
-import { designSystemsShown, namesDesignSystem, tracyOriginOf } from './design-systems-switch.mjs'
+import {
+  designSystemsShown,
+  namesDesignSystem,
+  tracyOriginOf,
+  withoutTrailingSlashes
+} from './design-systems-switch.mjs'
 import { catalogIds, catalogNames } from './library-ids.mjs'
 import { notifyBuild } from './notifications.mjs'
 import { inputRootFor, shotFileFor } from './stages-shared.mjs'
@@ -881,7 +886,7 @@ export function parseRoute(
   | null {
   const pathname = (url ?? '').split('?')[0] ?? ''
   if (!pathname.startsWith(prefix)) return null
-  const rest = pathname.slice(prefix.length).replace(/^\/+/, '').replace(/\/+$/, '')
+  const rest = withoutTrailingSlashes(pathname.slice(prefix.length).replace(/^\/+/, ''))
   if (method === 'POST' && rest === 'start') return 'start'
   if (method === 'GET' && rest === 'job') return 'job'
   if (method === 'POST' && rest === 'answers') return 'answers'

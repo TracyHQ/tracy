@@ -76,6 +76,71 @@ test('replaceFlatRules: the rules the old regex found, found in one pass', () =>
   )
 })
 
+/** Milliseconds `fn` takes. @param {() => unknown} fn */
+const timed = (fn) => {
+  const t0 = performance.now()
+  fn()
+  return performance.now() - t0
+}
+
+/**
+ * Asserts `run` grows linearly, with the same verdict under the load of test files running in parallel.
+ * After one warm-up call: twice the given size answers under 300 ms (one try of three is enough; a try
+ * over 900 ms ends them). Then the size doubles (up to 64 times the given one) until one run takes 20 ms,
+ * and four times that input must take under eight times as long, plus 10 ms (best of seven each): a
+ * linear reader takes four times as long, a quadratic one sixteen, and a few ms of scheduling or GC
+ * cannot cross that gap the way it crossed a 2.8 bound on runs of 2 ms. The comparison gets three tries.
+ * @param {string} label @param {(n: number) => unknown} run @param {number} n
+ */
+const assertLinear = (label, run, n) => {
+  /** Least of `tries` runs at `k`, stopping at the first run under `enough` or over `cut`. */
+  const best = (/** @type {number} */ k, tries = 7, enough = 0, cut = Infinity) => {
+    let least = Infinity
+    for (let i = 0; i < tries; i += 1) {
+      const ms = timed(() => run(k))
+      if (ms < least) least = ms
+      if (ms < enough || ms > cut) break
+    }
+    return least
+  }
+  run(n)
+  const big = best(2 * n, 3, 300, 900)
+  assert.ok(big < 300, `${label}: ${big.toFixed(1)} ms at 2n`)
+  let k = n
+  while (k < 64 * n && best(k, 3) < 20) k *= 2
+  // a pause of the whole process can still land on one side; a linear reader passes one of three tries,
+  // a quadratic one fails all three
+  let one = 0
+  let four = Infinity
+  for (let t = 0; t < 3 && !(four < 8 * one + 10); t += 1) {
+    one = best(k)
+    four = best(4 * k)
+  }
+  assert.ok(four < 8 * one + 10, `${label}: ${one.toFixed(1)} ms at ${k}, ${four.toFixed(1)} ms at ${4 * k}`)
+}
+
+test('nestNots joins the blocks under one guard as its patterns joined them, at once on a run of markers', () => {
+  const G1 = ':not(.t3-header .navbar, .t3-footer .module, .kept-band-a)'
+  const G2 = ':where(.kept-band-b .btn, .kept-band-c .btn, .kept-band-d .x)'
+  // [sheet, what the marker patterns answered]
+  for (const [css, old] of [
+    [`a${G1}{color:red}b${G1}{color:blue}`, `${G1}{a&{color:red}b&{color:blue}}`],
+    [`a${G1}{color:red}\n  b${G1}{color:blue}`, `${G1}{a&{color:red}b&{color:blue}}`],
+    [`a${G1}{color:red}c{x:y}b${G1}{color:blue}`, `${G1}{a&{color:red}}c{x:y}${G1}{b&{color:blue}}`],
+    [`a${G1},b${G1}{color:red}`, `${G1}{a&,b&{color:red}}`],
+    [`a${G1},b${G2}{color:red}`, `a${G1},b${G2}{color:red}`],
+    [`/* mode: dark */\na${G1}{color:red}`, `/* mode: dark */\n${G1}{a&{color:red}}`],
+    [`p${G2}{c:d}q${G2}::before{e:f}a${G1}{g:h}`, `${G2}{p&{c:d}q&::before{e:f}}${G1}{a&{g:h}}`],
+    [`@media (x){a${G1}{color:red}b${G1}{c:d}}`, `@media (x){${G1}{a&{color:red}b&{c:d}}}`],
+    ['a:not(.short){color:red}', 'a:not(.short){color:red}'],
+    ['plain{color:red}', 'plain{color:red}']
+  ])
+    assert.equal(nestNots(css), old, css)
+  assertLinear('nestNots, \\u0000\\u0001', (n) => nestNots(`${'\u0000\u0001'.repeat(n)}a{b:c}`), 50_000)
+  assertLinear('nestNots, \\u0000', (n) => nestNots(`${'\u0000'.repeat(n)}a{b:c}`), 50_000)
+  assertLinear('nestNots, many guarded rules', (n) => nestNots(`a${G1}{color:red}\n`.repeat(n)), 4_000)
+})
+
 test('quickColours: the reference block ends at the next bold line, as before', () => {
   const read = (content) => quickColours({ customSections: [{ title: 'Agent Prompt Guide', content }] })
   assert.deepEqual(read('Quick Color Reference\n- background: #000000\n- text: #f4efd4\n'), {

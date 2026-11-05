@@ -143,12 +143,16 @@ test('a picture site the site check reads back ignoring the media suffix and a l
     }
   }
   const check = await runSiteCheck({ door, report })
-  const lines = check.groups[0].lines
+  const lines = check.groups.find((g) => g.name === 'read-back').lines
   assert.equal(lines['block-2.pic'], 'match')
   assert.equal(lines['article-7.5'], 'match')
   assert.equal(lines['block-2.figure'], 'match')
   assert.equal(lines['site.body-background'], 'match', 'the setting reads back through its own door')
-  assert.ok(check.groups[0].reads.some((r) => r.read === 'template.siteSettings read'))
+  assert.ok(
+    check.groups
+      .find((g) => g.name === 'read-back')
+      .reads.some((r) => r.read === 'template.siteSettings read')
+  )
 })
 
 test('the body background goes through its setting, once, after its file, whatever the package says of the door', async () => {
@@ -337,10 +341,16 @@ const stopsWithNothingSent = async (files, code, words) => {
   assert.equal(site.log.length, 0, 'no call reached the site')
 }
 
-test('a package with problems stops the run with nothing sent', async () => {
+test('a frame the export could not place is refused on its own line, naming the picture step, and the rest is written', async () => {
   const pictures = picturePackage()
-  pictures.problems = [{ where: 'block-2.pic', detail: 'the kit has no image slot' }]
-  await stopsWithNothingSent({ pictures }, 'BAD_FILE', /block-2\.pic: the kit has no image slot/)
+  pictures.problems = [{ where: 'block-2.lost', detail: 'the kit has no image slot module-2.lost' }]
+  const { report, site, line } = await runPictures({ files: { pictures } })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.equal(line('block-2.lost').status, 'refused')
+  assert.match(line('block-2.lost').reason, /the kit has no image slot module-2\.lost/)
+  assert.deepEqual(line('block-2.lost').unaddressable, { step: 8, stepName: 'pictures' })
+  assert.equal(line('block-2.pic').status, 'written')
+  assert.ok(site.of('media.upload').length > 0, 'the other pictures are uploaded')
 })
 
 test('a package made for another contract stops the run', async () => {
@@ -362,10 +372,15 @@ test('a package that still waits on the customer, or takes off links, stops the 
   await stopsWithNothingSent({ pictures: emptied }, 'BAD_FILE', /emptyLinks/)
 })
 
-test('a frame whose file is not in the uploads stops the run', async () => {
+test('a frame whose file is not in the uploads is refused on its own, and the other frames are written', async () => {
   const pictures = picturePackage()
   pictures.uploads = pictures.uploads.filter((u) => u.sha256 !== FIGURE.entry.sha256)
-  await stopsWithNothingSent({ pictures }, 'BAD_FILE', /module-2\.figure/)
+  const { report, line } = await runPictures({ files: { pictures } })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.equal(line('block-2.figure').status, 'refused')
+  assert.match(line('block-2.figure').reason, /uploads do not list/)
+  assert.equal(line('block-2.figure').unaddressable.step, 8)
+  assert.equal(line('block-2.pic').status, 'written')
 })
 
 test('a missing file stops the run', async () => {
@@ -410,13 +425,17 @@ test('a file at the plugin limit goes, one byte over stops the run with nothing 
   await stopsWithNothingSent({ pictures: only(over), files: [over] }, 'BAD_FILE', /8388608/)
 })
 
-test('a slot the site does not have stops the run before anything is uploaded', async () => {
+test('a slot the site does not have is refused on its own, naming the picture step, and the others are written', async () => {
   const pictures = picturePackage()
   pictures.mapping.changes['module-99.9'] = HERO.entry.sitePath
-  const { report, site } = await runPictures({ files: { pictures } })
-  assert.equal(report.cause.code, 'UNKNOWN_SLOT')
-  assert.match(report.cause.reason, /module-99\.9/)
-  assert.equal(site.of('media.upload').length, 0)
+  const { report, site, line } = await runPictures({ files: { pictures } })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.equal(line('block-99.9').status, 'refused')
+  assert.match(line('block-99.9').reason, /module-99\.9/)
+  assert.equal(line('block-99.9').unaddressable.step, 8)
+  const apply = site.log.find((c) => c.action === 'content.contract' && c.params.operation === 'apply')
+  assert.ok(apply && !('module-99.9' in apply.params.changes), 'nothing is sent for it')
+  assert.equal(line('block-2.pic').status, 'written')
 })
 
 test('a cancelled run stops between the pictures and the contract call', async () => {

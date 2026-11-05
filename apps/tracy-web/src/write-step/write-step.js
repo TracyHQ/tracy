@@ -1,6 +1,13 @@
 // The write step (ADR 0044, step 9): frozen files in, one site written, a write report out, with no model. It checks the
 // files and builds the owner table before anything is written, so a bad file or a dispute leaves the site untouched.
 //
+// Only what breaks the whole run stops it (ADR 0044, decision 26): a file that is not JSON or not the shape its step writes,
+// files made on another kit or contract, a file outside its folder or not matching its hash, a site that is not ready or answers
+// another contract, and a dispute. An item with nothing to write to (a slot the kit or the site does not have, a picture frame
+// with no slot) is left out with a `refused` line naming its step (`unaddressable`), and the rest is written. What the look guard
+// finds on a value is written all the same and kept in `report.guard.findings`. The site check blocks on both
+// (site-check/write-findings.js).
+//
 // It takes a site door as input and does not depend on how its site was made. The door has one method:
 //   apply({ siteKey, action, params }) -> the plugin's answer
 // No template and no version is written here: the contract comes from the kit, the slots from the files and the site.
@@ -44,6 +51,7 @@ import { preparePictureStage } from './picture-stage.js'
 import { runPrintedStage } from './printed-stage.js'
 import { runShareStage } from './share-stage.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
+import { unaddressableOf, withGuardFindings, withUnaddressable } from './unaddressable-lines.js'
 
 /** What one contract call takes (the seeder's and the plugin's own limits); more is refused whole, so it is said first. */
 const MAX_SLOTS = 1500
@@ -55,14 +63,24 @@ const named = (list) =>
   list.length > NAMED ? `${list.slice(0, NAMED).join(', ')} and ${list.length - NAMED} more` : list.join(', ')
 const entityOf = (key) => (key.lastIndexOf('.') > 0 ? key.slice(0, key.lastIndexOf('.')) : key)
 
-/** Whatever keeps these files off this kit, each as a sentence. */
+/** Where a copy problem is about the whole file rather than one entry of it (site-copy-view.js). */
+const WHOLE_COPY = /^(?:file|version|fingerprint(?:\..*)?|slots|alts|seo|pages|notebook|returns)$/
+const isWholeCopy = (problem) => WHOLE_COPY.test(String(problem.where))
+
+/** Whatever keeps these files off this kit, each as a sentence. A bad entry of the copy is not here: it is one item left out. */
 function fileProblems({ plan, copy, kitRef }, problems) {
   const out = planShapeProblems(plan, kitRef).map((p) => `plan: ${p}`)
-  out.push(...problems.map((p) => `copy: ${p.where}: ${p.detail}`))
+  out.push(...problems.filter(isWholeCopy).map((p) => `copy: ${p.where}: ${p.detail}`))
   const made = copy?.fingerprint?.kit
   if (typeof made === 'string' && !made.split(/\s+/).includes(kitRef))
     out.push(`copy: it was made on the kit "${made}", not ${kitRef}`)
   return out
+}
+
+/** The content map keys of this mapping the site does not have: nothing to write them to. */
+function missingOnSite({ reading, changes }) {
+  const onSite = new Set((Array.isArray(reading.slots) ? reading.slots : []).map((s) => s?.key))
+  return Object.keys(changes).filter((key) => !onSite.has(key))
 }
 
 /** The first thing about the site that keeps this mapping from being sent, or null. */
@@ -72,11 +90,7 @@ function siteProblem({ reading, contract, changes }) {
       code: 'CONTRACT_MISMATCH',
       reason: `The site answers the contract ${reading.contract}, the kit is ${contract}.`
     }
-  const onSite = new Set((Array.isArray(reading.slots) ? reading.slots : []).map((s) => s?.key))
   const keys = Object.keys(changes)
-  const missing = keys.filter((key) => !onSite.has(key))
-  if (missing.length)
-    return { code: 'UNKNOWN_SLOT', reason: `Slots the site does not have: ${named(missing)}.` }
   const entities = new Set(keys.map(entityOf)).size
   if (keys.length > MAX_SLOTS || entities > MAX_ENTITIES)
     return {
@@ -128,8 +142,12 @@ export async function runWriteStep(input) {
     counts: countsOf([]),
     slots: [],
     disputes: [],
-    unowned: []
+    unowned: [],
+    unaddressable: []
   }
+  // Items with nothing to write to, each `{ slot, key, owner, reason, part?, spot? }`: left out, and said as refused lines.
+  const unaddressable = []
+  const leaveOut = (items) => unaddressable.push(...items)
   let table = null
   let extras = {}
   let routes = { routed: new Map(), deferred: new Map() }
@@ -146,14 +164,12 @@ export async function runWriteStep(input) {
   let created = { pages: new Map(), results: [], lines: [], kept: [] }
   let restored = []
   let renamedLines = null
-  const finish = (runStatus, runCause, written = [], refused = new Map()) => {
-    // A stage takes a refusal as any other refused write and goes on; the run has stopped all the same, and this says why.
-    const refusedLook = guard.cause()
-    const status = refusedLook ? 'stopped' : runStatus
-    const cause = refusedLook ?? runCause
+  const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
-    report.guard = { refused: guard.refused() }
+    // What the guard found on a value was written all the same; what it held back (a channel nobody listed) was not sent.
+    report.guard = { findings: guard.findings(), refused: guard.refused() }
+    report.unaddressable = unaddressableOf(unaddressable)
     let lines = []
     if (table) {
       const hidden = hide?.results({ emptied, refused, settled })
@@ -181,6 +197,7 @@ export async function runWriteStep(input) {
         ...routes
       })
     }
+    lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
     const against = last.active ? againstLast(lines, last, status) : { slots: lines }
     report.slots = against.slots
     // Rows kept against the plan, per list (hide-lines.js): what the site check's list-rows holds the printed list to.
@@ -233,6 +250,7 @@ export async function runWriteStep(input) {
       templateSheets: input.templateSheets && (() => input.templateSheets({ door, siteKey }))
     })
     if (brand.stop) return { stop: brand.stop }
+    leaveOut(brand.unaddressable ?? [])
     const corrections = correctionsReader(door, siteKey, contract)
     pictures = await preparePictureStage({
       corrections,
@@ -248,10 +266,18 @@ export async function runWriteStep(input) {
       last
     })
     if (pictures.stop) return { stop: pictures.stop }
+    leaveOut(pictures.unaddressable ?? [])
     guard.refuse(pictures.refused ?? [])
-    const problems = fileProblems({ plan, copy, kitRef: kit.ref }, readCopy(copy).problems)
+    const copyRead = readCopy(copy)
+    const problems = fileProblems({ plan, copy, kitRef: kit.ref }, copyRead.problems)
     if (problems.length)
       return { stop: { code: 'BAD_FILE', reason: `The files cannot be written: ${problems.join('; ')}` } }
+    // A copy entry that is not what the copy step writes is left out of the copy's view; it is said once, on step 6.
+    leaveOut(
+      copyRead.problems
+        .filter((p) => !isWholeCopy(p))
+        .map((p) => ({ slot: String(p.where), owner: null, step: 6, reason: `copy: ${p.detail}` }))
+    )
     const exported = exportContractMapping({
       copy,
       contract,
@@ -271,7 +297,22 @@ export async function runWriteStep(input) {
         }
       }
     const index = indexInputs({ plan, kit: kit.doc, brief, contentMap: contentMap ?? undefined })
-    const { view } = readCopy(copy)
+    // A copy slot the kit does not have has nothing to write to: it is left out and said as refused, and the rest is written.
+    const known = kitSlotIds(kit.doc)
+    for (const slot of index.kitSlots.keys()) known.add(slot)
+    const copyView = copyRead.view
+    const strays = copyView.slots.filter((s) => !known.has(s.slot))
+    for (const stray of strays) delete exported.mapping.changes[contentMapKey(stray.slot)]
+    leaveOut(
+      strays.map((s) => ({
+        slot: s.slot,
+        key: contentMapKey(s.slot),
+        owner: s.owner,
+        step: 6,
+        reason: `copy: the kit has no slot ${s.slot}`
+      }))
+    )
+    const view = { ...copyView, slots: copyView.slots.filter((s) => known.has(s.slot)) }
     const fromPlan = planClaims(
       {
         plan,
@@ -323,16 +364,6 @@ export async function runWriteStep(input) {
     report.keptPages = keptPagesOf(plan, kit.doc)
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
-    const known = kitSlotIds(kit.doc)
-    for (const slot of index.kitSlots.keys()) known.add(slot)
-    const unknown = view.slots.map((s) => s.slot).filter((slot) => !known.has(slot))
-    if (unknown.length)
-      return {
-        stop: {
-          code: 'UNKNOWN_SLOT',
-          reason: `Slots the kit does not have: ${named([...new Set(unknown)])}.`
-        }
-      }
     if (table.disputes.length)
       return {
         stop: {
@@ -383,8 +414,25 @@ export async function runWriteStep(input) {
     try {
       const reading = await apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } })
       if (!reading?.ok) return { stop: { code: 'INSPECT_REFUSED', reason: doorRefusal(reading) } }
+      // A slot the site does not have has nothing to write to: it is left out, and its owner's step is named.
+      const missing =
+        reading.contract === contract ? missingOnSite({ reading, changes: mapping.changes }) : []
+      for (const key of missing) {
+        delete mapping.changes[key]
+        delete mapping.evidence?.[key]
+      }
+      const ownerOf = (key) => table.owners.get(key.replace(/^module-/, 'block-'))?.owner ?? null
+      leaveOut(
+        missing.map((key) => ({
+          slot: key.replace(/^module-/, 'block-'),
+          key,
+          owner: ownerOf(key),
+          reason: `the site does not have the slot ${key}`
+        }))
+      )
       const problem = siteProblem({ reading, contract, changes: mapping.changes })
-      return problem ? { stop: problem } : { reading }
+      if (problem) return { stop: problem }
+      return { reading }
     } catch (error) {
       return { stop: { code: 'INSPECT_REFUSED', reason: String(error?.message ?? error) } }
     }
@@ -392,13 +440,12 @@ export async function runWriteStep(input) {
   if (inspected.stop) return stopped(inspected.stop)
   if (await isCancelled()) return finish('cancelled', null)
 
-  // Before the first write: what the run already knows it will send, so a refusal leaves the site as it was.
+  // Before the first write: what the run already knows it will send, judged once; a finding does not hold the write back.
   guard.check({
     action: 'content.contract',
     params: { operation: 'apply', changes: mapping.changes }
   })
   for (const call of brand.planned ?? []) guard.check(call)
-  if (guard.cause()) return finish('stopped', null)
 
   // A rerun on pages the last run renamed: they answer at their demo addresses again, which every stage before the route stage reads.
   const restoring = await restoreRoutes({ door, siteKey, routes: input.last?.routes })
@@ -545,8 +592,7 @@ export async function runWriteStep(input) {
       })
     )
   // Last of the writes, once every page was found and read back at its demo address: the kept pages take the plan's slugs.
-  // A fallback block the look guard refused in the printed check stops the run first, as any refused write does.
-  if (!guard.cause() && report.status === 'done' && hasPlanSlugs(plan)) {
+  if (report.status === 'done' && hasPlanSlugs(plan)) {
     const routed = await timed('routes', () =>
       runRouteStage({
         door,

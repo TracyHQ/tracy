@@ -307,15 +307,18 @@ for (const [what, [change, words]] of Object.entries(badBrands))
     assert.equal(site.log.length, 0)
   })
 
-test('a brand file that is not JSON stops the run; a name slot the kit lacks is an unknown slot', async () => {
+test('a brand file that is not JSON stops the run; a name slot the kit lacks is refused on its own and the rest is written', async () => {
   const broken = await runBrand({ files: { brand: '{nope' } })
   assert.equal(broken.report.cause.code, 'BAD_FILE')
   const brand = brandFile()
   brand.name.slots[2].where = 'block-99.0'
   const unknown = await runBrand({ files: { brand } })
-  assert.equal(unknown.report.cause.code, 'UNKNOWN_SLOT')
-  assert.match(unknown.report.cause.reason, /block-99\.0/)
-  assert.equal(unknown.site.log.length, 0)
+  assert.equal(unknown.report.status, 'done', JSON.stringify(unknown.report.cause))
+  const refused = unknown.report.slots.find((s) => s.slot === 'block-99.0')
+  assert.equal(refused.status, 'refused')
+  assert.match(refused.reason, /the kit has no slot block-99\.0/)
+  assert.deepEqual(refused.unaddressable, { step: 2, stepName: 'brand' })
+  assert.ok(unknown.site.log.length > 0, 'the rest of the brand is written')
 })
 
 test('a slot contract the server does not have stops the run before any write', async () => {

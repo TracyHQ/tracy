@@ -78,6 +78,7 @@ const idle = {
   claims: [],
   changes: {},
   evidence: {},
+  unaddressable: [],
   lines: () => []
 }
 const stoppedBy = (stop) => ({ ...idle, stop })
@@ -105,12 +106,20 @@ export async function prepareBrandStage({
       code: 'BAD_FILE',
       reason: `The files cannot be written: brand: ${plan.problems.join('; ')}`
     })
-  const { orders } = plan
+  // An order on a slot the kit does not have has nothing to write to: it is left out and said as refused, and the rest of the
+  // brand is written (ADR 0044, decision 26).
   const known = kitSlotIds(kit)
+  const unknown = plan.orders.filter((o) => o.via === 'contract' && !known.has(o.slot))
+  const orders = plan.orders.filter((o) => !unknown.includes(o))
+  const unaddressable = unknown.map((o) => ({
+    slot: o.slot,
+    key: o.key ?? null,
+    owner: BRAND_OWNER,
+    part: PARTS[o.item],
+    ...(o.spot ? { spot: o.spot } : {}),
+    reason: `brand: the kit has no slot ${o.slot}`
+  }))
   const inContract = orders.filter((o) => o.via === 'contract')
-  const unknown = inContract.filter((o) => !known.has(o.slot)).map((o) => o.slot)
-  if (unknown.length)
-    return stoppedBy({ code: 'UNKNOWN_SLOT', reason: `Slots the kit does not have: ${unknown.join(', ')}.` })
   const read = await readPictures(orders, path.dirname(brandPath), inputs)
   if (read.stop) return stoppedBy(read.stop)
   const { pictures } = read
@@ -231,5 +240,5 @@ export async function prepareBrandStage({
         }
       ]
     : []
-  return { active: true, claims, changes, evidence, write, lines, routes, planned }
+  return { active: true, claims, changes, evidence, write, lines, routes, planned, unaddressable }
 }

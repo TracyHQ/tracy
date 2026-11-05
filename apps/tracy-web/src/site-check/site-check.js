@@ -16,13 +16,17 @@ import { kitVersionGroup } from './kit-version.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
 import { baselineAtRoutes, hasRouteTable, pageSlugGroup } from './page-slug.js'
 import { readBackGroup } from './read-back.js'
+import { WRITE_FINDING_GROUPS } from './write-findings.js'
 import { writtenNotPrintedGroup } from './written-not-printed.js'
 
 export const CHECK_VERSION = 'site-check/1'
 /** With a kit, the first group: a kit older than the check expects stops the run (kit-version.js). */
 export const KIT_GROUPS = [kitVersionGroup]
-/** The groups that need no browser. With a host, `PAGE_CHECK_GROUPS` (page-groups.js) follow them. */
-export const SITE_CHECK_GROUPS = [readBackGroup]
+/**
+ * The groups that need no browser. With a host, `PAGE_CHECK_GROUPS` (page-groups.js) follow them. What the write step found and
+ * left out (write-findings.js) reads only the report, so it comes before read-back, which stops the later groups when red.
+ */
+export const SITE_CHECK_GROUPS = [...WRITE_FINDING_GROUPS, readBackGroup]
 /** With a route table in the report (the write step renamed kept pages), after read-back: each page ends with its plan slug. */
 export const ROUTE_GROUPS = [pageSlugGroup]
 /** The groups that read pages as a visitor's browser gets them, with no browser: they run when a page reader is given. */

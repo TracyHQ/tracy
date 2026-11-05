@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-406-pictures-setting-slot-frames",
+  "kind": "fix",
+  "title": "A picture frame the kit writes through a setting slot (T4 page background) is listed in siteSettings, so the picture package exports with no problems",
+  "pr": 406,
+  "area": "site-pictures",
+  "cms": ["jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap apps/tracy-web/test/site-pictures-setting-slot.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0': fillFrames lists the background frame tied to site.body-background in siteSettings (writeDoor none) and gives its two kit twins no entry; exportPictureMapping on that manifest has no problems and one siteSettings entry; packageProblems returns []; the ladder state lists the frame in siteSettings, and a frame whose slotId is not a slot of site.settingSlots stays in frames.",
+    "The write step no longer stops on one item (ADR 0044, decision 26): a look guard finding is written and kept in report.guard.findings, a slot the kit or the site does not have and a picture frame with no slot get a refused line naming the owning step, a file whose bytes are not its hash still stops the run, and the site check groups look-guard-findings and unaddressable-items block on each, naming the cell and the step."
+  ],
+  "selectors": {
+    "rule": "listOf in apps/tracy-web/src/site-pictures/picture-check/inputs-index.js",
+    "callers": "fill-frames.js, ladder-state.js, picker-input.js",
+    "package": "packageProblems in apps/tracy-web/src/write-step/picture-package.js"
+  },
+  "evidence": "Step 9 on a T4 kit with the writable background setting slot stopped BAD_FILE with 0 written: the picture mapping held 14 problems 'the kit has no image slot' for the background frame and its 13 twins.",
+  "fence": "Mechanism only: which manifest list a setting slot frame lands in and that the export and the package check accept it. Not covered: the write step setting body_bg_img on a live site. Decision 26 part: covered with invented fixtures through runWriteStep and runSiteCheck; not covered on a live site.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-pictures-setting-slot.test.mjs",
+      "apps/tracy-web/test/write-step-kit-slot-ids.test.mjs",
+      "apps/tracy-web/test/site-check-write-findings.test.mjs",
+      "apps/tracy-web/test/write-step-pictures.test.mjs",
+      "apps/tracy-web/test/write-step-run.test.mjs"
+    ],
+    "tests": [
+      "a frame of a setting slot goes to siteSettings",
+      "the fallback ladder lists a setting slot frame in siteSettings too",
+      "a writable frame with a slot id the kit does not list as a setting slot stays in frames",
+      "kitSlotIds reads ids nested under rowSlots[].slots[]",
+      "kitSlotIds keeps reading the flat rowSlots, rows and block slots",
+      "each look guard finding blocks, naming the cell and the step that owns the value",
+      "each item left out blocks on its owning step, with the cell",
+      "through a real run: a guard finding and a stray copy slot are written around, and the check names both cells and steps",
+      "a frame the export could not place is refused on its own line, naming the picture step, and the rest is written",
+      "a slot the site does not have is refused on its own, naming the picture step, and the others are written",
+      "a file whose bytes are not its hash stops the run",
+      "a copy slot the kit does not have is refused on its own line, naming the copy step, and the rest is written"
+    ]
+  }
+}

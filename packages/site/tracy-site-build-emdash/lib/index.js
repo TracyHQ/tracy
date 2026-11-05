@@ -1024,6 +1024,11 @@ function resolveCapabilities(catalog, requested, inventory, executors = []) {
 
 // ../tracy-site-build-core/src/host/design-systems-switch.mjs
 import { readFileSync as readFileSync3 } from "node:fs";
+function withoutTrailingSlashes(s) {
+  let end = s.length;
+  while (end > 0 && s[end - 1] === "/") end -= 1;
+  return s.slice(0, end);
+}
 function tracyOriginOf(config) {
   if (config.tracyOrigin) return config.tracyOrigin;
   const own = process.env.MCP_TRACY_ORIGIN?.trim();
@@ -1040,7 +1045,7 @@ function tracyOriginOf(config) {
 async function designSystemsShown(origin, fetchImpl = fetch) {
   if (!origin) return false;
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, "")}/api/design-systems`, {
+    const response = await fetchImpl(`${withoutTrailingSlashes(origin)}/api/design-systems`, {
       headers: { accept: "application/json" }
     });
     if (!response.ok) return false;
@@ -2792,7 +2797,7 @@ function rootForRequest(url, sessions, fallback) {
 function parseRoute(prefix, method, url) {
   const pathname = (url ?? "").split("?")[0] ?? "";
   if (!pathname.startsWith(prefix)) return null;
-  const rest = pathname.slice(prefix.length).replace(/^\/+/, "").replace(/\/+$/, "");
+  const rest = withoutTrailingSlashes(pathname.slice(prefix.length).replace(/^\/+/, ""));
   if (method === "POST" && rest === "start") return "start";
   if (method === "GET" && rest === "job") return "job";
   if (method === "POST" && rest === "answers") return "answers";
@@ -4506,7 +4511,7 @@ var LATE = Symbol("late");
 var LINE2 = "TRACY_SLOT_PINS ";
 var ROLES_TEXT_MAX = 256 * 1024;
 var PINS_READ_MAX = 200;
-var SLOT_PINS_SCRIPT = `const fs=require("fs"),path=require("path");const app=process.argv[1]||"/app";const o=(a)=>console.log(${JSON.stringify(LINE2)}+Buffer.from(JSON.stringify(a)).toString("base64"));const walk=(d,re,acc)=>{let es=[];try{es=fs.readdirSync(d,{withFileTypes:true})}catch{return acc}for(const e of es){if(e.name==="node_modules"||e.name.startsWith("."))continue;const p=path.join(d,e.name);if(e.isDirectory())walk(p,re,acc);else if(re.test(e.name))acc.push(p)}return acc};const CAND=/rounded|(^|[\\s"'\`!:])p[xytblrse]?-|bg-\\[|text-|border-\\[|var\\(--ds-/;try{let slot=null;try{slot=fs.readFileSync(path.join(app,"data","ds-slot.css"),"utf8").slice(0,65536)}catch{}if(slot!==null&&!slot.startsWith("/* tracy-ds-slot: "))slot=null;let roles=walk(path.join(app,"src"),/\\.css$/,[]).map((f)=>fs.readFileSync(f,"utf8")).join("\\n").slice(0,${ROLES_TEXT_MAX});if(!roles.includes("var(--ds-"))roles=null;if(slot===null&&roles===null){o({ok:true,slot:null})}else{let built=0;const dist=walk(path.join(app,"dist"),/\\.(m?js|html)$/,[]).map((f)=>{built=Math.max(built,fs.statSync(f).mtimeMs);return fs.readFileSync(f,"utf8")}).join("\\n");if(dist===""){o({ok:true,slot,roles,dist:false,found:[]})}else{const found=[];for(const f of walk(path.join(app,"src"),/\\.(astro|[jt]sx?|mjs|html|mdx?)$/,[])){if(fs.statSync(f).mtimeMs<=built)continue;const lines=fs.readFileSync(f,"utf8").split("\\n");lines.forEach((t,i)=>{if(!CAND.test(t))return;for(const m of t.matchAll(/"([^"\\n]*)"|'([^'\\n]*)'|\`([^\`\\n]*)\`/g)){const s=m[1]??m[2]??m[3];if(!s||!CAND.test(s)||dist.includes(s)||(s.includes("&")&&dist.includes(s.replaceAll("&","&amp;"))))continue;found.push({file:path.relative(app,f),line:i+1,cls:s.slice(0,600),text:t.trim().slice(0,300)})}})}o({ok:true,slot,roles,dist:true,found:found.slice(0,${PINS_READ_MAX}),more:Math.max(0,found.length-${PINS_READ_MAX})})}}}catch(e){o({ok:false,error:String((e&&e.message)||e).slice(0,200)})}`;
+var SLOT_PINS_SCRIPT = `const fs=require("fs"),path=require("path");const app=process.argv[1]||"/app";const o=(a)=>console.log("TRACY_SLOT_PINS "+Buffer.from(JSON.stringify(a)).toString("base64"));const walk=(d,re,acc)=>{let es=[];try{es=fs.readdirSync(d,{withFileTypes:true})}catch{return acc}for(const e of es){if(e.name==="node_modules"||e.name.startsWith("."))continue;const p=path.join(d,e.name);if(e.isDirectory())walk(p,re,acc);else if(re.test(e.name))acc.push(p)}return acc};const CAND=/rounded|(^|[\\s"'\`!:])p[xytblrse]?-|bg-\\[|text-|border-\\[|var\\(--ds-/;try{let slot=null;try{slot=fs.readFileSync(path.join(app,"data","ds-slot.css"),"utf8").slice(0,65536)}catch{}if(slot!==null&&!slot.startsWith("/* tracy-ds-slot: "))slot=null;let roles=walk(path.join(app,"src"),/\\.css$/,[]).map((f)=>fs.readFileSync(f,"utf8")).join("\\n").slice(0,${ROLES_TEXT_MAX});if(!roles.includes("var(--ds-"))roles=null;if(slot===null&&roles===null){o({ok:true,slot:null})}else{let built=0;const dist=walk(path.join(app,"dist"),/\\.(m?js|html)$/,[]).map((f)=>{built=Math.max(built,fs.statSync(f).mtimeMs);return fs.readFileSync(f,"utf8")}).join("\\n");if(dist===""){o({ok:true,slot,roles,dist:false,found:[]})}else{const found=[];for(const f of walk(path.join(app,"src"),/\\.(astro|[jt]sx?|mjs|html|mdx?)$/,[])){if(fs.statSync(f).mtimeMs<=built)continue;const lines=fs.readFileSync(f,"utf8").split("\\n");lines.forEach((t,i)=>{if(!CAND.test(t))return;for(const m of t.matchAll(/"([^"\\n]*)"|'([^'\\n]*)'|\`([^\`\\n]*)\`/g)){const s=m[1]??m[2]??m[3];if(!s||!CAND.test(s)||dist.includes(s)||(s.includes("&")&&dist.includes(s.replaceAll("&","&amp;"))))continue;found.push({file:path.relative(app,f),line:i+1,cls:s.slice(0,600),text:t.trim().slice(0,300)})}})}o({ok:true,slot,roles,dist:true,found:found.slice(0,${PINS_READ_MAX}),more:Math.max(0,found.length-${PINS_READ_MAX})})}}}catch(e){o({ok:false,error:String((e&&e.message)||e).slice(0,200)})}`;
 function slotPinsArgv(container) {
   return ["exec", "-u", "www-data", container, "node", "-e", SLOT_PINS_SCRIPT, "/app"];
 }

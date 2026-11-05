@@ -14,24 +14,61 @@ const SITE_PATH = /^images\/tracy-content\/([a-f0-9]{64})\.(?:png|jpg|webp)$/
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 const filled = (x) => Array.isArray(x) && x.length > 0
 
-/** Whatever keeps this package off this contract, each as a sentence; empty when it can be used. */
-export function packageProblems(pictures, contract) {
+const isExport = (pictures) => {
   const { mapping, uploads, hidden, painted, siteSettings, problems } = pictures ?? {}
-  if (
-    !isObject(mapping) ||
-    !isObject(mapping.changes) ||
-    ![uploads, hidden, painted, siteSettings, problems].every(Array.isArray)
+  return (
+    isObject(mapping) &&
+    isObject(mapping.changes) &&
+    [uploads, hidden, painted, siteSettings, problems].every(Array.isArray)
   )
-    return ['it is not the output of the picture export']
-  const out = problems.map((p) => `${p?.where}: ${p?.detail}`)
+}
+
+/**
+ * What keeps the whole package off this contract, each as a sentence; empty when it can be used. These stop the run (ADR 0044,
+ * decision 26): a file that is not the export, or one made for another contract, holds nothing the step can trust.
+ */
+export function packageStops(pictures, contract) {
+  if (!isExport(pictures)) return ['it is not the output of the picture export']
+  const { mapping } = pictures
+  const out = []
   if (mapping.contract !== contract)
     out.push(`it was made for the contract ${mapping.contract}, not ${contract}`)
   if (filled(mapping.pending)) out.push(`it has pending items: ${mapping.pending.join(', ')}`)
   if (filled(mapping.emptyLinks)) out.push('it has emptyLinks, which the picture stage does not send')
+  return out
+}
+
+/**
+ * The items of the package that have nothing to write to or nothing to write: a frame the export could not place (its own
+ * `problems`, such as a frame the kit has no image slot for) and a slot holding a file the uploads do not list. Each is left
+ * out and said once, and the rest of the package is written (ADR 0044, decision 26). Empty for a file that is not the export.
+ * @returns {{ frame: string, key: string | null, reason: string }[]}
+ */
+export function packageItems(pictures) {
+  if (!isExport(pictures)) return []
+  const { mapping, uploads, problems } = pictures
+  const out = problems.map((p) => ({ frame: String(p?.where), key: null, reason: String(p?.detail) }))
   const sent = new Set(uploads.map((u) => u?.sitePath))
   for (const [key, value] of Object.entries(mapping.changes))
-    if (!sent.has(value)) out.push(`${key} holds a file the uploads do not list`)
+    if (!sent.has(value))
+      out.push({
+        frame: key.replace(/^module-/, 'block-'),
+        key,
+        reason: 'it holds a file the uploads do not list'
+      })
   return out
+}
+
+/** Whatever keeps this package or one of its items off this contract, each as a sentence; empty when all of it can be used. */
+export function packageProblems(pictures, contract) {
+  if (!isExport(pictures)) return packageStops(pictures, contract)
+  const items = packageItems(pictures)
+  const said = (i) => (i.key ? `${i.key} holds a file the uploads do not list` : `${i.frame}: ${i.reason}`)
+  return [
+    ...items.filter((i) => !i.key).map(said),
+    ...packageStops(pictures, contract),
+    ...items.filter((i) => i.key).map(said)
+  ]
 }
 
 /** One file, read and held to its record; a stop names what is wrong. */

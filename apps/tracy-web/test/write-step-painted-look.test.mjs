@@ -109,13 +109,13 @@ test('a slot with no template icon draws its recipe, and its line says there was
   assert.equal(line('block-3.icon').painted.template, null)
 })
 
-test('an icon that replaces a template icon is refused when nothing can read that icon', async () => {
-  const { report, uploaded } = await runPainted({ items, contentMap, templateAccent: TEMPLATE_ACCENT })
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'LOOK_GUARD')
-  assert.equal(report.cause.stepName, 'pictures')
-  assert.match(report.cause.reason, /no reader of the site's files/)
-  assert.deepEqual(uploaded, [], 'nothing went out')
+test('an icon that replaces a template icon is a finding naming the picture step when nothing can read that icon', async () => {
+  const { report } = await runPainted({ items, contentMap, templateAccent: TEMPLATE_ACCENT })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  const [finding] = report.guard.findings
+  assert.equal(finding.stepName, 'pictures')
+  assert.equal(finding.sent, true, 'the icon is written all the same (decision 26)')
+  assert.match(finding.reason, /no reader of the site's files/)
 })
 
 /** The painted stage with a drawing code that gets it wrong, to see the guard refuse what it draws. */

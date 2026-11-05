@@ -138,8 +138,8 @@ test('the site check reads a written alt back on its slot', async () => {
     }
   }
   const check = await runSiteCheck({ door, report })
-  assert.equal(check.groups[0].lines['block-8.11'], 'match')
-  assert.equal(check.groups[0].lines['block-8.12'], 'match')
+  assert.equal(check.groups.find((g) => g.name === 'read-back').lines['block-8.11'], 'match')
+  assert.equal(check.groups.find((g) => g.name === 'read-back').lines['block-8.12'], 'match')
 })
 
 test('the frame a file hides keeps its alt out of the call', () => {

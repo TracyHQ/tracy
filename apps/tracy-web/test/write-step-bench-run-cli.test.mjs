@@ -227,7 +227,9 @@ test('check prints the group and the verdict, exits 0 on green and writes nothin
   const before = h.site.calls.filter((c) => c.params.operation !== 'inspect').length
   assert.equal(await h.cli(checkArgs()), 0)
   assert.equal(h.out[0], 'kit-version: green 1 checked')
-  assert.match(h.out[1], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
+  assert.equal(h.out[1], 'look-guard-findings: green 0 checked')
+  assert.equal(h.out[2], 'unaddressable-items: green 0 checked')
+  assert.match(h.out[3], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
   assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn, 0 unmeasured)')
   assert.equal(h.site.calls.filter((c) => c.params.operation !== 'inspect').length, before)
   const { report } = h.runs.rows[0]
