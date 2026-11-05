@@ -143,3 +143,64 @@ test('icon-only links take the address slots of the icon-only rows in row order'
     ['block-22.link-1', 'block-63.4', 'block-63.5']
   )
 })
+
+const entry = (id, label) => ({
+  item: `menuItem-${id}`,
+  level: 1,
+  type: 'url',
+  label: { slot: `menuItem-${id}.0`, text: label },
+  target: { kind: 'none' }
+})
+const MENU_MAP = {
+  entities: [{ key: 'module-121', kind: 'module', identity: {} }],
+  slots: [
+    {
+      key: 'menuItem-132.0',
+      entity: 'menuItem-132',
+      type: 'text',
+      role: 'contact.social_label',
+      sample: 'Twitter'
+    },
+    { key: 'menuItem-132.1', entity: 'menuItem-132', type: 'url', role: 'contact.social_url', sample: '#' },
+    {
+      key: 'menuItem-133.0',
+      entity: 'menuItem-133',
+      type: 'text',
+      role: 'contact.social_label',
+      sample: 'Facebook'
+    }
+  ],
+  menuBlocks: {
+    'module-121': { block: 'module-121', items: [entry(132, 'Twitter'), entry(133, 'Facebook')] }
+  },
+  pages: []
+}
+
+test('a url menu entry link is its address slot; an entry without one keeps its position id', () => {
+  const b = buildBlock({
+    rec: {
+      id: 'block-121',
+      source: 'module-121',
+      widths: { 1440: { pages: ['home'], details: { texts: [], links: [], repeats: [] } } }
+    },
+    entity: 'module-121',
+    idx: indexMap(MENU_MAP),
+    samples: sampleIndex(MENU_MAP),
+    errors: [],
+    minEvidence: {},
+    linkIcons: [
+      { position: 0, label: 'Twitter', href: '#' },
+      { position: 1, label: 'Facebook', href: '#' }
+    ],
+    siteUrl: 'http://site.example',
+    aliasHosts: [],
+    widths: ['1440']
+  })
+  assert.deepEqual(
+    b.links.map((l) => [l.id, l.labelId, l.menuItem]),
+    [
+      ['menuItem-132.1', 'menuItem-132.0', 'menuItem-132'],
+      ['block-121.link-2', 'menuItem-133.0', 'menuItem-133']
+    ]
+  )
+})

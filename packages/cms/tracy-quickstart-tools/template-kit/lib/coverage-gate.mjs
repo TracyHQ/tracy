@@ -54,6 +54,16 @@ function labelSlots(kit, mapOf) {
       here.add(l.labelId)
       if (!o) owner.set(l.labelId, { b, s: slot })
     }
+    // A link that is a menu entry's address slot (kit-blocks.mjs): the block lists that slot too.
+    for (const l of b.links ?? []) {
+      const m = mapOf.get(l.id)
+      if (!l.menuItem || m?.type !== 'url' || here.has(l.id)) continue
+      b.slots = [
+        ...(b.slots ?? []),
+        { id: l.id, type: 'url', role: m.role ?? null, sample: m.sample ?? null }
+      ]
+      here.add(l.id)
+    }
   }
 }
 

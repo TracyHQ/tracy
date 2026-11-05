@@ -272,6 +272,13 @@ export function buildBlock({
       })
     }
   else if (!desk) missing('links', 'the block was never shown, so its links could not be read')
+  // A menu entry that opens an address of its own (a `url` entry: "Twitter" of a "Follow us" menu) has that address
+  // as a slot: the link is that slot, so the business's profile address is written where the link reads it.
+  for (const l of links) {
+    if (!l.menuItem || !/\.link-\d+$/.test(l.id)) continue
+    const u = (idx.map.slots ?? []).find((s) => s.entity === l.menuItem && s.type === 'url')
+    if (u && !usedIds.has(neutralKey(u.key))) usedIds.add((l.id = neutralKey(u.key)))
+  }
   // Words the block shows that no slot holds; the site part names the CMS language string behind a sentence.
   // Shown words that are a content slot's (whole, cut short, or split by markup) are content, never fixed text: a
   // slot of this block is already declared; another entity's (an item's intro on a listing) is the demo's own.
