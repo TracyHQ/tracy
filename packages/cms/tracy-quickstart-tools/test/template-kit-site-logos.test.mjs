@@ -3,11 +3,14 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
+import { chromium } from '@playwright/test'
+
 import { joomlaAdapter, prefixOf, readConfig } from '../template-kit/lib/site/adapters/joomla.mjs'
 import { emptyShowsOf, variableOf } from '../template-kit/lib/site/adapters/joomla-t4.mjs'
 import { mysqlPrefix, parseBatch, siteSource } from '../template-kit/lib/site/adapters/source.mjs'
 import { stylesOfHtml } from '../template-kit/lib/site/browse-site.mjs'
 import { buildLogoSpots, logoFrameIds } from '../template-kit/lib/site/logo-spots.mjs'
+import { readLogos } from '../template-kit/lib/site/read-logos.js'
 import { buildSite } from '../template-kit/lib/site/site-kit.mjs'
 
 const LAYOUT = `<?php $name = $s->get('site_name'); $logo = $s->get('site_logo'); $logo_dark = $s->get('site_logo_dark'); ?>
@@ -304,4 +307,102 @@ test('a logo only a phone shows is sized at phone width; a phone read adds no pl
   assert.equal(logoSpots.length, 1)
   assert.deepEqual([logoSpots[0].width, logoSpots[0].height, logoSpots[0].sizeAt], [60, 60, 390])
   assert.ok(!errors.some((e) => e.field.endsWith('.width')))
+})
+
+test('a "logo" class in the page body (client strip, feature icon) is no site logo; header and footer ones are', async (t) => {
+  let browser
+  try {
+    browser = await chromium.launch()
+  } catch {
+    return t.skip('no Chromium available')
+  }
+  try {
+    const page = await browser.newPage()
+    const png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+    const img = (src) => `<img src="${src}" width="40" height="20">`
+    const html = `<header><div class="logo">${img(png + '#head')}</div></header>
+      <main><div class="client-logos">${img(png + '#client')}</div>
+        <div class="logo"><svg width="30" height="30"><rect width="30" height="30"/></svg></div>
+        <a class="navbar-brand">${img(png + '#brand')}</a>
+        <div>${img('images/logo/item-1.png')}</div></main>
+      <footer><div class="footer-logo">${img(png + '#foot')}</div></footer>`
+    // A page served from a made-up site address, so a picture path resolves as on a real page.
+    await page.route('http://site.example/**', (r) =>
+      r.request().url().endsWith('.png') ? r.fulfill({ status: 404 }) : r.fulfill({ contentType: 'text/html', body: html })
+    )
+    await page.goto('http://site.example/')
+    const { logos } = await page.evaluate(readLogos, { logoFiles: ['images/logo/item-1.png'], siteName: null, brand: [] })
+    assert.deepEqual(
+      logos.map((l) => [l.region, l.found]),
+      [
+        ['header', 'logo-container'],
+        ['other', 'logo-container'],
+        ['other', 'logo-file'],
+        ['footer', 'logo-container']
+      ]
+    )
+  } finally {
+    await browser.close()
+  }
+})
+
+test('a logo inside a block that holds no slot with its file is the site setting; a block holding the file keeps its own', () => {
+  const extra = {
+    ...map,
+    entities: [...map.entities, { key: 'module-50', kind: 'module', identity: { module: 'mod_custom' } }],
+    slots: [
+      ...map.slots,
+      { key: 'module-50.2', entity: 'module-50', type: 'image', role: 'editorial.illustration', sample: 'images/demo/logo-light.png' }
+    ]
+  }
+  const reads = [
+    {
+      pageId: 'page-home',
+      theme: null,
+      opening: true,
+      logos: [
+        // The template's footer logo element, found inside a module's footer section that holds no slot with this file.
+        logo('images/demo/logo-light.png', 'footer', 'module-41', null, true, '#202020'),
+        // Free HTML that types the same file into its own content.
+        logo('images/demo/logo-light.png', 'footer', 'module-50', null, true, '#202020')
+      ]
+    }
+  ]
+  const { logoSpots } = buildLogoSpots({ reads, map: extra, settings: [], isFreeHtml: () => true })
+  assert.deepEqual(
+    logoSpots.map((s) => [s.block, s.frameId, s.setting]),
+    [
+      ['block-41', 'siteSetting-1.0', 'site_logo'],
+      ['block-50', null, null]
+    ]
+  )
+})
+
+test('a logo with no slot is written by the template setting whose layout prints there, holding its file or empty', () => {
+  const reads = [
+    {
+      pageId: 'page-home',
+      theme: null,
+      opening: true,
+      logos: [
+        logo('inline-svg', 'header', 'header', null, true, '#ffffff'),
+        logo('images/demo/partner.png', 'footer', 'module-77', null, true, '#202020'),
+        logo('images/demo/logo.png', 'offcanvas', null, null, true, '#ffffff')
+      ]
+    }
+  ]
+  const settings = [
+    { key: 'site_logo', value: '', prints: [{ where: 'header', emptyShows: 'template-text' }] },
+    { key: 'site_logo_small', value: 'images/demo/logo.png', prints: [{ where: 'offcanvas', emptyShows: 'nothing' }] },
+    { key: 'site_logo_dark', value: '', prints: [{ where: 'header', emptyShows: null }] }
+  ]
+  const { logoSpots } = buildLogoSpots({ reads, map: { entities: [], slots: [] }, settings, isFreeHtml: () => false })
+  assert.deepEqual(
+    logoSpots.map((s) => [s.where, s.frameId, s.setting, s.emptyShows]),
+    [
+      ['header', null, 'site_logo', 'template-text'],
+      ['offcanvas', null, 'site_logo_small', 'nothing'],
+      ['footer', null, null, null]
+    ]
+  )
 })

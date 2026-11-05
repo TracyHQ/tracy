@@ -2,7 +2,8 @@
 //
 //   primary    the colour the framework role rules resolve to (links, the primary button, `.text-primary`, `.bg-primary`,
 //              the primary/link/accent theme variables), voted; with every role it was found in. A winner only
-//              links are painted with gives way to the colour that fills the primary button or ground
+//              links are painted with gives way to the colour that fills the primary button or ground. A colour a
+//              status rule paints is never brand, unless a variable names it the primary
 //   secondary  the same from the secondary roles, kept only when its hue stands apart from the primary
 //   status     the status colours (danger, warning, success, info), never brand
 //   on         the words the template writes on the primary colour, most used first
@@ -33,6 +34,8 @@ const FILL_ROLES = new Set(['button-fill', 'fill'])
 const LINK_ROLE = /link/i
 const PRIMARY_VAR =
   /^--(?!ds-)(?:[a-z0-9]+-)*(?:(?:primary|brand|accent)(?:-colou?r)?|link(?:-hover|-active)?-colou?r)$/
+/** A stylesheet variable that names the brand itself (`--color-primary`, `--t4-primary`), not the link colour. */
+const BRAND_VAR = /^--(?!ds-)(?:[a-z0-9]+-)*(?:primary|brand|accent)(?:-colou?r)?$/
 const SECONDARY_VAR = /^--(?!ds-)(?:[a-z0-9]+-)*secondary(?:-colou?r)?$/
 /** The same roles among variables a template declares before compiling (LESS `@brand-primary`, `@brand-secondary`). */
 const DECLARED_PRIMARY = /^@(?:[a-z0-9]+-)*(?:primary|brand|accent)(?:-colou?r)?$/
@@ -85,9 +88,15 @@ export function measureBrandColours(styles, { variables = [] } = {}) {
     return c ? hexOf(c) : null
   }
   const declared = variables.filter((v) => painted.has(hexOfValue(v.value)))
-  const declaredPrimary = new Set(
-    declared.filter((v) => DECLARED_PRIMARY.test(v.name)).map((v) => hexOfValue(v.value))
-  )
+  // A colour the template names as its primary stays a brand colour when a status rule reuses it: an alert border
+  // painted with the primary, or a page class read as a status (`.t4-error-page`).
+  const declaredPrimary = new Set([
+    ...declared.filter((v) => DECLARED_PRIMARY.test(v.name)).map((v) => hexOfValue(v.value)),
+    ...[...base.vars]
+      .filter(([name]) => BRAND_VAR.test(name))
+      .map(([, value]) => hexOfValue(resolveVars(value, base.vars)))
+      .filter(Boolean)
+  ])
   const votes = { primary: new Map(), secondary: new Map() }
   const roles = { primary: new Map(), secondary: new Map() }
   const vote = (kind, value, weight, role) => {
