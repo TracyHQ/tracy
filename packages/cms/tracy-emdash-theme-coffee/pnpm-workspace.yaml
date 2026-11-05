@@ -15,7 +15,7 @@ minimumReleaseAgeExclude:
   - emdash@1.1.0
 # Every zod below 4.6.6 has GHSA-mrhx-c7xc-m3w5 (memory exhaustion on oversized constrained
 # collections) and 3.x has no patched release, so all of them resolve to 4.6.6: emdash 1.1.0
-# pins 4.5.4, astro 7.2.8 asks ^4.3.6, the dev-only shadcn CLI asks ^3.24.1.
+# pins 4.5.4, astro 7.3.3 asks ^4.5.4, the dev-only shadcn CLI asks ^3.24.1.
 overrides:
   'zod@<4.6.6': 4.6.6
 # body-parser 2.0.0 to 2.3.x has GHSA-27r3-jxmh-p828 (denial of service via trailing bytes after a
