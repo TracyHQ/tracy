@@ -26,6 +26,18 @@ export function withoutTrailingSlashes(s) {
 }
 
 /**
+ * `s` without the dots and white space it ends with: what `replace(/[.\s]+$/, '')` gave, in one pass from
+ * the end (the pattern retried from every character of a long run of tabs, quadratic on a fleet reason
+ * that ends in one).
+ * @param {string} s
+ */
+export function withoutTrailingDotsAndSpace(s) {
+  let end = s.length
+  while (end > 0 && (s[end - 1] === '.' || /\s/.test(s[end - 1]))) end -= 1
+  return s.slice(0, end)
+}
+
+/**
  * This dsh's Tracy: the config's word in tests, else `MCP_TRACY_ORIGIN` — the process env first,
  * then the password gate's env file, where `tracy-site-tools` and `tracy-add-site` read it too.
  * @param {{ tracyOrigin?: string }} config

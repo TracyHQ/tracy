@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { withoutTrailingSlashes } from '../src/host/design-systems-switch.mjs'
+import { withoutTrailingDotsAndSpace, withoutTrailingSlashes } from '../src/host/design-systems-switch.mjs'
 import { parseRoute } from '../src/host/host.ts'
 
 /** Milliseconds `fn` takes. @param {() => unknown} fn */
@@ -62,6 +62,22 @@ test('withoutTrailingSlashes drops what `/\\/+$/` dropped, at once on a run of s
   ])
     assert.equal(withoutTrailingSlashes(s), old, s)
   assertLinear('withoutTrailingSlashes', (n) => withoutTrailingSlashes(`${'/'.repeat(n)}x`), 100_000)
+})
+
+test('withoutTrailingDotsAndSpace drops what `/[.\\s]+$/` dropped, at once on a run of tabs', () => {
+  // [fleet reason, what `replace(/[.\s]+$/, '')` gave]
+  for (const [s, old] of [
+    ['disk full.', 'disk full'],
+    ['disk full. \n', 'disk full'],
+    ['v1.2 failed...\t', 'v1.2 failed'],
+    ['a.b', 'a.b'],
+    [' . \u00a0', ''],
+    ['', '']
+  ]) {
+    assert.equal(s.replace(/[.\s]+$/, ''), old, `old pattern on ${JSON.stringify(s)}`)
+    assert.equal(withoutTrailingDotsAndSpace(s), old, s)
+  }
+  assertLinear('withoutTrailingDotsAndSpace', (n) => withoutTrailingDotsAndSpace(`${'\t'.repeat(n)}x`), 100_000)
 })
 
 test('parseRoute reads the door as before, at once on a path of slashes', () => {
