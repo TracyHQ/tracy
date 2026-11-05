@@ -1,5 +1,5 @@
 /**
- * REG-PR-<n>: an EmDash release never publishes a path of the machine that built it. The QA gates record the artifact and
+ * REG-PR-399: an EmDash release never publishes a path of the machine that built it. The QA gates record the artifact and
  * the fast-gate run through shownPath (relative to the template, else the last segment), and release.mjs writes every file
  * through a guard that refuses an absolute local path and names its JSON pointer. Checked in the kit and in every theme
  * (the published Business, Base and SaaS releases carried macOS temp and user-home paths; a rebuilt JA Restaurant release a Linux home and a checkout path).
