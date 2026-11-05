@@ -13,3 +13,7 @@ minimumReleaseAgeExclude:
   - '@emdash-cms/plugin-audit-log@0.2.3'
   - '@emdash-cms/plugin-forms@0.2.9'
   - emdash@1.1.0
+# body-parser 2.0.0 to 2.3.x has GHSA-27r3-jxmh-p828 (denial of service via trailing bytes after a
+# compressed request body); 2.4.0 is the first patched release.
+overrides:
+  "body-parser@>=2.0.0 <2.4.0": 2.4.0
