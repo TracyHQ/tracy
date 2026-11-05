@@ -36,7 +36,10 @@ const $t = stampFor(
 const $b = stampFor(Astro.request, 'banner', banner ? { id: banner.id, slug: banner.slug } : null)
 const bannerImg = banner ? mediaUrl(banner.image) : null
 // a category or the banner button leads somewhere only while its page is published
-const live = await liveLinks(Astro.request, locale, [...categories.map((c) => `/${c.slug}`), banner?.button_link])
+const live = await liveLinks(Astro.request, locale, [
+  ...categories.map((c) => `/${c.slug}`),
+  banner?.button_link
+])
 const items: any[] = testimonials?.items ?? []
 ---
 

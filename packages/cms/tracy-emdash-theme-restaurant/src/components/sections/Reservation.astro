@@ -16,7 +16,10 @@ const r = await section('reservation', 'reservation', locale)
 const $r = stampFor(Astro.request, 'reservation', r ? { id: r.id, slug: r.slug } : null)
 const intro = r ? await liveBlocks(Astro.request, locale, stampBlocks($r, 'intro', r.intro)) : []
 const to = (u: string) => dataHref(u || '/', (p) => href(locale, p)) ?? '/'
-const live = await liveLinks(Astro.request, locale, [...(r?.blocks ?? []).map((b: any) => b.button_link), r?.online_link])
+const live = await liveLinks(Astro.request, locale, [
+  ...(r?.blocks ?? []).map((b: any) => b.button_link),
+  r?.online_link
+])
 const br = (t: string) => String(t ?? '').split('\n')
 ---
 

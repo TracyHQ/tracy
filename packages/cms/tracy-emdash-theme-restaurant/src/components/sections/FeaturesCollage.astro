@@ -15,7 +15,11 @@ const { entry, locale } = Astro.props
 const $f = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
 const bg = mediaUrl(entry.background)
 const items: any[] = (entry.items ?? []).slice(0, 2)
-const live = await liveLinks(Astro.request, locale, items.map((it) => it.btn_link))
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  items.map((it) => it.btn_link)
+)
 ---
 
 <section class="rs-section rs-collage" style={bg ? `background-image:url('${bg}')` : undefined}>

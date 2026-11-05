@@ -13,7 +13,10 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const hours: Array<{ days: string; time: string }> = site.footer_hours ?? []
 const contact: Array<{ label: string; value: string; href?: string }> = site.footer_contact ?? []
 // the map link and the contact links are free text: a same-site path to an unticked page is dropped, the words stay
-const live = await liveLinks(Astro.request, chrome.locale, [site.footer_map_url, ...contact.map((c) => c.href)])
+const live = await liveLinks(Astro.request, chrome.locale, [
+  site.footer_map_url,
+  ...contact.map((c) => c.href)
+])
 const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
 ---
 
