@@ -862,21 +862,22 @@ export function editorialLeads(baseline) {
 const MEDIA_FIELD =
   /(?:^|[._\-\][])(?:images?|photos?|pictures?|logos?|gallery|media|videos?|icons?|thumbnails?|src|url|href|_thumbnail_id)\]?$/i
 // Words as a visitor reads them in a stored field: no tags, entities read, quotes and spaces alike.
+// Each string is read once: a nested value joins its parts' read text, never reads it again.
 const readText = (value) =>
-  (typeof value === 'string'
+  typeof value === 'string'
     ? value
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&#0*39;|&rsquo;|&#8217;|’/g, "'")
+        .replace(/&quot;|&#8220;|&#8221;|[“”]/g, '"')
+        // Last, so an escaped entity (`&amp;quot;`) reads as the text `&quot;`, never as a quote.
+        .replace(/&amp;/g, '&')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase()
     : value && typeof value === 'object'
-      ? Object.values(value).map(readText).join(' ')
+      ? Object.values(value).map(readText).filter(Boolean).join(' ')
       : ''
-  )
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&#0*39;|&rsquo;|&#8217;|’/g, "'")
-    .replace(/&quot;|&#8220;|&#8221;|[“”]/g, '"')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase()
 
 /**
  * The frozen contract's own entry for a slot key (`content.contract` inspect), or null. Joomla lists each slot with

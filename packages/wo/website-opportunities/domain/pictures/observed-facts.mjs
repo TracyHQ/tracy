@@ -98,13 +98,18 @@ export function observablePhotos(views) {
   return { photos, dropped }
 }
 
+/** The text without the stops (`.`, `;`, `,`) it ends on, read from its end: `/[.;,]+$/` went over a long run
+ * of them once for each place in it. */
+function withoutEndStops(text) {
+  let end = text.length
+  while (end > 0 && '.;,'.includes(text[end - 1])) end--
+  return text.slice(0, end)
+}
+
 /** A value in its held form (lower case, one space), or null when it breaks a rule. */
 function heldValue(value, people) {
   if (typeof value !== 'string') return null
-  const v = fold(value)
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/[.;,]+$/, '')
+  const v = withoutEndStops(fold(value).replace(/\s+/g, ' ').trim())
   if (v.length < 3 || v.length > VALUE_MAX || /\d/.test(v)) return null
   // "One-to-one" and "one on one" name a lesson format, not a count.
   const words = v.replace(/\bone[\s-]+(?:to|on)[\s-]+one\b/g, 'personal').match(/[a-z]+/g) ?? []

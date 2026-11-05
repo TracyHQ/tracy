@@ -24,6 +24,7 @@ import { contractBase, loadContract, loadProfile } from '../src/library.mjs'
 import { brandProfile, parseBrandId } from '../src/brand.mjs'
 import { browser } from './cdp.mjs'
 import { gate } from '../src/normalise.mjs'
+import { jsLiteral } from '../src/js-literal.mjs'
 import {
   paintProbe,
   channels,
@@ -246,7 +247,7 @@ const contrastProbe = (kinds) => `(() => {
   const ratioOf = (t, g) => { const a = lum(t), b = lum(g); return Math.round(((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)) * 100) / 100 }
   const pending = []
   const out = []
-  for (const [name, sel] of Object.entries(${JSON.stringify(kinds)})) {
+  for (const [name, sel] of Object.entries(${jsLiteral(kinds)})) {
     // off the page sideways (a closed off-canvas menu) is not seen and not measured;
     // every visible match is measured (up to 400), keyed by its index in document order: the judge
     // compares each text with the same text on the default page. The entry itself stays the first
@@ -310,7 +311,7 @@ const contrastProbe = (kinds) => `(() => {
 // mean colour of its box; a box the photograph does not cover is dropped, as a skipped text was
 const groundProbe = (png, scale) => `(async () => {
   const { out, pending, ratioOf, hx } = window.__dsContrast
-  const png = ${JSON.stringify(png)}
+  const png = ${jsLiteral(png)}
   if (png) {
     const img = new Image()
     img.src = 'data:image/png;base64,' + png
@@ -357,7 +358,7 @@ const MODE_HOOK =
   typeof CONTRACT.modeHook === 'string' && CONTRACT.modeHook.trim() !== '' ? CONTRACT.modeHook.trim() : null
 const flip = (/** @type {'light' | 'dark'} */ side) =>
   MODE_HOOK && TOGGLE
-    ? `{ const is = () => document.documentElement.matches(${JSON.stringify(`:root${MODE_HOOK}`)}); for (let k = 0; k < 2 && is() !== ${side === 'dark'}; k++) { const t = document.querySelector(${JSON.stringify(TOGGLE)}); if (!t) break; t.click() } }`
+    ? `{ const is = () => document.documentElement.matches(${jsLiteral(`:root${MODE_HOOK}`)}); for (let k = 0; k < 2 && is() !== ${side === 'dark'}; k++) { const t = document.querySelector(${jsLiteral(TOGGLE)}); if (!t) break; t.click() } }`
     : side === 'dark'
       ? `document.documentElement.setAttribute('data-theme', 'dark')`
       : `document.documentElement.removeAttribute('data-theme')`
@@ -367,7 +368,7 @@ const flip = (/** @type {'light' | 'dark'} */ side) =>
 const NO_FADE = ':root:root:root, :root:root:root *, :root:root:root *::before, :root:root:root *::after'
 const setSide = (b, side) =>
   b.evaluate(
-    `(async () => { const st = document.createElement('style'); st.textContent = ${JSON.stringify(`${NO_FADE}{transition:none!important}`)}; document.head.appendChild(st); ${flip(side)}; await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); st.remove(); return 1 })()`
+    `(async () => { const st = document.createElement('style'); st.textContent = ${jsLiteral(`${NO_FADE}{transition:none!important}`)}; document.head.appendChild(st); ${flip(side)}; await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); st.remove(); return 1 })()`
   )
 // what the switch remembered (its cookie) is forgotten after the other side is read, so the next page opens as a
 // visitor who never pressed it does: the slot's own side, and the template's default once the system is off
@@ -474,7 +475,7 @@ const keptButtonProbe = `(() => {
   const ratio = (x, y) => { const a = lum(x), b = lum(y); return Math.round(((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)) * 100) / 100 }
   const hx = (c) => '#' + c.slice(0, 3).map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')
   const opaque = (c) => c.length >= 3 && (c[3] === undefined || c[3] === 1)
-  const sel = ${JSON.stringify(KEPT_BUTTON_SEL)}
+  const sel = ${jsLiteral(KEPT_BUTTON_SEL)}
   if (!sel) return []
   // a button the page does not show: its middle lies outside a box that clips what overflows it on that
   // axis (a slider's other slides beyond its frame: JA Gamex's owl hero, 15/10/2026). Judged, it was read on
@@ -524,28 +525,28 @@ const keptButtonProbe = `(() => {
 const roleBandProbe = `(() => {
   const rgb = ${channels.toString()}
   const hx = (c) => '#' + c.slice(0, 3).map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')
-  const sel = ${JSON.stringify(KEPT_BUTTON_SEL)}
-  const role = ${JSON.stringify(CONTRACT.roles?.['button-primary'] ?? null)}
+  const sel = ${jsLiteral(KEPT_BUTTON_SEL)}
+  const role = ${jsLiteral(CONTRACT.roles?.['button-primary'] ?? null)}
   const el = sel && role ? document.querySelector(role) : null
   if (!el || !el.matches(sel)) return null
   const depth = (x) => { let n = 0; for (; x; x = x.parentElement) n++; return n }
   // the innermost band holding the button; two keys on one box (JA Civica's hero: .acm-hero, a picture band, and
   // .ja-acm.acm-hero…cv-hero--full, a fill) are told apart as the cascade does: the weightier key, then the later
   const weight = (k) => (k.match(/#/g) ?? []).length * 100 + (k.match(/[.[]/g) ?? []).length
-  const holders = ${JSON.stringify(KEPT_BUTTON_BANDS)}.map((k, i) => [k, el.closest(k), i]).filter(([, x]) => x)
+  const holders = ${jsLiteral(KEPT_BUTTON_BANDS)}.map((k, i) => [k, el.closest(k), i]).filter(([, x]) => x)
   const band = holders.sort((a, b) => depth(b[1]) - depth(a[1]) || weight(b[0]) - weight(a[0]) || b[2] - a[2])[0]?.[0] ?? null
   for (let x = el.parentElement; x; x = x.parentElement) { const c = rgb(getComputedStyle(x).backgroundColor); if (c.length >= 3 && (c[3] === undefined || c[3] === 1)) return { ground: hx(c), band } }
   return { ground: '#ffffff', band }
 })()`
 const keptProbe = `(() => {
   const out = {}
-  for (const scope of ${JSON.stringify(KEEP_SCOPES)}) {
+  for (const scope of ${jsLiteral(KEEP_SCOPES)}) {
     const list = []
     for (const root of document.querySelectorAll(scope))
       for (const e of [root, ...root.querySelectorAll('*')]) {
-        if (${JSON.stringify(TOGGLE)} && e.closest(${JSON.stringify(TOGGLE)})) continue
-        if (${JSON.stringify(KEPT_BUTTON_SEL)} && e.closest(${JSON.stringify(KEPT_BUTTON_SEL)})) continue
-        if (${JSON.stringify(WORN_BAND_SEL)} && e.closest(${JSON.stringify(WORN_BAND_SEL)})) continue
+        if (${jsLiteral(TOGGLE)} && e.closest(${jsLiteral(TOGGLE)})) continue
+        if (${jsLiteral(KEPT_BUTTON_SEL)} && e.closest(${jsLiteral(KEPT_BUTTON_SEL)})) continue
+        if (${jsLiteral(WORN_BAND_SEL)} && e.closest(${jsLiteral(WORN_BAND_SEL)})) continue
         if (!e.getClientRects().length || e.closest('svg') && e.tagName.toLowerCase() !== 'svg') continue
         // the slot module's own wrapper (a module position inside a kept band, JA Alumni's topbar):
         // it holds the system's sheet and no text, and is there only while a system is worn
@@ -553,7 +554,7 @@ const keptProbe = `(() => {
         if (slot && e.contains(slot) && [...e.querySelectorAll('*')].every((x) => x.contains(slot) || /^(STYLE|LINK|SCRIPT)$/.test(x.tagName))) continue
         const cs = getComputedStyle(e)
         let bg = cs.backgroundColor
-        if (e === root && ${JSON.stringify(KEEP_GROUND)}.includes(scope))
+        if (e === root && ${jsLiteral(KEEP_GROUND)}.includes(scope))
           for (let x = e; x && /^rgba\\(.*, 0\\)$/.test(bg); x = x.parentElement) bg = getComputedStyle(x).backgroundColor
         list.push(cs.color + '|' + bg + '|' + cs.borderTopColor)
       }

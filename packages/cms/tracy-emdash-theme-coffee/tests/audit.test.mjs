@@ -27,6 +27,12 @@ const config = {
 const cfgFile = path.join(mkdtempSync(path.join(tmpdir(), 'audit-')), 'config.json')
 writeFileSync(cfgFile, JSON.stringify(config))
 
+// Text from the request goes into the page escaped, so the fixture never echoes markup it was sent.
+const esc = (v) =>
+  String(v).replace(
+    /[&<>"']/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
+  )
 function page({
   origin,
   locale,
@@ -46,11 +52,11 @@ function page({
     `${origin}${l === 'de' ? base : `/fr${base === '/' ? '' : base}`}${pageNo ? `?page=${pageNo}` : ''}`
   const alts = hreflang
     ? [
-        ...LOCALES.map((l) => `<link rel="alternate" hreflang="${l}" href="${forLocale(l)}">`),
-        `<link rel="alternate" hreflang="x-default" href="${forLocale('de')}">`
+        ...LOCALES.map((l) => `<link rel="alternate" hreflang="${l}" href="${esc(forLocale(l))}">`),
+        `<link rel="alternate" hreflang="x-default" href="${esc(forLocale('de'))}">`
       ].join('')
     : ''
-  return `<!doctype html><html lang="${bodyLang ?? locale}"><head><title>${title}</title><link rel="canonical" href="${canonical ?? forLocale(locale)}">${noindex ? '<meta name="robots" content="noindex, follow">' : ''}${alts}</head><body><h1>${title}</h1><nav>${links.map((l) => `<a href="${l}">${l}</a>`).join('')}</nav><p>${other}</p></body></html>`
+  return `<!doctype html><html lang="${bodyLang ?? locale}"><head><title>${esc(title)}</title><link rel="canonical" href="${esc(canonical ?? forLocale(locale))}">${noindex ? '<meta name="robots" content="noindex, follow">' : ''}${alts}</head><body><h1>${esc(title)}</h1><nav>${links.map((l) => `<a href="${esc(l)}">${esc(l)}</a>`).join('')}</nav><p>${other}</p></body></html>`
 }
 function serve(broken, extra = {}) {
   return new Promise((res) => {

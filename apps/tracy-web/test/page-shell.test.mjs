@@ -76,7 +76,7 @@ test('pageShell: Vietnamese pages swap General Sans for Be Vietnam Pro, other la
 })
 
 test('pageShell: no inline script unless one is passed', () => {
-  assert.doesNotMatch(pageShell('T', '<p>body</p>'), /<script>/)
+  assert.equal(pageShell('T', '<p>body</p>').toLowerCase().includes('<script>'), false)
   assert.match(pageShell('T', '<p>body</p>', 'console.log(1)'), /<script>console\.log\(1\)<\/script>/)
 })
 

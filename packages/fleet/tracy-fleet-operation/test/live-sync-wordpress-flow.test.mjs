@@ -662,13 +662,17 @@ test(
       write(s.webroot, {
         'wp-content/themes/shop/style.css': css({ 2: '.btn { color: #bf5b3d } /* Tracy */' })
       })
+      // The copy's wp-config.php as built, its bytes read before the sync can lay anything over it.
+      const builtConfig = readFileSync(join(s.webroot, 'wp-config.php'), 'utf8')
+      assert.equal(builtConfig, wpConfig(COPY_DB))
 
       const done = s.syncReading()
       assert.equal(done.state, 'applied', JSON.stringify({ ...done, _log: undefined }))
-      // The manifest handed to the read: the copy as built, each file by its bytes' sha1.
+      // The manifest handed to the read: the copy as built, each file by its bytes' sha1 (the manifest's own
+      // algorithm, a file fingerprint rather than a password hash).
       const sha1 = (text) => createHash('sha1').update(text).digest('hex')
       assert.equal(done._manifest['index.php'], sha1(SITE_FILES['index.php']))
-      assert.equal(done._manifest['wp-config.php'], sha1(wpConfig(COPY_DB)))
+      assert.equal(done._manifest['wp-config.php'], sha1(builtConfig))
       assert.ok(done._manifest['wp-content/mu-plugins/tracy-access.php'])
       // Read: the live wp-config.php and .htaccess (provision rewrote the copy's), the theme's
       // stylesheet and the upload — not the files the import already brought.
