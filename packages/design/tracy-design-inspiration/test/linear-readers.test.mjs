@@ -59,5 +59,5 @@ test('tokenValue reads the value its pattern read, with the name as plain text, 
   // a name is text: its `.` is a dot, not any character
   assert.equal(tokenValue('--axb: 1;--a.b: 2;', '--a.b'), '2')
   assertLinear('tokenValue, no `;`', (n) => tokenValue('--a:'.repeat(n), '--a'), 20_000)
-  assertLinear('tokenValue, spaces', (n) => tokenValue(`--a:${' '.repeat(n)}`, '--a'), 100_000)
+  assertLinear('tokenValue, spaces', (n) => tokenValue(`--a:${' '.repeat(n)}`, '--a'), 800_000)
 })
