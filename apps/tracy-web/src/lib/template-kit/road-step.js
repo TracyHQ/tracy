@@ -116,7 +116,10 @@ export const KIT_CHECK_LABELS = Object.freeze({
   // a phone number printed outside any link.
   deadControls: 'buttons with no address',
   mapLocationUnmapped: 'map stays at the demo place',
-  phoneNotCallable: 'phones not callable'
+  phoneNotCallable: 'phones not callable',
+  // A list mixing a lone row with card rows where a card row pairs no text slot (row-pairs.mjs, 2026-11-05): a plan cannot
+  // tell which card texts go with which picture row.
+  rowPartsUnpaired: 'card rows without paired texts'
 })
 const checkName = (name) => KIT_CHECK_LABELS[name] ?? name
 const labelledFirst = ([a], [b]) => (a in KIT_CHECK_LABELS ? 0 : 1) - (b in KIT_CHECK_LABELS ? 0 : 1)

@@ -32,8 +32,8 @@
 //                 `demoChars`, its inline emphasis as `inline`; no browser, no capture, no image; nothing else moves, so
 //                 an approval stays valid)
 //   Every settle command (samples, slot-roles, relabel, setting-slots) counts the slot shape checks again
-//   (lib/slot-shape-checks.mjs: samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing) and stamps `tool` and
-//   `settledAt`.
+//   (lib/slot-shape-checks.mjs: samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing), the reach checks and
+//   the row pair check (lib/row-pairs.mjs: rowPartsUnpaired) and stamps `tool` and `settledAt`.
 //   cli.mjs measure-fields --site <url> --out <dir> --contract <dir> --db-command '<client prefix>' --scratch-site
 //                 [--host-header <host>]   (WRITES to the site, each field set to a marker and put back: only on a
 //                 throwaway site rebuilt from the quickstart, which --scratch-site says it is; field-drives.json)
@@ -67,6 +67,7 @@ import { settleSentenceGroups } from './lib/sentence-groups.mjs'
 import { settleSlotRoles } from './lib/slot-roles.mjs'
 import { slotShapeChecks } from './lib/slot-shape-checks.mjs'
 import { reachChecks } from './lib/reach-checks.mjs'
+import { rowPairChecks } from './lib/row-pairs.mjs'
 import { stampSettled, TOOL } from './lib/version.mjs'
 import { runFieldMeasure } from './lib/site/measure-fields.mjs'
 import { writeSheets } from './lib/sheets.mjs'
@@ -109,6 +110,7 @@ const contentCoverageOf = (o) => readIf(join(o.contract, 'content-coverage.json'
 const settled = (kit, map, o) => {
   slotShapeChecks(kit, { map, contentCoverage: contentCoverageOf(o) })
   reachChecks(kit)
+  rowPairChecks(kit)
   return stampSettled(kit)
 }
 
