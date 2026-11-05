@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-410-emdash-provision-wait-loopback",
+  "kind": "fix",
+  "title": "An isolated EmDash site on a host-networked tracy-host waits for its web port instead of being refused as a bridged host",
+  "pr": 410,
+  "area": "fleet/provision-emdash",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, run the isolated-fleet cases of the post-up suite: a stub whose loopback port refuses the first 13 dials and then answers (HOSTNAME is a machine name), and a stub whose port never answers."
+  ],
+  "expect": [
+    "The first case ends with platform_post_up returning 0, no `docker inspect` of a tracy-host and no network connect (pre-fix: 'cannot identify this bridged tracy-host', return 1).",
+    "The second case returns nonzero with 'did not answer on 127.0.0.1:4321 within 90 s' and never says 'cannot identify this bridged'."
+  ],
+  "selectors": {},
+  "evidence": "Measured 05/11/2026 on the dev host: two installs of tracy-restaurant/emdash-0.x failed ~15 s after the site network stage; after a restart of the web container the published port refused for ~1.5 s, then answered 200.",
+  "fence": "_emdash_prepare_site_network in packages/fleet/tracy-fleet-operation/scripts/provision/platform/emdash.sh",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=isolated fleet",
+      "packages/fleet/tracy-fleet-operation/test/emdash-post-up.test.mjs"
+    ]
+  }
+}

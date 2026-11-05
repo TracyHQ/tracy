@@ -413,13 +413,37 @@ platform_post_up() (
 # The fleet reaches published loopback ports. A bridged local tracy-host needs a temporary
 # endpoint on an isolated site's network; the SITE never joins the shared control-plane network.
 # The helper's PAT stays on the host and is sent only to the inspected web-container address.
+#
+# `platform_post_up` runs right after `docker compose up`, which returns before the site listens
+# (measured 05/11/2026 on dev: the published port refused for ~1.5 s after a start). One probe
+# therefore raced the server and a host-networked tracy-host was refused as "bridged". The two hosts
+# are told apart up front instead: a bridged tracy-host's HOSTNAME is its container id (hex, 12–64),
+# a host-networked one's is the machine's name. The latter waits, bounded, for the published port;
+# the former asks once (its loopback is its own and never answers) and goes on to the identity checks.
+_EMDASH_SITE_WAIT_SECONDS=90
+
+# _emdash_wait_for_site <url> [seconds]: success once <url> answers, polled about twice a second.
+# Bounded by the clock and by a poll count, so a stalled clock cannot loop forever.
+_emdash_wait_for_site() {
+  local url="$1" limit="${2:-$_EMDASH_SITE_WAIT_SECONDS}" start="$SECONDS" tries=0
+  while :; do
+    curl -s -m 2 -o /dev/null "$url" >/dev/null 2>&1 && return 0
+    tries=$((tries + 1))
+    [ $((SECONDS - start)) -lt "$limit" ] && [ "$tries" -lt $((limit * 2 + 2)) ] || return 1
+    sleep 0.5
+  done
+}
+
 _emdash_prepare_site_network() {
   [ -f "$SITE_DIR/network-isolated" ] || return 0
-  curl -s -m 3 -o /dev/null "http://127.0.0.1:${HOST_PORT}/" >/dev/null 2>&1 && return 0
   local host="${HOSTNAME:-}" stack="${TRACY_SITE_NETWORK:-tracy_tracy}" identity id service running networks ip
   local net="${LABEL}_default"
-  if ! [[ "$host" =~ ^[a-f0-9]{12,64}$ ]]; then
-    echo "!! cannot identify this bridged tracy-host — refusing isolated site setup" >&2
+  if [[ "$host" =~ ^[a-f0-9]{12,64}$ ]]; then
+    # A container id: this may be a bridged tracy-host, whose 127.0.0.1 is its own. Ask once.
+    curl -s -m 3 -o /dev/null "http://127.0.0.1:${HOST_PORT}/" >/dev/null 2>&1 && return 0
+  else
+    if _emdash_wait_for_site "http://127.0.0.1:${HOST_PORT}/"; then return 0; fi
+    echo "!! isolated site did not answer on 127.0.0.1:${HOST_PORT} within ${_EMDASH_SITE_WAIT_SECONDS} s (and this tracy-host is not a bridged container, HOSTNAME is not a container id) — refusing isolated site setup" >&2
     return 1
   fi
   identity=$(docker inspect --format '{{.Id}}|{{index .Config.Labels "com.docker.compose.service"}}|{{.State.Running}}|{{range $k, $v := .NetworkSettings.Networks}}{{$k}} {{end}}' "$host") || return 1
@@ -444,8 +468,8 @@ _emdash_prepare_site_network() {
       docker network connect "$net" "$host" || return 1
       ;;
   esac
-  curl -s -m 5 -o /dev/null "http://$ip:4321/" >/dev/null 2>&1 || {
-    echo "!! isolated site does not answer from tracy-host — refusing setup" >&2
+  _emdash_wait_for_site "http://$ip:4321/" || {
+    echo "!! isolated site does not answer from tracy-host within ${_EMDASH_SITE_WAIT_SECONDS} s — refusing setup" >&2
     return 1
   }
 }
