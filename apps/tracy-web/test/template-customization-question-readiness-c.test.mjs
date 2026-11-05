@@ -25,6 +25,7 @@ import { releaseContent } from '../src/lib/template-customization-question-readi
 import { contractOf } from '../src/lib/template-customization-question-readiness/readers/quickstart-contract.js'
 import { directoryReleaseSource } from '../src/lib/template-customization-question-readiness/release-source.js'
 import { about1HomeHeading } from '../src/lib/template-customization-question-readiness/rules/about-1-home-heading.js'
+import { escapeRe } from '../src/lib/template-customization-question-readiness/readers/template-source.js'
 import { about2DemoParagraphs } from '../src/lib/template-customization-question-readiness/rules/about-2-demo-paragraphs.js'
 import { about3DemoCompanyName } from '../src/lib/template-customization-question-readiness/rules/about-3-demo-company-name.js'
 import { page5ButtonsLeadSomewhere } from '../src/lib/template-customization-question-readiness/rules/page-5-buttons-lead-somewhere.js'
@@ -470,6 +471,17 @@ test('ABOUT-1: every entry of the collection that holds the field must be covere
     twoHeroes([ruleFor(undefined, 'hero_heading'), ruleFor(undefined, 'hero_intro')])
   )
   assert.equal(all.status, 'pass', all.message)
+})
+
+test('ABOUT-1: a regular expression built from names escapes every metacharacter, the backslash included', async () => {
+  for (const input of ['a\\b', 'Ui.Intro', '$hero', 'x\\.y$', '(a|b)[c]{d}^*+?'])
+    assert.equal(new RegExp(`^${escapeRe(input)}$`).test(input), true, input)
+  assert.equal(new RegExp(escapeRe('a\\b')).test('a/b'), false)
+  assert.equal(new RegExp(escapeRe('Ui.Intro')).test('UiXIntro'), false)
+  // and the rule reads a view whose printed text holds backslashes and dotted component names
+  const view = `---\n${STAMPS}\n---\n<h1 {...$hero('hero_heading')}>{hero.hero_heading + '\\\\'}</h1>\n<Ui.Intro {...$hero("hero_intro")}>{hero.hero_intro}</Ui.Intro>`
+  const r = await run(about1HomeHeading, stampedHome(view, bothRules))
+  assert.equal(r.status, 'pass', r.message)
 })
 
 test('ABOUT-1: a rule on another collection or entry does not cover a stamped field, and a field missing from the seed fails', async () => {
