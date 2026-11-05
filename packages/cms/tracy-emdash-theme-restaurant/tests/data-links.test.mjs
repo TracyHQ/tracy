@@ -333,3 +333,43 @@ test('every data href is printed through dataHref, so no external or fragment li
   )
   assert.deepEqual(fromField, [])
 })
+
+// ── candidates are resolved against the request origin, the way a browser resolves them ──────────────────────────────────────
+test('a link is read against the request origin: scheme, default ports and case do not hide the own host', () => {
+  const http = ['http://site.test']
+  const https = ['https://site.test']
+  // protocol-relative takes the page's own scheme, so its default port is the default
+  assert.equal(sameSitePath('//site.test:80/menu', http), '/menu')
+  assert.equal(sameSitePath('//site.test:443/menu', https), '/menu')
+  assert.equal(sameSitePath('//SITE.TEST/menu', http), '/menu')
+  assert.equal(sameSitePath('HTTP://SITE.TEST/menu', http), '/menu')
+  assert.equal(sameSitePath('HTTP://SITE.TEST:80/menu', http), '/menu')
+  assert.equal(sameSitePath('https://SITE.TEST:443/menu', https), '/menu')
+  // a site behind a proxy is reached as both
+  assert.equal(sameSitePath('https://site.test/menu', http), '/menu')
+  assert.equal(sameSitePath('http://site.test/menu', https), '/menu')
+  // the parser normalises the path too, and a backslash is a slash to it
+  assert.equal(sameSitePath('//site.test/a/../menu', http), '/menu')
+  assert.equal(sameSitePath('/\\site.test/menu', http), '/menu')
+  assert.equal(sameSitePath('/\\evil.test/menu', http), null, '/\\host is another host, not a path')
+  assert.equal(sameSitePath('/menu', http), '/menu')
+  // the configured public origin counts too
+  assert.equal(sameSitePath('//cdn.test/menu', ['http://site.test', 'https://cdn.test']), '/menu')
+  // lookalikes stay external
+  for (const other of [
+    '//site.test.evil.test/menu',
+    'https://site.test.evil.test/menu',
+    'http://site.test:8080/menu',
+    '//site.test:8080/menu',
+    '//evil.test/site.test/menu',
+    '//site.test@evil.test/menu',
+    'https://site.test:80/menu',
+    'ftp://site.test/menu'
+  ])
+    assert.equal(sameSitePath(other, http), null, other)
+  assert.equal(
+    sameSitePath('//site.test:8080/menu', ['http://site.test:8080']),
+    '/menu',
+    'a non-default port is part of the host'
+  )
+})

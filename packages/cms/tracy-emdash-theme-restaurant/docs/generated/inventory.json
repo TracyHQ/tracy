@@ -1307,7 +1307,7 @@
     "src/lib/chrome-labels.ts": "sha256:caf6017c4fda7d87717e8fffbe17bcbacc16d948849869dc9544b07b612a1b75",
     "src/lib/chrome.ts": "sha256:0af3700ea4441c43a583d8a07e6b5528df386e3df05497831f6cbe24fd3833e9",
     "src/lib/content.ts": "sha256:684f9fba7ecc3ea9332c640791e917a13a2805eb6fe818cd0004a1e06510e31c",
-    "src/lib/data-links.ts": "sha256:1ade4a4d47ff4b224599e54c3f472e181ae3835bbf0f5a0924b301fb857374ac",
+    "src/lib/data-links.ts": "sha256:fb08660882cf4e99e35cddf7631c84d95405c9e72d0d761f83d1e935ef62910e",
     "src/lib/demo-logo.ts": "sha256:0de59a298f975c2a2caa92e7710a65dac580365230477c98b4d2bd94d7d758a3",
     "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
     "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",

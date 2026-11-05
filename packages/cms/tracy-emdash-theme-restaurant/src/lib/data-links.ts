@@ -22,30 +22,35 @@ export function isScriptUrl(url: unknown): boolean {
   return scheme === 'javascript' || scheme === 'vbscript' || scheme === 'data'
 }
 
-/** The host of an origin (`https://site.test:8443` -> `site.test:8443`). */
-const hostOf = (origin: string): string | null => {
-  try {
-    return new URL(origin).host
-  } catch {
-    return null
-  }
-}
+/** `hostname:port` with the scheme's default port dropped, so `http://x`, `https://x` and `//x:80` on http are one host. */
+const hostKey = (u: URL): string => `${u.hostname}:${u.port}`
 
 /**
  * The gate passes an external link (http(s) to another host), `tel:`, `mailto:` and an in-page `#` link unchanged and gates a
- * same-site path. This reads the URL as the path it opens on THIS site: a path as it is; an absolute http(s) URL or a
- * protocol-relative `//host/...` URL whose host is one of `origins` (any scheme: `http://site.test/menu` on an https site is
- * still `/menu`) as its path; anything else (another host, another scheme, `#`) as null, which the gate always passes.
+ * same-site path. This reads the URL as the path it opens on THIS site, the way a browser would resolve it: the candidate is
+ * resolved against the request origin (`origins[0]`; so `//host/...` takes the page's own scheme, `/\host` is the host it
+ * is, and the parser normalises case, default ports and dot segments), and it is the same site when its host is the request's
+ * or one of the other `origins` (the configured public one). The scheme is not compared: a site behind a proxy is reached
+ * as both `http://` and `https://`. Anything else (another host or port, another scheme, `#`) is null, which the gate
+ * always passes.
  */
 export function sameSitePath(url: unknown, origins: readonly string[]): string | null {
   if (typeof url !== 'string' || isScriptUrl(url)) return null
   const raw = url.trim()
-  if (raw.startsWith('/') && !raw.startsWith('//')) return raw
-  if (!/^(https?:)?\/\//i.test(raw)) return null
+  if (!/^([/\\]|https?:)/i.test(raw)) return null
+  const bases = origins.flatMap((o) => {
+    try {
+      return [new URL(o)]
+    } catch {
+      return []
+    }
+  })
   try {
-    const u = new URL(raw.startsWith('//') ? `https:${raw}` : raw)
-    const own = origins.map(hostOf)
-    return own.includes(u.host) ? `${u.pathname}${u.search}${u.hash}` : null
+    const resolved = new URL(raw, bases[0] ?? 'http://localhost')
+    if (!/^https?:$/.test(resolved.protocol)) return null
+    return bases.some((b) => hostKey(b) === hostKey(resolved))
+      ? `${resolved.pathname}${resolved.search}${resolved.hash}`
+      : null
   } catch {
     return null
   }
