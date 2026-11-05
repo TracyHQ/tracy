@@ -14376,6 +14376,24 @@
       "sha256": "e064778f79f16e7bdcc1c62f0b4d6772465bfbc4a441bd65d84936ef5da2939e",
       "count": 1,
       "reason": "Exact line of the approved JA Boxing 1.0.10 template kit: the template's own English demo text, which contains a proper name with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.11/content-map.json",
+      "sha256": "f66b01b3b55a8495cd0301912d5cd6849ff96a99e8d310e2940b10f7282f2718",
+      "count": 1,
+      "reason": "Exact line of the approved JA Boxing 1.0.11 contract: the template's own English demo text, which contains a proper name with an accent. The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.11/content-map.json",
+      "sha256": "392aaacd306ddfce3b8ea65b48be54b6fbfbbc38c9c7ee1f929c82925743705d",
+      "count": 8,
+      "reason": "Exact line of the approved JA Boxing 1.0.11 contract: the template's own English demo text, which contains a proper name with an accent. The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.11/presentation-lock.json",
+      "sha256": "a1704f3997b0dc023843720831d5d461bc27fc831968a7b0a3f94999a46f3cb9",
+      "count": 8,
+      "reason": "Exact line of the approved JA Boxing 1.0.11 contract: the template's own English demo text, which contains a proper name with an accent. The contract is sealed by its approval digest, so the file is not edited."
     }
   ],
   "objects": [
