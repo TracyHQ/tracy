@@ -298,7 +298,7 @@ function liveEngine(liveDir, { templateFiles = null } = {}) {
           )
         if (params.operation === 'set') {
           for (const [k, v] of Object.entries(params.fields)) {
-            const line = `\tpublic $${k} = '${String(v).replace(/'/g, "\\'")}';`
+            const line = `\tpublic $${k} = '${String(v).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}';`
             text = new RegExp(`\\$${k} = `).test(text)
               ? text.replace(new RegExp(`^\\s*public \\$${k} = .*;$`, 'm'), line)
               : text.replace('}\n', `${line}\n}\n`)

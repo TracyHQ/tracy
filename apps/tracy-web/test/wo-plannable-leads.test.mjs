@@ -57,3 +57,35 @@ test('a plan writes one post per topic, as many as the template has, at most twe
   assert.equal(postsAsked({ templatePosts: 21, researchTopics: 4 }), 4)
   assert.equal(postsAsked({ templatePosts: 126, researchTopics: 130 }), 12)
 })
+
+test('a record’s entities are read once: `&amp;` is a plain ampersand, `&amp;quot;` the text `&quot;`', () => {
+  const held = (content) => ({
+    inventory: { complete: true, records: [{ kind: 'module', id: 1, data: { content } }] }
+  })
+  const lead = (text) => [{ page: '/', at: 'p', text }]
+  assert.equal(
+    plannableLeads(lead('Fish & chips by the harbour'), held('<p>Fish &amp; chips by the harbour</p>'))
+      .length,
+    1
+  )
+  assert.equal(
+    plannableLeads(lead('Say "hello" at the harbour'), held('<p>Say &quot;hello&quot; at the harbour</p>'))
+      .length,
+    1
+  )
+  // Double unescaping turned `&amp;quot;` into a quote: the record holds the literal text `&quot;`.
+  assert.equal(
+    plannableLeads(
+      lead('Say "hello" at the harbour'),
+      held('<p>Say &amp;quot;hello&amp;quot; at the harbour</p>')
+    ).length,
+    0
+  )
+  assert.equal(
+    plannableLeads(
+      lead('Say &amp;quot;hello&amp;quot; at the harbour'),
+      held('<p>Say &amp;quot;hello&amp;quot; at the harbour</p>')
+    ).length,
+    1
+  )
+})

@@ -67,7 +67,7 @@ function joomla(
     if (!found) continue
     const own = (slots.get(key) ?? []).filter((s) => s.type === 'text')
     const samples = new Set(own.map((s) => normalText(s.sample)))
-    const missing = htmlTextPieces(found.heading.replace(/ /g, ' ')).filter((t) => !samples.has(t))
+    const missing = htmlTextPieces(found.heading).filter((t) => !samples.has(t))
     const headingSlots = own.filter((s) => found.heading.includes(normalText(s.sample)))
     const paragraph = own.some(
       (s) =>

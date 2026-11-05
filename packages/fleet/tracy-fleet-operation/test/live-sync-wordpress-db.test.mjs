@@ -94,7 +94,7 @@ CREATE TABLE wp_nokey (v text);`)
       `O:8:"stdClass":1:{s:4:"logo";${ser(`${OLD}/logo.png`)}}`,
       `a:1:{s:3:"url";s:99:"${OLD}/wrong-length";}`,
       `s:5:"not really serialized ${OLD}`,
-      `[{"url":"${OLD.replace(/\//g, '\\/')}\\/x","u":"${OLD}/y"}]`,
+      `[{"url":"${OLD.replace(/\\/g, '\\\\').replace(/\//g, '\\/')}\\/x","u":"${OLD}/y"}]`,
       `Tiếng Việt ${OLD}/đường-dẫn ✓`,
       `${OLD.toUpperCase()}/stays`,
       `nothing to see`,
