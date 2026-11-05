@@ -213,14 +213,15 @@ export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/emdash/tracy-emdash-skill/',
     reason:
-      'no worker test and none of the five EmDash suites read the tree; four regression scripts run tests of the skill (REG-PR-1156, 1159, 1161, 1177); no CI row runs a regression script, they run by hand through the regression runner',
+      'no worker test and none of the five EmDash suites read the tree; five regression scripts read the skill (REG-PR-1156, 1159, 1161, 1177 run its tests; REG-PR-399 loads its release tools and reads their sources); no CI row runs a regression script, they run by hand through the regression runner',
     gate: 'check-site-model and check-emdash-kit-sync in the checks row',
     readers: [],
     outsideCi: [
       'tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs',
       'tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs',
       'tests/regression/scripts/REG-PR-1161-tcqr-final-released.mjs',
-      'tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs'
+      'tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs',
+      'tests/regression/scripts/REG-PR-399-emdash-release-local-paths.mjs'
     ],
     modules: ['scripts/check-emdash-kit-sync.ts', 'scripts/check-site-model.ts', 'scripts/skills-common.ts']
   },

@@ -5,7 +5,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, it } from 'node:test'
-import { ROUTE_FIELDS, holdsLocalPath, isRouteField, localPathProblems, shownPath } from '../tools/distribution.mjs'
+import { holdsLocalPath, isRouteField, localPathProblems, shownPath } from '../tools/distribution.mjs'
 
 const tool = (name) => readFileSync(path.join(new URL('.', import.meta.url).pathname, '..', 'tools', name), 'utf8')
 /** A builder disk with these directories on it. */
@@ -84,8 +84,22 @@ describe('localPathProblems', () => {
     const declared = (pointer) => /^\/pages\/\d+\/path$/.test(pointer)
     const pages = { pages: [{ id: 'a', path: '/home/contact/form' }, { id: 'b', label: '/home/contact/form' }] }
     assert.deepEqual(localPathProblems(pages, [], '', builder, declared), ['/pages/1/label'])
-    // the table: empty, because no schema of a file the release writes defines a site route
-    assert.deepEqual(ROUTE_FIELDS, {})
+    // the real table, as release.mjs calls it: a builder path in every field of a release file that LOOKS like a route
+    // (page fields, question url/href, manifest routes) is refused, because no schema defines a site route
+    const home = abs('home', 'builder', 'work', 'site', 'pack')
+    const asRelease = (file) => (pointer) => isRouteField(file, pointer)
+    const fieldsLikeRoutes = {
+      'tracy_site_pages.json': { pages: [{ id: home, label: 'x', path: home, href: home, route: home, url: home, slug: home }] },
+      'tracy_site_question.json': {
+        questions: [{ id: 'name', url: home, href: home, path: home, route: home, slug: home, options: [{ path: home }] }]
+      },
+      'manifest.json': { routes: [{ path: home, href: home, url: home }], pages: [{ path: home, slug: home }] }
+    }
+    for (const [file, doc] of Object.entries(fieldsLikeRoutes)) {
+      const refused = localPathProblems(doc, [], '', none, asRelease(file))
+      const everyString = JSON.stringify(doc).split(home).length - 1
+      assert.equal(refused.length, everyString, `${file}: every field holding a builder path is refused (${refused.length}/${everyString})`)
+    }
     for (const [file, pointer] of [
       ['tracy_site_pages.json', '/pages/0/path'],
       ['tracy_site_pages.json', '/pages/0/id'],
