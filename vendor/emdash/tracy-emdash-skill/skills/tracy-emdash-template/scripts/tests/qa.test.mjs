@@ -449,6 +449,13 @@ describe('F10 — acceptance gate', () => {
       )
       assert.ok(r.observations.find((o) => o.id === 'de-home/desktop-light/menu-open').panel.width >= 1279)
       assert.equal(r.report.gates.routing.status, 'pass', JSON.stringify(r.report.gates.routing))
+      // a passing run made with --reuse is published too: the run it reused is named by its last segment, never by this machine's path
+      const again = await qa(root, miniContract(), good.origin, ['--browser', '--reuse', r.out])
+      for (const gate of ['browser', 'routing']) {
+        const from = again.report.gates[gate].reusedFrom
+        assert.equal(from, path.basename(r.out), `${gate}.reusedFrom`)
+        assert.equal(path.isAbsolute(from), false)
+      }
       assert.equal(r.report.gates.distribution.status, 'pending')
       assert.equal(r.report.gates.build.status, 'pending')
       assert.equal(r.report.status, 'pending')
@@ -464,6 +471,8 @@ describe('F10 — acceptance gate', () => {
         JSON.stringify(first.report.gates.distribution)
       )
       assert.equal(first.report.artifactHash, artifactHash)
+      // the report is published in VERIFICATION.json: it names the artifact by its last segment, not by this machine's path
+      assert.equal(first.report.gates.distribution.artifact, path.basename(artifact))
       const identity = { contractHash: first.report.contractHash, artifactHash, origin: good.origin }
       const reviews = mkdtempSync(path.join(tmpdir(), 'qa-reviews-'))
       for (const g of [

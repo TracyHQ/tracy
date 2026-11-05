@@ -26,9 +26,10 @@ import {
   statSync,
   writeFileSync
 } from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { verifyDistribution } from './distribution.mjs'
+import { isRouteField, localPathProblems, verifyDistribution } from './distribution.mjs'
 import { personalizeProblems, questionProblems } from './personalize-gate.mjs'
 import { contentApiProblems } from './content-api-gate.mjs'
 
@@ -212,6 +213,71 @@ if (existsSync(out)) fail(`${out} exists; the release directory must be new`)
 const sitePages = sitePagesFor(artifact)
 for (const w of sitePages.warnings) console.error(`warning: ${sitePagesName}: ${w}`)
 
+// 🔒 NO MACHINE PATH IN A PUBLISHED FILE. manifest.json, VERIFICATION.json, README.md and the tracy_*.json files are read on
+// other machines; a gate that records the artifact folder or an evidence folder of the builder publishes where the release was built. Three
+// places are watched, and a path of this machine (`holdsLocalPath`, distribution.mjs) in any of them stops the release
+// (exit 1, the file and JSON pointer named) and removes the half-written folder:
+//  1. each metadata file as it is written (`writeRelease`), so the pointer is exact;
+//  2. every non-archive file of the release folder once all are written (`guardFolder`): design-system-roles.json, LICENSE,
+//     SHA256SUMS and whatever a Tracy module wrote there;
+//  3. the text the release GENERATES into its archives, scanned before they are made: README.md and AGENTS.md of the
+//     artifact (they ship in the zip), the artifact's own distribution.json and artifact.json, docs/generated/, and the
+//     state's data/seed-receipts.json. Authored code and guides are NOT scanned: restore.sh legitimately names a temp folder
+//     and a macOS home, and a prose guide may show a command.
+const guardRoots = () => [
+  process.cwd(),
+  path.resolve(import.meta.dirname, '..'),
+  artifact,
+  site,
+  path.dirname(reportPath),
+  os.homedir(),
+  os.tmpdir()
+]
+const refuseLocalPaths = (bad) => {
+  rmSync(out, { recursive: true, force: true })
+  fail(`the release would publish a path of this machine (nothing was released): ${bad.join(', ')}`)
+}
+/** Local-path problems of one file: `name#/json/pointer` for JSON, `name:line` for text. */
+const pathProblemsOf = (name, text) => {
+  let doc = text
+  if (name.endsWith('.json')) {
+    try {
+      doc = JSON.parse(text)
+    } catch {}
+  }
+  return localPathProblems(doc, guardRoots(), name.endsWith('.json') ? '' : name, undefined, (pointer) =>
+    isRouteField(name, pointer)
+  ).map((b) => (b.startsWith(name) ? b : `${name}#${b}`))
+}
+const writeRelease = (file, content) => {
+  const name = path.basename(file)
+  const bad = pathProblemsOf(name, typeof content === 'string' ? content : content.toString('utf8'))
+  if (bad.length > 0) refuseLocalPaths(bad)
+  writeFileSync(file, content)
+}
+const guardFolder = () => {
+  const bad = []
+  for (const name of readdirSync(out))
+    if (!/\.(zip|tar\.gz|tgz)$/.test(name))
+      bad.push(...pathProblemsOf(name, readFileSync(path.join(out, name), 'utf8')))
+  if (bad.length > 0) refuseLocalPaths(bad)
+}
+/** The generated or shipped-as-is text of the artifact that goes into the zip (see 3. above). */
+const guardArchiveText = () => {
+  const bad = []
+  const files = ['README.md', 'AGENTS.md', 'distribution.json', 'artifact.json']
+  const generated = path.join(artifact, 'docs', 'generated')
+  if (existsSync(generated)) for (const f of readdirSync(generated)) files.push(`docs/generated/${f}`)
+  for (const rel of files) {
+    const p = path.join(artifact, rel)
+    if (existsSync(p) && statSync(p).isFile())
+      bad.push(...pathProblemsOf(`zip:${rel}`, readFileSync(p, 'utf8')))
+  }
+  const receipts = path.join(site, 'data', 'seed-receipts.json')
+  if (existsSync(receipts))
+    bad.push(...pathProblemsOf('state:data/seed-receipts.json', readFileSync(receipts, 'utf8')))
+  if (bad.length > 0) refuseLocalPaths(bad)
+}
 // ── identity: everything comes from the shipped bytes, never from this checkout ─────────────
 const tcfg = JSON.parse(readFileSync(path.join(artifact, 'template.config.json'), 'utf8'))
 const pkg = JSON.parse(readFileSync(path.join(artifact, 'package.json'), 'utf8'))
@@ -381,6 +447,7 @@ for (const f of uploads) copyFileSync(path.join(site, 'uploads', f), path.join(s
 // ── assets ───────────────────────────────────────────────────────────────────────────────────
 const zipName = `${slug}-quickstart-${version}.zip`
 const stateName = `${slug}-state-${version}.tar.gz`
+guardArchiveText()
 execFileSync('zip', ['-q', '-r', '-X', path.join(out, zipName), '.'], { cwd: artifact })
 execFileSync('tar', ['-czf', path.join(out, stateName), '-C', stage, 'data', 'uploads'])
 rmSync(stage, { recursive: true })
@@ -431,8 +498,8 @@ const manifest = {
   gates,
   receipts
 }
-writeFileSync(path.join(out, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n')
-writeFileSync(
+writeRelease(path.join(out, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n')
+writeRelease(
   path.join(out, 'VERIFICATION.json'),
   JSON.stringify(
     {
@@ -483,7 +550,7 @@ Without Docker: \`pnpm install --frozen-lockfile && pnpm build && node dist/serv
 | ${zipName} | ${manifest.bytes} | ${manifest.sha256} |
 | ${stateName} | ${manifest.state.bytes} | ${manifest.state.sha256} |
 `
-writeFileSync(path.join(out, 'README.md'), notes)
+writeRelease(path.join(out, 'README.md'), notes)
 copyFileSync(path.join(artifact, 'LICENSE'), path.join(out, 'LICENSE'))
 // The questionnaire Tracy asks this template's customers (ADR 0017: the release is the source of
 // truth). Copied byte for byte out of the package -- the set is authored in seed/questions.json and
@@ -495,9 +562,9 @@ const questionsRaw = readFileSync(path.join(artifact, 'seed', 'questions.json'),
   const problems = questionProblems(questionsRaw)
   if (problems.length > 0) fail(`${questionsName} would be refused:\n  - ${problems.join('\n  - ')}`)
 }
-writeFileSync(path.join(out, questionsName), questionsRaw)
+writeRelease(path.join(out, questionsName), questionsRaw)
 
-writeFileSync(path.join(out, sitePagesName), `${JSON.stringify({ pages: sitePages.pages }, null, 2)}\n`)
+writeRelease(path.join(out, sitePagesName), `${JSON.stringify({ pages: sitePages.pages }, null, 2)}\n`)
 
 // The file TRACY reads first (ADR 0017). Until 13/10/2026 this release wrote none, so `languages` had to
 // be typed by hand into the published tracy_setting.json after every release. Composed and validated here,
@@ -530,7 +597,7 @@ const setting = {
   const problems = validateSetting(setting, { assets })
   if (problems.length > 0) fail(`${settingName} would be refused:\n  - ${problems.join('\n  - ')}`)
 }
-writeFileSync(path.join(out, settingName), `${JSON.stringify(setting, null, 2)}\n`)
+writeRelease(path.join(out, settingName), `${JSON.stringify(setting, null, 2)}\n`)
 
 const sums = [
   'manifest.json',
@@ -544,11 +611,12 @@ const sums = [
   sitePagesName,
   ROLE_SCAN_FILE
 ]
-writeFileSync(
+writeRelease(
   path.join(out, 'SHA256SUMS'),
   sums.map((f) => `${fileHash(path.join(out, f))}  ${f}`).join('\n') + '\n'
 )
 
+guardFolder()
 console.log(
   JSON.stringify(
     {
