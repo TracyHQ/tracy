@@ -135,6 +135,17 @@ export function findBlocks(assigned) {
       }
     if (inner.size) rec.contains = [...inner]
   }
+  // A module with no block of its own that a block found above prints: in a T4 layout column named after its position
+  // inside that block (`<div class="col-lg-4 footer-r t4-col">` of a footer section), or inside the module whose params
+  // name its position (`a.inside`, an ACM block printing another position in its own markup).
+  const recOf = (block) => out.find((r) => r.block === block)
+  for (const a of assigned ?? []) {
+    if (taken.has(a.entity)) continue
+    const col = a.position ? document.querySelector(`.t4-col.${CSS.escape(a.position)}`) : null
+    const host = recOf(a.inside) ?? recOf(col?.closest('[data-kit-block]')?.getAttribute('data-kit-block'))
+    if (host && host.block !== a.entity && !(host.contains ??= []).includes(a.entity))
+      host.contains.push(a.entity)
+  }
   const header = document.querySelector(HEADER)
   if (header) add(header, 'header', 'template-header')
   const body = document.querySelector('#t4-main-body, #t3-mainbody')

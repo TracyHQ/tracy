@@ -95,9 +95,55 @@ export const readContractSamples = (contract) =>
     readIf(join(contract, 'content-coverage.json'))
   )
 
+/** Every string a module's params give under a key naming a position, JSON strings inside them read too. */
+function positionsNamed(value, key = '', out = new Set()) {
+  if (typeof value === 'string') {
+    const t = value.trim()
+    if (/^[[{]/.test(t)) {
+      try {
+        return positionsNamed(JSON.parse(t), key, out)
+      } catch {}
+    }
+    if (/position/i.test(key) && t) out.add(t)
+  } else if (Array.isArray(value)) for (const v of value) positionsNamed(v, key, out)
+  else if (value && typeof value === 'object')
+    for (const [k, v] of Object.entries(value)) positionsNamed(v, k, out)
+  return out
+}
+
+/**
+ * The content map with each page's assigned module marked `inside` the module that prints it: a module whose params
+ * name a position (an ACM block's `items_position_2`, JA Impact's "Stay connected" printing the `follow` position
+ * where its "Follow us" icons sit) renders the modules of that position in its own markup, with no wrapper of theirs.
+ * @param {object} map
+ * @param {object | null} lock presentation-lock.json
+ */
+export function withModulesInside(map, lock) {
+  const hostOf = new Map()
+  for (const [key, e] of Object.entries(lock?.entities ?? {}))
+    if (key.startsWith('module-') && String(e?.published) !== '0')
+      for (const p of positionsNamed(e?.params)) if (!hostOf.has(p)) hostOf.set(p, key)
+  if (!hostOf.size) return map
+  return {
+    ...map,
+    pages: (map.pages ?? []).map((page) => {
+      const here = new Set((page.assignedModules ?? []).map((a) => a.entity))
+      return {
+        ...page,
+        assignedModules: (page.assignedModules ?? []).map((a) => {
+          const host = hostOf.get(a.position)
+          return host && host !== a.entity && here.has(host) ? { ...a, inside: host } : a
+        })
+      }
+    })
+  }
+}
+
 /** @param {string} contract the contract folder */
-export const readContractMap = (contract) =>
-  withHomeRoute(readContractSamples(contract), readIf(join(contract, 'presentation-lock.json')))
+export const readContractMap = (contract) => {
+  const lock = readIf(join(contract, 'presentation-lock.json'))
+  return withModulesInside(withHomeRoute(readContractSamples(contract), lock), lock)
+}
 
 /** @param {string} contract the contract folder */
 export const readContractCoverage = (contract) =>
