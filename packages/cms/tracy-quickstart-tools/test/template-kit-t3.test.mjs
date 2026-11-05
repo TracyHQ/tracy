@@ -409,3 +409,66 @@ test('--exclude-path: a comma inside a pattern is written \\,', () => {
   assert.equal(sorted('/shop/hats/by,product_name'), true)
   assert.equal(sorted('/shop/hats'), false)
 })
+
+// ── The id-suffix rule stays a T3 rule ───────────────────────────────────────────────────────────────────
+
+// A T4 page: its layout sections and grid columns end in small numbers that collide with module ids. The main menu
+// (module 1) prints with no wrapper of its own inside the header, and must never become the section that holds an
+// unrelated block.
+const T4_PAGE = `<!doctype html><html><head><style>
+body{margin:0;width:1200px} div,header,section{display:block} .box{height:120px}
+</style></head><body><div class="t4-wrapper">
+<header id="t4-header" class="t4-header box"><nav class="t4-megamenu"><ul class="nav"><li>Home</li></ul></nav></header>
+<div id="t4-section-1" class="t4-section box"><div class="t4-section-inner"><h2>Morning drills</h2><p>Fabricated text</p>
+  <div id="col-md-1">Column</div></div></div>
+<div class="box"><ul><li id="item-1">Fabricated list entry</li></ul></div>
+<div id="t4-main-body" class="t4-main-body box">Article</div>
+</div></body></html>`
+
+test('a T4 section or grid id ending in a module number is never that module', async (t) => {
+  const browser = await launch()
+  if (!browser) return t.skip('no Chromium available')
+  try {
+    const page = await browser.newPage({ viewport: { width: 1200, height: 800 } })
+    // Each candidate alone on the page, so the no-second-element guard cannot hide a wrong match.
+    for (const keep of ['t4-section-1', 'item-1']) {
+      const other = keep === 'item-1' ? 't4-section-1' : 'item-1'
+      await page.setContent(T4_PAGE.replace(`id="${other}"`, ''))
+      const { blocks } = await page.evaluate(findBlocks, [{ entity: 'module-1', position: 'mainnav' }])
+      assert.deepEqual(
+        blocks.filter((b) => b.block === 'module-1'),
+        [],
+        `module 1 is not matched to #${keep}`
+      )
+      const tagged = await page.evaluate(
+        (id) => document.getElementById(id).getAttribute('data-kit-block'),
+        keep
+      )
+      assert.equal(tagged, null, `#${keep} carries no block`)
+    }
+  } finally {
+    await browser.close()
+  }
+})
+
+test('on a T3 page a layout or grid id ending in a module number is never that module', async (t) => {
+  const browser = await launch()
+  if (!browser) return t.skip('no Chromium available')
+  try {
+    const page = await browser.newPage({ viewport: { width: 1200, height: 800 } })
+    await page.setContent(
+      T3_PAGE.replace(
+        '<div id="t3-mainbody"',
+        '<div id="t3-section-7" class="box">Layout row</div><div id="t3-mainbody"'
+      )
+    )
+    const { blocks } = await page.evaluate(findBlocks, [...T3_ASSIGNED, { entity: 'module-7', position: '' }])
+    assert.equal(
+      blocks.find((b) => b.block === 'module-7'),
+      undefined,
+      '#t3-section-7 is template layout'
+    )
+  } finally {
+    await browser.close()
+  }
+})

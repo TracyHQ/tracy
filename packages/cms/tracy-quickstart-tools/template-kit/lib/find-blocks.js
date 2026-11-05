@@ -94,13 +94,19 @@ export function findBlocks(assigned) {
   // article, a product or a menu entry can end in the same digits), so: an id of words then the number, a module
   // ASSIGNED to this page with that id, outside every block found so far, and no second element of its own elsewhere
   // (the outermost one counts; an inner `#block-slider-104` of `#block-slideshow-104` is the same block).
+  // A T3 rule only: T3 prints module chrome as `#mod-<N>`, `#block-<style>-<N>`, `#uber-<layout>-<N>`. A T4 page
+  // wraps every module in `#Mod<N>`, and its own layout ids (`#t4-section-1`) would match by accident. On T3 too,
+  // template layout, grid and list ids (`t3-`, `t4-`, `col-`, `row-`, `item-`, `menu-item-`, `grid-`) are never
+  // module chrome.
+  const isT3 = !!document.querySelector('#t3-header, #t3-mainbody, .t3-wrapper, .t3-off-canvas')
+  const LAYOUT_ID = /^(?:t3|t4|col|row|item|menu-item|grid)-/i
   const assignedIds = new Set(
-    (assigned ?? []).map((a) => /^module-(\d+)$/.exec(a.entity ?? '')?.[1]).filter(Boolean)
+    isT3 ? (assigned ?? []).map((a) => /^module-(\d+)$/.exec(a.entity ?? '')?.[1]).filter(Boolean) : []
   )
   const byId = new Map()
-  for (const el of document.querySelectorAll('[id]')) {
+  for (const el of assignedIds.size ? document.querySelectorAll('[id]') : []) {
     const m = /^[a-z][a-z0-9_]*(?:-[a-z][a-z0-9_]*)*-(\d+)$/i.exec(el.id)
-    if (!m || !assignedIds.has(m[1]) || taken.has(`module-${m[1]}`)) continue
+    if (!m || LAYOUT_ID.test(el.id) || !assignedIds.has(m[1]) || taken.has(`module-${m[1]}`)) continue
     if (el.closest('[data-kit-block]')) continue
     const list = byId.get(m[1]) ?? []
     if (!list.some((x) => x.contains(el))) list.push(el)
