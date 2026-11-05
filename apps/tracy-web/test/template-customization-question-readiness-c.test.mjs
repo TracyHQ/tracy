@@ -484,6 +484,46 @@ test('ABOUT-1: a regular expression built from names escapes every metacharacter
   assert.equal(r.status, 'pass', r.message)
 })
 
+/** A theme of the repo as an EmDash release source, only the files ABOUT-1 reads. */
+const themeEmdash = (theme, replace = {}) => {
+  const dir = path.join(HERE, '..', '..', '..', 'packages', 'cms', `tracy-emdash-theme-${theme}`)
+  const files = {}
+  for (const file of [
+    'template.config.json',
+    'seed/personalize.json',
+    'seed/questions.json',
+    'seed/seed.json',
+    'src/views/Home.astro'
+  ])
+    files[`t/${file}`] = readFileSync(path.join(dir, file))
+  for (const [file, text] of Object.entries(replace)) files[`t/${file}`] = text
+  return contextOf(path.join(C, 'tracy-business_emdash-0.x'), 'tracy-business/emdash-0.x', {
+    extra: { [BUSINESS_ZIP]: zipOf(files) }
+  })
+}
+
+test('ABOUT-1: JA Restaurant keeps its home heading and intro in hero entries, all written by copy rules', async () => {
+  const ok = await run(about1HomeHeading, themeEmdash('restaurant'))
+  assert.equal(ok.status, 'pass', ok.message)
+  assert.match(ok.message, /hero\.hero_heading, hero\.hero_intro/)
+  // without the copy rules of the hero entries (the template as first released) the same sources fail, entry by entry
+  const bare = JSON.parse(
+    readFileSync(
+      path.join(HERE, '..', '..', '..', 'packages/cms/tracy-emdash-theme-restaurant/seed/personalize.json'),
+      'utf8'
+    )
+  )
+  bare.copy = bare.copy.filter((r) => r.collection !== 'hero')
+  const bad = await run(
+    about1HomeHeading,
+    themeEmdash('restaurant', { 'seed/personalize.json': JSON.stringify(bare) })
+  )
+  assert.equal(bad.status, 'fail', bad.message)
+  assert.match(bad.message, /hero\.hero_heading has no identity, copy, blocks or rewrite rule \(entry hero\//)
+  for (const theme of ['business', 'coffee'])
+    assert.equal((await run(about1HomeHeading, themeEmdash(theme))).status, 'pass', theme)
+})
+
 test('ABOUT-1: a rule on another collection or entry does not cover a stamped field, and a field missing from the seed fails', async () => {
   const other = await run(
     about1HomeHeading,
