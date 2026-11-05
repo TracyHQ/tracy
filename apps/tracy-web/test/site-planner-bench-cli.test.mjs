@@ -168,7 +168,7 @@ test('status, list and get show a finished run, and nothing written carries a ke
   assert.deepEqual(JSON.parse(read('plan-v1.json')), plan())
   const meta = JSON.parse(read('run.json'))
   assert.match(meta.promptSha256, /^[0-9a-f]{64}$/)
-  assert.equal(meta.checkerVersion, 'site-plan-check/3')
+  assert.equal(meta.checkerVersion, 'site-plan-check/4')
   assert.equal(meta.door.model, MODEL)
   assert.equal(meta.harness.effort, 'medium')
   const turns = read('turns.jsonl').trim().split('\n').map(JSON.parse)
