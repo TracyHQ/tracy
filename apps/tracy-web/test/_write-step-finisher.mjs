@@ -142,6 +142,13 @@ export function writtenSite(held = heldAtStart(), { sideEffect = null } = {}) {
         }
       if (params.operation !== 'apply' || !params.apply_id)
         return { ok: false, error: 'bad_params', message: 'apply_id required' }
+      // The site's contract door takes only a `contract-` apply id, as the real one does.
+      if (!String(params.apply_id).startsWith('contract-'))
+        return {
+          ok: false,
+          error: 'contract_failed',
+          message: `apply_id must start with "contract-", got "${params.apply_id}"`
+        }
       writes.push({ applyId: params.apply_id, changes: { ...params.changes } })
       before.set(
         params.apply_id,

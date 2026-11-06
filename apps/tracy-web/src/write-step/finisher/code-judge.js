@@ -1,14 +1,13 @@
-// Repairs code can judge without a model (spec #418, #424): a repair that never changes a word, whose result is plain in the
-// page the site serves now. No checker call, no screenshot:
+// Repairs of words, judged by code on the page the site serves now (spec #418, #424): what they change is plain in that page,
+// so the checker model never judges them (a real run saw it keep repairs that changed nothing). No screenshot:
 //   - fix-text: the slot's words as they printed with their markup are gone from the page, and its words are on it unchanged;
 //   - mark-emphasis: the heading's words are on the page unchanged, and the marked words are wrapped in a span;
-//   - a glued words fix-text: a space stands before every line break of the heading (glued-words.js).
-// Pure, but for the page read it is handed. Without a page reader the repair goes to the checker as before.
+//   - a glued words fix-text: a space stands before every line break of the heading (glued-words.js);
+//   - any other words repair (a demo item replaced or removed): the new words are on the page and the old ones are gone.
+// A repair no screenshot shows (a link, an alt, a title) is read the same way, in live-confirm.js. Pure, but for the page
+// read it is handed; without one the repair is not proven.
 import { visibleText } from '../../lib/site-copy/emphasis-markup.js'
 import { servesUnglued } from './glued-words.js'
-
-/** Order kinds code judges on the served page. */
-export const CODE_JUDGED = new Set(['fix-text', 'mark-emphasis'])
 
 /** Markup as a slot may print it: content map codes such as ((span)), and HTML tags. */
 const MARKUP = /\(\(\s*\/?[a-z][a-z0-9]*\b[^()]*\)\)|<\/?[a-z][a-z0-9]*\b[^<>]*>/gi
@@ -62,6 +61,12 @@ export function codeVerdict(html, { order, valid }) {
     return { verdict: 'not better', reason: 'the served page does not show the words of the slot unchanged' }
   if (order.kind === 'fix-text')
     return { verdict: 'better', reason: 'the served page prints the words without the markup' }
+  if (order.kind !== 'mark-emphasis') {
+    const was = squash(visibleText(valid.current))
+    return was && !shown.includes(was) && words.includes(was)
+      ? { verdict: 'not better', reason: 'the served page still shows the words the repair replaced' }
+      : { verdict: 'better', reason: 'the served page shows the new words, the old ones gone' }
+  }
   const marked = new RegExp(`<span\\b[^>]*>\\s*${escaped(String(order.words ?? '').trim())}\\s*</span>`, 'i')
   return marked.test(String(html))
     ? { verdict: 'better', reason: 'the served page marks the words in a span, the heading unchanged' }

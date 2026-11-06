@@ -4,6 +4,7 @@
 //     page confirms nothing;
 //   - else by reading the page the site serves now: it still holds what the check measured.
 // And when two failures of the site check are one fault (another width, another group), counted once. Pure.
+import { siteCheckText } from './glued-words.js'
 import { hrefsIn } from './live-confirm.js'
 import { pageOf, samePage } from './page-paths.js'
 
@@ -22,7 +23,7 @@ const decoded = (html) =>
     .replace(/&#0?39;/g, "'")
 
 /** The words a finder quoted in what it saw: each double-quoted part, else the whole sentence. */
-function quotedIn(seen) {
+export function quotedIn(seen) {
   const parts = [...String(seen ?? '').matchAll(/["“]([^"”]{3,})["”]/g)].map((m) => squash(m[1]))
   return parts.length ? parts : [squash(seen)].filter(Boolean)
 }
@@ -52,7 +53,9 @@ export function sameCheckFault(a, b) {
 
 /**
  * Whether the page the site serves now still holds what the check measured: a tel: or mailto: link to the same number or
- * address, else the measured words or address anywhere in the page. Null when there is nothing measured to look for.
+ * address, else the measured words or address anywhere in the page, as written or read the way the site check reads it (a
+ * hidden line break glues the words beside it, and a template's capitals are set aside), so the same text is judged the
+ * same. Null when there is nothing measured to look for.
  */
 export function servedNow(html, measured) {
   if (typeof measured !== 'string' || !measured.trim()) return null
@@ -68,5 +71,7 @@ export function servedNow(html, measured) {
       ? hrefs.some((h) => digits(h) === digits(want) && digits(want) !== '')
       : hrefs.some((h) => decodeURIComponent(h).toLowerCase() === want.toLowerCase())
   }
-  return page.includes(measured.trim())
+  if (page.includes(measured.trim())) return true
+  const read = measured.replace(/\s+/g, ' ').trim().toLowerCase()
+  return siteCheckText(html).includes(read)
 }

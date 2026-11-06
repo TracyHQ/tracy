@@ -7,25 +7,58 @@
 //   - each content slot with the words the site holds there now (null when this run wrote none);
 //   - each picture frame with the slot that holds its alt, when the content map names one;
 //   - the CSS targets inside the block as served (served-block-targets.js), null when the page could not be read.
+// The menu of a fault holds only the blocks whose words hold the words the fault quotes (`blocksForFault`): a real run had
+// the fixer style the footer for words of an article. Only when no block of the page holds them does the menu list them all.
 // An order that names anything not on the menu is refused here with a reason the fixer is told (page-repairs.js). Pure.
 import { blockScopes } from '../../lib/finisher-style.js'
 import { kitSlotIds } from '../kit-slot-ids.js'
 import { altSlotOf } from '../slot-corrections.js'
+import { visibleText } from '../../lib/site-copy/emphasis-markup.js'
+import { quotedIn } from './fault-confirm.js'
 import { servedBlockTargets } from './served-block-targets.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const WORDS_SHOWN = 300
 
-/** The picture frames of a kit block: its image slots, in rows or not, and its frames. */
+/** The picture frames of a kit block: its image slots, in rows or not, the demo's own included, and its frames. */
 function framesOf(block) {
   const rowSlots = each(block?.lists).flatMap((l) => [
     ...each(l?.rowSlots),
     ...each(l?.rows).flatMap((r) => each(r?.slots))
   ])
-  const images = [...each(block?.slots), ...rowSlots].filter((s) => s?.type === 'image').map((s) => s.id)
+  const images = [...each(block?.slots), ...each(block?.demoOwned), ...rowSlots]
+    .filter((s) => s?.type === 'image')
+    .map((s) => s.id)
   return [...new Set([...images, ...each(block?.frames).map((f) => f?.id)])].filter(
     (id) => typeof id === 'string'
   )
+}
+
+const bare = (s) =>
+  String(s ?? '')
+    .replace(/[.…]+$/u, '')
+    .replace(/\s+/g, '')
+    .toLowerCase()
+
+/**
+ * The blocks a fault's repair menu lists: those whose words (what this run wrote in their slots) hold the words the fault
+ * quotes or the site check measured, spacing and case aside, with the block of the slot the fault names; every block
+ * given when none holds them.
+ * @param {{ fault: { seen?: string | null, measured?: string | null, slot?: string | null, block?: string | null },
+ *   blocks: object[],
+ *   wordsOf: (slot: string) => string | null }} input
+ */
+export function blocksForFault({ fault, blocks, wordsOf }) {
+  const quotes = [...quotedIn(fault.seen), ...(fault.measured ? [String(fault.measured)] : [])]
+    .map(bare)
+    .filter((q) => q.length >= 3)
+  const named = fault.block ?? (fault.slot ? String(fault.slot).replace(/\.[^.]*$/, '') : null)
+  const holds = (block) => {
+    const words = [...kitSlotIds({ blocks: [block] })].map((slot) => bare(visibleText(wordsOf(slot) ?? '')))
+    return quotes.some((q) => words.some((w) => w.includes(q)))
+  }
+  const holding = blocks.filter((block) => holds(block))
+  return holding.length ? blocks.filter((block) => block.id === named || holding.includes(block)) : blocks
 }
 
 /**

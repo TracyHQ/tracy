@@ -55,9 +55,11 @@ async function finish({
   briefFile = brief(),
   copyFile = copy(),
   held = heldAtStart(),
-  served = servedPage
+  served = servedPage,
+  ordered = {},
+  wordsOnly = []
 }) {
-  const site = writtenSite({ ...held })
+  const site = writtenSite({ ...held }, { wordsOnly })
   // The finder names the kind of the list the order answers, unless the test names another.
   const found = { kind: KIND_OF_ORDER[order?.kind], ...fault }
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-content-'))
@@ -81,7 +83,7 @@ async function finish({
       .concat(['--brief-file', path.join(dir, 'brief.json'), '--copy-file', path.join(dir, 'copy.json')])
       .concat(['--site-pictures-file', path.join(dir, 'site-pictures.json')]),
     {
-      runs: memoryRunStore([writtenRun({ ...held })]),
+      runs: memoryRunStore([writtenRun({ ...held }, ordered)]),
       store: memoryStore([benchSite()]),
       index: kits.index,
       makeDoor: () => site.door,
@@ -114,7 +116,7 @@ test('a demo phone with a replacement in the brief is replaced through the conte
   })
   assert.equal(run.site.held['module-5.1'], `Call ${BRIEF_PHONE} today`)
   assert.equal(run.site.writes.length, 1)
-  assert.match(run.site.writes[0].applyId, /^finisher-/)
+  assert.match(run.site.writes[0].applyId, /^contract-finisher-/)
   assert.equal(run.record.outcome, 'kept')
   assert.equal(run.record.applyId, run.site.writes[0].applyId)
 })
@@ -193,6 +195,44 @@ test("a wrong alt is replaced from step 8's description of the picture; other wo
   )
 })
 
+test("an alt repair goes through the site's contract door under a contract- apply id, and is undone by that id", async () => {
+  // The fake site door refuses a contract apply whose id does not start with contract-, as the real one does.
+  const order = { kind: 'fix-alt', slot: 'block-6.2', frame: 'block-6.1', text: SEEN }
+  const kept = await finish({ order, fault: { slot: 'block-6.2' } })
+  assert.equal(kept.record.outcome, 'kept', kept.record.reason)
+  assert.match(kept.site.writes[0].applyId, /^contract-finisher-[0-9a-f]{48}$/)
+  // A page that still serves the old alt: the repair is undone by its own apply id, and the alt is back.
+  const undone = await finish({
+    order,
+    fault: { slot: 'block-6.2' },
+    served: () => servedPage(writtenSite())
+  })
+  assert.equal(undone.record.outcome, 'undone')
+  assert.deepEqual(undone.site.reverts, [undone.site.writes[0].applyId])
+  assert.equal(undone.site.held['module-6.2'], 'Woman running on a beach')
+})
+
+test('a glued heading stored as HTML gets its space from code: the codes the writer ordered, then the tags again', async () => {
+  // The site stores the heading as HTML and reads it back as words only, so code takes the codes from the write report.
+  const done = await finish({
+    order: null,
+    fault: {
+      kind: 'broken-layout',
+      slot: null,
+      seen: 'the heading reads "MEET YOURCOACH": the words are glued'
+    },
+    checker: [],
+    held: { ...heldAtStart(), 'module-7.1': 'Meet your<br/><span>Coach</span>' },
+    ordered: { 'module-7.1': 'Meet your((br/))((span))Coach((/span))' },
+    wordsOnly: ['module-7.1']
+  })
+  assert.equal(done.doors.fixer.asked.length, 0, 'no model is asked')
+  assert.equal(done.record.outcome, 'kept', done.record.reason)
+  assert.equal(done.record.checkedBy, 'code')
+  assert.deepEqual(done.site.writes[0].changes, { 'module-7.1': 'Meet your ((br/))((span))Coach((/span))' })
+  assert.equal(done.site.held['module-7.1'], 'Meet your <br/><span>Coach</span>')
+})
+
 test('a wrong alt the site check names on its picture is repaired in the alt slot beside it; an alt order on the frame itself is refused', async () => {
   // The site check names the picture's slot; the alt lives in the slot beside it.
   const run = await finish({
@@ -260,6 +300,16 @@ test('accent emphasis marks one or two words the heading holds, never new or cha
   )
 })
 
+test('accent emphasis on a hero heading the kit keeps among the demo-owned slots is written, its mark found there', async () => {
+  const run = await finish({
+    order: { kind: 'mark-emphasis', slot: 'block-8.1', words: 'harbour' },
+    fault: { slot: 'block-8.1' },
+    checker: []
+  })
+  assert.equal(run.record.outcome, 'kept', run.record.reason)
+  assert.equal(run.site.held['module-8.1'], 'Strength training by the ((span))harbour((/span))')
+})
+
 test('emphasis in a heading stored as HTML goes through the emphasis stage, and an undo takes back both writes', async () => {
   const order = { kind: 'mark-emphasis', slot: 'block-7.1', words: 'Coach' }
   const kept = await finish({ order, fault: { slot: 'block-7.1' } })
@@ -320,14 +370,24 @@ test("a tel: link to the demo is given the brief's phone and proven on the live 
   assert.equal(run.doors.checker.asked.length, 0)
 })
 
-test('a repair the customer sees is still judged by the checker on before and after crops', async () => {
+test('a demo item repair the customer sees is judged by code on the served page, never by the checker model', async () => {
   const run = await finish({
-    order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: BRIEF_PHONE }
+    order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: BRIEF_PHONE },
+    checker: []
   })
-  assert.equal(run.record.outcome, 'kept')
-  assert.equal(run.record.checkedBy, 'checker')
-  assert.equal(run.doors.checker.asked.length, 1)
-  assert.equal(run.shots.length, 2, 'the repaired page is shot again')
+  assert.equal(run.record.outcome, 'kept', run.record.reason)
+  assert.equal(run.record.checkedBy, 'code')
+  assert.equal(run.doors.checker.asked.length, 0)
+  assert.equal(run.shots.length, 1, 'the page is not shot again')
+  // A page that still serves the demo phone: the repair changed nothing a visitor reads, so it is undone.
+  const stale = await finish({
+    order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: BRIEF_PHONE },
+    checker: [],
+    served: () => async () => `<html><body><p>Call ${DEMO_PHONE} today</p></body></html>`
+  })
+  assert.equal(stale.record.outcome, 'undone')
+  assert.match(stale.record.reason, /served page does not show the words|still shows the words/)
+  assert.equal(stale.site.held['module-5.1'], `Call ${DEMO_PHONE} today`)
 })
 
 test('every order kind the fault list names is an order the fixer can give, and every order answers some fault kind', () => {

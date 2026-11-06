@@ -97,11 +97,12 @@ async function effortSent(role, effort) {
   return { sent: model.requests[0].body.reasoning_effort, recorded: door.snapshot.effortUsed }
 }
 
-test('each finisher role calls its model at its own effort: finder max, fixer high, checker low by default', async () => {
+test('each finisher role calls its model at its own effort: finder max, fixer high, checker high by default', async () => {
   assert.deepEqual(await effortSent('finder', null), { sent: 'max', recorded: 'max' })
   // The product owner chose medium for the fixer; DeepSeek takes low, high and max only, so the nearest level is high.
   assert.deepEqual(await effortSent('fixer', null), { sent: 'high', recorded: 'high' })
-  assert.deepEqual(await effortSent('checker', null), { sent: 'low', recorded: 'low' })
+  // A checker at low kept spacing rules that left the words glued (a real run); it judges at high.
+  assert.deepEqual(await effortSent('checker', null), { sent: 'high', recorded: 'high' })
 })
 
 test("a finisher door's effort set in /ops wins over its role's default", async () => {

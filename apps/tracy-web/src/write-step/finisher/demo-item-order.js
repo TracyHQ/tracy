@@ -66,7 +66,7 @@ function withoutItem(at, item) {
 function emptiesBlock(at, after, context) {
   if (visibleText(after)) return null
   const block = context.kit?.blocks?.find((b) => b?.id === context.kitSlotOf(at.slot)?.block)
-  const others = (block?.slots ?? []).filter((s) => s?.id !== at.slot)
+  const others = [...(block?.slots ?? []), ...(block?.demoOwned ?? [])].filter((s) => s?.id !== at.slot)
   const kept = others.some((s) => {
     const key = context.keyOf(s.id)
     return key && visibleText(context.currentOf(key) ?? '')

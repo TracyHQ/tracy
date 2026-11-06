@@ -1,7 +1,8 @@
 // The finisher on an already written site (#420, spec #418), driven through the step 9 bench the way an operator does:
-// `finish` takes a run's write report and its first site check, and repairs the faults the finder sees. One seam, three
-// fakes: a written site that records writes and reverts, scripted model doors, and a capture with fixed images. Only what
-// comes out is asserted: the site's writes and reverts, the repair log, the final site check and refusals.
+// `finish` takes a run's write report and its first site check, and repairs the faults the finder sees. One seam, four
+// fakes: a written site that records writes and reverts, scripted model doors, a capture with fixed images, and the page as
+// the site serves it, on which code judges a words repair (the checker model never does). Only what comes out is asserted:
+// the site's writes and reverts, the repair log, the final site check and refusals.
 import assert from 'node:assert/strict'
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -26,16 +27,25 @@ import {
   judged
 } from './_write-step-finisher.mjs'
 import { memoryRunStore } from './_write-step-run.mjs'
+import { cleanUp, everyRepairChecker, finishOn } from './_write-step-finish-run.mjs'
 
 const kits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS, pages: PAGES })
 const dirs = []
 after(() => {
   kits.done()
+  cleanUp()
   for (const dir of dirs) rmSync(dir, { recursive: true, force: true })
 })
 
-/** One finish on the written site, with the model doors' scripted answers. */
+/** The pages as the site serves them now: the template prints each slot's words as they are, codes and all. */
+const servedNow = (held) => (page) =>
+  page === '/'
+    ? `<html><body><h2>${held['module-2.1']}</h2><p>${held['module-3.1']}</p><p>${held['module-3.2']}</p></body></html>`
+    : `<html><body><p>${held['module-4.1']}</p></body></html>`
+
+/** One finish on the written site, with the model doors' scripted answers; `served` renders a page from what the site holds. */
 async function finish({
+  served = servedNow,
   finder,
   fixer,
   checker,
@@ -67,6 +77,7 @@ async function finish({
       index: kits.index,
       makeDoor: () => site.door,
       makeCapture: async () => shots.capture,
+      pageHtml: async ({ path: page }) => served(site.held)(page),
       makeFinisherDoors: async () => ({
         finder: doors.finder.door,
         fixer: doors.fixer.door,
@@ -83,16 +94,16 @@ async function finish({
 
 const fixOrder = (over = {}) => ({ kind: 'fix-text', slot: 'block-2.1', text: CLEAN, ...over })
 
-test('a raw markup fault is repaired through the write door and kept when the checker says better', async () => {
+test('a raw markup fault is repaired through the write door and kept when code reads the words on the served page', async () => {
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [judged('better', 'the heading reads as words')]
+    checker: []
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   assert.equal(run.site.held['module-2.1'], CLEAN)
   assert.equal(run.site.writes.length, 1)
-  assert.match(run.site.writes[0].applyId, /^finisher-/)
+  assert.match(run.site.writes[0].applyId, /^contract-finisher-/)
   assert.deepEqual(run.site.reverts, [])
   const [record] = run.log.records
   assert.equal(record.outcome, 'kept')
@@ -102,9 +113,9 @@ test('a raw markup fault is repaired through the write door and kept when the ch
   assert.equal(record.causingStep, 9)
   assert.deepEqual(record.order, fixOrder())
   assert.equal(record.applyId, run.site.writes[0].applyId)
-  for (const file of [...record.crops.before, ...record.crops.after])
-    assert.ok(existsSync(path.join(run.dir, file)), `${file} is kept next to the run`)
-  assert.ok(record.crops.before.length && record.crops.after.length)
+  // Code judged it on the page as served: the checker model was never asked.
+  assert.equal(record.checkedBy, 'code')
+  assert.deepEqual(run.doors.checker.asked, [])
   assert.equal(run.log.counts.kept, 1)
   // The final site check reads the repaired words as the ones ordered, and the build's check is the final one.
   assert.match(
@@ -115,11 +126,13 @@ test('a raw markup fault is repaired through the write door and kept when the ch
   assert.equal(run.runs.rows[0].report.siteCheck.status, 'green')
 })
 
-test('a repair the checker finds not better is reverted by its apply id and logged as undone', async () => {
+test('a repair the served page does not show is reverted by its apply id and logged as undone', async () => {
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [judged('not better', 'the heading lost its accent')]
+    checker: [],
+    // A page cache that still serves the heading as it printed before.
+    served: () => () => `<html><body><h2>${RAW}</h2></body></html>`
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   assert.equal(run.site.writes.length, 1)
@@ -127,7 +140,7 @@ test('a repair the checker finds not better is reverted by its apply id and logg
   assert.equal(run.site.held['module-2.1'], RAW)
   const [record] = run.log.records
   assert.equal(record.outcome, 'undone')
-  assert.match(record.reason, /the heading lost its accent/)
+  assert.match(record.reason, /still prints \(\(span\)\)/)
   assert.equal(run.log.counts.undone, 1)
 })
 
@@ -169,14 +182,30 @@ test('a finder door that cannot take images makes the bench refuse with the reas
 
 const sizeOf = async (dir, file) => sharp(path.join(dir, file)).metadata()
 
-test('the checker compares crops of the repaired block at every width, cut from the tiles by the block box', async () => {
-  const run = await finish({
-    finder: [finding(), finding()],
-    fixer: [fixOrder()],
-    checker: [judged('better', 'the heading reads as words')]
+/** A style repair, which the checker judges on crops: text over a picture in the home page's heading block. */
+async function styled(over = {}) {
+  const checker = everyRepairChecker('better', 'the heading reads on its photo')
+  const run = await finishOn({
+    finder: scriptedDoor('Finisher finder', [
+      finding('unreadable-text', { seen: 'the heading "Strength coaching" is hard to read on its photo' }),
+      { faults: [] }
+    ]),
+    fixer: scriptedDoor('Finisher fixer', [
+      { kind: 'style-block', block: 'block-2', target: 'h2', styles: { 'text-shadow': '0 1px 2px #000' } }
+    ]),
+    checker,
+    head: true,
+    ...over
   })
+  return { ...run, checker }
+}
+
+test('the checker compares crops of the repaired block at every width, cut from the tiles by the block box', async () => {
+  const run = await styled()
   assert.equal(run.code, 0, run.err.join('\n'))
   const [record] = run.log.records
+  assert.equal(record.outcome, 'kept', record.reason)
+  assert.equal(record.checkedBy, 'checker')
   assert.equal(record.crops.by, 'block')
   assert.equal(record.crops.before.length, 2, 'desktop and phone before')
   assert.equal(record.crops.after.length, 2, 'desktop and phone after')
@@ -184,17 +213,18 @@ test('the checker compares crops of the repaired block at every width, cut from 
     const { width, height } = await sizeOf(run.dir, file)
     assert.ok(height < 300, `${file} is the block, not the whole tile (${width}x${height})`)
   }
-  const [asked] = run.doors.checker.asked
+  const [asked] = run.checker.asked
   assert.equal(asked.content.filter((c) => c.type === 'image_url').length, 4)
+  // The checker's reply file lists the crops it was shown, kept next to the run.
+  const checker = readdirSync(path.join(run.dir, 'replies'))
+    .map((f) => JSON.parse(readFileSync(path.join(run.dir, 'replies', f), 'utf8')))
+    .find((r) => r.role === 'checker')
+  assert.deepEqual(checker.images, [...record.crops.before, ...record.crops.after])
+  for (const file of checker.images) assert.ok(existsSync(path.join(run.dir, file)), `${file} is kept`)
 })
 
 test('with no block box from the host, the crops fall back to the tile and the log says so', async () => {
-  const run = await finish({
-    finder: [finding(), finding()],
-    fixer: [fixOrder()],
-    checker: [judged('better', 'the heading reads as words')],
-    boxes: false
-  })
+  const run = await styled({ boxText: () => '' })
   assert.equal(run.code, 0, run.err.join('\n'))
   const [record] = run.log.records
   assert.equal(record.crops.by, 'tile')
@@ -374,13 +404,13 @@ test('every model call leaves its raw reply and the image files it was shown nex
   const run = await finish({
     finder: [finding(), { faults: [] }],
     fixer: [fixOrder()],
-    checker: [judged('better', 'the heading reads as words')]
+    checker: []
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   const files = readdirSync(path.join(run.dir, 'replies')).sort()
-  assert.equal(files.length, 4, 'two finder calls, one fixer call, one checker call')
+  assert.equal(files.length, 3, 'two finder calls and one fixer call: code judged the words repair')
   const replies = files.map((f) => JSON.parse(readFileSync(path.join(run.dir, 'replies', f), 'utf8')))
-  assert.deepEqual(replies.map((r) => r.role).sort(), ['checker', 'finder', 'finder', 'fixer'])
+  assert.deepEqual(replies.map((r) => r.role).sort(), ['finder', 'finder', 'fixer'])
   const home = replies.find((r) => r.role === 'finder' && r.page === '/')
   assert.equal(home.text, JSON.stringify(finding()), 'the reply as the model gave it')
   assert.equal(home.model, 'deepseek-flash')
@@ -388,14 +418,12 @@ test('every model call leaves its raw reply and the image files it was shown nex
   // The model's own reasoning and token counts, as the door reported them: what shows it took the pictures in.
   assert.equal(home.reasoning, 'Finisher finder looked at what it was sent.')
   assert.equal(home.usage.promptTokens, 1200)
-  const checker = replies.find((r) => r.role === 'checker')
-  assert.deepEqual(checker.images, [...run.log.records[0].crops.before, ...run.log.records[0].crops.after])
   assert.deepEqual(replies.find((r) => r.role === 'fixer').images, [])
   for (const reply of replies) {
     for (const file of reply.images) assert.ok(existsSync(path.join(run.dir, file)), `${file} is kept`)
     assert.doesNotMatch(JSON.stringify(reply), /base64/, 'image bytes are never in a reply file')
   }
-  assert.ok(run.log.replies.length === 4, 'the repair log lists the reply files')
+  assert.ok(run.log.replies.length === 3, 'the repair log lists the reply files')
 })
 
 test('a Joomla page is shot at the address the site answers at, /index.php/<path>, and logged by its path', async () => {

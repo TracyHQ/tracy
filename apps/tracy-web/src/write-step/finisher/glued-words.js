@@ -22,6 +22,11 @@ const squashBare = (s) =>
     .replace(/\s+/g, '')
     .toLowerCase()
 
+/** Whether a fault is glued words: a broken layout whose words, as the finder or the site check says, run together. */
+export const isGluedFault = (fault) =>
+  fault?.kind === 'broken-layout' &&
+  (fault.causingCheck === 'glued-words' || /glue|run together|no space/i.test(String(fault.seen ?? '')))
+
 /** Whether the glued words a fault quoted or measured are the words of this slot, spacing aside. */
 export const gluedWordsOf = (fault, current) => {
   const words = squashBare(visibleText(current))
@@ -42,4 +47,34 @@ export function servesUnglued(html, value) {
     if (!new RegExp(`${escaped(before)}(?:\\s*</[a-z]+>)*\\s+<br\\b`, 'i').test(page)) return false
   }
   return true
+}
+
+const decoded = (s) =>
+  String(s)
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&amp;/gi, '&')
+
+/**
+ * The words of a page read the way the site check reads them (its glued words measure takes an element's text content): a
+ * tag leaves nothing in its place, so a line break the template hides glues the words beside it ("Strengthnow"); spacing is
+ * squashed and the case set aside, as a template may print a heading in capitals.
+ */
+export const siteCheckText = (html) =>
+  decoded(
+    String(html ?? '')
+      .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ')
+      .replace(/<[^>]*>/g, '')
+  )
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+
+/** Whether the page, read the way the site check reads it, shows these words apart, a space between each. */
+export const readsApart = (html, words) => {
+  const wanted = visibleText(words).toLowerCase()
+  return wanted.length > 0 && siteCheckText(html).includes(wanted)
 }

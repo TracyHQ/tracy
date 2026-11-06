@@ -4,10 +4,14 @@
 //   - every other repair is judged by the checker model: the page is shot again ONCE, only the tiles that hold a repaired
 //     block (page-shots.js `bands`, from the block boxes of the first shot), each repaired block is cropped before and after
 //     (repair-crops.js), and ONE checker call answers a verdict per repair. Its call is kept as a reply file like every role's.
+// A style aimed at glued words is judged by the served page as well: the checker's "better" stands only when the page, read
+// the way the site check reads it, shows the block's words apart (glued-words.js `readsApart`); a real run saw the checker
+// keep spacing rules that left the words glued.
 // Past a limit (run-limits.js) the checker is not asked, and one still open when new work stops is let go: such a repair is
 // not proven, so it is undone.
 import { shootPages } from '../../lib/page-shots.js'
 import { codeVerdict } from './code-judge.js'
+import { readsApart } from './glued-words.js'
 import { askChecker, verdictsOf } from './finisher-roles.js'
 import { liveVerdict } from './live-confirm.js'
 import { pageSlug } from './model-replies.js'
@@ -147,5 +151,21 @@ export async function judgePage(run, page, repairs, firstShots, round) {
       verdicts.set(n, v)
   if (byChecker.length)
     for (const [n, v] of await checkerJudges(run, page, byChecker, firstShots, round)) verdicts.set(n, v)
+  const apart = byChecker.filter(
+    (r) => typeof r.apart === 'string' && verdicts.get(r.number)?.verdict === 'better'
+  )
+  if (apart.length) {
+    const html = run.pageHtml ? await run.pageHtml(page).catch(() => null) : null
+    for (const r of apart) {
+      const held = verdicts.get(r.number)
+      const why =
+        typeof html !== 'string'
+          ? `the live page ${page} could not be read, so words read apart are not proven`
+          : readsApart(html, r.apart)
+            ? null
+            : 'the served page still reads the words glued, as the site check reads them'
+      if (why) verdicts.set(r.number, { ...held, verdict: 'not better', reason: why })
+    }
+  }
   return verdicts
 }

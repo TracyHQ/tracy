@@ -540,12 +540,23 @@ fault into one repair order, a checker compares the repaired block before and af
   name the block, and the CSS targets inside it as served (tag and classes, so a heading printed as `<span class="h2">` is
   `span.h2`, never `h2`). An order that names anything off the menu is refused, and the fixer is asked once more with the
   order and the reason.
-- Glued heading words at a hidden line break ("WHAT WECOACH") are repaired by a `fix-text` that only puts the missing space
-  before the break marker, every word and code kept; code judges it on the served page.
+- Glued heading words at a hidden line break ("WHAT WECOACH") are repaired by code, with no model: the missing space goes
+  before the break marker, every word and code kept (a slot stored as HTML takes the codes the writer ordered, then its tags
+  again); code judges it on the served page (2026-11-06, after a real run lost 11 of 11 such orders to a fixer that dropped
+  the break). A site check failure is confirmed by reading the page the way the check reads it (a hidden break glues the
+  words, capitals set aside), so the same words are judged the same.
+- Who judges a repair (2026-11-06, after a real run where the checker kept two spacing rules that changed nothing): every
+  repair whose result code can read from the served page (fixed text, a glued heading's space, an alt, a link, a page title or
+  description, an accent mark, a demo item) is judged by code on that page, never by the checker model. Only a style is judged
+  by the checker, at high effort; a style aimed at glued words is kept only when the served page reads the words apart too.
+- A fault's menu holds only the blocks whose words hold the words the fault quotes (all of the page's blocks when none does),
+  so an order on another block is refused and asked again.
+- The finisher's contract applies carry `contract-finisher-<hash>` apply ids: the site's contract door takes only `contract-`
+  ids, and the id still names whose repair it is.
 - A value the brief gives (a phone, an e-mail, a name, an address) is the customer's own: a demo fault on it is logged
   `not-demo`, never repaired. Pages compare as addresses: `/index.php/x`, `/x/` and `/x` are one page.
 - Each role thinks at its own reasoning effort, set per door in /ops › Model & AI; a door with none set takes its role's
-  default, the product owner's choice of 2026-11-06: finder max, fixer medium, checker low. DeepSeek takes only low, high
+  default, the product owner's choice of 2026-11-06: finder max, fixer medium, checker high (low until a real run, see above). DeepSeek takes only low, high
   and max, so the fixer runs at high, the nearest level; an effort the door's model does not take refuses the run with the
   levels it does take (`lib/bench-harness.js` `MODEL_EFFORTS`).
 - Pages run as a pipeline: each page is found, merged with the first check's failures on it, repaired and judged as soon

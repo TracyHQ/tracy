@@ -2360,7 +2360,7 @@ write (`write-step-nine.js` `runStepNine`, #424: the write, then the finisher, t
 finder, the build keeping the final check). The pages of the kit are shot by the site's host (`POST /_host/capture`, mode `vision-tiles/1`, the stream the
 demo look reads; `lib/page-shots.js`). Three model doors in `/ops` › Model & AI, each meant for `deepseek-flash` on the
 `deepseek` provider (migration 203; its comment says the doors take no effort, which no longer holds: each door takes an
-effort in /ops, by default finder max, fixer high, checker low, and one the model does not take refuses the run): `finisherFinder` (one call per page, its screenshots in, faults from
+effort in /ops, by default finder max, fixer high, checker high, and one the model does not take refuses the run): `finisherFinder` (one call per page, its screenshots in, faults from
 `fault-kinds.js` out), `finisherFixer` (one fault in, one typed order from `repair-orders.js` out) and `finisherChecker`
 (before and after crops in, better or not). A finder or checker model that cannot read pictures refuses the run. No model
 writes: code checks each order against the kit and the site, then writes it through the same `content.contract` apply as

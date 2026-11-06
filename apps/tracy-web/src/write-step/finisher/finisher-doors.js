@@ -1,8 +1,9 @@
 // The finisher's three model doors (spec #418): `finisherFinder`, `finisherFixer` and `finisherChecker`, each set in
 // /ops › Model & AI and meant for DeepSeek Flash on DeepSeek's own API (lib/bench-harness.js), like the planner, the writer
 // and the picture picker. Each role thinks at its own reasoning effort (ADR 0044 decision 30): the effort set on its door in
-// /ops, else its role's default: finder max, fixer high, checker low. The product owner chose medium for the fixer
-// (2026-11-06); DeepSeek takes low, high and max only, so the fixer runs at high, the nearest level it takes. An effort the
+// /ops, else its role's default: finder max, fixer high, checker high. The product owner chose medium for the fixer
+// (2026-11-06); DeepSeek takes low, high and max only, so the fixer runs at high, the nearest level it takes. The checker
+// was low until a real run saw it keep two spacing rules that left the words glued (#424). An effort the
 // door's model does not take (lib/bench-harness.js MODEL_EFFORTS) refuses the run with the levels it does take. Like the
 // other doors, a door never falls back to the environment: an unset, disabled or unreadable door refuses the run with its
 // reason. The finder and the checker look at screenshots, so a model that cannot read pictures (its provider says so, or
@@ -30,7 +31,7 @@ export const FINISHER_ROLES = Object.freeze({
     door: 'finisherChecker',
     label: 'Finisher checker',
     sight: 'the checker compares crops of the repaired block',
-    effort: 'low'
+    effort: 'high'
   })
 })
 

@@ -221,7 +221,7 @@ test('a later content edit of the block leaves its style rule in place', async (
     params: {
       operation: 'apply',
       expected_revision: inspect.revision,
-      apply_id: 'owner-edit-1',
+      apply_id: 'contract-owner-edit-1',
       changes: { 'module-2.1': 'Boxing classes for every age' }
     }
   })

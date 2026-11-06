@@ -310,7 +310,7 @@ export const LLM_DOORS = [
     blurb:
       'Write step bench: the finisher. One call per repair compares the block before and after it; a repair that is not better is undone.',
     needsModel: true,
-    // Vision is REQUIRED: the checker compares screenshots (#420). Effort per door; default low.
+    // Vision is REQUIRED: the checker compares screenshots (#420). Effort per door; default high.
     requires: ['vision'],
     prefers: ['json'],
     configurableEffort: true

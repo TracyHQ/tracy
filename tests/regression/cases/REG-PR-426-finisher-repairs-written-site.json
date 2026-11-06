@@ -9,14 +9,14 @@
   "flaky_model": false,
   "steps": [
     "S1: Run the bench-seam finisher tests one file at a time with node --test --test-concurrency=1 (apps/tracy-web/test/write-step-bench-finish*.test.mjs). The tests drive the finisher on a fixture written site with fake model doors and a fake host.",
-    "S2: On a written site whose page prints raw markup, check that the finisher finds the fault, writes a repair order through the write door, and keeps the repair when the checker says better or undoes it by its apply id when not.",
+    "S2: On a written site whose page prints raw markup, check that the finisher finds the fault, writes a repair order through the write door, and keeps the repair when code reads it on the page as served (a words repair is never judged by the checker model) or undoes it by its apply id when not.",
     "S3: Check that the final site check runs after the repairs, that a kept repair the final check blames for a new blocking failure is undone, and that repair-log.json is written.",
     "S4: Give the fixer a style order that would hide content (text the colour of its ground, huge or negative spacing, opacity, display none) and check it is refused by name and nothing is written.",
     "S5: Set a time or cost limit that is already reached and check that no new work starts, the faults left are logged as unrepaired with reason budget, and the final check still runs."
   ],
   "expect": [
     "S1: every file passes, every test reports ok.",
-    "S2: a raw markup fault is repaired and kept when better; a repair that is not better is reverted by its apply id and logged undone.",
+    "S2: a raw markup fault is repaired and kept when the served page shows it; a repair it does not show is reverted by its apply id and logged undone.",
     "S3: the final site check runs, a repair it blames is undone, and the repair log is written.",
     "S4: every banned declaration is refused, nothing is written, the refusal is logged.",
     "S5: outcome unrepaired with reason budget, no fixer asked once the limit is reached, final check runs."

@@ -2,7 +2,7 @@
 // gallery alt and page title the orders repair, behind a fake site door that answers the contract door, `content.get`,
 // `content.update` and `apply.revert` and records every write and revert. The club, its brief and its site are invented.
 import { report, written } from './_site-check.mjs'
-import { codesToHtml } from '../src/lib/site-copy/emphasis-markup.js'
+import { codesToHtml, visibleText } from '../src/lib/site-copy/emphasis-markup.js'
 import { benchSite, scriptedDoor, VERSION } from './_write-step-finisher.mjs'
 import { SITE } from './_write-step-run.mjs'
 
@@ -48,11 +48,24 @@ export const BLOCKS = [
     id: 'block-7',
     slots: [{ id: 'block-7.1', type: 'text', inline: [{ tag: 'span', text: 'Coach', at: 'end' }] }]
   },
-  { id: 'block-4', slots: [{ id: 'block-4.1', type: 'text' }] }
+  { id: 'block-4', slots: [{ id: 'block-4.1', type: 'text' }] },
+  // The hero: the kit keeps its heading among the slots the demo owns, with the demo's accent mark on it.
+  {
+    id: 'block-8',
+    slots: [],
+    demoOwned: [
+      {
+        id: 'block-8.1',
+        type: 'text',
+        role: 'heading',
+        inline: [{ tag: 'span', text: 'Fitness', at: 'end' }]
+      }
+    ]
+  }
 ]
 
 export const PAGES = [
-  { id: 'page-home', path: '/', blocks: { 1440: ['block-2', 'block-5', 'block-6', 'block-7'] } },
+  { id: 'page-home', path: '/', blocks: { 1440: ['block-8', 'block-2', 'block-5', 'block-6', 'block-7'] } },
   { id: 'page-about-us', path: '/about-us', blocks: { 1440: ['block-4'] } }
 ]
 
@@ -67,7 +80,8 @@ export const CONTENT_MAP = {
     { key: 'module-2.1', entity: 'module-2', nestedJson: 'jatools-config', jsonPath: ['title'] },
     { key: 'module-5.1', entity: 'module-5', sample: `Call ${DEMO_PHONE} today` },
     { key: 'module-5.2', entity: 'module-5', sample: 'Front desk of Demo Fitness' },
-    { key: 'module-7.1', entity: 'module-7', column: 'content', xpath: '/h2' }
+    { key: 'module-7.1', entity: 'module-7', column: 'content', xpath: '/h2' },
+    { key: 'module-8.1', entity: 'module-8', nestedJson: 'jatools-config', jsonPath: ['title'] }
   ]
 }
 
@@ -80,7 +94,8 @@ export const heldAtStart = () => ({
   'module-6.1': 'images/tracy-content/hall.jpg',
   'module-6.2': 'Woman running on a beach',
   'module-7.1': 'Meet your Coach',
-  'module-4.1': 'Our story began in a garage'
+  'module-4.1': 'Our story began in a garage',
+  'module-8.1': 'Strength training by the harbour'
 })
 
 /** The menu item that opens the about page, whose params hold its title. */
@@ -115,9 +130,14 @@ export const sitePictures = () => ({
   frames: [{ frame: 'block-6.1', seen: SEEN }]
 })
 
-/** The write report of the run, its first site check kept on it, and the line of the about page's title. */
-export function writtenRun(held = heldAtStart()) {
-  const lines = Object.entries(held).map(([key, words]) => written(`block-${key.slice(7)}`, key, words))
+/**
+ * The write report of the run, its first site check kept on it, and the line of the about page's title. `ordered` gives the
+ * codes the writer ordered for a key when the site stores something else there (a heading stored as HTML).
+ */
+export function writtenRun(held = heldAtStart(), ordered = {}) {
+  const lines = Object.entries(held).map(([key, words]) =>
+    written(`block-${key.slice(7)}`, key, ordered[key] ?? words)
+  )
   lines.push(
     written('page-about-us:title', null, 'About Demo Fitness', {
       owner: 'plan',
@@ -149,9 +169,10 @@ export function writtenRun(held = heldAtStart()) {
 
 /**
  * The written site. A module's row reads its HTML slot as `content`; `content.update` and the contract door both keep, under
- * their apply id, what they changed, and `apply.revert` puts it back. `writes` and `reverts` are what a test reads.
+ * their apply id, what they changed, and `apply.revert` puts it back. `writes` and `reverts` are what a test reads. A key in
+ * `wordsOnly` reads back through the contract door as its words only, tags taken out, as a slot stored as HTML does.
  */
-export function writtenSite(held = heldAtStart()) {
+export function writtenSite(held = heldAtStart(), { wordsOnly = [] } = {}) {
   const rows = { 'menuItem:102': aboutRow() }
   const writes = []
   const reverts = []
@@ -205,11 +226,18 @@ export function writtenSite(held = heldAtStart()) {
             key,
             entity: key.slice(0, key.lastIndexOf('.')),
             type: 'text',
-            current
+            current: wordsOnly.includes(key) ? visibleText(current) : current
           }))
         }
       if (params.operation !== 'apply' || !params.apply_id)
         return { ok: false, error: 'bad_params', message: 'apply_id required' }
+      // The site's contract door takes only a `contract-` apply id, as the real one does.
+      if (!String(params.apply_id).startsWith('contract-'))
+        return {
+          ok: false,
+          error: 'contract_failed',
+          message: `apply_id must start with "contract-", got "${params.apply_id}"`
+        }
       writes.push({ applyId: params.apply_id, action, changes: { ...params.changes } })
       const was = Object.fromEntries(Object.keys(params.changes).map((k) => [k, held[k]]))
       before.set(params.apply_id, () => Object.assign(held, was))
@@ -245,6 +273,6 @@ export function servedPage(site) {
     const link = site.held['module-5.3'].replace(/^index\.php\?Itemid=102$/, '/index.php/about')
     // The template prints emphasis codes as a span, as the real one does.
     const heading = codesToHtml(site.held['module-2.1'])
-    return `<html><head><title>${title}</title></head><body><h2>${heading}</h2><p>${site.held['module-5.1']}</p><a href="${link}">Contact</a><img src="/${site.held['module-6.1']}" alt="${site.held['module-6.2']}"><h3>${site.held['module-7.1']}</h3></body></html>`
+    return `<html><head><title>${title}</title></head><body><h1>${codesToHtml(site.held['module-8.1'])}</h1><h2>${heading}</h2><p>${site.held['module-5.1']}</p><a href="${link}">Contact</a><img src="/${site.held['module-6.1']}" alt="${site.held['module-6.2']}"><h3>${site.held['module-7.1']}</h3></body></html>`
   }
 }

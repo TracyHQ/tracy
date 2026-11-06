@@ -5,9 +5,9 @@
 // what comes out is asserted: what the fixer was sent, the repair log and the site's writes.
 import assert from 'node:assert/strict'
 import { after, test } from 'node:test'
-import { menuRefusal, repairMenu } from '../src/write-step/finisher/repair-menu.js'
+import { blocksForFault, menuRefusal, repairMenu } from '../src/write-step/finisher/repair-menu.js'
 import { RAW } from './_write-step-finisher.mjs'
-import { cleanUp, finishOn, scriptedDoor } from './_write-step-finish-run.mjs'
+import { cleanUp, everyRepairChecker, finishOn, scriptedDoor } from './_write-step-finish-run.mjs'
 
 after(cleanUp)
 
@@ -188,4 +188,67 @@ test('a gallery picture is on the menu with the slot of its alt, and an alt orde
   assert.equal(menuRefusal(alt('block-8.11'), menu), null)
   assert.match(menuRefusal(alt('block-8.1'), menu), /the alt of frame block-8\.5 is slot block-8\.11/)
   assert.match(menuRefusal(alt('block-8.5'), menu), /block-8\.11/)
+})
+
+test("a fault's menu holds only the blocks whose words hold the words it quotes; an order on another block is asked again", async () => {
+  // Words of the hours block, quoted by the finder: a real run styled the footer for words of an article.
+  const overPicture = {
+    page: '/',
+    viewport: 'phone',
+    tile: 0,
+    slot: null,
+    kind: 'unreadable-text',
+    seen: 'the grey line "Open every day from six" is printed over a photo'
+  }
+  const fixer = scriptedDoor('Finisher fixer', [
+    { kind: 'style-block', block: 'block-2', target: null, styles: { 'text-shadow': '0 1px 2px #000' } },
+    { kind: 'style-block', block: 'block-3', target: null, styles: { 'text-shadow': '0 1px 2px #000' } }
+  ])
+  const run = await finishOn({
+    finder: finder(overPicture),
+    fixer,
+    checker: everyRepairChecker(),
+    served,
+    head: true
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  assert.deepEqual(
+    sent(fixer).menu.blocks.map((b) => b.block),
+    ['block-3'],
+    'only the block that holds the quoted words'
+  )
+  const [refused] = sent(fixer, 1).refused
+  assert.match(refused.reason, /block-2.* not on the menu of \/ for a style order: its blocks are block-3$/)
+  const [record] = run.log.records
+  assert.equal(record.block, 'block-3')
+  assert.equal(record.outcome, 'kept', record.reason)
+})
+
+test('when no block holds the quoted words, the menu lists every block of the page', () => {
+  const blocks = [
+    { id: 'block-2', slots: [{ id: 'block-2.1', type: 'text' }] },
+    { id: 'block-3', slots: [{ id: 'block-3.1', type: 'text' }] }
+  ]
+  const wordsOf = (slot) => ({ 'block-2.1': 'Strength now', 'block-3.1': 'Open every day' })[slot]
+  const of = (seen) => blocksForFault({ fault: { seen }, blocks, wordsOf }).map((b) => b.id)
+  assert.deepEqual(of('the line "OPEN EVERY DAY" is hard to read'), ['block-3'])
+  assert.deepEqual(of('the line "Closed on Sundays" is hard to read'), ['block-2', 'block-3'])
+  assert.deepEqual(of('a heading is hard to read'), ['block-2', 'block-3'])
+})
+
+test('a picture the kit keeps among the demo-owned slots is a frame on the menu, not a words slot', () => {
+  const hero = {
+    id: 'block-9',
+    slots: [],
+    demoOwned: [
+      { id: 'block-9.1', type: 'image' },
+      { id: 'block-9.2', type: 'text' }
+    ]
+  }
+  const menu = repairMenu({ fault: { page: '/' }, blocks: [hero], html: null, wordsOf: () => null })
+  assert.deepEqual(menu.blocks[0].frames, [{ frame: 'block-9.1', alt: null }])
+  assert.deepEqual(
+    menu.blocks[0].slots.map((s) => s.slot),
+    ['block-9.2']
+  )
 })

@@ -11,6 +11,11 @@ import { cleanUp, everyRepairChecker, finishOn, scriptedDoor, slowDoor } from '.
 after(cleanUp)
 
 const fix = (over = {}) => ({ kind: 'fix-text', slot: 'block-2.1', text: CLEAN, ...over })
+/** The pages as served: the template prints every slot's words as they are, so code judges a words repair on them. */
+const served = (held) => (page) =>
+  page === '/'
+    ? `<h2>${held['module-2.1']}</h2><p>${held['module-3.1']}</p><p>${held['module-3.2']}</p>`
+    : `<h2>${held['module-2.1']}</h2><p>${held['module-4.1']}</p>`
 const twoFaults = () => ({
   faults: [
     ...finding().faults,
@@ -28,6 +33,7 @@ test('a model call whose estimated cost does not fit in what is left of the hard
     finder: slowDoor(scriptedDoor('Finisher finder', [twoFaults(), { faults: [] }]), { usd: 0.45 }),
     fixer,
     checker: everyRepairChecker(),
+    served,
     limits: { callUsd: { fix: 0.35 } }
   })
   assert.equal(run.code, 0, run.err.join('\n'))
@@ -65,9 +71,15 @@ test('a site write that never answers is let go at its own time limit, and the r
 
 test('a page whose judging throws has every repair it wrote undone and logged as not proven', async () => {
   const run = await finishOn({
-    finder: scriptedDoor('Finisher finder', [finding(), { faults: [] }]),
-    fixer: scriptedDoor('Finisher fixer', [fix()]),
+    finder: scriptedDoor('Finisher finder', [
+      finding('unreadable-text', { slot: null, seen: 'the heading "Strength coaching" is hard to read' }),
+      { faults: [] }
+    ]),
+    fixer: scriptedDoor('Finisher fixer', [
+      { kind: 'style-block', block: 'block-2', target: null, styles: { 'text-shadow': '0 1px 2px #000' } }
+    ]),
     checker: everyRepairChecker(),
+    head: true,
     // A file where the crops folder goes: keeping the first crop throws while the page is judged.
     prepare: (dir) => writeFileSync(path.join(dir, 'crops'), '')
   })
@@ -75,7 +87,8 @@ test('a page whose judging throws has every repair it wrote undone and logged as
   const [record] = run.log.records
   assert.equal(record.outcome, 'undone')
   assert.match(record.reason, /could not be judged .* so it is not proven/)
-  assert.deepEqual(run.site.reverts, [record.applyId])
+  // The rule is taken off: the head module holds no rule of the block.
+  assert.doesNotMatch(run.site.module.content, /#Mod2\b/)
   assert.equal(run.site.held['module-2.1'], RAW)
 })
 
@@ -84,6 +97,7 @@ test('a slot two pages show is repaired once: the second page finds it held by t
     finder: scriptedDoor('Finisher finder', [finding(), finding('raw-markup', { page: '/about' })]),
     fixer: scriptedDoor('Finisher fixer', [fix(), fix()]),
     checker: everyRepairChecker(),
+    served,
     shared: true
   })
   assert.equal(run.code, 0, run.err.join('\n'))

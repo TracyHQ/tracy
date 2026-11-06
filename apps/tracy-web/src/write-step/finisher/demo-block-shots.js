@@ -42,7 +42,9 @@ export function demoBlockShots({ kit, sitePages, images }) {
       if (!picture?.base64) continue
       shots.push({
         block: id,
-        slots: (block.slots ?? []).map((s) => s?.id).filter((s) => typeof s === 'string'),
+        slots: [...(block.slots ?? []), ...(block.demoOwned ?? [])]
+          .map((s) => s?.id)
+          .filter((s) => typeof s === 'string'),
         viewport: 'desktop',
         image: `data:${picture.mediaType ?? 'image/jpeg'};base64,${picture.base64}`
       })

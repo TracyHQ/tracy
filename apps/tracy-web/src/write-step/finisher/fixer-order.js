@@ -6,19 +6,23 @@ import { askFixer } from './finisher-roles.js'
 import { causeOf, logRecord, unrepairedRecord } from './repair-log.js'
 import { stepsOf, validOrder } from './repair-orders.js'
 import { fixerSources } from './repair-facts.js'
-import { repairMenu } from './repair-menu.js'
+import { blocksForFault, repairMenu } from './repair-menu.js'
 import { budgetReason } from './run-limits.js'
 
-/** The fault's repair menu: the blocks of its page (of every page when it names none), as the page is served now. */
+/**
+ * The fault's repair menu, as the page is served now: the blocks of its page (of every page when it names none) whose words
+ * hold the words the fault quotes, all of them when none does (repair-menu.js `blocksForFault`).
+ */
 function menuOf(run, fault, site, html) {
+  const wordsOf = (slot) => site.current.get(run.lineOf(slot)?.key) ?? null
   const blocks = fault.page
     ? run.blocksOn(fault.page)
     : [...new Map(run.blocksOn.all().map((b) => [b.id, b])).values()]
   return repairMenu({
     fault,
-    blocks,
+    blocks: blocksForFault({ fault, blocks, wordsOf }),
     html: fault.page ? html : null,
-    wordsOf: (slot) => site.current.get(run.lineOf(slot)?.key) ?? null,
+    wordsOf,
     contentMap: run.contentMap,
     heading: run.blocksOn.kitPageOf(fault.page)?.h1?.slot ?? null
   })

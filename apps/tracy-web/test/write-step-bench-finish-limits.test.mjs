@@ -130,32 +130,28 @@ test('a third round never starts, and round two does not write an order undone i
   assert.equal(run.site.held['module-2.1'], RAW)
 })
 
-test('round two retries only the repair the checker rejected: no page is shot again whole and the finder is not asked again', async () => {
+test('round two retries only the rejected repair: no page is shot again whole and the finder is not asked again', async () => {
   const about = finding('raw-markup', { page: '/about', slot: 'block-4.1', seen: 'prints ((span))' })
-  const checker = {
-    asked: [],
-    door: {
-      ...everyRepairChecker().door,
-      // Better on the home page, not better on the about page.
-      async ask(message) {
-        const home = message.content.some((c) => c.type === 'text' && c.text.includes('heading prints'))
-        const repair = Number(/^Repair (\d+)\./.exec(message.content[0].text)[1])
-        const verdict = home ? 'better' : 'not better'
-        return { text: JSON.stringify({ verdicts: [{ repair, verdict, reason: 'x' }] }), costUsd: 0.01 }
-      }
-    }
-  }
   const finder = scriptedDoor('Finisher finder', [finding(), about])
   const fixer = scriptedDoor('Finisher fixer', [
     fix(),
     fix({ slot: 'block-4.1', text: 'Our story began in a garage' }),
     fix({ slot: 'block-4.1', text: 'Our story began in a small garage' })
   ])
-  const run = await finishOn({ finder, fixer, checker, limits: { rounds: 2 } })
+  const run = await finishOn({
+    finder,
+    fixer,
+    checker: everyRepairChecker(),
+    // The home page serves what the site holds; the about page is served from a cache that still prints its codes, so
+    // code finds its repair not better and undoes it.
+    served: (held) => (page) =>
+      page === '/' ? `<h2>${held['module-2.1']}</h2>` : '<p>Our story ((span))began((/span)) in a garage</p>',
+    limits: { rounds: 2 }
+  })
   assert.equal(run.code, 0, run.err.join('\n'))
   assert.equal(finder.asked.length, 2)
   const whole = run.shots.layoutsAsked.filter((layouts) => layouts.every((l) => !l.bands))
-  assert.equal(whole.length, 1, 'the pages are shot whole once; a re-shoot asks only for the repaired bands')
+  assert.equal(whole.length, 1, 'the pages are shot whole once')
   // Only the about page's rejected repair is tried again, with the order tried before named to the fixer.
   assert.equal(fixer.asked.length, 3)
   assert.match(fixer.asked[2].content[0].text, /"slot":"block-4\.1".*"tried"/)
@@ -169,6 +165,8 @@ test('a kept repair the final site check blames for a new blocking failure is un
     checker: everyRepairChecker(),
     // The site writes something else than ordered on the repaired slot: read-back goes red there.
     sideEffect: { key: 'module-2.1', value: 'Closed' },
+    // The page as served (a cache) shows the ordered words, so code keeps the repair; the final check reads the site back.
+    served: () => (page) => (page === '/' ? `<h2>${CLEAN}</h2>` : '<html></html>'),
     first: { groups: [{ name: 'read-back', status: 'green', checked: 4, failures: [] }] }
   })
   assert.equal(run.code, 0, run.err.join('\n'))

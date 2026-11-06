@@ -11,6 +11,7 @@
 // logged as unrepaired, reason `budget`.
 import { judgePage } from './batch-judge.js'
 import { orderForFault } from './fixer-order.js'
+import { gluedRepair } from './glued-repair.js'
 import { logRecord, unrepairedRecord } from './repair-log.js'
 import { readSite } from './repair-write.js'
 import { budgetReason } from './run-limits.js'
@@ -120,7 +121,10 @@ export async function repairPage(run, page, faults, shots, round) {
   }
   // The page as served now, read once for the menus of all its faults; unread, the menus list no CSS targets.
   const html = run.pageHtml && page ? await run.pageHtml(page).catch(() => null) : null
-  const orders = await Promise.all(active.map((fault) => orderForFault(run, fault, site, html)))
+  // A glued heading is repaired by code alone (glued-repair.js); every other fault goes to the fixer.
+  const orders = await Promise.all(
+    active.map((fault) => gluedRepair(run, fault, site) ?? orderForFault(run, fault, site, html))
+  )
   const writing = []
   const targets = new Set()
   for (const [index, o] of orders.entries()) {

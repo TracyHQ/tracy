@@ -1,16 +1,18 @@
 // How each repair order kind is written, judged and undone (spec #418): a row of ORDER_KINDS (repair-orders.js) names one of
 // these, so the finisher (page-repairs.js) runs every order the same way and never branches on its kind.
-//   - words: a slot's words through the contract door (or the order's own `write`), judged on the live page when the customer
-//     cannot see the change (live-confirm.js), by code on the served page when the order never changes a word (code-judge.js),
-//     else by the checker on crops; undone by `apply.revert` of its apply id;
+//   - words: a slot's words through the contract door (or the order's own `write`), judged by code reading the page the site
+//     serves now, never by the checker model: on the live page when the customer cannot see the change (live-confirm.js),
+//     else on the served words (code-judge.js); undone by `apply.revert` of its apply id;
 //   - style: one rule keyed by its block in the head block (style-write.js), judged by the checker on crops of the block found
-//     by its unchanged words; undone by putting back that block's rule as it was. A kept style changes no words of the report.
+//     by its unchanged words, and, aimed at glued words, by the served page too: the words must read apart there the way the
+//     site check reads them (glued-words.js `readsApart`); undone by putting back that block's rule as it was. A kept style
+//     changes no words of the report.
 // `place` names what a write reads and writes whole (work-pool.js): two writes of one place never cross. Every contract apply
 // is checked against the site's one revision, so it is read again inside the lock, right before the write; a slot that no
 // longer holds the words the order was checked against (another page's repair wrote it first) is not written (`stale`).
 // `target` names what a repair changes on the page (one slot, one block), so a page writes one repair per target a round.
 import { visibleText } from '../../lib/site-copy/emphasis-markup.js'
-import { CODE_JUDGED } from './code-judge.js'
+import { isGluedFault } from './glued-words.js'
 import { isUnseenRepair } from './live-confirm.js'
 import { readSite, revertRepair, writeRepair } from './repair-write.js'
 import { takeOffStyleRule, writeStyleRule } from './style-write.js'
@@ -71,11 +73,8 @@ export const WORDS_STEPS = Object.freeze({
     })
   },
   /** @param {Repair} r */
-  judgeBy: ({ run, order, valid }) => {
-    if (isUnseenRepair(order, valid)) return { judgeBy: 'live-page' }
-    if (CODE_JUDGED.has(order.kind) && run.pageHtml) return { judgeBy: 'code' }
-    return { judgeBy: 'checker', wordsBefore: valid.current, wordsAfter: valid.after }
-  },
+  judgeBy: ({ order, valid }) =>
+    isUnseenRepair(order, valid) ? { judgeBy: 'live-page' } : { judgeBy: 'code' },
   /** @param {Repair & { wrote: object }} r */
   undo: ({ run, wrote }) =>
     revertRepair({ door: run.door, siteKey: run.siteKey, applyId: wrote.applyId, also: wrote.also }),
@@ -99,7 +98,8 @@ export const STYLE_STEPS = Object.freeze({
   // A style leaves the words as they are, so the block is found by words it holds (styleBlockWords).
   judgeBy: ({ run, fault, site, valid }) => {
     const words = styleBlockWords(run, fault, site, valid.block)
-    return { judgeBy: 'checker', wordsBefore: words, wordsAfter: words }
+    const apart = isGluedFault(fault) ? { apart: words } : {}
+    return { judgeBy: 'checker', wordsBefore: words, wordsAfter: words, ...apart }
   },
   undo: ({ run, valid, wrote, number }) =>
     takeOffStyleRule({
