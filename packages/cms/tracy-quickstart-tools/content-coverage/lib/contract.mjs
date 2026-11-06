@@ -85,6 +85,8 @@ export function loadContract(dir, siteUrl) {
     } else if (s.type === 'url') {
       push(url, normHref(s.sample, siteUrl), s.key)
     } else {
+      // A text field that holds a web address (a store link among a template's extra fields) prints it as an href.
+      if (/^https?:\/\//i.test(String(s.sample ?? '').trim())) push(url, normHref(s.sample, siteUrl), s.key)
       const n = normText(s.sample)
       if (!n) continue
       push(text, n, s.key)

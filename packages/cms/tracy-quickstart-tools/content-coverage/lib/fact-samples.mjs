@@ -15,7 +15,8 @@ const ISO_DATE = /\b\d{4}-\d{2}-\d{2}\b/g
 
 const stripTags = (s) =>
   String(s ?? '')
-    .replace(/<[^>]*>/g, ' ')
+    // T4 block fields write markup as ((tag …)) (an icon's ((svg …)) path numbers read as a phone, JA Vega)
+    .replace(/<[^>]*>|\(\(\/?[a-z][\s\S]*?\)\)/gi, ' ')
     .replace(/&nbsp;|&#160;/g, ' ')
 
 function hasPhone(text) {

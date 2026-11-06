@@ -4,7 +4,7 @@
 /**
  * Every logo the page prints, the side the page opens on, and where the brand colours sit inside pictures.
  * A logo is a picture whose file is a known logo file, or a picture inside a logo container (`.navbar-brand`, a class
- * holding "logo"), or a picture whose text alternative is the site name. Hidden logos (the other theme's twin, the
+ * holding "logo" in the header, footer or off-canvas menu), or a picture whose text alternative is the site name. Hidden logos (the other theme's twin, the
  * off-canvas menu) are read too, with `shown: false`.
  * @param {{logoFiles: string[], siteName: string|null, brand: string[]}} o
  */
@@ -14,7 +14,8 @@ export function readLogos({ logoFiles, siteName, brand }) {
   const HEADER =
     'header, #t4-header, .t4-header, #t3-header, .t3-header, .site-header, #masthead, [role="banner"]'
   const FOOTER = 'footer, [class*="footer"], [class*="footnav"]'
-  const LOGO_BOX = '.navbar-brand, .site-logo, .custom-logo-link, [class*="logo"]'
+  const BRAND_BOX = '.navbar-brand, .site-logo, .custom-logo-link'
+  const LOGO_BOX = `${BRAND_BOX}, [class*="logo"]`
   const MODE = /^(?:dark|light)-(?:active|mode|theme)$|^theme-(?:dark|light)$/
   const pathOf = (src) => {
     try {
@@ -66,7 +67,9 @@ export function readLogos({ logoFiles, siteName, brand }) {
   for (const img of document.querySelectorAll('img, svg')) {
     const isImg = img.tagName === 'IMG'
     const file = isImg ? pathOf(img.getAttribute('src')) : null
-    const inBox = img.closest(LOGO_BOX)
+    const region = regionOf(img)
+    // In the page body a class holding "logo" frames a client strip or a feature icon, not the site's own logo.
+    const inBox = img.closest(BRAND_BOX) ?? (region === 'other' ? null : img.closest(LOGO_BOX))
     const byName = isImg && siteName && img.getAttribute('alt')?.trim() === siteName
     if (!(file && known.has(file)) && !inBox && !byName) continue
     if (!isImg && !inBox) continue
@@ -79,7 +82,7 @@ export function readLogos({ logoFiles, siteName, brand }) {
       file: file ?? (isImg ? null : 'inline-svg'),
       found: file && known.has(file) ? 'logo-file' : inBox ? 'logo-container' : 'site-name-alt',
       block: blockEl?.getAttribute('data-kit-block') ?? null,
-      region: regionOf(img),
+      region,
       shown: shown(img),
       width: Math.round(r.width),
       height: Math.round(r.height),

@@ -185,21 +185,30 @@ test('the read pass names what each clickable opens: a tab by its #fragment, a m
     await page.setContent(`<div data-kit-block="film">
       <ul class="nav nav-tabs"><li><a href="#mod-7 .mod-8" role="tab" data-toggle="tab">Lanes</a></li></ul>
       <div id="mod-7"><div class="mod-8">Lane times</div></div>
-      <a class="play-video" href="javascript:void(0);" role="button" aria-label="Play film"><i style="display:inline-block;width:20px;height:20px"></i></a></div>`)
+      <a class="play-video" href="javascript:void(0);" role="button" aria-label="Play film"><i style="display:inline-block;width:20px;height:20px"></i></a>
+      <button type="button" class="theme-toggle" aria-label="Toggle dark mode"><i style="display:inline-block;width:20px;height:20px"></i></button>
+      <a class="btn btn-primary" href="#" role="button">Book Now</a></div>`)
     const bs3 = await page.evaluate(readDetails)
     assert.deepEqual(
       bs3.film.clickables.map((c) => [c.label, c.target?.kind, c.target?.element ?? null]),
       [
         ['Lanes', 'tab', '#mod-7 .mod-8'],
-        ['Play film', 'script', null]
+        ['Play film', 'script', null],
+        ['Toggle dark mode', 'script', null]
       ]
+    )
+    assert.deepEqual(
+      bs3.film.links.map((l) => [l.label, l.href]).filter(([label]) => label === 'Book Now'),
+      [['Book Now', '#']],
+      'a bare # link styled as a button is read once, as a link'
     )
     // A carousel control (`data-slide`, Bootstrap 3) moves the carousel its #fragment names; a `#` link held by a
     // form (the stars of a rating form) is a control of that form.
     await page.setContent(`<div data-kit-block="reel">
       <div id="reel-9" class="carousel"><div class="item">Slide</div></div>
       <a data-slide="prev" role="button" aria-label="Back" href="#reel-9" class="left carousel-control" style="display:inline-block;width:20px;height:20px"></a>
-      <form class="rate" method="POST" action="/notes/12-a-quiet-week"><ul><li><a href="#" title="2 of 5">2</a></li></ul></form></div>`)
+      <form class="rate" method="POST" action="/notes/12-a-quiet-week"><ul><li><a href="#" title="2 of 5">2</a></li></ul></form>
+      <form action="/news/signup"><input type="button" value="Join the list" onclick="return sendSignup()"></form></div>`)
     const more = await page.evaluate(readDetails)
     assert.deepEqual(
       more.reel.clickables.map((c) => [
@@ -209,8 +218,26 @@ test('the read pass names what each clickable opens: a tab by its #fragment, a m
       ]),
       [
         ['Back', 'slide', '#reel-9'],
-        ['2', 'form', '/notes/12-a-quiet-week']
+        ['2', 'form', '/notes/12-a-quiet-week'],
+        ['Join the list', 'form', '/news/signup']
       ]
+    )
+    // A block rendered inside another (a call-to-action module an article prints) reads its own links, once.
+    await page.setContent(`<div data-kit-block="main-body"><a href="/notes/1">Read the note</a><a aria-current="true" href="#">1</a>
+      <div data-kit-block="module-9"><a href="/join">Join</a><button type="button" onclick="go()">Go</button></div></div>`)
+    const nested = await page.evaluate(readDetails)
+    assert.deepEqual(
+      nested['main-body'].links.map((l) => [l.label, !!l.current]),
+      [
+        ['Read the note', false],
+        ['1', true]
+      ],
+      'the current page of a pagination is marked'
+    )
+    assert.deepEqual(nested['main-body'].clickables, [])
+    assert.deepEqual(
+      nested['module-9'].links.map((l) => l.label),
+      ['Join']
     )
   } finally {
     await browser.close()
@@ -414,5 +441,122 @@ test('a picture no frame holds becomes a frame that says it cannot be written; t
   assert.equal(
     imagesWithoutFrame({ kit, map, readings, fail: () => assert.fail('every picture has a frame') }),
     0
+  )
+})
+
+test("a link a rich text slot prints itself names that slot: its block's own, one card's links each their card's slot", () => {
+  // A fabricated shop block: two cards, each a Joomla ACM list field holding two worded links; another block's link
+  // with the same words is no link of those slots.
+  const list =
+    '((ul))((li))((a href="#"))Shop now((/a))((/li))((li))((a href="#"))Our brands((/a))((/li))((/ul))'
+  const map = {
+    slots: [
+      { key: 'module-5.1', entity: 'module-5', type: 'text', role: 'editorial.paragraph', sample: list },
+      { key: 'module-5.2', entity: 'module-5', type: 'text', role: 'editorial.paragraph', sample: list },
+      {
+        key: 'module-6.1',
+        entity: 'module-6',
+        type: 'text',
+        role: 'editorial.paragraph',
+        sample: '<p><a href="/x">Shop <b>now</b></a></p>'
+      }
+    ]
+  }
+  const kit = {
+    blocks: [
+      {
+        id: 'shop',
+        source: { entity: 'module-5', contains: [] },
+        slots: [{ id: 'block-5.1' }, { id: 'block-5.2' }],
+        links: ['Shop now', 'Our brands', 'Shop now', 'Our brands'].map((label, i) => ({
+          id: `shop.link-${i + 1}`,
+          label,
+          target: '#'
+        }))
+      },
+      {
+        id: 'other',
+        source: { entity: 'module-8', contains: [] },
+        slots: [],
+        links: [{ id: 'other.link-1', label: 'Our brands', target: '#' }]
+      }
+    ]
+  }
+  assert.equal(linkLabelSlots(kit, map), 4)
+  assert.deepEqual(
+    kit.blocks.flatMap((b) => b.links.map((l) => l.labelId ?? null)),
+    ['block-5.1', 'block-5.1', 'block-5.2', 'block-5.2', null]
+  )
+  const html = {
+    blocks: [
+      {
+        id: 'h',
+        source: { entity: 'module-6', contains: [] },
+        slots: [],
+        links: [{ id: 'h.link-1', label: 'Shop now', target: '/x' }]
+      }
+    ]
+  }
+  assert.equal(linkLabelSlots(html, map), 1, 'an <a> with inner markup in an HTML slot')
+})
+
+test("a link wrapping a whole card names the card's label slot: the member's name and role in one <a>", () => {
+  const map = {
+    slots: [
+      {
+        key: 'module-99.4',
+        entity: 'module-99',
+        type: 'text',
+        role: 'person.name',
+        sample: 'Mikael Johnasson',
+        group: { id: 'module-99.person.0' }
+      },
+      {
+        key: 'module-99.8',
+        entity: 'module-99',
+        type: 'text',
+        role: 'person.role',
+        sample: 'Keyboard',
+        group: { id: 'module-99.person.0' }
+      },
+      {
+        key: 'module-99.5',
+        entity: 'module-99',
+        type: 'text',
+        role: 'person.name',
+        sample: 'Siggi Campel',
+        group: { id: 'module-99.person.1' }
+      },
+      {
+        key: 'module-99.9',
+        entity: 'module-99',
+        type: 'text',
+        role: 'person.role',
+        sample: 'Vocals',
+        group: { id: 'module-99.person.1' }
+      }
+    ]
+  }
+  const block = (id, entity, labels) => ({
+    id,
+    source: { entity, contains: [] },
+    slots: [],
+    links: labels.map((label, i) => ({ id: `${id}.link-${i + 1}`, label, target: '#' }))
+  })
+  const kit = {
+    blocks: [
+      block('band', 'module-99', [
+        'Mikael Johnasson Keyboard',
+        'Siggi Campel Vocals',
+        'Keyboard Mikael Johnasson'
+      ]),
+      block('other', 'module-7', ['Siggi Campel Vocals'])
+    ]
+  }
+  assert.equal(linkLabelSlots(kit, map), 2)
+  assert.deepEqual(
+    kit.blocks.flatMap((b) => b.links.map((l) => l.labelId ?? null)),
+    ['block-99.4', 'block-99.5', null, null],
+    'the card of the block own only, its words in order'
   )
 })

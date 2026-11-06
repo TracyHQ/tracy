@@ -2,7 +2,7 @@
 // Compact on purpose: counts per class and one line per distinct hole, never screenshots or pages.
 // /ops reads it (apps/tracy-web/src/lib/content-coverage/) and holds Publish on unexplained holes
 // and on page hygiene findings (raw language constants, PHP errors, unfilled placeholders).
-import { labelRulesOf } from './label-rules.mjs'
+import { applyJudgeToLabelRules, labelRulesOf } from './label-rules.mjs'
 import { normText } from './normalize.mjs'
 import { rootCause } from './root-cause.mjs'
 import { headerOf, sitePagesOf } from './site-map.mjs'
@@ -156,6 +156,7 @@ export function buildCoverageFile({
       class: cls,
       ...(cls === 'capture' ? { lock: it.lockState === 'locked' ? 'locked' : 'undeclared' } : {}),
       cause: rootCause(it),
+      ...(it.inCode ? { inCode: true } : {}),
       evidence: cut(it.evidence?.[0] ?? '', 160),
       pages: pagesOf.get(it.key)?.n ?? 0,
       firstPage: pagesOf.get(it.key)?.first ?? null
@@ -196,17 +197,22 @@ export function buildCoverageFile({
     // The header of the home page (desktop): null when the run measured none.
     header: headerOf({ contract, result }),
     // Rules R2 to R9 over the map, the page snapshots and every hole found (core strings are skipped by R9 itself).
-    labelRules: labelRulesOf({
-      map: contract.map,
-      pages: result.pages,
-      holes: [...unique.values()]
-        .filter((it) => it.status === 'hole')
-        .map((it) => ({
-          kind: it.kind === 'attr' || it.kind === 'meta' ? `${it.kind}:${it.attr}` : it.kind,
-          value: shownValue(it),
-          class: CLASS_NAME[it.class] ?? 'unknown'
-        }))
-    }),
+    // A design cut-out the label judge said right leaves R5 (`applyJudgeToLabelRules`).
+    labelRules: applyJudgeToLabelRules(
+      labelRulesOf({
+        map: contract.map,
+        pages: result.pages,
+        holes: [...unique.values()]
+          .filter((it) => it.status === 'hole')
+          .map((it) => ({
+            kind: it.kind === 'attr' || it.kind === 'meta' ? `${it.kind}:${it.attr}` : it.kind,
+            value: shownValue(it),
+            class: CLASS_NAME[it.class] ?? 'unknown',
+            ...(it.inCode ? { inCode: true } : {})
+          }))
+      }),
+      labelJudge
+    ),
     // The label judge (spec #37): per slot right or wrong with a suggested role; also the cache of the next run.
     ...(labelJudge ? { labelJudge } : {}),
     // Inline markup of the samples against the database (resample.mjs): the template kit's `inlineMarkupLost` reads it.

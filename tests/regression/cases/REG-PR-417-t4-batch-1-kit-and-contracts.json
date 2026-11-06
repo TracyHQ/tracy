@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-417-t4-batch-1-kit-and-contracts",
+  "kind": "fix",
+  "title": "The template kit reads a module printed inside another block as that block's content, a url menu entry's link as its address slot, and the site's own logo pair and primary colour, and the five JA T4 batch 1 contracts seal the quickstarts the catalog pins",
+  "pr": 417,
+  "area": "quickstart/template-kit",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-timeout=120000 packages/cms/tracy-quickstart-tools/test/template-kit-modules-inside.test.mjs packages/cms/tracy-quickstart-tools/test/template-kit-link-label-opened.test.mjs packages/cms/tracy-quickstart-tools/test/template-kit-site-logos.test.mjs apps/tracy-web/test/contracts.test.mjs",
+    "S2: Read the exit code and the fail and skipped counts."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures and 0 skipped tests.",
+    "The contracts test 'the shipped profiles seal exactly the quickstarts the catalog bound by hand' reports ok with the ja-kinetic 1.0.11, ja-impact 1.0.6, ja-symphony 1.0.6, ja-nova 1.0.10 and ja-vega 1.0.9 profiles in the tree."
+  ],
+  "selectors": {
+    "kit": "packages/cms/tracy-quickstart-tools/template-kit/lib/",
+    "contracts": "packages/cms/tracy-joomla-quickstart/contracts/<slug>/j6/",
+    "catalog": "apps/tracy-web/src/quickstarts.json"
+  },
+  "evidence": "06/11/2026: before this branch the kit for JA Kinetic 1.0.11, Impact 1.0.6, Symphony 1.0.6, Nova 1.0.10 and Vega 1.0.9 missed modules printed inside other blocks, left url menu entries without an address slot and measured the wrong logo and primary colour.",
+  "fence": "The kit readers on fixture pages and the shipped contract tree only. Not exercised: a live capture against a running site, or a customer site created from these quickstarts.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-modules-inside.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-link-label-opened.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-site-logos.test.mjs",
+      "apps/tracy-web/test/contracts.test.mjs"
+    ],
+    "tests": ["the shipped profiles seal exactly the quickstarts the catalog bound by hand"],
+    "needs": []
+  }
+}

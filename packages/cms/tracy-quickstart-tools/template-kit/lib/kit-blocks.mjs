@@ -39,7 +39,8 @@ export function shownLinks(read = [], linkIcons = {}) {
     position,
     label: l.label,
     href: l.href,
-    icon: byKey[`${l.label}|${l.href}`] ?? null
+    icon: byKey[`${l.label}|${l.href}`] ?? null,
+    ...(l.current ? { current: true } : {})
   }))
 }
 
@@ -180,6 +181,15 @@ export function buildBlock({
   const urlSlots = slots.filter((s) => s.type === 'url')
   const labelSlot = new Map(slots.filter((s) => s.type === 'text').map((s) => [normText(s.sample), s]))
   const usedIds = new Set()
+  // The address slots of icon-only rows (every text slot of the row is blank: JA Impact's "Follow us" icons print no
+  // words), in row order: an icon link no words pair takes the next one.
+  const rowOrder = (g) => Number(/\.(\d+)$/.exec(String(g ?? ''))?.[1] ?? Infinity)
+  const iconRowUrls = urlSlots
+    .filter((u) => {
+      const row = slots.filter((s) => s.group?.id && s.group.id === u.group?.id && s.type === 'text')
+      return row.length && row.every((s) => !String(s.sample ?? '').trim())
+    })
+    .sort((a, b) => rowOrder(a.group.id) - rowOrder(b.group.id))
   const links = shownLinks(desk?.links, linkIcons).map((l, i) => {
     const target =
       canonicalPath(l.href, siteUrl, aliasHosts) ??
@@ -192,8 +202,12 @@ export function buildBlock({
     // when a row's label slot names that network ("Facebook" for fa-facebook).
     const network = icon ? networkOf({ icon, target: l.href, label: l.label }) : null
     const urlOf = (t) => (t?.group ? urlSlots.find((u) => u.group?.id === t.group.id) : null)
+    // No words pair by no words: a blank label would match whichever blank label slot came last.
+    const worded = !!normText(l.label)
     const pair =
-      urlOf(labelSlot.get(normText(l.label))) ?? (network ? urlOf(labelSlot.get(normText(network))) : null)
+      (worded ? urlOf(labelSlot.get(normText(l.label))) : null) ??
+      (network ? urlOf(labelSlot.get(normText(network))) : null) ??
+      (icon && !worded ? iconRowUrls.find((u) => !usedIds.has(neutralKey(u.key))) : null)
     // A repeat of a paired link (same label) keeps its own position id, so every id stays one link.
     const paired = pair ? neutralKey(pair.key) : null
     const linkId = paired && !usedIds.has(paired) ? paired : `${id}.link-${i + 1}`
@@ -207,12 +221,20 @@ export function buildBlock({
       label: l.label || null,
       target,
       ...(action ? { opens: { kind: 'action', action } } : {}),
-      ...(icon ? { icon: { ...icon, network } } : {})
+      ...(icon ? { icon: { ...icon, network } } : {}),
+      ...(l.current ? { current: true } : {})
     }
   })
   addIconSlots(lists, links, iconProbe, slots, neutralKey)
   // The slot each text link's label comes from: the block's own menu item, or the one slot printing its words.
-  labelLinks({ links, menuBlocks: idx.map.menuBlocks, mapSlots: idx.map.slots, siteUrl, aliasHosts })
+  labelLinks({
+    links,
+    menuBlocks: idx.map.menuBlocks,
+    mapSlots: idx.map.slots,
+    entities,
+    siteUrl,
+    aliasHosts
+  })
   // A clickable element without an address (a button opening a modal or a tab panel, a form's submit) is listed like a
   // link when a slot prints its label, with what it opens (`opens`), so its label and its target are both declared.
   const buttons = (desk?.clickables ?? []).map((c) => ({
@@ -223,7 +245,7 @@ export function buildBlock({
     element: c.tag,
     opens: opensOf(c.target, siteUrl, aliasHosts)
   }))
-  labelLinks({ links: buttons, menuBlocks: {}, mapSlots: idx.map.slots, siteUrl, aliasHosts })
+  labelLinks({ links: buttons, menuBlocks: {}, mapSlots: idx.map.slots, entities, siteUrl, aliasHosts })
   for (const b of buttons) {
     const own = labelSlot.get(normText(b.label))
     if (!b.labelId && own) b.labelId = neutralKey(own.key)
@@ -250,6 +272,13 @@ export function buildBlock({
       })
     }
   else if (!desk) missing('links', 'the block was never shown, so its links could not be read')
+  // A menu entry that opens an address of its own (a `url` entry: "Twitter" of a "Follow us" menu) has that address
+  // as a slot: the link is that slot, so the business's profile address is written where the link reads it.
+  for (const l of links) {
+    if (!l.menuItem || !/\.link-\d+$/.test(l.id)) continue
+    const u = (idx.map.slots ?? []).find((s) => s.entity === l.menuItem && s.type === 'url')
+    if (u && !usedIds.has(neutralKey(u.key))) usedIds.add((l.id = neutralKey(u.key)))
+  }
   // Words the block shows that no slot holds; the site part names the CMS language string behind a sentence.
   // Shown words that are a content slot's (whole, cut short, or split by markup) are content, never fixed text: a
   // slot of this block is already declared; another entity's (an item's intro on a listing) is the demo's own.

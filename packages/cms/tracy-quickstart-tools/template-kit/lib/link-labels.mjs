@@ -1,30 +1,44 @@
 // The slot each text link's label comes from. A menu link prints its menu item's title: the block's own menu is the
 // menu block whose labels most of its links show, and within it the item with the link's label and address (the top
 // level first), never another menu's item that happens to share the words. Any other link (a button) takes a
-// button or menu label slot that prints exactly its words; a heading sharing the words is a coincidence. Labels
-// shown in capitals by the style still match.
+// button or menu label slot that prints exactly its words (a form's button, a newsletter label too); a heading
+// sharing the words is a coincidence. Labels shown in capitals by the style still match.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { neutralKey } from './ids.mjs'
 import { canonicalPath } from './kit-paths.mjs'
 
 const LABEL_ROLE = /(button|menu)_label$/
+// A form's own button also prints the words of the sign-up it sends (a newsletter module rendered raw inside another
+// block, with no wrapper of its own to tell it apart).
+const labelRole = (l, role) =>
+  LABEL_ROLE.test(role) || (l.opens?.kind === 'form' && String(role).endsWith('newsletter_label'))
 const words = (s) => normText(s ?? '')
 const hasLetters = (s) => /\p{L}/u.test(words(s))
 
 /**
  * Sets `labelId` (and for a menu link `menuItem` and `menu`) on each text link that has none. Returns the block's
  * menu block key, or null.
- * @param {{links: object[], menuBlocks?: object, mapSlots?: object[], siteUrl: string, aliasHosts?: string[]}} o
+ * @param {{links: object[], menuBlocks?: object, mapSlots?: object[], entities?: string[], siteUrl: string, aliasHosts?: string[]}} o
  */
-export function labelLinks({ links, menuBlocks = {}, mapSlots = [], siteUrl, aliasHosts = [] }) {
+export function labelLinks({
+  links,
+  menuBlocks = {},
+  mapSlots = [],
+  entities = [],
+  siteUrl,
+  aliasHosts = []
+}) {
   const shown = links.filter((l) => hasLetters(l.label))
   let menu = null
-  let best = 1 // two links at least make a block's menu
+  // Two links at least make a block's menu. On a tie the menu that is the block's own module wins: a footer column
+  // listing aliases of main menu items shares every label with the main menu.
+  let best = 1.5
   for (const [key, m] of Object.entries(menuBlocks)) {
     const labels = new Set((m.items ?? []).map((it) => words(it.label?.text)))
     const hits = shown.filter((l) => labels.has(words(l.label))).length
-    if (hits > best) {
-      best = hits
+    const score = hits + (entities.includes(key) ? 0.5 : 0)
+    if (score > best) {
+      best = score
       menu = { key, items: m.items ?? [] }
     }
   }
@@ -40,10 +54,12 @@ export function labelLinks({ links, menuBlocks = {}, mapSlots = [], siteUrl, ali
       Object.assign(l, { labelId: neutralKey(it.label.slot), menuItem: it.item, menu: menu.key })
       continue
     }
-    // Links repeating the same words (a "View more" button per section) take each its own twin slot, in map order.
-    const same = mapSlots.filter(
-      (s) => s.type === 'text' && words(s.sample) === w && LABEL_ROLE.test(s.role ?? '')
-    )
+    // Links repeating the same words (a "View more" button per section) take each its own twin slot, in map order;
+    // the slots of the block's own entities come first (the "Book Now" of a tour page is that tour's).
+    const own = new Set(entities)
+    const same = mapSlots
+      .filter((s) => s.type === 'text' && words(s.sample) === w && labelRole(l, s.role ?? ''))
+      .sort((a, b) => own.has(b.entity) - own.has(a.entity))
     const named = new Set(links.map((x) => x.labelId).filter(Boolean))
     const pick = same.find((s) => !named.has(neutralKey(s.key))) ?? same[0]
     if (pick) l.labelId = neutralKey(pick.key)
@@ -72,11 +88,15 @@ export function menuLinkChecks({ blocks, groups = [], errors }) {
         })
       }
     }
+  const drawn = new Set(blocks.map((b) => b.id))
   for (const g of groups)
     for (const it of g.items ?? []) {
       // A menu heading opens nothing: its label is a text slot of the menu, never the label of a link.
       if (it.level !== 1 || !it.labelSlot || named.has(it.labelSlot) || it.target?.kind === 'heading')
         continue
+      // A menu whose block no captured page draws (a dropdown never opened) has no link to read; an item of it that
+      // opens nothing (`#`) can be the label of none. An item that opens a page stays caught: a visitor reaches it.
+      if (!drawn.has(g.block) && it.target?.kind === 'none' && it.alive === false) continue
       missing++
       errors.push({
         kind: 'menu-link-without-label-slot',

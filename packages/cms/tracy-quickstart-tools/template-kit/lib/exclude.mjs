@@ -82,8 +82,11 @@ export function decideExclusions({ pages, map, routes, patterns = [] }) {
     if ([p.path, ...(p.aliases ?? [])].some((x) => tests.some((t) => t(x))))
       out.set(p.path, 'matches an --exclude-path pattern')
     else {
+      // The account's content may show only on a later page of its list (`?start=3`), the first one holding what
+      // the site chrome links to anyway: a page of the same account with content of its own makes it the demo's.
       const account = accountOfPath(p.path, routes)
-      if (account && !known.has(account) && !own(p).length)
+      const shipsContent = pages.some((q) => baseOf(q.path) === baseOf(p.path) && own(q).length)
+      if (account && !known.has(account) && !shipsContent)
         out.set(p.path, 'account page of an account the quickstart does not ship, with no content of its own')
     }
   }

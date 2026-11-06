@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-impact/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_impact",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-impact",
+    "id": "quickstart/ja-impact/j6",
+    "version": "1.0.6",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_impact",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-impact-j6-webroot-1.0.6.tar.gz",
+        "bytes": 56046572,
+        "sha256": "9cb9ac3cb54e2717e866131aa24d1f34a8a0ebc9c845736feda00602efcaf679"
+      },
+      "database": {
+        "file": "ja-impact-j6-database-1.0.6.sql.gz",
+        "bytes": 106044,
+        "sha256": "a8e0ae5f7bd6c76c554426afcb7f94822685ac5c1a02dcfcb0f50eb4cee382a4"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-11-05T00:05:16.079Z",
+    "builtFrom": {
+      "site": "ja-impact-j6",
+      "tag": "local:pack",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-impact/j6",
+    "repository": "JoomlArt-Products/joomlart-products"
+  },
+  "coworkContractVersion": "0.24.86",
+  "mode": "content-recommendation"
+}

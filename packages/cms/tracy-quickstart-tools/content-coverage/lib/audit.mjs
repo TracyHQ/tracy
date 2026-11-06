@@ -27,7 +27,7 @@ const signature = (cls) => {
 
 /** For a page the map does not declare: does it at least render an entity the contract knows? */
 export function guessEntity(contract, page) {
-  const h1 = page.items.find((i) => i.kind === 'text' && i.tag === 'h1' && i.status === 'matched')
+  const h1 = page.items.find((i) => i.kind === 'text' && (i.tag === 'h1' || i.h1) && i.status === 'matched')
   if (!h1) return null
   const slot = contract.slotsByKey.get(h1.slots?.[0])
   return slot ? { entity: slot.entity, via: `h1 matches slot ${slot.key}` } : null

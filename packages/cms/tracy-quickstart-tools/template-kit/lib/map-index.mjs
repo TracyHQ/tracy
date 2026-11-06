@@ -28,10 +28,15 @@ export function indexMap(map) {
   return { map, entities, slotsBy, positionOf, pageByPath, byAlias }
 }
 
-/** The modules the map assigns to the page at `path` (for blocks that render without a wrapper id). */
+/**
+ * The published modules the map assigns to the page at `path` (for blocks that render without a wrapper id), each
+ * with the module it renders inside, if any (contract-read.mjs withModulesInside). An unpublished one prints nothing.
+ */
 export function assignedAt(idx, path) {
   const p = idx.pageByPath.get(path.split('?')[0]) ?? idx.pageByPath.get('/')
-  return (p?.assignedModules ?? []).map((a) => ({ entity: a.entity, position: a.position }))
+  return (p?.assignedModules ?? [])
+    .filter((a) => String(a.published ?? '1') !== '0')
+    .map((a) => ({ entity: a.entity, position: a.position, ...(a.inside ? { inside: a.inside } : {}) }))
 }
 
 /**

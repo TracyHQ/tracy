@@ -285,7 +285,7 @@ export function buildKit({
     listLimitsDiffering: limitChecks({ blocks, errors }),
     showcasePagesNotExcluded: showcaseChecks({ judged: showcase, pages, excludedPages, errors }),
     mixedPageGroups: mixedGroupChecks({ pages, pageGroups, itemParent, listedBy, errors }),
-    detailPagesOutsideListing: detailPageChecks({ pages, pageGroups, listedBy, errors }),
+    detailPagesOutsideListing: detailPageChecks({ pages, pageGroups, itemParent, listedBy, errors }),
     representativesNotListing: representativeChecks({ pages, pageGroups, errors }),
     slotsInTwoBlocks: slotOwnerChecks({ blocks, errors }),
     orphanTexts: orphanTextChecks({ blocks, errors }),

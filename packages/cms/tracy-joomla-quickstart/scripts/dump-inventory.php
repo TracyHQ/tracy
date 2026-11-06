@@ -22,6 +22,8 @@ $tables = ['modules', 'modules_menu', 'content', 'menu', 'template_styles', 'cat
 // The kinds `capture-contract.py --full-coverage` adds (contacts, tags, custom field definitions); a capture
 // without the flag never reads them, so a published profile re-captures byte for byte.
 $tables = array_merge($tables, ['contact_details', 'tags', 'fields']);
+// A custom field's stored values (field_id, item_id, value): the words a user's field prints on an author page.
+$tables[] = 'fields_values';
 $inventory = [];
 foreach ($tables as $table) {
     $rows = [];
@@ -40,7 +42,7 @@ $people = [
     'users' => 'SELECT u.id, u.name, u.username, EXISTS(SELECT 1 FROM `' . $prefix . 'user_usergroup_map` m WHERE m.user_id = u.id AND m.group_id = 8) AS admin'
         . ' FROM `' . $prefix . 'users` u',
     'user_profiles' => 'SELECT user_id, profile_key, profile_value FROM `' . $prefix . 'user_profiles`'
-        . " WHERE profile_key IN ('profile.aboutme', 'profile.user_jobtitle', 'profile.user_tagline', 'profile.user_avatar')",
+        . " WHERE profile_key IN ('profile.aboutme', 'profile.user_jobtitle', 'profile.user_tagline', 'profile.user_avatar', 'profile.address1')",
 ];
 foreach ($people as $table => $sql) {
     $rows = [];

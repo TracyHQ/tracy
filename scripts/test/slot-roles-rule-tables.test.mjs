@@ -72,3 +72,47 @@ test('from the command line, a capture step in any language reads the same propo
   assert.equal(wrong.status, 2)
   assert.match(wrong.stderr, /joomla|wordpress/)
 })
+
+// A fictional Joomla menu "Find us": three entries of type `url`, two named after a social network (one opening `#`,
+// one a profile address), one a plain address; and a social entry of another menu.
+test('a Joomla menu entry that opens a social network is a contact card, the nth of its menu showing profile n', () => {
+  const entry = (id, menutype, title, link) => [
+    { key: `menuItem-${id}`, kind: 'menuItem', identity: { menutype } },
+    [
+      {
+        key: `menuItem-${id}.0`,
+        entity: `menuItem-${id}`,
+        column: 'title',
+        type: 'text',
+        sample: title,
+        requiresEvidence: true
+      },
+      {
+        key: `menuItem-${id}.1`,
+        entity: `menuItem-${id}`,
+        column: 'link',
+        type: 'url',
+        sample: link,
+        requiresEvidence: true
+      }
+    ]
+  ]
+  const rows = [
+    entry(7, 'find-us', 'Mastodon shop', 'https://example.org/shop'),
+    entry(8, 'find-us', 'Instagram', '#'),
+    entry(9, 'find-us', 'Our page', 'https://www.facebook.com/kiteline'),
+    entry(12, 'footer-links', 'Threads', '#')
+  ]
+  const map = { entities: rows.map((r) => r[0]), slots: rows.flatMap((r) => r[1]) }
+  const { contentMap } = proposeContentMapRoles(map, { cms: 'joomla' })
+  const got = fieldsOf(contentMap)
+  const card = (id, item) => ({ id: `menuItem-${id}.social`, item, kind: 'contact' })
+  assert.deepEqual(got['menuItem-8.0'], ['contact.social_label', card(8, 0)])
+  assert.deepEqual(got['menuItem-8.1'], ['contact.social_url', card(8, 0)])
+  assert.deepEqual(got['menuItem-9.0'], ['contact.social_label', card(9, 1)])
+  assert.deepEqual(got['menuItem-9.1'], ['contact.social_url', card(9, 1)])
+  assert.deepEqual(got['menuItem-12.1'], ['contact.social_url', card(12, 0)])
+  // Not a social network: the address keeps no role and the title stays a menu label.
+  assert.deepEqual(got['menuItem-7.1'], [null, null])
+  assert.equal(got['menuItem-7.0'][1], null)
+})

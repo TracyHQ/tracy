@@ -15,6 +15,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 import { recordLabelJudge } from './lib/label-judge-record.mjs'
+import { applyJudgeToLabelRules } from './lib/label-rules.mjs'
 
 const USAGE =
   'usage: record-judge.mjs --request <request.json> --verdicts <verdicts.json> [--coverage <content-coverage.json>]'
@@ -65,7 +66,10 @@ function main(argv) {
     return { file, doc }
   })
   for (const { file, doc } of docs)
-    writeFileSync(file, `${JSON.stringify({ ...doc, labelJudge: block }, null, 2)}\n`)
+    writeFileSync(
+      file,
+      `${JSON.stringify({ ...doc, ...(doc.labelRules ? { labelRules: applyJudgeToLabelRules(doc.labelRules, block) } : {}), labelJudge: block }, null, 2)}\n`
+    )
   console.log(
     JSON.stringify({ written: targets, state: block.state, reason: block.reason, ...block.counts }, null, 1)
   )

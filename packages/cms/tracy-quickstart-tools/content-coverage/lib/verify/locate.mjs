@@ -8,6 +8,7 @@ import { suspicion } from './suspicion.mjs'
 
 const PAD = { desktop: 20, phone: 10 }
 const EXACTISH = /^(exact|exact ignoring spaces\/punctuation|path|href|video id|address slot)$/
+const NOWHERE = /^(#|javascript:.*)?$/i
 const entityOf = (key) => String(key).replace(/\.[^.]+$/, '')
 const GAP = 1200 // px: elements of one component further apart than this vertically are separate clusters
 const BAND = 150
@@ -58,6 +59,15 @@ export function locate({ map, findings, isFactRole, mods = {} }) {
         tally.set(pn, (tally.get(pn) ?? 0) + 1)
     const home = [...tally].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0]
     for (const s of slots) {
+      // An address slot whose demo value points nowhere (`#`, a script) matches every such link of the page (a logo, a
+      // "Follow us" entry): no evidence of where the component sits, and it would drag the component's area there.
+      if (s.type === 'url' && NOWHERE.test(String(s.sample ?? '').trim())) {
+        notLocated.push({
+          slot: s,
+          reason: 'The demo address points nowhere (#), so it says nothing about where the slot is'
+        })
+        continue
+      }
       const all = cands.get(s.key) ?? []
       const desk = all.filter((c) => c.rects.desktop)
       const onHome = desk.filter((c) => c.page === home)
