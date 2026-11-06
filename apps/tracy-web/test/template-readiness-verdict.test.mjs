@@ -52,7 +52,7 @@ test('the verdict lists the pieces in one fixed order, each with a state, a code
   const verdict = readinessVerdict(release(), { contracts: new Map() })
   assert.deepEqual(
     verdict.pieces.map((p) => p.piece),
-    ['quickstart-release', 'contract', 'template-kit', 'cowork-pin', 'design-system']
+    ['quickstart-release', 'contract', 'template-kit', 'cowork-pin', 'customize', 'design-system']
   )
   assert.deepEqual(
     PIECES.map((p) => p.piece),
@@ -73,6 +73,7 @@ test('a piece is decided by its first step not passed, with the code Road to liv
     ['contract', 'todo', 'no-contract'],
     ['template-kit', 'blocked', 'kit-waiting'],
     ['cowork-pin', 'blocked', 'customize-waiting'],
+    ['customize', 'blocked', 'customize-waiting'],
     ['design-system', 'todo', 'ds-not-checked']
   ])
   assert.equal(pieceOf(verdict, 'template-kit').blockedBy, 'contract')
@@ -111,7 +112,9 @@ test('Road to live shows the verdict steps first, unchanged, for every release s
 
 // The reference does NOT pass today, and the verdict must not be bent to make it: the committed content-coverage.json of
 // JA Boxing 1.0.11 records one page that did not render (`pages.failed: 1`), which Content coverage reads as an
-// incomplete measurement (`coverage-holes`). The case runs and reports as todo until JA Boxing is measured again.
+// incomplete measurement (`coverage-holes`). Run with its stored checks (`template-readiness.mjs ja-boxing`, local mode)
+// it also fails STAB-1 (64 slot samples not in their column of the dump) and has no design system measurement at the
+// current preview probe (`ds-not-at-probe`). The case runs and reports as todo until JA Boxing is green again.
 test('the reference: the latest JA Boxing j6 release in the quickstart list is green on every piece the repository judges', {
   todo: 'JA Boxing 1.0.11 content coverage: 1 page did not render'
 }, () => {
@@ -125,6 +128,7 @@ test('the reference: the latest JA Boxing j6 release in the quickstart list is g
     assert.equal(pieceOf(verdict, piece).state, 'done', `${piece}: ${pieceOf(verdict, piece).code}`)
   // The two stored checks are not in the repository: without them the verdict says so and never passes them.
   assert.equal(pieceOf(verdict, 'cowork-pin').code, 'customize-not-checked')
+  assert.equal(pieceOf(verdict, 'customize').code, 'customize-not-checked')
   assert.equal(pieceOf(verdict, 'design-system').code, 'ds-not-checked')
 })
 
@@ -140,17 +144,18 @@ test('the T3 case: JA Diner j6 is judged by the same pieces and codes (recorded 
     ['contract', 'done', 'coverage-ready'],
     ['template-kit', 'done', 'kit-approved'],
     ['cowork-pin', 'todo', 'customize-not-checked'],
+    ['customize', 'todo', 'customize-not-checked'],
     ['design-system', 'todo', 'ds-not-checked']
   ])
 })
 
-test('the command line prints the verdict of a named template as text and as JSON, and fails when a piece is not green', () => {
+test('the command line prints the verdict of a named template as text and as JSON, and fails when a piece is not green', async () => {
   let text = ''
-  assert.equal(main(['ja-diner'], { out: (s) => (text += s) }), 1)
+  assert.equal(await main(['ja-diner', '--pin-only'], { out: (s) => (text += s) }), 1)
   assert.match(text, /^quickstart\/ja-diner\/j6 1\.0\.5 /)
   assert.match(text, /done {5}template-kit {9}kit-approved/)
   let json = ''
-  assert.equal(main(['quickstart/ja-diner/j6', '--json'], { out: (s) => (json += s) }), 1)
+  assert.equal(await main(['quickstart/ja-diner/j6', '--json', '--pin-only'], { out: (s) => (json += s) }), 1)
   const doc = JSON.parse(json)
   assert.equal(doc.source, 'pin')
   assert.deepEqual(
@@ -158,7 +163,7 @@ test('the command line prints the verdict of a named template as text and as JSO
     PIECES.map((p) => p.piece)
   )
   let said = ''
-  assert.equal(main(['ja-example-nowhere'], { err: (s) => (said += s) }), 2)
+  assert.equal(await main(['ja-example-nowhere', '--pin-only'], { err: (s) => (said += s) }), 2)
   assert.match(said, /pins no release named ja-example-nowhere/)
 })
 
@@ -182,11 +187,66 @@ test('a later check joins its piece after the road steps, or opens a new piece a
     ['contract', 'todo', 'no-contract'],
     ['template-kit', 'blocked', 'kit-waiting'],
     ['cowork-pin', 'blocked', 'customize-waiting'],
+    ['customize', 'blocked', 'customize-waiting'],
     ['design-system', 'todo', 'ds-not-checked'],
     ['demo-baseline', 'todo', 'example-missing']
   ])
   assert.equal(
     verdict.steps.some((s) => s.step === 'example-check'),
     false
+  )
+})
+
+/** A stored Customize your site check of `version` with these rule results, as /ops stores it. */
+const customizeCheck = (version, results) => ({
+  state: 'done',
+  version,
+  report: { template: 'ja_example', cms: 'joomla', version, results },
+  reason: null,
+  checkedAt: '2026-11-06T00:00:00.000Z'
+})
+const rule = (id, status, owner = 'template') => ({
+  id,
+  status,
+  owner,
+  message: `${id} ${status}`,
+  fix: null
+})
+
+test('the Cowork pin piece judges only the rule that reads the pinned plugin; Customize your site carries the rest', () => {
+  const pin = latestPin('ja-diner')
+  const world = (results) => ({
+    contracts: defaultContracts(),
+    server: false,
+    readiness: customizeCheck(pin.version, results)
+  })
+  const plugin = readinessVerdict(
+    releaseOfPin(pin, defaultContracts()),
+    world([rule('STAB-1', 'fail', 'plugin'), rule('NAME-1', 'pass')])
+  )
+  assert.deepEqual(
+    [pieceOf(plugin, 'cowork-pin').code, pieceOf(plugin, 'customize').code],
+    ['customize-must-fix', 'customize-ready']
+  )
+  assert.deepEqual(
+    pieceOf(plugin, 'cowork-pin').params.mustFix.map((m) => m.rule),
+    ['STAB-1']
+  )
+  const template = readinessVerdict(
+    releaseOfPin(pin, defaultContracts()),
+    world([rule('STAB-1', 'pass', 'contract'), rule('NAME-1', 'fail')])
+  )
+  assert.deepEqual(
+    [pieceOf(template, 'cowork-pin').code, pieceOf(template, 'customize').code],
+    ['customize-ready', 'customize-must-fix']
+  )
+  // Road to live still shows one Customize your site step over every rule.
+  const road = roadOf(
+    releaseOfPin(pin, defaultContracts()),
+    world([rule('STAB-1', 'pass'), rule('NAME-1', 'fail')])
+  )
+  assert.deepEqual(
+    road.find((s) => s.step === 'customize').params.mustFix.map((m) => m.rule),
+    ['NAME-1']
   )
 })

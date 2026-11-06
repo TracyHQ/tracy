@@ -5,8 +5,9 @@
  *   quickstart-release   the release on GitHub and its install file (steps release, install-file)
  *   contract             the content contract, its content map and content coverage (steps contract, content-coverage)
  *   template-kit         the template kit beside the contract and what the flow reads of it (step template-kit)
- *   cowork-pin           the Claude Cowork plugin a new site gets: Road to live judges it in the Customize your site
- *                        check (STAB-1 reads the pinned plugin's own bytes), so this piece carries that step
+ *   cowork-pin           the Claude Cowork plugin a new site gets: the Customize your site rules that read the pinned
+ *                        plugin (STAB-1, `customize-split.js`)
+ *   customize            every other rule of Customize your site (the questions a customer answers)
  *   design-system        the design system slot contract and its readiness check (step design-system)
  *
  * 🔒 ONE SET OF FACTS. The steps are the very Road to live steps (`release-steps.js`, `check-steps.js` and the two
@@ -19,9 +20,9 @@
  * `todo`, `blocked` or `checking` step), else its first `warn`, else its last step (`done`). `step` names the step
  * that decided it.
  *
- * EXTENSION POINT: `CHECKS`. A later check (plugin write doors, hidden kit fields, demo measurements, the demo
+ * EXTENSION POINT: `CHECKS` (`checks.js`, one line per check). A later check (plugin write doors, hidden kit fields, demo measurements, the demo
  * baseline) is its own module returning `{ state, code, params }` for one piece; listed in `CHECKS` (or handed in as
- * `world.checks`), it joins that piece after its road steps, or opens a new piece after the five when it names one.
+ * `world.checks`), it joins that piece after its road steps, or opens a new piece after the six when it names one.
  * A check is not a Road to live step until its own ticket puts it on the road.
  */
 import { fitOfRelease } from '../content-coverage/fit.js'
@@ -31,26 +32,35 @@ import { previewDemoGap } from '../preview-demo.js'
 import { baselineOfRelease } from '../template-kit/demo-baseline-file.js'
 import { kitMapOfRelease, kitOfRelease, templateKitStep } from '../template-kit/road-step.js'
 import { customizeStep, designSystemStep } from './check-steps.js'
+import { CHECKS } from './checks.js'
+import { customizeHalves } from './customize-split.js'
 import { releaseSteps } from './release-steps.js'
 
-/** The pieces in verdict order, and the Road to live steps each one is made of. */
+export { CHECKS }
+
+/**
+ * The pieces in verdict order: the Road to live steps each one is made of, or (`half`) the half of Customize your
+ * site it carries (`customize-split.js`).
+ */
 export const PIECES = Object.freeze([
   { piece: 'quickstart-release', steps: ['release', 'install-file'] },
   { piece: 'contract', steps: ['contract', 'content-coverage'] },
   { piece: 'template-kit', steps: ['template-kit'] },
-  { piece: 'cowork-pin', steps: ['customize'] },
+  { piece: 'cowork-pin', half: 'plugin' },
+  { piece: 'customize', half: 'rest' },
   { piece: 'design-system', steps: ['design-system'] }
 ])
 
 /** The Road to live steps the verdict builds, in road order: the first steps of every road. */
-export const VERDICT_STEPS = Object.freeze(PIECES.flatMap((p) => p.steps))
-
-/**
- * The checks that are not Road to live steps, each `{ piece, step, judge(release, world, facts) }` where `judge`
- * returns `{ state, code, params }` (or null when it does not apply). Empty until the first later ticket lands.
- * @type {readonly { piece: string, step: string, judge: (release: any, world: any, facts: { steps: any[], version: string | null }) => { state: string, code: string, params?: Record<string, unknown> } | null }[]}
- */
-export const CHECKS = Object.freeze([])
+export const VERDICT_STEPS = Object.freeze([
+  'release',
+  'install-file',
+  'contract',
+  'content-coverage',
+  'template-kit',
+  'customize',
+  'design-system'
+])
 
 /** A step or piece that holds nothing: done, or done with something worth fixing. */
 export const passed = (s) => s.state === 'done' || s.state === 'warn'
@@ -137,8 +147,11 @@ export function readinessVerdict(release, world) {
   const road = startRoad()
   const { version } = verdictSteps(release, world, road)
   const steps = road.road
+  const halves = customizeHalves({ release, version, readiness: world.readiness ?? null }, road.waitingOn)
   /** @type {Map<string, any[]>} */
-  const entries = new Map(PIECES.map((p) => [p.piece, steps.filter((s) => p.steps.includes(s.step))]))
+  const entries = new Map(
+    PIECES.map((p) => [p.piece, p.half ? [halves[p.half]] : steps.filter((s) => p.steps?.includes(s.step))])
+  )
   for (const check of world.checks ?? CHECKS) {
     const judged = check.judge(release, world, { steps, version })
     if (!judged) continue
