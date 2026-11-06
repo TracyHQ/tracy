@@ -23,10 +23,12 @@ import {
   copy,
   DEMO_PHONE,
   finding,
+  heldAtStart,
   KIND_OF_ORDER,
   PAGES,
   SEEN,
   scriptedDoor,
+  servedPage,
   sitePictures,
   writtenRun,
   writtenSite
@@ -45,8 +47,15 @@ after(() => {
 const BETTER = [{ verdict: 'better', reason: 'reads right' }]
 
 /** One finish with one fault on the home page, the fixer's scripted order, and the brief, copy and pictures as files. */
-async function finish({ order, fault = {}, checker = BETTER, briefFile = brief() }) {
-  const site = writtenSite()
+async function finish({
+  order,
+  fault = {},
+  checker = BETTER,
+  briefFile = brief(),
+  held = heldAtStart(),
+  served = servedPage
+}) {
+  const site = writtenSite({ ...held })
   // The finder names the kind of the list the order answers, unless the test names another.
   const found = { kind: KIND_OF_ORDER[order?.kind], ...fault }
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-content-'))
@@ -64,16 +73,18 @@ async function finish({ order, fault = {}, checker = BETTER, briefFile = brief()
   }
   const out = []
   const err = []
+  const shooter = fakeCapture()
   const code = await runCli(
     ['finish', '--run', 'run-1', '--account', 'bench@example.test', '--out', path.join(dir, 'out')]
       .concat(['--brief-file', path.join(dir, 'brief.json'), '--copy-file', path.join(dir, 'copy.json')])
       .concat(['--site-pictures-file', path.join(dir, 'site-pictures.json')]),
     {
-      runs: memoryRunStore([writtenRun()]),
+      runs: memoryRunStore([writtenRun({ ...held })]),
       store: memoryStore([benchSite()]),
       index: kits.index,
       makeDoor: () => site.door,
-      makeCapture: async () => fakeCapture().capture,
+      makeCapture: async () => shooter.capture,
+      ...(served ? { pageHtml: served(site) } : {}),
       makeFinisherDoors: async () => ({
         finder: doors.finder.door,
         fixer: doors.fixer.door,
@@ -86,7 +97,7 @@ async function finish({ order, fault = {}, checker = BETTER, briefFile = brief()
   const logFile = path.join(dir, 'out', 'repair-log.json')
   const log = existsSync(logFile) ? JSON.parse(readFileSync(logFile, 'utf8')) : null
   assert.equal(code, 0, err.join('\n'))
-  return { site, log, record: log.records[0], doors }
+  return { site, log, record: log.records[0], doors, shots: shooter.calls }
 }
 
 const dropped = (run, why) => {
@@ -180,7 +191,7 @@ test("a wrong alt is replaced from step 8's description of the picture; other wo
   )
 })
 
-test('a demo page title is replaced from the site copy in its row, under its own apply id, and undone when not better', async () => {
+test('a demo page title is replaced from the site copy in its row, under its own apply id, and undone when the live page does not serve it', async () => {
   const order = { kind: 'fix-title-meta', page: '/about', field: 'title', text: ABOUT_TITLE }
   const fault = { page: '/about', slot: null }
   const kept = await finish({ order, fault })
@@ -191,11 +202,8 @@ test('a demo page title is replaced from the site copy in its row, under its own
   assert.equal(kept.record.outcome, 'kept')
   assert.equal(kept.record.slot, 'page-about-us:title')
 
-  const undone = await finish({
-    order,
-    fault,
-    checker: [{ verdict: 'not better', reason: 'no change seen' }]
-  })
+  // A page reader that still serves the title the site had before the repair.
+  const undone = await finish({ order, fault, served: () => servedPage(writtenSite()) })
   assert.deepEqual(undone.site.reverts, [undone.site.writes[0].applyId])
   assert.equal(JSON.parse(undone.site.rows['menuItem:102'].params).page_title, 'About Demo Fitness')
   assert.equal(undone.record.outcome, 'undone')
@@ -254,6 +262,49 @@ test('a content order for a fault whose kind does not list it is dropped', async
     fault: { slot: 'block-5.3', kind: 'raw-markup' }
   })
   dropped(run, /does not repair a raw-markup fault/)
+})
+
+test('a repair the customer cannot see is proven on the live page, never by the checker on screenshots', async () => {
+  const order = { kind: 'fix-link', slot: 'block-5.3', to: '/about' }
+  const fault = { slot: 'block-5.3' }
+  const kept = await finish({ order, fault })
+  assert.equal(kept.site.held['module-5.3'], 'index.php?Itemid=102')
+  assert.equal(kept.record.outcome, 'kept')
+  assert.equal(kept.record.checkedBy, 'live-page')
+  assert.equal(kept.doors.checker.asked.length, 0, 'the checker model is not asked')
+  assert.equal(kept.shots.length, 1, 'the pages are shot for the finder only, never again for this repair')
+
+  const stale = await finish({ order, fault, served: () => servedPage(writtenSite()) })
+  assert.equal(stale.record.outcome, 'undone')
+  assert.deepEqual(stale.site.reverts, [stale.site.writes[0].applyId])
+  assert.equal(stale.site.held['module-5.3'], 'https://demo.example.test/contact')
+  assert.match(stale.record.reason, /live page/)
+
+  const unread = await finish({ order, fault, served: null })
+  assert.equal(unread.record.outcome, 'undone')
+  assert.match(unread.record.reason, /could not be read/)
+})
+
+test("a tel: link to the demo is given the brief's phone and proven on the live page", async () => {
+  const run = await finish({
+    order: { kind: 'remove-demo-item', slot: 'block-5.3', item: DEMO_PHONE, with: BRIEF_PHONE },
+    fault: { slot: 'block-5.3', kind: 'demo-contact-link' },
+    held: { ...heldAtStart(), 'module-5.3': `tel:${DEMO_PHONE}` }
+  })
+  assert.equal(run.site.held['module-5.3'], `tel:${BRIEF_PHONE}`)
+  assert.equal(run.record.outcome, 'kept')
+  assert.equal(run.record.checkedBy, 'live-page')
+  assert.equal(run.doors.checker.asked.length, 0)
+})
+
+test('a repair the customer sees is still judged by the checker on before and after crops', async () => {
+  const run = await finish({
+    order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: BRIEF_PHONE }
+  })
+  assert.equal(run.record.outcome, 'kept')
+  assert.equal(run.record.checkedBy, 'checker')
+  assert.equal(run.doors.checker.asked.length, 1)
+  assert.equal(run.shots.length, 2, 'the repaired page is shot again')
 })
 
 test('every order kind the fault list names is an order the fixer can give, and every order answers some fault kind', () => {

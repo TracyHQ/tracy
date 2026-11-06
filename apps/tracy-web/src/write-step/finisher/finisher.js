@@ -22,8 +22,9 @@ import { readSite, revertRepair, writeRepair } from './repair-write.js'
 import { validOrder } from './repair-orders.js'
 import { cropsOf } from './repair-crops.js'
 import { takeOffStyleRule, writeStyleRule } from './style-write.js'
-import { orderFacts } from './repair-facts.js'
+import { fixerSources, orderFacts } from './repair-facts.js'
 import { demoBlockShots } from './demo-block-shots.js'
+import { isUnseenRepair, liveVerdict } from './live-confirm.js'
 import { keepShotFiles, pageSlug, replyKeeper } from './model-replies.js'
 
 /**
@@ -81,12 +82,51 @@ async function findFaults(run, firstShots) {
   return { faults: found.flatMap((f) => f.faults), records }
 }
 
+/** The checker's verdict on the before and after crops of the repaired block, the page shot again for it. */
+async function judgedOnCrops(run, { fault, valid, site, firstShots, repairNumber }) {
+  const { doors, lineOf } = run
+  const afterShots = await shootPages({ capture: run.capture, pages: [fault.page] })
+  // A style leaves the words as they are, so the block is found by the words its fault's slot holds.
+  const words = site.current.get(lineOf(fault.slot)?.key) ?? ''
+  const crops = await cropsOf({
+    fault,
+    before: firstShots,
+    after: afterShots,
+    wordsBefore: valid.style ? words : valid.current,
+    wordsAfter: valid.style ? words : valid.after,
+    name: `r${repairNumber}`,
+    saveFile: run.saveFile
+  })
+  const judged = run.spend(await askChecker(doors.checker, fault, crops.beforeShots, crops.afterShots))
+  await run.replies.keep({
+    name: `checker-r${repairNumber}`,
+    role: 'checker',
+    page: fault.page,
+    repair: repairNumber,
+    door: doors.checker,
+    sent: judged.sent,
+    images: [...crops.files.before, ...crops.files.after],
+    call: judged
+  })
+  const { verdict, reason } = judged.problem
+    ? { verdict: 'not better', reason: `the checker: ${judged.problem}` }
+    : verdictOf(judged.answer)
+  return { verdict, reason, crops, checkedBy: 'checker' }
+}
+
 /** Stage 2: one fault through the fixer, code's check, the write, the checker, and the keep or the undo. */
 async function repairFault(run, fault, repairNumber, firstShots) {
   const { door, siteKey, doors, lineOf } = run
   const cause = causeOf(run.firstCheck, fault)
   const site = await readSite(door, siteKey)
-  const asked = run.spend(await askFixer(doors.fixer, fault, site.current.get(lineOf(fault.slot)?.key)))
+  const asked = run.spend(
+    await askFixer(
+      doors.fixer,
+      fault,
+      site.current.get(lineOf(fault.slot)?.key),
+      fixerSources(run.orderFacts, fault)
+    )
+  )
   const about = { page: fault.page, repair: repairNumber }
   await run.replies.keep({
     name: `fixer-r${repairNumber}`,
@@ -142,43 +182,26 @@ async function repairFault(run, fault, repairNumber, firstShots) {
         reason: `the site refused it: ${wrote.reason}`
       })
     }
-  const afterShots = await shootPages({ capture: run.capture, pages: [fault.page] })
-  const crops = await cropsOf({
-    fault,
-    before: firstShots,
-    after: afterShots,
-    // A style leaves the words as they are, so the block is found by the words its fault's slot holds.
-    wordsBefore: valid.style ? (site.current.get(lineOf(fault.slot)?.key) ?? '') : valid.current,
-    wordsAfter: valid.style ? (site.current.get(lineOf(fault.slot)?.key) ?? '') : valid.after,
-    name: `r${repairNumber}`,
-    saveFile: run.saveFile
-  })
-  const judged = run.spend(await askChecker(doors.checker, fault, crops.beforeShots, crops.afterShots))
-  await run.replies.keep({
-    name: `checker-r${repairNumber}`,
-    role: 'checker',
-    ...about,
-    door: doors.checker,
-    sent: judged.sent,
-    images: [...crops.files.before, ...crops.files.after],
-    call: judged
-  })
-  const { verdict, reason } = judged.problem
-    ? { verdict: 'not better', reason: `the checker: ${judged.problem}` }
-    : verdictOf(judged.answer)
+  // A repair no screenshot shows is proven on the live page (live-confirm.js); every other one by the checker on crops.
+  const unseen = !valid.style && isUnseenRepair(order, valid)
+  const judged = unseen
+    ? { ...(await liveVerdict(run.pageHtml, fault, { order, valid })), checkedBy: 'live-page' }
+    : await judgedOnCrops(run, { fault, valid, site, firstShots, repairNumber })
+  const { verdict, reason, crops } = judged
   const shown = {
     ...known,
     ...(valid.style ? { block: valid.block } : {}),
     applyId: wrote.applyId,
-    crops: crops.files
+    checkedBy: judged.checkedBy,
+    ...(crops ? { crops: crops.files } : {})
   }
-  if (verdict === 'better' && crops.afterShots.length)
+  if (verdict === 'better' && (unseen || crops?.afterShots.length))
     return {
       record: logRecord(onSlot, { ...shown, outcome: 'kept', reason }),
       // A kept style changes no words of the report.
       ...(valid.style ? {} : { kept: { slot: valid.slot, ordered: valid.after, applyId: wrote.applyId } })
     }
-  const why = crops.afterShots.length ? reason : 'the repaired page could not be shot again'
+  const why = unseen || crops?.afterShots.length ? reason : 'the repaired page could not be shot again'
   const undone = valid.style
     ? await takeOffStyleRule({
         door,
@@ -258,6 +281,7 @@ export async function runFinisher(input) {
     capture,
     saveFile,
     firstCheck: null,
+    pageHtml,
     demoShots: demoBlockShots({ kit, sitePages, images: demoImages }),
     kit,
     kitSlots: kitSlotIds(kit),

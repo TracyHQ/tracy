@@ -1,20 +1,21 @@
 // The finisher's three model roles (spec #418), kept apart so no role grades its own work. Each is one call through its own
 // door (finisher-doors.js), in a fresh conversation, answered as one JSON object; none of them writes to the site.
 //   - finder: page screenshots in, faults from the closed list (fault-kinds.js) out. It never reads the site check report.
-//   - fixer: one fault and the slot's words in, one typed repair order (repair-orders.js) out. Code checks the order.
+//   - fixer: one fault, the order kinds its kind lists and the slot's words in, one typed repair order (repair-orders.js) out.
+//     Code checks the order.
 //   - checker: the before and after crops of the repaired block at every width in, "better" or "not better" out.
 // A call that fails or an answer with no JSON object is returned as `{ problem }`; the caller logs it and moves on. Every
 // call also returns what it was sent (`sent`), the reply as the model gave it (`text`), and the model's reasoning and token
 // counts when its door reports them, which the finisher keeps.
 import { jsonObjectIn } from '../../lib/json-object-in.js'
-import { faultListText } from './fault-kinds.js'
+import { FAULT_KINDS, faultListText } from './fault-kinds.js'
 import { orderListText } from './repair-orders.js'
 
 const FINDER_SYSTEM = `You look at screenshots of one page of a website a customer is about to receive. Each picture is a viewport tile of the page at desktop width (1440 px) or phone width (390 px), labelled with its viewport and tile number. Name only faults a site owner would see, and only of these kinds:
 {FAULTS}
 Pictures labelled "template demo" show the template's own demo of a block this page shows; they are not the site. Use them only for "lost-design": a design trait the demo block shows that the site's block lost. Never name a fault on a template demo picture. A fault a site owner would see that fits none of these kinds: name it with kind "other", so it is logged. Never judge taste, colours or fonts. Name a fault once, on the tile where it shows. Answer with one JSON object: { "faults": [ { "page": "<path>", "viewport": "desktop" | "phone", "tile": <number>, "kind": "<kind>", "slot": "<slot id when the page names it, else null>", "seen": "<one sentence>" } ] }. No fault: { "faults": [] }.`
 
-const FIXER_SYSTEM = `You turn one fault found on a website into one repair order. You never write to the site: code checks your order and writes it. Never invent a fact and never change the meaning of the words; only broken text is fixed. The orders you may give:
+const FIXER_SYSTEM = `You turn one fault found on a website into one repair order. You never write to the site: code checks your order and writes it, and drops an order that breaks a rule. Every order changes one thing: the words of one slot, one link, one demo item, one picture's alt, one page's title or meta description, the accent words of one heading, or the style of one block. Never invent a fact: new words, phone numbers, e-mail addresses and links come only from the sources given with the fault ("sources": the brief's facts, the pages the site keeps, the descriptions and alts of the pictures, the page's title and description in the site copy), and when there is nothing to put in place of a demo item, remove that one item. Never change the meaning of the words, never add words to a heading, never hide content. The fault names the order kinds that may repair it ("orders"); use one of them. The orders you may give:
 {ORDERS}
 Answer with one JSON object: the order.`
 
@@ -60,14 +61,19 @@ export function askFinder(door, page, shots, demoShots = []) {
   return askRole(door, FINDER_SYSTEM.replace('{FAULTS}', faultListText()), content)
 }
 
-/** One fixer call for one fault, with the words the site holds in the slot the finder named. */
-export function askFixer(door, fault, slotWords) {
+/**
+ * One fixer call for one fault, with the order kinds its kind lists, the words the site holds in the slot the finder named,
+ * and the sources a repair may take new words from (repair-facts.js).
+ */
+export function askFixer(door, fault, slotWords, sources = null) {
   const content = [
     {
       type: 'text',
       text: JSON.stringify({
         fault,
-        slotNow: fault.slot ? { slot: fault.slot, words: slotWords ?? null } : null
+        orders: FAULT_KINDS[fault.kind]?.orders ?? [],
+        slotNow: fault.slot ? { slot: fault.slot, words: slotWords ?? null } : null,
+        sources
       })
     }
   ]

@@ -115,10 +115,8 @@ export const sitePictures = () => ({
 })
 
 /** The write report of the run, its first site check kept on it, and the line of the about page's title. */
-export function writtenRun() {
-  const lines = Object.entries(heldAtStart()).map(([key, words]) =>
-    written(`block-${key.slice(7)}`, key, words)
-  )
+export function writtenRun(held = heldAtStart()) {
+  const lines = Object.entries(held).map(([key, words]) => written(`block-${key.slice(7)}`, key, words))
   lines.push(
     written('page-about-us:title', null, 'About Demo Fitness', {
       owner: 'plan',
@@ -235,3 +233,15 @@ export const finding = (over = {}) => ({
     }
   ]
 })
+
+/**
+ * The page as the site serves it now, read from the written site's state: the about page's title from its row, the contact
+ * link and the gallery alt from their slots. A link to a menu item is served at its routed address, as Joomla prints it.
+ */
+export function servedPage(site) {
+  return async ({ path: page }) => {
+    const title = page === '/about' ? JSON.parse(site.rows['menuItem:102'].params).page_title : 'Home'
+    const link = site.held['module-5.3'].replace(/^index\.php\?Itemid=102$/, '/index.php/about')
+    return `<html><head><title>${title}</title></head><body><h2>${site.held['module-2.1']}</h2><p>${site.held['module-5.1']}</p><a href="${link}">Contact</a><img src="/${site.held['module-6.1']}" alt="${site.held['module-6.2']}"></body></html>`
+  }
+}

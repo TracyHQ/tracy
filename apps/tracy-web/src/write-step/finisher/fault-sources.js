@@ -12,6 +12,7 @@
 //     the same fault at two widths or from two groups count once too.
 //   - A finder fault of a kind a check group measured green is logged with that group under `missedBy`.
 import { FAULT_KINDS, LOGGED_ONLY_KINDS, loggedOnlyReason } from './fault-kinds.js'
+import { hrefsIn } from './live-confirm.js'
 import { logRecord } from './repair-log.js'
 
 const DEMO_CONTACT = /^(tel|mailto):/i
@@ -89,9 +90,10 @@ export function servedNow(html, measured) {
   const page = decoded(html)
   const scheme = measured.match(DEMO_CONTACT)?.[1]?.toLowerCase()
   if (scheme) {
-    const hrefs = [...page.matchAll(new RegExp(`href\\s*=\\s*["']?${scheme}:([^"'\\s>]+)`, 'gi'))].map(
-      (m) => m[1]
-    )
+    // Every link target, quoted or not, so a number written with spaces is read whole (live-confirm.js).
+    const hrefs = hrefsIn(html)
+      .filter((h) => h.toLowerCase().startsWith(`${scheme}:`))
+      .map((h) => h.slice(scheme.length + 1))
     const want = measured.slice(scheme.length + 1)
     return scheme === 'tel'
       ? hrefs.some((h) => digits(h) === digits(want) && digits(want) !== '')

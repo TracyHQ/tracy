@@ -57,3 +57,21 @@ export function orderFacts({ kit, report, contentMap = null, facts = null, siteP
     seen: seenByFrame(facts?.pictures)
   }
 }
+
+/**
+ * The sources the fixer is shown with one fault, so the order it proposes can name what code will accept: the brief's facts
+ * by field, the paths of the pages the site keeps, step 8's description and the site copy's alt of each picture, and the site
+ * copy's title and description of the fault's page.
+ * @param {ReturnType<typeof orderFacts>} facts
+ * @param {{ page: string }} fault
+ */
+export function fixerSources(facts, fault) {
+  const page = facts.sitePages.find((p) => p.path === fault.page)
+  return {
+    brief: Object.fromEntries(facts.brief),
+    pages: facts.sitePages.map((p) => p.path),
+    pictures: Object.fromEntries(facts.seen),
+    alts: Object.fromEntries(facts.copyAlts),
+    pageMeta: page?.id ? (facts.copySeo.get(page.id) ?? null) : null
+  }
+}
