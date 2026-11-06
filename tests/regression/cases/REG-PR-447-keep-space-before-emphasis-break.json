@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-447-keep-space-before-emphasis-break",
+  "kind": "fix",
+  "title": "The write step keeps one space before an emphasis line break, and the host page measure steps over a hidden break, so a heading never reads as two glued words",
+  "pr": 447,
+  "area": "site-writer/emphasis",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-concurrency=1 apps/tracy-web/test/site-copy-check-emphasis.test.mjs",
+    "S2: Run: node --test --test-concurrency=1 apps/tracy-host/test/demo-qa-visible-faults-browser.test.mjs",
+    "S3: Read the exit codes and the fail/skipped counts."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures: 'A lesson in the pool' with the emphasis 'pool' exports as 'A lesson in the ((br/))((span))pool((/span))', and extra spaces before the break are never doubled.",
+    "S2 exits 0 with 0 failures and 0 skipped: a break the page hides does not stand between the words, and a space beside a hidden break or a visible break does."
+  ],
+  "selectors": {
+    "seam": "withEmphasis in apps/tracy-web/src/lib/site-copy/inline-emphasis.js and measurePageInPage in apps/tracy-host/src/demo-qa-page-measures.js"
+  },
+  "fence": "The exported text of a slot and the words the host measure reads from a page. Not exercised: a live customer build.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-copy-check-emphasis.test.mjs",
+      "apps/tracy-host/test/demo-qa-visible-faults-browser.test.mjs"
+    ],
+    "needs": []
+  }
+}
