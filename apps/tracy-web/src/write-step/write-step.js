@@ -45,6 +45,7 @@ import { planLinkTable } from './plan-link-table.js'
 import { createPages, pagesWithoutCopy } from './page-create-stage.js'
 import { routeLines } from './page-route-lines.js'
 import { hasPlanSlugs, restoreRoutes, runRouteStage } from './page-route-stage.js'
+import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
 import { coordinatesOf, runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { preparePictureStage } from './picture-stage.js'
@@ -107,11 +108,12 @@ function siteProblem({ reading, contract, changes }) {
  *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
  *   place?: { latitude: unknown, longitude: unknown } | null,
  *   onPhase?: (phase: string) => Promise<void>, onNoWayOut?: (named: { slot: string, reason: string }[]) => Promise<void>,
- *   pageHtml?: (input: { siteKey: string, path: string }) => Promise<string | null>,
+ *   pageHtml?: (input: { siteKey: string, path: string }) => Promise<string | null>, siteHosts?: string[],
  *   now?: () => number, sleep?: (ms: number) => Promise<void> }} input
  *   `last`: the report of the last run on this site, to write only what differs; `lastRun`: that run's id, for the report;
  *   `onNoWayOut`: told what the plan hides and cannot take off, before anything is written; `pageHtml`: a page of the site as a
- *   visitor reads it, for the printed check (without it the report has no `printed` section)
+ *   visitor reads it, for the printed check (without it the report has no `printed` section); `siteHosts`: the host names
+ *   the site answers at, so a full link to a renamed address on one of them is rewritten too (renamed-link-stage.js)
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
 export async function runWriteStep(input) {
@@ -164,6 +166,7 @@ export async function runWriteStep(input) {
   let created = { pages: new Map(), results: [], lines: [], kept: [] }
   let restored = []
   let renamedLines = null
+  let renamedLinks = null
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -186,7 +189,13 @@ export async function runWriteStep(input) {
         pictureLines: pictures.lines({ written, refused }),
         hides: hidden?.hides,
         frameLines: hidden?.lines,
-        shareLines: [...created.lines, ...settingLines, ...shareLines, ...pageRouteLines()],
+        shareLines: [
+          ...created.lines,
+          ...settingLines,
+          ...shareLines,
+          ...pageRouteLines(),
+          ...(renamedLinks?.lines ?? [])
+        ],
         links: links?.results({
           written,
           refused,
@@ -197,6 +206,8 @@ export async function runWriteStep(input) {
         ...routes
       })
     }
+    // A value the renamed-link stage rewrote is read back as the site holds it now (renamed-link-stage.js).
+    lines = followRenamedLinks(lines, renamedLinks)
     lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
     const against = last.active ? againstLast(lines, last, status) : { slots: lines }
     report.slots = against.slots
@@ -593,8 +604,8 @@ export async function runWriteStep(input) {
     )
   // Last of the writes, once every page was found and read back at its demo address: the kept pages take the plan's slugs.
   if (report.status === 'done' && hasPlanSlugs(plan)) {
-    const routed = await timed('routes', () =>
-      runRouteStage({
+    const routed = await timed('routes', async () => {
+      const out = await runRouteStage({
         door,
         siteKey,
         kit: kit.doc,
@@ -602,7 +613,27 @@ export async function runWriteStep(input) {
         keptPages: report.keptPages ?? [],
         menutype: hide.settingsExtras?.mainMenu?.menutype ?? null
       })
-    )
+      // Then every link written as a string to an address the stage moved follows it (card AD).
+      renamedLinks = await rewriteRenamedLinks({
+        door,
+        siteKey,
+        routes: out.routes,
+        hosts: input.siteHosts ?? [],
+        writeSlots: async ({ reading, changes, evidence }) => {
+          const { applyJoomlaContract } = await seeder('apply-joomla-contract')
+          return writeContract({
+            applyJoomlaContract,
+            apply,
+            siteKey,
+            reading,
+            mapping: { contract: mapping.contract, changes, evidence },
+            isCancelled,
+            sleep
+          })
+        }
+      })
+      return out
+    })
     renamedLines = routed.lines
     report.keptPages = routed.keptPages
     if (routed.routes.length) report.routes = routed.routes
