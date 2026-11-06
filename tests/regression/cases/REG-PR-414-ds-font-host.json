@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-414-ds-font-host",
+  "kind": "fix",
+  "title": "The ds-slot font cache fetches only from fonts.gstatic.com and follows no redirect, whatever URL a paused request carries (CodeQL alert of release #395, round 3)",
+  "pr": 414,
+  "area": "design/ds-slot",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run: node --test --test-reporter=tap packages/design/tracy-ds-slot/test/cdp-font-host.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Every named test is 'ok': fontFetchUrl keeps a fonts.gstatic.com address and gives null for a look-alike host, a user-info trick, plain http, another host carrying the gstatic URL in its path, a metadata address, an empty string and undefined; cachedFont never fetches for another host, fetches a gstatic font once with redirect 'error' and then serves it from disk, and treats a redirect as a miss that caches nothing."
+  ],
+  "selectors": {
+    "ds-slot": "fontFetchUrl and cachedFont (packages/design/tracy-ds-slot/scripts/cdp.mjs); cachedFont answers Fetch.requestPaused on fonts.gstatic.com"
+  },
+  "evidence": "CodeQL check of the release PR #395 after #413: server-side request forgery at packages/design/tracy-ds-slot/scripts/cdp.mjs:32 (`fetch(url)` with the paused request's URL). Review of #414: a mocked 302 from fonts.gstatic.com to 169.254.169.254 was followed by the default fetch. Measured: without the host guard 'cachedFont never fetches for another host' fails; without redirect 'error' the two redirect tests fail; Node's fetch with redirect 'error' rejects a real 302; a real gstatic font (Inter, 324 820 bytes) is still served.",
+  "fence": "Mechanism only: which address the cache fetches. Not covered: the CodeQL run itself (no CodeQL CLI on the machine) and a live browser lane.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/cdp-font-host.test.mjs"
+    ],
+    "tests": [
+      "fontFetchUrl keeps a fonts.gstatic.com address",
+      "fontFetchUrl refuses every other host",
+      "fontFetchUrl keeps the fetch on fonts.gstatic.com",
+      "cachedFont never fetches for another host",
+      "cachedFont fetches a gstatic font once",
+      "cachedFont treats a redirect from fonts.gstatic.com as a miss"
+    ]
+  }
+}
