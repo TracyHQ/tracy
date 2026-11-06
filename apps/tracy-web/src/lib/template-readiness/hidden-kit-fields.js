@@ -21,12 +21,14 @@
  *          (`kit-hidden-field-missing`, `fields` names each, `problems` the reader's words)
  *
  * Joomla only, and only on a kit that reads: the kit step itself says when there is none. The same on T3 and T4: the
- * fields name what the template prints, and the readers scope their rules by framework (lib/kit-framework.js).
+ * fields name what the template prints, and the readers scope their rules by framework (lib/kit-framework.js); `framework`
+ * in the params says which one the write step will use, null when no template profile row records it (read as T4).
  */
 import { emptyVideoButtonsOf } from '../empty-video-buttons.js'
 import { createdPageHideOf } from '../created-page-hide.js'
 import { hiddenPageLinksOf } from '../hidden-page-links.js'
 import { selfLinkButtonsOf } from '../self-link-buttons.js'
+import { frameworkOfKit } from '../kit-framework.js'
 import { kitOfRelease } from '../template-kit/road-step.js'
 
 export const HIDDEN_FIELDS_STEP = 'kit-hidden-fields'
@@ -34,10 +36,13 @@ export const HIDDEN_FIELDS_STEP = 'kit-hidden-fields'
 /** A Joomla layout as `article_layout` holds it: `<template or _>:<file>` (the kit tool's legal-layout.mjs rule). */
 const LAYOUT = /^(?:_|[a-z0-9_-]+):[a-z0-9_-]+$/i
 
-const said = (value) => typeof value === 'string' && value.trim() !== ''
+const isNonBlank = (value) => typeof value === 'string' && value.trim() !== ''
 
-/** A list field: its kit key, the write step's reader (`{ kept, problems }`) and the tool command that writes it. */
-const listField = (field, command, read) => ({
+/**
+ * A list field: its kit key, the tool command that writes it, and the write step's reader of it with the key of the entries
+ * that reader keeps (`selectors` or `containers`).
+ */
+const listField = (field, command, read, keptKey) => ({
   field,
   command,
   /** @param {any} site */
@@ -45,10 +50,10 @@ const listField = (field, command, read) => ({
     const value = site?.[field]
     if (!Array.isArray(value)) return { state: 'missing', problems: [] }
     if (value.length === 0)
-      return said(site?.noneWhy?.[field])
+      return isNonBlank(site?.noneWhy?.[field])
         ? { state: 'none', problems: [] }
         : { state: 'missing', problems: [] }
-    const { kept, problems } = read({ site })
+    const { [keptKey]: kept, problems } = read({ site })
     return kept.length > 0 && problems.length === 0
       ? { state: 'declared', problems }
       : { state: 'missing', problems }
@@ -57,22 +62,10 @@ const listField = (field, command, read) => ({
 
 /** The five fields, in the order the kit tool's README names them. */
 export const HIDDEN_KIT_FIELDS = Object.freeze([
-  listField('emptyVideoButtons', 'video-buttons', (kit) => {
-    const { selectors, problems } = emptyVideoButtonsOf(kit)
-    return { kept: selectors, problems }
-  }),
-  listField('selfLinkButtons', 'self-link-buttons', (kit) => {
-    const { containers, problems } = selfLinkButtonsOf(kit)
-    return { kept: containers, problems }
-  }),
-  listField('hiddenPageLinks', 'hidden-page-links', (kit) => {
-    const { containers, problems } = hiddenPageLinksOf(kit)
-    return { kept: containers, problems }
-  }),
-  listField('createdPageHide', 'created-page-hide', (kit) => {
-    const { selectors, problems } = createdPageHideOf(kit)
-    return { kept: selectors, problems }
-  }),
+  listField('emptyVideoButtons', 'video-buttons', emptyVideoButtonsOf, 'selectors'),
+  listField('selfLinkButtons', 'self-link-buttons', selfLinkButtonsOf, 'containers'),
+  listField('hiddenPageLinks', 'hidden-page-links', hiddenPageLinksOf, 'containers'),
+  listField('createdPageHide', 'created-page-hide', createdPageHideOf, 'selectors'),
   {
     field: 'createdPageLayouts.legal',
     command: 'legal-layout',
@@ -81,7 +74,7 @@ export const HIDDEN_KIT_FIELDS = Object.freeze([
       const legal = site?.createdPageLayouts?.legal
       if (!legal || typeof legal !== 'object') return { state: 'missing', problems: [] }
       if (legal.articleLayout === null)
-        return said(legal.why) ? { state: 'none', problems: [] } : { state: 'missing', problems: [] }
+        return isNonBlank(legal.why) ? { state: 'none', problems: [] } : { state: 'missing', problems: [] }
       return typeof legal.articleLayout === 'string' && LAYOUT.test(legal.articleLayout.trim())
         ? { state: 'declared', problems: [] }
         : {
@@ -118,12 +111,14 @@ export const HIDDEN_KIT_FIELDS_CHECK = Object.freeze({
     const kit = world?.templateKit ?? kitOfRelease(release, world?.contracts ?? new Map())
     if (kit?.state !== 'read') return null
     const { declared, none, missing, problems } = hiddenKitFieldsOf(kit.doc)
+    // The body class the write step scopes the self link and created page rules by (null: no profile row, read as T4).
+    const framework = frameworkOfKit(kit.doc, { contracts: world?.contracts })
     if (missing.length)
       return {
         state: 'todo',
         code: 'kit-hidden-field-missing',
-        params: { fields: missing, declared, none, problems }
+        params: { fields: missing, declared, none, problems, framework }
       }
-    return { state: 'done', code: 'kit-hidden-fields-declared', params: { declared, none } }
+    return { state: 'done', code: 'kit-hidden-fields-declared', params: { declared, none, framework } }
   }
 })

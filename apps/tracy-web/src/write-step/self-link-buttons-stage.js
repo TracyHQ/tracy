@@ -6,7 +6,7 @@
 // and written only when it differs, so a rerun sends nothing.
 import { createHash } from 'node:crypto'
 import { menuRows } from '../lib/joomla-menu-rows.js'
-import { frameworkOfKit } from '../lib/kit-framework.js'
+import { frameworkFor } from '../lib/kit-framework.js'
 import {
   SELF_LINKS_SLOT,
   selfLinkBlockFor,
@@ -29,7 +29,7 @@ export { SELF_LINKS_SLOT }
  */
 export async function hideSelfLinkButtons({ door, siteKey, kit, keptPages, menutype = null, framework }) {
   if (!Array.isArray(kit?.site?.selfLinkButtons)) return []
-  const scope = framework === undefined ? frameworkOfKit(kit) : framework
+  const bodyFramework = frameworkFor(kit, framework)
   const { containers, problems } = selfLinkButtonsOf(kit)
   const module = headModuleOf(kit)
   const line = (fields) => ({
@@ -57,7 +57,7 @@ export async function hideSelfLinkButtons({ door, siteKey, kit, keptPages, menut
       path: page.path,
       rows: rowsOpening(page, rows, menutype)
     }))
-    block = selfLinkBlockFor(selfLinkSelectorsFor(openings, containers, scope))
+    block = selfLinkBlockFor(selfLinkSelectorsFor(openings, containers, bodyFramework))
   }
   let content
   try {

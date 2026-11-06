@@ -83,6 +83,10 @@ test('the latest JA Boxing kit declares all five and passes', () => {
     HIDDEN_KIT_FIELDS.map((f) => f.field)
   )
   assert.deepEqual(judged.params.none, [])
+  assert.equal(
+    HIDDEN_KIT_FIELDS_CHECK.judge(boxingRelease, { contracts: defaultContracts() }).params.framework,
+    't4'
+  )
 })
 
 test('a JA Boxing kit with one field removed is todo, naming that field', () => {

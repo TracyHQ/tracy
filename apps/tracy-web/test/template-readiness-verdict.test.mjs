@@ -142,7 +142,8 @@ test('the T3 case: JA Diner j6 is judged by the same pieces and codes (recorded 
   assert.deepEqual(brief(verdict), [
     ['quickstart-release', 'done', 'install-file-ready'],
     ['contract', 'done', 'coverage-ready'],
-    ['template-kit', 'done', 'kit-approved'],
+    // The kit names none of the five hidden-by-CSS fields (#435).
+    ['template-kit', 'todo', 'kit-hidden-field-missing'],
     ['cowork-pin', 'todo', 'customize-not-checked'],
     ['customize', 'todo', 'customize-not-checked'],
     ['design-system', 'todo', 'ds-not-checked']
@@ -153,7 +154,7 @@ test('the command line prints the verdict of a named template as text and as JSO
   let text = ''
   assert.equal(await main(['ja-diner', '--pin-only'], { out: (s) => (text += s) }), 1)
   assert.match(text, /^quickstart\/ja-diner\/j6 1\.0\.5 /)
-  assert.match(text, /done {5}template-kit {9}kit-approved/)
+  assert.match(text, /todo {5}template-kit {9}kit-hidden-field-missing/)
   let json = ''
   assert.equal(await main(['quickstart/ja-diner/j6', '--json', '--pin-only'], { out: (s) => (json += s) }), 1)
   const doc = JSON.parse(json)

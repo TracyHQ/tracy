@@ -30,3 +30,6 @@ export function frameworkOfKit(kit, { contracts, profiles } = {}) {
   }
   return null
 }
+
+/** The framework a write stage scopes its rules by: the one handed in (`null` included), else the kit's own. */
+export const frameworkFor = (kit, given) => (given === undefined ? frameworkOfKit(kit) : given)

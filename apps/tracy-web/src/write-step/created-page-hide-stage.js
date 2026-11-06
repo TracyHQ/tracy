@@ -13,7 +13,7 @@ import {
   createdPageHideOf,
   withCreatedHideBlock
 } from '../lib/created-page-hide.js'
-import { frameworkOfKit } from '../lib/kit-framework.js'
+import { frameworkFor } from '../lib/kit-framework.js'
 import { headModuleOf } from './brand-write-orders.js'
 import { doorCall, readRow } from './settings-door.js'
 
@@ -26,7 +26,7 @@ import { doorCall, readRow } from './settings-door.js'
  */
 export async function hideOnCreatedPages({ door, siteKey, kit, created, framework }) {
   if (!Array.isArray(kit?.site?.createdPageHide)) return []
-  const scope = framework === undefined ? frameworkOfKit(kit) : framework
+  const bodyFramework = frameworkFor(kit, framework)
   const { selectors, problems } = createdPageHideOf(kit)
   const module = headModuleOf(kit)
   const line = (fields) => ({
@@ -37,7 +37,7 @@ export async function hideOnCreatedPages({ door, siteKey, kit, created, framewor
     readBack: null,
     ...fields
   })
-  const block = createdHideBlockFor(createdHideSelectorsFor(created, selectors, scope))
+  const block = createdHideBlockFor(createdHideSelectorsFor(created, selectors, bodyFramework))
   const failed = (reason) => (block ? [line({ status: 'failed', reason })] : [])
   if (problems.length && !selectors.length) return [line({ status: 'failed', reason: problems.join('; ') })]
   if (module === null) return failed('the kit names no head injection block to carry the rule')
