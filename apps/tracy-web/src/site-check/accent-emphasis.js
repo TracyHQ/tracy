@@ -8,6 +8,7 @@
 import { colourOfComputed, isShade } from '../lib/brand-accent/accent-colours.js'
 import { spanMarkOf } from '../lib/site-copy/inline-emphasis.js'
 import { showsRawCodes, visibleText } from '../lib/site-copy/emphasis-markup.js'
+import { kitSlotIndex } from '../lib/template-kit/kit-slots.js'
 import { WRITE_STEP } from '../lib/site-build-steps.js'
 import { factsOf } from './brand-accent.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
@@ -19,18 +20,10 @@ const squashed = (text) => visibleText(text).toLowerCase()
 const RAW_REASON =
   'The page prints the content map emphasis codes as words: the site stores codes where the template prints HTML.'
 
-/** The kit's text slots whose demo marks words with a span, by id. */
+/** The kit's text slots whose demo marks words with a span, by id: a block's own, its lists' and its demo-owned ones. */
 function spanSlotsOf(kit) {
   const out = new Map()
-  for (const b of each(kit?.blocks))
-    for (const s of [
-      ...each(b?.slots),
-      ...each(b?.lists).flatMap((l) => [
-        ...each(l?.rowSlots),
-        ...each(l?.rows).flatMap((r) => each(r?.slots))
-      ])
-    ])
-      if (typeof s?.id === 'string' && spanMarkOf(s) && !out.has(s.id)) out.set(s.id, spanMarkOf(s))
+  for (const [id, s] of kitSlotIndex(kit)) if (spanMarkOf(s)) out.set(id, spanMarkOf(s))
   return out
 }
 

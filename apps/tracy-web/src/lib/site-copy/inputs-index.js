@@ -3,6 +3,7 @@
 // oddly shaped part yields an empty index and never throws. Nothing here modifies an input.
 import { mainMenuOf, planCopyEntries } from './main-menu.js'
 import { sentencesOf, stripEllipsis, textOfValue, wordsOf } from './text-tools.js'
+import { blockSlotsOf } from '../template-kit/kit-slots.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
@@ -13,7 +14,7 @@ export const HEADING_LIMIT_MIN = 20
 const REVIEW_BLOCK = /review|testimonial/i
 const REVIEW_SAYS = /\b(quote|review|testimonial)s?\b/i
 
-// Text slots of the kit by id: block slots, list row slots and the slots of every demo row.
+// Text slots of the kit by id: block slots, list row slots, the slots of every demo row and the demo-owned slots.
 function indexKit(kit) {
   const slots = new Map()
   const hiddenByBlock = new Map()
@@ -23,11 +24,7 @@ function indexKit(kit) {
   }
   for (const b of arr(kit?.blocks)) {
     if (!isObject(b)) continue
-    for (const s of arr(b.slots)) add(s, b)
-    for (const l of arr(b.lists)) {
-      for (const s of arr(l?.rowSlots)) add(s, b)
-      for (const row of arr(l?.rows)) for (const s of arr(row?.slots)) add(s, b)
-    }
+    for (const s of blockSlotsOf(b)) add(s, b)
     hiddenByBlock.set(
       b.id,
       [...slots.values()].filter((s) => s.blockId === b.id).map((s) => s.id)

@@ -3,26 +3,18 @@
 // writer gave words and the write step did not put them on the site: that is step 9's, not the writer's step 6.
 import { visibleText } from '../lib/site-copy/emphasis-markup.js'
 import { WRITE_STEP } from '../lib/site-build-steps.js'
+import { kitSlotIndex } from '../lib/template-kit/kit-slots.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const words = (text) => visibleText(text).toLowerCase()
 /** Demo words shorter than this say too little to name one slot. */
 const MIN_WORDS = 6
 
-/** The kit's text slots with their demo words, by id. */
+/** The kit's text slots with their demo words, by id (demo-owned slots included). */
 function demoWords(kit) {
   const out = new Map()
-  const add = (slot) => {
-    if (typeof slot?.id === 'string' && typeof slot.sample === 'string' && !out.has(slot.id))
-      out.set(slot.id, words(slot.sample))
-  }
-  for (const block of each(kit?.blocks)) {
-    each(block?.slots).forEach(add)
-    for (const list of each(block?.lists)) {
-      each(list?.rowSlots).forEach(add)
-      for (const row of each(list?.rows)) each(row?.slots).forEach(add)
-    }
-  }
+  for (const [id, slot] of kitSlotIndex(kit))
+    if (typeof slot.sample === 'string') out.set(id, words(slot.sample))
   return out
 }
 
