@@ -9,8 +9,8 @@
  * done with nothing to act on). `text` may hold `{name}` placeholders, filled from the params of the piece (a list
  * is joined with commas; a param the piece lacks reads as `<name>`).
  *
- * Not here yet: the codes of the demo baseline step (ticket #433) and of the Road to live steps after the verdict's
- * (demo, listing, publish, polish). They join when their steps reach the verdict.
+ * Not here yet: the codes of the Road to live steps after the verdict's (demo, listing, publish, polish). They join
+ * when their steps reach the verdict.
  */
 const SKILL = '.agents/skills/quickstart-contract/SKILL.md'
 const CONTRACT_SKILL = (section) => `${SKILL} section ${section}`
@@ -26,8 +26,14 @@ const DS_CHECK = `node scripts/template-design-system-readiness.mjs <empty folde
 
 /** The two step 0 commands of the demo baseline (#419): measure it on the untouched site, then record it beside the contract. */
 const BASELINE_MEASURE =
-  'WRITE_BENCH_BASELINE_DIR=<dir> node apps/tracy-web/scripts/site-check-baseline.mjs --site <site key> --version <contract id> --pages-file <json>'
+  'WRITE_BENCH_BASELINE_DIR=<dir> node apps/tracy-web/scripts/site-check-baseline.mjs --site <site key> --version {contract} --pages-file <json>'
 const BASELINE_RECORD = `${KIT_TOOL} baseline --from <dir>/<contract id with / as _>.json --contract <contract folder>`
+
+/** A red demo baseline: measure it on the untouched site, record it beside the contract, commit it. */
+const BASELINE_FIX = (what) => ({
+  text: `${what} Measure it on a fresh, untouched quickstart site of this version (nobody has written to it), then record it beside the contract and commit demo-baseline.json: ${BASELINE_RECORD}`,
+  command: BASELINE_MEASURE
+})
 
 const GREEN = Object.freeze({ green: true })
 const WAITING = (what) => ({
@@ -369,7 +375,14 @@ export const FIXES = Object.freeze({
     text: 'Only worth-fixing Design system rules remain. They do not hold a release; fix them when the template is next touched.',
     command: DS_CHECK,
     skill: `${TDSR} section 2`
-  }
+  },
+
+  // demo-baseline (demo-baseline-check.js)
+  'demo-baseline-recorded': GREEN,
+  'demo-baseline-waiting': WAITING('a contract that seals this version'),
+  'demo-baseline-missing': BASELINE_FIX('There is no demo baseline of {contract} beside the contract.'),
+  'demo-baseline-invalid': BASELINE_FIX('The demo baseline of {contract} cannot be used ({reason}).'),
+  'demo-baseline-stale': BASELINE_FIX('The demo baseline beside {contract} is of another version ({reason}).')
 })
 
 /** A `{name}` placeholder filled from the params: a list joined with commas, a missing param shown as `<name>`. */

@@ -52,7 +52,15 @@ test('the verdict lists the pieces in one fixed order, each with a state, a code
   const verdict = readinessVerdict(release(), { contracts: new Map() })
   assert.deepEqual(
     verdict.pieces.map((p) => p.piece),
-    ['quickstart-release', 'contract', 'template-kit', 'cowork-pin', 'customize', 'design-system']
+    [
+      'quickstart-release',
+      'contract',
+      'template-kit',
+      'cowork-pin',
+      'customize',
+      'design-system',
+      'demo-baseline'
+    ]
   )
   assert.deepEqual(
     PIECES.map((p) => p.piece),
@@ -74,9 +82,11 @@ test('a piece is decided by its first step not passed, with the code Road to liv
     ['template-kit', 'blocked', 'kit-waiting'],
     ['cowork-pin', 'blocked', 'customize-waiting'],
     ['customize', 'blocked', 'customize-waiting'],
-    ['design-system', 'todo', 'ds-not-checked']
+    ['design-system', 'todo', 'ds-not-checked'],
+    ['demo-baseline', 'blocked', 'demo-baseline-waiting']
   ])
   assert.equal(pieceOf(verdict, 'template-kit').blockedBy, 'contract')
+  assert.equal(pieceOf(verdict, 'demo-baseline').blockedBy, 'contract')
   assert.equal(pieceOf(verdict, 'contract').step, 'contract')
 })
 
@@ -124,7 +134,7 @@ test('the reference: the latest JA Boxing j6 release in the quickstart list is g
     contracts: defaultContracts(),
     server: false
   })
-  for (const piece of ['quickstart-release', 'contract', 'template-kit'])
+  for (const piece of ['quickstart-release', 'contract', 'template-kit', 'demo-baseline'])
     assert.equal(pieceOf(verdict, piece).state, 'done', `${piece}: ${pieceOf(verdict, piece).code}`)
   // The two stored checks are not in the repository: without them the verdict says so and never passes them.
   assert.equal(pieceOf(verdict, 'cowork-pin').code, 'customize-not-checked')
@@ -146,7 +156,9 @@ test('the T3 case: JA Diner j6 is judged by the same pieces and codes (recorded 
     ['template-kit', 'todo', 'kit-hidden-field-missing'],
     ['cowork-pin', 'todo', 'customize-not-checked'],
     ['customize', 'todo', 'customize-not-checked'],
-    ['design-system', 'todo', 'ds-not-checked']
+    ['design-system', 'todo', 'ds-not-checked'],
+    // No demo baseline of 1.0.5 beside its contract (#433).
+    ['demo-baseline', 'todo', 'demo-baseline-missing']
   ])
 })
 

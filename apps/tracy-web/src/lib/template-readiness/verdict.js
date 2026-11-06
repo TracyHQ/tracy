@@ -9,6 +9,8 @@
  *                        plugin (STAB-1, `customize-split.js`)
  *   customize            every other rule of Customize your site (the questions a customer answers)
  *   design-system        the design system slot contract and its readiness check (step design-system)
+ *   demo-baseline        the demo baseline beside the contract, measured once per quickstart version (a check alone,
+ *                        `demo-baseline-check.js`, ticket #433)
  *
  * 🔒 ONE SET OF FACTS. The steps are the very Road to live steps (`release-steps.js`, `check-steps.js` and the two
  * road-step modules), built once here; `roadOf` starts its road from `verdictSteps` and adds the demo, the listing,
@@ -20,9 +22,9 @@
  * `todo`, `blocked` or `checking` step), else its first `warn`, else its last step (`done`). `step` names the step
  * that decided it.
  *
- * EXTENSION POINT: `CHECKS` (`checks.js`, one line per check). A later check (plugin write doors, hidden kit fields, demo measurements, the demo
- * baseline) is its own module returning `{ state, code, params }` for one piece; listed in `CHECKS` (or handed in as
- * `world.checks`), it joins that piece after its road steps, or opens a new piece after the six when it names one.
+ * EXTENSION POINT: `CHECKS` (`checks.js`, one line per check). A check that is not a road step (plugin write doors, hidden kit fields, demo measurements, the
+ * demo baseline) is its own module returning `{ state, code, params, blockedBy? }` for one piece; listed in `CHECKS` (or handed in as
+ * `world.checks`), it joins that piece after its road steps, or opens a new piece after the fixed ones when it names one.
  * A check is not a Road to live step until its own ticket puts it on the road.
  */
 import { fitOfRelease } from '../content-coverage/fit.js'
@@ -48,7 +50,9 @@ export const PIECES = Object.freeze([
   { piece: 'template-kit', steps: ['template-kit'] },
   { piece: 'cowork-pin', half: 'plugin' },
   { piece: 'customize', half: 'rest' },
-  { piece: 'design-system', steps: ['design-system'] }
+  { piece: 'design-system', steps: ['design-system'] },
+  // Made of a check alone (`demo-baseline-check.js`), not a Road to live step.
+  { piece: 'demo-baseline', steps: [] }
 ])
 
 /** The Road to live steps the verdict builds, in road order: the first steps of every road. */
@@ -156,7 +160,14 @@ export function readinessVerdict(release, world) {
     const judged = check.judge(release, world, { steps, version })
     if (!judged) continue
     const list = entries.get(check.piece) ?? []
-    list.push({ step: check.step, state: judged.state, code: judged.code, params: judged.params ?? {} })
+    const entry = /** @type {any} */ ({
+      step: check.step,
+      state: judged.state,
+      code: judged.code,
+      params: judged.params ?? {}
+    })
+    if (judged.blockedBy) entry.blockedBy = judged.blockedBy
+    list.push(entry)
     entries.set(check.piece, list)
   }
   const pieces = [...entries]

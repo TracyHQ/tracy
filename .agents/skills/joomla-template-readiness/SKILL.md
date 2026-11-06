@@ -38,9 +38,9 @@ is the one judged. DEMO-1 and the preview door health are server facts, judged o
 1. Take the **first piece in verdict order** whose state is not `done`:
    `todo` or `warn` is the one to fix; `blocked` waits for the piece in `blockedBy`; `checking` means read again.
    Skip `kit-not-approved` and `kit-approval-stale`: the approval comes at green.
-2. Find its fix: `params.fix` or `params.command` when the piece carries one, else
-   [`references/fix-map.md`](references/fix-map.md). **TODO (#432):** the fix registry replaces the map; until it
-   lands, the map and the verdict's params are the fix text.
+2. Its fix is the piece's `fix` in the verdict JSON (`text`, and `command` or `skill` when one exists), from the one
+   fix registry (`apps/tracy-web/src/lib/template-readiness/fixes.js`). Before running it, check
+   [`references/fix-map.md`](references/fix-map.md): a code listed there is a stop (section 5).
 3. Run that section or command. Rebuilding the kit goes through [`references/kit-rebuild.md`](references/kit-rebuild.md)
    (a `build` wipes the five hand-declared hidden fields).
 4. Append one line to `$RUN/fix-log.md`: piece, code, what changed, where (template release, contract, kit, pin, tool).
@@ -51,8 +51,9 @@ is the one judged. DEMO-1 and the preview door health are server facts, judged o
 door reader): test first, in this repository, in the same PR when small. Never hand-edit one template's contract or
 kit to get past a rule; the next capture or build wipes it and the next template trips again.
 
-**TODO (#433, after develop is merged):** the demo baseline piece. Until it is on the branch, the verdict has no such
-piece; when it lands, its fix is the two commands its params name.
+**Demo baseline.** Its fix names two commands: measure on a site freshly restored from the pinned version that nobody
+has written to, then record the file beside the contract and commit it. Measure it last in a round that cuts a new
+version, so it measures the version that ships.
 
 ## 3. Eye review
 
@@ -78,7 +79,7 @@ its params, what was tried, and who must act.
 | Coverage hole of class `unknown` (`quickstart-contract` 7b step 5) | a person reads the evidence |
 | The next pack's shape differs from the released one (`quickstart-contract` 7c) | a person decides |
 | A design-system fault in read-only design data (`tdsr`) | the design system owners |
-| A code the fix map and the verdict's params do not cover | a person; add the row after |
+| A piece that is not `done` and carries no `fix` | a person; add the registry entry after |
 | A hook or permission blocks a command | the preparer; never work around it |
 
 ## 6. Done
