@@ -5,6 +5,7 @@
  * import and one line in the list below; it joins its piece after that piece's road steps, or opens a new piece.
  * @typedef {{ piece: string, step: string, judge: (release: any, world: any, facts: { steps: any[], version: string | null }) => { state: string, code: string, params?: Record<string, unknown> } | null }} ReadinessCheck
  */
+import { WRITE_DOORS_CHECK } from './write-doors-check.js'
 
 /** @type {readonly ReadinessCheck[]} */
-export const CHECKS = Object.freeze([])
+export const CHECKS = Object.freeze([WRITE_DOORS_CHECK])

@@ -170,15 +170,14 @@ test('a pinned plugin the manifest has not read is not checked, which is never a
   assert.equal(judged.params.plugin, '0.24.84')
 })
 
-test('the check joins the cowork-pin piece of the verdict', () => {
+test('the check is listed in the verdict and joins its cowork-pin piece', () => {
   const pin = latestPin('ja-boxing')
   const world = {
     contracts: defaultContracts(),
     server: false,
     readiness: { version: pin.version, state: 'done', report: { results: [] } },
     pluginDoors: MANIFEST,
-    pins: pinsWithBoxingOn('0.24.80'),
-    checks: [WRITE_DOORS_CHECK]
+    pins: pinsWithBoxingOn('0.24.80')
   }
   const piece = readinessVerdict(boxing(), world).pieces.find((p) => p.piece === 'cowork-pin')
   assert.equal(piece.step, 'write-doors')

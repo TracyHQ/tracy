@@ -218,7 +218,9 @@ test('the Cowork pin piece judges only the rule that reads the pinned plugin; Cu
   const world = (results) => ({
     contracts: defaultContracts(),
     server: false,
-    readiness: customizeCheck(pin.version, results)
+    readiness: customizeCheck(pin.version, results),
+    // Only the two halves of the stored check: the later checks of the piece (write doors) are tested on their own.
+    checks: []
   })
   const plugin = readinessVerdict(
     releaseOfPin(pin, defaultContracts()),
