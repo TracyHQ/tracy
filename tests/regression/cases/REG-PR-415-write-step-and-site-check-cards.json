@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-415-write-step-and-site-check-cards",
   "kind": "fix",
-  "title": "The write step rewrites links and kept pages the route stage renamed, writes brief phones as tel: links and heading emphasis as real tags, never keeps refused demo words silently; the site check never reads green on nothing checked and compares printed alts with what step 8 saw",
+  "title": "The write step rewrites links and kept pages the route stage renamed, writes brief phones as tel: links and heading emphasis as real tags, never keeps refused demo words silently, hides empty video play buttons and self-link more buttons, and sends kept links to hidden pages to a living page; the site check never reads green on nothing checked and compares printed alts with what step 8 saw",
   "pr": 415,
   "area": "write-step/site-check",
   "cms": ["jo"],
@@ -17,15 +17,17 @@
     "J, AG: a site check group that checked nothing is not applicable with its reason or unmeasured, never green; a hide the contract has no slot for is blamed on step 0.",
     "AH, AP, K, AL, AB: list-rows reads only the row's own block; a maps search map button is not refused; a slot printed as an image alt or title counts as printed; a rerun with the same files keeps removed slots; the look guard lets words replace social icons for a person with no account.",
     "N, AS: heading emphasis is stored as real tags where the demo value is HTML, and a refused text slot never keeps demo words in silence.",
-    "Y: the site check's alt-matches-picture group blocks an alt that does not describe the picture step 8 placed, and is not applicable when no picture was written."
+    "Y: the site check's alt-matches-picture group blocks an alt that does not describe the picture step 8 placed, and is not applicable when no picture was written.",
+    "AR, AF, AM: a kit that names its play buttons gets one hide rule in its head block; each kept page hides only the more buttons that lead to itself, written after the renames; a link its row keeps to a hidden page goes to a living page, by a menu item id that a later rename (AD) leaves alone."
   ],
   "selectors": {
     "renamed": "rewriteRenamedLinks in apps/tracy-web/src/write-step/renamed-link-stage.js",
     "statuses": "statusOf in apps/tracy-web/src/site-check/site-check.js",
     "emphasis": "runEmphasisStage in apps/tracy-web/src/write-step/emphasis-stage.js",
-    "alt": "altMatchesPictureGroup in apps/tracy-web/src/site-check/alt-matches-picture.js"
+    "alt": "altMatchesPictureGroup in apps/tracy-web/src/site-check/alt-matches-picture.js",
+    "headRules": "hideEmptyVideoButtons, hideSelfLinkButtons and hideHiddenPageLinks in apps/tracy-web/src/write-step/"
   },
-  "evidence": "06/11/2026, cards AD AE P AQ AN J AG AH AP K AL AB N AS Y from step 9 and step 11 bench runs on a sealed JA Boxing quickstart, merged into PR 415.",
+  "evidence": "06/11/2026, cards AD AE P AQ AN J AG AH AP K AL AB N AS Y AR AF AM from step 9 and step 11 bench runs on a sealed JA Boxing quickstart, merged into PR 415.",
   "fence": "Write step and site check on invented fixtures with fake door and page readers. Not exercised: a real site write, a real browser page read, the Postgres-backed bench.",
   "run": {
     "cmd": [
@@ -39,7 +41,10 @@
       "apps/tracy-web/test/site-check-zero-checked.test.mjs",
       "apps/tracy-web/test/write-step-emphasis.test.mjs",
       "apps/tracy-web/test/write-step-text-fallback.test.mjs",
-      "apps/tracy-web/test/site-check-alt-matches-picture.test.mjs"
+      "apps/tracy-web/test/site-check-alt-matches-picture.test.mjs",
+      "apps/tracy-web/test/write-step-video-buttons.test.mjs",
+      "apps/tracy-web/test/write-step-self-link-buttons.test.mjs",
+      "apps/tracy-web/test/write-step-hidden-page-links.test.mjs"
     ],
     "tests": [
       "a url menu item and a link in a slot that name a moved address are written to the new one and read back",
@@ -48,7 +53,10 @@
       "a group that checked 0 and says why is not applicable, printed with its reason, and keeps the verdict green",
       "a slot whose demo value is HTML gets real tags; the ACM slot keeps its codes",
       "the three rungs, each tried once: plain words, then hide, then a failed line naming the demo text",
-      "an alt that describes its picture agrees; one that names another scene blocks on that slot, blamed on step 6"
+      "an alt that describes its picture agrees; one that names another scene blocks on that slot, blamed on step 6",
+      "a kit that names its play buttons gets one hide rule in its head block, beside the brand block, read back there",
+      "the stage writes the rules after the renames, at the address the page answers now, and reads them back",
+      "a relinked address survives the rename of the living page it names: the renamed-link stage leaves it alone"
     ],
     "needs": []
   }
