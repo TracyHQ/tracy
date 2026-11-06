@@ -16,6 +16,7 @@
  *
  * `--check` writes nothing and exits non-zero when the bundle no longer matches the sources.
  */
+import { dictionaryJson } from '../../../../scripts/lib/locale-bundle-data.mjs'
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
@@ -61,12 +62,6 @@ if (languages.length === 0) {
   console.error(`build-client: no language directories found in ${ROOT}`)
   process.exit(1)
 }
-
-/** Emit localized data as escaped string literals; the reviewable source stays in JSON. */
-const dictionaryJson = (value, space) =>
-  JSON.stringify(value, null, space).replace(/"(?:[^"\\]|\\.)*"/g, (token) =>
-    token.replace(/[^\u0021-\u007e]/g, (unit) => `\\u${unit.charCodeAt(0).toString(16).padStart(4, '0')}`)
-  )
 
 const body = dictionaryJson(table, 2).replace(/\n/g, '\n    ')
 

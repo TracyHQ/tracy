@@ -46,3 +46,17 @@ install/API/language run passed 103 tests and the pacing run passed 20. The pack
 including lint, all 14 typecheck projects, committed bundles and both web/native boot graphs. The
 two explicitly skipped broad gates are not claimed as passing. Results are committed in
 `tests/regression/results/2026-11-06-27c6fa6f9.jsonl`.
+
+## English contribution policy and generated locale data
+
+The trusted policy rejected new localized strings in generated JavaScript, while accepting their
+source JSON dictionaries. Both locale builders now use one shared serializer that emits escaped
+string literals. JSON sources remain UTF-8 and runtime values are unchanged. Executing both
+committed bundles and comparing every registration against source verifies all 233 dictionaries,
+including the language labels and fallbacks. The new regression case is
+`REG-PR-398-import-locale-bundles`.
+
+The original branch history was preserved locally at `refs/backup/pr-398-before-ci`, then
+consolidated onto the current develop base because the policy inspects every new commit. The
+policy and its exceptions were not changed. Prior result files describe the earlier branch state;
+the latest three official regression results are recorded on consolidated source commit `2bf48aa33b`.
