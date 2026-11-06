@@ -138,4 +138,21 @@ describe('F14 — qa-notes', () => {
     assert.equal(j.counts.sourceFlagged, 1)
     assert.equal(j.todos.find((t) => t.id.startsWith('N-')).flag, 'SOURCE')
   })
+  // found while porting JA Restaurant: bare paths and per-stage lens files read as no pictures opened
+  it('a lens may write bare paths under Opened and several files per lens; a miss says what was read', () => {
+    const d = runDir({ opened: [], notes: '' })
+    writeFileSync(
+      path.join(d, 'notes', 'layout-round2.md'),
+      '# layout\n## Opened\n/s/a.png\n## Notes\n| Page | Axis | What | Where | Fix | Verify | Flag |\n|---|---|---|---|---|---|---|\n| en-home | a | Nav wraps | header | fix | one line | |\n'
+    )
+    const r = run(d)
+    assert.equal(r.code, 0, r.out)
+    const j = JSON.parse(readFileSync(path.join(d, 'NOTES-light.json'), 'utf8'))
+    assert.ok(j.todos.some((t) => t.what === 'Nav wraps'))
+    const none = runDir({ opened: [], notes: '' })
+    const miss = run(none)
+    assert.equal(miss.code, 1)
+    assert.match(miss.out, /Lens files read: layout=\[layout\.md\] 0 opened/)
+    assert.match(miss.out, /bare path/)
+  })
 })

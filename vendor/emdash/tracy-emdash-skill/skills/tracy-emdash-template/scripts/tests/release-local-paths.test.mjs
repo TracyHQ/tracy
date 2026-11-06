@@ -31,6 +31,17 @@ describe('shownPath', () => {
   })
 })
 
+describe('system paths', () => {
+  it('a file below a system directory is a builder path whether or not it exists there', () => {
+    const none = () => false
+    assert.deepEqual(localPathProblems({ report: '/etc/passwd' }, [], '', none), ['/report'])
+    assert.equal(holdsLocalPath('see /usr/local/bin/node', [], none), true)
+    assert.deepEqual(localPathProblems({ report: '/usr/contact' }, [], '', none), [], 'a route may start with /usr')
+    assert.deepEqual(localPathProblems({ report: '/usr/local/bin/x' }, [], '', none), ['/report'])
+    assert.equal(holdsLocalPath('/home/contact and /etc', [], none), false, 'a route, and a lone segment')
+  })
+})
+
 describe('localPathProblems', () => {
   const report = {
     origin: 'http://127.0.0.1:18302',

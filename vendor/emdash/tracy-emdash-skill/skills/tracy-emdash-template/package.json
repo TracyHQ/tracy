@@ -7,7 +7,7 @@
   "description": "Skill kit: tools and regression tests for building and accepting an EmDash template.",
   "scripts": {
     "test": "npm run test:docs && node scripts/test-kit.mjs",
-    "test:docs": "node scripts/check-docs-numbers.mjs && node --test scripts/check-docs-numbers.test.mjs scripts/perf/token-report.test.mjs scripts/lessons.test.mjs",
+    "test:docs": "node scripts/check-docs-numbers.mjs && node --test scripts/check-docs-numbers.test.mjs scripts/perf/token-report.test.mjs scripts/lessons.test.mjs scripts/new-template.test.mjs",
     "test:kit-sync": "node --test scripts/check-kit-sync.test.mjs"
   },
   "dependencies": {

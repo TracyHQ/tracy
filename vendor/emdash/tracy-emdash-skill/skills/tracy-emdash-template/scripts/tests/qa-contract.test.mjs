@@ -305,6 +305,21 @@ describe('F8 — qa.contract validation', () => {
       }),
       /measured styles missing: body-font\/mobile-dark/
     )
+    // found while porting JA Restaurant: an optional role hidden on mobile needs no invented value for that variant
+    assert.deepEqual(
+      mutate((c) => {
+        c.design.rules[0].optional = true
+        delete c.design.rules[0].styles['mobile-dark']
+      }),
+      []
+    )
+    rejects(
+      mutate((c) => {
+        c.design.rules[0].optional = true
+        c.design.rules[0].styles['mobile-dark'] = {}
+      }),
+      /measured styles missing: body-font\/mobile-dark/
+    )
     rejects(
       mutate((c) => {
         c.interactions['menu-open'].maxInnerWidth = 'wide'

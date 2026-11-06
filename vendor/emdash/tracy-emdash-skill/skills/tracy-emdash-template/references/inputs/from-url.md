@@ -12,7 +12,7 @@ node tools/inventory.mjs <dir> <out-dir>     # the next step, exactly as for an 
 ```
 
 The output folder **takes the shape of the site itself**: `/` → `index.html`, `/about` → `about/index.html`,
-assets keep their paths (`media/templates/site/…`). No file is rewritten, so relative links
+assets keep their paths (`media/templates/site/…`). Pages that differ only by query string (`/blog`, `/blog?start=5`) are kept apart: the query becomes a suffix (`blog/index~start=5.html`) and `crawl.json` lists each file with its URL. Backgrounds in inline `style="…url(…)"` and `<style>` blocks come too. No file is rewritten, so relative links
 in the downloaded HTML still point correctly — and `inventory.mjs` can hash the whole tree just like a design folder.
 
 ## What it takes

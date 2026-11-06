@@ -6,7 +6,7 @@
 // positive fixture is mutated rather than retyped: a hand-written "invalid" model tends to be
 // invalid for three reasons at once, and then it passes the test while the rule is broken.
 import assert from 'node:assert/strict'
-import { readdirSync, readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
 import { validateModel } from '../contract/validate.mjs'
@@ -313,7 +313,9 @@ test('VALUE_HOLDS_A_PAGE: a value carrying page furniture is a rendered page in 
 test('the contract stays neutral: no CMS storage word appears under scripts/contract/', () => {
   const dir = path.join(here, '..', 'contract')
   const offenders = []
-  for (const name of readdirSync(dir)) {
+  // Only the kit's own two files: a template keeps its own builders elsewhere, but one that put a file of its own
+  // under contract/ (say a contract builder whose pages say `collection`) must not turn the kit's check red.
+  for (const name of ['site-model.mjs', 'validate.mjs']) {
     const text = readFileSync(path.join(dir, name), 'utf8').toLowerCase()
     for (const word of FOREIGN_STORAGE_WORDS) {
       if (text.includes(word)) offenders.push(`${name}: ${word}`)
