@@ -60,6 +60,17 @@ phones printed outside `tel:` links went to `reach-accepts.json` with their reas
 door reader): test first, in this repository, in the same PR when small. Never hand-edit one template's contract or
 kit to get past a rule; the next capture or build wipes it and the next template trips again.
 
+**A new version.** When a fix needs the next quickstart version (a contract on a published release is never
+edited), first collect every fault of this round, so one cut carries them all: the eye review (section 3) on the
+current version, the coverage audit, and the door check below. Cut it with `release-batch.mjs build` (wraps
+`release-joomla.mjs`, writes `tracy_setting.json` and `README.md`) and `release-batch.mjs verify`. A new contract
+version needs its showcase decisions: check that
+`packages/cms/tracy-joomla-quickstart/showcase-decisions.json` has an entry for the new contract id and that
+`build-joomla-showcase-nav.mjs --contract <id>` reports `unresolved 0`. Without an entry the automatic rule leaves the
+template's demo "Pages" dropdown in a customer's navigation (JA Voyara 1.0.12: 3 items hidden, 8 unresolved, until
+the entry hid 21). Copy the previous version's entry and re-key it, or write one by the product decision recorded in
+the file's reasons.
+
 **Demo baseline.** Its fix names two commands: measure on a site freshly restored from the pinned version that nobody
 has written to (`--base <its address>` reads it on this machine, as `demo-measures.mjs --base` does; no tracy-web
 needed), then record the file beside the contract and commit it. Measure it last in a round that cuts a new
