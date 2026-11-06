@@ -10,7 +10,16 @@ export const REPAIR_LOG_VERSION = 'repair-log/1'
 export const REPAIR_LOG_FILE = 'repair-log.json'
 
 /** Every outcome a record may have. */
-export const OUTCOMES = Object.freeze(['kept', 'undone', 'dropped', 'failed', 'logged-only'])
+export const OUTCOMES = Object.freeze([
+  'kept',
+  'undone',
+  'dropped',
+  'failed',
+  'logged-only',
+  // A site check failure the live site does not confirm, and one with nothing to write to (#423).
+  'measurement-wrong',
+  'no-door'
+])
 
 /** One record of the log. */
 export function logRecord(fault, fields) {
@@ -27,6 +36,9 @@ export function logRecord(fault, fields) {
     crops: { by: null, before: [], after: [] },
     outcome: 'logged-only',
     reason: null,
+    // Which sources named the fault, and the site check groups that measured its kind green (fault-sources.js).
+    ...(fault.sources ? { sources: fault.sources } : {}),
+    ...(fault.missedBy ? { missedBy: fault.missedBy } : {}),
     ...fields
   }
 }
@@ -99,7 +111,17 @@ export function newBlockingFailures(firstCheck, finalCheck) {
  * The log as it is kept: its records, their counts by outcome, what the run spent, how the final check ended and the
  * blocking failures it gained over the first check.
  */
-export function repairLog({ site, records, unshot, replies = [], costUsd, ms, firstCheck, finalCheck }) {
+export function repairLog({
+  site,
+  records,
+  unshot,
+  replies = [],
+  costUsd,
+  ms,
+  firstCheck,
+  finalCheck,
+  merge = null
+}) {
   const counts = Object.fromEntries(OUTCOMES.map((o) => [o, records.filter((r) => r.outcome === o).length]))
   const newBlocking = finalCheck ? newBlockingFailures(firstCheck, finalCheck) : []
   const { compared, notCompared } = finalCheck
@@ -110,6 +132,8 @@ export function repairLog({ site, records, unshot, replies = [], costUsd, ms, fi
     site,
     counts: { found: records.length, ...counts, newBlocking: newBlocking.length },
     records,
+    // How the finder's faults and the first site check's failures were merged (fault-sources.js).
+    merge,
     unshot,
     // The model calls' reply files (model-replies.js), each naming the image files it was shown.
     replies,

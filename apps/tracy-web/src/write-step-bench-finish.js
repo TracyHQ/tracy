@@ -12,15 +12,18 @@ import { checkLines } from './site-check/check-lines.js'
 import { withReadBack } from './site-check/read-back.js'
 import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runFinisher } from './write-step/finisher/finisher.js'
+import { firstCheckNow, finisherSources, mergeLine } from './write-step-bench-finish-sources.js'
 import { siteCheckOfRun } from './write-step-bench-site-check.js'
 
-export const FINISH_USAGE = `  finish --run <runId> --account <email> --out <dir> [--check-file <path>] [--site-pictures-file <path>]
+export const FINISH_USAGE = `  finish --run <runId> --account <email> --out <dir> [--check-file <path> | --check-now [--all-groups]] [--site-pictures-file <path>]
          [--brief-file <path>] [--copy-file <path>]
                                               start at the finisher on the run's written site: shoot every page, find
                                               faults of the fault list, repair them through the write door, check each
                                               repair and undo the ones not better, then run the site check a final time.
                                               The first site check is the one check kept on the run, or --check-file;
                                               the final one runs with its options (every group when it ran every group).
+                                              --check-now: run the first site check now, alongside the finder, and
+                                              write it as first-site-check.json; its failures merge with the finder's
                                               --site-pictures-file: step 8's site-pictures.json, as the first check had it
                                               --brief-file, --copy-file: the run's brief and site copy, the only places a
                                               repair takes new words from (with step 8's picture descriptions)
@@ -62,7 +65,9 @@ export async function finishRun(d, values) {
       return refused(d, `--check-file cannot be read as JSON: ${error?.message ?? error}`)
     }
   }
-  if (!firstCheck) return refused(d, `NO_FIRST_CHECK: run check --run ${r.id} first, or give --check-file.`)
+  const checkNow = values['check-now'] === true
+  if (!firstCheck && !checkNow)
+    return refused(d, `NO_FIRST_CHECK: run check --run ${r.id} first, or give --check-file or --check-now.`)
   const files = {}
   for (const [flag, name] of [
     ['site-pictures-file', 'pictures'],
@@ -78,7 +83,7 @@ export async function finishRun(d, values) {
   }
   const pictures = files.pictures ?? null
   // The final check measures as the first did, so the two can be compared group by group.
-  const allGroups = firstCheck.allGroups === true
+  const allGroups = checkNow ? values['all-groups'] === true : firstCheck.allGroups === true
   const kit = openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc
   const contentMap = openContentMap(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null
   if (!kit) return refused(d, `No readable kit "${r.report.kit}".`)
@@ -97,12 +102,21 @@ export async function finishRun(d, values) {
   // the host still names its frames by the path (lib/quickstart-releases.js).
   const shoot = await d.makeCapture(r.report.site)
   const capture = (layouts, opts) => shoot(joomlaAddresses(layouts, 'joomla'), opts)
+  // The first check started now runs beside the finder; the template demo's block shots and the live page reader feed the
+  // merge of its failures with the finder's faults (write-step-bench-finish-sources.js).
+  const first = checkNow
+    ? firstCheckNow(() =>
+        siteCheckOfRun(d, r.report, { account: values.account, baseline, pictures, allGroups })
+      )
+    : null
+  const sources = await finisherSources(d, { report: r.report, kitRef: r.report.kit })
   const finished = await runFinisher({
     door: d.makeDoor({ account: values.account, platform: 'joomla' }),
     siteKey: r.report.site,
     kit,
     report: r.report,
-    firstCheck,
+    firstCheck: first ? first.check : firstCheck,
+    ...sources.input,
     doors: await d.makeFinisherDoors(),
     capture,
     siteCheck: (report) =>
@@ -115,6 +129,8 @@ export async function finishRun(d, values) {
     ...(d.now ? { now: d.now } : {})
   })
   if (!finished.ok) return refused(d, `${finished.code}: ${finished.reason}`)
+  if (first) await first.report(d, finished.firstCheck, saveFile)
+  for (const line of sources.lines) d.out(line)
   // The build's site check is the final one, kept on the run with the repaired words as ordered.
   await d.runs.saveReport(r.id, withReadBack(finished.report, finished.finalCheck))
   await saveFile('site-check.json', `${JSON.stringify(finished.finalCheck, null, 2)}\n`)
@@ -126,6 +142,7 @@ export async function finishRun(d, values) {
     d.out(
       `  ${record.outcome} page=${record.page ?? '-'} slot=${record.slot ?? '-'} kind=${record.faultKind ?? '-'}${record.reason ? `: ${record.reason}` : ''}${record.crops.by ? ` (crops: ${record.crops.by})` : ''}`
     )
+  if (finished.log.merge) d.out(mergeLine(finished.log.merge))
   d.out(`repair log: repair-log.json, ${(ms / 1000).toFixed(1)} s, ${costUsd.toFixed(4)} USD`)
   for (const line of checkLines(finished.finalCheck)) d.out(line)
   d.out(

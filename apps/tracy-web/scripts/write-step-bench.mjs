@@ -30,6 +30,7 @@ import { pgBenchSiteStore } from '../src/write-step/bench-site-store.js'
 import { pgWriteRunStore } from '../src/write-step/write-run-store.js'
 import { finisherDoors } from '../src/write-step/finisher/finisher-doors.js'
 import { SHOT_MODE } from '../src/lib/page-shots.js'
+import { kitImagesFor } from '../src/lib/template-kit-images.js'
 
 export async function main(argv, env = process.env) {
   if (!env.DATABASE_URL || !env.SESSION_SECRET) {
@@ -66,6 +67,8 @@ export async function main(argv, env = process.env) {
         siteOf: (siteKey) => siteByKey(pool, siteKey),
         readers
       }),
+      // The template kit's images (the step 0 template profile's block shots), for the finisher's lost-design kind.
+      kitImages: kitImagesFor({ pool, config: readConfig(env) }),
       // The finisher's three model doors, from /ops > Model & AI (write-step/finisher/finisher-doors.js).
       makeFinisherDoors: () => finisherDoors({ pool, secret: env.SESSION_SECRET }),
       // The site's pages shot by its host's screenshotter, in the tiles the demo look reads (lib/page-shots.js).

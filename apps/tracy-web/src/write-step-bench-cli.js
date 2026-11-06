@@ -76,7 +76,8 @@ export async function runCli(argv, deps) {
         run: { type: 'string' },
         'all-groups': { type: 'boolean' },
         'site-pictures-file': { type: 'string' },
-        'check-file': { type: 'string' }
+        'check-file': { type: 'string' },
+        'check-now': { type: 'boolean' }
       }
     })
     const [command, runId] = positionals

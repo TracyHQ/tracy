@@ -15,13 +15,15 @@ import { keptPageList } from '../../lib/site-kept-paths.js'
 import { kitSlotIds } from '../kit-slot-ids.js'
 import { doorsRefusal } from './finisher-doors.js'
 import { askChecker, askFinder, askFixer, verdictOf } from './finisher-roles.js'
-import { heldFaults } from './fault-kinds.js'
+import { heldFaults, loggedOnlyReason } from './fault-kinds.js'
+import { mergedFaults } from './fault-sources.js'
 import { causeOf, logRecord, REPAIR_LOG_FILE, repairLog } from './repair-log.js'
 import { readSite, revertRepair, writeRepair } from './repair-write.js'
 import { validOrder } from './repair-orders.js'
 import { cropsOf } from './repair-crops.js'
 import { takeOffStyleRule, writeStyleRule } from './style-write.js'
 import { orderFacts } from './repair-facts.js'
+import { demoBlockShots } from './demo-block-shots.js'
 import { keepShotFiles, pageSlug, replyKeeper } from './model-replies.js'
 
 /**
@@ -48,14 +50,23 @@ async function findFaults(run, firstShots) {
   const found = await Promise.all(
     pages.map(async (page) => {
       const shown = firstShots.shots.filter((s) => s.page === page)
-      const call = run.spend(await askFinder(run.doors.finder, page, shown))
+      // The template demo's shot of each block the page shows, for the lost-design kind (demo-block-shots.js).
+      const demo = await run.demoShots(page)
+      const demoTiles = demo.map((d) => ({
+        page: `demo ${d.block}`,
+        viewport: d.viewport,
+        index: 0,
+        image: d.image
+      }))
+      const demoFile = await keepShotFiles(run.saveFile, demoTiles)
+      const call = run.spend(await askFinder(run.doors.finder, page, shown, demo))
       await run.replies.keep({
         name: `finder-${pageSlug(page)}`,
         role: 'finder',
         page,
         door: run.doors.finder,
         sent: call.sent,
-        images: shown.map(run.shotFile),
+        images: [...shown.map(run.shotFile), ...demoTiles.map(demoFile)],
         call
       })
       return call.problem
@@ -65,7 +76,7 @@ async function findFaults(run, firstShots) {
   )
   const records = found.flatMap((f) => [
     ...(f.problem ? [logRecord({ page: f.page, kind: null }, { outcome: 'failed', reason: f.problem })] : []),
-    ...f.loggedOnly.map((fault) => logRecord(fault, { reason: 'the kind is outside the fault list' }))
+    ...f.loggedOnly.map((fault) => logRecord(fault, { reason: loggedOnlyReason(fault.kind) }))
   ])
   return { faults: found.flatMap((f) => f.faults), records }
 }
@@ -201,10 +212,14 @@ const repairedReport = (report, keptBySlot) => ({
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, report: object, firstCheck: object | null,
  *   doors: Record<'finder' | 'fixer' | 'checker', object>, capture: Function,
  *   siteCheck: (report: object) => Promise<object>, saveFile: (name: string, data: string | Buffer) => Promise<void>,
+ *   pageHtml?: (page: string) => Promise<string | null>, demoImages?: { open: (id: string) => Promise<any> } | null,
  *   now?: () => number, contentMap?: object | null, facts?: { brief?: object, copy?: object, pictures?: object },
  *   faultKinds?: Record<string, object> }} input `kit` is the template kit's document; `report` the write report of the run;
- *   `facts` the brief, the site copy file and step 8's site pictures, the only sources a repair's new words come from
- * @returns {Promise<{ ok: false, code: string, reason: string } | { ok: true, report: object, log: object, finalCheck: object }>}
+ *   `facts` the brief, the site copy file and step 8's site pictures, the only sources a repair's new words come from;
+ *   `firstCheck` may be a promise of a site check still running beside the finder; `pageHtml` reads a page as the site
+ *   serves it now, to confirm an invisible site check failure; `demoImages` opens the kit's images, the template demo's block shots
+ * @returns {Promise<{ ok: false, code: string, reason: string } | { ok: true, report: object, log: object, finalCheck: object,
+ *   firstCheck: object | null }>}
  *   `report` is the write report with the kept repairs' words as ordered, and the final check is the one to keep
  */
 export async function runFinisher(input) {
@@ -218,6 +233,8 @@ export async function runFinisher(input) {
     capture,
     siteCheck,
     saveFile,
+    pageHtml = null,
+    demoImages = null,
     now = Date.now,
     contentMap = null,
     facts = null,
@@ -242,7 +259,8 @@ export async function runFinisher(input) {
     doors,
     capture,
     saveFile,
-    firstCheck,
+    firstCheck: null,
+    demoShots: demoBlockShots({ kit, sitePages, images: demoImages }),
     kit,
     kitSlots: kitSlotIds(kit),
     pageSlots: slotsByPage(kit, sitePages),
@@ -259,13 +277,18 @@ export async function runFinisher(input) {
   const firstShots = await shootPages({ capture, pages: sitePages.map((p) => p.path) })
   // The tiles the finder is shown, kept as files its reply files name (model-replies.js).
   run.shotFile = await keepShotFiles(saveFile, firstShots.shots)
-  const { faults, records } = await findFaults(run, firstShots)
+  const { faults: found, records } = await findFaults(run, firstShots)
+  // The first site check may still be running beside the finder (a promise); its failures join the finder's faults here.
+  const first = await firstCheck
+  run.firstCheck = first
+  const { faults, records: mergeRecords, merge } = await mergedFaults({ found, firstCheck: first, pageHtml })
   const keptBySlot = new Map()
   for (const [index, fault] of faults.entries()) {
     const outcome = await repairFault(run, fault, index + 1, firstShots)
     records.push(outcome.record)
     if (outcome.kept) keptBySlot.set(outcome.kept.slot, outcome.kept)
   }
+  records.push(...mergeRecords)
   const repaired = repairedReport(report, keptBySlot)
   const finalCheck = await siteCheck(repaired)
   const log = repairLog({
@@ -275,9 +298,10 @@ export async function runFinisher(input) {
     replies: run.replies.files,
     costUsd,
     ms: now() - started,
-    firstCheck,
-    finalCheck
+    firstCheck: first,
+    finalCheck,
+    merge
   })
   await saveFile(REPAIR_LOG_FILE, `${JSON.stringify(log, null, 2)}\n`)
-  return { ok: true, report: repaired, log, finalCheck }
+  return { ok: true, report: repaired, log, finalCheck, firstCheck: first }
 }

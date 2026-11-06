@@ -12,7 +12,7 @@ import { orderListText } from './repair-orders.js'
 
 const FINDER_SYSTEM = `You look at screenshots of one page of a website a customer is about to receive. Each picture is a viewport tile of the page at desktop width (1440 px) or phone width (390 px), labelled with its viewport and tile number. Name only faults a site owner would see, and only of these kinds:
 {FAULTS}
-Never judge taste, colours, fonts or the template's design. Name a fault once, on the tile where it shows. Answer with one JSON object: { "faults": [ { "page": "<path>", "viewport": "desktop" | "phone", "tile": <number>, "kind": "<kind>", "slot": "<slot id when the page names it, else null>", "seen": "<one sentence>" } ] }. No fault: { "faults": [] }.`
+Pictures labelled "template demo" show the template's own demo of a block this page shows; they are not the site. Use them only for "lost-design": a design trait the demo block shows that the site's block lost. Never name a fault on a template demo picture. A fault a site owner would see that fits none of these kinds: name it with kind "other", so it is logged. Never judge taste, colours or fonts. Name a fault once, on the tile where it shows. Answer with one JSON object: { "faults": [ { "page": "<path>", "viewport": "desktop" | "phone", "tile": <number>, "kind": "<kind>", "slot": "<slot id when the page names it, else null>", "seen": "<one sentence>" } ] }. No fault: { "faults": [] }.`
 
 const FIXER_SYSTEM = `You turn one fault found on a website into one repair order. You never write to the site: code checks your order and writes it. Never invent a fact and never change the meaning of the words; only broken text is fixed. The orders you may give:
 {ORDERS}
@@ -38,13 +38,23 @@ const askRole = async (door, system, content) => {
   }
 }
 
-/** One finder call for one page's shots. */
-export function askFinder(door, page, shots) {
+/**
+ * One finder call for one page's shots, and the template demo's shot of each block the page shows (demo-block-shots.js),
+ * each labelled with its block and slots.
+ */
+export function askFinder(door, page, shots, demoShots = []) {
   const content = [
     { type: 'text', text: `Page ${page}.` },
     ...shots.flatMap((s) => [
       { type: 'text', text: `Page ${s.page}, ${s.viewport}, tile ${s.index}, from ${s.y} px` },
       { type: 'image_url', image_url: { url: s.image } }
+    ]),
+    ...demoShots.flatMap((d) => [
+      {
+        type: 'text',
+        text: `Template demo, block ${d.block} (slots ${d.slots.join(', ') || 'none'}), ${d.viewport}`
+      },
+      { type: 'image_url', image_url: { url: d.image } }
     ])
   ]
   return askRole(door, FINDER_SYSTEM.replace('{FAULTS}', faultListText()), content)
