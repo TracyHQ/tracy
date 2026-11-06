@@ -1,0 +1,1 @@
+{"id":"REG-PR-413-provision-trailing-trim","verdict":"PASS","commit":"05df1996fbc52ae19bd371d67a7c0487841835bb","ran_at":"2026-11-05T23:45:04.364Z","evidence":"tests/regression/.runs/2026-11-05-05df1996f/REG-PR-413-provision-trailing-trim.log"}

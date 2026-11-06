@@ -1029,6 +1029,11 @@ function withoutTrailingSlashes(s) {
   while (end > 0 && s[end - 1] === "/") end -= 1;
   return s.slice(0, end);
 }
+function withoutTrailingDotsAndSpace(s) {
+  let end = s.length;
+  while (end > 0 && (s[end - 1] === "." || /\s/.test(s[end - 1]))) end -= 1;
+  return s.slice(0, end);
+}
 function tracyOriginOf(config) {
   if (config.tracyOrigin) return config.tracyOrigin;
   const own = process.env.MCP_TRACY_ORIGIN?.trim();
@@ -2969,7 +2974,7 @@ function provisionTodos(step, detail, lang) {
   const said = wordsFor(lang).provision;
   const lines = PROVISION_STEPS.slice(0, -1).map(([, key]) => said[key] ?? key);
   if (step === "failed") {
-    const why = detail.replace(/[.\s]+$/, "");
+    const why = withoutTrailingDotsAndSpace(detail);
     return [
       ...lines.map((content, i) => ({
         content,

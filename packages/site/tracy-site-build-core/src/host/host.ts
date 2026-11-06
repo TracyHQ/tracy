@@ -56,6 +56,7 @@ import {
   designSystemsShown,
   namesDesignSystem,
   tracyOriginOf,
+  withoutTrailingDotsAndSpace,
   withoutTrailingSlashes
 } from './design-systems-switch.mjs'
 import { catalogIds, catalogNames } from './library-ids.mjs'
@@ -673,7 +674,7 @@ export function provisionTodos(
   const said = wordsFor(lang).provision as Record<string, string>
   const lines = PROVISION_STEPS.slice(0, -1).map(([, key]) => said[key] ?? key)
   if (step === 'failed') {
-    const why = detail.replace(/[.\s]+$/, '')
+    const why = withoutTrailingDotsAndSpace(detail)
     return [
       ...lines.map((content, i) => ({
         content,
