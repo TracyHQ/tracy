@@ -284,10 +284,11 @@ export const LLM_DOORS = [
     blurb:
       'Write step bench: the finisher. One call per page looks at its screenshots at desktop and phone width and lists the faults a customer would see, from a fixed list. It never writes to the site. Without it the finisher does not start.',
     needsModel: true,
-    // Vision is REQUIRED: the finder looks at page screenshots (write-step/finisher/finisher-doors.js). No tools, no effort
-    // setting: the bench fixes it in code (max on DeepSeek Flash) (#420).
+    // Vision is REQUIRED: the finder looks at page screenshots (write-step/finisher/finisher-doors.js). No tools. Its effort
+    // is set per door here; none set is the role's default, max (#420, ADR 0044 decision 30).
     requires: ['vision'],
-    prefers: ['json']
+    prefers: ['json'],
+    configurableEffort: true
   },
   {
     id: 'finisherFixer',
@@ -296,9 +297,10 @@ export const LLM_DOORS = [
     blurb:
       'Write step bench: the finisher. One call per fault turns it into a typed repair order, which code checks against the template kit and writes. It never writes to the site.',
     needsModel: true,
-    // Text only: the fault and the slot's words (#420).
+    // Text only: the fault, its repair menu and the slot's words (#420). Effort per door; default medium.
     requires: [],
-    prefers: ['json']
+    prefers: ['json'],
+    configurableEffort: true
   },
   {
     id: 'finisherChecker',
@@ -307,9 +309,10 @@ export const LLM_DOORS = [
     blurb:
       'Write step bench: the finisher. One call per repair compares the block before and after it; a repair that is not better is undone.',
     needsModel: true,
-    // Vision is REQUIRED: the checker compares screenshots (#420).
+    // Vision is REQUIRED: the checker compares screenshots (#420). Effort per door; default low.
     requires: ['vision'],
-    prefers: ['json']
+    prefers: ['json'],
+    configurableEffort: true
   },
   {
     id: 'brandAgent',

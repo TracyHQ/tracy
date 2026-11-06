@@ -6,6 +6,8 @@ import { test } from 'node:test'
 import { pictureDrawerDoor } from '../src/site-pictures/drawer-door.js'
 import { pictureLookerDoor } from '../src/site-pictures/looker-door.js'
 import { finisherDoor } from '../src/write-step/finisher/finisher-doors.js'
+import { sealSecret } from '../src/lib/secret-box.js'
+import { finalReply, scriptedModel } from './_agent-over-door-fake.mjs'
 
 const WHERE = '/ops › Model & AI'
 const pool = (rows) => ({ query: async () => ({ rows }) })
@@ -51,4 +53,51 @@ test('a finisher door climbs the same ladder and names its role', async () => {
     'FINISHER_DOOR_DISABLED'
   )
   assert.equal((await finisherDoor({ pool: UNASSIGNED, role: 'finder' })).code, 'FINISHER_DOOR_UNREADABLE')
+})
+
+/** /ops as lookupDoor reads it: one ready DeepSeek Flash door on DeepSeek's own API, its effort as set (null: none set). */
+const readyDoor = async (effort) => ({
+  query: async () => ({
+    rows: [
+      {
+        id: 'deepseek',
+        enabled: true,
+        preset_id: 'deepseek',
+        base_url: 'https://api.deepseek.com',
+        api_key_cipher: await sealSecret('test-key', SECRET),
+        revision: 1,
+        door_model: 'deepseek-flash',
+        assignment_revision: 1,
+        assignment_updated_at: new Date(0),
+        reasoning_effort: effort,
+        models: [{ id: 'deepseek-flash', vision: true }]
+      }
+    ]
+  })
+})
+const SECRET = 's'.repeat(32)
+
+/** The reasoning effort one call of a finisher role sent to the model, with the door's effort as /ops holds it. */
+async function effortSent(role, effort) {
+  const model = scriptedModel([finalReply({ content: '{"faults":[]}' })])
+  const door = await finisherDoor({
+    pool: await readyDoor(effort),
+    secret: SECRET,
+    role,
+    fetchImpl: model.fetchImpl
+  })
+  assert.equal(door.ok, true, door.reason)
+  await door.ask({ system: 'look', content: [{ type: 'text', text: 'Page /.' }] })
+  return { sent: model.requests[0].body.reasoning_effort, recorded: door.snapshot.effortUsed }
+}
+
+test('each finisher role calls its model at its own effort: finder max, fixer medium, checker low by default', async () => {
+  assert.deepEqual(await effortSent('finder', null), { sent: 'max', recorded: 'max' })
+  assert.deepEqual(await effortSent('fixer', null), { sent: 'medium', recorded: 'medium' })
+  assert.deepEqual(await effortSent('checker', null), { sent: 'low', recorded: 'low' })
+})
+
+test("a finisher door's effort set in /ops wins over its role's default", async () => {
+  assert.deepEqual(await effortSent('fixer', 'high'), { sent: 'high', recorded: 'high' })
+  assert.deepEqual(await effortSent('finder', 'low'), { sent: 'low', recorded: 'low' })
 })

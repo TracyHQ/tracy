@@ -534,6 +534,18 @@ fault into one repair order, a checker compares the repaired block before and af
   An order of an unlisted kind, for a fault its kind does not answer, or for a slot or block the fault is not about, is
   dropped with its reason in the repair log and writes nothing. A repair the checker does not find better is undone.
 - Repairs never invent a fact, never hide customer content, never change meaning, never edit template or plugin code.
+- The fixer picks, it never guesses (2026-11-06, after a real run dropped 20 of 25 orders on guessed addresses). Each fault
+  goes to it with a repair menu code builds from the kit and the page as served (`write-step/finisher/repair-menu.js`): the
+  page's kit blocks, each slot with the words it holds, each picture frame with the slot of its alt, whether a style order may
+  name the block, and the CSS targets inside it as served (tag and classes, so a heading printed as `<span class="h2">` is
+  `span.h2`, never `h2`). An order that names anything off the menu is refused, and the fixer is asked once more with the
+  order and the reason.
+- Glued heading words at a hidden line break ("WHAT WECOACH") are repaired by a `fix-text` that only puts the missing space
+  before the break marker, every word and code kept; code judges it on the served page.
+- A value the brief gives (a phone, an e-mail, a name, an address) is the customer's own: a demo fault on it is logged
+  `not-demo`, never repaired. Pages compare as addresses: `/index.php/x`, `/x/` and `/x` are one page.
+- Each role thinks at its own reasoning effort, set per door in /ops › Model & AI; a door with none set takes its role's
+  default, the product owner's choice of 2026-11-06: finder max, fixer medium, checker low.
 
 **The second CSS exception: "style one block".** Unreadable text (text over a picture, text the colour of its ground) and a
 broken layout (a long word running out of its box) often have no repair in the words. The fixer may order a style for one

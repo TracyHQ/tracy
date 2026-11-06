@@ -154,18 +154,24 @@ export async function deleteProvider(pool, id) {
   return { error: null, doors: [] }
 }
 
+/** The finisher's doors, whose reasoning effort /ops may set per door (null: the role's default). */
+const FINISHER_EFFORT_DOORS = new Set(['finisherFinder', 'finisherFixer', 'finisherChecker'])
+
 /** Point one door at a provider. `model` is null for `agent` (key only — see `llm-catalog.js`). */
 export async function assignDoor(pool, door, { providerId, model = null, effort }, by) {
   if (!DOOR_IDS.includes(door)) return { error: 'UNKNOWN_DOOR' }
   let chosenEffort = null
-  if (door === 'woEditorial') {
+  // The finisher's doors take an effort too; none chosen is the role's default (write-step/finisher/finisher-doors.js).
+  const finisher = FINISHER_EFFORT_DOORS.has(door)
+  if (door === 'woEditorial' || finisher) {
     const provider = (await pool.query('select * from llm_provider where id=$1', [providerId])).rows[0]
     const options = effortOptions({
       presetId: provider?.preset_id,
       baseUrl: baseUrlFor({ baseUrl: provider?.base_url, presetId: provider?.preset_id }),
       metadata: provider?.models?.find((m) => m.id === model)
     })
-    chosenEffort = effort === undefined && options.choices.includes('high') ? 'high' : (effort ?? null)
+    chosenEffort =
+      effort === undefined && !finisher && options.choices.includes('high') ? 'high' : (effort ?? null)
     if (chosenEffort !== null && !options.choices.includes(chosenEffort))
       return { error: 'MODEL_EFFORT_UNSUPPORTED', supported: options.choices, mode: options.mode }
   } else if (door === 'vision') {

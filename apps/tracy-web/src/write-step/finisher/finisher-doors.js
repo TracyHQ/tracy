@@ -1,6 +1,7 @@
 // The finisher's three model doors (spec #418): `finisherFinder`, `finisherFixer` and `finisherChecker`, each set in
-// /ops › Model & AI and meant for DeepSeek Flash on DeepSeek's own API at maximum reasoning effort (lib/bench-harness.js),
-// like the planner, the writer and the picture picker. Like theirs, a door never falls back to the environment: an unset,
+// /ops › Model & AI and meant for DeepSeek Flash on DeepSeek's own API (lib/bench-harness.js), like the planner, the writer
+// and the picture picker. Each role thinks at its own reasoning effort (ADR 0044 decision 30): the effort set on its door in
+// /ops, else its role's default, finder max, fixer medium, checker low (the product owner's choice, 2026-11-06). Like theirs, a door never falls back to the environment: an unset,
 // disabled or unreadable door refuses the run with its reason. The finder and the checker look at screenshots, so a model
 // that cannot read pictures (its provider says so, or its harness profile sends none) refuses the run too.
 //
@@ -18,13 +19,15 @@ export const FINISHER_ROLES = Object.freeze({
   finder: Object.freeze({
     door: 'finisherFinder',
     label: 'Finisher finder',
-    sight: 'the finder looks at page screenshots'
+    sight: 'the finder looks at page screenshots',
+    effort: 'max'
   }),
-  fixer: Object.freeze({ door: 'finisherFixer', label: 'Finisher fixer', sight: null }),
+  fixer: Object.freeze({ door: 'finisherFixer', label: 'Finisher fixer', sight: null, effort: 'medium' }),
   checker: Object.freeze({
     door: 'finisherChecker',
     label: 'Finisher checker',
-    sight: 'the checker compares crops of the repaired block'
+    sight: 'the checker compares crops of the repaired block',
+    effort: 'low'
   })
 })
 
@@ -53,8 +56,8 @@ export function doorsRefusal(doors) {
   return null
 }
 
-/** One call in a fresh conversation, at the model's bench harness (max effort on DeepSeek Flash). */
-function askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl) {
+/** One call in a fresh conversation, at the model's bench harness and the role's effort. */
+function askerOf({ providerId, baseUrl, apiKey, model, effort }, fetchImpl) {
   const {
     modelProfile: _profile,
     budgetUsd: _budget,
@@ -69,6 +72,7 @@ function askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl) {
       firstUser: content,
       fetchImpl,
       ...harness,
+      effort,
       maxTurns: 1
     })
     // The model's own reasoning on the answered turn (DeepSeek's reasoning_content), kept so a person can audit what it saw.
@@ -104,14 +108,22 @@ export async function finisherDoor({ pool, secret, role, fetchImpl = fetch }) {
   })
   if (refused) return refused
   const { providerId, baseUrl, apiKey, model } = found.credential
+  // The effort set on the door in /ops, else the role's own default.
+  const effort = found.snapshot?.effort ?? spec.effort
   return {
     ok: true,
     label: spec.label,
     model,
     providerId,
     images: found.snapshot?.metadata?.vision !== false && sendsImages(model, providerId),
-    snapshot: { door: spec.door, model, endpointHost: new URL(baseUrl).hostname, ...found.snapshot },
-    ask: askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl)
+    snapshot: {
+      door: spec.door,
+      model,
+      endpointHost: new URL(baseUrl).hostname,
+      ...found.snapshot,
+      effortUsed: effort
+    },
+    ask: askerOf({ providerId, baseUrl, apiKey, model, effort }, fetchImpl)
   }
 }
 
