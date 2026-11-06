@@ -16,40 +16,7 @@
  * every JA quickstart dump has; the rows are rewritten field by field, every other byte kept.
  */
 
-/** Splits one `(v1,v2,...)` row into its raw field texts (quoted strings keep their quotes and escapes). */
-function fieldsOf(row) {
-  const inner = row.slice(row.indexOf('(') + 1, row.lastIndexOf(')'))
-  const out = []
-  let cur = ''
-  let quoted = false
-  for (let i = 0; i < inner.length; i++) {
-    const c = inner[i]
-    if (quoted) {
-      cur += c
-      if (c === '\\') cur += inner[++i]
-      else if (c === "'") quoted = false
-    } else if (c === "'") {
-      quoted = true
-      cur += c
-    } else if (c === ',') {
-      out.push(cur)
-      cur = ''
-    } else cur += c
-  }
-  out.push(cur)
-  return out
-}
-
-const unquote = (raw) => (raw === 'NULL' ? '' : raw.replace(/^'|'$/g, '').replace(/\\(.)/g, '$1'))
-const quote = (s) => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`
-
-/** The column names of `CREATE TABLE \`<table>\``, in order; null when the dump has no such table. */
-function columnsOf(dump, table) {
-  const start = dump.indexOf(`CREATE TABLE \`${table}\` (`)
-  if (start < 0) return null
-  const end = dump.indexOf('\n)', start)
-  return [...dump.slice(start, end).matchAll(/^\s+`([^`]+)`\s/gm)].map((m) => m[1])
-}
+import { columnsOf, fieldsOf, quote, unquote } from './release-dump-table.mjs'
 
 /**
  * @param {string} dump the whole SQL dump (latin1 text: every byte kept)

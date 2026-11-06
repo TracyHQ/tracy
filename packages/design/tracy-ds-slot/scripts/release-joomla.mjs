@@ -17,7 +17,7 @@
  *  1b. design-system-roles.json: the role scan of templates/<tpl> as it ships (release-role-scan.mjs),
  *     run before anything is packed; the build stops while rule VARS-1 would hold anything it finds;
  *  2. database: the same dump, under the new version's name (demo tags saved without a path given
- *     one, src/release-tag-paths.mjs);
+ *     one, src/release-tag-paths.mjs; articles' stale UCM copies resynced, src/release-ucm-sync.mjs);
  *  3. manifest.json + SHA256SUMS for the release;
  *  4. the tch contract for the new version: contracts/<slug>/j6/<new>/ — manifest.json re-embedding
  *     the new release manifest, presentation-lock.json with the changed files' hashes, content-map.json
@@ -54,6 +54,7 @@ import { pinAddedFiles } from '../src/release-lock-added.mjs'
 import { packTar, packZip } from '../src/release-pack.mjs'
 import { releaseRoleScan, ROLE_SCAN_FILE, roleScanError } from '../src/release-role-scan.mjs'
 import { repairTagPaths } from '../src/release-tag-paths.mjs'
+import { resyncUcmContent } from '../src/release-ucm-sync.mjs'
 import { siteLanguageTwins } from '../src/release-site-language.mjs'
 import { paletteForFile, tokenizeCss } from '../src/tokenize.mjs'
 import { COLOUR_TOKENS } from '../src/tokens56.mjs'
@@ -522,8 +523,15 @@ if (INSTALLER) {
     repair.push(
       `tag paths: ${tags.repaired.map((t) => `${t.id} ${t.path}`).join(', ')}; tags nested set rebuilt`
     )
-  if (contract.t3DevmodeOff || edits.length || tags.repaired.length) {
-    let dump = tags.dump
+  // the UCM copies core views (com_tags) read, resynced from the articles (src/release-ucm-sync.mjs)
+  const ucm = resyncUcmContent(tags.dump, cur.prefix ?? '')
+  if (ucm.resynced.length) repair.push(`ucm rows resynced from content: ${ucm.resynced.length}`)
+  if (ucm.orphans.length)
+    repair.push(
+      `ucm rows left without an article: ${ucm.orphans.map((o) => `${o.ucm} (article ${o.article})`).join(', ')}`
+    )
+  if (contract.t3DevmodeOff || edits.length || tags.repaired.length || ucm.resynced.length) {
+    let dump = ucm.dump
     if (contract.t3DevmodeOff) {
       devmodeRows += (dump.match(DEVMODE_ON) ?? []).length
       dump = devmodeOff(dump)
