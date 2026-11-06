@@ -5,9 +5,10 @@
  * `pageMeasures`, one entry per page and width:
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], textBlocks: [...], pictures: [...], controls: [...],
  *     fields: [...], glued: [...], headingSpans: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
- *     selfLinks: [...], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
+ *     selfLinks: [{ selector, text, href, holders: [{ tag, id, classes }] }], contentControls: [...], view, title, shownText,
+ *     shownLinks: [{ href, text, clickable }], shownLinksClickable, shownPictures: [...],
  *     lists: [{ selector, items: [{ chars, text, pictures }] }], maps: [{ kind, lat?, lng?, address?, from }],
- *     phones: [{ text, digits, inTel, selector }], brandStyle?, look? }
+ *     phones: [{ text, digits, inTel, selector }], videoButtons: [{ selector, attribute, address }], brandStyle?, look? }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
@@ -39,7 +40,8 @@ export const MEASURE_CAPS = Object.freeze({
   shownText: 30000,
   lists: 60,
   maps: 10,
-  phones: 40
+  phones: 40,
+  videoButtons: 40
 })
 
 /**
@@ -330,7 +332,15 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       continue
     }
     if (to.origin !== location.origin || pathOf(to) !== herePath) continue
-    selfLinks.push({ selector: selectorOf(a), text: saidBy(a).slice(0, 80), href: a.href })
+    // What holds it, nearest first, so the judge can tell a container the kit names (ADR 0044, decision 29).
+    const holders = []
+    for (let el = a.parentElement; el && el !== document.body && holders.length < 12; el = el.parentElement)
+      holders.push({
+        tag: el.tagName.toLowerCase(),
+        id: el.id || null,
+        classes: [...el.classList].slice(0, 8)
+      })
+    selfLinks.push({ selector: selectorOf(a), text: saidBy(a).slice(0, 80), href: a.href, holders })
   }
 
   // The controls of the page's own content, named by what holds them, for the judge to compare a page the write step created
@@ -376,8 +386,10 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   const shownLinks = []
   for (const a of document.body.querySelectorAll('a[href]')) {
     if (shownLinks.length >= caps.shownLinks) break
-    if (!shown(a) || clippedAway(a, getComputedStyle(a))) continue
-    shownLinks.push({ href: a.href, text: saidBy(a).slice(0, 80) })
+    const style = getComputedStyle(a)
+    if (!shown(a) || clippedAway(a, style)) continue
+    // Whether a click reaches it: a link made plain text (`pointer-events: none`) leads nowhere a visitor can go.
+    shownLinks.push({ href: a.href, text: saidBy(a).slice(0, 80), clickable: style.pointerEvents !== 'none' })
   }
   const shownPictures = []
   for (const img of document.body.querySelectorAll('img')) {
@@ -506,6 +518,18 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       phones.push({ text: m[0].trim().slice(0, 40), digits, inTel: Boolean(tel), selector: selectorOf(host) })
     }
   }
+  // Shown elements that open a video player: the address an attribute names (`empty-video-buttons` judges which name no video).
+  const videoButtons = []
+  const VIDEO_HOST = /(?:youtube(?:-nocookie)?\.com|youtu\.be|vimeo\.com)/i
+  const VIDEO_ATTRS = ['data-src', 'href', 'src', 'data-video', 'data-url', 'data-href', 'data-video-url']
+  const videoSelector = VIDEO_ATTRS.map((a) => `[${a}]`).join(',')
+  for (const el of document.querySelectorAll(videoSelector)) {
+    if (videoButtons.length >= caps.videoButtons) break
+    if (!shown(el)) continue
+    const attribute = VIDEO_ATTRS.find((a) => VIDEO_HOST.test(el.getAttribute(a) || ''))
+    if (attribute)
+      videoButtons.push({ selector: selectorOf(el), attribute, address: el.getAttribute(attribute) })
+  }
   return {
     links,
     textBoxes,
@@ -526,10 +550,12 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     title: document.title,
     shownText,
     shownLinks,
+    shownLinksClickable: true,
     shownPictures,
     lists,
     maps,
-    phones
+    phones,
+    videoButtons
   }
 }
 

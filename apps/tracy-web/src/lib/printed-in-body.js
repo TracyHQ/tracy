@@ -1,7 +1,8 @@
 // Whether a value a run wrote is PRINTED on a page (ADR 0044): read from the page's markup as a visitor's browser gets it, inside the
 // body only. A picture counts when an <img> or a <source> names its file in `src` or `srcset`, or when an element of the body paints it
 // as its own background (`style="background-image: url(...)"`, how a template's hero band prints its picture). Words count when the
-// body's text holds them. Nothing else counts: the head, scripts (JSON-LD among them), style sheets, comments, <meta>, and `data-*`
+// body's text holds them, or when an <img> prints them as its `alt`, or any element as its `title` (a gallery prints a picture's
+// description only in its alt, card K). Nothing else counts: the head, scripts (JSON-LD among them), style sheets, comments, <meta>, and `data-*`
 // attributes all name files the visitor may never see printed. One rule, shared by the write step and the site check.
 //
 // Several slots may hold the same picture on one page. Each needs its own printed element, so a file printed once covers one slot; the
@@ -10,6 +11,8 @@
 //
 // The picture fallback block: when the template prints a slot only under a condition the run cannot meet (a video poster printed only
 // with a video id), the write step prints the picture itself in the article body, marked so a later run finds it again.
+
+import { listSlotIds } from './kit-list-slot-ids.js'
 
 const FALLBACK = 'tracy-fallback'
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -21,12 +24,14 @@ const PAINTED = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]*))\s*\)/gi
 const NOT_PRINTED = /<(script|style|template|noscript|svg)\b[\s\S]*?<\/\1\s*>|<!--[\s\S]*?-->/gi
 const NAMED = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘' }
 
-const attr = (tag, name) => {
+/** An attribute of one tag, as written (entities not read); null when the tag has none. */
+export const attr = (tag, name) => {
   const m = new RegExp(`\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i').exec(tag)
   return m ? (m[1] ?? m[2] ?? m[3]) : null
 }
 
-const decoded = (text) =>
+/** A text with its character references read. */
+export const decoded = (text) =>
   String(text).replace(/&(?:([a-z]+)|#(\d+)|#x([0-9a-f]+));/gi, (whole, name, dec, hex) => {
     if (name) return NAMED[name.toLowerCase()] ?? whole
     const code = dec ? Number.parseInt(dec, 10) : Number.parseInt(hex, 16)
@@ -61,7 +66,7 @@ export const wordsKey = (value) =>
     .toLowerCase()
 
 /** The markup of the page's body, with what a visitor is never shown as content taken out. */
-function bodyOf(html) {
+export function bodyOf(html) {
   const text = String(html ?? '')
   const open = /<body\b[^>]*>/i.exec(text)
   const from = open ? open.index + open[0].length : (/<\/head\s*>/i.exec(text)?.index ?? 0)
@@ -117,6 +122,16 @@ function printedPictures(body) {
   return out
 }
 
+/** The words a body prints in attributes a visitor is shown: an image's `alt` and any element's `title`, each on its own. */
+function shownAttributes(body) {
+  const out = []
+  for (const m of body.matchAll(TAG)) {
+    const said = [/^<img\b/i.test(m[0]) ? attr(m[0], 'alt') : null, attr(m[0], 'title')]
+    for (const value of said) if (value) out.push(wordsKey(value))
+  }
+  return out.filter(Boolean)
+}
+
 /**
  * Which of a page's written slots the page prints.
  * @param {string} html the page as the site serves it
@@ -128,9 +143,12 @@ export function pagePrints(html, slots, { native = false } = {}) {
   const body = bodyOf(native ? withoutFallbackBlocks(html) : html)
   const printed = new Map()
   const words = wordsKey(body.replace(/<[^<>]*>/g, ' '))
-  for (const s of slots)
-    if (s.kind === 'text' && wordsKey(s.value) && words.includes(wordsKey(s.value)))
+  const attributes = shownAttributes(body)
+  for (const s of slots) {
+    const key = s.kind === 'text' ? wordsKey(s.value) : ''
+    if (key && (words.includes(key) || attributes.some((a) => a.includes(key))))
       printed.set(s.slot, 'template')
+  }
   const pool = new Map()
   for (const p of printedPictures(body)) {
     const own = p.block && slots.find((s) => s.kind === 'picture' && s.slot === p.block)
@@ -227,11 +245,10 @@ export function printedSlotsOf(lines, kit = null) {
   return out
 }
 
-/** Every slot id a kit block holds, in the kit's order: its words, its frames, its list rows. */
+/** Every slot id a kit block holds, in the kit's order: its words, its frames, its lists (row pairs and rows, card AY). */
 function slotIdsOf(block) {
   const ids = [...each(block?.slots), ...each(block?.frames)].map((s) => s?.id)
-  for (const list of each(block?.lists))
-    for (const row of each(list?.rows)) ids.push(...each(row?.slots).map((s) => s?.id))
+  for (const list of each(block?.lists)) ids.push(...listSlotIds(list))
   return ids.filter((id) => typeof id === 'string')
 }
 

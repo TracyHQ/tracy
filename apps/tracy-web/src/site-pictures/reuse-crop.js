@@ -116,10 +116,14 @@ export function reuseRegion(
 export async function cutPhotoAway(bytes, asset, frame, demo, avoid, { maxOverlap, distinct } = {}) {
   const size = await sizeOf(bytes)
   if (!size.width || !size.height) return { ok: false, refused: 'unreadable' }
-  const box = { width: Number(frame.width), height: Number(frame.height) }
+  const box = { width: Number(frame.width), height: Number(frame.height), minWidth: frame.minWidth }
   const shape = demo ?? box
-  // The narrowest region the size limit lets through: its written width over its own width is at most MAX_ENLARGE.
-  const minWidth = Math.ceil(outputSizeFor(demo, box, 1).width / MAX_ENLARGE)
+  // The narrowest region the size limit lets through: its written width over its own width is at most MAX_ENLARGE,
+  // and never narrower than the kit's minimum file width (card AI).
+  const minWidth = Math.max(
+    Math.ceil(outputSizeFor(demo, box, 1).width / MAX_ENLARGE),
+    Number.isInteger(frame.minWidth) ? frame.minWidth : 0
+  )
   const r = reuseRegion(size, shape, avoid, {
     heads: headBoxesOf(asset),
     subject: Array.isArray(asset.subjectBox) ? asset.subjectBox : null,

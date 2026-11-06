@@ -264,3 +264,80 @@ test('a value the look guard found fault with and a copy slot the kit lacks chan
   assertNothingChanged(run)
   assert.equal(lineOf(run.second, 'block-99.1').status, 'refused', 'still said on the second run')
 })
+
+// Card AL: a row the plan gives up left the stored field with rows.remove. A second run with the same files must not read that
+// slot as brought back (it stopped NEEDS_NEW_SITE with nothing written); only a slot the new files fill again is.
+function rowKit() {
+  const kit = hideKit()
+  const block = kit.doc.blocks.find((b) => b.id === 'block-3')
+  block.source = { entity: 'module-3' }
+  block.lists[0].rows.push({
+    index: 2,
+    slots: [
+      {
+        id: 'block-3.7',
+        type: 'text',
+        role: 'editorial.paragraph',
+        maxCharacters: 120,
+        sample: 'A third demo review.'
+      }
+    ]
+  })
+  return kit
+}
+/** The fake site with the rows.remove door, keeping what it removed as inspect lists it (`removedSlots`). */
+function rowSite() {
+  const fake = fakeSite({
+    hideDoor: hideDoor({ overrides: {} }),
+    records: RECORDS(),
+    // The site groups each review of block-3 in its own row, as the plugin's inspect does.
+    slots: siteSlotsOf(rowKit()).map((s) => ({
+      ...s,
+      entity: s.key.slice(0, s.key.lastIndexOf('.')),
+      ...(/^module-3\.[567]$/.test(s.key)
+        ? { row: `module-3:row-${s.key.slice(-1)}`, current: 'Demo review' }
+        : {})
+    })),
+    info: { ok: true, info: { hide_ops: { version: 1, rows_remove: 1 }, page_create: { version: 1 } } }
+  })
+  const removed = {}
+  const apply = fake.door.apply
+  fake.door.apply = async (call) => {
+    const answer = await apply(call)
+    if (call.params?.operation === 'rows.remove' && answer?.ok !== false)
+      for (const key of call.params.slots) removed[key] = true
+    if (call.params?.operation === 'inspect' && answer?.ok) return { ...answer, removedSlots: { ...removed } }
+    return answer
+  }
+  return fake
+}
+
+test('a row the plan gives up, removed by the first run, is no slot to bring back: the same files change nothing', async () => {
+  const kept = keptSite(rowSite(), { kit: rowKit() })
+  const [first, second] = await runInTurn(kept, [{}, {}])
+  const row = lineOf(first, 'module-3.7')
+  assert.deepEqual([row?.part, row?.status, row?.ordered], ['row', 'hidden', 'removed'])
+  assertNothingChanged({ kept, second })
+})
+
+test('filling a slot of a removed row again is still refused by name', async () => {
+  const kept = keptSite(rowSite(), { kit: rowKit() })
+  const more = plan()
+  const list = more.pages[0].blocks.find((b) => b.block === 'block-3').lists[0]
+  list.rows = 3
+  list.items.push({
+    about: 'review three',
+    copy: [{ slot: 'block-3.7', says: 'a third review', factIds: ['f-hours'], basis: 'brief' }],
+    pictures: []
+  })
+  const c = copy()
+  c.slots.push({
+    slot: 'block-3.7',
+    owner: 'writer',
+    text: 'A third member review in plain words.',
+    factIds: ['f-hours']
+  })
+  const [, second] = await runInTurn(kept, [{}, { plan: more, copy: c }])
+  assert.equal(second.cause?.code, 'NEEDS_NEW_SITE', JSON.stringify(second.cause))
+  assert.match(second.cause.reason, /module-3\.7/)
+})

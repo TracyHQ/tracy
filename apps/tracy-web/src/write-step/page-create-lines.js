@@ -1,5 +1,6 @@
 // What a created page should hold and what the report says of it (page-create-stage.js): its order from the frozen files, its lines
 // once it is written, and whether the last report says the site holds it already. Nothing here calls the site.
+import { callablePhones } from './phone-links.js'
 import { readRow } from './settings-door.js'
 
 /** How a row of a created page says so; the plugin holds the same mark (QuickstartContract::CREATED_PAGE_MARK). */
@@ -7,8 +8,11 @@ export const MARK = 'tracy-page:'
 const each = (value) => (Array.isArray(value) ? value : [])
 const escaped = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-/** What one page should hold on the site, from the frozen files. */
-export function orderOf(page, { pages, pageMeta }) {
+/**
+ * What one page should hold on the site, from the frozen files. `phones`: the brief's phones, which its words carry as tel:
+ * links (card AQ).
+ */
+export function orderOf(page, { pages, pageMeta }, { phones = [] } = {}) {
   const { title, body } = pages[page.id]
   return {
     ...page,
@@ -16,7 +20,7 @@ export function orderOf(page, { pages, pageMeta }) {
     title,
     html: each(body)
       .filter((paragraph) => paragraph.trim())
-      .map((paragraph) => `<p>${escaped(paragraph)}</p>`)
+      .map((paragraph) => `<p>${callablePhones(escaped(paragraph), phones)}</p>`)
       .join('\n'),
     seo: pageMeta?.[page.id] ?? null
   }
@@ -87,7 +91,7 @@ export function linesOf(order, done) {
  * the template's content pages have a route of their own, and a report without a route line is of a page not yet on it, as one whose
  * route line does not say the article's layout is of a route that does not print as they do yet.
  */
-export function heldByLast(order, last, routed = false) {
+export function heldByLast(order, last, routed = false, layout = null) {
   const same =
     last.same(order.id, order.html) &&
     last.same(`${order.id}:heading`, order.title) &&
@@ -98,6 +102,8 @@ export function heldByLast(order, last, routed = false) {
   if (!same || !address) return null
   const route = last.line(`${order.id}:route`)
   if (routed && route?.articleLayout === undefined) return null
+  // A route the last run gave another file than the one this page prints through now is written again (card AN).
+  if (route && route.articleLayout !== undefined && (route.articleLayout ?? null) !== layout) return null
   return {
     articleId: last.line(order.id).readFrom.params.id,
     itemId: address.readFrom.params.id,

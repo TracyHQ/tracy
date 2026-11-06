@@ -145,7 +145,11 @@ test('the group blocks by page, stays green on a clean page, and says when it co
 test('the group: no read at all is unmeasured after a brand write, and nothing to check without one', async () => {
   await assert.rejects(brandAccentGroup.run(context([{ path: '/', width: 1440, links: [] }])), /brandStyle/)
   const none = await brandAccentGroup.run(context([{ path: '/', width: 1440, links: [] }], false))
-  assert.deepEqual(none, { checked: 0, failures: [] })
+  assert.deepEqual(none, {
+    checked: 0,
+    notApplicable: 'no brand accent was written and no page reads a brand style',
+    failures: []
+  })
 })
 
 test('the group: a brand write that a page does not wear blocks, and a truncated read warns', async () => {

@@ -123,8 +123,11 @@ const over = (w) => ({
   ...w
 })
 
-test('grey words on a placed picture read under the bar: red, and the picture step answers', () => {
-  const { failures } = judgeWordsOverPicture([entry('dark', { over: [over()] })], {})
+test('white template words on a placed picture read under the bar: red, and the picture step answers', () => {
+  const { failures } = judgeWordsOverPicture(
+    [entry('dark', { over: [over({ fg: WHITE.slice(0, 3), fgOff: WHITE.slice(0, 3) })] })],
+    {}
+  )
   assert.equal(failures.length, 1)
   assert.equal(failures[0].level, undefined)
   assert.equal(failures[0].causingStep, undefined, "the group's own step, pictures")
@@ -189,6 +192,61 @@ test('the template own words over a picture from 3:1 are no fault; under it they
   )
   const [grey] = judgeWordsOverPicture([entry('dark', { over: [over()] })], untouched(GREY, ground)).failures
   assert.deepEqual([grey.level, grey.causingStep], ['warn', 0])
+})
+
+// Card AX (with G, B and AW), 2026-11-06: words over a picture follow the contrast rule the plain-ground measure keeps. The template's
+// default grey is no fault from TEMPLATE_FLOOR and warns once per fact under it; the brand accent blocks under BRAND_ACCENT_BAR, and
+// only warns over a veiled background layer; any other colour keeps 4.5:1. Colours, grounds and pages are invented.
+const TEMPLATE_GREY = [108, 117, 125]
+const ACCENT = [23, 96, 200]
+const ACCENT_OFF = [30, 80, 160]
+/** A dark picture region whose bright end gives `p85`. */
+const darkGround = (p85) => ({ p15: 0.001, p50: 0.002, p85 })
+
+test('the template grey over a placed picture: nothing from 3:1, under it one warning per fact, never a block', () => {
+  const at35 = over({ fg: TEMPLATE_GREY, fgOff: TEMPLATE_GREY, under: darkGround(0.014) })
+  assert.deepEqual(judgeWordsOverPicture([entry('dark', { over: [at35] })], {}).failures, [])
+  const at28 = over({ fg: TEMPLATE_GREY, fgOff: TEMPLATE_GREY, under: darkGround(0.03) })
+  const { failures } = judgeWordsOverPicture(
+    [
+      entry('dark', { over: [at28] }, { path: '/lessons/rowing' }),
+      entry('dark', { over: [at28] }, { path: '/lessons/rowing', width: 390 }),
+      entry('dark', { over: [at28] }, { path: '/lessons/sailing' })
+    ],
+    {}
+  )
+  assert.equal(failures.length, 1, 'the same words on the same picture are one fact')
+  assert.equal(failures[0].level, 'warn')
+  assert.match(failures[0].measured, /2\.8\d?:1/)
+})
+
+test('the brand accent over a sharp picture blocks under 3:1 only; over a veiled layer it warns', () => {
+  const accent = (p85, w = {}) => over({ fg: ACCENT, fgOff: ACCENT_OFF, under: darkGround(p85), ...w })
+  assert.deepEqual(
+    judgeWordsOverPicture([entry('dark', { over: [accent(0.0037)] })], {}).failures,
+    [],
+    '3.3:1 is over the accent bar'
+  )
+  const [sharp] = judgeWordsOverPicture([entry('dark', { over: [accent(0.0133)] })], {}).failures
+  assert.equal(sharp.level, undefined, 'a block')
+  assert.match(sharp.reason, /under 3:1/)
+  const [veiled] = judgeWordsOverPicture(
+    [entry('dark', { over: [accent(0.0133, { veiled: true })] })],
+    {}
+  ).failures
+  assert.equal(veiled.level, 'warn')
+  assert.match(veiled.reason, /veil/)
+})
+
+test('another colour of the template keeps 4.5:1 over a placed picture', () => {
+  const white = over({
+    fg: WHITE.slice(0, 3),
+    fgOff: WHITE.slice(0, 3),
+    under: { p15: 0.1, p50: 0.2, p85: 0.25 }
+  })
+  const [f] = judgeWordsOverPicture([entry('dark', { over: [white] })], {}).failures
+  assert.equal(f.level, undefined)
+  assert.match(f.reason, /under 4\.5:1/)
 })
 
 test('words the host could not shoot are counted, never read as green', () => {

@@ -127,6 +127,34 @@ test('a map button no slot holds is refused, naming what the plugin or the templ
   assert.ok(line.reason.endsWith(MAP_NEEDS))
 })
 
+// Card AP: a template that prints the map button as a maps search link of the address it prints draws no map from settings, so
+// there is nothing to refuse; where it leads is the site check's map-location (it reads the real link on the page).
+test('a map button the template prints as a maps search link of an address is not refused', () => {
+  const order = lineOrder(
+    { slot: 'body-contact.link-3', content: 'map:f-address' },
+    {
+      via: 'none',
+      link: {
+        action: 'navigation',
+        label: 'OPEN IN MAPS',
+        target: 'https://www.google.com/maps/search/?api=1&query=12%20Harbour%20Lane%2C%20Quayside'
+      }
+    },
+    { kind: 'map' },
+    { hiddenKeys: new Map(), leaving: new Set() }
+  )
+  const line = lineResult(order, {
+    settled: new Map(),
+    written: new Set(),
+    refused: new Map(),
+    hides: new Map()
+  })
+  assert.notEqual(line.status, 'refused')
+  assert.equal(line.status, 'skipped')
+  assert.match(line.reason, /maps search of the address/)
+  assert.match(line.reason, /map-location/)
+})
+
 test('coordinates come from the run place, else a brief fact, else the place record; a half pair is none', () => {
   assert.deepEqual(coordinatesOf({ latitude: 1.5, longitude: 2 }, null), { latitude: 1.5, longitude: 2 })
   assert.equal(coordinatesOf({ latitude: 1.5 }, null), null)

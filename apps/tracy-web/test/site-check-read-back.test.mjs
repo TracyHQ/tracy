@@ -25,7 +25,7 @@ test('every written line holding what was ordered is green, with the reads it us
   assert.equal(group(result).status, 'green')
   assert.equal(group(result).checked, 2)
   assert.deepEqual(group(result).reads, [{ read: 'content.contract inspect', lines: 2 }])
-  assert.deepEqual(result.counts, { block: 0, warn: 0, unmeasured: 0 })
+  assert.deepEqual(result.counts, { block: 0, warn: 0, unmeasured: 0, notApplicable: 3 })
 })
 
 test('a slot changed by hand is red, naming the page, the slot, the measured value and step 9', async () => {
@@ -49,7 +49,7 @@ test('a slot changed by hand is red, naming the page, the slot, the measured val
   assert.equal(failure.ordered, 'Train with us')
   assert.equal(failure.level, 'block')
   assert.equal(failure.causingStep, 9)
-  assert.deepEqual(result.counts, { block: 1, warn: 0, unmeasured: 0 })
+  assert.deepEqual(result.counts, { block: 1, warn: 0, unmeasured: 0, notApplicable: 3 })
 })
 
 test('a line the plugin refused stays red, in the plugin words, even when the site holds the ordered value', async () => {
@@ -163,7 +163,7 @@ test('a green read-back lets later groups run, and a later group is added withou
   const [block, warn] = group(result, 'later').failures
   assert.deepEqual([block.level, block.causingStep, block.width, block.group], ['block', 6, 390, 'later'])
   assert.deepEqual([warn.level, warn.causingStep], ['warn', 8])
-  assert.deepEqual(result.counts, { block: 1, warn: 1, unmeasured: 0 })
+  assert.deepEqual(result.counts, { block: 1, warn: 1, unmeasured: 0, notApplicable: 3 })
   assert.equal(result.status, 'red')
   assert.equal(site.calls.length, 1, 'one inspect is shared by every group')
 })
@@ -179,7 +179,7 @@ test('warnings alone keep a group and the check green', async () => {
   }
   const result = await check(checkSite({}), report([]), { groups: [warns] })
   assert.equal(result.status, 'green')
-  assert.deepEqual(result.counts, { block: 0, warn: 1, unmeasured: 0 })
+  assert.deepEqual(result.counts, { block: 0, warn: 1, unmeasured: 0, notApplicable: 0 })
 })
 
 test('nothing on the site changes: only inspect is asked, and a group cannot write through the check', async () => {
@@ -311,7 +311,7 @@ test('a hidden line gone with its block is read on the block: green unpublished,
   assert.equal(failuresOf(red)[0].measured, '1')
 })
 
-test('skipped lines are counted, not compared', async () => {
+test('skipped lines are counted, not compared, and a read-back that compared none is unmeasured', async () => {
   const skipped = {
     ...written('block-2.4', 'module-2.4'),
     status: 'skipped',
@@ -319,7 +319,9 @@ test('skipped lines are counted, not compared', async () => {
     ordered: undefined
   }
   const result = await check(checkSite({ 'module-2.4': 'Demo words' }), report([skipped]))
-  assert.equal(result.status, 'green')
+  // Nothing compared is not green (ADR 0044, decision 27).
+  assert.equal(result.status, 'unmeasured')
+  assert.equal(group(result).status, 'unmeasured')
   assert.equal(group(result).checked, 0)
   assert.equal(group(result).skipped, 1)
 })

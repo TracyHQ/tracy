@@ -49,7 +49,7 @@ function removedResult({ key, already }, removed) {
 }
 
 /** What became of one hide claim, or null while nothing did, which the report reads as the run having ended first. */
-function claimResult(order, { blocks, words, gone, refused, settled, removed }) {
+function claimResult(order, { blocks, words, gone, refused, settled, removed, relinked }) {
   const { via, key } = order
   if (via === 'kept') {
     const { status, reason, key: heldKey, ordered, readFrom, part } = order.line
@@ -81,9 +81,23 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed }) 
       readFrom: done.readFrom
     }
   }
+  // A link the plugin keeps with its row leads to a living page of the plan instead (ADR 0044, decision 29, card AM).
+  if (relinked?.has(key)) {
+    const { address, refusal } = relinked.get(key)
+    return {
+      status: 'written',
+      key,
+      ordered: address,
+      part: 'relink',
+      reason: `${PLAN_HIDES}, and the plugin keeps it with its row (${refusalWords(refusal)}); it leads to the living page ${address} instead of the hidden one`
+    }
+  }
   if (refused.has(key)) {
     const entry = refused.get(key)
-    return { status: 'failed', key, reason: refusalWords(entry), refusal: entry }
+    const reason = entry?.relink
+      ? `${PLAN_HIDES}; the plugin keeps it with its row (${refusalWords(entry.relink.refusal)}) and refused the living page ${entry.relink.address} too: ${refusalWords(entry)}`
+      : refusalWords(entry)
+    return { status: 'failed', key, reason, refusal: entry }
   }
   return gone.has(key) ? { status: 'hidden', key, reason: PLAN_HIDES } : null
 }
@@ -91,7 +105,7 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed }) 
 /**
  * @param {{ order: object, words: object, blocks: Map<string, true | string>, pages: Map<string, object>,
  *   cannotHide: string | null, emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object>,
- *   removed?: Map<string, true | string> }} input
+ *   removed?: Map<string, true | string>, relinked?: Map<string, { address: string, refusal: object }> }} input
  * @returns {{ hides: Map<string, object>, lines: object[], removed: Map<string, true | string>, rows: object[],
  *   rowKeys: Set<string> }} `rows`: rows kept against the plan per list; `rowKeys`: the unclaimed slots of given-up rows
  */
@@ -104,9 +118,10 @@ export function hideLines({
   emptied,
   refused,
   settled,
-  removed = new Map()
+  removed = new Map(),
+  relinked = new Map()
 }) {
-  const seen = { blocks, words, gone: new Set(emptied), refused, settled, removed }
+  const seen = { blocks, words, gone: new Set(emptied), refused, settled, removed, relinked }
   const hides = new Map()
   for (const [slot, claim] of order.orders) {
     const result = claimResult(claim, seen)

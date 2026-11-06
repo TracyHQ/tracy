@@ -10,7 +10,8 @@
 // 2. A picture in a frame with text over it that is still too bright gets a dark overlay baked in (darken.js).
 // 3. The looker looks at every finished picture (looker-step.js).
 // 4. Each rejected frame climbs its ladder (ladder-rungs.js): draw, one redraw with the fault names, the next photo,
-//    fewer rows (where the kit allows), hidden (where the kit allows), returned to the planner. A gallery tile is never
+//    fewer rows (where the kit allows), hidden (where the kit allows), drawn again in other compositions, the best
+//    picture rejected for minor faults only kept, and only then returned to the planner. A gallery tile is never
 //    hidden alone: after fewer rows it reuses an owner photo of its page cut to another region (ladder-reuse.js), and a
 //    gallery tile code found no photo for waits for this ladder. After each rung the
 //    changed pictures are looked at again. A frame the picker placed climbs only in the last round (and then also when
@@ -26,14 +27,14 @@ import path from 'node:path'
 import { darkenPicture, wantsDark } from './darken.js'
 import { WAITS_FOR } from './fill-frames.js'
 import { fileFields } from './frame-entries.js'
-import { climbAll, DRAW_CONCURRENCY, NEXT_PHOTO_TRIES } from './ladder-climb.js'
+import { climbAll, DRAW_CONCURRENCY, NEXT_PHOTO_TRIES, REDRAW_ALT_TRIES } from './ladder-climb.js'
 import { ladderState } from './ladder-state.js'
 import { LOOK_UNREADABLE } from './looker-call.js'
 import { LOOKED_SOURCES } from './looker-step.js'
 import { OWNER_SOURCES } from './manifest-shape.js'
 import { WAITS_FOR_DRAWER } from './picker-picks.js'
 
-export { DRAW_CONCURRENCY, NEXT_PHOTO_TRIES }
+export { DRAW_CONCURRENCY, NEXT_PHOTO_TRIES, REDRAW_ALT_TRIES }
 
 // A gallery tile's any-photo rung may try every owner photo of the brief, one look per pass.
 const MAX_PASSES = 40
@@ -139,7 +140,7 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
       }
       // 4. Every rejected frame that may climb climbs one more rung.
       climbing = []
-      for (const [frameId, { entry }] of s.entries) {
+      for (const [frameId, { list, entry }] of s.entries) {
         if (entry.looker?.verdict !== 'fail' || !LOOKED_SOURCES.has(entry.source) || !climbable(frameId))
           continue
         if (!s.progress.has(frameId) && s.picked.has(frameId) && !lastRound) continue
@@ -151,6 +152,10 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
         if (p.done) continue
         if (OWNER_SOURCES.has(entry.source)) p.tried.add(entry.asset)
         p.faults = faults
+        // Every rejected picture is kept as a candidate for the best-rejected rung, and every fault named for the
+        // other compositions the redraw-alt rung asks for.
+        p.rejected = [...(p.rejected ?? []), { list, entry: { ...entry }, faults: [...faults] }]
+        p.allFaults = [...new Set([...(p.allFaults ?? []), ...faults])]
         s.note(frameId, p.last ?? 'placed', 'rejected', faults.join(', '))
         climbing.push(frameId)
       }

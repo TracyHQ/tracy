@@ -3,20 +3,28 @@
 // door in a fresh conversation over an OpenAI-compatible /chat/completions endpoint (OpenRouter's image output). Three
 // modes, chosen by code (ladder-step.js): `scene` (a photograph of a place and what happens there), `object` (one thing
 // on a quiet background) and `outpaint` (a real owner photo placed in the middle of a wide band, its sides extended).
-// The one redraw after a looker rejection adds the template's `redraw` part with the fault names. A fourth mode,
+// The one redraw after a looker rejection adds the template's `redraw` part with the fault names; another composition
+// for a frame that would otherwise be left without a picture adds the `recompose` part instead (the subject whole and
+// centred with a margin, in the frame's shape, `framing`). A fourth mode,
 // `cutout` (#346), draws the figure of a cut-out frame on a flat plain ground of one colour code names and removes
 // afterwards (cutout-ground.js). When the kit holds the frame's demo picture, a cut-out drawing is sent it as a style
 // reference (the template's `style` part says to copy only framing, scale, pose energy, light and attitude).
 //
 // A call that fails or answers no picture is a drawing with no bytes and its reason; it never throws and is never sent
 // twice by this module (one drawing is one paid call). Its cost is the provider's figure, else its tokens at the model's
-// price (brand-step/brand-prices.js), else null.
+// price (brand-step/brand-prices.js), else null. A failure of the provider rather than of the drawing (out of credits
+// 402, a timeout 408, too many requests 429, a server error 5xx, no answer at all) also carries `provider` with its
+// status (card AU): the caller retries it (ladder-draw.js) and never takes it for a bad drawing.
 import { costOf } from '../lib/agent-over-door-wire.js'
 import { costOfCall, priceFor } from '../lib/brand-prices.js'
 
 export const DRAW_MODES = Object.freeze(['scene', 'object', 'outpaint', 'cutout'])
 /** How long one drawing may take: the model answers in 10 to 25 s. */
 export const DRAW_MS = 90_000
+/** The HTTP statuses that say the provider, not the drawing, failed: retried, never a reason to climb the ladder. */
+export const isProviderStatus = (status) =>
+  status === 402 || status === 408 || status === 429 || status >= 500
+
 /** The aspect ratios the image model takes (OpenRouter `image_config.aspect_ratio`). */
 export const ASPECT_RATIOS = Object.freeze([
   '1:1',
@@ -40,9 +48,18 @@ const said = (x) => (typeof x === 'string' && x.trim() ? x.trim() : 'not stated'
  * the fault names; a cut-out's from its `ground`.
  * @param {Record<string, string>} parts picture-prompts.js drawingParts
  * @param {{ name: string, hex: string } | null} [ground] the plain ground of a cut-out (cutout-ground.js GROUNDS)
- * @param {{ style?: boolean }} [options] `style`: the demo picture is attached as a style reference
+ * @param {{ style?: boolean, recompose?: number, framing?: string }} [options] `style`: the demo picture is attached
+ *   as a style reference; `recompose`: the try of another composition (1, 2, ...; 0 for none), whose `take<n>` part
+ *   fills `{{take}}`; `framing` the frame's shape in words (framingOf)
  */
-export function drawingText(parts, mode, wish, faults = null, ground = null, { style = false } = {}) {
+export function drawingText(
+  parts,
+  mode,
+  wish,
+  faults = null,
+  ground = null,
+  { style = false, recompose = 0, framing = '' } = {}
+) {
   if (!DRAW_MODES.includes(mode)) throw new Error(`not a drawing mode: ${mode}`)
   const values = {
     shows: said(wish?.shows),
@@ -51,17 +68,26 @@ export function drawingText(parts, mode, wish, faults = null, ground = null, { s
     mood: said(wish?.mood),
     size: said(wish?.size),
     faults: listed(faults),
-    ground: ground ? `${ground.name} (${ground.hex})` : ''
+    ground: ground ? `${ground.name} (${ground.hex})` : '',
+    framing: said(framing),
+    take: recompose ? (parts[`take${recompose}`] ?? '') : ''
   }
   const fill = (text) => String(text ?? '').replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '')
   return [
     parts.common,
     parts[mode],
     ...(style ? [parts.style] : []),
-    ...(faults?.length ? [parts.redraw] : [])
+    ...(recompose ? [parts.recompose] : faults?.length ? [parts.redraw] : [])
   ]
     .map(fill)
     .join('\n\n')
+}
+
+/** The shape of a frame in words for the recompose part: its aspect ratio and whether it is wide, tall or square. */
+export function framingOf(width, height) {
+  const ratio = aspectRatioFor(width, height)
+  const shape = ratio === '1:1' ? 'square' : width > height ? 'wider than tall' : 'taller than wide'
+  return `${shape}, about ${ratio}`
 }
 
 /** The supported aspect ratio nearest to a width and height (compared on a log scale). */
@@ -93,8 +119,8 @@ function pictureOf(message) {
  * @param {{ door: { baseUrl: string, apiKey: string, model: string }, text: string, image?: Buffer | null,
  *   aspect: string, fetchImpl?: typeof fetch, ms?: number }} input `image`: the attached picture (PNG), the band to extend for
  *   outpaint or the demo picture as a style reference for a cut-out
- * @returns {Promise<{ bytes: Buffer | null, problem?: string, model: string, ms: number, costUsd: number | null,
- *   costEstimated: boolean }>}
+ * @returns {Promise<{ bytes: Buffer | null, problem?: string, provider?: { status: number | 'unreachable' },
+ *   model: string, ms: number, costUsd: number | null, costEstimated: boolean }>} `provider` when the provider failed
  */
 export async function askDrawer({ door, text, image = null, aspect, fetchImpl = fetch, ms = DRAW_MS }) {
   const started = Date.now()
@@ -137,14 +163,21 @@ export async function askDrawer({ door, text, image = null, aspect, fetchImpl = 
       signal: AbortSignal.timeout(ms)
     })
     json = await res.json().catch(() => null)
-    if (!res.ok || !json || json.error)
+    if (!res.ok || !json || json.error) {
+      // OpenRouter may answer 200 with an error object whose code is the provider's status.
+      const status = res.ok && Number.isInteger(json?.error?.code) ? json.error.code : res.status
       return done(
-        { problem: `the drawer answered ${res.status}: ${String(json?.error?.message ?? '').slice(0, 200)}` },
+        {
+          problem: `the drawer answered ${status}: ${String(json?.error?.message ?? '').slice(0, 200)}`,
+          ...(isProviderStatus(status) ? { provider: { status } } : {})
+        },
         json
       )
+    }
   } catch (error) {
     return done({
-      problem: `the drawer could not be reached: ${String(error?.message ?? error).slice(0, 200)}`
+      problem: `the drawer could not be reached: ${String(error?.message ?? error).slice(0, 200)}`,
+      provider: { status: 'unreachable' }
     })
   }
   const bytes = pictureOf(json.choices?.[0]?.message)

@@ -37,6 +37,7 @@ reader uses that module.
 | `picks` | `[{ frame, photo, asset, reason }]`: one per frame the picker answers, in the order it was asked: the photo code it chose (or `"none"`, or `null` while unanswered), the brief asset that code names, and its reason. Empty when the run had no picker frame. |
 | `refusedPhotos` | `[{ asset, reason }]`: brief assets no frame may take (not a still, lettering, another business, a label that is unknown, blurry, no bytes with its hash). |
 | `altNotes` | `[{ frame, alt, seen, agrees, shared, note }]`: the writer's alt next to what the picture actually shows, compared by code (section 3b); filled only when a writer copy file is given to the run. |
+| `altCheck` | `{ status, reason, to? }`: `compared` when a writer copy file was given, `deferred` when not (steps 6 and 8 run in parallel); `to` names the site check's `alt-matches-picture` (ADR 0044 decision 28), which compares the printed alts with the seen sentences. |
 | `usage` | `[{ asset, frames }]`: per brief photo, how many frames use it. |
 | `cost`, `timing` | Objects keyed by role: `code` (always 0 USD; the time code took), `iconRanking` (the ranking call's cost as the provider reports it, 0 without a call, and its time in milliseconds), `looker` (the sum of the looks' costs as the provider reports them, or at the model's price when it reports none, and the sum of their times; section 3b), `drawer` (the sum of the drawings' costs and times; section 3c), and later background removal. The picker's cost is the cost of the run's turns, one row per call, with the provider balance before and after on the run. |
 | `iconRanking` | `{ model, notes }`: the model that ranked the icon names (`null` when the shortlist order decided) and why it did not, when it did not (no `pictureIconRanker` door, the demo icons not read, no usable answer). |
@@ -70,6 +71,7 @@ A frame entry:
 | `backdrop` | On a `drawn` cut-out whose demo picture has one: `{ shape, paint, preview }`, the disc and bands the demo has behind its figure, in shape units and colour roles (section 1a). Absent otherwise. |
 | `seen` | One sentence from the looker saying what the picture actually shows. |
 | `looker` | The look of the picture (section 3b): `{ verdict: "pass" \| "fail", faults: [...], seen }`, the fault names from the fixed list; `{ verdict: "fail", faults: ["look unreadable"], seen: null, problem }` when the look could not be read twice. Absent when the frame is not looked at (icons, initials, hidden frames). |
+| `filledBy` | `{ rung, faults }` when a rung that keeps the frame from being left without a picture filled it (section 4): `redraw-alt` (another composition, `faults` empty) or `best-rejected` (a picture the looker rejected for minor faults only, `faults` naming them). Absent otherwise. |
 | `reason` | Why this picture, or why hidden. |
 
 Twins (a kit frame with `twinOf`, the light or dark copy of another frame, and a plan frame with `sameAs`, a second
@@ -212,6 +214,12 @@ Thresholds and readings (named constants in the code):
   distorted face or body, stray lettering, visible drawing seam; on a cut-out also rough cut-out edge, leftover ground, missing
   part, covers the text), and writes the `seen` sentence. It never sees the picker's reasons.
 
+- **A file is never narrower than the kit's minimum** (card AI, owner decision 06/11/2026). A content map slot's
+  `fit.minWidth` is the narrowest file the write door takes (SlotFit checkPicture, `SLOT_IMAGE_TOO_SMALL`). The index
+  carries it on the frame; every cut and every drawing for the frame is written at least that wide (`outputSizeFor`),
+  and an owner photo region narrower than it is refused (`narrower-than-min-width`), never enlarged to reach it, so the
+  ladder moves on to the next photo, the drawing or the rungs after. The mapping export leaves a narrower file out as a
+  problem, and the write step's package check (`packageItems` with the content map) names any that still gets through.
 - **A cut never takes off a head** (`site-pictures/head-boxes.js`). The brief's face boxes are tight (brow to chin)
   and often a little low, and a person seen from behind has none. The cut keeps whole a head box grown from every
   face box (1.2 face heights above, 0.3 below, 0.3 face widths each side) and, when the labels count more people than
@@ -430,7 +438,12 @@ Looker rejections and check failures go back to the picker for the failing frame
    hidden alone: it reuses an owner photo of its page cut to another region, then takes any usable owner photo, and is
    returned only when no photo is left or the brief has fewer than 2);
 3. a drawing still rejected is hidden when the kit allows hiding;
-4. a frame that cannot be hidden is returned to the planner.
+4. a frame that cannot be hidden is drawn again in other compositions, then keeps the best picture rejected for minor
+   faults only (owner decision 06/11/2026, card AJ: step 8 never leaves a frame the plan wants filled without a picture
+   while one can be had);
+5. only a frame whose every picture had a hard fault, or that got none, is returned to the planner, and the mapping
+   export lists it in `problems` (`the plan wants a picture here and the picture step left it without one: ...`), so
+   step 9 reports it as refused instead of leaving the demo picture silently.
 
 A `person` frame never enters the drawing steps: no confirmed portrait means initials. A demo picture is never kept in
 a frame the plan asked to fill.
@@ -449,6 +462,8 @@ climb. The rungs, in order:
 | reuse | gallery tiles only | an owner photo already shown on the tile's pages, never one shown in a neighbouring tile of the same list (index one apart, or directly above or below when the kit gives the list's columns), cut by code to a region of the frame's shape that shares at most 30% of the smaller cut's area with every other cut of that photo and runs through no head, written and looked at like any cut; at most 2 per tile; the entry says `reuse: { with, overlap }` |
 | any photo | gallery tiles only | always fills while the brief has at least 2 usable owner photos: any usable owner photo (used on other pages or already twice), least used first, any region of the frame's shape, keeping only the hard rules: heads whole, never the photo of a neighbouring tile, never the very cut another frame of the page shows, and the photo's main subject kept (real run 6: a tile got a crop of a bush and a fence): the region holds at least half of the labelled subject box or a whole head, or, when no subject is labelled, covers at least half of the photo; a photo with no such region is skipped for the next one (the reuse rung keeps the same rule); looked at like any cut, a rejection followed by the next photo until every photo is tried; the entry says `reuse: { rung: "any-photo", with, overlap }` (the reuse rung writes `rung: "reuse"`) |
 | hide | every match but gallery tiles | the frame is hidden when the kit allows hiding and it is not a template setting |
+| redraw-alt | `specific`, `specific` cut-out | another composition (`REDRAW_ALT_TRIES`, 2): the template's `recompose` part names every fault seen so far, the frame's shape (`framingOf`: wide, tall or square, and its aspect ratio) and asks for the subject centred and whole with a margin on every side; each try adds its own `take<n>` part (another distance), so no two tries are the same request or the same cached drawing; drawn whole, never extended from a photo; `drawing.attempt` is 3, then 4; the entry says `filledBy: { rung: "redraw-alt", faults: [] }` |
+| best-rejected | every match but `person` | the best picture the looker rejected for this frame whose faults are all minor (`MINOR_FAULTS` in `looker-call.js`: subject cut off, visible drawing seam, rough cut-out edge, text would not read; every other fault is hard), fewest faults first, then the latest; an owner photo another frame of its pages now shows is passed over; the frame ends there; the entry says `filledBy: { rung: "best-rejected", faults }` and L01 notes it instead of failing it |
 | return | every match | the frame is returned to the planner (`returns`) |
 
 A **gallery tile** is an `any-real` photo frame that is one row of a kit list in which at least two rows hold an image
@@ -463,8 +478,20 @@ two cuts share at most 30%, after the any-photo rung they are not the same cut; 
 fails a gallery tile hidden alone (one not in a row the ladder dropped, the manifest's `rows`). A tile walks up to 40
 looks (the round's pass limit), one photo per pass.
 
+Owner decision 06/11/2026 (card AK, refines the any-photo rung above): one owner photo may show again in the same kit
+block only in a clearly different cut; a near duplicate (the bug: two tiles of one gallery, cuts sharing 97%) never.
+The reuse rung keeps its 30% rule; the any-photo cut now shares at most 50% with every other cut of the photo on its
+pages (`ANY_PHOTO_MAX_OVERLAP`) instead of only not being the very same cut. A tile no such cut is left for is drawn
+(rungs draw and redraw, entry `filledBy: { rung: "draw" }`): the gallery climbs next photo, fewer rows, reuse, any
+photo, draw, redraw, best-rejected and return. P06 fails an any-photo reuse sharing more than 50% (the reuse rung's
+30% and the neighbour rule unchanged); the same photo in one block with a clearly different cut still passes. P07
+accepts a drawn `any-real` frame only for a gallery tile marked `filledBy.rung` "draw". The mapping export lists a
+cut sharing more than 50% with another cut of the same photo in its block as a problem and leaves it out.
+
 A `person` frame climbs only hide and return (no other person's photo, never a drawing). A `specific` cut-out frame
-climbs draw, redraw, hide and return; any other cut-out only hide and return (section 3d). A frame waiting for the drawer
+climbs draw, redraw, hide, redraw-alt, best-rejected and return; any other cut-out only hide and return (section 3d).
+A `specific` frame climbs redraw-alt and best-rejected after hide, an `any-real` frame and a gallery tile best-rejected
+before return. A frame waiting for the drawer
 starts at draw; a frame code placed starts at its first rung after the placement; a frame the picker placed climbs only
 in the last round (no picker round follows), from draw, when the looker rejects it or it still fails the check. A look
 that could not be read is no rejection: the picture fails L01 and the next round asks again. Each rung is recorded in

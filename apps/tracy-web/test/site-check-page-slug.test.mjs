@@ -87,8 +87,9 @@ test('a report with a route table runs page-slug after read-back, and pages at t
   assert.deepEqual(
     check.groups.map((g) => [g.name, g.status]),
     [
-      ['look-guard-findings', 'green'],
-      ['unaddressable-items', 'green'],
+      ['look-guard-findings', 'not-applicable'],
+      ['unaddressable-items', 'not-applicable'],
+      ['emphasis-codes-left', 'not-applicable'],
       ['read-back', 'green'],
       ['page-slug', 'green']
     ]
@@ -98,9 +99,10 @@ test('a report with a route table runs page-slug after read-back, and pages at t
 
 test('a page whose menu link ends with another name blocks on step 9', async () => {
   const check = await runSiteCheck({
+    // The row is what the site answers now; inspect's route is from when the contract was captured (card AE).
     door: site(
-      { 10: 'classes', 11: 'classes/rowing' },
-      { ...ROWS, 11: { alias: 'kayak-tours', path: 'classes/kayak-tours' } }
+      { 10: 'classes', 11: 'classes/kayak-tours' },
+      { ...ROWS, 11: { alias: 'rowing', path: 'classes/rowing' } }
     ),
     report: renamed(),
     groups: [pageSlugGroup]
@@ -135,7 +137,7 @@ test('a report without a route table does not run the measure', async () => {
   const check = await runSiteCheck({ door: site({}), report: report([]) })
   assert.deepEqual(
     check.groups.map((g) => g.name),
-    ['look-guard-findings', 'unaddressable-items', 'read-back']
+    ['look-guard-findings', 'unaddressable-items', 'emphasis-codes-left', 'read-back']
   )
 })
 

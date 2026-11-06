@@ -13,7 +13,8 @@
 // manifest's `looker` holds the door's model and snapshot, the prompt hash and one record per picture (frame, file hash,
 // time, cost, cached); `cost.looker` and `timing.looker` are their sums, and `paid` (what this save spent, cached looks
 // excluded) is added to the run's cost by the caller.
-// When the run was given a writer copy file, `altNotes` compares its alts with the seen sentences (alt-notes.js).
+// When the run was given a writer copy file, `altNotes` compares its alts with the seen sentences (alt-notes.js); without
+// one, the manifest's `altCheck` says the comparison is deferred to the site check's `alt-matches-picture` (step 11).
 //
 // The looks run where a checked round is saved (looker-round.js withLooker). Every readable look is kept in the bench's
 // file store (runs/<run id>/looks/<key>.json, the key a hash of the picture, its display size, the words, the model and
@@ -23,7 +24,15 @@ import path from 'node:path'
 import { altNotesFor } from './alt-notes.js'
 import { hasTextOver } from './darken.js'
 import { fileStore, sha256Hex } from './file-store.js'
-import { askLooker, isAnyReal, LOOK_UNREADABLE, lookImage, lookWords, surfaceFacts } from './looker-call.js'
+import {
+  askLooker,
+  isAnyReal,
+  LOOK_UNREADABLE,
+  lookImage,
+  lookWords,
+  onlyMinorFaults,
+  surfaceFacts
+} from './looker-call.js'
 
 export const LOOK_CONCURRENCY = 4
 /** The sources whose picture the looker checks. */
@@ -206,7 +215,12 @@ export function createLooker({
       }
       if (said.dropped?.length)
         notes.push(`${entry.frame}: fault names outside the list dropped: ${said.dropped.join(', ')}`)
-      if (said.verdict === 'fail')
+      // A rejected picture the ladder kept because its only faults are minor (rung best-rejected) is noted, not failed.
+      if (said.verdict === 'fail' && entry.filledBy?.rung === 'best-rejected' && onlyMinorFaults(said.faults))
+        notes.push(
+          `${entry.frame}: kept with minor faults (${said.faults.join(', ')}): no better picture fits`
+        )
+      else if (said.verdict === 'fail')
         failures.push({
           where: whereOf(list, entry.frame),
           detail: said.problem
