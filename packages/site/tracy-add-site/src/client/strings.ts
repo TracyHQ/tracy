@@ -468,6 +468,15 @@ export const en: Record<string, string> = {
     '<a data-import-link="site">Open the site in your browser</a> to check that it is online.',
   import_problem_p55_fix_1: 'Once it loads again, start again.',
   import_problem_p55_action_0: 'Start again',
+  /** An older Claude Cowork stopped the read at a folder or file its PHP may not read (`files_unreadable`). */
+  import_problem_p56_what: 'Your site would not let Tracy read {folder}.',
+  import_problem_p56_why:
+    'Its permissions on your hosting do not allow it to be read, and the version of Claude Cowork on {domain} stops the whole import there.',
+  import_problem_p56_fix_0:
+    "In your hosting's file manager, give it read permission (755 for a folder, 644 for a file), or delete it if the site does not need it.",
+  import_problem_p56_fix_1:
+    'Or update Claude Cowork on your site: newer versions leave such a folder out, say which, and go on.',
+  import_problem_p56_action_0: 'Start again',
   import_problem_p36_what: 'This site is too large for one import.',
   import_problem_p36_why: 'Tracy support can move it for you.',
   import_problem_p36_fix_0:
@@ -675,6 +684,9 @@ export const en: Record<string, string> = {
   import_step_handing_over: 'Handing it to Tracy',
   import_detail_tables: '{count} tables copied',
   import_detail_files: '{count} files packed',
+  /** Beside the files step: what the site's Claude Cowork leaves out, unreadable to its PHP. */
+  import_detail_unreadable:
+    'Left out, unreadable on your site ({count}): {paths}. Give them read permission on your hosting, and Sync from live brings them in.',
   import_detail_sent: '{sent} MB sent',
   import_detail_sent_of: '{sent} of about {total} MB sent',
   import_detail_left: 'about {minutes} min left',
@@ -756,6 +768,8 @@ export const en: Record<string, string> = {
   import_error_cowork_not_answering:
     'Claude Cowork is not answering on this site. Check it is installed and switched on, or sign in with the admin details so Tracy installs it.',
   import_error_call_failed: 'The site stopped answering while Tracy was reading it. Try again.',
+  import_error_files_unreadable:
+    'Your site would not let Tracy read {folder}, so the import stopped. Give it read permission on your hosting, then start again.',
   import_error_store_refused: 'Tracy read your site but could not store the copy. Try again in a moment.',
   import_error_too_many_parts: 'This site is too large for one import. Contact Tracy support.',
   import_error_run_lost: 'Tracy restarted while reading your site, so the import stopped. Start it again.',

@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-398-sync-unreadable",
+  "kind": "fix",
+  "title": "Sync preserves unreadable files in whole and incremental reads and refuses incomplete omission lists",
+  "pr": 398,
+  "area": "site-changes/sync",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the live engine HTTP fixture and the real MariaDB sync fixture."],
+  "expect": [
+    "An incremental read retains the previous manifest entry for an unreadable folder and still recognizes actual deletions.",
+    "A whole read retains omitted files, then a later readable deletion removes them.",
+    "A truncated omission list refuses the read before it can authorize deletion."
+  ],
+  "selectors": {
+    "host": "live-pull.mjs, webroot-sync.sh"
+  },
+  "evidence": "tests/regression/evidence/REG-PR-398-import-unreadable-door/",
+  "fence": "Missing permission is unknown content, never proof of deletion.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=unreadable|could not read|whole read lacking",
+      "--test-timeout=300000",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+    ],
+    "tests": ["what the engine could not read", "a whole read lacking", "a truncated unreadable list"]
+  }
+}

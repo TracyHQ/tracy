@@ -864,5 +864,12 @@
   "own_source_website": "de website",
   "brand_chat_title": "Uit uw chat",
   "brand_chat_use": "{file} als logo gebruiken",
-  "brand_chat_not_png": "De afbeeldingen die u in de chat stuurde zijn geen PNG-files en kunnen dus niet het logo zijn."
+  "brand_chat_not_png": "De afbeeldingen die u in de chat stuurde zijn geen PNG-files en kunnen dus niet het logo zijn.",
+  "import_detail_unreadable": "Overgeslagen, niet leesbaar op je site ({count}): {paths}. Geef ze leesrechten op je hosting en haal ze daarna op met Sync from live.",
+  "import_error_files_unreadable": "Je site laat Tracy {folder} niet lezen, waardoor de import is gestopt. Geef leesrechten op je hosting en begin daarna opnieuw.",
+  "import_problem_p56_action_0": "Opnieuw beginnen",
+  "import_problem_p56_fix_0": "Geef in de bestandsbeheerder (file manager) van je hosting leesrechten (755 voor een map (folder), 644 voor een bestand (file)), of verwijder het onderdeel als de site het niet nodig heeft.",
+  "import_problem_p56_fix_1": "Of werk Claude Cowork op je site bij: nieuwere versies slaan zulke mappen (folder) over, noemen ze en gaan verder.",
+  "import_problem_p56_what": "Je site laat Tracy {folder} niet lezen.",
+  "import_problem_p56_why": "De rechten op je hosting staan lezen niet toe en de versie van Claude Cowork op {domain} stopt daarom de hele import."
 }

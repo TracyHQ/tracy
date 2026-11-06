@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-398-import-locale-bundles",
+  "kind": "fix",
+  "title": "Generated locale bundles preserve every localized dictionary and language label",
+  "pr": 398,
+  "area": "add-site/import",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Execute both committed locale bundles using a fake dsh locale registry and compare registrations with every source JSON dictionary."
+  ],
+  "expect": [
+    "Both locale bundles register every source dictionary once, with exactly the same Unicode values.",
+    "The locale bundle registers exactly the source language labels and fallbacks."
+  ],
+  "fence": "Changing generated string encoding must not change or omit localized interface data.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "tests/regression/scripts/import-locale-bundles.mjs"],
+    "tests": ["generated tracy-locale-vi registers", "generated tracy-locales registers"]
+  },
+  "selectors": {
+    "bundle": "lib/client.js",
+    "source": "locale JSON dictionaries"
+  }
+}

@@ -134,6 +134,32 @@ export function answerKind(text) {
 }
 
 /**
+ * What a page that was not the engine's reply shows, from a fixed list, never its text: the
+ * administrator's sign-in form (Joomla answering a door the API plugin did not take), a challenge
+ * or block page (a host's bot protection, a security plugin, a WAF), or anything else.
+ *
+ * The page kind describes the response, not its cause. A login page may be Joomla routing before
+ * the plugin is ready; an unexpected page alone cannot identify which hosting layer produced it.
+ * @param {string} text The body as received.
+ * @returns {'login_form' | 'challenge' | 'other'}
+ */
+export function pageKind(text) {
+  const t = String(text ?? '')
+  if (
+    /name=["']?(?:username|passwd|password)["']?/i.test(t) &&
+    /option=com_login|task=login|id=["']?form-login/i.test(t)
+  )
+    return 'login_form'
+  if (
+    /captcha|challenge|are you (?:a )?human|access denied|request (?:was )?blocked|forbidden|imunify|bot[- ]?protection|security check|sucuri|wordfence|mod_?security|cf-chl|just a moment|ddos/i.test(
+      t
+    )
+  )
+    return 'challenge'
+  return 'other'
+}
+
+/**
  * Did the door die on a PHP parse error?
  *
  * The engine needs PHP 8 (`?->`, `match`). On PHP 7 Joomla installs it without complaint, and then

@@ -218,6 +218,16 @@ export function ImportProgress({
                 {t(files.part.key, files.part.params)}
               </span>
             ) : null}
+            {name === 'reading_files' && index <= at && run?.detail?.unreadable?.count ? (
+              <span className="block text-muted-foreground" data-import-unreadable="">
+                {t('import_detail_unreadable', {
+                  count: run.detail.unreadable.count,
+                  paths:
+                    run.detail.unreadable.paths.slice(0, 5).join(', ') +
+                    (run.detail.unreadable.count > 5 ? ', …' : '')
+                })}
+              </span>
+            ) : null}
           </span>
         </li>
       ))}

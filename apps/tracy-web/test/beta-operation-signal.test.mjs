@@ -159,6 +159,7 @@ test('an import diagnostic keeps only values from closed sets, the same ones the
     signIns: [accepted.DIAGNOSTIC_SIGN_INS, worker.DIAGNOSTIC_SIGN_INS],
     actions: [accepted.DIAGNOSTIC_ACTIONS, worker.DIAGNOSTIC_ACTIONS],
     answers: [accepted.DIAGNOSTIC_ANSWERS, worker.DIAGNOSTIC_ANSWERS],
+    pages: [accepted.DIAGNOSTIC_PAGES, worker.DIAGNOSTIC_PAGES],
     engineErrors: [accepted.DIAGNOSTIC_ENGINE_ERRORS, worker.DIAGNOSTIC_ENGINE_ERRORS]
   }
   for (const [name, [web, host]] of Object.entries(pairs))
@@ -1174,4 +1175,31 @@ test('gate off: no plan, or a membership call that fails, still signs in as "gat
     assert.deepEqual(account.beta_admission.plans, [])
     assert.equal(account.beta_admission.lookup, lookup)
   }
+})
+
+test('a stuck import alert shows the permission check and both door reply kinds without raw bodies', () => {
+  const text = signalText(
+    {
+      kind: 'site.stuck',
+      site_key: 'import.localhost',
+      data: {
+        reason: 'blocked_by_host',
+        detail: {
+          at: 'api_door',
+          check: 'page_after_proof',
+          answer: 'html',
+          page: 'challenge',
+          doors: [
+            { path: '/index.php', status: 404, answer: 'json', head: 'private body' },
+            { path: '/administrator/index.php', status: 200, answer: 'html', page: 'challenge' }
+          ]
+        }
+      }
+    },
+    'DEV'
+  )
+  assert.match(text, /page_after_proof/)
+  assert.match(text, /\/index.php HTTP 404 json/)
+  assert.match(text, /\/administrator\/index.php HTTP 200 html challenge/)
+  assert.doesNotMatch(text, /private body/)
 })
