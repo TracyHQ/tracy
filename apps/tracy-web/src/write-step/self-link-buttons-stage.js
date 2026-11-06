@@ -6,6 +6,7 @@
 // and written only when it differs, so a rerun sends nothing.
 import { createHash } from 'node:crypto'
 import { menuRows } from '../lib/joomla-menu-rows.js'
+import { frameworkOfKit } from '../lib/kit-framework.js'
 import {
   SELF_LINKS_SLOT,
   selfLinkBlockFor,
@@ -22,11 +23,13 @@ export { SELF_LINKS_SLOT }
 
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, keptPages: { id: string, path: string }[],
- *   menutype?: string | null }} input `keptPages` as the route stage left them
+ *   menutype?: string | null, framework?: string | null }} input `keptPages` as the route stage left them; `framework`: `t3` or
+ *   `t4`, the one the kit's release records by default (lib/kit-framework.js), so a rule names the body class it prints
  * @returns {Promise<object[]>} one report line when the kit names containers, else none
  */
-export async function hideSelfLinkButtons({ door, siteKey, kit, keptPages, menutype = null }) {
+export async function hideSelfLinkButtons({ door, siteKey, kit, keptPages, menutype = null, framework }) {
   if (!Array.isArray(kit?.site?.selfLinkButtons)) return []
+  const scope = framework === undefined ? frameworkOfKit(kit) : framework
   const { containers, problems } = selfLinkButtonsOf(kit)
   const module = headModuleOf(kit)
   const line = (fields) => ({
@@ -54,7 +57,7 @@ export async function hideSelfLinkButtons({ door, siteKey, kit, keptPages, menut
       path: page.path,
       rows: rowsOpening(page, rows, menutype)
     }))
-    block = selfLinkBlockFor(selfLinkSelectorsFor(openings, containers))
+    block = selfLinkBlockFor(selfLinkSelectorsFor(openings, containers, scope))
   }
   let content
   try {

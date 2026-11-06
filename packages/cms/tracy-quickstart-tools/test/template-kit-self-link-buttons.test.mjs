@@ -18,6 +18,7 @@ import {
 const CLI = fileURLToPath(new URL('../template-kit/cli.mjs', import.meta.url))
 const CONTAINER = '.more-row'
 const WHY = 'the invented section chrome prints its "more" button in div.more-row'
+const NONE_WHY = 'no invented module prints a "more" button from settings a slot cannot reach'
 
 test('a declared container is one plain compound selector, as the write step reads it', () => {
   for (const c of [
@@ -37,7 +38,7 @@ test('a declared container is one plain compound selector, as the write step rea
   assert.match(containerProblem('.a .b'), /compound/)
 })
 
-test('declaring adds a container once with its reason, and --none sets an empty list', () => {
+test('declaring adds a container once with its reason, and --none sets an empty list with its reason', () => {
   const kit = { site: {} }
   assert.deepEqual(declareSelfLinkButtons(kit, { container: CONTAINER, why: WHY }), {
     error: null,
@@ -49,8 +50,14 @@ test('declaring adds a container once with its reason, and --none sets an empty 
   })
   assert.deepEqual(kit.site.selfLinkButtons, [{ container: CONTAINER, why: WHY }])
   assert.match(declareSelfLinkButtons(kit, { container: CONTAINER }).error, /--why/)
-  assert.deepEqual(declareSelfLinkButtons(kit, { none: true }), { error: null, changed: true })
+  assert.match(declareSelfLinkButtons(kit, { none: true }).error, /--why/)
+  assert.deepEqual(declareSelfLinkButtons(kit, { none: true, why: NONE_WHY }), { error: null, changed: true })
   assert.deepEqual(kit.site.selfLinkButtons, [])
+  assert.deepEqual(kit.site.noneWhy, { selfLinkButtons: NONE_WHY })
+  // Each field keeps its own reason, and a container declared later takes only its own none back.
+  declareHiddenPageLinks(kit, { none: true, why: NONE_WHY })
+  declareSelfLinkButtons(kit, { container: CONTAINER, why: WHY })
+  assert.deepEqual(kit.site.noneWhy, { hiddenPageLinks: NONE_WHY })
 })
 
 test('cli: self-link-buttons writes the kit in place with its own indent, and nothing on a bad container', () => {

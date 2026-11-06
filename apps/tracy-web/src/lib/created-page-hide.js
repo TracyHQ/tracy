@@ -3,8 +3,9 @@
 // (`div.share-social`, Facebook, X and Reddit) with no setting to turn it off, and none of its article files lacks both that bar
 // and the class pages' action bar, so a created privacy page printed share buttons. The kit names, per template, the selectors of
 // such blocks (`site.createdPageHide`), and the write step puts one CSS rule in the kit's head injection block that hides them on
-// the pages it created only: each selector is scoped by the body classes T4 prints on an article opened under the menu item that
-// opens a created page (lib/self-link-buttons.js), so an article the owner writes later keeps its share bar.
+// the pages it created only: each selector is scoped by the body classes the framework prints on an article opened under the menu
+// item that opens a created page (lib/self-link-buttons.js: T4 `item-<id>`, T3 `itemid-<id>`), so an article the owner writes
+// later keeps its share bar.
 import { markedBlockIn, withMarkedBlock } from './empty-video-buttons.js'
 import { containerListOf, pageBodyOf, RULE_END } from './self-link-buttons.js'
 
@@ -30,11 +31,12 @@ export function createdPageHideOf(kit) {
  * One selector per created page's menu item and kit selector; a page with no menu item gets none.
  * @param {{ id: string, itemId: number | null }[]} created the pages the write step created, each with the menu item opening it
  * @param {string[]} selectors
+ * @param {string | null} [framework] `t3` or `t4` (lib/kit-framework.js), T4 when unknown
  */
-export function createdHideSelectorsFor(created, selectors) {
+export function createdHideSelectorsFor(created, selectors, framework = null) {
   const out = []
   for (const page of each(created)) {
-    const body = pageBodyOf({ option: 'com_content', view: 'article', id: Number(page?.itemId) })
+    const body = pageBodyOf({ option: 'com_content', view: 'article', id: Number(page?.itemId), framework })
     if (!body) continue
     for (const selector of each(selectors)) {
       const scoped = `${body} ${selector}`
@@ -55,7 +57,7 @@ export const createdHideBlockIn = (content) => markedBlockIn(content, CREATED_HI
 export const withCreatedHideBlock = (content, block) =>
   withMarkedBlock(content, block, CREATED_HIDE_START, CREATED_HIDE_END)
 
-const SELECTOR = /^body\.com_content\.view-article\.item-\d+ (\S+)$/
+const SELECTOR = /^body\.com_content\.view-article\.(?:item|itemid)-\d+ (\S+)$/
 
 /** Whether a block holds only the hide rule on the kit's selectors, each scoped to a created page's item (the look guard's test). */
 export function isCreatedHideBlock(block, selectors) {

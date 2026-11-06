@@ -3,7 +3,8 @@
 // contract slot reaches (JA Boxing's section chrome prints `div.bottom-actions` from the module's `link-btn`) can leave a demo
 // button that opens its own page; the write step hides, on each kept page, a link in these containers whose address is that
 // page's own. A person declares them when packaging, after reading the template's layout (`cli.mjs self-link-buttons`); a
-// template with none declares an empty list, which says it was looked at.
+// template with none declares an empty list with its reason (`--none --why`, `site.noneWhy`, none-why.mjs), which says it was
+// looked at.
 //
 //   "selfLinkButtons": [{ "container": ".bottom-actions", "why": "<where the template prints it>" }]
 //
@@ -15,6 +16,8 @@
 //
 // A container is one compound selector (an optional tag, an id or classes), so a rule cannot reach past it and the site check can
 // match it on what holds a link. The write step reads it with the same rules (apps/tracy-web/src/lib/self-link-buttons.js).
+
+import { clearNone, declareNone } from './none-why.mjs'
 
 const CONTAINER = /^([a-z][a-z0-9]*)?(#[A-Za-z_][\w-]*)?((?:\.[A-Za-z_-][\w-]*)*)$/
 export const MAX_CONTAINER_CHARS = 100
@@ -32,7 +35,8 @@ export function containerProblem(container) {
 }
 
 /**
- * Adds one container to a kit's list under `field` (once), or sets an empty list with `none`. Changes the kit in place.
+ * Adds one container to a kit's list under `field` (once), or sets an empty list with `none` and its reason `why`. Changes the
+ * kit in place.
  * @param {object} kit
  * @param {string} field the kit's `site` field
  * @param {string} label what the containers are for, in an error's words
@@ -42,11 +46,7 @@ export function containerProblem(container) {
  */
 function declareContainer(kit, field, label, { container, why, none = false }, key = 'container') {
   if (!kit?.site || typeof kit.site !== 'object') return { error: 'the kit has no site part', changed: false }
-  if (none) {
-    const changed = !Array.isArray(kit.site[field]) || kit.site[field].length > 0
-    kit.site[field] = []
-    return { error: null, changed }
-  }
+  if (none) return declareNone(kit, field, why)
   const problem = containerProblem(container)
   if (problem) return { error: problem, changed: false }
   if (typeof why !== 'string' || !why.trim())
@@ -60,6 +60,7 @@ function declareContainer(kit, field, label, { container, why, none = false }, k
   if (at === -1) list.push(entry)
   else list[at] = entry
   kit.site[field] = list
+  clearNone(kit, field)
   return { error: null, changed: true }
 }
 

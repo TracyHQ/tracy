@@ -14,6 +14,7 @@ import { declareVideoButtons, selectorProblem } from '../template-kit/lib/video-
 const CLI = fileURLToPath(new URL('../template-kit/cli.mjs', import.meta.url))
 const SELECTOR = '.play-chip[data-src$="/embed/"]'
 const WHY = 'the invented card layout prints the button whatever the video field holds'
+const NONE_WHY = 'no invented layout file prints a video play button'
 
 test('a declared selector must test the video address and hold only plain selector characters, as the write step reads it', () => {
   for (const selector of [
@@ -32,7 +33,7 @@ test('a declared selector must test the video address and hold only plain select
   assert.match(selectorProblem('.play-chip'), /tests the video address/)
 })
 
-test('declaring adds a selector once with its reason, and --none sets an empty list', () => {
+test('declaring adds a selector once with its reason, and --none sets an empty list with its reason', () => {
   const kit = { site: {} }
   assert.deepEqual(declareVideoButtons(kit, { selector: SELECTOR, why: WHY }), { error: null, changed: true })
   assert.deepEqual(declareVideoButtons(kit, { selector: SELECTOR, why: WHY }), {
@@ -41,8 +42,15 @@ test('declaring adds a selector once with its reason, and --none sets an empty l
   })
   assert.deepEqual(kit.site.emptyVideoButtons, [{ selector: SELECTOR, why: WHY }])
   assert.match(declareVideoButtons(kit, { selector: SELECTOR }).error, /--why/)
-  assert.deepEqual(declareVideoButtons(kit, { none: true }), { error: null, changed: true })
+  assert.match(declareVideoButtons(kit, { none: true }).error, /--why/)
+  assert.deepEqual(kit.site.emptyVideoButtons, [{ selector: SELECTOR, why: WHY }], 'untouched')
+  assert.deepEqual(declareVideoButtons(kit, { none: true, why: NONE_WHY }), { error: null, changed: true })
   assert.deepEqual(kit.site.emptyVideoButtons, [])
+  assert.deepEqual(kit.site.noneWhy, { emptyVideoButtons: NONE_WHY })
+  assert.deepEqual(declareVideoButtons(kit, { none: true, why: NONE_WHY }), { error: null, changed: false })
+  // A selector declared later takes the none back.
+  declareVideoButtons(kit, { selector: SELECTOR, why: WHY })
+  assert.equal(kit.site.noneWhy, undefined)
   assert.match(declareVideoButtons({}, { selector: SELECTOR, why: WHY }).error, /no site part/)
 })
 

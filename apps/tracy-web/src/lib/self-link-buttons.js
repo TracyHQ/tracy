@@ -3,8 +3,8 @@
 // section chrome prints `div.bottom-actions` from the module's `link-btn` param), so a demo button linked to the page it is on
 // stays. The kit names, per template, the containers of such buttons (`site.selfLinkButtons`), and the write step puts CSS rules
 // in the kit's head injection block that hide, on each kept page, a link in those containers whose address is that page's own.
-// Each rule is scoped by the page's body classes (T4 prints the option, the view and the menu item id there) and names the
-// page's own addresses exactly, so a link to any other page is never hidden.
+// Each rule is scoped by the page's body classes (the option, the view and the menu item id: T4 prints `item-<id>`, T3
+// `itemid-<id>`, lib/kit-framework.js) and names the page's own addresses exactly, so a link to any other page is never hidden.
 import { markedBlockIn, withMarkedBlock } from './empty-video-buttons.js'
 
 /** The write report line of the rules (write-step/self-link-buttons-stage.js), which the site check reads too. */
@@ -83,8 +83,8 @@ export function holdersMatch(holders, containers) {
   return null
 }
 
-/** The body classes T4 prints for a menu item (option, view, item id), or null when its link names no view. */
-function bodyOf(row) {
+/** The body classes the framework prints for a menu item (option, view, item id), or null when its link names no view. */
+function bodyOf(row, framework) {
   const id = Number(row?.id)
   if (!Number.isInteger(id) || id < 1) return null
   const query = new URLSearchParams(String(row?.link ?? '').split('?')[1] ?? '')
@@ -92,17 +92,24 @@ function bodyOf(row) {
   const view = query.get('view')
   // Without the view, the item id alone also matches an article opened under the item, where this address is another page.
   if (!view) return null
-  return pageBodyOf({ option, view, id })
+  return pageBodyOf({ option, view, id, framework })
 }
 
+/** The class each framework prints on the body for the active menu item: T3 `itemid-<id>`, T4 (and the default) `item-<id>`. */
+const itemClassOf = (framework, id) => (framework === 't3' ? `itemid-${id}` : `item-${id}`)
+
+/** A menu item class of either framework, at the end of a body's classes (the look guard's test). */
+const ITEM_CLASS_END = /\.(?:item|itemid)-\d+$/
+
 /**
- * The body classes T4 prints on a page opened as `view` of `option` under menu item `id`, or null when one is not a plain token.
- * Shared with lib/created-page-hide.js.
+ * The body classes the framework prints on a page opened as `view` of `option` under menu item `id`, or null when one is not a
+ * plain token. `framework` is `t3` or `t4` (lib/kit-framework.js); anything else reads as T4. Shared with lib/created-page-hide.js.
+ * @param {{ option?: string | null, view: string, id: number, framework?: string | null }} page
  */
-export function pageBodyOf({ option = null, view, id }) {
+export function pageBodyOf({ option = null, view, id, framework = null }) {
   if (!Number.isInteger(id) || id < 1 || !TOKEN.test(String(view ?? '')) || (option && !TOKEN.test(option)))
     return null
-  return `body${option ? `.${option}` : ''}.view-${view}.item-${id}`
+  return `body${option ? `.${option}` : ''}.view-${view}.${itemClassOf(framework, id)}`
 }
 
 /** A page's own addresses as a link in its content prints them. */
@@ -116,12 +123,13 @@ function ownHrefs(path, id) {
  * The hide selectors for the kept pages: one per page, menu item opening it, container and own address.
  * @param {{ path: string, rows: { id: number, link?: string }[] }[]} openings each kept page at the address it answers now
  * @param {string[]} containers
+ * @param {string | null} [framework] `t3` or `t4` (lib/kit-framework.js), T4 when unknown
  */
-export function selfLinkSelectorsFor(openings, containers) {
+export function selfLinkSelectorsFor(openings, containers, framework = null) {
   const out = []
   for (const { path, rows } of each(openings))
     for (const row of each(rows)) {
-      const body = bodyOf(row)
+      const body = bodyOf(row, framework)
       if (!body) continue
       for (const container of containers)
         for (const href of ownHrefs(path, Number(row.id))) {
@@ -155,6 +163,6 @@ export function isSelfLinkBlock(block, containers) {
   const list = block.slice(prefix.length, block.length - suffix.length).split(',')
   return list.every((s) => {
     const match = SELECTOR.exec(s)
-    return Boolean(match && /\.item-\d+$/.test(match[1]) && containers.includes(match[2]))
+    return Boolean(match && ITEM_CLASS_END.test(match[1]) && containers.includes(match[2]))
   })
 }
