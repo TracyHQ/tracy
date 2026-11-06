@@ -27,6 +27,16 @@ async function addressOf(itemId, { routes, read }) {
   return routes.get(itemId) ?? null
 }
 
+/** The alias an article holds now, or null when the site says nothing of it. */
+async function articleAlias(id, read) {
+  try {
+    const alias = (await read('content.get', { kind: 'article', id }))?.item?.alias
+    return typeof alias === 'string' && alias ? alias : null
+  } catch {
+    return null
+  }
+}
+
 /** The pages the host opened that answered an error, by path; empty when no host read the pages. */
 async function brokenPaths(context) {
   if (typeof context.host !== 'function') return new Map()
@@ -57,6 +67,22 @@ async function run(context) {
   let checked = 0
   for (const route of table) {
     const where = { page: route.to ?? route.from ?? null, slot: `${route.pageId}:slug` }
+    // A page its parent item opens took the slug as its article's alias (card P): the article is read for it.
+    if (!route.itemId && route.via === 'article' && route.articleId) {
+      const alias = await articleAlias(route.articleId, read)
+      if (alias === null) {
+        unread.push(`${route.pageId} (the site answers nothing for article ${route.articleId})`)
+        continue
+      }
+      checked++
+      if (alias !== route.slug)
+        failures.push({
+          ...where,
+          measured: alias,
+          reason: `${route.pageId} is its article's address, and the article answers at "${alias}", not its plan slug "${route.slug}"`
+        })
+      continue
+    }
     if (!route.itemId) {
       unread.push(`${route.pageId} (the write report names no menu item for it)`)
       continue
