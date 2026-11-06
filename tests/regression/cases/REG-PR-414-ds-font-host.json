@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-414-ds-font-host",
   "kind": "fix",
-  "title": "The ds-slot font cache fetches only from fonts.gstatic.com, whatever URL a paused request carries (CodeQL alert of release #395, round 3)",
+  "title": "The ds-slot font cache fetches only from fonts.gstatic.com and follows no redirect, whatever URL a paused request carries (CodeQL alert of release #395, round 3)",
   "pr": 414,
   "area": "design/ds-slot",
   "cms": ["any"],
@@ -13,12 +13,12 @@
   ],
   "expect": [
     "S1 exits 0 with '# fail 0'.",
-    "Every named test is 'ok': a fonts.gstatic.com address is kept as it was; a look-alike host, a user-info trick, plain http, another host carrying the gstatic URL in its path, a metadata address, an empty string and undefined all give null; a path starting with '@' or '//' still fetches from fonts.gstatic.com."
+    "Every named test is 'ok': fontFetchUrl keeps a fonts.gstatic.com address and gives null for a look-alike host, a user-info trick, plain http, another host carrying the gstatic URL in its path, a metadata address, an empty string and undefined; cachedFont never fetches for another host, fetches a gstatic font once with redirect 'error' and then serves it from disk, and treats a redirect as a miss that caches nothing."
   ],
   "selectors": {
-    "ds-slot": "fontFetchUrl (packages/design/tracy-ds-slot/scripts/cdp.mjs), used by cachedFont for Fetch.requestPaused on fonts.gstatic.com"
+    "ds-slot": "fontFetchUrl and cachedFont (packages/design/tracy-ds-slot/scripts/cdp.mjs); cachedFont answers Fetch.requestPaused on fonts.gstatic.com"
   },
-  "evidence": "CodeQL check of the release PR #395 after #413: server-side request forgery at packages/design/tracy-ds-slot/scripts/cdp.mjs:32 (`fetch(url)` with the paused request's URL). With the host check removed from fontFetchUrl, 'fontFetchUrl refuses every other host' fails.",
+  "evidence": "CodeQL check of the release PR #395 after #413: server-side request forgery at packages/design/tracy-ds-slot/scripts/cdp.mjs:32 (`fetch(url)` with the paused request's URL). Review of #414: a mocked 302 from fonts.gstatic.com to 169.254.169.254 was followed by the default fetch. Measured: without the host guard 'cachedFont never fetches for another host' fails; without redirect 'error' the two redirect tests fail; Node's fetch with redirect 'error' rejects a real 302; a real gstatic font (Inter, 324 820 bytes) is still served.",
   "fence": "Mechanism only: which address the cache fetches. Not covered: the CodeQL run itself (no CodeQL CLI on the machine) and a live browser lane.",
   "run": {
     "cmd": [
@@ -30,7 +30,10 @@
     "tests": [
       "fontFetchUrl keeps a fonts.gstatic.com address",
       "fontFetchUrl refuses every other host",
-      "fontFetchUrl keeps the fetch on fonts.gstatic.com"
+      "fontFetchUrl keeps the fetch on fonts.gstatic.com",
+      "cachedFont never fetches for another host",
+      "cachedFont fetches a gstatic font once",
+      "cachedFont treats a redirect from fonts.gstatic.com as a miss"
     ]
   }
 }
