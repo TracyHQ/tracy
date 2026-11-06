@@ -197,7 +197,7 @@ test('the new measures at both widths, as groups: levels and causing steps', asy
 })
 
 test('warnings alone leave the check green and are counted', async () => {
-  const answers = { selfLinks: [], hiddenHeadings: [], shownText: 'Lessons', maps: [] }
+  const answers = { selfLinks: [], hiddenHeadings: [], shownText: 'Lessons', maps: [], videoButtons: [] }
   const measures = () =>
     BOTH('/', {
       1440: {

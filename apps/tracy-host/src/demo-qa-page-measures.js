@@ -7,7 +7,7 @@
  *     fields: [...], glued: [...], headingSpans: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
  *     selfLinks: [...], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
  *     lists: [{ selector, items: [{ chars, text, pictures }] }], maps: [{ kind, lat?, lng?, address?, from }],
- *     phones: [{ text, digits, inTel, selector }], brandStyle?, look? }
+ *     phones: [{ text, digits, inTel, selector }], videoButtons: [{ selector, attribute, address }], brandStyle?, look? }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
@@ -39,7 +39,8 @@ export const MEASURE_CAPS = Object.freeze({
   shownText: 30000,
   lists: 60,
   maps: 10,
-  phones: 40
+  phones: 40,
+  videoButtons: 40
 })
 
 /**
@@ -506,6 +507,18 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       phones.push({ text: m[0].trim().slice(0, 40), digits, inTel: Boolean(tel), selector: selectorOf(host) })
     }
   }
+  // Shown elements that open a video player: the address an attribute names (`empty-video-buttons` judges which name no video).
+  const videoButtons = []
+  const VIDEO_HOST = /(?:youtube(?:-nocookie)?\.com|youtu\.be|vimeo\.com)/i
+  const VIDEO_ATTRS = ['data-src', 'href', 'src', 'data-video', 'data-url', 'data-href', 'data-video-url']
+  const videoSelector = VIDEO_ATTRS.map((a) => `[${a}]`).join(',')
+  for (const el of document.querySelectorAll(videoSelector)) {
+    if (videoButtons.length >= caps.videoButtons) break
+    if (!shown(el)) continue
+    const attribute = VIDEO_ATTRS.find((a) => VIDEO_HOST.test(el.getAttribute(a) || ''))
+    if (attribute)
+      videoButtons.push({ selector: selectorOf(el), attribute, address: el.getAttribute(attribute) })
+  }
   return {
     links,
     textBoxes,
@@ -529,7 +542,8 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     shownPictures,
     lists,
     maps,
-    phones
+    phones,
+    videoButtons
   }
 }
 

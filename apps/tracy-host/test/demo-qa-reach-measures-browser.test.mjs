@@ -46,3 +46,33 @@ test('lists, maps and phones are read as a visitor sees them', opts, async () =>
     await browser.close()
   }
 })
+
+// An invented card row: two play buttons with an empty player address, one hidden by the write step's rule, and one with a video.
+const VIDEO_PAGE = `<!doctype html><html><body style="margin:0">
+<div class="card"><img src="data:," width="200" height="120"><a class="play-chip" data-src="https://www.youtube.com/embed/" href="#">Play</a></div>
+<div class="card hidden-one"><a class="play-chip" data-src="https://www.youtube.com/embed/" href="#">Play</a></div>
+<div class="card"><a class="play-chip" data-src="https://www.youtube.com/embed/abc123" href="#">Play</a></div>
+<style>.hidden-one .play-chip[data-src$="/embed/"]{display:none!important}</style>
+</body></html>`
+
+test(
+  'video controls are read with the address they open, and a control the page hides is not',
+  opts,
+  async () => {
+    const browser = await playwright.chromium.launch()
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+      await page.setContent(VIDEO_PAGE)
+      const m = await page.evaluate(measurePageInPage, { tolerance: 2, stretch: 0.05, caps: MEASURE_CAPS })
+      assert.deepEqual(
+        m.videoButtons.map((b) => [b.selector, b.attribute, b.address]),
+        [
+          ['a.play-chip', 'data-src', 'https://www.youtube.com/embed/'],
+          ['a.play-chip', 'data-src', 'https://www.youtube.com/embed/abc123']
+        ]
+      )
+    } finally {
+      await browser.close()
+    }
+  }
+)

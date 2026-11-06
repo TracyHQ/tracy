@@ -5,6 +5,7 @@
 // on a channel nobody listed (an action, an operation or a parameter) is never sent, so a new channel fails loudly. Nothing here
 // names a template; what a template may take is read from its kit, its content map and its own stylesheets. Everything it cannot
 // see is listed in the ADR.
+import { emptyVideoButtonsOf } from '../lib/empty-video-buttons.js'
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
@@ -27,6 +28,8 @@ const EXCEPTIONS = Object.freeze({
     'when a template has no small logo setting the head block shows it by content:url, and height:auto keeps the picture in its own proportion',
   'picture-fallback':
     'a kept picture the template prints only beside a field the plan hid is printed by a block of the template media classes at the top of its article text; nothing else of the text changes',
+  'empty-video-buttons':
+    'a play button the template prints with an empty video address opens an empty player; one rule in the head block, on the selectors the kit names and keyed on the empty address, stops it being drawn, and a filled video shows its button again',
   'body-background':
     'the setting a kit names for the picture behind its pages holds a picture path, and a picture may change'
 })
@@ -116,7 +119,9 @@ export function lookGuard({ kit, contentMap = null }) {
     created: new Set(),
     accents: new Set(),
     routes: null,
-    inspected: new Map()
+    inspected: new Map(),
+    // The kit's play buttons with an empty video address: the one hide rule the head injection block may carry for them.
+    videoSelectors: emptyVideoButtonsOf(kit).selectors
   }
   let owners = new Map()
   const findings = []

@@ -422,6 +422,13 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    it copies a look to the pages and blocks drawn by another one's shot (`fullShotOf`, `shotOf`) and keeps the
    approval, which covers images only. A rebuild keeps the look of every unchanged shot. On /ops the Template kit
    step reads `kit-incomplete` (`missingLooks`) until every packed 1440 shot has a current look.
+8. Name the **play buttons with an empty video address** (`site.emptyVideoButtons`, Tracy ADR 0044 decision 27): read
+   the template's layouts for a video play button whose address is built from a video field with no check that it is
+   set (JA Boxing `html/com_content/article/classes.php`: `data-src="https://www.youtube.com/embed/<id>"`), then
+   `cli.mjs video-buttons --kit <kit dir>/template-kit.json --selector '.video-btn[data-src$="/embed/"]' --why '<where>'`
+   once per such button, or `--none` when the template has none. The selector must test the address, so a button
+   with a video is never hidden; the write step hides the listed ones with one CSS rule in the head injection block,
+   and the site check's `empty-video-buttons` group blocks on any shown control that opens an empty player.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
 shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one

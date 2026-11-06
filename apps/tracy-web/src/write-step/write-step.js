@@ -35,6 +35,7 @@ import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
+import { hideEmptyVideoButtons } from './video-buttons-stage.js'
 import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
@@ -576,7 +577,12 @@ export async function runWriteStep(input) {
     isCancelled,
     last
   })
-  shareLines = [...shared.lines, ...(await closeForms({ door, siteKey, plan, kit: kit.doc, last }))]
+  shareLines = [
+    ...shared.lines,
+    ...(await closeForms({ door, siteKey, plan, kit: kit.doc, last })),
+    // After the contract call, which saves the head block's module in its own form: the kit's empty video button rule.
+    ...(await hideEmptyVideoButtons({ door, siteKey, kit: kit.doc }))
+  ]
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
   const done = finish('done', null, written, wrote.refused)

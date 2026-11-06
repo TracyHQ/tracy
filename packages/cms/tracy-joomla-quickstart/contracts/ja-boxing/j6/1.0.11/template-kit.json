@@ -73370,6 +73370,12 @@
           "article-15"
         ]
       }
+    ],
+    "emptyVideoButtons": [
+      {
+        "selector": ".video-btn[data-src$=\"/embed/\"]",
+        "why": "html/com_content/article/classes.php prints a.video-btn on every session card with data-src https://www.youtube.com/embed/ followed by the exer_video_id field, with no check that the id is set"
+      }
     ]
   },
   "storedFields": [

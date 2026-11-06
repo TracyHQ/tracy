@@ -45,6 +45,11 @@
 //                 --images is the folder the image paths are relative to, the kit's own folder by default)
 //   cli.mjs looks --kit <template-kit.json> --apply <looks.json>   (merge [{image, sha256, text}] written by the
 //                 packager's own Claude Code: all entries checked, none written when one is wrong; lib/looks.mjs)
+//   cli.mjs video-buttons --kit <template-kit.json> --selector '<css>' --why '<where the template prints it>'
+//   cli.mjs video-buttons --kit <template-kit.json> --none
+//                 (site.emptyVideoButtons, lib/video-buttons.mjs: a play button the template prints with an empty video
+//                 address, which the write step hides with one CSS rule; --none says the template has none. A person reads
+//                 the template's layout first; nothing is measured, and no image moves, so an approval stays valid)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -75,6 +80,7 @@ import { writeSheets } from './lib/sheets.mjs'
 import { adapterFor } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
+import { declareVideoButtons } from './lib/video-buttons.mjs'
 
 const COMMANDS = [
   'build',
@@ -290,10 +296,32 @@ function looks(o) {
   return 0
 }
 
+/** Declare a play button with an empty video address in a written kit (lib/video-buttons.mjs). */
+function videoButtons(o) {
+  if (!str(o.kit) || (!o.none && !str(o.selector)))
+    throw new Error(
+      "video-buttons needs --kit <template-kit.json> and --selector '<css>' --why '<words>', or --none"
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declareVideoButtons(kit, { selector: str(o.selector), why: str(o.why), none: o.none === true })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  console.log(
+    `${kit.site.emptyVideoButtons.length} empty video buttons named${r.changed ? '' : ', unchanged'}`
+  )
+  return 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
   if (cmd === 'looks') return looks(o)
+  if (cmd === 'video-buttons') return videoButtons(o)
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||

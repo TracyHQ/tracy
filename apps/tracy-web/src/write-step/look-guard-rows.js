@@ -3,6 +3,7 @@
 // was read of it, so a template's other settings, whatever they are, stay as they were and stay green.
 import { fallbackBlocksIn, isFallbackBlock, withoutFallbackBlocks } from '../lib/printed-in-body.js'
 import { HEAD_END, HEAD_START } from './brand-head-block.js'
+import { videoBlockFor, videoBlockIn, withVideoBlock } from '../lib/empty-video-buttons.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { NOT_A_POST } from './page-create-stage.js'
@@ -185,10 +186,37 @@ function headFaults(inside, what) {
   return faults
 }
 
+/**
+ * The empty video button block (ADR 0044, decision 27): it may hold exactly the rule for the selectors the kit names, or be
+ * taken off. The rest of the module is judged without it, as the head block and the accent module always were.
+ */
+function videoBlockFaults(what, raw, heldRaw, selectors) {
+  const block = videoBlockIn(raw)
+  if (!block || block === videoBlockIn(heldRaw) || block === videoBlockFor(selectors)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} empty video buttons`,
+      'the empty video button block holds only the hide rule for the selectors the kit names'
+    )
+  ]
+}
+
 /** What a module's content may change: the accent style alone, or the head block with all around it as the site held it. */
 function moduleContentFaults(id, content, { state }) {
   const what = `module ${id ?? '(new)'} content`
-  const text = String(content ?? '')
+  const raw = String(content ?? '')
+  const heldRaw = String(state.rows.get(`module:${id}`)?.content ?? '')
+  const video = videoBlockFaults(what, raw, heldRaw, state.videoSelectors ?? [])
+  const text = withVideoBlock(raw, null)
+  const held = withVideoBlock(heldRaw, null)
+  // A write of the video block alone: everything else of the module stays as the site held it.
+  if ((videoBlockIn(raw) || videoBlockIn(heldRaw)) && text.trim() === held.trim()) return video
+  return [...video, ...restFaults(text, held, what, state)]
+}
+
+/** The accent module, or the head block with all around it as the site held it. */
+function restFaults(text, held, what, state) {
   if (text.includes(ACCENT_MARK)) {
     const { blocks, rest } = stylesOf(text)
     const faults = blocks.flatMap((b) =>
@@ -207,7 +235,6 @@ function moduleContentFaults(id, content, { state }) {
       fault(WRITE, what, 'only the accent module and the head block are open to a write of a whole module')
     ]
   const inside = text.slice(from + HEAD_START.length, to)
-  const held = String(state.rows.get(`module:${id}`)?.content ?? '')
   const heldFrom = held.indexOf(HEAD_START)
   const heldTo = held.indexOf(HEAD_END)
   const heldOut =
