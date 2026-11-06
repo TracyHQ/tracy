@@ -5,7 +5,7 @@
 // step 2, and the write step itself step 9. They read only the report, so they run before read-back and are never stopped by it.
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { isStep, TEMPLATE_STEP, WRITE_STEP } from '../lib/site-build-steps.js'
-import { NEW_CONTRACT } from '../write-step/hide-plan.js'
+import { NEW_CONTRACT } from '../lib/new-contract-pointer.js'
 
 const stepOf = (step) => (isStep(step) ? step : WRITE_STEP)
 const each = (value) => (Array.isArray(value) ? value : [])
