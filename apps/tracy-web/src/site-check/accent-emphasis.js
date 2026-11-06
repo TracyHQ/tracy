@@ -2,20 +2,22 @@
 // colour (a `span` in the kit slot's `inline`, "((span))NO1((/span)) BOXING STUDIO") prints a span of its own in the brand accent.
 // No span on the page blocks: the writer's, when the copy named no emphasis (the written value holds no span), else the write step's.
 // A span in another colour is a warning on the template (step 0): it paints that span with a fixed colour, not the accent.
+// A heading that prints content map codes as words (`WHAT WE((BR/))((SPAN))COACH`) blocks on the write step, on any page and
+// whichever slot it is (card N, 2026-11-06): the site stored codes where it prints HTML. Every page the host read is judged, so a
+// heading on a class page counts as one on the home page does.
 import { colourOfComputed, isShade } from '../lib/brand-accent/accent-colours.js'
 import { spanMarkOf } from '../lib/site-copy/inline-emphasis.js'
+import { showsRawCodes, visibleText } from '../lib/site-copy/emphasis-markup.js'
 import { WRITE_STEP } from '../lib/site-build-steps.js'
 import { factsOf } from './brand-accent.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead } from './host-pages.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
-const squashed = (text) =>
-  String(text ?? '')
-    .replace(/\(\([^()]*\)\)/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase()
+// Words as the page prints them: a line break is a space, every other code or tag leaves no trace, any case.
+const squashed = (text) => visibleText(text).toLowerCase()
+const RAW_REASON =
+  'The page prints the content map emphasis codes as words: the site stores codes where the template prints HTML.'
 
 /** The kit's text slots whose demo marks words with a span, by id. */
 function spanSlotsOf(kit) {
@@ -50,41 +52,74 @@ export function judgeAccentEmphasis(kit, lines, measures) {
   const facts = each(measures)
     .map((m) => factsOf(m.brandStyle?.head))
     .find(Boolean)
+  const printed = each(measures).flatMap((m) => each(m.headingSpans).map((h) => ({ m, h })))
   const failures = []
-  let checked = 0
+  // One verdict per heading and page: the same heading at 1440 and at 390 is one place a visitor sees.
+  const judged = new Set()
+  const once = (slot, page, text) => {
+    const id = `${slot ?? ''}\u0000${page}\u0000${squashed(text)}`
+    if (judged.has(id)) return false
+    judged.add(id)
+    return true
+  }
   for (const line of lines) {
     const mark = marks.get(line.slot)
     if (!mark || typeof line.ordered !== 'string') continue
     const words = squashed(line.ordered)
-    const at = each(measures)
-      .flatMap((m) => each(m.headingSpans).map((h) => ({ m, h })))
-      .find(({ h }) => squashed(h.text) === words)
     // A heading no page prints is no fault a visitor sees: its block is dropped or its page not kept.
-    if (!at) continue
-    checked++
-    const { m, h } = at
-    const spans = each(h.spans)
-    const where = { page: m.path, width: m.width, slot: line.slot, measured: h.text.slice(0, 120) }
-    if (!spans.length) {
-      const named = /\(\(\s*span\b/i.test(line.ordered)
-      failures.push({
-        ...where,
-        level: 'block',
-        causingStep: named ? WRITE_STEP : 6,
-        reason: named
-          ? 'The copy marks words for the accent colour, and the page prints the heading with no span.'
-          : `The demo draws "${mark.text}" in the accent colour; the copy marks no words, so the heading prints in one colour.`
-      })
-    } else if (facts && !spans.some((s) => isBrandAccent(s.color, facts)))
-      failures.push({
-        ...where,
-        level: 'warn',
-        causingStep: 0,
-        measured: spans.map((s) => `${s.text}: ${s.color}`).join('; '),
-        reason: `The heading's span is not painted in the brand accent ${facts.accent}: the template colours it with a fixed value.`
-      })
+    for (const { m, h } of printed.filter(({ h }) => squashed(h.text) === words)) {
+      if (!once(line.slot, m.path, h.text)) continue
+      const spans = each(h.spans)
+      const where = { page: m.path, width: m.width, slot: line.slot, measured: h.text.slice(0, 120) }
+      const named = /\(\(\s*span\b|<\s*span\b/i.test(`${line.ordered} ${line.stored ?? ''}`)
+      if (showsRawCodes(h.text))
+        failures.push({ ...where, level: 'block', causingStep: WRITE_STEP, reason: RAW_REASON })
+      else if (!spans.length && line.textFallback === 'plain')
+        failures.push({
+          ...where,
+          level: 'block',
+          causingStep: WRITE_STEP,
+          reason:
+            'The plugin refused the heading with its emphasis and the write step wrote it plain, so it prints in one colour.'
+        })
+      else if (!spans.length)
+        failures.push({
+          ...where,
+          level: 'block',
+          causingStep: named ? WRITE_STEP : 6,
+          reason: named
+            ? 'The copy marks words for the accent colour, and the page prints the heading with no span.'
+            : `The demo draws "${mark.text}" in the accent colour; the copy marks no words, so the heading prints in one colour.`
+        })
+      else if (facts && !spans.some((s) => isBrandAccent(s.color, facts)))
+        failures.push({
+          ...where,
+          level: 'warn',
+          causingStep: 0,
+          measured: spans.map((s) => `${s.text}: ${s.color}`).join('; '),
+          reason: `The heading's span is not painted in the brand accent ${facts.accent}: the template colours it with a fixed value.`
+        })
+    }
   }
-  return { failures, checked }
+  // Codes printed as words in a heading no written line names are the write step's all the same: no visitor reads them as words.
+  for (const { m, h } of printed) {
+    if (
+      !showsRawCodes(h.text) ||
+      [...judged].some((id) => id.endsWith(`\u0000${m.path}\u0000${squashed(h.text)}`))
+    )
+      continue
+    if (!once(null, m.path, h.text)) continue
+    failures.push({
+      page: m.path,
+      width: m.width,
+      slot: null,
+      measured: h.text.slice(0, 120),
+      level: 'block',
+      causingStep: WRITE_STEP,
+      reason: RAW_REASON
+    })
+  }
+  return { failures, checked: judged.size }
 }
 
 export const accentEmphasisGroup = {

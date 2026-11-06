@@ -3,7 +3,7 @@
 // Blocking when a customer would see the fault; warning when it needs a person's eye.
 //
 //   group              level  causing step  source
-//   demo-words         block  6 writer      host no-demo-words, against the demo baseline
+//   demo-words         block  6 or 9        host no-demo-words, against the demo baseline; 9 for a slot the write step left with its demo
 //   demo-pictures      block  8 pictures    host no-demo-pictures, against the demo baseline
 //   demo-links         block  3 planner     host no-third-party-demo, cta-real (the plan owns link targets)
 //   dead-links         block  3 or 9        new: visited pages and links that answer an error; 9 for an address the write step renamed
@@ -34,6 +34,7 @@
 //
 // Faults that need the meaning understood (does an icon suit the words, is a sentence clumsy) are step 12's, a person with eyes.
 import { accentEmphasisGroup } from './accent-emphasis.js'
+import { demoLeftByWrite } from './demo-left-by-write.js'
 import { brandAccentGroup } from './brand-accent.js'
 import { createdControlsGroup, headingSeparatorGroup, selfLinksGroup } from './page-faults.js'
 import { brokenSentenceGroup } from './printed-sentences.js'
@@ -89,7 +90,8 @@ export const PAGE_CHECK_GROUPS = [
     ids: ['no-demo-words'],
     level: 'block',
     causingStep: 6,
-    needsBaseline: true
+    needsBaseline: true,
+    blame: demoLeftByWrite
   }),
   hostVerdictGroup({
     name: 'demo-pictures',
