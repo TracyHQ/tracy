@@ -8,6 +8,7 @@
  *                                   [--as <x.y.z>]           (the new version, when the next patch is already taken)
  *                                   [--contract-from <x.y.z>] (the tch contract the new one starts from; default: the release's)
  *                                   [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off]
+ *                                   [--remove-user <username>]... (a demo account taken out of the database)
  *
  * From the release's current pair (webroot + database, SHA-256 checked against its manifest):
  *  1. webroot: every templates/<tpl>/css/*.css tokenized (scripts/tokenize.mjs: a palette hex becomes
@@ -27,7 +28,9 @@
  * version the other releases ship), --sql appends a file to the installer's demo data
  * (installation/sql/mysql/custom.sql), --replace makes literal edits of the demo content in the
  * database AND in the lock that pins it (src/release-content-edits.mjs; Tracy Base 1.0.3: a kicker
- * painted with the warning colour in a module's HTML). --no-tokenize builds the repair alone — the baseline the
+ * painted with the warning colour in a module's HTML), --remove-user (repeatable) deletes a demo account
+ * from the database with its group map, profile fields and keys (src/release-remove-user.mjs; JA Voyara
+ * 1.0.12: the account its review left), refused for the last Super User or an article's author. --no-tokenize builds the repair alone — the baseline the
  * tokenized version is verified against, since the published one never rendered — and needs no contract;
  * --devmode-off does what a contract's t3DevmodeOff does.
  * Prints a JSON summary. Uploading, the Claude Cowork plugin that carries the contract and the pins
@@ -53,6 +56,7 @@ import { editContentMap, editDump, editLock, loadContentEdits } from '../src/rel
 import { pinAddedFiles } from '../src/release-lock-added.mjs'
 import { packTar, packZip } from '../src/release-pack.mjs'
 import { releaseRoleScan, ROLE_SCAN_FILE, roleScanError } from '../src/release-role-scan.mjs'
+import { removeUser } from '../src/release-remove-user.mjs'
 import { repairTagPaths } from '../src/release-tag-paths.mjs'
 import { resyncUcmContent } from '../src/release-ucm-sync.mjs'
 import { siteLanguageTwins } from '../src/release-site-language.mjs'
@@ -84,13 +88,15 @@ const OVERLAY = opt('--overlay')
 const SQL = opt('--sql')
 const REPLACE = opt('--replace')
 const edits = REPLACE ? loadContentEdits(REPLACE) : []
+const REMOVE_USERS = []
+for (let u = opt('--remove-user'); u; u = opt('--remove-user')) REMOVE_USERS.push(u)
 const NO_TOKENIZE = args.includes('--no-tokenize')
 const DEVMODE_OFF = args.includes('--devmode-off')
 const STAND_PORT = Number(opt('--port') ?? 52371)
 const tag = args.find((a) => !a.startsWith('--'))
 if (!tag || (!name && !NO_TOKENIZE) || !OUT) {
   console.error(
-    'usage: release-joomla.mjs <release tag> --template <contract> --out <dir> [--from <x.y.z>] [--rolling-as <x.y.z>] [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off]'
+    'usage: release-joomla.mjs <release tag> --template <contract> --out <dir> [--from <x.y.z>] [--rolling-as <x.y.z>] [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off] [--remove-user <username>]...'
   )
   process.exit(1)
 }
@@ -257,6 +263,8 @@ if (OVERLAY) {
   if (twins.length)
     repair.push(`${twins.length} installed language files (${twins.map((t) => t.to).join(', ')})`)
 }
+if (REMOVE_USERS.length && INSTALLER)
+  throw new Error('--remove-user edits the database part; this release is an installer zip')
 if (SQL) {
   if (!INSTALLER)
     throw new Error(
@@ -530,8 +538,18 @@ if (INSTALLER) {
     repair.push(
       `ucm rows left without an article: ${ucm.orphans.map((o) => `${o.ucm} (article ${o.article})`).join(', ')}`
     )
-  if (contract.t3DevmodeOff || edits.length || tags.repaired.length || ucm.resynced.length) {
-    let dump = ucm.dump
+  // demo accounts named by --remove-user, refused for the last Super User or an author (src/release-remove-user.mjs)
+  let dump = ucm.dump
+  for (const u of REMOVE_USERS) {
+    const r = removeUser(dump, cur.prefix ?? '', u)
+    dump = r.dump
+    repair.push(
+      `user ${u} (id ${r.removed.id}) removed: ${Object.entries(r.removed.rows)
+        .map(([t, n]) => `${n} ${t}`)
+        .join(', ')}`
+    )
+  }
+  if (contract.t3DevmodeOff || edits.length || dump !== original) {
     if (contract.t3DevmodeOff) {
       devmodeRows += (dump.match(DEVMODE_ON) ?? []).length
       dump = devmodeOff(dump)
