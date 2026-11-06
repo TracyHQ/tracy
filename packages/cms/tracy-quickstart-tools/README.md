@@ -422,6 +422,12 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    it copies a look to the pages and blocks drawn by another one's shot (`fullShotOf`, `shotOf`) and keeps the
    approval, which covers images only. A rebuild keeps the look of every unchanged shot. On /ops the Template kit
    step reads `kit-incomplete` (`missingLooks`) until every packed 1440 shot has a current look.
+8. Name the **article layout of a created legal page** (`site.createdPageLayouts.legal`): read the template's
+   `html/com_content/article/` files for the plain one, the file that prints the article alone (JA Boxing:
+   `default.php`; `classes.php`, the class pages' file, adds booking bars), then
+   `cli.mjs legal-layout --kit <kit dir>/template-kit.json --layout ja_boxing:default --why '<what it prints>'`, or
+   `--none --why '<words>'` when the component's default article is right. The write step prints a privacy or terms
+   page it creates through that file, never through the content pages' own one.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
 shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one

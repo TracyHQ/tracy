@@ -22,18 +22,43 @@ const CHROME = process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/M
 const FONT_CACHE = join(tmpdir(), 'ds-font-cache')
 const FONT_HOST = 'https://fonts.gstatic.com/'
 
-/** @param {string} url @returns {Promise<{ body: Buffer, type: string } | null>} */
-async function cachedFont(url) {
-  const key = createHash('sha256').update(url).digest('hex')
-  const file = join(FONT_CACHE, key)
+/**
+ * The address the font cache fetches for a paused request: only Google's font host, rebuilt on the
+ * fixed origin so a page cannot point the fetch at another host. Anything else gives null.
+ * @param {string} url @returns {string | null}
+ */
+export function fontFetchUrl(url) {
+  if (typeof url !== 'string' || !url.startsWith(FONT_HOST)) return null
+  // each path segment is URI-encoded: a real gstatic path (letters, digits, _ - .) is unchanged, and
+  // nothing in it can reach the host part (CodeQL counts the encoding as the request-forgery barrier)
+  const path = url
+    .slice(FONT_HOST.length)
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
+  return `${FONT_HOST}${path}`
+}
+
+/**
+ * A font for a paused request, from the disk cache or fetched once. The fetch refuses redirects, so
+ * an answer from fonts.gstatic.com cannot send it to another host; such a request fails as a miss.
+ * @param {string} url
+ * @param {{ fetchImpl?: typeof fetch, dir?: string }} [opts] the fetch and the folder, for tests
+ * @returns {Promise<{ body: Buffer, type: string } | null>}
+ */
+export async function cachedFont(url, { fetchImpl = fetch, dir = FONT_CACHE } = {}) {
+  const target = fontFetchUrl(url)
+  if (!target) return null
+  const key = createHash('sha256').update(target).digest('hex')
+  const file = join(dir, key)
   const meta = `${file}.type`
   if (existsSync(file) && existsSync(meta))
     return { body: readFileSync(file), type: readFileSync(meta, 'utf8') }
-  const res = await fetch(url).catch(() => null)
+  const res = await fetchImpl(target, { redirect: 'error' }).catch(() => null)
   if (!res || !res.ok) return null
   const body = Buffer.from(await res.arrayBuffer())
   const type = res.headers.get('content-type') ?? 'font/woff2'
-  mkdirSync(FONT_CACHE, { recursive: true })
+  mkdirSync(dir, { recursive: true })
   // written aside and renamed: lanes share the folder, and a half-written file is never read
   const part = `${file}.${process.pid}.${Date.now()}`
   writeFileSync(`${part}.type`, type)

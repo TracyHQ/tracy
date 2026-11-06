@@ -32,6 +32,7 @@ export const LIST_ITEM_LONGER = 2
 /** A picture drawn with its width and height ratio this far from the file's own is stretched (fit `fill` only). */
 export const STRETCH_TOLERANCE = 0.1
 
+import { addressMoves, addressNow, movePath } from '../lib/renamed-addresses.js'
 import { pathOfMeasure } from './page-faults.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -41,20 +42,43 @@ const clip = (text, n = 120) => String(text ?? '').slice(0, n)
 const dead = (status) =>
   status === null || status === undefined || Number(status) >= 400 || Number(status) === 0
 
+/** A link's path as a move compares it: no origin, no query, no fragment. */
+const hrefPath = (href) =>
+  String(href ?? '')
+    .replace(/^(?:https?:)?\/\/[^/?#]+/i, '')
+    .replace(/[?#].*$/, '')
+
 /**
- * Pages the host could not open, and links on the pages that lead nowhere.
+ * Pages the host could not open, and links on the pages that lead nowhere. A dead address the write step's route stage moved
+ * is the write step's (card AD): it renamed the page and left the link behind, so the failure names step 9 and the rename.
  * @param {{ path: string, status: number | null, skipped?: string }[]} visited the kept pages the host opened
  * @param {object[]} measures
+ * @param {object[]} [routes] the write report's route table
  */
-export function findDeadLinks(visited, measures) {
+export function findDeadLinks(visited, measures, routes = []) {
+  const moves = addressMoves(routes)
+  const blame = (href) => {
+    const path = hrefPath(href)
+    if (!path.startsWith('/') && !/^index\.php\//i.test(path)) return {}
+    const now = addressNow(path, moves)
+    if (now === null) return {}
+    const move = moves.find((m) => movePath(path) === m.from || movePath(path).startsWith(`${m.from}/`))
+    return {
+      causingStep: 9,
+      why: `; the write step renamed ${move.from} to ${move.to} and left this at the old address (${now} now)`
+    }
+  }
   const failures = []
   for (const v of each(visited))
-    if (v.skipped === 'not found' || (v.status !== null && v.status !== undefined && v.status >= 400))
+    if (v.skipped === 'not found' || (v.status !== null && v.status !== undefined && v.status >= 400)) {
+      const { why = '', ...step } = blame(v.path)
       failures.push({
         page: v.path,
         measured: v.status ?? v.skipped,
-        reason: `A kept page does not answer (${v.status ?? v.skipped})`
+        reason: `A kept page does not answer (${v.status ?? v.skipped})${why}`,
+        ...step
       })
+    }
   const seen = new Set()
   for (const m of each(measures))
     for (const link of each(m.links)) {
@@ -62,10 +86,12 @@ export function findDeadLinks(visited, measures) {
       const id = `${m.path} ${link.href}`
       if (seen.has(id)) continue
       seen.add(id)
+      const { why = '', ...step } = blame(link.href)
       failures.push({
         page: m.path,
         measured: link.status ?? 'no answer',
-        reason: `A link to ${clip(link.href, 100)} (${clip(link.text, 40) || 'no words'}) answers ${link.status ?? 'nothing'}`
+        reason: `A link to ${clip(link.href, 100)} (${clip(link.text, 40) || 'no words'}) answers ${link.status ?? 'nothing'}${why}`,
+        ...step
       })
     }
   return failures

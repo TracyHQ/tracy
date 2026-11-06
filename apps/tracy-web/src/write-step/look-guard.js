@@ -19,7 +19,7 @@ const ALWAYS_SHARE_SETTING = 'other_shareImage'
 /** Allowed though they touch a page, each for its reason. */
 const EXCEPTIONS = Object.freeze({
   'created-page-layout':
-    'a created page takes the article layout of the template content pages, and only a value read from the template, so it copies the template',
+    'a created legal page takes the article layout its kit names for legal pages, or none (the default article), and only a value read from the template or named by its kit, so it copies the template',
   'created-page-rows':
     'a created page is new, so its rows change nothing the template had; they carry the mark, and hold no setting that restyles anything',
   hide: 'taking a block, a row, a slot or a form off is the plan hide decision (decision 2): it removes an element and restyles none of those left',
@@ -112,7 +112,10 @@ export function lookGuard({ kit, contentMap = null }) {
   const map = new Map(each(contentMap?.slots).map((s) => [s?.key, s]))
   const state = {
     rows: new Map(),
-    layouts: new Set(),
+    // The file the kit names for a created legal page is the template's own (card AN).
+    layouts: new Set(
+      [kit?.site?.createdPageLayouts?.legal?.articleLayout].filter((l) => typeof l === 'string' && l)
+    ),
     created: new Set(),
     accents: new Set(),
     routes: null,

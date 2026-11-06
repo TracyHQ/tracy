@@ -73370,7 +73370,13 @@
           "article-15"
         ]
       }
-    ]
+    ],
+    "createdPageLayouts": {
+      "legal": {
+        "articleLayout": "ja_boxing:default",
+        "why": "html/com_content/article/default.php prints the article alone; classes.php, the class pages file, adds the signup-actions and bottom-actions bars"
+      }
+    }
   },
   "storedFields": [
     {

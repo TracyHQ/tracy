@@ -98,6 +98,8 @@ const settingsOpen = (state, created, listed) => (name, value) => {
     return hasMarkup(String(value)) ? `the setting ${name} holds markup` : true
   if (created && name === 'article_layout')
     return (
+      // Taken off, the page prints through the template's plain default (card AN).
+      value === undefined ||
       state.layouts.has(value) ||
       `the layout ${value} is not one read from the template's own pages, so it is not a copy of the template's`
     )

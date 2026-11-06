@@ -13,7 +13,8 @@
 import { createHash } from 'node:crypto'
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { answerWords, doorCall } from './settings-door.js'
-import { keptAt, routeLines, routeOrders } from './page-route-lines.js'
+import { addressAfter, keptAt, routeLines, routeOrders } from './page-route-lines.js'
+import { freeHolder } from './page-route-parent.js'
 
 /** The first release of the plugin whose `content.update` renames a menu item through `alias` (TracyHQ/claude-cowork#271). */
 export const ALIAS_DOOR = 'Claude Cowork for Joomla 0.24.81'
@@ -104,13 +105,30 @@ export async function runRouteStage({ door, siteKey, kit, plan, keptPages, menut
   const orders = routeOrders({ plan, kit, rows, menutype })
   const landed = new Map()
   const routes = []
+  const articlePages = []
   for (const order of orders) {
-    const { alias: _alias, ...entry } = order
+    const { alias: _alias, clear, ...entry } = order
     if (order.reason) {
       routes.push({ ...entry, outcome: 'refused' })
       continue
     }
     const applyId = `page-route-${digest(order.pageId)}`
+    // A page its parent item opens takes the slug as its article's alias (card P).
+    if (order.via === 'article') {
+      const { id: _id, ...article } = await renameArticle(call, applyId, order.articleId, order.slug)
+      routes.push({ ...entry, ...article })
+      if (article.outcome !== 'refused') articlePages.push(order)
+      continue
+    }
+    // A url sibling holding the slug takes another alias first; when it cannot, the page is not renamed (card P).
+    if (clear) {
+      entry.cleared = await freeHolder(call, applyId, clear)
+      if (entry.cleared.outcome === 'refused') {
+        const reason = `menu item ${clear.itemId}, a url item, holds the alias ${order.slug} and could not take ${clear.to}: ${entry.cleared.reason}`
+        routes.push({ ...entry, outcome: 'refused', reason })
+        continue
+      }
+    }
     const item = await renameItem(call, applyId, order)
     if (item.outcome !== 'refused') landed.set(order.itemId, order.slug)
     const article = order.articleId ? await renameArticle(call, applyId, order.articleId, order.slug) : null
@@ -118,8 +136,17 @@ export async function runRouteStage({ door, siteKey, kit, plan, keptPages, menut
   }
   const at = keptAt(keptPages, { kit, rows, landed, menutype })
   const where = new Map(at.map((p) => [p.id, p.path]))
-  // `to` is where the page answers now: the plan's address when its rename landed, the demo's when it did not.
-  for (const route of routes) if (route.itemId) route.to = where.get(route.pageId) ?? route.to
+  const byId = new Map(rows.map((r) => [Number(r.id), r]))
+  for (const order of articlePages) {
+    const parent = byId.get(order.parentItemId)
+    if (parent) where.set(order.pageId, `${addressAfter(parent, rows, landed)}/${order.slug}`)
+  }
+  at.forEach((p, i) => {
+    if (where.get(p.id) !== p.path) at[i] = { ...p, path: where.get(p.id) }
+  })
+  // `to` is where the page answers now: the plan's address when its rename landed, the demo's when it did not, and under its
+  // parent's new address when only the parent was renamed (card AE).
+  for (const route of routes) route.to = where.get(route.pageId) ?? route.to
   return { routes, lines: routeLines(routes), keptPages: at }
 }
 
@@ -132,7 +159,7 @@ export async function runRouteStage({ door, siteKey, kit, plan, keptPages, menut
 export async function restoreRoutes({ door, siteKey, routes }) {
   const renamed = each(routes).filter(
     (r) =>
-      r?.itemId &&
+      (r?.itemId || (r?.via === 'article' && r.articleId)) &&
       ['written', 'already'].includes(r.outcome) &&
       lastPart(r.from) &&
       lastPart(r.from) !== r.slug
@@ -143,6 +170,12 @@ export async function restoreRoutes({ door, siteKey, routes }) {
   for (const route of renamed) {
     const alias = lastPart(route.from)
     try {
+      if (!route.itemId) {
+        const back = await renameArticle(call, `page-route-${digest(route.pageId)}`, route.articleId, alias)
+        if (back.outcome === 'refused') throw new Error(back.reason)
+        restored.push(route)
+        continue
+      }
       const answer = await call('content.update', {
         apply_id: `page-route-${digest(route.pageId)}`,
         kind: 'menuItem',

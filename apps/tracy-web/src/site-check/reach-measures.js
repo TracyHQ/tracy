@@ -4,11 +4,12 @@
 //   map-location   block, step 9  a map a kept page draws is not at the demo's place (the demo baseline's `maps`), and within
 //                                 MAP_NEAR_KM of the business when the report knows its coordinates (`place`)
 //   phone-callable block, step 0  a phone number of the brief a kept page prints sits inside a tel: link; the template prints it
+//                                (step 9 when only a created page's own words print it, card AQ)
 // A host from before these measures answers none of them, and the group is unmeasured.
 import { TEMPLATE_STEP, WRITE_STEP } from '../lib/site-build-steps.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead } from './host-pages.js'
-import { pathOfMeasure } from './page-faults.js'
+import { createdPaths, pathOfMeasure } from './page-faults.js'
 
 /** A printed map further than this from the business is somewhere else. */
 export const MAP_NEAR_KM = 50
@@ -169,8 +170,14 @@ const sameNumber = (a, b) => a.length >= 7 && b.length >= 7 && a.slice(-9) === b
 /**
  * @param {object[]} measures
  * @param {string[]} phones the brief's phone numbers, digits only
+ * @param {Set<string>} [created] the paths of the pages the write step created (page-faults.js createdPaths): a number left
+ *   uncallable there and printed so on no other page is in the words the write step wrote, so it is step 9's (card AQ)
  */
-export function judgePhoneCallable(measures, phones) {
+export function judgePhoneCallable(measures, phones, created = new Set()) {
+  const elsewhere = new Set()
+  for (const m of each(measures))
+    if (!created.has(pathOfMeasure(m.path)))
+      for (const p of each(m.phones)) if (!p.inTel) elsewhere.add(`${p.digits} ${p.selector}`)
   const failures = []
   const seen = new Set()
   let checked = 0
@@ -185,7 +192,10 @@ export function judgePhoneCallable(measures, phones) {
         page: m.path,
         width: m.width,
         measured: p.text,
-        reason: `The page prints the phone number ${p.text} (${p.selector}) outside a tel: link, so a visitor cannot tap it to call`
+        reason: `The page prints the phone number ${p.text} (${p.selector}) outside a tel: link, so a visitor cannot tap it to call`,
+        ...(created.has(pathOfMeasure(m.path)) && !elsewhere.has(`${p.digits} ${p.selector}`)
+          ? { causingStep: WRITE_STEP }
+          : {})
       })
     }
   return { checked, failures }
@@ -199,6 +209,6 @@ export const phoneCallableGroup = {
     if (!phones.length) return { checked: 0, failures: [] }
     const read = await pagesRead(context)
     needs(read, 'phones', 'phone numbers')
-    return judgePhoneCallable(read.measures, phones)
+    return judgePhoneCallable(read.measures, phones, createdPaths(context.report))
   }
 }

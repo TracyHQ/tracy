@@ -98,9 +98,10 @@ test('a report with a route table runs page-slug after read-back, and pages at t
 
 test('a page whose menu link ends with another name blocks on step 9', async () => {
   const check = await runSiteCheck({
+    // The row is what the site answers now; inspect's route is from when the contract was captured (card AE).
     door: site(
-      { 10: 'classes', 11: 'classes/rowing' },
-      { ...ROWS, 11: { alias: 'kayak-tours', path: 'classes/kayak-tours' } }
+      { 10: 'classes', 11: 'classes/kayak-tours' },
+      { ...ROWS, 11: { alias: 'rowing', path: 'classes/rowing' } }
     ),
     report: renamed(),
     groups: [pageSlugGroup]

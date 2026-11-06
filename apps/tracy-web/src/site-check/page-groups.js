@@ -6,7 +6,7 @@
 //   demo-words         block  6 writer      host no-demo-words, against the demo baseline
 //   demo-pictures      block  8 pictures    host no-demo-pictures, against the demo baseline
 //   demo-links         block  3 planner     host no-third-party-demo, cta-real (the plan owns link targets)
-//   dead-links         block  3 planner     new: visited pages and links that answer an error
+//   dead-links         block  3 or 9        new: visited pages and links that answer an error; 9 for an address the write step renamed
 //   empty-frames       block  3 planner     host no-empty-picture-slots, no-empty-boxes (the plan owns hide decisions)
 //   cms-errors         block  9 write       host no-cms-error-leak, no-raw-placeholders
 //   text-overflow      block  6 writer      new: text cut by or past its box
@@ -100,7 +100,7 @@ export const PAGE_CHECK_GROUPS = [
     level: 'block',
     causingStep: 3,
     needsVisited: true,
-    find: (read) => findDeadLinks(read.visited, read.measures)
+    find: (read, context) => findDeadLinks(read.visited, read.measures, context.report?.routes)
   }),
   hostVerdictGroup({
     name: 'empty-frames',
