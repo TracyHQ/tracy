@@ -106,6 +106,8 @@ test('run --repair runs step 9 whole on the bench site as its owner and writes t
       'repair-pass.json'
     ])
       assert.ok(existsSync(path.join(outDir, file)), file)
+    const first = JSON.parse(readFileSync(path.join(outDir, 'first-site-check.json'), 'utf8'))
+    assert.equal(first.allGroups, true, 'the first check runs the page groups whatever read-back says')
     const repair = JSON.parse(readFileSync(path.join(outDir, 'repair-pass.json'), 'utf8'))
     assert.equal(repair.version, 'repair-pass/1')
     assert.ok(
@@ -178,4 +180,36 @@ test("a comment's page address is the page as the Joomla site serves it, on the 
   assert.equal(benchPageUrl(origin, '/about'), 'https://quay.sites.example/index.php/about')
   assert.equal(benchPageUrl(origin, '/index.php/about'), 'https://quay.sites.example/index.php/about')
   assert.throws(() => benchPageUrl(null, '/about'), /before the session is open/)
+})
+
+/** The site turn records, faked: `site_turn` rows and `site_write` rows, answered by the table each query reads. */
+const recordsPool = ({ turns, writes }) => ({
+  async query(sql) {
+    if (/from site_turn/.test(sql)) return { rows: turns }
+    if (/from site_write/.test(sql)) return { rows: writes }
+    throw new Error(`unexpected query: ${sql}`)
+  }
+})
+
+test('a turn that only changed design files is read with its file change, so step 9b judges it and can undo it', async () => {
+  // A look change (CSS in the template's files): Git moments, no database write.
+  const pool = recordsPool({
+    turns: [
+      {
+        turn_id: 'sess-1:1',
+        rpc_id: 'step9b-run-1',
+        state: 'closed',
+        token_usage: { costUsd: 0.05 },
+        files: 2,
+        head_sha: 'abc1234'
+      }
+    ],
+    writes: []
+  })
+  const agent = benchRepairAgent({ pool, door: agentDoor(), siteKey: SITE })
+  const [turn] = await agent.turns({ sessionId: 'sess-1', requestIds: ['step9b-run-1'] })
+  assert.deepEqual(turn.changes, [
+    { action: 'files', outcome: 'ok', target: null, via: 'files', files: 2, headSha: 'abc1234' }
+  ])
+  assert.equal(turn.costUsd, 0.05)
 })

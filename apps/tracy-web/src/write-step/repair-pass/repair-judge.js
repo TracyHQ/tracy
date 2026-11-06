@@ -2,7 +2,8 @@
 // a site check. A write names its record (`{ kind, id }`, the site write log's target) or, from a fake or a host that
 // says so, its page; a record is placed on a page by the content.locate answers of the pass's own comment items, which
 // name the records each page's elements print. A write the pass cannot place (no target, a record no item located) is
-// counted as changing every page (`*`): a turn is never kept because its writes could not be read. Undo is of the whole
+// counted as changing every page (`*`), and so is a change of files (a turn's Git moments, such as a site-wide CSS look
+// change, which writes no record): a turn is never kept because its writes could not be read. Undo is of the whole
 // turn, newest first, and every undo that fails, is refused or finds no time left is kept with its reason.
 import { newBlocking, pageOf } from './repair-faults.js'
 
@@ -36,6 +37,8 @@ export function pagesChanged(turn, recordPages) {
       if (page) pages.add(page)
       continue
     }
+    // Files the turn committed (a look change in the template's CSS) can show on any page.
+    if (change?.via === 'files') return EVERY_PAGE
     if (change?.target?.front === true) {
       pages.add('/')
       continue

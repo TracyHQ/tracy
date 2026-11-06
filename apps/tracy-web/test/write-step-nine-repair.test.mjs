@@ -208,3 +208,72 @@ test('a step 9 run with no site agent writes and checks, and says the repair pas
   assert.equal(result.siteCheck, first)
   assert.equal(result.repair.status, 'not-run')
 })
+
+test('every site check of step 9 runs the page groups even when read-back is red, and read-back stays blocking', async () => {
+  const agent = fakeAgent()
+  // A red read-back and a page fault the page groups found despite it: the fault is sent, the read-back is not.
+  const readBack = failure('read-back', '/', 'module-2.1', 'written value missing')
+  const first = checkOf([readBack, ALT])
+  const { result, checkOptions } = await stepNine({ checks: [first, checkOf([readBack])], agent })
+  assert.ok(checkOptions.length >= 2)
+  for (const options of checkOptions) assert.equal(options.allGroups, true)
+  assert.deepEqual(
+    itemsOf(agent).map((i) => i.element.label),
+    ['module-4.1']
+  )
+  assert.equal(result.siteCheck.status, 'red', 'a read-back failure is still blocking in what is handed over')
+})
+
+test('a finder stopped at its time limit hands over every fault it found before, with its cost and the pages it missed', async () => {
+  const agent = fakeAgent()
+  const seen = {
+    page: '/about',
+    viewport: 'phone',
+    tile: 0,
+    slot: null,
+    block: 'module-4',
+    kind: 'broken-layout',
+    seen: 'The heading "Our coaches" runs off the page'
+  }
+  // The finder answers only once it is stopped, with what it found so far.
+  const finder = {
+    find: (_report, { signal }) =>
+      new Promise((resolve) =>
+        signal.addEventListener('abort', () =>
+          resolve({
+            faults: [seen],
+            problem: '2 pages not looked at',
+            problems: [
+              { page: '/classes', problem: "not looked at: the finder's time ran out" },
+              { page: '/contact', problem: "not looked at: the finder's time ran out" }
+            ],
+            costUsd: 0.034
+          })
+        )
+      )
+  }
+  const fires = []
+  const timer = (go) => {
+    fires.push(go)
+    return () => {}
+  }
+  const run = stepNine({ checks: [checkOf([]), checkOf([])], agent, input: { finder, timer } })
+  for (let i = 0; i < 5000 && !fires.length; i++) await new Promise((r) => setImmediate(r))
+  fires[0]()
+  const { result, logged } = await run
+  assert.deepEqual(
+    itemsOf(agent).map((i) => i.page),
+    ['/about'],
+    'the fault found before the limit is sent'
+  )
+  assert.equal(result.repair.finder.faults, 1)
+  assert.equal(result.repair.costUsd.finder, 0.034)
+  assert.deepEqual(
+    result.repair.finder.notLookedAt.map((p) => p.page),
+    ['/classes', '/contact']
+  )
+  assert.ok(
+    logged.some((l) => /\/classes/.test(l) && /not looked at/.test(l)),
+    logged.join('\n')
+  )
+})

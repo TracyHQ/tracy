@@ -46,7 +46,7 @@ const sum = (values) => {
 }
 
 /**
- * @param {{ outcome: object, found: { faults: object[], problem: string | null, costUsd: number | null },
+ * @param {{ outcome: object, found: { faults: object[], problem: string | null, problems?: object[], costUsd: number | null },
  *   clock: { elapsed: () => number, limits: object }, site: string }} input
  */
 export function repairSummary({ outcome, found, clock, site }) {
@@ -62,7 +62,7 @@ export function repairSummary({ outcome, found, clock, site }) {
     ms: clock.elapsed(),
     limits: { stopNewWorkMs: clock.limits.stopNewWorkMs, returnByMs: clock.limits.returnByMs },
     costUsd: { finder: found.costUsd ?? null, agent: agentUsd },
-    finder: { faults: found.faults.length, problem: found.problem },
+    finder: { faults: found.faults.length, problem: found.problem, notLookedAt: found.problems ?? [] },
     sent: turns.reduce((n, t) => n + t.faults.length, 0),
     skipped: (outcome.skipped ?? []).map((s) => ({ ...faultLine(s.fault), code: s.code, reason: s.reason })),
     turns,

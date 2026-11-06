@@ -52,7 +52,7 @@ export async function stepNineOfRun(d, values, write, inCwd) {
     : null
   const kit = openKit(values.kit, d.index ? { index: d.index } : {})?.doc ?? null
   const host = d.makeHost ? await d.makeHost(values.site) : null
-  const checkSite = (report, { baseline }) =>
+  const checkSite = (report, { baseline, allGroups = false }) =>
     runSiteCheck({
       door: d.makeDoor({ account: values.account, platform: 'joomla' }),
       report,
@@ -61,6 +61,8 @@ export async function stepNineOfRun(d, values, write, inCwd) {
       baseline,
       kit,
       pictures,
+      // Step 9 asks for every group; `--all-groups` says the same.
+      allGroups: allGroups || values['all-groups'] === true,
       ...(d.now ? { now: d.now } : {})
     })
   const finder = d.makeFinder

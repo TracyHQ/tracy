@@ -24,22 +24,42 @@ import { runWriteStep } from './write-step/write-step.js'
 
 const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-/** The finder beside the first check, on the step clock; a finder that fails or is late finds nothing, and says so. */
+/** After the finder is stopped at its limit, how long it has to hand back what it found so far. */
+const FINDER_STOP_GRACE_MS = 15_000
+
+const addCost = (a, b) =>
+  typeof b === 'number' && Number.isFinite(b) ? Math.round(((a ?? 0) + b) * 1e8) / 1e8 : a
+
+/**
+ * The finder beside the first check, on the step clock. At its limit it is stopped (`signal`) and hands back every fault
+ * it found before, with the pages it did not look at; a finder that fails, or gives nothing back once stopped, finds
+ * nothing, and says so.
+ */
 async function findBeside(finder, report, clock) {
-  if (!finder) return { faults: [], problem: null, costUsd: null }
+  if (!finder) return { faults: [], problem: null, problems: [], costUsd: null }
+  const stop = new AbortController()
+  const looking = Promise.resolve().then(() => finder.find(report, { signal: stop.signal }))
   try {
-    const done = await clock.within(
-      () => finder.find(report),
-      Math.min(clock.limits.finderMs, clock.returnLeft())
-    )
-    if (done.late) return { faults: [], problem: 'the finder did not end in its time', costUsd: null }
+    let done = await clock.within(() => looking, Math.min(clock.limits.finderMs, clock.returnLeft()))
+    if (done.late) {
+      stop.abort(new Error('the finder time limit'))
+      done = await clock.within(() => looking, Math.min(FINDER_STOP_GRACE_MS, clock.returnLeft()))
+      if (done.late)
+        return {
+          faults: [],
+          problem: 'the finder did not end in its time, and gave nothing back once stopped',
+          problems: [],
+          costUsd: null
+        }
+    }
     return {
       faults: done.value?.faults ?? [],
       problem: done.value?.problem ?? null,
+      problems: done.value?.problems ?? [],
       costUsd: done.value?.costUsd ?? null
     }
   } catch (error) {
-    return { faults: [], problem: String(error?.message ?? error), costUsd: null }
+    return { faults: [], problem: String(error?.message ?? error), problems: [], costUsd: null }
   }
 }
 
@@ -83,9 +103,10 @@ async function takeBack(pass, reason, firstCheck) {
 }
 
 /**
- * @param {{ write: object, checkSite: (report: object, options: { baseline: object | null }) => Promise<object>,
+ * @param {{ write: object, checkSite: (report: object, options: { baseline: object | null, allGroups: true }) => Promise<object>,
  *   baselines?: { read: (contract: string) => Promise<object | null> } | null, contracts?: Map<string, object>,
- *   finder?: { find: (report: object) => Promise<{ faults: object[], problem?: string | null, costUsd?: number | null }> } | null,
+ *   finder?: { find: (report: object, options?: { pages?: string[], signal?: AbortSignal }) => Promise<{ faults: object[],
+ *     problem?: string | null, problems?: object[], costUsd?: number | null }> } | null,
  *   agent?: object | null, saveFile?: ((name: string, data: string) => Promise<void>) | null,
  *   pageHtml?: ((page: string) => Promise<string | null>) | null,
  *   limits?: object | null, timer?: Function, now?: () => number, sleep?: (ms: number) => Promise<void>,
@@ -102,7 +123,9 @@ export async function runStepNine(input) {
   // The demo baseline committed beside the contract at step 0 (demo-baseline.json), unless the caller gives its own lookup.
   const store = baselines ?? contractBaselineStore({ index: contracts ?? defaultContracts() })
   const baseline = await store.read(written.contract).catch(() => null)
-  const siteCheck = (report) => checkSite(report, { baseline })
+  // Every check of step 9 runs the page groups even when read-back is red: the repair pass needs the page faults, and
+  // a red read-back stays blocking in the check (site-check.js `allGroups`, never green).
+  const siteCheck = (report) => checkSite(report, { baseline, allGroups: true })
   // One clock for the whole of step 9 after the write: the first check and the finder spend it before 9b starts.
   const clock = repairClock({ now, sleep, limits, ...(timer ? { timer } : {}) })
   const [firstCheck, found, brief] = await Promise.all([
@@ -111,6 +134,8 @@ export async function runStepNine(input) {
     briefOf(write.files)
   ])
   if (found.problem) log.warn(`step 9b finder: ${found.problem}`)
+  for (const p of found.problems)
+    log.warn(`step 9b finder: ${p.page}${p.viewport ? ` (${p.viewport})` : ''} ${p.problem}`)
 
   const ledger = { turns: [], undone: new Set(), records: new Map() }
   let sequence = 0
@@ -123,7 +148,14 @@ export async function runStepNine(input) {
     checkSite: () => siteCheck(written),
     urlOf: pageAddressOf(agent),
     pageHtml,
-    refind: finder ? async (pages) => finder.find(written, { pages }) : null,
+    // A second look costs too: its cost joins the finder's.
+    refind: finder
+      ? async (pages) => {
+          const look = await finder.find(written, { pages })
+          found.costUsd = addCost(found.costUsd, look?.costUsd)
+          return look
+        }
+      : null,
     log: (line) => log.warn(line),
     nextRequestId: () => `step9b-${runId}-${++sequence}`
   }

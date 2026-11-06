@@ -223,3 +223,15 @@ test('an undo the site refuses, or that throws, is kept in repair-pass.json as u
     ]
   )
 })
+
+test('a turn that only changed design files counts as changing every page: a new blocking failure anywhere undoes it whole', async () => {
+  // A site-wide CSS change: the turn wrote no record, only files (the bench agent's `files` change).
+  const css = { action: 'files', outcome: 'ok', target: null, via: 'files', files: 1, headSha: 'abc1234' }
+  const agent = fakeAgent({ behave: () => ({ changes: [css] }) })
+  const later = checkOf([failure('text-overflow', '/index.php/contact', 'block-5.2', 'wider than 390 px')])
+  const { result } = await stepNine({ checks: [checkOf([DEMO]), later, checkOf([])], agent })
+  const [turn] = result.repair.turns
+  assert.equal(turn.changedPages, '*')
+  assert.deepEqual(agent.sent.undone, [turn.turnId])
+  assert.equal(result.repair.undone[0].status, 'undone')
+})

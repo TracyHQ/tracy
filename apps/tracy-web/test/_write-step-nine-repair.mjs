@@ -133,14 +133,16 @@ export async function stepNine({ checks, agent, found = null, clock = fakeClock(
   const site = fakeSite()
   const frozen = frozenFiles(files)
   const ran = []
+  const checkOptions = []
   const saved = new Map()
   const logged = []
   const finds = []
   try {
     const result = await runStepNine({
       write: { door: site.door, siteKey: SITE, kit: KIT(), contentMap: null, files: frozen.files },
-      checkSite: async (report) => {
+      checkSite: async (report, options) => {
         ran.push(report)
+        checkOptions.push(options)
         return checks[Math.min(ran.length, checks.length) - 1]
       },
       baselines: { read: async () => null },
@@ -170,7 +172,7 @@ export async function stepNine({ checks, agent, found = null, clock = fakeClock(
       sleep: clock.sleep,
       ...input
     })
-    return { result, checksRun: ran.length, saved, logged, clock, finds }
+    return { result, checksRun: ran.length, checkOptions, saved, logged, clock, finds }
   } finally {
     frozen.done()
   }

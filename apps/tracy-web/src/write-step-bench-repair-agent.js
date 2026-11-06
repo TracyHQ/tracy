@@ -7,7 +7,8 @@
 //   locate  `content.locate` through the Apply door, the call the popover makes for the element a person picks;
 //   prompt  the comment turn, queued into that session through the site session prompt path demo QA uses
 //           (`promptSiteSession`);
-//   turns   the site turn records of the prompts (state, and the writes each made), as demo QA reads them;
+//   turns   the site turn records of the prompts (state, the writes each made, and the files its Git moments committed),
+//           as demo QA and the turn undo read them;
 //   undo    one whole turn, through the turn undo door Site changes calls (bench-site-door.js `undoTurn`);
 //   cancel  the session's work (`session/cancel` on the site's dsh, the Stop of the chat), for a turn still open at the
 //           step's return;
@@ -77,7 +78,7 @@ export function benchRepairAgent({ pool, config, seatDoor, door, siteKey, email,
       promptSiteSession({ config, seatDoor, fetchImpl, site, email, sessionId, requestId, text }),
     async turns({ sessionId, requestIds }) {
       const { rows } = await pool.query(
-        `select turn_id, rpc_id, state, token_usage from site_turn
+        `select turn_id, rpc_id, state, token_usage, files, head_sha from site_turn
           where site_key = $1 and session_id = $2 and rpc_id = any($3::text[]) order by opened_at`,
         [siteKey, sessionId, requestIds]
       )
@@ -91,9 +92,25 @@ export function benchRepairAgent({ pool, config, seatDoor, door, siteKey, email,
         turnId: r.turn_id,
         rpcId: r.rpc_id,
         state: r.state,
-        changes: writes
-          .filter((w) => w.turn_id === r.turn_id)
-          .map((w) => ({ action: w.action, outcome: w.outcome, target: w.target, via: w.via })),
+        changes: [
+          ...writes
+            .filter((w) => w.turn_id === r.turn_id)
+            .map((w) => ({ action: w.action, outcome: w.outcome, target: w.target, via: w.via })),
+          // Files the turn committed (its Git moments: a look change in the template's CSS, say) write no database
+          // row; they count as a change of their own, which no page record places (repair-judge.js: every page).
+          ...(Number(r.files) > 0
+            ? [
+                {
+                  action: 'files',
+                  outcome: 'ok',
+                  target: null,
+                  via: 'files',
+                  files: Number(r.files),
+                  headSha: r.head_sha ?? null
+                }
+              ]
+            : [])
+        ],
         costUsd: typeof r.token_usage?.costUsd === 'number' ? r.token_usage.costUsd : null,
         usage: r.token_usage ?? null
       }))
