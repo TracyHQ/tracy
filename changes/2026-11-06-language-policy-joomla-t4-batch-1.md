@@ -1,0 +1,2 @@
+- **The language policy approves the exact lines of the JA Kinetic 1.0.11, Impact 1.0.6 and Symphony 1.0.6 contracts and template kits** — CI maintainer (Claude, for Akemi) · `chore/language-policy-joomla-t4-batch-1` · 2026-11-06
+  **Affects:** the `language-policy` check of `feat/joomla-t4-batch-1-tools` (#417). The accents are the templates' own English demo text in sealed contracts (proper names, place names and accented loanwords); Nova 1.0.10 and Vega 1.0.9 have none. Merge this, then re-run that branch's check.
