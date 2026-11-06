@@ -57,6 +57,16 @@ export function ladderState(idx, doc) {
       }
       return used
     },
+    /** The owner photos another frame of this frame's kit block shows: asset -> that frame (card AK). */
+    inBlock(frameId) {
+      const block = idx.frames.get(frameId)?.blockId
+      const shown = new Map()
+      if (!block) return shown
+      for (const [id, { entry }] of entries)
+        if (id !== frameId && OWNER_SOURCES.has(entry.source) && idx.frames.get(id)?.blockId === block)
+          shown.set(entry.asset, id)
+      return shown
+    },
     /** The cuts of each owner photo shown on a page of this frame by any other frame: asset -> [{ frame, crop }]. */
     cutsOn(frameId) {
       const pages = idx.wishes.get(frameId)?.pages ?? new Set()

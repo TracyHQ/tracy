@@ -72,6 +72,12 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     ? new Set(kit.contentMap.slots.filter((s) => s.type === 'image').map((s) => s.key))
     : null
   const tooNarrow = narrowerThanSlot(kit?.contentMap)
+  // The kit block of each frame, and the owner photos already placed in each block: one photo is never shown twice
+  // in one block (card AK).
+  const blockOf = new Map()
+  for (const b of Array.isArray(kit?.blocks) ? kit.blocks : [])
+    for (const f of Array.isArray(b?.frames) ? b.frames : []) if (f?.id) blockOf.set(f.id, b.id)
+  const shownIn = new Map()
   const bad = (where, detail) => {
     problems.push({ where, detail })
   }
@@ -164,6 +170,15 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
       const p = paintedOf(e, key)
       if (p) painted.push(p)
       continue
+    }
+    const block = blockOf.get(e.frame)
+    if (block && e.source === 'owner-photo' && e.asset) {
+      const other = shownIn.get(`${block} ${e.asset}`)
+      if (other) {
+        bad(e.frame, `owner photo ${e.asset} is already shown in ${other} of the same block ${block}`)
+        continue
+      }
+      shownIn.set(`${block} ${e.asset}`, e.frame)
     }
     // A file narrower than the slot's minimum is refused by the write door and the demo picture stays (card AI).
     const narrow = tooNarrow(key, e.width)

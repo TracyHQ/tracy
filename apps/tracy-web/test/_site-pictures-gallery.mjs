@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto'
 import { after } from 'node:test'
 import { fileStore } from '../src/site-pictures/file-store.js'
 import { fillFrames } from '../src/site-pictures/fill-frames.js'
+import { createDrawing } from '../src/site-pictures/ladder-draw.js'
 import { createFinisher } from '../src/site-pictures/ladder-step.js'
 import { createLooker } from '../src/site-pictures/looker-step.js'
 import { PICTURES_VERSION } from '../src/site-pictures/manifest-shape.js'
@@ -14,7 +15,7 @@ import { checkPictures } from '../src/site-pictures/picture-check/check-pictures
 import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
 import { picturePrompts } from '../src/site-pictures/picture-prompts.js'
 import { scene } from './_generated-photos.mjs'
-import { LOOKER_MODEL, storeDir } from './_site-pictures-bench.mjs'
+import { DRAWER_MODEL, drawReply, isDraw, LOOKER_MODEL, storeDir } from './_site-pictures-bench.mjs'
 
 const store = storeDir()
 after(store.done)
@@ -162,9 +163,14 @@ const frameOf = (text) => /block-[a-z]\.\d/.exec(text)?.[0] ?? null
  */
 function fakeLooker(reject, once = new Set()) {
   const looks = []
+  const drawings = []
   const first = new Set(once)
   const fetchImpl = async (_url, init) => {
     const body = JSON.parse(init.body)
+    if (isDraw(body)) {
+      drawings.push(body)
+      return drawReply(body)
+    }
     const f = frameOf(body.messages[1].content[0].text)
     looks.push(f)
     const no = reject.has(f) || first.delete(f)
@@ -180,16 +186,17 @@ function fakeLooker(reject, once = new Set()) {
       { headers: { 'content-type': 'application/json' } }
     )
   }
-  return { looks, fetchImpl }
+  return { looks, drawings, fetchImpl }
 }
 
 /**
  * Code's round 0 and the finished round, on a layout and a photo set.
  * @param {Set<string>} reject frames the looker always rejects
  * @param {string} runId
- * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string> }} [opts]
+ * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string>, draw?: boolean }} [opts] `draw`: the run
+ *   has a (fake) drawer door
  */
-export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, once } = {}) {
+export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, once, draw = false } = {}) {
   const PHOTOS = photos
   const k = kit(layout)
   const p = plan(layout)
@@ -239,14 +246,28 @@ export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, 
       alts: null,
       fetchImpl: looker.fetchImpl
     }),
-    drawing: null,
-    drawer: { model: null, snapshot: null, promptSha256: prompts.roles.drawing }
+    drawing: draw
+      ? createDrawing({
+          door: {
+            providerId: 'openrouter',
+            baseUrl: 'https://openrouter.test/api/v1',
+            apiKey: 'k',
+            model: DRAWER_MODEL
+          },
+          prompt: { parts: prompts.drawing, sha256: prompts.roles.drawing },
+          storeDir: store.dir,
+          runId,
+          photoBytes: PHOTOS,
+          fetchImpl: looker.fetchImpl
+        })
+      : null,
+    drawer: { model: draw ? DRAWER_MODEL : null, snapshot: null, promptSha256: prompts.roles.drawing }
   })
   const out = await finisher.finish(doc, { lastRound: true })
   const files = { ...measured }
   for (const f of out.files) files[f.file] = { sha256: f.sha256, width: f.width, height: f.height }
   const check = (pictures, onPlan = p) => checkPictures({ pictures, plan: onPlan, kit: k, brief: b, files })
-  return { parts, out, m: out.doc, check, looker }
+  return { parts, out, m: out.doc, check, looker, kit: k }
 }
 
 export const byFrame = (doc) => new Map(doc.frames.map((e) => [e.frame, e]))

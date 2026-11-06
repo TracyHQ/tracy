@@ -63,6 +63,9 @@ async function drawRung(ctx, s, frameId, p, rung) {
     p.asset = null
   }
   if (alt) p.alts = (p.alts ?? 0) + 1
+  // A gallery tile drawn after its photo rungs found nothing (card AK): its entry says so, the only drawing P07 lets an
+  // any-real frame have.
+  const tileDraw = idx.wishes.get(frameId)?.match === 'any-real' && Boolean(idx.galleryTile?.(frameId))
   const attempt = alt ? 2 + p.alts : rung === 'redraw' ? 2 : 1
   const ask = () =>
     drawing.draw({
@@ -97,14 +100,20 @@ async function drawRung(ctx, s, frameId, p, rung) {
     ? `owner photo ${p.asset.id} extended sideways to fill the wide band`
     : cut
       ? `drawn as a cut-out on a plain ${cut.groundName} ground (${cut.ground}), the ground removed by code: no owner photo is cut out`
-      : `drawn (${p.mode}): no owner photo fits`
+      : tileDraw
+        ? `drawn (${p.mode}): a gallery tile is never hidden alone and no owner photo is left that its block does not already show`
+        : `drawn (${p.mode}): no owner photo fits`
   return {
     list,
     entry: placedEntry(frameId, extended ? 'owner-photo-extended' : 'drawn', res.made, {
       ...res.extra,
       drawing: { mode: p.mode, attempt },
       reason: alt ? `drawn again in another composition, after: ${s.story(frameId)}` : reason,
-      ...(alt ? { filledBy: { rung: 'redraw-alt', faults: [] } } : {}),
+      ...(alt
+        ? { filledBy: { rung: 'redraw-alt', faults: [] } }
+        : tileDraw
+          ? { filledBy: { rung: 'draw', faults: [] } }
+          : {}),
       ...s.extraOf(list)
     })
   }

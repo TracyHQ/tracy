@@ -6,11 +6,14 @@
 // The "any-photo" rung after it always fills while the brief has at least ANY_PHOTO_MIN usable owner photos (owner
 // decision 04/11/2026): any usable owner photo, used on other pages or already twice, any region, keeping only the hard
 // rules: heads whole, never the photo of a neighbouring tile, never the very cut another frame of the page shows. The
-// looker still looks; a rejected picture is followed by the next photo, until every photo is tried. Only then, or with
-// fewer photos, is the tile returned.
+// looker still looks; a rejected picture is followed by the next photo, until every photo is tried.
+//
+// Neither rung ever shows one owner photo twice in one kit block, and an any-photo cut shares at most
+// ANY_PHOTO_MAX_OVERLAP with another cut of the photo on its pages (owner decision 06/11/2026, card AK: two tiles of
+// one gallery showed the same scene, cuts sharing 97%). With nothing left, the tile goes to the draw rung.
 
 import { placedEntry } from './frame-entries.js'
-import { neighbours } from './gallery-tiles.js'
+import { ANY_PHOTO_MAX_OVERLAP, neighbours } from './gallery-tiles.js'
 import { rankForFrame, sameService } from './photo-shortlist.js'
 import { cutPhotoAway } from './reuse-crop.js'
 
@@ -24,11 +27,16 @@ export async function reuseRung({ idx, usable, photoBytes, store }, s, frameId, 
   const wish = idx.wishes.get(frameId)
   const frame = idx.frames.get(frameId)
   const cuts = s.cutsOn(frameId)
+  const inBlock = s.inBlock(frameId)
   const tried = []
   for (const { a } of rankForFrame(usable, wish, frame, s.usageNow())) {
     const uses = cuts.get(a.id)
     if (!uses || p.reused.has(a.id)) continue
     p.reused.add(a.id)
+    if (inBlock.has(a.id)) {
+      tried.push(`${a.id} is already in ${frame.blockId} (${inBlock.get(a.id)})`)
+      continue
+    }
     const near = uses.find((u) => neighbours(tile, idx.gallery(u.frame)))
     if (near) {
       tried.push(`${a.id} is in the neighbouring tile ${near.frame}`)
@@ -76,10 +84,15 @@ export async function anyPhotoRung({ idx, usable, photoBytes, store }, s, frameI
   const wish = idx.wishes.get(frameId)
   const frame = idx.frames.get(frameId)
   const cuts = s.cutsOn(frameId)
+  const inBlock = s.inBlock(frameId)
   const tried = []
   for (const { a } of rankForFrame(usable, wish, frame, s.usageNow())) {
     if (p.filled.has(a.id)) continue
     p.filled.add(a.id)
+    if (inBlock.has(a.id)) {
+      tried.push(`${a.id} is already in ${frame.blockId} (${inBlock.get(a.id)})`)
+      continue
+    }
     const uses = cuts.get(a.id) ?? []
     const near = uses.find((u) => neighbours(tile, idx.gallery(u.frame)))
     if (near) {
@@ -88,7 +101,7 @@ export async function anyPhotoRung({ idx, usable, photoBytes, store }, s, frameI
     }
     const avoid = uses.map((u) => u.crop).filter(Boolean)
     const cut = await cutPhotoAway(photoBytes.get(a.id), a, frame, idx.demoSize(frameId), avoid, {
-      maxOverlap: 1,
+      maxOverlap: ANY_PHOTO_MAX_OVERLAP,
       distinct: true
     })
     if (!cut.ok) {

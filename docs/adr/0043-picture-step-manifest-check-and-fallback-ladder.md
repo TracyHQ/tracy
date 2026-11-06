@@ -477,6 +477,15 @@ two cuts share at most 30%, after the any-photo rung they are not the same cut; 
 fails a gallery tile hidden alone (one not in a row the ladder dropped, the manifest's `rows`). A tile walks up to 40
 looks (the round's pass limit), one photo per pass.
 
+Owner decision 06/11/2026 (card AK, replaces the within-gallery reuse above): one owner photo is never shown twice in
+one kit block. The reuse and any-photo rungs skip a photo another frame of the tile's block shows (so the reuse rung
+only takes a photo shown by another block of the page), the any-photo cut shares at most 50% with another cut of the
+photo (`ANY_PHOTO_MAX_OVERLAP`), and a tile no photo is left for is drawn (rungs draw and redraw, entry `filledBy: {
+rung: "draw" }`): the gallery climbs next photo, fewer rows, reuse, any photo, draw, redraw, best-rejected and return.
+P06 fails two showings of one photo in one block whatever the cuts, and an any-photo reuse sharing more than 50%; P07
+accepts a drawn `any-real` frame only for a gallery tile marked `filledBy.rung` "draw". The mapping export lists a
+second showing of one photo in one block as a problem and leaves it out.
+
 A `person` frame climbs only hide and return (no other person's photo, never a drawing). A `specific` cut-out frame
 climbs draw, redraw, hide, redraw-alt, best-rejected and return; any other cut-out only hide and return (section 3d).
 A `specific` frame climbs redraw-alt and best-rejected after hide, an `any-real` frame and a gallery tile best-rejected

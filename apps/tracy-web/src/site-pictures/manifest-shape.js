@@ -20,9 +20,10 @@ export const OWNER_SOURCES = new Set(['owner-photo', 'owner-photo-extended'])
 export const REUSE_RUNGS = new Set(['reuse', 'any-photo'])
 /**
  * The ladder rungs that fill a frame which would otherwise be left without a picture (card AJ): another composition,
- * or the best picture the looker rejected for minor faults only. The entry names it in `filledBy`.
+ * or the best picture the looker rejected for minor faults only; and (card AK) the drawing of a gallery tile no owner
+ * photo is left for. The entry names it in `filledBy`.
  */
-export const FILL_RUNGS = new Set(['redraw-alt', 'best-rejected'])
+export const FILL_RUNGS = new Set(['redraw-alt', 'best-rejected', 'draw'])
 /** The roles whose prompt hashes the fingerprint records. */
 export const PROMPT_ROLES = Object.freeze(['picker', 'drawing', 'looker'])
 /** The folder of the site every placed picture is uploaded to, named by its sha256. */
@@ -147,7 +148,7 @@ function readEntry(e, list) {
   )
     return {
       problem:
-        'filledBy must be null or, on a placed picture, { rung: "redraw-alt" | "best-rejected", faults: [names] }'
+        'filledBy must be null or, on a placed picture, { rung: "redraw-alt" | "best-rejected" | "draw", faults: [names] }'
     }
   // The frame's surface (ADR 0043 section 3e): text over the picture, and the overlay the template paints over it.
   if (e.textOver != null && typeof e.textOver !== 'boolean')
