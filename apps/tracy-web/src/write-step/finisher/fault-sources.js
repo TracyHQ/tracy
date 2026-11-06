@@ -5,14 +5,15 @@
 //     with its reason (a missing or repeated h1); any other blocking failure is logged only as outside the fault list.
 //   - A failure that has no door to repair is logged as no door: an item the write step had nothing to write to
 //     (`unaddressable-items`, the links with no slot in the contract of #369), or a link failure that names no slot.
-//   - A failure is repaired only when confirmed on the live site. A visible kind is confirmed when the finder saw the same
-//     fault (same kind, on the same page or slot); an invisible kind (a link target, an alt, a title or meta) when the page
-//     the site serves now still holds what the check measured. Unconfirmed, it is logged as measurement wrong.
+//   - A failure is repaired only when confirmed on the live site (fault-confirm.js): by the finder when it saw the same fault
+//     in the same place (slot, block, or the words it quoted), else by the page the site serves now still holding what the
+//     check measured. Unconfirmed, it is logged as measurement wrong; an invisible kind (a link target, an alt, a title or
+//     meta) with nothing to look for, or a page that could not be read, is logged only as not confirmed.
 //   - A fault both sources name is one fault (sources: finder and site check), so it gets one repair order; failures of
 //     the same fault at two widths or from two groups count once too.
 //   - A finder fault of a kind a check group measured green is logged with that group under `missedBy`.
-import { FAULT_KINDS, LOGGED_ONLY_KINDS, loggedOnlyReason } from './fault-kinds.js'
-import { hrefsIn } from './live-confirm.js'
+import { confirmedByFinder, sameCheckFault, servedNow } from './fault-confirm.js'
+import { FAULT_KINDS, isRepairable, LOGGED_ONLY_KINDS, loggedOnlyReason } from './fault-kinds.js'
 import { logRecord } from './repair-log.js'
 
 const DEMO_CONTACT = /^(tel|mailto):/i
@@ -24,7 +25,7 @@ export const CHECK_GROUP_KINDS = Object.freeze({
   'words-over-picture': 'unreadable-text',
   'band-contrast': 'unreadable-text',
   'empty-frames': 'empty-frame',
-  'empty-controls': 'empty-frame',
+  'empty-controls': 'empty-block',
   'text-overflow': 'broken-layout',
   'glued-words': 'broken-layout',
   'demo-words': 'demo-fact',
@@ -52,14 +53,6 @@ const kindOfFailure = (f) => {
   return typeof by === 'function' ? by(f) : (by ?? null)
 }
 
-/** Two faults are the same when their kinds are, and they agree on page and slot, one of the two named alike in both. */
-function sameFault(a, b) {
-  if (a.kind !== b.kind) return false
-  if (a.page && b.page && a.page !== b.page) return false
-  if (a.slot && b.slot && a.slot !== b.slot) return false
-  return Boolean((a.page && a.page === b.page) || (a.slot && a.slot === b.slot))
-}
-
 const failuresOf = (check) =>
   (check?.groups ?? []).flatMap((g) => (g.failures ?? []).map((f) => ({ ...f, group: f.group ?? g.name })))
 
@@ -73,34 +66,6 @@ const faultOf = (f, kind) => ({
   seen: f.reason ?? (f.measured ? `${f.group} measured ${String(f.measured).slice(0, 200)}` : f.group),
   measured: f.measured ?? null
 })
-
-const digits = (s) => String(s).replace(/\D+/g, '')
-const decoded = (html) =>
-  String(html)
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#0?39;/g, "'")
-
-/**
- * Whether the page the site serves now still holds what the check measured: a tel: or mailto: link to the same number or
- * address, else the measured words or address anywhere in the page. Null when there is nothing measured to look for.
- */
-export function servedNow(html, measured) {
-  if (typeof measured !== 'string' || !measured.trim()) return null
-  const page = decoded(html)
-  const scheme = measured.match(DEMO_CONTACT)?.[1]?.toLowerCase()
-  if (scheme) {
-    // Every link target, quoted or not, so a number written with spaces is read whole (live-confirm.js).
-    const hrefs = hrefsIn(html)
-      .filter((h) => h.toLowerCase().startsWith(`${scheme}:`))
-      .map((h) => h.slice(scheme.length + 1))
-    const want = measured.slice(scheme.length + 1)
-    return scheme === 'tel'
-      ? hrefs.some((h) => digits(h) === digits(want) && digits(want) !== '')
-      : hrefs.some((h) => decodeURIComponent(h).toLowerCase() === want.toLowerCase())
-  }
-  return page.includes(measured.trim())
-}
 
 /**
  * @param {{ found: object[], firstCheck: object | null,
@@ -151,8 +116,8 @@ export async function mergedFaults({ found, firstCheck, pageHtml = null }) {
       )
       continue
     }
-    if (!kind || !FAULT_KINDS[kind]) {
-      const named = logged ?? f.group
+    if (!isRepairable(kind)) {
+      const named = logged ?? (FAULT_KINDS[kind] ? kind : f.group)
       merge.loggedOnly += 1
       records.push(
         logRecord(faultOf(f, LOGGED_ONLY_KINDS[named] ? named : (kind ?? f.group)), {
@@ -164,45 +129,38 @@ export async function mergedFaults({ found, firstCheck, pageHtml = null }) {
     }
     const fault = faultOf(f, kind)
     // The same fault named again (another width, another group) is counted once.
-    const again = fromCheck.find((c) => sameFault(c.fault, fault))
+    const again = fromCheck.find((c) => sameCheckFault(c.fault, fault))
     if (again) continue
-    const seen = faults.find((x) => x.sources.includes('finder') && sameFault(x, fault))
+    const seen = faults.find((x) => x.sources.includes('finder') && confirmedByFinder(x, fault))
     fromCheck.push({ fault })
     if (seen) {
       merge.confirmed += 1
       if (!seen.sources.includes('site-check')) seen.sources = [...seen.sources, 'site-check']
       continue
     }
-    if (!SERVED_KINDS.has(kind)) {
-      merge.measurementWrong += 1
-      records.push(
-        logRecord(fault, {
-          ...asCheck(f),
-          outcome: 'measurement-wrong',
-          reason: 'measurement wrong: the finder did not see this fault on the screenshots of the live site'
-        })
-      )
-      continue
-    }
     const html = fault.page && pageHtml ? await pageHtml(fault.page).catch(() => null) : null
     const served = typeof html === 'string' ? servedNow(html, fault.measured) : null
-    if (served === null) {
+    const unread =
+      typeof html !== 'string'
+        ? 'the live page could not be read'
+        : 'the failure carries nothing measured to look for'
+    if (served === null && SERVED_KINDS.has(kind)) {
       merge.loggedOnly += 1
       records.push(
-        logRecord(fault, {
-          ...asCheck(f),
-          reason: `not confirmed: ${typeof html !== 'string' ? 'the live page could not be read' : 'the failure carries nothing measured to look for'}, so it is not repaired`
-        })
+        logRecord(fault, { ...asCheck(f), reason: `not confirmed: ${unread}, so it is not repaired` })
       )
       continue
     }
     if (!served) {
       merge.measurementWrong += 1
+      const missed = SERVED_KINDS.has(kind)
+        ? ''
+        : 'the finder did not see this fault on the screenshots of the live site, and '
       records.push(
         logRecord(fault, {
           ...asCheck(f),
           outcome: 'measurement-wrong',
-          reason: `measurement wrong: the live page no longer holds ${JSON.stringify(fault.measured)}`
+          reason: `measurement wrong: ${missed}${served === false ? `the live page no longer holds ${JSON.stringify(fault.measured)}` : unread}`
         })
       )
       continue

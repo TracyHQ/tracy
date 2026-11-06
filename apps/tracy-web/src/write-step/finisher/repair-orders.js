@@ -9,6 +9,7 @@ import { showsRawCodes, visibleText } from '../../lib/site-copy/emphasis-markup.
 import { CONTENT_ORDER_KINDS } from './content-repair-orders.js'
 import { FAULT_KINDS } from './fault-kinds.js'
 import { ALLOWED_PROPERTIES } from '../../lib/finisher-style.js'
+import { STYLE_STEPS, WORDS_STEPS } from './repair-steps.js'
 import { validStyleOrder } from './style-order.js'
 
 const squash = (s) =>
@@ -47,20 +48,25 @@ function checkFixText(order, { current }) {
   return null
 }
 
-/** Every order kind the fixer may use: `label` and `shape` are what the fixer is told, `check` what code holds it to. */
+/**
+ * Every order kind the fixer may use: `label` and `shape` are what the fixer is told, `check` what code holds it to, `steps`
+ * how a valid order is written, judged and undone (repair-steps.js).
+ */
 export const ORDER_KINDS = Object.freeze({
   'fix-text': Object.freeze({
     label: 'fix broken text in one slot',
     shape:
       '{ "kind": "fix-text", "slot": "<slot id>", "text": "<the slot words without the printed markup>" }',
-    check: checkFixText
+    check: checkFixText,
+    steps: WORDS_STEPS
   }),
   // A kind that writes elsewhere than a content slot validates the whole order itself (`validate`), with the same context.
   'style-block': Object.freeze({
     label: `style one block, only with these properties: ${Object.keys(ALLOWED_PROPERTIES).join(', ')}; never anything that hides, empties or moves content off screen; never a picture`,
     shape:
       '{ "kind": "style-block", "block": "<block id, e.g. block-2>", "target": "<null, or tags, classes or ids inside the block such as h2 or .title span>", "styles": { "<property>": "<value>" } }',
-    validate: validStyleOrder
+    validate: validStyleOrder,
+    steps: STYLE_STEPS
   }),
   // #422: link, demo item, alt, page title or description, and accent emphasis; each checks itself (`validate`).
   ...CONTENT_ORDER_KINDS
@@ -108,3 +114,6 @@ export const orderListText = () =>
   Object.entries(ORDER_KINDS)
     .map(([kind, k]) => `- "${kind}": ${k.label}. Answer ${k.shape}`)
     .join('\n')
+
+/** How a valid order of this kind is written, judged and undone. */
+export const stepsOf = (kind) => ORDER_KINDS[kind].steps

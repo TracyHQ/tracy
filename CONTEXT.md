@@ -281,7 +281,9 @@ _Avoid_: fixer agent, auto-fix, QA bot
 **Repair order**:
 The fixer's typed answer for one fault, of a closed list of seven kinds: fix broken text in one slot, fix one link, remove
 (or replace from the brief) one demo item, fix one picture's alt, fix one page's title or meta description, mark accent
-emphasis in one heading, style one block. Code checks it against the kit, its fault and what the site holds; an order that fails is dropped
+emphasis in one heading, style one block. A demo phone or e-mail link with nothing in the brief to put in its place leaves
+whole (the link with its words), never as an empty tel: or mailto: link. An empty frame or broken picture has no order yet
+and is logged only. Code checks it against the kit, its fault and what the site holds; an order that fails is dropped
 and writes nothing.
 _Avoid_: patch, fix instruction
 

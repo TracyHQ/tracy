@@ -6,12 +6,10 @@
 //   - a heading's accent emphasis is written in content map codes through the contract door, like any repair, then a slot that
 //     stores HTML takes real tags through the write step's own emphasis stage (emphasis-stage.js); that stage's apply id is
 //     returned in `also`, reverted before the repair's own.
-import { createHash } from 'node:crypto'
 import { runEmphasisStage } from '../emphasis-stage.js'
 import { answerWords } from '../settings-door.js'
+import { finisherApplyId } from './apply-ids.js'
 import { revertRepair, writeRepair } from './repair-write.js'
-
-const hash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex')
 
 /** A `content.get` read-back of one row field, `path` `['item', <field>, ...<keys inside its JSON>]`, or null. */
 export function rowReadOf(readFrom) {
@@ -70,8 +68,7 @@ export async function readRowValue(door, siteKey, read) {
 /** The write of a row field under the finisher's own apply id: `{ ok, applyId }` or `{ ok: false, applyId, reason }`. */
 export function rowFieldWrite(read, field) {
   return async ({ door, siteKey, repair }) => {
-    const requestId = hash({ siteKey, read, field, repair })
-    const applyId = `finisher-${requestId.slice(0, 48)}`
+    const applyId = finisherApplyId('finisher', { siteKey, read, field, repair })
     try {
       const answer = await door.apply({
         siteKey,

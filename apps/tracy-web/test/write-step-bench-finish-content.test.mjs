@@ -11,6 +11,7 @@ import { after, test } from 'node:test'
 import { runCli } from '../src/write-step-bench-cli.js'
 import { FAULT_KINDS } from '../src/write-step/finisher/fault-kinds.js'
 import { ORDER_KINDS } from '../src/write-step/finisher/repair-orders.js'
+import { servesRepair } from '../src/write-step/finisher/live-confirm.js'
 import { kitIndex, memoryStore } from './_write-step-bench.mjs'
 import { fakeCapture } from './_write-step-finisher.mjs'
 import {
@@ -52,6 +53,7 @@ async function finish({
   fault = {},
   checker = BETTER,
   briefFile = brief(),
+  copyFile = copy(),
   held = heldAtStart(),
   served = servedPage
 }) {
@@ -60,7 +62,7 @@ async function finish({
   const found = { kind: KIND_OF_ORDER[order?.kind], ...fault }
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-content-'))
   dirs.push(dir)
-  const files = { 'brief.json': briefFile, 'copy.json': copy(), 'site-pictures.json': sitePictures() }
+  const files = { 'brief.json': briefFile, 'copy.json': copyFile, 'site-pictures.json': sitePictures() }
   for (const [name, data] of Object.entries(files)) writeFileSync(path.join(dir, name), JSON.stringify(data))
   const doors = {
     // The finder is asked about the home page, then the about page.
@@ -308,11 +310,91 @@ test('a repair the customer sees is still judged by the checker on before and af
 })
 
 test('every order kind the fault list names is an order the fixer can give, and every order answers some fault kind', () => {
-  for (const [kind, { orders }] of Object.entries(FAULT_KINDS)) {
-    assert.ok(orders.length, `${kind} lists no order`)
+  for (const [kind, { orders, loggedOnly }] of Object.entries(FAULT_KINDS)) {
+    // A kind no order answers yet says why it is logged only.
+    assert.ok(orders.length || loggedOnly, `${kind} lists no order and no reason it is logged only`)
     for (const order of orders)
       assert.ok(ORDER_KINDS[order], `${kind} names ${order}, which is no order kind`)
   }
   const named = new Set(Object.values(FAULT_KINDS).flatMap((k) => k.orders))
   for (const order of Object.keys(ORDER_KINDS)) assert.ok(named.has(order), `no fault kind lists ${order}`)
+})
+
+test('a demo phone link inside the words, with no phone in the brief, leaves with its whole link: never an empty tel: link', async () => {
+  const words = `Call <a href="tel:+15550100">${DEMO_PHONE}</a> today`
+  const run = await finish({
+    order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: null },
+    briefFile: brief([]),
+    held: { ...heldAtStart(), 'module-5.1': words }
+  })
+  assert.equal(run.site.held['module-5.1'], 'Call today')
+  assert.doesNotMatch(run.site.held['module-5.1'], /tel:|<a\b/)
+  assert.equal(run.record.outcome, 'kept')
+})
+
+test('a stored tel: address with no phone in the brief is never emptied to a bare tel:, and nothing is written', async () => {
+  for (const item of [DEMO_PHONE, `tel:${DEMO_PHONE}`]) {
+    const run = await finish({
+      order: { kind: 'remove-demo-item', slot: 'block-5.3', item, with: null },
+      fault: { slot: 'block-5.3', kind: 'demo-contact-link' },
+      briefFile: brief([]),
+      held: { ...heldAtStart(), 'module-5.3': `tel:${DEMO_PHONE}` }
+    })
+    dropped(run, /would leave an empty tel: link/)
+    assert.equal(run.site.held['module-5.3'], `tel:${DEMO_PHONE}`)
+  }
+})
+
+test('the live page serving an empty tel: or mailto: link is worse, not a removed demo link', () => {
+  const repair = { order: { kind: 'remove-demo-item' }, valid: { current: `tel:${DEMO_PHONE}`, after: '' } }
+  assert.equal(servesRepair('<a href="tel:">Call us</a>', repair), false)
+  assert.equal(servesRepair('<a href="mailto:">Mail us</a>', repair), false)
+  assert.equal(servesRepair('<a href="/about">About</a>', repair), true)
+})
+
+test('an item written as tel: or mailto: is classed as a phone or an e-mail, its scheme kept on the replacement', async () => {
+  const run = await finish({
+    order: { kind: 'remove-demo-item', slot: 'block-5.3', item: `tel:${DEMO_PHONE}`, with: BRIEF_PHONE },
+    fault: { slot: 'block-5.3', kind: 'demo-contact-link' },
+    held: { ...heldAtStart(), 'module-5.3': `tel:${DEMO_PHONE}` }
+  })
+  assert.equal(run.site.held['module-5.3'], `tel:${BRIEF_PHONE}`)
+  assert.equal(run.record.outcome, 'kept')
+  dropped(
+    await finish({
+      order: {
+        kind: 'remove-demo-item',
+        slot: 'block-5.3',
+        item: 'mailto:desk@demo.example.test',
+        with: 'x@y.test'
+      },
+      fault: { slot: 'block-5.3', kind: 'demo-contact-link' },
+      held: { ...heldAtStart(), 'module-5.3': 'mailto:desk@demo.example.test' }
+    }),
+    /no email the brief gives/
+  )
+})
+
+test("a page title the site copy does not give falls back to the brief's own facts, never to new words", async () => {
+  const noSeo = { ...copy(), seo: [] }
+  const fault = { page: '/about', slot: null }
+  const title = { kind: 'fix-title-meta', page: '/about', field: 'title', text: 'Harbour Strength Club' }
+  const kept = await finish({ order: title, fault, copyFile: noSeo })
+  assert.equal(JSON.parse(kept.site.rows['menuItem:102'].params).page_title, 'Harbour Strength Club')
+  assert.equal(kept.record.outcome, 'kept')
+  dropped(
+    await finish({
+      order: { ...title, text: 'Harbour Strength Club, the best gym' },
+      fault,
+      copyFile: noSeo
+    }),
+    /neither the site copy's title .* nor the brief's/
+  )
+  const purpose = 'Who coaches at the club and how it started'
+  const withPurpose = { ...brief(), pages: [{ id: 'page-about-us', purpose }] }
+  const description = { kind: 'fix-title-meta', page: '/about', field: 'description', text: purpose }
+  dropped(await finish({ order: description, fault, copyFile: noSeo }), /the brief gives no description/)
+  const described = await finish({ order: description, fault, copyFile: noSeo, briefFile: withPurpose })
+  assert.equal(described.record.outcome, 'dropped')
+  assert.match(described.record.reason, /nowhere to write it/)
 })

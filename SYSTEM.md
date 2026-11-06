@@ -2366,7 +2366,7 @@ the write, under its own `finisher-` apply id, and undoes a repair that is not b
 Apply door, no new door). The site check then runs a final time on the report with the kept repairs as ordered, and is
 the one kept on the run. `repair-log.json` (`repair-log/1`) and the crops are written into the command's `--out` folder.
 Unreadable text and broken layout are answered by "style one block" (#421, ADR 0044 decision 30): code holds the order to
-the allow list in `lib/finisher-style.js`, then writes one rule keyed by the block in the finisher's marked style block of the
+the allow list in `lib/finisher-style-allow-list.js` (a readable colour pair, sane spacing, no opacity), then writes one rule keyed by the block in the finisher's marked style block of the
 kit's head injection module (`content.get` and `content.update` on that module, the door the write step's video button rule
 uses; `finisher/style-write.js`), and its undo puts back only that block's rule. The look guard lets that block hold only
 allow list rules (`finisher-style`). The site agent reads and edits the module through the same module door.
@@ -2377,7 +2377,9 @@ and the pages the site keeps (`finisher/repair-facts.js`); a title or descriptio
 finder works from the whole closed list (#423) and sees the template demo's block shots (the kit images) for lost design;
 the first site check's failures of the listed kinds merge with its faults, counted once (`finisher/fault-sources.js`). A
 repair no screenshot shows (a link target, a tel: or mailto: link, an alt, a title or description) is proven by reading the
-page the site serves now (`finisher/live-confirm.js`), never by the checker on crops.
+page the site serves now (`finisher/live-confirm.js`), never by the checker on crops. Each order kind names how it is
+written, judged and undone (`finisher/repair-steps.js`). A site check failure is confirmed by the finder only on the same
+slot, block or quoted words, else on the live page (`finisher/fault-confirm.js`).
 
 ## 9. Sign-in, seats, permissions
 

@@ -1,10 +1,8 @@
 // How the finisher writes a valid repair, and takes one back: through the same door, receipt and undo as every other write
 // of the write step (spec #418, story 40). A text repair is one `content.contract` apply with the finisher's own apply id
 // against the revision the site answers now; the undo is `apply.revert` of that apply id, which puts back what it changed.
-import { createHash } from 'node:crypto'
 import { answerWords } from '../settings-door.js'
-
-const hash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex')
+import { finisherApplyId, hashOf } from './apply-ids.js'
 
 /** What the site holds now: its revision, each slot's current value by content map key, and the pages it lists. */
 export async function readSite(door, siteKey) {
@@ -22,8 +20,9 @@ export async function readSite(door, siteKey) {
  * @returns {Promise<{ ok: true, applyId: string } | { ok: false, applyId: string, reason: string }>}
  */
 export async function writeRepair({ door, siteKey, revision, changes, repair }) {
-  const requestId = hash({ siteKey, revision, changes, repair })
-  const applyId = `finisher-${requestId.slice(0, 48)}`
+  const what = { siteKey, revision, changes, repair }
+  const requestId = hashOf(what)
+  const applyId = finisherApplyId('finisher', what)
   let answer
   try {
     answer = await door.apply({

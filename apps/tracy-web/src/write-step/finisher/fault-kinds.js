@@ -17,9 +17,17 @@ export const FAULT_KINDS = Object.freeze({
     what: 'text over a picture, text the colour of its background, contrast too low to read',
     orders: Object.freeze(['style-block'])
   }),
+  // No order fills a picture yet: an empty frame is named so it is counted, and logged only with `loggedOnly` as its reason.
   'empty-frame': Object.freeze({
-    label: 'empty frame, broken picture or empty block',
-    what: 'a picture frame with nothing in it, a broken picture icon, a block or button with no content',
+    label: 'empty frame or broken picture',
+    what: 'a picture frame with nothing in it, a broken picture icon',
+    orders: Object.freeze([]),
+    loggedOnly:
+      'no repair order yet: an empty frame or a broken picture needs a fill-picture order, which does not exist'
+  }),
+  'empty-block': Object.freeze({
+    label: 'empty demo block',
+    what: "a block or button left from the template's demo with no content in it",
     orders: Object.freeze(['remove-demo-item'])
   }),
   'broken-layout': Object.freeze({
@@ -67,8 +75,12 @@ export const LOGGED_ONLY_KINDS = Object.freeze({
   'main-heading': 'a missing or repeated h1 is logged only: fixing it means changing the template structure'
 })
 
+/** Whether a fault of this kind goes to the fixer: a listed kind that some repair order answers. */
+export const isRepairable = (kind) => Boolean(FAULT_KINDS[kind]?.orders.length)
+
 /** Why a fault of this kind is logged only and not repaired. */
-export const loggedOnlyReason = (kind) => LOGGED_ONLY_KINDS[kind] ?? 'the kind is outside the fault list'
+export const loggedOnlyReason = (kind) =>
+  LOGGED_ONLY_KINDS[kind] ?? FAULT_KINDS[kind]?.loggedOnly ?? 'the kind is outside the fault list'
 
 export const VIEWPORTS = Object.freeze(['desktop', 'phone'])
 
@@ -94,10 +106,11 @@ export function heldFaults(answer, shown) {
       viewport,
       tile,
       slot: text(raw?.slot, 120),
+      block: text(raw?.block, 40),
       kind: text(raw?.kind, 80) ?? 'unnamed',
       seen: text(raw?.seen, 400)
     }
-    if (FAULT_KINDS[fault.kind]) faults.push(fault)
+    if (isRepairable(fault.kind)) faults.push(fault)
     else loggedOnly.push(fault)
   }
   return { faults, loggedOnly }

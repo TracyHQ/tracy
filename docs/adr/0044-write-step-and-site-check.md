@@ -537,12 +537,16 @@ fault into one repair order, a checker compares the repaired block before and af
 
 **The second CSS exception: "style one block".** Unreadable text (text over a picture, text the colour of its ground) and a
 broken layout (a long word running out of its box) often have no repair in the words. The fixer may order a style for one
-kit block, and code accepts only a closed allow list (`lib/finisher-style.js`): text colour, a backing layer behind text
-(a colour or a gradient, never a picture), text shadow, font size, line height, spacing (padding, margins never negative,
-letter and word spacing) and the wrapping of long words. Any declaration that makes content disappear is refused by name:
-display none, visibility hidden, opacity, zero height or max-height, a position, transform, offset or indent that moves it off
-screen, a transparent text colour, a font size or line height too small to read, a value that loads a picture or reads
-another value. One refused declaration refuses the whole order; nothing is written, and the refusal is logged.
+kit block, and code accepts only a closed allow list (`lib/finisher-style-allow-list.js`): text colour, a backing layer
+behind text (a colour or a gradient, never a picture), text shadow, font size, line height, spacing (padding, margins, letter
+and word spacing) and the wrapping of long words. Any declaration that can take content off the page is refused:
+display none, visibility hidden, a position, transform, offset or indent that moves it off screen, zero height or max-height,
+a transparent text colour, a font size or line height too small to read, a value that loads a picture or reads another value,
+a text colour too close to the backing colour the same rule sets (both colours known and opaque, a WCAG contrast under 3:1,
+`lib/finisher-style-colours.js`), a padding, margin, letter or word spacing over 64px, 4em or 4rem (25% for padding and
+margins), and a negative margin, letter or word spacing. `opacity` is refused entirely, whatever its value: the spec bans only
+zero opacity, and this is stricter on purpose, since a faded text is a hidden text by degrees and no fault on the list is
+repaired by fading. One refused declaration refuses the whole order; nothing is written, and the refusal is logged.
 
 - The rule is written like the video button rule (decision 29): between its own markers
   (`<!-- tracy-finisher-style:start -->`) in the kit's head injection block, read back from the module first, every other
@@ -557,7 +561,8 @@ another value. One refused declaration refuses the whole order; nothing is writt
 - The site agent reads the block like any module content, and a customer may ask it to remove a rule: the line says what added
   it and that deleting the line takes it off.
 
-"Hide is never CSS" (decision 2) stays: nothing the allow list writes can take content off the page. WordPress (Additional CSS)
+"Hide is never CSS" (decision 2) stays, and the refusals above make it true: nothing the allow list writes can take content
+off the page. WordPress (Additional CSS)
 and EmDash (a style file and a rebuild) get their own style doors when the finisher joins the live build.
 
 ## Consequences

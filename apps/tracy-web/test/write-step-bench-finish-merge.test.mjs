@@ -366,3 +366,73 @@ test('a customer-visible fault outside the list that the finder names is kept in
   assert.equal(record.seen, 'a carousel arrow sits over the heading')
   assert.match(run.doors.finder.asked[0].system, /"other"/)
 })
+
+const SHOWERS = 'Showers ((span))and((/span)) lockers'
+const noOrder = { kind: 'fix-text', slot: 'block-9.1', text: 'x' }
+
+test('a site check failure on another block of the page is not confirmed by a finder fault that named neither slot nor block nor its words', async () => {
+  const run = await finish({
+    finder: twice(
+      finding('raw-markup', { slot: null, seen: 'the heading prints "((span))coaching((/span))"' })
+    ),
+    fixer: [noOrder],
+    failures: [failure('emphasis-codes-left', { slot: 'block-3.2', measured: SHOWERS })],
+    served: { '/': '<p>Showers and lockers</p>' }
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  const byOutcome = Object.fromEntries(run.log.records.map((r) => [r.outcome, r]))
+  assert.deepEqual(byOutcome['measurement-wrong'].causingCheck, 'emphasis-codes-left')
+  assert.match(byOutcome['measurement-wrong'].reason, /live page/)
+  assert.deepEqual(byOutcome.dropped.sources, ['finder'], 'the finder fault is not counted as confirmed')
+})
+
+test('a site check failure is confirmed by the finder on the same block, or on the words the finder quoted', async () => {
+  const sameBlock = await finish({
+    finder: twice(finding('raw-markup', { slot: 'block-3.1', seen: 'markup printed' })),
+    fixer: [noOrder],
+    failures: [failure('emphasis-codes-left', { slot: 'block-3.2', measured: SHOWERS })]
+  })
+  assert.equal(sameBlock.log.records.length, 1)
+  assert.deepEqual(sameBlock.log.records[0].sources, ['finder', 'site-check'])
+  const quoted = await finish({
+    finder: twice(finding('raw-markup', { slot: null, seen: `the block prints "${SHOWERS}"` })),
+    fixer: [noOrder],
+    failures: [failure('emphasis-codes-left', { slot: 'block-3.2', measured: SHOWERS })]
+  })
+  assert.equal(quoted.log.records.length, 1)
+  assert.deepEqual(quoted.log.records[0].sources, ['finder', 'site-check'])
+  assert.ok(!quoted.log.records.some((r) => r.outcome === 'measurement-wrong'))
+})
+
+test('a visible site check failure the finder missed is confirmed when the live page still holds what was measured', async () => {
+  const run = await finish({
+    finder: [{ faults: [] }, { faults: [] }],
+    fixer: [noOrder],
+    failures: [failure('emphasis-codes-left', { slot: 'block-3.2', measured: SHOWERS })],
+    served: { '/': `<p>${SHOWERS}</p>` }
+  })
+  assert.equal(run.doors.fixer.asked.length, 1)
+  assert.deepEqual(run.log.records[0].sources, ['site-check'])
+})
+
+test('an empty frame or broken picture is logged only until a repair order exists; an empty demo block still goes to the fixer', async () => {
+  const frame = await finish({
+    finder: twice(finding('empty-frame', { seen: 'the gallery frame is empty' })),
+    failures: [failure('empty-frames', { slot: 'block-3.2' })]
+  })
+  assert.equal(frame.code, 0, frame.err.join('\n'))
+  assert.equal(frame.doors.fixer.asked.length, 0)
+  assert.deepEqual(frame.site.writes, [])
+  assert.equal(frame.log.records.length, 2)
+  for (const record of frame.log.records) {
+    assert.equal(record.outcome, 'logged-only')
+    assert.match(record.reason, /no repair order yet/)
+  }
+  const block = await finish({
+    finder: twice(finding('empty-block', { seen: 'a demo button with no words' })),
+    fixer: [{ kind: 'remove-demo-item', slot: 'block-2.1', item: 'Strength', with: null }],
+    failures: []
+  })
+  assert.equal(block.doors.fixer.asked.length, 1)
+  assert.equal(block.log.records[0].faultKind, 'empty-block')
+})

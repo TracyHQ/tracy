@@ -251,3 +251,51 @@ test('the look guard lets the finisher style block hold allow list rules, and no
   assert.equal(found.length, 1)
   assert.match(found[0].reason, /finisher style block/)
 })
+
+test('a style that takes content off the page another way is refused: text the colour of its ground, huge or negative spacing, any opacity', async () => {
+  const refused = [
+    [{ color: '#ffffff', 'background-color': '#ffffff' }, /color.*too close to the background/],
+    [{ color: '#777777', background: '#888888' }, /too close to the background/],
+    [{ color: 'rgb(20, 20, 20)', 'background-color': '#000' }, /too close to the background/],
+    [{ padding: '200px' }, /padding: 200px: .*over/],
+    [{ 'margin-top': '10em' }, /margin-top: 10em: .*over/],
+    [{ 'padding-left': '50vw' }, /padding-left: 50vw: /],
+    [{ 'letter-spacing': '100px' }, /letter-spacing: 100px: .*over/],
+    [{ 'letter-spacing': '-1px' }, /letter-spacing: -1px: .*negative/],
+    [{ 'word-spacing': '-0.2em' }, /word-spacing: -0.2em: .*negative/],
+    [{ opacity: '0.9' }, /opacity: 0.9: /]
+  ]
+  for (const [styles, why] of refused) {
+    const run = await finish({
+      finder: [unreadable(), finding()],
+      fixer: [styleOrder({ styles: { 'line-height': '1.4', ...styles } })],
+      checker: []
+    })
+    assert.equal(run.code, 0, run.err.join('\n'))
+    assert.deepEqual(run.site.updates, [], JSON.stringify(styles))
+    const [record] = run.log.records
+    assert.equal(record.outcome, 'dropped', JSON.stringify(styles))
+    assert.match(record.reason, /^refused by the style allow list: /)
+    assert.match(record.reason, why)
+  }
+})
+
+test('a readable colour pair, sane spacing and a gradient backing layer are still written', async () => {
+  const run = await finish({
+    finder: [unreadable(), finding()],
+    fixer: [
+      styleOrder({
+        styles: {
+          color: '#ffffff',
+          'background-color': 'rgba(0,0,0,0.6)',
+          padding: '12px 1em',
+          'letter-spacing': '0.05em',
+          margin: '0 auto'
+        }
+      })
+    ],
+    checker: [{ verdict: 'better', reason: 'reads' }]
+  })
+  assert.equal(run.log.records[0].outcome, 'kept', run.log.records[0].reason)
+  assert.equal(run.site.updates.length, 1)
+})

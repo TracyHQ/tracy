@@ -4,13 +4,12 @@
 // written with `content.update` under the finisher's own apply id. The undo does not revert that apply id, which would also
 // take back a rule a later repair added to the same module: it reads the module again and puts back only that block's rule
 // as it was before the repair (taken off when there was none).
-import { createHash } from 'node:crypto'
 import { finisherRulesIn, withFinisherRule } from '../../lib/finisher-style.js'
 import { headModuleOf } from '../brand-write-orders.js'
 import { doorCall } from '../settings-door.js'
+import { finisherApplyId } from './apply-ids.js'
 
-const applyIdOf = (what) =>
-  `finisher-style-${createHash('sha256').update(JSON.stringify(what)).digest('hex').slice(0, 40)}`
+const applyIdOf = (what) => finisherApplyId('finisher-style', what, 40)
 
 /** Set one block's rule in the module, read first; refuses when the kit names no head block or the rule does not fit. */
 async function setRule({ door, siteKey, kit, block, line, repair, step }) {

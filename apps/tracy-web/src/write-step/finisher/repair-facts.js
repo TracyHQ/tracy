@@ -31,6 +31,21 @@ function briefValues(brief) {
 }
 
 /**
+ * The brief's own words for a page's title and description, when the site copy gives none: the business name it gives (a
+ * title) and the purpose it gives that page (a description), matched by the page's kit id or its path. Each is a list, empty
+ * when the brief has no such fact: nothing is composed.
+ */
+function briefPageMetaOf(brief, names) {
+  return (page) => {
+    const entry = each(brief?.pages).find(
+      (p) => (p?.id && p.id === page.id) || (p?.path && p.path === page.path)
+    )
+    const purpose = typeof entry?.purpose === 'string' && entry.purpose.trim() ? [entry.purpose.trim()] : []
+    return { title: [...names], description: purpose }
+  }
+}
+
+/**
  * @param {{ kit: object, report: object, contentMap?: object | null, facts?: { brief?: object, copy?: object,
  *   pictures?: object } | null, sitePages: { path: string, id: string | null }[] }} input
  */
@@ -41,6 +56,7 @@ export function orderFacts({ kit, report, contentMap = null, facts = null, siteP
   const kitSlots = new Map()
   for (const block of each(kit?.blocks))
     for (const slot of each(block?.slots)) kitSlots.set(slot?.id, { ...slot, block: block.id })
+  const brief = briefValues(facts?.brief)
   return {
     kit,
     contentMap,
@@ -51,7 +67,9 @@ export function orderFacts({ kit, report, contentMap = null, facts = null, siteP
     mapSlotOf: (key) => mapSlots.get(key) ?? null,
     /** A line of the write report by its slot, whatever its status. */
     reportLineOf: (slot) => lines.get(slot) ?? null,
-    brief: briefValues(facts?.brief),
+    brief,
+    /** The brief's words for a page's title and description, for when the site copy gives none. */
+    briefPageMeta: briefPageMetaOf(facts?.brief, brief.get('name') ?? []),
     copyAlts: new Map(view.alts.map((a) => [a.frame, a.text])),
     copySeo: new Map(view.seo.map((s) => [s.page, { title: s.title, description: s.description }])),
     seen: seenByFrame(facts?.pictures)
@@ -61,7 +79,7 @@ export function orderFacts({ kit, report, contentMap = null, facts = null, siteP
 /**
  * The sources the fixer is shown with one fault, so the order it proposes can name what code will accept: the brief's facts
  * by field, the paths of the pages the site keeps, step 8's description and the site copy's alt of each picture, and the site
- * copy's title and description of the fault's page.
+ * copy's title and description of the fault's page (else the brief's words for them).
  * @param {ReturnType<typeof orderFacts>} facts
  * @param {{ page: string }} fault
  */
@@ -72,6 +90,6 @@ export function fixerSources(facts, fault) {
     pages: facts.sitePages.map((p) => p.path),
     pictures: Object.fromEntries(facts.seen),
     alts: Object.fromEntries(facts.copyAlts),
-    pageMeta: page?.id ? (facts.copySeo.get(page.id) ?? null) : null
+    pageMeta: page?.id ? (facts.copySeo.get(page.id) ?? { fromBrief: facts.briefPageMeta(page) }) : null
   }
 }

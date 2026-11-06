@@ -6,113 +6,23 @@
 //
 // Order: refuse unless every door can do its role; shoot every page the written site keeps (the write report's kept pages
 // at their addresses now, the list the site check opens: lib/site-kept-paths.js), never a kit page the site dropped; ask the finder per page; for each fault
-// ask the fixer for one order, let code check it (repair-orders.js) and write it with its own apply id; re-shoot the page
-// and ask the checker on the before and after crops of the block (repair-crops.js); keep, or revert by apply id; run the
+// ask the fixer for one order, let code check it (repair-orders.js), and write, judge and keep or undo it the way its order
+// kind says (repair-steps.js: the checker on crops of the block, or the live page for a change no screenshot shows); run the
 // site check a final time on the report with the kept repairs in it; write the repair log, which says whether the final
 // check gained a blocking failure the first did not have. Rounds, limits and per-page parallel repairs come with #424.
 import { shootPages } from '../../lib/page-shots.js'
 import { keptPageList } from '../../lib/site-kept-paths.js'
 import { kitSlotIds } from '../kit-slot-ids.js'
 import { doorsRefusal } from './finisher-doors.js'
-import { askChecker, askFinder, askFixer, verdictOf } from './finisher-roles.js'
-import { heldFaults, loggedOnlyReason } from './fault-kinds.js'
+import { askFixer } from './finisher-roles.js'
+import { findFaults, slotsByPage } from './finder-stage.js'
 import { mergedFaults } from './fault-sources.js'
 import { causeOf, logRecord, REPAIR_LOG_FILE, repairLog } from './repair-log.js'
-import { readSite, revertRepair, writeRepair } from './repair-write.js'
-import { validOrder } from './repair-orders.js'
-import { cropsOf } from './repair-crops.js'
-import { takeOffStyleRule, writeStyleRule } from './style-write.js'
+import { readSite } from './repair-write.js'
+import { stepsOf, validOrder } from './repair-orders.js'
 import { fixerSources, orderFacts } from './repair-facts.js'
 import { demoBlockShots } from './demo-block-shots.js'
-import { isUnseenRepair, liveVerdict } from './live-confirm.js'
-import { keepShotFiles, pageSlug, replyKeeper } from './model-replies.js'
-
-/**
- * The kit slots each site page shows: the slots of the blocks its kit page lists at any width, and its h1. A site page is
- * its kit page by the id the write report kept, else by the same path; a page that is no kit page shows no kit slot.
- */
-function slotsByPage(kit, sitePages) {
-  const blocks = new Map((kit?.blocks ?? []).map((b) => [b?.id, b]))
-  const kitPages = kit?.pages ?? []
-  const byPage = new Map()
-  for (const { path, id } of sitePages) {
-    const page = kitPages.find((p) => (id ? p?.id === id : p?.path === path))
-    if (!page) continue
-    const ids = new Set(Object.values(page?.blocks ?? {}).flat())
-    const shown = { blocks: [...ids].map((b) => blocks.get(b)).filter(Boolean), pages: [{ h1: page?.h1 }] }
-    byPage.set(path, kitSlotIds(shown))
-  }
-  return (page) => byPage.get(page) ?? new Set()
-}
-
-/** Stage 1: the finder on every page that was shot. A page it could not look at is named, never counted as clean. */
-async function findFaults(run, firstShots) {
-  const pages = [...new Set(firstShots.shots.map((s) => s.page))]
-  const found = await Promise.all(
-    pages.map(async (page) => {
-      const shown = firstShots.shots.filter((s) => s.page === page)
-      // The template demo's shot of each block the page shows, for the lost-design kind (demo-block-shots.js).
-      const demo = await run.demoShots(page)
-      const demoTiles = demo.map((d) => ({
-        page: `demo ${d.block}`,
-        viewport: d.viewport,
-        index: 0,
-        image: d.image
-      }))
-      const demoFile = await keepShotFiles(run.saveFile, demoTiles)
-      const call = run.spend(await askFinder(run.doors.finder, page, shown, demo))
-      await run.replies.keep({
-        name: `finder-${pageSlug(page)}`,
-        role: 'finder',
-        page,
-        door: run.doors.finder,
-        sent: call.sent,
-        images: [...shown.map(run.shotFile), ...demoTiles.map(demoFile)],
-        call
-      })
-      return call.problem
-        ? { faults: [], loggedOnly: [], problem: `the finder: ${call.problem}`, page }
-        : heldFaults(call.answer, shown)
-    })
-  )
-  const records = found.flatMap((f) => [
-    ...(f.problem ? [logRecord({ page: f.page, kind: null }, { outcome: 'failed', reason: f.problem })] : []),
-    ...f.loggedOnly.map((fault) => logRecord(fault, { reason: loggedOnlyReason(fault.kind) }))
-  ])
-  return { faults: found.flatMap((f) => f.faults), records }
-}
-
-/** The checker's verdict on the before and after crops of the repaired block, the page shot again for it. */
-async function judgedOnCrops(run, { fault, valid, site, firstShots, repairNumber }) {
-  const { doors, lineOf } = run
-  const afterShots = await shootPages({ capture: run.capture, pages: [fault.page] })
-  // A style leaves the words as they are, so the block is found by the words its fault's slot holds.
-  const words = site.current.get(lineOf(fault.slot)?.key) ?? ''
-  const crops = await cropsOf({
-    fault,
-    before: firstShots,
-    after: afterShots,
-    wordsBefore: valid.style ? words : valid.current,
-    wordsAfter: valid.style ? words : valid.after,
-    name: `r${repairNumber}`,
-    saveFile: run.saveFile
-  })
-  const judged = run.spend(await askChecker(doors.checker, fault, crops.beforeShots, crops.afterShots))
-  await run.replies.keep({
-    name: `checker-r${repairNumber}`,
-    role: 'checker',
-    page: fault.page,
-    repair: repairNumber,
-    door: doors.checker,
-    sent: judged.sent,
-    images: [...crops.files.before, ...crops.files.after],
-    call: judged
-  })
-  const { verdict, reason } = judged.problem
-    ? { verdict: 'not better', reason: `the checker: ${judged.problem}` }
-    : verdictOf(judged.answer)
-  return { verdict, reason, crops, checkedBy: 'checker' }
-}
+import { keepShotFiles, replyKeeper } from './model-replies.js'
 
 /** Stage 2: one fault through the fixer, code's check, the write, the checker, and the keep or the undo. */
 async function repairFault(run, fault, repairNumber, firstShots) {
@@ -157,23 +67,10 @@ async function repairFault(run, fault, repairNumber, firstShots) {
   const onSlot = { ...fault, slot: fault.slot ?? (valid.ok ? valid.slot : null) }
   const known = { ...(fault.slot ? cause : causeOf(run.firstCheck, onSlot)), order }
   if (!valid.ok) return { record: logRecord(onSlot, { ...known, outcome: 'dropped', reason: valid.reason }) }
-  // A style order writes one rule keyed by its block in the head block (style-write.js); every other order, slot words.
-  const wrote = valid.style
-    ? await writeStyleRule({
-        door,
-        siteKey,
-        kit: run.kit,
-        block: valid.block,
-        line: valid.line,
-        repair: repairNumber
-      })
-    : await (valid.write ?? writeRepair)({
-        door,
-        siteKey,
-        revision: site.revision,
-        changes: valid.changes,
-        repair: repairNumber
-      })
+  // Each order kind is written, judged and undone its own way (repair-steps.js), named by its row of the order table.
+  const steps = stepsOf(order.kind)
+  const repair = { run, fault, order, valid, site, firstShots, repairNumber }
+  const wrote = await steps.write(repair)
   if (!wrote.ok)
     return {
       record: logRecord(onSlot, {
@@ -182,36 +79,20 @@ async function repairFault(run, fault, repairNumber, firstShots) {
         reason: `the site refused it: ${wrote.reason}`
       })
     }
-  // A repair no screenshot shows is proven on the live page (live-confirm.js); every other one by the checker on crops.
-  const unseen = !valid.style && isUnseenRepair(order, valid)
-  const judged = unseen
-    ? { ...(await liveVerdict(run.pageHtml, fault, { order, valid })), checkedBy: 'live-page' }
-    : await judgedOnCrops(run, { fault, valid, site, firstShots, repairNumber })
-  const { verdict, reason, crops } = judged
+  const { verdict, reason, crops, checkedBy, proven } = await steps.judge(repair)
   const shown = {
     ...known,
-    ...(valid.style ? { block: valid.block } : {}),
+    ...steps.shown(repair),
     applyId: wrote.applyId,
-    checkedBy: judged.checkedBy,
+    checkedBy,
     ...(crops ? { crops: crops.files } : {})
   }
-  if (verdict === 'better' && (unseen || crops?.afterShots.length))
-    return {
-      record: logRecord(onSlot, { ...shown, outcome: 'kept', reason }),
-      // A kept style changes no words of the report.
-      ...(valid.style ? {} : { kept: { slot: valid.slot, ordered: valid.after, applyId: wrote.applyId } })
-    }
-  const why = unseen || crops?.afterShots.length ? reason : 'the repaired page could not be shot again'
-  const undone = valid.style
-    ? await takeOffStyleRule({
-        door,
-        siteKey,
-        kit: run.kit,
-        block: valid.block,
-        before: wrote.before,
-        repair: repairNumber
-      })
-    : await revertRepair({ door, siteKey, applyId: wrote.applyId, also: wrote.also })
+  if (verdict === 'better' && proven) {
+    const kept = steps.kept({ ...repair, wrote })
+    return { record: logRecord(onSlot, { ...shown, outcome: 'kept', reason }), ...(kept ? { kept } : {}) }
+  }
+  const why = proven ? reason : 'the repaired page could not be shot again'
+  const undone = await steps.undo({ ...repair, wrote })
   return {
     record: logRecord(onSlot, {
       ...shown,

@@ -61,8 +61,20 @@ function sameContact(value) {
   }
 }
 
-/** Whether the page serves a tel: or mailto: link to the new value, or, when the item was removed, no link to the old one. */
+/** A tel: or mailto: link that reaches no one: no digits to dial, or no address to mail. */
+const emptyContact = (href) => {
+  const scheme = schemeOf(href)
+  if (!scheme) return false
+  const rest = href.slice(scheme.length + 1)
+  return scheme === 'tel' ? digits(rest) === '' : rest.trim() === ''
+}
+
+/**
+ * Whether the page serves a tel: or mailto: link to the new value, or, when the item was removed, no link to the old one. A
+ * page that serves an empty tel: or mailto: link is worse, never a removed demo link.
+ */
 function servesContact(hrefs, after, current) {
+  if (hrefs.some(emptyContact)) return false
   const rest = CONTACT.test(after) ? after.slice(schemeOf(after).length + 1) : ''
   const named = schemeOf(after) === 'tel' ? digits(rest) : rest.trim()
   if (named) return hrefs.some(sameContact(after))

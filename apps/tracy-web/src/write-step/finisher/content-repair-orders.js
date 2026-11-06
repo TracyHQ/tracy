@@ -14,40 +14,12 @@ import {
   visibleText
 } from '../../lib/site-copy/emphasis-markup.js'
 import { EMPHASIS_MAX_SHARE, spanMarkOf, withEmphasis } from '../../lib/site-copy/inline-emphasis.js'
-import { international, phoneOf } from '../phone-links.js'
+import { no, slotOf, slotRepair, squash } from './content-order-slots.js'
 import { emphasisHtmlWrite, readRowValue, rowFieldWrite, rowReadOf } from './content-repair-writes.js'
+import { validateDemoItem } from './demo-item-order.js'
+import { WORDS_STEPS } from './repair-steps.js'
 
-const squash = (s) =>
-  String(s ?? '')
-    .replace(/\s+/g, ' ')
-    .trim()
 const ADDRESS = /^(https?:|\/|#|index\.php)/i
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const PHONE = /^[+(]?[\d\s().-]{6,}$/
-const timesIn = (text, needle) => (needle ? text.split(needle).length - 1 : 0)
-const no = (reason) => ({ ok: false, reason })
-
-/** The slot an order names, held to the kit, to what this run wrote and to the fault: `{ slot, key, current }` or a refusal. */
-function slotOf(order, { fault, kitSlots, pageSlots, keyOf, currentOf }) {
-  const slot = order.slot
-  if (typeof slot !== 'string' || !kitSlots.has(slot))
-    return no(`slot ${JSON.stringify(slot ?? null)} is not a slot the kit has`)
-  const key = keyOf(slot)
-  const current = key ? currentOf(key) : undefined
-  if (!key || typeof current !== 'string')
-    return no(`slot ${slot} was not written by this run, so the site has no value to repair there`)
-  if (fault.slot && slot !== fault.slot)
-    return no(`the order targets ${slot}, the finder named ${fault.slot}`)
-  if (!fault.slot && !pageSlots(fault.page).has(slot))
-    return no(`${slot} is not on ${fault.page}, where the fault was seen`)
-  return { ok: true, slot, key, current }
-}
-
-/** A contract repair of one slot, unless it writes what the slot holds already. */
-const slotRepair = (at, after) =>
-  after === at.current
-    ? no(`a no-op: the new value is what ${at.slot} holds now, so nothing is written`)
-    : { ok: true, slot: at.slot, key: at.key, current: at.current, after, changes: { [at.key]: after } }
 
 /** Fix one link: a slot that holds an address gets the address of a page the written site keeps. */
 function validateLink(order, context) {
@@ -70,67 +42,6 @@ function validateLink(order, context) {
   return slotRepair(at, `index.php?Itemid=${item[1]}`)
 }
 
-const itemField = (item) => (EMAIL.test(item) ? 'email' : PHONE.test(item) ? 'phone' : 'name')
-const isBriefs = (item, field, values) =>
-  field === 'phone'
-    ? Boolean(
-        phoneOf(
-          item,
-          values.map((v) => ({ digits: international(v) }))
-        )
-      )
-    : values.some((v) => squash(v).toLowerCase() === squash(item).toLowerCase())
-
-/**
- * Fix or remove one demo item: a phone, an e-mail or a name of the demo inside one slot is replaced by the brief's fact of the
- * same field, or, when the brief has none, taken out alone. A slot whose block would be left with no words is refused.
- */
-function validateDemoItem(order, context) {
-  const at = slotOf(order, context)
-  if (!at.ok) return at
-  const item = typeof order.item === 'string' ? order.item.trim() : ''
-  if (!item) return no('the order names no demo item')
-  const field = itemField(item)
-  const values = context.brief.get(field) ?? []
-  if (isBriefs(item, field, values))
-    return no(`${JSON.stringify(item)} is the brief's own ${field}, not the demo's`)
-  if (timesIn(at.current, item) !== 1)
-    return no(`${at.slot} does not hold ${JSON.stringify(item)} exactly once`)
-  if (field === 'name' && !String(context.mapSlotOf(at.key)?.sample ?? '').includes(item))
-    return no(
-      `${JSON.stringify(item)} is not in the demo's words for ${at.slot}, so it is not shown to be the demo's`
-    )
-  if (order.with !== undefined && order.with !== null) {
-    const fact = values.find((v) => squash(v) === squash(order.with))
-    if (!fact) return no(`${JSON.stringify(order.with)} is no ${field} the brief gives`)
-    return slotRepair(
-      at,
-      at.current.replace(item, () => fact)
-    )
-  }
-  if (values.length)
-    return no(
-      `the brief gives a ${field} to put in its place (${values.join(', ')}): the item is replaced, never removed`
-    )
-  const after = at.current
-    .replace(item, '')
-    .replace(/[ \t]{2,}/g, ' ')
-    .trim()
-  if (!visibleText(after)) {
-    const block = context.kit?.blocks?.find((b) => b?.id === context.kitSlotOf(at.slot)?.block)
-    const others = (block?.slots ?? []).filter((s) => s?.id !== at.slot)
-    const kept = others.some((s) => {
-      const key = context.keyOf(s.id)
-      return key && visibleText(context.currentOf(key) ?? '')
-    })
-    if (!kept)
-      return no(
-        `removing it would leave block ${block?.id ?? '(unknown)'} with no words: one item, never a whole block`
-      )
-  }
-  return slotRepair(at, after)
-}
-
 /** Fix one picture's alt: the words step 8 saw in the picture of that frame, or the site copy's alt for it. */
 function validateAlt(order, context) {
   const at = slotOf(order, context)
@@ -147,7 +58,11 @@ function validateAlt(order, context) {
   )
 }
 
-/** Fix one page's title or description: the site copy's words for that page, where the write step put them. */
+/**
+ * Fix one page's title or description: the site copy's words for that page, where the write step put them. When the site copy
+ * gives that page none, the brief's own facts stand in (repair-facts.js `briefPageMeta`): its business name for a title, its
+ * purpose of the page for a description, only when the brief has them, never composed.
+ */
 async function validatePageMeta(order, context) {
   const { fault } = context
   if (!['title', 'description'].includes(order.field))
@@ -158,14 +73,24 @@ async function validatePageMeta(order, context) {
   if (!page?.id)
     return no(`${order.page} is no kit page of this site, so the site copy gives it no ${order.field}`)
   const slot = `${page.id}:${order.field}`
-  const wanted = context.copySeo.get(page.id)?.[order.field]
-  if (typeof order.text !== 'string' || !wanted || squash(wanted) !== squash(order.text))
-    return no(`the ${order.field} is not the site copy's ${order.field} for ${page.id}`)
+  const fromCopy = context.copySeo.get(page.id)?.[order.field]
+  const allowed = fromCopy ? [fromCopy] : context.briefPageMeta(page)[order.field]
+  if (!allowed.length)
+    return no(
+      `neither the site copy nor the brief gives ${page.id} a ${order.field}: the brief gives no ${order.field} for it`
+    )
+  const wanted = allowed.find((w) => typeof order.text === 'string' && squash(w) === squash(order.text))
+  if (!wanted)
+    return no(
+      fromCopy
+        ? `the ${order.field} is not the site copy's ${order.field} for ${page.id}`
+        : `the ${order.field} is neither the site copy's ${order.field} for ${page.id} (it gives none) nor the brief's (${allowed.join(', ')})`
+    )
   const read = rowReadOf(context.reportLineOf(slot)?.readFrom)
   if (!read) return no(`the write step left ${slot} no place on the site, so there is nowhere to write it`)
   const held = await readRowValue(context.door, context.siteKey, read)
   if (held.reason) return no(held.reason)
-  if (held.current === wanted) return no(`a no-op: ${slot} holds the site copy's words already`)
+  if (held.current === wanted) return no(`a no-op: ${slot} holds those words already`)
   return {
     ok: true,
     slot,
@@ -209,7 +134,8 @@ function validateEmphasis(order, context) {
   }
 }
 
-const kind = (label, shape, validate) => Object.freeze({ label, shape, validate })
+/** A content order kind: it validates itself, and is written, judged and undone as words (repair-steps.js). */
+const kind = (label, shape, validate) => Object.freeze({ label, shape, validate, steps: WORDS_STEPS })
 
 /** The rows, as ORDER_KINDS holds them. */
 export const CONTENT_ORDER_KINDS = Object.freeze({
@@ -229,8 +155,8 @@ export const CONTENT_ORDER_KINDS = Object.freeze({
     validateAlt
   ),
   'fix-title-meta': kind(
-    "fix one page's title or meta description from the site copy",
-    '{ "kind": "fix-title-meta", "page": "<path>", "field": "title" | "description", "text": "<the site copy\'s words>" }',
+    "fix one page's title or meta description from the site copy, else from the brief's business name (title) or purpose of the page (description)",
+    '{ "kind": "fix-title-meta", "page": "<path>", "field": "title" | "description", "text": "<the site copy\'s words, else the brief\'s>" }',
     validatePageMeta
   ),
   'mark-emphasis': kind(
