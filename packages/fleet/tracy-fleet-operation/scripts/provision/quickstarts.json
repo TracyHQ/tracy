@@ -1238,34 +1238,35 @@
   },
   "quickstart/ja-kinetic/j6": {
     "platform": "joomla",
-    "version": "1.0.9",
+    "version": "1.0.11",
     "webroot": {
-      "file": "ja-kinetic-j6-webroot-1.0.9.tar.gz",
-      "bytes": 69441897,
-      "sha256": "7bc7b8d33ac72777ba90399f73b474da6bbad68a9bd1c5e7f7065a00c8327f6a",
-      "githubAssetId": 683835106,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-webroot-1.0.9.tar.gz"
+      "file": "ja-kinetic-j6-webroot-1.0.11.tar.gz",
+      "bytes": 68643025,
+      "sha256": "31bc965267f6b62c3731784315fef6d4154bf1ece5777b6b7f653a27ac725295",
+      "githubAssetId": 716110574,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-webroot-1.0.11.tar.gz"
     },
     "database": {
-      "file": "ja-kinetic-j6-database-1.0.9.sql.gz",
-      "bytes": 1020266,
-      "sha256": "b350db659eda371a17066518ced10d26649ffec15e23c0f8ff876643b6305128",
-      "githubAssetId": 683829471,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-database-1.0.9.sql.gz"
+      "file": "ja-kinetic-j6-database-1.0.11.sql.gz",
+      "bytes": 1005608,
+      "sha256": "6c12e90a382c98b056777391786e193802654e9eb73ae8124991fc94367347bf",
+      "githubAssetId": 716110573,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-database-1.0.11.sql.gz"
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.43.zip",
-      "version": "0.24.43",
-      "bytes": 60457318,
-      "sha256": "bb21fba2fbd6b7914c5199e22579528106f01df6c97ecf753d1172b0b5cee341",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.43/pkg_claudecowork-0.24.43.zip",
-      "contractVersions": ["1.0.0", "1.0.2", "1.0.3", "1.0.4", "1.0.5", "1.0.8"],
+      "file": "pkg_claudecowork-0.24.86.zip",
+      "version": "0.24.86",
+      "bytes": 584414,
+      "sha256": "957377d7cef726dd543d7ee49e9f8d5f3f7ca9cbd2d3abc348d0f35f239b7869",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.86/pkg_claudecowork-0.24.86.zip",
       "contractFiles": {
-        "content-map.json": "17d45a7d2108280eb68f8478b5023b75b1249d520900e0578fcf53427ef87435",
-        "demo-trim-map.json": "f2b53cb30bae6913c64894f2a48eb3a9268f2fb1872c863da2bf779aaf967033",
-        "manifest.json": "dec0c251ba7e4ce99a3053d42fa127bb7f03c41f8a7ac4b0ead49f3aca692724",
-        "presentation-lock.json": "00f09a8c2ef3b330da240579f5655c41abc7603afa1adef8fde27d04d4b07b3e"
+        "content-map.json": "e67f3a6da437206d89d0179be01a6d1f3e7c72a5dc6879b0228bd859ada3e339",
+        "demo-trim-map.json": "8801fe0fcec64f2e74f53f443ac6c5668e9ccbd86ac38c564f74de3a3e465c3a",
+        "manifest.json": "19e2087e4ecc8799968514cbb8aefa6cc35bc9f0195f774fd1e20892c2b28498",
+        "presentation-lock.json": "c74daecbb0224222908eac4bd659c902211cbcda56b954597b4982a8b4bab47a",
+        "showcase-nav-map.json": "ed783c8c719053fc9ec29a98d5be6b0e1b28aa496a89a95a9f48b9fabe47f8b1"
       },
+      "contractVersions": ["1.0.0", "1.0.2", "1.0.3", "1.0.4", "1.0.5", "1.0.8", "1.0.9"],
       "alsoCarries": {
         "ja-kinetic/j6/1.0.0": {
           "content-map.json": "1b98f922255badd543cc435ba9d4c8e8a04855d34e1a1ddc8ba9445a1529dc47",
@@ -1299,10 +1300,17 @@
           "demo-trim-map.json": "7b31d59a164539981c2bc4658d28b3d5180dfda4c81a0c7182292495fa2e3606",
           "manifest.json": "e6709a7c56bae4dc335d2e085bbbba507f71053fec60726d7266ee877b2f859f",
           "presentation-lock.json": "20a809456e8d85d24b4846be41a1a90e676288d706dab5488bd09454b5d19038"
+        },
+        "ja-kinetic/j6/1.0.9": {
+          "content-map.json": "17d45a7d2108280eb68f8478b5023b75b1249d520900e0578fcf53427ef87435",
+          "demo-trim-map.json": "f2b53cb30bae6913c64894f2a48eb3a9268f2fb1872c863da2bf779aaf967033",
+          "manifest.json": "dec0c251ba7e4ce99a3053d42fa127bb7f03c41f8a7ac4b0ead49f3aca692724",
+          "presentation-lock.json": "00f09a8c2ef3b330da240579f5655c41abc7603afa1adef8fde27d04d4b07b3e",
+          "showcase-nav-map.json": "30a3a64b526b2b350b597b069394c7fb2ce8e1fba13833c007198e0363890c3d"
         }
       }
     },
-    "contract": "ja-kinetic/j6/1.0.9"
+    "contract": "ja-kinetic/j6/1.0.11"
   },
   "quickstart/ja-spa/j6": {
     "platform": "joomla",
@@ -1770,5 +1778,137 @@
       }
     },
     "contract": "ja-restaurant/wp7/1.0.1"
+  },
+  "quickstart/ja-impact/j6": {
+    "platform": "joomla",
+    "version": "1.0.6",
+    "webroot": {
+      "file": "ja-impact-j6-webroot-1.0.6.tar.gz",
+      "bytes": 56046572,
+      "sha256": "9cb9ac3cb54e2717e866131aa24d1f34a8a0ebc9c845736feda00602efcaf679",
+      "githubAssetId": 716111441,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-impact%2Fj6/ja-impact-j6-webroot-1.0.6.tar.gz"
+    },
+    "database": {
+      "file": "ja-impact-j6-database-1.0.6.sql.gz",
+      "bytes": 106044,
+      "sha256": "a8e0ae5f7bd6c76c554426afcb7f94822685ac5c1a02dcfcb0f50eb4cee382a4",
+      "githubAssetId": 716111439,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-impact%2Fj6/ja-impact-j6-database-1.0.6.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.86.zip",
+      "version": "0.24.86",
+      "bytes": 584414,
+      "sha256": "957377d7cef726dd543d7ee49e9f8d5f3f7ca9cbd2d3abc348d0f35f239b7869",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.86/pkg_claudecowork-0.24.86.zip",
+      "contractFiles": {
+        "content-map.json": "9ecb588c4c2fa3fa13485da8455c59848fae746785758c474ef3105b5f9e2a45",
+        "manifest.json": "445d4aed4d77a089acf65e7bfc6674e2c01327ff6c84ad7e1d24a01d24daad4d",
+        "presentation-lock.json": "3976d639a44917a49d808cf60bc1d23ab299d416ba00a8b5c2efb269fa0e1861",
+        "showcase-nav-map.json": "7fcfe76f24afdd4a83007cc2d7c7287a7bcde9c9a59931db7c529630d08f5e7f"
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-impact/j6/1.0.6"
+  },
+  "quickstart/ja-symphony/j6": {
+    "platform": "joomla",
+    "version": "1.0.6",
+    "webroot": {
+      "file": "ja-symphony-j6-webroot-1.0.6.tar.gz",
+      "bytes": 46595564,
+      "sha256": "e47e9a09945efed47050d35ae9d1119dbf75475fbaa76c40dc6396a000c326bb",
+      "githubAssetId": 716112181,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-symphony%2Fj6/ja-symphony-j6-webroot-1.0.6.tar.gz"
+    },
+    "database": {
+      "file": "ja-symphony-j6-database-1.0.6.sql.gz",
+      "bytes": 82518,
+      "sha256": "977a10b657a06b00e5ae2dfacf9339b2cf874981cfc10b0c6bf4bfaedfcd717d",
+      "githubAssetId": 716112180,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-symphony%2Fj6/ja-symphony-j6-database-1.0.6.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.86.zip",
+      "version": "0.24.86",
+      "bytes": 584414,
+      "sha256": "957377d7cef726dd543d7ee49e9f8d5f3f7ca9cbd2d3abc348d0f35f239b7869",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.86/pkg_claudecowork-0.24.86.zip",
+      "contractFiles": {
+        "content-map.json": "beca4f33c376985022e065d25786493a7e54ecd2254268baf1ad6a0ed5f14c01",
+        "manifest.json": "001e0c6c7e2e08a1c04675dc29f7c05a4be2009c7af70a9830bc1ddd88c87f79",
+        "presentation-lock.json": "4aeeb15b858bf3e6a47ddf8cec74fc262749f14c8404809805e6fdc3ae7b637b",
+        "showcase-nav-map.json": "09ca6ea8cef447ed1d146f3e2659bf8eaaf899d86e55e7e8ff7c7fa3b6a9ba97"
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-symphony/j6/1.0.6"
+  },
+  "quickstart/ja-nova/j6": {
+    "platform": "joomla",
+    "version": "1.0.10",
+    "webroot": {
+      "file": "ja-nova-j6-webroot-1.0.10.tar.gz",
+      "bytes": 56102356,
+      "sha256": "6321c9482d9c8e465dadc641d256bcb36744e64c2a612028b1ad4b941e2ae8e5",
+      "githubAssetId": 716112642,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-nova%2Fj6/ja-nova-j6-webroot-1.0.10.tar.gz"
+    },
+    "database": {
+      "file": "ja-nova-j6-database-1.0.10.sql.gz",
+      "bytes": 87803,
+      "sha256": "2e2e3baba5c448304f5479c4e48fb2565cc848890ed7de262780730680b8b890",
+      "githubAssetId": 716112637,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-nova%2Fj6/ja-nova-j6-database-1.0.10.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.86.zip",
+      "version": "0.24.86",
+      "bytes": 584414,
+      "sha256": "957377d7cef726dd543d7ee49e9f8d5f3f7ca9cbd2d3abc348d0f35f239b7869",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.86/pkg_claudecowork-0.24.86.zip",
+      "contractFiles": {
+        "content-map.json": "778a7fe3349519bcfb7b6760f52492db2ef3ed482a08a49cdde4c2ab25493bd3",
+        "manifest.json": "12f738b96c179b2466e0e112191bda6e41e02a1d13681afc4f47af95e06b8c90",
+        "presentation-lock.json": "622f230a7d3db5f229a49c513cf69e529d3dc93498aabb0fe00298996e5eebaa",
+        "showcase-nav-map.json": "88fabdf51cea84552e2f128f26742c5160481fd72302c5f47dea74916b08ca1b"
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-nova/j6/1.0.10"
+  },
+  "quickstart/ja-vega/j6": {
+    "platform": "joomla",
+    "version": "1.0.9",
+    "webroot": {
+      "file": "ja-vega-j6-webroot-1.0.9.tar.gz",
+      "bytes": 62058320,
+      "sha256": "76fd5eeb72981cf41e20417acccf11023f673b178bafba2029d857cb76e9a36a",
+      "githubAssetId": 716113259,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-vega%2Fj6/ja-vega-j6-webroot-1.0.9.tar.gz"
+    },
+    "database": {
+      "file": "ja-vega-j6-database-1.0.9.sql.gz",
+      "bytes": 119089,
+      "sha256": "1b85036d539d2a9462cfab0796fc6adbab56d631d08e95bbef197ea0c1eb7b14",
+      "githubAssetId": 716113254,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-vega%2Fj6/ja-vega-j6-database-1.0.9.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.86.zip",
+      "version": "0.24.86",
+      "bytes": 584414,
+      "sha256": "957377d7cef726dd543d7ee49e9f8d5f3f7ca9cbd2d3abc348d0f35f239b7869",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.86/pkg_claudecowork-0.24.86.zip",
+      "contractFiles": {
+        "content-map.json": "852d4ae69ea6a3c9d401baf84f67cb3fa668b3d38b5cfff59cfb37ff038bdd30",
+        "manifest.json": "9fd543650ac3a1059c8743c5a960aa15e110e8febeb3fd3529df1d7002c26a72",
+        "presentation-lock.json": "44252229d0808f018e4a5fd97fad171ca772ee0a9c742f171c4257b619c92744",
+        "showcase-nav-map.json": "c6ceeb396b61bc1e29be7a092cbaf788b7ca55df33e2c6176e8d59abb0560902"
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-vega/j6/1.0.9"
   }
 }
