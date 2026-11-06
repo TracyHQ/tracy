@@ -15,6 +15,7 @@
 import { KIT_TOOL_MIN, kitToolVersion } from '../../site-check/kit-version.js'
 import { versionAtLeast } from '../plugin-version.js'
 import { kitOfRelease } from '../template-kit/road-step.js'
+import { fixOf } from './fixes.js'
 
 export const KIT_TOOL_STEP = 'kit-tool-version'
 
@@ -33,7 +34,7 @@ export const KIT_TOOL_CHECK = Object.freeze({
       params: {
         built,
         required,
-        fix: `Rebuild the template kit with the template kit tool ${required} or later (settle it again) and commit template-kit.json beside the contract.`
+        fix: fixOf('kit-tool-outdated', { required }).text
       }
     }
   }

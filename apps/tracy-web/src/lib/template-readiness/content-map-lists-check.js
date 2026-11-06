@@ -21,6 +21,7 @@ import path from 'node:path'
 
 import { contractFor } from '../contracts.js'
 import { kitOfRelease } from '../template-kit/road-step.js'
+import { fixOf } from './fixes.js'
 
 const KEYS = Object.freeze(['itemLists', 'itemPages', 'menuBlocks'])
 
@@ -69,7 +70,7 @@ export const CONTENT_MAP_LISTS_CHECK = Object.freeze({
       code: 'content-map-missing-lists',
       params: {
         missing,
-        fix: `Capture the content map again with the current quickstart tools so it holds ${missing.join(', ')}, then seal it in a new contract version.`
+        fix: fixOf('content-map-missing-lists', { missing }).text
       }
     }
   }

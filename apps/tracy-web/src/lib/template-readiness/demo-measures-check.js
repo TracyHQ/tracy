@@ -24,11 +24,11 @@
 import { shownOnInspiration } from '../quickstart-releases.js'
 import { DEMO_MEASURE_NAMES } from '../../site-check/demo-measures.js'
 import { demoMeasuresOfRelease } from './demo-measures-file.js'
+import { DEMO_MEASURES_COMMAND, fixOf } from './fixes.js'
+
+export { DEMO_MEASURES_COMMAND }
 
 export const DEMO_MEASURES_STEP = 'demo-measures'
-
-export const DEMO_MEASURES_COMMAND =
-  'node apps/tracy-web/scripts/demo-measures.mjs --contract <contract folder> (--base <demo address> | --site <site key>) [--pages-file <json>]'
 
 /** The fault family code of each measured group (`DEMO_MEASURE_NAMES`, whose order decides). */
 const FAMILY_OF = Object.freeze({
@@ -52,9 +52,6 @@ const MEASURED = new Set(['green', 'red', 'not-applicable'])
 
 /** How many faults the piece names itself; the file lists them all. */
 const SHOWN_FAULTS = 8
-
-const FIX =
-  'The untouched demo shows a layout fault, so every site built from it starts with it. Fix it in the template (or the demo content the quickstart ships), cut a new template release and quickstart release, then measure that version again with the demo measurements command.'
 
 /** @param {any} release @param {any} world */
 export function judgeDemoMeasures(release, world) {
@@ -112,7 +109,13 @@ export function judgeDemoMeasures(release, world) {
     return {
       state: failing,
       code: families[0],
-      params: { contract, families, count: faults.length, faults: faults.slice(0, SHOWN_FAULTS), fix: FIX }
+      params: {
+        contract,
+        families,
+        count: faults.length,
+        faults: faults.slice(0, SHOWN_FAULTS),
+        fix: fixOf(families[0]).text
+      }
     }
   }
   const warnings = groups.reduce((n, g) => n + g.failures.filter((f) => f.level === 'warn').length, 0)

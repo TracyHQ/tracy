@@ -30,6 +30,7 @@ import { parseArgs } from 'node:util'
 
 import { defaultContracts } from '../src/lib/contracts.js'
 import { latestPin, releaseOfPin } from '../src/lib/template-readiness/pinned-release.js'
+import { fixOf } from '../src/lib/template-readiness/fixes.js'
 import { passed, readinessVerdict } from '../src/lib/template-readiness/verdict.js'
 
 /** The facts a server alone knows, never judged by this command. */
@@ -45,7 +46,14 @@ export function verdictText(verdict, { pin, source }) {
   const head = `${verdict.tag} ${verdict.version ?? '(no version)'} (${from}; pinned ${pin.version}, Cowork pin ${pin.cowork ?? 'none'})`
   const lines = verdict.pieces.map((p) => {
     const by = p.blockedBy ? `, waiting for ${p.blockedBy}` : ''
-    return `  ${p.state.padEnd(8)} ${p.piece.padEnd(20)} ${p.code} (step ${p.step}${by})`
+    const head = `  ${p.state.padEnd(8)} ${p.piece.padEnd(20)} ${p.code} (step ${p.step}${by})`
+    // The fix of a piece that is not green, from the one registry (`fixes.js`).
+    const fix = p.state === 'done' ? null : p.fix
+    if (!fix) return head
+    const more = [fix.command ? `command: ${fix.command}` : null, fix.skill ? `skill: ${fix.skill}` : null]
+    return [head, `      fix: ${fix.text}`, ...more.filter(Boolean).map((l) => `${' '.repeat(11)}${l}`)].join(
+      '\n'
+    )
   })
   const warned = verdict.pieces.filter((p) => p.state === 'warn').map((p) => p.piece)
   const held = verdict.pieces.filter((p) => !passed(p)).map((p) => p.piece)
@@ -115,10 +123,18 @@ export async function main(
     return 2
   }
   const { release, readiness, dsReadiness } = world
-  const verdict = readinessVerdict(release, { contracts, readiness, dsReadiness, server: false })
-  if (!verdict) {
+  const judged = readinessVerdict(release, { contracts, readiness, dsReadiness, server: false })
+  if (!judged) {
     err(`${pin.tag} is not a quickstart release.\n`)
     return 2
+  }
+  // Each piece that is not green carries its fix, so --json and the text read the same.
+  const verdict = {
+    ...judged,
+    pieces: judged.pieces.map((p) => {
+      const fix = p.state === 'done' ? null : fixOf(p.code, p.params)
+      return fix ? { ...p, fix } : p
+    })
   }
   if (values.json) out(`${JSON.stringify({ source, pin, notJudged: SERVER_ONLY, ...verdict }, null, 2)}\n`)
   else out(`${verdictText(verdict, { pin, source })}\n`)

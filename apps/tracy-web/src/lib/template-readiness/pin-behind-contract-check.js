@@ -12,6 +12,8 @@
  * The contracts come from the index the verdict is already handed; nothing is read from GitHub. Not judged (null):
  * a release without a semantic version, or a template with no contract at all (the contract step says that).
  */
+import { fixOf } from './fixes.js'
+
 const semver = (v) => {
   const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(String(v ?? ''))
   return m === null ? null : [Number(m[1]), Number(m[2]), Number(m[3])]
@@ -45,7 +47,7 @@ export const PIN_BEHIND_CHECK = Object.freeze({
       params: {
         pinned,
         latest,
-        fix: `Release ${latest} of the template if it is not out, then move its pin in the quickstart list from ${pinned} to ${latest}.`
+        fix: fixOf('pin-behind-contract', { pinned, latest }).text
       }
     }
   }
