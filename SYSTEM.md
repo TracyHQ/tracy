@@ -2294,7 +2294,8 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   is asked once more, then fails as "look unreadable". Its verdict, faults and seen sentence are stored on the entry;
   rejections are rule L01 failures that go back to the picker in the fix rounds. The run's cost adds the looks and the
   icon ranking to the picker's turns. `run --copy-file` passes a writer copy file whose alts are compared with the
-  seen sentences (`altNotes`). Migration 201 adds the door to the door check and the run's `copy` column.
+  seen sentences (`altNotes`); without it the manifest's `altCheck` says `deferred`, and step 11's
+  `alt-matches-picture` compares the printed alts with the seen sentences instead. Migration 201 adds the door to the door check and the run's `copy` column.
 - **The drawer and the fallback ladder** (#344) finish every checked round before it is saved
   ([`ladder-step.js`](apps/tracy-web/src/site-pictures/ladder-step.js), wrapped around the store's `saveRound` like the
   looker, so the shared loop is unchanged). A specific frame no owner photo fits (or the picker answered "none") is

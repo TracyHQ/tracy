@@ -21,12 +21,14 @@ const PAINTED = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]*))\s*\)/gi
 const NOT_PRINTED = /<(script|style|template|noscript|svg)\b[\s\S]*?<\/\1\s*>|<!--[\s\S]*?-->/gi
 const NAMED = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘' }
 
-const attr = (tag, name) => {
+/** An attribute of one tag, as written (entities not read); null when the tag has none. */
+export const attr = (tag, name) => {
   const m = new RegExp(`\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i').exec(tag)
   return m ? (m[1] ?? m[2] ?? m[3]) : null
 }
 
-const decoded = (text) =>
+/** A text with its character references read. */
+export const decoded = (text) =>
   String(text).replace(/&(?:([a-z]+)|#(\d+)|#x([0-9a-f]+));/gi, (whole, name, dec, hex) => {
     if (name) return NAMED[name.toLowerCase()] ?? whole
     const code = dec ? Number.parseInt(dec, 10) : Number.parseInt(hex, 16)
@@ -61,7 +63,7 @@ export const wordsKey = (value) =>
     .toLowerCase()
 
 /** The markup of the page's body, with what a visitor is never shown as content taken out. */
-function bodyOf(html) {
+export function bodyOf(html) {
   const text = String(html ?? '')
   const open = /<body\b[^>]*>/i.exec(text)
   const from = open ? open.index + open[0].length : (/<\/head\s*>/i.exec(text)?.index ?? 0)

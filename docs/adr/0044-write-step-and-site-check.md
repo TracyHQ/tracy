@@ -346,6 +346,28 @@ naming the cell and the step that owns the value: copy step 6, plan step 3, pict
 itself step 9. A report written before this decision has neither list, and both groups are `unmeasured` (decision 18).
 Read-back leaves an `unaddressable` line to its own group, so the fault is blamed once and on the owning step.
 
+### 30. The alt a page prints is held to what step 8 saw in the picture, on the written site
+
+Owner's decision, 2026-11-06. (Numbered 30 to stay clear of decisions other open branches add; renumber on merge if the
+numbers before it are free.) Steps 6 (the writer, who writes the alts) and 8 (the pictures) run in parallel once the plan
+passes its check. Step 8 compared each alt with what its looker saw (`altNotes`, ADR 0043 section 3b) only when it was
+given the writer's copy file, so in a parallel run the comparison was skipped and nothing said so. Making step 8 wait for
+step 6 would keep the check where it was and cost the customer several minutes per site; dropping it lets an alt that
+describes another scene (a pool pictured, a tennis court in the alt) reach screen readers and search engines.
+
+The comparison moves to step 11. The site check's `alt-matches-picture` group (`site-check/alt-matches-picture.js`) runs
+with the page-read groups, after step 9, given step 8's manifest (`site-pictures/1`, its `seen` sentences). For each
+picture the write report says was written, it reads the alt each page showing the slot prints for that file (an `<img>`
+naming it, or a `<picture>` one of whose `<source>` tags names it, inside the body) and compares it with the seen sentence
+by the same word overlap step 8 uses (`lib/alt-compare.js`, shared by both). No model is called. A disagreeing alt blocks
+on that slot with the page, the alt printed, what the picture shows and why they disagree, naming step 6 when the alt is
+words the writer wrote in this run, and step 9 when it is not (the template's or the demo's alt, left on the page). A
+picture with no seen sentence, painted as a background, printed with an empty alt or not printed at all is listed in
+`notMeasured` with its reason and not counted; a group that compared nothing returns `checked: 0` with a `reason`. Without
+the manifest, the group is unmeasured when pictures were written. Step 8 no longer leaves `altNotes` empty in silence: its
+manifest's `altCheck` says `deferred` (to this group) without a copy file, `compared` with one. Sending a finding back to
+the writer automatically is not part of this decision.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in
