@@ -20,6 +20,7 @@
 import { appendFileSync, readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 
+if (process.env.FAKE_DOCKER_ENVLOG) appendFileSync(process.env.FAKE_DOCKER_ENVLOG, `${process.env.DOCKER_HOST ?? '(unset)'}\n`) // what DOCKER_HOST the child docker was started with
 const db = JSON.parse(readFileSync(process.env.FAKE_JOOMLA_DB, 'utf8'))
 const argv = process.argv.slice(2)
 const php = argv.indexOf('php')

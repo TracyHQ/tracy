@@ -68,8 +68,9 @@ import { execFileSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { trashedMenuIds } from '../lib/menu-trash.mjs'
 import { generationRecord, bumpEpoch, PUBLISHING_MARKER } from './joomla-generation.mjs'
-import { CAPTURE_LIMITS, crawlRoutes, followImports, readTar, writeEntries } from './joomla-capture.mjs'
+import { CAPTURE_LIMITS, crawlRoutes, followImports, routeUrlStyle, readTar, writeEntries } from './joomla-capture.mjs'
 
 /** The tables the adapter reads — the same list as scripts/lib/joomla-inventory.mjs. */
 const TABLES = ['content', 'content_frontpage', 'categories', 'menu', 'modules', 'modules_menu', 'template_styles']
@@ -284,7 +285,7 @@ function run(argv, head, { whole = false, binary = false } = {}) {
   const cmd = 'docker'
   let result
   try {
-    result = execFileSync(cmd, argv, { encoding: binary ? 'buffer' : 'utf8', maxBuffer: MAX_BUFFER, timeout: TIMEOUT_MS, killSignal: 'SIGKILL', stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, DOCKER_HOST: '' } })
+    result = execFileSync(cmd, argv, { encoding: binary ? 'buffer' : 'utf8', maxBuffer: MAX_BUFFER, timeout: TIMEOUT_MS, killSignal: 'SIGKILL', stdio: ['ignore', 'pipe', 'pipe'], env: process.env })
   } catch (e) {
     if (e.code === 'ETIMEDOUT') die(`${head}: no answer within ${TIMEOUT_MS} ms`)
     if (e.code === 'ENOBUFS') die(`${head}: more than ${MAX_BUFFER} bytes of output`)
@@ -543,7 +544,9 @@ else console.log('⚠ no --web-service/--web-container: configuration.php (site 
  * pages the site does not serve.
  */
 const routes = []
+const inTrash = trashedMenuIds(inventory.menu)
 for (const item of inventory.menu) {
+  if (inTrash.has(String(item.id))) continue
   if (String(item.client_id) !== '0') continue
   if (String(item.published) !== '1') continue
   if (item.type !== 'component') continue
@@ -564,7 +567,7 @@ async function buildCapture() {
   let made = false // only a directory this run created is removed: what already sits at the name is not ours
   const cleanup = () => made && rmSync(tmpDir, { recursive: true, force: true })
   try {
-    const answered = await crawlRoutes(routes, base, { timeoutMs: captureTimeoutMs })
+    const answered = await crawlRoutes(routes, base, { timeoutMs: captureTimeoutMs, urls: routeUrlStyle(siteConfig?.fields) })
     routes.splice(0, routes.length, ...answered)
     const templates = [...new Set(inventory.template_styles.filter((s) => String(s.client_id) === '0').map((s) => String(s.template ?? '')))]
     const bad = templates.find((t) => !/^[A-Za-z0-9_.-]+$/.test(t) || /^\.+$/.test(t))

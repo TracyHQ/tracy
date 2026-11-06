@@ -141,10 +141,14 @@ export function writeEntries(entries, root) {
  * and `location` (a non-200 answer). A 5xx, a timeout or an oversized page aborts: the rest are cancelled and
  * awaited before the first error is thrown. Route order is kept.
  */
-export async function crawlRoutes(routes, base, { passes = 2, concurrency = CAPTURE_LIMITS.concurrency, timeoutMs = CAPTURE_LIMITS.requestTimeoutMs, fetchImpl = fetch } = {}) {
+export async function crawlRoutes(routes, base, { passes = 2, concurrency = CAPTURE_LIMITS.concurrency, timeoutMs = CAPTURE_LIMITS.requestTimeoutMs, fetchImpl = fetch, urls = 'path' } = {}) {
   if (routes.length > CAPTURE_LIMITS.routes) throw new Error(`${routes.length} routes, over the ${CAPTURE_LIMITS.routes} bound`)
   const basePath = base.pathname.replace(/\/+$/, '')
-  const urlOf = (r) => `${base.origin}${basePath}${r.path === '/' ? '/' : r.path}`
+  const urlOf = (r) => {
+    if (urls === 'itemid' && r.id) return `${base.origin}${basePath}/index.php?Itemid=${encodeURIComponent(r.id)}`
+    const front = urls === 'index.php' && r.path !== '/' ? '/index.php' : ''
+    return `${base.origin}${basePath}${front}${r.path === '/' ? '/' : r.path}`
+  }
   const record = routes.map((r) => ({ ...r }))
   const ctl = new AbortController()
   let failure = null
@@ -183,6 +187,17 @@ export async function crawlRoutes(routes, base, { passes = 2, concurrency = CAPT
 }
 
 // ── @imports the copied tree does not hold ────────────────────────────────────
+
+/**
+ * How the site addresses its pages, from the public configuration (`sef`, `sef_rewrite`): `path` (`/<path>`, URL
+ * rewriting on), `index.php` (`/index.php/<path>`, SEF without rewriting) or `itemid` (`/index.php?Itemid=<id>`, SEF
+ * off). Unknown configuration keeps `path`.
+ */
+export function routeUrlStyle(fields = {}) {
+  if (fields.sef === '0') return 'itemid'
+  if (fields.sef_rewrite === '0') return 'index.php'
+  return 'path'
+}
 
 /**
  * The files a compiled sheet's leading `@import`s name that `has(rel)` says the capture lacks, fetched from the site
