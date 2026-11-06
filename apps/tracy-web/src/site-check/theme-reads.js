@@ -15,6 +15,7 @@ import {
 } from './look-reads.js'
 import { pathOfMeasure } from './page-faults.js'
 import { TEMPLATE_STEP } from '../lib/site-build-steps.js'
+import { hex, neutralReason } from '../lib/brand-accent/colour-math.js'
 
 /**
  * The share of a logo's ink that reads under LOGO_GONE_RATIO against its ground: over LOGO_BLOCK_SHARE the logo is gone (a block),
@@ -130,11 +131,29 @@ function untouchedRatio(over, { path, width, side, key }) {
   return pool.length ? Math.max(...pool.map((w) => overPictureRatio(w.fg, w.under))) : null
 }
 
+const same = (a, b) => Array.isArray(a) && Array.isArray(b) && a.slice(0, 3).every((v, i) => v === b[i])
 /**
- * Words on a picture against the region the host shot under them. A brand colour that fails where the template's passes is the
+ * Which contrast rule words over a picture keep, the rule the plain-ground measure keeps (cards G and B, carried here by card AX):
+ * `grey`, the template's own neutral grey (the brand style left it): TEMPLATE_FLOOR, a warning under it; `accent`, a colour the
+ * brand style gave: BRAND_ACCENT_BAR; `other`, any other colour: 4.5:1 (3:1 large).
+ */
+export function overPictureRule(w) {
+  const touched = Array.isArray(w.fgOff) && !same(w.fg, w.fgOff)
+  const neutral = neutralReason(hex(...w.fg.slice(0, 3)))
+  if (!touched && neutral?.startsWith('grey')) return { kind: 'grey', need: TEMPLATE_FLOOR }
+  if (touched && !neutral) return { kind: 'accent', need: BRAND_ACCENT_BAR }
+  return { kind: 'other', need: needed(w.large) }
+}
+
+/**
+ * Words on a picture against the region the host shot under them, held to `overPictureRule`. The template's grey under its floor
+ * warns once per fact (side, selector, colour and picture), on whichever page first shows it. Otherwise a brand colour that fails
+ * where the template's passes is the brand's. A brand colour that fails where the template's passes is the
  * brand's. Otherwise the picture step answers when its picture is what makes them fail: the same words read at the bar, or clearly
  * better, on the untouched site. Words that read as badly there too, or lie on the template's own picture or a gradient, are the
- * template's, which warns only under TEMPLATE_FLOOR.
+ * template's, which warns only under TEMPLATE_FLOOR. Accent words over a veiled layer (the host's `veiled`: a picture under a
+ * pseudo-element veil or a blur, the template's own blurred background) warn instead of blocking: the owner ruled them readable
+ * (card AW, 2026-11-06).
  */
 export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
   const known = picturesKnown(report, baseline)
@@ -151,9 +170,12 @@ export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
         }
         measured++
         const ratio = overPictureRatio(w.fg, w.under)
-        const need = needed(w.large)
+        const { kind, need } = overPictureRule(w)
         if (ratio >= need) continue
-        const id = `${m.path} ${m.width} ${side} ${w.selector} ${w.fg}`
+        const id =
+          kind === 'grey'
+            ? `grey ${side} ${w.selector} ${w.fg} ${fileOf(w.underSrc)}`
+            : `${m.path} ${m.width} ${side} ${w.selector} ${w.fg}`
         if (seen.has(id)) continue
         seen.add(id)
         const before = w.fgOff ? overPictureRatio(w.fgOff, w.under) : ratio
@@ -172,13 +194,28 @@ export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
         }
         const pictureNew =
           Boolean(w.underSrc) && (known.isPlaced(w.underSrc) || !known.isTemplate(w.underSrc))
-        if (before >= need) {
+        const pictureMakesIt = pictureNew && (was === null || was >= need || ratio < was - MATERIALLY_WORSE)
+        if (kind === 'grey') {
+          failures.push({
+            ...base,
+            level: 'warn',
+            causingStep: pictureMakesIt ? 8 : TEMPLATE_STEP,
+            reason: `The template's grey words read under ${need}:1 over this picture in the ${side} theme.`
+          })
+        } else if (kind === 'accent' && w.veiled) {
+          failures.push({
+            ...base,
+            level: 'warn',
+            ...(before >= need ? { causingStep: 2 } : {}),
+            reason: `The accent words read under ${need}:1 over the template's veiled background in the ${side} theme.`
+          })
+        } else if (before >= need) {
           failures.push({
             ...base,
             causingStep: 2,
             reason: `The brand colour reads under ${need}:1 over this picture in the ${side} theme, and the template's colour read ${round(before)}:1.`
           })
-        } else if (pictureNew && (was === null || was >= need || ratio < was - MATERIALLY_WORSE)) {
+        } else if (pictureMakesIt) {
           failures.push({
             ...base,
             reason: `The picture makes these words read under ${need}:1 in the ${side} theme.`

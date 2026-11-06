@@ -185,6 +185,11 @@ not make them worse) when they read at 3:1 or over: the owner ruled the template
 the untouched demo, no fault. Under 3:1 they stay a step 0 warning, said once per theme, selector and colours for the whole run;
 the brand's bars do not move.
 
+Over a picture (cards AX and AW, 2026-11-06) the same bars hold whatever picture lies under the words: the template's neutral grey
+is no fault from 3:1 and a warning under it, once per fact, even on a picture step 8 placed; a colour the brand style gave blocks
+under 3:1, and only warns over a veiled picture (blurred, or under a pseudo-element veil, as the template's blurred background
+layer is), which the owner ruled readable; any other colour keeps 4.5:1.
+
 ### 15. A tall block is compared with the same block on the demo
 
 `tall-blocks` warns only when a block is more than 25% taller than the same block (page, width, selector) on the demo baseline,

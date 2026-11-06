@@ -20,7 +20,7 @@
 //   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
 //   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
 //   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes (3:1 for brand accent words; the template's own warn only under 3:1)
-//   words-over-picture block  8, 2 or 0     theme-reads.js: words against the picture region under them, in both themes
+//   words-over-picture block  8, 2 or 0     theme-reads.js: words against the picture region under them, in both themes (band-contrast's bars; accent over a veiled layer warns)
 //   logo-readable      block  2 or 0        theme-reads.js: a logo's pixels against its ground, in both themes (block over 60% under 2:1, warn from 40%)
 //   self-links         block  3 or 6        page-faults.js: a button that leads to the page it is on
 //   heading-separator  block  6 writer      page-faults.js: a page title printed as a heading, separator and all

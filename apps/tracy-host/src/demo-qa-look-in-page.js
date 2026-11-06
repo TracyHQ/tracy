@@ -163,20 +163,42 @@ export function readLookSideInPage({ caps, withLogos, overAttr, logoAttr, logoSe
 
   // ── Words, against what is painted behind them ──────────────────────────────────────────────────────────────────
   const PICTURES = ['IMG', 'VIDEO', 'CANVAS', 'PICTURE', 'IFRAME', 'svg']
+  /** A pseudo-element of `el` that paints over it: a veil of colour or gradient the template lays on its picture. */
+  const veilOf = (el, which) => {
+    const ps = getComputedStyle(el, which)
+    if (!ps.content || ps.content === 'none' || Number(ps.opacity) === 0) return false
+    const c = rgbOf(ps.backgroundColor)
+    return Boolean((c && c[3] > 0) || (ps.backgroundImage && ps.backgroundImage !== 'none'))
+  }
+  /**
+   * Whether the picture under the words is veiled (card AW): blurred by a filter, under a backdrop blur of a layer above it, or
+   * covered by a pseudo-element veil, as a template's blurred background layer is.
+   */
+  const veiledAt = (stack, at) => {
+    const pic = getComputedStyle(stack[at])
+    if (/blur\(/.test(pic.filter)) return true
+    if (stack.slice(0, at).some((e) => /blur\(/.test(getComputedStyle(e).backdropFilter || ''))) return true
+    return veilOf(stack[at], '::before') || veilOf(stack[at], '::after')
+  }
   /** What lies under the words at this point: a colour composed down the stack, or a picture. */
   const groundOf = (stack) => {
     const layers = []
-    for (const e of stack) {
+    for (const [at, e] of stack.entries()) {
       if (PICTURES.includes(e.tagName)) {
         const img = e.tagName === 'PICTURE' ? (e.querySelector('img') ?? e) : e
-        return { picture: true, src: img.currentSrc || img.src || null }
+        return {
+          picture: true,
+          src: img.currentSrc || img.src || null,
+          ...(veiledAt(stack, at) ? { veiled: true } : {})
+        }
       }
       const cs = getComputedStyle(e)
       if (cs.backgroundImage !== 'none') {
         const url = /url\("?([^")]+)"?\)/.exec(cs.backgroundImage)?.[1]
         return {
           picture: true,
-          src: url && !url.startsWith('data:') ? new URL(url, location.href).href : null
+          src: url && !url.startsWith('data:') ? new URL(url, location.href).href : null,
+          ...(veiledAt(stack, at) ? { veiled: true } : {})
         }
       }
       const c = rgbOf(cs.backgroundColor)
@@ -254,7 +276,8 @@ export function readLookSideInPage({ caps, withLogos, overAttr, logoAttr, logoSe
         large: h.large,
         selector,
         text: h.text,
-        ...(h.ground.src ? { underSrc: h.ground.src } : {})
+        ...(h.ground.src ? { underSrc: h.ground.src } : {}),
+        ...(h.ground.veiled ? { veiled: true } : {})
       })
       continue
     }
