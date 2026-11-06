@@ -255,8 +255,9 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   the question, the allowed verdicts and version 3 roles, the answer format, and per component its crop with numbered
   slots (the verify viewer's crops, with a margin, in `<out>/label-judge/images/`), the page title and URL, the module
   title and position, the neighbouring components' titles, and the slots to judge (number, key, kind, sample, role,
-  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "slots": [{"key", "verdict": "right" |
-  "wrong", "suggestedRole", "why"}]}`) and records it with `content-coverage/record-judge.mjs --request <file>
+  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "crops": [{"crop", "seen"}], "slots": [{"key",
+  "verdict": "right" | "wrong", "suggestedRole", "why"}]}`; every crop of the request named once with a line of what it
+  shows, so a file written from the slot tables alone is refused) and records it with `content-coverage/record-judge.mjs --request <file>
   --verdicts <file>`, which refuses the whole file on a missing, unknown or doubled key, a verdict other than right or
   wrong, or a suggested role outside `place-content-roles/3` (`content-coverage/lib/label-judge-record.mjs`), and
   otherwise writes `labelJudge` (with `judgedBy`) into the coverage files the request names. It targets what the rules

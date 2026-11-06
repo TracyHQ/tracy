@@ -121,6 +121,10 @@ function answersFor(request, over = {}) {
   }
   return {
     judgedBy: 'agent',
+    crops: request.components.map((c) => ({
+      crop: c.crop,
+      seen: `the ${c.module.title} section as a visitor sees it`
+    })),
     slots: keysOf(request).map((key) => ({ key, ...(say[key] ?? { verdict: 'right' }) }))
   }
 }
@@ -239,6 +243,29 @@ test('record-judge refuses a missing slot, a bad role, an unknown key and an unk
   assert.match(same.problems[0], /suggestedRole is the current role/)
 })
 
+test('record-judge refuses a file that does not say what each crop shows: judging from the slot table alone is not judging', async () => {
+  const { request } = await prepare()
+  const full = answersFor(request)
+  const refused = (verdicts) => recordLabelJudge({ request, verdicts })
+
+  const tableOnly = refused({ judgedBy: full.judgedBy, slots: full.slots })
+  assert.equal(tableOnly.block, null)
+  assert.match(tableOnly.problems[0], /"crops" must be a list/)
+
+  const [first, ...rest] = full.crops
+  const skipped = refused({ ...full, crops: rest })
+  assert.deepEqual(skipped.problems, [`${first.crop}: not opened (no "crops" entry)`])
+
+  const blank = refused({ ...full, crops: [{ crop: first.crop, seen: 'ok' }, ...rest] })
+  assert.match(blank.problems[0], /"seen" must say in a few words what the crop shows/)
+
+  const foreign = refused({
+    ...full,
+    crops: [...full.crops, { crop: 'images/module-99-p1-desktop.jpg', seen: 'a crop nobody asked about' }]
+  })
+  assert.match(foreign.problems[0], /is not a crop of this request/)
+})
+
 test('a rerun on unchanged content asks nothing: the recorded verdicts are the cache', async () => {
   const { request } = await prepare()
   const first = recordLabelJudge({ request, verdicts: answersFor(request) }).block
@@ -265,7 +292,10 @@ test('a changed slot is asked again alone; the cached slots of its component are
   assert.deepEqual([second.block.state, second.block.counts.judged], ['partly', 4])
   const third = recordLabelJudge({
     request: second.request,
-    verdicts: { slots: [{ key: 'module-13.intro', verdict: 'right' }] }
+    verdicts: {
+      crops: [{ crop: second.request.components[0].crop, seen: 'the classes intro as a visitor sees it' }],
+      slots: [{ key: 'module-13.intro', verdict: 'right' }]
+    }
   }).block
   assert.equal(third.state, 'judged')
   assert.equal(entry(third, 'module-13.intro').hash, slotHash(map.slots[4]))

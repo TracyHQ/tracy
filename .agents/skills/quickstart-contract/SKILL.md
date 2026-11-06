@@ -498,8 +498,13 @@ path):
    slots without a cached verdict (`labelJudge.reason` is `AWAITING_AGENT`; no file means nothing to judge):
    1. Read the request top to bottom: the question, the allowed verdicts and roles, the answer format, then per component
       its `crop` (open the image; the slots are numbered on it) and its `slots` table. `alreadyJudged` is context only.
-   2. Judge each listed slot by key: `right`, or `wrong` with one `suggestedRole` and a short `why`. Write the answers to
-      `"$WORK/coverage/verdicts.json"` (`{"judgedBy": "agent", "slots": [...]}`).
+   2. Judge each listed slot by key, **from the crop**: `right`, or `wrong` with one `suggestedRole` and a short `why`.
+      Write the answers to `"$WORK/coverage/verdicts.json"` (`{"judgedBy": "agent", "crops": [...], "slots": [...]}`),
+      with one `{"crop": "<path from the request>", "seen": "<what it shows>"}` per component crop. A judgement from the
+      slot table alone is not one, and `record-judge.mjs` refuses a file that leaves a crop out: on JA Voyara (06/11/2026)
+      six helpers judged 2838 slots from the text without opening a crop, and the contested slots had to be judged again. Splitting a big request among helpers: give each whole
+      components with their crop paths and the rule "open every crop with the image reader before judging its slots;
+      record each under `crops` with what you saw", then spot-check a few `seen` lines against the images yourself.
    3. `node packages/cms/tracy-quickstart-tools/content-coverage/record-judge.mjs --request "$WORK/coverage/label-judge/request.json" --verdicts "$WORK/coverage/verdicts.json"`.
       It refuses the whole file on a missing, unknown or doubled key or a role outside version 3; fix and rerun.
    4. Relabel every slot you marked wrong in `content-map.json` (a wrong fact/editorial group holds Publish for a new
