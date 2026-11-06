@@ -78,7 +78,12 @@ export const brandAccentGroup = {
     const read = await pagesRead(context)
     const entries = read.measures.filter((m) => m.brandStyle)
     if (!entries.length) {
-      if (!written) return { checked: 0, failures: [] }
+      if (!written)
+        return {
+          checked: 0,
+          notApplicable: 'no brand accent was written and no page reads a brand style',
+          failures: []
+        }
       throw new GroupUnmeasured(
         'The host answered no brand style read (`brandStyle`), so this was not measured.'
       )

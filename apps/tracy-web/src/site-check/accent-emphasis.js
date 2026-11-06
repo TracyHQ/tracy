@@ -93,7 +93,8 @@ export const accentEmphasisGroup = {
   async run(context) {
     const { kit, report } = context
     if (!kit) throw new GroupUnmeasured('No kit was given, so which headings the demo marks is not known.')
-    if (!spanSlotsOf(kit).size) return { checked: 0, failures: [] }
+    if (!spanSlotsOf(kit).size)
+      return { checked: 0, notApplicable: 'the kit marks no heading with an accent span', failures: [] }
     const read = await pagesRead(context)
     if (!read.measures.some((m) => Array.isArray(m.headingSpans)))
       throw new GroupUnmeasured(
@@ -109,6 +110,12 @@ export const accentEmphasisGroup = {
       throw new GroupUnmeasured(
         `None of the ${lines.length} written headings the demo marks with an accent span was found printed, so nothing was measured.`
       )
-    return { checked, failures }
+    return {
+      checked,
+      ...(lines.length
+        ? {}
+        : { notApplicable: 'no written heading is one the demo marks with an accent span' }),
+      failures
+    }
   }
 }

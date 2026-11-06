@@ -53,8 +53,17 @@ import {
   findUnfinishedHeadings
 } from './page-measures.js'
 import { planLinksGroup } from './plan-links.js'
+import { addressWords, mapsAddress } from '../lib/map-links.js'
 import { listRowsGroup, mapLocationGroup, phoneCallableGroup } from './reach-measures.js'
 import { unownedShownGroup } from './unowned-shown.js'
+
+/** A maps link the host calls off-site that searches an address the demo baseline's maps do not name. */
+function movedMapLink(finding, { baseline }) {
+  const address = mapsAddress(finding?.href)
+  const demo = Array.isArray(baseline?.maps) ? baseline.maps : null
+  if (!address || !demo?.length) return false
+  return !demo.some((m) => typeof m?.address === 'string' && addressWords(m.address) === address)
+}
 
 /** A group over the browser measures the host adds to its answer. Without them it could not tell, so it is unmeasured. */
 function measuredGroup({ name, level, causingStep, find, needsVisited = false }) {
@@ -93,7 +102,10 @@ export const PAGE_CHECK_GROUPS = [
     name: 'demo-links',
     ids: ['no-third-party-demo', 'cta-real'],
     level: 'block',
-    causingStep: 3
+    causingStep: 3,
+    // Card AP: a maps link leaves the site by what it is. It is a demo link only while it searches the demo's address; one that
+    // searches another address kept the demo's words, not its target, and map-location holds that address to the business.
+    notMine: movedMapLink
   }),
   measuredGroup({
     name: 'dead-links',

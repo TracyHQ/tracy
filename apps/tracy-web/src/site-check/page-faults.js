@@ -211,7 +211,7 @@ export const createdControlsGroup = {
   causingStep: 9,
   async run(context) {
     const created = createdPaths(context.report)
-    if (!created.size) return { checked: 0, failures: [] }
+    if (!created.size) return { checked: 0, notApplicable: 'the write step created no page', failures: [] }
     const read = await pagesRead(context)
     if (!read.measures.some((m) => Array.isArray(m.contentControls)))
       throw new GroupUnmeasured('The host answered no content controls, so this was not measured.')

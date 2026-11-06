@@ -189,3 +189,18 @@ test('the host adapter sends the site names and returns the body, and a refusal 
   )
   await assert.rejects(make({ ok: false, status: 0, timedOut: true })({ pages: ['/'] }), /timed out/)
 })
+
+// Card AP: the template's map button kept its words and now leads to a maps search of the business address. demo-links judges
+// where a link leads, not its words: only a maps link still at the demo's address is a demo link. Addresses are invented.
+test('a maps button that leads to another address than the demo is no demo link; one still at the demo address is', async () => {
+  const mapsAt = (address) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+  const demoAddress = '9 Sample Street, Demotown'
+  const baseline = { ...BASELINE, maps: [{ page: '/', width: 1440, kind: 'link', address: demoAddress }] }
+  const withButton = (href) => ({
+    '/': pageRead('/', { ctas: [{ text: 'OPEN IN MAPS', href, selector: 'a.btn-map' }] })
+  })
+  const moved = await run(withButton(mapsAt('12 Harbour Lane, Quayside')), { baseline })
+  assert.ok(!group(moved, 'demo-links').failures.some((f) => f.measured === 'OPEN IN MAPS'))
+  const stayed = await run(withButton(mapsAt(demoAddress)), { baseline })
+  assert.ok(group(stayed, 'demo-links').failures.some((f) => f.measured === 'OPEN IN MAPS'))
+})

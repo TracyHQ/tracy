@@ -82,6 +82,12 @@ Given new files and the site, the write step compares them with its last report 
 Its report still holds every line, the ones not sent marked unchanged with their value, and step 11 reads back all of them. Showing a slot that was emptied needs a new site, because the plugin refuses to
 fill an empty slot.
 
+Measured 2026-11-06 (card AL): a second run with the same files stopped `NEEDS_NEW_SITE` with nothing written, naming 28 slots
+the first run had taken off with their rows (`rows.remove`, lines of `part: 'row'`). Those lines have no hide claim, so the check
+that a hidden slot is still hidden read them as brought back. A row line is now brought back only when the new files want it
+again: they fill its slot, or it is a slot of a kit row the new plan no longer gives up. A slot the plugin took along that no kit
+row names stays gone. The same files give 0 written, every line unchanged.
+
 ### 7. Read-back belongs to the site check
 
 The write step checks files before writing and stops on a plugin refusal it cannot attribute to a slot. Comparing the
@@ -121,6 +127,13 @@ untouched site: a heavy read that compared effects and left the write that cause
 hashes and the words over a picture. What the guard cannot see is what the plugin does with a write and what the words or a
 picture's shape do to the layout; those stay with the remaining page groups and step 12.
 
+Decided 2026-11-06 (card AB, product owner): one named exception, `social-icons-without-accounts`. A cell whose demo content is
+only social icon links (no visible text), written for a subject the brief gives no social account (the brief facts the copy cites
+for that cell), may take words in their place; the icons going is accepted, not a finding. Only the "takes off the template's
+class" findings of that cell are let through, kept in `report.guard.allowed` with the rule and its reason; any other finding on
+the cell, a cell whose subject has an account, or a cell the copy cites no fact for, stays a finding. Measured offline on a JA
+Boxing bench run: 28 blocking look-guard lines (four coach role cells) become 0.
+
 ### 11. A written value counts only once the page prints it
 
 Read-back compares the database with the report, so it stays green when a template drops the block that would print a value: a
@@ -140,6 +153,12 @@ through a block and lists those not printed. Any other unprinted slot is only re
 
 The site check's `written-not-printed` group applies the same rule on its own reading of the pages and blocks on every written
 value no page prints, naming step 9.
+
+Measured 2026-11-06 (card K): a gallery prints each picture's description only as the image's `alt`, and `written-not-printed`
+blocked six written descriptions as not printed. A written text slot now also counts as printed when an `<img>` of the body holds it
+as its `alt`, or any element as its `title`, each attribute compared on its own with spaces and character references read
+(`lib/printed-in-body.js`). Other attributes (`data-*` among them) still do not count. The rule reads the page's markup, so the
+host's measures did not change.
 
 ### 12. Brand accent words are held to 3:1, and a logo blocks only when most of it fades
 
@@ -273,6 +292,12 @@ The host now answers `lists` per page (sibling groups by tag and classes, each i
 items than the plan keeps (the plan's count, or the demo's when fewer), or an item with no words and no picture. A list printed
 nowhere leaves the group unmeasured.
 
+Measured 2026-11-06 (card AH): a kept card's written word "Coach" was also printed by other blocks of the page, so a four-item
+list of another block was taken for a two-card list, and a block was measured on the home page, which does not print it. The list
+is now looked for only on the pages that print the row's block (inspect's `pages` and their `assignedModules`), a written word
+matches only as a whole word, and a word another block on that page also wrote is no sign of the row. A list it cannot place
+that way is unmeasured, never the nearest guess.
+
 ### 23. A map is drawn at the business, not at the demo's place
 
 The kit reads the maps each block prints (an embedded maps frame, an element carrying latitude and longitude) and counts
@@ -286,6 +311,13 @@ The host answers `maps` per page (frame, link, element or script, with latitude,
 them, moved with the kept pages (decision 20). `map-location` (block, step 9) blocks a map within 0.5 km of a demo map, or at the
 same address, and one more than 50 km from the business when the report holds its coordinates (`place`). With no demo maps and no
 coordinates it is unmeasured.
+
+Measured 2026-11-06 (card AP): a template release turned its map button into a maps search link of the address the page prints,
+and the button led to the business address once the address was written, yet the write step still refused it as "a map that
+stays at the demo place" and `demo-links` blocked it as a link leaving the site. A map button whose kit link is a maps search of an
+address (`lib/map-links.js`) is now a `skipped` line, not a refusal: there is no map drawn from settings to move, and
+`map-location` reads where the link leads. `demo-links` judges a maps link by its target: one that searches another address than
+the demo baseline's maps is not the demo's link; one still at the demo's address stays a block. Without a baseline nothing changes.
 
 ### 24. A phone a visitor reads can be called
 
@@ -345,6 +377,34 @@ Step 11 gains two groups that read only the write report, and run before read-ba
 naming the cell and the step that owns the value: copy step 6, plan step 3, pictures step 8, brand step 2, the write step
 itself step 9. A report written before this decision has neither list, and both groups are `unmeasured` (decision 18).
 Read-back leaves an `unaddressable` line to its own group, so the fault is blamed once and on the owning step.
+
+### 27. A group that checked nothing is never green: it is not applicable with its reason, or unmeasured
+
+Owner's decision, 2026-11-06. Decision 18 wrote "nothing measured is unmeasured" into three groups by hand, and every other group
+that answered `checked: 0` with no block still read green: on a real run `broken-sentence` read green on 0 (each slot of the kit's
+three sentence groups was hidden by the plan or had no line in the write report) and `unaddressable-items` read green on 0 while
+the plugin had refused 96 hides for want of a contract slot. The rule now lives once, in `measure()` (`site-check/site-check.js`):
+
+- A block failure is red, whatever the count.
+- Otherwise `checked > 0` is green.
+- Otherwise the group is `not-applicable` when it answers `notApplicable: '<reason>'`, a reason that says there was nothing of its
+  kind on this site (the write step created no page, the plan cuts no list, the kit marks no accent span), and `unmeasured`
+  when it gives none. A group never says not applicable for a read that came back empty: that is unmeasured.
+- `not-applicable` passes: the verdict reads it as green and a group with `stopsLaterWhenRed` does not stop the later ones.
+  `counts.notApplicable` counts it, and each one prints its reason on its line. `unmeasured` stays as decision 18 made it.
+
+The reasons given: `look-guard-findings` (the guard found nothing), `unaddressable-items` (nothing left out and no contract
+refusal), `broken-sentence` (every slot of every sentence group is hidden by the plan or has no line in the write report),
+`accent-emphasis` (the kit marks no accent span, or no written heading is one it marks), `created-controls` (no page created),
+`plan-links` (no plan link and no end action), `list-rows` (the plan cuts no list), `phone-callable` (the report names no brief
+phone), `map-location` (no page prints a map and the demo baseline holds none), `brand-accent` (no brand accent written and no
+page reads a brand style), `words-over-picture` (no page prints words over a picture), `unowned-slots` (every slot has an
+owner). Read-back that compared no line, `logo-readable` with no logo read, and a page group with no page read are unmeasured.
+
+A hide the plugin refuses because the contract has no slot for it (`report.noWayOut`, a reason naming issue #369) was sent, so it
+is not in `report.unaddressable`, and read-back blamed it on step 9 as a refused slot. `unaddressable-items` now lists it too, on
+step 0: the contract ships with the template, and a new contract is a template release. Read-back leaves those failed lines to
+that group, so each is blamed once.
 
 ## Consequences
 

@@ -135,7 +135,11 @@ async function run(context) {
           : `No step owns this ${u.type} slot and it still holds ${holds}`
     })
   }
-  return { checked: unowned.length, failures }
+  return {
+    checked: unowned.length,
+    ...(unowned.length ? {} : { notApplicable: 'every slot of the write report has an owner' }),
+    failures
+  }
 }
 
 export const unownedShownGroup = { name: 'unowned-slots', causingStep: 3, run }
