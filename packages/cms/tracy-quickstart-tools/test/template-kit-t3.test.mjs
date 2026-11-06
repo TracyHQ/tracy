@@ -40,7 +40,7 @@ body{margin:0;width:1200px} div,header,footer,section{display:block} .box{height
 <div class="box" id="gallery-120">Gallery one</div><div class="box" id="photos-120">Gallery two</div>
 <div class="box" id="product-131">A product whose number is no module of this page</div>
 <div id="t3-mainbody" class="t3-mainbody box"><div id="t3-content" class="t3-content">Article</div></div>
-<footer id="t3-footer" class="t3-footer"><div class="t3-module module box" id="Mod114">Footer links</div></footer>
+<footer id="t3-footer" class="t3-footer"><div id="t4-section-9"><div class="t3-module module box" id="Mod114">Footer links</div></div></footer>
 </div></body></html>`
 
 const T3_ASSIGNED = [
@@ -50,7 +50,8 @@ const T3_ASSIGNED = [
   { entity: 'module-106', position: '' },
   { entity: 'module-114', position: 'footer-1' },
   { entity: 'module-120', position: 'section-2' },
-  { entity: 'module-133', position: 'section-3' }
+  { entity: 'module-133', position: 'section-3' },
+  { entity: 'module-9', position: 'menu' }
 ]
 
 async function launch() {
@@ -80,6 +81,7 @@ test('T3 markup: template header, main body, and modules printed only with an id
     assert.equal(by['module-133']?.kind, 'module-id', 'any words before the number')
     assert.equal(by['module-120'], undefined, 'two elements end in 120: no guess')
     assert.equal(by['module-131'], undefined, 'a number of no assigned module is never a block')
+    assert.equal(by['module-9'], undefined, 'a section frame holding a found block only shares the digits')
     assert.equal(
       blocks.filter((b) => b.block === 'module-101').length,
       1,

@@ -242,3 +242,10 @@ test('an item only a signed-in account may see is no item of the block a visitor
   const items = menuBlocksOf({ map, lock, findings }).menuBlocks['module-80'].items.map((i) => i.item)
   assert.deepEqual(items, ['menuItem-501', 'menuItem-504', 'menuItem-506', 'menuItem-505'])
 })
+
+test('an item set to "Display in Menu: No" and the items under it are no items of the block', () => {
+  const { map, lock, findings } = fixture()
+  Object.assign(lock.entities['menuItem-504'], { params: JSON.stringify({ menu_show: 0 }) })
+  const items = menuBlocksOf({ map, lock, findings }).menuBlocks['module-80'].items.map((i) => i.item)
+  assert.deepEqual(items, ['menuItem-502', 'menuItem-501', 'menuItem-503', 'menuItem-505'])
+})

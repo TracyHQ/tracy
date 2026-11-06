@@ -187,7 +187,7 @@ test('a block says each CMS sentence once, with its source; the name line is a n
   assert.ok(kit.errors.some((e) => e.field === 'blocks[block-3].fixedText[Members only].canHide'))
 })
 
-test('a link with no address that opens something on the page (a tab, a menu heading) is no dead link', () => {
+test('a link with no address that opens something on the page (a tab, a menu heading, the current page) is no dead link', () => {
   const kit = {
     pages: [],
     blocks: [
@@ -201,7 +201,8 @@ test('a link with no address that opens something on the page (a tab, a menu hea
             target: null,
             opens: { kind: 'panel', element: '#day' }
           },
-          { id: 'block-7.link-2', label: 'Lanes', target: null }
+          { id: 'block-7.link-2', label: 'Lanes', target: null },
+          { id: 'block-7.link-3', label: '1', target: null, current: true }
         ]
       }
     ]

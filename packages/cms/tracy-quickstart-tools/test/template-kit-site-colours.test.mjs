@@ -122,3 +122,13 @@ test('no stylesheet and no browser read: every missing field is named, nothing i
   assert.ok(fields.includes('site.brandColours.inlineIcons'))
   assert.ok(fields.includes('site.brandColours.pictures'))
 })
+
+test('a colour a variable names the primary stays brand when an alert or an error page class reuses it', () => {
+  const css = `:root{--color-primary:#4d7c0f;--body-link-hover-color:#3f6a0a}
+    a{color:var(--color-primary)} a:hover{color:var(--body-link-hover-color)}
+    .btn-primary{background-color:var(--color-primary)} .bg-primary{background-color:var(--color-primary)}
+    .alert-info{border-color:var(--color-primary)} .t4-error-page .cta a:hover{background-color:var(--color-primary)}`
+  const m = measureBrandColours([{ css, from: 'template.css' }])
+  assert.equal(m.primary, '#4d7c0f')
+  assert.ok(m.primaryRoles.includes('button-fill'))
+})

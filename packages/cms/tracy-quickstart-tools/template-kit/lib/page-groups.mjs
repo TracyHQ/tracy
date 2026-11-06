@@ -162,7 +162,13 @@ export function mixedGroupChecks({
  * Self-check: a detail page that the page one path level up lists (`listedBy`) is in that page's group; a page that
  * lists pages of its own is a listing, not a detail page. Returns how many are not.
  */
-export function detailPageChecks({ pages, pageGroups, listedBy = new Map(), errors }) {
+export function detailPageChecks({
+  pages,
+  pageGroups,
+  itemParent = new Map(),
+  listedBy = new Map(),
+  errors
+}) {
   const byPath = new Map(pages.map((p) => [p.path, p]))
   const groupOf = new Map()
   for (const g of pageGroups) for (const id of [g.root, ...(g.children ?? [])]) groupOf.set(id, g)
@@ -171,6 +177,10 @@ export function detailPageChecks({ pages, pageGroups, listedBy = new Map(), erro
   for (const p of pages) {
     const lister = listerOf(p, listedBy, byPath, listers)
     if (!lister || groupOf.get(p.id)?.root === lister.id) continue
+    // The map's item page wins over the path, as in `groupPages`: an item listed one level up but routed under
+    // its own category is in that category's group.
+    const parent = byPath.get(itemParent.get(p.path))
+    if (parent && groupOf.get(p.id)?.root === parent.id) continue
     wrong++
     errors.push({
       kind: 'detail-page-outside-listing',

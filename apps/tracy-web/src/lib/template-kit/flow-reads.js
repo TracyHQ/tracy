@@ -39,6 +39,7 @@ import { contentMapKey } from '../content-map-key.js'
 import { contractFor } from '../contracts.js'
 import { kitZipName } from '../template-kit-images.js'
 import { BASELINE_FILE, baselineAskedOf } from './demo-baseline-file.js'
+import { logoWritePath } from './logo-write-path.js'
 
 /** The codes that hold Publish, in the order the step names them. */
 export const FLOW_TODO_CODES = Object.freeze([
@@ -129,18 +130,16 @@ function kitSlotIds(doc) {
 }
 
 function logoGap(site, map) {
-  const writes = (s) =>
-    (typeof s.setting === 'string' && s.setting !== '') ||
-    (typeof s.frameId === 'string' &&
-      s.frameId !== '' &&
-      (!map || map.slotKeys.has(contentMapKey(s.frameId))))
+  // The write step's own decision, so a spot passes here only when the write step can write it.
+  const world = map ? { frameKnown: (key) => map.slotKeys.has(key) } : {}
+  const writes = (s) => logoWritePath(s, world).via !== 'none'
   const spots = arr(site.logoSpots).filter((s) => arr(s?.shownIn).length > 0 && !writes(s))
   if (spots.length === 0) return null
   const ids = spots.map((s) => String(s.id))
   return {
     code: 'kit-logo-unsettable',
     spots: ids.slice(0, SHOWN),
-    reason: `${ids.length} logo spot${ids.length === 1 ? '' : 's'} the page shows ${ids.length === 1 ? 'has' : 'have'} no setting and no content map frame: ${some(ids)}`
+    reason: `${ids.length} logo spot${ids.length === 1 ? '' : 's'} the page shows ${ids.length === 1 ? 'has' : 'have'} no setting the write step can write and no content map frame: ${some(ids)}`
   }
 }
 

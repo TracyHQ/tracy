@@ -107,7 +107,8 @@ export function findBlocks(assigned) {
   for (const el of assignedIds.size ? document.querySelectorAll('[id]') : []) {
     const m = /^[a-z][a-z0-9_]*(?:-[a-z][a-z0-9_]*)*-(\d+)$/i.exec(el.id)
     if (!m || LAYOUT_ID.test(el.id) || !assignedIds.has(m[1]) || taken.has(`module-${m[1]}`)) continue
-    if (el.closest('[data-kit-block]')) continue
+    // Outside every block found so far, and around none: a wrapper holding one only shares the digits.
+    if (el.closest('[data-kit-block]') || el.querySelector('[data-kit-block]')) continue
     const list = byId.get(m[1]) ?? []
     if (!list.some((x) => x.contains(el))) list.push(el)
     byId.set(m[1], list)
@@ -133,6 +134,17 @@ export function findBlocks(assigned) {
         if (m && `module-${m[1]}` !== rec.block) inner.add(`module-${m[1]}`)
       }
     if (inner.size) rec.contains = [...inner]
+  }
+  // A module with no block of its own that a block found above prints: in a T4 layout column named after its position
+  // inside that block (`<div class="col-lg-4 footer-r t4-col">` of a footer section), or inside the module whose params
+  // name its position (`a.inside`, an ACM block printing another position in its own markup).
+  const recOf = (block) => out.find((r) => r.block === block)
+  for (const a of assigned ?? []) {
+    if (taken.has(a.entity)) continue
+    const col = a.position ? document.querySelector(`.t4-col.${CSS.escape(a.position)}`) : null
+    const host = recOf(a.inside) ?? recOf(col?.closest('[data-kit-block]')?.getAttribute('data-kit-block'))
+    if (host && host.block !== a.entity && !(host.contains ??= []).includes(a.entity))
+      host.contains.push(a.entity)
   }
   const header = document.querySelector(HEADER)
   if (header) add(header, 'header', 'template-header')

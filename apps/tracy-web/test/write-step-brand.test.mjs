@@ -39,6 +39,72 @@ test('the export turns a brand file into write orders, one per item, with no byt
   assert.equal(by('printed:document-title:page').via, 'none')
 })
 
+/** The made-up kit as a T3 template records it: each logo is a template style param with its content map frame. */
+const t3Kit = () => {
+  const kit = brandKit()
+  const t3Spot = (spot, setting, frameId) => ({ ...spot, setting, frameId })
+  const [header1, header2, offcanvas1, offcanvas2, footer] = kit.doc.site.logoSpots
+  kit.doc.site.logoSpots = [
+    t3Spot(header1, 'logoimage', 'templateStyle-9.0'),
+    t3Spot(header2, 'logoimage', 'templateStyle-10.0'),
+    t3Spot(offcanvas1, 'logoimage_sm', 'templateStyle-9.1'),
+    t3Spot(offcanvas2, 'logoimage_sm', 'templateStyle-10.1'),
+    footer
+  ]
+  kit.doc.site.favicon = { mechanism: { setting: null } }
+  const header = { id: 'header', role: 'header', slots: [], lists: [], demoOwned: [] }
+  for (const id of T3_FRAMES) header.demoOwned.push({ id, role: 'business.logo' })
+  kit.doc.blocks = [...kit.doc.blocks, header]
+  return kit
+}
+const T3_FRAMES = ['templateStyle-9.0', 'templateStyle-10.0', 'templateStyle-9.1', 'templateStyle-10.1']
+
+test('a T3 logo is a template style param: it goes in the contract call, never through the T4 site profile', () => {
+  const { orders } = exportBrandOrders({ brand: brandFile(), kit: t3Kit().doc })
+  const by = (spot) => orders.find((o) => o.spot === spot)
+  assert.deepEqual(
+    ['logo-header-1', 'logo-header-2', 'logo-offcanvas-1', 'logo-offcanvas-2'].map((spot) => [
+      by(spot).via,
+      by(spot).key
+    ]),
+    T3_FRAMES.map((frame) => ['contract', frame])
+  )
+  assert.equal(by('logo-header-1').file, 'spots/logo-header-1.png')
+  // T4 is unchanged: its logo settings stay site profile keys.
+  const t4 = exportBrandOrders({ brand: brandFile(), kit: brandKit().doc }).orders
+  assert.deepEqual(
+    t4.filter((o) => o.item === 'logo').map((o) => [o.spot, o.via, o.key]),
+    [
+      ['logo-header-1', 'profile', 'site_logo'],
+      ['logo-header-2', 'profile', 'site_logo_dark'],
+      ['logo-offcanvas-1', 'small-logo', 'site_logo_small'],
+      ['logo-offcanvas-2', 'small-logo', 'site_logo_dark_small'],
+      ['logo-footer-1', 'contract', 'module-88.1']
+    ]
+  )
+})
+
+test('on a T3 kit every logo is written by the one contract call and the site profile is never asked', async () => {
+  // A T3 template has no site profile, so its brand file names no site profile name either.
+  const brand = brandFile()
+  brand.name.slots = brand.name.slots.filter((s) => !s.id.includes('template site setting'))
+  const { site, parts } = await runBrand({
+    files: { brand },
+    site: { contract: { extraKeys: ['module-88.0', 'module-88.1', ...T3_FRAMES] } },
+    deps: { kit: t3Kit() }
+  })
+  assert.deepEqual(site.of('template.siteSettings'), [])
+  const changes = site.of('content.contract', 'apply')[0].params.changes
+  assert.equal(changes['templateStyle-9.0'], uploadOf(site, 'spots/logo-header-1.png'))
+  assert.equal(changes['templateStyle-10.1'], uploadOf(site, 'spots/logo-offcanvas-2.png'))
+  const lines = parts('brand-logo')
+  assert.equal(lines.length, 5)
+  assert.ok(
+    lines.every((l) => l.status === 'written'),
+    JSON.stringify(lines.map((l) => [l.spot, l.status, l.reason]))
+  )
+})
+
 test('the name reaches the CMS setting, the template profile and its slot, in the one contract call', async () => {
   const { site, report, line } = await runBrand()
   assert.equal(report.status, 'done')

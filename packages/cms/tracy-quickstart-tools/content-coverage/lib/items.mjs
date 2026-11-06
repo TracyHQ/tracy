@@ -31,10 +31,14 @@ export function mergeViewports(byViewport, siteUrl) {
           selector: it.selector,
           href: it.href,
           text: it.text,
+          ...(typeof it.outsideCode === 'string' ? { outsideCode: it.outsideCode } : {}),
+          ...(it.inCode ? { inCode: true } : {}),
           viewports: {}
         }
         merged.set(k, m)
       }
+      // Printed as the page heading by any copy: a breadcrumb that prints the same words first keeps the heading.
+      if (it.tag === 'h1') m.h1 = true
       // Printed inside a shop's catalogue markup on any viewport: the zone holds for the merged item.
       if (it.zone && !m.zone) m.zone = it.zone
       // The blocks every copy sits in (the item lists read them), and per copy its nearest block chrome id, '' for a
