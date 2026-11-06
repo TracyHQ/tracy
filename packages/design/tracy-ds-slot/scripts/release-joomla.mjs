@@ -9,6 +9,7 @@
  *                                   [--contract-from <x.y.z>] (the tch contract the new one starts from; default: the release's)
  *                                   [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off]
  *                                   [--remove-user <username>]... (a demo account taken out of the database)
+ *                                   [--untag-archived] (archived articles taken out of the tag map)
  *
  * From the release's current pair (webroot + database, SHA-256 checked against its manifest):
  *  1. webroot: every templates/<tpl>/css/*.css tokenized (scripts/tokenize.mjs: a palette hex becomes
@@ -33,6 +34,8 @@
  * 1.0.12: the account its review left), refused for the last Super User or an article's author. --no-tokenize builds the repair alone — the baseline the
  * tokenized version is verified against, since the published one never rendered — and needs no contract;
  * --devmode-off does what a contract's t3DevmodeOff does.
+ * --untag-archived takes archived articles out of the tag map: tag pages list them, the contract holds only
+ * published ones (src/release-untag-archived.mjs; JA Voyara 1.0.12).
  * Prints a JSON summary. Uploading, the Claude Cowork plugin that carries the contract and the pins
  * are the release owner's steps (quickstart-contract skill §8–9).
  */
@@ -57,6 +60,7 @@ import { pinAddedFiles } from '../src/release-lock-added.mjs'
 import { packTar, packZip } from '../src/release-pack.mjs'
 import { releaseRoleScan, ROLE_SCAN_FILE, roleScanError } from '../src/release-role-scan.mjs'
 import { removeUser } from '../src/release-remove-user.mjs'
+import { untagArchived } from '../src/release-untag-archived.mjs'
 import { repairTagPaths } from '../src/release-tag-paths.mjs'
 import { resyncUcmContent } from '../src/release-ucm-sync.mjs'
 import { siteLanguageTwins } from '../src/release-site-language.mjs'
@@ -92,11 +96,12 @@ const REMOVE_USERS = []
 for (let u = opt('--remove-user'); u; u = opt('--remove-user')) REMOVE_USERS.push(u)
 const NO_TOKENIZE = args.includes('--no-tokenize')
 const DEVMODE_OFF = args.includes('--devmode-off')
+const UNTAG_ARCHIVED = args.includes('--untag-archived')
 const STAND_PORT = Number(opt('--port') ?? 52371)
 const tag = args.find((a) => !a.startsWith('--'))
 if (!tag || (!name && !NO_TOKENIZE) || !OUT) {
   console.error(
-    'usage: release-joomla.mjs <release tag> --template <contract> --out <dir> [--from <x.y.z>] [--rolling-as <x.y.z>] [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off] [--remove-user <username>]...'
+    'usage: release-joomla.mjs <release tag> --template <contract> --out <dir> [--from <x.y.z>] [--rolling-as <x.y.z>] [--overlay <dir>] [--sql <file>] [--replace <file>] [--no-tokenize] [--devmode-off] [--remove-user <username>]... [--untag-archived]'
   )
   process.exit(1)
 }
@@ -263,6 +268,8 @@ if (OVERLAY) {
   if (twins.length)
     repair.push(`${twins.length} installed language files (${twins.map((t) => t.to).join(', ')})`)
 }
+if (UNTAG_ARCHIVED && INSTALLER)
+  throw new Error('--untag-archived edits the database part; this release is an installer zip')
 if (REMOVE_USERS.length && INSTALLER)
   throw new Error('--remove-user edits the database part; this release is an installer zip')
 if (SQL) {
@@ -548,6 +555,16 @@ if (INSTALLER) {
         .map(([t, n]) => `${n} ${t}`)
         .join(', ')}`
     )
+  }
+  // archived articles out of the tag map, so no tag page prints content the contract does not hold
+  // (src/release-untag-archived.mjs)
+  if (UNTAG_ARCHIVED) {
+    const r = untagArchived(dump, cur.prefix ?? '')
+    dump = r.dump
+    if (r.untagged.length)
+      repair.push(
+        `archived articles untagged: ${r.untagged.map((u) => `${u.article} (${u.rows})`).join(', ')}`
+      )
   }
   if (contract.t3DevmodeOff || edits.length || dump !== original) {
     if (contract.t3DevmodeOff) {
