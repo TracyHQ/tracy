@@ -206,14 +206,17 @@ const viewportJpeg = async (width, height) => {
  * The host's capture stream (mode vision-tiles/1), one tile per page and width. With `held` (the site's words by key), each
  * view starts with the boxes of the text elements on the page, as the host measures them: one per slot the page shows, in
  * page order, each holding the slot's words as the site prints them. Without `held`, no box is given. A page in `failing`
- * ends its views unshot, as a page the browser could not open does. Every call is kept in `calls`.
+ * ends its views unshot, as a page the browser could not open does. Every call's paths are kept in `calls`, its layouts as
+ * sent in `layoutsAsked`.
  * @param {{ held?: Record<string, string>, failing?: string[] }} [input]
  */
 export function fakeCapture({ held = null, failing = [] } = {}) {
   const calls = []
+  const layoutsAsked = []
   const onPage = { '/': ['module-2.1', 'module-3.1', 'module-3.2'], '/about': ['module-4.1'] }
   const capture = async (layouts, { onFrame }) => {
     calls.push(layouts.map((l) => l.path))
+    layoutsAsked.push(layouts)
     for (const layout of layouts)
       for (const [width, viewport, viewportHeight] of [
         [1440, 'desktop', 900],
@@ -263,7 +266,7 @@ export function fakeCapture({ held = null, failing = [] } = {}) {
     await onFrame({ type: 'end', version: 'vision-tiles/1', complete: true })
     return { ok: true }
   }
-  return { capture, calls }
+  return { capture, calls, layoutsAsked }
 }
 
 /** The finder's answer naming one fault of a kind, on the home page at desktop width. */

@@ -5,6 +5,7 @@
 // BENCH ONLY: it writes repairs to a site this bench made, never to a customer's.
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { joomlaAddresses } from './lib/quickstart-releases.js'
 import { openKit } from './lib/template-kit-source.js'
 import { checkLines } from './site-check/check-lines.js'
 import { withReadBack } from './site-check/read-back.js'
@@ -81,6 +82,10 @@ export async function finishRun(d, values) {
     await writeFile(file, data)
   }
   const baseline = d.baselines ? await d.baselines.read(r.report.contract) : null
+  // A bench site is Joomla with rewriting off: a page answers at /index.php/<path>, so each layout carries that address and
+  // the host still names its frames by the path (lib/quickstart-releases.js).
+  const shoot = await d.makeCapture(r.report.site)
+  const capture = (layouts, opts) => shoot(joomlaAddresses(layouts, 'joomla'), opts)
   const finished = await runFinisher({
     door: d.makeDoor({ account: values.account, platform: 'joomla' }),
     siteKey: r.report.site,
@@ -88,7 +93,7 @@ export async function finishRun(d, values) {
     report: r.report,
     firstCheck,
     doors: await d.makeFinisherDoors(),
-    capture: await d.makeCapture(r.report.site),
+    capture,
     siteCheck: (report) =>
       siteCheckOfRun(d, report, { account: values.account, baseline, pictures, allGroups }),
     saveFile,

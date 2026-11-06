@@ -388,3 +388,16 @@ test('every model call leaves its raw reply and the image files it was shown nex
   }
   assert.ok(run.log.replies.length === 4, 'the repair log lists the reply files')
 })
+
+test('a Joomla page is shot at the address the site answers at, /index.php/<path>, and logged by its path', async () => {
+  const run = await finish({ finder: [{ faults: [] }, { faults: [] }], fixer: [], checker: [] })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  assert.deepEqual(
+    run.shots.layoutsAsked[0].map((l) => [l.path, l.address ?? null]),
+    [
+      ['/', null],
+      ['/about', '/index.php/about']
+    ]
+  )
+  assert.deepEqual(run.log.unshot, [])
+})
