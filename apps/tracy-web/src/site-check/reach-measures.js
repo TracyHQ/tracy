@@ -97,7 +97,9 @@ export function judgeListRows(report, measures, { pagesOf } = {}) {
       .filter((m) => !printedOn || printedOn.has(pathOfMeasure(m.path)))
       .flatMap((m) => {
         const others = othersOn(pathOfMeasure(m.path))
-        const said = own.filter((w) => !others.some((o) => holdsWord(o, w)))
+        // A value another block there wrote too ("Coach" under each person of two lists) is no sign of this list; a word another
+        // block only says in a sentence (a masthead naming both coaches) still is (card AH follow-up).
+        const said = own.filter((w) => !others.includes(w))
         return each(m.lists).map((list) => ({ m, list, said }))
       })
       .filter(({ list, said }) =>
@@ -108,27 +110,37 @@ export function judgeListRows(report, measures, { pagesOf } = {}) {
       continue
     }
     checked++
-    // The list with the most items holding a written word is this list (a wrapper holding the whole block is one such item), and
-    // of those the one with the fewest items, so a wider run of siblings is not taken for it.
+    // Per width, the list holding the most of the row's distinct words is this list, then the one with the most items holding a
+    // written word (a wrapper holding the whole block is one such item), then the one with the fewest items, so a wider run of
+    // siblings or a menu sharing one word is not taken for it.
+    const distinct = ({ list, said }) =>
+      new Set(said.filter((w) => each(list.items).some((it) => holdsWord(words(it.text), w)))).size
     const holding = ({ list, said }) =>
       each(list.items).filter((it) => said.some((w) => holdsWord(words(it.text), w))).length
-    const best = found.sort((a, b) => holding(b) - holding(a) || a.list.items.length - b.list.items.length)[0]
     const want = Math.min(row.plan, row.demo)
-    const at = { page: best.m.path, width: best.m.width, slot: row.list }
-    const items = each(best.list.items)
-    if (items.length !== want)
-      failures.push({
-        ...at,
-        measured: items.length,
-        reason: `The plan keeps ${want} rows of ${row.list}, and the page prints ${items.length} (the write step kept ${row.kept})`
-      })
-    const empty = items.filter((it) => !it.chars && !it.pictures).length
-    if (empty)
-      failures.push({
-        ...at,
-        measured: empty,
-        reason: `${empty} printed item${empty > 1 ? 's' : ''} of ${row.list} ${empty > 1 ? 'have' : 'has'} no words and no picture: an empty box`
-      })
+    for (const width of new Set(found.map(({ m }) => m.width))) {
+      const best = found
+        .filter(({ m }) => m.width === width)
+        .sort(
+          (a, b) =>
+            distinct(b) - distinct(a) || holding(b) - holding(a) || a.list.items.length - b.list.items.length
+        )[0]
+      const at = { page: best.m.path, width: best.m.width, slot: row.list }
+      const items = each(best.list.items)
+      if (items.length !== want)
+        failures.push({
+          ...at,
+          measured: items.length,
+          reason: `The plan keeps ${want} rows of ${row.list}, and the page prints ${items.length} (the write step kept ${row.kept})`
+        })
+      const empty = items.filter((it) => !it.chars && !it.pictures).length
+      if (empty)
+        failures.push({
+          ...at,
+          measured: empty,
+          reason: `${empty} printed item${empty > 1 ? 's' : ''} of ${row.list} ${empty > 1 ? 'have' : 'has'} no words and no picture: an empty box`
+        })
+    }
   }
   return { checked, failures, unread }
 }
@@ -148,6 +160,11 @@ export const listRowsGroup = {
     if (!checked)
       throw new GroupUnmeasured(
         `None of the ${rows.length} lists the plan cuts was found printed, so nothing was measured.`
+      )
+    // Most lists found nowhere is no measure of the plan's cuts (decision 27): unmeasured, unless a list found already blocks.
+    if (unread.length > checked && !failures.some((f) => f.level !== 'warn'))
+      throw new GroupUnmeasured(
+        `Only ${checked} of the ${rows.length} lists the plan cuts were found printed, so the cuts were not measured; not found: ${unread.join(', ')}.`
       )
     for (const list of unread)
       failures.push({ level: 'warn', slot: list, reason: `Not measured: ${list} was not found printed` })
