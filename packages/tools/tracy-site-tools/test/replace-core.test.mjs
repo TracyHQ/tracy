@@ -1181,7 +1181,9 @@ test('a dryRun answer lists what would change and names the call that makes it, 
 
 test('followHref: tel: and mailto: follow the fact they carry, nothing else does', () => {
   assert.equal(followHref('tel:88005506790', '8 800 550-67-90', '0909 123 456'), 'tel:0909123456')
-  assert.equal(followHref('tel:+78005506790', '8 800 550-67-90', '0909 123 456'), null)
+  // The international form of the same number follows too, on every engine (was WordPress's alone).
+  assert.equal(followHref('tel:+78005506790', '8 800 550-67-90', '0909 123 456'), 'tel:0909123456')
+  assert.equal(followHref('tel:+74951234567', '8 812 123-45-67', '0909 123 456'), null, 'two area codes')
   assert.equal(
     followHref('mailto:Sales@northgate-ind.ru?subject=Hi', 'sales@northgate-ind.ru', 'hello@example.vn'),
     'mailto:hello@example.vn?subject=Hi'

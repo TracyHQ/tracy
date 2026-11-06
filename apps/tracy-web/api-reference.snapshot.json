@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-11-04",
+  "recorded": "2026-11-05",
   "public": {
     "components": {
       "schemas": {
@@ -1886,6 +1886,10 @@
               "$ref": "#/components/schemas/readCall"
             },
             "link": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "locale": {
               "minLength": 1,
               "type": "string"
             },
@@ -24530,6 +24534,10 @@
               "$ref": "#/components/schemas/readCall"
             },
             "link": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "locale": {
               "minLength": 1,
               "type": "string"
             },

@@ -1,0 +1,1 @@
+{"id":"REG-PR-385-site-agent-recheck","verdict":"PASS","commit":"2e88ec6d5ca020a061852a5213a48c2e4b0150c2","ran_at":"2026-11-04T17:11:19.030Z","evidence":"tests/regression/.runs/2026-11-04-2e88ec6d5/REG-PR-385-site-agent-recheck.log"}

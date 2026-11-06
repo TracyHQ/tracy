@@ -233,6 +233,9 @@ export function compactPageList(answer, params, { home = '', view = null } = {})
     return row
   })
   const leftOut = Object.values(elsewhere).reduce((sum, n) => sum + n, 0)
+  // The relay walked one language because the site serves many and the call named none (`locale`,
+  // tracy-web `oneLanguageOf`): the other languages are not in the list at all, so the agent is told.
+  const walkedOne = typeof a.locale === 'string' && str(p.locale) === '' && several ? a.locale : ''
   const { pages: _pages, truncatedCount: _count, next: _next, ...rest } = a
   /** @param {number} count */
   const build = (count) => {
@@ -248,7 +251,9 @@ export function compactPageList(answer, params, { home = '', view = null } = {})
     const parts = [
       leftOut > 0
         ? `Pages of ${home} and of every language; ${leftOut} more in ${Object.keys(elsewhere).length} other language${Object.keys(elsewhere).length === 1 ? '' : 's'} (otherLanguages): the same call with locale lists one.`
-        : '',
+        : walkedOne !== ''
+          ? `Pages of ${walkedOne}, the site's default language; it serves ${/** @type {unknown[]} */ (site.locales).length}: the same call with locale (one of site.locales) lists another.`
+          : '',
       more > 0
         ? `${more} more pages not shown: next.params gives the next rows; search finds a title or path; url reads one known link.`
         : '',
@@ -275,12 +280,18 @@ export function compactPageList(answer, params, { home = '', view = null } = {})
       ...(a.truncated === true && a.truncatedCount !== undefined
         ? { sourceTruncatedCount: a.truncatedCount }
         : {}),
-      // A whole list in one language says nothing more: every page is a row.
-      ...(leftOut > 0 || more > 0
+      // A whole list in one language the call asked for says nothing more: every page is a row.
+      ...(leftOut > 0 || more > 0 || walkedOne !== ''
         ? {
             next: {
               action: 'content.read',
-              params: more > 0 ? continuation : { view: 'pages', locale: '<a locale of otherLanguages>' },
+              params:
+                more > 0
+                  ? continuation
+                  : {
+                      view: 'pages',
+                      locale: leftOut > 0 ? '<a locale of otherLanguages>' : '<a locale of site.locales>'
+                    },
               why: parts.join(' ')
             }
           }

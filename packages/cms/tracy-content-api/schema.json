@@ -1615,6 +1615,10 @@
           "type": "string",
           "minLength": 1
         },
+        "locale": {
+          "type": "string",
+          "minLength": 1
+        },
         "pages": {
           "type": "array",
           "items": {

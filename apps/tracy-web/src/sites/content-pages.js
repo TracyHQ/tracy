@@ -179,13 +179,36 @@ export function fitPages(answer, { maxBytes = PAGES_MAX_BYTES, next }) {
 }
 
 /**
+ * The language a walk that named none is narrowed to: the site's default, when it serves more than
+ * {@link ALTERNATES_MAX} languages — past that no row names its twins anyway, and the agent's page list
+ * shows the default language's pages (`tracy-site-tools` `workingLocale`). Null otherwise.
+ *
+ * 🔒 EVERY LANGUAGE WAS WALKED TO SHOW ONE. A personalised EmDash site serves 40 languages, so
+ * `{view:"pages"}` with no locale ran all {@link PAGES_MAX_CALLS} listing calls, answered `truncated`,
+ * and the agent's list was then cut to the default language's pages it happened to reach. Measured on
+ * dev 04/11/2026 (mr-holmes-bakehouse, EmDash Business 1.7.23, 40 languages): 53.9 s for that answer,
+ * 81.5 s inside a "change our hotline" turn whose whole edit took 13 s; `{view:"pages", locale:"en"}`
+ * answered the whole English list in 3.1 s.
+ * @param {{ defaultLocale?: unknown, locales?: unknown } | null | undefined} site - a listing's `site`.
+ * @returns {string | null}
+ */
+export function oneLanguageOf(site) {
+  const locales = Array.isArray(site?.locales) ? site.locales : []
+  const home = site?.defaultLocale
+  return locales.length > ALTERNATES_MAX && typeof home === 'string' && locales.includes(home) ? home : null
+}
+
+/**
  * Walk the Claude Cowork plugin's listing from the first call to its last cursor (or `PAGES_MAX_CALLS`).
  * @param {(params: Record<string, unknown>) => Promise<any>} ask - one listing call; resolves to a
  *   v1 envelope, or to anything else when the Claude Cowork plugin could not answer.
  * @param {Record<string, unknown>} filter - the listing filter the caller passed (`locale`).
- * @returns {Promise<{ listings: any[], truncated: boolean, refusal: any }>}
+ * @param {{ oneLanguage?: boolean }} [options] - `oneLanguage`: a walk that names no locale, of a site
+ *   whose first listing does not hold all its rows, walks its default language only when `oneLanguageOf`
+ *   names one (`locale` in the answer says which).
+ * @returns {Promise<{ listings: any[], truncated: boolean, refusal: any, locale?: string }>}
  */
-export async function walkListing(ask, filter) {
+export async function walkListing(ask, filter, { oneLanguage = false } = {}) {
   const listings = []
   // The same filters on every call, the cursor added: a Claude Cowork plugin may sign its cursor over them
   // (EmDash does, and refuses a bare cursor), and "keep filters unchanged" is the protocol's rule.
@@ -194,9 +217,15 @@ export async function walkListing(ask, filter) {
   for (let call = 0; call < PAGES_MAX_CALLS; call += 1) {
     const answer = await ask(params)
     if (answer?.schemaVersion !== 'tracy-content/v1') return { listings, truncated: false, refusal: answer }
-    listings.push(answer)
     const next = answer.pagination?.nextCursor
-    if (typeof next !== 'string' || next === '') return { listings, truncated: false, refusal: null }
+    const more = typeof next === 'string' && next !== ''
+    // Narrowed at the first listing, which names the site's languages: its rows of every language go,
+    // and the walk starts again in one (one listing call more than a site that fits in one).
+    const home =
+      call === 0 && more && oneLanguage && filter.locale === undefined ? oneLanguageOf(answer.site) : null
+    if (home !== null) return { ...(await walkListing(ask, { ...filter, locale: home })), locale: home }
+    listings.push(answer)
+    if (!more) return { listings, truncated: false, refusal: null }
     params = { ...first, cursor: next }
   }
   return { listings, truncated: true, refusal: null }

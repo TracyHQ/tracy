@@ -294,6 +294,24 @@ describe('deploy-host-dsh.sh — the access resync ends a full deploy (#677)', {
     assert.ok(r.calls[resync].includes(`${IMAGE_REPO}:ctx-bbb `), r.calls[resync])
   })
 
+  test('a new tag: the site notes store is made through the daemon, on the sites root dsh mounts, before up (#210)', async (t) => {
+    // Dev 04/11/2026: a plain `install -d` ran in the CI runner's container, which does not mount the
+    // sites, and made the folder there; the host never got one and no site note was ever kept.
+    const dir = makeHost(t, {
+      siteDomainLine: 'HOST_SITES_ROOT=/data/sites\nTRACY_SITE_DOMAIN=tracy.site\n'
+    })
+    const r = await deployDsh(dir, 'ctx-bbb', full)
+    assert.equal(r.status, 0, r.stderr + r.stdout)
+    const notes = r.calls.findIndex(
+      (c) => / --entrypoint install /.test(c) && c.endsWith('/site/.site-notes')
+    )
+    assert.ok(notes >= 0, r.calls.join('\n'))
+    assert.ok(r.calls[notes].includes('type=bind,source=/data/sites,target=/site'), r.calls[notes])
+    assert.ok(r.calls[notes].includes(`${IMAGE_REPO}:ctx-bbb -d -m 0700 -o 33 -g 33 /site/.site-notes`))
+    assert.ok(notes < r.calls.findIndex((c) => c.includes(' up -d')), 'made before dsh comes up')
+    assert.doesNotMatch(r.stderr + r.stdout, /could not make/)
+  })
+
   test('a new tag, resync fails: non-zero, no success line, the healthy image is not rolled back', async (t) => {
     const dir = makeHost(t)
     const r = await deployDsh(dir, 'ctx-bbb', { ...full, FAKE_RESYNC_RC: '1' })

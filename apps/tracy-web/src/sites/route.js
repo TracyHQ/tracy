@@ -6921,7 +6921,10 @@ export function sitesRoutes({
           }
         }
       }
-      walk ??= await walkListing(askCowork, filter)
+      // A site in many languages asked for its pages with neither a language nor a link is walked in its
+      // default one (`content-pages.js` `oneLanguageOf`): the scope, the version and `later` are that language's.
+      walk ??= await walkListing(askCowork, filter, { oneLanguage: paging && typeof link !== 'string' })
+      if (walk.locale !== undefined) filter = { ...filter, locale: walk.locale }
       await recordApply(walk.refusal === null)
       if (walk.refusal !== null) {
         const refused = CONTENT_ERROR_STATUS[walk.refusal?.error?.code]
@@ -6964,6 +6967,8 @@ export function sitesRoutes({
                 // Twins only from a walk that listed every language: one language's walk holds none.
                 alternates: filter.locale === undefined
               }),
+              // The one language Tracy walked when the call named none (`oneLanguageOf`).
+              ...(walk.locale !== undefined ? { locale: walk.locale } : {}),
               version,
               // A walk cut short names the read that reaches the rest.
               ...(walk.truncated ? { next: narrowerPagesCall(filter, walk.listings[0]?.site) } : {}),

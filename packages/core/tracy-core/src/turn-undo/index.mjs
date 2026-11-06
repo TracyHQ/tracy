@@ -66,7 +66,11 @@ function readTarget(/** @type {unknown} */ raw) {
   if (!isObject(raw)) return null
   const t = /** @type {Record<string, unknown>} */ (raw)
   const id = typeof t.id === 'number' ? String(t.id) : text(t.id)
+  /** @type {Target} */
   const target = { kind: text(t.kind), id, title: text(t.title) }
+  // The site's static front page (#257) is kept, so the card names it the home page: dropped here,
+  // `targetText` never saw it and the card said the record's demo title (survey 04/11/2026).
+  if (t.front === true) target.front = true
   return target.kind === null && target.id === null && target.title === null ? null : target
 }
 
