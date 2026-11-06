@@ -283,6 +283,10 @@ function joined(parts) {
   }
 }
 
+/** The words that say how a baseline was settled, one source for every script that prints it. */
+export const baselineOutcome = ({ measured, force }) =>
+  !measured ? 'reused (stored)' : force ? 'measured again (forced)' : 'measured (none was stored)'
+
 /**
  * Measure a baseline on an untouched site and keep it. A version that already has one is not measured again.
  * @param {{ host: Function, pages: string[], version: string, store: object, force?: boolean, now?: () => Date }} input

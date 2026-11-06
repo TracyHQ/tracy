@@ -3,7 +3,7 @@
 // Exit codes: 0 done, 1 refused or not found, 2 wrong usage. The write itself is in bench-cli.js, which calls this.
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
-import { ensureBaseline } from '../site-check/demo-baseline.js'
+import { baselineOutcome, ensureBaseline } from '../site-check/demo-baseline.js'
 import { createBenchSite, specOfKit } from './bench-site-creator.js'
 
 export const USAGE = `  create-site --kit <ref> --account <email>   create a trial site from the kit's quickstart by the customer's path,
@@ -126,7 +126,7 @@ async function settleBaseline(d, values, { kit, siteKey, version }) {
       force
     })
     d.out(
-      `baseline ${measured ? (force ? 'measured again (forced)' : 'measured (none was stored)') : 'reused (stored)'} for ${version}: ${baseline.texts.length} texts, ${baseline.pictures.files.length} picture files, ${baseline.unread?.length ?? 0} pages with no demo`
+      `baseline ${baselineOutcome({ measured, force })} for ${version}: ${baseline.texts.length} texts, ${baseline.pictures.files.length} picture files, ${baseline.unread?.length ?? 0} pages with no demo`
     )
     return 0
   } catch (error) {

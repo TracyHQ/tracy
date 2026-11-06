@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 /**
  * Measure the demo baseline of a quickstart version on an UNTOUCHED site (ADR 0044, decision 8) and keep it, once per
- * version. A stored baseline is reused and printed as reused; `--force` measures again on purpose (about six minutes).
- * `write-step-bench.mjs create-site` settles the same baseline by itself, so this script is for measuring on its own. BENCH ONLY. Run it where tracy-web runs, like write-step-bench.mjs. The site must be a fresh quickstart nobody
- * has written to: a baseline read off a written site would call the written words demo.
+ * version. BENCH ONLY. Run it where tracy-web runs, like write-step-bench.mjs. The site must be a fresh quickstart
+ * nobody has written to: a baseline read off a written site would call the written words demo.
  *
- *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --site <site key> --version <contract id> --pages-file <json> [--force]
+ * A stored baseline is reused and printed as reused; `--force` measures again on purpose (about six minutes).
+ * `write-step-bench.mjs create-site` settles the same baseline by itself, so this script is for measuring on its own.
  *
- * `--pages-file` is a JSON array of the site's paths (the kit's `pages[].path`). It reads them through the host, fifteen per call, and stores texts, labels and picture files
- * and hashes, and the words on a picture with what lay under them. Nothing else of the site is kept.
- * A page the untouched template itself breaks is named as having no demo and the baseline is kept; a page the host could not reach,
- * a broken home, or a site mostly answering errors exits non zero and keeps nothing.
+ *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --site <site key> --version <contract id> \
+ *     --pages-file <json> [--force]
+ *
+ * `--pages-file` is a JSON array of the site's paths (the kit's `pages[].path`). It reads them through the host,
+ * fifteen per call, and stores texts, labels and picture files and hashes, and the words on a picture with what lay
+ * under them. Nothing else of the site is kept. A page the untouched template itself breaks is named as having no demo
+ * and the baseline is kept; a page the host could not reach, a broken home, or a site mostly answering errors exits non
+ * zero and keeps nothing.
  */
 import { readFile } from 'node:fs/promises'
 import { parseArgs } from 'node:util'
@@ -18,7 +22,7 @@ import { readConfig } from '../src/config.js'
 import { createPool } from '../src/db/index.js'
 import { hostCall } from '../src/host/client.js'
 import { demoSelfNames } from '../src/ops/quickstarts.js'
-import { ensureBaseline, fileBaselineStore } from '../src/site-check/demo-baseline.js'
+import { baselineOutcome, ensureBaseline, fileBaselineStore } from '../src/site-check/demo-baseline.js'
 import { hostMeasure } from '../src/site-check/host-measure.js'
 import { siteByKey } from '../src/sites/store.js'
 
@@ -57,7 +61,7 @@ export async function main(argv, env = process.env) {
       force: values.force === true
     })
     console.log(
-      `${measured ? (values.force ? 'measured again (forced)' : 'measured (none was stored)') : 'reused (stored)'} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, ${baseline.over?.length ?? 0} words over pictures, ${baseline.unread?.length ?? 0} pages with no demo${baseline.unread?.length ? ` (${baseline.unread.map((u) => `${u.path}: ${u.why}`).join('; ')})` : ''}`
+      `${baselineOutcome({ measured, force: values.force === true })} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, ${baseline.over?.length ?? 0} words over pictures, ${baseline.unread?.length ?? 0} pages with no demo${baseline.unread?.length ? ` (${baseline.unread.map((u) => `${u.path}: ${u.why}`).join('; ')})` : ''}`
     )
     return 0
   } finally {
