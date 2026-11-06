@@ -4,12 +4,14 @@
 // path calls it after the write (#424). It reaches the site only through the site door, the screenshots only through
 // `capture`, the site check only through `siteCheck`, and files only through `saveFile`, so tests give fakes for all four.
 //
-// Order: refuse unless every door can do its role; shoot every page of the kit; ask the finder per page; for each fault
+// Order: refuse unless every door can do its role; shoot every page the written site keeps (the write report's kept pages
+// at their addresses now, the list the site check opens: lib/site-kept-paths.js), never a kit page the site dropped; ask the finder per page; for each fault
 // ask the fixer for one order, let code check it (repair-orders.js) and write it with its own apply id; re-shoot the page
 // and ask the checker on the before and after crops of the block (repair-crops.js); keep, or revert by apply id; run the
 // site check a final time on the report with the kept repairs in it; write the repair log, which says whether the final
 // check gained a blocking failure the first did not have. Rounds, limits and per-page parallel repairs come with #424.
 import { shootPages } from '../../lib/page-shots.js'
+import { keptPageList } from '../../lib/site-kept-paths.js'
 import { kitSlotIds } from '../kit-slot-ids.js'
 import { doorsRefusal } from './finisher-doors.js'
 import { askChecker, askFinder, askFixer, verdictOf } from './finisher-roles.js'
@@ -18,18 +20,22 @@ import { causeOf, logRecord, REPAIR_LOG_FILE, repairLog } from './repair-log.js'
 import { readSite, revertRepair, writeRepair } from './repair-write.js'
 import { validOrder } from './repair-orders.js'
 import { cropsOf } from './repair-crops.js'
+import { keepShotFiles, pageSlug, replyKeeper } from './model-replies.js'
 
-const kitPages = (kit) =>
-  (kit?.pages ?? []).map((p) => p?.path).filter((p) => typeof p === 'string' && p.startsWith('/'))
-
-/** The kit slots each page shows: the slots of the blocks it lists at any width, and its h1. */
-function slotsByPage(kit) {
+/**
+ * The kit slots each site page shows: the slots of the blocks its kit page lists at any width, and its h1. A site page is
+ * its kit page by the id the write report kept, else by the same path; a page that is no kit page shows no kit slot.
+ */
+function slotsByPage(kit, sitePages) {
   const blocks = new Map((kit?.blocks ?? []).map((b) => [b?.id, b]))
+  const kitPages = kit?.pages ?? []
   const byPage = new Map()
-  for (const page of kit?.pages ?? []) {
+  for (const { path, id } of sitePages) {
+    const page = kitPages.find((p) => (id ? p?.id === id : p?.path === path))
+    if (!page) continue
     const ids = new Set(Object.values(page?.blocks ?? {}).flat())
-    const shown = { blocks: [...ids].map((id) => blocks.get(id)).filter(Boolean), pages: [{ h1: page?.h1 }] }
-    byPage.set(page?.path, kitSlotIds(shown))
+    const shown = { blocks: [...ids].map((b) => blocks.get(b)).filter(Boolean), pages: [{ h1: page?.h1 }] }
+    byPage.set(path, kitSlotIds(shown))
   }
   return (page) => byPage.get(page) ?? new Set()
 }
@@ -41,6 +47,15 @@ async function findFaults(run, firstShots) {
     pages.map(async (page) => {
       const shown = firstShots.shots.filter((s) => s.page === page)
       const call = run.spend(await askFinder(run.doors.finder, page, shown))
+      await run.replies.keep({
+        name: `finder-${pageSlug(page)}`,
+        role: 'finder',
+        page,
+        door: run.doors.finder,
+        sent: call.sent,
+        images: shown.map(run.shotFile),
+        call
+      })
       return call.problem
         ? { faults: [], loggedOnly: [], problem: `the finder: ${call.problem}`, page }
         : heldFaults(call.answer, shown)
@@ -59,6 +74,16 @@ async function repairFault(run, fault, repairNumber, firstShots) {
   const cause = causeOf(run.firstCheck, fault)
   const site = await readSite(door, siteKey)
   const asked = run.spend(await askFixer(doors.fixer, fault, site.current.get(lineOf(fault.slot)?.key)))
+  const about = { page: fault.page, repair: repairNumber }
+  await run.replies.keep({
+    name: `fixer-r${repairNumber}`,
+    role: 'fixer',
+    ...about,
+    door: doors.fixer,
+    sent: asked.sent,
+    images: [],
+    call: asked
+  })
   if (asked.problem)
     return {
       record: logRecord(fault, { ...cause, outcome: 'failed', reason: `the fixer: ${asked.problem}` })
@@ -101,6 +126,15 @@ async function repairFault(run, fault, repairNumber, firstShots) {
     saveFile: run.saveFile
   })
   const judged = run.spend(await askChecker(doors.checker, fault, crops.beforeShots, crops.afterShots))
+  await run.replies.keep({
+    name: `checker-r${repairNumber}`,
+    role: 'checker',
+    ...about,
+    door: doors.checker,
+    sent: judged.sent,
+    images: [...crops.files.before, ...crops.files.after],
+    call: judged
+  })
   const { verdict, reason } = judged.problem
     ? { verdict: 'not better', reason: `the checker: ${judged.problem}` }
     : verdictOf(judged.answer)
@@ -155,6 +189,12 @@ export async function runFinisher(input) {
   if (refused) return { ok: false, ...refused }
   const started = now()
   let costUsd = 0
+  let sitePages
+  try {
+    sitePages = keptPageList({ pages: (await readSite(door, siteKey)).pages }, report)
+  } catch (error) {
+    return { ok: false, code: 'SITE_UNREADABLE', reason: String(error?.message ?? error) }
+  }
   const writtenLines = new Map(
     report.slots.filter((l) => l.status === 'written' && l.key).map((l) => [l.slot, l])
   )
@@ -166,14 +206,18 @@ export async function runFinisher(input) {
     saveFile,
     firstCheck,
     kitSlots: kitSlotIds(kit),
-    pageSlots: slotsByPage(kit),
+    pageSlots: slotsByPage(kit, sitePages),
     lineOf: (slot) => writtenLines.get(slot),
+    replies: replyKeeper(saveFile),
+    shotFile: () => null,
     spend: (call) => {
       costUsd += call.costUsd ?? 0
       return call
     }
   }
-  const firstShots = await shootPages({ capture, pages: kitPages(kit) })
+  const firstShots = await shootPages({ capture, pages: sitePages.map((p) => p.path) })
+  // The tiles the finder is shown, kept as files its reply files name (model-replies.js).
+  run.shotFile = await keepShotFiles(saveFile, firstShots.shots)
   const { faults, records } = await findFaults(run, firstShots)
   const keptBySlot = new Map()
   for (const [index, fault] of faults.entries()) {
@@ -187,6 +231,7 @@ export async function runFinisher(input) {
     site: siteKey,
     records,
     unshot: firstShots.unshot,
+    replies: run.replies.files,
     costUsd,
     ms: now() - started,
     firstCheck,

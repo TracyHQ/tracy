@@ -6,7 +6,7 @@ import { answerWords } from '../settings-door.js'
 
 const hash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex')
 
-/** What the site holds now: its revision and each slot's current value by content map key. */
+/** What the site holds now: its revision, each slot's current value by content map key, and the pages it lists. */
 export async function readSite(door, siteKey) {
   const answer = await door.apply({
     siteKey,
@@ -15,7 +15,7 @@ export async function readSite(door, siteKey) {
   })
   if (!answer?.ok) throw new Error(`the site could not be read: ${answerWords(answer)}`)
   const current = new Map((answer.slots ?? []).map((s) => [s.key, s.current]))
-  return { revision: answer.revision, current }
+  return { revision: answer.revision, current, pages: answer.pages ?? [] }
 }
 
 /**

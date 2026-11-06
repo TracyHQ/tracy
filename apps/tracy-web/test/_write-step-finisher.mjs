@@ -30,10 +30,20 @@ export const BLOCKS = [
   { id: 'block-4', slots: [{ id: 'block-4.1', type: 'text' }] }
 ]
 
-/** The kit's pages: the home page shows blocks 2 and 3, the about page block 4. */
+/**
+ * The kit's pages, at the demo's addresses: the home page shows blocks 2 and 3, the about page block 4, and the plans page
+ * is one the written site does not keep.
+ */
 export const PAGES = [
-  { path: '/', blocks: { 390: ['block-2', 'block-3'], 1440: ['block-2', 'block-3'] } },
-  { path: '/about', blocks: { 390: ['block-4'], 1440: ['block-4'] } }
+  { id: 'page-home', path: '/', blocks: { 390: ['block-2', 'block-3'], 1440: ['block-2', 'block-3'] } },
+  { id: 'page-about-us', path: '/about-us', blocks: { 390: ['block-4'], 1440: ['block-4'] } },
+  { id: 'page-plans', path: '/plans', blocks: {} }
+]
+
+/** The pages the write step kept, at the addresses the written site answers at: the about page was renamed. */
+export const KEPT_PAGES = [
+  { id: 'page-home', path: '/' },
+  { id: 'page-about-us', path: '/about' }
 ]
 
 /** What the written site holds: the heading prints raw codes, the other slots are right. */
@@ -53,11 +63,15 @@ export const benchSite = () => ({
   contract: VERSION
 })
 
-/** The write report of the run, with the first site check result the bench's check kept on it. */
-export function writtenRun({ failures } = {}) {
+/**
+ * The write report of the run, with the first site check result the bench's check kept on it. `groups` adds groups after
+ * its one red group, and `allGroups` says the first check ran every group despite a red one.
+ */
+export function writtenRun({ failures, groups = [], allGroups = false } = {}) {
   const firstCheck = {
     version: 'site-check/1',
     status: 'red',
+    allGroups,
     counts: { block: 1, warn: 0, unmeasured: 0 },
     groups: [
       {
@@ -75,7 +89,8 @@ export function writtenRun({ failures } = {}) {
             measured: RAW
           }
         ]
-      }
+      },
+      ...groups
     ]
   }
   return {
@@ -87,7 +102,7 @@ export function writtenRun({ failures } = {}) {
     report: {
       ...report(
         Object.entries(heldAtStart()).map(([key, words]) => written(`block-${key.slice(7)}`, key, words)),
-        { site: SITE, kit: VERSION, contract: VERSION }
+        { site: SITE, kit: VERSION, contract: VERSION, keptPages: KEPT_PAGES }
       ),
       siteCheck: firstCheck
     }
@@ -190,11 +205,11 @@ const viewportJpeg = async (width, height) => {
 /**
  * The host's capture stream (mode vision-tiles/1), one tile per page and width. With `held` (the site's words by key), each
  * view starts with the boxes of the text elements on the page, as the host measures them: one per slot the page shows, in
- * page order, each holding the slot's words as the site prints them. Without `held`, no box is given. Every call is kept
- * in `calls`.
- * @param {{ held?: Record<string, string> }} [input]
+ * page order, each holding the slot's words as the site prints them. Without `held`, no box is given. A page in `failing`
+ * ends its views unshot, as a page the browser could not open does. Every call is kept in `calls`.
+ * @param {{ held?: Record<string, string>, failing?: string[] }} [input]
  */
-export function fakeCapture({ held = null } = {}) {
+export function fakeCapture({ held = null, failing = [] } = {}) {
   const calls = []
   const onPage = { '/': ['module-2.1', 'module-3.1', 'module-3.2'], '/about': ['module-4.1'] }
   const capture = async (layouts, { onFrame }) => {
@@ -214,6 +229,16 @@ export function fakeCapture({ held = null } = {}) {
               text: held[key]
             }))
           : undefined
+        if (failing.includes(layout.path)) {
+          await onFrame({
+            type: 'view-end',
+            ...base,
+            tiles: 0,
+            complete: false,
+            reason: 'CAPTURE_PAGE_FAILED'
+          })
+          continue
+        }
         await onFrame({
           type: 'view-start',
           ...base,

@@ -2,7 +2,8 @@
 // the run for the team (never shown to the customer). A record names the page, the block or slot, the fault kind, the step
 // that caused it and the site check group that named it when the first check names one, the order, the before and after
 // crop files (and whether they are the block or the whole tile), the outcome and the reason. The log also says whether the
-// final site check gained any blocking failure the first check did not have. Developers read it to choose which repeated
+// final site check gained any blocking failure the first check did not have, in the groups both checks measured, and names
+// the groups it could not compare. Developers read it to choose which repeated
 // faults become code rules.
 
 export const REPAIR_LOG_VERSION = 'repair-log/1'
@@ -49,15 +50,41 @@ export function causeOf(firstCheck, { page, slot }) {
 
 const blockingKey = (f) => JSON.stringify([f.group, f.page ?? null, f.slot ?? null, f.width ?? null])
 
-/** The blocking failures of the final check that the first check did not have, by group, page, slot and width. */
+/** A group that measured: one stopped by an earlier group (not-run) or that could not tell (unmeasured) did not. */
+const MEASURED = new Set(['green', 'red', 'not-applicable'])
+const measuredGroups = (check) =>
+  new Set((check?.groups ?? []).filter((g) => MEASURED.has(g.status)).map((g) => g.name))
+
+/**
+ * Which groups the two checks can be compared on: the ones both measured. The others are named, never read as clean.
+ * @returns {{ compared: string[], notCompared: string[] }}
+ */
+export function comparedGroups(firstCheck, finalCheck) {
+  const first = measuredGroups(firstCheck)
+  const final = measuredGroups(finalCheck)
+  const names = [
+    ...new Set([...(firstCheck?.groups ?? []), ...(finalCheck?.groups ?? [])].map((g) => g.name))
+  ]
+  return {
+    compared: names.filter((n) => first.has(n) && final.has(n)),
+    notCompared: names.filter((n) => !(first.has(n) && final.has(n)))
+  }
+}
+
+/**
+ * The blocking failures of the final check that the first check did not have, by group, page, slot and width, in the
+ * groups both checks measured only: a failure in a group the first check never ran cannot be told to be new.
+ */
 export function newBlockingFailures(firstCheck, finalCheck) {
+  const { compared } = comparedGroups(firstCheck, finalCheck)
+  const both = new Set(compared)
   const before = new Set(
     failuresOf(firstCheck)
       .filter((f) => (f.level ?? 'block') === 'block')
       .map(blockingKey)
   )
   return failuresOf(finalCheck)
-    .filter((f) => (f.level ?? 'block') === 'block' && !before.has(blockingKey(f)))
+    .filter((f) => both.has(f.group) && (f.level ?? 'block') === 'block' && !before.has(blockingKey(f)))
     .map((f) => ({
       group: f.group,
       page: f.page ?? null,
@@ -72,17 +99,31 @@ export function newBlockingFailures(firstCheck, finalCheck) {
  * The log as it is kept: its records, their counts by outcome, what the run spent, how the final check ended and the
  * blocking failures it gained over the first check.
  */
-export function repairLog({ site, records, unshot, costUsd, ms, firstCheck, finalCheck }) {
+export function repairLog({ site, records, unshot, replies = [], costUsd, ms, firstCheck, finalCheck }) {
   const counts = Object.fromEntries(OUTCOMES.map((o) => [o, records.filter((r) => r.outcome === o).length]))
   const newBlocking = finalCheck ? newBlockingFailures(firstCheck, finalCheck) : []
+  const { compared, notCompared } = finalCheck
+    ? comparedGroups(firstCheck, finalCheck)
+    : { compared: [], notCompared: [] }
   return {
     version: REPAIR_LOG_VERSION,
     site,
     counts: { found: records.length, ...counts, newBlocking: newBlocking.length },
     records,
     unshot,
+    // The model calls' reply files (model-replies.js), each naming the image files it was shown.
+    replies,
     costUsd,
     ms,
-    finalCheck: finalCheck ? { status: finalCheck.status, counts: finalCheck.counts, newBlocking } : null
+    finalCheck: finalCheck
+      ? {
+          status: finalCheck.status,
+          counts: finalCheck.counts,
+          allGroups: finalCheck.allGroups === true,
+          compared,
+          notCompared,
+          newBlocking
+        }
+      : null
   }
 }

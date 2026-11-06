@@ -3,7 +3,8 @@
 //   - finder: page screenshots in, faults from the closed list (fault-kinds.js) out. It never reads the site check report.
 //   - fixer: one fault and the slot's words in, one typed repair order (repair-orders.js) out. Code checks the order.
 //   - checker: the before and after crops of the repaired block at every width in, "better" or "not better" out.
-// A call that fails or an answer with no JSON object is returned as `{ problem }`; the caller logs it and moves on.
+// A call that fails or an answer with no JSON object is returned as `{ problem }`; the caller logs it and moves on. Every
+// call also returns what it was sent (`sent`) and the reply as the model gave it (`text`), which the finisher keeps.
 import { jsonObjectIn } from '../../lib/json-object-in.js'
 import { faultListText } from './fault-kinds.js'
 import { orderListText } from './repair-orders.js'
@@ -23,10 +24,16 @@ const askRole = async (door, system, content) => {
   try {
     const { text, costUsd = null } = await door.ask({ system, content })
     const answer = jsonObjectIn(text)
-    if (!answer || typeof answer !== 'object') return { problem: 'the answer holds no JSON object', costUsd }
-    return { answer, costUsd }
+    if (!answer || typeof answer !== 'object')
+      return { problem: 'the answer holds no JSON object', costUsd, text, sent: content }
+    return { answer, costUsd, text, sent: content }
   } catch (error) {
-    return { problem: `the call failed: ${String(error?.message ?? error).slice(0, 200)}`, costUsd: null }
+    return {
+      problem: `the call failed: ${String(error?.message ?? error).slice(0, 200)}`,
+      costUsd: null,
+      text: null,
+      sent: content
+    }
   }
 }
 
