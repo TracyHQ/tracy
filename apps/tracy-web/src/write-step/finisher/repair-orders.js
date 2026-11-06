@@ -69,7 +69,6 @@ export const ORDER_KINDS = Object.freeze({
 /**
  * @param {unknown} order the fixer's answer
  * @param {{ fault: { kind: string, page: string, slot: string | null, seen: string | null }, kitSlots: Set<string>,
- *   faultKinds?: Record<string, { orders: string[] }>,
  *   pageSlots: (page: string) => Set<string>, keyOf: (slot: string) => string | null,
  *   currentOf: (key: string) => string | undefined }} context `pageSlots` gives the kit slots a page shows, `keyOf` the
  *   content map key the write report wrote the slot under, `currentOf` what the site holds there now
@@ -78,10 +77,10 @@ export const ORDER_KINDS = Object.freeze({
  *   an order kind with its own `validate` (content-repair-orders.js) may answer a promise, and a `write` in place of `changes`
  */
 export function validOrder(order, context) {
-  const { fault, kitSlots, keyOf, currentOf, faultKinds = FAULT_KINDS } = context
+  const { fault, kitSlots, keyOf, currentOf } = context
   const entry = ORDER_KINDS[order?.kind]
   if (!entry) return { ok: false, reason: `unknown order kind ${JSON.stringify(order?.kind ?? null)}` }
-  if (!faultKinds[fault.kind]?.orders.includes(order.kind))
+  if (!FAULT_KINDS[fault.kind]?.orders.includes(order.kind))
     return { ok: false, reason: `a ${order.kind} order does not repair a ${fault.kind} fault` }
   if (entry.validate) return entry.validate(order, context)
   const { pageSlots } = context

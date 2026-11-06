@@ -124,8 +124,6 @@ export async function finishRun(d, values) {
     saveFile,
     contentMap,
     facts: files,
-    // A bench test may give the fault list (#423 adds the kinds that call for the content orders).
-    ...(d.faultKinds ? { faultKinds: d.faultKinds } : {}),
     ...(d.now ? { now: d.now } : {})
   })
   if (!finished.ok) return refused(d, `${finished.code}: ${finished.reason}`)

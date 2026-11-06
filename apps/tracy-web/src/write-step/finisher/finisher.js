@@ -71,7 +71,7 @@ async function findFaults(run, firstShots) {
       })
       return call.problem
         ? { faults: [], loggedOnly: [], problem: `the finder: ${call.problem}`, page }
-        : heldFaults(call.answer, shown, run.faultKinds)
+        : heldFaults(call.answer, shown)
     })
   )
   const records = found.flatMap((f) => [
@@ -107,7 +107,6 @@ async function repairFault(run, fault, repairNumber, firstShots) {
     site,
     door,
     siteKey,
-    faultKinds: run.faultKinds,
     fault,
     kitSlots: run.kitSlots,
     pageSlots: run.pageSlots,
@@ -213,8 +212,8 @@ const repairedReport = (report, keptBySlot) => ({
  *   doors: Record<'finder' | 'fixer' | 'checker', object>, capture: Function,
  *   siteCheck: (report: object) => Promise<object>, saveFile: (name: string, data: string | Buffer) => Promise<void>,
  *   pageHtml?: (page: string) => Promise<string | null>, demoImages?: { open: (id: string) => Promise<any> } | null,
- *   now?: () => number, contentMap?: object | null, facts?: { brief?: object, copy?: object, pictures?: object },
- *   faultKinds?: Record<string, object> }} input `kit` is the template kit's document; `report` the write report of the run;
+ *   now?: () => number, contentMap?: object | null, facts?: { brief?: object, copy?: object, pictures?: object }
+ *   }} input `kit` is the template kit's document; `report` the write report of the run;
  *   `facts` the brief, the site copy file and step 8's site pictures, the only sources a repair's new words come from;
  *   `firstCheck` may be a promise of a site check still running beside the finder; `pageHtml` reads a page as the site
  *   serves it now, to confirm an invisible site check failure; `demoImages` opens the kit's images, the template demo's block shots
@@ -237,8 +236,7 @@ export async function runFinisher(input) {
     demoImages = null,
     now = Date.now,
     contentMap = null,
-    facts = null,
-    faultKinds
+    facts = null
   } = input
   const refused = doorsRefusal(doors)
   if (refused) return { ok: false, ...refused }
@@ -265,7 +263,6 @@ export async function runFinisher(input) {
     kitSlots: kitSlotIds(kit),
     pageSlots: slotsByPage(kit, sitePages),
     lineOf: (slot) => writtenLines.get(slot),
-    faultKinds,
     orderFacts: orderFacts({ kit, report, contentMap, facts, sitePages }),
     replies: replyKeeper(saveFile),
     shotFile: () => null,

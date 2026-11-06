@@ -1,21 +1,19 @@
 // Fixtures for the finisher's content orders (#422): a written site of an invented club whose words, demo phone, demo link,
 // gallery alt and page title the orders repair, behind a fake site door that answers the contract door, `content.get`,
 // `content.update` and `apply.revert` and records every write and revert. The club, its brief and its site are invented.
-import { FAULT_KINDS as LISTED } from '../src/write-step/finisher/fault-kinds.js'
 import { report, written } from './_site-check.mjs'
 import { benchSite, scriptedDoor, VERSION } from './_write-step-finisher.mjs'
 import { SITE } from './_write-step-run.mjs'
 
 export { benchSite, scriptedDoor }
 
-/** The fault kind a bench test gives the finisher, standing for the kinds #423 adds, so every content order is reachable. */
-export const FAULT_KINDS = Object.freeze({
-  ...LISTED,
-  'test-fault': Object.freeze({
-    label: 'a fault of the test',
-    what: 'any',
-    orders: Object.freeze(['fix-link', 'demo-item', 'fix-alt', 'fix-page-meta', 'mark-emphasis'])
-  })
+/** The fault kind of the list each content order answers in these tests: the finder names a real kind. */
+export const KIND_OF_ORDER = Object.freeze({
+  'fix-link': 'bad-link',
+  'remove-demo-item': 'demo-fact',
+  'fix-alt': 'wrong-alt',
+  'fix-title-meta': 'demo-title-meta',
+  'mark-emphasis': 'lost-design'
 })
 
 export const HEADING = 'Harbour Strength Gym'
@@ -223,7 +221,7 @@ export function writtenSite(held = heldAtStart()) {
   return { door, held, rows, writes, reverts }
 }
 
-/** The finder's answer naming one fault of the test kind on the home page. */
+/** The finder's answer naming one fault on the home page (a demo fact unless the test names the kind). */
 export const finding = (over = {}) => ({
   faults: [
     {
@@ -231,7 +229,7 @@ export const finding = (over = {}) => ({
       viewport: 'desktop',
       tile: 0,
       slot: 'block-5.1',
-      kind: 'test-fault',
+      kind: 'demo-fact',
       seen: 'a fault',
       ...over
     }

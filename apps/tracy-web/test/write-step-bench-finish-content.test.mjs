@@ -1,14 +1,16 @@
 // The finisher's content orders (#422, spec #418), driven through the step 9 bench's `finish` the way an operator does: a
 // link, a demo item, an alt, a page title and an accent emphasis, each proposed by a scripted fixer, held to the brief, the
 // site copy and step 8's descriptions by code, written under its own apply id and reverted when the checker says not better.
-// One seam and fakes only: the written site records writes and reverts; the finder names a fault of a kind the bench test
-// gives (the real kinds come with #423). Only what comes out is asserted: the site, its writes and reverts, the repair log.
+// One seam and fakes only: the written site records writes and reverts; the finder names a fault of the real list whose kind
+// lists the order. Only what comes out is asserted: the site, its writes and reverts, the repair log.
 import assert from 'node:assert/strict'
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, test } from 'node:test'
 import { runCli } from '../src/write-step-bench-cli.js'
+import { FAULT_KINDS } from '../src/write-step/finisher/fault-kinds.js'
+import { ORDER_KINDS } from '../src/write-step/finisher/repair-orders.js'
 import { kitIndex, memoryStore } from './_write-step-bench.mjs'
 import { fakeCapture } from './_write-step-finisher.mjs'
 import {
@@ -20,8 +22,8 @@ import {
   CONTENT_MAP,
   copy,
   DEMO_PHONE,
-  FAULT_KINDS,
   finding,
+  KIND_OF_ORDER,
   PAGES,
   SEEN,
   scriptedDoor,
@@ -45,6 +47,8 @@ const BETTER = [{ verdict: 'better', reason: 'reads right' }]
 /** One finish with one fault on the home page, the fixer's scripted order, and the brief, copy and pictures as files. */
 async function finish({ order, fault = {}, checker = BETTER, briefFile = brief() }) {
   const site = writtenSite()
+  // The finder names the kind of the list the order answers, unless the test names another.
+  const found = { kind: KIND_OF_ORDER[order?.kind], ...fault }
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-content-'))
   dirs.push(dir)
   const files = { 'brief.json': briefFile, 'copy.json': copy(), 'site-pictures.json': sitePictures() }
@@ -53,7 +57,7 @@ async function finish({ order, fault = {}, checker = BETTER, briefFile = brief()
     // The finder is asked about the home page, then the about page.
     finder: scriptedDoor(
       'Finisher finder',
-      fault.page === '/about' ? [{ faults: [] }, finding(fault)] : [finding(fault), { faults: [] }]
+      fault.page === '/about' ? [{ faults: [] }, finding(found)] : [finding(found), { faults: [] }]
     ),
     fixer: scriptedDoor('Finisher fixer', [order]),
     checker: scriptedDoor('Finisher checker', checker)
@@ -68,7 +72,6 @@ async function finish({ order, fault = {}, checker = BETTER, briefFile = brief()
       runs: memoryRunStore([writtenRun()]),
       store: memoryStore([benchSite()]),
       index: kits.index,
-      faultKinds: FAULT_KINDS,
       makeDoor: () => site.door,
       makeCapture: async () => fakeCapture().capture,
       makeFinisherDoors: async () => ({
@@ -94,7 +97,7 @@ const dropped = (run, why) => {
 
 test('a demo phone with a replacement in the brief is replaced through the content door, the rest of the slot kept', async () => {
   const run = await finish({
-    order: { kind: 'demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: BRIEF_PHONE }
+    order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: BRIEF_PHONE }
   })
   assert.equal(run.site.held['module-5.1'], `Call ${BRIEF_PHONE} today`)
   assert.equal(run.site.writes.length, 1)
@@ -105,11 +108,11 @@ test('a demo phone with a replacement in the brief is replaced through the conte
 
 test('a demo phone the brief has a replacement for is never removed; one without is removed alone', async () => {
   dropped(
-    await finish({ order: { kind: 'demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: null } }),
+    await finish({ order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: null } }),
     /brief gives a phone/
   )
   const removed = await finish({
-    order: { kind: 'demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: null },
+    order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: null },
     briefFile: brief([])
   })
   assert.equal(removed.site.held['module-5.1'], 'Call today')
@@ -120,17 +123,19 @@ test('a demo phone the brief has a replacement for is never removed; one without
 test('a replacement the brief does not give, or a demo item the slot does not hold, is refused', async () => {
   dropped(
     await finish({
-      order: { kind: 'demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: '+44 20 0000 0000' }
+      order: { kind: 'remove-demo-item', slot: 'block-5.1', item: DEMO_PHONE, with: '+44 20 0000 0000' }
     }),
     /no phone the brief gives/
   )
   dropped(
-    await finish({ order: { kind: 'demo-item', slot: 'block-5.1', item: '+1 555 0199', with: BRIEF_PHONE } }),
+    await finish({
+      order: { kind: 'remove-demo-item', slot: 'block-5.1', item: '+1 555 0199', with: BRIEF_PHONE }
+    }),
     /does not hold/
   )
   dropped(
     await finish({
-      order: { kind: 'demo-item', slot: 'block-5.2', item: 'Harbour Strength Club', with: null },
+      order: { kind: 'remove-demo-item', slot: 'block-5.2', item: 'Harbour Strength Club', with: null },
       fault: { slot: 'block-5.2' }
     }),
     /brief's own name/
@@ -176,7 +181,7 @@ test("a wrong alt is replaced from step 8's description of the picture; other wo
 })
 
 test('a demo page title is replaced from the site copy in its row, under its own apply id, and undone when not better', async () => {
-  const order = { kind: 'fix-page-meta', page: '/about', field: 'title', text: ABOUT_TITLE }
+  const order = { kind: 'fix-title-meta', page: '/about', field: 'title', text: ABOUT_TITLE }
   const fault = { page: '/about', slot: null }
   const kept = await finish({ order, fault })
   const params = JSON.parse(kept.site.rows['menuItem:102'].params)
@@ -249,4 +254,14 @@ test('a content order for a fault whose kind does not list it is dropped', async
     fault: { slot: 'block-5.3', kind: 'raw-markup' }
   })
   dropped(run, /does not repair a raw-markup fault/)
+})
+
+test('every order kind the fault list names is an order the fixer can give, and every order answers some fault kind', () => {
+  for (const [kind, { orders }] of Object.entries(FAULT_KINDS)) {
+    assert.ok(orders.length, `${kind} lists no order`)
+    for (const order of orders)
+      assert.ok(ORDER_KINDS[order], `${kind} names ${order}, which is no order kind`)
+  }
+  const named = new Set(Object.values(FAULT_KINDS).flatMap((k) => k.orders))
+  for (const order of Object.keys(ORDER_KINDS)) assert.ok(named.has(order), `no fault kind lists ${order}`)
 })

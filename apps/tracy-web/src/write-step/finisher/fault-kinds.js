@@ -9,7 +9,9 @@ export const FAULT_KINDS = Object.freeze({
     what: 'markup printed as words: emphasis markers such as ((SPAN)) or ((br/)), braces, HTML tags shown as text',
     orders: Object.freeze(['fix-text'])
   }),
-  // The rest of the closed list (#423). An order kind not yet in ORDER_KINDS (repair-orders.js) is dropped and logged.
+  // The rest of the closed list (#423). Every order kind named here is a row of ORDER_KINDS (repair-orders.js), and an
+  // order is listed only where it can repair the kind: "fix-text" never changes a word, so it is no answer to a demo fact, and
+  // "fix-link" points a link at a page the site keeps, so it is no answer to a tel: or mailto: link to the demo.
   'unreadable-text': Object.freeze({
     label: 'unreadable text',
     what: 'text over a picture, text the colour of its background, contrast too low to read',
@@ -28,7 +30,7 @@ export const FAULT_KINDS = Object.freeze({
   'demo-fact': Object.freeze({
     label: 'demo fact left visible',
     what: "a phone number, e-mail address or business name of the template's demo company printed on the page",
-    orders: Object.freeze(['fix-text', 'remove-demo-item'])
+    orders: Object.freeze(['remove-demo-item'])
   }),
   'bad-link': Object.freeze({
     label: 'button or link to a 404 or to the demo',
@@ -38,7 +40,7 @@ export const FAULT_KINDS = Object.freeze({
   'demo-contact-link': Object.freeze({
     label: 'phone or e-mail link to the demo',
     what: "a phone or e-mail link that dials or mails the template's demo while the words shown are right",
-    orders: Object.freeze(['fix-link', 'remove-demo-item'])
+    orders: Object.freeze(['remove-demo-item'])
   }),
   'demo-title-meta': Object.freeze({
     label: 'demo or duplicated page title or meta description',
@@ -77,10 +79,9 @@ const text = (value, max) => (typeof value === 'string' && value.trim() ? value.
  * A fault naming a page or a width it was not shown is not kept at all: it cannot have been seen.
  * @param {unknown} answer the finder's JSON object, `{ faults: [{ page, viewport, tile, slot?, kind, seen }] }`
  * @param {{ page: string, viewport: string, index: number }[]} shown the shots of this call
- * @param {Record<string, object>} [kinds] the fault list; FAULT_KINDS, or the one a bench test gives
  * @returns {{ faults: object[], loggedOnly: object[] }}
  */
-export function heldFaults(answer, shown, kinds = FAULT_KINDS) {
+export function heldFaults(answer, shown) {
   const faults = []
   const loggedOnly = []
   for (const raw of Array.isArray(answer?.faults) ? answer.faults : []) {
@@ -96,7 +97,7 @@ export function heldFaults(answer, shown, kinds = FAULT_KINDS) {
       kind: text(raw?.kind, 80) ?? 'unnamed',
       seen: text(raw?.seen, 400)
     }
-    if (kinds[fault.kind]) faults.push(fault)
+    if (FAULT_KINDS[fault.kind]) faults.push(fault)
     else loggedOnly.push(fault)
   }
   return { faults, loggedOnly }

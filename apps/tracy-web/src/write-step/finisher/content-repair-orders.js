@@ -6,7 +6,7 @@
 //     written site keeps (repair-facts.js); an order whose replacement is not found there is refused, never filled in;
 //   - an order is tied to its fault: the slot the finder named, or a slot of the page it was seen on (a page's title: that page);
 //   - it changes one value, and writes through the write step's doors under its own apply id, so the checker can revert it.
-// The fault kinds that call for these orders come with #423; each lists the order kinds that repair it, as raw-markup does.
+// The fault kinds that call for these orders are in fault-kinds.js (#423); each lists the order kinds that repair it.
 import {
   hasEmphasisCodes,
   showsRawCodes,
@@ -218,9 +218,9 @@ export const CONTENT_ORDER_KINDS = Object.freeze({
     '{ "kind": "fix-link", "slot": "<slot id>", "to": "<path of a page the site keeps>" }',
     validateLink
   ),
-  'demo-item': kind(
+  'remove-demo-item': kind(
     "replace one demo phone, e-mail or name with the brief's own, or remove it alone when the brief gives none",
-    '{ "kind": "demo-item", "slot": "<slot id>", "item": "<the demo words as the slot holds them>", "with": "<the brief\'s fact>" | null }',
+    '{ "kind": "remove-demo-item", "slot": "<slot id>", "item": "<the demo words as the slot holds them>", "with": "<the brief\'s fact>" | null }',
     validateDemoItem
   ),
   'fix-alt': kind(
@@ -228,9 +228,9 @@ export const CONTENT_ORDER_KINDS = Object.freeze({
     '{ "kind": "fix-alt", "slot": "<alt slot id>", "frame": "<picture slot id>", "text": "<the description>" }',
     validateAlt
   ),
-  'fix-page-meta': kind(
+  'fix-title-meta': kind(
     "fix one page's title or meta description from the site copy",
-    '{ "kind": "fix-page-meta", "page": "<path>", "field": "title" | "description", "text": "<the site copy\'s words>" }',
+    '{ "kind": "fix-title-meta", "page": "<path>", "field": "title" | "description", "text": "<the site copy\'s words>" }',
     validatePageMeta
   ),
   'mark-emphasis': kind(
