@@ -18,6 +18,7 @@
 // a wrong-but-plausible field renders fine and loses data on the first edit in the admin.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
+import { joinInside, unsafeReason } from './safe-path.mjs'
 import { validateModel } from '../contract/validate.mjs'
 import { carryRolesIntoCompiledMap, readPreviousFieldMap } from './carry-field-map-roles.mjs'
 
@@ -303,6 +304,10 @@ export function compile(model, config = {}) {
   // mime type and, for each use `type/slug#path`, one target per locale the record exists in.
   const localesOf = {}
   for (const record of model.records) (localesOf[`${record.type}/${record.slug}`] ??= []).push(record.locale)
+  for (const item of model.media ?? []) {
+    const reason = unsafeReason(item.file)
+    if (reason) throw new Error(`media file ${JSON.stringify(item.file)} ${reason}; media[].file is a relative path inside the media folder`)
+  }
   const mediaMap = {
     generatedAt: new Date().toISOString(),
     files: (model.media ?? []).map((item) => ({
@@ -373,13 +378,20 @@ function main(argv) {
     const from = path.resolve(argv[mediaIndex + 1])
     const missing = []
     for (const item of out.mediaMap.items) {
-      const source = path.join(from, item.file)
+      let source, target
+      try {
+        source = joinInside(from, item.file)
+        target = joinInside(path.join(dir, 'media'), item.file, { within: dir })
+      } catch (error) {
+        console.error(`refused media file: ${error.message}`)
+        return 1
+      }
       if (!existsSync(source)) {
         missing.push(item.file)
         continue
       }
-      mkdirSync(path.dirname(path.join(dir, 'media', item.file)), { recursive: true })
-      copyFileSync(source, path.join(dir, 'media', item.file))
+      mkdirSync(path.dirname(target), { recursive: true })
+      copyFileSync(source, target)
     }
     if (missing.length > 0) {
       console.error(`${missing.length} media file(s) not found under ${from}: ${missing.slice(0, 5).join(', ')}${missing.length > 5 ? ', …' : ''}`)

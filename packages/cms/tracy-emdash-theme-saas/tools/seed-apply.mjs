@@ -30,6 +30,7 @@
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
+import { joinInside } from './safe-path.mjs'
 
 const args = process.argv.slice(2)
 const command = args[0]
@@ -634,7 +635,8 @@ const receiptFor = (item, hash, m, extra = {}) => ({
   ...extra
 })
 async function uploadOne(m) {
-  const file = path.join(SEED_DIR, m.copied ?? `media/${m.file}`)
+  // media-map.json is data: neither `copied` nor `file` may point outside the seed directory
+  const file = joinInside(SEED_DIR, m.copied ?? `media/${m.file}`, { within: SEED_DIR })
   const bytes = readFileSync(file)
   const hash = contentHashOf(bytes)
   const sha = sha256(bytes)

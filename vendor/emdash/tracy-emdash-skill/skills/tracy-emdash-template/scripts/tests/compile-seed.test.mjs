@@ -5,7 +5,7 @@
 // wrong, which is exactly the kind a human review passes.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -245,6 +245,87 @@ test('CLI: positional arguments survive without --config, and --media-from copie
     writeFileSync(path.join(dir, 'files', 'dam.jpg'), 'x')
     assert.equal(run('--media-from', path.join(dir, 'files')).status, 0)
     assert.equal(readFileSync(path.join(dir, 'seed', 'media', 'dam.jpg'), 'utf8'), 'x')
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('CLI: a media file name that leaves the seed or source folder is refused, nothing is copied, and a nested name still is', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'compile-seed-'))
+  const tool = path.join(import.meta.dirname, '..', 'tools', 'compile-seed.mjs')
+  try {
+    mkdirSync(path.join(dir, 'files', 'images'), { recursive: true })
+    writeFileSync(path.join(dir, 'files', 'images', 'a.jpg'), 'img')
+    writeFileSync(path.join(dir, 'victim.txt'), 'original')
+    const run = (file, ...extra) => {
+      const m = model({ media: [{ file, alt: { en: 'x' }, usedBy: [] }] })
+      writeFileSync(path.join(dir, 'model.json'), JSON.stringify(m))
+      return spawnSync(process.execPath, [tool, path.join(dir, 'model.json'), path.join(dir, 'out', 'seed'), ...extra], { encoding: 'utf8' })
+    }
+    const from = ['--media-from', path.join(dir, 'files')]
+    for (const bad of ['../../victim.txt', '../victim.txt', path.join(dir, 'victim.txt'), '/etc/passwd', 'C:\\x.jpg', 'images\\..\\..\\a.jpg', 'images/../../../victim.txt']) {
+      for (const args of [from, []]) {
+        const r = run(bad, ...args)
+        assert.notEqual(r.status, 0, bad)
+        assert.ok(r.stderr.includes(JSON.stringify(bad).slice(1, -1).replace(/\\\\/g, '\\\\')) || r.stderr.includes('media file'), `${bad}: ${r.stderr}`)
+      }
+      assert.equal(readFileSync(path.join(dir, 'victim.txt'), 'utf8'), 'original')
+    }
+    const ok = run('images/a.jpg', ...from)
+    assert.equal(ok.status, 0, ok.stderr)
+    assert.equal(readFileSync(path.join(dir, 'out', 'seed', 'media', 'images', 'a.jpg'), 'utf8'), 'img')
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('CLI: a symlinked folder under the source or the seed media folder cannot carry a media file out', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'compile-seed-'))
+  const tool = path.join(import.meta.dirname, '..', 'tools', 'compile-seed.mjs')
+  try {
+    mkdirSync(path.join(dir, 'outside'))
+    mkdirSync(path.join(dir, 'files'))
+    writeFileSync(path.join(dir, 'outside', 'victim.txt'), 'original')
+    writeFileSync(path.join(dir, 'files', 'ok.jpg'), 'new')
+    const run = (file) => {
+      writeFileSync(path.join(dir, 'model.json'), JSON.stringify(model({ media: [{ file, alt: { en: 'x' }, usedBy: [] }] })))
+      return spawnSync(process.execPath, [tool, path.join(dir, 'model.json'), path.join(dir, 'seed'), '--media-from', path.join(dir, 'files')], { encoding: 'utf8' })
+    }
+    // target side: seed/media/nested -> outside; the source file exists so only the target can go wrong
+    mkdirSync(path.join(dir, 'seed', 'media'), { recursive: true })
+    symlinkSync(path.join(dir, 'outside'), path.join(dir, 'seed', 'media', 'nested'))
+    mkdirSync(path.join(dir, 'files', 'nested'))
+    writeFileSync(path.join(dir, 'files', 'nested', 'victim.txt'), 'attack')
+    const t = run('nested/victim.txt')
+    assert.notEqual(t.status, 0)
+    assert.equal(readFileSync(path.join(dir, 'outside', 'victim.txt'), 'utf8'), 'original')
+    // source side: files/link -> outside; nothing outside is read into the seed
+    rmSync(path.join(dir, 'seed'), { recursive: true })
+    symlinkSync(path.join(dir, 'outside'), path.join(dir, 'files', 'link'))
+    const s = run('link/victim.txt')
+    assert.notEqual(s.status, 0)
+    assert.match(s.stderr, /symlink/)
+    assert.equal(run('ok.jpg').status, 0)
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('CLI: a seed/media folder that is itself a symlink to an outside folder is refused', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'compile-seed-'))
+  const tool = path.join(import.meta.dirname, '..', 'tools', 'compile-seed.mjs')
+  try {
+    mkdirSync(path.join(dir, 'outside'))
+    mkdirSync(path.join(dir, 'files'))
+    mkdirSync(path.join(dir, 'seed'))
+    writeFileSync(path.join(dir, 'outside', 'victim.txt'), 'original')
+    writeFileSync(path.join(dir, 'files', 'victim.txt'), 'attack')
+    symlinkSync(path.join(dir, 'outside'), path.join(dir, 'seed', 'media'))
+    writeFileSync(path.join(dir, 'model.json'), JSON.stringify(model({ media: [{ file: 'victim.txt', alt: { en: 'x' }, usedBy: [] }] })))
+    const r = spawnSync(process.execPath, [tool, path.join(dir, 'model.json'), path.join(dir, 'seed'), '--media-from', path.join(dir, 'files')], { encoding: 'utf8' })
+    assert.notEqual(r.status, 0)
+    assert.match(r.stderr, /symlink/)
+    assert.equal(readFileSync(path.join(dir, 'outside', 'victim.txt'), 'utf8'), 'original')
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
