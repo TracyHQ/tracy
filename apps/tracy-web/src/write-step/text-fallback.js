@@ -6,24 +6,11 @@
 //   3. demo-remains: a failed line that says the demo text is still on the site.
 // The rung each slot ended on is on its report line as `textFallback`. Pictures, links and settings are not text: untouched here.
 import { visibleText } from '../lib/site-copy/emphasis-markup.js'
+import { kitSlotIndex } from '../lib/template-kit/kit-slots.js'
 import { refusalWords } from './contract-write.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const DEMO_REMAINS = 'the demo text remains on the site'
-
-/** The kit's slots by id: a block's own and its lists' rows. */
-function kitSlotIndex(kit) {
-  const index = new Map()
-  const add = (slot) => typeof slot?.id === 'string' && !index.has(slot.id) && index.set(slot.id, slot)
-  for (const block of each(kit?.blocks)) {
-    each(block?.slots).forEach(add)
-    for (const list of each(block?.lists)) {
-      each(list?.rowSlots).forEach(add)
-      for (const row of each(list?.rows)) each(row?.slots).forEach(add)
-    }
-  }
-  return index
-}
 
 /**
  * @param {{ refused: Map<string, object>, changes: Record<string, string>, evidence?: Record<string, string>, kit: object,

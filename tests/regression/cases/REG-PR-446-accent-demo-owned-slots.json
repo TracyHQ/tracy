@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-446-accent-demo-owned-slots",
+  "kind": "fix",
+  "title": "Accent emphasis reaches a demo-owned kit text slot: the writer is told, W16 and the site check accent-emphasis judge it, the export wraps it",
+  "pr": 446,
+  "area": "site-writer/emphasis",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test apps/tracy-web/test/accent-demo-owned-slots.test.mjs",
+    "S2: Read the exit code and the fail and skipped counts."
+  ],
+  "expect": [
+    "The run exits 0 with 5 passing tests, 0 failures and 0 skipped.",
+    "A hero heading the kit lists under demoOwned with an inline span appears in the writer's block view with its inline note and limit.",
+    "W16 fails that heading with cause missing when the copy names no emphasis and passes it with an emphasis of its own words.",
+    "The export writes the emphasis wrapped in the demo span; the site check blocks the heading printed with no span, on step 6."
+  ],
+  "evidence": "06/11/2026: a real site copy wrote the JA Boxing home hero heading (a demo-owned slot whose demo draws NO1 in the accent span) plain, and the copy check and the step 11 site check stayed green.",
+  "fence": "Pure functions over an invented kit, plan and copy. Not exercised: a live writer run, the plugin write, a page read by the host.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/accent-demo-owned-slots.test.mjs"],
+    "needs": []
+  },
+  "selectors": {}
+}

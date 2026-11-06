@@ -10,6 +10,7 @@ import { readCopy } from '../site-copy-view.js'
 import { mainMenuOf } from './main-menu.js'
 import { contentMapKey } from '../content-map-key.js'
 import { withEmphasis } from './inline-emphasis.js'
+import { kitSlotIndex } from '../template-kit/kit-slots.js'
 
 const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragraphs) > 0)
 
@@ -44,21 +45,6 @@ export function listFormOf(sample) {
   const lead = /\(\(\s*p(?:\s[^()]*)?\s*\)\)/i.exec(before)
   const tag = list[1].toLowerCase()
   return { tag, open: list[0], lead: lead && before.replace(/\(\([^()]*\)\)/g, '').trim() ? lead[0] : null }
-}
-
-function kitSlotIndex(kit) {
-  const index = new Map()
-  const walk = (slots) => {
-    for (const s of slots ?? []) index.set(s.id, s)
-  }
-  for (const b of kit?.blocks ?? []) {
-    walk(b.slots)
-    for (const l of b.lists ?? []) {
-      walk(l.rowSlots)
-      for (const r of l.rows ?? []) walk(r.slots)
-    }
-  }
-  return index
 }
 
 /**

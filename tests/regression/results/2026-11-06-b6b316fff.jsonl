@@ -1,0 +1,1 @@
+{"id":"REG-PR-447-keep-space-before-emphasis-break","verdict":"PASS","commit":"b6b316fff47e941e29cac660416f090693443bbf","ran_at":"2026-11-06T12:55:11.220Z","evidence":"tests/regression/.runs/2026-11-06-b6b316fff/REG-PR-447-keep-space-before-emphasis-break.log"}

@@ -1,0 +1,2 @@
+- **The write step keeps one space before an emphasis line break, and the host page measure steps over a hidden break** · Akemi (with Claude Code) · #446 (folded from #447) · `fix/accent-demo-owned-slots` · 2026-11-06
+  **Affects:** whoever writes a site whose heading breaks the line before its highlight. `the ((br/))((span))pool` keeps its space, so a theme that hides the break on a narrow screen no longer prints "thepool". The host page measure skips a break the page hides when it looks for words that run into a highlight; a visible break still ends the line.

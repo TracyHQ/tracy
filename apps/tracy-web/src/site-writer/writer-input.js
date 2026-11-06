@@ -6,7 +6,7 @@
 //   evidence } where `evidence` lists the quotes the fact was read from; and the full text of every review the plan
 //   quotes (a `brief.reviews[]` entry whose id the plan names, or that names a cited fact as its own).
 // - From the kit, a slim view of every block the plan uses (every block decision but "hide", on shared blocks and
-//   kept pages): its look text and, per text slot, id, role, type, maxCharacters, a preview of the sample (its first
+//   kept pages): its look text and, per text slot (its own and its `demoOwned` ones), id, role, type, maxCharacters, a preview of the sample (its first
 //   SAMPLE_PREVIEW characters), demoChars and shape (lib/site-copy/slot-shape.js: the demo's lengths, which the copy
 //   check judges against; 2026-11-04), paragraphs and bullets, and `inline`, a note naming the words the demo draws in the
 //   accent colour when it marks some with a span (lib/site-copy/inline-emphasis.js); per
@@ -119,6 +119,13 @@ const slimSlot = (s) => ({
   ...(arr(s.pageTitleOf).length ? { pageTitleOf: s.pageTitleOf } : {}),
   ...(emphasisNoteOf(s) ? { inline: emphasisNoteOf(s) } : {})
 })
+// A block's own text slots, then its demo-owned ones the plan replaces (the writer writes those too, so it needs their limit
+// and the demo's accent); an id listed in both is shown once.
+const ownAndDemoOwned = (b) => {
+  const own = arr(b.slots)
+  const named = new Set(own.map((s) => s?.id))
+  return [...own, ...arr(b.demoOwned).filter((s) => !named.has(s?.id))]
+}
 const textSlots = (slots) =>
   arr(slots)
     .filter((s) => isObject(s) && s.type === 'text')
@@ -131,7 +138,7 @@ function slimBlock(b) {
     role: b.role ?? null,
     ...(b.shared ? { shared: true } : {}),
     look,
-    slots: textSlots(b.slots),
+    slots: textSlots(ownAndDemoOwned(b)),
     lists: arr(b.lists)
       .filter(isObject)
       .map((l) => {
