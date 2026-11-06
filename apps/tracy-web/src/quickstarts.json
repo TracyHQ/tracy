@@ -1600,11 +1600,11 @@
       "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fj6/ja-diner-j6-quickstart-1.0.5.zip"
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.80.zip",
-      "version": "0.24.80",
-      "bytes": 545510,
-      "sha256": "c843a19b8f684ea516501d1f22ffc6e71f98574dc605930eedc44395017e2dc6",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.80/pkg_claudecowork-0.24.80.zip",
+      "file": "pkg_claudecowork-0.24.87.zip",
+      "version": "0.24.87",
+      "bytes": 585541,
+      "sha256": "6f503fd998ef22e5eadfea7bcd7cce6800b2cc1d644d20aad5c1955c36ed5e21",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.87/pkg_claudecowork-0.24.87.zip",
       "contractFiles": {
         "content-map.json": "007259d97a25603720db82d46bdb59c2fb5804bced36146eccb2787fc2f106e2",
         "manifest.json": "019455aeb679e18de3f51fde173508dd6f96a8e61996eb178fd3194a86f65dd3",

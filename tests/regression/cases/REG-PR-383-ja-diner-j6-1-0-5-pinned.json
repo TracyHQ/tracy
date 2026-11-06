@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-383-ja-diner-j6-1-0-5-pinned",
   "kind": "feat",
-  "title": "JA Diner (Joomla 6) 1.0.5 is sealed with the contract, the kit and the plugin it was released with: ja-diner/j6/1.0.5 is the contract Claude Cowork for Joomla 0.24.80 carries, its approved template kit sits beside it, and both quickstarts.json pin quickstart/ja-diner/j6 at 1.0.5 on 0.24.80 with the installer of the manifest",
+  "title": "JA Diner (Joomla 6) 1.0.5 is sealed with the contract, the kit and the plugin it was released with: ja-diner/j6/1.0.5 is the contract Claude Cowork for Joomla 0.24.80 carries, its approved template kit sits beside it, and both quickstarts.json pin quickstart/ja-diner/j6 at 1.0.5 on 0.24.87 (moved from 0.24.80 by #439; same contract files) with the installer of the manifest",
   "pr": 383,
   "area": "quickstart/contracts",
   "cms": ["jo"],
@@ -14,7 +14,7 @@
   ],
   "expect": [
     "S1: the four hashes are those Claude Cowork for Joomla 0.24.80 carries (007259d9…, 019455ae…, e8de147c…, b70293ee…); floor 0.24.80, quickstart version 1.0.5; template-kit.json approved by Akemi0x for 1.0.5.",
-    "S2: version 1.0.5, contract ja-diner/j6/1.0.5, Claude Cowork 0.24.80, installer file, bytes and sha256 equal to the manifest's installer part with a GitHub asset id, every pinned contract file hash equal to the repository file's.",
+    "S2: version 1.0.5, contract ja-diner/j6/1.0.5, Claude Cowork 0.24.87, installer file, bytes and sha256 equal to the manifest's installer part with a GitHub asset id, every pinned contract file hash equal to the repository file's.",
     "S3: both gates pass."
   ],
   "selectors": {

@@ -142,8 +142,9 @@ test('the same fault gives the same code on a T3 kit and a T4 kit', () => {
   }
 })
 
-test('JA Diner 1.0.5 as committed declares none of the five', () => {
-  const judged = judge(dinerRelease, kitAt(DINER))
+test('a T3 kit with none of the five names all five (JA Diner 1.0.5 before #439 declared them)', () => {
+  const bare = HIDDEN_KIT_FIELDS.reduce((doc, f) => without(doc, f.field), kitAt(DINER))
+  const judged = judge(dinerRelease, bare)
   assert.equal(judged.state, 'todo')
   assert.equal(judged.code, 'kit-hidden-field-missing')
   assert.deepEqual(
@@ -161,7 +162,7 @@ test('the check does not apply off Joomla, or without a readable kit (the kit st
   assert.equal(HIDDEN_KIT_FIELDS_CHECK.judge(boxingRelease, { templateKit: { state: 'none' } }, {}), null)
 })
 
-test('in the verdict: the latest JA Boxing release stays green, the latest JA Diner names all five', () => {
+test('in the verdict: the latest JA Boxing and JA Diner releases are green, T4 and T3 alike', () => {
   const contracts = defaultContracts()
   const pieceOf = (name) => {
     const r = releaseOfPin(latestPin(name), contracts)
@@ -176,13 +177,12 @@ test('in the verdict: the latest JA Boxing release stays green, the latest JA Di
   const diner = pieceOf('ja-diner')
   assert.deepEqual(
     [diner.step, diner.state, diner.code],
-    ['kit-hidden-fields', 'todo', 'kit-hidden-field-missing']
+    ['kit-hidden-fields', 'done', 'kit-hidden-fields-declared']
   )
-  assert.deepEqual(
-    diner.params.fields,
-    HIDDEN_KIT_FIELDS.map((f) => f.field)
-  )
-  assert.deepEqual(hiddenKitFieldsOf(kitAt(DINER)).declared, [])
+  const read = hiddenKitFieldsOf(kitAt(DINER))
+  assert.deepEqual(read.missing, [])
+  assert.deepEqual(read.declared, ['selfLinkButtons', 'hiddenPageLinks'])
+  assert.deepEqual(read.none, ['emptyVideoButtons', 'createdPageHide', 'createdPageLayouts.legal'])
 })
 
 // ── T3 and T4 markup ─────────────────────────────────────────────────────────────────────────────────────────────────

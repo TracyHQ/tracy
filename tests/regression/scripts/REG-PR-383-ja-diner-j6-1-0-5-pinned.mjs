@@ -4,7 +4,8 @@
  *   S1 ja-diner/j6/1.0.5 is byte for byte the contract Claude Cowork for Joomla 0.24.80 carries
  *      (SHA-256 read from the published release joomla-v0.24.80), its floor is 0.24.80, and the
  *      approved template-kit.json sits beside it;
- *   S2 both quickstarts.json pin quickstart/ja-diner/j6 at 1.0.5 on Claude Cowork 0.24.80 with the
+ *   S2 both quickstarts.json pin quickstart/ja-diner/j6 at 1.0.5 on Claude Cowork 0.24.87 (moved
+ *      from 0.24.80 by #439 for the write doors; 0.24.87 carries the same four contract files) with the
  *      1.0.5 installer of the manifest (file, bytes, sha256, a GitHub asset id) and every pinned
  *      contract file hash equal to the repository file's;
  *   S3 the gates that judge contracts and pins pass.
@@ -46,7 +47,7 @@ for (const file of [
   const pin = JSON.parse(readFileSync(join(ROOT, file), 'utf8'))['quickstart/ja-diner/j6']
   c.eq(`S2 ${file}: version`, pin.version, '1.0.5')
   c.eq(`S2 ${file}: contract`, pin.contract, 'ja-diner/j6/1.0.5')
-  c.eq(`S2 ${file}: Claude Cowork`, pin.cowork.version, '0.24.80')
+  c.eq(`S2 ${file}: Claude Cowork`, pin.cowork.version, '0.24.87')
   c.eq(`S2 ${file}: installer file`, pin.installer.file, installer.file)
   c.eq(`S2 ${file}: installer bytes`, pin.installer.bytes, installer.bytes)
   c.eq(`S2 ${file}: installer sha256`, pin.installer.sha256, installer.sha256)

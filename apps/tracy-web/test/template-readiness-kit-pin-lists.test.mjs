@@ -1,7 +1,7 @@
 /**
  * Three small checks of the readiness verdict (ticket #437): the kit tool version, the pin behind the latest contract,
  * and the content map's item lists, item pages and menu blocks. Each is green on the latest JA Boxing and red on a
- * broken copy of it with the right code; the verdict flags JA Diner's kit and JA Voyara's pin.
+ * broken copy of it with the right code; the verdict flags JA Voyara's pin (JA Diner's kit was settled again in #439).
  */
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
@@ -39,7 +39,8 @@ test('kit tool: a Boxing kit stamped by an older tool, or by none, is outdated w
     assert.deepEqual([judged.state, judged.code], ['todo', 'kit-tool-outdated'], String(tool))
     assert.equal(judged.params.built, tool ? tool.split(' ')[1] : null)
     assert.equal(judged.params.required, '3.1.0')
-    assert.match(judged.params.fix, /Rebuild the template kit/)
+    assert.match(judged.params.fix, /Settle the template kit again/)
+    assert.match(judged.params.fix, /run samples/)
   }
 })
 
@@ -47,10 +48,19 @@ test('kit tool: no readable kit is not judged here', () => {
   assert.equal(KIT_TOOL_CHECK.judge(boxing, { templateKit: { state: 'none' } }, {}), null)
 })
 
-test('kit tool: the verdict flags the kit of JA Diner 1.0.5 (3.0.0) and keeps Boxing green', () => {
+test('kit tool: a T3 kit stamped 3.0.0 (JA Diner 1.0.5 before #439) is outdated; settled again, the verdict keeps it green', () => {
+  const doc = jsonAt('ja-diner/j6/1.0.5', 'template-kit.json')
+  const old = KIT_TOOL_CHECK.judge(
+    diner,
+    { templateKit: { state: 'read', doc: { ...doc, tool: 'template-kit 3.0.0' } } },
+    {}
+  )
+  assert.deepEqual([old.state, old.code], ['todo', 'kit-tool-outdated'])
+  assert.deepEqual([old.params.built, old.params.required], ['3.0.0', '3.1.0'])
+  assert.equal(doc.tool, 'template-kit 3.1.0')
   const d = pieceOf(diner, [KIT_TOOL_CHECK], 'template-kit')
-  assert.deepEqual([d.step, d.state, d.code], ['kit-tool-version', 'todo', 'kit-tool-outdated'])
-  assert.deepEqual([d.params.built, d.params.required], ['3.0.0', '3.1.0'])
+  assert.equal(d.state, 'done')
+  assert.notEqual(d.step, 'kit-tool-version')
   assert.equal(pieceOf(boxing, [KIT_TOOL_CHECK], 'template-kit').state, 'done')
   assert.notEqual(pieceOf(boxing, [KIT_TOOL_CHECK], 'template-kit').step, 'kit-tool-version')
 })
