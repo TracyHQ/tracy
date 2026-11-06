@@ -28,7 +28,10 @@ export function blocksByPage(kit, sitePages) {
     byPage.set(pagePath(path), { page, blocks: [...ids].map((b) => blocks.get(b)).filter(Boolean) })
   }
   const of = (page) => (page === null || page === undefined ? null : byPage.get(pagePath(page)))
-  return Object.assign((page) => of(page)?.blocks ?? [], { kitPageOf: (page) => of(page)?.page ?? null })
+  return Object.assign((page) => of(page)?.blocks ?? [], {
+    kitPageOf: (page) => of(page)?.page ?? null,
+    all: () => [...byPage.values()].flatMap((p) => p.blocks)
+  })
 }
 
 /** The kit slots each site page shows: the slots of the blocks it shows (blocksByPage), and its h1. */

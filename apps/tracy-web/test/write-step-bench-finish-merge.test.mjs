@@ -369,7 +369,8 @@ test('a customer-visible fault outside the list that the finder names is kept in
 })
 
 const SHOWERS = 'Showers ((span))and((/span)) lockers'
-const noOrder = { kind: 'fix-text', slot: 'block-9.1', text: 'x' }
+/** An order on the menu that code still refuses: it changes the words of the slot. */
+const noOrder = { kind: 'fix-text', slot: 'block-3.2', text: 'x' }
 
 test('a site check failure on another block of the page is not confirmed by a finder fault that named neither slot nor block nor its words', async () => {
   const run = await finish({

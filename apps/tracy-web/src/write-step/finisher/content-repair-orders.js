@@ -43,9 +43,14 @@ function validateLink(order, context) {
   return slotRepair(at, `index.php?Itemid=${item[1]}`)
 }
 
-/** Fix one picture's alt: the words step 8 saw in the picture of that frame, or the site copy's alt for it. */
+/**
+ * Fix one picture's alt: the words step 8 saw in the picture of that frame, or the site copy's alt for it. A fault the site
+ * check names on the picture's own slot is about that frame: the order writes the alt slot beside it.
+ */
 function validateAlt(order, context) {
-  const at = slotOf(order, context)
+  const { fault } = context
+  const onFrame = fault.slot && fault.slot === order.frame && order.slot !== order.frame
+  const at = slotOf(order, onFrame ? { ...context, fault: { ...fault, slot: order.slot } } : context)
   if (!at.ok) return at
   const frame = context.kitSlotOf(order.frame)
   if (!frame || frame.type !== 'image' || frame.block !== context.kitSlotOf(at.slot)?.block)

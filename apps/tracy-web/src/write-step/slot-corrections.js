@@ -35,7 +35,7 @@ const isOpenableAlt = (slot) =>
   slot.jsonPath.some((part) => String(part).endsWith('[alt]'))
 
 /** The alt slot beside a frame's picture in its row, or null. Only a gallery row has one a door can fill. */
-function altSlotOf(frame, slots) {
+export function altSlotOf(frame, slots) {
   const picture = slots.find((s) => s.key === contentMapKey(frame))
   if (picture?.type !== 'image' || picture.group?.kind !== 'gallery') return null
   const beside = (s) => s.entity === picture.entity && s.group?.id === picture.group.id

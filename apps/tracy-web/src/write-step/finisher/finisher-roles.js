@@ -16,7 +16,7 @@ const FINDER_SYSTEM = `You look at screenshots of one page of a website a custom
 {FAULTS}
 Pictures labelled "template demo" show the template's own demo of a block this page shows; they are not the site. Use them only for "lost-design": a design trait the demo block shows that the site's block lost. Never name a fault on a template demo picture. A fault a site owner would see that fits none of these kinds: name it with kind "other", so it is logged. Never judge taste, colours or fonts. Name a fault once, on the tile where it shows. Answer with one JSON object: { "faults": [ { "page": "<path>", "viewport": "desktop" | "phone", "tile": <number>, "kind": "<kind>", "slot": "<slot id when the page names it, else null>", "block": "<block id when the page names it, else null>", "seen": "<one sentence; quote the words you see in double quotes>" } ] }. No fault: { "faults": [] }.`
 
-const FIXER_SYSTEM = `You turn one fault found on a website into one repair order. You never write to the site: code checks your order and writes it, and drops an order that breaks a rule. Every order changes one thing: the words of one slot, one link, one demo item, one picture's alt, one page's title or meta description, the accent words of one heading, or the style of one block. Never invent a fact: new words, phone numbers, e-mail addresses and links come only from the sources given with the fault ("sources": the brief's facts, the pages the site keeps, the descriptions and alts of the pictures, the page's title and description in the site copy), and when there is nothing to put in place of a demo item, remove that one item. Never change the meaning of the words, never add words to a heading, never hide content. The fault names the order kinds that may repair it ("orders"); use one of them. A fault may carry "tried": orders written for it before and undone because they did not help; never give one of them again. The orders you may give:
+const FIXER_SYSTEM = `You turn one fault found on a website into one repair order. You never write to the site: code checks your order and writes it, and drops an order that breaks a rule. Every order changes one thing: the words of one slot, one link, one demo item, one picture's alt, one page's title or meta description, the accent words of one heading, or the style of one block. Never invent a fact: new words, phone numbers, e-mail addresses and links come only from the sources given with the fault ("sources": the brief's facts, the pages the site keeps, the descriptions and alts of the pictures, the page's title and description in the site copy), and when there is nothing to put in place of a demo item, remove that one item. Never change the meaning of the words, never add words to a heading, never hide content. The fault names the order kinds that may repair it ("orders"); use one of them. The fault comes with its menu ("menu"): the blocks of its page, each block's slots with the words they hold now, its picture frames with the slot of each one's alt, whether a style order may name the block and the CSS targets inside it as the page serves them. Name only blocks, slots, frames and targets from the menu; an order naming anything else is refused. A fault may carry "refused": an order you gave for it that code refused, with the reason; give one that the reason allows. A fault may carry "tried": orders written for it before and undone because they did not help; never give one of them again. The orders you may give:
 {ORDERS}
 Answer with one JSON object: the order.`
 
@@ -64,9 +64,10 @@ export function askFinder(door, page, shots, demoShots = []) {
 
 /**
  * One fixer call for one fault, with the order kinds its kind lists, the words the site holds in the slot the finder named,
- * and the sources a repair may take new words from (repair-facts.js).
+ * the sources a repair may take new words from (repair-facts.js), the fault's repair menu (repair-menu.js), and the order
+ * code refused for it with the reason, when it is asked again.
  */
-export function askFixer(door, fault, slotWords, sources = null) {
+export function askFixer(door, fault, slotWords, sources = null, { menu = null, refused = null } = {}) {
   const content = [
     {
       type: 'text',
@@ -74,7 +75,9 @@ export function askFixer(door, fault, slotWords, sources = null) {
         fault,
         orders: FAULT_KINDS[fault.kind]?.orders ?? [],
         slotNow: fault.slot ? { slot: fault.slot, words: slotWords ?? null } : null,
-        sources
+        sources,
+        ...(menu ? { menu } : {}),
+        ...(refused ? { refused } : {})
       })
     }
   ]

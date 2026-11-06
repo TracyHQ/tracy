@@ -16,7 +16,7 @@ import { shootPages } from '../../lib/page-shots.js'
 import { keptPageList } from '../../lib/site-kept-paths.js'
 import { kitSlotIds } from '../kit-slot-ids.js'
 import { doorsRefusal } from './finisher-doors.js'
-import { findFaults, slotsByPage } from './finder-stage.js'
+import { blocksByPage, findFaults, slotsByPage } from './finder-stage.js'
 import { mergedFaults } from './fault-sources.js'
 import { finalCheck } from './final-check.js'
 import { REPAIR_LOG_FILE, repairLog } from './repair-log.js'
@@ -100,6 +100,9 @@ export async function runFinisher(input) {
     kit,
     kitSlots: kitSlotIds(kit),
     pageSlots: slotsByPage(kit, sitePages),
+    // The kit blocks each page shows, for the repair menu of a fault (repair-menu.js).
+    blocksOn: blocksByPage(kit, sitePages),
+    contentMap,
     lineOf: (slot) => writtenLines.get(slot),
     orderFacts: orderFacts({ kit, report, contentMap, facts, sitePages }),
     replies: replyKeeper(saveFile),

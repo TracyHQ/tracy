@@ -7,84 +7,18 @@
 // round (`deferred`), so no order is checked against words another repair is about to change. Past a hard limit
 // (run-limits.js) no fixer is asked and no write starts: the fault is logged as unrepaired, reason `budget`.
 import { judgePage } from './batch-judge.js'
-import { askFixer } from './finisher-roles.js'
-import { causeOf, logRecord } from './repair-log.js'
-import { stepsOf, validOrder } from './repair-orders.js'
-import { fixerSources } from './repair-facts.js'
+import { proposed, unrepaired } from './fixer-order.js'
+import { logRecord } from './repair-log.js'
 import { readSite } from './repair-write.js'
 import { BUDGET } from './run-limits.js'
+
+export { unrepaired }
 
 /** Where a fault is, as far as the finder or the site check named it. */
 const spotOf = (fault) => (fault.slot ? `slot ${fault.slot}` : fault.block ? `block ${fault.block}` : null)
 /** Where a valid order writes. */
 const targetOf = (order, valid) =>
   order.kind === 'style-block' ? `block ${valid.block}` : `slot ${valid.slot}`
-
-/** A fault left unrepaired: by a hard limit, or by the last round. */
-export const unrepaired = (run, fault, reason) =>
-  logRecord(fault, { ...causeOf(run.firstCheck, fault), outcome: 'unrepaired', reason })
-
-/** The fixer's order for one fault, checked by code: `{ repair }` to write, or `{ record }` that says why not. */
-async function proposed(run, fault, site) {
-  const stopped = run.budget.stopped()
-  if (stopped) return { record: unrepaired(run, fault, `${BUDGET}: ${stopped}`) }
-  const number = run.nextNumber()
-  const cause = causeOf(run.firstCheck, fault)
-  const asked = run.budget.spend(
-    await run.budget.timed('fix', () =>
-      run.budget.bounded(() =>
-        askFixer(
-          run.doors.fixer,
-          fault,
-          site.current.get(run.lineOf(fault.slot)?.key),
-          fixerSources(run.orderFacts, fault)
-        )
-      )
-    )
-  )
-  await run.replies.keep({
-    name: `fixer-r${number}`,
-    role: 'fixer',
-    page: fault.page,
-    repair: number,
-    door: run.doors.fixer,
-    sent: asked.sent,
-    images: [],
-    call: asked
-  })
-  if (asked.budget) return { record: unrepaired(run, fault, asked.problem) }
-  if (asked.problem)
-    return {
-      record: logRecord(fault, { ...cause, outcome: 'failed', reason: `the fixer: ${asked.problem}` })
-    }
-  const order = asked.answer
-  const valid = await validOrder(order, {
-    ...run.orderFacts,
-    site,
-    door: run.door,
-    siteKey: run.siteKey,
-    fault,
-    kitSlots: run.kitSlots,
-    pageSlots: run.pageSlots,
-    keyOf: (slot) => run.lineOf(slot)?.key ?? null,
-    currentOf: (key) => site.current.get(key)
-  })
-  // A repair is logged on the slot it is about, the one the finder named or the one the order was tied to.
-  const onSlot = { ...fault, slot: fault.slot ?? (valid.ok ? valid.slot : null) }
-  const known = { ...(fault.slot ? cause : causeOf(run.firstCheck, onSlot)), order }
-  if (!valid.ok) return { record: logRecord(onSlot, { ...known, outcome: 'dropped', reason: valid.reason }) }
-  if ((fault.tried ?? []).includes(JSON.stringify(order)))
-    return {
-      record: logRecord(onSlot, {
-        ...known,
-        outcome: 'dropped',
-        reason: 'the same order was written and undone in the round before'
-      })
-    }
-  const steps = stepsOf(order.kind)
-  const repair = { run, fault, order, valid, site, number, steps, onSlot, known }
-  return { repair: { ...repair, ...steps.judgeBy(repair) } }
-}
 
 /** The written repair kept or undone on its verdict. */
 async function settled(run, r, verdict) {
@@ -138,7 +72,9 @@ export async function repairPage(run, page, faults, shots, round) {
   }
   if (!active.length) return { records, kept, deferred, undone }
   const site = await readSite(run.door, run.siteKey)
-  const orders = await Promise.all(active.map((fault) => proposed(run, fault, site)))
+  // The page as served now, read once for the menus of all its faults; unread, the menus list no CSS targets.
+  const html = run.pageHtml && page ? await run.pageHtml(page).catch(() => null) : null
+  const orders = await Promise.all(active.map((fault) => proposed(run, fault, site, html)))
   const writing = []
   const targets = new Set()
   for (const [index, o] of orders.entries()) {

@@ -134,7 +134,7 @@ test('a repair the checker finds not better is reverted by its apply id and logg
 test('an order of an unknown kind, for a slot the kit lacks, or that changes the words is dropped; nothing is written', async () => {
   for (const [order, why] of [
     [fixOrder({ kind: 'repaint-block' }), /unknown order kind/],
-    [fixOrder({ slot: 'block-9.9' }), /block-9\.9.*kit/],
+    [fixOrder({ slot: 'block-9.9' }), /block-9\.9.* not on the menu/],
     [fixOrder({ text: 'Strength coaching for champions only' }), /words/]
   ]) {
     const run = await finish({ finder: [finding(), finding()], fixer: [order], checker: [] })
@@ -232,7 +232,10 @@ test('with no slot from the finder, an order may only pick a slot of that page w
 
   for (const [order, why] of [
     // block-4.1 holds the same markup, but it is on the about page, not where the fault was seen.
-    [fixOrder({ slot: 'block-4.1', text: 'Our story began in a garage' }), /block-4\.1 is not on \//],
+    [
+      fixOrder({ slot: 'block-4.1', text: 'Our story began in a garage' }),
+      /block-4\.1.* not on the menu of \//
+    ],
     // block-3.1 is on the page, but its words hold no markup at all.
     [fixOrder({ slot: 'block-3.1', text: HOURS }), /block-3\.1.*does not hold the markup/]
   ]) {

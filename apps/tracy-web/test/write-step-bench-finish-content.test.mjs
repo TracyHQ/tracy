@@ -193,6 +193,23 @@ test("a wrong alt is replaced from step 8's description of the picture; other wo
   )
 })
 
+test('a wrong alt the site check names on its picture is repaired in the alt slot beside it; an alt order on the frame itself is refused', async () => {
+  // The site check names the picture's slot; the alt lives in the slot beside it.
+  const run = await finish({
+    order: { kind: 'fix-alt', slot: 'block-6.2', frame: 'block-6.1', text: SEEN },
+    fault: { slot: 'block-6.1' }
+  })
+  assert.equal(run.site.held['module-6.2'], SEEN)
+  assert.equal(run.record.outcome, 'kept')
+  dropped(
+    await finish({
+      order: { kind: 'fix-alt', slot: 'block-6.1', frame: 'block-6.1', text: SEEN },
+      fault: { slot: 'block-6.1' }
+    }),
+    /the alt of frame block-6\.1 is not a slot of its own, not "block-6\.1"/
+  )
+})
+
 test('a demo page title is replaced from the site copy in its row, under its own apply id, and undone when the live page does not serve it', async () => {
   const order = { kind: 'fix-title-meta', page: '/about', field: 'title', text: ABOUT_TITLE }
   const fault = { page: '/about', slot: null }

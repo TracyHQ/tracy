@@ -11,6 +11,7 @@ import { FAULT_KINDS } from './fault-kinds.js'
 import { ALLOWED_PROPERTIES } from '../../lib/finisher-style.js'
 import { STYLE_STEPS, WORDS_STEPS } from './repair-steps.js'
 import { validStyleOrder } from './style-order.js'
+import { menuRefusal } from './repair-menu.js'
 
 const squash = (s) =>
   String(s ?? '')
@@ -76,7 +77,7 @@ export const ORDER_KINDS = Object.freeze({
  * @param {unknown} order the fixer's answer
  * @param {{ fault: { kind: string, page: string, slot: string | null, seen: string | null }, kitSlots: Set<string>,
  *   pageSlots: (page: string) => Set<string>, keyOf: (slot: string) => string | null,
- *   currentOf: (key: string) => string | undefined }} context `pageSlots` gives the kit slots a page shows, `keyOf` the
+ *   currentOf: (key: string) => string | undefined, menu?: object }} context `menu` the fault's repair menu; `pageSlots` gives the kit slots a page shows, `keyOf` the
  *   content map key the write report wrote the slot under, `currentOf` what the site holds there now
  * @returns {{ ok: true, slot: string, key: string, current: string, after: string, changes: Record<string, string> }
  *   | { ok: false, reason: string }} `current` is what the slot holds before the repair, `after` what it holds once repaired;
@@ -88,6 +89,9 @@ export function validOrder(order, context) {
   if (!entry) return { ok: false, reason: `unknown order kind ${JSON.stringify(order?.kind ?? null)}` }
   if (!FAULT_KINDS[fault.kind]?.orders.includes(order.kind))
     return { ok: false, reason: `a ${order.kind} order does not repair a ${fault.kind} fault` }
+  // Everything the order names must be on the fault's repair menu (repair-menu.js); a refusal here is told to the fixer.
+  const off = context.menu ? menuRefusal(order, context.menu) : null
+  if (off) return { ok: false, reason: off, offMenu: true }
   if (entry.validate) return entry.validate(order, context)
   const { pageSlots } = context
   const slot = order.slot

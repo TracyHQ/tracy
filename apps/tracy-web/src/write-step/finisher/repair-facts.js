@@ -55,8 +55,15 @@ export function orderFacts({ kit, report, contentMap = null, facts = null, siteP
   const mapSlots = new Map(each(contentMap?.slots).map((s) => [s?.key, s]))
   const lines = new Map(each(report?.slots).map((l) => [l?.slot, l]))
   const kitSlots = new Map()
-  for (const block of each(kit?.blocks))
-    for (const slot of each(block?.slots)) kitSlots.set(slot?.id, { ...slot, block: block.id })
+  for (const block of each(kit?.blocks)) {
+    // A block's own slots, and the slots of its list rows (a gallery's pictures and their alts).
+    const rows = each(block?.lists).flatMap((l) => [
+      ...each(l?.rowSlots),
+      ...each(l?.rows).flatMap((r) => each(r?.slots))
+    ])
+    for (const slot of [...each(block?.slots), ...rows])
+      if (!kitSlots.has(slot?.id)) kitSlots.set(slot?.id, { ...slot, block: block.id })
+  }
   const brief = briefValues(facts?.brief)
   return {
     kit,
