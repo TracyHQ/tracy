@@ -1,0 +1,3 @@
+- **JA Boxing j6 1.0.11 carries its design system measurement at preview probe v10** — Akemi0x · `feat/ja-boxing-1-0-11-design-system-measurement` · 2026-11-06
+  **Affects:** the Design system step of JA Boxing 1.0.11 on /ops is judged once this is deployed (before: warn `ds-not-at-probe`, only 1.0.10 had a v10 measurement); press Check again. No contract file of 1.0.11 changed (ADR 0038 and ADR 0039): only `design-system-measurement.json` is added to its contract folder.
+  **Measured:** a stand restored from the 1.0.11 installer (sha256 d99d292e...), `scripts/release-measure.mjs`: `flow.mjs` under the 15 featured systems, `preview-check.mjs --scheme light,dark --pages all --write` (Moxie, Figma), `preview-parity.mjs --write`; results in the PR description.
