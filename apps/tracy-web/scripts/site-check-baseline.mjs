@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Measure the demo baseline of a quickstart version on an UNTOUCHED site (ADR 0044, decision 8) and keep it, once per
- * version. BENCH ONLY. Run it where tracy-web runs, like write-step-bench.mjs. The site must be a fresh quickstart nobody
+ * version. A stored baseline is reused and printed as reused; `--force` measures again on purpose (about six minutes).
+ * `write-step-bench.mjs create-site` settles the same baseline by itself, so this script is for measuring on its own. BENCH ONLY. Run it where tracy-web runs, like write-step-bench.mjs. The site must be a fresh quickstart nobody
  * has written to: a baseline read off a written site would call the written words demo.
  *
  *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --site <site key> --version <contract id> --pages-file <json> [--force]
@@ -56,7 +57,7 @@ export async function main(argv, env = process.env) {
       force: values.force === true
     })
     console.log(
-      `${measured ? 'measured' : 'kept'} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, ${baseline.over?.length ?? 0} words over pictures, ${baseline.unread?.length ?? 0} pages with no demo${baseline.unread?.length ? ` (${baseline.unread.map((u) => `${u.path}: ${u.why}`).join('; ')})` : ''}`
+      `${measured ? (values.force ? 'measured again (forced)' : 'measured (none was stored)') : 'reused (stored)'} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, ${baseline.over?.length ?? 0} words over pictures, ${baseline.unread?.length ?? 0} pages with no demo${baseline.unread?.length ? ` (${baseline.unread.map((u) => `${u.path}: ${u.why}`).join('; ')})` : ''}`
     )
     return 0
   } finally {
