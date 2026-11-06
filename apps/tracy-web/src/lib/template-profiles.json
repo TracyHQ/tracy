@@ -3594,6 +3594,12 @@
         "brandReady": true,
         "faviconReady": true,
         "note": "Read off the 1.0.0 pack source: the header is the only logo spot (BrandLogo with logoSpots); settings.logo in the light header and the chrome entry's logo_dark in the dark one, switched by the ◐ toggle and the visitor system; the template icon only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      },
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.0.0: only the stylesheets changed (type, shape and colour roles read the design-system slot); the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
       }
     },
     "tracy-saas/emdash-0.x": {

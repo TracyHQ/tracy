@@ -1,6 +1,6 @@
 # STATUS — tracy-restaurant (JA Restaurant → EmDash)
 
-End of coordinator session 6 (P8 finished). Version 1.0.0 is packed and release-prepared; nothing is published, committed or tagged.
+End of coordinator session 6 (P8 finished). Version 1.0.1 (design-system ready; 1.0.0 is published) is packed and release-prepared; 1.0.1 is not published.
 
 ## Gates
 | Phase | State | Evidence |
@@ -23,6 +23,6 @@ Routes: 12 pages and 4 lists plus details, 20 contract pages, 8 layouts. Seed: 2
 
 ## Open
 - The `language-policy` check needs the exact-line rows of `scripts/language-policy.json` on the base first: the same change is in this tree and as a separate patch (1177 rows, all in this template; customer-facing locale data plus kit-owned copies).
-- Design-system measurement (`contracts/1.0.0/design-system-measurement.json`, the slot contract `templates/emdash-tracy-restaurant.json` and the matching `COPY ... contracts` Dockerfile line) is not done: `flow.mjs` hangs opening the home page in its CDP harness (the renderer stops answering after the page commits; every other page opens, and Playwright opens the home page in 60 ms). A draft contract is in the work folder. It does not hold Publish (SLOT-1 is a worth-fixing rule); the check that does (VARS-1) reports 0.
+- Design-system measurement: done for 1.0.1 (`contracts/1.0.1/design-system-measurement.json`, slot contract `templates/emdash-tracy-restaurant.json`, `ready: true`, DECISIONS D62); the checker grades the 1.0.1 release files A, 46 of 46. 1.0.0 was measured too (`contracts/1.0.0/`) and did not pass: its stylesheets did not read the type and shape tokens.
 - Checkpoint left at 8/11 (SF-47): P6 skipped on purpose, P7 and P8 cannot be recorded without it.
 - The 22-language questionnaire is Claude-translated. `source/REBUILD.md` was not run end to end. Mail delivery was proven to a sandbox mailbox only. The Dockerfile and entrypoint of the template were not built into an image (the `tracy-web` image was).
