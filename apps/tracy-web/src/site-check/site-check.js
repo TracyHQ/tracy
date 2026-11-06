@@ -7,12 +7,13 @@
 // reason? }, with `level` defaulting to block and `causingStep` to the group's own. `read(action, params)` asks the site
 // through the door. Only reads pass, answers are shared between groups, and a refused read makes the group unmeasured.
 //
-// Context also holds `pageHtml(path)` (a page's markup as a visitor reads it), `host(payload)` (reads pages in a browser), `baseline` (the demo baseline) and `kit` (the template kit's
-// document), all optional: a group that needs one and has none is unmeasured.
+// Context also holds `pageHtml(path)` (a page's markup as a visitor reads it), `host(payload)` (reads pages in a browser), `baseline` (the demo baseline), `kit` (the template kit's
+// document) and `pictures` (step 8's site-pictures/1 manifest, for `alt-matches-picture`), all optional: a group that needs one and has none is unmeasured.
 //
 // Statuses: green, red (a block failure), unmeasured (it could not tell), not-applicable (it checked nothing, and said why), and
 // not-run for a group stopped by an earlier one. A group that checked nothing is never green (ADR 0044, decision 27): it answers
 // `notApplicable: '<reason>'` when there was genuinely nothing of its kind to measure, and is unmeasured otherwise.
+import { altMatchesPictureGroup } from './alt-matches-picture.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { kitVersionGroup } from './kit-version.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
@@ -32,8 +33,11 @@ export const KIT_GROUPS = [kitVersionGroup]
 export const SITE_CHECK_GROUPS = [...WRITE_FINDING_GROUPS, readBackGroup]
 /** With a route table in the report (the write step renamed kept pages), after read-back: each page ends with its plan slug. */
 export const ROUTE_GROUPS = [pageSlugGroup]
-/** The groups that read pages as a visitor's browser gets them, with no browser: they run when a page reader is given. */
-export const PAGE_READ_GROUPS = [writtenNotPrintedGroup]
+/**
+ * The groups that read pages as a visitor's browser gets them, with no browser: they run when a page reader is given.
+ * `alt-matches-picture` also needs step 8's manifest (`pictures`); without it, it is unmeasured when pictures were written.
+ */
+export const PAGE_READ_GROUPS = [writtenNotPrintedGroup, altMatchesPictureGroup]
 
 const READ_OPERATIONS = new Set(['inspect', 'read'])
 /** Actions that only read by what they are (the plugin marks `content.get` as writing nothing) and take no operation. */
@@ -117,7 +121,8 @@ const notGreenAfter = (status, stoppedBy) => (stoppedBy && passes(status) ? stop
 
 /**
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
- *   pageHtml?: (path: string) => Promise<string | null>, baseline?: object | null, kit?: object | null, allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
+ *   pageHtml?: (path: string) => Promise<string | null>, baseline?: object | null, kit?: object | null, pictures?: object | null,
+ *   allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
  *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
  *   `pageHtml` reads a page's markup: without it `written-not-printed` does not run. A `kit` adds `kit-version` first.
  *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
@@ -131,6 +136,7 @@ export async function runSiteCheck({
   pageHtml,
   baseline = null,
   kit = null,
+  pictures = null,
   groups = [
     ...(kit ? KIT_GROUPS : []),
     ...SITE_CHECK_GROUPS,
@@ -151,6 +157,7 @@ export async function runSiteCheck({
     // Measured at the demo's addresses; the kept pages answer at the plan's now (page-slug.js).
     baseline: baselineAtRoutes(baseline, report.routes),
     kit,
+    pictures,
     read: readsOnly(door, siteKey)
   }
   const results = []

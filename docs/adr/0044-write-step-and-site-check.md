@@ -399,12 +399,33 @@ refusal), `broken-sentence` (every slot of every sentence group is hidden by the
 `plan-links` (no plan link and no end action), `list-rows` (the plan cuts no list), `phone-callable` (the report names no brief
 phone), `map-location` (no page prints a map and the demo baseline holds none), `brand-accent` (no brand accent written and no
 page reads a brand style), `words-over-picture` (no page prints words over a picture), `unowned-slots` (every slot has an
-owner). Read-back that compared no line, `logo-readable` with no logo read, and a page group with no page read are unmeasured.
+owner), `alt-matches-picture` (no written picture, decision 28). Read-back that compared no line, `logo-readable` with no logo read, and a page group with no page read are unmeasured.
 
 A hide the plugin refuses because the contract has no slot for it (`report.noWayOut`, a reason naming issue #369) was sent, so it
 is not in `report.unaddressable`, and read-back blamed it on step 9 as a refused slot. `unaddressable-items` now lists it too, on
 step 0: the contract ships with the template, and a new contract is a template release. Read-back leaves those failed lines to
 that group, so each is blamed once.
+
+### 28. The alt a page prints is held to what step 8 saw in the picture, on the written site
+
+Owner's decision, 2026-11-06. Steps 6 (the writer, who writes the alts) and 8 (the pictures) run in parallel once the plan
+passes its check. Step 8 compared each alt with what its looker saw (`altNotes`, ADR 0043 section 3b) only when it was
+given the writer's copy file, so in a parallel run the comparison was skipped and nothing said so. Making step 8 wait for
+step 6 would keep the check where it was and cost the customer several minutes per site; dropping it lets an alt that
+describes another scene (a pool pictured, a tennis court in the alt) reach screen readers and search engines.
+
+The comparison moves to step 11. The site check's `alt-matches-picture` group (`site-check/alt-matches-picture.js`) runs
+with the page-read groups, after step 9, given step 8's manifest (`site-pictures/1`, its `seen` sentences). For each
+picture the write report says was written, it reads the alt each page showing the slot prints for that file (an `<img>`
+naming it, or a `<picture>` one of whose `<source>` tags names it, inside the body) and compares it with the seen sentence
+by the same word overlap step 8 uses (`lib/alt-compare.js`, shared by both). No model is called. A disagreeing alt blocks
+on that slot with the page, the alt printed, what the picture shows and why they disagree, naming step 6 when the alt is
+words the writer wrote in this run, and step 9 when it is not (the template's or the demo's alt, left on the page). A
+picture with no seen sentence, painted as a background, printed with an empty alt or not printed at all is listed in
+`notMeasured` with its reason and not counted. With no written picture the group is not applicable (decision 27); with
+pictures written but none compared, or without the manifest, it is unmeasured, with its reason. Step 8 no longer leaves `altNotes` empty in silence: its
+manifest's `altCheck` says `deferred` (to this group) without a copy file, `compared` with one. Sending a finding back to
+the writer automatically is not part of this decision.
 
 ## Consequences
 

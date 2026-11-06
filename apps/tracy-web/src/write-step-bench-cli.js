@@ -3,7 +3,7 @@
 // BENCH ONLY. The write step bench's command line (ADR 0044), with the commands of the other benches. A run executes in
 // this process and needs no worker in the server; other shells read it or stop it through its row (write-run-store.js).
 // Exit codes: 0 done, 1 refused, stopped, cancelled or not found, 2 wrong usage.
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from './lib/template-kit-source.js'
@@ -24,11 +24,13 @@ export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   status <runId>                              state, phase, counts and the cause of a stop
   get <runId> --out <dir>                     write the run's site-write-report.json
   cancel <runId>                              stop a run between phases
-  check --run <runId> --account <email> [--out <dir>] [--all-groups]
+  check --run <runId> --account <email> [--out <dir>] [--all-groups] [--site-pictures-file <path>]
                                               measure the run's site against its report (site-check/1): reads only,
                                               runs in this process, keeps the result on the run's report; --out also
                                               writes site-check.json. Exit 0 green, 1 red or unmeasured.
                                               --all-groups runs the page groups even when read-back is red (never green)
+                                              --site-pictures-file: step 8's site-pictures.json, for alt-matches-picture
+                                              (each printed alt against what the picture shows)
 ${SITE_USAGE}`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
@@ -76,7 +78,8 @@ export async function runCli(argv, deps) {
         limit: { type: 'string' },
         out: { type: 'string' },
         run: { type: 'string' },
-        'all-groups': { type: 'boolean' }
+        'all-groups': { type: 'boolean' },
+        'site-pictures-file': { type: 'string' }
       }
     })
     const [command, runId] = positionals
@@ -265,6 +268,16 @@ async function checkRun(d, values) {
   if (!r) return refused(d, `No run ${values.run}.`)
   if (r.status === 'running') return refused(d, `Run ${r.id} is still going.`)
   if (!r.report) return refused(d, `Run ${r.id} left no report.`)
+  // Step 8's manifest, whose seen sentences `alt-matches-picture` compares with the printed alts (alt-matches-picture.js).
+  let pictures = null
+  if (values['site-pictures-file']) {
+    const file = path.resolve(d.cwd ?? process.cwd(), values['site-pictures-file'])
+    try {
+      pictures = JSON.parse(await readFile(file, 'utf8'))
+    } catch (error) {
+      return refused(d, `--site-pictures-file cannot be read as JSON: ${error?.message ?? error}`)
+    }
+  }
   const check = await runSiteCheck({
     door: d.makeDoor({ account: values.account, platform: 'joomla' }),
     report: r.report,
@@ -274,6 +287,7 @@ async function checkRun(d, values) {
     ...(d.pageHtml ? { pageHtml: (path) => d.pageHtml({ siteKey: r.report.site, path }) } : {}),
     baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
     kit: openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null,
+    pictures,
     allGroups: values['all-groups'] === true,
     ...(d.now ? { now: d.now } : {})
   })

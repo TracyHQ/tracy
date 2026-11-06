@@ -1,41 +1,15 @@
 // Alt notes for the writer (#343, ADR 0043): when a run is given the writer's copy file (`site-copy/1`), each frame's
 // alt text is compared with what the looker saw in the picture actually placed there. Pure code, no model call.
 //
-// The comparison is a plain word overlap, so its verdict is easy to explain: both texts are cut into content words
+// The comparison (lib/alt-compare.js, shared with the site check's `alt-matches-picture`) is a plain word overlap, so its verdict is easy to explain: both texts are cut into content words
 // (lower case, letters and digits, three letters or more, common little words dropped, a plural or -ing ending
 // trimmed), and the alt "agrees" when at least one of its content words is in the seen sentence and at least a third of
 // them are. Anything else "differs": the note asks the writer to read the picture again. The note lists the shared
 // words, so a reader sees why. Frames with no alt, or no seen sentence, get no note.
+import { compareAlt } from '../lib/alt-compare.js'
 import { COPY_VERSION } from '../lib/site-copy-view.js'
 
-const STOP = new Set(
-  (
-    'the and with for from into onto over under this that these those their there here its his her our your they them ' +
-    'are was were been being has have had who whom which what when where while also very just some any each every ' +
-    'one two three photo picture image shows showing shown'
-  ).split(' ')
-)
-
-/** The content words of a text, as the comparison reads them. */
-export function contentWords(text) {
-  const words = String(text ?? '')
-    .toLowerCase()
-    .match(/[a-z0-9]+/g)
-  const out = new Set()
-  for (const w of words ?? []) {
-    if (w.length < 3 || STOP.has(w)) continue
-    out.add(w.replace(/(ing|es|s)$/, '') || w)
-  }
-  return out
-}
-
-/** One alt against one seen sentence: { agrees, shared }. */
-export function compareAlt(alt, seen) {
-  const a = contentWords(alt)
-  const s = contentWords(seen)
-  const shared = [...a].filter((w) => s.has(w))
-  return { agrees: shared.length >= 1 && shared.length * 3 >= a.size, shared }
-}
+export { compareAlt, contentWords } from '../lib/alt-compare.js'
 
 /**
  * The alts of a writer copy file by frame, as a run stores them, or a problem. Only `version` and `alts` are read.
@@ -77,4 +51,21 @@ export function altNotesFor(alts, entries) {
     })
   }
   return notes
+}
+
+/**
+ * What the manifest says of its alt check (`altCheck`). Without a writer copy file (steps 6 and 8 run in parallel, so the
+ * alts do not exist yet when this step runs) `altNotes` stays empty, and that is said: the comparison is deferred to the
+ * site check, which reads the alt each page prints and compares it with the seen sentences of this manifest.
+ * @param {Array<{ frame: string, text: string }> | null} alts null when the run was given no copy file
+ */
+export function altCheckFor(alts) {
+  if (!alts)
+    return {
+      status: 'deferred',
+      to: 'step 11 site check, group alt-matches-picture',
+      reason:
+        'the run was given no writer copy file, so no alt was compared here; step 11 (alt-matches-picture) compares the alt each page prints with the seen sentences of this manifest'
+    }
+  return { status: 'compared', reason: 'the writer copy file was given; altNotes holds the comparison' }
 }

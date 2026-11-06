@@ -13,7 +13,8 @@
 // manifest's `looker` holds the door's model and snapshot, the prompt hash and one record per picture (frame, file hash,
 // time, cost, cached); `cost.looker` and `timing.looker` are their sums, and `paid` (what this save spent, cached looks
 // excluded) is added to the run's cost by the caller.
-// When the run was given a writer copy file, `altNotes` compares its alts with the seen sentences (alt-notes.js).
+// When the run was given a writer copy file, `altNotes` compares its alts with the seen sentences (alt-notes.js); without
+// one, the manifest's `altCheck` says the comparison is deferred to the site check's `alt-matches-picture` (step 11).
 //
 // The looks run where a checked round is saved (looker-round.js withLooker). Every readable look is kept in the bench's
 // file store (runs/<run id>/looks/<key>.json, the key a hash of the picture, its display size, the words, the model and
