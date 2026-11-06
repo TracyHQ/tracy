@@ -45,6 +45,11 @@
 //                 --images is the folder the image paths are relative to, the kit's own folder by default)
 //   cli.mjs looks --kit <template-kit.json> --apply <looks.json>   (merge [{image, sha256, text}] written by the
 //                 packager's own Claude Code: all entries checked, none written when one is wrong; lib/looks.mjs)
+//   cli.mjs legal-layout --kit <template-kit.json> --layout '<template>:<file>' --why '<what it prints>'
+//   cli.mjs legal-layout --kit <template-kit.json> --none --why '<words>'
+//                 (site.createdPageLayouts.legal, lib/legal-layout.mjs: the plain article layout a created legal page
+//                 prints through, never a content page's own file; --none: the component's default. A person reads the
+//                 template's article layouts first; nothing is measured, and no image moves, so an approval stays valid)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -57,6 +62,7 @@ import { contactFieldChecks } from './lib/coverage-gate.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
 import { linkLabelSlots } from './lib/link-label-slots.mjs'
+import { declareLegalLayout } from './lib/legal-layout.mjs'
 import { applyLooks, indentOf, lookWorklist } from './lib/looks.mjs'
 import { assignedAt, indexMap } from './lib/map-index.mjs'
 import { measureMin } from './lib/measure-min.mjs'
@@ -290,10 +296,31 @@ function looks(o) {
   return 0
 }
 
+/** Name the article layout of a created legal page in a written kit (lib/legal-layout.mjs). */
+function legalLayout(o) {
+  if (!str(o.kit) || (!o.none && !str(o.layout)))
+    throw new Error(
+      "legal-layout needs --kit <template-kit.json> and --layout '<template>:<file>' --why '<words>', or --none"
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declareLegalLayout(kit, { layout: str(o.layout), why: str(o.why), none: o.none === true })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  const named = kit.site.createdPageLayouts.legal.articleLayout ?? 'the default article'
+  console.log(`created legal pages print through ${named}${r.changed ? '' : ', unchanged'}`)
+  return 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
   if (cmd === 'looks') return looks(o)
+  if (cmd === 'legal-layout') return legalLayout(o)
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||

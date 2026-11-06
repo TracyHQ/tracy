@@ -91,7 +91,7 @@ export function linesOf(order, done) {
  * the template's content pages have a route of their own, and a report without a route line is of a page not yet on it, as one whose
  * route line does not say the article's layout is of a route that does not print as they do yet.
  */
-export function heldByLast(order, last, routed = false) {
+export function heldByLast(order, last, routed = false, layout = null) {
   const same =
     last.same(order.id, order.html) &&
     last.same(`${order.id}:heading`, order.title) &&
@@ -102,6 +102,8 @@ export function heldByLast(order, last, routed = false) {
   if (!same || !address) return null
   const route = last.line(`${order.id}:route`)
   if (routed && route?.articleLayout === undefined) return null
+  // A route the last run gave another file than the one this page prints through now is written again (card AN).
+  if (route && route.articleLayout !== undefined && (route.articleLayout ?? null) !== layout) return null
   return {
     articleId: last.line(order.id).readFrom.params.id,
     itemId: address.readFrom.params.id,

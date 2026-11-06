@@ -306,8 +306,10 @@ const printedThrough = (article, item, component = '_:default') => {
   const own = (json, name) => JSON.parse(json ?? '{}')[name]
   return own(article.attribs, 'article_layout') || own(item.params, 'article_layout') || component
 }
-function routedKit({ recorded = false } = {}) {
+function routedKit({ recorded = false, legal = null } = {}) {
   const kit = pagesKit()
+  // The article file the kit names for a created legal page (card AN), when the test gives one.
+  if (legal) kit.doc.site = { ...kit.doc.site, createdPageLayouts: { legal: { articleLayout: legal } } }
   kit.doc.blocks.push({ id: 'body-rowing', source: { owner: 'article-8', ownerKind: 'article' }, slots: [] })
   kit.doc.pages = [
     ...(kit.doc.pages ?? []),
@@ -372,8 +374,7 @@ test('a created page takes the route of the template content pages: its article 
     'legal:privacy:address',
     'legal:privacy:title',
     'legal:privacy:description',
-    'legal:privacy:route',
-    'legal:privacy:layout'
+    'legal:privacy:route'
   ])
     assert.equal(check.lines[slot], 'match', slot)
 })
@@ -381,25 +382,26 @@ test('a created page takes the route of the template content pages: its article 
 const routeItemOf = (site) => site.rows('menuItem').find((r) => r.note === 'tracy-page:route')
 const createdArticleOf = (site) => site.rows('article').find((r) => r.note === 'tracy-page:legal:privacy')
 
-test('a created page prints through the file the template content pages print through, the one their menu item names', async () => {
+// Card AN: a created page is a legal page, so it never prints through the content pages' file (a class page's prints booking bars).
+test('a created legal page does not print through the file the template content pages print through', async () => {
   const site = routedSite()
   await routedRun(site)
   assert.equal(printedThrough(ROWING, COURSES), 'quay:course-page')
-  assert.equal(printedThrough(createdArticleOf(site), routeItemOf(site)), 'quay:course-page')
+  assert.equal(printedThrough(createdArticleOf(site), routeItemOf(site)), '_:default')
 })
 
-test("when the template's articles name the file themselves, a created page prints through that one", async () => {
+test("when the template's articles name the file themselves, a created legal page still prints the plain default", async () => {
   const site = routedSite()
   const rowing = { ...ROWING, attribs: JSON.stringify({ article_layout: 'quay:rowing-page' }) }
   site.records.set('article-8', rowing)
   await routedRun(site)
   assert.equal(printedThrough(rowing, COURSES), 'quay:rowing-page')
-  assert.equal(printedThrough(createdArticleOf(site), routeItemOf(site)), 'quay:rowing-page')
+  assert.equal(printedThrough(createdArticleOf(site), routeItemOf(site)), '_:default')
 })
 
-test('a route an earlier run made with no file gets it in one write, keeps its settings, and a rerun then writes nothing', async () => {
+test('a route an earlier run made with no file gets the kit legal file in one write, keeps its settings, and a rerun then writes nothing', async () => {
   const site = routedSite()
-  const first = await routedRun(site)
+  const first = await routedRun(site, { legal: 'quay:plain' })
   const item = routeItemOf(site)
   // What a run before this fix left: the item as it made it, and a report whose route line does not say the file.
   const { article_layout: _gone, ...before } = JSON.parse(item.params)
@@ -408,7 +410,7 @@ test('a route an earlier run made with no file gets it in one write, keeps its s
   older.slots = older.slots.filter((l) => l.slot !== 'legal:privacy:layout')
   for (const l of older.slots) if (l.slot === 'legal:privacy:route') delete l.articleLayout
   reset(site)
-  const moved = await routedRun(site, { last: older })
+  const moved = await routedRun(site, { last: older, legal: 'quay:plain' })
   assert.equal(moved.report.status, 'done')
   const writes = pageWrites(site)
   assert.deepEqual(
@@ -416,19 +418,19 @@ test('a route an earlier run made with no file gets it in one write, keeps its s
     [['content.update', 'menuItem', item.id]]
   )
   const params = JSON.parse(writes[0].params.fields.params)
-  assert.deepEqual([params.article_layout, params.kept, params.menu_show], ['quay:course-page', 'yes', 0])
-  assert.equal(moved.line('legal:privacy:layout').ordered, 'quay:course-page')
+  assert.deepEqual([params.article_layout, params.kept, params.menu_show], ['quay:plain', 'yes', 0])
+  assert.equal(moved.line('legal:privacy:layout').ordered, 'quay:plain')
   reset(site)
-  const again = await routedRun(site, { last: moved.report })
+  const again = await routedRun(site, { last: moved.report, legal: 'quay:plain' })
   assert.deepEqual(pageWrites(site), [])
   assert.deepEqual(
     site.calls.filter((c) => c.action === 'content.get'),
     []
   )
   assert.equal(again.line('legal:privacy:layout').unchanged, true)
-  assert.equal(again.line('legal:privacy:route').articleLayout, 'quay:course-page')
+  assert.equal(again.line('legal:privacy:route').articleLayout, 'quay:plain')
   reset(site)
-  await routedRun(site)
+  await routedRun(site, { legal: 'quay:plain' })
   assert.deepEqual(pageWrites(site), [])
 })
 
