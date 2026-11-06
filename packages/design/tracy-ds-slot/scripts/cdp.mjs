@@ -29,7 +29,8 @@ const FONT_HOST = 'https://fonts.gstatic.com/'
  */
 export function fontFetchUrl(url) {
   if (typeof url !== 'string' || !url.startsWith(FONT_HOST)) return null
-  return FONT_HOST + url.slice(FONT_HOST.length)
+  // the host is written out here, not taken from FONT_HOST, so a reader (and CodeQL) sees it is fixed
+  return `https://fonts.gstatic.com/${url.slice(FONT_HOST.length)}`
 }
 
 /**
