@@ -293,6 +293,13 @@ them, moved with the kept pages (decision 20). `map-location` (block, step 9) bl
 same address, and one more than 50 km from the business when the report holds its coordinates (`place`). With no demo maps and no
 coordinates it is unmeasured.
 
+Measured 2026-11-06 (card AP): a template release turned its map button into a maps search link of the address the page prints,
+and the button led to the business address once the address was written, yet the write step still refused it as "a map that
+stays at the demo place" and `demo-links` blocked it as a link leaving the site. A map button whose kit link is a maps search of an
+address (`lib/map-links.js`) is now a `skipped` line, not a refusal: there is no map drawn from settings to move, and
+`map-location` reads where the link leads. `demo-links` judges a maps link by its target: one that searches another address than
+the demo baseline's maps is not the demo's link; one still at the demo's address stays a block. Without a baseline nothing changes.
+
 ### 24. A phone a visitor reads can be called
 
 The kit counts `phoneNotCallable`: a phone slot no link of its block uses as its label, and a contact form or contact field of the

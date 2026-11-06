@@ -12,10 +12,18 @@ const seen = (finding) => {
 }
 
 /**
- * @param {{ name: string, ids: string[], level: 'block' | 'warn', causingStep: number, needsBaseline?: boolean }} spec
- *   `ids`: the host's checks this group answers for
+ * @param {{ name: string, ids: string[], level: 'block' | 'warn', causingStep: number, needsBaseline?: boolean,
+ *   notMine?: (finding: object, context: object) => boolean }} spec `ids`: the host's checks this group answers for;
+ *   `notMine`: a finding of the host this group does not hold against the site (another group judges it)
  */
-export function hostVerdictGroup({ name, ids, level, causingStep, needsBaseline = false }) {
+export function hostVerdictGroup({
+  name,
+  ids,
+  level,
+  causingStep,
+  needsBaseline = false,
+  notMine = () => false
+}) {
   return {
     name,
     causingStep,
@@ -32,7 +40,9 @@ export function hostVerdictGroup({ name, ids, level, causingStep, needsBaseline 
         if (!check) throw new GroupUnmeasured(`The host gave no verdict for ${id}.`)
         if (check.skipped) throw new GroupUnmeasured(`The host could not judge ${id}: ${check.skipped}.`)
         if (check.pass) continue
-        const found = check.detail.length ? check.detail : [{}]
+        const detail = check.detail.filter((f) => !notMine(f, context))
+        if (check.detail.length && !detail.length) continue
+        const found = detail.length ? detail : [{}]
         for (const f of found)
           failures.push({
             page: f.page ?? null,
