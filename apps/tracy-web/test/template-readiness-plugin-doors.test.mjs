@@ -185,18 +185,23 @@ test('the check is listed in the verdict and joins its cowork-pin piece', () => 
   assert.equal(piece.params.fixVersion, '0.24.87')
 })
 
-// Recorded as it is, not fixed here: JA Diner j6 stays on 0.24.80 (REG-PR-383 holds that pin), a plugin older than every
-// door of the write step. The fix names the newest release the committed manifest has read.
-test('the T3 case: JA Diner j6 (plugin 0.24.80) lacks every write door (recorded as it is today)', () => {
+// JA Diner j6 sat on 0.24.80, a plugin older than every door of the write step; #439 moved its pin to 0.24.87, which
+// carries the same 1.0.5 contract files and every door.
+test('the T3 case: JA Diner j6 on plugin 0.24.80 lacked every write door; on 0.24.87 it has them all', () => {
   const pin = latestPin('ja-diner')
-  // test-quality: contract JA Diner is recorded on the pin REG-PR-383 holds.
-  assert.equal(pin.cowork, '0.24.80')
-  const judged = judge(releaseOfPin(pin, defaultContracts()), {})
-  assert.equal(judged.state, 'todo')
-  assert.equal(judged.code, 'cowork-pin-missing-doors')
+  // test-quality: contract JA Diner is pinned on 0.24.87 since #439 (REG-PR-383 holds that pin).
+  assert.equal(pin.cowork, '0.24.87')
+  const contracts = defaultContracts()
+  const now = judge(releaseOfPin(pin, contracts), {})
+  assert.deepEqual([now.state, now.code, now.params.plugin], ['done', 'cowork-pin-doors-ready', '0.24.87'])
+  const pins = structuredClone(readPins())
+  pins['quickstart/ja-diner/j6'].cowork.version = '0.24.80'
+  const before = judge(releaseOfPin(pin, contracts), { pins })
+  assert.equal(before.state, 'todo')
+  assert.equal(before.code, 'cowork-pin-missing-doors')
   assert.deepEqual(
-    judged.params.missing,
+    before.params.missing,
     WRITE_STEP_DOORS.map((d) => d.id)
   )
-  assert.equal(judged.params.fixVersion, '0.24.87')
+  assert.equal(before.params.fixVersion, '0.24.87')
 })

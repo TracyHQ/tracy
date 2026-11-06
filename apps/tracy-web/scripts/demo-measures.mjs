@@ -31,7 +31,7 @@ import { measureDemo } from '../src/site-check/demo-measures.js'
 const USAGE = `usage: ${DEMO_MEASURES_COMMAND}\n`
 
 /** A host reader run on this machine: tracy-host's own browser code, opened at `base`. */
-async function localHost(base) {
+export async function localHost(base) {
   const origin = new URL(base).origin
   const hostSrc = new URL('../../tracy-host/src/', import.meta.url)
   const { makeDemoQa } = await import(new URL('demo-qa-browser.js', hostSrc).href)

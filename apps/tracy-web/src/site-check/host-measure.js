@@ -1,7 +1,7 @@
 // The site check's way to the host: `host(payload)` asks the site's tracy-host to read pages in its browser
 // (`POST /_host/demo-qa`) and answers the body. A refusal or a timeout is an error, so a group that asked is unmeasured.
 /** Joomla answers only under `/index.php` unless URL rewriting is on, so the asked pages go there, as the host does for planned ones. */
-const underIndex = (platform, p) =>
+export const underIndex = (platform, p) =>
   platform === 'joomla' && p !== '/' && !/^\/index\.php(?=\/|$)/.test(p) ? `/index.php${p}` : p
 
 /**

@@ -142,7 +142,7 @@ test('the reference: the latest JA Boxing j6 release in the quickstart list is g
   assert.equal(pieceOf(verdict, 'design-system').code, 'ds-not-checked')
 })
 
-test('the T3 case: JA Diner j6 is judged by the same pieces and codes (recorded as it is today)', () => {
+test('the T3 case: JA Diner j6 is judged by the same pieces and codes, and is green on every repository piece (#439)', () => {
   const pin = latestPin('ja-diner')
   assert.equal(pin.tag, 'quickstart/ja-diner/j6')
   const verdict = readinessVerdict(releaseOfPin(pin, defaultContracts()), {
@@ -152,13 +152,13 @@ test('the T3 case: JA Diner j6 is judged by the same pieces and codes (recorded 
   assert.deepEqual(brief(verdict), [
     ['quickstart-release', 'done', 'install-file-ready'],
     ['contract', 'done', 'coverage-ready'],
-    // The kit names none of the five hidden-by-CSS fields (#435).
-    ['template-kit', 'todo', 'kit-hidden-field-missing'],
+    // The kit declares the five hidden-by-CSS fields (#435) and is settled by the current tool (#439).
+    ['template-kit', 'done', 'demo-measures-clean'],
     ['cowork-pin', 'todo', 'customize-not-checked'],
     ['customize', 'todo', 'customize-not-checked'],
     ['design-system', 'todo', 'ds-not-checked'],
-    // No demo baseline of 1.0.5 beside its contract (#433).
-    ['demo-baseline', 'todo', 'demo-baseline-missing']
+    // The demo baseline of 1.0.5 sits beside its contract (#433, measured in #439).
+    ['demo-baseline', 'done', 'demo-baseline-recorded']
   ])
 })
 
@@ -166,7 +166,8 @@ test('the command line prints the verdict of a named template as text and as JSO
   let text = ''
   assert.equal(await main(['ja-diner', '--pin-only'], { out: (s) => (text += s) }), 1)
   assert.match(text, /^quickstart\/ja-diner\/j6 1\.0\.5 /)
-  assert.match(text, /todo {5}template-kit {9}kit-hidden-field-missing/)
+  assert.match(text, /done {5}template-kit {9}demo-measures-clean/)
+  assert.match(text, /todo {5}design-system {8}ds-not-checked/)
   let json = ''
   assert.equal(await main(['quickstart/ja-diner/j6', '--json', '--pin-only'], { out: (s) => (json += s) }), 1)
   const doc = JSON.parse(json)

@@ -93,6 +93,9 @@ export function inlineMarkupOf({ map, tables, write = false, markupOf = unitMark
   for (const slot of map.slots ?? []) {
     if (slot.type !== 'text') continue
     if (typeof slot.xpath === 'string' && !isElementXpath(slot.xpath)) continue
+    // A demo-only entity (a template showcase such as a typography sheet) never reaches a customer: the kit leaves its
+    // page out (template-kit/lib/showcase-pages.mjs), so its markup is not measured.
+    if (entities.get(slot.entity)?.demoOnly === true) continue
     const value = storedValueOf(slot, entities.get(slot.entity), tables)
     if (value == null) {
       unread++

@@ -1,7 +1,7 @@
 // The Joomla framework of the template a kit was captured on (ticket #435): `t3` or `t4`, as the template profile row of the
 // release the kit's contract seals records it (`template-profiles.json` `framework`, the same row the brand writer reads). The
-// readers that scope a CSS rule to one page need it, because the two frameworks print the menu item on the body differently:
-// T4 `item-<id>`, T3 `itemid-<id>` (both print the option and `view-<view>`). Never guessed from the template's name: a kit whose
+// readers that scope a CSS rule to one page need it, because the two frameworks print the menu item differently:
+// T4 `item-<id>` on the body, T3 `itemid-<id>` on the html element (both print the option and `view-<view>`). Never guessed from the template's name: a kit whose
 // contract no profile row covers answers null, and the readers keep their T4 default.
 import { defaultContracts } from './contracts.js'
 import { templateProfileOf } from './template-profiles.js'

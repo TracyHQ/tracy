@@ -12,6 +12,9 @@ The reference is the latest JA Boxing release: on it, this skill finds nothing t
 
 ## 0. Start
 
+- **T3 and T4 differ in markup.** The framework is the `framework` of the release's row in `template-profiles.json`
+  (`lib/kit-framework.js`), never guessed from the name. T3 prints the page classes (`itemid-<id>`) on `html` and leaves
+  `body` bare; T4 prints `item-<id>` on `body`. A selector you declare in the kit names a container, never the page element.
 - **One template, named by the preparer** (slug such as `ja-diner`, or tag `quickstart/ja-diner/j6`). No name, a list,
   or "all": ask for one name. Framework other than T3 or T4, or content in several languages: STOP (`quickstart-contract`
   section 1).
@@ -47,12 +50,19 @@ is the one judged. DEMO-1 and the preview door health are server facts, judged o
 5. Read the verdict again (section 1). The step is done when that piece's code changed; the same code after a fix
    means the fix or the check is wrong: diagnose it (`mattpocock-skills:diagnosing-bugs`) before a second try.
 
+**A template release is the last resort.** Before any fix that needs a new template version (the template source or the
+demo content), look for a door in the flow: an accept with its reason (`reach-accepts.json`, `gap-accepts.json`,
+`accepted` in `content-coverage.json`), a hidden kit field the write step acts on (`references/kit-rebuild.md`), or the
+planner or write step hiding or retargeting the slot. Only when none exists, release the template. JA Diner 1.0.5: five
+phones printed outside `tel:` links went to `reach-accepts.json` with their reason, not into a 1.0.6.
+
 **Fix the tool, not the template**, when the fault would hit any template (a capture rule, a kit reader, a measure, a
 door reader): test first, in this repository, in the same PR when small. Never hand-edit one template's contract or
 kit to get past a rule; the next capture or build wipes it and the next template trips again.
 
 **Demo baseline.** Its fix names two commands: measure on a site freshly restored from the pinned version that nobody
-has written to, then record the file beside the contract and commit it. Measure it last in a round that cuts a new
+has written to (`--base <its address>` reads it on this machine, as `demo-measures.mjs --base` does; no tracy-web
+needed), then record the file beside the contract and commit it. Measure it last in a round that cuts a new
 version, so it measures the version that ships.
 
 ## 3. Eye review

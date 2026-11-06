@@ -7,6 +7,9 @@ the run stops (SKILL.md section 5) instead of running the registry's fix.
 
 `QC` is the `quickstart-contract` skill.
 
+Before a fix that needs a template release, check that the flow has no door for it (an accept with its reason, a hidden
+kit field, the planner or write step hiding or retargeting): a template release is the last resort (SKILL.md section 2).
+
 Where a fix lands decides the version: a fix in the template source or the pack is a **template release** (the next
 quickstart version, `QC` section 7b step 3 and lesson 7c "the pack shape must match"); a fix in a Tracy tool is a
 **tool fix** (test first, same PR); a fix in the contract, kit or pin is committed beside the contract.

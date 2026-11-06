@@ -213,3 +213,21 @@ test('a new audit carries the inlineMarkup block while the content map is the on
   const fresh = { lost: 2, lostSlots: ['x.0', 'y.0'] }
   assert.deepEqual(buildCoverageFile({ result, contract, previous, inlineMarkup: fresh }).inlineMarkup, fresh)
 })
+
+test(
+  'a slot of a demo-only entity is not measured: the kit leaves its page out, so no customer sees its markup',
+  needsPhp,
+  () => {
+    // A template showcase article (a typography sheet) is marked demoOnly at capture, and the kit excludes its page.
+    // Its stored value marks words inline while its sample does not; counting it held the kit for a page no site keeps.
+    const { file } = dumpFile()
+    const map = structuredClone(MAP)
+    map.entities = map.entities.map((e) => (e.key === 'article-5' ? { ...e, demoOnly: true } : e))
+    const { tables } = readDump(file, { changes: true })
+    const r = inlineMarkupOf({ map, tables })
+    assert.equal(r.lost.includes('article-5.0'), false, JSON.stringify(r.lost))
+    assert.equal(r.lostBefore.includes('article-5.0'), false)
+    assert.equal(r.mismatched.includes('article-5.0'), false)
+    assert.ok(r.lost.includes('module-30.0'), 'a slot of a kept entity is still counted')
+  }
+)

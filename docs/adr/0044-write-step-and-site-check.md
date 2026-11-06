@@ -513,8 +513,9 @@ exception applies, with the same shape:
   per kept page, menu item opening it, container and own address
   (`body.com_content.view-category.item-195 .bottom-actions a[href="/about-us/coaches"]{display:none!important}`, with
   `/index.php/...`, `index.php?Itemid=195` and `/index.php?Itemid=195`), from the kept pages at the address they answer now and
-  the menu rows read then (`write-step/self-link-buttons-stage.js`). The body classes are the framework's (option, view, menu item
-  id: T4 `item-<id>`, T3 `itemid-<id>`, as the release's template profile records it, `lib/kit-framework.js`, ticket #435); the
+  the menu rows read then (`write-step/self-link-buttons-stage.js`). The page classes are the framework's (option, view, menu item
+  id: T4 `item-<id>` on `body`, T3 `itemid-<id>` on `html`, which is where T3 prints them, as the release's template profile
+  records it, `lib/kit-framework.js`, tickets #435 and #439); the
   view keeps the rule off an article opened under the same item, and a row whose view cannot be read gets no rule. Each rule
   names the page's own addresses exactly, so a link to another page is never hidden.
 - The look guard lets that block hold only such rules on the kit's containers (`self-link-buttons`).

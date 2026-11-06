@@ -3,7 +3,7 @@
  * by CSS on the customer's site (play buttons with an empty video address, "more" buttons that lead to their own page,
  * list row links to a hidden page, blocks a created page must not show such as a share bar, the article layout of a
  * created legal page) must each name what the template prints, or say none with a reason. And the readers behind them
- * scope a rule by the body classes the template's framework prints: T4 `item-<id>`, T3 `itemid-<id>`.
+ * scope a rule by the page classes the template's framework prints: T4 `item-<id>` on the body, T3 `itemid-<id>` on html.
  *
  * The reference T4 case is the committed JA Boxing kit; the T3 case is JA Diner, recorded as it is.
  */
@@ -142,8 +142,9 @@ test('the same fault gives the same code on a T3 kit and a T4 kit', () => {
   }
 })
 
-test('JA Diner 1.0.5 as committed declares none of the five', () => {
-  const judged = judge(dinerRelease, kitAt(DINER))
+test('a T3 kit with none of the five names all five (JA Diner 1.0.5 before #439 declared them)', () => {
+  const bare = HIDDEN_KIT_FIELDS.reduce((doc, f) => without(doc, f.field), kitAt(DINER))
+  const judged = judge(dinerRelease, bare)
   assert.equal(judged.state, 'todo')
   assert.equal(judged.code, 'kit-hidden-field-missing')
   assert.deepEqual(
@@ -161,7 +162,7 @@ test('the check does not apply off Joomla, or without a readable kit (the kit st
   assert.equal(HIDDEN_KIT_FIELDS_CHECK.judge(boxingRelease, { templateKit: { state: 'none' } }, {}), null)
 })
 
-test('in the verdict: the latest JA Boxing release stays green, the latest JA Diner names all five', () => {
+test('in the verdict: the latest JA Boxing and JA Diner releases are green, T4 and T3 alike', () => {
   const contracts = defaultContracts()
   const pieceOf = (name) => {
     const r = releaseOfPin(latestPin(name), contracts)
@@ -176,13 +177,12 @@ test('in the verdict: the latest JA Boxing release stays green, the latest JA Di
   const diner = pieceOf('ja-diner')
   assert.deepEqual(
     [diner.step, diner.state, diner.code],
-    ['kit-hidden-fields', 'todo', 'kit-hidden-field-missing']
+    ['kit-hidden-fields', 'done', 'kit-hidden-fields-declared']
   )
-  assert.deepEqual(
-    diner.params.fields,
-    HIDDEN_KIT_FIELDS.map((f) => f.field)
-  )
-  assert.deepEqual(hiddenKitFieldsOf(kitAt(DINER)).declared, [])
+  const read = hiddenKitFieldsOf(kitAt(DINER))
+  assert.deepEqual(read.missing, [])
+  assert.deepEqual(read.declared, ['selfLinkButtons', 'hiddenPageLinks'])
+  assert.deepEqual(read.none, ['emptyVideoButtons', 'createdPageHide', 'createdPageLayouts.legal'])
 })
 
 // ── T3 and T4 markup ─────────────────────────────────────────────────────────────────────────────────────────────────
@@ -194,11 +194,13 @@ test('the framework of a kit is the one its release profile records, never guess
   assert.equal(frameworkOfKit(null), null)
 })
 
-test('a page body is scoped by the menu item class its framework prints: T4 item-<id>, T3 itemid-<id>', () => {
+test('a page is scoped where its framework prints the page classes: T4 body item-<id>, T3 html itemid-<id>', () => {
+  // T3 prints the page classes on the html element (tpls/default.php: class='<jdoc:include type="pageclass" />') and
+  // leaves body bare, as JA Diner 1.0.5 answers: html class 'com_contact view-contact itemid-117 ...', body with no class.
   const page = { option: 'com_content', view: 'article', id: 244 }
   assert.equal(pageBodyOf(page), 'body.com_content.view-article.item-244')
   assert.equal(pageBodyOf({ ...page, framework: 't4' }), 'body.com_content.view-article.item-244')
-  assert.equal(pageBodyOf({ ...page, framework: 't3' }), 'body.com_content.view-article.itemid-244')
+  assert.equal(pageBodyOf({ ...page, framework: 't3' }), 'html.com_content.view-article.itemid-244')
 })
 
 test('the self link and created page rules follow the framework, and the look guard takes both', () => {
@@ -207,7 +209,7 @@ test('the self link and created page rules follow the framework, and the look gu
   ]
   const t3 = selfLinkSelectorsFor(openings, ['.section-more'], 't3')
   assert.ok(t3.length > 0)
-  assert.ok(t3.every((s) => s.startsWith('body.com_content.view-category.itemid-195 .section-more a[href=')))
+  assert.ok(t3.every((s) => s.startsWith('html.com_content.view-category.itemid-195 .section-more a[href=')))
   const t4 = selfLinkSelectorsFor(openings, ['.section-more'], 't4')
   assert.ok(t4.every((s) => s.startsWith('body.com_content.view-category.item-195 ')))
   const block = (list) =>
@@ -216,12 +218,12 @@ test('the self link and created page rules follow the framework, and the look gu
   assert.equal(isSelfLinkBlock(block(t4), ['.section-more']), true)
 
   const created = createdHideSelectorsFor([{ id: 'legal:privacy', itemId: 301 }], ['.share-strip'], 't3')
-  assert.deepEqual(created, ['body.com_content.view-article.itemid-301 .share-strip'])
+  assert.deepEqual(created, ['html.com_content.view-article.itemid-301 .share-strip'])
   const hide = `<!-- tracy-created-hide:start --><style>${created[0]}{display:none!important}</style><!-- tracy-created-hide:end -->`
   assert.equal(isCreatedHideBlock(hide, ['.share-strip']), true)
 })
 
-test('the created page stage scopes a T3 kit by itemid-<id>, from the framework its release records', async () => {
+test('the created page stage scopes a T3 kit by html itemid-<id>, from the framework its release records', async () => {
   let held = ''
   const door = {
     apply: async ({ action, params }) => {
@@ -244,5 +246,5 @@ test('the created page stage scopes a T3 kit by itemid-<id>, from the framework 
     created: [{ id: 'legal:privacy', itemId: 301 }]
   })
   assert.equal(lines[0]?.status, 'written', JSON.stringify(lines))
-  assert.match(held, /body\.com_content\.view-article\.itemid-301 \.share-strip\{display:none!important\}/)
+  assert.match(held, /html\.com_content\.view-article\.itemid-301 \.share-strip\{display:none!important\}/)
 })
