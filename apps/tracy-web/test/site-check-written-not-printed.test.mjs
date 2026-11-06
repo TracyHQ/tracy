@@ -166,3 +166,25 @@ test('without a page reader or a kit the measure cannot tell, and runs only when
   for (const g of PAGE_READ_GROUPS) assert.ok(isStep(g.causingStep), g.name)
   assert.ok(PAGE_READ_GROUPS.includes(writtenNotPrintedGroup))
 })
+
+// Card K: a gallery prints a picture's description only as the image's alt (or a title), never as visible words. Invented words.
+test('a written text slot counts as printed when the page prints it as an img alt or a title attribute', () => {
+  const words = (slot, value) => ({ slot, kind: 'text', value })
+  const html = (inner) => `<html><body><div class="gallery">${inner}</div></body></html>`
+  const alt = html(
+    '<a class="html5lightbox" href="/images/a.jpg"><img src="/images/a.jpg" alt="A rower&#39;s  boat at   dawn on the quay."></a>'
+  )
+  assert.deepEqual(
+    pagePrints(alt, [words('block-50.11', "A rower's boat at dawn on the quay.")]).notPrinted,
+    []
+  )
+  const title = html(
+    '<a class="html5lightbox" title="Two swimmers &amp; a coach" href="/images/b.jpg"><img src="/images/b.jpg" alt=""></a>'
+  )
+  assert.deepEqual(pagePrints(title, [words('block-50.12', 'Two swimmers & a coach')]).notPrinted, [])
+  // A value in no attribute a visitor is shown and in no text is still not printed; a data-* attribute does not count.
+  const data = html('<img src="/images/c.jpg" alt="" data-caption="A quiet lane by the river">')
+  assert.deepEqual(pagePrints(data, [words('block-50.13', 'A quiet lane by the river')]).notPrinted, [
+    'block-50.13'
+  ])
+})

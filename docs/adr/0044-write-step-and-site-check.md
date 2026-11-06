@@ -141,6 +141,12 @@ through a block and lists those not printed. Any other unprinted slot is only re
 The site check's `written-not-printed` group applies the same rule on its own reading of the pages and blocks on every written
 value no page prints, naming step 9.
 
+Measured 2026-11-06 (card K): a gallery prints each picture's description only as the image's `alt`, and `written-not-printed`
+blocked six written descriptions as not printed. A written text slot now also counts as printed when an `<img>` of the body holds it
+as its `alt`, or any element as its `title`, each attribute compared on its own with spaces and character references read
+(`lib/printed-in-body.js`). Other attributes (`data-*` among them) still do not count. The rule reads the page's markup, so the
+host's measures did not change.
+
 ### 12. Brand accent words are held to 3:1, and a logo blocks only when most of it fades
 
 `band-contrast` blocks words the brand style made worse than the template only when they read under 3:1, WCAG's level for large

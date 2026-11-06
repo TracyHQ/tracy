@@ -1,7 +1,8 @@
 // Whether a value a run wrote is PRINTED on a page (ADR 0044): read from the page's markup as a visitor's browser gets it, inside the
 // body only. A picture counts when an <img> or a <source> names its file in `src` or `srcset`, or when an element of the body paints it
 // as its own background (`style="background-image: url(...)"`, how a template's hero band prints its picture). Words count when the
-// body's text holds them. Nothing else counts: the head, scripts (JSON-LD among them), style sheets, comments, <meta>, and `data-*`
+// body's text holds them, or when an <img> prints them as its `alt`, or any element as its `title` (a gallery prints a picture's
+// description only in its alt, card K). Nothing else counts: the head, scripts (JSON-LD among them), style sheets, comments, <meta>, and `data-*`
 // attributes all name files the visitor may never see printed. One rule, shared by the write step and the site check.
 //
 // Several slots may hold the same picture on one page. Each needs its own printed element, so a file printed once covers one slot; the
@@ -117,6 +118,16 @@ function printedPictures(body) {
   return out
 }
 
+/** The words a body prints in attributes a visitor is shown: an image's `alt` and any element's `title`, each on its own. */
+function shownAttributes(body) {
+  const out = []
+  for (const m of body.matchAll(TAG)) {
+    const said = [/^<img\b/i.test(m[0]) ? attr(m[0], 'alt') : null, attr(m[0], 'title')]
+    for (const value of said) if (value) out.push(wordsKey(value))
+  }
+  return out.filter(Boolean)
+}
+
 /**
  * Which of a page's written slots the page prints.
  * @param {string} html the page as the site serves it
@@ -128,9 +139,12 @@ export function pagePrints(html, slots, { native = false } = {}) {
   const body = bodyOf(native ? withoutFallbackBlocks(html) : html)
   const printed = new Map()
   const words = wordsKey(body.replace(/<[^<>]*>/g, ' '))
-  for (const s of slots)
-    if (s.kind === 'text' && wordsKey(s.value) && words.includes(wordsKey(s.value)))
+  const attributes = shownAttributes(body)
+  for (const s of slots) {
+    const key = s.kind === 'text' ? wordsKey(s.value) : ''
+    if (key && (words.includes(key) || attributes.some((a) => a.includes(key))))
       printed.set(s.slot, 'template')
+  }
   const pool = new Map()
   for (const p of printedPictures(body)) {
     const own = p.block && slots.find((s) => s.kind === 'picture' && s.slot === p.block)
