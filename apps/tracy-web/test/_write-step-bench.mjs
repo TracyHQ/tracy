@@ -83,9 +83,13 @@ export function fakeClock(start = 1_000_000) {
 
 /**
  * A contract index holding a made-up kit in a temporary folder, as the shipped kits are read. `done()` removes it.
- * @param {{ release?: string, contract?: string }} [over]
+ * @param {{ release?: string, contract?: string, pages?: { path: string }[] }} [over]
  */
-export function kitIndex({ release = 'demo-gym/j6', contract = SPEC.contract } = {}) {
+export function kitIndex({
+  release = 'demo-gym/j6',
+  contract = SPEC.contract,
+  pages = [{ path: '/' }, { path: '/about' }]
+} = {}) {
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-kit-'))
   const version = contract.split('/').at(-1)
   writeFileSync(
@@ -94,6 +98,7 @@ export function kitIndex({ release = 'demo-gym/j6', contract = SPEC.contract } =
       kit: 'tracy-template-kit/2',
       contract,
       quickstart: { version },
+      pages,
       images: [{ id: 'block-1-1440', path: 'images/block-1-1440.jpg', sha256: 'e'.repeat(64) }]
     })
   )

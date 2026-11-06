@@ -3,11 +3,15 @@
 // Exit codes: 0 done, 1 refused or not found, 2 wrong usage. The write itself is in bench-cli.js, which calls this.
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
+import { ensureBaseline } from '../site-check/demo-baseline.js'
 import { createBenchSite, specOfKit } from './bench-site-creator.js'
 
 export const USAGE = `  create-site --kit <ref> --account <email>   create a trial site from the kit's quickstart by the customer's path,
-      [--by <label>]                          prove its contract is the kit's, keep it as the bench's one site and
-                                              delete the previous run's; prints the creation time
+      [--by <label>] [--force-baseline]       prove its contract is the kit's, keep it as the bench's one site and
+                                              delete the previous run's; prints the creation time. The new site is
+                                              untouched, so the demo baseline of the kit's version is settled on it:
+                                              a stored one is reused, a missing one is measured once and stored, and
+                                              a line says which. --force-baseline measures again on purpose.
   site-status [id]                            the latest (or the named) bench site record
   site-list [--limit <n>]                     the newest bench site records
 The quickstart and the contract come from the kit. Only sites this bench made are ever deleted.`
@@ -34,6 +38,7 @@ export async function runCli(argv, deps) {
         kit: { type: 'string' },
         account: { type: 'string' },
         by: { type: 'string' },
+        'force-baseline': { type: 'boolean' },
         limit: { type: 'string' }
       }
     })
@@ -92,7 +97,42 @@ async function createSite(d, values) {
   d.out(`contract ${made.contract} confirmed by content.contract inspect`)
   for (const key of made.removed) d.out(`removed the previous bench site ${key}`)
   for (const left of made.notRemoved) d.out(`not removed: ${left.siteKey} (${left.reason})`)
-  return 0
+  return settleBaseline(d, values, { kit, siteKey: made.siteKey, version: made.contract })
+}
+
+/**
+ * The demo baseline of the kit's version, settled on the untouched site just made: reused when one is stored, measured
+ * once when none is, measured again only when the operator forced it. Prints which.
+ */
+async function settleBaseline(d, values, { kit, siteKey, version }) {
+  if (!d.baselines || !d.makeHost) {
+    d.out(
+      `baseline: not settled (no baseline folder or host given), so the demo groups of a check stay unmeasured`
+    )
+    return 0
+  }
+  const pages = (kit.doc?.pages ?? []).map((p) => p?.path).filter((p) => typeof p === 'string')
+  if (!pages.length) {
+    d.err(`baseline: the kit lists no pages, so nothing could be measured for ${version}`)
+    return 1
+  }
+  const force = values['force-baseline'] === true
+  try {
+    const { baseline, measured } = await ensureBaseline({
+      host: await d.makeHost(siteKey),
+      pages,
+      version,
+      store: d.baselines,
+      force
+    })
+    d.out(
+      `baseline ${measured ? (force ? 'measured again (forced)' : 'measured (none was stored)') : 'reused (stored)'} for ${version}: ${baseline.texts.length} texts, ${baseline.pictures.files.length} picture files, ${baseline.unread?.length ?? 0} pages with no demo`
+    )
+    return 0
+  } catch (error) {
+    d.err(`baseline: not stored for ${version}: ${error.message}`)
+    return 1
+  }
 }
 
 const lineOf = (r) =>
