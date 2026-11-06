@@ -186,6 +186,8 @@ export function buildCoverageFile({
       inMap: s.mappedPages,
       notInMap: s.unmappedPages,
       failed: result.failures.length,
+      // Which pages failed: path and query only (never the stand address), so the next reader can tell.
+      failures: failuresOf(result.failures),
       capReached: result.capReached === true
     },
     counts,
@@ -227,6 +229,25 @@ function inlineMarkupOf(measured, previous, contract) {
 }
 
 /** matched / (matched + every hole that needs a slot); locked design and core strings are not asked of a slot. */
+/** One entry per page that did not render: its path, and the map page, HTTP status or error when known. */
+function failuresOf(failures) {
+  return (failures ?? []).map((f) => {
+    let url = String(f.url ?? '')
+    try {
+      const u = new URL(url)
+      url = u.pathname + u.search
+    } catch {
+      // already relative: keep as is
+    }
+    return {
+      url,
+      ...(f.mapPage ? { mapPage: f.mapPage } : {}),
+      ...(f.status ? { status: f.status } : {}),
+      ...(f.error ? { error: String(f.error).slice(0, 300) } : {})
+    }
+  })
+}
+
 export function percent(c) {
   const need = c.matched + c.capture + c.template + c.unknown
   return need ? Math.round((c.matched / need) * 1000) / 10 : 100

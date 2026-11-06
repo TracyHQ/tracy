@@ -13,16 +13,20 @@ import {
   createdPageHideOf,
   withCreatedHideBlock
 } from '../lib/created-page-hide.js'
+import { frameworkFor } from '../lib/kit-framework.js'
 import { headModuleOf } from './brand-write-orders.js'
 import { doorCall, readRow } from './settings-door.js'
 
 /**
- * @param {{ door: { apply: Function }, siteKey: string, kit: object, created: { id: string, itemId: number }[] }} input
- *   `created`: the pages the page create stage made or found, each with the menu item that opens it
+ * @param {{ door: { apply: Function }, siteKey: string, kit: object, created: { id: string, itemId: number }[],
+ *   framework?: string | null }} input
+ *   `created`: the pages the page create stage made or found, each with the menu item that opens it; `framework`: `t3` or `t4`,
+ *   the one the kit's release records by default (lib/kit-framework.js), so a rule names the body class it prints
  * @returns {Promise<object[]>} one report line when there is a rule, else none
  */
-export async function hideOnCreatedPages({ door, siteKey, kit, created }) {
+export async function hideOnCreatedPages({ door, siteKey, kit, created, framework }) {
   if (!Array.isArray(kit?.site?.createdPageHide)) return []
+  const bodyFramework = frameworkFor(kit, framework)
   const { selectors, problems } = createdPageHideOf(kit)
   const module = headModuleOf(kit)
   const line = (fields) => ({
@@ -33,7 +37,7 @@ export async function hideOnCreatedPages({ door, siteKey, kit, created }) {
     readBack: null,
     ...fields
   })
-  const block = createdHideBlockFor(createdHideSelectorsFor(created, selectors))
+  const block = createdHideBlockFor(createdHideSelectorsFor(created, selectors, bodyFramework))
   const failed = (reason) => (block ? [line({ status: 'failed', reason })] : [])
   if (problems.length && !selectors.length) return [line({ status: 'failed', reason: problems.join('; ') })]
   if (module === null) return failed('the kit names no head injection block to carry the rule')

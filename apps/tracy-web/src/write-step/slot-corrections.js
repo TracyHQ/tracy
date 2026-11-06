@@ -3,6 +3,7 @@
 // contract, so it is read from the site. An older plugin says nothing and answers as it always did, so nothing is sent
 // that it would refuse. Read at most once a run, and only when a frame needs the answer.
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { infoOf, SLOT_CORRECTIONS_DOOR } from './plugin-doors.js'
 
 const NONE = { icons: false, alts: false }
 
@@ -12,7 +13,8 @@ export function correctionsReader(door, siteKey, contract) {
   const ask = async () => {
     try {
       const said = await door.apply({ siteKey, action: 'info', params: {} })
-      const entry = said?.ok === false ? null : said?.info?.slot_corrections?.contracts?.[contract]
+      const entry =
+        said?.ok === false ? null : infoOf(SLOT_CORRECTIONS_DOOR, said?.info)?.contracts?.[contract]
       return { icons: Number(entry?.icons) > 0, alts: Number(entry?.alts) > 0 }
     } catch {
       return NONE

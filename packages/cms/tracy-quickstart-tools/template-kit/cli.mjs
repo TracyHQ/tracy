@@ -51,20 +51,21 @@
 //                 prints through, never a content page's own file; --none: the component's default. A person reads the
 //                 template's article layouts first; nothing is measured, and no image moves, so an approval stays valid)
 //   cli.mjs video-buttons --kit <template-kit.json> --selector '<css>' --why '<where the template prints it>'
-//   cli.mjs video-buttons --kit <template-kit.json> --none
+//   cli.mjs video-buttons --kit <template-kit.json> --none --why '<what was read>'
 //                 (site.emptyVideoButtons, lib/video-buttons.mjs: a play button the template prints with an empty video
-//                 address, which the write step hides with one CSS rule; --none says the template has none. A person reads
+//                 address, which the write step hides with one CSS rule; --none says the template has none, with its reason in
+//                 site.noneWhy (lib/none-why.mjs; every --none of these four commands needs --why). A person reads
 //                 the template's layout first; nothing is measured, and no image moves, so an approval stays valid)
 //   cli.mjs self-link-buttons --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
-//   cli.mjs self-link-buttons --kit <template-kit.json> --none
+//   cli.mjs self-link-buttons --kit <template-kit.json> --none --why '<what was read>'
 //                 (site.selfLinkButtons, lib/self-link-buttons.mjs: the container of a "more" button that may lead to the
 //                 page it sits on, which the write step hides on that page only; same reading, no image moves)
 //   cli.mjs hidden-page-links --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
-//   cli.mjs hidden-page-links --kit <template-kit.json> --none
+//   cli.mjs hidden-page-links --kit <template-kit.json> --none --why '<what was read>'
 //                 (site.hiddenPageLinks: the container of list row links that may lead to a page the plan hides, which the
 //                 write step sends to a living page or makes plain text; same reading, no image moves)
 //   cli.mjs created-page-hide --kit <template-kit.json> --selector '<css>' --why '<where the template prints it>'
-//   cli.mjs created-page-hide --kit <template-kit.json> --none
+//   cli.mjs created-page-hide --kit <template-kit.json> --none --why '<what was read>'
 //                 (site.createdPageHide: a block the template prints hard coded on every article page, such as a share bar,
 //                 which the write step hides on the pages it creates only; same reading, no image moves)
 //   cli.mjs baseline --from <measured baseline.json> --contract <dir>
@@ -349,7 +350,7 @@ function legalLayout(o) {
 function videoButtons(o) {
   if (!str(o.kit) || (!o.none && !str(o.selector)))
     throw new Error(
-      "video-buttons needs --kit <template-kit.json> and --selector '<css>' --why '<words>', or --none"
+      "video-buttons needs --kit <template-kit.json> and --selector '<css>' --why '<words>', or --none --why '<words>'"
     )
   const file = resolve(o.kit)
   const source = readFileSync(file, 'utf8')
@@ -370,7 +371,7 @@ function videoButtons(o) {
 function containers(o, command, declare, field, words, flag = 'container') {
   if (!str(o.kit) || (!o.none && !str(o[flag])))
     throw new Error(
-      `${command} needs --kit <template-kit.json> and --${flag} '<css>' --why '<words>', or --none`
+      `${command} needs --kit <template-kit.json> and --${flag} '<css>' --why '<words>', or --none --why '<words>'`
     )
   const file = resolve(o.kit)
   const source = readFileSync(file, 'utf8')

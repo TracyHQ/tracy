@@ -36,3 +36,4 @@ by hand: the next sync overwrites them.
 | [`tch-dev`](tch-dev/SKILL.md) | Fixing and debugging on a **running** surface, borrowing another session's processes instead of killing them |
 | [`pr-merge`](pr-merge/SKILL.md) | Taking a change into `main` and out to customers — gates before the PR, description template, journal, and the deploy that comes with the merge |
 | [`staging-check`](staging-check/SKILL.md) | Staging acceptance before the PR into `main`: real E2E `--env staging` + a human tester working by hand in a shared window, results into a dated checklist |
+| [`joomla-template-readiness`](joomla-template-readiness/SKILL.md) | Bringing one named Joomla template to the JA Boxing level: verdict, fix loop, eye review, release and PR |

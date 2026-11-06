@@ -6,6 +6,8 @@
 !public-skills.txt
 !desktop-release/
 !desktop-release/**
+!joomla-template-readiness/
+!joomla-template-readiness/**
 !modify-site/
 !modify-site/**
 !pr-merge/

@@ -63,6 +63,12 @@ export interface RoadStep {
   code: string
   params: Record<string, unknown>
   blockedBy?: StepName
+  /**
+   * The fix of a red or warn step, read on the server from the fix registry
+   * (`apps/tracy-web/src/lib/template-readiness/fixes.js`), the one place fix text lives: the text, and the command
+   * or skill section that does the fixing when there is one. Shown as sent, never worded here.
+   */
+  fix?: { text: string; command?: string; skill?: string }
 }
 
 /**

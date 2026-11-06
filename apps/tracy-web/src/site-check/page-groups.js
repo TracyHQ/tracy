@@ -18,6 +18,8 @@
 //   glued-words        block  9 write       new: words run into a highlight with no space
 //   unfinished-heading block  6 writer      new: a heading that stops on a small word; the writer owns the final text of every slot, labels included
 //   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
+//   orphan-row         block  3 planner     new: a grid or wrapping row of cards whose last row holds fewer, pushed left with a hole
+//   blank-footer-column block 3 planner     new: a footer column that prints no words, link or picture beside one that does
 //   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
 //   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes (3:1 for brand accent words; the template's own warn only under 3:1)
 //   words-over-picture block  8, 2 or 0     theme-reads.js: words against the picture region under them, in both themes (band-contrast's bars; accent over a veiled layer warns)
@@ -47,8 +49,10 @@ import { hostVerdictGroup } from './host-verdicts.js'
 import {
   findDeadLinks,
   findEmptyControls,
+  findBlankFooterColumns,
   findGluedWords,
   findMainHeadings,
+  findOrphanRows,
   findStretchedPictures,
   findTallBlocks,
   findTextFill,
@@ -185,6 +189,28 @@ export const PAGE_CHECK_GROUPS = [
       if (read.measures.length && !read.measures.some((m) => Array.isArray(m.mainHeadings)))
         throw new GroupUnmeasured('The host answered no main headings, so this was not measured.')
       return findMainHeadings(read.measures)
+    }
+  }),
+  measuredGroup({
+    name: 'orphan-row',
+    level: 'block',
+    // The plan keeps the cards a list prints; the template's own grid fixes how many fit on a row.
+    causingStep: 3,
+    find: (read) => {
+      if (read.measures.length && !read.measures.some((m) => Array.isArray(m.orphanRows)))
+        throw new GroupUnmeasured('The host answered no orphan rows, so this was not measured.')
+      return findOrphanRows(read.measures)
+    }
+  }),
+  measuredGroup({
+    name: 'blank-footer-column',
+    level: 'block',
+    // The plan owns hide decisions: a footer module emptied or hidden leaves its column standing.
+    causingStep: 3,
+    find: (read) => {
+      if (read.measures.length && !read.measures.some((m) => Array.isArray(m.blankFooterColumns)))
+        throw new GroupUnmeasured('The host answered no footer columns, so this was not measured.')
+      return findBlankFooterColumns(read.measures)
     }
   }),
   brandAccentGroup,

@@ -9,16 +9,17 @@
     "contentMapSha256": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
     "presentationLockSha256": "72b0c2ad80b2c59c3ba06e30ee3a70219d6cf9a74aae052f6489d6242527eda9"
   },
-  "measuredAt": "2026-11-05T09:05:29.190Z",
+  "measuredAt": "2026-11-06T10:19:16.238Z",
   "viewports": [
     "desktop",
     "phone"
   ],
   "pages": {
-    "audited": 59,
+    "audited": 61,
     "inMap": 19,
-    "notInMap": 40,
-    "failed": 1,
+    "notInMap": 42,
+    "failed": 0,
+    "failures": [],
     "capReached": false
   },
   "counts": {
@@ -35,13 +36,13 @@
       "ignored": 15
     },
     "images": {
-      "total": 111,
+      "total": 112,
       "matched": 110,
       "locked": 1,
       "capture": 0,
       "captureLocked": 0,
       "template": 0,
-      "core": 0,
+      "core": 1,
       "unknown": 0,
       "catalogue": 0,
       "ignored": 0
@@ -56,7 +57,7 @@
       "core": 1,
       "unknown": 2,
       "catalogue": 0,
-      "ignored": 60
+      "ignored": 61
     }
   },
   "coverage": {
@@ -83,7 +84,7 @@
       "lock": "undeclared",
       "cause": "DB: #__extensions#233.params -> services.1",
       "evidence": "#__extensions#233.params -> services.1",
-      "pages": 11,
+      "pages": 12,
       "firstPage": "/index.php?Itemid=165",
       "accepted": "Social icon name from the stand admin profile; its links are '#' placeholders, nothing of the demo brand."
     },
@@ -94,7 +95,7 @@
       "lock": "undeclared",
       "cause": "DB: #__extensions#37.manifest_cache -> authorUrl",
       "evidence": "#__extensions#37.manifest_cache -> authorUrl",
-      "pages": 59,
+      "pages": 61,
       "firstPage": "/index.php?Itemid=101",
       "accepted": "Joomla core 'Joomla! is Free Software' footer link of the admin-only Login Support module (mod_loginsupport); not demo content."
     },
@@ -5137,7 +5138,7 @@
     ]
   },
   "inlineMarkup": {
-    "measuredAt": "2026-11-05T09:05:29.189Z",
+    "measuredAt": "2026-11-06T10:19:16.238Z",
     "dump": {
       "file": "custom.sql",
       "sha256": "5f8d625543fe6c846c5cd325f877da2bc25bc3340a7ca04f9a66b59c77fef8ad"

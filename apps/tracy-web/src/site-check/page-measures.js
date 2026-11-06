@@ -8,7 +8,8 @@
 //     controls: [{ selector, fault: 'wordless' | 'nowhere', href, text }], fields: [{ selector, name }],
 //     glued: [{ selector, text, around }], headings: [text], mainHeadings: [text], shownText,
 //     minorHeadings: [text], hiddenHeadings: [text], selfLinks: [{ selector, text, href, holders }], contentControls: [{ key, text }], view,
-//     title, shownLinks: [{ href, text, clickable }], shownLinksClickable, shownPictures: [src], brandStyle?, look? }
+//     title, shownLinks: [{ href, text, clickable }], shownLinksClickable, shownPictures: [src],
+//     orphanRows: [{ selector, perRow, lastRow, rows, gap }], blankFooterColumns: [{ selector, width, height }], brandStyle?, look? }
 
 /** A box counts as overflowed only past this many pixels, so rounding in the browser is no finding. */
 export const OVERFLOW_TOLERANCE_PX = 2
@@ -133,6 +134,47 @@ function oncePerPage(measures, listOf, findingOf) {
       failures.push(finding)
     }
   return failures
+}
+
+/** One finding per page and element, at the first width that shows it: the same grid or column is one fault at both widths. */
+function oncePerElement(measures, listOf, reasonOf) {
+  const seen = new Set()
+  const failures = []
+  for (const m of each(measures))
+    for (const item of each(listOf(m))) {
+      const id = `${m.path} ${item?.selector}`
+      if (seen.has(id)) continue
+      seen.add(id)
+      failures.push({
+        page: m.path,
+        width: m.width,
+        measured: clip(item?.selector, 120),
+        reason: reasonOf(item),
+        selector: item?.selector ?? null
+      })
+    }
+  return failures
+}
+
+/**
+ * A grid or wrapping row of cards of one kind whose last row holds fewer cards, pushed to the left with a hole on its right
+ * (the host's `orphanRows`, which names the rule): the visitor sees a gap where a card is missing.
+ */
+export function findOrphanRows(measures) {
+  return oncePerElement(
+    measures,
+    (m) => m.orphanRows,
+    (o) => `${o.lastRow} cards on the last row of ${o.perRow}, leaving ${o.gap} px empty`
+  )
+}
+
+/** A footer column that prints no words, link or picture beside one that does (the host's `blankFooterColumns`). */
+export function findBlankFooterColumns(measures) {
+  return oncePerElement(
+    measures,
+    (m) => m.blankFooterColumns,
+    (c) => `A footer column ${c.width} px wide prints no words, link or picture`
+  )
 }
 
 /** A button with no words, a button going nowhere, a form field nothing names: a visitor cannot use them. */

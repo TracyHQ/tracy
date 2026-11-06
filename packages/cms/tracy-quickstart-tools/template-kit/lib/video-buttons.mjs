@@ -2,13 +2,16 @@
 // video address. A template that prints a video's play button whatever the video field holds (JA Boxing's session cards print
 // `https://www.youtube.com/embed/` plus the id) leaves a button that opens an empty player once the plan hides the id; the write
 // step hides exactly these selectors with one CSS rule. A person declares them when packaging, after reading the template's
-// layout (`cli.mjs video-buttons`); a template with none declares an empty list, which says it was looked at.
+// layout (`cli.mjs video-buttons`); a template with none declares an empty list with its reason (`--none --why`, `site.noneWhy`,
+// none-why.mjs), which says it was looked at.
 //
 //   "emptyVideoButtons": [{ "selector": ".video-btn[data-src$=\"/embed/\"]", "why": "<where the template prints it>" }]
 //
 // The selector must test the address (an attribute value test), so a button whose video is filled is never hidden, and holds only
 // plain selector characters, so it cannot close the rule. The write step reads it with the same rules
 // (apps/tracy-web/src/lib/empty-video-buttons.js), and leaves out an entry that breaks them.
+
+import { clearNone, declareNone } from './none-why.mjs'
 
 const SAFE = /^[\w\s.#[\]="'$^*~|:(),+/-]+$/
 const ADDRESS_TEST = /\[\s*[\w-]+\s*[$^*]?=\s*(?:"[^"]*"|'[^']*')\s*\]/
@@ -27,18 +30,14 @@ export function selectorProblem(selector) {
 }
 
 /**
- * Adds one selector to the kit's list (once), or sets an empty list with `none`. Changes the kit in place.
+ * Adds one selector to the kit's list (once), or sets an empty list with `none` and its reason `why`. Changes the kit in place.
  * @param {object} kit
  * @param {{ selector?: string, why?: string, none?: boolean }} order
  * @returns {{ error: string | null, changed: boolean }}
  */
 export function declareVideoButtons(kit, { selector, why, none = false }) {
   if (!kit?.site || typeof kit.site !== 'object') return { error: 'the kit has no site part', changed: false }
-  if (none) {
-    const changed = !Array.isArray(kit.site.emptyVideoButtons) || kit.site.emptyVideoButtons.length > 0
-    kit.site.emptyVideoButtons = []
-    return { error: null, changed }
-  }
+  if (none) return declareNone(kit, 'emptyVideoButtons', why)
   const problem = selectorProblem(selector)
   if (problem) return { error: problem, changed: false }
   if (typeof why !== 'string' || !why.trim())
@@ -52,5 +51,6 @@ export function declareVideoButtons(kit, { selector, why, none = false }) {
   if (at === -1) list.push(entry)
   else list[at] = entry
   kit.site.emptyVideoButtons = list
+  clearNone(kit, 'emptyVideoButtons')
   return { error: null, changed: true }
 }

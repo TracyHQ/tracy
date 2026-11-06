@@ -56,34 +56,13 @@
  *     publish has a demo anyway, and DEMO-1 only names the gap on the Design system step;
  *   - polish waits for nothing and holds nothing.
  */
-import { contractRefusalText, contractStatus } from './brief-support.js'
-import {
-  COVERAGE_STEP,
-  contentCoverageRefusal,
-  contentCoverageStep,
-  coverageOfRelease
-} from './content-coverage/road-step.js'
-import { fitOfRelease } from './content-coverage/fit.js'
-import { rolesOfRelease } from './content-coverage/roles.js'
+import { contractRefusalText } from './brief-support.js'
+import { COVERAGE_STEP, contentCoverageRefusal } from './content-coverage/road-step.js'
 import { cardRefusal, cardWarnings, notShownWhy } from './design-inspiration.js'
 import { listingProblems } from './listing-pages.js'
-import { baselineOfRelease } from './template-kit/demo-baseline-file.js'
-import { previewDemoGap } from './preview-demo.js'
-import {
-  cardOf,
-  DESIGN_INSPIRATION_FILE,
-  DESIGN_INSPIRATION_HIDDEN_FILE,
-  shownOnInspiration
-} from './quickstart-releases.js'
-import { summarizeReadiness } from './template-customization-question-readiness/severity.js'
-import { summarizeDsReadiness } from './template-design-system-readiness/severity.js'
-import {
-  KIT_STEP,
-  kitMapOfRelease,
-  kitOfRelease,
-  templateKitRefusal,
-  templateKitStep
-} from './template-kit/road-step.js'
+import { cardOf, shownOnInspiration } from './quickstart-releases.js'
+import { KIT_STEP, templateKitRefusal } from './template-kit/road-step.js'
+import { startRoad, verdictSteps } from './template-readiness/verdict.js'
 
 export const ROAD_STEPS = Object.freeze([
   'release',
@@ -117,63 +96,6 @@ const INSTALL_CODES = new Set(['asset-missing', 'template-not-an-id'])
 
 const passed = (s) => s.state === 'done' || s.state === 'warn'
 const list = (/** @type {unknown} */ x) => (Array.isArray(x) ? x.join(', ') : '')
-
-/**
- * `quickstart/ja-nova/j6` → `ja-nova`, `tracy-base/wp7` → `tracy-base`: the segment before the cut,
- * the folder a content contract lives under.
- */
-const slugOf = (tag) => tag.split('/').at(-2) ?? tag
-
-/**
- * Which way the quickstart-contract skill goes for this release (`SKILL.md` §2): an installer
- * release takes the full path (a new version is cut, its install file switched on after the
- * merge); a captured package (webroot + database) is captured directly, on the same version. A
- * captured package without the agent docs also takes the full path, which the release cannot tell.
- */
-const contractPathOf = (setting) =>
-  setting?.install && typeof setting.install === 'object' && 'installer' in setting.install
-    ? 'full'
-    : 'direct'
-
-/**
- * How `batch-contracts.mjs capture --only <slug>` can capture this release, or null when it cannot,
- * in the order `selectCards` decides: a Joomla or WordPress release that is not a draft and does not
- * carry the hidden mark, with either a card file (`card`) or, with no card file, its
- * tracy_setting.json and named with `--without-card <tag>` (`without-card`: a contract comes before
- * the card). A release with the hidden mark is excluded as `card hidden` whether or not it carries a
- * card, `--without-card` or not.
- * @returns {'card' | 'without-card' | null}
- */
-function batchScopeOf(release) {
-  if (release.platform !== 'joomla' && release.platform !== 'wordpress') return null
-  if (release.github === 'draft') return null
-  const names = new Set((release.assets ?? []).map((a) => a?.name))
-  if (names.has(DESIGN_INSPIRATION_HIDDEN_FILE)) return null
-  if (names.has(DESIGN_INSPIRATION_FILE)) return 'card'
-  return release.setting ? 'without-card' : null
-}
-
-/**
- * The install parts whose sha256 differs from the digest GitHub states for the asset of that name (`sha256:<hex>`,
- * stated since 2025). A part or an asset without one is not judged: nothing can be compared.
- * @returns {string[]}
- */
-function installDigestsDiffering(release) {
-  const install = release.setting?.install
-  if (release.local || !install || typeof install !== 'object') return []
-  const stated = new Map(
-    (release.assets ?? [])
-      .filter((a) => typeof a?.digest === 'string' && a.digest.startsWith('sha256:'))
-      .map((a) => [a.name, a.digest.slice('sha256:'.length).toLowerCase()])
-  )
-  const out = []
-  for (const part of Object.values(install)) {
-    const { file, sha256 } = /** @type {any} */ (part) ?? {}
-    if (typeof file !== 'string' || typeof sha256 !== 'string' || !stated.has(file)) continue
-    if (stated.get(file) !== sha256.toLowerCase()) out.push(file)
-  }
-  return out
-}
 
 /**
  * The road of one release, or null for a design pack (it is never offered on Design inspiration,
@@ -226,127 +148,33 @@ export function roadOf(
   }
 ) {
   if (!release || release.kind === 'design-pack') return null
-  const road = []
-  const put = (step, state, code, params = {}, blockedBy = undefined) => {
-    const s = { step, state, code, params }
-    if (blockedBy) s.blockedBy = blockedBy
-    road.push(s)
-    return s
-  }
-  /** The first of `steps` not passed yet, or undefined. */
-  const waitingOn = (steps) =>
-    steps.map((n) => road.find((s) => s.step === n)).find((s) => s && !passed(s))?.step
+  const at = startRoad()
+  const { road, put, waitingOn } = at
 
   // What the card would warn about, with the world as it is: routed to the step that fixes it.
   const warnings = cardOf(release) ? cardWarnings(release, { demo, failed, has }) : []
-  const setting = release.setting
-  const version = typeof setting?.version === 'string' ? setting.version : null
 
-  // 1. The release on GitHub: a draft cannot be installed by anything.
-  if (release.github === 'draft') put('release', 'todo', 'release-draft')
-  else put('release', 'done', 'release-published', { github: release.github })
-
-  // 2. The install file, judged by `cardRefusal` (the door's NOT_A_CARD) in its own order.
-  const refusal = release.github === 'draft' ? null : cardRefusal(release)
-  if (refusal !== null) {
-    if (!setting || release.tracy === 'no-setting') put('install-file', 'todo', 'no-install-file')
-    else if (release.tracy !== 'ready')
-      put('install-file', 'todo', 'install-file-invalid', { reason: release.reason ?? null })
-    else if (typeof setting.template !== 'string' || setting.template === '')
-      put('install-file', 'todo', 'no-template')
-    else put('install-file', 'todo', 'template-not-an-id', { template: setting.template })
-  } else {
-    // The files a build downloads, against the assets GitHub lists (`cardWarnings` asks the same).
-    const missing = []
-    if (!release.local && setting?.install && typeof setting.install === 'object') {
-      const names = new Set((release.assets ?? []).map((a) => a?.name))
-      for (const part of Object.values(setting.install)) {
-        const file = /** @type {any} */ (part)?.file
-        if (typeof file === 'string' && file !== '' && !names.has(file)) missing.push(file)
-      }
-    }
-    // The host downloads each part and refuses bytes whose sha256 is not the one the install file pins
-    // (`quickstart.py`): a part GitHub states another digest for cannot be installed.
-    const differing = installDigestsDiffering(release)
-    if (missing.length > 0) put('install-file', 'warn', 'asset-missing', { files: missing })
-    else if (differing.length > 0)
-      put('install-file', shownOnInspiration(release) ? 'warn' : 'todo', 'install-file-sha-mismatch', {
-        version,
-        files: differing,
-        reason: `GitHub states another sha256 for ${differing.join(', ')} than the install file pins`
-      })
-    else put('install-file', 'done', 'install-file-ready', { version })
-  }
-
-  // 3. The content contract, from the same `contractStatus` the door's NO_CONTRACT reads, asked of
-  // this release and of every other choosable release of the template.
-  const own = contractStatus({ platform: release.platform, tag: release.tag, version }, contracts)
-  const missingSiblings = siblings.filter(
-    (b) => b.tag !== release.tag && contractStatus(b, contracts).state === 'none'
+  // 1–5. The release, its install file, the contract, Content coverage, Template kit, Customize your site and Design
+  // system: the steps the template readiness verdict judges, built once there (`template-readiness/verdict.js`).
+  const { version, own } = verdictSteps(
+    release,
+    {
+      demo,
+      contracts,
+      siblings,
+      readiness,
+      dsReadiness,
+      dsSeverity,
+      doorHealth,
+      coverage,
+      roles,
+      fit,
+      templateKit,
+      kitMap,
+      demoBaseline
+    },
+    at
   )
-  const others = missingSiblings.map((b) => b.tag)
-  // It waits for the install file alone (the draft release before it holds that one too).
-  const contractWait = waitingOn(['release', 'install-file'])
-  const path = contractPathOf(setting)
-  if (own.state === 'not-applicable' && others.length === 0) put('contract', 'done', 'contract-not-needed')
-  else if (own.state === 'none') {
-    const batch = batchScopeOf(release)
-    const params = {
-      platform: release.platform,
-      slug: slugOf(release.tag),
-      version,
-      tags: [release.tag, ...others],
-      path,
-      batchInScope: batch !== null,
-      batchWithoutCard: batch === 'without-card'
-    }
-    if (contractWait) put('contract', 'blocked', 'no-contract', params, contractWait)
-    else put('contract', 'todo', 'no-contract', params)
-  } else if (others.length > 0)
-    // `missing` carries each one's platform and version, so the guide can word the work for THAT
-    // release rather than for this one.
-    put('contract', 'todo', 'sibling-no-contract', {
-      tags: others,
-      missing: missingSiblings.map((b) => ({ tag: b.tag, platform: b.platform, version: b.version ?? null }))
-    })
-  else if (own.state === 'lower')
-    put('contract', 'warn', 'contract-lower', { profile: own.profile, version, path })
-  else if (own.state === 'exact') put('contract', 'done', 'contract-exact', { profile: own.profile })
-  else put('contract', 'done', 'contract-not-needed')
-
-  // 3b. Content coverage: the committed measurement of the contract that seals this version, and its slot roles
-  // (ADR 0038: the third group of the step).
-  contentCoverageStep(put, waitingOn, {
-    release,
-    version,
-    contractId: own.profile,
-    coverage: coverage ?? coverageOfRelease(release, contracts),
-    roles: roles ?? rolesOfRelease(release, contracts),
-    fit: fit ?? fitOfRelease(release, contracts)
-  })
-
-  // 3c. Template kit: the kit committed beside the same contract, approved on the images it lists.
-  templateKitStep(put, waitingOn, {
-    release,
-    version,
-    contractId: own.profile,
-    kit: templateKit ?? kitOfRelease(release, contracts),
-    map: kitMap === undefined ? kitMapOfRelease(release, contracts) : kitMap,
-    baseline: demoBaseline ?? baselineOfRelease(release, contracts)
-  })
-
-  // 4. Customize your site: the stored readiness check of this version (see the 🔒 above).
-  customizeStep(put, waitingOn, { release, version, readiness })
-
-  // 5. Design system: the stored Template Design System Readiness check of this version (ADR 0031).
-  designSystemStep(put, waitingOn, {
-    release,
-    version,
-    readiness: dsReadiness,
-    severity: dsSeverity,
-    previewGap: previewDemoGap(demo),
-    doorHealth
-  })
 
   // 6. The demo on this server. A live one counts whatever came before; otherwise installing it
   // needs a release Tracy can build from.
@@ -477,56 +305,6 @@ export function publishRefusalOf(road, release) {
 }
 
 /**
- * The Customize your site step, from the stored check of this release's own version.
- *
- *   blocked   the contract is not passed yet (the check reads it);
- *   checking  the check is queued or running;
- *   todo      must-fix rules remain, the check could not run, nothing has checked this version, or
- *             a rule could not read the evidence it needs (`not-checked`: the Claude Cowork plugin a
- *             new site gets could not be read, or what it was read for changed since);
- *   warn      only worth-fixing rules remain, or a published release fails must-fix rules or has a
- *             rule not checked (it is never taken off for it, so the step only warns there);
- *   done      every rule the check could decide passes.
- * `params` always carries `passed`, `total`, `mustFix` and `worthFixing` (zero and empty before a
- * result exists), plus `version` and, once checked, `checkedAt`; `rechecking: true` while a release
- * that has a result is checked again (the state stays the last result's, so Publish is neither newly
- * held nor newly let through by a re-check).
- * @param {(step: string, state: any, code: string, params?: Record<string, unknown>, blockedBy?: string) => unknown} put
- * @param {(steps: string[]) => string | undefined} waitingOn
- * @param {{ release: any, version: string | null, readiness: any }} input the release, its version, its stored check
- */
-function customizeStep(put, waitingOn, { release, version, readiness }) {
-  const own = readiness && (readiness.version ?? null) === version ? readiness : null
-  const summary = own?.state === 'done' ? summarizeReadiness(own.report) : summarizeReadiness(null)
-  const params = {
-    ...summary,
-    version,
-    ...(own?.checkedAt ? { checkedAt: own.checkedAt } : {}),
-    // Judged again in the background (new rules, a new profile row…): the last result below stands,
-    // for the screen and for Publish, until the new one lands.
-    ...(own?.recheckingSince && own.state !== 'checking' ? { rechecking: true } : {})
-  }
-  const live = shownOnInspiration(release)
-  const wait = live ? undefined : waitingOn(['release', 'install-file', 'contract'])
-  if (wait) return put('customize', 'blocked', 'customize-waiting', params, wait)
-  if (!own) return put('customize', 'todo', 'customize-not-checked', params)
-  if (own.state === 'checking') return put('customize', 'checking', 'customize-checking', params)
-  if (own.state !== 'done')
-    return put('customize', 'todo', 'customize-error', { ...params, reason: own.reason ?? null })
-  if (summary.mustFix.length > 0)
-    return live
-      ? put('customize', 'warn', 'customize-live-failing', params)
-      : put('customize', 'todo', 'customize-must-fix', params)
-  // Nobody knows these pass, so a new Publish waits for them like a must-fix (25/10/2026).
-  if (summary.notChecked.length > 0)
-    return live
-      ? put('customize', 'warn', 'customize-live-unchecked', params)
-      : put('customize', 'todo', 'customize-unchecked', params)
-  if (summary.worthFixing.length > 0) return put('customize', 'warn', 'customize-worth-fixing', params)
-  return put('customize', 'done', 'customize-ready', params)
-}
-
-/**
  * The door's refusal while Customize your site holds Publish, in its own code, with the must-fix
  * rules it waits for.
  * @param {any} step the customize step of the road
@@ -547,57 +325,6 @@ function customizeRefusal(step) {
           ? `Customize your site could not be checked: ${String(p.reason ?? 'no reason given')}. Press Check again.`
           : 'Customize your site has not been checked for this version. Press Check again.'
   return { error: 'CUSTOMIZE_NOT_READY', reason, rules }
-}
-
-/**
- * The Design system step (ADR 0031), from the stored Template Design System Readiness check of this
- * release's own version, in the states and with the params of the Customize your site step:
- *
- *   blocked   the install file is not passed yet (the check reads the template's files);
- *   checking  the check is queued or running;
- *   todo      not measured at the current preview probe (`ds-not-at-probe`, shown alone, no grade),
- *             must-fix rules remain, the check could not run, nothing has checked this version, or
- *             (phase 2, `rule-severity.json` `unmeasured`) a built-site rule has no measurement file;
- *   warn      only worth-fixing rules remain, a built-site rule is not measured yet (phase 1), or a
- *             published release fails must-fix rules;
- *   done      every rule the check could decide passes.
- * @param {(step: string, state: any, code: string, params?: Record<string, unknown>, blockedBy?: string) => unknown} put
- * @param {(steps: string[]) => string | undefined} waitingOn
- * @param {{ release: any, version: string | null, readiness: any, severity?: import('./template-design-system-readiness/severity.js').DsSeverity, previewGap?: 'NO_DEMO' | 'NO_SLOT' | null }} input
- *   `previewGap`: why the Add site preview door would find no demo of this release, null when it has one (DEMO-1)
- */
-function designSystemStep(put, waitingOn, { release, version, readiness, severity, previewGap, doorHealth }) {
-  const own = readiness && (readiness.version ?? null) === version ? readiness : null
-  const summary =
-    own?.state === 'done'
-      ? summarizeDsReadiness(own.report, severity, { previewGap, doorHealth })
-      : summarizeDsReadiness(null, severity)
-  const params = {
-    ...summary,
-    version,
-    ...(own?.checkedAt ? { checkedAt: own.checkedAt } : {}),
-    ...(own?.recheckingSince && own.state !== 'checking' ? { rechecking: true } : {})
-  }
-  const live = shownOnInspiration(release)
-  const wait = live ? undefined : waitingOn(['release', 'install-file'])
-  if (wait) return put('design-system', 'blocked', 'ds-waiting', params, wait)
-  if (!own) return put('design-system', 'todo', 'ds-not-checked', params)
-  if (own.state === 'checking') return put('design-system', 'checking', 'ds-checking', params)
-  if (own.state !== 'done')
-    return put('design-system', 'todo', 'ds-error', { ...params, reason: own.reason ?? null })
-  // no measurement at the current preview probe: that alone, and Publish waits for it (never ds-ready)
-  if (summary.notAtProbe) return put('design-system', live ? 'warn' : 'todo', 'ds-not-at-probe', params)
-  if (summary.mustFix.length > 0)
-    return live
-      ? put('design-system', 'warn', 'ds-live-failing', params)
-      : put('design-system', 'todo', 'ds-must-fix', params)
-  // "Not measured yet" (spec decision 11): never a pass; it holds Publish only once the file says so
-  if (summary.unmeasured.length > 0)
-    return summary.unmeasuredHolds && !live
-      ? put('design-system', 'todo', 'ds-not-measured', params)
-      : put('design-system', 'warn', 'ds-not-measured', params)
-  if (summary.worthFixing.length > 0) return put('design-system', 'warn', 'ds-worth-fixing', params)
-  return put('design-system', 'done', 'ds-ready', params)
 }
 
 /**

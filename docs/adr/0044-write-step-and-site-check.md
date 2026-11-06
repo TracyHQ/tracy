@@ -496,7 +496,7 @@ site's share plugin, would take the bar off every article the owner writes later
 - After the contract call, the write step writes between its own markers in the head injection block one rule per created
   page's menu item and selector (`body.com_content.view-article.item-244 .share-social{display:none!important}`), from the menu
   item that opens each page it created (its own item, or the category's hidden item on the template's route, whose articles
-  are all created pages) (`write-step/created-page-hide-stage.js`). The body classes are T4's, built as for the self link rules.
+  are all created pages) (`write-step/created-page-hide-stage.js`). The body classes are built as for the self link rules.
 - The look guard lets that block hold only such rules on the kit's selectors (`created-page-hide`).
 - The site check is unchanged: `created-controls` (step 11) turns green once the bar is no longer shown.
 
@@ -513,7 +513,8 @@ exception applies, with the same shape:
   per kept page, menu item opening it, container and own address
   (`body.com_content.view-category.item-195 .bottom-actions a[href="/about-us/coaches"]{display:none!important}`, with
   `/index.php/...`, `index.php?Itemid=195` and `/index.php?Itemid=195`), from the kept pages at the address they answer now and
-  the menu rows read then (`write-step/self-link-buttons-stage.js`). The body classes are T4's (option, view, menu item id); the
+  the menu rows read then (`write-step/self-link-buttons-stage.js`). The body classes are the framework's (option, view, menu item
+  id: T4 `item-<id>`, T3 `itemid-<id>`, as the release's template profile records it, `lib/kit-framework.js`, ticket #435); the
   view keeps the rule off an article opened under the same item, and a row whose view cannot be read gets no rule. Each rule
   names the page's own addresses exactly, so a link to another page is never hidden.
 - The look guard lets that block hold only such rules on the kit's containers (`self-link-buttons`).

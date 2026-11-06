@@ -24,6 +24,7 @@ import { NO_LAST } from './no-last-report.js'
 import { heldByLast, linesOf, MARK, orderOf } from './page-create-lines.js'
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { paramsOf } from './page-meta-write.js'
+import { opens, PAGE_CREATE_DOOR } from './plugin-doors.js'
 import { answerWords, doorCall } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -272,7 +273,7 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
     const answer = await door.apply({ siteKey, action: 'info', params: {} })
     if (answer?.ok === false)
       cannot = `the plugin could not say whether it creates pages: ${answerWords(answer)}`
-    else if (!(Number(answer?.info?.page_create?.version) >= 1)) cannot = OLDER
+    else if (!opens(PAGE_CREATE_DOOR, answer?.info)) cannot = OLDER
   } catch (error) {
     cannot = `the plugin could not say whether it creates pages: ${String(error?.message ?? error)}`
   }

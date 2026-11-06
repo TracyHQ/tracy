@@ -135,6 +135,7 @@
         "$TURBO_ROOT$/scripts/test-timing-reporter.mjs",
         "$TURBO_ROOT$/scripts/test-database.ts",
         "$TURBO_ROOT$/scripts/ci/related-tests.mjs",
+        "$TURBO_ROOT$/.agents/skills/joomla-template-readiness/**",
         "$TURBO_ROOT$/.agents/skills/pr-merge/**",
         "$TURBO_ROOT$/.agents/skills/quickstart-contract/**",
         "$TURBO_ROOT$/.dockerignore",

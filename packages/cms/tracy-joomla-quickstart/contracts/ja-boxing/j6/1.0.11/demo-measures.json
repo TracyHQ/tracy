@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "tracy-demo-measures/v1",
+  "quickstart": {
+    "slug": "ja-boxing",
+    "version": "1.0.11"
+  },
+  "widths": [
+    1440,
+    390
+  ],
+  "pages": [
+    "/",
+    "/pages/users/login-form",
+    "/pages/users/registration-form",
+    "/pages/j-content/category-blog",
+    "/pages/j-content/featured-articles",
+    "/pages/j-content/author-listting",
+    "/pages/j-content/blog-detail",
+    "/classes",
+    "/about-us/contact",
+    "/plans",
+    "/about-us",
+    "/about-us/learning-center",
+    "/about-us/our-trainers",
+    "/about-us/our-trainers/darlene-robertson",
+    "/classes/advanced-boxing",
+    "/classes/beginner-boxing",
+    "/classes/group-boxing",
+    "/classes/private-training",
+    "/pages/j-content/category-blog/never-boxed-before",
+    "/pages/j-content/category-blog/boxing-legends-remembered",
+    "/pages/j-content/category-blog/title-defense-strategies",
+    "/pages/j-content/category-blog/inside-boxing-techniques",
+    "/pages/j-content/category-blog/classic-boxing-rivalries",
+    "/pages/j-content/category-blog/boxings-finest-moments",
+    "/pages/j-content/category-blog/boxings-ultimate-showdown",
+    "/pages/j-content/category-blog/boxings-impact-on-culture",
+    "/pages/j-content/category-blog/boxing-and-mental-toughness",
+    "/pages/j-content/category-blog?start=6",
+    "/pages/j-content/featured-articles?start=6",
+    "/pages/j-content/author-listting/author/admin",
+    "/pages/j-content/author-listting/author/drew_stokes",
+    "/pages/j-content/author-listting/author/daniel vasquez",
+    "/pages/j-content/author-listting/author/franklin wagner",
+    "/pages/j-content/author-listting/author/lorene bass",
+    "/pages/j-content/author-listting/author/corey gibson",
+    "/pages/j-content/author-listting/author/cora stephens",
+    "/pages/j-content/author-listting/author/gene roberts",
+    "/about-us/learning-center/every-champ-was-a-beginner-at-some-point",
+    "/about-us/learning-center/unforgettable-moments-in-boxing-history",
+    "/about-us/learning-center/the-art-and-science-of-boxing-strategy",
+    "/about-us/learning-center/boxing-legends-stories-of-great-fighters",
+    "/about-us/learning-center/behind-the-scenes-of-boxing-training-camps",
+    "/about-us/learning-center/the-impact-of-boxing-on-popular-culture",
+    "/about-us/learning-center/global-perspectives-on-the-sport-of-boxing",
+    "/about-us/learning-center/the-business-of-professional-boxing-promotions",
+    "/about-us/learning-center/the-evolution-of-boxing-equipment-and-gear",
+    "/about-us/learning-center/in-depth-analysis-of-classic-boxing-matches",
+    "/about-us/learning-center?start=6",
+    "/pages/j-content/category-blog/boxings-undisputed-champs",
+    "/pages/j-content/category-blog/the-evolution-of-boxing"
+  ],
+  "status": "green",
+  "groups": [
+    {
+      "name": "main-heading",
+      "status": "green",
+      "checked": 50,
+      "failures": [
+        {
+          "group": "main-heading",
+          "page": "/index.php/plans",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/about-us",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/about-us/our-trainers/darlene-robertson",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/classes/advanced-boxing",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        }
+      ]
+    },
+    {
+      "name": "empty-frames",
+      "status": "green",
+      "checked": 50,
+      "failures": []
+    },
+    {
+      "name": "text-overflow",
+      "status": "green",
+      "checked": 50,
+      "failures": []
+    },
+    {
+      "name": "orphan-row",
+      "status": "green",
+      "checked": 50,
+      "failures": []
+    },
+    {
+      "name": "blank-footer-column",
+      "status": "green",
+      "checked": 50,
+      "failures": []
+    }
+  ]
+}

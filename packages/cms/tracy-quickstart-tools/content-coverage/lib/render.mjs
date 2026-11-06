@@ -60,15 +60,22 @@ export async function wakeLazyContent(page) {
 /**
  * @returns {Promise<{status:number|null, finalUrl:string, data?:object, html?:string|null, shot?:Buffer, shotHeight?:number, error?:string}>}
  */
-export async function renderPage(ctx, url, { screenshot = true } = {}) {
+export async function renderPage(
+  ctx,
+  url,
+  { screenshot = true, navigationTimeout = 45000, loadGrace = 15000 } = {}
+) {
   const page = await ctx.newPage()
   try {
     let resp
     try {
-      resp = await page.goto(url, { waitUntil: 'load', timeout: 45000 })
+      resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: navigationTimeout })
     } catch (e) {
       return { status: null, finalUrl: url, error: String(e.message || e).split('\n')[0] }
     }
+    // The page is there once its document is. Wait for the load event for a while, but a resource that never answers
+    // (an avatar host a network blocks, a font CDN) must not turn a page that renders into a failed page.
+    await page.waitForLoadState('load', { timeout: loadGrace }).catch(() => {})
     await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {})
     await wakeLazyContent(page)
     await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {})

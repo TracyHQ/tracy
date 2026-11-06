@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-445-joomla-template-readiness",
+  "kind": "feat",
+  "title": "The template readiness verdict judges each piece the Website opportunity flow reads, every verdict code has a fix in one registry, and Road to live shows that fix under a red step",
+  "pr": 445,
+  "area": "ops/template-readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run: node --test --test-concurrency=1 apps/tracy-web/test/template-readiness-fixes.test.mjs apps/tracy-web/test/template-readiness-verdict.test.mjs packages/web/tracy-harness/test/template-presses.test.mjs",
+    "S2: Read the exit code and the fail and skipped counts."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures.",
+    "Every code a readiness module produces has an entry in apps/tracy-web/src/lib/template-readiness/fixes.js, and no entry names a code nothing produces.",
+    "withFixes puts the registry fix on each todo or warn road step whose code has an entry, and nothing on done or blocked steps.",
+    "On Road to live a red step shows [data-road-fix-text], [data-road-fix-command] and [data-road-fix-skill] exactly as sent; a done step shows no [data-road-fix]."
+  ],
+  "selectors": {
+    "registry": "apps/tracy-web/src/lib/template-readiness/fixes.js (FIXES, fixOf, withFixes)",
+    "list_door": "GET /ops/api/quickstarts (releases[].road[].fix)",
+    "panel": "[data-road-fix] in packages/web/tracy-harness/src/cms/RoadToLive.tsx"
+  },
+  "evidence": "Spec #429: fix text lived in several places and Road to live showed no registry fix under a red step (#432).",
+  "fence": "The registry scan over the readiness modules, the verdict on fixture worlds, and the real Road to live component mounted on a linkedom document. Not exercised: a running /ops server and a live GitHub release list.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/template-readiness-fixes.test.mjs",
+      "apps/tracy-web/test/template-readiness-verdict.test.mjs",
+      "packages/web/tracy-harness/test/template-presses.test.mjs"
+    ]
+  }
+}

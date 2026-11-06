@@ -1367,3 +1367,37 @@ test('Design system: verdict, runs, the paste block up front, every rule behind 
   )
   assert.doesNotMatch(row.textContent, /[–—]/, 'no dash')
 })
+
+test('Road to live: a red step with no guidance of its own shows the registry fix; a step with its own prompt does not repeat it', async () => {
+  const fix = {
+    text: 'Run the Customize your site check of this version, then read its result here.',
+    command: 'node scripts/example-fix.mjs --tag example',
+    skill: '.agents/skills/example-skill/SKILL.md section 9'
+  }
+  const draftFix = {
+    text: 'Publish the GitHub release of the quickstart.',
+    skill: '.agents/skills/example/SKILL.md'
+  }
+  const road = WITH_CONTRACT_ROAD.map((s) =>
+    s.step === 'release'
+      ? { ...s, state: 'todo', code: 'release-draft', fix: draftFix }
+      : s.step === 'customize'
+        ? { ...s, state: 'todo', code: 'customize-not-checked', fix }
+        : s
+  )
+  const r = release('quickstart/ja-restaurant/j6', 'joomla', 'none', { version: '1.0.2', road })
+  const ui = await mount(lib.RoadToLive, { releases: [r], writable: true, onGo: noop })
+  await ui.click(ui.host.querySelector('[data-road-release] [data-road-toggle]'))
+  // Customize your site, not checked yet: the step has no fix of its own, so the registry's shows.
+  const step = ui.host.querySelector('[data-road-step="customize"]')
+  assert.equal(step.querySelector('[data-road-fix-text]').textContent, fix.text)
+  assert.equal(step.querySelector('[data-road-fix-command]').textContent, fix.command)
+  assert.equal(step.querySelector('[data-road-fix-skill]').textContent, fix.skill)
+  // A draft release already has its own prompt to paste: the registry fix is not added under it.
+  const draft = ui.host.querySelector('[data-road-step="release"]')
+  assert.notEqual(draft.querySelector('[data-road-outside], ol'), null)
+  assert.equal(draft.querySelector('[data-road-fix]'), null)
+  // A done step shows no fix block.
+  assert.equal(ui.host.querySelector('[data-road-step="install-file"] [data-road-fix]'), null)
+  assert.doesNotMatch(ui.host.textContent, /[\u2013\u2014]/)
+})

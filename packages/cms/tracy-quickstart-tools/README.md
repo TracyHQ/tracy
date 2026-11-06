@@ -159,7 +159,9 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   never commit them). With `--write`: `content-coverage.json` in the contract folder, the compact
   file `/ops` reads: tool version, the contract id and sha256 of the map and lock it measured,
   counts per class, coverage per kind, and one line per distinct hole (`kind`, `value`, `class`,
-  `lock`, `cause`, `evidence`, `pages`, `firstPage`).
+  `lock`, `cause`, `evidence`, `pages`, `firstPage`). `pages.failed` is the count of pages that did not render;
+  `pages.failures` lists each one (path and query only, never the stand address, with `mapPage`, `status` or `error`
+  when known), so the next reader knows which page it was.
 - **Site map and header (audit 1.6.0).** The same file carries `sitePages`: one row per page the content map declares,
   in map order, none dropped, with `opens` (`live` with its HTTP status and path, `broken` with the status it answered,
   `no-page` for a menu group or a `#` link, `link` for a menu entry to another address, `unpublished`, `offsite`, or
@@ -432,18 +434,24 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    the template's layouts for a video play button whose address is built from a video field with no check that it is
    set (JA Boxing `html/com_content/article/classes.php`: `data-src="https://www.youtube.com/embed/<id>"`), then
    `cli.mjs video-buttons --kit <kit dir>/template-kit.json --selector '.video-btn[data-src$="/embed/"]' --why '<where>'`
-   once per such button, or `--none` when the template has none. The selector must test the address, so a button
+   once per such button, or `--none --why '<what was read>'` when the template has none (the reason goes to
+   `site.noneWhy.<field>`; an empty list without one reads as never looked at, on this command and the three below).
+   The selector must test the address, so a button
    with a video is never hidden; the write step hides the listed ones with one CSS rule in the head injection block,
    and the site check's `empty-video-buttons` group blocks on any shown control that opens an empty player.
    In the same reading, `cli.mjs self-link-buttons --kit <kit dir>/template-kit.json --container '.bottom-actions' --why '<where>'`
-   names the container of a "more" button the template prints from settings no slot reaches (or `--none`); the write step
+   names the container of a "more" button the template prints from settings no slot reaches (or `--none --why`); the write step
    hides, on each kept page only, a link there whose address is that page's own.
    `cli.mjs hidden-page-links --kit <kit dir>/template-kit.json --container '.teams-item' --why '<where>'` names the
    container of list row links (a card's name and photo) that may lead to a page the plan hides; the write step sends such a
-   link to a living page, or makes it plain text.
+   link to a living page, or makes it plain text (or `--none --why`).
    `cli.mjs created-page-hide --kit <kit dir>/template-kit.json --selector '.share-social' --why '<where>'` names a block the
    template prints hard coded on every article page (a share bar) that a page the write step creates must not show (or
-   `--none`); the write step hides it on the created pages only, so the owner's own articles keep it.
+   `--none --why`); the write step hides it on the created pages only, so the owner's own articles keep it.
+   The template readiness verdict holds the kit until all five of these fields (steps 8 and 9) name something or say
+   none with a reason (`kit-hidden-field-missing`). The write step scopes the self link and created page rules by the
+   menu item class the framework prints on the body (T4 `item-<id>`, T3 `itemid-<id>`), read from the release's template
+   profile.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
 shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one

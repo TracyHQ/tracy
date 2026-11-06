@@ -32,8 +32,10 @@ test('declaring adds a selector once with its reason, in its own field, and --no
   assert.match(declareCreatedPageHide(kit, { selector: SELECTOR }).error, /--why/)
   assert.match(declareCreatedPageHide(kit, { selector: '.a .b', why: WHY }).error, /compound/)
   assert.match(declareCreatedPageHide(kit, { selector: 'body', why: WHY }).error, /compound/)
-  assert.deepEqual(declareCreatedPageHide(kit, { none: true }), { error: null, changed: true })
+  assert.match(declareCreatedPageHide(kit, { none: true }).error, /--why/)
+  assert.deepEqual(declareCreatedPageHide(kit, { none: true, why: WHY }), { error: null, changed: true })
   assert.deepEqual(kit.site.createdPageHide, [])
+  assert.deepEqual(kit.site.noneWhy, { createdPageHide: WHY })
 })
 
 test('what the cli declares is what the write step reads', () => {
@@ -59,8 +61,13 @@ test('cli: created-page-hide writes the kit in place with its own indent, and no
     assert.deepEqual(JSON.parse(written).site.createdPageHide, [{ selector: SELECTOR, why: WHY }])
     assert.equal(run('--selector', SELECTOR, '--why', WHY).status, 0)
     assert.equal(readFileSync(file, 'utf8'), written, 'idempotent')
-    assert.equal(run('--none').status, 0)
-    assert.deepEqual(JSON.parse(readFileSync(file, 'utf8')).site.createdPageHide, [])
+    const held = readFileSync(file, 'utf8')
+    assert.equal(run('--none').status, 1)
+    assert.equal(readFileSync(file, 'utf8'), held, 'a none without a reason writes nothing')
+    assert.equal(run('--none', '--why', WHY).status, 0)
+    const site = JSON.parse(readFileSync(file, 'utf8')).site
+    assert.deepEqual(site.createdPageHide, [])
+    assert.deepEqual(site.noneWhy, { createdPageHide: WHY })
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
