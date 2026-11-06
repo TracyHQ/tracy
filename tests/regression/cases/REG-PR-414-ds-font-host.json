@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-414-ds-font-host",
+  "kind": "fix",
+  "title": "The ds-slot font cache fetches only from fonts.gstatic.com, whatever URL a paused request carries (CodeQL alert of release #395, round 3)",
+  "pr": 414,
+  "area": "design/ds-slot",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run: node --test --test-reporter=tap packages/design/tracy-ds-slot/test/cdp-font-host.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Every named test is 'ok': a fonts.gstatic.com address is kept as it was; a look-alike host, a user-info trick, plain http, another host carrying the gstatic URL in its path, a metadata address, an empty string and undefined all give null; a path starting with '@' or '//' still fetches from fonts.gstatic.com."
+  ],
+  "selectors": {
+    "ds-slot": "fontFetchUrl (packages/design/tracy-ds-slot/scripts/cdp.mjs), used by cachedFont for Fetch.requestPaused on fonts.gstatic.com"
+  },
+  "evidence": "CodeQL check of the release PR #395 after #413: server-side request forgery at packages/design/tracy-ds-slot/scripts/cdp.mjs:32 (`fetch(url)` with the paused request's URL). With the host check removed from fontFetchUrl, 'fontFetchUrl refuses every other host' fails.",
+  "fence": "Mechanism only: which address the cache fetches. Not covered: the CodeQL run itself (no CodeQL CLI on the machine) and a live browser lane.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/cdp-font-host.test.mjs"
+    ],
+    "tests": [
+      "fontFetchUrl keeps a fonts.gstatic.com address",
+      "fontFetchUrl refuses every other host",
+      "fontFetchUrl keeps the fetch on fonts.gstatic.com"
+    ]
+  }
+}
