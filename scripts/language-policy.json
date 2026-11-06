@@ -15078,6 +15078,234 @@
       "sha256": "69bbd243037bcd718d3abdc5219bb5a1469e9feb69e3dc79df91ac8876a89b57",
       "count": 1,
       "reason": "Exact line of the approved JA Symphony 1.0.6 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "86dc06b6140f6a16966daf68fccf88f058767666aeb5290a52117b4b3a33dd61",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "41ce454ca1c717635dbe67465bb064c7bce9aa6042be565c19ecc72c009ada1c",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "af36136b6570cbc3f4d6ecf8dfcf4045ce4e39d27fab3b4a046f2466e14f8cf8",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "989b90753d0dcc2112cd121dc4eb0bdd80b8e4a03c25a2f4fd38e4de28dbd7e7",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "94bb9c75011e051325e1af4613ccad9eb9c17f80553f5c4953fe166532125da7",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "5526dfbe93638924bd56a9161d272c809b8ff54d3656d5e28a47a81a48575c8c",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "dd90afc1a7814871a8fdb86f4739ba8a1c52fd1f964e85751341675f884c7dee",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "e2a23093e3ba47fddda71e8e1910d388b8880a70d46c5e6158954b4c62407387",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "f0c2019f8289a4081c1a9cb917fe2ae6c01db4306151526041c0c7859542e0ad",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "256279186889b2422c9489084863a6b471cc6195652a4e61baa64ad42999f109",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "cbc479c6d0fa444590c29e07b968a1b661e200595a5826ca0b77f1f375a899d7",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "3a489c57717d3a8118d74aed125235e8165c4879938e020e3cd2f919187c9ca2",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "3d651e01dbefc7aa43f81b66c1cd452fe3827bdb8ba22f87b3765605f91286de",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "58cf3d2a9352d5e718a6bdb25247caa6b16102f38b311e60ea881de3c25d58bf",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "6f0d79ad3805ca8db7b8271bd8331666209768969baef33e8a360b775a7302cd",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "eb232f5bf5d177b99932b8d6e45391d2424df51560d145c5c9e74fee07d2772e",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "70136abc41583cba7a379cc77285c63fcfa8c89697d02482edf22cceb22e224c",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "eadef5b9fdf22c3f6d0222e3ce791d8103471256b791f7995fd4b1cf6ef2a926",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "5d040227b4eb7b0d75d353ed1c5d228f47dda2a1af55a2bed84555af190b5714",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "261969c819658f4c1de316f21915a4b2e83a10274ec5e5a2a0a982652526ba19",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "be759f32203ddc2b3da9494299de846928ae931e3efd4e94511bf7ee475cb744",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "dcf7c657ac25c14c7b6b40c150809df927893bc40a15e82aea3223bd2d7b6775",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "221cc8af33965def8c2bfe556971c579f0751ad7b323aa3966d3c590de54e9e2",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "bc8dbaff5505096be8dc4b2ed18860332cea0dd362aeffcffaf84bf386937095",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "79658b9a72fd1674a1c4125de07536f41073322ab8d5b37742470c3d90d4a076",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "5c8bba02ff2a8b8df4fbc75ae1cf601845f3240c747f3a145e6085c4b9e08925",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "d3d09c0e9550c3618ce24f1b1e5919dcd4911da54862260e6bc579733364515a",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "124b151d0fb8b368bf3d742dd7f719c84bd0b81ca5a176de112cdb7882296c44",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "a853df7fca41f3f1ef776fc15580c9ea6df7670df585bcedaa83dcbd71b37ef5",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "1b8e85690f31237c1644781e09fed240047670472dd72d467b98e022e8e11289",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "8f252b762e0bd3bfd3c6f04b62ba7e5428e6ba0099657a7fb664257858fa35af",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "13fb83d84337445598cc3251f467ea2be2d90d9f97c97eea14a321cbc9dafef0",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "0731b78f1849b4f3f90588cc750d4775b9970f97fe8b88b6fbae0ff2bd14b71b",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "ec604724a70e519e1a4c6bf73abadb6b89a7583e22ade3b0985a0df5eda39d41",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "d1b64bf3151a2d79e326dea4148b3fbe6380cd41759fb0e1c132fe3896207a60",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "c2905a866fce68fd0058c65677c9b358ddbceca845ead46abdf52bcc50d32882",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "4e57dcc29618d1d0644bde636b3d3b4b3b58d1d7dd112de4a7c61be559dfd3d0",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/assets/seed-starter/questions.json",
+      "sha256": "8310007df176c015312dc498a0f2097848201640d6119c387e076450ec012edd",
+      "count": 1,
+      "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
     }
   ],
   "objects": [
