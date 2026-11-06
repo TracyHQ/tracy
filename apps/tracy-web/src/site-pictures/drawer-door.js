@@ -6,7 +6,7 @@
 // unset, disabled or unreadable door, or a model its provider says cannot draw, refuses the run at its start and again
 // when a worker claims it, as does a door changed since the start. A run records the door's snapshot (never the key) as
 // `door.drawer`.
-import { lookupDoor } from '../lib/llm-store.js'
+import { DOORS_WHERE as WHERE, ladderRefusal, lookedUpDoor } from '../lib/door-ladder.js'
 
 export const PICTURE_DRAWER_DOOR = 'pictureDrawer'
 
@@ -14,7 +14,6 @@ export const PICTURE_DRAWER_DOOR = 'pictureDrawer'
 export const PICTURE_DRAWER_MODEL = 'google/gemini-3.1-flash-lite-image'
 
 const LABEL = '"Picture drawer"'
-const WHERE = '/ops › Model & AI'
 
 /**
  * The drawer door, or a refusal with its code and reason.
@@ -25,23 +24,14 @@ const WHERE = '/ops › Model & AI'
  * >} `snapshot` is what a run stores: which provider, model and assignment revision it used, never the key.
  */
 export async function pictureDrawerDoor({ pool, secret }) {
-  const found = secret ? await lookupDoor(pool, PICTURE_DRAWER_DOOR, secret) : { state: 'unreadable' }
+  const found = await lookedUpDoor(pool, PICTURE_DRAWER_DOOR, secret)
+  const refused = ladderRefusal(found, {
+    prefix: 'SITE_PICTURES_DRAWER',
+    label: LABEL,
+    runsOn: `the drawer runs on ${PICTURE_DRAWER_MODEL}`
+  })
+  if (refused) return refused
   const refuse = (suffix, reason) => ({ ok: false, code: `SITE_PICTURES_DRAWER_${suffix}`, reason })
-  if (found.state === 'unassigned' || (found.state === 'ok' && !found.credential?.model))
-    return refuse(
-      'UNSET',
-      `The ${LABEL} door has no provider and model. Set it in ${WHERE} (the drawer runs on ${PICTURE_DRAWER_MODEL}).`
-    )
-  if (found.state === 'disabled')
-    return refuse(
-      'DISABLED',
-      `The provider of the ${LABEL} door is switched off. Turn it on, or pick another provider in ${WHERE}.`
-    )
-  if (found.state !== 'ok')
-    return refuse(
-      'UNREADABLE',
-      `The key of the ${LABEL} door's provider cannot be opened (empty, or sealed with another secret). Save the key again in ${WHERE}.`
-    )
   const { providerId, baseUrl, apiKey, model } = found.credential
   if (found.snapshot.metadata?.draws === false)
     return refuse(

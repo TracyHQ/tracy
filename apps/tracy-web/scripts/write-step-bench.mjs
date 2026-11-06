@@ -84,7 +84,9 @@ export async function main(argv, env = process.env) {
               layouts,
               port: site.port ?? null,
               ...demoSelfNames(config, site),
-              mode: SHOT_MODE
+              mode: SHOT_MODE,
+              // The boxes of the text elements, so the finisher crops a repaired block (lib/page-shots.js).
+              boxes: true
             },
             { onFrame, signal, timeoutMs: 240_000 }
           )

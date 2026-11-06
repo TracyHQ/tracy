@@ -1,21 +1,20 @@
-// Wiring: its check command runs the site check on a write step run, so it sits beside app.js, outside the domain
-// directories, which import only lib/ and db/ (module-graph.test.mjs).
+// Wiring: its check and finish commands (write-step-bench-site-check.js, write-step-bench-finish.js) join the site check
+// and the write step, so it sits beside app.js, outside the domain directories, which import only lib/ and db/
+// (module-graph.test.mjs).
 // BENCH ONLY. The write step bench's command line (ADR 0044), with the commands of the other benches. A run executes in
 // this process and needs no worker in the server; other shells read it or stop it through its row (write-run-store.js).
 // Exit codes: 0 done, 1 refused, stopped, cancelled or not found, 2 wrong usage.
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from './lib/template-kit-source.js'
-import { checkLines } from './site-check/check-lines.js'
 import { baselineOutcome, ensureBaseline } from './site-check/demo-baseline.js'
-import { withReadBack } from './site-check/read-back.js'
 import { openContentMap } from './lib/content-map-source.js'
 import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './write-step/bench-site-cli.js'
 import { runWriteStep } from './write-step/write-step.js'
-import { siteCheckOfRun } from './write-step-bench-site-check.js'
-import { FINISH_USAGE, finishRun } from './write-step-bench-finish.js'
+import { CHECK_NEEDS, CHECK_USAGE, checkRun } from './write-step-bench-site-check.js'
+import { FINISH_NEEDS, FINISH_USAGE, finishRun } from './write-step-bench-finish.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
@@ -26,13 +25,7 @@ export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   status <runId>                              state, phase, counts and the cause of a stop
   get <runId> --out <dir>                     write the run's site-write-report.json
   cancel <runId>                              stop a run between phases
-  check --run <runId> --account <email> [--out <dir>] [--all-groups] [--site-pictures-file <path>]
-                                              measure the run's site against its report (site-check/1): reads only,
-                                              runs in this process, keeps the result on the run's report; --out also
-                                              writes site-check.json. Exit 0 green, 1 red or unmeasured.
-                                              --all-groups runs the page groups even when read-back is red (never green)
-                                              --site-pictures-file: step 8's site-pictures.json, for alt-matches-picture
-                                              (each printed alt against what the picture shows)
+${CHECK_USAGE}
 ${FINISH_USAGE}
 ${SITE_USAGE}`
 
@@ -90,6 +83,8 @@ export async function runCli(argv, deps) {
     const found = COMMANDS[command]
     if (!found) throw new Usage(command ? `unknown command "${command}"` : '')
     if (found.needsId && !runId) throw new Usage(`${command} needs a run id`)
+    for (const [flag, name] of found.needs ?? [])
+      if (!values[flag]) throw new Usage(`${command} needs ${name}`)
     return await found.run({ ...deps, ...io }, values, runId)
   } catch (error) {
     if (error instanceof Usage || error?.code?.startsWith?.('ERR_PARSE_ARGS')) {
@@ -101,35 +96,26 @@ export async function runCli(argv, deps) {
   }
 }
 
+/** The flags `run` cannot run without, as the command line names them. */
+const RUN_NEEDS = [
+  ['site', '--site'],
+  ['kit', '--kit'],
+  ['plan-file', '--plan-file'],
+  ['copy-file', '--copy-file'],
+  ['account', '--account']
+]
+
 const COMMANDS = {
-  run: { run: startRun },
+  run: { needs: RUN_NEEDS, run: startRun },
   list: { run: listRuns },
   status: { needsId: true, run: statusOf },
   get: { needsId: true, run: getReport },
   cancel: { needsId: true, run: cancelRun },
-  check: { run: checkRun },
-  finish: { run: finish }
-}
-
-async function finish(d, values) {
-  for (const [flag, name] of [
-    ['run', '--run <runId>'],
-    ['account', '--account'],
-    ['out', '--out <dir>']
-  ])
-    if (!values[flag]) throw new Usage(`finish needs ${name}`)
-  return finishRun(d, values)
+  check: { needs: CHECK_NEEDS, run: checkRun },
+  finish: { needs: FINISH_NEEDS, run: finishRun }
 }
 
 async function startRun(d, values) {
-  for (const [flag, name] of [
-    ['site', '--site'],
-    ['kit', '--kit'],
-    ['plan-file', '--plan-file'],
-    ['copy-file', '--copy-file'],
-    ['account', '--account']
-  ])
-    if (!values[flag]) throw new Usage(`run needs ${name}`)
   if (values.by !== undefined && !LABEL.test(values.by))
     throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
   const where = d.index ? { index: d.index } : {}
@@ -274,45 +260,4 @@ async function cancelRun(d, _values, id) {
     return 0
   }
   return refused(d, `Run ${id} has already ended (${r.status}).`)
-}
-
-async function checkRun(d, values) {
-  if (!values.run) throw new Usage('check needs --run <runId>')
-  if (!values.account) throw new Usage('check needs --account')
-  const r = await d.runs.read(values.run)
-  if (!r) return refused(d, `No run ${values.run}.`)
-  if (r.status === 'running') return refused(d, `Run ${r.id} is still going.`)
-  if (!r.report) return refused(d, `Run ${r.id} left no report.`)
-  // Step 8's manifest, whose seen sentences `alt-matches-picture` compares with the printed alts (alt-matches-picture.js).
-  let pictures = null
-  if (values['site-pictures-file']) {
-    const file = path.resolve(d.cwd ?? process.cwd(), values['site-pictures-file'])
-    try {
-      pictures = JSON.parse(await readFile(file, 'utf8'))
-    } catch (error) {
-      return refused(d, `--site-pictures-file cannot be read as JSON: ${error?.message ?? error}`)
-    }
-  }
-  // The demo baseline create-site settled for the quickstart version: a check never measures one, as the site is written.
-  const baseline = d.baselines ? await d.baselines.read(r.report.contract) : null
-  if (d.makeHost)
-    d.out(
-      baseline
-        ? `baseline ${baselineOutcome({ measured: false })} for ${r.report.contract}`
-        : `baseline: none stored for ${r.report.contract}, so the demo groups stay unmeasured (create-site measures it on an untouched site)`
-    )
-  const check = await siteCheckOfRun(d, r.report, {
-    account: values.account,
-    baseline,
-    pictures,
-    allGroups: values['all-groups'] === true
-  })
-  await d.runs.saveReport(r.id, withReadBack(r.report, check))
-  if (values.out) {
-    const dir = path.resolve(d.cwd ?? process.cwd(), values.out)
-    await mkdir(dir, { recursive: true })
-    await writeFile(path.join(dir, 'site-check.json'), `${JSON.stringify(check, null, 2)}\n`)
-  }
-  for (const line of checkLines(check)) d.out(line)
-  return check.status === 'green' ? 0 : 1
 }

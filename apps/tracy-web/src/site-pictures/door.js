@@ -2,6 +2,7 @@
 // and the writer's doors it never falls back to the environment: an unset, disabled or unreadable door stops the run
 // and says why. The picker reads the owner photos by sight, so a model its provider says cannot read pictures is
 // refused.
+import { cannotSeeReason, DOORS_WHERE as WHERE } from '../lib/door-ladder.js'
 import { lookupDoor } from '../lib/llm-store.js'
 
 export const PICTURE_PICKER_DOOR = 'picturePicker'
@@ -10,8 +11,6 @@ export const PICTURE_PICKER_DOOR = 'picturePicker'
 export const PICTURE_PICKER_PROVIDER = 'deepseek'
 export const PICTURE_PICKER_MODEL = 'deepseek-flash'
 const DEFAULT_NAMED = `${PICTURE_PICKER_MODEL} on the ${PICTURE_PICKER_PROVIDER} provider`
-
-const WHERE = '/ops › Model & AI'
 
 const REFUSALS = {
   unassigned: [
@@ -52,7 +51,11 @@ export async function picturePickerDoor({ pool, secret }) {
     return {
       ok: false,
       code: 'SITE_PICTURES_MODEL_LACKS',
-      reason: `The provider says ${model} cannot read pictures, and the picker looks at the owner photos. Pick another model for the "Picture picker" door in ${WHERE}.`
+      reason: cannotSeeReason({
+        said: `The provider says ${model}`,
+        label: '"Picture picker"',
+        sight: 'the picker looks at the owner photos'
+      })
     }
   return {
     ok: true,

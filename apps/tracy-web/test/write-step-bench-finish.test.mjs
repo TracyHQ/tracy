@@ -7,6 +7,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, test } from 'node:test'
+import sharp from 'sharp'
 import { runCli } from '../src/write-step-bench-cli.js'
 import { kitIndex, memoryStore } from './_write-step-bench.mjs'
 import {
@@ -15,6 +16,9 @@ import {
   CLEAN,
   fakeCapture,
   finding,
+  HOURS,
+  heldAtStart,
+  PAGES,
   RAW,
   scriptedDoor,
   writtenRun,
@@ -22,7 +26,7 @@ import {
 } from './_write-step-finisher.mjs'
 import { memoryRunStore } from './_write-step-run.mjs'
 
-const kits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS })
+const kits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS, pages: PAGES })
 const dirs = []
 after(() => {
   kits.done()
@@ -30,9 +34,18 @@ after(() => {
 })
 
 /** One finish on the written site, with the model doors' scripted answers. */
-async function finish({ finder, fixer, checker, images = true, argv = [] }) {
-  const site = writtenSite()
-  const shots = fakeCapture()
+async function finish({
+  finder,
+  fixer,
+  checker,
+  images = true,
+  argv = [],
+  boxes = true,
+  sideEffect = null,
+  failures
+}) {
+  const site = writtenSite(heldAtStart(), { sideEffect })
+  const shots = fakeCapture(boxes ? { held: site.held } : {})
   const doors = {
     finder: scriptedDoor('Finisher finder', finder, { images }),
     fixer: scriptedDoor('Finisher fixer', fixer),
@@ -42,7 +55,7 @@ async function finish({ finder, fixer, checker, images = true, argv = [] }) {
   const err = []
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-'))
   dirs.push(dir)
-  const runs = memoryRunStore([writtenRun()])
+  const runs = memoryRunStore([writtenRun({ failures })])
   const code = await runCli(
     ['finish', '--run', 'run-1', '--account', 'bench@example.test', '--out', dir, ...argv],
     {
@@ -62,7 +75,7 @@ async function finish({ finder, fixer, checker, images = true, argv = [] }) {
   )
   const logFile = path.join(dir, 'repair-log.json')
   const log = existsSync(logFile) ? JSON.parse(readFileSync(logFile, 'utf8')) : null
-  return { code, out, err, site, shots, log, dir, runs }
+  return { code, out, err, site, shots, log, dir, runs, doors }
 }
 
 const fixOrder = (over = {}) => ({ kind: 'fix-text', slot: 'block-2.1', text: CLEAN, ...over })
@@ -91,7 +104,8 @@ test('a raw markup fault is repaired through the write door and kept when the ch
   assert.ok(record.crops.before.length && record.crops.after.length)
   assert.equal(run.log.counts.kept, 1)
   // The final site check reads the repaired words as the ones ordered, and the build's check is the final one.
-  assert.equal(run.out.at(-1), 'final site-check: green')
+  assert.equal(run.out.at(-1), 'final site-check: green, no new blocking failure since the first check')
+  assert.deepEqual(run.log.finalCheck.newBlocking, [])
   assert.equal(run.runs.rows[0].report.siteCheck.status, 'green')
 })
 
@@ -145,4 +159,132 @@ test('a finder door that cannot take images makes the bench refuse with the reas
   assert.deepEqual(run.shots.calls, [])
   assert.deepEqual(run.site.writes, [])
   assert.equal(run.log, null)
+})
+
+const sizeOf = async (dir, file) => sharp(path.join(dir, file)).metadata()
+
+test('the checker compares crops of the repaired block at every width, cut from the tiles by the block box', async () => {
+  const run = await finish({
+    finder: [finding(), finding()],
+    fixer: [fixOrder()],
+    checker: [{ verdict: 'better', reason: 'the heading reads as words' }]
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  const [record] = run.log.records
+  assert.equal(record.crops.by, 'block')
+  assert.equal(record.crops.before.length, 2, 'desktop and phone before')
+  assert.equal(record.crops.after.length, 2, 'desktop and phone after')
+  for (const file of [...record.crops.before, ...record.crops.after]) {
+    const { width, height } = await sizeOf(run.dir, file)
+    assert.ok(height < 300, `${file} is the block, not the whole tile (${width}x${height})`)
+  }
+  const [asked] = run.doors.checker.asked
+  assert.equal(asked.content.filter((c) => c.type === 'image_url').length, 4)
+})
+
+test('with no block box from the host, the crops fall back to the tile and the log says so', async () => {
+  const run = await finish({
+    finder: [finding(), finding()],
+    fixer: [fixOrder()],
+    checker: [{ verdict: 'better', reason: 'the heading reads as words' }],
+    boxes: false
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  const [record] = run.log.records
+  assert.equal(record.crops.by, 'tile')
+  assert.equal(record.crops.before.length, 1)
+  const { height } = await sizeOf(run.dir, record.crops.before[0])
+  assert.equal(height, 900)
+})
+
+test('an order for another slot than the finder named is dropped; nothing is written', async () => {
+  const run = await finish({
+    finder: [finding(), finding()],
+    fixer: [fixOrder({ slot: 'block-3.2', text: 'Showers and lockers' })],
+    checker: []
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  assert.deepEqual(run.site.writes, [])
+  const [record] = run.log.records
+  assert.equal(record.outcome, 'dropped')
+  assert.match(record.reason, /block-3\.2.*finder named block-2\.1/)
+})
+
+test('with no slot from the finder, an order may only pick a slot of that page whose words hold the markup it saw', async () => {
+  const unnamed = finding('raw-markup', {
+    slot: null,
+    seen: 'a line prints ((span)) and ((/span)) around a word'
+  })
+  const kept = await finish({
+    finder: [unnamed, finding('raw-markup', { slot: null })],
+    fixer: [fixOrder({ slot: 'block-3.2', text: 'Showers and lockers' })],
+    checker: [{ verdict: 'better', reason: 'reads as words' }]
+  })
+  assert.equal(kept.code, 0, kept.err.join('\n'))
+  assert.equal(kept.site.held['module-3.2'], 'Showers and lockers')
+  assert.equal(kept.log.records[0].outcome, 'kept')
+
+  for (const [order, why] of [
+    // block-4.1 holds the same markup, but it is on the about page, not where the fault was seen.
+    [fixOrder({ slot: 'block-4.1', text: 'Our story began in a garage' }), /block-4\.1 is not on \//],
+    // block-3.1 is on the page, but its words hold no markup at all.
+    [fixOrder({ slot: 'block-3.1', text: HOURS }), /block-3\.1.*does not hold the markup/]
+  ]) {
+    const run = await finish({
+      finder: [unnamed, finding('raw-markup', { slot: null })],
+      fixer: [order],
+      checker: []
+    })
+    assert.equal(run.code, 0, run.err.join('\n'))
+    assert.deepEqual(run.site.writes, [])
+    assert.equal(run.log.records[0].outcome, 'dropped')
+    assert.match(run.log.records[0].reason, why)
+  }
+})
+
+test('an order whose new text is the text the slot holds now is dropped as a no-op and never written', async () => {
+  const run = await finish({
+    finder: [
+      { faults: [...finding('raw-markup', { slot: 'block-3.1' }).faults, ...finding().faults] },
+      { faults: [] }
+    ],
+    fixer: [fixOrder({ slot: 'block-3.1', text: HOURS }), fixOrder()],
+    checker: [{ verdict: 'better', reason: 'reads as words' }]
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  assert.equal(run.site.writes.length, 1, 'only the real repair is written')
+  const noOp = run.log.records.find((r) => r.slot === 'block-3.1')
+  assert.equal(noOp.outcome, 'dropped')
+  assert.match(noOp.reason, /no-op/)
+})
+
+test('the bench says when the final site check gained a blocking failure the first check did not have', async () => {
+  const run = await finish({
+    finder: [finding(), finding()],
+    fixer: [fixOrder()],
+    checker: [{ verdict: 'better', reason: 'the heading reads as words' }],
+    sideEffect: { key: 'module-3.1', value: 'Closed' }
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  assert.match(run.out.at(-1), /^final site-check: red, 1 new blocking failure since the first check/)
+  const [added] = run.log.finalCheck.newBlocking
+  assert.equal(added.slot, 'block-3.1')
+  assert.equal(run.log.counts.newBlocking, 1)
+})
+
+test('the step and the check a first site check failure names as the cause go into the repair log', async () => {
+  const run = await finish({
+    finder: [finding(), finding()],
+    fixer: [fixOrder()],
+    checker: [{ verdict: 'better', reason: 'reads as words' }],
+    failures: [
+      { group: 'read-back', page: '/about', slot: 'block-2.1', width: null, level: 'block', causingStep: 9 },
+      { group: 'accent-emphasis', page: '/', slot: 'block-2.1', width: 1440, level: 'block', causingStep: 6 }
+    ]
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  const [record] = run.log.records
+  // The failure on the page the fault was seen wins over one on another page.
+  assert.equal(record.causingStep, 6)
+  assert.equal(record.causingCheck, 'accent-emphasis')
 })

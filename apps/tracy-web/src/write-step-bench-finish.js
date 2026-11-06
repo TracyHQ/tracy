@@ -20,6 +20,13 @@ export const FINISH_USAGE = `  finish --run <runId> --account <email> --out <dir
                                               Writes repair-log.json and the crops into --out. Needs the finisher's three
                                               doors in /ops > Model & AI (deepseek-flash at max effort by default).`
 
+/** The flags `finish` cannot run without, as the command line names them. */
+export const FINISH_NEEDS = [
+  ['run', '--run <runId>'],
+  ['account', '--account'],
+  ['out', '--out <dir>']
+]
+
 const refused = (d, message) => {
   d.err(message)
   return 1
@@ -82,12 +89,15 @@ export async function finishRun(d, values) {
   d.out(
     `finisher: ${counts.found} found, ${counts.kept} kept, ${counts.undone} undone, ${counts.dropped} dropped, ${counts.failed} failed, ${counts['logged-only']} logged only`
   )
-  for (const x of records)
+  for (const record of records)
     d.out(
-      `  ${x.outcome} page=${x.page ?? '-'} slot=${x.slot ?? '-'} kind=${x.faultKind ?? '-'}${x.reason ? `: ${x.reason}` : ''}`
+      `  ${record.outcome} page=${record.page ?? '-'} slot=${record.slot ?? '-'} kind=${record.faultKind ?? '-'}${record.reason ? `: ${record.reason}` : ''}${record.crops.by ? ` (crops: ${record.crops.by})` : ''}`
     )
   d.out(`repair log: repair-log.json, ${(ms / 1000).toFixed(1)} s, ${costUsd.toFixed(4)} USD`)
   for (const line of checkLines(finished.finalCheck)) d.out(line)
-  d.out(`final site-check: ${finished.finalCheck.status}`)
+  const gained = finished.log.finalCheck.newBlocking.length
+  d.out(
+    `final site-check: ${finished.finalCheck.status}, ${gained ? `${gained} new blocking failure${gained === 1 ? '' : 's'}` : 'no new blocking failure'} since the first check`
+  )
   return 0
 }

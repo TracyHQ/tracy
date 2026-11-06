@@ -2,6 +2,9 @@
 // the write report and what the site holds now, and only a valid order is written. An order kind joins by adding an entry
 // to ORDER_KINDS (#421 to #423), with its own `check`; nothing else branches on the kind. An order of a kind not listed,
 // for a fault its kind does not fix, or naming a slot the kit does not have, is dropped with its reason and writes nothing.
+// An order is tied to its fault: it targets the slot the finder named, or, when the finder named none, a slot of the page
+// the fault was seen on whose words hold the markup the finder reported. An order that would write the words the slot
+// holds already is a no-op, dropped too.
 import { showsRawCodes, visibleText } from '../../lib/site-copy/emphasis-markup.js'
 import { FAULT_KINDS } from './fault-kinds.js'
 
@@ -10,6 +13,24 @@ const squash = (s) =>
     .replace(/\s+/g, ' ')
     .trim()
 const HTML_TAG = /<\/?[a-z][a-z0-9]*\b[^<>]*>/i
+/** Markup as a finder reports it seen printed: content map codes such as ((span)), and HTML tags. */
+const MARKUP_SEEN = /\(\(\s*\/?[a-z][a-z0-9]*\b[^()]*\)\)|<\/?[a-z][a-z0-9]*\b[^<>]*>/gi
+const bare = (s) =>
+  String(s ?? '')
+    .replace(/\s+/g, '')
+    .toLowerCase()
+
+/** Why an order's slot is not the one its fault is about, or null when it is. */
+function untied(slot, { fault, pageSlots, current }) {
+  if (fault.slot)
+    return slot === fault.slot ? null : `the order targets ${slot}, the finder named ${fault.slot}`
+  if (!pageSlots(fault.page).has(slot)) return `${slot} is not on ${fault.page}, where the fault was seen`
+  const reported = (String(fault.seen ?? '').match(MARKUP_SEEN) ?? []).map(bare)
+  if (!reported.length) return `the finder named no slot and reported no markup to tie ${slot} to`
+  if (!reported.some((markup) => bare(current).includes(markup)))
+    return `${slot} does not hold the markup the finder reported (${reported.join(', ')})`
+  return null
+}
 
 /**
  * Fix broken text in one slot: the slot's words exactly as the site holds them, with the printed markup taken out. It never
@@ -35,12 +56,14 @@ export const ORDER_KINDS = Object.freeze({
 
 /**
  * @param {unknown} order the fixer's answer
- * @param {{ fault: { kind: string }, kitSlots: Set<string>, keyOf: (slot: string) => string | null,
- *   currentOf: (key: string) => string | undefined }} context `keyOf` gives the content map key the write report wrote the
- *   slot under, `currentOf` what the site holds there now
- * @returns {{ ok: true, slot: string, key: string, changes: Record<string, string> } | { ok: false, reason: string }}
+ * @param {{ fault: { kind: string, page: string, slot: string | null, seen: string | null }, kitSlots: Set<string>,
+ *   pageSlots: (page: string) => Set<string>, keyOf: (slot: string) => string | null,
+ *   currentOf: (key: string) => string | undefined }} context `pageSlots` gives the kit slots a page shows, `keyOf` the
+ *   content map key the write report wrote the slot under, `currentOf` what the site holds there now
+ * @returns {{ ok: true, slot: string, key: string, current: string, changes: Record<string, string> }
+ *   | { ok: false, reason: string }} `current` is what the slot holds before the repair
  */
-export function validOrder(order, { fault, kitSlots, keyOf, currentOf }) {
+export function validOrder(order, { fault, kitSlots, pageSlots, keyOf, currentOf }) {
   const entry = ORDER_KINDS[order?.kind]
   if (!entry) return { ok: false, reason: `unknown order kind ${JSON.stringify(order?.kind ?? null)}` }
   if (!FAULT_KINDS[fault.kind]?.orders.includes(order.kind))
@@ -55,9 +78,13 @@ export function validOrder(order, { fault, kitSlots, keyOf, currentOf }) {
       ok: false,
       reason: `slot ${slot} was not written by this run, so the site has no value to repair there`
     }
+  const loose = untied(slot, { fault, pageSlots, current })
+  if (loose) return { ok: false, reason: loose }
   const refused = entry.check(order, { current })
   if (refused) return { ok: false, reason: refused }
-  return { ok: true, slot, key, changes: { [key]: order.text } }
+  if (order.text === current)
+    return { ok: false, reason: `a no-op: the new text is the text ${slot} holds now, so nothing is written` }
+  return { ok: true, slot, key, current, changes: { [key]: order.text } }
 }
 
 /** The order kinds as the fixer is told them. */

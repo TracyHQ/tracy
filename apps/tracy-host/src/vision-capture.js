@@ -52,6 +52,40 @@ async function geometry(page) {
   })
 }
 
+/** How many text element boxes a view may send, and how much of each element's words. */
+export const VISION_MAX_BOXES = 800
+const BOX_TEXT = 200
+
+/**
+ * The boxes of the page's text elements, in page pixels: every visible element that holds words of its own, with its
+ * words. A caller that knows what a block prints finds the block on the tiles by them (the write step's finisher crops a
+ * repaired block this way). Read once, after the layout has settled, so they match the tiles, and only for a capture
+ * that asks for them (`boxes: true`), so the other readers of the stream pay no bytes for them.
+ */
+async function textBoxes(page) {
+  return page.evaluate(
+    ({ max, chars }) => {
+      const boxes = []
+      for (const element of document.querySelectorAll('body *')) {
+        if (boxes.length >= max) break
+        const own = [...element.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())
+        if (!own || !element.checkVisibility({ visibilityProperty: true, opacityProperty: true })) continue
+        const rect = element.getBoundingClientRect()
+        if (rect.width < 1 || rect.height < 1) continue
+        boxes.push({
+          x: Math.max(0, Math.round(rect.left + scrollX)),
+          y: Math.max(0, Math.round(rect.top + scrollY)),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+          text: element.textContent.replace(/\s+/g, ' ').trim().slice(0, chars)
+        })
+      }
+      return boxes
+    },
+    { max: VISION_MAX_BOXES, chars: BOX_TEXT }
+  )
+}
+
 function moved(previous, current, through) {
   return previous.anchors.some((anchor) => {
     if (anchor.y >= through || anchor.height === 0) return false
@@ -165,6 +199,7 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
     serveFromIsProxy = false,
     proxySiteLabel = null,
     siteHosts = [],
+    boxes = false,
     signal
   }) {
     const release = await acquire(signal)
@@ -237,7 +272,8 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
               if (still) break
             }
             documentHeight = previous.height
-            yield { type: 'view-start', ...identity, documentHeight }
+            const measured = boxes ? { boxes: await textBoxes(page).catch(() => []) } : {}
+            yield { type: 'view-start', ...identity, documentHeight, ...measured }
             while (covered < documentHeight && tiles < VISION_MAX_TILES) {
               signal.throwIfAborted()
               if (previous.viewportWidth !== view.width || previous.viewportHeight !== view.height) {

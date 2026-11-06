@@ -906,3 +906,10 @@ test('captureBody: the site’s own address is taken on the host named, and left
     assert.equal(captureBody(body(other)).publicOrigin, null, other)
   assert.equal(captureBody(body(undefined)).error, null)
 })
+
+test('captureBody asks for the text element boxes only when the caller says boxes: true', () => {
+  const body = { label: 'site-a', platform: 'joomla', layouts: [{ key: 'home', path: '/' }] }
+  assert.equal(captureBody(body).boxes, false)
+  assert.equal(captureBody({ ...body, boxes: 'yes' }).boxes, false)
+  assert.equal(captureBody({ ...body, boxes: true }).boxes, true)
+})

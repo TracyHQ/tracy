@@ -8,17 +8,24 @@
 // ask({ system, content }) => { text, costUsd } }, or a refusal { ok: false, code, reason }. Tests give scripted ones.
 import { runAgent } from '../../lib/agent-over-door.js'
 import { benchHarnessFor, sendsImages } from '../../lib/bench-harness.js'
-import { lookupDoor } from '../../lib/llm-store.js'
+import { cannotSeeReason, ladderRefusal, lookedUpDoor } from '../../lib/door-ladder.js'
 
 export const FINISHER_PROVIDER = 'deepseek'
 export const FINISHER_MODEL = 'deepseek-flash'
-const WHERE = '/ops › Model & AI'
 
-/** The roles, their door ids and labels, and whether the role looks at pictures. */
+/** The roles, their door ids and labels, and what the role looks at when it looks at pictures (null when it does not). */
 export const FINISHER_ROLES = Object.freeze({
-  finder: Object.freeze({ door: 'finisherFinder', label: 'Finisher finder', images: true }),
-  fixer: Object.freeze({ door: 'finisherFixer', label: 'Finisher fixer', images: false }),
-  checker: Object.freeze({ door: 'finisherChecker', label: 'Finisher checker', images: true })
+  finder: Object.freeze({
+    door: 'finisherFinder',
+    label: 'Finisher finder',
+    sight: 'the finder looks at page screenshots'
+  }),
+  fixer: Object.freeze({ door: 'finisherFixer', label: 'Finisher fixer', sight: null }),
+  checker: Object.freeze({
+    door: 'finisherChecker',
+    label: 'Finisher checker',
+    sight: 'the checker compares crops of the repaired block'
+  })
 })
 
 const DEFAULT_NAMED = `${FINISHER_MODEL} on the ${FINISHER_PROVIDER} provider`
@@ -32,10 +39,15 @@ export function doorsRefusal(doors) {
     const door = doors?.[role]
     if (!door) return { code: 'FINISHER_DOOR_UNSET', reason: `No ${spec.label} door was given.` }
     if (!door.ok) return { code: door.code, reason: door.reason }
-    if (spec.images && !door.images)
+    // The one place a finisher door that cannot read pictures is refused: its provider says so, or its harness sends none.
+    if (spec.sight && !door.images)
       return {
         code: 'FINISHER_DOOR_NO_IMAGES',
-        reason: `The ${spec.label} door's model ${door.model} cannot read pictures, and the ${role} looks at page screenshots. Pick another model for the "${spec.label}" door in ${WHERE} (it is meant for ${DEFAULT_NAMED}).`
+        reason: cannotSeeReason({
+          said: `The "${spec.label}" door's model ${door.model}`,
+          label: `"${spec.label}"`,
+          sight: spec.sight
+        })
       }
   }
   return null
@@ -72,23 +84,13 @@ function askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl) {
  */
 export async function finisherDoor({ pool, secret, role, fetchImpl = fetch }) {
   const spec = FINISHER_ROLES[role]
-  const found = secret ? await lookupDoor(pool, spec.door, secret) : { state: 'unreadable' }
-  const refuse = (suffix, reason) => ({ ok: false, code: `FINISHER_DOOR_${suffix}`, reason })
-  if (found.state === 'unassigned' || (found.state === 'ok' && !found.credential?.model))
-    return refuse(
-      'UNSET',
-      `The "${spec.label}" door has no provider and model. Set it in ${WHERE} (it runs on ${DEFAULT_NAMED}).`
-    )
-  if (found.state === 'disabled')
-    return refuse(
-      'DISABLED',
-      `The provider of the "${spec.label}" door is switched off. Turn it on, or pick another provider in ${WHERE}.`
-    )
-  if (found.state !== 'ok')
-    return refuse(
-      'UNREADABLE',
-      `The key of the "${spec.label}" door's provider cannot be opened. Save the key again in ${WHERE}.`
-    )
+  const found = await lookedUpDoor(pool, spec.door, secret)
+  const refused = ladderRefusal(found, {
+    prefix: 'FINISHER_DOOR',
+    label: `"${spec.label}"`,
+    runsOn: `it runs on ${DEFAULT_NAMED}`
+  })
+  if (refused) return refused
   const { providerId, baseUrl, apiKey, model } = found.credential
   return {
     ok: true,

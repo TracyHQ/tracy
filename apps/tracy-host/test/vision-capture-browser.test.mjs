@@ -155,3 +155,29 @@ test('lazy growth discovered while walking is included through its new footer', 
   }
   assert.equal(views, 2)
 })
+
+test(
+  'a capture that asks for boxes starts each view with the page boxes of its text elements',
+  opts,
+  async (t) => {
+    const { capture, base } = await fixture(
+      t,
+      '<style>body{margin:0}h2{margin:300px 0 0 20px;height:60px}</style><main><h2>Strength ((span))coaching((/span))</h2></main>'
+    )
+    const starts = []
+    for await (const frame of capture({
+      layouts: [{ key: 'home', path: '/' }],
+      base,
+      boxes: true,
+      signal: AbortSignal.timeout(60000)
+    }))
+      if (frame.type === 'view-start') starts.push(frame)
+    assert.equal(starts.length, 2)
+    for (const start of starts) {
+      const heading = start.boxes.find((b) => b.text === 'Strength ((span))coaching((/span))')
+      assert.ok(heading, JSON.stringify(start.boxes))
+      assert.equal(heading.y, 300)
+      assert.equal(heading.height, 60)
+    }
+  }
+)

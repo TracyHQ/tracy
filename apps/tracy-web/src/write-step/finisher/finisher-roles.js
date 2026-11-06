@@ -2,7 +2,7 @@
 // door (finisher-doors.js), in a fresh conversation, answered as one JSON object; none of them writes to the site.
 //   - finder: page screenshots in, faults from the closed list (fault-kinds.js) out. It never reads the site check report.
 //   - fixer: one fault and the slot's words in, one typed repair order (repair-orders.js) out. Code checks the order.
-//   - checker: the before and after crops of the repaired block in, "better" or "not better" out.
+//   - checker: the before and after crops of the repaired block at every width in, "better" or "not better" out.
 // A call that fails or an answer with no JSON object is returned as `{ problem }`; the caller logs it and moves on.
 import { jsonObjectIn } from '../../lib/json-object-in.js'
 import { faultListText } from './fault-kinds.js'
@@ -16,9 +16,10 @@ const FIXER_SYSTEM = `You turn one fault found on a website into one repair orde
 {ORDERS}
 Answer with one JSON object: the order.`
 
-const CHECKER_SYSTEM = `You compare two screenshots of the same block of a web page, before and after a repair, at the same width. Answer whether the after picture is better for a site owner: the fault is gone and nothing else broke. Answer with one JSON object: { "verdict": "better" | "not better", "reason": "<one sentence>" }.`
+const CHECKER_SYSTEM = `You compare screenshots of the same block of a web page, before and after a repair, in pairs at the same width. Answer whether the after picture is better for a site owner: the fault is gone and nothing else broke. Answer with one JSON object: { "verdict": "better" | "not better", "reason": "<one sentence>" }.`
 
-const asked = async (door, system, content) => {
+/** One call of a role through its door, its answer held to one JSON object, or the problem that stopped it. */
+const askRole = async (door, system, content) => {
   try {
     const { text, costUsd = null } = await door.ask({ system, content })
     const answer = jsonObjectIn(text)
@@ -38,7 +39,7 @@ export function askFinder(door, page, shots) {
       { type: 'image_url', image_url: { url: s.image } }
     ])
   ]
-  return asked(door, FINDER_SYSTEM.replace('{FAULTS}', faultListText()), content)
+  return askRole(door, FINDER_SYSTEM.replace('{FAULTS}', faultListText()), content)
 }
 
 /** One fixer call for one fault, with the words the site holds in the slot the finder named. */
@@ -52,18 +53,22 @@ export function askFixer(door, fault, slotWords) {
       })
     }
   ]
-  return asked(door, FIXER_SYSTEM.replace('{ORDERS}', orderListText()), content)
+  return askRole(door, FIXER_SYSTEM.replace('{ORDERS}', orderListText()), content)
 }
 
 /** One checker call: the before and after crops of the repaired block, paired by width. */
 export function askChecker(door, fault, before, after) {
+  const picture = (shot) => ({ type: 'image_url', image_url: { url: shot.image } })
   const content = [
-    { type: 'text', text: `The fault that was repaired: ${fault.seen ?? fault.kind}. Before:` },
-    ...before.map((s) => ({ type: 'image_url', image_url: { url: s.image } })),
-    { type: 'text', text: 'After:' },
-    ...after.map((s) => ({ type: 'image_url', image_url: { url: s.image } }))
+    { type: 'text', text: `The fault that was repaired: ${fault.seen ?? fault.kind}.` },
+    ...before.flatMap((shot, i) => [
+      { type: 'text', text: `${shot.viewport}, before:` },
+      picture(shot),
+      { type: 'text', text: `${shot.viewport}, after:` },
+      ...(after[i] ? [picture(after[i])] : [])
+    ])
   ]
-  return asked(door, CHECKER_SYSTEM, content)
+  return askRole(door, CHECKER_SYSTEM, content)
 }
 
 /** The checker's answer held to its form: better only when it says so. */

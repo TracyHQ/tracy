@@ -120,6 +120,7 @@ export function captureBody(body) {
     host: null,
     publicOrigin: null,
     maxBytes: null,
+    boxes: false,
     error
   })
   if (!body || typeof body !== 'object') return fail('not an object')
@@ -162,6 +163,8 @@ export function captureBody(body) {
     host,
     publicOrigin,
     maxBytes,
+    // A vision capture also sends the boxes of each page's text elements when asked (vision-capture.js).
+    boxes: body.boxes === true,
     error: null
   }
 }
