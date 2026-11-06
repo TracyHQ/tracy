@@ -360,6 +360,12 @@ const INVENTORY_LINE = {
   'scripts/ci/related-tests.mjs': [/^\s*prefix: (?:'[^']+'|`[^`]+`),?$/],
   'scripts/ci/plan-ci.mjs': [/^const EMDASH_INPUTS = String\.raw`[^`]+`$/],
   'scripts/check-tests.ts': [/^\s*tree: '[^']+',?$/, /Its home is /],
+  // The readiness fix registry names skill files in the fix text it hands to people; it never opens one.
+  'apps/tracy-web/src/lib/template-readiness/fixes.js': [
+    /^const SKILL = '\.agents\/skills\/quickstart-contract\/SKILL\.md'$/,
+    /^const TDSR = '\.agents\/skills\/tdsr\/SKILL\.md'$/,
+    /^\s*skill: '\.agents\/skills\/quickstart-contract\/references\/image-looks\.md'$/
+  ],
   // The shard installer test only checks that the sparse-checkout path list names the tree.
   'scripts/test/install-shard.test.mjs': [/^\s*\/sparse-checkout set deploy /],
   // The language gate's list of Tracy-owned vendor trees names each tree by path; the module is pure

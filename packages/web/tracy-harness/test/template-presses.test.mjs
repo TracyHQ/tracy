@@ -1372,7 +1372,7 @@ test('Road to live: a red step with no guidance of its own shows the registry fi
   const fix = {
     text: 'Run the Customize your site check of this version, then read its result here.',
     command: 'node scripts/example-fix.mjs --tag example',
-    skill: '.agents/skills/quickstart-contract/SKILL.md section 9'
+    skill: '.agents/skills/example-skill/SKILL.md section 9'
   }
   const draftFix = {
     text: 'Publish the GitHub release of the quickstart.',
