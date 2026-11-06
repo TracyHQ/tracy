@@ -159,7 +159,9 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   never commit them). With `--write`: `content-coverage.json` in the contract folder, the compact
   file `/ops` reads: tool version, the contract id and sha256 of the map and lock it measured,
   counts per class, coverage per kind, and one line per distinct hole (`kind`, `value`, `class`,
-  `lock`, `cause`, `evidence`, `pages`, `firstPage`).
+  `lock`, `cause`, `evidence`, `pages`, `firstPage`). `pages.failed` is the count of pages that did not render;
+  `pages.failures` lists each one (path and query only, never the stand address, with `mapPage`, `status` or `error`
+  when known), so the next reader knows which page it was.
 - **Site map and header (audit 1.6.0).** The same file carries `sitePages`: one row per page the content map declares,
   in map order, none dropped, with `opens` (`live` with its HTTP status and path, `broken` with the status it answered,
   `no-page` for a menu group or a `#` link, `link` for a menu entry to another address, `unpublished`, `offsite`, or

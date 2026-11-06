@@ -305,6 +305,30 @@ test('the coverage file: counts per class, one line per distinct hole, accepted 
   assert.deepEqual([verdict.holds, verdict.blocking.length, verdict.accepted], [true, 1, 1])
 })
 
+test('the coverage file names each page that failed to render, by path, never by stand address', () => {
+  const { contract, items } = audit([{ kind: 'text', value: 'Advanced Boxing' }])
+  const result = {
+    pages: [{ url: `${SITE}index.php?Itemid=101`, items }],
+    failures: [
+      { url: `${SITE}index.php?Itemid=909`, origin: 'map', mapPage: 'menuItem-909', status: 503 },
+      { url: `${SITE}blog/slow-page`, origin: 'crawl', status: undefined, error: 'Timeout 30000ms exceeded' }
+    ],
+    capReached: false,
+    viewports: ['desktop'],
+    summary: { pages: 1, mappedPages: 1, unmappedPages: 0 }
+  }
+  const doc = buildCoverageFile({ result, contract, measuredAt: '2026-10-24T00:00:00.000Z' })
+  assert.equal(doc.pages.failed, 2)
+  assert.deepEqual(doc.pages.failures, [
+    { url: '/index.php?Itemid=909', mapPage: 'menuItem-909', status: 503 },
+    { url: '/blog/slow-page', error: 'Timeout 30000ms exceeded' }
+  ])
+  assert.equal(JSON.stringify(doc).includes(new URL(SITE).host), false)
+  const clean = buildCoverageFile({ result: { ...result, failures: [] }, contract })
+  assert.deepEqual(clean.pages.failures, [])
+  assert.equal(coverageFileProblem(doc), null)
+})
+
 test('configuration.php gives the visible site strings and never a secret', () => {
   const config = parseConfigurationPhp(
     "<?php\nclass JConfig {\n\tpublic $sitename = 'JA Boxing';\n\tpublic $password = 'secret';\n\tpublic $MetaDesc = 'It\\'s boxing';\n}"
