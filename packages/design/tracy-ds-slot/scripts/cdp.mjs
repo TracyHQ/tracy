@@ -22,6 +22,16 @@ const CHROME = process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/M
 const FONT_CACHE = join(tmpdir(), 'ds-font-cache')
 const FONT_HOST = 'https://fonts.gstatic.com/'
 
+/**
+ * The address the font cache fetches for a paused request: only Google's font host, rebuilt on the
+ * fixed origin so a page cannot point the fetch at another host. Anything else gives null.
+ * @param {string} url @returns {string | null}
+ */
+export function fontFetchUrl(url) {
+  if (typeof url !== 'string' || !url.startsWith(FONT_HOST)) return null
+  return FONT_HOST + url.slice(FONT_HOST.length)
+}
+
 /** @param {string} url @returns {Promise<{ body: Buffer, type: string } | null>} */
 async function cachedFont(url) {
   const key = createHash('sha256').update(url).digest('hex')
@@ -29,7 +39,9 @@ async function cachedFont(url) {
   const meta = `${file}.type`
   if (existsSync(file) && existsSync(meta))
     return { body: readFileSync(file), type: readFileSync(meta, 'utf8') }
-  const res = await fetch(url).catch(() => null)
+  const target = fontFetchUrl(url)
+  if (!target) return null
+  const res = await fetch(target).catch(() => null)
   if (!res || !res.ok) return null
   const body = Buffer.from(await res.arrayBuffer())
   const type = res.headers.get('content-type') ?? 'font/woff2'
