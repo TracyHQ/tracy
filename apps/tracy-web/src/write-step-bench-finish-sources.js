@@ -54,7 +54,7 @@ export async function finisherSources(d, { report, kitRef }) {
 
 /** The bench line of the merge of the finder's faults and the first site check's failures. */
 export const mergeLine = (m) =>
-  `merge: ${m.finder} from the finder, ${m.siteCheck} site check failures (${m.confirmed} confirmed on the live site, ${m.both} named by both and repaired once, ${m.measurementWrong} measurement wrong, ${m.noDoor} no door, ${m.loggedOnly} logged only)`
+  `merge: ${m.finder} from the finder, ${m.siteCheck} site check failures (${m.confirmed} confirmed on the live site, ${m.both} named by both and repaired once, ${m.measurementWrong} measurement wrong, ${m.noDoor} no door, ${m.loggedOnly} logged only, ${m.notDemo ?? 0} not demo: the brief's own)`
 
 const seconds = (ms) => `${(ms / 1000).toFixed(1)} s`
 

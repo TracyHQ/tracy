@@ -1,7 +1,7 @@
 // One `finish` of the step 9 bench on the invented written site of _write-step-finisher.mjs, with the knobs the finisher's
 // rounds, limits and batches need (#424): a fake clock each model call moves on, the cost each call reports, a page reader,
 // the finisher's limits, and a checker that approves (or refuses) every repair it is shown, whatever their numbers.
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { runCli } from '../src/write-step-bench-cli.js'
@@ -81,8 +81,8 @@ export function cleanUp() {
 
 /**
  * @param {{ finder: object, fixer: object, checker: object, served?: ((held: object) => (page: string) => string) | null,
- *   limits?: object, clock?: object, sideEffect?: object | null, first?: object }} input `finder`, `fixer`, `checker` are
- *   doors as scriptedDoor makes them; `served` renders a page from what the site holds now
+ *   limits?: object, clock?: object, sideEffect?: object | null, first?: object, files?: Record<string, object> | null }} input
+ *   `finder`, `fixer`, `checker` are doors as scriptedDoor makes them; `served` renders a page from what the site holds now
  */
 export async function finishOn({
   finder,
@@ -93,7 +93,8 @@ export async function finishOn({
   clock = null,
   sideEffect = null,
   first = {},
-  timer = null
+  timer = null,
+  files = null
 }) {
   const site = writtenSite(heldAtStart(), { sideEffect })
   const shots = fakeCapture({ held: site.held })
@@ -102,7 +103,14 @@ export async function finishOn({
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-run-'))
   dirs.push(dir)
   const runs = memoryRunStore([writtenRun(first)])
-  const code = await runCli(['finish', '--run', 'run-1', '--account', 'bench@example.test', '--out', dir], {
+  // `files`: the brief, copy and pictures files by their bench option (`brief-file`), written next to the run.
+  const fileArgs = Object.entries(files ?? {}).flatMap(([option, data]) => {
+    const file = path.join(dir, `${option}.json`)
+    writeFileSync(file, JSON.stringify(data))
+    return [`--${option}`, file]
+  })
+  const argv = ['finish', '--run', 'run-1', '--account', 'bench@example.test', '--out', dir, ...fileArgs]
+  const code = await runCli(argv, {
     runs,
     store: memoryStore([benchSite()]),
     index: kits.index,

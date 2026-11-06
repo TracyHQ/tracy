@@ -17,6 +17,7 @@ import { EMPHASIS_MAX_SHARE, spanMarkOf, withEmphasis } from '../../lib/site-cop
 import { no, slotOf, slotRepair, squash } from './content-order-slots.js'
 import { emphasisHtmlWrite, readRowValue, rowFieldWrite, rowReadOf } from './content-repair-writes.js'
 import { validateDemoItem } from './demo-item-order.js'
+import { samePage } from './page-paths.js'
 import { WORDS_STEPS } from './repair-steps.js'
 
 const ADDRESS = /^(https?:|\/|#|index\.php)/i
@@ -27,7 +28,7 @@ function validateLink(order, context) {
   if (!at.ok) return at
   if (!ADDRESS.test(at.current.trim())) return no(`${at.slot} holds no address, so it is no link`)
   const to = `/${String(order.to ?? '').replace(/^\/+/, '')}`
-  if (!context.sitePages.some((p) => p.path === to))
+  if (!context.sitePages.some((p) => samePage(p.path, to)))
     return no(
       `no page of the site is at ${JSON.stringify(order.to ?? null)}: a link goes only to a page the site keeps`
     )
@@ -67,9 +68,9 @@ async function validatePageMeta(order, context) {
   const { fault } = context
   if (!['title', 'description'].includes(order.field))
     return no('the order names neither the title nor the description')
-  if (order.page !== fault.page)
+  if (!samePage(order.page, fault.page))
     return no(`the order targets ${order.page}, the fault was seen on ${fault.page}`)
-  const page = context.sitePages.find((p) => p.path === order.page)
+  const page = context.sitePages.find((p) => samePage(p.path, order.page))
   if (!page?.id)
     return no(`${order.page} is no kit page of this site, so the site copy gives it no ${order.field}`)
   const slot = `${page.id}:${order.field}`

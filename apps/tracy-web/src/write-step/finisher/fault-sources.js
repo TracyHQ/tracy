@@ -12,8 +12,12 @@
 //   - A fault both sources name is one fault (sources: finder and site check), so it gets one repair order; failures of
 //     the same fault at two widths or from two groups count once too.
 //   - A finder fault of a kind a check group measured green is logged with that group under `missedBy`.
+//   - A demo fact or demo contact link, from either source, on a value the brief gives (a phone, an e-mail, a name or an
+//     address) is the customer's own: logged `not-demo`, never repaired (brief-values.js).
+import { notDemoReason } from './brief-values.js'
 import { confirmedByFinder, sameCheckFault, servedNow } from './fault-confirm.js'
 import { FAULT_KINDS, isRepairable, LOGGED_ONLY_KINDS, loggedOnlyReason } from './fault-kinds.js'
+import { pageOf } from './page-paths.js'
 import { logRecord } from './repair-log.js'
 
 const DEMO_CONTACT = /^(tel|mailto):/i
@@ -56,9 +60,12 @@ const kindOfFailure = (f) => {
 const failuresOf = (check) =>
   (check?.groups ?? []).flatMap((g) => (g.failures ?? []).map((f) => ({ ...f, group: f.group ?? g.name })))
 
-/** A failure as a fault of the list, where the crops fall back to the page's first desktop tile. */
+/**
+ * A failure as a fault of the list, where the crops fall back to the page's first desktop tile. Its page is named as the
+ * finder and the shots name it (page-paths.js), so `/index.php/x` meets the finder's `/x`.
+ */
 const faultOf = (f, kind) => ({
-  page: f.page ?? null,
+  page: pageOf(f.page),
   viewport: f.width === 390 ? 'phone' : 'desktop',
   tile: 0,
   slot: f.slot ?? null,
@@ -69,13 +76,20 @@ const faultOf = (f, kind) => ({
 
 /**
  * @param {{ found: object[], firstCheck: object | null,
- *   pageHtml?: ((page: string) => Promise<string | null>) | null }} input `found` the finder's faults of the list;
- *   `pageHtml` reads a page as the site serves it now
+ *   pageHtml?: ((page: string) => Promise<string | null>) | null, brief?: Map<string, string[]> | null }} input `found` the
+ *   finder's faults of the list; `pageHtml` reads a page as the site serves it now; `brief` the brief's values by field
  * @returns {Promise<{ faults: object[], records: object[], merge: { finder: number, siteCheck: number, confirmed: number,
- *   both: number, measurementWrong: number, noDoor: number, loggedOnly: number } }>}
+ *   both: number, measurementWrong: number, noDoor: number, loggedOnly: number, notDemo: number } }>}
  */
-export async function mergedFaults({ found, firstCheck, pageHtml = null }) {
+export async function mergedFaults({ found, firstCheck, pageHtml = null, brief = null }) {
   const records = []
+  const notDemo = (fault, fields) => {
+    const reason = notDemoReason(fault, brief)
+    if (!reason) return false
+    merge.notDemo += 1
+    records.push(logRecord(fault, { ...fields, outcome: 'not-demo', reason }))
+    return true
+  }
   const asCheck = (f) => ({
     causingStep: f.causingStep ?? null,
     causingCheck: f.group,
@@ -86,10 +100,6 @@ export async function mergedFaults({ found, firstCheck, pageHtml = null }) {
     (firstCheck?.groups ?? [])
       .filter((g) => g.status === 'green' && kindOfFailure({ group: g.name }) === kind)
       .map((g) => g.name)
-  const faults = found.map((fault) => {
-    const missedBy = greenGroups(fault.kind)
-    return { ...fault, sources: ['finder'], ...(missedBy.length ? { missedBy } : {}) }
-  })
   const merge = {
     finder: found.length,
     siteCheck: 0,
@@ -97,13 +107,21 @@ export async function mergedFaults({ found, firstCheck, pageHtml = null }) {
     both: 0,
     measurementWrong: 0,
     noDoor: 0,
-    loggedOnly: 0
+    loggedOnly: 0,
+    notDemo: 0
   }
+  const faults = found
+    .map((fault) => {
+      const missedBy = greenGroups(fault.kind)
+      return { ...fault, sources: ['finder'], ...(missedBy.length ? { missedBy } : {}) }
+    })
+    .filter((fault) => !notDemo(fault, {}))
   const fromCheck = []
   for (const f of failuresOf(firstCheck)) {
     if ((f.level ?? 'block') !== 'block') continue
     merge.siteCheck += 1
     const kind = kindOfFailure(f)
+    if (kind && notDemo(faultOf(f, kind), asCheck(f))) continue
     const logged = LOGGED_ONLY_GROUPS[f.group]
     if (NO_DOOR_GROUPS.has(f.group) || (kind && LINK_KINDS.has(kind) && !f.slot)) {
       merge.noDoor += 1

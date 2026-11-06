@@ -2,6 +2,7 @@
 // words in it. A kept repair that the final check blames for a blocking failure the first check did not have (on its slot,
 // on its block, or on its page when the failure names no slot) is undone, its record says why, and the check runs once more
 // so the build keeps the check of the site as it is delivered. It runs even past a hard limit: the build needs it.
+import { samePage } from './page-paths.js'
 import { newBlockingFailures } from './repair-log.js'
 
 /** The write report with the kept repairs' words as ordered, which the final site check measures. */
@@ -22,7 +23,7 @@ const blockOf = (slot) => (slot ? String(slot).replace(/\.[^.]*$/, '') : null)
 const blames = (k, f) =>
   f.slot
     ? k.record.slot === f.slot || (k.repair.valid.block != null && k.repair.valid.block === blockOf(f.slot))
-    : Boolean(f.page) && k.record.page === f.page
+    : samePage(k.record.page, f.page)
 
 /**
  * @param {object} run the finisher's run (finisher.js)

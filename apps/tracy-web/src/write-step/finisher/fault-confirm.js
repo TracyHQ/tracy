@@ -5,6 +5,7 @@
 //   - else by reading the page the site serves now: it still holds what the check measured.
 // And when two failures of the site check are one fault (another width, another group), counted once. Pure.
 import { hrefsIn } from './live-confirm.js'
+import { pageOf, samePage } from './page-paths.js'
 
 const DEMO_CONTACT = /^(tel|mailto):/i
 const squash = (s) =>
@@ -29,7 +30,7 @@ function quotedIn(seen) {
 /** Whether the finder's fault `x` confirms the site check's fault `f`: same kind, same page, and the same place. */
 export function confirmedByFinder(x, f) {
   if (x.kind !== f.kind) return false
-  if (x.page && f.page && x.page !== f.page) return false
+  if (x.page && f.page && !samePage(x.page, f.page)) return false
   const xBlock = x.block ?? blockOf(x.slot)
   if (x.slot || x.block) {
     if (x.slot && f.slot && x.slot === f.slot) return true
@@ -44,9 +45,9 @@ export function confirmedByFinder(x, f) {
 /** Two site check failures of one fault: same kind, agreeing on page and slot, one of the two named alike in both. */
 export function sameCheckFault(a, b) {
   if (a.kind !== b.kind) return false
-  if (a.page && b.page && a.page !== b.page) return false
+  if (a.page && b.page && !samePage(a.page, b.page)) return false
   if (a.slot && b.slot && a.slot !== b.slot) return false
-  return Boolean((a.page && a.page === b.page) || (a.slot && a.slot === b.slot))
+  return Boolean((a.page && pageOf(a.page) === pageOf(b.page)) || (a.slot && a.slot === b.slot))
 }
 
 /**

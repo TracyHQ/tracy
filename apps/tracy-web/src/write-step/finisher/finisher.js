@@ -117,7 +117,12 @@ export async function runFinisher(input) {
   // The first site check may still be running beside the finder (a promise); its failures join the finder's faults here.
   const first = await firstCheck
   run.firstCheck = first
-  const merged = await mergedFaults({ found, firstCheck: first, pageHtml: readOnce(pageHtml) })
+  const merged = await mergedFaults({
+    found,
+    firstCheck: first,
+    pageHtml: readOnce(pageHtml),
+    brief: run.orderFacts.brief
+  })
   const { records: repairRecords, kept, rounds } = await runRounds(run, merged.faults, firstShots)
   records.push(...repairRecords, ...merged.records)
   // The final check runs whatever the limits: the build needs it. The hard limit's timer is let go first.

@@ -21,7 +21,9 @@ export const OUTCOMES = Object.freeze([
   'measurement-wrong',
   'no-door',
   // A fault left when a hard limit stopped the run (reason `budget`) or when no round was left (#424).
-  'unrepaired'
+  'unrepaired',
+  // A demo fact or demo contact link on a value the brief gives: the customer's own, never repaired (brief-values.js).
+  'not-demo'
 ])
 
 /** One record of the log. */

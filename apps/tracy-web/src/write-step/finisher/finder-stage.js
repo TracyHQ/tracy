@@ -1,7 +1,9 @@
 // The finder's stage of the finisher (spec #418, finisher.js): every page that was shot goes to the finder with the template
 // demo's shot of each block it shows, and its answer is held to the fault list (fault-kinds.js). And the kit slots each
 // site page shows, which tie an order to the page its fault was seen on.
+import { pagePath } from '../../lib/hidden-page-links.js'
 import { kitSlotIds } from '../kit-slot-ids.js'
+import { samePage } from './page-paths.js'
 import { heldFaults, loggedOnlyReason } from './fault-kinds.js'
 import { askFinder } from './finisher-roles.js'
 import { keepShotFiles, pageSlug } from './model-replies.js'
@@ -10,21 +12,32 @@ import { BUDGET } from './run-limits.js'
 import { eachLimited } from './work-pool.js'
 
 /**
- * The kit slots each site page shows: the slots of the blocks its kit page lists at any width, and its h1. A site page is
- * its kit page by the id the write report kept, else by the same path; a page that is no kit page shows no kit slot.
+ * The kit blocks each site page shows: the blocks its kit page lists at any width. A site page is its kit page by the id the
+ * write report kept, else by the same path; a page that is no kit page shows no kit block. Pages compare as addresses do
+ * (lib/hidden-page-links.js `pagePath`): `/index.php/x`, `/x/` and `/x` are one page.
+ * @returns {(page: string | null) => object[]}
  */
-export function slotsByPage(kit, sitePages) {
+export function blocksByPage(kit, sitePages) {
   const blocks = new Map((kit?.blocks ?? []).map((b) => [b?.id, b]))
   const kitPages = kit?.pages ?? []
   const byPage = new Map()
   for (const { path, id } of sitePages) {
-    const page = kitPages.find((p) => (id ? p?.id === id : p?.path === path))
+    const page = kitPages.find((p) => (id ? p?.id === id : samePage(p?.path, path)))
     if (!page) continue
     const ids = new Set(Object.values(page?.blocks ?? {}).flat())
-    const shown = { blocks: [...ids].map((b) => blocks.get(b)).filter(Boolean), pages: [{ h1: page?.h1 }] }
-    byPage.set(path, kitSlotIds(shown))
+    byPage.set(pagePath(path), { page, blocks: [...ids].map((b) => blocks.get(b)).filter(Boolean) })
   }
-  return (page) => byPage.get(page) ?? new Set()
+  const of = (page) => (page === null || page === undefined ? null : byPage.get(pagePath(page)))
+  return Object.assign((page) => of(page)?.blocks ?? [], { kitPageOf: (page) => of(page)?.page ?? null })
+}
+
+/** The kit slots each site page shows: the slots of the blocks it shows (blocksByPage), and its h1. */
+export function slotsByPage(kit, sitePages) {
+  const shownOn = blocksByPage(kit, sitePages)
+  return (page) => {
+    const kitPage = shownOn.kitPageOf(page)
+    return kitPage ? kitSlotIds({ blocks: shownOn(page), pages: [{ h1: kitPage.h1 }] }) : new Set()
+  }
 }
 
 /**

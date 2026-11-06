@@ -3,6 +3,7 @@
 // description of each picture, and the pages the written site keeps. Missing files give empty sources, so an order that
 // needs one is refused with the reason, never filled by a guess. Pure.
 import { readCopy } from '../../lib/site-copy-view.js'
+import { samePage } from './page-paths.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 
@@ -38,7 +39,7 @@ function briefValues(brief) {
 function briefPageMetaOf(brief, names) {
   return (page) => {
     const entry = each(brief?.pages).find(
-      (p) => (p?.id && p.id === page.id) || (p?.path && p.path === page.path)
+      (p) => (p?.id && p.id === page.id) || (p?.path && samePage(p.path, page.path))
     )
     const purpose = typeof entry?.purpose === 'string' && entry.purpose.trim() ? [entry.purpose.trim()] : []
     return { title: [...names], description: purpose }
@@ -84,7 +85,7 @@ export function orderFacts({ kit, report, contentMap = null, facts = null, siteP
  * @param {{ page: string }} fault
  */
 export function fixerSources(facts, fault) {
-  const page = facts.sitePages.find((p) => p.path === fault.page)
+  const page = facts.sitePages.find((p) => samePage(p.path, fault.page))
   return {
     brief: Object.fromEntries(facts.brief),
     pages: facts.sitePages.map((p) => p.path),
