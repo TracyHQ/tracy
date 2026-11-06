@@ -95,9 +95,9 @@ The kit is copied into a template and runs from there, against that template's `
 ```bash
 cd skills/tracy-emdash-template
 npm install                 # playwright
-npx playwright install chrome
+npx playwright install chromium
 npm test                    # docs counts + links (test:docs), then the negative fixtures: the gate must be able to fail
 ```
 
-System Chrome is used by the visual pass (`channel: "chrome"`); Playwright's bundled Chromium is
-the fallback. Node ≥ 22.19 (24.x used in the reference build).
+The visual pass and `render-source.mjs` draw with Playwright's bundled Chromium (the line above installs it);
+the machine's Chrome is used only when asked for with `RENDER_CHROME_CHANNEL=chrome` (or `RENDER_CHROME_PATH`), never as a fallback. Node ≥ 22.19 (24.x used in the reference build).

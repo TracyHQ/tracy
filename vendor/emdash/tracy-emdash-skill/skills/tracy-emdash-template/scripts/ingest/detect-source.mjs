@@ -90,6 +90,9 @@ export function detectFromHtml(html = '') {
 /** Words a home page titles itself with that name a PAGE, not a site. */
 const PAGE_WORDS = /^(home|homepage|trang ch[ủu]|welcome|index|main|start|accueil|inicio|startseite)$/i
 
+/** Words a demo title puts around the real name ("Restaurant Joomla Template - JA Restaurant"). */
+const GENERIC_WORDS = /\b(joomla|wordpress|template|theme|demo|cms)\b/i
+
 /**
  * A package name a person would have picked — and an honest flag when we could not pick one.
  *
@@ -99,14 +102,21 @@ const PAGE_WORDS = /^(home|homepage|trang ch[ủu]|welcome|index|main|start|accu
  * found, say so (`needsName`) so intake asks one short question instead of guessing.
  */
 export function suggestNames({ siteName = null, title = null, url = null } = {}) {
-  const fromTitle = String(title ?? '')
-    .split(/[·|—–]|\s+-\s+/)[0]
-    .trim()
+  // A title may carry several segments ("Page - Site", "Site | Page", "Kind Template - Site"). Segments that
+  // name a page or describe the product are not the name; if exactly one is left it is; if several are, the
+  // first stays the label but intake is asked, because the order of the parts differs from site to site.
+  const segments = String(title ?? '')
+    .split(/[·|—–]|\s+-\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+  const named = segments.filter((part) => !PAGE_WORDS.test(part) && !GENERIC_WORDS.test(part))
+  const fromTitle = named[0] ?? segments[0] ?? ''
+  const titleIsAmbiguous = named.length > 1
   const host = url && /^https?:\/\//i.test(url) ? new URL(url).hostname.replace(/^www\./, '') : null
   const fromHost = host && !/^(127\.|localhost|0\.0\.0\.0)/.test(host) ? host.split('.')[0] : null
 
   const picked = siteName ?? fromHost ?? (fromTitle && !PAGE_WORDS.test(fromTitle) ? fromTitle : null)
-  const needsName = picked === null
+  const needsName = picked === null || (picked === fromTitle && titleIsAmbiguous)
   const label = picked ?? 'Site'
   const slug =
     label
@@ -156,6 +166,24 @@ export function roadFor({ cms, reach = 'remote', t4 = false } = {}) {
   }
 }
 
+/**
+ * A folder that is a CMS webroot rather than a folder of pages. Joomla keeps configuration.php and an
+ * administrator/ folder at its root; WordPress keeps wp-config.php (or wp-content/ with wp-includes/).
+ * T4 is claimed only when its own plugin or library is there, not because a `templates/` folder is (every Joomla has one).
+ * There is no page to read in it, only the proof of which CMS it is — the road is the contract road,
+ * reached through a stand that serves it (the WordPress skill's joomla-dump.mjs), not through HTML.
+ */
+export function detectFromFolder(files = [], exists = () => false) {
+  const has = (name) => files.includes(name)
+  if (has('configuration.php') && has('administrator')) {
+    return { cms: 'joomla', confidence: 4, evidence: ['configuration.php and administrator/ at the folder root'], t4: ['plugins/system/t4', 'libraries/t4', 'media/t4', 'plugins/system/t4plugin'].some(exists) }
+  }
+  if (has('wp-config.php') || (has('wp-content') && has('wp-includes'))) {
+    return { cms: 'wordpress', confidence: 4, evidence: ['wp-config.php or wp-content/ at the folder root'], t4: false }
+  }
+  return null
+}
+
 /** Local means: this machine, or a host we were given a way into. */
 export function reachOf(target) {
   if (!/^https?:\/\//i.test(target)) return 'local'
@@ -171,6 +199,7 @@ async function main(argv) {
   }
   let html = ''
   let adminReachable = null
+  let folderEvidence = null
   if (/^https?:\/\//i.test(target)) {
     const response = await fetch(target, { redirect: 'follow' })
     html = await response.text()
@@ -184,17 +213,21 @@ async function main(argv) {
       }
     }
   } else {
-    const { readFileSync, existsSync } = await import('node:fs')
+    const { readFileSync, existsSync, readdirSync } = await import('node:fs')
     const { join } = await import('node:path')
     const index = ['index.html', 'index.htm'].map((f) => join(target, f)).find((f) => existsSync(f))
-    if (!index) {
-      console.error(`no index.html in ${target} — point at a folder of pages, or a URL`)
+    const webroot = index || !existsSync(target) ? null : detectFromFolder(readdirSync(target), (rel) => existsSync(join(target, rel)))
+    if (!index && !webroot) {
+      console.error(`no index.html in ${target} and no CMS webroot (configuration.php, wp-config.php) — point at a folder of pages, a CMS webroot, or a URL`)
       return 2
     }
-    html = readFileSync(index, 'utf8')
+    if (index) html = readFileSync(index, 'utf8')
+    else folderEvidence = webroot
   }
 
-  const detected = detectFromHtml(html)
+  const detected = folderEvidence
+    ? { ...detectFromHtml(''), ...folderEvidence, siteName: null, title: null, lang: null }
+    : detectFromHtml(html)
   const names = suggestNames({ siteName: detected.siteName, title: detected.title, url: target })
   const reach = reachOf(target)
   const road = roadFor({ cms: detected.cms, reach, t4: detected.t4 })

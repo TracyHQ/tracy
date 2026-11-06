@@ -17,6 +17,11 @@ cp -R "$HERE"/tools/. "$DEST/tools/"
 cp -R "$HERE"/src/. "$DEST/src/"
 [ -e "$DEST/src/middleware.ts" ] || cp "$HERE/../assets/src-starter/middleware.ts" "$DEST/src/middleware.ts"
 cp -R "$HERE"/tests/. "$DEST/tests/"
+# tools/compile-seed.mjs imports ../contract/validate.mjs, and the copied tests import ../ingest/*: kit-owned too
+# (kit-manifest.json), so a template that runs `node --test tests/*.test.mjs` has them from the start.
+mkdir -p "$DEST/contract" "$DEST/ingest"
+cp -R "$HERE"/contract/. "$DEST/contract/"
+cp -R "$HERE"/ingest/. "$DEST/ingest/"
 mkdir -p "$DEST/docs"
 # Authored documentation belongs to the template agent; never overwrite existing guidance.
 for FILE in "$HERE/../assets/package-docs/AGENTS.md" "$HERE/../assets/package-docs/docs/"*.md; do
@@ -73,6 +78,7 @@ evidence/
 backups/
 G
 echo "kit copied to $DEST (package $NAME, template id $ID; pin versions per references/runtime.md)"
+echo "NOT created here (this script copies the kit, it does not scaffold an Astro project): package.json + lockfile, astro.config.mjs, tsconfig.json, components.json, biome.jsonc, emdash-env.d.ts, public/, the layout, src/styles/, src/pages/[...path].astro, the 404 -- take them from a sibling theme on the same stack (e.g. tracy-emdash-theme-base) or write them per references/runtime.md and references/frontend-stack.md"
 echo "next: template.config.json (identity, locales, form bindings, audit policy, qa.theme hook) · package.json · astro.config.mjs · src/styles/{tokens,global}.css · components.json · seed/ · tools/build-seed.mjs"
 echo "personalize: seed/questions.json (what the customer is asked) and seed/personalize.json (where their answers land) ship as placeholders -- fill both, and list them with tools/personalize.mjs in distribution.include; release.mjs refuses a package that still holds the placeholders"
 echo "contract: node tools/qa-contract.mjs init <design-folder> qa.contract.json --config template.config.json, then author pages/rules/interactions (references/qa-contract.md)"

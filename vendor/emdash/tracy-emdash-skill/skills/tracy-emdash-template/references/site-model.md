@@ -86,6 +86,8 @@ node scripts/ingest/from-joomla.mjs <j6-dir> --out <spec-dir> --site-url <site-u
 node tools/compile-seed.mjs <spec-dir>/site-model.json seed/
 ```
 
+The scripts need their own dependencies (`jsdom`, `parse5`, `php-parser`, `acorn`, `playwright`, `pngjs` — `ERR_MODULE_NOT_FOUND: jsdom` is what a missing install looks like). Where the sibling skill's folder is read-only (a vendored copy), copy its `scripts/` and `package.json` to a work folder outside the repository and run `npm install` there; do not write into the vendored tree.
+
 In TCH the two trees already sit side by side — `vendor/wordpress/tracy-wordpress-theme/` and
 `vendor/emdash/tracy-emdash-skill/` — so nothing needs cloning.
 
@@ -123,7 +125,17 @@ orders them. Those live next to the template:
 ```
 
 A collection with an entry in `collections` is written **exactly as declared, in that key order**;
-only a collection with no entry gets the derived shape. A field kind with no mapping is an **error**,
+only a collection with no entry gets the derived shape. **"Exactly" includes what is missing**: `{ "supports": ["revisions", "search"] }`
+alone drops `label`, `sortOrder`, `routable` and `editLocking` — spell the collection out in full (the compiler warns when `label` is
+absent). Search needs the collection to list `search` in `supports` **and** the fields to be `searchable`.
+
+Three things the compiler does that the config can steer: a `prose` field is stored as `text` unless `fields["<type>.<field>"].type`
+says `portableText` — and the compiler **warns** when such a `text` field holds HTML (the admin then shows markup in a textarea; there
+is no HTML → Portable Text step in the contract road, so convert the values or keep the HTML on purpose and record it); a `date`
+field is written as UTC ISO (`2021-09-27 00:02:00` → `2021-09-27T00:02:00.000Z`), which is the form `seed-apply content` compares
+against; and `media-map.json` carries `items` (`key`, `file`, `mime`, `alt`, one `targets[{collection, slug, locale, path}]` per
+locale of each `type/slug#path` use) next to the model's `files`, so `seed-apply media` reads it as it is — `--media-from <dir>`
+copies the files into `<seed-dir>/media/`. A field kind with no mapping is an **error**,
 not a default `string`: a wrong-but-looks-right field renders normally and loses data on the first
 edit in the admin.
 

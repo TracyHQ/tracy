@@ -69,6 +69,11 @@ Each agent receives: the list of files (site, and source if any), the contract (
 | `images` | right image in the right place, crop, ratio, alt/caption, leftover dummy text (lorem, TODO), languages drifting in content, blocks missing/extra versus the source | image count, placeholder, h1/lede matching the source |
 | `interaction` | mobile menu, clearly visible active/hover/focus states, sensible tab order, buttons big enough to tap at 390 | hover-jump, mega travel, Escape/focus, theme toggle |
 
+**Materiality.** A note is something a customer would notice at a glance. Do not write down differences under about 12 px
+or small shade deltas, and do not re-open a measurement the source settles (measure the source before claiming it says 14 px:
+one run produced 119 notes, most of them such deltas and several contradicting each other between rounds, then 3, then 0 once
+the brief carried this rule). The lens brief must repeat it.
+
 Mandatory question for every note: **could the machine catch this?** If so, write in the Fix column
 "→ rule/scanner: …" so that next time no eyes are needed.
 
@@ -88,7 +93,7 @@ compare" explicitly instead of staying silent. **Unverified** guesses at a cause
 
 ## 5. Note = todo — template
 
-`notes/<lens>.md`:
+`notes/<lens>.md` (several agents or stages may write `notes/<lens>-<suffix>.md` instead — all of them are read; a `-close.md` file is a verdict, not notes):
 
 ```
 # <lens> — <run>
@@ -112,7 +117,9 @@ compare" explicitly instead of staying silent. **Unverified** guesses at a cause
 - **What**: where the site differs from source/system, one sentence. **Where**: region + approximate coordinates. **Fix**: suggested file/rule/seed.
   **Verify**: the sentence that closes it. **Flag** `LEE` = changes design intent (token, dropping a block, changing a font) — the agent
   does not decide alone; `SOURCE` = the source is wrong too, fix it better than the source, only counted separately.
-- An empty table = nothing found; the `Opened` section is still required in full.
+- An empty table = nothing found; the `Opened` section is still required in full. `qa-notes.mjs` reads `Opened` as `- <path>` lines
+  or bare paths (one per line, up to the next `## ` heading) ending in .png/.jpg/.webp; when pictures are reported unopened it names
+  the lens files it read and how many paths each listed.
 - `## Seen` (after `## Notes`) is the lens's own record for the next round: one row per tile with the shot's `hash` from
   `index.json` and a one-word verdict (`clean` or the note ids). In a close round (§6 step 5) the lens opens only tiles
   whose shot hash changed and lists only those under `## Opened` ([`execution-rules.md`](execution-rules.md) §Fan-out,

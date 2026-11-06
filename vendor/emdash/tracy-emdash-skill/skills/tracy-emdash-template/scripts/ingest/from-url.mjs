@@ -13,7 +13,8 @@
 //
 // WHAT COMES BACK. Pages at the path the site serves them from (`/about/` → `about/index.html`),
 // and — unless `--no-assets` — every same-origin stylesheet, script, image and font they
-// reference, saved at ITS OWN path. Nothing is rewritten: a relative href in the saved HTML
+// reference (markup, stylesheets, <style> blocks and inline style="…url(…)" backgrounds), saved at ITS OWN
+// path. Nothing is rewritten: a relative href in the saved HTML
 // still resolves, because the folder mirrors the site's own layout. `inventory.mjs` can then
 // hash the lot exactly as it would a design folder.
 //
@@ -23,6 +24,7 @@
 // JavaScript: a site that renders its content client-side will come back thin, and the report
 // says so rather than leaving you to discover it three phases later.
 import { mkdir, writeFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { dirname, join } from 'node:path'
 
 const args = process.argv.slice(2)
@@ -86,10 +88,20 @@ function normalise(u) {
  * shape is what lets the saved HTML's relative links keep working without rewriting a byte.
  */
 function pagePath(url) {
-  const path = new URL(url).pathname
-  if (path === '/' || path === '') return 'index.html'
-  const clean = path.replace(/^\/+|\/+$/g, '')
-  return /\.(html?|php)$/i.test(clean) ? clean.replace(/\.php$/i, '.html') : `${clean}/index.html`
+  const { pathname: path, searchParams } = new URL(url)
+  const base = (() => {
+    if (path === '/' || path === '') return 'index.html'
+    const clean = path.replace(/^\/+|\/+$/g, '')
+    return /\.(html?|php)$/i.test(clean) ? clean.replace(/\.php$/i, '.html') : `${clean}/index.html`
+  })()
+  // Pages that differ only by query string (/blog, /blog?start=5) are different pages: the query
+  // becomes a suffix, so the last one fetched no longer overwrites the others.
+  if ([...searchParams.keys()].length === 0) return base
+  // `key=value&key=value`, each part percent-encoded, so two different queries never share a name (`a=b-c` and
+  // `a-b=c` stay apart because `=` and `&` only ever appear as separators).
+  const query = [...searchParams].map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
+  const suffix = query.length > 80 ? `${query.slice(0, 60)}&${createHash('sha256').update(query).digest('hex').slice(0, 16)}` : query
+  return base.replace(/\.html$/, `~${suffix}.html`)
 }
 
 /** Where an asset is saved: its own path, so the markup that points at it still does. */
@@ -181,7 +193,12 @@ while (queue.length > 0 && pages.length < maxPages) {
     queued.add(link)
     queue.push(link)
   }
-  if (withAssets) for (const a of assetsIn(html, finalUrl, ASSET_ATTR)) assetQueue.add(a)
+  if (withAssets) {
+    for (const a of assetsIn(html, finalUrl, ASSET_ATTR)) assetQueue.add(a)
+    // Backgrounds live in inline style="…url(…)" and <style> blocks, which ASSET_ATTR does not see.
+    const unescaped = html.replace(/&quot;|&#0*34;|&#0*39;|&apos;/g, '"')
+    for (const a of assetsIn(unescaped, finalUrl, ASSET_IN_CSS)) assetQueue.add(a)
+  }
 }
 
 // ── assets ────────────────────────────────────────────────────────────────────
@@ -235,4 +252,4 @@ if (thin.length > 0) {
   console.log(`         ⚠ ${thin.length} pages under 2 KB: the site may render its content with JavaScript,`)
   console.log('           and this crawler does not run JS. Check one page before trusting the download.')
 }
-console.log(`next    : node tools/inventory.mjs ${out} <out.json>   (source.kind: url)`)
+console.log(`next    : node tools/inventory.mjs ${out} <out-dir>   (source.kind: url)`)
