@@ -6,6 +6,7 @@ import { HEAD_END, HEAD_START } from './brand-head-block.js'
 import { videoBlockFor, videoBlockIn, withVideoBlock } from '../lib/empty-video-buttons.js'
 import { isSelfLinkBlock, selfLinkBlockIn, withSelfLinkBlock } from '../lib/self-link-buttons.js'
 import { hiddenLinkBlockIn, isHiddenLinkBlock, withHiddenLinkBlock } from '../lib/hidden-page-links.js'
+import { createdHideBlockIn, isCreatedHideBlock, withCreatedHideBlock } from '../lib/created-page-hide.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
 import { emphasisOnlyUpdate } from './look-guard-emphasis.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
@@ -236,7 +237,27 @@ function hiddenLinkBlockFaults(what, raw, heldRaw, containers) {
   ]
 }
 
-const withoutMarked = (text) => withHiddenLinkBlock(withSelfLinkBlock(withVideoBlock(text, null), null), null)
+/** The created page hide block (card AT): only the hide rule on the kit's selectors, each scoped to one menu item's article. */
+function createdHideBlockFaults(what, raw, heldRaw, selectors) {
+  const block = createdHideBlockIn(raw)
+  if (!block || block === createdHideBlockIn(heldRaw) || isCreatedHideBlock(block, selectors)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} created page hide`,
+      'the created page hide block holds only the hide rule on the selectors the kit names, scoped to one menu item each'
+    )
+  ]
+}
+
+const MARKED = [
+  [videoBlockIn, withVideoBlock],
+  [selfLinkBlockIn, withSelfLinkBlock],
+  [hiddenLinkBlockIn, withHiddenLinkBlock],
+  [createdHideBlockIn, withCreatedHideBlock]
+]
+const withoutMarked = (text) => MARKED.reduce((t, [, without]) => without(t, null), text)
+const hasMarked = (text) => MARKED.some(([blockIn]) => blockIn(text))
 
 /** What a module's content may change: the accent style alone, or the head block with all around it as the site held it. */
 function moduleContentFaults(id, content, { state }) {
@@ -246,11 +267,12 @@ function moduleContentFaults(id, content, { state }) {
   const marked = [
     ...videoBlockFaults(what, raw, heldRaw, state.videoSelectors ?? []),
     ...selfLinkBlockFaults(what, raw, heldRaw, state.selfLinkContainers ?? []),
-    ...hiddenLinkBlockFaults(what, raw, heldRaw, state.hiddenLinkContainers ?? [])
+    ...hiddenLinkBlockFaults(what, raw, heldRaw, state.hiddenLinkContainers ?? []),
+    ...createdHideBlockFaults(what, raw, heldRaw, state.createdHideSelectors ?? [])
   ]
   const text = withoutMarked(raw)
   const held = withoutMarked(heldRaw)
-  const touched = [raw, heldRaw].some((t) => videoBlockIn(t) || selfLinkBlockIn(t) || hiddenLinkBlockIn(t))
+  const touched = [raw, heldRaw].some(hasMarked)
   // A write of the marked blocks alone: everything else of the module stays as the site held it.
   if (touched && text.trim() === held.trim()) return marked
   return [...marked, ...restFaults(text, held, what, state)]

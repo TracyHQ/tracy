@@ -441,6 +441,9 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    `cli.mjs hidden-page-links --kit <kit dir>/template-kit.json --container '.teams-item' --why '<where>'` names the
    container of list row links (a card's name and photo) that may lead to a page the plan hides; the write step sends such a
    link to a living page, or makes it plain text.
+   `cli.mjs created-page-hide --kit <kit dir>/template-kit.json --selector '.share-social' --why '<where>'` names a block the
+   template prints hard coded on every article page (a share bar) that a page the write step creates must not show (or
+   `--none`); the write step hides it on the created pages only, so the owner's own articles keep it.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
 shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one

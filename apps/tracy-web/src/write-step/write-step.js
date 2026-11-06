@@ -40,6 +40,7 @@ import { climbTextFallback, withTextFallback } from './text-fallback.js'
 import { hideEmptyVideoButtons } from './video-buttons-stage.js'
 import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
 import { hideHiddenPageLinks, relinkOrders } from './hidden-page-links-stage.js'
+import { hideOnCreatedPages } from './created-page-hide-stage.js'
 import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
@@ -172,7 +173,7 @@ export async function runWriteStep(input) {
   let shareLines = []
   let settingLines = []
   let links = null
-  let created = { pages: new Map(), results: [], lines: [], kept: [] }
+  let created = { pages: new Map(), results: [], lines: [], kept: [], opened: [] }
   let restored = []
   let renamedLines = null
   let renamedLinks = null
@@ -663,7 +664,9 @@ export async function runWriteStep(input) {
     ...shared.lines,
     ...(await closeForms({ door, siteKey, plan, kit: kit.doc, last })),
     // After the contract call, which saves the head block's module in its own form: the kit's empty video button rule.
-    ...(await hideEmptyVideoButtons({ door, siteKey, kit: kit.doc }))
+    ...(await hideEmptyVideoButtons({ door, siteKey, kit: kit.doc })),
+    // And the kit's blocks a created page must not show, on those pages only (card AT).
+    ...(await hideOnCreatedPages({ door, siteKey, kit: kit.doc, created: created.opened }))
   ]
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
