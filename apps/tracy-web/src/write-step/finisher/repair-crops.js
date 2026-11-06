@@ -91,6 +91,25 @@ const tileOf = (shots, fault) =>
   shots.filter((s) => s.page === fault.page && s.viewport === fault.viewport && s.index === fault.tile)
 
 /**
+ * The after tiles that show what the before tiles showed: the one that overlaps each most. A re-shoot of only the repaired
+ * blocks (page-shots.js `bands`) numbers its tiles anew, so a tile is matched by where it is on the page, not by its number.
+ */
+const sameSpot = (shots, tiles) =>
+  tiles.flatMap((tile) => {
+    let best = null
+    let most = 0
+    for (const shot of shots) {
+      if (shot.page !== tile.page || shot.viewport !== tile.viewport) continue
+      const shown = Math.min(tile.y + tile.height, shot.y + shot.height) - Math.max(tile.y, shot.y)
+      if (shown > most) {
+        most = shown
+        best = shot
+      }
+    }
+    return best ? [best] : []
+  })
+
+/**
  * @param {{ fault: { page: string, viewport: string, tile: number }, before: { shots: object[], boxes?: object[] },
  *   after: { shots: object[], boxes?: object[] }, wordsBefore: string, wordsAfter: string, name: string,
  *   saveFile: (name: string, data: Buffer) => Promise<void> }} input
@@ -101,7 +120,7 @@ export async function cropsOf({ fault, before, after, wordsBefore, wordsAfter, n
   const pairs = await blockCrops({ fault, before, after, wordsBefore, wordsAfter })
   const by = pairs.length ? 'block' : 'tile'
   const beforeShots = pairs.length ? pairs.map(([b]) => b) : tileOf(before.shots, fault)
-  const afterShots = pairs.length ? pairs.map(([, a]) => a) : tileOf(after.shots, fault)
+  const afterShots = pairs.length ? pairs.map(([, a]) => a) : sameSpot(after.shots, beforeShots)
   const files = { by, before: [], after: [] }
   for (const [when, list] of [
     ['before', beforeShots],

@@ -86,6 +86,13 @@ async function textBoxes(page) {
   )
 }
 
+/**
+ * Whether a viewport window from `y`, `height` tall, reaches one of the bands a capture asked for. No bands: every window
+ * does, so the page is shot whole.
+ */
+export const reachesBand = (bands, y, height) =>
+  !bands || bands.some((b) => b.y < y + height && b.y + b.height > y)
+
 function moved(previous, current, through) {
   return previous.anchors.some((anchor) => {
     if (anchor.y >= through || anchor.height === 0) return false
@@ -231,6 +238,10 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
           }
           signal.addEventListener('abort', abort, { once: true })
           let tiles = 0
+          // Windows walked, shot or passed over: a capture that asked for bands passes over a window that reaches none.
+          let windows = 0
+          let skipped = 0
+          const bands = layout.bands?.[viewport] ?? null
           let covered = 0
           let documentHeight = 0
           let reason = null
@@ -274,7 +285,7 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
             documentHeight = previous.height
             const measured = boxes ? { boxes: await textBoxes(page).catch(() => []) } : {}
             yield { type: 'view-start', ...identity, documentHeight, ...measured }
-            while (covered < documentHeight && tiles < VISION_MAX_TILES) {
+            while (covered < documentHeight && windows < VISION_MAX_TILES) {
               signal.throwIfAborted()
               if (previous.viewportWidth !== view.width || previous.viewportHeight !== view.height) {
                 reason = 'CAPTURE_VIEWPORT_MISMATCH'
@@ -285,7 +296,18 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
                 break
               }
               // The previous tile covers the sticky top band before it becomes hidden in this viewport.
-              const target = tiles === 0 ? 0 : Math.max(0, covered - OVERLAP - previous.top)
+              const target = windows === 0 ? 0 : Math.max(0, covered - OVERLAP - previous.top)
+              if (!reachesBand(bands, target, view.height)) {
+                // Passed over, not shot: the window counts as covered where a tile there would have ended.
+                const y = Math.min(target, Math.max(0, documentHeight - view.height))
+                const to = Math.min(documentHeight, y + view.height - previous.bottom)
+                if (to > covered) {
+                  covered = to
+                  windows++
+                  skipped++
+                  continue
+                }
+              }
               await page.evaluate((y) => scrollTo(0, y), target)
               await page.waitForTimeout(100)
               const settled = await settleImages(page)
@@ -313,7 +335,7 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
                 break
               }
               documentHeight = after.height
-              const from = tiles === 0 ? 0 : after.y + after.top
+              const from = windows === 0 ? 0 : after.y + after.top
               const to = Math.min(documentHeight, after.y + view.height - after.bottom)
               if (from > covered || to <= covered) {
                 reason = 'CAPTURE_OCCLUDED'
@@ -337,6 +359,7 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
               }
               covered = to
               tiles++
+              windows++
               previous = after
               yield tile
             }
@@ -358,6 +381,7 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
             documentHeight,
             tiles,
             covered,
+            ...(bands ? { skipped } : {}),
             ...(pendingImages.length ? { pendingImages } : {})
           }
         }

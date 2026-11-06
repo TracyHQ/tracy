@@ -13,7 +13,7 @@ import { FAULT_KINDS } from '../src/write-step/finisher/fault-kinds.js'
 import { ORDER_KINDS } from '../src/write-step/finisher/repair-orders.js'
 import { servesRepair } from '../src/write-step/finisher/live-confirm.js'
 import { kitIndex, memoryStore } from './_write-step-bench.mjs'
-import { fakeCapture } from './_write-step-finisher.mjs'
+import { fakeCapture, judged } from './_write-step-finisher.mjs'
 import {
   ABOUT_TITLE,
   BLOCKS,
@@ -45,7 +45,7 @@ after(() => {
   for (const dir of dirs) rmSync(dir, { recursive: true, force: true })
 })
 
-const BETTER = [{ verdict: 'better', reason: 'reads right' }]
+const BETTER = [judged('better', 'reads right')]
 
 /** One finish with one fault on the home page, the fixer's scripted order, and the brief, copy and pictures as files. */
 async function finish({
@@ -220,6 +220,8 @@ test('accent emphasis marks one or two words the heading holds, never new or cha
   })
   assert.equal(run.site.held['module-2.1'], 'Harbour Strength ((span))Gym((/span))')
   assert.equal(run.record.outcome, 'kept')
+  assert.equal(run.record.checkedBy, 'code', 'judged by code on the served page')
+  assert.equal(run.doors.checker.asked.length, 0)
   for (const [words, why] of [
     ['Fitness', /does not hold "Fitness" once/],
     ['Harbour Strength Gym', /one or two words/],
@@ -247,11 +249,13 @@ test('emphasis in a heading stored as HTML goes through the emphasis stage, and 
   assert.equal(kept.site.held['module-7.1'], 'Meet your <span>Coach</span>')
   assert.equal(kept.record.outcome, 'kept')
 
+  // A page reader that still serves the heading without the mark: code judges it not better, no checker call.
   const undone = await finish({
     order,
     fault: { slot: 'block-7.1' },
-    checker: [{ verdict: 'not better', reason: 'x' }]
+    served: () => servedPage(writtenSite())
   })
+  assert.equal(undone.doors.checker.asked.length, 0)
   assert.equal(undone.site.writes.length, 2, 'the codes, then the tags')
   assert.deepEqual(undone.site.reverts, [undone.site.writes[1].applyId, undone.site.writes[0].applyId])
   assert.equal(undone.site.held['module-7.1'], 'Meet your Coach')

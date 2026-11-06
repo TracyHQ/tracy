@@ -1,123 +1,50 @@
 // The finisher of the write step (spec #418): after the write, it looks at the written site, finds customer-visible faults of
 // the closed list, repairs them through the write step's own door, proves each repair, and undoes one that does not help.
-// This is the ONE entry point: the step 9 bench's `finish` (on a site already written) calls it today, and the live step 9
-// path calls it after the write (#424). It reaches the site only through the site door, the screenshots only through
-// `capture`, the site check only through `siteCheck`, and files only through `saveFile`, so tests give fakes for all four.
+// This is the ONE entry point: the step 9 bench's `finish` (on a site already written) and the live step 9 path
+// (write-step-nine.js, after the write) both call it. It reaches the site only through the site door, the screenshots
+// only through `capture`, the site check only through `siteCheck`, and files only through `saveFile`, so tests give fakes.
 //
 // Order: refuse unless every door can do its role; shoot every page the written site keeps (the write report's kept pages
-// at their addresses now, the list the site check opens: lib/site-kept-paths.js), never a kit page the site dropped; ask the finder per page; for each fault
-// ask the fixer for one order, let code check it (repair-orders.js), and write, judge and keep or undo it the way its order
-// kind says (repair-steps.js: the checker on crops of the block, or the live page for a change no screenshot shows); run the
-// site check a final time on the report with the kept repairs in it; write the repair log, which says whether the final
-// check gained a blocking failure the first did not have. Rounds, limits and per-page parallel repairs come with #424.
+// at their addresses now, the list the site check opens: lib/site-kept-paths.js), never a kit page the site dropped; ask the
+// finder per page, a few pages at once, while the first site check may still be running beside it; merge its failures in;
+// then repair page by page, pages side by side (page-repairs.js: every order of a page written, the page judged once, each
+// repair kept or undone on its own), at most two rounds (rounds.js); run the site check a final time and undo a kept repair
+// it blames for a new blocking failure (final-check.js); write the repair log with the time and cost of every stage. Past a
+// hard limit of time or cost (run-limits.js) no new work starts, what is left is logged as unrepaired, and the run still ends
+// with its final check and its log: the site is delivered, nothing hidden, no notice to the customer.
 import { shootPages } from '../../lib/page-shots.js'
 import { keptPageList } from '../../lib/site-kept-paths.js'
 import { kitSlotIds } from '../kit-slot-ids.js'
 import { doorsRefusal } from './finisher-doors.js'
-import { askFixer } from './finisher-roles.js'
 import { findFaults, slotsByPage } from './finder-stage.js'
 import { mergedFaults } from './fault-sources.js'
-import { causeOf, logRecord, REPAIR_LOG_FILE, repairLog } from './repair-log.js'
+import { finalCheck } from './final-check.js'
+import { REPAIR_LOG_FILE, repairLog } from './repair-log.js'
 import { readSite } from './repair-write.js'
-import { stepsOf, validOrder } from './repair-orders.js'
-import { fixerSources, orderFacts } from './repair-facts.js'
+import { orderFacts } from './repair-facts.js'
 import { demoBlockShots } from './demo-block-shots.js'
 import { keepShotFiles, replyKeeper } from './model-replies.js'
+import { runRounds } from './rounds.js'
+import { finisherBudget } from './run-limits.js'
+import { placeLocks } from './work-pool.js'
 
-/** Stage 2: one fault through the fixer, code's check, the write, the checker, and the keep or the undo. */
-async function repairFault(run, fault, repairNumber, firstShots) {
-  const { door, siteKey, doors, lineOf } = run
-  const cause = causeOf(run.firstCheck, fault)
-  const site = await readSite(door, siteKey)
-  const asked = run.spend(
-    await askFixer(
-      doors.fixer,
-      fault,
-      site.current.get(lineOf(fault.slot)?.key),
-      fixerSources(run.orderFacts, fault)
-    )
-  )
-  const about = { page: fault.page, repair: repairNumber }
-  await run.replies.keep({
-    name: `fixer-r${repairNumber}`,
-    role: 'fixer',
-    ...about,
-    door: doors.fixer,
-    sent: asked.sent,
-    images: [],
-    call: asked
-  })
-  if (asked.problem)
-    return {
-      record: logRecord(fault, { ...cause, outcome: 'failed', reason: `the fixer: ${asked.problem}` })
-    }
-  const order = asked.answer
-  const valid = await validOrder(order, {
-    ...run.orderFacts,
-    site,
-    door,
-    siteKey,
-    fault,
-    kitSlots: run.kitSlots,
-    pageSlots: run.pageSlots,
-    keyOf: (slot) => lineOf(slot)?.key ?? null,
-    currentOf: (key) => site.current.get(key)
-  })
-  // A repair is logged on the slot it is about, the one the finder named or the one the order was tied to.
-  const onSlot = { ...fault, slot: fault.slot ?? (valid.ok ? valid.slot : null) }
-  const known = { ...(fault.slot ? cause : causeOf(run.firstCheck, onSlot)), order }
-  if (!valid.ok) return { record: logRecord(onSlot, { ...known, outcome: 'dropped', reason: valid.reason }) }
-  // Each order kind is written, judged and undone its own way (repair-steps.js), named by its row of the order table.
-  const steps = stepsOf(order.kind)
-  const repair = { run, fault, order, valid, site, firstShots, repairNumber }
-  const wrote = await steps.write(repair)
-  if (!wrote.ok)
-    return {
-      record: logRecord(onSlot, {
-        ...known,
-        outcome: 'failed',
-        reason: `the site refused it: ${wrote.reason}`
-      })
-    }
-  const { verdict, reason, crops, checkedBy, proven } = await steps.judge(repair)
-  const shown = {
-    ...known,
-    ...steps.shown(repair),
-    applyId: wrote.applyId,
-    checkedBy,
-    ...(crops ? { crops: crops.files } : {})
-  }
-  if (verdict === 'better' && proven) {
-    const kept = steps.kept({ ...repair, wrote })
-    return { record: logRecord(onSlot, { ...shown, outcome: 'kept', reason }), ...(kept ? { kept } : {}) }
-  }
-  const why = proven ? reason : 'the repaired page could not be shot again'
-  const undone = await steps.undo({ ...repair, wrote })
-  return {
-    record: logRecord(onSlot, {
-      ...shown,
-      outcome: undone.ok ? 'undone' : 'failed',
-      reason: undone.ok ? why : `${why}; the revert failed: ${undone.reason}`
-    })
+/** A page reader that reads each page once while nothing is written yet (the merge reads a page per failure). */
+const readOnce = (pageHtml) => {
+  if (!pageHtml) return null
+  const read = new Map()
+  return (page) => {
+    if (!read.has(page)) read.set(page, pageHtml(page))
+    return read.get(page)
   }
 }
-
-/** Stage 3: the write report with the kept repairs' words as ordered, which the final site check measures. */
-const repairedReport = (report, keptBySlot) => ({
-  ...report,
-  slots: report.slots.map((line) => {
-    const kept = keptBySlot.get(line.slot)
-    return kept ? { ...line, ordered: kept.ordered, repairedBy: kept.applyId } : line
-  })
-})
 
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, report: object, firstCheck: object | null,
  *   doors: Record<'finder' | 'fixer' | 'checker', object>, capture: Function,
  *   siteCheck: (report: object) => Promise<object>, saveFile: (name: string, data: string | Buffer) => Promise<void>,
  *   pageHtml?: (page: string) => Promise<string | null>, demoImages?: { open: (id: string) => Promise<any> } | null,
- *   now?: () => number, contentMap?: object | null, facts?: { brief?: object, copy?: object, pictures?: object }
- *   }} input `kit` is the template kit's document; `report` the write report of the run;
+ *   now?: () => number, contentMap?: object | null, facts?: { brief?: object, copy?: object, pictures?: object },
+ *   limits?: Partial<import('./run-limits.js').FINISHER_LIMITS> | null }} input `kit` is the template kit's document; `report` the write report of the run;
  *   `facts` the brief, the site copy file and step 8's site pictures, the only sources a repair's new words come from;
  *   `firstCheck` may be a promise of a site check still running beside the finder; `pageHtml` reads a page as the site
  *   serves it now, to confirm an invisible site check failure; `demoImages` opens the kit's images, the template demo's block shots
@@ -140,12 +67,12 @@ export async function runFinisher(input) {
     demoImages = null,
     now = Date.now,
     contentMap = null,
-    facts = null
+    facts = null,
+    limits = null
   } = input
   const refused = doorsRefusal(doors)
   if (refused) return { ok: false, ...refused }
-  const started = now()
-  let costUsd = 0
+  const budget = finisherBudget({ now, limits })
   let sitePages
   try {
     sitePages = keptPageList({ pages: (await readSite(door, siteKey)).pages }, report)
@@ -155,6 +82,7 @@ export async function runFinisher(input) {
   const writtenLines = new Map(
     report.slots.filter((l) => l.status === 'written' && l.key).map((l) => [l.slot, l])
   )
+  let numbers = 0
   const run = {
     door,
     siteKey,
@@ -171,39 +99,35 @@ export async function runFinisher(input) {
     orderFacts: orderFacts({ kit, report, contentMap, facts, sitePages }),
     replies: replyKeeper(saveFile),
     shotFile: () => null,
-    spend: (call) => {
-      costUsd += call.costUsd ?? 0
-      return call
-    }
+    budget,
+    locks: placeLocks(),
+    nextNumber: () => ++numbers
   }
-  const firstShots = await shootPages({ capture, pages: sitePages.map((p) => p.path) })
+  const firstShots = await budget.timed('shoot', () =>
+    shootPages({ capture, pages: sitePages.map((p) => p.path) })
+  )
   // The tiles the finder is shown, kept as files its reply files name (model-replies.js).
   run.shotFile = await keepShotFiles(saveFile, firstShots.shots)
   const { faults: found, records } = await findFaults(run, firstShots)
   // The first site check may still be running beside the finder (a promise); its failures join the finder's faults here.
   const first = await firstCheck
   run.firstCheck = first
-  const { faults, records: mergeRecords, merge } = await mergedFaults({ found, firstCheck: first, pageHtml })
-  const keptBySlot = new Map()
-  for (const [index, fault] of faults.entries()) {
-    const outcome = await repairFault(run, fault, index + 1, firstShots)
-    records.push(outcome.record)
-    if (outcome.kept) keptBySlot.set(outcome.kept.slot, outcome.kept)
-  }
-  records.push(...mergeRecords)
-  const repaired = repairedReport(report, keptBySlot)
-  const finalCheck = await siteCheck(repaired)
+  const merged = await mergedFaults({ found, firstCheck: first, pageHtml: readOnce(pageHtml) })
+  const { records: repairRecords, kept, rounds } = await runRounds(run, merged.faults, firstShots)
+  records.push(...repairRecords, ...merged.records)
+  const final = await finalCheck(run, { report, kept, firstCheck: first, siteCheck })
   const log = repairLog({
     site: siteKey,
     records,
     unshot: firstShots.unshot,
     replies: run.replies.files,
-    costUsd,
-    ms: now() - started,
+    budget: budget.summary(),
+    rounds,
+    undoneByFinalCheck: final.undone,
     firstCheck: first,
-    finalCheck,
-    merge
+    finalCheck: final.check,
+    merge: merged.merge
   })
   await saveFile(REPAIR_LOG_FILE, `${JSON.stringify(log, null, 2)}\n`)
-  return { ok: true, report: repaired, log, finalCheck, firstCheck: first }
+  return { ok: true, report: final.report, log, finalCheck: final.check, firstCheck: first }
 }

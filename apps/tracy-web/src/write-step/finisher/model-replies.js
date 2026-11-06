@@ -20,12 +20,13 @@ export const pageSlug = (page) =>
  * Saves every tile of a page shot as a file, so the finder's pictures can be looked at later.
  * @param {(name: string, data: Buffer) => Promise<void>} saveFile
  * @param {{ page: string, viewport: string, index: number, image: string }[]} shots
+ * @param {string} [prefix] put before each file name, so a later round's shots keep the first round's
  * @returns {Promise<(shot: object) => string | null>} the file a tile was saved as
  */
-export async function keepShotFiles(saveFile, shots) {
+export async function keepShotFiles(saveFile, shots, prefix = '') {
   const files = new Map()
   for (const shot of shots) {
-    const file = `${SHOTS_DIR}/${pageSlug(shot.page)}-${shot.viewport}-${shot.index}.jpg`
+    const file = `${SHOTS_DIR}/${prefix}${pageSlug(shot.page)}-${shot.viewport}-${shot.index}.jpg`
     await saveFile(file, bytesOf(shot.image))
     files.set(shot, file)
   }

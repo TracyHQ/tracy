@@ -2355,8 +2355,9 @@ row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tr
 
 **The finisher** (#420, spec #418) repairs, on a site already written, the customer-visible faults of a closed list, and
 proves each repair. `finish --run <run>` starts it on the run's site with its write report and the first site check `check`
-kept. The one entry point, `write-step/finisher/finisher.js` `runFinisher`, is what the live step 9 path will call after the
-write (#424). The pages of the kit are shot by the site's host (`POST /_host/capture`, mode `vision-tiles/1`, the stream the
+kept. The one entry point, `write-step/finisher/finisher.js` `runFinisher`, is what the live step 9 path calls after the
+write (`write-step-nine.js` `runStepNine`, #424: the write, then the finisher, the first site check started beside the
+finder, the build keeping the final check). The pages of the kit are shot by the site's host (`POST /_host/capture`, mode `vision-tiles/1`, the stream the
 demo look reads; `lib/page-shots.js`). Three model doors in `/ops` › Model & AI, each meant for `deepseek-flash` on the
 `deepseek` provider at max effort (migration 203): `finisherFinder` (one call per page, its screenshots in, faults from
 `fault-kinds.js` out), `finisherFixer` (one fault in, one typed order from `repair-orders.js` out) and `finisherChecker`
@@ -2380,6 +2381,15 @@ repair no screenshot shows (a link target, a tel: or mailto: link, an alt, a tit
 page the site serves now (`finisher/live-confirm.js`), never by the checker on crops. Each order kind names how it is
 written, judged and undone (`finisher/repair-steps.js`). A site check failure is confirmed by the finder only on the same
 slot, block or quoted words, else on the live page (`finisher/fault-confirm.js`).
+Speed and limits (#424): the repairs of one page are written together, the page is shot again once, only the tiles that
+reach a repaired block (`bands` per width in the capture body; the host passes over the other tiles,
+`apps/tracy-host/src/vision-capture.js`), and one checker call answers a verdict per repair (`finisher/batch-judge.js`); a
+`fix-text` or `mark-emphasis` repair is judged by code on the served page (`finisher/code-judge.js`). Pages run side by side,
+four at once by default, and a write holds the lock of the place it reads and writes whole (the contract's revision, a row,
+the head module; `finisher/work-pool.js`). At most two rounds (`finisher/rounds.js`). A run aims at 5 minutes and 1 USD; at 8
+minutes or 1.5 USD no new work starts, what is left is logged `unrepaired` with reason `budget`, and the final check still
+runs (`finisher/run-limits.js`). A kept repair the final check blames for a new blocking failure is undone and the check runs
+again (`finisher/final-check.js`). The repair log keeps the time of each stage (`timings`).
 
 ## 9. Sign-in, seats, permissions
 

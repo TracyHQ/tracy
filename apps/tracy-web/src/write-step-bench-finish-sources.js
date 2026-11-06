@@ -55,3 +55,20 @@ export async function finisherSources(d, { report, kitRef }) {
 /** The bench line of the merge of the finder's faults and the first site check's failures. */
 export const mergeLine = (m) =>
   `merge: ${m.finder} from the finder, ${m.siteCheck} site check failures (${m.confirmed} confirmed on the live site, ${m.both} named by both and repaired once, ${m.measurementWrong} measurement wrong, ${m.noDoor} no door, ${m.loggedOnly} logged only)`
+
+const seconds = (ms) => `${(ms / 1000).toFixed(1)} s`
+
+/** The bench lines of what the finisher took: its time and cost against its limits, each stage's time, what stopped it. */
+export function spendLines(log) {
+  const { ms, costUsd, timings, limits, stoppedBy, rounds, undoneByFinalCheck } = log
+  return [
+    `repair log: repair-log.json, ${seconds(ms)} (target ${seconds(limits.targetMs)}, hard ${seconds(limits.hardMs)}), ${costUsd.toFixed(4)} USD (target ${limits.targetUsd}, hard ${limits.hardUsd}), ${rounds} round${rounds === 1 ? '' : 's'}`,
+    `stages: ${Object.entries(timings)
+      .map(([stage, t]) => `${stage} ${seconds(t)}`)
+      .join(', ')} (summed over pages run side by side)`,
+    ...(stoppedBy ? [`stopped: ${stoppedBy}; what was left is logged as unrepaired`] : []),
+    ...(undoneByFinalCheck
+      ? [`undone after the final site check: ${undoneByFinalCheck}, and the site check ran again`]
+      : [])
+  ]
+}

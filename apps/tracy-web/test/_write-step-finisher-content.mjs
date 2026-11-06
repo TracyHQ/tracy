@@ -2,6 +2,7 @@
 // gallery alt and page title the orders repair, behind a fake site door that answers the contract door, `content.get`,
 // `content.update` and `apply.revert` and records every write and revert. The club, its brief and its site are invented.
 import { report, written } from './_site-check.mjs'
+import { codesToHtml } from '../src/lib/site-copy/emphasis-markup.js'
 import { benchSite, scriptedDoor, VERSION } from './_write-step-finisher.mjs'
 import { SITE } from './_write-step-run.mjs'
 
@@ -242,6 +243,8 @@ export function servedPage(site) {
   return async ({ path: page }) => {
     const title = page === '/about' ? JSON.parse(site.rows['menuItem:102'].params).page_title : 'Home'
     const link = site.held['module-5.3'].replace(/^index\.php\?Itemid=102$/, '/index.php/about')
-    return `<html><head><title>${title}</title></head><body><h2>${site.held['module-2.1']}</h2><p>${site.held['module-5.1']}</p><a href="${link}">Contact</a><img src="/${site.held['module-6.1']}" alt="${site.held['module-6.2']}"></body></html>`
+    // The template prints emphasis codes as a span, as the real one does.
+    const heading = codesToHtml(site.held['module-2.1'])
+    return `<html><head><title>${title}</title></head><body><h2>${heading}</h2><p>${site.held['module-5.1']}</p><a href="${link}">Contact</a><img src="/${site.held['module-6.1']}" alt="${site.held['module-6.2']}"><h3>${site.held['module-7.1']}</h3></body></html>`
   }
 }

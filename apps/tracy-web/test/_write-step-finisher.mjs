@@ -288,3 +288,6 @@ export const finding = (kind = 'raw-markup', over = {}) => ({
     }
   ]
 })
+
+/** The checker's answer for one page: the verdict of one repair, by its number in the run (the first repair is 1). */
+export const judged = (verdict, reason, repair = 1) => ({ verdicts: [{ repair, verdict, reason }] })

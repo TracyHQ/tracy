@@ -4,7 +4,9 @@
 // shows them to a model and keeps some as files (the write step's finisher). A frame that breaks the stream's shape stops
 // the shot of that page and width, which is then named in `unshot`, never counted as seen. A host that measures them
 // starts each view with the boxes of the page's text elements (`view-start.boxes`, in page pixels); they come back in
-// `boxes`, and a host that sends none gives none.
+// `boxes`, and a host that sends none gives none. A caller that needs only some of a page (the finisher's re-shoot of the
+// blocks it repaired) names its `bands` per width, in page pixels; the host then shoots only the tiles that reach a band, and
+// a view it shot so is still whole for what was asked.
 import { createHash } from 'node:crypto'
 import { captureLayouts } from './capture-layouts.js'
 
@@ -15,15 +17,16 @@ const MAX_TILE_BYTES = 640 * 1024
 
 /**
  * @param {{ capture: (layouts: {key: string, path: string}[], opts: {onFrame: Function, signal?: AbortSignal}) =>
- *   Promise<{ok: boolean, body?: any}>, pages: string[], signal?: AbortSignal }} input
- *   `capture` asks the site's host to stream the pages (the host and the site are the caller's)
+ *   Promise<{ok: boolean, body?: any}>, pages: string[], signal?: AbortSignal,
+ *   bands?: Record<string, Partial<Record<'desktop' | 'phone', { y: number, height: number }[]>>> }} input
+ *   `capture` asks the site's host to stream the pages (the host and the site are the caller's); `bands` by page path
  * @returns {Promise<{ shots: { page: string, viewport: 'desktop' | 'phone', index: number, y: number, height: number,
  *   documentHeight: number, image: string }[], boxes: { page: string, viewport: string, x: number, y: number,
  *   width: number, height: number, text: string }[], unshot: { page: string, viewport: string, why: string }[] }>}
  *   `image` is a `data:image/jpeg;base64,` URL
  */
-export async function shootPages({ capture, pages, signal }) {
-  const layouts = captureLayouts(pages)
+export async function shootPages({ capture, pages, signal, bands = null }) {
+  const layouts = captureLayouts(pages).map((l) => (bands?.[l.path] ? { ...l, bands: bands[l.path] } : l))
   const views = new Map()
   for (const l of layouts)
     for (const viewport of ['desktop', 'phone'])

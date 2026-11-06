@@ -6,6 +6,8 @@ import { heldFaults, loggedOnlyReason } from './fault-kinds.js'
 import { askFinder } from './finisher-roles.js'
 import { keepShotFiles, pageSlug } from './model-replies.js'
 import { logRecord } from './repair-log.js'
+import { BUDGET } from './run-limits.js'
+import { eachLimited } from './work-pool.js'
 
 /**
  * The kit slots each site page shows: the slots of the blocks its kit page lists at any width, and its h1. A site page is
@@ -25,38 +27,52 @@ export function slotsByPage(kit, sitePages) {
   return (page) => byPage.get(page) ?? new Set()
 }
 
-/** Stage 1: the finder on every page that was shot. A page it could not look at is named, never counted as clean. */
-export async function findFaults(run, firstShots) {
+/**
+ * Stage 1: the finder on every page that was shot, a few pages at once. A page it could not look at is named, never counted
+ * as clean; past a hard limit (run-limits.js) a page it was not asked about is named too. `round` names its reply files.
+ */
+export async function findFaults(run, firstShots, round = 1) {
   const pages = [...new Set(firstShots.shots.map((s) => s.page))]
-  const found = await Promise.all(
-    pages.map(async (page) => {
-      const shown = firstShots.shots.filter((s) => s.page === page)
-      // The template demo's shot of each block the page shows, for the lost-design kind (demo-block-shots.js).
-      const demo = await run.demoShots(page)
-      const demoTiles = demo.map((d) => ({
-        page: `demo ${d.block}`,
-        viewport: d.viewport,
-        index: 0,
-        image: d.image
-      }))
-      const demoFile = await keepShotFiles(run.saveFile, demoTiles)
-      const call = run.spend(await askFinder(run.doors.finder, page, shown, demo))
-      await run.replies.keep({
-        name: `finder-${pageSlug(page)}`,
-        role: 'finder',
+  const found = await eachLimited(pages, run.budget.limits.pages, async (page) => {
+    const stopped = run.budget.stopped()
+    if (stopped)
+      return {
+        faults: [],
+        loggedOnly: [],
         page,
-        door: run.doors.finder,
-        sent: call.sent,
-        images: [...shown.map(run.shotFile), ...demoTiles.map(demoFile)],
-        call
-      })
-      return call.problem
-        ? { faults: [], loggedOnly: [], problem: `the finder: ${call.problem}`, page }
-        : heldFaults(call.answer, shown)
+        skipped: `${BUDGET}: ${stopped}, so the finder was not asked`
+      }
+    const shown = firstShots.shots.filter((s) => s.page === page)
+    // The template demo's shot of each block the page shows, for the lost-design kind (demo-block-shots.js).
+    const demo = await run.demoShots(page)
+    const demoTiles = demo.map((d) => ({
+      page: `demo ${d.block}`,
+      viewport: d.viewport,
+      index: 0,
+      image: d.image
+    }))
+    const demoFile = await keepShotFiles(run.saveFile, demoTiles)
+    const call = run.budget.spend(
+      await run.budget.timed('find', () => askFinder(run.doors.finder, page, shown, demo))
+    )
+    await run.replies.keep({
+      name: `finder-${pageSlug(page)}${round > 1 ? `-round${round}` : ''}`,
+      role: 'finder',
+      page,
+      door: run.doors.finder,
+      sent: call.sent,
+      images: [...shown.map(run.shotFile), ...demoTiles.map(demoFile)],
+      call
     })
-  )
+    return call.problem
+      ? { faults: [], loggedOnly: [], problem: `the finder: ${call.problem}`, page }
+      : heldFaults(call.answer, shown)
+  })
   const records = found.flatMap((f) => [
     ...(f.problem ? [logRecord({ page: f.page, kind: null }, { outcome: 'failed', reason: f.problem })] : []),
+    ...(f.skipped
+      ? [logRecord({ page: f.page, kind: null }, { outcome: 'unrepaired', reason: f.skipped })]
+      : []),
     ...f.loggedOnly.map((fault) => logRecord(fault, { reason: loggedOnlyReason(fault.kind) }))
   ])
   return { faults: found.flatMap((f) => f.faults), records }

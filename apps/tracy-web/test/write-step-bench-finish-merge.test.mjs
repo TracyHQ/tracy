@@ -192,7 +192,8 @@ test('a fault reported by both the finder and the site check leads to one repair
   const run = await finish({
     finder: twice(finding()),
     fixer: [{ kind: 'fix-text', slot: 'block-2.1', text: 'Strength coaching for every level' }],
-    checker: [{ verdict: 'better', reason: 'reads as words' }],
+    // The page as served once repaired: a text repair is judged by code on it, no checker call.
+    served: { '/': '<h2>Strength coaching for every level</h2>' },
     // The default first check names the same raw markup on block-2.1, at both widths.
     failures: [
       failure('emphasis-codes-left', { page: null, slot: 'block-2.1', width: null }),

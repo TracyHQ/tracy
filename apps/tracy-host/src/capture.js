@@ -104,6 +104,29 @@ export function captureTarget(label, platform, port = null, host = null) {
   return `http://${webDnsName(label)}${suffix}/`
 }
 
+/** How many bands one width of a layout may name. */
+const MAX_BANDS = 40
+const pixels = (n) => Number.isFinite(n) && n >= 0
+
+/**
+ * The parts of a page a vision capture is asked to shoot, per width, in page pixels (`{ desktop: [{ y, height }] }`): only
+ * the tiles that reach one are shot (vision-capture.js). A band that is not one is dropped, and a layout left with none is
+ * shot whole, as before bands existed; asking for less must never refuse a capture that would have worked.
+ * @returns {Record<string, { y: number, height: number }[]> | null}
+ */
+export function layoutBands(sent) {
+  if (!sent || typeof sent !== 'object') return null
+  const bands = {}
+  for (const viewport of ['desktop', 'phone']) {
+    const list = Array.isArray(sent[viewport]) ? sent[viewport].slice(0, MAX_BANDS) : []
+    const kept = list
+      .filter((b) => pixels(b?.y) && pixels(b?.height) && b.height > 0)
+      .map((b) => ({ y: b.y, height: b.height }))
+    if (kept.length) bands[viewport] = kept
+  }
+  return Object.keys(bands).length ? bands : null
+}
+
 /**
  * Read the request into what a capture needs, or the first thing wrong with it — pure, so a bad
  * argument is a sentence before any browser work. Same grammar as `parseShoot` in the checkout
@@ -139,7 +162,13 @@ export function captureBody(body) {
     // rather than refuse a capture that would have worked.
     const address =
       typeof layout.address === 'string' && layout.address.startsWith('/') ? layout.address : undefined
-    layouts.push({ key: layout.key, path: layout.path, ...(address === undefined ? {} : { address }) })
+    const bands = layoutBands(layout.bands)
+    layouts.push({
+      key: layout.key,
+      path: layout.path,
+      ...(address === undefined ? {} : { address }),
+      ...(bands ? { bands } : {})
+    })
   }
   // A port is optional and checked rather than trusted: absent or unusable simply falls back to the
   // container name, which is the behaviour every caller had before this existed.

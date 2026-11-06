@@ -3,7 +3,8 @@
 // that caused it and the site check group that named it when the first check names one, the order, the before and after
 // crop files (and whether they are the block or the whole tile), the outcome and the reason. The log also says whether the
 // final site check gained any blocking failure the first check did not have, in the groups both checks measured, and names
-// the groups it could not compare. Developers read it to choose which repeated
+// the groups it could not compare. It keeps what the run took: its time and cost, the time of each stage (`timings`), its
+// limits, the rounds it ran, and what stopped it when a hard limit did (#424). Developers read it to choose which repeated
 // faults become code rules.
 
 export const REPAIR_LOG_VERSION = 'repair-log/1'
@@ -18,7 +19,9 @@ export const OUTCOMES = Object.freeze([
   'logged-only',
   // A site check failure the live site does not confirm, and one with nothing to write to (#423).
   'measurement-wrong',
-  'no-door'
+  'no-door',
+  // A fault left when a hard limit stopped the run (reason `budget`) or when no round was left (#424).
+  'unrepaired'
 ])
 
 /** One record of the log. */
@@ -116,8 +119,9 @@ export function repairLog({
   records,
   unshot,
   replies = [],
-  costUsd,
-  ms,
+  budget,
+  rounds = 1,
+  undoneByFinalCheck = 0,
   firstCheck,
   finalCheck,
   merge = null
@@ -137,8 +141,15 @@ export function repairLog({
     unshot,
     // The model calls' reply files (model-replies.js), each naming the image files it was shown.
     replies,
-    costUsd,
-    ms,
+    costUsd: budget.costUsd,
+    ms: budget.ms,
+    // The time each stage took, summed over its calls (pages run side by side), and the run's limits (run-limits.js).
+    timings: budget.timings,
+    limits: budget.limits,
+    overTarget: budget.overTarget,
+    stoppedBy: budget.stoppedBy,
+    rounds,
+    undoneByFinalCheck,
     finalCheck: finalCheck
       ? {
           status: finalCheck.status,

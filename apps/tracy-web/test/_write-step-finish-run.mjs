@@ -1,0 +1,122 @@
+// One `finish` of the step 9 bench on the invented written site of _write-step-finisher.mjs, with the knobs the finisher's
+// rounds, limits and batches need (#424): a fake clock each model call moves on, the cost each call reports, a page reader,
+// the finisher's limits, and a checker that approves (or refuses) every repair it is shown, whatever their numbers.
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
+import { runCli } from '../src/write-step-bench-cli.js'
+import { kitIndex, memoryStore } from './_write-step-bench.mjs'
+import {
+  BLOCKS,
+  benchSite,
+  fakeCapture,
+  heldAtStart,
+  PAGES,
+  scriptedDoor,
+  writtenRun,
+  writtenSite
+} from './_write-step-finisher.mjs'
+import { memoryRunStore } from './_write-step-run.mjs'
+
+/** A clock that only moves when a test says so. */
+export const fakeClock = () => {
+  const clock = { at: 0, now: () => clock.at }
+  return clock
+}
+
+/**
+ * A door whose every call moves the clock on by `ms` and reports `usd`, and waits a few turns of the event loop, so calls
+ * that run side by side overlap. `inFlight.max` is the most calls that were open at once.
+ */
+export function slowDoor(scripted, { clock = null, ms = 0, usd = null } = {}) {
+  const ask = scripted.door.ask
+  const inFlight = { now: 0, max: 0 }
+  scripted.door.ask = async (message) => {
+    inFlight.now += 1
+    inFlight.max = Math.max(inFlight.max, inFlight.now)
+    for (let i = 0; i < 5; i++) await new Promise((resolve) => setImmediate(resolve))
+    if (clock) clock.at += ms
+    const answer = await ask(message)
+    inFlight.now -= 1
+    return usd === null ? answer : { ...answer, costUsd: usd }
+  }
+  return { ...scripted, inFlight }
+}
+
+/** A checker door that gives `verdict` to every repair it is shown, read from the "Repair <n>." lines it was sent. */
+export function everyRepairChecker(verdict = 'better', reason = 'reads as words') {
+  const asked = []
+  return {
+    asked,
+    door: {
+      ok: true,
+      label: 'Finisher checker',
+      model: 'deepseek-flash',
+      providerId: 'deepseek',
+      images: true,
+      async ask(message) {
+        asked.push(message)
+        const numbers = message.content
+          .filter((c) => c.type === 'text')
+          .map((c) => /^Repair (\d+)\. /.exec(c.text)?.[1])
+          .filter(Boolean)
+          .map(Number)
+        return {
+          text: JSON.stringify({ verdicts: numbers.map((repair) => ({ repair, verdict, reason })) }),
+          costUsd: 0.01
+        }
+      }
+    }
+  }
+}
+
+const kits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS, pages: PAGES })
+const dirs = []
+
+/** Removes the kit index and the output folders; call it from `after`. */
+export function cleanUp() {
+  kits.done()
+  for (const dir of dirs) rmSync(dir, { recursive: true, force: true })
+}
+
+/**
+ * @param {{ finder: object, fixer: object, checker: object, served?: ((held: object) => (page: string) => string) | null,
+ *   limits?: object, clock?: object, sideEffect?: object | null, first?: object }} input `finder`, `fixer`, `checker` are
+ *   doors as scriptedDoor makes them; `served` renders a page from what the site holds now
+ */
+export async function finishOn({
+  finder,
+  fixer,
+  checker,
+  served = null,
+  limits = null,
+  clock = null,
+  sideEffect = null,
+  first = {}
+}) {
+  const site = writtenSite(heldAtStart(), { sideEffect })
+  const shots = fakeCapture({ held: site.held })
+  const out = []
+  const err = []
+  const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-run-'))
+  dirs.push(dir)
+  const runs = memoryRunStore([writtenRun(first)])
+  const code = await runCli(['finish', '--run', 'run-1', '--account', 'bench@example.test', '--out', dir], {
+    runs,
+    store: memoryStore([benchSite()]),
+    index: kits.index,
+    makeDoor: () => site.door,
+    makeCapture: async () => shots.capture,
+    makeFinisherDoors: async () => ({ finder: finder.door, fixer: fixer.door, checker: checker.door }),
+    ...(served ? { pageHtml: async ({ path: page }) => served(site.held)(page) } : {}),
+    ...(limits ? { finisherLimits: limits } : {}),
+    ...(clock ? { now: clock.now } : {}),
+    out: (l) => out.push(l),
+    err: (l) => err.push(l)
+  })
+  const logFile = path.join(dir, 'repair-log.json')
+  const log = existsSync(logFile) ? JSON.parse(readFileSync(logFile, 'utf8')) : null
+  return { code, out, err, site, shots, log, dir, runs }
+}
+
+export { scriptedDoor }

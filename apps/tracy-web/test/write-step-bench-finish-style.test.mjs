@@ -26,7 +26,8 @@ import {
   PAGES,
   scriptedDoor,
   writtenRun,
-  writtenSite
+  writtenSite,
+  judged
 } from './_write-step-finisher.mjs'
 import { memoryRunStore } from './_write-step-run.mjs'
 
@@ -53,7 +54,12 @@ function siteWithHead(head = HEAD) {
     const { action, params } = call
     if ((action === 'content.get' || action === 'content.update') && params.id !== HEAD_MODULE)
       return { ok: false, error: 'not_found', message: `no module ${params.id}` }
-    if (action === 'content.get') return { ok: true, item: { id: HEAD_MODULE, content: module.content } }
+    if (action === 'content.get') {
+      // A read takes a moment, as over the network: what it answers is the module as it was when asked.
+      const content = module.content
+      for (let i = 0; i < 5; i++) await new Promise((resolve) => setImmediate(resolve))
+      return { ok: true, item: { id: HEAD_MODULE, content } }
+    }
     if (action === 'content.update') {
       if (!params.apply_id) return { ok: false, error: 'bad_params', message: 'apply_id required' }
       updates.push({ applyId: params.apply_id, content: params.fields.content })
@@ -105,7 +111,7 @@ test('text over a picture is repaired with an allowed style in the head block an
   const run = await finish({
     finder: [unreadable(), finding()],
     fixer: [styleOrder()],
-    checker: [{ verdict: 'better', reason: 'the heading reads on the photo' }]
+    checker: [judged('better', 'the heading reads on the photo')]
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   // The rule is written to the head module only: no slot's words change.
@@ -124,6 +130,20 @@ test('text over a picture is repaired with an allowed style in the head block an
   assert.equal(record.slot, 'block-2.1')
   assert.equal(record.applyId, run.site.updates[0].applyId)
   assert.equal(record.crops.by, 'block')
+})
+
+test('style repairs of two pages run side by side yet write the one head module in turn: no rule is lost', async () => {
+  const both = { verdicts: [1, 2].map((repair) => ({ repair, verdict: 'better', reason: 'reads' })) }
+  const run = await finish({
+    finder: [unreadable(), unreadable({ page: '/about', slot: 'block-4.1' })],
+    fixer: [styleOrder(), styleOrder({ block: 'block-4' })],
+    checker: [both, both]
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  assert.equal(run.site.updates.length, 2)
+  const rules = finisherRulesIn(run.site.module.content)
+  assert.ok(rules.get('block-2') && rules.get('block-4'), 'both rules are in the module')
+  assert.equal(run.log.counts.kept, 2)
 })
 
 test('every banned declaration is refused by code, nothing is written, and the refusal is logged', async () => {
@@ -168,7 +188,7 @@ test('undoing a style repair puts back only that block’s rule as it was, and a
   const run = await finish({
     finder: [unreadable(), finding()],
     fixer: [styleOrder()],
-    checker: [{ verdict: 'not better', reason: 'the shadow blurs the letters' }],
+    checker: [judged('not better', 'the shadow blurs the letters')],
     head
   })
   assert.equal(run.code, 0, run.err.join('\n'))
@@ -187,7 +207,7 @@ test('a later content edit of the block leaves its style rule in place', async (
   const run = await finish({
     finder: [unreadable(), finding()],
     fixer: [styleOrder()],
-    checker: [{ verdict: 'better', reason: 'the heading reads on the photo' }]
+    checker: [judged('better', 'the heading reads on the photo')]
   })
   const kept = run.site.module.content
   const inspect = await run.site.door.apply({
@@ -294,7 +314,7 @@ test('a readable colour pair, sane spacing and a gradient backing layer are stil
         }
       })
     ],
-    checker: [{ verdict: 'better', reason: 'reads' }]
+    checker: [judged('better', 'reads')]
   })
   assert.equal(run.log.records[0].outcome, 'kept', run.log.records[0].reason)
   assert.equal(run.site.updates.length, 1)

@@ -12,7 +12,7 @@ import { checkLines } from './site-check/check-lines.js'
 import { withReadBack } from './site-check/read-back.js'
 import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runFinisher } from './write-step/finisher/finisher.js'
-import { firstCheckNow, finisherSources, mergeLine } from './write-step-bench-finish-sources.js'
+import { firstCheckNow, finisherSources, mergeLine, spendLines } from './write-step-bench-finish-sources.js'
 import { siteCheckOfRun } from './write-step-bench-site-check.js'
 
 export const FINISH_USAGE = `  finish --run <runId> --account <email> --out <dir> [--check-file <path> | --check-now [--all-groups]] [--site-pictures-file <path>]
@@ -124,6 +124,7 @@ export async function finishRun(d, values) {
     saveFile,
     contentMap,
     facts: files,
+    ...(d.finisherLimits ? { limits: d.finisherLimits } : {}),
     ...(d.now ? { now: d.now } : {})
   })
   if (!finished.ok) return refused(d, `${finished.code}: ${finished.reason}`)
@@ -132,16 +133,16 @@ export async function finishRun(d, values) {
   // The build's site check is the final one, kept on the run with the repaired words as ordered.
   await d.runs.saveReport(r.id, withReadBack(finished.report, finished.finalCheck))
   await saveFile('site-check.json', `${JSON.stringify(finished.finalCheck, null, 2)}\n`)
-  const { counts, records, costUsd, ms } = finished.log
+  const { counts, records } = finished.log
   d.out(
-    `finisher: ${counts.found} found, ${counts.kept} kept, ${counts.undone} undone, ${counts.dropped} dropped, ${counts.failed} failed, ${counts['logged-only']} logged only`
+    `finisher: ${counts.found} found, ${counts.kept} kept, ${counts.undone} undone, ${counts.dropped} dropped, ${counts.failed} failed, ${counts['logged-only']} logged only, ${counts.unrepaired} unrepaired`
   )
   for (const record of records)
     d.out(
       `  ${record.outcome} page=${record.page ?? '-'} slot=${record.slot ?? '-'} kind=${record.faultKind ?? '-'}${record.reason ? `: ${record.reason}` : ''}${record.crops.by ? ` (crops: ${record.crops.by})` : ''}`
     )
   if (finished.log.merge) d.out(mergeLine(finished.log.merge))
-  d.out(`repair log: repair-log.json, ${(ms / 1000).toFixed(1)} s, ${costUsd.toFixed(4)} USD`)
+  for (const line of spendLines(finished.log)) d.out(line)
   for (const line of checkLines(finished.finalCheck)) d.out(line)
   d.out(
     `final site-check options: ${allGroups ? 'all groups (as the first check)' : 'stops at a red group (as the first check)'}, ${pictures ? 'with' : 'without'} site pictures`

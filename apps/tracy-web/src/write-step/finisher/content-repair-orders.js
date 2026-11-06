@@ -97,6 +97,7 @@ async function validatePageMeta(order, context) {
     key: null,
     current: held.current ?? '',
     after: wanted,
+    place: `row:${read.kind}:${read.id}`,
     write: rowFieldWrite(read, held.fieldWith(wanted))
   }
 }

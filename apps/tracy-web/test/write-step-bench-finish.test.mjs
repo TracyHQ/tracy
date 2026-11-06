@@ -22,7 +22,8 @@ import {
   RAW,
   scriptedDoor,
   writtenRun,
-  writtenSite
+  writtenSite,
+  judged
 } from './_write-step-finisher.mjs'
 import { memoryRunStore } from './_write-step-run.mjs'
 
@@ -86,7 +87,7 @@ test('a raw markup fault is repaired through the write door and kept when the ch
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [{ verdict: 'better', reason: 'the heading reads as words' }]
+    checker: [judged('better', 'the heading reads as words')]
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   assert.equal(run.site.held['module-2.1'], CLEAN)
@@ -118,7 +119,7 @@ test('a repair the checker finds not better is reverted by its apply id and logg
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [{ verdict: 'not better', reason: 'the heading lost its accent' }]
+    checker: [judged('not better', 'the heading lost its accent')]
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   assert.equal(run.site.writes.length, 1)
@@ -172,7 +173,7 @@ test('the checker compares crops of the repaired block at every width, cut from 
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [{ verdict: 'better', reason: 'the heading reads as words' }]
+    checker: [judged('better', 'the heading reads as words')]
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   const [record] = run.log.records
@@ -191,7 +192,7 @@ test('with no block box from the host, the crops fall back to the tile and the l
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [{ verdict: 'better', reason: 'the heading reads as words' }],
+    checker: [judged('better', 'the heading reads as words')],
     boxes: false
   })
   assert.equal(run.code, 0, run.err.join('\n'))
@@ -223,7 +224,7 @@ test('with no slot from the finder, an order may only pick a slot of that page w
   const kept = await finish({
     finder: [unnamed, finding('raw-markup', { slot: null })],
     fixer: [fixOrder({ slot: 'block-3.2', text: 'Showers and lockers' })],
-    checker: [{ verdict: 'better', reason: 'reads as words' }]
+    checker: [judged('better', 'reads as words')]
   })
   assert.equal(kept.code, 0, kept.err.join('\n'))
   assert.equal(kept.site.held['module-3.2'], 'Showers and lockers')
@@ -254,20 +255,22 @@ test('an order whose new text is the text the slot holds now is dropped as a no-
       { faults: [] }
     ],
     fixer: [fixOrder({ slot: 'block-3.1', text: HOURS }), fixOrder()],
-    checker: [{ verdict: 'better', reason: 'reads as words' }]
+    // The no-op is repair 1, the real repair is repair 2.
+    checker: [judged('better', 'reads as words', 2)]
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   assert.equal(run.site.writes.length, 1, 'only the real repair is written')
   const noOp = run.log.records.find((r) => r.slot === 'block-3.1')
   assert.equal(noOp.outcome, 'dropped')
   assert.match(noOp.reason, /no-op/)
+  assert.equal(run.log.records.find((r) => r.slot === 'block-2.1').outcome, 'kept')
 })
 
 test('the bench says when the final site check gained a blocking failure the first check did not have', async () => {
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [{ verdict: 'better', reason: 'the heading reads as words' }],
+    checker: [judged('better', 'the heading reads as words')],
     sideEffect: { key: 'module-3.1', value: 'Closed' },
     first: { groups: [{ name: 'read-back', status: 'green', checked: 4, failures: [] }] }
   })
@@ -285,7 +288,7 @@ test('the step and the check a first site check failure names as the cause go in
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [{ verdict: 'better', reason: 'reads as words' }],
+    checker: [judged('better', 'reads as words')],
     failures: [
       { group: 'read-back', page: '/about', slot: 'block-2.1', width: null, level: 'block', causingStep: 9 },
       { group: 'accent-emphasis', page: '/', slot: 'block-2.1', width: 1440, level: 'block', causingStep: 6 }
@@ -305,7 +308,7 @@ test('the pages shot are the pages the written site keeps, at their addresses no
       finding('raw-markup', { page: '/about', slot: null, seen: 'a line prints ((span))' })
     ],
     fixer: [fixOrder({ slot: 'block-4.1', text: 'Our story began in a garage' })],
-    checker: [{ verdict: 'better', reason: 'reads as words' }]
+    checker: [judged('better', 'reads as words')]
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   assert.deepEqual(run.shots.calls[0], ['/', '/about'])
@@ -349,7 +352,7 @@ test('a blocking failure is new only in a group both checks ran; the groups not 
   const run = await finish({
     finder: [finding(), finding()],
     fixer: [fixOrder()],
-    checker: [{ verdict: 'better', reason: 'the heading reads as words' }],
+    checker: [judged('better', 'the heading reads as words')],
     sideEffect: { key: 'module-3.1', value: 'Closed' },
     // The first check never ran read-back, so a read-back failure now cannot be told to be new.
     first: { groups: [{ name: 'read-back', status: 'not-run', checked: 0, failures: [] }] }
@@ -368,7 +371,7 @@ test('every model call leaves its raw reply and the image files it was shown nex
   const run = await finish({
     finder: [finding(), { faults: [] }],
     fixer: [fixOrder()],
-    checker: [{ verdict: 'better', reason: 'the heading reads as words' }]
+    checker: [judged('better', 'the heading reads as words')]
   })
   assert.equal(run.code, 0, run.err.join('\n'))
   const files = readdirSync(path.join(run.dir, 'replies')).sort()
