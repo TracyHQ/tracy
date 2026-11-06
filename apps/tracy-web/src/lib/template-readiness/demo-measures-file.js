@@ -22,6 +22,9 @@ import { DEMO_MEASURES_VERSION } from '../../site-check/demo-measures.js'
 
 export const DEMO_MEASURES_FILE = 'demo-measures.json'
 
+/** The widths a demo is measured at: the site check's own (desktop and phone). */
+const REQUIRED_WIDTHS = [1440, 390]
+
 /**
  * @typedef {{ state: 'no-contract' } | { state: 'none', contract: string } | { state: 'invalid', contract: string, reason: string }
  *   | { state: 'read', contract: string, doc: any }} DemoMeasures
@@ -33,6 +36,8 @@ export function demoMeasuresProblem(doc) {
   if (doc.schemaVersion !== DEMO_MEASURES_VERSION)
     return `schemaVersion is ${JSON.stringify(doc.schemaVersion)}, not ${DEMO_MEASURES_VERSION}`
   if (typeof doc.quickstart?.version !== 'string') return 'it names no quickstart version'
+  if (!Array.isArray(doc.widths) || !REQUIRED_WIDTHS.every((w) => doc.widths.includes(w)))
+    return `it was not measured at ${REQUIRED_WIDTHS.join(' and ')}`
   if (!Array.isArray(doc.groups) || doc.groups.length === 0) return 'it holds no measured group'
   for (const g of doc.groups) {
     if (typeof g?.name !== 'string' || typeof g?.status !== 'string') return 'a group has no name or status'

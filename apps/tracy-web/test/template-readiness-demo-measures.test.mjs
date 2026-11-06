@@ -11,7 +11,6 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:f
 import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
-import { fileURLToPath } from 'node:url'
 
 import { defaultContracts } from '../src/lib/contracts.js'
 import {
@@ -24,9 +23,6 @@ import { readinessVerdict } from '../src/lib/template-readiness/verdict.js'
 import { DEMO_MEASURE_GROUPS, measureDemo } from '../src/site-check/demo-measures.js'
 import { main } from '../scripts/demo-measures.mjs'
 
-const CONTRACTS = fileURLToPath(
-  new URL('../../../packages/cms/tracy-joomla-quickstart/contracts/', import.meta.url)
-)
 const TAG = 'quickstart/ja-example/j6'
 
 const release = (over = {}) => ({
@@ -206,6 +202,8 @@ test('a file that cannot be read, measured on another version, or with a group u
   assert.equal(judge({ schemaVersion: 'tracy-demo-measures/v0' }).code, 'demo-measure-invalid')
   const { host } = fakeHost()
   const doc = await measureDemo({ host, pages: PAGES, quickstart: QUICKSTART })
+  // Measured at one width only: the site check reads both, so the file does not stand for the demo.
+  assert.equal(judge({ ...doc, widths: [1440] }).code, 'demo-measure-invalid')
   const older = judge({ ...doc, quickstart: { slug: 'ja-example', version: '0.9.0' } })
   assert.deepEqual([older.state, older.code], ['todo', 'demo-measure-stale'])
   // A host from before the page measures: the groups that need them could not tell, which is never green.

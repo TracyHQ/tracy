@@ -24,11 +24,11 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
 
+import { DEMO_MEASURES_COMMAND } from '../src/lib/template-readiness/demo-measures-check.js'
 import { DEMO_MEASURES_FILE } from '../src/lib/template-readiness/demo-measures-file.js'
 import { measureDemo } from '../src/site-check/demo-measures.js'
 
-const USAGE =
-  'usage: node apps/tracy-web/scripts/demo-measures.mjs --contract <contract folder> (--base <demo address> | --site <site key>) [--pages-file <json>]\n'
+const USAGE = `usage: ${DEMO_MEASURES_COMMAND}\n`
 
 /** A host reader run on this machine: tracy-host's own browser code, opened at `base`. */
 async function localHost(base) {
@@ -135,16 +135,22 @@ export async function main(
     return 2
   }
   const quickstart = {
-    slug: kit.quickstart?.product ?? kit.quickstart?.slug,
+    slug: kit.quickstart?.product,
     version: kit.quickstart?.version
   }
   if (typeof quickstart.slug !== 'string' || typeof quickstart.version !== 'string') {
     err('The template kit names no quickstart slug and version.\n')
     return 2
   }
-  const pages = values['pages-file']
-    ? JSON.parse(readFileSync(values['pages-file'], 'utf8'))
-    : (kit.pages ?? []).map((p) => p.path).filter((p) => typeof p === 'string')
+  let pages
+  try {
+    pages = values['pages-file']
+      ? JSON.parse(readFileSync(values['pages-file'], 'utf8'))
+      : (kit.pages ?? []).map((p) => p.path).filter((p) => typeof p === 'string')
+  } catch {
+    err(`${values['pages-file']} is not a readable JSON array of paths.\n`)
+    return 2
+  }
   if (!Array.isArray(pages) || pages.length === 0) {
     err('No page to measure.\n')
     return 2

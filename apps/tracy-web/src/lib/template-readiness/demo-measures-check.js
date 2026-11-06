@@ -20,19 +20,31 @@
  * contract seals the release (the contract piece says when none does).
  */
 import { shownOnInspiration } from '../quickstart-releases.js'
+import { DEMO_MEASURE_NAMES } from '../../site-check/demo-measures.js'
 import { demoMeasuresOfRelease } from './demo-measures-file.js'
 
 export const DEMO_MEASURES_STEP = 'demo-measures'
 
 export const DEMO_MEASURES_COMMAND =
-  'node apps/tracy-web/scripts/demo-measures.mjs --contract <contract folder> (--base <demo address> | --site <site key>)'
+  'node apps/tracy-web/scripts/demo-measures.mjs --contract <contract folder> (--base <demo address> | --site <site key>) [--pages-file <json>]'
 
-/** The fault family of each measured group, in the order they decide. */
-export const FAULT_FAMILIES = Object.freeze({
+/** The fault family code of each measured group (`DEMO_MEASURE_NAMES`, whose order decides). */
+const FAMILY_OF = Object.freeze({
   'main-heading': 'demo-main-heading',
   'empty-frames': 'demo-empty-block',
   'text-overflow': 'demo-overflow'
 })
+export const FAULT_FAMILIES = Object.freeze(
+  Object.fromEntries(
+    DEMO_MEASURE_NAMES.map((name) => {
+      if (!FAMILY_OF[name]) throw new Error(`The demo measure ${name} has no fault family code`)
+      return [name, FAMILY_OF[name]]
+    })
+  )
+)
+
+/** A group status that measured: green, red, or nothing of its kind to measure (the site check's own passing status). */
+const MEASURED = new Set(['green', 'red', 'not-applicable'])
 
 /** How many faults the piece names itself; the file lists them all. */
 const SHOWN_FAULTS = 8
@@ -46,6 +58,7 @@ export function judgeDemoMeasures(release, world) {
   if (platform !== 'joomla') return null
   const read = world?.demoMeasures ?? demoMeasuresOfRelease(release, world?.contracts ?? new Map())
   if (read.state === 'no-contract') return null
+  // What a failing answer is: a hold on a new release, only a warning on one already shown on Design inspiration.
   const failing = shownOnInspiration(release) ? 'warn' : 'todo'
   const contract = read.contract
   const command = DEMO_MEASURES_COMMAND
@@ -59,25 +72,23 @@ export function judgeDemoMeasures(release, world) {
     }
   const doc = read.doc
   const version = release?.setting?.version ?? null
-  if (version !== null && doc.quickstart.version !== version)
+  if (doc.quickstart.version !== version)
     return {
       state: failing,
       code: 'demo-measure-stale',
       params: { contract, measured: doc.quickstart.version, version, command }
     }
   const groups = doc.groups.filter((g) => g.name in FAULT_FAMILIES)
-  const missing = Object.keys(FAULT_FAMILIES).filter((name) => !groups.some((g) => g.name === name))
-  const blind = groups.filter(
-    (g) => g.status !== 'green' && g.status !== 'red' && g.status !== 'not-applicable'
-  )
-  if (missing.length || blind.length)
+  const missing = DEMO_MEASURE_NAMES.filter((name) => !groups.some((g) => g.name === name))
+  const couldNotTell = groups.filter((g) => !MEASURED.has(g.status))
+  if (missing.length || couldNotTell.length)
     return {
       state: failing,
       code: 'demo-measure-incomplete',
       params: {
         contract,
-        groups: [...missing, ...blind.map((g) => g.name)],
-        reasons: blind.map((g) => `${g.name}: ${g.reason ?? g.status}`),
+        groups: [...missing, ...couldNotTell.map((g) => g.name)],
+        reasons: couldNotTell.map((g) => `${g.name}: ${g.reason ?? g.status}`),
         command
       }
     }
