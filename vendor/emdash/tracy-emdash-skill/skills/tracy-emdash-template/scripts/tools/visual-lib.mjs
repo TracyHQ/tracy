@@ -8,6 +8,7 @@
 // Theme handling follows `template.config.json → qa.theme` (selector + attribute + values, and the
 // storageKey the page reads before first paint). `values[theme] === null` means "attribute absent".
 import { readFileSync, existsSync } from 'node:fs'
+import { joinInside } from './safe-path.mjs'
 import { browserIdentity, launchBrowser } from './qa-browser.mjs'
 export { browserIdentity, launchBrowser }
 
@@ -1204,7 +1205,12 @@ export function pageHash(contract, spec, { root = process.cwd(), toolsDir } = {}
         .map((it) => [it.file, it.targets.filter((t) => cols.includes(t.collection))])
       add('media targets', sha(JSON.stringify(mine)))
       for (const [f] of mine) {
-        const p = path.join(root, 'seed', 'media', f)
+        let p
+        try {
+          p = joinInside(path.join(root, 'seed', 'media'), f, { within: path.join(root, 'seed') })
+        } catch {
+          continue // a name outside the media folder is never read
+        }
         if (existsSync(p)) add(`media ${f}`, sha(readFileSync(p)))
       }
     }

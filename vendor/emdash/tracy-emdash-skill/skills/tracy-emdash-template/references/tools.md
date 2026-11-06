@@ -51,7 +51,8 @@ printed line is percent-encoded when it holds a control character, `%` or (in `g
 | `render-source.mjs <url> <out> --pages a,b [--block host,host]` | render the source at 1440/390 × light/dark, measure overflow/fonts/errors; `--block` aborts requests to hosts that never settle offline (booking iframes, analytics); a page that fails is listed under `failed` in `render-manifest.json` and the run goes on (exit 1) | P1 |
 | `validate-seed.mjs seed/seed.json` | EmDash's own `validateSeed` | P2 |
 | `contract/validate.mjs <site-model.json>` | **source contract gate** ([`references/site-model.md`](site-model.md), ADR 0016): named error codes, one negative fixture per rule; also scans the storage vocabulary of the three CMSes in `scripts/contract/` | P1/P2 |
-| `compile-seed.mjs <site-model.json> <seed-dir> [--config] [--media-from <dir>]` | contract → `seed.json` + `field-map.json` + `media-map.json` (`files` for the model, `items` in the shape `seed-apply.mjs` reads; `--media-from` copies the files into `<seed-dir>/media/`); datetimes written as UTC ISO; warns on HTML in a `text` prose field and on a configured collection without a label; rebuilds translation relations, rejects unmapped field kinds instead of guessing | P2 |
+| `compile-seed.mjs <site-model.json> <seed-dir> [--config] [--media-from <dir>]` | contract → `seed.json` + `field-map.json` + `media-map.json` (`files` for the model, `items` in the shape `seed-apply.mjs` reads; `--media-from` copies the files into `<seed-dir>/media/`; a file name with `..`, an absolute path or a backslash is refused); datetimes written as UTC ISO; warns on HTML in a `text` prose field and on a configured collection without a label; rebuilds translation relations, rejects unmapped field kinds instead of guessing | P2 |
+| `safe-path.mjs` | library: `joinInside(root, name)` / `unsafeReason(name)` refuse a model-, seed- or media-map-supplied file name that is absolute, has `..` or a backslash; used by `compile-seed`, `seed-apply` (media upload) and `visual-lib` (media hash) | P2 |
 | `carry-field-map-roles.mjs` | library, not a command: `compile-seed.mjs` (and a template's own `build-seed.mjs`) keep each field's slot role (`role`, `group`, `subRoles`) when they regenerate `seed/field-map.json` (ADR 0038); a field map without roles comes out unchanged | P2 |
 | `from-emdash-seed.mjs <seed.json> <out>` | **one-time bootstrap**: the seed of a template built before the contract → `site-model.json` + `compile.config.json` | P2 |
 | `from-wp-spec.mjs <spec-dir> <out-dir>` | **bridge** ([`references/inputs/from-wp-spec.md`](inputs/from-wp-spec.md)): an existing Joomla spec-pack from the WordPress kit → `site-model.json`, stripping WordPress-isation traces; not the long-term Joomla adapter road | P1/P2 |
@@ -94,7 +95,7 @@ printed line is percent-encoded when it holds a control character, `%` or (in `g
 | `content-api/` (directory) | the Content API reader every template builds in (`/content.json`, `TRACY_CONTENT_API_SCALARS`); its own `README.md` is the spec; [`content-api.md`](content-api.md) | P2/P8 |
 | `docker-entrypoint.sh` | the image entrypoint: creates `data/` + `uploads/`, hands only those to `www-data`, drops root via `gosu` | P8 |
 
-There are 45 entries in `scripts/tools/` (files and the `content-api/` directory); each has a row above
+There are 46 entries in `scripts/tools/` (files and the `content-api/` directory); each has a row above
 (`scripts/check-docs-numbers.mjs` fails when one is missing or the count is wrong).
 
 `new-template.sh` also copies `assets/package-docs/` into the new package, keeping guide files that already exist.
