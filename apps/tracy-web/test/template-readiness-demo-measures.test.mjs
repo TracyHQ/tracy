@@ -241,29 +241,16 @@ const boxingNow = () => {
   return { contracts, boxing, judged: DEMO_MEASURES_CHECK.judge(boxing, { contracts }, {}) }
 }
 
-// The reference does NOT pass today, and the check must not be bent to make it: measured on the untouched dev demo of
-// JA Boxing 1.0.11 (template 1.1.0), the host's empty frame measure (`no-empty-picture-slots`) calls the icon boxes
-// empty (`div.img-icon`, `div.intro-image`): the template draws each icon over an <img> it keeps at opacity 0, which the
-// measure does not count as a picture. The same measure says the same on every built JA Boxing site.
-test('the reference: the latest JA Boxing release is done on its committed demo measurements', {
-  todo: 'JA Boxing 1.0.11 demo: the empty frame measure counts no icon drawn over a transparent img'
-}, () => {
+// The reference: measured on the untouched dev demo of JA Boxing 1.0.11 (template 1.1.0). Its feature and class icons
+// are painted by masked pseudo elements over an <img> kept at opacity 0; the host counts such a painted icon as the
+// frame's picture, so the icon boxes (`div.img-icon`, `div.intro-image`) are no empty frames.
+test('the reference: the latest JA Boxing release is done on its committed demo measurements', () => {
   const { contracts, boxing, judged } = boxingNow()
   assert.deepEqual([judged.state, judged.code], ['done', 'demo-measures-clean'])
-  const verdict = readinessVerdict(boxing, { contracts, server: false, checks: [DEMO_MEASURES_CHECK] })
-  const kit = verdict.pieces.find((p) => p.piece === 'template-kit')
-  assert.deepEqual([kit.state, kit.code], ['done', 'demo-measures-clean'])
-})
-
-test('JA Boxing 1.0.11 as measured today: its committed file is read, of this version, and names the icon frames', () => {
-  const { contracts, boxing, judged } = boxingNow()
-  assert.deepEqual([judged.state, judged.code], ['todo', 'demo-empty-block'])
   assert.equal(judged.params.contract, 'ja-boxing/j6/1.0.11')
-  assert.deepEqual(judged.params.families, ['demo-empty-block'])
-  // The check joins the Template kit piece after the kit's own step, which is done on JA Boxing.
   const verdict = readinessVerdict(boxing, { contracts, server: false, checks: [DEMO_MEASURES_CHECK] })
   const kit = verdict.pieces.find((p) => p.piece === 'template-kit')
-  assert.deepEqual([kit.step, kit.state, kit.code], ['demo-measures', 'todo', 'demo-empty-block'])
+  assert.deepEqual([kit.step, kit.state, kit.code], ['demo-measures', 'done', 'demo-measures-clean'])
 })
 
 test('in the verdict: a copy of JA Boxing whose demo overflows at 390 holds the Template kit piece with demo-overflow', () => {

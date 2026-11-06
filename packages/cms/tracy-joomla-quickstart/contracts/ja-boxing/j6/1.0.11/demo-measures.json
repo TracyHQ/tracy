@@ -60,7 +60,7 @@
     "/pages/j-content/category-blog/boxings-undisputed-champs",
     "/pages/j-content/category-blog/the-evolution-of-boxing"
   ],
-  "status": "red",
+  "status": "green",
   "groups": [
     {
       "name": "main-heading",
@@ -103,106 +103,9 @@
     },
     {
       "name": "empty-frames",
-      "status": "red",
+      "status": "green",
       "checked": 50,
-      "failures": [
-        {
-          "group": "empty-frames",
-          "page": "/",
-          "width": null,
-          "measured": "div.item-inner > div.img-icon",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/",
-          "width": null,
-          "measured": "div.item-inner > div.img-icon",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/",
-          "width": null,
-          "measured": "div.item-inner > div.img-icon",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/",
-          "width": null,
-          "measured": "div.item-inner > div.img-icon",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/index.php/about-us",
-          "width": null,
-          "measured": "div.item-inner > div.img-icon",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/index.php/about-us",
-          "width": null,
-          "measured": "div.item-inner > div.img-icon",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/index.php/about-us",
-          "width": null,
-          "measured": "div.item-inner > div.img-icon",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/index.php/about-us",
-          "width": null,
-          "measured": "div.item-inner > div.img-icon",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/index.php/classes/advanced-boxing",
-          "width": null,
-          "measured": "div.item-inner > div.intro-image",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/index.php/classes/advanced-boxing",
-          "width": null,
-          "measured": "div.item-inner > div.intro-image",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/index.php/classes/advanced-boxing",
-          "width": null,
-          "measured": "div.item-inner > div.intro-image",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        },
-        {
-          "group": "empty-frames",
-          "page": "/index.php/classes/advanced-boxing",
-          "width": null,
-          "measured": "div.item-inner > div.intro-image",
-          "level": "block",
-          "reason": "no-empty-picture-slots: every picture frame a visitor sees shows a picture"
-        }
-      ]
+      "failures": []
     },
     {
       "name": "text-overflow",
