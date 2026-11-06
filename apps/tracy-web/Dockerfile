@@ -172,6 +172,12 @@ COPY packages/cms/tracy-seeder/src ./src/seeder
 # The package's own bytes, not a mirror: the image installs from this app's lockfile alone, so a
 # workspace dependency would have nothing to resolve to.
 COPY packages/cms/tracy-content-api/package.json packages/cms/tracy-content-api/validate.mjs packages/cms/tracy-content-api/schema.json packages/cms/tracy-content-api/describe-map.mjs ./src/content-api/
+# The preview comment popover's turn builder, for the write step's repair pass (step 9b, `lib/comment-turn.js` reads
+# `./src/comment-turn/` here and the package in a checkout), with the two `@tracy/core` modules it imports by name.
+COPY packages/ui/tracy-chat-input/src/client/comment-turn.mjs ./src/comment-turn/comment-turn.mjs
+COPY packages/core/tracy-core/package.json ./node_modules/@tracy/core/package.json
+COPY packages/core/tracy-core/src/language ./node_modules/@tracy/core/src/language
+COPY packages/core/tracy-core/src/mention ./node_modules/@tracy/core/src/mention
 # The operator's User Interface switches (`lib/ui-setting.js`): the ONE catalogue the customer-page
 # plugins read through `@tracy/core/ui-switches`. Same arrangement as the Content API above — the
 # package's own bytes here, the package in place in a checkout, no mirror.

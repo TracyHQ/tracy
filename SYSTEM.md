@@ -2353,6 +2353,18 @@ row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tr
 `apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
 (`site-copy/`, `brand-accent/`, `picture-paint/`).
 
+**Step 9 whole and step 9b** (#448, ADR 0044 decision 30). `apps/tracy-web/src/write-step-nine.js` (`runStepNine`) is the
+one entry point of step 9: the write, the first site check with the finder beside it (`write-step/finder/`: kept pages shot
+by the site's host at 1440 and 390 px, one call per page through the `finisherFinder` door, migration 203), then step 9b
+(`write-step/repair-pass/`): each page's customer-visible faults become one numbered comment turn, built by the preview
+popover's own builder (`lib/comment-turn.js`, `@tracy/dsh-chat-input` `buildCommentTurn`, copied into the image), after the
+comment requests are made through `POST /api/sites/:key/requests`. The turn is queued into a session 9b opens for the site
+as its owner (`lib/site-session-ahead.js`, the path demo QA uses), and completion is read from `site_turn`. After the site
+check runs again, a turn that made a page worse is undone whole through `POST /api/sites/:key/turns/undo`, newest first.
+Repairs are Tracy turns of that session, so Site changes shows each with Undo. Any 9b error takes its turns back and hands
+over the written site. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
+`write-step-bench-repair-agent.js`); no customer flow calls it yet (#444).
+
 ## 9. Sign-in, seats, permissions
 
 ### Credentials for external programs: seat key, MCP OAuth, account token (24/10/2026)

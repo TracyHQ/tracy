@@ -48,6 +48,7 @@ test('the WO doors are unchanged by the new door', () => {
       'pictureIconRanker',
       'pictureLooker',
       'pictureDrawer',
+      'finisherFinder',
       'brandAgent',
       'brandReviewer'
     ]

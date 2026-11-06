@@ -278,6 +278,18 @@ export const LLM_DOORS = [
     drawsPictures: true
   },
   {
+    id: 'finisherFinder',
+    label: 'Finisher finder',
+    where: 'this process',
+    blurb:
+      'Write step bench: step 9b. One call per kept page looks at its screenshots at desktop and phone width beside the template demo and lists the faults a customer would see, from a fixed list; step 9b asks the site agent to fix them. It never writes to the site. Without it step 9b sends only the site check faults.',
+    needsModel: true,
+    // Vision is REQUIRED: the finder looks at page screenshots (write-step/finder/finder-door.js). No tools; its effort is
+    // fixed in code at max (#448).
+    requires: ['vision'],
+    prefers: ['json']
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',

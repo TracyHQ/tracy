@@ -523,6 +523,39 @@ exception applies, with the same shape:
   button to its own page inside a container the kit names, and decides the owner as before otherwise (step 0 when no slot
   holds it).
 
+### 30. Step 9b repairs customer-visible faults through Tracy's site agent, not a purpose-built repair bot
+
+Owner's decision, 2026-11-06 (#448). After the write and the first site check, a written site still carries small faults
+no earlier step foresaw: a demo alt text, grey words over a picture, a demo phone link, a heading that breaks at phone
+width. A purpose-built finisher was tried (PR #426, closed unmerged): it wrote typed repair orders through its own write
+path and judged them with its own model, and on trial sites it broke more than it fixed (emphasis notation printed raw,
+undos in an order the site refused, CSS aimed at the wrong block). Tracy's site agent, which customers use every day through
+the preview's comment popover, fixed three such faults on the dev environment in 63 to 87 seconds each, recorded in Site
+changes with Undo. So:
+
+- Step 9 is one entry point (`write-step-nine.js` `runStepNine`): write, first site check with the finder beside it,
+  step 9b, the site check again, hand-over. Callers never run the parts on their own.
+- Fault sources are the site check (customer-visible groups only) and the finder, carried over from the finisher with its
+  fixer and checker dropped (door `finisherFinder`, migration 203). A fault both name is sent once.
+- Never sent, by one table (`write-step/repair-pass/repair-kinds.js`): missing accent emphasis and emphasis codes (the
+  write step's gap, fixed at its source, PR #446; the agent cannot write accent emphasis), glued words (#446), a missing
+  h1, an empty frame or a demo picture (the picture step's), a CMS error, a fault with no page, and any fault no visitor
+  or search engine sees.
+- Each fault is one comment item (the page, the slot or block as the locate levels, the words now, one sentence of what
+  should change). A page's items go in one numbered comment turn, built by the popover's own builder after the comment
+  requests are made through the same requests door, so the agent's writes cite each number.
+- The turn is queued into a session 9b opens for the site as its owner, through the site session prompt path demo QA uses,
+  and its end is read from the site turn records. A prompt with no turn after 60 seconds is resent once, then dropped and
+  logged.
+- A turn is undone whole, newest first, when the site check after it shows a new blocking failure on a page it changed.
+  Faults still failing get one resend round, judged the same way; then the pass ends. No new work after 10 minutes; the
+  pass returns by 12 (`repair-limits.js`).
+- Any error in 9b takes back the turns it made and hands over the written site with the first site check, logged, with no
+  customer notice. The result (faults sent and skipped, turns, changes, undos, time, cost) is `repair-pass.json` beside
+  the build's other step outputs.
+- Repairs are Tracy turns of the setup session, shown in Site changes with Undo like any other change. This replaces the
+  finisher's decision that setup repairs stay out of the Changes tab.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

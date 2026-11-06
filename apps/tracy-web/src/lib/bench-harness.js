@@ -129,6 +129,17 @@ export const MODEL_HARNESS = Object.freeze([
   }
 ])
 
+/**
+ * The reasoning efforts each profile's model takes, as its provider documents them (DeepSeek's thinking mode guide and
+ * OpenRouter's endpoint list, read 03/11/2026): low, high and max, never medium. A profile not listed here is not known,
+ * and a caller that must check an effort says so.
+ */
+export const MODEL_EFFORTS = Object.freeze({
+  'deepseek-flash-native': Object.freeze(['low', 'high', 'max']),
+  'deepseek-v4-pro-native': Object.freeze(['low', 'high', 'max']),
+  'deepseek-v4.1-flash': Object.freeze(['low', 'high', 'max'])
+})
+
 /** Any other model: images in user messages and no cache markers, the forms OpenAI-compatible models all accept. */
 const OTHER_MODEL = { profile: 'other', harness: { toolImages: 'user-message', cacheMarkers: false } }
 
@@ -146,3 +157,7 @@ export function benchHarnessFor(model, providerId) {
 
 /** Whether a run's harness sends images to this model: false for a text-only profile. */
 export const sendsImages = (model, providerId) => benchHarnessFor(model, providerId).images !== false
+
+/** The reasoning efforts this model takes (MODEL_EFFORTS), or null when its profile does not say. */
+export const effortsFor = (model, providerId) =>
+  MODEL_EFFORTS[benchHarnessFor(model, providerId).modelProfile] ?? null
