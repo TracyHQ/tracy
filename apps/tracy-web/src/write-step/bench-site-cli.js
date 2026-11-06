@@ -3,7 +3,6 @@
 // Exit codes: 0 done, 1 refused or not found, 2 wrong usage. The write itself is in bench-cli.js, which calls this.
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
-import { baselineOutcome, ensureBaseline } from '../site-check/demo-baseline.js'
 import { createBenchSite, specOfKit } from './bench-site-creator.js'
 
 export const USAGE = `  create-site --kit <ref> --account <email>   create a trial site from the kit's quickstart by the customer's path,
@@ -105,7 +104,10 @@ async function createSite(d, values) {
  * once when none is, measured again only when the operator forced it. Prints which.
  */
 async function settleBaseline(d, values, { kit, siteKey, version }) {
-  if (!d.baselines || !d.makeHost) {
+  // The site check's baseline functions come from the bench's command line (write-step-bench-cli.js): a domain directory
+  // imports only lib/ and db/ (module-graph.test.mjs).
+  const { ensureBaseline, baselineOutcome } = d
+  if (!d.baselines || !d.makeHost || !ensureBaseline) {
     d.out(
       `baseline: not settled (no baseline folder or host given), so the demo groups of a check stay unmeasured`
     )

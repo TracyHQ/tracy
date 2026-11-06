@@ -8,7 +8,12 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, test } from 'node:test'
 import { BASELINE_FILE } from '../src/lib/template-kit/demo-baseline-file.js'
-import { contractBaselineStore, fileBaselineStore } from '../src/site-check/demo-baseline.js'
+import {
+  baselineOutcome,
+  contractBaselineStore,
+  ensureBaseline,
+  fileBaselineStore
+} from '../src/site-check/demo-baseline.js'
 import { runCli } from '../src/write-step/bench-site-cli.js'
 import { fakeHost, demoRead } from './_site-check-pages.mjs'
 import { fakeClock, fakeDoor, kitIndex, memoryStore } from './_write-step-bench.mjs'
@@ -34,6 +39,8 @@ async function operator() {
     const err = []
     const clock = fakeClock()
     const code = await runCli(argv, {
+      ensureBaseline,
+      baselineOutcome,
       store: memoryStore(),
       index: kits.index,
       makeDoor: () => fakeDoor(),
@@ -111,6 +118,8 @@ async function contractOperator() {
     const err = []
     const clock = fakeClock()
     const code = await runCli(argv, {
+      ensureBaseline,
+      baselineOutcome,
       store: memoryStore(),
       index: own.index,
       makeDoor: () => fakeDoor(),
@@ -175,6 +184,8 @@ test('with neither a file beside the contract nor a cache, nothing is measured t
     const out = []
     const clock = fakeClock()
     const code = await runCli(create(), {
+      ensureBaseline,
+      baselineOutcome,
       store: memoryStore(),
       index: own.index,
       makeDoor: () => fakeDoor(),

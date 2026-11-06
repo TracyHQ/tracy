@@ -8,7 +8,7 @@ import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from './lib/template-kit-source.js'
 import { checkLines } from './site-check/check-lines.js'
-import { baselineOutcome } from './site-check/demo-baseline.js'
+import { baselineOutcome, ensureBaseline } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
 import { runSiteCheck } from './site-check/site-check.js'
 import { openContentMap } from './lib/content-map-source.js'
@@ -61,7 +61,7 @@ const causeOf = (r) => (r.code ? `${r.code}: ${r.reason}` : '')
  */
 export async function runCli(argv, deps) {
   const io = { out: deps.out ?? console.log, err: deps.err ?? console.error }
-  if (SITE_COMMANDS.has(argv[0])) return runSiteCli(argv, deps)
+  if (SITE_COMMANDS.has(argv[0])) return runSiteCli(argv, { ensureBaseline, baselineOutcome, ...deps })
   try {
     const { values, positionals } = parseArgs({
       args: argv,
