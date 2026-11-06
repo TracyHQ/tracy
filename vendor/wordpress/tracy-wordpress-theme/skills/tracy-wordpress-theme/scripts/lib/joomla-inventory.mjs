@@ -8,6 +8,7 @@
 // Nothing here touches the network or a running site. Dependency-free except jsdom for the ACM
 // schema XML (optional — the heuristic path needs no schema at all).
 
+import { trashedMenuIds, liveMenuRows } from './menu-trash.mjs'
 import { readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { JSDOM } from 'jsdom'
@@ -251,8 +252,10 @@ export function siteMenuTypes(inv) {
  * the implicit parent of level-1 items and is never returned.
  */
 export function menuTree(inv, menutype) {
+  // A trashed item (`published -2`) and everything under it is not part of the site (unpublished, `0`, items stay, as published: false).
+  const out = trashedMenuIds(inv.menu)
   const items = inv.menu
-    .filter((row) => (row.menutype ?? '') === menutype)
+    .filter((row) => (row.menutype ?? '') === menutype && !out.has(String(row.id)))
     .map(menuItem)
     .sort((a, b) => a.lft - b.lft)
   const byId = new Map(items.map((i) => [i.id, i]))
@@ -267,7 +270,7 @@ export function menuTree(inv, menutype) {
 
 /** Flat lookup of every menu item by id (all menutypes, both clients). */
 export function menuIndex(inv) {
-  return new Map(inv.menu.map((row) => [String(row.id), menuItem(row)]))
+  return new Map(liveMenuRows(inv.menu).map((row) => [String(row.id), menuItem(row)]))
 }
 
 // ── modules ───────────────────────────────────────────────────────────────────
@@ -808,7 +811,7 @@ export function routeViews(inv, routes, { retitle = [], routeRenames = {} } = {}
         menuId: String(route.id),
         joomlaPath,
         kind: 'gap',
-        reason: 'menu item not in inventory',
+        reason: trashedMenuIds(inv.menu).has(String(route.id)) ? 'menu item is trashed (or under a trashed item)' : 'menu item not in inventory',
         redirectTo: '/'
       }
     const { option, view, layout: linkLayout, id } = item.target

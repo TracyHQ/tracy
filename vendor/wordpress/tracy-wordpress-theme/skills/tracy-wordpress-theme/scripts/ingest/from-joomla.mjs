@@ -61,6 +61,7 @@ import { ABSENT } from '../content-contract.mjs'
 import { classifyTemplate } from './quickstart-inventory.mjs'
 import { selectorProfileFor } from '../lib/framework-selectors.mjs'
 import { recordData, recordPath, repoRootOf } from '../lib/record-paths.mjs'
+import { liveMenuRows, trashedMenuIds } from '../lib/menu-trash.mjs'
 import { buildSiteModel } from './site-model.mjs'
 import { readT3Layout, blockMarkupEvidence, t3StyleSettings, styleOfItem } from './joomla-layout.mjs'
 import { computedAcmItemField } from './joomla-php-scan.mjs'
@@ -2244,7 +2245,7 @@ function sourceFontsStatic({ j6Dir, inv, missingTables, tpl }) {
       }))
     : null
   const menu = hasMenu
-    ? inv.menu.map((r) => ({ id: String(r.id), path: r.path ?? '', alias: r.alias ?? '', type: r.type ?? '', published: String(r.published), template_style_id: String(r.template_style_id ?? '0'), home: String(r.home ?? '0'), client_id: String(r.client_id ?? '0') }))
+    ? liveMenuRows(inv.menu).map((r) => ({ id: String(r.id), path: r.path ?? '', alias: r.alias ?? '', type: r.type ?? '', published: String(r.published), template_style_id: String(r.template_style_id ?? '0'), home: String(r.home ?? '0'), client_id: String(r.client_id ?? '0') }))
     : null
   const capture = captureReader(join(j6Dir, 'capture'), j6Dir)
   if (!capture.ok) gaps.push(`capture/ of ${j6Dir} is not readable: the template files were not read`)
@@ -3525,7 +3526,7 @@ function buildSpecPackLocked({
 
   // ── parent pages: a nested Joomla path is preserved as a page hierarchy ────
   const menuByPath = new Map(
-    inv.menu.filter((m) => Number(m.client_id) === 0 && m.path).map((m) => ['/' + m.path, m.title])
+    liveMenuRows(inv.menu).filter((m) => Number(m.client_id) === 0 && m.path).map((m) => ['/' + m.path, m.title])
   )
   const pagePaths = new Set(wpPages.map((p) => p.path).filter(Boolean))
   const archivePaths = new Map(archives.map((a) => [a.path, a.file]))
@@ -3923,7 +3924,7 @@ function buildSpecPackLocked({
   // nobody; that is the point of adding it before anything depends on it.
   writeJson(
     join(out, 'site-model.json'),
-    buildSiteModel({ tpl, site, arts, cats, catById, wpPages, archives, sectionsAcm, menus, redirects, isPageArticle, postPath })
+    buildSiteModel({ tpl, site, arts, cats, catById, wpPages, archives, sectionsAcm, customModules: customModules.map((m) => ({ ...m, placement: m.pages.includes('ALL') ? ['ALL'] : [...new Set(m.pages.map((p) => p.wpPath ?? pageByMenuId.get(p.menuId)?.wpPath).filter(Boolean))] })), menus, redirects, isPageArticle, postPath })
   )
 
   // ── contracts ──────────────────────────────────────────────────────────────
@@ -5156,6 +5157,10 @@ function adapterCoverage(c) {
       continue
     }
     const mi = menuFlat.get(mid)
+    if (!mi && trashedMenuIds(inv.menu).has(mid)) {
+      add('menu-item', id, 'skipped-by-rule', { title, source, impact, reason: 'trashed (published -2) or under a trashed item: Joomla shows no trash and serves no path for it, so it is not exported' })
+      continue
+    }
     if (!row.menutype || !mi) {
       add('menu-item', id, 'skipped-by-rule', { title, source, impact, reason: mid === '1' || !row.menutype ? 'the menu tree root (no menu type): Joomla never prints it' : 'not in any site menu type' })
       continue
@@ -5872,7 +5877,7 @@ function adapterCoverage(c) {
     x.members.push(items.get(`route:${e.menuId}:${e.joomlaPath}`))
     x.routes.add(e.joomlaPath)
   }
-  for (const row of inv.menu) {
+  for (const row of liveMenuRows(inv.menu)) {
     if (Number(row.client_id) !== 0 || row.type !== 'component') continue
     const opt = parseMenuLink(row.link).option
     if (opt) extOf(opt, 'component').refs.push(`menu-item:${row.id}`)

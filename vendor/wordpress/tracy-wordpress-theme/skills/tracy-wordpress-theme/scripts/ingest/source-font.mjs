@@ -62,6 +62,10 @@ export function phpTruthy(v) {
   if (Array.isArray(v)) return v.length > 0
   return true
 }
+/** A `)` with no `(` in the same name is a typo in the source (`Teko)`), not part of a family name. */
+const stripStrayParen = (name) => (name.includes(')') && !name.includes('(') ? name.replace(/\)+/g, '').trim() : name)
+/** True when a family value holds a name with a stray `)` (see stripStrayParen): the source declares it, the adapter reads past it. */
+export const hasStrayParen = (value) => String(value ?? '').split(',').map((n) => n.replace(/!important|["']/gi, '').trim()).some((n) => stripStrayParen(n) !== n)
 const clean = (s) => String(s ?? '').replace(/["']/g, '').trim()
 const same = (a, b) => fold(clean(a)).replace(/[\s_-]+/g, '') === fold(clean(b)).replace(/[\s_-]+/g, '')
 
@@ -71,6 +75,7 @@ export function familyStack(value) {
     .replace(/!important/gi, '')
     .split(',')
     .map(clean)
+    .map(stripStrayParen)
     .filter(Boolean)
 }
 export const isGeneric = (name) => GENERIC.has(fold(name))
@@ -191,7 +196,7 @@ export function familiesOfFontUrl(url) {
   return u.searchParams
     .getAll('family')
     .flatMap((v) => v.split('|'))
-    .map((v) => v.split(':')[0].replace(/\+/g, ' ').trim())
+    .map((v) => stripStrayParen(v.split(':')[0].replace(/\+/g, ' ').trim()))
     .filter(Boolean)
 }
 const isExternal = (u) => /^(?:https?:)?\/\//i.test(u)
@@ -628,7 +633,7 @@ function analyzeT3Style(ctx, style, gaps) {
   for (const r of resolved) {
     if (r.primary) {
       const name = primaryFamily(r.primary.value)
-      if (name) declared.push({ role: r.role, family: name, stack: String(r.primary.value).slice(0, 200), file: r.primary.file, key: r.primary.key ?? (r.primary.sel.startsWith('@') ? r.primary.sel : `${r.primary.sel}{font-family}`), ambiguous: r.ambiguous })
+      if (name) declared.push({ role: r.role, family: name, stack: String(r.primary.value).slice(0, 200), file: r.primary.file, key: r.primary.key ?? (r.primary.sel.startsWith('@') ? r.primary.sel : `${r.primary.sel}{font-family}`), ambiguous: r.ambiguous, ...(hasStrayParen(r.primary.value) ? { malformed: `the value ${JSON.stringify(String(r.primary.value).slice(0, 200))} holds a stray ')' in the source; the family is read as ${JSON.stringify(name)}` } : {}) })
     } else if (r.ambiguous.length) {
       declared.push({ role: r.role, family: '', stack: '', file: null, key: null, ambiguous: r.ambiguous })
     }
@@ -660,7 +665,7 @@ function analyzeT3Style(ctx, style, gaps) {
       if (!['loaded', 'system'].includes(v.verdict)) gaps.push(`style #${style.id} ${d.role}: ${c.file} \`${c.sel}\`${c.media ? ` (${c.media})` : ''} sets "${family}", which no active sheet loads; whether it reaches the ${d.role} text cannot be decided statically (the browser reading judges it)`)
     }
     if (!d.family) continue
-    const r = { role: d.role, key: d.key, family: d.family, stack: d.stack, declared: 'set', file: d.file, from: 'template', ...(ambiguous.length ? { ambiguous } : {}) }
+    const r = { role: d.role, key: d.key, family: d.family, stack: d.stack, declared: 'set', file: d.file, from: 'template', ...(d.malformed ? { malformed: d.malformed } : {}), ...(ambiguous.length ? { ambiguous } : {}) }
     Object.assign(r, loaderOf(d.family, d.file))
     // a rule that outranks this one and may reach the sampled text can replace it: a family nothing loads is then not a definitive finding
     if (ambiguous.length && !['loaded', 'system', 'unverified'].includes(r.verdict)) {
