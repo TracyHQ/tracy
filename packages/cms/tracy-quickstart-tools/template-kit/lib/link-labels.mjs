@@ -10,7 +10,8 @@ import { canonicalPath } from './kit-paths.mjs'
 const LABEL_ROLE = /(button|menu)_label$/
 // A form's own button also prints the words of the sign-up it sends (a newsletter module rendered raw inside another
 // block, with no wrapper of its own to tell it apart).
-const labelRole = (l, role) => LABEL_ROLE.test(role) || (l.opens?.kind === 'form' && /newsletter_label$/.test(role))
+const labelRole = (l, role) =>
+  LABEL_ROLE.test(role) || (l.opens?.kind === 'form' && String(role).endsWith('newsletter_label'))
 const words = (s) => normText(s ?? '')
 const hasLetters = (s) => /\p{L}/u.test(words(s))
 
@@ -19,7 +20,14 @@ const hasLetters = (s) => /\p{L}/u.test(words(s))
  * menu block key, or null.
  * @param {{links: object[], menuBlocks?: object, mapSlots?: object[], entities?: string[], siteUrl: string, aliasHosts?: string[]}} o
  */
-export function labelLinks({ links, menuBlocks = {}, mapSlots = [], entities = [], siteUrl, aliasHosts = [] }) {
+export function labelLinks({
+  links,
+  menuBlocks = {},
+  mapSlots = [],
+  entities = [],
+  siteUrl,
+  aliasHosts = []
+}) {
   const shown = links.filter((l) => hasLetters(l.label))
   let menu = null
   // Two links at least make a block's menu. On a tie the menu that is the block's own module wins: a footer column

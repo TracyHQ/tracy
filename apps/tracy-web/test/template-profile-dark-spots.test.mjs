@@ -64,7 +64,10 @@ const PROVEN_SINCE = {
   'quickstart/ja-boxing/j6@1.0.11': { footer: true },
   // JA Cagox's first row (29/10/2026): measured on a site restored from 1.0.2 (1.0.1 with language keys and dated articles), the footer band and its logo are dark
   'quickstart/ja-cagox/j6@1.0.1': { footer: true },
-  'quickstart/ja-cagox/j6@1.0.2': { footer: true }
+  'quickstart/ja-cagox/j6@1.0.2': { footer: true },
+  // Joomla T4 batch 1 (06/11/2026): logo pictures, layouts and T4 site profile files byte for byte the previous version's, same row and proof
+  'quickstart/ja-impact/j6@1.0.6': { profiles: ['default', 'Blog', 'home-magz'], footer: true },
+  'quickstart/ja-vega/j6@1.0.9': { profiles: ['default'] }
 }
 
 /** `darkSpotsOf` as it read the table above. */
