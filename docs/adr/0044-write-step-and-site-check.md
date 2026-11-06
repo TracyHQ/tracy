@@ -127,6 +127,13 @@ untouched site: a heavy read that compared effects and left the write that cause
 hashes and the words over a picture. What the guard cannot see is what the plugin does with a write and what the words or a
 picture's shape do to the layout; those stay with the remaining page groups and step 12.
 
+Decided 2026-11-06 (card AB, product owner): one named exception, `social-icons-without-accounts`. A cell whose demo content is
+only social icon links (no visible text), written for a subject the brief gives no social account (the brief facts the copy cites
+for that cell), may take words in their place; the icons going is accepted, not a finding. Only the "takes off the template's
+class" findings of that cell are let through, kept in `report.guard.allowed` with the rule and its reason; any other finding on
+the cell, a cell whose subject has an account, or a cell the copy cites no fact for, stays a finding. Measured offline on a JA
+Boxing bench run: 28 blocking look-guard lines (four coach role cells) become 0.
+
 ### 11. A written value counts only once the page prints it
 
 Read-back compares the database with the report, so it stays green when a template drops the block that would print a value: a

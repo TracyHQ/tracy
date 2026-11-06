@@ -168,7 +168,7 @@ export async function runWriteStep(input) {
     report.status = status
     report.cause = cause
     // What the guard found on a value was written all the same; what it held back (a channel nobody listed) was not sent.
-    report.guard = { findings: guard.findings(), refused: guard.refused() }
+    report.guard = { findings: guard.findings(), refused: guard.refused(), allowed: guard.allowed() }
     report.unaddressable = unaddressableOf(unaddressable)
     let lines = []
     if (table) {
@@ -360,7 +360,7 @@ export async function runWriteStep(input) {
       })
     ])
     extras = withEveryMenuHide({ extras, owners: table.owners, contentMap })
-    guard.know({ owners: table.owners, routes: brand.routes ?? null })
+    guard.know({ owners: table.owners, routes: brand.routes ?? null, copy, brief })
     report.keptPages = keptPagesOf(plan, kit.doc)
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })

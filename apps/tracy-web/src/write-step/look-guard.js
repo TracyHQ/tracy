@@ -6,8 +6,10 @@
 // names a template; what a template may take is read from its kit, its content map and its own stylesheets. Everything it cannot
 // see is listed in the ADR.
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
+import { SOCIAL_ICONS_REASON, SOCIAL_ICONS_RULE, socialIconsAllowed } from './look-guard-social.js'
 import { MARK } from './page-create-lines.js'
 
 const WRITE = 9
@@ -27,6 +29,7 @@ const EXCEPTIONS = Object.freeze({
     'when a template has no small logo setting the head block shows it by content:url, and height:auto keeps the picture in its own proportion',
   'picture-fallback':
     'a kept picture the template prints only beside a field the plan hid is printed by a block of the template media classes at the top of its article text; nothing else of the text changes',
+  [SOCIAL_ICONS_RULE]: SOCIAL_ICONS_REASON,
   'body-background':
     'the setting a kit names for the picture behind its pages holds a picture path, and a picture may change'
 })
@@ -119,7 +122,10 @@ export function lookGuard({ kit, contentMap = null }) {
     inspected: new Map()
   }
   let owners = new Map()
+  /** The brief facts the copy cites, by content map key: who or what a cell speaks of. */
+  let subjects = new Map()
   const findings = []
+  const allowed = []
 
   const stepOfKey = (key) => {
     const claim = owners.get(key.replace(/^module-/, 'block-')) ?? owners.get(key)
@@ -136,9 +142,16 @@ export function lookGuard({ kit, contentMap = null }) {
         : [fault(step, key, `${key} holds a picture, and this is not one`)]
     if (slot?.type === 'url')
       return ADDRESS_NOT.test(text) ? [fault(step, key, `${key} holds an address, and this is not one`)] : []
-    return markupFaults(text, slot?.sample ?? slot?.current ?? '').map((said) =>
-      fault(step, key, `${key}: ${said}`)
-    )
+    const sample = slot?.sample ?? slot?.current ?? ''
+    const { kept, allowed: through } = socialIconsAllowed({
+      sample,
+      said: markupFaults(text, sample),
+      facts: subjects.get(key) ?? null
+    })
+    for (const said of through)
+      if (!allowed.some((a) => a.what === key && a.said === said))
+        allowed.push({ rule: SOCIAL_ICONS_RULE, what: key, said, reason: SOCIAL_ICONS_REASON })
+    return kept.map((said) => fault(step, key, `${key}: ${said}`))
   }
 
   const JUDGES = {
@@ -244,9 +257,20 @@ export function lookGuard({ kit, contentMap = null }) {
     exceptions: EXCEPTIONS,
 
     /** What the guard learns once the files are read: who owns each slot, and the accent routes of this template. */
-    know({ owners: claims, routes }) {
+    know({ owners: claims, routes, copy, brief }) {
       if (claims) owners = claims
       if (routes !== undefined) state.routes = routes
+      if (copy) {
+        const facts = new Map(each(brief?.facts).map((f) => [f?.id, f]))
+        subjects = new Map(
+          each(copy.slots).map((c) => [
+            contentMapKey(String(c?.slot ?? '')),
+            each(c?.factIds)
+              .map((id) => facts.get(id))
+              .filter(Boolean)
+          ])
+        )
+      }
     },
 
     /** Judges a write that is known before anything is sent. @returns {boolean} whether it has no finding */
@@ -282,6 +306,9 @@ export function lookGuard({ kit, contentMap = null }) {
 
     /** Every finding of the run, each with the step at fault and whether its write was sent all the same. */
     findings: () => [...findings],
+
+    /** What a named exception let through on a value, each with its rule and reason (card AB). */
+    allowed: () => [...allowed],
 
     /** The findings whose write was held back: calls on a channel nobody listed. */
     refused: () => findings.filter((f) => !f.sent)
