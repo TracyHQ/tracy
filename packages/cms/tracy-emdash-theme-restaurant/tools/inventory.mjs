@@ -2,8 +2,10 @@
 // Inventory a design-source folder: every file hashed, every HTML page classified, every asset
 // reference resolved. Output is the evidence that the source was read whole and left untouched.
 //
-//   node tools/inventory.mjs <source-dir> <out-dir>
+//   node tools/inventory.mjs <source-dir> <out-dir>      e.g.  inventory.mjs design inventory
 //
+// <out-dir> is a DIRECTORY (not a .json file): it receives source-inventory.json and assets.json, so
+// `inventory` gives the `inventory/source-inventory.json` that checkpoint.mjs looks for.
 // Writes <out-dir>/source-inventory.json and <out-dir>/assets.json. Exit 1 when an asset
 // reference points at a file that does not exist -- a broken reference in the source is a
 // content gap to record, not something to invent around.
@@ -19,6 +21,12 @@ import path from 'node:path'
 const [, , srcArg, outArg] = process.argv
 if (!srcArg || !outArg) {
   console.error('usage: inventory.mjs <source-dir> <out-dir>')
+  process.exit(2)
+}
+if (/\.json$/i.test(outArg)) {
+  console.error(
+    `<out-dir> is a directory that receives source-inventory.json and assets.json; got a file name: ${outArg}`
+  )
   process.exit(2)
 }
 const SRC = path.resolve(srcArg)
@@ -50,6 +58,65 @@ for (const f of files) {
 
 const assets = { generatedAt: new Date().toISOString(), refs: [], unresolved: [], unreferenced: [] }
 const referenced = new Set()
+
+// A mirrored CMS site (ingest/from-url.mjs) writes its asset paths root-relative (`/templates/x/a.css`) or as
+// absolute URLs of its own origin, not as `./a.css`. Those resolve against the folder root, the origin being the
+// one crawl.json names; a reference to another origin is not this folder's to resolve.
+const ASSET_EXT = 'css|js|mjs|png|jpe?g|webp|gif|svg|avif|ico|pdf|woff2?|ttf|otf|mp4|webm'
+const mirrorOrigin = (() => {
+  try {
+    return new URL(JSON.parse(readFileSync(path.join(SRC, 'crawl.json'), 'utf8')).start).origin
+  } catch {
+    return null
+  }
+})()
+const rootRelative = (ref) => {
+  // oxlint-disable-next-line unicorn/prefer-string-starts-ends-with -- kit file, kept byte-for-byte with the kit
+  if (/^\/\//.test(ref) || /^(data|blob|mailto|tel|javascript):/i.test(ref)) return null
+  if (/^https?:\/\//i.test(ref)) {
+    try {
+      const url = new URL(ref)
+      return url.origin === mirrorOrigin ? decodeURIComponent(url.pathname) : null
+    } catch {
+      return null
+    }
+  }
+  return ref
+}
+/** The references the dot-relative pattern does not see: root-relative, bare-relative and own-origin ones. */
+function otherRefs(text, { dots = false } = {}) {
+  const text2 = text.replace(/&quot;|&#0*34;|&#0*39;|&apos;/g, '"')
+  const found = []
+  const re = new RegExp(
+    `(?:(?:src|href|data-src|data-bg|poster)\\s*=\\s*["']|url\\(\\s*["']?)([^"')\\s{}<>]+?\\.(?:${ASSET_EXT}))(?:[?#][^"')\\s]*)?`,
+    'gi'
+  )
+  let m
+  while ((m = re.exec(text2))) {
+    const ref = rootRelative(m[1])
+    if (ref && (dots || !ref.startsWith('.'))) found.push(ref)
+  }
+  return found
+}
+function note(from, rawRef) {
+  const ref = (() => {
+    try {
+      return decodeURI(rawRef)
+    } catch {
+      return rawRef
+    }
+  })()
+  const resolved = ref.startsWith('/')
+    ? path.normalize(ref.slice(1))
+    : path.normalize(path.join(path.dirname(from), ref))
+  const hit = byRel.get(resolved)
+  if (hit) {
+    referenced.add(resolved)
+    assets.refs.push({ from, ref, resolved, sha256: hit.sha256 })
+  } else {
+    assets.unresolved.push({ from, ref, resolved })
+  }
+}
 
 for (const entry of inventory.files) {
   if (entry.ext !== '.html') continue
@@ -91,6 +158,13 @@ for (const entry of inventory.files) {
       assets.unresolved.push({ from: entry.path, ref, resolved })
     }
   }
+  for (const ref of otherRefs(html)) note(entry.path, ref)
+}
+// A stylesheet points at fonts and pictures of its own, relative to itself.
+for (const entry of inventory.files) {
+  if (entry.ext === '.css')
+    for (const ref of otherRefs(readFileSync(path.join(SRC, entry.path), 'utf8'), { dots: true }))
+      note(entry.path, ref)
 }
 
 for (const entry of inventory.files) {

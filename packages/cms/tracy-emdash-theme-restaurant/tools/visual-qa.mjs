@@ -79,7 +79,7 @@ import {
   tagInteractive,
   settledRect,
   DEFAULT_INTERACTIVE,
-  SNAPSHOT_PROPERTIES,
+  parityPropertiesFor,
   firstFamily,
   imageCensus,
   findOneSpec,
@@ -407,7 +407,12 @@ async function measureAxis(spec, variant) {
     }
     const cap = { rules: measuredRules }
     for (const r of cap.rules) {
-      const expected = contract.design.rules.find((x) => x.id === r.id).styles[variant.id] ?? {}
+      const rule = contract.design.rules.find((x) => x.id === r.id)
+      const expected = rule.styles[variant.id] ?? {}
+      if (r.elements.length && rule.optional && rule.styles[variant.id] === undefined) {
+        F('rule-unexpected-visible', { rule: r.id, selector: r.selector, count: r.elements.length })
+        continue
+      }
       if (!r.elements.length) {
         // `optional` rules describe a role a page may not have (chips, h3); a required rule that
         // matches nothing is a finding — the page lost a component or the selector rotted.
@@ -453,7 +458,7 @@ async function measureAxis(spec, variant) {
     } else axis.parity = { basis: 'requirements-only' }
     if (sourceSite && contract.design?.parity && spec.source?.[0] && !frame) {
       const sel = contract.design.parity.selectors,
-        props = contract.design.parity.properties ?? SNAPSHOT_PROPERTIES
+        props = parityPropertiesFor(contract.design.parity, variant.theme)
       // `pages[].parity` (array of keys) narrows the pairs for a page whose source is a different
       // page type (a detail page measured against its list page shares chrome, not headings).
       //
@@ -711,13 +716,18 @@ async function measureAxis(spec, variant) {
         }
       }
       const imgCfg = contract.design.images ?? {}
+      // Unless the contract sets `design.images.scope`, both sides count the same root: a source with no <main>
+      // (Joomla/T3, most CMS themes) counts its whole body, and then so must the site, or the same pictures
+      // read as missing.
+      const siteScope = imgCfg.scope ?? (srcImages?.resolved === 'body' ? 'body' : 'main')
       const siteImages = await page.evaluate(imageCensus, {
-        scope: imgCfg.scope ?? 'main',
+        scope: siteScope,
         placeholder: imgCfg.placeholder ?? null
       })
       axis.images = {
         source: srcImages.images,
         site: siteImages.images,
+        roots: { source: srcImages.resolved, site: siteImages.resolved },
         placeholders: siteImages.placeholders.length
       }
       // `pages[].images: 'placeholders'` — a derived page's count is data-driven; placeholders still fail.
@@ -725,6 +735,7 @@ async function measureAxis(spec, variant) {
         F('image-missing', {
           expected: srcImages.images,
           observed: siteImages.images,
+          roots: { source: srcImages.resolved, site: siteImages.resolved },
           sourceSlots: srcImages.slots.slice(0, 12)
         })
       for (const ph of siteImages.placeholders) F('image-placeholder', ph)
@@ -1409,6 +1420,8 @@ writeFileSync(
 // works from ONE list. Ids are stable within a run (M1…); the merge step re-keys across lenses.
 const HINT = {
   'rule-mismatch': "set the property on the rule's selector to the expected value (global.css / tokens.css)",
+  'rule-unexpected-visible':
+    'the contract declares this optional role absent in this variant (no styles for it) but it is visible — hide it, or measure it and add its styles',
   'rule-no-visible-match': 'the page lost the component, or the selector rotted — check the view',
   'unclassified-element': 'add a design.rule for this role (or fold it into an existing selector)',
   'parity-mismatch':

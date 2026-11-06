@@ -5,9 +5,15 @@ import path from 'node:path'
 import { casesFor } from './qa-contract.mjs'
 
 // Which Chromium draws the evidence is decided ONCE, from the environment, and every report says
-// which one it was (`browserIdentity`). The default is the build Playwright ships for the version
-// pnpm-lock.yaml pins (1.63.0 → Chromium 153.0.8010.12), so two runs a week apart render with the
-// same binary and a difference between them is the site, not the browser. The machine's own Google
+// which one it was (`browserIdentity`). The default is the build Playwright itself ships, so the
+// choice never depends on what happens to be installed on the machine.
+//
+// ⚠ That makes the CHOICE reproducible, not the BINARY. This kit declares `playwright: ^1.49.0`
+// and commits no lockfile, so two installs a month apart resolve to different Playwright releases
+// and therefore different Chromium builds (measured 2026-09-17: the range resolved to 1.63.0 →
+// Chromium 153.0.8010.12). `browserIdentity()` is what makes that visible rather than silent —
+// a report names the binary that drew it, and two reports naming different ones are not
+// comparable. Pinning the range, or committing a lockfile, is the kit owner's call. The machine's own Google
 // Chrome used to come first — render-source.mjs keeps the reason, "avoid a 150 MB browser download
 // on a machine that already has one" — but that Chrome updates itself: measured 2026-09-15, the
 // system Chrome was 152.0.7977.84 while the lockfile's Chromium was 153.0.8010.12, and nothing in
@@ -19,8 +25,8 @@ import { casesFor } from './qa-contract.mjs'
 // No branch falls back to another: an opt-in that cannot launch fails the run, because a quiet
 // fallback renders with a browser nobody asked for and the pin then exists only on paper. The child
 // process visual-qa spawns for mega-hover inherits the environment, so it makes the same choice.
-// It is only the same CHOICE, not a checked one: this template's visual-qa records its own
-// `browserIdentity()` in the report and does not compare the version the child reports against it.
+// It is only the same CHOICE, not a checked one: visual-qa records its own `browserIdentity()` in
+// the report and does not compare the version the child reports against it.
 export function browserChoice(env = process.env) {
   if (env.RENDER_CHROME_PATH) return { launch: 'executable', executablePath: env.RENDER_CHROME_PATH }
   if (env.RENDER_CHROME_CHANNEL) return { launch: 'channel', channel: env.RENDER_CHROME_CHANNEL }
@@ -257,7 +263,8 @@ export async function collectBrowser(contract, base, out, options = {}) {
         observation.styles = []
         for (const id of spec.rules) {
           const rule = contract.design.rules.find((r) => r.id === id),
-            expected = rule.styles[variant.id]
+            // an optional rule with no styles for this variant declares the role absent here
+            expected = rule.styles[variant.id] ?? {}
           const values = await page.locator(rule.selector).evaluateAll(
             (els, properties) =>
               els
@@ -278,6 +285,10 @@ export async function collectBrowser(contract, base, out, options = {}) {
             continue
           }
           assert(values.length > 0, `design selector matches: ${id}`)
+          assert(
+            !(rule.optional && rule.styles[variant.id] === undefined),
+            `design ${id}: declared absent on ${variant.id} (no styles for it), but ${values.length} element(s) are visible`
+          )
           observation.styles.push({ id, values })
           for (const item of values)
             for (const [property, value] of Object.entries(expected)) {

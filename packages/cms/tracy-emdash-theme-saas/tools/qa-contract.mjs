@@ -223,6 +223,9 @@ export function validateContract(c, sourceRoot) {
       pages.some((p) => list(p.rules).includes(r.id) && list(p.variants).includes(v.id))
     )) {
       const expected = r.styles?.[v.id]
+      // An optional rule may leave a variant out: the role is declared ABSENT there (a desktop nav hidden on mobile),
+      // and a visible match in that variant is a finding. Where it does give styles they are still validated.
+      if (r.optional && expected === undefined) continue
       check(
         expected && Object.keys(expected).length > 0 && Object.values(expected).every(text),
         `measured styles missing: ${r.id}/${v.id}`
@@ -312,6 +315,12 @@ export function validateContract(c, sourceRoot) {
             : text(v.site) && (text(v.source) || text(v.source?.css) || text(v.source?.text))))
       check(ok, `design.parity.selectors.${k}: a CSS string, {site, source} or {content: <known content id>}`)
     }
+    if (par?.sourceThemes !== undefined)
+      check(
+        Array.isArray(par.sourceThemes) &&
+          par.sourceThemes.every((t) => variants.some((v) => v?.theme === t)),
+        'design.parity.sourceThemes must list themes some variant has'
+      )
     for (const t of ['hexTolerance', 'pxTolerance'])
       if (par?.[t] !== undefined)
         check(Number.isFinite(par[t]) && par[t] >= 0, `design.parity.${t} must be a non-negative number`)

@@ -79,7 +79,7 @@ import {
   tagInteractive,
   settledRect,
   DEFAULT_INTERACTIVE,
-  SNAPSHOT_PROPERTIES,
+  parityPropertiesFor,
   firstFamily,
   imageCensus,
   findOneSpec,
@@ -407,7 +407,12 @@ async function measureAxis(spec, variant) {
     }
     const cap = { rules: measuredRules }
     for (const r of cap.rules) {
-      const expected = contract.design.rules.find((x) => x.id === r.id).styles[variant.id] ?? {}
+      const rule = contract.design.rules.find((x) => x.id === r.id)
+      const expected = rule.styles[variant.id] ?? {}
+      if (r.elements.length && rule.optional && rule.styles[variant.id] === undefined) {
+        F('rule-unexpected-visible', { rule: r.id, selector: r.selector, count: r.elements.length })
+        continue
+      }
       if (!r.elements.length) {
         // `optional` rules describe a role a page may not have (chips, h3); a required rule that
         // matches nothing is a finding — the page lost a component or the selector rotted.
@@ -453,7 +458,7 @@ async function measureAxis(spec, variant) {
     } else axis.parity = { basis: 'requirements-only' }
     if (sourceSite && contract.design?.parity && spec.source?.[0] && !frame) {
       const sel = contract.design.parity.selectors,
-        props = contract.design.parity.properties ?? SNAPSHOT_PROPERTIES
+        props = parityPropertiesFor(contract.design.parity, variant.theme)
       // `pages[].parity` (array of keys) narrows the pairs for a page whose source is a different
       // page type (a detail page measured against its list page shares chrome, not headings).
       //
@@ -486,7 +491,7 @@ async function measureAxis(spec, variant) {
       const siteSnap = {}
       const unresolved = new Set()
       // One in-page pass for every pair first (`siteSnapshotOf` keeps the locator's element choice;
-      // its header carries the reason: on the sibling business template the twelve per-pair locator
+      // its header carries the reason: on a template built from this kit the twelve per-pair locator
       // round trips cost 612 s of a 39-minute matrix, all of it waiting on selectors not on the page).
       // A key absent from `rest` is absent from the page, and absence is an ANSWER here -- the pair
       // is either a role this page does not have, or a real gap that `parity-not-measured` reports
@@ -530,10 +535,11 @@ async function measureAxis(spec, variant) {
       }
       // The source is a STATIC document: for one (source file, variant) neither its selector
       // snapshot nor its image census can differ between two site pages that cite it. This contract
-      // has 31 pages over 25 source files: of its 178 axes, 28 name a (source file, variant) an
-      // earlier axis already measured (counted from qa.contract.json, 2026-09-17). Fewer than 28
-      // are served -- the two conditions below are decided per axis at runtime, and a page that
-      // wants the source picture or asks a content-keyed question opens the file itself.
+      // Contracts repeat source files: a template built from this kit measured 31 pages over 25
+      // source files, so of its 178 axes, 28 named a (source file, variant) an earlier axis had
+      // already measured. Fewer are served -- the two conditions below are decided per axis at
+      // runtime, and a page that wants the source picture or asks a content-keyed question opens
+      // the file itself.
       //
       // Two conditions keep a hit honest, and both are checked, not assumed:
       //   · the axis must want no source SCREENSHOT — that is decided per page (`consumersFor`), so
@@ -597,7 +603,7 @@ async function measureAxis(spec, variant) {
               )
             // Scroll the whole document once before anything is measured or shot. A full-page
             // screenshot does not scroll, so `loading="lazy"` pictures below the fold are never
-            // requested: measured 2026-09-17 on `pages/company/about.html`, 5, 6 and 6 of 11 images
+            // requested: measured 2026-09-17 on the base template's `about.html`, 5, 6 and 6 of 11 images
             // were undecoded at this exact point on three loads, and 0 of 11 after this pass every
             // time. Reloading cannot fix that -- lazy stays lazy -- so the pass belongs here, inside
             // what an attempt re-does, rather than in the retry that answers a latched render.
@@ -619,14 +625,14 @@ async function measureAxis(spec, variant) {
             await ref.waitForTimeout(200)
           }
           // Ask whether the source is actually showing its pictures, and say so when it is not.
-          // `prepare()` above already scrolls, which is what this template's lazy images need; the
+          // `prepare()` above already scrolls, which is what a plain-HTML source's lazy images need; the
           // loop is for a render whose end state is decided per LOAD rather than by waiting -- an
-          // export whose picture component latches filled or unfilled (the sibling business
-          // template does exactly that). Waiting cannot decide such a state, so the only honest
+          // export whose picture component latches filled or unfilled (a template built from this
+          // kit does exactly that). Waiting cannot decide such a state, so the only honest
           // options are load again, or say the picture is not the design. Three is small on
           // purpose: a page that needs many tries is telling us something a finding should carry.
 
-          // Plain `<img>` is this template's source shape. Selector and attribute are ONE decision,
+          // Plain `<img>` is the common source shape. Selector and attribute are ONE decision,
           // not two: an export whose picture component marks itself ready declares both in
           // `design.source.rendered`. Taking the selector from `design.images.sourceSlot` while
           // leaving the attribute at its default mixes the two contracts and asks a custom element
@@ -693,7 +699,7 @@ async function measureAxis(spec, variant) {
           // keeping even when this page also asked for content-keyed pairs -- and it usually does,
           // because the FIRST page to cite a source file is the unnarrowed one. Storing nothing in
           // that case left the cache empty for exactly the pages meant to hit it (measured on the
-          // sibling business template: 32 of its 288 axes served instead of the 84 it allows).
+          // a template built from this kit: 32 of its 288 axes served instead of the 84 it allows).
           const shareable = pairs.filter(([, pr]) => pr.source?.text === undefined).map(([k]) => k)
           // A reading taken while the source was still showing placeholders is not something a later
           // axis may inherit: the finding stays on this axis, and a reused entry would carry none of it.
@@ -710,13 +716,18 @@ async function measureAxis(spec, variant) {
         }
       }
       const imgCfg = contract.design.images ?? {}
+      // Unless the contract sets `design.images.scope`, both sides count the same root: a source with no <main>
+      // (Joomla/T3, most CMS themes) counts its whole body, and then so must the site, or the same pictures
+      // read as missing.
+      const siteScope = imgCfg.scope ?? (srcImages?.resolved === 'body' ? 'body' : 'main')
       const siteImages = await page.evaluate(imageCensus, {
-        scope: imgCfg.scope ?? 'main',
+        scope: siteScope,
         placeholder: imgCfg.placeholder ?? null
       })
       axis.images = {
         source: srcImages.images,
         site: siteImages.images,
+        roots: { source: srcImages.resolved, site: siteImages.resolved },
         placeholders: siteImages.placeholders.length
       }
       // `pages[].images: 'placeholders'` — a derived page's count is data-driven; placeholders still fail.
@@ -724,6 +735,7 @@ async function measureAxis(spec, variant) {
         F('image-missing', {
           expected: srcImages.images,
           observed: siteImages.images,
+          roots: { source: srcImages.resolved, site: siteImages.resolved },
           sourceSlots: srcImages.slots.slice(0, 12)
         })
       for (const ph of siteImages.placeholders) F('image-placeholder', ph)
@@ -869,7 +881,7 @@ async function measureAxis(spec, variant) {
         // for whatever is still animating on the element, its subtree or its ancestors (the test
         // fixture's 400 ms `translateY` transition costs 400 ms here, and that is the point), and
         // reports a box that will not settle within HOVER_SETTLE_MS instead of measuring mid-motion.
-        // Measured 15/09 on the sibling business template's en-home and en-about: none of its 13 hovered
+        // Measured 15/09 on a template built from this kit, en-home and en-about: none of its 13 hovered
         // per axis starts an animation, so the settle step costs one `evaluate` round trip (2-7 ms)
         // per element and the two pages' wall time is unchanged within run-to-run noise (±4 s).
         await page.waitForTimeout(60)
@@ -1211,12 +1223,13 @@ writeFileSync(path.join(out, 'visual.json'), JSON.stringify(report, null, 2) + '
 if (scope.plan) writeFileSync(path.join(out, 'FAST-GATE-PLAN.md'), planMarkdown(scope.plan))
 // 🔒 TRIAGE FIRST — 1,302 findings were 17 problems. A finding list is one row per SIGHTING,
 // so one undeclared selector arrives as 70 rows that a reader must collapse
-// by hand before deciding anything; measured 18/09 on base, 1,302 rows grouped to 17 KEYS — and
-// reading those 17 is what showed that nine of them name the same shape of problem (selectors
-// listed in pages[].parity that nothing measures). Seventeen keys is not a claim of seventeen
-// independent causes; it is a surface small enough that a reader can look for the causes. Accepted findings are grouped
-// beside them ON PURPOSE: they are the discrepancies a cited exception is excusing, and a reader
-// who never sees them cannot tell whether the exception still excuses what it was written for.
+// by hand before deciding anything; measured 18/09 on the sibling base template, 1,302 rows
+// grouped to 17 KEYS — and reading those 17 is what showed that nine of them name the same shape
+// of problem (selectors listed in pages[].parity that nothing measures). Seventeen keys is not a
+// claim of seventeen independent causes; it is a surface small enough to look for the causes in.
+// Accepted findings are grouped beside them ON PURPOSE: they are the discrepancies a cited
+// exception is excusing, and a reader who never sees them cannot tell whether the exception
+// still excuses what it was written for.
 const groupRows = (rows) => {
   const g = new Map()
   for (const { page, finding } of rows) {
@@ -1308,13 +1321,13 @@ const md = [
   '| Page | Axis | Component | Status | Deltas |',
   '|---|---|---|---|---|'
 ]
-// 🔒 THE COMPONENT TABLE PRINTS EXCEPTIONS, NOT THE CORPUS. Measured 18/09 on base: all 12,898
-// rows were `PASS` with no deltas, and printing them made this file 1.79 MB — of which 1.53 MB
-// (85%) said only "this was checked and it matched". A digest that large is not read, and a
-// digest nobody reads is the same failure as a gate nobody can fail. The rows stay in
-// visual.json, which is where `--reuse` and any run-to-run comparison read them from; what
-// changes is only what a READER is handed first. The count is kept so "0 exceptions of 12,898"
-// cannot be mistaken for "nothing was measured".
+// 🔒 THE COMPONENT TABLE PRINTS EXCEPTIONS, NOT THE CORPUS. Measured 18/09 on the sibling base
+// template: all 12,898 rows were `PASS` with no deltas, and printing them made that file 1.79 MB
+// — of which 1.53 MB (85%) said only "this was checked and it matched". A digest that large is
+// not read, and a digest nobody reads is the same failure as a gate nobody can fail. The rows
+// stay in visual.json, which is where `--reuse` and any run-to-run comparison read them from;
+// what changes is only what a READER is handed first. The count is kept so "0 exceptions of
+// 12,898" cannot be mistaken for "nothing was measured".
 // 🔒 A ROW IS NOISE ONLY IF IT SAYS SO IN A WAY THIS WRITER RECOGNISES. These producers write
 // `PASS`; the WordPress sibling writes `ok` for the same thing. Matching one spelling and
 // swallowing the other is how a filter quietly stops filtering — measured 18/09, the first
@@ -1407,6 +1420,8 @@ writeFileSync(
 // works from ONE list. Ids are stable within a run (M1…); the merge step re-keys across lenses.
 const HINT = {
   'rule-mismatch': "set the property on the rule's selector to the expected value (global.css / tokens.css)",
+  'rule-unexpected-visible':
+    'the contract declares this optional role absent in this variant (no styles for it) but it is visible — hide it, or measure it and add its styles',
   'rule-no-visible-match': 'the page lost the component, or the selector rotted — check the view',
   'unclassified-element': 'add a design.rule for this role (or fold it into an existing selector)',
   'parity-mismatch':
