@@ -310,6 +310,10 @@ printed in one colour.
 - The export (`contract-mapping.js`) wraps the emphasis in the demo's tag and attributes, in content map notation, in
   the first item holding it: `European Coaching in ((span))Dubai((/span))`. A slot without a span mark ignores it.
 - The site check's `accent-emphasis` (ADR 0044 decision 19) measures the printed heading.
+- The write step's emphasis stage (`write-step/emphasis-stage.js`, 2026-11-06) turns the codes into tags where the slot stores
+  HTML. It looks for the written words at the content map's path, then in every text of the whole stored value, since rows
+  removed in the same write move an indexed heading (card N). Words found twice or nowhere keep their codes, and the site
+  check's `emphasis-codes-left` blocks on step 9 with the reason.
 
 ## Consequences
 

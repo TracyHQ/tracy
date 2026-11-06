@@ -13,8 +13,8 @@
 // as they do. It has no item of its own then, so its title lives on the article, and an item an earlier run made for it is unpublished.
 import { createHash } from 'node:crypto'
 import {
-  articleLayoutOf,
   contentPageRoute,
+  legalLayoutOf,
   mayHaveContentRoute,
   ROUTE_ALIAS,
   routedAddress,
@@ -227,11 +227,12 @@ async function writeRoutedPage({ order, call, write, make, rows, owners, kit, ca
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, owners: Map<string, object>, extras: object,
  *   last?: object }} input
  * @returns {Promise<{ pages: Map<string, { url?: string, reason?: string }>, results: [string, object][], lines: object[],
- *   kept: { id: string, path: string }[] }>} `pages`: each page's address or why it has none; `results`: by report line slot;
- *   `kept`: the pages the site check should open
+ *   kept: { id: string, path: string }[], opened: { id: string, itemId: number }[] }>} `pages`: each page's address or why it
+ *   has none; `results`: by report line slot; `kept`: the pages the site check should open; `opened`: the menu item that opens each
+ *   page (its own, or the category's hidden item on the template's route), which the created page hide rule is scoped by (card AT)
  */
-export async function createPages({ door, siteKey, kit, plan, owners, extras, last = NO_LAST }) {
-  const out = { pages: new Map(), results: [], lines: [], kept: [] }
+export async function createPages({ door, siteKey, kit, plan, owners, extras, last = NO_LAST, phones = [] }) {
+  const out = { pages: new Map(), results: [], lines: [], kept: [], opened: [] }
   const finish = (order, done) => {
     const words = linesOf(order, done)
     out.results.push(...words.results)
@@ -247,17 +248,19 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
               : `index.php?Itemid=${done.itemId}`
           }
     )
-    if (!done.reason)
+    if (!done.reason) {
       out.kept.push({
         id: order.id,
         path: done.routeLink ? `/${ROUTE_ALIAS}/${order.slug}` : `/${order.slug}`
       })
+      if (Number(done.itemId) > 0) out.opened.push({ id: order.id, itemId: Number(done.itemId) })
+    }
   }
-  const orders = pagesToCreate(plan).map((page) => orderOf(page, extras))
+  const orders = pagesToCreate(plan).map((page) => orderOf(page, extras, { phones }))
   const routed = mayHaveContentRoute({ plan, kit })
   const fresh = []
   for (const order of orders) {
-    const held = heldByLast(order, last, routed)
+    const held = heldByLast(order, last, routed, legalLayoutOf(kit))
     if (held) finish(order, held)
     else fresh.push(order)
   }
@@ -287,7 +290,8 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
   }
   // A kept page of a route the template does not use names no category: the page keeps its own item.
   const route = contentPageRoute({ plan, kit, rows })
-  const articleLayout = route ? await articleLayoutOf(route, call) : null
+  // Every page created today is a legal page (site.legalPages), so it prints as the kit says a legal page does (card AN).
+  const articleLayout = route ? legalLayoutOf(kit) : null
   const printsAs = articleLayout ? { article_layout: articleLayout } : {}
   let categoryId = null
   let routeRow = null
@@ -338,6 +342,11 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
       const held = paramsOf(routeRow.params)
       if (articleLayout && held.article_layout !== articleLayout)
         fields.params = JSON.stringify({ ...held, ...printsAs })
+      else if (!articleLayout && held.article_layout) {
+        // A file an earlier run set, which the kit does not name for this page, comes off (card AN).
+        const { article_layout: _gone, ...rest } = held
+        fields.params = JSON.stringify(rest)
+      }
       if (Object.keys(fields).length) {
         await write('menuItem', Number(routeRow.id), fields)
         routeRow = { ...routeRow, ...fields }

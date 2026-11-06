@@ -73370,6 +73370,36 @@
           "article-15"
         ]
       }
+    ],
+    "createdPageLayouts": {
+      "legal": {
+        "articleLayout": "ja_boxing:default",
+        "why": "html/com_content/article/default.php prints the article alone; classes.php, the class pages file, adds the signup-actions and bottom-actions bars"
+      }
+    },
+    "emptyVideoButtons": [
+      {
+        "selector": ".video-btn[data-src$=\"/embed/\"]",
+        "why": "html/com_content/article/classes.php prints a.video-btn on every session card with data-src https://www.youtube.com/embed/ followed by the exer_video_id field, with no check that the id is set"
+      }
+    ],
+    "selfLinkButtons": [
+      {
+        "container": ".bottom-actions",
+        "why": "html/layouts/chromes/t4section.php prints a.section-actions inside div.bottom-actions from the module params title-btn and link-btn, which no contract slot reaches (issue #369); module-178 on the Coaches page links it to its own menu item (Itemid=195)"
+      }
+    ],
+    "hiddenPageLinks": [
+      {
+        "container": ".teams-item",
+        "why": "acm/teams/tmpl/style-1.php links each card photo and name (h4 a.link-heading) inside div.teams-item to data.link, the demo trainer profile (index.php?Itemid=197); the plugin keeps that link with its row (SLOT_NOT_HIDEABLE), so a plan that drops the profile page leaves it leading to a hidden page"
+      }
+    ],
+    "createdPageHide": [
+      {
+        "selector": ".share-social",
+        "why": "html/com_content/article/default.php prints div.share-social (div.ja-share-button, services facebook,twitter,reddit) on every article with no setting to turn it off, and no article layout of the template lacks both it and the class pages action bar, so a created legal page printed share buttons (card AT)"
+      }
     ]
   },
   "storedFields": [

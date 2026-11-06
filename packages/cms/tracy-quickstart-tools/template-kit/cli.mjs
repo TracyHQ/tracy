@@ -45,6 +45,28 @@
 //                 --images is the folder the image paths are relative to, the kit's own folder by default)
 //   cli.mjs looks --kit <template-kit.json> --apply <looks.json>   (merge [{image, sha256, text}] written by the
 //                 packager's own Claude Code: all entries checked, none written when one is wrong; lib/looks.mjs)
+//   cli.mjs legal-layout --kit <template-kit.json> --layout '<template>:<file>' --why '<what it prints>'
+//   cli.mjs legal-layout --kit <template-kit.json> --none --why '<words>'
+//                 (site.createdPageLayouts.legal, lib/legal-layout.mjs: the plain article layout a created legal page
+//                 prints through, never a content page's own file; --none: the component's default. A person reads the
+//                 template's article layouts first; nothing is measured, and no image moves, so an approval stays valid)
+//   cli.mjs video-buttons --kit <template-kit.json> --selector '<css>' --why '<where the template prints it>'
+//   cli.mjs video-buttons --kit <template-kit.json> --none
+//                 (site.emptyVideoButtons, lib/video-buttons.mjs: a play button the template prints with an empty video
+//                 address, which the write step hides with one CSS rule; --none says the template has none. A person reads
+//                 the template's layout first; nothing is measured, and no image moves, so an approval stays valid)
+//   cli.mjs self-link-buttons --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
+//   cli.mjs self-link-buttons --kit <template-kit.json> --none
+//                 (site.selfLinkButtons, lib/self-link-buttons.mjs: the container of a "more" button that may lead to the
+//                 page it sits on, which the write step hides on that page only; same reading, no image moves)
+//   cli.mjs hidden-page-links --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
+//   cli.mjs hidden-page-links --kit <template-kit.json> --none
+//                 (site.hiddenPageLinks: the container of list row links that may lead to a page the plan hides, which the
+//                 write step sends to a living page or makes plain text; same reading, no image moves)
+//   cli.mjs created-page-hide --kit <template-kit.json> --selector '<css>' --why '<where the template prints it>'
+//   cli.mjs created-page-hide --kit <template-kit.json> --none
+//                 (site.createdPageHide: a block the template prints hard coded on every article page, such as a share bar,
+//                 which the write step hides on the pages it creates only; same reading, no image moves)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -57,6 +79,7 @@ import { contactFieldChecks } from './lib/coverage-gate.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
 import { linkLabelSlots } from './lib/link-label-slots.mjs'
+import { declareLegalLayout } from './lib/legal-layout.mjs'
 import { applyLooks, indentOf, lookWorklist } from './lib/looks.mjs'
 import { assignedAt, indexMap } from './lib/map-index.mjs'
 import { measureMin } from './lib/measure-min.mjs'
@@ -75,6 +98,12 @@ import { writeSheets } from './lib/sheets.mjs'
 import { adapterFor } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
+import { declareVideoButtons } from './lib/video-buttons.mjs'
+import {
+  declareCreatedPageHide,
+  declareHiddenPageLinks,
+  declareSelfLinkButtons
+} from './lib/self-link-buttons.mjs'
 
 const COMMANDS = [
   'build',
@@ -290,10 +319,85 @@ function looks(o) {
   return 0
 }
 
+/** Name the article layout of a created legal page in a written kit (lib/legal-layout.mjs). */
+function legalLayout(o) {
+  if (!str(o.kit) || (!o.none && !str(o.layout)))
+    throw new Error(
+      "legal-layout needs --kit <template-kit.json> and --layout '<template>:<file>' --why '<words>', or --none"
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declareLegalLayout(kit, { layout: str(o.layout), why: str(o.why), none: o.none === true })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  const named = kit.site.createdPageLayouts.legal.articleLayout ?? 'the default article'
+  console.log(`created legal pages print through ${named}${r.changed ? '' : ', unchanged'}`)
+  return 0
+}
+
+/** Declare a play button with an empty video address in a written kit (lib/video-buttons.mjs). */
+function videoButtons(o) {
+  if (!str(o.kit) || (!o.none && !str(o.selector)))
+    throw new Error(
+      "video-buttons needs --kit <template-kit.json> and --selector '<css>' --why '<words>', or --none"
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declareVideoButtons(kit, { selector: str(o.selector), why: str(o.why), none: o.none === true })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  console.log(
+    `${kit.site.emptyVideoButtons.length} empty video buttons named${r.changed ? '' : ', unchanged'}`
+  )
+  return 0
+}
+
+/** Declare a container of links in a written kit under one `site` field (lib/self-link-buttons.mjs). */
+function containers(o, command, declare, field, words, flag = 'container') {
+  if (!str(o.kit) || (!o.none && !str(o[flag])))
+    throw new Error(
+      `${command} needs --kit <template-kit.json> and --${flag} '<css>' --why '<words>', or --none`
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declare(kit, { [flag]: str(o[flag]), why: str(o.why), none: o.none === true })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  console.log(`${kit.site[field].length} ${words} named${r.changed ? '' : ', unchanged'}`)
+  return 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
   if (cmd === 'looks') return looks(o)
+  if (cmd === 'legal-layout') return legalLayout(o)
+  if (cmd === 'video-buttons') return videoButtons(o)
+  if (cmd === 'self-link-buttons')
+    return containers(o, cmd, declareSelfLinkButtons, 'selfLinkButtons', 'self link containers')
+  if (cmd === 'hidden-page-links')
+    return containers(o, cmd, declareHiddenPageLinks, 'hiddenPageLinks', 'hidden page link containers')
+  if (cmd === 'created-page-hide')
+    return containers(
+      o,
+      cmd,
+      declareCreatedPageHide,
+      'createdPageHide',
+      'created page hide selectors',
+      'selector'
+    )
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||

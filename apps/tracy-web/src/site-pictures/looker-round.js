@@ -6,9 +6,12 @@
 // (picker-picks.js splitForPicker). The stored manifest, check result and failure list therefore hold the drawings and
 // the looks, and the next fix round sends back the rejected frames the picker placed, with their fault names. Every
 // saved manifest entry carries its frame's surface (textOver, templateOverlay; frame-surface/surface.js stampSurface).
+// When the drawer's provider keeps failing a drawing (ladder-draw.js DrawerProviderError, card AU), the round is saved
+// failed with that error, so the run ends failed naming the frame and the status, and no frame is hidden for it.
 import sharp from 'sharp'
 import { addRunCost, saveFile } from './bench-store.js'
 import { stampSurface } from './frame-surface/surface.js'
+import { DrawerProviderError } from './ladder-draw.js'
 import { LOOKER_RULE } from './looker-step.js'
 import { splitForPicker } from './picker-picks.js'
 
@@ -64,7 +67,18 @@ export function withLooker(step) {
             const frame = String(f.where).replace(/^siteSettings /, '')
             failing.set(frame, [...new Set([...(failing.get(frame) ?? []), r.id])])
           }
-        const finished = await ready.finisher.finish(args.pictures, { lastRound, failing })
+        let finished
+        try {
+          finished = await ready.finisher.finish(args.pictures, { lastRound, failing })
+        } catch (error) {
+          if (!(error instanceof DrawerProviderError)) throw error
+          return store.saveRound(pool, {
+            ...args,
+            pictures: stamped(args.pictures),
+            state: 'failed',
+            error: `${error.code}: ${error.message}`
+          })
+        }
         for (const f of finished.files) {
           if (!ready.files[f.file])
             ready.files[f.file] = { sha256: f.sha256, width: f.width, height: f.height }

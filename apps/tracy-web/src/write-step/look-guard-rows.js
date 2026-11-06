@@ -3,7 +3,12 @@
 // was read of it, so a template's other settings, whatever they are, stay as they were and stay green.
 import { fallbackBlocksIn, isFallbackBlock, withoutFallbackBlocks } from '../lib/printed-in-body.js'
 import { HEAD_END, HEAD_START } from './brand-head-block.js'
+import { videoBlockFor, videoBlockIn, withVideoBlock } from '../lib/empty-video-buttons.js'
+import { isSelfLinkBlock, selfLinkBlockIn, withSelfLinkBlock } from '../lib/self-link-buttons.js'
+import { hiddenLinkBlockIn, isHiddenLinkBlock, withHiddenLinkBlock } from '../lib/hidden-page-links.js'
+import { createdHideBlockIn, isCreatedHideBlock, withCreatedHideBlock } from '../lib/created-page-hide.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
+import { emphasisOnlyUpdate } from './look-guard-emphasis.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { NOT_A_POST } from './page-create-stage.js'
 import { MARK } from './page-create-lines.js'
@@ -98,6 +103,8 @@ const settingsOpen = (state, created, listed) => (name, value) => {
     return hasMarkup(String(value)) ? `the setting ${name} holds markup` : true
   if (created && name === 'article_layout')
     return (
+      // Taken off, the page prints through the template's plain default (card AN).
+      value === undefined ||
       state.layouts.has(value) ||
       `the layout ${value} is not one read from the template's own pages, so it is not a copy of the template's`
     )
@@ -185,10 +192,94 @@ function headFaults(inside, what) {
   return faults
 }
 
+/**
+ * The empty video button block (ADR 0044, decision 29): it may hold exactly the rule for the selectors the kit names, or be
+ * taken off. The rest of the module is judged without it, as the head block and the accent module always were.
+ */
+function videoBlockFaults(what, raw, heldRaw, selectors) {
+  const block = videoBlockIn(raw)
+  if (!block || block === videoBlockIn(heldRaw) || block === videoBlockFor(selectors)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} empty video buttons`,
+      'the empty video button block holds only the hide rule for the selectors the kit names'
+    )
+  ]
+}
+
+/**
+ * The self link block (ADR 0044, decision 29, second use): it may hold only hide rules scoped to one page each, on the containers
+ * the kit names, or be what the site held already.
+ */
+function selfLinkBlockFaults(what, raw, heldRaw, containers) {
+  const block = selfLinkBlockIn(raw)
+  if (!block || block === selfLinkBlockIn(heldRaw) || isSelfLinkBlock(block, containers)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} self link buttons`,
+      'the self link block holds only hide rules, one page each, on the containers the kit names'
+    )
+  ]
+}
+
+/** The hidden page link block (card AM): only the inert rule on links in the containers the kit names, or what the site held. */
+function hiddenLinkBlockFaults(what, raw, heldRaw, containers) {
+  const block = hiddenLinkBlockIn(raw)
+  if (!block || block === hiddenLinkBlockIn(heldRaw) || isHiddenLinkBlock(block, containers)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} hidden page links`,
+      'the hidden page link block holds only the plain text rule on links in the containers the kit names'
+    )
+  ]
+}
+
+/** The created page hide block (card AT): only the hide rule on the kit's selectors, each scoped to one menu item's article. */
+function createdHideBlockFaults(what, raw, heldRaw, selectors) {
+  const block = createdHideBlockIn(raw)
+  if (!block || block === createdHideBlockIn(heldRaw) || isCreatedHideBlock(block, selectors)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} created page hide`,
+      'the created page hide block holds only the hide rule on the selectors the kit names, scoped to one menu item each'
+    )
+  ]
+}
+
+const MARKED = [
+  [videoBlockIn, withVideoBlock],
+  [selfLinkBlockIn, withSelfLinkBlock],
+  [hiddenLinkBlockIn, withHiddenLinkBlock],
+  [createdHideBlockIn, withCreatedHideBlock]
+]
+const withoutMarked = (text) => MARKED.reduce((t, [, without]) => without(t, null), text)
+const hasMarked = (text) => MARKED.some(([blockIn]) => blockIn(text))
+
 /** What a module's content may change: the accent style alone, or the head block with all around it as the site held it. */
 function moduleContentFaults(id, content, { state }) {
   const what = `module ${id ?? '(new)'} content`
-  const text = String(content ?? '')
+  const raw = String(content ?? '')
+  const heldRaw = String(state.rows.get(`module:${id}`)?.content ?? '')
+  const marked = [
+    ...videoBlockFaults(what, raw, heldRaw, state.videoSelectors ?? []),
+    ...selfLinkBlockFaults(what, raw, heldRaw, state.selfLinkContainers ?? []),
+    ...hiddenLinkBlockFaults(what, raw, heldRaw, state.hiddenLinkContainers ?? []),
+    ...createdHideBlockFaults(what, raw, heldRaw, state.createdHideSelectors ?? [])
+  ]
+  const text = withoutMarked(raw)
+  const held = withoutMarked(heldRaw)
+  const touched = [raw, heldRaw].some(hasMarked)
+  // A write of the marked blocks alone: everything else of the module stays as the site held it.
+  if (touched && text.trim() === held.trim()) return marked
+  return [...marked, ...restFaults(text, held, what, state)]
+}
+
+/** The accent module, or the head block with all around it as the site held it. */
+function restFaults(text, held, what, state) {
   if (text.includes(ACCENT_MARK)) {
     const { blocks, rest } = stylesOf(text)
     const faults = blocks.flatMap((b) =>
@@ -207,7 +298,6 @@ function moduleContentFaults(id, content, { state }) {
       fault(WRITE, what, 'only the accent module and the head block are open to a write of a whole module')
     ]
   const inside = text.slice(from + HEAD_START.length, to)
-  const held = String(state.rows.get(`module:${id}`)?.content ?? '')
   const heldFrom = held.indexOf(HEAD_START)
   const heldTo = held.indexOf(HEAD_END)
   const heldOut =
@@ -267,6 +357,8 @@ function moduleFaults({ id, fields, state, kitNamed }) {
 /** @returns {{ step: number, what: string, reason: string }[]} */
 export function updateFaults(params, state, kitNamed) {
   const { kind, id, fields } = params ?? {}
+  // The emphasis stage turns a heading's codes into the demo's tags and changes nothing else (look-guard-emphasis.js).
+  if (emphasisOnlyUpdate(params, state)) return []
   if (kind === 'module') return moduleFaults({ id, fields, state, kitNamed })
   if (kind === 'moduleAssignment') {
     const on = Object.keys(fields ?? {}).join() === 'menuids' && fields.menuids === '[0]'

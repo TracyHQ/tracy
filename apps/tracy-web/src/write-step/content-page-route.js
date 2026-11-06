@@ -106,6 +106,14 @@ export async function articleLayoutOf(route, call) {
   return named(paramsOf(route.item?.params).article_layout)
 }
 
+/**
+ * The file a created legal page prints its article through (card AN): the one the kit names for legal pages
+ * (`site.createdPageLayouts.legal.articleLayout`), else none, so Joomla prints the template's plain default article. Never the
+ * file of the template's content pages: a class page's prints its booking bars, which a legal page must not show.
+ * @returns {string | null}
+ */
+export const legalLayoutOf = (kit) => named(kit?.site?.createdPageLayouts?.legal?.articleLayout)
+
 /** The link of the menu item a created page is opened under. */
 export const routeLink = (route, category) =>
   `index.php?option=com_content&view=category${route.layout ? `&layout=${route.layout}` : ''}&id=${category}`

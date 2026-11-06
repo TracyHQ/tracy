@@ -42,6 +42,21 @@ export const CUTOUT_FAULTS = Object.freeze([
 ])
 /** The fault it may name when the site's text sits over the picture with no template overlay (section 3e). */
 export const TEXT_OVER_FAULT = 'text would not read'
+/**
+ * The faults that are minor (owner decision 06/11/2026, card AJ): a picture rejected for these only may still fill a
+ * frame that would otherwise be left without one (ladder rung `best-rejected`). Every other fault is hard: a wrong or
+ * missing subject, a forbidden item, a cut face, a distorted body, lettering, a missing part, leftover ground, or a
+ * figure over the text.
+ */
+export const MINOR_FAULTS = Object.freeze([
+  'subject cut off',
+  'visible drawing seam',
+  'rough cut-out edge',
+  TEXT_OVER_FAULT
+])
+/** Whether a look's faults are all minor (and at least one is named). */
+export const onlyMinorFaults = (faults) =>
+  Array.isArray(faults) && faults.length > 0 && faults.every((f) => MINOR_FAULTS.includes(f))
 /** Every fault the looker model may name. */
 export const MODEL_FAULTS = Object.freeze([...PICTURE_FAULTS, ...CUTOUT_FAULTS, TEXT_OVER_FAULT])
 /** The fault code records when the looker could not look at a picture, twice: it fails the picture. */

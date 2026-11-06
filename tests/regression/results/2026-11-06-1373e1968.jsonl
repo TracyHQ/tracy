@@ -1,0 +1,2 @@
+{"id":"REG-PR-415-write-step-and-site-check-cards","verdict":"PASS","commit":"1373e1968b62be6b453b62f703f5879029f11e2e","ran_at":"2026-11-06T04:24:04.149Z","evidence":"tests/regression/.runs/2026-11-06-1373e1968/REG-PR-415-write-step-and-site-check-cards.log"}
+{"id":"REG-PR-415-pictures-never-leave-frame-empty","verdict":"PASS","commit":"1373e1968b62be6b453b62f703f5879029f11e2e","ran_at":"2026-11-06T04:24:20.243Z","evidence":"tests/regression/.runs/2026-11-06-1373e1968/REG-PR-415-pictures-never-leave-frame-empty.log"}

@@ -188,8 +188,9 @@ test(
     assert.equal(drawn.length, 1)
     const paid = looks + drawn[0].costUsd
     assert.ok(Math.abs(run.costUsd - (r0.costUsd + r1.costUsd + paid)) < 1e-9, `${run.costUsd}`)
-    // No copy file: no alt notes.
+    // No copy file: no alt notes, and the manifest says the alt check is deferred to the site check (step 11).
     assert.deepEqual(r1.pictures.altNotes, [])
+    assert.equal(r1.pictures.altCheck.status, 'deferred')
 
     // Side check: DeepSeek's fix round request (no tools) does not carry the earlier reasoning_content; the shared
     // wire drops it on purpose (lib/agent-over-door-wire.js, DeepSeek's thinking mode docs).
@@ -259,6 +260,7 @@ test(
     const second = await readRun(pool, withCopy.id)
     const notes = new Map(second.rounds[0].pictures.altNotes.map((n) => [n.frame, n]))
     assert.equal(notes.size, 2)
+    assert.equal(second.rounds[0].pictures.altCheck.status, 'compared')
     assert.equal(notes.get(a).agrees, true)
     assert.deepEqual(notes.get(a).shared, ['mechanic', 'tru', 'bicycle', 'wheel', 'stand'])
     assert.equal(notes.get(a).seen, SEEN)

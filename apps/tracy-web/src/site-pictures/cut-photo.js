@@ -3,6 +3,10 @@
 // pictures/subject-crop.mjs, given the heads of head-boxes.js as the boxes it keeps whole), written at EXACTLY the aspect of the demo file the site holds for the frame (the content
 // map slot's fit.source; the write door compares with it) and at least the frame's display box on both sides.
 //
+// 🔒 NEVER NARROWER THAN THE KIT'S MINIMUM (card AI). A frame whose content map slot sets `fit.minWidth` (the write
+// door refuses a narrower file, SLOT_IMAGE_TOO_SMALL) is written at least that wide, and an owner photo region narrower
+// than it is refused (`narrower-than-min-width`): it is never enlarged to reach it, so the next rung takes over.
+//
 // 🔒 ENLARGED AT MOST MAX_ENLARGE (1.5) TIMES, AND ONLY THROUGH THE SHARPNESS GATE. A crop smaller than the size it must
 // be written at is judged first at its own pixels for the frame's display width (lib/photo-sharpness.js judgePhoto):
 // it passes as it is, passes after the gate's light correction (those bytes are used), or the photo loses the frame.
@@ -33,14 +37,16 @@ const open = (bytes) => sharp(Buffer.from(bytes), { limitInputPixels: MAX_PIXELS
  * demo file's width, or twice the display width when there is no demo file) when that is already enough. Whole
  * pixels; the aspect is off by less than one pixel's worth.
  * @param {{width: number, height: number} | null} demo
- * @param {{width: number, height: number}} box the frame's display box
+ * @param {{width: number, height: number, minWidth?: number}} box the frame's display box, and the kit's minimum file
+ *   width when its slot sets one (never written narrower)
  * @param {number} natural the width the crop has of its own
  */
 export function outputSizeFor(demo, box, natural) {
   const shape = demo ?? box
   const aspect = shape.width / shape.height
   const most = demo?.width ?? 2 * box.width
-  let width = Math.max(box.width, Math.ceil(box.height * aspect), Math.min(natural, most))
+  const floor = Number.isInteger(box.minWidth) && box.minWidth > 0 ? box.minWidth : 0
+  let width = Math.max(box.width, floor, Math.ceil(box.height * aspect), Math.min(natural, most))
   let height = Math.round(width / aspect)
   while (height < box.height) {
     width += 1
@@ -120,12 +126,14 @@ export async function cutPhoto(bytes, asset, frame, demo, { matches = false, any
  * most MAX_ENLARGE times and only through the sharpness gate (a low quality photo always goes through it).
  * @param {Uint8Array} bytes the owner photo
  * @param {{left: number, top: number, width: number, height: number}} rect on the photo as shown (EXIF turned)
- * @param {{width: number, height: number}} frame the kit frame (its display box)
+ * @param {{width: number, height: number, minWidth?: number}} frame the kit frame (its display box, its minimum width)
  * @param {{width: number, height: number} | null} demo
  * @param {boolean} low the photo is labelled low quality
  */
 export async function writeRect(bytes, rect, frame, demo, low) {
-  const box = { width: Number(frame.width), height: Number(frame.height) }
+  const box = { width: Number(frame.width), height: Number(frame.height), minWidth: frame.minWidth }
+  if (Number.isInteger(frame.minWidth) && rect.width < frame.minWidth)
+    return { ok: false, refused: 'narrower-than-min-width' }
   const out = outputSizeFor(demo, box, rect.width)
   const enlarge = Number((out.width / rect.width).toFixed(4))
   if (enlarge > MAX_ENLARGE) return { ok: false, refused: 'too-small' }

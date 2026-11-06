@@ -15,12 +15,12 @@
       "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-database-1.3.1.sql.gz"
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.82.zip",
+      "file": "pkg_claudecowork-0.24.85.zip",
       "overridesRelease": true,
-      "version": "0.24.82",
-      "bytes": 570198,
-      "sha256": "d145d7f06bdebeba78eb8d90f07930335a9198dcb30529e819571e228770432a",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.82/pkg_claudecowork-0.24.82.zip",
+      "version": "0.24.85",
+      "bytes": 580543,
+      "sha256": "0ad0c6f455f107df66cb04631b1dad7007373311652f4f2db3580c558a28bcf4",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.85/pkg_claudecowork-0.24.85.zip",
       "contractFiles": {
         "content-map.json": "ace00671b7c1256c5517624c111cb6bee471697a7227ed20ffd8d85909050fbd",
         "manifest.json": "8c67ed945a7370ee8d6933fcb93a31822443ecc58150b2f86f4a14a868400d7c",
@@ -57,12 +57,12 @@
       "githubAssetId": 683844330
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.82.zip",
+      "file": "pkg_claudecowork-0.24.85.zip",
       "overridesRelease": true,
-      "version": "0.24.82",
-      "bytes": 570198,
-      "sha256": "d145d7f06bdebeba78eb8d90f07930335a9198dcb30529e819571e228770432a",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.82/pkg_claudecowork-0.24.82.zip",
+      "version": "0.24.85",
+      "bytes": 580543,
+      "sha256": "0ad0c6f455f107df66cb04631b1dad7007373311652f4f2db3580c558a28bcf4",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.85/pkg_claudecowork-0.24.85.zip",
       "contractVersions": ["1.2.0", "1.2.1", "1.2.2", "1.2.3", "1.2.4", "1.2.5"],
       "contractFiles": {
         "content-map.json": "55497d7a13229d24266dc2b61d75d6e574d1161f33644b46511003f3a91e073b",
@@ -150,11 +150,11 @@
       "githubAssetId": 683858593
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.82.zip",
-      "version": "0.24.82",
-      "bytes": 570198,
-      "sha256": "d145d7f06bdebeba78eb8d90f07930335a9198dcb30529e819571e228770432a",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.82/pkg_claudecowork-0.24.82.zip",
+      "file": "pkg_claudecowork-0.24.85.zip",
+      "version": "0.24.85",
+      "bytes": 580543,
+      "sha256": "0ad0c6f455f107df66cb04631b1dad7007373311652f4f2db3580c558a28bcf4",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.85/pkg_claudecowork-0.24.85.zip",
       "contractVersions": ["1.0.0", "1.0.1", "1.0.2", "1.0.3", "1.0.4"],
       "contractFiles": {
         "content-map.json": "d56b1b6826e70efb8ffbb8e0f1a7edc1fb901eed7841cdf2b3552b172aa3e873",
@@ -1618,11 +1618,11 @@
       "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-boxing%2Fj6/ja-boxing-j6-quickstart-1.0.11.zip"
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.83.zip",
-      "version": "0.24.83",
-      "bytes": 579733,
-      "sha256": "29552bb57f69feb3afec380827219c0ba2ef8d4fa70263879d681ec95503ee3f",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.83/pkg_claudecowork-0.24.83.zip",
+      "file": "pkg_claudecowork-0.24.85.zip",
+      "version": "0.24.85",
+      "bytes": 580543,
+      "sha256": "0ad0c6f455f107df66cb04631b1dad7007373311652f4f2db3580c558a28bcf4",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.85/pkg_claudecowork-0.24.85.zip",
       "contractFiles": {
         "content-map.json": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
         "manifest.json": "0fa084ae9aa9ded5d60596ff20a000385460cfeb63365b89df3065a42be01cef",

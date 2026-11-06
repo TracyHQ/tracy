@@ -92,6 +92,13 @@ const PAGES = {
     '<footer',
     '<p><img class="on-dark" src="/plate.png" width="120" height="30" alt=""><img class="on-light" src="/mid.png" width="120" height="30" alt=""></p><footer'
   ),
+  // A template's blurred background layer (card AW): a picture under a pseudo-element veil, words over it.
+  '/veiled': THEMED(
+    '<style>.mask{position:relative;background:url(/mid.png);padding:60px}.mask:after{content:"";position:absolute;inset:0;background:#121111;opacity:.8}.mask p{position:relative;z-index:1}</style>'
+  ).replace(
+    '<section class="band"',
+    '<section class="mask" id="Mod4"><p>Words on a veiled picture</p></section><section class="band"'
+  ),
   '/noswitch':
     '<!doctype html><html><body><div class="ja-dark-mode">Mode</div><p>Plain words here</p></body></html>',
   '/faults': `<!doctype html><html><head><title>Quay | About</title><style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style></head><body class="view-article">
@@ -206,6 +213,17 @@ test('words on a picture are shot against the region under them, on both sides',
       assert.deepEqual(w.fg, [139, 139, 139])
       assert.ok(w.key.includes('#Mod2'))
     }
+  })
+})
+
+test('words over a picture under a veil say so; words over a bare picture do not', opts, async () => {
+  await withPage('/veiled', async (page) => {
+    const { sides } = await readLook(page, 1440)
+    const veiled = sides.dark.over.find((x) => x.text.startsWith('Words on a veiled'))
+    const bare = sides.dark.over.find((x) => x.text.startsWith('Grey words'))
+    assert.ok(veiled && bare)
+    assert.equal(veiled.veiled, true)
+    assert.equal(bare.veiled, undefined)
   })
 })
 

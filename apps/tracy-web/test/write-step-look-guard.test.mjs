@@ -616,6 +616,10 @@ test('the exceptions the guard allows each say why', () => {
     'created-page-rows',
     'hide',
     'phone-logo-css',
+    'empty-video-buttons',
+    'self-link-buttons',
+    'hidden-page-links',
+    'created-page-hide',
     'body-background'
   ])
     assert.ok(String(exceptions[name] ?? '').length > 20, `${name} has a stated reason`)
@@ -680,4 +684,52 @@ test('a template that mixes its accent itself keeps the mix, and only its colour
     `.dot::before{background-color:color-mix(in srgb,var(--dot-accent,var(--tracy-accent)) ${share}%,transparent)}`
   assert.deepEqual(cssFaults(rule(10), { routes: own }), [])
   assert.equal(cssFaults(rule(40), { routes: own }).length, 1)
+})
+
+// Card AB: a person card's cell holds only social icon links on the demo, and the brief has no social account for that person, so
+// the plan writes their role there and the icons go. That is accepted; any other finding on such a cell, or a cell whose person
+// does have an account, is still kept. People and accounts are invented.
+test('words over a cell of social icons only, for a person with no social account in the brief, are no finding', async () => {
+  const icons =
+    '((div class="list-social"))((a href="#"))((i class="fab fa-facebook"))((/i))((/a))((a href="#"))((i class="fab fa-instagram"))((/i))((/a))((/div))'
+  const map = {
+    slots: [
+      { key: 'module-7.12', type: 'text', sample: icons },
+      { key: 'module-7.13', type: 'text', sample: icons }
+    ]
+  }
+  const brief = {
+    facts: [
+      { id: 'f-ana', field: 'team', value: { name: 'Ana Ruiz', role: 'Coach' } },
+      {
+        id: 'f-ben',
+        field: 'team',
+        value: { name: 'Ben Olsen', role: 'Coach', instagram: 'https://instagram.com/ben.coach.example' }
+      },
+      { id: 'f-club', field: 'socials', value: [{ url: 'https://instagram.com/quay.club.example' }] }
+    ]
+  }
+  const copy = {
+    slots: [
+      { slot: 'block-7.12', owner: 'writer', text: 'Coach', factIds: ['f-ana'] },
+      { slot: 'block-7.13', owner: 'writer', text: 'Coach', factIds: ['f-ben'] }
+    ]
+  }
+  const run = async (key, value) => {
+    const guard = lookGuard({ kit, contentMap: map })
+    guard.know({ copy, brief })
+    guard.check({ action: 'content.contract', params: { operation: 'apply', changes: { [key]: value } } })
+    return guard
+  }
+  const ana = await run('module-7.12', 'Coach')
+  assert.deepEqual(ana.findings(), [])
+  assert.equal(ana.allowed()[0]?.rule, 'social-icons-without-accounts')
+  // Ben has an account: the icons going is still a finding.
+  assert.ok((await run('module-7.13', 'Coach')).findings().some((f) => /list-social/.test(f.reason)))
+  // Another fault on the same cell stays.
+  assert.ok(
+    (await run('module-7.12', '((span style="color:red"))Coach((/span))'))
+      .findings()
+      .some((f) => /inline style/.test(f.reason))
+  )
 })

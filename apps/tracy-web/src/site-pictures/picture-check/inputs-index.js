@@ -39,6 +39,12 @@ function indexKit(kit) {
       .filter((s) => isObject(s) && typeof s.key === 'string')
       .map((s) => [s.key, s])
   )
+  // The narrowest file the write door takes for a frame (the slot's fit.minWidth, SlotFit checkPicture): carried on the
+  // frame, so every cut and every drawing for it is written at least that wide (card AI).
+  for (const [id, f] of frames) {
+    const min = slots.get(contentMapKey(id))?.fit?.minWidth
+    if (isSize(min)) frames.set(id, { ...f, minWidth: min })
+  }
   const demoSize = (frameId) => {
     const s = slots.get(contentMapKey(frameId))
     return s ? demoFileSize(s) : null
