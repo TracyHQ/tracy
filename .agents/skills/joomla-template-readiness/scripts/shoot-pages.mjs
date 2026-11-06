@@ -6,7 +6,8 @@
 //   node shoot-pages.mjs --base <demo address> --kit <template-kit.json> --out <dir> [--pages-file <json>]
 //
 // Writes <out>/<page>-<width>.png and <out>/shots.json ([{ path, width, file, status }]). Run from the repository root.
-// Exit 0 every page shot, 1 a page failed (named in shots.json), 2 usage or setup error.
+// Pages are asked under /index.php (`pageUrl`). Exit 0 every page shot with a 200, 1 a page failed or answered another
+// status (named in shots.json, `failed: true`), 2 usage or setup error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import path from 'node:path'
@@ -32,6 +33,14 @@ export const nameOf = (p) => p.replace(/^\/+|\/+$/g, '').replace(/[^a-z0-9]+/gi,
  */
 export const WALK = Object.freeze({ pauseMs: 100, maxSteps: 40, settleMs: 2000 })
 
+/**
+ * The address of a page: Joomla answers only under `/index.php` unless URL rewriting is on (a quickstart site has it
+ * off), so a page path goes there, the rule apps/tracy-web/src/site-check/host-measure.js applies to the pages it asks.
+ * JA Diner 1.0.5, 06/11/2026: kit paths asked as is gave 96 of 98 shots of Apache's 404 page.
+ */
+export const pageUrl = (base, p) =>
+  new URL(p !== '/' && !/^\/index\.php(?=[/?]|$)/.test(p) ? `/index.php${p}` : p, base).href
+
 /** The browser context options of every shot at one size. */
 export const contextOptions = (size) => ({ viewport: size, reducedMotion: 'reduce' })
 
@@ -49,7 +58,7 @@ export async function walkPage(page) {
 
 /**
  * Shoot every path at every width into `out`. `chromium` is Playwright's.
- * @returns {Promise<{ path: string, width: number, file: string | null, status: number | null, error?: string }[]>}
+ * @returns {Promise<{ path: string, width: number, file: string | null, status: number | null, failed: boolean, error?: string }[]>}
  */
 export async function shootPages({ chromium, base, paths, out, widths = WIDTHS }) {
   mkdirSync(out, { recursive: true })
@@ -62,12 +71,15 @@ export async function shootPages({ chromium, base, paths, out, widths = WIDTHS }
       for (const p of paths) {
         const file = `${nameOf(p)}-${size.width}.png`
         try {
-          const res = await page.goto(new URL(p, base).href, { waitUntil: 'load', timeout: 60_000 })
+          const res = await page.goto(pageUrl(base, p), { waitUntil: 'load', timeout: 60_000 })
           await walkPage(page)
           await page.screenshot({ path: path.join(out, file), fullPage: true })
-          shots.push({ path: p, width: size.width, file, status: res?.status() ?? null })
+          // a page that answers anything but 200 is no shot of the page (an error page looks like a page)
+          const status = res?.status() ?? null
+          shots.push({ path: p, width: size.width, file, status, failed: status !== 200 })
         } catch (e) {
-          shots.push({ path: p, width: size.width, file: null, status: null, error: String(e?.message ?? e) })
+          const error = String(e?.message ?? e)
+          shots.push({ path: p, width: size.width, file: null, status: null, failed: true, error })
         }
       }
       await context.close()
@@ -101,7 +113,7 @@ async function main(argv) {
   const { chromium } = require('playwright')
   const shots = await shootPages({ chromium, base: values.base, paths, out: values.out })
   writeFileSync(path.join(values.out, 'shots.json'), `${JSON.stringify(shots, null, 2)}\n`)
-  const failed = shots.filter((s) => !s.file)
+  const failed = shots.filter((s) => s.failed)
   process.stdout.write(`${shots.length - failed.length} shots, ${failed.length} failed\n`)
   return failed.length ? 1 : 0
 }
