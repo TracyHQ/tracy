@@ -92,7 +92,8 @@ export async function finishOn({
   limits = null,
   clock = null,
   sideEffect = null,
-  first = {}
+  first = {},
+  timer = null
 }) {
   const site = writtenSite(heldAtStart(), { sideEffect })
   const shots = fakeCapture({ held: site.held })
@@ -110,6 +111,7 @@ export async function finishOn({
     makeFinisherDoors: async () => ({ finder: finder.door, fixer: fixer.door, checker: checker.door }),
     ...(served ? { pageHtml: async ({ path: page }) => served(site.held)(page) } : {}),
     ...(limits ? { finisherLimits: limits } : {}),
+    ...(timer ? { finisherTimer: timer } : {}),
     ...(clock ? { now: clock.now } : {}),
     out: (l) => out.push(l),
     err: (l) => err.push(l)

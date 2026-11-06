@@ -125,6 +125,7 @@ export async function finishRun(d, values) {
     contentMap,
     facts: files,
     ...(d.finisherLimits ? { limits: d.finisherLimits } : {}),
+    ...(d.finisherTimer ? { timer: d.finisherTimer } : {}),
     ...(d.now ? { now: d.now } : {})
   })
   if (!finished.ok) return refused(d, `${finished.code}: ${finished.reason}`)

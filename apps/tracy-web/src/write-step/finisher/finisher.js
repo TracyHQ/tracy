@@ -44,10 +44,13 @@ const readOnce = (pageHtml) => {
  *   siteCheck: (report: object) => Promise<object>, saveFile: (name: string, data: string | Buffer) => Promise<void>,
  *   pageHtml?: (page: string) => Promise<string | null>, demoImages?: { open: (id: string) => Promise<any> } | null,
  *   now?: () => number, contentMap?: object | null, facts?: { brief?: object, copy?: object, pictures?: object },
- *   limits?: Partial<import('./run-limits.js').FINISHER_LIMITS> | null }} input `kit` is the template kit's document; `report` the write report of the run;
+ *   limits?: Partial<import('./run-limits.js').FINISHER_LIMITS> | null, timer?: Function }} input `kit` is the template
+ *   kit's document; `report` the write report of the run;
  *   `facts` the brief, the site copy file and step 8's site pictures, the only sources a repair's new words come from;
  *   `firstCheck` may be a promise of a site check still running beside the finder; `pageHtml` reads a page as the site
- *   serves it now, to confirm an invisible site check failure; `demoImages` opens the kit's images, the template demo's block shots
+ *   serves it now, to confirm an invisible site check failure and to judge a repair code can judge; `demoImages` opens the
+ *   kit's images, the template demo's block shots; `limits` overrides the time, cost, pages at once and rounds
+ *   (run-limits.js); `timer` fires at the hard time limit, so a model call still open then is let go (a test gives a fake one)
  * @returns {Promise<{ ok: false, code: string, reason: string } | { ok: true, report: object, log: object, finalCheck: object,
  *   firstCheck: object | null }>}
  *   `report` is the write report with the kept repairs' words as ordered, and the final check is the one to keep
@@ -68,15 +71,17 @@ export async function runFinisher(input) {
     now = Date.now,
     contentMap = null,
     facts = null,
-    limits = null
+    limits = null,
+    timer = undefined
   } = input
   const refused = doorsRefusal(doors)
   if (refused) return { ok: false, ...refused }
-  const budget = finisherBudget({ now, limits })
+  const budget = finisherBudget({ now, limits, timer })
   let sitePages
   try {
     sitePages = keptPageList({ pages: (await readSite(door, siteKey)).pages }, report)
   } catch (error) {
+    budget.close()
     return { ok: false, code: 'SITE_UNREADABLE', reason: String(error?.message ?? error) }
   }
   const writtenLines = new Map(
@@ -115,6 +120,8 @@ export async function runFinisher(input) {
   const merged = await mergedFaults({ found, firstCheck: first, pageHtml: readOnce(pageHtml) })
   const { records: repairRecords, kept, rounds } = await runRounds(run, merged.faults, firstShots)
   records.push(...repairRecords, ...merged.records)
+  // The final check runs whatever the limits: the build needs it. The hard limit's timer is let go first.
+  budget.close()
   const final = await finalCheck(run, { report, kept, firstCheck: first, siteCheck })
   const log = repairLog({
     site: siteKey,

@@ -32,11 +32,13 @@ async function proposed(run, fault, site) {
   const cause = causeOf(run.firstCheck, fault)
   const asked = run.budget.spend(
     await run.budget.timed('fix', () =>
-      askFixer(
-        run.doors.fixer,
-        fault,
-        site.current.get(run.lineOf(fault.slot)?.key),
-        fixerSources(run.orderFacts, fault)
+      run.budget.bounded(() =>
+        askFixer(
+          run.doors.fixer,
+          fault,
+          site.current.get(run.lineOf(fault.slot)?.key),
+          fixerSources(run.orderFacts, fault)
+        )
       )
     )
   )
@@ -50,6 +52,7 @@ async function proposed(run, fault, site) {
     images: [],
     call: asked
   })
+  if (asked.budget) return { record: unrepaired(run, fault, asked.problem) }
   if (asked.problem)
     return {
       record: logRecord(fault, { ...cause, outcome: 'failed', reason: `the fixer: ${asked.problem}` })

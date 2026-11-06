@@ -53,7 +53,9 @@ export async function findFaults(run, firstShots, round = 1) {
     }))
     const demoFile = await keepShotFiles(run.saveFile, demoTiles)
     const call = run.budget.spend(
-      await run.budget.timed('find', () => askFinder(run.doors.finder, page, shown, demo))
+      await run.budget.timed('find', () =>
+        run.budget.bounded(() => askFinder(run.doors.finder, page, shown, demo))
+      )
     )
     await run.replies.keep({
       name: `finder-${pageSlug(page)}${round > 1 ? `-round${round}` : ''}`,
@@ -64,6 +66,7 @@ export async function findFaults(run, firstShots, round = 1) {
       images: [...shown.map(run.shotFile), ...demoTiles.map(demoFile)],
       call
     })
+    if (call.budget) return { faults: [], loggedOnly: [], page, skipped: call.problem }
     return call.problem
       ? { faults: [], loggedOnly: [], problem: `the finder: ${call.problem}`, page }
       : heldFaults(call.answer, shown)

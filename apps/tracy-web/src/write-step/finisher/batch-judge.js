@@ -4,7 +4,8 @@
 //   - every other repair is judged by the checker model: the page is shot again ONCE, only the tiles that hold a repaired
 //     block (page-shots.js `bands`, from the block boxes of the first shot), each repaired block is cropped before and after
 //     (repair-crops.js), and ONE checker call answers a verdict per repair. Its call is kept as a reply file like every role's.
-// Past a hard limit (run-limits.js) the checker is not asked: such a repair is not proven, so it is undone.
+// Past a hard limit (run-limits.js) the checker is not asked, and one still open when it is reached is let go: such a repair
+// is not proven, so it is undone.
 import { shootPages } from '../../lib/page-shots.js'
 import { codeVerdict } from './code-judge.js'
 import { askChecker, verdictsOf } from './finisher-roles.js'
@@ -97,14 +98,16 @@ async function checkerJudges(run, page, repairs, firstShots, round) {
     })
   const judged = run.budget.spend(
     await run.budget.timed('judge', () =>
-      askChecker(
-        run.doors.checker,
-        cropped.map(({ r, crops }) => ({
-          repair: r.number,
-          fault: r.fault,
-          before: crops.beforeShots,
-          after: crops.afterShots
-        }))
+      run.budget.bounded(() =>
+        askChecker(
+          run.doors.checker,
+          cropped.map(({ r, crops }) => ({
+            repair: r.number,
+            fault: r.fault,
+            before: crops.beforeShots,
+            after: crops.afterShots
+          }))
+        )
       )
     )
   )

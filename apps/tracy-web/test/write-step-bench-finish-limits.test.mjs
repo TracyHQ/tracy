@@ -71,6 +71,35 @@ test('a cost overrun stops the finisher at once, even mid page: no write starts 
   assert.ok(run.log.costUsd >= 1.5)
 })
 
+test('a model call still open when the hard time limit is reached is let go, and its fault is logged unrepaired', async () => {
+  // The fixer never answers; the hard limit's timer fires once the fixer has been asked.
+  const fixer = scriptedDoor('Finisher fixer', [])
+  let fire = null
+  fixer.door.ask = (message) => {
+    fixer.asked.push(message)
+    setImmediate(() => fire?.())
+    return new Promise(() => {})
+  }
+  const run = await finishOn({
+    finder: scriptedDoor('Finisher finder', [finding(), { faults: [] }]),
+    fixer,
+    checker: everyRepairChecker(),
+    timer: (done) => {
+      fire = done
+      return () => {
+        fire = null
+      }
+    }
+  })
+  assert.equal(run.code, 0, run.err.join('\n'))
+  assert.equal(fixer.asked.length, 1)
+  assert.deepEqual(run.site.writes, [])
+  const [record] = run.log.records
+  assert.equal(record.outcome, 'unrepaired')
+  assert.match(record.reason, /^budget: the hard time limit of 480 s was reached while the call was open/)
+  assert.ok(run.log.finalCheck, 'the final site check still ran')
+})
+
 test('a third round never starts, and round two does not write an order undone in round one again', async () => {
   const finder = scriptedDoor('Finisher finder', [finding(), { faults: [] }, finding(), finding()])
   const fixer = scriptedDoor('Finisher fixer', [

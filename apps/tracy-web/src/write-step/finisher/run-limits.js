@@ -23,12 +23,26 @@ export const STAGES = Object.freeze(['find', 'fix', 'write', 'shoot', 'judge', '
 /** The reason every fault left unrepaired by a hard limit is logged with. */
 export const BUDGET = 'budget'
 
+/** A real timer that never keeps the process alive: `(fire, ms) => cancel`. */
+const realTimer = (fire, ms) => {
+  const handle = setTimeout(fire, ms)
+  handle.unref?.()
+  return () => clearTimeout(handle)
+}
+
 /**
- * @param {{ now: () => number, limits?: Partial<typeof FINISHER_LIMITS> | null }} input
+ * @param {{ now: () => number, limits?: Partial<typeof FINISHER_LIMITS> | null,
+ *   timer?: (fire: () => void, ms: number) => () => void }} input `timer` fires once the hard time limit is reached, so a
+ *   model call still open then is let go (`bounded`); a test gives a fake one
  */
-export function finisherBudget({ now, limits = null }) {
+export function finisherBudget({ now, limits = null, timer = realTimer }) {
   const set = { ...FINISHER_LIMITS, ...limits }
   const started = now()
+  let reachHard
+  const hard = new Promise((resolve) => {
+    reachHard = resolve
+  })
+  const cancelTimer = timer(() => reachHard(), set.hardMs)
   const timings = Object.fromEntries(STAGES.map((s) => [s, 0]))
   let costUsd = 0
   let stoppedBy = null
@@ -47,6 +61,24 @@ export function finisherBudget({ now, limits = null }) {
     },
     /** Null while new work may start; once a hard limit is reached, why it may not (it stays reached). */
     stopped: check,
+    /**
+     * A model call that may not outlast the hard time limit: one still open when the limit is reached is let go, and
+     * `{ problem, budget: true }` is answered in its place (what the late call costs is not known to the run).
+     */
+    bounded(call) {
+      const late = hard.then(() => {
+        stoppedBy ??= `the hard time limit of ${set.hardMs / 1000} s was reached`
+        return {
+          problem: `${BUDGET}: ${stoppedBy} while the call was open`,
+          budget: true,
+          costUsd: null,
+          sent: []
+        }
+      })
+      return Promise.race([call(), late])
+    },
+    /** Lets the timer go: the run is over. */
+    close: () => cancelTimer(),
     /** Runs one piece of a stage and adds its time to that stage. */
     async timed(stage, work) {
       const from = now()
