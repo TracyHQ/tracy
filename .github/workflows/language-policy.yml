@@ -22,7 +22,7 @@ jobs:
     steps:
       # The validator and policy are immutable BASE bytes, never imports from the PR checkout.
       - name: Check out the trusted policy
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: trusted
@@ -31,7 +31,7 @@ jobs:
 
       # Only Git data is read here. Do not run npm, hooks, builds or actions from this directory.
       - name: Fetch the contribution and its complete history
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0

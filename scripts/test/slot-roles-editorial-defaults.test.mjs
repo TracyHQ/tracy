@@ -234,3 +234,85 @@ test('article body copy is a paragraph in any tag, an indexed text node still re
   const w = proposeContentMapRoles(wordpress, { cms: 'wordpress' })
   assert.equal(roleOf(w.contentMap, 'home.slideshow.title.2'), 'editorial.heading')
 })
+
+test('the icon class of a repeatable row is an item icon in version 3; a single icon option stays with the agent', () => {
+  const icon = (key, jsonPath, sample) => ({
+    key,
+    entity: 'module-9',
+    column: 'params',
+    type: 'text',
+    sample,
+    jsonPath
+  })
+  const map = () => ({
+    slots: [
+      icon('module-9.0', ['social', 'social-intro[font-icon]', 0], 'fa fa-kite'),
+      icon('module-9.1', ['social', 'heading-icon'], 'fa fa-star')
+    ]
+  })
+  const v3 = proposeContentMapRoles(map(), { cms: 'joomla', vocabulary: 'place-content-roles/3' })
+  assert.equal(roleOf(v3.contentMap, 'module-9.0'), 'editorial.item_icon')
+  assert.equal(roleOf(v3.contentMap, 'module-9.1'), null)
+  // Version 2 has no icon role: the slot stays on the agent's list.
+  const v2 = proposeContentMapRoles(map(), { cms: 'joomla' })
+  assert.equal(roleOf(v2.contentMap, 'module-9.0'), null)
+})
+
+test('an icon of a repeated row joins the group of its row, so each repeated item is one group (label rule R4)', async () => {
+  const { labelRulesOf } = await import(
+    '../../packages/cms/tracy-quickstart-tools/content-coverage/lib/label-rules.mjs'
+  )
+  // A fictional kite shop's social block: two networks, label and link reviewed into one group per network.
+  const slot = (key, jsonPath, type, sample, extra = {}) => ({
+    key,
+    entity: 'module-12',
+    column: 'params',
+    type,
+    sample,
+    jsonPath,
+    ...extra
+  })
+  const social = (i) => ({ id: `module-12.social.${i}`, item: 0, kind: 'contact' })
+  const map = () => ({
+    roleVocabularyVersion: 'place-content-roles/3',
+    slots: [
+      slot('module-12.0', ['social', 'social-intro[title]', 0], 'text', 'Kitebook', {
+        role: 'contact.social_label',
+        group: social(0)
+      }),
+      slot('module-12.1', ['social', 'social-intro[title]', 1], 'text', 'Kitegram', {
+        role: 'contact.social_label',
+        group: social(1)
+      }),
+      slot('module-12.2', ['social', 'social-intro[link]', 0], 'url', '#', {
+        role: 'contact.social_url',
+        group: social(0)
+      }),
+      slot('module-12.3', ['social', 'social-intro[link]', 1], 'url', '#', {
+        role: 'contact.social_url',
+        group: social(1)
+      }),
+      // A new icon: the rule tables name it, then it joins its row.
+      slot('module-12.4', ['social', 'social-intro[font-icon]', 0], 'text', 'fa fa-kite'),
+      // An icon a previous map carried over with its role but without a group.
+      slot('module-12.5', ['social', 'social-intro[font-icon]', 1], 'text', 'fa fa-wind', {
+        role: 'editorial.item_icon',
+        customize: 'keep'
+      }),
+      // An icon of a row nobody grouped stays as it is.
+      slot('module-12.6', ['badges', 'badge[icon]', 0], 'text', 'fa fa-sun')
+    ]
+  })
+  const before = labelRulesOf({ map: { ...map(), slots: map().slots } })
+  assert.ok(before.rules.R4.keys.includes('module-12.5'))
+
+  const { contentMap } = proposeContentMapRoles(map(), { cms: 'joomla', vocabulary: 'place-content-roles/3' })
+  const groupOf = (key) => contentMap.slots.find((s) => s.key === key)?.group ?? null
+  assert.equal(roleOf(contentMap, 'module-12.4'), 'editorial.item_icon')
+  assert.deepEqual(groupOf('module-12.4'), social(0))
+  assert.deepEqual(groupOf('module-12.5'), social(1))
+  assert.equal(groupOf('module-12.6'), null)
+  assert.equal(labelRulesOf({ map: contentMap }).rules.R4.keys.includes('module-12.4'), false)
+  assert.equal(labelRulesOf({ map: contentMap }).rules.R4.keys.includes('module-12.5'), false)
+  assert.deepEqual(checkContentMapRoles(contentMap).errors ?? [], [])
+})

@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-246-joomla-config-comments",
+  "kind": "fix",
+  "title": "A Joomla import replaces a configuration line that ends in a comment, and stops when the copy configuration does not load",
+  "pr": 246,
+  "area": "import/joomla",
+  "cms": ["jo"],
+  "steps": [
+    "Render a configuration.php whose lines carry trailing comments, a quoted ; and var; load it in PHP 7.4.",
+    "Run the load check on a file that declares $host twice."
+  ],
+  "expect": [
+    "Each setting is declared once and replaced in place, comments kept; PHP loads the file.",
+    "The check refuses the doubled file naming Cannot redeclare JConfig::$host; a setting it cannot replace is refused, never appended twice."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/render-configuration.test.mjs"
+    ],
+    "tests": [
+      "a setting line with a comment after it is replaced in place",
+      "PHP loads the rendered file",
+      "a setting declared in a shape the renderer cannot replace",
+      "an import stops when the copy"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

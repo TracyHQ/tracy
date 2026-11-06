@@ -202,6 +202,101 @@ export const LLM_DOORS = [
     // Choosing a different model for the agent means touching `agent-default-model` inside the
     // dsh image, which is a different job from rotating a credential.
     needsModel: false
+  },
+  {
+    id: 'sitePlanner',
+    label: 'Site planner',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the site planner bench, started from a command line on the server. An agent plans a whole site from a brief and a template kit, reading the kit with tool calls, and its pictures by sight when the model can.',
+    needsModel: true,
+    // Tool calls are REQUIRED: the planner reads the kit only through them. Vision is preferred, not required: a
+    // text-only model (deepseek-v4-pro, an alternative to the default deepseek-flash) plans from the kit's looks, and the
+    // bench refuses it at run start for a kit missing any look (site-planner/door.js). No effort setting: the bench fixes it in code and records it
+    // on each run (ADR 0041, #301).
+    requires: ['tools'],
+    prefers: ['vision']
+  },
+  {
+    id: 'siteWriter',
+    label: 'Site writer',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the site writer bench, started from a command line on the server. An agent writes the copy of a whole site from a checked site plan, the facts it cites and a slim view of the template kit.',
+    needsModel: true,
+    // The writer reads everything from its first message: no tool calls, no pictures (it reads the kit's block looks).
+    // No effort setting: the bench fixes it in code (max on DeepSeek Flash) and records it on each run (#329).
+    requires: [],
+    prefers: []
+  },
+  {
+    id: 'picturePicker',
+    label: 'Picture picker',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the picture bench, started from a command line on the server. One call per site looks at the owner photos as small thumbnails and chooses one for every frame of the site plan that needs a specific picture.',
+    needsModel: true,
+    // Vision is REQUIRED: the picker judges the owner photos by sight (site-pictures/door.js). No tools. No effort
+    // setting: the bench fixes it in code (max on DeepSeek Flash) and records it on each run (#342).
+    requires: ['vision'],
+    prefers: []
+  },
+  {
+    id: 'pictureIconRanker',
+    label: 'Picture icon ranker',
+    where: 'this process',
+    blurb:
+      'WO New Flow Test: the picture bench, started from a command line on the server. One cheap text call per site ranks the icon names code shortlisted for each icon frame; it never invents a name. Without it the shortlist order decides.',
+    needsModel: true,
+    // Text only: no tools, no pictures (site-pictures/icon-step.js). Meant for openai/gpt-6-luna through OpenRouter
+    // (icons/icon-ranker.js ICON_RANKER_MODEL). An unset door never stops a run (#345).
+    requires: [],
+    prefers: ['json']
+  },
+  {
+    id: 'pictureLooker',
+    label: 'Picture looker',
+    where: 'this process',
+    blurb:
+      "WO New Flow Test: the picture bench, started from a command line on the server. One call per finished picture, in a fresh context, checks it at display size against the plan's words and says what it shows. Its model must be of another maker than the picker's. A picture run does not start without it.",
+    needsModel: true,
+    // Vision is REQUIRED: the looker judges each picture by sight (site-pictures/looker-door.js). No tools, no effort
+    // setting. Meant for openai/gpt-6-luna through OpenRouter, as the brand step's reviewer (#343).
+    requires: ['vision'],
+    prefers: ['json']
+  },
+  {
+    id: 'pictureDrawer',
+    label: 'Picture drawer',
+    where: 'this process',
+    blurb:
+      "WO New Flow Test: the picture bench, started from a command line on the server. Draws a picture the plan asks for when no owner photo fits, from a fixed template filled with the plan's words, or extends a real photo sideways for a wide band. Never draws a person. A picture run that may need a drawing does not start without it.",
+    needsModel: true,
+    // Drawing is REQUIRED: a model that answers only text gives no picture (site-pictures/drawer-door.js). Meant for
+    // google/gemini-3.1-flash-lite-image through OpenRouter, about 0.034 USD a picture (#344).
+    requires: ['draws'],
+    drawsPictures: true
+  },
+  {
+    id: 'brandAgent',
+    label: 'Brand agent',
+    where: 'this process',
+    blurb:
+      'Brand bench: the agent that builds a site’s brand file (accent colour, logos, favicon, name slots) from a brief and a template kit, with tool calls and by looking at pictures. Never an Anthropic model; never the same model as the Brand reviewer.',
+    needsModel: true,
+    // Both REQUIRED: the agent works only through tool calls and judges the template by sight (brand-step/brand-doors.js).
+    requires: ['tools', 'vision'],
+    prefers: []
+  },
+  {
+    id: 'brandReviewer',
+    label: 'Brand reviewer',
+    where: 'this process',
+    blurb:
+      'Brand bench: answers questions about logo and icon pictures for the brand agent, and names the business an icon suggests when it is not told the business. Never an Anthropic model; never the same model as the Brand agent.',
+    needsModel: true,
+    requires: ['vision'],
+    prefers: []
   }
 ]
 

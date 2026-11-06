@@ -1204,6 +1204,56 @@ test(
   }
 )
 
+test(
+  'a push read back while the host does not answer keeps its lease: a chat stays refused until it ends (#224)',
+  opts,
+  async () => {
+    const { pool } = db
+    const net = network({ answers: ANSWERS })
+    net.running.add('webroot-live-push-preview')
+    const { send, cookieFor } = harness(pool, net.fetchImpl)
+    await importedSite(pool)
+    const owner = await cookieFor('owner@x.y')
+    assert.equal((await send('POST', `/api/sites/${SITE}/push/preview`, owner)).status, 202)
+    // tracy-web restarts with the host unreachable, past the lease's 90 s.
+    await pool.query(
+      "update site_write_lease set wrote_at = now() - interval '100 seconds' where site_key = $1",
+      [SITE]
+    )
+    let hostDown = true
+    const flaky = async (input, init) => {
+      if (hostDown && /\/_host\/jobs\//.test(String(input))) throw new TypeError('fetch failed')
+      return net.fetchImpl(input, init)
+    }
+    const again = livePush({
+      pool,
+      config: readConfig(env),
+      host: { hostCall, hostJob },
+      fetchImpl: flaky,
+      watchEveryMs: 0
+    })
+    assert.equal(await again.resume(), 1)
+    const lease = await pool.query(
+      'select holder_session, extract(epoch from now() - wrote_at) as age from site_write_lease where site_key = $1',
+      [SITE]
+    )
+    assert.match(lease.rows[0].holder_session, /^push:/)
+    assert.ok(Number(lease.rows[0].age) < 10, `renewed, not ${lease.rows[0].age} s old`)
+    const chat = await takeWriteLease(pool, { siteKey: SITE, sessionId: 'chat-1', actor: 'owner@x.y' })
+    assert.equal(chat.ok, false, 'the chat may not write while the push may still run')
+    const { rows } = await pool.query('select state from site_push where site_key = $1', [SITE])
+    assert.equal(rows[0].state, 'running')
+    // The host answers again and the job has ended: the row settles and the lease goes.
+    hostDown = false
+    net.running.delete('webroot-live-push-preview')
+    assert.equal(await again.resume(), 1)
+    assert.equal(
+      (await takeWriteLease(pool, { siteKey: SITE, sessionId: 'chat-1', actor: 'owner@x.y' })).ok,
+      true
+    )
+  }
+)
+
 /** `net` whose first `lost` apply jobs the host lost (it restarted mid-write): `failed` with `orphanedAt`. */
 function losing(net, lost) {
   return async (input, init) => {

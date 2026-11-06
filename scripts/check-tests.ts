@@ -94,7 +94,11 @@ const STANDALONE = [
   'packages/cms/tracy-emdash-theme-base',
   'packages/cms/tracy-emdash-theme-business',
   // Tracy SaaS (JA Kinetic), in the repo since 29/09/2026; its suite measured 179/179 that day.
-  'packages/cms/tracy-emdash-theme-saas'
+  'packages/cms/tracy-emdash-theme-saas',
+  // Tracy Coffee, the 3D coffee-shop template copied from Tracy Base.
+  'packages/cms/tracy-emdash-theme-coffee',
+  // JA Restaurant (EmDash port of the JA Restaurant Joomla site): same shape as the four above.
+  'packages/cms/tracy-emdash-theme-restaurant'
 ] as const
 
 /** One run group: the command that runs it, and the test files that command picks up. */
@@ -115,7 +119,8 @@ const GROUPS: readonly CoverageGroup[] = [
   { run: 'dsh-passwords', files: /^vendor\/tracy\/dsh-passwords\/test\/.+\.test\.ts$/ },
   {
     run: 'standalone',
-    files: /^packages\/cms\/tracy-emdash-theme-(base|business|saas)\/tests\/[^/]+\.test\.mjs$/
+    files:
+      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant)\/tests\/[^/]+\.test\.mjs$/
   }
 ]
 
@@ -144,6 +149,8 @@ const PARTS = [
   'standalone:base',
   'standalone:business',
   'standalone:saas',
+  'standalone:coffee',
+  'standalone:restaurant',
   'vendor',
   'rest',
   'owner'
@@ -301,11 +308,45 @@ export function shardOf(
   return owned[shard.index - 1].sort()
 }
 
+/**
+ * What the small suites cost on a GitHub-hosted `ubuntu-latest` row (30/10/2026), measured on run
+ * 41028805223 (#221, both attempts green), where `tests 2/2` carried them. The table is measured on our
+ * runners. There the workers files ran 1.23x their table seconds (`tests 1/2`: 549 s of `Build
+ * check` for 446 s predicted), and `tests 2/2` ran 1096 s for 514 s of workers: the remainder,
+ * ~464 s, is `rest` (interop + dsh-passwords; the table says 185 s), plus the ~9 s step of tests
+ * with the clock moved forward that rides the same row. So on hosted the last shard is preloaded
+ * with 473 s in hosted wall time, converted to the unit `shardOf` balances in. Two samples only:
+ * replace these figures when hosted runs report their own `tracy-test-timing` lines.
+ */
+export const HOSTED_COST = { workersFactor: 1.23, restWallSeconds: 464 + 9 } as const
+
+/** `TRACY_TESTS_HOSTED=1`: this row runs on GitHub-hosted (`tracy-ci.yml`, step `Build check`). */
+const HOSTED_ENV = 'TRACY_TESTS_HOSTED'
+
+/**
+ * The last shard's preload in `shardOf`'s unit (summed table seconds). On our runners the table's own
+ * figure; on GitHub-hosted the hosted cost of the small suites, divided by what one summed table
+ * second costs there (`wallPerSummedSecond` x the hosted workers factor).
+ */
+export function preloadFor(
+  table: { readonly preloadLastShardSeconds?: number; readonly wallPerSummedSecond?: number },
+  hosted: boolean
+): number {
+  const own = table.preloadLastShardSeconds ?? 0
+  const wall = table.wallPerSummedSecond
+  if (!hosted || typeof wall !== 'number' || !(wall > 0)) return own
+  return HOSTED_COST.restWallSeconds / (wall * HOSTED_COST.workersFactor)
+}
+
 /** Read the committed table; a missing or unreadable file means equal weights, never a failure. */
-function loadTimings(): Timings {
+function loadTimings(hosted = false): Timings {
   try {
-    const raw = JSON.parse(readFileSync(join(ROOT, 'scripts/test-timings.json'), 'utf8')) as Partial<Timings>
-    return { files: raw.files ?? {}, preloadLastShardSeconds: raw.preloadLastShardSeconds ?? 0 }
+    const raw = JSON.parse(
+      readFileSync(join(ROOT, 'scripts/test-timings.json'), 'utf8')
+    ) as Partial<Timings> & {
+      wallPerSummedSecond?: number
+    }
+    return { files: raw.files ?? {}, preloadLastShardSeconds: preloadFor(raw, hosted) }
   } catch {
     return NO_TIMINGS
   }
@@ -526,10 +567,17 @@ export function ensureDeps(): void {
 }
 
 /**
- * Try to open a browser the same way the suite opens it: the machine's `chrome` channel first, Playwright's
- * Chromium second (`tools/qa-browser.mjs`). `createRequire` from the package's own directory, not a bare
+ * Try to open a browser the same way the suites open it by default: Playwright's own Chromium for the
+ * version the package pins (`chromium.launch()` in the e2e tests, `browserChoice` in the templates'
+ * `tools/qa-browser.mjs`). `createRequire` from the package's own directory, not a bare
  * `import('playwright')`: a bare specifier inside `node -e` resolves against the process's working
  * directory, and a probe must never depend on who called it.
+ *
+ * ⚠ NO FALLBACK TO THE MACHINE'S CHROME — changed 03/11/2026. The probe tried the `chrome` channel first,
+ * as `qa-browser.mjs` once did; the templates dropped that fallback (pinned Chromium, so a report says
+ * which binary drew it) and the e2e tests never had it. On `ubuntu-latest`, which ships Google Chrome,
+ * the probe then said "a browser opens", nothing was installed, and every launch failed with
+ * `Executable doesn't exist at …/chromium_headless_shell-1243/…` (run 41581075192: 86 e2e tests red).
  */
 function browserOpens(dir: string): { ok: boolean; why: string } {
   const probe = spawnSync(
@@ -538,7 +586,7 @@ function browserOpens(dir: string): { ok: boolean; why: string } {
       '-e',
       `const { createRequire } = require('node:module');` +
         `const pw = createRequire(${JSON.stringify(join(dir, 'probe.cjs'))})('playwright');` +
-        `pw.chromium.launch({ channel: 'chrome' }).catch(() => pw.chromium.launch())` +
+        `pw.chromium.launch()` +
         `.then((b) => b.close()).then(() => process.exit(0))` +
         `.catch((e) => { console.error(String(e && e.message || e)); process.exit(1); });`
     ],
@@ -602,9 +650,9 @@ function canInstallSystemDeps(): boolean {
  * across two places, of which only one is right.
  *
  * 🔒 PROBE FIRST, INSTALL SECOND — and the probe is the same path the suite opens a browser by
- * (`tools/qa-browser.mjs`: the machine's `chrome` channel first, Playwright's Chromium second). A machine
- * that can open one downloads nothing: a laptop with Chrome runs this gate without swallowing 150 MB,
- * and a blank runner downloads exactly once per run. A blind install would make everyone pay that price
+ * (`browserOpens`: Playwright's pinned Chromium). A machine that already has it downloads nothing, and
+ * a blank runner downloads exactly once per run (none on GitHub-hosted, where the workflow's step
+ * "Install the Playwright browser on a GitHub-hosted runner" put it there first). A blind install would make everyone pay that price
  * to fix one machine.
  *
  * ⚠ DOWNLOADING THE BINARY IS NOT HAVING A BROWSER — fixed 2026-09-18, after the patch above fixed
@@ -1234,33 +1282,33 @@ function runWorkers(shard?: { index: number; of: number }, selected?: readonly s
     return
   }
 
-  const assigned = shardOf(all, shard, loadTimings())
-  // 🔒 AN EMPTY SHARD IS RED. `node --test` with no files exits 0, which on the Actions page is a
-  // green tick for a shard that tested nothing — the same fail-open shape this gate exists to
-  // refuse. It can only happen when the shard count exceeds the file count, i.e. a workflow typo.
-  // Judged BEFORE the skip: a shard the skip empties is a different thing, and is red just below.
-  if (assigned.length === 0) {
+  // 🔒 THE SKIP IS APPLIED BEFORE THE SPLIT (30/10/2026): the rows balance only the files they will
+  // run. Until then the table split the whole list and each row dropped its database files after,
+  // which left the rows of a routine pull request uneven (predicted 446 / 699 s on two shards). A
+  // file is still in exactly one row: every row computes the same split from the same list.
+  const { run: runnable, dropped } = splitWorkers(all, skip)
+  announceDatabaseSkip(`the workers shards (this is ${String(shard.index)}/${String(shard.of)})`, dropped)
+  if (runnable.length === 0) {
     process.stderr.write(
-      `check-tests: shard ${String(shard.index)}/${String(shard.of)} has no file — ` +
-        `the shard count (${String(shard.of)}) is larger than the file count (${String(all.length)}).\n`
+      `check-tests: every workers file reads ${DATABASE_MARK} and ${SKIP_DB_ENV} left them all out — nothing would run.\n`
     )
     process.exit(1)
   }
-  // The skip is applied to the shard the table assigned, never before the split: the same file lands
-  // in the same shard with or without it, so a run that skipped and one that did not agree on who owns what.
-  const { run: mine, dropped } = splitWorkers(assigned, skip)
-  announceDatabaseSkip(`workers shard ${String(shard.index)}/${String(shard.of)}`, dropped)
+  const mine = shardOf(runnable, shard, loadTimings(process.env[HOSTED_ENV] === '1'))
+  // 🔒 AN EMPTY SHARD IS RED. `node --test` with no files exits 0, which on the Actions page is a
+  // green tick for a shard that tested nothing — the same fail-open shape this gate exists to
+  // refuse. It can only happen when the shard count exceeds the number of files to run.
+  if (mine.length === 0) {
+    process.stderr.write(
+      `check-tests: shard ${String(shard.index)}/${String(shard.of)} has no file — ` +
+        `the shard count (${String(shard.of)}) is larger than the file count (${String(runnable.length)}).\n`
+    )
+    process.exit(1)
+  }
   process.stdout.write(
     `check-tests: workers + scripts + packages — shard ${String(shard.index)}/${String(shard.of)}, ` +
       `${String(mine.length)}/${String(all.length)} file\n`
   )
-  if (mine.length === 0) {
-    process.stderr.write(
-      `check-tests: shard ${String(shard.index)}/${String(shard.of)} holds only files that read ${DATABASE_MARK}, ` +
-        `and ${SKIP_DB_ENV} left them all out — nothing would run, and a shard that tested nothing is red.\n`
-    )
-    process.exit(1)
-  }
   // The two `tracy-test-timing` lines bracket this shard's file records in the log; the table is
   // refreshed from them (`scripts/update-test-timings.mjs`). `end` is printed for a green shard only.
   const tag = `part=workers shard=${String(shard.index)}/${String(shard.of)}`
@@ -1375,6 +1423,18 @@ function runE2e(): void {
   }
 }
 
+/**
+ * A template's `test` argv with `--test-force-exit`, as `test:workers` and e2e already run. A test that
+ * fails before closing what it opened (a server listening, a browser) otherwise keeps its file's
+ * process alive, and `node --test` waits for it without a word: measured 03/11/2026 on run
+ * 41581075192, `tests emdash-base` printed nothing for 43 minutes after F7/F10 failed, until the job
+ * timeout. `visual.test.mjs` started a server, then a browser that did not exist threw before the
+ * `try` that closed it. With the flag the file ends when its tests do, and the row is red in minutes.
+ */
+export function standaloneArgs(args: readonly string[]): string[] {
+  return args.includes('--test-force-exit') ? [...args] : ['--test', '--test-force-exit', ...args.slice(1)]
+}
+
 /** One standalone EmDash template: its own lockfile, its own browser, its own `pnpm test`. */
 function runStandalone(rel: string): void {
   const dir = join(ROOT, rel)
@@ -1391,7 +1451,10 @@ function runStandalone(rel: string): void {
     }
   }
   ensureBrowser(dir, rel)
-  const run = spawnReported(process.execPath, scriptArgs(dir, 'test'), { cwd: dir, env: scriptEnv(dir) })
+  const run = spawnReported(process.execPath, standaloneArgs(scriptArgs(dir, 'test')), {
+    cwd: dir,
+    env: scriptEnv(dir)
+  })
   if (run.status !== 0) {
     process.stderr.write(`check-tests: the suite of ${rel} is red.\n`)
     process.exit(1)
@@ -1613,6 +1676,8 @@ function main(): void {
       else if (spec.part === 'standalone:base') runStandalone(STANDALONE[0])
       else if (spec.part === 'standalone:business') runStandalone(STANDALONE[1])
       else if (spec.part === 'standalone:saas') runStandalone(STANDALONE[2])
+      else if (spec.part === 'standalone:coffee') runStandalone(STANDALONE[3])
+      else if (spec.part === 'standalone:restaurant') runStandalone(STANDALONE[4])
       else if (spec.part === 'vendor') runVendor()
       else if (spec.part === 'owner') runOwner(spec.owner ?? '', spec.shard)
       else {

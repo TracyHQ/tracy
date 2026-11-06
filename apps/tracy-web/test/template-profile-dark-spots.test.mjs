@@ -7,7 +7,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { profileTableProblems, TEMPLATE_PROFILES, templateProfileOf } from '../src/lib/template-profiles.js'
-import { darkSpotsOf } from '../src/sites/brief-engines/brand-joomla-places.js'
+import { darkSpotsOf } from '../src/lib/brand-joomla-places.js'
 
 /** The engine's own table as it stood before the move (07/10/2026), frozen here as the golden answer. */
 const BEFORE = {
@@ -58,6 +58,10 @@ const PROVEN_SINCE = {
   'quickstart/ja-boxing/j6@1.0.7': { footer: true },
   // JA Boxing 1.0.8 (29/10/2026): one ACM layout and one demo row (Private Training contact fields), the same row and proof
   'quickstart/ja-boxing/j6@1.0.8': { footer: true },
+  // JA Boxing 1.0.10 (01/11/2026): centred card rows, one h1 per page and real footer links, the same row and proof
+  'quickstart/ja-boxing/j6@1.0.10': { footer: true },
+  // JA Boxing 1.0.11 (05/11/2026): no stylesheet or demo data changed (hidden h1, class buttons, tel: and map links), same proof
+  'quickstart/ja-boxing/j6@1.0.11': { footer: true },
   // JA Cagox's first row (29/10/2026): measured on a site restored from 1.0.2 (1.0.1 with language keys and dated articles), the footer band and its logo are dark
   'quickstart/ja-cagox/j6@1.0.1': { footer: true },
   'quickstart/ja-cagox/j6@1.0.2': { footer: true }

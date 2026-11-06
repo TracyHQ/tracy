@@ -644,3 +644,212 @@ test('onRead hears a WordPress read whole, before the outline the model is shown
   )
   assert.equal(again.ok, true)
 })
+
+test('page search finds an omitted target with a smaller result; every row remains reachable', async (t) => {
+  const all = pageList({ defaultLocale: 'en-GB', perLocale: 400 })
+  const door = relay(() => all)
+  const ctx = ctxOf('wordpress', { send: door.send })
+  const before = await call(ctx, { action: 'content.read', params: { view: 'pages' } })
+  const target = all.pages.find((p) => p.path === '/en/page-399')
+  assert.ok(!before.pages.some((row) => row[2] === target.id), 'the unfiltered head omits this target')
+  const found = await call(ctx, {
+    action: 'content.read',
+    params: { view: 'pages', search: 'Page 399', limit: 5 }
+  })
+  assert.equal(found.pages.length, 1)
+  assert.equal(found.pages[0][2], target.id)
+  assert.ok(size(found) < size(before) * 0.1)
+  assert.deepEqual(door.sent.at(-1), ['content.read', { view: 'pages' }], 'query parameters stay on the host')
+  t.diagnostic(`Unfiltered result: ${size(before)} characters; title search: ${size(found)} characters`)
+  const ids = []
+  let params = { view: 'pages', limit: 100 }
+  do {
+    const out = await call(ctx, { action: 'content.read', params })
+    ids.push(...out.pages.map((row) => row[2]))
+    assert.equal(out.pagination.totalIsComplete, true)
+    params = out.pagination.nextOffset === null ? null : out.next.params
+  } while (params)
+  const expected = all.pages.filter((p) => p.locale === 'en-GB' || p.locale === '*').map((p) => p.id)
+  assert.deepEqual(ids, expected, 'no gaps or duplicate rows across continuation calls')
+  const none = await call(ctx, { action: 'content.read', params: { view: 'pages', search: 'absent-title' } })
+  assert.equal(none.pages.length, 0)
+  assert.equal(none.pagination.total, 0)
+  const whole = await call(ctx, {
+    action: 'content.read',
+    params: { view: 'pages', search: 'absent-title', full: true }
+  })
+  assert.ok(whole.pages.length > 0, 'full:true retains the raw-data escape')
+})
+
+test('page query preserves upstream truncation and does not take listing cursor parameters', async () => {
+  const raw = {
+    ...pageList({ perLocale: 4 }),
+    truncated: true,
+    next: { action: 'content.read', params: { view: 'pages', locale: 'en-GB' } }
+  }
+  const out = await call(ctxOf('joomla', { send: relay(() => raw).send }), {
+    action: 'content.read',
+    params: { view: 'pages', limit: 2 }
+  })
+  assert.equal(out.pagination.totalIsComplete, false)
+  assert.deepEqual(out.sourceNext, raw.next)
+  const { takeViewParams } = await import('../src/host/read-compact.mjs')
+  for (const params of [
+    { type: 'page', limit: 50, cursor: 'cursor' },
+    { view: 'pages', url: '/', limit: 50 },
+    { view: 'pages', changedSince: 'v1', limit: 50 }
+  ]) {
+    assert.deepEqual(takeViewParams('content.read', params).params, params)
+  }
+})
+
+test('page search matches titles in every interface language without translating identifiers', async () => {
+  const titles = [
+    'Heading',
+    'Tiêu đề',
+    'Überschrift',
+    'Intestazione',
+    'En-tête',
+    'Koptekst',
+    '标题',
+    'Encabezado'
+  ]
+  const raw = pageList({ locales: ['en'], perLocale: 8, common: 0 })
+  raw.pages.forEach((page, i) => {
+    page.title = titles[i]
+  })
+  for (const title of titles) {
+    const out = await call(ctxOf('wordpress', { send: relay(() => raw).send }), {
+      action: 'content.read',
+      params: { view: 'pages', search: title.toUpperCase() }
+    })
+    assert.deepEqual(
+      out.pages.map((row) => row[0]),
+      [title]
+    )
+  }
+})
+
+test('native page IDs stay usable for records and give an explicit Content API lookup without extra reads', async () => {
+  const raw = {
+    ok: true,
+    kind: 'post',
+    search: 'Reference',
+    items: [
+      {
+        id: 404,
+        title: 'Reference',
+        slug: 'reference',
+        type: 'page',
+        status: 'publish',
+        url: 'https://example.test/?page_id=404'
+      }
+    ]
+  }
+  const door = relay((action) => (action === 'content.list' ? raw : assert.fail('Unexpected backend action')))
+  const out = await call(ctxOf('wordpress', { send: door.send }), {
+    action: 'content.list',
+    params: { post_type: 'page', search: 'Reference' }
+  })
+  assert.equal(out.items[0].id, 404, 'record IDs must never be replaced with Content API IDs')
+  assert.equal(out.idNamespace, 'wordpress:post')
+  assert.deepEqual(out.contentIdLookup.params, { view: 'pages', url: '/?page_id=404' })
+  assert.equal(out.contentIdLookup.action, 'content.read')
+  assert.match(out.contentIdLookup.why, /opaque Content API IDs/)
+  assert.equal(door.sent.length, 1, 'advice must not add a hidden backend walk')
+})
+
+test('ambiguous native page matches keep every record and recover by title, while other kinds and refusals are untouched', async () => {
+  const { nativePageIdAdvice } = await import('../src/host/read-compact.mjs')
+  const raw = {
+    ok: true,
+    items: [
+      { id: 1, type: 'page' },
+      { id: 2, type: 'page' }
+    ]
+  }
+  const copy = structuredClone(raw)
+  const advised = nativePageIdAdvice(raw, { search: 'Reference' }, 'wordpress')
+  assert.deepEqual(advised.items, copy.items)
+  assert.deepEqual(advised.contentIdLookup.params, { view: 'pages', search: 'Reference' })
+  assert.deepEqual(raw, copy, 'advice never mutates the shared response')
+  for (const [answer, params, platform] of [
+    [{ ok: false, code: 'DENIED' }, { post_type: 'page' }, 'wordpress'],
+    [{ ok: true, items: [{ id: 1, type: 'wp_navigation' }] }, {}, 'wordpress'],
+    [raw, {}, 'joomla'],
+    [raw, {}, 'emdash']
+  ])
+    assert.equal(nativePageIdAdvice(answer, params, platform), answer)
+  const empty = nativePageIdAdvice(
+    { ok: true, items: [] },
+    { post_type: 'page', search: 'Missing' },
+    'wordpress'
+  )
+  assert.deepEqual(empty.items, [])
+  assert.deepEqual(empty.contentIdLookup.params, { view: 'pages', search: 'Missing' })
+})
+
+test('a bounded OR page search returns the union once with one relay call and preserves continuation', async () => {
+  const all = pageList({ perLocale: 30, common: 0, defaultLocale: 'en-GB' })
+  const door = relay(() => all)
+  const ctx = ctxOf('wordpress', { send: door.send })
+  const terms = ['Page 2 (en-GB)', 'Page 22 (en-GB)', 'Page 2 (en-GB)']
+  const out = await call(ctx, { action: 'content.read', params: { view: 'pages', search: terms, limit: 1 } })
+  assert.equal(door.sent.length, 1)
+  assert.deepEqual(door.sent[0], ['content.read', { view: 'pages' }])
+  assert.equal(out.pages.length, 1)
+  assert.equal(out.pagination.total, 2)
+  assert.deepEqual(out.next.params.search, terms)
+  const next = await call(ctx, out.next)
+  assert.equal(next.pages.length, 1)
+  assert.notEqual(next.pages[0][2], out.pages[0][2])
+  assert.equal(next.pagination.nextOffset, null)
+})
+
+test('invalid page search arrays fail before the relay; existing string searches stay unchanged', async () => {
+  const door = relay(() => pageList())
+  for (const search of [[], [''], ['x', null], Array(9).fill('x'), ['x'.repeat(81)]]) {
+    const out = await call(ctxOf('wordpress', { send: door.send }), {
+      action: 'content.read',
+      params: { view: 'pages', search }
+    })
+    assert.equal(out.ok, false)
+    assert.equal(out.code, 'CONTENT_BAD_QUERY')
+  }
+  assert.equal(door.sent.length, 0)
+  for (const extra of [{ url: '/' }, { changedSince: 'cv1.test' }]) {
+    const out = await call(ctxOf('wordpress', { send: door.send }), {
+      action: 'content.read',
+      params: { view: 'pages', search: ['Page'], ...extra }
+    })
+    assert.equal(out.code, 'CONTENT_BAD_QUERY')
+  }
+  const all = pageList({ perLocale: 2, common: 0, defaultLocale: 'en-GB' })
+  const output = await call(ctxOf('wordpress', { send: async () => all }), {
+    action: 'content.read',
+    params: { view: 'pages', search: ['Missing'] }
+  })
+  assert.deepEqual(output.pages, [])
+  assert.equal(output.pagination.total, 0)
+})
+
+test('page results distinguish Content API IDs from native locators without changing full recovery', async () => {
+  const inventory = pageList({ perLocale: 1, common: 0, locales: ['en-GB'] })
+  const { send } = relay(() => inventory)
+  const context = ctxOf('joomla', { send })
+  const listed = await call(context, { action: 'content.read', params: { view: 'pages' } })
+  assert.equal(listed.idNamespace, 'content-api')
+  assert.match(listed.idMeaning, /Content ID = id/)
+  assert.match(listed.idMeaning, /CMS locator/)
+  assert.equal(listed.pages[0][2], inventory.pages[0].id)
+  assert.equal(listed.pages[0][3], 'menuItem:601')
+  const located = await call(context, {
+    action: 'content.read',
+    params: { view: 'pages', url: inventory.pages[0].url }
+  })
+  assert.equal(located.idNamespace, 'content-api')
+  assert.equal(located.pages[0].id, inventory.pages[0].id)
+  assert.equal(located.pages[0].native[0].id, 601)
+  const full = await call(context, { action: 'content.read', params: { view: 'pages', full: true } })
+  assert.deepEqual(full, inventory)
+})

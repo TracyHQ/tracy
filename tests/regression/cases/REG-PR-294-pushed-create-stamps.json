@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-294-pushed-create-stamps",
+  "kind": "fix",
+  "title": "What a push made and the customer then deleted for good on live goes from the copy, meta and links included",
+  "pr": 294,
+  "area": "sync/push",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-sync-pushed case for #223 (real MariaDB, WordPress tables): the settle sync after a push of a page with meta, two menu items, a template part, Additional CSS and a picture; then the live site deletes them for good and the next sync runs."
+  ],
+  "expect": [
+    "Settle sync: nothing kept or held, 7 posts, the copy page holds the live guid, the custom link object id is the copy number. After the delete: nothing kept, only the sample page left, no postmeta, no term relationships."
+  ],
+  "selectors": {},
+  "evidence": "Issue #223 re-test: WordPress 6.8 kept db:wp_posts:[\"9\"] and [\"10\"] as delete-modify; only guid differed",
+  "fence": "live_push.py seeds stamps, live_sync.py seed_pushed",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#223",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs"
+    ],
+    "tests": [
+      "WordPress: what a push made and the customer then deleted for good on the live site goes from the copy too"
+    ]
+  }
+}

@@ -51,7 +51,9 @@
 
   /* Brand: NOT mapped — see the note at the top of the file. Terracotta is the system-wide primary
      (since 14/09/2026), the same value as tracy-brand's DEFAULT_PRIMARY; Tracy blue is retired. */
-  --primary: oklch(0.588 0.136 37.4); /* Tracy terracotta (#bf5b3d) */
+  /* Tracy terracotta, one step darker than the brand mark (#bf5b3d) so a label on it and it as text on white both read
+     at WCAG AA (#228): #fafafa on it 4.64:1 (4.21 before), it on white 4.84:1 (4.40). Same hue and chroma. */
+  --primary: oklch(0.565 0.136 37.4); /* #b75436 */
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.588 0.136 37.4);
 

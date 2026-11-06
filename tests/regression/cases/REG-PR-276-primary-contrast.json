@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-276-primary-contrast",
+  "kind": "fix",
+  "title": "The primary colour reads at WCAG AA as a button fill and as text on white",
+  "pr": 276,
+  "area": "ui/tokens",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read --primary and --primary-foreground from tokens.css and from page-shell.js and compute both contrast ratios.",
+    "S2: compare the two files' --primary."
+  ],
+  "expect": [
+    "S1: a label on the primary and the primary on white are each at least 4.5:1 in both files.",
+    "S2: the same value."
+  ],
+  "selectors": {
+    "file": "packages/ui/tracy-ui/src/tokens.css",
+    "exports": "--primary"
+  },
+  "evidence": "Issue #228: #fafafa on #bf5b3d read 4.21:1 on every primary button",
+  "fence": "Design tokens",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/primary-contrast.test.mjs"],
+    "tests": [
+      "tokens.css: a label on the primary colour and the primary colour on white both read at AA (#228)",
+      "page-shell.js: a label on the primary colour and the primary colour on white both read at AA (#228)",
+      "page-shell.js redeclares the same primary as tokens.css"
+    ]
+  }
+}

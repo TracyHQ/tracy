@@ -1,0 +1,41 @@
+---
+/** The two story tiles of the home page (features intro, style 1): a text card with a picture under or over it, on a photograph. */
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  entry: Row
+  locale: Locale
+}
+const { entry, locale } = Astro.props
+const $f = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
+const bg = mediaUrl(entry.background)
+const items: any[] = (entry.items ?? []).slice(0, 2)
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  items.map((it) => it.btn_link)
+)
+---
+
+<section class="rs-section rs-collage" style={bg ? `background-image:url('${bg}')` : undefined}>
+	<div class="rs-wrap">
+		<div class="rs-collage-row">
+			{items.map((it, i) => (
+				<div class:list={['rs-collage-item', i % 2 === 0 ? 'is-odd' : 'is-even']}>
+					{i % 2 === 1 && mediaUrl(it.img_icon) && <div class="rs-collage-img"><img src={mediaUrl(it.img_icon)!} alt="" width="500" height="300" loading="lazy" decoding="async" {...$f(`items[${i}].img_icon`)} /></div>}
+					<div class="rs-collage-card">
+						<h2 class="rs-display" {...$f(`items[${i}].title`)}>{it.title}</h2>
+						<p {...$f(`items[${i}].description`)}>{it.description}</p>
+						{it.btn_value && live(it.btn_link) && <a class="rs-btn rs-btn-outline" href={dataHref(it.btn_link || '/', (p) => href(locale, p))} {...$f(`items[${i}].btn_value`)}>{it.btn_value}</a>}
+					</div>
+					{i % 2 === 0 && mediaUrl(it.img_icon) && <div class="rs-collage-img"><img src={mediaUrl(it.img_icon)!} alt="" width="500" height="300" loading="lazy" decoding="async" {...$f(`items[${i}].img_icon`)} /></div>}
+				</div>
+			))}
+		</div>
+	</div>
+</section>

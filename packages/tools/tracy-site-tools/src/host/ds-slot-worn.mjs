@@ -104,6 +104,32 @@ const DARK_OPEN_SRC = String.raw`(?<=^|[{};"])(?:\s|\\n)*(?:@media[^{};]*prefers
 /** One of the template's own custom properties — never a BEM `.btn--primary:hover`, which follows a name. */
 const OWN_PROP_SRC = String.raw`(?<![\w-])--(?!ds-)[a-z0-9_-]+\s*:\s*[^;{}]{1,200}`
 
+/** What `codeString` writes for a character JSON leaves bare: an escape PHP's `"…"` and node's read the same. */
+const CODE_ESCAPES = {
+  '<': '\\x3C',
+  '>': '\\x3E',
+  '/': '\\x2F',
+  '\b': '\\x08',
+  '\f': '\\x0C',
+  '\n': '\\x0A',
+  '\r': '\\x0D',
+  '\t': '\\x09',
+  '\0': '\\x00',
+  '\u2028': '\\u{2028}',
+  '\u2029': '\\u{2029}'
+}
+
+/**
+ * `s` as a double-quoted string literal of the PHP and node scripts below: JSON's escapes, and no `<`, `>`,
+ * `/` or line separator left bare (a pattern written into a script must never close the script around it).
+ * @param {string} s
+ */
+const codeString = (s) =>
+  JSON.stringify(s).replace(
+    /[<>/\b\f\n\r\t\0\u2028\u2029]/g,
+    (c) => CODE_ESCAPES[/** @type {keyof typeof CODE_ESCAPES} */ (c)]
+  )
+
 /**
  * `$roles([folders])` in PHP: the role reads and custom properties of every `.css` and `theme.json` under
  * them (never a style variation's `styles/*.json`: a variation is not the template's own look), comments
@@ -116,26 +142,26 @@ export const ROLES_PHP =
   'function($f){$n=$f->getFilename();return !($f->isDir()&&($n==="node_modules"||$n[0]==="."));}),' +
   'RecursiveIteratorIterator::LEAVES_ONLY,RecursiveIteratorIterator::CATCH_GET_CHILD);' +
   'foreach($it as $fi){try{if($fi->isLink()||!$fi->isFile())continue;$bn=$fi->getFilename();' +
-  `if(!preg_match(${JSON.stringify(String.raw`/\.css$/`)},$bn)&&$bn!=="theme.json")continue;if($fi->getSize()>4194304)continue;` +
+  `if(!preg_match(${codeString(String.raw`/\.css$/`)},$bn)&&$bn!=="theme.json")continue;if($fi->getSize()>4194304)continue;` +
   '$t=(string)@file_get_contents($fi->getPathname());}catch(\\Throwable $e){continue;}' +
   'if(strpos($t,"var(--ds-")===false)continue;' +
-  `$t=(string)preg_replace(${JSON.stringify(String.raw`#/\*.*?\*/#s`)},"",$t);` +
+  `$t=(string)preg_replace(${codeString(String.raw`#/\*.*?\*/#s`)},"",$t);` +
   // the dark side's blocks, each whole by its braces (a recursive pattern ran out of backtracking on a
   // 30 KB theme.json and answered null, measured 20/10/2026); no match, or a pattern that fails: no split
-  `$dk=[];$lt="";$at=0;$uc=0;if(preg_match_all(${JSON.stringify(`/${DARK_OPEN_SRC}/i`)},$t,$mm,PREG_OFFSET_CAPTURE)){foreach($mm[0] as $mx){$st=$mx[1];if($st<$at)continue;` +
+  `$dk=[];$lt="";$at=0;$uc=0;if(preg_match_all(${codeString(`/${DARK_OPEN_SRC}/i`)},$t,$mm,PREG_OFFSET_CAPTURE)){foreach($mm[0] as $mx){$st=$mx[1];if($st<$at)continue;` +
   '$i=$st+strlen($mx[0]);$dp=1;$L=strlen($t);while($i<$L&&$dp>0){$c=$t[$i];if($c==="{")$dp++;elseif($c==="}")$dp--;$i++;}' +
   // a block that never closes (a cut file, a brace in a string) is not split; the next ones still are
   'if($dp>0){if(++$uc>5)break;continue;}$lt.=substr($t,$at,$st-$at);$dk[]=substr($t,$st,$i-$st);$at=$i;}}$lt.=substr($t,$at);' +
-  `preg_match_all(${JSON.stringify(`/${ROLE_READ_SRC}/i`)},$lt,$m);foreach($m[0] as $x){if(count($rs)<${ROLE_READS_MAX})$rs[]=$x;}` +
-  `preg_match_all(${JSON.stringify(`/${ROLE_READ_SRC}/i`)},implode("\\n",$dk),$m);foreach($m[0] as $x){if(count($rs)<${ROLE_READS_MAX})$rs[]="@dark ".$x;}` +
+  `preg_match_all(${codeString(`/${ROLE_READ_SRC}/i`)},$lt,$m);foreach($m[0] as $x){if(count($rs)<${ROLE_READS_MAX})$rs[]=$x;}` +
+  `preg_match_all(${codeString(`/${ROLE_READ_SRC}/i`)},implode("\\n",$dk),$m);foreach($m[0] as $x){if(count($rs)<${ROLE_READS_MAX})$rs[]="@dark ".$x;}` +
   // the template's own properties of its light side only: a dark block's restate the dark values
-  `preg_match_all(${JSON.stringify(`/${OWN_PROP_SRC}/i`)},$lt,$m);foreach($m[0] as $x){if(count($dc)<${OWN_PROPS_MAX})$dc[]=$x;}` +
+  `preg_match_all(${codeString(`/${OWN_PROP_SRC}/i`)},$lt,$m);foreach($m[0] as $x){if(count($dc)<${OWN_PROPS_MAX})$dc[]=$x;}` +
   `if(count($rs)>=${ROLE_READS_MAX})break 2;}}}catch(\\Throwable $e){}` +
   'return count($rs)===0?null:implode(";\\n",array_merge($rs,$dc)).";";};'
 
 /** `roles(folder)` in node: the same, under one folder. */
 export const ROLES_JS =
-  `const roles=(d)=>{const rs=[],dc=[];const R=new RegExp(${JSON.stringify(ROLE_READ_SRC)},"gi"),D=new RegExp(${JSON.stringify(OWN_PROP_SRC)},"gi"),K=new RegExp(${JSON.stringify(DARK_OPEN_SRC)},"gi");` +
+  `const roles=(d)=>{const rs=[],dc=[];const R=new RegExp(${codeString(ROLE_READ_SRC)},"gi"),D=new RegExp(${codeString(OWN_PROP_SRC)},"gi"),K=new RegExp(${codeString(DARK_OPEN_SRC)},"gi");` +
   // the dark side's blocks, whole (a brace count: no recursion in a JS regex), apart from the rest
   'const split=(t)=>{let light="",dark="",at=0,uc=0,m;K.lastIndex=0;while((m=K.exec(t))!==null){let i=m.index+m[0].length,depth=1;' +
   'while(i<t.length&&depth>0){const c=t[i];if(c==="{")depth++;else if(c==="}")depth--;i++}if(depth>0){if(++uc>5)break;K.lastIndex=m.index+m[0].length;continue}' +

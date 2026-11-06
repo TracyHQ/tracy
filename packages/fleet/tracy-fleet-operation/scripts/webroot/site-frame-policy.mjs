@@ -32,6 +32,21 @@ const managedDefault = (policy) =>
   /^'self' https:\/\/\*\.[a-zA-Z0-9.-]+(?: https:\/\/[a-zA-Z0-9.-]+)? http:\/\/127\.0\.0\.1:\* http:\/\/localhost:\*(?: https?:\/\/[^\s;]+)?$/.test(
     policy
   )
+/**
+ * The EmDash compose with `init: true` under its web service's `restart:` line, where render-compose.sh
+ * writes it since 31/10/2026 (#205) and the custody matchers accept it, or the text unchanged when it
+ * already has one or is not that form. A file rendered before then gets it at the recreate this job
+ * makes anyway, so its next stop is at once instead of after Docker's timeout; nothing else changes.
+ * @param {string} compose
+ */
+export function withInit(compose) {
+  if (/^ {4}init: true\r?$/m.test(compose)) return compose
+  return compose.replace(
+    /^( {2}web:\r?\n {4}image: [^\n]+\n {4}restart: unless-stopped)(\r?\n)/m,
+    '$1$2    init: true$2'
+  )
+}
+
 const docker = (args, options) => execFileSync('docker', args, { timeout: 40_000, stdio: 'pipe', ...options })
 
 /** Called with the site's lifecycle lock held. It never changes CMS content or publish state. */
@@ -84,12 +99,13 @@ export function reconcileFramePolicy({ root, label, policy, publicOrigin, run = 
     originals.set(envFile, env)
     originals.set(composeFile, compose)
     apply = () => {
-      if (interpolated)
+      if (interpolated) {
         replaceConfig(envFile, env.replace(envSetting[0], `TRACY_FRAME_ANCESTORS="${policy}"`))
-      else
+        if (withInit(compose) !== compose) replaceConfig(composeFile, withInit(compose))
+      } else
         replaceConfig(
           composeFile,
-          compose.replace(setting[0], `${setting[1]}TRACY_FRAME_ANCESTORS: "${policy}"`)
+          withInit(compose.replace(setting[0], `${setting[1]}TRACY_FRAME_ANCESTORS: "${policy}"`))
         )
       // Recreate is required: restarting a container does not replace its environment.
       run(

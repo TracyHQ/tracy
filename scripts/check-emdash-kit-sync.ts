@@ -22,7 +22,13 @@ import path from 'node:path'
 const ROOT = path.resolve(import.meta.dirname, '..')
 const KIT = path.join(ROOT, 'vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template')
 const CHECK = path.join(KIT, 'scripts/check-kit-sync.mjs')
-const TEMPLATES = ['tracy-emdash-theme-base', 'tracy-emdash-theme-business', 'tracy-emdash-theme-saas']
+const TEMPLATES = [
+  'tracy-emdash-theme-base',
+  'tracy-emdash-theme-business',
+  'tracy-emdash-theme-saas',
+  'tracy-emdash-theme-coffee',
+  'tracy-emdash-theme-restaurant'
+]
 
 if (!existsSync(CHECK)) {
   console.error(`check-emdash-kit-sync: ${path.relative(ROOT, CHECK)} is missing — did the kit change shape?`)

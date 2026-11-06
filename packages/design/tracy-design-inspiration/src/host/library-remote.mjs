@@ -22,6 +22,7 @@ import os from 'node:os'
 import path from 'node:path'
 
 import { ARTIFACT_TYPES, SYSTEM_FILES, slimCatalog } from './gallery.mjs'
+import { withoutTrailingSlashes } from './templates.mjs'
 
 /**
  * The files of a system the library serves — the host's closed list, `slots.json`, and the measured
@@ -121,7 +122,7 @@ function manifestOf(body) {
  * @returns {Promise<RemoteLibrary | null>} null only when there is no network AND nothing on disk.
  */
 export async function openRemoteLibrary({ url, cacheDir, fetch: fetchImpl = fetch }) {
-  const base = url.replace(/\/+$/, '')
+  const base = withoutTrailingSlashes(url)
   const manifest = manifestOf(await get(`${base}/data/manifest.json`, fetchImpl))
   let commit = typeof manifest?.vendorCommit === 'string' ? manifest.vendorCommit : null
   let offline = false

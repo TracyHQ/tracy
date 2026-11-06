@@ -229,12 +229,14 @@ test('the variable does the same as the flag, and a skipping run says so on Acti
   assert.match(got.summary, /2 workers test file\(s\) that read TEST_DATABASE_URL/)
 })
 
-test('a shard leaves out its own database files; together the two shards ran every unit test once', () => {
+test('the shards split only the files they will run; together they ran every unit test once', () => {
   const ran = new Set<string>()
   for (const index of [1, 2]) {
     const got = gateOver(['--part', `workers:${String(index)}/2`, '--skip-db-gated'])
     assert.equal(got.status, 0, `${got.stdout}${got.stderr}`)
     assert.doesNotMatch(got.stdout, /RAN a-db|RAN b-db/)
+    // Since 30/10/2026 the skip comes BEFORE the split: two unit files, two shards, one each.
+    assert.match(got.stdout, /shard \d\/2, 1\/4 file/)
     for (const m of got.stdout.matchAll(/✔ (RAN \S+)/g)) {
       assert.ok(!ran.has(m[1]), `${m[1]} ran in two shards`)
       ran.add(m[1])
@@ -273,11 +275,22 @@ test('a whole-suite run whose list is empty, or that the skip empties, is red �
   assert.doesNotMatch(empty.stdout, /RAN /)
 })
 
-test('a shard the skip empties is red, in English', () => {
+test('shards the skip leaves nothing to split, or more shards than files to run, are red, in English', () => {
   const onlyDb = Object.fromEntries(Object.entries(FIXTURE).filter(([file]) => file.includes('-db.')))
   const got = gateOver(['--part', 'workers:1/2', '--skip-db-gated'], {}, onlyDb)
   assert.equal(got.status, 1, `${got.stdout}${got.stderr}`)
-  assert.match(got.stderr, /holds only files that read TEST_DATABASE_URL/)
+  assert.match(
+    got.stderr,
+    /every workers file reads TEST_DATABASE_URL and TRACY_TESTS_SKIP_DB left them all out/
+  )
+  assert.doesNotMatch(got.stdout, /RAN /)
+  // Two unit files after the skip, three shards: the third has nothing, and a shard of nothing is red.
+  const third = gateOver(['--part', 'workers:3/3', '--skip-db-gated'])
+  assert.equal(third.status, 1, `${third.stdout}${third.stderr}`)
+  assert.match(
+    third.stderr,
+    /shard 3\/3 has no file — the shard count \(3\) is larger than the file count \(2\)/
+  )
 })
 
 test('the flag twice, or with an owned database, is refused: the two ask for opposite things', () => {

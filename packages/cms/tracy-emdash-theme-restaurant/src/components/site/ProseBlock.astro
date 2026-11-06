@@ -1,0 +1,17 @@
+---
+/**
+ * A Portable Text text block (paragraph, heading, quote) with its provenance stamp: EmDash's own
+ * block renderer, plus `data-tracy-src` when `stampBlocks()` (`src/lib/stamps.ts`) stamped the
+ * node. Views pass it only on a stamped request, so an ordinary page renders exactly as before.
+ */
+import { emdashComponents } from 'emdash/ui'
+import { BLOCK_SRC } from '@/lib/stamps'
+
+// EmDash's block renderer. `emdash/ui` also exports a type named `Block`, which TypeScript reads
+// the named import as; the components object names the same renderer unambiguously.
+const Block = emdashComponents.block
+
+const { node, index, isInline } = Astro.props
+---
+
+<Block node={node} index={index} isInline={isInline} data-tracy-src={node?.[BLOCK_SRC]}><slot /></Block>

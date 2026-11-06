@@ -1,0 +1,4906 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"defaultLocale": "en",
+	"meta": {
+		"name": "JA Restaurant",
+		"description": "",
+		"author": "Tracy"
+	},
+	"settings": {
+		"title": "JA Restaurant",
+		"tagline": "",
+		"postsPerPage": 10
+	},
+	"collections": [
+		{
+			"slug": "pages",
+			"label": "Pages",
+			"labelSingular": "Page",
+			"sortOrder": 1,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"description": "One entry per page of the site. `path` and `sections` record where the page is served and which section entries its template prints, for Tracy's Content API: changing them does not move or change the page.",
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "body",
+					"label": "Body",
+					"type": "portableText"
+				},
+				{
+					"slug": "view",
+					"label": "View",
+					"type": "string"
+				},
+				{
+					"slug": "image",
+					"label": "Image",
+					"type": "image"
+				},
+				{
+					"slug": "caption",
+					"label": "Caption",
+					"type": "string"
+				},
+				{
+					"slug": "lead_title",
+					"label": "Lead title",
+					"type": "string"
+				},
+				{
+					"slug": "lead_text",
+					"label": "Lead text",
+					"type": "string"
+				},
+				{
+					"slug": "path",
+					"label": "Path",
+					"type": "string"
+				},
+				{
+					"slug": "sections",
+					"label": "Sections",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "collection",
+								"label": "Collection",
+								"type": "string"
+							},
+							{
+								"slug": "entry",
+								"label": "Entry",
+								"type": "string"
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"slug": "posts",
+			"label": "Posts",
+			"labelSingular": "Post",
+			"sortOrder": 2,
+			"routable": true,
+			"supports": [
+				"revisions",
+				"search"
+			],
+			"editLocking": false,
+			"description": "Articles, albums and the Chefs page. `path` records the address the post is served at: changing it does not move the post.",
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"searchable": true
+				},
+				{
+					"slug": "excerpt",
+					"label": "Excerpt",
+					"type": "text",
+					"searchable": true
+				},
+				{
+					"slug": "body",
+					"label": "Body",
+					"type": "portableText",
+					"searchable": true
+				},
+				{
+					"slug": "date",
+					"label": "Date",
+					"type": "datetime"
+				},
+				{
+					"slug": "cover",
+					"label": "Cover",
+					"type": "image"
+				},
+				{
+					"slug": "featured",
+					"label": "Featured",
+					"type": "boolean"
+				},
+				{
+					"slug": "featured_order",
+					"label": "Featured order",
+					"type": "integer"
+				},
+				{
+					"slug": "list_order",
+					"label": "List order",
+					"type": "integer"
+				},
+				{
+					"slug": "photos",
+					"label": "Photos",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "image",
+								"label": "Image",
+								"type": "image"
+							}
+						]
+					}
+				},
+				{
+					"slug": "path",
+					"label": "Path",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "slideshow",
+			"label": "slideshow",
+			"labelSingular": "Slideshow",
+			"sortOrder": 3,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "items",
+					"label": "Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "image",
+								"label": "Image",
+								"type": "image"
+							},
+							{
+								"slug": "slide_title",
+								"label": "Slide title",
+								"type": "string"
+							},
+							{
+								"slug": "slide_link",
+								"label": "Slide link",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "hero",
+			"label": "hero",
+			"labelSingular": "Hero",
+			"sortOrder": 4,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "hero_heading",
+					"label": "Hero heading",
+					"type": "string"
+				},
+				{
+					"slug": "hero_intro",
+					"label": "Hero intro",
+					"type": "portableText"
+				},
+				{
+					"slug": "hero_img",
+					"label": "Hero img",
+					"type": "image"
+				},
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "features_intro",
+			"label": "features intro",
+			"labelSingular": "Features intro",
+			"sortOrder": 5,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "description",
+					"label": "Description",
+					"type": "portableText"
+				},
+				{
+					"slug": "img_features",
+					"label": "Img features",
+					"type": "image"
+				},
+				{
+					"slug": "items",
+					"label": "Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "img_icon",
+								"label": "Img icon",
+								"type": "image"
+							},
+							{
+								"slug": "title",
+								"label": "Title",
+								"type": "string"
+							},
+							{
+								"slug": "description",
+								"label": "Description",
+								"type": "text"
+							},
+							{
+								"slug": "btn_value",
+								"label": "Btn value",
+								"type": "string"
+							},
+							{
+								"slug": "btn_link",
+								"label": "Btn link",
+								"type": "string"
+							},
+							{
+								"slug": "short_desc",
+								"label": "Short desc",
+								"type": "string"
+							},
+							{
+								"slug": "price",
+								"label": "Price",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "menu",
+			"label": "menu",
+			"labelSingular": "Menu",
+			"sortOrder": 6,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "items",
+					"label": "Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "dish_name",
+								"label": "Dish name",
+								"type": "string"
+							},
+							{
+								"slug": "dish_description",
+								"label": "Dish description",
+								"type": "string"
+							},
+							{
+								"slug": "dish_price",
+								"label": "Dish price",
+								"type": "string"
+							},
+							{
+								"slug": "dish_extra_class",
+								"label": "Dish extra class",
+								"type": "string"
+							},
+							{
+								"slug": "dish_image",
+								"label": "Dish image",
+								"type": "image"
+							}
+						]
+					}
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "tabs",
+			"label": "tabs",
+			"labelSingular": "Tabs",
+			"sortOrder": 7,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "heading",
+					"label": "Heading",
+					"type": "string"
+				},
+				{
+					"slug": "position",
+					"label": "Position",
+					"type": "string"
+				},
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "testimonials",
+			"label": "testimonials",
+			"labelSingular": "Testimonials",
+			"sortOrder": 8,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "block_intro",
+					"label": "Block intro",
+					"type": "string"
+				},
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "items",
+					"label": "Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "testimonial_text",
+								"label": "Testimonial text",
+								"type": "string"
+							},
+							{
+								"slug": "author_name",
+								"label": "Author name",
+								"type": "string"
+							},
+							{
+								"slug": "author_img",
+								"label": "Author img",
+								"type": "image"
+							}
+						]
+					}
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "statistics",
+			"label": "statistics",
+			"labelSingular": "Statistics",
+			"sortOrder": 9,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "button_title",
+					"label": "Button title",
+					"type": "string"
+				},
+				{
+					"slug": "button_link",
+					"label": "Button link",
+					"type": "string"
+				},
+				{
+					"slug": "button_icon",
+					"label": "Button icon",
+					"type": "string"
+				},
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "items",
+					"label": "Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "stats_count",
+								"label": "Stats count",
+								"type": "string"
+							},
+							{
+								"slug": "stats_name",
+								"label": "Stats name",
+								"type": "string"
+							},
+							{
+								"slug": "stats_color",
+								"label": "Stats color",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "teams",
+			"label": "teams",
+			"labelSingular": "Teams",
+			"sortOrder": 10,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "number_col",
+					"label": "Number col",
+					"type": "string"
+				},
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "items",
+					"label": "Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "member_image",
+								"label": "Member image",
+								"type": "image"
+							},
+							{
+								"slug": "member_desc",
+								"label": "Member desc",
+								"type": "string"
+							},
+							{
+								"slug": "member_name",
+								"label": "Member name",
+								"type": "string"
+							},
+							{
+								"slug": "member_position",
+								"label": "Member position",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "timeline",
+			"label": "timeline",
+			"labelSingular": "Timeline",
+			"sortOrder": 11,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "items",
+					"label": "Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "date",
+								"label": "Date",
+								"type": "string"
+							},
+							{
+								"slug": "icon",
+								"label": "Icon",
+								"type": "string"
+							},
+							{
+								"slug": "image",
+								"label": "Image",
+								"type": "image"
+							},
+							{
+								"slug": "title",
+								"label": "Title",
+								"type": "string"
+							},
+							{
+								"slug": "description",
+								"label": "Description",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "opentime",
+			"label": "opentime",
+			"labelSingular": "Opentime",
+			"sortOrder": 12,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "oclock_begin",
+					"label": "Oclock begin",
+					"type": "string"
+				},
+				{
+					"slug": "oclock_end",
+					"label": "Oclock end",
+					"type": "string"
+				},
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "opentable",
+			"label": "opentable",
+			"labelSingular": "Opentable",
+			"sortOrder": 13,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "ot_desc",
+					"label": "Ot desc",
+					"type": "string"
+				},
+				{
+					"slug": "ot_id",
+					"label": "Ot id",
+					"type": "string"
+				},
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "happyhours",
+			"label": "happyhours",
+			"labelSingular": "Happyhours",
+			"sortOrder": 14,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "hp_bg",
+					"label": "Hp bg",
+					"type": "image"
+				},
+				{
+					"slug": "hp_brand",
+					"label": "Hp brand",
+					"type": "image"
+				},
+				{
+					"slug": "hp_title",
+					"label": "Hp title",
+					"type": "string"
+				},
+				{
+					"slug": "hp_desc",
+					"label": "Hp desc",
+					"type": "string"
+				},
+				{
+					"slug": "hp_info",
+					"label": "Hp info",
+					"type": "string"
+				},
+				{
+					"slug": "hp_badge",
+					"label": "Hp badge",
+					"type": "string"
+				},
+				{
+					"slug": "hp_link_text",
+					"label": "Hp link text",
+					"type": "string"
+				},
+				{
+					"slug": "hp_link",
+					"label": "Hp link",
+					"type": "string"
+				},
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "hp_other_info",
+					"label": "Hp other info",
+					"type": "string"
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				},
+				{
+					"slug": "section_style",
+					"label": "Section style",
+					"type": "string"
+				},
+				{
+					"slug": "section_intro",
+					"label": "Section intro",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "chrome",
+			"label": "Site chrome",
+			"labelSingular": "Chrome",
+			"sortOrder": 15,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "brand_name",
+					"label": "Brand name",
+					"type": "string"
+				},
+				{
+					"slug": "topbar_text",
+					"label": "Topbar text",
+					"type": "string"
+				},
+				{
+					"slug": "logo_dark",
+					"label": "Logo dark",
+					"type": "image"
+				},
+				{
+					"slug": "footer_location_title",
+					"label": "Footer location title",
+					"type": "string"
+				},
+				{
+					"slug": "footer_address",
+					"label": "Footer address",
+					"type": "string"
+				},
+				{
+					"slug": "footer_map_label",
+					"label": "Footer map label",
+					"type": "string"
+				},
+				{
+					"slug": "footer_map_url",
+					"label": "Footer map url",
+					"type": "string"
+				},
+				{
+					"slug": "footer_hours_title",
+					"label": "Footer hours title",
+					"type": "string"
+				},
+				{
+					"slug": "footer_hours",
+					"label": "Footer hours",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "days",
+								"label": "Days",
+								"type": "string"
+							},
+							{
+								"slug": "time",
+								"label": "Time",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "footer_contact_title",
+					"label": "Footer contact title",
+					"type": "string"
+				},
+				{
+					"slug": "footer_contact",
+					"label": "Footer contact",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "label",
+								"label": "Label",
+								"type": "string"
+							},
+							{
+								"slug": "value",
+								"label": "Value",
+								"type": "string"
+							},
+							{
+								"slug": "href",
+								"label": "Href",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "copyright",
+					"label": "Copyright",
+					"type": "string"
+				},
+				{
+					"slug": "skip_label",
+					"label": "Skip label",
+					"type": "string"
+				},
+				{
+					"slug": "menu_label",
+					"label": "Menu label",
+					"type": "string"
+				},
+				{
+					"slug": "appearance_label",
+					"label": "Appearance label",
+					"type": "string"
+				},
+				{
+					"slug": "categories_title",
+					"label": "Categories title",
+					"type": "string"
+				},
+				{
+					"slug": "prev_label",
+					"label": "Prev label",
+					"type": "string"
+				},
+				{
+					"slug": "next_label",
+					"label": "Next label",
+					"type": "string"
+				},
+				{
+					"slug": "more_label",
+					"label": "More label",
+					"type": "string"
+				},
+				{
+					"slug": "photos_label",
+					"label": "Photos label",
+					"type": "string"
+				},
+				{
+					"slug": "gallery_link_label",
+					"label": "Gallery link label",
+					"type": "string"
+				},
+				{
+					"slug": "not_found_code",
+					"label": "Not found code",
+					"type": "string"
+				},
+				{
+					"slug": "not_found_title",
+					"label": "Not found title",
+					"type": "string"
+				},
+				{
+					"slug": "not_found_text",
+					"label": "Not found text",
+					"type": "string"
+				},
+				{
+					"slug": "not_found_back_label",
+					"label": "Not found back label",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "masthead",
+			"label": "Mastheads",
+			"labelSingular": "Masthead",
+			"sortOrder": 16,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "description",
+					"label": "Description",
+					"type": "string"
+				},
+				{
+					"slug": "background",
+					"label": "Background",
+					"type": "image"
+				}
+			]
+		},
+		{
+			"slug": "banner",
+			"label": "Sidebar banner",
+			"labelSingular": "Banner",
+			"sortOrder": 17,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "image",
+					"label": "Image",
+					"type": "image"
+				},
+				{
+					"slug": "price",
+					"label": "Price",
+					"type": "string"
+				},
+				{
+					"slug": "points",
+					"label": "Points",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "text",
+								"label": "Text",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "button_label",
+					"label": "Button label",
+					"type": "string"
+				},
+				{
+					"slug": "button_link",
+					"label": "Button link",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "category_info",
+			"label": "Category pages",
+			"labelSingular": "Category info",
+			"sortOrder": 18,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "description",
+					"label": "Description",
+					"type": "string"
+				},
+				{
+					"slug": "image",
+					"label": "Image",
+					"type": "image"
+				}
+			]
+		},
+		{
+			"slug": "subscribe",
+			"label": "Subscribe box",
+			"labelSingular": "Subscribe",
+			"sortOrder": 19,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "intro",
+					"label": "Intro",
+					"type": "string"
+				},
+				{
+					"slug": "placeholder",
+					"label": "Placeholder",
+					"type": "string"
+				},
+				{
+					"slug": "button",
+					"label": "Button",
+					"type": "string"
+				},
+				{
+					"slug": "form_id",
+					"label": "Form id",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "contact",
+			"label": "Contact page",
+			"labelSingular": "Contact",
+			"sortOrder": 20,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "form_title",
+					"label": "Form title",
+					"type": "string"
+				},
+				{
+					"slug": "form_note",
+					"label": "Form note",
+					"type": "string"
+				},
+				{
+					"slug": "form_id",
+					"label": "Form id",
+					"type": "string"
+				},
+				{
+					"slug": "card_title",
+					"label": "Card title",
+					"type": "string"
+				},
+				{
+					"slug": "card_text",
+					"label": "Card text",
+					"type": "portableText"
+				},
+				{
+					"slug": "details_title",
+					"label": "Details title",
+					"type": "string"
+				},
+				{
+					"slug": "image",
+					"label": "Image",
+					"type": "image"
+				},
+				{
+					"slug": "address",
+					"label": "Address",
+					"type": "string"
+				},
+				{
+					"slug": "phone",
+					"label": "Phone",
+					"type": "string"
+				},
+				{
+					"slug": "mobile",
+					"label": "Mobile",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "reservation",
+			"label": "Phone reservation",
+			"labelSingular": "Reservation",
+			"sortOrder": 21,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "intro",
+					"label": "Intro",
+					"type": "portableText"
+				},
+				{
+					"slug": "blocks",
+					"label": "Blocks",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "image",
+								"label": "Image",
+								"type": "image"
+							},
+							{
+								"slug": "image_alt",
+								"label": "Image alt",
+								"type": "string"
+							},
+							{
+								"slug": "title",
+								"label": "Title",
+								"type": "string"
+							},
+							{
+								"slug": "text",
+								"label": "Text",
+								"type": "string"
+							},
+							{
+								"slug": "points",
+								"label": "Points",
+								"type": "string"
+							},
+							{
+								"slug": "button_label",
+								"label": "Button label",
+								"type": "string"
+							},
+							{
+								"slug": "button_link",
+								"label": "Button link",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
+					"slug": "online_title",
+					"label": "Online title",
+					"type": "string"
+				},
+				{
+					"slug": "online_text",
+					"label": "Online text",
+					"type": "string"
+				},
+				{
+					"slug": "online_button",
+					"label": "Online button",
+					"type": "string"
+				},
+				{
+					"slug": "online_link",
+					"label": "Online link",
+					"type": "string"
+				}
+			]
+		}
+	],
+	"taxonomies": [
+		{
+			"id": "tax:category:en",
+			"name": "category",
+			"label": "Categories",
+			"labelSingular": "Category",
+			"hierarchical": true,
+			"collections": [
+				"posts"
+			],
+			"locale": "en",
+			"terms": [
+				{
+					"id": "term:category:restaurant:en",
+					"slug": "restaurant",
+					"label": "Restaurant",
+					"locale": "en"
+				},
+				{
+					"id": "term:category:restaurant-business:en",
+					"slug": "restaurant-business",
+					"label": "Restaurant Business",
+					"locale": "en"
+				},
+				{
+					"id": "term:category:restaurant-marketing:en",
+					"slug": "restaurant-marketing",
+					"label": "Restaurant Marketing",
+					"locale": "en"
+				},
+				{
+					"id": "term:category:restaurant-news:en",
+					"slug": "restaurant-news",
+					"label": "Restaurant News",
+					"locale": "en"
+				},
+				{
+					"id": "term:category:restaurant-guide:en",
+					"slug": "restaurant-guide",
+					"label": "Restaurant Guide",
+					"locale": "en"
+				},
+				{
+					"id": "term:category:pages:en",
+					"slug": "pages",
+					"label": "Pages",
+					"locale": "en"
+				},
+				{
+					"id": "term:category:gallery:en",
+					"slug": "gallery",
+					"label": "Gallery",
+					"locale": "en"
+				}
+			]
+		},
+		{
+			"id": "tax:tag:en",
+			"name": "tag",
+			"label": "Tags",
+			"labelSingular": "Tag",
+			"hierarchical": false,
+			"collections": [
+				"posts"
+			],
+			"locale": "en",
+			"terms": [
+				{
+					"id": "term:tag:menus:en",
+					"slug": "menus",
+					"label": "menus",
+					"locale": "en"
+				},
+				{
+					"id": "term:tag:fish:en",
+					"slug": "fish",
+					"label": "Fish",
+					"locale": "en"
+				},
+				{
+					"id": "term:tag:seep:en",
+					"slug": "seep",
+					"label": "seep",
+					"locale": "en"
+				}
+			]
+		}
+	],
+	"menus": [
+		{
+			"id": "menu:primary:en",
+			"name": "primary",
+			"label": "mainmenu",
+			"locale": "en",
+			"items": [
+				{
+					"type": "custom",
+					"label": "Home",
+					"url": "/"
+				},
+				{
+					"type": "custom",
+					"label": "About us",
+					"url": "/about-us",
+					"children": [
+						{
+							"type": "custom",
+							"label": "Our History",
+							"url": "/about-us/our-history"
+						}
+					]
+				},
+				{
+					"type": "custom",
+					"label": "Menu",
+					"url": "/menu",
+					"children": [
+						{
+							"type": "custom",
+							"label": "Simple Menu",
+							"url": "/menu/simple-menu"
+						},
+						{
+							"type": "custom",
+							"label": "Menu with Image",
+							"url": "/menu/menu-with-image"
+						},
+						{
+							"type": "custom",
+							"label": "2 Column Menu",
+							"url": "/menu/2-column-menu"
+						}
+					]
+				},
+				{
+					"type": "custom",
+					"label": "Offers",
+					"url": "/offers"
+				},
+				{
+					"type": "custom",
+					"label": "Blog",
+					"url": "/blog"
+				},
+				{
+					"type": "custom",
+					"label": "Gallery",
+					"url": "/gallery"
+				},
+				{
+					"type": "custom",
+					"label": "Explore",
+					"url": "#",
+					"children": [
+						{
+							"type": "custom",
+							"label": "J! Pages",
+							"url": "#",
+							"children": [
+								{
+									"type": "custom",
+									"label": "Smart Search",
+									"url": "/explore/j-pages/smart-search"
+								},
+								{
+									"type": "custom",
+									"label": "All Categories",
+									"url": "/explore/j-pages/all-categories"
+								},
+								{
+									"type": "custom",
+									"label": "Featured Articles",
+									"url": "/explore/j-pages/featured-articles"
+								},
+								{
+									"type": "custom",
+									"label": "Tagged Items",
+									"url": "/explore/j-pages/tagged-items"
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "custom",
+					"label": "Reservation",
+					"url": "#",
+					"children": [
+						{
+							"type": "custom",
+							"label": "Phone Reservation",
+							"url": "/contact/phone-reservation"
+						},
+						{
+							"type": "custom",
+							"label": "Contact Us",
+							"url": "/contact/contact-us"
+						}
+					]
+				}
+			]
+		}
+	],
+	"redirects": [
+		{
+			"source": "/submit-an-article",
+			"destination": "/"
+		},
+		{
+			"source": "/template-settings",
+			"destination": "/"
+		},
+		{
+			"source": "/site-settings",
+			"destination": "/"
+		},
+		{
+			"source": "/homepage",
+			"destination": "/"
+		}
+	],
+	"widgetAreas": [],
+	"sections": [],
+	"content": {
+		"pages": [
+			{
+				"id": "pages:home:en",
+				"slug": "home",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Read the latest News + Blog",
+					"body": [],
+					"view": "front-page",
+					"path": "/",
+					"sections": [
+						{
+							"collection": "slideshow",
+							"entry": "slideshow"
+						},
+						{
+							"collection": "hero",
+							"entry": "welcome-to-res-bar-restaurant"
+						},
+						{
+							"collection": "features_intro",
+							"entry": "special-offers"
+						},
+						{
+							"collection": "features_intro",
+							"entry": "features-intro"
+						},
+						{
+							"collection": "tabs",
+							"entry": "discover-our-menu"
+						},
+						{
+							"collection": "testimonials",
+							"entry": "happy-customers"
+						},
+						{
+							"collection": "menu",
+							"entry": "snacks-x-salads"
+						},
+						{
+							"collection": "menu",
+							"entry": "entrees"
+						},
+						{
+							"collection": "menu",
+							"entry": "dessert"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-business"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-guide"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-marketing"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-news"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:about-us:en",
+				"slug": "about-us",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "About us",
+					"body": [],
+					"view": "page",
+					"path": "/about-us",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "about-us"
+						},
+						{
+							"collection": "features_intro",
+							"entry": "about-us"
+						},
+						{
+							"collection": "statistics",
+							"entry": "you-re-in-good-restaurant"
+						},
+						{
+							"collection": "teams",
+							"entry": "our-team"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:menu:en",
+				"slug": "menu",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "About us",
+					"body": [],
+					"view": "page",
+					"path": "/menu",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "menu"
+						},
+						{
+							"collection": "tabs",
+							"entry": "our-menu"
+						},
+						{
+							"collection": "menu",
+							"entry": "dessert-117"
+						},
+						{
+							"collection": "menu",
+							"entry": "sea-food"
+						},
+						{
+							"collection": "menu",
+							"entry": "icream-and-juice"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:featured-articles:en",
+				"slug": "featured-articles",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Featured Articles",
+					"body": [],
+					"view": "page-landing",
+					"path": "/explore/j-pages/featured-articles",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "featured-articles"
+						},
+						{
+							"collection": "banner",
+							"entry": "banner"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-business"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-guide"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-marketing"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-news"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:all-categories:en",
+				"slug": "all-categories",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "All Categories",
+					"body": [],
+					"view": "page",
+					"path": "/explore/j-pages/all-categories",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "all-categories"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-business"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-guide"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-marketing"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-news"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:our-history:en",
+				"slug": "our-history",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "History",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "h1",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Four decades on 5th Avenue",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "RES opened in 1982 as a twelve-table neighborhood bar. The room has grown, but the welcome has not changed.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "RES Bar & Restaurant at a glance:",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s14",
+									"text": "Seasonal American kitchen and bar",
+									"marks": []
+								}
+							],
+							"listItem": "bullet",
+							"level": 1
+						},
+						{
+							"_type": "block",
+							"_key": "b17",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s18",
+									"text": "4 5th Avenue at St. Marks Place, Cathedral District Brooklyn, NY 11217",
+									"marks": []
+								}
+							],
+							"listItem": "bullet",
+							"level": 1
+						},
+						{
+							"_type": "block",
+							"_key": "b21",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s22",
+									"text": "Established 1982",
+									"marks": []
+								}
+							],
+							"listItem": "bullet",
+							"level": 1
+						},
+						{
+							"_type": "block",
+							"_key": "b25",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s26",
+									"text": "From the chalkboard menu of our first year to the wood-fired kitchen of today, RES has always been a place for the neighborhood: somewhere to celebrate, to catch up with friends or simply to enjoy a good meal after work. Many of our regulars have been coming for decades, and some of our cooks started here as dishwashers. We are proud of that history, and we are still writing it every night.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"view": "page",
+					"image": "images/joomlart/blog/rest-8.jpg",
+					"caption": "Our dining room on 5th Avenue",
+					"lead_title": "Cooking for Brooklyn since 1982",
+					"lead_text": "The same corner, the same open kitchen and many of the same regulars.\nCome and see what is on the menu this season\nand meet the team behind it.",
+					"path": "/about-us/our-history",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "our-history"
+						},
+						{
+							"collection": "timeline",
+							"entry": "our-history-timeline"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:phone-reservation:en",
+				"slug": "phone-reservation",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Phone Reservation",
+					"body": [],
+					"view": "page",
+					"path": "/contact/phone-reservation",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "phone-reservation"
+						},
+						{
+							"collection": "reservation",
+							"entry": "reservation"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:contact-us:en",
+				"slug": "contact-us",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Contact Us",
+					"body": [],
+					"view": "page-contact",
+					"path": "/contact/contact-us",
+					"sections": [
+						{
+							"collection": "contact",
+							"entry": "contact"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:simple-menu:en",
+				"slug": "simple-menu",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Simple Menu",
+					"body": [],
+					"view": "page-landing",
+					"path": "/menu/simple-menu",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "default"
+						},
+						{
+							"collection": "menu",
+							"entry": "simple-menu"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:menu-with-image:en",
+				"slug": "menu-with-image",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Menu with Image",
+					"body": [],
+					"view": "page-landing",
+					"path": "/menu/menu-with-image",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "default"
+						},
+						{
+							"collection": "menu",
+							"entry": "menu-with-image"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:2-column-menu:en",
+				"slug": "2-column-menu",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "2 Column Menu",
+					"body": [],
+					"view": "page-landing",
+					"path": "/menu/2-column-menu",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "default"
+						},
+						{
+							"collection": "menu",
+							"entry": "2-column-menu"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:offers:en",
+				"slug": "offers",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Offers",
+					"body": [],
+					"view": "page-landing",
+					"path": "/offers",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "offers"
+						},
+						{
+							"collection": "happyhours",
+							"entry": "happy-hours-style-1"
+						},
+						{
+							"collection": "happyhours",
+							"entry": "happy-hours-style-2"
+						},
+						{
+							"collection": "happyhours",
+							"entry": "happy-hours-style-3"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:blog:en",
+				"slug": "blog",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Blog",
+					"body": [],
+					"view": "list",
+					"path": "/blog",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "blog"
+						},
+						{
+							"collection": "banner",
+							"entry": "banner"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-business"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-guide"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-marketing"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-news"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:gallery:en",
+				"slug": "gallery",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Gallery",
+					"body": [],
+					"view": "list",
+					"path": "/gallery",
+					"sections": [
+						{
+							"collection": "slideshow",
+							"entry": "gallery"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:smart-search:en",
+				"slug": "smart-search",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Smart Search",
+					"body": [],
+					"view": "list",
+					"path": "/explore/j-pages/smart-search",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "smart-search"
+						},
+						{
+							"collection": "testimonials",
+							"entry": "happy-customers"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-business"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-guide"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-marketing"
+						},
+						{
+							"collection": "category_info",
+							"entry": "restaurant-news"
+						}
+					]
+				}
+			},
+			{
+				"id": "pages:tagged-items:en",
+				"slug": "tagged-items",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Tagged Items",
+					"body": [],
+					"view": "list",
+					"path": "/explore/j-pages/tagged-items",
+					"sections": [
+						{
+							"collection": "masthead",
+							"entry": "tagged-items"
+						}
+					]
+				}
+			}
+		],
+		"posts": [
+			{
+				"id": "posts:4-habits-that-can-improve-your-customer-service:en",
+				"slug": "4-habits-that-can-improve-your-customer-service",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "4 Habits That Can Improve Your Customer Service",
+					"excerpt": "Great food brings guests in the first time; great service is what brings them back. After four decades on 5th Avenue, these are the four habits our floor team practises every single shift.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Great food brings guests in the first time; great service is what brings them back. After four decades on 5th Avenue, these are the four habits our floor team practises every single shift.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Greet every table within a minute.",
+									"marks": [
+										"strong"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "s7",
+									"text": " Even on the busiest Friday night, a quick hello and a glass of water tells guests they have been seen. The order can wait a moment; the welcome cannot.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b10",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s11",
+									"text": "Know the menu like a cook.",
+									"marks": [
+										"strong"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "s12",
+									"text": " Our servers taste every new dish before it goes on the menu, so they can explain what is in it, how it is cooked and what to drink with it, and answer allergy questions with confidence.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b15",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s16",
+									"text": "Listen more than you talk, and close the loop.",
+									"marks": [
+										"strong"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "s17",
+									"text": " When something is not right we fix it at the table, then tell the kitchen so it does not happen again. A complaint handled well often turns a guest into a regular.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:02:00.000Z",
+					"cover": "rest-3.jpg",
+					"featured": false,
+					"list_order": 1,
+					"path": "/restaurant-business/4-habits-that-can-improve-your-customer-service"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-business"
+					]
+				}
+			},
+			{
+				"id": "posts:chipotle-to-launch-burger-spinoff-this-fall:en",
+				"slug": "chipotle-to-launch-burger-spinoff-this-fall",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Chipotle to launch burger spinoff this fall",
+					"excerpt": "Fast-casual chains keep testing new concepts, and a burger spinoff from a burrito brand is the latest sign that the category is still hungry for growth.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Fast-casual chains keep testing new concepts, and a burger spinoff from a burrito brand is the latest sign that the category is still hungry for growth.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "For neighborhood restaurants the lesson is not to chase the trend but to understand what guests are asking for: fresh ingredients, a short menu they can trust and food that arrives quickly without tasting rushed.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "Our own burger has been on the menu since 1982. We grind the beef in-house every morning, toast the buns to order and keep the toppings simple. Sometimes the best answer to a new trend is to keep doing one thing very well.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:03:00.000Z",
+					"cover": "rest-7.jpg",
+					"featured": false,
+					"list_order": 4,
+					"path": "/restaurant-marketing/chipotle-to-launch-burger-spinoff-this-fall"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-marketing"
+					]
+				}
+			},
+			{
+				"id": "posts:how-to-help-your-chef-achieve-a-better-work-life-balance:en",
+				"slug": "how-to-help-your-chef-achieve-a-better-work-life-balance",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "How To Help Your Chef Achieve A Better Work-Life Balance",
+					"excerpt": "Kitchens are famous for long hours and little rest. Keeping a talented chef means taking their time off as seriously as their time on the line.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Kitchens are famous for long hours and little rest. Keeping a talented chef means taking their time off as seriously as their time on the line.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "At RES we plan the rota four weeks ahead, give every cook two consecutive days off and close the kitchen for a full week each January. Prep lists are shared so no one person carries the whole service, and the sous chef runs the pass two nights a week so the head chef can go home to their family.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "The result is a calmer kitchen, fewer mistakes and a team that has stayed with us for years. Guests may never see it, but they taste it in every plate.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:02:00.000Z",
+					"cover": "rest-2.jpg",
+					"featured": false,
+					"list_order": 6,
+					"path": "/restaurant-marketing/how-to-help-your-chef-achieve-a-better-work-life-balance"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-marketing"
+					]
+				}
+			},
+			{
+				"id": "posts:indies-aren-t-sold-on-tech:en",
+				"slug": "indies-aren-t-sold-on-tech",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Indies aren't sold on tech",
+					"excerpt": "Independent restaurants are being offered more apps, tablets and dashboards than ever, yet many owners remain unconvinced that every new screen makes the dining room better.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Independent restaurants are being offered more apps, tablets and dashboards than ever, yet many owners remain unconvinced that every new screen makes the dining room better.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Technology earns its place when it saves time for the team or makes life easier for the guest: online reservations, a reliable card terminal at the table, a kitchen display that keeps tickets in order. It loses its place when it gets between the server and the guest.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "We use a simple booking system and a kitchen printer that has not missed a ticket in years. Everything else we judge by one question: does it help us look after the people in front of us?",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:00:00.000Z",
+					"cover": "rest-6.jpg",
+					"featured": true,
+					"featured_order": 2005,
+					"list_order": 8,
+					"path": "/restaurant-news/indies-aren-t-sold-on-tech"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-news"
+					]
+				}
+			},
+			{
+				"id": "posts:starbucks-brings-under-armour-exec-on-board:en",
+				"slug": "starbucks-brings-under-armour-exec-on-board",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Starbucks brings Under Armour exec on board",
+					"excerpt": "When a coffee giant hires an executive from a sportswear brand, it is a reminder that restaurant brands are as much about experience and loyalty as they are about the product in the cup.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "When a coffee giant hires an executive from a sportswear brand, it is a reminder that restaurant brands are as much about experience and loyalty as they are about the product in the cup.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Big chains borrow ideas from retail: loyalty programmes, mobile ordering and carefully designed stores. Small restaurants can borrow too, at a human scale. Remembering a regular’s usual order is still the best loyalty programme there is.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "At RES our bartenders know hundreds of guests by name and by drink. No app can replace that, but it is worth watching how the big players think about the whole journey from the front door to the last sip.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:01:00.000Z",
+					"cover": "rest-1.jpg",
+					"featured": false,
+					"list_order": 3,
+					"path": "/restaurant-business/starbucks-brings-under-armour-exec-on-board"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-business"
+					],
+					"tag": [
+						"menus",
+						"fish"
+					]
+				}
+			},
+			{
+				"id": "posts:8-trends-trickling-down-to-mainstream-menus:en",
+				"slug": "8-trends-trickling-down-to-mainstream-menus",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "8 trends trickling down to mainstream menus",
+					"excerpt": "Ideas that start in fine-dining kitchens tend to reach everyday menus a few years later. Here are eight we are seeing on menus across the country, and in our own kitchen.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Ideas that start in fine-dining kitchens tend to reach everyday menus a few years later. Here are eight we are seeing on menus across the country, and in our own kitchen.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "1. Vegetables as the main course, not the side. 2. Fermentation: house pickles, kimchi and hot sauces. 3. Wood-fired cooking for smoke and char. 4. Smaller plates made for sharing.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "5. Global breakfast dishes served all day. 6. Low- and no-alcohol cocktails with as much care as the classics. 7. Heritage grains in breads and salads. 8. Menus that name the farms and fishermen behind each dish.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s14",
+									"text": "Not every trend belongs on every menu. We keep the ones that make our food taste better and leave the rest to others.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:00:00.000Z",
+					"cover": "rest-5.jpg",
+					"featured": false,
+					"list_order": 2,
+					"path": "/restaurant-business/8-trends-trickling-down-to-mainstream-menus"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-business"
+					]
+				}
+			},
+			{
+				"id": "posts:starbucks-faces-a-big-recall:en",
+				"slug": "starbucks-faces-a-big-recall",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Starbucks faces a big recall",
+					"excerpt": "A product recall at a chain the size of Starbucks makes headlines, but the way a business responds matters just as much to every restaurant, large or small.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "A product recall at a chain the size of Starbucks makes headlines, but the way a business responds matters just as much to every restaurant, large or small.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Food safety starts long before anything reaches the table: trusted suppliers, clear labelling, cold chains that are checked and logged, and a team trained to raise a concern the moment something looks wrong.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "In our kitchen every delivery is checked on arrival, every container is dated and every allergen is written on the prep sheet. If something ever goes wrong, we tell our guests quickly and honestly. That is how trust is kept.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:04:00.000Z",
+					"cover": "rest-1.jpg",
+					"featured": false,
+					"list_order": 9,
+					"path": "/restaurant-guide/starbucks-faces-a-big-recall"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-guide"
+					],
+					"tag": [
+						"menus",
+						"fish"
+					]
+				}
+			},
+			{
+				"id": "posts:logan-s-said-to-be-weighing-bankruptcy:en",
+				"slug": "logan-s-said-to-be-weighing-bankruptcy",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Logan's said to be weighing bankruptcy",
+					"excerpt": "Reports that a casual-dining chain may be weighing bankruptcy are a sign of how hard the middle of the market has become, squeezed between fast-casual prices and fine-dining experiences.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Reports that a casual-dining chain may be weighing bankruptcy are a sign of how hard the middle of the market has become, squeezed between fast-casual prices and fine-dining experiences.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Rising food and labour costs, rent and changing habits hit every restaurant. The ones that last tend to know exactly who they are cooking for, keep their menus focused and invest in the people who run the dining room.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "We have been through a few difficult years since 1982. Each time, the answer was the same: listen to our regulars, keep the quality up and never stop giving people a reason to come back.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:03:00.000Z",
+					"cover": "rest-2.jpg",
+					"featured": false,
+					"list_order": 10,
+					"path": "/restaurant-guide/logan-s-said-to-be-weighing-bankruptcy"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-guide"
+					],
+					"tag": [
+						"menus"
+					]
+				}
+			},
+			{
+				"id": "posts:fish-sauces-seep-onto-all-sorts-of-menus:en",
+				"slug": "fish-sauces-seep-onto-all-sorts-of-menus",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Fish sauces seep onto all sorts of menus",
+					"excerpt": "Once found mostly in Southeast Asian kitchens, fish sauce is now turning up in salad dressings, marinades, burgers and even cocktails.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Once found mostly in Southeast Asian kitchens, fish sauce is now turning up in salad dressings, marinades, burgers and even cocktails.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "A few drops add a deep, savoury note that is hard to place but easy to love. Our chefs use it in the glaze for our chili chicken, in the dressing for the grilled romaine salad and in a slow-cooked tomato sauce that tastes richer than its three ingredients.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "The trick is balance: a little acid, a little sweetness and a light hand. Used well, fish sauce does not taste of fish at all; it simply makes everything around it taste more like itself.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:02:00.000Z",
+					"cover": "rest-5.jpg",
+					"featured": false,
+					"list_order": 11,
+					"path": "/restaurant-guide/fish-sauces-seep-onto-all-sorts-of-menus"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-guide"
+					],
+					"tag": [
+						"menus",
+						"fish",
+						"seep"
+					]
+				}
+			},
+			{
+				"id": "posts:denny-s-adopts-a-pancake-guarantee:en",
+				"slug": "denny-s-adopts-a-pancake-guarantee",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Denny’s adopts a pancake guarantee",
+					"excerpt": "A pancake guarantee is a bold promise: if the stack is not right, it is on the house. It is also a smart way to show confidence in a signature dish.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "A pancake guarantee is a bold promise: if the stack is not right, it is on the house. It is also a smart way to show confidence in a signature dish.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Guarantees work when the kitchen can deliver them every time. That means a tested recipe, consistent equipment and cooks who know what \"right\" looks like.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "Our own weekend brunch has a quieter promise. If anything on your plate is not as you expected, tell your server and we will make it again. It rarely happens, and when it does, it helps us get better.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:01:00.000Z",
+					"cover": "rest-3.jpg",
+					"featured": true,
+					"featured_order": 2011,
+					"list_order": 12,
+					"path": "/restaurant-guide/denny-s-adopts-a-pancake-guarantee"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-guide"
+					],
+					"tag": [
+						"menus",
+						"fish"
+					]
+				}
+			},
+			{
+				"id": "posts:blt-on-pimento-cheese-biscuit:en",
+				"slug": "blt-on-pimento-cheese-biscuit",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "BLT on Pimento Cheese Biscuit",
+					"excerpt": "Our brunch menu has a new favourite: a classic BLT built on a warm, flaky pimento cheese biscuit.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Our brunch menu has a new favourite: a classic BLT built on a warm, flaky pimento cheese biscuit.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "We bake the biscuits every morning with sharp cheddar, roasted red peppers and a pinch of cayenne, then split them and layer thick-cut smoked bacon, crisp lettuce and ripe tomato with a smear of house mayonnaise.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "It is served with a side of pickled vegetables and a choice of fries or salad, Saturdays and Sundays from 10 am. Come early; the biscuits usually sell out before noon.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:00:00.000Z",
+					"cover": "rest-6.jpg",
+					"featured": false,
+					"list_order": 13,
+					"path": "/restaurant-guide/blt-on-pimento-cheese-biscuit"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-guide"
+					]
+				}
+			},
+			{
+				"id": "posts:mcdonald-s-makes-clean-tweaks-to-some-menu-items:en",
+				"slug": "mcdonald-s-makes-clean-tweaks-to-some-menu-items",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "McDonald’s makes 'clean' tweaks to some menu items",
+					"excerpt": "Big burger chains are simplifying ingredient lists, removing artificial preservatives and colours from some of their best-known items.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Big burger chains are simplifying ingredient lists, removing artificial preservatives and colours from some of their best-known items.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Guests increasingly want to know what is in their food and where it comes from. That is good news for everyone who cooks from scratch.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "At RES our sauces, dressings and stocks are made in-house, and our servers can tell you exactly what goes into every dish. \"Clean\" was never a trend for us; it is simply how a good kitchen works.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:01:00.000Z",
+					"cover": "rest-7.jpg",
+					"featured": false,
+					"list_order": 7,
+					"path": "/restaurant-marketing/mcdonald-s-makes-clean-tweaks-to-some-menu-items"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-marketing"
+					],
+					"tag": [
+						"menus"
+					]
+				}
+			},
+			{
+				"id": "posts:how-the-gop-and-dems-differ-on-restaurant-issues:en",
+				"slug": "how-the-gop-and-dems-differ-on-restaurant-issues",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "How the GOP and Dems differ on restaurant issues",
+					"excerpt": "Minimum wage, tipping, tax credits and health rules: restaurant owners follow policy debates closely because the outcomes land directly on their payroll and their menus.",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Minimum wage, tipping, tax credits and health rules: restaurant owners follow policy debates closely because the outcomes land directly on their payroll and their menus.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Whatever the politics, the questions every restaurant faces are practical ones. How do we pay our team fairly and keep prices our guests can afford? How do we plan when the rules may change next year?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "We believe the answers start at home: transparent pay, clear communication with our staff and guests, and staying involved with the local business associations that speak for independent restaurants in Brooklyn.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:00:00.000Z",
+					"cover": "rest-4.jpg",
+					"featured": true,
+					"featured_order": 1014,
+					"list_order": 5,
+					"path": "/restaurant-marketing/how-the-gop-and-dems-differ-on-restaurant-issues"
+				},
+				"taxonomies": {
+					"category": [
+						"restaurant-marketing"
+					]
+				}
+			},
+			{
+				"id": "posts:sample-album-1:en",
+				"slug": "sample-album-1",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sample Album 1",
+					"excerpt": "",
+					"body": [],
+					"date": "2021-09-27T00:06:00.000Z",
+					"featured": false,
+					"list_order": 15,
+					"cover": "images/joomlart/gallery/intro-6.jpg",
+					"photos": [
+						{
+							"image": "images/joomlart/gallery/intro-6.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-4.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-3.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-2.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-1.jpg"
+						}
+					],
+					"path": "/gallery/sample-album-1"
+				},
+				"taxonomies": {
+					"category": [
+						"gallery"
+					]
+				}
+			},
+			{
+				"id": "posts:sample-album-2:en",
+				"slug": "sample-album-2",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sample Album 2",
+					"excerpt": "",
+					"body": [],
+					"date": "2021-09-27T00:05:00.000Z",
+					"featured": false,
+					"list_order": 16,
+					"cover": "images/joomlart/gallery/intro-8.jpg",
+					"photos": [
+						{
+							"image": "images/joomlart/gallery/intro-8.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-4.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-3.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-2.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-1.jpg"
+						}
+					],
+					"path": "/gallery/sample-album-2"
+				},
+				"taxonomies": {
+					"category": [
+						"gallery"
+					]
+				}
+			},
+			{
+				"id": "posts:sample-album-3:en",
+				"slug": "sample-album-3",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sample Album 3",
+					"excerpt": "",
+					"body": [],
+					"date": "2021-09-27T00:04:00.000Z",
+					"featured": false,
+					"list_order": 17,
+					"cover": "images/joomlart/gallery/intro-5.jpg",
+					"photos": [
+						{
+							"image": "images/joomlart/gallery/intro-5.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-4.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-3.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-2.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-1.jpg"
+						}
+					],
+					"path": "/gallery/sample-album-3"
+				},
+				"taxonomies": {
+					"category": [
+						"gallery"
+					]
+				}
+			},
+			{
+				"id": "posts:sample-album-4:en",
+				"slug": "sample-album-4",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sample Album 4",
+					"excerpt": "",
+					"body": [],
+					"date": "2021-09-27T00:03:00.000Z",
+					"featured": false,
+					"list_order": 18,
+					"cover": "images/joomlart/gallery/intro-1.jpg",
+					"photos": [
+						{
+							"image": "images/joomlart/gallery/intro-1.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-3.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-2.jpg"
+						}
+					],
+					"path": "/gallery/sample-album-4"
+				},
+				"taxonomies": {
+					"category": [
+						"gallery"
+					]
+				}
+			},
+			{
+				"id": "posts:sample-album-5:en",
+				"slug": "sample-album-5",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sample Album 5",
+					"excerpt": "",
+					"body": [],
+					"date": "2021-09-27T00:02:00.000Z",
+					"featured": false,
+					"list_order": 19,
+					"cover": "images/joomlart/gallery/intro-2.jpg",
+					"photos": [
+						{
+							"image": "images/joomlart/gallery/intro-2.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-1.jpg"
+						}
+					],
+					"path": "/gallery/sample-album-5"
+				},
+				"taxonomies": {
+					"category": [
+						"gallery"
+					]
+				}
+			},
+			{
+				"id": "posts:sample-album-6:en",
+				"slug": "sample-album-6",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sample Album 6",
+					"excerpt": "",
+					"body": [],
+					"date": "2021-09-27T00:01:00.000Z",
+					"featured": false,
+					"list_order": 20,
+					"cover": "images/joomlart/gallery/intro-4.jpg",
+					"photos": [
+						{
+							"image": "images/joomlart/gallery/intro-4.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-5.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-3.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-2.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-1.jpg"
+						}
+					],
+					"path": "/gallery/sample-album-6"
+				},
+				"taxonomies": {
+					"category": [
+						"gallery"
+					]
+				}
+			},
+			{
+				"id": "posts:sample-album-7:en",
+				"slug": "sample-album-7",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sample Album 7",
+					"excerpt": "",
+					"body": [],
+					"date": "2021-09-27T00:00:00.000Z",
+					"featured": false,
+					"list_order": 21,
+					"cover": "images/joomlart/gallery/intro-3.jpg",
+					"photos": [
+						{
+							"image": "images/joomlart/gallery/intro-3.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-5.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-4.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-2.jpg"
+						},
+						{
+							"image": "images/joomlart/gallery/intro-1.jpg"
+						}
+					],
+					"path": "/gallery/sample-album-7"
+				},
+				"taxonomies": {
+					"category": [
+						"gallery"
+					]
+				}
+			},
+			{
+				"id": "posts:chefs:en",
+				"slug": "chefs",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Chefs",
+					"excerpt": "",
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Our kitchen is led by a small team of cooks who have worked together for years. They share one rule: every plate that leaves the pass should be one they would be proud to eat themselves.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Each season the team tastes, tests and argues over the new menu until every dish earns its place. Come and meet them at the chef’s counter, where you can watch dinner being cooked over the wood fire.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-09-27T00:03:00.000Z",
+					"featured": false,
+					"list_order": 14,
+					"path": "/pages/chefs"
+				},
+				"taxonomies": {
+					"category": [
+						"pages"
+					]
+				}
+			}
+		],
+		"slideshow": [
+			{
+				"id": "slideshow:slideshow:en",
+				"slug": "slideshow",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Slideshow",
+					"items": [
+						{
+							"image": "images/joomlart/slideshow/slide-1.jpg",
+							"slide_title": "The Best Bar & Restaurant \nin Brooklyn",
+							"slide_link": "/menu"
+						},
+						{
+							"image": "images/joomlart/slideshow/slide-2.jpg",
+							"slide_title": "The Best Bar & Restaurant \nin Brooklyn",
+							"slide_link": "/about-us"
+						},
+						{
+							"image": "images/joomlart/slideshow/slide-3.jpg",
+							"slide_title": "The Best Bar & Restaurant \nin Brooklyn",
+							"slide_link": "/contact/phone-reservation"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "slideshow:gallery:en",
+				"slug": "gallery",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Gallery",
+					"items": [
+						{
+							"image": "images/joomlart/gallery/big-photo-2.jpg",
+							"slide_title": "",
+							"slide_link": ""
+						},
+						{
+							"image": "images/joomlart/gallery/big-photo-1.jpg",
+							"slide_title": "",
+							"slide_link": ""
+						},
+						{
+							"image": "images/joomlart/gallery/big-photo-3.jpg",
+							"slide_title": "",
+							"slide_link": ""
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			}
+		],
+		"hero": [
+			{
+				"id": "hero:welcome-to-res-bar-restaurant:en",
+				"slug": "welcome-to-res-bar-restaurant",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"hero_heading": "Welcome to RES\nBar & Restaurant",
+					"hero_intro": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [
+								{
+									"_type": "link",
+									"_key": "l3",
+									"href": "https://www.google.com/maps/search/?api=1&query=4+5th+Avenue%2C+Brooklyn%2C+NY+11217"
+								}
+							],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Since 1982, RES has welcomed Brooklyn to one of the neighborhood’s oldest buildings, at ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s4",
+									"text": "4 5th Avenue at St. Marks Place, Cathedral District",
+									"marks": [
+										"l3"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "s5",
+									"text": ". Our kitchen cooks seasonal market produce over a wood fire, the bar pours local beer and classic cocktails, and every table gets the same warm welcome, whether you drop in for a quick lunch or stay for a long dinner.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"hero_img": "images/joomlart/hero/chef.png",
+					"title": "Welcome to RES Bar & Restaurant",
+					"background": "images/joomlart/hero/background.png",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "hero:welcome-to-res-bar-restaurant-2:en",
+				"slug": "welcome-to-res-bar-restaurant-2",
+				"status": "draft",
+				"locale": "en",
+				"data": {
+					"hero_heading": "Meet\nour chef",
+					"hero_intro": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [
+								{
+									"_type": "link",
+									"_key": "l3",
+									"href": "#"
+								}
+							],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Mattis quis senectus lobortis adipiscing felis vel commodo Integer elit vel. Vestibulum quis at nibh ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s4",
+									"text": "Quisque urna urna habitant",
+									"marks": [
+										"l3"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "s5",
+									"text": " Nam Morbi turpis. Vivamus tempor massa sit scelerisque parturient nibh id wisi semper elit. Justo velit malesuada ut Mauris lorem pretium tincidunt enim odio elit. Elit mauris justo magna vel consequat sit vestibulum vel nunc velit.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"hero_img": "",
+					"title": "Welcome to RES Bar & Restaurant (2)",
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			}
+		],
+		"features_intro": [
+			{
+				"id": "features_intro:features-intro:en",
+				"slug": "features-intro",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Features Intro",
+					"items": [
+						{
+							"img_icon": "images/joomlart/features-intro/intro-2.jpg",
+							"title": "Discover Our Story",
+							"description": "RES opened its doors on 5th Avenue in 1982 as a twelve-table neighborhood bar with a short menu and a long wine list. Four decades later the room is bigger and the kitchen busier, but the idea is the same: honest food cooked from scratch, drinks poured generously and a dining room where regulars and first-timers are greeted the same way. Many of our suppliers have been with us for more than twenty years, and our recipes still start with what the farmers bring in each morning.",
+							"btn_value": "About Us",
+							"btn_link": "/about-us"
+						},
+						{
+							"img_icon": "images/joomlart/features-intro/intro-1.jpg",
+							"title": "premium food experience",
+							"description": "Our chefs build every plate around the season: spring peas and ramps, summer tomatoes, autumn squash and slow braises through the winter. Breads are baked in-house every morning, pasta is rolled by hand and fish arrives daily from the Fulton market. Pair it with a cocktail from the bar or a bottle from our cellar, and let our team take care of the rest.",
+							"btn_value": "Learn more",
+							"btn_link": "/about-us/our-history"
+						}
+					],
+					"background": "images/joomlart/background/features-intro-1.jpg",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "features_intro:special-offers:en",
+				"slug": "special-offers",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Special Offers",
+					"items": [
+						{
+							"img_icon": "images/joomlart/features-intro/intro-3.jpg",
+							"title": "Imported Oysters Grill",
+							"description": "Fresh oysters grilled over oak with a ginger and scallion butter, served on crushed ice with charred lemon. Available every weekday from 5 pm.",
+							"short_desc": "Oysters, veggie, ginger",
+							"price": "$14.95"
+						},
+						{
+							"img_icon": "images/joomlart/features-intro/intro-4.jpg",
+							"title": "Roasted Steak Roulade",
+							"description": "Tender steak rolled with spinach, roasted peppers and aged provolone, sliced and finished with a red wine jus. Our chef’s favourite for two.",
+							"short_desc": "Oysters, veggie, ginger",
+							"price": "$16.85"
+						},
+						{
+							"img_icon": "images/joomlart/features-intro/intro-5.jpg",
+							"title": "Roasted Red Potatoes \nwith Rosemary",
+							"description": "Crisp roasted red potatoes tossed in rosemary, garlic and brown butter. The side dish our regulars order with everything.",
+							"short_desc": "Potatoes, rosemary, butter",
+							"price": "$25.75"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": "This week's chef specials, cooked in small batches while the market lasts. Ask your server what is fresh today."
+				}
+			},
+			{
+				"id": "features_intro:about-us:en",
+				"slug": "about-us",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Our Food Network",
+					"description": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Get started with the list of our best recipes. Narrow down those great options using our customised recipe filters. One you find the perfect dish, print & share your finds with friends. Sure you can make your meal planning a success.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b3",
+							"style": "normal",
+							"markDefs": [
+								{
+									"_type": "link",
+									"_key": "l5",
+									"href": "#our-team"
+								}
+							],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Meet Our Team",
+									"marks": [
+										"l5"
+									]
+								}
+							]
+						}
+					],
+					"img_features": "images/joomlart/hero/sam-1.png",
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			}
+		],
+		"menu": [
+			{
+				"id": "menu:snacks-x-salads:en",
+				"slug": "snacks-x-salads",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Snacks x Salads",
+					"items": [
+						{
+							"dish_name": "Chili Chicken",
+							"dish_description": "tempura style, cool cucumbers, chili sauce",
+							"dish_price": "$30"
+						},
+						{
+							"dish_name": "Calamari Fritti ",
+							"dish_description": "tempura vegetables, spicy aioli",
+							"dish_price": "$47"
+						},
+						{
+							"dish_name": "Japanese Gyoza",
+							"dish_description": "pork dumplings with hot mustard",
+							"dish_price": "$56"
+						},
+						{
+							"dish_name": "Trio of Dips",
+							"dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+							"dish_price": "$33"
+						},
+						{
+							"dish_name": "Szechuan Edamame",
+							"dish_description": "wok tossed with chilies, garlic, soy sauce",
+							"dish_price": "$47"
+						},
+						{
+							"dish_name": "Lettuce Wraps",
+							"dish_description": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+							"dish_price": "$89"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "menu:entrees:en",
+				"slug": "entrees",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Entrées",
+					"items": [
+						{
+							"dish_name": "Wood-Fired Ribeye",
+							"dish_description": "14 oz dry-aged ribeye, roasted garlic butter, hand-cut fries",
+							"dish_price": "$42"
+						},
+						{
+							"dish_name": "Pan-Seared Atlantic Salmon",
+							"dish_description": "lemon-caper butter, crushed new potatoes, green beans",
+							"dish_price": "$29"
+						},
+						{
+							"dish_name": "Chicken Parmigiana",
+							"dish_description": "crispy chicken cutlet, San Marzano tomato, fresh mozzarella, spaghetti",
+							"dish_price": "$26"
+						},
+						{
+							"dish_name": "Braised Short Rib",
+							"dish_description": "red wine jus, creamy polenta, glazed carrots",
+							"dish_price": "$34"
+						},
+						{
+							"dish_name": "Wild Mushroom Risotto",
+							"dish_description": "arborio rice, porcini, Grana Padano, truffle oil",
+							"dish_price": "$24"
+						},
+						{
+							"dish_name": "RES Burger",
+							"dish_description": "house-ground chuck, aged cheddar, bacon jam, brioche bun, fries",
+							"dish_price": "$19"
+						},
+						{
+							"dish_name": "Lobster Linguine",
+							"dish_description": "half Maine lobster, cherry tomatoes, chili, garlic, basil",
+							"dish_price": "$38"
+						}
+					]
+				}
+			},
+			{
+				"id": "menu:dessert:en",
+				"slug": "dessert",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Dessert",
+					"items": [
+						{
+							"dish_name": "Tiramisu",
+							"dish_description": "espresso-soaked ladyfingers, mascarpone cream, cocoa",
+							"dish_price": "$12"
+						},
+						{
+							"dish_name": "Warm Chocolate Lava Cake",
+							"dish_description": "molten dark chocolate centre, vanilla bean ice cream",
+							"dish_price": "$14"
+						},
+						{
+							"dish_name": "New York Cheesecake",
+							"dish_description": "graham cracker crust, seasonal berry compote",
+							"dish_price": "$11"
+						},
+						{
+							"dish_name": "Crème Brûlée",
+							"dish_description": "Tahitian vanilla custard, caramelized sugar crust",
+							"dish_price": "$10"
+						},
+						{
+							"dish_name": "Apple Tarte Tatin",
+							"dish_description": "caramelized apples, puff pastry, crème fraîche",
+							"dish_price": "$13"
+						},
+						{
+							"dish_name": "Affogato",
+							"dish_description": "vanilla gelato drowned in a shot of hot espresso",
+							"dish_price": "$9"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "menu:dessert-117:en",
+				"slug": "dessert-117",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Dessert",
+					"items": [
+						{
+							"dish_name": "Tiramisu",
+							"dish_description": "espresso-soaked ladyfingers, mascarpone cream, cocoa",
+							"dish_price": "$12"
+						},
+						{
+							"dish_name": "Warm Chocolate Lava Cake",
+							"dish_description": "molten dark chocolate centre, vanilla bean ice cream",
+							"dish_price": "$14"
+						},
+						{
+							"dish_name": "New York Cheesecake",
+							"dish_description": "graham cracker crust, seasonal berry compote",
+							"dish_price": "$11"
+						},
+						{
+							"dish_name": "Crème Brûlée",
+							"dish_description": "Tahitian vanilla custard, caramelized sugar crust",
+							"dish_price": "$10"
+						},
+						{
+							"dish_name": "Apple Tarte Tatin",
+							"dish_description": "caramelized apples, puff pastry, crème fraîche",
+							"dish_price": "$13"
+						},
+						{
+							"dish_name": "Affogato",
+							"dish_description": "vanilla gelato drowned in a shot of hot espresso",
+							"dish_price": "$9"
+						}
+					]
+				}
+			},
+			{
+				"id": "menu:sea-food:en",
+				"slug": "sea-food",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sea food",
+					"items": [
+						{
+							"dish_name": "Chili Chicken",
+							"dish_description": "Tempura-style chicken in a sweet chili glaze, with cool cucumber ribbons and toasted sesame.",
+							"dish_price": "$30",
+							"dish_extra_class": "Hot",
+							"dish_image": "images/joomlart/food/fd-1.jpg"
+						},
+						{
+							"dish_name": "Calamari Fritti ",
+							"dish_description": "Lightly battered squid and seasonal vegetables, fried crisp and finished with lemon and spicy aioli.",
+							"dish_price": "$47",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-2.jpg"
+						},
+						{
+							"dish_name": "Japanese Gyoza",
+							"dish_description": "Pan-seared pork and cabbage dumplings with a soy-ginger dipping sauce and hot mustard.",
+							"dish_price": "$56",
+							"dish_extra_class": "Sale",
+							"dish_image": "images/joomlart/food/fd-3.jpg"
+						},
+						{
+							"dish_name": "Trio of Dips",
+							"dish_description": "Smoked trout dip, warm cheese dip and house hummus with freshly sliced baguette.",
+							"dish_price": "$33",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-4.jpg"
+						},
+						{
+							"dish_name": "Szechuan Edamame",
+							"dish_description": "Wok-tossed edamame with dried chilies, garlic and soy, made for sharing over a cold beer.",
+							"dish_price": "$47",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-5.jpg"
+						},
+						{
+							"dish_name": "Cheeseburger Sliders",
+							"dish_description": "Three mini burgers with our secret sauce, American cheese and pickles on toasted brioche.",
+							"dish_price": "$58",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-6.jpg"
+						},
+						{
+							"dish_name": "Lettuce Wraps",
+							"dish_description": "Crisp butter lettuce cups with toasted peanuts, crispy noodles and fresh cilantro.",
+							"dish_price": "$89",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-7.jpg"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "menu:icream-and-juice:en",
+				"slug": "icream-and-juice",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Icream and Juice",
+					"items": [
+						{
+							"dish_name": "Chili Chicken",
+							"dish_description": "tempura style, cool cucumbers, chili sauce",
+							"dish_price": "$30",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-1.jpg"
+						},
+						{
+							"dish_name": "Calamari Fritti ",
+							"dish_description": "tempura vegetables, spicy aioli",
+							"dish_price": "$47",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-2.jpg"
+						},
+						{
+							"dish_name": "Japanese Gyoza",
+							"dish_description": "pork dumplings with hot mustard",
+							"dish_price": "$56",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-3.jpg"
+						},
+						{
+							"dish_name": "Trio of Dips",
+							"dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+							"dish_price": "$33",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-4.jpg"
+						},
+						{
+							"dish_name": "Szechuan Edamame",
+							"dish_description": "wok tossed with chilies, garlic, soy sauce",
+							"dish_price": "$47",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-6.jpg"
+						},
+						{
+							"dish_name": "Cheeseburger Sliders",
+							"dish_description": "secret sauce & American cheese + additional sliders $4/each",
+							"dish_price": "$58",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-7.jpg"
+						},
+						{
+							"dish_name": "Lettuce Wraps",
+							"dish_description": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+							"dish_price": "$89",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-8.jpg"
+						},
+						{
+							"dish_name": "Pesto Shrimp Flatbread",
+							"dish_description": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
+							"dish_price": "$29",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-9.jpg"
+						},
+						{
+							"dish_name": "Lime Juice",
+							"dish_description": "chutney, red onion, cilantro, yogurt",
+							"dish_price": "$30",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-10.jpg"
+						},
+						{
+							"dish_name": "Hot Wings",
+							"dish_description": "Frank's hot sauce, creamy blue cheese dip",
+							"dish_price": "$30",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-11.jpg"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "menu:simple-menu:en",
+				"slug": "simple-menu",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Simple Menu",
+					"items": [
+						{
+							"dish_name": "Chili Chicken",
+							"dish_description": "tempura style, cool cucumbers, chili sauce",
+							"dish_price": "$30"
+						},
+						{
+							"dish_name": "Calamari Fritti ",
+							"dish_description": "tempura vegetables, spicy aioli",
+							"dish_price": "$47"
+						},
+						{
+							"dish_name": "Japanese Gyoza",
+							"dish_description": "pork dumplings with hot mustard",
+							"dish_price": "$56"
+						},
+						{
+							"dish_name": "Trio of Dips",
+							"dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+							"dish_price": "$33"
+						},
+						{
+							"dish_name": "Szechuan Edamame",
+							"dish_description": "wok tossed with chilies, garlic, soy sauce",
+							"dish_price": "$47"
+						},
+						{
+							"dish_name": "Cheeseburger Sliders",
+							"dish_description": "secret sauce & American cheese + additional sliders $4/each",
+							"dish_price": "$58"
+						},
+						{
+							"dish_name": "Lettuce Wraps",
+							"dish_description": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+							"dish_price": "$89"
+						},
+						{
+							"dish_name": "Pesto Shrimp Flatbread",
+							"dish_description": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
+							"dish_price": "$29"
+						},
+						{
+							"dish_name": "Tandoori Chicken Flatbread",
+							"dish_description": "chutney, red onion, cilantro, yogurt",
+							"dish_price": "$30"
+						},
+						{
+							"dish_name": "Hot Wings",
+							"dish_description": "Frank's hot sauce, creamy blue cheese dip",
+							"dish_price": "$30"
+						},
+						{
+							"dish_name": "Yam Fries & Truffle Lemon Aioli",
+							"dish_description": "grated Grana Padano, truffle lemon aioli",
+							"dish_price": "$30"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "menu:menu-with-image:en",
+				"slug": "menu-with-image",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Menu with Image",
+					"items": [
+						{
+							"dish_name": "Chili Chicken",
+							"dish_description": "Tempura-style chicken in a sweet chili glaze, with cool cucumber ribbons and toasted sesame.",
+							"dish_price": "$30",
+							"dish_extra_class": "Hot",
+							"dish_image": "images/joomlart/food/fd-1.jpg"
+						},
+						{
+							"dish_name": "Calamari Fritti ",
+							"dish_description": "Lightly battered squid and seasonal vegetables, fried crisp and finished with lemon and spicy aioli.",
+							"dish_price": "$47",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-2.jpg"
+						},
+						{
+							"dish_name": "Japanese Gyoza",
+							"dish_description": "Pan-seared pork and cabbage dumplings with a soy-ginger dipping sauce and hot mustard.",
+							"dish_price": "$56",
+							"dish_extra_class": "Sale",
+							"dish_image": "images/joomlart/food/fd-3.jpg"
+						},
+						{
+							"dish_name": "Trio of Dips",
+							"dish_description": "Smoked trout dip, warm cheese dip and house hummus with freshly sliced baguette.",
+							"dish_price": "$33",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-4.jpg"
+						},
+						{
+							"dish_name": "Szechuan Edamame",
+							"dish_description": "Wok-tossed edamame with dried chilies, garlic and soy, made for sharing over a cold beer.",
+							"dish_price": "$47",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-5.jpg"
+						},
+						{
+							"dish_name": "Cheeseburger Sliders",
+							"dish_description": "Three mini burgers with our secret sauce, American cheese and pickles on toasted brioche.",
+							"dish_price": "$58",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-6.jpg"
+						},
+						{
+							"dish_name": "Lettuce Wraps",
+							"dish_description": "Crisp butter lettuce cups with toasted peanuts, crispy noodles and fresh cilantro.",
+							"dish_price": "$89",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/food/fd-7.jpg"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "menu:2-column-menu:en",
+				"slug": "2-column-menu",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "2 Column Menu",
+					"items": [
+						{
+							"dish_name": "Chili Chicken",
+							"dish_description": "tempura style, cool cucumbers, chili sauce",
+							"dish_price": "$30",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-1.jpg"
+						},
+						{
+							"dish_name": "Calamari Fritti ",
+							"dish_description": "tempura vegetables, spicy aioli",
+							"dish_price": "$47",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-2.jpg"
+						},
+						{
+							"dish_name": "Japanese Gyoza",
+							"dish_description": "pork dumplings with hot mustard",
+							"dish_price": "$56",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-3.jpg"
+						},
+						{
+							"dish_name": "Trio of Dips",
+							"dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+							"dish_price": "$33",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-4.jpg"
+						},
+						{
+							"dish_name": "Szechuan Edamame",
+							"dish_description": "wok tossed with chilies, garlic, soy sauce",
+							"dish_price": "$47",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-6.jpg"
+						},
+						{
+							"dish_name": "Cheeseburger Sliders",
+							"dish_description": "secret sauce & American cheese + additional sliders $4/each",
+							"dish_price": "$58",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-7.jpg"
+						},
+						{
+							"dish_name": "Lettuce Wraps",
+							"dish_description": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+							"dish_price": "$89",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-8.jpg"
+						},
+						{
+							"dish_name": "Pesto Shrimp Flatbread",
+							"dish_description": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
+							"dish_price": "$29",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-9.jpg"
+						},
+						{
+							"dish_name": "Lime Juice",
+							"dish_description": "chutney, red onion, cilantro, yogurt",
+							"dish_price": "$30",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-10.jpg"
+						},
+						{
+							"dish_name": "Hot Wings",
+							"dish_description": "Frank's hot sauce, creamy blue cheese dip",
+							"dish_price": "$30",
+							"dish_extra_class": "",
+							"dish_image": "images/joomlart/icream/ic-11.jpg"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			}
+		],
+		"tabs": [
+			{
+				"id": "tabs:discover-our-menu:en",
+				"slug": "discover-our-menu",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"heading": "Discover Our Menu",
+					"position": "tab-1",
+					"title": "Discover Our Menu",
+					"background": "images/joomlart/background/tab-1.jpg",
+					"section_style": "dark",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "tabs:our-menu:en",
+				"slug": "our-menu",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"heading": "Our Menu",
+					"position": "food-menu",
+					"title": "Our Menu",
+					"background": "",
+					"section_style": "dark",
+					"section_intro": ""
+				}
+			}
+		],
+		"testimonials": [
+			{
+				"id": "testimonials:happy-customers:en",
+				"slug": "happy-customers",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"block_intro": "",
+					"title": "Happy customers",
+					"items": [
+						{
+							"testimonial_text": "You make the tough decision to consult the different approach, but help us move forward with bold steps. Huge thanks for your team. ",
+							"author_name": " Marsh W.",
+							"author_img": "images/joomlart/avatars/avt-1.jpg"
+						},
+						{
+							"testimonial_text": "Very relaxing and thorough. Friendly staff will bring you awesome relaxation feeling the the moment you enter…Great prices as well.",
+							"author_name": "CssYeah",
+							"author_img": "images/joomlart/avatars/avt-2.jpg"
+						},
+						{
+							"testimonial_text": "You make the tough decision to consult the different approach, but help us move forward with bold steps. Huge thanks for your team. ",
+							"author_name": " Marsh W.",
+							"author_img": "images/joomlart/avatars/avt-2.jpg"
+						},
+						{
+							"testimonial_text": "Very relaxing and thorough. Friendly staff will bring you awesome relaxation feeling the the moment you enter…Great prices as well.",
+							"author_name": "CssYeah",
+							"author_img": "images/joomlart/avatars/avt-2.jpg"
+						}
+					],
+					"background": "",
+					"section_style": "dark",
+					"section_intro": ""
+				}
+			}
+		],
+		"statistics": [
+			{
+				"id": "statistics:you-re-in-good-restaurant:en",
+				"slug": "you-re-in-good-restaurant",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"button_title": " Write a Review ",
+					"button_link": "/contact/contact-us",
+					"button_icon": "fa fa-tripadvisor",
+					"title": "You’re In Good Restaurant",
+					"items": [
+						{
+							"stats_count": "85",
+							"stats_name": "Excellent",
+							"stats_color": ""
+						},
+						{
+							"stats_count": "10",
+							"stats_name": "Very good",
+							"stats_color": ""
+						},
+						{
+							"stats_count": "4",
+							"stats_name": " Average",
+							"stats_color": ""
+						},
+						{
+							"stats_count": "1",
+							"stats_name": "Poor",
+							"stats_color": ""
+						}
+					],
+					"background": "images/joomlart/background/tab-1.jpg",
+					"section_style": "default",
+					"section_intro": "2,362 Reviews from our TripAdvisor Community"
+				}
+			}
+		],
+		"teams": [
+			{
+				"id": "teams:our-team:en",
+				"slug": "our-team",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"number_col": "2",
+					"title": "Our Team",
+					"items": [
+						{
+							"member_image": "images/joomlart/avatars/chef-1.jpg",
+							"member_desc": "Dewey has led the RES kitchen for over a decade, cooking seasonal plates built on produce from farms across the Hudson Valley.",
+							"member_name": "Dewey Hall",
+							"member_position": "Executive Chef"
+						},
+						{
+							"member_image": "images/joomlart/avatars/chef-2.jpg",
+							"member_desc": "Lorenzo runs the line every night and brings the flavours of his family’s trattoria to our pasta and wood-fired dishes.",
+							"member_name": "Lorenzo Pope",
+							"member_position": "Sous Chef"
+						},
+						{
+							"member_image": "images/joomlart/avatars/chef-3.jpg",
+							"member_desc": "Perry bakes our bread each morning and is the reason guests save room for tiramisu and warm chocolate lava cake.",
+							"member_name": "Perry Larson",
+							"member_position": "Pastry Chef"
+						},
+						{
+							"member_image": "images/joomlart/avatars/chef-4.jpg",
+							"member_desc": "Darren looks after the bar, from classic cocktails to the local craft beers that rotate on our taps every week.",
+							"member_name": "Darren Klein",
+							"member_position": "Head Bartender"
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": "What makes a good chef the best in the world?\nHere are a few best chefs recommended by their peers in the field."
+				}
+			}
+		],
+		"timeline": [
+			{
+				"id": "timeline:our-history-timeline:en",
+				"slug": "our-history-timeline",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Our History",
+					"items": [
+						{
+							"date": "2016-08-16",
+							"icon": "",
+							"image": "images/joomlart/map-contact.jpg",
+							"title": "A new chapter for the dining room",
+							"description": "We restored the original tin ceiling, opened the back garden for summer dinners and welcomed a new generation of cooks to the kitchen, while keeping the dishes our regulars ask for by name."
+						},
+						{
+							"date": "1999-09-01",
+							"icon": "",
+							"image": "images/joomlart/slideshow/slide-1.jpg",
+							"title": "A bigger kitchen and a longer bar",
+							"description": "After years of queues on the sidewalk we took over the shop next door, doubled the kitchen and built the long oak bar that is still the heart of the room today."
+						},
+						{
+							"date": "1982-05-14",
+							"icon": "",
+							"image": "images/joomlart/features-intro/intro-2.jpg",
+							"title": "Doors open on 5th Avenue",
+							"description": "RES opened as a twelve-table neighborhood bar at 4 5th Avenue, serving a short menu of home-style plates and local beer to the people of Brooklyn. The first menu was written on a chalkboard, and it still hangs by the door."
+						}
+					],
+					"background": "",
+					"section_style": "default",
+					"section_intro": "From a twelve-table neighborhood bar to a Brooklyn favourite: the milestones that shaped RES since 1982."
+				}
+			}
+		],
+		"opentime": [
+			{
+				"id": "opentime:open-daily:en",
+				"slug": "open-daily",
+				"status": "draft",
+				"locale": "en",
+				"data": {
+					"oclock_begin": "7",
+					"oclock_end": "19",
+					"title": "Open Daily",
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			}
+		],
+		"opentable": [
+			{
+				"id": "opentable:open-table:en",
+				"slug": "open-table",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"ot_desc": "",
+					"ot_id": "",
+					"title": "[ACM] Open Table"
+				}
+			}
+		],
+		"happyhours": [
+			{
+				"id": "happyhours:happy-hours-style-1:en",
+				"slug": "happy-hours-style-1",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"hp_bg": "images/joomlart/happyhours/hp-bg-1.jpg",
+					"hp_brand": "images/joomlart/logo.png",
+					"hp_title": "Happy Hours",
+					"hp_desc": "ON FRESH BEER, BLACK DOG 8YRS ANTIQUITY BLUE",
+					"hp_info": "MON. TUE.\nTHU. & SUN.\n12 NOON TO 11 PM",
+					"hp_badge": "Off 50%",
+					"hp_link_text": "Join now",
+					"hp_link": "/contact/phone-reservation",
+					"title": "Happy Hours Style 1",
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "happyhours:happy-hours-style-2:en",
+				"slug": "happy-hours-style-2",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"hp_bg": "images/joomlart/happyhours/hp-bg-2.jpg",
+					"hp_brand": "images/joomlart/logo.png",
+					"hp_title": "Happy Hours",
+					"hp_desc": "ONE + ONE ON FRESH BEER BLACK DOG 8YRS.\nANTIQUITY BLUE",
+					"hp_info": "MON. TUE. THU. & SUN\n12 NOON TO 11 PM",
+					"hp_badge": "35% OFF",
+					"hp_link_text": "Join now",
+					"hp_link": "/contact/phone-reservation",
+					"hp_other_info": "res-restaurant.example\nRESERVATIONS (084) 555-0110",
+					"title": "Happy Hours Style 2",
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			},
+			{
+				"id": "happyhours:happy-hours-style-3:en",
+				"slug": "happy-hours-style-3",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"hp_bg": "images/joomlart/happyhours/hp-bg-3.jpg",
+					"hp_brand": "images/joomlart/logo.png",
+					"hp_title": "Happy Hours",
+					"hp_desc": "ONE + ONE ON FRESH BEER BLACK DOG 8YRS.\nANTIQUITY BLUE",
+					"hp_info": "MON. TUE. THU. & SUN\n12 NOON TO 11 PM",
+					"hp_badge": "Sales",
+					"hp_link_text": "Don't wait",
+					"hp_link": "/contact/phone-reservation",
+					"hp_other_info": "res-restaurant.example\nRESERVATIONS (084) 555-0110",
+					"title": "Happy Hours Style 3",
+					"background": "",
+					"section_style": "default",
+					"section_intro": ""
+				}
+			}
+		],
+		"chrome": [
+			{
+				"id": "chrome:chrome:en",
+				"slug": "chrome",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Site chrome",
+					"brand_name": "JA Restaurant",
+					"topbar_text": "7.00am - 6.30pm Monday to Sunday",
+					"footer_location_title": "Location",
+					"footer_address": "4 5th Avenue at St. Marks Place, Cathedral District Brooklyn, NY 11217",
+					"footer_map_label": "Get Direction",
+					"footer_map_url": "https://www.google.com/maps/search/?api=1&query=4+5th+Avenue%2C+Brooklyn%2C+NY+11217",
+					"footer_hours_title": "Hours",
+					"footer_hours": [
+						{
+							"days": "Mon - Thu",
+							"time": "9 AM - 5 PM"
+						},
+						{
+							"days": "Fri - Sat",
+							"time": "10 AM - 3 PM"
+						},
+						{
+							"days": "Sun",
+							"time": "10AM - 1PM"
+						}
+					],
+					"footer_contact_title": "Contact",
+					"footer_contact": [
+						{
+							"label": "Phone",
+							"value": "(084) 555-0110",
+							"href": ""
+						},
+						{
+							"label": "Fax",
+							"value": "(084) 555-0111",
+							"href": ""
+						},
+						{
+							"label": "Email",
+							"value": "hello@res-restaurant.example",
+							"href": "mailto:hello@res-restaurant.example"
+						}
+					],
+					"copyright": "Copyright © {year} {name}. All Rights Reserved. Designed by JoomlArt.com.",
+					"skip_label": "Skip to content",
+					"menu_label": "Menu",
+					"appearance_label": "Switch between light and dark appearance",
+					"categories_title": "Categories",
+					"prev_label": "Prev",
+					"next_label": "Next",
+					"more_label": "More Articles ...",
+					"photos_label": "Photos",
+					"gallery_link_label": "View more our gallery",
+					"not_found_code": "404",
+					"not_found_title": "Page not found",
+					"not_found_text": "Please try one of the following pages:",
+					"not_found_back_label": "Home Page"
+				}
+			}
+		],
+		"masthead": [
+			{
+				"id": "masthead:blog:en",
+				"slug": "blog",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Restaurant News",
+					"description": "News, recipes and stories from our kitchen",
+					"background": "images/joomlart/masthead/masthead-blog.jpg"
+				}
+			},
+			{
+				"id": "masthead:about-us:en",
+				"slug": "about-us",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "About Us",
+					"description": "Bar & restaurant in Brooklyn since 1982",
+					"background": "images/joomlart/masthead/masthead-aboutus.jpg"
+				}
+			},
+			{
+				"id": "masthead:our-history:en",
+				"slug": "our-history",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Our History",
+					"description": "Four decades on 5th Avenue",
+					"background": "images/joomlart/masthead/masthead-chefs.jpg"
+				}
+			},
+			{
+				"id": "masthead:menu:en",
+				"slug": "menu",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Menu",
+					"description": "Seasonal plates from our kitchen and bar",
+					"background": "images/joomlart/masthead/masthead-menu.jpg"
+				}
+			},
+			{
+				"id": "masthead:phone-reservation:en",
+				"slug": "phone-reservation",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Make A Reservation",
+					"description": "Book a table for lunch or dinner",
+					"background": "images/joomlart/masthead/masthead-menu.jpg"
+				}
+			},
+			{
+				"id": "masthead:offers:en",
+				"slug": "offers",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Offers",
+					"description": "Happy hours and specials all week long",
+					"background": "images/joomlart/masthead/masthead-menu.jpg"
+				}
+			},
+			{
+				"id": "masthead:tagged-items:en",
+				"slug": "tagged-items",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Tagged Items",
+					"description": "Articles by tag",
+					"background": "images/joomlart/masthead/masthead-blog.jpg"
+				}
+			},
+			{
+				"id": "masthead:smart-search:en",
+				"slug": "smart-search",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Search",
+					"description": "Find dishes, news and pages",
+					"background": "images/joomlart/masthead/masthead-blog.jpg"
+				}
+			},
+			{
+				"id": "masthead:all-categories:en",
+				"slug": "all-categories",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "All Categories",
+					"description": "Browse the news by category",
+					"background": "images/joomlart/masthead/masthead-blog.jpg"
+				}
+			},
+			{
+				"id": "masthead:featured-articles:en",
+				"slug": "featured-articles",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Featured Articles",
+					"description": "Stories from our kitchen and bar",
+					"background": "images/joomlart/masthead/masthead-blog.jpg"
+				}
+			},
+			{
+				"id": "masthead:default:en",
+				"slug": "default",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "RES Bar & Restaurant",
+					"description": "Bar & restaurant in Brooklyn since 1982",
+					"background": ""
+				}
+			}
+		],
+		"banner": [
+			{
+				"id": "banner:banner:en",
+				"slug": "banner",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Sidebar banner",
+					"image": "images/joomlart/banner/banner-1.jpg",
+					"price": "Only $5.99",
+					"points": [
+						{
+							"text": "Soup or salad of the day"
+						},
+						{
+							"text": "Fresh bread from our oven"
+						},
+						{
+							"text": "Coffee or iced tea included"
+						},
+						{
+							"text": "Monday to Friday, 11 am - 2 pm"
+						}
+					],
+					"button_label": "Book a Table",
+					"button_link": "/contact/phone-reservation"
+				}
+			}
+		],
+		"category_info": [
+			{
+				"id": "category_info:restaurant-business:en",
+				"slug": "restaurant-business",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Restaurant Business",
+					"description": "Running a restaurant: service, staff, suppliers and the day-to-day business of a busy dining room.",
+					"image": "images/joomlart/blog/rest-3.jpg"
+				}
+			},
+			{
+				"id": "category_info:restaurant-marketing:en",
+				"slug": "restaurant-marketing",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Restaurant Marketing",
+					"description": "How restaurants reach their guests: menus, social media, loyalty and the stories behind the brands.",
+					"image": "images/joomlart/blog/rest-1.jpg"
+				}
+			},
+			{
+				"id": "category_info:restaurant-news:en",
+				"slug": "restaurant-news",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Restaurant News",
+					"description": "Restaurant openings, chef moves, awards and the food stories everyone is talking about this month.",
+					"image": "images/joomlart/blog/rest-4.jpg"
+				}
+			},
+			{
+				"id": "category_info:restaurant-guide:en",
+				"slug": "restaurant-guide",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Restaurant Guide",
+					"description": "Where to eat now: reviews, tasting notes and neighbourhood picks from our critics.",
+					"image": "images/joomlart/blog/rest-6.jpg"
+				}
+			}
+		],
+		"subscribe": [
+			{
+				"id": "subscribe:subscribe:en",
+				"slug": "subscribe",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Subscribe",
+					"intro": "We won’t spam you. One short e-mail a month with new dishes, events and happy-hour offers from RES.",
+					"placeholder": "Email",
+					"button": "Subscribe",
+					"form_id": ""
+				}
+			}
+		],
+		"contact": [
+			{
+				"id": "contact:contact:en",
+				"slug": "contact",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Contact",
+					"form_title": "Contact Form",
+					"form_note": "Send an Email. All fields with an asterisk (*) are required.",
+					"form_id": "",
+					"card_title": "Contact Us",
+					"card_text": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [
+								{
+									"_type": "link",
+									"_key": "l5",
+									"href": "tel:+10845550110"
+								}
+							],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "We take reservations for lunch and dinner.",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s3",
+									"text": "\n",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s4",
+									"text": " To make a reservation, please call us at ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "(084) 555-0110",
+									"marks": [
+										"l5"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "s7",
+									"text": " between 9 am and 5 pm,",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s8",
+									"text": "\n",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s9",
+									"text": " Monday to Friday.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"details_title": "Contact",
+					"image": "images/joomlart/map-contact.jpg",
+					"address": "4 5th Avenue at St. Marks Place, Cathedral District Brooklyn, NY 11217",
+					"phone": "(084) 555-0110",
+					"mobile": "048 594 5483"
+				}
+			}
+		],
+		"reservation": [
+			{
+				"id": "reservation:reservation:en",
+				"slug": "reservation",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Reserve by Phone",
+					"intro": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [
+								{
+									"_type": "link",
+									"_key": "l3",
+									"href": "tel:+10845550110"
+								}
+							],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "We take reservations for lunch and dinner. To make a reservation, please call us at ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "s4",
+									"text": "(084) 555-0110",
+									"marks": [
+										"l3"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "s5",
+									"text": " between 9 am and 5 pm, Monday to Friday.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"blocks": [
+						{
+							"image": "images/joomlart/features-intro/intro-7.jpg",
+							"image_alt": "Lunch at RES",
+							"title": "Reservations for lunch",
+							"text": "A relaxed midday menu of salads, sandwiches and plates of the day, ready in time for your next meeting.",
+							"points": "Tables for 1 to 12 guests\nWeekday lunch special from $5.99\nServed 11 am - 2 pm",
+							"button_label": "Menu for Lunch",
+							"button_link": "/menu"
+						},
+						{
+							"image": "images/joomlart/features-intro/intro-8.jpg",
+							"image_alt": "Dinner at RES",
+							"title": "Reservations for dinner",
+							"text": "Seasonal dishes from the wood-fired kitchen, a full wine list and cocktails from the bar.",
+							"points": "Private room for up to 30 guests\nChef's counter for 6\nServed 5 pm - 10 pm",
+							"button_label": "Menu for Dinner",
+							"button_link": "/menu"
+						}
+					],
+					"online_title": "Reservation Online",
+					"online_text": "Line busy? Leave your name, date and number of guests\nand we will call you back to confirm your table.",
+					"online_button": "Call Now",
+					"online_link": "tel:+10845550110"
+				}
+			}
+		]
+	}
+}

@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-267-fleet-internal-origin",
+  "kind": "fix",
+  "title": "A fleet dsh sends its Apply calls to tracy-web on its own network by itself",
+  "pr": 267,
+  "area": "site-tools/site-call",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: on a fleet dsh with no setting, ask for the internal origin twice while tracy-web resolves, then after 5 minutes when it does not.",
+    "S2: a host that names its own origin, and a dsh that is not a fleet host."
+  ],
+  "expect": [
+    "S1: http://tracy-web:8080, resolved once; then the public origin.",
+    "S2: the named origin; no guess and no lookup."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/call-origin.mjs",
+    "exports": "createInternalOrigin, FLEET_TRACY_WEB"
+  },
+  "evidence": "Issue #208: Apply calls went out through Cloudflare unless an operator set HOST_TRACY_API_ORIGIN; dev's tracy-dsh reaches http://tracy-web:8080 in ~80 ms",
+  "fence": "Site agent calls",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#208\\)",
+      "packages/tools/tracy-site-tools/test/call-origin.test.mjs"
+    ],
+    "tests": [
+      "a host that names an internal origin sends its calls there; the public origin stays for people (#208)",
+      "a fleet dsh finds tracy-web on its own network; a name that does not resolve keeps the public origin (#208)"
+    ]
+  }
+}

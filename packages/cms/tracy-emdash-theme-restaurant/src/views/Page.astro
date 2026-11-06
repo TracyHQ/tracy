@@ -1,0 +1,159 @@
+---
+/**
+ * The page family: one `pages` entry is one page, and which sections it shows is code (DECISIONS D5; the source keeps that
+ * in module-to-menu-item assignments the model does not carry). About us, Menu and its three styles, Offers, Our History,
+ * Reservation, Contact and All Categories.
+ */
+import { getEmDashEntry } from 'emdash'
+import { PortableText } from 'emdash/ui'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import Masthead from '@/components/sections/Masthead.astro'
+import Dishes from '@/components/sections/Dishes.astro'
+import MenuTabs from '@/components/sections/MenuTabs.astro'
+import FeaturesIntro from '@/components/sections/FeaturesIntro.astro'
+import Stats from '@/components/sections/Stats.astro'
+import Team from '@/components/sections/Team.astro'
+import Timeline from '@/components/sections/Timeline.astro'
+import HappyHours from '@/components/sections/HappyHours.astro'
+import Reservation from '@/components/sections/Reservation.astro'
+import Contact from '@/components/sections/Contact.astro'
+import Categories from '@/components/sections/Categories.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { mediaUrl } from '@/lib/media'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { liveBlocks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+  path: string
+}
+const { chrome, locale, slug, path } = Astro.props
+const { entry } = await getEmDashEntry('pages', slug, { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const page = entry.data as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', { id: page.id, slug })
+
+// masthead entry per page (module 99 per menu item); a page with none shows the default one
+const MASTHEAD: Record<string, string> = {
+  'about-us': 'about-us',
+  'our-history': 'our-history',
+  menu: 'menu',
+  offers: 'offers',
+  'phone-reservation': 'phone-reservation',
+  'featured-articles': 'featured-articles',
+  'all-categories': 'all-categories'
+}
+const masthead = slug === 'contact-us' ? null : await section('masthead', MASTHEAD[slug] ?? 'default', locale)
+
+// the entries each page shows, by (collection, slug)
+const WANT: Record<string, Array<[string, string]>> = {
+  'about-us': [
+    ['features_intro', 'about-us'],
+    ['statistics', 'you-re-in-good-restaurant'],
+    ['teams', 'our-team']
+  ],
+  menu: [
+    ['tabs', 'our-menu'],
+    ['menu', 'dessert-117'],
+    ['menu', 'sea-food'],
+    ['menu', 'icream-and-juice']
+  ],
+  offers: [
+    ['happyhours', 'happy-hours-style-1'],
+    ['happyhours', 'happy-hours-style-2'],
+    ['happyhours', 'happy-hours-style-3']
+  ],
+  'our-history': [['timeline', 'our-history-timeline']],
+  'simple-menu': [['menu', 'simple-menu']],
+  'menu-with-image': [['menu', 'menu-with-image']],
+  '2-column-menu': [['menu', '2-column-menu']]
+}
+const got = await Promise.all((WANT[slug] ?? []).map(([c, k]) => section(c, k, locale)))
+const [aboutIntro, stats, team] = slug === 'about-us' ? got : []
+const [ourMenu, dessert, seafood, icream] = slug === 'menu' ? got : []
+const [hh1, hh2, hh3] = slug === 'offers' ? got : []
+const [timeline] = slug === 'our-history' ? got : []
+const [simple] = slug === 'simple-menu' ? got : []
+const [withImage] = slug === 'menu-with-image' ? got : []
+const [twoCol] = slug === '2-column-menu' ? got : []
+const flat =
+  slug === 'simple-menu'
+    ? { entry: simple, style: 1 as const }
+    : slug === 'menu-with-image'
+      ? { entry: withImage, style: 2 as const }
+      : slug === '2-column-menu'
+        ? { entry: twoCol, style: 3 as const }
+        : null
+const history = slug === 'our-history'
+const historyBody = history
+  ? await liveBlocks(Astro.request, locale, stampBlocks($page, 'body', page.body))
+  : []
+const historyComponents = $page.owner ? { block: ProseBlock, listItem: ProseListItem } : {}
+const $f = flat?.entry ? stampFor(Astro.request, 'menu', { id: flat.entry.id, slug: flat.entry.slug }) : null
+const title = masthead?.title ?? flat?.entry?.title ?? page.title
+---
+
+<Base chrome={chrome} title={title} description={masthead?.description || undefined} currentPath={path} content={{ collection: 'pages', id: page.id, slug, toPath: () => path }}>
+	{masthead && <Masthead masthead={masthead} fallbackTitle={page.title} heading={!(slug === 'about-us' || history || flat)} />}
+	<main id="main">
+		<PageOwner stamp={$page} />
+		{slug === 'about-us' && (
+			<>
+				{aboutIntro && <FeaturesIntro entry={aboutIntro} locale={locale} />}
+				{stats && <Stats entry={stats} locale={locale} />}
+				{team && <Team entry={team} />}
+			</>
+		)}
+		{slug === 'menu' && ourMenu && dessert && seafood && icream && <MenuTabs tabs={ourMenu} menus={[dessert, seafood, icream]} styles={[1, 2, 3]} />}
+		{flat?.entry && (
+			<section class="rs-section rs-flat-menu">
+				<div class="rs-wrap rs-flat-menu-box">
+					<h1 class="rs-display rs-section-title" {...$f!('title')}>{flat.entry.title}</h1>
+					<Dishes menu={flat.entry} style={flat.style} />
+				</div>
+			</section>
+		)}
+		{slug === 'offers' && (
+			<>
+				{hh1 && <HappyHours entry={hh1} style={1} locale={locale} />}
+				{hh2 && <HappyHours entry={hh2} style={2} locale={locale} />}
+				{hh3 && <HappyHours entry={hh3} style={3} locale={locale} />}
+			</>
+		)}
+		{history && (
+			<>
+				<section class="rs-wrap rs-history">
+					{mediaUrl(page.image) && (
+						<figure class="rs-history-figure">
+							<img src={mediaUrl(page.image)!} alt={page.caption || ''} width="345" height="480" loading="lazy" decoding="async" {...$page('image')} />
+							{page.caption && <figcaption {...$page('caption')}>{page.caption}</figcaption>}
+						</figure>
+					)}
+					<div class="rs-history-text" {...$page('body')}><PortableText value={historyBody} components={historyComponents} /></div>
+				</section>
+				{page.lead_title && (
+					<section class="rs-section rs-lead">
+						<div class="rs-wrap">
+							<h2 class="rs-display" {...$page('lead_title')}>{page.lead_title}</h2>
+							<p {...$page('lead_text')}>{page.lead_text}</p>
+						</div>
+					</section>
+				)}
+				{timeline && <Timeline entry={timeline} />}
+			</>
+		)}
+		{slug === 'phone-reservation' && <Reservation locale={locale} />}
+		{slug === 'contact-us' && <Contact locale={locale} chrome={chrome} />}
+		{slug === 'all-categories' && <Categories locale={locale} />}
+	</main>
+</Base>

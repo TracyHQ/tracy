@@ -125,7 +125,8 @@ const DOOR_IDS: readonly string[] = [
   'woEditorial',
   'vision',
   'seedImage',
-  'agent'
+  'agent',
+  'sitePlanner'
 ]
 const WHERE_KEY: Record<string, string> = {
   'this process': 'settings.model.door.where.process',

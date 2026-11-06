@@ -1,0 +1,56 @@
+---
+/**
+ * One router for every locale. Astro resolves `Astro.currentLocale` from the URL, so a single catch-all serves the whole
+ * site; unknown paths render the 404 view with a 404 status. Route table: seed/site-model.json routes, derived into
+ * src/lib/page-routes.json (DECISIONS D6, D21): pages by path, four lists, a category list at `/<category>`, an album at
+ * `/gallery/<slug>`, an article at `/<category>/<slug>`.
+ */
+export const prerender = false
+import { splitPath } from '@/lib/i18n'
+import { loadChrome } from '@/lib/chrome'
+import routes from '@/lib/page-routes.json'
+import Home from '@/views/Home.astro'
+import Post from '@/views/Post.astro'
+import Page from '@/views/Page.astro'
+import BlogList from '@/views/BlogList.astro'
+import Gallery from '@/views/Gallery.astro'
+import Search from '@/views/Search.astro'
+import NotFound from '@/views/NotFound.astro'
+import { BLOG_SIDEBAR } from '@/lib/posts'
+import { childLive } from '@/lib/link-gate'
+
+const { locale, path } = splitPath(Astro.url.pathname)
+const chrome = await loadChrome(locale)
+const segs = path.split('/').filter(Boolean)
+const SLUG = /^[a-z0-9][a-z0-9-]*$/
+const clean = segs.length === 0 ? '/' : `/${segs.join('/')}`
+const base = { chrome, locale, path: clean }
+
+type View = { component: any; props: Record<string, unknown> } | null
+let view: View = null
+const page = (routes.pages as Array<{ path: string; slug: string }>).find((p) => p.path === clean)
+if (clean === '/') view = { component: Home, props: {} }
+else if (clean === '/blog') view = { component: BlogList, props: { ...base, mode: 'blog' } }
+else if (clean === '/gallery') view = { component: Gallery, props: base }
+else if (clean === '/explore/j-pages/smart-search') view = { component: Search, props: base }
+else if (clean === '/explore/j-pages/tagged-items')
+  view = { component: BlogList, props: { ...base, mode: 'tagged' } }
+else if (clean === '/explore/j-pages/featured-articles')
+  view = { component: BlogList, props: { ...base, mode: 'featured' } }
+else if (page) view = { component: Page, props: { ...base, slug: page.slug } }
+else if (segs.length === 1 && BLOG_SIDEBAR.includes(segs[0]))
+  view = { component: BlogList, props: { ...base, mode: 'category', category: segs[0] } }
+else if (segs.length === 2 && segs[0] === 'gallery' && SLUG.test(segs[1]))
+  view = { component: Gallery, props: { ...base, slug: segs[1] } }
+else if (segs.length === 2 && SLUG.test(segs[0]) && SLUG.test(segs[1]) && segs[0] !== 'pages')
+  view = { component: Post, props: { category: segs[0], slug: segs[1] } }
+else if (segs.length === 2 && segs[0] === 'pages' && SLUG.test(segs[1]))
+  view = { component: Post, props: { category: 'pages', slug: segs[1] } }
+
+// a page the customer unticked (its record is unpublished), and everything that hangs under it, answers 404
+if (view && !(await childLive(Astro.request, locale, clean))) view = null
+const Component = view?.component ?? NotFound
+if (!view) Astro.response.status = 404
+---
+
+<Component chrome={chrome} locale={locale} path={path} {...(view?.props ?? {})} />

@@ -1,0 +1,108 @@
+// Read a contract's content map and coverage file for the kit tool. The site's front page may carry any alias
+// ("homepage"), and its address is still `/`; the presentation lock says which menu item is the front page. Every
+// page path in the tool starts from a map route, so the route is settled here once, on the way in.
+// A released content map is sealed (ADR 0038 decision 6, ADR 0044): the demo's inline markup it lost is carried beside it,
+// in content-coverage.json `inlineMarkup.samples`, and taken here as the slot's sample when the map's own has none.
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
+import { normText } from '../../content-coverage/lib/normalize.mjs'
+import { inlineOf } from './inline-marks.mjs'
+
+const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
+const readIf = (file) => (existsSync(file) ? readJson(file) : null)
+
+/** The menu item the lock marks as the site's front page, the all-languages one when several are marked. */
+function frontPageEntity(lock) {
+  const rows = Object.entries(lock?.entities ?? {}).filter(
+    ([key, e]) => key.startsWith('menuItem-') && String(e?.home) === '1'
+  )
+  return (rows.find(([, e]) => e.language == null || e.language === '*') ?? rows[0])?.[0] ?? null
+}
+
+/** The route the front page goes by in this map, null when it is already `home` or the map does not name it. */
+function aliasOfFrontPage(pages, lock) {
+  if (pages.some((p) => p.route === 'home')) return null
+  const key = frontPageEntity(lock)
+  return (key && pages.find((p) => p.entity === key)?.route) || null
+}
+
+/**
+ * The content map with its front page routed as `home`. A map that already says so comes back as it is.
+ * @param {object} map
+ * @param {object | null} lock presentation-lock.json
+ */
+export function withHomeRoute(map, lock) {
+  const alias = aliasOfFrontPage(map.pages ?? [], lock)
+  if (!alias) return map
+  const route = (r) => (r === alias ? 'home' : r)
+  return {
+    ...map,
+    pages: map.pages.map((p) => ({ ...p, route: route(p.route) })),
+    itemLists: Object.fromEntries(
+      Object.entries(map.itemLists ?? {}).map(([key, e]) => [
+        key,
+        e.source?.route === alias ? { ...e, source: { ...e.source, route: 'home' } } : e
+      ])
+    )
+  }
+}
+
+/**
+ * The coverage file with its front page routed as `home`, by the map's own pages.
+ * @param {object | null} coverage
+ * @param {object} map the content map as the contract wrote it
+ * @param {object | null} lock presentation-lock.json
+ */
+export function coverageWithHomeRoute(coverage, map, lock) {
+  const alias = aliasOfFrontPage(map.pages ?? [], lock)
+  if (!alias || !Array.isArray(coverage?.sitePages)) return coverage
+  return {
+    ...coverage,
+    sitePages: coverage.sitePages.map((r) => (r.route === alias ? { ...r, route: 'home' } : r))
+  }
+}
+
+/** The tags whose loss changes what a visitor sees of a title, as `content-coverage/lib/inline-markup.mjs` counts them. */
+const KEPT_TAGS = new Set(['br', 'span', 'strong', 'em', 'b', 'i'])
+const marks = (sample) => inlineOf(String(sample ?? '')).some((m) => KEPT_TAGS.has(m.tag))
+
+/**
+ * The content map with each text slot's inline markup taken from the map first and from the coverage file's
+ * `inlineMarkup.samples` second: a sidecar sample replaces a map sample only when the map's marks nothing and both read
+ * as the same words. A map that needs nothing comes back as it is.
+ * @param {object} map
+ * @param {object | null} coverage content-coverage.json
+ */
+export function withInlineMarkup(map, coverage) {
+  const samples = coverage?.inlineMarkup?.samples
+  if (!samples || typeof samples !== 'object') return map
+  let taken = 0
+  const slots = (map.slots ?? []).map((s) => {
+    const markup = samples[s.key]
+    if (s.type !== 'text' || typeof markup !== 'string' || marks(s.sample)) return s
+    if (normText(markup) !== normText(s.sample)) return s
+    taken++
+    return { ...s, sample: markup }
+  })
+  return taken ? { ...map, slots } : map
+}
+
+/** @param {string} contract the contract folder: its content map with the inline markup carried beside it */
+export const readContractSamples = (contract) =>
+  withInlineMarkup(
+    readJson(join(contract, 'content-map.json')),
+    readIf(join(contract, 'content-coverage.json'))
+  )
+
+/** @param {string} contract the contract folder */
+export const readContractMap = (contract) =>
+  withHomeRoute(readContractSamples(contract), readIf(join(contract, 'presentation-lock.json')))
+
+/** @param {string} contract the contract folder */
+export const readContractCoverage = (contract) =>
+  coverageWithHomeRoute(
+    readIf(join(contract, 'content-coverage.json')),
+    readJson(join(contract, 'content-map.json')),
+    readIf(join(contract, 'presentation-lock.json'))
+  )

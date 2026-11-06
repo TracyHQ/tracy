@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-saas",
     "label": "Tracy SaaS",
-    "version": "1.4.14"
+    "version": "1.4.16"
   },
   "locales": {
     "default": "en",
@@ -1161,7 +1161,7 @@
     "@emdash-cms/plugin-forms": "0.2.9",
     "@phosphor-icons/react": "2.1.10",
     "@tailwindcss/vite": "4.3.3",
-    "astro": "7.2.8",
+    "astro": "7.3.3",
     "better-sqlite3": "12.11.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -1273,8 +1273,8 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:7cc314c4b87820302748be68e12231909682818b8a5c3169af1bd70659b2cb9e",
-    "package.json": "sha256:2957904b4a770800333d3272f86cacbc611fd3857807dff4f155d5dbdec0d3d4",
-    "pnpm-lock.yaml": "sha256:604c8a85fa3fe073389043da5dca2f78cb69aa33764b867de68a5b2024168610",
+    "package.json": "sha256:ba8aa577d92ee075efba34c98a3eeff161b216197dc3849494ec2ac7cb751db0",
+    "pnpm-lock.yaml": "sha256:e9c605a351a8ec4d0602c5acf8e964541090ab146e298b0d0bb26bc1b7ccf49d",
     "seed/field-map.json": "sha256:26b1953aa4492dc523b83fce3c98e9a2de279a003f9e6e038f29a8619d6f885f",
     "seed/media-map.json": "sha256:39f24f782e8ddeea43591a63dcebba5d0f22d96e17ba34eccc655fe5ce1b8990",
     "seed/seed.json": "sha256:becf582ea6274450500763edab6b290f12e5940c40e9b558592b3d5b98b296ff",
@@ -1332,7 +1332,7 @@
     "src/lib/chrome.ts": "sha256:5308848190f7aa07e2532ad4c14a0ff8cb014e3fccf102506ec5208f8de68544",
     "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
     "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
-    "src/lib/font-subsets.mjs": "sha256:736e34fffe763d32ed64fbaf3892ef0a973f49c66d7534d3e3850d948552d37a",
+    "src/lib/font-subsets.mjs": "sha256:4588e6245fff77b220db5b153406c28cb7c8df3d4de1c2d6ab01a7848e2f6689",
     "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
     "src/lib/hreflang-plugin.ts": "sha256:24284c2861f5dbc8a61d0d308e2c215fbf34d7c9cf401e22424ed7904b8ed26e",
     "src/lib/hreflang.ts": "sha256:259fdd499937508d8f43b963e80132dc7570171128ac3b1839b6d02ab28cc3aa",
@@ -1364,7 +1364,7 @@
     "src/views/Search.astro": "sha256:8d1f6f822c0829026efcaa8c4aa700b1047b3a4687be0d53686ef9d3887815b1",
     "src/views/Sections.astro": "sha256:a0234e9c87b62ca95db0196825eecdf6c53657a96bc22fdac5606ee61cf69533",
     "src/views/Terms.astro": "sha256:e41a9001d5c49612da6aa361048e500de4054015dc2c62f61b81eb944b5626d1",
-    "template.config.json": "sha256:1bc366ae8ff4d3d6b04dd57535a2bf42a12bafea9042297591b0029a9f1d61f2",
+    "template.config.json": "sha256:cb0f3ab813ce95f22028c358d2b1626aeeab1bc48d3e6a12ea08922cf7d1e704",
     "tools/forms.json": "sha256:0569d2bb0f4f243d6620c952bfbef389a13b033a6bbbf5edaf1064c796bbf390",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

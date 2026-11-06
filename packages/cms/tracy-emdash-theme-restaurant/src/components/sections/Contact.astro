@@ -1,0 +1,49 @@
+---
+/** The contact page: the form (Forms plugin) beside the reservation card and the address card. */
+import { PortableText } from 'emdash/ui'
+import { blockComponents } from '@emdash-cms/plugin-forms/astro'
+import FormWords from '@/components/site/FormWords.astro'
+import { section } from '@/lib/content'
+import { mediaUrl } from '@/lib/media'
+import { uiTag } from '@/lib/ui'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { liveBlocks } from '@/lib/link-gate'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+
+interface Props {
+  locale: Locale
+  chrome: Chrome
+}
+const { locale } = Astro.props
+const c = await section('contact', 'contact', locale)
+const $c = stampFor(Astro.request, 'contact', c ? { id: c.id, slug: c.slug } : null)
+const FormEmbed = (blockComponents as any)['emdash-form']
+const cardText = c ? await liveBlocks(Astro.request, locale, stampBlocks($c, 'card_text', c.card_text)) : []
+const img = c ? mediaUrl(c.image) : null
+---
+
+{c && (
+	<div class="rs-wrap rs-contact">
+		<div class="rs-contact-form">
+			<h1 class="rs-display rs-contact-title" {...$c('form_title')}>{c.form_title}</h1>
+			<p class="rs-contact-note" {...$c('form_note')}>{c.form_note}</p>
+			{c.form_id && <FormWords tag={uiTag(locale)}><FormEmbed node={{ formId: c.form_id }} /></FormWords>}
+		</div>
+		<aside class="rs-contact-side">
+			<div class="rs-contact-card is-accent">
+				<h2 class="rs-display" {...$c('card_title')}>{c.card_title}</h2>
+				<div {...$c('card_text')}><PortableText value={cardText} /></div>
+			</div>
+			<div class="rs-contact-card">
+				{img && <img src={img} alt="" width="347" height="180" loading="lazy" decoding="async" {...$c('image')} />}
+				<div class="rs-contact-details">
+					<h2 class="rs-display" {...$c('details_title')}>{c.details_title}</h2>
+					{c.address && <p {...$c('address')}>{c.address}</p>}
+					{c.phone && <p {...$c('phone')}><a href={`tel:${String(c.phone).replace(/[^+\d]/g, '')}`}>{c.phone}</a></p>}
+					{c.mobile && <p {...$c('mobile')}>{c.mobile}</p>}
+				</div>
+			</div>
+		</aside>
+	</div>
+)}

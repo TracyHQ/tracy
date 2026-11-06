@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-261-joomla-contact-replace",
+  "kind": "fix",
+  "title": "Replacing a phone number on a sealed Joomla site reaches the contact record that holds it too",
+  "pr": 261,
+  "area": "site-tools/replace",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: dry run of a replace with all:true on a sealed Joomla site whose contact record holds the old number.",
+    "S2: the same replace, written.",
+    "S3: a replace of words that only the contact record holds."
+  ],
+  "expect": [
+    "S1: the dry run lists the contact record with the field that holds the number.",
+    "S2: the contact is written through content.update and carries its own undo next to the slots' undo.",
+    "S3: the contact is written; the replace does not answer NOT_FOUND."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/replace-joomla-contacts.mjs",
+    "exports": "readContacts, contactChanges, writeContacts"
+  },
+  "evidence": "Issue #204: on a sealed Joomla site the agent changed the phone number in the modules and the contact page kept the old one",
+  "fence": "Site agent replace",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=sealed Joomla, all:true",
+      "packages/tools/tracy-site-tools/test/replace-joomla.test.mjs"
+    ],
+    "tests": [
+      "sealed Joomla, all:true: the dry run names the contact record that holds the number too (#204)",
+      "sealed Joomla, all:true: the write reaches the contact too, under its own undo (#204)",
+      "sealed Joomla, all:true: words only a contact holds are written there, not refused NOT_FOUND (#204)"
+    ]
+  }
+}

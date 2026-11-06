@@ -30,6 +30,7 @@ const SOURCE_KIND_FOR = {
   boolean: 'boolean',
   datetime: 'date',
   image: 'image',
+  file: 'file',
   reference: 'reference',
   repeater: 'group',
   json: 'link',

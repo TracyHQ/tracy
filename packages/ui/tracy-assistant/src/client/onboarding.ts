@@ -75,3 +75,32 @@ export function draftActions(fetchImpl: (path: string, init?: RequestInit) => Pr
     return prepareDraft(turn, press, () => mine === sequence && current(), fetchImpl)
   }
 }
+
+/**
+ * Create or Import pressed in the row above the composer (`StartRow`): the same draft as the answer's
+ * own action (`prepared`), so what the customer said in the chat reaches Add site through either door
+ * — the row once opened Add site bare (#203). With no request in the conversation yet, or when
+ * preparing fails, the plain start (`plain`), as before; Templates opens its own tab, as on the first
+ * screen. One press at a time: a second press while the draft is prepared is ignored.
+ */
+export function rowStarts(deps: {
+  rows: (sessionId: string) => readonly { kind: string; data: unknown }[]
+  prepared: (sessionId: string, press: StartPress) => Promise<void>
+  plain: (action: 'create' | 'templates' | 'import', answered: string) => void
+}) {
+  let pending: Promise<void> | undefined
+  return (sessionId: string | undefined, action: 'create' | 'templates' | 'import', answered: string) => {
+    if (!sessionId || action === 'templates' || !latestDraftTurn(deps.rows(sessionId), sessionId)) {
+      deps.plain(action, answered)
+      return undefined
+    }
+    if (pending) return pending
+    pending = deps
+      .prepared(sessionId, { action })
+      .catch(() => deps.plain(action, answered))
+      .finally(() => {
+        pending = undefined
+      })
+    return pending
+  }
+}

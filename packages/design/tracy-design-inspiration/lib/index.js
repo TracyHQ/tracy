@@ -822,9 +822,14 @@ for (const s of UI_SWITCHES) {
 }
 var UI_DOOR = "/api/ui";
 var PAGE_READ = Symbol.for("@tracy/core/ui-switches#page-read");
+function withoutTrailingSlashes(s) {
+  let end = s.length;
+  while (end > 0 && s[end - 1] === "/") end -= 1;
+  return s.slice(0, end);
+}
 async function switchesAtTracy(origin, options = {}) {
   if (typeof origin !== "string" || origin.trim() === "") return null;
-  const base = origin.trim().replace(/\/+$/, "");
+  const base = withoutTrailingSlashes(origin.trim());
   const call = options.fetch ?? globalThis.fetch.bind(globalThis);
   const timeoutMs = options.timeoutMs ?? 3e3;
   const hidden = await readHidden(
@@ -2602,6 +2607,11 @@ function templateRows(body) {
 }
 
 // src/host/templates.mjs
+function withoutTrailingSlashes2(s) {
+  let end = s.length;
+  while (end > 0 && s[end - 1] === "/") end -= 1;
+  return s.slice(0, end);
+}
 function quickstartCandidates(configured) {
   const out = [];
   if (configured) out.push(configured);
@@ -2623,7 +2633,7 @@ async function readQuickstarts(candidates) {
 async function templatesFromTracy(origin, fetchImpl = fetch) {
   if (!origin) return null;
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, "")}/api/templates`, {
+    const response = await fetchImpl(`${withoutTrailingSlashes2(origin)}/api/templates`, {
       headers: { accept: "application/json" }
     });
     if (!response.ok) return null;
@@ -2657,7 +2667,7 @@ function withBrandPlatforms(brands, templates) {
 async function designSystemsShownFromTracy(origin, fetchImpl = fetch) {
   if (!origin) return false;
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, "")}/api/design-systems`, {
+    const response = await fetchImpl(`${withoutTrailingSlashes2(origin)}/api/design-systems`, {
       headers: { accept: "application/json" }
     });
     if (!response.ok) return false;
@@ -2682,8 +2692,19 @@ function pictureType(file) {
 var SANS_FALLBACK = ["ui-sans-serif", "system-ui", "sans-serif"];
 var MONO_FALLBACK = ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"];
 function tokenValue(css, name2) {
-  const m = new RegExp(`${name2.replace(/[-]/g, "\\-")}\\s*:\\s*([^;]+);`).exec(css);
-  return m ? m[1].replace(/\s+/g, " ").trim() : null;
+  const space = (i) => /\s/.test(css[i] ?? "");
+  let semicolon = -1;
+  for (let at = css.indexOf(name2); at >= 0 && name2 !== ""; at = css.indexOf(name2, at + 1)) {
+    let i = at + name2.length;
+    while (space(i)) i++;
+    if (css[i] !== ":") continue;
+    const colon = i++;
+    while (space(i)) i++;
+    if (semicolon < i) semicolon = css.indexOf(";", i);
+    if (semicolon < 0) return null;
+    if (semicolon > i || i > colon + 1) return css.slice(i, semicolon).replace(/\s+/g, " ").trim();
+  }
+  return null;
 }
 function hex(css, name2) {
   const v = tokenValue(css, name2);
@@ -2830,7 +2851,7 @@ function manifestOf(body) {
   }
 }
 async function openRemoteLibrary({ url, cacheDir, fetch: fetchImpl = fetch }) {
-  const base = url.replace(/\/+$/, "");
+  const base = withoutTrailingSlashes2(url);
   const manifest = manifestOf(await get(`${base}/data/manifest.json`, fetchImpl));
   let commit = typeof manifest?.vendorCommit === "string" ? manifest.vendorCommit : null;
   let offline = false;

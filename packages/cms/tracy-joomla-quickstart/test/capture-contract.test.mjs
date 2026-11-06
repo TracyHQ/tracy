@@ -601,6 +601,97 @@ test(
   }
 )
 
+/** An invented social block: a repeatable row (an icon class, a name, a link) and one option named like an icon. */
+const SOCIAL_XML = `<?xml version="1.0" encoding="utf-8"?>
+<form><fields name="social"><fieldset name="social-intro" multiple="1">
+  <field name="font-icon" type="text"/><field name="title" type="text"/><field name="link" type="text"/>
+</fieldset><fieldset name="basic"><field name="heading-icon" type="text"/></fieldset></fields></form>`
+const SOCIAL = {
+  'jatools-layout-social': 'style-1',
+  'heading-icon': 'fa fa-star',
+  'social-intro[font-icon]': ['fa fa-kite', 'fa fa-lantern'],
+  'social-intro[title]': ['Kiteline', 'Lanternly'],
+  'social-intro[link]': ['#', '#']
+}
+
+test(
+  "--repeat-icons declares the icon field of a repeatable row, after the module's other slots and kept from Customize",
+  needsPhp,
+  () => {
+    const plain = capture(acmInventory('social', SOCIAL), { schemas: { social: SOCIAL_XML } })
+    assertWritten(plain)
+    const before = slotsOf(plain)
+    assert.equal(
+      before.some(([p]) => p.includes('font-icon')),
+      false,
+      'without the flag the capture is the published one'
+    )
+    const run = capture(acmInventory('social', SOCIAL), {
+      args: ['--repeat-icons'],
+      schemas: { social: SOCIAL_XML }
+    })
+    assertWritten(run)
+    assert.deepEqual(slotsOf(run), [
+      ...before,
+      ['social|social-intro[font-icon]|0', 'text', 'fa fa-kite'],
+      ['social|social-intro[font-icon]|1', 'text', 'fa fa-lantern']
+    ])
+    const icons = run
+      .read('content-map.json')
+      .slots.filter((s) => (s.jsonPath ?? []).join('|').includes('font-icon'))
+    assert.deepEqual(
+      icons.map((s) => [s.key, s.customize]),
+      [
+        ['module-7.' + before.length, 'keep'],
+        ['module-7.' + (before.length + 1), 'keep']
+      ]
+    )
+  }
+)
+
+test(
+  '--repeat-icons with --full-coverage still adds the row icons last, so no other slot key moves',
+  needsPhp,
+  () => {
+    const keys = (run) =>
+      run
+        .read('content-map.json')
+        .slots.filter((s) => s.entity === 'module-7')
+        .map((s) => [s.key, s.column, (s.jsonPath ?? []).map(String).join('|'), s.sample])
+    // A section heading the template's module form adds beside the block config: a slot the full coverage rules
+    // declare after the block's own fields.
+    const inventory = () => {
+      const inv = acmInventory('social', SOCIAL)
+      const block = inv.modules.find((m) => m.id === '7')
+      block.params = JSON.stringify({ ...JSON.parse(block.params), 'main-section': 'Find us online' })
+      return inv
+    }
+    const options = (args) => ({
+      args,
+      schemas: { social: SOCIAL_XML },
+      files: { 'templates/tracy/etc/form/com_modules.module.xml': MODULE_FORM_XML }
+    })
+    const plain = capture(inventory(), options(['--full-coverage']))
+    assertWritten(plain)
+    const before = keys(plain)
+    assert.ok(
+      before.some(([, , p]) => p === 'main-section'),
+      'the full coverage rules add a slot after the block fields'
+    )
+    const run = capture(inventory(), options(['--full-coverage', '--repeat-icons']))
+    assertWritten(run)
+    const after = keys(run)
+    assert.deepEqual(after.slice(0, before.length), before)
+    assert.deepEqual(
+      after.slice(before.length).map(([, , p, sample]) => [p, sample]),
+      [
+        ['social|social-intro[font-icon]|0', 'fa fa-kite'],
+        ['social|social-intro[font-icon]|1', 'fa fa-lantern']
+      ]
+    )
+  }
+)
+
 test(
   'a trashed module whose ACM schema is shipped is still captured unless --skip-trashed-modules is passed',
   needsPhp,
@@ -996,6 +1087,59 @@ test(
 )
 
 test(
+  "--full-coverage reads a module's template fields from the template's form for that module, and a contact's links",
+  needsPhp,
+  () => {
+    // JA Kids Corner: `etc/form/mod_articles_category.xml` adds a "view all" link to the category module, and the
+    // contact's social links sit in its `params` (Joomla's own `linka` … `linke`).
+    const categoryForm = `<?xml version="1.0" encoding="utf-8"?>
+<form><fields name="params"><fieldset name="custom-field">
+  <field name="show-link" type="list"/>
+  <field name="title-category" type="text"/>
+</fieldset></fields></form>`
+    const inv = fullInventory()
+    inv.modules.push(
+      module('13', {
+        title: 'Programs',
+        module: 'mod_articles_category',
+        params: JSON.stringify({ 'show-link': '1', 'title-category': 'View All Programs' })
+      })
+    )
+    inv.modules_menu.push({ id: '13', moduleid: '13', menuid: '101' })
+    inv.contact_details[0].params = JSON.stringify({
+      show_links: '1',
+      linka_name: 'facebook',
+      linka: 'https://joomlart.com',
+      linkb_name: '',
+      linkb: false
+    })
+    const run = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage'],
+      schemas: { features: ICONS_XML },
+      files: { ...FULL_FILES, 'templates/tracy/etc/form/mod_articles_category.xml': categoryForm }
+    })
+    assertWritten(run)
+    const slots = described(run)
+    assert.deepEqual(
+      slots.filter((s) => s.startsWith('module-13 params')),
+      ['module-13 params title-category text View All Programs keep']
+    )
+    assert.deepEqual(
+      slots.filter((s) => s.startsWith('contact-1 params')),
+      [
+        'contact-1 params linka_name text facebook keep',
+        'contact-1 params linka url https://joomlart.com keep'
+      ]
+    )
+    // A contact's own links are the customer's to state, as its web page is.
+    const link = run
+      .read('content-map.json')
+      .slots.find((s) => s.entity === 'contact-1' && s.jsonPath?.[0] === 'linka')
+    assert.equal(link.requiresEvidence, true)
+  }
+)
+
+test(
   '--full-coverage with --evidence-by-field leaves no fact field the contracts gate refuses',
   needsPhp,
   () => {
@@ -1043,7 +1187,7 @@ const languageStringId = (extension, language, key) =>
 const STRING_FILES = {
   // The site's copy is the one Joomla loads; the template's own copy is read only when there is none.
   'language/en-GB/en-GB.tpl_tracy.ini':
-    '; Tracy\nTPL_TRY_CLASS = "Try a class"\nTPL_LEAD = "The 6 <span>punches</span>"\nTPL_CONTACT_SEND="Submit"\nTPL_UNUSED = "Not on any page"\nTPL_T4_SUPPORT="Support"\n',
+    '; Tracy\nTPL_TRY_CLASS = "Try a class"\nTPL_LEAD = "The 6 <span>punches</span>"\nTPL_CONTACT_SEND="Submit"\nTPL_UNUSED = "Not on any page"\nTPL_T4_SUPPORT="Support"\nTPL_MAP_OPEN="Open in Google Maps"\nTPL_MAP_ALT="Street map of %s"\n',
   'templates/tracy/language/en-GB/en-GB.tpl_tracy.ini': 'TPL_TRY_CLASS = "Try a class (template copy)"\n',
   'language/en-GB/en-GB.tpl_tracy.sys.ini': 'TPL_TRACY_POSITION_MAIN="Main"\n',
   // An override the release ships is what a visitor reads.
@@ -1051,6 +1195,9 @@ const STRING_FILES = {
   'language/en-GB/com_finder.ini': 'COM_FINDER_SEARCH="Search"\n',
   'templates/tracy/html/com_content/article/classes.php':
     "<?php echo Text::_('TPL_TRY_CLASS'); ?><h2><?php echo Text::_('TPL_LEAD'); ?></h2><?php echo JText::_(\"TPL_FOLLOW_US\"); echo Text::sprintf('TPL_CONTACT_SEND', 1);",
+  // A layout that hands the key to a helper of its own as a plain string; a key built at run time names nothing.
+  'templates/tracy/html/jagooglemap/default.php':
+    "<?php $say = function ($key, $english) { return Text::_($key); }; echo $say('TPL_MAP_OPEN', 'Open'); echo sprintf($say(\"TPL_MAP_ALT\", 'Map of %s'), $place); echo Text::_('TPL_' . $name);",
   'templates/tracy/html/mod_menu/main.php':
     "<?php echo Text::_('TPL_TRACY_POSITION_MAIN'); echo Text::_('COM_FINDER_SEARCH');",
   // The T4 error page (shown only when the framework is missing) and the administrator's overview are no visitor page.
@@ -1118,6 +1265,8 @@ test(
     const want = [
       ['tpl_tracy', 'TPL_CONTACT_SEND', 'Send it'],
       ['tpl_tracy', 'TPL_FOLLOW_US', 'TPL_FOLLOW_US'],
+      ['tpl_tracy', 'TPL_MAP_ALT', 'Street map of %s'],
+      ['tpl_tracy', 'TPL_MAP_OPEN', 'Open in Google Maps'],
       ['tpl_tracy', 'TPL_TRY_CLASS', 'Try a class'],
       ['tpl_tracy.sys', 'TPL_TRACY_POSITION_MAIN', 'Main']
     ]
@@ -1480,6 +1629,56 @@ test('C1: a fragment with no heading or paragraph at all is one slot for the who
   )
 })
 
+test('inline markup: a merged unit keeps its inline tags in the content map notation', needsPhp, () => {
+  const run = bodyRun('<h2>Strong <span class="accent">arms</span><br>calm minds</h2>', [
+    '--whole-units',
+    '--inline-markup'
+  ])
+  assertWritten(run)
+  assert.deepEqual(
+    bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+    [['text', 'Strong ((span class="accent"))arms((/span))((br/))calm minds', '/html/body/div/h2']]
+  )
+  const field = bodyRun('More<br>\r\n<span>Blogs</span>', ['--whole-units', '--inline-markup'])
+  assertWritten(field)
+  assert.deepEqual(
+    bodySlots(field).map(([, sample, xpath]) => [sample, xpath]),
+    [['More((br/)) ((span))Blogs((/span))', '/html/body/div']]
+  )
+})
+
+test('inline markup: the limit is counted on the plain text, not on the markup', needsPhp, () => {
+  const heading = '<h2>Our <span class="a-rather-long-accent-class-name">classes</span></h2>'
+  const plain = bodyRun(heading, ['--whole-units']).read('content-map.json')
+  const marked = bodyRun(heading, ['--whole-units', '--inline-markup']).read('content-map.json')
+  const slotOf = (map) => map.slots.find((s) => s.entity === 'module-2')
+  assert.equal(slotOf(plain).sample, 'Our classes')
+  assert.match(slotOf(marked).sample, /\(\(span class=/)
+  assert.equal(slotOf(marked).maxCharacters, slotOf(plain).maxCharacters)
+})
+
+test('inline markup: a role carried by --previous-map stays when only markup changed', needsPhp, () => {
+  const content = '<h2>Strong <span>arms</span> calm minds</h2>'
+  const previous = bodyRun(content, ['--whole-units']).read('content-map.json')
+  const slot = previous.slots.find((s) => s.entity === 'module-2')
+  slot.role = 'claim.heading'
+  const run = capture(bodyInventory(content), {
+    helper: PER_TEXT_HELPER,
+    args: ['--whole-units', '--inline-markup'],
+    previous
+  })
+  assertWritten(run)
+  const now = run.read('content-map.json').slots.find((s) => s.entity === 'module-2')
+  assert.equal(now.sample, 'Strong ((span))arms((/span)) calm minds')
+  assert.equal(now.role, 'claim.heading')
+})
+
+test('inline markup needs whole units', needsPhp, () => {
+  const run = bodyRun('<h2>One <b>two</b></h2>', ['--inline-markup'])
+  assert.notEqual(run.status, 0)
+  assert.match(run.stderr, /--inline-markup needs --whole-units/)
+})
+
 test('C1: loose text beside real paragraphs is not glued into one slot', needsPhp, () => {
   const run = bodyRun('lead <i>in</i><p>One</p><p>Two <b>more</b></p>', ['--whole-units'])
   assertWritten(run)
@@ -1548,6 +1747,356 @@ test(
         ['url', 'https://www.facebook.com/larkspurtearoom', 'contact.social_url', 'module-2.content.ul.2'],
         ['text', 'Facebook', 'contact.social_label', 'module-2.content.ul.2']
       ]
+    )
+  }
+)
+
+// ── T3 templates: logos in the style params, trashed menu items ──────────────────────────────────────
+
+/** A T3 style: its logos are params of the style row (invented files). */
+const t3Inventory = () => {
+  const inv = clean()
+  inv.template_styles = [
+    style('9', {
+      home: '1',
+      title: 'Tracy - Default',
+      params: JSON.stringify({
+        logotype: 'image',
+        logoimage: 'images/brand/logo-main.png',
+        enable_logoimage_sm: '1',
+        logoimage_sm: 'images/brand/logo-small.png',
+        logofootertype: 'image',
+        logofooterimage: 'images/brand/logo-foot.png',
+        logoimage_dark: '',
+        sitename: ''
+      })
+    })
+  ]
+  inv.menu = [menu('101'), menu('102', { path: 'old-shop', title: 'Old shop', published: '-2' })]
+  return inv
+}
+
+test(
+  '--template-style-logos declares every logo picture a T3 style sets as a business.logo slot of that style',
+  needsPhp,
+  () => {
+    const plain = capture(t3Inventory())
+    assertWritten(plain)
+    assert.equal(
+      plain.read('content-map.json').slots.some((s) => s.entity === 'templateStyle-9'),
+      false,
+      'off by default: a published profile re-captures byte for byte'
+    )
+    const run = capture(t3Inventory(), { args: ['--template-style-logos'] })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.entity === 'templateStyle-9')
+    assert.deepEqual(
+      slots.map((s) => [s.key, s.column, s.type, s.jsonPath, s.sample, s.role, s.customize]),
+      [
+        [
+          'templateStyle-9.0',
+          'params',
+          'image',
+          ['logoimage'],
+          'images/brand/logo-main.png',
+          'business.logo',
+          'keep'
+        ],
+        [
+          'templateStyle-9.1',
+          'params',
+          'image',
+          ['logoimage_sm'],
+          'images/brand/logo-small.png',
+          'business.logo',
+          'keep'
+        ],
+        [
+          'templateStyle-9.2',
+          'params',
+          'image',
+          ['logofooterimage'],
+          'images/brand/logo-foot.png',
+          'business.logo',
+          'keep'
+        ]
+      ],
+      'an empty logo param (logoimage_dark) and the switches (logotype) are not pictures'
+    )
+    assert.deepEqual(slots[0].group, { id: 'site-logo.business', item: 0, kind: 'business' })
+  }
+)
+
+test(
+  '--template-style-logos declares the default picture a T3 style prints when its logo param is empty',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.template_styles = [
+      style('9', {
+        home: '1',
+        params: JSON.stringify({ logotype: 'image', logoimage: '', enable_logoimage_sm: '1', sitename: '' })
+      }),
+      style('10', { title: 'Tracy - Text', params: JSON.stringify({ logotype: 'text', logoimage: '' }) })
+    ]
+    // The template ships its own logo.png but no logo-sm.png, so the small one comes from the T3 base.
+    const run = capture(inv, {
+      args: ['--template-style-logos'],
+      files: { 'templates/tracy/images/logo.png': 'png' }
+    })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.entity.startsWith('templateStyle-'))
+    assert.deepEqual(
+      slots.map((s) => [s.key, s.jsonPath, s.sample, s.role, s.customize, s.requiresEvidence]),
+      [
+        [
+          'templateStyle-9.0',
+          ['logoimage'],
+          'templates/tracy/images/logo.png',
+          'business.logo',
+          'keep',
+          false
+        ],
+        [
+          'templateStyle-9.1',
+          ['logoimage_sm'],
+          'plugins/system/t3/base/images/logo-sm.png',
+          'business.logo',
+          'keep',
+          false
+        ]
+      ],
+      'a style whose logotype is text prints no picture, so it declares none'
+    )
+    assert.deepEqual(slots[0].group, { id: 'site-logo.business', item: 0, kind: 'business' })
+  }
+)
+
+test(
+  '--full-coverage declares each page masthead of mod_jamasthead: its background, title and description',
+  needsPhp,
+  () => {
+    const config = {
+      item_id: { 0: ['117'], 1: ['108'], 2: ['130'], 3: ['124'] },
+      title: { 0: 'Contact', 1: 'Our Blog', 2: 'Video', 3: 'Gone' },
+      description: { 0: 'Find us', 1: '', 2: 'Watch', 3: 'Gone too' },
+      background: {
+        0: 'images/bg-contact.jpg',
+        1: 'images/banner-blog.jpg',
+        2: 'images/intro.mp4',
+        3: 'images/bg-gone.jpg'
+      }
+    }
+    const inv = clean()
+    // Menu item 124 does not exist: its entry never shows, so it declares nothing.
+    inv.menu.push(
+      menu('117', { path: 'contact' }),
+      menu('108', { path: 'blog' }),
+      menu('130', { path: 'video' })
+    )
+    inv.modules = [
+      module('20', {
+        title: 'Masthead',
+        module: 'mod_jamasthead',
+        position: 'masthead',
+        params: JSON.stringify({ 'default-title': 'Diner', menuitem_config: config })
+      }),
+      // Another module type with the same param name declares nothing from it.
+      module('21', {
+        title: 'Other',
+        module: 'mod_other',
+        params: JSON.stringify({ menuitem_config: config })
+      })
+    ]
+    const plain = capture(inv)
+    assertWritten(plain)
+    assert.equal(
+      plain.read('content-map.json').slots.some((s) => s.jsonPath?.[0] === 'menuitem_config'),
+      false,
+      'off without --full-coverage: a published profile re-captures byte for byte'
+    )
+    const run = capture(inv, { args: ['--full-coverage'] })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.jsonPath?.[0] === 'menuitem_config')
+    assert.deepEqual(
+      slots.map((s) => [s.entity, s.column, s.type, s.jsonPath.join('|'), s.sample, s.role, s.label]),
+      [
+        [
+          'module-20',
+          'params',
+          'image',
+          'menuitem_config|background|0',
+          'images/bg-contact.jpg',
+          'business.hero_image',
+          'Masthead / menu item 117 / background'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|title|0',
+          'Contact',
+          'editorial.heading',
+          'Masthead / menu item 117 / title'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|description|0',
+          'Find us',
+          'editorial.paragraph',
+          'Masthead / menu item 117 / description'
+        ],
+        [
+          'module-20',
+          'params',
+          'image',
+          'menuitem_config|background|1',
+          'images/banner-blog.jpg',
+          'business.hero_image',
+          'Masthead / menu item 108 / background'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|title|1',
+          'Our Blog',
+          'editorial.heading',
+          'Masthead / menu item 108 / title'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|title|2',
+          'Video',
+          'editorial.heading',
+          'Masthead / menu item 130 / title'
+        ],
+        [
+          'module-20',
+          'params',
+          'text',
+          'menuitem_config|description|2',
+          'Watch',
+          'editorial.paragraph',
+          'Masthead / menu item 130 / description'
+        ]
+      ],
+      'an empty description, a video background and an entry for a missing menu item are not slots'
+    )
+    // One group per page, so each page's banner is replaced on its own.
+    assert.deepEqual(
+      slots.filter((s) => s.type === 'image').map((s) => s.group),
+      [
+        { id: 'module-20.masthead-0', item: 0, kind: 'business' },
+        { id: 'module-20.masthead-1', item: 0, kind: 'business' }
+      ]
+    )
+  }
+)
+
+test(
+  '--full-coverage: a masthead title or description the module form already declares is not declared twice',
+  needsPhp,
+  () => {
+    // The module's own form declares `title` and `description`, so the generic params rule already writes
+    // menuitem_config.title.N and menuitem_config.description.N (a description with markup as fragment slots).
+    // The masthead rule then adds only the backgrounds: one slot per write target, never two.
+    const mastheadForm = `<?xml version="1.0" encoding="utf-8"?>
+<extension type="module"><config><fields name="params"><fieldset name="basic">
+  <field name="title" type="text"/>
+  <field name="description" type="textarea"/>
+</fieldset></fields></config></extension>`
+    const inv = clean()
+    inv.menu.push(menu('117', { path: 'contact' }), menu('108', { path: 'blog' }))
+    inv.modules = [
+      module('20', {
+        title: 'Masthead',
+        module: 'mod_jamasthead',
+        position: 'masthead',
+        params: JSON.stringify({
+          menuitem_config: {
+            item_id: [['117'], ['108']],
+            title: ['Reach the Lantern Bakery', 'Lantern Notes'],
+            description: ['Fresh loaves daily', 'Read <span>more</span> of our stories'],
+            background: ['images/bg-lantern.jpg', 'images/bg-notes.jpg']
+          }
+        })
+      })
+    ]
+    const run = capture(inv, {
+      args: ['--full-coverage'],
+      files: { 'modules/mod_jamasthead/mod_jamasthead.xml': mastheadForm }
+    })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots.filter((s) => s.jsonPath?.[0] === 'menuitem_config')
+    const targets = slots.map((s) => `${s.jsonPath.join('|')}${s.xpath ? ` ${s.xpath}` : ''}`)
+    assert.equal(new Set(targets).size, targets.length, `one slot per write target: ${targets.join(', ')}`)
+    for (const field of ['title', 'description']) {
+      for (const k of ['0', '1']) {
+        const hits = slots.filter((s) => s.jsonPath[1] === field && String(s.jsonPath[2]) === k && !s.xpath)
+        const fragments = slots.filter(
+          (s) => s.jsonPath[1] === field && String(s.jsonPath[2]) === k && s.xpath
+        )
+        assert.ok(
+          hits.length + (fragments.length ? 1 : 0) === 1,
+          `menuitem_config.${field}.${k} is written by one rule only: ${targets.join(', ')}`
+        )
+      }
+    }
+    assert.deepEqual(
+      slots.filter((s) => s.type === 'image').map((s) => [s.key, s.jsonPath.join('|'), s.role]),
+      [
+        [
+          slots.find((s) => s.jsonPath.join('|') === 'menuitem_config|background|0').key,
+          'menuitem_config|background|0',
+          'business.hero_image'
+        ],
+        [
+          slots.find((s) => s.jsonPath.join('|') === 'menuitem_config|background|1').key,
+          'menuitem_config|background|1',
+          'business.hero_image'
+        ]
+      ],
+      'the per-page backgrounds are still declared'
+    )
+    // The masthead slots come after every generic slot, so the generic keys are numbered first and never move.
+    const index = (s) => Number(s.key.split('.')[1])
+    const masthead = slots.filter((s) => s.label.includes(' / menu item '))
+    const generic = slots.filter((s) => !masthead.includes(s))
+    assert.ok(Math.max(...generic.map(index)) < Math.min(...masthead.map(index)))
+    const keys = run
+      .read('content-map.json')
+      .slots.filter((s) => s.entity === 'module-20')
+      .map(index)
+    assert.deepEqual(
+      keys,
+      keys.map((_, i) => i),
+      'keys stay dense'
+    )
+  }
+)
+
+test(
+  '--skip-trashed-menu-items leaves a trashed menu item out of the entities and the pages',
+  needsPhp,
+  () => {
+    const plain = capture(t3Inventory())
+    assertWritten(plain)
+    assert.ok(plain.read('content-map.json').pages.some((p) => p.entity === 'menuItem-102'))
+    const run = capture(t3Inventory(), { args: ['--skip-trashed-menu-items'] })
+    assertWritten(run)
+    const map = run.read('content-map.json')
+    assert.deepEqual(
+      map.pages.map((p) => p.entity),
+      ['menuItem-101']
+    )
+    assert.equal(
+      map.entities.some((e) => e.key === 'menuItem-102'),
+      false
     )
   }
 )

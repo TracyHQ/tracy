@@ -15,14 +15,16 @@
  * 🔒 NEVER IN THE WAY OF THE BRIEF. No model, a refused budget, a failed call or an unreadable store: nothing is labelled,
  * the claims go back for a later build, and the note says why. This step never throws.
  */
-import { createHash } from 'node:crypto'
 import { createChargeable } from 'website-opportunities/src/cost-ledger.js'
 import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import { photographsOnly } from 'website-opportunities/domain/pictures/brief-media.mjs'
 import { closedListDigest, ownershipOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { labelWithVision } from '../lib/picture-vision.js'
+import { observeWithModel } from '../lib/picture-observations.js'
+import { observeBriefPictures } from './brief-picture-observations.js'
 import { claimAnalyses, doneAnalyses, reopenAnalyses, settleAnalysis } from './media-analysis.js'
+import { briefPictureBytes } from '../lib/brief-picture-bytes.js'
 
 export const BRIEF_VISION_MAX_PICTURES = 60
 /** Who published a photo, in the order photos are labelled. */
@@ -31,7 +33,6 @@ const OWNERSHIP_RANK = { owner: 0, unknown: 1, customer: 2 }
 const BATCH = 8
 /** A picture smaller than this on its long side is never shown to the model: no place on a site takes it. */
 const MIN_EDGE = 480
-const PICTURE_MAX_BYTES = 25 * 1024 * 1024
 
 /** Rounds a failed call is sent again; the charge's ceiling covers them. */
 const RETRY = 1
@@ -42,7 +43,8 @@ const entryOf = (vision, labels) => ({ key: vision.key, model: vision.door.model
 /**
  * @param {{pool: {query: Function}, objects: {get: (key: string) => Promise<Response | null>} | null,
  *   visionFor: () => Promise<{door: {url: string, key: string, model: string}, key: string} | null>,
- *   label?: typeof labelWithVision, chargeable?: Function, maxPictures?: number, log?: {warn?: Function}}} deps
+ *   label?: typeof labelWithVision, chargeable?: Function, maxPictures?: number, observe?: typeof observeWithModel,
+ *   log?: {warn?: Function}}} deps - `observe`: the text call that turns the labels into facts; null skips it
  */
 export function createBriefPictureLabels({
   pool,
@@ -51,55 +53,19 @@ export function createBriefPictureLabels({
   label = labelWithVision,
   chargeable = createChargeable(null),
   maxPictures = BRIEF_VISION_MAX_PICTURES,
+  observe = observeWithModel,
   log = console
 }) {
-  /** The stored bytes of each picture, read by id and checked against its sha256. */
-  async function bytesOf(rows, accountId) {
-    const place = rows.filter((r) => r.origin === 'place').map((r) => r.id)
-    const own = rows.filter((r) => r.origin !== 'place').map((r) => r.id)
-    const keys = new Map()
-    if (place.length) {
-      const { rows: got } = await pool.query(
-        `select id, sha256, object_key from wo_place_media
-         where id = any($1::uuid[]) and status = 'stored' and revoked_at is null`,
-        [place]
-      )
-      for (const r of got) keys.set(r.id, r)
-    }
-    if (own.length && accountId) {
-      const { rows: got } = await pool.query(
-        `select id, sha256, object_key from wo_media where id = any($1::uuid[]) and account_id = $2 and status = 'stored'`,
-        [own, accountId]
-      )
-      for (const r of got) keys.set(r.id, r)
-    }
-    const pictures = []
-    for (const r of rows) {
-      const held = keys.get(r.id)
-      if (!held?.object_key || held.sha256 !== r.sha256 || !objects) continue
-      const res = await objects.get(held.object_key).catch(() => null)
-      if (!res?.ok) continue
-      const bytes = Buffer.from(await res.arrayBuffer())
-      if (bytes.length > PICTURE_MAX_BYTES) continue
-      if (createHash('sha256').update(bytes).digest('hex') === r.sha256) pictures.push({ id: r.id, bytes })
-    }
-    return pictures
-  }
+  const bytesOf = (rows, accountId) => briefPictureBytes({ pool, objects }, rows, accountId)
 
   /**
    * @param {{media: any[], brand: any, accountId: string | null, trade: string | null,
    *   closedList?: {offerings?: any[], people?: any[]} | null, businessName?: string | null}} input a brief read's media,
    *   the brief's closed list of offerings and people (`picture-links.mjs closedListOf`) and the business's name
+   * @param {{vision?: any}} ctx receives the vision door this labelling used, for the observation that follows it
    * @returns {Promise<{labels: Map<string, {key: string, model: string, labels: any}>, note: Record<string, any>}>}
    */
-  return async function labelBriefPictures({
-    media,
-    brand,
-    accountId,
-    trade,
-    closedList = null,
-    businessName = null
-  }) {
+  async function labelOnly({ media, brand, accountId, trade, closedList = null, businessName = null }, ctx) {
     const digest = closedListDigest(closedList)
     /** A label made against this closed list (none made against none). */
     const current = (l) => l && typeof l === 'object' && (l.closedList ?? null) === digest
@@ -130,6 +96,7 @@ export function createBriefPictureLabels({
     let sent = []
     try {
       vision = await visionFor()
+      ctx.vision = vision
       if (!vision) {
         mark([...photoIds], 'no_vision_model')
         return done({ ...note, status: 'off', reason: 'no_vision_model' })
@@ -242,6 +209,33 @@ export function createBriefPictureLabels({
       return done({ ...note, status: 'failed', reason: String(error?.code ?? 'vision_failed').slice(0, 60) })
     }
   }
+
+  /**
+   * The labelling, then what the labelled photos show about the business as facts (`brief-picture-observations.js`),
+   * asked on the same vision door: `observed` is `{facts, note}`, absent when nothing was labelled.
+   * @param {{media: any[], brand: any, accountId: string | null, trade: string | null,
+   *   closedList?: {offerings?: any[], people?: any[]} | null, businessName?: string | null}} input a brief read's media,
+   *   the brief's closed list of offerings and people (`picture-links.mjs closedListOf`) and the business's name
+   * @returns {Promise<{labels: Map<string, {key: string, model: string, labels: any}>, note: Record<string, any>,
+   *   observed?: {facts: any[], note: Record<string, any>}}>}
+   */
+  return async function labelBriefPictures(input) {
+    const ctx = {}
+    const out = await labelOnly(input, ctx)
+    if (!observe || !ctx.vision || !out.labels.size) return out
+    const observed = await observeBriefPictures({
+      media: input.media,
+      labels: out.labels,
+      closedList: input.closedList ?? null,
+      businessName: input.businessName ?? null,
+      trade: input.trade ?? null,
+      door: ctx.vision.door,
+      accountId: input.accountId ?? null,
+      observe,
+      chargeable
+    })
+    return { ...out, observed }
+  }
 }
 
 /** The reason most pictures share (the first of a tie), or null. */
@@ -252,3 +246,5 @@ function commonest(reasons) {
   for (const [r, n] of counts) if (!best || n > counts.get(best)) best = r
   return best
 }
+
+export { briefPictureBytes }

@@ -419,7 +419,9 @@ test(
         columns: ['post_content', 'post_title'],
         create: true,
         entity: 'posts',
-        id: 41
+        id: 41,
+        // What WordPress stamps on the part itself: the next sync's base holds the copy's (#223).
+        stamps: ['guid', 'post_author', 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt']
       }
     ])
     // The page template the copy handed back to the theme: removed on the live site (with the removals

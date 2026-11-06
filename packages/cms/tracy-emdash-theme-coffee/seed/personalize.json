@@ -1,0 +1,458 @@
+{
+  "schemaVersion": "tracy-personalize/v1",
+  "note": "What tools/personalize.mjs changes on a customer's copy of the Ember Roasters demo from the questionnaire answers (seed/questions.json: name · sector · contact). Same five kinds as Tracy Business (D38): `identity` is written exactly from the answers (a missing answer EMPTIES the field, never keeps the demo value); `replace` rewrites the demo brand everywhere; `copy` is prose a model writes for the sector, the demo text being the length reference; `facts` are claims about a real business (counts, prices, years, named clients, named people) and are REMOVED, never invented; `blocks` and `rewrite` let the model redo whole cards and entries for the sector. Values use {name} {NAME} {initials} {phone} {address} {hours} {year} {sector}. A contact line the customer did not give (phone, e-mail, address, opening hours: the questions never ask for them) keeps the template's value as a placeholder the customer fills in later (`\"unanswered\": \"keep-demo\"`); a rule with `requires` is written only when every fact it names is given.",
+  "settings": {
+    "title": "{name}"
+  },
+  "identity": [
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "brand_name",
+      "value": "{name}"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "not_found_back_label",
+      "value": "Back to {name}"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "social_handle",
+      "value": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "social",
+      "value": [],
+      "from": "social",
+      "networks": [
+        "instagram",
+        "facebook",
+        "linkedin",
+        "youtube",
+        "x",
+        "tiktok"
+      ],
+      "item": {
+        "platform": "{network}",
+        "url": "{url}"
+      }
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "email",
+      "value": "{email}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "email_label",
+      "value": "",
+      "requires": [
+        "email"
+      ]
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "phone",
+      "value": "{phone}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "address",
+      "value": "{address}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "hours",
+      "value": "{hours}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "social",
+      "value": [],
+      "from": "social",
+      "item": {
+        "label": "{name}",
+        "url": "{url}"
+      }
+    },
+    {
+      "collection": "menu_page",
+      "slug": "menu_page",
+      "field": "order_url",
+      "value": ""
+    }
+  ],
+  "replace": [
+    {
+      "find": "Ember Roasters",
+      "with": "{name}"
+    },
+    {
+      "find": "@emberroasters",
+      "with": ""
+    }
+  ],
+  "copyNote": "Read by Tracy's template readiness check, not by tools/personalize.mjs (TCH #1013, D6 + D7): demoCompanyNames is every spelling of the demo company's name, each renamed by a replace rule above; keptText is demo text kept on purpose (collection/slug for an entry, collection/slug.field for one field). Every `*image_alt` kept describes a demo picture that stays on the customer's site (this template draws no new pictures: `images` is empty), so the words still match the picture. The same holds for the `alt` of each photo in `home.space_photos` (the shop photos on the home page stay too).",
+  "demoCompanyNames": [
+    "Ember Roasters"
+  ],
+  "keptText": [
+    "site/site.mega_resources_image_alt",
+    "about/about.chapter1_image_alt",
+    "about/about.chapter2_image_alt",
+    "home/home.space_photos"
+  ],
+  "labelsNote": "The entries whose labels tools/personalize.mjs translates when the root is written in another language than its own (chromeLabelsOf, TCH #1013): the chrome (header, footer, search, 404) and every page's own headings, buttons, eyebrows and captions; the menus are translated beside them. Addresses, names and fields another rule decides are left alone.",
+  "labels": [
+    {
+      "collection": "site",
+      "slug": "site"
+    },
+    {
+      "collection": "home",
+      "slug": "home"
+    },
+    {
+      "collection": "blog",
+      "slug": "blog"
+    },
+    {
+      "collection": "menu_page",
+      "slug": "menu_page"
+    },
+    {
+      "collection": "about",
+      "slug": "about"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact"
+    },
+    {
+      "collection": "posts",
+      "fields": [
+        "image_caption"
+      ]
+    }
+  ],
+  "copy": [
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "brand_tagline",
+      "brief": "what the business does, under the logo",
+      "maxWords": 5
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "intro_lead",
+      "brief": "one sentence under the shop name at the top of the home page: an invitation to come in",
+      "maxWords": 20
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "story_title",
+      "brief": "headline of the short story of the business",
+      "maxWords": 6
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "story_left",
+      "brief": "how the business began, two sentences",
+      "maxWords": 30
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "story_right",
+      "brief": "what the business is like today, two sentences",
+      "maxWords": 32
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "why_title",
+      "brief": "headline of the four reasons customers choose this business",
+      "maxWords": 8
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "detail_title",
+      "brief": "a short headline over labels that point at the object on the home page",
+      "maxWords": 5
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "featured_title",
+      "brief": "headline over the featured items of the menu",
+      "maxWords": 6
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "featured_lead",
+      "brief": "one line under it",
+      "maxWords": 14
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "space_title",
+      "brief": "headline over photos of the premises",
+      "maxWords": 6
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "visit_title",
+      "brief": "an invitation to come by, over the opening hours",
+      "maxWords": 6
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "chapter1_statement",
+      "brief": "the about page headline",
+      "maxWords": 10
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "chapter1_support",
+      "brief": "two sentences about the business",
+      "maxWords": 40
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "chapter2_statement",
+      "brief": "a statement about lasting value",
+      "maxWords": 10
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "chapter2_support",
+      "brief": "two sentences supporting it",
+      "maxWords": 40
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "title",
+      "brief": "the contact page headline",
+      "maxWords": 8
+    },
+    {
+      "collection": "blog",
+      "slug": "blog",
+      "field": "intro",
+      "brief": "one sentence introducing the articles",
+      "maxWords": 20
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "mega_resources_text",
+      "brief": "one line under the resources menu: what the articles help with",
+      "maxWords": 12
+    },
+    {
+      "collection": "blog",
+      "slug": "blog",
+      "field": "topics_intro",
+      "brief": "one sentence introducing the topics the articles cover",
+      "maxWords": 16
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "stats_heading",
+      "brief": "headline of the section on how the business works",
+      "maxWords": 8
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "team_heading",
+      "brief": "headline of the people section",
+      "maxWords": 8
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "cta_statement",
+      "brief": "a closing call to action inviting the visitor to get in touch",
+      "maxWords": 12
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "cta_support",
+      "brief": "one or two sentences on what to send and what happens next",
+      "maxWords": 28
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "intro",
+      "brief": "one sentence inviting the visitor to come to the shop or write",
+      "maxWords": 20
+    },
+    {
+      "collection": "menu_page",
+      "slug": "menu_page",
+      "field": "intro",
+      "brief": "one sentence inviting the visitor to look through what the shop serves",
+      "maxWords": 20
+    }
+  ],
+  "copySettings": {
+    "tagline": {
+      "brief": "what the business does, five words",
+      "maxWords": 6
+    }
+  },
+  "facts": [
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "stats_figures",
+      "why": "counts and the year the demo café opened"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "team_members",
+      "why": "named demo people with roles"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "notice",
+      "why": "says the site is the Ember Roasters demo café and its address, hours, team and offers are illustrative (TCH #1013)"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "notice",
+      "why": "says the contact page is a demonstration (TCH #1013)"
+    },
+    {
+      "collection": "posts",
+      "field": "author",
+      "why": "a named person of the demo"
+    },
+    {
+      "collection": "menu_items",
+      "field": "price",
+      "why": "prices are an offer of the demo café"
+    }
+  ],
+  "hide": [],
+  "rewrite": [
+    {
+      "collection": "posts",
+      "brief": "one news post this café would publish for its customers: a story about its coffee, a brewing tip, an offer or shop news",
+      "fields": [
+        "title",
+        "excerpt"
+      ],
+      "body": "content",
+      "bodyWords": 160,
+      "batch": 3,
+      "decides": [
+        "title"
+      ]
+    },
+    {
+      "collection": "menu_items",
+      "brief": "one item this café would serve, with a short description, of the same kind as its example: a tea stays a tea, a pastry stays a pastry, an iced drink stays an iced drink, a coffee stays a coffee — this café's own version of that kind of item, never an item of another kind",
+      "fields": [
+        "title",
+        "excerpt"
+      ],
+      "batch": 6,
+      "decides": [
+        "title"
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "why_items",
+      "itemFields": [
+        "title",
+        "text"
+      ],
+      "brief": "one reason customers choose this business"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "detail_labels",
+      "itemFields": [
+        "label",
+        "text"
+      ],
+      "brief": "one detail of the object on the home page, read from the top of it down"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "category",
+      "collections": [
+        "posts"
+      ],
+      "brief": "a group of news this café publishes (coffee stories, brew guides, offers, shop news)"
+    },
+    {
+      "taxonomy": "menu_group",
+      "collections": [
+        "menu_items"
+      ],
+      "brief": "a group of this café's menu (coffee, tea, iced drinks, pastries)"
+    }
+  ],
+  "forms": [
+    {
+      "slug": "contact",
+      "fields": {
+        "subject": "what the visitor is writing about"
+      },
+      "brief": "the contact form of this business"
+    }
+  ],
+  "images": [],
+  "brand": {
+    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, TCH #1013 D9): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none.",
+    "logoDark": {
+      "collection": "site",
+      "slug": "site",
+      "field": "logo_dark",
+      "label": "Logo for dark backgrounds"
+    }
+  }
+}

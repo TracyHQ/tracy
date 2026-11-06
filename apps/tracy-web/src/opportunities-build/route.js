@@ -466,7 +466,7 @@ export function createWebsiteBuilder(deps) {
             error.status ?? 409,
             error.code ?? 'DEMO_CHAT_UNAVAILABLE',
             'The demo chat could not be prepared or reserved.',
-            // DEMO_LOGO_RESEARCH_PENDING names when to ask again; the page waits until then.
+            // DEMO_LOGO_RESEARCH_PENDING and DEMO_PICTURE_LABELS_PENDING name when to ask again; the page waits.
             typeof error.retryAt === 'string' ? { retryAt: error.retryAt } : {}
           )
         }
@@ -745,7 +745,9 @@ export function createWebsiteBuilder(deps) {
       jobShape: ctx.jobShape,
       startResearch: ctx.startResearch,
       acceptActions,
-      templateCards
+      templateCards,
+      // Read at call time: the client demo service is set after this builder is made.
+      warmPictureLabels: (args) => deps.clientDemo?.warmPictureLabels?.(args)
     })
   }
 

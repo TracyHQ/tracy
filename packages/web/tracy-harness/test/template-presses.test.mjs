@@ -419,7 +419,7 @@ test('Road to live for ja-restaurant: nine steps in the order they finish, only 
   )
   assert.equal(demo.querySelector('[data-road-go]'), null)
   const listing = ui.host.querySelector('[data-road-step="listing"]')
-  assert.equal(listing.querySelector('[data-road-waiting]').textContent, 'Waiting for step 7: Demo site')
+  assert.equal(listing.querySelector('[data-road-waiting]').textContent, 'Waiting for step 8: Demo site')
   assert.doesNotMatch(listing.textContent, /by hand/)
   // Customize your site waits for the contract: the check reads it.
   assert.equal(
@@ -431,7 +431,7 @@ test('Road to live for ja-restaurant: nine steps in the order they finish, only 
   // Publish names every step it still needs, not only the first.
   assert.equal(
     published.querySelector('[data-road-waiting]').textContent,
-    'Waiting for steps 3, 4, 5 and 8: Content contract, Content coverage, Customize your site, Listing'
+    'Waiting for steps 3, 4, 6 and 9: Content contract, Content coverage, Customize your site, Listing'
   )
   // A waiting step is one line: no why, no body.
   assert.doesNotMatch(published.textContent, /Shows the listing/)
@@ -517,7 +517,7 @@ test('Road to live once the contract is in place: the demo opens with one short 
   assert.deepEqual(gone, [['quickstart/ja-restaurant/j6', 'demo-install']])
   assert.equal(
     ui.host.querySelector('[data-road-step="listing"] [data-road-waiting]').textContent,
-    'Waiting for step 7: Demo site'
+    'Waiting for step 8: Demo site'
   )
 })
 

@@ -33,7 +33,8 @@ export function templateSource(context) {
   return reader
 }
 
-const escapeRe = (/** @type {string} */ s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+/** A string as a regular expression matching exactly it: every metacharacter, the backslash included, is escaped. */
+export const escapeRe = (/** @type {string} */ s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 /** @param {import('../index.js').RuleContext} context */
 function make(context) {

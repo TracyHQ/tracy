@@ -61,7 +61,9 @@ and runs `docker build` right there; without them the release closes green, push
 16/09/2026). `release.mjs` refuses a package missing them before upload. The clean install runs **from that package
 folder** (`cd <package> && tools/clean-install.sh <target> <port>`), not from the checkout; the
 `clean-install` receipt quotes the `artifactHash` of `distribution.json`. `qa.mjs --artifact <package>` verifies again
-before the roll-up.
+before the roll-up. `tools/release-chain.mjs` runs this sequence — docs check, `artifact.json`, pack, clean install
+from the package, `qa.mjs` on the artifact, `content-api-gate`, `release.mjs` — as one command that stops at the
+first failing step and resumes with `--from` ([`tools.md`](tools.md)); it adds no check of its own.
 
 The package is self-contained: source, `pnpm-lock.yaml`, `seed/{seed.json,media-map.json,field-map.json,media/}`,
 `tools/`, `src/components/ui/PROVENANCE.md`, `PROVENANCE.md` (design source, OFL fonts, images),

@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import test from 'node:test'
 
 import { createCallMemory } from '../src/host/call-memory.mjs'
-import { decodeEntities, foldForMatch } from '../src/host/html-units.mjs'
+import { decodeEntities, foldForMatch, withoutComments } from '../src/host/html-units.mjs'
 import { latestCustomerWords } from '../src/host/prompter.mjs'
 import { renderedText } from '../src/host/rendered-words.mjs'
 import { RECEIPT_MAX_BYTES, REPLACE_NEXT, dialDigits, planReplace } from '../src/host/replace.mjs'
@@ -537,9 +537,14 @@ test('followLink: a trunk prefix in brackets after the country code is never dia
 
 // ── The block grammar: what WordPress's own parser reads back ───────────────────────────────────
 
-/** `WP_Block_Parser::next_token`'s delimiter pattern (wp-includes/class-wp-block-parser.php, WordPress */
+/**
+ * `WP_Block_Parser::next_token`'s delimiter pattern (wp-includes/class-wp-block-parser.php, WordPress).
+ * PHP's attrs loop `(?:[^}]+|}+(?=})|(?!}\s+\/?-->).)*+` is possessive; JS has no possessive, and the
+ * literal copy backtracked exponentially. One character per turn reads the same: a `}` belongs to the
+ * attrs unless `\s+/?-->` follows it (a `}` followed by `}` never is), and the loop stops at the same place.
+ */
 const WP_TOKEN =
-  /<!--\s+(\/)?wp:([a-z][a-z0-9_-]*\/)?([a-z][a-z0-9_-]*)\s+(\{(?:(?:[^}]+|\}+(?=\})|(?!\}\s+\/?-->)[\s\S])*)?\}\s+)?(\/)?-->/g
+  /<!--\s+(\/)?wp:([a-z][a-z0-9_-]*\/)?([a-z][a-z0-9_-]*)\s+(\{(?:[^}]|\}(?!\s+\/?-->))*\}\s+)?(\/)?-->/g
 
 /** @param {string} body */
 function wpBlocks(body) {
@@ -2017,7 +2022,7 @@ function contentOf(post) {
     url: `https://w.test/${post.post_name === 'home' ? '' : `${post.post_name}/`}`,
     revision: `r-${post.ID}`,
     native: [{ kind: 'post', id: post.ID }],
-    bodyHtml: raw.replace(/<!--[\s\S]*?-->/g, ''),
+    bodyHtml: withoutComments(raw),
     fields: [],
     blocks: [{ id: 'b-named', key: 'named', fields, items: [] }]
   }
@@ -2197,4 +2202,80 @@ test('confirm-count weighs only the places no expect counts: a counted pair besi
   assert.equal(overlap.out.code, 'BAD_PARAMS')
   assert.equal(overlap.out.change, 1)
   assert.deepEqual(overlap.site.writes(), [])
+})
+
+// #257 (survey 29/10/2026): a quickstart's front page record keeps the template demo's title, which no
+// visitor sees ("Read the latest News + Blog"), and a home page hero edit was named after it in the
+// receipt, the card under the reply and Site changes. The front page is the home page.
+test('a write to the static front page is named the home page, whatever title its record keeps (#257)', async () => {
+  const home = SITE.posts.find((/** @type {any} */ p) => p.ID === 42)
+  const demoTitled = () => component({ posts: [{ ...home, post_title: 'Read the latest News + Blog' }] })
+  // The home page as a page read that does not say `home` (the options must answer instead).
+  const unsaid = { ...PAGES, '/': PAGES['/'].replace('<body class="home ', '<body class="') }
+  assert.notEqual(unsaid['/'], PAGES['/'])
+  /** @param {Record<string, unknown>} params @param {(site: any) => any} [door] @param {Record<string, string>} [pages] */
+  const replace = async (params, door = (site) => site.door, pages = PAGES) => {
+    const site = demoTitled()
+    /** @type {number[]} */
+    const fronts = []
+    const out = /** @type {any} */ (
+      await replaceOnWordPress({
+        plan: /** @type {any} */ (planReplace(params)),
+        read: door(site),
+        write: door(site),
+        pageHtml: pagesOf(pages),
+        mintApplyId: () => 'replace-front-1',
+        onFront: (id) => fronts.push(id),
+        verify: false
+      })
+    )
+    return { out, fronts }
+  }
+  // The home page read: its body says `home`, so no option is asked.
+  const page = await replace({
+    find: 'Building the groundwork for next-generation plants',
+    replace: 'Built for the way you work',
+    path: '/'
+  })
+  assert.equal(page.out.ok, true, JSON.stringify(page.out))
+  assert.deepEqual(page.fronts, [42])
+  assert.match(JSON.stringify(page.out), /the home page, its content/)
+  assert.doesNotMatch(JSON.stringify(page.out), /Read the latest News/)
+  // Site-wide, the page read saying nothing: `page_on_front` while `show_on_front` is `page`.
+  const all = await replace(
+    { find: 'Design–build main contractor', replace: 'Design–build contractor', all: true },
+    undefined,
+    unsaid
+  )
+  assert.equal(all.out.ok, true, JSON.stringify(all.out))
+  assert.deepEqual(all.fronts, [42])
+  assert.doesNotMatch(JSON.stringify(all.out), /Read the latest News/)
+  // A site that shows its latest posts on the front: page_on_front left over names nothing.
+  const posts = await replace(
+    { find: 'Design–build main contractor', replace: 'Design–build contractor', all: true },
+    (site) => async (/** @type {string} */ action, /** @type {any} */ params) =>
+      action === 'content.get' && params.kind === 'option' && params.key === 'show_on_front'
+        ? { ok: true, item: { value: 'posts' } }
+        : site.door(action, params),
+    unsaid
+  )
+  assert.equal(posts.out.ok, true, JSON.stringify(posts.out))
+  assert.deepEqual(posts.fronts, [])
+  assert.match(JSON.stringify(posts.out), /Read the latest News/)
+})
+
+test('wider template discovery reuses its snapshot but keeps the final write revalidation', async () => {
+  const { discoveryTrial } = await import('./fixtures/replace/discovery-bench.mjs')
+  const wide = await discoveryTrial(replaceOnWordPress)
+  const direct = await discoveryTrial(replaceOnWordPress, { wide: false })
+  assert.equal(wide.reads, 19, 'baseline made 34 backend reads for this same verified change')
+  assert.equal(direct.reads, 16, 'ordinary edits do not add backend calls')
+  const counts = wide.counts
+  assert.equal(counts[JSON.stringify(['content.get', { kind: 'option', key: 'blogname' }])], 1)
+  assert.equal(
+    counts[JSON.stringify(['content.get', { kind: 'template', key: 'page' }])],
+    2,
+    'the template is read during discovery and again immediately before writing'
+  )
+  assert.equal(wide.undoVerified, true)
 })

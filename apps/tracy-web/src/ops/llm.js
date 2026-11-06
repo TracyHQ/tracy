@@ -35,6 +35,8 @@ import {
   saveModels,
   saveProvider
 } from '../lib/llm-store.js'
+import { doorRefusesModel } from '../lib/llm-door-policy.js'
+import { foreignMakerIn } from '../lib/model-providers.js'
 import { admit, denied } from './admit.js'
 
 /** A provider id somebody typed: a catalog id, or `custom:<slug>`. Nothing else reaches the table. */
@@ -245,6 +247,27 @@ export function llmRoutes({ pool, config, fetchImpl = fetch, deps = {} }) {
     const aliases = normalizeModelAliases(b.value.aliases)
     if (aliases === null) return c.json({ error: 'INVALID_MODEL_ALIASES' }, 400)
     const id = c.req.param('id')
+    // 🔒 A display name is Tracy's, never another product's (#249): one that names a model maker the
+    // route itself does not ("Claude Opus 5.5" on a DeepSeek route) is refused, by model, with the word.
+    const provider = (await readProviders(pool, secret)).find((p) => p.id === id)
+    if (provider) {
+      const own = [provider.presetId, provider.id, provider.name]
+      const misnamed = Object.entries(aliases).flatMap(([modelId, alias]) => {
+        const model = (provider.models ?? []).find((m) => m?.id === modelId)
+        const word = foreignMakerIn(alias, [...own, modelId, model?.name])
+        return word === null ? [] : [{ model: modelId, alias, word }]
+      })
+      const providerWord = typeof providerAlias === 'string' ? foreignMakerIn(providerAlias, own) : null
+      if (misnamed.length > 0 || providerWord !== null)
+        return c.json(
+          {
+            error: 'ALIAS_NAMES_ANOTHER_MAKER',
+            ...(misnamed.length > 0 ? { models: misnamed } : {}),
+            ...(providerWord !== null ? { providerAlias: { alias: providerAlias, word: providerWord } } : {})
+          },
+          400
+        )
+    }
     if (!(await saveModelAliases(pool, id, aliases, g.who.email, providerAlias)))
       return c.json({ error: 'NO_SUCH_PROVIDER' }, 404)
     await auditBook(pool, {
@@ -302,6 +325,17 @@ export function llmRoutes({ pool, config, fetchImpl = fetch, deps = {} }) {
       if (typeof b.value.model !== 'string' || b.value.model.length > 200 || /\s/.test(b.value.model))
         return c.json({ error: 'INVALID_MODEL' }, 400)
     }
+    // The brand step never uses Anthropic models (lib/llm-door-policy.js; brand-step/brand-doors.js refuses them at run time too); saying no
+    // here means the screen cannot show a configured door that every run would refuse.
+    if (doorRefusesModel(doorId, b.value.providerId, b.value.model))
+      return c.json(
+        {
+          error: 'MODEL_NOT_ALLOWED',
+          model: b.value.model,
+          reason: `${b.value.model} is an Anthropic model. The brand step never uses Opus or Sonnet (the cost has to be multipliable); pick another model.`
+        },
+        400
+      )
     if (meta.requires?.length && b.value.model) {
       const { rows } = await pool.query('select models from llm_provider where id = $1', [b.value.providerId])
       const known = (rows[0]?.models ?? []).find((m) => m.id === b.value.model)

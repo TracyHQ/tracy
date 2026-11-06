@@ -25,7 +25,13 @@ import { existsSync, realpathSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-export const TEMPLATES = ['tracy-emdash-theme-base', 'tracy-emdash-theme-business', 'tracy-emdash-theme-saas']
+export const TEMPLATES = [
+  'tracy-emdash-theme-base',
+  'tracy-emdash-theme-business',
+  'tracy-emdash-theme-saas',
+  'tracy-emdash-theme-coffee',
+  'tracy-emdash-theme-restaurant'
+]
 export const GENERATOR = 'tools/generate-docs.mjs'
 
 /**

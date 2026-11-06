@@ -1,0 +1,48 @@
+---
+/** The "Our Food Network" block: a picture, a heading, a short text and a button (features intro, style 3). */
+import { PortableText } from 'emdash/ui'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+import { liveBlocks, liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  entry: Row
+  locale: Locale
+}
+const { entry, locale } = Astro.props
+const $f = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
+const blocks: any[] = Array.isArray(entry.description)
+  ? stampBlocks($f, 'description', entry.description)
+  : []
+// a block that is nothing but one link is the button; every other block is text
+const isButton = (b: any) =>
+  b?._type === 'block' &&
+  b.children?.length === 1 &&
+  (b.markDefs ?? []).some((m: any) => m._key === b.children[0].marks?.[0])
+const text = await liveBlocks(
+  Astro.request,
+  locale,
+  blocks.filter((b) => !isButton(b))
+)
+const button = blocks.find(isButton)
+const link = button ? (button.markDefs ?? []).find((m: any) => m._key === button.children[0].marks[0]) : null
+const img = mediaUrl(entry.img_features)
+const to = (u: string) => dataHref(u, (p) => href(locale, p)) ?? '/'
+const live = await liveLinks(Astro.request, locale, [link?.href])
+---
+
+<section class="rs-section rs-features-intro">
+	<div class="rs-wrap">
+		<div class="rs-features-row">
+			{img && <div class="rs-features-image"><img src={img} alt="" width="363" height="475" loading="lazy" decoding="async" {...$f('img_features')} /></div>}
+			<div class="rs-features-text">
+				<h1 class="rs-display" {...$f('title')}>{entry.title}</h1>
+				<div class="rs-features-body" {...$f('description')}><PortableText value={text} /></div>
+				{button && link && live(link.href) && <a class="rs-btn" href={to(link.href)}>{button.children[0].text}</a>}
+			</div>
+		</div>
+	</div>
+</section>

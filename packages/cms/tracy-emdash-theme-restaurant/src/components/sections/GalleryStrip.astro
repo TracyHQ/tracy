@@ -1,0 +1,31 @@
+---
+/** The row of album covers above the footer, with the link to the whole gallery. */
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { fill } from '@/lib/i18n'
+import type { PostRow } from '@/lib/posts'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  albums: PostRow[]
+  locale: Locale
+  photosLabel: string
+  linkLabel: string
+}
+const { albums, locale, photosLabel, linkLabel } = Astro.props
+const live = await liveLinks(Astro.request, locale, ['/gallery', ...albums.map((a) => `/gallery/${a.slug}`)])
+---
+
+{albums.length > 0 && live('/gallery') && (
+	<section class="rs-gallery-strip" aria-label={linkLabel}>
+		<div class="rs-strip-row">
+			{albums.map((a) => (
+				<a class="rs-strip-item" href={href(locale, `/gallery/${a.slug}`)}>
+					{mediaUrl(a.cover) && <img src={mediaUrl(a.cover)!} alt={a.title} width="240" height="240" loading="eager" decoding="async" />}
+					<span class="rs-photos-badge">{a.photos.length} {photosLabel}</span>
+				</a>
+			))}
+		</div>
+		<a class="rs-strip-link" href={href(locale, '/gallery')}>{linkLabel}</a>
+	</section>
+)}

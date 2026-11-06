@@ -7,7 +7,7 @@
 import { interfaceLocale } from '../../interface-languages/index.mjs'
 import type { Translate } from '../../team/translate'
 import { fieldsText, labelText, whatText } from './record-words'
-import { type PhpTooOld, phpTooOldText } from './sync-words'
+import type { PhpTooOld } from './sync-words'
 
 /** One change as `view()` names it: titles and field names, never values. */
 export type PushItem = {
@@ -240,9 +240,14 @@ export function pushPhaseOf(
 
 /** Why a phase did not finish, in a sentence a customer can act on; the code stays for support. */
 export function pushFailureText(code: string, t: Translate, max = 200, php?: PhpTooOld | null): string {
-  if (code === 'LIVE_PHP_TOO_OLD') return phpTooOldText(php, t)
+  // The live site in the Sync to live screen's own words; the Sync from live screen calls it the
+  // original site (sync-words.ts), and the two once shared one sentence (#226).
+  if (code === 'LIVE_PHP_TOO_OLD')
+    return php?.php && php.min
+      ? t('push.error.livePhpTooOld', { php: php.php, min: php.min })
+      : t('push.error.livePhpTooOldPlain')
   const liveErrors: Record<string, string> = {
-    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    LIVE_BLOCKED: 'push.error.liveBlocked',
     LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
     LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
     TOKEN_REFUSED: 'sync.error.liveToken'
@@ -301,11 +306,27 @@ export function withNotes(items: PushItem[], t: Translate, platform?: string | n
   return items.map((item) => {
     if (item.note) return item
     if (item.warning === 'parent-theme') return { ...item, note: t('push.warning.parentTheme') }
+    // Turned away by the live site's firewall, or found not made: what to do about it (#220, #226).
+    if (item.code === 'LIVE_BLOCKED') return { ...item, note: t('push.note.liveBlocked') }
+    if (item.code === 'NOT_WRITTEN') return { ...item, note: t('push.note.notWritten') }
     const off = [item.code, item.reason].find((r) => SWITCHED_OFF.includes(r ?? ''))
     const why = off ? unsupportedReasonText(off, t, { platform }) : null
     return why ? { ...item, note: why } : item
   })
 }
+
+/**
+ * The items an apply could not write, apart from those it sent with no answer back
+ * (`WRITE_OUTCOME_UNKNOWN`): those may already be on the live site, and an Owner told they failed
+ * pushed them again and made them twice (#226).
+ */
+export function failedApart(items: PushItem[]): { unknown: PushItem[]; failed: PushItem[] } {
+  const unknown = items.filter((i) => i.code === 'WRITE_OUTCOME_UNKNOWN')
+  return { unknown, failed: items.filter((i) => i.code !== 'WRITE_OUTCOME_UNKNOWN') }
+}
+
+/** `key`, or `key.one` for exactly one (the strings' one/other pair). */
+export const countKey = (key: string, count: number): string => (count === 1 ? `${key}.one` : key)
 
 /**
  * The step of the Sync to live flow a phase is drawn on: Review (preview and what it found) or Send

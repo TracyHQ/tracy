@@ -1,0 +1,350 @@
+{
+  "kind": "brand-file",
+  "version": 10,
+  "kit": "ja-boxing@1.0.10",
+  "name": {
+    "value": "Glen Bay Swim Academy",
+    "from": "brief.brand.name",
+    "slots": [
+      {
+        "id": "setting:global configuration sitename",
+        "kind": "setting",
+        "where": "cms",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Glen Bay Swim Academy",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "setting:template site setting site_name (templates/ja_boxing/etc/site/default.json)",
+        "kind": "setting",
+        "where": "template",
+        "current": "",
+        "status": "written",
+        "value": "Glen Bay Swim Academy",
+        "handOff": null,
+        "pattern": "empty-setting",
+        "reason": "empty setting that prints the CMS site name: gets the business name"
+      },
+      {
+        "id": "slot:block-162.0",
+        "kind": "slot",
+        "where": "block-162.0",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Glen Bay Swim Academy",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:text:block-168",
+        "kind": "printed",
+        "where": "text",
+        "current": "Copyright © 2026 JA Boxing. All Rights Reserved.",
+        "status": "written",
+        "value": "Copyright © 2026 Glen Bay Swim Academy. All Rights Reserved.",
+        "handOff": null,
+        "pattern": "legal-line",
+        "reason": "fixed legal or attribution pattern: only the template name is replaced"
+      },
+      {
+        "id": "printed:title-attribute:offcanvas",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Glen Bay Swim Academy",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:offcanvas",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Glen Bay Swim Academy",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:title-attribute:header",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Glen Bay Swim Academy",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:header",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Glen Bay Swim Academy",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:document-title:page",
+        "kind": "printed",
+        "where": "document-title",
+        "current": "JA Boxing - Gym, Fitness, and Boxing Studio Joomla Template",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      },
+      {
+        "id": "printed:meta description:page",
+        "kind": "printed",
+        "where": "meta description",
+        "current": "Elevate your gym, fitness center, or boxing studio website with JA Boxing Joomla template. Engage your audience with a stunning design and powerful features",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      }
+    ]
+  },
+  "colours": {
+    "decision": "kept-template",
+    "why": "The brief has no logo and no brand colour, so the template accent stays and nothing is built.",
+    "brandColour": null,
+    "lift": null,
+    "accent": "#f44141",
+    "replaces": "#f44141",
+    "keeps": "template",
+    "builds": 0,
+    "shifts": [],
+    "module": null
+  },
+  "logo": {
+    "material": null,
+    "mark": {
+      "decision": "icon",
+      "why": "There is no logo, so an icon in the site's accent shows what the business does; the first drawing, a swimmer in goggles, passed the looks on both grounds.",
+      "letters": null,
+      "icon": {
+        "subject": "a swim school: one simplified swimmer doing front crawl, head turned to breathe, wearing swim goggles",
+        "colours": ["#f44141"],
+        "coloursFrom": "accent",
+        "provider": "openrouter",
+        "model": "google/gemini-3.1-flash-lite-image",
+        "attempts": [
+          {
+            "file": "icon/icon-1.png",
+            "raw": "icon/icon-1.raw.jpg",
+            "subject": "a swim school: one simplified swimmer doing front crawl, head turned to breathe, wearing swim goggles",
+            "verdict": "pass",
+            "plate": null
+          }
+        ]
+      },
+      "file": "icon/icon-1.png",
+      "recoloured": {
+        "light": null,
+        "dark": null
+      }
+    },
+    "name": {
+      "text": "Glen Bay Swim Academy",
+      "rendersAs": "GLEN BAY SWIM ACADEMY",
+      "files": {
+        "light": "name/name.light.png",
+        "dark": "name/name.dark.png"
+      },
+      "twoLines": {
+        "lines": ["Glen Bay", "Swim Academy"],
+        "files": {
+          "light": "name/name-2l.light.png",
+          "dark": "name/name-2l.dark.png"
+        }
+      }
+    },
+    "logos": {
+      "light": null,
+      "dark": null,
+      "twoLines": {
+        "light": "logo/logo-2l.light.png",
+        "dark": "logo/logo-2l.dark.png"
+      }
+    },
+    "look": [
+      {
+        "file": "icon/icon-1.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "there are no letters, numbers or words in it",
+            "verdict": "pass",
+            "reason": "It shows only a stylized figure and curved shape."
+          },
+          {
+            "check": "it reads as one clear shape on this ground",
+            "verdict": "pass",
+            "reason": "The red swimmer-like silhouette is clear against white."
+          }
+        ]
+      },
+      {
+        "file": "icon/icon-1.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "there are no letters, numbers or words in it",
+            "verdict": "pass",
+            "reason": "It shows only a stylized figure and curved shape."
+          },
+          {
+            "check": "it reads as one clear shape on this ground",
+            "verdict": "pass",
+            "reason": "The red swimmer-like silhouette is clear against the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.light.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Glen Bay Swim Academy` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "“GLEN BAY SWIM ACADEMY” is spelled correctly."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The red mark and dark name are clear on white."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the swimmer mark and name are shown."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo-2l.dark.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly `Glen Bay Swim Academy` (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "“GLEN BAY SWIM ACADEMY” is spelled correctly."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The red mark and white name are clear on the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the swimmer mark and name are shown."
+          }
+        ]
+      }
+    ],
+    "spots": [
+      {
+        "spot": "logo-header-1",
+        "file": "spots/logo-header-1.png",
+        "shows": "logo-2-lines",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-header-2",
+        "file": "spots/logo-header-2.png",
+        "shows": "logo-2-lines",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-1",
+        "file": "spots/logo-offcanvas-1.png",
+        "shows": "mark",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-2",
+        "file": "spots/logo-offcanvas-2.png",
+        "shows": "mark",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-footer-1",
+        "file": "spots/logo-footer-1.png",
+        "shows": "logo-2-lines",
+        "ground": "#1f1e1e",
+        "writable": false
+      }
+    ]
+  },
+  "favicon": {
+    "from": "mark",
+    "mark": "icon/icon-1.png",
+    "phoneMark": "icon/icon-1.png",
+    "phoneGround": "#121111",
+    "tabIcons": "transparent",
+    "tileGround": null,
+    "tileMark": null,
+    "tileMarkRecoloured": false,
+    "check": {
+      "final": {
+        "bboxShare": 0.563,
+        "contrastShare": {
+          "#ffffff": 1,
+          "#202124": 1
+        },
+        "pass": true
+      },
+      "candidates": [
+        {
+          "kind": "transparent",
+          "png32": "favicon/candidate-transparent-32.png",
+          "bboxShare": 0.563,
+          "contrastShare": {
+            "#ffffff": 1,
+            "#202124": 1
+          },
+          "pass": true
+        }
+      ]
+    },
+    "ico": "favicon/favicon.ico",
+    "png32": "favicon/favicon-32.png",
+    "png512": "favicon/favicon-512.png",
+    "phone180": "favicon/apple-touch-icon-180.png"
+  },
+  "ownerTasks": [
+    {
+      "kind": "replace-temporary-logo",
+      "say": "Your site uses a temporary logo: a swimmer icon in the site colour next to your name; please send us your real logo to replace it."
+    }
+  ]
+}

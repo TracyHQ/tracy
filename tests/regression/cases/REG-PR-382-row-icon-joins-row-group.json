@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-382-row-icon-joins-row-group",
+  "kind": "fix",
+  "title": "The icon class of a repeated Joomla row joins the group of its row, so label rule R4 passes for repeated items",
+  "pr": 382,
+  "area": "slot-roles/rule-tables",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the slot role rule tables (proposeContentMapRoles, vocabulary place-content-roles/3) on a fictional social block whose label and link slots share one group per network, with one icon class not yet roled and one icon carried over with the role editorial.item_icon but no group.",
+    "S2: Run label rule R4 (labelRulesOf) on the map before and after, and the content map roles check on the result."
+  ],
+  "expect": [
+    "S1: both icons get the group of the label and link of their own row; an icon of a row nobody grouped keeps no group.",
+    "S2: R4 names the carried icon before and neither icon after; the roles check reports no error."
+  ],
+  "selectors": {
+    "files": "scripts/slot-roles/{rule-tables.mjs,editorial-defaults.mjs}",
+    "tool": "scripts/test/slot-roles-editorial-defaults.test.mjs"
+  },
+  "evidence": "JA Boxing j6 1.0.10: label rule R4 failed on 8 icon slots (module-171 social-intro[font-icon], module-180 hero[social-intro][font-icon]) whose label and link siblings were grouped per network",
+  "fence": "Unit test of the rule tables on a fictional fixture; the released 1.0.10 content map is not changed",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "scripts/test/slot-roles-editorial-defaults.test.mjs"
+    ],
+    "tests": [
+      "an icon of a repeated row joins the group of its row, so each repeated item is one group (label rule R4)"
+    ]
+  }
+}

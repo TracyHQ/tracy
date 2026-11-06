@@ -1,0 +1,3 @@
+- **The brand step no longer runs a blind meaning check on the icon** — Claude, for Akemi · #335 · `feat/brand-bench-tools` ·
+  **Affects:** nobody yet; the brand bench only. An icon now fails only when the reviewer sees letters, numbers or words in it, or when it does not read as one clear shape on a ground. The agent no longer records a business type, a neighbour or a blind result, and `look_logo` has no blind mode.
+  **Why:** an icon does not need to say the exact trade (the business name sits next to it), and guessing the trade was strict and cost tokens. `make_icon` now allows abstract or evocative symbols. The locked prompt was edited with the owner's approval; its sha256 constant and the tests that pin it moved with it.

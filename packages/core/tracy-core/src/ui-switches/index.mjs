@@ -234,6 +234,17 @@ function create(options, shared) {
 }
 
 /**
+ * `s` without the slashes it ends with: what `replace(/\/+$/, '')` gave, in one pass from the end (the
+ * pattern retried from every slash of a long run, quadratic on an origin of slashes).
+ * @param {string} s
+ */
+function withoutTrailingSlashes(s) {
+  let end = s.length
+  while (end > 0 && s[end - 1] === '/') end -= 1
+  return s.slice(0, end)
+}
+
+/**
  * The operator's switches as a dsh HOST plugin reads them: Tracy's `/api/ui` at `origin` (the lane's
  * `MCP_TRACY_ORIGIN`). For the roads a page cannot govern — an agent tool, the rules the agent is
  * sent — that must follow the same switch the page hides a piece by (`chat-design-system`).
@@ -248,7 +259,7 @@ function create(options, shared) {
  */
 export async function switchesAtTracy(origin, options = {}) {
   if (typeof origin !== 'string' || origin.trim() === '') return null
-  const base = origin.trim().replace(/\/+$/, '')
+  const base = withoutTrailingSlashes(origin.trim())
   const call = options.fetch ?? globalThis.fetch.bind(globalThis)
   const timeoutMs = options.timeoutMs ?? 3000
   const hidden = await readHidden((url, init) =>

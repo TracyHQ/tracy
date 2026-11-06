@@ -300,7 +300,8 @@ export function jsonLdNodes(facts) {
       .replace(/^(?:\/\*\s*)?<!\[CDATA\[(?:\s*\*\/)?/, '')
       .replace(/(?:\/\*\s*)?\]\]>(?:\s*\*\/)?$/, '')
       .replace(/^<!--/, '')
-      .replace(/-->$/, '')
+      // a comment ends at `-->` or at `--!>` (HTML's own parser closes on both)
+      .replace(/--!?>$/, '')
       .trim()
     let value
     try {

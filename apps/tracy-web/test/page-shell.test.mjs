@@ -39,7 +39,8 @@ test('pageShell: the token block mirrors docs/references/page-shell-tokens.md, v
   assert.match(html, /--foreground:oklch\(0\.145 0 0\)/)
   // --primary is Tracy's terracotta since 14/09/2026 (Akemi: one primary for the whole system;
   // Tracy blue retired) — as oklch, mirroring tokens.css, never as a raw hex.
-  assert.match(html, /--primary:oklch\(0\.588 0\.136 37\.4\)/)
+  // #228: one step darker than the brand mark (#bf5b3d) so its label and its words read at WCAG AA.
+  assert.match(html, /--primary:oklch\(0\.565 0\.136 37\.4\)/)
   assert.doesNotMatch(html, /--primary:oklch\(0\.623 0\.16 259\.8\)/)
   assert.doesNotMatch(html, /--primary:#/i)
   assert.match(html, /@media \(prefers-color-scheme:dark\)/)
@@ -75,7 +76,7 @@ test('pageShell: Vietnamese pages swap General Sans for Be Vietnam Pro, other la
 })
 
 test('pageShell: no inline script unless one is passed', () => {
-  assert.doesNotMatch(pageShell('T', '<p>body</p>'), /<script>/)
+  assert.equal(pageShell('T', '<p>body</p>').toLowerCase().includes('<script>'), false)
   assert.match(pageShell('T', '<p>body</p>', 'console.log(1)'), /<script>console\.log\(1\)<\/script>/)
 })
 

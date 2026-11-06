@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Playfair Display",
+    "cssVariable": "--font-playfair",
+    "weights": [600, 700],
+    "styles": ["normal"],
+    "subsets": ["latin", "latin-ext"],
+    "optimizedFallbacks": false,
+    "fallbacks": ["Georgia", "Times New Roman", "serif"]
+  },
+  {
+    "name": "Manrope",
+    "cssVariable": "--font-manrope",
+    "weights": [400, 500, 600],
+    "styles": ["normal"],
+    "subsets": ["latin", "latin-ext"],
+    "optimizedFallbacks": false,
+    "fallbacks": ["system-ui", "-apple-system", "Segoe UI", "Roboto", "Arial", "sans-serif"]
+  },
+  {
+    "name": "Bricolage Grotesque",
+    "cssVariable": "--font-bricolage",
+    "weights": ["200 800"],
+    "styles": ["normal"],
+    "subsets": ["latin", "latin-ext"],
+    "optimizedFallbacks": false,
+    "fallbacks": ["Manrope", "system-ui", "sans-serif"],
+    "options": {
+      "experimental": {
+        "variableAxis": {
+          "wdth": [["75", "100"]],
+          "opsz": [["12", "96"]]
+        }
+      }
+    }
+  }
+]

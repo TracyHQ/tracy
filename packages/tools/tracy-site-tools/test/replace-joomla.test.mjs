@@ -2009,3 +2009,104 @@ test('a module the site trashed or unpublished is not on the page its assignment
   const shown = await run(snap('1'), html, { ...call, expect: 2 })
   assert.deepEqual(placesOf(shown.r), ['module-105.0', 'article-18.0'])
 })
+
+// ── #204: the contact records a site-wide replace reaches too ──────────────────────────────────────
+
+/** `run`, with a contacts list and a write door that records each contact write. */
+async function runWithContacts(call, contacts, opts = {}) {
+  const writes = []
+  const lists = []
+  const { r, calls } = await run(SNAP_12, HOME_12, call, {
+    ...opts,
+    plan: planReplace(call)
+  })
+  // `run` passes no read/write: call replaceOnJoomla again with them, the same fakes otherwise.
+  const applies = []
+  const r2 = await replaceOnJoomla({
+    plan: planReplace(call),
+    snapshot: async () => SNAP_12,
+    apply: async (params) => {
+      applies.push(params)
+      return { ok: true }
+    },
+    pageHtml: async () => ({ ok: true, status: 200, html: HOME_12 }),
+    mint: (prefix) => `${prefix}-t${applies.length + writes.length}`,
+    evidenceText: null,
+    env: {},
+    read: async (action, params) => {
+      lists.push([action, params])
+      return { ok: true, items: params.offset === 0 ? contacts : [] }
+    },
+    write: async (action, params) => {
+      writes.push([action, params])
+      return opts.writeFails ? { ok: false, error: 'write_failed' } : { ok: true }
+    }
+  })
+  return { without: r, withoutCalls: calls, r: r2, applies, writes, lists }
+}
+
+const PHONE = '+7 495 382 14 55'
+const CONTACT = {
+  id: 1,
+  name: 'Head office',
+  published: 1,
+  telephone: PHONE,
+  misc: `<p>Call us on ${PHONE} on weekdays.</p>`,
+  email_to: 'office@example.test'
+}
+
+test('sealed Joomla, all:true: the dry run names the contact record that holds the number too (#204)', async () => {
+  const { without, r, writes, lists } = await runWithContacts(
+    { find: PHONE, replace: '(212) 555-0147', all: true, dryRun: true },
+    [CONTACT, { id: 2, name: 'Unpublished', published: 0, telephone: PHONE }]
+  )
+  assert.equal(without.contacts, undefined, 'with no list door, as before')
+  assert.equal(r.ok, true, JSON.stringify(r).slice(0, 400))
+  assert.equal(r.count, without.count, 'the slots counted as before; contacts listed apart')
+  assert.deepEqual(
+    r.contacts.map((c) => [c.at, c.after]),
+    [
+      ['contact:1.telephone', '(212) 555-0147'],
+      ['contact:1.misc', '<p>Call us on (212) 555-0147 on weekdays.</p>']
+    ]
+  )
+  assert.ok(
+    r.notes.some((n) => /2 contact field\(s\)/.test(n)),
+    JSON.stringify(r.notes)
+  )
+  assert.equal(writes.length, 0, 'a dry run writes nothing')
+  assert.equal(lists[0][1].kind, 'contact')
+})
+
+test('sealed Joomla, all:true: the write reaches the contact too, under its own undo (#204)', async () => {
+  const { r, applies, writes } = await runWithContacts(
+    { find: PHONE, replace: '(212) 555-0147', all: true },
+    [CONTACT]
+  )
+  assert.equal(r.ok, true, JSON.stringify(r).slice(0, 400))
+  assert.equal(applies.length, 1, 'the slots, through the contract')
+  assert.deepEqual(writes, [
+    [
+      'content.update',
+      {
+        kind: 'contact',
+        id: 1,
+        fields: { telephone: '(212) 555-0147', misc: '<p>Call us on (212) 555-0147 on weekdays.</p>' },
+        apply_id: writes[0][1].apply_id
+      }
+    ]
+  ])
+  assert.deepEqual(r.contactsUndo, { action: 'apply.revert', params: { apply_id: writes[0][1].apply_id } })
+  assert.equal(r.contacts.length, 2)
+})
+
+test('sealed Joomla, all:true: words only a contact holds are written there, not refused NOT_FOUND (#204)', async () => {
+  const only = { id: 3, name: 'Shop', published: 1, telephone: '+1 000 111 2222' }
+  const { r, applies, writes } = await runWithContacts(
+    { find: '+1 000 111 2222', replace: '+1 999', all: true },
+    [only]
+  )
+  assert.equal(r.ok, true, JSON.stringify(r).slice(0, 400))
+  assert.equal(applies.length, 0)
+  assert.deepEqual(writes[0][1].fields, { telephone: '+1 999' })
+})

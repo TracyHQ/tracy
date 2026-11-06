@@ -1,0 +1,1 @@
+{"id":"REG-PR-386-readiness-reader-replace-update-code-text-t3-logo","verdict":"PASS","commit":"84534cbcc41541958caec79c30806fbde66e47c2","ran_at":"2026-11-04T19:13:52.595Z","evidence":"tests/regression/.runs/2026-11-04-84534cbcc/REG-PR-386-readiness-reader-replace-update-code-text-t3-logo.log"}

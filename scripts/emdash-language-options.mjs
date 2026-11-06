@@ -17,7 +17,8 @@ import { join } from 'node:path'
 /** The EmDash templates in this repo; each carries `template.config.json` and `seed/questions.json`. */
 export const EMDASH_TEMPLATES = Object.freeze([
   'packages/cms/tracy-emdash-theme-business',
-  'packages/cms/tracy-emdash-theme-base'
+  'packages/cms/tracy-emdash-theme-base',
+  'packages/cms/tracy-emdash-theme-coffee'
 ])
 
 /**

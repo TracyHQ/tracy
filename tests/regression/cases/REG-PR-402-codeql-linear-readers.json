@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-402-codeql-linear-readers",
+  "kind": "fix",
+  "title": "Site tools and tracy-core read site-controlled text in linear time and sanitise it once (CodeQL alerts of release #395)",
+  "pr": 402,
+  "area": "site-tools/readers",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/linear-readers.test.mjs packages/core/tracy-core/test/ui-switches.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Every named test is 'ok': each rewritten reader (site error texts, wp shell flags, database clients, HTML comments, trailing slashes, CSS comments) answers what its old pattern answered on fixed and random text, and twice the pathological input takes under 2.8 times as long as once (the old patterns took four times as long or more); `&amp;quot;` reads as `&quot;`; a leftover `<script` is written as `&lt;script`; a comment closed by `--!>` is stripped; the role scripts carry no bare `<` or `>`; switchesAtTracy drops every trailing slash and trims 160 000 slashes in linear time."
+  ],
+  "selectors": {
+    "readers": "toolNotFound, unlistedKind, lastWord, readablePage (src/host/site.mjs); runsInterpreter (build-fence.mjs); wpCommandStarts, shellConsequence (shell-writes.mjs); withoutComments (html-units.mjs); withoutTrailingSlashes (chat-design-route.mjs); switchesAtTracy (@tracy/core/ui-switches)"
+  },
+  "evidence": "CodeQL check of the release PR #395 (head d41031ebe): polynomial and exponential regular expressions on library input, incomplete multi-character sanitisation, double unescaping, bad HTML comment filter, incomplete escaping and improper code sanitisation in packages/tools/tracy-site-tools. Review measurements: unlistedKind 54 ms at 16 000 repetitions and 207 ms at 32 000; shellConsequence 257 ms at 2 000 '-wp ' and 1 037 ms at 4 000; the trailing-slash trim about 3 s at 80 000 slashes.",
+  "fence": "Mechanism only: the readers' answers and their growth in time. Not covered: the CodeQL run itself (no CodeQL CLI on the machine) and the PHP role script inside a WordPress container.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/linear-readers.test.mjs",
+      "packages/core/tracy-core/test/ui-switches.test.mjs"
+    ],
+    "tests": [
+      "toolNotFound, unlistedKind and lastWord answer what their patterns answered",
+      "🔒 a site message that repeats its start is read at once",
+      "withoutTrailingSlashes drops what",
+      "withoutComments removes what the comment patterns removed",
+      "runsInterpreter reads what INTERPRETER read",
+      "the shell rules answer what their patterns answered, in linear time",
+      "unescape reads an attribute address once",
+      "stripTags removes tags as before",
+      "cssDeclarations reads properties after comments",
+      "a JSON-LD block wrapped in a comment closed by",
+      "storedSpellings escapes a backslash",
+      "🔒 the role scripts carry their patterns",
+      "switchesAtTracy: a host reads the switches at Tracy's origin",
+      "🔒 switchesAtTracy trims an origin of slashes in linear time"
+    ]
+  }
+}

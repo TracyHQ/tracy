@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-245-joomla3-after-sync",
+  "kind": "fix",
+  "title": "The after-sync step of Sync from live runs on Joomla 3",
+  "pr": 245,
+  "area": "sync/after",
+  "cms": ["jo"],
+  "steps": [
+    "Run sync-joomla-after.php on PHP 7.4 against a Joomla 3 shaped tree (no service container) and a Joomla 4+ shaped one."
+  ],
+  "expect": [
+    "Joomla 3: TRACY_RESULT rebuild=menu:ok,categories:ok,assets:ok,tags:ok, no getContainer error, no application started.",
+    "Joomla 4+: the administrator application is started first, every rebuild ok."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/sync-joomla-after.test.mjs"
+    ],
+    "tests": [
+      "Joomla 3: the nested sets rebuild with no service container",
+      "Joomla 4 and later: the administrator application is started first"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

@@ -1,0 +1,151 @@
+---
+import Glyph from './Glyph.astro'
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import { DEMO_LOGO, DEMO_LOGO_SMALL } from '@/lib/demo-logo'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+}
+const { chrome, currentPath } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+// a leaf that points home (the Themes menu's "Default Color") must not light its parent on the home page
+const active = (item: ChromeMenuItem): boolean => {
+  const u = item.url
+  if (u === '/') return currentPath === '/'
+  return (
+    (u !== '' && (currentPath === u || currentPath.startsWith(`${u}/`))) ||
+    item.children.some((c) => c.url !== '/' && active(c))
+  )
+}
+// the menu without the pages the customer unticked, and the pages under them
+const live = await liveLinks(Astro.request, locale, menuUrls(chrome.primary))
+const primary = pruneMenu(chrome.primary, live)
+const home = primary.find((i) => i.url === '/')
+const rest = primary.filter((i) => i !== home)
+---
+
+<div class="rs-topbar">
+	<div class="rs-wrap">
+		<span {...$c('topbar_text')}>{site.topbar_text}</span>
+		<button type="button" class="rs-appearance" data-theme-toggle aria-label={site.appearance_label}><Glyph name="appearance" /></button>
+	</div>
+</div>
+<div class="rs-header-band">
+<header class="rs-header">
+		<div class="rs-header-logo">
+			<a href={href(locale, '/')} aria-label={site.brand_name}>
+				<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="rs-logo-lg">
+					<img class="rs-logo-lg" src={DEMO_LOGO} alt={site.brand_name} width="178" height="110" />
+					<img class="rs-logo-sm" src={DEMO_LOGO_SMALL} alt={site.brand_name} width="78" height="50" />
+				</BrandLogo>
+			</a>
+		</div>
+</header>
+</div>
+<nav class="rs-nav-wrap" aria-label="Main">
+	<div class="rs-wrap">
+		<div class="rs-nav">
+			<div class="rs-nav-inner">
+				{home && (
+					<div class="rs-nav-home">
+						<a href={dataHref(home.url, (p) => href(locale, p))} aria-label={home.label} class:list={[active(home) && 'is-active']} style="padding:0">
+							<svg width="30" height="30" viewBox="0 0 576 512" aria-hidden="true"><path fill="currentColor" d="M280 148 96 300v164a16 16 0 0 0 16 16h112V344h128v136h112a16 16 0 0 0 16-16V300L296 148a12 12 0 0 0-16 0zm292 88L488 166V44a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72L318 38a48 48 0 0 0-60 0L4 236a12 12 0 0 0-1.6 17l25.5 31a12 12 0 0 0 17 1.6L288 82l243 203a12 12 0 0 0 17-1.6l25.5-31a12 12 0 0 0-1.6-17z"/></svg>
+						</a>
+					</div>
+				)}
+				<ul class="rs-nav-main">
+					{rest.map((item) => (
+						<li class:list={[item.children.length > 0 && 'has-sub', active(item) && 'is-active']}>
+							{item.url && item.url !== '' ? <a href={dataHref(item.url, (p) => href(locale, p))}>{item.label}</a> : <span class="rs-nav-label" tabindex={item.children.length ? 0 : undefined}>{item.label}</span>}
+							{item.children.length > 0 && (
+								<div class="rs-sub">
+									<ul>
+										{item.children.map((child) => (
+											<li>
+												{child.url ? <a href={dataHref(child.url, (p) => href(locale, p))}>{child.label}</a> : <span class="rs-nav-label">{child.label}</span>}
+												{child.children.length > 0 && (
+													<ul>
+														{child.children.map((leaf) => (
+															<li><a href={dataHref(leaf.url, (p) => href(locale, p))}>{leaf.label}</a></li>
+														))}
+													</ul>
+												)}
+											</li>
+										))}
+									</ul>
+								</div>
+							)}
+						</li>
+					))}
+				</ul>
+			</div>
+			<button type="button" class="rs-nav-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label={site.menu_label}>
+				<svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="2" /></svg>
+			</button>
+		</div>
+		<div class="rs-mobile-nav" id="mobile-nav">
+			<ul>
+				{primary.map((item) => (
+					<li>
+						{item.url ? <a href={dataHref(item.url, (p) => href(locale, p))}>{item.label}</a> : <span class="rs-nav-label">{item.label}</span>}
+						{item.children.length > 0 && (
+							<ul>
+								{item.children.map((child) => (
+									<li>
+										{child.url ? <a href={dataHref(child.url, (p) => href(locale, p))}>{child.label}</a> : <span class="rs-nav-label">{child.label}</span>}
+										{child.children.length > 0 && (
+											<ul>
+												{child.children.map((leaf) => (
+													<li><a href={dataHref(leaf.url, (p) => href(locale, p))}>{leaf.label}</a></li>
+												))}
+											</ul>
+										)}
+									</li>
+								))}
+							</ul>
+						)}
+					</li>
+				))}
+			</ul>
+		</div>
+	</div>
+</nav>
+<script is:inline>
+	(function () {
+		const t = document.querySelector('.rs-nav-toggle');
+		const p = document.getElementById('mobile-nav');
+		if (t && p) {
+			t.addEventListener('click', function () {
+				const open = p.classList.toggle('is-open');
+				t.setAttribute('aria-expanded', open ? 'true' : 'false');
+			});
+			document.addEventListener('keydown', function (e) {
+				if (e.key === 'Escape' && p.classList.contains('is-open')) {
+					p.classList.remove('is-open');
+					t.setAttribute('aria-expanded', 'false');
+					t.focus();
+				}
+			});
+		}
+		const b = document.querySelector('[data-theme-toggle]');
+		if (b)
+			b.addEventListener('click', function () {
+				const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+				if (dark) document.documentElement.removeAttribute('data-theme');
+				else document.documentElement.setAttribute('data-theme', 'dark');
+				try { localStorage.setItem('tracy-restaurant-theme', dark ? 'light' : 'dark'); } catch (e) {}
+			});
+	})();
+</script>

@@ -4,7 +4,9 @@
 // door can accept a change the page never shows, so the page itself is read before and after.
 //
 // Slot rule: type "text", requiresEvidence false, current value plain [A-Za-z0-9 ]+, maxCharacters
-// >= 20, not contained in the new text, and found exactly once on the home page. The page text right after it is
+// >= 20, current value at least 12 characters, a limit that fits the new text (the plugin's effective
+// limit: maxCharacters, lowered by a measured fit), not contained in the new text, held by no other slot, and
+// found exactly once on the home page as a whole text node (not inside longer words). The page text right after it is
 // kept as an anchor, so the after-check proves the same spot changed.
 //
 // Usage: node k6-edit-one-slot.mjs --site <DDEV project dir> --token-file <file> --contract-id <id>
@@ -19,6 +21,7 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parseArgs } from 'node:util'
+import { effectiveLimit, MIN_SAMPLE_LENGTH, pickNewText, wholeTextMatches } from './k6-slot-rules.mjs'
 
 const DOOR = 'http://127.0.0.1/index.php?option=com_claudecowork&task=api.exec&format=json'
 const PLAIN = /^[A-Za-z0-9 ]+$/
@@ -111,6 +114,7 @@ async function page(url, extra = {}) {
 }
 
 const count = (text, part) => text.split(part).length - 1
+const countWhole = (html, text) => wholeTextMatches(html, text).count
 
 let url
 try {
@@ -141,29 +145,37 @@ if (args['stop-on-warnings'] && Array.isArray(inspect.warnings) && inspect.warni
   })
 
 const stamp = new Date().toISOString().replace(/\D/g, '').slice(2, 12)
-const newText = `K6 edit ${stamp.slice(6)}`
 
 const before = await page(url)
-if (count(before, newText) !== 0)
-  fail(`new text ${newText} already shows on ${url}`, { inspect: inspectSummary })
+// Either marker form may be used (the short one for slots with a tight fit), so neither may show yet.
+for (const marker of [pickNewText(stamp, 99), pickNewText(stamp, 9)])
+  if (count(before, marker) !== 0)
+    fail(`new text ${marker} already shows on ${url}`, { inspect: inspectSummary })
 // A slot whose current words sit inside the new text would still count as "old found" after a
-// correct edit, so such a slot is skipped.
-const slot = (inspect.slots ?? []).find(
+// correct edit, so such a slot is skipped. So is one whose words another slot also holds: the page
+// cannot tell which of them it shows (JA Kids Corner 1.0.3: category "Blog" and menu item "Blog").
+const slots = inspect.slots ?? []
+const holders = (words) => slots.filter((t) => t.current === words).length
+const slot = slots.find(
   (s) =>
     s.type === 'text' &&
     s.requiresEvidence === false &&
     typeof s.current === 'string' &&
     PLAIN.test(s.current) &&
     s.current.trim() !== '' &&
+    s.current.length >= MIN_SAMPLE_LENGTH &&
     // maxCharacters >= 20: slot rule taken as-is from the JA Spa K6 plan (step 8.6).
     s.maxCharacters >= 20 &&
-    s.maxCharacters >= newText.length &&
-    !newText.includes(s.current) &&
-    count(before, s.current) === 1
+    pickNewText(stamp, effectiveLimit(s)) !== null &&
+    !pickNewText(stamp, effectiveLimit(s)).includes(s.current) &&
+    holders(s.current) === 1 &&
+    countWhole(before, s.current) === 1
 )
 if (!slot) fail(`no slot matches the K6 rule on ${url}`, { inspect: inspectSummary, url })
 
-const end = before.indexOf(slot.current) + slot.current.length
+// The new text is sized to what the plugin accepts for this slot, never to maxCharacters alone.
+const newText = pickNewText(stamp, effectiveLimit(slot))
+const { end } = wholeTextMatches(before, slot.current)
 const anchor = before.slice(end, end + ANCHOR_LENGTH)
 
 const selection = {
@@ -195,8 +207,8 @@ if (applied.ok !== true || !applied.afterRevision)
   })
 
 const after = await page(url, { inspect: inspectSummary, selection, apply: applySummary })
-const newCount = count(after, newText)
-const oldCount = count(after, slot.current)
+const newCount = countWhole(after, newText)
+const oldCount = countWhole(after, slot.current)
 const anchorFound = after.includes(newText + anchor)
 const ok = newCount >= 1 && oldCount === 0 && anchorFound
 if (!ok)

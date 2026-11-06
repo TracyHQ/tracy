@@ -10,7 +10,9 @@ import {
   restrictToAliasedModels,
   isDeploymentRoute,
   isApprovedDeploymentModel,
-  ROUTE_OF
+  ROUTE_OF,
+  shownModelAlias,
+  shownProviderAlias
 } from '../lib/model-providers.js'
 export { allowedModelProviders } from '../lib/model-providers.js'
 
@@ -70,9 +72,9 @@ export async function forwardModelHttp(request, target, options, { pool, config,
     const value =
       source && typeof canonical.model === 'string'
         ? {
-            providerName: source.providerAlias?.trim() || source.name,
+            providerName: shownProviderAlias(source) || source.name,
             modelName:
-              source.modelAliases?.[canonical.model]?.trim() ||
+              shownModelAlias(source, canonical.model) ||
               source.models.find((model) => model.id === canonical.model)?.name ||
               null
           }

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { normalizeModelAliases, normalizeProviderAlias, saveModelAliases } from '../src/lib/llm-store.js'
-import { aliasModelCatalog, tracyModelIdentity } from '../src/lib/model-providers.js'
+import { aliasModelCatalog, foreignMakerIn, tracyModelIdentity } from '../src/lib/model-providers.js'
 
 test('aliases trim names and an empty value restores the original name', () => {
   assert.deepEqual(normalizeModelAliases({ 'deepseek-flash': '  Tracy Fast  ', other: '  ' }), {
@@ -89,4 +89,67 @@ test('Tracy prompt identity follows current aliases and never labels a personal 
     modelName: 'Original'
   })
   assert.equal(tracyModelIdentity(providers, { provider: 'seat-plan-codex--account', model: 'flash' }), null)
+})
+
+// #249 (survey 30/10/2026): dev's DeepSeek route was aliased "Claude Opus 5.5" in /ops and the picker
+// told every customer a Claude model answered. An alias may name a maker only when the route does.
+test('an alias that names another maker is never shown: the model and provider keep their own names (#249)', () => {
+  assert.equal(
+    foreignMakerIn('Claude Opus 5.5', ['deepseek', 'DeepSeek', 'deepseek-flash', 'DeepSeek Flash']),
+    'claude'
+  )
+  assert.equal(foreignMakerIn('GPT-5 mini', ['deepseek', 'deepseek-flash']), 'gpt')
+  assert.equal(foreignMakerIn('Tracy Fast', ['deepseek', 'deepseek-flash']), null)
+  assert.equal(foreignMakerIn('DeepSeek Flash', ['deepseek', 'deepseek-flash']), null, 'its own maker')
+  assert.equal(
+    foreignMakerIn('Claude Sonnet', ['openrouter', 'anthropic/claude-sonnet-4']),
+    null,
+    'the model id names it'
+  )
+  assert.equal(foreignMakerIn('Gemini Pro', ['openrouter', 'anthropic/claude-sonnet-4']), 'gemini')
+  assert.equal(foreignMakerIn('Immersive', ['deepseek']), null, 'a word inside another is not a name')
+  const providers = [
+    {
+      id: 'deepseek',
+      presetId: 'deepseek',
+      name: 'DeepSeek',
+      providerAlias: 'Anthropic',
+      models: [{ id: 'deepseek-flash', name: 'DeepSeek Flash' }],
+      modelAliases: { 'deepseek-flash': 'Claude Opus 5.5' }
+    },
+    {
+      id: 'openrouter',
+      presetId: 'openrouter',
+      name: 'OpenRouter',
+      providerAlias: 'Tracy AI',
+      models: [{ id: 'anthropic/claude-sonnet-4', name: 'Claude Sonnet 4' }],
+      modelAliases: { 'anthropic/claude-sonnet-4': 'Claude Sonnet' }
+    }
+  ]
+  const catalog = {
+    groups: [
+      {
+        id: 'deepseek-official',
+        name: 'DeepSeek',
+        models: [{ id: 'deepseek-flash', name: 'DeepSeek Flash' }]
+      },
+      {
+        id: 'openrouter',
+        name: 'OpenRouter',
+        models: [{ id: 'anthropic/claude-sonnet-4', name: 'Claude Sonnet 4' }]
+      }
+    ]
+  }
+  const shown = aliasModelCatalog(catalog, providers)
+  assert.equal(shown.groups[0].name, 'DeepSeek', 'a provider alias naming another maker is not shown')
+  assert.equal(shown.groups[0].models[0].name, 'DeepSeek Flash')
+  assert.equal(shown.groups[1].name, 'Tracy AI')
+  assert.equal(shown.groups[1].models[0].name, 'Claude Sonnet')
+  assert.deepEqual(
+    tracyModelIdentity(providers, { provider: 'deepseek-official', model: 'deepseek-flash' }),
+    {
+      providerName: 'DeepSeek',
+      modelName: 'DeepSeek Flash'
+    }
+  )
 })

@@ -1,0 +1,63 @@
+---
+/**
+ * `/blog/topics`: every category term as a card (label, description, article count), linking to
+ * its list page. The source is Joomla's categories view, which has no capture; the cards follow
+ * the site's card idiom. Counts are computed from published posts so drafts never inflate them.
+ */
+import { getEmDashEntry, getTaxonomyTerms } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import type { Chrome } from '@/lib/chrome'
+import { fill, href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { loadPosts } from '@/lib/posts'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const [{ entry }, terms, posts] = await Promise.all([
+  getEmDashEntry('blog', 'blog', { locale }),
+  getTaxonomyTerms('category', { locale, includeCounts: false }),
+  loadPosts(locale)
+])
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const b = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'blog', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const counts = new Map<string, number>()
+for (const p of posts) if (p.category) counts.set(p.category.slug, (counts.get(p.category.slug) ?? 0) + 1)
+const title = b.topics_title
+---
+
+<Base chrome={chrome} title={title} description={b.topics_intro} currentPath="/blog">
+	<Breadcrumb items={[{ label: site.breadcrumb_home, url: href(locale, "/"), stamp: $site("breadcrumb_home") }, { label: b.title, url: href(locale, "/blog"), stamp: $page("title") }, { label: title, stamp: $page("topics_title") }]} />
+	<main id="main" class="wrap pb-[var(--band-y)] pt-6">
+		<PageOwner stamp={$page} />
+		<header class="mb-8">
+			<h1 class="h-page" {...$page("topics_title")}>{title}</h1>
+			{b.topics_intro && <p class="lead mt-3 max-w-[720px]" {...$page("topics_intro")}>{b.topics_intro}</p>}
+		</header>
+		{terms.length > 0 && (
+			<div class="card-grid">
+				{terms.map((t) => {
+					const url = href(locale, `/blog/category/${t.slug}`)
+					return (
+						<article class="card flex flex-col gap-3 p-6">
+							<h2 class="h-card-sm"><a href={url} class="text-fg hover:text-accent">{t.label}</a></h2>
+							{t.description && <p class="text-[17px] leading-[1.47] text-fg">{t.description}</p>}
+							{site.count_label && <a href={url} class="meta mt-auto pt-2 hover:text-accent" {...$site("count_label")}>{fill(site.count_label, { count: counts.get(t.slug) ?? 0 })}</a>}
+						</article>
+					)
+				})}
+			</div>
+		)}
+	</main>
+</Base>

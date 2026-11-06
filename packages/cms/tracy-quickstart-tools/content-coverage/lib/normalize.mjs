@@ -46,8 +46,10 @@ export function stripTags(s) {
 
 /** Canonical comparison form of a piece of visible text. */
 export function normText(s) {
-  // JA ACM fields spell inline markup as ((span))...((/span)); the template turns it into tags.
-  return decodeEntities(stripTags(String(s ?? '').replace(/\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\)\)/gi, ' ')))
+  // JA ACM fields spell inline markup as ((span))...((/span)) and a line break as ((br/)); the template turns it into tags.
+  return decodeEntities(
+    stripTags(String(s ?? '').replace(/\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/gi, ' '))
+  )
     .normalize('NFKC')
     .replace(/[‘’‚′`´]/g, "'")
     .replace(/[“”„″«»]/g, '"')

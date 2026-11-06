@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crumb and Co</title>
+<style>
+body { margin: 0; font: 16px sans-serif; }
+header { display: flex; gap: 24px; align-items: center; padding: 12px 24px; }
+.dropdown-menu { display: none; }
+.t4-offcanvas { position: fixed; left: -400px; top: 0; width: 300px; }
+</style>
+</head>
+<body>
+<header id="t4-header">
+  <div class="topbar"><span>Open daily from 7am</span></div>
+  <div class="logo"><a href="/"><img src="logo.png" alt="Crumb and Co" width="120" height="40"></a></div>
+  <nav class="t4-megamenu">
+    <ul class="navbar-nav">
+      <li class="nav-item"><a href="/">Home</a></li>
+      <li class="nav-item"><a href="/breads">Breads</a></li>
+      <li class="nav-item dropdown"><span class="nav-link">About</span>
+        <div class="dropdown-menu"><ul>
+          <li><a href="/about/team">Our Team</a></li>
+        </ul></div>
+      </li>
+      <li class="nav-item"><a href="#">Gift cards</a></li>
+    </ul>
+  </nav>
+  <a class="btn btn-primary" href="/order">Order a cake</a>
+  <button class="navbar-toggler" aria-label="Toggle navigation"><svg width="20" height="20"></svg></button>
+</header>
+<div class="t4-offcanvas"><nav><ul><li><a href="/">Home</a></li><li><a href="/secret">Offcanvas only</a></li></ul></nav></div>
+<main><h1>Fresh loaves every morning</h1><p>Body text that is not the header.</p></main>
+<footer><nav><a href="/privacy">Privacy</a></nav></footer>
+</body>
+</html>

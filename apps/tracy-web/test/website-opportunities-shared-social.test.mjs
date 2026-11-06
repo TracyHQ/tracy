@@ -208,7 +208,9 @@ test(
     const verify = (header) => verifySocialServiceKey({ pool: central.pool, pepper, header, now: NOW })
     assert.equal((await verify(`Bearer ${key.key}`)).deploymentId, 'local')
     assert.equal((await verify('Bearer trk_' + key.key.slice(4))).error, 'SOCIAL_AUTH_INVALID')
-    assert.equal((await verify(`Bearer ${key.key.slice(0, -1)}X`)).error, 'SOCIAL_AUTH_INVALID')
+    // The secret's last character is random base64url: a fixed `X` left the key unchanged 1 time in 64.
+    const forged = `${key.key.slice(0, -1)}${key.key.endsWith('X') ? 'Y' : 'X'}`
+    assert.equal((await verify(`Bearer ${forged}`)).error, 'SOCIAL_AUTH_INVALID')
     const stored = (await central.pool.query('select * from wo_social_service_key')).rows[0]
     assert.ok(!JSON.stringify(stored).includes(key.key.split('.')[1]))
     await revokeSocialServiceKey(central.pool, key.id, NOW)

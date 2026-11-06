@@ -1,0 +1,22 @@
+{
+  "id": "REG-PR-399-emdash-release-local-paths",
+  "kind": "fix",
+  "title": "An EmDash release never publishes a path of the machine that built it",
+  "pr": 399,
+  "area": "cms/emdash-templates",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, run node tests/regression/scripts/REG-PR-399-emdash-release-local-paths.mjs. For the kit and each of the five EmDash themes it imports tools/distribution.mjs, calls shownPath and localPathProblems, and reads tools/qa.mjs, tools/visual-qa.mjs and tools/release.mjs."
+  ],
+  "expect": [
+    "In the kit and in every theme: shownPath shows an absolute artifact path by its last segment (a path inside the template relative); localPathProblems names the JSON pointer of macOS user-home, Linux user-home, macOS private and temp-folder paths in a QA report and passes relative paths and URLs; qa.mjs records gates.distribution.artifact and every reusedFrom through shownPath, visual-qa.mjs records fastGate.run through shownPath, holdsLocalPath finds drive, ~/, builder-root and builder-evidence paths with no field of the release exempt (no schema of a file it writes defines a site route: tracy_site_pages.json holds id, label and home), so a path in a question url/href or a page path is refused, and release.mjs scans the metadata as written, the whole folder at the end and the text that ships in the archives, so a release with a machine path is refused. Pre-fix the published Business, Base and SaaS releases carried macOS temp-folder and user-home paths and a rebuilt JA Restaurant release a Linux home artifact path and a checkout path"
+  ],
+  "selectors": {},
+  "evidence": "Measured 05/11/2026: VERIFICATION.json of a rebuilt JA Restaurant release held an absolute \"artifact\" path of the builder and an absolute fast-gate \"run\" path; the published Business, Base and SaaS emdash-0.x releases carried macOS temp-folder and user-home paths the same way.",
+  "fence": "tools/distribution.mjs shownPath and localPathProblems, qa.mjs gates.distribution.artifact, visual-qa.mjs fastGate.run, release.mjs writeRelease, in the kit and the five themes.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-399-emdash-release-local-paths.mjs"]
+  }
+}

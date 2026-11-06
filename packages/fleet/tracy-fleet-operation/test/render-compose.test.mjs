@@ -15,6 +15,7 @@
  * their absence here says nothing.
  */
 
+import { withInit } from '../scripts/webroot/site-frame-policy.mjs'
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -762,7 +763,8 @@ for (const [[labelName, longLabel], [name, env, mail, limits]] of CUSTODY_COMBOS
     const opts = {
       image: /^ {4}image: (\S+)$/m.exec(out)[1],
       network: env.TRACY_SITE_NETWORK ?? 'tracy_tracy',
-      dns: env.TRACY_SITE_DNS ?? null
+      dns: env.TRACY_SITE_DNS ?? null,
+      init: true
     }
     assert.deepEqual(
       significant(out),
@@ -772,6 +774,20 @@ for (const [[labelName, longLabel], [name, env, mail, limits]] of CUSTODY_COMBOS
 
     // Every variant of the render, with the answer both matchers must give it (written here).
     const variants = [{ name: 'the render itself', text: out, expect: 'protected' }]
+
+    // #205: every file written before 31/10/2026 has no `init: true`; still protected. The line
+    // anywhere but right under `restart:` was never written by anyone.
+    const INIT = '    init: true\n'
+    assert.ok(out.includes(`    restart: unless-stopped\n${INIT}`), 'the render runs an init')
+    variants.push({ name: 'no init (before #205)', text: out.replace(INIT, ''), expect: 'protected' })
+    // The frame-policy recreate puts it back in that one place (`withInit`): the generator's own file.
+    assert.equal(withInit(out.replace(INIT, '')), out)
+    assert.equal(withInit(out), out, 'never twice')
+    variants.push({
+      name: 'init out of place',
+      text: out.replace(INIT, '').replace('    shm_size: 512m\n', `    shm_size: 512m\n${INIT}`),
+      expect: 'unknown'
+    })
 
     // The bind and the mail run without the caps: the generator between #289 and 28/09/2026 — every
     // site running today — still protected.

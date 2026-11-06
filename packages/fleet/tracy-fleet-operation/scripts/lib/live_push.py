@@ -238,12 +238,31 @@ class Spec:
     # A column the engine names otherwise (`post_content` of a template part is its `content`): the
     # table's own name stays for links, seeds and the dialog; the item writes and expects the engine's.
     engine: dict = field(default_factory=dict)
+    # What the CMS stamps by itself on a record of this kind it creates, beyond the `CREATE_STAMPS` it
+    # ignores (`seeds`): a kind whose columns name no time stamp still has them in its table.
+    stamps: frozenset = frozenset()
 
 
 J_STAMPS = frozenset({"asset_id", "created", "created_by", "modified", "modified_by", "checked_out",
                       "checked_out_time", "version", "hits", "created_user_id", "created_time",
                       "modified_user_id", "modified_time"})
 J_TREE = frozenset({"lft", "rgt", "level", "path", "parent_id"})
+# What a CMS stamps by itself on a record it creates (never sent): the record a push created holds
+# the live site's, the copy's row its own. Named in the create's seed (`stamps`), so the base of the
+# sync after it holds the copy's (lib/live_sync.py `seed_pushed`): the live site's come over as its
+# change, and the copy's row stops reading as changed — a live delete of it was held as a false
+# delete-modify (#223). The times; WordPress's `guid`, fixed at the first insert from that site's own
+# address; and the author, which the engine sets itself (WordPress: no one; Joomla: the first Super
+# User, JoomlaSiteWriter::articleAuthorId) while a record a person made on the copy is theirs.
+# Measured on two real WordPress 7.1 sites through the Claude Cowork writer (02/11/2026, #223).
+CREATE_STAMPS = frozenset({"created", "modified", "created_time", "modified_time", "created_date",
+                           "modified_date", "created_by", "modified_by", "created_user_id",
+                           "modified_user_id", "post_date", "post_date_gmt", "post_modified",
+                           "post_modified_gmt", "guid", "post_author"})
+# The same of a WordPress `posts` row whose kind names none of them (a menu item, a template part, a
+# block post, Additional CSS, a Media Library item): every one is sent without a date.
+W_CREATE_STAMPS = frozenset({"post_date", "post_date_gmt", "post_modified", "post_modified_gmt", "guid",
+                             "post_author"})
 
 # claude-cowork JoomlaSiteWriter::MAP columns (update) and NESTED createColumns (create).
 J_ARTICLE = ("title", "alias", "introtext", "fulltext", "state", "catid", "images", "urls", "attribs",
@@ -332,6 +351,7 @@ W_STAMPS = frozenset({"post_modified", "post_modified_gmt", "post_date_gmt", "gu
                       "post_content_filtered", "to_ping", "pinged", "post_mime_type", "post_author",
                       "category_slugs", "tag_slugs", "tag_names"})
 W_MENU = ("title", "position", "type", "object", "object_id", "url", "parent")
+W_MEDIA_TEXT = ("post_title", "post_name", "post_excerpt", "post_content")
 # Options a person sets in Settings › General / Reading / Discussion and the Customizer's Site
 # Identity that the engine writes as one value (`content.update` `option`; PROTECTED_OPTIONS refused).
 W_OPTIONS = ("blogname", "blogdescription", "date_format", "time_format", "start_of_week", "posts_per_page",
@@ -366,6 +386,7 @@ WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": 
         "templateStyle": "setting", "option": "setting", "optionOther": "setting", "themeMods": "setting",
         "customCss": "setting", "globalStyles": "setting", "siteIdentity": "setting", "templateSettings": "setting",
         "templatePart": "templatePart", "template": "template", "postmeta": "pageDetail", "attachment": "media",
+        "mediaText": "media",
         "file": "file"}
 # Polylang's language and translation group of a post or a term (`Changeset.translation_refused`):
 # compared on their own, never written — the live engine's write door has no read of them to check
@@ -458,6 +479,15 @@ def wordpress_specs(prefix: str) -> list[Spec]:
              columns={"ID": "r.ID", "post_title": "r.post_title", "file": meta("_wp_attached_file")},
              title=("post_title", "file"), write=(), ignore=frozenset({"post_title"}), delete_absent=False,
              report="media"),
+        # A Media Library item's own words: its title, slug, caption and description, written as a post
+        # (`content.update` `post` takes them for any post type). The upload alone names a new item
+        # after its file, so a picture titled otherwise on the copy was another record on the live
+        # site and its later delete there was held (#223); an edit of one already there was never sent.
+        Spec("mediaText", "post", "posts", "posts", key=("ID",), where="r.post_type = 'attachment'",
+             columns={"ID": "r.ID", "post_title": "r.post_title", "post_name": "r.post_name",
+                      "post_excerpt": "r.post_excerpt", "post_content": "r.post_content"},
+             title=("post_title",), write=W_MEDIA_TEXT, create=None, delete_absent=False, address=True,
+             follows="attachment", group="files"),
         Spec("post", "post", "posts", "posts", key=("ID",),
              where=f"r.post_type IN ({types}) AND r.post_status NOT IN ('auto-draft', 'inherit')",
              extra={"categories": terms_of("category", "term_id"), "tags": terms_of("post_tag", "term_id"),
@@ -475,7 +505,9 @@ def wordpress_specs(prefix: str) -> list[Spec]:
                       "object_id": meta("_menu_item_object_id"), "url": meta("_menu_item_url"),
                       "parent": meta("_menu_item_menu_item_parent"), "menu": menu_slug, "object_title": menu_object_title},
              title=("title", "object_title", "url"), write=W_MENU, create=W_MENU,
-             ignore=frozenset({"object_title"}), refs={"object_id": _menu_object_entity, "parent": "posts"}, address=True),
+             ignore=frozenset({"object_title"}), refs={"object_id": _menu_object_entity, "parent": "posts"}, address=True,
+             # An item with no title of its own is named after its number by WordPress.
+             stamps=W_CREATE_STAMPS | {"post_name"}),
         Spec("option", "option", "options", None, key=("option_name",), key_refs={},
              where=f"r.option_name IN ({options})",
              columns={"option_name": "r.option_name", "value": "r.option_value"},
@@ -494,7 +526,7 @@ def wordpress_specs(prefix: str) -> list[Spec]:
                       "post_status": "r.post_status", "post_type": "r.post_type", "post_content": "r.post_content"},
              title=("post_name",), write=("post_content",),
              create=("post_type", "post_name", "post_title", "post_status", "post_content"),
-             ignore=frozenset({"post_type"}), address=True, group="settings"),
+             ignore=frozenset({"post_type"}), address=True, group="settings", stamps=W_CREATE_STAMPS),
         # A block theme's header, footer and other parts, and its templates, as the Site Editor saved
         # them: by slug, the area as the engine reads it (`uncategorized` when none is filed).
         Spec("templatePart", "templatePart", "posts", None, key=("post_name",), key_refs={},
@@ -519,7 +551,7 @@ def wordpress_specs(prefix: str) -> list[Spec]:
              title=("post_title", "post_name"), write=("post_title", "post_content", "post_status"),
              create=("post_type", "post_name", "post_title", "post_status", "post_content"),
              trash=("post_status", "trash"), ignore=frozenset({"post_type", "post_name"}), texts=("post_content",),
-             address=True),
+             address=True, stamps=W_CREATE_STAMPS),
         Spec("globalStyles", "post", "posts", "posts", key=("ID",),
              where=f"r.post_type = 'wp_global_styles' AND r.post_status = 'publish' AND {of_active_theme}",
              columns={"ID": "r.ID", "post_name": "r.post_name", "post_title": "r.post_title",
@@ -1372,18 +1404,24 @@ class Changeset:
         if spec.name == "option":
             return [{"table": "options", "match": {"option_name": named["option_name"]}, "columns": ["option_value"]}]
         if spec.name == "postmeta":
-            return [{"table": "postmeta", "match": {"post_id": named["post_id"], "meta_key": named["meta_key"]},
-                     "columns": ["meta_value"]}]
+            match = {"post_id": named["post_id"], "meta_key": named["meta_key"]}
+            return [{"table": "postmeta", "match": match, "columns": ["meta_value"],
+                     **({"align": {"entity": "postmeta", "match": match}} if op == "create" else {})}]
         if spec.name == "menuItem" and self.platform == "wordpress":
             ident = int(named["ID"])
             out = [{"table": "posts", "match": {"ID": ident},
                     "columns": [{"title": "post_title", "position": "menu_order"}[c] for c in columns
                                 if c in ("title", "position")],
-                    **({"create": True, "entity": "posts", "id": ident} if op == "create" else {})}]
+                    **({"create": True, "entity": "posts", "id": ident, "stamps": sorted(spec.stamps)}
+                       if op == "create" else {})}]
             for c in columns:
                 if c in ("type", "object", "object_id", "url", "parent"):
                     meta = "_menu_item_menu_item_parent" if c == "parent" else f"_menu_item_{c}"
-                    out.append({"table": "postmeta", "match": {"post_id": ident, "meta_key": meta}, "columns": ["meta_value"]})
+                    match = {"post_id": ident, "meta_key": meta}
+                    # A new row's meta: the live site numbered it on its own, so it takes the copy's
+                    # number, or a later live delete of the item leaves the copy's meta behind (#223).
+                    out.append({"table": "postmeta", "match": match, "columns": ["meta_value"],
+                                **({"align": {"entity": "postmeta", "match": match}} if op == "create" else {})})
             if op == "delete":
                 out = [{"table": "posts", "match": {"ID": ident}, "rows": "theirs"}]
             return out
@@ -1392,14 +1430,16 @@ class Changeset:
                      "columns": [c for c in columns if c not in ("menutype", "client_id")] or ["title"]}]
         if spec.name == "attachment":
             ident = int(named["ID"])
-            return [{"table": "posts", "match": {"ID": ident}, "columns": [], "create": True, "entity": "posts", "id": ident}]
+            return [{"table": "posts", "match": {"ID": ident}, "columns": [], "create": True, "entity": "posts", "id": ident,
+                     "stamps": sorted(W_CREATE_STAMPS)}]
         if spec.name in W_THEME_ROWS:
             # Named by slug for the engine, by the copy's number in the copy's table.
             ident = int((row or {}).get("ID") or 0)
             if op == "delete" or not ident:
                 return []
             return [{"table": "posts", "match": {"ID": ident}, "columns": ["post_content", "post_title"],
-                     **({"create": True, "entity": "posts", "id": ident} if op == "create" else {})}]
+                     **({"create": True, "entity": "posts", "id": ident, "stamps": sorted(W_CREATE_STAMPS)}
+                        if op == "create" else {})}]
         pk = spec.key[0]
         ident = int(named[pk])
         db_columns = [c for c in columns if c not in spec.lists and c not in spec.extra]
@@ -1408,8 +1448,10 @@ class Changeset:
             out.append({"table": spec.table, "match": {pk: ident}, "rows": "theirs"})
         else:
             asset = self.asset_name(spec.entity, ident) if op == "create" else None
+            stamps = sorted(((CREATE_STAMPS & spec.ignore) | spec.stamps) - set(db_columns)) if op == "create" else []
             out.append({"table": spec.table, "match": {pk: ident}, "columns": db_columns,
                         **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {}),
+                        **({"stamps": stamps} if stamps else {}),
                         # Joomla gives the new record its `assets` row on its own: the copy's number for
                         # it, found by the asset's name on both sides, before clashes are numbered (#172).
                         **({"align": {"entity": "assets", "match": {"name": asset}}} if asset else {})})
@@ -1583,6 +1625,18 @@ class Changeset:
                 continue
             if spec.report == "media":
                 self.upload_item(spec, c, copy_row, title)
+                continue
+            if spec.name == "mediaText":
+                # A new Media Library item's words, once its upload made it on the live site: its title
+                # and slug always (the upload names it after its file), a caption or description it has.
+                ident = int(c[0])
+                if not any(i["id"] == f"media:new:{ident}" for i in self.items):
+                    continue
+                after = self.to_live(spec, copy_row)
+                changed = {col: (None, after.get(col)) for col in spec.write
+                           if col in ("post_title", "post_name") or after.get(col)}
+                self.update_item(spec, c, (Placeholder("posts", ident),), None, changed, title,
+                                 Placeholder("posts", ident), None, created=True)
                 continue
             if spec.follows:
                 # A created module's pages: written once the module is there.
@@ -1862,7 +1916,7 @@ class Changeset:
         """The menu a new menu item goes in, on the live site: True when the live site has it, the id of
         this push's item that makes it, or None when neither (WordPress: no menu at all, its term gone)."""
         if self.platform == "wordpress":
-            return True if copy_row.get("menu") else None
+            return self.wordpress_menu_of(copy_row.get("menu"))
         menutype = copy_row.get("menutype")
         # Every menu the live read holds is in its keys (its rows are only the ones that differ).
         live = self.data.get("kinds", {}).get("menutype", {}).get("keys", {}).get("base", [])
@@ -1877,6 +1931,29 @@ class Changeset:
             spec = next(sp for sp in self.specs if sp.name == "menutype")
             return self.item_id(spec, (menutype,))  # made under its name, as `menutype:<name>`
         return None
+
+    def wordpress_menu_of(self, slug):
+        """`menu_of` on WordPress, where a menu is a `nav_menu` term named by its slug. The copy keeping
+        a menu the customer deleted on the live site (the sync holds that deletion as a conflict, #119)
+        no longer means the live site has it: its term is the copy's alone, so the item waits for the
+        push to make it, or is named as depending on it. Sent anyway, it failed WRITE_OUTCOME_UNKNOWN."""
+        if not slug:
+            return None
+        term = self.data.get("kinds", {}).get("term")
+        if term is None:
+            return True  # no read of the live menus to go by (an older read): as before, nothing refused
+        # Only the terms that differ are listed: a menu not among them is on the live site as the copy has it.
+        row = next((r for r in term.get("rows", {}).get("copy", [])
+                    if str(r.get("taxonomy")) == "nav_menu" and str(r.get("slug")) == str(slug)), None)
+        if row is None:
+            return True
+        spec = next(sp for sp in self.specs if sp.name == "term")
+        mine = (str(row.get("term_id")), "nav_menu")
+        alone = pair_keys(spec, term["keys"]["base"], term["keys"]["copy"], self.id_map)["copy_only"]
+        if mine not in {tuple(str(x) for x in k) for k in alone}:
+            return True  # the live site has it (renamed, or changed on either side)
+        ref = f"terms:{int(row['term_id'])}"
+        return ref if ref in self.creatable else None
 
     def menu_items_made(self) -> None:
         """A new menu item waiting for a menu this push was to make, which it does not make (refused
@@ -2794,8 +2871,20 @@ def record_cut(push_root: Path, id_map_path: Path, pushed_path: Path) -> dict:
         return {"ok": True, "recorded": done}
     for d in sorted(p for p in push_root.iterdir() if p.is_dir() and p.name != "previews"):
         journal, changeset_file, marker = d / "journal.jsonl", d / "changeset.json", d / "recorded-journal"
-        if not journal.exists() or not changeset_file.exists() or (d / "written.json").exists() or (d / "recorded").exists():
+        if not journal.exists() or not changeset_file.exists():
             continue
+        # An undone push is the Undo's to record (`record --undo`). Recorded again here as a forward
+        # push, its seeds came after the Undo's and the settle sync trashed Tracy's own post (#222).
+        if (d / "undo-recorded").exists() or (d / "undone.json").exists():
+            continue
+        # A push that answered was recorded by its own `record`; only a create settled since from the
+        # live site's log (live-write.mjs `settle`, `reconciled.json`) joins now.
+        answered = (d / "written.json").exists() or (d / "recorded").exists()
+        reconciled = d / "reconciled.json"
+        if answered and not reconciled.exists():
+            continue
+        if answered:
+            marker = d / "recorded-reconciled"
         last, created = {}, {}
         for line in journal.read_text().splitlines():
             try:
@@ -2806,14 +2895,24 @@ def record_cut(push_root: Path, id_map_path: Path, pushed_path: Path) -> dict:
                 last[entry["id"]] = entry
                 created.update(entry.get("created") or {})
         written = [{"id": i} for i, e in last.items() if e.get("state") == "written"]
+        changeset = json.loads(changeset_file.read_text())
+        if answered:
+            try:
+                named = {w.get("id") for w in json.loads(reconciled.read_text()).get("written", [])}
+            except (ValueError, AttributeError):
+                named = set()
+            written = [w for w in written if w["id"] in named]
+            # Only those creates' numbers: the rest were recorded with the push's answer, and their
+            # seeds again would hold a later sync's base to the copy's values.
+            makes = {i.get("id"): i.get("creates") for i in changeset.get("items", [])}
+            created = {k: v for k, v in created.items() if k in {makes.get(w["id"]) for w in written}}
         try:
             before = int(json.loads(marker.read_text()).get("written", 0)) if marker.exists() else 0
         except (ValueError, AttributeError):
             before = 0
         if len(written) <= before:
             continue
-        record(json.loads(changeset_file.read_text()), {"written": written, "created": created},
-               id_map_path, pushed_path, False)
+        record(changeset, {"written": written, "created": created}, id_map_path, pushed_path, False)
         write_private(marker, {"written": len(written)})
         done.append(d.name)
     return {"ok": True, "recorded": done}

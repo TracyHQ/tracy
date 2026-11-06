@@ -55,6 +55,31 @@ function atPath(column, slot) {
 }
 
 /**
+ * Whether an empty T3 logo param stands for the picture the header prints in its place: with `logotype`
+ * image, T3 falls back to `templates/<tpl>/images/logo.png` (else the T3 base one), and capture-contract.py
+ * (`--template-style-logos`) declares the slot with that path. `logoimage_sm` only when it is switched on.
+ * @param {Record<string, any>} row the template style @param {any} slot
+ */
+function isT3DefaultLogo(row, slot) {
+  const key = slot.jsonPath?.length === 1 ? String(slot.jsonPath[0]) : ''
+  const file = { logoimage: 'logo.png', logoimage_sm: 'logo-sm.png' }[key]
+  const params = (() => {
+    try {
+      return JSON.parse(String(row?.params ?? '{}')) ?? {}
+    } catch {
+      return {}
+    }
+  })()
+  if (slot.type !== 'image' || !file || params.logotype !== 'image') return false
+  if (key === 'logoimage_sm' && String(params.enable_logoimage_sm ?? '') !== '1') return false
+  const sample = String(slot.sample)
+  return (
+    sample === `templates/${row?.template}/images/${file}` ||
+    sample === `plugins/system/t3/base/images/${file}`
+  )
+}
+
+/**
  * Whether a Joomla slot's sample is what its column holds in `row`: the value at its `jsonPath`,
  * or a text piece (text slots) or a substring (url, image) of an HTML column.
  * @param {Record<string, any>} row
@@ -64,15 +89,22 @@ export function sampleIsInRow(row, slot) {
   const column = row?.[slot.column]
   const sample = normalText(slot.sample)
   // `xpath` beside `jsonPath`: one text of an HTML string stored in the JSON (`--full-coverage`).
-  if (slot.jsonPath && !slot.xpath) return normalText(atPath(column, slot)) === sample
+  if (slot.jsonPath && !slot.xpath) {
+    const value = normalText(atPath(column, slot))
+    return value === sample || (value === '' && isT3DefaultLogo(row, slot))
+  }
   const raw = String(slot.jsonPath ? (atPath(column, slot) ?? '') : (column ?? ''))
   if (slot.type !== 'text') return raw.includes(String(slot.sample)) || normalText(raw).includes(sample)
   // Inline markup (`<code>`, `<em>`) splits a sentence into pieces: compare with no white space at all.
   const bare = (/** @type {string} */ s) => s.replace(/\s+/g, '')
   // An attribute slot (`@alt`, `@title`) is not a text node: look in the raw column as well.
+  // A whole-unit sample leaves out text inside code and svg, as capture's ContentSlots::htmlSlots does
+  // (`This is a <code>.mute</code> paragraph.` is captured "This is a paragraph."), so look without them too.
+  const uncoded = raw.replace(/<(code|svg)\b[\s\S]*?<\/\1>/gi, ' ')
   return (
     sample === '' ||
     bare(htmlTextPieces(raw).join('')).includes(bare(sample)) ||
+    bare(htmlTextPieces(uncoded).join('')).includes(bare(sample)) ||
     bare(normalText(raw)).includes(bare(sample))
   )
 }

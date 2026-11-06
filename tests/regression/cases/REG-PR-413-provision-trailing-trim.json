@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-413-provision-trailing-trim",
+  "kind": "fix",
+  "title": "A failed provision's fleet reason is trimmed of trailing dots and white space in linear time (CodeQL alert of release #395, round 3)",
+  "pr": 413,
+  "area": "readers/codeql",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run: node --test --test-reporter=tap packages/site/tracy-site-build-core/test/linear-readers.test.mjs packages/site/tracy-site-build-core/test/host-words.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Every named test is 'ok': withoutTrailingDotsAndSpace gives what `replace(/[.\\s]+$/, '')` gave on fixed reasons (trailing dots, spaces, tabs, newlines, a no-break space, an inner dot kept) and trims a run of tabs in linear time; provisionTodos still builds the task list in every language."
+  ],
+  "selectors": {
+    "readers": "withoutTrailingDotsAndSpace (tracy-site-build-core src/host/design-systems-switch.mjs), used by provisionTodos (src/host/host.ts) and embedded in the emdash, joomla and wordpress lib/index.js"
+  },
+  "evidence": "CodeQL check of the release PR #395 after #407: polynomial regular expression on library input at packages/site/tracy-site-build-core/src/host/host.ts:676 (`detail.replace(/[.\\s]+$/, '')`), slow on many repetitions of a tab. Measured: the old pattern took 665 ms on 30 000 tabs followed by `x`; with the old pattern put back in the helper, the linear test took 29.9 s at 200 000 and failed.",
+  "fence": "Mechanism only: the trim's answers and its growth in time. Not covered: the CodeQL run itself (no CodeQL CLI on the machine).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-site-build-core/test/linear-readers.test.mjs",
+      "packages/site/tracy-site-build-core/test/host-words.test.mjs"
+    ],
+    "tests": [
+      "withoutTrailingDotsAndSpace drops what",
+      "withoutTrailingSlashes drops what",
+      "parseRoute reads the door as before",
+      "provisionTodos"
+    ]
+  }
+}

@@ -1,0 +1,351 @@
+// The Joomla adapter of the site part of the kit: where Joomla and its template framework keep the site name, the
+// logo, the favicon, the head and the title suffix, read from the site's own files and database (read-only, never
+// written). Everything it returns is in CMS-neutral words; the Joomla names only appear as the `setting` a later step
+// writes. Another CMS gets an adapter of the same shape.
+import { languageFilesOf } from '../cms-strings.mjs'
+import { mapRowsSql, mapSettingOf } from './joomla-map.mjs'
+import {
+  isT3,
+  t3ColourVariables,
+  t3LessFiles,
+  t3LogoLayouts,
+  t3LogoSettings,
+  t3NameFallsBack
+} from './joomla-t3.mjs'
+import { emptyShowsOf, logoLayouts, t4PrintsOpenGraph, t4Settings, variableOf } from './joomla-t4.mjs'
+
+/** The most bytes Joomla stores in one module's content (`Table\Module::check`). */
+export const FREE_HTML_MAX_BYTES = 65535
+const TITLE_SUFFIX = { 0: 'none', 1: 'before', 2: 'after' }
+
+/** Selected keys of `configuration.php` (only these are ever read: never a password or a secret). */
+export function readConfig(php, keys = ['sitename', 'sitename_pagetitles', 'MetaDesc', 'offline']) {
+  const out = {}
+  for (const k of keys) {
+    const m = new RegExp(
+      `public\\s+\\$${k}\\s*=\\s*(?:'((?:[^'\\\\]|\\\\.)*)'|"([^"]*)"|([\\w.-]+))\\s*;`
+    ).exec(php ?? '')
+    if (m) out[k] = m[1] !== undefined ? m[1].replace(/\\'/g, "'") : (m[2] ?? m[3])
+  }
+  return out
+}
+
+/** The prefix of the Joomla tables (`jos_` in `jos_extensions`). */
+export function prefixOf(tables) {
+  const hits = tables.map((t) => /^(\w+?_)extensions$/.exec(t)?.[1]).filter(Boolean)
+  return hits.sort((a, b) => a.length - b.length)[0] ?? null
+}
+
+/** @param {{query: Function|null, readFile: Function|null}} source */
+export function joomlaAdapter(source) {
+  const errors = []
+  const missing = (field, reason) => errors.push({ kind: 'missing', field, reason })
+  const { query, readFile } = source
+  const state = {
+    config: {},
+    template: null,
+    site: null,
+    global: null,
+    prefix: null,
+    menus: [],
+    language: null
+  }
+  if (readFile) state.config = readConfig(readFile('configuration.php'))
+  else missing('site.nameSlots', 'no web root to read the CMS settings from (--webroot)')
+  if (query) {
+    state.prefix = prefixOf(query('SHOW TABLES').map((r) => Object.values(r)[0]))
+    const p = state.prefix
+    const [styles, menus, schema, langs] = (source.queryMany ?? ((qs) => qs.map(query)))([
+      `SELECT template, params FROM ${p}template_styles WHERE client_id = 0 AND home = '1'`,
+      `SELECT id, title, link, menutype, home, params FROM ${p}menu WHERE client_id = 0 AND published = 1 AND link <> ''`,
+      `SELECT enabled FROM ${p}extensions WHERE type = 'plugin' AND folder = 'system' AND element = 'schemaorg'`,
+      `SELECT params FROM ${p}extensions WHERE type = 'component' AND element = 'com_languages'`
+    ])
+    const style = styles[0]
+    state.template = style?.template ?? null
+    state.styleParams = safeJson(style?.params)
+    state.siteProfile = state.styleParams['typelist-site'] || 'default'
+    state.menus = menus.map((r) => ({ ...r, params: safeJson(r.params) }))
+    state.schemaPlugin = schema[0]
+    const langParams = langs[0]?.params
+    state.language = safeJson(langParams).site ?? null
+  } else missing('site', 'no database to read the template and menus from (--db or --db-command)')
+  const t4 = state.template && readFile ? t4Settings(readFile, state.template, 'site') : null
+  if (t4) {
+    state.site = t4
+    state.global = t4Settings(readFile, state.template, 'global')
+  }
+  // A T3 template keeps its logo and name in the params of its home style; read only when it is not T4.
+  const t3 =
+    !t4 && state.template && readFile && isT3(readFile(`templates/${state.template}/templateDetails.xml`))
+      ? { params: state.styleParams ?? {}, layouts: t3LogoLayouts(readFile, state.template) }
+      : null
+  const templateHas = (rel) => {
+    const dir = `templates/${state.template}/${rel.split('/').slice(0, -1).join('/')}`.replace(/\/$/, '')
+    if (source.listDir) return source.listDir(dir).includes(rel.split('/').pop())
+    return readFile?.(`templates/${state.template}/${rel}`) != null
+  }
+  const siteName = state.config.sitename ?? null
+  return {
+    cms: 'joomla',
+    framework: t4 ? 't4' : t3 ? 't3' : null,
+    template: state.template,
+    errors,
+    siteName,
+    /** The menu entry behind a map page entity (`menuItem-N`): `{title, params}`, or null. */
+    menuOf(entityKey) {
+      const id = /^menuItem-(\d+)$/.exec(entityKey ?? '')?.[1]
+      return state.menus.find((m) => String(m.id) === id) ?? null
+    },
+    /** The titles of the main menu (the menu holding the home entry). */
+    mainMenuTitles() {
+      const home = state.menus.find((m) => m.home === '1')
+      return state.menus.filter((m) => home && m.menutype === home.menutype).map((m) => m.title)
+    },
+    /** Whether a map page lists items (a category or featured listing). */
+    isListing: (mapPage) => /[?&]view=(?:category|featured)\b/.test(mapPage?.link ?? ''),
+    nameSettings() {
+      const out = []
+      if (siteName != null)
+        out.push({ kind: 'setting', scope: 'cms', setting: 'global configuration sitename', value: siteName })
+      if (t4)
+        out.push({
+          kind: 'setting',
+          scope: 'template',
+          setting: `template site setting site_name (${t4.file})`,
+          value: t4.values.site_name ?? '',
+          whenEmpty: 'prints the CMS site name'
+        })
+      if (t3) {
+        const header = t3.layouts.find((l) => l.where === 'header')
+        out.push({
+          kind: 'setting',
+          scope: 'template',
+          setting: 'template style param sitename (home style)',
+          value: String(t3.params.sitename ?? ''),
+          whenEmpty: header && t3NameFallsBack(header.php) ? 'prints the CMS site name' : null
+        })
+      }
+      return out
+    },
+    /** The template-level logo settings: `{key, value, file, prints: [{where, emptyShows}]}`. */
+    logoSettings() {
+      if (t3) return t3LogoSettings({ params: t3.params, layouts: t3.layouts, templateHas })
+      if (!t4) return []
+      const layouts = logoLayouts(readFile, state.template)
+      return Object.entries(t4.values)
+        .filter(([k]) => k.startsWith('site_logo'))
+        .map(([key, value]) => ({
+          key,
+          value: String(value ?? '').split('#')[0],
+          prints: layouts.map((l) => {
+            const v = variableOf(l.php, key)
+            return { where: l.where, layout: l.file, emptyShows: v ? emptyShowsOf(l.php, v) : null }
+          })
+        }))
+    },
+    /**
+     * The colour variables the template declares outside its stylesheets (T3: LESS, compiled away before a browser
+     * sees it): `[{name, value, declaredIn}]`; empty for a template whose stylesheets carry their own variables.
+     */
+    colourVariables() {
+      if (!t3) return []
+      const files = t3LessFiles(state.template, t3.params.theme || null)
+      const texts = source.readMany
+        ? source.readMany(files)
+        : files.map((f) => ({ file: f, text: readFile(f) }))
+      return t3ColourVariables(texts, state.template)
+    },
+    /**
+     * The template styles that paint another colour theme than the home style (T3: a style whose `theme` param names
+     * another `less/themes/<theme>` than the home style's): `['templateStyle-10', ...]`. Pages on such a style are
+     * the template's colour showcase, never the brand. Empty for any other framework.
+     */
+    themeVariantStyles() {
+      if (!t3 || !query || !/^[\w-]+$/.test(state.template ?? '')) return []
+      const home = String(t3.params.theme ?? '')
+      return query(
+        `SELECT id, params FROM ${state.prefix}template_styles WHERE client_id = 0 AND template = '${state.template}'`
+      )
+        .filter((r) => String(safeJson(r.params).theme ?? '') !== home)
+        .map((r) => `templateStyle-${r.id}`)
+    },
+    favicon(icons) {
+      const set = t4?.values.other_faviconFile ?? null
+      const own = state.template && readFile ? readFile(`templates/${state.template}/favicon.ico`) : null
+      return {
+        currentFile: icons?.[0]?.href?.split('?')[0] ?? null,
+        mechanism: {
+          setting: t4 ? 'template site setting other_faviconFile' : null,
+          value: set || null,
+          fallback: own !== null ? `favicon.ico in the template folder (templates/${state.template})` : null
+        }
+      }
+    },
+    head(titles) {
+      const suffix = state.config.sitename_pagetitles ?? (readFile ? '0' : null)
+      const g = state.global?.values ?? {}
+      return {
+        injection: {
+          mechanism: 'free-html-block-on-every-page',
+          maxBytes: FREE_HTML_MAX_BYTES,
+          templateCodeSetting: t4
+            ? 'template global setting system_advancedCodeBeforeHead (a file, not written)'
+            : null
+        },
+        titleSuffix: {
+          setting: 'global configuration sitename_pagetitles',
+          value: suffix === null ? null : (TITLE_SUFFIX[suffix] ?? suffix),
+          current: titles
+        },
+        og: {
+          supported: t4 && readFile ? t4PrintsOpenGraph(readFile) : null,
+          switch: t4 ? 'template global setting system_opengraph' : null,
+          on: t4 ? Boolean(Number(g.system_opengraph ?? 0)) : null,
+          perPage: t4 ? 'menu entry setting og_title' : null
+        },
+        schemaInjection: state.schemaPlugin
+          ? { mechanism: 'cms schema plugin (system schemaorg)', enabled: state.schemaPlugin.enabled === '1' }
+          : { mechanism: 'free-html-block-on-every-page', enabled: null }
+      }
+    },
+    /**
+     * The language files the site prints its fixed sentences from, read in one call, and the override file a
+     * measurement may write: `{tag, files: [{file, text}], override: {file, setting}}`, or null without files.
+     */
+    cmsStrings() {
+      if (!source.listDir || !source.readMany) return null
+      const tag = state.language ?? 'en-GB'
+      const rels = languageFilesOf({ listDir: source.listDir, tag, template: state.template })
+      return {
+        tag,
+        files: source.readMany(rels).filter((f) => f.text),
+        rankFile: (file) => languageFileRank(file, state.template),
+        override: { file: `language/overrides/${tag}.override.ini`, setting: 'cms language override' }
+      }
+    },
+    /**
+     * The channels a CMS contact (`contact-N`) accepts, from its fields, the switches that print them (the menu
+     * entry's, then the contact's, then the component's) and the template's own contact layout: each field holds
+     * one value; the five named links are where any other channel (a messaging app, a social profile) goes, and
+     * only when the page prints them. Null for any other entity or without a database.
+     */
+    contactChannels(entityKey) {
+      const id = Number(/^contact-(\d+)$/.exec(entityKey ?? '')?.[1])
+      if (!id || !query || !state.prefix) return null
+      const p = state.prefix
+      const [contacts, globals, entries] = (source.queryMany ?? ((qs) => qs.map(query)))([
+        `SELECT address, telephone, fax, mobile, email_to, webpage, params FROM ${p}contact_details WHERE id = ${id}`,
+        `SELECT params FROM ${p}extensions WHERE type = 'component' AND element = 'com_contact'`,
+        `SELECT params FROM ${p}menu WHERE client_id = 0 AND published = 1 AND link LIKE 'index.php?option=com_contact&view=contact&id=${id}%'`
+      ])
+      const row = contacts[0]
+      if (!row) return null
+      const own = safeJson(row.params)
+      const layers = [...entries.map((e) => safeJson(e.params)), own, safeJson(globals[0]?.params)]
+      const setting = (k) => layers.map((l) => l[k]).find((v) => v != null && v !== '') ?? null
+      const layout = (f) =>
+        readFile?.(`templates/${state.template}/html/com_contact/contact/${f}`) ??
+        readFile?.(`components/com_contact/tmpl/contact/${f}`) ??
+        ''
+      const address = layout('default_address.php')
+      const main = layout('default.php')
+      const fields = CONTACT_FIELDS.map(([kind, column, sw]) => ({
+        kind,
+        column,
+        max: 1,
+        // The layout reads the contact as `$this->item` (Joomla 4 and later) or `$this->contact` (older overrides).
+        printed:
+          new RegExp(`->(?:item|contact)->${column}\\b`).test(`${main}\n${address}`) && setting(sw) === '1',
+        filled: Boolean(String(row[column] ?? '').trim()),
+        setting: `cms contact setting ${sw}`
+      }))
+      const links = ['a', 'b', 'c', 'd', 'e']
+      const namedLinks = {
+        max: links.length,
+        printed: main.includes("loadTemplate('links')") && setting('show_links') === '1',
+        filled: links.filter((x) => String(own[`link${x}`] ?? '').trim()).length,
+        setting: 'cms contact setting show_links'
+      }
+      return {
+        entity: entityKey,
+        fields,
+        repeatableRows: false,
+        namedLinks,
+        otherChannels: namedLinks.printed
+          ? `a messaging app or social profile goes in a named link: ${namedLinks.max - namedLinks.filled} free of ${namedLinks.max}`
+          : 'none: a messaging app or social profile has no field this page prints (named links are switched off)'
+      }
+    },
+    /**
+     * The maps the site's own blocks draw from their content (joomla-map.mjs): `[{entity, column, template,
+     * location, drawnBy}]`, or null without a database.
+     */
+    mapSettings() {
+      if (!query || !state.prefix) return null
+      return query(mapRowsSql(state.prefix)).map(mapSettingOf).filter(Boolean)
+    },
+    /**
+     * The picture a T4 template paints behind the blocks of its pages from its site profile (`body_bg_img`, the
+     * media field's `#joomlaImage` suffix dropped): `[{key, value, template, file}]`, `[]` when the template has none
+     * (or is not T4), null without the database and the web root to read it from.
+     */
+    backgroundSettings() {
+      if (!query || !readFile) return null
+      // The profile the home style names (`typelist-site`), which need not be `default`.
+      const own = t4
+        ? (t4Settings(readFile, state.template, 'site', state.siteProfile ?? 'default') ?? t4)
+        : null
+      const value = String(own?.values.body_bg_img ?? '').split('#')[0]
+      return own && value ? [{ key: 'body_bg_img', value, template: state.template, file: own.file }] : []
+    },
+    /** Map entities that are free HTML blocks (no slots but their HTML). */
+    isFreeHtml: (entity) => entity?.kind === 'module' && entity.identity?.module === 'mod_custom'
+  }
+}
+
+// The one-value fields of a CMS contact a contact layout may print: [kind, column, switch].
+const CONTACT_FIELDS = [
+  ['address', 'address', 'show_street_address'],
+  ['phone', 'telephone', 'show_telephone'],
+  ['mobile', 'mobile', 'show_mobile'],
+  ['fax', 'fax', 'show_fax'],
+  ['email', 'email_to', 'show_email'],
+  ['website', 'webpage', 'show_webpage']
+]
+
+function safeJson(text) {
+  try {
+    return JSON.parse(text)
+  } catch {
+    return {}
+  }
+}
+
+/**
+ * Whether a Joomla page view exists only to show a CMS feature off, and why: a search results page (Smart Search or
+ * the legacy search) is reached through the site's search box, never planned as a page of its own. Null otherwise.
+ * `kind` is the page kind of `map-index.mjs` (`<component> <view>` for views it does not name).
+ * @param {string} kind
+ */
+export function showcaseViewOf(kind) {
+  if (/^(finder|search) /.test(String(kind ?? ''))) return 'a search results page: the search box reaches it'
+  return null
+}
+
+/**
+ * Which language file names a line when several constants share its value (lower first): the language override and
+ * the template's own files, then Joomla's core files (`joomla.ini`, `lib_joomla.ini`), then core extensions
+ * (`com_users.ini`, `mod_footer.ini`), then add-ons, which Joomla 4 and later still ship as `<tag>.<extension>.ini`.
+ * @param {string} file the file path under the web root
+ * @param {string|null} template the template's name
+ */
+export function languageFileRank(file, template) {
+  const f = String(file ?? '')
+  const base = f.split('/').pop() ?? ''
+  if (f.includes('/overrides/') || f.startsWith('templates/')) return 0
+  if (template && base.endsWith(`tpl_${template}.ini`)) return 0
+  if (/^[a-z]{2,3}-[A-Z]{2}\./.test(base)) return 3
+  if (/^(com|mod|plg|tpl|pkg|files)_/.test(base)) return 2
+  return 1
+}

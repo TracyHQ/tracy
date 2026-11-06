@@ -1,0 +1,1202 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-coffee",
+    "label": "Tracy Coffee",
+    "version": "0.1.0"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "posts",
+      "label": "Blog",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "excerpt",
+          "label": "Summary",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image_caption",
+          "label": "Image caption",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "content",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort order (ties on the same date)",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "seedEntries": 6
+    },
+    {
+      "slug": "site",
+      "label": "Site chrome",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "brand_name",
+          "label": "Brand name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand_tagline",
+          "label": "Brand tagline",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone",
+          "label": "Phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "address",
+          "label": "Address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours",
+          "label": "Opening hours",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_label",
+          "label": "Header button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_url",
+          "label": "Header button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "theme_dark_label",
+          "label": "Theme toggle: dark",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "theme_light_label",
+          "label": "Theme toggle: light",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_label",
+          "label": "Mobile menu label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_read_title",
+          "label": "Mega Resources: Read & learn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_help_title",
+          "label": "Mega Resources: Help & support title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_eyebrow",
+          "label": "Mega Resources: feature eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_heading",
+          "label": "Mega Resources: feature title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_text",
+          "label": "Mega Resources: feature text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_action",
+          "label": "Mega Resources: feature link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_url",
+          "label": "Mega Resources: feature link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_image",
+          "label": "Mega Resources: feature image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_image_alt",
+          "label": "Mega Resources: feature image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_latest_title",
+          "label": "Mega Resources: latest posts title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_search_label",
+          "label": "Mega Resources: search label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_resources_title",
+          "label": "Footer column 2 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_company_title",
+          "label": "Footer column 3 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social_heading",
+          "label": "Social heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social_handle",
+          "label": "Social handle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social",
+          "label": "Social profiles",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "notice",
+          "label": "Demo notice (footer)",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "breadcrumb_home",
+          "label": "Breadcrumb: home label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_code",
+          "label": "404: code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_title",
+          "label": "404: title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_back_label",
+          "label": "404: back link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_title",
+          "label": "Search: page title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_placeholder",
+          "label": "Search: placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_button",
+          "label": "Search: button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_results_line",
+          "label": "Search: results line ({count}, {query})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_empty",
+          "label": "Search: no results line",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "read_more",
+          "label": "Read more label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "count_label",
+          "label": "List count label ({count})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "page_meta",
+          "label": "Pagination label ({page}, {pages})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_label",
+          "label": "Previous label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_label",
+          "label": "Next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "related_title",
+          "label": "Related posts title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "latest_title",
+          "label": "Latest posts title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sections_title",
+          "label": "Blog sections title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sitemap_title",
+          "label": "Sitemap title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "skip_label",
+          "label": "Skip to content label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "back_to_top",
+          "label": "Back to top label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "home",
+      "label": "Home page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "cup_model",
+          "label": "Cup model (.glb)",
+          "type": "file",
+          "required": false
+        },
+        {
+          "slug": "cup_still",
+          "label": "Cup still image (transparent PNG or WebP)",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "intro_lead",
+          "label": "Section 1 · invitation",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "intro_cta_label",
+          "label": "Section 1 · button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "intro_cta_url",
+          "label": "Section 1 · button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "story_title",
+          "label": "Section 2 · story title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "story_left",
+          "label": "Section 2 · story, left",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "story_right",
+          "label": "Section 2 · story, right",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "why_title",
+          "label": "Section 3 · title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "why_items",
+          "label": "Section 3 · reasons (four)",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "detail_title",
+          "label": "Section 4 · title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "detail_labels",
+          "label": "Section 4 · labels pointing at the cup (top to bottom)",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "featured_title",
+          "label": "Section 5 · title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured_lead",
+          "label": "Section 5 · line under the title",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "featured_cta_label",
+          "label": "Section 5 · button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured_cta_url",
+          "label": "Section 5 · button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "space_title",
+          "label": "Section 6 · photos title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "space_photos",
+          "label": "Section 6 · photos of the shop (three or four)",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "visit_title",
+          "label": "Section 6 · visit title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours_label",
+          "label": "Section 6 · opening hours label (the hours are the shop hours)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_label",
+          "label": "Section 6 · button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_url",
+          "label": "Section 6 · button URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "menu_page",
+      "label": "Menu page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "order_label",
+          "label": "Order button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "order_url",
+          "label": "Order button link (empty hides the button)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "call_label",
+          "label": "Call button label (the phone number is the shop phone)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_label",
+          "label": "Group name for items with no group",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "menu_items",
+      "label": "Menu items",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "excerpt",
+          "label": "Description",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "price",
+          "label": "Price (free text)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort order",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "seedEntries": 12
+    },
+    {
+      "slug": "blog",
+      "label": "Blog page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "topics_title",
+          "label": "Topics page title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "topics_intro",
+          "label": "Topics intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "all_label",
+          "label": "All articles label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "about",
+      "label": "About page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "chapter1_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "chapter1_image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "chapter1_image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_style",
+          "label": "Link style",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "stats_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_figures",
+          "label": "Figures",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "chapter2_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "chapter2_image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "chapter2_image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_style",
+          "label": "Link style",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "team_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_members",
+          "label": "Members",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_url",
+          "label": "Button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "contact",
+      "label": "Contact page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form (Forms plugin id)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_title",
+          "label": "Form heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "required_note",
+          "label": "Required-field legend",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "info_heading",
+          "label": "Information heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone_label",
+          "label": "Phone label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "address_label",
+          "label": "Address label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours_label",
+          "label": "Opening hours label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "directions_label",
+          "label": "Directions button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email",
+          "label": "Email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email_label",
+          "label": "Email label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "notice",
+          "label": "Notice",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "social_heading",
+          "label": "Social heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "unavailable_label",
+          "label": "Unavailable label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social",
+          "label": "Social links",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary navigation",
+      "locale": "en",
+      "items": 5
+    },
+    {
+      "name": "resources_read",
+      "label": "Resources: Read & learn",
+      "locale": "en",
+      "items": 5
+    },
+    {
+      "name": "resources_help",
+      "label": "Resources: Help & support",
+      "locale": "en",
+      "items": 2
+    },
+    {
+      "name": "footer_resources",
+      "label": "Footer: Resources",
+      "locale": "en",
+      "items": 2
+    },
+    {
+      "name": "footer_company",
+      "label": "Footer: Company",
+      "locale": "en",
+      "items": 2
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "menu_group",
+      "locale": "en",
+      "collections": [
+        "menu_items"
+      ],
+      "terms": 4
+    }
+  ],
+  "formBindings": [
+    {
+      "form": "contact-{locale}",
+      "collection": "contact",
+      "slug": "contact",
+      "field": "form_id"
+    }
+  ],
+  "dependencies": {
+    "@astrojs/node": "11.1.3",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.3.3",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3",
+    "three": "0.186.1"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/islands/MegaMenu.tsx",
+    "src/components/islands/MobileNav.tsx",
+    "src/components/sections/Chapter.astro",
+    "src/components/sections/CtaBand.astro",
+    "src/components/sections/CupStage.astro",
+    "src/components/sections/StatsBand.astro",
+    "src/components/sections/TeamGrid.astro",
+    "src/components/site/ArticleH2.astro",
+    "src/components/site/BlogSidebar.astro",
+    "src/components/site/BodyImage.astro",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/Breadcrumb.astro",
+    "src/components/site/Decor.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/Icon.astro",
+    "src/components/site/Logo.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/Pagination.astro",
+    "src/components/site/Photo.astro",
+    "src/components/site/PostCard.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/components/site/SocialIcon.astro",
+    "src/components/ui/button.tsx",
+    "src/components/ui/checkbox.tsx",
+    "src/components/ui/dropdown-menu.tsx",
+    "src/components/ui/input.tsx",
+    "src/components/ui/label.tsx",
+    "src/components/ui/popover.tsx",
+    "src/components/ui/textarea.tsx",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/brand.ts",
+    "src/lib/brew-scene.mjs",
+    "src/lib/brew-shot.mjs",
+    "src/lib/chrome-labels.ts",
+    "src/lib/chrome.ts",
+    "src/lib/cup-route.mjs",
+    "src/lib/cup-scene.mjs",
+    "src/lib/decor-motion.mjs",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/home-scroll.mjs",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/i18n.ts",
+    "src/lib/icons.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/media.ts",
+    "src/lib/menu.ts",
+    "src/lib/page-records.ts",
+    "src/lib/posts.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/stamps.ts",
+    "src/lib/toc.ts",
+    "src/lib/ui-words.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/forms.css",
+    "src/styles/global.css",
+    "src/styles/tokens.css",
+    "src/views/About.astro",
+    "src/views/Article.astro",
+    "src/views/Blog.astro",
+    "src/views/Contact.astro",
+    "src/views/Home.astro",
+    "src/views/Menu.astro",
+    "src/views/NotFound.astro",
+    "src/views/Search.astro",
+    "src/views/Sitemap.astro",
+    "src/views/Topics.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:f2d75482bada57053dd4e5467f73f215315411ac2a16a3310faed0519d4e8e66",
+    "package.json": "sha256:a47df52853dd88ab1d91e4de7dddd9b05abf49a84ab3b154d3e14a2bc749c42e",
+    "pnpm-lock.yaml": "sha256:be9fa239039069ac4ff838ace86812fb0617c05b96d869014381a8fed2cd0017",
+    "seed/field-map.json": "sha256:25445ee973524e149435aa5ec97338087e44875ace7ef10d5b4aa1206ed91a48",
+    "seed/media-map.json": "sha256:eaf7ecc9b46576b582d8337298cc1ca53b5a3e863e0e902fb271d520a526f13a",
+    "seed/seed.json": "sha256:af257e75097c6242f12227a2aa07f58a721215b6dbe0ce089892304416902afe",
+    "src/components/islands/MegaMenu.tsx": "sha256:5896a15a212f992944c00e916834ade2619aa6f37e428bbf674a6c1f8b8eb546",
+    "src/components/islands/MobileNav.tsx": "sha256:f981932ee61527dec7f6f0a743eb7f3dbf4505f6e5e863468d253f394938bcda",
+    "src/components/sections/Chapter.astro": "sha256:573f62443b90b44ef89a165f889e1f056c5c7869adfa0c00afe006280d2bd4a1",
+    "src/components/sections/CtaBand.astro": "sha256:faa46fe8cd81191879f8c6b7ba4e649791675b02e1298d33b60f49740c5bc34e",
+    "src/components/sections/CupStage.astro": "sha256:8427ff844d03380d7417809bd69192e1c474143376b73daf643136b31f9f2013",
+    "src/components/sections/StatsBand.astro": "sha256:fa477dbc1c3aed81c0907417f7bcaa6c929ad0f92bb775ef4dfd24c522bbea90",
+    "src/components/sections/TeamGrid.astro": "sha256:1a48a193b955f91b56fc6b1d35f3a2321642316d41b26642bc439f639585f459",
+    "src/components/site/ArticleH2.astro": "sha256:307628c34e08c9805a52608f433d6401f26f3f8ba2fbf68fdc249bfe57c010e3",
+    "src/components/site/BlogSidebar.astro": "sha256:86f7bb3d64b3308f0d41b113ca42e39ac89fc96d84c13007497f466be0f45c31",
+    "src/components/site/BodyImage.astro": "sha256:d1a76f480031903ae90af699afb4e5fbfbc5598f878e0df358b5e89faa45142b",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/Breadcrumb.astro": "sha256:8c33e50d922da39117e37eb96c4fb8ff489b5aac25720ca267ad8b5cdca41aeb",
+    "src/components/site/Decor.astro": "sha256:4452693f20bd939326ac9cccc0af66d2154680d28df7885e2d6e5bb591533247",
+    "src/components/site/Footer.astro": "sha256:5dd588c4be2c67eda3c2c2b55f86c0c3c6c5b5af51a350ff9800d2819b423c26",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/Header.astro": "sha256:26dc844b2f5aebbc02e16ef46b97ab3326b4a8a413fa09cdff275faffca339d0",
+    "src/components/site/Icon.astro": "sha256:4b46e06e056fcd76362c96af94530f841d51d927d8fc7f7c35b8adb289624968",
+    "src/components/site/Logo.astro": "sha256:fde2b9147d86b6dd861c4f74d18e255e74db659e678b2f4ec8cdcfcbe302a02a",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/Pagination.astro": "sha256:71a76c9033e2fca6c1541ae7d5c1c8756cff6f9d67ba17b63558431d122aa366",
+    "src/components/site/Photo.astro": "sha256:0b3aa8e86f3d1e722c079d22f1dc92735c0f1c20a764c9bb85ee107733bbce23",
+    "src/components/site/PostCard.astro": "sha256:099da861ff8b8ad796efa551291b8c85b928d3cf54aeccb2447db7f63d084b25",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/components/site/SocialIcon.astro": "sha256:86c7a3d048b2b70b4fc17677e4f1409eab1483a761f2e30f5e43386c56a0f51c",
+    "src/components/ui/button.tsx": "sha256:a821d025ec909b9929e354e82e06742b8712d236dd57f1a3e79cdea63a21adea",
+    "src/components/ui/checkbox.tsx": "sha256:33f41bfe203269e2eff8bdb10fb8590240bdfe94aa08e0a35ce290ac9c9edeff",
+    "src/components/ui/dropdown-menu.tsx": "sha256:95f5fe1f94cb6d0c99828e94c9b752543edd8215ebee8c203069e195c6ad53f7",
+    "src/components/ui/input.tsx": "sha256:974e14fe41822c7962386661366496dd93ed889f07f68d79467e4d3f92c8550e",
+    "src/components/ui/label.tsx": "sha256:5428d0bddf31ce3d91c753c0f7a7a9c78054a680218d109ee2b0b6dc967044aa",
+    "src/components/ui/popover.tsx": "sha256:96d6d819e474ad38bb2fa11816bb20ea60f8c7370b102b64d5d0876e4043ddd3",
+    "src/components/ui/textarea.tsx": "sha256:bb82c0c5cc75e1bd9a50c47e56667bd60848f6a6c73f9e9f84a35a4e77850a6f",
+    "src/fonts.json": "sha256:fb599a35058d9c712b9fd018fe5f5e3536ccaf75690ee293c98b3e63d2914ab0",
+    "src/layouts/Base.astro": "sha256:5d4d4587657bccc78615ee5ee4b9312ac648049dcb2fc4e9511a42969ec67a19",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/brew-scene.mjs": "sha256:eae217314c4613d500fde61af71cdb7e16ab4a5884578d7b7baa8ab9a15f8ee1",
+    "src/lib/brew-shot.mjs": "sha256:eeee57194a35e9db2e176ff437cdf42fe420fd72b29a23de89cfd9da7df85791",
+    "src/lib/chrome-labels.ts": "sha256:18b398338e771a60583455fe9dcb75985b008118d984ae17ed538a5cc865b359",
+    "src/lib/chrome.ts": "sha256:990782e54b307866fc85e06e88e0f333a2314ad8d30193a0e403458f306dd899",
+    "src/lib/cup-route.mjs": "sha256:df46a9a5d3aeb26b8ecccb60871050370cb1836dac29da1b3cfb826b094e491d",
+    "src/lib/cup-scene.mjs": "sha256:51004b69c5c850b0a6db892b3091443dd3c925b6662e580901f494aa8a74711b",
+    "src/lib/decor-motion.mjs": "sha256:8cd830b1f12b7eedf322488b14058a47849ca30acfea21f5ea07a87550776e22",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:4588e6245fff77b220db5b153406c28cb7c8df3d4de1c2d6ab01a7848e2f6689",
+    "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
+    "src/lib/home-scroll.mjs": "sha256:0a9059690207aeb06359f05e8b2649f6e5524f0b1391a648c64fc29ec5cf2e15",
+    "src/lib/hreflang-plugin.ts": "sha256:fb1993974b6296c4a677f4691b7038313c5eb3b222088f4c9160a52e744fbe0d",
+    "src/lib/hreflang.ts": "sha256:924561614f01c3e11fa8f6f06b17ef04e1212a47dc7d1bedd83bb64cfe0f5f98",
+    "src/lib/i18n.ts": "sha256:7f12d110d5f47a1467b30d8b37185bdd4db9470e46911412aefb9b1f12ad372f",
+    "src/lib/icons.ts": "sha256:8f1ff4efd2068aa7e972cdddfdcebd62c6ba03ed956022578d6b4be2d99797a1",
+    "src/lib/link-gate.ts": "sha256:e28f98faaccded6cad80fbfb6f07e3fdcdde1a30c0c2e73557837ec9a2688fff",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/menu.ts": "sha256:dea177c93fcfa1368d0e6154cd52e2c323322c78ff2dea8e1ded60a6b6c0bb6e",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/posts.ts": "sha256:b4188b849bef8613e6e4e8e4eeb26d91f6e7defbf51c307dd70c72bcfa507eb7",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/toc.ts": "sha256:93cf47c5aaa7e3b7170fb944012e93dd0f58a7fedc9fd517721c4f6a884439ba",
+    "src/lib/ui-words.ts": "sha256:5c71ad4a2dc37652d026302f455053783e3b1feaab697a33a2a6f2cb55f4ec8f",
+    "src/lib/ui.ts": "sha256:19959ee7c4a5e6b70385beea93fc26d7046bd36a695765808134e093c23cc680",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
+    "src/pages/[...path].astro": "sha256:557f9fea1b9d2350490870fba2242d4d096436963e09979001eed6933d48297f",
+    "src/pages/404.astro": "sha256:3be98f29009305dca7be057c517b1054e02135b0b3b436feda1cdbbff809620e",
+    "src/styles/forms.css": "sha256:0b1073af281798b7dcb4257b4f1f388043ca63862f6fa0d5dcb90db2b0066078",
+    "src/styles/global.css": "sha256:a5f0750b2533ba9bc420e8c9090c3c4c8c929eadf7906949953c6123d67da9ef",
+    "src/styles/tokens.css": "sha256:b99052604fc6844ab5b45bbbfe6a3a5e9e29d21d9a6c33fe47e812ee95b5b7aa",
+    "src/views/About.astro": "sha256:b559a0c6b016f2f43f1d541e3455c21ea2ada22c17b076e6079120e8246a5d48",
+    "src/views/Article.astro": "sha256:b0887b3e3980fb4ee562f564db4a014550ea553b27dbcede65ca7bfd0bb71a74",
+    "src/views/Blog.astro": "sha256:9f7dd8b391e4d758e007fc04a7e26bb549053d01c411e6a907e91845622d6e13",
+    "src/views/Contact.astro": "sha256:7ce267de7867147df7a124ea8de2da28f1c3923b3f6603c3872958dcea89b313",
+    "src/views/Home.astro": "sha256:2d930450bb156b73db8bdfea82bccbd465b75e95e6659ad000beffb242d19b74",
+    "src/views/Menu.astro": "sha256:058a343dde2995ecaf28d3fa12ac366191112fb21556b2e28b9df22e222a80c5",
+    "src/views/NotFound.astro": "sha256:545f3486ddc63458fd97201bfa5dd650ba8dabc1a3af6effffa45400e5acd9f5",
+    "src/views/Search.astro": "sha256:202234fa82a7eb18b111b22234daa508c786237d64195704b99bb51a011d97ff",
+    "src/views/Sitemap.astro": "sha256:f295a10ab473ec769107ee36521c7c38ee3d43283f6e0bdd8588d49ac197ac7f",
+    "src/views/Topics.astro": "sha256:4ca937075a139c3c32e546573a12ac3f64aa7bf7217021cc4516bcf67a78f26c",
+    "template.config.json": "sha256:c229aa34875d21b61c62f3f6542aabfa6232c3257ec0a0a52f0c67aa63c2ccc6",
+    "tools/forms.json": "sha256:a9c78a8909278efb02bf7b690dd1460d9ed94fa2602df9a9fb2964c6cb9d983f",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

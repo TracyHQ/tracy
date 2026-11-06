@@ -20,7 +20,8 @@ import {
 } from './agent-demo.js'
 import { liveReadinessOf } from './live-readiness.js'
 import { deterministicBuildId, readinessOfBuild, suggestedLabel, startBuild, settleBuild } from './builds.js'
-import { revisionForAction } from './revisions.js'
+import { freezeDemoResearchInput, pictureLabelInputOf, revisionForAction } from './revisions.js'
+import { createPictureLabelRuns, PICTURE_LABELS_PENDING } from './picture-label-runs.js'
 import { logoResearchDoor, logoResearchNote } from './logo-research.js'
 import { withBuildChoice } from './build-choice.js'
 import { buildPlaced, insertBuild, saveBuildLabel } from './build-store.js'
@@ -49,6 +50,8 @@ function contactFacts(brief) {
 export const CLIENT_DEMO = 'client-send/1'
 /** `prepare`'s answer while the demo's logo research may still answer: ask again later (`retryAt`). */
 export const LOGO_RESEARCH_PENDING = 'DEMO_LOGO_RESEARCH_PENDING'
+/** `prepare`'s answer while the brief's photographs are still being labelled (#250): ask again later (`retryAt`). */
+export { PICTURE_LABELS_PENDING }
 const CMS_NAMES = { wordpress: 'WordPress', joomla: 'Joomla', emdash: 'EmDash' }
 const error = (code, status = 409) => Object.assign(new Error(code), { code, status })
 
@@ -58,6 +61,8 @@ const sha = (text) => createHash('sha256').update(text, 'utf8').digest('hex')
 const ended = new Set(['aborted', 'blocked', 'error', 'interrupted', 'max-tokens'])
 /** This process: a running check whose row names it but which it no longer runs died with a restart. */
 const BOOT = randomUUID()
+/** A business labelled ahead is not read for it again sooner (its research rarely changes meanwhile; the brief's own ask starts a run for a changed one). */
+const WARM_AGAIN_MS = 10 * 60_000
 /**
  * How long the host's QA may read the inventory's routes past its pages (`inventoryRoutes`): the baseline inside the
  * agent's first check, the check inside dsh's 10 min wait beside the look and the sweep.
@@ -98,6 +103,28 @@ export function lookSample(pages, posts, seen = []) {
 }
 /** A look's time for `n` pages. */
 export const lookBudgetMs = (n) => Math.min(LOOK_MS_MAX, Math.max(LOOK_MS, n * LOOK_MS_PER_PAGE))
+
+/**
+ * 🔒 A LOOK TAKES THE PAGES ITS TIME HOLDS (#247). With the vision door at ~36 s a call and 3 at once, 29 pages never fit
+ * `LOOK_MS_MAX`: every look ran the full 300 s, cut every stream and saw nothing whole. The last look says what a page
+ * seen whole cost (`msPerPage`); this look takes as many pages as `LOOK_MS_MAX` holds at that rate — the home page first,
+ * then pages no look has seen, then the rest — and leaves the others to the next check, said as not looked at. With no
+ * rate yet (the first look) every page is tried, as before.
+ * @param {string[]} pages @param {{ msPerPage?: unknown, seen?: unknown }} [last]
+ * @returns {{ pages: string[], left: string[] }}
+ */
+export function lookFit(pages, last = {}) {
+  const rate = typeof last?.msPerPage === 'number' && last.msPerPage > 0 ? last.msPerPage : null
+  if (rate === null) return { pages, left: [] }
+  const seen = new Set(Array.isArray(last?.seen) ? last.seen : [])
+  const ordered = [
+    ...pages.filter((p) => p === '/'),
+    ...pages.filter((p) => p !== '/' && !seen.has(p)),
+    ...pages.filter((p) => p !== '/' && seen.has(p))
+  ]
+  const room = Math.max(1, Math.floor(LOOK_MS_MAX / rate))
+  return { pages: ordered.slice(0, room), left: ordered.slice(room) }
+}
 /** The paths a build's template posts answer at: their frozen routes and where they moved since (`postRoutes`). */
 function templatePostPaths(build, postRoutes = []) {
   const records = build.content?.agentDemo?.structure?.inventory?.records ?? []
@@ -274,6 +301,18 @@ export function createClientDemoService(deps) {
   const now = deps.now ?? Date.now
   const origin = String(config.origin).replace(/\/+$/, '')
   const runningChecks = new Map()
+  /**
+   * 🔒 THE PHOTO LABELLING RUNS BESIDE THE REQUEST (#250): Build from my business labels its brief's photographs from
+   * the moment its research is done (`warmPictureLabels`), and `prepare` answers `DEMO_PICTURE_LABELS_PENDING` while
+   * they are still being labelled, instead of holding the request for every vision call (113 s measured).
+   */
+  const pictureRuns = deps.pictureLabels
+    ? createPictureLabelRuns({ label: deps.pictureLabels, now, log: deps.log ?? console })
+    : null
+  /** Whether this action's brief labels its photographs beside the request: the page of an own site asks again. */
+  /** When each own-site business was last labelled ahead: its state door is read every few seconds. */
+  const warmed = new Map()
+  const labelsBeside = (action) => Boolean(pictureRuns && action.selection?.ownSite === true)
   async function locked(actionId, fn) {
     const lock = await pool.connect()
     try {
@@ -349,8 +388,26 @@ export function createClientDemoService(deps) {
           now,
           // 🔒 Asked as the demo's account, through the same door an operator presses (logo-research.js).
           logoResearch: { research: logoResearchDoor({ request, origin, cookie: state.cookie }) },
-          pictureLabels: deps.pictureLabels ?? null
+          ...(labelsBeside(state.action)
+            ? { pictureLabelRuns: pictureRuns }
+            : { pictureLabels: deps.pictureLabels ?? null })
         })
+        // 🔒 The photographs still being labelled (#250): the brief is made once their run settles. The mark lets the
+        // runner's `reconcile` prepare it then, whether or not the page asks again.
+        if (made.pending && made.waitingFor === 'pictures') {
+          if (state.action.selection?.pictureLabels?.state !== 'requested')
+            await pool.query(
+              `update wo_demo_action set selection = selection || $2::jsonb, updated_at = $3 where id = $1`,
+              [
+                state.action.id,
+                JSON.stringify({ pictureLabels: { state: 'requested', at: new Date(now()).toISOString() } }),
+                new Date(now())
+              ]
+            )
+          throw Object.assign(error(PICTURE_LABELS_PENDING), {
+            retryAt: new Date(made.retryAt).toISOString()
+          })
+        }
         // 🔒 Never waited for here: this runs inside HTTP requests (`/v1/demos`). The caller asks again, and the
         // runner's `reconcile` prepares it once the research is done or its minute is over.
         if (made.pending)
@@ -578,9 +635,13 @@ export function createClientDemoService(deps) {
     // 🔒 A demo whose brief waits for its logo research is prepared here once that is settled, so its build starts
     // whether or not anyone reads the demo again (logo-research.js). Before the Retry guard below: an action with no
     // build has sent no brief yet, so that guard would return first and the build would never start.
-    if (!state.build && state.action.selection?.logoResearch?.state === 'requested')
+    if (
+      !state.build &&
+      (state.action.selection?.logoResearch?.state === 'requested' ||
+        state.action.selection?.pictureLabels?.state === 'requested')
+    )
       await prepare({ accountId: action.account_id, actionId: action.id }).catch((failure) => {
-        if (failure?.code !== LOGO_RESEARCH_PENDING)
+        if (failure?.code !== LOGO_RESEARCH_PENDING && failure?.code !== PICTURE_LABELS_PENDING)
           (deps.log ?? console).warn(
             `client demo ${action.id} not prepared after its logo research: ${failure?.code ?? failure}`
           )
@@ -750,8 +811,20 @@ export function createClientDemoService(deps) {
       // left it one answer. A caller gone before the result is saved costs no attempt. (An older dsh's road;
       // a current one starts the check and polls it, `check.start`.)
       if (signal?.aborted) throw error('AGENT_DEMO_CHECK_UNHEARD')
-      return { ok: true, ...(await settle(state, outcome)) }
+      return { ok: true, ...(await settle(state, outcome)), ...(await siteAddressOf(state.build.site_key)) }
     })
+  }
+  /**
+   * 🔒 THE SITE'S ADDRESS IS HANDED, NEVER TYPED (#247): a build's last reply told the customer the site was live at
+   * `https://zuni-cafe.tracy.sit`, an address the model wrote from memory with its last letter missing. Every finished
+   * check answers the site's exact address, as the site row holds it, for the reply to copy (`clientSendSteps`).
+   */
+  async function siteAddressOf(siteKey) {
+    if (!siteKey) return {}
+    const row = (await pool.query('select address from site where site_key=$1', [siteKey])).rows[0]
+    return typeof row?.address === 'string' && /^https?:\/\//.test(row.address)
+      ? { siteAddress: row.address }
+      : {}
   }
   function checkAllowed(state) {
     if ((state.build.qa?.clientCheckAttempts ?? 0) >= DEMO_CHECKS) throw error('DEMO_CHECK_BUDGET_EXHAUSTED')
@@ -787,10 +860,18 @@ export function createClientDemoService(deps) {
     // 🔒 AN INCREMENTAL READ LEAVES THE LOOK TO THE FULL ONE (29/10/2026): its look is never the answer — a pass is
     // confirmed by a full read, a counted failure is read again in full, and a round that sweeps is not looked at — so
     // a WordPress check looked twice, ~190 s each. The verdicts are the same; the full read looks.
-    const first = await measureOnce(auth, state, incremental, { ...sweep, look: !incremental })
+    // 🔒 AN INCREMENTAL READ THAT KEPT NO PAGE WAS A FULL READ (#247): every page read anew is what the full read would
+    // do again, ~100 s on a 48-page site for the same answer (dev 30/10/2026: six reads in one check answered "0
+    // unchanged", each then read again in full). Such a read looks as a full one does (`look: 'whole'`) and its answer
+    // stands; one that kept a page still leaves the look to the full read.
+    const first = await measureOnce(auth, state, incremental, {
+      ...sweep,
+      look: incremental ? 'whole' : true
+    })
     if (!incremental) return first
     const attempts = state.build.qa?.clientCheckAttempts ?? 0
     if (!first.pass && sweepDecision(state.build.qa?.residueSweeps, attempts, first.sweep).go) return first
+    if (first.readWhole) return first
     return measureOnce(auth, state, false, sweep)
   }
   async function measureOnce(auth, state, incremental, { batches = false, look = true } = {}) {
@@ -848,9 +929,16 @@ export function createClientDemoService(deps) {
     ]
     const reused =
       incremental && Array.isArray(measured.body.reused) ? new Set(measured.body.reused) : new Set()
-    const lastLook = incremental
-      ? (state.build.qa?.clientCheck?.result?.checks ?? []).find((c) => c?.id === 'looks-finished')
-      : null
+    // `look: 'whole'`: look only when this read kept no page, as a full read does (`measure`).
+    const looks = look === true || (look === 'whole' && reused.size === 0)
+    // 🔒 THE LOOK KEEPS WHAT IT SAW ACROSS CHECKS, FULL ONES TOO (#247). A full read reads every page anew, and the host
+    // still says which had not changed since their last read (`unchanged`); a page seen whole by the last look and
+    // unchanged since keeps that verdict. A full read that dropped them started the look from the first page again, and
+    // a 29-page site was never seen whole in 300 s (dev 30/10/2026: six checks, "looked partly", 0 pages seen).
+    const unchanged = Array.isArray(measured.body.unchanged) ? new Set(measured.body.unchanged) : reused
+    const lastLook = (state.build.qa?.clientCheck?.result?.checks ?? []).find(
+      (c) => c?.id === 'looks-finished'
+    )
     const sourced = checkResearchSourced(state.build.content.agentDemo.structure.inventory, inventory, {
       research: checkedResearch(state.revision),
       business: state.revision.brief?.business ?? null
@@ -966,15 +1054,17 @@ export function createClientDemoService(deps) {
     let kept = []
     let fresh = []
     let judged = null
-    if (sweeping || !look) judged = lookCarried(lastLook, readPages, reused)
+    if (sweeping || !looks) judged = lookCarried(lastLook, readPages, unchanged)
     else {
-      kept = reusableLookPages(lastLook, readPages, reused)
+      kept = reusableLookPages(lastLook, readPages, unchanged)
       const sample = lookSample(
         readPages.filter((p) => !kept.includes(p)),
         templatePostPaths(state.build, routesNow.postRoutes),
         Array.isArray(lastLook?.seen) ? lastLook.seen : []
       )
-      fresh = sample.pages
+      // The pages this look's time holds; the rest wait for the next check (#247).
+      const fit = lookFit(sample.pages, lastLook ?? {})
+      fresh = fit.pages
       const lookNow = deps.demoLook
         ? await deps.demoLook(site, {
             pages: fresh.length ? fresh : ['/'],
@@ -988,6 +1078,17 @@ export function createClientDemoService(deps) {
         : null
       const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
       judged = look ? deferToMeasure(look, contrast?.measuredOver) : null
+      if (judged && fit.left.length > 0)
+        judged = {
+          ...judged,
+          pass: false,
+          looked: 'partly',
+          unlooked: [
+            ...(Array.isArray(judged.unlooked) ? judged.unlooked : []),
+            ...fit.left.map((page) => ({ page, why: 'LEFT_FOR_NEXT_LOOK', viewports: ['desktop', 'phone'] }))
+          ],
+          measured: `${judged.measured}; ${fit.left.length} page(s) left to the next check's look (about ${Math.round(lastLook.msPerPage / 1000)} s a page here)`
+        }
       if (judged && sample.postsLeft > 0)
         judged = {
           ...judged,
@@ -998,7 +1099,7 @@ export function createClientDemoService(deps) {
     // Where a check's minutes go, one line per check (28/10/2026: nothing said it before).
     const secs = (ms) => (ms / 1000).toFixed(1)
     console.info(
-      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}${sweeping ? ' sweep round' : ''}: inventory ${secs(inventoryAt - started)}s, page reads ${secs(readAt - inventoryAt)}s (${readPages.length} page(s), ${reused.size} unchanged), ${sweeping ? 'look skipped' : !look ? 'look left to the full read' : `look ${secs(now() - lookStarted)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`}`
+      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}${sweeping ? ' sweep round' : ''}: inventory ${secs(inventoryAt - started)}s, page reads ${secs(readAt - inventoryAt)}s (${readPages.length} page(s), ${reused.size} unchanged), ${sweeping ? 'look skipped' : !looks ? 'look left to the full read' : `look ${secs(now() - lookStarted)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`}`
     )
     return {
       checks: checksForAgent(checks),
@@ -1006,7 +1107,9 @@ export function createClientDemoService(deps) {
       sweep,
       // What a sweep with no call to run still names unresolved (a slot the replace job refuses to empty, a linked
       // title with no sourced words): kept on the check's answer, so the QA lists it (`sweepUnresolvedOf`).
-      unswept: worn.calls.length === 0 ? worn.unresolved : []
+      unswept: worn.calls.length === 0 ? worn.unresolved : [],
+      // Every page was read anew and looked at: what a full read would answer (`measure`).
+      readWhole: incremental && reused.size === 0 && !sweeping && looks
     }
   }
   /**
@@ -1202,9 +1305,35 @@ export function createClientDemoService(deps) {
       return { ok: true, running: true, checkId: job.id }
     }
     if (job.state === 'error') throw error(job.code ?? 'DEMO_QA_UNAVAILABLE')
-    return { ok: true, checkId: job.id, ...(job.resultText ? JSON.parse(job.resultText) : job.result) }
+    return {
+      ok: true,
+      checkId: job.id,
+      ...(job.resultText ? JSON.parse(job.resultText) : job.result),
+      ...(await siteAddressOf(build.site_key))
+    }
   }
-  return { prepare, send, operation, reconcile }
+  /**
+   * Starts labelling the photographs of an own-site business's research as soon as it is done (#250), so the brief
+   * pressing build makes finds them labelled. Never awaited by its caller; never throws.
+   * @param {{accountId: string, opportunityId: string}} args
+   */
+  async function warmPictureLabels({ accountId, opportunityId }) {
+    if (!pictureRuns) return
+    const key = `${accountId}:${opportunityId}`
+    if (now() - (warmed.get(key) ?? Number.NEGATIVE_INFINITY) < WARM_AGAIN_MS) return
+    warmed.set(key, now())
+    for (const [k, at] of warmed) if (now() - at >= WARM_AGAIN_MS) warmed.delete(k)
+    try {
+      const frozen = await freezeDemoResearchInput(pool, opportunityId, accountId)
+      const input = await pictureLabelInputOf(pool, { accountId, opportunityId, frozenResearchRead: frozen })
+      if (input) pictureRuns.start(input)
+    } catch (failure) {
+      ;(deps.log ?? console).warn?.(
+        `[brief pictures] not labelled ahead for ${opportunityId}: ${failure?.code ?? failure?.message ?? failure}`
+      )
+    }
+  }
+  return { prepare, send, operation, reconcile, warmPictureLabels, pictureRuns }
 }
 
 /**

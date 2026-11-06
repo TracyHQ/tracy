@@ -102,6 +102,7 @@
   "cms-design.rule.source": "Quelle",
   "cms-design.rule.systems": "Systeme",
   "cms-design.rule.why": "Warum",
+  "cms-design.rules.brand": "Brand-Modus, zählt nicht zur Note",
   "cms-design.rules.copied": "Kopiert",
   "cms-design.rules.copy": "Prompt kopieren",
   "cms-design.rules.details_one": "Details ({count} Regel)",

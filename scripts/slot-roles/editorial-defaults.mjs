@@ -123,13 +123,18 @@ const inNavigation = (xpath, slot) =>
 
 const longerThanHeading = (slot) => Number(slot.maxCharacters) > HEADING_MAX_CHARACTERS
 
-function editorialTextRole(slot) {
+/** A value of one row of a repeatable field (a Joomla json path ending in the row's index). */
+const inRepeatedRow = (slot) => Array.isArray(slot.jsonPath) && Number.isInteger(slot.jsonPath.at(-1))
+
+function editorialTextRole(slot, vocabulary3) {
   const xpath = String(slot.xpath ?? '')
   const field = fieldOf(slot)
   const words = wordsOf(field)
   const tag = tagOf(xpath)
   const hasWord = (set) => words.some((w) => set.has(w))
 
+  // The icon class of a row (a social network's `fa fa-...`): version 3 names it; a single icon option is a setting.
+  if (vocabulary3 && words.includes('icon') && inRepeatedRow(slot)) return 'editorial.item_icon'
   if (words.some((w) => TECHNICAL_WORDS.has(w))) return null
   if (inNavigation(xpath, slot) && (tag === 'a' || hasWord(HEADING_WORDS) || slot.column === 'title'))
     return 'editorial.menu_label'
@@ -163,6 +168,23 @@ export function editorialRoleOf(slot, { vocabulary3 = false } = {}) {
   // Version 3 split the decorative image: a picture no signal marks as a design element may be replaced (the Slot fit
   // audit marks the icons, shapes and textures).
   if (slot.type === 'image') return vocabulary3 ? 'editorial.illustration' : 'editorial.decorative_image'
-  if (slot.type === 'text') return editorialTextRole(slot)
+  if (slot.type === 'text') return editorialTextRole(slot, vocabulary3)
   return null
+}
+
+/**
+ * The row of a repeatable Joomla field a slot sits in, or `null` outside one: its entity, its json path with the row's
+ * own field name dropped from the last name (`social-intro[font-icon]` and `social-intro[title]` are both the row
+ * `social-intro`; `hero[social-intro][font-icon]` is `hero[social-intro]`), and the row's index. Two slots with the
+ * same row are the parts of one repeated item: a social network's label, link and icon.
+ * @param {any} slot a content map slot
+ * @returns {string | null}
+ */
+export function repeatedRowOf(slot) {
+  if (!slot || !inRepeatedRow(slot) || slot.jsonPath.length < 2) return null
+  const field = slot.jsonPath.at(-2)
+  if (typeof field !== 'string') return null
+  const row = field.replace(/\[[^\][]*\]$/, '')
+  if (row === field) return null
+  return JSON.stringify([slot.entity ?? '', ...slot.jsonPath.slice(0, -2), row, slot.jsonPath.at(-1)])
 }

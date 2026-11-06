@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-313-template-kit-image-looks",
+  "kind": "feat",
+  "title": "A template kit whose packed 1440 shots lack a current look reads kit-incomplete; writing looks keeps the approval",
+  "pr": 313,
+  "area": "ops/template-kit",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap apps/tracy-web/test/template-kit.test.mjs",
+    "S2: Read the line for the test whose name starts with 'every 1440 shot needs a current look'."
+  ],
+  "expect": [
+    "That test reports ok: a kit with a packed 1440 shot and no look (or a look whose sha256 is not the shot's) reads kit-incomplete with params.missingLooks naming it as missing or stale; once every shot has a current look the step reads kit-approved again, with the same approval."
+  ],
+  "selectors": {},
+  "evidence": "Measured 03/11/2026: the committed JA Boxing 1.0.10 kit had no looks; after cli.mjs looks --apply, looks --list reports 0 shots without a current look.",
+  "fence": "apps/tracy-web/src/lib/template-kit/reader.js looksMissingOf and road-step.js judge looks after the template gaps and before the approval.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/template-kit.test.mjs"],
+    "tests": ["every 1440 shot needs a current look"]
+  }
+}

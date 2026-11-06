@@ -1,0 +1,79 @@
+{
+  "id": "tracy-restaurant",
+  "label": "JA Restaurant",
+  "version": "1.0.0",
+  "locales": ["en"],
+  "defaultLocale": "en",
+  "site": {
+    "title": "JA Restaurant",
+    "tagline": ""
+  },
+  "contentOrder": [
+    "chrome",
+    "posts",
+    "pages",
+    "slideshow",
+    "hero",
+    "features_intro",
+    "menu",
+    "tabs",
+    "testimonials",
+    "statistics",
+    "teams",
+    "timeline",
+    "opentime",
+    "opentable",
+    "happyhours",
+    "masthead",
+    "banner",
+    "category_info",
+    "contact",
+    "reservation",
+    "subscribe"
+  ],
+  "forms": {
+    "file": "tools/forms.json",
+    "bindings": [
+      {
+        "form": "contact-{locale}",
+        "collection": "contact",
+        "slug": "contact",
+        "field": "form_id"
+      },
+      {
+        "form": "subscribe-{locale}",
+        "collection": "subscribe",
+        "slug": "subscribe",
+        "field": "form_id"
+      }
+    ]
+  },
+  "mail": {
+    "fromEmail": "no-reply@ja-restaurant.example",
+    "fromName": "JA Restaurant",
+    "notifyTest": "hello@ja-restaurant.example"
+  },
+  "audit": {
+    "indexable": ["^/(?!search)(?!explore/j-pages/smart-search)(?!404$).*"],
+    "noindex": ["^/(search|explore/j-pages/smart-search)"],
+    "notFound": ["^/404$"],
+    "canonicalQuery": ["page"],
+    "unknownProbes": ["/blog/nope", "/gallery/nope", "/menu/nope"],
+    "alternates": "all-locales"
+  },
+  "qa": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      },
+      "storageKey": "tracy-restaurant-theme"
+    },
+    "expectedStatus": {
+      "/404": 404
+    }
+  },
+  "$comment": "Template identity and site-specific wiring read by the generic tools (tools/*.mjs, *.sh). Demo content: the JA Restaurant sample site (RES Bar & Restaurant, Brooklyn)."
+}

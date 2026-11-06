@@ -1024,6 +1024,16 @@ function resolveCapabilities(catalog, requested, inventory, executors = []) {
 
 // ../tracy-site-build-core/src/host/design-systems-switch.mjs
 import { readFileSync as readFileSync3 } from "node:fs";
+function withoutTrailingSlashes(s) {
+  let end = s.length;
+  while (end > 0 && s[end - 1] === "/") end -= 1;
+  return s.slice(0, end);
+}
+function withoutTrailingDotsAndSpace(s) {
+  let end = s.length;
+  while (end > 0 && (s[end - 1] === "." || /\s/.test(s[end - 1]))) end -= 1;
+  return s.slice(0, end);
+}
 function tracyOriginOf(config) {
   if (config.tracyOrigin) return config.tracyOrigin;
   const own = process.env.MCP_TRACY_ORIGIN?.trim();
@@ -1040,7 +1050,7 @@ function tracyOriginOf(config) {
 async function designSystemsShown(origin, fetchImpl = fetch) {
   if (!origin) return false;
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, "")}/api/design-systems`, {
+    const response = await fetchImpl(`${withoutTrailingSlashes(origin)}/api/design-systems`, {
       headers: { accept: "application/json" }
     });
     if (!response.ok) return false;
@@ -2964,7 +2974,7 @@ function provisionTodos(step, detail, lang) {
   const said = wordsFor(lang).provision;
   const lines = PROVISION_STEPS.slice(0, -1).map(([, key]) => said[key] ?? key);
   if (step === "failed") {
-    const why = detail.replace(/[.\s]+$/, "");
+    const why = withoutTrailingDotsAndSpace(detail);
     return [
       ...lines.map((content, i) => ({
         content,
@@ -3051,7 +3061,7 @@ function rootForRequest(url, sessions, fallback) {
 function parseRoute(prefix, method, url) {
   const pathname = (url ?? "").split("?")[0] ?? "";
   if (!pathname.startsWith(prefix)) return null;
-  const rest = pathname.slice(prefix.length).replace(/^\/+/, "").replace(/\/+$/, "");
+  const rest = withoutTrailingSlashes(pathname.slice(prefix.length).replace(/^\/+/, ""));
   if (method === "POST" && rest === "start") return "start";
   if (method === "GET" && rest === "job") return "job";
   if (method === "POST" && rest === "answers") return "answers";

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Example Boxing Club</title>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font: 16px sans-serif; }
+  h1, h2 { margin: 0; }
+  #t4-header { position: sticky; top: 0; height: 80px; background: #222; color: #fff; z-index: 10; }
+  .t4-header-r { float: right; width: 200px; height: 40px; }
+  .t4-offcanvas { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; transform: translateX(-100%); }
+  .hero { height: 600px; background: #a33; }
+  .section { height: 700px; border-top: 1px solid #ccc; }
+  #back-to-top { position: fixed; right: 16px; bottom: 16px; width: 40px; height: 40px; background: #000; }
+  .only-wide { display: block; height: 300px; }
+  .cards { display: flex; flex-wrap: wrap; justify-content: center; }
+  .card { width: 300px; height: 200px; }
+  @media (max-width: 600px) { .only-wide { display: none; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="t4-offcanvas"><div class="t4-module module" id="Mod90"><a href="/">Home</a></div></div>
+  <div id="t4-header" class="t4-section t4-header">
+    <header><a href="/">Example Boxing Club</a><div class="t4-header-r"><a href="tel:+10000000">Call us</a></div></header>
+  </div>
+  <div id="acm-hero-wrap-20" class="hero"><h1>Train like a champion</h1></div>
+  <div class="section"><div class="t4-module module" id="Mod21"><div id="acm-features-21"><h2>Classes</h2></div></div></div>
+  <div class="section only-wide"><div class="t4-module module" id="Mod22"><h2>Schedule</h2></div></div>
+  <div class="section"><div class="t4-module module" id="Mod26"><div class="cards"><div class="card item-1"><a href="/index.php/coaches/alex">Read more</a></div><div class="card item-2"><a href="/index.php/coaches/sam">Read more</a></div><div class="card item-3"><a href="/index.php/coaches/kim">Read more</a></div></div></div></div>
+  <div class="section"><div class="t4-module module" id="Mod30"><div class="tab-content"><div class="tab-pane active mod-31"><h2>Plans</h2></div><div class="tab-pane mod-32">Kids</div></div></div></div>
+  <div class="section"><div class="t4-copyright">Copyright Example Boxing Club</div></div>
+</main>
+<a id="back-to-top" href="#top">Top</a>
+</body>
+</html>

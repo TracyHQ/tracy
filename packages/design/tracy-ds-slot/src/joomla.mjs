@@ -28,6 +28,7 @@ import {
 } from './emit.mjs'
 import { autoPaletteCss, roleValues, splitTop } from './auto-palette.mjs'
 import { bandColours, bandRules } from './bands.mjs'
+import { brandKeptRules, brandPageAccent } from './brand.mjs'
 import { gate } from './normalise.mjs'
 import { addWornRoles, facesOf } from './role-values.mjs'
 import { omittedRoles } from './role-variables.mjs'
@@ -238,10 +239,20 @@ const notJoined = (/** @type {string | string[]} */ list) =>
 /**
  * `css` is the readable sheet (each side of a two-mode template whole); `sheet` is what the module's <style>
  * carries before nestNots (for two modes: side-merge.mjs, the same rules on each side in fewer bytes).
+ * `options.brand`: brand mode (src/brand.mjs) — the bands the contract keeps take the profile's accent in the
+ * accent role; off (the Design system button), the module is byte for byte what it was before brand mode.
+ * @param {any} profile
+ * @param {Record<string, string>} base
+ * @param {Record<string, any>} contract
+ * `options.accentOnly`: accent-only mode (brand mode's page and band accent handling, on a profile built by
+ * `brandProfile(..., { accentOnly: true })`): only the accent family differs from the template's own palette.
+ * @param {{ brand?: boolean, accentOnly?: boolean }} [options]
  * @returns {{ html: string, css: string, sheet: string, fontsHref: string | null, adjusted: string[] } | { refused: string[] }}
  */
-export function joomlaSlot(profile, base, contract) {
-  const g = gate(profile)
+export function joomlaSlot(profile, base, contract, options = {}) {
+  const accentOnly = options?.accentOnly === true
+  const brand = options?.brand === true || accentOnly
+  const g = gate(profile, { keepOwnText: accentOnly })
   if (!g.ok) return { refused: g.reasons }
   const href = fontsHref(profile)
   const head = `/* tracy-ds-slot: ${profile.id.replace(/[^a-z0-9:-]/gi, '')} */`
@@ -253,13 +264,15 @@ export function joomlaSlot(profile, base, contract) {
   let mode
   if (contract.modes === true) {
     // a template with a light/dark switch (sides.mjs): both modes, the switch kept
-    const two = twoSides(profile, (p) => joomlaSheet(p, base, contract), contract, { shared: true })
+    const two = twoSides(profile, (p) => joomlaSheet(p, base, contract, brand, accentOnly), contract, {
+      shared: true
+    })
     css = `${head}\n${two.css}`
     sheet = `${head}\n${two.shared}`
     adjusted = [...two.own.adjusted, ...two.derived.adjusted.map((a) => `derived:${a}`)]
     mode = two.mode
   } else {
-    const one = joomlaSheet(profile, base, contract)
+    const one = joomlaSheet(profile, base, contract, brand, accentOnly)
     css = `${head}\n${one.css}`
     sheet = css
     adjusted = one.adjusted
@@ -299,7 +312,7 @@ export const MODULE_MAX_BYTES = 64000
  */
 export function nestNots(css) {
   // \u0000 guard \u0001 rules \u0002 marks a block while the neighbours are merged
-  const marked = css.replace(/([^{}]+)\{([^{}]*)\}/g, (whole, selectors, body) => {
+  const marked = replaceFlatRules(css, (whole, selectors, body) => {
     // whitespace and comments before the selectors stay where they are: a sheet's `/* mode: dark */` line
     // went into the first guard's block (JA Kinetic WordPress, whose side condition reads as a guard)
     const lead = /^(?:\s|\/\*[\s\S]*?\*\/)*/.exec(selectors)[0]
@@ -314,18 +327,92 @@ export function nestNots(css) {
     return guard ? `${lead}\u0000${guard}\u0001${own.join(',')}{${body}}\u0002` : whole
   })
   // the markers are control characters on purpose: no CSS holds them
-  // oxlint-disable-next-line no-control-regex
-  const neighbours = /\u0000([^\u0001]*)\u0001[^\u0002]*\u0002(?:\s*\u0000\1\u0001[^\u0002]*\u0002)+/g
-  // oxlint-disable-next-line no-control-regex
-  const block = /\u0000[^\u0001]*\u0001([^\u0002]*)\u0002/g
-  // oxlint-disable-next-line no-control-regex
-  const unmark = /\u0000([^\u0001]*)\u0001([^\u0002]*)\u0002/g
-  return marked
-    .replace(neighbours, (run, guard) => {
-      const rules = [...run.matchAll(block)].map((m) => m[1])
-      return `\u0000${guard}\u0001${rules.join('')}\u0002`
-    })
-    .replace(unmark, '$1{$2}')
+  const pieces = markedPieces(marked)
+  let out = ''
+  for (let i = 0; i < pieces.length; i++) {
+    const piece = pieces[i]
+    if (typeof piece === 'string') {
+      out += piece
+      continue
+    }
+    // the blocks after it under the same guard, with nothing but whitespace between, join it
+    let rules = piece.rules
+    for (;;) {
+      const gap = typeof pieces[i + 1] === 'string' && /^\s*$/.test(pieces[i + 1]) ? 1 : 0
+      const next = pieces[i + 1 + gap]
+      if (!next || typeof next === 'string' || next.guard !== piece.guard) break
+      rules += next.rules
+      i += 1 + gap
+    }
+    out += `${piece.guard}{${rules}}`
+  }
+  return out
+}
+
+/**
+ * The marked sheet of `nestNots` as its pieces: the text between blocks, and each block `\u0000 guard \u0001
+ * rules \u0002` as `{guard, rules}` (the guard up to the first `\u0001`, the rules up to the first `\u0002`
+ * after it), read in one pass: the patterns that read them went back over a long run of markers once for each
+ * marker in it.
+ * @param {string} marked
+ * @returns {(string | {guard: string, rules: string})[]}
+ */
+export function markedPieces(marked) {
+  const pieces = []
+  let at = 0
+  while (at < marked.length) {
+    const open = marked.indexOf('\u0000', at)
+    const mid = open < 0 ? -1 : marked.indexOf('\u0001', open + 1)
+    const close = mid < 0 ? -1 : marked.indexOf('\u0002', mid + 1)
+    if (close < 0) {
+      pieces.push(marked.slice(at))
+      break
+    }
+    if (open > at) pieces.push(marked.slice(at, open))
+    pieces.push({ guard: marked.slice(open + 1, mid), rules: marked.slice(mid + 1, close) })
+    at = close + 1
+  }
+  return pieces
+}
+
+/**
+ * `css.replace(/([^{}]+)\{([^{}]*)\}/g, fn)`, each rule with no block inside it handed to `fn` as
+ * (whole, selectors, body), read in one pass: the regex went back over a long text with no brace once for
+ * each place in it.
+ * @param {string} css
+ * @param {(whole: string, selectors: string, body: string) => string} fn
+ */
+export function replaceFlatRules(css, fn) {
+  const nextBrace = (from) => {
+    for (let k = from; k < css.length; k++) if (css[k] === '{' || css[k] === '}') return k
+    return -1
+  }
+  let out = ''
+  let done = 0
+  let at = 0
+  while (at < css.length) {
+    // a rule starts on a character that is not a brace and runs to the `{` its selectors end on
+    if (css[at] === '{' || css[at] === '}') {
+      at++
+      continue
+    }
+    const open = nextBrace(at)
+    if (open < 0) break
+    // every start before this brace meets the same brace: past it when it does not open a rule
+    if (css[open] === '}') {
+      at = open + 1
+      continue
+    }
+    const close = nextBrace(open + 1)
+    if (close < 0) break
+    if (css[close] === '{') {
+      at = open + 1
+      continue
+    }
+    out += css.slice(done, at) + fn(css.slice(at, close + 1), css.slice(at, open), css.slice(open + 1, close))
+    done = at = close + 1
+  }
+  return out + css.slice(done)
 }
 
 /**
@@ -354,9 +441,10 @@ function trailingNot(s) {
 /**
  * The module sheet for one profile, without its header line. A one-look contract hides the
  * template's switch; a two-mode one (`modes`) leaves it, each side written by its own call.
+ * `brandMode`: brand mode (joomlaSlot). `accentOnly`: accent-only mode (joomlaSlot), which also keeps the ink band.
  * @returns {{ css: string, adjusted: string[] }}
  */
-function joomlaSheet(profile, base, contract) {
+function joomlaSheet(profile, base, contract, brandMode = false, accentOnly = false) {
   const { tokens, text, palette: wornPalette } = tokens56(profile, base)
   const sv = slotVars(profile, templateSizes(contract))
   const sel = contract.selectors ?? {}
@@ -431,7 +519,12 @@ function joomlaSheet(profile, base, contract) {
   // system that states its display size (every OpenDesign one since 13/10/2026) wore it nowhere on a
   // contract without displaySize (JA Company: 36px under BMW's 60)
   const displaySize = sel.displaySize ?? contract.roles?.display ?? null
-  const bands = bandRules(contract, tokens, HI, page)
+  const bands = bandRules(contract, tokens, HI, brandMode ? { ...page, brand: true } : page)
+  // brand mode: the accent role inside each kept band (brand.mjs), after keepRules so it wins at the same weight
+  const branded = brandMode ? brandKeptRules(contract, tokens, base, HI, page) : { rules: [], adjusted: [] }
+  // brand mode: the page's own accent words and fills made readable keeping the brand hue (brand.mjs), after
+  // the kept bands, which judge the brand accent as stated on their own grounds
+  if (brandMode) branded.adjusted.push(...brandPageAccent(tokens, text))
   const wornKeys = [...Object.keys(bands.grounds), ...Object.keys(bands.media ?? {})]
 
   // A template that reads the 56 names (tracy-base) gets them; a JA template may define those short
@@ -477,7 +570,7 @@ function joomlaSheet(profile, base, contract) {
   // every standard role variable the sheet does not write yet (role-values.mjs), as literals of this
   // side: a template that reads the roles finds a whole set, a template that does not reads none of
   // them; ink, its words and the accent on it always together, from the same ink, on every contract
-  addWornRoles(vars, { tokens, text, palette: wornPalette }, sv, facesOf(profile))
+  addWornRoles(vars, { tokens, text, palette: wornPalette, keepInk: accentOnly }, sv, facesOf(profile))
   // an optional role the template does not read, left out where the module has no bytes to spare
   // (`omit`, as on EmDash): JA Impact two-mode sat 17 bytes under MODULE_MAX_BYTES before
   // --ds-c-surface-hover (20/10/2026). Only optional roles: a required one is always written
@@ -552,6 +645,7 @@ function joomlaSheet(profile, base, contract) {
     // system band): a dark system's page is dark however the visitor's own system is set
     `${HI}{color-scheme:${wornPalette.dark === true ? 'dark' : 'light'}}`,
     ...keepRules(contract, HI),
+    ...branded.rules,
     // every colour of the template's own stylesheets, mapped to the system by role (auto-palette.mjs);
     // before the contract's named rules, which win where they state something
     autoPaletteCss(contract.autoPalette, {
@@ -858,5 +952,5 @@ function joomlaSheet(profile, base, contract) {
   ]
     .filter(Boolean)
     .join('\n')
-  return { css, adjusted: text.adjusted }
+  return { css, adjusted: brandMode ? [...text.adjusted, ...branded.adjusted] : text.adjusted }
 }

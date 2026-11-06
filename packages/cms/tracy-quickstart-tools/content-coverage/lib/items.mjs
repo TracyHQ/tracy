@@ -7,6 +7,9 @@ const keyOf = (it, siteUrl) => {
   return `${it.kind}|${it.attr ?? ''}|${normText(it.value)}`
 }
 
+/** A block's chrome id (Joomla: `Mod160`, `mod-articles-160`, `module-160`; T4 ACM: `acm-hero-wrap-156`). */
+export const BLOCK_CHROME = /^(?:mod|module)[-_a-z]*\d+$|^acm-[-_a-z]*\d+$/i
+
 /** Collapse repeated items (slider clones, menus rendered twice) per viewport, then union viewports. */
 export function mergeViewports(byViewport, siteUrl) {
   const merged = new Map()
@@ -34,6 +37,16 @@ export function mergeViewports(byViewport, siteUrl) {
       }
       // Printed inside a shop's catalogue markup on any viewport: the zone holds for the merged item.
       if (it.zone && !m.zone) m.zone = it.zone
+      // The blocks every copy sits in (the item lists read them), and per copy its nearest block chrome id, '' for a
+      // copy outside every block (the page body): a listing page's cards are the body's.
+      if (it.scopes?.length) m.scopes = [...new Set([...(m.scopes ?? []), ...it.scopes])]
+      if (Array.isArray(it.scopes)) {
+        const home = it.scopes.find((s) => BLOCK_CHROME.test(s)) ?? ''
+        if (!(m.homes ??= []).includes(home)) m.homes.push(home)
+        // The role of the body's own copy, a menu's only when every body copy is one: a card title a header mega menu
+        // (outside every block too) or an off-canvas menu also prints is met as the menu's copy first.
+        if (home === '' && (m.bodyRole === undefined || m.bodyRole === 'nav')) m.bodyRole = it.role
+      }
       const v = (m.viewports[vp] ??= { visible: false, count: 0, rect: null, selector: it.selector })
       v.count++
       // What the page measured of the picture's own file (Slot fit), the same on every viewport.

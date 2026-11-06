@@ -47,4 +47,15 @@ test('malformed metadata and unsafe import URLs cannot prefill a form', () => {
     assert.equal(chatDraftOf({ ...raw, ...delta }), undefined)
   assert.equal(chatDraftOf({ ...raw, importUrl: 'https://user:secret@example.test/' }).importUrl, undefined)
   assert.equal(chatDraftOf({ ...raw, importUrl: 'https://example.test/' }).importUrl, 'https://example.test')
+  // The folder a site is installed in reaches the address field (#202); an admin page never does.
+  assert.equal(
+    chatDraftOf({ ...raw, importUrl: 'https://example.test/shop/' }).importUrl,
+    'https://example.test/shop/'
+  )
+  assert.equal(
+    chatDraftOf({ ...raw, importUrl: 'https://example.test/shop' }).importUrl,
+    'https://example.test/shop/'
+  )
+  assert.equal(chatDraftOf({ ...raw, importUrl: 'https://example.test/shop/wp-admin/' }).importUrl, undefined)
+  assert.equal(chatDraftOf({ ...raw, importUrl: 'https://example.test/shop/?p=1' }).importUrl, undefined)
 })

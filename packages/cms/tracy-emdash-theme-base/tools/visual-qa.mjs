@@ -13,6 +13,11 @@
 //        [--scope full|fast-gate] [--pages id,id] [--fast-gate <fast-gate run-dir>] [--config template.config.json]
 //        [--scans white,darktext,contrast,border,seam,hover] [--contrast-min 3] [--border-luma 80]
 //        [--stage light-desktop[,…]] [--all-stages] [--reuse <earlier out-dir>] [--tile-height 1200]
+//        [--verbose]
+//
+// Output: one summary line, `visual-qa run: pass|fail pages=… axes=… findings=… distinct=… -> <out>/VISUAL.md`;
+// the complete result is visual.json beside it. `--verbose` adds the per-axis (`ok`/`FAIL`/`same`) and
+// per-stage (`== stage`) lines and the JSON summary. Exit codes do not depend on it.
 //
 // Tiles: every picture a lens consumes is also cut into ≤ --tile-height px strips under
 // shots/<page>--<variant>[--source]/<n>.png, listed in index.json `tiles`. A reader downsamples a
@@ -47,6 +52,8 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { pathToFileURL } from 'node:url'
 import { contractHash } from './qa-contract.mjs'
+import { shownPath } from './distribution.mjs'
+import { summaryLine, takeVerbose } from './cli-output.mjs'
 import { resolveFastGate, planMarkdown } from './fast-gate.mjs'
 import {
   browserIdentity,
@@ -83,6 +90,8 @@ const execFileP = promisify(execFile)
 const HERE = path.dirname(new URL(import.meta.url).pathname)
 
 const argv = process.argv.slice(2)
+const verbose = takeVerbose(argv)
+const say = (line) => verbose && console.log(line)
 const opt = (name, dflt) => {
   const i = argv.indexOf(name)
   if (i < 0) return dflt
@@ -111,7 +120,7 @@ const configFile = opt('--config', 'template.config.json')
 const config = loadConfig(configFile)
 if (!site || !out || existsSync(out)) {
   console.error(
-    'usage: visual-qa.mjs --contract qa.contract.json --site <origin> --out <new-dir> [--source-site <origin>] [--pages a,b]'
+    'usage: visual-qa.mjs --contract qa.contract.json --site <origin> --out <new-dir> [--source-site <origin>] [--pages a,b] [--verbose]'
   )
   process.exit(2)
 }
@@ -163,7 +172,7 @@ if (fastGateRun) {
     console.error(`fast gate ${fastGateRun} is stale or not clean: ${stale.join('; ')}`)
     process.exit(2)
   }
-  fastGate = { run: path.resolve(fastGateRun), verdictAt: v.at ?? null, contractHash: v.contractHash }
+  fastGate = { run: shownPath(fastGateRun), verdictAt: v.at ?? null, contractHash: v.contractHash }
 } else if (scope.kind === 'full')
   console.error('note: no --fast-gate cited; the workflow expects a clean fast gate before a full run')
 mkdirSync(path.join(out, 'shots'), { recursive: true })
@@ -1141,9 +1150,7 @@ try {
           summary.components += axis.components.length
           summary.findings += axis.findings.length
           summary.unclassified += axis.coverage?.unclassified?.length ?? 0
-          console.log(
-            `same ${spec.id} ${axis.variant} (reused from ${reuseDir}) findings=${axis.findings.length}`
-          )
+          say(`same ${spec.id} ${axis.variant} (reused from ${reuseDir}) findings=${axis.findings.length}`)
         }
         continue
       }
@@ -1161,13 +1168,13 @@ try {
         pageReport.axes.push(axis)
         pageReport.findings.push(...axis.findings.map((f) => ({ ...f, axis: variant.id })))
         for (const f of axis.findings) distinctKeys.add(distinctKey(f))
-        console.log(
+        say(
           `${axis.findings.length ? 'FAIL' : 'ok  '} ${spec.id} ${variant.id} components=${axis.components.length} unclassified=${axis.coverage?.unclassified?.length ?? '-'} findings=${axis.findings.length}`
         )
       }
     }
     st.status = st.findings ? 'fail' : 'pass'
-    console.log(
+    say(
       `== stage ${st.id}: ${st.status} (pages ${st.pages}, axes ${st.axes}, reused ${st.reused}, findings ${st.findings})`
     )
   }
@@ -1472,11 +1479,29 @@ writeFileSync(
     '|---|---|---|---|---|---|---|---|---|',
     ...machine.map(
       (m) =>
-        `| ${m.id} | ${m.lens} | ${m.page} | ${m.axis} | ${m.what.replace(/\|/g, '\\|')} | ${m.fix} | ${m.verify} | ${m.status} | |`
+        `| ${m.id} | ${m.lens} | ${m.page} | ${m.axis} | ${m.what.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')} | ${m.fix} | ${m.verify} | ${m.status} | |`
     ),
     machine.length ? '' : 'none',
     ''
   ].join('\n')
 )
-console.log(JSON.stringify(summary))
+say(JSON.stringify(summary))
+console.log(
+  summaryLine(
+    'visual-qa',
+    'run',
+    {
+      status: summary.findings ? 'fail' : 'pass',
+      scope: scope.kind,
+      pages: summary.pages,
+      axes: summary.axes,
+      reused: summary.reused,
+      findings: summary.findings,
+      distinct: summary.distinct,
+      unclassified: summary.unclassified,
+      stages: summary.stages
+    },
+    path.join(out, 'VISUAL.md')
+  )
+)
 process.exit(summary.findings ? 1 : 0)

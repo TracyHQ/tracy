@@ -136,12 +136,14 @@ jobs:
   # dev dsh under everyone's sessions, and held the next merge's build in this workflow's
   # concurrency group for 24 more minutes.
   decide:
-    # `tracy-check`, not `tracy-build` — changed 2026-09-21. This job asks the REGISTRY whether a
+    # GitHub-hosted, not self-hosted — changed 2026-11-04. This job asks the REGISTRY whether a
     # tag exists; `docker manifest inspect` is a registry client and needs no daemon. Measured on
     # j-static: `docker run -e DOCKER_HOST=unix:///nonexistent docker:cli manifest inspect
-    # alpine:latest` exits 0 with the full manifest. So a 20-second decision does not have to
-    # occupy one of the few machines that hold the docker socket.
-    runs-on: [self-hosted, linux, tracy-check, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    # alpine:latest` exits 0 with the full manifest. So a 20-second decision needs no machine of
+    # ours. It ran on `tracy-check` until every runner with that label went offline (02/11) and
+    # every build since 30/10 sat queued here, while `build` and the deploys below already had a
+    # runner on the dev host. The repo is public, so a hosted runner costs nothing.
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
@@ -151,7 +153,7 @@ jobs:
       skip: ${{ steps.registry.outputs.skip }}
     steps:
       - name: Checkout (without submodules)
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
 
@@ -209,7 +211,7 @@ jobs:
 
     steps:
       - name: Checkout (without submodules)
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
 
@@ -498,7 +500,7 @@ jobs:
       packages: read
     steps:
       - name: Checkout (without submodules)
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
 
@@ -594,7 +596,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       - uses: ./.github/actions/deploy-host-dsh
@@ -627,7 +629,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       - uses: ./.github/actions/deploy-host-dsh
@@ -657,7 +659,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       - uses: ./.github/actions/deploy-host-dsh

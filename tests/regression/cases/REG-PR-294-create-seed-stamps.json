@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-294-create-seed-stamps",
+  "kind": "fix",
+  "title": "A create's seed names what the CMS stamps on the record itself, on WordPress and Joomla",
+  "pr": 294,
+  "area": "sync/push",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-push-changeset cases: a new page, picture and menu item; a new template part, synced pattern and Additional CSS; a new Joomla article and redirect."
+  ],
+  "expect": [
+    "WordPress posts: guid, post_author, post_date_gmt, post_modified, post_modified_gmt; the other kinds the four times, guid and post_author, a menu item also post_name; Joomla article the times and author columns; redirect created_date and modified_date."
+  ],
+  "selectors": {},
+  "evidence": "Issue #223 re-test; measured on two real WordPress 7.1 sites through the Claude Cowork writer",
+  "fence": "live_push.py CREATE_STAMPS, W_CREATE_STAMPS",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#223|each waits for what it names|new article in a new category",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": [
+      "WordPress: a new page with a new picture, a new category and a menu entry",
+      "WordPress: a new template part, Additional CSS and synced pattern name what WordPress stamps on them",
+      "Joomla: a new redirect names the dates Joomla stamps on it",
+      "Joomla: a new article in a new category is two creates"
+    ]
+  }
+}

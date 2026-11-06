@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-293-template-kit-single-label-source",
+  "kind": "fix",
+  "title": "A template kit names a link's label slot only in links[].labelId; a link that shows words with neither a label slot nor a fixed-text reason fails linksWithoutLabel",
+  "pr": 293,
+  "area": "quickstart/template-kit",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout (no stand, no site, no browser) run: node --test --test-concurrency=1 packages/cms/tracy-quickstart-tools/test/template-kit-link-label-reasons.test.mjs packages/cms/tracy-quickstart-tools/test/template-kit-coverage-gate.test.mjs",
+    "S2: Read the summary lines `pass` and `fail`."
+  ],
+  "expect": [
+    "S2: fail 0.",
+    "`a phone link names its block slot: words without a letter pick only a slot of the block` passes.",
+    "`the check counts a link with words and neither a label slot nor a reason, and a label slot outside its block` passes.",
+    "`relabel drops every labelOf copy, and a settled kit passes the check` passes.",
+    "`a link label owned by another block is listed in the link block as a reference, never a second owner` passes (no labelOf in the gate's output)."
+  ],
+  "selectors": {
+    "check": "template-kit.json checks.linksWithoutLabel",
+    "label": "blocks[].links[].labelId",
+    "reason": "blocks[].links[].fixedLabel {rule, reason}"
+  },
+  "evidence": "JA Boxing 1.0.10 kit before the fix: 254 links with labelId, 80 of them in no slot's labelOf; 3 phone links named no slot. After relabel: 257 with labelId, 135 with fixedLabel, linksWithoutLabel 0, image digest equal to the approval.",
+  "fence": "packages/cms/tracy-quickstart-tools/template-kit/lib/link-label-reasons.mjs (fixedLinkLabels, linkLabelChecks, relabelKit) and link-label-slots.mjs (labelResolver)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-link-label-reasons.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-coverage-gate.test.mjs"
+    ]
+  }
+}

@@ -36,6 +36,11 @@ sources:
   - packages/wo/website-opportunities/src/executor.js
   - apps/tracy-web/src/lib/customize-readiness.js
   - apps/tracy-web/src/lib/design-system-readiness.js
+  - apps/tracy-web/src/site-planner/bench-worker.js
+  - apps/tracy-web/src/site-planner/bench-cli.js
+  - apps/tracy-web/src/site-planner/kit-images.js
+  - apps/tracy-web/src/lib/agent-over-door.js
+  - apps/tracy-web/scripts/site-planner-bench.mjs
   - apps/tracy-host/src/app.js
   - apps/tracy-host/src/jobs.js
   - packages/bundle/tracy-native/cordis.patch.yml
@@ -792,6 +797,15 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `account_seen_hint` keeps the seen marks for step 2 of the tour (`site-tour`) and the voice hint (`voice-tip`), primary
   key `(account_id, hint)`, first time `seen_at`, deleted automatically when the account is deleted; the closed list of names
   is checked at the write door and by an SQL constraint. The existing `assistant_tip_seen` still keeps the separate `/help` hint.
+  Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
+  row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
+  failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,
+  never as bytes). Apart from the WO quality tables.
+  Site writer bench (migration 197, §8 *Site writer bench*): `site_writer_run` (plan, brief, kit and the rest of its inputs
+  frozen by a trigger; at most one queued row), `site_writer_round` (rounds 0 to 2: the `copy` file, check, failure list
+  sent, corrected entries applied), `site_writer_turn` (one row per model call, append-only), with the planner bench's shape.
+  Write step bench (migration 198, §8 *Write step bench*): `write_bench_site` (every trial site the bench made),
+  `write_bench_run` (one run with its write report; at most one running row per site).
   Website Opportunities (migration 125, §8): `wo_preference`, `wo_opportunity`, `wo_job`, `wo_job_attempt`,
   `wo_source`, `wo_media`, `wo_profile`, `wo_revision` (immutable, a trigger blocks UPDATE), `wo_build`. Migration 126: `wo_media.caption/alt/dhash/labels`, `wo_build.pictures` (immutable picture plan + receipts).
   Migration 175 (`/v1/demos`): `wo_public_demo` (one request: `Idempotency-Key`, fingerprint of the whole body, body snapshot, opportunity + demo action, `sponsored`/`reserved_cents`, cancellation), `wo_sponsor_setting` (one row: number of live demos per account, model budget), `wo_demo_usage.kind` adds `external`.
@@ -938,6 +952,18 @@ Without `SITE_MAIL_DOMAIN` nothing is sent; the helper rejects with `NO_SENDER` 
 carry the template's recipients (`tracy-business`: `sales@northgate-ind.ru` on all 80 forms), so the helper removes the recipients,
 turns off digests, drops the webhooks of every form, then reads back; submissions are still stored in the site for the owner to read. A site with no form plugin
 has nothing to do; any other error means the site is not marked ready.
+
+**EmDash Content API reads are kept in the site's process while its database is unchanged** (31/10/2026, templates Base 0.5.8,
+Business 1.7.25, SaaS 1.4.16): every read of `/_emdash/api/content/tracy-content-v1.json` needs the whole site's records (the
+snapshot revision covers them all), which cost about 3 s of the site's only Node process per read on dev (#252). The identity step
+of `platform/emdash.sh` (`tools/content-api/identity-sqlite.mjs init|fork`) now also creates `_tracy_content_changes` (one row:
+`nonce`, `n`) and three triggers on every table a native list or GET may read, which count each row written by any connection.
+The template's reader keeps the rows it read, per caller rights, under (nonce, count, schema cookie) and reads fresh when the key
+moved or any watched table lacks its triggers (a table created since, a site whose identity step ran on an older template). Tables
+only routine traffic writes are not watched (`_emdash_api_tokens`, sign-in, locks, logs, the media-usage index, and the
+scheduler's `system:scheduler:*` rows of `options`); the list is `UNWATCHED` in `tools/content-api/reader.mjs`. The cache is
+memory only and starts empty with the process. `redeploy-template.mjs` does not run the identity step, so a redeployed site
+reads fresh every time until `identity-sqlite.mjs init` runs in its web container.
 
 ### Invitations: sandbox and real campaigns kept separate in Ops, no real mail sent yet
 
@@ -2179,6 +2205,135 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   just because the inventoried regions were written successfully. The list of the three existing EmDash templates is unchanged.
   Backend checks/CMS reads do not replace paid E2E or acceptance of the three demos.
 
+### Site planner bench (03/11/2026, [ADR 0041](docs/adr/0041-site-planner-trial-bench-in-ops.md))
+
+A trial bench for the first step of the new brief-built flow: the approved planner prompt turns one brief into one site
+plan for one template kit, and the deterministic checker scores it. It builds no site and has **no screen, route or API
+endpoint**.
+
+- **Started and read from a command line** inside the tracy-web container:
+  [`scripts/site-planner-bench.mjs`](apps/tracy-web/scripts/site-planner-bench.mjs) (`kits`, `run`, `list`, `status`, `get`,
+  `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-planner/bench-cli.js)). It calls the bench service directly with the
+  container's `DATABASE_URL` and `SESSION_SECRET`. A plan is read off the server with the approved plan reader script.
+- **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-planner/bench-worker.js)) is a durable queue over
+  `site_planner_run` inside the tracy-web process (`app.sitePlannerQueue`, started by `server.js`): one run at a time, a
+  lease renewed every minute, 20 claims, so a redeploy mid-run resumes from the last saved turn. A call dispatched with no
+  answer is marked abandoned and sent once more; a second loss fails the run. A failing plan gets at most two fix rounds in
+  the same conversation.
+- **The model** is called through the `sitePlanner` door (`/ops` › Model & AI; by default `deepseek-flash` on the
+  `deepseek` provider, with `deepseek-v4-pro` and Claude through OpenRouter as alternatives) by
+  [`agent-over-door.js`](apps/tracy-web/src/lib/agent-over-door.js): an OpenAI-compatible `/chat/completions` tool loop
+  with the reasoning effort of the model's profile, reasoning sent back, and per call the provider's own cost or, on
+  DeepSeek's own API (streamed), one computed from DeepSeek's published prices. DeepSeek Flash reads the kit's text
+  looks with tool calls, at reasoning effort max. A run whose model reads no pictures (DeepSeek V4 Pro on DeepSeek's own API) gets the whole kit in its first message and
+  no tools; a run that reads with tools is told to write after 20 reading calls or a read of parts it already had. Every
+  run stops past its cost budget (2 USD by default). On DeepSeek's own API the bench also reads the account balance
+  (`GET /user/balance`) before and after a run and stores it on the run.
+- **Kit images** ([`kit-images.js`](apps/tracy-web/src/site-planner/kit-images.js)): the first time a kit version is needed,
+  tracy-web **downloads the kit zip from GitHub** (the `template-kit-<template>-<version>.zip` asset of the kit's quickstart
+  release, found through `quickstart_releases`, read with the releases credential), checks every image against the sha256 the
+  kit lists, and caches the images on disk in `<TRACY_READINESS_DIR>/site-planner-kit-images/<kit>/<digest>/`. Later runs
+  reuse the cache, checked again on use. A missing zip or any mismatch refuses `run` and fails a queued run with the reason,
+  before any model call. Turn rows keep a reference to each opened image; the bytes are read back from the cache when a run
+  resumes or a fix round replays the conversation. Images are never committed.
+
+### Site writer bench (03/11/2026, [ADR 0042](docs/adr/0042-site-writer-trial-bench-copy-contract-and-check.md))
+
+A trial bench for the writer step (#326): one agent writes the copy of a whole site from a frozen site plan into one
+`site-copy/1` file, and the copy check grades it. It builds no site and has **no screen, route or API endpoint**.
+
+- **Started and read from a command line** inside the tracy-web container:
+  [`scripts/site-writer-bench.mjs`](apps/tracy-web/scripts/site-writer-bench.mjs) (`run --plan-file --kit
+  --brief-file|--brief-revision`, `list`, `status`, `get`, `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-writer/bench-cli.js)).
+  `get` also writes the final `site-copy.json` and its Joomla contract mapping export (`mapping.json`).
+- **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-writer/bench-worker.js)) is the writer as a step of the shared
+  bench run loop (`lib/bench-run-loop.js`), its own durable queue over `site_writer_run` (`app.siteWriterQueue`, started
+  by `server.js`), one writer run at a time, parallel to the planner bench. Same guards: retries, resume from the last
+  saved turn, a 2 USD fuse, the DeepSeek balance before and after.
+- **The model** is called through the `siteWriter` door (`/ops` › Model & AI; by default `deepseek-flash` on the
+  `deepseek` provider, effort max), with no tools and no image: the first message carries the plan, the facts it cites,
+  the reviews it quotes, a slim view of the kit blocks it uses (with their look text) and the two handed-over name slots.
+  Code adds version, fingerprint and the plan's label slots; fix rounds apply only the writer's corrected entries.
+
+### Picture bench (03/11/2026, [ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md))
+
+A trial bench for the picture step (#336): every picture frame of a frozen site plan gets a file cut to the size the
+site needs, a hide, a return to the planner or a pending entry, written as one `site-pictures/1` manifest that the
+picture check grades. It builds no site, writes nothing to one and has **no screen, route or API endpoint**.
+
+- **Started and read from a command line** inside the tracy-web container:
+  [`scripts/site-pictures-bench.mjs`](apps/tracy-web/scripts/site-pictures-bench.mjs) (`run --plan-file --kit
+  --brief-file --photos | --brief-revision`, `list`, `status`, `get`, `cancel`;
+  [`bench-cli.js`](apps/tracy-web/src/site-pictures/bench-cli.js)). `get` copies the manifest, the picture files, each
+  round's check and the turns to an output folder.
+- **The worker** ([`bench-worker.js`](apps/tracy-web/src/site-pictures/bench-worker.js)) is the picture step as a step
+  of the shared bench run loop, its own durable queue over `site_picture_run` (`app.sitePicturesQueue`, started by
+  `server.js`, migration 198), one picture run at a time.
+- **Owner photo bytes** of a WO revision are read through the brief asset reader (`briefPictureBytes`,
+  `opportunities-build/brief-picture-labels.js`) from the media store, hash checked; a run on a brief file reads a folder
+  of files named by their sha256, which the CLI copies into the bench's file store when the run starts.
+- **A new store on disk**: the bench's file store ([`file-store.js`](apps/tracy-web/src/site-pictures/file-store.js)),
+  a folder in the container (`TRACY_PICTURE_BENCH_DIR`, default in the system's temporary directory) where every
+  picture file is named by its sha256, with one `site_picture_file` row per file (path, hash, bytes, cost). It is a
+  cache: a file gone from it is reported by `get`, never invented.
+- **Code first** (#340): any-real frames take owner photos by code, person frames a confirmed portrait or initials,
+  twins copy their source, frames the kit marks not writable are returned (a picture painted behind blocks is listed
+  in `siteSettings`); icon and cut-out frames stay pending for their own steps (#345, #346).
+- **The picker** (#342) is called through the `picturePicker` door (`/ops` › Model & AI; by default `deepseek-flash` on
+  the `deepseek` provider, effort max, no tools): one call per run with the owner photos as 512 px thumbnails and a code
+  shortlist per specific frame, never a demo picture of the kit. A run whose plan has no specific frame needs no door
+  and calls no model. Fix rounds send back only the picker's failing frames (at most two); the DeepSeek balance is read
+  before and after, as on the other benches. Migration 199 adds the door to the door check.
+- **Icons** (#345): icon frames get a Phosphor icon; the names code shortlists are ranked by one text call through the
+  `pictureIconRanker` door (`openai/gpt-6-luna`; unset, the shortlist order decides, migration 200), and the weight,
+  colour and plate are measured from the kit's demo icons, read once per kit release from the release's webroot tar.gz
+  (through the releases credential) and cached in the bench's file store.
+- **The looker** (#343) checks every finished owner photo or drawn picture through the `pictureLooker` door
+  (`openai/gpt-6-luna` through OpenRouter; mandatory, another maker than the picker's, else the run is refused): one
+  fresh call per picture, 4 at a time, with only the picture at display size and the plan's words; an unreadable look
+  is asked once more, then fails as "look unreadable". Its verdict, faults and seen sentence are stored on the entry;
+  rejections are rule L01 failures that go back to the picker in the fix rounds. The run's cost adds the looks and the
+  icon ranking to the picker's turns. `run --copy-file` passes a writer copy file whose alts are compared with the
+  seen sentences (`altNotes`). Migration 201 adds the door to the door check and the run's `copy` column.
+- **The drawer and the fallback ladder** (#344) finish every checked round before it is saved
+  ([`ladder-step.js`](apps/tracy-web/src/site-pictures/ladder-step.js), wrapped around the store's `saveRound` like the
+  looker, so the shared loop is unchanged). A specific frame no owner photo fits (or the picker answered "none") is
+  drawn through the `pictureDrawer` door (`google/gemini-3.1-flash-lite-image` through OpenRouter, about 0.034 USD a
+  picture, 4 at a time) from a fixed template filled only with the plan's words
+  ([`drawing-prompt.md`](apps/tracy-web/src/site-pictures/drawing-prompt.md)), or, for a wide band with a portrait owner
+  photo of its own offering, that photo is extended sideways (`owner-photo-extended`, its real part kept and recorded as
+  `realPart`). A run on a plan with specific frames does not start without the door, nor run when it changed. Frames with
+  text over the picture take darker photos first; a picture still too bright gets a dark overlay baked in (`darkened`,
+  `overlay`). A rejected frame then climbs its ladder: one redraw with the fault names, up to two other photos, one row
+  fewer (where the kit's list allows), hidden (where the kit allows), returned to the planner; any-real frames never
+  draw, person frames only hide or return. Each rung is recorded in `ladder`, dropped rows in `rows`, every drawing in
+  `drawer` and `cost.drawer`; the run's cost adds the drawings, and each drawn file's row its cost. Drawings and looks are
+  kept in the file store by key, so a later round or a resumed run pays once. Migration 202 adds the door.
+- **Cut-out frames** (#346) are drawn in the same finishing pass: a `specific` cut-out is drawn by the drawer on a flat
+  plain ground of one colour code chooses from the plan's words (chroma green, else magenta, else chroma blue), and code
+  removes the ground ([`cutout-ground.js`](apps/tracy-web/src/site-pictures/cutout-ground.js): a colour difference key
+  with a soft edge, colour unmixing and spill suppression), writing a PNG with alpha at the frame's size; a ground it
+  cannot remove cleanly (not plain, its colour in the figure, the figure touching the top or a side) is a failed draw.
+  The entry is `drawn` with `cutout: { ground, groundRemoved, ... }`; the looker sees it over checks and may name the
+  cut-out faults (rough edge, leftover ground, missing part, covers the text). A rejected cut-out is redrawn once, then
+  hidden where the kit allows, else returned; person and any-real cut-outs are never drawn. No background removal model,
+  no owner photo cut out, never a demo figure. A run on a plan with a specific cut-out does not start without the drawer
+  door.
+
+### Write step bench (04/11/2026, [ADR 0044](docs/adr/0044-write-step-and-site-check.md))
+
+A trial bench for step 9 of the new build flow, run only from `apps/tracy-web/scripts/write-step-bench.mjs` inside the
+tracy-web container; no customer flow reaches it. `create-site` makes a trial site by the customer's doors and records it.
+`run` takes frozen files and one of those sites and writes them through the Apply door as the bench account, in the
+command's own process: no worker and no server route of its own. It checks the files and builds the owner table first, so
+a bad file or a dispute writes nothing, then sends one `content.contract` apply. Slots the plugin refuses are dropped and
+the rest sent again, since that door is all or nothing; a refusal that names no slot stops the run. This slice writes the
+site copy's mapping only: hide decisions, link targets and the export's extras are reported as `skipped`. The result is the
+write report `site-write-report/1`, kept on the run row. `cancel` sets a flag on the row, read between phases, and the
+row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tracy-web/src/write-step/`, its command line
+`apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
+(`site-copy/`, `brand-accent/`, `picture-paint/`).
+
 ## 9. Sign-in, seats, permissions
 
 ### Credentials for external programs: seat key, MCP OAuth, account token (24/10/2026)
@@ -2379,6 +2534,16 @@ secret for any host, `dev` included. `HOST_DSH_GATEWAY` and `HOST_DSH_CONTAINER`
 it waits for; a second, prefixed dsh on the same machine must set all five variables `HOST_DSH_HOME`, `HOST_SITES_ROOT`,
 `HOST_DSH_ENV_FILE`, `HOST_DSH_GATEWAY`, `HOST_DSH_CONTAINER`, otherwise it keeps the first dsh's `dsh-passwords.env`.
 Details of each flag and the order for setting up a host: `packages/fleet/tracy-fleet-operation/dsh/HOST-DSH.md` §3.
+
+**The site agent's calls to tracy-web can stay on the machine (#208).** `MCP_TRACY_ORIGIN` stays the public origin
+people are sent to and read in messages; `MCP_TRACY_API_ORIGIN`, when set to a bare http(s) origin, is where the Apply
+door (`tracy-site-tools` `applyDoorOnce`) sends its calls instead. The whole-machine stack (`deploy/compose.yml`) sets
+it to `http://tracy-web:8080`, which `tracy-dsh` reaches on the stack's own `tracy` network. A host dsh (`host-dsh.yml`,
+its own compose project) takes it from `HOST_TRACY_API_ORIGIN` in `host-dsh.env`. Left empty, a fleet dsh
+(`MCP_TRACY_FLEET=1`) finds tracy-web by itself: every server stack joins tracy-web to dsh's network under the name
+`tracy-web` (`deploy/compose.server.yml`), so while that name resolves calls go to `http://tracy-web:8080`; on a shard
+whose tracy-web lives on another machine the name does not resolve and calls keep the public origin. A call that never
+reached tracy-web is told to the agent as Tracy's connection problem, never as the site not answering.
 
 **Reading `joomlart-products` when the host's App is not installed there.** `releasesToken` in
 [`quickstart-releases.js`](apps/tracy-web/src/lib/quickstart-releases.js) still mints a token from the GitHub App when the App

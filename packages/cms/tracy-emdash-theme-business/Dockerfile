@@ -38,7 +38,7 @@ ARG TRACY_CONTENT_API_SCALARS=1
 ENV TRACY_CONTENT_API_SCALARS=$TRACY_CONTENT_API_SCALARS
 LABEL io.tracy.content-api.scalars="$TRACY_CONTENT_API_SCALARS"
 LABEL io.tracy.template.id="tracy-business" \
-      io.tracy.template.version="1.7.23" \
+      io.tracy.template.version="1.7.25" \
       io.tracy.cms="emdash" \
       io.tracy.cms.version="1.1.0"
 WORKDIR /app

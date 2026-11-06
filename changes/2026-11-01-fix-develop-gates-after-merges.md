@@ -1,0 +1,2 @@
+- **develop's typecheck, page tests and EmDash inventories agree with what #263, #271 and #276 changed** — site agent (Claude, for David) · `fix/develop-gates-after-merges` · 2026-11-01
+  **Affects:** contributors only: `develop` was red on the `checks` row (typecheck of `site-context.mjs`, stale `docs/generated/inventory.json` of the three EmDash templates) and on four tracy-web page tests that pinned the old `--primary`.

@@ -1113,7 +1113,7 @@ function createdIdOf(action, answer) {
  * @param {string | null} [title]
  * @returns {{ kind?: string, id?: string, fields?: string[], title?: string } | null}
  */
-function writeTarget(params, title = null) {
+function writeTarget(params, title = null, front = false) {
   const target = {}
   if (typeof params.kind === 'string' && params.kind.length <= 64) target.kind = params.kind
   if ((typeof params.id === 'string' && params.id.length <= 128) || Number.isFinite(params.id))
@@ -1126,6 +1126,8 @@ function writeTarget(params, title = null) {
       : []
   if (names.length > 0) target.fields = names.slice(0, 50).map((name) => name.slice(0, 64))
   if (title !== null && (target.kind !== undefined || target.id !== undefined)) target.title = title
+  // The site's static front page (`x-tracy-write-front`, #257): named "the home page" on screen.
+  if (front && (target.kind !== undefined || target.id !== undefined)) target.front = true
   return Object.keys(target).length > 0 ? target : null
 }
 
@@ -5969,9 +5971,9 @@ export function sitesRoutes({
     now,
     // A head is kept as long as the describe probe (`contentProbes`), which answers it first.
     headMaxAgeMs: CONTENT_PROBE_TTL_MS,
-    onBuilt: ({ siteKey, locale, records, kept, ms }) =>
+    onBuilt: ({ siteKey, locale, records, kept, ms, resumed = 0 }) =>
       console.info(
-        `[locate] snapshot built for ${siteKey} (${locale ?? 'all languages'}): ${records} records in ${ms} ms, ${kept ? 'kept' : 'not kept (incomplete)'}`
+        `[locate] snapshot built for ${siteKey} (${locale ?? 'all languages'}): ${records} records in ${ms} ms${resumed > 0 ? ` (${resumed} taken over from the last build)` : ''}, ${kept ? 'kept' : `not kept (incomplete)${records > 0 ? '; its complete records wait for the next build' : ''}`}`
       )
   })
   /** Its second source: each site's language strings and template files (`content-strings.js`). */
@@ -6703,6 +6705,11 @@ export function sitesRoutes({
       auth.kind === 'actor' && WRITE_TITLE_ACTIONS.has(action)
         ? writeTitleOf(headers['x-tracy-write-title'])
         : null
+    // THE HOME PAGE (`x-tracy-write-front: 1`, #257): the dsh host found the record is the site's static
+    // front page, whose title is often a template demo's that no visitor sees. A display mark only, from
+    // the same signed actor; `{kind, id}` still decide what is written and undone.
+    const writeFront =
+      auth.kind === 'actor' && WRITE_TITLE_ACTIONS.has(action) && headers['x-tracy-write-front'] === '1'
     // 🔒 WHERE THE WRITE CAME FROM, AS THIS DOOR KNOWS IT (sweep #4/#2, council 11/10/2026) — never read off a
     // header: a seat key's call is the key's (`/v1`), and `setupRun` reaches here only through `applyAs`, the
     // server writing a new site's brief for its person (never over HTTP). Everything else names none.
@@ -6760,7 +6767,11 @@ export function sitesRoutes({
                   typeof params.apply_id === 'string' &&
                   params.apply_id.length <= 128
                     ? { reverts: params.apply_id }
-                    : writeTarget(created === null ? params : { ...params, id: created }, writeTitle),
+                    : writeTarget(
+                        created === null ? params : { ...params, id: created },
+                        writeTitle,
+                        writeFront
+                      ),
                 via: 'apply',
                 origin: writeOrigin,
                 ...(created === null ? {} : { action: 'content.create' })
@@ -7201,7 +7212,12 @@ export function sitesRoutes({
               'x-tracy-session': c.req.header('x-tracy-session'),
               'x-tracy-preset': c.req.header('x-tracy-preset'),
               'x-tracy-turn': c.req.header('x-tracy-turn'),
-              ...(auth.kind === 'actor' ? { 'x-tracy-write-title': c.req.header('x-tracy-write-title') } : {})
+              ...(auth.kind === 'actor'
+                ? {
+                    'x-tracy-write-title': c.req.header('x-tracy-write-title'),
+                    'x-tracy-write-front': c.req.header('x-tracy-write-front')
+                  }
+                : {})
             }
     })
     for (const [name, value] of Object.entries(answered.headers ?? {})) c.header(name, value)

@@ -5,6 +5,7 @@
 import { labelRulesOf } from './label-rules.mjs'
 import { normText } from './normalize.mjs'
 import { rootCause } from './root-cause.mjs'
+import { headerOf, sitePagesOf } from './site-map.mjs'
 
 export const SCHEMA = 'tracy-content-coverage/v1'
 /** Bump when a change makes the audit see more (or less): /ops can then ask for a new measurement. */
@@ -13,7 +14,12 @@ export const SCHEMA = 'tracy-content-coverage/v1'
 // 1.3.0 (28/10/2026): the LLM label judge's verdicts (`labelJudge`, `label-judge.mjs`); a 1.2.0 file has none.
 // 1.4.0 (28/10/2026): the label judge is the agent that runs the release (record-judge.mjs); the block names it in
 //   `judgedBy` and carries no model, calls or cents.
-export const TOOL_VERSION = '1.5.0'
+// 1.6.0 (01/11/2026): the site map (`sitePages`: whether each map page opens and where it sits in the menus) and the
+//   `header` a visitor sees (logo, menu items, buttons, text); a 1.5.0 file has neither.
+// 1.7.0 (04/11/2026): an all-numeric date a layout prints (06.09.2021) is core like a written one; label rules R4, R7 and
+//   R8 read cards (a mailto: link labelled by its email, info cards of different contact facts, names of two cards side
+//   by side).
+export const TOOL_VERSION = '1.7.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */
@@ -98,16 +104,19 @@ const emptyBucket = () => ({
 })
 
 /**
- * @param {{ result: any, contract: any, previous?: any, measuredAt?: string, labelJudge?: any }} input
+ * @param {{ result: any, contract: any, previous?: any, measuredAt?: string, labelJudge?: any, inlineMarkup?: any }} input
  *   `result` = what `runAudit` returned; `previous` = the file this run replaces (accepted reasons carry over);
- *   `labelJudge` = the label judge's block (`prepareLabelJudge`, `recordLabelJudge`), written beside `labelRules` when given
+ *   `labelJudge` = the label judge's block (`prepareLabelJudge`, `recordLabelJudge`), written beside `labelRules` when given;
+ *   `inlineMarkup` = the inline markup measurement against the dump (`inline-markup.mjs`); without it, the previous
+ *   file's block is carried over while the content map is the one it measured
  */
 export function buildCoverageFile({
   result,
   contract,
   previous = null,
   measuredAt = new Date().toISOString(),
-  labelJudge = null
+  labelJudge = null,
+  inlineMarkup = null
 }) {
   const accepted = new Map()
   for (const h of Array.isArray(previous?.holes) ? previous.holes : []) {
@@ -182,6 +191,10 @@ export function buildCoverageFile({
     coverage: Object.fromEntries(Object.entries(counts).map(([k, c]) => [k, percent(c)])),
     holes,
     hygiene: hygieneOf(result, previous),
+    // Every map page: does it open (HTTP 2xx), is it a menu group or a `#` link, is it in the main menu and the header.
+    sitePages: sitePagesOf({ contract, result }),
+    // The header of the home page (desktop): null when the run measured none.
+    header: headerOf({ contract, result }),
     // Rules R2 to R9 over the map, the page snapshots and every hole found (core strings are skipped by R9 itself).
     labelRules: labelRulesOf({
       map: contract.map,
@@ -195,8 +208,16 @@ export function buildCoverageFile({
         }))
     }),
     // The label judge (spec #37): per slot right or wrong with a suggested role; also the cache of the next run.
-    ...(labelJudge ? { labelJudge } : {})
+    ...(labelJudge ? { labelJudge } : {}),
+    // Inline markup of the samples against the database (resample.mjs): the template kit's `inlineMarkupLost` reads it.
+    ...inlineMarkupOf(inlineMarkup, previous, contract)
   }
+}
+
+function inlineMarkupOf(measured, previous, contract) {
+  if (measured) return { inlineMarkup: measured }
+  const same = previous?.contract?.contentMapSha256 === contract.sha256?.contentMap
+  return same && previous?.inlineMarkup ? { inlineMarkup: previous.inlineMarkup } : {}
 }
 
 /** matched / (matched + every hole that needs a slot); locked design and core strings are not asked of a slot. */

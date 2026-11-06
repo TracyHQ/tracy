@@ -121,6 +121,36 @@
           "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
         },
         "note": "Same logos as 1.0.7; no logo file, logo layout or logo rule changed: one ACM layout (features-intro style-3) and one demo row give the Private Training email and phone their own fields (ja-products #57)."
+      },
+      "1.0.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos as 1.0.8; no logo file, logo layout or logo rule changed: card rows are centred (joomlart-products #2), every page has one h1 (joomlart-products #4 and #5), author post rows are centred, and the footer link menus lead to real pages."
+      },
+      "1.0.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos as 1.0.10; 1.0.11 changed no stylesheet and no demo data (joomlart-products #15): a hidden h1 from the menu item, class buttons, tel: links on phone numbers and a Google Maps link."
       }
     },
     "quickstart/ja-cagox/j6": {
@@ -201,6 +231,18 @@
         },
         "logoHeight": 80,
         "note": "Same logos and content as 1.0.3; only eleven bootstrap.css files changed: the badge of a status panel heading reads the status text role as its ground (fallbacks unchanged). No logo file or logo rule changed. Unworn the default page computes as on 1.0.3 (VERIFICATION.json: 0 differences). The brand writer and favicon proof was not re-run on this release."
+      },
+      "1.0.5": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos as 1.0.4; no logo file or logo rule changed, and every template style keeps logoimage empty, so the header prints the template's own images/logo.png (the contract declares it as one business.logo slot per style). 1.0.5 adds the agent documentation of the ACM module, template fixes in css, less, html, tpls and acm (smart search and tag page language strings, tab picture alt), and three demo links that pointed nowhere now lead to Contact Us and Offers. Proven on the 1.0.5 installer pack (sha256 bb331594) by a clean install whose contract capture pins the lock. The brand writer and favicon proof was not re-run on this release."
       }
     },
     "quickstart/ja-directory/j6": {
@@ -883,6 +925,28 @@
         },
         "note": "Logos and database as 1.0.10 (nothing in the content changed; measured from the release archive 21/10). Theme 1.0.14: the outline-light button text colour reads --ds-c-on-ink instead of a ground role (TEXT-1); unworn, every page computes as with theme 1.0.13.",
         "darkLogo": true
+      }
+    },
+    "quickstart/ja-kidscorner/j6": {
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": { "width": 168, "height": 48 },
+        "logoHeight": 48,
+        "unverified": ["brandReady", "faviconReady"],
+        "note": "Template ja_kidscorner: two styles (Default, DT Register), both logotype image with logoimage empty, so the header shows the template's own images/logo.png (a dark 168 x 48 picture, mean luminance 118, on the light #fdf9ef page; no logoimage_sm, no logoimage_dark, no footer logo, no dark mode); no CSS rule holds an uploaded logo to a height, so the writer scales it to 48. The header shows the style's logoimage when logotype is image (tpls/blocks/header.php), and the only icon link is templates/ja_kidscorner/favicon.ico (T3, no favicon setting). Measured on the published 1.0.2 (31/10/2026); the brand writer and favicon proof was not run, hence unverified."
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": { "width": 168, "height": 48 },
+        "logoHeight": 48,
+        "unverified": ["brandReady", "faviconReady"],
+        "note": "Same logos as 1.0.2; no logo file, logo layout or logo rule changed (images/logo.png, favicon.ico and tpls/blocks/header.php are byte-identical, both styles still logotype image with logoimage empty): the template stylesheets read the role variables of a worn design system with the old colours as fallback. Measured on the 1.0.3 installer (31/10/2026); the brand writer and favicon proof was not run, hence unverified."
       }
     },
     "quickstart/ja-kinetic/j6": {
@@ -3123,6 +3187,12 @@
         "brandReady": true,
         "faviconReady": true,
         "note": "As 0.5.5; under a worn system the call band's button is drawn in the band's words on the dark side, the dark side's scene band takes the quiet raised ground, the call capsule's text column leaves room for a wider face, the swatch tiles' rule sits on their label (the same pixels), and the worn-only shades are defined only while a system is worn (DEF-1). Without a system only the swatch rule moves element (pixel-identical)."
+      },
+      "0.5.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.5.6; the Content API reader keeps its source rows while the site database is unchanged (an exact change counter the identity tool installs), so a repeated read of one entry answers in milliseconds instead of re-reading every entry (#252, #271). Storefront, content and state snapshot unchanged."
       }
     },
     "tracy-apple/j6": {
@@ -3394,6 +3464,12 @@
         "brandReady": true,
         "faviconReady": true,
         "note": "As 1.7.22; the four places the slot contract patched for 1.7.20-1.7.22 read their role at the source while a system is worn (kit form step labels and region arrow: meta; the empty filled marks of the kit form, search filter and kit slides: fg; the header call to action: accent-text with bg words; the header search button: the button corner), and astro 7.2.8, @astrojs/node 11.1.3, sharp 0.35.5 (security fixes). Without a system: 11.9M computed values over 23 pages, 1440 and 390, light and dark, every screenshot identical to 1.7.22."
+      },
+      "1.7.25": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.23; the Content API reader keeps its source rows while the site database is unchanged (an exact change counter the identity tool installs), so a repeated read of one entry answers in milliseconds instead of re-reading every entry (#252, #271). Storefront, content and state snapshot unchanged."
       }
     },
     "tracy-business/j6": {
@@ -3502,6 +3578,22 @@
         "nameFallback": true,
         "darkLogo": true,
         "note": "Brand rows as 1.3.7 (header, footer, brand-logo.php and inc/identity.php fallbacks unchanged; measured from the release archive 16/10). Theme 1.1.10 reads every design-system role variable with the template's own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release); the header and footer logo follow a worn system alike; the news index head and lead are two self-closing patterns, and the Contact card goes when every row is empty. Database as 1.3.7."
+      }
+    },
+    "tracy-coffee/emdash-0.x": {
+      "0.1.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "Copied from Tracy Base 0.5.6 (template.config.json id tracy-coffee); read off the 0.1.0 pack source 30/10/2026: Logo.astro byte-identical to Base 0.5.6, settings.logo in the light header and site.logo_dark in the dark one, the template icon (/favicon.svg) only while settings.favicon is empty (Base.astro templateIconWanted). Only the header's page list and the theme toggle's stored key (tracy-coffee-theme) differ from Base."
+      }
+    },
+    "tracy-restaurant/emdash-0.x": {
+      "1.0.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "Read off the 1.0.0 pack source: the header is the only logo spot (BrandLogo with logoSpots); settings.logo in the light header and the chrome entry's logo_dark in the dark one, switched by the ◐ toggle and the visitor system; the template icon only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
       }
     },
     "tracy-saas/emdash-0.x": {

@@ -1,0 +1,433 @@
+{
+  "kind": "brand-file",
+  "version": 10,
+  "kit": "ja-boxing@1.0.10",
+  "name": {
+    "value": "Palm Terrace Padel Club",
+    "from": "brief.brand.name",
+    "slots": [
+      {
+        "id": "setting:global configuration sitename",
+        "kind": "setting",
+        "where": "cms",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Palm Terrace Padel Club",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "setting:template site setting site_name (templates/ja_boxing/etc/site/default.json)",
+        "kind": "setting",
+        "where": "template",
+        "current": "",
+        "status": "written",
+        "value": "Palm Terrace Padel Club",
+        "handOff": null,
+        "pattern": "empty-setting",
+        "reason": "empty setting that prints the CMS site name: gets the business name"
+      },
+      {
+        "id": "slot:block-162.0",
+        "kind": "slot",
+        "where": "block-162.0",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Palm Terrace Padel Club",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:text:block-168",
+        "kind": "printed",
+        "where": "text",
+        "current": "Copyright © 2026 JA Boxing. All Rights Reserved.",
+        "status": "written",
+        "value": "Copyright © 2026 Palm Terrace Padel Club. All Rights Reserved.",
+        "handOff": null,
+        "pattern": "legal-line",
+        "reason": "fixed legal or attribution pattern: only the template name is replaced"
+      },
+      {
+        "id": "printed:title-attribute:offcanvas",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Palm Terrace Padel Club",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:offcanvas",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Palm Terrace Padel Club",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:title-attribute:header",
+        "kind": "printed",
+        "where": "title-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Palm Terrace Padel Club",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:alt-attribute:header",
+        "kind": "printed",
+        "where": "alt-attribute",
+        "current": "JA Boxing",
+        "status": "written",
+        "value": "Palm Terrace Padel Club",
+        "handOff": null,
+        "pattern": "name-only",
+        "reason": "the slot holds only the template name"
+      },
+      {
+        "id": "printed:document-title:page",
+        "kind": "printed",
+        "where": "document-title",
+        "current": "JA Boxing - Gym, Fitness, and Boxing Studio Joomla Template",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      },
+      {
+        "id": "printed:meta description:page",
+        "kind": "printed",
+        "where": "meta description",
+        "current": "Elevate your gym, fitness center, or boxing studio website with JA Boxing Joomla template. Engage your audience with a stunning design and powerful features",
+        "status": "handed-off",
+        "value": null,
+        "handOff": "writer",
+        "pattern": "marketing",
+        "reason": "template marketing sentence; the writing step rewrites it",
+        "evidence": {
+          "productWords": ["boxing", "joomla", "template"]
+        }
+      }
+    ]
+  },
+  "colours": {
+    "decision": "new-accent",
+    "why": "The brand primary dark green #042515 has a visible hue, so it became the accent; the build lifted it to #0f884d to read on the dark opening ground.",
+    "brandColour": "#042515",
+    "lift": {
+      "from": "#042515",
+      "to": "#0f884d",
+      "lightnessFrom": 0.08,
+      "lightnessTo": 0.296,
+      "say": "Your dark green was made lighter (same hue) so buttons and links stand out on the template's dark opening background."
+    },
+    "accent": "#0f884d",
+    "replaces": "#f44141",
+    "keeps": "template",
+    "builds": 1,
+    "shifts": [
+      {
+        "side": "light",
+        "opens": false,
+        "colour": "accent-text",
+        "from": "#0f884d",
+        "to": "#0e7f48",
+        "on": "#ffffff",
+        "ratio": 5.06
+      },
+      {
+        "side": "dark",
+        "opens": true,
+        "colour": "accent-text",
+        "from": "#0f884d",
+        "to": "#129f5a",
+        "on": "#121111",
+        "ratio": 5.51
+      }
+    ],
+    "module": {
+      "file": "module-build-1.html",
+      "bytes": 50737,
+      "slot": "joomla-ja-boxing-modes@f29c1d8f7f"
+    }
+  },
+  "logo": {
+    "material": {
+      "mediaId": "a1f0c2d4-7b3e-4c59-8a61-2d9e5f7b0c13",
+      "width": 1080,
+      "height": 1080,
+      "hasAlpha": false,
+      "readsAs": "PALM TERRACE PADEL CLUB",
+      "ground": "#032010"
+    },
+    "mark": {
+      "decision": "cut",
+      "why": "The logo has a standalone shield symbol (crossed rackets and a wave) apart from the words; the cut kept the green inside of the shield and passed the reviewer.",
+      "letters": null,
+      "file": "mark.png",
+      "recoloured": {
+        "light": null,
+        "dark": null
+      }
+    },
+    "name": {
+      "text": "Palm Terrace Padel Club",
+      "rendersAs": "PALM TERRACE PADEL CLUB",
+      "files": {
+        "light": "name/name.light.png",
+        "dark": "name/name.dark.png"
+      },
+      "twoLines": {
+        "lines": ["Palm Terrace", "Padel Club"],
+        "files": {
+          "light": "name/name-2l.light.png",
+          "dark": "name/name-2l.dark.png"
+        }
+      }
+    },
+    "logos": {
+      "light": "logo/logo.light.png",
+      "dark": "logo/logo.dark.png",
+      "twoLines": null
+    },
+    "look": [
+      {
+        "file": "mark.png",
+        "ground": "#808080",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the whole symbol is there, nothing cut off",
+            "verdict": "pass",
+            "reason": "The full shield and its contents are visible."
+          },
+          {
+            "check": "no ground or words left around it",
+            "verdict": "pass",
+            "reason": "Only the shield appears on the gray background; no words remain."
+          },
+          {
+            "check": "it is the same symbol as in the original",
+            "verdict": "pass",
+            "reason": "The shield, crossed rackets, and wave match the original."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo.light.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly Palm Terrace Padel Club (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The name reads PALM TERRACE PADEL CLUB."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The crest and dark lettering are clear against white."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the crest and name are visible."
+          }
+        ]
+      },
+      {
+        "file": "logo/logo.dark.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the name reads exactly Palm Terrace Padel Club (capitals only is the same name)",
+            "verdict": "pass",
+            "reason": "The name reads PALM TERRACE PADEL CLUB."
+          },
+          {
+            "check": "mark and name read clearly on this ground",
+            "verdict": "pass",
+            "reason": "The crest and white lettering are clear against the dark ground."
+          },
+          {
+            "check": "nothing but the mark and the name",
+            "verdict": "pass",
+            "reason": "Only the crest and name are visible."
+          }
+        ]
+      },
+      {
+        "file": "mark.png",
+        "ground": "#ffffff",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The gold shield and tennis-racket design are distinct on white."
+          }
+        ]
+      },
+      {
+        "file": "mark.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The gold outline and racket details remain distinct on the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "favicon/apple-touch-icon-180.png",
+        "ground": "#121111",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the mark reads clearly on this ground",
+            "verdict": "pass",
+            "reason": "The gold and green emblem is clearly visible against the dark ground."
+          }
+        ]
+      },
+      {
+        "file": "mark.png",
+        "ground": "#032010",
+        "verdict": "pass",
+        "checks": [
+          {
+            "check": "the whole symbol is there, nothing cut off",
+            "verdict": "pass",
+            "reason": "The full shield, rackets, and wave are visible."
+          },
+          {
+            "check": "no ground or words left around it",
+            "verdict": "pass",
+            "reason": "Only the symbol appears on a plain dark background; no words or stray marks."
+          },
+          {
+            "check": "it is the same symbol as in the original",
+            "verdict": "pass",
+            "reason": "The shield, crossed rackets, and wave match the original."
+          }
+        ]
+      }
+    ],
+    "spots": [
+      {
+        "spot": "logo-header-1",
+        "file": "spots/logo-header-1.png",
+        "shows": "logo",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-header-2",
+        "file": "spots/logo-header-2.png",
+        "shows": "logo",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-1",
+        "file": "spots/logo-offcanvas-1.png",
+        "shows": "mark",
+        "ground": "#ffffff",
+        "writable": true
+      },
+      {
+        "spot": "logo-offcanvas-2",
+        "file": "spots/logo-offcanvas-2.png",
+        "shows": "mark",
+        "ground": "#121111",
+        "writable": true
+      },
+      {
+        "spot": "logo-footer-1",
+        "file": "spots/logo-footer-1.png",
+        "shows": "logo",
+        "ground": "#1f1e1e",
+        "writable": false
+      }
+    ]
+  },
+  "favicon": {
+    "from": "mark",
+    "mark": "mark.png",
+    "phoneMark": "mark.png",
+    "phoneGround": "#121111",
+    "ico": "favicon-v10/favicon.ico",
+    "png32": "favicon-v10/favicon-32.png",
+    "png512": "favicon-v10/favicon-512.png",
+    "phone180": "favicon-v10/apple-touch-icon-180.png",
+    "tabIcons": "tile",
+    "tileGround": "#121111",
+    "tileMark": "favicon-v10/tile-mark.dark.png",
+    "tileMarkRecoloured": true,
+    "check": {
+      "final": {
+        "bboxShare": 0.25,
+        "contrastShare": {
+          "#ffffff": 1,
+          "#202124": 1
+        },
+        "pass": true
+      },
+      "candidates": [
+        {
+          "kind": "transparent",
+          "png32": "favicon-v10/candidate-transparent-32.png",
+          "bboxShare": 0.563,
+          "contrastShare": {
+            "#ffffff": 1,
+            "#202124": 0
+          },
+          "pass": false
+        },
+        {
+          "kind": "tile",
+          "png32": "favicon-v10/candidate-tile-32.png",
+          "bboxShare": 0.25,
+          "contrastShare": {
+            "#ffffff": 0,
+            "#202124": 0
+          },
+          "pass": false
+        },
+        {
+          "kind": "tile-recoloured",
+          "png32": "favicon-v10/candidate-tile-recoloured-32.png",
+          "bboxShare": 0.25,
+          "contrastShare": {
+            "#ffffff": 1,
+            "#202124": 1
+          },
+          "pass": true
+        }
+      ]
+    }
+  },
+  "ownerTasks": [
+    {
+      "kind": "approve-rebuilt-logo",
+      "say": "We rebuilt your logo from your profile picture: the shield on the left and your name set in the site's font on the right. Please check it and send us your original logo file if you prefer to replace it."
+    }
+  ]
+}

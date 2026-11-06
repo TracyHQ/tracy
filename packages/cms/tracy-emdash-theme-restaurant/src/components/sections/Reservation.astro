@@ -1,0 +1,47 @@
+---
+/** "Phone Reservation": the phone line, a lunch row and a dinner row (picture, text, points, button) and the call card. */
+import { PortableText } from 'emdash/ui'
+import { href, type Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { mediaUrl } from '@/lib/media'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { liveBlocks, liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  locale: Locale
+}
+const { locale } = Astro.props
+const r = await section('reservation', 'reservation', locale)
+const $r = stampFor(Astro.request, 'reservation', r ? { id: r.id, slug: r.slug } : null)
+const intro = r ? await liveBlocks(Astro.request, locale, stampBlocks($r, 'intro', r.intro)) : []
+const to = (u: string) => dataHref(u || '/', (p) => href(locale, p)) ?? '/'
+const live = await liveLinks(Astro.request, locale, [
+  ...(r?.blocks ?? []).map((b: any) => b.button_link),
+  r?.online_link
+])
+const br = (t: string) => String(t ?? '').split('\n')
+---
+
+{r && (
+	<div class="rs-wrap rs-reserve">
+		<h2 class="rs-display rs-reserve-title" {...$r('title')}>{r.title}</h2>
+		<div class="rs-reserve-intro" {...$r('intro')}><PortableText value={intro} /></div>
+		{(r.blocks ?? []).map((b: any, i: number) => (
+			<div class:list={['rs-reserve-row', i % 2 === 1 && 'is-flip']}>
+				<div class="rs-reserve-photo">{mediaUrl(b.image) && <img src={mediaUrl(b.image)!} alt={b.image_alt || ''} width="545" height="360" loading="lazy" decoding="async" {...$r(`blocks[${i}].image`)} />}</div>
+				<div class="rs-reserve-text">
+					<h3 {...$r(`blocks[${i}].title`)}>{b.title}</h3>
+					<p {...$r(`blocks[${i}].text`)}>{b.text}</p>
+					<ul {...$r(`blocks[${i}].points`)}>{br(b.points).filter(Boolean).map((l) => <li>{l}</li>)}</ul>
+					{b.button_label && live(b.button_link) && <a class="rs-btn" href={to(b.button_link || '/')} {...$r(`blocks[${i}].button_label`)}>{b.button_label}</a>}
+				</div>
+			</div>
+		))}
+		<div class="rs-reserve-online">
+			<h3 class="rs-display" {...$r('online_title')}>{r.online_title}</h3>
+			<p {...$r('online_text')}>{br(r.online_text).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+			{r.online_button && live(r.online_link) && <a class="rs-btn rs-btn-lg" href={to(r.online_link || '/')} {...$r('online_button')}>{r.online_button}</a>}
+		</div>
+	</div>
+)}

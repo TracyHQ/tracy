@@ -7,9 +7,17 @@
  * (`scripts/test/ci-plan.test.mjs`) instead of shell inside a workflow.
  *
  * Three rows always run: `checks` (lint + every gate but the tests), `tests 1/2`, `tests 2/2`
- * (+ the small suites). Four more run only when needed: the three EmDash suites and `e2e`.
+ * (+ the small suites). Five more run only when needed: the five EmDash suites and `e2e`.
  * A routine PR into `develop` replaces `tests 1/2` and `tests 2/2` by one `tests related` row (or
  * none), see `related-tests.mjs`; `checks` always runs.
+ *
+ * THREE WORKERS SHARDS ON GITHUB-HOSTED (30/10/2026). A pull request's rows run on `ubuntu-latest`
+ * unless it carries `ci:self-hosted` (`hosted`, from the workflow's `ROWS_HOSTED`), and there the
+ * full workers suite is `tests 1/3`, `tests 2/3`, `tests 3/3` (+ the small suites): a 4-vCPU VM ran
+ * the two shards in ~9 and ~20 minutes (run 41028805223) against ~9.5 and ~14 on our runners. Same
+ * `shardOf` over the same measured table, one shard more; GitHub-hosted runners cost no machine of
+ * ours. Our runners keep two shards: their pool is shared with the image builds, and a third row is
+ * one more runner per full run there.
  *
  * TEMPLATE-DATA LANE (12/10/2026). When every changed file of a PR into `develop` is template data
  * (`TEMPLATE_DATA` in `related-tests.mjs`: contracts, template profiles, quickstart pins, journal,
@@ -74,7 +82,7 @@ const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
  */
 const EMDASH_INPUTS = String.raw`vendor/emdash/(?!tracy-emdash-skill/)`
 
-/** The three EmDash suites: each reads inside its own directory (checked 29/09/2026). */
+/** The five EmDash suites: each reads inside its own directory (checked 29/09/2026; Tracy Coffee 30/10/2026, JA Restaurant 04/11/2026). */
 const EMDASH = [
   {
     group: 'tests emdash-business',
@@ -90,10 +98,20 @@ const EMDASH = [
     group: 'tests emdash-base',
     args: '--only tests --tests-part standalone:base',
     own: String.raw`packages/cms/tracy-emdash-theme-base/`
+  },
+  {
+    group: 'tests emdash-coffee',
+    args: '--only tests --tests-part standalone:coffee',
+    own: String.raw`packages/cms/tracy-emdash-theme-coffee/`
+  },
+  {
+    group: 'tests emdash-restaurant',
+    args: '--only tests --tests-part standalone:restaurant',
+    own: String.raw`packages/cms/tracy-emdash-theme-restaurant/`
   }
 ]
 
-/** Whether a matrix group is one of the three EmDash suites. */
+/** Whether a matrix group is one of the EmDash suites. */
 const isEmdashRow = (group) => EMDASH.some((r) => r.group === group)
 
 /**
@@ -130,6 +148,7 @@ export function e2ePaths(e2eFiles) {
  * @param {readonly string[]} input.allFiles - tracked files, to derive the e2e owners.
  * @param {(file: string) => string} [input.readText] - reads a tracked file; without it there is no
  *   template-data lane (the planner's own run passes one).
+ * @param {boolean} [input.hosted] - the rows run on GitHub-hosted runners: three workers shards, not two.
  * @returns {{matrix: {include: object[]}, skipped: {group: string, paths: string}[], runsAll: boolean, why: string}}
  */
 /**
@@ -195,6 +214,37 @@ export function turboRows(dry, { force = false } = {}) {
   return { rows: out, cached }
 }
 
+/** Workers shards of a full run on our runners, and on GitHub-hosted `ubuntu-latest` (30/10/2026). */
+export const SELF_HOSTED_SHARDS = 2
+export const HOSTED_SHARDS = 3
+
+/**
+ * The full workers rows: `tests i/n`, the small suites (`rest`) on the last one only, where
+ * `shardOf` reserves their measured seconds (`check-tests.ts` refuses `rest` on any other shard).
+ * @param {number} n
+ */
+function workersShards(n) {
+  return Array.from({ length: n }, (_, i) => ({
+    group: `tests ${String(i + 1)}/${String(n)}`,
+    label: 'tracy-check',
+    args: `--only tests --tests-part workers:${String(i + 1)}/${String(n)}${i === n - 1 ? ',rest' : ''}`
+  }))
+}
+
+/**
+ * Whether a row may open a Playwright browser, so that on GitHub-hosted it installs one first
+ * (`tracy-ci.yml`, step "Install the Playwright browser on a GitHub-hosted runner", 03/11/2026). Every
+ * row that runs a test suite does: `check-tests.ts` opens one for e2e and the EmDash themes, and
+ * `ensureWorkersBrowser` for every workers part (shards, `related`, each Turbo owner task) because
+ * `test:workers` holds browser tests (`apps/tracy-host`, `tracy-quickstart-tools`). So does the row
+ * that runs the tests with the clock moved forward: they are `test:workers` files. `checks` without
+ * that step runs no test and installs nothing.
+ * @param {{ args?: string, turbo?: string, clock?: boolean }} row
+ */
+export function opensBrowser(row) {
+  return Boolean(row.turbo) || Boolean(row.clock) || /(?:^| )--only tests(?: |$)/.test(row.args ?? '')
+}
+
 /** The title of the notice `plan` prints when a full run's tests are forced Turbo rows. */
 export const FULL_RUN_TITLE = 'full run'
 
@@ -212,18 +262,24 @@ const ONE_TASK_PER_ROW = {
 
 /**
  * The `build check` row names a full run may have (17/10/2026): `legacy`, the two workers shards
- * (`plan` could not ask Turbo, or a run from before forced rows), and `turbo`, the forced Turbo
- * rows. Both carry `checks` and every conditional row. `green-tree.mjs` and `check-pr-merge.mjs`
- * judge a full run by these; a `turbo` set counts only with `plan`'s `full run` notice, because a
- * pull request into develop has rows of the same names whose tasks the cache may have served.
- * @returns {{ legacy: string[], turbo: string[] }}
+ * (`plan` could not ask Turbo, or a run from before forced rows), `hosted`, the three workers shards
+ * of the same fallback on GitHub-hosted runners (30/10/2026), and `turbo`, the forced Turbo rows,
+ * which do not depend on the runner. All carry `checks` and every conditional row. `green-tree.mjs`
+ * and `check-pr-merge.mjs` judge a full run by these; a `turbo` set counts only with `plan`'s
+ * `full run` notice, because a pull request into develop has rows of the same names whose tasks the
+ * cache may have served.
+ * @returns {{ legacy: string[], hosted: string[], turbo: string[] }}
  */
 export function fullRowSets() {
-  const groups = (turboDry) =>
-    planMatrix({ event: 'workflow_dispatch', changed: null, allFiles: [], turboDry }).matrix.include.map(
-      (row) => row.group
-    )
-  return { legacy: groups(null), turbo: groups(ONE_TASK_PER_ROW) }
+  const groups = (turboDry, hosted = false) =>
+    planMatrix({
+      event: 'workflow_dispatch',
+      changed: null,
+      allFiles: [],
+      turboDry,
+      hosted
+    }).matrix.include.map((row) => row.group)
+  return { legacy: groups(null), hosted: groups(null, true), turbo: groups(ONE_TASK_PER_ROW) }
 }
 
 export function planMatrix({
@@ -234,7 +290,8 @@ export function planMatrix({
   dependencies = {},
   readText,
   turboDry = null,
-  labels = null
+  labels = null,
+  hosted = false
 }) {
   const conditional = [
     ...EMDASH.map((r) => ({
@@ -250,10 +307,7 @@ export function planMatrix({
       paths: e2ePaths(allFiles)
     }
   ]
-  const fullRows = [
-    { group: 'tests 1/2', label: 'tracy-check', args: '--only tests --tests-part workers:1/2' },
-    { group: 'tests 2/2', label: 'tracy-check', args: '--only tests --tests-part workers:2/2,rest' }
-  ]
+  const fullRows = workersShards(hosted ? HOSTED_SHARDS : SELF_HOSTED_SHARDS)
   let checks = { group: 'checks', label: 'tracy-check', args: '--skip tests' }
 
   let runsAll = true
@@ -316,7 +370,7 @@ export function planMatrix({
       leftOut.push({ group: row.group, label: E2E_LABEL, wouldRun: runsAll || Boolean(affects) })
       continue
     }
-    // The three EmDash suites are browser rows too: their visual/audit/qa tests open Chromium and
+    // The five EmDash suites are browser rows too: their visual/audit/qa tests open Chromium and
     // nothing separates them from the suite's other files. Without `ci:e2e` a row the paths would have
     // run does not exist; a row the paths would not run stays an ordinary path skip.
     if (isEmdashRow(row.group) && scope.e2eLeftOut && (runsAll || affects)) {
@@ -324,7 +378,7 @@ export function planMatrix({
       continue
     }
     // The label means "run it": no path filter second-guesses a person who asked for the e2e row. The
-    // EmDash rows keep their own paths even with the label (three suites of 5-10 minutes each are not
+    // EmDash rows keep their own paths even with the label (five suites of 5-10 minutes each are not
     // worth running for a change that no theme reads).
     if (row.group === 'tests e2e' && scope.e2eForced) include.push(rest)
     else if (!runsAll && !affects) skipped.push({ group: row.group, paths })
@@ -345,9 +399,12 @@ export function planMatrix({
         : []
   // The tests with the clock moved forward run on exactly one row: the last full shard, the related
   // row, or — when Turbo plans the tests and may start none — `checks`, which always runs.
+  const lastShard = fullRows.at(-1).group
   const clockRow =
-    turbo || fullTurbo ? 'checks' : tests.some((r) => r.group === 'tests 2/2') ? 'tests 2/2' : 'tests related'
-  const rows = [...include, ...tests, checks].map((r) => (r.group === clockRow ? { ...r, clock: true } : r))
+    turbo || fullTurbo ? 'checks' : tests.some((r) => r.group === lastShard) ? lastShard : 'tests related'
+  const rows = [...include, ...tests, checks]
+    .map((r) => (r.group === clockRow ? { ...r, clock: true } : r))
+    .map((r) => (opensBrowser(r) ? { ...r, browser: true } : r))
   // A docs-only PR has no test job. The full nightly and release rows are unchanged.
   return {
     matrix: { include: rows },
@@ -474,7 +531,7 @@ export function scopeNotes(plan) {
       `SKIPPED ${row.group}: opt-in on a pull request into develop — add the label ${row.label} to run it (this pull request touches its inputs)`
     )
     notes.summary.push(
-      `### ⏭ ${row.group} not run (opt-in)\n\nA pull request into \`develop\` runs the browser suites (the e2e row and the three EmDash rows) only when it carries the label \`${row.label}\` — **this one changes files that suite reads**. Adding the label re-runs Tracy CI by itself. ` +
+      `### ⏭ ${row.group} not run (opt-in)\n\nA pull request into \`develop\` runs the browser suites (the e2e row and the five EmDash rows) only when it carries the label \`${row.label}\` — **this one changes files that suite reads**. Adding the label re-runs Tracy CI by itself. ` +
         'Release pull requests into `staging` and `main`, the nightly and manual runs always run it.\n'
     )
   }
@@ -522,7 +579,10 @@ function main() {
     dependencies,
     readText: repoReader(),
     turboDry,
-    labels: parseLabels(process.env.PR_LABELS)
+    labels: parseLabels(process.env.PR_LABELS),
+    // `true` exactly when the rows run on `ubuntu-latest` (the workflow's own `runs-on` condition);
+    // anything else, unset included, plans our runners' two shards.
+    hosted: process.env.ROWS_HOSTED === 'true'
   })
   // 🔒 THE DRY RUN AND THE ROWS MUST AGREE ON THE SKIP. Turbo hashed the tests under the decision the
   // `--scope` step made; if this plan decides otherwise, the cache answer it holds describes a run

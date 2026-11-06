@@ -1,0 +1,2 @@
+- **The contracts name EmDash Base 0.5.8 and Business 1.7.25 (the cached Content API reader)** — site agent (Claude, for David) · `chore/emdash-reader-contracts` · 2026-10-31
+  **Affects:** the Design system button and the content map for EmDash sites on those versions (`tracy-ds-slot` `emdash-base-roles`, `emdash-tracy-business-source`, `sites/where/emdash-tracy-business.json`, `template-profiles.json`). Needed on `main` before the rolling releases serve the new versions; nothing changes for a site until then.

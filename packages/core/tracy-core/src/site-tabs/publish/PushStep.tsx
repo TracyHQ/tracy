@@ -17,6 +17,8 @@ import type { Translate } from '../../team/translate'
 import { agoText } from './sync-words'
 import { Checklist, Notice, type PageFooter, StepPage, Working } from './page'
 import {
+  countKey,
+  failedApart,
   itemLine,
   itemName,
   PUSH_STAGES,
@@ -124,6 +126,10 @@ function Code({ code, detail, t }: { code: string; detail?: string | null; t: Tr
 function UndoBlock({ live, t }: { live: LivePush; t: Translate }): JSX.Element | null {
   const target = live.undoTarget
   if (!target || live.running || live.phase === 'confirm') return null
+  // Undo answered that nothing of this push is left to take back (NOT_PUSHED): said once, on this
+  // push, with no Undo to press again; a later Sync to live screen says nothing of it (#226).
+  const gone = target.undoError === 'NOT_PUSHED'
+  if (gone && target.id !== live.push?.id) return null
   const busy = live.pressed || live.running
   return (
     <Notice
@@ -133,15 +139,18 @@ function UndoBlock({ live, t }: { live: LivePush; t: Translate }): JSX.Element |
     >
       {target.id !== live.push?.id && (
         <p className="tv-pub-small">
-          {t('push.lastPush', { when: agoText(target.pushedAt), count: target.result?.pushed.length ?? 0 })}
+          {t(countKey('push.lastPush', target.result?.pushed.length ?? 0), {
+            when: agoText(target.pushedAt),
+            count: target.result?.pushed.length ?? 0
+          })}
         </p>
       )}
       {target.undoError && <p>{pushFailureText(target.undoError, t, live.max, target.undoPhp)}</p>}
       {target.undoError && target.undoErrorDetail && (
         <Code code={target.undoError} detail={target.undoErrorDetail} t={t} />
       )}
-      <div className="tv-pub-notice-actions">
-        {live.askUndo ? (
+      <div className="tv-pub-notice-actions" hidden={gone}>
+        {gone ? null : live.askUndo ? (
           <>
             <Button
               type="button"
@@ -428,6 +437,14 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
   // said as that, never as a success with "0 changes" (dev, 26/10/2026).
   const sent = push?.result?.pushed.length ?? 0
   const notSent = conflictGroups(push?.result?.conflicts ?? [], t)
+  // Sent with no answer back (WRITE_OUTCOME_UNKNOWN): they may be on the live site, so no headline
+  // says it was not changed, and none is a plain success (#286).
+  const unknown = failedApart(push?.result?.failed ?? []).unknown
+  const unknownAlso = unknown.length > 0 && (
+    <p data-push-unknown-also="">
+      {t(countKey('push.status.unknownAlso', unknown.length), { count: unknown.length })}
+    </p>
+  )
   let state: ReactNode = null
   if (phase === 'confirm')
     state = (
@@ -454,9 +471,18 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
   if (phase === 'pushed')
     state = partial ? (
       <Notice severity="error" title={t('push.status.partial')}>
-        <p>{t('push.status.partialBody', { count: push?.result?.pushed.length ?? 0 })}</p>
+        <p>
+          {t(countKey('push.status.partialBody', push?.result?.pushed.length ?? 0), {
+            count: push?.result?.pushed.length ?? 0
+          })}
+        </p>
+        {unknownAlso}
         {push?.error === 'LIVE_PHP_TOO_OLD' && <p>{pushFailureText(push.error, t, live.max, push.php)}</p>}
         {push?.error && <Code code={push.error} detail={push.errorDetail} t={t} />}
+      </Notice>
+    ) : sent === 0 && unknown.length > 0 ? (
+      <Notice severity="warning" title={t('push.status.unknown')} attrs={{ 'data-push-unknown': '1' }}>
+        <p>{t(countKey('push.status.unknownBody', unknown.length), { count: unknown.length })}</p>
       </Notice>
     ) : sent === 0 ? (
       <Notice
@@ -467,25 +493,35 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
         <p>{t(notSent.open.length ? 'push.status.nothingSentOpen' : 'push.status.nothingSentBody')}</p>
       </Notice>
     ) : (
-      <Notice severity="success" title={t('push.status.pushed')}>
+      <Notice severity={unknown.length > 0 ? 'warning' : 'success'} title={t('push.status.pushed')}>
         <p>
-          {t('push.status.pushedBody', {
+          {t(countKey('push.status.pushedBody', push?.result?.pushed.length ?? 0), {
             count: push?.result?.pushed.length ?? 0,
             when: agoText(push?.pushedAt)
           })}
         </p>
+        {unknownAlso}
       </Notice>
     )
   if (phase === 'undone')
     state = (
       <Notice severity="success" title={t('push.status.undone')}>
-        <p>{t('push.status.undoneBody', { count: push?.undo?.restored.length ?? 0 })}</p>
+        <p>
+          {t(countKey('push.status.undoneBody', push?.undo?.restored.length ?? 0), {
+            count: push?.undo?.restored.length ?? 0
+          })}
+        </p>
       </Notice>
     )
   if (phase === 'failed')
     state = (
       <Notice severity="error" title={t('push.status.failed')}>
         <p>{pushFailureText(failure, t, live.max, live.error ? null : push?.php)}</p>
+        {unknown.length > 0 && (
+          <p data-push-unknown="">
+            {t(countKey('push.status.unknownBody', unknown.length), { count: unknown.length })}
+          </p>
+        )}
         {failure && <Code code={failure} detail={live.error ? null : push?.errorDetail} t={t} />}
       </Notice>
     )
@@ -507,6 +543,19 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
         </Notice>
       )}
       {phase === 'confirm' && v && <PreviewGroups live={live} t={t} />}
+      {phase === 'failed' && unknown.length > 0 && (
+        // A push that stopped with writes on the way: those may be on the live site.
+        <div className="tv-pub-push-groups" data-push-result>
+          <Group
+            t={t}
+            id="unknown"
+            title={t('push.result.unknown', { count: unknown.length })}
+            hint={t('push.result.unknownHint')}
+            items={unknown}
+            open
+          />
+        </div>
+      )}
       {phase === 'pushed' && push?.result && (
         <div className="tv-pub-push-groups" data-push-result>
           <Group
@@ -534,9 +583,17 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
           />
           <Group
             t={t}
+            id="unknown"
+            title={t('push.result.unknown', { count: failedApart(push.result.failed).unknown.length })}
+            hint={t('push.result.unknownHint')}
+            items={failedApart(push.result.failed).unknown}
+            open
+          />
+          <Group
+            t={t}
             id="failed"
-            title={t('push.result.failed', { count: push.result.failed.length })}
-            items={withNotes(push.result.failed, t, push.preview?.platform)}
+            title={t('push.result.failed', { count: failedApart(push.result.failed).failed.length })}
+            items={withNotes(failedApart(push.result.failed).failed, t, push.preview?.platform)}
             open
           />
           <Group

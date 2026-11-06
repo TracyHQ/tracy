@@ -37,6 +37,12 @@ import {
 } from './pictures/asset-labels.mjs'
 import { UPLOADER_ROLES, assetOriginOf } from './pictures/asset-origin.mjs'
 import { PHOTO_ROLES, assetRelationsOf, closedListOf } from './pictures/picture-links.mjs'
+import {
+  heldObservedFacts,
+  observablePhotos,
+  observedFactEnvelopes,
+  photoViewOf
+} from './pictures/observed-facts.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
 import {
   briefFactErrors,
@@ -237,7 +243,8 @@ export function buildBrief({
   currentSite,
   placeProfile = null,
   factAssessment = null,
-  factOverrides = null
+  factOverrides = null,
+  observedFacts = null
 } = {}) {
   const resolvedAt = madeAt
   // The candidate as read today, whenever it was saved (`candidate-as-read.mjs`).
@@ -461,6 +468,18 @@ export function buildBrief({
       ...assetLabelsOf(m),
       ...assetRelationsOf(m, linkContext)
     }))
+  // What the business's own photos show, as facts (`observed-facts.mjs`): the observation step's answer held again
+  // against this brief's own photos, so a fact resting only on a guest's, a blurry or an off-topic photo is not stated.
+  const observed = Array.isArray(observedFacts)
+    ? observedFactEnvelopes(
+        heldObservedFacts(
+          { facts: observedFacts },
+          observablePhotos(media.filter((m) => nonEmpty(m?.id)).map((m) => photoViewOf(m, linkContext)))
+            .photos,
+          { people: linkContext.list.people.map((p) => p.label) }
+        )
+      )
+    : []
   const stale = []
   const staleIds = new Set()
   for (const m of media) {
@@ -886,7 +905,7 @@ export function buildBrief({
     business,
     ...(whatsapp ? { contact: { whatsapp } } : {}),
     // Every fact the brief states, one envelope each (`brief-facts.mjs`), and the points the site leads with.
-    facts: stated,
+    facts: [...stated, ...observed],
     ...(keyMessages.length ? { keyMessages } : {}),
     madeAt,
     // Generated prose carries no dash (`plain-prose.mjs`); quotes and evidence stay exact.
@@ -915,7 +934,14 @@ export function buildBrief({
 
 const PICTO = /\p{Extended_Pictographic}|\u{FE0F}|\u{200D}|[\u{1F1E6}-\u{1F1FF}]|[\u{1F3FB}-\u{1F3FF}]/gu
 const MAX_SELF_WORDS = 12
-const stripEnd = (t) => t.replace(/[\s.!:;,–—-]+$/u, '').trim()
+const END_MARK = /[\s.!:;,–—-]/u
+// The text without the spaces and stops it ends on, read from its end: `/[…]+$/` went over a long run of them
+// once for each place in it.
+export const stripEnd = (t) => {
+  let end = t.length
+  while (end > 0 && END_MARK.test(t[end - 1])) end--
+  return t.slice(0, end).trim()
+}
 
 /** The bio's first line that is words only (no number, handle or link), emoji taken off; null when none. */
 function firstBioLine(bio) {

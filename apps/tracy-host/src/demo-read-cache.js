@@ -50,12 +50,10 @@ export class DemoReadCache {
 }
 
 /**
- * 🔒 A KEPT READ IS NEVER THE EVIDENCE FOR A FINDING (review 27/10/2026): a page's fingerprint is its document as
- * loaded, before the walk that scrolls lazy content in (`readDemoPage`), so a write that changed only what loads on
- * scroll (a category label, a card list) left the fingerprint as it was and the old read, with its old residue, was
- * kept. Every page a failing check or the residue ledger names is read in full on the next check: these are the pages
- * a sweep writes and the ones whose words a failure rests on. A page with no finding may keep its read; a failure that
- * names no page is confirmed by a full check before it counts (tracy-web `client-demo.js` `measure`).
+ * The pages a failing check or the residue ledger names (review 27/10/2026): the pages a sweep writes and the ones whose
+ * words a failure rests on. Each keeps its read for the next check only when that read can stand for its finding
+ * (`keptForFinding`); a failure that names no page is confirmed by a full check before it counts (tracy-web
+ * `client-demo.js` `measure`).
  * @param {{checks?: Array<Record<string, any>>, residue?: unknown} | null | undefined} result - `runDemoQa`'s
  * @returns {Set<string>} the pages, by the path they were read at
  */
@@ -75,4 +73,20 @@ export function pagesWithFindings(result) {
   for (const check of result?.checks ?? []) if (check && check.pass !== true) walk(check, 0)
   walk(result?.residue, 0)
   return pages
+}
+
+/**
+ * 🔒 A FINDING ALONE NEVER DROPS A KEPT READ (#247), A DYNAMIC PAGE STILL DOES (review 27/10/2026). Dropping every page a
+ * finding named left a build mid-repair nothing to keep (template residue on most routes): every "incremental" read of a
+ * 48-page site read all 48 again (dev 30/10/2026, six times in one check). A page's fingerprint holds its document as
+ * served and every same-origin stylesheet, script and picture it loaded by its load event, each by its body
+ * (`readDemoPage`), so a repair of its words, its styles or its pictures changes it and the page is read anew. What the
+ * fingerprint cannot hold is a page's script-fetched data, the category label or card list a visitor's scroll loads that
+ * made the old rule: such a page is `dynamic` and is still read in full while a finding names it. A read kept before
+ * this was known (no `dynamic` said) is dropped too.
+ * @param {{dynamic?: boolean} | null | undefined} entry - the cache's entry for the page
+ * @returns {boolean}
+ */
+export function keptForFinding(entry) {
+  return entry?.dynamic === false
 }

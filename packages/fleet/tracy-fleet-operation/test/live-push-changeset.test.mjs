@@ -168,6 +168,18 @@ test('Joomla: a new article in a new category is two creates, the category first
       create: true,
       entity: 'content',
       id: 3,
+      // The times Joomla stamps on it by itself: the next sync's base holds the copy's (#223).
+      // The author columns too: the engine writes as the first Super User (#223 re-test).
+      stamps: [
+        'created',
+        'created_by',
+        'created_time',
+        'created_user_id',
+        'modified',
+        'modified_by',
+        'modified_time',
+        'modified_user_id'
+      ],
       // Its asset, which Joomla numbers on its own, aligned by name on the next sync (#172).
       align: { entity: 'assets', match: { name: 'com_content.article.3' } }
     }
@@ -613,6 +625,15 @@ test('Joomla: a menu both sides renamed since the last sync is a conflict — th
 
 // ── WordPress ────────────────────────────────────────────────────────────────────────────────
 const HOMES = ['https://shop.example', 'https://shop-com.tracy.ai']
+/** What WordPress stamps itself on a record it makes, as a create's seed names it (lib/live_push.py `W_CREATE_STAMPS`). */
+const WP_CREATE_STAMPS = [
+  'guid',
+  'post_author',
+  'post_date',
+  'post_date_gmt',
+  'post_modified',
+  'post_modified_gmt'
+]
 const post = (id, fields = {}) => ({
   ID: String(id),
   post_type: 'page',
@@ -1253,6 +1274,66 @@ test('WordPress: a new page with a new picture, a new category and a menu entry 
     !answer.unsupported.some((u) => u.path?.includes('300x200')),
     'a size of the picture is not named'
   )
+  // What WordPress stamps itself on each record it makes: the next sync's base holds the copy's, so a
+  // live delete of it is taken, never held as a false delete-modify (#223). The post sends its date.
+  const stampsOf = (id) => items[id].seed.find((s) => s.create)?.stamps
+  assert.deepEqual(stampsOf('post:new:61'), [
+    'guid',
+    'post_author',
+    'post_date_gmt',
+    'post_modified',
+    'post_modified_gmt'
+  ])
+  assert.deepEqual(stampsOf('media:new:60'), WP_CREATE_STAMPS)
+  // An item with no title is named after its number by WordPress.
+  assert.deepEqual(stampsOf('menuItem:new:62'), [...WP_CREATE_STAMPS, 'post_name'].sort())
+})
+
+test('WordPress: a new template part, Additional CSS and synced pattern name what WordPress stamps on them (#223)', () => {
+  const row = (id, type, name, content) => ({
+    ID: String(id),
+    post_name: name,
+    post_title: name,
+    post_status: 'publish',
+    post_type: type,
+    post_content: content
+  })
+  const answer = changeset('wordpress', {
+    homes: HOMES,
+    entities: { posts: { base: [10], copy: [10, 13, 15, 17] } },
+    kinds: {
+      templatePart: kind(
+        [],
+        [{ ...row(13, 'wp_template_part', 'header', '<!-- wp:site-title /-->'), area: 'header' }],
+        ['post_name']
+      ),
+      blockPost: kind([], [row(15, 'wp_block', 'call-to-action', '<p>Buy now</p>')], ['ID']),
+      customCss: kind([], [row(17, 'custom_css', 'twentytwentyfive', 'body{color:#123456}')], ['ID'])
+    }
+  })
+  const creates = answer.items.filter((i) => i.op === 'create')
+  assert.equal(creates.length, 3, JSON.stringify(answer.items.map((i) => i.id)))
+  for (const item of creates)
+    assert.deepEqual(item.seed.find((s) => s.create)?.stamps, WP_CREATE_STAMPS, item.id)
+})
+
+test('Joomla: a new redirect names the dates Joomla stamps on it (#223)', () => {
+  const link = (id, fields = {}) => ({
+    id: String(id),
+    old_url: `/old-${id}`,
+    new_url: `/new-${id}`,
+    comment: '',
+    published: '1',
+    header: '301',
+    ...fields
+  })
+  const answer = changeset('joomla', {
+    entities: { redirect_links: { base: [1], copy: [1, 2] } },
+    kinds: { redirect: kind([link(1)], [link(1), link(2)]) }
+  })
+  const created = byId(answer)['redirect:new:2']
+  assert.ok(created, JSON.stringify(answer.items.map((i) => i.id)))
+  assert.deepEqual(created.seed[0].stamps, ['created_date', 'modified_date'])
 })
 
 test('WordPress: a post put in another category writes slugs and checks the live site’s category ids', () => {
@@ -1828,6 +1909,56 @@ test('a new menu item goes only into a menu the live site has or this push makes
   assert.ok(items['menuItem:new:105'], 'an item in a live menu goes as before')
 })
 
+test('WordPress: a menu the customer deleted on live that the copy kept is no menu of the live site; its new item waits for it (#119)', () => {
+  const menu = (id, slug) => ({
+    term_id: String(id),
+    taxonomy: 'nav_menu',
+    name: slug,
+    slug,
+    description: '',
+    parent: '0'
+  })
+  const menuItem = (id, slug) => ({
+    ID: String(id),
+    title: `Item ${id}`,
+    position: '1',
+    type: 'post_type',
+    object: 'page',
+    object_id: '10',
+    url: '',
+    parent: '0',
+    menu: slug
+  })
+  const data = {
+    entities: { posts: { base: [10], copy: [10, 62, 63] }, terms: { base: [2], copy: [2, 7] } },
+    kinds: {
+      term: kind([menu(2, 'main')], [menu(2, 'main'), menu(7, 'gone')], ['term_id', 'taxonomy']),
+      menuItem: kind([], [menuItem(62, 'gone'), menuItem(63, 'main')], ['ID'])
+    }
+  }
+  const answer = changeset('wordpress', data)
+  const items = byId(answer)
+  const made = answer.items.find((i) => i.kind === 'term' && i.op === 'create')
+  assert.ok(made, JSON.stringify(answer.items.map((i) => i.id)))
+  assert.ok(items['menuItem:new:62'].dependsOn.includes(made.id), JSON.stringify(items['menuItem:new:62']))
+  assert.deepEqual(items['menuItem:new:63'].dependsOn, [], 'an item in a live menu goes as before')
+
+  // The sync kept the deleted menu as the copy's (a delete-modify): its create is a conflict, and the
+  // item in it is never written on its own.
+  const held = changeset('wordpress', data, [
+    {
+      id: 'db:wp_terms:["7"]',
+      kind: 'row',
+      table: 'wp_terms',
+      key: { term_id: '7' },
+      reason: 'delete-modify'
+    }
+  ])
+  const term = held.items.find((i) => i.kind === 'term' && i.op === 'create')
+  assert.ok(term?.conflict, JSON.stringify(held.items))
+  assert.ok(byId(held)['menuItem:new:62'].dependsOn.includes(term.id))
+})
+
 test('Joomla: an article the push creates seeds its asset to be aligned by name, so the next sync meets the copy’s own (#172)', () => {
   const answer = changeset('joomla', {
     entities: { content: { base: [1], copy: [1, 10] } },
@@ -1895,4 +2026,171 @@ test('a push cut off before it recorded its writes is recorded from its journal 
   writeFileSync(join(cut, 'journal.jsonl'), line(10, 20) + line(11, 21) + line(12, 24))
   assert.deepEqual(run().recorded, ['cut'])
   assert.deepEqual(JSON.parse(readFileSync(idMap, 'utf8')), { content: { 20: 10, 21: 11, 24: 12 } })
+})
+
+test('record-cut never records an undone push again, and records a create settled after its push answered (#222, #74)', () => {
+  const pushRoot = join(root, `push-root-${++n}`)
+  const item = (id) => ({
+    id: `article:new:${id}`,
+    kind: 'article',
+    op: 'create',
+    title: `Article ${id}`,
+    creates: `content:${id}`,
+    seed: [{ table: 'content', match: { id }, columns: ['title'], create: true, entity: 'content', id }]
+  })
+  const changeset = JSON.stringify({ ok: true, platform: 'joomla', items: [item(10), item(11)] })
+  const line = (id, live) =>
+    `${JSON.stringify({ id: `article:new:${id}`, state: 'written', created: { [`content:${id}`]: live } })}\n`
+  const pushDir = (name, files) => {
+    const dir = join(pushRoot, name)
+    mkdirSync(dir, { recursive: true })
+    for (const [file, text] of Object.entries(files)) writeFileSync(join(dir, file), text)
+    return dir
+  }
+  // Cut off, then undone: its Undo recorded it (`undo-recorded`); recorded forward again, the settle
+  // sync trashed Tracy's post on the copy.
+  pushDir('undone', { 'changeset.json': changeset, 'journal.jsonl': line(10, 20), 'undo-recorded': '' })
+  // Answered with article 11 unknown; settled since from the live site's log (`reconciled.json`).
+  const answered = pushDir('answered', {
+    'changeset.json': changeset,
+    'journal.jsonl': line(10, 30),
+    'written.json': '{"written":[{"id":"article:new:10"}]}',
+    recorded: ''
+  })
+  const idMap = join(pushRoot, 'id-map.json')
+  const pushed = join(pushRoot, 'pushed.json')
+  const run = () => {
+    const r = spawnSync(
+      'python3',
+      [PUSH, 'record-cut', '--push-root', pushRoot, '--id-map', idMap, '--pushed', pushed],
+      {
+        encoding: 'utf8'
+      }
+    )
+    assert.equal(r.status, 0, r.stderr + r.stdout)
+    return JSON.parse(r.stdout.trim().split('\n').at(-1))
+  }
+  assert.deepEqual(run().recorded, [], 'an undone push and an answered one are left alone')
+  writeFileSync(join(answered, 'journal.jsonl'), line(10, 30) + line(11, 31))
+  writeFileSync(join(answered, 'reconciled.json'), '{"written":[{"id":"article:new:11"}]}')
+  assert.deepEqual(run().recorded, ['answered'])
+  assert.deepEqual(
+    JSON.parse(readFileSync(idMap, 'utf8')),
+    { content: { 31: 11 } },
+    'only the settled create'
+  )
+  assert.deepEqual(run().recorded, [], 'recorded once')
+})
+
+test('WordPress: a new picture titled otherwise than its file has its words written after the upload; an edit of one already there is sent too (#223)', () => {
+  const words = (id, fields = {}) => ({
+    ID: String(id),
+    post_title: `pic-${id}`,
+    post_name: `pic-${id}`,
+    post_excerpt: '',
+    post_content: '',
+    ...fields
+  })
+  const answer = changeset('wordpress', {
+    homes: HOMES,
+    entities: { posts: { base: [10, 50], copy: [10, 50, 60] } },
+    files: {
+      changes: [
+        { path: 'wp-content/uploads/2026/11/rt-pic.png', change: 'added', blob: 'a'.repeat(40), size: 500 }
+      ],
+      config: null
+    },
+    kinds: {
+      attachment: kind(
+        [{ ID: '50', post_title: 'pic-50', file: '2026/10/pic-50.png' }],
+        [
+          { ID: '50', post_title: 'Shop front', file: '2026/10/pic-50.png' },
+          { ID: '60', post_title: 'RT picture', file: '2026/11/rt-pic.png' }
+        ],
+        ['ID']
+      ),
+      mediaText: kind(
+        [words(50)],
+        [
+          words(50, { post_title: 'Shop front', post_excerpt: 'See https://shop-com.tracy.ai/visit' }),
+          words(60, { post_title: 'RT picture', post_name: 'rt-picture', post_content: 'Our roof' })
+        ],
+        ['ID']
+      )
+    }
+  })
+  const items = byId(answer)
+  // The new one: uploaded, then its own words, once the upload made it.
+  assert.equal(items['media:new:60'].op, 'upload')
+  const made = items['mediaText:new:60']
+  assert.ok(made, JSON.stringify(Object.keys(items)))
+  assert.equal(made.kind, 'post', 'written as a post: the engine takes these fields for any post type')
+  assert.deepEqual(made.ident, { $new: 'posts:60' })
+  assert.deepEqual(made.dependsOn, ['media:new:60'])
+  assert.deepEqual(made.write, {
+    post_title: 'RT picture',
+    post_name: 'rt-picture',
+    post_content: 'Our roof'
+  })
+  assert.deepEqual(made.expect, {})
+  assert.deepEqual(made.seed, [
+    { table: 'posts', match: { ID: 60 }, columns: ['post_title', 'post_name', 'post_content'] }
+  ])
+  assert.ok(answer.items.indexOf(items['media:new:60']) < answer.items.indexOf(made), 'the upload first')
+  // The one already there: its title and caption are sent, the caption with the live address,
+  // checked against what the live site held.
+  const edited = items['mediaText:50']
+  assert.ok(edited, JSON.stringify(Object.keys(items)))
+  assert.equal(edited.liveId, 50)
+  assert.deepEqual(edited.write, { post_title: 'Shop front', post_excerpt: 'See https://shop.example/visit' })
+  assert.deepEqual(edited.expect, { post_title: 'pic-50', post_excerpt: '' })
+  assert.equal(edited.group, 'files')
+  assert.ok(!answer.unsupported.some((u) => u.title === 'Shop front'), JSON.stringify(answer.unsupported))
+})
+
+test('WordPress: no words are written for a picture whose upload is not sent (#223)', () => {
+  const answer = changeset('wordpress', {
+    homes: HOMES,
+    entities: { posts: { base: [10], copy: [10, 60] } },
+    files: { changes: [], config: null },
+    kinds: {
+      attachment: kind([], [{ ID: '60', post_title: 'RT picture', file: '2026/11/rt-pic.png' }], ['ID']),
+      mediaText: kind(
+        [],
+        [{ ID: '60', post_title: 'RT picture', post_name: 'rt-picture', post_excerpt: '', post_content: '' }],
+        ['ID']
+      )
+    }
+  })
+  assert.deepEqual(answer.items, [])
+  assert.deepEqual(
+    answer.unsupported.map((u) => u.reason),
+    ['file-not-in-copy']
+  )
+})
+
+test('Joomla: an article a sync kept though the live site deleted it is held by its kept place, never refused as a live record (#307)', () => {
+  // The sync kept Tracy's edited article 7 the customer deleted on live, and took 7 out of the id map:
+  // the base (the live read) has no 7.
+  const data = {
+    entities: { content: { base: [1], copy: [1, 7] } },
+    kinds: { article: kind([article(1)], [article(1), article(7, { title: 'Edited by Tracy' })]) }
+  }
+  const held = changeset('joomla', data, [
+    {
+      id: 'db:jos_content:["7"]',
+      kind: 'row',
+      table: 'jos_content',
+      key: { id: '7' },
+      reason: 'delete-modify'
+    }
+  ])
+  const item = byId(held)['article:new:7']
+  assert.ok(item, JSON.stringify(held.items.map((i) => i.id)))
+  assert.equal(item.conflict?.reason, 'changed-on-both', JSON.stringify(item))
+  assert.ok(!held.unsupported.some((u) => u.why === 'live-record'), JSON.stringify(held.unsupported))
+  // Once no sync keeps it, it is Tracy's article to send, as any other.
+  const free = byId(changeset('joomla', data))['article:new:7']
+  assert.equal(free.op, 'create')
+  assert.equal(free.conflict, undefined)
 })

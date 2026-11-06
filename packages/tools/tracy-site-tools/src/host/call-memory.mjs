@@ -405,7 +405,7 @@ export function createCallMemory(opts = {}) {
    *   inspects: Map<string, Snapshot>,
    *   slotShapes: Map<string, { slots: unknown[], turn: number }>,
    *   reads: Map<number | string, Read>, partKeys: Map<string, Read>,
-   *   titles: Map<string, string>,
+   *   titles: Map<string, string>, front: number | null, drift: Set<string>,
    *   receipts: Map<string, { applyIds: string[], ok: Set<string>, unknown: Set<string>, idMap: Map<string, string>, records: Map<string, Map<string, number>>, unknownRecords: Map<string, Set<string>> }>,
    *   wp: Map<string, { turn: number, base: string, n: number }>,
    *   confirms: Map<string, { askedAt: number, said: 'yes' | 'no' | null, own: boolean, facts: string[], yesAt: number, intent: 'delete' | 'hide' | null, typed?: boolean }>,
@@ -450,6 +450,8 @@ export function createCallMemory(opts = {}) {
         slotShapes: new Map(),
         reads: new Map(),
         titles: new Map(),
+        front: null,
+        drift: new Set(),
         partKeys: new Map(),
         receipts: new Map(),
         wp: new Map(),
@@ -913,6 +915,49 @@ export function createCallMemory(opts = {}) {
       const kind = typeof address?.kind === 'string' ? address.kind : ''
       if (kind === '' || !Number.isInteger(id) || id <= 0) return null
       return session(sessionId).titles.get(`${kind}:${id}`) ?? null
+    },
+
+    /**
+     * The presentation drift lines of `messages` this conversation has not been told yet (#258), which
+     * from now on count as told. A site's drift is permanent once built, and the Joomla Claude Cowork
+     * plugin repeats its whole list in every contract answer (`site-call.mjs` `driftSaidOnce`).
+     * @param {unknown} sessionId
+     * @param {string[]} messages
+     * @returns {string[]}
+     */
+    unsaidDrift(sessionId, messages) {
+      if (!named(sessionId)) return messages
+      const s = session(sessionId)
+      const fresh = messages.filter((m) => !s.drift.has(m))
+      for (const m of fresh) s.drift.add(m)
+      while (s.drift.size > MAX_TITLES) s.drift.delete(/** @type {string} */ (s.drift.values().next().value))
+      return fresh
+    },
+
+    /**
+     * The site's static front page, as a read found it (#257: `replace-wordpress.mjs` `onFront`).
+     * @param {unknown} sessionId
+     * @param {unknown} id - its post id
+     */
+    rememberFront(sessionId, id) {
+      const n = Number(id)
+      if (named(sessionId) && Number.isInteger(n) && n > 0) session(sessionId).front = n
+    },
+
+    /**
+     * Whether a write names the site's static front page: a WordPress `post` or `page` of that id. The
+     * write is then labelled the home page (`x-tracy-write-front`), whatever title its record keeps.
+     * @param {unknown} sessionId
+     * @param {{ kind?: unknown, id?: unknown }} address
+     */
+    isFront(sessionId, address) {
+      if (!named(sessionId)) return false
+      const front = session(sessionId).front
+      return (
+        typeof front === 'number' &&
+        (address?.kind === 'post' || address?.kind === 'page') &&
+        Number(address?.id) === front
+      )
     },
 
     /**

@@ -24,10 +24,10 @@ self-hosted runners (owner decision, 26/10/2026). Enforced by `scripts/test/ci-p
 | Code | Where it runs | Credentials |
 |---|---|---|
 | A push to `main`/`staging`/`develop`, a manual run, the nightly | the team's self-hosted runners, as before | the secrets each workflow already uses |
-| A pull request from a **branch of this repository** | the team's self-hosted runners, **always the dev lane** (`tracy-lane-dev`), whatever the base | as before (the CI read App token in `plan` and `CI Before Merge`, the vendor deploy key, the Turbo cache keys) |
+| A pull request from a **branch of this repository** | Tracy CI: GitHub-hosted `ubuntu-latest` by default since 30/10/2026 (full workers suite in three rows there), or the team's self-hosted runners when it carries the label `ci:self-hosted` — then **always the dev lane** (`tracy-lane-dev`), whatever the base ([`gates-ci-runners.md`](gates-ci-runners.md) › Runners); the light gates (`changelog`, `description`, `Regression`, `branch-fresh`, `english`, `CI Before Merge`): GitHub-hosted `ubuntu-latest` since 30/10/2026 | as before (the CI read App token in `plan` and `CI Before Merge`, the vendor deploy key); the Turbo cache needs no secret since 30/10/2026 (the repository's GitHub Actions cache, written under the pull request's own scope) |
 | A pull request from a **fork** | **GitHub-hosted** `ubuntu-latest` only | none: `permissions: { contents: read }`, `actions/checkout` with `persist-credentials: false`, no `secrets.*` |
 
-Each self-hosted job of a pull-request workflow carries
+Each same-repository job of a pull-request workflow carries
 `github.event.pull_request.head.repo.full_name == github.repository` in its `if`. Each such
 workflow has a fork twin named `<job> (fork)` that runs the same repo script on `ubuntu-latest`:
 
@@ -48,10 +48,11 @@ person, after reading it.
 `tracy-lane-prod` runners share the machine that builds production images. Since 26/10/2026 no
 pull-request job asks for it, a release pull request into `main` included; only a push to
 `main`/`staging` (image builds, deploys, `changelog`) and a manual Tracy CI run on `main`/`staging`
-do. `check-pr-merge.mjs` therefore requires the dev lane on every job of every pull request, and the
+do. `check-pr-merge.mjs` therefore requires the dev lane on every self-hosted job of every pull request (a job whose only label is `ubuntu-latest` and whose runner group is `GitHub Actions` is GitHub-hosted, on no lane), and the
 lane no longer records which base a run was made for. A pull request retargeted after a green run is
-still caught: into `staging`/`main` every row is required (the forced Turbo rows only with the plan's
-`full run` mark), and `branch-fresh` now re-runs on `edited`, which retargeting fires.
+still caught: into `staging`/`main` every row is required (three workers shards when the run's `plan`
+job and rows ran GitHub-hosted, two on our runners, and a mix of the two kinds is refused; the forced Turbo rows only with the plan's `full run`
+mark), and `branch-fresh` now re-runs on `edited`, which retargeting fires.
 
 ### Privileged workflows
 

@@ -19,6 +19,8 @@ import { test } from 'node:test'
 import { readContracts } from '../src/lib/contracts.js'
 import { DS_READY_CODE } from '../src/lib/design-system-ready-templates.js'
 import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
+import { imagesDigest } from '../src/lib/template-kit/reader.js'
+import { FLOW_SITE, frontGroup } from './_template-kit-flow-site.mjs'
 import { DS_SEVERITY, phaseTwoOf } from '../src/lib/template-design-system-readiness/severity.js'
 
 /**
@@ -49,6 +51,28 @@ function writeCleanCoverage(at, id, { roles = true } = {}) {
       hygiene: []
     })
   )
+  writeApprovedKit(at, id.split('/').at(-1))
+}
+
+/** An approved template kit of `version` beside the contract, so Template kit passes unless a test says otherwise. */
+function writeApprovedKit(at, version) {
+  writeFileSync(path.join(at, 'template-kit.json'), JSON.stringify(approvedKit(version)))
+}
+
+/** An approved template kit of `version`, as `template-kit.json` holds it. */
+function approvedKit(version) {
+  const images = [{ id: 'page-home-1440', path: 'pages/home-1440.png', sha256: 'a'.repeat(64) }]
+  return {
+    kitVersion: '1.0.0',
+    template: { name: 'ja_restaurant' },
+    quickstart: { product: 'ja-restaurant', version },
+    images,
+    site: FLOW_SITE,
+    pageGroups: [frontGroup('home')],
+    pages: [{ id: 'home', path: '/', images: { 1440: 'home-1440', 390: 'home-390' } }],
+    blocks: [{ id: 'hero', images: { 1440: 'hero-1440', 390: 'hero-390' } }],
+    approval: { by: 'reviewer', at: '2026-10-30T00:00:00.000Z', imagesSha256: imagesDigest(images) }
+  }
 }
 
 /** A contract index holding one profile for `tag` at each version. */
@@ -74,6 +98,9 @@ function indexWith(tag, platform, versions, { coverage = true, roles = true } = 
 }
 
 const NO_CONTRACTS = new Map()
+
+/** The image zip of the approved kit of 1.0.2, as the kit pack names it on the release. */
+const KIT_ZIP = 'template-kit-ja-restaurant-1.0.2.zip'
 
 const CARD = Object.freeze({
   template: 'ja-restaurant',
@@ -108,7 +135,7 @@ function release(over = {}) {
     tracy: over.tracy ?? (setting ? 'ready' : 'no-setting'),
     reason: over.reason ?? null,
     publishedAt: null,
-    assets: over.assets ?? [{ name: 'w.tar.gz' }],
+    assets: over.assets ?? [{ name: 'w.tar.gz' }, { name: KIT_ZIP }],
     setting,
     inspiration: over.inspiration ?? null,
     inspirationHidden: over.inspirationHidden ?? false,
@@ -155,6 +182,7 @@ test('the steps come in one fixed order, each with a state and a code', () => {
       'install-file',
       'contract',
       'content-coverage',
+      'template-kit',
       'customize',
       'design-system',
       'demo',
@@ -220,6 +248,7 @@ test('ja-restaurant on dev: release ok, demo failed on 1.0.0, no listing, no con
   assert.deepEqual(published.params.waiting, [
     'contract',
     'content-coverage',
+    'template-kit',
     'customize',
     'design-system',
     'listing'
@@ -343,6 +372,27 @@ test('a draft holds everything after the release step', () => {
   assert.equal(stepOf(road, 'published').blockedBy, 'release')
 })
 
+test('an install part whose sha256 GitHub states otherwise holds Publish: the host would refuse the download', () => {
+  const digest = (hex) => [{ name: 'w.tar.gz', digest: `sha256:${hex}` }, { name: KIT_ZIP }]
+  const road = roadOf(release({ assets: digest('b'.repeat(64)), inspirationHidden: true }), {
+    contracts: NO_CONTRACTS
+  })
+  const step = stepOf(road, 'install-file')
+  assert.deepEqual(
+    [step.state, step.code, step.params.files],
+    ['todo', 'install-file-sha-mismatch', ['w.tar.gz']]
+  )
+  const refusal = publishRefusalOf(road, release({ assets: digest('b'.repeat(64)) }))
+  assert.equal(refusal.error, 'NOT_A_CARD')
+  assert.match(refusal.reason, /w\.tar\.gz/)
+  // The same digest, or none stated, passes.
+  for (const assets of [digest('a'.repeat(64)), [{ name: 'w.tar.gz' }]])
+    assert.equal(
+      stepOf(roadOf(release({ assets }), { contracts: NO_CONTRACTS }), 'install-file').code,
+      'install-file-ready'
+    )
+})
+
 test('a missing download is a warning on the install file, not a polish note', () => {
   const road = roadOf(release({ assets: [] }), { contracts: NO_CONTRACTS })
   assert.deepEqual(
@@ -399,7 +449,7 @@ test('a shown listing is published, and with nothing to polish every step is don
   })
   assert.deepEqual(
     road.map((s) => s.state),
-    ['done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done']
+    ['done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done']
   )
   assert.deepEqual(stepOf(road, 'customize').params, {
     passed: 2,
@@ -451,7 +501,9 @@ test('EmDash needs no contract; a lower profile warns and does not hold Publish'
     demo: { url: 'https://d/', version: '1.0.2', platform: 'joomla' },
     contracts: lower,
     readiness: READY,
-    dsReadiness: DS_READY
+    dsReadiness: DS_READY,
+    // The kit is per quickstart version: the one beside the 1.0.0 contract is stale for 1.0.2, so hand in its own.
+    templateKit: { state: 'read', doc: approvedKit('1.0.2') }
   })
   assert.deepEqual(
     [stepOf(warned, 'contract').state, stepOf(warned, 'contract').code, stepOf(warned, 'contract').params],

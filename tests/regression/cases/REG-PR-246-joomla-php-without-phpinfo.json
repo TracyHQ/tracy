@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-246-joomla-php-without-phpinfo",
+  "kind": "fix",
+  "title": "A Joomla import names an old PHP when phpinfo is disabled",
+  "pr": 246,
+  "area": "import/joomla",
+  "cms": ["jo"],
+  "steps": [
+    "Run installCowork against a fake Joomla whose phpinfo page is blank and whose System Information JSON names PHP 7.3.33.",
+    "Run it against one whose package installer refuses PHP 7.3.33."
+  ],
+  "expect": [
+    "php_too_old with php 7.3.33, before any install POST.",
+    "php_too_old with php 7.3.33 and minimum 7.4.0 (check installer_php_floor), not install_failed."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#225",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs"
+    ],
+    "tests": ["phpinfo disabled and no X-Powered-By", "the package installer refusing the site"]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

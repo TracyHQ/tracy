@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-315-signed-in-link-visit",
+  "kind": "feat",
+  "title": "A signed-in navigation to / from a link with utm_* records link.visited once per person, source and half hour; a fetch, a repeat, a signed-out visit and a view-as record none",
+  "pr": 315,
+  "area": "usage/funnel",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: signed in as ceo@tracy.ai, GET /?utm_source=tracy&utm_medium=email&utm_campaign=tracy-beta-2026-10&utm_content=followup-d with Accept text/html twice, once with Accept application/json, then GET / with no utm_*.",
+    "S2: the same link with no session cookie.",
+    "S3: move the clock one ENTERED_WINDOW_MS and open the link signed in again.",
+    "S4: open /?utm_source=tracy&utm_medium=email as an admin viewing customer@example.com (tracy_view cookie, view-as on)."
+  ],
+  "expect": [
+    "S1: exactly one link.visited row whose data is {email: ceo@tracy.ai, source: tracy, medium: email, campaign: tracy-beta-2026-10, content: followup-d}.",
+    "S2: 302 to /login?utm_source=tracy... and no new link.visited row.",
+    "S3: a second link.visited row; linkVisitKey ignores the case of the address and is the same within one half hour.",
+    "S4: no link.visited row."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/workspace/route.js (root branch, linkVisitKey); apps/tracy-web/src/lib/ops-signal.js (link.visited)"
+  },
+  "evidence": "Lifecycle mails of 2026-11-02 to 87 existing customers left no click record: a signed-in browser opening /?utm_... never reaches /login, so login.visited saw none of them",
+  "fence": "Usage never stands in the way: the redirect is unchanged and the signal is never awaited; only an HTML navigation from a real session counts, so link scanners (no cookie), fetches and an admin's view-as add no rows",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=link.visited",
+      "apps/tracy-web/test/proxy.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "workspaceRoutes: a signed-in navigation to / with utm_* records link.visited once per half hour",
+      "workspaceRoutes: a view as a customer records no link.visited for the customer"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "id": "REG-PR-264-build-from-business-waits",
+  "kind": "fix",
+  "title": "Build from my business never waits on photo labelling, says when it reads the business, and keeps unchanged reads and looks across checks",
+  "pr": 264,
+  "area": "website-opportunities/build-from-business",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: label five pictures one per call, two calls at once, and answer the second call before the first.",
+    "S2: ask a brief's photo labelling run for its answer while it labels, after it settles, and past its five-minute bound; ask revisionForAction for an own-site brief while its run still labels, then after.",
+    "S3: follow a business whose chat/prepare answers DEMO_PICTURE_LABELS_PENDING twice; read the research progress of a job whose progress says reading: business.",
+    "S4: make the business reading's door from a DeepSeek assignment set to high, and from a provider whose reasoning cannot be turned off.",
+    "S5: ask whether a kept page read stands for a finding when the page is static, dynamic, or of unknown kind.",
+    "S6: look at two pages in one stream where the second vision call fails."
+  ],
+  "expect": [
+    "S1: the third call starts as soon as the second answers, while the first is still out.",
+    "S2: pending with a time to ask again and no brief written while it labels; the settled labels once done, from one labelling call; a failed labelling with reason labelling_overdue and no label past the bound.",
+    "S3: prepare is asked again after each pending answer with the photos line shown, then the chat opens; the progress names reading and no source.",
+    "S4: effort off with a 4,000-token answer budget for DeepSeek; no effort and 12,000 tokens for the other provider.",
+    "S5: only the static page's read is kept.",
+    "S6: the first page counts as seen; the second is unlooked on its phone width."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/picture-label-runs.js, apps/tracy-web/src/lib/picture-vision.js, packages/wo/website-opportunities/src/business-reading.js, packages/site/tracy-add-site/src/client/from-business-flow.mjs, apps/tracy-host/src/demo-read-cache.js, apps/tracy-web/src/opportunities-build/demo-look.js",
+    "codes": "DEMO_PICTURE_LABELS_PENDING, labelling_overdue"
+  },
+  "evidence": "Issues 250, 251 and 247 (dev 30/10/2026, Zuni Cafe): chat/prepare 113 s, profile stage 119.7 s with no progress, checks of 9-28 min with every incremental read 0 unchanged and every look partly with 0 pages seen",
+  "fence": "Build from my business waits",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=a bounded pool|one run per input|a run still out past its bound|revisionForAction answers pending|a chat whose photos are still being labelled|while the research reads the business it says so|a reading asks for no reasoning|a finding keeps a read whose fingerprint|a page is seen once every tile",
+      "apps/tracy-web/test/picture-vision.test.mjs",
+      "apps/tracy-web/test/wo-picture-label-runs.test.mjs",
+      "packages/site/tracy-add-site/test/from-business-flow.test.mjs",
+      "apps/tracy-web/test/website-opportunities-business-reading.test.mjs",
+      "apps/tracy-host/test/demo-read-cache.test.mjs",
+      "apps/tracy-web/test/wo-demo-look.test.mjs"
+    ],
+    "tests": [
+      "a bounded pool: the next batch starts as soon as any call answers",
+      "one run per input: pending while it labels, its settled answer after, asked once",
+      "a run still out past its bound is an honest failed labelling, never a longer wait",
+      "revisionForAction answers pending and makes no brief while the photographs are labelled, then briefs them",
+      "a chat whose photos are still being labelled is asked again, with its own line, never failed",
+      "researchProgressOf: while the research reads the business it says so, and names no source left behind",
+      "a reading asks for no reasoning where the provider can turn it off, and a JSON-sized answer",
+      "a finding keeps a read whose fingerprint holds the whole page; a dynamic or unknown one is read anew",
+      "a page is seen once every tile of it is answered, even when a later call of its stream fails"
+    ]
+  }
+}

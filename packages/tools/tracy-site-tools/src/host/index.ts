@@ -119,6 +119,7 @@ import {
   designSystemRequest
 } from './chat-design-route.mjs'
 import { designRoutesAt } from './chat-design-switch.mjs'
+import { callOrigin, createInternalOrigin } from './call-origin.mjs'
 import { captureWishes, mayHoldWish, notesNotice, readNotes, storeDirOf, WISH_KEPT } from './site-notes.mjs'
 import {
   COMMENT_KEY,
@@ -882,11 +883,34 @@ const bySession = new Map<string, Viewer>()
 let latest: Viewer | null = null
 
 /**
+ * Where a call from this host to tracy-web goes: `MCP_TRACY_API_ORIGIN` when the host names an
+ * internal address (the stack's `http://tracy-web:8080`), else the public origin it was given. Every
+ * Apply call once left the host through the public edge and came back to tracy-web on the same machine;
+ * on dev 30–40 % of fresh connections stalled there and the agent told the customer their site was not
+ * answering (#208). Only the address the call is SENT to changes: words the customer reads keep the
+ * public origin. A test that names its own origin (`config.origin`) keeps it.
+ *
+ * Unset on a fleet dsh, it is found by itself (`createInternalOrigin`): tracy-web on dsh's own network.
+ */
+const internalOrigin = createInternalOrigin({
+  configured: () => gatewaySetting('MCP_TRACY_API_ORIGIN'),
+  fleet: () => process.env.MCP_TRACY_FLEET?.trim() === '1'
+})
+async function apiOriginOf(publicOrigin: string): Promise<string> {
+  return callOrigin(publicOrigin, gatewaySetting('MCP_TRACY_ORIGIN'), await internalOrigin())
+}
+
+/**
  * The site this lane serves, from the env file the lane was created with (`MCP_TRACY_SITE_KEY`).
  * Read lazily and once — same reasoning as `tracy-site-tabs`.
  */
 function gatewaySetting(
-  name: 'MCP_TRACY_SITE_KEY' | 'MCP_TRACY_SITE_LABEL' | 'MCP_TRACY_ORIGIN' | 'TRACY_BUILD_REASONING_EFFORT'
+  name:
+    | 'MCP_TRACY_SITE_KEY'
+    | 'MCP_TRACY_SITE_LABEL'
+    | 'MCP_TRACY_ORIGIN'
+    | 'MCP_TRACY_API_ORIGIN'
+    | 'TRACY_BUILD_REASONING_EFFORT'
 ): string | null {
   const value = process.env[name]?.trim() || null
   if (value === null) {
@@ -1059,7 +1083,8 @@ async function applyDoor(
   label: string | null = null,
   sessionId: string | null = null,
   preset: string | null = null,
-  title: string | null = null
+  title: string | null = null,
+  front = false
 ): Promise<unknown> {
   // WHOSE NAME THIS WRITE LEAVES IN. `prompter` is the person who typed the message that started
   // this turn, vouched for by a signed assertion the gate mints (`prompter.mjs` says why). `viewer`
@@ -1097,6 +1122,9 @@ async function applyDoor(
   // label only — tracy-web never decides which record is written by it — and a header, so a door that
   // does not know it ignores it and the component never sees it.
   if (title) headers['x-tracy-write-title'] = encodeURIComponent(title.slice(0, 120))
+  // The record is the site's static front page (#257, `memory.isFront`): the card and Site changes say
+  // "the home page" in the reader's language, not the title a quickstart's demo left on the record.
+  if (front) headers['x-tracy-write-front'] = '1'
   const comment = answeringComment.getStore()
   // A write refused because another conversation holds the site's lease is sent again, bounded, until
   // it goes through (`lease-wait.mjs`, acceptance v4 S09/SEND-v4-new-11). Only a call that names its
@@ -1172,25 +1200,34 @@ async function applyDoorOnce(
   comment: number | number[] | undefined
 ): Promise<unknown> {
   let res: Response
+  let text: string
   try {
-    res = await (config.fetch ?? fetch)(`${plan.origin}/api/sites/${encodeURIComponent(key)}/apply`, {
-      method: 'POST',
-      headers,
-      // `target` sits beside `action`, not inside `params`: the Apply door reads it there, and it is
-      // omitted entirely when absent so a call with no target keeps the exact shape it always had.
-      // `comment` beside `action` too, and only when the call answers one: the door then writes the
-      // words a comment points at for whoever commented (`apps/tracy-web/src/sites/comment-answer.js`,
-      // Brian 29/09/2026), after checking the number is that person's own sent comment on the site.
-      body: JSON.stringify({
-        action,
-        params,
-        ...(target === null ? {} : { target }),
-        ...(comment === undefined ? {} : { comment })
-      }),
-      signal: AbortSignal.timeout(
-        action === 'demo.research' && params.operation === 'check' ? DEMO_CHECK_TIMEOUT_MS : APPLY_TIMEOUT_MS
-      )
-    })
+    res = await (config.fetch ?? fetch)(
+      `${await apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
+      {
+        method: 'POST',
+        headers,
+        // `target` sits beside `action`, not inside `params`: the Apply door reads it there, and it is
+        // omitted entirely when absent so a call with no target keeps the exact shape it always had.
+        // `comment` beside `action` too, and only when the call answers one: the door then writes the
+        // words a comment points at for whoever commented (`apps/tracy-web/src/sites/comment-answer.js`,
+        // Brian 29/09/2026), after checking the number is that person's own sent comment on the site.
+        body: JSON.stringify({
+          action,
+          params,
+          ...(target === null ? {} : { target }),
+          ...(comment === undefined ? {} : { comment })
+        }),
+        signal: AbortSignal.timeout(
+          action === 'demo.research' && params.operation === 'check'
+            ? DEMO_CHECK_TIMEOUT_MS
+            : APPLY_TIMEOUT_MS
+        )
+      }
+    )
+    // The body is part of the answer: a deadline or a reset while it is read is the same lost answer as
+    // one before the headers, never a raw throw out of the call (#208).
+    text = await res.text()
   } catch (error) {
     return {
       ok: false,
@@ -1198,7 +1235,6 @@ async function applyDoorOnce(
       error: error instanceof Error ? error.message : String(error)
     }
   }
-  const text = await res.text()
   let body: unknown
   try {
     body = JSON.parse(text)
@@ -3069,7 +3105,20 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     const writes = relayWrites(action, params)
     if (writes) memory.invalidateSite(site)
     const title = writes ? memory.titleOf(sessionId, params) : null
-    const answer = await applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title)
+    const front = writes && memory.isFront(sessionId, params)
+    const answer = await applyDoor(
+      config,
+      plan,
+      key,
+      action,
+      params,
+      target,
+      label,
+      sessionId,
+      preset,
+      title,
+      front
+    )
     if (writes) memory.invalidateSite(site)
     // A write the door took holds the site's lease for this conversation until its turn ends.
     // 🔒 A WRITE BY THE DOOR'S OWN RULE (`doorTakesLease`, review C3), not "makes reads stale": a media
@@ -4151,6 +4200,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
                 storeDir: store,
                 message: wish,
                 session: typeof sessionId === 'string' ? sessionId : null,
+                warn,
                 // The plugin's own clock, like the today notice above: a note's date is the day the
                 // host says it is, never a second clock read behind it.
                 ...(config.now ? { now: config.now } : {})
@@ -5739,7 +5789,8 @@ export function apply(ctx: HostContext, config: Config = {}): void {
               facts.platform === 'wordpress' || facts.platform === 'joomla'
                 ? facts.platform
                 : await detectPlatform(webroot),
-            // A bound WordPress site: a picture lands in an image slot or nowhere.
+            // A bound WordPress site: a picture placed on a page lands in an image slot; one drawn with a
+            // shape of its own is kept in the media library only (#255).
             slotOnly: facts.platform === 'wordpress' && facts.contractDoor === true,
             door: pictureDoor(process.env),
             draw: drawPicture,

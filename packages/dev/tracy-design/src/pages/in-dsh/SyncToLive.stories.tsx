@@ -116,6 +116,40 @@ const ANSWERS: Record<string, unknown> = {
     }),
     lastPush: null
   },
+  // Sent with no answer back, and a write a firewall refused (#226): their own group, a note each.
+  unknown: {
+    available: true,
+    push: row({
+      state: 'pushed',
+      phase: 'apply',
+      pushedAt: ago(1),
+      preview: PREVIEW,
+      result: {
+        ...RESULT,
+        pushed: RESULT.pushed.slice(0, 1),
+        failed: [
+          item('u1', 'Page template', { code: 'WRITE_OUTCOME_UNKNOWN' }),
+          item('b1', 'Prices', { code: 'LIVE_BLOCKED' })
+        ]
+      },
+      undoable: true
+    }),
+    lastPush: null
+  },
+  // Undo answered that nothing is left to undo (#226): said once, no Undo to press.
+  notPushed: {
+    available: true,
+    push: row({
+      state: 'pushed',
+      phase: 'apply',
+      pushedAt: ago(40),
+      preview: PREVIEW,
+      result: RESULT,
+      undoable: true,
+      undoError: 'NOT_PUSHED'
+    }),
+    lastPush: null
+  },
   undoing: {
     available: true,
     push: row({ state: 'running', phase: 'undo', step: 'undoing', preview: PREVIEW, result: RESULT }),
@@ -242,5 +276,8 @@ export const UndoAsked: Story = { render: () => <Frame which="undo" /> }
 export const Undoing: Story = { render: () => <Frame which="undoing" /> }
 export const Undone: Story = { render: () => <Frame which="undone" /> }
 export const Failed: Story = { render: () => <Frame which="failed" /> }
+export const PushedUnknown: Story = { render: () => <Frame which="unknown" /> }
+export const PushedUnknownVi: Story = { render: () => <Frame which="unknown" lang="vi" /> }
+export const NothingLeftToUndo: Story = { render: () => <Frame which="notPushed" /> }
 export const ReviewVi: Story = { render: () => <Frame which="review" lang="vi" /> }
 export const PushedVi: Story = { render: () => <Frame which="pushed" lang="vi" /> }

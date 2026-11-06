@@ -969,3 +969,118 @@ test("each picture carries its own card's words, never a neighbouring card's", o
     server.close()
   }
 })
+
+// #247: a finding alone no longer drops a kept read, so the fingerprint must hold what a repair changes besides the
+// document (a stylesheet, a picture rewritten in place), and a page that fetches its content by script says so.
+test(
+  'the fingerprint holds the stylesheets and pictures a page loads; a page that fetches its content is dynamic (#247)',
+  opts,
+  async () => {
+    const { chromium } = await import('playwright')
+    let css = 'h1{color:rgb(10, 10, 10)}'
+    const server = await new Promise((resolve) => {
+      const s = createServer((req, res) => {
+        const path = new URL(req.url ?? '/', 'http://x').pathname
+        const send = (type, body) => {
+          res.writeHead(200, { 'content-type': type, 'cache-control': 'no-store' })
+          res.end(body)
+        }
+        if (path === '/style.css') return send('text/css', css)
+        if (path === '/hero.png') return send('image/png', PNG)
+        if (path === '/data.json') return send('application/json', '{"label":"News"}')
+        if (path === '/styled')
+          return send(
+            'text/html; charset=utf-8',
+            '<!doctype html><title>Styled</title><link rel="stylesheet" href="/style.css"><main><h1>Our kitchen</h1>' +
+              '<img src="/hero.png" width="200" height="120" alt=""></main>'
+          )
+        if (path === '/fetching')
+          return send(
+            'text/html; charset=utf-8',
+            '<!doctype html><title>Fetching</title><main><h1>News</h1><p id="label"></p></main><script>' +
+              "fetch('/data.json').then(r=>r.json()).then(d=>{document.getElementById('label').textContent=d.label})</script>"
+          )
+        res.writeHead(404)
+        res.end()
+      })
+      s.listen(0, '127.0.0.1', () => resolve(s))
+    })
+    try {
+      const browser = await chromium.connectOverCDP(cdp)
+      const ctx = browser.contexts()[0] ?? (await browser.newContext())
+      const at = (p) => `http://127.0.0.1:${server.address().port}${p}`
+      const first = await readDemoPage(await ctx.newPage(), at('/styled'), '/styled', {})
+      assert.match(first.fingerprint, /^[0-9a-f]{64}$/)
+      assert.equal(first.dynamic, false)
+      const same = await readDemoPage(await ctx.newPage(), at('/styled'), '/styled', {
+        previous: { fingerprint: first.fingerprint, read: first }
+      })
+      assert.equal(same.reused, true, 'nothing changed: the read is kept')
+      // The build rewrites the stylesheet in place: the document is the same, the page is not.
+      css = 'h1{color:rgb(250, 250, 250)}'
+      const restyled = await readDemoPage(await ctx.newPage(), at('/styled'), '/styled', {
+        previous: { fingerprint: first.fingerprint, read: first }
+      })
+      assert.equal(restyled.reused, undefined, 'a rewritten stylesheet reads the page anew')
+      assert.notEqual(restyled.fingerprint, first.fingerprint)
+      const fetching = await readDemoPage(await ctx.newPage(), at('/fetching'), '/fetching', {})
+      assert.equal(fetching.dynamic, true, 'content fetched by script is not in the fingerprint')
+    } finally {
+      server.close()
+    }
+  }
+)
+
+// #247 (dev 30/10/2026): every "incremental" read of a 48-page site answered "0 unchanged" because a finding dropped the
+// kept read of every page it named. A page with a finding now keeps its read while all it shows is unchanged.
+test(
+  'a page a finding names keeps its read for the next incremental check, and a full read still says it is unchanged (#247)',
+  opts,
+  async () => {
+    const { chromium } = await import('playwright')
+    const { makeDemoQa } = await import('../src/demo-qa-browser.js')
+    let css = 'p{color:rgb(10, 10, 10)}'
+    const server = await new Promise((resolve) => {
+      const s = createServer((req, res) => {
+        const path = new URL(req.url ?? '/', 'http://x').pathname
+        const send = (type, body, status = 200) => {
+          res.writeHead(status, { 'content-type': type, 'cache-control': 'no-store' })
+          res.end(body)
+        }
+        if (path === '/style.css') return send('text/css', css)
+        const page = (title) =>
+          `<!doctype html><title>${title}</title><link rel="stylesheet" href="/style.css"><main><h1>${title}</h1><p>Words</p></main>`
+        if (path === '/') return send('text/html; charset=utf-8', page('Home'))
+        // A page the build left answering 404: `pages-load` fails on it, a finding naming the page.
+        return send('text/html; charset=utf-8', page('Gone'), 404)
+      })
+      s.listen(0, '127.0.0.1', () => resolve(s))
+    })
+    try {
+      const browser = await chromium.connectOverCDP(cdp)
+      const qa = await makeDemoQa({
+        playwright: { chromium: { launch: async () => browser } },
+        log: { log() {}, warn() {} }
+      })
+      const base = `http://127.0.0.1:${server.address().port}`
+      const run = (incremental) =>
+        qa({ asked: { label: 'harbour', platform: 'wordpress', pages: ['/', '/gone'], incremental }, base })
+      const first = await run(false)
+      const load = first.checks.find((c) => c.id === 'pages-load')
+      assert.equal(load?.pass, false, JSON.stringify(load))
+      assert.ok(JSON.stringify(load).includes('/gone'), 'the finding names the page')
+      const kept = await run(true)
+      assert.deepEqual([...kept.reused].sort(), ['/', '/gone'], 'a finding alone does not drop the kept read')
+      assert.deepEqual([...kept.unchanged].sort(), ['/', '/gone'])
+      const full = await run(false)
+      assert.deepEqual(full.reused, [], 'a full read reads every page anew')
+      assert.deepEqual([...full.unchanged].sort(), ['/', '/gone'], 'and says which had not changed')
+      css = 'p{color:rgb(250, 250, 250)}'
+      const restyled = await run(true)
+      assert.deepEqual(restyled.reused, [], 'a rewritten stylesheet reads each page anew')
+      assert.deepEqual(restyled.unchanged, [])
+    } finally {
+      server.close()
+    }
+  }
+)

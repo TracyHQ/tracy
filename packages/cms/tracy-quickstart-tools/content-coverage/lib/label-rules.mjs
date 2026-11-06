@@ -6,12 +6,13 @@
 //
 //   R2  a phone, email, address, price or hours sample needs a contact or price role
 //   R3  every URL slot has a role
-//   R4  an indexed repeat is grouped (one group per item); a CTA URL shares a group with its label
+//   R4  an indexed repeat is grouped (one group per item); a CTA URL shares a group with its label (a mailto: or tel:
+//       link with the email or phone it calls)
 //   R5  no keep on a fact role; a face, signature or cut-out picture needs a person, quote or business role (faces
 //       may also prove a number: `stat.proof_image`, ADR 0040)
 //   R6  no link or list item inside a fact slot
-//   R7  siblings of a repeat share a role
-//   R8  adjacent short slots of one entity on one line are flagged as a cut heading
+//   R7  siblings of a repeat share a role (info cards, one contact fact per card, may each hold their own)
+//   R8  adjacent short slots of one entity and one card on one line are flagged as a cut heading
 //   R9  a fact-like hole blocks (an accepted reason does not lift it: a fact the map misses stays the demo's)
 //
 // Slots of a demo-only entity (a style-guide page, `demo-only.mjs`) are left out of R1 to R8; R9 reads every hole.
@@ -121,8 +122,11 @@ function r4(slots, repeats) {
   for (const s of slots) {
     if (!CTA_URL_ROLES.has(roleOf(s))) continue
     const id = s.group?.id
-    if (!id || !slots.some((o) => o !== s && o.group?.id === id && CTA_LABEL_ROLES.has(roleOf(o))))
-      out.add(s.key)
+    // A mailto: or tel: link's words are the address or number it calls: that fact slot is its label.
+    const labels = new Set(CTA_LABEL_ROLES)
+    if (/^mailto:/i.test(String(s.sample ?? ''))) labels.add('contact.email')
+    if (/^tel:/i.test(String(s.sample ?? ''))) labels.add('contact.phone')
+    if (!id || !slots.some((o) => o !== s && o.group?.id === id && labels.has(roleOf(o)))) out.add(s.key)
   }
   return [...out]
 }
@@ -145,9 +149,20 @@ const r6 = (slots) =>
     .filter((s) => s?.type === 'html' && isFactRole(s.role) && /<a[\s>]|<li[\s>]/i.test(String(s.sample)))
     .map((s) => s.key)
 
+/** A contact fact role: info cards (Location, Hours, Call us) each hold a different one. */
+const CONTACT_FACT = /^contact\.(?:address|hours|phone|email)$/
+/** One card per item: every member is grouped and no two items share a group. */
+const cardPerItem = (members) =>
+  members.every(({ slot }) => slot.group?.id) &&
+  new Set(members.map(({ slot, tuple }) => `${slot.group.id}|${tuple}`)).size ===
+    new Set(members.map(({ slot }) => slot.group.id)).size
+
 function r7(repeats) {
   const out = []
   for (const { members } of repeats) {
+    // A row of info cards, one contact fact per card (the address on Location, the hours on Hours): their roles
+    // differ because the facts do, not because a label slipped.
+    if (cardPerItem(members) && members.every(({ slot }) => CONTACT_FACT.test(roleOf(slot)))) continue
     const counts = new Map()
     for (const { slot } of members) counts.set(roleOf(slot), (counts.get(roleOf(slot)) ?? 0) + 1)
     const [majority] = [...counts].sort((a, b) => b[1] - a[1])[0]
@@ -185,6 +200,8 @@ function r8(slots, pages) {
         const sameLine = Math.abs(a.rect.y - b.rect.y) <= height * 0.25
         const gap = b.rect.x - (a.rect.x + a.rect.w)
         if (a.slot.entity !== b.slot.entity || a.slot.key === b.slot.key || !sameLine) continue
+        // Two cards side by side (the names of two team members in a row): one heading is never cut across cards.
+        if (a.slot.group?.id && b.slot.group?.id && a.slot.group.id !== b.slot.group.id) continue
         if (gap < -2 || gap > height * 1.5) continue
         if (isFactRole(a.slot.role) && isFactRole(b.slot.role) && a.slot.role !== b.slot.role) continue
         out.add(`${a.slot.key} + ${b.slot.key}`)

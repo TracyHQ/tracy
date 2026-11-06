@@ -1,0 +1,44 @@
+---
+/**
+ * The brand in a header. The customer's logo when they gave one (core `settings.logo` for the light theme, the site
+ * entry's `logo_dark` for the dark one, `src/lib/brand.ts`); in a theme without a picture, the template's mark — a
+ * leaning coffee bean with a hollow groove and three embers, in the text colour so it follows the espresso and cream
+ * themes (`public/favicon.svg` is the same drawing) — and the name, live text, in the brand face: Bricolage Grotesque
+ * 750, narrow (`wdth` 78, `opsz` 48), Vietnamese letters included (`src/fonts.json`).
+ */
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import type { Attrs } from '@/lib/stamps'
+
+interface Props {
+  name: string
+  class?: string
+  /** Provenance stamp of the field `name` is read from (`src/lib/stamps.ts`). */
+  stamp?: Attrs
+  /** The site entry's `logo_dark` image value; absent on a release whose schema has no such field. */
+  logoDark?: unknown
+}
+const { name, class: className = '', stamp = {}, logoDark } = Astro.props
+const logos = brandLogos(await getSiteSettings(), logoDark, name)
+---
+
+<BrandLogo spots={logoSpots(logos, "themed")} alt={logos.alt} imgClass="h-8 w-auto max-w-[min(200px,100%)] object-contain">
+	<span class:list={["inline-flex min-w-0 max-w-full items-center gap-[10px] text-fg", className]}>
+		<svg class="shrink-0" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" data-brand-mark>
+			<mask id="brand-mark-groove" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32"><rect width="32" height="32" fill="#fff" /><path d="M8.6 26.2C12 22.6 10 19 13.4 15.4S17.2 10 19.6 9.6" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round" /></mask>
+			<g fill="currentColor"><ellipse cx="14" cy="18.4" rx="7.6" ry="10.6" transform="rotate(38 14 18.4)" mask="url(#brand-mark-groove)" /><circle cx="25.4" cy="6.4" r="2.5" /><circle cx="29" cy="12.4" r="1.6" /><circle cx="20.6" cy="2.6" r="1.4" /></g>
+		</svg>
+		<span class="brand-name min-w-0 [overflow-wrap:anywhere] text-[20px] leading-none" {...stamp}>{name}</span>
+	</span>
+</BrandLogo>
+
+<style>
+	.brand-name {
+		font-family: var(--font-bricolage), var(--font-sans);
+		font-weight: 750;
+		font-stretch: 78%;
+		font-variation-settings: "opsz" 48;
+		letter-spacing: -0.01em;
+	}
+</style>

@@ -21,8 +21,9 @@
  * is uploaded, in its own call, so a refusal never takes another brand write down with it.
  */
 import { createHash } from 'node:crypto'
+import { componentOf } from '../../lib/plugin-version.js'
 import { atLeast } from './brand-joomla.js'
-import { templateFolderOf, uploader } from './brand-joomla-places.js'
+import { templateFolderOf, uploader } from '../../lib/brand-joomla-places.js'
 
 /** The first plugin releases that print the share picture. */
 export const WORDPRESS_SHARE_SINCE = '0.18.5'
@@ -32,12 +33,6 @@ export const JOOMLA_SHARE_SINCE = '0.24.5'
 const WORDPRESS_FOLDER = 'wp-content/uploads/tracy-brand'
 const TOO_OLD = 'plugin too old'
 const WHY = (/** @type {unknown} */ error) => (error instanceof Error ? error.message : String(error))
-
-/** The plugin's own version, or null when the site does not say. */
-async function componentOf(/** @type {Function} */ read) {
-  const info = await read('info', {}).catch(() => null)
-  return info?.ok === false ? null : (info?.info?.component ?? null)
-}
 
 /** @param {import('./brand.js').BrandWriterInput} input */
 export async function writeWordpressShare({ prepared, stamp, write, read, wrote, skip }) {

@@ -66,8 +66,8 @@ export const PALETTE: Record<string, { light: string; dark: string }> = {
     "dark": "oklch(0.704 0.191 22.216)"
   },
   "--dsw-alias-state-business-primary": {
-    "light": "oklch(0.588 0.136 37.4)",
-    "dark": "oklch(0.588 0.136 37.4)"
+    "light": "oklch(0.565 0.136 37.4)",
+    "dark": "oklch(0.565 0.136 37.4)"
   },
   "--dsw-alias-state-success-primary": {
     "light": "oklch(0.696 0.17 162.48)",

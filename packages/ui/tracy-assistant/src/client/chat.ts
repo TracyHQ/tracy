@@ -210,6 +210,8 @@ export interface Turn {
   at?: string | null
   /** Files a question carried (`files.ts`). */
   files?: import('./files.ts').HelpFile[]
+  /** How an answer that did not finish ended: the asker stopped it, or it was cut. Absent: finished. */
+  ended?: 'stopped' | 'cut'
 }
 
 /**

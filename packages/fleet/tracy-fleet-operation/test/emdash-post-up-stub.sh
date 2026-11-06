@@ -92,6 +92,11 @@ curl() {
   [ -n "${STUB_DOCKER_LOG:-}" ] && printf 'curl %s\n' "$*" >> "$STUB_DOCKER_LOG"
   case "$*" in
     *http://127.0.0.1:*)
+      # STUB_LOOPBACK_UP_AFTER=N: a site still starting — the first N loopback dials are refused, then it answers.
+      if [ -n "${STUB_LOOPBACK_UP_AFTER:-}" ]; then
+        n=$(( $(cat "$STUB_DOCKER_LOG.dials" 2>/dev/null || echo 0) + 1 )); echo "$n" > "$STUB_DOCKER_LOG.dials"
+        [ "$n" -le "$STUB_LOOPBACK_UP_AFTER" ] && return 7
+      fi
       if [ "${STUB_LOOPBACK_DOWN:-0}" = 1 ]; then
         if [ "${STUB_LOOPBACK_RECOVERS:-0}" = 1 ] && [ -f "$STUB_DOCKER_LOG.loopback" ]; then :
         else touch "$STUB_DOCKER_LOG.loopback"; return 7; fi

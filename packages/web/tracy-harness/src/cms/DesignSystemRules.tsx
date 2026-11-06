@@ -17,7 +17,7 @@ import { Check, ChevronRight, Copy, ExternalLink } from 'lucide-react'
 import { type ReactNode, useId, useState } from 'react'
 import { FoldedBody, RuleBody, SUMMARY } from './DesignSystemRuleDetail'
 import { type DsRun, rowStamp, runsOf } from './ds-rule-display'
-import type { CustomizeRule, OutsideFix, StepGuide } from './problem-guides'
+import type { BrandRule, CustomizeRule, OutsideFix, StepGuide } from './problem-guides'
 import { ruleRows } from './rule-rows'
 import { Trans, useT } from '../i18n'
 
@@ -46,8 +46,13 @@ const allOf = (rules: Rules): CustomizeRule[] => [
   ...rules.mustFix,
   ...rules.worthFixing,
   ...(rules.unmeasured ?? []),
-  ...(rules.passed ?? [])
+  ...(rules.passed ?? []),
+  ...(rules.brand ?? [])
 ]
+
+/** A brand rule's dot: failing ones warn, live-only ones wait for a run, passing ones pass. */
+const BRAND_KIND = (status: string): Kind =>
+  status === 'fail' ? 'worth-fixing' : status === 'pass' ? 'passed' : 'not-measured'
 
 /** A severity dot. */
 function Dot({ kind }: { kind: Kind }) {
@@ -300,6 +305,36 @@ function QuietLines({ kind, rules, runs }: { kind: Kind; rules: CustomizeRule[];
   )
 }
 
+/**
+ * Brand mode (ADR 0031 revision 02/11/2026): every brand rule with its status, under its own heading, since none
+ * of them changes the grade. A live-only one opens to its measuring command.
+ */
+function BrandLines({ rules, runs }: { rules: BrandRule[]; runs: DsRun[] }) {
+  const t = useT()
+  if (rules.length === 0) return null
+  return (
+    <div className="flex flex-col" data-road-rules="brand">
+      <span className="font-semibold text-muted-foreground text-xs">
+        {t('cms-design.rules.brand')} ({rules.length})
+      </span>
+      <ul className="flex flex-col">
+        {rules.map((r) => (
+          <RuleLine
+            key={r.rule}
+            kind={BRAND_KIND(r.status)}
+            text={r.text}
+            id={r.rule}
+            data-road-rule={r.rule}
+            data-ds-brand-status={r.status}
+          >
+            <RuleBody r={r} runs={runs} />
+          </RuleLine>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 /** Every rule, behind one closed fold. */
 function Details({ rules, runs }: { rules: Rules; runs: DsRun[] }) {
   const t = useT()
@@ -319,6 +354,7 @@ function Details({ rules, runs }: { rules: Rules; runs: DsRun[] }) {
         <FailingLines kind="worth-fixing" rules={rules.worthFixing} runs={runs} />
         <QuietLines kind="not-measured" rules={rules.unmeasured ?? []} runs={runs} />
         <QuietLines kind="passed" rules={rules.passed ?? []} runs={runs} />
+        <BrandLines rules={rules.brand ?? []} runs={runs} />
       </div>
     </details>
   )

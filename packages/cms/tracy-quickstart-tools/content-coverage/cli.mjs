@@ -15,6 +15,8 @@
 //               picture's keep flag by its kind (in a place-content-roles/3 map every keep flag follows the role,
 //               ADR 0040); with --write the content map gets them, BEFORE content-coverage.json is built, so the
 //               coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
+//               It also writes `itemLists` and `itemPages`: each block whose settings name a category, with the items
+//               it shows and the fields of each card (lib/item-lists.mjs).
 //     [--no-judge]
 //               The label judge (spec #37): no model is called. For every component with a slot whose verdict is not
 //               cached in content-coverage.json, the audit writes <out>/label-judge/request.json (the question, the
@@ -24,8 +26,9 @@
 //
 // Exit: 0 the policy passes · 1 holes, page problems (or an incomplete run) hold Publish · 2 usage or run error.
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { COVERAGE_POLICY, judgeCoverage } from '../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
@@ -39,7 +42,9 @@ import { annotate, count } from './lib/items.mjs'
 import { createMatcher } from './lib/match.mjs'
 import { buildReport } from './lib/report-html.mjs'
 import { groupByCause } from './lib/root-cause.mjs'
+import { inlineMarkupBlock, inlineMarkupOf } from './lib/inline-markup.mjs'
 import { createShrinker } from './lib/shrink.mjs'
+import { readDump } from './lib/sql-dump.mjs'
 import { readSiteConfig } from './lib/site-config.mjs'
 import { measureSlotFit } from './lib/slot-fit.mjs'
 import { buildSourceIndex } from './lib/sources.mjs'
@@ -72,6 +77,9 @@ function loadIndexes(o, contract) {
   return { siteConfig, dbIndex, sourceIndex }
 }
 
+/** Who wrote each article and the accounts the dump ships: an author page lists its author's articles (`author-lists.mjs`). */
+const dumpPeopleOf = (dbIndex) => ({ contentAuthors: dbIndex.authors, contentUsers: dbIndex.accounts })
+
 /** Match and classify again the items of an earlier findings.json (new rules, no browser run). */
 function reclassify(result, contract, siteUrl, o) {
   const { dbIndex, sourceIndex } = loadIndexes(o, contract)
@@ -91,6 +99,7 @@ function reclassify(result, contract, siteUrl, o) {
     'lockState',
     '_n'
   ]
+  if (dbIndex) Object.assign(result, dumpPeopleOf(dbIndex))
   for (const p of result.pages) {
     for (const it of p.items) for (const k of derived) delete it[k]
     annotate(p.items, match, classify)
@@ -102,14 +111,35 @@ function reclassify(result, contract, siteUrl, o) {
   return result
 }
 
+/**
+ * A Joomla contract's inline markup against the database dump (lib/inline-markup.mjs), measured only: the map is not
+ * resampled here (resample.mjs does that). Null without a dump, on WordPress, or when php cannot run (said on stderr).
+ */
+function measureInlineMarkup(o, contract) {
+  const dump = o['db-dump']
+  if (contract.platform !== 'joomla' || typeof dump !== 'string' || !existsSync(dump)) return null
+  try {
+    const { tables } = readDump(dump, { changes: true })
+    const r = inlineMarkupOf({ map: structuredClone(contract.map), tables })
+    const sha256 = createHash('sha256').update(readFileSync(dump)).digest('hex')
+    return inlineMarkupBlock(r, { dump: { file: basename(dump), sha256 } })
+  } catch (error) {
+    console.error(`[content-coverage] inline markup not measured: ${error.message}`)
+    return null
+  }
+}
+
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 
 /** Slot fit from this run's findings into the content map (or beside the evidence), formatted as capture formats it. */
 function writeSlotFit({ result, contractDir, outDir, write }) {
   const mapFile = join(contractDir, 'content-map.json')
+  // The blocks' settings (which category a block lists) come from the presentation lock: item lists need them.
+  const lockFile = join(contractDir, 'presentation-lock.json')
   const { map, summary } = measureSlotFit({
     map: JSON.parse(readFileSync(mapFile, 'utf8')),
-    findings: result
+    findings: result,
+    lock: existsSync(lockFile) ? JSON.parse(readFileSync(lockFile, 'utf8')) : undefined
   })
   const file = write ? mapFile : join(outDir, 'content-map.fit.json')
   writeFileSync(file, `${JSON.stringify(map, null, 2)}\n`)
@@ -155,6 +185,8 @@ async function main() {
   if (o['report-only'] || o.reclassify) {
     result = JSON.parse(readFileSync(findings, 'utf8'))
     if (o.reclassify) result = reclassify(result, contract, siteUrl, o)
+    else if (o['db-dump'] && existsSync(o['db-dump']))
+      Object.assign(result, dumpPeopleOf(buildDbIndex(o['db-dump'])))
   } else {
     const t0 = Date.now()
     const { dbIndex, sourceIndex } = loadIndexes(o, contract)
@@ -172,6 +204,8 @@ async function main() {
       seconds: Math.round((Date.now() - t0) / 1000),
       ...run
     }
+    // Who wrote each article (from the dump): an author page lists only that author's articles (`author-lists.mjs`).
+    if (dbIndex) Object.assign(result, dumpPeopleOf(dbIndex))
   }
   const unique = new Map()
   for (const p of result.pages)
@@ -202,7 +236,13 @@ async function main() {
   const coverageFiles = [join(outDir, COVERAGE_FILE), ...(o.write ? [target] : [])]
   const judge = await runLabelJudge({ o, result, contract, outDir, chromium, previous, coverageFiles })
   const labelJudge = judge.block
-  const doc = buildCoverageFile({ result, contract, previous, labelJudge })
+  const doc = buildCoverageFile({
+    result,
+    contract,
+    previous,
+    labelJudge,
+    inlineMarkup: measureInlineMarkup(o, contract)
+  })
   writeFileSync(join(outDir, COVERAGE_FILE), `${JSON.stringify(doc, null, 2)}\n`)
   if (o.write) writeFileSync(target, `${JSON.stringify(doc, null, 2)}\n`)
   const verdict = judgeCoverage(doc, COVERAGE_POLICY)

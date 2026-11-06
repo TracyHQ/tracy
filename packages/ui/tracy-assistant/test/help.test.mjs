@@ -206,6 +206,37 @@ test('restore draws earlier turns at their anchor, a cut one as an error, and th
   assert.equal(list[1].data.error, 'error.cut')
 })
 
+test('restore keeps a stopped answer stopped and a cut one cut, words and all; a finished one is done (#206)', async () => {
+  const conv = {
+    ok: true,
+    status: 200,
+    json: async () => ({
+      conversationId: 'c9',
+      tipSeen: true,
+      turns: [
+        { id: '1', role: 'user', text: 'stop?' },
+        { id: '2', role: 'assistant', text: 'Every change', replyToId: '1', ended: 'stopped' },
+        { id: '3', role: 'user', text: 'cut?' },
+        { id: '4', role: 'assistant', text: 'Half an', replyToId: '3', ended: 'cut' },
+        { id: '5', role: 'user', text: 'done?' },
+        { id: '6', role: 'assistant', text: 'All of it.', replyToId: '5' }
+      ]
+    })
+  }
+  const { help, rows } = setup([conv])
+  await help.restore()
+  const by = (q) => [...rows.values()].find((r) => r.data.question === q).data
+  assert.deepEqual(
+    [by('stop?').status, by('stop?').answer, by('stop?').error],
+    ['stopped', 'Every change', undefined]
+  )
+  assert.deepEqual(
+    [by('cut?').status, by('cut?').answer, by('cut?').error],
+    ['error', 'Half an', 'error.cut']
+  )
+  assert.deepEqual([by('done?').status, by('done?').error], ['done', undefined])
+})
+
 test('restore on a fresh account shows the tip and records it as seen', async () => {
   const conv = {
     ok: true,

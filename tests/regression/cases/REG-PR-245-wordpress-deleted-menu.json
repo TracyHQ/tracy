@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-245-wordpress-deleted-menu",
+  "kind": "fix",
+  "title": "A WordPress menu the copy alone holds is not taken as the live one: its new item waits for the menu or is held",
+  "pr": 245,
+  "area": "sync/push",
+  "cms": ["wp"],
+  "steps": [
+    "Run the changeset case: the copy keeps a nav_menu term deleted on live, with a new menu item in it and one in a live menu."
+  ],
+  "expect": [
+    "The item in the deleted menu depends on the push creating that menu; held as a conflict when the sync kept the deletion.",
+    "The item in the live menu has no dependency."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#119",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": ["WordPress: a menu the customer deleted on live that the copy kept is no menu of the live site"]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

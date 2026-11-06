@@ -35,13 +35,15 @@ import { revOf, topBlocks } from './wp-blocks.mjs'
 
 const SITE_ACTIONS = /^[a-z]+\.[a-z.]+$/i
 
-/** Entities an address carries inside an attribute, read back to the address. @param {string} s */
+/**
+ * Entities an address carries inside an attribute, read back to the address — in one pass, so the `&` an
+ * `&amp;` gives back never opens a second entity (`&amp;quot;` reads `&quot;`, never `"`).
+ * @param {string} s
+ */
 const unescape = (s) =>
-  s
-    .replace(/&amp;/g, '&')
-    .replace(/&#0*38;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#0*39;/g, "'")
+  s.replace(/&(?:amp|quot|#0*(38|39));/g, (entity, code) =>
+    entity === '&quot;' ? '"' : code === '39' ? "'" : '&'
+  )
 
 /** An anchor's words as a visitor reads them: no tags, entities read, spaces collapsed, any case. @param {string} html */
 const wordsOf = (html) =>

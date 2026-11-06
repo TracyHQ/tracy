@@ -45,6 +45,14 @@ p.add_argument('--list-items',action='store_true')
 # (PAGE-5) and its target is never checked (PAGE-4). Off by default so every published profile
 # re-captures byte for byte.
 p.add_argument('--link-fields-by-role',action='store_true')
+# An ACM icon field inside a repeatable row (a social block's `social-intro[font-icon]`: one icon class per network)
+# is part of the row a visitor reads: a fourth network the customer adds needs its icon. The name rule below drops
+# every field named like an option (`icon`), so without this flag the row is declared without its icon. With it a
+# text field whose name holds `icon` and whose value sits in a list (a row of a repeatable fieldset) is declared as a
+# text slot kept from Customize, after the module's other slots so the keys the old rules made stay what they were.
+# A single option named like an icon (`heading-icon`) stays out. Off by default so every published profile
+# re-captures byte for byte.
+p.add_argument('--repeat-icons',action='store_true')
 # The one module a Tracy quickstart keeps its identity in (name, contact, social links), found by its
 # note. Its entity and every slot of it are flagged `siteIdentity` (not `identity`: every entity already
 # has an `identity` — the fields the Claude Cowork plugin finds it by): the Claude Cowork plugin (0.17.0+) lets those slots
@@ -56,6 +64,18 @@ p.add_argument('--identity-note',default='')
 # keep one that uses a block the template does not ship. With this flag such rows are left out of the
 # contract (entities, slots, assignments). Off by default so every published profile re-captures byte for byte.
 p.add_argument('--skip-trashed-modules',action='store_true')
+# A menu item in the trash (published = -2) is no page a visitor can open, yet a demo archive keeps some (JA Cagox 1.0.2:
+# trashed copies of its shop pages), and each one became a page of the contract that no crawl ever reaches. With this
+# flag such rows are left out of the contract (entities, slots, pages). Off by default so every published profile
+# re-captures byte for byte.
+p.add_argument('--skip-trashed-menu-items',action='store_true')
+# A T3 template keeps its logos in the params of each template style (`logoimage`, `logoimage_sm`, `logofooterimage`,
+# `logoimage_dark`), not in a module or a settings file, so a T3 contract declared no slot for the logo every page prints
+# (JA Cagox 1.0.2: three logo pictures, no slot). With this flag each such param a captured style sets is an image slot
+# of that style's `templateStyle` entity (column `params`, `jsonPath` [key]), role `business.logo`, kept from Customize;
+# the Claude Cowork plugin writes it as it writes any style param (`content.update` kind `templateStyle`). Off by
+# default so every published profile re-captures byte for byte.
+p.add_argument('--template-style-logos',action='store_true')
 # A published mod_ja_acm module whose BLOCK the template does not ship (no `acm/<block>/` folder at all)
 # renders nothing: mod_ja_acm has no layout to draw it with, so its words never reach a page (JA Vega j6:
 # #121 "Our FAQ", block `accordion`, assigned to Home, absent from the rendered page). With this flag such
@@ -98,11 +118,19 @@ p.add_argument('--previous-map',default='');p.add_argument('--unplaced-report',d
 # whole unit, so the link would lose its words; its pieces stay separate text slots as without the flag. Off by default so every
 # published profile re-captures byte for byte.
 p.add_argument('--whole-units',action='store_true')
+# Inline markup (whole units): a unit merged from several text pieces kept only their words ("More<br><span>Blogs</span>"
+# became "More Blogs"), so the kit could not tell that the template draws "Blogs" on a second line in the accent colour.
+# With this flag (it needs --whole-units) such a slot's sample is the unit's inner markup in the content map's notation,
+# `More((br/)) ((span))Blogs((/span))` (`unit-markup.php`, which loads the HTML as the plugin's helper does), and every
+# slot's `maxCharacters` is counted on its plain text, markup left out. `--previous-map` keeps a role whose sample only
+# gained markup. Off by default so every published profile re-captures byte for byte.
+p.add_argument('--inline-markup',action='store_true')
 # The role vocabulary this capture WRITES (`roleVocabularyVersion`). 2 is what every released map carries. 3 (ADR 0040)
 # adds the roles the whole-unit and list rules need to say what they found: article.title, editorial.navigation_url,
 # editorial.illustration. Off by default: switching is a release decision, made with Road to live.
 p.add_argument('--role-vocabulary',choices=['2','3'],default='2')
 a=p.parse_args()
+if a.inline_markup and not a.whole_units:p.error('--inline-markup needs --whole-units: only a merged unit keeps its markup')
 menutypes=[s for s in a.menutypes.split(',') if s]
 template=a.template
 styleTemplates=[s for s in (a.styles or template).split(',') if s]
@@ -176,7 +204,7 @@ def inside_slotted(xpath,unit,slotted):
   at=at+'/'+seg
   if at in slotted:return True
  return False
-def whole_units(hs):
+def whole_units(hs,body=''):
  """Merge the text slots the HTML helper cut out of one unit element into one slot on that element."""
  texts=[h for h in hs if h.get('type')=='text' and isinstance(h.get('xpath'),str) and '/@' not in h['xpath']]
  units={id(h):text_unit(h['xpath']) for h in texts}
@@ -198,11 +226,28 @@ def whole_units(hs):
   done.add(unit)
   sample=re.sub(r'\s+',' ',' '.join(m['sample'] for m in members[unit])).strip()
   out.append({**h,'sample':sample,'xpath':unit})
+ if a.inline_markup:
+  merged=[h for h in out if h.get('xpath') in done]
+  for h,markup in zip(merged,unit_markup(body,[h['xpath'] for h in merged])):
+   # The markup must read as the words it replaces; anything else keeps the plain sample.
+   if markup and plain_text(markup)==h['sample']:h['sample']=markup
  return out
+UNIT_MARKUP=pathlib.Path(__file__).resolve().parent/'unit-markup.php'
+def unit_markup(body,xpaths):
+ """The inner markup of each element `xpaths` names in `body`, in the content map's notation (None when none)."""
+ if not xpaths:return []
+ return json.loads(subprocess.check_output(['php',str(UNIT_MARKUP)],input=json.dumps([{'html':body,'xpath':x} for x in xpaths]).encode()))
+# The content map's notation `((tag attrs))`, `((/tag))`, `((br/))`, read as the kit reads it (text-format.mjs partsOf).
+NOTATION=re.compile(r'\(\((/?[a-zA-Z][a-zA-Z0-9]*(?:\s[^()]*)?/?)\)\)')
+def plain_text(sample):
+ """A sample's words: markup (notation or HTML) read as a space, white space collapsed."""
+ return re.sub(r'\s+',' ',re.sub(r'<[^>]*>',' ',NOTATION.sub(' ',str(sample)))).strip()
+# The length a slot's limit is counted on: its plain text under --inline-markup (markup is not what a reader counts).
+text_len=lambda sample:len(plain_text(sample)) if a.inline_markup else len(sample)
 def html_slots(body):
  script='require $argv[1]; echo json_encode(ContentSlots::htmlSlots(stream_get_contents(STDIN)));'
  hs=json.loads(subprocess.check_output(['php','-r',script,a.slots_helper],input=body.encode())) if body.strip() else []
- return whole_units(hs) if a.whole_units else hs
+ return whole_units(hs,body) if a.whole_units else hs
 def form_types(files):
  """Field name -> type from Joomla form XML (`<field>` and JoomlArt's `<item>`), first declaration wins."""
  types={}
@@ -213,12 +258,14 @@ def form_types(files):
    if node.get('name') and node.get('type'):types.setdefault(node.get('name'),node.get('type').lower())
  return types
 tpl_dir=root/'templates'/template
-# T4 and T3 both read an article's extra fields from `etc/extrafields/*.xml` and add module fields from `etc/form/`.
+# T4 and T3 both read an article's extra fields from `etc/extrafields/*.xml` and add module fields from `etc/form/`:
+# `com_modules*.xml` for every module, `<module>.xml` for that one (JA Kids Corner's "view all" link of mod_articles_category).
 article_types=form_types(sorted((tpl_dir/'etc'/'extrafields').glob('*.xml'))) if a.full_coverage else {}
 module_form=sorted((tpl_dir/'etc'/'form').glob('com_modules*.xml')) if a.full_coverage else []
 module_types_cache={}
 def module_types(module):
- if module not in module_types_cache:module_types_cache[module]=form_types([root/'modules'/module/f'{module}.xml',*module_form])
+ own=[tpl_dir/'etc'/'form'/f'{module}.xml'] if a.full_coverage and module else []
+ if module not in module_types_cache:module_types_cache[module]=form_types([root/'modules'/module/f'{module}.xml',*module_form,*own])
  return module_types_cache[module]
 CONTENT_TYPES={'text','textarea','editor','media','url','email'}
 # Options, not words: a field whose NAME says it styles or places something. A picture is a picture
@@ -328,6 +375,13 @@ def declare_everything(kind,row,add):
   for col in CONTACT_TEXT:declare_text(add,col,row.get(col),title+' / '+col,requiresEvidence=col in CONTACT_FACTS)
   declare_text(add,'webpage',row.get('webpage'),title+' / webpage','url',requiresEvidence=True)
   declare_html(add,'misc',row.get('misc'),title+' / misc')
+  # Joomla's five contact links (`linka` … `linke`) and the words shown for each; an unused one holds `false`.
+  try:params=json.loads(row.get('params') or '{}')
+  except ValueError:params={}
+  for n in 'abcde':
+   for k,typ in ((f'link{n}_name','text'),(f'link{n}','url')):
+    v=params.get(k) if isinstance(params,dict) else None
+    if isinstance(v,str) and v.strip():add('params',typ,v,jsonPath=[k],label=title+' / '+k,customize='keep',**({'requiresEvidence':True} if typ=='url' else {}))
  elif kind=='tag':
   declare_text(add,'title',row.get('title'),title+' / title')
   declare_html(add,'description',row.get('description'),title+' / description')
@@ -337,6 +391,37 @@ def declare_everything(kind,row,add):
   except ValueError:params={}
   v=params.get('hint') if isinstance(params,dict) else None
   if isinstance(v,str) and v.strip():add('params','text',v,jsonPath=['hint'],label=title+' / hint',customize='keep')
+# One page masthead per `menuitem_config` entry of mod_jamasthead: `item_id`, `title`, `description` and `background`
+# are objects keyed by the entry number. The background is the page's banner picture (a video file stays as it is),
+# grouped per page; the title and description are the words printed over it. An entry for a menu item that does not
+# exist is left out. When the module's form already declares `title` / `description`, the generic params rule has a
+# slot (or fragment slots) writing that same entry, so the masthead rule skips it: one writer per `menuitem_config`
+# field, deduped by write target (the params column and jsonPath ['menuitem_config', field, entry], entry as text).
+MASTHEAD_VIDEO=re.compile(r'\.(mp4|ogg|webm)$',re.I)
+def declare_masthead(row,add,declared=()):
+ written={(s['jsonPath'][1],str(s['jsonPath'][2])) for s in declared if s.get('column')=='params' and isinstance(s.get('jsonPath'),list) and len(s['jsonPath'])>=3 and s['jsonPath'][0]=='menuitem_config'}
+ menu_ids={str(r.get('id')) for r in inv.get('menu',[])}
+ try:params=json.loads(row.get('params') or '{}')
+ except ValueError:return
+ cfg=params.get('menuitem_config') if isinstance(params,dict) else None
+ if not isinstance(cfg,dict):return
+ def column(name):
+  v=cfg.get(name)
+  return v if isinstance(v,dict) else dict(enumerate(v)) if isinstance(v,list) else {}
+ items,titles,descriptions,backgrounds=(column(n) for n in ('item_id','title','description','background'))
+ for k in sorted({*titles,*descriptions,*backgrounds},key=lambda x:(not str(x).isdigit(),int(x) if str(x).isdigit() else 0,str(x))):
+  ids=items.get(k);ids=[str(i) for i in ids] if isinstance(ids,list) else [str(ids)] if ids not in (None,'') else []
+  # An entry whose menu items are all gone never shows (the helper matches the active item): no slot.
+  if not any(i in menu_ids for i in ids):continue
+  page=f'{row["title"]} / menu item {",".join(ids) or k}'
+  bg=backgrounds.get(k)
+  if isinstance(bg,str) and bg.strip() and not MASTHEAD_VIDEO.search(bg.split('#')[0]):
+   add('params','image',bg,jsonPath=['menuitem_config','background',k],label=page+' / background',role='business.hero_image',group={'id':f'module-{row["id"]}.masthead-{k}','item':0,'kind':'business'})
+  for name,role in (('title','editorial.heading'),('description','editorial.paragraph')):
+   v=(titles if name=='title' else descriptions).get(k)
+   if isinstance(v,str) and v.strip() and (name,str(k)) not in written:add('params','text',v,jsonPath=['menuitem_config',name,k],label=page+' / '+name,role=role)
+# A T3 style param naming a logo picture (the kit's `joomla-t3.mjs` T3_LOGO_KEY reads the same names).
+T3_LOGO_KEY=re.compile(r'logo[a-z]*image(?:_[a-z]+)?')
 volatile={'id','asset_id','checked_out','checked_out_time','created','created_by','created_by_alias','modified','modified_by','hits','version','lft','rgt'}
 tables={'category':'categories','module':'modules','article':'content','menuItem':'menu','templateStyle':'template_styles'}
 # The kinds --full-coverage adds, each read through the plugin's own writer for its kind (JoomlaSiteWriter::MAP).
@@ -351,6 +436,7 @@ for kind,table in tables.items():
   if kind=='module' and a.skip_trashed_modules and str(row.get('published'))=='-2':continue
   if kind=='module' and row['id'] in unshipped:continue
   if kind=='menuItem' and (row.get('client_id')!='0' or row.get('menutype') not in menutypes):continue
+  if kind=='menuItem' and a.skip_trashed_menu_items and str(row.get('published'))=='-2':continue
   if kind=='templateStyle' and row.get('template') not in styleTemplates:continue
   if kind=='article' and row.get('state')!='1':continue
   if kind=='contact' and str(row.get('published'))!='1':continue
@@ -360,11 +446,12 @@ for kind,table in tables.items():
   identity={k:row[k] for k in identity_fields[kind]}
   # Modules agreeing on all five fields (JA Space's two Hero, two Clients) make the plugin refuse the whole contract, so only they carry the release's id.
   if kind=='module' and module_keys[module_key(row)]>1:identity['id']=row['id']
+  icons=[]
   entity={'key':eid,'kind':kind,'identity':identity,'sourceId':int(row['id']),'initial':{k:v for k,v in row.items() if k not in volatile}}
   if kind=='article':entity['identityReferences']={'catid':'category-'+row['catid']}
   entities.append(entity)
   def add(column, typ, sample, **extra):
-   slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':2048 if typ=='url' else 255 if typ=='image' else max(40,min(2000,len(sample)*2+20)),'requiresEvidence':bool(re.search(a.evidence_pattern,row.get('title',''))),**extra})
+   slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':2048 if typ=='url' else 255 if typ=='image' else max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':bool(re.search(a.evidence_pattern,row.get('title',''))),**extra})
   if kind=='module' and row['module']=='mod_ja_acm' and row['title'].startswith(a.module_prefix):
    params=json.loads(row['params']);cfg=json.loads(params['jatools-config']);block=cfg[':type'].split(':')[-1];layout=cfg[block].get('jatools-layout-'+block,'style-1')
    xml=root/('templates/'+template+'/acm')/block/'tmpl'/f'{layout}.xml'
@@ -384,6 +471,8 @@ for kind,table in tables.items():
       add('params','text',node,jsonPath=path,nestedJson='jatools-config',label=row['title']+' / '+name+' row '+str(path[-2]+1))
       return
      if ft not in ['text','textarea','media','url','email']:return
+     if a.repeat_icons and ft=='text' and 'icon' in name and path and isinstance(path[-1],int):
+      icons.append((node,path,name));return
      if re.search(r'color|class|style|layout|icon|width|height|column|align|animation',name) and not (a.full_coverage and ft=='media'):return
      link=r'(link|url|href)[-_]?\d*$' if a.link_fields_by_role else r'link$|url$'
      typ='image' if ft=='media' else 'url' if re.search(link,name) or ft=='url' else 'text'
@@ -404,6 +493,34 @@ for kind,table in tables.items():
   # Labels remain content; identities use stable aliases rather than mutable titles.
   if kind in ['article','menuItem']:add('title','text',row['title'],label=row['title'])
   if a.full_coverage:declare_everything(kind,row,add)
+  if kind=='templateStyle' and a.template_style_logos:
+   try:style_params=json.loads(row.get('params') or '{}')
+   except ValueError:style_params={}
+   if not isinstance(style_params,dict):style_params={}
+   # An empty logo param is not "no logo": with logotype image the T3 header prints the template's default picture
+   # (tpls/blocks/header.php: params->get('logoimage', T3Path::getUrl('images/logo.png'))), so the slot is declared
+   # with the path the page really prints; logoimage_sm only when enable_logoimage_sm is on.
+   t3_defaults={}
+   if style_params.get('logotype')=='image':
+    t3_defaults['logoimage']='images/logo.png'
+    if str(style_params.get('enable_logoimage_sm',''))=='1':t3_defaults['logoimage_sm']='images/logo-sm.png'
+   def t3_default_logo(rel):
+    own=f'templates/{a.template}/{rel}'
+    return own if (root/own).is_file() else f'plugins/system/t3/base/{rel}'
+   seen=set()
+   for k,v in list(style_params.items())+[(k,None) for k in t3_defaults if k not in style_params]:
+    if not T3_LOGO_KEY.fullmatch(k) or k in seen:continue
+    seen.add(k)
+    if isinstance(v,str) and v.strip():sample=v
+    elif k in t3_defaults:sample=t3_default_logo(t3_defaults[k])
+    else:continue
+    add('params','image',sample,jsonPath=[k],label=f'{k} (template style {row["title"]})',customize='keep',requiresEvidence=False,role='business.logo',group={'id':'site-logo.business','item':0,'kind':'business'})
+  # Row icons (--repeat-icons) come after every other slot of the entity, so no key an older rule made moves.
+  for node,path,name in icons:add('params','text',node,jsonPath=path,nestedJson='jatools-config',label=row['title']+' / '+name+' '+str(path[-1]+1),customize='keep')
+  # The JA masthead (--full-coverage): mod_jamasthead shows, per menu item, the background, title and description of
+  # its `menuitem_config` entry (helper.php matches `item_id` to the active item), else default-title/description.
+  # They come last, so no key an older rule made moves.
+  if a.full_coverage and kind=='module' and row.get('module')=='mod_jamasthead':declare_masthead(row,add,[s for s in slots if s['entity']==eid])
 # Authors (--full-coverage): a visitor reads each post's author name, and on the author pages the picture, bio and job
 # title. A `user` entity per author of a captured article (identity: username; only name and username are kept, never
 # the account), and a `userProfile` entity per profile value the plugin lists (\UserProfileKey: user_id x 100 + the
@@ -426,7 +543,7 @@ if a.full_coverage:
   for pr in sorted((p for p in people_rows['userProfile'] if p['user_id']==uid),key=lambda p:int(p['id'])):
    pid=f'userProfile-{pr["id"]}';plabel=label.strip()+' / '+pr['field']
    def add(column,typ,sample,**extra):
-    slots.append({'key':f'{pid}.{len([s for s in slots if s["entity"]==pid])}','entity':pid,'column':column,'type':typ,'sample':sample,'maxCharacters':255 if typ=='image' else max(40,min(2000,len(sample)*2+20)),'requiresEvidence':False,**extra})
+    slots.append({'key':f'{pid}.{len([s for s in slots if s["entity"]==pid])}','entity':pid,'column':column,'type':typ,'sample':sample,'maxCharacters':255 if typ=='image' else max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':False,**extra})
    if pr['field']=='user_avatar':declare_text(add,'value',pr['value'],plabel,'image')
    elif MARKUP.search(pr['value']):declare_html(add,'value',pr['value'],plabel)
    else:declare_text(add,'value',pr['value'],plabel)
@@ -443,15 +560,18 @@ if a.full_coverage:
  # account's id, which a provision keeps (it only resets the password).
  for uid in sorted(owners,key=int):declare_profiles(uid,owners[uid]['name'],{'user_id':str(uid)},None)
 # Template language strings (--full-coverage): words a template keeps in its language file and prints itself (JA Boxing's
-# "Try a class" is `Text::_('TPL_TRY_CLASS')`). One `languageString` entity per key the template's front-end PHP names as a
-# literal, identity {extension, key, language}: `tpl_<template>` (or its `.sys` file) for a key that file defines, or a
+# "Try a class" is `Text::_('TPL_TRY_CLASS')`; JA Kids Corner's map hands `'TPL_MAP_STATIC_OPEN'` to a helper of its own that
+# calls `Text::_`). One `languageString` entity per key the template's front-end PHP names as a literal (in a `Text` call,
+# or any quoted `TPL_…` string; a quoted prefix joined to a variable names no key), identity {extension, key, language}:
+# `tpl_<template>` (or its `.sys` file) for a key that file defines, or a
 # `TPL_` key no file defines (Joomla prints the key itself). A key another extension's file also defines is that
 # extension's to print, and is left out. Its value is what a visitor reads, as the Claude Cowork plugin reads it
 # (lib/LanguageStrings.php): the override file, else the site's `language/<tag>/` copy, else the template's own, else the
 # key. The row id is the plugin's LanguageStrings::id(). Never counted: a language file is not inventory.
 NOT_VISITOR_PHP={'templateInfo.php','error-t4.php'}
 NOT_VISITOR_DIRS={'admin','fields','elements','params'}
-LANG_CALL=re.compile(r'\b(?:J?Text)::(?:_|sprintf|plural|script)\(\s*([\'"])([A-Za-z0-9_][A-Za-z0-9_.-]*)\1',re.I)
+LANG_CALL=re.compile(r'\b(?:J?Text)::(?:_|sprintf|plural|script)\(\s*([\'"])([A-Za-z0-9_][A-Za-z0-9_.-]*)\1(?!\s*\.)',re.I)
+TPL_LITERAL=re.compile(r'([\'"])(TPL_[A-Za-z0-9_.-]+)\1(?!\s*\.)')
 # Joomla's own reading of a language file (LanguageOverrides::parse in the plugin), so a value is read exactly as the plugin reads it.
 INI_PHP=r'''$o=[];foreach(json_decode(stream_get_contents(STDIN),true) as $f=>$b){$r=[];$s=trim($b)===''?[]:@parse_ini_string(str_replace('_QQ_','"\""',$b),false,INI_SCANNER_RAW);if(is_array($s))foreach($s as $k=>$v)if(is_string($k)&&is_scalar($v))$r[strtoupper($k)]=str_replace('\"','"',(string)$v);$o[$f]=(object)$r;}echo json_encode((object)$o);'''
 def string_id(extension,language,key):return int(hashlib.sha1(f'{extension}|{language}|{key}'.encode()).hexdigest()[:7],16)+1
@@ -460,7 +580,7 @@ if a.full_coverage:
  for f in sorted(tpl_dir.rglob('*.php')):
   rel=f.relative_to(tpl_dir).parts
   if rel[-1] in NOT_VISITOR_PHP or rel[0] in NOT_VISITOR_DIRS:continue
-  named.update(m.group(2).upper() for m in LANG_CALL.finditer(read_text(f)))
+  named.update(m.group(2).upper() for rx in (LANG_CALL,TPL_LITERAL) for m in rx.finditer(read_text(f)))
  tags=sorted({d.name for base in [root/'language',tpl_dir/'language'] if base.is_dir() for d in base.iterdir() if d.is_dir() and re.fullmatch(r'[a-z]{2,3}-[A-Z]{2,4}',d.name) and any((d/n).is_file() for n in [f'{d.name}.tpl_{template}.ini',f'tpl_{template}.ini'])})
  if a.languages:tags=[t for t in tags if t in set(a.languages.split(','))]
  ini_files={}
@@ -490,7 +610,7 @@ if a.full_coverage:
   for ext,key,value in sorted(declared):
    sid=string_id(ext,tag,key);eid=f'languageString-{sid}';label=f'{key} (template string, {tag})'
    def add(column,typ,sample,**extra):
-    slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':max(40,min(2000,len(sample)*2+20)),'requiresEvidence':False,**extra})
+    slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':False,**extra})
    if MARKUP.search(value):declare_html(add,'value',value,label)
    else:declare_text(add,'value',value,label)
    if not any(sl['entity']==eid for sl in slots):continue
@@ -602,7 +722,9 @@ if a.previous_map:
  previous={s['key']:s for s in json.load(open(a.previous_map)).get('slots',[])}
  for sl in slots:
   before=previous.get(sl['key'])
-  if before and 'role' in before and before.get('sample')==sl.get('sample'):
+  # Under --inline-markup a sample that only gained or lost markup is the same words: its role stays.
+  same=before and (plain_text(before.get('sample'))==plain_text(sl.get('sample')) if a.inline_markup else before.get('sample')==sl.get('sample'))
+  if same and 'role' in before:
    sl['role']=before['role']
    if 'group' in before:sl['group']=before['group']
 # The rule tables fill in every slot still without a role; slots that kept one are left as they are.

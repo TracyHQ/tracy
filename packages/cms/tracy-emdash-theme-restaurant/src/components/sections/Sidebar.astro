@@ -1,0 +1,99 @@
+---
+import Glyph from '../site/Glyph.astro'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  locale: Locale
+  categories: Array<{ slug: string; label: string }>
+  testimonials?: Row | null
+  banner?: Row | null
+  title: string
+  prevLabel?: string
+  nextLabel?: string
+  chromeEntry: { id: string; slug: string } | null
+}
+const {
+  locale,
+  categories,
+  testimonials = null,
+  banner = null,
+  title,
+  chromeEntry,
+  prevLabel = '',
+  nextLabel = ''
+} = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chromeEntry)
+const $t = stampFor(
+  Astro.request,
+  'testimonials',
+  testimonials ? { id: testimonials.id, slug: testimonials.slug } : null
+)
+const $b = stampFor(Astro.request, 'banner', banner ? { id: banner.id, slug: banner.slug } : null)
+const bannerImg = banner ? mediaUrl(banner.image) : null
+// a category or the banner button leads somewhere only while its page is published
+const live = await liveLinks(Astro.request, locale, [
+  ...categories.map((c) => `/${c.slug}`),
+  banner?.button_link
+])
+const items: any[] = testimonials?.items ?? []
+---
+
+<aside class="rs-side" aria-label="Sidebar">
+	<div class="rs-side-mod is-primary">
+		<h3 class="rs-side-title" {...$c('categories_title')}>{title}</h3>
+		<ul>
+			{categories.filter((c) => live(`/${c.slug}`)).map((c) => <li><a href={href(locale, `/${c.slug}`)}>{c.label}</a></li>)}
+		</ul>
+	</div>
+	{testimonials && items.length > 0 && (
+		<div class="rs-side-mod is-dark" data-testimonials>
+			<h3 class="rs-side-title" {...$t('title')}>{testimonials.block_intro || testimonials.title}</h3>
+			<div class="rs-quote-viewport"><div class="rs-quote-track">
+			{items.map((it: any, i: number) => (
+				<div class:list={['rs-quote', i === 0 && 'is-active']} data-quote={i}>
+					<p {...$t(`items[${i}].testimonial_text`)}>{String(it.testimonial_text).trim()}</p>
+					<span class="rs-quote-author" {...$t(`items[${i}].author_name`)}>{String(it.author_name).trim()}</span>
+					{mediaUrl(it.author_img) && <div class="rs-quote-photo"><img src={mediaUrl(it.author_img)!} alt="" width="60" height="60" loading="eager" decoding="async" {...$t(`items[${i}].author_img`)} /></div>}
+				</div>
+			))}
+			</div></div>
+			{items.length > 1 && (
+				<div class="rs-quote-nav">
+					<button type="button" data-step="-1" aria-label={prevLabel}><Glyph name="prev" /></button>
+					<button type="button" data-step="1" aria-label={nextLabel}><Glyph name="next" /></button>
+				</div>
+			)}
+		</div>
+	)}
+	{banner && (
+		<div class="rs-side-mod rs-banner">
+			{bannerImg && <img src={bannerImg} alt="" width="347" height="231" loading="lazy" decoding="async" {...$b('image')} />}
+			<div class="rs-banner-price" {...$b('price')}>{banner.price}</div>
+			<ul class="rs-banner-points">
+				{(banner.points ?? []).map((p: any, i: number) => <li {...$b(`points[${i}].text`)}>{p.text}</li>)}
+			</ul>
+			{banner.button_label && live(banner.button_link) && <div class="rs-banner-actions"><a class="rs-btn" href={dataHref(banner.button_link || '/', (p) => href(locale, p))} {...$b('button_label')}>{banner.button_label}</a></div>}
+		</div>
+	)}
+</aside>
+
+<script>
+	document.querySelectorAll('[data-testimonials]').forEach((root) => {
+		const quotes = root.querySelectorAll('.rs-quote')
+		const track = root.querySelector<HTMLElement>('.rs-quote-track')
+		let cur = 0
+		root.querySelectorAll<HTMLElement>('[data-step]').forEach((b) =>
+			b.addEventListener('click', () => {
+				quotes[cur].classList.remove('is-active')
+				cur = (cur + Number(b.dataset.step) + quotes.length) % quotes.length
+				quotes[cur].classList.add('is-active')
+				if (track) track.style.transform = `translateX(-${cur * 100}%)`
+			})
+		)
+	})
+</script>

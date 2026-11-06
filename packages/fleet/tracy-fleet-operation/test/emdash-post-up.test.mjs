@@ -514,6 +514,38 @@ test('isolated fleet: reachable loopback needs no bridged host identity or membe
   assert.doesNotMatch(r.docker, /^inspect |^network (connect|disconnect) /m)
 })
 
+const loopbackDials = (/** @type {string} */ docker) =>
+  (docker.match(/^curl .*http:\/\/127\.0\.0\.1:/gm) ?? []).length
+
+test('isolated fleet: a site still starting is waited for, not refused as a bridged host', () => {
+  // The web container's port refuses for a moment after `docker compose up`; a host-networked
+  // tracy-host (HOSTNAME is the machine's name) must proceed once it answers.
+  const r = runPostUp({
+    isolated: true,
+    env: { ...BIZ_OK, HOSTNAME: 'tracy-dev', STUB_LOOPBACK_UP_AFTER: '13' }
+  })
+  assert.equal(r.rc, 0, r.stderr)
+  assert.doesNotMatch(r.stderr, /cannot identify/)
+  assert.doesNotMatch(r.docker, /^inspect |^network (connect|disconnect) /m)
+  assert.ok(loopbackDials(r.docker) >= 14, r.docker)
+})
+
+test('isolated fleet: a port that never answers says so, with the port and the wait, not "bridged"', () => {
+  const r = runPostUp({ isolated: true, env: { ...BIZ_OK, HOSTNAME: 'tracy-dev', STUB_LOOPBACK_DOWN: '1' } })
+  assert.notEqual(r.rc, 0)
+  assert.match(r.stderr, /did not answer on 127\.0\.0\.1:4321 within 90 s/)
+  assert.doesNotMatch(r.stderr, /cannot identify this bridged/)
+  assert.doesNotMatch(r.docker, /^network connect |configure-mail\.mjs/m)
+  // bounded: about two dials a second for 90 s, never unbounded
+  assert.ok(loopbackDials(r.docker) <= 185, String(loopbackDials(r.docker)))
+})
+
+test('isolated bridge: a container-id host asks the loopback once, it does not wait', () => {
+  const r = runPostUp({ isolated: true, env: { ...MACOS, HOSTNAME: '123456abcdef' } })
+  assert.equal(r.rc, 0, r.stderr)
+  assert.equal(loopbackDials(r.docker.split(/^inspect /m)[0]), 1, r.docker)
+})
+
 test('isolated bridge: a preexisting host connection is preserved', () => {
   const r = runPostUp({ isolated: true, env: { ...MACOS, HOSTNAME: '123456abcdef', STUB_HOST_JOINED: '1' } })
   assert.equal(r.rc, 0, r.stderr)

@@ -662,13 +662,17 @@ test(
       write(s.webroot, {
         'wp-content/themes/shop/style.css': css({ 2: '.btn { color: #bf5b3d } /* Tracy */' })
       })
+      // The copy's wp-config.php as built, its bytes read before the sync can lay anything over it.
+      const builtConfig = readFileSync(join(s.webroot, 'wp-config.php'), 'utf8')
+      assert.equal(builtConfig, wpConfig(COPY_DB))
 
       const done = s.syncReading()
       assert.equal(done.state, 'applied', JSON.stringify({ ...done, _log: undefined }))
-      // The manifest handed to the read: the copy as built, each file by its bytes' sha1.
+      // The manifest handed to the read: the copy as built, each file by its bytes' sha1 (the manifest's own
+      // algorithm, a file fingerprint rather than a password hash).
       const sha1 = (text) => createHash('sha1').update(text).digest('hex')
       assert.equal(done._manifest['index.php'], sha1(SITE_FILES['index.php']))
-      assert.equal(done._manifest['wp-config.php'], sha1(wpConfig(COPY_DB)))
+      assert.equal(done._manifest['wp-config.php'], sha1(builtConfig))
       assert.ok(done._manifest['wp-content/mu-plugins/tracy-access.php'])
       // Read: the live wp-config.php and .htaccess (provision rewrote the copy's), the theme's
       // stylesheet and the upload — not the files the import already brought.
@@ -1429,3 +1433,51 @@ INSERT INTO wp_options VALUES (31, 'polylang', 'a:1:{s:12:"default_lang";s:2:"en
     }
   }
 )
+
+test('WordPress: a picture Tracy retitled and the customer deleted for good on the live site stays whole in the copy — its row, its meta and its files (#223)', {
+  ...opts,
+  timeout: 600_000
+}, () => {
+  const meta =
+    'a:2:{s:4:"file";s:18:"2026/11/rt-pic.png";s:5:"sizes";a:1:{s:9:"thumbnail";a:1:{s:4:"file";s:18:"rt-pic-150x150.png";}}}'
+  const s = stack(
+    `INSERT INTO wp_posts (ID, post_author, post_content, post_title, post_status, post_name, guid, post_type)
+         VALUES (5, 1, '', 'rt-pic', 'inherit', 'rt-pic', '${LIVE_URL}/rt-pic/', 'attachment');
+       INSERT INTO wp_postmeta VALUES (10, 5, '_wp_attached_file', '2026/11/rt-pic.png'),
+         (11, 5, '_wp_attachment_metadata', ${sqlText(meta)});`
+  )
+  try {
+    const pictures = {
+      'wp-content/uploads/2026/11/rt-pic.png': 'png bytes',
+      'wp-content/uploads/2026/11/rt-pic-150x150.png': 'thumb bytes'
+    }
+    write(s.webroot, pictures)
+    write(s.live, pictures)
+    assert.equal(s.sync(s.read()).state, 'applied')
+
+    // Tracy gives the picture its title; the customer deletes it for good on the live site.
+    sql(
+      "UPDATE wp_posts SET post_title='RT picture', post_modified='2026-11-02 10:00:00' WHERE ID=5",
+      'wordpress'
+    )
+    sql('DELETE FROM wp_posts WHERE ID=5; DELETE FROM wp_postmeta WHERE post_id=5', 'livesrc')
+    for (const path of Object.keys(pictures)) rmSync(join(s.live, path))
+
+    const done = s.sync(s.read())
+    assert.equal(done.state, 'applied', JSON.stringify({ ...done, _log: undefined }))
+    assert.deepEqual(
+      done.kept.map((k) => [k.id, k.reason]),
+      [['db:wp_posts:["5"]', 'delete-modify']]
+    )
+    assert.deepEqual(rows('SELECT post_title FROM wp_posts WHERE ID=5'), [['RT picture']])
+    assert.deepEqual(rows('SELECT meta_key FROM wp_postmeta WHERE post_id=5 ORDER BY meta_id'), [
+      ['_wp_attached_file'],
+      ['_wp_attachment_metadata']
+    ])
+    for (const [path, bytes] of Object.entries(pictures))
+      assert.equal(readFileSync(join(s.webroot, path), 'utf8'), bytes, `${path} stays`)
+    assert.match(done._log, /2 file\(s\) of kept Media Library items stay/)
+  } finally {
+    s.dispose()
+  }
+})

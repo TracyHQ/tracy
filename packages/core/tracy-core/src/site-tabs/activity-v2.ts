@@ -327,6 +327,8 @@ export function resourceText(
     id: string | null
     title: string | null
     op?: string | null
+    /** The site's static front page (#257): said as the home page, whatever its title. */
+    front?: boolean | null
     /** `tracy`: one of Tracy's own components on the site — said as Tracy's. */
     owner?: string | null
   },
@@ -338,6 +340,7 @@ export function resourceText(
   // id the CMS admin shows (WordPress post 42, Joomla article 2601) is kept ONLY when no title was
   // recorded: council D1 (20/10/2026) names a titled record by its kind and title, never its id.
   const id = r.id && !isOpaqueId(r.id) ? r.id : null
+  if (r.front === true) return t(`event.line.${opKey(r.op)}`, { target: t('event.target.home') })
   if (r.owner === 'tracy') {
     // Word order differs by language ("Tracy's plugin …" / "plugin … của Tracy"): whole templates.
     const op = opWord(r.op, t)
@@ -377,7 +380,8 @@ export function describe(
             type: s(params.type),
             id: typeof params.id === 'number' ? String(params.id) : s(params.id),
             title: s(params.title),
-            owner: s(params.owner)
+            owner: s(params.owner),
+            front: params.front === true
           },
           t
         ),

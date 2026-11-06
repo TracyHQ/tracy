@@ -169,6 +169,61 @@ test('links to take off are sent as empty_links, alone or beside changes', async
   assert.notEqual(both[1].params.request_id, calls[1].params.request_id)
 })
 
+// Slots to empty are named the same way (`empty_slots`, TracyHQ/tracy#362). The plugin judges them, so no inspect mark is asked.
+test('slots to empty are sent as empty_slots, alone or beside changes, and join the request id only when sent', async () => {
+  const calls = []
+  await applyJoomlaContract({
+    siteKey: 'customer.test',
+    mapping: { contract: 'apple/1', revision: 'rev1', changes: {}, emptySlots: ['row.link'] },
+    apply: linkDoor(calls)
+  })
+  assert.deepEqual(calls[1].params.empty_slots, ['row.link'])
+  assert.equal(calls[1].params.changes, undefined)
+  const both = []
+  await applyJoomlaContract({
+    siteKey: 'customer.test',
+    mapping: { ...mapping, emptySlots: ['row.link'] },
+    apply: linkDoor(both)
+  })
+  assert.deepEqual(both[1].params.changes, mapping.changes)
+  assert.deepEqual(both[1].params.empty_slots, ['row.link'])
+  const none = []
+  await applyJoomlaContract({
+    siteKey: 'customer.test',
+    mapping: { ...mapping, emptySlots: [] },
+    apply: linkDoor(none)
+  })
+  assert.equal(none[1].params.empty_slots, undefined)
+  const before = []
+  await applyJoomlaContract({ siteKey: 'customer.test', mapping, apply: linkDoor(before) })
+  assert.equal(
+    none[1].params.request_id,
+    before[1].params.request_id,
+    'an empty list replays as it always did'
+  )
+  assert.notEqual(both[1].params.request_id, before[1].params.request_id)
+})
+
+test('a slot cannot be both changed and emptied, and the list shares the slot limit', async () => {
+  const [key] = Object.keys(mapping.changes)
+  await assert.rejects(
+    applyJoomlaContract({
+      siteKey: 'customer.test',
+      mapping: { ...mapping, emptySlots: [key] },
+      apply: linkDoor([])
+    }),
+    /both changed and emptied/
+  )
+  await assert.rejects(
+    applyJoomlaContract({
+      siteKey: 'customer.test',
+      mapping: { ...mapping, emptySlots: Array.from({ length: 1500 }, (_, i) => `row.${i}`) },
+      apply: linkDoor([])
+    }),
+    /at most 1500/
+  )
+})
+
 test('a mapping without links to take off keeps the request it always had', async () => {
   const before = []
   const after = []
@@ -195,4 +250,42 @@ test('a link the site has not marked, or one also changed, is refused by name be
     )
     assert.equal(calls.length, 1)
   }
+})
+
+// The write step drops exactly the slots the plugin refuses, so a thrown refusal keeps what the plugin said per slot. The
+// sentence stays what every other caller reads.
+test('a refused apply keeps the per-slot errors and the answer, with the same sentence as before', async () => {
+  const errors = [{ code: 'SLOT_TOO_LONG', severity: 'recoverable', field: { slotKey: 'hero.title' } }]
+  const answer = { ok: false, error: 'contract_failed', message: 'Review the slots', errors }
+  const apply = async (call) => (call.params.operation === 'inspect' ? state : answer)
+  await assert.rejects(
+    () => applyJoomlaContract({ apply, siteKey: 'customer.test', mapping }),
+    (error) => {
+      assert.equal(error.message, 'Review the slots')
+      assert.deepEqual(error.errors, errors)
+      assert.equal(error.answer.error, 'contract_failed')
+      return true
+    }
+  )
+})
+
+test('a refusal with no per-slot list has no errors, and a slot this adapter refuses names itself', async () => {
+  const silent = async (call) =>
+    call.params.operation === 'inspect' ? state : { ok: false, error: 'writer_busy' }
+  await assert.rejects(
+    () => applyJoomlaContract({ apply: silent, siteKey: 'customer.test', mapping }),
+    (error) => error.errors === undefined && error.answer.error === 'writer_busy'
+  )
+  const proof = {
+    ...state,
+    slots: [{ key: 'hero.title', entity: 'hero', requiresEvidence: true }]
+  }
+  await assert.rejects(
+    () => applyJoomlaContract({ apply: async () => proof, siteKey: 'customer.test', mapping }),
+    (error) =>
+      error.message === 'Customer evidence is missing for hero.title' &&
+      error.errors[0].code === 'SLOT_EVIDENCE_REQUIRED' &&
+      error.errors[0].field.slotKey === 'hero.title' &&
+      error.errors[0].message === error.message
+  )
 })

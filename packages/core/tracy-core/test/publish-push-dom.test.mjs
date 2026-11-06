@@ -568,7 +568,7 @@ test('a push the live site refused for its switch says where to turn it on; a fa
   )
   assert.equal(phase(), 'pushed')
   assert.ok(
-    document.body.textContent.includes(t('sync.error.livePhpTooOld', { php: '7.3.33', min: '7.4.0' })),
+    document.body.textContent.includes(t('push.error.livePhpTooOld', { php: '7.3.33', min: '7.4.0' })),
     document.body.textContent
   )
 
@@ -756,7 +756,7 @@ test('undone: said with what could not be put back', async () => {
   )
   assert.equal(phase(), 'undone')
   assert.equal(stepIs(), 'send')
-  assert.match(text(), /1 changes on your live site were put back as they were/)
+  assert.match(text(), /1 change on your live site was put back as it was/)
   assert.match(text(), /Not put back: changed again on your live site \(1\)/)
 })
 
@@ -776,7 +776,7 @@ test('an older push stays undoable under a newer preview', async () => {
     })
   )
   assert.equal(phase(), 'review')
-  assert.match(text(), /Last sync to live 10 minutes ago: 1 changes/)
+  assert.match(text(), /Last sync to live 10 minutes ago: 1 change\./)
   assert.ok(document.querySelector('[data-push-undo-ask]'))
 })
 
@@ -849,7 +849,8 @@ test('the pure parts: phases from answers, the step each is drawn on, failure wo
   assert.equal(lib.pushFailureText('PREVIEW_STALE', t), t('push.error.copyChanged'))
   assert.equal(lib.pushFailureText('LIVE_UNREACHABLE', t), t('push.error.liveUnreachable'))
   for (const [code, key] of Object.entries({
-    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    // The Sync to live screen's own words for the live site (#226); the rest are shared.
+    LIVE_BLOCKED: 'push.error.liveBlocked',
     LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
     LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
     TOKEN_REFUSED: 'sync.error.liveToken'
@@ -857,9 +858,9 @@ test('the pure parts: phases from answers, the step each is drawn on, failure wo
     assert.equal(lib.pushFailureText(code, t), t(key))
   assert.equal(
     lib.pushFailureText('LIVE_PHP_TOO_OLD', t, 200, { php: '7.3.33', min: '7.4.0' }),
-    t('sync.error.livePhpTooOld', { php: '7.3.33', min: '7.4.0' })
+    t('push.error.livePhpTooOld', { php: '7.3.33', min: '7.4.0' })
   )
-  assert.equal(lib.pushFailureText('LIVE_PHP_TOO_OLD', t), t('sync.error.livePhpTooOldPlain'))
+  assert.equal(lib.pushFailureText('LIVE_PHP_TOO_OLD', t), t('push.error.livePhpTooOldPlain'))
   assert.equal(lib.pushFailureText('NOT_PUSHED', t), t('push.error.notPushed'))
   assert.equal(lib.pushFailureText('WEIRD', t), t('push.failed', { error: 'WEIRD' }))
   assert.equal(lib.itemName({ id: 'x', kind: 'post', title: null }, t), 'Post')
@@ -957,4 +958,154 @@ test('Preview translates metadata subjects and keeps page types in every interfa
       language
     )
   }
+})
+
+test('a write with no answer is "may already be on your live site", apart from what failed; a firewall block says what to do (#226)', async () => {
+  await open(() =>
+    json(200, {
+      available: true,
+      push: row({
+        state: 'pushed',
+        phase: 'apply',
+        pushedAt: ago(1),
+        undoable: true,
+        result: {
+          pushed: [item('a1', 'Opening hours')],
+          conflicts: [],
+          failed: [
+            item('u1', 'Page template', { code: 'WRITE_OUTCOME_UNKNOWN' }),
+            item('b1', 'Prices', { code: 'LIVE_BLOCKED' })
+          ],
+          skipped: []
+        }
+      }),
+      lastPush: null
+    })
+  )
+  assert.match(text(), /1 change reached your live site/, 'one change, not "1 changes"')
+  const unknown = document.querySelector('[data-push-group="unknown"]')
+  assert.ok(unknown, 'its own group')
+  assert.match(unknown.textContent, /May already be on your live site \(1\)/)
+  assert.match(unknown.textContent, /Page template/)
+  assert.match(unknown.textContent, /Check them on your live site before you sync to live again/)
+  const failed = document.querySelector('[data-push-group="failed"]')
+  assert.match(failed.textContent, /Could not be written \(1\)/)
+  assert.doesNotMatch(failed.textContent, /Page template/)
+  assert.match(failed.textContent, new RegExp(t('push.note.liveBlocked').slice(0, 40)))
+})
+
+test('writes sent with no answer back are never "your live site was not changed", nor a plain success (#286)', async () => {
+  const unknownItem = item('u1', 'Page template', { code: 'WRITE_OUTCOME_UNKNOWN' })
+  const pushedWith = (result, extra = {}) =>
+    open(() =>
+      json(200, {
+        available: true,
+        push: row({ state: 'pushed', phase: 'apply', pushedAt: ago(1), preview: PREVIEW, result, ...extra }),
+        lastPush: null
+      })
+    )
+  // Every write ended with no answer: nothing confirmed, nothing refused.
+  await pushedWith({ pushed: [], conflicts: [], failed: [unknownItem], skipped: [] })
+  assert.equal(phase(), 'pushed')
+  assert.equal(document.querySelector('[data-push-nothing-sent]'), null, 'no "Nothing was sent"')
+  assert.doesNotMatch(text(), new RegExp(t('push.status.nothingSentBody').slice(0, 30)))
+  const notice = document.querySelector('[data-push-unknown]')
+  assert.ok(notice, 'the unknown-outcome notice')
+  assert.match(notice.textContent, new RegExp(t('push.status.unknown')))
+  assert.match(notice.textContent, /Tracy sent 1 change but got no answer/)
+  assert.match(notice.textContent, /Check it there before you sync to live again/)
+  assert.ok(document.querySelector('[data-push-group="unknown"]'), 'the group still lists it')
+
+  // One refused, one with no answer: still the unknown outcome, never "not changed".
+  await pushedWith({
+    pushed: [],
+    conflicts: [],
+    failed: [unknownItem, item('b1', 'Prices', { code: 'LIVE_BLOCKED' })],
+    skipped: []
+  })
+  assert.ok(document.querySelector('[data-push-unknown]'))
+  assert.equal(document.querySelector('[data-push-nothing-sent]'), null)
+
+  // Some written, some with no answer: a warning beside the count, not a plain success.
+  await pushedWith({
+    pushed: [item('a1', 'Opening hours'), item('a2', 'Prices')],
+    conflicts: [],
+    failed: [unknownItem, item('u2', 'Footer', { code: 'WRITE_OUTCOME_UNKNOWN' })],
+    skipped: []
+  })
+  assert.match(text(), /2 changes reached your live site/)
+  const also = document.querySelector('[data-push-unknown-also]')
+  assert.ok(also, 'the writes with no answer are said beside the count')
+  assert.match(also.textContent, /2 more changes were sent with no answer back/)
+  assert.equal(also.closest('[data-severity]').getAttribute('data-severity'), 'warning')
+
+  // Nothing unknown: the success as before.
+  await pushedWith({ pushed: [item('a1', 'Opening hours')], conflicts: [], failed: [], skipped: [] })
+  assert.equal(document.querySelector('[data-push-unknown-also]'), null)
+  assert.equal(
+    document.querySelector('[data-severity="success"]')?.textContent.includes(t('push.status.pushed')),
+    true
+  )
+  assert.equal(document.querySelector('[data-push-unknown]'), null)
+
+  // An Apply that stopped (the live site stopped answering) with one write on the way and none
+  // confirmed: the failure, and that this one may be on the live site, listed.
+  await open(() =>
+    json(200, {
+      available: true,
+      push: row({
+        state: 'failed',
+        phase: 'apply',
+        error: 'LIVE_UNREACHABLE',
+        preview: PREVIEW,
+        result: { pushed: [], conflicts: [], failed: [unknownItem], skipped: [item('s1', 'Contact')] }
+      }),
+      lastPush: null
+    })
+  )
+  assert.equal(phase(), 'failed')
+  assert.equal(stepIs(), 'send')
+  assert.match(text(), new RegExp(t('push.error.liveUnreachable').slice(0, 40)))
+  assert.match(
+    document.querySelector('[data-push-unknown]').textContent,
+    /Tracy sent 1 change but got no answer/
+  )
+  const group = document.querySelector('[data-push-group="unknown"]')
+  assert.ok(group, 'the change that may be on the live site is listed')
+  assert.match(group.textContent, /Page template/)
+})
+
+test('an Undo answering that nothing is left to undo: said once on this push, no Undo to press; later screens say nothing (#226)', async () => {
+  const pushed = (id, extra = {}) =>
+    row({
+      id,
+      state: 'pushed',
+      phase: 'apply',
+      pushedAt: ago(1),
+      undoable: true,
+      undoError: 'NOT_PUSHED',
+      result: { pushed: [item('a1', 'Opening hours')], conflicts: [], failed: [], skipped: [] },
+      ...extra
+    })
+  await open(() => json(200, { available: true, push: pushed('p1'), lastPush: null }))
+  assert.match(text(), new RegExp(t('push.error.notPushed').slice(0, 40)))
+  assert.doesNotMatch(text(), /30 days\.$/m)
+  assert.equal(document.querySelector('[data-push-undo-ask]'), null, 'no Undo to press again')
+  // A newer preview: the old push's dead Undo is not shown again.
+  await open(() =>
+    json(200, { available: true, push: row({ id: 'p2', preview: PREVIEW }), lastPush: pushed('p1') })
+  )
+  assert.equal(document.querySelector('[data-push-undo]'), null)
+  assert.doesNotMatch(text(), new RegExp(t('push.error.notPushed').slice(0, 40)))
+})
+
+test('blocked or too old on the Sync to live screen is the live site; on Sync from live, the original site (#226)', () => {
+  assert.match(lib.pushFailureText('LIVE_BLOCKED', t), /^Your live site blocked Tracy’s request/)
+  assert.doesNotMatch(lib.pushFailureText('LIVE_BLOCKED', t), /engine/)
+  assert.match(
+    lib.pushFailureText('LIVE_PHP_TOO_OLD', t, 200, { php: '7.3', min: '7.4' }),
+    /^Your live site runs PHP 7\.3/
+  )
+  assert.match(t('sync.error.liveBlocked'), /^Your original site blocked/)
+  assert.match(t('sync.error.livePhpTooOld', { php: '7.3', min: '7.4' }), /^Your original site runs PHP 7\.3/)
 })

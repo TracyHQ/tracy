@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-261-internal-api-origin",
+  "kind": "fix",
+  "title": "Agent calls to Tracy's own server go over the internal origin, and a failed one is never said as the site not answering",
+  "pr": 261,
+  "area": "site-tools/site-call",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: build the call address with an internal origin set, and without it.",
+    "S2: a relay call to tracy-web that throws on both tries."
+  ],
+  "expect": [
+    "S1: with MCP_TRACY_API_ORIGIN the call goes to the internal origin; without it, to the public one.",
+    "S2: COWORK_WEB_UNREACHABLE, asked twice; its next says the call did not reach Tracy's own server and never tells the customer the site is not answering."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/call-origin.mjs",
+    "exports": "callOrigin"
+  },
+  "evidence": "Issue #208: Apply door calls hairpinned through the public address and timed out; the agent then told the customer their site was not answering",
+  "fence": "Site agent calls",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#208\\)|a relay that throws is an answer",
+      "packages/tools/tracy-site-tools/test/call-origin.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-call.test.mjs"
+    ],
+    "tests": [
+      "a host that names an internal origin sends its calls there; the public origin stays for people (#208)"
+    ]
+  }
+}

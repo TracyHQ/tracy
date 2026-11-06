@@ -1,0 +1,43 @@
+---
+/** "You're in good restaurant": review bars on a photograph, one white card. */
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import type { Row } from '@/lib/content'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  entry: Row
+  locale: Locale
+}
+const { entry, locale } = Astro.props
+const $s = stampFor(Astro.request, 'statistics', { id: entry.id, slug: entry.slug })
+const bg = mediaUrl(entry.background)
+const live = await liveLinks(Astro.request, locale, [entry.button_link])
+---
+
+<section class="rs-section rs-stats" style={bg ? `--rs-stats-bg:url('${bg}')` : undefined}>
+	<div class="rs-stats-card">
+		<h2 class="rs-display rs-section-title" {...$s('title')}>{entry.title}</h2>
+		{entry.section_intro && <p class="rs-section-desc" {...$s('section_intro')}>{entry.section_intro}</p>}
+		<ul class="rs-stats-list">
+			{(entry.items ?? []).map((it: any, i: number) => (
+				<li>
+					<span class="rs-stats-name" {...$s(`items[${i}].stats_name`)}>{String(it.stats_name).trim()}</span>
+					<span class="rs-stats-track">
+						{Number(it.stats_count) < 12 ? (
+							<>
+								<span class="rs-stats-bar" style={`width:${Number(it.stats_count)}%`}></span>
+								<span class="rs-stats-val" {...$s(`items[${i}].stats_count`)}>{it.stats_count}%</span>
+							</>
+						) : (
+							<span class="rs-stats-bar" style={`width:${Number(it.stats_count)}%`}><span {...$s(`items[${i}].stats_count`)}>{it.stats_count}%</span></span>
+						)}
+					</span>
+				</li>
+			))}
+		</ul>
+		{entry.button_title && live(entry.button_link) && <a class="rs-btn" href={dataHref(entry.button_link || '/', (p) => href(locale, p))} {...$s('button_title')}>{String(entry.button_title).trim()}</a>}
+	</div>
+</section>

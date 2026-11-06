@@ -19,8 +19,8 @@ async function html(response) {
 test('unknownSitePage and messagePage carry the shared shell — token block, color-scheme', async () => {
   const unknown = await html(unknownSitePage('nope.tracy.test'))
   assert.match(unknown, /<meta name="color-scheme" content="light dark">/)
-  assert.match(unknown, /--primary:oklch\(0\.588 0\.136 37\.4\)/)
-  assert.match(await html(messagePage('Not found', 'gone', 404)), /--primary:oklch\(0\.588/)
+  assert.match(unknown, /--primary:oklch\(0\.565 0\.136 37\.4\)/)
+  assert.match(await html(messagePage('Not found', 'gone', 404)), /--primary:oklch\(0\.565/)
 })
 
 test('unknownSitePage: a <script> pushed through hostname never reaches the page unescaped', async () => {

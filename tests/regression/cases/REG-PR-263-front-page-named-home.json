@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-263-front-page-named-home",
+  "kind": "fix",
+  "title": "A write to a WordPress site's static front page is named the home page",
+  "pr": 263,
+  "area": "site-tools/replace",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: replace words on the home page of a site whose front page record keeps a demo title.",
+    "S2: a site-wide replace whose page read does not say home: page_on_front with show_on_front page, then show_on_front posts.",
+    "S3: the conversation memory asked about the front page id, other ids and other kinds.",
+    "S4: a write target marked front reaches the turn card's target and the Site changes description."
+  ],
+  "expect": [
+    "S1: the receipt says \"the home page, its content\", never the demo title, and the caller is told post 42.",
+    "S2: post 42 is the front page only while show_on_front is page.",
+    "S3: only a WordPress post or page of that id is the front page, in that conversation.",
+    "S4: targetOf keeps front:true; describeEffects gives resource.op with front:true; nothing is marked without it."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs",
+    "exports": "replaceOnWordPress, pageFactsOf"
+  },
+  "evidence": "Issue #257: a home page hero edit was named \"Read the latest News + Blog\" in the card and Site changes",
+  "fence": "Site changes names",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#257\\)",
+      "packages/tools/tracy-site-tools/test/replace-wordpress.test.mjs",
+      "packages/tools/tracy-site-tools/test/call-memory.test.mjs",
+      "apps/tracy-web/test/apply-write-title.test.mjs"
+    ],
+    "tests": [
+      "a write to the static front page is named the home page, whatever title its record keeps (#257)",
+      "isFront: a WordPress post or page of the front page id this conversation found, and nothing else (#257)",
+      "a front page mark reaches the turn card and Site changes beside the title, and only when set (#257)"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+---
+// Portable Text h2 with a stable id so the table of contents can link to it, and its provenance
+// stamp on a stamped request (`stampBlocks()`, `src/lib/stamps.ts`; absent, Astro prints nothing).
+import { BLOCK_SRC } from '@/lib/stamps'
+import { toId } from '@/lib/toc'
+const { node } = Astro.props
+const text = (node?.children ?? []).map((c: any) => c.text ?? '').join('')
+---
+
+<h2 id={toId(text)} data-tracy-src={node?.[BLOCK_SRC]}><slot /></h2>

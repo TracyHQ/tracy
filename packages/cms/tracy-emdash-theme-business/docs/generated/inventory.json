@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-business",
     "label": "Tracy Business",
-    "version": "1.7.23"
+    "version": "1.7.25"
   },
   "locales": {
     "default": "en",
@@ -4640,7 +4640,7 @@
     "@emdash-cms/plugin-forms": "0.2.9",
     "@phosphor-icons/react": "2.1.10",
     "@tailwindcss/vite": "4.3.3",
-    "astro": "7.2.8",
+    "astro": "7.3.3",
     "better-sqlite3": "12.11.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -4757,8 +4757,8 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:424b334f280bfc54098b92c1abb5ea83ffec155d94a2ce25c1926535172c1686",
-    "package.json": "sha256:110e824d029ee09a2e31761f7aac93beadd8eb696fdc11c01689229ee293eff6",
-    "pnpm-lock.yaml": "sha256:604c8a85fa3fe073389043da5dca2f78cb69aa33764b867de68a5b2024168610",
+    "package.json": "sha256:0a76bd3ed0c468f1037efbe812af808494850fd5a219e5dcf3effabc40f0c324",
+    "pnpm-lock.yaml": "sha256:e9c605a351a8ec4d0602c5acf8e964541090ab146e298b0d0bb26bc1b7ccf49d",
     "seed/field-map.json": "sha256:b463bc104be5dcf058893c8d2b9e333de95faf7791dd945dc2f28345af30d334",
     "seed/media-map.json": "sha256:f62125be2fda732dfc8a4a9d05ff341d2f4ec4dab7cbf08f5900d9e12a929bd6",
     "seed/seed.json": "sha256:f269c81281f22c5918ff298a0511b954c71813c0d44c61fcd19eabe37a20e7cf",
@@ -4807,7 +4807,7 @@
     "src/lib/chrome.ts": "sha256:1755047adab7fc022c1edc76536d32c6b1a6b28910e245a61568869057c61fe1",
     "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
     "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
-    "src/lib/font-subsets.mjs": "sha256:736e34fffe763d32ed64fbaf3892ef0a973f49c66d7534d3e3850d948552d37a",
+    "src/lib/font-subsets.mjs": "sha256:4588e6245fff77b220db5b153406c28cb7c8df3d4de1c2d6ab01a7848e2f6689",
     "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
     "src/lib/hreflang-plugin.ts": "sha256:379ded7b2e192b534db20031ac74a8e9d412c3c8bb99c2546cce214faf2faec0",
     "src/lib/hreflang.ts": "sha256:0c81835d74f69b2c46a4c6783a0d832366c86d3bbc20389b57aad37962402902",
@@ -4853,7 +4853,7 @@
     "src/views/Service.astro": "sha256:dbbb49b29191625ee021626f2541439ef503a04c183002e48fadf6c28c4547fe",
     "src/views/Services.astro": "sha256:d1d584e3e0d1b6cfa2f06c8f037148d599c10c1039606faaf57243f9bad403b8",
     "src/views/Sitemap.astro": "sha256:979278a8534d9168abf53dcc2f66584627392b49af7c2dce9a70ca53557dfa7e",
-    "template.config.json": "sha256:3810e5356b7e04bd407634665e68d8ca10bb03b053a1faba6a024b0bda5d1d67",
+    "template.config.json": "sha256:0700138edc2a4e07d8853544c90d10f92e70436b2cd6def60d14ce18fc16cbad",
     "tools/forms.json": "sha256:75b8fadc91e8dc4991d588c06a9219b07fc4e36b7719eee6ebcb3ad3f49cdc85",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

@@ -8,6 +8,11 @@
 //   node tools/fast-gate.mjs plan    --contract qa.contract.json [--json <out>] [--changed a,b,…]
 //   node tools/fast-gate.mjs verdict <run-dir> [--contract qa.contract.json] [--json]
 //
+// Output: one summary line, `fast-gate <command>: <key=value …> -> <file>`. `plan` writes its table to
+// `--json <out>`'s sibling `<out>.md` (or $TMPDIR/tracy-cli/fast-gate-plan-<hash>.md) and its errors to
+// stderr; `verdict` points at FAST-GATE.md. `--verbose` prints the Markdown table / verdict as before;
+// `verdict --json` and `plan --changed` print JSON on stdout as before. Exit codes do not depend on it.
+//
 // plan     resolve the cases (below), print the table, exit 2 when the contract cannot support a fast gate
 //          (an override names nothing, drops the only coverage of something, the output requires an
 //          unknown-route page and the contract has none). `--changed` lists the cases whose render inputs
@@ -32,11 +37,14 @@
 //              the source offers no frame for them.
 //   overrides  `visual.fastGate.add[]` / `.drop[]`, each with a reason; a drop that removes the only
 //              coverage of a requirement is an error, not a quieter gate.
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { importClosure, pageHash } from './visual-lib.mjs'
 import { contractHash } from './qa-contract.mjs'
+import { summaryLine, takeVerbose } from './cli-output.mjs'
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const byId = (a, b) => (a < b ? -1 : a > b ? 1 : 0)
@@ -630,6 +638,7 @@ export function verdictMarkdown(v) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const args = process.argv.slice(2)
+  const verbose = takeVerbose(args)
   const opt = (n) => {
     const i = args.indexOf(n)
     return i < 0 ? undefined : args[i + 1]
@@ -646,20 +655,52 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     if (opt('--changed')) {
       const hit = affectedCases(plan, contract, opt('--changed').split(',').filter(Boolean))
       console.log(JSON.stringify({ changed: opt('--changed').split(','), cases: hit.map((c) => c.page) }))
-    } else {
+    } else if (verbose) {
       process.stdout.write(planMarkdown(plan))
     }
     if (opt('--json')) writeFileSync(opt('--json'), JSON.stringify(plan, null, 2) + '\n')
+    if (!opt('--changed') && !verbose) {
+      const md = opt('--json')
+        ? `${opt('--json')}.md`
+        : path.join(
+            tmpdir(),
+            'tracy-cli',
+            `fast-gate-plan-${createHash('sha256')
+              .update(`${process.cwd()}\0${path.resolve(contractFile)}`)
+              .digest('hex')
+              .slice(0, 10)}.md`
+          )
+      mkdirSync(path.dirname(path.resolve(md)), { recursive: true })
+      writeFileSync(md, planMarkdown(plan))
+      for (const e of plan.errors) console.error(`error: ${e}`)
+      const summary = {
+        status: plan.errors.length ? 'error' : 'ok',
+        cases: plan.cases.length,
+        axes: `${plan.axes.fast}/${plan.axes.full}`,
+        errors: plan.errors.length
+      }
+      console.log(summaryLine('fast-gate', 'plan', summary, md))
+    }
     process.exit(plan.errors.length ? 2 : 0)
   } else if (command === 'verdict' && args[1]) {
     const v = assessFastGate(args[1], { contract })
     writeFileSync(path.join(args[1], 'FAST-GATE.json'), JSON.stringify(v, null, 2) + '\n')
     writeFileSync(path.join(args[1], 'FAST-GATE.md'), verdictMarkdown(v))
-    console.log(args.includes('--json') ? JSON.stringify(v) : verdictMarkdown(v))
+    if (args.includes('--json')) console.log(JSON.stringify(v))
+    else if (verbose) console.log(verdictMarkdown(v))
+    else
+      console.log(
+        summaryLine(
+          'fast-gate',
+          'verdict',
+          { status: v.status, cases: v.cases, reasons: v.reasons, first: v.reasons[0] },
+          path.join(args[1], 'FAST-GATE.md')
+        )
+      )
     process.exit(v.status === 'pass' ? 0 : 1)
   } else {
     console.error(
-      'usage: fast-gate.mjs plan --contract qa.contract.json [--json out] [--changed a,b] | verdict <run-dir> [--contract f]'
+      'usage: fast-gate.mjs plan --contract qa.contract.json [--json out] [--changed a,b] [--verbose] | verdict <run-dir> [--contract f] [--json|--verbose]'
     )
     process.exit(2)
   }

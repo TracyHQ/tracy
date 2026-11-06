@@ -10,6 +10,17 @@
  * A field that cannot be proven is `empty`. Nothing is invented.
  */
 import { contrast, distance, luminance, mix, parseHex, readable, readableOn, toHex } from './colour.mjs'
+import {
+  emTracking,
+  letterSpacing,
+  paddingPair,
+  radiusAfter,
+  radiusBefore,
+  sizeAt,
+  sizeOfLabel,
+  verticalHorizontalPad,
+  verticalSlashHorizontalPad
+} from './prose-numbers.mjs'
 import { fromStack, kindOf, nearestWeight, REFUSED_KINDS, resolveFont, stackOf, weightsOf } from './fonts.mjs'
 
 export const SCHEMA = 'tracy-ds-profile/v1'
@@ -34,13 +45,36 @@ const pxField = (text, f) => {
   return p.range ? { v: p.v, s: 'derived', f, range: p.range } : stated(p.v, f)
 }
 
+/**
+ * The text after "Quick Color Reference" up to the next line that opens with `**` (the next heading), or the
+ * whole text when it has no such reference. Read by position rather than a lazy regex, which went back over
+ * every run of blank lines once for each line in it.
+ * @param {string} text
+ */
+function quickBlock(text) {
+  const head = /Quick Color Reference/i.exec(text)
+  if (!head) return text
+  const from = head.index + head[0].length
+  for (let star = text.indexOf('**', from); star >= 0; star = text.indexOf('**', star + 1)) {
+    // the white space right before these stars, and the first line break in it
+    let space = star
+    while (space > from && /\s/.test(text[space - 1])) space--
+    const lineBreak = text.indexOf('\n', space)
+    if (lineBreak >= 0 && lineBreak < star) return text.slice(from, lineBreak)
+  }
+  return text.slice(from)
+}
+
 /** The "Quick Color Reference" lines of a Refero system's "Agent Prompt Guide". */
 export function quickColours(system) {
   const sec = (system.customSections ?? []).find((c) => /prompt guide/i.test(c.title ?? ''))
   const text = String(sec?.content ?? '')
   const out = {}
-  const block = /Quick Color Reference([\s\S]*?)(?:\n\s*\*\*|$)/i.exec(text)?.[1] ?? text
-  for (const m of block.matchAll(/^\s*[-*]\s*([a-z][a-z ]{1,24}?)\s*:\s*(#[0-9a-fA-F]+)\b/gim)) {
+  const block = quickBlock(text)
+  // a line's own leading blanks only: `^\s*` went over every blank line below each line start
+  for (const m of block.matchAll(
+    /^[^\S\n\r\u2028\u2029]*[-*]\s*([a-z][a-z ]{1,24}?)\s*:\s*(#[0-9a-fA-F]+)\b/gim
+  )) {
     const key = m[1].trim().toLowerCase()
     if (parseHex(m[2]) && !(key in out)) out[key] = m[2].toLowerCase()
   }
@@ -92,33 +126,29 @@ export function primaryButton(system) {
     if (!fill) continue
     const word = /\b(white|black)\s+(?:text|label)\b/i.exec(d)?.[1]?.toLowerCase()
     const label = hexFor(d, 'text|label') ?? (word ? LABEL_WORDS[word] : null)
-    const num = (re) => {
-      const m = re.exec(d)
-      return m ? Number(m[1]) : null
+    // the numbers of the prose, read in one pass (prose-numbers.mjs), each as its regex there reads it
+    const num = (read) => {
+      const caps = read(d)
+      return caps ? Number(caps[0]) : null
     }
-    const pad =
-      /padding[:\s]*(\d+(?:\.\d+)?)px\s*(?:vertical\s*)?(?:[×x]\s*)?(\d+(?:\.\d+)?)px/i.exec(d) ??
-      /(\d+(?:\.\d+)?)px\s*vertical\s*[×x/]\s*(\d+(?:\.\d+)?)px\s*horizontal/i.exec(d)
-    const size =
-      num(/\bat\s*(\d+(?:\.\d+)?)(?:\s*[–-]\s*\d+)?\s*px/i) ?? num(/(\d+(?:\.\d+)?)px\s+(?:text|label)/i)
-    const track =
-      /letter-spacing[:\s]*(-?\d*\.?\d+)\s*(px|em)\b/i.exec(d) ??
-      /(-?\d*\.?\d+)(em)\s+(?:tracking|letter-spacing)/i.exec(d)
+    const pad = paddingPair(d) ?? verticalHorizontalPad(d)
+    const size = num(sizeAt) ?? num(sizeOfLabel)
+    const track = letterSpacing(d) ?? emTracking(d)
+    const weight = /weight\s*(\d{3})/i.exec(d)?.[1]
     const tracking = track
-      ? track[2].toLowerCase() === 'em'
-        ? `${Number(track[1])}em`
+      ? track[1].toLowerCase() === 'em'
+        ? `${Number(track[0])}em`
         : size
-          ? `${Math.round((Number(track[1]) / size) * 1000) / 1000}em`
+          ? `${Math.round((Number(track[0]) / size) * 1000) / 1000}em`
           : null
       : null
     return {
       from: `components[${name(c)}]`,
       fill,
       label,
-      radius:
-        num(/(\d+(?:\.\d+)?)px\s*(?:border-)?radius/i) ?? num(/radius[:\s]*(?:of\s*)?(\d+(?:\.\d+)?)px/i),
-      pad: pad ? { y: Number(pad[1]), x: Number(pad[2]) } : null,
-      weight: num(/weight\s*(\d{3})/i),
+      radius: num(radiusAfter) ?? num(radiusBefore),
+      pad: pad ? { y: Number(pad[0]), x: Number(pad[1]) } : null,
+      weight: weight ? Number(weight) : null,
       size,
       transform: /\buppercase\b|all[- ]caps/i.test(d) ? 'uppercase' : null,
       tracking
@@ -415,7 +445,7 @@ function refero_shape(system) {
     return empty('not stated')
   }
   const btn = (system.components ?? []).find((c) => /button|cta|pill/i.test(c.name ?? ''))
-  const pad = /(\d+)px\s*vertical\s*\/\s*(\d+)px\s*horizontal/i.exec(btn?.description ?? '')
+  const pad = verticalSlashHorizontalPad(String(btn?.description ?? ''))
   const primary = primaryButton(system)
   const radius = get('buttons', 'button')
   return {
@@ -428,7 +458,7 @@ function refero_shape(system) {
     buttonPad: primary?.pad
       ? stated(primary.pad, `${primary.from}.description`)
       : pad
-        ? stated({ y: Number(pad[1]), x: Number(pad[2]) }, 'components[button].description')
+        ? stated({ y: Number(pad[0]), x: Number(pad[1]) }, 'components[button].description')
         : empty('not stated')
   }
 }
@@ -730,13 +760,18 @@ function flagsOf(p) {
 /**
  * The quality gate. A profile that fails is never offered to a customer. Reasons are returned, not
  * thrown, so a report can count them.
+ * `options.keepOwnText`: accent-only mode (brand.mjs) leaves the template's own page text as it is, so the
+ * text-on-page contrast is not judged (JA Boxing's own text is 4.02:1 on its page); everything else is.
+ * @param {any} p
+ * @param {{ keepOwnText?: boolean }} [options]
  * @returns {{ ok: boolean, reasons: string[] }}
  */
-export function gate(p) {
+export function gate(p, options = {}) {
   const reasons = []
   for (const k of ['bg', 'fg', 'accent']) if (!parseHex(p.colors[k]?.v)) reasons.push(`no-${k}`)
   const text = contrast(p.colors.fg?.v, p.colors.bg?.v)
-  if (text !== null && text < 4.5) reasons.push(`contrast-fg-bg:${text.toFixed(2)}`)
+  if (text !== null && text < 4.5 && options?.keepOwnText !== true)
+    reasons.push(`contrast-fg-bg:${text.toFixed(2)}`)
   const on = contrast(p.colors.accentOn?.v, p.colors.accent?.v)
   if (on !== null && on < 4.5) reasons.push(`contrast-accent:${on.toFixed(2)}`)
   if (p.fonts.body.s === 'empty' && p.fonts.display.s === 'empty') reasons.push('no-usable-font')

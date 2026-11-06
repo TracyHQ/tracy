@@ -1,0 +1,62 @@
+---
+/** Search (the source's Smart Search): a form, then the articles whose words match. Results are the blog's posts only. */
+import { search } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Sidebar from '@/components/sections/Sidebar.astro'
+import Masthead from '@/components/sections/Masthead.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { fillWords } from '@/lib/ui-words'
+import { section } from '@/lib/content'
+import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+}
+const { chrome, locale, path } = Astro.props
+const { w } = ui(locale)
+const [masthead, testimonials] = await Promise.all([
+  section('masthead', 'smart-search', locale),
+  section('testimonials', 'happy-customers', locale)
+])
+const q = (Astro.url.searchParams.get('q') ?? '').trim()
+const found = q
+  ? (await search(q, { collections: ['posts'], locale, status: 'published', limit: 50 })).items
+  : []
+const all = await livePosts(Astro.request, locale, blogPosts(await loadPosts(locale)))
+const categories = BLOG_SIDEBAR.map((slug) => ({
+  slug,
+  label: all.find((p) => p.category?.slug === slug)?.category?.label ?? slug
+})).filter((c) => all.some((p) => p.category?.slug === c.slug))
+const results = found.map((r: any) => all.find((p) => p.slug === r.slug)).filter(Boolean) as typeof all
+---
+
+<Base chrome={chrome} title={masthead?.title ?? w.search} currentPath={path} robots="noindex, follow">
+	<Masthead masthead={masthead} fallbackTitle={w.search} />
+	<main id="main" class="rs-wrap rs-main">
+		<div class="rs-main-grid is-search">
+		<div>
+		<form class="rs-search-form" action={href(locale, path)} method="get" role="search">
+			<label for="rs-q" class="rs-display">{w.searchTerms}</label>
+			<input id="rs-q" type="search" name="q" value={q} autocomplete="off" />
+			<button type="submit" class="rs-btn">{w.search}</button>
+		</form>
+		{q && <p class="rs-search-line">{results.length > 0 ? fillWords(w.searchResultsLine, { count: results.length, query: q }) : fillWords(w.searchEmpty, { query: q })}</p>}
+		<ul class="rs-search-results">
+			{results.map((p) => (
+				<li>
+					<a href={href(locale, postPath(p))}>{p.title}</a>
+					{p.category && <span class="rs-meta"> — {p.category.label}</span>}
+					{p.excerpt && <p>{p.excerpt}</p>}
+				</li>
+			))}
+		</ul>
+		</div>
+		<Sidebar locale={locale} categories={categories} testimonials={testimonials} title={chrome.site.categories_title} prevLabel={chrome.site.prev_label} nextLabel={chrome.site.next_label} chromeEntry={chrome.entry} />
+		</div>
+	</main>
+</Base>

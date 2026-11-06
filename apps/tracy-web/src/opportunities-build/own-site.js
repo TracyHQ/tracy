@@ -215,7 +215,12 @@ export function ownSiteRoutes(app, h) {
       return refuse(c, 404, 'NOT_FOUND', 'Reload: this business is gone or is not yours.')
     const domain = await h.domainOr(c)
     if (domain instanceof Response) return domain
-    return json(c, { business: await stateOf(me.accountId, opp, { advance: true, domain }) })
+    const business = await stateOf(me.accountId, opp, { advance: true, domain })
+    // 🔒 The research is done: its photographs are labelled from now, while the person chooses a template, so pressing
+    // build finds them labelled (#250). Never awaited: this is the page's poll.
+    if (business.phase === 'choose')
+      void h.warmPictureLabels?.({ accountId: me.accountId, opportunityId: opp.id })
+    return json(c, { business })
   })
 
   /**

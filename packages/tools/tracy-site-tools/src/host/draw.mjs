@@ -233,8 +233,12 @@ export function slotChoices(slots) {
   return { slots: lines, ...(slots.length > SLOTS_LISTED ? { moreSlots: slots.length - SLOTS_LISTED } : {}) }
 }
 
+/** What a draw with no shape at all is told on a bound WordPress site: a slot to place it, a shape to keep it (#255). */
+const SLOT_OR_LIBRARY =
+  'On this quickstart site a picture placed on a page goes into an image slot: media.draw {prompt, slot:"<image slot key>"}. A picture kept in the media library only takes its own shape: media.draw {prompt, aspect:"<w>:<h>"}.'
+
 /**
- * A picture asked for with no slot on a site that takes pictures into slots only, or into a slot that is
+ * A picture asked for with no slot or shape on a site that places pictures through slots, or into a slot that is
  * not one — answered with the slots the agent can choose from, so the next call is the right one and no
  * inspect stands between. The list is the slots of the entity the wrong key names (`module-999.1` →
  * `module-999`, `home.hero.image` → `home`) when it has any: a mistyped key is usually a right block.
@@ -260,16 +264,13 @@ async function slotRefusal({ code, slot, imageSlots }) {
       code,
       error:
         slot === null
-          ? 'On this quickstart site a picture goes into an image slot: media.draw {prompt, slot:"<image slot key>"}. content.read names the slot of a picture (field.slotKey), or content.contract {operation:"inspect", slots:"image"} lists them.'
+          ? `${SLOT_OR_LIBRARY} content.read names the slot of a picture (field.slotKey), or content.contract {operation:"inspect", slots:"image"} lists them.`
           : `${slot} is not an image slot of this site's contract; list them with content.contract {operation:"inspect", slots:"image"}`
     }
   return {
     ok: false,
     code,
-    error:
-      slot === null
-        ? 'On this quickstart site a picture goes into an image slot: media.draw {prompt, slot:"<image slot key>"}.'
-        : `${slot} is not an image slot of this site.`,
+    error: slot === null ? SLOT_OR_LIBRARY : `${slot} is not an image slot of this site.`,
     ...slotChoices(found),
     next:
       slot === null
@@ -382,9 +383,13 @@ export async function mediaDraw({
         'replaces is for EmDash sites: here the shape is a contract image slot (slot) or a picture on the site (like).'
     }
   }
-  // A bound WordPress site takes a picture into an image slot and nowhere else; refused here,
-  // before the picture model is paid, rather than after the upload by the apply.
-  if (slotOnly && plan.slot === null) return slotRefusal({ code: 'SLOT_REQUIRED', slot: null, imageSlots })
+  // A bound WordPress site places a picture on a page through an image slot, whose demo picture fixes
+  // the shape the apply checks. A picture kept in the media library only (#255) is a content-addressed
+  // upload under its own apply id, which the Claude Cowork plugin takes on a bound site as on any other
+  // (`wordpress/cowork/lib/Engine.php`, "bound: a content-addressed image under its own apply lands"):
+  // it needs a shape of its own. With none at all, refused here, before the picture model is paid.
+  if (slotOnly && plan.slot === null && plan.like === null && plan.aspect === null)
+    return slotRefusal({ code: 'SLOT_REQUIRED', slot: null, imageSlots })
   if (!door?.imageModel)
     return {
       ok: false,
@@ -440,6 +445,15 @@ export async function mediaDraw({
       next: `${emdashPlacedNext(id, url, picture.path)}${id ? ` To look at it: media.scan {id:"${id}"}.` : ''} ${DRAWN_RULES}`
     })
   }
+  // A library picture on a bound WordPress site (#255): kept, placed nowhere; a slot needs its own draw.
+  if (slotOnly && plan.slot === null)
+    return said({
+      ok: true,
+      path: picture.path,
+      width: picture.width,
+      height: picture.height,
+      next: `The picture is in the media library as ${picture.path}, placed on no page. To show a picture in an image slot, draw it with that slot (media.draw {prompt, slot}): the slot brings the shape its apply checks. ${DRAWN_RULES}`
+    })
   return said({
     ok: true,
     path: picture.path,
