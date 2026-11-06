@@ -10,6 +10,7 @@
 import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { baselineOfContractId } from '../lib/template-kit/demo-baseline-file.js'
 import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf, hostPath } from './page-chunks.js'
 
 export const BASELINE_SCHEMA = 'demo-baseline/1'
@@ -281,6 +282,27 @@ function joined(parts) {
     read: union((p) => p.read),
     unread: parts.flatMap((p) => each(p.unread))
   }
+}
+
+/**
+ * The store the bench and the site check read a version's baseline through: the file committed beside the contract at
+ * step 0 (`demo-baseline.json`, `lib/template-kit/demo-baseline-file.js`) first, then `cache`, a folder store
+ * (`fileBaselineStore`, the bench's WRITE_BENCH_BASELINE_DIR) that only holds what was measured for a version with no
+ * committed file. A measurement is kept in the cache, never written into the contract folder: committing it is step 0's
+ * (`template-kit/cli.mjs baseline`). With no cache the store cannot keep a measurement, so it has no `save`.
+ * @param {{ index: Map<string, { id: string, dir?: string }>, cache?: { read: Function, save: Function } | null }} input
+ *   `index`: the contract index (`readContracts`); a version is named by its contract id
+ */
+export function contractBaselineStore({ index, cache = null }) {
+  const store = {
+    /** @returns {Promise<object | null>} */
+    async read(version) {
+      const kept = baselineOfContractId(index, version)
+      if (kept.state === 'read') return kept.doc
+      return cache ? cache.read(version) : null
+    }
+  }
+  return cache ? { ...store, save: (version, baseline) => cache.save(version, baseline) } : store
 }
 
 /** The words that say how a baseline was settled, one source for every script that prints it. */

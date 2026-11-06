@@ -3,8 +3,12 @@
 // and fake site of _write-step-run.mjs; the finisher's doors, the capture and the site check are fakes. Only what comes out,
 // and the order things happened in, is asserted.
 import assert from 'node:assert/strict'
+import { writeFileSync } from 'node:fs'
+import path from 'node:path'
 import { test } from 'node:test'
+import { BASELINE_FILE } from '../src/lib/template-kit/demo-baseline-file.js'
 import { runStepNine } from '../src/write-step-nine.js'
+import { kitIndex } from './_write-step-bench.mjs'
 import { fakeCapture } from './_write-step-finisher.mjs'
 import { CONTRACT, fakeSite, frozenFiles, KIT, SITE } from './_write-step-run.mjs'
 
@@ -30,7 +34,7 @@ const check = (name) => ({
   groups: [{ name: 'read-back', status: 'green', checked: 1, failures: [], lines: {} }]
 })
 
-async function stepNine({ over = {}, script = {} } = {}) {
+async function stepNine({ over = {}, script = {}, input = {} } = {}) {
   const site = fakeSite(script)
   // The written site lists its home page, the one page the finisher shoots here.
   const apply = site.door.apply
@@ -78,7 +82,8 @@ async function stepNine({ over = {}, script = {} } = {}) {
           baselinesRead.push(contract)
           return { contract, kind: 'demo-baseline' }
         }
-      }
+      },
+      ...input
     })
     return { result, events, checks, baselinesRead, site }
   } finally {
@@ -111,4 +116,28 @@ test('a write that stops never reaches the finisher, and no site check runs on a
   assert.equal(result.siteCheck, null)
   assert.deepEqual(events, [])
   assert.deepEqual(checks, [])
+})
+
+test('with no baseline lookup given, step 9 reads the demo baseline committed beside the contract (#428)', async () => {
+  const kits = kitIndex({ contract: CONTRACT })
+  try {
+    const [contract] = [...kits.index.values()]
+    writeFileSync(
+      path.join(contract.dir, BASELINE_FILE),
+      JSON.stringify({
+        schema: 'demo-baseline/1',
+        quickstart: CONTRACT,
+        source: 'host',
+        texts: ['0123456789abcdef'],
+        labels: [],
+        pictures: { files: [], shas: [] },
+        unread: []
+      })
+    )
+    const { checks } = await stepNine({ input: { baselines: undefined, contracts: kits.index } })
+    assert.ok(checks.length >= 2)
+    for (const { options } of checks) assert.deepEqual(options.baseline?.texts, ['0123456789abcdef'])
+  } finally {
+    kits.done()
+  }
 })

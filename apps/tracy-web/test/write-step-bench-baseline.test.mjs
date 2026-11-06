@@ -2,12 +2,19 @@
 // untouched site, and the baseline of the kit's version is reused when stored, measured once when not, and measured again
 // only when the operator forces it. Driven the way an operator does, with a fake door and a fake host. Invented pages.
 import assert from 'node:assert/strict'
+import { writeFileSync } from 'node:fs'
 import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, test } from 'node:test'
-import { fileBaselineStore } from '../src/site-check/demo-baseline.js'
-import { runCli } from '../src/write-step-bench-cli.js'
+import { BASELINE_FILE } from '../src/lib/template-kit/demo-baseline-file.js'
+import {
+  baselineOutcome,
+  contractBaselineStore,
+  ensureBaseline,
+  fileBaselineStore
+} from '../src/site-check/demo-baseline.js'
+import { runCli } from '../src/write-step/bench-site-cli.js'
 import { fakeHost, demoRead } from './_site-check-pages.mjs'
 import { fakeClock, fakeDoor, kitIndex, memoryStore } from './_write-step-bench.mjs'
 
@@ -32,6 +39,8 @@ async function operator() {
     const err = []
     const clock = fakeClock()
     const code = await runCli(argv, {
+      ensureBaseline,
+      baselineOutcome,
       store: memoryStore(),
       index: kits.index,
       makeDoor: () => fakeDoor(),
@@ -90,4 +99,107 @@ test('a measurement that fails stores nothing and the run exits 1 with the reaso
   assert.equal(failing.code, 1)
   assert.match(failing.err.join('\n'), /baseline: not stored for demo-gym\/j6\/1\.2\.3: host down/)
   assert.equal(await baselines.read(VERSION), null)
+})
+
+/**
+ * The bench's store as `write-step-bench.mjs` wires it: the baseline committed beside the contract at step 0 first, the
+ * baseline folder only as a fallback cache. A kit index of its own, so the file written beside its contract stays there.
+ */
+async function contractOperator() {
+  const own = kitIndex()
+  const dir = await mkdtemp(path.join(tmpdir(), 'bench-baseline-cache-'))
+  dirs.push(dir)
+  const cache = fileBaselineStore(dir)
+  const [contract] = [...own.index.values()]
+  const { host, calls } = fakeHost(reads)
+  const baselines = contractBaselineStore({ index: own.index, cache })
+  const run = async (argv, over = {}) => {
+    const out = []
+    const err = []
+    const clock = fakeClock()
+    const code = await runCli(argv, {
+      ensureBaseline,
+      baselineOutcome,
+      store: memoryStore(),
+      index: own.index,
+      makeDoor: () => fakeDoor(),
+      makeHost: async () => host,
+      baselines,
+      out: (l) => out.push(l),
+      err: (l) => err.push(l),
+      now: clock.now,
+      sleep: clock.sleep,
+      ...over
+    })
+    return { code, out, err }
+  }
+  return { run, calls, cache, baselines, contract, done: own.done }
+}
+
+/** A baseline as step 0 commits it beside the contract: no machine time, one made-up text key of its own. */
+const committed = (version) => ({
+  schema: 'demo-baseline/1',
+  quickstart: version,
+  source: 'host',
+  texts: ['c0ffee00c0ffee00'],
+  labels: [],
+  pictures: { files: [], shas: [] },
+  unread: []
+})
+
+test('the baseline beside the contract is read first: no measurement, and the cache is not consulted', async () => {
+  const op = await contractOperator()
+  try {
+    writeFileSync(path.join(op.contract.dir, BASELINE_FILE), JSON.stringify(committed(VERSION)))
+    await op.cache.save(VERSION, { ...committed(VERSION), texts: ['cache000cache000'] })
+    const made = await op.run(create())
+    assert.equal(made.code, 0)
+    assert.match(baselineLine(made.out), /^baseline reused \(stored\) for demo-gym\/j6\/1\.2\.3/)
+    assert.equal(op.calls.length, 0, 'a committed baseline is never measured again')
+    assert.deepEqual((await op.baselines.read(VERSION)).texts, ['c0ffee00c0ffee00'])
+  } finally {
+    op.done()
+  }
+})
+
+test('with no file beside the contract the cache is the fallback: measured once, kept there, then reused', async () => {
+  const op = await contractOperator()
+  try {
+    const first = await op.run(create())
+    assert.match(baselineLine(first.out), /^baseline measured \(none was stored\)/)
+    assert.equal((await op.cache.read(VERSION)).source, 'host')
+    const asked = op.calls.length
+    const second = await op.run(create())
+    assert.match(baselineLine(second.out), /^baseline reused \(stored\)/)
+    assert.equal(op.calls.length, asked)
+  } finally {
+    op.done()
+  }
+})
+
+test('with neither a file beside the contract nor a cache, nothing is measured that could not be kept', async () => {
+  const own = kitIndex()
+  try {
+    const { host, calls } = fakeHost(reads)
+    const out = []
+    const clock = fakeClock()
+    const code = await runCli(create(), {
+      ensureBaseline,
+      baselineOutcome,
+      store: memoryStore(),
+      index: own.index,
+      makeDoor: () => fakeDoor(),
+      makeHost: async () => host,
+      baselines: contractBaselineStore({ index: own.index, cache: null }),
+      out: (l) => out.push(l),
+      err: (l) => out.push(l),
+      now: clock.now,
+      sleep: clock.sleep
+    })
+    assert.equal(code, 0)
+    assert.match(baselineLine(out), /^baseline: none beside the contract and no baseline folder/)
+    assert.equal(calls.length, 0)
+  } finally {
+    own.done()
+  }
 })

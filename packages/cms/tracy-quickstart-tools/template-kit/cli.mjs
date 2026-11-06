@@ -67,6 +67,11 @@
 //   cli.mjs created-page-hide --kit <template-kit.json> --none
 //                 (site.createdPageHide: a block the template prints hard coded on every article page, such as a share bar,
 //                 which the write step hides on the pages it creates only; same reading, no image moves)
+//   cli.mjs baseline --from <measured baseline.json> --contract <dir>
+//                 (step 0, #419: demo-baseline.json beside the contract, lib/demo-baseline-file.mjs, from the demo baseline
+//                 tracy-web measured on the untouched quickstart site with apps/tracy-web/scripts/site-check-baseline.mjs;
+//                 only tracy-web reaches a site's host, so the measuring is there and the writing here. The measuring
+//                 time is dropped and a value naming a machine refuses the file; nothing else of the kit moves)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -79,6 +84,7 @@ import { contactFieldChecks } from './lib/coverage-gate.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
 import { linkLabelSlots } from './lib/link-label-slots.mjs'
+import { BASELINE_FILE, contractBaselineOf } from './lib/demo-baseline-file.mjs'
 import { declareLegalLayout } from './lib/legal-layout.mjs'
 import { applyLooks, indentOf, lookWorklist } from './lib/looks.mjs'
 import { assignedAt, indexMap } from './lib/map-index.mjs'
@@ -379,9 +385,28 @@ function containers(o, command, declare, field, words, flag = 'container') {
   return 0
 }
 
+/** Write the measured demo baseline beside the contract (lib/demo-baseline-file.mjs). */
+function baseline(o) {
+  if (!str(o.from) || !str(o.contract))
+    throw new Error('baseline needs --from <measured baseline.json> and --contract <dir>')
+  const dir = resolve(o.contract)
+  const contractId = readJson(join(dir, 'manifest.json'))?.id
+  const r = contractBaselineOf(readJson(resolve(o.from)), { contractId: String(contractId) })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  writeFileSync(join(dir, BASELINE_FILE), `${JSON.stringify(r.doc, null, 2)}\n`)
+  console.log(
+    `${BASELINE_FILE} of ${contractId}: ${r.doc.texts.length} texts, ${r.doc.pictures.files.length} picture files, ${r.doc.unread?.length ?? 0} pages with no demo`
+  )
+  return 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
+  if (cmd === 'baseline') return baseline(o)
   if (cmd === 'looks') return looks(o)
   if (cmd === 'legal-layout') return legalLayout(o)
   if (cmd === 'video-buttons') return videoButtons(o)

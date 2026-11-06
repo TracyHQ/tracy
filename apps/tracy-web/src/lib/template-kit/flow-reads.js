@@ -20,6 +20,9 @@
  *                                     bench runs before a run)
  *   kit-zip-missing             todo  the release lacks the kit's image zip, which the planner, the brand step and
  *                                     the picture step download before any model call (`lib/template-kit-images.js`)
+ *   kit-demo-baseline-missing   todo  only for a template `demo-baseline-policy.json` opts in: no readable
+ *                                     `demo-baseline.json` of this version beside the contract, which the site check's
+ *                                     demo groups judge a written site against (`demo-baseline-file.js`)
  *   kit-setting-slot-missing    warn  a map button or a frame painted behind the blocks points at no setting slot:
  *                                     the planner leaves it to the demo (`rules-map-judgement.js`)
  *
@@ -35,6 +38,8 @@ import { brandKitProblem } from '../../brand-step/kit-grounds.js'
 import { contentMapKey } from '../content-map-key.js'
 import { contractFor } from '../contracts.js'
 import { kitZipName } from '../template-kit-images.js'
+import { BASELINE_FILE, baselineAskedOf } from './demo-baseline-file.js'
+import { logoWritePath } from './logo-write-path.js'
 
 /** The codes that hold Publish, in the order the step names them. */
 export const FLOW_TODO_CODES = Object.freeze([
@@ -44,7 +49,8 @@ export const FLOW_TODO_CODES = Object.freeze([
   'kit-map-mismatch',
   'kit-front-page-group',
   'kit-brand-unreadable',
-  'kit-zip-missing'
+  'kit-zip-missing',
+  'kit-demo-baseline-missing'
 ])
 
 /** How many ids a gap names itself. */
@@ -124,18 +130,16 @@ function kitSlotIds(doc) {
 }
 
 function logoGap(site, map) {
-  const writes = (s) =>
-    (typeof s.setting === 'string' && s.setting !== '') ||
-    (typeof s.frameId === 'string' &&
-      s.frameId !== '' &&
-      (!map || map.slotKeys.has(contentMapKey(s.frameId))))
+  // The write step's own decision, so a spot passes here only when the write step can write it.
+  const world = map ? { frameKnown: (key) => map.slotKeys.has(key) } : {}
+  const writes = (s) => logoWritePath(s, world).via !== 'none'
   const spots = arr(site.logoSpots).filter((s) => arr(s?.shownIn).length > 0 && !writes(s))
   if (spots.length === 0) return null
   const ids = spots.map((s) => String(s.id))
   return {
     code: 'kit-logo-unsettable',
     spots: ids.slice(0, SHOWN),
-    reason: `${ids.length} logo spot${ids.length === 1 ? '' : 's'} the page shows ${ids.length === 1 ? 'has' : 'have'} no setting and no content map frame: ${some(ids)}`
+    reason: `${ids.length} logo spot${ids.length === 1 ? '' : 's'} the page shows ${ids.length === 1 ? 'has' : 'have'} no setting the write step can write and no content map frame: ${some(ids)}`
   }
 }
 
@@ -236,13 +240,30 @@ function settingSlotGap(doc) {
 }
 
 /**
+ * The demo baseline an opted in template must carry beside its contract, or null. Not asked when `baseline` is left out.
+ * @param {any} release
+ * @param {import('./demo-baseline-file.js').DemoBaseline | undefined} baseline
+ */
+function baselineGap(release, baseline) {
+  if (baseline === undefined || baseline.state === 'read' || !baselineAskedOf(release)) return null
+  return {
+    code: 'kit-demo-baseline-missing',
+    baselineState: baseline.state,
+    reason:
+      baseline.state === 'none' ? `there is no ${BASELINE_FILE} beside the contract` : `${baseline.reason}`
+  }
+}
+
+/**
  * Every fact the flow reads that this kit gets wrong, todo ones first in `FLOW_TODO_CODES` order, then the warnings.
  * @param {any} doc the parsed kit
  * @param {{ map?: KitMap | null, release?: any }} [world] `map`: the content map beside the kit (`kitMapOfRelease`),
- *   null skips the checks that need it; `release`: its assets name the kit zip (a local pack carries none)
+ *   null skips the checks that need it; `release`: its assets name the kit zip (a local pack carries none); `baseline`:
+ *   the demo baseline beside the contract (`baselineOfRelease`), asked of the templates the baseline policy opts in;
+ *   left out, it is not asked
  * @returns {{ code: string, severity: 'todo' | 'warn', reason: string, [k: string]: unknown }[]}
  */
-export function flowGapsOf(doc, { map = null, release = null } = {}) {
+export function flowGapsOf(doc, { map = null, release = null, baseline = undefined } = {}) {
   const site = doc?.site && typeof doc.site === 'object' ? doc.site : {}
   const gaps = [
     logoGap(site, map),
@@ -260,6 +281,7 @@ export function flowGapsOf(doc, { map = null, release = null } = {}) {
     if (!release.assets.some((a) => a?.name === file))
       gaps.push({ code: 'kit-zip-missing', file, reason: `the release has no asset ${file}` })
   }
+  gaps.push(baselineGap(release, baseline))
   const todo = gaps.filter(Boolean).map((g) => ({ ...g, severity: /** @type {const} */ ('todo') }))
   todo.sort((a, b) => FLOW_TODO_CODES.indexOf(a.code) - FLOW_TODO_CODES.indexOf(b.code))
   const warn = [settingSlotGap(doc)]

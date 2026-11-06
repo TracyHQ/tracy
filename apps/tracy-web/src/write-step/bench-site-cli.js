@@ -119,6 +119,16 @@ async function settleBaseline(d, values, { kit, siteKey, version }) {
     return 1
   }
   const force = values['force-baseline'] === true
+  // A store that cannot keep a measurement (no baseline folder) is read only: a missing baseline is said, never measured.
+  if (!d.baselines.save) {
+    const kept = await d.baselines.read(version)
+    d.out(
+      kept
+        ? `baseline ${baselineOutcome({ measured: false })} for ${version}: ${kept.texts.length} texts, ${kept.pictures.files.length} picture files, ${kept.unread?.length ?? 0} pages with no demo`
+        : `baseline: none beside the contract and no baseline folder to keep a measurement in, so the demo groups of a check stay unmeasured`
+    )
+    return 0
+  }
   try {
     const { baseline, measured } = await ensureBaseline({
       host: await d.makeHost(siteKey),

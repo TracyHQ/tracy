@@ -7,6 +7,8 @@
 // Repairs are part of the build, not changes the customer asked for: they are written by the build's site door under the
 // finisher's own apply ids, outside any chat turn, so the Site changes tab, which lists chat turns (sites/activity.js), does
 // not list them. A build that wires this step must give it the same build door the write uses, never a chat turn's.
+import { defaultContracts } from './lib/contracts.js'
+import { contractBaselineStore } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
 import { runFinisher } from './write-step/finisher/finisher.js'
 import { runWriteStep } from './write-step/write-step.js'
@@ -15,18 +17,19 @@ import { runWriteStep } from './write-step/write-step.js'
  * @param {{ write: object, finisher: { doors: object, capture: Function, saveFile: Function,
  *   pageHtml?: ((page: string) => Promise<string | null>) | null, demoImages?: object | null, facts?: object | null,
  *   limits?: object | null }, checkSite: (report: object, options: { baseline: object | null }) => Promise<object>,
- *   baselines?: { read: (contract: string) => Promise<object | null> } | null, now?: () => number }} input
+ *   baselines?: { read: (contract: string) => Promise<object | null> } | null, contracts?: Map<string, object>,
+ *   now?: () => number }} input
  *   `write` is the write step's own input (write-step.js); `checkSite` runs the site check on a report; `baselines` gives the
- *   demo baseline of the quickstart version the site was made from
+ *   demo baseline of the quickstart version the site was made from, by default the file beside the contract in `contracts`
  * @returns {Promise<{ report: object, siteCheck: object | null, repairLog: object | null, finisher: object | null }>}
  *   `report` is the build's write report, its `siteCheck` the final one; `finisher` says why the finisher did not run
  */
-export async function runStepNine({ write, finisher, checkSite, baselines = null, now = Date.now }) {
+export async function runStepNine({ write, finisher, checkSite, baselines, contracts, now = Date.now }) {
   const written = await runWriteStep({ now, ...write })
   if (written.status !== 'done') return { report: written, siteCheck: null, repairLog: null, finisher: null }
-  // TODO(#428): read the baseline from the contract's own file (contractBaselineStore) once it is on develop; until then the
-  // build gives the baseline lookup it has, the one the bench reads.
-  const baseline = baselines ? await baselines.read(written.contract).catch(() => null) : null
+  // The demo baseline committed beside the contract at step 0 (demo-baseline.json), unless the caller gives its own lookup.
+  const store = baselines ?? contractBaselineStore({ index: contracts ?? defaultContracts() })
+  const baseline = await store.read(written.contract).catch(() => null)
   const siteCheck = (report) => checkSite(report, { baseline })
   // Started now, awaited by the finisher: the first check runs beside the finder. A check that throws gives none.
   const firstCheck = siteCheck(written).catch(() => null)

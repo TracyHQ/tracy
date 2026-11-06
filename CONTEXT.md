@@ -325,8 +325,8 @@ it. It never repairs.
 _Avoid_: machine gate, QA
 
 **Demo baseline**:
-The text and picture hashes of an untouched site, measured once per quickstart version. What it holds and a kept page
-still shows is demo content.
+The text and picture hashes of an untouched site, measured once per quickstart version at step 0 and committed beside
+the contract as `demo-baseline.json`. What it holds and a kept page still shows is demo content.
 _Avoid_: demo list, sample set
 
 ---
