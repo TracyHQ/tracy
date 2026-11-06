@@ -1,7 +1,8 @@
 // What each finisher model call was shown and what it answered, kept as files next to the repair log so a person can audit
 // that the model looked at the pictures and what it said (spec #418). A reply file holds the role, the page or repair it
 // was about, the door's label and model, the words it was sent, the image FILES it was sent (the finder's page tiles under
-// `shots/`, the checker's crops under `crops/`, never the bytes), and the reply exactly as the model gave it.
+// `shots/`, the checker's crops under `crops/`, never the bytes), the reply exactly as the model gave it, and the model's
+// reasoning and token counts when its door reports them.
 
 export const REPLIES_DIR = 'replies'
 export const SHOTS_DIR = 'shots'
@@ -50,6 +51,8 @@ export function replyKeeper(saveFile) {
       sent: sent.filter((c) => c?.type === 'text').map((c) => c.text),
       images: images.filter(Boolean),
       text: call.text ?? null,
+      reasoning: call.reasoning ?? null,
+      usage: call.usage ?? null,
       problem: call.problem ?? null,
       costUsd: call.costUsd ?? null
     }

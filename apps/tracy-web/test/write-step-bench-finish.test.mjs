@@ -379,6 +379,9 @@ test('every model call leaves its raw reply and the image files it was shown nex
   assert.equal(home.text, JSON.stringify(finding()), 'the reply as the model gave it')
   assert.equal(home.model, 'deepseek-flash')
   assert.equal(home.images.length, 2, 'the home page at desktop and at phone width')
+  // The model's own reasoning and token counts, as the door reported them: what shows it took the pictures in.
+  assert.equal(home.reasoning, 'Finisher finder looked at what it was sent.')
+  assert.equal(home.usage.promptTokens, 1200)
   const checker = replies.find((r) => r.role === 'checker')
   assert.deepEqual(checker.images, [...run.log.records[0].crops.before, ...run.log.records[0].crops.after])
   assert.deepEqual(replies.find((r) => r.role === 'fixer').images, [])

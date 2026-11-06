@@ -180,7 +180,12 @@ export function scriptedDoor(label, answers, { images = true } = {}) {
         asked.push(message)
         const next = queue.shift()
         if (!next) throw new Error(`${label} was asked more often than scripted`)
-        return { text: JSON.stringify(next), costUsd: 0.01 }
+        return {
+          text: JSON.stringify(next),
+          costUsd: 0.01,
+          reasoning: `${label} looked at what it was sent.`,
+          usage: { promptTokens: 1200, completionTokens: 40, cachedTokens: 0, reasoningTokens: 30 }
+        }
       }
     }
   }

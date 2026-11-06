@@ -4,7 +4,8 @@
 //   - fixer: one fault and the slot's words in, one typed repair order (repair-orders.js) out. Code checks the order.
 //   - checker: the before and after crops of the repaired block at every width in, "better" or "not better" out.
 // A call that fails or an answer with no JSON object is returned as `{ problem }`; the caller logs it and moves on. Every
-// call also returns what it was sent (`sent`) and the reply as the model gave it (`text`), which the finisher keeps.
+// call also returns what it was sent (`sent`), the reply as the model gave it (`text`), and the model's reasoning and token
+// counts when its door reports them, which the finisher keeps.
 import { jsonObjectIn } from '../../lib/json-object-in.js'
 import { faultListText } from './fault-kinds.js'
 import { orderListText } from './repair-orders.js'
@@ -22,11 +23,11 @@ const CHECKER_SYSTEM = `You compare screenshots of the same block of a web page,
 /** One call of a role through its door, its answer held to one JSON object, or the problem that stopped it. */
 const askRole = async (door, system, content) => {
   try {
-    const { text, costUsd = null } = await door.ask({ system, content })
+    const { text, costUsd = null, reasoning = null, usage = null } = await door.ask({ system, content })
+    const said = { costUsd, text, reasoning, usage, sent: content }
     const answer = jsonObjectIn(text)
-    if (!answer || typeof answer !== 'object')
-      return { problem: 'the answer holds no JSON object', costUsd, text, sent: content }
-    return { answer, costUsd, text, sent: content }
+    if (!answer || typeof answer !== 'object') return { problem: 'the answer holds no JSON object', ...said }
+    return { answer, ...said }
   } catch (error) {
     return {
       problem: `the call failed: ${String(error?.message ?? error).slice(0, 200)}`,

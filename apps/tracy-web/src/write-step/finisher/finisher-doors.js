@@ -5,7 +5,7 @@
 // that cannot read pictures (its provider says so, or its harness profile sends none) refuses the run too.
 //
 // What the finisher is given for each role is a door object: { ok, label, model, providerId, images, snapshot,
-// ask({ system, content }) => { text, costUsd } }, or a refusal { ok: false, code, reason }. Tests give scripted ones.
+// ask({ system, content }) => { text, costUsd, reasoning, usage } }, or a refusal { ok: false, code, reason }. Tests give scripted ones.
 import { runAgent } from '../../lib/agent-over-door.js'
 import { benchHarnessFor, sendsImages } from '../../lib/bench-harness.js'
 import { cannotSeeReason, ladderRefusal, lookedUpDoor } from '../../lib/door-ladder.js'
@@ -63,7 +63,7 @@ function askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl) {
     ...harness
   } = benchHarnessFor(model, providerId)
   return async ({ system, content }) => {
-    const { answer, totals } = await runAgent({
+    const { answer, totals, turns } = await runAgent({
       door: { baseUrl, apiKey, model },
       system,
       firstUser: content,
@@ -71,9 +71,21 @@ function askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl) {
       ...harness,
       maxTurns: 1
     })
+    // The model's own reasoning on the answered turn (DeepSeek's reasoning_content), kept so a person can audit what it saw.
+    const said = [...(turns ?? [])].reverse().find((t) => t?.state === 'answered')?.message
+    const reasoning = said?.reasoning_content ?? said?.reasoning ?? null
     return {
       text: typeof answer === 'string' ? answer : JSON.stringify(answer),
-      costUsd: totals?.cost ?? null
+      costUsd: totals?.cost ?? null,
+      reasoning: typeof reasoning === 'string' ? reasoning : null,
+      usage: totals
+        ? {
+            promptTokens: totals.promptTokens,
+            completionTokens: totals.completionTokens,
+            cachedTokens: totals.cachedTokens,
+            reasoningTokens: totals.reasoningTokens
+          }
+        : null
     }
   }
 }
