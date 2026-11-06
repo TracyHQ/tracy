@@ -8,13 +8,14 @@ import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from './lib/template-kit-source.js'
 import { checkLines } from './site-check/check-lines.js'
-import { baselineOutcome } from './site-check/demo-baseline.js'
+import { baselineOutcome, ensureBaseline } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
-import { runSiteCheck } from './site-check/site-check.js'
 import { openContentMap } from './lib/content-map-source.js'
 import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './write-step/bench-site-cli.js'
 import { runWriteStep } from './write-step/write-step.js'
+import { siteCheckOfRun } from './write-step-bench-site-check.js'
+import { FINISH_USAGE, finishRun } from './write-step-bench-finish.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
@@ -32,6 +33,7 @@ export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
                                               --all-groups runs the page groups even when read-back is red (never green)
                                               --site-pictures-file: step 8's site-pictures.json, for alt-matches-picture
                                               (each printed alt against what the picture shows)
+${FINISH_USAGE}
 ${SITE_USAGE}`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
@@ -61,7 +63,7 @@ const causeOf = (r) => (r.code ? `${r.code}: ${r.reason}` : '')
  */
 export async function runCli(argv, deps) {
   const io = { out: deps.out ?? console.log, err: deps.err ?? console.error }
-  if (SITE_COMMANDS.has(argv[0])) return runSiteCli(argv, deps)
+  if (SITE_COMMANDS.has(argv[0])) return runSiteCli(argv, { ensureBaseline, baselineOutcome, ...deps })
   try {
     const { values, positionals } = parseArgs({
       args: argv,
@@ -80,7 +82,8 @@ export async function runCli(argv, deps) {
         out: { type: 'string' },
         run: { type: 'string' },
         'all-groups': { type: 'boolean' },
-        'site-pictures-file': { type: 'string' }
+        'site-pictures-file': { type: 'string' },
+        'check-file': { type: 'string' }
       }
     })
     const [command, runId] = positionals
@@ -104,7 +107,18 @@ const COMMANDS = {
   status: { needsId: true, run: statusOf },
   get: { needsId: true, run: getReport },
   cancel: { needsId: true, run: cancelRun },
-  check: { run: checkRun }
+  check: { run: checkRun },
+  finish: { run: finish }
+}
+
+async function finish(d, values) {
+  for (const [flag, name] of [
+    ['run', '--run <runId>'],
+    ['account', '--account'],
+    ['out', '--out <dir>']
+  ])
+    if (!values[flag]) throw new Usage(`finish needs ${name}`)
+  return finishRun(d, values)
 }
 
 async function startRun(d, values) {
@@ -287,18 +301,11 @@ async function checkRun(d, values) {
         ? `baseline ${baselineOutcome({ measured: false })} for ${r.report.contract}`
         : `baseline: none stored for ${r.report.contract}, so the demo groups stay unmeasured (create-site measures it on an untouched site)`
     )
-  const check = await runSiteCheck({
-    door: d.makeDoor({ account: values.account, platform: 'joomla' }),
-    report: r.report,
-    // The page groups need the site's host and the demo baseline of the quickstart; both are optional (site-check.js).
-    ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
-    // The pages as a visitor reads them, for `written-not-printed` (written-not-printed.js).
-    ...(d.pageHtml ? { pageHtml: (path) => d.pageHtml({ siteKey: r.report.site, path }) } : {}),
+  const check = await siteCheckOfRun(d, r.report, {
+    account: values.account,
     baseline,
-    kit: openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null,
     pictures,
-    allGroups: values['all-groups'] === true,
-    ...(d.now ? { now: d.now } : {})
+    allGroups: values['all-groups'] === true
   })
   await d.runs.saveReport(r.id, withReadBack(r.report, check))
   if (values.out) {

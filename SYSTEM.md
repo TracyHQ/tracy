@@ -2353,6 +2353,20 @@ row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tr
 `apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
 (`site-copy/`, `brand-accent/`, `picture-paint/`).
 
+**The finisher** (#420, spec #418) repairs, on a site already written, the customer-visible faults of a closed list, and
+proves each repair. `finish --run <run>` starts it on the run's site with its write report and the first site check `check`
+kept. The one entry point, `write-step/finisher/finisher.js` `runFinisher`, is what the live step 9 path will call after the
+write (#424). The pages of the kit are shot by the site's host (`POST /_host/capture`, mode `vision-tiles/1`, the stream the
+demo look reads; `lib/page-shots.js`). Three model doors in `/ops` › Model & AI, each meant for `deepseek-flash` on the
+`deepseek` provider at max effort (migration 203): `finisherFinder` (one call per page, its screenshots in, faults from
+`fault-kinds.js` out), `finisherFixer` (one fault in, one typed order from `repair-orders.js` out) and `finisherChecker`
+(before and after crops in, better or not). A finder or checker model that cannot read pictures refuses the run. No model
+writes: code checks each order against the kit and the site, then writes it through the same `content.contract` apply as
+the write, under its own `finisher-` apply id, and undoes a repair that is not better with `apply.revert` of that id (the
+Apply door, no new door). The site check then runs a final time on the report with the kept repairs as ordered, and is
+the one kept on the run. `repair-log.json` (`repair-log/1`) and the crops are written into the command's `--out` folder.
+So far the only fault kind is printed raw markup and the only order is "fix broken text in one slot".
+
 ## 9. Sign-in, seats, permissions
 
 ### Credentials for external programs: seat key, MCP OAuth, account token (24/10/2026)

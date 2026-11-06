@@ -278,6 +278,40 @@ export const LLM_DOORS = [
     drawsPictures: true
   },
   {
+    id: 'finisherFinder',
+    label: 'Finisher finder',
+    where: 'this process',
+    blurb:
+      'Write step bench: the finisher. One call per page looks at its screenshots at desktop and phone width and lists the faults a customer would see, from a fixed list. It never writes to the site. Without it the finisher does not start.',
+    needsModel: true,
+    // Vision is REQUIRED: the finder looks at page screenshots (write-step/finisher/finisher-doors.js). No tools, no effort
+    // setting: the bench fixes it in code (max on DeepSeek Flash) (#420).
+    requires: ['vision'],
+    prefers: ['json']
+  },
+  {
+    id: 'finisherFixer',
+    label: 'Finisher fixer',
+    where: 'this process',
+    blurb:
+      'Write step bench: the finisher. One call per fault turns it into a typed repair order, which code checks against the template kit and writes. It never writes to the site.',
+    needsModel: true,
+    // Text only: the fault and the slot's words (#420).
+    requires: [],
+    prefers: ['json']
+  },
+  {
+    id: 'finisherChecker',
+    label: 'Finisher checker',
+    where: 'this process',
+    blurb:
+      'Write step bench: the finisher. One call per repair compares the block before and after it; a repair that is not better is undone.',
+    needsModel: true,
+    // Vision is REQUIRED: the checker compares screenshots (#420).
+    requires: ['vision'],
+    prefers: ['json']
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',

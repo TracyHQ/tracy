@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, test } from 'node:test'
 import { fileBaselineStore } from '../src/site-check/demo-baseline.js'
-import { runCli } from '../src/write-step/bench-site-cli.js'
+import { runCli } from '../src/write-step-bench-cli.js'
 import { fakeHost, demoRead } from './_site-check-pages.mjs'
 import { fakeClock, fakeDoor, kitIndex, memoryStore } from './_write-step-bench.mjs'
 

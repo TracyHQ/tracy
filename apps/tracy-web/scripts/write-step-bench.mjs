@@ -8,13 +8,14 @@
  *   node scripts/write-step-bench.mjs create-site --kit <contract id> --account <bench account email>
  *   node scripts/write-step-bench.mjs run --site <site key> --kit <contract id> --plan-file <path> --copy-file <path> --account <email>
  *   node scripts/write-step-bench.mjs check --run <run> --account <email> [--out <dir>]
+ *   node scripts/write-step-bench.mjs finish --run <run> --account <email> --out <dir>
  *   node scripts/write-step-bench.mjs list | status <run> | get <run> --out <dir> | cancel <run>
  *
  * Every command and its options: `node scripts/write-step-bench.mjs` with no command (src/write-step-bench-cli.js).
  */
 import { readConfig } from '../src/config.js'
 import { createPool } from '../src/db/index.js'
-import { hostCall } from '../src/host/client.js'
+import { hostCall, hostStreamCall } from '../src/host/client.js'
 import { demoSelfNames } from '../src/ops/quickstarts.js'
 import { designSystemSiteReaders } from '../src/sites/design-system-site-readers.js'
 import { siteByKey } from '../src/sites/store.js'
@@ -27,6 +28,8 @@ import { siteFileReader } from '../src/write-step/site-file.js'
 import { sitePageReader, siteSheetsReader } from '../src/write-step/site-sheets.js'
 import { pgBenchSiteStore } from '../src/write-step/bench-site-store.js'
 import { pgWriteRunStore } from '../src/write-step/write-run-store.js'
+import { finisherDoors } from '../src/write-step/finisher/finisher-doors.js'
+import { SHOT_MODE } from '../src/lib/page-shots.js'
 
 export async function main(argv, env = process.env) {
   if (!env.DATABASE_URL || !env.SESSION_SECRET) {
@@ -63,6 +66,29 @@ export async function main(argv, env = process.env) {
         siteOf: (siteKey) => siteByKey(pool, siteKey),
         readers
       }),
+      // The finisher's three model doors, from /ops > Model & AI (write-step/finisher/finisher-doors.js).
+      makeFinisherDoors: () => finisherDoors({ pool, secret: env.SESSION_SECRET }),
+      // The site's pages shot by its host's screenshotter, in the tiles the demo look reads (lib/page-shots.js).
+      makeCapture: async (siteKey) => {
+        const site = await siteByKey(pool, siteKey)
+        if (!site) throw new Error(`No site ${siteKey}`)
+        const config = readConfig(env)
+        return (layouts, { onFrame, signal }) =>
+          hostStreamCall(
+            config,
+            site.host ?? config.defaultHost,
+            '/capture',
+            {
+              label: site.label,
+              platform: site.platform,
+              layouts,
+              port: site.port ?? null,
+              ...demoSelfNames(config, site),
+              mode: SHOT_MODE
+            },
+            { onFrame, signal, timeoutMs: 240_000 }
+          )
+      },
       ...(env.WRITE_BENCH_BASELINE_DIR ? { baselines: fileBaselineStore(env.WRITE_BENCH_BASELINE_DIR) } : {}),
       runs: pgWriteRunStore(pool),
       makeDoor: ({ account, platform }) =>

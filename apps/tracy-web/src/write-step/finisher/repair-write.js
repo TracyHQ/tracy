@@ -1,0 +1,55 @@
+// How the finisher writes a valid repair, and takes one back: through the same door, receipt and undo as every other write
+// of the write step (spec #418, story 40). A text repair is one `content.contract` apply with the finisher's own apply id
+// against the revision the site answers now; the undo is `apply.revert` of that apply id, which puts back what it changed.
+import { createHash } from 'node:crypto'
+import { answerWords } from '../settings-door.js'
+
+const hash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex')
+
+/** What the site holds now: its revision and each slot's current value by content map key. */
+export async function readSite(door, siteKey) {
+  const answer = await door.apply({
+    siteKey,
+    action: 'content.contract',
+    params: { operation: 'inspect' }
+  })
+  if (!answer?.ok) throw new Error(`the site could not be read: ${answerWords(answer)}`)
+  const current = new Map((answer.slots ?? []).map((s) => [s.key, s.current]))
+  return { revision: answer.revision, current }
+}
+
+/**
+ * @returns {Promise<{ ok: true, applyId: string } | { ok: false, applyId: string, reason: string }>}
+ */
+export async function writeRepair({ door, siteKey, revision, changes, repair }) {
+  const requestId = hash({ siteKey, revision, changes, repair })
+  const applyId = `finisher-${requestId.slice(0, 48)}`
+  let answer
+  try {
+    answer = await door.apply({
+      siteKey,
+      action: 'content.contract',
+      params: {
+        operation: 'apply',
+        expected_revision: revision,
+        apply_id: applyId,
+        request_id: requestId,
+        changes,
+        evidence: {}
+      }
+    })
+  } catch (error) {
+    return { ok: false, applyId, reason: String(error?.message ?? error) }
+  }
+  return answer?.ok ? { ok: true, applyId } : { ok: false, applyId, reason: answerWords(answer) }
+}
+
+/** @returns {Promise<{ ok: boolean, reason?: string }>} */
+export async function revertRepair({ door, siteKey, applyId }) {
+  try {
+    const answer = await door.apply({ siteKey, action: 'apply.revert', params: { apply_id: applyId } })
+    return answer?.ok ? { ok: true } : { ok: false, reason: answerWords(answer) }
+  } catch (error) {
+    return { ok: false, reason: String(error?.message ?? error) }
+  }
+}

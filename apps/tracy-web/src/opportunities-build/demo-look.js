@@ -24,6 +24,7 @@
 import sharp from 'sharp'
 import { createVisionChallenge, IMAGE_CODE_INSTRUCTION, imageCodeMatches } from '../lib/vision-challenge.js'
 import { createHash } from 'node:crypto'
+import { captureLayouts } from '../lib/capture-layouts.js'
 import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 
@@ -178,17 +179,7 @@ export function deferToMeasure(look, measuredOver) {
 }
 
 /** A capture layout key for a page path (`capture.js` KEY): stable, short, unique per path. */
-export function lookLayouts(pages) {
-  const seen = new Set()
-  const out = []
-  for (const path of pages) {
-    if (typeof path !== 'string' || !path.startsWith('/') || seen.has(path)) continue
-    seen.add(path)
-    out.push({ key: `p${out.length}`, path })
-    if (out.length >= LOOK_MAX_PAGES) break
-  }
-  return out
-}
+export const lookLayouts = (pages) => captureLayouts(pages, LOOK_MAX_PAGES)
 
 /** Reuse only complete verdicts produced by this capture/prompt contract; old crops are never evidence. */
 export function reusableLookPages(lastLook, readPages, reused) {
