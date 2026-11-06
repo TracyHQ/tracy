@@ -1,6 +1,7 @@
 // Where each kept page should answer once it takes its plan slug (ADR 0044, decision 20), and what the report says of it
 // (page-route-stage.js). The planner names every kept page after what it holds (`plan.pages[].slug`); the kit and the site's menu
 // still call it by the demo's address. Nothing here calls the site: the menu rows come in, the orders and the lines go out.
+import { addressMoves, addressNow } from '../lib/renamed-addresses.js'
 import { rowsOpening } from './page-meta-write.js'
 import { readRow } from './settings-door.js'
 
@@ -149,10 +150,24 @@ export function routeLines(routes) {
 export function keptAt(keptPages, { kit, rows, landed, menutype = null }) {
   if (!landed.size) return keptPages
   const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
+  // A page no item of its own opens (an article under a category item) answers under its parent's new address (card AE).
+  const byId = new Map(rows.map((r) => [Number(r.id), r]))
+  const moves = addressMoves(
+    [...landed.keys()]
+      .map((id) => byId.get(id))
+      .filter(Boolean)
+      .map((row) => ({
+        from: addressAfter(row, rows),
+        to: addressAfter(row, rows, landed),
+        outcome: 'written'
+      }))
+  )
   return each(keptPages).map((page) => {
     const kitPage = kitPages.get(page.id)
     if (!kitPage || trimmed(page.path) === '') return page
     const [row] = rowsOpening(kitPage, rows, menutype)
-    return row ? { ...page, path: addressAfter(row, rows, landed) } : page
+    if (row) return { ...page, path: addressAfter(row, rows, landed) }
+    const now = addressNow(page.path, moves)
+    return now ? { ...page, path: now } : page
   })
 }

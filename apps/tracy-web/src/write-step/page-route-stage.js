@@ -118,8 +118,9 @@ export async function runRouteStage({ door, siteKey, kit, plan, keptPages, menut
   }
   const at = keptAt(keptPages, { kit, rows, landed, menutype })
   const where = new Map(at.map((p) => [p.id, p.path]))
-  // `to` is where the page answers now: the plan's address when its rename landed, the demo's when it did not.
-  for (const route of routes) if (route.itemId) route.to = where.get(route.pageId) ?? route.to
+  // `to` is where the page answers now: the plan's address when its rename landed, the demo's when it did not, and under its
+  // parent's new address when only the parent was renamed (card AE).
+  for (const route of routes) route.to = where.get(route.pageId) ?? route.to
   return { routes, lines: routeLines(routes), keptPages: at }
 }
 

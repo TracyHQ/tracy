@@ -1,7 +1,7 @@
 // The site check's `page-slug` measure (ADR 0044, decision 20): each kept page the plan gives a slug answers at an address that
 // ends with it. The write step's route stage renames the page's menu item and keeps a route table in the report
-// (write-step/page-route-stage.js); this reads the item's address back as the site answers it, in inspect's pages (the routes the
-// host is given to open) or else on the row. A page whose item ends with another name blocks on step 9 (write); a page the site
+// (write-step/page-route-stage.js); this reads the item's address back as the site answers it now, on its row, or else in
+// inspect's pages (captured with the contract, so from before any rename). A page whose item ends with another name blocks on step 9 (write); a page the site
 // answers nothing for is unmeasured. When the host read the pages, a kept page that does not answer at its new address blocks too:
 // an old demo address that answers 404 is what a rename leaves, and is fine.
 import { GroupUnmeasured } from './group-unmeasured.js'
@@ -12,16 +12,19 @@ const each = (value) => (Array.isArray(value) ? value : [])
 const trimmed = (path) => String(path ?? '').replace(/^\/+|\/+$/g, '')
 const LANDED = new Set(['written', 'already'])
 
-/** The address the site answers a menu item at, or null when it says nothing of it. */
+/**
+ * The address the site answers a menu item at, or null when it says nothing of it. The row is read first: inspect's routes
+ * are the paths the contract was captured with, from before the route stage renamed anything (card AE).
+ */
 async function addressOf(itemId, { routes, read }) {
-  if (routes.has(itemId)) return routes.get(itemId)
   try {
     const answer = await read('content.get', { kind: 'menuItem', id: itemId })
     const path = answer?.item?.path
-    return typeof path === 'string' && path ? `/${trimmed(path)}` : null
+    if (typeof path === 'string' && path) return `/${trimmed(path)}`
   } catch {
-    return null
+    // No row: inspect's route is all the site says.
   }
+  return routes.get(itemId) ?? null
 }
 
 /** The pages the host opened that answered an error, by path; empty when no host read the pages. */

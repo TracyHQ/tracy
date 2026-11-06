@@ -1,8 +1,10 @@
-// Card AD: once the route stage moved an address (`/lessons` to `/classes`), a link written as a string to the old
-// address follows it (a url menu item, an anchor in a slot's words), and what cannot follow is a refused line. Every site, page, row and host here is invented.
+// Cards AD and AE: once the route stage moved an address (`/lessons` to `/classes`), a link written as a string to the old
+// address follows it (a url menu item, an anchor in a slot's words), what cannot follow is a refused line, and a kept page under
+// a renamed parent is listed at the address it answers at now. Every site, page, row and host here is invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { addressMoves, addressNow, movedLink, movedLinksIn } from '../src/lib/renamed-addresses.js'
+import { runRouteStage } from '../src/write-step/page-route-stage.js'
 import { followRenamedLinks, rewriteRenamedLinks } from '../src/write-step/renamed-link-stage.js'
 import { fakeSite, SITE } from './_write-step-run.mjs'
 
@@ -192,6 +194,46 @@ test('the lines that ordered a rewritten value say what the site holds now', () 
     lines.map((l) => l.ordered),
     ['/classes/rowing', '((a href="/classes"))x((/a))', '((a href="/lessons"))x((/a))']
   )
+})
+
+test('card AE: a kept page with no item of its own is listed under its renamed parent', async () => {
+  const site = fakeSite({
+    records: [row(10, 'lessons', 'lessons', 1, { link: 'index.php?option=com_content&view=category&id=8' })],
+    refuseUpdate: () => null
+  })
+  const inner = site.door.apply
+  site.door.apply = async (call) => {
+    const answer = await inner(call)
+    return call.action === 'content.update' && 'alias' in (call.params.fields ?? {})
+      ? { ...answer, alias: call.params.fields.alias }
+      : answer
+  }
+  const out = await runRouteStage({
+    door: site.door,
+    siteKey: SITE,
+    kit: {
+      pages: [
+        { id: 'page-lessons', path: '/lessons' },
+        { id: 'page-lessons_rowing', path: '/lessons/rowing' }
+      ]
+    },
+    plan: {
+      pages: [
+        { id: 'page-lessons', decision: 'keep', slug: 'classes' },
+        { id: 'page-lessons_rowing', decision: 'keep', slug: 'kayak-tours' }
+      ]
+    },
+    keptPages: [
+      { id: 'page-lessons', path: '/lessons' },
+      { id: 'page-lessons_rowing', path: '/lessons/rowing' }
+    ]
+  })
+  assert.deepEqual(
+    out.keptPages.map((p) => p.path),
+    ['/classes', '/classes/rowing']
+  )
+  const child = out.routes.find((r) => r.pageId === 'page-lessons_rowing')
+  assert.deepEqual([child.outcome, child.to], ['refused', '/classes/rowing'])
 })
 
 test('the write step rewrites a footer link to a renamed page after the rename, and the report says so', async () => {
