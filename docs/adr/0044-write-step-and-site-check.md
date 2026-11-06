@@ -273,6 +273,12 @@ The host now answers `lists` per page (sibling groups by tag and classes, each i
 items than the plan keeps (the plan's count, or the demo's when fewer), or an item with no words and no picture. A list printed
 nowhere leaves the group unmeasured.
 
+Measured 2026-11-06 (card AH): a kept card's written word "Coach" was also printed by other blocks of the page, so a four-item
+list of another block was taken for a two-card list, and a block was measured on the home page, which does not print it. The list
+is now looked for only on the pages that print the row's block (inspect's `pages` and their `assignedModules`), a written word
+matches only as a whole word, and a word another block on that page also wrote is no sign of the row. A list it cannot place
+that way is unmeasured, never the nearest guess.
+
 ### 23. A map is drawn at the business, not at the demo's place
 
 The kit reads the maps each block prints (an embedded maps frame, an element carrying latitude and longitude) and counts
