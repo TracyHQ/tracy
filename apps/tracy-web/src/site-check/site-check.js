@@ -10,7 +10,9 @@
 // Context also holds `pageHtml(path)` (a page's markup as a visitor reads it), `host(payload)` (reads pages in a browser), `baseline` (the demo baseline) and `kit` (the template kit's
 // document), all optional: a group that needs one and has none is unmeasured.
 //
-// Statuses: green, red (a block failure), unmeasured (it could not tell), and not-run for a group stopped by an earlier one.
+// Statuses: green, red (a block failure), unmeasured (it could not tell), not-applicable (it checked nothing, and said why), and
+// not-run for a group stopped by an earlier one. A group that checked nothing is never green (ADR 0044, decision 27): it answers
+// `notApplicable: '<reason>'` when there was genuinely nothing of its kind to measure, and is unmeasured otherwise.
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { kitVersionGroup } from './kit-version.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
@@ -20,6 +22,7 @@ import { WRITE_FINDING_GROUPS } from './write-findings.js'
 import { writtenNotPrintedGroup } from './written-not-printed.js'
 
 export const CHECK_VERSION = 'site-check/1'
+export const NOT_APPLICABLE = 'not-applicable'
 /** With a kit, the first group: a kit older than the check expects stops the run (kit-version.js). */
 export const KIT_GROUPS = [kitVersionGroup]
 /**
@@ -64,15 +67,30 @@ const failureOf = (group) => (f) => ({
   ...f
 })
 
+/** Red on a block failure; otherwise a group that checked nothing is not applicable when it said why, else unmeasured. */
+function statusOf(failures, checked, notApplicable) {
+  if (failures.some((f) => f.level === 'block')) return { status: 'red' }
+  if (checked > 0) return { status: 'green' }
+  if (typeof notApplicable === 'string' && notApplicable.trim())
+    return { status: NOT_APPLICABLE, reason: notApplicable }
+  return {
+    status: 'unmeasured',
+    reason: 'Nothing was measured (0 checked), and the group gave no reason it does not apply.'
+  }
+}
+
+/** A status that counts as passing: the verdict and a stopping group read it as green. */
+const passes = (status) => status === 'green' || status === NOT_APPLICABLE
+
 async function measure(group, context) {
   const from = context.now()
   const timed = () => ({ ms: context.now() - from })
   try {
-    const { failures = [], ...kept } = await group.run(context)
+    const { failures = [], notApplicable, ...kept } = await group.run(context)
     const named = failures.map(failureOf(group))
     return {
       name: group.name,
-      status: named.some((f) => f.level === 'block') ? 'red' : 'green',
+      ...statusOf(named, kept.checked, notApplicable),
       ...kept,
       failures: named,
       ...timed()
@@ -95,7 +113,7 @@ function overall(groups) {
 }
 
 /** With `allGroups`, a run that a group would have stopped is never green, whatever the later groups say. */
-const notGreenAfter = (status, stoppedBy) => (stoppedBy && status === 'green' ? stoppedBy.status : status)
+const notGreenAfter = (status, stoppedBy) => (stoppedBy && passes(status) ? stoppedBy.status : status)
 
 /**
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
@@ -150,7 +168,7 @@ export async function runSiteCheck({
     }
     const result = await measure(group, context)
     results.push(stoppedBy ? { ...result, ranDespite: `${stoppedBy.name} is ${stoppedBy.status}` } : result)
-    if (!stoppedBy && group.stopsLaterWhenRed && result.status !== 'green') stoppedBy = result
+    if (!stoppedBy && group.stopsLaterWhenRed && !passes(result.status)) stoppedBy = result
   }
   const every = results.flatMap((g) => g.failures)
   return {
@@ -165,7 +183,9 @@ export async function runSiteCheck({
       block: every.filter((f) => f.level === 'block').length,
       warn: every.filter((f) => f.level === 'warn').length,
       // Groups that could not tell: never counted as green (ADR 0044, 2026-11-04).
-      unmeasured: results.filter((g) => g.status === 'unmeasured').length
+      unmeasured: results.filter((g) => g.status === 'unmeasured').length,
+      // Groups with nothing of their kind to measure, each with its reason: they pass, and are said (decision 27).
+      notApplicable: results.filter((g) => g.status === NOT_APPLICABLE).length
     },
     groups: results
   }

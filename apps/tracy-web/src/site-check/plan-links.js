@@ -126,7 +126,12 @@ export const planLinksGroup = {
       throw new GroupUnmeasured(
         'The write report keeps no plan links (made before they were kept), so this was not measured.'
       )
-    if (!each(report.planLinks).length && !each(report.endActions).length) return { checked: 0, failures: [] }
+    if (!each(report.planLinks).length && !each(report.endActions).length)
+      return {
+        checked: 0,
+        notApplicable: 'the write report has no plan link and no end action',
+        failures: []
+      }
     const read = await pagesRead(context)
     if (!read.measures.some((m) => Array.isArray(m.shownLinks)))
       throw new GroupUnmeasured('The host answered no shown links (`shownLinks`), so this was not measured.')

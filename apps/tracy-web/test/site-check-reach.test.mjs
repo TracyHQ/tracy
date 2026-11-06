@@ -200,8 +200,16 @@ test('the groups: an older report or host is unmeasured, nothing to hold is no m
     host: async () => ({ checks: [], pageMeasures: measures, visited: [] })
   })
   await assert.rejects(planLinksGroup.run(context({ slots: [] }, [])), /keeps no plan links/)
-  assert.deepEqual(await listRowsGroup.run(context({ slots: [] }, [])), { checked: 0, failures: [] })
-  assert.deepEqual(await phoneCallableGroup.run(context({ slots: [] }, [])), { checked: 0, failures: [] })
+  assert.deepEqual(await listRowsGroup.run(context({ slots: [] }, [])), {
+    checked: 0,
+    notApplicable: 'the plan cuts no list',
+    failures: []
+  })
+  assert.deepEqual(await phoneCallableGroup.run(context({ slots: [] }, [])), {
+    checked: 0,
+    notApplicable: 'the write report names no brief phone number',
+    failures: []
+  })
   await assert.rejects(
     mapLocationGroup.run(
       context({ slots: [], keptPages: [{ id: 'p', path: '/contact' }] }, [{ path: '/contact', width: 1440 }])

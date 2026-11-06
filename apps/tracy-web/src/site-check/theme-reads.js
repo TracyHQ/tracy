@@ -267,7 +267,13 @@ export const wordsOverPictureGroup = {
         measured: unshot,
         reason: `${unshot} texts on a picture could not be shot, so they were not judged.`
       })
-    return { checked: measured, unshot, themes, failures: failuresAll }
+    return {
+      checked: measured,
+      unshot,
+      themes,
+      ...(measured || unshot ? {} : { notApplicable: 'no page read prints words over a picture' }),
+      failures: failuresAll
+    }
   }
 }
 

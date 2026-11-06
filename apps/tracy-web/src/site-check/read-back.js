@@ -6,6 +6,7 @@
 // with neither warns and is listed under `reads`, so that green never claims more than was read.
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { sameValue } from './slot-values.js'
+import { contractRefusals } from './write-findings.js'
 
 const INSPECT = 'content.contract inspect'
 
@@ -99,9 +100,14 @@ function judge(line, held) {
 }
 
 async function run({ report, read }) {
-  // An item the write step had nothing to write to is blamed on its owning step by `unaddressable-items` (write-findings.js).
+  // An item the write step had nothing to write to, and a hide the plugin refused for want of a contract slot, are blamed on
+  // their owning step by `unaddressable-items` (write-findings.js), never here on step 9.
+  const contractLacks = new Set(contractRefusals(report).map((item) => item.slot))
   const compared = report.slots.filter(
-    (s) => ['written', 'failed', 'refused', 'hidden'].includes(s.status) && !s.unaddressable
+    (s) =>
+      ['written', 'failed', 'refused', 'hidden'].includes(s.status) &&
+      !s.unaddressable &&
+      !(s.status === 'failed' && contractLacks.has(s.slot))
   )
   const noOrder = compared.filter((s) => s.status === 'written' && s.ordered === undefined)
   if (noOrder.length)

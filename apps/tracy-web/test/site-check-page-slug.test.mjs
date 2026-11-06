@@ -87,8 +87,8 @@ test('a report with a route table runs page-slug after read-back, and pages at t
   assert.deepEqual(
     check.groups.map((g) => [g.name, g.status]),
     [
-      ['look-guard-findings', 'green'],
-      ['unaddressable-items', 'green'],
+      ['look-guard-findings', 'not-applicable'],
+      ['unaddressable-items', 'not-applicable'],
       ['read-back', 'green'],
       ['page-slug', 'green']
     ]

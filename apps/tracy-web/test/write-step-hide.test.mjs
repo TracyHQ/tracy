@@ -126,7 +126,7 @@ for (const [address, xpath] of [
   ['a text node', '/html/body/div/text()[2]'],
   ['an attribute', '/html/body/div/img/@src']
 ]) {
-  test(`a slot addressed by ${address} is not sent, is failed naming #369, and the site check is red`, async () => {
+  test(`a slot addressed by ${address} is not sent, is failed naming #369, and the site check blames the contract`, async () => {
     const { report, site } = await runHide({
       site: { overSlot: (s) => (s.key === 'module-2.3' ? { xpath, canHide: undefined } : {}) }
     })
@@ -137,7 +137,10 @@ for (const [address, xpath] of [
     assert.match(line.reason, /#369/)
     const check = await runSiteCheck({ door: site.door, report })
     assert.equal(check.status, 'red')
-    assert.ok(failuresOf(check).some((f) => f.slot === 'block-2.3' && /#369/.test(f.reason)))
+    // Blamed once, on the template's contract (step 0, issue #369), and not on the write step through read-back.
+    const items = check.groups.find((g) => g.name === 'unaddressable-items').failures
+    assert.ok(items.some((f) => f.slot === 'block-2.3' && f.causingStep === 0 && /#369/.test(f.reason)))
+    assert.ok(!failuresOf(check).some((f) => f.slot === 'block-2.3'))
   })
 }
 

@@ -90,7 +90,7 @@ test('each item left out blocks on its owning step, with the cell', async () => 
   assert.match(g.failures[1].reason, /Nothing to write it to: pictures/)
 })
 
-test('a report with nothing found and nothing left out is green; one written before they were kept is unmeasured', async () => {
+test('a report with nothing found and nothing left out is not applicable, never green; one written before they were kept is unmeasured', async () => {
   const clean = await runSiteCheck({
     door: checkSite({}).door,
     groups: WRITE_FINDING_GROUPS,
@@ -98,8 +98,9 @@ test('a report with nothing found and nothing left out is green; one written bef
   })
   assert.deepEqual(
     clean.groups.map((g) => g.status),
-    ['green', 'green']
+    ['not-applicable', 'not-applicable']
   )
+  assert.equal(clean.status, 'green')
   const older = report([])
   delete older.guard
   delete older.unaddressable

@@ -346,6 +346,34 @@ naming the cell and the step that owns the value: copy step 6, plan step 3, pict
 itself step 9. A report written before this decision has neither list, and both groups are `unmeasured` (decision 18).
 Read-back leaves an `unaddressable` line to its own group, so the fault is blamed once and on the owning step.
 
+### 27. A group that checked nothing is never green: it is not applicable with its reason, or unmeasured
+
+Owner's decision, 2026-11-06. Decision 18 wrote "nothing measured is unmeasured" into three groups by hand, and every other group
+that answered `checked: 0` with no block still read green: on a real run `broken-sentence` read green on 0 (each slot of the kit's
+three sentence groups was hidden by the plan or had no line in the write report) and `unaddressable-items` read green on 0 while
+the plugin had refused 96 hides for want of a contract slot. The rule now lives once, in `measure()` (`site-check/site-check.js`):
+
+- A block failure is red, whatever the count.
+- Otherwise `checked > 0` is green.
+- Otherwise the group is `not-applicable` when it answers `notApplicable: '<reason>'`, a reason that says there was nothing of its
+  kind on this site (the write step created no page, the plan cuts no list, the kit marks no accent span), and `unmeasured`
+  when it gives none. A group never says not applicable for a read that came back empty: that is unmeasured.
+- `not-applicable` passes: the verdict reads it as green and a group with `stopsLaterWhenRed` does not stop the later ones.
+  `counts.notApplicable` counts it, and each one prints its reason on its line. `unmeasured` stays as decision 18 made it.
+
+The reasons given: `look-guard-findings` (the guard found nothing), `unaddressable-items` (nothing left out and no contract
+refusal), `broken-sentence` (every slot of every sentence group is hidden by the plan or has no line in the write report),
+`accent-emphasis` (the kit marks no accent span, or no written heading is one it marks), `created-controls` (no page created),
+`plan-links` (no plan link and no end action), `list-rows` (the plan cuts no list), `phone-callable` (the report names no brief
+phone), `map-location` (no page prints a map and the demo baseline holds none), `brand-accent` (no brand accent written and no
+page reads a brand style), `words-over-picture` (no page prints words over a picture), `unowned-slots` (every slot has an
+owner). Read-back that compared no line, `logo-readable` with no logo read, and a page group with no page read are unmeasured.
+
+A hide the plugin refuses because the contract has no slot for it (`report.noWayOut`, a reason naming issue #369) was sent, so it
+is not in `report.unaddressable`, and read-back blamed it on step 9 as a refused slot. `unaddressable-items` now lists it too, on
+step 0: the contract ships with the template, and a new contract is a template release. Read-back leaves those failed lines to
+that group, so each is blamed once.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

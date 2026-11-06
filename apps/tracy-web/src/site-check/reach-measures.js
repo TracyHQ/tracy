@@ -94,7 +94,7 @@ export const listRowsGroup = {
   causingStep: WRITE_STEP,
   async run(context) {
     const rows = each(context.report?.rows)
-    if (!rows.length) return { checked: 0, failures: [] }
+    if (!rows.length) return { checked: 0, notApplicable: 'the plan cuts no list', failures: [] }
     const read = await pagesRead(context)
     needs(read, 'lists', 'lists')
     const { checked, failures, unread } = judgeListRows(context.report, read.measures)
@@ -158,7 +158,12 @@ export const mapLocationGroup = {
       throw new GroupUnmeasured(
         'Neither a demo baseline with maps nor the business coordinates are known, so where a map should be is not known.'
       )
-    return judgeMapLocation(read.measures, { demoMaps, place })
+    const judged = judgeMapLocation(read.measures, { demoMaps, place })
+    // No page prints a map and the demo printed none either: nothing of this kind is on the site. A demo map gone, or no baseline, is unmeasured.
+    const demoHasNone = Array.isArray(context.baseline?.maps) && !demoMaps.length
+    return judged.checked || !demoHasNone
+      ? judged
+      : { ...judged, notApplicable: 'no page prints a map, and the demo baseline holds none' }
   }
 }
 
@@ -196,7 +201,8 @@ export const phoneCallableGroup = {
   causingStep: TEMPLATE_STEP,
   async run(context) {
     const phones = each(context.report?.phones)
-    if (!phones.length) return { checked: 0, failures: [] }
+    if (!phones.length)
+      return { checked: 0, notApplicable: 'the write report names no brief phone number', failures: [] }
     const read = await pagesRead(context)
     needs(read, 'phones', 'phone numbers')
     return judgePhoneCallable(read.measures, phones)

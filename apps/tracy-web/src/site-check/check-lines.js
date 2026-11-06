@@ -38,6 +38,6 @@ export function checkLines(check) {
     ...(check.pageGroups === false
       ? ['page groups: not run (no host was given, so no page was opened)']
       : []),
-    `site-check: ${check.status} (${check.counts.block} block, ${check.counts.warn} warn, ${check.counts.unmeasured ?? 0} unmeasured)`
+    `site-check: ${check.status} (${check.counts.block} block, ${check.counts.warn} warn, ${check.counts.unmeasured ?? 0} unmeasured${check.counts.notApplicable ? `, ${check.counts.notApplicable} not applicable` : ''})`
   ]
 }
