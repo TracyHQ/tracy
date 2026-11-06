@@ -10,6 +10,7 @@ import { HIDDEN_KIT_FIELDS_CHECK } from './hidden-kit-fields.js'
 import { KIT_TOOL_CHECK } from './kit-tool-version-check.js'
 import { PIN_BEHIND_CHECK } from './pin-behind-contract-check.js'
 import { WRITE_DOORS_CHECK } from './write-doors-check.js'
+import { DEMO_MEASURES_CHECK } from './demo-measures-check.js'
 
 /** @type {readonly ReadinessCheck[]} */
 export const CHECKS = Object.freeze([
@@ -17,5 +18,6 @@ export const CHECKS = Object.freeze([
   HIDDEN_KIT_FIELDS_CHECK,
   KIT_TOOL_CHECK,
   PIN_BEHIND_CHECK,
-  CONTENT_MAP_LISTS_CHECK
+  CONTENT_MAP_LISTS_CHECK,
+  DEMO_MEASURES_CHECK
 ])
