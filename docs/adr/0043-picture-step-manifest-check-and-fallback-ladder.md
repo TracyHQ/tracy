@@ -213,6 +213,12 @@ Thresholds and readings (named constants in the code):
   distorted face or body, stray lettering, visible drawing seam; on a cut-out also rough cut-out edge, leftover ground, missing
   part, covers the text), and writes the `seen` sentence. It never sees the picker's reasons.
 
+- **A file is never narrower than the kit's minimum** (card AI, owner decision 06/11/2026). A content map slot's
+  `fit.minWidth` is the narrowest file the write door takes (SlotFit checkPicture, `SLOT_IMAGE_TOO_SMALL`). The index
+  carries it on the frame; every cut and every drawing for the frame is written at least that wide (`outputSizeFor`),
+  and an owner photo region narrower than it is refused (`narrower-than-min-width`), never enlarged to reach it, so the
+  ladder moves on to the next photo, the drawing or the rungs after. The mapping export leaves a narrower file out as a
+  problem, and the write step's package check (`packageItems` with the content map) names any that still gets through.
 - **A cut never takes off a head** (`site-pictures/head-boxes.js`). The brief's face boxes are tight (brow to chin)
   and often a little low, and a person seen from behind has none. The cut keeps whole a head box grown from every
   face box (1.2 face heights above, 0.3 below, 0.3 face widths each side) and, when the labels count more people than

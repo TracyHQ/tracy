@@ -26,6 +26,25 @@ import { paintKindOf } from '../lib/picture-paint/paint.js'
  * writable (module chrome, a twin a template setting paints) has no slot to write to.
  */
 const NOT_OURS = /^(a logo frame belongs to the brand step|the kit marks this frame not writable)/
+/**
+ * The check of a file's width against its content map slot's `fit.minWidth` (the write door's SlotFit checkPicture):
+ * `(key, width)` gives the problem sentence, or null when the slot takes it. Shared with the write step's package check.
+ * @param {{ slots?: object[] } | null | undefined} contentMap
+ */
+export function narrowerThanSlot(contentMap) {
+  const mins = new Map(
+    (Array.isArray(contentMap?.slots) ? contentMap.slots : [])
+      .filter((s) => Number.isInteger(s?.fit?.minWidth) && s.fit.minWidth > 0)
+      .map((s) => [s.key, s.fit.minWidth])
+  )
+  return (key, width) => {
+    const min = mins.get(key)
+    return min && Number(width) < min
+      ? `its file is ${width} px wide; the kit slot ${key} takes at least ${min}`
+      : null
+  }
+}
+
 /** The opening of the problem that names a frame the plan wants filled and the picture step left without a picture. */
 export const LEFT_EMPTY = 'the plan wants a picture here and the picture step left it without one'
 
@@ -52,6 +71,7 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
   const imageSlots = kit?.contentMap?.slots
     ? new Set(kit.contentMap.slots.filter((s) => s.type === 'image').map((s) => s.key))
     : null
+  const tooNarrow = narrowerThanSlot(kit?.contentMap)
   const bad = (where, detail) => {
     problems.push({ where, detail })
   }
@@ -143,6 +163,12 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     if (e.paint) {
       const p = paintedOf(e, key)
       if (p) painted.push(p)
+      continue
+    }
+    // A file narrower than the slot's minimum is refused by the write door and the demo picture stays (card AI).
+    const narrow = tooNarrow(key, e.width)
+    if (narrow) {
+      bad(e.frame, narrow)
       continue
     }
     changes[key] = e.sitePath

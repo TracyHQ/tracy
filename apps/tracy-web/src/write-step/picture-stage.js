@@ -86,7 +86,7 @@ export async function preparePictureStage({
       reason: `The files cannot be written: pictures: ${problems.join('; ')}`
     })
   // An item with nothing to write to is left out and said as refused; the rest of the package is written (decision 26).
-  const items = packageItems(pictures)
+  const items = packageItems(pictures, contentMap ?? kit?.contentMap ?? null)
   const unaddressable = items.map((i) => ({
     slot: i.frame,
     key: i.key,
