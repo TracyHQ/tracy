@@ -371,6 +371,26 @@ edits, and removing it needs a template release that sites already made would no
   fails every shown one whose address names no video: on step 9 when the kit names a rule or the report has its line, on
   step 0 when the kit names none. A host without the measure leaves it unmeasured (decision 18).
 
+**Third use: a link in a kept row that leads to a page the plan hides (card AM).** Owner's decision, 2026-11-06. Measured on a
+bench site with the JA Boxing 1.0.11 kit: the plan dropped the demo trainer's profile page (menu item 197, unpublished), and the
+coach cards it kept on the home, About and Coaches pages still linked name and photo there (`block-163.8`, `.9`,
+`block-178.16`, `.17`, value `index.php?Itemid=197`), so a click answered 404. The plugin empties such a slot only with its row
+(`SLOT_NOT_HIDEABLE`). The kit names the containers of such links (`site.hiddenPageLinks`, `template-kit/cli.mjs
+hidden-page-links`; JA Boxing 1.0.11 names `.teams-item`), and on a kit that does:
+
+- Before the contract call, each link slot the plan empties whose address is a hidden page's (a page the plan drops, or a menu
+  item left unpublished) is given the address of a living page of the plan: the nearest kept page above it (a profile goes to
+  the page listing the coaches), else the first kept page that holds the block (`write-step/hidden-page-links-stage.js`). The
+  contract call writes that address only when the plugin refuses the empty with `SLOT_NOT_HIDEABLE` (`contract-write.js`), and
+  the line is written with the plugin's words and the address, read back like any slot. When the door refuses the address too,
+  the line is failed and says both refusals.
+- Last of the writes, one rule between its own markers in the head injection block makes a link in those containers whose
+  address is still a hidden page's plain text: `pointer-events:none`, `cursor:default`, no underline, the colour around it. The
+  rule names hidden pages by their exact addresses (`lib/hidden-page-links.js`), so a link to a living page is never touched; the
+  look guard lets that block hold only it (`hidden-page-links`).
+- The host's `shownLinks` say whether a link takes a click (`clickable`), and `hidden-page-links` (block, step 9) fails every
+  shown link that does and leads to a hidden page. A host without the read leaves it unmeasured.
+
 The plugin also has `template.files.write`, which could put the rule in a T4 template's `local/css/custom.css` (T4 reads it
 local first, and a template update keeps `local/`). It was not used: an unlisted file under a locked template root reads as
 presentation drift in every later contract call, and the head block is already the write step's door for CSS.

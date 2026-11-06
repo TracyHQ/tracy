@@ -33,8 +33,8 @@ export const ROUTE_GROUPS = [pageSlugGroup]
 export const PAGE_READ_GROUPS = [writtenNotPrintedGroup]
 
 const READ_OPERATIONS = new Set(['inspect', 'read'])
-/** Actions that only read by what they are (the plugin marks `content.get` as writing nothing) and take no operation. */
-const READ_ACTIONS = new Set(['content.get'])
+/** Actions that only read by what they are (the plugin marks `content.get` and `content.list` as writing nothing) and take no operation. */
+const READ_ACTIONS = new Set(['content.get', 'content.list'])
 
 /** The only way a group reaches the site. */
 function readsOnly(door, siteKey) {

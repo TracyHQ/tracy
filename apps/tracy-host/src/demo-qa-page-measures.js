@@ -5,7 +5,8 @@
  * `pageMeasures`, one entry per page and width:
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], textBlocks: [...], pictures: [...], controls: [...],
  *     fields: [...], glued: [...], headingSpans: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
- *     selfLinks: [{ selector, text, href, holders: [{ tag, id, classes }] }], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
+ *     selfLinks: [{ selector, text, href, holders: [{ tag, id, classes }] }], contentControls: [...], view, title, shownText,
+ *     shownLinks: [{ href, text, clickable }], shownLinksClickable, shownPictures: [...],
  *     lists: [{ selector, items: [{ chars, text, pictures }] }], maps: [{ kind, lat?, lng?, address?, from }],
  *     phones: [{ text, digits, inTel, selector }], videoButtons: [{ selector, attribute, address }], brandStyle?, look? }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
@@ -385,8 +386,10 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   const shownLinks = []
   for (const a of document.body.querySelectorAll('a[href]')) {
     if (shownLinks.length >= caps.shownLinks) break
-    if (!shown(a) || clippedAway(a, getComputedStyle(a))) continue
-    shownLinks.push({ href: a.href, text: saidBy(a).slice(0, 80) })
+    const style = getComputedStyle(a)
+    if (!shown(a) || clippedAway(a, style)) continue
+    // Whether a click reaches it: a link made plain text (`pointer-events: none`) leads nowhere a visitor can go.
+    shownLinks.push({ href: a.href, text: saidBy(a).slice(0, 80), clickable: style.pointerEvents !== 'none' })
   }
   const shownPictures = []
   for (const img of document.body.querySelectorAll('img')) {
@@ -547,6 +550,7 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     title: document.title,
     shownText,
     shownLinks,
+    shownLinksClickable: true,
     shownPictures,
     lists,
     maps,

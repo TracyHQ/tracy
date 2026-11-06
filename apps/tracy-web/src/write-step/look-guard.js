@@ -7,6 +7,7 @@
 // see is listed in the ADR.
 import { emptyVideoButtonsOf } from '../lib/empty-video-buttons.js'
 import { selfLinkButtonsOf } from '../lib/self-link-buttons.js'
+import { hiddenPageLinksOf } from '../lib/hidden-page-links.js'
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
@@ -33,6 +34,8 @@ const EXCEPTIONS = Object.freeze({
     'a play button the template prints with an empty video address opens an empty player; one rule in the head block, on the selectors the kit names and keyed on the empty address, stops it being drawn, and a filled video shows its button again',
   'self-link-buttons':
     'a "more" button the template prints from settings no slot reaches can lead to the page it sits on; rules in the head block, on the containers the kit names and scoped to each kept page and its own address, stop it being drawn, and a link to another page is never hidden',
+  'hidden-page-links':
+    "a link the plugin keeps with its kept row can lead to a page the plan hides; one rule in the head block, on the containers the kit names and the hidden pages' exact addresses, makes it plain text, and a link to a living page is never touched",
   'body-background':
     'the setting a kit names for the picture behind its pages holds a picture path, and a picture may change'
 })
@@ -126,7 +129,9 @@ export function lookGuard({ kit, contentMap = null }) {
     // The kit's play buttons with an empty video address: the one hide rule the head injection block may carry for them.
     videoSelectors: emptyVideoButtonsOf(kit).selectors,
     // The kit's containers of "more" buttons that may lead to their own page: what the self link block's rules may name.
-    selfLinkContainers: selfLinkButtonsOf(kit).containers
+    selfLinkContainers: selfLinkButtonsOf(kit).containers,
+    // The kit's containers of links that may lead to a hidden page: what the hidden page link block's rule may name.
+    hiddenLinkContainers: hiddenPageLinksOf(kit).containers
   }
   let owners = new Map()
   const findings = []

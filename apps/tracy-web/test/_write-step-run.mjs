@@ -37,7 +37,7 @@ function siteSlots(kit, extra) {
  * A site behind the door. `refuse` maps a content map key to the entry the plugin lists for it; while a refused key is in
  * the changes the whole apply is refused and nothing lands. `answers` overrides the next apply answers, in order.
  * The hide orders (write-step/hide-stage.js) are answered as the plugin does, see `hideDoor` in `_write-step-hide.mjs`.
- * @param {{ refuse?: Record<string, object>, answers?: object[], contract?: string, slots?: object[],
+ * @param {{ refuse?: Record<string, object>, refuseEmpty?: Record<string, object>, answers?: object[], contract?: string, slots?: object[],
  *   inspect?: object, extraKeys?: string[], hideDoor?: Function, overSlot?: (slot: object) => object }} [script]
  */
 export function fakeSite(script = {}) {
@@ -139,12 +139,17 @@ export function fakeSite(script = {}) {
         const refused = [...Object.keys(call.params.changes ?? {}), ...emptied].filter(
           (k) => script.refuse?.[k]
         )
-        if (refused.length)
+        // `refuseEmpty`: refused only as an empty, as the plugin refuses a slot that goes only with its row.
+        const unemptied = emptied.filter((k) => script.refuseEmpty?.[k] && !refused.includes(k))
+        if (refused.length || unemptied.length)
           return {
             ok: false,
             error: 'contract_failed',
             message: 'The content contract refused some slots',
-            errors: refused.map((k) => ({ ...script.refuse[k], field: { slotKey: k } }))
+            errors: [
+              ...refused.map((k) => ({ ...script.refuse[k], field: { slotKey: k } })),
+              ...unemptied.map((k) => ({ ...script.refuseEmpty[k], field: { slotKey: k } }))
+            ]
           }
         Object.assign(held, call.params.changes)
         for (const key of emptied) held[key] = ''

@@ -5,6 +5,7 @@ import { fallbackBlocksIn, isFallbackBlock, withoutFallbackBlocks } from '../lib
 import { HEAD_END, HEAD_START } from './brand-head-block.js'
 import { videoBlockFor, videoBlockIn, withVideoBlock } from '../lib/empty-video-buttons.js'
 import { isSelfLinkBlock, selfLinkBlockIn, withSelfLinkBlock } from '../lib/self-link-buttons.js'
+import { hiddenLinkBlockIn, isHiddenLinkBlock, withHiddenLinkBlock } from '../lib/hidden-page-links.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { NOT_A_POST } from './page-create-stage.js'
@@ -219,7 +220,20 @@ function selfLinkBlockFaults(what, raw, heldRaw, containers) {
   ]
 }
 
-const withoutMarked = (text) => withSelfLinkBlock(withVideoBlock(text, null), null)
+/** The hidden page link block (card AM): only the inert rule on links in the containers the kit names, or what the site held. */
+function hiddenLinkBlockFaults(what, raw, heldRaw, containers) {
+  const block = hiddenLinkBlockIn(raw)
+  if (!block || block === hiddenLinkBlockIn(heldRaw) || isHiddenLinkBlock(block, containers)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} hidden page links`,
+      'the hidden page link block holds only the plain text rule on links in the containers the kit names'
+    )
+  ]
+}
+
+const withoutMarked = (text) => withHiddenLinkBlock(withSelfLinkBlock(withVideoBlock(text, null), null), null)
 
 /** What a module's content may change: the accent style alone, or the head block with all around it as the site held it. */
 function moduleContentFaults(id, content, { state }) {
@@ -228,11 +242,12 @@ function moduleContentFaults(id, content, { state }) {
   const heldRaw = String(state.rows.get(`module:${id}`)?.content ?? '')
   const marked = [
     ...videoBlockFaults(what, raw, heldRaw, state.videoSelectors ?? []),
-    ...selfLinkBlockFaults(what, raw, heldRaw, state.selfLinkContainers ?? [])
+    ...selfLinkBlockFaults(what, raw, heldRaw, state.selfLinkContainers ?? []),
+    ...hiddenLinkBlockFaults(what, raw, heldRaw, state.hiddenLinkContainers ?? [])
   ]
   const text = withoutMarked(raw)
   const held = withoutMarked(heldRaw)
-  const touched = [raw, heldRaw].some((t) => videoBlockIn(t) || selfLinkBlockIn(t))
+  const touched = [raw, heldRaw].some((t) => videoBlockIn(t) || selfLinkBlockIn(t) || hiddenLinkBlockIn(t))
   // A write of the marked blocks alone: everything else of the module stays as the site held it.
   if (touched && text.trim() === held.trim()) return marked
   return [...marked, ...restFaults(text, held, what, state)]

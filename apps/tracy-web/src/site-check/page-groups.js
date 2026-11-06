@@ -32,6 +32,7 @@
 //   map-location       block  9 write       reach-measures.js: a map is not at the demo's place, and near the business
 //   phone-callable     block  0 template    reach-measures.js: a brief phone the page prints sits inside a tel: link
 //   empty-video-buttons block 9 or 0       video-buttons.js: no shown control opens a video player with no video; 9 when the kit names a hide rule
+//   hidden-page-links  block  9 write       hidden-page-links.js: no shown link that takes a click leads to a page the plan hid
 //
 // Faults that need the meaning understood (does an icon suit the words, is a sentence clumsy) are step 12's, a person with eyes.
 import { accentEmphasisGroup } from './accent-emphasis.js'
@@ -57,6 +58,7 @@ import { planLinksGroup } from './plan-links.js'
 import { listRowsGroup, mapLocationGroup, phoneCallableGroup } from './reach-measures.js'
 import { unownedShownGroup } from './unowned-shown.js'
 import { emptyVideoButtonsGroup } from './video-buttons.js'
+import { hiddenPageLinksGroup } from './hidden-page-links.js'
 
 /** A group over the browser measures the host adds to its answer. Without them it could not tell, so it is unmeasured. */
 function measuredGroup({ name, level, causingStep, find, needsVisited = false }) {
@@ -185,5 +187,6 @@ export const PAGE_CHECK_GROUPS = [
   listRowsGroup,
   mapLocationGroup,
   phoneCallableGroup,
-  emptyVideoButtonsGroup
+  emptyVideoButtonsGroup,
+  hiddenPageLinksGroup
 ]

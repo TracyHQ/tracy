@@ -40,26 +40,31 @@ export function containerParts(selector) {
 export const isSafeContainer = (selector) => containerParts(selector) !== null
 
 /**
- * The kit's containers of "more" buttons that may lead to their own page, and what keeps an entry out.
+ * The containers a kit lists under one field, and what keeps an entry out. Shared with lib/hidden-page-links.js.
+ * @param {unknown} entries the kit's list (`[{ container, why }]`)
+ * @param {string} label what the containers are for, in a problem's words
  * @returns {{ containers: string[], problems: string[] }}
  */
-export function selfLinkButtonsOf(kit) {
+export function containerListOf(entries, label) {
   const containers = []
   const problems = []
-  for (const entry of each(kit?.site?.selfLinkButtons)) {
+  for (const entry of each(entries)) {
     const container = typeof entry?.container === 'string' ? entry.container.trim() : null
     if (!isSafeContainer(container))
       problems.push(
-        `the kit's self link container ${JSON.stringify(entry?.container ?? null)} is not one plain compound selector`
+        `the kit's ${label} container ${JSON.stringify(entry?.container ?? null)} is not one plain compound selector`
       )
     else if (!containers.includes(container)) containers.push(container)
   }
   if (containers.length > MAX_CONTAINERS) {
-    problems.push(`the kit names ${containers.length} self link containers, over ${MAX_CONTAINERS}`)
+    problems.push(`the kit names ${containers.length} ${label} containers, over ${MAX_CONTAINERS}`)
     return { containers: [], problems }
   }
   return { containers, problems }
 }
+
+/** The kit's containers of "more" buttons that may lead to their own page, and what keeps an entry out. */
+export const selfLinkButtonsOf = (kit) => containerListOf(kit?.site?.selfLinkButtons, 'self link')
 
 /** The container a link's holders (the host's ancestors, nearest first) sit in, or null. */
 export function holdersMatch(holders, containers) {

@@ -54,6 +54,10 @@
 //   cli.mjs self-link-buttons --kit <template-kit.json> --none
 //                 (site.selfLinkButtons, lib/self-link-buttons.mjs: the container of a "more" button that may lead to the
 //                 page it sits on, which the write step hides on that page only; same reading, no image moves)
+//   cli.mjs hidden-page-links --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
+//   cli.mjs hidden-page-links --kit <template-kit.json> --none
+//                 (site.hiddenPageLinks: the container of list row links that may lead to a page the plan hides, which the
+//                 write step sends to a living page or makes plain text; same reading, no image moves)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -85,7 +89,7 @@ import { adapterFor } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 import { declareVideoButtons } from './lib/video-buttons.mjs'
-import { declareSelfLinkButtons } from './lib/self-link-buttons.mjs'
+import { declareHiddenPageLinks, declareSelfLinkButtons } from './lib/self-link-buttons.mjs'
 
 const COMMANDS = [
   'build',
@@ -322,28 +326,22 @@ function videoButtons(o) {
   return 0
 }
 
-/** Declare the container of a "more" button that may lead to its own page (lib/self-link-buttons.mjs). */
-function selfLinkButtons(o) {
+/** Declare a container of links in a written kit under one `site` field (lib/self-link-buttons.mjs). */
+function containers(o, command, declare, field, words) {
   if (!str(o.kit) || (!o.none && !str(o.container)))
     throw new Error(
-      "self-link-buttons needs --kit <template-kit.json> and --container '<css>' --why '<words>', or --none"
+      `${command} needs --kit <template-kit.json> and --container '<css>' --why '<words>', or --none`
     )
   const file = resolve(o.kit)
   const source = readFileSync(file, 'utf8')
   const kit = JSON.parse(source)
-  const r = declareSelfLinkButtons(kit, {
-    container: str(o.container),
-    why: str(o.why),
-    none: o.none === true
-  })
+  const r = declare(kit, { container: str(o.container), why: str(o.why), none: o.none === true })
   if (r.error) {
     console.error(`nothing written: ${r.error}`)
     return 1
   }
   if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
-  console.log(
-    `${kit.site.selfLinkButtons.length} self link containers named${r.changed ? '' : ', unchanged'}`
-  )
+  console.log(`${kit.site[field].length} ${words} named${r.changed ? '' : ', unchanged'}`)
   return 0
 }
 
@@ -352,7 +350,10 @@ async function main() {
   const cmd = o._[0]
   if (cmd === 'looks') return looks(o)
   if (cmd === 'video-buttons') return videoButtons(o)
-  if (cmd === 'self-link-buttons') return selfLinkButtons(o)
+  if (cmd === 'self-link-buttons')
+    return containers(o, cmd, declareSelfLinkButtons, 'selfLinkButtons', 'self link containers')
+  if (cmd === 'hidden-page-links')
+    return containers(o, cmd, declareHiddenPageLinks, 'hiddenPageLinks', 'hidden page link containers')
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||

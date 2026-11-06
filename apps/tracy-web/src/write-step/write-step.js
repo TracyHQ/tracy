@@ -37,6 +37,7 @@ import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
 import { hideEmptyVideoButtons } from './video-buttons-stage.js'
 import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
+import { hideHiddenPageLinks, relinkOrders } from './hidden-page-links-stage.js'
 import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
@@ -54,6 +55,8 @@ import { runPrintedStage } from './printed-stage.js'
 import { runShareStage } from './share-stage.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
 import { unaddressableOf, withGuardFindings, withUnaddressable } from './unaddressable-lines.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
+import { doorCall } from './settings-door.js'
 
 /** What one contract call takes (the seeder's and the plugin's own limits); more is refused whole, so it is said first. */
 const MAX_SLOTS = 1500
@@ -160,6 +163,7 @@ export async function runWriteStep(input) {
   let pictures = { active: false, lines: () => [] }
   let hide = null
   let emptied = []
+  let relinked = new Map()
   let shareLines = []
   let settingLines = []
   let links = null
@@ -174,7 +178,7 @@ export async function runWriteStep(input) {
     report.unaddressable = unaddressableOf(unaddressable)
     let lines = []
     if (table) {
-      const hidden = hide?.results({ emptied, refused, settled })
+      const hidden = hide?.results({ emptied, refused, settled, relinked })
       lines = slotLines({
         owners: table.owners,
         // A slot of a row the plan gave up has its own line, as it left with its row.
@@ -204,7 +208,7 @@ export async function runWriteStep(input) {
     report.slots = against.slots
     // Rows kept against the plan, per list (hide-lines.js): what the site check's list-rows holds the printed list to.
     if (table && hide) {
-      const rows = hide.results({ emptied, refused, settled }).rows
+      const rows = hide.results({ emptied, refused, settled, relinked }).rows
       if (rows.length) report.rows = rows
     }
     report.counts = countsOf(report.slots)
@@ -506,6 +510,21 @@ export async function runWriteStep(input) {
   if (hiding.stop) return stopped(hiding.stop)
   hide = hiding
   mapping.emptySlots = hide.emptySlots
+  // A link slot to a hidden page that its kept row keeps (SLOT_NOT_HIDEABLE) is written with a living page instead (card AM).
+  if (Array.isArray(kit.doc?.site?.hiddenPageLinks) && mapping.emptySlots.length) {
+    try {
+      const rows = await menuRows(doorCall(door, siteKey))
+      mapping.relink = relinkOrders({
+        reading: hide.reading,
+        emptySlots: mapping.emptySlots,
+        kit: kit.doc,
+        plan,
+        rows
+      })
+    } catch {
+      // No menu to read: the slots are emptied or refused as before, and the plain text rule at the end still holds them.
+    }
+  }
   if (await isCancelled()) return finish('cancelled', null)
 
   let reading = hide.reading
@@ -545,6 +564,7 @@ export async function runWriteStep(input) {
   })
   report.rounds = wrote.rounds
   emptied = wrote.emptied ?? []
+  relinked = wrote.relinked ?? new Map()
   if (wrote.cancelled) return finish('cancelled', null, [], wrote.refused)
   if (wrote.stop) return finish('stopped', wrote.stop, [], wrote.refused)
   const written = [...wrote.written, ...held]
@@ -624,7 +644,9 @@ export async function runWriteStep(input) {
         kit: kit.doc,
         keptPages: report.keptPages ?? [],
         menutype: hide.settingsExtras?.mainMenu?.menutype ?? null
-      }))
+      })),
+      // And the links in the kit's containers that still lead to a page the plan hid read as plain text (card AM).
+      ...(await hideHiddenPageLinks({ door, siteKey, kit: kit.doc, plan, keptPages: report.keptPages ?? [] }))
     ]
   return finish('done', null, written, wrote.refused)
 }

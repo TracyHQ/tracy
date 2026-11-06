@@ -111,3 +111,30 @@ test(
     }
   }
 )
+
+// An invented card row (card AM): a name linked to a hidden profile, made plain text by the write step's rule, and one to a
+// living page.
+const INERT_PAGE = `<!doctype html><html><body style="margin:0">
+<div class="crew-card"><a class="name" href="/index.php?Itemid=197">Ana Lima</a></div>
+<div class="crew-card"><a class="name" href="/team">Team</a></div>
+<style>.crew-card a[href="/index.php?Itemid=197"]{pointer-events:none!important;cursor:default!important;text-decoration:none!important;color:inherit!important}</style>
+</body></html>`
+
+test('a shown link says whether it takes a click', opts, async () => {
+  const browser = await playwright.chromium.launch()
+  try {
+    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+    await page.setContent(INERT_PAGE)
+    const m = await page.evaluate(measurePageInPage, { tolerance: 2, stretch: 0.05, caps: MEASURE_CAPS })
+    assert.equal(m.shownLinksClickable, true)
+    assert.deepEqual(
+      m.shownLinks.map((l) => [l.text, l.clickable]),
+      [
+        ['Ana Lima', false],
+        ['Team', true]
+      ]
+    )
+  } finally {
+    await browser.close()
+  }
+})

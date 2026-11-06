@@ -9,7 +9,11 @@ import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { isSafeContainer } from '../../../../apps/tracy-web/src/lib/self-link-buttons.js'
-import { containerProblem, declareSelfLinkButtons } from '../template-kit/lib/self-link-buttons.mjs'
+import {
+  containerProblem,
+  declareHiddenPageLinks,
+  declareSelfLinkButtons
+} from '../template-kit/lib/self-link-buttons.mjs'
 
 const CLI = fileURLToPath(new URL('../template-kit/cli.mjs', import.meta.url))
 const CONTAINER = '.more-row'
@@ -66,6 +70,33 @@ test('cli: self-link-buttons writes the kit in place with its own indent, and no
     assert.deepEqual(JSON.parse(written).site.selfLinkButtons, [{ container: CONTAINER, why: WHY }])
     assert.equal(run('--container', CONTAINER, '--why', WHY).status, 0)
     assert.equal(readFileSync(file, 'utf8'), written, 'idempotent')
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('hidden-page-links (card AM) declares link containers the same way, in its own field', () => {
+  const kit = { site: {} }
+  assert.deepEqual(declareHiddenPageLinks(kit, { container: '.crew-card', why: WHY }), {
+    error: null,
+    changed: true
+  })
+  assert.deepEqual(kit.site.hiddenPageLinks, [{ container: '.crew-card', why: WHY }])
+  assert.equal(kit.site.selfLinkButtons, undefined)
+  assert.match(declareHiddenPageLinks(kit, { container: '.a .b', why: WHY }).error, /compound/)
+  const dir = mkdtempSync(join(tmpdir(), 'kit-hidden-'))
+  try {
+    const file = join(dir, 'template-kit.json')
+    writeFileSync(file, `${JSON.stringify({ kit: 'x', site: {} }, null, 2)}\n`)
+    const ok = spawnSync(
+      process.execPath,
+      [CLI, 'hidden-page-links', '--kit', file, '--container', '.crew-card', '--why', WHY],
+      { encoding: 'utf8' }
+    )
+    assert.equal(ok.status, 0, ok.stderr)
+    assert.deepEqual(JSON.parse(readFileSync(file, 'utf8')).site.hiddenPageLinks, [
+      { container: '.crew-card', why: WHY }
+    ])
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
