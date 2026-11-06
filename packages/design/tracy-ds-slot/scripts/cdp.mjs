@@ -104,6 +104,10 @@ async function launch(/** @type {number} */ wait) {
       '--no-first-run',
       '--hide-scrollbars',
       '--proxy-server=direct://',
+      // a container's /dev/shm is 64 MB: a page that loads a hundred fonts and pictures at once fills it and Chrome
+      // kills the page's renderer (JA Restaurant EmDash's home page, 05/11/2026: `Inspector.targetCrashed` 0.1 s
+      // after the document committed, then every call unanswered). Chrome's shared memory goes to /tmp instead
+      '--disable-dev-shm-usage',
       // no keychain: every fresh profile otherwise asks macOS's keychain for its storage key, and with several
       // lanes launching a Chrome per page the keychain daemons (secd, ctkd) took the machine's CPU and pages
       // timed out (15/10/2026). A measure stores no secret
@@ -158,8 +162,20 @@ async function connect(
   })
   let id = 0
   const pending = new Map()
+  // set when the page's renderer dies (`Inspector.targetCrashed`): Chrome then answers no call for that page, and
+  // every wait below would run to its own limit (minutes) before saying nothing useful
+  /** @type {Error | null} */
+  let crashed = null
   ws.onmessage = (e) => {
     const m = JSON.parse(e.data)
+    if (m.method === 'Inspector.targetCrashed' && m.sessionId) {
+      crashed = new Error(
+        'Chrome: the page crashed (its renderer died; a container with a small /dev/shm does this)'
+      )
+      for (const f of pending.values()) f.no(crashed)
+      pending.clear()
+      return
+    }
     // a page's alert() or confirm() holds every script call until it is answered: answered at once
     if (m.method === 'Page.javascriptDialogOpening' && m.sessionId) {
       const n = ++id
@@ -238,6 +254,7 @@ async function connect(
   // the flow waited for hours on a target that was gone) fails after 10 minutes instead of hanging
   const send = (method, params = {}, sessionId) =>
     new Promise((ok, no) => {
+      if (crashed && sessionId) return no(crashed)
       const n = ++id
       const t = setTimeout(() => {
         pending.delete(n)
@@ -297,6 +314,7 @@ async function connect(
           expression: 'document.readyState',
           returnByValue: true
         }).catch(() => null)
+        if (crashed) throw crashed
         if (r?.result?.value === 'complete') break
         await new Promise((ok) => setTimeout(ok, 500))
       }

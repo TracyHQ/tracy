@@ -1,0 +1,1 @@
+{"id":"REG-PR-410-emdash-provision-wait-loopback","verdict":"PASS","commit":"1835657c71bfad457297683dca5e107872bd7301","ran_at":"2026-11-05T18:33:00.620Z","evidence":"tests/regression/.runs/2026-11-05-1835657c7/REG-PR-410-emdash-provision-wait-loopback.log"}
