@@ -3,6 +3,9 @@
 // was read of it, so a template's other settings, whatever they are, stay as they were and stay green.
 import { fallbackBlocksIn, isFallbackBlock, withoutFallbackBlocks } from '../lib/printed-in-body.js'
 import { HEAD_END, HEAD_START } from './brand-head-block.js'
+import { videoBlockFor, videoBlockIn, withVideoBlock } from '../lib/empty-video-buttons.js'
+import { isSelfLinkBlock, selfLinkBlockIn, withSelfLinkBlock } from '../lib/self-link-buttons.js'
+import { hiddenLinkBlockIn, isHiddenLinkBlock, withHiddenLinkBlock } from '../lib/hidden-page-links.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
 import { emphasisOnlyUpdate } from './look-guard-emphasis.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
@@ -188,10 +191,73 @@ function headFaults(inside, what) {
   return faults
 }
 
+/**
+ * The empty video button block (ADR 0044, decision 29): it may hold exactly the rule for the selectors the kit names, or be
+ * taken off. The rest of the module is judged without it, as the head block and the accent module always were.
+ */
+function videoBlockFaults(what, raw, heldRaw, selectors) {
+  const block = videoBlockIn(raw)
+  if (!block || block === videoBlockIn(heldRaw) || block === videoBlockFor(selectors)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} empty video buttons`,
+      'the empty video button block holds only the hide rule for the selectors the kit names'
+    )
+  ]
+}
+
+/**
+ * The self link block (ADR 0044, decision 29, second use): it may hold only hide rules scoped to one page each, on the containers
+ * the kit names, or be what the site held already.
+ */
+function selfLinkBlockFaults(what, raw, heldRaw, containers) {
+  const block = selfLinkBlockIn(raw)
+  if (!block || block === selfLinkBlockIn(heldRaw) || isSelfLinkBlock(block, containers)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} self link buttons`,
+      'the self link block holds only hide rules, one page each, on the containers the kit names'
+    )
+  ]
+}
+
+/** The hidden page link block (card AM): only the inert rule on links in the containers the kit names, or what the site held. */
+function hiddenLinkBlockFaults(what, raw, heldRaw, containers) {
+  const block = hiddenLinkBlockIn(raw)
+  if (!block || block === hiddenLinkBlockIn(heldRaw) || isHiddenLinkBlock(block, containers)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} hidden page links`,
+      'the hidden page link block holds only the plain text rule on links in the containers the kit names'
+    )
+  ]
+}
+
+const withoutMarked = (text) => withHiddenLinkBlock(withSelfLinkBlock(withVideoBlock(text, null), null), null)
+
 /** What a module's content may change: the accent style alone, or the head block with all around it as the site held it. */
 function moduleContentFaults(id, content, { state }) {
   const what = `module ${id ?? '(new)'} content`
-  const text = String(content ?? '')
+  const raw = String(content ?? '')
+  const heldRaw = String(state.rows.get(`module:${id}`)?.content ?? '')
+  const marked = [
+    ...videoBlockFaults(what, raw, heldRaw, state.videoSelectors ?? []),
+    ...selfLinkBlockFaults(what, raw, heldRaw, state.selfLinkContainers ?? []),
+    ...hiddenLinkBlockFaults(what, raw, heldRaw, state.hiddenLinkContainers ?? [])
+  ]
+  const text = withoutMarked(raw)
+  const held = withoutMarked(heldRaw)
+  const touched = [raw, heldRaw].some((t) => videoBlockIn(t) || selfLinkBlockIn(t) || hiddenLinkBlockIn(t))
+  // A write of the marked blocks alone: everything else of the module stays as the site held it.
+  if (touched && text.trim() === held.trim()) return marked
+  return [...marked, ...restFaults(text, held, what, state)]
+}
+
+/** The accent module, or the head block with all around it as the site held it. */
+function restFaults(text, held, what, state) {
   if (text.includes(ACCENT_MARK)) {
     const { blocks, rest } = stylesOf(text)
     const faults = blocks.flatMap((b) =>
@@ -210,7 +276,6 @@ function moduleContentFaults(id, content, { state }) {
       fault(WRITE, what, 'only the accent module and the head block are open to a write of a whole module')
     ]
   const inside = text.slice(from + HEAD_START.length, to)
-  const held = String(state.rows.get(`module:${id}`)?.content ?? '')
   const heldFrom = held.indexOf(HEAD_START)
   const heldTo = held.indexOf(HEAD_END)
   const heldOut =

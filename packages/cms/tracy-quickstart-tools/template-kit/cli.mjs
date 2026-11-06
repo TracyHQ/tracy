@@ -50,6 +50,19 @@
 //                 (site.createdPageLayouts.legal, lib/legal-layout.mjs: the plain article layout a created legal page
 //                 prints through, never a content page's own file; --none: the component's default. A person reads the
 //                 template's article layouts first; nothing is measured, and no image moves, so an approval stays valid)
+//   cli.mjs video-buttons --kit <template-kit.json> --selector '<css>' --why '<where the template prints it>'
+//   cli.mjs video-buttons --kit <template-kit.json> --none
+//                 (site.emptyVideoButtons, lib/video-buttons.mjs: a play button the template prints with an empty video
+//                 address, which the write step hides with one CSS rule; --none says the template has none. A person reads
+//                 the template's layout first; nothing is measured, and no image moves, so an approval stays valid)
+//   cli.mjs self-link-buttons --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
+//   cli.mjs self-link-buttons --kit <template-kit.json> --none
+//                 (site.selfLinkButtons, lib/self-link-buttons.mjs: the container of a "more" button that may lead to the
+//                 page it sits on, which the write step hides on that page only; same reading, no image moves)
+//   cli.mjs hidden-page-links --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
+//   cli.mjs hidden-page-links --kit <template-kit.json> --none
+//                 (site.hiddenPageLinks: the container of list row links that may lead to a page the plan hides, which the
+//                 write step sends to a living page or makes plain text; same reading, no image moves)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -81,6 +94,8 @@ import { writeSheets } from './lib/sheets.mjs'
 import { adapterFor } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
+import { declareVideoButtons } from './lib/video-buttons.mjs'
+import { declareHiddenPageLinks, declareSelfLinkButtons } from './lib/self-link-buttons.mjs'
 
 const COMMANDS = [
   'build',
@@ -316,11 +331,56 @@ function legalLayout(o) {
   return 0
 }
 
+/** Declare a play button with an empty video address in a written kit (lib/video-buttons.mjs). */
+function videoButtons(o) {
+  if (!str(o.kit) || (!o.none && !str(o.selector)))
+    throw new Error(
+      "video-buttons needs --kit <template-kit.json> and --selector '<css>' --why '<words>', or --none"
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declareVideoButtons(kit, { selector: str(o.selector), why: str(o.why), none: o.none === true })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  console.log(
+    `${kit.site.emptyVideoButtons.length} empty video buttons named${r.changed ? '' : ', unchanged'}`
+  )
+  return 0
+}
+
+/** Declare a container of links in a written kit under one `site` field (lib/self-link-buttons.mjs). */
+function containers(o, command, declare, field, words) {
+  if (!str(o.kit) || (!o.none && !str(o.container)))
+    throw new Error(
+      `${command} needs --kit <template-kit.json> and --container '<css>' --why '<words>', or --none`
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declare(kit, { container: str(o.container), why: str(o.why), none: o.none === true })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  console.log(`${kit.site[field].length} ${words} named${r.changed ? '' : ', unchanged'}`)
+  return 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
   if (cmd === 'looks') return looks(o)
   if (cmd === 'legal-layout') return legalLayout(o)
+  if (cmd === 'video-buttons') return videoButtons(o)
+  if (cmd === 'self-link-buttons')
+    return containers(o, cmd, declareSelfLinkButtons, 'selfLinkButtons', 'self link containers')
+  if (cmd === 'hidden-page-links')
+    return containers(o, cmd, declareHiddenPageLinks, 'hiddenPageLinks', 'hidden page link containers')
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||

@@ -31,6 +31,8 @@
 //   list-rows          block  9 write       reach-measures.js: a list prints the rows the plan keeps, and no empty item
 //   map-location       block  9 write       reach-measures.js: a map is not at the demo's place, and near the business
 //   phone-callable     block  0 template    reach-measures.js: a brief phone the page prints sits inside a tel: link
+//   empty-video-buttons block 9 or 0       video-buttons.js: no shown control opens a video player with no video; 9 when the kit names a hide rule
+//   hidden-page-links  block  9 write       hidden-page-links.js: no shown link that takes a click leads to a page the plan hid
 //
 // Faults that need the meaning understood (does an icon suit the words, is a sentence clumsy) are step 12's, a person with eyes.
 import { accentEmphasisGroup } from './accent-emphasis.js'
@@ -57,6 +59,8 @@ import { planLinksGroup } from './plan-links.js'
 import { addressWords, mapsAddress } from '../lib/map-links.js'
 import { listRowsGroup, mapLocationGroup, phoneCallableGroup } from './reach-measures.js'
 import { unownedShownGroup } from './unowned-shown.js'
+import { emptyVideoButtonsGroup } from './video-buttons.js'
+import { hiddenPageLinksGroup } from './hidden-page-links.js'
 
 /** A maps link the host calls off-site that searches an address the demo baseline's maps do not name. */
 function movedMapLink(finding, { baseline }) {
@@ -196,5 +200,7 @@ export const PAGE_CHECK_GROUPS = [
   planLinksGroup,
   listRowsGroup,
   mapLocationGroup,
-  phoneCallableGroup
+  phoneCallableGroup,
+  emptyVideoButtonsGroup,
+  hiddenPageLinksGroup
 ]

@@ -7,8 +7,8 @@
 //     pictures: [{ selector, src, naturalWidth, naturalHeight, width, height, fit }],
 //     controls: [{ selector, fault: 'wordless' | 'nowhere', href, text }], fields: [{ selector, name }],
 //     glued: [{ selector, text, around }], headings: [text], mainHeadings: [text], shownText,
-//     minorHeadings: [text], hiddenHeadings: [text], selfLinks: [{ selector, text, href }], contentControls: [{ key, text }], view,
-//     title, shownLinks: [{ href, text }], shownPictures: [src], brandStyle?, look? }
+//     minorHeadings: [text], hiddenHeadings: [text], selfLinks: [{ selector, text, href, holders }], contentControls: [{ key, text }], view,
+//     title, shownLinks: [{ href, text, clickable }], shownLinksClickable, shownPictures: [src], brandStyle?, look? }
 
 /** A box counts as overflowed only past this many pixels, so rounding in the browser is no finding. */
 export const OVERFLOW_TOLERANCE_PX = 2

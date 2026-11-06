@@ -37,7 +37,8 @@ function siteSlots(kit, extra) {
  * A site behind the door. `refuse` maps a content map key to the entry the plugin lists for it; while a refused key is in
  * the changes the whole apply is refused and nothing lands. `answers` overrides the next apply answers, in order.
  * The hide orders (write-step/hide-stage.js) are answered as the plugin does, see `hideDoor` in `_write-step-hide.mjs`.
- * @param {{ refuse?: Record<string, object>, refuseWhen?: (key: string, value: string) => object | null, answers?: object[], contract?: string, slots?: object[],
+ * @param {{ refuse?: Record<string, object>, refuseWhen?: (key: string, value: string) => object | null, refuseEmpty?: Record<string, object>,
+ *   answers?: object[], contract?: string, slots?: object[],
  *   inspect?: object, extraKeys?: string[], hideDoor?: Function, overSlot?: (slot: object) => object }} [script]
  */
 export function fakeSite(script = {}) {
@@ -139,12 +140,17 @@ export function fakeSite(script = {}) {
         // `refuseWhen(key, value)` refuses one value of a slot and takes another (an emptied slot has the value '').
         const entryOf = (k) => script.refuse?.[k] ?? script.refuseWhen?.(k, call.params.changes?.[k] ?? '')
         const refused = [...Object.keys(call.params.changes ?? {}), ...emptied].filter((k) => entryOf(k))
-        if (refused.length)
+        // `refuseEmpty`: refused only as an empty, as the plugin refuses a slot that goes only with its row.
+        const unemptied = emptied.filter((k) => script.refuseEmpty?.[k] && !refused.includes(k))
+        if (refused.length || unemptied.length)
           return {
             ok: false,
             error: 'contract_failed',
             message: 'The content contract refused some slots',
-            errors: refused.map((k) => ({ ...entryOf(k), field: { slotKey: k } }))
+            errors: [
+              ...refused.map((k) => ({ ...entryOf(k), field: { slotKey: k } })),
+              ...unemptied.map((k) => ({ ...script.refuseEmpty[k], field: { slotKey: k } }))
+            ]
           }
         Object.assign(held, call.params.changes)
         for (const key of emptied) held[key] = ''

@@ -427,6 +427,77 @@ pictures written but none compared, or without the manifest, it is unmeasured, w
 manifest's `altCheck` says `deferred` (to this group) without a copy file, `compared` with one. Sending a finding back to
 the writer automatically is not part of this decision.
 
+### 29. A play button with an empty video address is hidden by one CSS rule the kit names
+
+Owner's decision, 2026-11-06. Measured on a bench site with the JA Boxing 1.0.11 kit: the plan hid every video id (no video in
+the brief), the write step emptied them, and the four class pages still showed 16 play buttons over the new pictures, each
+opening an empty YouTube player. The template's session cards (`html/com_content/article/classes.php`) print `a.video-btn` with
+`data-src="https://www.youtube.com/embed/"` plus the id, with no check that the id is set. The block above them prints only with
+an id, so decision 11's fallback already covers it; the cards print the picture, so nothing asked about the button.
+
+This is the one exception to decision 2. The button is not a slot: it has no words a search engine reads and nothing the owner
+edits, and removing it needs a template release that sites already made would not get. So:
+
+- The kit names, per template, the selector of its play buttons with an empty address (`site.emptyVideoButtons`: `selector`,
+  `why`), declared when packaging (`template-kit/cli.mjs video-buttons`). The selector must test the address
+  (`[data-src$="/embed/"]`) and hold only plain selector characters (`lib/empty-video-buttons.js`). JA Boxing 1.0.11 is the
+  first; another template adds its own when packaged, and `[]` says it has none.
+- After the contract call, the write step writes `<selectors>{display:none!important}` between its own markers in the kit's
+  head injection block (`write-step/video-buttons-stage.js`), the brand block kept, read back from the module. The rule keys
+  on the empty address, so a video filled later shows its button again with nothing to take off. A kit without the field
+  sends nothing; the block is written only when it differs.
+- The look guard (decision 10) lets that block hold exactly the rule for the kit's selectors (`empty-video-buttons`), and
+  judges the rest of the module as before.
+- The host answers `videoButtons` per page (shown elements naming a video player's address). `empty-video-buttons` (block)
+  fails every shown one whose address names no video: on step 9 when the kit names a rule or the report has its line, on
+  step 0 when the kit names none. A host without the measure leaves it unmeasured (decision 18).
+
+**Third use: a link in a kept row that leads to a page the plan hides (card AM).** Owner's decision, 2026-11-06. Measured on a
+bench site with the JA Boxing 1.0.11 kit: the plan dropped the demo trainer's profile page (menu item 197, unpublished), and the
+coach cards it kept on the home, About and Coaches pages still linked name and photo there (`block-163.8`, `.9`,
+`block-178.16`, `.17`, value `index.php?Itemid=197`), so a click answered 404. The plugin empties such a slot only with its row
+(`SLOT_NOT_HIDEABLE`). The kit names the containers of such links (`site.hiddenPageLinks`, `template-kit/cli.mjs
+hidden-page-links`; JA Boxing 1.0.11 names `.teams-item`), and on a kit that does:
+
+- Before the contract call, each link slot the plan empties whose address is a hidden page's (a page the plan drops, or a menu
+  item left unpublished) is given the address of a living page of the plan: the nearest kept page above it (a profile goes to
+  the page listing the coaches), else the first kept page that holds the block (`write-step/hidden-page-links-stage.js`). The
+  contract call writes that address only when the plugin refuses the empty with `SLOT_NOT_HIDEABLE` (`contract-write.js`), and
+  the line is written with the plugin's words and the address, read back like any slot. When the door refuses the address too,
+  the line is failed and says both refusals.
+- Last of the writes, one rule between its own markers in the head injection block makes a link in those containers whose
+  address is still a hidden page's plain text: `pointer-events:none`, `cursor:default`, no underline, the colour around it. The
+  rule names hidden pages by their exact addresses (`lib/hidden-page-links.js`), so a link to a living page is never touched; the
+  look guard lets that block hold only it (`hidden-page-links`).
+- The host's `shownLinks` say whether a link takes a click (`clickable`), and `hidden-page-links` (block, step 9) fails every
+  shown link that does and leads to a hidden page. A host without the read leaves it unmeasured.
+
+The plugin also has `template.files.write`, which could put the rule in a T4 template's `local/css/custom.css` (T4 reads it
+local first, and a template update keeps `local/`). It was not used: an unlisted file under a locked template root reads as
+presentation drift in every later contract call, and the head block is already the write step's door for CSS.
+
+
+**Second use: a "more" button that leads to the page it sits on (card AF).** Owner's decision, 2026-11-06. Measured on a bench
+site with the JA Boxing 1.0.11 kit: the Coaches page showed a VIEW MORE button under the coach cards that opens the Coaches page
+itself. The template's section chrome (`html/layouts/chromes/t4section.php`) prints `div.bottom-actions` from the module params
+`title-btn` and `link-btn`, which no contract slot reaches (issue #369), and module-178 links it to its own menu item. The same
+exception applies, with the same shape:
+
+- The kit names, per template, the containers of such buttons (`site.selfLinkButtons`: `container`, `why`), declared when
+  packaging (`template-kit/cli.mjs self-link-buttons`). A container is one compound selector, a tag, an id or classes with no
+  combinator (`lib/self-link-buttons.js`). JA Boxing 1.0.11 names `.bottom-actions`.
+- Last of the writes, after the route stage, the write step writes between its own markers in the head injection block one rule
+  per kept page, menu item opening it, container and own address
+  (`body.com_content.view-category.item-195 .bottom-actions a[href="/about-us/coaches"]{display:none!important}`, with
+  `/index.php/...`, `index.php?Itemid=195` and `/index.php?Itemid=195`), from the kept pages at the address they answer now and
+  the menu rows read then (`write-step/self-link-buttons-stage.js`). The body classes are T4's (option, view, menu item id); the
+  view keeps the rule off an article opened under the same item, and a row whose view cannot be read gets no rule. Each rule
+  names the page's own addresses exactly, so a link to another page is never hidden.
+- The look guard lets that block hold only such rules on the kit's containers (`self-link-buttons`).
+- The host's `selfLinks` carry `holders` (the elements around the link, nearest first). `self-links` blames step 9 for a shown
+  button to its own page inside a container the kit names, and decides the owner as before otherwise (step 0 when no slot
+  holds it).
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

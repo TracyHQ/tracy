@@ -428,6 +428,19 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    `cli.mjs legal-layout --kit <kit dir>/template-kit.json --layout ja_boxing:default --why '<what it prints>'`, or
    `--none --why '<words>'` when the component's default article is right. The write step prints a privacy or terms
    page it creates through that file, never through the content pages' own one.
+9. Name the **play buttons with an empty video address** (`site.emptyVideoButtons`, Tracy ADR 0044 decision 29): read
+   the template's layouts for a video play button whose address is built from a video field with no check that it is
+   set (JA Boxing `html/com_content/article/classes.php`: `data-src="https://www.youtube.com/embed/<id>"`), then
+   `cli.mjs video-buttons --kit <kit dir>/template-kit.json --selector '.video-btn[data-src$="/embed/"]' --why '<where>'`
+   once per such button, or `--none` when the template has none. The selector must test the address, so a button
+   with a video is never hidden; the write step hides the listed ones with one CSS rule in the head injection block,
+   and the site check's `empty-video-buttons` group blocks on any shown control that opens an empty player.
+   In the same reading, `cli.mjs self-link-buttons --kit <kit dir>/template-kit.json --container '.bottom-actions' --why '<where>'`
+   names the container of a "more" button the template prints from settings no slot reaches (or `--none`); the write step
+   hides, on each kept page only, a link there whose address is that page's own.
+   `cli.mjs hidden-page-links --kit <kit dir>/template-kit.json --container '.teams-item' --why '<where>'` names the
+   container of list row links (a card's name and photo) that may lead to a page the plan hides; the write step sends such a
+   link to a living page, or makes it plain text.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
 shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one

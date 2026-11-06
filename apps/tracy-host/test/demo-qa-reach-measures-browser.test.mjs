@@ -46,3 +46,95 @@ test('lists, maps and phones are read as a visitor sees them', opts, async () =>
     await browser.close()
   }
 })
+
+// An invented card row: two play buttons with an empty player address, one hidden by the write step's rule, and one with a video.
+const VIDEO_PAGE = `<!doctype html><html><body style="margin:0">
+<div class="card"><img src="data:," width="200" height="120"><a class="play-chip" data-src="https://www.youtube.com/embed/" href="#">Play</a></div>
+<div class="card hidden-one"><a class="play-chip" data-src="https://www.youtube.com/embed/" href="#">Play</a></div>
+<div class="card"><a class="play-chip" data-src="https://www.youtube.com/embed/abc123" href="#">Play</a></div>
+<style>.hidden-one .play-chip[data-src$="/embed/"]{display:none!important}</style>
+</body></html>`
+
+test(
+  'video controls are read with the address they open, and a control the page hides is not',
+  opts,
+  async () => {
+    const browser = await playwright.chromium.launch()
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+      await page.setContent(VIDEO_PAGE)
+      const m = await page.evaluate(measurePageInPage, { tolerance: 2, stretch: 0.05, caps: MEASURE_CAPS })
+      assert.deepEqual(
+        m.videoButtons.map((b) => [b.selector, b.attribute, b.address]),
+        [
+          ['a.play-chip', 'data-src', 'https://www.youtube.com/embed/'],
+          ['a.play-chip', 'data-src', 'https://www.youtube.com/embed/abc123']
+        ]
+      )
+    } finally {
+      await browser.close()
+    }
+  }
+)
+
+// An invented page at /team (card AF): T4 body classes, a "more" button to the page itself in a container the write step's rule
+// hides, the same button in a container no rule names, and a "more" button to another page that the rule must leave.
+const SELF_PAGE = `<!doctype html><html><body class="com_content view-category item-195" style="margin:0">
+<div class="more-row"><a class="btn more" href="/team">See more</a></div>
+<div class="more-row"><a class="btn more" href="/prices">See prices</a></div>
+<section class="other-row"><div><a class="btn more" href="/index.php/team">More</a></div></section>
+<style>body.com_content.view-category.item-195 .more-row a[href="/team"],body.com_content.view-category.item-195 .more-row a[href="/index.php/team"]{display:none!important}</style>
+</body></html>`
+
+test(
+  'a button to its own page is read with its holders, and one the self link rule hides is not',
+  opts,
+  async () => {
+    const browser = await playwright.chromium.launch()
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+      await page.route('http://site.test/**', (route) =>
+        route.fulfill({ status: 200, contentType: 'text/html', body: SELF_PAGE })
+      )
+      await page.goto('http://site.test/team')
+      const m = await page.evaluate(measurePageInPage, { tolerance: 2, stretch: 0.05, caps: MEASURE_CAPS })
+      assert.equal(m.selfLinks.length, 1)
+      assert.equal(m.selfLinks[0].text, 'More')
+      assert.deepEqual(m.selfLinks[0].holders.slice(0, 2), [
+        { tag: 'div', id: null, classes: [] },
+        { tag: 'section', id: null, classes: ['other-row'] }
+      ])
+      const prices = await page.$eval('a[href="/prices"]', (a) => getComputedStyle(a).display)
+      assert.notEqual(prices, 'none', 'a link to another page stays')
+    } finally {
+      await browser.close()
+    }
+  }
+)
+
+// An invented card row (card AM): a name linked to a hidden profile, made plain text by the write step's rule, and one to a
+// living page.
+const INERT_PAGE = `<!doctype html><html><body style="margin:0">
+<div class="crew-card"><a class="name" href="/index.php?Itemid=197">Ana Lima</a></div>
+<div class="crew-card"><a class="name" href="/team">Team</a></div>
+<style>.crew-card a[href="/index.php?Itemid=197"]{pointer-events:none!important;cursor:default!important;text-decoration:none!important;color:inherit!important}</style>
+</body></html>`
+
+test('a shown link says whether it takes a click', opts, async () => {
+  const browser = await playwright.chromium.launch()
+  try {
+    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+    await page.setContent(INERT_PAGE)
+    const m = await page.evaluate(measurePageInPage, { tolerance: 2, stretch: 0.05, caps: MEASURE_CAPS })
+    assert.equal(m.shownLinksClickable, true)
+    assert.deepEqual(
+      m.shownLinks.map((l) => [l.text, l.clickable]),
+      [
+        ['Ana Lima', false],
+        ['Team', true]
+      ]
+    )
+  } finally {
+    await browser.close()
+  }
+})
