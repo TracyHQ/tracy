@@ -137,6 +137,11 @@ export function repairLog({
     version: REPAIR_LOG_VERSION,
     site,
     counts: { found: records.length, ...counts, newBlocking: newBlocking.length },
+    // How the checker's crops were cut: the repaired block, or the whole tile when no box held its words (repair-crops.js).
+    cropModes: {
+      block: records.filter((r) => r.crops?.by === 'block').length,
+      tile: records.filter((r) => r.crops?.by === 'tile').length
+    },
     records,
     // How the finder's faults and the first site check's failures were merged (fault-sources.js).
     merge,

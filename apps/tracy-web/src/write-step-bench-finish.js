@@ -143,6 +143,8 @@ export async function finishRun(d, values) {
       `  ${record.outcome} page=${record.page ?? '-'} slot=${record.slot ?? '-'} kind=${record.faultKind ?? '-'}${record.reason ? `: ${record.reason}` : ''}${record.crops.by ? ` (crops: ${record.crops.by})` : ''}`
     )
   if (finished.log.merge) d.out(mergeLine(finished.log.merge))
+  const crops = finished.log.cropModes
+  if (crops) d.out(`crops: ${crops.block} by block, ${crops.tile} by tile`)
   for (const line of spendLines(finished.log)) d.out(line)
   for (const line of checkLines(finished.finalCheck)) d.out(line)
   d.out(

@@ -18,21 +18,23 @@ const squash = (value) =>
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase()
+const bare = (value) => squash(value).replace(/ /g, '')
 const clamp = (n, low, high) => Math.min(Math.max(n, low), high)
 
 /**
  * The box of the element that prints these words on that page and width: the smallest whose text holds them, as stored
- * (markup printed raw) or as read (markup taken out). Null when no box holds them.
+ * (markup printed raw) or as read (markup taken out), spaces aside: the host reads an element's text content, where a line
+ * break the template hides leaves no space ("Strengthnow"). Null when no box holds them.
  */
 export function blockBox(boxes, { page, viewport }, words) {
   const wanted = [...new Set([squash(words), squash(visibleText(words))])]
     .filter(Boolean)
-    .map((w) => w.slice(0, LOOKED_FOR))
+    .map((w) => bare(w).slice(0, LOOKED_FOR))
   if (!wanted.length) return null
   let smallest = null
   for (const box of boxes) {
     if (box.page !== page || box.viewport !== viewport) continue
-    const text = squash(box.text)
+    const text = bare(box.text)
     if (!wanted.some((w) => text.includes(w))) continue
     if (!smallest || box.width * box.height < smallest.width * smallest.height) smallest = box
   }

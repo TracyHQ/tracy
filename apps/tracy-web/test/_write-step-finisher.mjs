@@ -213,9 +213,10 @@ const viewportJpeg = async (width, height) => {
  * page order, each holding the slot's words as the site prints them. Without `held`, no box is given. A page in `failing`
  * ends its views unshot, as a page the browser could not open does. Every call's paths are kept in `calls`, its layouts as
  * sent in `layoutsAsked`.
- * @param {{ held?: Record<string, string>, failing?: string[] }} [input]
+ * `boxText` turns a slot's words into the text the host reads off its element (as given, unless a test says otherwise).
+ * @param {{ held?: Record<string, string>, failing?: string[], boxText?: (words: string) => string }} [input]
  */
-export function fakeCapture({ held = null, failing = [] } = {}) {
+export function fakeCapture({ held = null, failing = [], boxText = (words) => words } = {}) {
   const calls = []
   const layoutsAsked = []
   const onPage = { '/': ['module-2.1', 'module-3.1', 'module-3.2'], '/about': ['module-4.1'] }
@@ -234,7 +235,7 @@ export function fakeCapture({ held = null, failing = [] } = {}) {
               y: 120 + i * 200,
               width: width - 80,
               height: 90,
-              text: held[key]
+              text: boxText(held[key])
             }))
           : undefined
         if (failing.includes(layout.path)) {

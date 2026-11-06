@@ -71,18 +71,39 @@ export function everyRepairChecker(verdict = 'better', reason = 'reads as words'
 }
 
 const kits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS, pages: PAGES })
+/** The kit's head injection block, module 9, where a style repair is written (finisher-style.js). */
+const HEAD_MODULE = 9
+const HEAD_SITE = { head: { injection: { position: { block: `block-${HEAD_MODULE}` }, maxBytes: 65535 } } }
+const headKits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS, pages: PAGES, site: HEAD_SITE })
+
+/** The written site with the head module behind `content.get` and `content.update`, as a style repair needs it. */
+function withHeadModule(site) {
+  const module = { content: '' }
+  const inner = site.door.apply
+  site.door.apply = async (call) => {
+    const { action, params } = call
+    if (action !== 'content.get' && action !== 'content.update') return inner(call)
+    if (params.id !== HEAD_MODULE) return { ok: false, error: 'not_found', message: `no module ${params.id}` }
+    if (action === 'content.get') return { ok: true, item: { id: HEAD_MODULE, content: module.content } }
+    module.content = params.fields.content
+    return { ok: true }
+  }
+  return { ...site, module }
+}
 const dirs = []
 
 /** Removes the kit index and the output folders; call it from `after`. */
 export function cleanUp() {
   kits.done()
+  headKits.done()
   for (const dir of dirs) rmSync(dir, { recursive: true, force: true })
 }
 
 /**
  * @param {{ finder: object, fixer: object, checker: object, served?: ((held: object) => (page: string) => string) | null,
  *   limits?: object, clock?: object, sideEffect?: object | null, first?: object, files?: Record<string, object> | null,
- *   held?: Record<string, string> }} input
+ *   held?: Record<string, string>, head?: boolean, boxText?: Function }} input `head` gives the kit a head injection
+ *   module, so a style repair can be written; `boxText` is what the host reads off a slot's element (fakeCapture)
  *   `finder`, `fixer`, `checker` are doors as scriptedDoor makes them; `served` renders a page from what the site holds now
  */
 export async function finishOn({
@@ -96,10 +117,13 @@ export async function finishOn({
   first = {},
   timer = null,
   files = null,
-  held = heldAtStart()
+  held = heldAtStart(),
+  head = false,
+  boxText = undefined
 }) {
-  const site = writtenSite({ ...held }, { sideEffect })
-  const shots = fakeCapture({ held: site.held })
+  const written = writtenSite({ ...held }, { sideEffect })
+  const site = head ? withHeadModule(written) : written
+  const shots = fakeCapture({ held: site.held, boxText })
   const out = []
   const err = []
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-run-'))
@@ -115,7 +139,7 @@ export async function finishOn({
   const code = await runCli(argv, {
     runs,
     store: memoryStore([benchSite()]),
-    index: kits.index,
+    index: (head ? headKits : kits).index,
     makeDoor: () => site.door,
     makeCapture: async () => shots.capture,
     makeFinisherDoors: async () => ({ finder: finder.door, fixer: fixer.door, checker: checker.door }),

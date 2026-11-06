@@ -7,12 +7,32 @@
 //     by its unchanged words; undone by putting back that block's rule as it was. A kept style changes no words of the report.
 // `place` names what a write reads and writes whole (work-pool.js): two writes of one place never cross. Every contract apply
 // is checked against the site's one revision, so it is read again inside the lock, right before the write.
+import { visibleText } from '../../lib/site-copy/emphasis-markup.js'
 import { CODE_JUDGED } from './code-judge.js'
 import { isUnseenRepair } from './live-confirm.js'
 import { readSite, revertRepair, writeRepair } from './repair-write.js'
 import { takeOffStyleRule, writeStyleRule } from './style-write.js'
 
 /** @typedef {{ run: object, fault: object, order: object, valid: object, site: object, number: number }} Repair */
+
+const squashBare = (s) =>
+  String(s ?? '')
+    .replace(/\s+/g, '')
+    .toLowerCase()
+
+/**
+ * The words a styled block is found by on the shots: the slot the fault names; else, of the block's own slots this run
+ * wrote, the one whose words the fault quoted (spacing aside, so glued words count), else its first with words. Empty when
+ * the block holds no written words, and the crops fall back to the tile.
+ */
+export function styleBlockWords(run, fault, site, block) {
+  const held = (slot) => site.current.get(run.lineOf(slot)?.key) ?? ''
+  if (fault.slot) return held(fault.slot)
+  const own = [...run.kitSlots].filter((slot) => slot.replace(/\.[^.]*$/, '') === block).map(held)
+  const seen = squashBare(fault.seen)
+  const words = own.filter((w) => visibleText(w))
+  return words.find((w) => seen.includes(squashBare(visibleText(w)))) ?? words[0] ?? ''
+}
 
 const CONTRACT = 'contract'
 
@@ -54,9 +74,9 @@ export const STYLE_STEPS = Object.freeze({
       line: valid.line,
       repair: number
     }),
-  // A style leaves the words as they are, so the block is found by the words its fault's slot holds.
-  judgeBy: ({ run, fault, site }) => {
-    const words = site.current.get(run.lineOf(fault.slot)?.key) ?? ''
+  // A style leaves the words as they are, so the block is found by words it holds (styleBlockWords).
+  judgeBy: ({ run, fault, site, valid }) => {
+    const words = styleBlockWords(run, fault, site, valid.block)
     return { judgeBy: 'checker', wordsBefore: words, wordsAfter: words }
   },
   undo: ({ run, valid, wrote, number }) =>
