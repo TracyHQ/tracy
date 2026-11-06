@@ -83,12 +83,14 @@ export function fakeClock(start = 1_000_000) {
 
 /**
  * A contract index holding a made-up kit in a temporary folder, as the shipped kits are read. `done()` removes it.
- * @param {{ release?: string, contract?: string, pages?: { path: string }[] }} [over]
+ * @param {{ release?: string, contract?: string, pages?: { path: string }[], tool?: string }} [over]
+ *   `tool`: the template-kit tool that settled the kit, which the site check's kit-version reads
  */
 export function kitIndex({
   release = 'demo-gym/j6',
   contract = SPEC.contract,
-  pages = [{ path: '/' }, { path: '/about' }]
+  pages = [{ path: '/' }, { path: '/about' }],
+  tool
 } = {}) {
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-kit-'))
   const version = contract.split('/').at(-1)
@@ -97,6 +99,7 @@ export function kitIndex({
     JSON.stringify({
       kit: 'tracy-template-kit/2',
       contract,
+      ...(tool ? { tool } : {}),
       quickstart: { version },
       pages,
       images: [{ id: 'block-1-1440', path: 'images/block-1-1440.jpg', sha256: 'e'.repeat(64) }]
