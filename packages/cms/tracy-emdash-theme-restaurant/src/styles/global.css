@@ -572,7 +572,7 @@
    ═════════════════════════════════════════════════════════════════════════════════════════════ */
 @layer components {
 	.rs-btn-outline { background: var(--color-accent); border: 2px solid var(--ds-c-accent-on, #fff); padding: 13px 78px 13px 20px; margin-top: 30px; position: relative; }
-	.rs-btn-outline::after { content: "→"; position: absolute; right: 0; top: 0; bottom: 0; width: 56px; display: flex; align-items: center; justify-content: center; background: var(--ds-c-surface, #fff); color: var(--color-accent); font-size: 20px; }
+	.rs-btn-outline::after { content: "→"; position: absolute; right: 0; top: 0; bottom: 0; width: 56px; display: flex; align-items: center; justify-content: center; background: var(--ds-c-surface, #fff); color: var(--ds-c-accent-text, var(--color-accent)); font-size: 20px; }
 	.rs-collage-item.is-even .rs-btn-outline::after { color: var(--ds-c-fg, #3a352f); }
 	.rs-btn-lg { padding: 18px 30px; font-size: 14px; }
 	.rs-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
@@ -928,8 +928,8 @@
 
 /* dark: surfaces the light design draws in fixed greys come from the palette */
 html[data-theme="dark"] {
-	--color-photo-ground: var(--color-line-soft);
-	--color-panel: var(--color-line-soft);
+	--color-photo-ground: var(--ds-c-surface-hover, var(--color-line-soft));
+	--color-panel: var(--ds-c-surface-warm, var(--color-line-soft));
 	--color-tag: var(--color-accent-hover);
 }
 

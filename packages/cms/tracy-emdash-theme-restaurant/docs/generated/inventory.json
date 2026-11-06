@@ -1335,7 +1335,7 @@
     "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
     "src/pages/[...path].astro": "sha256:baf3b0a3081174731a779064cf0f5a4d2632e54bf504ea34d2d01ea91dc27335",
     "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
-    "src/styles/global.css": "sha256:a9a98bef41fc0fc8885bb3a950898227f8490a9e27235d06678a2643a6f86ca8",
+    "src/styles/global.css": "sha256:f7a909039ca2d346ec492eb8595538091003e3e3aff76d8a6c43c334133fbc00",
     "src/styles/tokens.css": "sha256:dbb4b8e68ae23bbbda6043fc3b3c9910cdba5ea98ac3b8ef100a4c286c72622c",
     "src/views/BlogList.astro": "sha256:cc6c4d0fbe5b5318ff2c9bddadc29b44e7d5b48c5cdd59d1ade5e312b2a17fe8",
     "src/views/Gallery.astro": "sha256:db00b96fc73a9ad8361a24f3f3115972a839a747371bcb3de796f7e220d19faf",
