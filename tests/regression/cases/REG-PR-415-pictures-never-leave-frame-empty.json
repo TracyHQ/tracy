@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-415-pictures-never-leave-frame-empty",
+  "kind": "fix",
+  "title": "Step 8 never returns a planned frame while a picture can be had, never writes a file narrower than its slot minWidth, and never shows one owner photo twice in one block",
+  "pr": 415,
+  "area": "site-pictures/ladder",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run the run command (three picture step test files, one at a time).",
+    "S2: Read the result of each named test."
+  ],
+  "expect": [
+    "A specific frame the kit cannot hide whose every picture is rejected for a cut-off subject is not returned: it is drawn in two other compositions (centred, whole, with a margin, in the frame's 4:3 shape) and then keeps the best rejected drawing with filledBy { rung: best-rejected, faults: [subject cut off] }; L01 notes it instead of failing it and the export writes it.",
+    "A frame whose every picture had a hard fault is still returned, and the mapping export lists it in problems as 'the plan wants a picture here and the picture step left it without one'.",
+    "An owner photo region narrower than the slot fit.minWidth is refused (narrower-than-min-width); every written file is at least minWidth wide; the export and packageItems(pictures, contentMap) name a narrower file as a problem.",
+    "No gallery block shows one owner photo twice: the reuse and any-photo rungs skip a photo already in the block, a tile with no photo left is drawn (filledBy { rung: draw }), P06 fails one photo twice in one block and the export leaves the second showing out as a problem."
+  ],
+  "selectors": {
+    "ladder": "RUNGS in apps/tracy-web/src/site-pictures/ladder-rungs.js; bestRejectedRung and drawRung in ladder-climb.js",
+    "minWidth": "writeRect and outputSizeFor in apps/tracy-web/src/site-pictures/cut-photo.js; packageItems in apps/tracy-web/src/write-step/picture-package.js",
+    "block": "inBlock in apps/tracy-web/src/site-pictures/ladder-state.js; checkP06 in picture-check/rules-sources.js",
+    "export": "exportPictureMapping in apps/tracy-web/src/site-pictures/contract-mapping.js"
+  },
+  "evidence": "06/11/2026, cards AJ, AI, AK on a sealed JA Boxing 1.0.11 step 8 batch: four frames returned with no step picking them up (demo picture kept), three frames refused by the write door as SLOT_IMAGE_TOO_SMALL, two gallery tiles holding the same owner photo with cuts sharing 97%.",
+  "fence": "The finisher (createFinisher) on invented fixtures with fake drawer and looker doors, cutPhoto on generated photos, the picture check and the mapping export. Not exercised: a real drawing or looking model, the Postgres-backed bench, a real site write.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/site-pictures-ladder.test.mjs",
+      "apps/tracy-web/test/site-pictures-min-width.test.mjs",
+      "apps/tracy-web/test/site-pictures-gallery-reuse.test.mjs"
+    ],
+    "tests": [
+      "a frame the plan wants filled that cannot be hidden keeps the best picture whose only fault is minor",
+      "a frame that cannot be hidden takes another composition the looker passes",
+      "every rung of the ladder, in order",
+      "the index carries the slot minimum width onto its frame",
+      "a picture is written at least the frame minimum width wide",
+      "an owner photo whose usable region is narrower than the frame minimum width is refused",
+      "the export leaves out a file narrower than its frame minimum width",
+      "a gallery never shows one owner photo twice in its block"
+    ],
+    "needs": []
+  }
+}
