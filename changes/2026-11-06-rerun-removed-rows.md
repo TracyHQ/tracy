@@ -1,3 +1,3 @@
-- **A second write run with the same files no longer stops for slots removed with their rows** — Write step bench (card AL) · #pending · `fix/site-check-zero-checked` · 2026-11-06
+- **A second write run with the same files no longer stops for slots removed with their rows** — Write step bench (card AL) · #415 · `fix/site-check-zero-checked` · 2026-11-06
   **Affects:** step 9 rewrites (`write-step/last-report.js`): a slot an earlier run removed with its row counts as brought back only when the new files fill it, or the new plan keeps that kit row again. The same files now write nothing instead of stopping `NEEDS_NEW_SITE`; a real change that fills such a slot is still refused by name. ADR 0044 decision 6.
   **Why / Measured:** On a bench site the second run with the first run's files stopped `NEEDS_NEW_SITE`, 0 written, naming 28 row slots. Reproduced with an invented site and kit (red before the fix, green after); not re-run on that site.

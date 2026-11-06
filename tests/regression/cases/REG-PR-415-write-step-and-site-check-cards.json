@@ -1,0 +1,55 @@
+{
+  "id": "REG-PR-415-write-step-and-site-check-cards",
+  "kind": "fix",
+  "title": "The write step rewrites links and kept pages the route stage renamed, writes brief phones as tel: links and heading emphasis as real tags, never keeps refused demo words silently; the site check never reads green on nothing checked and compares printed alts with what step 8 saw",
+  "pr": 415,
+  "area": "write-step/site-check",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run the run command (write step and site check test files, one at a time).",
+    "S2: Read the result of each named test."
+  ],
+  "expect": [
+    "AD, AE, P: a link written to an address the route stage renamed is rewritten to the new address, kept pages under a renamed parent are listed and measured at their live address, and an article page is renamed by its article alias.",
+    "AQ, AN: a brief phone number in a created page's words is a tel: link, and a created legal page prints through the kit's plain article layout.",
+    "J, AG: a site check group that checked nothing is not applicable with its reason or unmeasured, never green; a hide the contract has no slot for is blamed on step 0.",
+    "AH, AP, K, AL, AB: list-rows reads only the row's own block; a maps search map button is not refused; a slot printed as an image alt or title counts as printed; a rerun with the same files keeps removed slots; the look guard lets words replace social icons for a person with no account.",
+    "N, AS: heading emphasis is stored as real tags where the demo value is HTML, and a refused text slot never keeps demo words in silence.",
+    "Y: the site check's alt-matches-picture group blocks an alt that does not describe the picture step 8 placed, and is not applicable when no picture was written."
+  ],
+  "selectors": {
+    "renamed": "rewriteRenamedLinks in apps/tracy-web/src/write-step/renamed-link-stage.js",
+    "statuses": "statusOf in apps/tracy-web/src/site-check/site-check.js",
+    "emphasis": "runEmphasisStage in apps/tracy-web/src/write-step/emphasis-stage.js",
+    "alt": "altMatchesPictureGroup in apps/tracy-web/src/site-check/alt-matches-picture.js"
+  },
+  "evidence": "06/11/2026, cards AD AE P AQ AN J AG AH AP K AL AB N AS Y from step 9 and step 11 bench runs on a sealed JA Boxing quickstart, merged into PR 415.",
+  "fence": "Write step and site check on invented fixtures with fake door and page readers. Not exercised: a real site write, a real browser page read, the Postgres-backed bench.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/write-step-renamed-links.test.mjs",
+      "apps/tracy-web/test/write-step-phone-links.test.mjs",
+      "apps/tracy-web/test/site-check-zero-checked.test.mjs",
+      "apps/tracy-web/test/write-step-emphasis.test.mjs",
+      "apps/tracy-web/test/write-step-text-fallback.test.mjs",
+      "apps/tracy-web/test/site-check-alt-matches-picture.test.mjs"
+    ],
+    "tests": [
+      "a url menu item and a link in a slot that name a moved address are written to the new one and read back",
+      "every way of writing a brief phone is wrapped once; other numbers and existing tel: links are left alone",
+      "a group that checked 0 with no reason is unmeasured, counted, and the verdict is not red",
+      "a group that checked 0 and says why is not applicable, printed with its reason, and keeps the verdict green",
+      "a slot whose demo value is HTML gets real tags; the ACM slot keeps its codes",
+      "the three rungs, each tried once: plain words, then hide, then a failed line naming the demo text",
+      "an alt that describes its picture agrees; one that names another scene blocks on that slot, blamed on step 6"
+    ],
+    "needs": []
+  }
+}

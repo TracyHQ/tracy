@@ -1,3 +1,3 @@
-- **A written text slot counts as printed when the page prints it as an image alt or a title** — Write step bench (card K) · #pending · `fix/site-check-zero-checked` · 2026-11-06
+- **A written text slot counts as printed when the page prints it as an image alt or a title** — Write step bench (card K) · #415 · `fix/site-check-zero-checked` · 2026-11-06
   **Affects:** the printed rule shared by the write step's printed stage and step 11 `written-not-printed` (`lib/printed-in-body.js`): an `<img>` `alt` or any element's `title` in the body now counts, besides the visible text. `data-*` attributes still do not. No change to tracy-host. ADR 0044 decision 11.
   **Why / Measured:** On a bench run six gallery descriptions were blocked as "not printed" while the page printed each as its image's alt (the template prints that slot nowhere else). Covered by an invented-fixture test; not re-run on that site.
