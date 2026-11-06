@@ -70,6 +70,7 @@ A frame entry:
 | `backdrop` | On a `drawn` cut-out whose demo picture has one: `{ shape, paint, preview }`, the disc and bands the demo has behind its figure, in shape units and colour roles (section 1a). Absent otherwise. |
 | `seen` | One sentence from the looker saying what the picture actually shows. |
 | `looker` | The look of the picture (section 3b): `{ verdict: "pass" \| "fail", faults: [...], seen }`, the fault names from the fixed list; `{ verdict: "fail", faults: ["look unreadable"], seen: null, problem }` when the look could not be read twice. Absent when the frame is not looked at (icons, initials, hidden frames). |
+| `filledBy` | `{ rung, faults }` when a rung that keeps the frame from being left without a picture filled it (section 4): `redraw-alt` (another composition, `faults` empty) or `best-rejected` (a picture the looker rejected for minor faults only, `faults` naming them). Absent otherwise. |
 | `reason` | Why this picture, or why hidden. |
 
 Twins (a kit frame with `twinOf`, the light or dark copy of another frame, and a plan frame with `sameAs`, a second
@@ -430,7 +431,12 @@ Looker rejections and check failures go back to the picker for the failing frame
    hidden alone: it reuses an owner photo of its page cut to another region, then takes any usable owner photo, and is
    returned only when no photo is left or the brief has fewer than 2);
 3. a drawing still rejected is hidden when the kit allows hiding;
-4. a frame that cannot be hidden is returned to the planner.
+4. a frame that cannot be hidden is drawn again in other compositions, then keeps the best picture rejected for minor
+   faults only (owner decision 06/11/2026, card AJ: step 8 never leaves a frame the plan wants filled without a picture
+   while one can be had);
+5. only a frame whose every picture had a hard fault, or that got none, is returned to the planner, and the mapping
+   export lists it in `problems` (`the plan wants a picture here and the picture step left it without one: ...`), so
+   step 9 reports it as refused instead of leaving the demo picture silently.
 
 A `person` frame never enters the drawing steps: no confirmed portrait means initials. A demo picture is never kept in
 a frame the plan asked to fill.
@@ -449,6 +455,8 @@ climb. The rungs, in order:
 | reuse | gallery tiles only | an owner photo already shown on the tile's pages, never one shown in a neighbouring tile of the same list (index one apart, or directly above or below when the kit gives the list's columns), cut by code to a region of the frame's shape that shares at most 30% of the smaller cut's area with every other cut of that photo and runs through no head, written and looked at like any cut; at most 2 per tile; the entry says `reuse: { with, overlap }` |
 | any photo | gallery tiles only | always fills while the brief has at least 2 usable owner photos: any usable owner photo (used on other pages or already twice), least used first, any region of the frame's shape, keeping only the hard rules: heads whole, never the photo of a neighbouring tile, never the very cut another frame of the page shows, and the photo's main subject kept (real run 6: a tile got a crop of a bush and a fence): the region holds at least half of the labelled subject box or a whole head, or, when no subject is labelled, covers at least half of the photo; a photo with no such region is skipped for the next one (the reuse rung keeps the same rule); looked at like any cut, a rejection followed by the next photo until every photo is tried; the entry says `reuse: { rung: "any-photo", with, overlap }` (the reuse rung writes `rung: "reuse"`) |
 | hide | every match but gallery tiles | the frame is hidden when the kit allows hiding and it is not a template setting |
+| redraw-alt | `specific`, `specific` cut-out | another composition (`REDRAW_ALT_TRIES`, 2): the template's `recompose` part names every fault seen so far, the frame's shape (`framingOf`: wide, tall or square, and its aspect ratio) and asks for the subject centred and whole with a margin on every side; each try adds its own `take<n>` part (another distance), so no two tries are the same request or the same cached drawing; drawn whole, never extended from a photo; `drawing.attempt` is 3, then 4; the entry says `filledBy: { rung: "redraw-alt", faults: [] }` |
+| best-rejected | every match but `person` | the best picture the looker rejected for this frame whose faults are all minor (`MINOR_FAULTS` in `looker-call.js`: subject cut off, visible drawing seam, rough cut-out edge, text would not read; every other fault is hard), fewest faults first, then the latest; an owner photo another frame of its pages now shows is passed over; the frame ends there; the entry says `filledBy: { rung: "best-rejected", faults }` and L01 notes it instead of failing it |
 | return | every match | the frame is returned to the planner (`returns`) |
 
 A **gallery tile** is an `any-real` photo frame that is one row of a kit list in which at least two rows hold an image
@@ -464,7 +472,9 @@ fails a gallery tile hidden alone (one not in a row the ladder dropped, the mani
 looks (the round's pass limit), one photo per pass.
 
 A `person` frame climbs only hide and return (no other person's photo, never a drawing). A `specific` cut-out frame
-climbs draw, redraw, hide and return; any other cut-out only hide and return (section 3d). A frame waiting for the drawer
+climbs draw, redraw, hide, redraw-alt, best-rejected and return; any other cut-out only hide and return (section 3d).
+A `specific` frame climbs redraw-alt and best-rejected after hide, an `any-real` frame and a gallery tile best-rejected
+before return. A frame waiting for the drawer
 starts at draw; a frame code placed starts at its first rung after the placement; a frame the picker placed climbs only
 in the last round (no picker round follows), from draw, when the looker rejects it or it still fails the check. A look
 that could not be read is no rejection: the picture fails L01 and the next round asks again. Each rung is recorded in

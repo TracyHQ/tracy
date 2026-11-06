@@ -18,6 +18,11 @@ export const SOURCES = Object.freeze([
 export const OWNER_SOURCES = new Set(['owner-photo', 'owner-photo-extended'])
 /** The ladder rungs that may show an owner photo a second time on a page (a gallery tile's, ADR 0043 section 4). */
 export const REUSE_RUNGS = new Set(['reuse', 'any-photo'])
+/**
+ * The ladder rungs that fill a frame which would otherwise be left without a picture (card AJ): another composition,
+ * or the best picture the looker rejected for minor faults only. The entry names it in `filledBy`.
+ */
+export const FILL_RUNGS = new Set(['redraw-alt', 'best-rejected'])
 /** The roles whose prompt hashes the fingerprint records. */
 export const PROMPT_ROLES = Object.freeze(['picker', 'drawing', 'looker'])
 /** The folder of the site every placed picture is uploaded to, named by its sha256. */
@@ -126,6 +131,24 @@ function readEntry(e, list) {
       problem:
         'reuse must be null or, on an owner photo, { rung: "reuse" | "any-photo", with: [frames], overlap: number }'
     }
+  // A frame filled by a rung that keeps it from being left without a picture names the rung, and for a kept rejected
+  // picture the minor faults it was kept with.
+  if (
+    e.filledBy != null &&
+    !(
+      source !== 'hide' &&
+      source !== 'twin' &&
+      isObject(e.filledBy) &&
+      FILL_RUNGS.has(e.filledBy.rung) &&
+      Array.isArray(e.filledBy.faults) &&
+      e.filledBy.faults.every(isNonEmpty) &&
+      (e.filledBy.rung !== 'best-rejected' || e.filledBy.faults.length > 0)
+    )
+  )
+    return {
+      problem:
+        'filledBy must be null or, on a placed picture, { rung: "redraw-alt" | "best-rejected", faults: [names] }'
+    }
   // The frame's surface (ADR 0043 section 3e): text over the picture, and the overlay the template paints over it.
   if (e.textOver != null && typeof e.textOver !== 'boolean')
     return { problem: 'textOver must be true or false' }
@@ -165,6 +188,7 @@ function readEntry(e, list) {
       enlarge: e.enlarge ?? null,
       sharpness: e.sharpness ?? null,
       reuse: e.reuse ? { rung: e.reuse.rung, with: [...e.reuse.with], overlap: e.reuse.overlap } : null,
+      filledBy: e.filledBy ? { rung: e.filledBy.rung, faults: [...e.filledBy.faults] } : null,
       darkened: e.darkened,
       textOver: e.textOver === true,
       templateOverlay: o === undefined ? 'unknown' : o,

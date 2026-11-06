@@ -14,9 +14,20 @@
 // A drawn cut-out with a backdrop (the disc and bands its demo has behind the figure) is placed as it is, the figure
 // alone, and also listed in `painted` (kind `backdrop`) with the recipe: step 9 paints the backdrop behind the figure
 // in the brand's colours (a file of both, or the backdrop behind the slot), and its preview is only for review.
+//
+// A frame the manifest returns (the plan wants it filled and the step left it without a picture) is a problem of the
+// package, never silently left out: only the logo frame, which the brand step fills, is not.
 import { contentMapKey } from '../lib/content-map-key.js'
 import { readPictures } from './manifest-shape.js'
 import { paintKindOf } from '../lib/picture-paint/paint.js'
+
+/**
+ * A return that is not the picture step's to fill: the brand step places the logo, and a frame the kit marks not
+ * writable (module chrome, a twin a template setting paints) has no slot to write to.
+ */
+const NOT_OURS = /^(a logo frame belongs to the brand step|the kit marks this frame not writable)/
+/** The opening of the problem that names a frame the plan wants filled and the picture step left without a picture. */
+export const LEFT_EMPTY = 'the plan wants a picture here and the picture step left it without one'
 
 export { contentMapKey }
 
@@ -157,6 +168,10 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
         height: e.height
       })
   }
+  // A frame the plan wants filled that the step returned keeps its demo picture unless someone acts: never silent
+  // (card AJ). Each is a problem of the package, which step 9 reports as refused instead of "no owner".
+  for (const r of view.returns)
+    if (!NOT_OURS.test(r.reason) && !frames.has(r.frame)) bad(r.frame, `${LEFT_EMPTY}: ${r.reason}`)
   const siteSettings = view.entries
     .filter((e) => e.list === 'siteSettings')
     .map((e) => ({

@@ -60,10 +60,16 @@ test('a tile is returned only when the brief has fewer than two usable photos', 
   assert.equal(byFrame(m).get('block-t.1').source, 'owner-photo')
   assert.ok(!byFrame(m).has('block-t.2'))
   const steps = m.ladder.find((l) => l.frame === 'block-t.2').steps
-  assert.deepEqual(steps.at(-2), {
+  assert.deepEqual(steps.at(-3), {
     rung: 'any-photo',
     outcome: 'skipped',
     detail: 'the brief has fewer than 2 usable owner photos'
+  })
+  // No picture was ever made for it: nothing to keep, so it is returned (and the package names it as a problem).
+  assert.deepEqual(steps.at(-2), {
+    rung: 'best-rejected',
+    outcome: 'skipped',
+    detail: 'no picture of this frame was made'
   })
   assert.match(m.returns.find((r) => r.frame === 'block-t.2').reason, /^a gallery tile is never hidden alone/)
 })

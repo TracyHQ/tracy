@@ -23,7 +23,15 @@ import path from 'node:path'
 import { altNotesFor } from './alt-notes.js'
 import { hasTextOver } from './darken.js'
 import { fileStore, sha256Hex } from './file-store.js'
-import { askLooker, isAnyReal, LOOK_UNREADABLE, lookImage, lookWords, surfaceFacts } from './looker-call.js'
+import {
+  askLooker,
+  isAnyReal,
+  LOOK_UNREADABLE,
+  lookImage,
+  lookWords,
+  onlyMinorFaults,
+  surfaceFacts
+} from './looker-call.js'
 
 export const LOOK_CONCURRENCY = 4
 /** The sources whose picture the looker checks. */
@@ -206,7 +214,12 @@ export function createLooker({
       }
       if (said.dropped?.length)
         notes.push(`${entry.frame}: fault names outside the list dropped: ${said.dropped.join(', ')}`)
-      if (said.verdict === 'fail')
+      // A rejected picture the ladder kept because its only faults are minor (rung best-rejected) is noted, not failed.
+      if (said.verdict === 'fail' && entry.filledBy?.rung === 'best-rejected' && onlyMinorFaults(said.faults))
+        notes.push(
+          `${entry.frame}: kept with minor faults (${said.faults.join(', ')}): no better picture fits`
+        )
+      else if (said.verdict === 'fail')
         failures.push({
           where: whereOf(list, entry.frame),
           detail: said.problem

@@ -26,7 +26,7 @@ import { outputSizeFor } from './cut-photo.js'
 import { backdropOf } from './cutout-backdrop.js'
 import { backdropComposite } from '../lib/picture-paint/cutout-backdrop-draw.js'
 import { cutoutFile, groundFor } from './cutout-ground.js'
-import { askDrawer, aspectRatioFor, drawingText } from './drawer-call.js'
+import { askDrawer, aspectRatioFor, drawingText, framingOf } from './drawer-call.js'
 import { fileStore, sha256Hex } from './file-store.js'
 import { PREVIEW_PALETTE, previewColour } from '../lib/picture-paint/paint.js'
 
@@ -113,12 +113,24 @@ export function createDrawing({
   }
 
   /**
-   * Draw one frame. `asset` (outpaint only) the owner photo to extend; `faults` the looker's fault names on a redraw.
+   * Draw one frame. `asset` (outpaint only) the owner photo to extend; `faults` the looker's fault names on a redraw;
+   * `recompose` the try (1, 2, ...) of another composition of a frame that would otherwise be left without a picture,
+   * 0 for none.
    * @returns {Promise<{ made: object | null, call: object, extra: object, problem?: string, faults?: string[] }>}
    *   `made` the stored file ({ name, ext, sha256, width, height }); `call` the record of the call; `extra` the entry
    *   fields of an extension or a cut-out; `faults` the looker faults of a cut-out whose ground could not be removed
    */
-  async function draw({ frameId, wish, frame, demo, mode, asset = null, faults = null, attempt = 1 }) {
+  async function draw({
+    frameId,
+    wish,
+    frame,
+    demo,
+    mode,
+    asset = null,
+    faults = null,
+    attempt = 1,
+    recompose = 0
+  }) {
     const out = outputSizeFor(demo, frame, 2 * Number(frame.width))
     const band = mode === 'outpaint' ? await bandOf(asset, out) : null
     if (mode === 'outpaint' && !band)
@@ -130,7 +142,11 @@ export function createDrawing({
       }
     const ground = mode === 'cutout' ? groundFor(wish) : null
     const style = mode === 'cutout' ? await styleOf(frame) : null
-    const text = drawingText(prompt.parts, mode, wish, faults, ground, { style: Boolean(style) })
+    const text = drawingText(prompt.parts, mode, wish, faults, ground, {
+      style: Boolean(style),
+      recompose,
+      framing: framingOf(out.width, out.height)
+    })
     const key = sha256Hex(
       JSON.stringify([mode, text, band?.photoSha ?? style?.sha256 ?? null, out, door.model, prompt.sha256])
     )

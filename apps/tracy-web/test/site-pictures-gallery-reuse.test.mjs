@@ -54,13 +54,19 @@ test('a gallery tile no new photo fits reuses a photo of its page, cut elsewhere
   // The last rung tries every photo: the neighbour's is never taken, the tile's own is rejected again.
   const u2 = rungs(m, 'block-u.2')
   assert.ok(u2.some(([r, o]) => r === 'reuse' && o === 'skipped'))
-  assert.deepEqual(u2.slice(-2), [
+  // Its rejected photos had a hard fault, so no rejected picture is kept either.
+  assert.deepEqual(u2.slice(-3), [
     ['any-photo', 'skipped'],
+    ['best-rejected', 'skipped'],
     ['return', 'returned']
   ])
   assert.match(
-    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-2).detail,
+    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-3).detail,
     /is in the neighbouring tile block-u\.1/
+  )
+  assert.match(
+    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-2).detail,
+    /^every rejected picture has a hard fault/
   )
   // A frame that is not a gallery tile keeps today's ladder: hidden where the kit allows.
   assert.equal(e.get('block-d.1').source, 'hide')
