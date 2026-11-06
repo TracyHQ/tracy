@@ -379,6 +379,13 @@ path):
      several text pieces becomes ONE slot on its element, and the rule tables group each link-list item (label and link) into one card.
      Add `--role-vocabulary 3` only with the release that moves the template to `place-content-roles/3` (it writes `article.title`,
      `editorial.navigation_url` and `editorial.illustration`, and derives `customize` from the role); the default stays 2.
+   - **The level a template is brought to (JA Boxing 1.0.11, the reference):** a new profile, or the recapture that
+     brings a template to that level, also passes `--full-coverage` (every piece of demo content a visitor reads: an
+     article's images and extra fields, a module's shown title, contacts, users, tags, the template's `TPL_` strings),
+     `--inline-markup` (with `--whole-units`) and `--role-vocabulary 3`. Without them the capture declares a fraction of the
+     demo (JA Voyara 1.0.11: no article extra fields, no tags) and the coverage audit (K8) is red. `--full-coverage` reads
+     more tables, so it can stop at K7 on demo rows that never stopped a narrower capture (JA Voyara 1.0.11: five tags
+     saved without a path); that is demo data to repair in the next version, not a reason to drop the flag.
    - `--file-roots`: `templates/$TPL` + the template's own framework code (`plugins/system/t4` or
      `plugins/system/t3`) + `modules/mod_ja_acm` + `media`, only folders that actually exist in the pack's webroot:
 
@@ -406,7 +413,8 @@ path):
        --webroot "$WORK/chup/webroot" --inventory "$WORK/chup/inventory.json" --manifest "$PACK/manifest.json" \
        --slots-helper "$CW_WT/joomla/cowork/lib/ContentSlots.php" --out "$WORK/chup/capture-$n" \
        --id "$CID" --template "$TPL" --styles "$TPL" --menutypes "$MENUTYPES" --module-prefix "$MODULE_PREFIX" "${LIST_ITEMS[@]}" \
-       --exclude-generated --link-fields-by-role --file-roots "$ROOTS" --cowork-version "$COWORK_VER" ${PREV[@]+"${PREV[@]}"} || break
+       --exclude-generated --link-fields-by-role --evidence-by-field --whole-units --inline-markup --full-coverage \
+       --role-vocabulary 3 --file-roots "$ROOTS" --cowork-version "$COWORK_VER" ${PREV[@]+"${PREV[@]}"} || break
    done
    diff -r "$WORK/chup/capture-1" "$WORK/chup/capture-2"                       # K4: empty
    node "$QC/check-release-fields.mjs" --contract "$WORK/chup/capture-1" --pack "$PACK"   # K2+K3 pass 1
