@@ -8,6 +8,7 @@ import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from './lib/template-kit-source.js'
 import { checkLines } from './site-check/check-lines.js'
+import { baselineOutcome, ensureBaseline } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
 import { runSiteCheck } from './site-check/site-check.js'
 import { openContentMap } from './lib/content-map-source.js'
@@ -60,7 +61,7 @@ const causeOf = (r) => (r.code ? `${r.code}: ${r.reason}` : '')
  */
 export async function runCli(argv, deps) {
   const io = { out: deps.out ?? console.log, err: deps.err ?? console.error }
-  if (SITE_COMMANDS.has(argv[0])) return runSiteCli(argv, deps)
+  if (SITE_COMMANDS.has(argv[0])) return runSiteCli(argv, { ensureBaseline, baselineOutcome, ...deps })
   try {
     const { values, positionals } = parseArgs({
       args: argv,
@@ -278,6 +279,14 @@ async function checkRun(d, values) {
       return refused(d, `--site-pictures-file cannot be read as JSON: ${error?.message ?? error}`)
     }
   }
+  // The demo baseline create-site settled for the quickstart version: a check never measures one, as the site is written.
+  const baseline = d.baselines ? await d.baselines.read(r.report.contract) : null
+  if (d.makeHost)
+    d.out(
+      baseline
+        ? `baseline ${baselineOutcome({ measured: false })} for ${r.report.contract}`
+        : `baseline: none stored for ${r.report.contract}, so the demo groups stay unmeasured (create-site measures it on an untouched site)`
+    )
   const check = await runSiteCheck({
     door: d.makeDoor({ account: values.account, platform: 'joomla' }),
     report: r.report,
@@ -285,7 +294,7 @@ async function checkRun(d, values) {
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
     // The pages as a visitor reads them, for `written-not-printed` (written-not-printed.js).
     ...(d.pageHtml ? { pageHtml: (path) => d.pageHtml({ siteKey: r.report.site, path }) } : {}),
-    baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
+    baseline,
     kit: openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null,
     pictures,
     allGroups: values['all-groups'] === true,

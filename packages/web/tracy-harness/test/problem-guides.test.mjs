@@ -419,6 +419,7 @@ const EVERY_CODE = [
     ['kit-front-page-group', 'the front page has no group and shot of its own: it sits in group group-blog'],
     ['kit-brand-unreadable', 'the kit has no site.nameSlots'],
     ['kit-zip-missing', 'the release has no asset template-kit-ja-restaurant-1.0.2.zip'],
+    ['kit-demo-baseline-missing', 'there is no demo-baseline.json beside the contract'],
     ['kit-setting-slot-missing', '1 map button (block-7) point at no setting slot']
   ].map(([code, reason]) => [
     'template-kit',
