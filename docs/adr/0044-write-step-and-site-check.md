@@ -82,6 +82,12 @@ Given new files and the site, the write step compares them with its last report 
 Its report still holds every line, the ones not sent marked unchanged with their value, and step 11 reads back all of them. Showing a slot that was emptied needs a new site, because the plugin refuses to
 fill an empty slot.
 
+Measured 2026-11-06 (card AL): a second run with the same files stopped `NEEDS_NEW_SITE` with nothing written, naming 28 slots
+the first run had taken off with their rows (`rows.remove`, lines of `part: 'row'`). Those lines have no hide claim, so the check
+that a hidden slot is still hidden read them as brought back. A row line is now brought back only when the new files want it
+again: they fill its slot, or it is a slot of a kit row the new plan no longer gives up. A slot the plugin took along that no kit
+row names stays gone. The same files give 0 written, every line unchanged.
+
 ### 7. Read-back belongs to the site check
 
 The write step checks files before writing and stops on a plugin refusal it cannot attribute to a slot. Comparing the
