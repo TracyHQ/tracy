@@ -16,7 +16,8 @@
  *     request, from the tokenized files (it compares mtimes; the cache is outside the contract);
  *  1b. design-system-roles.json: the role scan of templates/<tpl> as it ships (release-role-scan.mjs),
  *     run before anything is packed; the build stops while rule VARS-1 would hold anything it finds;
- *  2. database: the same dump, under the new version's name;
+ *  2. database: the same dump, under the new version's name (demo tags saved without a path given
+ *     one, src/release-tag-paths.mjs);
  *  3. manifest.json + SHA256SUMS for the release;
  *  4. the tch contract for the new version: contracts/<slug>/j6/<new>/ — manifest.json re-embedding
  *     the new release manifest, presentation-lock.json with the changed files' hashes, content-map.json
@@ -52,6 +53,7 @@ import { editContentMap, editDump, editLock, loadContentEdits } from '../src/rel
 import { pinAddedFiles } from '../src/release-lock-added.mjs'
 import { packTar, packZip } from '../src/release-pack.mjs'
 import { releaseRoleScan, ROLE_SCAN_FILE, roleScanError } from '../src/release-role-scan.mjs'
+import { repairTagPaths } from '../src/release-tag-paths.mjs'
 import { siteLanguageTwins } from '../src/release-site-language.mjs'
 import { paletteForFile, tokenizeCss } from '../src/tokenize.mjs'
 import { COLOUR_TOKENS } from '../src/tokens56.mjs'
@@ -510,11 +512,18 @@ if (INSTALLER) {
   // same layout as the published archive (entries under ./), no macOS metadata, modes set (STAB-1)
   packTar(site, join(rel, webFile))
   // ── 2. database, same dump ──
-  if (contract.t3DevmodeOff || edits.length) {
-    // latin1: every byte of the dump kept, valid UTF-8 or not (both edits touch ASCII only)
-    let dump = execFileSync('gunzip', ['-c', join(dl, cur.parts.database.file)], {
-      maxBuffer: 1 << 30
-    }).toString('latin1')
+  // latin1: every byte of the dump kept, valid UTF-8 or not (the edits touch ASCII only)
+  const original = execFileSync('gunzip', ['-c', join(dl, cur.parts.database.file)], {
+    maxBuffer: 1 << 30
+  }).toString('latin1')
+  // demo tags saved without a path get one, and the tags' nested set is rebuilt (src/release-tag-paths.mjs)
+  const tags = repairTagPaths(original, cur.prefix ?? '')
+  if (tags.repaired.length)
+    repair.push(
+      `tag paths: ${tags.repaired.map((t) => `${t.id} ${t.path}`).join(', ')}; tags nested set rebuilt`
+    )
+  if (contract.t3DevmodeOff || edits.length || tags.repaired.length) {
+    let dump = tags.dump
     if (contract.t3DevmodeOff) {
       devmodeRows += (dump.match(DEVMODE_ON) ?? []).length
       dump = devmodeOff(dump)
