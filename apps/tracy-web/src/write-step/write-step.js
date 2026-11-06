@@ -35,6 +35,7 @@ import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
+import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
 import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
@@ -164,6 +165,7 @@ export async function runWriteStep(input) {
   let created = { pages: new Map(), results: [], lines: [], kept: [] }
   let restored = []
   let renamedLines = null
+  let emphasis = new Map()
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -198,6 +200,14 @@ export async function runWriteStep(input) {
       })
     }
     lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
+    lines = withEmphasis(lines, emphasis)
+    if (emphasis.size)
+      report.emphasis = [...emphasis].map(([key, e]) => ({
+        key,
+        storage: e.storage,
+        converted: Boolean(e.stored),
+        ...(e.warning ? { warning: e.warning } : {})
+      }))
     const against = last.active ? againstLast(lines, last, status) : { slots: lines }
     report.slots = against.slots
     // Rows kept against the plan, per list (hide-lines.js): what the site check's list-rows holds the printed list to.
@@ -546,6 +556,8 @@ export async function runWriteStep(input) {
   if (wrote.cancelled) return finish('cancelled', null, [], wrote.refused)
   if (wrote.stop) return finish('stopped', wrote.stop, [], wrote.refused)
   const written = [...wrote.written, ...held]
+  // A heading whose demo value is HTML takes its emphasis as real tags, after the contract call wrote its words (emphasis-stage.js).
+  emphasis = await runEmphasisStage({ door, siteKey, contentMap, written: wrote.written, ordered })
   // Last: the page settings, which the contract door does not take (page-settings-stage.js).
   const settings = await timed('settings', () =>
     runPageSettings({

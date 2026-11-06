@@ -4,6 +4,7 @@
 import { fallbackBlocksIn, isFallbackBlock, withoutFallbackBlocks } from '../lib/printed-in-body.js'
 import { HEAD_END, HEAD_START } from './brand-head-block.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
+import { emphasisOnlyUpdate } from './look-guard-emphasis.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { NOT_A_POST } from './page-create-stage.js'
 import { MARK } from './page-create-lines.js'
@@ -267,6 +268,8 @@ function moduleFaults({ id, fields, state, kitNamed }) {
 /** @returns {{ step: number, what: string, reason: string }[]} */
 export function updateFaults(params, state, kitNamed) {
   const { kind, id, fields } = params ?? {}
+  // The emphasis stage turns a heading's codes into the demo's tags and changes nothing else (look-guard-emphasis.js).
+  if (emphasisOnlyUpdate(params, state)) return []
   if (kind === 'module') return moduleFaults({ id, fields, state, kitNamed })
   if (kind === 'moduleAssignment') {
     const on = Object.keys(fields ?? {}).join() === 'menuids' && fields.menuids === '[0]'

@@ -60,7 +60,7 @@ function judge(line, held) {
     key: line.key,
     page: held.page,
     measured: held.value,
-    ordered: line.ordered ?? null
+    ordered: line.stored ?? line.ordered ?? null
   }
   // A line the write step refused never reached the site: it blocks as a refused write does, in the step's own words.
   if (line.status === 'refused')
@@ -93,7 +93,8 @@ function judge(line, held) {
           result: 'differs',
           failure: { ...base, reason: 'The plan hides this slot and it still holds words' }
         }
-  return sameValue(line.ordered, held.value, held.slot)
+  // A heading the write step gave real emphasis tags is held to what it stored, not to the codes it sent (emphasis-stage.js).
+  return sameValue(line.stored ?? line.ordered, held.value, held.slot)
     ? { result: 'match' }
     : { result: 'differs', failure: { ...base, reason: 'The site does not hold what was ordered' } }
 }
