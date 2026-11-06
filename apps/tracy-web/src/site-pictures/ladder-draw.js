@@ -19,6 +19,11 @@
 // Every drawing is kept in the bench's file store (runs/<run id>/draws/<key>.json, the key a hash of the mode, the
 // text, the real photo, the size, the model and the template), so a later round or a resumed run pays once per
 // drawing. A call that fails is not kept: the ladder moves on.
+//
+// A call the provider failed (drawer-call.js `provider`: out of credits, too many requests, a server error, no answer)
+// is no verdict on the drawing (card AU). It is sent again once the other drawings in flight have settled, after a
+// growing wait, up to DRAWER_TRIES times in all; still failing, the drawing throws DrawerProviderError, which stops the
+// run (looker-round.js) instead of letting the ladder hide a frame the plan wants filled.
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
@@ -29,6 +34,25 @@ import { cutoutFile, groundFor } from './cutout-ground.js'
 import { askDrawer, aspectRatioFor, drawingText, framingOf } from './drawer-call.js'
 import { fileStore, sha256Hex } from './file-store.js'
 import { PREVIEW_PALETTE, previewColour } from '../lib/picture-paint/paint.js'
+
+/** How many times one drawing is sent when the provider fails it, and the waits before the second and third. */
+export const DRAWER_TRIES = 3
+export const DRAWER_BACKOFF_MS = Object.freeze([5_000, 20_000])
+
+/** The provider of the drawer failed a drawing DRAWER_TRIES times: the run stops with it, no frame is hidden for it. */
+export class DrawerProviderError extends Error {
+  constructor(frameId, status, problem, tries) {
+    super(
+      `the picture drawer's provider failed frame ${frameId} ${tries} times (status ${status}): ${problem}`
+    )
+    this.name = 'DrawerProviderError'
+    this.code = 'SITE_PICTURES_DRAWER_PROVIDER'
+    this.frame = frameId
+    this.status = status
+  }
+}
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /** A frame at least this many times wider than tall is a wide band, which a portrait owner photo may be extended to. */
 export const WIDE_BAND = 2
@@ -47,8 +71,9 @@ export const modeOf = (frame) => (/illustration|product/.test(String(frame?.role
  * The drawer of one run.
  * @param {{ door: object, prompt: { parts: Record<string, string>, sha256: string }, storeDir: string, runId: string,
  *   photoBytes: Map<string, Buffer>, readDemo?: ((frame: object) => Promise<Buffer | null>) | null,
- *   accent?: string | null, fetchImpl?: typeof fetch }} input `readDemo`: the kit's demo picture of a frame
- *   (demo-pictures.js), or null; `accent` the template accent, the colour a backdrop preview's bands are drawn in
+ *   accent?: string | null, fetchImpl?: typeof fetch, backoffMs?: number[], wait?: (ms: number) => Promise<void> }} input
+ *   `readDemo`: the kit's demo picture of a frame (demo-pictures.js), or null; `accent` the template accent, the colour a
+ *   backdrop preview's bands are drawn in; `backoffMs` and `wait` the waits between tries of a provider failure (tests)
  */
 export function createDrawing({
   door,
@@ -58,9 +83,27 @@ export function createDrawing({
   photoBytes,
   readDemo = null,
   accent = null,
-  fetchImpl = fetch
+  fetchImpl = fetch,
+  backoffMs = DRAWER_BACKOFF_MS,
+  wait = sleep
 }) {
   const store = fileStore(storeDir)
+  // The drawing calls in flight, so a retry after a provider failure waits until the others have settled.
+  const inflight = new Set()
+
+  // One drawing, sent again while the provider fails it; DrawerProviderError once it failed DRAWER_TRIES times.
+  async function askTrying(frameId, request) {
+    for (let tries = 1; ; tries++) {
+      const call = askDrawer({ ...request, door, fetchImpl })
+      inflight.add(call)
+      const answer = await call.finally(() => inflight.delete(call))
+      if (!answer.provider) return answer
+      if (tries >= DRAWER_TRIES)
+        throw new DrawerProviderError(frameId, answer.provider.status, answer.problem, tries)
+      await Promise.allSettled(inflight)
+      await wait(backoffMs[tries - 1] ?? backoffMs.at(-1) ?? 0)
+    }
+  }
   const kept = (key) => path.join(store.dir, 'runs', String(runId), 'draws', `${key}.json`)
 
   /** The real photo laid in the middle of the band, or null when it cannot be (not narrower, or it would grow). */
@@ -170,12 +213,10 @@ export function createDrawing({
           cached: true
         }
       })
-    const answer = await askDrawer({
-      door,
+    const answer = await askTrying(frameId, {
       text,
       image: band?.sent ?? style?.sent ?? null,
-      aspect: aspectRatioFor(out.width, out.height),
-      fetchImpl
+      aspect: aspectRatioFor(out.width, out.height)
     })
     const call = {
       ...base,
