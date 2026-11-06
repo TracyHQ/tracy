@@ -367,3 +367,66 @@ test('route lines say what each write did', () => {
     ]
   )
 })
+
+// Card AL follow-up, 2026-11-06: a rerun with the same files stopped "Content changed; inspect again" with nothing written. The
+// rerun gives renamed pages their demo alias back after its inspect, and a rename moves the revision the contract call must name,
+// as the plugin's menu rows do; the call went with the revision read before. Invented site, pages and words.
+test('a rerun with the same files after renamed pages is done, writes nothing new, and fails nothing', async () => {
+  const kit = KIT()
+  kit.doc.pages = [
+    { id: 'page-home', path: '/' },
+    { id: 'page-about', path: '/about' }
+  ]
+  const plan = basePlan()
+  plan.pages.find((p) => p.id === 'page-about').slug = 'coaching'
+  const site = withAliasAnswer(
+    fakeSite({
+      records: [
+        item(101, 'home', 'home', 1, { home: 1, link: 'index.php?option=com_content&view=featured' }),
+        item(20, 'about', 'about', 1, { link: 'index.php?option=com_content&view=article&id=7' }),
+        { kind: 'article', id: 7, alias: 'about', title: 'About' }
+      ],
+      // A slot the plugin refuses on both runs, so the rerun still makes its contract call (as 96 refusals did on the bench).
+      refuse: { 'module-2.1': { code: 'SLOT_TOO_LONG', message: 'too long for this slot' } }
+    })
+  )
+  // As the plugin: a renamed menu item moves the revision, and the contract call names the revision it read.
+  const inner = site.door.apply
+  site.door.apply = async (call) => {
+    if (
+      call.action === 'content.contract' &&
+      call.params.operation === 'apply' &&
+      call.params.expected_revision !== site.revision.now
+    )
+      return { ok: false, error: 'contract_failed', message: 'Content changed; inspect again' }
+    const answer = await inner(call)
+    if (call.action === 'content.update' && call.params.kind === 'menuItem' && answer?.ok)
+      site.revision.now = `${site.revision.now}+menu`
+    return answer
+  }
+  const run = async (last = null) => {
+    const frozen = frozenFiles({ plan, copy: copy() })
+    try {
+      return await runWriteStep({
+        door: site.door,
+        siteKey: SITE,
+        kit,
+        contentMap: null,
+        files: frozen.files,
+        sleep: async () => {},
+        last
+      })
+    } finally {
+      frozen.done()
+    }
+  }
+  const first = await run()
+  assert.equal(first.status, 'done', JSON.stringify(first.cause))
+  assert.ok(first.counts.failed >= 1, 'the refused slot is a failed line')
+  const again = await run(first)
+  assert.equal(again.status, 'done', JSON.stringify(again.cause))
+  assert.equal(again.counts.failed, first.counts.failed)
+  assert.equal(again.counts.refused, first.counts.refused)
+  assert.equal(again.slots.find((s) => s.slot === 'page-about:slug').status, 'written')
+  assert.equal(again.routes[0].to, '/coaching')
+})

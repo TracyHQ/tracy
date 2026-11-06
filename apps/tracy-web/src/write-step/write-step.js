@@ -497,6 +497,21 @@ export async function runWriteStep(input) {
   })
   settled = new Map(created.results)
   report.keptPages.push(...created.kept)
+  // A rerun's restored addresses and the created pages move the revision the contract call must name, which the inspect above read
+  // before them: read it again, or the call is refused "Content changed" with nothing written (card AL, 2026-11-06).
+  if (restored.length || created.results.length) {
+    const again = await apply({
+      siteKey,
+      action: 'content.contract',
+      params: { operation: 'inspect' }
+    }).catch((error) => ({ ok: false, message: String(error?.message ?? error) }))
+    if (!again?.ok)
+      return stopped({
+        code: 'INSPECT_REFUSED',
+        reason: `the site could not be read again after the pages moved: ${again?.message ?? again?.error ?? 'no answer'}`
+      })
+    inspected.reading = again
+  }
 
   // Before the hide stage: a slot a kept link writes is not emptied as well.
   if ([...table.owners.values()].some((claim) => claim.kind === 'link')) {
