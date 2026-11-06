@@ -65,7 +65,14 @@ function contractDir() {
       { key: 'languageString-1.0', type: 'text', sample: 'Showing %1$s of %2$s' },
       { key: 'languageString-2.0', type: 'text', sample: 'Follow %s' },
       { key: 'languageString-3.0', type: 'text', sample: 'Ready to write your own %s chapter?' },
-      { key: 'user-45.0', type: 'text', sample: 'Riley Moss' }
+      { key: 'user-45.0', type: 'text', sample: 'Riley Moss' },
+      // A policy paragraph that names an address in its text, and a label a card prints before it.
+      { key: 'article-3.label', type: 'text', sample: 'HOUSE RULES' },
+      {
+        key: 'article-3.body',
+        type: 'text',
+        sample: 'Write to rules@example.test for any question about these rules and we answer within a day.'
+      }
     ],
     pages: [{ entity: 'menu-101', route: 'home' }]
   })
@@ -200,6 +207,24 @@ test('a language string with placeholders matches text filled with counts, slot 
       ['matched', 'language pattern', ['languageString-2.0']],
       ['matched', 'language pattern', ['languageString-3.0']],
       ['hole', null, null]
+    ]
+  )
+})
+
+test('a card excerpt cut inside a slot is that slot; a cloaked address inside a slot text is its mailto link', () => {
+  const { items } = audit([
+    { kind: 'text', value: 'HOUSE RULES Write to rules@example.test for any question about…' },
+    { kind: 'text', value: 'HOUSE RULES Something else entirely that no slot holds…' },
+    { kind: 'link', value: 'mailto:rules@example.test', source: 'a', role: 'content' },
+    { kind: 'link', value: 'mailto:other@example.test', source: 'a', role: 'content' }
+  ])
+  assert.deepEqual(
+    items.map((i) => [i.status, i.matchBy ?? null]),
+    [
+      ['matched', 'composite'],
+      ['hole', 'partial'],
+      ['matched', 'address inside a slot text'],
+      ['hole', null]
     ]
   )
 })

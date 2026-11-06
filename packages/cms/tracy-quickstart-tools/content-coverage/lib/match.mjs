@@ -97,6 +97,21 @@ export function createMatcher(contract, siteUrl) {
       // Composite block: remove every slot sample found inside it; what is left is unmatched.
       let rest = v
       const slots = []
+      // A card excerpt joins a label, a title and the start of a paragraph, then cuts it ("... the component wrapper -
+      // your..."): the longest cut tail that starts a slot's text is that slot.
+      if (/(\.\.\.|…)$/.test(v)) {
+        const tail = v.replace(/\s*(\.\.\.|…)$/, '')
+        for (let i = 0; i < tail.length; i = tail.indexOf(' ', i + 1) + 1 || tail.length) {
+          const cut = tail.slice(i).trim()
+          if (cut.length < 15) break
+          const hit = textList.find((s) => s.norm.length > cut.length && s.norm.startsWith(cut))
+          if (hit) {
+            slots.push(hit.key)
+            rest = `${tail.slice(0, i)} \u0000 `
+            break
+          }
+        }
+      }
       for (const s of textList) {
         if (s.norm.length > rest.length) continue
         const occ = occurrences(rest, s.norm)
@@ -157,6 +172,12 @@ export function createMatcher(contract, siteUrl) {
       .split('?')[0]
     if (addr !== String(item.value).trim() && rawSample.has(decodeURIComponent(addr)))
       return { status: 'matched', by: 'address slot', slots: rawSample.get(decodeURIComponent(addr)) }
+    // Joomla's e-mail cloaking turns an address written in a slot's text into a mailto link.
+    if (/^mailto:/i.test(String(item.value).trim()) && addr.includes('@')) {
+      const a = decodeURIComponent(addr).toLowerCase()
+      const hit = textList.find((s) => occurrences(s.norm, a).length)
+      if (hit) return { status: 'matched', by: 'address inside a slot text', slots: [hit.key] }
+    }
     let u
     try {
       u = new URL(item.value, site)
