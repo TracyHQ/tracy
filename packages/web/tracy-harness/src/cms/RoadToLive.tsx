@@ -276,6 +276,36 @@ function Outside({ fix }: { fix: OutsideFix }) {
   )
 }
 
+/**
+ * The fix of a red or warn step, exactly as the server read it from the fix registry (#432): the text, then the
+ * command to run (with a copy button) and the skill section, when the registry names them.
+ */
+function RegistryFix({ fix }: { fix: NonNullable<RoadStep['fix']> }) {
+  return (
+    <div className="flex flex-col gap-1 border-border border-s-2 ps-2" data-road-fix="">
+      <p className="break-words text-sm leading-snug" data-road-fix-text="">
+        {fix.text}
+      </p>
+      {fix.command ? (
+        <div className="flex items-start gap-1 rounded bg-muted/60 ps-2">
+          <code
+            className="min-w-0 flex-1 whitespace-pre-wrap break-words py-1 font-mono text-xs"
+            data-road-fix-command=""
+          >
+            {fix.command}
+          </code>
+          <CopyButton text={fix.command} />
+        </div>
+      ) : null}
+      {fix.skill ? (
+        <code className="break-all font-mono text-muted-foreground text-xs" data-road-fix-skill="">
+          {fix.skill}
+        </code>
+      ) : null}
+    </div>
+  )
+}
+
 /** Open on GitHub as a small inline link, on the release step's line. */
 function GithubLink({ tag }: { tag: string }) {
   const t = useT()
@@ -582,8 +612,9 @@ function StepRow({
         ) : null}
       </div>
       {open && isDs && guide.rules ? (
-        <div className="ps-[2.625rem]">
+        <div className="flex flex-col gap-1 ps-[2.625rem]">
           <DesignSystemStepBody guide={{ ...guide, rules: guide.rules }} />
+          {s.fix ? <RegistryFix fix={s.fix} /> : null}
         </div>
       ) : open ? (
         <div className="flex flex-col gap-1 ps-[2.625rem]">
@@ -603,6 +634,7 @@ function StepRow({
             </ol>
           ) : null}
           {guide.outside ? <Outside fix={guide.outside} /> : null}
+          {s.fix ? <RegistryFix fix={s.fix} /> : null}
         </div>
       ) : doneRules ? (
         <div className="flex flex-col gap-1 ps-[2.625rem]">

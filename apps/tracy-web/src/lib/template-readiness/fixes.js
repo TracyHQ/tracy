@@ -409,3 +409,23 @@ export function fixOf(code, params = {}) {
   if (entry.skill) out.skill = entry.skill
   return out
 }
+
+/** The states of a road step that ask for a fix: to do now, or done with something worth fixing. */
+const NEEDS_FIX = new Set(['todo', 'warn'])
+
+/**
+ * A road with the registry's fix on each step that asks for one (`todo` or `warn`), as `fix`, so Road to live shows
+ * the fix text under a red step from this registry alone. A step whose code has no entry (the steps after the
+ * verdict's) gets none. The road handed in is not changed.
+ * @template {{ state: string, code: string, params?: Record<string, unknown> }} S
+ * @param {S[] | null} road
+ * @returns {(S & { fix?: { text: string, command?: string, skill?: string } })[] | null}
+ */
+export function withFixes(road) {
+  if (!Array.isArray(road)) return road
+  return road.map((s) => {
+    if (!NEEDS_FIX.has(s.state)) return s
+    const fix = fixOf(s.code, s.params ?? {})
+    return fix ? { ...s, fix } : s
+  })
+}

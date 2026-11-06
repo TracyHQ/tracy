@@ -8,10 +8,9 @@ import { readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-
-import { FAULT_FAMILIES } from '../src/lib/template-readiness/demo-measures-check.js'
 import { main } from '../scripts/template-readiness.mjs'
-import { FIXES, fixOf } from '../src/lib/template-readiness/fixes.js'
+import { FAULT_FAMILIES } from '../src/lib/template-readiness/demo-measures-check.js'
+import { FIXES, fixOf, withFixes } from '../src/lib/template-readiness/fixes.js'
 
 const LIB = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'src', 'lib')
 const READINESS = path.join(LIB, 'template-readiness')
@@ -109,4 +108,29 @@ test('the command line prints the fix under each piece that is not green, and in
   assert.ok(red.length > 0)
   for (const p of red) assert.match(p.fix?.text ?? '', /\S/, `${p.piece} has no fix in --json`)
   for (const p of json.pieces.filter((x) => x.state === 'done')) assert.equal(p.fix, undefined)
+})
+
+test('withFixes puts the registry fix on each red or warn step of a road, and nothing on the others', () => {
+  const road = [
+    { step: 'release', state: 'done', code: 'release-published', params: {} },
+    { step: 'install-file', state: 'todo', code: 'release-draft', params: {} },
+    {
+      step: 'contract',
+      state: 'warn',
+      code: 'pin-behind-contract',
+      params: { pinned: '1.0.0', latest: '1.0.1' }
+    },
+    { step: 'demo', state: 'todo', code: 'demo-failed', params: {} },
+    { step: 'customize', state: 'blocked', code: 'customize-waiting', params: {}, blockedBy: 'contract' }
+  ]
+  const out = withFixes(road)
+  assert.equal(out[0].fix, undefined)
+  assert.deepEqual(out[1].fix, fixOf('release-draft', {}))
+  assert.match(out[2].fix.text, /from 1\.0\.0 to 1\.0\.1/)
+  // A code the registry does not hold yet (the steps after the verdict's) carries no fix.
+  assert.equal(out[3].fix, undefined)
+  assert.equal(out[4].fix, undefined)
+  // The road it was handed is left as it was.
+  assert.equal(road[1].fix, undefined)
+  assert.equal(withFixes(null), null)
 })

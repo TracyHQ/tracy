@@ -1,0 +1,2 @@
+- **A red or warn step on Road to live shows its fix text from the fix registry** - Akemi · `feat/joomla-template-readiness` (ticket #432) · 2026-11-06
+  **Affects:** /ops users of the Templates page. Under each open step whose code has a registry entry, Road to live now shows the fix text, the command to run (with a copy button) and the skill section, exactly as `apps/tracy-web/src/lib/template-readiness/fixes.js` words them. The release list of `/ops/api/quickstarts` carries a `fix` object on those road steps (`withFixes`); nothing else changes.

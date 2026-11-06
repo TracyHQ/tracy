@@ -1367,3 +1367,24 @@ test('Design system: verdict, runs, the paste block up front, every rule behind 
   )
   assert.doesNotMatch(row.textContent, /[–—]/, 'no dash')
 })
+
+test('Road to live: a red step shows the fix text the server read from the fix registry, with its command and skill', async () => {
+  const fix = {
+    text: 'Publish the GitHub release of the quickstart: a draft cannot be installed by anything.',
+    command: 'node scripts/example-fix.mjs --tag example',
+    skill: '.agents/skills/quickstart-contract/SKILL.md section 9'
+  }
+  const road = WITH_CONTRACT_ROAD.map((s) =>
+    s.step === 'release' ? { ...s, state: 'todo', code: 'release-draft', fix } : s
+  )
+  const r = release('quickstart/ja-restaurant/j6', 'joomla', 'none', { version: '1.0.2', road })
+  const ui = await mount(lib.RoadToLive, { releases: [r], writable: true, onGo: noop })
+  await ui.click(ui.host.querySelector('[data-road-release] [data-road-toggle]'))
+  const step = ui.host.querySelector('[data-road-step="release"]')
+  assert.equal(step.querySelector('[data-road-fix-text]').textContent, fix.text)
+  assert.equal(step.querySelector('[data-road-fix-command]').textContent, fix.command)
+  assert.equal(step.querySelector('[data-road-fix-skill]').textContent, fix.skill)
+  // A done step shows no fix block.
+  assert.equal(ui.host.querySelector('[data-road-step="install-file"] [data-road-fix]'), null)
+  assert.doesNotMatch(ui.host.textContent, /[\u2013\u2014]/)
+})

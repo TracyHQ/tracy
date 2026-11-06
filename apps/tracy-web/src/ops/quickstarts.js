@@ -45,6 +45,7 @@ import {
 } from '../lib/design-inspiration.js'
 import { readDesignSystemsShown, saveDesignSystemsShown } from '../lib/design-systems-setting.js'
 import { publishRefusalOf, roadOf } from '../lib/road-to-live.js'
+import { withFixes } from '../lib/template-readiness/fixes.js'
 import { designSystemIssues } from '../lib/template-design-system-readiness/readers/measurement.js'
 import { referoNames, withSystemNames } from '../lib/ds-system-names.js'
 import { shotThumb, thumbWidth } from '../lib/shot-thumb.js'
@@ -272,7 +273,8 @@ export function quickstartRoutes({
         readiness: readinessForRoad(checks, r),
         dsReadiness: dsReadinessOf(dsChecks, r)
       })
-      return withSystemNames(road, systemNames)
+      // each red or warn step carries its fix from the fix registry, the one place fix text lives (#432)
+      return withSystemNames(withFixes(road), systemNames)
     }
 
     const { reason } = await releasesToken(config, fetchImpl)
