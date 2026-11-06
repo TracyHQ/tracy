@@ -101,7 +101,7 @@ async function drawRung(ctx, s, frameId, p, rung) {
     : cut
       ? `drawn as a cut-out on a plain ${cut.groundName} ground (${cut.ground}), the ground removed by code: no owner photo is cut out`
       : tileDraw
-        ? `drawn (${p.mode}): a gallery tile is never hidden alone and no owner photo is left that its block does not already show`
+        ? `drawn (${p.mode}): a gallery tile is never hidden alone and no owner photo is left that can be cut clearly differently from its other cuts`
         : `drawn (${p.mode}): no owner photo fits`
   return {
     list,

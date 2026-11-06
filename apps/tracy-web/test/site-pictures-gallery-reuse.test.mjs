@@ -12,65 +12,66 @@ import { exportPictureMapping } from '../src/site-pictures/contract-mapping.js'
 import { reuseRegion } from '../src/site-pictures/reuse-crop.js'
 import { byFrame, finished, kit, p06, plan, rungs, tiles } from './_site-pictures-gallery.mjs'
 
-// Page t holds a lone frame (block-s) and a gallery of two tiles (block-t); pages u and d as before.
-const SHARED = [
-  ['page-t', 'block-s', 1, false],
-  ['page-t', 'block-t', 2, true],
-  ['page-u', 'block-u', 2, true],
-  ['page-d', 'block-d', 1, false]
-]
-
-test('a gallery tile no new photo fits reuses a photo of another block of its page, cut elsewhere', async () => {
-  const { parts, m, check } = await finished(new Set(['block-u.2', 'block-d.1']), 'run-reuse', {
-    layout: SHARED
-  })
-  // Code alone hides no tile: the tile it found no free photo for waits for the ladder.
+test('a gallery tile no new photo fits reuses a photo of its page, cut elsewhere, never next to its other tile', async () => {
+  const { parts, m, check } = await finished(new Set(['block-u.2', 'block-d.1']), 'run-reuse')
+  // Code alone hides no tile: the two tiles it found no free photo for wait for the ladder.
   assert.deepEqual(
     parts.pending.filter((x) => x.waitsFor === 'ladder').map((x) => x.frame),
-    ['block-t.2']
+    ['block-t.3', 'block-t.4']
   )
   assert.ok(!parts.frames.some((e) => e.source === 'hide'))
 
   const e = byFrame(m)
-  const lone = e.get('block-s.1')
   const first = e.get('block-t.1')
-  // Which photo goes where is code's order (darker first, then by id): the test names them S and T.
-  const S = lone.asset
-  const T = first.asset
-  assert.deepEqual([S, T].sort(), ['p-a', 'p-b'])
-  // block-t.2 takes the photo of block-s.1 (another block), never the one of block-t.1 (its own block, card AK).
-  const t2 = e.get('block-t.2')
-  assert.equal(t2.source, 'owner-photo')
-  assert.equal(t2.asset, S)
-  assert.deepEqual([t2.reuse.rung, t2.reuse.with], ['reuse', ['block-s.1']])
-  assert.ok(cropOverlap(t2.crop, lone.crop) <= REUSE_MAX_OVERLAP, JSON.stringify([t2.crop, lone.crop]))
-  assert.equal(t2.reuse.overlap, Number(cropOverlap(t2.crop, lone.crop).toFixed(3)))
-  assert.match(t2.reason, new RegExp(`^reused owner photo ${S}, also in block-s\\.1, cut to another region`))
-  assert.deepEqual(rungs(m, 'block-t.2'), [
+  const second = e.get('block-t.2')
+  // Which photo goes first is code's order (darker first, then by id): the test names them A and B.
+  const A = first.asset
+  const B = second.asset
+  assert.deepEqual([A, B].sort(), ['p-a', 'p-b'])
+  // block-t.3 takes the photo of block-t.1 (two tiles away), not the one of its neighbour block-t.2.
+  const t3 = e.get('block-t.3')
+  assert.equal(t3.source, 'owner-photo')
+  assert.equal(t3.asset, A)
+  assert.deepEqual([t3.reuse.rung, t3.reuse.with], ['reuse', ['block-t.1']])
+  assert.ok(cropOverlap(t3.crop, first.crop) <= REUSE_MAX_OVERLAP, JSON.stringify([t3.crop, first.crop]))
+  assert.equal(t3.reuse.overlap, Number(cropOverlap(t3.crop, first.crop).toFixed(3)))
+  assert.match(t3.reason, new RegExp(`^reused owner photo ${A}, also in block-t\\.1, cut to another region`))
+  assert.deepEqual(rungs(m, 'block-t.3'), [
     ['next-photo', 'skipped'],
     ['fewer-rows', 'skipped'],
     ['reuse', 'placed']
   ])
+  // block-t.4 sits next to block-t.3, which now shows A: it takes B of block-t.2, two tiles away.
+  const t4 = e.get('block-t.4')
+  assert.equal(t4.asset, B)
+  assert.deepEqual(t4.reuse.with, ['block-t.2'])
+  assert.ok(cropOverlap(t4.crop, second.crop) <= REUSE_MAX_OVERLAP)
+  assert.match(m.ladder.find((l) => l.frame === 'block-t.4').steps[2].detail ?? '', /^[0-9a-f]{12}$/)
 
-  // No photo left (the other photo of its page is in its own block, its own was rejected) and no drawer door: the
-  // rejected photos had a hard fault, so nothing is kept and it is returned, never hidden.
+  // No photo left (the other photo of the page is in the neighbouring tile, its own was rejected): returned, never hidden.
   assert.ok(!e.has('block-u.2'))
   const back = m.returns.find((r) => r.frame === 'block-u.2')
   assert.match(back.reason, /^a gallery tile is never hidden alone/)
-  const u2 = m.ladder.find((l) => l.frame === 'block-u.2').steps
-  assert.match(u2.find((x) => x.rung === 'reuse').detail, /no owner photo on the page can be reused/)
-  assert.deepEqual(
-    u2.slice(-5).map((x) => [x.rung, x.outcome]),
-    [
-      ['any-photo', 'skipped'],
-      ['draw', 'skipped'],
-      ['redraw', 'skipped'],
-      ['best-rejected', 'skipped'],
-      ['return', 'returned']
-    ]
+  // The last rung tries every photo: the neighbour's is never taken, the tile's own is rejected again.
+  const u2 = rungs(m, 'block-u.2')
+  assert.ok(u2.some(([r, o]) => r === 'reuse' && o === 'skipped'))
+  // Its rejected photos had a hard fault, so no rejected picture is kept either.
+  // With no drawer door the draw rungs are skipped too (card AK sends a tile no photo fits to the draw rung).
+  assert.deepEqual(u2.slice(-5), [
+    ['any-photo', 'skipped'],
+    ['draw', 'skipped'],
+    ['redraw', 'skipped'],
+    ['best-rejected', 'skipped'],
+    ['return', 'returned']
+  ])
+  assert.match(
+    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-5).detail,
+    /is in the neighbouring tile block-u\.1/
   )
-  assert.match(u2.at(-5).detail, /is already in block-u \(block-u\.1\)/)
-  assert.match(u2.at(-2).detail, /^every rejected picture has a hard fault/)
+  assert.match(
+    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-2).detail,
+    /^every rejected picture has a hard fault/
+  )
   // A frame that is not a gallery tile keeps today's ladder: hidden where the kit allows.
   assert.equal(e.get('block-d.1').source, 'hide')
   assert.deepEqual(rungs(m, 'block-d.1').slice(-2), [
@@ -78,11 +79,11 @@ test('a gallery tile no new photo fits reuses a photo of another block of its pa
     ['hide', 'hidden']
   ])
   // No tile anywhere is hidden; nothing is drawn.
-  for (const f of [...tiles('block-t', 2), ...tiles('block-u', 2)])
+  for (const f of [...tiles('block-t', 4), ...tiles('block-u', 2)])
     assert.notEqual(e.get(f)?.source, 'hide', f)
   assert.equal(m.drawer.calls.length, 0)
 
-  // The finished manifest passes the check, P06 included: the reuse keeps clear of its other cut.
+  // The finished manifest passes the check, P06 included: the reuses keep clear of their other cuts.
   const result = await check(m)
   assert.deepEqual(
     result.rules.filter((r) => r.status === 'fail').map((r) => [r.id, r.failures]),
@@ -91,126 +92,142 @@ test('a gallery tile no new photo fits reuses a photo of another block of its pa
   assert.equal(p06(result).status, 'pass')
 })
 
-test('the duplicate rule fails a photo shown twice on a page unless a gallery tile of another block reused it clear of the other', async () => {
-  const { m, check } = await finished(new Set(), 'run-dup', { layout: SHARED })
+test('the duplicate rule fails a photo shown twice on a page unless a gallery tile reused it clear of the other', async () => {
+  const { m, check } = await finished(new Set(), 'run-dup')
   const swap = (frame, change) => ({
     ...m,
     frames: m.frames.map((e) => (e.frame === frame ? { ...e, ...change } : e))
   })
-  const s1 = byFrame(m).get('block-s.1')
-  const t2 = byFrame(m).get('block-t.2')
-  const S = s1.asset
+  const t1 = byFrame(m).get('block-t.1')
+  const A = t1.asset
   assert.equal(p06(await check(m)).status, 'pass')
-  // The same photo with no reuse mark: two showings of S on page-t.
-  const noMark = p06(await check(swap('block-t.2', { reuse: null })))
+  // The same photo with no reuse mark: two showings of A on page-t.
+  const noMark = p06(await check(swap('block-t.3', { reuse: null })))
   assert.equal(noMark.status, 'fail')
   assert.match(
     noMark.failures[0].detail,
-    new RegExp(`brief asset ${S} is already shown in block-s\\.1 on page-t`)
+    new RegExp(`brief asset ${A} is already shown in block-t\\.1 on page-t`)
   )
   // Marked as reused, but cut the same way: too much shared.
-  const sameCut = p06(await check(swap('block-t.2', { crop: { ...s1.crop } })))
+  const sameCut = p06(await check(swap('block-t.3', { crop: { ...t1.crop } })))
   assert.equal(sameCut.status, 'fail')
   assert.match(sameCut.failures[0].detail, /at most 30% of the smaller cut/)
-  // The last rung allows at most half shared (card AK): the same cut fails, a cut sharing half or less passes.
-  const lastSame = swap('block-t.2', {
-    crop: { ...s1.crop },
-    reuse: { rung: 'any-photo', with: ['block-s.1'], overlap: 1 }
+  // Marked as reused, cut elsewhere, but next to the other showing: block-t.2 holding A beside block-t.1.
+  const t3 = byFrame(m).get('block-t.3')
+  const nextTo = swap('block-t.2', {
+    asset: A,
+    crop: t3.crop,
+    reuse: { rung: 'reuse', with: ['block-t.1'], overlap: 0 }
+  })
+  assert.equal(p06(await check(nextTo)).status, 'fail')
+  // The last rung allows at most half shared (card AK): the same cut, or a slightly smaller one (a near duplicate),
+  // fails; a cut sharing half or less passes; never beside it.
+  const lastSame = swap('block-t.3', {
+    crop: { ...t1.crop },
+    reuse: { rung: 'any-photo', with: ['block-t.1'], overlap: 1 }
   })
   assert.equal(p06(await check(lastSame)).status, 'fail')
-  const half = { ...s1.crop, y: s1.crop.y + s1.crop.height / 2 }
-  assert.ok(cropOverlap(half, s1.crop) <= 0.5)
-  const lastHalf = swap('block-t.2', {
-    crop: half,
-    reuse: { rung: 'any-photo', with: ['block-s.1'], overlap: 0.5 }
+  const inner = { ...t1.crop, width: t1.crop.width - 50, height: t1.crop.height - 50 }
+  assert.ok(cropOverlap(inner, t1.crop) > 0.5)
+  const lastNear = swap('block-t.3', {
+    crop: inner,
+    reuse: { rung: 'any-photo', with: ['block-t.1'], overlap: 1 }
   })
-  assert.equal(p06(await check(lastHalf)).status, 'pass')
-  // One photo twice in one block always fails, cut clear or not: block-t.1 holding S beside block-t.2.
-  const inBlock = swap('block-t.1', {
-    asset: S,
+  assert.equal(p06(await check(lastNear)).status, 'fail')
+  const half = { ...t1.crop, y: t1.crop.y + t1.crop.height / 2 }
+  assert.ok(cropOverlap(half, t1.crop) <= 0.5)
+  const lastOther = swap('block-t.3', {
     crop: half,
-    reuse: { rung: 'any-photo', with: ['block-t.2'], overlap: 0 }
+    reuse: { rung: 'any-photo', with: ['block-t.1'], overlap: 0.5 }
   })
-  assert.equal(p06(await check(inBlock)).status, 'fail')
+  assert.equal(p06(await check(lastOther)).status, 'pass')
+  const lastNext = swap('block-t.2', {
+    asset: A,
+    crop: half,
+    reuse: { rung: 'any-photo', with: ['block-t.1'], overlap: 0.5 }
+  })
+  assert.equal(p06(await check(lastNext)).status, 'fail')
   // A frame that is not a gallery tile may not reuse: block-d.1 also shown on page-t, marked as reused, cut clear.
-  const both = plan(SHARED)
-  both.pages[0].blocks.push(both.pages[3].blocks[0])
+  const both = plan()
+  both.pages[0].blocks.push(both.pages[2].blocks[0])
   const single = swap('block-d.1', {
-    asset: S,
-    crop: t2.crop,
-    reuse: { rung: 'reuse', with: ['block-s.1'], overlap: 0 }
+    asset: A,
+    crop: t3.crop,
+    reuse: { rung: 'reuse', with: ['block-t.1'], overlap: 0 }
   })
-  const loneReuse = p06(await check(single, both))
-  assert.equal(loneReuse.status, 'fail')
+  const lone = p06(await check(single, both))
+  assert.equal(lone.status, 'fail')
   assert.ok(
-    loneReuse.failures.some(
+    lone.failures.some(
       (f) =>
-        (f.where === 'block-d.1' && f.detail.includes(`${S} is already shown in block-s.1`)) ||
-        (f.where === 'block-s.1' && f.detail.includes(`${S} is already shown in block-d.1`))
+        (f.where === 'block-d.1' && f.detail.includes(`${A} is already shown in block-t.1`)) ||
+        (f.where === 'block-t.1' && f.detail.includes(`${A} is already shown in block-d.1`))
     ),
-    JSON.stringify(loneReuse.failures)
+    JSON.stringify(lone.failures)
   )
 })
 
-test('a gallery never shows one owner photo twice in its block; with no other photo left the tile is drawn', async () => {
-  // Card AK: one gallery of four tiles and two owner photos. Code places both; the two other tiles may not take
-  // either again in the same block (reuse, any-photo), so they go to the draw rung.
+test('one gallery block shows an owner photo again only in a clearly different cut, never a near duplicate', async () => {
+  // Card AK (corrected 06/11/2026): two cuts of one photo in one block share at most half; the bug was 0.969.
   const {
     m,
     check,
-    looker,
     kit: k
   } = await finished(new Set(), 'run-ak', {
     layout: [['page-t', 'block-t', 4, true]],
     draw: true
   })
   const e = byFrame(m)
-  const assets = tiles('block-t', 4)
-    .map((f) => e.get(f))
-    .filter((x) => x?.source === 'owner-photo')
-    .map((x) => x.asset)
-  assert.equal(new Set(assets).size, assets.length, JSON.stringify(assets))
-  for (const f of ['block-t.3', 'block-t.4']) {
-    assert.equal(e.get(f)?.source, 'drawn', f)
-    assert.deepEqual(e.get(f).filledBy, { rung: 'draw', faults: [] })
-    const steps = m.ladder.find((l) => l.frame === f).steps
-    assert.match(steps.find((x) => x.rung === 'reuse').detail, /is already in block-t/)
-    assert.match(steps.find((x) => x.rung === 'any-photo').detail, /is already in block-t/)
-  }
-  assert.equal(looker.drawings.length, 2)
-  // The picture check passes it (a drawn gallery tile after the any-photo rung is no P07 failure), and so does the export.
+  const ids = tiles('block-t', 4)
+  for (const a of ids)
+    for (const b of ids) {
+      if (a >= b || e.get(a).source !== 'owner-photo' || e.get(b).source !== 'owner-photo') continue
+      if (e.get(a).asset !== e.get(b).asset) continue
+      assert.ok(cropOverlap(e.get(a).crop, e.get(b).crop) <= 0.5, `${a} ${b}`)
+    }
   const result = await check(m)
   assert.deepEqual(
     result.rules.filter((r) => r.status === 'fail').map((r) => [r.id, r.failures]),
     []
   )
-  const exported = exportPictureMapping({ pictures: m, contract: 'c', revision: 'r', kit: k })
-  assert.deepEqual(exported.problems, [])
+  assert.deepEqual(exportPictureMapping({ pictures: m, contract: 'c', revision: 'r', kit: k }).problems, [])
 
-  // The same photo twice in the block, or two cuts sharing more than half, fails the check and the export.
+  // The same photo twice in the block: a clearly different cut (30% shared) passes the check and the export; a near
+  // duplicate (97% shared) fails P06 and the export leaves it out as a problem.
   const t1 = e.get('block-t.1')
-  const twice = {
+  const cutSharing = (share) => ({ ...t1.crop, y: t1.crop.y + Math.round(t1.crop.height * (1 - share)) })
+  const with3 = (crop, rung) => ({
     ...m,
     frames: m.frames.map((x) =>
       x.frame === 'block-t.3'
         ? {
             ...t1,
             frame: 'block-t.3',
-            reuse: { rung: 'any-photo', with: ['block-t.1'], overlap: 0.2 },
-            crop: { ...t1.crop, width: t1.crop.width - 50, height: t1.crop.height - 50 }
+            crop,
+            reuse: { rung, with: ['block-t.1'], overlap: cropOverlap(crop, t1.crop) }
           }
         : x
     )
-  }
-  const dup = p06(await check(twice))
+  })
+  const clear = cutSharing(0.3)
+  assert.ok(Math.abs(cropOverlap(clear, t1.crop) - 0.3) < 0.01)
+  const allowed = with3(clear, 'reuse')
+  assert.equal(p06(await check(allowed)).status, 'pass')
+  const okOut = exportPictureMapping({ pictures: allowed, contract: 'c', revision: 'r', kit: k })
+  assert.equal(okOut.mapping.changes['module-t.3'], t1.sitePath)
+  assert.deepEqual(okOut.problems, [])
+  const near = cutSharing(0.97)
+  assert.ok(cropOverlap(near, t1.crop) > 0.96)
+  const refused = with3(near, 'any-photo')
+  const dup = p06(await check(refused))
   assert.equal(dup.status, 'fail')
   assert.match(dup.failures[0].detail, new RegExp(`brief asset ${t1.asset} is already shown in block-t\\.1`))
-  const out = exportPictureMapping({ pictures: twice, contract: 'c', revision: 'r', kit: k })
+  const out = exportPictureMapping({ pictures: refused, contract: 'c', revision: 'r', kit: k })
   assert.ok(!('module-t.3' in out.mapping.changes))
   assert.deepEqual(out.problems, [
     {
       where: 'block-t.3',
-      detail: `owner photo ${t1.asset} is already shown in block-t.1 of the same block block-t`
+      detail: `owner photo ${t1.asset} is already shown in block-t.1 of the same block block-t, the two cuts sharing 97% (at most 50%)`
     }
   ])
 })

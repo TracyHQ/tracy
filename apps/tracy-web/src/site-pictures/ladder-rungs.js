@@ -8,9 +8,8 @@
 // redrawn once, then hidden or returned; any other cut-out (a person, any real photo) is never drawn: hidden or returned.
 // A gallery tile (an any-real frame of a picture list, gallery-tiles.js) is never hidden alone: after the next photo
 // and fewer rows it reuses an owner photo already on its page, cut to another region, then takes any usable owner
-// photo (any-photo, heads whole, not its neighbour's photo, not another tile's very cut). Neither ever shows one owner
-// photo twice in one kit block (card AK); with no photo left the tile is drawn (draw, redraw), and returned only after
-// that.
+// photo (any-photo, heads whole, not its neighbour's photo, at most half shared with another cut of the photo, card AK);
+// with no such cut left the tile is drawn (draw, redraw), and returned only after that.
 //
 // A frame the plan wants filled is never left without a picture while one can be had (owner decision 06/11/2026, card
 // AJ): before `return`, a drawn frame is drawn again in other compositions (`redraw-alt`, the subject whole and centred

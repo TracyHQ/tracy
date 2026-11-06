@@ -1,6 +1,7 @@
 // No gallery tile ends hidden or returned while a picture can be had (owner decisions 04/11/2026 and 06/11/2026, ADR
-// 0043 section 4): the last photo rung "any-photo" fills a tile from an owner photo its block does not show yet, and a
-// tile no photo is left for is drawn (card AK); on the invented Harrow Lane Climbing Wall (_site-pictures-gallery.mjs).
+// 0043 section 4): the last photo rung "any-photo" fills a tile from an owner photo cut clearly differently from its
+// other cuts on the page (at most half shared, card AK), and a tile no such cut is left for is drawn; on the invented
+// Harrow Lane Climbing Wall (_site-pictures-gallery.mjs).
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { byFrame, finished, rule, rungs, SQUARE, TALL, tiles } from './_site-pictures-gallery.mjs'
@@ -8,8 +9,8 @@ import { byFrame, finished, rule, rungs, SQUARE, TALL, tiles } from './_site-pic
 const SIX = [['page-t', 'block-t', 6, true]]
 
 test('with only three photos for six tiles, every tile is filled with a different picture', async () => {
-  // Card AK: no owner photo twice in one block, so the three tiles left are drawn (block-t.6 once more after the
-  // looker rejects its first drawing).
+  // Card AK: a square photo cut whole leaves no second cut sharing at most half with it, so the three tiles left are
+  // drawn (block-t.6 once more after the looker rejects its first drawing).
   const { m, check } = await finished(new Set(), 'run-fill', {
     layout: SIX,
     photos: SQUARE,

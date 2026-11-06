@@ -7,8 +7,9 @@
 /** The most a reused cut may share with any other cut of the same photo, as a share of the smaller cut's area. */
 export const REUSE_MAX_OVERLAP = 0.3
 /**
- * The most an any-photo cut may share with another cut of the same photo on its pages (owner decision 06/11/2026,
- * card AK: a cut sharing 97% read as the same picture twice). One owner photo is never shown twice in one block.
+ * The most an any-photo cut may share with another cut of the same photo on its pages, and the most any two cuts of
+ * one photo in one kit block may share (owner decision 06/11/2026, card AK: a cut sharing 97% read as the same
+ * picture twice; a clearly different cut of the same photo is fine).
  */
 export const ANY_PHOTO_MAX_OVERLAP = 0.5
 

@@ -11,13 +11,11 @@ const framesOnly = (view) => view.entries.filter((e) => e.list === 'frames')
 // gallery tile that took the reuse rung (ADR 0043 section 4): its entry says `reuse`, the frame is a gallery tile, and
 // against every other showing of the photo on the page its cut shares at most REUSE_MAX_OVERLAP of the smaller cut and
 // the two tiles are not neighbours; a tile filled by the last rung (`reuse.rung` "any-photo") is not next to the other
-// showing and its cut shares at most ANY_PHOTO_MAX_OVERLAP. Never two showings in one kit block (card AK). Two showings
-// neither of which took one of these rungs always fail.
+// showing and its cut shares at most ANY_PHOTO_MAX_OVERLAP (card AK: a near duplicate, 97% shared, was let through).
+// Two showings neither of which took one of these rungs always fail.
 function reuseAllowed(idx, a, b) {
   const reused = a.reuse ? a : b.reuse ? b : null
   if (!reused || !idx.galleryTile(reused.frame) || !a.crop || !b.crop) return false
-  const blockOf = (e) => idx.frames.get(e.frame)?.blockId
-  if (blockOf(a) && blockOf(a) === blockOf(b)) return false
   if (neighbours(idx.gallery(a.frame), idx.gallery(b.frame))) return false
   const crop = (e) => ({ x: e.crop.x, y: e.crop.y, width: e.crop.width, height: e.crop.height })
   const [x, y] = [crop(a), crop(b)]
@@ -25,7 +23,7 @@ function reuseAllowed(idx, a, b) {
   return cropOverlap(x, y) <= most + 1e-9
 }
 
-const REUSE_RULE = ` (a reuse must be a gallery tile of another block, not next to the other tile, its cut sharing at most ${REUSE_MAX_OVERLAP * 100}% of the smaller cut, or ${ANY_PHOTO_MAX_OVERLAP * 100}% after the any-photo rung)`
+const REUSE_RULE = ` (a reuse must be a gallery tile, not next to the other tile, its cut sharing at most ${REUSE_MAX_OVERLAP * 100}% of the smaller cut, or ${ANY_PHOTO_MAX_OVERLAP * 100}% after the any-photo rung)`
 
 export function checkP06({ R, view, idx }) {
   const r = R.p06

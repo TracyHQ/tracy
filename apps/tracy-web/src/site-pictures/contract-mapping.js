@@ -18,6 +18,7 @@
 // A frame the manifest returns (the plan wants it filled and the step left it without a picture) is a problem of the
 // package, never silently left out: only the logo frame, which the brand step fills, is not.
 import { contentMapKey } from '../lib/content-map-key.js'
+import { ANY_PHOTO_MAX_OVERLAP, cropOverlap } from './gallery-tiles.js'
 import { readPictures } from './manifest-shape.js'
 import { paintKindOf } from '../lib/picture-paint/paint.js'
 
@@ -72,8 +73,8 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     ? new Set(kit.contentMap.slots.filter((s) => s.type === 'image').map((s) => s.key))
     : null
   const tooNarrow = narrowerThanSlot(kit?.contentMap)
-  // The kit block of each frame, and the owner photos already placed in each block: one photo is never shown twice
-  // in one block (card AK).
+  // The kit block of each frame, and the cuts of each owner photo already placed in each block: two cuts of one photo
+  // in one block share at most ANY_PHOTO_MAX_OVERLAP (card AK: a near duplicate reads as the same picture twice).
   const blockOf = new Map()
   for (const b of Array.isArray(kit?.blocks) ? kit.blocks : [])
     for (const f of Array.isArray(b?.frames) ? b.frames : []) if (f?.id) blockOf.set(f.id, b.id)
@@ -173,12 +174,21 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     }
     const block = blockOf.get(e.frame)
     if (block && e.source === 'owner-photo' && e.asset) {
-      const other = shownIn.get(`${block} ${e.asset}`)
-      if (other) {
-        bad(e.frame, `owner photo ${e.asset} is already shown in ${other} of the same block ${block}`)
+      const key = `${block} ${e.asset}`
+      const near = e.crop
+        ? (shownIn.get(key) ?? []).find(
+            (o) => o.crop && cropOverlap(o.crop, e.crop) > ANY_PHOTO_MAX_OVERLAP + 1e-9
+          )
+        : null
+      if (near) {
+        const share = Math.round(cropOverlap(near.crop, e.crop) * 100)
+        bad(
+          e.frame,
+          `owner photo ${e.asset} is already shown in ${near.frame} of the same block ${block}, the two cuts sharing ${share}% (at most ${ANY_PHOTO_MAX_OVERLAP * 100}%)`
+        )
         continue
       }
-      shownIn.set(`${block} ${e.asset}`, e.frame)
+      shownIn.set(key, [...(shownIn.get(key) ?? []), { frame: e.frame, crop: e.crop }])
     }
     // A file narrower than the slot's minimum is refused by the write door and the demo picture stays (card AI).
     const narrow = tooNarrow(key, e.width)
