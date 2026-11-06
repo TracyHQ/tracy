@@ -12,10 +12,11 @@ const seen = (finding) => {
 }
 
 /**
- * @param {{ name: string, ids: string[], level: 'block' | 'warn', causingStep: number, needsBaseline?: boolean }} spec
- *   `ids`: the host's checks this group answers for
+ * @param {{ name: string, ids: string[], level: 'block' | 'warn', causingStep: number, needsBaseline?: boolean,
+ *   blame?: (failure: object, context: object) => object | null }} spec
+ *   `ids`: the host's checks this group answers for; `blame`: another step answering for one failure, or null
  */
-export function hostVerdictGroup({ name, ids, level, causingStep, needsBaseline = false }) {
+export function hostVerdictGroup({ name, ids, level, causingStep, needsBaseline = false, blame = null }) {
   return {
     name,
     causingStep,
@@ -33,14 +34,16 @@ export function hostVerdictGroup({ name, ids, level, causingStep, needsBaseline 
         if (check.skipped) throw new GroupUnmeasured(`The host could not judge ${id}: ${check.skipped}.`)
         if (check.pass) continue
         const found = check.detail.length ? check.detail : [{}]
-        for (const f of found)
-          failures.push({
+        for (const f of found) {
+          const failure = {
             page: f.page ?? null,
             slot: f.slot ?? null,
             measured: seen(f) ?? check.measured ?? null,
             level,
             reason: `${id}: ${check.expected}`
-          })
+          }
+          failures.push(blame?.(failure, context) ?? failure)
+        }
       }
       if (needsBaseline) failures.push(...noDemoFaults(context.baseline, read.paths))
       return { checked: read.paths.length, widths: WIDTHS, calls: read.calls, ids, failures }

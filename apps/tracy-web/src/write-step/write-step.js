@@ -36,6 +36,7 @@ import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './
 import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
 import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
+import { climbTextFallback, withTextFallback } from './text-fallback.js'
 import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
@@ -166,6 +167,7 @@ export async function runWriteStep(input) {
   let restored = []
   let renamedLines = null
   let emphasis = new Map()
+  let fallbacks = new Map()
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -200,7 +202,7 @@ export async function runWriteStep(input) {
       })
     }
     lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
-    lines = withEmphasis(lines, emphasis)
+    lines = withTextFallback(withEmphasis(lines, emphasis), fallbacks)
     if (emphasis.size)
       report.emphasis = [...emphasis].map(([key, e]) => ({
         key,
@@ -539,9 +541,9 @@ export async function runWriteStep(input) {
     delete mapping.changes[key]
     delete mapping.evidence?.[key]
   }
-  const wrote = await timed('write', async () => {
-    const { applyJoomlaContract } = await seeder('apply-joomla-contract')
-    return writeContract({
+  const { applyJoomlaContract } = await seeder('apply-joomla-contract')
+  const wrote = await timed('write', () =>
+    writeContract({
       applyJoomlaContract,
       apply,
       siteKey,
@@ -550,11 +552,36 @@ export async function runWriteStep(input) {
       isCancelled,
       sleep
     })
-  })
+  )
   report.rounds = wrote.rounds
   emptied = wrote.emptied ?? []
   if (wrote.cancelled) return finish('cancelled', null, [], wrote.refused)
   if (wrote.stop) return finish('stopped', wrote.stop, [], wrote.refused)
+  // A refused text slot keeps no demo words if it can help it: plain words, else hidden, else said (text-fallback.js).
+  fallbacks = await climbTextFallback({
+    refused: wrote.refused,
+    changes: mapping.changes,
+    evidence: mapping.evidence,
+    kit: kit.doc,
+    contentMap,
+    before: reading,
+    inspect: () => apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } }),
+    send: (order) =>
+      writeContract({
+        applyJoomlaContract,
+        apply,
+        siteKey,
+        reading: order.reading,
+        mapping: {
+          contract: mapping.contract,
+          changes: order.changes,
+          evidence: order.evidence,
+          emptySlots: order.emptySlots
+        },
+        isCancelled,
+        sleep
+      })
+  })
   const written = [...wrote.written, ...held]
   // A heading whose demo value is HTML takes its emphasis as real tags, after the contract call wrote its words (emphasis-stage.js).
   emphasis = await runEmphasisStage({ door, siteKey, contentMap, written: wrote.written, ordered })

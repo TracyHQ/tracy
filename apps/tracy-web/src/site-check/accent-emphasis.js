@@ -74,6 +74,14 @@ export function judgeAccentEmphasis(kit, lines, measures) {
       const named = /\(\(\s*span\b|<\s*span\b/i.test(`${line.ordered} ${line.stored ?? ''}`)
       if (showsRawCodes(h.text))
         failures.push({ ...where, level: 'block', causingStep: WRITE_STEP, reason: RAW_REASON })
+      else if (!spans.length && line.textFallback === 'plain')
+        failures.push({
+          ...where,
+          level: 'block',
+          causingStep: WRITE_STEP,
+          reason:
+            'The plugin refused the heading with its emphasis and the write step wrote it plain, so it prints in one colour.'
+        })
       else if (!spans.length)
         failures.push({
           ...where,

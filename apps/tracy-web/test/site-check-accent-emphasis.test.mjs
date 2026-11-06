@@ -109,3 +109,15 @@ test('a heading printed on several pages is judged on each of them', () => {
   )
   assert.equal(r.checked, 2)
 })
+
+test('a heading the write step wrote plain after a refusal blames the write step, not the writer', () => {
+  const lines = [
+    { slot: 'block-2.1', status: 'written', ordered: 'European Coaching in Dubai', textFallback: 'plain' }
+  ]
+  const r = judgeAccentEmphasis(KIT, lines, page([]))
+  assert.deepEqual(
+    r.failures.map((f) => [f.level, f.causingStep]),
+    [['block', 9]]
+  )
+  assert.match(r.failures[0].reason, /plain/)
+})
