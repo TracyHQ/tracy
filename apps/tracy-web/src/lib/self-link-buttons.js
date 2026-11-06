@@ -3,8 +3,8 @@
 // section chrome prints `div.bottom-actions` from the module's `link-btn` param), so a demo button linked to the page it is on
 // stays. The kit names, per template, the containers of such buttons (`site.selfLinkButtons`), and the write step puts CSS rules
 // in the kit's head injection block that hide, on each kept page, a link in those containers whose address is that page's own.
-// Each rule is scoped by the page's body classes (the option, the view and the menu item id: T4 prints `item-<id>`, T3
-// `itemid-<id>`, lib/kit-framework.js) and names the page's own addresses exactly, so a link to any other page is never hidden.
+// Each rule is scoped by the page classes (the option, the view and the menu item id: T4 prints `item-<id>` on the body, T3
+// `itemid-<id>` on the html element, lib/kit-framework.js) and names the page's own addresses exactly, so a link to any other page is never hidden.
 import { markedBlockIn, withMarkedBlock } from './empty-video-buttons.js'
 
 /** The write report line of the rules (write-step/self-link-buttons-stage.js), which the site check reads too. */
@@ -95,21 +95,28 @@ function bodyOf(row, framework) {
   return pageBodyOf({ option, view, id, framework })
 }
 
-/** The class each framework prints on the body for the active menu item: T3 `itemid-<id>`, T4 (and the default) `item-<id>`. */
+/** The class each framework prints for the active menu item: T3 `itemid-<id>`, T4 (and the default) `item-<id>`. */
 const itemClassOf = (framework, id) => (framework === 't3' ? `itemid-${id}` : `item-${id}`)
 
-/** A menu item class of either framework, at the end of a body's classes (the look guard's test). */
+/**
+ * The element each framework prints the page classes on: T4 the body, T3 the html element (its `tpls/default.php` prints
+ * `<html class='<jdoc:include type="pageclass" />'>` and a bare `<body>`), so a T3 rule scoped by the body never matches.
+ */
+const pageElementOf = (framework) => (framework === 't3' ? 'html' : 'body')
+
+/** A menu item class of either framework, at the end of a page's classes (the look guard's test). */
 const ITEM_CLASS_END = /\.(?:item|itemid)-\d+$/
 
 /**
- * The body classes the framework prints on a page opened as `view` of `option` under menu item `id`, or null when one is not a
- * plain token. `framework` is `t3` or `t4` (lib/kit-framework.js); anything else reads as T4. Shared with lib/created-page-hide.js.
+ * The page classes the framework prints on a page opened as `view` of `option` under menu item `id`, on the element it prints
+ * them on (T4 `body`, T3 `html`), or null when one is not a plain token. `framework` is `t3` or `t4` (lib/kit-framework.js);
+ * anything else reads as T4. Shared with lib/created-page-hide.js.
  * @param {{ option?: string | null, view: string, id: number, framework?: string | null }} page
  */
 export function pageBodyOf({ option = null, view, id, framework = null }) {
   if (!Number.isInteger(id) || id < 1 || !TOKEN.test(String(view ?? '')) || (option && !TOKEN.test(option)))
     return null
-  return `body${option ? `.${option}` : ''}.view-${view}.${itemClassOf(framework, id)}`
+  return `${pageElementOf(framework)}${option ? `.${option}` : ''}.view-${view}.${itemClassOf(framework, id)}`
 }
 
 /** A page's own addresses as a link in its content prints them. */
@@ -153,7 +160,7 @@ export const selfLinkBlockIn = (content) => markedBlockIn(content, SELF_LINKS_ST
 export const withSelfLinkBlock = (content, block) =>
   withMarkedBlock(content, block, SELF_LINKS_START, SELF_LINKS_END)
 
-const SELECTOR = /^body((?:\.[\w-]+)+) (\S+) a\[href="([^"\\<>]*)"\]$/
+const SELECTOR = /^(?:body|html)((?:\.[\w-]+)+) (\S+) a\[href="([^"\\<>]*)"\]$/
 
 /** Whether a block holds only self link rules on the kit's containers, scoped to one page each (the look guard's test). */
 export function isSelfLinkBlock(block, containers) {
