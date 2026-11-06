@@ -230,7 +230,7 @@ async function writeRoutedPage({ order, call, write, make, rows, owners, kit, ca
  *   kept: { id: string, path: string }[] }>} `pages`: each page's address or why it has none; `results`: by report line slot;
  *   `kept`: the pages the site check should open
  */
-export async function createPages({ door, siteKey, kit, plan, owners, extras, last = NO_LAST }) {
+export async function createPages({ door, siteKey, kit, plan, owners, extras, last = NO_LAST, phones = [] }) {
   const out = { pages: new Map(), results: [], lines: [], kept: [] }
   const finish = (order, done) => {
     const words = linesOf(order, done)
@@ -253,7 +253,7 @@ export async function createPages({ door, siteKey, kit, plan, owners, extras, la
         path: done.routeLink ? `/${ROUTE_ALIAS}/${order.slug}` : `/${order.slug}`
       })
   }
-  const orders = pagesToCreate(plan).map((page) => orderOf(page, extras))
+  const orders = pagesToCreate(plan).map((page) => orderOf(page, extras, { phones }))
   const routed = mayHaveContentRoute({ plan, kit })
   const fresh = []
   for (const order of orders) {

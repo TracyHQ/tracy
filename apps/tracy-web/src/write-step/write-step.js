@@ -45,6 +45,7 @@ import { planLinkTable } from './plan-link-table.js'
 import { createPages, pagesWithoutCopy } from './page-create-stage.js'
 import { routeLines } from './page-route-lines.js'
 import { hasPlanSlugs, restoreRoutes, runRouteStage } from './page-route-stage.js'
+import { phonesOf } from './phone-links.js'
 import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
 import { coordinatesOf, runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
@@ -464,7 +465,16 @@ export async function runWriteStep(input) {
   if (restoring.stop) return stopped(restoring.stop)
 
   // First of all the writes: a link to a created page needs its address (page-create-stage.js).
-  created = await createPages({ door, siteKey, kit: kit.doc, plan, owners: table.owners, extras, last })
+  created = await createPages({
+    door,
+    siteKey,
+    kit: kit.doc,
+    plan,
+    owners: table.owners,
+    extras,
+    last,
+    phones: phonesOf(brief)
+  })
   settled = new Map(created.results)
   report.keptPages.push(...created.kept)
 
