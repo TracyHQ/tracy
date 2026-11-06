@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Measure the UNTOUCHED demo of a quickstart version with the site check's layout measures (main headings, empty blocks,
- * text past its box or past the right edge) at 1440 and 390, and write `demo-measures.json` beside its contract, where
+ * text past its box or past the right edge, orphan card rows, blank footer columns) at 1440 and 390, and write `demo-measures.json` beside its contract, where
  * the template readiness verdict reads it (`src/lib/template-readiness/demo-measures-check.js`, ticket #436).
  *
  *   node apps/tracy-web/scripts/demo-measures.mjs --contract <contract folder> --base <demo address> [--pages-file <json>]

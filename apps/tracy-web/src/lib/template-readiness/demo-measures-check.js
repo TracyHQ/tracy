@@ -9,8 +9,10 @@
  *   todo demo-measure-incomplete  { contract, groups, reasons, command }: a group could not tell, which is never green
  *   todo demo-main-heading        more than one main heading on a demo page          ┐ a template layout fault, one code
  *   todo demo-empty-block         an empty picture frame or an empty box on the demo  │ per fault family (the first in the
- *   todo demo-overflow            text cut by its box or past the right edge          ┘ order above decides; `families`
- *                                 { contract, families, faults, fix }                    names every one found)
+ *   todo demo-overflow            text cut by its box or past the right edge          │ order above decides; `families`
+ *   todo demo-orphan-row          a card row whose last line holds fewer, left a hole │ names every one found)
+ *   todo demo-blank-footer-column a footer column that prints nothing                 ┘
+ *                                 { contract, families, count, faults, fix }
  *   done demo-measures-clean      { contract, pages, warnings }: no block failure (a warning, such as a page with no
  *                                 main heading, needs a person's eye and is counted, as on a built site)
  *
@@ -32,7 +34,9 @@ export const DEMO_MEASURES_COMMAND =
 const FAMILY_OF = Object.freeze({
   'main-heading': 'demo-main-heading',
   'empty-frames': 'demo-empty-block',
-  'text-overflow': 'demo-overflow'
+  'text-overflow': 'demo-overflow',
+  'orphan-row': 'demo-orphan-row',
+  'blank-footer-column': 'demo-blank-footer-column'
 })
 export const FAULT_FAMILIES = Object.freeze(
   Object.fromEntries(

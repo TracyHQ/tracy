@@ -1,6 +1,6 @@
 /**
  * The demo measurements check of the template readiness verdict (ticket #436): the site check's own layout measures
- * (main headings, empty blocks, text past its box or past the right edge) run on the UNTOUCHED demo of a quickstart at
+ * (main headings, empty blocks, text past its box or past the right edge, orphan card rows, blank footer columns) run on the UNTOUCHED demo of a quickstart at
  * 1440 and 390, recorded as `demo-measures.json` beside the contract, and read by the verdict. A template layout fault
  * holds a new release with a code per fault family and a fix that points to a template release.
  *
@@ -81,7 +81,9 @@ const cleanMeasure = (p, width) => ({
       right: Math.min(width, 340)
     }
   ],
-  mainHeadings: ['Wren Example Gym']
+  mainHeadings: ['Wren Example Gym'],
+  orphanRows: [],
+  blankFooterColumns: []
 })
 
 /**
@@ -111,7 +113,7 @@ test('the demo is measured by the very site check groups a built site gets, at 1
   // test-quality: contract the measures named by the ticket, each one a group of the site check (page-groups.js).
   assert.deepEqual(
     DEMO_MEASURE_GROUPS.map((g) => g.name),
-    ['main-heading', 'empty-frames', 'text-overflow']
+    ['main-heading', 'empty-frames', 'text-overflow', 'orphan-row', 'blank-footer-column']
   )
 })
 
@@ -127,7 +129,9 @@ test('a clean untouched demo is recorded green, every page read at both widths, 
     [
       ['main-heading', 'green'],
       ['empty-frames', 'green'],
-      ['text-overflow', 'green']
+      ['text-overflow', 'green'],
+      ['orphan-row', 'green'],
+      ['blank-footer-column', 'green']
     ]
   )
   // The host is asked for its page measures, as the site check asks it on a built site.
@@ -182,6 +186,26 @@ test('each fault family has its own code: two main headings, an empty block', as
   assert.equal(judged.params.faults[0].page, '/about-us')
 })
 
+test('an orphan card row and a blank footer column each have their own code', async () => {
+  const orphan = fakeHost((m) =>
+    m.path === '/classes' && m.width === 1440
+      ? { ...m, orphanRows: [{ selector: 'div.class-grid', perRow: 3, lastRow: 1, rows: 2, gap: 780 }] }
+      : m
+  )
+  const rows = await measureDemo({ host: orphan.host, pages: PAGES, quickstart: QUICKSTART })
+  const judgedRows = judge(rows)
+  assert.deepEqual([judgedRows.state, judgedRows.code], ['todo', 'demo-orphan-row'])
+  assert.deepEqual([judgedRows.params.faults[0].page, judgedRows.params.faults[0].width], ['/classes', 1440])
+
+  const blank = fakeHost((m) =>
+    m.width === 1440 ? { ...m, blankFooterColumns: [{ selector: 'div.t4-col', width: 280, height: 120 }] } : m
+  )
+  const footer = await measureDemo({ host: blank.host, pages: PAGES, quickstart: QUICKSTART })
+  const judgedFooter = judge(footer)
+  assert.deepEqual([judgedFooter.state, judgedFooter.code], ['todo', 'demo-blank-footer-column'])
+  assert.equal(judgedFooter.params.count, 3, 'once per page')
+})
+
 test('a page with no main heading only warns in the site check, so the demo stays done and says it', async () => {
   const { host } = fakeHost((m) => (m.path === '/about-us' ? { ...m, mainHeadings: [] } : m))
   const doc = await measureDemo({ host, pages: PAGES, quickstart: QUICKSTART })
@@ -214,7 +238,12 @@ test('a file that cannot be read, measured on another version, or with a group u
   })
   const judged = judge(blind)
   assert.deepEqual([judged.state, judged.code], ['todo', 'demo-measure-incomplete'])
-  assert.deepEqual(judged.params.groups, ['main-heading', 'text-overflow'])
+  assert.deepEqual(judged.params.groups, [
+    'main-heading',
+    'text-overflow',
+    'orphan-row',
+    'blank-footer-column'
+  ])
 })
 
 test('a template already shown on Design inspiration only warns', async () => {

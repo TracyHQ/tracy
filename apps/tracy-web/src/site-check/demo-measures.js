@@ -6,11 +6,12 @@
 //   main-heading   more than one main heading on a page (block); none is a warning
 //   empty-frames   the host's no-empty-picture-slots and no-empty-boxes
 //   text-overflow  text cut by its box, or running past the right edge of the screen (horizontal overflow)
+//   orphan-row     a grid or wrapping row of cards whose last row holds fewer cards, pushed left with a hole on its right
+//   blank-footer-column  a footer column that prints no words, link or picture beside one that does
 //
 // Nothing was written to the demo, so every block failure here is the template's (its layout or its demo content as the
 // quickstart ships it). The groups that judge a write (demo words, demo links, plan links) do not run: on an untouched
-// demo everything is demo content by definition. Orphan card rows and blank footer columns have no site check measure
-// today; they join here when the site check gains one.
+// demo everything is demo content by definition.
 import { runSiteCheck } from './site-check.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
 import { WIDTHS } from './host-pages.js'
@@ -18,7 +19,13 @@ import { WIDTHS } from './host-pages.js'
 export const DEMO_MEASURES_VERSION = 'tracy-demo-measures/v1'
 
 /** The site check groups run on the demo, by name, in the site check's own order. */
-export const DEMO_MEASURE_NAMES = Object.freeze(['main-heading', 'empty-frames', 'text-overflow'])
+export const DEMO_MEASURE_NAMES = Object.freeze([
+  'main-heading',
+  'empty-frames',
+  'text-overflow',
+  'orphan-row',
+  'blank-footer-column'
+])
 
 export const DEMO_MEASURE_GROUPS = Object.freeze(
   DEMO_MEASURE_NAMES.map((name) => {

@@ -6,7 +6,9 @@ import {
   findDeadLinks,
   findEmptyControls,
   findGluedWords,
+  findBlankFooterColumns,
   findMainHeadings,
+  findOrphanRows,
   findUnfinishedHeadings,
   findStretchedPictures,
   findTallBlocks,
@@ -203,6 +205,8 @@ test('warnings alone never turn the check red, and are counted', async () => {
     shownText: 'Lessons',
     maps: [],
     videoButtons: [],
+    orphanRows: [],
+    blankFooterColumns: [],
     shownLinksClickable: true
   }
   const measures = () =>
@@ -435,4 +439,62 @@ test('two main headings on a page fail the check through its group', async () =>
     g.failures.map((f) => [f.level, f.causingStep, f.page]),
     [['block', 9, '/']]
   )
+})
+
+test('an orphan card row and a blank footer column are found once per page, with what the host measured', () => {
+  const orphan = { selector: 'div#services.grid', perRow: 3, lastRow: 2, rows: 2, gap: 392 }
+  const blank = { selector: 'div#blank.col', width: 210, height: 120 }
+  const measures = [
+    { path: '/', width: 1440, orphanRows: [orphan], blankFooterColumns: [blank] },
+    { path: '/', width: 390, orphanRows: [], blankFooterColumns: [] },
+    {
+      path: '/about',
+      width: 1440,
+      orphanRows: [orphan, { ...orphan, selector: 'div.team' }],
+      blankFooterColumns: []
+    },
+    { path: '/older', width: 1440 }
+  ]
+  assert.deepEqual(
+    findOrphanRows(measures).map((f) => [f.page, f.width, f.measured, f.reason]),
+    [
+      ['/', 1440, 'div#services.grid', '2 cards on the last row of 3, leaving 392 px empty'],
+      ['/about', 1440, 'div#services.grid', '2 cards on the last row of 3, leaving 392 px empty'],
+      ['/about', 1440, 'div.team', '2 cards on the last row of 3, leaving 392 px empty']
+    ]
+  )
+  assert.deepEqual(
+    findBlankFooterColumns(measures).map((f) => [f.page, f.width, f.measured, f.reason]),
+    [['/', 1440, 'div#blank.col', 'A footer column 210 px wide prints no words, link or picture']]
+  )
+})
+
+test('an orphan row and a blank footer column fail the check through their groups; an older host leaves them unmeasured', async () => {
+  const faults = {
+    orphanRows: [{ selector: 'div.grid', perRow: 3, lastRow: 1, rows: 2, gap: 780 }],
+    blankFooterColumns: [{ selector: 'div.col', width: 300, height: 120 }]
+  }
+  const check = await runSiteCheck({
+    door: pagedSite(1).door,
+    report: writtenReport(),
+    host: fakeHost({ '/': pageRead('/') }, { measures: () => BOTH('/', { 1440: faults, 390: {} }) }).host,
+    baseline: null
+  })
+  for (const name of ['orphan-row', 'blank-footer-column']) {
+    const g = group(check, name)
+    assert.equal(g.status, 'red', name)
+    assert.deepEqual(
+      g.failures.map((f) => [f.level, f.causingStep, f.page, f.width]),
+      [['block', 3, '/', 1440]],
+      name
+    )
+  }
+  const older = await runSiteCheck({
+    door: pagedSite(1).door,
+    report: writtenReport(),
+    host: fakeHost({ '/': pageRead('/') }, { measures: () => BOTH('/', { 1440: {}, 390: {} }) }).host,
+    baseline: null
+  })
+  for (const name of ['orphan-row', 'blank-footer-column'])
+    assert.equal(group(older, name).status, 'unmeasured', name)
 })

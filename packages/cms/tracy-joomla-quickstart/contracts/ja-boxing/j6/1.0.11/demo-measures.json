@@ -112,6 +112,18 @@
       "status": "green",
       "checked": 50,
       "failures": []
+    },
+    {
+      "name": "orphan-row",
+      "status": "green",
+      "checked": 50,
+      "failures": []
+    },
+    {
+      "name": "blank-footer-column",
+      "status": "green",
+      "checked": 50,
+      "failures": []
     }
   ]
 }
