@@ -44,6 +44,12 @@ test('tags read back as the codes they were made from', () => {
   assert.equal(tagsToCodes('Our <br><span>coaches</span>'), 'Our ((br/))((span))coaches((/span))')
 })
 
+test('the visible text keeps no tag when removing one joins the pieces around it into another', () => {
+  assert.equal(visibleText('<scr<script>ipt>alert(1)'), 'alert(1)')
+  assert.equal(visibleText('a<scr<b>ipt>b'), 'ab')
+  assert.ok(!visibleText('<scr<script>ipt>x</scr</script>ipt>').toLowerCase().includes('script'))
+})
+
 test('the visible text leaves codes and tags out and reads a break as a space', () => {
   assert.equal(visibleText('Lift with((br/))((span))purpose((/span))'), 'Lift with purpose')
   assert.equal(visibleText('Lift with<br/><span>purpose</span>'), 'Lift with purpose')

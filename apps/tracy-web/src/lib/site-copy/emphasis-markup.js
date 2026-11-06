@@ -80,15 +80,28 @@ export const tagsToCodes = (value) =>
 const REFERENCES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
 
 /**
+ * Removes codes and tags until nothing changes: one pass can leave a new tag behind when removing a piece joins the text around
+ * it (`<scr<script>ipt>` loses the inner tag and reads `<script>` again), so a single pass is not a full strip.
+ */
+function stripUntilStable(text) {
+  let current = text
+  for (;;) {
+    const next = current
+      .replace(BREAK_CODE, ' ')
+      .replace(BREAK_TAG, ' ')
+      .replace(ANY_CODE, '')
+      .replace(ANY_TAG, '')
+    if (next === current) return next
+    current = next
+  }
+}
+
+/**
  * What a visitor reads of a value: codes and tags left out, a line break as a space, references read, spaces collapsed.
  * The copy check and the plugin count this, never the markup.
  */
 export function visibleText(value) {
-  return String(value ?? '')
-    .replace(BREAK_CODE, ' ')
-    .replace(BREAK_TAG, ' ')
-    .replace(ANY_CODE, '')
-    .replace(ANY_TAG, '')
+  return stripUntilStable(String(value ?? ''))
     .replace(/&(amp|lt|gt|quot|apos|nbsp);/gi, (_, name) => REFERENCES[name.toLowerCase()])
     .replace(/\s+/g, ' ')
     .trim()
