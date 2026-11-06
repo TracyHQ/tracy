@@ -42,6 +42,8 @@ const EXCEPTIONS = Object.freeze({
     "a link the plugin keeps with its kept row can lead to a page the plan hides; one rule in the head block, on the containers the kit names and the hidden pages' exact addresses, makes it plain text, and a link to a living page is never touched",
   'created-page-hide':
     'a template can print a block on every article page with no setting to turn it off, such as a share bar a created privacy page must not show; one rule in the head block, on the selectors the kit names and scoped to the menu items that open the created pages, stops it being drawn there, and every other article keeps it',
+  'finisher-style':
+    "the finisher may style one block to repair text that cannot be read or a broken layout (decision 30); one rule per block in its own marked block of the head block, scoped to that block's element, only with the allow list's properties (text colour, a backing layer, text shadow, font size, line height, spacing, wrapping), never one that hides content",
   'body-background':
     'the setting a kit names for the picture behind its pages holds a picture path, and a picture may change'
 })

@@ -7,6 +7,8 @@
 // holds already is a no-op, dropped too.
 import { showsRawCodes, visibleText } from '../../lib/site-copy/emphasis-markup.js'
 import { FAULT_KINDS } from './fault-kinds.js'
+import { ALLOWED_PROPERTIES } from '../../lib/finisher-style.js'
+import { validStyleOrder } from './style-order.js'
 
 const squash = (s) =>
   String(s ?? '')
@@ -51,6 +53,13 @@ export const ORDER_KINDS = Object.freeze({
     shape:
       '{ "kind": "fix-text", "slot": "<slot id>", "text": "<the slot words without the printed markup>" }',
     check: checkFixText
+  }),
+  // A kind that writes elsewhere than a content slot validates the whole order itself (`validate`), with the same context.
+  'style-block': Object.freeze({
+    label: `style one block, only with these properties: ${Object.keys(ALLOWED_PROPERTIES).join(', ')}; never anything that hides, empties or moves content off screen; never a picture`,
+    shape:
+      '{ "kind": "style-block", "block": "<block id, e.g. block-2>", "target": "<null, or tags, classes or ids inside the block such as h2 or .title span>", "styles": { "<property>": "<value>" } }',
+    validate: validStyleOrder
   })
 })
 
@@ -68,6 +77,7 @@ export function validOrder(order, { fault, kitSlots, pageSlots, keyOf, currentOf
   if (!entry) return { ok: false, reason: `unknown order kind ${JSON.stringify(order?.kind ?? null)}` }
   if (!FAULT_KINDS[fault.kind]?.orders.includes(order.kind))
     return { ok: false, reason: `a ${order.kind} order does not repair a ${fault.kind} fault` }
+  if (entry.validate) return entry.validate(order, { fault, kitSlots, pageSlots })
   const slot = order.slot
   if (typeof slot !== 'string' || !kitSlots.has(slot))
     return { ok: false, reason: `slot ${JSON.stringify(slot ?? null)} is not a slot the kit has` }

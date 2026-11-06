@@ -2365,7 +2365,11 @@ writes: code checks each order against the kit and the site, then writes it thro
 the write, under its own `finisher-` apply id, and undoes a repair that is not better with `apply.revert` of that id (the
 Apply door, no new door). The site check then runs a final time on the report with the kept repairs as ordered, and is
 the one kept on the run. `repair-log.json` (`repair-log/1`) and the crops are written into the command's `--out` folder.
-So far the only fault kind is printed raw markup and the only order is "fix broken text in one slot".
+Unreadable text and broken layout are answered by "style one block" (#421, ADR 0044 decision 30): code holds the order to
+the allow list in `lib/finisher-style.js`, then writes one rule keyed by the block in the finisher's marked style block of the
+kit's head injection module (`content.get` and `content.update` on that module, the door the write step's video button rule
+uses; `finisher/style-write.js`), and its undo puts back only that block's rule. The look guard lets that block hold only
+allow list rules (`finisher-style`). The site agent reads and edits the module through the same module door.
 
 ## 9. Sign-in, seats, permissions
 

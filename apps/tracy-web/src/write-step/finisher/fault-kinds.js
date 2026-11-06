@@ -8,6 +8,16 @@ export const FAULT_KINDS = Object.freeze({
     label: 'raw code or markup printed',
     what: 'markup printed as words: emphasis markers such as ((SPAN)) or ((br/)), braces, HTML tags shown as text',
     orders: Object.freeze(['fix-text'])
+  }),
+  'unreadable-text': Object.freeze({
+    label: 'unreadable text',
+    what: 'text over a picture that cannot be read, text the colour of its background, contrast too low',
+    orders: Object.freeze(['style-block'])
+  }),
+  'broken-layout': Object.freeze({
+    label: 'broken layout',
+    what: 'text running out of its box, a long word overflowing the screen, lines overlapping or cut off, above all at phone width',
+    orders: Object.freeze(['style-block'])
   })
 })
 

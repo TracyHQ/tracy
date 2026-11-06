@@ -521,6 +521,45 @@ exception applies, with the same shape:
   button to its own page inside a container the kit names, and decides the owner as before otherwise (step 0 when no slot
   holds it).
 
+### 30. A model may decide repairs in step 9, within closed orders, and only code writes; the second bounded CSS exception
+
+Owner's decision, 2026-11-06 (spec #418, tickets #420 and #421). Decision 1 and the context above say step 9 writes with no
+model. That holds for the write itself. After it, the finisher looks at the written site and repairs the customer-visible
+faults of a closed list, and three model calls take part in it: a finder names faults on page screenshots, a fixer turns one
+fault into one repair order, a checker compares the repaired block before and after. So:
+
+- A model may DECIDE a repair inside step 9, never WRITE one. The fixer only answers with a typed order of a closed list
+  (`write-step/finisher/repair-orders.js`); code checks the order against the kit, the fault it answers and what the site holds
+  now, and only a valid order is written, through the doors the write step already uses, under the finisher's own apply id.
+  An order of an unlisted kind, for a fault its kind does not answer, or for a slot or block the fault is not about, is
+  dropped with its reason in the repair log and writes nothing. A repair the checker does not find better is undone.
+- Repairs never invent a fact, never hide customer content, never change meaning, never edit template or plugin code.
+
+**The second CSS exception: "style one block".** Unreadable text (text over a picture, text the colour of its ground) and a
+broken layout (a long word running out of its box) often have no repair in the words. The fixer may order a style for one
+kit block, and code accepts only a closed allow list (`lib/finisher-style.js`): text colour, a backing layer behind text
+(a colour or a gradient, never a picture), text shadow, font size, line height, spacing (padding, margins never negative,
+letter and word spacing) and the wrapping of long words. Any declaration that makes content disappear is refused by name:
+display none, visibility hidden, opacity, zero height or max-height, a position, transform, offset or indent that moves it off
+screen, a transparent text colour, a font size or line height too small to read, a value that loads a picture or reads
+another value. One refused declaration refuses the whole order; nothing is written, and the refusal is logged.
+
+- The rule is written like the video button rule (decision 29): between its own markers
+  (`<!-- tracy-finisher-style:start -->`) in the kit's head injection block, read back from the module first, every other
+  byte kept, through `content.update` on that module (`write-step/finisher/style-write.js`). No new plugin door.
+- One rule per block, on its own line behind a comment naming the block, scoped to the block's element by its module id
+  (`#Mod<N>`, or `#acm-<name>-<N>` for an ACM block printed without that wrapper, the shapes the template kit measures), with a
+  target inside the block of tags, classes or ids only. A rule names no words, so a later edit of the block's content leaves it
+  in place. A template whose blocks carry neither shape is not reached; such a rule draws nothing, and the checker says so.
+- The undo takes off only that block's rule (or puts back the rule the block held before), by reading the module again, never
+  by reverting the module's apply id, which would take back a later repair in the same module too.
+- The look guard (decision 10) lets that block hold only rules the allow list would write, one per block (`finisher-style`).
+- The site agent reads the block like any module content, and a customer may ask it to remove a rule: the line says what added
+  it and that deleting the line takes it off.
+
+"Hide is never CSS" (decision 2) stays: nothing the allow list writes can take content off the page. WordPress (Additional CSS)
+and EmDash (a style file and a rebuild) get their own style doors when the finisher joins the live build.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

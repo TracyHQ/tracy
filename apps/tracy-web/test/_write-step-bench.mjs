@@ -91,7 +91,8 @@ export function kitIndex({
   contract = SPEC.contract,
   pages = [{ path: '/' }, { path: '/about' }],
   tool,
-  blocks
+  blocks,
+  site
 } = {}) {
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-kit-'))
   const version = contract.split('/').at(-1)
@@ -102,6 +103,7 @@ export function kitIndex({
       contract,
       ...(tool ? { tool } : {}),
       ...(blocks ? { blocks } : {}),
+      ...(site ? { site } : {}),
       quickstart: { version },
       pages,
       images: [{ id: 'block-1-1440', path: 'images/block-1-1440.jpg', sha256: 'e'.repeat(64) }]

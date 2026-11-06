@@ -7,6 +7,7 @@ import { videoBlockFor, videoBlockIn, withVideoBlock } from '../lib/empty-video-
 import { isSelfLinkBlock, selfLinkBlockIn, withSelfLinkBlock } from '../lib/self-link-buttons.js'
 import { hiddenLinkBlockIn, isHiddenLinkBlock, withHiddenLinkBlock } from '../lib/hidden-page-links.js'
 import { createdHideBlockIn, isCreatedHideBlock, withCreatedHideBlock } from '../lib/created-page-hide.js'
+import { finisherBlockIn, isFinisherStyleBlock, withFinisherBlock } from '../lib/finisher-style.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
 import { emphasisOnlyUpdate } from './look-guard-emphasis.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
@@ -250,7 +251,21 @@ function createdHideBlockFaults(what, raw, heldRaw, selectors) {
   ]
 }
 
+/** The finisher's style block (decision 30): only rules the style allow list writes, each scoped to its own block. */
+function finisherStyleBlockFaults(what, raw, heldRaw) {
+  const block = finisherBlockIn(raw)
+  if (!block || block === finisherBlockIn(heldRaw) || isFinisherStyleBlock(block)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} finisher style`,
+      'the finisher style block holds only allow list rules, one per block, scoped to that block'
+    )
+  ]
+}
+
 const MARKED = [
+  [finisherBlockIn, withFinisherBlock],
   [videoBlockIn, withVideoBlock],
   [selfLinkBlockIn, withSelfLinkBlock],
   [hiddenLinkBlockIn, withHiddenLinkBlock],
@@ -268,7 +283,8 @@ function moduleContentFaults(id, content, { state }) {
     ...videoBlockFaults(what, raw, heldRaw, state.videoSelectors ?? []),
     ...selfLinkBlockFaults(what, raw, heldRaw, state.selfLinkContainers ?? []),
     ...hiddenLinkBlockFaults(what, raw, heldRaw, state.hiddenLinkContainers ?? []),
-    ...createdHideBlockFaults(what, raw, heldRaw, state.createdHideSelectors ?? [])
+    ...createdHideBlockFaults(what, raw, heldRaw, state.createdHideSelectors ?? []),
+    ...finisherStyleBlockFaults(what, raw, heldRaw)
   ]
   const text = withoutMarked(raw)
   const held = withoutMarked(heldRaw)

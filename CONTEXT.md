@@ -265,10 +265,35 @@ rung it took is recorded. A demo picture is never kept, a person is never drawn,
 _Avoid_: retry policy, plan B
 
 **Write step**:
-The code, with no model, that writes the brand file, site copy and picture manifest to a site, with the plan's hide
-decisions. Nothing else writes to a site during a build ([ADR 0044](docs/adr/0044-write-step-and-site-check.md)). It takes a
+The code that writes the brand file, site copy and picture manifest to a site, with the plan's hide decisions, and then
+runs the finisher. Only its code writes to a site during a build; no model writes, and a model decides only within the
+finisher's closed repair orders ([ADR 0044](docs/adr/0044-write-step-and-site-check.md), decisions 1 and 30). It takes a
 site door as input; the contract a site must answer comes from the template kit, never from the write step's code.
 _Avoid_: apply step, publisher
+
+**Finisher**:
+The last part of the write step: it looks at the written site, finds customer-visible faults of a closed list, repairs
+each through a repair order, proves each repair on before and after crops of the block and undoes one that does not help.
+A finder, a fixer and a checker model take part; code checks and writes every repair.
+_Avoid_: fixer agent, auto-fix, QA bot
+
+**Repair order**:
+The fixer's typed answer for one fault, of a closed list of kinds (fix broken text in one slot, style one block, and the
+kinds still to come). Code checks it against the kit, its fault and what the site holds; an order that fails is dropped
+and writes nothing.
+_Avoid_: patch, fix instruction
+
+**Repair log**:
+The file `repair-log.json` written next to a finisher run for the team, never shown to the customer: one record per fault
+found, with its page, slot or block, kind, causing step, order, crops, outcome (kept, undone, dropped, failed, logged only)
+and reason, and whether the final site check gained a blocking failure.
+_Avoid_: receipt, changes, audit trail
+
+**Finisher style block**:
+The finisher's marked block in the kit's head injection module, holding one CSS rule per repaired block, each of the style
+allow list (text colour, backing layer, text shadow, font size, line height, spacing, wrapping) and never one that hides
+content. A rule is taken off alone, by the finisher's undo or by the site agent when the customer asks.
+_Avoid_: custom CSS, override stylesheet
 
 **Slot owner**:
 The one file with the right to fill a content slot, or a setting that acts like one. Two owners with different

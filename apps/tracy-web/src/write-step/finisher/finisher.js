@@ -20,6 +20,7 @@ import { causeOf, logRecord, REPAIR_LOG_FILE, repairLog } from './repair-log.js'
 import { readSite, revertRepair, writeRepair } from './repair-write.js'
 import { validOrder } from './repair-orders.js'
 import { cropsOf } from './repair-crops.js'
+import { takeOffStyleRule, writeStyleRule } from './style-write.js'
 import { keepShotFiles, pageSlug, replyKeeper } from './model-replies.js'
 
 /**
@@ -100,13 +101,23 @@ async function repairFault(run, fault, repairNumber, firstShots) {
   const onSlot = { ...fault, slot: fault.slot ?? (valid.ok ? valid.slot : null) }
   const known = { ...(fault.slot ? cause : causeOf(run.firstCheck, onSlot)), order }
   if (!valid.ok) return { record: logRecord(onSlot, { ...known, outcome: 'dropped', reason: valid.reason }) }
-  const wrote = await writeRepair({
-    door,
-    siteKey,
-    revision: site.revision,
-    changes: valid.changes,
-    repair: repairNumber
-  })
+  // A style order writes one rule keyed by its block in the head block (style-write.js); every other order, slot words.
+  const wrote = valid.style
+    ? await writeStyleRule({
+        door,
+        siteKey,
+        kit: run.kit,
+        block: valid.block,
+        line: valid.line,
+        repair: repairNumber
+      })
+    : await writeRepair({
+        door,
+        siteKey,
+        revision: site.revision,
+        changes: valid.changes,
+        repair: repairNumber
+      })
   if (!wrote.ok)
     return {
       record: logRecord(onSlot, {
@@ -120,8 +131,9 @@ async function repairFault(run, fault, repairNumber, firstShots) {
     fault,
     before: firstShots,
     after: afterShots,
-    wordsBefore: valid.current,
-    wordsAfter: order.text,
+    // A style leaves the words as they are, so the block is found by the words its fault's slot holds.
+    wordsBefore: valid.style ? (site.current.get(lineOf(fault.slot)?.key) ?? '') : valid.current,
+    wordsAfter: valid.style ? (site.current.get(lineOf(fault.slot)?.key) ?? '') : order.text,
     name: `r${repairNumber}`,
     saveFile: run.saveFile
   })
@@ -138,14 +150,29 @@ async function repairFault(run, fault, repairNumber, firstShots) {
   const { verdict, reason } = judged.problem
     ? { verdict: 'not better', reason: `the checker: ${judged.problem}` }
     : verdictOf(judged.answer)
-  const shown = { ...known, applyId: wrote.applyId, crops: crops.files }
+  const shown = {
+    ...known,
+    ...(valid.style ? { block: valid.block } : {}),
+    applyId: wrote.applyId,
+    crops: crops.files
+  }
   if (verdict === 'better' && crops.afterShots.length)
     return {
       record: logRecord(onSlot, { ...shown, outcome: 'kept', reason }),
-      kept: { slot: valid.slot, ordered: order.text, applyId: wrote.applyId }
+      // A kept style changes no words of the report.
+      ...(valid.style ? {} : { kept: { slot: valid.slot, ordered: order.text, applyId: wrote.applyId } })
     }
   const why = crops.afterShots.length ? reason : 'the repaired page could not be shot again'
-  const undone = await revertRepair({ door, siteKey, applyId: wrote.applyId })
+  const undone = valid.style
+    ? await takeOffStyleRule({
+        door,
+        siteKey,
+        kit: run.kit,
+        block: valid.block,
+        before: wrote.before,
+        repair: repairNumber
+      })
+    : await revertRepair({ door, siteKey, applyId: wrote.applyId })
   return {
     record: logRecord(onSlot, {
       ...shown,
@@ -205,6 +232,7 @@ export async function runFinisher(input) {
     capture,
     saveFile,
     firstCheck,
+    kit,
     kitSlots: kitSlotIds(kit),
     pageSlots: slotsByPage(kit, sitePages),
     lineOf: (slot) => writtenLines.get(slot),
