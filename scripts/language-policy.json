@@ -15306,6 +15306,72 @@
       "sha256": "8310007df176c015312dc498a0f2097848201640d6119c387e076450ec012edd",
       "count": 1,
       "reason": "Exact line of the localized site questions (one label per interface language) of the vendored EmDash skill starter seed, vendored unchanged from JoomlArt-Products/tracy-emdash-template."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/content-coverage.json",
+      "sha256": "627bb111c87a2b4b217adf3826241a379413ce797fbef3a775e784b44b2d1f23",
+      "count": 1,
+      "reason": "Exact line of the JA Diner 1.0.5 content coverage file: the template's own English demo text sampled from its database, which contains a proper name with an accent or the word cafe with an accent. It is measured data, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/content-coverage.json",
+      "sha256": "5b32d02ba5217f0b3bff9a2a59357d14b2b383db9d6b9ff8cf3e1c9cbcff304f",
+      "count": 1,
+      "reason": "Exact line of the JA Diner 1.0.5 content coverage file: the template's own English demo text sampled from its database, which contains a proper name with an accent or the word cafe with an accent. It is measured data, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "3a7efb665ce4c98c2089764dba35376d7a27a7e42fadb0ca9a2dd060650e4987",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "2d609aabcbc6e21fc6f57e9d7460a0e07b05fbb820e47b86201a6a165844f950",
+      "count": 5,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "648ebc76d6dbe12a917c31196b0f2e202b8c6ad2b85d5ab6d0cbd3daabf18d76",
+      "count": 37,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "ef41c34848ea1578feba65593dff7397881cef10f822fe8c8727d430f90dde76",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "3e3ff114cb2ca93832a88b3a9ee8c43b2f8e52af8fb5dae58400052fb57399db",
+      "count": 27,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "84e091eda8a42a09f3d5549f772bb0f3fdfdbdcc60508e26464e75eeedba2d3e",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "ff933aeb074d4a022f143156e438def50b6d056657743f19e37c4a12cbb4c411",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "3524b489136eeb67385a3fb5c76738e34e9461d77f7787e8169556b5493f1687",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.5/template-kit.json",
+      "sha256": "4ef061739d957e20d956b025bfdc0d767916766484566a7f82643d6ca4d5e011",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
     }
   ],
   "objects": [
