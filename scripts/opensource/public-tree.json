@@ -4240,6 +4240,13 @@
       "reason": "sample contact number of the Tracy Business template's demo content (seed and contracts), echoed by tests that check the template is personalised or replaced; template demo content is reviewed separately"
     },
     {
+      "path": "tests/regression/cases/REG-PR-385-site-agent-recheck.json",
+      "category": "phone",
+      "match": "^\\+780055067(?:90|00)$",
+      "kind": "third-party-content",
+      "reason": "Tracy Business template demo number and its replacement, quoted from the phone-link regression tests; only these two fixture values in this case are allowed"
+    },
+    {
       "path": "packages/cms/tracy-wordpress-theme/test/identity.test.mjs",
       "category": "phone",
       "match": "^\\+[78][ \\d-]+$",

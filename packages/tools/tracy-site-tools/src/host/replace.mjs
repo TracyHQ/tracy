@@ -2207,8 +2207,43 @@ export function dialDigits(text) {
 }
 
 /**
+ * Do two digit runs dial the same number? Equal, or equal once a national trunk prefix (`0`, `8`, or
+ * none at all) on one side meets a country code (1–3 digits) or a trunk on the other, with at least
+ * seven digits in common: `8 800 550-67-89` is `tel:+78005506789`, `0909 123 456` is
+ * `tel:+84909123456`, `(212) 555-0147` is `tel:+12125550147`. Two area codes (`495…` against `812…`)
+ * never pass.
+ * @param {string} a
+ * @param {string} b
+ */
+function sameNumber(a, b) {
+  if (a === b) return a.length >= 7
+  let k = 0
+  while (k < a.length && k < b.length && a[a.length - 1 - k] === b[b.length - 1 - k]) k += 1
+  if (k < 7) return false
+  const ha = a.slice(0, a.length - k)
+  const hb = b.slice(0, b.length - k)
+  const trunk = (/** @type {string} */ h) => h === '' || h === '0' || h === '8'
+  const country = (/** @type {string} */ h) => /^[1-9]\d{0,2}$/.test(h)
+  return (trunk(ha) && (trunk(hb) || country(hb))) || (trunk(hb) && country(ha))
+}
+
+/**
  * The link that must follow a changed fact: `tel:` when a phone number changes, `mailto:` when an
  * e-mail does — or null when `href` carries something else. One rule for the three engines.
+ *
+ * 🔒 THE LINK DIALS THE NUMBER IN ITS INTERNATIONAL FORM, THE PAGE SHOWS THE LOCAL ONE. Measured on
+ * ja-business WordPress (header and footer parts): `<a href="tel:+78005506789">8 800 550-67-89</a>` —
+ * `7` is the country code, `8` the trunk prefix, so an exact-digits rule left both links dialling the
+ * old number after the hotline changed. WordPress had this rule alone (`followLink`) until 04/11/2026;
+ * a sealed Joomla site and EmDash compared digits exactly, so "change our phone everywhere" on
+ * elite-smiles-dental changed `(212) 555-0147` in five places, said "read nothing back", and left the
+ * call box's `tel:+12125550147` dialling the old number (survey 04/11/2026).
+ *
+ * 🔒 A NEW NUMBER WRITTEN THE WAY THE OLD ONE WAS KEEPS THE LINK'S INTERNATIONAL FORM. The hotline's
+ * last digits changing (`8 800 550-67-89` → `8 800 550-67-00`) dials `tel:+78005506700`, and a number
+ * written with no trunk at all keeps its country the same way (`(212) 555-0147` → `(212) 555-0199`
+ * dials `tel:+12125550199`); only a number of another shape (`0909 123 456`, another length or trunk)
+ * is linked as written, since its country cannot be read off the old link.
  * @param {string} href
  * @param {string} find
  * @param {string} replace
@@ -2217,9 +2252,27 @@ export function dialDigits(text) {
 export function followHref(href, find, replace) {
   const h = href.trim()
   if (/^tel:/i.test(h) && isPhone(find) && isPhone(replace)) {
-    if (dialDigits(h) !== dialDigits(find)) return null
+    const hd = dialDigits(h)
+    const fd = dialDigits(find)
+    const rd = dialDigits(replace)
     const plus = replace.trim().startsWith('+') ? '+' : ''
-    return `tel:${plus}${dialDigits(replace)}`
+    if (hd === fd) return `tel:${plus}${rd}`
+    if (!sameNumber(hd, fd)) return null
+    let k = 0
+    while (k < hd.length && k < fd.length && hd[hd.length - 1 - k] === fd[fd.length - 1 - k]) k += 1
+    const country = hd.slice(0, hd.length - k)
+    const trunk = fd.slice(0, fd.length - k)
+    if (
+      /^\s*tel:\s*\+/i.test(h) &&
+      /^[1-9]\d{0,2}$/.test(country) &&
+      (trunk === '' || trunk === '0' || trunk === '8') &&
+      plus === '' &&
+      rd.length === fd.length &&
+      // no trunk before: a new number that opens with one (`0909 123 456`) is another shape
+      (trunk === '' ? !rd.startsWith('0') : rd.startsWith(trunk))
+    )
+      return `tel:+${country}${rd.slice(trunk.length)}`
+    return `tel:${plus}${rd}`
   }
   if (/^mailto:/i.test(h) && isEmail(find) && isEmail(replace)) {
     const [addr, query = ''] = h.slice(7).split('?')

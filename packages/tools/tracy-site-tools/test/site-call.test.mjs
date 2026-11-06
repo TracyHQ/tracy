@@ -2159,7 +2159,12 @@ test('🔒 C2: Stop during a lock-miss pause ends the pause at once; the retry t
         actions,
         label
       )
-      assert.equal(sent[2][1].apply_id, MODEL_ID, `${label}: the model's one id is the receipt asked about`)
+      assert.equal(
+        sent[2][1].apply_id,
+        sent[0][1].apply_id,
+        `${label}: the model's one id is the receipt asked about`
+      )
+      assert.ok(sent[2][1].apply_id.startsWith(`${MODEL_ID}-`), `${label}: sent as this turn's own`)
       assert.match(second.normalized.join(' '), note, label)
     })
 }
@@ -2314,7 +2319,7 @@ test('lost write: a create whose outcome is unknown blocks the receipt count for
   assert.equal(count(sent, 'apply.list'), 0)
 })
 
-test('🔒 one apply id per write (owner, 26/10/2026): two agent writes of one turn go out under two ids of one stem, on WordPress and on open Joomla; an id the call sets is sent as given', async () => {
+test("🔒 one apply id per write (owner, 26/10/2026): two agent writes of one turn go out under two ids of one stem, on WordPress and on open Joomla; an id the call sets is sent as this turn's own", async () => {
   const wp = relay(() => POST_42)
   const wpCtx = wordpress({ send: wp.send })
   await call(wpCtx, titleWrite('One'))
@@ -2323,7 +2328,7 @@ test('🔒 one apply id per write (owner, 26/10/2026): two agent writes of one t
   const [a, b, c] = wp.sent.filter(([x]) => x === 'content.update').map(([, p]) => p.apply_id)
   assert.match(a, /^wp-.+-1$/)
   assert.equal(b, a.replace(/-1$/, '-2'))
-  assert.equal(c, MODEL_ID)
+  assert.match(c, new RegExp(`^${MODEL_ID}-[0-9a-z]+-[0-9a-f]{6}$`), "the name it gave, made this turn's")
 
   const jo = relay(() => ({ ok: true, kind: 'article', id: 4 }))
   const joCtx = joomla({ send: jo.send, facts: { platform: 'joomla', sealed: false } })
@@ -2333,6 +2338,33 @@ test('🔒 one apply id per write (owner, 26/10/2026): two agent writes of one t
   assert.equal(ids.length, 2)
   assert.match(ids[0], /^jo-.+-1$/)
   assert.equal(ids[1], ids[0].replace(/-1$/, '-2'))
+})
+
+test('🔒 a name the model gives twice in two turns is two changes: each turn sends its own id, and a revert of the name reaches the newest', async () => {
+  // Dev, 04/11/2026: elite-smiles-dental's tel: link fix was named `phone-link-109` on 29/10 and again on
+  // 04/11; both turns wrote under it, so the Undo card said "mixed with another request's" (SHARED_CHANGE).
+  const jo = relay((action) =>
+    action === 'apply.revert' ? { ok: true } : { ok: true, kind: 'module', id: 109 }
+  )
+  const ctx = joomla({ send: jo.send, facts: { platform: 'joomla', sealed: false } })
+  const fix = {
+    action: 'content.update',
+    params: { kind: 'module', id: 109, fields: { title: 'x' }, apply_id: 'phone-link-109' }
+  }
+  await call(ctx, fix)
+  await call(ctx, fix)
+  ctx.memory.newTurn('session-a')
+  await call(ctx, fix)
+  const [a, b, c] = jo.sent.filter(([x]) => x === 'content.update').map(([, p]) => p.apply_id)
+  assert.match(a, /^phone-link-109-[0-9a-z]+-[0-9a-f]{6}$/)
+  assert.equal(b, a, 'one turn, one name: one id')
+  assert.notEqual(c, a, 'another turn: another id')
+  await call(ctx, { action: 'apply.revert', params: { apply_id: 'phone-link-109' } })
+  assert.equal(
+    jo.sent.at(-1)?.[1].apply_id,
+    c,
+    'the revert of the name is sent under the id the newest write went out under'
+  )
 })
 
 {
@@ -2690,8 +2722,9 @@ const shrinkWrite = (/** @type {number} */ id) => ({
 
       assert.notEqual(out.code, 'SAME_CALL_REFUSED', label)
       assert.equal(out.ok === true, ok, label)
+      // A content write's name is sent as this turn's own (`ownApplyId`): `<name>-<turn's mint>`.
       assert.deepEqual(
-        sent.map(([, p]) => p.apply_id),
+        sent.map(([, p]) => String(p.apply_id).replace(/-[0-9a-z]{2,}-[0-9a-f]{6}$/, '')),
         ids,
         label
       )

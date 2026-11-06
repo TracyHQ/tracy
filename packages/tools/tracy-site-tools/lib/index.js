@@ -2747,6 +2747,7 @@ function createCallMemory(opts = {}) {
         partKeys: /* @__PURE__ */ new Map(),
         receipts: /* @__PURE__ */ new Map(),
         wp: /* @__PURE__ */ new Map(),
+        named: /* @__PURE__ */ new Map(),
         confirms: /* @__PURE__ */ new Map(),
         declined: 0,
         refused: /* @__PURE__ */ new Map(),
@@ -3793,6 +3794,40 @@ ${prefix}`;
       return `${prefix}-${base3}-1`;
     },
     /**
+     * The apply id a write the MODEL named is sent under: its name with this turn's mint after it, the
+     * same for every write of the turn that gives that name, and kept in `idMap` so an `apply.revert` of
+     * the name reaches it (`normalize.mjs` `receipts`).
+     *
+     * 🔒 A NAME THE MODEL CHOSE IS NOT UNIQUE: IT CHOOSES IT AGAIN. "change our phone everywhere" on dev's
+     * elite-smiles-dental named its tel: link fix `phone-link-109` on 29/10 and again on 04/11/2026; the two
+     * turns shared one id, so the plugin's `apply.revert` of it would undo both, and the Undo card said "mixed
+     * with another request's" (SHARED_CHANGE, cause apply-id). Dev, 30 days to 04/11: 38 of 854 write turns
+     * held an id another turn also wrote under (`doi-tieu-de-bai-107` in three, `contact-record` on two sites).
+     * A conversation with no session keeps the name (nothing remembers it to map a revert).
+     * @param {unknown} sessionId
+     * @param {unknown} label
+     * @param {string} given - the `apply_id` the model sent.
+     * @returns {string}
+     */
+    ownApplyId(sessionId, label, given) {
+      if (!named3(sessionId) || given === "") return given;
+      const s = session(sessionId);
+      const key = `${labelKey(label)}
+${given}`;
+      const held = s.named.get(key);
+      if (held !== void 0 && held.turn === s.turn) return held.id;
+      const id = `${given.slice(0, 60)}-${mint("n").slice(2)}`;
+      s.named.set(key, { turn: s.turn, id });
+      const r = receiptsOf(sessionId, label);
+      r.idMap.set(given, id);
+      while (r.idMap.size > MAX_RECEIPTS * 2) {
+        const oldest = r.idMap.keys().next().value;
+        if (oldest === void 0) break;
+        r.idMap.delete(oldest);
+      }
+      return id;
+    },
+    /**
      * A destructive call was refused until the customer answers (D34). Only a refusal calls this: a
      * call that went through asks nothing, so nothing afterwards is an answer to it.
      * @param {unknown} sessionId
@@ -4449,6 +4484,7 @@ function compactPageList(answer, params, { home: home3 = "", view: view2 = null 
     return row;
   });
   const leftOut = Object.values(elsewhere2).reduce((sum, n) => sum + n, 0);
+  const walkedOne = typeof a.locale === "string" && str(p.locale) === "" && several ? a.locale : "";
   const { pages: _pages, truncatedCount: _count, next: _next, ...rest } = a;
   const build = (count) => {
     const cut4 = matched.length - offset - count;
@@ -4461,7 +4497,8 @@ function compactPageList(answer, params, { home: home3 = "", view: view2 = null 
       limit: view2?.pageRows ? view2.limit : Math.min(count, LIST_ROWS_MAX)
     };
     const parts = [
-      leftOut > 0 ? `Pages of ${home3} and of every language; ${leftOut} more in ${Object.keys(elsewhere2).length} other language${Object.keys(elsewhere2).length === 1 ? "" : "s"} (otherLanguages): the same call with locale lists one.` : "",
+      leftOut > 0 ? `Pages of ${home3} and of every language; ${leftOut} more in ${Object.keys(elsewhere2).length} other language${Object.keys(elsewhere2).length === 1 ? "" : "s"} (otherLanguages): the same call with locale lists one.` : walkedOne !== "" ? `Pages of ${walkedOne}, the site's default language; it serves ${/** @type {unknown[]} */
+      site.locales.length}: the same call with locale (one of site.locales) lists another.` : "",
       more > 0 ? `${more} more pages not shown: next.params gives the next rows; search finds a title or path; url reads one known link.` : "",
       'A page by its link: {view:"pages", url}. Every language and field as the site gave them: full:true.'
     ].filter((x) => x !== "");
@@ -4482,11 +4519,14 @@ function compactPageList(answer, params, { home: home3 = "", view: view2 = null 
       } : {},
       ...a.truncated === true && a.next !== void 0 ? { sourceNext: a.next } : {},
       ...a.truncated === true && a.truncatedCount !== void 0 ? { sourceTruncatedCount: a.truncatedCount } : {},
-      // A whole list in one language says nothing more: every page is a row.
-      ...leftOut > 0 || more > 0 ? {
+      // A whole list in one language the call asked for says nothing more: every page is a row.
+      ...leftOut > 0 || more > 0 || walkedOne !== "" ? {
         next: {
           action: "content.read",
-          params: more > 0 ? continuation : { view: "pages", locale: "<a locale of otherLanguages>" },
+          params: more > 0 ? continuation : {
+            view: "pages",
+            locale: leftOut > 0 ? "<a locale of otherLanguages>" : "<a locale of site.locales>"
+          },
           why: parts.join(" ")
         }
       } : {}
@@ -6080,8 +6120,17 @@ function termFields(fields, notes) {
       notes.push(`fields.${alias} \u2192 ${real}`);
     }
 }
+var TRACY_MADE_ID = /-[0-9a-z]{6,}-[0-9a-f]{6}(?:-\d+)?$/;
 function ensureApplyId(p, f, notes, prefix = "wp") {
-  if (str2(p.apply_id) !== "") return;
+  const given = str2(p.apply_id);
+  if (given !== "") {
+    if (typeof f.ownApplyId !== "function" || TRACY_MADE_ID.test(given)) return;
+    const id2 = f.ownApplyId(given);
+    if (id2 === given) return;
+    p.apply_id = id2;
+    notes.push(`apply_id ${given} \u2192 ${id2} (this turn's own: another change of the site may have that name)`);
+    return;
+  }
   const id = typeof f.wpApplyId === "function" ? f.wpApplyId(prefix) : prefix === "wp" ? f.wpApplyId : f.mint?.(prefix);
   if (typeof id !== "string" || id === "") return;
   p.apply_id = id;
@@ -17389,7 +17438,11 @@ function stepBudget(agent, scale = 1) {
     } else if (event?.type === "tool/result") {
       if (typeof event.time === "number") lastResult = Math.max(lastResult, event.time);
     } else if (event?.type === "tool/call") {
-      if ((changesSite(event.data) || buildsSite(event.data)) && settled(settledById, event.data) || waitsOnProvision(event.data))
+      if ((changesSite(event.data) || buildsSite(event.data)) && settled(settledById, event.data)) {
+        const answer = due();
+        return answer === null ? null : { ...answer, changed: true };
+      }
+      if (waitsOnProvision(event.data) || event.data?.name === "ask_user_question" && settledById.has(event.data?.callId))
         return due();
       if (typeof event.time === "number") firstCall = Math.min(firstCall, event.time);
       if (steps === 0) latestCalledTool = true;
@@ -17573,9 +17626,10 @@ function hasPlan(agent) {
   }
   return false;
 }
-function stepBudgetNotice(steps, planned = false, sent = 0, seconds, reach = {}, build = false) {
+function stepBudgetNotice(steps, planned = false, sent = 0, seconds, reach = {}, build = false, changed = false) {
   const plan = reach.todo === false ? "write the plan in your reply, one line per change, and start its first item." : "call `todo_write` with the plan, one item per change, and start its first item.";
-  const opening = typeof seconds === "number" ? `You have taken ${steps} step${steps === 1 ? "" : "s"} and ${seconds} s of tool time without changing the site.` : `You have taken ${steps} steps without changing the site.`;
+  const since = changed ? "since your last change to the site" : "without changing the site";
+  const opening = typeof seconds === "number" ? `You have taken ${steps} step${steps === 1 ? "" : "s"} and ${seconds} s of tool time ${since}.` : `You have taken ${steps} steps ${since}.`;
   const body = build ? `${opening} Make the next write now: the field or picture the next row of your saved plan names, or a repair the last check named. Do not read again a record you already read. Keep going until a check passes or the fifth has run.` : sent === 0 ? planned ? `${opening} Your plan is still open: name the write the item in progress needs \u2014 which record, which field \u2014 and make it. An item that names no record is not an item; rewrite the plan so every item is a change.` : `${opening} Stop exploring now. If the customer asked a question, answer it with what you have; if the change needs a fact only they know, ask for it. Otherwise make the smallest change that does what the customer asked, or \u2014 if what you found means this is several changes rather than one \u2014 ${plan}` : sent === 1 ? `${opening} You were already asked to stop exploring and did not. This site's own records answer through its content door \u2014 \`tracy_site\` \`content.get\`, \`content.contract\` inspect on a Joomla or WordPress quickstart with a contract, \`tracy_emdash\` \`content_get\` on EmDash; the platform's own source code does not, and reading it cannot change anything. Make the next write now, or tell the customer what you found and what you need from them.` : `${opening} Stop. Do not open another file, page or address. Say in plain words what you have changed so far, what is left, and the one thing you need from the customer to finish it.`;
   return ["<system-reminder>", body, "</system-reminder>"].join("\n");
 }
@@ -17592,7 +17646,8 @@ function loopNotices(agent, options = {}) {
         budget2.sent,
         budget2.seconds,
         toolReach(options?.tools),
-        scale !== 1
+        scale !== 1,
+        budget2.changed === true
       ),
       summary: `step budget ${budget2.sent + 1}`
     });
@@ -18607,6 +18662,7 @@ async function runSiteCall(input) {
     // was found to predate it within the hour.
     contentRevisions: (slotKeys) => memory && !memory.learned(label).noContentRevisions ? memory.contentRevisionsFor(sessionId, label, slotKeys) : null,
     wpApplyId: (prefix = "wp") => memory ? memory.wpApplyId(sessionId, label, prefix) : fallbackMint(prefix),
+    ownApplyId: (given) => memory ? memory.ownApplyId(sessionId, label, given) : given,
     mint: (prefix) => memory ? memory.mint(prefix) : fallbackMint(prefix)
   };
   let blockDrop = null;
@@ -22854,12 +22910,34 @@ function dialDigits(text6) {
   const t = String(text6);
   return (/^\s*(?:tel:\s*)?\+/i.test(t) ? t.replace(/\(\s*0\s*\)/g, "") : t).replace(/\D/g, "");
 }
+function sameNumber(a, b) {
+  if (a === b) return a.length >= 7;
+  let k = 0;
+  while (k < a.length && k < b.length && a[a.length - 1 - k] === b[b.length - 1 - k]) k += 1;
+  if (k < 7) return false;
+  const ha = a.slice(0, a.length - k);
+  const hb = b.slice(0, b.length - k);
+  const trunk = (h) => h === "" || h === "0" || h === "8";
+  const country = (h) => /^[1-9]\d{0,2}$/.test(h);
+  return trunk(ha) && (trunk(hb) || country(hb)) || trunk(hb) && country(ha);
+}
 function followHref(href, find, replace) {
   const h = href.trim();
   if (/^tel:/i.test(h) && isPhone(find) && isPhone(replace)) {
-    if (dialDigits(h) !== dialDigits(find)) return null;
+    const hd = dialDigits(h);
+    const fd = dialDigits(find);
+    const rd = dialDigits(replace);
     const plus = replace.trim().startsWith("+") ? "+" : "";
-    return `tel:${plus}${dialDigits(replace)}`;
+    if (hd === fd) return `tel:${plus}${rd}`;
+    if (!sameNumber(hd, fd)) return null;
+    let k = 0;
+    while (k < hd.length && k < fd.length && hd[hd.length - 1 - k] === fd[fd.length - 1 - k]) k += 1;
+    const country = hd.slice(0, hd.length - k);
+    const trunk = fd.slice(0, fd.length - k);
+    if (/^\s*tel:\s*\+/i.test(h) && /^[1-9]\d{0,2}$/.test(country) && (trunk === "" || trunk === "0" || trunk === "8") && plus === "" && rd.length === fd.length && // no trunk before: a new number that opens with one (`0909 123 456`) is another shape
+    (trunk === "" ? !rd.startsWith("0") : rd.startsWith(trunk)))
+      return `tel:+${country}${rd.slice(trunk.length)}`;
+    return `tel:${plus}${rd}`;
   }
   if (/^mailto:/i.test(h) && isEmail(find) && isEmail(replace)) {
     const [addr, query = ""] = h.slice(7).split("?");
@@ -39030,33 +39108,8 @@ function factIn(text6, tel) {
   const found = [...text6.matchAll(tel ? PHONE_IN : EMAIL_IN)].map((m) => m[0]).filter((f) => tel ? isPhone(f) : isEmail(f));
   return found.length === 1 ? found[0] : null;
 }
-function sameNumber(a, b) {
-  if (a === b) return a.length >= 7;
-  let k = 0;
-  while (k < a.length && k < b.length && a[a.length - 1 - k] === b[b.length - 1 - k]) k += 1;
-  if (k < 7) return false;
-  const ha = a.slice(0, a.length - k);
-  const hb = b.slice(0, b.length - k);
-  const trunk = (h) => h === "" || h === "0" || h === "8";
-  const country = (h) => /^[1-9]\d{0,2}$/.test(h);
-  return trunk(ha) && (trunk(hb) || country(hb)) || trunk(hb) && country(ha);
-}
 function followLink(href, find, replace) {
-  const exact = followHref(href, find, replace);
-  if (exact !== null) return exact;
-  const h = href.trim();
-  if (!/^tel:/i.test(h) || !isPhone(find) || !isPhone(replace)) return null;
-  const hd = dialDigits(h);
-  const fd = dialDigits(find);
-  const rd = dialDigits(replace);
-  if (!sameNumber(hd, fd)) return null;
-  let k = 0;
-  while (k < hd.length && k < fd.length && hd[hd.length - 1 - k] === fd[fd.length - 1 - k]) k += 1;
-  const country = hd.slice(0, hd.length - k);
-  const trunk = fd.slice(0, fd.length - k);
-  if (/^\s*tel:\s*\+/i.test(h) && /^[1-9]\d{0,2}$/.test(country) && (trunk === "0" || trunk === "8") && !replace.trim().startsWith("+") && rd.length === fd.length && rd.startsWith(trunk))
-    return `tel:+${country}${rd.slice(trunk.length)}`;
-  return `tel:${replace.trim().startsWith("+") ? "+" : ""}${rd}`;
+  return followHref(href, find, replace);
 }
 function withoutGlyph(replace, glyph) {
   if (!glyph) return replace;

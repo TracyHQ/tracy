@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-05: Pages of a site in many languages
+
+Changed: `content.read` with `view: "pages"` and neither `locale` nor `url`, on a site that serves more than eight languages and whose pages do not fit in one listing, walks the site's default language only and names it in the new `locale` field of the `tracy-content-pages/v1` answer; `later` carries the same `locale`. Name a `locale` to list another language. A site in eight languages or fewer, a call with `locale` or `url`, and a site that fits in one listing answer as before.
+
 ## 2026-11-04: Template page background
 
 Added key `body_bg_img` to action `template.siteSettings` (Joomla, T4 only, Claude Cowork 0.24.78+): the picture a T4 template paints behind the top of its pages, a path under `images/` of a file already on the site; empty clears it and the template's own background colour shows. An older plugin refuses it with `unsupported` and writes nothing of that set.

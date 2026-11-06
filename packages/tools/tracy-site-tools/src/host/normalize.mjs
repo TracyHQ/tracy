@@ -504,6 +504,7 @@ export function checkParams(platform, action, params, site = {}) {
  *   applyIds?: string[], okIds?: string[], unknownIds?: string[], idMap?: Record<string, string>,
  *   postsRead?: { id: number, title: string }[],
  *   wpApplyId?: string | ((prefix?: string) => string),
+ *   ownApplyId?: (given: string) => string,
  *   mint?: (prefix: string) => string
  * }} CallFacts
  *   `missing`: actions this site's component answered `bad_action` for within the hour (E3.3,
@@ -1599,17 +1600,29 @@ function termFields(fields, notes) {
     }
 }
 
+/** An id Tracy made (`mint`, `wpApplyId`, `ownApplyId`): `…-<clock in base 36>-<6 hex>`, maybe `-<n>`. */
+const TRACY_MADE_ID = /-[0-9a-z]{6,}-[0-9a-f]{6}(?:-\d+)?$/
+
 /**
  * WP-27: a write with no apply_id gets one of its own, the n-th of this turn (call-memory `wpApplyId`; owner
  * 26/10/2026, was one id per turn under D9), so `apply.revert` undoes that write alone and a whole build
- * reverts newest-first. A given id is kept.
+ * reverts newest-first. A given id is made this turn's (call-memory `ownApplyId`, 04/11/2026): the model
+ * names the same change the same way in another turn, and two turns under one id undo together.
  * @param {Record<string, unknown>} p
  * @param {CallFacts} f
  * @param {string[]} notes
  * @param {string} [prefix] - `wp` on WordPress, `jo` on Joomla.
  */
 function ensureApplyId(p, f, notes, prefix = 'wp') {
-  if (str(p.apply_id) !== '') return
+  const given = str(p.apply_id)
+  if (given !== '') {
+    if (typeof f.ownApplyId !== 'function' || TRACY_MADE_ID.test(given)) return
+    const id = f.ownApplyId(given)
+    if (id === given) return
+    p.apply_id = id
+    notes.push(`apply_id ${given} → ${id} (this turn's own: another change of the site may have that name)`)
+    return
+  }
   // A fixed `wpApplyId` (a caller with no conversation memory) is WordPress's; another prefix mints its own.
   const id =
     typeof f.wpApplyId === 'function' ? f.wpApplyId(prefix) : prefix === 'wp' ? f.wpApplyId : f.mint?.(prefix)
