@@ -8,6 +8,7 @@
 import { emptyVideoButtonsOf } from '../lib/empty-video-buttons.js'
 import { selfLinkButtonsOf } from '../lib/self-link-buttons.js'
 import { hiddenPageLinksOf } from '../lib/hidden-page-links.js'
+import { createdPageHideOf } from '../lib/created-page-hide.js'
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
@@ -39,6 +40,8 @@ const EXCEPTIONS = Object.freeze({
     'a "more" button the template prints from settings no slot reaches can lead to the page it sits on; rules in the head block, on the containers the kit names and scoped to each kept page and its own address, stop it being drawn, and a link to another page is never hidden',
   'hidden-page-links':
     "a link the plugin keeps with its kept row can lead to a page the plan hides; one rule in the head block, on the containers the kit names and the hidden pages' exact addresses, makes it plain text, and a link to a living page is never touched",
+  'created-page-hide':
+    'a template can print a block on every article page with no setting to turn it off, such as a share bar a created privacy page must not show; one rule in the head block, on the selectors the kit names and scoped to the menu items that open the created pages, stops it being drawn there, and every other article keeps it',
   'body-background':
     'the setting a kit names for the picture behind its pages holds a picture path, and a picture may change'
 })
@@ -137,7 +140,9 @@ export function lookGuard({ kit, contentMap = null }) {
     // The kit's containers of "more" buttons that may lead to their own page: what the self link block's rules may name.
     selfLinkContainers: selfLinkButtonsOf(kit).containers,
     // The kit's containers of links that may lead to a hidden page: what the hidden page link block's rule may name.
-    hiddenLinkContainers: hiddenPageLinksOf(kit).containers
+    hiddenLinkContainers: hiddenPageLinksOf(kit).containers,
+    // The kit's blocks a created page must not show: what the created page hide block's rule may name.
+    createdHideSelectors: createdPageHideOf(kit).selectors
   }
   let owners = new Map()
   /** The brief facts the copy cites, by content map key: who or what a cell speaks of. */

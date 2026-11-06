@@ -43,16 +43,17 @@ export const isSafeContainer = (selector) => containerParts(selector) !== null
  * The containers a kit lists under one field, and what keeps an entry out. Shared with lib/hidden-page-links.js.
  * @param {unknown} entries the kit's list (`[{ container, why }]`)
  * @param {string} label what the containers are for, in a problem's words
+ * @param {string} [key] the entry's field that holds the selector (lib/created-page-hide.js names it `selector`)
  * @returns {{ containers: string[], problems: string[] }}
  */
-export function containerListOf(entries, label) {
+export function containerListOf(entries, label, key = 'container') {
   const containers = []
   const problems = []
   for (const entry of each(entries)) {
-    const container = typeof entry?.container === 'string' ? entry.container.trim() : null
+    const container = typeof entry?.[key] === 'string' ? entry[key].trim() : null
     if (!isSafeContainer(container))
       problems.push(
-        `the kit's ${label} container ${JSON.stringify(entry?.container ?? null)} is not one plain compound selector`
+        `the kit's ${label} ${key} ${JSON.stringify(entry?.[key] ?? null)} is not one plain compound selector`
       )
     else if (!containers.includes(container)) containers.push(container)
   }
@@ -90,7 +91,17 @@ function bodyOf(row) {
   const option = query.get('option')
   const view = query.get('view')
   // Without the view, the item id alone also matches an article opened under the item, where this address is another page.
-  if (!view || !TOKEN.test(view) || (option && !TOKEN.test(option))) return null
+  if (!view) return null
+  return pageBodyOf({ option, view, id })
+}
+
+/**
+ * The body classes T4 prints on a page opened as `view` of `option` under menu item `id`, or null when one is not a plain token.
+ * Shared with lib/created-page-hide.js.
+ */
+export function pageBodyOf({ option = null, view, id }) {
+  if (!Number.isInteger(id) || id < 1 || !TOKEN.test(String(view ?? '')) || (option && !TOKEN.test(option)))
+    return null
   return `body${option ? `.${option}` : ''}.view-${view}.item-${id}`
 }
 
@@ -121,7 +132,7 @@ export function selfLinkSelectorsFor(openings, containers) {
   return out
 }
 
-const RULE_END = '{display:none!important}'
+export const RULE_END = '{display:none!important}'
 
 /** The marked block that carries the rules, or null when there is nothing to hide. */
 export const selfLinkBlockFor = (selectors) =>

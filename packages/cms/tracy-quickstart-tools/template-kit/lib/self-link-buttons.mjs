@@ -7,6 +7,9 @@
 //
 //   "selfLinkButtons": [{ "container": ".bottom-actions", "why": "<where the template prints it>" }]
 //
+// `site.createdPageHide` (card AT) holds `{ selector, why }`: a block the template prints hard coded on every article page that a
+// page the write step creates must not show (apps/tracy-web/src/lib/created-page-hide.js).
+//
 // `site.hiddenPageLinks` (card AM) is read the same way: the container of list row links that may lead to a page the plan hides
 // (apps/tracy-web/src/lib/hidden-page-links.js).
 //
@@ -34,9 +37,10 @@ export function containerProblem(container) {
  * @param {string} field the kit's `site` field
  * @param {string} label what the containers are for, in an error's words
  * @param {{ container?: string, why?: string, none?: boolean }} order
+ * @param {string} [key] the entry's field that holds the selector
  * @returns {{ error: string | null, changed: boolean }}
  */
-function declareContainer(kit, field, label, { container, why, none = false }) {
+function declareContainer(kit, field, label, { container, why, none = false }, key = 'container') {
   if (!kit?.site || typeof kit.site !== 'object') return { error: 'the kit has no site part', changed: false }
   if (none) {
     const changed = !Array.isArray(kit.site[field]) || kit.site[field].length > 0
@@ -48,10 +52,10 @@ function declareContainer(kit, field, label, { container, why, none = false }) {
   if (typeof why !== 'string' || !why.trim())
     return { error: 'say where the template prints it (--why)', changed: false }
   const list = Array.isArray(kit.site[field]) ? kit.site[field] : []
-  const at = list.findIndex((e) => e?.container === container.trim())
+  const at = list.findIndex((e) => e?.[key] === container.trim())
   if (at === -1 && list.length >= MAX_CONTAINERS)
     return { error: `a kit names at most ${MAX_CONTAINERS} ${label} containers`, changed: false }
-  const entry = { container: container.trim(), why: why.trim() }
+  const entry = { [key]: container.trim(), why: why.trim() }
   if (at !== -1 && list[at].why === entry.why) return { error: null, changed: false }
   if (at === -1) list.push(entry)
   else list[at] = entry
@@ -69,3 +73,17 @@ export const declareSelfLinkButtons = (kit, order) =>
  */
 export const declareHiddenPageLinks = (kit, order) =>
   declareContainer(kit, 'hiddenPageLinks', 'hidden page link', order)
+
+/**
+ * `site.createdPageHide` (card AT): a block the template prints hard coded on every article page, with no setting to turn it off,
+ * that a page the write step creates must not show (JA Boxing's share bar `.share-social` on a created privacy page). The write
+ * step hides it on the created pages only.
+ */
+export const declareCreatedPageHide = (kit, { selector, why, none }) =>
+  declareContainer(
+    kit,
+    'createdPageHide',
+    'created page hide',
+    { container: selector, why, none },
+    'selector'
+  )

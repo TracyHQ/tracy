@@ -483,6 +483,23 @@ local first, and a template update keeps `local/`). It was not used: an unlisted
 presentation drift in every later contract call, and the head block is already the write step's door for CSS.
 
 
+**Fourth use: a block every article prints that a created page must not show (card AT).** Owner's decision, 2026-11-06.
+Measured on a bench site with the JA Boxing 1.0.11 kit: the created Privacy page, printed through `ja_boxing:default` (card AN),
+ended with three share buttons (Facebook, X, Reddit) no other page of the site shows. The template's article file
+(`html/com_content/article/default.php`) prints `div.share-social` hard coded, with no setting to turn it off, and none of the
+template's three article files lacks both that bar and the class pages' action bar. Releasing the template, or turning off the
+site's share plugin, would take the bar off every article the owner writes later too, so:
+
+- The kit names, per template, the selectors of such blocks (`site.createdPageHide`: `selector`, `why`), declared when
+  packaging (`template-kit/cli.mjs created-page-hide`). A selector is one compound selector, as for `selfLinkButtons`
+  (`lib/created-page-hide.js`). JA Boxing 1.0.11 names `.share-social`; a kit that names nothing behaves as before.
+- After the contract call, the write step writes between its own markers in the head injection block one rule per created
+  page's menu item and selector (`body.com_content.view-article.item-244 .share-social{display:none!important}`), from the menu
+  item that opens each page it created (its own item, or the category's hidden item on the template's route, whose articles
+  are all created pages) (`write-step/created-page-hide-stage.js`). The body classes are T4's, built as for the self link rules.
+- The look guard lets that block hold only such rules on the kit's selectors (`created-page-hide`).
+- The site check is unchanged: `created-controls` (step 11) turns green once the bar is no longer shown.
+
 **Second use: a "more" button that leads to the page it sits on (card AF).** Owner's decision, 2026-11-06. Measured on a bench
 site with the JA Boxing 1.0.11 kit: the Coaches page showed a VIEW MORE button under the coach cards that opens the Coaches page
 itself. The template's section chrome (`html/layouts/chromes/t4section.php`) prints `div.bottom-actions` from the module params
