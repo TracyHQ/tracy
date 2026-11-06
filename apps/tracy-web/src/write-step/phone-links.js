@@ -6,7 +6,7 @@
 const each = (value) => (Array.isArray(value) ? value : [])
 const digitsOf = (value) => String(value ?? '').replace(/[^0-9]/g, '')
 /** Digits as a number is dialled internationally: a leading 00 is the + it stands for. */
-const international = (text) => {
+export const international = (text) => {
   const digits = digitsOf(text)
   return /^\s*00/.test(String(text)) ? digits.slice(2) : digits
 }
@@ -30,8 +30,8 @@ export function phonesOf(brief) {
   return [...out.values()]
 }
 
-/** The brief phone a number written in the text stands for, or null. */
-function phoneOf(text, phones) {
+/** The brief phone a number written in the text stands for, or null (also how a page's tel: link is matched, card AZ). */
+export function phoneOf(text, phones) {
   const digits = international(text)
   return (
     phones.find(

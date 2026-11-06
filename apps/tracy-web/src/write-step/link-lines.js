@@ -72,7 +72,8 @@ function noDoor(link, leadsTo) {
     `no door holds this link: the template prints it${keeps}${dead ? ' with no address' : ''}, so the plan's ${leadsTo} cannot reach the site${
       dead ? '; the template must print it as a link with an address the site holds' : ''
     }`,
-    dead ? { deadControl: true } : {}
+    // `keeps`: the address the kit read in the template's own link, which a later read of the page holds the refusal to (card AZ).
+    dead ? { deadControl: true } : link?.target ? { keeps: link.target } : {}
   )
 }
 

@@ -35,6 +35,7 @@ import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
+import { settleDialledPhones } from './dialled-phones.js'
 import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
 import { climbTextFallback, withTextFallback } from './text-fallback.js'
 import { hideEmptyVideoButtons } from './video-buttons-stage.js'
@@ -679,6 +680,20 @@ export async function runWriteStep(input) {
         pageHtml: (path) => input.pageHtml({ siteKey, path })
       })
     )
+  // A phone link refused for want of a door is read against the page: the template may already dial the brief's number (card AZ).
+  if (
+    input.pageHtml &&
+    done.status === 'done' &&
+    report.slots.some((s) => s.status === 'refused' && s.keeps)
+  ) {
+    report.slots = await settleDialledPhones({
+      lines: report.slots,
+      planLinks: report.planLinks,
+      keptPages: report.keptPages ?? [],
+      pageHtml: (path) => input.pageHtml({ siteKey, path })
+    })
+    report.counts = countsOf(report.slots)
+  }
   // Last of the writes, once every page was found and read back at its demo address: the kept pages take the plan's slugs.
   if (report.status === 'done' && hasPlanSlugs(plan)) {
     const routed = await timed('routes', async () => {
