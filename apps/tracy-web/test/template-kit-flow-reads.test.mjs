@@ -79,13 +79,25 @@ test('kit-logo-unsettable: a shown logo spot with no setting and a frame the con
   const step = stepOf(kit({}, { logoSpots: [spot] }))
   assert.deepEqual([step.state, step.code], ['todo', 'kit-logo-unsettable'])
   assert.deepEqual(step.params.flowGaps[0].spots, ['logo-header-1'])
-  // The frame the content map holds writes it; so does a setting with no frame the map holds.
+  // The frame the content map holds writes it; so does a site profile setting with no frame the map holds.
   assert.deepEqual(codesOf(kit({}, { logoSpots: [{ ...spot, frameId: 'siteSetting-1.0' }] })), [])
-  assert.deepEqual(codesOf(kit({}, { logoSpots: [{ ...spot, setting: 'logo' }] })), [])
+  assert.deepEqual(codesOf(kit({}, { logoSpots: [{ ...spot, setting: 'site_logo' }] })), [])
   // A spot the page never shows needs nothing.
   assert.deepEqual(codesOf(kit({}, { logoSpots: [{ ...spot, shownIn: [] }, FLOW_SITE.logoSpots[0]] })), [])
   // No frame at all: said once, by the logo gap, not again as a kit the brand step refuses.
   assert.deepEqual(codesOf(kit({}, { logoSpots: [{ ...spot, frameId: null }] })), ['kit-logo-unsettable'])
+})
+
+test('kit-logo-unsettable: a T3 style param is no profile setting, so only its content map frame writes it', () => {
+  // A T3 kit names the template style param that holds the logo; the site profile door cannot write it.
+  const spot = { ...FLOW_SITE.logoSpots[0], setting: 'logoimage', frameId: 'templateStyle-9.0' }
+  const step = stepOf(kit({}, { logoSpots: [spot] }))
+  assert.deepEqual([step.state, step.code], ['todo', 'kit-logo-unsettable'])
+  assert.deepEqual(step.params.flowGaps[0].spots, ['logo-header-1'])
+  assert.deepEqual(codesOf(kit({}, { logoSpots: [{ ...spot, frameId: null }] })), ['kit-logo-unsettable'])
+  // The same spot with its style frame in the content map is written through the contract.
+  const map = kitMapOf({ slots: [{ key: 'templateStyle-9.0' }], menuBlocks: {} })
+  assert.deepEqual(codesOf(kit({}, { logoSpots: [spot] }), { map, release: release() }), [])
 })
 
 test('kit-brand-colour-from-link: an accent that paints links only, with the stylesheet primary named', () => {
