@@ -79,6 +79,35 @@ function isT3DefaultLogo(row, slot) {
   )
 }
 
+/** One tag of the content map's inline markup notation, without its double parentheses: `span class="a"`, `/span`, `br/`. */
+const NOTATION_TAG = /^\/?[a-zA-Z][a-zA-Z0-9]*(?:\s[^()]*)?\/?$/
+
+/**
+ * A sample with the content map's inline markup notation (`((tag attrs))`, `((/tag))`, `((br/))`, written by
+ * capture-contract.py `--inline-markup` through unit-markup.php) read as markup: each tag becomes a space, as
+ * capture's `plain_text` and the kit's `partsOf` read it. Double parentheses that hold no tag stay words.
+ * An indexOf loop, not a global regex, so a long sample costs one pass.
+ * @param {string} sample
+ */
+function withoutNotation(sample) {
+  let out = ''
+  let from = 0
+  for (;;) {
+    const open = sample.indexOf('((', from)
+    if (open < 0) break
+    const close = sample.indexOf('))', open + 2)
+    if (close < 0) break
+    if (NOTATION_TAG.test(sample.slice(open + 2, close))) {
+      out += `${sample.slice(from, open)} `
+      from = close + 2
+    } else {
+      out += sample.slice(from, open + 2)
+      from = open + 2
+    }
+  }
+  return out + sample.slice(from)
+}
+
 /**
  * Whether a Joomla slot's sample is what its column holds in `row`: the value at its `jsonPath`,
  * or a text piece (text slots) or a substring (url, image) of an HTML column.
@@ -95,6 +124,8 @@ export function sampleIsInRow(row, slot) {
   }
   const raw = String(slot.jsonPath ? (atPath(column, slot) ?? '') : (column ?? ''))
   if (slot.type !== 'text') return raw.includes(String(slot.sample)) || normalText(raw).includes(sample)
+  // A whole unit captured with `--inline-markup` writes its tags in the notation: its words are what the row holds.
+  const words = normalText(withoutNotation(String(slot.sample ?? '')))
   // Inline markup (`<code>`, `<em>`) splits a sentence into pieces: compare with no white space at all.
   const bare = (/** @type {string} */ s) => s.replace(/\s+/g, '')
   // An attribute slot (`@alt`, `@title`) is not a text node: look in the raw column as well.
@@ -102,10 +133,10 @@ export function sampleIsInRow(row, slot) {
   // (`This is a <code>.mute</code> paragraph.` is captured "This is a paragraph."), so look without them too.
   const uncoded = raw.replace(/<(code|svg)\b[\s\S]*?<\/\1>/gi, ' ')
   return (
-    sample === '' ||
-    bare(htmlTextPieces(raw).join('')).includes(bare(sample)) ||
-    bare(htmlTextPieces(uncoded).join('')).includes(bare(sample)) ||
-    bare(normalText(raw)).includes(bare(sample))
+    words === '' ||
+    bare(htmlTextPieces(raw).join('')).includes(bare(words)) ||
+    bare(htmlTextPieces(uncoded).join('')).includes(bare(words)) ||
+    bare(normalText(raw)).includes(bare(words))
   )
 }
 
