@@ -39,6 +39,15 @@ export class PagePlan {
         })
         continue
       }
+      // A form for signed-in users (Joomla's article submit form) answers a visitor 403: no public page to read.
+      if (/[?&]layout=edit\b/.test(p.link ?? '')) {
+        this.skipped.push({
+          entity: p.entity,
+          route: p.route,
+          reason: 'a form for signed-in users (layout=edit) is no public page'
+        })
+        continue
+      }
       const url = new URL(p.openAs ?? `index.php?Itemid=${p.sourceId}`, this.site).href
       this.seen.add(normHref(url, siteUrl))
       this.queue.push({ url, origin: 'map', mapPage: p })

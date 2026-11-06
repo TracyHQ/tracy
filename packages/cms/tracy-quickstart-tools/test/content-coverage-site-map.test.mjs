@@ -249,3 +249,31 @@ test('a map page whose request leaves the site is recorded with its entity', () 
   const row = byEntity(sitePagesOf({ contract, result }))[job.mapPage.entity]
   assert.deepEqual([row.opens, row.landedOn], ['offsite', 'https://elsewhere.example/'])
 })
+
+test('a map page that opens a form for signed-in users is skipped, not audited as a failed page', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'site-map-form-'))
+  const write = (name, value) => writeFileSync(path.join(dir, name), JSON.stringify(value))
+  write('manifest.json', { id: 'ja-crumb/j6/1.0.0', template: 'ja_crumb' })
+  write('content-map.json', {
+    entities: [101, 102].map((id) => ({ key: `menuItem-${id}`, kind: 'menuItem', sourceId: id })),
+    slots: [],
+    pages: [
+      { entity: 'menuItem-101', route: 'home', link: 'index.php?option=com_content&view=featured' },
+      { entity: 'menuItem-102', route: 'submit', link: 'index.php?option=com_content&view=form&layout=edit' }
+    ]
+  })
+  write('presentation-lock.json', {
+    entities: {
+      'menuItem-101': menuItem(101, 'mainmenu', 'Home', 'component', { home: '1' }),
+      'menuItem-102': menuItem(102, 'mainmenu', 'Submit a recipe', 'component')
+    }
+  })
+  const plan = new PagePlan(SITE, loadContract(dir, SITE), 10)
+  const urls = []
+  for (let job = plan.next(); job; job = plan.next()) urls.push(job.url)
+  assert.deepEqual(urls, [`${SITE}index.php?Itemid=101`, SITE])
+  assert.deepEqual(
+    plan.skipped.map((s) => [s.entity, s.reason]),
+    [['menuItem-102', 'a form for signed-in users (layout=edit) is no public page']]
+  )
+})
