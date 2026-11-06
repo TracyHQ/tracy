@@ -572,6 +572,8 @@ const FLOW_GAP_FIX: Record<string, string> = {
   'kit-front-page-group': 'give the front page its own group and shot',
   'kit-brand-unreadable': 'complete the site part the brand step reads',
   'kit-zip-missing': 'pack the kit images and attach the zip to the release',
+  'kit-demo-baseline-missing':
+    'measure the demo baseline on the untouched quickstart site and commit demo-baseline.json beside the contract',
   'kit-setting-slot-missing': 'give the map button or the frame painted behind its setting slot'
 }
 
@@ -1481,6 +1483,7 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
     case 'kit-front-page-group':
     case 'kit-brand-unreadable':
     case 'kit-zip-missing':
+    case 'kit-demo-baseline-missing':
     case 'kit-setting-slot-missing':
       return g(tr('cms-readiness.kit.incomplete'), {
         detail: kitDetail(p, tr('cms-readiness.kit.incomplete.detail')),

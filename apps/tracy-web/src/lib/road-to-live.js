@@ -45,7 +45,9 @@
  *   - Template kit waits for the contract too: the kit (screenshots of every page and block at 1440 and 390, a per
  *     page summary of the content map, a version stamp) is committed as `template-kit.json` beside it
  *     (`template-kit/road-step.js`). A kit that is missing, of another version, incomplete, or not approved on the
- *     images it lists holds Publish; a release already published only warns;
+ *     images it lists holds Publish; a release already published only warns. A template that
+ *     `template-kit/demo-baseline-policy.json` opts in (JA Boxing) also needs `demo-baseline.json` of this version beside
+ *     the contract, measured at step 0 on the untouched quickstart site;
  *   - Publish needs the release, the install file, the listing, the contract, Content coverage, Template kit,
  *     Customize your site and Design system, never a demo (a warning never takes a card off, 04/10/2026); the one
  *     exception is Design system's DEMO-1 (14/10/2026: must-fix): with no demo the preview door has
@@ -65,6 +67,7 @@ import { fitOfRelease } from './content-coverage/fit.js'
 import { rolesOfRelease } from './content-coverage/roles.js'
 import { cardRefusal, cardWarnings, notShownWhy } from './design-inspiration.js'
 import { listingProblems } from './listing-pages.js'
+import { baselineOfRelease } from './template-kit/demo-baseline-file.js'
 import { previewDemoGap } from './preview-demo.js'
 import {
   cardOf,
@@ -198,6 +201,8 @@ function installDigestsDiffering(release) {
  *   `fit`: the Slot fit of its content map, the fourth group (ADR 0039); read the same way when left out.
  *   `templateKit`: the template kit beside the sealing contract; read from its folder when left out.
  *   `kitMap`: what the flow reads of the content map beside that kit; read from the same folder when left out.
+ *   `demoBaseline`: the demo baseline beside that contract (`demo-baseline.json`), which the Template kit step asks of
+ *   the templates `template-kit/demo-baseline-policy.json` opts in; read from the same folder when left out.
  * @returns {{ step: string, state: 'done' | 'blocked' | 'todo' | 'warn' | 'checking', code: string, params: Record<string, unknown>, blockedBy?: string }[] | null}
  */
 export function roadOf(
@@ -216,7 +221,8 @@ export function roadOf(
     roles = undefined,
     fit = undefined,
     templateKit = undefined,
-    kitMap = undefined
+    kitMap = undefined,
+    demoBaseline = undefined
   }
 ) {
   if (!release || release.kind === 'design-pack') return null
@@ -325,7 +331,8 @@ export function roadOf(
     version,
     contractId: own.profile,
     kit: templateKit ?? kitOfRelease(release, contracts),
-    map: kitMap === undefined ? kitMapOfRelease(release, contracts) : kitMap
+    map: kitMap === undefined ? kitMapOfRelease(release, contracts) : kitMap,
+    baseline: demoBaseline ?? baselineOfRelease(release, contracts)
   })
 
   // 4. Customize your site: the stored readiness check of this version (see the 🔒 above).
