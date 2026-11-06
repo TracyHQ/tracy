@@ -64,7 +64,8 @@ export function withEmphasis(items, emphasis, slot) {
   const before = items[at].slice(0, i)
   const br = breakBeforeMarkOf(slot)
   // The break goes between words only: an emphasis that opens the text has no line above it.
-  const lead = br && before.trim() ? `${before.trimEnd()}${br}` : before
+  // One space stays before the break, so a theme that hides the break on a narrow screen still shows two words.
+  const lead = br && before.trim() ? `${before.trimEnd()} ${br}` : before
   const wrapped = `${lead}${open}${emphasis}((/${mark.tag}))${items[at].slice(i + emphasis.length)}`
   return items.map((t, n) => (n === at ? wrapped : t))
 }
