@@ -22,7 +22,7 @@ export function videoId(href) {
 }
 
 export function createMatcher(contract, siteUrl) {
-  const { text, textCompact, textList, image, url, rawSample } = contract.index
+  const { text, textCompact, textList, patterns = [], image, url, rawSample } = contract.index
   // Compact forms of every slot sample, for blocks whose spans render with no space between them ("Our<span>Classes</span>").
   const compactSet = new Set([...text.keys()].map((k) => compact(k)).filter((k) => k.length >= 2))
   /** Whether a compact piece is a run of slot samples written with no space between them. */
@@ -55,6 +55,16 @@ export function createMatcher(contract, siteUrl) {
   const textCache = new Map()
   const site = new URL(siteUrl)
 
+  /**
+   * Whether a placeholder of a language pattern was filled with run-time text: a count or a figure, a slot's text, or
+   * the first words of a slot's text (a layout prints an author's first name).
+   */
+  function filledGap(gap) {
+    if (/^[\p{N}\p{P}\p{S}\s]*\p{N}[\p{N}\p{P}\p{S}\s]*$/u.test(gap)) return true
+    if (text.has(gap) || textCompact.has(compact(gap))) return true
+    return letterCount(gap) >= 2 && textList.some((s) => s.norm.startsWith(`${gap} `))
+  }
+
   function matchText(value) {
     const v = normText(value)
     if (textCache.has(v)) return textCache.get(v)
@@ -63,6 +73,13 @@ export function createMatcher(contract, siteUrl) {
     else if (text.has(v)) res = { status: 'matched', by: 'exact', slots: text.get(v) }
     else if (textCompact.has(compact(v)))
       res = { status: 'matched', by: 'exact ignoring spaces/punctuation', slots: textCompact.get(compact(v)) }
+    if (!res) {
+      const hit = patterns.find((p) => {
+        const m = v.match(p.re)
+        return m && m.slice(1).every(filledGap)
+      })
+      if (hit) res = { status: 'matched', by: 'language pattern', slots: [hit.key] }
+    }
     if (!res && /(\.\.\.|…)$/.test(v)) {
       const p = v.replace(/\s*(\.\.\.|…)$/, '')
       const hit = p.length >= 15 && textList.find((s) => s.norm.startsWith(p) || s.norm.includes(p))

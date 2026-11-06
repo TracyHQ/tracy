@@ -121,6 +121,18 @@ export function loadContract(dir, siteUrl) {
   }
   textList.sort((a, b) => b.norm.length - a.norm.length)
 
+  // A language string with printf placeholders ("Showing %1$s of %2$s", "Follow %s") renders with each placeholder
+  // filled at run time: one pattern per such slot, its fixed parts in order, each gap captured.
+  const PLACEHOLDER = /%(?:\d+\$)?[sdu]/g
+  const patterns = []
+  for (const s of map.slots) {
+    if (s.type !== 'text' || typeof s.sample !== 'string' || !PLACEHOLDER.test(s.sample)) continue
+    PLACEHOLDER.lastIndex = 0
+    const fixed = s.sample.split(PLACEHOLDER).map((x) => normText(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    if (letterCount(fixed.join('')) < 3) continue
+    patterns.push({ re: new RegExp(`^${fixed.join('\\s*(.+?)\\s*')}$`), key: s.key })
+  }
+
   // Pages declared by the map: menu item id + route. `index.php?Itemid=<id>` opens any of them
   // whatever the site's SEF settings, so the audit never depends on guessing URL rewriting.
   const mapPages =
@@ -173,7 +185,7 @@ export function loadContract(dir, siteUrl) {
     pages,
     lockedFiles,
     slotsByKey: new Map(map.slots.map((s) => [s.key, s])),
-    index: { text, textCompact, textList, image, imageBase, url, rawSample },
+    index: { text, textCompact, textList, patterns, image, imageBase, url, rawSample },
     template: manifest.template ?? manifest.theme,
     prefix: manifest.quickstart?.prefix ?? manifest.quickstart?.tablePrefix ?? ''
   }

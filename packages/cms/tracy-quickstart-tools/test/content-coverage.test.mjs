@@ -60,7 +60,12 @@ function contractDir() {
       // A figure field the template prints after a hard-coded currency sign ("$<?= $raise ?>").
       { key: 'module-90.raised', type: 'text', sample: '4,500' },
       // A store link kept in a text field of the template's extra fields.
-      { key: 'article-2.store', type: 'text', sample: 'https://music.apple.com/' }
+      { key: 'article-2.store', type: 'text', sample: 'https://music.apple.com/' },
+      // Template language strings with printf placeholders (capture's language-string rule) and an author's name.
+      { key: 'languageString-1.0', type: 'text', sample: 'Showing %1$s of %2$s' },
+      { key: 'languageString-2.0', type: 'text', sample: 'Follow %s' },
+      { key: 'languageString-3.0', type: 'text', sample: 'Ready to write your own %s chapter?' },
+      { key: 'user-45.0', type: 'text', sample: 'Riley Moss' }
     ],
     pages: [{ entity: 'menu-101', route: 'home' }]
   })
@@ -179,6 +184,24 @@ test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside
   )
   assert.equal(byValue(items, 'Now').status, 'matched')
   assert.notEqual(byValue(items, 'Rea').status, 'matched')
+})
+
+test('a language string with placeholders matches text filled with counts, slot text or a first name; other words stay holes', () => {
+  const { items } = audit([
+    { kind: 'text', value: 'Showing 8 of 82' },
+    { kind: 'text', value: 'Follow Riley' },
+    { kind: 'text', value: 'Ready to write your own Advanced Boxing chapter?' },
+    { kind: 'text', value: 'Follow Morgan' }
+  ])
+  assert.deepEqual(
+    items.map((i) => [i.status, i.matchBy ?? null, i.slots ?? null]),
+    [
+      ['matched', 'language pattern', ['languageString-1.0']],
+      ['matched', 'language pattern', ['languageString-2.0']],
+      ['matched', 'language pattern', ['languageString-3.0']],
+      ['hole', null, null]
+    ]
+  )
 })
 
 test('a paragraph with inline code is its slot when the words outside the code match; a block of code alone stays a hole', () => {
