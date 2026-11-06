@@ -46,14 +46,16 @@ export function verdictText(verdict, { pin, source }) {
   const head = `${verdict.tag} ${verdict.version ?? '(no version)'} (${from}; pinned ${pin.version}, Cowork pin ${pin.cowork ?? 'none'})`
   const lines = verdict.pieces.map((p) => {
     const by = p.blockedBy ? `, waiting for ${p.blockedBy}` : ''
-    const head = `  ${p.state.padEnd(8)} ${p.piece.padEnd(20)} ${p.code} (step ${p.step}${by})`
+    const line = `  ${p.state.padEnd(8)} ${p.piece.padEnd(20)} ${p.code} (step ${p.step}${by})`
     // The fix of a piece that is not green, from the one registry (`fixes.js`).
-    const fix = p.state === 'done' ? null : p.fix
-    if (!fix) return head
-    const more = [fix.command ? `command: ${fix.command}` : null, fix.skill ? `skill: ${fix.skill}` : null]
-    return [head, `      fix: ${fix.text}`, ...more.filter(Boolean).map((l) => `${' '.repeat(11)}${l}`)].join(
-      '\n'
-    )
+    const fix = p.fix
+    if (!fix) return line
+    const extras = [fix.command ? `command: ${fix.command}` : null, fix.skill ? `skill: ${fix.skill}` : null]
+    return [
+      line,
+      `      fix: ${fix.text}`,
+      ...extras.filter(Boolean).map((l) => `${' '.repeat(11)}${l}`)
+    ].join('\n')
   })
   const warned = verdict.pieces.filter((p) => p.state === 'warn').map((p) => p.piece)
   const held = verdict.pieces.filter((p) => !passed(p)).map((p) => p.piece)

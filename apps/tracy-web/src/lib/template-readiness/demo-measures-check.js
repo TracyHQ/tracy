@@ -114,7 +114,7 @@ export function judgeDemoMeasures(release, world) {
         families,
         count: faults.length,
         faults: faults.slice(0, SHOWN_FAULTS),
-        fix: fixOf(families[0]).text
+        fix: fixOf(families[0])?.text ?? null
       }
     }
   }
