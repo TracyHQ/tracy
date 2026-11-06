@@ -1,14 +1,8 @@
 // Page screenshots from the host's own screenshotter (`POST /_host/capture`, mode `vision-tiles/1`), the stream the demo
 // look of website opportunities reads (opportunities-build/demo-look.js): every page at desktop (1440 px) and phone
 // (390 px) width, top to bottom in viewport tiles, each a JPEG. Here the tiles are kept as they come, for a caller that
-// shows them to a model and keeps some as files (the write step's finisher). A frame that breaks the stream's shape stops
-// the shot of that page and width, which is then named in `unshot`, never counted as seen. A host that measures them
-// starts each view with the boxes of the page's text elements (`view-start.boxes`, in page pixels); they come back in
-// `boxes`, and a host that sends none gives none. A caller that needs only some of a page (the finisher's re-shoot of the
-// blocks it repaired) names its `bands` per width, in page pixels; the host then shoots only the tiles that reach a band, and
-// a view it shot so is still whole for what was asked. A caller that works on each page as soon as it is shot names
-// `onPage`: it is told each page once, the moment both its views have ended (or, for a page the stream never ended, when the
-// capture is over), with that page's part of the result.
+// shows them to a model (step 9b's finder, write-step/finder/). A frame that breaks the stream's shape stops the shot of
+// that page and width, which is then named in `unshot`, never counted as seen.
 import { createHash } from 'node:crypto'
 import { captureLayouts } from './capture-layouts.js'
 
@@ -19,16 +13,14 @@ const MAX_TILE_BYTES = 640 * 1024
 
 /**
  * @param {{ capture: (layouts: {key: string, path: string}[], opts: {onFrame: Function, signal?: AbortSignal}) =>
- *   Promise<{ok: boolean, body?: any}>, pages: string[], signal?: AbortSignal,
- *   bands?: Record<string, Partial<Record<'desktop' | 'phone', { y: number, height: number }[]>>> }} input
- *   `capture` asks the site's host to stream the pages (the host and the site are the caller's); `bands` by page path
+ *   Promise<{ok: boolean, body?: any}>, pages: string[], signal?: AbortSignal }} input
+ *   `capture` asks the site's host to stream the pages (the host and the site are the caller's)
  * @returns {Promise<{ shots: { page: string, viewport: 'desktop' | 'phone', index: number, y: number, height: number,
- *   documentHeight: number, image: string }[], boxes: { page: string, viewport: string, x: number, y: number,
- *   width: number, height: number, text: string }[], unshot: { page: string, viewport: string, why: string }[] }>}
+ *   documentHeight: number, image: string }[], unshot: { page: string, viewport: string, why: string }[] }>}
  *   `image` is a `data:image/jpeg;base64,` URL
  */
-export async function shootPages({ capture, pages, signal, bands = null, onPage = null }) {
-  const layouts = captureLayouts(pages).map((l) => (bands?.[l.path] ? { ...l, bands: bands[l.path] } : l))
+export async function shootPages({ capture, pages, signal }) {
+  const layouts = captureLayouts(pages)
   const views = new Map()
   for (const l of layouts)
     for (const viewport of ['desktop', 'phone'])
@@ -36,38 +28,19 @@ export async function shootPages({ capture, pages, signal, bands = null, onPage 
         page: l.path,
         viewport,
         tiles: [],
-        boxes: [],
         complete: false,
         ended: false,
         why: null
       })
-  const told = new Set()
-  const tell = (page, failed = null) => {
-    if (!onPage || told.has(page)) return
-    told.add(page)
-    onPage(
-      page,
-      partOf(
-        [...views.values()].filter((v) => v.page === page),
-        failed
-      )
-    )
-  }
-  const ended = (page) => [...views.values()].filter((v) => v.page === page).every((v) => v.ended)
   const onFrame = async (frame) => {
     if (frame?.type === 'end') return
     const view = views.get(`${frame?.page}\n${VIEWPORTS[frame?.width] ?? frame?.viewport}`)
     if (!view || view.ended) return
     if (view.why && frame.type !== 'view-end') return
-    if (frame.type === 'view-start') {
-      view.boxes = boxesOf(frame.boxes, view)
-      return
-    }
     if (frame.type === 'view-end') {
       view.complete = frame.complete === true && view.tiles.length > 0
       if (!view.complete) view.why ??= frame.reason ?? 'the capture ended before the page was shot whole'
       view.ended = true
-      if (ended(view.page)) tell(view.page)
       return
     }
     if (frame.type !== 'tile') return
@@ -99,39 +72,11 @@ export async function shootPages({ capture, pages, signal, bands = null, onPage 
   } catch (error) {
     failed = typeof error?.code === 'string' ? error.code : String(error?.message ?? error).slice(0, 160)
   }
-  for (const l of layouts) tell(l.path, failed)
-  return partOf([...views.values()], failed)
-}
-
-/** The shots, boxes and unshot views of some views. */
-function partOf(views, failed) {
   const shots = []
-  const boxes = []
   const unshot = []
-  for (const view of views) {
-    if (view.complete && !view.why) {
-      shots.push(...view.tiles)
-      boxes.push(...view.boxes)
-    } else unshot.push({ page: view.page, viewport: view.viewport, why: view.why ?? failed ?? 'not shot' })
+  for (const view of views.values()) {
+    if (view.complete && !view.why) shots.push(...view.tiles)
+    else unshot.push({ page: view.page, viewport: view.viewport, why: view.why ?? failed ?? 'not shot' })
   }
-  return { shots, boxes, unshot }
-}
-
-const MAX_BOXES = 2000
-const whole = (n) => Number.isFinite(n) && n >= 0
-
-/** The text element boxes of a view as the host sent them, each kept only when whole and with words. */
-function boxesOf(sent, { page, viewport }) {
-  if (!Array.isArray(sent)) return []
-  return sent
-    .slice(0, MAX_BOXES)
-    .filter(
-      (b) =>
-        [b?.x, b?.y].every(whole) &&
-        b.width > 0 &&
-        b.height > 0 &&
-        typeof b.text === 'string' &&
-        b.text.trim()
-    )
-    .map((b) => ({ page, viewport, x: b.x, y: b.y, width: b.width, height: b.height, text: b.text }))
+  return { shots, unshot }
 }

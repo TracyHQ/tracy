@@ -1,4 +1,4 @@
-// One finder call (#448, carried over from the closed finisher branch): one page's screenshots at desktop (1440 px) and
+// One finder call (#448, carried over from PR #426): one page's screenshots at desktop (1440 px) and
 // phone (390 px) width, with the template demo's shot of each block the page shows, in; faults of the closed list
 // (finder-kinds.js) out, as one JSON object. It never reads the site check and never writes to the site. A call that fails
 // or answers no JSON object is `{ problem }`; the caller logs it and moves on.

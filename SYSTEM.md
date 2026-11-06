@@ -2357,12 +2357,13 @@ row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tr
 one entry point of step 9: the write, the first site check with the finder beside it (`write-step/finder/`: kept pages shot
 by the site's host at 1440 and 390 px, one call per page through the `finisherFinder` door, migration 203), then step 9b
 (`write-step/repair-pass/`): each page's customer-visible faults become one numbered comment turn, built by the preview
-popover's own builder (`lib/comment-turn.js`, `@tracy/dsh-chat-input` `buildCommentTurn`, copied into the image), after the
-comment requests are made through `POST /api/sites/:key/requests`. The turn is queued into a session 9b opens for the site
+popover's own builder (`lib/comment-turn.js`, `@tracy/dsh-chat-input` `buildCommentTurn`, copied into the image, whose
+build imports the copy), after each element is located through the Apply door (`content.locate`) and the comment requests
+are made through `POST /api/sites/:key/requests`. The turn is queued into a session 9b opens for the site
 as its owner (`lib/site-session-ahead.js`, the path demo QA uses), and completion is read from `site_turn`. After the site
 check runs again, a turn that made a page worse is undone whole through `POST /api/sites/:key/turns/undo`, newest first.
-Repairs are Tracy turns of that session, so Site changes shows each with Undo. Any 9b error takes its turns back and hands
-over the written site. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
+Repairs are Tracy turns of that session, so Site changes shows each with Undo; a turn still open at the step's return is
+stopped with `session/cancel`. Any 9b error takes its turns back and hands over the written site. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
 `write-step-bench-repair-agent.js`); no customer flow calls it yet (#444).
 
 ## 9. Sign-in, seats, permissions

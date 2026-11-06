@@ -173,11 +173,15 @@ COPY packages/cms/tracy-seeder/src ./src/seeder
 # workspace dependency would have nothing to resolve to.
 COPY packages/cms/tracy-content-api/package.json packages/cms/tracy-content-api/validate.mjs packages/cms/tracy-content-api/schema.json packages/cms/tracy-content-api/describe-map.mjs ./src/content-api/
 # The preview comment popover's turn builder, for the write step's repair pass (step 9b, `lib/comment-turn.js` reads
-# `./src/comment-turn/` here and the package in a checkout), with the two `@tracy/core` modules it imports by name.
+# `./src/comment-turn/` here and the package in a checkout), with the two `@tracy/core` modules it imports by name. The
+# package's own bytes, as with the Content API above: this image installs from the app's lockfile alone, so a workspace
+# dependency on `@tracy/core` would have nothing to resolve to. The RUN line imports the copy, so an import this layout
+# lacks fails the build rather than step 9b; `scripts/test/tracy-web-comment-turn-image.test.mjs` rebuilds the same layout.
 COPY packages/ui/tracy-chat-input/src/client/comment-turn.mjs ./src/comment-turn/comment-turn.mjs
 COPY packages/core/tracy-core/package.json ./node_modules/@tracy/core/package.json
 COPY packages/core/tracy-core/src/language ./node_modules/@tracy/core/src/language
 COPY packages/core/tracy-core/src/mention ./node_modules/@tracy/core/src/mention
+RUN node --input-type=module -e "await import('/opt/tracy-web/src/comment-turn/comment-turn.mjs')"
 # The operator's User Interface switches (`lib/ui-setting.js`): the ONE catalogue the customer-page
 # plugins read through `@tracy/core/ui-switches`. Same arrangement as the Content API above — the
 # package's own bytes here, the package in place in a checkout, no mirror.

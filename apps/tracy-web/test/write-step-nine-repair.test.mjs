@@ -52,7 +52,7 @@ test('each visible fault is sent once, with its page, element and one sentence; 
   const items = itemsOf(agent)
   assert.equal(items.length, 4, 'the alt fault named twice and by the finder is one item')
   const alt = items.find((i) => i.element.label === 'module-4.1')
-  assert.equal(alt.url, 'https://site.example/about')
+  assert.equal(alt.url, 'https://site.example/index.php/about', 'the page as the site serves it')
   assert.equal(alt.element.text, 'Demo coach lifting weights')
   assert.match(alt.text, /alt text/i)
   assert.ok(!alt.text.includes('\n'), 'one sentence')

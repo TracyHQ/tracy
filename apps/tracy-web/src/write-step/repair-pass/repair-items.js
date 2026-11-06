@@ -1,5 +1,6 @@
-// One fault as one comment item of the preview popover (#448): the page, the element (its slot or block as the locate
-// levels, its words now, a label) and one plain sentence of what should change. The items of one page become one numbered
+// One fault as one comment item of the preview popover (#448): the page, the element (as the picker reports it, with the
+// content.locate answer for it, or its slot and block as levels when locate is unavailable) and one plain sentence of what
+// should change. The items of one page become one numbered
 // comment turn, built by the popover's own turn builder (lib/comment-turn.js) once the comment requests door has numbered
 // them, so the agent's writes can cite each number. Pure but for the builder it is given.
 import { SENT_KINDS } from './repair-kinds.js'
@@ -27,24 +28,32 @@ const levelsOf = (fault) => [
 ]
 
 /**
- * The comment item of one fault, before it has a number: what the requests door takes, plus what the turn builder needs.
+ * The comment item of one fault, before it has a number, as the popover makes it: the page's address, the element as the
+ * picker reports it (`element`, from the served page, repair-served-element.js) and the `content.locate` answer for it
+ * (`located.answer`). Without an answer the fault's own levels stand in, and the item says why (`locateProblem`).
  * @param {object} fault a fault of repair-faults.js
- * @param {(page: string) => string} urlOf the page's address as a visitor opens it
+ * @param {{ url: string, element?: object | null, located?: { answer?: object | null, problem?: string | null } | null }} at
  */
-export function commentItem(fault, urlOf) {
-  const url = urlOf(fault.page)
+export function commentItem(fault, { url, element = null, located = null }) {
   const levels = levelsOf(fault)
+  const answer = located?.answer ?? null
+  const measured = typeof fault.measured === 'string' ? fault.measured : ''
   return {
     page: fault.page,
     url,
     text: changeSentence(fault),
     element: {
       url,
-      selector: '',
+      selector: element?.selector ?? '',
       label: fault.slot ?? fault.block ?? fault.kind,
-      text: typeof fault.measured === 'string' ? fault.measured : ''
+      text: element ? element.text || (element.image ? '' : measured) : measured,
+      marks: element?.marks ?? [],
+      tag: element?.tag ?? '',
+      image: element?.image ?? null
     },
-    locate: levels.length ? { status: 'resolved', levels } : { status: 'unchecked', levels: [] }
+    locate: answer ?? (levels.length ? { status: 'resolved', levels } : { status: 'unchecked', levels: [] }),
+    locateFrom: answer ? 'content.locate' : 'fault',
+    ...(answer ? {} : { locateProblem: located?.problem ?? 'content.locate was not asked' })
   }
 }
 

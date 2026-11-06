@@ -1,5 +1,6 @@
 // The pages a run keeps, as paths. Shared: the site check opens them and the write step bench reads the template's
-// stylesheets from them (write-step/site-sheets.js), and the write step's finisher shoots them, so it is in lib/ (module-graph.test.mjs). Pure.
+// stylesheets from them (write-step/site-sheets.js), and step 9b's finder shoots them, so it is in lib/
+// (module-graph.test.mjs). Pure.
 import { addressMoves, addressNow } from './renamed-addresses.js'
 
 /**

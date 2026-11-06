@@ -26,11 +26,12 @@ export function repairLines(repair) {
   ]
   for (const t of repair.turns)
     lines.push(
-      `  turn ${t.turnId} ${t.state} page=${t.page} round=${t.round} faults=${t.faults.length} changes=${t.changes.length}`
+      `  turn ${t.turnId} ${t.state} ${t.how} page=${t.page} round=${t.round} faults=${t.faults.length} changes=${t.changes.length}`
     )
   for (const u of repair.undone)
-    lines.push(`  undone ${u.turnId} page=${u.page}: ${u.ok ? u.why : `refused ${u.code}`}`)
+    lines.push(`  undone ${u.turnId} page=${u.page}: ${u.ok ? u.why : `undo-failed ${u.reason}`}`)
   for (const x of repair.dropped) lines.push(`  dropped page=${x.page}: ${x.reason}`)
+  for (const x of repair.notSent) lines.push(`  not sent page=${x.page}: ${x.faults} faults, ${x.reason}`)
   return lines
 }
 
@@ -72,6 +73,8 @@ export async function stepNineOfRun(d, values, write, inCwd) {
     finder,
     agent,
     saveFile,
+    // The page as the site serves it, for the element each comment points at (repair-served-element.js).
+    ...(d.pageHtml ? { pageHtml: (page) => d.pageHtml({ siteKey: values.site, path: page }) } : {}),
     ...(d.baselines ? { baselines: d.baselines } : {}),
     ...(d.index ? { contracts: d.index } : {}),
     ...(d.now ? { now: d.now } : {}),

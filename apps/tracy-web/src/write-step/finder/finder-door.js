@@ -1,4 +1,4 @@
-// The finder's model door (#448, carried over from the closed finisher branch, its fixer and checker doors dropped):
+// The finder's model door (#448, carried over from PR #426, its fixer and checker doors dropped):
 // `finisherFinder`, set in /ops › Model & AI and meant for DeepSeek Flash on DeepSeek's own API (lib/bench-harness.js). It
 // thinks at `max`, the finder's effort; a model that does not take it refuses with the levels it does take. Like the other
 // doors it never falls back to the environment: an unset, disabled or unreadable door refuses with its reason

@@ -1,6 +1,7 @@
 // The result of step 9b as kept with the build's other step outputs (#448): what was found and skipped, each turn with
-// the faults it carried, the turn sent and what it changed, what was undone, resent and dropped, how long it took and what
-// it cost. `repair-pass.json` beside the write report and the site checks. Pure.
+// the faults it carried, how it joined (sent, late, duplicate), the items as sent, the turn sent, what it changed and on
+// which pages, what was undone (or failed to be, with why), resent, dropped and not sent, how long it took and what it cost.
+// `repair-pass.json` beside the write report and the site checks. Pure.
 
 export const REPAIR_VERSION = 'repair-pass/1'
 
@@ -18,8 +19,18 @@ const faultLine = (f) => ({
 const turnLine = (t) => ({
   page: t.page,
   round: t.round,
+  how: t.how ?? 'sent',
   turnId: t.turnId,
   state: t.state,
+  ...(t.cancelled ? { cancelled: true } : {}),
+  ...(t.leftOpen ? { leftOpen: true } : {}),
+  changedPages: t.changedPages ?? null,
+  items: (t.items ?? []).map((i) => ({
+    url: i.url,
+    selector: i.element?.selector ?? '',
+    locateFrom: i.locateFrom ?? null,
+    ...(i.locateProblem ? { locateProblem: i.locateProblem } : {})
+  })),
   requestIds: t.requestIds,
   numbers: t.numbers,
   faults: t.faults.map(faultLine),
@@ -53,7 +64,7 @@ export function repairSummary({ outcome, found, clock, site }) {
     costUsd: { finder: found.costUsd ?? null, agent: agentUsd },
     finder: { faults: found.faults.length, problem: found.problem },
     sent: turns.reduce((n, t) => n + t.faults.length, 0),
-    skipped: (outcome.skipped ?? []).map((s) => ({ ...faultLine(s.fault), reason: s.reason })),
+    skipped: (outcome.skipped ?? []).map((s) => ({ ...faultLine(s.fault), code: s.code, reason: s.reason })),
     turns,
     undone: outcome.undone ?? [],
     resent: outcome.resent ?? [],

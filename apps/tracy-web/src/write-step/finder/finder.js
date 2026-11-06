@@ -1,8 +1,9 @@
 // The finder (#448): a fault source of step 9b beside the step 11 site check, for faults no script measures. It shoots every
-// page the written site keeps (the write report's kept pages, lib/site-kept-paths.js) at 1440 and 390 px through the
-// site's host (lib/page-shots.js), and asks the finder door (finder-door.js) about each page with the template demo's shot
-// of each block it shows (finder-ask.js), a few pages at once. A page it could not shoot or ask about is named in
-// `problems`, never counted as clean. It writes nothing to the site; with `saveFile` each tile and each reply is kept.
+// page the written site keeps (the write report's kept pages, lib/site-kept-paths.js; on a second look, only the pages it
+// is given) at 1440 and 390 px through the site's host (lib/page-shots.js), and asks the finder door (finder-door.js) about
+// each page with the template demo's shot of each block it shows (finder-ask.js), a few pages at once. A page it could not
+// shoot or ask about is named in `problems`, never counted as clean. It writes nothing to the site; with `saveFile` each
+// tile and each reply is kept.
 import { shootPages } from '../../lib/page-shots.js'
 import { keptPageList } from '../../lib/site-kept-paths.js'
 import { askFinder, demoBlockShots } from './finder-ask.js'
@@ -34,15 +35,16 @@ async function eachLimited(items, limit, work) {
  * @param {{ door: { ok: boolean, ask: Function, code?: string, reason?: string }, capture: Function, kit?: object | null,
  *   demoImages?: { open: (id: string) => Promise<any> } | null, saveFile?: ((name: string, data: any) => Promise<void>) | null }} input
  *   `capture` asks the site's host to stream the pages (lib/page-shots.js); `demoImages` opens the kit's images
- * @returns {{ find: (report: object) => Promise<{ faults: object[], problem: string | null, problems: object[],
+ * @returns {{ find: (report: object, options?: { pages?: string[] | null }) => Promise<{ faults: object[], problem: string | null, problems: object[],
  *   costUsd: number | null }> }}
  */
 export function siteFinder({ door, capture, kit = null, demoImages = null, saveFile = null }) {
   return {
-    async find(report) {
+    async find(report, { pages: only = null } = {}) {
       if (!door?.ok)
         return { faults: [], problem: `${door?.code}: ${door?.reason}`, problems: [], costUsd: null }
-      const sitePages = keptPageList(null, report)
+      // A second look (step 9b's resend round) names the pages it looks at again; the first looks at every kept page.
+      const sitePages = keptPageList(null, report).filter((p) => !only || only.includes(p.path))
       const pages = sitePages.map((p) => p.path)
       const shot = await shootPages({ capture, pages })
       const demo = demoBlockShots({ kit, sitePages, images: demoImages })

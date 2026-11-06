@@ -1,6 +1,6 @@
 // The layouts of a host capture (`POST /_host/capture`, the host's `capture.js` KEY): one per page path, each with a key
-// that is stable, short and unique per path. Shared by the demo look of website opportunities and the write step's
-// finisher, which ask the same screenshotter for the same tiles.
+// that is stable, short and unique per path. Shared by the demo look of website opportunities (at most its page cap) and
+// step 9b's finder (lib/page-shots.js), which ask the same screenshotter for the same tiles.
 
 /**
  * @param {string[]} pages page paths; anything not starting with "/" and repeats are left out

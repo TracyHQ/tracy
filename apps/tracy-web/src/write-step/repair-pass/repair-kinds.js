@@ -1,8 +1,9 @@
-// What step 9b sends to the site agent (#448), in two tables. A fault is sent when its kind is in SENT_KINDS, each with the
-// one plain sentence of what should change, the words a person would type in the preview's comment popover. A fault whose
-// kind is in NEVER_SENT is a known gap of an earlier step, fixed there, or something the agent cannot do; it is logged with
-// its reason and never sent. Any other kind is not customer visible (it harms neither the visitor nor search), and is
-// logged as such. A kind joins by adding a row here, never a branch elsewhere.
+// What step 9b sends to the site agent (#448), in explicit tables. A fault is sent when its kind is in SENT_KINDS, each with
+// the one plain sentence of what should change, the words a person would type in the preview's comment popover. A fault
+// whose kind is in NEVER_SENT is a known gap of an earlier step, fixed there, or something the agent cannot do (code
+// `never-sent`); a site check group in NOT_SENT_GROUPS is not a customer-visible fault the agent edits (`not-visible`).
+// Every one is logged with its reason. A group or kind no table names is logged `unknown-kind`, never dropped silently,
+// so a new check group is seen the first time it fails. A kind joins by adding a row here, never a branch elsewhere.
 
 /** The fault kind of a site check group's failures (step 11, customer-visible groups only). */
 export const CHECK_GROUP_KINDS = Object.freeze({
@@ -61,12 +62,59 @@ export const NEVER_SENT = Object.freeze({
   other: 'the finder named it outside its fault list, so it is logged and never sent'
 })
 
-/** Why a fault of this kind is not sent, or null when it is sent. */
-export function notSentReason(kind) {
-  if (NEVER_SENT[kind]) return NEVER_SENT[kind]
-  if (SENT_KINDS[kind]) return null
-  return 'not a customer-visible fault: it harms neither a visitor nor search, so it is not sent'
+const OWN_STEP =
+  'checks what an earlier step wrote or decided, which that step fixes; the agent is not sent it'
+const NOT_SEEN = 'harms neither a visitor nor search, so it is not sent'
+
+/** Site check groups never sent, each with why: what they measure is not a fault the agent edits on a page. */
+export const NOT_SENT_GROUPS = Object.freeze({
+  'read-back': `${OWN_STEP} (the write's read-back)`,
+  'written-not-printed': `${OWN_STEP} (a written value the page does not print)`,
+  'look-guard-findings': `${OWN_STEP} (the look guard's refusals)`,
+  'unaddressable-items': `${OWN_STEP} (plan items with no slot)`,
+  'unowned-slots': `${OWN_STEP} (slots step 3 owns)`,
+  'kit-version': `the kit version is the contract's; it ${NOT_SEEN}`,
+  'page-slug': `${OWN_STEP} (the route stage's page addresses)`,
+  'plan-links': `${OWN_STEP} (the plan's kept links and end actions)`,
+  'brand-accent': `${OWN_STEP} (the brand step's accent)`,
+  'logo-readable': `${OWN_STEP} (the brand step's logo)`,
+  'self-links': `${OWN_STEP} (links the route stage wrote)`,
+  'created-controls': `${OWN_STEP} (controls the page stage created)`,
+  'heading-separator': `${OWN_STEP} (the writer's heading marks)`,
+  'broken-sentence': `${OWN_STEP} (the writer's sentences)`,
+  'unfinished-heading': `${OWN_STEP} (the writer's headings)`,
+  'tall-blocks': `${OWN_STEP} (the writer's lengths against the kit)`,
+  'text-fill': `${OWN_STEP} (the writer's lengths against the kit)`,
+  'stretched-pictures': `${OWN_STEP} (the picture step's fit)`,
+  'orphan-row': `${OWN_STEP} (the plan's kept cards)`,
+  'blank-footer-column': `${OWN_STEP} (the plan's hide decisions)`,
+  'list-rows': `${OWN_STEP} (the plan's list rows)`,
+  'map-location': `${OWN_STEP} (where the business is, from the brief)`,
+  'phone-callable': `${OWN_STEP} (the write step's phone links)`,
+  'empty-video-buttons': `${OWN_STEP} (the template's video buttons)`
+})
+
+const UNKNOWN = 'no table of repair-kinds.js names it, so it is logged and not sent until one does'
+
+/** The kind of a site check failure, or null when no table names its group. A demo link that dials or mails is a contact link. */
+export function kindOfFailure(f) {
+  const kind = CHECK_GROUP_KINDS[f.group] ?? null
+  if (kind === 'bad-link' && f.group === 'demo-links' && /^(tel|mailto):/i.test(String(f.measured ?? '')))
+    return 'demo-contact-link'
+  return kind
 }
 
-/** The kind of a site check failure, or its group's name when no row names one. */
-export const kindOfFailure = (f) => CHECK_GROUP_KINDS[f.group] ?? f.group ?? 'unnamed'
+/**
+ * Why a fault is not sent, by code and reason, or null when it is sent.
+ * @param {{ source: string, group: string | null, kind: string | null, page: string | null }} fault
+ * @returns {{ code: 'never-sent' | 'not-visible' | 'unknown-kind' | 'no-page', reason: string } | null}
+ */
+export function notSentOf(fault) {
+  if (fault.source === 'site-check' && NOT_SENT_GROUPS[fault.group])
+    return { code: 'not-visible', reason: NOT_SENT_GROUPS[fault.group] }
+  if (NEVER_SENT[fault.kind]) return { code: 'never-sent', reason: NEVER_SENT[fault.kind] }
+  if (!SENT_KINDS[fault.kind]) return { code: 'unknown-kind', reason: UNKNOWN }
+  if (!fault.page)
+    return { code: 'no-page', reason: 'the fault names no page, so no comment can point at it' }
+  return null
+}

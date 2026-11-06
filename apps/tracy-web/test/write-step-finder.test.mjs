@@ -102,3 +102,14 @@ test('a page that could not be shot is named, never counted as clean; a refused 
   assert.deepEqual(refused.faults, [])
   assert.match(refused.problem, /FINDER_DOOR_UNSET/)
 })
+
+test('a second look names its pages: only those are shot and asked about', async () => {
+  const { capture, asked } = fakeCapture()
+  const finderDoor = door({})
+  await siteFinder({ door: finderDoor, capture }).find(REPORT, { pages: ['/about'] })
+  assert.deepEqual(asked, [['/about']])
+  assert.deepEqual(
+    finderDoor.calls.map((c) => c.page),
+    ['/about']
+  )
+})

@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, test } from 'node:test'
 import { runCli } from '../src/write-step-bench-cli.js'
+import { benchPageUrl, benchRepairAgent } from '../src/write-step-bench-repair-agent.js'
 import { memoryStore } from './_write-step-bench.mjs'
 import { fakeAgent } from './_write-step-nine-repair.mjs'
 import { fakeSite, frozenFiles, KIT, memoryRunStore, SITE } from './_write-step-run.mjs'
@@ -116,4 +117,65 @@ test('run --repair runs step 9 whole on the bench site as its owner and writes t
   } finally {
     frozen.done()
   }
+})
+
+/** The bench site door, faked for the agent's own calls: comment requests (rate limited `limited` times) and Apply. */
+function agentDoor({ limited = 0, apply = () => ({ status: 'resolved', levels: [] }) } = {}) {
+  const calls = { requests: 0, apply: [] }
+  return {
+    calls,
+    async requests(_siteKey, body) {
+      calls.requests += 1
+      if (calls.requests <= limited) return { ok: false, code: 'COMMENT_RATE_LIMIT', retryAfter: 60 }
+      return { ok: true, requests: body.items.map((_, i) => ({ id: `r${i}`, n: i + 1 })) }
+    },
+    async apply(input) {
+      calls.apply.push(input)
+      return apply(input)
+    }
+  }
+}
+
+const ITEM = { url: 'https://site.example/', element: { selector: '' }, text: 'Fix it.' }
+
+test("the bench agent's rate limit wait counts against the step's time: it never waits past the time left", async () => {
+  const slept = []
+  const sleep = async (ms) => slept.push(ms)
+  const short = benchRepairAgent({ door: agentDoor({ limited: 1 }), siteKey: SITE, sleep })
+  await assert.rejects(
+    short.request({ sessionId: 's', requestId: 'r', items: [ITEM], timeLeftMs: 30_000 }),
+    /COMMENT_RATE_LIMIT/
+  )
+  assert.deepEqual(slept, [], 'no wait it has no time for')
+  const long = benchRepairAgent({ door: agentDoor({ limited: 1 }), siteKey: SITE, sleep })
+  const { numbers } = await long.request({
+    sessionId: 's',
+    requestId: 'r',
+    items: [ITEM],
+    timeLeftMs: 120_000
+  })
+  assert.deepEqual(numbers, [1])
+  assert.deepEqual(slept, [60_000])
+})
+
+test('the bench agent locates an element through the Apply door, as the popover does', async () => {
+  const door = agentDoor()
+  const agent = benchRepairAgent({ door, siteKey: SITE })
+  const answer = await agent.locate({ url: 'https://site.example/', text: 'Our story', marks: [] })
+  assert.equal(answer.status, 'resolved')
+  assert.deepEqual(door.calls.apply, [
+    {
+      siteKey: SITE,
+      action: 'content.locate',
+      params: { url: 'https://site.example/', text: 'Our story', marks: [] }
+    }
+  ])
+})
+
+test("a comment's page address is the page as the Joomla site serves it, on the site's public address", () => {
+  const origin = 'https://quay.sites.example'
+  assert.equal(benchPageUrl(origin, '/'), 'https://quay.sites.example/')
+  assert.equal(benchPageUrl(origin, '/about'), 'https://quay.sites.example/index.php/about')
+  assert.equal(benchPageUrl(origin, '/index.php/about'), 'https://quay.sites.example/index.php/about')
+  assert.throws(() => benchPageUrl(null, '/about'), /before the session is open/)
 })

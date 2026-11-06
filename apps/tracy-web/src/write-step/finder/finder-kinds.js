@@ -1,4 +1,4 @@
-// The finder's closed fault list (#448, carried over from the closed finisher branch without its repair orders): the kinds
+// The finder's closed fault list (#448, carried over from PR #426 without its repair orders): the kinds
 // of customer-visible fault it names on a screenshot. Which of them step 9b sends to the site agent, and which it never
 // sends, is the repair pass's own table (repair-pass/repair-kinds.js); this one only says what the finder looks for.
 

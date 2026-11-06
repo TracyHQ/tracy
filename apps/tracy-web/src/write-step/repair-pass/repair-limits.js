@@ -1,7 +1,9 @@
-// The limits of step 9b, the repair pass through Tracy's site agent (#448): the one place their numbers live.
-//   - `stopNewWorkMs`: from the start of the pass, no new page turn and no resend round starts after it.
-//   - `returnByMs`: the pass hands the site over by then, whatever the agent or the site check does; `undoReserveMs` of it is
-//     kept for undoing turns after the last site check.
+// The limits of step 9b, the repair pass through Tracy's site agent (#448): the one place their numbers live. One clock
+// runs them for the whole of step 9 after the write: the first site check and the finder beside it spend it too.
+//   - `stopNewWorkMs`: from the end of the write, no new page turn and no resend round starts after it.
+//   - `returnByMs`: the step hands the site over by then, whatever the agent or the site check does; `undoReserveMs` of it
+//     is kept for undoing turns after the last site check, and `judgeReserveMs` more for that last check, so a turn still
+//     open is waited for only until both are left.
 //   - `noTurnMs`: a prompt that opened no turn by then is resent once; a resend that opened none by then is dropped.
 //   - `pollMs`: how often the turn records are read while a turn is awaited.
 //   - `itemsPerTurn`: the most faults one page turn carries (the comment requests door takes 20 a minute per site).
@@ -10,6 +12,7 @@ export const REPAIR_LIMITS = Object.freeze({
   stopNewWorkMs: 10 * 60_000,
   returnByMs: 12 * 60_000,
   undoReserveMs: 30_000,
+  judgeReserveMs: 60_000,
   noTurnMs: 60_000,
   pollMs: 5_000,
   itemsPerTurn: 12,
@@ -46,6 +49,8 @@ export function repairClock({ now, sleep, limits = null, timer = realTimer }) {
     checkLeft: () => returnAt - set.undoReserveMs - now(),
     /** Time left before the pass must return. */
     returnLeft: () => returnAt - now(),
+    /** Time left to wait for an open turn: the return, less the last check's and the undos' slices. */
+    waitLeft: () => returnAt - set.undoReserveMs - set.judgeReserveMs - now(),
     elapsed: () => now() - started,
     /** `work()` raced against `ms`: `{ value }`, or `{ late: true }` once the time is up. */
     async within(work, ms) {
@@ -64,6 +69,12 @@ export function repairClock({ now, sleep, limits = null, timer = realTimer }) {
       } finally {
         cancel()
       }
+    },
+    /** `work()` within `ms` (by default all the time left), or an error naming `what` once the time is up. */
+    async bounded(what, work, ms = returnAt - now()) {
+      const done = await this.within(work, ms)
+      if (done.late) throw new Error(`${what} did not answer in the time left`)
+      return done.value
     }
   }
 }

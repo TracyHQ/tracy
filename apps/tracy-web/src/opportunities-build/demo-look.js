@@ -21,6 +21,7 @@
  * did not look (`looked: false` with the reason). Missing evidence cannot pass; no configured model
  * retains the existing needs-review policy. It never reports "finished" it did not see.
  */
+import { captureLayouts } from '../lib/capture-layouts.js'
 import sharp from 'sharp'
 import { createVisionChallenge, IMAGE_CODE_INSTRUCTION, imageCodeMatches } from '../lib/vision-challenge.js'
 import { createHash } from 'node:crypto'
@@ -177,18 +178,8 @@ export function deferToMeasure(look, measuredOver) {
   }
 }
 
-/** A capture layout key for a page path (`capture.js` KEY): stable, short, unique per path. */
-export function lookLayouts(pages) {
-  const seen = new Set()
-  const out = []
-  for (const path of pages) {
-    if (typeof path !== 'string' || !path.startsWith('/') || seen.has(path)) continue
-    seen.add(path)
-    out.push({ key: `p${out.length}`, path })
-    if (out.length >= LOOK_MAX_PAGES) break
-  }
-  return out
-}
+/** A capture layout key for a page path (`capture.js` KEY): stable, short, unique per path, at most LOOK_MAX_PAGES. */
+export const lookLayouts = (pages) => captureLayouts(pages, LOOK_MAX_PAGES)
 
 /** Reuse only complete verdicts produced by this capture/prompt contract; old crops are never evidence. */
 export function reusableLookPages(lastLook, readPages, reused) {
