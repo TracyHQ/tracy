@@ -14,7 +14,8 @@
  * Publish and polish after them. So Road to live and the verdict can never disagree, and every code a piece carries
  * is a Road to live code, worded by the same guide.
  *
- * A piece is `{ piece, step, state, code, params, blockedBy? }`: the first of its steps not passed decides it (a
+ * A piece is `{ piece, step, state, code, params, blockedBy? }`, its state one of Road to live's (`done`, `warn`,
+ * `todo`, `blocked`, and `checking` while a stored check of the piece still runs): the first of its steps not passed decides it (a
  * `todo`, `blocked` or `checking` step), else its first `warn`, else its last step (`done`). `step` names the step
  * that decided it.
  *
@@ -42,15 +43,7 @@ export const PIECES = Object.freeze([
 ])
 
 /** The Road to live steps the verdict builds, in road order: the first steps of every road. */
-export const VERDICT_STEPS = Object.freeze([
-  'release',
-  'install-file',
-  'contract',
-  'content-coverage',
-  'template-kit',
-  'customize',
-  'design-system'
-])
+export const VERDICT_STEPS = Object.freeze(PIECES.flatMap((p) => p.steps))
 
 /**
  * The checks that are not Road to live steps, each `{ piece, step, judge(release, world, facts) }` where `judge`
@@ -59,7 +52,8 @@ export const VERDICT_STEPS = Object.freeze([
  */
 export const CHECKS = Object.freeze([])
 
-const passed = (s) => s.state === 'done' || s.state === 'warn'
+/** A step or piece that holds nothing: done, or done with something worth fixing. */
+export const passed = (s) => s.state === 'done' || s.state === 'warn'
 
 /** An empty road, with the two helpers every step module is handed. */
 export function startRoad() {
@@ -82,7 +76,7 @@ export function startRoad() {
  * @param {any} release one row of `readReleases`
  * @param {any} world what `roadOf` is handed (see there); `server: false` says there is no server behind the call
  *   (the command line), so the facts only a server knows (DEMO-1: its own demo; preview door health) are not judged
- * @param {ReturnType<typeof startRoad>} at
+ * @param {ReturnType<typeof startRoad>} road the road to put them on
  * @returns {{ version: string | null, own: { state: string, profile: string | null } }}
  */
 export function verdictSteps(release, world, { put, waitingOn }) {
@@ -101,6 +95,7 @@ export function verdictSteps(release, world, { put, waitingOn }) {
     version,
     contractId: own.profile,
     kit: world.templateKit ?? kitOfRelease(release, contracts),
+    // `null` is an answer here (no content map beside the kit), so only a missing key reads the folder.
     map: world.kitMap === undefined ? kitMapOfRelease(release, contracts) : world.kitMap,
     baseline: world.demoBaseline ?? baselineOfRelease(release, contracts)
   })
@@ -139,9 +134,9 @@ function pieceOf(piece, entries) {
  */
 export function readinessVerdict(release, world) {
   if (!release || release.kind === 'design-pack') return null
-  const at = startRoad()
-  const { version } = verdictSteps(release, world, at)
-  const steps = at.road
+  const road = startRoad()
+  const { version } = verdictSteps(release, world, road)
+  const steps = road.road
   /** @type {Map<string, any[]>} */
   const entries = new Map(PIECES.map((p) => [p.piece, steps.filter((s) => p.steps.includes(s.step))]))
   for (const check of world.checks ?? CHECKS) {

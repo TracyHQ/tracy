@@ -161,3 +161,32 @@ test('the command line prints the verdict of a named template as text and as JSO
   assert.equal(main(['ja-example-nowhere'], { err: (s) => (said += s) }), 2)
   assert.match(said, /pins no release named ja-example-nowhere/)
 })
+
+test('a later check joins its piece after the road steps, or opens a new piece after the five', () => {
+  const checks = [
+    {
+      piece: 'quickstart-release',
+      step: 'example-check',
+      judge: () => ({ state: 'warn', code: 'example-warn' })
+    },
+    {
+      piece: 'demo-baseline',
+      step: 'demo-baseline',
+      judge: () => ({ state: 'todo', code: 'example-missing' })
+    },
+    { piece: 'template-kit', step: 'not-applicable', judge: () => null }
+  ]
+  const verdict = readinessVerdict(release(), { contracts: new Map(), checks })
+  assert.deepEqual(brief(verdict), [
+    ['quickstart-release', 'warn', 'example-warn'],
+    ['contract', 'todo', 'no-contract'],
+    ['template-kit', 'blocked', 'kit-waiting'],
+    ['cowork-pin', 'blocked', 'customize-waiting'],
+    ['design-system', 'todo', 'ds-not-checked'],
+    ['demo-baseline', 'todo', 'example-missing']
+  ])
+  assert.equal(
+    verdict.steps.some((s) => s.step === 'example-check'),
+    false
+  )
+})

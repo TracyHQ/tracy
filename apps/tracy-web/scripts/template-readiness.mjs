@@ -19,9 +19,7 @@ import { parseArgs } from 'node:util'
 
 import { defaultContracts } from '../src/lib/contracts.js'
 import { latestPin, releaseOfPin } from '../src/lib/template-readiness/pinned-release.js'
-import { readinessVerdict } from '../src/lib/template-readiness/verdict.js'
-
-const passed = (state) => state === 'done' || state === 'warn'
+import { passed, readinessVerdict } from '../src/lib/template-readiness/verdict.js'
 
 /** One line per piece: state, piece, code, and the step that decided it when it is not the piece's own name. */
 export function verdictText(verdict, pin) {
@@ -30,7 +28,7 @@ export function verdictText(verdict, pin) {
     const by = p.blockedBy ? `, waiting for ${p.blockedBy}` : ''
     return `  ${p.state.padEnd(8)} ${p.piece.padEnd(20)} ${p.code} (step ${p.step}${by})`
   })
-  const green = verdict.pieces.every((p) => passed(p.state))
+  const green = verdict.pieces.every(passed)
   return [head, ...lines, green ? 'Every piece is green.' : 'Not every piece is green.'].join('\n')
 }
 
@@ -87,7 +85,7 @@ export function main(
   }
   if (values.json) out(`${JSON.stringify({ source: 'pin', pin, ...verdict }, null, 2)}\n`)
   else out(`${verdictText(verdict, pin)}\n`)
-  return verdict.pieces.every((p) => passed(p.state)) ? 0 : 1
+  return verdict.pieces.every(passed) ? 0 : 1
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)
