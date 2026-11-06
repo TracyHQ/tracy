@@ -6729,6 +6729,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
             'structure.read',
             'plan.read',
             'plan.save',
+            'plan.fix',
             'plan.add',
             'copy.write',
             'copy.apply',
@@ -6780,7 +6781,14 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         rows: {
           type: 'array',
           items: { type: 'object', additionalProperties: true },
-          description: 'plan.add: rows appended after the saved ones.'
+          description: 'plan.add: rows appended after the saved ones. plan.fix: rows added to the kept draft.'
+        },
+        // `plan.fix` (#296): only the refused rows of a kept draft, by index, never the whole plan again.
+        fix: {
+          type: 'object',
+          additionalProperties: true,
+          description:
+            'plan.fix: {"<rowIndex>": <the corrected row> | null} for the rows a refused plan.save named; null drops the row. Indexes are the draft\'s.'
         },
         images: {
           type: 'object',
@@ -6931,8 +6939,13 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       // A failed check while checks remain says so in its own answer, the moment the agent decides what comes next
       // (`checkAgainNext`). Not a steer at turn-stopping: the turn is closed on tracy-web by then
       // (tracy-site-tabs), and every write of the step a steer adds is refused AGENT_DEMO_TURN_NOT_BOUND.
-      const verdict = answer as { pass?: unknown } | null
-      if ((args as { operation?: unknown })?.operation === 'check' && verdict?.pass === false) {
+      const verdict = answer as { pass?: unknown; stopped?: unknown } | null
+      // A check the server ended the checking with (#296, `stopped`) keeps its own next: no check remains.
+      if (
+        (args as { operation?: unknown })?.operation === 'check' &&
+        verdict?.pass === false &&
+        typeof verdict.stopped !== 'string'
+      ) {
         const next = checkAgainNext(
           { checks: buildChecks(events).checks + 1 },
           BUILD_CHECKS,

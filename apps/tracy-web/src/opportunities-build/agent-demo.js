@@ -1710,6 +1710,48 @@ export function joinPlan(held, params) {
 }
 
 /**
+ * The rows a refused plan's issues name, in order: each issue that points at a row (`rows[i]`). A plan-wide issue (a lead
+ * no row covers, `unplaced`) names no row; it is fixed by adding rows or `unplaced`.
+ * @param {Array<{rowIndex?: number | null}> | undefined} issues @param {number} count
+ */
+export function refusedRowsOf(issues, count) {
+  const rows = new Set()
+  for (const i of issues ?? []) if (Number.isInteger(i?.rowIndex) && i.rowIndex < count) rows.add(i.rowIndex)
+  return [...rows].sort((a, b) => a - b)
+}
+
+/**
+ * A kept draft with one `plan.fix` laid over it (#296): `fix` replaces a row by its index in the draft, or drops it (null);
+ * `rows` are appended; `unplaced` replaces the draft's when sent. Indexes are the draft's, read before anything moves.
+ * @param {{rows: any[]} & Record<string, unknown>} draft
+ * @param {Record<string, unknown>} params
+ */
+export function fixPlanDraft(draft, params) {
+  const keys = ['operation', 'fix', 'rows', 'unplaced']
+  const bad = Object.keys(params).find((key) => !keys.includes(key))
+  const issue = (message) => fail('AGENT_DEMO_PLAN_INVALID', { issues: [{ message }] })
+  if (bad !== undefined) throw issue(`plan.fix takes fix, rows and unplaced, not ${bad}`)
+  const fix = params.fix ?? {}
+  if (!fix || typeof fix !== 'object' || Array.isArray(fix))
+    throw issue('fix is {"<rowIndex>": <the corrected row> | null}, indexes of the kept draft')
+  const rows = draft.rows.map((row) => row)
+  for (const [key, row] of Object.entries(fix)) {
+    const i = Number(key)
+    if (!Number.isInteger(i) || i < 0 || i >= rows.length) throw issue(`fix: ${key} is no row of the draft`)
+    if (row !== null && (typeof row !== 'object' || Array.isArray(row)))
+      throw issue(`fix: row ${i} is an object or null`)
+    rows[i] = row
+  }
+  if (params.rows !== undefined && !Array.isArray(params.rows)) throw issue('rows is a list of rows to add')
+  const { at: _at, ...rest } = draft
+  return {
+    ...rest,
+    rows: [...rows.filter((row) => row !== null), ...(params.rows ?? [])],
+    ...(params.unplaced !== undefined ? { unplaced: params.unplaced } : {})
+  }
+}
+
+/**
  * A saved plan grows, it is not rewritten (pilot 24/10/2026): a build learns a slot's shape only when it writes
  * there, and its crops were then refused as a new plan. An amendment keeps every saved row at its index and its
  * other fields, may give a row that had none its `image`, may append rows and change `unplaced`; a row's import
@@ -2422,17 +2464,21 @@ export function agentDemoCapabilities({
       }
     }
     if (
-      ['plan.save', 'plan.add', 'media.import'].includes(params.operation) &&
+      ['plan.save', 'plan.fix', 'plan.add', 'media.import'].includes(params.operation) &&
       build.action_selection?.chatMode === 'client-send/1' &&
       (build.state !== 'done' || !build.qa?.baseline || !build.content?.agentDemo?.structureHash)
     )
       throw fail('AGENT_DEMO_NOT_READY')
-    if (params.operation === 'plan.save') {
+    if (params.operation === 'plan.save' || params.operation === 'plan.fix') {
+      const held = build.content?.agentDemo?.plan
+      const draft = build.content?.agentDemo?.planDraft ?? null
+      if (params.operation === 'plan.fix' && (held || !draft)) throw fail('AGENT_DEMO_PLAN_DRAFT_MISSING')
+      const asked = params.operation === 'plan.fix' ? fixPlanDraft(draft, params) : params.plan
       if (
         !build.content?.agentDemo?.structureHash ||
-        params.plan?.structureHash !== build.content.agentDemo.structureHash ||
-        (params.plan?.structure !== undefined &&
-          researchHash(params.plan.structure) !== build.content.agentDemo.structureHash)
+        asked?.structureHash !== build.content.agentDemo.structureHash ||
+        (asked?.structure !== undefined &&
+          researchHash(asked.structure) !== build.content.agentDemo.structureHash)
       )
         throw fail('AGENT_DEMO_STRUCTURE_CHANGED')
       if (!build.content.agentDemo.structure.inventory?.complete) throw fail('AGENT_DEMO_INVENTORY_REQUIRED')
@@ -2443,20 +2489,35 @@ export function agentDemoCapabilities({
       ])
       // The fill plan, made once with the first saved plan and kept: every later save is held to the same one (#141).
       const fill = build.content.agentDemo.fill ?? (await fillPlanFor({ revision, sizes }).catch(() => null))
-      const checked = validateAgentPlan(
-        { ...params.plan, structure: build.content.agentDemo.structure },
-        bundle,
-        {
+      let checked
+      try {
+        checked = validateAgentPlan({ ...asked, structure: build.content.agentDemo.structure }, bundle, {
           leads: plannableLeads(editorialLeads(build.qa?.baseline), build.content.agentDemo.structure),
           inventoryInvariant,
           baseline: build.qa?.baseline ?? null,
           sizes,
           fill
+        })
+      } catch (error) {
+        // 🔒 A REFUSED FIRST PLAN IS KEPT AS A DRAFT, AND ONLY ITS REFUSED ROWS ARE SENT AGAIN (#296, 02/11/2026):
+        // `plan.save` was refused 4–10 times a build and each try re-sent the whole plan (15–66K characters, 40–60 % of
+        // the agent's output tokens). The rows that passed stay here; `plan.fix` sends the refused ones by index.
+        if (error?.code !== 'AGENT_DEMO_PLAN_INVALID' || held || !Array.isArray(asked?.rows)) throw error
+        const { structure: _structure, ...kept } = asked
+        const refusedRows = refusedRowsOf(error.detail?.issues, kept.rows.length)
+        await pool.query(
+          `update wo_build set content=jsonb_set(coalesce(content,'{}'::jsonb),'{agentDemo,planDraft}',$2::jsonb),updated_at=now()
+          where id=$1 and content#>>'{agentDemo,plan,hash}' is null`,
+          [build.id, JSON.stringify({ ...kept, at: new Date(now()).toISOString() })]
+        )
+        error.detail = {
+          ...error.detail,
+          draft: { rows: kept.rows.length, kept: kept.rows.length - refusedRows.length, refusedRows }
         }
-      )
+        throw error
+      }
       const { structure: _structure, hash: _oldHash, ...body } = checked
       const plan = { ...body, hash: researchHash(body) }
-      const held = build.content?.agentDemo?.plan
       if (held && held.hash !== plan.hash && !amendsPlan(held, plan)) throw fail('AGENT_DEMO_PLAN_FROZEN')
       const saved = await pool.query(
         `update wo_build set content=jsonb_set(coalesce(content,'{}'::jsonb),'{agentDemo}', $2::jsonb),updated_at=now()
@@ -2466,6 +2527,7 @@ export function agentDemoCapabilities({
           JSON.stringify({
             ...build.content?.agentDemo,
             plan,
+            planDraft: null,
             ...(fill ? { fill } : {}),
             savedAt: new Date(now()).toISOString()
           }),

@@ -24,7 +24,9 @@ import {
   amendsPlan,
   isLogo,
   structurePage,
+  fixPlanDraft,
   joinPlan,
+  refusedRowsOf,
   compactSource
 } from '../src/opportunities-build/agent-demo.js'
 
@@ -213,6 +215,10 @@ function fixture(cms = 'wordpress', sourceBytes = bytes) {
         build.content.agentDemo.imports ??= {}
         build.content.agentDemo.imports[args[1]] = JSON.parse(args[2])
         return { rows: [{ id: 'build' }] }
+      }
+      if (sql.includes("'{agentDemo,planDraft}'")) {
+        build.content.agentDemo.planDraft = JSON.parse(args[1])
+        return { rows: [{ id: build.id }] }
       }
       if (sql.startsWith('update wo_build set content=jsonb_set')) {
         build.content.agentDemo = JSON.parse(args[1])
@@ -1498,6 +1504,53 @@ test('plan.add appends rows, gives images to rows that had none and tones to sav
   assert.throws(
     () => joinPlan({ rows: [] }, { operation: 'plan.add', tones: { 3: 'dark' } }),
     (e) => /3 is no saved row/.test(JSON.stringify(e.detail))
+  )
+})
+
+// #296 (02/11/2026): plan.save was refused 4–10 times a build, each try re-sending the whole plan (40–60 % of output tokens).
+test('a refused first plan is kept as a draft; plan.fix sends only its refused rows and saves the whole', async () => {
+  const { plan, pool } = fixture()
+  const auth = { accountId: 'account', siteKey: 'site.test', sessionId: 'session' }
+  const service = agentDemoCapabilities({ pool, objects: null })
+  await assert.rejects(service.call(auth, { operation: 'plan.fix', fix: {} }), /PLAN_DRAFT_MISSING/)
+  const broken = {
+    ...plan,
+    rows: [plan.rows[0], { ...plan.rows[0], section: 'story', page: 'https://bakery.test/' }]
+  }
+  let refused = null
+  await assert.rejects(service.call(auth, { operation: 'plan.save', plan: broken }), (e) => {
+    refused = e.detail
+    return e.code === 'AGENT_DEMO_PLAN_INVALID'
+  })
+  assert.deepEqual(refused.draft, { rows: 2, kept: 1, refusedRows: [1] })
+  const saved = await service.call(auth, {
+    operation: 'plan.fix',
+    fix: { 1: { ...plan.rows[0], section: 'story' } }
+  })
+  assert.deepEqual([saved.ok, saved.rows], [true, 2])
+  await assert.rejects(service.call(auth, { operation: 'plan.fix', fix: {} }), /PLAN_DRAFT_MISSING/)
+  assert.throws(
+    () => fixPlanDraft({ rows: [{}] }, { operation: 'plan.fix', fix: { 4: null } }),
+    (e) => /4 is no row of the draft/.test(JSON.stringify(e.detail))
+  )
+  assert.deepEqual(
+    fixPlanDraft(
+      { rows: [{ a: 1 }, { a: 2 }, { a: 3 }], structureHash: 's', at: 'x' },
+      {
+        operation: 'plan.fix',
+        fix: { 0: null, 2: { a: 4 } },
+        rows: [{ a: 5 }]
+      }
+    ),
+    { rows: [{ a: 2 }, { a: 4 }, { a: 5 }], structureHash: 's' },
+    "indexes are the draft's, a null drops the row, new rows go last"
+  )
+  assert.deepEqual(
+    refusedRowsOf(
+      [{ rowIndex: 3 }, { rowIndex: null }, { rowIndex: 1 }, { rowIndex: 3 }, { rowIndex: 9 }],
+      5
+    ),
+    [1, 3]
   )
 })
 

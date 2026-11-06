@@ -69,9 +69,18 @@ export class BudgetExceededError extends Error {
 
 // What one row counts against a cap: a settled call its cost, a released one nothing, an open or
 // unreconciled one its ceiling (or more, if a late settle reported more).
+/**
+ * What a settled call cost, in cents: to the thousandth (`actual_millicents`, migration 195 / schema 0011) where it was
+ * recorded so, else the whole cents of an older row, else its ceiling. A sum of these is rounded up once, never per call.
+ */
+export const SPENT = 'coalesce(actual_millicents / 1000.0, actual_cents, reserved_cents)'
+
+/** The budgets a charge counts against: research (a place's research) or build (a site built from it). */
+export const BUDGETS = Object.freeze(['research', 'build'])
+
 export const COMMITTED = `case state
   when 'released' then 0
-  when 'settled' then coalesce(actual_cents, reserved_cents)
+  when 'settled' then ${SPENT}
   else greatest(reserved_cents, coalesce(actual_cents, 0)) end`
 
 /**
@@ -92,15 +101,18 @@ export const COMMITTED = `case state
 /**
  * @param {{pool: import('pg').Pool, caps: () => Promise<{dailyCapCents: number, jobCapCents: number}>,
  *   now?: () => number, staleAfterMs?: number,
- *   scope?: {accountIds: string[], jobIds: string[]} | null}} deps
+ *   scope?: {accountIds: string[], jobIds: string[]} | null, budget?: 'research' | 'build'}} deps - `budget`: which
+ *   day cap this ledger's charges count against (#296): a build's look, words and pictures never spend research's day
  */
 export function createCostLedger({
   pool,
   caps,
   now = Date.now,
   staleAfterMs = DEFAULT_STALE_MS,
-  scope = null
+  scope = null,
+  budget = 'research'
 }) {
+  if (!BUDGETS.includes(budget)) throw new TypeError('cost-ledger: budget must be research or build')
   if (
     scope &&
     [scope.accountIds, scope.jobIds].some(
@@ -223,7 +235,7 @@ export function createCostLedger({
           throw Object.assign(new Error('Prefetch campaign is stopped'), { code: 'PREFETCH_STOPPED' })
         const total = (
           await client.query(
-            `select coalesce(sum(${COMMITTED}),0)::int as committed from wo_cost_ledger where prefetch_campaign_id=$1`,
+            `select ceil(coalesce(sum(${COMMITTED}),0))::int as committed from wo_cost_ledger where prefetch_campaign_id=$1`,
             [spec.prefetchCampaignId]
           )
         ).rows[0].committed
@@ -242,11 +254,11 @@ export function createCostLedger({
       }
       await assertLease(client, spec)
       const { rows: sums } = await client.query(
-        `select coalesce(sum(${COMMITTED}) filter (where budget_day = $1), 0)::int as day,
-                coalesce(sum(${COMMITTED}) filter (where job_id = $2), 0)::int as job,
-                coalesce(sum(${COMMITTED}) filter (where account_id = $3 and budget_day = $1), 0)::int as account
+        `select ceil(coalesce(sum(${COMMITTED}) filter (where budget_day = $1 and budget = $4), 0))::int as day,
+                ceil(coalesce(sum(${COMMITTED}) filter (where job_id = $2), 0))::int as job,
+                ceil(coalesce(sum(${COMMITTED}) filter (where account_id = $3 and budget_day = $1), 0))::int as account
          from wo_cost_ledger where budget_day = $1 or job_id = $2`,
-        [day, jobId, accountId]
+        [day, jobId, accountId, budget]
       )
       const refusal =
         sums[0].day + admissionCents > dailyCapCents
@@ -269,8 +281,8 @@ export function createCostLedger({
       const usage = usageColumns(spec)
       const { rows } = await client.query(
         `insert into wo_cost_ledger
-           (budget_day, place_id, opportunity_id, job_id, provider, operation, reserved_cents, request_key, created_at,account_id,action_id,build_id${usage.names}${spec.prefetchCampaignId != null ? ',prefetch_campaign_id' : ''})
-         values ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10,$11,$12${usage.places(13)}${spec.prefetchCampaignId != null ? `,$${13 + usage.values.length}` : ''}) returning *`,
+           (budget_day, place_id, opportunity_id, job_id, provider, operation, reserved_cents, request_key, created_at,account_id,action_id,build_id,budget${usage.names}${spec.prefetchCampaignId != null ? ',prefetch_campaign_id' : ''})
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10,$11,$12,$13${usage.places(14)}${spec.prefetchCampaignId != null ? `,$${14 + usage.values.length}` : ''}) returning *`,
         [
           day,
           spec.placeId ?? null,
@@ -284,6 +296,7 @@ export function createCostLedger({
           accountId,
           spec.actionId ?? null,
           spec.buildId ?? null,
+          budget,
           ...usage.values,
           ...(spec.prefetchCampaignId != null ? [spec.prefetchCampaignId] : [])
         ]
@@ -308,14 +321,15 @@ export function createCostLedger({
    */
   async function settle(reservation, actualCents = null, providerRunId = null, tokens = null) {
     // Tokens go in the same statement as the cost; a charge without any leaves the column out (older tables too).
-    const cost =
-      typeof actualCents === 'number' && Number.isFinite(actualCents) && actualCents >= 0
-        ? Math.ceil(actualCents)
-        : null
+    // 🔒 THE COST IS KEPT TO THE THOUSANDTH OF A CENT (#296): `actual_cents` stays the whole cents an older reader sums,
+    // `actual_millicents` what caps and spend reports count (`SPENT`).
+    const known = typeof actualCents === 'number' && Number.isFinite(actualCents) && actualCents >= 0
+    const cost = known ? Math.ceil(actualCents) : null
+    const millicents = known ? Math.round(actualCents * 1000) : null
     const { rowCount } = await pool.query(
       `update wo_cost_ledger
-       set state = 'settled', actual_cents = coalesce($2, reserved_cents),
-           provider_run_id = coalesce($3, provider_run_id), settled_at = $4${tokens ? ', tokens = $7::jsonb' : ''}
+       set state = 'settled', actual_cents = coalesce($2, reserved_cents), actual_millicents = $7::bigint,
+           provider_run_id = coalesce($3, provider_run_id), settled_at = $4${tokens ? ', tokens = $8::jsonb' : ''}
        where id = $1 and state in ('reserved', 'unreconciled')
          and ($5::uuid[] is null or account_id=any($5)) and ($6::uuid[] is null or job_id=any($6))`,
       [
@@ -325,6 +339,7 @@ export function createCostLedger({
         at(),
         accountIds,
         jobIds,
+        millicents,
         ...(tokens ? [JSON.stringify(tokens)] : [])
       ]
     )
@@ -368,19 +383,19 @@ export function createCostLedger({
   }
 
   /**
-   * One UTC day's research cost, of the whole deployment or of one place.
+   * One UTC day's cost of this ledger's budget (research or build), of the whole deployment or of one place.
    * @param {{day?: string, placeId?: string | null}} [query] - `day` as YYYY-MM-DD, today by default
    */
   async function summary({ day = utcDay(now()), placeId = null } = {}) {
     await markStale()
     const { rows } = await pool.query(
       `select
-         coalesce(sum(coalesce(actual_cents, reserved_cents)) filter (where state = 'settled'), 0)::int as spent,
+         ceil(coalesce(sum(${SPENT}) filter (where state = 'settled'), 0))::int as spent,
          coalesce(sum(reserved_cents) filter (where state = 'reserved'), 0)::int as reserved,
-         coalesce(sum(${COMMITTED}) filter (where state = 'unreconciled'), 0)::int as unreconciled,
+         ceil(coalesce(sum(${COMMITTED}) filter (where state = 'unreconciled'), 0))::int as unreconciled,
          count(*) filter (where state <> 'released')::int as calls
-       from wo_cost_ledger where budget_day = $1 and ($2::uuid is null or place_id = $2)`,
-      [day, placeId]
+       from wo_cost_ledger where budget_day = $1 and ($2::uuid is null or place_id = $2) and budget = $3`,
+      [day, placeId, budget]
     )
     const { dailyCapCents } = await caps()
     const r = rows[0]
@@ -403,11 +418,11 @@ export function createCostLedger({
     const r = (
       await pool.query(
         `select
-      coalesce(sum(${COMMITTED}) filter(where budget_day=$1),0)::float8 as day,
-      coalesce(sum(${COMMITTED}) filter(where job_id=$2),0)::float8 as job,
-      coalesce(sum(${COMMITTED}) filter(where budget_day=$1 and account_id=$3),0)::float8 as account
+      ceil(coalesce(sum(${COMMITTED}) filter(where budget_day=$1 and budget=$4),0))::float8 as day,
+      ceil(coalesce(sum(${COMMITTED}) filter(where job_id=$2),0))::float8 as job,
+      ceil(coalesce(sum(${COMMITTED}) filter(where budget_day=$1 and account_id=$3),0))::float8 as account
       from wo_cost_ledger where budget_day=$1 or job_id=$2`,
-        [day, jobId, accountId]
+        [day, jobId, accountId, budget]
       )
     ).rows[0]
     const effectiveJobCap = Math.min(limits.jobCapCents, jobCapCents ?? limits.jobCapCents)
@@ -480,11 +495,18 @@ export function createChargeable(ledger) {
   return (spec, fn) => withCharge(ledger, spec, fn)
 }
 
-/** The caps a ledger reads, from `woRuntime`'s settings (`/ops/wo`), read on every reserve. */
-export function capsFromRuntime(runtime) {
+/**
+ * The caps a ledger reads, from `woRuntime`'s settings (`/ops/wo`), read on every reserve: research's, or (#296) the
+ * build's own day cap, so a day of builds never refuses research and the other way round. A build charge names no
+ * research job, so the job cap only binds research.
+ * @param {() => Promise<{settings: any}>} runtime @param {'research' | 'build'} [budget]
+ */
+export function capsFromRuntime(runtime, budget = 'research') {
   return async () => {
     const { settings } = await runtime()
-    return { dailyCapCents: settings.researchDailyCapCents, jobCapCents: settings.researchJobCapCents }
+    return budget === 'build'
+      ? { dailyCapCents: settings.buildDailyCapCents, jobCapCents: settings.buildDailyCapCents }
+      : { dailyCapCents: settings.researchDailyCapCents, jobCapCents: settings.researchJobCapCents }
   }
 }
 

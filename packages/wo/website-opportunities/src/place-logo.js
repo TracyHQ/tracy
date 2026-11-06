@@ -18,7 +18,7 @@ import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 import { canonicalJson } from './canonical-json.js'
 import { BudgetExceededError } from './cost-ledger.js'
-import { visionCostCents } from './cost-prices.js'
+import { visionCostCents, visionCostExactCents } from './cost-prices.js'
 import { controlError } from './google-maps-research.js'
 import { askVision } from './menu-photo-reading.js'
 import { modelTokensOf } from './wo-model-tokens.js'
@@ -285,7 +285,7 @@ export async function classifyLogos({
           operation: model.model,
           maxCents: logoCeilingCents(model.model),
           actualCents: (r) =>
-            visionCostCents(model.model, {
+            visionCostExactCents(model.model, {
               promptTokens: r.promptTokens,
               completionTokens: r.completionTokens
             }),

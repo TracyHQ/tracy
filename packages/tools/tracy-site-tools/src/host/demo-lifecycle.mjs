@@ -112,10 +112,16 @@ async function sweptCheck(send, { signal, sleep, now, sweep }) {
       return heard(answer, sweeps)
     const refused = []
     let sent = 0
-    const sendOne = sweepRound(sweep)
-    for (const call of calls) {
-      if (signal?.aborted) return stoppedAnswer({ lastReceipt: heard(answer, []) })
-      const answered = await sendOne(call)
+    // Several at a time where tracy-web says the site's door takes them (`inFlight`, `sendRound`); each answer is
+    // read at its call's place in the round, so the report is the one a round sent one call at a time gives.
+    const answers = await sendRound(calls, sweepRound(sweep), {
+      inFlight: answer.sweep.inFlight,
+      shown: answer.sweep.shown,
+      signal
+    })
+    if (answers === null) return stoppedAnswer({ lastReceipt: heard(answer, []) })
+    for (const [at, call] of calls.entries()) {
+      const answered = answers[at]
       // A page's pairs sent as one call answer pair by pair (`sweepRound`), each reported as its own call was.
       const rows = Array.isArray(answered?.pairs)
         ? answered.pairs
@@ -222,12 +228,18 @@ const wordsKey = (text) =>
  * earlier in this round put in place words that hold them, that write is why, and the call is answered done with
  * `cleared` naming it. Every call is still sent whole with its own guards (`expect`, confirm-count); a NOT_FOUND
  * that no earlier write explains stays refused.
+ *
+ * 🔒 THE ROUND'S WRITES ARE KEPT IN THE ROUND'S ORDER, NOT THE ORDER THEIR ANSWERS CAME (02/11/2026): with calls in
+ * flight together (`sendRound`), the write a NOT_FOUND is explained by is the first one of the round that holds its
+ * words, as it was when the round went one call at a time. `at` is the call's place in the round; a caller that
+ * sends one call after another may leave it out.
  * @param {SweepRun} sweep
- * @returns {SweepRun}
+ * @returns {(call: {action: string, params: Record<string, any>}, at?: number) => Promise<any>}
  */
 export function sweepRound(sweep) {
-  /** @type {string[]} */
+  /** @type {Array<{at: number, words: string}>} */
   const written = []
+  let next = 0
   /** @param {{action: string, params: Record<string, any>}} call */
   const sent = (call) =>
     sweep(call).catch((failure) => ({
@@ -235,26 +247,31 @@ export function sweepRound(sweep) {
       code: 'SWEEP_CALL_FAILED',
       error: String(failure?.message ?? failure)
     }))
-  /** @param {{action: string, params: Record<string, any>}} call */
-  const one = async (call) => {
+  /** @param {{action: string, params: Record<string, any>}} call @param {number} at */
+  const one = async (call, at) => {
     const done = await sent(call)
     if (call.action !== 'content.replace') return done
-    return heldBy(call.params?.find, done)
+    return heldBy(call.params?.find, done, at)
   }
-  /** A pair's answer: written, or a NOT_FOUND an earlier write of the round explains. @param {unknown} words @param {any} done */
-  const heldBy = (words, done) => {
+  /**
+   * A pair's answer: written, or a NOT_FOUND an earlier write of the round explains.
+   * @param {unknown} words @param {any} done @param {number} at
+   */
+  const heldBy = (words, done, at) => {
     const find = wordsKey(words)
-    if (done?.ok === true) written.push(find)
-    else if (done?.code === 'NOT_FOUND' && find !== '') {
-      const by = written.find((w) => w.includes(find))
-      if (by !== undefined) return { ok: true, count: 0, cleared: by }
+    if (done?.ok === true) {
+      const after = written.findIndex((w) => w.at > at)
+      written.splice(after === -1 ? written.length : after, 0, { at, words: find })
+    } else if (done?.code === 'NOT_FOUND' && find !== '') {
+      const by = written.find((w) => w.words.includes(find))
+      if (by !== undefined) return { ok: true, count: 0, cleared: by.words }
     }
     return done
   }
-  return async (call) => {
+  return async (call, at = next++) => {
     const changes = call.action === 'content.replace' ? call.params?.changes : undefined
-    if (!Array.isArray(changes)) return one(call)
-    return { ok: true, pairs: await batch(call, changes) }
+    if (!Array.isArray(changes)) return one(call, at)
+    return { ok: true, pairs: await batch(call, changes, at) }
   }
 
   /**
@@ -272,9 +289,10 @@ export function sweepRound(sweep) {
    * the rest of its call (the overlap above) is sent only once every answer of the call is known.
    * @param {{action: string, params: Record<string, any>}} call
    * @param {Array<{find: string, replace: string, expect?: number}>} changes
+   * @param {number} at - the call's place in the round
    * @returns {Promise<Array<{find: string, done: any}>>}
    */
-  async function batch(call, changes) {
+  async function batch(call, changes, at) {
     const { changes: _changes, ...base } = call.params
     /** @param {{find: string, replace: string, expect?: number}} pair */
     const alone = (pair) => ({ action: call.action, params: { ...base, ...pair } })
@@ -288,32 +306,180 @@ export function sweepRound(sweep) {
         queue.length === 1 ? alone(queue[0]) : { action: call.action, params: { ...base, changes: queue } }
       )
       if (done?.ok === true) {
-        for (const pair of queue) rows.push({ find: pair.find, done: heldBy(pair.find, done) })
+        for (const pair of queue) rows.push({ find: pair.find, done: heldBy(pair.find, done, at) })
         break
       }
       if (!refusedBeforeWrite(done)) {
         for (const pair of queue) rows.push({ find: pair.find, done })
         break
       }
-      const at =
+      const refusedAt =
         queue.length === 1
           ? 0
           : Number.isInteger(done?.change) && done.change >= 0 && done.change < queue.length
             ? done.change
             : null
-      if (at === null) {
-        for (const pair of queue) rows.push({ find: pair.find, done: await one(alone(pair)) })
+      if (refusedAt === null) {
+        for (const pair of queue) rows.push({ find: pair.find, done: await one(alone(pair), at) })
         break
       }
-      if (queue.length > 1 && done?.code === 'BAD_PARAMS') after.push(queue[at])
-      else rows.push({ find: queue[at].find, done: heldBy(queue[at].find, done) })
-      queue = queue.filter((_pair, i) => i !== at)
+      if (queue.length > 1 && done?.code === 'BAD_PARAMS') after.push(queue[refusedAt])
+      else rows.push({ find: queue[refusedAt].find, done: heldBy(queue[refusedAt].find, done, at) })
+      queue = queue.filter((_pair, i) => i !== refusedAt)
     }
     const known = rows.every((r) => r.done?.ok === true || refusedBeforeWrite(r.done))
-    for (const pair of after) rows.push({ find: pair.find, done: known ? await one(alone(pair)) : NOT_SENT })
+    for (const pair of after)
+      rows.push({ find: pair.find, done: known ? await one(alone(pair), at) : NOT_SENT })
     return rows
   }
 }
+
+/** The most calls of one sweep round in flight at once, whatever tracy-web asks (`sweep.inFlight`). */
+export const SWEEP_IN_FLIGHT_MAX = 4
+
+/**
+ * Sends a round's calls, at most `inFlight` at a time, each only once every call it waits for has answered
+ * ({@link roundOrder}); calls start in the round's order, the first one free going first.
+ *
+ * 🔒 SEVERAL AT A TIME ONLY WHERE THE SITE'S DOOR TAKES THEM, AND ONLY WHAT CANNOT MEET ON ONE RECORD (02/11/2026).
+ * A round sent one call after another took 217–657 s of a build's checks (local r5 EmDash 528 calls, r3 WordPress
+ * 720). tracy-web says how many may be in flight (`sweep.inFlight`, `client-demo.js` `sweepInFlightOf`): four on
+ * EmDash, whose writes wait for SQLite's one writer and carry each entry's revision; none on WordPress and Joomla,
+ * where the Claude Cowork engine takes the site's write lock without waiting (`GET_LOCK(…, 0)`): a second write is
+ * refused `writer_busy` and waits 3–19 s for its retry, and every Joomla write already queues in the site's flight
+ * (`call-memory.mjs`). Without it, or with anything but a whole number above one, the round goes one call at a time
+ * as it always did. Stop sends nothing more; the calls in flight answer, and the answer is null.
+ * @param {Array<{action: string, params: Record<string, any>}>} calls
+ * @param {(call: {action: string, params: Record<string, any>}, at: number) => Promise<any>} sendOne
+ * @param {{inFlight?: unknown, shown?: unknown, signal?: AbortSignal | null}} [options] - `shown`: every page's
+ *   words the read before the round showed (`sweep.shown`)
+ * @returns {Promise<any[] | null>} each call's answer at its place in the round; null when Stop came first
+ */
+export function sendRound(calls, sendOne, { inFlight = 1, shown = [], signal = null } = {}) {
+  const limit =
+    typeof inFlight === 'number' && Number.isInteger(inFlight) && inFlight > 1
+      ? Math.min(inFlight, SWEEP_IN_FLIGHT_MAX)
+      : 1
+  // One at a time: each call waits for the one before it, the order the round always had.
+  const waits = limit > 1 ? roundOrder(calls, shown) : calls.map((_, i) => (i > 0 ? [i - 1] : []))
+  const pending = waits.map((w) => w.length)
+  /** @type {number[][]} */
+  const freed = calls.map(() => [])
+  for (const [i, w] of waits.entries()) for (const j of w) freed[j].push(i)
+  /** @type {any[]} */
+  const answers = Array.from({ length: calls.length })
+  const sentAlready = calls.map(() => false)
+  let flying = 0
+  let stopped = false
+  /** @param {number} at */
+  const send = async (at) => {
+    try {
+      return await sendOne(calls[at], at)
+    } catch (failure) {
+      return {
+        ok: false,
+        code: 'SWEEP_CALL_FAILED',
+        error: String(/** @type {any} */ (failure)?.message ?? failure)
+      }
+    }
+  }
+  return new Promise((resolve) => {
+    const pump = () => {
+      for (let at = 0; at < calls.length && flying < limit && !stopped; at++) {
+        if (sentAlready[at] || pending[at] > 0) continue
+        if (signal?.aborted) {
+          stopped = true
+          break
+        }
+        sentAlready[at] = true
+        flying += 1
+        void send(at).then((done) => {
+          answers[at] = done
+          flying -= 1
+          for (const i of freed[at]) pending[i] -= 1
+          pump()
+        })
+      }
+      if (flying === 0) resolve(stopped ? null : answers)
+    }
+    pump()
+  })
+}
+
+/**
+ * What each call of a round waits for: the calls before it that may write a record it writes. The sweep plans per page
+ * and cannot know the records a call reaches until the replace job reads them, so it waits for any call before it that:
+ * - is on its page (a page's later call holds words its earlier one changes: `onePerPage` layers, `partsOf` parts);
+ * - looks for words that hold its own or that its own hold (a passage before a name inside it, a post's excerpt on
+ *   the blog and its body on the post's page);
+ * - looks for words several pages show, when it does too, whatever the words: a header, footer, menu or site title is
+ *   one record every page shows, and two calls writing different words of it at once would meet on its revision. The
+ *   read before the round names every page's words, cap or not (`shown`), so words the cap left on one page still
+ *   count as shown on several;
+ * - is not a page's words (a link, a picture, a post, a record's fields, a site-wide replace), or it is not one:
+ *   such a call writes where its own resolver finds, so it waits for every call before it and every call after it
+ *   waits for it.
+ * A call waits only for calls before it, so the round always ends.
+ * @param {Array<{action: string, params: Record<string, any>}>} calls
+ * @param {unknown} [shown] - `sweep.shown`: `<path>\u0000<words>` per page's words the read showed
+ * @returns {number[][]} for each call, the places of the calls it waits for
+ */
+export function roundOrder(calls, shown = []) {
+  const keys = calls.map(pageWordsOf)
+  /** @type {Array<{path: string, words: string[]}>} */
+  const read = []
+  for (const key of Array.isArray(shown) ? shown : []) {
+    const at = typeof key === 'string' ? key.indexOf('\u0000') : -1
+    const words = at > 0 ? wordsKey(key.slice(at + 1)) : ''
+    if (words !== '') read.push({ path: pageKey(key.slice(0, at)), words: [words] })
+  }
+  const seen = [...keys, ...read]
+  const shared = keys.map(
+    (k) => k !== null && seen.some((o) => o !== null && o.path !== k.path && overlaps(k.words, o.words))
+  )
+  return keys.map((k, i) => {
+    /** @type {number[]} */
+    const waits = []
+    for (let j = 0; j < i; j++) {
+      const o = keys[j]
+      if (
+        k === null ||
+        o === null ||
+        o.path === k.path ||
+        overlaps(k.words, o.words) ||
+        (shared[i] && shared[j])
+      )
+        waits.push(j)
+    }
+    return waits
+  })
+}
+
+/**
+ * A call's page and the words it looks for, or null for a call that is not one page's words: any other action, a
+ * link's address (`href`), a replace over the whole site (`all: true`), or a shape the sweep does not plan.
+ * @param {{action?: string, params?: Record<string, any>}} call
+ */
+function pageWordsOf(call) {
+  const p = call?.params
+  if (call?.action !== 'content.replace' || !p || p.href || p.all === true || typeof p.path !== 'string')
+    return null
+  const finds = Array.isArray(p.changes) ? p.changes.map((/** @type {any} */ c) => c?.find) : [p.find]
+  const words = finds.map((f) => (typeof f === 'string' ? wordsKey(f) : ''))
+  if (words.length === 0 || words.includes('')) return null
+  return { path: pageKey(p.path), words }
+}
+
+/** A page as one key: any case, no query or fragment, no last slash. @param {string} path */
+const pageKey = (path) =>
+  path
+    .trim()
+    .toLowerCase()
+    .replace(/[?#].*$/, '')
+    .replace(/\/+$/, '') || '/'
+
+/** Whether words of one list hold, or are held by, words of the other. @param {string[]} a @param {string[]} b */
+const overlaps = (a, b) => a.some((x) => b.some((y) => x.includes(y) || y.includes(x)))
 
 /** A poll that failed on the way, not an answer from the check: the check itself runs on. @param {any} answer */
 function onTheWay(answer) {

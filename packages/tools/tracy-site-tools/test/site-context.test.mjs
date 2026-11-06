@@ -3868,6 +3868,39 @@ test('planIssuesNext: a plan refused with its own issues is told to fix those ro
   assert.equal(planIssuesNext({ ok: true }), null)
 })
 
+test('checkAgainStep: a check the server stopped the checking with (#296, no progress) is not steered to check again', () => {
+  const call = {
+    type: 'tool/call',
+    data: { name: 'tracy_demo', callId: 'c1', arguments: { operation: 'check' } }
+  }
+  const result = (answer) => ({
+    type: 'tool/result',
+    data: { message: { source: { callId: 'c1' }, content: [{ type: 'text', text: JSON.stringify(answer) }] } }
+  })
+  const stopped = [{ type: 'turn/start' }, call, result({ pass: false, stopped: 'no-progress', checks: [] })]
+  assert.deepEqual(buildChecks(stopped), { checks: 1, lastPass: false, exhausted: true })
+  assert.equal(checkAgainStep(stopped), null)
+  const going = [{ type: 'turn/start' }, call, result({ pass: false, checks: [] })]
+  assert.match(String(checkAgainStep(going)), /checks remain/)
+})
+
+test('planIssuesNext: a refused first plan the server kept as a draft is fixed by its refused rows only, through plan.fix (#296)', () => {
+  // Measured: plan.save took 4–10 tries a build, each re-sending the whole plan (15–66K characters).
+  const answer = {
+    ok: false,
+    code: 'AGENT_DEMO_PLAN_INVALID',
+    detail: { issues: [{}, {}], draft: { rows: 40, kept: 38, refusedRows: [3, 17] } }
+  }
+  const next = planIssuesNext(answer)
+  assert.match(next, /2 issues of this draft; the other 38 rows are kept\. Fix rows 3, 17/)
+  assert.match(next, /plan\.fix/)
+  assert.match(next, /never the whole plan again/)
+  assert.doesNotMatch(next, /plan\.save again/)
+  const planWide = { ...answer, detail: { issues: [{}], draft: { rows: 40, kept: 40, refusedRows: [] } } }
+  assert.match(planIssuesNext(planWide), /no single row \(add the rows or unplaced the issues ask for\)/)
+  assert.equal(buildsSite({ name: 'tracy_demo', arguments: { operation: 'plan.fix' } }), true)
+})
+
 test('checkAnswerForAgent: a failed check leads with its next and shows each list at most 12 long, the rest counted (The Living Room local, build 11, 25/10/2026)', () => {
   // Measured: a check over every route answered 163 KB; the tool cut it at 50 KB, its next came last, and the agent
   // ended the turn "extremely deep into this turn" with four checks left.

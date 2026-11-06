@@ -280,7 +280,8 @@ test(
     const resumed = await createQualityEditorial(deps).editorialFor(context)(frozen)
     assert.deepEqual(resumed, result)
     assert.equal(calls.length, 4)
-    assert.equal((await ledger.summary()).spentCents, 4)
+    // Four calls at what their tokens cost, the sum rounded up once (#296): no longer a whole cent each.
+    assert.equal((await ledger.summary()).spentCents, 1)
     const changed = structuredClone(frozen)
     changed.overlay.name = 'Changed after acceptance'
     await assert.rejects(createQualityEditorial(deps).editorialFor(context)(changed), /PREPARATION_CHANGED/)

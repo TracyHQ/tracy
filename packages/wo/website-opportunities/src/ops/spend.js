@@ -3,7 +3,7 @@
  * counts what it commits against a cap (`COMMITTED`): a settled call its cost, an open or unreconciled one its
  * ceiling, a released one nothing (it never went out, so it is not a call either).
  */
-import { COMMITTED } from '../cost-ledger.js'
+import { COMMITTED, SPENT } from '../cost-ledger.js'
 
 export const LEDGER_STATES = Object.freeze(['reserved', 'settled', 'released', 'unreconciled'])
 export const MAX_SPEND_DAYS = 90
@@ -38,7 +38,7 @@ export async function spendSummary(pool, { days, now = Date.now }) {
     await pool.query(
       `select count(*) filter (where ${sent}) as calls,
               coalesce(sum(${COMMITTED}), 0) as committed,
-              coalesce(sum(coalesce(actual_cents, reserved_cents)) filter (where state = 'settled'), 0) as settled,
+              ceil(coalesce(sum(${SPENT}) filter (where state = 'settled'), 0)) as settled,
               coalesce(sum(reserved_cents) filter (where state = 'reserved'), 0) as open,
               coalesce(sum(${COMMITTED}) filter (where state = 'unreconciled'), 0) as unreconciled,
               count(*) filter (where state = 'unreconciled') as unreconciled_calls,
@@ -71,7 +71,7 @@ export async function spendSummary(pool, { days, now = Date.now }) {
   const t = (
     await pool.query(
       `select coalesce(sum(${COMMITTED}), 0) as committed,
-              coalesce(sum(coalesce(actual_cents, reserved_cents)) filter (where state = 'settled'), 0) as spent,
+              ceil(coalesce(sum(${SPENT}) filter (where state = 'settled'), 0)) as spent,
               coalesce(sum(reserved_cents) filter (where state = 'reserved'), 0) as reserved,
               coalesce(sum(${COMMITTED}) filter (where state = 'unreconciled'), 0) as unreconciled
          from wo_cost_ledger where budget_day = $1`,

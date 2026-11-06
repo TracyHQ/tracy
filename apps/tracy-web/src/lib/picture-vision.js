@@ -9,6 +9,7 @@
  * labels again instead of reading an old answer.
  */
 import sharp from 'sharp'
+import { noReasoningBody } from './seed-model.js'
 import { createVisionChallenge, IMAGE_CODE_INSTRUCTION, imageCodeMatches } from './vision-challenge.js'
 import {
   ASSET_CAPTION_MAX,
@@ -54,6 +55,52 @@ const ENUMS = {
 }
 const BOOLS = ['heroWorthy', 'isCollage', 'hasTextOverlay']
 const CALL_MS = 60_000
+
+/**
+ * The most output any call on the vision door asks for: DeepSeek's chat models refuse a larger `max_tokens`
+ * (DeepSeek's documented output limit for its chat model).
+ */
+export const VISION_MAX_TOKENS = 8192
+/**
+ * The output one label call may write: room for each picture's label and for the JSON around them (the image code). A
+ * label with its evidence, boxes and flags is ~250 tokens (deepseek-flash, dev 30/10/2026), so one picture has 4× its
+ * label and a batch of 8 about 3×, under `VISION_MAX_TOKENS`.
+ */
+const LABEL_TOKENS_PER_PICTURE = 800
+const LABEL_FRAME_TOKENS = 512
+/** @param {number} pictures - the pictures one call asks about */
+export const labelMaxTokens = (pictures) =>
+  Math.min(VISION_MAX_TOKENS, LABEL_FRAME_TOKENS + Math.max(1, pictures) * LABEL_TOKENS_PER_PICTURE)
+
+/**
+ * One request to the vision door, the model asked not to reason, and asked once more without that field when the
+ * provider refuses it (a 400 that names thinking or reasoning, as `seed-model.js` reads it).
+ *
+ * 🔒 NO CALL ON THE VISION DOOR REASONS (02/11/2026). Dev's vision door is DeepSeek's `deepseek-flash`, which reasons
+ * unless told not to: every look, label and observation call spent 5–7K completion tokens reasoning and took ~36 s, where
+ * the same call without reasoning writes 18–64 tokens in 1.3–2.8 s (local). Naming what a picture shows or a fault a
+ * visitor sees rewards no reasoning; `noReasoningBody` asks each provider in its own words, as the Apply seed calls and the
+ * demo copy do (`seed-model.js`, `demo-copy.js`). Each caller also bounds the answer (`max_tokens`) to what it asks.
+ * @param {{door: {url: string, key: string}, bodyFor: (quiet: Record<string, unknown>) => string,
+ *   fetchImpl?: typeof fetch, signal?: AbortSignal}} request - `bodyFor`: the request's JSON with these fields added
+ * @returns {Promise<Response>}
+ */
+export async function postVisionDoor({ door, bodyFor, fetchImpl = fetch, signal }) {
+  const quiet = noReasoningBody(door.url)
+  const send = (/** @type {Record<string, unknown>} */ fields) =>
+    fetchImpl(door.url, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${door.key}`, 'content-type': 'application/json' },
+      body: bodyFor(fields),
+      signal
+    })
+  const res = await send(quiet)
+  if (res.status !== 400 || !Object.keys(quiet).length) return res
+  const said = await Promise.resolve()
+    .then(() => res.text())
+    .catch(() => '')
+  return /think|reason/i.test(said) ? send({}) : res
+}
 
 /** The closed list as the prompt shows it: one line per item, its id first. */
 function listLines(closedList) {
@@ -238,15 +285,18 @@ export async function labelWithVision({
     }
     const asked = new Set(group.map((p) => p.id))
     try {
-      const res = await fetchImpl(door.url, {
-        method: 'POST',
-        headers: { authorization: `Bearer ${door.key}`, 'content-type': 'application/json' },
-        body: JSON.stringify({
-          model: door.model,
-          temperature: 0,
-          response_format: { type: 'json_object' },
-          messages: [{ role: 'user', content }]
-        }),
+      const res = await postVisionDoor({
+        door,
+        bodyFor: (quiet) =>
+          JSON.stringify({
+            model: door.model,
+            temperature: 0,
+            max_tokens: labelMaxTokens(group.length),
+            response_format: { type: 'json_object' },
+            messages: [{ role: 'user', content }],
+            ...quiet
+          }),
+        fetchImpl,
         signal: AbortSignal.any([AbortSignal.timeout(CALL_MS), ...(signal ? [signal] : [])])
       })
       if (!res.ok) throw new CallFailed('http_error')

@@ -1313,7 +1313,8 @@ export function buildApp(deps) {
             chargeable: createChargeable(
               createCostLedger({
                 pool: deps.pool,
-                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+                budget: 'build',
+                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config), 'build')
               })
             ),
             fetchImpl: deps.fetchImpl ?? fetch
@@ -1509,7 +1510,7 @@ export function buildApp(deps) {
       siteChecks,
       socialStats,
       // What the brief's photographs show, labelled when the brief is made (F08): the build's vision door, key and cache,
-      // every own photo plus others up to TRACY_BRIEF_VISION_MAX_PICTURES (60) in total, billed to the research caps. `deps.…PictureLabels`: a test's own.
+      // every own photo plus others up to TRACY_BRIEF_VISION_MAX_PICTURES (60) in total, billed to the builds' day cap (`buildDailyCapCents`). `deps.…PictureLabels`: a test's own.
       pictureLabels:
         deps.websiteOpportunitiesPictureLabels ??
         createBriefPictureLabels({
@@ -1518,7 +1519,8 @@ export function buildApp(deps) {
           chargeable: createChargeable(
             createCostLedger({
               pool: deps.pool,
-              caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+              budget: 'build',
+              caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config), 'build')
             })
           ),
           visionFor: async () => {
@@ -1964,11 +1966,12 @@ export function buildApp(deps) {
       deps.realPictures ??
       createSitePictures({
         pool: deps.pool,
-        // The vision model's calls count against Tracy's research caps like the research's own (`cost-ledger.js`).
+        // The vision model's calls count against the builds' own day cap (`buildDailyCapCents`, `cost-ledger.js` budget build).
         chargeable: createChargeable(
           createCostLedger({
             pool: deps.pool,
-            caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+            budget: 'build',
+            caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config), 'build')
           })
         ),
         objects:
@@ -1996,7 +1999,8 @@ export function buildApp(deps) {
         secret: deps.config.sessionSecret,
         ledger: createCostLedger({
           pool: deps.pool,
-          caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+          budget: 'build',
+          caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config), 'build')
         }),
         runtime: () => woRuntime(deps.pool, deps.config)
       })
@@ -2224,7 +2228,8 @@ export function buildApp(deps) {
             chargeable: createChargeable(
               createCostLedger({
                 pool: deps.pool,
-                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+                budget: 'build',
+                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config), 'build')
               })
             ),
             fetchImpl: deps.fetchImpl ?? fetch
@@ -2236,7 +2241,8 @@ export function buildApp(deps) {
             chargeable: createChargeable(
               createCostLedger({
                 pool: deps.pool,
-                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+                budget: 'build',
+                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config), 'build')
               })
             ),
             fetchImpl: deps.fetchImpl ?? fetch

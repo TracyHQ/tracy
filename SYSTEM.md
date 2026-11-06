@@ -832,6 +832,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   win over duplicate dishes from photos. Place details (customer and /ops) return `menu`; the three Research again doors accept `parts` (Read menu again =
   the two menu parts).
   Migration 135: `wo_cost_ledger` — the research costs Tracy pays (`opportunities/cost-ledger.js`): every billable call reserves against the cap before calling, a Tracy-wide UTC daily cap + a per-job cap (`/ops/wo` › `researchDailyCapCents`/`researchJobCapCents`), failed calls kept as `unreconciled`.
+  Migration 195 (WO schema 0011, #296): a settled call keeps its cost to the thousandth of a cent (`actual_millicents`; caps and spend reports sum `SPENT` and round once), and each row names its `budget`: `research`, or `build` for what a site build spends (the look, page words, site pictures, demo and brief photo labels, the brief's photo observation, the quickstart model), held to its own day cap (`/ops/wo` › `buildDailyCapCents`).
   Migration 152 adds nullable account/action/build to link the editorial phase, without adding another money ledger.
   `reserve(spec,{onAdmitted})` keeps the receipt checkpoint and the reservation in the same transaction/monetary lock;
   it keeps campaign kill/budget/attribution and checks the real lease before/after the hook, including on replay. The frozen account/day cap

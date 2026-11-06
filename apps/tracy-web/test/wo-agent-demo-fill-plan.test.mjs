@@ -160,6 +160,11 @@ function fixture(sourceBytes) {
         build.content.agentDemo.imports[args[1]] = JSON.parse(args[2])
         return { rows: [{ id: 'build' }] }
       }
+      // A refused first plan kept as a draft (#296): only its own key.
+      if (sql.includes("'{agentDemo,planDraft}'")) {
+        build.content.agentDemo.planDraft = JSON.parse(args[1])
+        return { rows: [{ id: build.id ?? 'build' }] }
+      }
       if (sql.startsWith('update wo_build set content=jsonb_set')) {
         build.content.agentDemo = JSON.parse(args[1])
         return { rows: [{ id: 'build' }] }

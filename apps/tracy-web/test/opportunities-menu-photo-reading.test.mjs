@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { BudgetExceededError } from 'website-opportunities/src/cost-ledger.js'
-import { visionCostCents } from 'website-opportunities/src/cost-prices.js'
+import { visionCostCents, visionCostExactCents } from 'website-opportunities/src/cost-prices.js'
 import {
   MENU_PHOTOS_PER_PLACE,
   MENU_PHOTO_SYSTEM,
@@ -403,9 +403,10 @@ test('the ledger reserves a ceiling as provider vision and settles at the tokens
   await readMenuPhotos({ ...h.input, photos: [photo(1)], door: ready })
   assert.equal(h.specs[0].operation, 'deepseek-flash')
   assert.ok(h.specs[0].maxCents >= 1)
+  // Settled at what the tokens cost, unrounded (#296); the reservation stays a whole cent.
   assert.equal(
     h.settled[0],
-    visionCostCents('deepseek-flash', { promptTokens: 1000, completionTokens: 4000 })
+    visionCostExactCents('deepseek-flash', { promptTokens: 1000, completionTokens: 4000 })
   )
   assert.ok(h.settled[0] <= h.specs[0].maxCents)
 })
@@ -453,7 +454,7 @@ test('malformed model JSON is rejected and stores nothing, yet the call is still
     ]
   )
   assert.equal(h.settled.length, 2)
-  assert.ok(h.settled.every((c) => c >= 1))
+  assert.ok(h.settled.every((c) => c > 0))
   assert.equal(
     parseMenuPhotoAnswer('{"items": [{"price": "5"}, {"name": "Tea", "price": "about 5"}]}').items[0].price,
     null

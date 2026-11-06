@@ -2523,6 +2523,8 @@ test(
     // The first check reads every page; it answers with the sweep's calls, uncounted.
     const swept = await capability.call(auth, { operation: 'check' })
     assert.ok((swept.sweep?.calls ?? []).length > 0, JSON.stringify(swept.sweep ?? swept))
+    // 02/11/2026: an EmDash site's door takes several writes, so dsh may send four of the round's calls at a time.
+    assert.equal(swept.sweep.inFlight, 4)
     assert.equal(looked[0].incremental, false)
     assert.equal((await w.pool.query('select qa from wo_build')).rows[0].qa.clientCheckAttempts ?? 0, 0)
     // The check after the round keeps each page whose document the sweep did not change (`checkIsIncremental`).

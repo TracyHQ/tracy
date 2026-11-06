@@ -26,7 +26,8 @@ const packageFiles = async () => (await readSchemaFiles()).map((f) => f.name)
 const TRACY_COPIES = {
   '0004-place-snapshot-guard.sql': '173-wo-place-snapshot-guard.sql',
   '0009-site-check-read-tier.sql': '176-wo-site-check-read-tier.sql',
-  '0010-monid-key.sql': '186-wo-monid-key.sql'
+  '0010-monid-key.sql': '186-wo-monid-key.sql',
+  '0011-cost-ledger-exact-and-build.sql': '195-wo-cost-ledger-exact-and-build.sql'
 }
 const CARRIED = Object.keys(TRACY_COPIES)
 const afterBaseline = async () =>
@@ -255,11 +256,20 @@ test(
       return out
     }
     const before = await dump()
+    // The rows as they were, in the columns they had: a later migration may add a column (195 adds two to the ledger),
+    // never change what a row held.
+    const asBefore = (/** @type {Record<string, any[]>} */ now) =>
+      Object.fromEntries(
+        Object.entries(now).map(([t, rows]) => {
+          const cols = Object.keys(before[t][0] ?? {})
+          return [t, rows.map((r) => (cols.length ? Object.fromEntries(cols.map((c) => [c, r[c]])) : r))]
+        })
+      )
 
     const done = await tracyMigrate(pool, TRACY_DIR, { lockId })
     assert.ok(done.applied.includes(PRINCIPAL) && done.applied.includes(VALIDATE))
     assert.equal(await recorded(pool), 2)
-    assert.deepEqual(await dump(), before)
+    assert.deepEqual(asBefore(await dump()), before)
 
     const principals = (await pool.query('select id, kind, external_ref from wo_principal order by id')).rows
     const accounts = (await pool.query('select id from account order by id')).rows
@@ -308,12 +318,12 @@ test(
       Array(7).fill('account')
     )
     assert.equal((await pool.query(`select to_regclass('wo_principal') as t`)).rows[0].t, null)
-    assert.deepEqual(await dump(), before)
+    assert.deepEqual(asBefore(await dump()), before)
     assert.equal(await recorded(pool), 0)
     assert.deepEqual((await tracyMigrate(pool, TRACY_DIR, { lockId })).applied, [PRINCIPAL, VALIDATE])
     assert.equal(await recorded(pool), 2)
     assert.deepEqual((await tracyMigrate(pool, TRACY_DIR, { lockId })).applied, [])
-    assert.deepEqual(await dump(), before)
+    assert.deepEqual(asBefore(await dump()), before)
 
     // A new account can open WO at once; deleting an account still removes its WO rows and clears what it started.
     const c = await account('c@example.com')

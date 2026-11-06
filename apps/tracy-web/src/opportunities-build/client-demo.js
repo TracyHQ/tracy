@@ -57,6 +57,36 @@ const error = (code, status = 409) => Object.assign(new Error(code), { code, sta
 
 /** How many `tracy_demo check` runs a build has (`agent-demo.js`, where the brief says it too). */
 export { DEMO_CHECKS }
+
+/**
+ * 🔒 CHECKS STOP WHEN THEY STOP HELPING (#296, 02/11/2026). A build ran all {@link DEMO_CHECKS} counted checks, 4–18 min
+ * each: an EmDash build stayed at 29/30 from its third check on, so checks 5–8 and their repairs were ~20 min for nothing,
+ * while a Joomla build still went 25 → 27/30 over the same four. From the {@link PLATEAU_FROM}th counted check on, when
+ * two checks in a row found no fewer faults than the one before each, no further check runs: the build ends as one that
+ * used every check does (`failed`, needs a person), the site stays and the chat goes on. A fault is one finding a failed
+ * check lists (one for a check that lists none), so moving a fault from one check to another is not progress.
+ */
+export const PLATEAU_FROM = 4
+
+/** What the agent is told when no check remains because the last ones stopped helping. */
+export const PLATEAU_NEXT =
+  'No more checks will run on this build: the last two checks found no fewer faults than the one before them, so another round would not finish it. Make no further repairs and call no check. End the turn with a short reply to the customer naming what the site still lacks (the failures above), in plain words; a person reviews the site next.'
+
+/** The faults a check's failures count: each finding it lists, one for a failure that lists none. */
+export function faultsOf(failed) {
+  return (failed ?? []).reduce((n, c) => n + (Array.isArray(c?.detail) ? Math.max(1, c.detail.length) : 1), 0)
+}
+
+/**
+ * Whether this counted check, with `failed` its failures and `rounds` the counted checks before it, ends the checking:
+ * it is at least the {@link PLATEAU_FROM}th, and neither it nor the one before found fewer faults than its predecessor.
+ * @param {Array<{failed?: any[]}>} rounds @param {any[]} failed
+ */
+export function checksPlateaued(rounds, failed) {
+  if (rounds.length + 1 < PLATEAU_FROM || rounds.length < 2) return false
+  const [a, b, c] = [faultsOf(rounds.at(-2)?.failed), faultsOf(rounds.at(-1)?.failed), faultsOf(failed)]
+  return b >= a && c >= b
+}
 const sha = (text) => createHash('sha256').update(text, 'utf8').digest('hex')
 const ended = new Set(['aborted', 'blocked', 'error', 'interrupted', 'max-tokens'])
 /** This process: a running check whose row names it but which it no longer runs died with a restart. */
@@ -222,6 +252,21 @@ export function sweepDecision(swept, attempts, sweep) {
     return { go: false, rounds, stopped: 'no-progress' }
   return { go: true, rounds }
 }
+
+/**
+ * 🔒 A SWEEP ROUND'S CALLS GO SEVERAL AT A TIME ONLY WHERE THE SITE'S DOOR TAKES SEVERAL WRITERS (02/11/2026). A round
+ * sent one call after another took 217–657 s of a build's checks (local r5 EmDash 528 calls, r3 WordPress 720). An
+ * EmDash write waits for SQLite's one writer (`busy_timeout`) and carries the entry's revision, so the check tells dsh
+ * it may have {@link SWEEP_IN_FLIGHT} in flight (`sweep.inFlight`). A WordPress or Joomla site has one writer at a
+ * time: the Claude Cowork engine takes the site's write lock without waiting (`GET_LOCK(…, 0)`), so a second write is
+ * refused `writer_busy` and waits 3–19 s for dsh's retry; those rounds stay one call at a time. dsh still keeps a
+ * page's calls, overlapping words and a shared part's words in the round's order (`demo-lifecycle.mjs` `roundOrder`),
+ * and a dsh from before reads no `inFlight` and sends one at a time.
+ */
+export const SWEEP_IN_FLIGHT = 4
+
+/** How many of a sweep round's calls dsh may have in flight on a site of `platform`; null for one at a time. */
+export const sweepInFlightOf = (platform) => (platform === 'emdash' ? SWEEP_IN_FLIGHT : null)
 /**
  * The look a sweep round carries instead of looking: the last look as it stands, with every page read anew since then
  * (not `reused`) named unlooked and its faults dropped, so a later check keeps only verdicts newer than each page's
@@ -827,7 +872,8 @@ export function createClientDemoService(deps) {
       : {}
   }
   function checkAllowed(state) {
-    if ((state.build.qa?.clientCheckAttempts ?? 0) >= DEMO_CHECKS) throw error('DEMO_CHECK_BUDGET_EXHAUSTED')
+    if ((state.build.qa?.clientCheckAttempts ?? 0) >= DEMO_CHECKS || state.build.qa?.checksStopped)
+      throw error('DEMO_CHECK_BUDGET_EXHAUSTED')
     if (!state.build.qa?.baseline || !state.build.content?.agentDemo?.plan)
       throw error('AGENT_DEMO_PLAN_REQUIRED')
   }
@@ -1039,6 +1085,9 @@ export function createClientDemoService(deps) {
         JSON.stringify({ brandLogoWorn: logo.url })
       ])
     const sweep = sweepOf(worn)
+    // How many of its calls dsh may send at once on this site's door (`sweepInFlightOf`).
+    const inFlight = sweepInFlightOf(site.platform)
+    if (sweep && inFlight !== null) sweep.inFlight = inFlight
     const lookStarted = now()
     // 🔒 A ROUND THAT SWEEPS IS NOT LOOKED AT (28/10/2026). Its answer is the sweep's calls and is not counted; dsh runs
     // them and checks again, and that check looks. A look here (up to `LOOK_MS_MAX`, every page at both widths) was thrown
@@ -1172,7 +1221,8 @@ export function createClientDemoService(deps) {
       sweep: {
         calls: outcome.sweep.calls,
         unresolved: outcome.sweep.unresolved,
-        shown: outcome.sweep.shown ?? []
+        shown: outcome.sweep.shown ?? [],
+        ...(outcome.sweep.inFlight ? { inFlight: outcome.sweep.inFlight } : {})
       }
     }
     await pool.query(`update wo_build set qa=qa||$2::jsonb where id=$1`, [
@@ -1195,23 +1245,32 @@ export function createClientDemoService(deps) {
   /** Counts one check and keeps its answer; `job` also marks the background check `id` done with it. */
   async function saveCheck(state, checks, pass, job = null, sweep = null) {
     const attempts = state.build.qa?.clientCheckAttempts ?? 0
-    const result = { pass, needsReview: pass, checks, ...(sweep ? { sweep } : {}) }
     // Counted as the server QA counts its rounds, so every reader of `qa.rounds`/`qa.repairs` sees the checks.
     const rounds = state.build.qa?.rounds ?? []
+    const failed = checks.filter((c) => !c.pass && !c.skipped)
+    const plateau = !pass && attempts < DEMO_CHECKS - 1 && checksPlateaued(rounds, failed)
+    const result = {
+      pass,
+      needsReview: pass,
+      checks,
+      ...(sweep ? { sweep } : {}),
+      ...(plateau ? { stopped: 'no-progress', checksLeft: 0, next: PLATEAU_NEXT } : {})
+    }
     const repaired = attempts > 0 && state.build.qa?.machinePassed === false
     const live = liveReadinessOf(state.revision?.brief?.readiness, checks)
     await pool.query(`update wo_build set qa=qa||$2::jsonb where id=$1`, [
       state.build.id,
       checkJson({
-        state: pass ? 'needs-review' : attempts >= DEMO_CHECKS - 1 ? 'failed' : 'client-running',
+        state: pass ? 'needs-review' : attempts >= DEMO_CHECKS - 1 || plateau ? 'failed' : 'client-running',
         clientCheckAttempts: attempts + 1,
+        ...(plateau ? { checksStopped: 'no-progress' } : {}),
         rounds: [
           ...rounds,
           {
             n: rounds.length + 1,
             at: new Date(now()).toISOString(),
             checks: summary(checks),
-            failed: checks.filter((c) => !c.pass && !c.skipped),
+            failed,
             ...(sweep?.stopped ? { sweepStopped: sweep.stopped } : {}),
             // What the live site shows of the brief (#50, `live-readiness.js`).
             ...(live ? { readiness: live } : {})

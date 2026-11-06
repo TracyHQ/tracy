@@ -17,7 +17,7 @@
  */
 import { createHash } from 'node:crypto'
 import { createChargeable } from 'website-opportunities/src/cost-ledger.js'
-import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
+import { ceilingCents, visionCostExactCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import { featuresOf } from 'website-opportunities/src/media-info.js'
 import { acceptedDishPhotos } from 'website-opportunities/domain/dish-photos.mjs'
@@ -199,7 +199,7 @@ export function createSitePictures({
               provider: 'vision',
               operation: model,
               maxCents: Math.ceil(pictures.length / 8) * ceilingCents('vision', model),
-              actualCents: (r) => visionCostCents(model, r.usage),
+              actualCents: (r) => visionCostExactCents(model, r.usage),
               // One row for the whole batch: the build's owner pressed Build (/ops › Usage, migration 167).
               purpose: 'picture-labels',
               payer,
