@@ -375,6 +375,28 @@ The plugin also has `template.files.write`, which could put the rule in a T4 tem
 local first, and a template update keeps `local/`). It was not used: an unlisted file under a locked template root reads as
 presentation drift in every later contract call, and the head block is already the write step's door for CSS.
 
+
+**Second use: a "more" button that leads to the page it sits on (card AF).** Owner's decision, 2026-11-06. Measured on a bench
+site with the JA Boxing 1.0.11 kit: the Coaches page showed a VIEW MORE button under the coach cards that opens the Coaches page
+itself. The template's section chrome (`html/layouts/chromes/t4section.php`) prints `div.bottom-actions` from the module params
+`title-btn` and `link-btn`, which no contract slot reaches (issue #369), and module-178 links it to its own menu item. The same
+exception applies, with the same shape:
+
+- The kit names, per template, the containers of such buttons (`site.selfLinkButtons`: `container`, `why`), declared when
+  packaging (`template-kit/cli.mjs self-link-buttons`). A container is one compound selector, a tag, an id or classes with no
+  combinator (`lib/self-link-buttons.js`). JA Boxing 1.0.11 names `.bottom-actions`.
+- Last of the writes, after the route stage, the write step writes between its own markers in the head injection block one rule
+  per kept page, menu item opening it, container and own address
+  (`body.com_content.view-category.item-195 .bottom-actions a[href="/about-us/coaches"]{display:none!important}`, with
+  `/index.php/...`, `index.php?Itemid=195` and `/index.php?Itemid=195`), from the kept pages at the address they answer now and
+  the menu rows read then (`write-step/self-link-buttons-stage.js`). The body classes are T4's (option, view, menu item id); the
+  view keeps the rule off an article opened under the same item, and a row whose view cannot be read gets no rule. Each rule
+  names the page's own addresses exactly, so a link to another page is never hidden.
+- The look guard lets that block hold only such rules on the kit's containers (`self-link-buttons`).
+- The host's `selfLinks` carry `holders` (the elements around the link, nearest first). `self-links` blames step 9 for a shown
+  button to its own page inside a container the kit names, and decides the owner as before otherwise (step 0 when no slot
+  holds it).
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

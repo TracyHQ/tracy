@@ -429,6 +429,9 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    once per such button, or `--none` when the template has none. The selector must test the address, so a button
    with a video is never hidden; the write step hides the listed ones with one CSS rule in the head injection block,
    and the site check's `empty-video-buttons` group blocks on any shown control that opens an empty player.
+   In the same reading, `cli.mjs self-link-buttons --kit <kit dir>/template-kit.json --container '.bottom-actions' --why '<where>'`
+   names the container of a "more" button the template prints from settings no slot reaches (or `--none`); the write step
+   hides, on each kept page only, a link there whose address is that page's own.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
 shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one

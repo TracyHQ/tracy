@@ -76,3 +76,38 @@ test(
     }
   }
 )
+
+// An invented page at /team (card AF): T4 body classes, a "more" button to the page itself in a container the write step's rule
+// hides, the same button in a container no rule names, and a "more" button to another page that the rule must leave.
+const SELF_PAGE = `<!doctype html><html><body class="com_content view-category item-195" style="margin:0">
+<div class="more-row"><a class="btn more" href="/team">See more</a></div>
+<div class="more-row"><a class="btn more" href="/prices">See prices</a></div>
+<section class="other-row"><div><a class="btn more" href="/index.php/team">More</a></div></section>
+<style>body.com_content.view-category.item-195 .more-row a[href="/team"],body.com_content.view-category.item-195 .more-row a[href="/index.php/team"]{display:none!important}</style>
+</body></html>`
+
+test(
+  'a button to its own page is read with its holders, and one the self link rule hides is not',
+  opts,
+  async () => {
+    const browser = await playwright.chromium.launch()
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+      await page.route('http://site.test/**', (route) =>
+        route.fulfill({ status: 200, contentType: 'text/html', body: SELF_PAGE })
+      )
+      await page.goto('http://site.test/team')
+      const m = await page.evaluate(measurePageInPage, { tolerance: 2, stretch: 0.05, caps: MEASURE_CAPS })
+      assert.equal(m.selfLinks.length, 1)
+      assert.equal(m.selfLinks[0].text, 'More')
+      assert.deepEqual(m.selfLinks[0].holders.slice(0, 2), [
+        { tag: 'div', id: null, classes: [] },
+        { tag: 'section', id: null, classes: ['other-row'] }
+      ])
+      const prices = await page.$eval('a[href="/prices"]', (a) => getComputedStyle(a).display)
+      assert.notEqual(prices, 'none', 'a link to another page stays')
+    } finally {
+      await browser.close()
+    }
+  }
+)

@@ -5,7 +5,7 @@
  * `pageMeasures`, one entry per page and width:
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], textBlocks: [...], pictures: [...], controls: [...],
  *     fields: [...], glued: [...], headingSpans: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
- *     selfLinks: [...], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
+ *     selfLinks: [{ selector, text, href, holders: [{ tag, id, classes }] }], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
  *     lists: [{ selector, items: [{ chars, text, pictures }] }], maps: [{ kind, lat?, lng?, address?, from }],
  *     phones: [{ text, digits, inTel, selector }], videoButtons: [{ selector, attribute, address }], brandStyle?, look? }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
@@ -331,7 +331,15 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       continue
     }
     if (to.origin !== location.origin || pathOf(to) !== herePath) continue
-    selfLinks.push({ selector: selectorOf(a), text: saidBy(a).slice(0, 80), href: a.href })
+    // What holds it, nearest first, so the judge can tell a container the kit names (ADR 0044, decision 27).
+    const holders = []
+    for (let el = a.parentElement; el && el !== document.body && holders.length < 12; el = el.parentElement)
+      holders.push({
+        tag: el.tagName.toLowerCase(),
+        id: el.id || null,
+        classes: [...el.classList].slice(0, 8)
+      })
+    selfLinks.push({ selector: selectorOf(a), text: saidBy(a).slice(0, 80), href: a.href, holders })
   }
 
   // The controls of the page's own content, named by what holds them, for the judge to compare a page the write step created

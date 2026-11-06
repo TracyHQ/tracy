@@ -617,6 +617,7 @@ test('the exceptions the guard allows each say why', () => {
     'hide',
     'phone-logo-css',
     'empty-video-buttons',
+    'self-link-buttons',
     'body-background'
   ])
     assert.ok(String(exceptions[name] ?? '').length > 20, `${name} has a stated reason`)

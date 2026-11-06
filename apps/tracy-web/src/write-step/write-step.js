@@ -36,6 +36,7 @@ import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './
 import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
 import { hideEmptyVideoButtons } from './video-buttons-stage.js'
+import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
 import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
@@ -613,5 +614,17 @@ export async function runWriteStep(input) {
     report.keptPages = routed.keptPages
     if (routed.routes.length) report.routes = routed.routes
   }
+  // After the renames: the kit's "more" buttons that lead to their own page, each kept page named at the address it answers now.
+  if (report.status === 'done')
+    shareLines = [
+      ...shareLines,
+      ...(await hideSelfLinkButtons({
+        door,
+        siteKey,
+        kit: kit.doc,
+        keptPages: report.keptPages ?? [],
+        menutype: hide.settingsExtras?.mainMenu?.menutype ?? null
+      }))
+    ]
   return finish('done', null, written, wrote.refused)
 }

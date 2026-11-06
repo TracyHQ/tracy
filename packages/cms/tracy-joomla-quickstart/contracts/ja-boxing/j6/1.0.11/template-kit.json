@@ -73376,6 +73376,12 @@
         "selector": ".video-btn[data-src$=\"/embed/\"]",
         "why": "html/com_content/article/classes.php prints a.video-btn on every session card with data-src https://www.youtube.com/embed/ followed by the exer_video_id field, with no check that the id is set"
       }
+    ],
+    "selfLinkButtons": [
+      {
+        "container": ".bottom-actions",
+        "why": "html/layouts/chromes/t4section.php prints a.section-actions inside div.bottom-actions from the module params title-btn and link-btn, which no contract slot reaches (issue #369); module-178 on the Coaches page links it to its own menu item (Itemid=195)"
+      }
     ]
   },
   "storedFields": [

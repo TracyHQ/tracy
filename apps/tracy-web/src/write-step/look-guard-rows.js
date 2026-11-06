@@ -4,6 +4,7 @@
 import { fallbackBlocksIn, isFallbackBlock, withoutFallbackBlocks } from '../lib/printed-in-body.js'
 import { HEAD_END, HEAD_START } from './brand-head-block.js'
 import { videoBlockFor, videoBlockIn, withVideoBlock } from '../lib/empty-video-buttons.js'
+import { isSelfLinkBlock, selfLinkBlockIn, withSelfLinkBlock } from '../lib/self-link-buttons.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { NOT_A_POST } from './page-create-stage.js'
@@ -202,17 +203,39 @@ function videoBlockFaults(what, raw, heldRaw, selectors) {
   ]
 }
 
+/**
+ * The self link block (ADR 0044, decision 27, second use): it may hold only hide rules scoped to one page each, on the containers
+ * the kit names, or be what the site held already.
+ */
+function selfLinkBlockFaults(what, raw, heldRaw, containers) {
+  const block = selfLinkBlockIn(raw)
+  if (!block || block === selfLinkBlockIn(heldRaw) || isSelfLinkBlock(block, containers)) return []
+  return [
+    fault(
+      WRITE,
+      `${what} self link buttons`,
+      'the self link block holds only hide rules, one page each, on the containers the kit names'
+    )
+  ]
+}
+
+const withoutMarked = (text) => withSelfLinkBlock(withVideoBlock(text, null), null)
+
 /** What a module's content may change: the accent style alone, or the head block with all around it as the site held it. */
 function moduleContentFaults(id, content, { state }) {
   const what = `module ${id ?? '(new)'} content`
   const raw = String(content ?? '')
   const heldRaw = String(state.rows.get(`module:${id}`)?.content ?? '')
-  const video = videoBlockFaults(what, raw, heldRaw, state.videoSelectors ?? [])
-  const text = withVideoBlock(raw, null)
-  const held = withVideoBlock(heldRaw, null)
-  // A write of the video block alone: everything else of the module stays as the site held it.
-  if ((videoBlockIn(raw) || videoBlockIn(heldRaw)) && text.trim() === held.trim()) return video
-  return [...video, ...restFaults(text, held, what, state)]
+  const marked = [
+    ...videoBlockFaults(what, raw, heldRaw, state.videoSelectors ?? []),
+    ...selfLinkBlockFaults(what, raw, heldRaw, state.selfLinkContainers ?? [])
+  ]
+  const text = withoutMarked(raw)
+  const held = withoutMarked(heldRaw)
+  const touched = [raw, heldRaw].some((t) => videoBlockIn(t) || selfLinkBlockIn(t))
+  // A write of the marked blocks alone: everything else of the module stays as the site held it.
+  if (touched && text.trim() === held.trim()) return marked
+  return [...marked, ...restFaults(text, held, what, state)]
 }
 
 /** The accent module, or the head block with all around it as the site held it. */

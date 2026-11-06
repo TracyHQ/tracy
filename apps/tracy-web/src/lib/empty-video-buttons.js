@@ -62,18 +62,18 @@ export const hideRuleFor = (selectors) => `${selectors.join(',')}{display:none!i
 export const videoBlockFor = (selectors) =>
   selectors.length ? `${VIDEO_START}<style>${hideRuleFor(selectors)}</style>${VIDEO_END}` : null
 
-/** The marked block a module's content holds, or null. */
-export function videoBlockIn(content) {
+/** The block between `start` and `end` that a module's content holds, or null. Shared with lib/self-link-buttons.js. */
+export function markedBlockIn(content, start, end) {
   const text = String(content ?? '')
-  const from = text.indexOf(VIDEO_START)
-  const to = text.indexOf(VIDEO_END)
-  return from !== -1 && to > from ? text.slice(from, to + VIDEO_END.length) : null
+  const from = text.indexOf(start)
+  const to = text.indexOf(end)
+  return from !== -1 && to > from ? text.slice(from, to + end.length) : null
 }
 
-/** `content` with the block put in place of an earlier one, added at the end, or taken off when `block` is null. */
-export function withVideoBlock(content, block) {
+/** `content` with a marked block put in place of an earlier one, added at the end, or taken off when `block` is null. */
+export function withMarkedBlock(content, block, start, end) {
   const text = String(content ?? '')
-  const held = videoBlockIn(text)
+  const held = markedBlockIn(text, start, end)
   if (held) {
     const at = text.indexOf(held)
     const before = text.slice(0, at)
@@ -84,6 +84,12 @@ export function withVideoBlock(content, block) {
   if (!block) return text
   return text === '' ? block : `${text}\n${block}`
 }
+
+/** The marked video block a module's content holds, or null. */
+export const videoBlockIn = (content) => markedBlockIn(content, VIDEO_START, VIDEO_END)
+
+/** `content` with the video block put in place of an earlier one, added at the end, or taken off when `block` is null. */
+export const withVideoBlock = (content, block) => withMarkedBlock(content, block, VIDEO_START, VIDEO_END)
 
 // ── measuring ─────────────────────────────────────────────────────────────────────────────────────────────────────────
 

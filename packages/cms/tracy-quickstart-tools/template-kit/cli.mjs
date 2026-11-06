@@ -50,6 +50,10 @@
 //                 (site.emptyVideoButtons, lib/video-buttons.mjs: a play button the template prints with an empty video
 //                 address, which the write step hides with one CSS rule; --none says the template has none. A person reads
 //                 the template's layout first; nothing is measured, and no image moves, so an approval stays valid)
+//   cli.mjs self-link-buttons --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
+//   cli.mjs self-link-buttons --kit <template-kit.json> --none
+//                 (site.selfLinkButtons, lib/self-link-buttons.mjs: the container of a "more" button that may lead to the
+//                 page it sits on, which the write step hides on that page only; same reading, no image moves)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -81,6 +85,7 @@ import { adapterFor } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 import { declareVideoButtons } from './lib/video-buttons.mjs'
+import { declareSelfLinkButtons } from './lib/self-link-buttons.mjs'
 
 const COMMANDS = [
   'build',
@@ -317,11 +322,37 @@ function videoButtons(o) {
   return 0
 }
 
+/** Declare the container of a "more" button that may lead to its own page (lib/self-link-buttons.mjs). */
+function selfLinkButtons(o) {
+  if (!str(o.kit) || (!o.none && !str(o.container)))
+    throw new Error(
+      "self-link-buttons needs --kit <template-kit.json> and --container '<css>' --why '<words>', or --none"
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declareSelfLinkButtons(kit, {
+    container: str(o.container),
+    why: str(o.why),
+    none: o.none === true
+  })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  console.log(
+    `${kit.site.selfLinkButtons.length} self link containers named${r.changed ? '' : ', unchanged'}`
+  )
+  return 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
   if (cmd === 'looks') return looks(o)
   if (cmd === 'video-buttons') return videoButtons(o)
+  if (cmd === 'self-link-buttons') return selfLinkButtons(o)
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||
