@@ -4,10 +4,10 @@
   "cms": "joomla",
   "tag": "quickstart/ja-boxing/j6",
   "version": "1.0.11",
-  "measuredAt": "2026-11-06T09:45:51.288Z",
+  "measuredAt": "2026-11-06T11:22:41.240Z",
   "machine": "darwin-arm64",
   "measuredBy": "tdsr flow.mjs --cms joomla --template joomla-ja-boxing-modes",
-  "flowVersion": "2578abc20",
+  "flowVersion": null,
   "modes": [
     "native",
     "derived"
@@ -69,7 +69,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0
+        "page": 0.001
       },
       "lowContrast": 0,
       "lowestContrast": 5.13,
@@ -173,7 +173,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.002
+        "page": 0.008
       },
       "lowContrast": 0,
       "lowestContrast": 5.41,
@@ -360,9 +360,9 @@
       "lowContrast": 0,
       "lowestContrast": 4.53,
       "misses": [],
-      "fontsLoaded": 5,
+      "fontsLoaded": 7,
       "fontsDeclared": 2,
-      "systemFontsLoaded": 1,
+      "systemFontsLoaded": 2,
       "ident": true,
       "modeMatch": true,
       "toggleVisible": true,
@@ -381,7 +381,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.002
+        "page": 0.006
       },
       "lowContrast": 0,
       "lowestContrast": 4.53,
@@ -537,7 +537,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.001
+        "page": 0.004
       },
       "lowContrast": 0,
       "lowestContrast": 4.64,
@@ -568,9 +568,9 @@
       "lowContrast": 0,
       "lowestContrast": 5.49,
       "misses": [],
-      "fontsLoaded": 4,
+      "fontsLoaded": 7,
       "fontsDeclared": 1,
-      "systemFontsLoaded": 0,
+      "systemFontsLoaded": 1,
       "ident": true,
       "modeMatch": true,
       "toggleVisible": true,
@@ -750,9 +750,9 @@
       "lowContrast": 0,
       "lowestContrast": 4.53,
       "misses": [],
-      "fontsLoaded": 4,
+      "fontsLoaded": 7,
       "fontsDeclared": 1,
-      "systemFontsLoaded": 0,
+      "systemFontsLoaded": 1,
       "ident": true,
       "modeMatch": true,
       "toggleVisible": true,
@@ -1140,7 +1140,7 @@
       "lowContrast": 0,
       "lowestContrast": 4.6,
       "misses": [],
-      "fontsLoaded": 5,
+      "fontsLoaded": 7,
       "fontsDeclared": null,
       "systemFontsLoaded": null,
       "ident": null,
@@ -1348,7 +1348,7 @@
       "lowContrast": 0,
       "lowestContrast": 4.62,
       "misses": [],
-      "fontsLoaded": 4,
+      "fontsLoaded": 7,
       "fontsDeclared": null,
       "systemFontsLoaded": null,
       "ident": null,
@@ -1530,7 +1530,7 @@
       "lowContrast": 0,
       "lowestContrast": 4.63,
       "misses": [],
-      "fontsLoaded": 4,
+      "fontsLoaded": 7,
       "fontsDeclared": null,
       "systemFontsLoaded": null,
       "ident": null,
@@ -16146,7 +16146,7 @@
       "keptText": 0,
       "lowText": 0,
       "lostButtons": 0,
-      "failedFonts": 1,
+      "failedFonts": 0,
       "empty": 0,
       "docs": 1,
       "detectors": {
@@ -24857,6 +24857,7 @@
       }
     }
   ],
+  "previewMeasuredAt": "2026-11-06T11:32:14.671Z",
   "previewPages": [
     "/",
     "/index.php/pages/users/login-form",
@@ -24877,11 +24878,10 @@
     "/index.php/about-us/our-trainers",
     "/index.php/about-us/our-trainers/darlene-robertson"
   ],
-  "previewMeasuredAt": "2026-11-06T09:52:41.517Z",
   "previewParity": {
     "probeVersion": 10,
     "popup": "live, live/door",
-    "measuredAt": "2026-11-06T09:58:15.778Z",
+    "measuredAt": "2026-11-06T11:35:14.258Z",
     "pages": [
       "/",
       "/index.php/home",
