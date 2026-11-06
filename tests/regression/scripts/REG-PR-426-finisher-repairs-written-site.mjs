@@ -11,8 +11,14 @@ const files = readdirSync(dir)
 
 // Tests that carry the case's expect lines: a renamed or deleted one turns the case red.
 const required = [
-  'a raw markup fault is repaired through the write door and kept when the checker says better',
-  'a repair the checker finds not better is reverted by its apply id and logged as undone',
+  'a raw markup fault is repaired through the write door and kept when code reads the words on the served page',
+  'a repair the served page does not show is reverted by its apply id and logged as undone',
+  'a glued heading gets the space before its break from code, no model asked, judged by code on the page',
+  'a glued words failure of the site check is confirmed by reading the page as the check reads it, then repaired',
+  'a style aimed at glued words that leaves them glued on the served page is undone, whatever the checker says',
+  "an alt repair goes through the site's contract door under a contract- apply id, and is undone by that id",
+  "a fault's menu holds only the blocks whose words hold the words it quotes",
+  'accent emphasis on a hero heading the kit keeps among the demo-owned slots is written, its mark found there',
   'every banned declaration is refused by code, nothing is written, and the refusal is logged',
   'a time overrun stops the finisher at once',
   'a kept repair the final site check blames for a new blocking failure is undone, and the check runs again',
