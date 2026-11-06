@@ -864,5 +864,12 @@
   "own_source_website": "seine Website",
   "brand_chat_title": "Aus Ihrem Chat",
   "brand_chat_use": "{file} als Logo verwenden",
-  "brand_chat_not_png": "Die Bilder aus Ihrem Chat sind keine PNG-Files und können daher nicht das Logo sein."
+  "brand_chat_not_png": "Die Bilder aus Ihrem Chat sind keine PNG-Files und können daher nicht das Logo sein.",
+  "import_detail_unreadable": "Ausgelassen, auf Ihrer Site nicht lesbar ({count}): {paths}. Erteilen Sie Leserechte auf Ihrem Hosting und holen Sie die Einträge mit Sync from live nach.",
+  "import_error_files_unreadable": "Ihre Site lässt Tracy {folder} nicht lesen, daher wurde der Import angehalten. Erteilen Sie Leserechte auf Ihrem Hosting und starten Sie erneut.",
+  "import_problem_p56_action_0": "Neu starten",
+  "import_problem_p56_fix_0": "Erteilen Sie im Dateimanager (file manager) Ihres Hostings Leserechte (755 für einen Ordner (folder), 644 für eine Datei (file)), oder löschen Sie den Eintrag, wenn die Site ihn nicht benötigt.",
+  "import_problem_p56_fix_1": "Oder aktualisieren Sie Claude Cowork auf Ihrer Site: Neuere Versionen überspringen solche Ordner (folder), nennen sie und fahren fort.",
+  "import_problem_p56_what": "Ihre Site lässt Tracy {folder} nicht lesen.",
+  "import_problem_p56_why": "Die Berechtigungen auf Ihrem Hosting erlauben das Lesen nicht. Die Version von Claude Cowork auf {domain} bricht deshalb den gesamten Import ab."
 }

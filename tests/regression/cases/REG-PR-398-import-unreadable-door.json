@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-398-import-unreadable-door",
+  "kind": "fix",
+  "title": "Imports retain unreadable-path warnings and explain permission failures and unexpected pages",
+  "pr": 398,
+  "area": "add-site/import",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the real import exporter and run lifecycle with HTTP and storage fixtures."],
+  "expect": [
+    "A legacy permission failure names the path without network retries.",
+    "Omitted paths survive multipart resume and appear in the rendered progress.",
+    "An unexpected page after an engine answer records both Joomla doors and does not request another installation.",
+    "The stuck-import alert retains only closed-set reply diagnostics.",
+    "Post-install API routing delays recover without reinstalling; persistent login pages stop after bounded reads and definite refusals are not retried."
+  ],
+  "selectors": {
+    "host": "export.ts, run.ts, joomla.ts",
+    "ui": "ImportProgress and import problem p56"
+  },
+  "evidence": "tests/regression/evidence/REG-PR-398-import-unreadable-door/",
+  "fence": "An unreadable path is an omission or an explicit permission failure; HTML is never treated as an engine reply.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/doors.test.mjs",
+      "packages/site/tracy-add-site/test/export-site-limits.test.mjs",
+      "packages/site/tracy-add-site/test/files-export-slow.test.mjs",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs",
+      "packages/site/tracy-add-site/test/import-problems.test.mjs",
+      "packages/site/tracy-add-site/test/site-link-pacing.test.mjs",
+      "apps/tracy-web/test/import-diagnostic.test.mjs",
+      "apps/tracy-web/test/beta-operation-signal.test.mjs",
+      "packages/site/tracy-add-site/test/install-language.test.mjs"
+    ],
+    "tests": [
+      "an older engine stopping the walk",
+      "omitted paths survive later parts",
+      "WordPress: engine calls answered by a page",
+      "a stuck import alert shows",
+      "a newly installed API becomes ready",
+      "an installed API that keeps showing login",
+      "post-install readiness does not retry"
+    ]
+  }
+}

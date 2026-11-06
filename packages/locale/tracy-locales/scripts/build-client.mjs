@@ -62,7 +62,13 @@ if (languages.length === 0) {
   process.exit(1)
 }
 
-const body = JSON.stringify(table, null, 2).replace(/\n/g, '\n    ')
+/** Emit localized data as escaped string literals; the reviewable source stays in JSON. */
+const dictionaryJson = (value, space) =>
+  JSON.stringify(value, null, space).replace(/"(?:[^"\\]|\\.)*"/g, (token) =>
+    token.replace(/[^\u0021-\u007e]/g, (unit) => `\\u${unit.charCodeAt(0).toString(16).padStart(4, '0')}`)
+  )
+
+const body = dictionaryJson(table, 2).replace(/\n/g, '\n    ')
 
 const bundle = `window.__ModuleLoader__.load({
   id: '@tracy/dsh-tracy-locales',
@@ -78,7 +84,7 @@ const bundle = `window.__ModuleLoader__.load({
     const DICTIONARIES = ${body}
 
     /** Languages this package owns and adds (languages.json). */
-    const OWNED_LANGUAGES = ${JSON.stringify(OWNED)}
+    const OWNED_LANGUAGES = ${dictionaryJson(OWNED)}
 
     /** Required service: the dictionary registry the locale plugin provides. */
     const inject = ['locale']

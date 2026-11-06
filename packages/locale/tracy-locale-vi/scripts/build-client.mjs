@@ -49,10 +49,16 @@ if (namespaces.length === 0) {
   process.exit(1)
 }
 
+/** Emit localized data as escaped string literals; the reviewable source stays in JSON. */
+const dictionaryJson = (value, space) =>
+  JSON.stringify(value, null, space).replace(/"(?:[^"\\]|\\.)*"/g, (token) =>
+    token.replace(/[^\u0021-\u007e]/g, (unit) => `\\u${unit.charCodeAt(0).toString(16).padStart(4, '0')}`)
+  )
+
 const dictionaries = namespaces
   .map(
     ({ ns, entries }) =>
-      `      ${JSON.stringify(ns)}: ${JSON.stringify(entries, null, 8).replace(/\n/g, '\n      ')}`
+      `      ${JSON.stringify(ns)}: ${dictionaryJson(entries, 8).replace(/\n/g, '\n      ')}`
   )
   .join(',\n')
 

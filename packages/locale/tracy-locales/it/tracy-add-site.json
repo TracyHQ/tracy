@@ -864,5 +864,12 @@
   "own_source_website": "il suo sito",
   "brand_chat_title": "Dalla tua chat",
   "brand_chat_use": "Usa {file} come logo",
-  "brand_chat_not_png": "Le immagini inviate nella chat non sono file PNG, quindi non possono essere il logo."
+  "brand_chat_not_png": "Le immagini inviate nella chat non sono file PNG, quindi non possono essere il logo.",
+  "import_detail_unreadable": "Elementi saltati perché non leggibili sul tuo site ({count}): {paths}. Concedi i permessi di lettura sul tuo hosting, poi recuperali con Sync from live.",
+  "import_error_files_unreadable": "Il tuo site non consente a Tracy di leggere {folder}, quindi l’importazione si è fermata. Concedi i permessi di lettura sul tuo hosting, poi ricomincia.",
+  "import_problem_p56_action_0": "Ricomincia",
+  "import_problem_p56_fix_0": "Nel gestore dei file del tuo hosting, concedi i permessi di lettura (755 per una cartella (folder), 644 per un file), oppure elimina l’elemento se il site non ne ha bisogno.",
+  "import_problem_p56_fix_1": "Oppure aggiorna Claude Cowork sul tuo site: le versioni più recenti saltano queste cartelle (folder), le indicano e proseguono.",
+  "import_problem_p56_what": "Il tuo site non consente a Tracy di leggere {folder}.",
+  "import_problem_p56_why": "I permessi sul tuo hosting ne impediscono la lettura e la versione di Claude Cowork su {domain} interrompe l’intera importazione in quel punto."
 }

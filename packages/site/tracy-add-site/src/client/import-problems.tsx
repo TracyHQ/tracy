@@ -77,6 +77,7 @@ export function importProblemCase(
         upload_too_large: 'p33',
         too_many_parts: 'p36',
         call_failed: 'p37',
+        files_unreadable: 'p56',
         site_offline: 'p55',
         store_refused: 'p38',
         run_lost: 'p39',
@@ -264,6 +265,7 @@ export function ImportProblem({
     uploadMinimum: detail?.packageMb ? Math.max(16, Math.ceil(Number(detail.packageMb) / 4 + 1) * 4) : '',
     minutes: 3,
     checked: '',
+    folder: detail?.folder ?? '',
     ...context.params
   }
   if (problem === 'p29')

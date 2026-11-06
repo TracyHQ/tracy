@@ -43,6 +43,8 @@ package does not call it.
 2. A readable diff. One line per key, sorted — on the next dsh upgrade, which strings are new and which are
    gone is **visible**, instead of being discovered as an English screen in the middle of a Vietnamese UI.
 
+Generated JavaScript encodes localized values as escaped string literals. The UTF-8 JSON dictionaries remain the readable source; executing the bundle must register exactly the same values.
+
 `lib/client.js` is **committed**, not gitignored: the fleet copies this folder as-is into
 `$DESK_HOME/profiles/node_modules/` and runs no build step there.
 

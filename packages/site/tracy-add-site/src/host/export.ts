@@ -27,7 +27,7 @@ import { createGzip } from 'node:zlib'
 import type { SiteArtifacts } from './artifacts.js'
 import type { Diagnostic } from './joomla.js'
 import { DIAGNOSTIC_ACTIONS, DIAGNOSTIC_ENGINE_ERRORS } from './diagnostic.mjs'
-import { answerKind, engineReply, isPhpParseFailure } from './doors.mjs'
+import { answerKind, engineReply, isPhpParseFailure, pageKind } from './doors.mjs'
 import { failureCode } from './error-code.mjs'
 import { firewallOf, gatewayOf, USER_AGENT } from './firewall.mjs'
 import { forgetUpload, heldUpload, rememberUpload, staleUpload } from './resume.js'
@@ -90,6 +90,7 @@ export type ExportRefusal =
   | 'site_offline'
   | 'php_too_old'
   | 'blocked_by_host'
+  | 'files_unreadable'
 
 export interface DbExportResult {
   key: string
@@ -102,9 +103,17 @@ export interface FilesExportResult {
   files: number
   bytes: number
   parts: number
+  /** What the site's engine left out because its PHP could not read it, when it named any. */
+  unreadable?: Unreadable
 }
 
 export class ExportFailed extends Error {
+  /**
+   * On `files_unreadable`: the folder or file the site's engine could not read, as it named it —
+   * the customer's own server path, shown to them so they know what to give read access to; never
+   * in the stuck signal (`diagnostic.mjs` keeps closed sets only).
+   */
+  folder?: string
   /**
    * @param detail What the operator log needs beyond the reason — the firewall's name, or on
    *   `blocked_by_host` the connection error (`ECONNREFUSED`…).
@@ -201,7 +210,57 @@ interface PackResponse {
   next_offset: number
   next_size?: number
   done: boolean
+  /** What the walk left out because the site's PHP could not read it (claude-cowork #unreadable). */
+  unreadable?: Unreadable
 }
+
+/** Folders (ending in `/`) and files a site's engine left out of its walk, unreadable to its PHP. */
+export interface Unreadable {
+  paths: string[]
+  count: number
+}
+
+/** The engine's `unreadable`, kept only in its own shape: at most 50 webroot-relative paths. */
+export function unreadableOf(value: unknown): Unreadable | undefined {
+  if (!value || typeof value !== 'object') return undefined
+  const { paths, count } = value as { paths?: unknown; count?: unknown }
+  if (!Array.isArray(paths) || !Number.isSafeInteger(count) || Number(count) < 1) return undefined
+  const kept = paths
+    .filter((path): path is string => typeof path === 'string' && path !== '' && path.length <= 300)
+    .filter(
+      (path) =>
+        !path.startsWith('/') &&
+        !path.includes('\\') &&
+        !path.split('/').includes('..') &&
+        !Array.from(path).some((c) => c.charCodeAt(0) < 32 || c.charCodeAt(0) === 127)
+    )
+    .slice(0, 50)
+  return { paths: kept, count: Math.max(Number(count), kept.length) }
+}
+
+/**
+ * The folder or file an older engine stopped the whole walk on, from its refusal: "RecursiveDirectory
+ * Iterator::__construct(<path>): Failed to open directory: Permission denied" (a folder), or
+ * "cannot open <path>" (a file). `undefined` when the refusal is not about reading permission.
+ */
+export function unreadableRefusal(message: unknown): string | undefined {
+  const text = typeof message === 'string' ? message : ''
+  const folder = /__construct\(([^)]{1,300})\):\s*Failed to open dir(?:ectory)?:\s*Permission denied/i.exec(
+    text
+  )
+  if (folder) return folder[1].trim()
+  // The pack's own `read_failed`: "cannot open <path>", the file fopen refused.
+  const file = /^cannot open (.{1,300}?)[\s:.]*$/i.exec(text.trim())
+  if (file) return file[1]
+  if (/permission denied/i.test(text)) {
+    const named = /\(([^)]{1,300})\)/.exec(text)
+    if (named) return named[1].trim()
+  }
+  return undefined
+}
+
+/** The links whose site's engine answered in this run (`callPlugin`): a page after that is a block. */
+const engineHeard = new WeakSet<SiteLink>()
 
 /** ETag as the store said it, without the quotes a PUT response wraps it in. */
 const etagOf = (response: Response): string => (response.headers.get('etag') ?? '').replace(/^"|"$/g, '')
@@ -297,6 +356,27 @@ async function callPlugin(
       else siteOverloads.add(error)
       throw error
     }
+    // A page where the engine answered earlier in this run: something in front of the site blocks
+    // Tracy now — a host's bot protection after the import's burst of calls, a security plugin —
+    // never the engine's own answer, and asking again within minutes meets the same page. Said as
+    // the host's block, not "the site stopped answering, try again" (05/11/2026).
+    if (response.status === 200 && engineHeard.has(site.link)) {
+      const answer = answerKind(text)
+      const page = answer === 'html' ? pageKind(text) : undefined
+      if (answer === 'html' && page !== 'login_form')
+        throw new ExportFailed(
+          'blocked_by_host',
+          `${action} answered a page: ${text.replace(/\s+/g, ' ').trim().slice(0, 160)}`,
+          {
+            at: 'export',
+            check: 'answered_page',
+            status: response.status,
+            ...(DIAGNOSTIC_ACTIONS.has(action) ? { action } : {}),
+            answer,
+            ...(page ? { page } : {})
+          }
+        )
+    }
     // 🔒 SAID, NOT SWALLOWED (beta report, 28/10/2026). Two customers left after `call_failed` here
     // with nothing kept: the detail was built and dropped, and the container log was gone when the
     // runs were looked at. The stuck signal now keeps which call, the status and what came back
@@ -309,6 +389,7 @@ async function callPlugin(
       answer: answerKind(text)
     })
   }
+  engineHeard.add(site.link)
   if (!result.ok) {
     // 🔒 THE ENGINE PUTS TO STORAGE ITSELF, then reports storage's 502 as ITS OWN `ok:false`.
     // Read as an answer, the retry would never run — exactly where `tracy-desk` needed a patch
@@ -328,6 +409,22 @@ async function callPlugin(
     }
     const code =
       typeof result.error === 'string' && DIAGNOSTIC_ENGINE_ERRORS.has(result.error) ? result.error : 'other'
+    // An older engine stops the whole walk at one folder or file its PHP may not read — a host's
+    // `certificates/thumbs` stopped eleven imports of one site, each told "the site stopped
+    // answering, try again" (05/11/2026). Said as what it is, with the path to give read access to;
+    // asking again cannot change it. Newer engines leave such a path out and name it (`unreadable`).
+    const folder = unreadableRefusal(result.message)
+    if (folder) {
+      const failed = new ExportFailed('files_unreadable', detail, {
+        at: 'export',
+        check: 'permission_denied',
+        status: response.status,
+        ...(DIAGNOSTIC_ACTIONS.has(action) ? { action } : {}),
+        engine_error: code
+      })
+      failed.folder = folder
+      throw failed
+    }
     throw new ExportFailed('call_failed', detail, {
       at: 'export',
       check: 'engine_refused',
@@ -717,6 +814,7 @@ export async function exportFiles(
   let declaredSize = held?.cursor.size ?? 0
   let files = held?.files ?? 0
   let bytes = held?.bytes ?? 0
+  let unreadable = unreadableOf(held?.unreadable)
   // The timestamp of the FIRST part. Re-stamping on every resume would let an archive claim a freshness
   // its first part never had.
   const startedAt = held?.startedAt ?? Date.now()
@@ -735,7 +833,8 @@ export async function exportFiles(
       cursor: { path, offset, size: declaredSize },
       files,
       bytes,
-      startedAt
+      startedAt,
+      ...(unreadable ? { unreadable } : {})
     })
 
   const total = await siteBytes(endpoint, token, site)
@@ -752,6 +851,7 @@ export async function exportFiles(
       partStartedAt,
       ...(total !== undefined ? { total } : {}),
       ...(seconds >= 1 && bytes > bytesBefore ? { rate: Math.round((bytes - bytesBefore) / seconds) } : {}),
+      ...(unreadable ? { unreadable } : {}),
       ...extra
     }
   }
@@ -804,6 +904,14 @@ export async function exportFiles(
     path = packed.next_path
     offset = packed.next_offset
     declaredSize = packed.next_size ?? 0
+    const omitted = unreadableOf(packed.unreadable)
+    if (omitted) {
+      const paths = [...new Set([...(unreadable?.paths ?? []), ...omitted.paths])]
+      unreadable = {
+        paths: paths.slice(0, 50),
+        count: Math.max(unreadable?.count ?? 0, omitted.count, paths.length)
+      }
+    }
     onPart?.(progress())
 
     // Written AFTER EVERY PART, not at the end: the cursor's whole point is to survive a run that
@@ -818,7 +926,7 @@ export async function exportFiles(
   // an upload storage has already sealed.
   await forgetUpload(siteKey)
 
-  return { key, files, bytes, parts: parts.length }
+  return { key, files, bytes, parts: parts.length, ...(unreadable ? { unreadable } : {}) }
 
   /** One attempt at the next part, by the road and size `asked`. */
   async function packPart(
@@ -892,6 +1000,8 @@ export interface FilesProgress {
   partStartedAt?: number
   /** Which retry of the part on its way. Absent while it goes normally. */
   retrying?: number
+  /** What the site's engine left out, unreadable to its PHP (`Unreadable`). */
+  unreadable?: Unreadable
 }
 
 /** The most `site.fingerprint` pages read for a total: past this, the total is not worth the calls. */

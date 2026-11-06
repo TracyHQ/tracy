@@ -626,3 +626,116 @@ test('signInRefusal marks only a refused account, and signInWay names how the ru
   assert.equal(run.signInWay({ ...base, token: TOKEN, webRootUrl: WEBROOT }), 'code')
   assert.equal(run.signInWay(base), 'saved')
 })
+
+// ── a page where the engine answered: something in front of the site blocks Tracy (05/11/2026) ──
+
+const CHALLENGE =
+  '<!DOCTYPE html><html><head><title>Security check</title></head><body>verifying…</body></html>'
+
+test('WordPress: engine calls answered by a page after the engine answered stop as blocked_by_host, said as the host', async () => {
+  const w = wordpressWorld()
+  const realWorld = globalThis.fetch
+  let tablesAnswered = false
+  let pages = 0
+  globalThis.fetch = async (url, init = {}) => {
+    const body =
+      typeof init.body === 'string' && init.body.startsWith('{') ? JSON.parse(init.body) : undefined
+    if (String(url) === API && tablesAnswered) {
+      pages++
+      return new Response(CHALLENGE, { status: 200, headers: { 'content-type': 'text/html' } })
+    }
+    const answer = await realWorld(url, init)
+    if (String(url) === API && body?.action === 'db.tables') tablesAnswered = true
+    return answer
+  }
+  const state = await finished(startLogin('page-after.test'))
+  assert.equal(state.error, 'blocked_by_host')
+  assert.deepEqual(state.diagnostic, {
+    at: 'export',
+    check: 'answered_page',
+    status: 200,
+    action: 'db.dump',
+    answer: 'html',
+    page: 'challenge'
+  })
+  assertNoAddress(state, 'the page-blocked run')
+  assert.equal(pages, 1, 'one page, no retries')
+  assert.ok(w.calls.some((c) => c.action === 'db.tables'))
+})
+
+test('Joomla: doors that answer a page right after the host blocked this site are blocked_by_host too; before any block, cowork_not_answering', async () => {
+  const site = 'joomla-page.test'
+  const root = `https://${site}`
+  const doors = [
+    `${root}/index.php?option=com_claudecowork&task=api.exec&format=json`,
+    `${root}/administrator/index.php?option=com_claudecowork&task=api.exec&format=json`
+  ]
+  const world = { engine: true, pageAfterTables: true }
+  globalThis.fetch = async (url, init = {}) => {
+    url = String(url)
+    if (init.method === 'POST' && url.endsWith('/import-result')) return Response.json({ ok: true })
+    if (url.startsWith(`${ORIGIN}/api/sites/${site}/`)) {
+      if (url.endsWith('artifacts/put')) return json({ key: 'db/1.sql.gz', url: 'https://store.test/db/1' })
+      return json({})
+    }
+    if (url === JOOMLA_MANIFEST)
+      return json({ version: '0.8.0', package: `${RELEASES}/v0.8.0/claude-cowork-joomla.zip` })
+    if (url === `${root}/`) return html('<html></html>', { url })
+    if (doors.includes(url)) {
+      const action = JSON.parse(init.body).action
+      if (!world.engine) return new Response(CHALLENGE, { status: 200 })
+      if (action === 'info') return json({ ok: true, info: { component: '0.8.0' } })
+      if (action === 'site.fingerprint') return json({ ok: false, error: 'unknown_action' })
+      if (action === 'db.tables') {
+        if (world.pageAfterTables) world.engine = false
+        return json({ ok: true, tables: ['jos_content'] })
+      }
+    }
+    throw new TypeError(`unexpected fetch: ${init.method ?? 'GET'} ${url}`)
+  }
+  const pasted = () =>
+    run.startRun({
+      siteKey: site,
+      platform: 'joomla',
+      origin: ORIGIN,
+      cookie: 'session=synthetic',
+      token: TOKEN,
+      webRootUrl: root
+    })
+  const first = await finished(pasted())
+  assert.equal(first.error, 'blocked_by_host')
+  assert.equal(first.diagnostic.check, 'answered_page')
+  // A minute later, the doors still answer the page: the same block, not "install Claude Cowork".
+  const again = await finished(pasted())
+  assert.equal(again.error, 'blocked_by_host')
+  assert.equal(again.diagnostic.check, 'page_after_ban')
+  assert.equal(again.diagnostic.doors.length, 2)
+  // A site never blocked whose doors answer a page: cowork_not_answering, with what the doors said.
+  const fresh = 'joomla-fresh.test'
+  const freshRoot = `https://${fresh}`
+  const freshDoors = [
+    `${freshRoot}/index.php?option=com_claudecowork&task=api.exec&format=json`,
+    `${freshRoot}/administrator/index.php?option=com_claudecowork&task=api.exec&format=json`
+  ]
+  globalThis.fetch = async (url, init = {}) => {
+    url = String(url)
+    if (init.method === 'POST' && url.endsWith('/import-result')) return Response.json({ ok: true })
+    if (url === JOOMLA_MANIFEST)
+      return json({ version: '0.8.0', package: `${RELEASES}/v0.8.0/claude-cowork-joomla.zip` })
+    if (url === `${freshRoot}/`) return html('<html></html>', { url })
+    if (freshDoors.includes(url)) return new Response(CHALLENGE, { status: 200 })
+    throw new TypeError(`unexpected fetch: ${init.method ?? 'GET'} ${url}`)
+  }
+  const never = await finished(
+    run.startRun({
+      siteKey: fresh,
+      platform: 'joomla',
+      origin: ORIGIN,
+      cookie: 'session=synthetic',
+      token: TOKEN,
+      webRootUrl: freshRoot
+    })
+  )
+  assert.equal(never.error, 'cowork_not_answering')
+  assert.equal(never.diagnostic.check, 'answered_page')
+})

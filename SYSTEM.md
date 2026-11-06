@@ -192,6 +192,24 @@ The run also carries `handover` (`pending`/`filed`/`refused`): a wizard still op
 itself when the host refuses, there is no `handover`, or it has waited more than 60 seconds. Both sides calling at once still yields **one** job: the
 `/provision` door is unchanged, holds an advisory lock and returns `reused` to the second request.
 
+**Unreadable source files during import and Sync from live:** the engine can return
+`unreadable: {paths, count}` alongside `files.list` and `files.pack` (folders end in `/`). Add site
+shows the omitted paths during the read and retains that warning across multipart resumes. An
+older engine's permission refusal is `files_unreadable`, with the path shown only to the owner;
+operator signals keep the closed-set `permission_denied` check, not a raw server error. A door
+returning HTML records the reply kind and both Joomla doors; after a successful engine proof,
+an unexpected page follows the existing `blocked_by_host` recovery path. This diagnoses the
+observed reply, without identifying which hosting layer produced it. After an installer write,
+Joomla API checks can make up to three read-only rounds with 1- and 2-second waits while routing
+still returns HTML or non-engine JSON (HTTP 200/403/404). An engine answer, PHP error, Basic
+challenge or recognized security challenge ends the readiness wait immediately. This absorbs
+short registration delays without another installation when the API becomes ready.
+
+Sync records omitted paths in the private read's `live/unreadable.json`. An incremental read
+keeps their previous manifest entries and never lists them as deleted. A whole read restores
+those paths from the preceding live tree before the three-way merge. A truncated or invalid
+omission list refuses the read because unnamed paths cannot safely be treated as deleted.
+
 **An unfinished import is never opened as a workspace** (22/10/2026). An import claim creates the row and
 the claimed seat *before* the read; the site folder on the host exists only when `/provision` runs at the end, and a failed read
 keeps the row for Retry. One single rule, [`lib/import-pending.js`](apps/tracy-web/src/lib/import-pending.js):

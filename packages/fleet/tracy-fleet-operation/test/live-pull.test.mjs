@@ -299,7 +299,11 @@ async function engine(options = {}) {
           if (options.listMax && p.limit > options.listMax)
             return send(500, '<html>Internal Server Error</html>')
           if (!p.after) options.onList?.(++seen.lists, write)
-          const all = walk(webroot)
+          // What the engine leaves out, unreadable to its PHP (claude-cowork's `unreadable`).
+          const hidden = options.unreadable?.() ?? []
+          const all = walk(webroot).filter(
+            (path) => !hidden.some((h) => (h.endsWith('/') ? path.startsWith(h) : path === h))
+          )
           const start = p.after ? all.indexOf(p.after) + 1 : 0
           const slice = all.slice(start, start + p.limit)
           if (p.hash !== false && !p.after) seen.sha1Lists++
@@ -316,7 +320,10 @@ async function engine(options = {}) {
               return { path, size: b.length, sha1: sha1(b) }
             }),
             next_cursor: slice.at(-1) ?? null,
-            done: start + slice.length >= all.length
+            done: start + slice.length >= all.length,
+            ...(hidden.length
+              ? { unreadable: { paths: hidden, count: options.unreadableCount ?? hidden.length } }
+              : {})
           })
         }
         case 'file.read': {
@@ -498,6 +505,31 @@ test('with the last manifest only what changed is read, one file at a time; dele
     )
     assert.deepEqual(JSON.parse(readFileSync(join(dir, 'live', 'deleted.json'), 'utf8')), ['index.php'])
     assert.equal(existsSync(join(dir, 'live', 'tree')), false)
+  } finally {
+    site.server.close()
+  }
+})
+
+test('what the engine could not read is unknown, never deleted: the last read keeps it (05/11/2026)', async () => {
+  let hidden = []
+  const site = await engine({ unreadable: () => hidden })
+  try {
+    const first = join(root, 'u1')
+    await pull(first, site.url)
+    // The host makes the images folder unreadable to PHP: the engine leaves it out and names it.
+    hidden = ['images/']
+    rmSync(join(site.webroot, 'index.php'))
+    const dir = join(root, 'u2')
+    const { answer } = await pull(dir, site.url, {
+      TRACY_SYNC_MANIFEST_IN: join(first, 'live', 'manifest.json')
+    })
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.equal(answer.mode, 'incremental')
+    assert.deepEqual(JSON.parse(readFileSync(join(dir, 'live', 'deleted.json'), 'utf8')), ['index.php'])
+    const manifest = JSON.parse(readFileSync(join(dir, 'live', 'manifest.json'), 'utf8'))
+    const before = JSON.parse(readFileSync(join(first, 'live', 'manifest.json'), 'utf8'))
+    assert.deepEqual(manifest['images/logo.png'], before['images/logo.png'], 'kept as the last read had it')
+    assert.deepEqual(JSON.parse(readFileSync(join(dir, 'live', 'unreadable.json'), 'utf8')), ['images/'])
   } finally {
     site.server.close()
   }
@@ -1903,6 +1935,18 @@ test('a table whose definition moved is read again though its rows did not; trig
       triggers: [{ name: 'shop_after_insert', table: 'jos_content', event: 'INSERT', timing: 'AFTER' }],
       tables: ['jos_action_logs']
     })
+  } finally {
+    site.server.close()
+  }
+})
+
+test('a truncated unreadable list refuses sync instead of treating unnamed files as deleted', async () => {
+  const site = await engine({ unreadable: () => ['images/'], unreadableCount: 51 })
+  try {
+    const { answer } = await pull(join(root, 'truncated-unreadable'), site.url)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.code, 'ENGINE_REFUSED')
+    assert.match(answer.detail, /incomplete unreadable paths/)
   } finally {
     site.server.close()
   }

@@ -133,7 +133,13 @@ const stuckWhere = (value) => {
   // "Where: export/no_engine_reply · HTTP 200 · db.dump · answered php_notice"
   if (detail.action) parts.push(detail.action)
   if (detail.answer) parts.push(`answered ${detail.answer}`)
+  if (detail.page) parts.push(`page ${detail.page}`)
   if (detail.engine_error) parts.push(`engine ${detail.engine_error}`)
+  for (const door of detail.doors ?? []) {
+    parts.push(
+      [door.path, door.status ? `HTTP ${door.status}` : '', door.answer, door.page].filter(Boolean).join(' ')
+    )
+  }
   return `\nWhere: ${parts.join(' · ')}${installRoads(detail)}${sizes(detail)}`
 }
 // "Sign-in: password · username is an email address": how the run came in (the row's own
