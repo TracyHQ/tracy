@@ -5,9 +5,11 @@ import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 import { report, written } from './_site-check.mjs'
 import { keptPages } from './_site-check-pages.mjs'
+import { SITE } from './_write-step-run.mjs'
 
 export const VERSION = 'demo-gym/j6/1.2.3'
-export const SITE = 'write-bench-abc.sites.example'
+/** The bench site of the shared write step fixtures (a made-up label in the bench's own form). */
+export { SITE }
 /** What the writer ordered for the heading: words with emphasis codes the site printed as they are. */
 export const RAW = 'Strength ((span))coaching((/span)) for every level'
 export const CLEAN = 'Strength coaching for every level'
@@ -45,7 +47,7 @@ export const heldAtStart = () => ({
 /** The bench site record the site creator would have kept. */
 export const benchSite = () => ({
   id: 'site-1',
-  label: 'write-bench-abc',
+  label: SITE.slice(0, SITE.indexOf('.')),
   siteKey: SITE,
   status: 'ready',
   contract: VERSION
