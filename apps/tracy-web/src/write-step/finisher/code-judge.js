@@ -1,9 +1,11 @@
 // Repairs code can judge without a model (spec #418, #424): a repair that never changes a word, whose result is plain in the
 // page the site serves now. No checker call, no screenshot:
 //   - fix-text: the slot's words as they printed with their markup are gone from the page, and its words are on it unchanged;
-//   - mark-emphasis: the heading's words are on the page unchanged, and the marked words are wrapped in a span.
+//   - mark-emphasis: the heading's words are on the page unchanged, and the marked words are wrapped in a span;
+//   - a glued words fix-text: a space stands before every line break of the heading (glued-words.js).
 // Pure, but for the page read it is handed. Without a page reader the repair goes to the checker as before.
 import { visibleText } from '../../lib/site-copy/emphasis-markup.js'
+import { servesUnglued } from './glued-words.js'
 
 /** Order kinds code judges on the served page. */
 export const CODE_JUDGED = new Set(['fix-text', 'mark-emphasis'])
@@ -42,6 +44,10 @@ export const pageWords = (html) =>
  * @returns {{ verdict: 'better' | 'not better', reason: string }}
  */
 export function codeVerdict(html, { order, valid }) {
+  if (valid.glued)
+    return servesUnglued(html, valid.after)
+      ? { verdict: 'better', reason: 'the served page puts a space before the line break of the heading' }
+      : { verdict: 'not better', reason: 'the served page still glues the words at the line break' }
   const words = pageWords(html)
   const shown = squash(visibleText(valid.after))
   // The slot's words as they printed before, markup and all: still on the page, the repair did not reach it.

@@ -33,7 +33,8 @@ export const FAULT_KINDS = Object.freeze({
   'broken-layout': Object.freeze({
     label: 'broken layout',
     what: 'content wider than the page, overlapping or cut off, above all at phone width; words of a heading glued together with no space (such as "THEPOOL") where a line break was dropped',
-    orders: Object.freeze(['style-block'])
+    // Glued words are repaired by a fix-text that only puts the missing space before the line break (glued-words.js).
+    orders: Object.freeze(['style-block', 'fix-text'])
   }),
   'demo-fact': Object.freeze({
     label: 'demo fact left visible',

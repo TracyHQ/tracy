@@ -81,7 +81,8 @@ export function cleanUp() {
 
 /**
  * @param {{ finder: object, fixer: object, checker: object, served?: ((held: object) => (page: string) => string) | null,
- *   limits?: object, clock?: object, sideEffect?: object | null, first?: object, files?: Record<string, object> | null }} input
+ *   limits?: object, clock?: object, sideEffect?: object | null, first?: object, files?: Record<string, object> | null,
+ *   held?: Record<string, string> }} input
  *   `finder`, `fixer`, `checker` are doors as scriptedDoor makes them; `served` renders a page from what the site holds now
  */
 export async function finishOn({
@@ -94,15 +95,16 @@ export async function finishOn({
   sideEffect = null,
   first = {},
   timer = null,
-  files = null
+  files = null,
+  held = heldAtStart()
 }) {
-  const site = writtenSite(heldAtStart(), { sideEffect })
+  const site = writtenSite({ ...held }, { sideEffect })
   const shots = fakeCapture({ held: site.held })
   const out = []
   const err = []
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-run-'))
   dirs.push(dir)
-  const runs = memoryRunStore([writtenRun(first)])
+  const runs = memoryRunStore([writtenRun({ held: { ...held }, ...first })])
   // `files`: the brief, copy and pictures files by their bench option (`brief-file`), written next to the run.
   const fileArgs = Object.entries(files ?? {}).flatMap(([option, data]) => {
     const file = path.join(dir, `${option}.json`)

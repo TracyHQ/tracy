@@ -12,6 +12,7 @@ import { ALLOWED_PROPERTIES } from '../../lib/finisher-style.js'
 import { STYLE_STEPS, WORDS_STEPS } from './repair-steps.js'
 import { validStyleOrder } from './style-order.js'
 import { menuRefusal } from './repair-menu.js'
+import { gluedWordsOf, isGluedRepair } from './glued-words.js'
 
 const squash = (s) =>
   String(s ?? '')
@@ -30,6 +31,9 @@ function untied(slot, { fault, pageSlots, current }) {
   if (fault.slot)
     return slot === fault.slot ? null : `the order targets ${slot}, the finder named ${fault.slot}`
   if (!pageSlots(fault.page).has(slot)) return `${slot} is not on ${fault.page}, where the fault was seen`
+  // Glued words are tied by the words themselves: the slot's words, spacing aside, are the glued words seen.
+  if (fault.kind === 'broken-layout')
+    return gluedWordsOf(fault, current) ? null : `${slot} does not hold the glued words the finder saw`
   const reported = (String(fault.seen ?? '').match(MARKUP_SEEN) ?? []).map(bare)
   if (!reported.length) return `the finder named no slot and reported no markup to tie ${slot} to`
   if (!reported.some((markup) => bare(current).includes(markup)))
@@ -39,10 +43,15 @@ function untied(slot, { fault, pageSlots, current }) {
 
 /**
  * Fix broken text in one slot: the slot's words exactly as the site holds them, with the printed markup taken out. It never
- * changes a word, so the meaning of the copy stays the writer's.
+ * changes a word, so the meaning of the copy stays the writer's. For glued words (a broken layout) it may do one thing only:
+ * put the missing space before each line break, every word and code kept (glued-words.js).
  */
-function checkFixText(order, { current }) {
+function checkFixText(order, { current, fault }) {
   if (typeof order.text !== 'string' || !order.text.trim()) return 'the order carries no text'
+  if (fault.kind === 'broken-layout')
+    return isGluedRepair(current, order.text)
+      ? null
+      : `for glued words the new text may add only a space before the line break, every word and code kept (it holds ${JSON.stringify(current)})`
   if (showsRawCodes(order.text) || HTML_TAG.test(order.text)) return 'the new text still holds markup'
   if (squash(visibleText(current)) !== squash(order.text))
     return `the new text changes the words of the slot (it holds ${JSON.stringify(current)})`
@@ -106,11 +115,12 @@ export function validOrder(order, context) {
     }
   const loose = untied(slot, { fault, pageSlots, current })
   if (loose) return { ok: false, reason: loose }
-  const refused = entry.check(order, { current })
+  const refused = entry.check(order, { current, fault })
   if (refused) return { ok: false, reason: refused }
   if (order.text === current)
     return { ok: false, reason: `a no-op: the new text is the text ${slot} holds now, so nothing is written` }
-  return { ok: true, slot, key, current, after: order.text, changes: { [key]: order.text } }
+  const glued = fault.kind === 'broken-layout' ? { glued: true } : {}
+  return { ok: true, slot, key, current, after: order.text, changes: { [key]: order.text }, ...glued }
 }
 
 /** The order kinds as the fixer is told them. */

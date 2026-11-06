@@ -65,9 +65,9 @@ export const benchSite = () => ({
 
 /**
  * The write report of the run, with the first site check result the bench's check kept on it. `groups` adds groups after
- * its one red group, and `allGroups` says the first check ran every group despite a red one.
+ * its one red group, `allGroups` says the first check ran every group despite a red one, and `held` is what the run wrote.
  */
-export function writtenRun({ failures, groups = [], allGroups = false } = {}) {
+export function writtenRun({ failures, groups = [], allGroups = false, held = heldAtStart() } = {}) {
   const firstCheck = {
     version: 'site-check/1',
     status: 'red',
@@ -101,7 +101,7 @@ export function writtenRun({ failures, groups = [], allGroups = false } = {}) {
     phase: 'done',
     report: {
       ...report(
-        Object.entries(heldAtStart()).map(([key, words]) => written(`block-${key.slice(7)}`, key, words)),
+        Object.entries(held).map(([key, words]) => written(`block-${key.slice(7)}`, key, words)),
         { site: SITE, kit: VERSION, contract: VERSION, keptPages: KEPT_PAGES }
       ),
       siteCheck: firstCheck
