@@ -609,12 +609,20 @@ export function unpickedPageRules(answers, seed) {
   return { rules, skipped }
 }
 
+/** `find` as a whole word: not inside a longer one (a brand "RES" must leave RESERVATIONS and FRESH alone). */
+const wordPattern = (find) =>
+  new RegExp(
+    `(?<![\\p{L}\\p{N}_])${String(find).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}\\p{N}_])`,
+    'gu'
+  )
+
 /** Every string in an entry's data with the demo brand replaced, keys that are addresses untouched. */
 export function replaceDeep(value, rules, key = '') {
   if (typeof value === 'string') {
     if (SKIP_KEYS.has(key) || looksLikeAddress(value)) return value
     let out = value
-    for (const r of rules) out = out.split(r.find).join(r.with)
+    for (const r of rules)
+      out = r.word ? out.replace(wordPattern(r.find), () => r.with) : out.split(r.find).join(r.with)
     return out
   }
   if (Array.isArray(value)) return value.map((v) => replaceDeep(v, rules, key))
@@ -637,7 +645,7 @@ export function nameRulesOf(map, facts) {
       unanswered.push({ rule: `replace ${JSON.stringify(r.find)}`, why: noAnswer(filled.missing) })
       continue
     }
-    rules.push({ find: r.find, with: filled.value })
+    rules.push({ find: r.find, with: filled.value, ...(r.word ? { word: true } : {}) })
   }
   return { rules, unanswered }
 }

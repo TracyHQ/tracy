@@ -167,6 +167,19 @@ export const SNAPSHOT_PROPERTIES = [
   'border-radius'
 ]
 
+/**
+ * The parity properties to compare on one theme. A source that has no frame in `theme` (design.parity.sourceThemes
+ * lists the ones it has; absent = all) is still compared on geometry and type, but not on colour: its render in that
+ * theme is the light page, so a colour pair there can never agree and `design.exceptions` (element/rule/selector)
+ * cannot silence it. The theme's colours are held by per-variant `design.rules` instead.
+ */
+const COLOUR_PROPERTY = /colou?r|^background|shadow|outline|fill|stroke/i
+export function parityPropertiesFor(parity, theme) {
+  const all = parity?.properties ?? SNAPSHOT_PROPERTIES
+  const has = parity?.sourceThemes
+  return !Array.isArray(has) || has.includes(theme) ? all : all.filter((p) => !COLOUR_PROPERTY.test(p))
+}
+
 // ───────────────────────── theme ─────────────────────────
 export function loadConfig(file = 'template.config.json') {
   return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {}
@@ -333,11 +346,12 @@ export function captureDesign(request) {
     width: innerWidth,
     height: innerHeight,
     fontsReady: document.fonts.status === 'loaded',
-    // 🔒 `identityMatches` WAS REMOVED HERE. It was a `querySelectorAll` plus a visibility filter on
-    // every axis of every page, and NOTHING in any of these packages ever read the number. The
-    // assertion it looks like is performed for real twice over: `navigate()` waits on the same
-    // selector and throws when it is not visible, and `qa-browser.mjs` asserts a match count
-    // directly. Found and removed in the business template first; this copy kept paying for it.
+    // 🔒 `identityMatches` WAS REMOVED HERE, and the removal is the point. It was a
+    // `querySelectorAll` plus a visibility filter on EVERY axis of EVERY page, and nothing in any
+    // of these packages ever read the number. What it looks like it asserts is asserted for real
+    // twice over: `navigate()` waits on the same selector and throws when it is not visible, and
+    // `qa-browser.mjs` checks a match count directly. Found in the business template first (all 48
+    // pages of its contract declare an identity); this copy went on paying for it.
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
     tokens: Object.fromEntries((request.tokens ?? []).map((k) => [k, root.getPropertyValue(k).trim()])),
@@ -755,7 +769,8 @@ export function scanSeams() {
  * site's "no picture yet" element: every visible one is a picture the page promised and lost.
  */
 export function imageCensus({ scope = 'main', slot = null, placeholder = null } = {}) {
-  const root = document.querySelector(scope) ?? document.body
+  const found = document.querySelector(scope)
+  const root = found ?? document.body
   const visible = (e) => e.getClientRects().length > 0 && e.getBoundingClientRect().width > 20
   const decoded = (img) => img.naturalWidth > 0 && visible(img)
   const imgs = [...root.querySelectorAll('img')].filter(decoded)
@@ -772,6 +787,8 @@ export function imageCensus({ scope = 'main', slot = null, placeholder = null } 
       }))
     : []
   return {
+    // what the scope resolved to on THIS page: a source with no <main> counts its whole body
+    resolved: found ? scope : 'body',
     images: imgs.length + slotDecoded.length,
     slots: slots.map((e) => e.id || e.getAttribute('src') || e.tagName.toLowerCase()),
     placeholders
@@ -786,7 +803,7 @@ export function imageCensus({ scope = 'main', slot = null, placeholder = null } 
 // Why one round trip. This used to be three Playwright calls per element on the rest side alone --
 // `locator.scrollIntoViewIfNeeded()` (which waits for the box to hold still over two animation
 // frames, then scrolls over CDP), an `evaluate` for the rect, and after the hover an `evaluate` to
-// settle and another for the rect. Measured 15/09 on the sibling business template (320 elements,
+// settle and another for the rect. Measured 15/09 on a template built from this kit (320 elements,
 // 3 pages x 2 widths x 4 reps, medians): the scroll call alone was 72 ms of a 195 ms element, the
 // four rect/settle evaluates 1-2 ms each; this shape is 85 ms an element with the SAME rest rect,
 // hovered rect and scroll offset on all 320 (the in-page `scrollIntoViewIfNeeded()` and Playwright's
@@ -801,10 +818,10 @@ export function imageCensus({ scope = 'main', slot = null, placeholder = null } 
 // Why the box has to be settled. The hover check compares rest with hovered at a 1 px threshold, so
 // both have to be the SETTLED box. A fixed 60 ms sample was not: a 4 px `translateY` behind
 // `transition: transform 400ms` reads under 1 px at 60 ms and the page was called clean (measured
-// 15/09 on the sibling business template: caught 1/8 at 150 ms, 0/8 at 300 ms).
+// 15/09 on a template built from this kit: caught 1/8 at 150 ms, 0/8 at 300 ms).
 // `reducedMotion: 'reduce'` on the context does not help -- it flips the media query, it does not
-// stop transitions, and the one `prefers-reduced-motion` rule this template ships
-// (`src/styles/global.css`, `scroll-behavior: auto`) does not touch them either. Settling AFTER the
+// stop transitions, and a `prefers-reduced-motion` rule of the kind these templates ship (the base
+// template has exactly one, `scroll-behavior: auto`) does not touch them either. Settling AFTER the
 // scroll matters on the rest side too: a header that shrinks on scroll starts its transition at the
 // scroll, and a box read
 // before it ends is a hover jump that never happened.
@@ -1311,12 +1328,11 @@ export function scanOffSystem(ds, theme) {
 /**
  * Is the SOURCE render finished, or is it still showing empty picture frames?
  *
- * This template's design source is a folder of plain HTML with ordinary `<img>` elements: 183
- * across the 25 documents the contract cites, 23 of them carrying `loading="lazy"` (counted
- * 2026-09-17 from qa.contract.json, not from the whole folder -- the tree holds 30, and 7 of those
- * are in files no page cites). A full-page screenshot does not scroll the page, so at the
+ * A design source is often a folder of plain HTML with ordinary `<img>` elements. Measured
+ * 2026-09-17 on the base template this kit generates: 183 images across the 25 documents its
+ * contract cites, 23 of them carrying `loading="lazy"`. A full-page screenshot does not scroll the page, so at the
  * moment the runner shoots it the images below the fold have never been asked for. Measured
- * 2026-09-17 on `pages/company/about.html`, three loads at the exact point the runner screenshots
+ * 2026-09-17 on that template's `pages/company/about.html`, three loads at the point the runner shoots
  * (`networkidle` -> `fonts.ready` -> 200 ms): 5, 6 and 6 of 11 images undecoded -- non-deterministic,
  * which is why two runs of the same page disagree. One scroll pass through the document, then the
  * same read: 0 of 11, all three times.
