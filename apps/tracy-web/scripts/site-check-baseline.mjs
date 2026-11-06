@@ -18,6 +18,12 @@
  *
  *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --site <site key> --version <contract id> \
  *     --pages-file <json> [--force]
+ *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --base <untouched Joomla demo address> \
+ *     --version <contract id> --pages-file <json> [--force]
+ *
+ * `--base` reads the demo on this machine with tracy-host's own browser reader, as `demo-measures.mjs --base` does (it
+ * needs the tracy-host dependencies with Chromium, and no database): step 0 then needs no tracy-web and tracy-host running
+ * the current code. The pages are asked under `/index.php`, as the site's host asks a Joomla site's pages.
  *
  * `--pages-file` is a JSON array of the site's paths (the kit's `pages[].path`). It reads them through the host,
  * fifteen per call, and stores texts, labels and picture files and hashes, and the words on a picture with what lay
@@ -30,59 +36,96 @@ import { parseArgs } from 'node:util'
 import { readConfig } from '../src/config.js'
 import { createPool } from '../src/db/index.js'
 import { hostCall } from '../src/host/client.js'
-import { demoSelfNames } from '../src/ops/quickstarts.js'
 import { defaultContracts } from '../src/lib/contracts.js'
+import { demoSelfNames } from '../src/ops/quickstarts.js'
 import {
   baselineOutcome,
   contractBaselineStore,
   ensureBaseline,
   fileBaselineStore
 } from '../src/site-check/demo-baseline.js'
-import { hostMeasure } from '../src/site-check/host-measure.js'
+import { hostMeasure, underIndex } from '../src/site-check/host-measure.js'
 import { siteByKey } from '../src/sites/store.js'
 
-export async function main(argv, env = process.env) {
+/** Joomla answers its pages under `/index.php`: the demo read on this machine is asked them as the site's host asks them. */
+const underIndexHost =
+  (host) =>
+  ({ pages, ...payload }) =>
+    host({
+      ...payload,
+      ...(Array.isArray(pages) ? { pages: pages.map((p) => underIndex('joomla', p)) } : {})
+    })
+
+/** A demo read on this machine by tracy-host's own browser reader (`demo-measures.mjs --base`). */
+async function localReader(base) {
+  const { localHost } = await import('./demo-measures.mjs')
+  return localHost(base)
+}
+
+/**
+ * @param {string[]} argv
+ * @param {Record<string, string | undefined>} [env]
+ * @param {{ hostOf?: Function, index?: Map<string, any>, out?: Function, err?: Function }} [deps] for tests: the reader of
+ *   `--base`, the contract index, and where lines go
+ */
+export async function main(argv, env = process.env, deps = {}) {
+  const out = deps.out ?? ((l) => console.log(l))
+  const err = deps.err ?? ((l) => process.stderr.write(`${l}\n`))
   const { values } = parseArgs({
     args: argv,
     options: {
       site: { type: 'string' },
+      base: { type: 'string' },
       version: { type: 'string' },
       'pages-file': { type: 'string' },
       force: { type: 'boolean' }
     }
   })
   if (
-    !values.site ||
+    Boolean(values.site) === Boolean(values.base) ||
     !values.version ||
     !values['pages-file'] ||
     !env.WRITE_BENCH_BASELINE_DIR ||
-    !env.DATABASE_URL
+    (values.site && !env.DATABASE_URL)
   ) {
-    process.stderr.write(
-      'usage: WRITE_BENCH_BASELINE_DIR=<dir> DATABASE_URL=... node scripts/site-check-baseline.mjs --site <key> --version <contract id> --pages-file <json> [--force]\n'
+    err(
+      'usage: WRITE_BENCH_BASELINE_DIR=<dir> DATABASE_URL=... node scripts/site-check-baseline.mjs --site <key> --version <contract id> --pages-file <json> [--force]\n' +
+        '   or: WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --base <untouched Joomla demo address> --version <contract id> --pages-file <json> [--force]'
     )
     return 2
+  }
+  const pages = JSON.parse(await readFile(values['pages-file'], 'utf8'))
+  const store = contractBaselineStore({
+    index: deps.index ?? defaultContracts(),
+    cache: fileBaselineStore(env.WRITE_BENCH_BASELINE_DIR)
+  })
+  const measure = async (host) => {
+    const { baseline, measured } = await ensureBaseline({
+      host,
+      pages,
+      version: values.version,
+      // The file committed beside the contract wins: a version that has one is not measured unless forced.
+      store,
+      force: values.force === true
+    })
+    out(
+      `${baselineOutcome({ measured, force: values.force === true })} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, ${baseline.over?.length ?? 0} words over pictures, ${baseline.unread?.length ?? 0} pages with no demo${baseline.unread?.length ? ` (${baseline.unread.map((u) => `${u.path}: ${u.why}`).join('; ')})` : ''}`
+    )
+    return 0
+  }
+  if (values.base) {
+    const reader = deps.hostOf ? await deps.hostOf(values) : await localReader(values.base)
+    try {
+      return await measure(underIndexHost(reader.host))
+    } finally {
+      await reader.close?.()
+    }
   }
   const pool = createPool(env.DATABASE_URL)
   try {
     const site = await siteByKey(pool, values.site)
     if (!site) throw new Error(`No site ${values.site}`)
-    const host = hostMeasure({ hostCall, config: readConfig(env), site, selfNames: demoSelfNames })
-    const { baseline, measured } = await ensureBaseline({
-      host,
-      pages: JSON.parse(await readFile(values['pages-file'], 'utf8')),
-      version: values.version,
-      // The file committed beside the contract wins: a version that has one is not measured unless forced.
-      store: contractBaselineStore({
-        index: defaultContracts(),
-        cache: fileBaselineStore(env.WRITE_BENCH_BASELINE_DIR)
-      }),
-      force: values.force === true
-    })
-    console.log(
-      `${baselineOutcome({ measured, force: values.force === true })} ${values.version}: ${baseline.texts.length} texts, ${baseline.labels.length} labels, ${baseline.pictures.files.length} picture files, ${baseline.over?.length ?? 0} words over pictures, ${baseline.unread?.length ?? 0} pages with no demo${baseline.unread?.length ? ` (${baseline.unread.map((u) => `${u.path}: ${u.why}`).join('; ')})` : ''}`
-    )
-    return 0
+    return await measure(hostMeasure({ hostCall, config: readConfig(env), site, selfNames: demoSelfNames }))
   } finally {
     await pool.end()
   }

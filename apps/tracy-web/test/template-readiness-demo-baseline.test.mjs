@@ -65,6 +65,8 @@ test('a release without a baseline file is red, and its fix names the measure an
   assert.match(said, /apps\/tracy-web\/scripts\/site-check-baseline\.mjs/)
   assert.match(said, /template-kit\/cli\.mjs baseline/)
   assert.match(fix.text, /ja-example\/j6\/1\.0\.0/)
+  // Read on this machine from the untouched demo's address: no tracy-web of the current code is needed (JA Diner 1.0.5).
+  assert.match(fix.command, /site-check-baseline\.mjs --base <untouched demo address>/)
 })
 
 test('a baseline that cannot be read, or that measured another version, is red with its own code', () => {

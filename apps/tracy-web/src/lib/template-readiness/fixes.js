@@ -26,7 +26,7 @@ const DS_CHECK = `node scripts/template-design-system-readiness.mjs <empty folde
 
 /** The two step 0 commands of the demo baseline (#419): measure it on the untouched site, then record it beside the contract. */
 const BASELINE_MEASURE =
-  'WRITE_BENCH_BASELINE_DIR=<dir> node apps/tracy-web/scripts/site-check-baseline.mjs --site <site key> --version {contract} --pages-file <json>'
+  'WRITE_BENCH_BASELINE_DIR=<dir> node apps/tracy-web/scripts/site-check-baseline.mjs --base <untouched demo address> --version {contract} --pages-file <json> (or --site <site key> where tracy-web runs)'
 const BASELINE_RECORD = `${KIT_TOOL} baseline --from <dir>/<contract id with / as _>.json --contract <contract folder>`
 
 /** A red demo baseline: measure it on the untouched site, record it beside the contract, commit it. */
@@ -256,8 +256,8 @@ export const FIXES = Object.freeze({
     skill: CONTRACT_SKILL('7')
   },
   'kit-tool-outdated': {
-    text: 'Rebuild the template kit with the template kit tool {required} or later (settle it again) and commit template-kit.json beside the contract.',
-    command: `${KIT_TOOL} assemble --out <dir>`
+    text: 'Settle the template kit again with the template kit tool {required} or later: copy template-kit.json from beside the contract into a folder, run samples there (it stamps the tool and moves no image, so the approval stays), and commit it back beside the contract.',
+    command: `${KIT_TOOL} samples --out <dir> --contract <contract folder>`
   },
   'pin-behind-contract': {
     text: 'Release {latest} of the template if it is not out, then move its pin in the quickstart list from {pinned} to {latest}.',

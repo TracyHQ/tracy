@@ -95,6 +95,15 @@ test('fixOf fills the placeholders from the params, and says nothing for a green
   assert.equal(fixOf('not-a-code', {}), null)
 })
 
+test('the outdated kit tool fix settles the committed kit again, which needs no build folder and keeps its approval', () => {
+  // A kit beside its contract has no capture or images to assemble from: `assemble --out <dir>` needs a build folder.
+  // `samples` is the settle that stamps the current tool and moves no image (JA Diner 1.0.5, 06/11/2026: 3.0.0 to 3.1.0).
+  const fix = fixOf('kit-tool-outdated', { required: '3.1.0' })
+  assert.match(fix.command, /template-kit\/cli\.mjs samples --out <dir> --contract <contract folder>/)
+  assert.doesNotMatch(fix.command, /assemble/)
+  assert.match(fix.text, /3\.1\.0/)
+})
+
 test('the command line prints the fix under each piece that is not green, and includes it in --json', async () => {
   const run = async (args) => {
     let text = ''
