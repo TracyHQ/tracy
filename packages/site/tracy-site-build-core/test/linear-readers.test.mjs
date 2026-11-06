@@ -77,7 +77,11 @@ test('withoutTrailingDotsAndSpace drops what `/[.\\s]+$/` dropped, at once on a 
     assert.equal(s.replace(/[.\s]+$/, ''), old, `old pattern on ${JSON.stringify(s)}`)
     assert.equal(withoutTrailingDotsAndSpace(s), old, s)
   }
-  assertLinear('withoutTrailingDotsAndSpace', (n) => withoutTrailingDotsAndSpace(`${'\t'.repeat(n)}x`), 100_000)
+  assertLinear(
+    'withoutTrailingDotsAndSpace',
+    (n) => withoutTrailingDotsAndSpace(`${'\t'.repeat(n)}x`),
+    100_000
+  )
 })
 
 test('parseRoute reads the door as before, at once on a path of slashes', () => {
