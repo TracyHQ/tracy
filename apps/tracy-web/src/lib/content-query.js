@@ -68,7 +68,7 @@ export const CONTENT_QUERY_PARAMS = Object.freeze([
     name: 'view',
     schema: { const: 'pages' },
     description:
-      "Every page with an address (tracy-content-pages/v1), walked by Tracy over the site's listing. Takes locale and url. An answer larger than 256 KiB is cut at whole pages with truncated: true, and next names the narrower read (one locale, or one type)."
+      "Every page with an address (tracy-content-pages/v1), walked by Tracy over the site's listing. Takes locale and url; with neither, a site in more than eight languages is walked in its default language, which the answer names as locale. An answer larger than 256 KiB is cut at whole pages with truncated: true, and next names the narrower read (one locale, or one type)."
   },
   {
     name: 'url',

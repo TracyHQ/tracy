@@ -469,6 +469,29 @@ test('1.1.0 hotline all:true: ONE apply — four blocks, their Russian copies, b
   )
 })
 
+test('1.1.0 hotline all:true: a tel: link in international form follows the number too (survey 04/11/2026)', async () => {
+  // elite-smiles-dental on dev: the call box printed "(212) 555-0147" and dialled tel:+12125550147;
+  // the replace compared digits exactly, left the link dialling the old number, and said "read nothing back".
+  const snap = structuredClone(SNAP_11)
+  for (const s of snap.slots)
+    if (s.type === 'url' && s.current === 'tel:88005506790') s.current = s.sample = 'tel:+78005506790'
+  const html = HOME_11.replaceAll('tel:88005506790', 'tel:+78005506790')
+  const same = await run(snap, html, { find: '8 800 550-67-90', replace: '8 800 550-67-00', all: true })
+  assert.equal(same.r.ok, true, JSON.stringify(same.r).slice(0, 400))
+  assert.equal(
+    same.calls.apply[0].changes['module-428.0'],
+    'tel:+78005506700',
+    'same shape: the country stays'
+  )
+  assert.equal(same.calls.apply[0].changes['module-448.0'], 'tel:+78005506700')
+  assert.deepEqual(
+    same.r.companions.map((c) => c.at),
+    ['module-428.0', 'module-448.0']
+  )
+  const other = await run(snap, html, { find: '8 800 550-67-90', replace: '0909 123 456', all: true })
+  assert.equal(other.calls.apply[0].changes['module-428.0'], 'tel:0909123456', 'another shape: as written')
+})
+
 test("1.1.0 e-mail all:true: the address and its mailto: in both languages; the footer's own address is another place", async () => {
   const info = await run(SNAP_11, HOME_11, {
     find: 'info@northgate-ind.ru',

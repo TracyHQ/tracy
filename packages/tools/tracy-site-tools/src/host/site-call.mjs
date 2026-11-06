@@ -1674,6 +1674,7 @@ export async function runSiteCall(input) {
         : null,
     wpApplyId: (prefix = 'wp') =>
       memory ? memory.wpApplyId(sessionId, label, prefix) : fallbackMint(prefix),
+    ownApplyId: (given) => (memory ? memory.ownApplyId(sessionId, label, given) : given),
     mint: (prefix) => (memory ? memory.mint(prefix) : fallbackMint(prefix))
   }
 
