@@ -5,6 +5,8 @@ import { href, type Locale } from '@/lib/i18n'
 import { mediaUrl } from '@/lib/media'
 import { stampBlocks, stampFor } from '@/lib/stamps'
 import type { Row } from '@/lib/content'
+import { liveBlocks, liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   entry: Row
@@ -20,11 +22,16 @@ const isButton = (b: any) =>
   b?._type === 'block' &&
   b.children?.length === 1 &&
   (b.markDefs ?? []).some((m: any) => m._key === b.children[0].marks?.[0])
-const text = blocks.filter((b) => !isButton(b))
+const text = await liveBlocks(
+  Astro.request,
+  locale,
+  blocks.filter((b) => !isButton(b))
+)
 const button = blocks.find(isButton)
 const link = button ? (button.markDefs ?? []).find((m: any) => m._key === button.children[0].marks[0]) : null
 const img = mediaUrl(entry.img_features)
-const to = (u: string) => (u.startsWith('#') ? u : href(locale, u))
+const to = (u: string) => dataHref(u, (p) => href(locale, p)) ?? '/'
+const live = await liveLinks(Astro.request, locale, [link?.href])
 ---
 
 <section class="rs-section rs-features-intro">
@@ -34,7 +41,7 @@ const to = (u: string) => (u.startsWith('#') ? u : href(locale, u))
 			<div class="rs-features-text">
 				<h1 class="rs-display" {...$f('title')}>{entry.title}</h1>
 				<div class="rs-features-body" {...$f('description')}><PortableText value={text} /></div>
-				{button && link && <a class="rs-btn" href={to(link.href)}>{button.children[0].text}</a>}
+				{button && link && live(link.href) && <a class="rs-btn" href={to(link.href)}>{button.children[0].text}</a>}
 			</div>
 		</div>
 	</div>

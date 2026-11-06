@@ -63,7 +63,8 @@ export const PINS_READ_MAX = 200
  */
 export const SLOT_PINS_SCRIPT =
   'const fs=require("fs"),path=require("path");const app=process.argv[1]||"/app";' +
-  `const o=(a)=>console.log(${JSON.stringify(LINE)}+Buffer.from(JSON.stringify(a)).toString("base64"));` +
+  // `LINE`, written out: the script is code, so it carries no value built at run time.
+  'const o=(a)=>console.log("TRACY_SLOT_PINS "+Buffer.from(JSON.stringify(a)).toString("base64"));' +
   'const walk=(d,re,acc)=>{let es=[];try{es=fs.readdirSync(d,{withFileTypes:true})}catch{return acc}for(const e of es){if(e.name==="node_modules"||e.name.startsWith("."))continue;const p=path.join(d,e.name);if(e.isDirectory())walk(p,re,acc);else if(re.test(e.name))acc.push(p)}return acc};' +
   'const CAND=/rounded|(^|[\\s"\'`!:])p[xytblrse]?-|bg-\\[|text-|border-\\[|var\\(--ds-/;' +
   'try{let slot=null;try{slot=fs.readFileSync(path.join(app,"data","ds-slot.css"),"utf8").slice(0,65536)}catch{}' +

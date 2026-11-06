@@ -46,7 +46,17 @@ function indexKit(kit) {
   // The picture lists a frame sits in (gallery-tiles.js): its block, list and row.
   const galleries = galleryIndex(kit)
   const gallery = (frameId) => galleries.get(frameId) ?? null
-  return { frames, twinsOf, demoPaths, demoHashes, demoSize, gallery }
+  // A frame written through a kit setting slot (`site.settingSlots`, e.g. the T4 page background) has no content map
+  // slot: it goes in siteSettings like a frame the kit marks not writable, and the write step sets it through the slot.
+  const settingSlotIds = new Set(
+    arr(kit?.site?.settingSlots)
+      .filter((s) => isObject(s) && typeof s.id === 'string')
+      .map((s) => s.id)
+  )
+  /** The manifest list a frame of the kit goes in: `siteSettings` or `frames`. */
+  const listOf = (frame) =>
+    frame?.writable === false || settingSlotIds.has(frame?.slotId) ? 'siteSettings' : 'frames'
+  return { frames, twinsOf, demoPaths, demoHashes, demoSize, gallery, listOf }
 }
 
 // Every picture wish of the plan, with the pages it shows on. A shared block shows on every kept page.

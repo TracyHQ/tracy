@@ -28,6 +28,33 @@ export function doorRefusal(result, { writing = false } = {}) {
   return code ? `The content contract door refused (${code})` : 'Content contract unavailable'
 }
 
+/**
+ * A refused door call as a thrown error: the sentence above, plus what the door answered, so a caller that writes around a
+ * refused slot can read the plugin's per-slot `errors[]`. Callers that read only the sentence see no difference.
+ * @param {any} result
+ * @param {{ writing?: boolean }} how
+ */
+function refusalError(result, how) {
+  const error = /** @type {Error & { errors?: unknown[], answer?: any }} */ (
+    new Error(doorRefusal(result, how))
+  )
+  error.answer = result
+  if (Array.isArray(result?.errors)) error.errors = result.errors
+  return error
+}
+
+/**
+ * A slot this adapter refuses before the door is asked, in the shape the plugin uses for one, with the sentence as `message`.
+ * @param {string} message
+ * @param {string} code
+ * @param {string} slotKey
+ */
+function slotRefusal(message, code, slotKey) {
+  const error = /** @type {Error & { errors?: unknown[] }} */ (new Error(message))
+  error.errors = [{ code, message, field: { slotKey } }]
+  return error
+}
+
 /** Apply reviewed scalar content to the quickstart's original entities.
  * The Claude Cowork plugin owns identity resolution, display checks, transactions and undo.
  * No fallback to the legacy T4 writer is safe after a contract check fails.
@@ -35,11 +62,14 @@ export function doorRefusal(result, { writing = false } = {}) {
  * `mapping.emptyLinks` names link slots to take off (`empty_links`, Claude Cowork for Joomla 0.24.4, TCH #1013): only a
  * slot inspect marks `emptyLink` (its layout was reviewed to draw no dead link without it) may be named, never one also
  * changed. It may stand alone; it joins the request id only when sent, so a mapping without it replays as it always did.
+ *
+ * `mapping.emptySlots` names slots to empty (`empty_slots`, TracyHQ/tracy#362), by the same rules. The plugin alone decides
+ * which it takes (inspect marks them `canHide`) and refuses the rest per slot, so nothing about them is judged here.
  */
 export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false }) {
   const call = async (params) => {
     const result = await apply({ siteKey, action: 'content.contract', params })
-    if (!result?.ok) throw new Error(doorRefusal(result, { writing: params.operation === 'apply' }))
+    if (!result?.ok) throw refusalError(result, { writing: params.operation === 'apply' })
     return result
   }
   const state = await call({ operation: 'inspect' })
@@ -54,7 +84,14 @@ export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false
   const emptyLinks = mapping.emptyLinks ?? []
   if (!Array.isArray(emptyLinks) || emptyLinks.some((key) => typeof key !== 'string'))
     throw new Error('Links to take off must be a list of link slot keys')
-  if (!changes.length && !emptyLinks.length) throw new Error('The mapping contains no customer content')
+  const emptySlots = mapping.emptySlots ?? []
+  if (!Array.isArray(emptySlots) || emptySlots.some((key) => typeof key !== 'string'))
+    throw new Error('Slots to empty must be a list of slot keys')
+  if (!changes.length && !emptyLinks.length && !emptySlots.length)
+    throw new Error('The mapping contains no customer content')
+  for (const key of emptySlots)
+    if (key in mapping.changes || emptyLinks.includes(key))
+      throw new Error(`A slot cannot be both changed and emptied: ${key}`)
   for (const key of emptyLinks) {
     if (key in mapping.changes) throw new Error(`A link cannot be both changed and taken off: ${key}`)
     if (!slots.get(key)?.emptyLink)
@@ -68,15 +105,17 @@ export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false
     throw new Error(`Customer content is still needed: ${mapping.pending.join(', ')}`)
   for (const [key, value] of changes) {
     const slot = slots.get(key)
-    if (!slot || typeof value !== 'string') throw new Error(`Unknown or non-scalar content slot: ${key}`)
+    if (!slot || typeof value !== 'string')
+      throw slotRefusal(`Unknown or non-scalar content slot: ${key}`, 'SLOT_UNKNOWN', key)
     // A translated copy is written by the language machinery, from its source, never by a seed —
     // a mapping that names one would put brief-language copy into another edition. Refused here as
     // well as skipped by the planner, because a reviewed `--copy` file could name one by hand.
-    if (isDerived(slot)) throw new Error(`A seed does not write a translated copy: ${key}`)
+    if (isDerived(slot))
+      throw slotRefusal(`A seed does not write a translated copy: ${key}`, 'SLOT_NOT_CONTENT', key)
     if (slot.requiresEvidence && !mapping.evidence?.[key]?.trim())
-      throw new Error(`Customer evidence is missing for ${key}`)
+      throw slotRefusal(`Customer evidence is missing for ${key}`, 'SLOT_EVIDENCE_REQUIRED', key)
   }
-  if (changes.length + emptyLinks.length > 1500)
+  if (changes.length + emptyLinks.length + emptySlots.length > 1500)
     throw new Error('Review at most 1500 scalar slots in one content revision')
   const requestId = createHash('sha256')
     .update(
@@ -86,7 +125,8 @@ export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false
         revision: mapping.revision,
         changes,
         evidence: mapping.evidence ?? {},
-        ...(emptyLinks.length ? { emptyLinks } : {})
+        ...(emptyLinks.length ? { emptyLinks } : {}),
+        ...(emptySlots.length ? { emptySlots } : {})
       })
     )
     .digest('hex')
@@ -97,6 +137,7 @@ export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false
     request_id: requestId,
     ...(changes.length ? { changes: mapping.changes } : {}),
     ...(emptyLinks.length ? { empty_links: emptyLinks } : {}),
+    ...(emptySlots.length ? { empty_slots: emptySlots } : {}),
     evidence: mapping.evidence ?? {}
   }
   if (dry) return { contract: state.contract, params, pages: state.pages }

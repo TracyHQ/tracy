@@ -6,12 +6,14 @@ import { brief, breaks, ruleOf, check, copy, kit, plan, slotOf } from './_site-c
 test('the passing copy passes every rule and the version is frozen', () => {
   const r = check(copy())
   // test-quality: contract ADR 0042 stores the checker version with every run and bumps it on any rule change
-  assert.equal(CHECKER_VERSION, 'site-copy-check/3')
+  assert.equal(CHECKER_VERSION, 'site-copy-check/6')
   assert.deepEqual(
     r.rules.map((x) => `${x.id}:${x.status}`),
-    ['W01', 'W02', 'W03', 'W04', 'W05', 'W06', 'W07', 'W08', 'W09', 'W10', 'W11'].map((id) => `${id}:pass`)
+    ['W01', 'W02', 'W03', 'W04', 'W05', 'W06', 'W07', 'W08', 'W09', 'W10', 'W11']
+      .map((id) => `${id}:pass`)
+      .concat('W12:skip', 'W13:pass', 'W14:pass', 'W15:skip', 'W16:skip')
   )
-  assert.equal(r.meta.checker, 'site-copy-check/3')
+  assert.equal(r.meta.checker, 'site-copy-check/6')
   assert.deepEqual(check(copy()), r)
   assert.equal(failureListText(r), '')
 })
@@ -126,7 +128,7 @@ test('W03 fails text over the limit, under the demo floor, empty, or with too ma
     (c) => {
       slotOf(c, 'block-2.2').text = 'Small classes.'
     },
-    /block-2\.2.*14.*56/
+    /block-2\.2.*14.*94/
   )
   breaks(
     'W03',
@@ -170,7 +172,7 @@ test('oddly shaped plan, kit and brief parts never throw', () => {
       kit: { blocks: [null, { slots: 5 }] },
       brief: { facts: 'x', missing: [7] }
     })
-    assert.equal(r.rules.length, 11)
+    assert.equal(r.rules.length, 16)
   }
 })
 

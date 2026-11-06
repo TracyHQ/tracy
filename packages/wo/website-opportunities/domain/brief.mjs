@@ -934,7 +934,14 @@ export function buildBrief({
 
 const PICTO = /\p{Extended_Pictographic}|\u{FE0F}|\u{200D}|[\u{1F1E6}-\u{1F1FF}]|[\u{1F3FB}-\u{1F3FF}]/gu
 const MAX_SELF_WORDS = 12
-const stripEnd = (t) => t.replace(/[\s.!:;,–—-]+$/u, '').trim()
+const END_MARK = /[\s.!:;,–—-]/u
+// The text without the spaces and stops it ends on, read from its end: `/[…]+$/` went over a long run of them
+// once for each place in it.
+export const stripEnd = (t) => {
+  let end = t.length
+  while (end > 0 && END_MARK.test(t[end - 1])) end--
+  return t.slice(0, end).trim()
+}
 
 /** The bio's first line that is words only (no number, handle or link), emoji taken off; null when none. */
 function firstBioLine(bio) {

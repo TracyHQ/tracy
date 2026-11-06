@@ -368,6 +368,13 @@ test("switchesAtTracy: a host reads the switches at Tracy's origin, and no answe
     }
   })
   assert.deepEqual(asked, ['https://tracy.example/api/ui'])
+  await switchesAtTracy('https://tracy.example///', {
+    fetch: async (url) => {
+      asked.push(String(url))
+      return new Response('nope', { status: 503 })
+    }
+  })
+  assert.equal(asked.at(-1), 'https://tracy.example/api/ui', 'every trailing slash is dropped')
   assert.ok(on)
   assert.equal(on('chat-design-system'), true, 'not hidden: an operator turned it on')
   assert.equal(on('toolbar-design-system'), false)
@@ -385,4 +392,44 @@ test("switchesAtTracy: a host reads the switches at Tracy's origin, and no answe
     async () => new Response(JSON.stringify({ hidden: 'all' }), { status: 200 })
   ])
     assert.equal(await switchesAtTracy('https://tracy.example', { fetch }), null)
+})
+
+test('🔒 switchesAtTracy trims an origin of slashes in linear time', async () => {
+  const refuse = async () => new Response('nope', { status: 503 })
+  /** Milliseconds one read takes at `n` slashes. @param {number} n */
+  const timed = async (n) => {
+    const origin = `${'/'.repeat(n)}x`
+    const t0 = performance.now()
+    await switchesAtTracy(origin, { fetch: refuse })
+    return performance.now() - t0
+  }
+  // the shape of `assertLinear` in the linear-readers tests, awaited: after one warm-up read, twice the size
+  // answers under 300 ms; then the size doubles (up to 64 times) until one read takes 20 ms, and four times
+  // that input must take under eight times as long plus 10 ms (best of seven each), where a quadratic reader
+  // takes sixteen times as long, a gap a few ms of load cannot cross
+  /** Least of `tries` reads at `k`, stopping at the first under `enough` or over `cut`. */
+  const best = async (/** @type {number} */ k, tries = 7, enough = 0, cut = Infinity) => {
+    let least = Infinity
+    for (let i = 0; i < tries; i += 1) {
+      const ms = await timed(k)
+      if (ms < least) least = ms
+      if (ms < enough || ms > cut) break
+    }
+    return least
+  }
+  const n = 80_000
+  await timed(n)
+  // the old `replace(/\/+$/, '')` took about 3 s at 80 000 slashes and four times that at twice as many
+  const big = await best(2 * n, 3, 300, 900)
+  assert.ok(big < 300, `${big.toFixed(1)} ms at 2n`)
+  let k = n
+  while (k < 64 * n && (await best(k, 3)) < 20) k *= 2
+  // a linear switch passes one of three tries, a quadratic one fails all three
+  let one = 0
+  let four = Infinity
+  for (let t = 0; t < 3 && !(four < 8 * one + 10); t += 1) {
+    one = await best(k)
+    four = await best(4 * k)
+  }
+  assert.ok(four < 8 * one + 10, `${one.toFixed(1)} ms at ${k}, ${four.toFixed(1)} ms at ${4 * k}`)
 })

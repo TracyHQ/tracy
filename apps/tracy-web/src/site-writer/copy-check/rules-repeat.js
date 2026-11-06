@@ -1,6 +1,6 @@
 // W06 and W07 (ADR 0042): nothing repeats, and nothing of the demo business survives.
 import { allTexts } from './copy-view.js'
-import { hasPhrase, sentencesOf, wordsOf } from './text-tools.js'
+import { hasPhrase, sentencesOf, wordsOf } from '../../lib/site-copy/text-tools.js'
 
 export const RUN_WORDS = 5 // W06: two sentences sharing this many consecutive words are near-duplicates.
 export const MIN_EQUAL_WORDS = 3 // W06 and W07: shortest sentence that counts as a sentence on its own.

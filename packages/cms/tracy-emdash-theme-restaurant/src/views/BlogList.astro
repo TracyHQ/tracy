@@ -17,6 +17,7 @@ import { ui } from '@/lib/ui'
 import { section } from '@/lib/content'
 import { stampFor } from '@/lib/stamps'
 import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
 
 interface Props {
   chrome: Chrome
@@ -38,7 +39,7 @@ const [all, banner, mastheadSlug] = await Promise.all([
   Promise.resolve(mode === 'featured' ? 'featured-articles' : mode === 'tagged' ? 'tagged-items' : 'blog')
 ])
 const masthead = await section('masthead', mastheadSlug, locale)
-const blog = blogPosts(all)
+const blog = await livePosts(Astro.request, locale, blogPosts(all))
 let list = blog
 if (mode === 'category') list = blog.filter((p) => p.category?.slug === category)
 if (mode === 'featured')

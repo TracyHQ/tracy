@@ -4,6 +4,8 @@ import { href, type Locale } from '@/lib/i18n'
 import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import type { Row } from '@/lib/content'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
 
 interface Props {
   locale: Locale
@@ -33,6 +35,11 @@ const $t = stampFor(
 )
 const $b = stampFor(Astro.request, 'banner', banner ? { id: banner.id, slug: banner.slug } : null)
 const bannerImg = banner ? mediaUrl(banner.image) : null
+// a category or the banner button leads somewhere only while its page is published
+const live = await liveLinks(Astro.request, locale, [
+  ...categories.map((c) => `/${c.slug}`),
+  banner?.button_link
+])
 const items: any[] = testimonials?.items ?? []
 ---
 
@@ -40,7 +47,7 @@ const items: any[] = testimonials?.items ?? []
 	<div class="rs-side-mod is-primary">
 		<h3 class="rs-side-title" {...$c('categories_title')}>{title}</h3>
 		<ul>
-			{categories.map((c) => <li><a href={href(locale, `/${c.slug}`)}>{c.label}</a></li>)}
+			{categories.filter((c) => live(`/${c.slug}`)).map((c) => <li><a href={href(locale, `/${c.slug}`)}>{c.label}</a></li>)}
 		</ul>
 	</div>
 	{testimonials && items.length > 0 && (
@@ -70,7 +77,7 @@ const items: any[] = testimonials?.items ?? []
 			<ul class="rs-banner-points">
 				{(banner.points ?? []).map((p: any, i: number) => <li {...$b(`points[${i}].text`)}>{p.text}</li>)}
 			</ul>
-			{banner.button_label && <div class="rs-banner-actions"><a class="rs-btn" href={href(locale, banner.button_link || '/')} {...$b('button_label')}>{banner.button_label}</a></div>}
+			{banner.button_label && live(banner.button_link) && <div class="rs-banner-actions"><a class="rs-btn" href={dataHref(banner.button_link || '/', (p) => href(locale, p))} {...$b('button_label')}>{banner.button_label}</a></div>}
 		</div>
 	)}
 </aside>

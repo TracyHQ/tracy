@@ -312,7 +312,7 @@ export const MODULE_MAX_BYTES = 64000
  */
 export function nestNots(css) {
   // \u0000 guard \u0001 rules \u0002 marks a block while the neighbours are merged
-  const marked = css.replace(/([^{}]+)\{([^{}]*)\}/g, (whole, selectors, body) => {
+  const marked = replaceFlatRules(css, (whole, selectors, body) => {
     // whitespace and comments before the selectors stay where they are: a sheet's `/* mode: dark */` line
     // went into the first guard's block (JA Kinetic WordPress, whose side condition reads as a guard)
     const lead = /^(?:\s|\/\*[\s\S]*?\*\/)*/.exec(selectors)[0]
@@ -327,18 +327,92 @@ export function nestNots(css) {
     return guard ? `${lead}\u0000${guard}\u0001${own.join(',')}{${body}}\u0002` : whole
   })
   // the markers are control characters on purpose: no CSS holds them
-  // oxlint-disable-next-line no-control-regex
-  const neighbours = /\u0000([^\u0001]*)\u0001[^\u0002]*\u0002(?:\s*\u0000\1\u0001[^\u0002]*\u0002)+/g
-  // oxlint-disable-next-line no-control-regex
-  const block = /\u0000[^\u0001]*\u0001([^\u0002]*)\u0002/g
-  // oxlint-disable-next-line no-control-regex
-  const unmark = /\u0000([^\u0001]*)\u0001([^\u0002]*)\u0002/g
-  return marked
-    .replace(neighbours, (run, guard) => {
-      const rules = [...run.matchAll(block)].map((m) => m[1])
-      return `\u0000${guard}\u0001${rules.join('')}\u0002`
-    })
-    .replace(unmark, '$1{$2}')
+  const pieces = markedPieces(marked)
+  let out = ''
+  for (let i = 0; i < pieces.length; i++) {
+    const piece = pieces[i]
+    if (typeof piece === 'string') {
+      out += piece
+      continue
+    }
+    // the blocks after it under the same guard, with nothing but whitespace between, join it
+    let rules = piece.rules
+    for (;;) {
+      const gap = typeof pieces[i + 1] === 'string' && /^\s*$/.test(pieces[i + 1]) ? 1 : 0
+      const next = pieces[i + 1 + gap]
+      if (!next || typeof next === 'string' || next.guard !== piece.guard) break
+      rules += next.rules
+      i += 1 + gap
+    }
+    out += `${piece.guard}{${rules}}`
+  }
+  return out
+}
+
+/**
+ * The marked sheet of `nestNots` as its pieces: the text between blocks, and each block `\u0000 guard \u0001
+ * rules \u0002` as `{guard, rules}` (the guard up to the first `\u0001`, the rules up to the first `\u0002`
+ * after it), read in one pass: the patterns that read them went back over a long run of markers once for each
+ * marker in it.
+ * @param {string} marked
+ * @returns {(string | {guard: string, rules: string})[]}
+ */
+export function markedPieces(marked) {
+  const pieces = []
+  let at = 0
+  while (at < marked.length) {
+    const open = marked.indexOf('\u0000', at)
+    const mid = open < 0 ? -1 : marked.indexOf('\u0001', open + 1)
+    const close = mid < 0 ? -1 : marked.indexOf('\u0002', mid + 1)
+    if (close < 0) {
+      pieces.push(marked.slice(at))
+      break
+    }
+    if (open > at) pieces.push(marked.slice(at, open))
+    pieces.push({ guard: marked.slice(open + 1, mid), rules: marked.slice(mid + 1, close) })
+    at = close + 1
+  }
+  return pieces
+}
+
+/**
+ * `css.replace(/([^{}]+)\{([^{}]*)\}/g, fn)`, each rule with no block inside it handed to `fn` as
+ * (whole, selectors, body), read in one pass: the regex went back over a long text with no brace once for
+ * each place in it.
+ * @param {string} css
+ * @param {(whole: string, selectors: string, body: string) => string} fn
+ */
+export function replaceFlatRules(css, fn) {
+  const nextBrace = (from) => {
+    for (let k = from; k < css.length; k++) if (css[k] === '{' || css[k] === '}') return k
+    return -1
+  }
+  let out = ''
+  let done = 0
+  let at = 0
+  while (at < css.length) {
+    // a rule starts on a character that is not a brace and runs to the `{` its selectors end on
+    if (css[at] === '{' || css[at] === '}') {
+      at++
+      continue
+    }
+    const open = nextBrace(at)
+    if (open < 0) break
+    // every start before this brace meets the same brace: past it when it does not open a rule
+    if (css[open] === '}') {
+      at = open + 1
+      continue
+    }
+    const close = nextBrace(open + 1)
+    if (close < 0) break
+    if (css[close] === '{') {
+      at = open + 1
+      continue
+    }
+    out += css.slice(done, at) + fn(css.slice(at, close + 1), css.slice(at, open), css.slice(open + 1, close))
+    done = at = close + 1
+  }
+  return out + css.slice(done)
 }
 
 /**

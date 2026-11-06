@@ -15,6 +15,7 @@ import { readContracts } from '../src/lib/contracts.js'
 import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
 import { imagesDigest, kitOfContract } from '../src/lib/template-kit/reader.js'
 import { KIT_STEP, templateKitRefusal } from '../src/lib/template-kit/road-step.js'
+import { compactForPlanner } from '../src/lib/template-kit-planner-view.js'
 import { FLOW_SITE, frontGroup } from './_template-kit-flow-site.mjs'
 
 const TAG = 'quickstart/ja-sample/j6'
@@ -196,6 +197,146 @@ test('a kit whose self-checks count anything is incomplete, and the step names t
   assert.match(String(step.params.reason), /slotsInTwoBlocks/)
   assert.doesNotMatch(String(step.params.reason), /listLimitsDiffering/)
   assert.notDeepEqual(verdictOf(kit({ checks: { slotsInTwoBlocks: 0 } })), ['todo', 'kit-incomplete'])
+})
+
+test('the counters the copy and the site check depend on are named in words, first, so /ops shows them', () => {
+  const k = kit({
+    checks: { slotsInTwoBlocks: 1, samplesCut: 2, sentenceGroupsUnsettled: 0, inlineEmphasisMissing: 2 }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: demo samples cut 2, inline emphasis missing 2, slotsInTwoBlocks 1'
+  )
+  const settled = kit({ checks: { sentenceGroupsUnsettled: 2 } })
+  assert.match(
+    String(stepOf(roadOf(release(), world(contractsWith(settled)))).params.reason),
+    /^its self-checks fail: sentence groups not settled 2$/
+  )
+})
+
+test('a content map that lost the demo inline markup holds the kit, named in words with its first slots', () => {
+  const k = kit({
+    checks: { slotsInTwoBlocks: 0, inlineMarkupLost: 3 },
+    coverage: {
+      parts: {},
+      failures: [
+        { part: 'inlineMarkupLost', where: 'contentMap.slots[module-8.0]', reason: 'made up' },
+        { part: 'inlineMarkupLost', where: 'contentMap.slots[module-9.0]', reason: 'made up' }
+      ]
+    }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: inline markup lost 3 (inlineMarkupLost contentMap.slots[module-8.0], inlineMarkupLost contentMap.slots[module-9.0])'
+  )
+  assert.notDeepEqual(verdictOf(kit({ checks: { inlineMarkupLost: 0 } })), ['todo', 'kit-incomplete'])
+})
+
+test('a button with no address, a map no slot moves and a phone outside a link hold the kit, named in words', () => {
+  const k = kit({
+    checks: { deadControls: 2, mapLocationUnmapped: 1, phoneNotCallable: 1 },
+    coverage: {
+      parts: {},
+      failures: [{ part: 'deadControls', where: 'links[block-4.link-2]', reason: 'made up' }]
+    }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: buttons with no address 2, map stays at the demo place 1, phones not callable 1 (deadControls links[block-4.link-2])'
+  )
+  assert.notDeepEqual(
+    verdictOf(kit({ checks: { deadControls: 0, mapLocationUnmapped: 0, phoneNotCallable: 0 } })),
+    ['todo', 'kit-incomplete']
+  )
+})
+
+test('a list whose card rows pair no text slot holds the kit, named in words', () => {
+  const k = kit({
+    checks: { rowPartsUnpaired: 1 },
+    coverage: {
+      parts: {},
+      failures: [{ part: 'rowPartsUnpaired', where: 'lists[block-7.clip]', reason: 'made up' }]
+    }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: card rows without paired texts 1 (rowPartsUnpaired lists[block-7.clip])'
+  )
+  assert.notDeepEqual(verdictOf(kit({ checks: { rowPartsUnpaired: 0 } })), ['todo', 'kit-incomplete'])
+})
+
+test('a counter whose every failure carries a reason in the kit does not hold it, and /ops sees the count as recorded', () => {
+  const explained = (n) =>
+    Array.from({ length: n }, (_, i) => ({
+      where: `links[block-4.link-${i + 1}]`,
+      reason: 'demo placeholder button',
+      by: null
+    }))
+  const k = kit({
+    checks: { deadControls: 3, phoneNotCallable: 0 },
+    checkAccepts: { deadControls: explained(3) },
+    coverage: { parts: {}, failures: [] }
+  })
+  assert.notDeepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const step = stepOf(roadOf(release(), world(contractsWith(k))))
+  assert.deepEqual(step.params.checksExplained, [
+    { check: 'deadControls', label: 'buttons with no address', count: 3, explained: 3 }
+  ])
+})
+
+test('a counter only partly explained holds the kit, worded with its explained share and the unexplained places', () => {
+  const k = kit({
+    checks: { deadControls: 3, mapLocationUnmapped: 0 },
+    checkAccepts: {
+      deadControls: [
+        { where: 'links[block-4.link-1]', reason: 'demo placeholder button', by: null },
+        { where: 'links[block-4.link-2]', reason: 'demo placeholder button', by: null }
+      ]
+    },
+    coverage: {
+      parts: {},
+      failures: [{ part: 'deadControls', where: 'links[block-4.link-3]', reason: 'made up' }]
+    }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const reason = String(stepOf(roadOf(release(), world(contractsWith(k)))).params.reason)
+  assert.equal(
+    reason,
+    'its self-checks fail: buttons with no address 3 (2 explained) (deadControls links[block-4.link-3])'
+  )
+})
+
+test('an explanation with an empty reason explains nothing', () => {
+  const k = kit({
+    checks: { deadControls: 1 },
+    checkAccepts: { deadControls: [{ where: 'links[block-4.link-1]', reason: '  ', by: null }] },
+    coverage: { parts: {}, failures: [] }
+  })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+})
+
+test('the planner reads every list row with its paired slots and the part it prints in', () => {
+  const row = {
+    index: 1,
+    slots: [{ id: 'block-7.10', type: 'image' }],
+    printsIn: 'DIV.card',
+    pairedSlots: ['block-7.11']
+  }
+  const seen = compactForPlanner({
+    blocks: [{ id: 'block-7', lists: [{ id: 'block-7.clip', rowPairsFrom: 'measured', rows: [row] }] }]
+  })
+  const list = seen.blocks[0].lists[0]
+  assert.equal(list.rowPairsFrom, 'measured')
+  assert.deepEqual(list.rows[0].pairedSlots, ['block-7.11'])
+  assert.equal(list.rows[0].printsIn, 'DIV.card')
 })
 
 test('a kit failing a coverage gate part is incomplete, and the step names the part and the slot', () => {

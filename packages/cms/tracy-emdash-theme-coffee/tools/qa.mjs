@@ -21,7 +21,7 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { pathToFileURL } from 'node:url'
 import { hash, contractHash, validateContract, casesFor, REVIEW_GATES, relativeFile } from './qa-contract.mjs'
-import { manifestFor, verifyDistribution } from './distribution.mjs'
+import { manifestFor, shownPath, verifyDistribution } from './distribution.mjs'
 const execFileP = promisify(execFile)
 const HERE = path.dirname(new URL(import.meta.url).pathname)
 
@@ -277,7 +277,7 @@ export async function main(args = process.argv.slice(2)) {
           )
         gates.distribution = {
           status: errors.length ? 'fail' : 'pass',
-          artifact: path.resolve(artifact),
+          artifact: shownPath(artifact),
           files: v.files,
           errors
         }
@@ -312,7 +312,7 @@ export async function main(args = process.argv.slice(2)) {
                 artifactHash: report.artifactHash,
                 origin: report.origin
               },
-              reusedFrom: path.resolve(opt('--reuse')),
+              reusedFrom: shownPath(opt('--reuse')),
               observations: prior.observations
             },
             null,
@@ -321,10 +321,10 @@ export async function main(args = process.argv.slice(2)) {
         )
         gates.browser = {
           ...assessObservations(contract, prior.observations),
-          reusedFrom: path.resolve(opt('--reuse'))
+          reusedFrom: shownPath(opt('--reuse'))
         }
         gates.routing = prior.audit
-          ? { ...assessAudit(prior.audit), reusedFrom: path.resolve(opt('--reuse')) }
+          ? { ...assessAudit(prior.audit), reusedFrom: shownPath(opt('--reuse')) }
           : { status: 'pending', reason: 'reused run has no audit' }
       } catch (error) {
         gates.browser = { status: 'fail', errors: [error.message] }
@@ -388,7 +388,7 @@ export async function main(args = process.argv.slice(2)) {
       gates.visual = existsSync(prior)
         ? {
             ...assessVisual(JSON.parse(readFileSync(prior, 'utf8')), contract),
-            reusedFrom: path.resolve(opt('--reuse'))
+            reusedFrom: shownPath(opt('--reuse'))
           }
         : { status: 'pending', reason: 'reused run has no visual pass' }
     } else if (args.includes('--visual')) {

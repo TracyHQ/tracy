@@ -5,7 +5,7 @@ import { shownParagraphs } from './orphan-text.mjs'
 import { isFactRole } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { imageIdOf, neutralKey } from './ids.mjs'
-import { canonicalPath, pathOfRoute } from './kit-paths.mjs'
+import { actionAddress, canonicalPath, pathOfRoute, siteAddress } from './kit-paths.mjs'
 import { slotsOfBlock } from './block-slots.mjs'
 import { buildFrames } from './kit-frames.mjs'
 import { itemListsOf } from './kit-item-lists.mjs'
@@ -13,6 +13,7 @@ import { measuredMin } from './min-evidence.mjs'
 import { matchRepeat, ruleOneMin } from './rows.mjs'
 import { addIconSlots } from './icon-slots.mjs'
 import { networkOf } from './site/helpers.mjs'
+import { sampleOf } from './text-format.mjs'
 
 const esc = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -22,6 +23,9 @@ const short = (s, n = 60) => {
     .trim()
   return t ? t.slice(0, n) : null
 }
+// A text slot's sample is the whole demo text (cut only past SAMPLE_CAP, a long article body): the writer aims its
+// length at it. Formatted samples (one part per line) are set later by formatTextSlots; an image path stays short.
+const sampleOfSlot = (x) => (x.type === 'text' ? sampleOf(x.sample).sample || null : short(x.sample))
 
 /**
  * The block's shown links, one per position (links repeating a label and an address are each kept), each with the
@@ -105,7 +109,7 @@ export function buildBlock({
           .filter((s) => String(s.group?.id ?? '') === gid)
           .map((s) => ({
             ...slotOut(s),
-            ...(s.type === 'image' || s.type === 'url' ? {} : { sample: short(s.sample) })
+            ...(s.type === 'image' || s.type === 'url' ? {} : { sample: sampleOfSlot(s) })
           }))
       }))
       const mapMax = g.max ?? g.items ?? null
@@ -179,7 +183,8 @@ export function buildBlock({
   const links = shownLinks(desk?.links, linkIcons).map((l, i) => {
     const target =
       canonicalPath(l.href, siteUrl, aliasHosts) ??
-      (/^(https?:|mailto:|tel:)/i.test(l.href ?? '') && !aliasHosts.some((h) => l.href.includes(h))
+      // A same-site address that is no page (a picture file) has no target, on whatever host it was read.
+      (/^(https?:|mailto:|tel:)/i.test(l.href ?? '') && siteAddress(l.href, siteUrl, aliasHosts) === null
         ? l.href
         : null)
     const icon = l.icon ?? null
@@ -193,11 +198,15 @@ export function buildBlock({
     const paired = pair ? neutralKey(pair.key) : null
     const linkId = paired && !usedIds.has(paired) ? paired : `${id}.link-${i + 1}`
     usedIds.add(linkId)
+    // An address of the site that runs a task (a question form opened in a modal, a print view) is no page: the link
+    // opens that action.
+    const action = target ? null : actionAddress(l.href, siteUrl, aliasHosts)
     return {
       id: linkId,
       position: l.position ?? i,
       label: l.label || null,
       target,
+      ...(action ? { opens: { kind: 'action', action } } : {}),
       ...(icon ? { icon: { ...icon, network } } : {})
     }
   })
@@ -212,7 +221,7 @@ export function buildBlock({
     label: c.label,
     target: null,
     element: c.tag,
-    opens: opensOf(c.target)
+    opens: opensOf(c.target, siteUrl, aliasHosts)
   }))
   labelLinks({ links: buttons, menuBlocks: {}, mapSlots: idx.map.slots, siteUrl, aliasHosts })
   for (const b of buttons) {
@@ -288,13 +297,13 @@ export function buildBlock({
   })
   const demoOwned = slots
     .filter((s) => isFactRole(s.role) || (id === 'header' && String(s.role ?? '').startsWith('business.')))
-    .map((s) => ({ id: neutralKey(s.key), role: s.role, sample: short(s.sample) }))
+    .map((s) => ({ id: neutralKey(s.key), role: s.role, sample: sampleOfSlot(s) }))
   for (const { slot, text, how } of shownContent)
     if (!demoOwned.some((d) => d.id === neutralKey(slot.key)))
       demoOwned.push({
         id: neutralKey(slot.key),
         role: slot.role ?? null,
-        sample: short(slot.sample),
+        sample: sampleOfSlot({ ...slot, type: 'text' }),
         kind: 'text',
         shownAs: short(text),
         matched: how
@@ -397,12 +406,13 @@ const pagesOf = (rec, widths) => new Set(widths.flatMap((w) => rec.widths[w]?.pa
  * page's settings, which no content map slot holds, says so), a tab or collapse panel, a menu heading's submenu, the
  * form it sends, or a script.
  */
-function opensOf(t) {
+function opensOf(t, siteUrl, aliasHosts) {
   if (!t) return null
-  if (t.kind === 'form') return { kind: 'form', action: t.action ?? null }
+  if (t.kind === 'form')
+    return { kind: 'form', action: siteAddress(t.action, siteUrl, aliasHosts) ?? t.action ?? null }
   if (t.kind === 'script') return { kind: 'script' }
   if (t.kind === 'submenu') return { kind: 'submenu' }
-  const out = { kind: t.kind === 'modal' ? 'modal' : 'panel', element: t.element }
+  const out = { kind: t.kind === 'modal' || t.kind === 'slide' ? t.kind : 'panel', element: t.element }
   if (t.shows === 'map')
     Object.assign(out, {
       shows: 'map',
@@ -419,7 +429,7 @@ const slotOut = (x) => ({
   role: x.role ?? null,
   type: x.type,
   ...(x.maxCharacters != null ? { maxCharacters: x.maxCharacters } : {}),
-  ...(x.type === 'url' ? {} : { sample: short(x.sample) })
+  ...(x.type === 'url' ? {} : { sample: sampleOfSlot(x) })
 })
 
 /** The path of the map page an entity opens, or null. */

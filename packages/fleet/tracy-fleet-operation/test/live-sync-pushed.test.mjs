@@ -703,3 +703,227 @@ test(
     assert.deepEqual(rows('SELECT COUNT(*) FROM wp_term_relationships', 'wd_ours'), [['0']])
   }
 )
+
+// ── #307: a record whose live delete the merge took leaves the id map and its copy-only rows ──────
+function joomlaMerge(names, map) {
+  const file = join(root, `${names.ours}-map.json`)
+  writeFileSync(file, JSON.stringify(map))
+  const r = spawnSync(
+    'python3',
+    [
+      ENGINE,
+      'db',
+      '--base-schema',
+      names.base,
+      '--ours-schema',
+      names.ours,
+      '--theirs-schema',
+      names.theirs,
+      '--work-schema',
+      `${names.ours}_work`,
+      '--platform',
+      'joomla',
+      '--prefix',
+      'jos_',
+      '--prefer',
+      'ours',
+      '--id-map',
+      file
+    ],
+    { encoding: 'utf8', env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) } }
+  )
+  assert.equal(r.status, 0, r.stderr + r.stdout)
+  return JSON.parse(r.stdout.trim().split('\n').at(-1))
+}
+const J_TABLES = `
+CREATE TABLE jos_content (id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, asset_id INT UNSIGNED DEFAULT 0,
+  title VARCHAR(255), alias VARCHAR(400), introtext MEDIUMTEXT, state TINYINT DEFAULT 1, catid INT UNSIGNED DEFAULT 2,
+  modified DATETIME);
+CREATE TABLE jos_history (version_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, item_id VARCHAR(50) NOT NULL,
+  version_note VARCHAR(255) DEFAULT '', save_date DATETIME, editor_user_id INT UNSIGNED DEFAULT 0, character_count INT DEFAULT 0,
+  sha1_hash VARCHAR(50) DEFAULT '', version_data MEDIUMTEXT, keep_forever TINYINT DEFAULT 0);
+CREATE TABLE jos_workflow_associations (item_id INT UNSIGNED NOT NULL, stage_id INT UNSIGNED NOT NULL,
+  extension VARCHAR(50) NOT NULL, PRIMARY KEY (item_id, extension));`
+const ARTICLE_1 = `INSERT INTO jos_content VALUES (1, 0, 'Tracy news', 'tracy-news', 'new by Tracy', 1, 2, '2026-11-02 10:00:00');
+  INSERT INTO jos_workflow_associations VALUES (1, 1, 'com_content.article');`
+const autoIncrement = (db, table) =>
+  Number(
+    rows(
+      `SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA='${db}' AND TABLE_NAME='${table}'`
+    )[0][0]
+  )
+
+test(
+  'Joomla: an article a push made and the live site deleted for good leaves the id map, keeps its number used, and takes its copy-only versions along (#307)',
+  opts,
+  () => {
+    // The base is the read after the push (the article there); the copy has it with the versions
+    // Tracy's own saves made; the live site deleted it with its rows, by hand.
+    schema('jd_base', `${J_TABLES} ${ARTICLE_1}`)
+    schema(
+      'jd_ours',
+      `${J_TABLES} ${ARTICLE_1}
+       INSERT INTO jos_history (version_id, item_id, save_date, version_data) VALUES
+         (5, 'com_content.article.1', '2026-11-02 09:00:00', '{}'), (6, 'com_content.article.1', '2026-11-02 10:00:00', '{}');`
+    )
+    schema('jd_theirs', J_TABLES)
+    assert.equal(autoIncrement('jd_ours', 'jos_content'), 2)
+    const answer = joomlaMerge(
+      { base: 'jd_base', ours: 'jd_ours', theirs: 'jd_theirs' },
+      { content: { 1: 1 } }
+    )
+    assert.equal(answer.ok, true)
+    assert.deepEqual(answer.kept, [], JSON.stringify(answer.kept))
+    assert.equal(
+      answer.tables.jos_content,
+      'from-theirs',
+      'the whole table is the live one, as in the report'
+    )
+    assert.deepEqual(rows('SELECT COUNT(*) FROM jos_content', 'jd_ours'), [['0']])
+    // The map no longer names the deleted article: a new copy article is the copy's own.
+    assert.equal(answer.idMap.content, undefined, JSON.stringify(answer.idMap))
+    assert.deepEqual(answer.idMapForgotten, [{ table: 'content', live: 1, copy: 1 }])
+    // Its number stays used: the copy's next article is 2, never 1 again.
+    assert.ok(autoIncrement('jd_ours', 'jos_content') >= 2, 'AUTO_INCREMENT went back')
+    // The versions Tracy's saves made went with it.
+    assert.deepEqual(rows('SELECT COUNT(*) FROM jos_history', 'jd_ours'), [['0']])
+    assert.equal(answer.counts.orphansRemoved, 2)
+  }
+)
+
+test(
+  'Joomla: an article the merge keeps (Tracy changed it, the live site deleted it) keeps its versions; its live number leaves the id map (#307)',
+  opts,
+  () => {
+    schema('jk_base', `${J_TABLES} ${ARTICLE_1}`)
+    schema(
+      'jk_ours',
+      `${J_TABLES} ${ARTICLE_1}
+     UPDATE jos_content SET introtext = 'edited by Tracy' WHERE id = 1;
+     INSERT INTO jos_history (version_id, item_id, save_date, version_data) VALUES (5, 'com_content.article.1', '2026-11-02 11:00:00', '{}');`
+    )
+    schema('jk_theirs', J_TABLES)
+    const answer = joomlaMerge(
+      { base: 'jk_base', ours: 'jk_ours', theirs: 'jk_theirs' },
+      { content: { 1: 1 } }
+    )
+    assert.equal(answer.ok, true)
+    assert.ok(
+      answer.kept.some((k) => k.reason === 'delete-modify' && k.table === 'jos_content'),
+      JSON.stringify(answer.kept)
+    )
+    // The live site has no record of it any more: Sync to live holds it by its kept place, never
+    // again refuses it as a live record.
+    assert.equal(answer.idMap.content, undefined)
+    assert.deepEqual(answer.idMapForgotten, [{ table: 'content', live: 1, copy: 1 }])
+    assert.deepEqual(rows('SELECT introtext FROM jos_content', 'jk_ours'), [['edited by Tracy']])
+    assert.deepEqual(rows('SELECT COUNT(*) FROM jos_history', 'jk_ours'), [['1']])
+    // The rows the live site deleted with it stay with the kept article (`dependents`).
+    assert.deepEqual(rows('SELECT item_id FROM jos_workflow_associations', 'jk_ours'), [['1']])
+  }
+)
+
+test(
+  'WordPress: a picture Tracy retitled and the live site deleted for good is kept with its meta, its terms and its files; a deleted post takes its copy-only revision and meta along (#223, #307)',
+  opts,
+  () => {
+    const picture = (title) =>
+      `${wpRow({
+        ID: 18,
+        post_date: '2026-11-02 15:12:26',
+        post_title: title,
+        post_status: 'inherit',
+        comment_status: 'open',
+        post_name: 'rt-pic',
+        guid: `${LIVE}/rt-pic/`,
+        post_type: 'attachment',
+        post_mime_type: 'image/png'
+      })}
+       INSERT INTO wp_postmeta VALUES (50, 18, '_wp_attached_file', '2026/11/rt-pic.png'),
+         (51, 18, '_wp_attachment_metadata', 'a:3:{s:4:"file";s:18:"2026/11/rt-pic.png";s:5:"sizes";a:1:{s:9:"thumbnail";a:1:{s:4:"file";s:18:"rt-pic-150x150.png";}}s:14:"original_image";s:15:"rt-pic-full.png";}');`
+    const post = `${wpRow({
+      ID: 30,
+      post_date: '2026-11-01 10:00:00',
+      post_content: '<p>Old</p>',
+      post_title: 'Old news',
+      post_name: 'old-news',
+      guid: `${LIVE}/old-news/`,
+      post_type: 'post'
+    })}
+       INSERT INTO wp_postmeta VALUES (60, 30, 'subtitle', 'A subtitle');
+       INSERT INTO wp_term_relationships VALUES (30, 1, 0);`
+    schema('wk_base', SITE(LIVE, `${picture('rt-pic')} ${post}`))
+    schema(
+      'wk_ours',
+      SITE(
+        COPY,
+        `${picture('RT picture')} ${post}
+         ${wpRow({
+           ID: 31,
+           post_date: '2026-11-02 12:00:00',
+           post_content: '<p>Old</p>',
+           post_title: 'Old news',
+           post_name: '30-revision-v1',
+           guid: 'HOME/30-revision-v1/',
+           post_type: 'revision',
+           post_status: 'inherit',
+           post_parent: 30
+         })}
+         INSERT INTO wp_postmeta VALUES (61, 30, '_edit_last', '1');`
+      )
+    )
+    schema('wk_theirs', SITE(LIVE, ''))
+    const answer = wpMerge({ base: 'wk_base', ours: 'wk_ours', theirs: 'wk_theirs' }, null, {})
+    assert.equal(answer.ok, true)
+    // The picture: Tracy changed its title, so it is kept, whole.
+    assert.deepEqual(
+      answer.kept.map((k) => [k.table, k.reason]),
+      [['wp_posts', 'delete-modify']],
+      JSON.stringify(answer.kept)
+    )
+    assert.deepEqual(rows('SELECT post_title FROM wp_posts WHERE ID = 18', 'wk_ours'), [['RT picture']])
+    assert.deepEqual(
+      rows('SELECT meta_key FROM wp_postmeta WHERE post_id = 18 ORDER BY meta_id', 'wk_ours'),
+      [['_wp_attached_file'], ['_wp_attachment_metadata']]
+    )
+    assert.deepEqual(answer.keepFiles, [
+      'wp-content/uploads/2026/11/rt-pic-150x150.png',
+      'wp-content/uploads/2026/11/rt-pic-full.png',
+      'wp-content/uploads/2026/11/rt-pic.png'
+    ])
+    // The post nobody changed goes, with its terms and meta, and with the revision and meta only the
+    // copy had.
+    assert.deepEqual(rows('SELECT ID FROM wp_posts WHERE ID IN (30, 31)', 'wk_ours'), [])
+    assert.deepEqual(rows('SELECT COUNT(*) FROM wp_postmeta WHERE post_id = 30', 'wk_ours'), [['0']])
+    assert.deepEqual(rows('SELECT COUNT(*) FROM wp_term_relationships WHERE object_id = 30', 'wk_ours'), [
+      ['0']
+    ])
+    assert.equal(answer.counts.orphansRemoved, 2)
+  }
+)
+
+test(
+  "Joomla: a site already stuck — a new copy article under a deleted one's number — is put right at its next sync (#307)",
+  opts,
+  () => {
+    // The delete was taken by an older sync: the base no longer has article 1, and the copy has a new
+    // article that got number 1 again, which the map still names as the live site's.
+    schema('js_base', J_TABLES)
+    schema(
+      'js_ours',
+      `${J_TABLES} INSERT INTO jos_content VALUES (1, 0, 'Tracy news 2', 'tracy-news-2', 'again', 1, 2, '2026-11-03 09:00:00');`
+    )
+    schema('js_theirs', J_TABLES)
+    const answer = joomlaMerge(
+      { base: 'js_base', ours: 'js_ours', theirs: 'js_theirs' },
+      { content: { 1: 1 } }
+    )
+    assert.equal(answer.ok, true)
+    assert.equal(answer.idMap.content, undefined, JSON.stringify(answer.idMap))
+    assert.deepEqual(
+      rows('SELECT title FROM jos_content', 'js_ours'),
+      [['Tracy news 2']],
+      'the new article stays'
+    )
+  }
+)

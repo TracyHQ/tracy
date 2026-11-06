@@ -10,7 +10,7 @@
 //                  (the tab colour; the tile ground for a tile icon). Fails under MIN_CONTRAST_SHARE (0.5).
 // pass = bboxShare >= 0.2 and contrastShare >= 0.5 on both tabs.
 import sharp from 'sharp'
-import { contrastHex, hex } from './colour-math.js'
+import { contrastHex, hex } from '../lib/brand-accent/colour-math.js'
 
 export const TABS = ['#ffffff', '#202124']
 export const MIN_BBOX = 0.2

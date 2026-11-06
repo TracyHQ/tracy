@@ -876,7 +876,8 @@ describe('F15 — scopes: fast-gate, targeted-debug, full', () => {
     full = await visual(clean, c, ['--fast-gate', fast.out])
     assert.equal(full.code, 0, full.log.slice(-1500))
     assert.equal(full.report.scope.kind, 'full')
-    assert.equal(full.report.fastGate.run, path.resolve(fast.out))
+    // published in VERIFICATION.json: the run is named by its last segment, never by this machine's path
+    assert.equal(full.report.fastGate.run, path.basename(path.resolve(fast.out)))
     assert.equal(full.report.pages.length, 3, 'full measures every page')
     const c2 = staged()
     c2.design.rules[0].styles['desktop-light']['font-weight'] = '700'

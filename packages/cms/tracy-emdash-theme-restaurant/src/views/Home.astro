@@ -26,6 +26,7 @@ import { stampBlocks } from '@/lib/stamps'
 import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import { BLOG_SIDEBAR, blogPosts, loadPosts } from '@/lib/posts'
+import { liveBlocks, livePosts } from '@/lib/link-gate'
 import { getEmDashEntry, getTaxonomyTerms } from 'emdash'
 
 interface Props {
@@ -51,11 +52,19 @@ const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 
 const $hero = stampFor(Astro.request, 'hero', hero ? { id: hero.id, slug: hero.slug } : null)
 const $off = stampFor(Astro.request, 'features_intro', offers ? { id: offers.id, slug: offers.slug } : null)
 // the front page lists the posts Joomla flags as featured, in its own order (enrich-model.mjs carries both)
-const posts = blogPosts(all)
+const posts = (await livePosts(Astro.request, locale, blogPosts(all)))
   .filter((p) => p.featured)
   .sort((a, b) => a.featuredOrder - b.featuredOrder)
-const albums = all.filter((p) => p.category?.slug === 'gallery')
+const albums = await livePosts(
+  Astro.request,
+  locale,
+  all.filter((p) => p.category?.slug === 'gallery')
+)
 const categories = (cats as any[]).filter((c) => BLOG_SIDEBAR.includes(c.slug))
+// the intro's own links go through the gate too (a link to an unticked page keeps its words, plain)
+const heroIntro = hero
+  ? await liveBlocks(Astro.request, locale, stampBlocks($hero, 'hero_intro', hero.hero_intro))
+  : []
 const heroComponents = $hero.owner ? { block: ProseBlock, listItem: ProseListItem } : {}
 const heroLines = hero ? lines(hero.hero_heading) : []
 const slides: any[] = slideshow?.items ?? []
@@ -77,7 +86,7 @@ const dateTag = ui(locale).tag
 					<div class="rs-hero-content">
 						<h1 class="rs-display" {...$hero('hero_heading')}>{heroLines.map((l, i) => (i === 0 && heroLines.length > 1 ? <><span class="rs-mark">{l}</span>{' '}<br /></> : <>{l}{' '}{i < heroLines.length - 1 && <br />}</>))}</h1>
 						<div class="rs-hero-stars" aria-hidden="true">★★★★★</div>
-						<div class="rs-hero-intro" {...$hero('hero_intro')}><PortableText value={stampBlocks($hero, 'hero_intro', hero.hero_intro)} components={heroComponents} /></div>
+						<div class="rs-hero-intro" {...$hero('hero_intro')}><PortableText value={heroIntro} components={heroComponents} /></div>
 						{mediaUrl(hero.hero_img) && <div class="rs-hero-img" style={`--hero-img-url:url('${mediaUrl(hero.hero_img)}')`}><img src={mediaUrl(hero.hero_img)!} alt="" width="222" height="181" loading="lazy" decoding="async" {...$hero('hero_img')} /></div>}
 					</div>
 				</div>

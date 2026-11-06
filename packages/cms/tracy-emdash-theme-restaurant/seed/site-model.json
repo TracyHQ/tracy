@@ -1366,7 +1366,7 @@
           },
           {
             "collection": "timeline",
-            "entry": "our-history"
+            "entry": "our-history-timeline"
           }
         ]
       }
@@ -3033,7 +3033,7 @@
     },
     {
       "type": "timeline",
-      "slug": "our-history",
+      "slug": "our-history-timeline",
       "locale": "en",
       "status": "published",
       "values": {

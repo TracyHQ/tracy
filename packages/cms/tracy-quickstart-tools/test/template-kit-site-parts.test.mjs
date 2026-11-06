@@ -270,3 +270,43 @@ test('navigation groups: every menu block of the map, joined with what its colum
   )
   assert.equal(menuNavigationGroups({}, read).errors[0].field, 'site.navigationGroups')
 })
+
+test('a page title reading keeps the block that printed it and whether it is hidden from the eye', () => {
+  const read = h1Source({
+    h1s: [{ text: 'Swim with us', block: 'block-9', clipped: true }],
+    slotOf: () => ({ id: 'block-4.0' })
+  })
+  assert.equal(read.block, 'block-9')
+  assert.equal(read.clipped, true)
+  assert.equal(h1Source({ h1s: [{ text: 'Welcome' }] }).block, undefined)
+})
+
+test('a footer column of social profile links holds the social profiles; an article view without a body class', () => {
+  const reads = [
+    {
+      pageId: 'page-home',
+      slug: 'home',
+      navGroups: [
+        {
+          block: 'module-7',
+          heading: null,
+          links: [
+            { label: 'FACEBOOK', href: 'https://www.facebook.com/demo' },
+            { label: 'PINTEREST', href: 'https://www.pinterest.com/demo/' }
+          ]
+        }
+      ]
+    }
+  ]
+  const { navigationGroups: g, errors } = buildNavigationGroups(reads, {
+    listingTitles: new Map(),
+    menuLabels: new Set(['home']),
+    idOf
+  })
+  assert.deepEqual([g[0].holds, errors.length], ['socialProfiles', 0])
+  const pages = [
+    { pageId: 'page-blog', path: '/blog', bodyClass: '', articleView: false, blockCount: 3 },
+    { pageId: 'page-about', path: '/about', bodyClass: '', articleView: true, blockCount: 4 }
+  ]
+  assert.equal(articleLayoutOf(pages).pageId, 'page-about')
+})

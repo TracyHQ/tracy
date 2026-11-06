@@ -24,7 +24,8 @@ import {
   templateFolderOf,
   uploader,
   variantFor
-} from './brand-joomla-places.js'
+} from '../../lib/brand-joomla-places.js'
+import { versionAtLeast } from '../../lib/plugin-version.js'
 import { writeDemoAuthorName } from './brand-joomla-author.js'
 import { writeT3Styles } from './brand-joomla-t3.js'
 import { writeT4Profiles } from './brand-joomla-t4.js'
@@ -41,19 +42,9 @@ const NOT_SHOWN = Object.freeze({
   logo: 'this design does not show a logo yet',
   favicon: 'this design does not show a favicon yet'
 })
-/** `x.y.z` (a leading `v` and a suffix allowed) as three numbers, or null. */
-function semverOf(version) {
-  const m = /^v?(\d+)\.(\d+)\.(\d+)/.exec(String(version ?? ''))
-  return m === null ? null : [Number(m[1]), Number(m[2]), Number(m[3])]
-}
-
 /** True when `version` is `since` or later; null when `version` cannot be read. */
 export function atLeast(version, since = SITE_IDENTITY_SINCE) {
-  const have = semverOf(version)
-  const want = semverOf(since)
-  if (have === null || want === null) return null
-  for (let i = 0; i < 3; i += 1) if (have[i] !== want[i]) return have[i] > want[i]
-  return true
+  return versionAtLeast(version, since)
 }
 
 /** True when a refusal says the plugin does not know the action. */

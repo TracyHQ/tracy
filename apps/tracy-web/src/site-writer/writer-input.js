@@ -6,14 +6,22 @@
 //   evidence } where `evidence` lists the quotes the fact was read from; and the full text of every review the plan
 //   quotes (a `brief.reviews[]` entry whose id the plan names, or that names a cited fact as its own).
 // - From the kit, a slim view of every block the plan uses (every block decision but "hide", on shared blocks and
-//   kept pages): its look text and, per text slot, id, role, type, maxCharacters, sample, paragraphs and bullets; per
+//   kept pages): its look text and, per text slot, id, role, type, maxCharacters, a preview of the sample (its first
+//   SAMPLE_PREVIEW characters), demoChars and shape (lib/site-copy/slot-shape.js: the demo's lengths, which the copy
+//   check judges against; 2026-11-04), paragraphs and bullets, and `inline`, a note naming the words the demo draws in the
+//   accent colour when it marks some with a span (lib/site-copy/inline-emphasis.js); per
 //   list, its row slots and the slots of demo rows the row slots do not name. Also the footer column headings
 //   (the kit's navigation group of each `site.footerMenu[].group`) and the two name slots the brand step hands over
 //   (`kit.site.nameSlots` printed at the document title and the meta description).
 // - From the content map (when the template has one), the main menu dropdown slots the writer writes, grouped under
 //   their parent's label slot (main-menu.js).
+// - Every plan label slot (plan-labels.js): the planner's label as a suggestion, its `says`, and from the kit the demo
+//   sample, role, limit and where the slot prints, so the writer keeps the label or rewrites it (2026-11-04).
 // No image: the writer reads the block look text instead.
-import { mainMenuOf } from './main-menu.js'
+import { mainMenuOf } from '../lib/site-copy/main-menu.js'
+import { emphasisNoteOf } from '../lib/site-copy/inline-emphasis.js'
+import { demoCharsOf, slotShape } from '../lib/site-copy/slot-shape.js'
+import { planLabelSlots } from './plan-labels.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
@@ -76,14 +84,40 @@ function quotedReviews(plan, brief, factIds) {
     .map((r) => ({ id: r.id ?? null, text: r.text ?? r.quote ?? r.body ?? '' }))
 }
 
+/** Slots the page prints as one sentence, with what the demo prints there; input data, the prompt is not touched. */
+const SENTENCE_NOTE =
+  'These slots print run together as one sentence, in this order, with nothing added between them. Write them so the joined text reads as one sentence: only the first starts with a capital unless a word needs one. A slot under endWithASpace must end with a space; every other space between them is kept for you.'
+const slimSentences = (groups) =>
+  arr(groups).map((g) => ({
+    slots: g.slots,
+    demoPrints: g.sample,
+    note: SENTENCE_NOTE,
+    endWithASpace: arr(g.slots).filter((_, i) => arr(g.joins)[i] === ' ' && !arr(g.kept)[i])
+  }))
+
+/** The writer reads the demo's length in `demoChars` and `shape`; of the sample it needs only enough to see what kind of text it is. */
+export const SAMPLE_PREVIEW = 160
+const preview = (sample) => {
+  const text = typeof sample === 'string' ? sample : ''
+  return text.length > SAMPLE_PREVIEW ? `${text.slice(0, SAMPLE_PREVIEW).trimEnd()}…` : text
+}
+const demoCharsFor = (s) => {
+  const { total, lead, bullets } = demoCharsOf(s)
+  return { total, lead, bullets }
+}
+
 const slimSlot = (s) => ({
   id: s.id,
   role: s.role ?? null,
   type: s.type ?? null,
   maxCharacters: s.maxCharacters ?? null,
-  sample: s.sample ?? '',
+  sample: preview(s.sample),
+  demoChars: demoCharsFor(s),
+  shape: slotShape(s),
   paragraphs: s.paragraphs ?? 0,
-  bullets: s.bullets ?? 0
+  bullets: s.bullets ?? 0,
+  ...(arr(s.pageTitleOf).length ? { pageTitleOf: s.pageTitleOf } : {}),
+  ...(emphasisNoteOf(s) ? { inline: emphasisNoteOf(s) } : {})
 })
 const textSlots = (slots) =>
   arr(slots)
@@ -108,7 +142,8 @@ function slimBlock(b) {
           .map((r) => ({ index: r.index ?? null, slots: textSlots(r.slots).filter((s) => !named.has(s.id)) }))
           .filter((r) => r.slots.length)
         return { id: l.id, rowSlots, ...(rows.length ? { rows } : {}) }
-      })
+      }),
+    ...(arr(b.sentences).length ? { sentences: slimSentences(b.sentences) } : {})
   }
 }
 
@@ -188,6 +223,7 @@ export function writerInput({ plan, brief, kit, contentMap = null }) {
       .map((id) => slimBlock(blocks.get(id))),
     footerHeadings: footerHeadings(plan, kit),
     nameSlots: nameSlots(kit),
+    labels: planLabelSlots({ plan, kit, contentMap }),
     mainMenu: mainMenuSection(mainMenuOf({ plan, kit, contentMap }))
   }
 }

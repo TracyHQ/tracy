@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import test from 'node:test'
 
 import { createCallMemory } from '../src/host/call-memory.mjs'
-import { decodeEntities, foldForMatch } from '../src/host/html-units.mjs'
+import { decodeEntities, foldForMatch, withoutComments } from '../src/host/html-units.mjs'
 import { latestCustomerWords } from '../src/host/prompter.mjs'
 import { renderedText } from '../src/host/rendered-words.mjs'
 import { RECEIPT_MAX_BYTES, REPLACE_NEXT, dialDigits, planReplace } from '../src/host/replace.mjs'
@@ -548,9 +548,14 @@ test('followLink: a trunk prefix in brackets after the country code is never dia
 
 // ── The block grammar: what WordPress's own parser reads back ───────────────────────────────────
 
-/** `WP_Block_Parser::next_token`'s delimiter pattern (wp-includes/class-wp-block-parser.php, WordPress */
+/**
+ * `WP_Block_Parser::next_token`'s delimiter pattern (wp-includes/class-wp-block-parser.php, WordPress).
+ * PHP's attrs loop `(?:[^}]+|}+(?=})|(?!}\s+\/?-->).)*+` is possessive; JS has no possessive, and the
+ * literal copy backtracked exponentially. One character per turn reads the same: a `}` belongs to the
+ * attrs unless `\s+/?-->` follows it (a `}` followed by `}` never is), and the loop stops at the same place.
+ */
 const WP_TOKEN =
-  /<!--\s+(\/)?wp:([a-z][a-z0-9_-]*\/)?([a-z][a-z0-9_-]*)\s+(\{(?:(?:[^}]+|\}+(?=\})|(?!\}\s+\/?-->)[\s\S])*)?\}\s+)?(\/)?-->/g
+  /<!--\s+(\/)?wp:([a-z][a-z0-9_-]*\/)?([a-z][a-z0-9_-]*)\s+(\{(?:[^}]|\}(?!\s+\/?-->))*\}\s+)?(\/)?-->/g
 
 /** @param {string} body */
 function wpBlocks(body) {
@@ -2028,7 +2033,7 @@ function contentOf(post) {
     url: `https://w.test/${post.post_name === 'home' ? '' : `${post.post_name}/`}`,
     revision: `r-${post.ID}`,
     native: [{ kind: 'post', id: post.ID }],
-    bodyHtml: raw.replace(/<!--[\s\S]*?-->/g, ''),
+    bodyHtml: withoutComments(raw),
     fields: [],
     blocks: [{ id: 'b-named', key: 'named', fields, items: [] }]
   }

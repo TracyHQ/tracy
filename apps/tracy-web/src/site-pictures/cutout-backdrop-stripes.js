@@ -1,6 +1,6 @@
 // The chevron bands of a cut-out's demo backdrop (cutout-backdrop.js): bands in the accent's hue across the disc,
 // measured on the disc's two sides away from the figure in the middle. Units as in cutout-backdrop.js.
-import { hexOf, rgbOf } from './icons/icon-ink.js'
+import { hexOf, rgbOf } from '../lib/picture-paint/icons/icon-ink.js'
 
 const round3 = (v) => Math.round(v * 1000) / 1000
 const hueOf = (r, g, b) => {

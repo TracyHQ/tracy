@@ -57,7 +57,9 @@ function minutesOf(clock, meridiem) {
 
 /** `5:00 – 10:00 PM` → '1020-1320'; the start inherits the end's AM/PM when it has none, as Google writes it. */
 function rangeOf(text) {
-  const m = /^(\S+?)\s*(am|pm)?\s*[-–—]\s*(\S+?)\s*(am|pm)?$/i.exec(text.trim())
+  // A clock holds no dash (`minutesOf` refuses one), so neither side reads past the one between them: a side that
+  // could hold dashes tried every dash of a long line as the middle one.
+  const m = /^([^\s\-–—]+?)\s*(?:(am|pm)\s*)?[-–—]\s*([^\s\-–—]+?)\s*(am|pm)?$/i.exec(text.trim())
   if (!m) return null
   const endMer = m[4]?.toLowerCase()
   const startMer = m[2]?.toLowerCase() ?? endMer
@@ -66,6 +68,31 @@ function rangeOf(text) {
   if (start === null || end === null) return null
   if (end === 0 || end === 1439) end = 1440
   return `${start}-${end}`
+}
+
+/**
+ * A trimmed hours line split into its days and the rest, as `/^([A-Za-z][A-Za-z,\- ]*?)(?::\s*|\s+)(.+)$/` splits
+ * it (`[whole, days, rest]`, or null), read in one pass: the regex went over a long run of spaces once for each
+ * place in it.
+ * @param {string} line
+ * @returns {[string, string, string] | null}
+ */
+function dayAndBody(line) {
+  if (!/^[A-Za-z]/.test(line)) return null
+  // the rest (`.+`) holds no line break
+  const lastBreak = Math.max(...['\n', '\r', '\u2028', '\u2029'].map((c) => line.lastIndexOf(c)))
+  let restAt = -1
+  for (let i = 1; i < line.length; i++) {
+    const c = line[i]
+    const from = c === ':' ? i + 1 : /\s/.test(c) ? i : -1
+    if (from >= 0) {
+      // the white space the separator takes; one run is walked once, however many day characters end on it
+      if (restAt < from) for (restAt = from; restAt < line.length && /\s/.test(line[restAt]); ) restAt++
+      if (restAt < line.length && restAt > lastBreak) return [line, line.slice(0, i), line.slice(restAt)]
+    }
+    if (!/[A-Za-z,\- ]/.test(c)) return null
+  }
+  return null
 }
 
 /**
@@ -81,7 +108,7 @@ export function weekOf(lines) {
     if (typeof raw !== 'string') return null
     const line = raw.replace(/[   ]/g, ' ').trim()
     // Google: "Monday: …"; schema.org: "Mo-Fr 09:00-17:00".
-    const m = /^([A-Za-z][A-Za-z,\- ]*?)(?::\s*|\s+)(.+)$/.exec(line)
+    const m = dayAndBody(line)
     if (!m) return null
     const days = daysOf(m[1].replace(/\s+/g, ''))
     if (!days) return null

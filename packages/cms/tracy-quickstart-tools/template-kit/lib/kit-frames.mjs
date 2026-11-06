@@ -89,21 +89,28 @@ export function buildFrames({ blockId, slots, evidence, classes, review, widths,
   const desk = widths[0]
   const one = (f) => {
     const ev = evidence[f.id]
-    const m = ev?.widths?.[desk]?.found && ev.widths[desk].shown ? ev.widths[desk] : seen(ev)
+    const m =
+      ev?.widths?.[desk]?.found && ev.widths[desk].shown
+        ? ev.widths[desk]
+        : (Object.values(ev?.widths ?? {}).find((x) => x.found && x.shown) ?? seen(ev))
     const kind = kindOf(m)
     const measuredAt = Object.entries(ev?.widths ?? {}).filter(([, x]) => x.hidden)
     const checks = Object.fromEntries(measuredAt.map(([w, x]) => [w, x.hidden.check]))
     const auto = canHideOf(Object.values(checks))
     const measuredAs = measuredAt.find(([, x]) => x.hidden.measuredAs)?.[1].hidden.measuredAs ?? 'single'
     const human = review?.[f.id]
+    // The size at desktop; a frame the template shows only at a narrower width (a phone logo) takes its size
+    // there, named in `sizeAt`.
+    const sizedAt = ev?.widths?.[desk]?.shown
+      ? desk
+      : (widths.find((w) => ev?.widths?.[w]?.shown && ev.widths[w].box?.width) ?? null)
+    const sized = sizedAt ? ev.widths[sizedAt].box : null
     return {
       id: f.id,
-      shape: shapeOfBox(
-        ev?.widths?.[desk]?.shown ? ev.widths[desk].box?.width : null,
-        ev?.widths?.[desk]?.box?.height
-      ),
-      width: ev?.widths?.[desk]?.shown ? ev.widths[desk].box.width : null,
-      height: ev?.widths?.[desk]?.shown ? ev.widths[desk].box.height : null,
+      shape: shapeOfBox(sized?.width, sized?.height),
+      width: sized ? sized.width : null,
+      height: sized ? sized.height : null,
+      ...(sizedAt && sizedAt !== desk ? { sizeAt: Number(sizedAt) } : {}),
       kind,
       canHide: typeof human?.canHide === 'boolean' ? human.canHide : auto,
       twinOf: null,
@@ -178,8 +185,18 @@ export function buildFrames({ blockId, slots, evidence, classes, review, widths,
         f.classReason = why
       } else if (f.kind === 'photo' || f.kind === 'cutout') f.faces = null
     }
+    // A picture field the demo leaves empty prints nothing: the demo already shows the block with this frame
+    // empty (canHide), and there is no picture to size or classify (no kind, no width).
+    if (!f.picture) {
+      f.emptyInDemo = true
+      if (f.canHide == null) {
+        f.canHide = true
+        f.hideEvidence = { judgedBy: 'the demo leaves the picture field empty: the block shows without it' }
+      }
+      continue
+    }
     if (!f.kind) missing(f.id, 'kind', 'the picture was not found shown in the block on any captured page')
-    if (f.width == null) missing(f.id, 'width', 'the frame is not shown at desktop width')
+    if (f.width == null) missing(f.id, 'width', 'the frame is not shown at any captured width')
     if (f.canHide == null)
       missing(
         f.id,

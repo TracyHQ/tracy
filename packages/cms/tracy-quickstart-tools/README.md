@@ -198,6 +198,11 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   User) is found by its page's last path part against the dump's accounts (`contentUsers`: login and display name
   only; `--report-only` with `--db-dump` records both too); a page tied to no shipped user and `?start=` pages declare
   nothing (`content-coverage/lib/author-lists.mjs`).
+- **Tag pages (`--fit`).** A tag link on an item opens the page of every item with that tag, which has no menu item
+  of its own; the crawl ties it to the tag twice: its last path part is the tag's alias and its heading is the tag's
+  title. It gets `itemLists["<tag>.items"]` (`block` and `page` null, `pagePath`, `source.kind: "tag"`; `max` the
+  demo count). Every article is a candidate, as on the featured page; only the page body counts. A menu page showing
+  several tags and `?start=` pages declare nothing (`content-coverage/lib/tag-lists.mjs`).
 - **The stand's own accounts.** With `--db-dump`, the audit never follows a link to the author page of a user the
   release database lacks (a local admin added to the stand) and drops that user's entry from author lists
   (`content-coverage/lib/stand-users.mjs`).
@@ -206,7 +211,9 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   lock's `lft`, else `item-id`: depth first, siblings by id) and `items[]`: `item`, `level`, `parent`, `type`,
   `label` (`slot`, `text`, `maxCharacters` with `limitFrom` `slot-fit` or `store`) and `target` (`kind` `page`,
   `alias`, `link`, `url`, `heading`, `separator` or `none`; `page`, `path`, `link` or `url`; `alive` and `status`
-  from the crawl, `alive: null` when the crawl did not reach it). Source: `content-coverage/lib/menu-blocks.mjs`.
+  from the crawl, `alive: null` when the crawl did not reach it). Only items a visitor who has not signed in sees
+  (access level public or guest) are listed: "Your Profile" or "Site Settings" of a user menu are never drawn on the
+  pages a site build plans. Source: `content-coverage/lib/menu-blocks.mjs`.
 - **Page hygiene, same crawl.** Things a customer must never see, one line per distinct problem in
   the `hygiene` list of `content-coverage.json` (`kind`, `value`, `where`, `visible`, `pages`,
   `firstPage`), and a Page hygiene card in `report.html`: `language-constant` (a raw Joomla key such
@@ -266,6 +273,32 @@ are allowed, the audit version a file needs: 1.1.0 measures page hygiene, so a 1
 file measured on another map or lock is stale and counts as not measured. A release already
 published only warns.
 
+### `content-coverage/resample.mjs`: the inline markup of the samples, from the demo database
+
+A whole-unit text slot (`capture-contract.py --whole-units`: a title merged from several text pieces) captured before
+`--inline-markup` holds its words only: `More<br><span>Blogs</span>` became `More Blogs`, so the kit cannot tell that
+the template draws "Blogs" on a second line in the accent colour. This reads each text slot's stored value from the
+quickstart's database dump (the installer's `installation/sql/mysql/custom.sql` or a `database.sql[.gz]`, with the
+UPDATE and DELETE fixes appended after its INSERTs applied), takes the markup of the slot's element
+(`tracy-joomla-quickstart/scripts/unit-markup.php`, which loads HTML as the plugin's helper does) and counts
+`inlineMarkupLost`: a text slot whose stored value marks words inline (`br`, `span`, `strong`, `em`, `b`, `i`) while
+its sample marks none. No stand, no browser; it needs `php`.
+
+```
+node packages/cms/tracy-quickstart-tools/content-coverage/resample.mjs \
+  --contract <contract dir> --db-dump <custom.sql | database.sql[.gz]> [--write]
+```
+
+With `--write` it rewrites only the `sample` of the slots whose markup reads as the same words
+(`More((br/)) ((span))Blogs((/span))`; keys, roles, groups, limits and fits stay) and writes the `inlineMarkup` block
+(`checked`, `lost`, `lostSlots`, `mismatched`, the dump's name and sha256) into `content-coverage.json`. A coverage
+file that was current for the map is restamped to the new map (`restampedFrom` names the old digest): the audit
+compares samples by their words, so a new audit can only match more. A slot whose stored value is not its words is
+named (`mismatched`) and never written. A full audit given `--db-dump` measures the same block; without one it carries
+the previous block while the map is unchanged. Then settle the kit: `template-kit/cli.mjs samples` and
+`slot-roles --only sentences`, then `pack`. Exit: 0 nothing lost, 1 a slot still loses its markup or a stored value
+is not its words, 2 usage or file error. `test/content-coverage-inline-markup.test.mjs` covers it.
+
 ### `content-coverage/verify-viewer.mjs` — look at the content map on the real pages
 
 A page for a person to check a content map with their eyes, run after `--fit` has written the map. One block
@@ -306,6 +339,32 @@ back as it was (fixed CMS text, below). One file, `template-kit.json`, beside
 `images/`, in CMS-neutral words: a block is `block-<n>`, `header` or `body-<page>`; the content map key stays only
 in a block's `source`.
 
+### Page titles, sentences and stored fields
+
+The coverage gate (run by `cli.mjs assemble`) settles three things from what the page prints; none moves a slot, a list or a role.
+
+- `pages[].titleSlot`: the one slot that prints the page title. Part `pageTitleSlots` fails a page with none or with a tie.
+- `blocks[].sentences`: pieces of one stored field in one element, printed as one sentence around a highlight. The copy check (W12) reads them joined.
+- `blocks[].buttons`: every button a visitor can see, with `labelSlot`, `urlSlot`, `label`, `link`, `target`. Each block's button stands here even when a link's `labelId` names another block's field of the same words. A write step hides one no file speaks for.
+- `site.contentPages[]`: how the template presents a content page: the category menu item its item pages are opened under (`menuItem`, `route`, `layout`, `pages`). A page the write step creates takes that route.
+- `storedFields[]`: every text, url or image field the template stores, with `listedIn` (its block, or null). `coverage.fields` reports `notListed` and `drivingSeveralControls`, and does not block.
+
+What a stored field really drives is measured on a **throwaway restored site**, never one in use: the command writes a marker into each field, reads the pages, and puts the value back.
+
+```
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs measure-fields --site <url> --out <kit dir> \
+  --contract <contract dir> --db-command "<database client prefix>" --scratch-site
+node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs slot-roles --out <kit dir> --contract <contract dir>
+```
+
+`samples --out <kit dir> --contract <contract dir>` gives every text slot of a written kit its whole demo text and
+`demoChars` and `inline` from the content map (kits made before 3.1.0 carry samples cut at their first words); `slot-roles --only
+sentences` settles only the sentence groups. A content map captured without `--inline-markup` is resampled first
+(`content-coverage/resample.mjs --write`): the kit can only list the inline marks the map's samples hold. Every settle command stamps the kit's `tool` (version in
+`template-kit/lib/version.mjs`) and `settledAt`; none touches an image, so an approval stays valid.
+
+Run `pack` after. Without a measurement a tie between two slots of a page stays a failure of `pageTitleSlots`, by name.
+
 ### Make a kit for a new template
 
 1. Restore the template's quickstart into a local site (skill `tracy-dev:restore`); never use the public demo.
@@ -329,6 +388,18 @@ in a block's `source`.
    true|false, "reason": "..."}}`), then `cli.mjs assemble ...`. A template gap that is right by design is
    accepted in `gap-accepts.json` (`{"<gap id>": {"reason": "...", "by": "<login>"}}`, one entry per gap id, never
   by kind, so a new dead link is never accepted unseen); the kit never accepts one.
+   A reach or row pair failure the template keeps on purpose (a demo placeholder button such as a pricing "select
+   plan", a row of technique chips the planner decides link by link) is explained in `reach-accepts.json`
+   (`lib/check-accepts.mjs`): a list of `{"check": "deadControls", "where": "links[block-20.link-1]", "reason": "...",
+   "by": "<login>"}`, where `check` is one of `deadControls`, `mapLocationUnmapped`, `phoneNotCallable`,
+   `rowPartsUnpaired`, `where` is the `where` the counter writes in `coverage.failures` (a `*` matches any run of
+   characters, `links[block-31.link-*]` for a row of chips) and `by` is optional. `assemble` and every settle command
+   read it: the counter still counts every failure in `checks.<check>`, each explained one is listed in
+   `checkAccepts.<check>` (`[{where, reason, by}]`) instead of `coverage.failures`, and an entry that matches no
+   failure is counted in `checks.checkAcceptsUnmatched` and named in `coverage.failures` (part
+   `checkAcceptsUnmatched`, with its `check`), so a stale reason holds the kit. /ops fails a check only on its
+   unexplained rest and words it as the kit records it: `buttons with no address 70 (68 explained)`; the step's
+   `checksExplained` lists every check with explained failures (`{check, label, count, explained}`).
 5. `cli.mjs pack --out <kit dir>` (`build --full` runs it last) writes `pack/` and `template-kit-<template>-<quickstart
    version>.zip`. The build shoots only what the pack holds (below): every measurement (emptied frames, fixed CMS
    text, list minimums, template fix trials) is read in the DOM and kept as numbers, so the images folder and the pack
@@ -395,20 +466,44 @@ list, kept by every later run).
   tag pages), `pages[]` (`group`, `path`, `inMainMenu`, `blocks` and `images` per width), `blocks[]` (`role`, `shared`,
   `images`, `lists[]` with `rowKind`, `min`, `max`, `rowSlots`, `rows` (every row with its slots: the map's slot
   groups `<list>.<n>`, so a map that numbers each row as its own group still gives every row; `maxFrom: "slot-rows"`
-  when that raised the map's count), `iconMechanism` (how a row's link icon is drawn: `font-icon`, `inline-svg`,
+  when that raised the map's count; on each row `printsIn`, the signature of the repeated card its picture prints in
+  or `block` when it has none, and `pairedSlots`, the ids of the block's text slots printed inside that card, measured
+  by the frames pass at the first width before any frame is emptied (`lib/read-row-cards.js`, `rowCard` in
+  `frame-evidence.json`, written by `lib/row-pairs.mjs`), with `rowPairsFrom: "measured"` on the list, or
+  `"declared"` when a person wrote the pairs), `iconMechanism` (how a row's link icon is drawn: `font-icon`, `inline-svg`,
   `image-file` or `css-background`, whether it can be changed, measured by setting one row's icon class to
   another's), `frames[]`, `links[]` (every shown link by `position`, repeats of one label and address included,
   with `icon` when the link draws one: `mechanism`, `classes`/`file`,
   `network`; `labelId`, the one place that says which text slot is the link's label (no slot carries a copy), or
   `fixedLabel: {rule, reason}` when its words are not the customer's: `template-words` (the block's fixed text),
-  `icon-name` (an icon-only link's accessible name) or `pagination` (a CMS page number or step)), `slots[]` (planner rule 5),
+  `icon-name` (an icon-only link's accessible name), `pagination` (a CMS page number or step), `control-value` (a
+  number on a link to no page: a rating star, a slide dot) or `sort-control` (the same listing in another order)),
+  `slots[]` (planner rule 5),
   `fixedText[]`, `demoOwned[]`), `checks` (counts that must all be 0, or /ops marks the kit
   `kit-incomplete` and it cannot be approved: `itemsListsWithoutCardFields` (a listing's items list takes the content
   map's list and its card fields, a further result page takes page 1's), and the planner rules below:
   `listLimitsDiffering`, `showcasePagesNotExcluded`, `mixedPageGroups`, `detailPagesOutsideListing`,
   `representativesNotListing`, `slotsInTwoBlocks`, `orphanTexts`, `paragraphsMissing`, `fixedTextIdsInvalid`, the
   coverage gate `slotCoverage`, and `linksWithoutLabel` (`lib/link-label-reasons.mjs`: a link that shows words with
-  neither a `labelId` naming a slot of its own block nor a `fixedLabel` reason)),
+  neither a `labelId` naming a slot of its own block nor a `fixedLabel` reason), and the slot shape checks counted
+  against the content map (`lib/slot-shape-checks.mjs`, by `build` and every settle command, their first failing
+  slots or blocks in `coverage.failures`): `samplesCut` (a text slot whose `sample` or `demoChars` is not the whole
+  demo text), `sentenceGroupsUnsettled` (a block whose `sentences` differ from what the sentence-groups pass gives),
+  `inlineEmphasisMissing` (a text slot whose demo marks words inline with no matching `inline`) and
+  `inlineMarkupLost` (content map text slots whose stored value marks words inline while their sample does not, read
+  from the `inlineMarkup` block `content-coverage/resample.mjs` writes into `content-coverage.json`; a map with a
+  whole-unit text slot and no such block counts 1), and the reach checks (`lib/reach-checks.mjs`, by `build` and every settle
+  command, from the kit alone): `deadControls` (a link with words that acts inside the page and has no door: nothing it opens, no
+  address, no menu item; the template prints it with a dead address, so a plan cannot send it anywhere), `mapLocationUnmapped`
+  (a button that opens a map with no `slotId`, or a block whose read found an embedded map, `embeddedMaps` from the read pass's
+  `maps`, with no map-location setting slot on its entity) and `phoneNotCallable` (a `contact.phone` slot, or a contact block's
+  printed phone or mobile field, that no link of its block shows as its words, so no address can make it `tel:`), and
+  the row pair check (`lib/row-pairs.mjs`, by `build` and every settle command): `rowPartsUnpaired` (a list whose rows
+  print in more than one part, a lone row beside card rows, while a card row has no `pairedSlots` and the pairs are
+  not declared: a plan cannot tell which card texts go with which picture row); a phone the demo leaves empty (a
+  contact field with `filled: false`, a phone slot whose sample has no words) prints nothing and is not counted; a
+  failure of these four explained in `reach-accepts.json` (step 4 above) still counts, and the check holds the kit
+  only on its unexplained rest (`checkAccepts`, `checkAcceptsUnmatched`)),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the
@@ -437,6 +532,9 @@ list, kept by every later run).
      group. The check names a group holding a second listing or an unrelated page.
      A detail page (a person, an item) that a repeated list on the page one path level up links to is one of that
      page's items, even with a menu item of its own (`checks.detailPagesOutsideListing` names one grouped elsewhere).
+     A page that itself lists pages one level down (a shop category of products) is a listing by its structure,
+     never a detail page of the page above it; a page one level down of a kind that listing lists, shown on no list
+     (the demo's list is cut short), is one of its items too.
      A group's root, its listing page, is its representative: its full-page shot stands for the group
      (`checks.representativesNotListing` names a group with items represented by another page).
   4. *A slot belongs to one block* (`lib/slot-owners.mjs`, `checks.slotsInTwoBlocks`): a slot listed by several
@@ -481,8 +579,10 @@ list, kept by every later run).
      generator gives each further element the next slot with those words, in content map order);
      `linksWithoutTarget`, every clickable element without an address (`details.clickables`: a button, a tab, a
      menu heading, a submit) whose label a slot of its block prints is a link of the block with what it opens
-     (`links[].opens`: `modal` or `panel` with its `element` (a tab's own `#fragment` included), `submenu`, `form`
-     with its `action`, `script`; a modal drawing a map says `writable: true` with the `slotId` of its setting
+     (`links[].opens`: `modal` or `panel` with its `element` (a tab's own `#fragment` included), `slide` with the
+     carousel its `data-slide` control moves, `submenu`, `form` with its `action` (a `#` link inside a form, such
+     as the stars of a rating form, included), `action` with the address of the site it runs (`?task=`, `tmpl=` or
+     another action key: a question form opened in a modal, a print view), `script`; a modal drawing a map says `writable: true` with the `slotId` of its setting
      slot when exactly one map setting is assigned to the page, else `writable: false` with the reason);
      `linksWithoutLabelSlot` (`lib/link-label-slots.mjs`), every link whose shown words a slot prints names it
      (`links[].labelId`): the text slot of the link's own address group first, then a slot the block declares or
@@ -496,8 +596,13 @@ list, kept by every later run).
      (`<block>.picture-N`, `shownAs`, `painter`, `paintedBehind`, `twinOf` when the same painter shows it in an
      earlier block, `canHide: true` for a background, which takes no room) with `writable: false` and the reason,
      since no content map slot holds it, unless a setting slot does (a template background, below);
-     `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom` and a sample with the first
-     words of each paragraph and bullet (`lib/text-format.mjs`), read from the block's real page, including the row
+     `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom`, a `sample` with the whole
+     demo text, one paragraph or `- ` bullet per line (cut only past 1500 characters), and `demoChars` (`total`,
+     `lead`, `bullets`: plain-text lengths of the whole text, the paragraphs before the list, each bullet), so a writer
+     aims at the demo's real length, and `inline` when the demo marks words inside the text (`[{tag, attrs, text,
+     at}]` for a `span`, `strong` and the like, `at` being `start`, `end` or `inside`; `{tag: 'br'}` for a line break;
+     `lib/inline-marks.mjs`) so the writer can mark the same words (`lib/text-format.mjs`; `cli.mjs samples` settles a
+     written kit again), read from the block's real page, including the row
      template of a list with no sample row and the items of a card field; `mainMenuRowLimitMissing`, the main menu
      group has `rowLimit`: every top-level label filled together in the page until one wraps, drops to another row
      or pushes past the header, at 1440 and every narrower width down to where the row folds (`read-row-fit.js`,
@@ -521,7 +626,7 @@ list, kept by every later run).
   (`body_bg_img` in `etc/site/<profile>.json`, read by the adapter): one slot `site.body-background` with
   `writeTo: {action: "template.siteSettings", template, key, file}`, `canHide: true` and the `frames` it covers; every
   frame painted behind with that picture says `writable: true` and `slotId`, its twins included. Tracy writes it with
-  `apps/tracy-web/src/sites/brief-engines/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
+  `apps/tracy-web/src/lib/joomla-t4-body-background.js` (Claude Cowork for Joomla 0.24.78+).
   `cli.mjs setting-slots --out <dir> --contract <dir> --db-command <prefix> [--webroot <dir>]` settles a written kit
   again (no browser, no image; without `--webroot` the background slot the kit has is kept), then `pack`.
 - **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and
@@ -530,7 +635,7 @@ list, kept by every later run).
   names an entry without an id or two with one id.
 - **Template gaps** (`templateGaps[]`: `id, kind, where, detail, evidence, accepted`): real defects of the template
   or its demo, for /ops to judge: `page-without-h1`, `dead-link` (a block link to nothing, `#`, or a path that
-  does not answer 200; one per target and block), `dead-path` (a content map page that does not answer 200) and
+  does not answer 200, unless it opens something on the page or runs an action; one per target and block), `dead-path` (a content map page that does not answer 200) and
   `sparse-row-left-packed` (each proposed template fix). The id hashes kind and place, so it survives a rebuild.
 - **Site part** (`site`, from `site-cli.mjs`). `navigationGroups[]`: every menu block of the content map
   (`menuBlocks`), each item with `label`, `maxCharacters`, `target` (`kind`, `page`/`path`), `alive` and `status`;
@@ -593,8 +698,10 @@ list, kept by every later run).
   `business.logo` slots and every logo spot's frame; who owns it is the brand step's, so `fixed` is null). An
   `<img>` kept at opacity 0 while its holder paints a mask or background over it is shown through that painter
   (`paintedBy`) and measured from it. A frame in a closed tab, slide or accordion is opened first, the way a
-  visitor would (`revealed`); a picture not in its own block is looked for in the other blocks of the pages
-  (`measuredIn`). `canHide`, in the DOM only: the picture and its painters (mask, pseudo-element, holder background)
+  visitor would (`revealed`, read again once a moving slide has settled); a picture not in its own block is looked
+  for in the other blocks of the pages, then in the page region that holds it (`measuredIn`, a logo the template's
+  own footer prints). A frame shown at phone width only takes its box there (`sizeAt`). A frame whose picture the demo
+  leaves empty (`emptyInDemo`) can hide: the block already shows without it. `canHide`, in the DOM only: the picture and its painters (mask, pseudo-element, holder background)
   are emptied in the browser and the block read again at every width, once per layout (a frame in the same place on
   a page of the same layout takes it: `canHideFrom`); a picture repeated by every row of a list is emptied in every
   row at once (`measuredAs: "row-slot"`, one verdict for the slot). The numbers are kept (`hideEvidence.measured`:
@@ -608,7 +715,12 @@ list, kept by every later run).
   in the block's `demoOwned`. Twins follow their main frame.
 - **Listing maximum.** A listing page's `items` list takes the page size: from the pager when a later list position
   exists (`?start=N`: `maxSource: "page-size"`), else the item rows the demo shows (`captured-rows`; item rows are
-  the biggest set whose every row opens a different content item). `maxEvidence` says which.
+  the biggest set whose every row opens a different content item, through the first item link of the row; rows of a
+  block nested in the listing are that block's). Without a later position the page-size control the listing prints
+  (`select[name=limit]`, its selected number) is the page size (`page-size-control`). `maxEvidence` says which.
+  Zebra classes (`row0`/`row1`, `odd`/`even`) are row state, not shape. A width where the listing shows no row (a
+  collapsed sidebar) is not judged for the minimum. An items list whose page shows too few rows to measure takes the
+  minimum measured on the page of its layout that shows the most rows (`minSource: "layout"`, `minFrom`).
 - **`contact-sheet/`**: every block image on HTML sheets (no screenshot), to spot
   images that are misaligned, blank, cut by a header or doubled.
 

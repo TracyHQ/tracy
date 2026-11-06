@@ -2,9 +2,9 @@
 // mainMenu gives the dropdown slots the writer writes and the menu items step 9 hides. Invented fixtures only.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { exportContractMapping } from '../src/site-writer/contract-mapping.js'
+import { exportContractMapping } from '../src/lib/site-copy/contract-mapping.js'
 import { CHECKER_VERSION, checkCopy } from '../src/site-writer/copy-check/check-copy.js'
-import { mainMenuOf } from '../src/site-writer/main-menu.js'
+import { mainMenuOf } from '../src/lib/site-copy/main-menu.js'
 import { writerInput } from '../src/site-writer/writer-input.js'
 import { fixedPart } from '../src/site-writer/writer-turns.js'
 import { brief, contentMap, copy, kit, plan } from './_site-writer-main-menu.mjs'

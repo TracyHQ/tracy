@@ -199,3 +199,21 @@ test('a brief media row reads as a photo view: its labels, its own-photo answer 
     offering: 'Court hire'
   })
 })
+
+// CodeQL polynomial-redos (release 2026-11-05): the stops a value ends on are taken off from its end, in one pass.
+test('the stops a value ends on are taken off; a long run of them inside a value reads fast', () => {
+  const { photos } = observablePhotos(PHOTOS)
+  const held = (value) =>
+    heldObservedFacts(JSON.stringify({ facts: [{ field: 'facility', value, assetIds: ['wm-01'] }] }), photos)
+  assert.deepEqual(
+    held('Clay courts.;,').map((f) => f.value),
+    ['clay courts']
+  )
+  assert.deepEqual(
+    held('clay courts, shaded').map((f) => f.value),
+    ['clay courts, shaded']
+  )
+  const t = performance.now()
+  assert.deepEqual(held(`clay courts${','.repeat(100_000)}x`), [])
+  assert.ok(performance.now() - t < 500, 'a run of commas read in one pass')
+})

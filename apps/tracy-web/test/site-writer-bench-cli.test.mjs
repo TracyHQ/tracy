@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { runCli } from '../src/site-writer/bench-cli.js'
+import { CHECKER_VERSION } from '../src/site-writer/copy-check/check-copy.js'
 import { scriptedModel } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import {
@@ -149,7 +150,7 @@ test('run, list, status and get: a finished run is downloaded with every file', 
   assert.match(status.out, /state\s+succeeded \(after round 1\)/)
   assert.match(status.out, /model\s+deepseek-flash/)
   assert.match(status.out, /balance\s+before 5\.00 USD, after 4\.98 USD/)
-  assert.match(status.out, /checker\s+site-copy-check\/3: 11 pass, 0 fail/)
+  assert.match(status.out, new RegExp(`checker\\s+${CHECKER_VERSION.replace('/', '\\/')}: \\d+ pass, 0 fail`))
 
   const got = await cli('get', runId, '--out', 'files')
   assert.equal(got.code, 0, got.err)

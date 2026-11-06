@@ -1,6 +1,6 @@
 // Plate fallback of make_icon: a two-colour icon that came back in ONE colour is put, by code and with no new
 // drawing, on a filled plate of the missing colour. Ported from the approved lab's icon-quantize (decision 20).
-import { contrastHex, parseHexColour, PLATE_MIN_RATIO } from '../colour-math.js'
+import { contrastHex, parseHexColour, PLATE_MIN_RATIO } from '../../lib/brand-accent/colour-math.js'
 import { raw, sharp } from './common.js'
 import { contentBox } from './icon-quantize.js'
 

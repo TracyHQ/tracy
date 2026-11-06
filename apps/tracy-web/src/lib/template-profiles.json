@@ -136,6 +136,21 @@
           "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
         },
         "note": "Same logos as 1.0.8; no logo file, logo layout or logo rule changed: card rows are centred (joomlart-products #2), every page has one h1 (joomlart-products #4 and #5), author post rows are centred, and the footer link menus lead to real pages."
+      },
+      "1.0.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos as 1.0.10; 1.0.11 changed no stylesheet and no demo data (joomlart-products #15): a hidden h1 from the menu item, class buttons, tel: links on phone numbers and a Google Maps link."
       }
     },
     "quickstart/ja-cagox/j6": {
@@ -216,6 +231,18 @@
         },
         "logoHeight": 80,
         "note": "Same logos and content as 1.0.3; only eleven bootstrap.css files changed: the badge of a status panel heading reads the status text role as its ground (fallbacks unchanged). No logo file or logo rule changed. Unworn the default page computes as on 1.0.3 (VERIFICATION.json: 0 differences). The brand writer and favicon proof was not re-run on this release."
+      },
+      "1.0.5": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos as 1.0.4; no logo file or logo rule changed, and every template style keeps logoimage empty, so the header prints the template's own images/logo.png (the contract declares it as one business.logo slot per style). 1.0.5 adds the agent documentation of the ACM module, template fixes in css, less, html, tpls and acm (smart search and tag page language strings, tab picture alt), and three demo links that pointed nowhere now lead to Contact Us and Offers. Proven on the 1.0.5 installer pack (sha256 bb331594) by a clean install whose contract capture pins the lock. The brand writer and favicon proof was not re-run on this release."
       }
     },
     "quickstart/ja-directory/j6": {

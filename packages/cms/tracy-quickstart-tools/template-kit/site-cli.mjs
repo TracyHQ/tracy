@@ -16,6 +16,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
+import { readContractMap } from './lib/contract-read.mjs'
 import { pageIdOf } from './lib/ids.mjs'
 import { pathOfRoute, slugOfPath } from './lib/kit-paths.mjs'
 import { indexMap } from './lib/map-index.mjs'
@@ -28,6 +29,7 @@ import { measureFixedTexts } from './lib/site/hide-cms-text.mjs'
 import { logoSlotsOf } from './lib/site/logo-spots.mjs'
 import { writePaletteHtml } from './lib/site/palette.mjs'
 import { buildSite } from './lib/site/site-kit.mjs'
+import { pathsOnStyles, stylesOfOpeningTheme } from './lib/site/theme-styles.mjs'
 
 const log = (...a) => console.error('[template-kit site]', ...a)
 const readJson = (f) => JSON.parse(readFileSync(f, 'utf8'))
@@ -65,7 +67,7 @@ export function pagesToRead(map, captureIndex, cap) {
  * @param {{o: object, out: string, chromium: object, capture?: object|null, log?: Function}} a
  */
 export async function runSite({ o, out, chromium, capture = null, log: say = log }) {
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const manifest = readJson(join(o.contract, 'manifest.json'))
   const hostHeader = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
   const str = (v) => (typeof v === 'string' ? v : undefined)
@@ -82,8 +84,17 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
     `(${adapter.cms}${adapter.framework ? ` ${adapter.framework}` : ''})`
   )
   const pages = pagesToRead(map, capture, Number(o['max-pages'] ?? 60))
-  const { styles, htmls } = await fetchStyles({ pages, siteUrl: o.site, hostHeader })
+  const served = await fetchStyles({ pages, siteUrl: o.site, hostHeader })
+  const { htmls } = served
+  // A page on another colour theme of the template (a theme showcase) does not paint the brand.
+  const variantPaths = pathsOnStyles(map, adapter.themeVariantStyles?.() ?? [])
+  const styles = stylesOfOpeningTheme(served.styles, variantPaths)
   say(styles.length, 'stylesheets from', htmls.length, 'pages')
+  if (styles.length < served.styles.length)
+    say(
+      served.styles.length - styles.length,
+      'stylesheets left out: only pages on another colour theme serve them'
+    )
   const first = buildBrandColours({ styles, pages: htmls, variables: adapter.colourVariables?.() ?? [] })
   const brand = [first.brandColours.primary?.value, first.brandColours.secondary?.value].filter(Boolean)
   const browser = await chromium.launch()

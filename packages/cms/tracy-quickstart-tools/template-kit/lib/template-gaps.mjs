@@ -60,13 +60,18 @@ export function templateGaps({ kit, mainHeadings = [], dead = [], fixes = [], ac
   for (const d of dead)
     if ((d.from ?? []).includes('content-map'))
       add('dead-path', { path: d.path }, `a content map page answers ${d.status}`, [])
-  for (const f of fixes)
+  // Only fixes of lists the kit keeps: a list measured on a page left out (a showcase page) is not the template's.
+  const keptBlocks = new Set(kit.blocks.map((b) => b.id))
+  const keptLists = new Set(kit.blocks.flatMap((b) => (b.lists ?? []).map((l) => l.id)))
+  const blockOfList = (l) => l.replace(/\.[^.]+$/, '')
+  const inKit = (l) => keptLists.has(l) || keptBlocks.has(blockOfList(l))
+  for (const f of fixes.filter((x) => (x.lists ?? []).some(inKit)))
     add(
       'sparse-row-left-packed',
       { selector: f.selector },
       `short last row packed left in ${f.lists.join(', ')}; proposed fix { ${f.rule} }${f.verified ? '' : ' (not verified)'}`,
       // The packed shots of the blocks the lists live in (the trial itself is read in the DOM, not shot).
-      [...new Set(f.lists.map((l) => l.replace(/\.[^.]+$/, '')))].flatMap((id) =>
+      [...new Set(f.lists.map(blockOfList))].flatMap((id) =>
         Object.values(kit.blocks.find((b) => b.id === id)?.images ?? {})
       )
     )

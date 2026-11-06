@@ -2,7 +2,7 @@
 // version suffix that keeps a tool from overwriting a file. Ported from the approved lab's lib.mjs.
 import path from 'node:path'
 import sharp from 'sharp'
-import { contrastHex, hex, parseHexColour } from '../colour-math.js'
+import { contrastHex, hex, parseHexColour } from '../../lib/brand-accent/colour-math.js'
 import { sideText } from '../kit-grounds.js'
 
 export { sharp }

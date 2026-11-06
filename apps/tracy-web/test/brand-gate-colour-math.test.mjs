@@ -1,10 +1,10 @@
-// The gate colour maths (brand-step/colour-math.js) is a frozen port of the approved lab rule; the design system
+// The gate colour maths (lib/brand-accent/colour-math.js) is a frozen port of the approved lab rule; the design system
 // slot keeps a twin (packages/design/tracy-ds-slot/src/colour.mjs). This vector table is repeated VERBATIM in
 // packages/design/tracy-ds-slot/test/accent-lift-vectors.test.mjs: the same table in both suites is what stops the
 // twins drifting. The expected values come from running the approved lab lift on these grounds.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { liftAccent, neutralReason } from '../src/brand-step/colour-math.js'
+import { liftAccent, neutralReason } from '../src/lib/brand-accent/colour-math.js'
 
 const OPENING = '#121111'
 const OTHER = '#f4f1ec'

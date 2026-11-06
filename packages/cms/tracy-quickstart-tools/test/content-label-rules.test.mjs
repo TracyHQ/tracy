@@ -257,6 +257,57 @@ test('R8: adjacent short slots of one entity on one line are flagged as a cut he
   assert.deepEqual(rule(res, 'R8').keys, ['h.a + h.b'])
 })
 
+test('R8: names of two cards side by side on one line are not a cut heading', () => {
+  const map = cleanMap()
+  const pages = [
+    {
+      url: 'https://site.example/team',
+      items: [
+        item('Ada Quill', 'team.0.n', { x: 100, y: 200, w: 90, h: 30 }),
+        item('Bo Marsh', 'team.1.n', { x: 196, y: 200, w: 80, h: 30 })
+      ]
+    }
+  ]
+  for (const s of map.slots) if (s.jsonPath) s.entity = 'module-4'
+  assert.deepEqual(fails(labelRulesOf({ map, pages })), [])
+  // The same two pieces in one card are still flagged.
+  for (const s of map.slots) if (s.key === 'team.1.n') s.group = grp('team.person.0', 0, 'person')
+  assert.equal(rule(labelRulesOf({ map, pages }), 'R8').count, 1)
+})
+
+test('R7: info cards that each hold a different contact fact pass; a contact fact beside an editorial sibling fails', () => {
+  const map = cleanMap()
+  const card = (i, sample, role) =>
+    text(`info.${i}`, sample, role, {
+      jsonPath: ['info', 'info[desc]', i],
+      group: grp(`info.${i}`, i, 'contact')
+    })
+  map.slots.push(
+    card(0, '12 Larkspur Lane, Hollow Bay', 'contact.address'),
+    card(1, 'Mon - Fri: 7am - 3pm', 'contact.hours')
+  )
+  assert.deepEqual(fails(labelRulesOf({ map })), [])
+  // In one shared card the different roles are a slip again.
+  for (const s of map.slots) if (s.key === 'info.1') s.group = grp('info.0', 0, 'contact')
+  assert.ok(fails(labelRulesOf({ map })).includes('R7'))
+})
+
+test('R4: a mailto or tel CTA URL is labelled by the email or phone in its group', () => {
+  const map = cleanMap()
+  const g = grp('foot.contact.0', 0, 'contact')
+  map.slots.push(text('foot.email', 'hello@larkspur.example', 'contact.email', { group: g }), {
+    key: 'foot.mail',
+    type: 'url',
+    sample: 'mailto:hello@larkspur.example',
+    role: 'contact.cta_url',
+    group: g
+  })
+  assert.deepEqual(fails(labelRulesOf({ map })), [])
+  // An ordinary page link still needs a label slot beside it.
+  map.slots.find((s) => s.key === 'foot.mail').sample = 'index.php?Itemid=4'
+  assert.deepEqual(rule(labelRulesOf({ map }), 'R4').keys, ['foot.mail'])
+})
+
 test('slots of a demo-only entity (a style-guide page) are left out of the label rules; holes are not', () => {
   // A style-guide article shows "Example heading" cut in pieces and sample progress bars: the same layout on a page the
   // map does not mark would fail R8, the marked one does not. R9 still reads every hole.
@@ -328,7 +379,7 @@ test('the committed coverage file carries the rule results', () => {
   }
   const contract = { manifest: { id: 'x/j6/1.0.0' }, sha256: { contentMap: 'a', presentationLock: 'b' }, map }
   const doc = buildCoverageFile({ result, contract })
-  assert.equal(doc.tool.version, '1.6.0')
+  assert.equal(doc.tool.version, '1.7.0')
   assert.equal(doc.labelRules.rules.R3.count, 1)
   assert.deepEqual(doc.labelRules.rules.R3.keys, ['foot.link'])
   assert.equal(doc.labelRules.applies, true)

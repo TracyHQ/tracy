@@ -3,7 +3,7 @@
 // drawn) and for person frames that have a confirmed portrait; other person frames get initials drawn by code in the
 // as a colour recipe of roles with a neutral preview file (paint.js: the brand colour is decided when written); a frame with no fitting photo is hidden where the kit allows, else returned to the
 // planner (a gallery tile, gallery-tiles.js, is never hidden alone: it waits for the ladder); frames the kit marks not writable are returned, except a picture painted behind blocks, which goes into
-// siteSettings; twins copy their source. A frame with text over its picture tries darker photos first (the overlay a
+// siteSettings, as does a frame the kit writes through a setting slot (the T4 page background, whose twins follow the setting); twins copy their source. A frame with text over its picture tries darker photos first (the overlay a
 // picture still too bright gets is baked when the round is finished, ladder-step.js). Specific, icon and cut-out frames are left as pending entries for the steps
 // that come later (the picker, the icons, the cut-outs, ladder-step.js): never a demo picture. No owner photo is shown twice on a page.
 import { initialsOf } from 'website-opportunities/domain/person-avatar.mjs'
@@ -11,7 +11,7 @@ import { initialsAvatar } from '../lib/initials-avatar.js'
 import { cutPhoto, outputSizeFor } from './cut-photo.js'
 import { darkerFirst } from './darken.js'
 import { addTwins, hiddenEntry, pendingEntry, placedEntry } from './frame-entries.js'
-import { INITIALS_PAINT, previewColour } from './paint.js'
+import { INITIALS_PAINT, previewColour } from '../lib/picture-paint/paint.js'
 import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
 import { indexInputs } from './picture-check/inputs-index.js'
 
@@ -71,7 +71,7 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
       continue
     }
     if (frame.twinOf || wish.sameAs) continue
-    const list = frame.writable === false ? 'siteSettings' : 'frames'
+    const list = idx.listOf(frame)
     if (frame.kind === 'logo')
       returns.push({ frame: frameId, reason: 'a logo frame belongs to the brand step' })
     else if (frame.kind === 'icon' && icons) iconJobs.push({ frameId, wish, frame, list })

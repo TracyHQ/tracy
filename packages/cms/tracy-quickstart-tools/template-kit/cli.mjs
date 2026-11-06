@@ -23,6 +23,21 @@
 //                 (the setting slots of the template-kit.json in --out settled again: the map a button opens, read
 //                 from the site's database, the contact's mobile line, and with --webroot the picture the template
 //                 paints behind its pages; no browser, no capture, no image)
+//   cli.mjs slot-roles --out <dir> --contract <dir>   (the template-kit.json in --out settled again from the content
+//                 map and field-drives.json: page title slots, sentence groups, stored fields, the gate counted
+//                 again; no browser, no capture, no image; it only adds, no slot id, list or role moves)
+//                 [--only sentences]: only the sentence groups (a kit whose page titles are not settled yet keeps its gate)
+//   cli.mjs samples --out <dir> --contract <dir>   (the text slot samples of the template-kit.json in --out settled
+//                 again from the content map: every text slot's whole demo text as `sample` and its lengths as
+//                 `demoChars`, its inline emphasis as `inline`; no browser, no capture, no image; nothing else moves, so
+//                 an approval stays valid)
+//   Every settle command (samples, slot-roles, relabel, setting-slots) counts the slot shape checks again
+//   (lib/slot-shape-checks.mjs: samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing), the reach checks and
+//   the row pair check (lib/row-pairs.mjs: rowPartsUnpaired), each with the reasons of reach-accepts.json in --out
+//   (lib/check-accepts.mjs), and stamps `tool` and `settledAt`.
+//   cli.mjs measure-fields --site <url> --out <dir> --contract <dir> --db-command '<client prefix>' --scratch-site
+//                 [--host-header <host>]   (WRITES to the site, each field set to a marker and put back: only on a
+//                 throwaway site rebuilt from the quickstart, which --scratch-site says it is; field-drives.json)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
 //   cli.mjs looks --kit <template-kit.json> [--images <dir>] --list [--to <worklist.json>]
@@ -35,8 +50,9 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 
-import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
+import { assembleKit, reachAcceptsOf, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
+import { readContractMap, readContractSamples } from './lib/contract-read.mjs'
 import { contactFieldChecks } from './lib/coverage-gate.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
@@ -47,12 +63,19 @@ import { measureMin } from './lib/measure-min.mjs'
 import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
 import { settleSettingSlots } from './lib/setting-slots.mjs'
+import { settleSamples } from './lib/slot-samples.mjs'
+import { settleSentenceGroups } from './lib/sentence-groups.mjs'
+import { settleSlotRoles } from './lib/slot-roles.mjs'
+import { slotShapeChecks } from './lib/slot-shape-checks.mjs'
+import { reachChecks } from './lib/reach-checks.mjs'
+import { rowPairChecks } from './lib/row-pairs.mjs'
+import { stampSettled, TOOL } from './lib/version.mjs'
+import { runFieldMeasure } from './lib/site/measure-fields.mjs'
 import { writeSheets } from './lib/sheets.mjs'
 import { adapterFor } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 
-const TOOL = 'template-kit 3.0.0'
 const COMMANDS = [
   'build',
   'assemble',
@@ -62,9 +85,14 @@ const COMMANDS = [
   'pack',
   'relabel',
   'setting-slots',
+  'slot-roles',
+  'samples',
+  'measure-fields',
   'looks'
 ]
-const NO_SITE = ['sheet', 'approve', 'pack', 'relabel', 'setting-slots']
+const NO_SITE = ['sheet', 'approve', 'pack', 'relabel', 'setting-slots', 'slot-roles', 'samples']
+// The no-browser commands that settle a written kit again from the contract.
+const SETTLE = ['relabel', 'setting-slots', 'slot-roles', 'samples']
 
 export function parseArgs(argv) {
   const o = { _: [] }
@@ -74,6 +102,19 @@ export function parseArgs(argv) {
     else o[a.slice(2)] = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true
   }
   return o
+}
+
+/** The content coverage file beside the contract (its `inlineMarkup` measurement), null when there is none. */
+const contentCoverageOf = (o) => readIf(join(o.contract, 'content-coverage.json')) ?? null
+
+/** A settled kit: its slot shape checks counted again from the content map, and the tool that settled it. */
+const settled = (kit, map, o) => {
+  slotShapeChecks(kit, { map, contentCoverage: contentCoverageOf(o) })
+  // A person's reasons for reach and row pair failures the template keeps (reach-accepts.json, lib/check-accepts.mjs).
+  const accepts = reachAcceptsOf(resolve(o.out))
+  reachChecks(kit, { accepts })
+  rowPairChecks(kit, { accepts })
+  return stampSettled(kit)
 }
 
 const str = (v) => (typeof v === 'string' ? v : undefined)
@@ -112,12 +153,70 @@ function pack(out) {
   return p.blocksWithoutImage.length || p.unknownImages.length ? 1 : 0
 }
 
+/** Settle page titles, sentence groups and stored fields of the kit in `out` again; exit 1 when a page has no one title. */
+function slotRoles(o, out) {
+  const file = join(out, 'template-kit.json')
+  const kit = readJson(file)
+  const map = readContractSamples(o.contract)
+  if (o.only === 'sentences') {
+    settleSentenceGroups(kit, { map })
+    writeJson(file, settled(kit, map, o))
+    console.log(`${kit.blocks.flatMap((b) => b.sentences ?? []).length} sentence groups`)
+    return 0
+  }
+  if (o.only !== undefined) throw new Error('slot-roles --only takes: sentences')
+  const r = settleSlotRoles(kit, { map, drives: readIf(join(out, 'field-drives.json')) ?? {} })
+  writeJson(file, settled(kit, map, o))
+  console.log(JSON.stringify(r, null, 1))
+  for (const f of kit.coverage.failures.filter((x) => x.part === 'pageTitleSlots'))
+    console.error(`${f.where}: ${f.reason}`)
+  return r.pageTitleSlots ? 1 : 0
+}
+
+/** Settle every text slot's sample, demoChars and inline of the kit in `out` again (slot-samples.mjs); exit 1 when a
+ * slot shape check still fails. */
+function samples(o, out) {
+  const file = join(out, 'template-kit.json')
+  const kit = readJson(file)
+  const map = readContractSamples(o.contract)
+  const r = settleSamples(kit, { map })
+  writeJson(file, settled(kit, map, o))
+  const { samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing, inlineMarkupLost } = kit.checks
+  console.log(
+    `${r.slots} text slots, ${r.changed} entries rewritten; cut before ${r.cutBefore}, after ${r.cutAfter} (${r.capped} cut at the length cap); ${r.inline} with inline marks; ${r.withoutMapSlot.length} without a content map slot`
+  )
+  console.log(
+    JSON.stringify({ samplesCut, sentenceGroupsUnsettled, inlineEmphasisMissing, inlineMarkupLost })
+  )
+  return samplesCut || inlineEmphasisMissing || inlineMarkupLost ? 1 : 0
+}
+
+/** Measure what each stored field drives on a throwaway site, into field-drives.json. */
+async function measureFields(o, out) {
+  if (o['scratch-site'] !== true || !str(o['db-command']))
+    throw new Error(
+      'measure-fields writes to the site: it needs --db-command and --scratch-site, on a throwaway site rebuilt from the quickstart'
+    )
+  const drives = await runFieldMeasure({
+    chromium: await chromiumOf(),
+    siteUrl: o.site,
+    hostHeader: str(o['host-header']),
+    dbCommand: o['db-command'],
+    kit: readJson(join(out, 'template-kit.json')),
+    map: readContractSamples(o.contract),
+    log
+  })
+  writeJson(join(out, 'field-drives.json'), drives)
+  return Object.values(drives).some((d) => d.error) ? 1 : 0
+}
+
 /** Settle the link labels of the kit in `out` again (link-label-reasons.mjs); exit 1 when some link has neither. */
 function relabel(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const r = relabelKit(kit, { map: readJson(join(o.contract, 'content-map.json')), linkLabelSlots })
-  writeJson(file, kit)
+  const map = readContractMap(o.contract)
+  const r = relabelKit(kit, { map, linkLabelSlots })
+  writeJson(file, settled(kit, map, o))
   const links = kit.blocks.flatMap((b) => b.links ?? [])
   console.log(
     `${links.filter((l) => l.labelId).length} links name their label slot, ${links.filter((l) => l.fixedLabel).length} carry a fixed-text reason (${r.set} label slots named now), linksWithoutLabel ${r.wrong}`
@@ -134,7 +233,7 @@ function relabel(o, out) {
 function settingSlots(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  const map = readContractMap(o.contract)
   const manifest = readJson(join(o.contract, 'manifest.json'))
   const source = siteSource({
     db: str(o.db),
@@ -151,7 +250,7 @@ function settingSlots(o, out) {
   const failures = []
   const wrong = contactFieldChecks(kit, (part, where, reason) => failures.push({ part, where, reason }))
   if (kit.coverage?.parts) kit.coverage.parts.contactFieldsUnresolved = wrong
-  writeJson(file, kit)
+  writeJson(file, settled(kit, map, o))
   const maps = kit.blocks.flatMap((b) => (b.links ?? []).filter((l) => l.opens?.shows === 'map'))
   console.log(
     `${r.slots} setting slots: ${r.tied} of ${maps.length} map buttons tied, ${r.mobile} mobile lines opened, ${r.backgrounds} frames painted behind tied${backgroundSettings ? '' : ' (no --webroot: background slots kept)'}; contactFieldsUnresolved ${wrong}`
@@ -200,7 +299,7 @@ async function main() {
     !o.out ||
     !COMMANDS.includes(cmd) ||
     (needSite && !o.site) ||
-    ((needSite || cmd === 'relabel' || cmd === 'setting-slots') && !o.contract)
+    ((needSite || SETTLE.includes(cmd)) && !o.contract)
   ) {
     console.error(
       `usage: cli.mjs ${COMMANDS.join('|')} --out <dir> [--site <url> --contract <dir>] (see the head of this file)`
@@ -214,7 +313,10 @@ async function main() {
   if (cmd === 'pack') return pack(out)
   if (cmd === 'relabel') return relabel(o, out)
   if (cmd === 'setting-slots') return settingSlots(o, out)
-  const map = readJson(join(o.contract, 'content-map.json'))
+  if (cmd === 'slot-roles') return slotRoles(o, out)
+  if (cmd === 'samples') return samples(o, out)
+  if (cmd === 'measure-fields') return measureFields(o, out)
+  const map = readContractMap(o.contract)
   const hostHeader = str(o['host-header'])
   const widths = String(o.widths ?? '1440,390')
     .split(',')

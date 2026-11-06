@@ -113,3 +113,53 @@ test('a label slot says what else changes with it: other blocks, page titles and
   })
   assert.equal(about.alsoChanges, undefined, 'printed nowhere else: nothing to say')
 })
+
+test('links repeating the same words take each its own twin slot, in content map order', () => {
+  // An article with three "See dates" buttons, one per section: three slots with the same words.
+  const slots = [3, 8, 13].map((n) => ({
+    key: `article-40.${n}`,
+    type: 'text',
+    role: 'editorial.button_label',
+    sample: 'See dates'
+  }))
+  const links = ['/tides', '/reefs', '/dunes'].map((target, i) => ({
+    id: `l${i}`,
+    label: 'See dates',
+    target
+  }))
+  labelLinks({ links, menuBlocks: {}, mapSlots: slots, siteUrl: SITE })
+  assert.deepEqual(
+    links.map((l) => l.labelId),
+    ['article-40.3', 'article-40.8', 'article-40.13']
+  )
+})
+
+test('self-check: a top-level menu heading is a text slot of the menu, not a link label', () => {
+  const groups = [
+    {
+      id: 'nav-drawer',
+      items: [
+        { level: 1, label: 'Sample pages', labelSlot: 'menuItem-18.0', target: { kind: 'heading' } },
+        {
+          level: 2,
+          label: 'Login',
+          labelSlot: 'menuItem-19.0',
+          target: { kind: 'page', page: 'menuItem-19' }
+        },
+        {
+          level: 1,
+          label: 'Contact',
+          labelSlot: 'menuItem-23.0',
+          target: { kind: 'page', page: 'menuItem-23' }
+        }
+      ]
+    }
+  ]
+  const drawer = { id: 'drawer', links: [{ id: 'drawer.link-2', label: 'Login', labelId: 'menuItem-19.0' }] }
+  const errors = []
+  assert.equal(menuLinkChecks({ blocks: [drawer], groups, errors }), 1)
+  assert.deepEqual(
+    errors.map((e) => e.field),
+    ['site.navigationGroups[nav-drawer].items[Contact]']
+  )
+})

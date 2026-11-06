@@ -264,6 +264,41 @@ The fixed order a rejected frame walks down: draw, one redraw, next photo, fewer
 rung it took is recorded. A demo picture is never kept, a person is never drawn, an any-real frame never drawn.
 _Avoid_: retry policy, plan B
 
+**Write step**:
+The code, with no model, that writes the brand file, site copy and picture manifest to a site, with the plan's hide
+decisions. Nothing else writes to a site during a build ([ADR 0044](docs/adr/0044-write-step-and-site-check.md)). It takes a
+site door as input; the contract a site must answer comes from the template kit, never from the write step's code.
+_Avoid_: apply step, publisher
+
+**Slot owner**:
+The one file with the right to fill a content slot, or a setting that acts like one. Two owners with different
+content stop the write.
+_Avoid_: source, author
+
+**Unowned slot**:
+A slot in a kept block that no file fills, so it still holds demo content unless something else removes it.
+_Avoid_: orphan slot, gap
+
+**Write report**:
+The machine-readable result of a write: one line per slot with its owner, status, reason and read-back result. The
+statuses are written, hidden, skipped and failed.
+_Avoid_: log, receipt
+
+**Read-back**:
+Comparing what a site now holds with what the write report says was ordered. It says nothing about whether the
+result looks good.
+_Avoid_: verification, QA
+
+**Site check**:
+The script-only measure of a whole written site (step 11). Each failure names a page, a slot and the step that caused
+it. It never repairs.
+_Avoid_: machine gate, QA
+
+**Demo baseline**:
+The text and picture hashes of an untouched site, measured once per quickstart version. What it holds and a kept page
+still shows is demo content.
+_Avoid_: demo list, sample set
+
 ---
 
 **Read next:** [`SYSTEM.md`](SYSTEM.md) (how the system runs) · [`CLAUDE.md`](CLAUDE.md) (boundary

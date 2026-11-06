@@ -1,7 +1,7 @@
 // Gate sections: header (kind, version, kit), the name and its slots (decision 21), and the colours (accent only,
 // decisions C, 8 and 9). Each section only appends rejected fields to ctx.
 import { HEX } from './gate-context.js'
-import { liftAccent, neutralReason } from './colour-math.js'
+import { liftAccent, neutralReason } from '../lib/brand-accent/colour-math.js'
 
 export function checkHeaderAndName(ctx) {
   const { b, bad, exact, NS } = ctx

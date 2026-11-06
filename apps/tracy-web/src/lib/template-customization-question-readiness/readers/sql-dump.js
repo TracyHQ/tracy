@@ -143,7 +143,7 @@ function tuples(s, from) {
  * for any other shape (an expression, a function call, an OR, a subquery): those are not applied.
  * @param {string} s the statement
  * @param {number} from just after `SET`
- * @returns {{ set: Record<string, any>, where: [string, any][] } | null}
+ * @returns {{ set: Record<string, any>, where: [string, any][] } | null} a `set` value may be a function of the row (REPLACE)
  */
 function updateParts(s, from) {
   const n = s.length
@@ -160,8 +160,36 @@ function updateParts(s, from) {
     if (s[i] !== '=') return null
     i += 1
     skip()
-    const { value, end } = literalAt(s, i)
-    i = end
+    // `col = REPLACE(src, 'from', 'to')`: a release builder's link repair (JA Diner 1.0.5). Kept as a
+    // function of the row, run in the order MySQL runs a single-table SET (left to right, on new values).
+    const replace = /^REPLACE\s*\(\s*(?:`([^`]+)`|([A-Za-z_]\w*))\s*,\s*/i.exec(s.slice(i))
+    let value
+    if (replace) {
+      i += replace[0].length
+      const from = literalAt(s, i)
+      i = from.end
+      skip()
+      if (s[i] !== ',' || typeof from.value !== 'string') return null
+      i += 1
+      skip()
+      const to = literalAt(s, i)
+      i = to.end
+      skip()
+      if (s[i] !== ')' || typeof to.value !== 'string') return null
+      i += 1
+      const source = replace[1] ?? replace[2]
+      const [a, b] = [from.value, to.value]
+      value = (/** @type {Record<string, any>} */ row) =>
+        row[source] == null
+          ? row[source]
+          : a === ''
+            ? String(row[source])
+            : String(row[source]).split(a).join(b)
+    } else {
+      const literal = literalAt(s, i)
+      value = literal.value
+      i = literal.end
+    }
     skip()
     // A literal followed by an operator is an expression (`n + 1`), not a value.
     if (i < n && !/^(,|WHERE\b|AND\b)/i.test(s.slice(i))) return null
@@ -250,7 +278,8 @@ export function readTables(sql, want = () => true) {
       const parts = table && updateParts(statement, update[0].length)
       if (parts)
         for (const row of table.rows)
-          if (parts.where.every(([c, v]) => String(row[c]) === String(v))) Object.assign(row, parts.set)
+          if (parts.where.every(([c, v]) => String(row[c]) === String(v)))
+            for (const [c, v] of Object.entries(parts.set)) row[c] = typeof v === 'function' ? v(row) : v
       continue
     }
     const insert = INSERT.exec(statement)

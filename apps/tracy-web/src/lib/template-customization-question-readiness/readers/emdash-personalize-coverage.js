@@ -68,6 +68,8 @@ export function coverageOf(personalize) {
       (p.rewrite ?? []).some(
         (r) =>
           r.collection === collection &&
+          // a rule with `slugs` rewrites only those entries of the collection
+          (!Array.isArray(r.slugs) || r.slugs.includes(slug)) &&
           ((r.fields ?? []).includes(field) || (r.body && field === 'content') || field in (r.lists ?? {}))
       )
     )

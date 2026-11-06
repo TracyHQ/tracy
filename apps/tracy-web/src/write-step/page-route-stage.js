@@ -1,0 +1,165 @@
+// Kept pages take the plan's slug (ADR 0044, decision 20). The planner names each kept page after what it holds; until this
+// stage the site still served it at the demo's address (a tennis page at /classes/group-boxing). It runs last of the writes,
+// after the printed check read the pages back: every stage before it, and the kit, find a page by its demo address.
+//
+// For each kept page with a plan slug, the home page aside, the menu item that opens it takes the slug as its alias through
+// `content.update`, and so does the article it prints when it prints one. The plugin renames the item's whole branch, keeps the
+// undo, makes the value URL safe and refuses an alias a sibling holds. A plugin from before that door ignores or refuses the
+// field: the line is failed with the release it needs, so the site check blocks on step 9 and nothing reads as renamed.
+//
+// The report keeps a route table, `[{ pageId, slug, itemId, from, to, outcome, ... }]`, and the kept pages at their new
+// addresses, which the site check opens. On a rerun the route table of the last report is played back first (restoreRoutes):
+// the item takes its demo alias again, so every stage before this one still finds its page, and this stage renames it again.
+import { createHash } from 'node:crypto'
+import { menuRows } from '../lib/joomla-menu-rows.js'
+import { answerWords, doorCall } from './settings-door.js'
+import { keptAt, routeLines, routeOrders } from './page-route-lines.js'
+
+/** The first release of the plugin whose `content.update` renames a menu item through `alias` (TracyHQ/claude-cowork#271). */
+export const ALIAS_DOOR = 'Claude Cowork for Joomla 0.24.81'
+const each = (value) => (Array.isArray(value) ? value : [])
+const digest = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 32)
+const OLDER = `the plugin took the call and kept the old alias; renaming a page needs ${ALIAS_DOOR} or later`
+const lastPart = (path) =>
+  String(path ?? '')
+    .replace(/\/+$/, '')
+    .split('/')
+    .at(-1) ?? ''
+
+/** The plugin's words for a refused rename, with the release it needs when the refusal is an older plugin's. */
+const refusalOf = (error) => {
+  const words = String(error?.message ?? error)
+  return /no writable column/i.test(words) ? `${words}; renaming a page needs ${ALIAS_DOOR} or later` : words
+}
+
+/** One menu item to its slug: written, already, or refused with the plugin's words. */
+async function renameItem(call, applyId, order) {
+  if (order.alias === order.slug) return { outcome: 'already', evidence: { alias: order.alias } }
+  try {
+    const answer = await call('content.update', {
+      apply_id: applyId,
+      kind: 'menuItem',
+      id: order.itemId,
+      fields: { alias: order.slug }
+    })
+    if (answer?.alias === order.slug)
+      return { outcome: 'written', evidence: { alias: answer.alias, before: order.alias } }
+    return { outcome: 'refused', reason: OLDER, evidence: { answered: answer?.alias ?? null } }
+  } catch (error) {
+    return { outcome: 'refused', reason: refusalOf(error) }
+  }
+}
+
+/** The article the item prints, to the same slug; Joomla's own Table makes it URL safe and keeps it unique in its category. */
+async function renameArticle(call, applyId, id, slug) {
+  try {
+    const held = (await call('content.get', { kind: 'article', id }))?.item?.alias
+    if (held === slug) return { id, outcome: 'already', evidence: { alias: held } }
+    await call('content.update', { apply_id: applyId, kind: 'article', id, fields: { alias: slug } })
+    const now = (await call('content.get', { kind: 'article', id }))?.item?.alias
+    return now === slug
+      ? { id, outcome: 'written', evidence: { alias: now, before: held ?? null } }
+      : {
+          id,
+          outcome: 'refused',
+          reason: `the site holds the alias ${now ?? '(none)'} after the write`,
+          evidence: { answered: now ?? null }
+        }
+  } catch (error) {
+    return { id, outcome: 'refused', reason: refusalOf(error) }
+  }
+}
+
+/** Whether the plan gives any kept page a slug; without one the stage has nothing to do and does not run. */
+export const hasPlanSlugs = (plan) =>
+  each(plan?.pages).some((p) => p?.decision === 'keep' && String(p?.slug ?? '').trim())
+
+/**
+ * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, keptPages: { id: string, path: string }[],
+ *   menutype?: string | null }} input `menutype`: the main menu, whose item a page is renamed through when several open it
+ * @returns {Promise<{ routes: object[], lines: object[], keptPages: { id: string, path: string }[] }>} `routes` is empty when
+ *   no kept page has a plan slug to take
+ */
+export async function runRouteStage({ door, siteKey, kit, plan, keptPages, menutype = null }) {
+  if (!hasPlanSlugs(plan)) return { routes: [], lines: [], keptPages }
+  const call = doorCall(door, siteKey)
+  let rows
+  try {
+    rows = await menuRows(call)
+  } catch (error) {
+    const reason = `the menu could not be read: ${error.message}`
+    const routes = each(plan.pages)
+      .filter((p) => p?.decision === 'keep' && String(p?.slug ?? '').trim())
+      .map((p) => ({
+        pageId: p.id,
+        slug: p.slug,
+        itemId: null,
+        from: null,
+        to: null,
+        outcome: 'refused',
+        reason
+      }))
+    return { routes, lines: routeLines(routes), keptPages }
+  }
+  const orders = routeOrders({ plan, kit, rows, menutype })
+  const landed = new Map()
+  const routes = []
+  for (const order of orders) {
+    const { alias: _alias, ...entry } = order
+    if (order.reason) {
+      routes.push({ ...entry, outcome: 'refused' })
+      continue
+    }
+    const applyId = `page-route-${digest(order.pageId)}`
+    const item = await renameItem(call, applyId, order)
+    if (item.outcome !== 'refused') landed.set(order.itemId, order.slug)
+    const article = order.articleId ? await renameArticle(call, applyId, order.articleId, order.slug) : null
+    routes.push({ ...entry, ...item, ...(article ? { article } : {}) })
+  }
+  const at = keptAt(keptPages, { kit, rows, landed, menutype })
+  const where = new Map(at.map((p) => [p.id, p.path]))
+  // `to` is where the page answers now: the plan's address when its rename landed, the demo's when it did not.
+  for (const route of routes) if (route.itemId) route.to = where.get(route.pageId) ?? route.to
+  return { routes, lines: routeLines(routes), keptPages: at }
+}
+
+/**
+ * Before the other stages of a rerun: each page the last report renamed takes its demo alias again, so the stages that find a
+ * page by the kit's address find it. The route stage at the end renames it again.
+ * @param {{ door: { apply: Function }, siteKey: string, routes: object[] | undefined }} input the last report's route table
+ * @returns {Promise<{ restored: object[], stop?: { code: string, reason: string } }>}
+ */
+export async function restoreRoutes({ door, siteKey, routes }) {
+  const renamed = each(routes).filter(
+    (r) =>
+      r?.itemId &&
+      ['written', 'already'].includes(r.outcome) &&
+      lastPart(r.from) &&
+      lastPart(r.from) !== r.slug
+  )
+  if (!renamed.length) return { restored: [] }
+  const call = doorCall(door, siteKey)
+  const restored = []
+  for (const route of renamed) {
+    const alias = lastPart(route.from)
+    try {
+      const answer = await call('content.update', {
+        apply_id: `page-route-${digest(route.pageId)}`,
+        kind: 'menuItem',
+        id: route.itemId,
+        fields: { alias }
+      })
+      if (answer?.alias !== alias) throw new Error(answerWords(answer))
+      restored.push(route)
+    } catch (error) {
+      return {
+        restored,
+        stop: {
+          code: 'ROUTE_RESTORE_FAILED',
+          reason: `${route.pageId} could not take its demo address ${route.from} back before the rerun: ${error.message}`
+        }
+      }
+    }
+  }
+  return { restored }
+}

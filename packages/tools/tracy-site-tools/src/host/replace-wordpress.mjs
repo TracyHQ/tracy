@@ -2471,8 +2471,24 @@ export function narrowChange(oldText, newText) {
   return { p, q, mid }
 }
 
-/** Visible text of raw markup, tags removed (entities kept: the bytes are already encoded). @param {string} s */
-const stripTags = (s) => s.replace(/<[^>]*>/g, '')
+/**
+ * Visible text of raw markup, tags removed (entities kept: the bytes are already encoded). A tag is what
+ * `/<[^>]*>/g` reads: a `<` to the first `>` after it. A `<` with no `>` after it opens no tag and is text,
+ * so it stays as `&lt;` (what it reads as): a bare `<script` left at the end never becomes a tag when the
+ * text written beside it brings a `>`.
+ * @param {string} s
+ */
+export const stripTags = (s) => {
+  let out = ''
+  let from = 0
+  for (let at = s.indexOf('<'); at !== -1; at = s.indexOf('<', from)) {
+    const end = s.indexOf('>', at + 1)
+    if (end === -1) break
+    out += s.slice(from, at)
+    from = end + 1
+  }
+  return out + s.slice(from).replace(/</g, '&lt;')
+}
 
 /**
  * Grow `[s, e)` until every tag opened inside it closes inside it and every tag closed inside it

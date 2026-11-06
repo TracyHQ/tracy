@@ -212,3 +212,31 @@ test('a link with no address that opens something on the page (a tab, a menu hea
     ['link "Lanes" has no target']
   )
 })
+
+test('the review opens a kit whose frame is empty in the demo: no measured numbers to show', () => {
+  const frame = {
+    id: 'b.1',
+    kind: 'picture',
+    hideEvidence: { judgedBy: 'the demo leaves the picture field empty' }
+  }
+  const rows = reviewRows({ widths: [1440, 390], images: [], blocks: [{ id: 'b', frames: [frame] }] })
+  assert.ok(Array.isArray(rows))
+})
+
+test('template gaps: a row fix measured on a page the kit left out is not proposed', () => {
+  const kit = {
+    pages: [],
+    blocks: [{ id: 'block-4', images: {}, links: [], lists: [{ id: 'article-2.body-ul' }] }]
+  }
+  const fix = (selector, lists) => ({ selector, rule: 'justify-content: center', verified: true, lists })
+  const fixes = [
+    fix('div.kept-by-block div.row', ['block-4.cards']),
+    fix('div.kept-by-list ul', ['article-2.body-ul']),
+    fix('div.showcase div.row', ['article-9.introtext.div-ul'])
+  ]
+  const gaps = templateGaps({ kit, fixes })
+  assert.deepEqual(
+    gaps.map((g) => g.where.selector),
+    ['div.kept-by-block div.row', 'div.kept-by-list ul']
+  )
+})

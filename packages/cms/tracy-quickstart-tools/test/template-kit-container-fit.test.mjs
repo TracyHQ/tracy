@@ -9,7 +9,10 @@ import { chromium } from '@playwright/test'
 import { readRowFit } from '../template-kit/lib/read-row-fit.js'
 import { readTextFit } from '../template-kit/lib/read-text-fit.js'
 
-const FACE = 'body{margin:0;font:16px/20px monospace}'
+// Named faces first: the generic `monospace` alone is whatever fontconfig picks, and on a machine with Playwright's
+// fonts but no DejaVu (Ubuntu 24.04 with `--with-deps`) that is WenQuanYi Zen Hei Mono, whose Latin letters are
+// proportional and 8px wide, so every reading below came out longer. Liberation Mono comes with `--with-deps`.
+const FACE = 'body{margin:0;font:16px/20px "Liberation Mono","DejaVu Sans Mono","Courier New",monospace}'
 
 async function withPage(t, html, width, fn) {
   let browser
@@ -21,6 +24,20 @@ async function withPage(t, html, width, fn) {
   try {
     const page = await browser.newPage({ viewport: { width, height: 600 } })
     await page.setContent(html)
+    // The numbers below assume about 9.6px a character, every character: say so when the face is not that.
+    const widths = await page.evaluate(() =>
+      ['i', 'W'].map((c) => {
+        const s = document.body.appendChild(document.createElement('span'))
+        s.textContent = c.repeat(50)
+        const w = s.getBoundingClientRect().width / 50
+        s.remove()
+        return w
+      })
+    )
+    assert.ok(
+      widths.every((w) => w > 9.4 && w < 9.8),
+      `no fixed-pitch face of about 9.6px on this machine (i, W: ${widths.join(', ')}px); install fonts-liberation`
+    )
     await fn(page)
   } finally {
     await browser.close()

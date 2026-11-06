@@ -2,17 +2,20 @@
 //
 // A writing turn answers { slots, alts, seo, pages, notebook, returns }; code puts the site-copy/1 file together from
 // it (assembleCopy): it adds `version` and `fingerprint` and fills every label slot of the plan (`owner:
-// "plan-label"`, the plan's own words) that the writer left out, as the prompt tells it to. Nothing the writer wrote
-// is changed, reordered or dropped.
+// "plan-label"`, the plan's own words) that the writer left out, as the prompt tells it to. A label slot the writer
+// wrote is recorded by what happened (plan-labels.js labelSlotEntry, 2026-11-04): the plan's words kept are
+// `plan-label`, a text of its own is `writer` with `replacedPlanLabel`. No text the writer wrote is changed,
+// reordered or dropped.
 //
 // A fix round answers only the corrected entries: { slots, alts, seo, pages }, each list holding only what changed
 // (and `returns`, which withdraws the writer's own text for a slot or page).
 // They are read as a change list for the shared run loop (asChangeList: one change per entry, { in: <list>, ...entry
 // }) and applied onto the previous round's copy (applyValidChanges): an entry replaces the text of the entry with the
-// same key (slot, frame, page) or adds it when the writer had left it out. An entry that names nothing the plan has,
-// a label slot, a malformed text, or the same key twice is rejected on its own and sent back once; every valid entry
+// same key (slot, frame, page) or adds it when the writer had left it out. A label slot entry is recorded the same
+// way as in a whole answer. An entry that names nothing the plan has, a malformed text, or the same key twice is rejected on its own and sent back once; every valid entry
 // is applied. Text the writer wrote is replaced only by the writer's own corrected entry, never by code.
 import { invalidChangesMessage as invalidChangesMessageFor } from '../lib/bench-changes.js'
+import { labelSlotEntry } from './plan-labels.js'
 
 export const COPY_VERSION = 'site-copy/1'
 
@@ -30,7 +33,7 @@ const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 const isText = (x) => typeof x === 'string' && x.trim() !== ''
 
 /**
- * The site-copy/1 file of one whole answer. `index` is the copy check's index of the plan (copy-check/inputs-index.js
+ * The site-copy/1 file of one whole answer. `index` is the copy check's index of the plan (lib/site-copy/inputs-index.js
  * indexInputs): its `expected` slots carry `label` (the plan's words) on label slots.
  * @param {object} answer the writer's answer as one JSON object
  * @param {{ fingerprint: object, index: { expected: Map<string, object> } }} context
@@ -40,10 +43,12 @@ export function assembleCopy(answer, { fingerprint, index }) {
   let all = slots
   if (slots === undefined || Array.isArray(slots)) {
     const written = new Set(arr(slots).map((s) => (isObject(s) ? s.slot : null)))
+    const labelOf = (s) => (isObject(s) ? index.expected.get(s.slot) : null)
+    const traced = arr(slots).map((s) => (labelOf(s)?.label != null ? labelSlotEntry(s, labelOf(s)) : s))
     const labels = [...index.expected.values()]
       .filter((e) => e.label !== null && !written.has(e.slot))
       .map((e) => ({ slot: e.slot, owner: 'plan-label', text: e.label, factIds: [...e.factIds] }))
-    all = [...arr(slots), ...labels]
+    all = [...traced, ...labels]
   }
   return { version: COPY_VERSION, fingerprint, slots: all, ...rest }
 }
@@ -87,10 +92,10 @@ function entryProblem(change, index) {
   if (list === 'slots') {
     const planned = index.expected.get(key)
     if (!planned) return `slot ${key} is not a slot the plan keeps`
-    if (planned.label !== null)
-      return `slot ${key} is a label: code fills it with the plan's words, leave it out`
     if (change.factIds !== undefined && !(Array.isArray(change.factIds) && change.factIds.every(isText)))
       return `slot ${key}: factIds must be a list of fact ids`
+    if (change.emphasis !== undefined && !(isText(change.emphasis) && change.emphasis.trim()))
+      return `slot ${key}: emphasis must be a non-empty string`
     return textProblem(change.text) && `slot ${key}: ${textProblem(change.text)}`
   }
   if (list === 'alts') {
@@ -126,7 +131,7 @@ function returnProblem(change, index) {
   if (isText(change.slot)) {
     const planned = index.expected.get(change.slot)
     if (planned && planned.label !== null)
-      return `slot ${change.slot} is a label: code fills it with the plan's words, leave it out`
+      return `slot ${change.slot} is a label: write the plan's words as its text to keep them, never return it`
     return null
   }
   if (!isText(change.page)) return 'a returns entry must name its slot or its page'
@@ -156,11 +161,32 @@ function applyEntry(doc, change, index) {
   if (!Array.isArray(doc[list])) doc[list] = []
   const at = doc[list].filter((e) => isObject(e) && e[keyName] === entry[keyName])
   if (list === 'slots') {
+    const planned = index.expected.get(entry.slot)
+    if (planned?.label != null) {
+      // Replaced in its place, so the copy keeps its order; a label the copy did not hold yet is added.
+      const traced = labelSlotEntry(entry, planned)
+      let placed = false
+      doc.slots = doc.slots.flatMap((e) => {
+        if (!(isObject(e) && e.slot === entry.slot)) return [e]
+        if (placed) return []
+        placed = true
+        return [traced]
+      })
+      if (!placed) doc.slots.push(traced)
+      return
+    }
     if (!at.length)
-      doc.slots.push({ slot: entry.slot, owner: 'writer', text: entry.text, factIds: entry.factIds ?? [] })
+      doc.slots.push({
+        slot: entry.slot,
+        owner: 'writer',
+        text: entry.text,
+        factIds: entry.factIds ?? [],
+        ...(entry.emphasis !== undefined ? { emphasis: entry.emphasis } : {})
+      })
     for (const e of at) {
       e.text = entry.text
       if (entry.factIds !== undefined) e.factIds = entry.factIds
+      if (entry.emphasis !== undefined) e.emphasis = entry.emphasis
     }
     return
   }

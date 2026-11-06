@@ -9,6 +9,7 @@ import { briefOfRevision, cancelPictureRun, startPictureRun } from './bench-cont
 import { copyPictureFiles, listLines, runFiles, standingLines, statusLines } from './bench-export.js'
 import { filesOf, inputsOf, listRuns, readRun } from './bench-store.js'
 import { fileStore } from './file-store.js'
+import { openKitWithMap } from './kit-with-map.js'
 
 export const USAGE = `usage: node scripts/site-pictures-bench.mjs <command>
   run --plan-file <path> --kit <ref> --brief-file <path> --photos <dir>   queue a run on a plan, a brief JSON file
@@ -20,8 +21,11 @@ export const USAGE = `usage: node scripts/site-pictures-bench.mjs <command>
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, cost, duration, checker summary
   get <runId> --out <dir>                 write the manifest of each round and the final site-pictures.json, the
-                                          picture files (files/), the file rows, the check and failure list of each
-                                          round, the failures still standing, run meta, plan and turns
+                                          write step's picture file mapping.json (exportPictureMapping of the final
+                                          manifest, for write-step-bench.mjs run --pictures-file <dir>/mapping.json),
+                                          the picture files both name (files/<sha256>.<ext>), the file rows, the check
+                                          and failure list of each round, the failures still standing, run meta, plan
+                                          and turns
   cancel <runId>                          stop a run
 A plan with frames that need a specific picture calls the picker through the "Picture picker" door (/ops, Model & AI);
 one without calls no picker. Every finished picture is checked by the looker through the "Picture looker" door, which
@@ -201,11 +205,21 @@ async function getRun(d, values, runId) {
   const fileRows = await filesOf(d.pool, run.id)
   const dir = resolve(d, values.out)
   await mkdir(dir, { recursive: true })
-  const files = runFiles(run, turns, fileRows)
+  // The kit with its content map, as the run read it: the mapping's contract and its image slots.
+  const kit = openKitWithMap(run.kitRef, d.index ? { index: d.index } : {})
+  const files = runFiles(run, turns, fileRows, kit?.doc ?? null)
   for (const [name, text] of files) await writeFile(path.join(dir, name), text)
   const missing = await copyPictureFiles(fileStore(d.storeDir), fileRows, dir)
   d.out(`${files.length} files written: ${files.map(([name]) => name).join(', ')}`)
   d.out(`${fileRows.length - missing.length} picture files copied to files/`)
+  const mapping = files.find(([name]) => name === 'mapping.json')
+  if (mapping) {
+    const m = JSON.parse(mapping[1])
+    d.out(
+      `mapping.json: ${Object.keys(m.mapping.changes).length} changes, ${m.uploads.length} uploads, ${m.hidden.length} hidden, ${m.painted.length} painted, ${m.siteSettings.length} site settings, ${m.problems.length} problems${kit ? '' : ` (kit ${run.kitRef} not found: no slot checked)`}`
+    )
+    for (const p of m.problems) d.err(`mapping problem ${p.where}: ${p.detail}`)
+  }
   if (missing.length)
     d.err(`${missing.length} picture files are no longer in the file store: ${missing.join(', ')}`)
   const standing = standingLines(run)

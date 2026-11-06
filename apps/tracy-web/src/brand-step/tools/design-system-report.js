@@ -1,7 +1,7 @@
 // What build_design_system reports besides the module: the accent's contrast table (hard rule 3:1 for text and
 // buttons; the slot's own aim for words is 4.5:1) and the advisory slot drift (where the slot's rendering of the
 // template itself, with the template accent, differs from the template's own tokens; not caused by the brand).
-import { contrastHex } from '../colour-math.js'
+import { contrastHex } from '../../lib/brand-accent/colour-math.js'
 import { sideText } from '../kit-grounds.js'
 
 export function contrastTable(sides) {

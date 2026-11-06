@@ -27,12 +27,16 @@ export function notFoundOf(answer) {
 
 /**
  * The page a new plain page would look like: of the pages that show one article (body marked as an article view),
- * the one with the fewest blocks around the article, then the shortest path.
- * @param {Array<{pageId: string, path: string, bodyClass?: string, blockCount?: number}>} pages
+ * the one with the fewest blocks around the article, then the shortest path. A body with no view class counts when
+ * the page read one article view in its content (`articleView`).
+ * @param {Array<{pageId: string, path: string, bodyClass?: string, articleView?: boolean, blockCount?: number}>} pages
  */
 export function articleLayoutOf(pages) {
   const articles = pages.filter(
-    (p) => /\bview-article\b/.test(p.bodyClass ?? '') || /\bsingle(?:-post)?\b/.test(p.bodyClass ?? '')
+    (p) =>
+      /\bview-article\b/.test(p.bodyClass ?? '') ||
+      /\bsingle(?:-post)?\b/.test(p.bodyClass ?? '') ||
+      p.articleView === true
   )
   articles.sort((a, b) => (a.blockCount ?? 99) - (b.blockCount ?? 99) || a.path.length - b.path.length)
   return { pageId: articles[0]?.pageId ?? null, candidates: articles.length }

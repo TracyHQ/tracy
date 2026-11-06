@@ -22,7 +22,8 @@ export const PLANNER_DROPPED_KIT_FIELDS = Object.freeze([
   { field: 'formatFrom', why: 'where a slot format came from' },
   { field: 'shotOf', why: 'which page a block image was captured on' },
   { field: 'fullShotOf', why: 'which page a page image was captured on' },
-  { field: 'classes', in: ['icon'], why: 'the CSS classes of a link icon' }
+  { field: 'classes', in: ['icon'], why: 'the CSS classes of a link icon' },
+  { field: 'storedFields', why: 'every stored field and what it drives: for the kit gate and a person' }
 ])
 
 const DROPPED = new Map(PLANNER_DROPPED_KIT_FIELDS.map((d) => [d.field, d.in ?? null]))

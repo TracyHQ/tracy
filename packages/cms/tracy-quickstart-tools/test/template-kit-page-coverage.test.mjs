@@ -13,6 +13,7 @@ import { linksWithoutTarget, textsWithoutSlot } from '../template-kit/lib/page-c
 import { imagesWithoutFrame, pictureFrames } from '../template-kit/lib/picture-frames.mjs'
 import { readDetails } from '../template-kit/lib/read-details.js'
 import { sampleIndex } from '../template-kit/lib/sample-index.mjs'
+import { templateGaps } from '../template-kit/lib/template-gaps.mjs'
 
 const text = (n, sample, role = 'editorial.paragraph') => ({
   key: `article-5.${n}`,
@@ -86,6 +87,44 @@ test('a button opening a map is a link of the block: its label slot and what it 
   assert.match(button.opens.writableReason, /no content map slot/)
 })
 
+test('a link to an address of the site that only runs a task opens that action: no dead link, a missing page still is', () => {
+  const b = buildBlock({
+    rec: {
+      id: 'body-lane',
+      source: 'main-body',
+      widths: {
+        1440: {
+          pages: ['lane'],
+          details: {
+            ...READING,
+            clickables: [],
+            links: [
+              { label: 'Ask the coach', href: '/index.php/pool/lane-3?task=askquestion&tmpl=component' },
+              { label: 'Old lane', href: '' }
+            ]
+          }
+        }
+      }
+    },
+    entity: 'article-5',
+    idx: indexMap(MAP),
+    samples: sampleIndex(MAP),
+    errors: [],
+    minEvidence: {},
+    siteUrl: 'http://site.example',
+    aliasHosts: [],
+    widths: ['1440']
+  })
+  const ask = b.links.find((l) => l.label === 'Ask the coach')
+  assert.equal(ask.target, null)
+  assert.deepEqual(ask.opens, { kind: 'action', action: '/pool/lane-3?task=askquestion&tmpl=component' })
+  const gaps = templateGaps({ kit: { pages: [], blocks: [b] } })
+  assert.deepEqual(
+    gaps.map((g) => g.detail),
+    ['link "Old lane" has no target']
+  )
+})
+
 test('gate: elements printing content with no slot of their own, and clickables without a target, are named', () => {
   const b = build()
   b.source = { entity: 'article-5', contains: [] }
@@ -139,6 +178,38 @@ test('the read pass names what each clickable opens: a tab by its #fragment, a m
         ['Day passes', 'tab', '#tab-a'],
         ['Season passes', 'tab', '#tab-b'],
         ['Visit', 'submenu', null]
+      ]
+    )
+    // Bootstrap 3 markup (a T3 template): `data-toggle` tabs whose #fragment is a selector, and a play button whose
+    // address is a script.
+    await page.setContent(`<div data-kit-block="film">
+      <ul class="nav nav-tabs"><li><a href="#mod-7 .mod-8" role="tab" data-toggle="tab">Lanes</a></li></ul>
+      <div id="mod-7"><div class="mod-8">Lane times</div></div>
+      <a class="play-video" href="javascript:void(0);" role="button" aria-label="Play film"><i style="display:inline-block;width:20px;height:20px"></i></a></div>`)
+    const bs3 = await page.evaluate(readDetails)
+    assert.deepEqual(
+      bs3.film.clickables.map((c) => [c.label, c.target?.kind, c.target?.element ?? null]),
+      [
+        ['Lanes', 'tab', '#mod-7 .mod-8'],
+        ['Play film', 'script', null]
+      ]
+    )
+    // A carousel control (`data-slide`, Bootstrap 3) moves the carousel its #fragment names; a `#` link held by a
+    // form (the stars of a rating form) is a control of that form.
+    await page.setContent(`<div data-kit-block="reel">
+      <div id="reel-9" class="carousel"><div class="item">Slide</div></div>
+      <a data-slide="prev" role="button" aria-label="Back" href="#reel-9" class="left carousel-control" style="display:inline-block;width:20px;height:20px"></a>
+      <form class="rate" method="POST" action="/notes/12-a-quiet-week"><ul><li><a href="#" title="2 of 5">2</a></li></ul></form></div>`)
+    const more = await page.evaluate(readDetails)
+    assert.deepEqual(
+      more.reel.clickables.map((c) => [
+        c.label,
+        c.target?.kind,
+        c.target?.element ?? c.target?.action ?? null
+      ]),
+      [
+        ['Back', 'slide', '#reel-9'],
+        ['2', 'form', '/notes/12-a-quiet-week']
       ]
     )
   } finally {

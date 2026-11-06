@@ -3,7 +3,7 @@
 // writer's own files: the plan it wrote from, the final copy and its Joomla contract mapping export. Pure.
 import { benchExport } from '../lib/bench-export.js'
 import { MAX_FIX_ROUNDS } from './bench-worker.js'
-import { exportContractMapping } from './contract-mapping.js'
+import { exportContractMapping } from '../lib/site-copy/contract-mapping.js'
 
 export { listLines, standingLines } from '../lib/bench-export.js'
 

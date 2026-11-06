@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-389-emdash-restaurant-readiness",
+  "kind": "fix",
+  "title": "JA Restaurant passes the customization readiness check and its links follow the pages the customer unticked",
+  "pr": 389,
+  "area": "cms/emdash-templates",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, run node tests/regression/scripts/REG-PR-389-emdash-restaurant-readiness.mjs. It loads the theme's link gate libs (packages/cms/tracy-emdash-theme-restaurant/src/lib), reads seed/seed.json, seed/personalize.json and `tools/release.mjs --site-pages`, and runs the ABOUT-1 readiness tests of apps/tracy-web."
+  ],
+  "expect": [
+    "With Menu unticked, /menu, /menu/simple-menu and the own-host spellings (//site.test:80/menu, https://site.test/menu) are dead; an external link, tel:, # and / stay live; a script URL (javascript:, data:, in any spelling) is never printed; only a same-site path takes the locale prefix; a menu loses an unticked page, its children and a heading left empty.",
+    "The dark logo rule of seed/personalize.json targets an entry the seed has (chrome/chrome, the entry the header reads).",
+    "tracy_site_pages.json lists our-history, simple-menu, menu-with-image, 2-column-menu, phone-reservation and contact-us.",
+    "The ABOUT-1 readiness tests pass, among them the JA Restaurant case (hero.hero_heading and hero.hero_intro, every hero entry covered). Pre-fix (9c920b202): no gate libs, the dark logo targeted site/site, the Pages list held 6 pages, and ABOUT-1 failed for this theme."
+  ],
+  "selectors": {},
+  "evidence": "Template Customization Question Readiness on release 1.0.0 had 8 must-fix with qa.mjs at 16/16 (REL-2, LOGO-1, LOGO-2, ABOUT-1, ABOUT-2, ABOUT-3, PAGE-4, LANG-2); on a built site with Menu and Blog unticked the home page still linked to /menu, /blog and the categories (measured 04/11/2026).",
+  "fence": "src/lib/{page-records,parent-gate,data-links,menu-gate,link-gate}.ts of the theme, seed/personalize.json, tools/release.mjs sitePagesFor, and rules/about-1-home-heading.js.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-389-emdash-restaurant-readiness.mjs"]
+  }
+}

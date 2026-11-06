@@ -159,6 +159,15 @@ export function h1Source(page) {
   if (shown.length > 1)
     return { via: null, reason: `the page shows ${shown.length} h1`, texts: shown.map((h) => h.text) }
   const h = shown[0]
+  return {
+    ...h1Origin(page, h),
+    ...(h.block ? { block: h.block } : {}),
+    ...(h.clipped ? { clipped: true } : {})
+  }
+}
+
+/** Which of the four sources prints one shown h1. */
+function h1Origin(page, h) {
   const text = norm(h.text)
   const params = page.menu?.params ?? {}
   const heading = norm(params.page_heading) || norm(page.menu?.title)

@@ -7,6 +7,7 @@ import { section } from '@/lib/content'
 import { mediaUrl } from '@/lib/media'
 import { uiTag } from '@/lib/ui'
 import { stampBlocks, stampFor } from '@/lib/stamps'
+import { liveBlocks } from '@/lib/link-gate'
 import type { Chrome } from '@/lib/chrome'
 import type { Locale } from '@/lib/i18n'
 
@@ -18,7 +19,7 @@ const { locale } = Astro.props
 const c = await section('contact', 'contact', locale)
 const $c = stampFor(Astro.request, 'contact', c ? { id: c.id, slug: c.slug } : null)
 const FormEmbed = (blockComponents as any)['emdash-form']
-const cardText = c ? stampBlocks($c, 'card_text', c.card_text) : []
+const cardText = c ? await liveBlocks(Astro.request, locale, stampBlocks($c, 'card_text', c.card_text)) : []
 const img = c ? mediaUrl(c.image) : null
 ---
 

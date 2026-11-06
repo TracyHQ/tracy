@@ -7465,6 +7465,23 @@ function unitParts(unit) {
   if (loose2 || parts.length < 2) return [{ text: unit.shown, link: unitLink(unit) }];
   return parts;
 }
+function withoutComments(html, { keep = null, newlineBefore = false } = {}) {
+  let out = "";
+  let from = 0;
+  let at = html.indexOf("<!--");
+  while (at !== -1) {
+    if (keep?.(html, at)) {
+      at = html.indexOf("<!--", at + 1);
+      continue;
+    }
+    const end = html.indexOf("-->", at + 4);
+    if (end === -1) break;
+    out += html.slice(from, newlineBefore && at > from && html[at - 1] === "\n" ? at - 1 : at);
+    from = end + 3;
+    at = html.indexOf("<!--", from);
+  }
+  return out + html.slice(from);
+}
 
 // src/host/merge-patch.mjs
 var isPlainObject = (v2) => v2 !== null && typeof v2 === "object" && !Array.isArray(v2);
@@ -13971,10 +13988,36 @@ function fleetCopyNext(why, transient2) {
   }
 }
 var EMDASH_ROAD = "This site runs EmDash, which has no Cowork component and needs none: its own MCP tools, through tracy_emdash, are the door. What Tracy wrote at the build is read and undone through the build tool: tracy_site_build_emdash request site.inspect, then site.revert {applyId}.";
+function toolNotFound(text6) {
+  for (const line of text6.toLowerCase().split(/[\n\r\u2028\u2029]/)) {
+    const at = line.indexOf("tool ");
+    if (at !== -1 && line.lastIndexOf(" not found") >= at + 5) return true;
+  }
+  return false;
+}
+var UNLISTED_TAIL = /; "([^"]*)" is not listed/y;
+function unlistedKind(message2) {
+  let tried = -1;
+  for (const m of message2.matchAll(/content\.list serves kinds? /g)) {
+    if (m.index < tried) continue;
+    const semi = message2.indexOf(";", m.index + m[0].length);
+    if (semi === -1) return null;
+    tried = semi;
+    UNLISTED_TAIL.lastIndex = semi;
+    const tail = UNLISTED_TAIL.exec(message2);
+    if (tail) return tail[1];
+  }
+  return null;
+}
+function lastWord(text6) {
+  let at = text6.length;
+  while (at > 0 && /\S/.test(text6[at - 1])) at -= 1;
+  return at === text6.length ? null : text6.slice(at);
+}
 function emdashFailedNext(a, ctx) {
   const text6 = String(a.error ?? a.message ?? "");
   const tool = ctx.tool ?? "";
-  const sub = typeof a.emdash === "string" && a.emdash !== "" ? a.emdash : /^\s*\[([A-Z_]+)\]/.exec(text6)?.[1] ?? (/-32602|Input validation|Invalid arguments/i.test(text6) ? "VALIDATION" : /_rev is required/.test(text6) ? "REV_MISSING" : /tool .* not found|Method not found/i.test(text6) ? "UNKNOWN_TOOL" : "");
+  const sub = typeof a.emdash === "string" && a.emdash !== "" ? a.emdash : /^\s*\[([A-Z_]+)\]/.exec(text6)?.[1] ?? (/-32602|Input validation|Invalid arguments/i.test(text6) ? "VALIDATION" : /_rev is required/.test(text6) ? "REV_MISSING" : toolNotFound(text6) || /Method not found/i.test(text6) ? "UNKNOWN_TOOL" : "");
   if (sub === "CONFLICT")
     return tool === "content_publish" || tool === "content_unpublish" ? 'content_update {\u2026, status:"published"} changes and publishes in one call; to publish now: content_get for the current _rev, then content_publish once.' : "content_get {collection, id} for a fresh _rev, then the same write once; do not loop on the old _rev.";
   if (sub === "NOT_FOUND" || sub === "COLLECTION_NOT_FOUND") {
@@ -14022,9 +14065,8 @@ function badParamsNext(message2, ctx) {
     message2
   ))
     return pagedWithout("search");
-  const listed = /content\.list serves kinds? [^;]*; "([^"]*)" is not listed/.exec(message2);
-  if (listed) {
-    const kind = listed[1];
+  const kind = unlistedKind(message2);
+  if (kind !== null) {
     if (kind === "page" || kind === "pages")
       return 'content.list {kind:"post", post_type:"page"} lists the pages.';
     if (/^(templatePart|template_part|wp_template_part|part)$/.test(kind))
@@ -14145,7 +14187,7 @@ function contractFailedNext(message2) {
   if (message2.startsWith("An option has no edition"))
     return `${slot.split("::").pop()} is one for every language: send it without an edition prefix.`;
   if (/^No \S+ edition of |edition has no block for /.test(message2))
-    return `That language's copy of the page has no such block, so ${/(\S+)$/.exec(message2)?.[1] ?? slot} cannot change there: tell the customer.`;
+    return `That language's copy of the page has no such block, so ${lastWord(message2) ?? slot} cannot change there: tell the customer.`;
   if (message2.startsWith("Unsupported link"))
     return `${slot} takes https://\u2026, mailto:\u2026, tel:+digits, /path or #anchor.`;
   if (message2.startsWith("Template directives are not content"))
@@ -14392,7 +14434,7 @@ function readablePage(html) {
   const langMatch = /<html\b[^>]*\blang\s*=\s*["']?([^"'\s>]+)/i.exec(source);
   const titleMatch = /<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(source);
   const text6 = decodeEntities(
-    source.replace(/<!--[\s\S]*?-->/g, "").replace(NOT_PROSE, " ").replace(BLOCK3, "\n").replace(/<[^>]*>/g, " ")
+    withoutComments(source).replace(NOT_PROSE, " ").replace(BLOCK3, "\n").replace(/<[^>]*>/g, " ")
   ).split("\n").map((line) => line.replace(/[^\S\n]+/g, " ").trim()).filter((line) => line !== "").join("\n");
   return {
     lang: langMatch === null ? null : langMatch[1],
@@ -14941,8 +14983,13 @@ function designSystemArgs(args) {
     };
   return { ok: true, action: "apply", id };
 }
+function withoutTrailingSlashes(s) {
+  let end = s.length;
+  while (end > 0 && s[end - 1] === "/") end -= 1;
+  return s.slice(0, end);
+}
 function designSystemRequest(plan, where, call) {
-  const origin = typeof where.origin === "string" ? where.origin.trim().replace(/\/+$/, "") : "";
+  const origin = typeof where.origin === "string" ? withoutTrailingSlashes(where.origin.trim()) : "";
   if (!plan || origin === "" || !where.siteKey) return null;
   const headers = plan.as === "prompter" ? { "x-tracy-actor": plan.sign?.() ?? plan.assertion, accept: "application/json" } : { cookie: plan.cookie, accept: "application/json" };
   if (where.label) headers["x-tracy-workspace-label"] = where.label;
@@ -15267,8 +15314,28 @@ var ROLE_READ_SRC = String.raw`var\(\s*--ds-[a-z0-9-]+\s*,(?:[^;{}()]|\((?:[^;{}
 var DARK_SELECTOR = String.raw`(?:html|:root|body)?(?:\.(?:dark|t4-dark|is-dark|is-dark-theme|dark-mode|dark-theme|theme-dark|theme--dark|color-scheme-dark)(?![\w-])|\[data-(?:bs-)?(?:theme|mode|color-mode|color-scheme)=\\?["']?dark\\?["']?\])[^{},;"]*`;
 var DARK_OPEN_SRC = String.raw`(?<=^|[{};"])(?:\s|\\n)*(?:@media[^{};]*prefers-color-scheme\s*:\s*dark[^{};]*|${DARK_SELECTOR}(?:,(?:\s|\\n)*${DARK_SELECTOR})*)\{`;
 var OWN_PROP_SRC = String.raw`(?<![\w-])--(?!ds-)[a-z0-9_-]+\s*:\s*[^;{}]{1,200}`;
-var ROLES_PHP = `$roles=function($ds){$rs=[];$dc=[];try{foreach($ds as $d){if(!is_string($d)||$d===""||!is_dir($d))continue;$it=new RecursiveIteratorIterator(new RecursiveCallbackFilterIterator(new RecursiveDirectoryIterator($d,FilesystemIterator::SKIP_DOTS),function($f){$n=$f->getFilename();return !($f->isDir()&&($n==="node_modules"||$n[0]==="."));}),RecursiveIteratorIterator::LEAVES_ONLY,RecursiveIteratorIterator::CATCH_GET_CHILD);foreach($it as $fi){try{if($fi->isLink()||!$fi->isFile())continue;$bn=$fi->getFilename();if(!preg_match(${JSON.stringify(String.raw`/\.css$/`)},$bn)&&$bn!=="theme.json")continue;if($fi->getSize()>4194304)continue;$t=(string)@file_get_contents($fi->getPathname());}catch(\\Throwable $e){continue;}if(strpos($t,"var(--ds-")===false)continue;$t=(string)preg_replace(${JSON.stringify(String.raw`#/\*.*?\*/#s`)},"",$t);$dk=[];$lt="";$at=0;$uc=0;if(preg_match_all(${JSON.stringify(`/${DARK_OPEN_SRC}/i`)},$t,$mm,PREG_OFFSET_CAPTURE)){foreach($mm[0] as $mx){$st=$mx[1];if($st<$at)continue;$i=$st+strlen($mx[0]);$dp=1;$L=strlen($t);while($i<$L&&$dp>0){$c=$t[$i];if($c==="{")$dp++;elseif($c==="}")$dp--;$i++;}if($dp>0){if(++$uc>5)break;continue;}$lt.=substr($t,$at,$st-$at);$dk[]=substr($t,$st,$i-$st);$at=$i;}}$lt.=substr($t,$at);preg_match_all(${JSON.stringify(`/${ROLE_READ_SRC}/i`)},$lt,$m);foreach($m[0] as $x){if(count($rs)<${ROLE_READS_MAX})$rs[]=$x;}preg_match_all(${JSON.stringify(`/${ROLE_READ_SRC}/i`)},implode("\\n",$dk),$m);foreach($m[0] as $x){if(count($rs)<${ROLE_READS_MAX})$rs[]="@dark ".$x;}preg_match_all(${JSON.stringify(`/${OWN_PROP_SRC}/i`)},$lt,$m);foreach($m[0] as $x){if(count($dc)<${OWN_PROPS_MAX})$dc[]=$x;}if(count($rs)>=${ROLE_READS_MAX})break 2;}}}catch(\\Throwable $e){}return count($rs)===0?null:implode(";\\n",array_merge($rs,$dc)).";";};`;
-var ROLES_JS = `const roles=(d)=>{const rs=[],dc=[];const R=new RegExp(${JSON.stringify(ROLE_READ_SRC)},"gi"),D=new RegExp(${JSON.stringify(OWN_PROP_SRC)},"gi"),K=new RegExp(${JSON.stringify(DARK_OPEN_SRC)},"gi");const split=(t)=>{let light="",dark="",at=0,uc=0,m;K.lastIndex=0;while((m=K.exec(t))!==null){let i=m.index+m[0].length,depth=1;while(i<t.length&&depth>0){const c=t[i];if(c==="{")depth++;else if(c==="}")depth--;i++}if(depth>0){if(++uc>5)break;K.lastIndex=m.index+m[0].length;continue}light+=t.slice(at,m.index);dark+=t.slice(m.index,i)+"\\n";at=i;K.lastIndex=i}return[light+t.slice(at),dark]};const walk=(x,depth)=>{if(depth>12)return;let es=[];try{es=fs.readdirSync(x,{withFileTypes:true})}catch{return}for(const e of es){if(rs.length>=${ROLE_READS_MAX})return;if(e.name==="node_modules"||e.name.startsWith("."))continue;const p=path.join(x,e.name);if(e.isDirectory()){walk(p,depth+1);continue}if(!e.isFile()||!(/\\.css$/.test(e.name)||e.name==="theme.json"))continue;let t="";try{t=fs.readFileSync(p,"utf8")}catch{continue}if(!t.includes("var(--ds-"))continue;t=t.replace(/\\/\\*[\\s\\S]*?\\*\\//g,"");const[lt,dk]=split(t);for(const m of lt.matchAll(R))if(rs.length<${ROLE_READS_MAX})rs.push(m[0]);for(const m of dk.matchAll(R))if(rs.length<${ROLE_READS_MAX})rs.push("@dark "+m[0]);for(const m of lt.matchAll(D))if(dc.length<${OWN_PROPS_MAX})dc.push(m[0])}};try{walk(d,0)}catch{}return rs.length===0?null:[...rs,...dc].join(";\\n")+";"};`;
+var CODE_ESCAPES = {
+  "<": "\\x3C",
+  ">": "\\x3E",
+  "/": "\\x2F",
+  "\b": "\\x08",
+  "\f": "\\x0C",
+  "\n": "\\x0A",
+  "\r": "\\x0D",
+  "	": "\\x09",
+  "\0": "\\x00",
+  "\u2028": "\\u{2028}",
+  "\u2029": "\\u{2029}"
+};
+var codeString = (s) => JSON.stringify(s).replace(
+  /[<>/\b\f\n\r\t\0\u2028\u2029]/g,
+  (c) => CODE_ESCAPES[
+    /** @type {keyof typeof CODE_ESCAPES} */
+    c
+  ]
+);
+var ROLES_PHP = `$roles=function($ds){$rs=[];$dc=[];try{foreach($ds as $d){if(!is_string($d)||$d===""||!is_dir($d))continue;$it=new RecursiveIteratorIterator(new RecursiveCallbackFilterIterator(new RecursiveDirectoryIterator($d,FilesystemIterator::SKIP_DOTS),function($f){$n=$f->getFilename();return !($f->isDir()&&($n==="node_modules"||$n[0]==="."));}),RecursiveIteratorIterator::LEAVES_ONLY,RecursiveIteratorIterator::CATCH_GET_CHILD);foreach($it as $fi){try{if($fi->isLink()||!$fi->isFile())continue;$bn=$fi->getFilename();if(!preg_match(${codeString(String.raw`/\.css$/`)},$bn)&&$bn!=="theme.json")continue;if($fi->getSize()>4194304)continue;$t=(string)@file_get_contents($fi->getPathname());}catch(\\Throwable $e){continue;}if(strpos($t,"var(--ds-")===false)continue;$t=(string)preg_replace(${codeString(String.raw`#/\*.*?\*/#s`)},"",$t);$dk=[];$lt="";$at=0;$uc=0;if(preg_match_all(${codeString(`/${DARK_OPEN_SRC}/i`)},$t,$mm,PREG_OFFSET_CAPTURE)){foreach($mm[0] as $mx){$st=$mx[1];if($st<$at)continue;$i=$st+strlen($mx[0]);$dp=1;$L=strlen($t);while($i<$L&&$dp>0){$c=$t[$i];if($c==="{")$dp++;elseif($c==="}")$dp--;$i++;}if($dp>0){if(++$uc>5)break;continue;}$lt.=substr($t,$at,$st-$at);$dk[]=substr($t,$st,$i-$st);$at=$i;}}$lt.=substr($t,$at);preg_match_all(${codeString(`/${ROLE_READ_SRC}/i`)},$lt,$m);foreach($m[0] as $x){if(count($rs)<${ROLE_READS_MAX})$rs[]=$x;}preg_match_all(${codeString(`/${ROLE_READ_SRC}/i`)},implode("\\n",$dk),$m);foreach($m[0] as $x){if(count($rs)<${ROLE_READS_MAX})$rs[]="@dark ".$x;}preg_match_all(${codeString(`/${OWN_PROP_SRC}/i`)},$lt,$m);foreach($m[0] as $x){if(count($dc)<${OWN_PROPS_MAX})$dc[]=$x;}if(count($rs)>=${ROLE_READS_MAX})break 2;}}}catch(\\Throwable $e){}return count($rs)===0?null:implode(";\\n",array_merge($rs,$dc)).";";};`;
+var ROLES_JS = `const roles=(d)=>{const rs=[],dc=[];const R=new RegExp(${codeString(ROLE_READ_SRC)},"gi"),D=new RegExp(${codeString(OWN_PROP_SRC)},"gi"),K=new RegExp(${codeString(DARK_OPEN_SRC)},"gi");const split=(t)=>{let light="",dark="",at=0,uc=0,m;K.lastIndex=0;while((m=K.exec(t))!==null){let i=m.index+m[0].length,depth=1;while(i<t.length&&depth>0){const c=t[i];if(c==="{")depth++;else if(c==="}")depth--;i++}if(depth>0){if(++uc>5)break;K.lastIndex=m.index+m[0].length;continue}light+=t.slice(at,m.index);dark+=t.slice(m.index,i)+"\\n";at=i;K.lastIndex=i}return[light+t.slice(at),dark]};const walk=(x,depth)=>{if(depth>12)return;let es=[];try{es=fs.readdirSync(x,{withFileTypes:true})}catch{return}for(const e of es){if(rs.length>=${ROLE_READS_MAX})return;if(e.name==="node_modules"||e.name.startsWith("."))continue;const p=path.join(x,e.name);if(e.isDirectory()){walk(p,depth+1);continue}if(!e.isFile()||!(/\\.css$/.test(e.name)||e.name==="theme.json"))continue;let t="";try{t=fs.readFileSync(p,"utf8")}catch{continue}if(!t.includes("var(--ds-"))continue;t=t.replace(/\\/\\*[\\s\\S]*?\\*\\//g,"");const[lt,dk]=split(t);for(const m of lt.matchAll(R))if(rs.length<${ROLE_READS_MAX})rs.push(m[0]);for(const m of dk.matchAll(R))if(rs.length<${ROLE_READS_MAX})rs.push("@dark "+m[0]);for(const m of lt.matchAll(D))if(dc.length<${OWN_PROPS_MAX})dc.push(m[0])}};try{walk(d,0)}catch{}return rs.length===0?null:[...rs,...dc].join(";\\n")+";"};`;
 var EMDASH_SLOT_SCRIPT = 'const fs=require("fs"),path=require("path");const f=process.argv[1];' + ROLES_JS + `const o=(a)=>console.log(${JSON.stringify(LINE)}+Buffer.from(JSON.stringify(a)).toString("base64"));const r=roles(path.join(path.dirname(path.dirname(f)),"src"));try{if(!fs.existsSync(f)){o({ok:true,css:null,roles:r})}else{o({ok:true,css:fs.readFileSync(f).subarray(0,${SLOT_TEXT_MAX}).toString("utf8"),roles:r})}}catch(e){o({ok:false,error:String((e&&e.message)||e).slice(0,200)})}`;
 var WORDPRESS_SLOT_PHP = `$o=function($a){echo "\\n${LINE}".base64_encode(json_encode($a,JSON_UNESCAPED_SLASHES|JSON_INVALID_UTF8_SUBSTITUTE))."\\n";};` + ROLES_PHP + `$p=WP_Theme_JSON_Resolver::get_user_data_from_wp_global_styles(wp_get_theme());$j=(is_array($p)&&isset($p["post_content"]))?json_decode((string)$p["post_content"],true):null;$css=(is_array($j)&&isset($j["styles"]["css"])&&is_string($j["styles"]["css"]))?$j["styles"]["css"]:"";$rs=$roles(array_unique([get_stylesheet_directory(),get_template_directory()]));if(strpos($css,"tracy-ds-slot:")===false){$o(["ok"=>true,"css"=>null,"roles"=>$rs]);return;}$l=$j["settings"]["color"]["palette"]??[];if(is_array($l)&&(isset($l["theme"])||isset($l["custom"]))){$l=array_merge((array)($l["theme"]??[]),(array)($l["custom"]??[]));}$pal=[];foreach((array)$l as $c){if(is_array($c)&&isset($c["slug"],$c["color"])){$pal[]=["slug"=>(string)$c["slug"],"color"=>(string)$c["color"]];}}$fl=$j["settings"]["typography"]["fontFamilies"]??[];if(is_array($fl)&&(isset($fl["theme"])||isset($fl["custom"]))){$fl=array_merge((array)($fl["theme"]??[]),(array)($fl["custom"]??[]));}$ff=[];foreach((array)$fl as $f){if(is_array($f)&&isset($f["slug"],$f["fontFamily"])){$ff[]=["slug"=>(string)$f["slug"],"fontFamily"=>(string)$f["fontFamily"]];}}$s=(string)get_option("tracy_inspiration","");$n=null;$u=wp_upload_dir(null,false);$i=(is_array($u)&&isset($u["basedir"]))?json_decode((string)@file_get_contents($u["basedir"]."/tracy/inspirations.json"),true):null;if($s!==""&&is_array($i)&&isset($i["systems"][$s]["name"])&&is_string($i["systems"][$s]["name"])){$n=$i["systems"][$s]["name"];}$o(["ok"=>true,"css"=>substr($css,0,${SLOT_TEXT_MAX}),"palette"=>$pal,"fonts"=>$ff,"variation"=>$s,"name"=>$n,"roles"=>$rs]);`;
 var JOOMLA_SLOT_PHP = `$o=function($a){echo "\\n${LINE}".base64_encode(json_encode($a,JSON_UNESCAPED_SLASHES|JSON_INVALID_UTF8_SUBSTITUTE))."\\n";};` + ROLES_PHP + `if(!is_file("configuration.php")){$o(["ok"=>false,"error"=>"no configuration.php"]);exit(0);}require "configuration.php";$c=new JConfig();$m=@new mysqli($c->host,$c->user,$c->password,$c->db,(int)($c->dbport?:3306));if($m->connect_errno){$o(["ok"=>false,"error"=>"the database did not answer"]);exit(0);}$p=$m->real_escape_string($c->dbprefix);$t=gmdate("Y-m-d H:i:s");$r=$m->query("SELECT m.id,m.title,m.content FROM {$p}modules m WHERE m.module='mod_custom' AND m.client_id=0 AND m.published=1 AND m.position<>'' AND m.content LIKE '%tracy-ds-slot:%' AND (m.publish_up IS NULL OR m.publish_up<='$t') AND (m.publish_down IS NULL OR m.publish_down>'$t') AND EXISTS(SELECT 1 FROM {$p}modules_menu mm WHERE mm.moduleid=m.id) ORDER BY m.ordering,m.id LIMIT 1");if(!$r){$o(["ok"=>false,"error"=>"the module query failed"]);exit(0);}$s=$m->query("SELECT * FROM {$p}template_styles WHERE client_id=0 AND home='1' LIMIT 1");$y=$s?$s->fetch_assoc():null;$tf=[];foreach(["template","parent"] as $k){$v=is_array($y)?preg_replace("/[^A-Za-z0-9_.-]/","",(string)($y[$k]??"")):"";if($v!==""){$tf[]="templates/".$v;$tf[]="media/templates/site/".$v;}}$rs=count($tf)===0?null:$roles($tf);$x=$r->fetch_assoc();if(!$x){$o(["ok"=>true,"css"=>null,"roles"=>$rs]);exit(0);}$o(["ok"=>true,"css"=>substr((string)$x["content"],0,${SLOT_TEXT_MAX}),"module"=>["id"=>(int)$x["id"],"title"=>(string)$x["title"]],"roles"=>$rs]);`;
@@ -20075,7 +20142,10 @@ async function recordTitleOf(send, platform, params) {
 
 // src/host/sweep-resolve.mjs
 var SITE_ACTIONS = /^[a-z]+\.[a-z.]+$/i;
-var unescape = (s) => s.replace(/&amp;/g, "&").replace(/&#0*38;/g, "&").replace(/&quot;/g, '"').replace(/&#0*39;/g, "'");
+var unescape = (s) => s.replace(
+  /&(?:amp|quot|#0*(38|39));/g,
+  (entity, code) => entity === "&quot;" ? '"' : code === "39" ? "'" : "&"
+);
 var wordsOf3 = (html) => unescape(html.replace(/<[^>]*>/g, " ")).replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
 function wantOf(text6) {
   const all = (Array.isArray(text6) ? text6 : [text6]).filter((t) => typeof t === "string" && t !== "");
@@ -23032,7 +23102,27 @@ function buildHideRefusal(prop) {
 function buildPictureRefusal(tool, file) {
   return `site-tools: ${tool} refused: ${JSON.stringify(file)} is a picture of the site, and a build writes no picture file by hand \u2014 the template's stay as they are. Nothing ran. Put the business's picture in with tracy_demo {operation:"media.import"} and set the path it answers in the field or setting that shows it (a T4 template's logo: "site_logo" in templates/<template>/local/etc/site/<profile>.json).`;
 }
-var INTERPRETER = /(?:^|[\s;&|(])(?:python3?|php|node|perl|ruby)(?=[\s;&|)]|$)|\bwp\s+(?:--?[\w-]+(?:=\S+)?\s+)*eval(?:-file)?\b/m;
+var INTERPRETER_NAME = /(?:^|[\s;&|(])(?:python3?|php|node|perl|ruby)(?=[\s;&|)]|$)/m;
+var WP = /\bwp\s+/g;
+var WP_FLAG = /-[\w-]+(?:=\S+)?\s+/y;
+var WP_EVAL = /eval(?:-file)?\b/y;
+function runsInterpreter(text6) {
+  if (INTERPRETER_NAME.test(text6)) return true;
+  WP.lastIndex = 0;
+  for (let m = WP.exec(text6); m !== null; m = WP.exec(text6)) {
+    let at = m.index + m[0].length;
+    for (; ; ) {
+      WP_FLAG.lastIndex = at;
+      const flag2 = WP_FLAG.exec(text6);
+      if (flag2 === null) break;
+      at += flag2[0].length;
+    }
+    WP_EVAL.lastIndex = at;
+    if (WP_EVAL.test(text6)) return true;
+    WP.lastIndex = Math.max(WP.lastIndex, at);
+  }
+  return false;
+}
 var SCRIPT_WRITE = /\bopen\s*\([^)]*,\s*(?:mode\s*=\s*)?['"][wax]\+?b?['"]|\.write_(?:text|bytes)\s*\(|\bfile_put_contents\s*\(|\bwriteFile(?:Sync)?\s*\(|\bappendFile(?:Sync)?\s*\(|\bshutil\.(?:copy\w*|move)\s*\(|\bos\.(?:remove|rename|replace|unlink)\s*\(|\b(?:unlink|rename|copy)\s*\(\s*['"$]|\bFile\.write\s*\(|\bimage(?:png|jpeg|webp|gif|avif|bmp)\s*\(|\.save\s*\(|\bopen\s*\(\s*(?:my\s+)?\$?\w+\s*,\s*['"]?[>+]/;
 var PATH_WORD = /[\w.@~-]*\/[\w./@~-]*|[\w.-]+\.(?:php|html?|js|json|twig|xml|ini|tpl)\b/g;
 function writePlaces({ name: name2, args, cwd, siteRoot }) {
@@ -23043,7 +23133,7 @@ function writePlaces({ name: name2, args, cwd, siteRoot }) {
     args !== null && typeof args === "object" ? args : {}
   );
   const text6 = typeof a.command === "string" ? a.command : typeof a.text === "string" ? a.text : null;
-  if (text6 === null || !INTERPRETER.test(text6) || !SCRIPT_WRITE.test(text6)) return { targets, script: [] };
+  if (text6 === null || !runsInterpreter(text6) || !SCRIPT_WRITE.test(text6)) return { targets, script: [] };
   const dir = typeof a.workdir === "string" ? path9.resolve(cwd, a.workdir) : cwd;
   const here = dirBeforeScript(text6, dir, siteRoot);
   const script = [path9.join(here, "_")];
@@ -23098,7 +23188,7 @@ var BUILD_REBUILD_UNNEEDED = "site-tools: site.rebuild refused: nothing under /a
 function dirBeforeScript(command, dir, siteRoot) {
   let here = dir;
   for (const part of command.split(/\n|;|&&|\|\||\|/)) {
-    if (INTERPRETER.test(part)) break;
+    if (runsInterpreter(part)) break;
     const words = part.trim().split(/\s+/).filter(Boolean);
     if (words[0] !== "cd") continue;
     const to = words[1]?.replace(/^['"]|['"]$/g, "");
@@ -23555,7 +23645,7 @@ function rolePins(texts, { ruler, template = null, worn, every = false }) {
   return pins;
 }
 function rolePinsNext(pins, worn) {
-  const reads = pins.filter((p) => ROLE_READ2.test(p.value));
+  const reads2 = pins.filter((p) => ROLE_READ2.test(p.value));
   const literals = pins.filter((p) => !ROLE_READ2.test(p.value));
   const listed = (some) => some.map((p) => `\`${p.prop}: ${p.value}\` \u2192 \`${p.use}\``).join("; ");
   const parts = [];
@@ -23563,9 +23653,9 @@ function rolePinsNext(pins, worn) {
     parts.push(
       `This write typed ${literals.length === 1 ? "a value" : `${literals.length} values`} as a literal where a design-system role owns it (${listed(literals)}), so ${worn ? "the next design system, or taking this one off," : "a design system the customer applies later"} will not reach ${literals.length === 1 ? "it" : "them"}. Write each as the var() named \u2014 ${worn ? "the template's own value is the fallback, so it looks the same now and taking the system off brings the template back" : "the literal stays as the fallback, so it looks the same now"} \u2014 before you tell the customer it is done; a value the customer named exactly may stay as they named it: then say it will not follow a design system.`
     );
-  if (reads.length > 0)
+  if (reads2.length > 0)
     parts.push(
-      `This write read ${reads.length === 1 ? "a design-system role" : `${reads.length} design-system roles`} without the template's own value as the fallback (${listed(reads)}): ` + (worn ? `taking the system off would leave ${reads.length === 1 ? "it" : "them"} empty or in the system's look. ` : `with no system worn, ${reads.length === 1 ? "it paints" : "they paint"} nothing. `) + "Write each as named \u2014 the template's value as the fallback \u2014 before you tell the customer it is done."
+      `This write read ${reads2.length === 1 ? "a design-system role" : `${reads2.length} design-system roles`} without the template's own value as the fallback (${listed(reads2)}): ` + (worn ? `taking the system off would leave ${reads2.length === 1 ? "it" : "them"} empty or in the system's look. ` : `with no system worn, ${reads2.length === 1 ? "it paints" : "they paint"} nothing. `) + "Write each as named \u2014 the template's value as the fallback \u2014 before you tell the customer it is done."
     );
   return parts.join(" ");
 }
@@ -24880,9 +24970,14 @@ for (const s of UI_SWITCHES) {
 }
 var UI_DOOR = "/api/ui";
 var PAGE_READ = Symbol.for("@tracy/core/ui-switches#page-read");
+function withoutTrailingSlashes2(s) {
+  let end = s.length;
+  while (end > 0 && s[end - 1] === "/") end -= 1;
+  return s.slice(0, end);
+}
 async function switchesAtTracy(origin, options = {}) {
   if (typeof origin !== "string" || origin.trim() === "") return null;
-  const base3 = origin.trim().replace(/\/+$/, "");
+  const base3 = withoutTrailingSlashes2(origin.trim());
   const call = options.fetch ?? globalThis.fetch.bind(globalThis);
   const timeoutMs = options.timeoutMs ?? 3e3;
   const hidden = await readHidden(
@@ -28412,7 +28507,7 @@ async function runEmdashCall({
     });
     const kept = /* @__PURE__ */ new Map();
     try {
-      const reads = slugs.map(async (slug) => {
+      const reads2 = slugs.map(async (slug) => {
         try {
           const got = (
             /** @type {any} */
@@ -28435,7 +28530,7 @@ async function runEmdashCall({
         } catch {
         }
       });
-      await Promise.race([Promise.all(reads), tooLate]);
+      await Promise.race([Promise.all(reads2), tooLate]);
       const arrived = slugs.filter((slug) => kept.has(slug)).map((slug) => [slug, kept.get(slug)]);
       return arrived.length === 0 ? null : Object.fromEntries(arrived);
     } finally {
@@ -30580,7 +30675,7 @@ function beforePage(reach, { comment, lastRead }) {
   if (on.length > 0) return on.includes("/") ? "/" : on[0];
   return "/";
 }
-function extraPages(reach, { main, reads }) {
+function extraPages(reach, { main, reads: reads2 }) {
   if (reach.shared !== "site" && reach.shared !== "some") return [];
   const checked = pageOf2(main);
   const on = reach.shared === "some" ? (reach.usedOn ?? []).map(pageOf2).filter((p) => p !== null) : null;
@@ -30588,12 +30683,12 @@ function extraPages(reach, { main, reads }) {
   const mayShow = (page) => page !== null && (on === null || on.includes(page));
   const out = [];
   if (checked !== "/" && mayShow("/")) out.push("/");
-  const others = reads.filter((r) => {
+  const others = reads2.filter((r) => {
     const page = pageOf2(r.path);
     return page !== null && page !== checked && page !== "/" && typeof r.chars === "number" && mayShow(page);
   });
   if (others.length > 0) {
-    const own = reads.find((r) => pageOf2(r.path) === checked && typeof r.chars === "number")?.chars;
+    const own = reads2.find((r) => pageOf2(r.path) === checked && typeof r.chars === "number")?.chars;
     const ref = typeof own === "number" ? own : others.reduce((sum, r) => sum + /** @type {number} */
     r.chars, 0) / others.length;
     let best = others[0];
@@ -30810,9 +30905,9 @@ function createPageReads({ keep = 200 } = {}) {
   const by = /* @__PURE__ */ new Map();
   return {
     /** @param {string} key @param {readonly { path: string, chars: number | null }[]} reads */
-    note(key, reads) {
-      if (typeof key !== "string" || key === "" || reads.length === 0) return;
-      const kept = [...reads, ...by.get(key) ?? []];
+    note(key, reads2) {
+      if (typeof key !== "string" || key === "" || reads2.length === 0) return;
+      const kept = [...reads2, ...by.get(key) ?? []];
       const out = [];
       for (const r of kept) {
         const page = pageOf2(r.path);
@@ -31316,7 +31411,7 @@ function jsonLdNodes(facts) {
       cut4 += 1;
       continue;
     }
-    const text6 = block.text.trim().replace(/^(?:\/\*\s*)?<!\[CDATA\[(?:\s*\*\/)?/, "").replace(/(?:\/\*\s*)?\]\]>(?:\s*\*\/)?$/, "").replace(/^<!--/, "").replace(/-->$/, "").trim();
+    const text6 = block.text.trim().replace(/^(?:\/\*\s*)?<!\[CDATA\[(?:\s*\*\/)?/, "").replace(/(?:\/\*\s*)?\]\]>(?:\s*\*\/)?$/, "").replace(/^<!--/, "").replace(/--!?>$/, "").trim();
     let value;
     try {
       value = JSON.parse(text6);
@@ -32644,7 +32739,7 @@ async function pageText(input) {
   const n = asked.targets.length;
   const total = clampChars(params.maxChars, outline ? PAGES_OUTLINE_CHARS : PAGES_TEXT_CHARS);
   const cap = asked.multi ? Math.max(PAGE_MIN_SHARE_CHARS, Math.floor(total / n)) : void 0;
-  const reads = await mapLimit(
+  const reads2 = await mapLimit(
     asked.targets,
     PAGE_PATHS_PARALLEL,
     (t) => fetchPageHtml({
@@ -32665,7 +32760,7 @@ async function pageText(input) {
     ...at
   }));
   const answers = [];
-  for (const [i, read] of reads.entries()) {
+  for (const [i, read] of reads2.entries()) {
     const path22 = asked.targets[i].path;
     if (!read.ok && read.why === "no-curl") {
       answers.push(input.legacy ? await input.legacy(path22, cap) : noReaderAnswer(door, "curl"));
@@ -32880,70 +32975,127 @@ function recordedDoorRefusal(name2, args, site = {}) {
 
 // src/host/shell-writes.mjs
 var SHELL_TEXT2 = Object.freeze({ bash: "command", pwsh: "command", terminal_send: "text" });
-var WP = String.raw`\bwp\s+(?:--?[\w-]+(?:=\S+)?\s+)*`;
+var WP_AT = /\bwp\s+/g;
+var WP_FLAG2 = /-[\w-]+(?:=\S+)?\s+/y;
+function wpCommandStarts(text6) {
+  const out = [];
+  WP_AT.lastIndex = 0;
+  for (let m = WP_AT.exec(text6); m !== null; m = WP_AT.exec(text6)) {
+    let at = m.index + m[0].length;
+    for (; ; ) {
+      WP_FLAG2.lastIndex = at;
+      const flag2 = WP_FLAG2.exec(text6);
+      if (flag2 === null) break;
+      at += flag2[0].length;
+    }
+    out.push(at);
+    WP_AT.lastIndex = Math.max(WP_AT.lastIndex, at);
+  }
+  return out;
+}
+function tailFrom(text6, from, re, memo) {
+  if (from < memo.from || from >= memo.stop) {
+    STOP.lastIndex = from;
+    const stop = STOP.exec(text6)?.index ?? text6.length;
+    let last = -1;
+    for (const m of text6.slice(from, stop).matchAll(re)) last = from + m.index;
+    Object.assign(memo, { from, stop, last });
+  }
+  return memo.last >= from;
+}
+var STOP = /[\n;&|]/g;
 var RULES = Object.freeze([
   {
-    re: new RegExp(
-      `${WP}(?:post|term|comment|user|menu|media|widget|sidebar)(?:\\s+(?:item|meta))?\\s+delete\\b`
-    ),
+    next: /(?:post|term|comment|user|menu|media|widget|sidebar)(?:\s+(?:item|meta))?\s+delete\b/y,
     reason: "deletes",
     sentence: "This deletes something from your site, with no undo.",
     door: "tracy_site content.delete"
   },
   {
-    re: new RegExp(`${WP}site\\s+(?:empty|delete)\\b`),
+    next: /site\s+(?:empty|delete)\b/y,
     reason: "deletes",
     sentence: "This empties your site's content, with no undo.",
     door: null
   },
   {
-    re: new RegExp(`${WP}post\\s+update\\b[^\\n;&|]*--post_status=["']?(?:draft|pending|private|trash)\\b`),
+    next: /post\s+update\b/y,
+    tail: /--post_status=["']?(?:draft|pending|private|trash)\b/g,
     reason: "hides",
     sentence: "This takes something off your site's pages.",
     door: "tracy_site content.update"
   },
   {
-    re: new RegExp(`${WP}search-replace\\b(?![^\\n;&|]*--dry-run)`),
+    next: /search-replace\b/y,
+    tail: /--dry-run/g,
+    without: true,
     reason: "many",
     sentence: "This changes words in many places on your site at once, with no undo.",
     door: "tracy_site content.replace"
   },
   {
-    re: new RegExp(`${WP}db\\s+(?:reset|drop|import|clean)\\b`),
+    next: /db\s+(?:reset|drop|import|clean)\b/y,
     reason: "database",
     sentence: "This replaces or empties your site's database, with no undo.",
     door: "tracy_site db.rollback"
   },
   {
-    re: new RegExp(
-      `${WP}(?:plugin|theme)\\s+(?:install|activate|deactivate|delete|uninstall|update|toggle|enable|disable)\\b`
-    ),
+    next: /(?:plugin|theme)\s+(?:install|activate|deactivate|delete|uninstall|update|toggle|enable|disable)\b/y,
     reason: "code",
     sentence: "This installs or switches something your site runs.",
     door: "tracy_site plugin.install / plugin.activate / theme.activate"
   },
   {
-    re: new RegExp(`${WP}core\\s+(?:update|update-db|download)\\b`),
+    next: /core\s+(?:update|update-db|download)\b/y,
     reason: "code",
     sentence: "This upgrades the software your site runs on.",
     door: "tracy_site core.upgrade"
   },
   {
-    re: new RegExp(`${WP}option\\s+(?:update|delete|add|set|patch)\\b`),
+    next: /option\s+(?:update|delete|add|set|patch)\b/y,
     reason: "site",
     sentence: "This changes your site's settings on every page.",
     door: 'tracy_site content.update {kind:"option"}'
   },
   {
-    re: /\bjoomla\.php\b[^\n;&|]*\b(?:extension:(?:install|remove|discover:install)|core:update|database:import|user:delete|config:set|site:down)\b/,
+    starts: /\bjoomla\.php\b/g,
+    next: /(?:)/y,
+    tail: /\b(?:extension:(?:install|remove|discover:install)|core:update|database:import|user:delete|config:set|site:down)\b/g,
     reason: "code",
     sentence: "This changes how your site runs, with no undo.",
     door: null
   }
 ]);
-var DB_CLIENT = new RegExp(String.raw`\b(?:mysql|mariadb|sqlite3|psql)\b|${WP}db\s+query\b`);
+function reads(rule, text6, wpStarts) {
+  const starts = rule.starts ? [...text6.matchAll(rule.starts)].map((m) => m.index + m[0].length) : wpStarts;
+  const memo = { from: 0, stop: -1, last: -1 };
+  for (const at of starts) {
+    rule.next.lastIndex = at;
+    if (!rule.next.test(text6)) continue;
+    if (!rule.tail || tailFrom(text6, rule.next.lastIndex, rule.tail, memo) !== (rule.without === true))
+      return true;
+  }
+  return false;
+}
+var DB_CLIENT_NAME = /\b(?:mysql|mariadb|sqlite3|psql)\b/;
+var WP_DB_QUERY = /db\s+query\b/y;
+var dbClient = (text6) => DB_CLIENT_NAME.test(text6) || wpCommandStarts(text6).some((at) => {
+  WP_DB_QUERY.lastIndex = at;
+  return WP_DB_QUERY.test(text6);
+});
 var SQL_WRITE = /\b(?:update\s+[`"\w.]+\s+set\b|delete\s+from\b|drop\s+(?:table|database|schema)\b|truncate\s+(?:table\s+)?[`"\w]|alter\s+table\b|insert\s+(?:ignore\s+)?into\b|replace\s+into\b)/i;
-var SQL_IMPORT = /\b(?:mysql|mariadb|sqlite3|psql)\b[^\n;&|]*<\s*\S/;
+var DB_CLIENTS = /\b(?:mysql|mariadb|sqlite3|psql)\b/g;
+var LINE_END_OR_FEED = /[\n;&|<]/g;
+function sqlImport(text6) {
+  DB_CLIENTS.lastIndex = 0;
+  for (let m = DB_CLIENTS.exec(text6); m !== null; m = DB_CLIENTS.exec(text6)) {
+    LINE_END_OR_FEED.lastIndex = m.index + m[0].length;
+    const end = LINE_END_OR_FEED.exec(text6);
+    if (end === null) return false;
+    if (end[0] === "<") return /\S/.test(text6.slice(end.index + 1));
+    DB_CLIENTS.lastIndex = Math.max(DB_CLIENTS.lastIndex, end.index);
+  }
+  return false;
+}
 function shellConsequence(name2, args) {
   const key = typeof name2 === "string" && Object.hasOwn(SHELL_TEXT2, name2) ? (
     /** @type {Record<string, string>} */
@@ -32956,15 +33108,19 @@ function shellConsequence(name2, args) {
   );
   if (typeof raw !== "string" || raw.trim() === "") return null;
   const command = raw.trim();
-  if (DB_CLIENT.test(command) && (SQL_WRITE.test(command) || SQL_IMPORT.test(command)))
+  if (dbClient(command) && (SQL_WRITE.test(command) || sqlImport(command)))
     return {
       reason: "database",
       sentence: "This changes your site's database directly, with no undo.",
       door: null,
       command
     };
-  for (const part of command.split(/\n|;|&&|\|\||\|/))
-    for (const { re, ...rule } of RULES) if (re.test(part)) return { ...rule, command };
+  for (const part of command.split(/\n|;|&&|\|\||\|/)) {
+    const wpStarts = wpCommandStarts(part);
+    for (const rule of RULES)
+      if (reads(rule, part, wpStarts))
+        return { reason: rule.reason, sentence: rule.sentence, door: rule.door, command };
+  }
   return null;
 }
 function shellRefusal(found, ask) {
@@ -33708,7 +33864,7 @@ function cssDeclarations(text6) {
     const top = stack.at(-1);
     if (top === void 0 || top.kind !== "rule") return;
     const raw = text6.slice(seg, end);
-    const m = /^((?:\s|\/\*[\s\S]*?\*\/)*)(--[\w-]+|-?[A-Za-z][\w-]*)\s*:/.exec(raw);
+    const m = /^((?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*)(--[\w-]+|-?[A-Za-z][\w-]*)\s*:/.exec(raw);
     if (m === null) return;
     let vs = seg + m[0].length;
     let ve = end;
@@ -36712,9 +36868,10 @@ function linkTargetsOf(html) {
   out.delete("");
   return [...out];
 }
+var jsonSlashes = (s) => s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\//g, "\\/");
 function storedSpellings(href) {
   const amp = href.replace(/&/g, "&amp;");
-  return [.../* @__PURE__ */ new Set([href, amp, href.replace(/\//g, "\\/"), amp.replace(/\//g, "\\/")])];
+  return [.../* @__PURE__ */ new Set([href, amp, jsonSlashes(href), jsonSlashes(amp)])];
 }
 function renderedTargets(changes, page) {
   const targets = [];
@@ -38670,7 +38827,17 @@ function narrowChange(oldText, newText) {
   const mid = a >= b ? "" : newText.slice(nv.map[a][0], nv.map[b - 1][1]);
   return { p, q, mid };
 }
-var stripTags = (s) => s.replace(/<[^>]*>/g, "");
+var stripTags = (s) => {
+  let out = "";
+  let from = 0;
+  for (let at = s.indexOf("<"); at !== -1; at = s.indexOf("<", from)) {
+    const end = s.indexOf(">", at + 1);
+    if (end === -1) break;
+    out += s.slice(from, at);
+    from = end + 1;
+  }
+  return out + s.slice(from).replace(/</g, "&lt;");
+};
 function balanceSpan(raw, s, e) {
   const VOIDS = /* @__PURE__ */ new Set(["br", "img", "hr", "input", "wbr", "source", "meta", "link"]);
   for (let round = 0; round < 8; round += 1) {
@@ -40762,7 +40929,7 @@ async function readStores2(read, page, { site, plan }) {
     contact: new Map(bodies.contact.map((r) => [positive3(r.id), r]))
   };
   const rows = /* @__PURE__ */ new Map();
-  const reads = [];
+  const reads2 = [];
   for (
     const kind of
     /** @type {Kind[]} */
@@ -40772,14 +40939,14 @@ async function readStores2(read, page, { site, plan }) {
       if (id === 0) continue;
       const got = kind === "article" || kind === "module" || kind === "contact" ? listed[kind].get(id) : void 0;
       if (got) rows.set(`${kind}:${id}`, got);
-      else reads.push({ kind, id });
+      else reads2.push({ kind, id });
     }
   const readWhole = (list) => inPool2(list, async ({ kind, id }) => {
     const got = await read("content.get", { kind, id });
     if (cut4(got)) cutWhat.push(`${kind} ${id}`);
     else if (ok(got) && isRecord18(got.item)) rows.set(`${kind}:${id}`, got.item);
   });
-  await readWhole(reads);
+  await readWhole(reads2);
   const second = failed();
   if (second) return second;
   const itemWhole = pageItem > 0 ? rows.get(`menuItem:${pageItem}`) ?? null : null;
@@ -41643,9 +41810,9 @@ function spreadOverFragments(raws, find, replace) {
   const span = [];
   for (let k = kA; k <= kB; k += 1) span.push(k);
   const first = words[a];
-  const lastWord = words[b - 1];
+  const lastWord2 = words[b - 1];
   const lead = (k) => k === kA ? raws[k].slice(0, first.s) : /^\s*/.exec(raws[k])?.[0] ?? "";
-  const tail = (k) => k === kB ? raws[k].slice(lastWord.e) : /\s*$/.exec(raws[k])?.[0] ?? "";
+  const tail = (k) => k === kB ? raws[k].slice(lastWord2.e) : /\s*$/.exec(raws[k])?.[0] ?? "";
   const held = span.map((k) => words.slice(a, b).filter((w) => w.k === k).length);
   const needs = span.map((k) => `${lead(k)}${tail(k)}`.trim() === "");
   const spread = (pins) => {
@@ -44216,6 +44383,11 @@ function blockSpans(raw) {
   return out;
 }
 var blockAround = (raw, a, b) => blockSpans(raw).filter((s) => s.start <= a && b <= s.end).sort((x, y) => x.end - x.start - (y.end - y.start))[0] ?? null;
+var BLOCK_DELIMITER = /\s*\/?wp:/y;
+var blockDelimiter = (html, at) => {
+  BLOCK_DELIMITER.lastIndex = at + 4;
+  return BLOCK_DELIMITER.test(html);
+};
 function wordpressBody(recipe, plan) {
   const plain = () => ({
     markup: plan.items.map(
@@ -44229,7 +44401,7 @@ function wordpressBody(recipe, plan) {
     pinned: false
   });
   if (typeof recipe !== "string") return plain();
-  const raw = recipe.replace(/\n?<!--(?!\s*\/?wp:)[\s\S]*?-->/g, "");
+  const raw = withoutComments(recipe, { keep: blockDelimiter, newlineBefore: true });
   const qi = raw.indexOf(QUESTION);
   const ai = raw.indexOf(ANSWER);
   if (qi === -1 || ai === -1) return plain();

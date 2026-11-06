@@ -2,7 +2,9 @@
 // file, read its box, pixels and theme marker, then empty it (DOM only, never the site's database) and judge the
 // block from its DOM (empty-frame.mjs). Nothing is screenshotted. A frame repeated by every row
 // of a list is emptied in every row at once (`measuredAs: row-slot`); a frame in a tab, slide or accordion is
-// revealed first; a picture not in its own block is looked for in the other blocks of the captured pages.
+// revealed first; a picture not in its own block is looked for in the other blocks of the captured pages. At the
+// first width, before anything is emptied, every list row's picture also records the card it prints in and the
+// block's text slots shown inside that card (`rowCard`, read-row-cards.js; row-pairs.mjs writes it on the rows).
 // Writes frame-evidence.json.
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -14,8 +16,10 @@ import { neutralKey } from './ids.mjs'
 import { urlOfPath } from './kit-paths.mjs'
 import { assignedAt, indexMap } from './map-index.mjs'
 import { readFrames } from './read-frames.js'
+import { readRowCards } from './read-row-cards.js'
 import { revealFrame } from './reveal.js'
 import { rowSlotsOf } from './row-slots.mjs'
+import { partsOf } from './text-format.mjs'
 
 const REVEAL_TRIES = 20
 
@@ -29,9 +33,14 @@ export function framePlan({ capture, map }) {
     const { slots } = slotsOfBlock({ rec, entity, idx })
     const frames = slots
       .filter((s) => s.type === 'image' && pictureOf(s))
-      .map((s) => ({ id: neutralKey(s.key), path: pictureOf(s) }))
+      .map((s) => ({ id: neutralKey(s.key), path: pictureOf(s), row: s.group?.id ?? null }))
     if (!frames.length) continue
     const rowSlots = rowSlotsOf(slots)
+    // The block's text slots by their shown words (a slot of several paragraphs by its first), for the row cards.
+    const texts = slots
+      .filter((s) => s.type === 'text')
+      .map((s) => ({ id: neutralKey(s.key), text: partsOf(s.sample)[0]?.text ?? '' }))
+      .filter((t) => t.text.trim())
     for (const [w, at] of Object.entries(rec.widths)) {
       const slug = at.shotOn ?? at.pages?.[0] ?? at.hiddenOn?.[0]
       if (slug)
@@ -41,7 +50,8 @@ export function framePlan({ capture, map }) {
           block: rec.source,
           blockId: rec.id,
           frames,
-          rowSlots
+          rowSlots,
+          texts
         })
     }
   }
@@ -90,7 +100,16 @@ export async function measureFrames({
       try {
         for (const [path, jobs] of byPage) {
           await visit(path, async (page) => {
-            for (const job of jobs) await measureBlock({ page, job, width, evidence, missing, inherit })
+            for (const job of jobs)
+              await measureBlock({
+                page,
+                job,
+                width,
+                evidence,
+                missing,
+                inherit,
+                pair: width === capture.widths[0]
+              })
           })
           log(
             'frames',
@@ -128,13 +147,23 @@ async function reveal(page, block, f) {
     if (!r.did) return null
     await page.waitForTimeout(500)
     const m = (await page.evaluate(readFrames, { block, frames: [f] })).frames[f.id]
-    if (m?.shown) return { ...m, revealed: r.how }
+    if (!m?.shown) continue
+    // A slide shows while it still moves in: read it again once the transition has ended.
+    await page.waitForTimeout(1000)
+    const settled = (await page.evaluate(readFrames, { block, frames: [f] })).frames[f.id]
+    return { ...(settled?.shown ? settled : m), revealed: r.how }
   }
   return null
 }
 
-async function measureBlock({ page, job, width, evidence, missing, inherit = new Map() }) {
+async function measureBlock({ page, job, width, evidence, missing, inherit = new Map(), pair = false }) {
   const read = await page.evaluate(readFrames, { block: job.block, frames: job.frames })
+  // Read while every frame still shows: the card each list row's picture prints in (row-pairs.mjs).
+  const rowFrames = job.frames.filter((f) => f.row).map((f) => ({ id: f.id, row: f.row }))
+  const cards =
+    pair && rowFrames.length
+      ? await page.evaluate(readRowCards, { block: job.block, frames: rowFrames, texts: job.texts ?? [] })
+      : {}
   const inSlot = new Set(job.rowSlots.flatMap((s) => s.ids))
   const later = []
   for (const f of job.frames) {
@@ -142,7 +171,11 @@ async function measureBlock({ page, job, width, evidence, missing, inherit = new
     if (evidence[f.id]?.widths[width]?.hidden) continue
     const m = read.frames[f.id] ?? { found: false }
     if (!m.found) missing.set(f.id, { frame: f, blockId: job.blockId })
-    const rec = recOf(evidence, f.id, job.blockId, width, { page: job.path, ...m })
+    const rec = recOf(evidence, f.id, job.blockId, width, {
+      page: job.path,
+      ...m,
+      ...(cards[f.id] ? { rowCard: cards[f.id] } : {})
+    })
     if (!m.found) continue
     if (!m.shown) {
       later.push(f)
@@ -173,10 +206,13 @@ async function measureBlock({ page, job, width, evidence, missing, inherit = new
   }
 }
 
-/** Frames whose picture is not in their own block, looked for in any block of this page. */
+/**
+ * Frames whose picture is not in their own block, looked for in any block of this page, then in the page region
+ * that holds it when no block does (a logo the template's own footer layout prints).
+ */
 async function findElsewhere({ page, path, width, evidence, missing }) {
   const frames = [...missing.values()].map((x) => x.frame)
-  const read = await page.evaluate(readFrames, { block: null, frames })
+  const read = await page.evaluate(readFrames, { block: null, frames, anywhere: true })
   for (const f of frames) {
     const m = read.frames[f.id]
     if (!m?.found || !m.shown) continue

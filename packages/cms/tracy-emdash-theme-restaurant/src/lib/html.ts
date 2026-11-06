@@ -1,3 +1,18 @@
+import { isScriptUrl, schemeOf } from './data-links.ts'
+
+/** A value as the browser reads it from an attribute: numeric and the few named references that spell a script URL. */
+function attributeText(v: string): string {
+  return v
+    .replace(/&#x([0-9a-f]+);?/gi, (_, h: string) =>
+      String.fromCodePoint(Math.min(parseInt(h, 16), 0x10ffff))
+    )
+    .replace(/&#(\d+);?/g, (_, d: string) => String.fromCodePoint(Math.min(parseInt(d, 10), 0x10ffff)))
+    .replace(
+      /&(colon|tab|newline);/gi,
+      (_, n: string) => ({ colon: ':', tab: '\t', newline: '\n' })[n.toLowerCase()] as string
+    )
+}
+
 // Source content keeps inline HTML in text fields (heading `<br/>`, an intro with a link). It is editor-owned text,
 // so it is passed through a small allowlist before it is printed -- never trusted as markup.
 const ALLOWED = new Set([
@@ -53,9 +68,12 @@ export function cleanHtml(input: unknown): string {
       const k = a[1].toLowerCase()
       const v = a[3] ?? a[4] ?? ''
       if (n === 'a' && (k === 'href' || k === 'title' || k === 'target' || k === 'rel')) {
-        if (k === 'href' && /^\s*javascript:/i.test(v)) continue
+        if (k === 'href' && isScriptUrl(attributeText(v))) continue
         keep.push(`${k}="${v.replace(/"/g, '&quot;')}"`)
-      } else if (n === 'img' && (k === 'src' || k === 'alt')) keep.push(`${k}="${v.replace(/"/g, '&quot;')}"`)
+      } else if (n === 'img' && (k === 'src' || k === 'alt')) {
+        if (k === 'src' && ['javascript', 'vbscript'].includes(schemeOf(attributeText(v)) ?? '')) continue
+        keep.push(`${k}="${v.replace(/"/g, '&quot;')}"`)
+      }
     }
     out += `<${n}${keep.length ? ' ' + keep.join(' ') : ''}${n === 'br' || n === 'img' ? ' /' : ''}>`
   }

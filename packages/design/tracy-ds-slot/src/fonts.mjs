@@ -125,6 +125,20 @@ export function weightsOf(family, wanted) {
 }
 
 /**
+ * A family name without its variable-cut suffix ("Inter Variable", "Inter-VF" are Inter), the separators before
+ * the suffix gone too; the name as it is when it has none. Read by position: a regex with the separators
+ * before the suffix went over a long run of them once for each place in it.
+ * @param {string} name
+ */
+export function withoutVariableCut(name) {
+  const cut = /(?:variable|var|vf)$/i.exec(name)
+  if (!cut) return name
+  let end = cut.index
+  while (end > 0 && /[\s-]/.test(name[end - 1])) end--
+  return end < cut.index ? name.slice(0, end) : name
+}
+
+/**
  * Resolve the font a system names to something loadable.
  *  - on Google Fonts            → `stated`
  *  - a Google substitute named  → `substituted` (the family it replaces is kept for the record)
@@ -141,7 +155,7 @@ export function resolveFont(family, substitute, refuse = []) {
   const named = String(family).trim()
   const ok = (f) => !refuse.includes(kindOf(f))
   // the variable cut of a Google family is that family ("Inter Variable" is Inter: Linear, 13/10/2026)
-  const direct = googleFamily(family) ?? googleFamily(named.replace(/[\s-]+(variable|var|vf)$/i, ''))
+  const direct = googleFamily(family) ?? googleFamily(withoutVariableCut(named))
   const system = SYSTEM.has(named.toLowerCase())
   if (direct && ok(direct)) return { family: direct, status: 'stated', source: 'google' }
   if (!direct && system) return { family: named, status: 'stated', source: 'system' }

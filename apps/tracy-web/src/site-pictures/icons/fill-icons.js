@@ -13,13 +13,13 @@
 
 import { outputSizeFor } from '../cut-photo.js'
 import { fileFields, placedEntry } from '../frame-entries.js'
-import { counterpartRole, previewColour, roleOf } from '../paint.js'
-import { contrast, iconColourOf, luminanceOfHex } from './icon-ink.js'
+import { counterpartRole, previewColour, roleOf } from '../../lib/picture-paint/paint.js'
+import { contrast, iconColourOf, luminanceOfHex } from '../../lib/picture-paint/icons/icon-ink.js'
 import { rankIcons } from './icon-ranker.js'
-import { iconPicture } from './icon-render.js'
+import { iconPicture } from '../../lib/picture-paint/icons/icon-render.js'
 import { assignIcons, iconShortlist, usableCatalog } from './icon-shortlist.js'
-import { iconStyleOf, sectionWeightOf } from './icon-style.js'
-import { PHOSPHOR_SET, phosphorCatalog } from './phosphor-set.js'
+import { iconStyleOf, sectionWeightOf } from '../../lib/picture-paint/icons/icon-style.js'
+import { PHOSPHOR_SET, phosphorCatalog } from '../../lib/picture-paint/icons/phosphor-set.js'
 
 const FALLBACK_INK = '#222222'
 

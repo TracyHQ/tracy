@@ -7,10 +7,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import {
-  BODY_BACKGROUND_SINCE,
-  writeT4BodyBackground
-} from '../src/sites/brief-engines/joomla-t4-body-background.js'
+import { BODY_BACKGROUND_SINCE, writeT4BodyBackground } from '../src/lib/joomla-t4-body-background.js'
 
 const PICTURE = 'images/tracy-pictures/court-at-dusk-3f2a9c1b-apply-7.jpg'
 

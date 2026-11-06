@@ -28,7 +28,7 @@ import {
   ROLE_VOCABULARY_V3,
   ROLE_VOCABULARY_VERSION
 } from 'website-opportunities/domain'
-import { editorialRoleOf } from './editorial-defaults.mjs'
+import { editorialRoleOf, repeatedRowOf } from './editorial-defaults.mjs'
 import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
 import { proposeMarkupBindings } from './rule-tables-markup.mjs'
 import { proposeWordpressLinks } from './rule-tables-wordpress-links.mjs'
@@ -826,6 +826,7 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
     const role = editorialRoleOf(slot, { vocabulary3 })
     if (role) slot.role = role
   }
+  joinRowIcons(slots)
   for (const slot of slots) {
     if (slot?.role === undefined) delete slot.role
     if (slot?.group === undefined) delete slot.group
@@ -836,6 +837,34 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
     .filter((slot) => ROLE_TYPES.has(slot?.type) && slot.role === undefined)
     .map((slot) => String(slot.key))
   return { contentMap: out, unplaced }
+}
+
+/** The role of an icon class that belongs to the item of a repeated row, not to the page. */
+const ROW_ICON_ROLE = 'editorial.item_icon'
+
+/**
+ * An icon of a repeated row joins the group of the other slots of its row (label R4: a repeated block is one group per
+ * item). The social row `social-intro[font-icon]` of item 2 joins the group its `social-intro[title]` and
+ * `social-intro[link]` of item 2 already share, so a fourth network the customer adds keeps its icon with it. It runs
+ * on every icon still without a group, the ones a previous map carried over included; a row whose slots name more than
+ * one group, or none, is left as it is. Changes `slots` in place.
+ * @param {any[]} slots
+ */
+function joinRowIcons(slots) {
+  const groupsByRow = new Map()
+  for (const slot of slots) {
+    if (!slot?.group || slot.role === ROW_ICON_ROLE) continue
+    const row = repeatedRowOf(slot)
+    if (!row) continue
+    const ids = groupsByRow.get(row) ?? new Map()
+    ids.set(slot.group.id, slot.group)
+    groupsByRow.set(row, ids)
+  }
+  for (const slot of slots) {
+    if (slot?.role !== ROW_ICON_ROLE || slot.group) continue
+    const ids = groupsByRow.get(repeatedRowOf(slot))
+    if (ids?.size === 1) slot.group = { ...[...ids.values()][0] }
+  }
 }
 
 /** In a version 3 map the role alone decides keep or replace: `customize` and a measured picture's `replace` follow it. */

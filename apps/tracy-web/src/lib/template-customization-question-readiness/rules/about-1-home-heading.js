@@ -11,8 +11,16 @@
  * - WordPress: the first level-1 heading of the front page (else its first heading) and the first
  *   paragraph after it. A named block (`metadata.name`) must have a slot targeting that name; an
  *   unnamed one passes, because Tracy rewrites unnamed text itself (`wp-leaves.js`).
- * - EmDash: the fields `src/views/Home.astro` prints inside its `<h1>` and the paragraph after it
- *   must each have an `identity`, `copy`, `blocks` or `rewrite` rule and exist in the seed.
+ * - EmDash: the fields `src/views/Home.astro` prints inside its `<h1>` and in the element under it (the first
+ *   `<p>`, or the first element printing a stamped field, whichever comes first) must each have an `identity`,
+ *   `copy`, `blocks` or `rewrite` rule and exist in the seed. A field is read through a stamp the view declares
+ *   (`const $hero = stampFor(Astro.request, 'hero', …)` makes `$hero("f")` / `$hero('f')` a field of collection
+ *   `hero`; an undeclared `$page` and `{ h.f }` mean the `home` entry, as in Tracy Business). Each is checked
+ *   against EVERY default-locale entry of its collection that holds the field (the view's entry is not knowable here). The `<h1>` and the element under it must EACH
+ *   print such a field (a static `<p>` standing first fails); with no element after the `<h1>` the heading alone is
+ *   an `<h1>` with nothing after it fails too. A stamp alone proves nothing: the element's text expressions (`{x.f}`, a PortableText `value={… x.f …}`)
+ *   must reach the field OF THE ENTRY THE STAMP IS BOUND TO (the third argument of its `stampFor`: `hero`), through that
+ *   variable, a variable derived from it, or a frontmatter variable built from either: `{other.hero_heading}` does not count.
  */
 import {
   contractOf,
@@ -24,6 +32,7 @@ import { demoDatabase } from '../readers/demo-database-tables.js'
 import { coverageOf, defaultEntries, emdashTemplate } from '../readers/emdash-personalize-coverage.js'
 import { acmStrings, firstHeadingOf, htmlTextPieces, normalText } from '../readers/joomla-row-text.js'
 import { UnreadableContent } from '../readers/release-content.js'
+import { escapeRe } from '../readers/template-source.js'
 import { blocksOf } from '../site-pages/wordpress-blocks.js'
 
 const PARAGRAPH_FIELD = /(^|[-_[])(desc|description|intro|info-desc|text|lead)([-_\]]|$)/
@@ -58,7 +67,7 @@ function joomla(
     if (!found) continue
     const own = (slots.get(key) ?? []).filter((s) => s.type === 'text')
     const samples = new Set(own.map((s) => normalText(s.sample)))
-    const missing = htmlTextPieces(found.heading.replace(/ /g, ' ')).filter((t) => !samples.has(t))
+    const missing = htmlTextPieces(found.heading).filter((t) => !samples.has(t))
     const headingSlots = own.filter((s) => found.heading.includes(normalText(s.sample)))
     const paragraph = own.some(
       (s) =>
@@ -123,6 +132,245 @@ async function wordpress(
   }
 }
 
+/**
+ * The collection each stamp of a view names: `const $hero = stampFor(Astro.request, 'hero', …)` -> `$hero: hero`.
+ * @param {string} view
+ */
+function stampCollections(view) {
+  return new Map(
+    [...view.matchAll(/const\s+(\$\w+)\s*=\s*stampFor\(\s*Astro\.request\s*,\s*["'](\w+)["']/g)].map((m) => [
+      m[1],
+      m[2]
+    ])
+  )
+}
+
+/**
+ * The variables each stamp is bound to: the third argument of `stampFor(Astro.request, 'c', <entry>)` names the entry it
+ * stamps (`hero ? { id: hero.id, slug: hero.slug } : null` -> `hero`, `{ data: site } as any` -> `site`).
+ * @param {string} view
+ * @returns {Map<string, Set<string>>} stamp name -> the entry variables
+ */
+function stampRoots(view) {
+  const out = new Map()
+  for (const m of view.matchAll(/const\s+(\$\w+)\s*=\s*stampFor\(\s*Astro\.request\s*,\s*["']\w+["']\s*,/g)) {
+    // the argument runs to the `)` that closes the call
+    let depth = 1
+    let i = m.index + m[0].length
+    const start = i
+    for (; i < view.length && depth > 0; i++) depth += view[i] === '(' ? 1 : view[i] === ')' ? -1 : 0
+    const arg = view
+      .slice(start, i - 1)
+      .replace(/\bas\s+[\w.<>[\], ]+/g, ' ')
+      .replace(/\b[A-Za-z_$][\w$]*\s*:/g, ' ')
+    out.set(m[1], new Set(rootsIn(arg)))
+  }
+  return out
+}
+
+const NOT_VARIABLES = new Set(['null', 'undefined', 'true', 'false', 'new', 'typeof', 'await', 'as', 'any'])
+/** The variables an expression reads: identifiers that are not property names or keywords. */
+function rootsIn(/** @type {string} */ code) {
+  return [...code.matchAll(/(?<![.\w$])([A-Za-z_$][\w$]*)/g)]
+    .map((m) => m[1])
+    .filter((id) => !NOT_VARIABLES.has(id))
+}
+
+/**
+ * The frontmatter variables derived from `roots` through `const` / `let` assignments: `h = entry.data`, then anything
+ * built from `h`, and so on.
+ * @param {Set<string>} roots @param {Map<string, string>} declared
+ */
+function derivedFrom(roots, declared) {
+  const known = new Set(roots)
+  for (let grew = true; grew; ) {
+    grew = false
+    for (const [name, init] of declared)
+      if (!known.has(name) && rootsIn(init).some((id) => known.has(id))) {
+        known.add(name)
+        grew = true
+      }
+  }
+  return known
+}
+
+/** A field printed through a stamp: `$X("f")` or `$X('f')`. */
+const STAMPED = /(\$\w+)\(\s*["'](\w+)["']\s*\)/g
+
+/**
+ * The (collection, field) pairs a piece of Home.astro prints: through a declared stamp, through an undeclared `$page`
+ * (the `home` entry, as the Tracy templates write it), or as `{ h.f }` (also `home`).
+ * @param {string} text @param {Map<string, string>} stamps
+ * @returns {{ collection: string, field: string, stamp: string | null }[]}
+ */
+function printedFields(text, stamps) {
+  /** @type {{ collection: string, field: string, stamp: string | null }[]} */
+  const out = []
+  const add = (
+    /** @type {string} */ collection,
+    /** @type {string} */ field,
+    /** @type {string | null} */ stamp
+  ) => {
+    if (!out.some((o) => o.collection === collection && o.field === field))
+      out.push({ collection, field, stamp })
+  }
+  for (const m of text.matchAll(STAMPED)) {
+    const collection = stamps.get(m[1]) ?? (m[1] === '$page' ? 'home' : null)
+    if (collection) add(collection, m[2], m[1])
+  }
+  for (const m of text.matchAll(/\{\s*h\.(\w+)\s*\}/g)) add('home', m[1], null)
+  return out
+}
+
+/**
+ * The element "under" the heading: the first `<p>` after it, or the first element that prints a stamped field, whichever
+ * comes first (a hero's intro is often a `<div>` holding rich text, not a `<p>`). Either is read whole, to its closing tag.
+ * @param {string} rest what follows the `</h1>`
+ */
+function underHeading(rest) {
+  const p = /<p\b[\s\S]*?<\/p>/i.exec(rest)
+  const stamped = new RegExp(STAMPED.source).exec(rest)
+  let stampedTag = null
+  if (stamped) {
+    const open = rest.lastIndexOf('<', stamped.index)
+    const close = rest.indexOf('>', stamped.index)
+    if (open >= 0 && close > open) stampedTag = { at: open, text: elementFrom(rest, open, close) }
+  }
+  if (p && (!stampedTag || p.index <= stampedTag.at)) return p[0]
+  return stampedTag?.text ?? ''
+}
+
+/**
+ * The element whose opening tag is `rest[open..close]`, to its matching closing tag (same-name tags nest); a void or
+ * self-closing tag, or one never closed, is the tag alone.
+ * @param {string} rest @param {number} open @param {number} close
+ */
+function elementFrom(rest, open, close) {
+  const name = /^<([A-Za-z][\w.-]*)/.exec(rest.slice(open, close + 1))?.[1]
+  if (!name || rest[close - 1] === '/') return rest.slice(open, close + 1)
+  const tag = new RegExp(`<(/?)${escapeRe(name)}(?=[\\s>/])[^>]*?(/?)>`, 'g')
+  tag.lastIndex = close + 1
+  let depth = 1
+  for (let m = tag.exec(rest); m; m = tag.exec(rest)) {
+    if (m[2] === '/') continue
+    depth += m[1] ? -1 : 1
+    if (depth === 0) return rest.slice(open, m.index + m[0].length)
+  }
+  return rest.slice(open, close + 1)
+}
+
+/** `{ ... }` expressions of a JSX fragment: the code it prints, its static text left out. Braces nest; strings are skipped. */
+function expressionsOf(/** @type {string} */ jsx) {
+  /** @type {string[]} */
+  const out = []
+  for (let i = 0; i < jsx.length; i++) {
+    if (jsx[i] !== '{') continue
+    let depth = 0
+    let j = i
+    for (; j < jsx.length; j++) {
+      const c = jsx[j]
+      if (c === '"' || c === "'" || c === '`') {
+        const end = jsx.indexOf(c, j + 1)
+        if (end < 0) break
+        j = end
+      } else if (c === '{') depth++
+      else if (c === '}' && --depth === 0) break
+    }
+    out.push(jsx.slice(i + 1, j))
+    i = j
+  }
+  return out
+}
+
+/**
+ * The frontmatter's `const` / `let` initialisers by name: `heroLines` -> `hero ? lines(hero.hero_heading) : []`. A
+ * statement runs to the next line that starts another declaration.
+ * @param {string} view
+ */
+function declarations(view) {
+  const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(view)?.[1] ?? ''
+  /** @type {Map<string, string>} */
+  const out = new Map()
+  const starts = [...fm.matchAll(/^(?:const|let|var)\s+(\w+)\s*(?::[^=\n]+)?=/gm)]
+  const next = /^(?:const|let|var|import|export|function|async function)\b/gm
+  for (const m of starts) {
+    next.lastIndex = m.index + m[0].length
+    const end = next.exec(fm)?.index ?? fm.length
+    out.set(m[1], fm.slice(m.index + m[0].length, end))
+  }
+  return out
+}
+
+/**
+ * A JSX fragment without its tags: what is left between them, `{...}` expressions included. A tag's attributes (the open tag
+ * of the element itself, a nested HTML element's) never print text, so `data-copy={hero.hero_heading}` proves nothing. A tag
+ * inside an expression stays with it.
+ * @param {string} jsx
+ */
+function childrenOf(jsx) {
+  let out = ''
+  let depth = 0
+  for (let i = 0; i < jsx.length; i++) {
+    const c = jsx[i]
+    if (depth === 0 && c === '<' && /[A-Za-z/]/.test(jsx[i + 1] ?? '')) {
+      // skip the tag: to the first `>` outside braces and quotes
+      let braces = 0
+      let j = i + 1
+      for (; j < jsx.length; j++) {
+        const d = jsx[j]
+        if (d === '"' || d === "'" || d === '`') {
+          const end = jsx.indexOf(d, j + 1)
+          if (end < 0) break
+          j = end
+        } else if (d === '{') braces++
+        else if (d === '}') braces--
+        else if (d === '>' && braces === 0) break
+      }
+      // a component's props are its content (`<PortableText value={x.f} />`); an HTML element's attributes are not text
+      out += /^<[A-Z]/.test(jsx.slice(i, i + 2)) ? jsx.slice(i, j + 1) : ' '
+      i = j
+      continue
+    }
+    if (c === '{') depth++
+    else if (c === '}') depth--
+    out += c
+  }
+  return out
+}
+
+/**
+ * The code a fragment prints: the `{...}` expressions of its children (`childrenOf`: attributes are not text) and, for
+ * each frontmatter variable they use, that variable's initialiser, and so on down the chain.
+ * @param {string} fragment @param {Map<string, string>} declared
+ */
+function printedCode(fragment, declared) {
+  const own = expressionsOf(childrenOf(fragment))
+  const seen = new Set()
+  const code = [...own]
+  for (let i = 0; i < code.length; i++)
+    for (const [, id] of code[i].matchAll(/(?<![.\w$])([A-Za-z_$][\w$]*)/g))
+      if (declared.has(id) && !seen.has(id)) {
+        seen.add(id)
+        code.push(/** @type {string} */ (declared.get(id)))
+      }
+  return code.join('\n')
+}
+
+/**
+ * Whether `code` reaches the field of the entry: `r.f`, `r?.f` or `r['f']`, where `r` is one of `roots` (the entry the
+ * stamp is bound to, or a variable derived from it). With no roots (a stamp the view does not declare) any `x.f` does.
+ */
+const reaches = (
+  /** @type {string} */ code,
+  /** @type {string} */ field,
+  /** @type {Set<string> | null} */ roots
+) => {
+  const owner =
+    roots && roots.size ? `(?<![.\\w$])(?:${[...roots].map(escapeRe).join('|')})\\s*` : '[\\w$)\\]]\\s*'
+  const name = escapeRe(field)
+  return new RegExp(`${owner}(?:\\?\\.|\\.)\\s*${name}\\b|${owner}\\[\\s*["']${name}["']\\s*\\]`).test(code)
+}
+
 /** @param {import('../index.js').RuleContext} context */
 async function emdash(context) {
   const t = await emdashTemplate(context)
@@ -136,28 +384,69 @@ async function emdash(context) {
   const h1 = /<h1\b[\s\S]*?<\/h1>/i.exec(view)
   if (!h1)
     return { status: 'live-only', message: 'src/views/Home.astro prints no <h1> of its own', problems: [] }
-  const rest = view.slice(h1.index + h1[0].length)
-  const p = /<p\b[\s\S]*?<\/p>/i.exec(rest)
-  const fieldsOf = (/** @type {string} */ s) => [
-    ...new Set([...s.matchAll(/\$page\("(\w+)"\)|\{\s*h\.(\w+)\s*\}/g)].map((m) => m[1] ?? m[2]))
-  ]
-  const fields = [...fieldsOf(h1[0]), ...(p ? fieldsOf(p[0]) : [])]
-  const covered = coverageOf(t.personalize)
-  const home = defaultEntries(t.seed).find((e) => e.collection === 'home')
-  const problems = []
-  for (const field of fields) {
-    if (
-      !covered('home', home?.slug ?? 'home', field).some((k) =>
-        ['identity', 'copy', 'blocks', 'rewrite'].includes(k)
-      )
-    )
-      problems.push(`home.${field} has no identity, copy, blocks or rewrite rule`)
-    if (home && !(field in home.data)) problems.push(`home.${field} is not in seed/seed.json`)
+  const stamps = stampCollections(view)
+  const under = underHeading(view.slice(h1.index + h1[0].length))
+  const declared = declarations(view)
+  const roots = stampRoots(view)
+  /** The fields an element stamps and really prints: its text expression reaches them. */
+  const read = (/** @type {string} */ element) => {
+    const stamped = printedFields(element, stamps)
+    const code = printedCode(element, declared)
+    const printed = stamped.filter((f) => {
+      const bound = f.stamp ? roots.get(f.stamp) : null
+      return reaches(code, f.field, bound ? derivedFrom(bound, declared) : null)
+    })
+    return { stamped, printed }
   }
-  if (!fields.length) problems.push('the home <h1> prints no field of the home entry')
+  const heading = read(h1[0])
+  const paragraph = read(under)
+  const headingFields = heading.printed
+  const paragraphFields = paragraph.printed
+  const named = (/** @type {{ collection: string, field: string }[]} */ list) =>
+    list.map((f) => (f.collection === 'home' ? f.field : `${f.collection}.${f.field}`)).join(', ')
+  const fields = [...headingFields, ...paragraphFields].filter(
+    (f, i, all) => all.findIndex((o) => o.collection === f.collection && o.field === f.field) === i
+  )
+  const covered = coverageOf(t.personalize)
+  const entries = defaultEntries(t.seed)
+  const problems = []
+  for (const { collection, field } of fields) {
+    // The entry the view renders is not knowable here, so EVERY default-locale entry of the collection that holds the field
+    // must be covered (a slug-scoped rule covers only its slug). A `home` collection the seed lacks is judged as before.
+    const holders = entries.filter((e) => e.collection === collection && field in e.data)
+    const own = entries.some((e) => e.collection === collection)
+    for (const holder of holders.length
+      ? holders
+      : [{ slug: entries.find((e) => e.collection === collection)?.slug ?? collection }])
+      if (
+        !covered(collection, holder.slug, field).some((k) =>
+          ['identity', 'copy', 'blocks', 'rewrite'].includes(k)
+        )
+      )
+        problems.push(
+          `${collection}.${field} has no identity, copy, blocks or rewrite rule${holders.length > 1 || own ? ` (entry ${collection}/${holder.slug})` : ''}`
+        )
+    if ((own || collection !== 'home') && !holders.length)
+      problems.push(`${collection}.${field} is not in seed/seed.json`)
+  }
+  // Both must be written: a covered heading does not excuse a static paragraph under it, nor the reverse, and a home with
+  // nothing after the <h1> has no paragraph to write (the Joomla half asks for a paragraph slot the same way).
+  if (!headingFields.length)
+    problems.push(
+      heading.stamped.length
+        ? `the home <h1> stamps ${named(heading.stamped)} but its text prints none of them`
+        : 'the home <h1> prints no field of the home entry'
+    )
+  if (!under) problems.push('nothing under the home heading prints a field of the home entry')
+  else if (!paragraphFields.length)
+    problems.push(
+      paragraph.stamped.length
+        ? `the element under the home heading stamps ${named(paragraph.stamped)} but its text prints none of them`
+        : 'the element under the home heading (<p>) prints no field of the home entry'
+    )
   return {
     status: problems.length ? 'fail' : 'pass',
-    message: `home heading and paragraph fields ${fields.join(', ')}`,
+    message: `home heading and paragraph fields ${fields.map((f) => (f.collection === 'home' ? f.field : `${f.collection}.${f.field}`)).join(', ')}`,
     problems
   }
 }

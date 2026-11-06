@@ -16,6 +16,10 @@ const MONTHS =
 const DATE = new RegExp(
   `^(\\d{1,2}(st|nd|rd|th)?\\s+${MONTHS},?\\s+\\d{4}|${MONTHS}\\s+\\d{1,2}(st|nd|rd|th)?,?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}|${MONTHS}\\s+\\d{4})$`
 )
+// An all-numeric date a layout prints from an item's own date with a format string (JA's latest-news layout: `d.m.Y`
+// -> 06.09.2021): day, month and year in either order, split by dots, slashes or dashes. It is the article's date, not
+// words of the demo; a phone or a price never has this shape.
+const NUMERIC_DATE = /^(\d{1,2}[./-]\d{1,2}[./-]\d{4}|\d{4}[./]\d{1,2}[./]\d{1,2})$/
 // Strings Joomla core or the framework generate whatever the site is (when no language file is given).
 const CORE_TEXT =
   /^(read more( \.\.\.)?|read more:.*|search|search \.\.\.|prev|previous|next|start|end|home|you are here:?|page \d+ of \d+|written by|published:?|hits:?|category:?|details|back to top|toggle navigation|close|menu|skip to main content|share|tags:?|more articles|\d+ (min|mins|minutes) read|skip to content|leave a comment|search for:?|comments?|reply|log in|proudly powered by wordpress|powered by wordpress)$/
@@ -80,7 +84,8 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
 
   function classifyText(value) {
     const norm = normText(value)
-    if (DATE.test(norm)) return { class: 'c', label: 'date rendered by Joomla', evidence: [] }
+    if (DATE.test(norm) || NUMERIC_DATE.test(norm))
+      return { class: 'c', label: 'date rendered by Joomla', evidence: [] }
     if (/^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$/.test(String(value).trim()))
       return {
         class: 'b',

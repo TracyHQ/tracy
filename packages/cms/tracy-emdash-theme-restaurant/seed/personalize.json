@@ -32,6 +32,13 @@
       "field": "footer_address",
       "value": "{address}",
       "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "address",
+      "value": "{address}",
+      "unanswered": "keep-demo"
     }
   ],
   "replace": [
@@ -70,9 +77,182 @@
       "field": "section_intro",
       "brief": "two short lines under the Our Team heading about what makes a good chef and the people in this kitchen",
       "maxWords": 30
+    },
+    {
+      "collection": "hero",
+      "slug": "welcome-to-res-bar-restaurant",
+      "field": "hero_heading",
+      "brief": "the big heading at the top of the home page: a welcome to this restaurant, in two short lines",
+      "maxWords": 8
+    },
+    {
+      "collection": "hero",
+      "slug": "welcome-to-res-bar-restaurant",
+      "field": "hero_intro",
+      "brief": "two sentences under the home heading inviting guests to eat here, about the food and the welcome, with no year, address or number",
+      "maxWords": 40
+    },
+    {
+      "collection": "hero",
+      "slug": "welcome-to-res-bar-restaurant-2",
+      "field": "hero_heading",
+      "brief": "a short heading that introduces the kitchen team of this restaurant, in two short lines",
+      "maxWords": 6
+    },
+    {
+      "collection": "hero",
+      "slug": "welcome-to-res-bar-restaurant-2",
+      "field": "hero_intro",
+      "brief": "two sentences inviting guests to eat here, about the food and the welcome, with no year, address or number",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-us",
+      "field": "title",
+      "brief": "the title of the box that sends guests to the recipes and stories of this restaurant",
+      "maxWords": 4
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-us",
+      "field": "description",
+      "brief": "one sentence on that box: what guests will find in this restaurant's recipes and stories",
+      "maxWords": 28
+    },
+    {
+      "collection": "masthead",
+      "slug": "default",
+      "field": "description",
+      "brief": "the line under the restaurant name on pages without a title of their own: what it serves, with no year or place",
+      "maxWords": 8
+    },
+    {
+      "collection": "masthead",
+      "slug": "about-us",
+      "field": "description",
+      "brief": "the line under the About Us title: what this restaurant is about, with no year or place",
+      "maxWords": 8
+    },
+    {
+      "collection": "masthead",
+      "slug": "our-history",
+      "field": "description",
+      "brief": "the line under the Our History title: a short line about the story of this restaurant, with no year or place",
+      "maxWords": 8
+    },
+    {
+      "collection": "subscribe",
+      "slug": "subscribe",
+      "field": "intro",
+      "brief": "one short sentence under the newsletter box promising few, useful e-mails",
+      "maxWords": 20
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "card_text",
+      "brief": "one short sentence on the contact card: how to reach the restaurant",
+      "maxWords": 14
+    },
+    {
+      "collection": "reservation",
+      "slug": "reservation",
+      "field": "intro",
+      "brief": "two sentences about booking a table by phone, with no opening hours or phone number",
+      "maxWords": 36
+    },
+    {
+      "collection": "reservation",
+      "slug": "reservation",
+      "field": "online_text",
+      "brief": "one sentence inviting guests who cannot get through by phone to leave their details",
+      "maxWords": 24
     }
   ],
-  "rewrite": [],
+  "rewrite": [
+    {
+      "collection": "posts",
+      "slugs": [
+        "4-habits-that-can-improve-your-customer-service",
+        "chipotle-to-launch-burger-spinoff-this-fall",
+        "how-to-help-your-chef-achieve-a-better-work-life-balance",
+        "indies-aren-t-sold-on-tech",
+        "starbucks-brings-under-armour-exec-on-board",
+        "8-trends-trickling-down-to-mainstream-menus",
+        "starbucks-faces-a-big-recall",
+        "logan-s-said-to-be-weighing-bankruptcy",
+        "fish-sauces-seep-onto-all-sorts-of-menus",
+        "denny-s-adopts-a-pancake-guarantee",
+        "blt-on-pimento-cheese-biscuit",
+        "mcdonald-s-makes-clean-tweaks-to-some-menu-items",
+        "how-the-gop-and-dems-differ-on-restaurant-issues"
+      ],
+      "brief": "one news post this restaurant would publish for its guests: a story about its kitchen, a cooking tip, a dish or news from the dining room",
+      "fields": [
+        "title",
+        "excerpt",
+        "body"
+      ],
+      "body": "body",
+      "bodyWords": 160,
+      "batch": 3,
+      "decides": [
+        "title"
+      ]
+    },
+    {
+      "collection": "posts",
+      "slugs": [
+        "chefs"
+      ],
+      "brief": "the paragraph that introduces the kitchen team of this restaurant, about how they cook, with no names, years or counts",
+      "fields": [
+        "body"
+      ],
+      "body": "body",
+      "bodyWords": 60
+    },
+    {
+      "collection": "pages",
+      "slugs": [
+        "our-history"
+      ],
+      "brief": "the story page of this restaurant: how it welcomes guests and what it cooks, with no years, addresses, names or counts",
+      "fields": [
+        "lead_title",
+        "lead_text",
+        "caption",
+        "body"
+      ],
+      "body": "body",
+      "bodyWords": 120,
+      "decides": [
+        "lead_title"
+      ]
+    },
+    {
+      "collection": "menu",
+      "brief": "the title of one section of this restaurant's menu (starters, mains, desserts, drinks)",
+      "fields": [
+        "title"
+      ],
+      "decides": [
+        "title"
+      ]
+    },
+    {
+      "collection": "category_info",
+      "brief": "the introduction of one group of news this restaurant publishes",
+      "fields": [
+        "title",
+        "description"
+      ],
+      "decides": [
+        "title"
+      ]
+    }
+  ],
   "facts": [
     {
       "collection": "chrome",
@@ -100,7 +280,7 @@
     },
     {
       "collection": "timeline",
-      "slug": "our-history",
+      "slug": "our-history-timeline",
       "field": "items",
       "why": "the demo restaurant's history"
     },
@@ -121,16 +301,301 @@
       "slug": "open-daily",
       "field": "oclock_end",
       "why": "closing hour of the demo restaurant"
+    },
+    {
+      "collection": "testimonials",
+      "slug": "happy-customers",
+      "field": "items",
+      "why": "quotes of the demo restaurant's guests"
+    },
+    {
+      "collection": "statistics",
+      "slug": "you-re-in-good-restaurant",
+      "field": "section_intro",
+      "why": "the review count of the demo restaurant"
+    },
+    {
+      "collection": "timeline",
+      "slug": "our-history-timeline",
+      "field": "section_intro",
+      "why": "the history of the demo restaurant"
+    },
+    {
+      "collection": "banner",
+      "slug": "banner",
+      "field": "points",
+      "why": "the lunch offer and its hours at the demo restaurant"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-1",
+      "field": "hp_desc",
+      "why": "the drinks offer of the demo bar"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-1",
+      "field": "hp_info",
+      "why": "the happy-hour days and hours of the demo bar"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-2",
+      "field": "hp_desc",
+      "why": "the drinks offer of the demo bar"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-2",
+      "field": "hp_info",
+      "why": "the happy-hour days and hours of the demo bar"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-2",
+      "field": "hp_other_info",
+      "why": "the demo restaurant's web address and reservation phone"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-3",
+      "field": "hp_desc",
+      "why": "the drinks offer of the demo bar"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-3",
+      "field": "hp_info",
+      "why": "the happy-hour days and hours of the demo bar"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-3",
+      "field": "hp_other_info",
+      "why": "the demo restaurant's web address and reservation phone"
     }
   ],
   "hide": [],
   "brand": {
     "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, from the kit's brand PR; a tool without it ignores this block): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none. Name the chrome entry the header and footer read (references/brand-and-pages.md).",
     "logoDark": {
-      "collection": "site",
-      "slug": "site",
+      "collection": "chrome",
+      "slug": "chrome",
       "field": "logo_dark",
       "label": "Logo for dark backgrounds"
     }
-  }
+  },
+  "demoCompanyNames": [
+    "JA Restaurant",
+    "RES Bar & Restaurant"
+  ],
+  "copyNote": "Read by Tracy's template readiness check, not by tools/personalize.mjs (TCH #1013, D6 + D7): demoCompanyNames is every spelling of the demo company's name, each renamed by a replace rule above (the demo's own name first); keptText is demo text kept on purpose (collection/slug for an entry, collection/slug.field for one field): the titles that only name an entry in the admin (the hero, the Open Table and Happy Hours blocks, the kit-style statistics icon) and the form's own instruction line, which are the template's words with the demo name swapped by `replace`. `rewrite` of `posts` lists `body` among its fields only so that the readiness check, which looks for the body of a post under `fields`, sees it; the tool writes it through `body`.",
+  "keptText": [
+    "hero/welcome-to-res-bar-restaurant.title",
+    "hero/welcome-to-res-bar-restaurant-2.title",
+    "statistics/you-re-in-good-restaurant.button_icon",
+    "opentable/open-table.title",
+    "happyhours/happy-hours-style-1.title",
+    "happyhours/happy-hours-style-2.title",
+    "happyhours/happy-hours-style-3.title",
+    "contact/contact.form_note"
+  ],
+  "labelsNote": "The entries whose labels tools/personalize.mjs translates when the root is written in another language than its own (chromeLabelsOf, TCH #1013): the chrome (header, footer, search, 404), the headings, buttons and captions of the pages, of the home sections and of the contact and reservation pages. A field another rule writes (copy, blocks, rewrite) is left to that rule; addresses and names are left alone.",
+  "labels": [
+    {
+      "collection": "chrome",
+      "slug": "chrome"
+    },
+    {
+      "collection": "pages"
+    },
+    {
+      "collection": "masthead"
+    },
+    {
+      "collection": "hero"
+    },
+    {
+      "collection": "tabs"
+    },
+    {
+      "collection": "testimonials",
+      "slug": "happy-customers",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "statistics"
+    },
+    {
+      "collection": "happyhours"
+    },
+    {
+      "collection": "banner"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact"
+    },
+    {
+      "collection": "reservation",
+      "slug": "reservation"
+    },
+    {
+      "collection": "category_info",
+      "fields": [
+        "title"
+      ]
+    }
+  ],
+  "copySettings": {
+    "tagline": {
+      "brief": "what the restaurant serves, five words",
+      "maxWords": 6
+    }
+  },
+  "blocks": [
+    {
+      "collection": "slideshow",
+      "slug": "slideshow",
+      "field": "items",
+      "itemFields": [
+        "slide_title"
+      ],
+      "brief": "the line over one picture of the home page slideshow: a short welcome to this restaurant, in two short lines"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "features-intro",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one card that tells guests what this restaurant is about: a short title and two sentences, with no year, address or number"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "special-offers",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description",
+        "short_desc"
+      ],
+      "brief": "one dish this restaurant would put forward this week: its name, a sentence about it and the main ingredients"
+    },
+    {
+      "collection": "reservation",
+      "slug": "reservation",
+      "field": "blocks",
+      "itemFields": [
+        "title",
+        "text",
+        "points",
+        "button_label"
+      ],
+      "brief": "one way to book at this restaurant (lunch, dinner, groups): a title, a sentence, up to three short lines and a button label, with no hours, prices or counts"
+    },
+    {
+      "collection": "menu",
+      "slug": "snacks-x-salads",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "entrees",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "dessert",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "dessert-117",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "sea-food",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "icream-and-juice",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "simple-menu",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "menu-with-image",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "2-column-menu",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "category",
+      "collections": [
+        "posts"
+      ],
+      "brief": "a group of news this restaurant publishes (kitchen stories, cooking tips, dishes, dining-room news)"
+    }
+  ]
 }

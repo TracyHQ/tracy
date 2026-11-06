@@ -15,6 +15,11 @@ minimumReleaseAgeExclude:
   - emdash@1.1.0
 # Every zod below 4.6.6 has GHSA-mrhx-c7xc-m3w5 (memory exhaustion on oversized constrained
 # collections) and 3.x has no patched release, so all of them resolve to 4.6.6: emdash 1.1.0
-# pins 4.5.4, astro 7.2.8 asks ^4.3.6, the dev-only shadcn CLI asks ^3.24.1.
+# pins 4.5.4, astro 7.3.3 asks ^4.5.4, the dev-only shadcn CLI asks ^3.24.1.
 overrides:
   'zod@<4.6.6': 4.6.6
+# body-parser 2.0.0 to 2.3.x has GHSA-27r3-jxmh-p828 (denial of service via trailing bytes after a
+# compressed request body); 2.4.0 is the first patched release.
+  "body-parser@>=2.0.0 <2.4.0": 2.4.0
+# nodemailer below 10.1.4: GHSA-rcmh-qjqh-p98v, GHSA-p6gq-j5cr-w38f, GHSA-2x7j-588g-ccc2, GHSA-v53p-9fqp-m79j, GHSA-r7g4-qg5f-qqm2 (high) and 17 moderate or low ones; 10.1.4 clears every one.
+  "nodemailer@<10.1.4": 10.1.4

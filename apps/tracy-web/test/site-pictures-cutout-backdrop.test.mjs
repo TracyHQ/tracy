@@ -7,9 +7,9 @@ import { test } from 'node:test'
 import sharp from 'sharp'
 import { exportPictureMapping } from '../src/site-pictures/contract-mapping.js'
 import { backdropOf } from '../src/site-pictures/cutout-backdrop.js'
-import { backdropComposite } from '../src/site-pictures/cutout-backdrop-draw.js'
+import { backdropComposite } from '../src/lib/picture-paint/cutout-backdrop-draw.js'
 import { PICTURES_VERSION, readPictures } from '../src/site-pictures/manifest-shape.js'
-import { backdropProblem, PAINT_ROLES, PREVIEW_PALETTE } from '../src/site-pictures/paint.js'
+import { backdropProblem, PAINT_ROLES, PREVIEW_PALETTE } from '../src/lib/picture-paint/paint.js'
 
 const ACCENT = '#c81e1e'
 const W = 400

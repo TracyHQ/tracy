@@ -1,0 +1,3 @@
+- **Write step bench: a hidden slot takes its row or element with it, so the page shows no hole** · Claude, for Akemi · `feat/write-step-rows` · 2026-11-04
+  **Affects:** whoever runs the write step bench. The hide stage now sends slots to the plugin's `rows.remove` door (plugin `feat/hide-ops`; an older plugin refuses as before). Removal cannot be undone on a site: a retry needs a new bench site. A link the same block hides, or on a row past the plan's `lists[].rows`, is no longer a kept link; a link whose words are hidden leaves with them and its report line carries `conflict: true`.
+  **Why / Measured:** a full run left blank cards and empty boxes where slots were emptied, and 66 slots in HTML fields refused to empty and kept demo words.

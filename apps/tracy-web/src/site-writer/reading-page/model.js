@@ -113,6 +113,7 @@ export function buildModel({
       basis: entry.basis ?? null,
       facts: factsOf(entry.factIds),
       owner: w?.owner ?? null,
+      replacedPlanLabel: typeof w?.replacedPlanLabel === 'string' ? w.replacedPlanLabel : null,
       items,
       chars: sum(items),
       limit: entry.maxCharacters ?? (limitText ? Number(limitText) : null),
@@ -165,7 +166,8 @@ export function buildModel({
       pictures,
       hidden: asArray(b.hiddenSlots).map((h) => ({ slot: h.slot, why: h.why ?? null })),
       links: linksOf(b),
-      lists: kitIdx.listsOf(b.block)
+      lists: kitIdx.listsOf(b.block),
+      sentences: kitIdx.sentencesOf(b.block)
     }
   }
   // The plan's links of a block, in plan order: the label from the copy (wherever its slot was written), the target

@@ -17,3 +17,9 @@ minimumReleaseAgeExclude:
   - '@emdash-cms/plugin-audit-log@0.2.3'
   - '@emdash-cms/plugin-forms@0.2.9'
   - emdash@1.1.0
+# body-parser 2.0.0 to 2.3.x has GHSA-27r3-jxmh-p828 (denial of service via trailing bytes after a
+# compressed request body); 2.4.0 is the first patched release.
+overrides:
+  "body-parser@>=2.0.0 <2.4.0": 2.4.0
+# nodemailer below 10.1.4: GHSA-rcmh-qjqh-p98v, GHSA-p6gq-j5cr-w38f, GHSA-2x7j-588g-ccc2, GHSA-v53p-9fqp-m79j, GHSA-r7g4-qg5f-qqm2 (high) and 17 moderate or low ones; 10.1.4 clears every one.
+  "nodemailer@<10.1.4": 10.1.4

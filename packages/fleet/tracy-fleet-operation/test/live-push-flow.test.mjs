@@ -298,7 +298,7 @@ function liveEngine(liveDir, { templateFiles = null } = {}) {
           )
         if (params.operation === 'set') {
           for (const [k, v] of Object.entries(params.fields)) {
-            const line = `\tpublic $${k} = '${String(v).replace(/'/g, "\\'")}';`
+            const line = `\tpublic $${k} = '${String(v).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}';`
             text = new RegExp(`\\$${k} = `).test(text)
               ? text.replace(new RegExp(`^\\s*public \\$${k} = .*;$`, 'm'), line)
               : text.replace('}\n', `${line}\n}\n`)
@@ -781,6 +781,23 @@ test('an article a push created and the customer then deleted on the live site g
     assert.equal(sync.state, 'applied', JSON.stringify(sync))
     assert.deepEqual(sync.kept, [], JSON.stringify(sync.kept))
     assert.deepEqual(rows("SELECT COUNT(*) FROM jos_content WHERE title='Tracy news'"), [['0']])
+    // The deleted article left the id map (#307), and its number is not given again.
+    const idMap = JSON.parse(readFileSync(join(s.priv, 'sync', 'id-map.json'), 'utf8'))
+    assert.ok(!Object.values(idMap.content ?? {}).includes(3), JSON.stringify(idMap))
+    // Tracy makes another article: it is pushed as one, never named the live site's own.
+    sql(
+      "INSERT INTO jos_content (title, alias, introtext, `fulltext`) VALUES ('Tracy news 2', 'tracy-news-2', 'again', '')",
+      'joomla'
+    )
+    const [[next]] = rows("SELECT id FROM jos_content WHERE alias='tracy-news-2'")
+    assert.ok(Number(next) > 3, `the copy gave the new article ${next}, the deleted one's number or lower`)
+    const { answer: again } = await s.runPush(['--op', 'preview', '--preview-id', id()], engine)
+    assert.equal(again.ok, true, JSON.stringify(again))
+    assert.deepEqual(
+      again.items.filter((i) => i.id.startsWith('article:')).map((i) => [i.id, i.op]),
+      [[`article:new:${next}`, 'create']]
+    )
+    assert.ok(!again.unsupported.some((u) => u.why === 'live-record'), JSON.stringify(again.unsupported))
   } finally {
     await engine.close()
     s.dispose()

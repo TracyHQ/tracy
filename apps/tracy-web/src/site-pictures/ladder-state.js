@@ -38,7 +38,7 @@ export function ladderState(idx, doc) {
       (ladder.get(frame) ?? [])
         .map((x) => `${x.rung} ${x.outcome}${x.detail ? ` (${x.detail})` : ''}`)
         .join('; '),
-    listOf: (frame) => (frame.writable === false ? 'siteSettings' : 'frames'),
+    listOf: (frame) => idx.listOf(frame),
     extraOf: (list) => (list === 'siteSettings' ? { writeDoor: 'none' } : {}),
     /** How many frames use each brief photo now. */
     usageNow() {

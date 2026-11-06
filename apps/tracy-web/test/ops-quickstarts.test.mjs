@@ -24,6 +24,8 @@ import { demoPublicHost } from '../src/ops/quickstarts.js'
 import { deleteShot, putShot } from '../src/lib/template-shots.js'
 import { dbSitesResolver } from '../src/sites/resolver.js'
 import { imagesDigest } from '../src/lib/template-kit/reader.js'
+import { kitZipName } from '../src/lib/template-kit-images.js'
+import { FLOW_SITE, frontGroup } from './_template-kit-flow-site.mjs'
 import { fileDb } from './_db.mjs'
 
 // One migrated schema for the whole file, emptied before each test (see _db.mjs).
@@ -125,17 +127,22 @@ const COVERAGE_MEASURED = () => ({
  * An approved template kit of the release's own version, the same way: the released contracts these fixtures borrow
  * carry no template-kit.json. A test hands in its own `templateKitOf` to judge another kit.
  */
-const KIT_IMAGES = [{ path: 'pages/home-1440.png', sha256: 'a'.repeat(64) }]
+const KIT_IMAGES = [{ id: 'page-home-1440', path: 'pages/home-1440.png', sha256: 'a'.repeat(64) }]
 const kitDoc = (version, over = {}) => ({
   kitVersion: '1.0.0',
-  quickstart: { version },
+  template: { name: 'ja_restaurant' },
+  quickstart: { product: 'ja-restaurant', version },
   images: KIT_IMAGES,
-  pages: [{ id: 'home', images: { 1440: 'home-1440', 390: 'home-390' } }],
+  site: FLOW_SITE,
+  pageGroups: [frontGroup('home')],
+  pages: [{ id: 'home', path: '/', images: { 1440: 'home-1440', 390: 'home-390' } }],
   blocks: [{ id: 'hero', images: { 1440: 'hero-1440', 390: 'hero-390' } }],
   approval: { by: 'reviewer', at: '2026-10-30T00:00:00.000Z', imagesSha256: imagesDigest(KIT_IMAGES) },
   ...over
 })
 const KIT_APPROVED = (r) => ({ state: 'read', doc: kitDoc(String(r?.setting?.version ?? '')) })
+/** The kit's image zip of `version` as a release asset, named the way the kit pack names it (`kitZipName`). */
+const kitZipAssets = (version = '1.0.0') => [{ id: 901, name: kitZipName(kitDoc(version)) }]
 
 function harness(
   pool,
@@ -240,7 +247,7 @@ async function seedReleases(pool) {
       kind: 'quickstart',
       github: 'published',
       publishedAt: '2026-09-14T19:33:55Z',
-      assets: []
+      assets: kitZipAssets()
     },
     emdash,
     'ready',
@@ -253,7 +260,7 @@ async function seedReleases(pool) {
       kind: 'quickstart',
       github: 'draft',
       publishedAt: null,
-      assets: []
+      assets: kitZipAssets()
     },
     {
       ...emdash,
@@ -557,7 +564,13 @@ async function seedCard(pool, tag, { card = null, inspiration = null, reason = n
      values ($1, $2::jsonb, $3::jsonb, $4::jsonb, 'ready', $5)`,
     [
       tag,
-      JSON.stringify({ name: tag, kind: 'quickstart', github: 'published', publishedAt: null, assets: [] }),
+      JSON.stringify({
+        name: tag,
+        kind: 'quickstart',
+        github: 'published',
+        publishedAt: null,
+        assets: kitZipAssets()
+      }),
       JSON.stringify({
         schemaVersion: 'tracy-setting/v1',
         platform: 'emdash',
@@ -930,7 +943,13 @@ async function seedWordpressRelease(pool, tag, version) {
      values ($1, $2::jsonb, $3::jsonb, 'ready', null)`,
     [
       tag,
-      JSON.stringify({ name: tag, kind: 'quickstart', github: 'published', publishedAt: null, assets: [] }),
+      JSON.stringify({
+        name: tag,
+        kind: 'quickstart',
+        github: 'published',
+        publishedAt: null,
+        assets: kitZipAssets(version)
+      }),
       JSON.stringify({
         schemaVersion: 'tracy-setting/v1',
         platform: 'wordpress',

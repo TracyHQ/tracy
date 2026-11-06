@@ -29,16 +29,18 @@ export function revealFrame({ id, attempt }) {
   }
   const SLIDER = /owl-carousel|swiper|slick-slider|carousel|slider/i
   const SLIDE = /owl-item|swiper-slide|slick-slide|carousel-item|tab-pane|accordion-collapse|collapse/i
-  const slider = ancestors.find((e) => SLIDER.test(String(e.className)))
+  const DOTS = '.owl-dot, .swiper-pagination-bullet, .slick-dots button, [data-bs-slide-to], [data-slide-to]'
+  const NEXT =
+    '.owl-next, .swiper-button-next, .slick-next, .carousel-control-next, [data-bs-slide="next"], [data-slide="next"]'
+  // The slider whose controls these are: the nearest slider ancestor holding dots or a next button (a
+  // `carousel-inner` matches the name too, but its controls sit beside it, in the carousel around it).
+  const sliders = ancestors.filter((e) => SLIDER.test(String(e.className)))
+  const slider = sliders.find((e) => e.querySelector(`${DOTS}, ${NEXT}`)) ?? sliders[0]
   if (slider) {
-    const dots = slider.querySelectorAll(
-      '.owl-dot, .swiper-pagination-bullet, .slick-dots button, [data-bs-slide-to], [data-slide-to]'
-    )
+    const dots = slider.querySelectorAll(DOTS)
     for (const [i, d] of [...dots].entries())
       actions.push({ how: `slider dot ${i + 1}`, run: () => d.click() })
-    const next = slider.querySelector(
-      '.owl-next, .swiper-button-next, .slick-next, .carousel-control-next, [data-bs-slide="next"], [data-slide="next"]'
-    )
+    const next = slider.querySelector(NEXT)
     if (next)
       for (let i = 0; i < 12; i++) actions.push({ how: `slider next x${i + 1}`, run: () => next.click() })
   }

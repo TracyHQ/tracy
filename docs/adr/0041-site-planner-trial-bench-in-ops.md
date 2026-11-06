@@ -228,3 +228,46 @@
   offers it the image tool; it reads the looks first and opens an image only when a look cannot settle a decision. `deepseek-v4-pro` (text only, needs every look) and Claude Sonnet 5.5
   or Opus 5.5 through OpenRouter stay as alternatives. A fix round applies the valid changes of an answer and sends back
   only the invalid ones.
+
+## Amendment 05/11/2026: a section that shows how the trade works is kept (settled by Akemi)
+
+12. **Trade sections are written without terms, not hidden (prompt change, approved by Akemi on 05/11/2026).** On all
+    three rounds of a frozen Flash max run on JA Boxing 1.0.10, the planner hid the section of each class page that
+    shows a typical session (a heading, an intro and four clip cards of stages), 21 slots per page, as "would be
+    invented", because "Prefer hiding a row, a block or a page to filling it with something untrue" and the rule that a
+    line with a number needs a fact pulled against the Trade knowledge section. Akemi unlocked the prompt for this
+    change only. Trade knowledge now says a block that shows how a session, a visit, an order or a first contact
+    typically runs is trade content: it is kept and each stage is described without any number, duration, count, price
+    or other term; it is hidden only when it cannot read whole without those numbers, or when a brief fact shows the
+    business does not do that activity. Its cards keep their picture frames (each shows a stage); a video id slot stays
+    hidden without a video in the brief. The line in "What you must never do" now prefers rewriting from trade
+    knowledge to hiding, hides only as the last resort, and names the brief fact when an activity is absent. Every
+    other rule is unchanged. The prompt's sha256 is
+    `ec160022e152e5c66db6eb168a64a5923e9def4781d2e39ec7ee3b263cd58612` (was `b48800fb...`).
+13. **Plan check R21 (`rules-trade-hidden.js`), checker `site-plan-check/3`.** Inside a kept block (page block or
+    shared block), two or more `hiddenSlots` whose `why` says the brief holds no fact for them or that they would be
+    invented ("no fact", "holds no", "invent...", "not in the brief", a demo routine or drill) fail, once per block,
+    asking the planner to rewrite them as trade content without numbers or to name the brief fact that shows the
+    activity is absent. Not counted: a `why` that names a fact id the brief holds, `demoOwned` slots, fixed texts with
+    `canHide`, CMS notices, video id slots and `site.nameSlots`. Numbers inside kept trade lines stay with R10f. R20
+    was already taken by the page title rule, so the new rule is R21; the approved rules R00 to R19 are unchanged. On
+    the frozen run's three plans R21 fails exactly the four class page bodies and nothing else.
+
+## Amendment 05/11/2026: a list row printed in a text card follows that card (settled by Akemi)
+
+14. **Paired list rows (prompt change, approved by Akemi on 05/11/2026).** In a sealed Flash max run on JA Boxing
+    1.0.10, each class page kept the four exercise cards of its "typical session" block (a heading and its lines per
+    card) but set the block's video list to `rows: 2`, so cards two to four printed without their picture. The kit
+    tool now records, per list row, `rows[].pairedSlots` (the block's text slots printed in the same card as that
+    row's picture, empty when none) and `rows[].printsIn` (the card signature, or `block`). The prompt names
+    `rows[].pairedSlots` in the list description and adds to the row rule: keep any of a row's paired text slots and
+    the row and its picture are kept; hide them all and the row is dropped; the row count follows the cards kept,
+    never the pictures on hand. Every other rule is unchanged. The prompt's sha256 is
+    `5db969c53e4c3d3b083f42466a808d6dccf92d383b336f97cd90de6628d14a50` (was `ec160022...`).
+15. **Plan check R22 (`rules-row-pairs.js`), checker `site-plan-check/4`.** For every kept list of a kept block and
+    every kit row with non-empty `pairedSlots`, the row is kept when its picture slot is a frame of the list's
+    `items[].pictures` (or, when the items carry no frame, when its index is below `rows`), and its card is kept when
+    one paired slot is in `copy` and not in `hiddenSlots`; the two must agree, one failure per row naming the list,
+    the row, its picture and its paired slots. A hidden list is not checked, and a kit without `pairedSlots` (every kit
+    measured before the field) leaves R22 skipped. On the sealed run's plan, with the four class pages' rows paired by
+    hand in a copy of the 1.0.10 kit, R22 fails rows 2 to 4 of exactly the four video lists and nothing else.

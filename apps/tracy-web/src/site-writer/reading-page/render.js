@@ -34,7 +34,7 @@ function slotHtml(s) {
   return `<div class="slot${bad ? ' bad' : ''}" id="${slugOf(s.slot)}">
 <div><span class="id">${esc(s.slot)}</span>${s.label ? ` <span class="chip">${esc(s.label)}</span>` : ''}${
     s.owner === 'plan-label' ? ' <span class="chip">label from the plan</span>' : ''
-  }${s.basis ? ` <span class="chip">${esc(s.basis)}</span>` : ''} ${count}</div>
+  }${s.replacedPlanLabel ? ` <span class="chip">replaces the plan label "${esc(s.replacedPlanLabel)}"</span>` : ''}${s.basis ? ` <span class="chip">${esc(s.basis)}</span>` : ''} ${count}</div>
 ${s.says ? `<div class="note">Plan: ${esc(s.says)}</div>` : ''}
 ${s.facts.length ? `<div class="facts">${s.facts.map(factLine).join('')}</div>` : ''}
 ${text}${failLines(s.failures)}</div>`
@@ -81,6 +81,16 @@ function cellHtml(c) {
   }</div>`
 }
 
+// The block's slots printed as one sentence, as the page will print them.
+function sentencesHtml(sentences) {
+  return (sentences ?? [])
+    .map(
+      (g) =>
+        `<div class="slot"><span class="id">${esc(g.slots.join(' + '))}</span> <q>${esc(g.written)}</q> <span class="muted">one sentence on the page; demo: ${esc(g.demo)}</span></div>`
+    )
+    .join('')
+}
+
 // The kit's lists of a block, row by row, each row slot resolved from the copy wherever it was written.
 function listsHtml(lists) {
   return (lists ?? [])
@@ -104,7 +114,7 @@ function blockHtml(b, imageSrc) {
     ? `<div class="muted small">Hidden slots: ${b.hidden.map((h) => `${esc(h.slot)} (${esc(h.why)})`).join('; ')}</div>`
     : ''
   return `<section class="block"><header><h3>${esc(b.id)}</h3><span class="muted small">${esc(b.why)}</span></header>
-<div class="body"><div class="shot">${shot}</div><div class="slots">${b.slots.map(slotHtml).join('')}${linksHtml(b.links)}${listsHtml(b.lists)}${b.pictures.map(pictureHtml).join('')}${hidden}</div></div></section>`
+<div class="body"><div class="shot">${shot}</div><div class="slots">${b.slots.map(slotHtml).join('')}${linksHtml(b.links)}${listsHtml(b.lists)}${sentencesHtml(b.sentences)}${b.pictures.map(pictureHtml).join('')}${hidden}</div></div></section>`
 }
 
 const seoHtml = (s) =>

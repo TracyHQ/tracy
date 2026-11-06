@@ -47,7 +47,7 @@ const SECTIONS = {
   ],
   'featured-articles': [...E('masthead', 'featured-articles'), ...E('banner', 'banner'), ...SIDEBAR],
   'all-categories': [...E('masthead', 'all-categories'), ...SIDEBAR],
-  'our-history': [...E('masthead', 'our-history'), ...E('timeline', 'our-history')],
+  'our-history': [...E('masthead', 'our-history'), ...E('timeline', 'our-history-timeline')],
   'phone-reservation': [...E('masthead', 'phone-reservation'), ...E('reservation', 'reservation')],
   'contact-us': E('contact', 'contact'),
   'simple-menu': [...E('masthead', 'default'), ...E('menu', 'simple-menu')],
