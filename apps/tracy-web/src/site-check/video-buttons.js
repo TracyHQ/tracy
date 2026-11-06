@@ -55,6 +55,12 @@ export const emptyVideoButtonsGroup = {
       emptyVideoButtonsOf(context.kit).selectors.length > 0 ||
       each(context.report?.slots).some((l) => l?.slot === VIDEO_BUTTONS_SLOT)
     const judged = judgeEmptyVideoButtons(read.measures, { kitNamesRule })
-    return { ...judged, widths: WIDTHS, calls: read.calls }
+    // Every page read answered, and none shows a video control: nothing of its kind (ADR 0044, decision 27).
+    return {
+      ...judged,
+      ...(judged.checked ? {} : { notApplicable: 'no page read shows a video control' }),
+      widths: WIDTHS,
+      calls: read.calls
+    }
   }
 }

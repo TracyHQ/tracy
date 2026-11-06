@@ -58,6 +58,13 @@ export const hiddenPageLinksGroup = {
           reason: `This link takes a click and leads to a page the plan hid (${l.href}).`
         })
       }
-    return { checked, failures, widths: WIDTHS, calls: read.calls }
+    // The pages read said which links take a click, and none shows a link: nothing of its kind (ADR 0044, decision 27).
+    return {
+      checked,
+      failures,
+      ...(checked ? {} : { notApplicable: 'no page read shows a link' }),
+      widths: WIDTHS,
+      calls: read.calls
+    }
   }
 }

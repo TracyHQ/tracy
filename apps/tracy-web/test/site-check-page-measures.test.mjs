@@ -242,7 +242,7 @@ test('warnings alone never turn the check red, and are counted', async () => {
     ['logo-readable', 'broken-sentence']
   )
   assert.ok(check.groups.every((g) => g.status !== 'red'))
-  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 2, notApplicable: 11 })
+  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 2, notApplicable: 13 })
 })
 
 test('when the host answers no page measures, the groups that need them are unmeasured and dead pages are still found', async () => {

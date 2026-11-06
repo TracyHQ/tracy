@@ -399,7 +399,8 @@ refusal), `broken-sentence` (every slot of every sentence group is hidden by the
 `plan-links` (no plan link and no end action), `list-rows` (the plan cuts no list), `phone-callable` (the report names no brief
 phone), `map-location` (no page prints a map and the demo baseline holds none), `brand-accent` (no brand accent written and no
 page reads a brand style), `words-over-picture` (no page prints words over a picture), `unowned-slots` (every slot has an
-owner), `alt-matches-picture` (no written picture, decision 28). Read-back that compared no line, `logo-readable` with no logo read, and a page group with no page read are unmeasured.
+owner), `alt-matches-picture` (no written picture, decision 28), `empty-video-buttons` (no page read shows a video control,
+decision 29), `hidden-page-links` (no page read shows a link, decision 29). Read-back that compared no line, `logo-readable` with no logo read, and a page group with no page read are unmeasured.
 
 A hide the plugin refuses because the contract has no slot for it (`report.noWayOut`, a reason naming issue #369) was sent, so it
 is not in `report.unaddressable`, and read-back blamed it on step 9 as a refused slot. `unaddressable-items` now lists it too, on
