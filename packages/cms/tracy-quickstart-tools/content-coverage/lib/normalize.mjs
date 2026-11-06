@@ -39,10 +39,12 @@ export function decodeEntities(s) {
 
 /** Strip HTML tags (keeps a space where a tag was, so words do not glue). */
 export function stripTags(s) {
-  return String(s ?? '')
-    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ')
-    // A tag opens with a letter, "/" or "!": a code sample's "x < 0.8 ... y > 0.9" on the page is text, not a tag.
-    .replace(/<[a-z/!][^>]*>/gi, ' ')
+  return (
+    String(s ?? '')
+      .replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ')
+      // A tag opens with a letter, "/" or "!": a code sample's "x < 0.8 ... y > 0.9" on the page is text, not a tag.
+      .replace(/<[a-z/!][^>]*>/gi, ' ')
+  )
 }
 
 /** Canonical comparison form of a piece of visible text. */

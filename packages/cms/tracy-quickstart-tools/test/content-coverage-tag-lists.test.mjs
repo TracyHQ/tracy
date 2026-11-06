@@ -132,6 +132,9 @@ test('a module alone in its position, with no chrome of its own, is found by the
     { kind: 'text', value: 'A', scopes: ['t4-section-9'] },
     { kind: 'text', value: 'B', scopes: ['t4-section-10'] }
   ]
-  assert.deepEqual(blockPool({ sourceId: 122 }, false, 'section-9')(items)?.pool.map((p) => p.it.value), ['A'])
+  assert.deepEqual(
+    blockPool({ sourceId: 122 }, false, 'section-9')(items)?.pool.map((p) => p.it.value),
+    ['A']
+  )
   assert.equal(blockPool({ sourceId: 122 }, false)(items), null, 'not alone there: no guess')
 })

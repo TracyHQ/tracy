@@ -198,18 +198,21 @@ export function buildCoverageFile({
     header: headerOf({ contract, result }),
     // Rules R2 to R9 over the map, the page snapshots and every hole found (core strings are skipped by R9 itself).
     // A design cut-out the label judge said right leaves R5 (`applyJudgeToLabelRules`).
-    labelRules: applyJudgeToLabelRules(labelRulesOf({
-      map: contract.map,
-      pages: result.pages,
-      holes: [...unique.values()]
-        .filter((it) => it.status === 'hole')
-        .map((it) => ({
-          kind: it.kind === 'attr' || it.kind === 'meta' ? `${it.kind}:${it.attr}` : it.kind,
-          value: shownValue(it),
-          class: CLASS_NAME[it.class] ?? 'unknown',
-          ...(it.inCode ? { inCode: true } : {})
-        }))
-    }), labelJudge),
+    labelRules: applyJudgeToLabelRules(
+      labelRulesOf({
+        map: contract.map,
+        pages: result.pages,
+        holes: [...unique.values()]
+          .filter((it) => it.status === 'hole')
+          .map((it) => ({
+            kind: it.kind === 'attr' || it.kind === 'meta' ? `${it.kind}:${it.attr}` : it.kind,
+            value: shownValue(it),
+            class: CLASS_NAME[it.class] ?? 'unknown',
+            ...(it.inCode ? { inCode: true } : {})
+          }))
+      }),
+      labelJudge
+    ),
     // The label judge (spec #37): per slot right or wrong with a suggested role; also the cache of the next run.
     ...(labelJudge ? { labelJudge } : {}),
     // Inline markup of the samples against the database (resample.mjs): the template kit's `inlineMarkupLost` reads it.

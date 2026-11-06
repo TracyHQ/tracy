@@ -318,7 +318,8 @@ test('a "logo" class in the page body (client strip, feature icon) is no site lo
   }
   try {
     const page = await browser.newPage()
-    const png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+    const png =
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
     const img = (src) => `<img src="${src}" width="40" height="20">`
     const html = `<header><div class="logo">${img(png + '#head')}</div></header>
       <main><div class="client-logos">${img(png + '#client')}</div>
@@ -328,10 +329,16 @@ test('a "logo" class in the page body (client strip, feature icon) is no site lo
       <footer><div class="footer-logo">${img(png + '#foot')}</div></footer>`
     // A page served from a made-up site address, so a picture path resolves as on a real page.
     await page.route('http://site.example/**', (r) =>
-      r.request().url().endsWith('.png') ? r.fulfill({ status: 404 }) : r.fulfill({ contentType: 'text/html', body: html })
+      r.request().url().endsWith('.png')
+        ? r.fulfill({ status: 404 })
+        : r.fulfill({ contentType: 'text/html', body: html })
     )
     await page.goto('http://site.example/')
-    const { logos } = await page.evaluate(readLogos, { logoFiles: ['images/logo/item-1.png'], siteName: null, brand: [] })
+    const { logos } = await page.evaluate(readLogos, {
+      logoFiles: ['images/logo/item-1.png'],
+      siteName: null,
+      brand: []
+    })
     assert.deepEqual(
       logos.map((l) => [l.region, l.found]),
       [
@@ -352,7 +359,13 @@ test('a logo inside a block that holds no slot with its file is the site setting
     entities: [...map.entities, { key: 'module-50', kind: 'module', identity: { module: 'mod_custom' } }],
     slots: [
       ...map.slots,
-      { key: 'module-50.2', entity: 'module-50', type: 'image', role: 'editorial.illustration', sample: 'images/demo/logo-light.png' }
+      {
+        key: 'module-50.2',
+        entity: 'module-50',
+        type: 'image',
+        role: 'editorial.illustration',
+        sample: 'images/demo/logo-light.png'
+      }
     ]
   }
   const reads = [
@@ -393,10 +406,19 @@ test('a logo with no slot is written by the template setting whose layout prints
   ]
   const settings = [
     { key: 'site_logo', value: '', prints: [{ where: 'header', emptyShows: 'template-text' }] },
-    { key: 'site_logo_small', value: 'images/demo/logo.png', prints: [{ where: 'offcanvas', emptyShows: 'nothing' }] },
+    {
+      key: 'site_logo_small',
+      value: 'images/demo/logo.png',
+      prints: [{ where: 'offcanvas', emptyShows: 'nothing' }]
+    },
     { key: 'site_logo_dark', value: '', prints: [{ where: 'header', emptyShows: null }] }
   ]
-  const { logoSpots } = buildLogoSpots({ reads, map: { entities: [], slots: [] }, settings, isFreeHtml: () => false })
+  const { logoSpots } = buildLogoSpots({
+    reads,
+    map: { entities: [], slots: [] },
+    settings,
+    isFreeHtml: () => false
+  })
   assert.deepEqual(
     logoSpots.map((s) => [s.where, s.frameId, s.setting, s.emptyShows]),
     [

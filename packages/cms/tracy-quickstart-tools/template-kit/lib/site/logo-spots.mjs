@@ -85,7 +85,8 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
     // A block whose own content holds no slot with this file wraps the template's logo element (a T4 footer or
     // off-canvas logo found inside a module's section): the site setting prints it. A block that does hold the file
     // prints it itself, so only its own logo slot can change it.
-    const blockPrints = g.block && (map.slots ?? []).some((s) => s.entity === g.block && fileOf(s.sample) === g.file)
+    const blockPrints =
+      g.block && (map.slots ?? []).some((s) => s.entity === g.block && fileOf(s.sample) === g.file)
     const slot = own[0] ?? (blockPrints ? null : pickByTheme(siteLevel, g.themeClass))
     // No slot: a template logo setting whose layout prints here, holding this file or empty (the page shows the
     // layout's stand-in, a drawn mark or the name), is what writes this logo.
@@ -153,7 +154,9 @@ const isOpening = (spot, reads) => spot.shownIn.includes(openingTheme(reads))
 /** The key of the logo setting a template layout prints at `where`, holding `file` or empty; of several, by theme. */
 function settingPrinting(settings, where, file, themeClass) {
   const list = settings
-    .filter((s) => (s.value === file || s.value === '') && s.prints.some((p) => p.where === where && p.emptyShows))
+    .filter(
+      (s) => (s.value === file || s.value === '') && s.prints.some((p) => p.where === where && p.emptyShows)
+    )
     .map((s) => ({ setting: s.key }))
   return pickByTheme(list, themeClass)?.setting ?? null
 }

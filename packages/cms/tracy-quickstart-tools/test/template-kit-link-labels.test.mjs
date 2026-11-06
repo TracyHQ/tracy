@@ -86,13 +86,23 @@ test('outside a menu only a button or menu label is a link label: a heading that
 })
 
 test("a form's button prints its sign-up's newsletter label; a link of the same words does not", () => {
-  const slots = [{ key: 'module-6.0', type: 'text', role: 'editorial.newsletter_label', sample: 'Join the list' }]
+  const slots = [
+    { key: 'module-6.0', type: 'text', role: 'editorial.newsletter_label', sample: 'Join the list' }
+  ]
   const links = [
-    { id: 'block-2.button-1', label: 'Join the list', target: null, opens: { kind: 'form', action: '/news/signup' } },
+    {
+      id: 'block-2.button-1',
+      label: 'Join the list',
+      target: null,
+      opens: { kind: 'form', action: '/news/signup' }
+    },
     { id: 'block-2.link-1', label: 'Join the list', target: '/join' }
   ]
   labelLinks({ links, mapSlots: slots, siteUrl: SITE })
-  assert.deepEqual(links.map((l) => l.labelId ?? null), ['block-6.0', null])
+  assert.deepEqual(
+    links.map((l) => l.labelId ?? null),
+    ['block-6.0', null]
+  )
 })
 
 test('a label slot says what else changes with it: other blocks, page titles and menus printing the same slot', () => {
@@ -195,18 +205,27 @@ test('a menu no captured page draws: an item that opens nothing is left out, one
       block: 'block-9',
       items: [
         { level: 1, label: 'Bakeries', labelSlot: 'menuItem-40.0', target: { kind: 'none' }, alive: false },
-        { level: 1, label: 'Classes', labelSlot: 'menuItem-41.0', target: { kind: 'page', page: 'menuItem-41' }, alive: true }
+        {
+          level: 1,
+          label: 'Classes',
+          labelSlot: 'menuItem-41.0',
+          target: { kind: 'page', page: 'menuItem-41' },
+          alive: true
+        }
       ]
     }
   ]
   const errors = []
   assert.equal(menuLinkChecks({ blocks: [{ id: 'header', links: [] }], groups, errors }), 1)
-  assert.deepEqual(errors.map((e) => e.field), ['site.navigationGroups[nav-block-9].items[Classes]'])
+  assert.deepEqual(
+    errors.map((e) => e.field),
+    ['site.navigationGroups[nav-block-9].items[Classes]']
+  )
   // The same menu drawn on a page: its dead item must be some link's label too.
   assert.equal(menuLinkChecks({ blocks: [{ id: 'block-9', links: [] }], groups, errors: [] }), 2)
 })
 
-test("a footer column listing aliases of main menu items reads its own menu, not the main menu it ties with", () => {
+test('a footer column listing aliases of main menu items reads its own menu, not the main menu it ties with', () => {
   const menus = {
     'module-1': { items: [item(101, 'Home', '/index.php'), item(150, 'Lessons', '/index.php/lessons')] },
     'module-30': { items: [item(301, 'Home', '/index.php'), item(302, 'Lessons', '/index.php/lessons')] }
@@ -216,11 +235,17 @@ test("a footer column listing aliases of main menu items reads its own menu, not
     { id: 'foot.link-2', label: 'Lessons', target: '/lessons' }
   ]
   assert.equal(labelLinks({ links, menuBlocks: menus, entities: ['module-30'], siteUrl: SITE }), 'module-30')
-  assert.deepEqual(links.map((l) => l.labelId), ['menuItem-301.0', 'menuItem-302.0'])
+  assert.deepEqual(
+    links.map((l) => l.labelId),
+    ['menuItem-301.0', 'menuItem-302.0']
+  )
   // A block that is neither keeps the first menu, as before.
   const other = [
     { id: 'x.link-1', label: 'Home', target: '/' },
     { id: 'x.link-2', label: 'Lessons', target: '/lessons' }
   ]
-  assert.equal(labelLinks({ links: other, menuBlocks: menus, entities: ['module-7'], siteUrl: SITE }), 'module-1')
+  assert.equal(
+    labelLinks({ links: other, menuBlocks: menus, entities: ['module-7'], siteUrl: SITE }),
+    'module-1'
+  )
 })

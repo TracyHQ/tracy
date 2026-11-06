@@ -152,7 +152,8 @@ function r4(slots, repeats) {
     if (/^mailto:/i.test(String(s.sample ?? ''))) labels.add('contact.email')
     if (/^tel:/i.test(String(s.sample ?? ''))) labels.add('contact.phone')
     // A contact card's link with no address of its own wraps the fact it shows (the address, the e-mail, the number).
-    if (roleOf(s) === 'contact.cta_url' && !String(s.sample ?? '').trim()) for (const r of CONTACT_FACT_ROLES) labels.add(r)
+    if (roleOf(s) === 'contact.cta_url' && !String(s.sample ?? '').trim())
+      for (const r of CONTACT_FACT_ROLES) labels.add(r)
     if (!id || !slots.some((o) => o !== s && o.group?.id === id && labels.has(roleOf(o)))) out.add(s.key)
   }
   return [...out]

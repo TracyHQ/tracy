@@ -27,7 +27,8 @@ after(() => {
 function tree() {
   const dir = mkdtempSync(path.join(tmpdir(), 'joomla-demo-trim-'))
   made.push(dir)
-  for (const id of [...PINNED, PREVIOUS, NEW]) cpSync(path.join(CONTRACTS, id), path.join(dir, id), { recursive: true })
+  for (const id of [...PINNED, PREVIOUS, NEW])
+    cpSync(path.join(CONTRACTS, id), path.join(dir, id), { recursive: true })
   return dir
 }
 const run = (dir, ...args) =>

@@ -462,7 +462,12 @@ test('R9: a fact-like hole fails and an accepted reason does not lift it; other 
     { kind: 'text', value: 'Read more about our story', class: 'template' },
     { kind: 'text', value: 'Call 555 010 1111', class: 'core' },
     // A code sample's log line (JA Kinetic): the sample's own words, never the business's.
-    { kind: 'text', value: 'WARN: SAML assertion for user@example.com contained 340 group claims', class: 'capture', inCode: true }
+    {
+      kind: 'text',
+      value: 'WARN: SAML assertion for user@example.com contained 340 group claims',
+      class: 'capture',
+      inCode: true
+    }
   ]
   const res = labelRulesOf({ map: cleanMap(), holes })
   assert.deepEqual(fails(res), ['R9'])

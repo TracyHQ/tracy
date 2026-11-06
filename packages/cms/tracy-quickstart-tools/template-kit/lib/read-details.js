@@ -172,8 +172,15 @@ export function readDetails() {
       const label = (a.innerText || a.getAttribute('aria-label') || a.getAttribute('title') || '')
         .replace(/\s+/g, ' ')
         .trim()
-      const current = /^#?$/.test(a.getAttribute('href') ?? '') && /^(true|page)$/.test(a.getAttribute('aria-current') ?? '')
-      links.push({ position: links.length, label, href: a.getAttribute('href'), ...(current ? { current: true } : {}) })
+      const current =
+        /^#?$/.test(a.getAttribute('href') ?? '') &&
+        /^(true|page)$/.test(a.getAttribute('aria-current') ?? '')
+      links.push({
+        position: links.length,
+        label,
+        href: a.getAttribute('href'),
+        ...(current ? { current: true } : {})
+      })
     }
     const texts = new Set()
     // How many shown elements print each text: a text printed by three elements is three slots, never one.
@@ -217,7 +224,12 @@ export function readDetails() {
       if (href && !/^(#|javascript:)/i.test(href)) continue
       // A bare `#` link styled as a button (`role="button"`, no toggle, slide, form or handler) is read once, as the
       // link it is: one going nowhere is a dead link of the template, not a second, undeclared control.
-      if (href === '#' && !el.getAttribute('onclick') && !el.closest('form') && !el.matches('[data-bs-toggle], [data-toggle], [data-bs-slide], [data-slide]'))
+      if (
+        href === '#' &&
+        !el.getAttribute('onclick') &&
+        !el.closest('form') &&
+        !el.matches('[data-bs-toggle], [data-toggle], [data-bs-slide], [data-slide]')
+      )
         continue
       // A toggle names its panel by data-bs-target, aria-controls, or (a tab or collapse link) its own #fragment;
       // Bootstrap 3 and 4 (a T3 template) spell the attributes without "bs-".

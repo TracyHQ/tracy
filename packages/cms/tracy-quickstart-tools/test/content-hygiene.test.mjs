@@ -132,7 +132,7 @@ test('no false alarms: real all-caps headings, lorem ipsum, prices, prose with a
   assert.deepEqual(found, [])
 })
 
-test('a code sample is never flagged: its ${API_KEY} and CI_RUN_ID are the sample\'s own words', () => {
+test("a code sample is never flagged: its ${API_KEY} and CI_RUN_ID are the sample's own words", () => {
   const found = findHygiene({
     items: [
       text('headers: x-api-key: ${KINETIC_API_KEY} env: CI_RUN_ID', { inCode: true }),

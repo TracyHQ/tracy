@@ -97,16 +97,20 @@ const scopeTest = (id) => new RegExp(`^(?:(?:mod|module)[-_a-z]*|section)0*${id}
 /** The findings items of a block on a page (`by: "block"`), else the whole page when it is assigned there. A module
  * alone in its position, rendered with no chrome of its own, is known by the position's wrapper (`t4-section-9`), as the
  * kit finds it. */
-export const blockPool = (block, assigned, soleAt = null) => (items) => {
-  const inScope = scopeTest(block.sourceId)
-  const atPosition = soleAt ? new RegExp(`^t[34]-${soleAt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') : null
-  const pool = items
-    .map((it, index) => ({ it, index }))
-    .filter(({ it }) => (it.scopes ?? []).some((s) => inScope.test(s) || atPosition?.test(s)))
-  if (pool.length) return { pool, by: 'block' }
-  if (items.some((it) => Array.isArray(it.scopes)) || !assigned) return null
-  return { pool: items.map((it, index) => ({ it, index })), by: 'page' }
-}
+export const blockPool =
+  (block, assigned, soleAt = null) =>
+  (items) => {
+    const inScope = scopeTest(block.sourceId)
+    const atPosition = soleAt
+      ? new RegExp(`^t[34]-${soleAt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i')
+      : null
+    const pool = items
+      .map((it, index) => ({ it, index }))
+      .filter(({ it }) => (it.scopes ?? []).some((s) => inScope.test(s) || atPosition?.test(s)))
+    if (pool.length) return { pool, by: 'block' }
+    if (items.some((it) => Array.isArray(it.scopes)) || !assigned) return null
+    return { pool: items.map((it, index) => ({ it, index })), by: 'page' }
+  }
 
 /**
  * The cards of one list on one page: per shown item its findings items (in page order) and its detail page path.

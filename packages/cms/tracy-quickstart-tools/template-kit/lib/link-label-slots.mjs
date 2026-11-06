@@ -33,7 +33,9 @@ function labelResolver(map) {
   }
   const inLinks = new Map()
   for (const s of text)
-    for (const m of String(s.sample ?? '').matchAll(/(?:<a\b[^>]*>|\(\(a\b(?:(?!\)\)).)*\)\))(.*?)(?:<\/a>|\(\(\/a\)\))/gis)) {
+    for (const m of String(s.sample ?? '').matchAll(
+      /(?:<a\b[^>]*>|\(\(a\b(?:(?!\)\)).)*\)\))(.*?)(?:<\/a>|\(\(\/a\)\))/gis
+    )) {
       const n = normText(m[1].replace(/<[^>]*>|\(\([^)]*\)\)/g, ' '))
       if (n && !(inLinks.get(n) ?? []).includes(s)) inLinks.set(n, [...(inLinks.get(n) ?? []), s])
     }
@@ -80,7 +82,8 @@ function labelResolver(map) {
     ]
     const rich = letters ? nearOf(inLinks.get(n) ?? []) : []
     const printedBy = rich.find((s) => !used.has(`${neutralKey(s.key)}|${n}`)) ?? rich[0] ?? null
-    const card = letters && !same.length && !printedBy ? cardOf(n, nearOf, cards, first, opened(l.target)) : null
+    const card =
+      letters && !same.length && !printedBy ? cardOf(n, nearOf, cards, first, opened(l.target)) : null
     if (!same.length && !printedBy && !card) return null
     const group = urlGroup.get(l.id)
     const near = nearOf(same)
@@ -103,7 +106,10 @@ function labelResolver(map) {
     // A sign the template prints before the words (the `$` of a command chip) is no part of them.
     const signed = n.replace(/^[^\p{L}\p{N}]+/u, '')
     if (signed !== n && byWords.has(signed)) return resolveWords(b, l, signed, declared, used)
-    const fixed = (b.fixedText ?? []).map((t) => normText(t.text ?? '')).filter(Boolean).sort((x, y) => y.length - x.length)
+    const fixed = (b.fixedText ?? [])
+      .map((t) => normText(t.text ?? ''))
+      .filter(Boolean)
+      .sort((x, y) => y.length - x.length)
     let rest = n
     for (const f of fixed) rest = rest.split(f).join(' ').replace(/\s+/g, ' ').trim()
     // What is left beside the block's string names only a slot of the block or its entities, and only when it is no
@@ -130,7 +136,10 @@ function openedBy(map) {
   for (const p of map.pages ?? []) {
     const q = new URLSearchParams(String(p.link ?? '').split('?')[1] ?? '')
     const view = q.get('view') === 'author' ? 'user' : q.get('view')
-    const item = /^(category|article|tag|contact|user)$/.test(view ?? '') && q.get('id') ? `${view}-${q.get('id')}` : null
+    const item =
+      /^(category|article|tag|contact|user)$/.test(view ?? '') && q.get('id')
+        ? `${view}-${q.get('id')}`
+        : null
     pages.set(clean(p.route), [item, p.entity].filter(Boolean))
   }
   const items = new Map(Object.entries(map.itemPages ?? {}).map(([e, ip]) => [clean(ip.path), e]))
@@ -138,7 +147,12 @@ function openedBy(map) {
   // An article names its alias; a tag or a category its path, whose last segment is its alias; an author (a user) its
   // username.
   for (const e of map.entities ?? []) {
-    const alias = e.identity?.alias ?? e.identity?.username ?? String(e.identity?.path ?? '').split('/').pop()
+    const alias =
+      e.identity?.alias ??
+      e.identity?.username ??
+      String(e.identity?.path ?? '')
+        .split('/')
+        .pop()
     if (alias) byAlias.set(alias, [...(byAlias.get(alias) ?? []), e])
   }
   return (target) => {
@@ -147,7 +161,9 @@ function openedBy(map) {
     const seg = r.split('/')
     const view = seg.at(-2)
     const kind = view === 'author' ? 'user' : view
-    const named = (byAlias.get(seg.at(-1).replace(/^\d+-/, '')) ?? []).filter((e) => !/^(tag|category|article|contact|user)$/.test(kind) || e.kind === kind)
+    const named = (byAlias.get(seg.at(-1).replace(/^\d+-/, '')) ?? []).filter(
+      (e) => !/^(tag|category|article|contact|user)$/.test(kind) || e.kind === kind
+    )
     const page = pages.get(r) ?? []
     return [...page.slice(0, -1), ...named.map((e) => e.key), items.get(r), ...page.slice(-1)].filter(Boolean)
   }

@@ -45,7 +45,12 @@ function contractDir() {
       // A whole-unit slot (capture --whole-units): the xpath names the heading, the sample joins its pieces.
       { key: 'article-2.heading', type: 'text', sample: 'Ring Ready Now', xpath: '/html/body/div/h2' },
       // A paragraph with inline code: capture leaves the code words out of the sample.
-      { key: 'article-2.typed', type: 'text', sample: 'Assign types at ingest: is an integer, is a float.', xpath: '/html/body/div/p[3]' },
+      {
+        key: 'article-2.typed',
+        type: 'text',
+        sample: 'Assign types at ingest: is an integer, is a float.',
+        xpath: '/html/body/div/p[3]'
+      },
       { key: 'module-90.video', type: 'text', sample: '7CZ5I-PZjEg' },
       { key: 'module-90.email', type: 'text', sample: 'sale@getfit.com' },
       { key: 'module-90.info', type: 'html', sample: '<p>Call us: <span>(239) 555-0108</span></p>' },
@@ -183,7 +188,11 @@ test('a paragraph with inline code is its slot when the words outside the code m
       value: 'Assign types at ingest: status is an integer, duration_ms is a float.',
       outsideCode: 'Assign types at ingest: is an integer, is a float.'
     },
-    { kind: 'text', value: 'Assign types at ingest: status is a string.', outsideCode: 'Assign types at ingest: is a string.' },
+    {
+      kind: 'text',
+      value: 'Assign types at ingest: status is a string.',
+      outsideCode: 'Assign types at ingest: is a string.'
+    },
     { kind: 'text', value: 'alert "disk pressure" | when disk_used > 0.9 for 15m', outsideCode: '' }
   ])
   const p = items[0]

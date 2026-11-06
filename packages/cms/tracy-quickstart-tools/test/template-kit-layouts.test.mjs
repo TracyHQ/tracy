@@ -127,19 +127,37 @@ test('an author listing with no map entity: a further result page still uses pag
 })
 
 test('a further result page with only some of page 1 parts (no second row of items) still uses page 1', () => {
-  const ONE = 'DIV.blog>DIV.items-leading(~),DIV.items-row.row(DIV.col-4(~),DIV.item(~)),SECTION.items-more(DIV.blog-items(~)),DIV.pagination(~)'
+  const ONE =
+    'DIV.blog>DIV.items-leading(~),DIV.items-row.row(DIV.col-4(~),DIV.item(~)),SECTION.items-more(DIV.blog-items(~)),DIV.pagination(~)'
   const TWO = 'DIV.blog>DIV.items-leading(~),DIV.pagination(~)'
   assert.ok(skeletonSimilarity(ONE, TWO) < 0.8, 'not close by shared pieces over all pieces')
   const pages = [
     page('page-work', '/work', ['header', 'body-work'], 'category listing', true),
-    page('page-work--start-7', '/work?start=7', ['header', 'body-work--start-7'], 'category listing (list position 7)')
+    page(
+      'page-work--start-7',
+      '/work?start=7',
+      ['header', 'body-work--start-7'],
+      'category listing (list position 7)'
+    )
   ]
   const skeletons = new Map([
     ['body-work', ONE],
     ['body-work--start-7', TWO]
   ])
-  const blocks = ['header', 'body-work', 'body-work--start-7'].map((id) => ({ id, images: W(id), frames: [], lists: [], links: [] }))
-  const kit = { widths: [1440, 390], pages, pageGroups: [{ id: 'g', root: 'page-work', children: ['page-work--start-7'] }], blocks, errors: [] }
+  const blocks = ['header', 'body-work', 'body-work--start-7'].map((id) => ({
+    id,
+    images: W(id),
+    frames: [],
+    lists: [],
+    links: []
+  }))
+  const kit = {
+    widths: [1440, 390],
+    pages,
+    pageGroups: [{ id: 'g', root: 'page-work', children: ['page-work--start-7'] }],
+    blocks,
+    errors: []
+  }
   applyLayouts(kit, { skeletons })
   assert.equal(kit.pages.find((p) => p.id === 'page-work--start-7').paginationOf, 'page-work')
 })

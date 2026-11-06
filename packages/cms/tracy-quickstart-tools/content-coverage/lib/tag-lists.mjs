@@ -53,7 +53,9 @@ export function tagListsOf({ map, findings }) {
     if ((p.mapPages ?? []).length || laterPage(p.url)) continue
     const tag = byAlias.get(lastSegment(pathOfHref(p.url)))
     if (!tag) continue
-    const title = normText((map.slots ?? []).find((s) => s.entity === tag.key && s.column === 'title')?.sample)
+    const title = normText(
+      (map.slots ?? []).find((s) => s.entity === tag.key && s.column === 'title')?.sample
+    )
     if (!(p.rendersEntity?.entity === tag.key || headedBy(p, tag.key, slotsByKey, title))) continue
     const seen = cardsOnPage(p, bodyPool, candidates, slotsByKey)
     const prev = best.get(tag.key)

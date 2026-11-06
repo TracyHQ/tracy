@@ -43,7 +43,12 @@ export function skeletonSimilarity(a, b) {
 
 /** Share of the distinct pieces of skeleton `a` that `b` also has, 0..1. */
 export function skeletonContained(a, b) {
-  const parts = (s) => new Set(String(s ?? '').split(/[(),>]+/).filter(Boolean))
+  const parts = (s) =>
+    new Set(
+      String(s ?? '')
+        .split(/[(),>]+/)
+        .filter(Boolean)
+    )
   const x = parts(a)
   const y = parts(b)
   if (!x.size) return y.size ? 0 : 1

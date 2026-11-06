@@ -59,8 +59,15 @@ export function readLinkIcons({ block }) {
     const icon = iconOf(a)
     if (icon?.el) fonts.push(icon)
     const { el: _el, ...rest } = icon ?? {}
-    const current = /^#?$/.test(a.getAttribute('href') ?? '') && /^(true|page)$/.test(a.getAttribute('aria-current') ?? '')
-    links.push({ position: links.length, label, href: a.getAttribute('href'), icon: icon ? rest : null, ...(current ? { current: true } : {}) })
+    const current =
+      /^#?$/.test(a.getAttribute('href') ?? '') && /^(true|page)$/.test(a.getAttribute('aria-current') ?? '')
+    links.push({
+      position: links.length,
+      label,
+      href: a.getAttribute('href'),
+      icon: icon ? rest : null,
+      ...(current ? { current: true } : {})
+    })
   }
   // The probe: does setting the class change the glyph?
   let probe = null

@@ -267,8 +267,16 @@ test("self-check: a detail page listed one level up but in its category's group 
   const groups = groupPages(pages, itemParent, { listedBy })
   assert.equal(groups.find((g) => g.children.includes('page-work_piece'))?.root, 'page-work_art')
   const errors = []
-  assert.equal(detailPageChecks({ pages, pageGroups: groups, itemParent, listedBy, errors }), 0, JSON.stringify(errors))
-  assert.equal(detailPageChecks({ pages, pageGroups: groups, listedBy, errors: [] }), 1, 'without the map: an error')
+  assert.equal(
+    detailPageChecks({ pages, pageGroups: groups, itemParent, listedBy, errors }),
+    0,
+    JSON.stringify(errors)
+  )
+  assert.equal(
+    detailPageChecks({ pages, pageGroups: groups, listedBy, errors: [] }),
+    1,
+    'without the map: an error'
+  )
 })
 
 test('self-check: a group with items whose representative is not its listing page is an error', () => {

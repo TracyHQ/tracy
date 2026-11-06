@@ -236,7 +236,12 @@ test('test-data pages are left out without naming them: undeclared account with 
     pages: [
       ...exclusionPages(),
       { path: '/coaches/author/admin', aliases: [], links: CHROME, refs: ['/coaches'] },
-      { path: '/coaches/author/admin?start=3', aliases: [], links: [...CHROME, '/blog/jab'], refs: ['/coaches/author/admin'] }
+      {
+        path: '/coaches/author/admin?start=3',
+        aliases: [],
+        links: [...CHROME, '/blog/jab'],
+        refs: ['/coaches/author/admin']
+      }
     ],
     map: EXCLUSION_MAP,
     routes
