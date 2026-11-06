@@ -8,7 +8,7 @@ import { join } from 'node:path'
 import { prepareLabelJudge } from './label-judge.mjs'
 import { openContext } from './render.mjs'
 import { renderCrops } from './verify/crops.mjs'
-import { moduleBoxes } from './verify/module-boxes.mjs'
+import { addModuleBoxFailures, moduleBoxes } from './verify/module-boxes.mjs'
 
 /** Where the request and its crops go, under the audit's --out. */
 export const JUDGE_DIR = 'label-judge'
@@ -22,7 +22,12 @@ export async function runLabelJudge({ o, result, contract, outDir, chromium, pre
   const dir = join(outDir, JUDGE_DIR)
   rmSync(dir, { recursive: true, force: true })
   const judge = !o['no-judge'] && Boolean(chromium)
-  const mods = judge ? await moduleBoxes({ chromium, openContext, findings: result }) : {}
+  let mods = {}
+  if (judge) {
+    const read = await moduleBoxes({ chromium, openContext, findings: result })
+    mods = read.boxes
+    addModuleBoxFailures(result, read.failures)
+  }
   const crop = async (components, { margin }) => {
     const files = new Map()
     if (!chromium) return files

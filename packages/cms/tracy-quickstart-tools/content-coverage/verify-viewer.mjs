@@ -94,8 +94,14 @@ async function main() {
   if (o.reuse && existsSync(modFile)) mods = readJson(modFile)
   else {
     console.error('[verify] measuring module wrappers on every audited page')
-    mods = await moduleBoxes({ chromium, openContext, findings })
-    writeFileSync(modFile, JSON.stringify(mods))
+    const read = await moduleBoxes({ chromium, openContext, findings })
+    mods = read.boxes
+    if (read.failures.length > 0) {
+      // A page whose boxes were not read cannot place its slots: say so and keep no cache that hides it.
+      for (const f of read.failures)
+        console.error(`[verify] module boxes not read: ${f.url} ${f.viewport}: ${f.error}`)
+      process.exitCode = 1
+    } else writeFileSync(modFile, JSON.stringify(mods))
   }
 
   const model = locate({ map: contract.map, findings, isFactRole, mods })
