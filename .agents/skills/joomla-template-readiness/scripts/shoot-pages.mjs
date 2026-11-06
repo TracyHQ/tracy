@@ -10,6 +10,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
 
 const WIDTHS = Object.freeze([
@@ -20,16 +21,61 @@ const WIDTHS = Object.freeze([
 /** A file name for a site path: `/` is `home`, every other run of non-word characters a dash. */
 export const nameOf = (p) => p.replace(/^\/+|\/+$/g, '').replace(/[^a-z0-9]+/gi, '-') || 'home'
 
-/** Scroll to the bottom in steps so lazy pictures load, then back to the top. */
-async function settle(page) {
-  await page.evaluate(async () => {
-    for (let y = 0; y < document.body.scrollHeight; y += 600) {
-      window.scrollTo(0, y)
-      await new Promise((r) => setTimeout(r, 120))
+/**
+ * Walk the page the way tracy-host walks a page before its shot (`apps/tracy-host/src/browser.js`, SCROLL_STEP_PAUSE_MS):
+ * a full-page shot does not scroll, so what a template reveals on scroll stays hidden unless the page was walked
+ * first. One screen per step, each `behavior: 'instant'` (a `scroll-behavior: smooth` page only starts a glide on a
+ * plain scrollTo), then back to the top and a settle for the entrance animations. The context also asks for reduced
+ * motion (`contextOptions`): a template that honours it shows everything at once. JA Voyara 1.0.11, 06/11/2026: with
+ * 600 px steps, 120 ms each and no reduced motion, five home sections and the footer brand stayed at opacity 0 and the
+ * review read them as blank bands (V10) and empty columns (V5).
+ */
+export const WALK = Object.freeze({ pauseMs: 100, maxSteps: 40, settleMs: 2000 })
+
+/** The browser context options of every shot at one size. */
+export const contextOptions = (size) => ({ viewport: size, reducedMotion: 'reduce' })
+
+export async function walkPage(page) {
+  await page.evaluate(async ({ pauseMs, maxSteps }) => {
+    const step = window.innerHeight
+    for (let i = 1; i <= maxSteps && i * step < document.documentElement.scrollHeight; i++) {
+      window.scrollTo({ top: i * step, behavior: 'instant' })
+      await new Promise((r) => setTimeout(r, pauseMs))
     }
-    window.scrollTo(0, 0)
-  })
-  await page.waitForTimeout(500)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, WALK)
+  await page.waitForTimeout(WALK.settleMs)
+}
+
+/**
+ * Shoot every path at every width into `out`. `chromium` is Playwright's.
+ * @returns {Promise<{ path: string, width: number, file: string | null, status: number | null, error?: string }[]>}
+ */
+export async function shootPages({ chromium, base, paths, out, widths = WIDTHS }) {
+  mkdirSync(out, { recursive: true })
+  const browser = await chromium.launch()
+  const shots = []
+  try {
+    for (const size of widths) {
+      const context = await browser.newContext(contextOptions(size))
+      const page = await context.newPage()
+      for (const p of paths) {
+        const file = `${nameOf(p)}-${size.width}.png`
+        try {
+          const res = await page.goto(new URL(p, base).href, { waitUntil: 'load', timeout: 60_000 })
+          await walkPage(page)
+          await page.screenshot({ path: path.join(out, file), fullPage: true })
+          shots.push({ path: p, width: size.width, file, status: res?.status() ?? null })
+        } catch (e) {
+          shots.push({ path: p, width: size.width, file: null, status: null, error: String(e?.message ?? e) })
+        }
+      }
+      await context.close()
+    }
+  } finally {
+    await browser.close()
+  }
+  return shots
 }
 
 async function main(argv) {
@@ -53,32 +99,12 @@ async function main(argv) {
     : [...new Set(['/', ...JSON.parse(readFileSync(values.kit, 'utf8')).pages.map((p) => p.path)])]
   const require = createRequire(path.resolve('apps/tracy-host/package.json'))
   const { chromium } = require('playwright')
-  mkdirSync(values.out, { recursive: true })
-  const browser = await chromium.launch()
-  const shots = []
-  try {
-    for (const size of WIDTHS) {
-      const page = await browser.newPage({ viewport: size })
-      for (const p of paths) {
-        const file = `${nameOf(p)}-${size.width}.png`
-        try {
-          const res = await page.goto(new URL(p, values.base).href, { waitUntil: 'load', timeout: 60_000 })
-          await settle(page)
-          await page.screenshot({ path: path.join(values.out, file), fullPage: true })
-          shots.push({ path: p, width: size.width, file, status: res?.status() ?? null })
-        } catch (e) {
-          shots.push({ path: p, width: size.width, file: null, status: null, error: String(e?.message ?? e) })
-        }
-      }
-      await page.close()
-    }
-  } finally {
-    await browser.close()
-  }
+  const shots = await shootPages({ chromium, base: values.base, paths, out: values.out })
   writeFileSync(path.join(values.out, 'shots.json'), `${JSON.stringify(shots, null, 2)}\n`)
   const failed = shots.filter((s) => !s.file)
   process.stdout.write(`${shots.length - failed.length} shots, ${failed.length} failed\n`)
   return failed.length ? 1 : 0
 }
 
-process.exitCode = await main(process.argv.slice(2))
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href)
+  process.exitCode = await main(process.argv.slice(2))
