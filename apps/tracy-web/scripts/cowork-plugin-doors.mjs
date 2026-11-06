@@ -17,6 +17,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
 
+import { MAX_ARTIFACT_BYTES } from '../src/lib/cowork-contract-evidence.js'
 import { coworkNewer, coworkPackageUrl } from '../src/lib/cowork-install.js'
 import { evidenceOfPackage } from '../src/lib/template-readiness/plugin-doors-of-package.js'
 import { readPins } from '../src/lib/template-readiness/pinned-release.js'
@@ -24,7 +25,6 @@ import { WRITE_STEP_DOORS } from '../src/write-step/plugin-doors.js'
 
 const OUT = fileURLToPath(new URL('../src/lib/template-readiness/cowork-plugin-doors.json', import.meta.url))
 const RELEASES_API = 'https://api.github.com/repos/TracyHQ/claude-cowork/releases?per_page=100'
-const MAX_PACKAGE_BYTES = 128 * 1024 * 1024
 
 const headers = () =>
   process.env.GITHUB_TOKEN ? { authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}
@@ -49,7 +49,7 @@ async function packageOf(url, sha256) {
   const res = await fetch(url, { redirect: 'follow' })
   if (!res.ok) throw new Error(`${url} answered ${res.status}`)
   const bytes = Buffer.from(await res.arrayBuffer())
-  if (bytes.length > MAX_PACKAGE_BYTES) throw new Error(`${url} is larger than ${MAX_PACKAGE_BYTES} bytes`)
+  if (bytes.length > MAX_ARTIFACT_BYTES) throw new Error(`${url} is larger than ${MAX_ARTIFACT_BYTES} bytes`)
   const got = createHash('sha256').update(bytes).digest('hex')
   if (sha256 && got !== sha256.toLowerCase())
     throw new Error(`${url} has sha256 ${got}, the pin states ${sha256}`)
@@ -74,13 +74,19 @@ export async function main(argv = process.argv.slice(2)) {
   let old = { releases: {} }
   try {
     old = JSON.parse(readFileSync(OUT, 'utf8'))
-  } catch {}
+  } catch (error) {
+    // No file yet: every release is read. A file that does not parse is an error, never a reason to start over quietly.
+    if (/** @type {any} */ (error)?.code !== 'ENOENT') throw error
+  }
   /** @type {Record<string, any>} */
   const releases = {}
   const versions = [...wanted.keys()].sort((a, b) => (coworkNewer(a, b) ? 1 : coworkNewer(b, a) ? -1 : 0))
   for (const version of versions) {
     const kept = old.releases?.[version]
-    if (kept && evidences.every((e) => typeof kept.evidence?.[e] === 'boolean')) {
+    const { sha256: pinned } = /** @type {{ sha256?: string }} */ (wanted.get(version))
+    // Kept only while it answers every door and is the very package a pin states (a pin never changes bytes in place).
+    const same = !pinned || kept?.sha256 === pinned.toLowerCase()
+    if (kept && same && evidences.every((e) => typeof kept.evidence?.[e] === 'boolean')) {
       releases[version] = kept
       continue
     }

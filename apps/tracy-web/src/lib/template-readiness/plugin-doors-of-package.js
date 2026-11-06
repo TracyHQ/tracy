@@ -7,12 +7,10 @@
  * A package that cannot be read throws (`CorruptArchive`, or an Error naming what is missing): an unreadable package
  * says nothing about its doors, so it is never read as one without them.
  */
-import { CorruptArchive, readZipStrict } from '../cowork-contract-evidence.js'
+import { CorruptArchive, MAX_ARTIFACT_BYTES, readZipStrict } from '../cowork-contract-evidence.js'
 
 const COMPONENT = 'packages/com_claudecowork.zip'
 const LIBRARY = 'administrator/lib/'
-/** The most the component zip may inflate to (the full packages up to 0.24.53 carried every contract inside it). */
-const MAX_COMPONENT_BYTES = 128 * 1024 * 1024
 /** The most one library file may inflate to (Engine.php was 364 KB at 0.24.85). */
 const MAX_SOURCE_BYTES = 16 * 1024 * 1024
 
@@ -27,7 +25,7 @@ export function evidenceOfPackage(bytes, evidences) {
   const m = xml ? /<version>\s*([^<\s]+)\s*<\/version>/.exec(xml.read().toString('utf8')) : null
   const component = outer.get(COMPONENT)
   if (!component) throw new CorruptArchive(`the package holds no ${COMPONENT}`)
-  const inner = readZipStrict(component.read(MAX_COMPONENT_BYTES))
+  const inner = readZipStrict(component.read(MAX_ARTIFACT_BYTES))
   const sources = [...inner]
     .filter(([name]) => name.startsWith(LIBRARY) && name.endsWith('.php'))
     .map(([, entry]) => entry.read(MAX_SOURCE_BYTES).toString('utf8'))

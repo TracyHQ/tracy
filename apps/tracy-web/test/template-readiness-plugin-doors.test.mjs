@@ -19,6 +19,7 @@ test('the write step declares every plugin door it reads, each with the evidence
     WRITE_STEP_DOORS.map((d) => d.id),
     ['hide-orders', 'rows-remove', 'page-create', 'slot-corrections', 'menu-item-alias']
   )
+  // test-quality: contract the evidence is what the manifest is keyed by; each string was read in the plugin source.
   // The plugin's own words for each door (its info block, and the alias cleaner of content.update), read in its source.
   assert.deepEqual(
     WRITE_STEP_DOORS.map((d) => d.evidence),
@@ -112,6 +113,7 @@ const judge = (release, world) =>
   WRITE_DOORS_CHECK.judge(release, { contracts: defaultContracts(), ...world })
 
 test('the latest JA Boxing release pins a plugin with every write door: green', () => {
+  // test-quality: contract the reference case is the pin named in ticket #434; a new pin should revisit this case.
   assert.equal(latestPin('ja-boxing').cowork, '0.24.85')
   const judged = judge(boxing(), { pluginDoors: MANIFEST })
   assert.deepEqual(judged, {
@@ -188,6 +190,7 @@ test('the check joins the cowork-pin piece of the verdict', () => {
 // door of the write step. The fix names the newest release the committed manifest has read.
 test('the T3 case: JA Diner j6 (plugin 0.24.80) lacks every write door (recorded as it is today)', () => {
   const pin = latestPin('ja-diner')
+  // test-quality: contract JA Diner is recorded on the pin REG-PR-383 holds.
   assert.equal(pin.cowork, '0.24.80')
   const judged = judge(releaseOfPin(pin, defaultContracts()), {})
   assert.equal(judged.state, 'todo')

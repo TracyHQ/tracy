@@ -59,9 +59,5 @@ export const WRITE_STEP_DOORS = Object.freeze([
 /** The value at the door's `info` path of an `info` answer, or undefined. */
 export const infoOf = (door, info) => door.info?.reduce((at, key) => at?.[key], info ?? undefined)
 
-/** Whether the site's `info` answer says this door is open (a number of at least 1, or any object for a door it describes). */
-export function opens(door, info) {
-  const said = infoOf(door, info)
-  if (said !== null && typeof said === 'object') return true
-  return Number(said) >= 1
-}
+/** Whether the site's `info` answer says this door is open: a number of at least 1 at the door's `info` path. */
+export const opens = (door, info) => Number(infoOf(door, info)) >= 1

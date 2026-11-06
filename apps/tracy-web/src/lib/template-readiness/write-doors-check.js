@@ -116,7 +116,8 @@ export function judgeWriteDoors(release, world) {
   return {
     state: 'done',
     code: 'cowork-pin-doors-ready',
-    params: { plugin: versions.length === 1 ? versions[0] : versions, doors: doors.map((d) => d.id) }
+    // One plugin for a pin; the fleet's latest and floor are both candidates, named together.
+    params: { plugin: versions.join(' or '), doors: doors.map((d) => d.id) }
   }
 }
 
