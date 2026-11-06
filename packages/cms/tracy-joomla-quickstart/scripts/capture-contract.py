@@ -376,6 +376,8 @@ def declare_everything(kind,row,add):
   # images and attribs so their keys stay.
   declare_text(add,'metadesc',row.get('metadesc'),title+' / metadesc')
   declare_text(add,'created_by_alias',row.get('created_by_alias'),title+' / created_by_alias')
+  # The administrator's note, which a card can print as its label (JA Voyara's featured view: the label chip), last.
+  declare_text(add,'note',row.get('note'),title+' / note')
  elif kind=='module':
   if module_title_shown(row):declare_text(add,'title',row.get('title'),title+' / title')
   # mod_custom bodies outside the module prefix were never slots.
