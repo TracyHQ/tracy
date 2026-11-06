@@ -12,6 +12,8 @@
 // The picture fallback block: when the template prints a slot only under a condition the run cannot meet (a video poster printed only
 // with a video id), the write step prints the picture itself in the article body, marked so a later run finds it again.
 
+import { listSlotIds } from './kit-list-slot-ids.js'
+
 const FALLBACK = 'tracy-fallback'
 const each = (value) => (Array.isArray(value) ? value : [])
 /** A fallback block as written: one wrapper, one frame, one picture, whatever whitespace an editor puts between them. */
@@ -243,11 +245,10 @@ export function printedSlotsOf(lines, kit = null) {
   return out
 }
 
-/** Every slot id a kit block holds, in the kit's order: its words, its frames, its list rows. */
+/** Every slot id a kit block holds, in the kit's order: its words, its frames, its lists (row pairs and rows, card AY). */
 function slotIdsOf(block) {
   const ids = [...each(block?.slots), ...each(block?.frames)].map((s) => s?.id)
-  for (const list of each(block?.lists))
-    for (const row of each(list?.rows)) ids.push(...each(row?.slots).map((s) => s?.id))
+  for (const list of each(block?.lists)) ids.push(...listSlotIds(list))
   return ids.filter((id) => typeof id === 'string')
 }
 

@@ -188,3 +188,44 @@ test('a written text slot counts as printed when the page prints it as an img al
     'block-50.13'
   ])
 })
+
+// Card AY, 2026-11-06: a class intro picture also stands in a list's row pair (`lists[].rowSlots[].slots[]`) of the class list,
+// so the pages that print the list show it; reading only `rows[].slots` placed it on its detail page alone.
+test('a slot nested in a list row pair counts on the pages whose blocks print the list', () => {
+  const kit = {
+    blocks: [
+      {
+        id: 'block-40',
+        slots: [{ id: 'block-40.1' }],
+        lists: [
+          {
+            rowSlots: [{ id: 'block-40.row-3', slots: [{ id: 'article-12.5' }, { id: 'article-12.1' }] }],
+            rows: [{ slots: [{ id: 'block-40.row-1' }] }]
+          }
+        ]
+      },
+      { id: 'body-lesson', frames: [{ id: 'article-12.5' }] }
+    ],
+    pages: [
+      { id: 'home', blocks: { 1440: ['block-40'] } },
+      { id: 'lesson', blocks: { 1440: ['body-lesson'] } }
+    ]
+  }
+  const on = slotsOnPages(kit, [
+    { id: 'home', path: '/' },
+    { id: 'lesson', path: '/lessons/rowing' }
+  ])
+  assert.deepEqual(on.get('/'), [
+    'block-40.1',
+    'block-40.row-3',
+    'article-12.5',
+    'article-12.1',
+    'block-40.row-1'
+  ])
+  const picture = { slot: 'article-12.5', kind: 'picture', value: PIC }
+  const pages = new Map([
+    ['/', `<html><body><figure class="item-image"><img src="/${PIC}"></figure></body></html>`],
+    ['/lessons/rowing', '<html><body><script type="application/ld+json">{}</script></body></html>']
+  ])
+  assert.deepEqual(sitePrints({ onPages: on, pages, slots: [picture] }).notPrinted, [])
+})
