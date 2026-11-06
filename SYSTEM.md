@@ -2370,6 +2370,14 @@ the allow list in `lib/finisher-style.js`, then writes one rule keyed by the blo
 kit's head injection module (`content.get` and `content.update` on that module, the door the write step's video button rule
 uses; `finisher/style-write.js`), and its undo puts back only that block's rule. The look guard lets that block hold only
 allow list rules (`finisher-style`). The site agent reads and edits the module through the same module door.
+Links, demo items, alts, page titles and descriptions, and accent emphasis have their own orders (#422,
+`finisher/content-repair-orders.js`), each taking new words only from the brief, the site copy, step 8's picture descriptions
+and the pages the site keeps (`finisher/repair-facts.js`); a title or description is written into its row with
+`content.update`, an emphasis on an HTML slot through the write step's emphasis stage, each under a `finisher-` apply id. The
+finder works from the whole closed list (#423) and sees the template demo's block shots (the kit images) for lost design;
+the first site check's failures of the listed kinds merge with its faults, counted once (`finisher/fault-sources.js`). A
+repair no screenshot shows (a link target, a tel: or mailto: link, an alt, a title or description) is proven by reading the
+page the site serves now (`finisher/live-confirm.js`), never by the checker on crops.
 
 ## 9. Sign-in, seats, permissions
 

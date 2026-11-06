@@ -273,19 +273,22 @@ _Avoid_: apply step, publisher
 
 **Finisher**:
 The last part of the write step: it looks at the written site, finds customer-visible faults of a closed list, repairs
-each through a repair order, proves each repair on before and after crops of the block and undoes one that does not help.
+each through a repair order, proves each repair (on before and after crops of the block, or, for a repair no screenshot
+shows, on the page the site serves now) and undoes one that does not help.
 A finder, a fixer and a checker model take part; code checks and writes every repair.
 _Avoid_: fixer agent, auto-fix, QA bot
 
 **Repair order**:
-The fixer's typed answer for one fault, of a closed list of kinds (fix broken text in one slot, style one block, and the
-kinds still to come). Code checks it against the kit, its fault and what the site holds; an order that fails is dropped
+The fixer's typed answer for one fault, of a closed list of seven kinds: fix broken text in one slot, fix one link, remove
+(or replace from the brief) one demo item, fix one picture's alt, fix one page's title or meta description, mark accent
+emphasis in one heading, style one block. Code checks it against the kit, its fault and what the site holds; an order that fails is dropped
 and writes nothing.
 _Avoid_: patch, fix instruction
 
 **Repair log**:
 The file `repair-log.json` written next to a finisher run for the team, never shown to the customer: one record per fault
-found, with its page, slot or block, kind, causing step, order, crops, outcome (kept, undone, dropped, failed, logged only)
+found, with its page, slot or block, kind, causing step, order, crops, outcome (kept, undone, dropped, failed, logged only,
+measurement wrong, no door)
 and reason, and whether the final site check gained a blocking failure.
 _Avoid_: receipt, changes, audit trail
 
