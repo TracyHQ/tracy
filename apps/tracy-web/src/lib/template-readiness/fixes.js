@@ -85,16 +85,16 @@ export const FIXES = Object.freeze({
   'contract-exact': GREEN,
   'contract-lower': {
     text: 'The release is on a newer version than its contract ({profile}). Seal a contract for the version it carries before the next release.',
-    skill: CONTRACT_SKILL('2')
+    skill: CONTRACT_SKILL('8')
   },
   'no-contract': {
     text: 'No content contract seals this version of {slug}. Capture one, place it beside the others, and ship it, following the quickstart-contract skill.',
     command: `node packages/cms/tracy-quickstart-tools/batch-contracts.mjs capture --only {slug} --platform {platform} --project-prefix qc-batch --cowork-source <claude-cowork checkout> --artifacts <empty folder outside the repo>`,
-    skill: CONTRACT_SKILL('2')
+    skill: CONTRACT_SKILL('7')
   },
   'sibling-no-contract': {
     text: 'Another release of the same template ({tags}) has no content contract. Capture a contract for it too, following the quickstart-contract skill.',
-    skill: CONTRACT_SKILL('2')
+    skill: CONTRACT_SKILL('7')
   },
 
   // content coverage
@@ -246,7 +246,7 @@ export const FIXES = Object.freeze({
   'kit-hidden-fields-declared': GREEN,
   'kit-hidden-field-missing': {
     text: 'A hidden kit field names nothing and says no reason: {fields}. Read the template layouts and declare what the template prints, or say none with a reason.',
-    command: `${KIT_TOOL} video-buttons --kit <template-kit.json> --none --why '<what was read>'`,
+    command: `${KIT_TOOL} <video-buttons|self-link-buttons|hidden-page-links|created-page-hide|legal-layout> --kit <template-kit.json> --none --why '<what was read>'`,
     skill: CONTRACT_SKILL('7')
   },
   'kit-tool-outdated': {
@@ -255,11 +255,11 @@ export const FIXES = Object.freeze({
   },
   'pin-behind-contract': {
     text: 'Release {latest} of the template if it is not out, then move its pin in the quickstart list from {pinned} to {latest}.',
-    skill: CONTRACT_SKILL('9')
+    skill: CONTRACT_SKILL('8')
   },
   'content-map-missing-lists': {
     text: 'Capture the content map again with the current quickstart tools so it holds {missing}, then seal it in a new contract version.',
-    command: `node packages/cms/tracy-quickstart-tools/batch-contracts.mjs capture --only <slug> --platform <platform>`,
+    command: `node packages/cms/tracy-quickstart-tools/batch-contracts.mjs capture --only <slug> --platform <platform> --project-prefix qc-batch --cowork-source <claude-cowork checkout> --artifacts <empty folder outside the repo>`,
     skill: CONTRACT_SKILL('7')
   },
   'demo-measures-clean': GREEN,
@@ -290,11 +290,11 @@ export const FIXES = Object.freeze({
   'cowork-pin-doors-ready': GREEN,
   'cowork-pin-doors-unread': {
     text: 'The Claude Cowork plugin a new site gets could not be read for the write doors ({reason}). Read its doors into the manifest, then check again.',
-    skill: CONTRACT_SKILL('9')
+    skill: CONTRACT_SKILL('8')
   },
   'cowork-pin-missing-doors': {
     text: 'The pinned Claude Cowork plugin {plugin} lacks write doors ({missing}). Move the Cowork pin to {fixVersion} or newer in the quickstart list.',
-    skill: CONTRACT_SKILL('9')
+    skill: CONTRACT_SKILL('8')
   },
   'cowork-release-needed': {
     text: 'No Claude Cowork release has the write doors {doors}. A new plugin release is needed first, then move the Cowork pin to it.'
@@ -314,8 +314,7 @@ export const FIXES = Object.freeze({
   },
   'customize-must-fix': {
     text: 'Customize your site rules fail and hold a new release. Run the check, fix each failing rule in the template or the contract, release, then check again.',
-    command: CUSTOMIZE_CHECK,
-    skill: CONTRACT_SKILL('8')
+    command: CUSTOMIZE_CHECK
   },
   'customize-live-failing': {
     text: 'The published release fails Customize your site rules. Fix them in the next release; the card stays up meanwhile.',
@@ -363,7 +362,7 @@ export const FIXES = Object.freeze({
     skill: `${TDSR} section 4`
   },
   'ds-not-measured': {
-    text: 'A rule on the built site has no measurement yet. Measure the built site and commit the measurement file.',
+    text: 'A rule on the built site has no measurement yet (it holds a new release only when the rule file says so). Measure the built site and commit the measurement file.',
     skill: `${TDSR} section 3`
   },
   'ds-worth-fixing': {
