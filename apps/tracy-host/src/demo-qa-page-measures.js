@@ -238,7 +238,11 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   for (const el of document.body.querySelectorAll('*')) {
     if (glued.length >= caps.glued) break
     if (SKIP.has(el.tagName.toUpperCase()) || !shown(el)) continue
-    const nodes = Array.from(el.childNodes)
+    // What the visitor sees beside the highlight: elements and comments that print nothing (a break a theme hides on a narrow
+    // screen) are stepped over, a break that shows ends the line and so is not text.
+    const nodes = Array.from(el.childNodes).filter(
+      (n) => n.nodeType === 3 || (n.nodeType === 1 && getComputedStyle(n).display !== 'none')
+    )
     nodes.forEach((node, at) => {
       if (node.nodeType !== 1 || getComputedStyle(node).display !== 'inline') return
       const inner = node.textContent ?? ''
