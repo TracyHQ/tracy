@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-449-step-9b-site-agent-repair",
+  "kind": "feat",
+  "title": "Step 9b sends each page's customer-visible faults to the site agent as one numbered comment turn, undoes a turn that made a page worse, and hands over the written site on any error",
+  "pr": 449,
+  "area": "write-step/repair-pass",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the step 9 entry point tests with the site agent faked: node --test --test-concurrency=1 apps/tracy-web/test/write-step-nine-repair.test.mjs.",
+    "S2: Run the finder, finder door and bench command tests one file at a time: write-step-finder, door-ladder, write-step-bench-repair-cli."
+  ],
+  "expect": [
+    "S1: every test passes: each fault is sent once with page, element and sentence; one turn per page; excluded kinds are never sent; a turn causing a new blocking failure is undone newest first; a prompt with no turn is resent once then dropped; one resend round; no new work after 10 minutes and a return by 12; any error hands over the written site with the first check; no faults means no turn.",
+    "S2: every test passes."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/write-step-nine-repair.test.mjs, apps/tracy-web/test/write-step-finder.test.mjs, apps/tracy-web/test/door-ladder.test.mjs, apps/tracy-web/test/write-step-bench-repair-cli.test.mjs",
+    "door": "runStepNine (apps/tracy-web/src/write-step-nine.js)"
+  },
+  "fence": "The step 9 entry point's repair pass: what it sends to the site agent, what it undoes and what it hands over, checked with a fake site agent",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-nine-repair.test.mjs",
+      "apps/tracy-web/test/write-step-finder.test.mjs",
+      "apps/tracy-web/test/door-ladder.test.mjs",
+      "apps/tracy-web/test/write-step-bench-repair-cli.test.mjs"
+    ]
+  }
+}
