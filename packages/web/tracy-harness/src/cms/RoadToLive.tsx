@@ -278,7 +278,8 @@ function Outside({ fix }: { fix: OutsideFix }) {
 
 /**
  * The fix of a red or warn step, exactly as the server read it from the fix registry (#432): the text, then the
- * command to run (with a copy button) and the skill section, when the registry names them.
+ * command to run (with a copy button) and the skill section, when the registry names them. Shown only on a step
+ * whose guide has no fix of its own (no how-to-fix steps, no prompt to paste), so the advice never appears twice.
  */
 function RegistryFix({ fix }: { fix: NonNullable<RoadStep['fix']> }) {
   return (
@@ -612,9 +613,8 @@ function StepRow({
         ) : null}
       </div>
       {open && isDs && guide.rules ? (
-        <div className="flex flex-col gap-1 ps-[2.625rem]">
+        <div className="ps-[2.625rem]">
           <DesignSystemStepBody guide={{ ...guide, rules: guide.rules }} />
-          {s.fix ? <RegistryFix fix={s.fix} /> : null}
         </div>
       ) : open ? (
         <div className="flex flex-col gap-1 ps-[2.625rem]">
@@ -634,7 +634,8 @@ function StepRow({
             </ol>
           ) : null}
           {guide.outside ? <Outside fix={guide.outside} /> : null}
-          {s.fix ? <RegistryFix fix={s.fix} /> : null}
+          {/* The registry fix only where the step has no guidance of its own: never the same advice twice. */}
+          {s.fix && !guide.ops && !guide.outside && !guide.rules ? <RegistryFix fix={s.fix} /> : null}
         </div>
       ) : doneRules ? (
         <div className="flex flex-col gap-1 ps-[2.625rem]">
