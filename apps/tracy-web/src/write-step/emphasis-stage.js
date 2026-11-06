@@ -80,8 +80,9 @@ function findWritten(held, path, needle) {
 /**
  * @param {{ door: { apply: Function }, siteKey: string, contentMap?: object | null, written: Iterable<string>,
  *   ordered: Record<string, string> }} input `written`: the content map keys the contract call wrote; `ordered`: what it sent
- * @returns {Promise<Map<string, { storage: string, stored?: string, readFrom?: object, warning?: string, blocking?: true }>>} by content map key,
- *   for every written key whose value holds emphasis codes
+ * @returns {Promise<Map<string, { storage: string, stored?: string, readFrom?: object, applyId?: string, warning?: string,
+ *   blocking?: true }>>} by content map key, for every written key whose value holds emphasis codes; `applyId` names the
+ *   `content.update` that put the tags in, which the finisher reverts with its repair (finisher/content-repair-writes.js)
  */
 export async function runEmphasisStage({ door, siteKey, contentMap, written, ordered }) {
   const results = new Map()
@@ -158,17 +159,14 @@ export async function runEmphasisStage({ door, siteKey, contentMap, written, ord
     for (const [column, held] of columns)
       if (held.changed) fields[column] = held.json ? JSON.stringify(held.json) : held.text
     if (!Object.keys(fields).length) continue
+    const applyId = `emphasis-${createHash('sha256')
+      .update(`${entity} ${JSON.stringify(fields)}`)
+      .digest('hex')
+      .slice(0, 32)}`
     try {
-      await call('content.update', {
-        apply_id: `emphasis-${createHash('sha256')
-          .update(`${entity} ${JSON.stringify(fields)}`)
-          .digest('hex')
-          .slice(0, 32)}`,
-        kind,
-        id,
-        fields
-      })
-      for (const d of done) results.set(d.key, { storage: 'html', stored: d.stored, readFrom: d.readFrom })
+      await call('content.update', { apply_id: applyId, kind, id, fields })
+      for (const d of done)
+        results.set(d.key, { storage: 'html', stored: d.stored, readFrom: d.readFrom, applyId })
     } catch (error) {
       for (const d of done) keep(d.key, `the site refused the emphasis tags (${error.message})`)
     }

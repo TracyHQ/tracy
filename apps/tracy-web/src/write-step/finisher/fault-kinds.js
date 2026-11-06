@@ -30,9 +30,10 @@ const text = (value, max) => (typeof value === 'string' && value.trim() ? value.
  * A fault naming a page or a width it was not shown is not kept at all: it cannot have been seen.
  * @param {unknown} answer the finder's JSON object, `{ faults: [{ page, viewport, tile, slot?, kind, seen }] }`
  * @param {{ page: string, viewport: string, index: number }[]} shown the shots of this call
+ * @param {Record<string, object>} [kinds] the fault list; FAULT_KINDS, or the one a bench test gives
  * @returns {{ faults: object[], loggedOnly: object[] }}
  */
-export function heldFaults(answer, shown) {
+export function heldFaults(answer, shown, kinds = FAULT_KINDS) {
   const faults = []
   const loggedOnly = []
   for (const raw of Array.isArray(answer?.faults) ? answer.faults : []) {
@@ -48,7 +49,7 @@ export function heldFaults(answer, shown) {
       kind: text(raw?.kind, 80) ?? 'unnamed',
       seen: text(raw?.seen, 400)
     }
-    if (FAULT_KINDS[fault.kind]) faults.push(fault)
+    if (kinds[fault.kind]) faults.push(fault)
     else loggedOnly.push(fault)
   }
   return { faults, loggedOnly }

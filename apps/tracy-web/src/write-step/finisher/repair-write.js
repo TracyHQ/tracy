@@ -44,8 +44,16 @@ export async function writeRepair({ door, siteKey, revision, changes, repair }) 
   return answer?.ok ? { ok: true, applyId } : { ok: false, applyId, reason: answerWords(answer) }
 }
 
-/** @returns {Promise<{ ok: boolean, reason?: string }>} */
-export async function revertRepair({ door, siteKey, applyId }) {
+/**
+ * `also`: the apply ids a repair wrote after its own (an emphasis follow-up, content-repair-writes.js), taken back first,
+ * newest first, so the site is put back in the order it was changed.
+ * @returns {Promise<{ ok: boolean, reason?: string }>}
+ */
+export async function revertRepair({ door, siteKey, applyId, also = [] }) {
+  for (const id of [...also].reverse()) {
+    const undone = await revertRepair({ door, siteKey, applyId: id })
+    if (!undone.ok) return { ok: false, reason: `${id}: ${undone.reason}` }
+  }
   try {
     const answer = await door.apply({ siteKey, action: 'apply.revert', params: { apply_id: applyId } })
     return answer?.ok ? { ok: true } : { ok: false, reason: answerWords(answer) }

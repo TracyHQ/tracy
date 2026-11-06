@@ -6,6 +6,7 @@
 // the fault was seen on whose words hold the markup the finder reported. An order that would write the words the slot
 // holds already is a no-op, dropped too.
 import { showsRawCodes, visibleText } from '../../lib/site-copy/emphasis-markup.js'
+import { CONTENT_ORDER_KINDS } from './content-repair-orders.js'
 import { FAULT_KINDS } from './fault-kinds.js'
 import { ALLOWED_PROPERTIES } from '../../lib/finisher-style.js'
 import { validStyleOrder } from './style-order.js'
@@ -60,24 +61,30 @@ export const ORDER_KINDS = Object.freeze({
     shape:
       '{ "kind": "style-block", "block": "<block id, e.g. block-2>", "target": "<null, or tags, classes or ids inside the block such as h2 or .title span>", "styles": { "<property>": "<value>" } }',
     validate: validStyleOrder
-  })
+  }),
+  // #422: link, demo item, alt, page title or description, and accent emphasis; each checks itself (`validate`).
+  ...CONTENT_ORDER_KINDS
 })
 
 /**
  * @param {unknown} order the fixer's answer
  * @param {{ fault: { kind: string, page: string, slot: string | null, seen: string | null }, kitSlots: Set<string>,
+ *   faultKinds?: Record<string, { orders: string[] }>,
  *   pageSlots: (page: string) => Set<string>, keyOf: (slot: string) => string | null,
  *   currentOf: (key: string) => string | undefined }} context `pageSlots` gives the kit slots a page shows, `keyOf` the
  *   content map key the write report wrote the slot under, `currentOf` what the site holds there now
- * @returns {{ ok: true, slot: string, key: string, current: string, changes: Record<string, string> }
- *   | { ok: false, reason: string }} `current` is what the slot holds before the repair
+ * @returns {{ ok: true, slot: string, key: string, current: string, after: string, changes: Record<string, string> }
+ *   | { ok: false, reason: string }} `current` is what the slot holds before the repair, `after` what it holds once repaired;
+ *   an order kind with its own `validate` (content-repair-orders.js) may answer a promise, and a `write` in place of `changes`
  */
-export function validOrder(order, { fault, kitSlots, pageSlots, keyOf, currentOf }) {
+export function validOrder(order, context) {
+  const { fault, kitSlots, keyOf, currentOf, faultKinds = FAULT_KINDS } = context
   const entry = ORDER_KINDS[order?.kind]
   if (!entry) return { ok: false, reason: `unknown order kind ${JSON.stringify(order?.kind ?? null)}` }
-  if (!FAULT_KINDS[fault.kind]?.orders.includes(order.kind))
+  if (!faultKinds[fault.kind]?.orders.includes(order.kind))
     return { ok: false, reason: `a ${order.kind} order does not repair a ${fault.kind} fault` }
-  if (entry.validate) return entry.validate(order, { fault, kitSlots, pageSlots })
+  if (entry.validate) return entry.validate(order, context)
+  const { pageSlots } = context
   const slot = order.slot
   if (typeof slot !== 'string' || !kitSlots.has(slot))
     return { ok: false, reason: `slot ${JSON.stringify(slot ?? null)} is not a slot the kit has` }
@@ -94,7 +101,7 @@ export function validOrder(order, { fault, kitSlots, pageSlots, keyOf, currentOf
   if (refused) return { ok: false, reason: refused }
   if (order.text === current)
     return { ok: false, reason: `a no-op: the new text is the text ${slot} holds now, so nothing is written` }
-  return { ok: true, slot, key, current, changes: { [key]: order.text } }
+  return { ok: true, slot, key, current, after: order.text, changes: { [key]: order.text } }
 }
 
 /** The order kinds as the fixer is told them. */

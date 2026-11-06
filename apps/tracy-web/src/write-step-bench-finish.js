@@ -5,6 +5,7 @@
 // BENCH ONLY: it writes repairs to a site this bench made, never to a customer's.
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { openContentMap } from './lib/content-map-source.js'
 import { joomlaAddresses } from './lib/quickstart-releases.js'
 import { openKit } from './lib/template-kit-source.js'
 import { checkLines } from './site-check/check-lines.js'
@@ -14,12 +15,15 @@ import { runFinisher } from './write-step/finisher/finisher.js'
 import { siteCheckOfRun } from './write-step-bench-site-check.js'
 
 export const FINISH_USAGE = `  finish --run <runId> --account <email> --out <dir> [--check-file <path>] [--site-pictures-file <path>]
+         [--brief-file <path>] [--copy-file <path>]
                                               start at the finisher on the run's written site: shoot every page, find
                                               faults of the fault list, repair them through the write door, check each
                                               repair and undo the ones not better, then run the site check a final time.
                                               The first site check is the one check kept on the run, or --check-file;
                                               the final one runs with its options (every group when it ran every group).
                                               --site-pictures-file: step 8's site-pictures.json, as the first check had it
+                                              --brief-file, --copy-file: the run's brief and site copy, the only places a
+                                              repair takes new words from (with step 8's picture descriptions)
                                               Writes repair-log.json and the crops into --out. Needs the finisher's three
                                               doors in /ops > Model & AI (deepseek-flash at max effort by default).`
 
@@ -59,17 +63,24 @@ export async function finishRun(d, values) {
     }
   }
   if (!firstCheck) return refused(d, `NO_FIRST_CHECK: run check --run ${r.id} first, or give --check-file.`)
-  let pictures = null
-  if (values['site-pictures-file']) {
+  const files = {}
+  for (const [flag, name] of [
+    ['site-pictures-file', 'pictures'],
+    ['brief-file', 'brief'],
+    ['copy-file', 'copy']
+  ]) {
+    if (!values[flag]) continue
     try {
-      pictures = await readJson(path.resolve(cwd, values['site-pictures-file']))
+      files[name] = await readJson(path.resolve(cwd, values[flag]))
     } catch (error) {
-      return refused(d, `--site-pictures-file cannot be read as JSON: ${error?.message ?? error}`)
+      return refused(d, `--${flag} cannot be read as JSON: ${error?.message ?? error}`)
     }
   }
+  const pictures = files.pictures ?? null
   // The final check measures as the first did, so the two can be compared group by group.
   const allGroups = firstCheck.allGroups === true
   const kit = openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc
+  const contentMap = openContentMap(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null
   if (!kit) return refused(d, `No readable kit "${r.report.kit}".`)
   if (!d.makeFinisherDoors || !d.makeCapture)
     return refused(d, 'FINISHER_UNWIRED: this bench was given no finisher doors or no page capture.')
@@ -97,6 +108,10 @@ export async function finishRun(d, values) {
     siteCheck: (report) =>
       siteCheckOfRun(d, report, { account: values.account, baseline, pictures, allGroups }),
     saveFile,
+    contentMap,
+    facts: files,
+    // A bench test may give the fault list (#423 adds the kinds that call for the content orders).
+    ...(d.faultKinds ? { faultKinds: d.faultKinds } : {}),
     ...(d.now ? { now: d.now } : {})
   })
   if (!finished.ok) return refused(d, `${finished.code}: ${finished.reason}`)

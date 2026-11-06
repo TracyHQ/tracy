@@ -21,6 +21,7 @@ import { readSite, revertRepair, writeRepair } from './repair-write.js'
 import { validOrder } from './repair-orders.js'
 import { cropsOf } from './repair-crops.js'
 import { takeOffStyleRule, writeStyleRule } from './style-write.js'
+import { orderFacts } from './repair-facts.js'
 import { keepShotFiles, pageSlug, replyKeeper } from './model-replies.js'
 
 /**
@@ -59,7 +60,7 @@ async function findFaults(run, firstShots) {
       })
       return call.problem
         ? { faults: [], loggedOnly: [], problem: `the finder: ${call.problem}`, page }
-        : heldFaults(call.answer, shown)
+        : heldFaults(call.answer, shown, run.faultKinds)
     })
   )
   const records = found.flatMap((f) => [
@@ -90,7 +91,12 @@ async function repairFault(run, fault, repairNumber, firstShots) {
       record: logRecord(fault, { ...cause, outcome: 'failed', reason: `the fixer: ${asked.problem}` })
     }
   const order = asked.answer
-  const valid = validOrder(order, {
+  const valid = await validOrder(order, {
+    ...run.orderFacts,
+    site,
+    door,
+    siteKey,
+    faultKinds: run.faultKinds,
     fault,
     kitSlots: run.kitSlots,
     pageSlots: run.pageSlots,
@@ -111,7 +117,7 @@ async function repairFault(run, fault, repairNumber, firstShots) {
         line: valid.line,
         repair: repairNumber
       })
-    : await writeRepair({
+    : await (valid.write ?? writeRepair)({
         door,
         siteKey,
         revision: site.revision,
@@ -133,7 +139,7 @@ async function repairFault(run, fault, repairNumber, firstShots) {
     after: afterShots,
     // A style leaves the words as they are, so the block is found by the words its fault's slot holds.
     wordsBefore: valid.style ? (site.current.get(lineOf(fault.slot)?.key) ?? '') : valid.current,
-    wordsAfter: valid.style ? (site.current.get(lineOf(fault.slot)?.key) ?? '') : order.text,
+    wordsAfter: valid.style ? (site.current.get(lineOf(fault.slot)?.key) ?? '') : valid.after,
     name: `r${repairNumber}`,
     saveFile: run.saveFile
   })
@@ -160,7 +166,7 @@ async function repairFault(run, fault, repairNumber, firstShots) {
     return {
       record: logRecord(onSlot, { ...shown, outcome: 'kept', reason }),
       // A kept style changes no words of the report.
-      ...(valid.style ? {} : { kept: { slot: valid.slot, ordered: order.text, applyId: wrote.applyId } })
+      ...(valid.style ? {} : { kept: { slot: valid.slot, ordered: valid.after, applyId: wrote.applyId } })
     }
   const why = crops.afterShots.length ? reason : 'the repaired page could not be shot again'
   const undone = valid.style
@@ -172,7 +178,7 @@ async function repairFault(run, fault, repairNumber, firstShots) {
         before: wrote.before,
         repair: repairNumber
       })
-    : await revertRepair({ door, siteKey, applyId: wrote.applyId })
+    : await revertRepair({ door, siteKey, applyId: wrote.applyId, also: wrote.also })
   return {
     record: logRecord(onSlot, {
       ...shown,
@@ -195,7 +201,9 @@ const repairedReport = (report, keptBySlot) => ({
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, report: object, firstCheck: object | null,
  *   doors: Record<'finder' | 'fixer' | 'checker', object>, capture: Function,
  *   siteCheck: (report: object) => Promise<object>, saveFile: (name: string, data: string | Buffer) => Promise<void>,
- *   now?: () => number }} input `kit` is the template kit's document; `report` the write report of the run
+ *   now?: () => number, contentMap?: object | null, facts?: { brief?: object, copy?: object, pictures?: object },
+ *   faultKinds?: Record<string, object> }} input `kit` is the template kit's document; `report` the write report of the run;
+ *   `facts` the brief, the site copy file and step 8's site pictures, the only sources a repair's new words come from
  * @returns {Promise<{ ok: false, code: string, reason: string } | { ok: true, report: object, log: object, finalCheck: object }>}
  *   `report` is the write report with the kept repairs' words as ordered, and the final check is the one to keep
  */
@@ -210,7 +218,10 @@ export async function runFinisher(input) {
     capture,
     siteCheck,
     saveFile,
-    now = Date.now
+    now = Date.now,
+    contentMap = null,
+    facts = null,
+    faultKinds
   } = input
   const refused = doorsRefusal(doors)
   if (refused) return { ok: false, ...refused }
@@ -236,6 +247,8 @@ export async function runFinisher(input) {
     kitSlots: kitSlotIds(kit),
     pageSlots: slotsByPage(kit, sitePages),
     lineOf: (slot) => writtenLines.get(slot),
+    faultKinds,
+    orderFacts: orderFacts({ kit, report, contentMap, facts, sitePages }),
     replies: replyKeeper(saveFile),
     shotFile: () => null,
     spend: (call) => {
