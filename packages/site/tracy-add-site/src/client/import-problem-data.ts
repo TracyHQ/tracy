@@ -299,6 +299,17 @@ export const IMPORT_PROBLEMS: Record<string, ImportProblemData> = {
     actions: ['import_problem_p37_action_0'],
     fail: 2
   },
+  // An older Claude Cowork stops the whole read at one folder or file its PHP may not read
+  // (`files_unreadable`): the folder is named, and asking again cannot change it.
+  p56: {
+    severity: 'error',
+    what: 'import_problem_p56_what',
+    why: 'import_problem_p56_why',
+    fix: ['import_problem_p56_fix_0', 'import_problem_p56_fix_1'],
+    options: false,
+    actions: ['import_problem_p56_action_0'],
+    fail: 2
+  },
   p38: {
     severity: 'error',
     what: 'import_problem_p38_what',

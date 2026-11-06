@@ -16,6 +16,7 @@
  *
  * `--check` writes nothing and exits non-zero when the bundle no longer matches the sources.
  */
+import { dictionaryJson } from '../../../../scripts/lib/locale-bundle-data.mjs'
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
@@ -62,7 +63,7 @@ if (languages.length === 0) {
   process.exit(1)
 }
 
-const body = JSON.stringify(table, null, 2).replace(/\n/g, '\n    ')
+const body = dictionaryJson(table, 2).replace(/\n/g, '\n    ')
 
 const bundle = `window.__ModuleLoader__.load({
   id: '@tracy/dsh-tracy-locales',
@@ -78,7 +79,7 @@ const bundle = `window.__ModuleLoader__.load({
     const DICTIONARIES = ${body}
 
     /** Languages this package owns and adds (languages.json). */
-    const OWNED_LANGUAGES = ${JSON.stringify(OWNED)}
+    const OWNED_LANGUAGES = ${dictionaryJson(OWNED)}
 
     /** Required service: the dictionary registry the locale plugin provides. */
     const inject = ['locale']

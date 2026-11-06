@@ -9,7 +9,7 @@
 @theme {
 	--font-display: var(--ds-font-display, var(--font-teko), "Teko", "Arial Narrow", sans-serif);
 	--font-body: var(--ds-font-body, var(--font-noticia-text), "Noticia Text", Georgia, serif);
-	--font-ui: var(--ds-font-ui, var(--font-roboto-mono), "Roboto Mono", ui-monospace, monospace);
+	--font-ui: var(--ds-font-ui, var(--ds-font-body, var(--font-roboto-mono), "Roboto Mono", ui-monospace, monospace)); /* no system states a UI face: under one, labels take its text face */
 
 	--color-bg: var(--ds-c-bg, #f4f2e7);
 	--color-surface: var(--ds-c-surface, #ffffff);
@@ -24,12 +24,18 @@
 	--color-accent-on: var(--ds-c-accent-on, #ffffff);
 	--color-accent-hover: var(--ds-c-accent-hover, #b93d1b);
 	--color-accent-text: var(--ds-c-accent-text, #bc4220);
-	--color-secondary: var(--ds-c-secondary, #ffd33d);
+	/* the template's second colour: the yellow of the active menu item and the footer links on the ink band (words), and of the
+	   highlight behind the hero line (a fill with its own words). Systems define no "secondary": words take the accent made for
+	   the ink band, the fill takes the accent band */
+	--color-secondary: var(--ds-c-accent-on-ink, #ffd33d);
+	--color-secondary-fill: var(--ds-c-accent-band, #ffd33d);
+	/* the band behind the hero line holds the heading's own words, so under a system it is a warm surface, not the accent band */
+	--color-hero-band: var(--ds-c-surface-warm, #ffd33d);
 
 	/* the dark panels (navbar, footer, menu tabs, testimonial block) and the words on them */
 	--color-ink: var(--ds-c-ink, #3a352f);
 	--color-on-ink: var(--ds-c-on-ink, #ffffff);
-	--color-on-ink-soft: var(--ds-c-on-ink-soft, rgba(255, 255, 255, 0.8));
+	--color-on-ink-soft: color-mix(in srgb, var(--ds-c-on-ink, #fff) 80%, transparent);
 	--color-ink-line: rgba(255, 255, 255, 0.22); /* ds-keep: hairline on the ink band: depth, not a role */
 	/* the cream plate the logo sits on, in both themes */
 	--color-logo-ground: #f4f2e7;

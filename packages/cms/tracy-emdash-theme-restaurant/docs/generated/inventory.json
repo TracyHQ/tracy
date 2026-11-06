@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-restaurant",
     "label": "JA Restaurant",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "locales": {
     "default": "en",
@@ -1269,7 +1269,7 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:81b84d0f0e6516da5f3e30c7b604a4459c1e61955d41199cacac48b5b56b57bf",
-    "package.json": "sha256:3821dc23ebcd8146ebc1fbc18325072888282cd99b10a793eb3ab40cfde5ddce",
+    "package.json": "sha256:20eb431198d6d748cbc8a96b5f39643220d72863f3aca08b21cfe4b191387549",
     "pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
     "seed/field-map.json": "sha256:07548f5b68d4202be58338db9ada012c70e8f8845f81f962ef190e0682e14a15",
     "seed/media-map.json": "sha256:07d3b76eaeade9fb7a49f25f6e165514f36150d05b0fd4203aa4469e1bef776c",
@@ -1335,8 +1335,8 @@
     "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
     "src/pages/[...path].astro": "sha256:baf3b0a3081174731a779064cf0f5a4d2632e54bf504ea34d2d01ea91dc27335",
     "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
-    "src/styles/global.css": "sha256:a52487271a02faf41c138fb2da38a1a3331b8563d895c556b0c99d424edeb5ec",
-    "src/styles/tokens.css": "sha256:d1b20dd1002253e5ef71ea367848dc132f8a3f88cdbf225a16d15568d26fdff0",
+    "src/styles/global.css": "sha256:f7a909039ca2d346ec492eb8595538091003e3e3aff76d8a6c43c334133fbc00",
+    "src/styles/tokens.css": "sha256:dbb4b8e68ae23bbbda6043fc3b3c9910cdba5ea98ac3b8ef100a4c286c72622c",
     "src/views/BlogList.astro": "sha256:cc6c4d0fbe5b5318ff2c9bddadc29b44e7d5b48c5cdd59d1ade5e312b2a17fe8",
     "src/views/Gallery.astro": "sha256:db00b96fc73a9ad8361a24f3f3115972a839a747371bcb3de796f7e220d19faf",
     "src/views/Home.astro": "sha256:efe9decd53268ae60e1c0a9a8e28494b45a8e0eab763ecc75378fd33cc78ecdf",
@@ -1344,7 +1344,7 @@
     "src/views/Page.astro": "sha256:ef525001ce8bd7421965d525e28182f1d66e25361e600f7817edcaf4fbbcd34a",
     "src/views/Post.astro": "sha256:88cbfeae4e4036bd3f2c7a8b8b0fd3ed204aa2cb496c6c4d8015927964b03e1a",
     "src/views/Search.astro": "sha256:c022cfe06930035bd705cfea403cf0b365d7bc9c911b77ed56d716caed14e026",
-    "template.config.json": "sha256:552a49a61a98fbe907e91e4082f74f34a66edb6bbcbbb23a182d43e168d902ff",
+    "template.config.json": "sha256:ebf99fe6bf66a37fc03f7b29009abd878c98b416ff48de5778d63f0ba626bd71",
     "tools/forms.json": "sha256:762e87a9fda1fba307ee2e2ebf2f9535c23d93c4b97801b11e91731dca548777",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

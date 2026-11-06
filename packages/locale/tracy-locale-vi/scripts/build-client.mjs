@@ -22,6 +22,7 @@
  * in `pnpm build:check` because a stale bundle fails silently: fix a translation, forget to rebuild,
  * and the fleet still gets the old words.
  */
+import { dictionaryJson } from '../../../../scripts/lib/locale-bundle-data.mjs'
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
@@ -52,7 +53,7 @@ if (namespaces.length === 0) {
 const dictionaries = namespaces
   .map(
     ({ ns, entries }) =>
-      `      ${JSON.stringify(ns)}: ${JSON.stringify(entries, null, 8).replace(/\n/g, '\n      ')}`
+      `      ${JSON.stringify(ns)}: ${dictionaryJson(entries, 8).replace(/\n/g, '\n      ')}`
   )
   .join(',\n')
 

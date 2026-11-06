@@ -610,6 +610,25 @@ theirs_of_last_merge() {
   return 0
 }
 
+# The paths the site's engine left out of a whole read because its PHP could not read them
+# (live-pull's live/unreadable.json, folders ending in `/`): unknown, never deleted. Each comes from
+# `from` (the last read, else the baseline) as it was — a folder a host made unreadable is still on
+# the live site, and a read without it took it as removed and deleted the copy's (05/11/2026).
+with_unreadable() { # tree from → tree
+  local index="$DIR/index-unreadable" path
+  if [[ -z "$2" ]]; then printf '%s\n' "$1"; return 0; fi
+  rm -f "$index"
+  GIT_INDEX_FILE="$index" g read-tree "$1" || return 1
+  while IFS= read -r path; do
+    [[ -n "$path" ]] || continue
+    # ls-tree's own lines are what --index-info takes; every line is read, none dropped early.
+    g ls-tree -r -z "$2" -- ":(literal)$path" | GIT_INDEX_FILE="$index" g update-index -z --index-info || return 1
+  done < <(python3 -c 'import json,sys
+print("\n".join(p for p in json.load(open(sys.argv[1])) if isinstance(p, str) and p and ".." not in p.split("/")))' "$DIR/live/unreadable.json")
+  GIT_INDEX_FILE="$index" g write-tree || return 1
+  rm -f "$index"
+}
+
 commit_tree() { # tree message [parent]
   if [[ -n "${3:-}" ]]; then g commit-tree "$1" -p "$3" -m "$2"; else g commit-tree "$1" -m "$2"; fi
 }
@@ -739,7 +758,13 @@ merge() {
       if [[ -n "$previous" ]]; then theirs_tree="$(g rev-parse "$previous^{tree}")"
       else theirs_tree="$(g rev-parse "refs/tags/tracy-baseline^{tree}")"; fi
     elif [[ -f "$DIR/live/deleted.json" ]]; then theirs_tree="$(tree_of_changes "$over")"
-    else theirs_tree="$(tree_of_archive "$(live_tree)" live)"; fi
+    else
+      theirs_tree="$(tree_of_archive "$(live_tree)" live)"
+      # A whole read lacks what the site's engine could not read: laid as the last read had it.
+      if [[ -f "$DIR/live/unreadable.json" ]]; then
+        theirs_tree="$(with_unreadable "$theirs_tree" "${over:-$(g rev-parse --verify --quiet refs/tags/tracy-baseline || true)}")"
+      fi
+    fi
     theirs_commit="$(commit_tree "$theirs_tree" "live: read $stamp" "$previous")"
   fi
 

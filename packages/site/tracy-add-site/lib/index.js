@@ -721,6 +721,16 @@ function answerKind(text2) {
   if (parseJson(t) !== void 0) return "json";
   return "text";
 }
+function pageKind(text2) {
+  const t = String(text2 ?? "");
+  if (/name=["']?(?:username|passwd|password)["']?/i.test(t) && /option=com_login|task=login|id=["']?form-login/i.test(t))
+    return "login_form";
+  if (/captcha|challenge|are you (?:a )?human|access denied|request (?:was )?blocked|forbidden|imunify|bot[- ]?protection|security check|sucuri|wordfence|mod_?security|cf-chl|just a moment|ddos/i.test(
+    t
+  ))
+    return "challenge";
+  return "other";
+}
 function isPhpParseFailure(status, text2) {
   return status >= 500 && /\b(?:Parse error|syntax error, unexpected)\b/i.test(text2);
 }
@@ -1555,10 +1565,14 @@ async function readSiteInfo(endpoint, token, opts = {}) {
       result = JSON.parse(text2);
     } catch {
       const firewall = firewallOf(response.status, response.headers, text2);
+      const answer = answerKind(text2);
       return {
         ok: false,
         reached: false,
         status: response.status,
+        answer,
+        ...answer === "html" ? { page: pageKind(text2) } : {},
+        head: bodyHead(text2),
         ...isBasicAuthChallenge(response) ? { basicChallenge: true } : {},
         ...firewall ? { firewall } : {}
       };
@@ -1584,6 +1598,7 @@ async function readSiteInfo(endpoint, token, opts = {}) {
       dbDumpMany: result?.info?.db_dump_many && typeof result.info.db_dump_many === "object" ? result.info.db_dump_many : void 0,
       reached: isEngineAnswer(result),
       status: response.status,
+      ...isEngineAnswer(result) ? {} : { answer: "json", head: bodyHead(text2) },
       ...isBasicAuthChallenge(response) ? { basicChallenge: true } : {}
     };
   } catch (error) {
@@ -1614,6 +1629,18 @@ async function askDoors(webRootUrl, token, opts) {
   }
   return { misses };
 }
+async function askInstalledDoors(webRootUrl, token, opts) {
+  let result = await askDoors(webRootUrl, token, opts);
+  for (const pause of [1e3, 2e3]) {
+    if (result.door || !result.misses.length || result.misses.some(
+      (miss) => miss.phpError || miss.firewall || miss.basicChallenge || miss.page === "challenge" || ![200, 403, 404].includes(miss.status ?? 0) || !["html", "json"].includes(miss.answer ?? "")
+    ))
+      break;
+    await new Promise((resolve) => setTimeout(resolve, pause));
+    result = await askDoors(webRootUrl, token, opts);
+  }
+  return result;
+}
 function bareVersion(value) {
   return typeof value === "string" && /^\d+(\.\d+){0,3}$/.test(value) ? value : void 0;
 }
@@ -1622,16 +1649,44 @@ function phpOfMisses(misses, php, minimum) {
   if (said) return { ...said.php ? { php: said.php } : {}, minimumPhp: said.minimumPhp };
   return phpDetail(php, minimum);
 }
+function bodyHead(text2) {
+  return text2.replace(/\s+/g, " ").trim().slice(0, 200);
+}
+function doorAnswers(misses) {
+  return misses.slice(-2).map((miss) => {
+    const path10 = diagnosticPath(miss.endpoint, miss.webRootUrl);
+    return {
+      ...path10 ? { path: path10 } : {},
+      ...miss.status !== void 0 ? { status: miss.status } : {},
+      ...miss.answer ? { answer: miss.answer } : {},
+      ...miss.page ? { page: miss.page } : {}
+    };
+  });
+}
+function pageAnswered(misses) {
+  if (misses.length === 0 || misses.some((miss) => miss.phpError || miss.firewall || miss.status === void 0))
+    return false;
+  return misses.some((miss) => miss.status === 200 && miss.answer === "html" && miss.page !== "login_form");
+}
+function doorLog(misses) {
+  return misses.map(
+    (miss) => `${diagnosticPath(miss.endpoint, miss.webRootUrl) ?? "door"} ${miss.status ?? "-"} ${miss.answer ?? ""}${miss.page ? `/${miss.page}` : ""}: ${miss.head ?? ""}`
+  ).join(" | ");
+}
 function doorMiss(at, misses) {
   const miss = [...misses].reverse().find((one) => one.phpError) ?? misses.at(-1);
   if (!miss) return { at, check: "no_door" };
   const path10 = diagnosticPath(miss.endpoint, miss.webRootUrl);
-  const check = miss.phpError ? miss.minimumPhp ? "below_minimum" : "parse_error" : miss.status !== void 0 ? "no_engine" : "network";
+  const check = miss.phpError ? miss.minimumPhp ? "below_minimum" : "parse_error" : pageAnswered(misses) ? "answered_page" : miss.status !== void 0 ? "no_engine" : "network";
   return {
     at,
     check,
     ...miss.status !== void 0 ? { status: miss.status } : {},
-    ...path10 ? { path: path10 } : {}
+    ...path10 ? { path: path10 } : {},
+    ...miss.answer ? { answer: miss.answer } : {},
+    ...miss.page ? { page: miss.page } : {},
+    // What each door answered, where that is the question: no engine behind a status, or a page.
+    ...check === "no_engine" || check === "answered_page" ? { doors: doorAnswers(misses) } : {}
   };
 }
 function firewallMiss(at, misses) {
@@ -1677,7 +1732,11 @@ async function resolveDoor(webRootUrl, token, opts = {}) {
       };
     const blocked = firewallMiss("api_door", misses);
     if (blocked) return { refusal: "blocked_by_firewall", ...blocked };
-    return { refusal: "cowork_not_answering", detail: doorMiss("api_door", misses) };
+    return {
+      refusal: "cowork_not_answering",
+      detail: doorMiss("api_door", misses),
+      ...misses.some((miss) => miss.head) ? { log: doorLog(misses) } : {}
+    };
   }
   return {
     endpoint: door.endpoint,
@@ -1969,7 +2028,7 @@ async function installSteps(session, packageUrl, latestVersion, existingToken, o
   const installedNow = async (at) => {
     const token2 = await readInstalledToken(at);
     if (!token2) return false;
-    const { door: info, misses: misses2 } = await askDoors(session.webRootUrl, token2, doorOpts);
+    const { door: info, misses: misses2 } = await askInstalledDoors(session.webRootUrl, token2, doorOpts);
     noteDoors(at, misses2);
     return info?.ok === true && !needsInstall(info.component, latestVersion);
   };
@@ -2166,7 +2225,7 @@ async function installSteps(session, packageUrl, latestVersion, existingToken, o
     if (cause) return cause;
     const landed = await readInstalledToken("proof");
     if (landed) {
-      const { door: proof2, misses: misses2 } = await askDoors(session.webRootUrl, landed, doorOpts);
+      const { door: proof2, misses: misses2 } = await askInstalledDoors(session.webRootUrl, landed, doorOpts);
       noteDoors("proof", misses2);
       if (proof2?.error === "contract_unavailable")
         return {
@@ -2192,7 +2251,7 @@ async function installSteps(session, packageUrl, latestVersion, existingToken, o
   }
   const token = await readInstalledToken("proof");
   if (!token) return { ok: false, reason: "configure_failed", detail: { at: "proof", check: "no_token" } };
-  const { door: proof, misses } = await askDoors(session.webRootUrl, token, doorOpts);
+  const { door: proof, misses } = await askInstalledDoors(session.webRootUrl, token, doorOpts);
   noteDoors("proof", misses);
   if (!proof?.ok) {
     if (!proof && misses.some((miss) => miss.phpError))
@@ -2517,6 +2576,12 @@ var ExportFailed = class extends Error {
     this.diagnostic = diagnostic;
     this.name = "ExportFailed";
   }
+  /**
+   * On `files_unreadable`: the folder or file the site's engine could not read, as it named it —
+   * the customer's own server path, shown to them so they know what to give read access to; never
+   * in the stuck signal (`diagnostic.mjs` keeps closed sets only).
+   */
+  folder;
 };
 var siteOverloads = /* @__PURE__ */ new WeakSet();
 var isSiteOverload = (error) => error instanceof Error && siteOverloads.has(error);
@@ -2535,6 +2600,30 @@ async function overloadAware(step) {
     throw error;
   }
 }
+function unreadableOf(value) {
+  if (!value || typeof value !== "object") return void 0;
+  const { paths, count } = value;
+  if (!Array.isArray(paths) || !Number.isSafeInteger(count) || Number(count) < 1) return void 0;
+  const kept = paths.filter((path10) => typeof path10 === "string" && path10 !== "" && path10.length <= 300).filter(
+    (path10) => !path10.startsWith("/") && !path10.includes("\\") && !path10.split("/").includes("..") && !Array.from(path10).some((c) => c.charCodeAt(0) < 32 || c.charCodeAt(0) === 127)
+  ).slice(0, 50);
+  return { paths: kept, count: Math.max(Number(count), kept.length) };
+}
+function unreadableRefusal(message) {
+  const text2 = typeof message === "string" ? message : "";
+  const folder = /__construct\(([^)]{1,300})\):\s*Failed to open dir(?:ectory)?:\s*Permission denied/i.exec(
+    text2
+  );
+  if (folder) return folder[1].trim();
+  const file = /^cannot open (.{1,300}?)[\s:.]*$/i.exec(text2.trim());
+  if (file) return file[1];
+  if (/permission denied/i.test(text2)) {
+    const named = /\(([^)]{1,300})\)/.exec(text2);
+    if (named) return named[1].trim();
+  }
+  return void 0;
+}
+var engineHeard = /* @__PURE__ */ new WeakSet();
 var etagOf = (response) => (response.headers.get("etag") ?? "").replace(/^"|"$/g, "");
 async function callPlugin(endpoint, token, action, params, site, timeoutMs = REQUEST_TIMEOUT_MS2) {
   await site.link.ready();
@@ -2583,6 +2672,23 @@ async function callPlugin(endpoint, token, action, params, site, timeoutMs = REQ
       else siteOverloads.add(error);
       throw error;
     }
+    if (response.status === 200 && engineHeard.has(site.link)) {
+      const answer = answerKind(text2);
+      const page = answer === "html" ? pageKind(text2) : void 0;
+      if (answer === "html" && page !== "login_form")
+        throw new ExportFailed(
+          "blocked_by_host",
+          `${action} answered a page: ${text2.replace(/\s+/g, " ").trim().slice(0, 160)}`,
+          {
+            at: "export",
+            check: "answered_page",
+            status: response.status,
+            ...DIAGNOSTIC_ACTIONS.has(action) ? { action } : {},
+            answer,
+            ...page ? { page } : {}
+          }
+        );
+    }
     throw new ExportFailed("call_failed", detail, {
       at: "export",
       check: "no_engine_reply",
@@ -2591,6 +2697,7 @@ async function callPlugin(endpoint, token, action, params, site, timeoutMs = REQ
       answer: answerKind(text2)
     });
   }
+  engineHeard.add(site.link);
   if (!result.ok) {
     const detail = `${action} failed: ${JSON.stringify(result).slice(0, 200)}`;
     if (result.error === "upload_failed") {
@@ -2603,6 +2710,18 @@ async function callPlugin(endpoint, token, action, params, site, timeoutMs = REQ
       }
     }
     const code = typeof result.error === "string" && DIAGNOSTIC_ENGINE_ERRORS.has(result.error) ? result.error : "other";
+    const folder = unreadableRefusal(result.message);
+    if (folder) {
+      const failed = new ExportFailed("files_unreadable", detail, {
+        at: "export",
+        check: "permission_denied",
+        status: response.status,
+        ...DIAGNOSTIC_ACTIONS.has(action) ? { action } : {},
+        engine_error: code
+      });
+      failed.folder = folder;
+      throw failed;
+    }
     throw new ExportFailed("call_failed", detail, {
       at: "export",
       check: "engine_refused",
@@ -2842,6 +2961,7 @@ async function exportFiles(endpoint, token, artifacts, siteKey, onPart, options 
   let declaredSize = held?.cursor.size ?? 0;
   let files = held?.files ?? 0;
   let bytes = held?.bytes ?? 0;
+  let unreadable = unreadableOf(held?.unreadable);
   const startedAt = held?.startedAt ?? Date.now();
   let inline = options.inline === true;
   const targetBytes = TARGET_PART_BYTES;
@@ -2854,7 +2974,8 @@ async function exportFiles(endpoint, token, artifacts, siteKey, onPart, options 
     cursor: { path: path10, offset, size: declaredSize },
     files,
     bytes,
-    startedAt
+    startedAt,
+    ...unreadable ? { unreadable } : {}
   });
   const total = await siteBytes(endpoint, token, site);
   const runStarted = Date.now();
@@ -2869,6 +2990,7 @@ async function exportFiles(endpoint, token, artifacts, siteKey, onPart, options 
       partStartedAt,
       ...total !== void 0 ? { total } : {},
       ...seconds >= 1 && bytes > bytesBefore ? { rate: Math.round((bytes - bytesBefore) / seconds) } : {},
+      ...unreadable ? { unreadable } : {},
       ...extra
     };
   };
@@ -2905,13 +3027,21 @@ async function exportFiles(endpoint, token, artifacts, siteKey, onPart, options 
     path10 = packed.next_path;
     offset = packed.next_offset;
     declaredSize = packed.next_size ?? 0;
+    const omitted = unreadableOf(packed.unreadable);
+    if (omitted) {
+      const paths = [.../* @__PURE__ */ new Set([...unreadable?.paths ?? [], ...omitted.paths])];
+      unreadable = {
+        paths: paths.slice(0, 50),
+        count: Math.max(unreadable?.count ?? 0, omitted.count, paths.length)
+      };
+    }
     onPart?.(progress());
     await saveCursor();
     if (packed.done) break;
   }
   await artifacts.finish(key, uploadId, parts);
   await forgetUpload(siteKey);
-  return { key, files, bytes, parts: parts.length };
+  return { key, files, bytes, parts: parts.length, ...unreadable ? { unreadable } : {} };
   async function packPart(putUrl, asked) {
     const timeoutMs = packTimeoutMs(asked.inline, asked.targetBytes);
     if (!asked.inline) {
@@ -4169,9 +4299,9 @@ ${detail}`
   });
   return run;
 }
-function failBlocked(run, diagnostic) {
+function failBlocked(run, diagnostic, said) {
   console.warn(
-    `[tracy-add-site] run ${run.id} (${run.siteKey}) blocked by the site's host at ${run.step}: ${diagnostic.check} ${diagnostic.error ?? ""}`
+    `[tracy-add-site] run ${run.id} (${run.siteKey}) blocked by the site's host at ${run.step}: ${diagnostic.check} ${diagnostic.error ?? ""}${said ? ` ${said}` : ""}`
   );
   update(run, {
     state: "error",
@@ -4211,6 +4341,7 @@ async function execute(run, input, bannedBefore = false) {
   let webRootUrl;
   let dbDumpMany;
   let wordpressInfoRead = false;
+  let proved = false;
   if (input.token && input.webRootUrl) {
     token = input.token;
     webRootUrl = await resolveWebRoot(input.webRootUrl, fetch, siteHeaders);
@@ -4277,6 +4408,7 @@ async function execute(run, input, bannedBefore = false) {
           return;
         }
         token = installed.token;
+        proved = true;
         webRootUrl = session.webRootUrl;
         await rememberToken(input.siteKey, {
           token,
@@ -4341,6 +4473,12 @@ async function execute(run, input, bannedBefore = false) {
       failWith(run, { reason: door.refusal, firewall: door.firewall, detail: door.detail });
       return;
     }
+    if (door.refusal === "cowork_not_answering" && door.log)
+      console.warn(`[tracy-add-site] run ${run.id} (${run.siteKey}) no door at ${run.step}: ${door.log}`);
+    if (door.refusal === "cowork_not_answering" && door.detail.check === "answered_page" && (proved || bannedBefore)) {
+      failBlocked(run, { ...door.detail, check: proved ? "page_after_proof" : "page_after_ban" });
+      return;
+    }
     update(run, {
       state: "error",
       error: door.refusal,
@@ -4363,11 +4501,19 @@ async function execute(run, input, bannedBefore = false) {
     if (error instanceof ExportFailed && error.reason === "php_too_old")
       update(run, { ...needPhp(), diagnostic: { at: "export", check: "parse_error" } });
     if (error instanceof ExportFailed && error.reason === "blocked_by_host") {
-      failBlocked(run, {
-        at: "export",
-        check: bannedBefore ? "connection_refused_after_ban" : "connection_refused_after_progress",
-        ...error.detail ? { error: error.detail } : {}
-      });
+      if (error.diagnostic) failBlocked(run, error.diagnostic, error.detail);
+      else
+        failBlocked(run, {
+          at: "export",
+          check: bannedBefore ? "connection_refused_after_ban" : "connection_refused_after_progress",
+          ...error.detail ? { error: error.detail } : {}
+        });
+    }
+    if (error instanceof ExportFailed && error.reason === "files_unreadable") {
+      console.warn(
+        `[tracy-add-site] run ${run.id} (${run.siteKey}) files_unreadable at ${run.step}: ${error.detail ?? ""}`
+      );
+      if (error.folder) update(run, { errorDetail: { folder: error.folder } });
     }
     if (error instanceof ExportFailed && error.reason === "site_offline")
       update(run, {
@@ -4406,7 +4552,9 @@ async function execute(run, input, bannedBefore = false) {
           retrying: progress.retrying,
           totalBytes: progress.total,
           rate: progress.rate,
-          partStartedAt: progress.partStartedAt
+          partStartedAt: progress.partStartedAt,
+          // What the site's engine leaves out, unreadable to its PHP: said on the screen while it reads.
+          ...progress.unreadable ? { unreadable: progress.unreadable } : {}
         }
       });
     },

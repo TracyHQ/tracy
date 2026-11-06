@@ -36,6 +36,8 @@ export interface UploadCursor {
   nextPart?: number
   /** When the last part landed; set by `rememberUpload`. Absent on cursors written before #1565. */
   updatedAt?: number
+  /** Paths omitted by any completed part, retained when the upload resumes. */
+  unreadable?: { paths: string[]; count: number }
 }
 
 type Book = Record<string, UploadCursor>

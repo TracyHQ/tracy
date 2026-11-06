@@ -119,3 +119,16 @@ test('what came back instead of the engine is named by kind, never by its text',
   assert.equal(answerKind('0'), 'json')
   assert.equal(answerKind('Service unavailable'), 'text')
 })
+
+test('a page that is not the engine is told by what it shows, never by its text (pageKind)', async () => {
+  const { pageKind } = await import('../src/host/doors.mjs')
+  assert.equal(
+    pageKind(
+      '<form action="/administrator/index.php?option=com_login" id="form-login"><input name="username"></form>'
+    ),
+    'login_form'
+  )
+  assert.equal(pageKind('<html><title>Imunify360 bot-protection</title></html>'), 'challenge')
+  assert.equal(pageKind('<html><title>Just a moment...</title></html>'), 'challenge')
+  assert.equal(pageKind('<html><title>Garden Cafe</title><body>Welcome</body></html>'), 'other')
+})

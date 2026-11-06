@@ -102,6 +102,48 @@ const TRACY_PATHS = [
   'wp-content/mu-plugins/tracy-access.php'
 ]
 const isTracyPath = (path) => TRACY_PATHS.some((t) => (t.endsWith('/') ? path.startsWith(t) : path === t))
+
+/**
+ * What the site's engine left out of its walk because its PHP could not read it (claude-cowork
+ * #unreadable): folders end in `/`. Unknown, never deleted: a folder the host made unreadable is
+ * still on the live site, and taking it as removed would delete the copy's (05/11/2026).
+ * @type {string[]}
+ */
+let leftOut = []
+
+/** Remember a listing's `unreadable` (each lot's walk names all of it). */
+function noteLeftOut(lot) {
+  const omitted = lot?.unreadable
+  if (!omitted) return
+  const paths = omitted.paths
+  // A truncated or malformed list cannot authorize deletion of the unnamed paths.
+  if (
+    !Array.isArray(paths) ||
+    !Number.isSafeInteger(omitted.count) ||
+    omitted.count < 1 ||
+    omitted.count > paths.length
+  )
+    throw new PullFailed(
+      'ENGINE_REFUSED',
+      'files.list: incomplete unreadable paths; restore read permission before syncing'
+    )
+  if (
+    paths.some(
+      (p) =>
+        typeof p !== 'string' ||
+        !p ||
+        p.startsWith('/') ||
+        p.includes('\\') ||
+        p.split('/').includes('..') ||
+        Array.from(p).some((c) => c.charCodeAt(0) < 32 || c.charCodeAt(0) === 127)
+    )
+  )
+    throw new PullFailed('ENGINE_REFUSED', 'files.list: invalid unreadable paths')
+  leftOut = [...new Set([...leftOut, ...paths])]
+}
+
+/** Whether `path` is one the engine left out, or under a folder it left out. */
+const isLeftOut = (path) => leftOut.some((p) => (p.endsWith('/') ? path.startsWith(p) : path === p))
 /**
  * Tracy's copies of a site's tables in its database — a `db.snapshot` (`_tracy_snap_*`) or a table
  * `db.cleanup` moved to the trash (`_tracy_trash_*`) — which `db.tables` lists with the site's own:
@@ -1652,6 +1694,7 @@ async function listAll(endpoint, token) {
       // Room to halve from LIST_LIMIT down to MIN_LIST_LIMIT, and then still ask again.
       TRIES + Math.ceil(Math.log2(LIST_LIMIT / MIN_LIST_LIMIT))
     )
+    noteLeftOut(lot)
     for (const f of lot.files ?? [])
       if (!isTracyPath(f.path)) files.set(f.path, { size: f.size, sha1: f.sha1 })
     if (lot.done || !lot.next_cursor) break
@@ -1666,6 +1709,7 @@ async function listStat(endpoint, token, limit) {
   let after = ''
   for (;;) {
     const lot = await retried(() => call(endpoint, token, 'files.list', { after, limit, hash: false }))
+    noteLeftOut(lot)
     for (const f of lot.files ?? [])
       if (!isTracyPath(f.path)) files.set(f.path, { size: f.size, mtime: f.mtime })
     if (lot.done || !lot.next_cursor) break
@@ -1914,9 +1958,14 @@ async function pullWebroot(endpoint, token, live, ability, steady = null) {
   const manifest = Object.fromEntries(
     [...listing].map(([p, f]) => [p, cheap ? { sha1: f.sha1, size: f.size, mtime: f.mtime } : f.sha1])
   )
+  // A path the engine could not read keeps the last read's entry: unknown now, so as it was.
+  if (base)
+    for (const [p, entry] of Object.entries(base)) if (isLeftOut(p) && !(p in manifest)) manifest[p] = entry
   writeFileSync(join(live, 'manifest.json'), JSON.stringify(manifest), { mode: 0o600 })
+  // Named beside the read, for the merge of a whole read (`webroot-sync.sh` keeps the copy's there).
+  if (leftOut.length) writeFileSync(join(live, 'unreadable.json'), JSON.stringify(leftOut), { mode: 0o600 })
   if (mode === 'incremental') {
-    const deleted = Object.keys(base).filter((p) => !listing.has(p) && !isTracyPath(p))
+    const deleted = Object.keys(base).filter((p) => !listing.has(p) && !isTracyPath(p) && !isLeftOut(p))
     writeFileSync(join(live, 'deleted.json'), JSON.stringify(deleted), { mode: 0o600 })
     return {
       mode,

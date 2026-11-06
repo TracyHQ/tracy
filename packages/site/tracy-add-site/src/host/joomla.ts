@@ -21,7 +21,7 @@ import {
 } from './slim-package'
 import { CookieJar } from './cookie-jar.js'
 import { diagnosticError, diagnosticPath } from './diagnostic.mjs'
-import { apiDoors, isEngineAnswer, isPhpParseFailure } from './doors.mjs'
+import { answerKind, apiDoors, isEngineAnswer, isPhpParseFailure, pageKind } from './doors.mjs'
 import { failureCode } from './error-code.mjs'
 import { firewallOf, USER_AGENT } from './firewall.mjs'
 import { needsInstall } from './manifest.js'
@@ -363,8 +363,20 @@ export interface Diagnostic {
   action?: string
   /** What came back instead of the engine's reply (`DIAGNOSTIC_ANSWERS`), never its text. */
   answer?: string
+  /** On a page: what it showed (`DIAGNOSTIC_PAGES`), never its text. */
+  page?: string
+  /** On a door that did not reach the engine: what each door answered, both kept (`DoorAnswer`). */
+  doors?: DoorAnswer[]
   /** The engine's own refusal code (`DIAGNOSTIC_ENGINE_ERRORS`, else `other`). */
   engine_error?: string
+}
+
+/** One door as it answered: path, status and the fixed kinds of its body, never the body. */
+export interface DoorAnswer {
+  path?: string
+  status?: number
+  answer?: string
+  page?: string
 }
 
 export type InstallRoadName = 'url_install' | 'upload_install'
@@ -1193,6 +1205,11 @@ export type SiteInfo = {
   basicChallenge?: boolean
   /** A firewall answered instead of the engine (`firewallOf`, no `generic`). */
   firewall?: string
+  /** A body that was not the engine's: its kind (`answerKind`) and, for a page, what it showed. */
+  answer?: string
+  page?: 'login_form' | 'challenge' | 'other'
+  /** Its head, one line, for the operator log only — never the stuck signal (it can hold anything). */
+  head?: string
   dbDumpMany?: { max_tables?: number; max_bytes?: number; max_seconds?: number }
 }
 
@@ -1249,10 +1266,14 @@ export async function readSiteInfo(
       result = JSON.parse(text)
     } catch {
       const firewall = firewallOf(response.status, response.headers, text)
+      const answer = answerKind(text)
       return {
         ok: false,
         reached: false,
         status: response.status,
+        answer,
+        ...(answer === 'html' ? { page: pageKind(text) } : {}),
+        head: bodyHead(text),
         ...(isBasicAuthChallenge(response) ? { basicChallenge: true } : {}),
         ...(firewall ? { firewall } : {})
       }
@@ -1288,6 +1309,7 @@ export async function readSiteInfo(
           : undefined,
       reached: isEngineAnswer(result),
       status: response.status,
+      ...(isEngineAnswer(result) ? {} : { answer: 'json', head: bodyHead(text) }),
       ...(isBasicAuthChallenge(response) ? { basicChallenge: true } : {})
     }
   } catch (error) {
@@ -1356,6 +1378,38 @@ async function askDoors(
   return { misses }
 }
 
+/**
+ * After an install write, give Joomla's clients two short chances to route to the new plugin.
+ * A successful installer page is not proof that the API is already ready. Only reads are repeated;
+ * an engine refusal, PHP error, Basic challenge or security challenge ends this wait immediately.
+ */
+async function askInstalledDoors(
+  webRootUrl: string,
+  token: string,
+  opts: { headers?: Record<string, string>; link?: SiteLink }
+): ReturnType<typeof askDoors> {
+  let result = await askDoors(webRootUrl, token, opts)
+  for (const pause of [1_000, 2_000]) {
+    if (
+      result.door ||
+      !result.misses.length ||
+      result.misses.some(
+        (miss) =>
+          miss.phpError ||
+          miss.firewall ||
+          miss.basicChallenge ||
+          miss.page === 'challenge' ||
+          ![200, 403, 404].includes(miss.status ?? 0) ||
+          !['html', 'json'].includes(miss.answer ?? '')
+      )
+    )
+      break
+    await new Promise((resolve) => setTimeout(resolve, pause))
+    result = await askDoors(webRootUrl, token, opts)
+  }
+  return result
+}
+
 /** A version as the engine said it (`7.3.33`), or `undefined` for anything else. */
 function bareVersion(value: unknown): string | undefined {
   return typeof value === 'string' && /^\d+(\.\d+){0,3}$/.test(value) ? value : undefined
@@ -1378,6 +1432,49 @@ export function phpOfMisses(
 /** A door that did not reach the engine, with the address it was asked on. */
 type DoorMiss = SiteInfo & { endpoint: string; webRootUrl: string }
 
+/** A body's head on one line, for the operator log: what answered a door when the engine did not. */
+function bodyHead(text: string): string {
+  return text.replace(/\s+/g, ' ').trim().slice(0, 200)
+}
+
+/** Every door as it answered, for the diagnostic: closed sets only (`DoorAnswer`). */
+function doorAnswers(misses: DoorMiss[]): DoorAnswer[] {
+  return misses.slice(-2).map((miss) => {
+    const path = diagnosticPath(miss.endpoint, miss.webRootUrl)
+    return {
+      ...(path ? { path } : {}),
+      ...(miss.status !== undefined ? { status: miss.status } : {}),
+      ...(miss.answer ? { answer: miss.answer } : {}),
+      ...(miss.page ? { page: miss.page } : {})
+    }
+  })
+}
+
+/**
+ * Whether the doors were answered by a web page where the engine should be: a 200 page that is not
+ * Joomla's own sign-in form, on at least one door, and nothing else (no PHP error, no firewall named).
+ * This identifies an unexpected response, not the layer that generated it. A login form remains
+ * separate so the caller does not turn an unavailable API into a confirmed hosting block.
+ */
+export function pageAnswered(misses: DoorMiss[]): boolean {
+  if (
+    misses.length === 0 ||
+    misses.some((miss) => miss.phpError || miss.firewall || miss.status === undefined)
+  )
+    return false
+  return misses.some((miss) => miss.status === 200 && miss.answer === 'html' && miss.page !== 'login_form')
+}
+
+/** The operator's line of what each door answered, heads included (never the stuck signal). */
+export function doorLog(misses: DoorMiss[]): string {
+  return misses
+    .map(
+      (miss) =>
+        `${diagnosticPath(miss.endpoint, miss.webRootUrl) ?? 'door'} ${miss.status ?? '-'} ${miss.answer ?? ''}${miss.page ? `/${miss.page}` : ''}: ${miss.head ?? ''}`
+    )
+    .join(' | ')
+}
+
 /**
  * What the last door that missed answered, for the diagnostic: a PHP parse error, an HTTP status
  * that was not the engine, or no answer at all.
@@ -1391,14 +1488,20 @@ function doorMiss(at: string, misses: DoorMiss[]): Diagnostic {
     ? miss.minimumPhp
       ? 'below_minimum'
       : 'parse_error'
-    : miss.status !== undefined
-      ? 'no_engine'
-      : 'network'
+    : pageAnswered(misses)
+      ? 'answered_page'
+      : miss.status !== undefined
+        ? 'no_engine'
+        : 'network'
   return {
     at,
     check,
     ...(miss.status !== undefined ? { status: miss.status } : {}),
-    ...(path ? { path } : {})
+    ...(path ? { path } : {}),
+    ...(miss.answer ? { answer: miss.answer } : {}),
+    ...(miss.page ? { page: miss.page } : {}),
+    // What each door answered, where that is the question: no engine behind a status, or a page.
+    ...(check === 'no_engine' || check === 'answered_page' ? { doors: doorAnswers(misses) } : {})
   }
 }
 
@@ -1426,6 +1529,8 @@ export type ResolvedDoor =
       /** On `php_too_old` the engine named: the site's PHP and the one it needs. */
       php?: string
       minimumPhp?: string
+      /** What each door answered, heads included: for the operator log only (`doorLog`). */
+      log?: string
     }
   | { refusal: 'blocked_by_firewall'; firewall: string; detail: Diagnostic }
 
@@ -1477,7 +1582,11 @@ export async function resolveDoor(
       }
     const blocked = firewallMiss('api_door', misses)
     if (blocked) return { refusal: 'blocked_by_firewall', ...blocked }
-    return { refusal: 'cowork_not_answering', detail: doorMiss('api_door', misses) }
+    return {
+      refusal: 'cowork_not_answering',
+      detail: doorMiss('api_door', misses),
+      ...(misses.some((miss) => miss.head) ? { log: doorLog(misses) } : {})
+    }
   }
   // `inline`: the host cannot PUT a part anywhere itself, so every part comes back in the answer
   // and this side stores it. Decided once, before the first part.
@@ -1971,7 +2080,7 @@ async function installSteps(
   const installedNow = async (at: InstallRoadName): Promise<boolean> => {
     const token = await readInstalledToken(at)
     if (!token) return false
-    const { door: info, misses } = await askDoors(session.webRootUrl, token, doorOpts)
+    const { door: info, misses } = await askInstalledDoors(session.webRootUrl, token, doorOpts)
     noteDoors(at, misses)
     return info?.ok === true && !needsInstall(info.component, latestVersion)
   }
@@ -2256,7 +2365,7 @@ async function installSteps(
     // anything but a parse error. Say that rather than "the site refused the install".
     const landed = await readInstalledToken('proof')
     if (landed) {
-      const { door: proof, misses } = await askDoors(session.webRootUrl, landed, doorOpts)
+      const { door: proof, misses } = await askInstalledDoors(session.webRootUrl, landed, doorOpts)
       noteDoors('proof', misses)
       // Installed, but the site names a quickstart contract the package did not carry: every door
       // refuses until it does. Not the host's doing, so not the "ask your host" sentence.
@@ -2287,10 +2396,10 @@ async function installSteps(
 
   const token = await readInstalledToken('proof')
   if (!token) return { ok: false, reason: 'configure_failed', detail: { at: 'proof', check: 'no_token' } }
-  const { door: proof, misses } = await askDoors(session.webRootUrl, token, doorOpts)
+  const { door: proof, misses } = await askInstalledDoors(session.webRootUrl, token, doorOpts)
   noteDoors('proof', misses)
-  // Installed "successfully" yet answering on neither door is not installed — this is the check
-  // that catches exactly that. A door dying on a PHP parse error says why.
+  // The API must answer after installation; an installer success message alone proves nothing.
+  // Readiness was checked with bounded waits. A PHP parse error still says why at once.
   if (!proof?.ok) {
     if (!proof && misses.some((miss) => miss.phpError))
       return {

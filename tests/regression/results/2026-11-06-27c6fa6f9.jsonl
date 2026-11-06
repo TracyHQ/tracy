@@ -1,0 +1,2 @@
+{"id":"REG-PR-398-import-unreadable-door","verdict":"PASS","commit":"27c6fa6f90624cfa4f44aa8553522f07ae3100f8","ran_at":"2026-11-06T03:31:20.161Z","evidence":"tests/regression/.runs/2026-11-06-27c6fa6f9/REG-PR-398-import-unreadable-door.log"}
+{"id":"REG-PR-398-sync-unreadable","verdict":"PASS","commit":"27c6fa6f90624cfa4f44aa8553522f07ae3100f8","ran_at":"2026-11-06T03:31:48.912Z","evidence":"tests/regression/.runs/2026-11-06-27c6fa6f9/REG-PR-398-sync-unreadable.log"}

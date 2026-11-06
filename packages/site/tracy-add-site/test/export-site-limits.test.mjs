@@ -692,11 +692,12 @@ test('PHP 8.5 notices printed before each engine reply (curl_close deprecated) d
 })
 
 test('call_failed keeps where it stopped, from closed sets: the call, the status, what came back or the engine’s code', async () => {
+  // A page before the engine ever answered: nothing says the engine is there, so `call_failed`.
   await assert.rejects(
     exportFixture({
-      tableReply: { tables: ['wp_posts'] },
+      tableReply: { __status: 200, __body: '<!DOCTYPE html><html><body>Please wait…</body></html>' },
       options: { platform: 'wordpress' },
-      responseFor: () => ({ __status: 200, __body: '<!DOCTYPE html><html><body>Please wait…</body></html>' })
+      responseFor: () => ({})
     }),
     (error) => {
       assert.equal(error.reason, 'call_failed')
@@ -704,10 +705,30 @@ test('call_failed keeps where it stopped, from closed sets: the call, the status
         at: 'export',
         check: 'no_engine_reply',
         status: 200,
-        action: 'db.dump',
+        action: 'db.tables',
         answer: 'html'
       })
-      assert.match(error.detail, /db\.dump answered 200 without an engine reply/)
+      assert.match(error.detail, /db\.tables answered 200 without an engine reply/)
+      return true
+    }
+  )
+  // The same page after the engine answered: something in front of the site blocks Tracy now.
+  await assert.rejects(
+    exportFixture({
+      tableReply: { tables: ['wp_posts'] },
+      options: { platform: 'wordpress' },
+      responseFor: () => ({ __status: 200, __body: '<!DOCTYPE html><html><body>Please wait…</body></html>' })
+    }),
+    (error) => {
+      assert.equal(error.reason, 'blocked_by_host')
+      assert.deepEqual(error.diagnostic, {
+        at: 'export',
+        check: 'answered_page',
+        status: 200,
+        action: 'db.dump',
+        answer: 'html',
+        page: 'other'
+      })
       return true
     }
   )

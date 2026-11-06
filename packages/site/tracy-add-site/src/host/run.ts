@@ -68,6 +68,8 @@ export interface RunState {
     rate?: number
     /** When the part on its way was first asked for, on this host's clock (#1567). */
     partStartedAt?: number
+    /** Folders (ending in `/`) and files the site's engine leaves out, unreadable to its PHP. */
+    unreadable?: { paths: string[]; count: number }
   }
   /** Present when done — what provisioning needs. */
   result?: { webrootKey: string; dbKey: string; liveSite: string; fingerprint?: LiveFingerprint }
@@ -94,6 +96,8 @@ export interface RunState {
     limitMb?: string
     have?: string
     need?: string
+    /** On `files_unreadable`: the folder or file the site's engine could not read, as it named it. */
+    folder?: string
   }
   /**
    * Where a sign-in or install stopped — step, HTTP status, path, which check failed — sent
@@ -504,9 +508,9 @@ export function startRun(input: StartInput): RunState {
 }
 
 /** The run stopped because the site's host refused this IP: the operator line, then the state. */
-function failBlocked(run: RunState, diagnostic: joomla.Diagnostic): void {
+function failBlocked(run: RunState, diagnostic: joomla.Diagnostic, said?: string): void {
   console.warn(
-    `[tracy-add-site] run ${run.id} (${run.siteKey}) blocked by the site's host at ${run.step}: ${diagnostic.check} ${diagnostic.error ?? ''}`
+    `[tracy-add-site] run ${run.id} (${run.siteKey}) blocked by the site's host at ${run.step}: ${diagnostic.check} ${diagnostic.error ?? ''}${said ? ` ${said}` : ''}`
   )
   update(run, {
     state: 'error',
@@ -586,6 +590,9 @@ async function execute(run: RunState, input: StartInput, bannedBefore = false): 
   let webRootUrl: string
   let dbDumpMany: { max_tables?: number; max_bytes?: number; max_seconds?: number } | undefined
   let wordpressInfoRead = false
+  // The engine answered this run already (the Joomla install's proof): a door that then answers a
+  // page is blocked, not missing.
+  let proved = false
 
   if (input.token && input.webRootUrl) {
     token = input.token
@@ -669,6 +676,8 @@ async function execute(run: RunState, input: StartInput, bannedBefore = false): 
           return
         }
         token = installed.token
+        // The install's proof reached the engine through a door (`installCowork`).
+        proved = true
         webRootUrl = session.webRootUrl
         await rememberToken(input.siteKey, {
           token,
@@ -742,6 +751,19 @@ async function execute(run: RunState, input: StartInput, bannedBefore = false): 
       failWith(run, { reason: door.refusal, firewall: door.firewall, detail: door.detail })
       return
     }
+    if (door.refusal === 'cowork_not_answering' && door.log)
+      console.warn(`[tracy-add-site] run ${run.id} (${run.siteKey}) no door at ${run.step}: ${door.log}`)
+    // After this run's engine proof or a previous host refusal, use the existing wait-and-recover
+    // path instead of requesting another installation. The page does not establish which hosting
+    // layer produced it; the historical report did not retain that response.
+    if (
+      door.refusal === 'cowork_not_answering' &&
+      door.detail.check === 'answered_page' &&
+      (proved || bannedBefore)
+    ) {
+      failBlocked(run, { ...door.detail, check: proved ? 'page_after_proof' : 'page_after_ban' })
+      return
+    }
     update(run, {
       state: 'error',
       error: door.refusal,
@@ -790,11 +812,22 @@ async function execute(run: RunState, input: StartInput, bannedBefore = false): 
     if (error instanceof ExportFailed && error.reason === 'php_too_old')
       update(run, { ...needPhp(), diagnostic: { at: 'export', check: 'parse_error' } })
     if (error instanceof ExportFailed && error.reason === 'blocked_by_host') {
-      failBlocked(run, {
-        at: 'export',
-        check: bannedBefore ? 'connection_refused_after_ban' : 'connection_refused_after_progress',
-        ...(error.detail ? { error: error.detail } : {})
-      })
+      // A page where the engine answered before (`export.ts`) carries its own diagnostic, and the
+      // page's head for the operator; a refused connection, the connection code.
+      if (error.diagnostic) failBlocked(run, error.diagnostic, error.detail)
+      else
+        failBlocked(run, {
+          at: 'export',
+          check: bannedBefore ? 'connection_refused_after_ban' : 'connection_refused_after_progress',
+          ...(error.detail ? { error: error.detail } : {})
+        })
+    }
+    // The folder an older engine could not read: named to the customer, who can give it read access.
+    if (error instanceof ExportFailed && error.reason === 'files_unreadable') {
+      console.warn(
+        `[tracy-add-site] run ${run.id} (${run.siteKey}) files_unreadable at ${run.step}: ${error.detail ?? ''}`
+      )
+      if (error.folder) update(run, { errorDetail: { folder: error.folder } })
     }
     // Which gateway said the origin is down (`cloudflare 530`), or the connection code: the operator's
     // only way to tell a site switched off from a tunnel that dropped.
@@ -843,7 +876,9 @@ async function execute(run: RunState, input: StartInput, bannedBefore = false): 
           retrying: progress.retrying,
           totalBytes: progress.total,
           rate: progress.rate,
-          partStartedAt: progress.partStartedAt
+          partStartedAt: progress.partStartedAt,
+          // What the site's engine leaves out, unreadable to its PHP: said on the screen while it reads.
+          ...(progress.unreadable ? { unreadable: progress.unreadable } : {})
         }
       })
     },

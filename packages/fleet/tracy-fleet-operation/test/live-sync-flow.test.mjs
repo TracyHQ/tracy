@@ -1148,6 +1148,38 @@ test('an `apply` whose live read is gone refuses before anything is put in place
 })
 
 test(
+  "a whole read lacking what the site's engine could not read keeps the copy's files there, never deletes them (05/11/2026)",
+  opts,
+  () => {
+    const s = stack()
+    try {
+      write(s.live, { 'gallery/thumbs/a.jpg': 'thumb', 'gallery/b.jpg': 'b' })
+      write(s.webroot, { 'gallery/thumbs/a.jpg': 'thumb', 'gallery/b.jpg': 'b' })
+      assert.equal(s.sync(s.read()).state, 'applied')
+      // The host makes gallery/thumbs unreadable: the engine leaves it out of the whole read, and names it.
+      rmSync(join(s.live, 'gallery', 'thumbs'), { recursive: true })
+      const dir = s.read()
+      writeFileSync(join(dir, 'live', 'unreadable.json'), JSON.stringify(['gallery/thumbs/']))
+      const kept = s.sync(dir)
+      assert.equal(kept.state, 'applied', JSON.stringify(kept))
+      assert.equal(
+        readFileSync(join(s.webroot, 'gallery/thumbs/a.jpg'), 'utf8'),
+        'thumb',
+        'the copy keeps it'
+      )
+      // The same read without that word is a delete on the live site, as before.
+      const dir2 = s.read()
+      const gone = s.sync(dir2)
+      assert.equal(gone.state, 'applied', JSON.stringify(gone))
+      assert.equal(existsSync(join(s.webroot, 'gallery/thumbs/a.jpg')), false)
+      assert.equal(readFileSync(join(s.webroot, 'gallery/b.jpg'), 'utf8'), 'b')
+    } finally {
+      s.dispose()
+    }
+  }
+)
+
+test(
   'a read that carries only what changed is laid over the last read; its manifest is kept for the next',
   opts,
   () => {
