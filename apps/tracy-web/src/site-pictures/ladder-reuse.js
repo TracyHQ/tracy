@@ -6,11 +6,15 @@
 // The "any-photo" rung after it always fills while the brief has at least ANY_PHOTO_MIN usable owner photos (owner
 // decision 04/11/2026): any usable owner photo, used on other pages or already twice, any region, keeping only the hard
 // rules: heads whole, never the photo of a neighbouring tile, never the very cut another frame of the page shows. The
-// looker still looks; a rejected picture is followed by the next photo, until every photo is tried. Only then, or with
-// fewer photos, is the tile returned.
+// looker still looks; a rejected picture is followed by the next photo, until every photo is tried.
+//
+// A photo may show again in the tile's own block only in a clearly different cut: the reuse cut shares at most
+// REUSE_MAX_OVERLAP and the any-photo cut at most ANY_PHOTO_MAX_OVERLAP with every other cut of the photo on its pages
+// (owner decision 06/11/2026, card AK: two tiles of one gallery showed the same scene, cuts sharing 97%). With no such
+// cut left, the tile goes to the draw rung.
 
 import { placedEntry } from './frame-entries.js'
-import { neighbours } from './gallery-tiles.js'
+import { ANY_PHOTO_MAX_OVERLAP, neighbours } from './gallery-tiles.js'
 import { rankForFrame, sameService } from './photo-shortlist.js'
 import { cutPhotoAway } from './reuse-crop.js'
 
@@ -88,7 +92,7 @@ export async function anyPhotoRung({ idx, usable, photoBytes, store }, s, frameI
     }
     const avoid = uses.map((u) => u.crop).filter(Boolean)
     const cut = await cutPhotoAway(photoBytes.get(a.id), a, frame, idx.demoSize(frameId), avoid, {
-      maxOverlap: 1,
+      maxOverlap: ANY_PHOTO_MAX_OVERLAP,
       distinct: true
     })
     if (!cut.ok) {

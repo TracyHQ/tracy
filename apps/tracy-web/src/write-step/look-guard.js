@@ -5,9 +5,15 @@
 // on a channel nobody listed (an action, an operation or a parameter) is never sent, so a new channel fails loudly. Nothing here
 // names a template; what a template may take is read from its kit, its content map and its own stylesheets. Everything it cannot
 // see is listed in the ADR.
+import { emptyVideoButtonsOf } from '../lib/empty-video-buttons.js'
+import { selfLinkButtonsOf } from '../lib/self-link-buttons.js'
+import { hiddenPageLinksOf } from '../lib/hidden-page-links.js'
+import { createdPageHideOf } from '../lib/created-page-hide.js'
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
+import { SOCIAL_ICONS_REASON, SOCIAL_ICONS_RULE, socialIconsAllowed } from './look-guard-social.js'
 import { MARK } from './page-create-lines.js'
 
 const WRITE = 9
@@ -19,7 +25,7 @@ const ALWAYS_SHARE_SETTING = 'other_shareImage'
 /** Allowed though they touch a page, each for its reason. */
 const EXCEPTIONS = Object.freeze({
   'created-page-layout':
-    'a created page takes the article layout of the template content pages, and only a value read from the template, so it copies the template',
+    'a created legal page takes the article layout its kit names for legal pages, or none (the default article), and only a value read from the template or named by its kit, so it copies the template',
   'created-page-rows':
     'a created page is new, so its rows change nothing the template had; they carry the mark, and hold no setting that restyles anything',
   hide: 'taking a block, a row, a slot or a form off is the plan hide decision (decision 2): it removes an element and restyles none of those left',
@@ -27,6 +33,15 @@ const EXCEPTIONS = Object.freeze({
     'when a template has no small logo setting the head block shows it by content:url, and height:auto keeps the picture in its own proportion',
   'picture-fallback':
     'a kept picture the template prints only beside a field the plan hid is printed by a block of the template media classes at the top of its article text; nothing else of the text changes',
+  [SOCIAL_ICONS_RULE]: SOCIAL_ICONS_REASON,
+  'empty-video-buttons':
+    'a play button the template prints with an empty video address opens an empty player; one rule in the head block, on the selectors the kit names and keyed on the empty address, stops it being drawn, and a filled video shows its button again',
+  'self-link-buttons':
+    'a "more" button the template prints from settings no slot reaches can lead to the page it sits on; rules in the head block, on the containers the kit names and scoped to each kept page and its own address, stop it being drawn, and a link to another page is never hidden',
+  'hidden-page-links':
+    "a link the plugin keeps with its kept row can lead to a page the plan hides; one rule in the head block, on the containers the kit names and the hidden pages' exact addresses, makes it plain text, and a link to a living page is never touched",
+  'created-page-hide':
+    'a template can print a block on every article page with no setting to turn it off, such as a share bar a created privacy page must not show; one rule in the head block, on the selectors the kit names and scoped to the menu items that open the created pages, stops it being drawn there, and every other article keeps it',
   'body-background':
     'the setting a kit names for the picture behind its pages holds a picture path, and a picture may change'
 })
@@ -112,14 +127,28 @@ export function lookGuard({ kit, contentMap = null }) {
   const map = new Map(each(contentMap?.slots).map((s) => [s?.key, s]))
   const state = {
     rows: new Map(),
-    layouts: new Set(),
+    // The file the kit names for a created legal page is the template's own (card AN).
+    layouts: new Set(
+      [kit?.site?.createdPageLayouts?.legal?.articleLayout].filter((l) => typeof l === 'string' && l)
+    ),
     created: new Set(),
     accents: new Set(),
     routes: null,
-    inspected: new Map()
+    inspected: new Map(),
+    // The kit's play buttons with an empty video address: the one hide rule the head injection block may carry for them.
+    videoSelectors: emptyVideoButtonsOf(kit).selectors,
+    // The kit's containers of "more" buttons that may lead to their own page: what the self link block's rules may name.
+    selfLinkContainers: selfLinkButtonsOf(kit).containers,
+    // The kit's containers of links that may lead to a hidden page: what the hidden page link block's rule may name.
+    hiddenLinkContainers: hiddenPageLinksOf(kit).containers,
+    // The kit's blocks a created page must not show: what the created page hide block's rule may name.
+    createdHideSelectors: createdPageHideOf(kit).selectors
   }
   let owners = new Map()
+  /** The brief facts the copy cites, by content map key: who or what a cell speaks of. */
+  let subjects = new Map()
   const findings = []
+  const allowed = []
 
   const stepOfKey = (key) => {
     const claim = owners.get(key.replace(/^module-/, 'block-')) ?? owners.get(key)
@@ -136,9 +165,16 @@ export function lookGuard({ kit, contentMap = null }) {
         : [fault(step, key, `${key} holds a picture, and this is not one`)]
     if (slot?.type === 'url')
       return ADDRESS_NOT.test(text) ? [fault(step, key, `${key} holds an address, and this is not one`)] : []
-    return markupFaults(text, slot?.sample ?? slot?.current ?? '').map((said) =>
-      fault(step, key, `${key}: ${said}`)
-    )
+    const sample = slot?.sample ?? slot?.current ?? ''
+    const { kept, allowed: through } = socialIconsAllowed({
+      sample,
+      said: markupFaults(text, sample),
+      facts: subjects.get(key) ?? null
+    })
+    for (const said of through)
+      if (!allowed.some((a) => a.what === key && a.said === said))
+        allowed.push({ rule: SOCIAL_ICONS_RULE, what: key, said, reason: SOCIAL_ICONS_REASON })
+    return kept.map((said) => fault(step, key, `${key}: ${said}`))
   }
 
   const JUDGES = {
@@ -244,9 +280,20 @@ export function lookGuard({ kit, contentMap = null }) {
     exceptions: EXCEPTIONS,
 
     /** What the guard learns once the files are read: who owns each slot, and the accent routes of this template. */
-    know({ owners: claims, routes }) {
+    know({ owners: claims, routes, copy, brief }) {
       if (claims) owners = claims
       if (routes !== undefined) state.routes = routes
+      if (copy) {
+        const facts = new Map(each(brief?.facts).map((f) => [f?.id, f]))
+        subjects = new Map(
+          each(copy.slots).map((c) => [
+            contentMapKey(String(c?.slot ?? '')),
+            each(c?.factIds)
+              .map((id) => facts.get(id))
+              .filter(Boolean)
+          ])
+        )
+      }
     },
 
     /** Judges a write that is known before anything is sent. @returns {boolean} whether it has no finding */
@@ -282,6 +329,9 @@ export function lookGuard({ kit, contentMap = null }) {
 
     /** Every finding of the run, each with the step at fault and whether its write was sent all the same. */
     findings: () => [...findings],
+
+    /** What a named exception let through on a value, each with its rule and reason (card AB). */
+    allowed: () => [...allowed],
 
     /** The findings whose write was held back: calls on a channel nobody listed. */
     refused: () => findings.filter((f) => !f.sent)

@@ -76,7 +76,7 @@ function accentOrder(colours) {
 }
 
 /** The module id of the kit's head injection block ("block-170" is 170), or null. */
-const headModuleOf = (kit) => {
+export const headModuleOf = (kit) => {
   const found = /^block-(\d+)$/.exec(String(kit?.site?.head?.injection?.position?.block ?? ''))
   return found ? Number(found[1]) : null
 }

@@ -1,7 +1,9 @@
 // Where each kept page should answer once it takes its plan slug (ADR 0044, decision 20), and what the report says of it
 // (page-route-stage.js). The planner names every kept page after what it holds (`plan.pages[].slug`); the kit and the site's menu
 // still call it by the demo's address. Nothing here calls the site: the menu rows come in, the orders and the lines go out.
+import { addressMoves, addressNow } from '../lib/renamed-addresses.js'
 import { rowsOpening } from './page-meta-write.js'
+import { freeAlias, parentOrder } from './page-route-parent.js'
 import { readRow } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -53,6 +55,12 @@ export function routeOrders({ plan, kit, rows, menutype = null }) {
     if (!kitPage || typeof kitPage.path !== 'string' || !slug || trimmed(kitPage.path) === '') continue
     const from = `/${trimmed(kitPage.path)}`
     const [row] = rowsOpening(kitPage, rows, menutype)
+    // No item of its own: the page may be its parent item's article, renamed through the article's alias (card P).
+    const parent = row ? null : parentOrder(kitPage, { kit, rows, menutype })
+    if (parent) {
+      orders.push({ pageId: page.id, slug, itemId: null, alias: null, from, to: null, ...parent })
+      continue
+    }
     if (!row) {
       orders.push({
         pageId: page.id,
@@ -80,6 +88,7 @@ export function routeOrders({ plan, kit, rows, menutype = null }) {
   // Every rename at once: a page under a renamed parent answers under the parent's new name too.
   const renamed = new Map(orders.filter((o) => o.itemId).map((o) => [o.itemId, o.slug]))
   for (const order of orders) {
+    if (order.parentRow) order.to = `${addressAfter(order.parentRow, rows, renamed)}/${order.slug}`
     if (!order.itemId) continue
     order.to = addressAfter(order.row, rows, renamed)
     const parent = Number(order.row.parent_id)
@@ -93,10 +102,19 @@ export function routeOrders({ plan, kit, rows, menutype = null }) {
         (renamed.get(Number(r.id)) ?? aliasOf(r)) === order.slug &&
         sameLanguage(String(r.language ?? '*'), language)
     )
-    if (holder && order.alias !== order.slug)
-      order.reason = `menu item ${holder.id} under the same parent already answers at ${order.slug}`
+    if (!holder || order.alias === order.slug) continue
+    // A url item routes nothing, so the slug it holds is freed first (card P); a routed item holding it is never touched.
+    const free =
+      holder.type === 'url'
+        ? freeAlias(
+            order.slug,
+            rows.filter((r) => Number(r.parent_id) === parent)
+          )
+        : null
+    if (free) order.clear = { itemId: Number(holder.id), from: aliasOf(holder), to: free }
+    else order.reason = `menu item ${holder.id} under the same parent already answers at ${order.slug}`
   }
-  return orders.map(({ row: _row, ...order }) => order)
+  return orders.map(({ row: _row, parentRow: _parent, ...order }) => order)
 }
 
 /**
@@ -125,8 +143,23 @@ export function routeLines(routes) {
       'page-slug',
       route.slug,
       { ...route, status: statusOf(route.outcome) },
-      route.itemId ? readRow('menuItem', route.itemId, 'alias') : null
+      route.itemId
+        ? readRow('menuItem', route.itemId, 'alias')
+        : route.via === 'article' && route.articleId
+          ? readRow('article', route.articleId, 'alias')
+          : null
     ),
+    ...(route.cleared
+      ? [
+          line(
+            `${route.pageId}:freed-alias`,
+            'freed-alias',
+            route.cleared.to,
+            { ...route.cleared, status: statusOf(route.cleared.outcome) },
+            readRow('menuItem', route.cleared.itemId, 'alias')
+          )
+        ]
+      : []),
     ...(route.article
       ? [
           line(
@@ -149,10 +182,24 @@ export function routeLines(routes) {
 export function keptAt(keptPages, { kit, rows, landed, menutype = null }) {
   if (!landed.size) return keptPages
   const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
+  // A page no item of its own opens (an article under a category item) answers under its parent's new address (card AE).
+  const byId = new Map(rows.map((r) => [Number(r.id), r]))
+  const moves = addressMoves(
+    [...landed.keys()]
+      .map((id) => byId.get(id))
+      .filter(Boolean)
+      .map((row) => ({
+        from: addressAfter(row, rows),
+        to: addressAfter(row, rows, landed),
+        outcome: 'written'
+      }))
+  )
   return each(keptPages).map((page) => {
     const kitPage = kitPages.get(page.id)
     if (!kitPage || trimmed(page.path) === '') return page
     const [row] = rowsOpening(kitPage, rows, menutype)
-    return row ? { ...page, path: addressAfter(row, rows, landed) } : page
+    if (row) return { ...page, path: addressAfter(row, rows, landed) }
+    const now = addressNow(page.path, moves)
+    return now ? { ...page, path: now } : page
   })
 }

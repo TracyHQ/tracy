@@ -196,8 +196,15 @@ test('the new measures at both widths, as groups: levels and causing steps', asy
   assert.ok(check.counts.block >= 2)
 })
 
-test('warnings alone leave the check green and are counted', async () => {
-  const answers = { selfLinks: [], hiddenHeadings: [], shownText: 'Lessons', maps: [] }
+test('warnings alone never turn the check red, and are counted', async () => {
+  const answers = {
+    selfLinks: [],
+    hiddenHeadings: [],
+    shownText: 'Lessons',
+    maps: [],
+    videoButtons: [],
+    shownLinksClickable: true
+  }
   const measures = () =>
     BOTH('/', {
       1440: {
@@ -227,12 +234,16 @@ test('warnings alone leave the check green and are counted', async () => {
     baseline,
     kit: { tool: 'template-kit 3.1.0', blocks: [{ sentences: [{ id: 'one', slots: ['block-2.1'] }] }] }
   })
-  assert.equal(
-    check.status,
-    'green',
-    JSON.stringify(check.groups.filter((g) => g.status !== 'green').map((g) => [g.name, g.reason]))
+  // Warnings never turn it red. Two groups find nothing to read here (no logo, and a one-slot sentence group), and nothing measured
+  // is unmeasured, never green (ADR 0044, decision 27); the groups with nothing of their kind say so and pass.
+  assert.equal(check.status, 'unmeasured')
+  assert.deepEqual(
+    check.groups.filter((g) => g.status === 'unmeasured').map((g) => g.name),
+    ['logo-readable', 'broken-sentence']
   )
-  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 0 })
+  assert.ok(check.groups.every((g) => g.status !== 'red'))
+  // 14, not 13: emphasis-codes-left (card N) finds no emphasis codes written into an HTML slot here, so it is not applicable (decision 27).
+  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 2, notApplicable: 14 })
 })
 
 test('when the host answers no page measures, the groups that need them are unmeasured and dead pages are still found', async () => {

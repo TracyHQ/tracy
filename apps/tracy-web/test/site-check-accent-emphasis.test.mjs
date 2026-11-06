@@ -62,3 +62,62 @@ test('a span in a fixed template colour is a step 0 warning; a heading no page p
   assert.equal(judgeAccentEmphasis(KIT, line('Something else'), page([])).checked, 0)
   assert.ok(PAGE_CHECK_GROUPS.some((g) => g.name === 'accent-emphasis'))
 })
+
+const measure = (path, headings, width = 1440) => ({
+  path,
+  width,
+  brandStyle: { worn: true, head: HEAD },
+  headingSpans: headings
+})
+
+test('a heading broken onto two lines is found as the page prints it, a space where the break is', () => {
+  const r = judgeAccentEmphasis(KIT, line('European Coaching((br/))((span))Dubai((/span))'), [
+    measure('/', [{ text: 'EUROPEAN COACHING DUBAI', spans: [{ text: 'DUBAI', color: 'rgb(191, 91, 61)' }] }])
+  ])
+  assert.deepEqual([r.checked, r.failures], [1, []])
+})
+
+test('content map codes printed as words block on the write step, whatever the slot or the page', () => {
+  const r = judgeAccentEmphasis(KIT, line('European Coaching((br/))((span))Dubai((/span))'), [
+    measure('/classes/evening', [
+      { text: 'EUROPEAN COACHING((BR/))((SPAN))DUBAI((/SPAN))', spans: [] },
+      { text: 'OPEN((BR/))LATE', spans: [{ text: 'LATE', color: 'rgb(191, 91, 61)' }] }
+    ])
+  ])
+  assert.deepEqual(
+    r.failures.map((f) => [f.level, f.causingStep, f.page, f.slot]),
+    [
+      ['block', 9, '/classes/evening', 'block-2.1'],
+      ['block', 9, '/classes/evening', null]
+    ]
+  )
+  assert.match(r.failures[0].reason, /codes/)
+  assert.equal(r.checked, 2)
+})
+
+test('a heading printed on several pages is judged on each of them', () => {
+  const r = judgeAccentEmphasis(KIT, line('European Coaching in ((span))Dubai((/span))'), [
+    measure('/', [
+      { text: 'European Coaching in Dubai', spans: [{ text: 'Dubai', color: 'rgb(191, 91, 61)' }] }
+    ]),
+    measure('/about', [{ text: 'European Coaching in Dubai', spans: [] }]),
+    measure('/about', [{ text: 'European Coaching in Dubai', spans: [] }], 390)
+  ])
+  assert.deepEqual(
+    r.failures.map((f) => [f.page, f.causingStep]),
+    [['/about', 9]]
+  )
+  assert.equal(r.checked, 2)
+})
+
+test('a heading the write step wrote plain after a refusal blames the write step, not the writer', () => {
+  const lines = [
+    { slot: 'block-2.1', status: 'written', ordered: 'European Coaching in Dubai', textFallback: 'plain' }
+  ]
+  const r = judgeAccentEmphasis(KIT, lines, page([]))
+  assert.deepEqual(
+    r.failures.map((f) => [f.level, f.causingStep]),
+    [['block', 9]]
+  )
+  assert.match(r.failures[0].reason, /plain/)
+})

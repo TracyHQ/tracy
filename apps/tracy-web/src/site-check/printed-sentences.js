@@ -99,6 +99,20 @@ export const brokenSentenceGroup = {
     }
     const lines = each(report.slots).filter((s) => s.status === 'written' && typeof s.ordered === 'string')
     const { failures, read: count } = judgeSentences(kit, held, lines, read.measures)
-    return { checked: count, failures }
+    // Not applicable only when no sentence could have been written: each of its slots is hidden by the plan or has no line in
+    // the write report (decision 27). A sentence that was written and not found printed is unmeasured instead.
+    const lined = new Set(each(report.slots).map((s) => s.slot))
+    const noneWritten = groups.every((g) =>
+      each(g.slots).every((slot) => hidden.has(slot) || !lined.has(slot))
+    )
+    return {
+      checked: count,
+      ...(!count && noneWritten
+        ? {
+            notApplicable: `every slot of the ${groups.length} sentence groups is hidden by the plan or has no line in the write report`
+          }
+        : {}),
+      failures
+    }
   }
 }

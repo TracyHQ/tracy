@@ -2,7 +2,8 @@
 // page title printed as a heading, and a created page showing controls the template's content pages do not.
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead } from './host-pages.js'
-import { ownerStep, TEMPLATE_STEP } from '../lib/site-build-steps.js'
+import { ownerStep, TEMPLATE_STEP, WRITE_STEP } from '../lib/site-build-steps.js'
+import { holdersMatch, SELF_LINKS_SLOT, selfLinkButtonsOf } from '../lib/self-link-buttons.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const squashed = (text) =>
@@ -78,6 +79,7 @@ export const selfLinksGroup = {
         'The host answered no links to the page they are on, so this was not measured.'
       )
     const found = known.flatMap((m) => m.selfLinks.map((l) => ({ ...l, page: m.path })))
+    const { containers } = selfLinkButtonsOf(context.kit)
     let slots = []
     if (found.length) {
       const reading = await context.read('content.contract', { operation: 'inspect' })
@@ -93,6 +95,15 @@ export const selfLinksGroup = {
       known,
       (m) => m.selfLinks.filter((l) => !ownerOf(l, m).shared),
       (l, m) => {
+        // Inside a container the kit names (ADR 0044, decision 29): the write step owed the rule that hides it.
+        const container = holdersMatch(l.holders, containers)
+        if (container)
+          return {
+            measured: l.text || l.selector,
+            slot: SELF_LINKS_SLOT,
+            causingStep: WRITE_STEP,
+            reason: `This button leads to the page it is on, inside ${container}, which the kit names for the write step to hide.`
+          }
         const { step, slot } = ownerOf(l, m)
         return {
           measured: l.text || l.selector,
@@ -211,7 +222,7 @@ export const createdControlsGroup = {
   causingStep: 9,
   async run(context) {
     const created = createdPaths(context.report)
-    if (!created.size) return { checked: 0, failures: [] }
+    if (!created.size) return { checked: 0, notApplicable: 'the write step created no page', failures: [] }
     const read = await pagesRead(context)
     if (!read.measures.some((m) => Array.isArray(m.contentControls)))
       throw new GroupUnmeasured('The host answered no content controls, so this was not measured.')

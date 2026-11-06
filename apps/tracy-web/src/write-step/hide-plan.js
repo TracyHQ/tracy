@@ -2,6 +2,7 @@
 // writes. Each hide decision gets one order: it goes with its dropped block or its menu item, by the kit's language constant,
 // as an emptied slot, or it cannot be taken and says why. A menu item a kept page depends on is left published and reported:
 // Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
+import { NEW_CONTRACT } from '../lib/new-contract-pointer.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { goneRowSlots, listRowCounts, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
@@ -14,8 +15,7 @@ const blocksOfPage = (page) => [...new Set(Object.values(page?.blocks ?? {}).fla
 const MODULE = /^module-\d+$/
 const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
 
-/** The pointer every refusal carries: a hide the plugin cannot take needs a contract that captures the whole unit. */
-export const NEW_CONTRACT = 'tracked as issue #369'
+export { NEW_CONTRACT }
 
 /** The kit's blocks the plan drops whole, as module keys: no kept page keeps or shows one. */
 export function droppedBlocks(plan, kit) {

@@ -1,6 +1,7 @@
 // A link line of the write report (TracyHQ/tracy#371): `lineOrder` says what the link stage will do with a plan link, whose door and
 // address are known, and `lineResult` says what became of it once the writes are done.
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { mapsAddress } from '../lib/map-links.js'
 import { refusalWords } from './contract-write.js'
 import { actsInsidePage, slashless } from './link-doors.js'
 import { readRow } from './settings-door.js'
@@ -21,7 +22,8 @@ export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys =
     return failed(`${door.key} holds words, not an address, and the kit ties no link to it`, {
       key: door.key
     })
-  if (target.kind === 'map') return { via: 'map', slotId: link?.opens?.slotId ?? null }
+  if (target.kind === 'map')
+    return { via: 'map', slotId: link?.opens?.slotId ?? null, searches: mapsSearch(link?.target) }
   if (actsInsidePage(link) || leadsTo === 'lightbox')
     return {
       status: 'skipped',
@@ -70,7 +72,8 @@ function noDoor(link, leadsTo) {
     `no door holds this link: the template prints it${keeps}${dead ? ' with no address' : ''}, so the plan's ${leadsTo} cannot reach the site${
       dead ? '; the template must print it as a link with an address the site holds' : ''
     }`,
-    dead ? { deadControl: true } : {}
+    // `keeps`: the address the kit read in the template's own link, which a later read of the page holds the refusal to (card AZ).
+    dead ? { deadControl: true } : link?.target ? { keeps: link.target } : {}
   )
 }
 
@@ -215,7 +218,19 @@ function rowResult({ key, leadsTo }, removed) {
 export const MAP_NEEDS =
   'the map it opens is drawn from settings no slot holds (the map plugin params): it needs a door for those params in the Claude Cowork plugin, or a template that prints the map from a slot or links to the address'
 
-function mapResult({ slotId }, settled) {
+/** A maps link that searches an address, as the kit read the template's own link: the template prints it. */
+const mapsSearch = (target) => mapsAddress(target) !== null
+
+function mapResult({ slotId, searches }, settled) {
+  // Card AP: a template that prints this button as a maps search of the address it prints draws no map from settings, so there is
+  // nothing to refuse and nothing to write here: the address slot is written, and the site check's map-location reads the link.
+  if (!slotId && searches)
+    return {
+      status: 'skipped',
+      key: null,
+      reason:
+        "this button is the template's maps search of the address the page prints, not a map drawn from settings: the address is written with the page, and map-location reads where the link leads"
+    }
   if (!slotId) return refusedLine(`this button opens a map that stays at the demo place: ${MAP_NEEDS}`)
   const done = settled.get(slotId)
   if (!done)

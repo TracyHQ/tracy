@@ -14412,6 +14412,672 @@
       "sha256": "e064778f79f16e7bdcc1c62f0b4d6772465bfbc4a441bd65d84936ef5da2939e",
       "count": 1,
       "reason": "Exact line of the approved JA Boxing 1.0.11 template kit: the template's own English demo text, which contains a proper name with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-impact/j6/1.0.6/content-map.json",
+      "sha256": "9236b6d3698c587de2a65c6c0ef3752482f8205f0d610d5c60ce7f2940805114",
+      "count": 1,
+      "reason": "Exact line of the approved JA Impact 1.0.6 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-impact/j6/1.0.6/template-kit.json",
+      "sha256": "944153c9c8c511dc2e0cdb9ea16c1d3106b1563a396e3db496944316f0996c97",
+      "count": 1,
+      "reason": "Exact line of the approved JA Impact 1.0.6 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-impact/j6/1.0.6/template-kit.json",
+      "sha256": "686935dd69641b1c0c114a2da7d0c0bab58d9f09fe41097e1d49e75dd77d2421",
+      "count": 1,
+      "reason": "Exact line of the approved JA Impact 1.0.6 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "82681415307902bfd56593ff8748408dd9abca8b0d99043694eb62d6a4953198",
+      "count": 31,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "4fbbf2b5b0dc6aa0cf6c1d0e516c1d2ba789912320ea20aa6c28fb545225ee26",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "85358e39ff8e587923a62e2e1dba0c6bf70a8b2d2d8fdec19779e0d5ae538e50",
+      "count": 13,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "7eba9b2216912607f764079c9a8aa035ef872cbfa1bcac95d07f227799f2157d",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "38ac6a097fed36829a4828fee101351f5249ab3140491b53774ccb451779fae8",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "819a5494762a79a1ea98551c971160ac114a00f82f679568590668fa17be4d48",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "ac22649799450c96b1e58dececd542c26d4eb1d5399193b4f3e1250f604e9ded",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "da9760c1e5530ee2082e841501cd6905dcffab5e212d3d59060386690769f023",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "5b05f70aba46c7829650d2aa75ec32491f79966d446cea1ceb958d86d23d3e6e",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "1600bdf3523a8057f51f04f80d1bc1bc7ead78f283e7573d5f323640bab347fe",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "240caa220d2f9a27c370a6bd237fc473507b5d6fded6c61463dbce2b5ddcc9b1",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "30e9ad6303235be1d2ca99731249a96d9b903349f02eb7ca0072b897661a2aea",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "c51a765419d8e0c7ea2ab883191d1d6b8f43341531926e2bde7c382a0c9622be",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "f1dfb8862fe6f7e39a3693cddb218ec53aaeccd992ce2f7684c7650efa9246f2",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "da566a36a421e5c312a3be1167074137b13915c2a1c6c9916b6bc021cf042a01",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "7adb0703e83e4dea23f52767750b111c4c8cb7c4c7721c3a3171ce7dcff073fc",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "aed3394442bcc0694b8ec291e4d0f287b4afa2c86d7c122cdee273a4b68d8a50",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/content-map.json",
+      "sha256": "f3b1ebe3b805b9ea8b6ddb27df780d17a02e6f852e675c88836750d3b7b6384a",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/presentation-lock.json",
+      "sha256": "c2c352f518dcfffb059017d55dddb87c32f05a64a6dfc5e11853f3129692fab4",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/presentation-lock.json",
+      "sha256": "00d2ced7d713820d2d304586b76e44f385f6635220492dda14460fa58704281d",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/presentation-lock.json",
+      "sha256": "54700529aa5c2fcf10dc2dc45cb92f24242728b556430a073b62715bae6848af",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/presentation-lock.json",
+      "sha256": "8054246920c8560856c0245de13d955075fc191cf621d9b09753be8ba76c8851",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/presentation-lock.json",
+      "sha256": "bc78b30b9b87a3d5e4aa0c930a3dd6d2b305159aa3b0a937263f23bdee00e3e6",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/presentation-lock.json",
+      "sha256": "15a6c8e1e95ac0b9bf0a67904d8a15ec15ebdc3865110a09b377812c734c00ec",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "41677ec656aca6e00f0b78094105290635e2eb472d7b4775e1a63f91cc1332b8",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "cfd04036f602029eece1c887e82318df2e42a54ca3c46dcc2fe0c54954ff4afd",
+      "count": 41,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "8191979cb8efe2b9f42d1e7cf4bfabef358dbaa7453c2a6b9f06ac06874da159",
+      "count": 31,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "3e0bcc545edcd85e022607608df71532bdb28ea14131df4bfbd66e696e129410",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "f544907d8e84a6db4c3a025a74615ba952c263ad0eb7d8dcb96d3c86814881e3",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "2a4537d14097cbd00a13725bfdacb89f75528aac90cf9ce78043606cfa06b5c1",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "59ed8e7d9c5b4f1175e1939ede4edfb91d345684e03170d99e017e0673889533",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "f1cca80cc0d158f95f696bfdb138e836908e09a4450935ecb5fcf6c004219ab5",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "e2253af6256c11b8b09fe6dd0c3e16d7d33060f4d9f1dbc2fd208a48e993e8ee",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "1e0e0725b679b42e38d7f4077be8691a30e4381eeef00c8890792429049e939a",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "970559663b66f2195e197f99d25a4fc1f661c4d61192420a96781aaa2e086a33",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "9822e2d45b65d897929e9b06b5412b75b811272c9013b8066cd6de96cc52e47b",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "071e2ce63158b0a818f4672433a49bfe8d37b1ceebb35610da3517533c17cd73",
+      "count": 3,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "9979784ff373e45ec6107a7268424b32b409f9003e9e61fd195adc74b4249304",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "e7f155d796bda9587021bc83525eaf98bf0f1bcc8e1fbcfddc93b74aea9c4855",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "615545e7b55159d70a6f665b31832e8e3af68f3b06b4d3bee4f2badb51f65882",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "564c7bfcbb05f0814163c7a53f6f9663f2ff430a14ca9ae2478ac250d3f310a7",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "0e798cc8fd77af9867d4e1a36ffc5f3ddeb39e2388b80d41031aa485d9182d1b",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "7b933061f3b02a8580d0842951c766de381e817c637b42646ae846880098ce8b",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "46a95b1ba54e5c3fa123149544723559555e976ea573b6dc955cef3f65695571",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "1f4a89e622ccb72cb7ee6f1c0daa5a9d3ceebc07eee7e3f98ec46a879becc28f",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "5758dc4a2e62f2c56c1b65d3f601dcb3921db00000206342292f737e73b5f1c4",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "3e7d5ce5689937d61d4ad83ab3c0c90cf951c2aa9a8bb84fe1e0644997aa8c88",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "67b0ff9b1676c486809cde68b7413b4fe559fe33aba69d4bf7fb3395d0f4b142",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "3932520ea09505e0c76207b22ba384dcca34d6eac0679ff52a664dfc21891311",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "f93fc02ef7e9557dd1bc0bbc95cbd3335e904b0df26c472ccc973d10955e24ce",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "12ff7731b88f601f834ca5afe14ce95dc1b09d0f9bb0e9d458356b8b3a91ab7e",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "7f8c1159969a678609ba2e96d7a3a5f2d30f4144b9811477f7a4b516db46d7ff",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "d594a65f1d61b4e17ec20c2cf8a2af337c9437be6af60d1455360ca8aa69df2b",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "0179d204f271babec5b523eb63b28e655e13585d473466b3306d473345f2a798",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "f8722e4dfa32b27956b150404e1371fec50d692096bc9a8add82736e0b6bdf77",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "7611014fa27068a74795d2c52ad5143b129acc7827f17c5b22f2cb89d99bc841",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "35845dd781e83eabec526c0027a208e5d7db3a4953efcd91031074ca2e7085ed",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "8847beaa7b5f0025d8ca67fe6ec46ce6b04310cd331d48cab40f79c4a2a328ec",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "e34fa3c907dd6b1c391d496973cdaa6cc0c2833d8dbbb2c634abad3abf6b15dd",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "4269dd18275c70e4d14ad0d29301548ecd10d00b035e6f90d9b8d2216903a4e8",
+      "count": 29,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "187147db017aa65e16cc5ed230b1c1e8a81deb4af209dbdbc3257fc5babf5892",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "96e2089d9f9ef7d1cb7a20461550e5b4256bb13e2db2667e155c122260b1d325",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "d4ae158c5cb6695dc7b7421517e1bbfe07d73c5914ead2b097249ae830d13af6",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "a10c45bd9aedf3e7a18a9981d60882909fd598ae26e4a6ca92ded090b133bad9",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "c6a11c1b5c3b12e66fb3e1f5f8ca9b4c51fe397d00e186e555f92e6246362370",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "d23c26a3ed46cae53345658d6b6f930d721e399f185d9e5f619c34b66900fa2c",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "ad1c3afad8f1799a1f536fce49a86d7a1e3cee10a87d2f09beac1301c0d3f740",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "484487dc44c7029d7641941c860b1b93ad8323694b8ef1ae3d601d20728fb377",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "1ab57f927fcd340188ee7d52158358f0b032987ceccbc957f40ee66db27bdb5c",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "43fb7151db3d06cd20ed5666eb7510d3a81c091e56e660d15212f9d54352204a",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "203dfef8ca9bc205583fd78dad575052012627c541a3b73bcf6f6eebad5130d6",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "f0725ef97a6181d0d7c6ddfbe888f36eb96176b3f2395aa56d40f21a0e63d125",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "946b99c8d06077e02c57c990f4d863753fb1dbefeca444fd589d1c830eda4409",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "9d7211c34d8e97ace97fd4ff4832f8982646041905db0d13a2f342d975c56d5c",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "f33170c2285a0d2d79a59e8a4d2af643fb65bf5e6cb12572ce64020edc4f9d5d",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "e8365e44fff5bbf17b1e874dbc2f21111c7f9b767763e91f008447201d3b8edc",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "7c6cab3bca5654282dc57db63e0846f472b1a6e221a66f56c41e8b201151723d",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "5108ae1054247de93dcdc087044e6b932e66c234c1968cdb9544211292dbce4b",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "e11b63bd5b54cd6be217f5dbd68fe90a6df11967a5f64855946987192a6a7c09",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "6f7f702b43c4c0f661f7196066cd46a8bc3e2a7be68b11568f119d0347b90e3f",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "5651d0b5e09616f108e226c4699c60f670d5e57d58a2945dc158da0872b5f6c0",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "af67d92d191d492f69f3c5e2a611ea1a5f9ff9d3d12c2fab7ec8c8b2d692978f",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "4130a8cc04221eaad1b84ccf169c21ee6f677165b1232fe77785c87dbdd033a6",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "c090633c7ce61aefe35de7c14baea11c5a194da930dee472f7610fb308958338",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "37f333a0ded24b0ab7287f0c44821b0506aaebaeacbc97c07561f21321685625",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "00ac64c0fe6bb3159fecbd38f64e672a863b72badf0f441a7686c0c407ac452f",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "c7f1bcb8da7dd308d69ab18373e46f4b820b701f5bd021e19ba85e68eac81370",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "f9508ae6fd9cc337a7621c4ec842b30e6090e25aa22d228f47102bfd2cf08af6",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "fe630c711589ed1a4ca36123ec27695f5865eb1f082cda37baf562986607b0ae",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "4efcf3507a834f9fe3e22f8de7ccd7d342c06f7142905de4d74bf9be50d0a168",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "70fbd234d4a44800867e3c2ae663795333c0df9d957beb4f5e9bce4c0fd2b502",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "f6d7b04d47d041a47472f8c813872660755d1af2df04f6895be0420fda4cfbed",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "59841b0104dfe00126d39cc437ba7ece75ee5f4bfb8bc41b219bedb92d087696",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "2357fe23726cdd60a078ad92c4a066677033e9c4ed73d12ef33ecaac45bd926c",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "752e742f68702bf0148211ab39a10c6c59ad817fcf792ba223f03062bb8fa690",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "a021a77576330711293089b757a9a50944b214756df31f022898dd8336dbec36",
+      "count": 2,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "78cff4015bb4f241efeed85aaa2e6270d4df15a064fd8e31dc1d5b771997d793",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "4723af157d398ddac9cf21364777f33619171463ce862c847a5ba736d0dc5bcb",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "5a6adb438e66a936faf098540c0543552e3b8f66f3fc506d2f8e91dfe90db73b",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "60731aa1763bc7c2c421a6b5fbfe0115570e4cf41581ac177bfd50910640db3e",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "b7fe4921e14c884a9a8205802a50a9b476615d8c4e6eb47fdeff79c18493b5ac",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.11/template-kit.json",
+      "sha256": "d3c706c9d05b506a663417a279762f93c97958775bad0f6494b0e0c47f304f7a",
+      "count": 1,
+      "reason": "Exact line of the approved JA Kinetic 1.0.11 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-symphony/j6/1.0.6/content-map.json",
+      "sha256": "98c9c02755b58efe896d570334f2357b599b893c3162b883588bb9a8cff07dcf",
+      "count": 1,
+      "reason": "Exact line of the approved JA Symphony 1.0.6 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-symphony/j6/1.0.6/content-map.json",
+      "sha256": "9f1efc57fe354e0291376ec07a8c63999816a5c57a15f5f918674963da7c7a7e",
+      "count": 1,
+      "reason": "Exact line of the approved JA Symphony 1.0.6 contract: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The contract is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-symphony/j6/1.0.6/template-kit.json",
+      "sha256": "04d773f4487695ce499f64d4ea45bcc0f3ed5d65781113a4381e756ef3380d14",
+      "count": 1,
+      "reason": "Exact line of the approved JA Symphony 1.0.6 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-symphony/j6/1.0.6/template-kit.json",
+      "sha256": "aa2202fab145e53f8d626ce718387313b20abb36c88c6347022c39650ae260df",
+      "count": 1,
+      "reason": "Exact line of the approved JA Symphony 1.0.6 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-symphony/j6/1.0.6/template-kit.json",
+      "sha256": "07a0a55830fb9b1394cf4e7a06fd8e03fbe2858bae2151ae8d109c6b0958790b",
+      "count": 1,
+      "reason": "Exact line of the approved JA Symphony 1.0.6 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-symphony/j6/1.0.6/template-kit.json",
+      "sha256": "69bbd243037bcd718d3abdc5219bb5a1469e9feb69e3dc79df91ac8876a89b57",
+      "count": 1,
+      "reason": "Exact line of the approved JA Symphony 1.0.6 template kit: the template's own English demo text, which contains accented letters (a proper name, a place name or an accented loanword). The template kit is sealed by its approval digest, so the file is not edited."
     }
   ],
   "objects": [
