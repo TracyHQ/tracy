@@ -179,3 +179,80 @@ test('through the write step: the line keeps the codes it sent, stores the tags,
   })
   assert.deepEqual(judged.lines, { 'block-2.1': 'match' })
 })
+
+// Card N, 2026-11-06: the same write removed rows of a list, so the array the content map indexes shrank and the fixed index of a
+// heading points nowhere (or at another row). The stage finds the written words in the whole stored value instead.
+const MENU_SLOT = (index) => ({
+  key: `module-7.${index}`,
+  entity: 'module-7',
+  column: 'params',
+  type: 'text',
+  jsonPath: ['menuitem_config', 'title', index],
+  xpath: '/html/body/div'
+})
+const MENU_MAP = { slots: [MENU_SLOT(14), MENU_SLOT(12)] }
+const menuParams = (titles) =>
+  JSON.stringify({ menuitem_config: { title: titles, link: ['a', 'b', 'c'] }, layout: 'grid' })
+
+test('rows removed in the same write move the heading: the words are found in the whole stored value and converted', async () => {
+  const services = 'Our ((span))services((/span)) in town'
+  const coaches = "The club's ((span))coaches((/span))"
+  const site = rowsDoor({
+    'module-7': { id: 7, params: menuParams(['Welcome', services, coaches]) }
+  })
+  const guard = lookGuard({ kit: KIT().doc, contentMap: MENU_MAP })
+  const results = await runEmphasisStage({
+    door: guard.door(site.door),
+    siteKey: 'site-a',
+    contentMap: MENU_MAP,
+    written: ['module-7.14', 'module-7.12'],
+    ordered: { 'module-7.14': services, 'module-7.12': coaches }
+  })
+  const stored = JSON.parse(site.rows['module-7'].params)
+  assert.deepEqual(stored.menuitem_config.title, [
+    'Welcome',
+    'Our <span>services</span> in town',
+    "The club's <span>coaches</span>"
+  ])
+  assert.equal(stored.layout, 'grid')
+  assert.equal(results.get('module-7.14').stored, 'Our <span>services</span> in town')
+  assert.deepEqual(results.get('module-7.14').readFrom.path, [
+    'item',
+    'params',
+    'menuitem_config',
+    'title',
+    1
+  ])
+  assert.deepEqual(results.get('module-7.12').readFrom.path, [
+    'item',
+    'params',
+    'menuitem_config',
+    'title',
+    2
+  ])
+  assert.equal(results.get('module-7.14').blocking, undefined)
+  assert.equal(site.calls.filter((c) => c.action === 'content.update').length, 1)
+  assert.deepEqual(guard.findings(), [])
+})
+
+test('words found twice or nowhere in the stored value keep their codes and block the write step with the reason', async () => {
+  const twice = 'Our ((span))team((/span))'
+  const site = rowsDoor({
+    'module-7': { id: 7, params: menuParams(['Hello', twice, twice]) }
+  })
+  const results = await runEmphasisStage({
+    door: site.door,
+    siteKey: 'site-a',
+    contentMap: MENU_MAP,
+    written: ['module-7.14', 'module-7.12'],
+    ordered: { 'module-7.14': twice, 'module-7.12': 'Gone ((span))words((/span))' }
+  })
+  assert.equal(results.get('module-7.14').blocking, true)
+  assert.match(
+    results.get('module-7.14').warning,
+    /2 times, not once \(looked at every text of module-7 params\)/
+  )
+  assert.equal(results.get('module-7.12').blocking, true)
+  assert.match(results.get('module-7.12').warning, /0 times, not once/)
+  assert.equal(site.calls.filter((c) => c.action === 'content.update').length, 0)
+})

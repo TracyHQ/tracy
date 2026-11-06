@@ -233,8 +233,12 @@ test('check prints the group and the verdict, exits 0 on green and writes nothin
     "look-guard-findings: not-applicable 0 checked (the write step's look guard found nothing)"
   )
   assert.match(h.out[2], /^unaddressable-items: not-applicable 0 checked \(the write step left nothing out/)
-  assert.match(h.out[3], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
-  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn, 0 unmeasured, 2 not applicable)')
+  assert.match(
+    h.out[3],
+    /^emphasis-codes-left: not-applicable 0 checked \(the write step wrote no emphasis codes/
+  )
+  assert.match(h.out[4], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
+  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn, 0 unmeasured, 3 not applicable)')
   assert.equal(h.site.calls.filter((c) => c.params.operation !== 'inspect').length, before)
   const { report } = h.runs.rows[0]
   assert.equal(report.siteCheck.version, 'site-check/1')
@@ -251,7 +255,7 @@ test('check exits 1 on red, printing the page, the slot, the step, and --out kee
     line,
     /block step 9 \(write\) page=- slot=block-2\.1 key=module-2\.1 measured="Changed by hand"/
   )
-  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn, 0 unmeasured, 2 not applicable)')
+  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn, 0 unmeasured, 3 not applicable)')
   const saved = JSON.parse(readFileSync(path.join(dir, 'site-check.json'), 'utf8'))
   assert.equal(saved.status, 'red')
   assert.equal(h.runs.rows[0].report.slots.find((s) => s.slot === 'block-2.1').readBack, 'differs')
@@ -284,7 +288,7 @@ test('check --all-groups runs the page groups after a red read-back; a default c
       again.out.at(-1),
       wantAll
         ? /^site-check: red \(1 block, 0 warn, [1-9]\d* unmeasured(?:, \d+ not applicable)?\)$/
-        : /^site-check: red \(1 block, 0 warn, 0 unmeasured, 2 not applicable\)$/
+        : /^site-check: red \(1 block, 0 warn, 0 unmeasured, 3 not applicable\)$/
     )
   }
 })

@@ -226,7 +226,8 @@ export async function runWriteStep(input) {
         key,
         storage: e.storage,
         converted: Boolean(e.stored),
-        ...(e.warning ? { warning: e.warning } : {})
+        ...(e.warning ? { warning: e.warning } : {}),
+        ...(e.blocking ? { blocking: true } : {})
       }))
     const against = last.active ? againstLast(lines, last, status) : { slots: lines }
     report.slots = against.slots

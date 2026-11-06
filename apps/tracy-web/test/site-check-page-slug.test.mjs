@@ -89,6 +89,7 @@ test('a report with a route table runs page-slug after read-back, and pages at t
     [
       ['look-guard-findings', 'not-applicable'],
       ['unaddressable-items', 'not-applicable'],
+      ['emphasis-codes-left', 'not-applicable'],
       ['read-back', 'green'],
       ['page-slug', 'green']
     ]
@@ -136,7 +137,7 @@ test('a report without a route table does not run the measure', async () => {
   const check = await runSiteCheck({ door: site({}), report: report([]) })
   assert.deepEqual(
     check.groups.map((g) => g.name),
-    ['look-guard-findings', 'unaddressable-items', 'read-back']
+    ['look-guard-findings', 'unaddressable-items', 'emphasis-codes-left', 'read-back']
   )
 })
 

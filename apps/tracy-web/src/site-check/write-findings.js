@@ -90,4 +90,31 @@ export const unaddressableItemsGroup = {
   }
 }
 
-export const WRITE_FINDING_GROUPS = [lookGuardFindingsGroup, unaddressableItemsGroup]
+/**
+ * `emphasis-codes-left`: every written heading of an HTML slot whose emphasis codes the write step's emphasis stage could not turn
+ * into tags (its words not found exactly once in the stored value, the row unreadable, the update refused), one block each on the
+ * write step: the page prints the codes as words (card N, 2026-11-06). An ACM slot keeps its codes by design and is not judged.
+ */
+export const emphasisCodesLeftGroup = {
+  name: 'emphasis-codes-left',
+  causingStep: WRITE_STEP,
+  /** @param {{ report: object }} context */
+  async run({ report }) {
+    const html = each(report?.slots).filter((s) => s?.status === 'written' && s.emphasis === 'html')
+    return {
+      checked: html.length,
+      ...(html.length ? {} : { notApplicable: 'the write step wrote no emphasis codes into an HTML slot' }),
+      failures: html
+        .filter((s) => s.emphasisBlocking)
+        .map((s) => ({
+          slot: s.slot,
+          ...(s.key ? { key: s.key } : {}),
+          causingStep: WRITE_STEP,
+          measured: 'codes left as written',
+          reason: `The emphasis codes were not turned into tags, so the page prints them as words: ${s.warning ?? 'no reason kept'}`
+        }))
+    }
+  }
+}
+
+export const WRITE_FINDING_GROUPS = [lookGuardFindingsGroup, unaddressableItemsGroup, emphasisCodesLeftGroup]

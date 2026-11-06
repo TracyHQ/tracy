@@ -98,7 +98,7 @@ test('a report with nothing found and nothing left out is not applicable, never 
   })
   assert.deepEqual(
     clean.groups.map((g) => g.status),
-    ['not-applicable', 'not-applicable']
+    ['not-applicable', 'not-applicable', 'not-applicable']
   )
   assert.equal(clean.status, 'green')
   const older = report([])
@@ -107,7 +107,7 @@ test('a report with nothing found and nothing left out is not applicable, never 
   const old = await runSiteCheck({ door: checkSite({}).door, groups: WRITE_FINDING_GROUPS, report: older })
   assert.deepEqual(
     old.groups.map((g) => g.status),
-    ['unmeasured', 'unmeasured']
+    ['unmeasured', 'unmeasured', 'not-applicable']
   )
   assert.equal(old.status, 'unmeasured')
 })
@@ -151,4 +151,50 @@ test('through a real run: a guard finding and a stray copy slot are written arou
   })
   assert.deepEqual(blocks(group(check, 'look-guard-findings')), [['module-5.1', 6, 'block']])
   assert.deepEqual(blocks(group(check, 'unaddressable-items')), [['block-99.1', 6, 'block']])
+})
+
+test('a heading the emphasis stage could not convert blocks the write step with the reason; a converted one does not (card N)', async () => {
+  const left = {
+    slot: 'block-7.16',
+    key: 'module-7.14',
+    owner: 'writer',
+    status: 'written',
+    ordered: 'Our ((span))services((/span))',
+    emphasis: 'html',
+    warning:
+      'the stored HTML holds the written words 0 times, not once (looked at every text of module-7 params), so its emphasis codes were left as written',
+    emphasisBlocking: true
+  }
+  const converted = {
+    slot: 'block-7.14',
+    key: 'module-7.12',
+    owner: 'writer',
+    status: 'written',
+    ordered: "The club's ((span))coaches((/span))",
+    emphasis: 'html',
+    stored: "The club's <span>coaches</span>"
+  }
+  const acm = {
+    slot: 'block-3.1',
+    key: 'module-3.1',
+    status: 'written',
+    ordered: 'Calm ((span))days((/span))',
+    emphasis: 'codes'
+  }
+  const check = await runSiteCheck({
+    door: checkSite({}).door,
+    groups: WRITE_FINDING_GROUPS,
+    report: report([left, converted, acm])
+  })
+  const g = group(check, 'emphasis-codes-left')
+  assert.equal(g.status, 'red')
+  assert.equal(g.checked, 2, 'the two HTML headings are judged; the ACM one keeps its codes by design')
+  assert.deepEqual(blocks(g), [['block-7.16', 9, 'block']])
+  assert.match(g.failures[0].reason, /0 times, not once/)
+  const none = await runSiteCheck({
+    door: checkSite({}).door,
+    groups: WRITE_FINDING_GROUPS,
+    report: report([acm])
+  })
+  assert.equal(group(none, 'emphasis-codes-left').status, 'not-applicable')
 })

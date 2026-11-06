@@ -16,7 +16,7 @@
     "AQ, AN: a brief phone number in a created page's words is a tel: link, and a created legal page prints through the kit's plain article layout.",
     "J, AG: a site check group that checked nothing is not applicable with its reason or unmeasured, never green; a hide the contract has no slot for is blamed on step 0.",
     "AH, AP, K, AL, AB: list-rows reads only the row's own block; a maps search map button is not refused; a slot printed as an image alt or title counts as printed; a rerun with the same files keeps removed slots; the look guard lets words replace social icons for a person with no account.",
-    "N, AS: heading emphasis is stored as real tags where the demo value is HTML, and a refused text slot never keeps demo words in silence.",
+    "N, AS: heading emphasis is stored as real tags where the demo value is HTML, found in the whole stored value when rows removed in the same write moved the indexed heading, and words not found once block step 9; a refused text slot never keeps demo words in silence.",
     "Y: the site check's alt-matches-picture group blocks an alt that does not describe the picture step 8 placed, and is not applicable when no picture was written.",
     "AR, AF, AM: a kit that names its play buttons gets one hide rule in its head block; each kept page hides only the more buttons that lead to itself, written after the renames; a link its row keeps to a hidden page goes to a living page, by a menu item id that a later rename (AD) leaves alone."
   ],
@@ -44,7 +44,8 @@
       "apps/tracy-web/test/site-check-alt-matches-picture.test.mjs",
       "apps/tracy-web/test/write-step-video-buttons.test.mjs",
       "apps/tracy-web/test/write-step-self-link-buttons.test.mjs",
-      "apps/tracy-web/test/write-step-hidden-page-links.test.mjs"
+      "apps/tracy-web/test/write-step-hidden-page-links.test.mjs",
+      "apps/tracy-web/test/site-check-write-findings.test.mjs"
     ],
     "tests": [
       "a url menu item and a link in a slot that name a moved address are written to the new one and read back",
@@ -56,7 +57,9 @@
       "an alt that describes its picture agrees; one that names another scene blocks on that slot, blamed on step 6",
       "a kit that names its play buttons gets one hide rule in its head block, beside the brand block, read back there",
       "the stage writes the rules after the renames, at the address the page answers now, and reads them back",
-      "a relinked address survives the rename of the living page it names: the renamed-link stage leaves it alone"
+      "a relinked address survives the rename of the living page it names: the renamed-link stage leaves it alone",
+      "rows removed in the same write move the heading: the words are found in the whole stored value and converted",
+      "a heading the emphasis stage could not convert blocks the write step with the reason; a converted one does not (card N)"
     ],
     "needs": []
   }

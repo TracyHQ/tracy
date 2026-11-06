@@ -176,7 +176,7 @@ test('a report that left nothing out and was refused nothing is not applicable, 
   })
   assert.deepEqual(
     check.groups.map((g) => g.status),
-    ['not-applicable', 'not-applicable']
+    ['not-applicable', 'not-applicable', 'not-applicable']
   )
   assert.equal(check.status, 'green')
 })

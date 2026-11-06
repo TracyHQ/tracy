@@ -8,8 +8,10 @@
 //   - html: converted as above; the line carries `stored` (what the site now holds) and `readFrom` (the raw read) for read-back;
 //   - codes: an ACM module's data, which the template reads codes from itself: left as written;
 //   - unknown: left as written, with a `warning` on its line, never guessed.
-// A slot whose words cannot be found once in the stored value keeps its codes and says so. Nothing else of the row changes:
-// the look guard holds the update to the emphasis form alone (look-guard-emphasis.js).
+// The words are looked for at the content map's path first, then in every text of the whole stored value: rows removed in the same
+// write shrink the array the path indexes, so the heading has moved (card N, 2026-11-06). A slot whose words cannot be found exactly
+// once keeps its codes and its line blocks the write step (`blocking`), since the page would print the codes as words. Nothing
+// else of the row changes: the look guard holds the update to the emphasis form alone (look-guard-emphasis.js).
 import { createHash } from 'node:crypto'
 import { codesToHtml, escapeText, hasEmphasisCodes, storageOf } from '../lib/site-copy/emphasis-markup.js'
 import { doorCall } from './settings-door.js'
@@ -43,10 +45,42 @@ function leafAt(root, path) {
   return { value, set: (next) => void (holder[step] = next) }
 }
 
+/** Every string leaf of a parsed column, with its path and a setter. */
+function leavesOf(root, path = [], out = []) {
+  if (!root || typeof root !== 'object') return out
+  for (const [step, value] of Object.entries(root)) {
+    const key = Array.isArray(root) ? Number(step) : step
+    if (typeof value === 'string')
+      out.push({ value, path: [...path, key], set: (next) => void (root[key] = next) })
+    else leavesOf(value, [...path, key], out)
+  }
+  return out
+}
+
+/**
+ * The one leaf that holds `needle` once: the leaf at the slot's path when it does, else the only leaf of the whole value that
+ * holds it, the value holding it once in all. `times` is how often the whole value holds it when no such leaf is found.
+ */
+function findWritten(held, path, needle) {
+  if (!path.length) {
+    if (typeof held.text !== 'string') return { times: 0 }
+    const times = timesIn(held.text, needle)
+    return times === 1
+      ? { leaf: { value: held.text, path, set: (next) => void (held.text = next) } }
+      : { times }
+  }
+  if (!held.json) return { times: 0 }
+  const indexed = leafAt(held.json, path)
+  if (indexed && timesIn(indexed.value, needle) === 1) return { leaf: { ...indexed, path } }
+  const holding = leavesOf(held.json).filter((l) => l.value.includes(needle))
+  const times = holding.reduce((sum, l) => sum + timesIn(l.value, needle), 0)
+  return times === 1 ? { leaf: holding[0] } : { times }
+}
+
 /**
  * @param {{ door: { apply: Function }, siteKey: string, contentMap?: object | null, written: Iterable<string>,
  *   ordered: Record<string, string> }} input `written`: the content map keys the contract call wrote; `ordered`: what it sent
- * @returns {Promise<Map<string, { storage: string, stored?: string, readFrom?: object, warning?: string }>>} by content map key,
+ * @returns {Promise<Map<string, { storage: string, stored?: string, readFrom?: object, warning?: string, blocking?: true }>>} by content map key,
  *   for every written key whose value holds emphasis codes
  */
 export async function runEmphasisStage({ door, siteKey, contentMap, written, ordered }) {
@@ -72,8 +106,13 @@ export async function runEmphasisStage({ door, siteKey, contentMap, written, ord
   }
   if (!byEntity.size) return results
   const call = doorCall(door, siteKey)
+  // An HTML slot left with its codes prints them as words: its line blocks the write step (card N).
   const keep = (key, reason) =>
-    results.set(key, { storage: 'html', warning: `${reason}, so its emphasis codes were left as written` })
+    results.set(key, {
+      storage: 'html',
+      warning: `${reason}, so its emphasis codes were left as written`,
+      blocking: true
+    })
   for (const [entity, wanted] of byEntity) {
     const [, kind, idText] = ENTITY.exec(entity)
     const id = Number(idText)
@@ -92,19 +131,13 @@ export async function runEmphasisStage({ door, siteKey, contentMap, written, ord
       if (!columns.has(column))
         columns.set(column, path.length ? { json: parsed(item?.[column]) } : { text: item?.[column] })
       const held = columns.get(column)
-      const leaf = path.length
-        ? held.json && leafAt(held.json, path)
-        : typeof held.text === 'string'
-          ? { value: held.text, set: (next) => void (held.text = next) }
-          : null
-      if (!leaf) {
-        keep(key, `${entity} holds no text at ${[column, ...path].join('.')}`)
-        continue
-      }
       const needle = escapeText(value)
-      const times = timesIn(leaf.value, needle)
-      if (times !== 1) {
-        keep(key, `the stored HTML holds the written words ${times} times, not once`)
+      const { leaf, times } = findWritten(held, path, needle)
+      if (!leaf) {
+        keep(
+          key,
+          `the stored HTML holds the written words ${times} times, not once (looked at every text of ${entity} ${column})`
+        )
         continue
       }
       const stored = codesToHtml(value)
@@ -116,7 +149,7 @@ export async function runEmphasisStage({ door, siteKey, contentMap, written, ord
         readFrom: {
           action: 'content.get',
           params: { kind, id },
-          path: ['item', column, ...path],
+          path: ['item', column, ...leaf.path],
           type: 'contains'
         }
       })
@@ -153,7 +186,8 @@ export function withEmphasis(lines, results) {
       ...line,
       emphasis: done.storage,
       ...(done.stored ? { stored: done.stored, readFrom: done.readFrom } : {}),
-      ...(done.warning ? { warning: done.warning } : {})
+      ...(done.warning ? { warning: done.warning } : {}),
+      ...(done.blocking ? { emphasisBlocking: true } : {})
     }
   })
 }
