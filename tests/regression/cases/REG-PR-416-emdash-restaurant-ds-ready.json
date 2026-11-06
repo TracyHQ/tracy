@@ -1,6 +1,6 @@
 {
   "id": "REG-PR-416-emdash-restaurant-ds-ready",
-  "kind": "fix",
+  "kind": "feat",
   "title": "JA Restaurant EmDash 1.0.1 reads the design-system type, shape and colour roles, its slot contract is ready and its committed measurement passes every built-site rule",
   "pr": 416,
   "area": "design/slot",
