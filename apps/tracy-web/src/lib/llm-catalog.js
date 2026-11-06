@@ -297,7 +297,8 @@ export const LLM_DOORS = [
     blurb:
       'Write step bench: the finisher. One call per fault turns it into a typed repair order, which code checks against the template kit and writes. It never writes to the site.',
     needsModel: true,
-    // Text only: the fault, its repair menu and the slot's words (#420). Effort per door; default medium.
+    // Text only: the fault, its repair menu and the slot's words (#420). Effort per door; default high (DeepSeek takes
+    // low, high and max; the medium the product owner chose is not one of them).
     requires: [],
     prefers: ['json'],
     configurableEffort: true

@@ -6,7 +6,9 @@
 //   - style: one rule keyed by its block in the head block (style-write.js), judged by the checker on crops of the block found
 //     by its unchanged words; undone by putting back that block's rule as it was. A kept style changes no words of the report.
 // `place` names what a write reads and writes whole (work-pool.js): two writes of one place never cross. Every contract apply
-// is checked against the site's one revision, so it is read again inside the lock, right before the write.
+// is checked against the site's one revision, so it is read again inside the lock, right before the write; a slot that no
+// longer holds the words the order was checked against (another page's repair wrote it first) is not written (`stale`).
+// `target` names what a repair changes on the page (one slot, one block), so a page writes one repair per target a round.
 import { visibleText } from '../../lib/site-copy/emphasis-markup.js'
 import { CODE_JUDGED } from './code-judge.js'
 import { isUnseenRepair } from './live-confirm.js'
@@ -39,16 +41,35 @@ const CONTRACT = 'contract'
 export const WORDS_STEPS = Object.freeze({
   /** A row field write names its row; every other words repair goes through the contract's one revision. */
   place: ({ valid }) => valid.place ?? CONTRACT,
+  target: ({ valid }) => `slot ${valid.slot}`,
   /** @param {Repair} r */
-  write: async ({ run, valid, number }) =>
-    (valid.write ?? writeRepair)({
+  write: async ({ run, valid, number }) => {
+    // A row field write needs no revision; a contract apply needs the one the site answers now.
+    let revision = null
+    if (!valid.place) {
+      let now
+      try {
+        now = await readSite(run.door, run.siteKey)
+      } catch (error) {
+        return { ok: false, applyId: null, reason: String(error?.message ?? error) }
+      }
+      revision = now.revision
+      if (valid.key && typeof valid.current === 'string' && now.current.get(valid.key) !== valid.current)
+        return {
+          ok: false,
+          stale: true,
+          applyId: null,
+          reason: `${valid.slot} changed after its order was checked (another repair wrote it first)`
+        }
+    }
+    return (valid.write ?? writeRepair)({
       door: run.door,
       siteKey: run.siteKey,
-      // A row field write needs no revision; a contract apply needs the one the site answers now.
-      revision: valid.place ? null : (await readSite(run.door, run.siteKey)).revision,
+      revision,
       changes: valid.changes,
       repair: number
-    }),
+    })
+  },
   /** @param {Repair} r */
   judgeBy: ({ run, order, valid }) => {
     if (isUnseenRepair(order, valid)) return { judgeBy: 'live-page' }
@@ -59,12 +80,13 @@ export const WORDS_STEPS = Object.freeze({
   undo: ({ run, wrote }) =>
     revertRepair({ door: run.door, siteKey: run.siteKey, applyId: wrote.applyId, also: wrote.also }),
   /** What the log adds about the repair, and what a kept repair changes in the report's words. */
-  shown: () => ({}),
+  logFields: () => ({}),
   kept: ({ valid, wrote }) => ({ slot: valid.slot, ordered: valid.after, applyId: wrote.applyId })
 })
 
 export const STYLE_STEPS = Object.freeze({
   place: () => 'head-module',
+  target: ({ valid }) => `block ${valid.block}`,
   write: ({ run, valid, number }) =>
     writeStyleRule({
       door: run.door,
@@ -88,6 +110,6 @@ export const STYLE_STEPS = Object.freeze({
       before: wrote.before,
       repair: number
     }),
-  shown: ({ valid }) => ({ block: valid.block }),
+  logFields: ({ valid }) => ({ block: valid.block }),
   kept: () => null
 })

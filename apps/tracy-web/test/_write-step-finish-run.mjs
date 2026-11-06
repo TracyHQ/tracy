@@ -75,6 +75,13 @@ const kits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS, pages: PAGES
 const HEAD_MODULE = 9
 const HEAD_SITE = { head: { injection: { position: { block: `block-${HEAD_MODULE}` }, maxBytes: 65535 } } }
 const headKits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS, pages: PAGES, site: HEAD_SITE })
+/** The kit with the home page's heading block shown on the about page too, as a header is on every page. */
+const SHARED_PAGES = PAGES.map((p) =>
+  p.id === 'page-about-us'
+    ? { ...p, blocks: { 390: ['block-2', 'block-4'], 1440: ['block-2', 'block-4'] } }
+    : p
+)
+const sharedKits = kitIndex({ tool: 'template-kit 3.1.0', blocks: BLOCKS, pages: SHARED_PAGES })
 
 /** The written site with the head module behind `content.get` and `content.update`, as a style repair needs it. */
 function withHeadModule(site) {
@@ -96,14 +103,18 @@ const dirs = []
 export function cleanUp() {
   kits.done()
   headKits.done()
+  sharedKits.done()
   for (const dir of dirs) rmSync(dir, { recursive: true, force: true })
 }
 
 /**
  * @param {{ finder: object, fixer: object, checker: object, served?: ((held: object) => (page: string) => string) | null,
  *   limits?: object, clock?: object, sideEffect?: object | null, first?: object, files?: Record<string, object> | null,
- *   held?: Record<string, string>, head?: boolean, boxText?: Function }} input `head` gives the kit a head injection
- *   module, so a style repair can be written; `boxText` is what the host reads off a slot's element (fakeCapture)
+ *   held?: Record<string, string>, head?: boolean, shared?: boolean, boxText?: Function, wrapDoor?: Function,
+ *   wrapCapture?: Function, prepare?: Function }} input `head` gives the kit a head injection module, so a style repair can be written;
+ *   `shared` shows the home page's heading block on the about page too; `boxText` is what the host reads off a slot's
+ *   element (fakeCapture); `wrapDoor` and `wrapCapture` change how the site door and the capture answer; `prepare` is
+ *   given the output folder before the run
  *   `finder`, `fixer`, `checker` are doors as scriptedDoor makes them; `served` renders a page from what the site holds now
  */
 export async function finishOn({
@@ -119,7 +130,11 @@ export async function finishOn({
   files = null,
   held = heldAtStart(),
   head = false,
-  boxText = undefined
+  shared = false,
+  boxText = undefined,
+  wrapDoor = (door) => door,
+  wrapCapture = (capture) => capture,
+  prepare = () => {}
 }) {
   const written = writtenSite({ ...held }, { sideEffect })
   const site = head ? withHeadModule(written) : written
@@ -128,6 +143,7 @@ export async function finishOn({
   const err = []
   const dir = mkdtempSync(path.join(tmpdir(), 'write-step-finish-run-'))
   dirs.push(dir)
+  prepare(dir)
   const runs = memoryRunStore([writtenRun({ held: { ...held }, ...first })])
   // `files`: the brief, copy and pictures files by their bench option (`brief-file`), written next to the run.
   const fileArgs = Object.entries(files ?? {}).flatMap(([option, data]) => {
@@ -139,9 +155,9 @@ export async function finishOn({
   const code = await runCli(argv, {
     runs,
     store: memoryStore([benchSite()]),
-    index: (head ? headKits : kits).index,
-    makeDoor: () => site.door,
-    makeCapture: async () => shots.capture,
+    index: (head ? headKits : shared ? sharedKits : kits).index,
+    makeDoor: () => wrapDoor(site.door),
+    makeCapture: async () => wrapCapture(shots.capture),
     makeFinisherDoors: async () => ({ finder: finder.door, fixer: fixer.door, checker: checker.door }),
     ...(served ? { pageHtml: async ({ path: page }) => served(site.held)(page) } : {}),
     ...(limits ? { finisherLimits: limits } : {}),

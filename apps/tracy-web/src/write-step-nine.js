@@ -4,9 +4,14 @@
 // check starts the moment the write is done and runs beside the finder (the finisher awaits it when it merges its failures);
 // the build keeps the final site check, run on the write report with the kept repairs in it.
 //
-// Repairs are part of the build, not changes the customer asked for: they are written by the build's site door under the
-// finisher's own apply ids, outside any chat turn, so the Site changes tab, which lists chat turns (sites/activity.js), does
-// not list them. A build that wires this step must give it the same build door the write uses, never a chat turn's.
+// Repairs are part of the build, not changes the customer asked for (spec #418): every repair goes through the step's one
+// site door, the write's (`write.door`), under the finisher's own apply ids; a door handed to the finisher is never used. A
+// build gives the door of its setup run (`applyAs` with `setupRun`, sites/route.js), so Site changes shows the write and its
+// repairs as the one "Tracy setup" row of the build, never as repairs of their own. Nothing here makes a chat turn.
+//
+// The finisher never keeps the site from the customer: one that refuses, or throws, leaves the site as the write left it,
+// with the first site check, and the step says why (`finisher`); one whose final check did not end in its slice of time
+// leaves the first check too. Nothing is hidden and the customer is not told.
 import { defaultContracts } from './lib/contracts.js'
 import { contractBaselineStore } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
@@ -22,7 +27,8 @@ import { runWriteStep } from './write-step/write-step.js'
  *   `write` is the write step's own input (write-step.js); `checkSite` runs the site check on a report; `baselines` gives the
  *   demo baseline of the quickstart version the site was made from, by default the file beside the contract in `contracts`
  * @returns {Promise<{ report: object, siteCheck: object | null, repairLog: object | null, finisher: object | null }>}
- *   `report` is the build's write report, its `siteCheck` the final one; `finisher` says why the finisher did not run
+ *   `report` is the build's write report, its `siteCheck` the final one; `finisher` says why the finisher did not run, or
+ *   failed, or left no final check (`{ code, reason }`), so the caller logs it
  */
 export async function runStepNine({ write, finisher, checkSite, baselines, contracts, now = Date.now }) {
   const written = await runWriteStep({ now, ...write })
@@ -33,27 +39,32 @@ export async function runStepNine({ write, finisher, checkSite, baselines, contr
   const siteCheck = (report) => checkSite(report, { baseline })
   // Started now, awaited by the finisher: the first check runs beside the finder. A check that throws gives none.
   const firstCheck = siteCheck(written).catch(() => null)
-  const finished = await runFinisher({
-    ...finisher,
-    door: write.door,
-    siteKey: write.siteKey,
-    kit: write.kit.doc,
-    contentMap: write.contentMap ?? null,
-    report: written,
-    firstCheck,
-    siteCheck,
-    now
-  })
-  if (!finished.ok) {
-    // A finisher that refused (a door it cannot use) leaves the written site as the write left it; its first check stands.
-    const first = await firstCheck
-    return {
-      report: first ? withReadBack(written, first) : written,
-      siteCheck: first,
-      repairLog: null,
-      finisher: { code: finished.code, reason: finished.reason }
-    }
+  let finished
+  try {
+    finished = await runFinisher({
+      ...finisher,
+      door: write.door,
+      siteKey: write.siteKey,
+      kit: write.kit.doc,
+      contentMap: write.contentMap ?? null,
+      report: written,
+      firstCheck,
+      siteCheck,
+      now
+    })
+  } catch (error) {
+    finished = { ok: false, code: 'FINISHER_FAILED', reason: String(error?.message ?? error) }
   }
+  if (!finished.ok)
+    return asWritten(written, await firstCheck, { code: finished.code, reason: finished.reason })
+  if (!finished.finalCheck)
+    return {
+      ...asWritten(finished.report, finished.firstCheck, {
+        code: 'FINAL_CHECK_MISSING',
+        reason: finished.log.finalCheck.missing
+      }),
+      repairLog: finished.log
+    }
   return {
     report: withReadBack(finished.report, finished.finalCheck),
     siteCheck: finished.finalCheck,
@@ -61,3 +72,11 @@ export async function runStepNine({ write, finisher, checkSite, baselines, contr
     finisher: null
   }
 }
+
+/** The site delivered with the first site check, and why the finisher gave no final one. */
+const asWritten = (report, first, why) => ({
+  report: first ? withReadBack(report, first) : report,
+  siteCheck: first ?? null,
+  repairLog: null,
+  finisher: why
+})

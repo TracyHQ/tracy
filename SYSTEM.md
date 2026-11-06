@@ -2359,7 +2359,8 @@ kept. The one entry point, `write-step/finisher/finisher.js` `runFinisher`, is w
 write (`write-step-nine.js` `runStepNine`, #424: the write, then the finisher, the first site check started beside the
 finder, the build keeping the final check). The pages of the kit are shot by the site's host (`POST /_host/capture`, mode `vision-tiles/1`, the stream the
 demo look reads; `lib/page-shots.js`). Three model doors in `/ops` › Model & AI, each meant for `deepseek-flash` on the
-`deepseek` provider at max effort (migration 203): `finisherFinder` (one call per page, its screenshots in, faults from
+`deepseek` provider (migration 203; its comment says the doors take no effort, which no longer holds: each door takes an
+effort in /ops, by default finder max, fixer high, checker low, and one the model does not take refuses the run): `finisherFinder` (one call per page, its screenshots in, faults from
 `fault-kinds.js` out), `finisherFixer` (one fault in, one typed order from `repair-orders.js` out) and `finisherChecker`
 (before and after crops in, better or not). A finder or checker model that cannot read pictures refuses the run. No model
 writes: code checks each order against the kit and the site, then writes it through the same `content.contract` apply as
@@ -2385,11 +2386,18 @@ Speed and limits (#424): the repairs of one page are written together, the page 
 reach a repaired block (`bands` per width in the capture body; the host passes over the other tiles,
 `apps/tracy-host/src/vision-capture.js`), and one checker call answers a verdict per repair (`finisher/batch-judge.js`); a
 `fix-text` or `mark-emphasis` repair is judged by code on the served page (`finisher/code-judge.js`). Pages run side by side,
-four at once by default, and a write holds the lock of the place it reads and writes whole (the contract's revision, a row,
-the head module; `finisher/work-pool.js`). At most two rounds (`finisher/rounds.js`). A run aims at 5 minutes and 1 USD; at 8
-minutes or 1.5 USD no new work starts, what is left is logged `unrepaired` with reason `budget`, and the final check still
-runs (`finisher/run-limits.js`). A kept repair the final check blames for a new blocking failure is undone and the check runs
-again (`finisher/final-check.js`). The repair log keeps the time of each stage (`timings`).
+four at once by default, each as soon as its own shots are in (`finisher/page-pipeline.js`), and a write holds the lock of
+the place it reads and writes whole (the contract's revision, a row, the head module; `finisher/work-pool.js`); a place two
+pages share is written once (`run.claimed`). At most two rounds; round two only retries rejected repairs
+(`finisher/rounds.js`). A run aims at 5 minutes and 1 USD. Every model and site call is bounded (`finisher/run-limits.js`):
+new work stops at 6 minutes (2 kept for the final check) or when a call's estimated cost no longer fits in 1.5 USD, a site
+call is let go after 60 s, and the finisher answers by 8 minutes; what is left is logged `unrepaired` with reason `budget`.
+Worst case and the cost bound: ADR 0044 decision 30. A kept repair the final check blames for a new blocking failure on its
+slot or block is undone and the check runs again; a new failure naming neither is logged `unblamed` (`finisher/final-check.js`).
+`runStepNine` delivers the written site with the first check when the finisher refuses, throws or leaves no final check, and
+says why (`finisher` in its answer). The bench's `run --out <dir>` runs step 9 whole through it
+(`write-step-bench-step-nine.js`); no live build runs the write step yet. The repair log keeps the time of each stage
+(`timings`).
 
 ## 9. Sign-in, seats, permissions
 

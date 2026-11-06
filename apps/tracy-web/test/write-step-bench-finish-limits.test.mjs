@@ -30,10 +30,11 @@ test('a time overrun stops the finisher at once: no fixer is asked, faults are l
   const clock = fakeClock()
   const fixer = scriptedDoor('Finisher fixer', [])
   const run = await finishOn({
-    // Looking at the pages takes past the hard limit of 8 minutes.
+    // Looking at the two pages side by side takes 7 minutes, past the 6 minutes new work may start in (8 minutes hard,
+    // 2 kept for the final site check).
     finder: slowDoor(scriptedDoor('Finisher finder', [twoFaults(), { faults: [] }]), {
       clock,
-      ms: 5 * 60_000
+      ms: 3.5 * 60_000
     }),
     fixer,
     checker: everyRepairChecker(),
@@ -44,11 +45,15 @@ test('a time overrun stops the finisher at once: no fixer is asked, faults are l
   assert.deepEqual(run.site.writes, [])
   const left = run.log.records.filter((r) => r.outcome === 'unrepaired')
   assert.equal(left.length, 2)
-  for (const r of left) assert.match(r.reason, /^budget: the hard time limit of 480 s was reached/)
-  assert.match(run.log.stoppedBy, /hard time limit/)
+  for (const r of left)
+    assert.match(
+      r.reason,
+      /^budget: the time limit for repairs of 360 s was reached \(480 s hard, 120 s kept/
+    )
+  assert.match(run.log.stoppedBy, /time limit for repairs/)
   assert.ok(run.log.finalCheck, 'the final site check still ran')
   assert.ok(existsSync(path.join(run.dir, 'site-check.json')))
-  assert.ok(run.out.some((l) => l.startsWith('stopped: the hard time limit')))
+  assert.ok(run.out.some((l) => l.startsWith('stopped: the time limit for repairs')))
 })
 
 test('a cost overrun stops the finisher at once, even mid page: no write starts once the limit is reached', async () => {
@@ -71,7 +76,7 @@ test('a cost overrun stops the finisher at once, even mid page: no write starts 
   assert.ok(run.log.costUsd >= 1.5)
 })
 
-test('a model call still open when the hard time limit is reached is let go, and its fault is logged unrepaired', async () => {
+test('a model call still open when new work stops is let go, counted at its estimated cost, and its fault is logged unrepaired', async () => {
   // The fixer never answers; the hard limit's timer fires once the fixer has been asked.
   const fixer = scriptedDoor('Finisher fixer', [])
   let fire = null
@@ -96,12 +101,17 @@ test('a model call still open when the hard time limit is reached is let go, and
   assert.deepEqual(run.site.writes, [])
   const [record] = run.log.records
   assert.equal(record.outcome, 'unrepaired')
-  assert.match(record.reason, /^budget: the hard time limit of 480 s was reached while the call was open/)
+  assert.match(
+    record.reason,
+    /^budget: the time limit for repairs of 360 s was reached .* while the call was open/
+  )
+  // Two finder calls at 0.01 USD, and the fixer call let go at its stage's estimate (0.02 USD): never counted as free.
+  assert.equal(run.log.costUsd.toFixed(4), '0.0400')
   assert.ok(run.log.finalCheck, 'the final site check still ran')
 })
 
 test('a third round never starts, and round two does not write an order undone in round one again', async () => {
-  const finder = scriptedDoor('Finisher finder', [finding(), { faults: [] }, finding(), finding()])
+  const finder = scriptedDoor('Finisher finder', [finding(), { faults: [] }])
   const fixer = scriptedDoor('Finisher fixer', [
     fix(),
     fix(),
@@ -110,7 +120,7 @@ test('a third round never starts, and round two does not write an order undone i
   const run = await finishOn({ finder, fixer, checker: everyRepairChecker('not better', 'still wrong') })
   assert.equal(run.code, 0, run.err.join('\n'))
   assert.equal(run.log.rounds, 2)
-  assert.equal(finder.asked.length, 3, 'two pages, then the home page again in round two')
+  assert.equal(finder.asked.length, 2, 'each page once: round two never asks the finder again')
   // Round two retries the undone repair: the order tried before is named to the fixer, and given again it is dropped.
   assert.match(fixer.asked[1].content[0].text, /"tried"/)
   assert.equal(fixer.asked.length, 2)
@@ -120,7 +130,7 @@ test('a third round never starts, and round two does not write an order undone i
   assert.equal(run.site.held['module-2.1'], RAW)
 })
 
-test('round two goes back only to the pages where a repair was undone', async () => {
+test('round two retries only the repair the checker rejected: no page is shot again whole and the finder is not asked again', async () => {
   const about = finding('raw-markup', { page: '/about', slot: 'block-4.1', seen: 'prints ((span))' })
   const checker = {
     asked: [],
@@ -135,21 +145,20 @@ test('round two goes back only to the pages where a repair was undone', async ()
       }
     }
   }
-  const run = await finishOn({
-    finder: scriptedDoor('Finisher finder', [finding(), about, { faults: [] }]),
-    fixer: scriptedDoor('Finisher fixer', [
-      fix(),
-      fix({ slot: 'block-4.1', text: 'Our story began in a garage' })
-    ]),
-    checker,
-    limits: { rounds: 2 }
-  })
+  const finder = scriptedDoor('Finisher finder', [finding(), about])
+  const fixer = scriptedDoor('Finisher fixer', [
+    fix(),
+    fix({ slot: 'block-4.1', text: 'Our story began in a garage' }),
+    fix({ slot: 'block-4.1', text: 'Our story began in a small garage' })
+  ])
+  const run = await finishOn({ finder, fixer, checker, limits: { rounds: 2 } })
   assert.equal(run.code, 0, run.err.join('\n'))
-  assert.deepEqual(
-    run.shots.calls.at(-1),
-    ['/about'],
-    'only the about page is shot again whole for round two'
-  )
+  assert.equal(finder.asked.length, 2)
+  const whole = run.shots.layoutsAsked.filter((layouts) => layouts.every((l) => !l.bands))
+  assert.equal(whole.length, 1, 'the pages are shot whole once; a re-shoot asks only for the repaired bands')
+  // Only the about page's rejected repair is tried again, with the order tried before named to the fixer.
+  assert.equal(fixer.asked.length, 3)
+  assert.match(fixer.asked[2].content[0].text, /"slot":"block-4\.1".*"tried"/)
   assert.equal(run.site.held['module-2.1'], CLEAN)
 })
 

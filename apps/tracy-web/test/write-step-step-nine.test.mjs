@@ -34,7 +34,7 @@ const check = (name) => ({
   groups: [{ name: 'read-back', status: 'green', checked: 1, failures: [], lines: {} }]
 })
 
-async function stepNine({ over = {}, script = {}, input = {} } = {}) {
+async function stepNine({ over = {}, script = {}, input = {}, finisherOver = {}, finalCheck = null } = {}) {
   const site = fakeSite(script)
   // The written site lists its home page, the one page the finisher shoots here.
   const apply = site.door.apply
@@ -65,12 +65,14 @@ async function stepNine({ over = {}, script = {}, input = {} } = {}) {
           checker: quietDoor('checker', events)
         },
         capture: fakeCapture().capture,
-        saveFile: async () => {}
+        saveFile: async () => {},
+        ...finisherOver
       },
       checkSite: async (report, options) => {
         const name = checks.length ? 'final' : 'first'
         events.push(`${name} check started`)
         checks.push({ report, options })
+        if (name === 'final' && finalCheck) return finalCheck()
         // The first check takes a while: it ends once the finder was asked, or after a bounded wait when it never is.
         for (let i = 0; i < 500 && name === 'first' && !events.includes('finder asked'); i++)
           await new Promise((resolve) => setImmediate(resolve))
@@ -140,4 +142,61 @@ test('with no baseline lookup given, step 9 reads the demo baseline committed be
   } finally {
     kits.done()
   }
+})
+
+test('a finisher that throws still delivers the written site, with the first site check and why', async () => {
+  const { result, checks } = await stepNine({
+    finisherOver: {
+      saveFile: async () => {
+        throw new Error('the disk is full')
+      }
+    }
+  })
+  assert.equal(result.report.status, 'done')
+  assert.deepEqual(result.finisher, { code: 'FINISHER_FAILED', reason: 'the disk is full' })
+  assert.equal(result.siteCheck.name, 'first')
+  assert.equal(result.report.siteCheck.name, 'first')
+  assert.equal(result.repairLog, null)
+  assert.equal(checks.length, 1, 'no final check runs on a finisher that failed')
+})
+
+test('a final site check that does not end in the time kept for it leaves the first check, and says so', async () => {
+  let fire = null
+  const { result } = await stepNine({
+    finisherOver: {
+      timer: (done) => {
+        fire = done
+        return () => {}
+      }
+    },
+    finalCheck: () => {
+      setImmediate(() => fire?.())
+      return new Promise(() => {})
+    }
+  })
+  assert.equal(result.report.status, 'done')
+  assert.equal(result.finisher.code, 'FINAL_CHECK_MISSING')
+  assert.match(result.finisher.reason, /final site check did not end in time/)
+  assert.equal(result.siteCheck.name, 'first')
+  assert.ok(result.repairLog, 'the repair log is kept')
+})
+
+test("every site call of step 9 goes through the write's door: a door handed to the finisher is never used", async () => {
+  const { result, site } = await stepNine({
+    finisherOver: {
+      door: {
+        apply: async () => {
+          throw new Error('a second door was used')
+        }
+      }
+    }
+  })
+  assert.equal(result.finisher, null)
+  const writeCalls = site.calls.filter((c) => c.params?.operation === 'apply').length
+  assert.ok(writeCalls > 0)
+  // The finisher read the written site through the same door, after the write.
+  const inspects = site.calls.filter((c) => c.params?.operation === 'inspect')
+  assert.ok(
+    site.calls.lastIndexOf(inspects.at(-1)) > site.calls.findIndex((c) => c.params?.operation === 'apply')
+  )
 })

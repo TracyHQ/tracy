@@ -8,11 +8,10 @@ import path from 'node:path'
 import { openContentMap } from './lib/content-map-source.js'
 import { joomlaAddresses } from './lib/quickstart-releases.js'
 import { openKit } from './lib/template-kit-source.js'
-import { checkLines } from './site-check/check-lines.js'
 import { withReadBack } from './site-check/read-back.js'
 import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runFinisher } from './write-step/finisher/finisher.js'
-import { firstCheckNow, finisherSources, mergeLine, spendLines } from './write-step-bench-finish-sources.js'
+import { finishedLines, firstCheckNow, finisherSources } from './write-step-bench-finish-sources.js'
 import { siteCheckOfRun } from './write-step-bench-site-check.js'
 
 export const FINISH_USAGE = `  finish --run <runId> --account <email> --out <dir> [--check-file <path> | --check-now [--all-groups]] [--site-pictures-file <path>]
@@ -132,28 +131,11 @@ export async function finishRun(d, values) {
   if (first) await first.report(d, finished.firstCheck, saveFile)
   for (const line of sources.lines) d.out(line)
   // The build's site check is the final one, kept on the run with the repaired words as ordered.
-  await d.runs.saveReport(r.id, withReadBack(finished.report, finished.finalCheck))
-  await saveFile('site-check.json', `${JSON.stringify(finished.finalCheck, null, 2)}\n`)
-  const { counts, records } = finished.log
-  d.out(
-    `finisher: ${counts.found} found, ${counts.kept} kept, ${counts.undone} undone, ${counts.dropped} dropped, ${counts.failed} failed, ${counts['logged-only']} logged only, ${counts.unrepaired} unrepaired`
-  )
-  for (const record of records)
-    d.out(
-      `  ${record.outcome} page=${record.page ?? '-'} slot=${record.slot ?? '-'} kind=${record.faultKind ?? '-'}${record.reason ? `: ${record.reason}` : ''}${record.crops.by ? ` (crops: ${record.crops.by})` : ''}`
-    )
-  if (finished.log.merge) d.out(mergeLine(finished.log.merge))
-  const crops = finished.log.cropModes
-  if (crops) d.out(`crops: ${crops.block} by block, ${crops.tile} by tile`)
-  for (const line of spendLines(finished.log)) d.out(line)
-  for (const line of checkLines(finished.finalCheck)) d.out(line)
-  d.out(
-    `final site-check options: ${allGroups ? 'all groups (as the first check)' : 'stops at a red group (as the first check)'}, ${pictures ? 'with' : 'without'} site pictures`
-  )
-  const { newBlocking, compared, notCompared } = finished.log.finalCheck
-  const gained = newBlocking.length
-  d.out(
-    `final site-check: ${finished.finalCheck.status}, ${gained ? `${gained} new blocking failure${gained === 1 ? '' : 's'}` : 'no new blocking failure'} in the ${compared.length} groups both checks ran${notCompared.length ? `; not compared: ${notCompared.join(', ')}` : ''}`
-  )
+  if (finished.finalCheck) {
+    await d.runs.saveReport(r.id, withReadBack(finished.report, finished.finalCheck))
+    await saveFile('site-check.json', `${JSON.stringify(finished.finalCheck, null, 2)}\n`)
+  }
+  const options = `final site-check options: ${allGroups ? 'all groups (as the first check)' : 'stops at a red group (as the first check)'}, ${pictures ? 'with' : 'without'} site pictures`
+  for (const line of finishedLines(finished, options)) d.out(line)
   return 0
 }

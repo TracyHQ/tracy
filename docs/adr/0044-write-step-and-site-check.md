@@ -545,7 +545,22 @@ fault into one repair order, a checker compares the repaired block before and af
 - A value the brief gives (a phone, an e-mail, a name, an address) is the customer's own: a demo fault on it is logged
   `not-demo`, never repaired. Pages compare as addresses: `/index.php/x`, `/x/` and `/x` are one page.
 - Each role thinks at its own reasoning effort, set per door in /ops › Model & AI; a door with none set takes its role's
-  default, the product owner's choice of 2026-11-06: finder max, fixer medium, checker low.
+  default, the product owner's choice of 2026-11-06: finder max, fixer medium, checker low. DeepSeek takes only low, high
+  and max, so the fixer runs at high, the nearest level; an effort the door's model does not take refuses the run with the
+  levels it does take (`lib/bench-harness.js` `MODEL_EFFORTS`).
+- Pages run as a pipeline: each page is found, merged with the first check's failures on it, repaired and judged as soon
+  as its own shots are in. Round two only retries the repairs the checker rejected (and a same-place fault that waited, while
+  no limit is reached); it never shoots a page whole again or asks the finder again. A place two pages share is written once.
+- Hard limits (#424), and their honest worst case. Time: one deadline at 8 minutes; new work stops at 6, the last 2 are kept
+  for the final site check; a model call open at 6 minutes is let go; every site or host call is let go after 60 seconds or at
+  the deadline. So the finisher answers by 8 minutes whatever a host or a model does; a final check that cannot end by then
+  leaves the first check on the build, and the repair log says so. A call let go may still run on the host or at the provider.
+  Cost: a model call reserves its estimated cost (the dearest call of its stage so far, else 0.05 USD for the finder and the
+  checker, 0.02 for the fixer) and is not started when the spend and the reservations would pass 1.5 USD; at most 8 are open
+  at once; a call let go is counted at its estimate. The run passes 1.5 USD only by what the open calls cost over their
+  estimates: on DeepSeek Flash a call is capped by its output limit (131072 tokens, about 0.16 USD, plus its input), so the
+  bound is under 3 USD, and a normal call costs about a cent. A finisher that throws leaves the written site and its first
+  check; the build logs why.
 
 **The second CSS exception: "style one block".** Unreadable text (text over a picture, text the colour of its ground) and a
 broken layout (a long word running out of its box) often have no repair in the words. The fixer may order a style for one

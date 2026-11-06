@@ -72,3 +72,36 @@ export function spendLines(log) {
       : [])
   ]
 }
+
+/**
+ * The bench lines of a finished run, for `finish` and for step 9 run whole by `run --out`: the counts, one line per record,
+ * the merge, the crops, the time and cost, and the final site check against the first (after `optionsLine`, when given).
+ */
+export function finishedLines({ log, finalCheck }, optionsLine = null) {
+  const { counts, records } = log
+  const lines = [
+    `finisher: ${counts.found} found, ${counts.kept} kept, ${counts.undone} undone, ${counts.dropped} dropped, ${counts.failed} failed, ${counts['logged-only']} logged only, ${counts.unrepaired} unrepaired`,
+    ...records.map(
+      (record) =>
+        `  ${record.outcome} page=${record.page ?? '-'} slot=${record.slot ?? '-'} kind=${record.faultKind ?? '-'}${record.reason ? `: ${record.reason}` : ''}${record.crops.by ? ` (crops: ${record.crops.by})` : ''}`
+    )
+  ]
+  if (log.merge) lines.push(mergeLine(log.merge))
+  if (log.cropModes) lines.push(`crops: ${log.cropModes.block} by block, ${log.cropModes.tile} by tile`)
+  lines.push(...spendLines(log))
+  if (!finalCheck) {
+    lines.push(`final site-check: none, ${log.finalCheck.missing}; the run keeps its first check`)
+    return lines
+  }
+  lines.push(...checkLines(finalCheck), ...(optionsLine ? [optionsLine] : []))
+  const { newBlocking, compared, notCompared, unblamed } = log.finalCheck
+  const gained = newBlocking.length
+  if (unblamed.length)
+    lines.push(
+      `new blocking failures no repair is blamed for (none undone): ${unblamed.map((f) => `${f.group}${f.page ? ` on ${f.page}` : ''}`).join(', ')}`
+    )
+  lines.push(
+    `final site-check: ${finalCheck.status}, ${gained ? `${gained} new blocking failure${gained === 1 ? '' : 's'}` : 'no new blocking failure'} in the ${compared.length} groups both checks ran${notCompared.length ? `; not compared: ${notCompared.join(', ')}` : ''}`
+  )
+  return lines
+}

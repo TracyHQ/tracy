@@ -48,6 +48,10 @@ export function logRecord(fault, fields) {
   }
 }
 
+/** A fault left unrepaired, by a limit or by the last round, with the cause the first site check names for it. */
+export const unrepairedRecord = (firstCheck, fault, reason) =>
+  logRecord(fault, { ...causeOf(firstCheck, fault), outcome: 'unrepaired', reason })
+
 const failuresOf = (check) =>
   (check?.groups ?? []).flatMap((g) => (g.failures ?? []).map((f) => ({ group: g.name, ...f })))
 
@@ -123,11 +127,11 @@ export function repairLog({
   replies = [],
   budget,
   rounds = 1,
-  undoneByFinalCheck = 0,
+  final = null,
   firstCheck,
-  finalCheck,
   merge = null
 }) {
+  const finalCheck = final?.check ?? null
   const counts = Object.fromEntries(OUTCOMES.map((o) => [o, records.filter((r) => r.outcome === o).length]))
   const newBlocking = finalCheck ? newBlockingFailures(firstCheck, finalCheck) : []
   const { compared, notCompared } = finalCheck
@@ -156,7 +160,7 @@ export function repairLog({
     overTarget: budget.overTarget,
     stoppedBy: budget.stoppedBy,
     rounds,
-    undoneByFinalCheck,
+    undoneByFinalCheck: final?.undone ?? 0,
     finalCheck: finalCheck
       ? {
           status: finalCheck.status,
@@ -164,8 +168,12 @@ export function repairLog({
           allGroups: finalCheck.allGroups === true,
           compared,
           notCompared,
-          newBlocking
+          newBlocking,
+          // New blocking failures that name no slot or block a repair changed: logged, no repair undone for them.
+          unblamed: final.unblamed ?? [],
+          // What the check that ran again after the undos still gains over the first check.
+          leftAfterUndo: final.leftAfterUndo ?? []
         }
-      : null
+      : { status: null, missing: final?.missing ?? 'the final site check did not run' }
   }
 }

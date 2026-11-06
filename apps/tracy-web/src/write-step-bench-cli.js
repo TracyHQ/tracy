@@ -15,12 +15,14 @@ import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './writ
 import { runWriteStep } from './write-step/write-step.js'
 import { CHECK_NEEDS, CHECK_USAGE, checkRun } from './write-step-bench-site-check.js'
 import { FINISH_NEEDS, FINISH_USAGE, finishRun } from './write-step-bench-finish.js'
+import { STEP_NINE_USAGE, stepNineOfRun, stepNineSetup } from './write-step-bench-step-nine.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
       [--brief-file <path>] [--brand-file <path>] [--pictures-file <path>] [--by <label>]    write the frozen files to a site this bench made; runs in this process,
                                               prints the run id first and the counts last. On a site written before, it
                                               compares with the last report and writes only what differs
+${STEP_NINE_USAGE}
   list [--limit <n>]                          the newest runs
   status <runId>                              state, phase, counts and the cause of a stop
   get <runId> --out <dir>                     write the run's site-write-report.json
@@ -148,6 +150,10 @@ async function startRun(d, values) {
       d,
       `NEEDS_NEW_SITE: run ${lastRun.id} on ${values.site} ended ${lastRun.status} with no report, so what the site holds is not known. This needs a new site.`
     )
+  const inCwd = (file) => path.resolve(d.cwd ?? process.cwd(), file)
+  // With --out, step 9 whole: the finisher is checked before anything is written (write-step-bench-step-nine.js).
+  const nine = values.out ? await stepNineSetup(d, values, inCwd) : null
+  if (nine?.refused) return refused(d, nine.refused)
   const begun = await d.runs.begin({
     siteKey: values.site,
     kit: values.kit,
@@ -157,10 +163,10 @@ async function startRun(d, values) {
     return refused(d, `RUN_ACTIVE: ${values.site} already has run ${begun.active?.id ?? '(unknown)'} going.`)
   const { id } = begun.run
   d.out(id)
-  const inCwd = (file) => path.resolve(d.cwd ?? process.cwd(), file)
   let report
+  let finished = []
   try {
-    report = await runWriteStep({
+    const write = {
       door: d.makeDoor({ account: values.account, platform: 'joomla' }),
       siteKey: values.site,
       kit: { ref: values.kit, doc: opened.doc },
@@ -184,7 +190,9 @@ async function startRun(d, values) {
       isCancelled: () => d.runs.cancelRequested(id),
       ...(d.now ? { now: d.now } : {}),
       ...(d.sleep ? { sleep: d.sleep } : {})
-    })
+    }
+    if (nine) ({ report, lines: finished } = await stepNineOfRun(d, nine, write))
+    else report = await runWriteStep(write)
   } catch (error) {
     const reason = String(error?.message ?? error)
     await d.runs.finish(id, { status: 'stopped', code: 'CRASHED', reason })
@@ -200,6 +208,7 @@ async function startRun(d, values) {
     if (report.printed) d.out(printedLine(report.printed))
     if (report.routes?.length) d.out(routesLine(report.routes))
     d.out(`done: ${countsLine(report.counts)}${report.rewrite ? ` in ${report.timings.total} ms` : ''}`)
+    for (const line of finished) d.out(line)
     return 0
   }
   return refused(

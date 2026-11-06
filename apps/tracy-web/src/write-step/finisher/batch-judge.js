@@ -4,14 +4,14 @@
 //   - every other repair is judged by the checker model: the page is shot again ONCE, only the tiles that hold a repaired
 //     block (page-shots.js `bands`, from the block boxes of the first shot), each repaired block is cropped before and after
 //     (repair-crops.js), and ONE checker call answers a verdict per repair. Its call is kept as a reply file like every role's.
-// Past a hard limit (run-limits.js) the checker is not asked, and one still open when it is reached is let go: such a repair
-// is not proven, so it is undone.
+// Past a limit (run-limits.js) the checker is not asked, and one still open when new work stops is let go: such a repair is
+// not proven, so it is undone.
 import { shootPages } from '../../lib/page-shots.js'
 import { codeVerdict } from './code-judge.js'
 import { askChecker, verdictsOf } from './finisher-roles.js'
 import { liveVerdict } from './live-confirm.js'
 import { pageSlug } from './model-replies.js'
-import { BUDGET } from './run-limits.js'
+import { budgetReason } from './run-limits.js'
 import { blockBox, cropsOf } from './repair-crops.js'
 import { VIEWPORTS } from './fault-kinds.js'
 
@@ -72,7 +72,7 @@ async function checkerJudges(run, page, repairs, firstShots, round) {
     for (const r of repairs)
       verdicts.set(r.number, {
         verdict: 'not better',
-        reason: `${BUDGET}: ${stopped}, so the checker was not asked and the repair is not proven`,
+        reason: `${budgetReason(stopped)}, so the checker was not asked and the repair is not proven`,
         checkedBy: null,
         proven: true
       })
@@ -96,19 +96,15 @@ async function checkerJudges(run, page, repairs, firstShots, round) {
         saveFile: run.saveFile
       })
     })
-  const judged = run.budget.spend(
-    await run.budget.timed('judge', () =>
-      run.budget.bounded(() =>
-        askChecker(
-          run.doors.checker,
-          cropped.map(({ r, crops }) => ({
-            repair: r.number,
-            fault: r.fault,
-            before: crops.beforeShots,
-            after: crops.afterShots
-          }))
-        )
-      )
+  const judged = await run.budget.ask('judge', () =>
+    askChecker(
+      run.doors.checker,
+      cropped.map(({ r, crops }) => ({
+        repair: r.number,
+        fault: r.fault,
+        before: crops.beforeShots,
+        after: crops.afterShots
+      }))
     )
   )
   await run.replies.keep({
@@ -143,13 +139,13 @@ async function checkerJudges(run, page, repairs, firstShots, round) {
  *   crops?: object }>>} by repair number
  */
 export async function judgePage(run, page, repairs, firstShots, round) {
-  const served = repairs.filter((r) => r.judgeBy !== 'checker')
-  const shown = repairs.filter((r) => r.judgeBy === 'checker')
+  const byServedPage = repairs.filter((r) => r.judgeBy !== 'checker')
+  const byChecker = repairs.filter((r) => r.judgeBy === 'checker')
   const verdicts = new Map()
-  if (served.length)
-    for (const [n, v] of await run.budget.timed('judge', () => servedJudges(run, page, served)))
+  if (byServedPage.length)
+    for (const [n, v] of await run.budget.timed('judge', () => servedJudges(run, page, byServedPage)))
       verdicts.set(n, v)
-  if (shown.length)
-    for (const [n, v] of await checkerJudges(run, page, shown, firstShots, round)) verdicts.set(n, v)
+  if (byChecker.length)
+    for (const [n, v] of await checkerJudges(run, page, byChecker, firstShots, round)) verdicts.set(n, v)
   return verdicts
 }

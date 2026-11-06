@@ -3,15 +3,11 @@
 // that names something off the menu is refused and asked for once more with the reason. Past a hard limit (run-limits.js) no
 // fixer is asked: the fault is logged as unrepaired, reason `budget`.
 import { askFixer } from './finisher-roles.js'
-import { causeOf, logRecord } from './repair-log.js'
+import { causeOf, logRecord, unrepairedRecord } from './repair-log.js'
 import { stepsOf, validOrder } from './repair-orders.js'
 import { fixerSources } from './repair-facts.js'
 import { repairMenu } from './repair-menu.js'
-import { BUDGET } from './run-limits.js'
-
-/** A fault left unrepaired: by a hard limit, or by the last round. */
-export const unrepaired = (run, fault, reason) =>
-  logRecord(fault, { ...causeOf(run.firstCheck, fault), outcome: 'unrepaired', reason })
+import { budgetReason } from './run-limits.js'
 
 /** The fault's repair menu: the blocks of its page (of every page when it names none), as the page is served now. */
 function menuOf(run, fault, site, html) {
@@ -30,17 +26,13 @@ function menuOf(run, fault, site, html) {
 
 /** One fixer call, kept as a reply file; `refused` is the order code refused for this fault, told on the second ask. */
 async function askedFixer(run, fault, site, { number, menu, refused = null }) {
-  const asked = run.budget.spend(
-    await run.budget.timed('fix', () =>
-      run.budget.bounded(() =>
-        askFixer(
-          run.doors.fixer,
-          fault,
-          site.current.get(run.lineOf(fault.slot)?.key),
-          fixerSources(run.orderFacts, fault),
-          { menu, refused }
-        )
-      )
+  const asked = await run.budget.ask('fix', () =>
+    askFixer(
+      run.doors.fixer,
+      fault,
+      site.current.get(run.lineOf(fault.slot)?.key),
+      fixerSources(run.orderFacts, fault),
+      { menu, refused }
     )
   )
   await run.replies.keep({
@@ -61,14 +53,14 @@ async function askedFixer(run, fault, site, { number, menu, refused = null }) {
  * names something off the fault's menu is refused, and the fixer is asked once more with the order and the reason; a second
  * answer that fails is dropped with the first refusal.
  */
-export async function proposed(run, fault, site, html) {
+export async function orderForFault(run, fault, site, html) {
   const stopped = run.budget.stopped()
-  if (stopped) return { record: unrepaired(run, fault, `${BUDGET}: ${stopped}`) }
+  if (stopped) return { record: unrepairedRecord(run.firstCheck, fault, budgetReason(stopped)) }
   const number = run.nextNumber()
   const cause = causeOf(run.firstCheck, fault)
   const menu = menuOf(run, fault, site, html)
   const asked = await askedFixer(run, fault, site, { number, menu })
-  if (asked.budget) return { record: unrepaired(run, fault, asked.problem) }
+  if (asked.budget) return { record: unrepairedRecord(run.firstCheck, fault, asked.problem) }
   if (asked.problem)
     return {
       record: logRecord(fault, { ...cause, outcome: 'failed', reason: `the fixer: ${asked.problem}` })
@@ -100,17 +92,18 @@ export async function proposed(run, fault, site, html) {
   }
   // A repair is logged on the slot it is about, the one the finder named or the one the order was tied to.
   const onSlot = { ...fault, slot: fault.slot ?? (valid.ok ? valid.slot : null) }
-  const known = { ...(fault.slot ? cause : causeOf(run.firstCheck, onSlot)), order }
-  if (!valid.ok) return { record: logRecord(onSlot, { ...known, outcome: 'dropped', reason: valid.reason }) }
+  const logFields = { ...(fault.slot ? cause : causeOf(run.firstCheck, onSlot)), order }
+  if (!valid.ok)
+    return { record: logRecord(onSlot, { ...logFields, outcome: 'dropped', reason: valid.reason }) }
   if ((fault.tried ?? []).includes(JSON.stringify(order)))
     return {
       record: logRecord(onSlot, {
-        ...known,
+        ...logFields,
         outcome: 'dropped',
         reason: 'the same order was written and undone in the round before'
       })
     }
   const steps = stepsOf(order.kind)
-  const repair = { run, fault, order, valid, site, number, steps, onSlot, known }
+  const repair = { run, fault, order, valid, site, number, steps, onSlot, logFields }
   return { repair: { ...repair, ...steps.judgeBy(repair) } }
 }

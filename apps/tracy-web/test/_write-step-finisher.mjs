@@ -159,6 +159,39 @@ export function writtenSite(held = heldAtStart(), { sideEffect = null } = {}) {
   return { door, held, writes, reverts }
 }
 
+/** The kept pages in the order a finder's scripted answers name them: the first answer is the home page's. */
+const PAGE_ORDER = ['/', '/about']
+
+/**
+ * The scripted answer a call takes. Pages run side by side, so calls may come in any order; an answer is matched to what the
+ * call is about: a finder call to its page (the answers in PAGE_ORDER), a fixer call to the first answer ordering the fault's
+ * own slot or its block, a checker call to the first answer naming only repairs it was shown. Anything else takes the next answer.
+ */
+function scriptedAnswer(queue, message, answers) {
+  const first = message?.content?.[0]?.text ?? ''
+  const page = /^Page (\/\S*)\.$/.exec(first)?.[1]
+  const take = (at) => (at < 0 ? queue.shift() : queue.splice(at, 1)[0])
+  if (page !== undefined) {
+    const answer = answers[PAGE_ORDER.indexOf(page)]
+    const at = queue.indexOf(answer)
+    return PAGE_ORDER.includes(page) && at >= 0 ? take(at) : take(-1)
+  }
+  const fault = first.startsWith('{') ? JSON.parse(first).fault : null
+  if (fault?.slot)
+    return take(
+      queue.findIndex((a) => a.slot === fault.slot || (a.block && fault.slot.startsWith(`${a.block}.`)))
+    )
+  const shown = message?.content
+    ?.map((c) => /^Repair (\d+)\. /.exec(c.text ?? '')?.[1])
+    .filter(Boolean)
+    .map(Number)
+  if (shown?.length)
+    return take(
+      queue.findIndex((a) => Array.isArray(a.verdicts) && a.verdicts.every((v) => shown.includes(v.repair)))
+    )
+  return take(-1)
+}
+
 /**
  * A model door with scripted answers, one per call, as the finisher's doors answer: `ask` returns the answer's text.
  * @param {string} label
@@ -178,7 +211,7 @@ export function scriptedDoor(label, answers, { images = true } = {}) {
       images,
       async ask(message) {
         asked.push(message)
-        const next = queue.shift()
+        const next = scriptedAnswer(queue, message, answers)
         if (!next) throw new Error(`${label} was asked more often than scripted`)
         return {
           text: JSON.stringify(next),

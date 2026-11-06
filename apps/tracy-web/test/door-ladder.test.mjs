@@ -5,7 +5,13 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { pictureDrawerDoor } from '../src/site-pictures/drawer-door.js'
 import { pictureLookerDoor } from '../src/site-pictures/looker-door.js'
-import { finisherDoor } from '../src/write-step/finisher/finisher-doors.js'
+import {
+  FINISHER_MODEL,
+  FINISHER_PROVIDER,
+  FINISHER_ROLES,
+  finisherDoor
+} from '../src/write-step/finisher/finisher-doors.js'
+import { effortsFor } from '../src/lib/bench-harness.js'
 import { sealSecret } from '../src/lib/secret-box.js'
 import { finalReply, scriptedModel } from './_agent-over-door-fake.mjs'
 
@@ -91,13 +97,39 @@ async function effortSent(role, effort) {
   return { sent: model.requests[0].body.reasoning_effort, recorded: door.snapshot.effortUsed }
 }
 
-test('each finisher role calls its model at its own effort: finder max, fixer medium, checker low by default', async () => {
+test('each finisher role calls its model at its own effort: finder max, fixer high, checker low by default', async () => {
   assert.deepEqual(await effortSent('finder', null), { sent: 'max', recorded: 'max' })
-  assert.deepEqual(await effortSent('fixer', null), { sent: 'medium', recorded: 'medium' })
+  // The product owner chose medium for the fixer; DeepSeek takes low, high and max only, so the nearest level is high.
+  assert.deepEqual(await effortSent('fixer', null), { sent: 'high', recorded: 'high' })
   assert.deepEqual(await effortSent('checker', null), { sent: 'low', recorded: 'low' })
 })
 
 test("a finisher door's effort set in /ops wins over its role's default", async () => {
   assert.deepEqual(await effortSent('fixer', 'high'), { sent: 'high', recorded: 'high' })
   assert.deepEqual(await effortSent('finder', 'low'), { sent: 'low', recorded: 'low' })
+})
+
+test("a finisher door's effort its model does not take is refused before any call, with the levels it takes", async () => {
+  const model = scriptedModel([])
+  const door = await finisherDoor({
+    pool: await readyDoor('medium'),
+    secret: SECRET,
+    role: 'fixer',
+    fetchImpl: model.fetchImpl
+  })
+  assert.equal(door.ok, false)
+  assert.equal(door.code, 'FINISHER_DOOR_EFFORT_UNSUPPORTED')
+  assert.match(
+    door.reason,
+    /"Finisher fixer" door asks deepseek-flash for effort medium; it takes low, high, max/
+  )
+  assert.equal(model.requests.length, 0)
+})
+
+test('every finisher role default is an effort its default model takes', async () => {
+  for (const role of Object.keys(FINISHER_ROLES))
+    assert.ok(
+      effortsFor(FINISHER_MODEL, FINISHER_PROVIDER).includes(FINISHER_ROLES[role].effort),
+      `${role}: ${FINISHER_ROLES[role].effort}`
+    )
 })

@@ -5,28 +5,29 @@
 // only through `capture`, the site check only through `siteCheck`, and files only through `saveFile`, so tests give fakes.
 //
 // Order: refuse unless every door can do its role; shoot every page the written site keeps (the write report's kept pages
-// at their addresses now, the list the site check opens: lib/site-kept-paths.js), never a kit page the site dropped; ask the
-// finder per page, a few pages at once, while the first site check may still be running beside it; merge its failures in;
-// then repair page by page, pages side by side (page-repairs.js: every order of a page written, the page judged once, each
-// repair kept or undone on its own), at most two rounds (rounds.js); run the site check a final time and undo a kept repair
-// it blames for a new blocking failure (final-check.js); write the repair log with the time and cost of every stage. Past a
-// hard limit of time or cost (run-limits.js) no new work starts, what is left is logged as unrepaired, and the run still ends
-// with its final check and its log: the site is delivered, nothing hidden, no notice to the customer.
+// at their addresses now, the list the site check opens: lib/site-kept-paths.js), never a kit page the site dropped. Each
+// page then runs on its own as soon as its shots are in (page-pipeline.js), a few pages at once: the finder looks at it while
+// the first site check may still be running beside it, the check's failures on that page join its faults, and the page is
+// repaired (page-repairs.js: every order of a page written, the page judged once, each repair kept or undone on its own) in
+// at most two rounds (rounds.js). Then the site check runs a final time and a kept repair it blames for a new blocking
+// failure is undone (final-check.js), and the repair log is written with the time and cost of every stage. Every site and
+// model call is bounded (run-limits.js): past a limit no new work starts, what is left is logged as unrepaired, and the run
+// still ends with its final check, in the slice of time kept for it, and its log: the site is delivered, nothing hidden, no
+// notice to the customer.
 import { shootPages } from '../../lib/page-shots.js'
 import { keptPageList } from '../../lib/site-kept-paths.js'
 import { kitSlotIds } from '../kit-slot-ids.js'
 import { doorsRefusal } from './finisher-doors.js'
-import { blocksByPage, findFaults, slotsByPage } from './finder-stage.js'
-import { mergedFaults } from './fault-sources.js'
+import { blocksByPage, slotsByPage } from './finder-stage.js'
 import { finalCheck } from './final-check.js'
+import { failureOwner, finishPage } from './page-pipeline.js'
 import { REPAIR_LOG_FILE, repairLog } from './repair-log.js'
 import { readSite } from './repair-write.js'
 import { orderFacts } from './repair-facts.js'
 import { demoBlockShots } from './demo-block-shots.js'
-import { keepShotFiles, replyKeeper } from './model-replies.js'
-import { runRounds } from './rounds.js'
+import { replyKeeper } from './model-replies.js'
 import { finisherBudget } from './run-limits.js'
-import { placeLocks } from './work-pool.js'
+import { eachLimited, placeLocks } from './work-pool.js'
 
 /** A page reader that reads each page once while nothing is written yet (the merge reads a page per failure). */
 const readOnce = (pageHtml) => {
@@ -36,6 +37,41 @@ const readOnce = (pageHtml) => {
     if (!read.has(page)) read.set(page, pageHtml(page))
     return read.get(page)
   }
+}
+
+/** The site door with every call bounded by the run's limits (run-limits.js `site`). */
+const boundedDoor = (door, budget) => ({ ...door, apply: (call) => budget.site(() => door.apply(call)) })
+
+/** Every page shot in one stream, each page's part handed over the moment it is in. */
+function pageStream(capture, pages, budget) {
+  const ready = new Map()
+  const tell = new Map()
+  for (const page of pages) ready.set(page, new Promise((resolve) => tell.set(page, resolve)))
+  const controller = new AbortController()
+  const whole = budget
+    .timed('shoot', () =>
+      budget.site(
+        () =>
+          shootPages({
+            capture,
+            pages,
+            signal: controller.signal,
+            onPage: (page, part) => tell.get(page)?.(part)
+          }),
+        { whole: true, abort: controller }
+      )
+    )
+    .catch((error) => ({ failed: String(error?.message ?? error) }))
+    .then((shot) => {
+      // A page the stream never handed over (the shots were let go) is unshot, with why.
+      for (const page of pages)
+        tell.get(page)({
+          shots: [],
+          boxes: [],
+          unshot: ['desktop', 'phone'].map((viewport) => ({ page, viewport, why: shot.failed ?? 'not shot' }))
+        })
+    })
+  return { of: (page) => ready.get(page), done: whole }
 }
 
 /**
@@ -50,7 +86,7 @@ const readOnce = (pageHtml) => {
  *   `firstCheck` may be a promise of a site check still running beside the finder; `pageHtml` reads a page as the site
  *   serves it now, to confirm an invisible site check failure and to judge a repair code can judge; `demoImages` opens the
  *   kit's images, the template demo's block shots; `limits` overrides the time, cost, pages at once and rounds
- *   (run-limits.js); `timer` fires at the hard time limit, so a model call still open then is let go (a test gives a fake one)
+ *   (run-limits.js); `timer` bounds every site and model call (run-limits.js; a test gives a fake one)
  * @returns {Promise<{ ok: false, code: string, reason: string } | { ok: true, report: object, log: object, finalCheck: object,
  *   firstCheck: object | null }>}
  *   `report` is the write report with the kept repairs' words as ordered, and the final check is the one to keep
@@ -77,25 +113,37 @@ export async function runFinisher(input) {
   const refused = doorsRefusal(doors)
   if (refused) return { ok: false, ...refused }
   const budget = finisherBudget({ now, limits, timer })
+  const siteDoor = boundedDoor(door, budget)
   let sitePages
   try {
-    sitePages = keptPageList({ pages: (await readSite(door, siteKey)).pages }, report)
+    sitePages = keptPageList({ pages: (await readSite(siteDoor, siteKey)).pages }, report)
   } catch (error) {
-    budget.close()
     return { ok: false, code: 'SITE_UNREADABLE', reason: String(error?.message ?? error) }
   }
   const writtenLines = new Map(
     report.slots.filter((l) => l.status === 'written' && l.key).map((l) => [l.slot, l])
   )
+  const boundedRead = pageHtml ? (page) => budget.site(() => pageHtml(page)) : null
   let numbers = 0
   const run = {
-    door,
+    door: siteDoor,
     siteKey,
     doors,
     capture,
     saveFile,
     firstCheck: null,
-    pageHtml,
+    // The first site check, may be still running beside the finders: awaited by each page before it merges, never past
+    // the time new work may start (a check that does not end by then merges nothing).
+    firstReady: budget
+      .within(() => firstCheck, budget.workLeft())
+      .then((done) => (done.late ? null : (done.value ?? null)))
+      .catch(() => null)
+      .then((first) => {
+        run.firstCheck = first
+        return first
+      }),
+    pageHtml: boundedRead,
+    readOnce: readOnce(boundedRead),
     demoShots: demoBlockShots({ kit, sitePages, images: demoImages }),
     kit,
     kitSlots: kitSlotIds(kit),
@@ -106,43 +154,42 @@ export async function runFinisher(input) {
     lineOf: (slot) => writtenLines.get(slot),
     orderFacts: orderFacts({ kit, report, contentMap, facts, sitePages }),
     replies: replyKeeper(saveFile),
-    shotFile: () => null,
     budget,
     locks: placeLocks(),
+    // The place each written repair holds, so a page does not write over another page's repair (page-repairs.js).
+    claimed: new Map(),
     nextNumber: () => ++numbers
   }
-  const firstShots = await budget.timed('shoot', () =>
-    shootPages({ capture, pages: sitePages.map((p) => p.path) })
+  const pages = sitePages.map((p) => p.path)
+  const stream = pageStream(capture, pages, budget)
+  const owner = (f) => failureOwner(run, pages, f)
+  const pageResults = await eachLimited(pages, budget.limits.pages, (page) =>
+    finishPage(run, page, { shots: stream.of(page), owns: (f) => owner(f) === page })
   )
-  // The tiles the finder is shown, kept as files its reply files name (model-replies.js).
-  run.shotFile = await keepShotFiles(saveFile, firstShots.shots)
-  const { faults: found, records } = await findFaults(run, firstShots)
-  // The first site check may still be running beside the finder (a promise); its failures join the finder's faults here.
-  const first = await firstCheck
-  run.firstCheck = first
-  const merged = await mergedFaults({
-    found,
-    firstCheck: first,
-    pageHtml: readOnce(pageHtml),
-    brief: run.orderFacts.brief
-  })
-  const { records: repairRecords, kept, rounds } = await runRounds(run, merged.faults, firstShots)
-  records.push(...repairRecords, ...merged.records)
-  // The final check runs whatever the limits: the build needs it. The hard limit's timer is let go first.
-  budget.close()
+  pageResults.push(await finishPage(run, null, { shots: null, owns: (f) => owner(f) === null }))
+  await stream.done
+  const first = await run.firstReady
+  const records = [...pageResults.flatMap((p) => p.records), ...pageResults.flatMap((p) => p.mergeRecords)]
+  const kept = pageResults.flatMap((p) => p.kept)
   const final = await finalCheck(run, { report, kept, firstCheck: first, siteCheck })
   const log = repairLog({
     site: siteKey,
-    records,
-    unshot: firstShots.unshot,
+    records: records.map((r) => final.replaced.get(r) ?? r),
+    unshot: pageResults.flatMap((p) => p.unshot),
     replies: run.replies.files,
     budget: budget.summary(),
-    rounds,
-    undoneByFinalCheck: final.undone,
+    rounds: Math.max(0, ...pageResults.map((p) => p.rounds)),
+    final,
     firstCheck: first,
-    finalCheck: final.check,
-    merge: merged.merge
+    merge: mergeTotals(pageResults.map((p) => p.merge))
   })
   await saveFile(REPAIR_LOG_FILE, `${JSON.stringify(log, null, 2)}\n`)
   return { ok: true, report: final.report, log, finalCheck: final.check, firstCheck: first }
+}
+
+/** The merge counts of every page, added up. */
+const mergeTotals = (merges) => {
+  const total = {}
+  for (const merge of merges) for (const [k, v] of Object.entries(merge)) total[k] = (total[k] ?? 0) + v
+  return total
 }

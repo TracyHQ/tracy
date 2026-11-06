@@ -1,15 +1,18 @@
 // The finisher's three model doors (spec #418): `finisherFinder`, `finisherFixer` and `finisherChecker`, each set in
 // /ops › Model & AI and meant for DeepSeek Flash on DeepSeek's own API (lib/bench-harness.js), like the planner, the writer
 // and the picture picker. Each role thinks at its own reasoning effort (ADR 0044 decision 30): the effort set on its door in
-// /ops, else its role's default, finder max, fixer medium, checker low (the product owner's choice, 2026-11-06). Like theirs, a door never falls back to the environment: an unset,
-// disabled or unreadable door refuses the run with its reason. The finder and the checker look at screenshots, so a model
-// that cannot read pictures (its provider says so, or its harness profile sends none) refuses the run too.
+// /ops, else its role's default: finder max, fixer high, checker low. The product owner chose medium for the fixer
+// (2026-11-06); DeepSeek takes low, high and max only, so the fixer runs at high, the nearest level it takes. An effort the
+// door's model does not take (lib/bench-harness.js MODEL_EFFORTS) refuses the run with the levels it does take. Like the
+// other doors, a door never falls back to the environment: an unset, disabled or unreadable door refuses the run with its
+// reason. The finder and the checker look at screenshots, so a model that cannot read pictures (its provider says so, or
+// its harness profile sends none) refuses the run too.
 //
 // What the finisher is given for each role is a door object: { ok, label, model, providerId, images, snapshot,
 // ask({ system, content }) => { text, costUsd, reasoning, usage } }, or a refusal { ok: false, code, reason }. Tests give scripted ones.
 import { runAgent } from '../../lib/agent-over-door.js'
-import { benchHarnessFor, sendsImages } from '../../lib/bench-harness.js'
-import { cannotSeeReason, ladderRefusal, lookedUpDoor } from '../../lib/door-ladder.js'
+import { benchHarnessFor, effortsFor, sendsImages } from '../../lib/bench-harness.js'
+import { cannotSeeReason, DOORS_WHERE, ladderRefusal, lookedUpDoor } from '../../lib/door-ladder.js'
 
 export const FINISHER_PROVIDER = 'deepseek'
 export const FINISHER_MODEL = 'deepseek-flash'
@@ -22,7 +25,7 @@ export const FINISHER_ROLES = Object.freeze({
     sight: 'the finder looks at page screenshots',
     effort: 'max'
   }),
-  fixer: Object.freeze({ door: 'finisherFixer', label: 'Finisher fixer', sight: null, effort: 'medium' }),
+  fixer: Object.freeze({ door: 'finisherFixer', label: 'Finisher fixer', sight: null, effort: 'high' }),
   checker: Object.freeze({
     door: 'finisherChecker',
     label: 'Finisher checker',
@@ -110,6 +113,13 @@ export async function finisherDoor({ pool, secret, role, fetchImpl = fetch }) {
   const { providerId, baseUrl, apiKey, model } = found.credential
   // The effort set on the door in /ops, else the role's own default.
   const effort = found.snapshot?.effort ?? spec.effort
+  const takes = effortsFor(model, providerId)
+  if (takes && !takes.includes(effort))
+    return {
+      ok: false,
+      code: 'FINISHER_DOOR_EFFORT_UNSUPPORTED',
+      reason: `The "${spec.label}" door asks ${model} for effort ${effort}; it takes ${takes.join(', ')}. Pick one of them in ${DOORS_WHERE}.`
+    }
   return {
     ok: true,
     label: spec.label,
