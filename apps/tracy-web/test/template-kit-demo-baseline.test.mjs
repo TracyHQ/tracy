@@ -128,6 +128,7 @@ const verdict = (rel, contracts) => {
 }
 
 test('only JA Boxing is opted in', () => {
+  // test-quality: contract only JA Boxing is opted in to the demo baseline publish hold (product decision, #419)
   assert.deepEqual(DEMO_BASELINE_POLICY.holdPublishFor, [OPTED])
 })
 
