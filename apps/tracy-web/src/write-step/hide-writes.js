@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto'
 import { BUSY_WAITS_MS, refusalWords } from './contract-write.js'
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { rowsOpening } from './page-meta-write.js'
+import { HIDE_ORDERS_DOOR, opens, ROWS_REMOVE_DOOR } from './plugin-doors.js'
 import { answerWords, doorCall, readRow } from './settings-door.js'
 
 const digest = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex')
@@ -23,8 +24,11 @@ export async function hideOpsOf(door, siteKey) {
         problem: `the plugin could not say whether it takes hide orders: ${answerWords(answer)}`,
         rowsRemove: false
       }
-    const ops = answer?.info?.hide_ops
-    return { problem: Number(ops?.version) >= 1 ? null : older, rowsRemove: Number(ops?.rows_remove) >= 1 }
+    const info = answer?.info
+    return {
+      problem: opens(HIDE_ORDERS_DOOR, info) ? null : older,
+      rowsRemove: opens(ROWS_REMOVE_DOOR, info)
+    }
   } catch (error) {
     return {
       problem: `the plugin could not say whether it takes hide orders: ${String(error?.message ?? error)}`,

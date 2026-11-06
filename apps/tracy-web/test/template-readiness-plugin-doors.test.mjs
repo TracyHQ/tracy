@@ -1,0 +1,200 @@
+/**
+ * The write doors check of the template readiness verdict (ticket #434): the write step declares the plugin doors it
+ * needs (`src/write-step/plugin-doors.js`), the doors each released Claude Cowork for Joomla package offers are read
+ * from its own bytes into a derived manifest, and the check holds the pinned plugin to the declared list.
+ */
+import assert from 'node:assert/strict'
+import { test } from 'node:test'
+
+import { defaultContracts } from '../src/lib/contracts.js'
+import { latestPin, readPins, releaseOfPin } from '../src/lib/template-readiness/pinned-release.js'
+import { evidenceOfPackage } from '../src/lib/template-readiness/plugin-doors-of-package.js'
+import { readinessVerdict } from '../src/lib/template-readiness/verdict.js'
+import { WRITE_DOORS_CHECK } from '../src/lib/template-readiness/write-doors-check.js'
+import { opens, WRITE_STEP_DOORS } from '../src/write-step/plugin-doors.js'
+import { zipOf } from './template-customization-question-readiness-fixtures.mjs'
+
+test('the write step declares every plugin door it reads, each with the evidence a package shows it by', () => {
+  assert.deepEqual(
+    WRITE_STEP_DOORS.map((d) => d.id),
+    ['hide-orders', 'rows-remove', 'page-create', 'slot-corrections', 'menu-item-alias']
+  )
+  // The plugin's own words for each door (its info block, and the alias cleaner of content.update), read in its source.
+  assert.deepEqual(
+    WRITE_STEP_DOORS.map((d) => d.evidence),
+    [
+      "'hide_ops' =>",
+      "'rows_remove' =>",
+      "'page_create' =>",
+      "'slot_corrections' =>",
+      'function urlSafeAlias('
+    ]
+  )
+  for (const door of WRITE_STEP_DOORS) {
+    assert.equal(typeof door.evidence, 'string', door.id)
+    assert.ok(door.evidence.length > 0, door.id)
+    assert.equal(typeof door.what, 'string', door.id)
+  }
+})
+
+test('a door read from the info answer opens only when the plugin says so', () => {
+  const hide = WRITE_STEP_DOORS.find((d) => d.id === 'hide-orders')
+  const rows = WRITE_STEP_DOORS.find((d) => d.id === 'rows-remove')
+  assert.equal(opens(hide, { hide_ops: { version: 1, rows_remove: 1 } }), true)
+  assert.equal(opens(rows, { hide_ops: { version: 1, rows_remove: 1 } }), true)
+  assert.equal(opens(rows, { hide_ops: { version: 1 } }), false)
+  assert.equal(opens(hide, {}), false)
+  assert.equal(opens(hide, null), false)
+})
+
+/** A Claude Cowork for Joomla package as a release publishes it: the package manifest and the component zip inside. */
+function joomlaPackage(version, engine) {
+  return zipOf({
+    'pkg_claudecowork.xml': `<extension type="package"><version>${version}</version></extension>`,
+    'packages/com_claudecowork.zip': zipOf({
+      'administrator/lib/Engine.php': engine,
+      'administrator/lib/Other.php': '<?php // nothing here',
+      'site/claudecowork.php': `<?php // ${WRITE_STEP_DOORS.map((d) => d.evidence).join(' ')}`
+    })
+  })
+}
+
+test('a package is read for each piece of evidence in its component library, and says its own version', () => {
+  const engine =
+    "<?php $info = ['hide_ops' => ['version' => 1, 'rows_remove' => 1], 'page_create' => ['version' => 1]];"
+  const read = evidenceOfPackage(
+    joomlaPackage('0.24.90', engine),
+    WRITE_STEP_DOORS.map((d) => d.evidence)
+  )
+  assert.equal(read.version, '0.24.90')
+  assert.deepEqual(read.evidence, {
+    "'hide_ops' =>": true,
+    "'rows_remove' =>": true,
+    "'page_create' =>": true,
+    // Only the component's library is read: the same words in a site file are not the door.
+    "'slot_corrections' =>": false,
+    'function urlSafeAlias(': false
+  })
+})
+
+test('a package that is not a Joomla package of the plugin says so rather than reading as one without doors', () => {
+  assert.throws(() => evidenceOfPackage(Buffer.from('not a zip'), ["'hide_ops' =>"]), /zip/)
+  assert.throws(() => evidenceOfPackage(zipOf({ 'readme.txt': 'x' }), ["'hide_ops' =>"]), /com_claudecowork/)
+})
+
+/** Every door's evidence set to `has` (one answer for all, or a function of the door). */
+const evidenceOf = (has, doors = WRITE_STEP_DOORS) =>
+  Object.fromEntries(doors.map((d) => [d.evidence, typeof has === 'function' ? has(d) : has]))
+
+/** A manifest of four released packages, in the shape scripts/cowork-plugin-doors.mjs writes. */
+const MANIFEST = {
+  platform: 'joomla',
+  releases: {
+    '0.24.80': { evidence: evidenceOf(false) },
+    '0.24.81': { evidence: evidenceOf((d) => d.id === 'menu-item-alias') },
+    '0.24.85': { evidence: evidenceOf(true) },
+    '0.24.87': { evidence: evidenceOf(true) }
+  }
+}
+
+/** The pin list with JA Boxing j6 pinned to another plugin version (a copy of the latest JA Boxing release). */
+function pinsWithBoxingOn(version) {
+  const pins = structuredClone(readPins())
+  const cowork = pins['quickstart/ja-boxing/j6'].cowork
+  cowork.version = version
+  cowork.file = `pkg_claudecowork-${version}.zip`
+  cowork.url = `https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v${version}/${cowork.file}`
+  return pins
+}
+
+const boxing = () => releaseOfPin(latestPin('ja-boxing'), defaultContracts())
+const judge = (release, world) =>
+  WRITE_DOORS_CHECK.judge(release, { contracts: defaultContracts(), ...world })
+
+test('the latest JA Boxing release pins a plugin with every write door: green', () => {
+  assert.equal(latestPin('ja-boxing').cowork, '0.24.85')
+  const judged = judge(boxing(), { pluginDoors: MANIFEST })
+  assert.deepEqual(judged, {
+    state: 'done',
+    code: 'cowork-pin-doors-ready',
+    params: { plugin: '0.24.85', doors: WRITE_STEP_DOORS.map((d) => d.id) }
+  })
+})
+
+test('the latest JA Boxing release is green against the doors read from the released packages (committed manifest)', () => {
+  const judged = judge(boxing(), {})
+  assert.equal(judged.state, 'done', `${judged.code} ${JSON.stringify(judged.params)}`)
+})
+
+test('a copy of JA Boxing pinned to a plugin without the doors is red, naming them and the newest release that has them', () => {
+  const judged = judge(boxing(), { pluginDoors: MANIFEST, pins: pinsWithBoxingOn('0.24.81') })
+  assert.deepEqual(judged, {
+    state: 'todo',
+    code: 'cowork-pin-missing-doors',
+    params: {
+      plugin: '0.24.81',
+      missing: ['hide-orders', 'rows-remove', 'page-create', 'slot-corrections'],
+      fixVersion: '0.24.87'
+    }
+  })
+})
+
+test('a door no released plugin has asks for a plugin release, naming that door', () => {
+  const door = { id: 'example-door', what: 'an example door', evidence: "'example_door' =>" }
+  const doors = [...WRITE_STEP_DOORS, door]
+  const manifest = structuredClone(MANIFEST)
+  for (const r of Object.values(manifest.releases)) r.evidence[door.evidence] = false
+  const judged = judge(boxing(), { pluginDoors: manifest, writeDoors: doors })
+  assert.deepEqual(judged, {
+    state: 'todo',
+    code: 'cowork-release-needed',
+    params: { plugin: '0.24.85', missing: ['example-door'], doors: ['example-door'] }
+  })
+})
+
+test('a door the write step adds is held to the plugin at once: not read in any package yet, it is never a pass', () => {
+  const door = { id: 'example-door', what: 'an example door', evidence: "'example_door' =>" }
+  const judged = judge(boxing(), { pluginDoors: MANIFEST, writeDoors: [...WRITE_STEP_DOORS, door] })
+  assert.equal(judged.state, 'todo')
+  assert.equal(judged.code, 'cowork-pin-doors-unread')
+  assert.deepEqual(judged.params.doors, ['example-door'])
+  assert.equal(judged.params.plugin, '0.24.85')
+})
+
+test('a pinned plugin the manifest has not read is not checked, which is never a pass', () => {
+  const judged = judge(boxing(), { pluginDoors: MANIFEST, pins: pinsWithBoxingOn('0.24.84') })
+  assert.equal(judged.state, 'todo')
+  assert.equal(judged.code, 'cowork-pin-doors-unread')
+  assert.equal(judged.params.plugin, '0.24.84')
+})
+
+test('the check joins the cowork-pin piece of the verdict', () => {
+  const pin = latestPin('ja-boxing')
+  const world = {
+    contracts: defaultContracts(),
+    server: false,
+    readiness: { version: pin.version, state: 'done', report: { results: [] } },
+    pluginDoors: MANIFEST,
+    pins: pinsWithBoxingOn('0.24.80'),
+    checks: [WRITE_DOORS_CHECK]
+  }
+  const piece = readinessVerdict(boxing(), world).pieces.find((p) => p.piece === 'cowork-pin')
+  assert.equal(piece.step, 'write-doors')
+  assert.equal(piece.code, 'cowork-pin-missing-doors')
+  assert.equal(piece.params.fixVersion, '0.24.87')
+})
+
+// Recorded as it is, not fixed here: JA Diner j6 stays on 0.24.80 (REG-PR-383 holds that pin), a plugin older than every
+// door of the write step. The fix names the newest release the committed manifest has read.
+test('the T3 case: JA Diner j6 (plugin 0.24.80) lacks every write door (recorded as it is today)', () => {
+  const pin = latestPin('ja-diner')
+  assert.equal(pin.cowork, '0.24.80')
+  const judged = judge(releaseOfPin(pin, defaultContracts()), {})
+  assert.equal(judged.state, 'todo')
+  assert.equal(judged.code, 'cowork-pin-missing-doors')
+  assert.deepEqual(
+    judged.params.missing,
+    WRITE_STEP_DOORS.map((d) => d.id)
+  )
+  assert.equal(judged.params.fixVersion, '0.24.87')
+})

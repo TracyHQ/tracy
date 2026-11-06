@@ -15,9 +15,10 @@ import { menuRows } from '../lib/joomla-menu-rows.js'
 import { answerWords, doorCall } from './settings-door.js'
 import { addressAfter, keptAt, routeLines, routeOrders } from './page-route-lines.js'
 import { freeHolder } from './page-route-parent.js'
+import { MENU_ITEM_ALIAS_DOOR } from './plugin-doors.js'
 
 /** The first release of the plugin whose `content.update` renames a menu item through `alias` (TracyHQ/claude-cowork#271). */
-export const ALIAS_DOOR = 'Claude Cowork for Joomla 0.24.81'
+export const ALIAS_DOOR = `Claude Cowork for Joomla ${MENU_ITEM_ALIAS_DOOR.since}`
 const each = (value) => (Array.isArray(value) ? value : [])
 const digest = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 32)
 const OLDER = `the plugin took the call and kept the old alias; renaming a page needs ${ALIAS_DOOR} or later`
