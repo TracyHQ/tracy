@@ -1,5 +1,5 @@
 /**
- * REG-PR-411: JA Restaurant EmDash 1.0.1 wears a design system fully. The fence is what the release
+ * REG-PR-416: JA Restaurant EmDash 1.0.1 wears a design system fully. The fence is what the release
  * is made of: the stylesheets read the type and shape tokens and no role a system does not define, the
  * slot contract is ready from 1.0.1, and the committed measurement of 1.0.1 judges every built-site
  * rule as pass.

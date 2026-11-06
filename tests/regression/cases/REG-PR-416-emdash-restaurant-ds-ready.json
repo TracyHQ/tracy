@@ -1,14 +1,14 @@
 {
-  "id": "REG-PR-411-emdash-restaurant-ds-ready",
+  "id": "REG-PR-416-emdash-restaurant-ds-ready",
   "kind": "fix",
   "title": "JA Restaurant EmDash 1.0.1 reads the design-system type, shape and colour roles, its slot contract is ready and its committed measurement passes every built-site rule",
-  "pr": 411,
+  "pr": 416,
   "area": "design/slot",
   "cms": ["em"],
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "S1: From the repo root at the commit under test, run tests/regression/scripts/REG-PR-411-emdash-restaurant-ds-ready.mjs: it reads the theme's version, its stylesheets and tokens, the slot contract and contracts/1.0.1/design-system-measurement.json."
+    "S1: From the repo root at the commit under test, run tests/regression/scripts/REG-PR-416-emdash-restaurant-ds-ready.mjs: it reads the theme's version, its stylesheets and tokens, the slot contract and contracts/1.0.1/design-system-measurement.json."
   ],
   "expect": [
     "The theme is 1.0.1 in package.json, template.config.json and the Dockerfile label.",
@@ -19,6 +19,6 @@
   "evidence": "Measured 05-06/11/2026 on sites built from the 1.0.0 and 1.0.1 packages: 1.0.0 passed 29 of 45 design-system rules (4 of 64 flow views); 1.0.1 passes 64 of 64 views and every preview rule, and its Fast Gate tiles are identical to 1.0.0's.",
   "fence": "packages/cms/tracy-emdash-theme-restaurant/src/styles, the slot contract templates/emdash-tracy-restaurant.json and contracts/1.0.1/design-system-measurement.json.",
   "run": {
-    "cmd": ["node", "tests/regression/scripts/REG-PR-411-emdash-restaurant-ds-ready.mjs"]
+    "cmd": ["node", "tests/regression/scripts/REG-PR-416-emdash-restaurant-ds-ready.mjs"]
   }
 }
