@@ -14,9 +14,10 @@
 // A frame the plan wants filled is never left without a picture while one can be had (owner decision 06/11/2026, card
 // AJ): before `return`, a drawn frame is drawn again in other compositions (`redraw-alt`, the subject whole and centred
 // with a margin, in the frame's shape, at most REDRAW_ALT_TRIES), and any frame that is not a person keeps the best
-// picture the looker rejected for minor faults only (`best-rejected`, looker-call.js MINOR_FAULTS). Only a frame whose
-// every picture had a hard fault, or that got no picture at all, is still returned, and the picture package names it
-// as a problem (contract-mapping.js).
+// picture the looker rejected for minor faults only (`best-rejected`, looker-call.js MINOR_FAULTS), else the best of
+// its rejected pictures, placed despite the looker: a checker's rejection never leaves the demo (owner's rule
+// 2026-11-07). Only a frame that got no picture at all is still returned, and the picture package names it as a problem
+// (contract-mapping.js).
 
 /** The rungs per plan match. */
 export const RUNGS = Object.freeze({

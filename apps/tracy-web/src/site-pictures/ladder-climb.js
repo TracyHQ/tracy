@@ -119,23 +119,17 @@ async function drawRung(ctx, s, frameId, p, rung) {
   }
 }
 
-// The best picture the looker rejected for this frame, kept when its only faults are minor: the fewest faults, then the
-// latest (a later picture was made to avoid the faults of the earlier ones). An owner photo another frame of its pages
-// now shows is passed over.
+// The best picture the looker rejected for this frame: the fewest faults, then the latest (a later picture was made to
+// avoid the faults of the earlier ones). One whose only faults are minor wins; with none, the best of the others is
+// placed despite the looker, because a checker's rejection never leaves the demo in a frame (owner's rule 2026-11-07).
+// An owner photo another frame of its pages now shows is passed over.
 function bestRejectedRung(s, frameId, p) {
   const used = s.onPages(frameId)
-  const minor = (p.rejected ?? []).filter(
-    (r) => onlyMinorFaults(r.faults) && r.entry.file && !(r.entry.asset && used.has(r.entry.asset))
-  )
-  if (!minor.length) {
-    const hard = [...new Set((p.rejected ?? []).flatMap((r) => r.faults))]
-    return {
-      skip: p.rejected?.length
-        ? `every rejected picture has a hard fault (${hard.join(', ')})`
-        : 'no picture of this frame was made'
-    }
-  }
-  const best = minor.reduce((a, b) => (b.faults.length <= a.faults.length ? b : a))
+  const usable = (p.rejected ?? []).filter((r) => r.entry.file && !(r.entry.asset && used.has(r.entry.asset)))
+  if (!usable.length) return { skip: 'no picture of this frame was made' }
+  const minor = usable.filter((r) => onlyMinorFaults(r.faults))
+  const pool = minor.length ? minor : usable
+  const best = pool.reduce((a, b) => (b.faults.length <= a.faults.length ? b : a))
   p.done = true
   return {
     list: best.list,
@@ -143,7 +137,9 @@ function bestRejectedRung(s, frameId, p) {
     entry: {
       ...best.entry,
       filledBy: { rung: 'best-rejected', faults: [...best.faults] },
-      reason: `the best rejected picture, kept because its only faults are minor (${best.faults.join(', ')}), after: ${s.story(frameId)}`
+      reason: minor.length
+        ? `the best rejected picture, kept because its only faults are minor (${best.faults.join(', ')}), after: ${s.story(frameId)}`
+        : `placed despite looker: ${best.faults.join(', ') || 'no fault named'}, after: ${s.story(frameId)}`
     }
   }
 }

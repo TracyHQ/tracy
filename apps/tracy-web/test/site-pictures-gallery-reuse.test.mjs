@@ -48,30 +48,27 @@ test('a gallery tile no new photo fits reuses a photo of its page, cut elsewhere
   assert.ok(cropOverlap(t4.crop, second.crop) <= REUSE_MAX_OVERLAP)
   assert.match(m.ladder.find((l) => l.frame === 'block-t.4').steps[2].detail ?? '', /^[0-9a-f]{12}$/)
 
-  // No photo left (the other photo of the page is in the neighbouring tile, its own was rejected): returned, never hidden.
-  assert.ok(!e.has('block-u.2'))
-  const back = m.returns.find((r) => r.frame === 'block-u.2')
-  assert.match(back.reason, /^a gallery tile is never hidden alone/)
+  // No photo left (the other photo of the page is in the neighbouring tile, its own was rejected): never hidden, and
+  // its own rejected photo is placed despite the looker rather than leaving the demo (owner's rule 2026-11-07).
+  assert.ok(!m.returns.some((r) => r.frame === 'block-u.2'), 'never returned')
   // The last rung tries every photo: the neighbour's is never taken, the tile's own is rejected again.
   const u2 = rungs(m, 'block-u.2')
   assert.ok(u2.some(([r, o]) => r === 'reuse' && o === 'skipped'))
-  // Its rejected photos had a hard fault, so no rejected picture is kept either.
-  // With no drawer door the draw rungs are skipped too (card AK sends a tile no photo fits to the draw rung).
-  assert.deepEqual(u2.slice(-5), [
+  // With no drawer door the draw rungs are skipped (card AK sends a tile no photo fits to the draw rung).
+  assert.deepEqual(u2.slice(-4), [
     ['any-photo', 'skipped'],
     ['draw', 'skipped'],
     ['redraw', 'skipped'],
-    ['best-rejected', 'skipped'],
-    ['return', 'returned']
+    ['best-rejected', 'placed']
   ])
   assert.match(
-    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-5).detail,
+    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-4).detail,
     /is in the neighbouring tile block-u\.1/
   )
-  assert.match(
-    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-2).detail,
-    /^every rejected picture has a hard fault/
-  )
+  const u2Entry = e.get('block-u.2')
+  assert.equal(u2Entry.filledBy.rung, 'best-rejected')
+  assert.match(u2Entry.reason, /^placed despite looker: /)
+  assert.notEqual(u2Entry.asset, e.get('block-u.1').asset, "never the neighbouring tile's photo")
   // A frame that is not a gallery tile keeps today's ladder: hidden where the kit allows.
   assert.equal(e.get('block-d.1').source, 'hide')
   assert.deepEqual(rungs(m, 'block-d.1').slice(-2), [

@@ -229,10 +229,13 @@ export function createLooker({
       }
       if (said.dropped?.length)
         notes.push(`${entry.frame}: fault names outside the list dropped: ${said.dropped.join(', ')}`)
-      // A rejected picture the ladder kept because its only faults are minor (rung best-rejected) is noted, not failed.
-      if (said.verdict === 'fail' && entry.filledBy?.rung === 'best-rejected' && onlyMinorFaults(said.faults))
+      // A rejected picture the ladder kept (rung best-rejected) is noted, not failed: with minor faults only, or placed
+      // despite the looker because nothing better was made (a rejection never leaves the demo, owner's rule 2026-11-07).
+      if (said.verdict === 'fail' && entry.filledBy?.rung === 'best-rejected')
         notes.push(
-          `${entry.frame}: kept with minor faults (${said.faults.join(', ')}): no better picture fits`
+          onlyMinorFaults(said.faults)
+            ? `${entry.frame}: kept with minor faults (${said.faults.join(', ')}): no better picture fits`
+            : `${entry.frame}: placed despite looker: ${said.faults.join(', ') || 'no fault named'}: no better picture was made`
         )
       else if (said.verdict === 'fail')
         failures.push({
