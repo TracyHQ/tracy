@@ -10,6 +10,7 @@ import {
   finderDoor
 } from '../src/write-step/finder/finder-door.js'
 import { effortsFor } from '../src/lib/bench-harness.js'
+import { assignDoor } from '../src/lib/llm-store.js'
 import { sealSecret } from '../src/lib/secret-box.js'
 import { finalReply, scriptedModel } from './_agent-over-door-fake.mjs'
 
@@ -31,7 +32,7 @@ test('the finder door refuses an unset, a disabled and an unreadable door, each 
 })
 
 /** /ops as lookupDoor reads it: one ready door on DeepSeek's own API. */
-const readyDoor = async ({ model = 'deepseek-flash', vision = true } = {}) =>
+const readyDoor = async ({ model = 'deepseek-flash', vision = true, effort = null } = {}) =>
   pool([
     {
       id: 'deepseek',
@@ -43,7 +44,7 @@ const readyDoor = async ({ model = 'deepseek-flash', vision = true } = {}) =>
       door_model: model,
       assignment_revision: 1,
       assignment_updated_at: new Date(0),
-      reasoning_effort: null,
+      reasoning_effort: effort,
       models: [{ id: model, vision }]
     }
   ])
@@ -70,4 +71,48 @@ test('a finder door whose model cannot read pictures is refused before any call'
   assert.equal(door.code, 'FINDER_DOOR_NO_IMAGES')
   assert.match(door.reason, /cannot read pictures, and the finder looks at page screenshots/)
   assert.equal(model.requests.length, 0)
+})
+
+test('the finder effort is a door setting: a saved effort is the one sent, and one the model does not take is refused', async () => {
+  const model = scriptedModel([finalReply({ content: '{"faults":[]}' })])
+  const door = await finderDoor({
+    pool: await readyDoor({ effort: 'high' }),
+    secret: SECRET,
+    fetchImpl: model.fetchImpl
+  })
+  assert.equal(door.ok, true, door.reason)
+  await door.ask({ system: 'look', content: [{ type: 'text', text: 'Page /.' }] })
+  assert.equal(model.requests[0].body.reasoning_effort, 'high')
+  assert.equal(door.snapshot.effortUsed, 'high')
+  const refused = await finderDoor({ pool: await readyDoor({ effort: 'medium' }), secret: SECRET })
+  assert.equal(refused.code, 'FINDER_DOOR_EFFORT_UNSUPPORTED')
+  assert.match(refused.reason, /does not take effort medium; it takes low, high, max/)
+})
+
+test('/ops saves a finder effort only when the door model takes it, and no effort keeps the finder default', async () => {
+  const saved = []
+  const book = { query: async (sql, params) => (saved.push(params), { rows: [] }) }
+  const pick = (effort) =>
+    assignDoor(book, 'finisherFinder', { providerId: 'deepseek', model: FINDER_MODEL, effort }, 'ops')
+  assert.deepEqual(await pick('medium'), {
+    error: 'MODEL_EFFORT_UNSUPPORTED',
+    supported: ['low', 'high', 'max'],
+    mode: 'selectable'
+  })
+  assert.equal(saved.length, 0, 'a refused effort writes nothing')
+  assert.deepEqual(await pick('low'), { error: null })
+  assert.equal(saved.at(-1)[4], 'low')
+  assert.deepEqual(await pick(undefined), { error: null })
+  assert.equal(saved.at(-1)[4], null, `no effort saved: the door thinks at ${FINDER_EFFORT}`)
+  const other = await assignDoor(
+    book,
+    'finisherFinder',
+    { providerId: 'other', model: 'some-vision-model', effort: 'high' },
+    'ops'
+  )
+  assert.equal(
+    other.error,
+    'MODEL_EFFORT_UNSUPPORTED',
+    'a model whose efforts are not known takes no effort setting'
+  )
 })

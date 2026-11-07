@@ -1,6 +1,7 @@
 // The finder's model door (#448, carried over from PR #426, its fixer and checker doors dropped):
 // `finisherFinder`, set in /ops › Model & AI and meant for DeepSeek Flash on DeepSeek's own API (lib/bench-harness.js). It
-// thinks at `max`, the finder's effort; a model that does not take it refuses with the levels it does take. Like the other
+// thinks at the effort saved on the door, or at `FINDER_EFFORT` when none is saved; a model that does not take that
+// effort refuses with the levels it does take. Like the other
 // doors it never falls back to the environment: an unset, disabled or unreadable door refuses with its reason
 // (lib/door-ladder.js). The finder looks at screenshots, so a model that cannot read pictures refuses too.
 //
@@ -17,7 +18,7 @@ export const FINDER_MODEL = 'deepseek-flash'
 export const FINDER_EFFORT = 'max'
 
 /** One call in a fresh conversation, at the model's bench harness and the finder's effort. */
-function askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl) {
+function askerOf({ providerId, baseUrl, apiKey, model, effort }, fetchImpl) {
   const {
     modelProfile: _profile,
     budgetUsd: _budget,
@@ -32,7 +33,7 @@ function askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl) {
       firstUser: content,
       fetchImpl,
       ...harness,
-      effort: FINDER_EFFORT,
+      effort,
       maxTurns: 1
     })
     const said = [...(turns ?? [])].reverse().find((t) => t?.state === 'answered')?.message
@@ -59,12 +60,13 @@ export async function finderDoor({ pool, secret, fetchImpl = fetch }) {
   })
   if (refused) return refused
   const { providerId, baseUrl, apiKey, model } = found.credential
+  const effort = found.snapshot?.effort ?? FINDER_EFFORT
   const takes = effortsFor(model, providerId)
-  if (takes && !takes.includes(FINDER_EFFORT))
+  if (takes && !takes.includes(effort))
     return {
       ok: false,
       code: 'FINDER_DOOR_EFFORT_UNSUPPORTED',
-      reason: `The "${FINDER_LABEL}" door's model ${model} does not take effort ${FINDER_EFFORT}; it takes ${takes.join(', ')}. Pick another model in ${DOORS_WHERE}.`
+      reason: `The "${FINDER_LABEL}" door's model ${model} does not take effort ${effort}; it takes ${takes.join(', ')}. Pick another effort or model in ${DOORS_WHERE}.`
     }
   if (found.snapshot?.metadata?.vision === false || !sendsImages(model, providerId))
     return {
@@ -86,8 +88,8 @@ export async function finderDoor({ pool, secret, fetchImpl = fetch }) {
       model,
       endpointHost: new URL(baseUrl).hostname,
       ...found.snapshot,
-      effortUsed: FINDER_EFFORT
+      effortUsed: effort
     },
-    ask: askerOf({ providerId, baseUrl, apiKey, model }, fetchImpl)
+    ask: askerOf({ providerId, baseUrl, apiKey, model, effort }, fetchImpl)
   }
 }

@@ -284,10 +284,11 @@ export const LLM_DOORS = [
     blurb:
       'Write step bench: step 9b. One call per kept page looks at its screenshots at desktop and phone width beside the template demo and lists the faults a customer would see, from a fixed list; step 9b asks the site agent to fix them. It never writes to the site. Without it step 9b sends only the site check faults.',
     needsModel: true,
-    // Vision is REQUIRED: the finder looks at page screenshots (write-step/finder/finder-door.js). No tools; its effort is
-    // fixed in code at max (#448).
+    // Vision is REQUIRED: the finder looks at page screenshots (write-step/finder/finder-door.js). No tools. Its effort is
+    // a door setting, checked against the model's efforts (lib/bench-harness.js); none saved = max (#448).
     requires: ['vision'],
-    prefers: ['json']
+    prefers: ['json'],
+    configurableEffort: true
   },
   {
     id: 'brandAgent',
