@@ -148,15 +148,16 @@ export function languageFilesOf({ listDir, tag, template }) {
  * @param {{reads: object[], idOf: Function, cms: {files: object[]}|null, slotTexts: string[], nameSetting: string|null}} o
  */
 export function siteCmsTexts({ reads, idOf, cms, slotTexts, nameSetting }) {
-  if (!cms)
+  // `cms.none`: the platform prints no fixed sentence from a file a line can be matched against (the adapter's reason).
+  if (!cms || cms.none)
     return {
       fixedTexts: [],
       nameLines: [],
       errors: [
         {
-          kind: 'missing',
+          kind: cms?.none ? 'not-on-platform' : 'missing',
           field: 'site.fixedTexts',
-          reason: 'no web root to read the language files from (--webroot)'
+          reason: cms?.none ?? 'no web root to read the language files from (--webroot)'
         }
       ]
     }

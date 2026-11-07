@@ -20,7 +20,7 @@ import { readContractMap } from './lib/contract-read.mjs'
 import { pageIdOf } from './lib/ids.mjs'
 import { pathOfRoute, slugOfPath } from './lib/kit-paths.mjs'
 import { indexMap } from './lib/map-index.mjs'
-import { adapterFor } from './lib/site/adapters/index.mjs'
+import { adapterFor, usePlatform } from './lib/site/adapters/index.mjs'
 import { siteWriter } from './lib/site/adapters/site-writer.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { buildBrandColours } from './lib/site/brand-colours.mjs'
@@ -69,6 +69,7 @@ export function pagesToRead(map, captureIndex, cap) {
 export async function runSite({ o, out, chromium, capture = null, log: say = log }) {
   const map = readContractMap(o.contract)
   const manifest = readJson(join(o.contract, 'manifest.json'))
+  usePlatform(manifest.platform)
   const hostHeader = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
   const str = (v) => (typeof v === 'string' ? v : undefined)
   const source = siteSource({

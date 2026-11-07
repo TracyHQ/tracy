@@ -102,7 +102,7 @@ import { rowPairChecks } from './lib/row-pairs.mjs'
 import { stampSettled, TOOL } from './lib/version.mjs'
 import { runFieldMeasure } from './lib/site/measure-fields.mjs'
 import { writeSheets } from './lib/sheets.mjs'
-import { adapterFor } from './lib/site/adapters/index.mjs'
+import { adapterFor, usePlatform } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 import { declareVideoButtons } from './lib/video-buttons.mjs'
@@ -438,6 +438,8 @@ async function main() {
   }
   const out = resolve(o.out)
   mkdirSync(join(out, 'images'), { recursive: true })
+  // Page addresses are spelled the platform's way (lib/kit-paths.mjs urlOfPath).
+  if (o.contract) usePlatform(readIf(join(o.contract, 'manifest.json'))?.platform)
   if (cmd === 'sheet') return sheet(o, out).then(() => 0)
   if (cmd === 'approve') return approve(o, out)
   if (cmd === 'pack') return pack(out)

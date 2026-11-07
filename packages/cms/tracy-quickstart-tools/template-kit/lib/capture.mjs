@@ -25,7 +25,7 @@ export async function openKitContext(browser, { width, siteUrl, hostHeader, skip
     ignoreHTTPSErrors: true
   })
   const base = new URL(siteUrl)
-  await ctx.route('**/*', (route) => {
+  await ctx.route('**/*', async (route) => {
     const req = route.request()
     if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method())) return route.abort('blockedbyclient')
     // A pass that reads the DOM only skips what it never looks at (pictures, video, fonts).
@@ -35,7 +35,19 @@ export async function openKitContext(browser, { width, siteUrl, hostHeader, skip
     if (!ours || !hostHeader) return route.continue()
     u.protocol = base.protocol
     u.host = base.host
-    return route.continue({ url: u.href, headers: { ...req.headers(), host: hostHeader } })
+    const headers = { ...req.headers(), host: hostHeader }
+    // Chromium drops a `Host` header set on a continued request, so a page the site answers by its host name (a
+    // WordPress page redirects any other host to its own address) is fetched from Node with the header, its
+    // redirects handed back to the browser one by one (each comes back through this route).
+    if (req.resourceType() === 'document') {
+      try {
+        const response = await route.fetch({ url: u.href, headers, maxRedirects: 0 })
+        return route.fulfill({ response })
+      } catch {
+        return route.abort('connectionrefused')
+      }
+    }
+    return route.continue({ url: u.href, headers })
   })
   return ctx
 }

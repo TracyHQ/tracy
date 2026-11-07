@@ -21,9 +21,9 @@ import { mergeSite } from './kit-site.mjs'
 import { slotOwnerChecks } from './slot-owners.mjs'
 import { templateGaps } from './template-gaps.mjs'
 import { fixesOf } from './template-fixes.mjs'
-import { showcaseViewFor } from './site/adapters/index.mjs'
+import { showcaseViewFor, templateFileOf } from './site/adapters/index.mjs'
 import { logoFrameIds } from './site/logo-spots.mjs'
-import { buildStamp, imageChecksums, templateVersionOf } from './stamp.mjs'
+import { buildStamp, imageChecksums } from './stamp.mjs'
 import { limitChecks } from './text-limits.mjs'
 
 export const readJson = (f) => JSON.parse(readFileSync(f, 'utf8'))
@@ -32,17 +32,17 @@ export const writeJson = (f, v) => writeFileSync(f, `${JSON.stringify(v, null, 1
 /** A person's reasons for reach and row pair check failures in the kit work folder `out` (check-accepts.mjs). */
 export const reachAcceptsOf = (out) => readCheckAccepts(join(out, 'reach-accepts.json'))
 
-/** The template version: the flag, else the one already in the kit, else templateDetails.xml read on the site. */
+/** The template version: the flag, else the one already in the kit, else the template's own file read on the site. */
 async function templateVersion(o, manifest, previous) {
   if (typeof o['template-version'] === 'string')
     return { version: o['template-version'], from: 'flag --template-version' }
   if (previous?.version) return { version: previous.version, from: previous.measuredFrom }
-  if (!manifest.template) return { version: null, from: 'the contract names no template' }
-  const xml = `templates/${manifest.template}/templateDetails.xml`
+  const file = templateFileOf(manifest)
+  if (!file) return { version: null, from: 'the contract names no template' }
   const host = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
-  const r = await httpFetcher({ siteUrl: o.site, hostHeader: host })(new URL(xml, o.site).href)
-  const version = r.status === 200 ? templateVersionOf(r.html) : null
-  return { version, from: version ? `${xml} on the site` : `${xml} answered ${r.status}` }
+  const r = await httpFetcher({ siteUrl: o.site, hostHeader: host })(new URL(file.path, o.site).href)
+  const version = r.status === 200 ? file.versionOf(r.html) : null
+  return { version, from: version ? `${file.path} on the site` : `${file.path} answered ${r.status}` }
 }
 
 /** Assemble and write template-kit.json; returns the kit. */
@@ -84,6 +84,10 @@ export async function assembleKit(o, out, tool) {
     aliasHosts: host ? [host] : []
   })
   mergeSite(kit, siteDoc, map, wordsLinks)
+  // What the platform's content map does not declare (a WordPress map has no menu blocks or item lists): the kit
+  // leaves those fields empty and says why, once each (wordpress-map.mjs).
+  for (const g of map.platformGaps ?? [])
+    kit.errors.push({ kind: 'not-on-platform', field: g.field, reason: g.reason })
   // The coverage gate (coverage-gate.mjs): complete the kit from the contract, then count what it still lacks. The
   // list and owner checks run again over the completed kit.
   const desk = String(capture.widths?.[0] ?? '1440')

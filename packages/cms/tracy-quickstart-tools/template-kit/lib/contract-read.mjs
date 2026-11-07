@@ -8,6 +8,7 @@ import { join } from 'node:path'
 
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { inlineOf } from './inline-marks.mjs'
+import { withWordPressPages } from './site/adapters/wordpress-map.mjs'
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 const readIf = (file) => (existsSync(file) ? readJson(file) : null)
@@ -88,10 +89,22 @@ export function withInlineMarkup(map, coverage) {
   return taken ? { ...map, slots } : map
 }
 
+/**
+ * The content map in the shape the kit reads, whatever the platform: a WordPress map lists no pages, so they are
+ * derived from its page entities and the release inventory beside it (`wordpress-map.mjs`).
+ * @param {object} map
+ * @param {string} contract the contract folder
+ */
+function withPlatformShape(map, contract) {
+  const manifest = readIf(join(contract, 'manifest.json'))
+  if (String(manifest?.platform ?? '').toLowerCase() !== 'wordpress') return map
+  return withWordPressPages(map, readIf(join(contract, 'inventory.json')))
+}
+
 /** @param {string} contract the contract folder: its content map with the inline markup carried beside it */
 export const readContractSamples = (contract) =>
   withInlineMarkup(
-    readJson(join(contract, 'content-map.json')),
+    withPlatformShape(readJson(join(contract, 'content-map.json')), contract),
     readIf(join(contract, 'content-coverage.json'))
   )
 
