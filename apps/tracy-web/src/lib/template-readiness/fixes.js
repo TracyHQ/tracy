@@ -302,6 +302,9 @@ export const FIXES = Object.freeze({
     text: 'The pinned Claude Cowork plugin {plugin} lacks write doors ({missing}). Move the Cowork pin to {fixVersion} or newer in the quickstart list.',
     skill: CONTRACT_SKILL('8')
   },
+  'write-doors-not-judged': {
+    text: 'Not judged until the {platform} write step exists. This is not a pass, and there is nothing to fix here; the plugin write doors are judged like Joomla once that step is built.'
+  },
   'cowork-release-needed': {
     text: 'No Claude Cowork release has the write doors {doors}. A new plugin release is needed first, then move the Cowork pin to it.'
   },

@@ -64,7 +64,12 @@ export function verdictText(verdict, { pin, source }) {
       ? `Not green: ${held.join(', ')} hold${held.length === 1 ? 's' : ''} a new release.`
       : warned.length > 0
         ? `Not green: ${warned.join(', ')} warn${warned.length === 1 ? 's' : ''} (a release already published only warns where a new one would be held).`
-        : 'Every piece is green.'
+        : verdict.pieces.some((p) => p.state === 'not-judged')
+          ? `Every piece is green except ${verdict.pieces
+              .filter((p) => p.state === 'not-judged')
+              .map((p) => p.piece)
+              .join(', ')}, not judged yet (nothing to fix).`
+          : 'Every piece is green.'
   return [head, ...lines, `Not judged here: ${SERVER_ONLY.join('; ')}.`, summary].join('\n')
 }
 
@@ -140,7 +145,12 @@ export async function main(
   }
   if (values.json) out(`${JSON.stringify({ source, pin, notJudged: SERVER_ONLY, ...verdict }, null, 2)}\n`)
   else out(`${verdictText(verdict, { pin, source })}\n`)
-  return verdict.pieces.every((p) => p.state === 'done') ? 0 : 1
+  return exitCodeOf(verdict.pieces)
+}
+
+/** 0 when every piece is done or not judged (nothing to fix), else 1. */
+export function exitCodeOf(pieces) {
+  return pieces.every((p) => p.state === 'done' || p.state === 'not-judged') ? 0 : 1
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)
