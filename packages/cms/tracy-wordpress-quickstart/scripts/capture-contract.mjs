@@ -30,7 +30,7 @@
  *     --release-manifest <manifest.json> --tag <release tag> --cowork-version <x.y.z>
  *     --contracts-root <dir> [--webroot-members <file listing the archive's paths>]
  *     [--previous-map <previous version's content-map.json>] [--unplaced-report <file>]
- *     [--all-text] [--posts] [--role-vocabulary 2|3]
+ *     [--all-text] [--posts] [--page-titles] [--role-vocabulary 2|3]
  *
  * ALL VISIBLE TEXT (spec #37, issue #43): `--all-text` also makes a slot for every heading, paragraph, list item, button,
  * table cell, cite and menu label that has no `metadata.name` (or repeats one), and a url slot for each link in them.
@@ -46,6 +46,11 @@
  * verdict finds the site's posts carried nowhere (`itemLists`, `itemPages`). Off by default: a Claude Cowork plugin must
  * read a post's own fields before a profile carrying them can be bound, and every released profile re-captures byte for
  * byte. Only the `post` type is taken, the one `capture-inventory.mjs` records beside pages.
+ *
+ * PAGE TITLES (TracyHQ/tracy#459): `--page-titles` also gives every page entity a slot for its title (`target.field:
+ * "post_title"`, key `page-<slug>.title`), and makes an entity of a page that has a title and no addressable block.
+ * WordPress prints the title as the page's menu label, masthead and document title. Off by default, for the same
+ * reason as `--posts`: Claude Cowork 0.18.38 or later reads a page's own fields.
  *
  * SLOT ROLES (ADR 0038): every text and image slot of the map carries a `role` and a `group`. A recapture passes the
  * previous version's content map as --previous-map: a slot whose key AND sample are unchanged keeps its role and group
@@ -218,6 +223,29 @@ const POST_FIELDS = [
 ]
 
 /**
+ * The title slot of a page (TracyHQ/tracy#459): WordPress prints a page's title as its menu label, its masthead and its
+ * document title, so a page whose title no slot holds keeps the demo's words in every menu. The key `page-<slug>.title`
+ * cannot meet a block slot, whose keys start with the bare slug. A title with markup is left out and said.
+ * @returns {{ slot?: object, skipped?: string }}
+ */
+export function pageTitleSlot(p, key) {
+  const sample = String(p.post_title ?? '')
+  if (sample.trim() === '') return {}
+  if (sample.includes('<')) return { skipped: `${key}:title (inline markup)` }
+  return {
+    slot: {
+      key: `${key}.title`,
+      entity: key,
+      target: { field: 'post_title' },
+      type: 'text',
+      sample,
+      maxCharacters: Math.max(80, Math.min(2000, sample.length * 2 + 20)),
+      label: `${key} — title`
+    }
+  }
+}
+
+/**
  * The entities and slots of the published posts of `rows` (rows of the dump's posts table, every type), and everything
  * left out with the reason. A post is taken by the rule a page is: its type+slug is exactly one non-trashed row.
  * @param {object[]} rows @param {{ allText?: boolean }} [options]
@@ -310,6 +338,7 @@ export function deriveProfile({
   previousMap,
   allText = false,
   posts = false,
+  pageTitles = false,
   vocabulary
 }) {
   const release = normalizeRelease(raw)
@@ -362,6 +391,11 @@ export function deriveProfile({
     const key = `page-${p.post_name}`
     const got = pageSlots({ content: p.post_content, entityKey: key, prefix: p.post_name, allText })
     coverage.skipped.push(...got.skipped)
+    if (pageTitles) {
+      const title = pageTitleSlot(p, key)
+      if (title.skipped) coverage.skipped.push(title.skipped)
+      if (title.slot) got.slots.unshift(title.slot)
+    }
     if (got.slots.length === 0) {
       coverage.pagesWithoutSlots.push(p.post_name)
       continue
@@ -421,7 +455,7 @@ export function deriveProfile({
   }
   const contentMap = {
     schemaVersion: 'tracy-quickstart-content-map/wordpress/v1',
-    $comment: `Derived from ${card.tag} ${card.version}'s own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain${posts ? ', and the title, excerpt and named blocks of every published post' : ''}. A block is found by its metadata.name, never by position.`,
+    $comment: `Derived from ${card.tag} ${card.version}'s own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain${pageTitles ? ', the title of every published page' : ''}${posts ? ', and the title, excerpt and named blocks of every published post' : ''}. A block is found by its metadata.name, never by position.`,
     entities,
     slots
   }
@@ -469,6 +503,7 @@ function main() {
     const a = process.argv[i]
     if (a === '--all-text') args['all-text'] = true
     else if (a === '--posts') args.posts = true
+    else if (a === '--page-titles') args['page-titles'] = true
     else if (a.startsWith('--')) args[a.slice(2)] = process.argv[++i]
   }
   const need = [
@@ -507,6 +542,7 @@ function main() {
     themeRoots: args['theme-roots'].split(','),
     allText: args['all-text'] === true,
     posts: args.posts === true,
+    pageTitles: args['page-titles'] === true,
     vocabulary: args['role-vocabulary'] === '3' ? 'place-content-roles/3' : undefined,
     previousMap: args['previous-map'] ? JSON.parse(readFileSync(args['previous-map'], 'utf8')) : undefined
   })
