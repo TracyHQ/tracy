@@ -31,11 +31,15 @@ const nav = JSON.parse(readFileSync(navFile, 'utf8'))
 const menuIds = (nav.operations ?? [])
   .filter((o) => o.path === 'menu_show' && String(o.to) === '0')
   .map((o) => String(o.key).replace(/^menuItem-/, ''))
-const containers = (arg('--hide-links') ?? '')
-  .split(',')
-  .map((s) => s.trim())
+const kitFile = arg('--kit')
+const kit = kitFile ? JSON.parse(readFileSync(kitFile, 'utf8')) : {}
+const containers = (kit.site?.hiddenPageLinks ?? [])
+  .map((h) => h?.container)
   .filter(Boolean)
-const hidden = hiddenSelectorOf({ menuIds, containers })
+  .join(', ')
+const stock = (kit.site?.stockScreens ?? []).map((s) => s?.path).filter(Boolean)
+const dropped = droppedTestOf(stock)
+const hidden = hiddenSelectorOf({ menuIds })
 const routeOfItem = new Map(
   (map.pages ?? []).map((p) => [String(p.entity).replace(/^menuItem-/, ''), p.route])
 )
@@ -57,7 +61,7 @@ try {
       )
       links.set(
         key(p.url),
-        anchors.map((a) => ({ target: key(a.href), hidden: a.hidden }))
+        anchors.map((a) => ({ target: key(a.href), hidden: a.hidden, inContainer: a.inContainer }))
       )
     } catch (e) {
       failed.push({ url: p.url, error: String(e?.message ?? e).split('\n')[0] })
