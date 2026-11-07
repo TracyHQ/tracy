@@ -1,0 +1,1 @@
+{"id":"REG-PR-465-wordpress-readiness-read-side","verdict":"PASS","commit":"97bc6cf8ae4bbd60310a5f473c78b125de0af8db","ran_at":"2026-11-07T08:02:48.091Z","evidence":"tests/regression/.runs/2026-11-07-97bc6cf8a/REG-PR-465-wordpress-readiness-read-side.log"}
