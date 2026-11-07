@@ -453,6 +453,11 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    `cli.mjs created-page-hide --kit <kit dir>/template-kit.json --selector '.share-social' --why '<where>'` names a block the
    template prints hard coded on every article page (a share bar) that a page the write step creates must not show (or
    `--none --why`); the write step hides it on the created pages only, so the owner's own articles keep it.
+   `cli.mjs stock-screens --kit <kit dir>/template-kit.json --path '/pages/writers' --why '<why no customer content fills it>'`
+   names a stock screen every plan drops (a path, or one ending in `/*` for every page beneath it; it may name a page left out
+   of the kit); the planner drops it after the model, its checker refuses a plan that keeps it, and the write step unpublishes
+   its menu item unless a kept page needs the path, so pair it with a `hidden-page-links` container for the links to it. The
+   field is optional (or `--none --why`), and the readiness verdict does not ask for it.
    The template readiness verdict holds the kit until all five of these fields (steps 8 and 9) name something or say
    none with a reason (`kit-hidden-field-missing`). The write step scopes the self link and created page rules by the
    menu item class the framework prints on the body (T4 `item-<id>`, T3 `itemid-<id>`), read from the release's template
