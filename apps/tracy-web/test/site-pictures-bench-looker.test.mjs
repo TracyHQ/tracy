@@ -7,6 +7,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import sharp from 'sharp'
+import { withCmsLine } from '../src/lib/cms-line.js'
 import { assignDoor, clearDoor } from '../src/lib/llm-store.js'
 import { startPictureRun } from '../src/site-pictures/bench-control.js'
 import { readRun } from '../src/site-pictures/bench-store.js'
@@ -143,7 +144,7 @@ test(
     for (const body of looker.calls) {
       assert.equal(body.model, LOOKER)
       assert.equal(body.messages.length, 2)
-      assert.equal(body.messages[0].content, picturePrompts().looker)
+      assert.equal(body.messages[0].content, withCmsLine(picturePrompts().looker, 'joomla'))
       const [text, image] = body.messages[1].content
       assert.doesNotMatch(text.text, /secret picker reason|the bench|P\d/)
       assert.match(text.text, /"avoid"/)
@@ -393,3 +394,66 @@ test(
     }
   }
 )
+
+test(
+  'the picker and looker prompts open with the CMS line of the kit, WordPress or Joomla',
+  opts,
+  async () => {
+    const { pool } = db
+    for (const platform of ['wordpress', 'joomla']) {
+      await db.reset()
+      const own = kitIndex({ platform })
+      try {
+        const here = { index: own.index, dir: store.dir }
+        await assignPickerDoor(pool)
+        const started = await startPickerRun(pool, here)
+        const picker = []
+        const looker = fakeLooker(() => pass)
+        const fetchImpl = async (url, init) => {
+          picker.push(JSON.parse(init.body))
+          const view = pickerView({ body: picker[0] })
+          const [hero, feature, about] = ['block-2.0', 'block-6.1', 'block-5.1'].map(
+            (f) => view.frames.get(f).photos
+          )
+          const picks = [
+            { frame: 'block-2.0', photo: hero[0], reason: 'a' },
+            { frame: 'block-6.1', photo: feature.find((c) => c !== hero[0]), reason: 'b' },
+            { frame: 'block-5.1', photo: about[0], reason: 'c' }
+          ]
+          return json(reply({ picks }).body)
+        }
+        await drainPicker(pool, { ...here, fetchImpl, looker: looker.answer })
+        const run = await readRun(pool, started.id)
+        assert.equal(run.status, 'succeeded', run.error)
+        assert.equal(picker[0].messages[0].content, withCmsLine(picturePrompts().text, platform))
+        assert.ok(looker.calls.length > 0)
+        for (const body of looker.calls)
+          assert.equal(body.messages[0].content, withCmsLine(picturePrompts().looker, platform))
+      } finally {
+        own.done()
+      }
+    }
+  }
+)
+
+test('a kit with no platform fails the picture run before any model call', opts, async () => {
+  const { pool } = db
+  const own = kitIndex({ platform: '' })
+  try {
+    const here = { index: own.index, dir: store.dir }
+    await assignPickerDoor(pool)
+    const started = await startPickerRun(pool, here)
+    const calls = []
+    const fetchImpl = async (url, init) => {
+      calls.push(url)
+      return json({})
+    }
+    await drainPicker(pool, { ...here, fetchImpl })
+    const run = await readRun(pool, started.id)
+    assert.equal(run.status, 'failed')
+    assert.match(run.error, /SITE_PICTURES_KIT_PLATFORM/)
+    assert.equal(calls.length, 0)
+  } finally {
+    own.done()
+  }
+})
