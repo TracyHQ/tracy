@@ -2,7 +2,8 @@
 /**
  * Declare the IMAGE slots of a WordPress contract from its own archive: one per named `core/image`
  * block of every page the content map governs, and the featured picture of every post it governs
- * (`target.meta: "_thumbnail_id"`, the attachment the post's thumbnail meta names).
+ * (`target.meta: "_thumbnail_id"`, the attachment the post's thumbnail meta names), and the pictures the theme points at
+ * through the option names and post meta keys `manifest.themePictures` declares (TracyHQ/tracy#459).
  *
  * WHY: a sealed Tracy Business site took words and links only, so an agent asked for a new hero
  * photo answered "I cannot change pictures on this site" (measured 26/09/2026, session on
@@ -113,6 +114,75 @@ export function featuredImageSlotOf({ postId, entityKey, prefix, postmeta }) {
   }
 }
 
+/** The uploads path of attachment `id` (its `_wp_attached_file`), or why there is none to put back. */
+function attachmentFile(id, postmeta) {
+  const file =
+    postmeta.find((m) => Number(m.post_id) === id && m.meta_key === '_wp_attached_file')?.meta_value ?? null
+  if (file === null) return { why: `attachment ${id} has no file` }
+  const sample = UPLOADS.exec(`wp-content/uploads/${file}`)?.[1]
+  if (!sample || file.includes('..')) return { why: `picture not in uploads: ${file}` }
+  return { sample }
+}
+
+/**
+ * The image slots of one page or post on the post meta keys its theme declares (`manifest.themePictures.postMeta`,
+ * TracyHQ/tracy#459): a key holding an attachment id whose file is in uploads is a slot `target.meta: <key>`. Pure.
+ * @param {{ postId: number, entityKey: string, prefix: string, postmeta: object[], keys: string[] }} post
+ * @returns {{ slots: object[], skipped: string[] }}
+ */
+export function themeMetaSlotsOf({ postId, entityKey, prefix, postmeta, keys }) {
+  const slots = []
+  const skipped = []
+  for (const key of keys) {
+    const value = postmeta.find((m) => Number(m.post_id) === Number(postId) && m.meta_key === key)?.meta_value
+    const id = Number(value)
+    if (value === undefined || !Number.isInteger(id) || id <= 0) continue
+    const file = attachmentFile(id, postmeta)
+    if (file.why) {
+      skipped.push(`${entityKey}:${key} (${file.why})`)
+      continue
+    }
+    slots.push({
+      key: `${prefix}.${key}`,
+      entity: entityKey,
+      target: { meta: key },
+      type: 'image',
+      sample: file.sample,
+      sampleId: id,
+      maxCharacters: 255,
+      label: `${prefix} — ${key}`
+    })
+  }
+  return { slots, skipped }
+}
+
+/**
+ * The image slot of one theme picture option (`manifest.themePictures.options`): the option holds an attachment id.
+ * Its entity is `option-<name>`, which `capture-contract.mjs` makes for every declared option. Pure.
+ * @param {{ name: string, value: string | undefined, postmeta: object[] }} option
+ * @returns {{ slot: object | null, skipped: string | null }}
+ */
+export function themeOptionSlotOf({ name, value, postmeta }) {
+  const entity = `option-${name}`
+  if (!/^\d+$/.test(String(value ?? '')) || Number(value) <= 0)
+    return { slot: null, skipped: `${entity} (the option holds no attachment id)` }
+  const file = attachmentFile(Number(value), postmeta)
+  if (file.why) return { slot: null, skipped: `${entity} (${file.why})` }
+  return {
+    slot: {
+      key: `theme.${name}`,
+      entity,
+      target: { option: name },
+      type: 'image',
+      sample: file.sample,
+      sampleId: Number(value),
+      maxCharacters: 255,
+      label: `Theme picture — ${name}`
+    },
+    skipped: null
+  }
+}
+
 /**
  * The content map with its image slots replaced by `captured`.
  * @param {{ slots: object[] }} contentMap @param {object[]} captured
@@ -177,6 +247,11 @@ function main() {
   const sql = readDump(args.dump)
   const posts = new Map(tableRows(sql, `${wordpressPrefix(sql)}posts`).map((p) => [Number(p.ID), p]))
   const postmeta = tableRows(sql, `${wordpressPrefix(sql)}postmeta`)
+  const themeMeta = manifest.themePictures?.postMeta ?? []
+  const themeOptions = manifest.themePictures?.options ?? []
+  const optionValues = new Map(
+    tableRows(sql, `${wordpressPrefix(sql)}options`).map((o) => [o.option_name, o.option_value])
+  )
 
   const captured = []
   const problems = []
@@ -206,6 +281,27 @@ function main() {
       if (featured.slot) captured.push(featured.slot)
       if (featured.skipped) console.error(`  skipped ${featured.skipped}`)
     }
+    // The pictures the theme prints from its own post meta (manifest.themePictures.postMeta), on a page or a post.
+    const theme = themeMetaSlotsOf({
+      postId: rows[0].id,
+      entityKey: entity.key,
+      prefix,
+      postmeta,
+      keys: themeMeta
+    })
+    captured.push(...theme.slots)
+    for (const s of theme.skipped) console.error(`  skipped ${s}`)
+  }
+  for (const name of themeOptions) {
+    if (!contentMap.entities.some((e) => e.kind === 'option' && e.identity?.name === name)) {
+      problems.push(
+        `option-${name}: a declared theme picture option has no entity (capture-contract.mjs makes it)`
+      )
+      continue
+    }
+    const option = themeOptionSlotOf({ name, value: optionValues.get(name), postmeta })
+    if (option.slot) captured.push(option.slot)
+    if (option.skipped) console.error(`  skipped ${option.skipped}`)
   }
   if (problems.length) {
     for (const p of problems) console.error(`  ✖ ${p}`)

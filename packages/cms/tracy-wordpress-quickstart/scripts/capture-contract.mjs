@@ -30,7 +30,8 @@
  *     --release-manifest <manifest.json> --tag <release tag> --cowork-version <x.y.z>
  *     --contracts-root <dir> [--webroot-members <file listing the archive's paths>]
  *     [--previous-map <previous version's content-map.json>] [--unplaced-report <file>]
- *     [--all-text] [--posts] [--page-titles] [--role-vocabulary 2|3]
+ *     [--all-text] [--posts] [--page-titles] [--inline-markup] [--role-vocabulary 2|3]
+ *     [--theme-picture-options <option,...>] [--theme-picture-meta <meta key,...>]
  *
  * ALL VISIBLE TEXT (spec #37, issue #43): `--all-text` also makes a slot for every heading, paragraph, list item, button,
  * table cell, cite and menu label that has no `metadata.name` (or repeats one), and a url slot for each link in them.
@@ -52,6 +53,14 @@
  * WordPress prints the title as the page's menu label, masthead and document title. Off by default, for the same
  * reason as `--posts`: Claude Cowork 0.18.38 or later reads a page's own fields.
  *
+ * INLINE MARKUP (TracyHQ/tracy#459): `--inline-markup` also makes a slot for a named block whose element marks words
+ * inline (a price span, an accent span, a link inside a sentence, a line break): `markup: "inline"`, its sample the inner
+ * HTML in the content map's notation (`((span class="price"))$12((/span))`, `inline-markup.mjs`), its limit counted on the
+ * words. Only when the Claude Cowork plugin can write that markup back (its fixed inline allowlist); any other is left
+ * out and said. THEME PICTURES: `--theme-picture-options` and `--theme-picture-meta` declare the options and post meta
+ * keys the theme keeps a picture's attachment id in (`manifest.themePictures`); each option becomes an entity, and
+ * `capture-image-slots.mjs` makes their image slots. Both off by default: Claude Cowork 0.18.39 or later binds them.
+ *
  * SLOT ROLES (ADR 0038): every text and image slot of the map carries a `role` and a `group`. A recapture passes the
  * previous version's content map as --previous-map: a slot whose key AND sample are unchanged keeps its role and group
  * (the packaging agent reviewed them), the rule tables place the rest, and the slots they cannot place are printed on
@@ -65,6 +74,7 @@ import { readDump, tableRows, wordpressPrefix } from '../../tracy-quickstart-too
 import { setBlockValue } from '../../tracy-seeder/src/apply-wordpress-contract.mjs'
 import { proposeContentMapRoles } from '../../../../scripts/slot-roles/rule-tables.mjs'
 import { allTextSlots } from './capture-all-text.mjs'
+import { markupProblem, notationOf, wordsOf } from './inline-markup.mjs'
 
 const TEXT_BLOCKS = new Set(['heading', 'paragraph', 'list-item', 'button'])
 const OPTION_SLOTS = [
@@ -138,7 +148,7 @@ const nameProblemIn = (content) => (name, start) => {
  * The slots of one page and everything that was left out of it, with the reason.
  * @returns {{ slots: object[], skipped: string[] }}
  */
-export function pageSlots({ content, entityKey, prefix, allText = false }) {
+export function pageSlots({ content, entityKey, prefix, allText = false, inlineMarkup = false }) {
   if (allText) return allTextSlots({ content, entityKey, prefix, nameProblem: nameProblemIn(content) })
   const slots = []
   const skipped = []
@@ -168,12 +178,19 @@ export function pageSlots({ content, entityKey, prefix, allText = false }) {
       continue
     }
     const raw = readText(found)
-    if (raw === null || raw.includes('<')) {
-      skipped.push(`${entityKey}:${name} (${raw === null ? 'no single text element' : 'inline markup'})`)
+    // With --inline-markup, a block that marks words inside its element keeps them (`markup: "inline"`, the sample
+    // in the notation), when the plugin can write that markup back; its limit counts the words only.
+    const marked = inlineMarkup && raw !== null && raw.includes('<')
+    const problem = marked ? markupProblem(notationOf(raw), { button: blockType === 'button' }) : null
+    if (raw === null || (raw.includes('<') && !marked) || problem) {
+      skipped.push(
+        `${entityKey}:${name} (${raw === null ? 'no single text element' : problem ? `inline markup the plugin cannot write: ${problem}` : 'inline markup'})`
+      )
       continue
     }
-    const sample = decodeEntities(raw)
-    if (sample.trim() === '') continue
+    const sample = marked ? notationOf(raw) : decodeEntities(raw)
+    const words = marked ? wordsOf(sample) : sample
+    if (words.trim() === '') continue
     try {
       const masked = setBlockValue(content, name, 'content', '{{slot}}')
       if (masked === content) throw new Error('masking changed nothing')
@@ -187,8 +204,9 @@ export function pageSlots({ content, entityKey, prefix, allText = false }) {
       entity: entityKey,
       target: { block: name, attr: 'content' },
       type: 'text',
+      ...(marked ? { markup: 'inline' } : {}),
       sample,
-      maxCharacters: Math.max(80, Math.min(2000, sample.length * 2 + 20)),
+      maxCharacters: Math.max(80, Math.min(2000, words.length * 2 + 20)),
       label: `${prefix} — ${name}`
     })
     if (blockType === 'button') {
@@ -248,10 +266,10 @@ export function pageTitleSlot(p, key) {
 /**
  * The entities and slots of the published posts of `rows` (rows of the dump's posts table, every type), and everything
  * left out with the reason. A post is taken by the rule a page is: its type+slug is exactly one non-trashed row.
- * @param {object[]} rows @param {{ allText?: boolean }} [options]
+ * @param {object[]} rows @param {{ allText?: boolean, inlineMarkup?: boolean }} [options]
  * @returns {{ entities: object[], slots: object[], coverage: { posts: number, postsWithoutSlots: string[], ambiguousPosts: string[], skipped: string[] } }}
  */
-export function postEntitiesOf(rows, { allText = false } = {}) {
+export function postEntitiesOf(rows, { allText = false, inlineMarkup = false } = {}) {
   const entities = []
   const slots = []
   const coverage = { posts: 0, postsWithoutSlots: [], ambiguousPosts: [], skipped: [] }
@@ -288,7 +306,13 @@ export function postEntitiesOf(rows, { allText = false } = {}) {
       })
     }
     const fieldKeys = new Set(own.map((s) => s.key))
-    const blocks = pageSlots({ content: String(p.post_content ?? ''), entityKey: key, prefix: key, allText })
+    const blocks = pageSlots({
+      content: String(p.post_content ?? ''),
+      entityKey: key,
+      prefix: key,
+      allText,
+      inlineMarkup
+    })
     coverage.skipped.push(...blocks.skipped)
     for (const s of blocks.slots) {
       if (fieldKeys.has(s.key)) coverage.skipped.push(`${key}:${s.key} (the key of a field slot of the post)`)
@@ -302,6 +326,32 @@ export function postEntitiesOf(rows, { allText = false } = {}) {
     slots.push(...own)
   }
   return { entities, slots, coverage }
+}
+
+/**
+ * The `themePictures` declaration of the manifest (TracyHQ/tracy#459): the options and post meta keys the theme keeps a
+ * picture's attachment id in, held to the rule the Claude Cowork plugin (0.18.39 or later) binds by: an option starts with
+ * the theme's own prefix (`wp-ja-diner` gives `wp_ja_diner_`), a meta key does not start with `_`. Null when nothing is
+ * declared, so a profile without theme pictures keeps its manifest bytes. Throws naming the first key that breaks it.
+ * @param {{ theme: string, options?: string[], meta?: string[] }} declared
+ * @returns {{ options: string[], postMeta: string[] } | null}
+ */
+export function themePictureDeclaration({ theme, options = [], meta = [] }) {
+  if (options.length === 0 && meta.length === 0) return null
+  const prefix = `${theme.replace(/-/g, '_')}_`
+  for (const name of [...options, ...meta]) {
+    if (!/^[A-Za-z0-9_-]{1,64}$/.test(name)) throw new Error(`theme picture key ${name} is not a name`)
+  }
+  for (const name of options) {
+    if (!name.startsWith(prefix) || name === prefix)
+      throw new Error(
+        `theme picture option ${name} is not one of the theme ${theme} (its name starts ${prefix})`
+      )
+  }
+  for (const name of meta) {
+    if (name.startsWith('_')) throw new Error(`theme picture meta ${name} is a protected key`)
+  }
+  return { options: [...options], postMeta: [...meta] }
 }
 
 /**
@@ -339,6 +389,9 @@ export function deriveProfile({
   allText = false,
   posts = false,
   pageTitles = false,
+  inlineMarkup = false,
+  themePictureOptions = [],
+  themePictureMeta = [],
   vocabulary
 }) {
   const release = normalizeRelease(raw)
@@ -389,7 +442,13 @@ export function deriveProfile({
     }
     taken.add(p.post_name)
     const key = `page-${p.post_name}`
-    const got = pageSlots({ content: p.post_content, entityKey: key, prefix: p.post_name, allText })
+    const got = pageSlots({
+      content: p.post_content,
+      entityKey: key,
+      prefix: p.post_name,
+      allText,
+      inlineMarkup
+    })
     coverage.skipped.push(...got.skipped)
     if (pageTitles) {
       const title = pageTitleSlot(p, key)
@@ -405,13 +464,23 @@ export function deriveProfile({
   }
   const pageSlotCount = slots.filter((s) => !s.target.option).length
   if (posts) {
-    const got = postEntitiesOf(rows, { allText })
+    const got = postEntitiesOf(rows, { allText, inlineMarkup })
     entities.push(...got.entities)
     slots.push(...got.slots)
     coverage.skipped.push(...got.coverage.skipped)
     coverage.posts = got.coverage.posts
     coverage.postsWithoutSlots = got.coverage.postsWithoutSlots
     coverage.ambiguousPosts = got.coverage.ambiguousPosts
+  }
+  // A theme picture option is an entity of its own; its image slot is made by `capture-image-slots.mjs`, as every picture.
+  const themePictures = themePictureDeclaration({
+    theme: stylesheet,
+    options: themePictureOptions,
+    meta: themePictureMeta
+  })
+  for (const name of themePictures?.options ?? []) {
+    if (!options.has(name)) throw new Error(`theme picture option ${name} is not in the dump`)
+    entities.push({ key: `option-${name}`, kind: 'option', identity: { name } })
   }
   const keys = new Set()
   for (const s of slots) {
@@ -451,11 +520,12 @@ export function deriveProfile({
       parts: { webroot: part('webroot'), database: part('database') }
     },
     coworkContractVersion: coworkVersion,
-    mode: 'content-recommendation'
+    mode: 'content-recommendation',
+    ...(themePictures ? { themePictures } : {})
   }
   const contentMap = {
     schemaVersion: 'tracy-quickstart-content-map/wordpress/v1',
-    $comment: `Derived from ${card.tag} ${card.version}'s own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain${pageTitles ? ', the title of every published page' : ''}${posts ? ', and the title, excerpt and named blocks of every published post' : ''}. A block is found by its metadata.name, never by position.`,
+    $comment: `Derived from ${card.tag} ${card.version}'s own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain${inlineMarkup ? ' (or marks words inline with markup the plugin writes back, kept as markup: inline)' : ''}${pageTitles ? ', the title of every published page' : ''}${posts ? ', and the title, excerpt and named blocks of every published post' : ''}. A block is found by its metadata.name, never by position.`,
     entities,
     slots
   }
@@ -504,6 +574,7 @@ function main() {
     if (a === '--all-text') args['all-text'] = true
     else if (a === '--posts') args.posts = true
     else if (a === '--page-titles') args['page-titles'] = true
+    else if (a === '--inline-markup') args['inline-markup'] = true
     else if (a.startsWith('--')) args[a.slice(2)] = process.argv[++i]
   }
   const need = [
@@ -543,6 +614,9 @@ function main() {
     allText: args['all-text'] === true,
     posts: args.posts === true,
     pageTitles: args['page-titles'] === true,
+    inlineMarkup: args['inline-markup'] === true,
+    themePictureOptions: (args['theme-picture-options'] ?? '').split(',').filter(Boolean),
+    themePictureMeta: (args['theme-picture-meta'] ?? '').split(',').filter(Boolean),
     vocabulary: args['role-vocabulary'] === '3' ? 'place-content-roles/3' : undefined,
     previousMap: args['previous-map'] ? JSON.parse(readFileSync(args['previous-map'], 'utf8')) : undefined
   })
