@@ -886,3 +886,41 @@ test('a row edit may name a path; a path written as \\/ in the dump is a count m
   assert.equal(L['module-400'].params, '{"btn-link":"index.php?Itemid=275"}')
   assert.equal(L['module-450'].params, '{"btn-link":"/pages/contact"}')
 })
+
+// JA Voyara 1.0.12 (07/11/2026): Joomla 6 merges an article's own `article_layout` only where the menu item's value is
+// `use_article`; the tour category menu items had no such key, so every tour article printed the default layout. The
+// next version adds the key: a JSON pair edit may add one setting after a pair it keeps (`"adds": true`).
+const ADD_LAYOUT = {
+  entity: 'menuItem-7',
+  field: 'params',
+  row: true,
+  json: true,
+  adds: true,
+  from: '"menu-anchor_css":""',
+  to: '"menu-anchor_css":"","article_layout":"use_article"',
+  count: 1
+}
+
+test('an adding JSON edit keeps its pair and adds one new key, in its row only', () => {
+  assert.equal(loadContentEdits(editsFile([ADD_LAYOUT])).length, 1)
+  for (const bad of [
+    { adds: undefined }, // a plain pair edit changes a value, never adds a key
+    { to: '"menu-anchor_css":"x","article_layout":"use_article"' }, // the kept pair changed
+    { to: '"menu-anchor_css":"","menu-anchor_css":"x"' }, // the same key again
+    { to: '"menu-anchor_css":"","a":"b","c":"d"' }, // two new pairs
+    { row: undefined },
+    { count: 2 }
+  ])
+    assert.throws(() => loadContentEdits(editsFile([{ ...ADD_LAYOUT, ...bad }])))
+  const dump =
+    'INSERT INTO `x_menu` (`id`, `params`) VALUES (7,\'{\\"menu-anchor_css\\":\\"\\",\\"menu_show\\":1}\'),(8,\'{\\"menu-anchor_css\\":\\"\\"}\');'
+  const out = editDump(dump, [ADD_LAYOUT])
+  assert.ok(
+    out.includes(
+      '(7,\'{\\"menu-anchor_css\\":\\"\\",\\"article_layout\\":\\"use_article\\",\\"menu_show\\":1}\')'
+    )
+  )
+  assert.ok(out.includes('(8,\'{\\"menu-anchor_css\\":\\"\\"}\')'))
+  // a second run finds the key already there
+  assert.throws(() => editDump(out, [ADD_LAYOUT]), /already/)
+})
