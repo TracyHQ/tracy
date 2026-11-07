@@ -155,6 +155,27 @@ test('system pages: legal pages by name, the not-found answer, the plainest arti
   assert.equal(buildSystemPages({ pages: [], notFound: null }).errors.length, 2)
 })
 
+test('a not-found link the template prints as a full address of the site is kept as its site path', () => {
+  const { systemPages } = buildSystemPages({
+    pages: [],
+    notFound: {
+      status: 404,
+      siteUrl: 'http://stand.example:8080',
+      read: {
+        links: [
+          { label: 'Read the journal', href: 'http://stand.example:8080/pages/blog?x=1#top' },
+          { label: 'Home', href: '/index.php' },
+          { label: 'Elsewhere', href: 'https://other.example/pages/blog' }
+        ]
+      }
+    }
+  })
+  assert.deepEqual(
+    systemPages.notFound.slots.map((s) => s.target),
+    ['/pages/blog?x=1#top', '/index.php', 'https://other.example/pages/blog']
+  )
+})
+
 test('link actions', () => {
   const ctx = { itemPaths: new Set(['/lessons/morning']), contactPaths: new Set(['/contact']) }
   assert.equal(
