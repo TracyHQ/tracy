@@ -30,13 +30,22 @@
  *     --release-manifest <manifest.json> --tag <release tag> --cowork-version <x.y.z>
  *     --contracts-root <dir> [--webroot-members <file listing the archive's paths>]
  *     [--previous-map <previous version's content-map.json>] [--unplaced-report <file>]
- *     [--all-text] [--role-vocabulary 2|3]
+ *     [--all-text] [--posts] [--role-vocabulary 2|3]
  *
  * ALL VISIBLE TEXT (spec #37, issue #43): `--all-text` also makes a slot for every heading, paragraph, list item, button,
  * table cell, cite and menu label that has no `metadata.name` (or repeats one), and a url slot for each link in them.
  * Such a slot is addressed by position (`target.blockType` + `target.occurrence`, see `capture-all-text.mjs`); a named
  * first block keeps its name key and target. Off by default so every released profile re-captures byte for byte.
  * `--role-vocabulary 3` writes version 3 roles (default 2), as the Joomla capture does.
+ *
+ * PUBLISHED POSTS (spec #452): `--posts` also makes an entity of every published post (`kind: "post"`, identity
+ * `{ postType, slug }`, key `post-<slug>`) whose type+slug is exactly one non-trashed row, with a slot for its title
+ * (`target.field: "post_title"`) and its excerpt (`target.field: "post_excerpt"`) when they are plain text, and the slots
+ * of its content blocks by the same rule as a page (named blocks, or every text with `--all-text`). Its featured picture
+ * is an image slot made by `capture-image-slots.mjs`. Without these entities the content map lists check of the readiness
+ * verdict finds the site's posts carried nowhere (`itemLists`, `itemPages`). Off by default: a Claude Cowork plugin must
+ * read a post's own fields before a profile carrying them can be bound, and every released profile re-captures byte for
+ * byte. Only the `post` type is taken, the one `capture-inventory.mjs` records beside pages.
  *
  * SLOT ROLES (ADR 0038): every text and image slot of the map carries a `role` and a `group`. A recapture passes the
  * previous version's content map as --previous-map: a slot whose key AND sample are unchanged keeps its role and group
@@ -200,6 +209,73 @@ export function pageSlots({ content, entityKey, prefix, allText = false }) {
   return { slots, skipped }
 }
 
+/** The post types whose published rows become entities: what `capture-inventory.mjs` records besides pages. */
+const POST_TYPES = new Set(['post'])
+/** The fields of a post row a slot names directly, in the order the slots are made. */
+const POST_FIELDS = [
+  { field: 'post_title', name: 'title' },
+  { field: 'post_excerpt', name: 'excerpt' }
+]
+
+/**
+ * The entities and slots of the published posts of `rows` (rows of the dump's posts table, every type), and everything
+ * left out with the reason. A post is taken by the rule a page is: its type+slug is exactly one non-trashed row.
+ * @param {object[]} rows @param {{ allText?: boolean }} [options]
+ * @returns {{ entities: object[], slots: object[], coverage: { posts: number, postsWithoutSlots: string[], ambiguousPosts: string[], skipped: string[] } }}
+ */
+export function postEntitiesOf(rows, { allText = false } = {}) {
+  const entities = []
+  const slots = []
+  const coverage = { posts: 0, postsWithoutSlots: [], ambiguousPosts: [], skipped: [] }
+  const taken = new Set()
+  for (const p of rows
+    .filter((x) => POST_TYPES.has(x.post_type) && x.post_status === 'publish')
+    .sort((a, b) => Number(a.ID) - Number(b.ID))) {
+    coverage.posts += 1
+    const same = rows.filter(
+      (x) => x.post_type === p.post_type && x.post_name === p.post_name && x.post_status !== 'trash'
+    )
+    const key = `${p.post_type}-${p.post_name}`
+    if (p.post_name === '' || same.length !== 1 || taken.has(key)) {
+      coverage.ambiguousPosts.push(`${p.post_name || '(no slug)'} (${same.length} rows)`)
+      continue
+    }
+    taken.add(key)
+    const own = []
+    for (const { field, name } of POST_FIELDS) {
+      const sample = String(p[field] ?? '')
+      if (sample.trim() === '') continue
+      if (sample.includes('<')) {
+        coverage.skipped.push(`${key}:${name} (inline markup)`)
+        continue
+      }
+      own.push({
+        key: `${key}.${name}`,
+        entity: key,
+        target: { field },
+        type: 'text',
+        sample,
+        maxCharacters: Math.max(80, Math.min(2000, sample.length * 2 + 20)),
+        label: `${key} — ${name}`
+      })
+    }
+    const fieldKeys = new Set(own.map((s) => s.key))
+    const blocks = pageSlots({ content: String(p.post_content ?? ''), entityKey: key, prefix: key, allText })
+    coverage.skipped.push(...blocks.skipped)
+    for (const s of blocks.slots) {
+      if (fieldKeys.has(s.key)) coverage.skipped.push(`${key}:${s.key} (the key of a field slot of the post)`)
+      else own.push(s)
+    }
+    if (own.length === 0) {
+      coverage.postsWithoutSlots.push(p.post_name)
+      continue
+    }
+    entities.push({ key, kind: 'post', identity: { postType: p.post_type, slug: p.post_name } })
+    slots.push(...own)
+  }
+  return { entities, slots, coverage }
+}
+
 /**
  * The fields of a release's `manifest.json` this tool reads, whichever of the two shapes it has: the
  * older one (`webroot`/`database` at the top, `wpVersion`, `phpVersion`, `theme` as a name or object)
@@ -233,6 +309,7 @@ export function deriveProfile({
   themeRoots,
   previousMap,
   allText = false,
+  posts = false,
   vocabulary
 }) {
   const release = normalizeRelease(raw)
@@ -268,13 +345,13 @@ export function deriveProfile({
       label: o.label
     })
   }
-  const posts = tableRows(sql, `${prefix}posts`)
+  const rows = tableRows(sql, `${prefix}posts`)
   const taken = new Set()
-  for (const p of posts
+  for (const p of rows
     .filter((x) => x.post_type === 'page' && x.post_status === 'publish')
     .sort((a, b) => Number(a.ID) - Number(b.ID))) {
     coverage.pages += 1
-    const same = posts.filter(
+    const same = rows.filter(
       (x) => x.post_type === 'page' && x.post_name === p.post_name && x.post_status !== 'trash'
     )
     if (p.post_name === '' || same.length !== 1 || taken.has(p.post_name)) {
@@ -292,12 +369,21 @@ export function deriveProfile({
     entities.push({ key, kind: 'page', identity: { postType: 'page', slug: p.post_name } })
     slots.push(...got.slots)
   }
+  const pageSlotCount = slots.filter((s) => !s.target.option).length
+  if (posts) {
+    const got = postEntitiesOf(rows, { allText })
+    entities.push(...got.entities)
+    slots.push(...got.slots)
+    coverage.skipped.push(...got.coverage.skipped)
+    coverage.posts = got.coverage.posts
+    coverage.postsWithoutSlots = got.coverage.postsWithoutSlots
+    coverage.ambiguousPosts = got.coverage.ambiguousPosts
+  }
   const keys = new Set()
   for (const s of slots) {
     if (keys.has(s.key)) throw new Error(`slot key ${s.key} is made twice`)
     keys.add(s.key)
   }
-  const pageSlotCount = slots.filter((s) => !s.target.option).length
   if (entities.filter((e) => e.kind === 'page').length === 0 || pageSlotCount === 0)
     throw new Error(
       'no page of the dump has a named text block the plugin can address; the map would hold only the site name'
@@ -335,7 +421,7 @@ export function deriveProfile({
   }
   const contentMap = {
     schemaVersion: 'tracy-quickstart-content-map/wordpress/v1',
-    $comment: `Derived from ${card.tag} ${card.version}'s own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain. A block is found by its metadata.name, never by position.`,
+    $comment: `Derived from ${card.tag} ${card.version}'s own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain${posts ? ', and the title, excerpt and named blocks of every published post' : ''}. A block is found by its metadata.name, never by position.`,
     entities,
     slots
   }
@@ -382,6 +468,7 @@ function main() {
   for (let i = 2; i < process.argv.length; i++) {
     const a = process.argv[i]
     if (a === '--all-text') args['all-text'] = true
+    else if (a === '--posts') args.posts = true
     else if (a.startsWith('--')) args[a.slice(2)] = process.argv[++i]
   }
   const need = [
@@ -419,6 +506,7 @@ function main() {
     coworkVersion: args['cowork-version'],
     themeRoots: args['theme-roots'].split(','),
     allText: args['all-text'] === true,
+    posts: args.posts === true,
     vocabulary: args['role-vocabulary'] === '3' ? 'place-content-roles/3' : undefined,
     previousMap: args['previous-map'] ? JSON.parse(readFileSync(args['previous-map'], 'utf8')) : undefined
   })

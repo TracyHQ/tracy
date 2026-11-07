@@ -16,3 +16,4 @@ staging-check
 desktop-release
 tdsr
 joomla-template-readiness
+wordpress-template-readiness

@@ -172,7 +172,7 @@ async function getRun(d, values, runId) {
   const contentMap = openContentMap(run.kitRef, d.index ? { index: d.index } : {})
   const dir = path.resolve(d.cwd ?? process.cwd(), values.out)
   await mkdir(dir, { recursive: true })
-  const files = runFiles(run, turns, kit?.doc ?? null, contentMap?.doc ?? null)
+  const files = runFiles(run, turns, kit?.doc ?? null, contentMap?.doc ?? null, kit?.platform)
   for (const [name, text] of files) await writeFile(path.join(dir, name), text)
   d.out(`${files.length} files written: ${files.map(([name]) => name).join(', ')}`)
   if (run.balance) d.out(`balance ${balanceLine(run.balance)}`)

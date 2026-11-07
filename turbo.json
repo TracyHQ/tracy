@@ -138,6 +138,7 @@
         "$TURBO_ROOT$/.agents/skills/joomla-template-readiness/**",
         "$TURBO_ROOT$/.agents/skills/pr-merge/**",
         "$TURBO_ROOT$/.agents/skills/quickstart-contract/**",
+        "$TURBO_ROOT$/.agents/skills/wordpress-template-readiness/**",
         "$TURBO_ROOT$/.dockerignore",
         "$TURBO_ROOT$/.github/CODEOWNERS",
         "$TURBO_ROOT$/.github/ISSUE_TEMPLATE/**",

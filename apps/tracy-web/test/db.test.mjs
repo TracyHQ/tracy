@@ -213,6 +213,33 @@ test('migration 097: a questions assignment is deleted, the others stay, and the
   }
 })
 
+test('migration 205: finisherFinder assignments are deleted, the others stay, and the door is refused after', {
+  skip: url ? false : 'set TEST_DATABASE_URL to run against a real Postgres'
+}, async () => {
+  const { pool, close } = await scratchPool()
+  try {
+    await migrate(pool, await migrationsBefore('205'))
+    await pool.query(`insert into llm_provider(id, name, updated_by) values ('p', 'P', 't')`)
+    await pool.query(
+      `insert into llm_assignment(door, provider_id, model, reasoning_effort, updated_by) values ('finisherFinder', 'p', 'm', 'max', 't'), ('web', 'p', 'm', null, 't')`
+    )
+    await migrate(pool)
+    const { rows } = await pool.query('select door from llm_assignment order by door')
+    assert.deepEqual(
+      rows.map((r) => r.door),
+      ['web']
+    )
+    await assert.rejects(
+      pool.query(
+        `insert into llm_assignment(door, provider_id, model, updated_by) values ('finisherFinder', 'p', 'm', 't')`
+      ),
+      /llm_assignment_door_check/
+    )
+  } finally {
+    await close()
+  }
+})
+
 /**
  * The server ends one connection of a `createPool` pool — idle in the pool, or checked out between
  * two queries — and the test waits for what follows: the pool's warning, or an uncaught exception

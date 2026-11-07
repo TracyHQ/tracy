@@ -55,6 +55,12 @@
  *     wait: Publish already waits on the listing and the listing on a live demo, so a release that can
  *     publish has a demo anyway, and DEMO-1 only names the gap on the Design system step;
  *   - polish waits for nothing and holds nothing.
+ *
+ * WRITE DOORS (#454): a road whose plugin write doors are NOT JUDGED (the verdict's own check, `write-doors-check.js`,
+ * answers `not-judged` for WordPress: there is no WordPress write step to hold a plugin to yet) ends with one more
+ * step, `write-doors`, in state `not-judged`. It comes last so every other step keeps its number, it holds nothing
+ * (Publish never waits for it) and it is never green. A road the check judges (Joomla) or does not answer carries no
+ * such step, so it stays exactly the eleven steps above.
  */
 import { contractRefusalText } from './brief-support.js'
 import { COVERAGE_STEP, contentCoverageRefusal } from './content-coverage/road-step.js'
@@ -63,6 +69,7 @@ import { listingProblems } from './listing-pages.js'
 import { cardOf, shownOnInspiration } from './quickstart-releases.js'
 import { KIT_STEP, templateKitRefusal } from './template-kit/road-step.js'
 import { startRoad, verdictSteps } from './template-readiness/verdict.js'
+import { WRITE_DOORS_CHECK } from './template-readiness/write-doors-check.js'
 
 export const ROAD_STEPS = Object.freeze([
   'release',
@@ -77,6 +84,9 @@ export const ROAD_STEPS = Object.freeze([
   'published',
   'polish'
 ])
+
+/** The step a road ends with while the plugin write doors are not judged yet (see WRITE DOORS above). */
+export const WRITE_DOORS_STEP = WRITE_DOORS_CHECK.step
 
 /** The steps Publish needs done (or warned), in road order; the first one not done is the refusal. */
 const PUBLISH_NEEDS = Object.freeze([
@@ -125,7 +135,7 @@ const list = (/** @type {unknown} */ x) => (Array.isArray(x) ? x.join(', ') : ''
  *   `kitMap`: what the flow reads of the content map beside that kit; read from the same folder when left out.
  *   `demoBaseline`: the demo baseline beside that contract (`demo-baseline.json`), which the Template kit step asks of
  *   the templates `template-kit/demo-baseline-policy.json` opts in; read from the same folder when left out.
- * @returns {{ step: string, state: 'done' | 'blocked' | 'todo' | 'warn' | 'checking', code: string, params: Record<string, unknown>, blockedBy?: string }[] | null}
+ * @returns {{ step: string, state: 'done' | 'blocked' | 'todo' | 'warn' | 'checking' | 'not-judged', code: string, params: Record<string, unknown>, blockedBy?: string }[] | null}
  */
 export function roadOf(
   release,
@@ -262,6 +272,10 @@ export function roadOf(
     })
   if (items.length > 0) put('polish', 'warn', 'polish', { items })
   else put('polish', 'done', 'polish-done')
+
+  // 10. The plugin write doors, only while the verdict's check says it cannot judge them (WordPress today).
+  const doors = WRITE_DOORS_CHECK.judge(release, { contracts })
+  if (doors?.state === 'not-judged') put(WRITE_DOORS_STEP, 'not-judged', doors.code, doors.params ?? {})
   return road
 }
 

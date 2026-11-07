@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Declare the IMAGE slots of a WordPress contract from its own archive: one per named `core/image`
- * block of every page the content map governs.
+ * block of every page the content map governs, and the featured picture of every post it governs
+ * (`target.meta: "_thumbnail_id"`, the attachment the post's thumbnail meta names).
  *
  * WHY: a sealed Tracy Business site took words and links only, so an agent asked for a new hero
  * photo answered "I cannot change pictures on this site" (measured 26/09/2026, session on
@@ -79,6 +80,38 @@ export function imageSlotsOf({ content, entityKey, prefix }) {
 }
 
 /**
+ * The featured picture of one post as an image slot: the post's `_thumbnail_id` meta names an attachment whose
+ * `_wp_attached_file` is under `wp-content/uploads/`. Pure, so the test feeds it meta rows.
+ * @param {{ postId: number, entityKey: string, prefix: string, postmeta: object[] }} post `postmeta` rows of the dump
+ * @returns {{ slot: object | null, skipped: string | null }} both null when the post has no featured picture
+ */
+export function featuredImageSlotOf({ postId, entityKey, prefix, postmeta }) {
+  const meta = (id, key) =>
+    postmeta.find((m) => Number(m.post_id) === id && m.meta_key === key)?.meta_value ?? null
+  const thumbnail = Number(meta(Number(postId), '_thumbnail_id'))
+  if (!Number.isInteger(thumbnail) || thumbnail <= 0) return { slot: null, skipped: null }
+  const file = meta(thumbnail, '_wp_attached_file')
+  if (file === null)
+    return { slot: null, skipped: `${entityKey}:featured image (attachment ${thumbnail} has no file)` }
+  const sample = UPLOADS.exec(`wp-content/uploads/${file}`)?.[1]
+  if (!sample || file.includes('..'))
+    return { slot: null, skipped: `${entityKey}:featured image (picture not in uploads: ${file})` }
+  return {
+    slot: {
+      key: `${prefix}.featured-image`,
+      entity: entityKey,
+      target: { meta: '_thumbnail_id' },
+      type: 'image',
+      sample,
+      sampleId: thumbnail,
+      maxCharacters: 255,
+      label: `${prefix} — featured image`
+    },
+    skipped: null
+  }
+}
+
+/**
  * The content map with its image slots replaced by `captured`.
  * @param {{ slots: object[] }} contentMap @param {object[]} captured
  */
@@ -120,6 +153,7 @@ function main() {
   }
   const sql = readDump(args.dump)
   const posts = new Map(tableRows(sql, `${wordpressPrefix(sql)}posts`).map((p) => [Number(p.ID), p]))
+  const postmeta = tableRows(sql, `${wordpressPrefix(sql)}postmeta`)
 
   const captured = []
   const problems = []
@@ -143,6 +177,12 @@ function main() {
     const { slots, skipped } = imageSlotsOf({ content, entityKey: entity.key, prefix })
     captured.push(...slots)
     for (const s of skipped) console.error(`  skipped ${s}`)
+    // A post's featured picture is its thumbnail meta, not a block (a page's is left alone: released profiles stay as they are).
+    if (entity.kind === 'post') {
+      const featured = featuredImageSlotOf({ postId: rows[0].id, entityKey: entity.key, prefix, postmeta })
+      if (featured.slot) captured.push(featured.slot)
+      if (featured.skipped) console.error(`  skipped ${featured.skipped}`)
+    }
   }
   if (problems.length) {
     for (const p of problems) console.error(`  ✖ ${p}`)

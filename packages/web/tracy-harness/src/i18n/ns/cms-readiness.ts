@@ -23,6 +23,7 @@ export const en = {
   'cms-readiness.step.designSystem.title': 'Design system',
   'cms-readiness.step.published.title': 'Published',
   'cms-readiness.step.polish.title': 'Polish',
+  'cms-readiness.step.writeDoors.title': 'Plugin write doors',
 
   'cms-readiness.step.release.why': 'Tracy installs only from a published GitHub release.',
   'cms-readiness.step.installFile.why': 'Tells Tracy which files to install from the release.',
@@ -38,6 +39,8 @@ export const en = {
     'Checks a picked design system restyles this template; no pick keeps its look.',
   'cms-readiness.step.published.why': 'Shows the listing to customers on Design templates.',
   'cms-readiness.step.polish.why': 'Nice to have. Publish works without them.',
+  'cms-readiness.step.writeDoors.why':
+    'The plugin a new site gets must offer every door the write step uses.',
 
   'cms-readiness.target.demoSite': 'Design Templates › Demo Site',
   'cms-readiness.target.listing': 'Design Templates › Listing',
@@ -280,6 +283,7 @@ export const en = {
   'cms-readiness.road.state.todo': 'To do',
   'cms-readiness.road.state.blocked': 'Waiting',
   'cms-readiness.road.state.checking': 'Checking',
+  'cms-readiness.road.state.notJudged': 'Not judged yet',
   'cms-readiness.road.tag.contract': 'Start now, takes longest',
   'cms-readiness.road.tag.parallel': 'Start now',
   'cms-readiness.road.checkAgain': 'Check again',
