@@ -46,6 +46,7 @@
 //   cli.mjs looks --kit <template-kit.json> --apply <looks.json>   (merge [{image, sha256, text}] written by the
 //                 packager's own Claude Code: all entries checked, none written when one is wrong; lib/looks.mjs)
 //   cli.mjs legal-layout --kit <template-kit.json> --layout '<template>:<file>' --why '<what it prints>'
+//                 (WordPress kit: --layout '<template>' or '<theme>//<template>' --webroot <dir holding the theme>)
 //   cli.mjs legal-layout --kit <template-kit.json> --none --why '<words>'
 //                 (site.createdPageLayouts.legal, lib/legal-layout.mjs: the plain article layout a created legal page
 //                 prints through, never a content page's own file; --none: the component's default. A person reads the
@@ -86,7 +87,7 @@ import { urlOfPath } from './lib/kit-paths.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
 import { linkLabelSlots } from './lib/link-label-slots.mjs'
 import { BASELINE_FILE, contractBaselineOf } from './lib/demo-baseline-file.mjs'
-import { declareLegalLayout } from './lib/legal-layout.mjs'
+import { declareLegalLayout, themeTemplatesOf } from './lib/legal-layout.mjs'
 import { applyLooks, indentOf, lookWorklist } from './lib/looks.mjs'
 import { assignedAt, indexMap } from './lib/map-index.mjs'
 import { measureMin } from './lib/measure-min.mjs'
@@ -335,7 +336,15 @@ function legalLayout(o) {
   const file = resolve(o.kit)
   const source = readFileSync(file, 'utf8')
   const kit = JSON.parse(source)
-  const r = declareLegalLayout(kit, { layout: str(o.layout), why: str(o.why), none: o.none === true })
+  // A WordPress kit's layout is checked against the block templates of its theme on --webroot.
+  const templates =
+    str(o.webroot) && kit.template?.name ? themeTemplatesOf(resolve(o.webroot), kit.template.name) : null
+  const r = declareLegalLayout(kit, {
+    layout: str(o.layout),
+    why: str(o.why),
+    none: o.none === true,
+    templates
+  })
   if (r.error) {
     console.error(`nothing written: ${r.error}`)
     return 1
