@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Content coverage audit: does a Joomla quickstart's content contract declare every piece of demo
+// Content coverage audit: does a Joomla or WordPress quickstart's content contract declare every piece of demo
 // text, every demo image and every demo link a visitor sees? The same crawl checks page hygiene:
 // raw language constants, PHP error text and unfilled placeholders a customer must never see. Read-only on the site (every request
 // that is not GET/HEAD/OPTIONS is aborted). Writes the evidence to --out (findings.json,

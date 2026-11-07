@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "Ten slots of the released JA Diner WP7 1.0.1 content map (quickstart/ja-diner/wp7), unchanged; no Slot fit.",
+  "entities": [
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": ""
+    },
+    {
+      "key": "page-front-page",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "front-page"
+      }
+    },
+    {
+      "key": "page-about-us",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "about-us"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "front-page.slideshow.image.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "slideshow.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1.jpg",
+      "sampleId": 25,
+      "maxCharacters": 255,
+      "label": "front-page — slideshow.image.1"
+    },
+    {
+      "key": "front-page.features-intro.ft-img.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.ft-img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-1.jpg",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.ft-img.1"
+    },
+    {
+      "key": "front-page.container-tabs.image-intro",
+      "entity": "page-front-page",
+      "target": {
+        "block": "container-tabs.image-intro",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/tab-intro.png",
+      "sampleId": 113,
+      "maxCharacters": 255,
+      "label": "front-page — container-tabs.image-intro"
+    },
+    {
+      "key": "front-page.subscribe.section-bg",
+      "entity": "page-front-page",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "front-page — subscribe.section-bg"
+    },
+    {
+      "key": "about-us.teams.member-image.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/Chef-8.jpg",
+      "sampleId": 289,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.1"
+    },
+    {
+      "key": "front-page.slideshow.title.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "slideshow.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "front-page — slideshow.title.1"
+    },
+    {
+      "key": "front-page.features-intro.module-title",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet Three Broomsticks.",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.module-title"
+    },
+    {
+      "key": "front-page.features-intro.description.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ potatoes, rosemary & butter",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.description.1"
+    },
+    {
+      "key": "about-us.teams.member-name.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Darren Klein",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.1"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    }
+  ]
+}

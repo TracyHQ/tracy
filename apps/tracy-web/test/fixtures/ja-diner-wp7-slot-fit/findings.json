@@ -1,0 +1,433 @@
+{
+  "$comment": "What the content coverage audit measured for those slots on the JA Diner WP7 1.0.1 demo at desktop and phone widths, trimmed to the fields Slot fit reads.",
+  "viewports": ["desktop", "phone"],
+  "pages": [
+    {
+      "items": [
+        {
+          "kind": "text",
+          "value": "Hey Harry!!! Are you ready for restaurant week?",
+          "status": "matched",
+          "matchBy": "exact",
+          "slots": ["front-page.slideshow.title.1"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 108,
+                "y": 476,
+                "w": 504,
+                "h": 216
+              },
+              "look": {
+                "width": 504,
+                "lines": 3,
+                "charWidth": 26.25,
+                "textTransform": "none"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 18,
+                "y": 296,
+                "w": 354,
+                "h": 130
+              },
+              "look": {
+                "width": 354,
+                "lines": 3,
+                "charWidth": 15.55,
+                "textTransform": "none"
+              }
+            }
+          }
+        },
+        {
+          "kind": "text",
+          "value": "Meet Three Broomsticks.",
+          "status": "matched",
+          "matchBy": "exact",
+          "slots": ["front-page.features-intro.module-title"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 738,
+                "y": 1208,
+                "w": 594,
+                "h": 14
+              },
+              "look": {
+                "width": 594,
+                "lines": 1,
+                "charWidth": 7.45,
+                "textTransform": "uppercase"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 18,
+                "y": 873,
+                "w": 354,
+                "h": 14
+              },
+              "look": {
+                "width": 354,
+                "lines": 1,
+                "charWidth": 7.45,
+                "textTransform": "uppercase"
+              }
+            }
+          }
+        },
+        {
+          "kind": "text",
+          "value": "w/ potatoes, rosemary & butter",
+          "status": "matched",
+          "matchBy": "exact",
+          "slots": ["front-page.features-intro.description.1"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 633,
+                "y": 3059,
+                "w": 702,
+                "h": 24
+              },
+              "look": {
+                "width": 702,
+                "lines": 1,
+                "charWidth": 7.67,
+                "textTransform": "none"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 18,
+                "y": 3201,
+                "w": 354,
+                "h": 24
+              },
+              "look": {
+                "width": 354,
+                "lines": 1,
+                "charWidth": 7.67,
+                "textTransform": "none"
+              }
+            }
+          }
+        },
+        {
+          "kind": "text",
+          "value": "w/ potatoes, rosemary, butter",
+          "status": "matched",
+          "matchBy": "exact ignoring spaces/punctuation",
+          "slots": ["front-page.features-intro.description.1"],
+          "viewports": {
+            "desktop": {
+              "visible": false,
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 0,
+                "h": 0
+              }
+            },
+            "phone": {
+              "visible": false,
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 0,
+                "h": 0
+              }
+            }
+          }
+        },
+        {
+          "kind": "image",
+          "value": "/wp-content/uploads/2026/10/item-1.jpg",
+          "status": "matched",
+          "matchBy": "path",
+          "slots": ["front-page.slideshow.image.1"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 0,
+                "y": 224,
+                "w": 1440,
+                "h": 840
+              },
+              "look": {
+                "objectFit": "cover",
+                "objectPosition": "50% 50%"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 0,
+                "y": 188,
+                "w": 390,
+                "h": 613
+              },
+              "look": {
+                "objectFit": "cover",
+                "objectPosition": "50% 50%"
+              }
+            }
+          },
+          "file": {
+            "width": 2400,
+            "height": 1350,
+            "alpha": false,
+            "clear": 0
+          }
+        },
+        {
+          "kind": "image",
+          "value": "/wp-content/uploads/2026/10/item-1-1.jpg",
+          "status": "matched",
+          "matchBy": "path",
+          "slots": ["front-page.features-intro.ft-img.1"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 108,
+                "y": 1208,
+                "w": 486,
+                "h": 729
+              },
+              "look": {
+                "objectFit": "fill",
+                "objectPosition": "50% 50%"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 18,
+                "y": 1320,
+                "w": 354,
+                "h": 531
+              },
+              "look": {
+                "objectFit": "fill",
+                "objectPosition": "50% 50%"
+              }
+            }
+          },
+          "file": {
+            "width": 504,
+            "height": 756,
+            "alpha": false,
+            "clear": 0
+          }
+        },
+        {
+          "kind": "image",
+          "value": "/wp-content/uploads/2026/10/tab-intro.png",
+          "status": "matched",
+          "matchBy": "path",
+          "slots": ["front-page.container-tabs.image-intro"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": -36,
+                "y": 3228,
+                "w": 489,
+                "h": 489
+              },
+              "look": {
+                "objectFit": "fill",
+                "objectPosition": "50% 50%"
+              }
+            },
+            "phone": {
+              "visible": false,
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 0,
+                "h": 0
+              }
+            }
+          },
+          "file": {
+            "width": 504,
+            "height": 504,
+            "alpha": true,
+            "clear": 0.369
+          }
+        },
+        {
+          "kind": "image",
+          "value": "/wp-content/uploads/2026/10/bg-icon.png",
+          "status": "matched",
+          "matchBy": "path",
+          "slots": ["front-page.subscribe.section-bg"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 0,
+                "y": 5683,
+                "w": 1440,
+                "h": 569
+              },
+              "look": {
+                "objectFit": "cover",
+                "objectPosition": "50% 50%"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 0,
+                "y": 6201,
+                "w": 390,
+                "h": 433
+              },
+              "look": {
+                "objectFit": "cover",
+                "objectPosition": "50% 50%"
+              }
+            }
+          },
+          "file": {
+            "width": 1812,
+            "height": 558,
+            "alpha": false,
+            "clear": 0
+          }
+        },
+        {
+          "kind": "text",
+          "value": "Meet Three BroomSticks",
+          "status": "matched",
+          "matchBy": "exact ignoring spaces/punctuation",
+          "slots": ["front-page.features-intro.module-title"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 108,
+                "y": 2629,
+                "w": 576,
+                "h": 14
+              },
+              "look": {
+                "width": 576,
+                "lines": 1,
+                "charWidth": 7.64,
+                "textTransform": "uppercase"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 18,
+                "y": 2062,
+                "w": 354,
+                "h": 14
+              },
+              "look": {
+                "width": 354,
+                "lines": 1,
+                "charWidth": 7.64,
+                "textTransform": "uppercase"
+              }
+            }
+          }
+        },
+        {
+          "kind": "text",
+          "value": "Darren Klein",
+          "status": "matched",
+          "matchBy": "exact",
+          "slots": ["about-us.teams.member-name.1"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 108,
+                "y": 4997,
+                "w": 279,
+                "h": 33
+              },
+              "look": {
+                "width": 279,
+                "lines": 1,
+                "charWidth": 11.47,
+                "textTransform": "none"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 18,
+                "y": 4121,
+                "w": 354,
+                "h": 33
+              },
+              "look": {
+                "width": 354,
+                "lines": 1,
+                "charWidth": 11.47,
+                "textTransform": "none"
+              }
+            }
+          }
+        },
+        {
+          "kind": "image",
+          "value": "/wp-content/uploads/2026/10/Chef-8.jpg",
+          "status": "matched",
+          "matchBy": "path",
+          "slots": ["about-us.teams.member-image.1"],
+          "viewports": {
+            "desktop": {
+              "visible": true,
+              "rect": {
+                "x": 108,
+                "y": 4711,
+                "w": 279,
+                "h": 279
+              },
+              "look": {
+                "objectFit": "fill",
+                "objectPosition": "50% 50%"
+              }
+            },
+            "phone": {
+              "visible": true,
+              "rect": {
+                "x": 51,
+                "y": 3826,
+                "w": 288,
+                "h": 288
+              },
+              "look": {
+                "objectFit": "fill",
+                "objectPosition": "50% 50%"
+              }
+            }
+          },
+          "file": {
+            "width": 288,
+            "height": 288,
+            "alpha": false,
+            "clear": 0
+          }
+        }
+      ]
+    }
+  ]
+}

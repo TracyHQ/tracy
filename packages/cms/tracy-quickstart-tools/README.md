@@ -137,11 +137,15 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
 ```
 
 - **WordPress.** The same command audits a WordPress contract (`.../tracy-wordpress-quickstart/contracts/<slug>/wp7/<version>`).
-  A WordPress map declares no routes, so each page entity opens as `?pagename=<slug>` and the front page is crawled; the
+  A WordPress map declares no routes, so each page entity opens as `?pagename=<path>` and the front page is crawled; a
+  page under a parent opens by its whole parent path (`?pagename=j-pages/login`), the parents read from the
+  `inventory.json` beside the map (without one, the slug alone); the
   database dump is read by the `<prefix>posts` / `<prefix>options` tables (a hit on a page is matched to its contract
   entity by slug); `--webroot` reads only `wp-content/themes/<theme>`, never WordPress itself. Capture the contract with
   `capture-contract.mjs --all-text` (every visible text, not only named blocks; `--role-vocabulary 3` for version 3 roles)
-  so there are slots to match. Not measured on WordPress yet: Slot fit (`--fit`).
+  so there are slots to match. Slot fit (`--fit`) is measured on WordPress the same way: a block slot is found by
+  its `metadata.name`, and a picture's kind is read from the block name (`<page slug> — <block>` labels: the page slug is
+  the demo's words, never a field name), its file and its boxes, with the same `pictureKindOf` rules as Joomla.
 - **What it reads.** Every page the content map declares (`index.php?Itemid=N`), plus a same-host
   crawl (list pagination `?start=N` and author pages included), at 1440 px and 390 px, read-only
   (every request that is not GET/HEAD/OPTIONS is aborted). Per page: visible text by block, `alt` /
