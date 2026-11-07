@@ -21,7 +21,8 @@
  *     --contract tracy-business/wp7/1.2.0 --dump <database.sql.gz> [--check]
  *
  * Rewrites `contracts/<id>/content-map.json`: every existing `type: "image"` slot is dropped and
- * the captured ones are appended, in entity order then document order. Run after it, in this
+ * the captured ones are appended, in entity order then document order; when the map declares slot roles, each captured
+ * slot gets its role from the same rule tables (`withImageRoles`). Run after it, in this
  * order: `capture-inventory.mjs --check` (the lock must not move), `build-wordpress-editions.mjs`,
  * `build-wordpress-demo-trim.mjs`, `build-wordpress-superseded.mjs`.
  */
@@ -29,6 +30,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { proposeContentMapRoles } from '../../../../scripts/slot-roles/rule-tables.mjs'
 import { readDump, tableRows, wordpressPrefix } from '../../tracy-quickstart-tools/mysqldump.mjs'
 
 const UPLOADS = /^\/?(wp-content\/uploads\/[A-Za-z0-9/_.-]+\.(?:png|jpe?g|webp))$/
@@ -119,6 +121,27 @@ export function withImageSlots(contentMap, captured) {
   return { ...contentMap, slots: [...contentMap.slots.filter((s) => s.type !== 'image'), ...captured] }
 }
 
+/**
+ * The content map with a role on every image slot that has none, when the map declares slot roles (ADR 0038): the
+ * image slots are added after capture-contract placed the text roles, so the same rule tables place theirs, in the
+ * vocabulary the map is written in. Every other slot is left as it is. A map that declares no role is returned as it
+ * is, so a released profile recaptures to the same bytes.
+ * @param {{ slots: object[], roleVocabularyVersion?: string }} contentMap
+ */
+export function withImageRoles(contentMap) {
+  if (!contentMap.slots.some((s) => s.role !== undefined)) return contentMap
+  const { contentMap: proposed } = proposeContentMapRoles(contentMap, {
+    cms: 'wordpress',
+    ...(contentMap.roleVocabularyVersion ? { vocabulary: contentMap.roleVocabularyVersion } : {})
+  })
+  return {
+    ...contentMap,
+    slots: contentMap.slots.map((s, i) =>
+      s.type === 'image' && s.role === undefined ? proposed.slots[i] : s
+    )
+  }
+}
+
 function main() {
   const args = {}
   for (let i = 2; i < process.argv.length; i++) {
@@ -188,7 +211,7 @@ function main() {
     for (const p of problems) console.error(`  ✖ ${p}`)
     process.exit(1)
   }
-  const next = `${JSON.stringify(withImageSlots(contentMap, captured), null, 2)}\n`
+  const next = `${JSON.stringify(withImageRoles(withImageSlots(contentMap, captured)), null, 2)}\n`
   const file = path.join(dir, 'content-map.json')
   if (args.check) {
     if (readFileSync(file, 'utf8') !== next) {

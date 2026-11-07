@@ -22,6 +22,7 @@ import {
   customizeOfRole,
   DEFAULT_NEUTRAL_BY_ROLE,
   GROUP_KINDS,
+  GROUP_KINDS_V3,
   isRole,
   modeOfRole,
   pictureReplaceOfRole,
@@ -411,7 +412,40 @@ const WP_REPEATED_FIELD_MAP = Object.freeze({
   'author-img': { family: 'quote', entityKind: 'quote', role: 'quote.author_image' }
 })
 
-export function proposeWordpress(slots) {
+/**
+ * A proposal without the groups that lack a role their kind needs (`GROUP_KINDS_V3` requiredRoles): a menu card whose
+ * dish name is no slot (the name heading carries inline price markup) is not a card. Its slots lose their binding and
+ * fall back to an editorial role. `placedRoles` are the roles a group already has on the map, from slots placed before.
+ * @param {{groups: any[], bindings: any[], roleOnly: any[], unplaced: any[]}} proposal
+ * @param {Map<string, Set<string>>} placedRoles
+ */
+function withoutIncompleteGroups(proposal, placedRoles) {
+  const rolesOf = new Map()
+  for (const b of proposal.bindings) {
+    const roles = rolesOf.get(b.groupId) ?? new Set(placedRoles.get(b.groupId) ?? [])
+    roles.add(b.role)
+    rolesOf.set(b.groupId, roles)
+  }
+  const incomplete = new Set(
+    proposal.groups
+      .filter((g) =>
+        (GROUP_KINDS_V3[g.entityKind]?.requiredRoles ?? []).some((r) => !rolesOf.get(g.groupId)?.has(r))
+      )
+      .map((g) => g.groupId)
+  )
+  if (incomplete.size === 0) return proposal
+  return {
+    ...proposal,
+    groups: proposal.groups.filter((g) => !incomplete.has(g.groupId)),
+    bindings: proposal.bindings.filter((b) => !incomplete.has(b.groupId))
+  }
+}
+
+/**
+ * @param {any[]} slots the slots still without a role
+ * @param {{placedRoles?: Map<string, Set<string>>}} [options] the roles each group already has on the map
+ */
+export function proposeWordpress(slots, { placedRoles = new Map() } = {}) {
   const collector = buildGroupCollector()
 
   for (const slot of slots) {
@@ -529,7 +563,7 @@ export function proposeWordpress(slots) {
     }
   }
 
-  return collector.finalize()
+  return withoutIncompleteGroups(collector.finalize(), placedRoles)
 }
 
 const EMDASH_REPEATER_MAP = Object.freeze({
@@ -790,11 +824,18 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
       }
     }
   const open = slots.filter((slot) => slot && slot.role === undefined)
+  const placedRoles = new Map()
+  for (const slot of slots) {
+    if (slot?.role === undefined || !slot.group?.id) continue
+    const roles = placedRoles.get(slot.group.id) ?? new Set()
+    roles.add(slot.role)
+    placedRoles.set(slot.group.id, roles)
+  }
   const {
     groups,
     bindings,
     roleOnly = []
-  } = cms === 'wordpress' ? proposeWordpress(open) : proposeJoomla(open, { vocabulary3 })
+  } = cms === 'wordpress' ? proposeWordpress(open, { placedRoles }) : proposeJoomla(open, { vocabulary3 })
   const roleOnlyBySlot = new Map(roleOnly.map((b) => [b.slotKey, b.role]))
   const groupOf = new Map(groups.map((g) => [g.groupId, g]))
   const bySlot = new Map(bindings.map((b) => [b.slotKey, b]))
