@@ -82,7 +82,7 @@ export function findBlocks(assigned) {
     el.setAttribute('data-kit-block', block)
     taken.add(block)
   }
-  // A platform that names its blocks by selector (WordPress: the template parts and the post content, from
+  // A platform that names its blocks by selector (WordPress: the template parts and the post content or its sections, from
   // `lib/site/adapters/wordpress-map.mjs`) is read by those selectors only: the Joomla module wrappers below would
   // read a ported template's leftover ids (`#acm-slideshow-94`) as modules the content map does not hold.
   const named = (assigned ?? []).filter((a) => a && typeof a.selector === 'string')
@@ -91,9 +91,20 @@ export function findBlocks(assigned) {
     for (const a of named) {
       const el = document.querySelector(a.selector)
       if (el && !taken.has(a.entity))
-        add(el, a.entity, KIND[a.entity] ?? 'template-part', a.position ? { position: a.position } : {})
+        add(
+          el,
+          a.entity,
+          a.kind ?? KIND[a.entity] ?? 'template-part',
+          a.position ? { position: a.position } : {}
+        )
       else if (!el && a.entity === 'main-body')
-        out.push({ block: 'main-body', kind: 'component', visible: false, offCanvas: false, note: 'no component area' })
+        out.push({
+          block: 'main-body',
+          kind: 'component',
+          visible: false,
+          offCanvas: false,
+          note: 'no component area'
+        })
     }
     const docHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
     return { blocks: out.sort((a, b) => (a.top ?? 0) - (b.top ?? 0)), docHeight }

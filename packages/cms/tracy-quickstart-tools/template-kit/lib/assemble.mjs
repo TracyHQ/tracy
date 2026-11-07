@@ -88,6 +88,9 @@ export async function assembleKit(o, out, tool) {
   // leaves those fields empty and says why, once each (wordpress-map.mjs).
   for (const g of map.platformGaps ?? [])
     kit.errors.push({ kind: 'not-on-platform', field: g.field, reason: g.reason })
+  // A WordPress page whose post content could not be split into its sections (wordpress-map.mjs).
+  for (const g of map.sectionGaps ?? [])
+    kit.errors.push({ kind: 'missing', field: g.field, reason: g.reason })
   // The coverage gate (coverage-gate.mjs): complete the kit from the contract, then count what it still lacks. The
   // list and owner checks run again over the completed kit.
   const desk = String(capture.widths?.[0] ?? '1440')

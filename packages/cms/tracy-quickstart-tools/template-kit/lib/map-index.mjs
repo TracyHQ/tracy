@@ -41,8 +41,9 @@ export function assignedAt(idx, path) {
       entity: a.entity,
       position: a.position,
       ...(a.inside ? { inside: a.inside } : {}),
-      // A block a platform finds by selector (WordPress areas, wordpress-map.mjs).
-      ...(a.selector ? { selector: a.selector } : {})
+      // A block a platform finds by selector (WordPress areas and page sections, wordpress-map.mjs).
+      ...(a.selector ? { selector: a.selector } : {}),
+      ...(a.kind ? { kind: a.kind } : {})
     }))
 }
 

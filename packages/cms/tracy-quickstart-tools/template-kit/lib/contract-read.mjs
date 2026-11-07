@@ -90,15 +90,28 @@ export function withInlineMarkup(map, coverage) {
 }
 
 /**
+ * The sections of each WordPress page post, by post id, that this run read from the site (wordpress-sections.mjs);
+ * null until a run sets them (cli.mjs, once, beside `usePlatform`), and the post contents then stay one block each.
+ * @type {Record<string, object[]>|null}
+ */
+let wordpressSections = null
+
+/** Settle, once per run, the WordPress page sections every read of the contract map splits pages by. */
+export function useWordPressSections(sectionsByPost) {
+  wordpressSections = sectionsByPost ?? null
+}
+
+/**
  * The content map in the shape the kit reads, whatever the platform: a WordPress map lists no pages, so they are
- * derived from its page entities and the release inventory beside it (`wordpress-map.mjs`).
+ * derived from its page entities and the release inventory beside it (`wordpress-map.mjs`), each page's post content
+ * split into its sections when the run read them.
  * @param {object} map
  * @param {string} contract the contract folder
  */
 function withPlatformShape(map, contract) {
   const manifest = readIf(join(contract, 'manifest.json'))
   if (String(manifest?.platform ?? '').toLowerCase() !== 'wordpress') return map
-  return withWordPressPages(map, readIf(join(contract, 'inventory.json')))
+  return withWordPressPages(map, readIf(join(contract, 'inventory.json')), wordpressSections)
 }
 
 /** @param {string} contract the contract folder: its content map with the inline markup carried beside it */

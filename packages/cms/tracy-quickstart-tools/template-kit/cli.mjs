@@ -103,6 +103,7 @@ import { stampSettled, TOOL } from './lib/version.mjs'
 import { runFieldMeasure } from './lib/site/measure-fields.mjs'
 import { writeSheets } from './lib/sheets.mjs'
 import { adapterFor, usePlatform } from './lib/site/adapters/index.mjs'
+import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 import { declareVideoButtons } from './lib/video-buttons.mjs'
@@ -439,7 +440,12 @@ async function main() {
   const out = resolve(o.out)
   mkdirSync(join(out, 'images'), { recursive: true })
   // Page addresses are spelled the platform's way (lib/kit-paths.mjs urlOfPath).
-  if (o.contract) usePlatform(readIf(join(o.contract, 'manifest.json'))?.platform)
+  const platform = o.contract ? readIf(join(o.contract, 'manifest.json'))?.platform : undefined
+  if (o.contract) usePlatform(platform)
+  // A WordPress page is read as its sections (the top-level blocks of its post content), from the database or the
+  // work folder's wordpress-sections.json.
+  const split = settleWordPressSections({ platform, out, db: str(o.db), dbCommand: str(o['db-command']) })
+  if (split) log('wordpress sections', split.pages, 'pages, from', split.from)
   if (cmd === 'sheet') return sheet(o, out).then(() => 0)
   if (cmd === 'approve') return approve(o, out)
   if (cmd === 'pack') return pack(out)

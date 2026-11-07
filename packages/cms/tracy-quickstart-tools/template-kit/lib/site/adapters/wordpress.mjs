@@ -134,6 +134,14 @@ export function wordpressAdapter(source) {
       const ref = navigationRefOf(partOf('header'))
       return topLevelLabels(state.navigations.get(String(ref))?.post_content)
     },
+    /** The post content of every published page, by post id (its sections are the kit's blocks). */
+    pageContents() {
+      if (!query || !state.prefix) return null
+      const rows = query(
+        `SELECT ID, post_content FROM ${state.prefix}posts WHERE post_type = 'page' AND post_status = 'publish'`
+      )
+      return Object.fromEntries(rows.map((r) => [String(r.ID), r.post_content ?? '']))
+    },
     /** Whether a map page lists posts: the posts page, or a page whose content holds a query loop. */
     isListing(mapPage) {
       const id = String(mapPage?.postId ?? '')

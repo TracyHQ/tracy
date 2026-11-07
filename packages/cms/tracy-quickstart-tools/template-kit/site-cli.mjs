@@ -17,6 +17,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
 import { readContractMap } from './lib/contract-read.mjs'
+import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
 import { pageIdOf } from './lib/ids.mjs'
 import { pathOfRoute, slugOfPath } from './lib/kit-paths.mjs'
 import { indexMap } from './lib/map-index.mjs'
@@ -165,6 +166,13 @@ async function main() {
   const out = resolve(o.out)
   mkdirSync(out, { recursive: true })
   const capture = typeof o['capture-index'] === 'string' ? readJson(o['capture-index']) : null
+  // WordPress pages are read as their sections, the way the kit run splits them (wordpress-sections-file.mjs).
+  settleWordPressSections({
+    platform: readJson(join(o.contract, 'manifest.json')).platform,
+    out,
+    db: typeof o.db === 'string' ? o.db : undefined,
+    dbCommand: typeof o['db-command'] === 'string' ? o['db-command'] : undefined
+  })
   const mod = await import(process.env.PLAYWRIGHT_MODULE ?? '@playwright/test')
   const chromium = mod.chromium ?? mod.default?.chromium
   const doc = await runSite({ o, out, chromium, capture })
