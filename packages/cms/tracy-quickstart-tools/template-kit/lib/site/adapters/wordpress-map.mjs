@@ -150,6 +150,9 @@ export function withWordPressPages(map, inventory, sectionsByPost = null) {
     entities: [...(map.entities ?? []), ...sectionEntities],
     slots,
     pages,
+    // A page the map does not list (a single post, an archive) prints its content as one block, never the sections of
+    // the front page.
+    otherPageAreas: [header, body, footer],
     platformGaps,
     sectionGaps
   }

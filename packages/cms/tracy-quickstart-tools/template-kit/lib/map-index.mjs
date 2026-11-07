@@ -34,7 +34,11 @@ export function indexMap(map) {
  * when its platform names blocks that way. An unpublished one prints nothing.
  */
 export function assignedAt(idx, path) {
-  const p = idx.pageByPath.get(path.split('?')[0]) ?? idx.pageByPath.get('/')
+  // A page the map does not list prints what the front page prints (Joomla modules on every page), or, on a platform
+  // whose map names the areas any page prints (WordPress, `otherPageAreas`), those areas.
+  const p =
+    idx.pageByPath.get(path.split('?')[0]) ??
+    (idx.map.otherPageAreas ? { assignedModules: idx.map.otherPageAreas } : idx.pageByPath.get('/'))
   return (p?.assignedModules ?? [])
     .filter((a) => String(a.published ?? '1') !== '0')
     .map((a) => ({

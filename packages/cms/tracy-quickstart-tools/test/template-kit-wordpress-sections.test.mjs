@@ -143,3 +143,13 @@ test('without the sections read from the site, every page is the three areas, as
     ['header', 'main-body', 'footer']
   )
 })
+
+test('a page the map does not list (a single post) is read as the three areas, not as the front page sections', async () => {
+  const { assignedAt } = await import('../template-kit/lib/map-index.mjs')
+  const idx = indexMap(withWordPressPages(MAP, INVENTORY, { 7: postSections(FRONT) }))
+  assert.deepEqual(
+    assignedAt(idx, '/a-post-about-rye/').map((a) => a.entity),
+    ['header', 'main-body', 'footer']
+  )
+  assert.equal(assignedAt(idx, '/')[1].entity, 'block-home-hero')
+})
