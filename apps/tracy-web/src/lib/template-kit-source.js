@@ -81,7 +81,13 @@ export function openKit(ref, { index = defaultContracts() } = {}) {
     const kit = kitOfContract(contract)
     const at = key.lastIndexOf('@')
     return kit.state === 'read'
-      ? { ref, release: key.slice(0, at), version: key.slice(at + 1), doc: kit.doc }
+      ? {
+          ref,
+          release: key.slice(0, at),
+          version: key.slice(at + 1),
+          platform: contract.platform ?? '',
+          doc: kit.doc
+        }
       : null
   }
   return null

@@ -8,8 +8,10 @@ import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { BENCH_QUEUE, createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { openKit } from '../src/site-planner/kit-source.js'
 import { checkPlan, failureListText } from '../src/site-planner/plan-check/check-plan.js'
+import { withCmsLine } from '../src/lib/cms-line.js'
 import { plannerPrompt } from '../src/site-planner/planner-prompt.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
+import { indexAs } from './_cms-line-index.mjs'
 import { fileDb } from './_db.mjs'
 import {
   API_KEY,
@@ -36,7 +38,7 @@ const readGroups = (cost = 0.5) =>
 const planReply = (cost = 1.25) => finalReply({ content: JSON.stringify(plan()), usage: usageOf({ cost }) })
 
 /** Start a run, then let one worker claim and run everything queued. */
-async function runOnce(pool, replies, { wrap } = {}) {
+async function runOnce(pool, replies, { wrap, index } = {}) {
   await assignPlannerDoor(pool)
   const run = await startRun(pool)
   const model = scriptedModel(replies)
@@ -46,6 +48,7 @@ async function runOnce(pool, replies, { wrap } = {}) {
     secret: SECRET,
     fetchImpl,
     kitImages: readyKitImages(),
+    ...(index ? { index } : {}),
     log: quiet,
     retry: { attempts: 1 }
   }).drain()
@@ -85,13 +88,34 @@ test(
     assert.equal(model.requests.length, 2)
     const [first, second] = model.requests.map((r) => r.body)
     assert.equal(first.model, MODEL)
-    assert.equal(first.messages[0].content[0].text, plannerPrompt().text)
+    assert.equal(first.messages[0].content[0].text, withCmsLine(plannerPrompt().text, 'joomla'))
     assert.equal(first.max_tokens, 128000)
     const toolResult = second.messages.find((m) => m.role === 'tool')
     assert.match(JSON.stringify(toolResult.content), /group-home/)
     assert.equal(model.requests[0].headers.authorization, `Bearer ${API_KEY}`)
   }
 )
+
+test('the planner prompt opens with the CMS line of the kit, WordPress or Joomla', opts, async () => {
+  const { pool } = db
+  for (const [platform, line] of [
+    ['wordpress', 'This site runs on WordPress (block editor).'],
+    ['joomla', 'This site runs on Joomla.']
+  ]) {
+    await db.reset()
+    const { run, model } = await runOnce(pool, [readGroups(), planReply()], { index: indexAs(platform) })
+    assert.equal(run.status, 'succeeded', run.error)
+    const system = model.requests[0].body.messages[0].content[0].text
+    assert.equal(system, `${line}\n\n${plannerPrompt().text}`)
+  }
+})
+
+test('a kit with no platform fails the run loudly', opts, async () => {
+  const { pool } = db
+  const { run } = await runOnce(pool, [readGroups(), planReply()], { index: indexAs('') })
+  assert.equal(run.status, 'failed')
+  assert.match(run.error, /platform/)
+})
 
 test('a truncated answer fails the run', opts, async () => {
   const { pool } = db
