@@ -9,9 +9,10 @@ import { WRITER_PROMPT_FILE, writerPrompt } from '../src/site-writer/writer-prom
 // in on 2026-11-04 (a plan label is a suggestion the writer keeps or rewrites, a created page title is its on-page
 // heading, a created privacy page is a complete policy), and on 2026-11-04 ruled that a text follows the demo's length
 // part by part, between 80% and 100% of it, in the demo's lead and points shape, and that a slot whose demo draws
-// words in the accent colour names its own as `emphasis`; its bytes change only with a new
+// words in the accent colour names its own as `emphasis`, and on 2026-11-07 that the emphasis marks the strongest
+// words of the text, never a filler, wherever the demo put its own; its bytes change only with a new
 // approval from the owner, recorded in ADR 0042.
-const APPROVED_SHA256 = '50b69c79498fe4aa219f2abf17267f3a8e0e535c7d9a1f19e59b9b10a5979229'
+const APPROVED_SHA256 = '79658a692fcf4a3b33d7e32a9f295b4af05e40bba7f5911924bef9d77902e32c'
 
 test('the shipped writer prompt is the approved one, byte for byte', () => {
   const bytes = readFileSync(WRITER_PROMPT_FILE)

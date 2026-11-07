@@ -81,9 +81,11 @@ copy file:
   point, each a short phrase like the demo points, not a sentence.
 - `emphasis`: only on a slot whose kit view has `inline`. The exact words of your `text` to draw in the accent
   colour, copied character for character from one item: one run, about as long as the demo's (one or two words of
-  a heading, the unit of a price), at most twice as long, never the whole text and never half of it. `text` itself
-  stays plain. A label slot with `inline` is written in `slots` too (keep the plan's words or rewrite them) so it
-  carries its `emphasis`. No other slot has `emphasis`.
+  a heading, the unit of a price), at most twice as long, never the whole text and never half of it. Mark the
+  strongest word or words of the text, the ones that carry its claim (the distinctive service, the number, the
+  proof, the place only when the place is the point), never a filler or connecting word; where the demo put its
+  emphasis is not a rule. `text` itself stays plain. A label slot with `inline` is written in `slots` too (keep the
+  plan's words or rewrite them) so it carries its `emphasis`. No other slot has `emphasis`.
 - `factIds`: the slot's `factIds` from the plan, copied. Add a fact id only when a detail you wrote rests on a
   fact you were given that the plan did not list for the slot.
 - **Labels.** The plan's `text` on a label slot is a suggestion, not the final text. Keep it when it already fits
@@ -230,7 +232,7 @@ full text of earlier pages, and an interrupted run continues from it.
 - W15: When `shape.lead` is true, is the first item the lead paragraph near `shape.leadChars`, and every item after
   it one short point, a phrase and not a sentence, at most one and a half times the longest demo point?
 - W16: Does every slot with `inline` carry an `emphasis` that is exact words of its text, a short run and not
-  the whole text, and does no other slot carry one?
+  the whole text, and is it the strongest words of the text, not a filler? Does no other slot carry one?
 - Did you change anything the plan decided? Did you add any point the plan does not make?
 
 ## After you answer
