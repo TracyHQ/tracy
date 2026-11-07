@@ -205,3 +205,57 @@ test('the T3 case: JA Diner j6 on plugin 0.24.80 lacked every write door; on 0.2
   )
   assert.equal(before.params.fixVersion, '0.24.87')
 })
+
+/** An invented WordPress quickstart release: the write step has no WordPress door list to hold a plugin to yet. */
+function wordpressRelease() {
+  return {
+    tag: 'quickstart/ja-example/wp7',
+    name: 'JA Example',
+    kind: 'quickstart',
+    github: 'published',
+    tracy: 'ready',
+    reason: null,
+    publishedAt: null,
+    assets: [{ name: 'w.tar.gz' }],
+    setting: {
+      schemaVersion: 'tracy-setting/v1',
+      platform: 'wordpress',
+      label: 'JA Example',
+      version: '1.0.0',
+      template: 'ja_example',
+      install: { webroot: { file: 'w.tar.gz', sha256: 'a'.repeat(64) } }
+    },
+    inspiration: null,
+    inspirationHidden: false,
+    pages: null,
+    local: null,
+    choosable: true,
+    platform: 'wordpress'
+  }
+}
+
+test('a WordPress release is not judged on the write doors yet: its own code, never a pass', () => {
+  const judged = WRITE_DOORS_CHECK.judge(wordpressRelease(), { contracts: defaultContracts() })
+  assert.deepEqual(judged, {
+    state: 'todo',
+    code: 'write-doors-not-judged',
+    params: { platform: 'wordpress' }
+  })
+  assert.ok(judged.state !== 'done' && judged.state !== 'warn')
+})
+
+test('the verdict of a WordPress release never passes its cowork-pin piece, and the check is the one listed for it', () => {
+  const world = { contracts: defaultContracts(), server: false, checks: [WRITE_DOORS_CHECK] }
+  const piece = readinessVerdict(wordpressRelease(), world).pieces.find((p) => p.piece === 'cowork-pin')
+  // The invented release has no contract, so the plugin rules of Customize your site decide the piece first; what
+  // matters is that the piece is not a pass, and that the listed check gives the not judged answer for it.
+  assert.ok(piece.state !== 'done' && piece.state !== 'warn')
+  assert.equal(WRITE_DOORS_CHECK.judge(wordpressRelease(), world).code, 'write-doors-not-judged')
+})
+
+test('a platform that is neither Joomla nor WordPress is still not judged by this check (no result)', () => {
+  const emdash = wordpressRelease()
+  emdash.platform = 'emdash'
+  emdash.setting.platform = 'emdash'
+  assert.equal(WRITE_DOORS_CHECK.judge(emdash, { contracts: defaultContracts() }), null)
+})
