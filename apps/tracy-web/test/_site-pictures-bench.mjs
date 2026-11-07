@@ -135,12 +135,12 @@ export const contentMap = () => ({
 })
 
 /** A contract index holding the invented kit and its content map, in a temporary folder; `done()` removes it. */
-export function kitIndex() {
+export function kitIndex({ platform = 'joomla' } = {}) {
   const dir = mkdtempSync(path.join(tmpdir(), 'site-pictures-kit-'))
   writeFileSync(path.join(dir, 'template-kit.json'), JSON.stringify(kit()))
   writeFileSync(path.join(dir, 'content-map.json'), JSON.stringify(contentMap()))
   return {
-    index: new Map([['demo-bikes@1.0.0', { id: KIT_REF, dir, platform: 'joomla' }]]),
+    index: new Map([['demo-bikes@1.0.0', { id: KIT_REF, dir, platform }]]),
     done: () => rmSync(dir, { recursive: true, force: true })
   }
 }

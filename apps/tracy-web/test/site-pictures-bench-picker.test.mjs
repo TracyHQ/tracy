@@ -10,6 +10,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { after, before, beforeEach, test } from 'node:test'
 import sharp from 'sharp'
+import { withCmsLine } from '../src/lib/cms-line.js'
 import { startPictureRun } from '../src/site-pictures/bench-control.js'
 import { runFiles } from '../src/site-pictures/bench-export.js'
 import { filesOf, inputsOf, readRun } from '../src/site-pictures/bench-store.js'
@@ -73,7 +74,7 @@ test(
     assert.equal(model.requests.length, 1, 'one call for the whole site')
     const body = model.requests[0].body
     // The system prompt is the picker prompt; its hash is recorded on the run and in the manifest's fingerprint.
-    assert.equal(body.messages[0].content, picturePrompts().text)
+    assert.equal(body.messages[0].content, withCmsLine(picturePrompts().text, 'joomla'))
     const pickerSha = createHash('sha256').update(readFileSync(PICKER_PROMPT_FILE)).digest('hex')
     assert.equal((await inputsOf(pool, started.id)).prompts.picker, pickerSha)
     assert.equal(run.promptSha256, picturePrompts().sha256)

@@ -7,6 +7,8 @@ import { readFileSync } from 'node:fs'
 import { after, before, beforeEach, test } from 'node:test'
 import { BRAND_PROMPT_SHA256, brandPrompt } from '../src/brand-step/brand-prompt.js'
 import { callsOf } from '../src/brand-step/brand-call-store.js'
+import { withCmsLine } from '../src/lib/cms-line.js'
+import { indexAs } from './_cms-line-index.mjs'
 import { toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import { AGENT_MODEL, API_KEY, brandCase, done, REVIEWER_MODEL, runOnce, saveCall } from './_brand-bench.mjs'
@@ -45,7 +47,10 @@ test('a brand file the gate accepts on round 0 ends the run with that file', opt
   assert.deepEqual(run.rounds[0].gateResult, { ok: true })
   // The locked prompt went out as the system prompt and its hash is on the run.
   assert.equal(run.promptSha256, BRAND_PROMPT_SHA256)
-  assert.match(model.agent.requests[0].body.messages[0].content, /^# Brand step/)
+  assert.match(
+    model.agent.requests[0].body.messages[0].content,
+    /^This site runs on Joomla\.\n\n# Brand step/
+  )
   assert.equal(model.agent.requests[0].body.model, AGENT_MODEL)
   assert.equal(model.reviewer.requests[0].body.model, REVIEWER_MODEL)
   // The cost is split agent / drawing / reviewer, and every call is in the log with tool, model, purpose, status.
@@ -67,6 +72,32 @@ test('a brand file the gate accepts on round 0 ends the run with that file', opt
     ['look_logo', REVIEWER_MODEL, 'logo look']
   )
   assert.ok(Number.isInteger(reviewer.latencyMs) && reviewer.costUsd === 0.0003)
+})
+
+test('the brand prompt opens with the CMS line of the kit, WordPress or Joomla', opts, async () => {
+  const { pool } = db
+  for (const platform of ['wordpress', 'joomla']) {
+    await db.reset()
+    const c = await brandCase()
+    const { run, model } = await runOnce(pool, c, {
+      agent: [saveCall(c.brand), done()],
+      queue: { index: indexAs(platform) }
+    })
+    assert.equal(run.status, 'succeeded', run.error)
+    assert.equal(model.agent.requests[0].body.messages[0].content, withCmsLine(brandPrompt().text, platform))
+  }
+})
+
+test('a kit with no platform fails the brand run before any model call', opts, async () => {
+  const { pool } = db
+  const c = await brandCase()
+  const { run, model } = await runOnce(pool, c, {
+    agent: [saveCall(c.brand), done()],
+    queue: { index: indexAs('') }
+  })
+  assert.equal(run.status, 'failed')
+  assert.match(run.error, /BRAND_KIT_PLATFORM/)
+  assert.equal(model.agent.requests.length, 0)
 })
 
 test(

@@ -9,6 +9,7 @@
 // is one that was dispatched and never answered (the provider may have charged it): that run fails with
 // AGENT_TURN_UNANSWERED. A cancel is honoured between two model calls and between two rounds.
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
+import { platformRefusal } from '../lib/cms-line.js'
 import { ensureLogo } from './brand-logo.js'
 import { brandPrompt } from './brand-prompt.js'
 import { brandDoors } from './brand-doors.js'
@@ -118,6 +119,8 @@ async function prepare(deps, row) {
     return { ok: false, code: 'BRAND_PROMPT_CHANGED', reason: 'the approved prompt changed since the start' }
   const kit = openKit(row.kit?.ref, index ? { index } : {})
   if (!kit) return { ok: false, code: 'BRAND_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
+  const unplatformed = platformRefusal(kit, 'BRAND')
+  if (unplatformed) return unplatformed
   const doors = await brandDoors({ pool, secret, override: row.door?.agent?.override ?? null })
   if (!doors.ok) return doors
   for (const side of ['agent', 'reviewer']) {
