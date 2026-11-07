@@ -1,6 +1,7 @@
 // What the brand gate refuses to read from a template kit: an empty site part is a problem, never a pass. JA Boxing's
 // committed kit still feeds the gate; a T3 kit read through LESS variables gives its heading colour.
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 
 import { kitProblem, sideText } from '../src/brand-step/kit-grounds.js'
@@ -43,6 +44,26 @@ test('a T4 logo spot the site profile writes needs no frame', () => {
   // A kit that keeps no T4 site profile (a WordPress copy without a Site Logo block) still needs the frame.
   kit.site.favicon.mechanism = { setting: 'option site_icon', value: null, fallback: null }
   assert.match(kitProblem(kit), /no frame to write them: logo-header-1/)
+})
+
+test("JA Voyara's committed 1.0.12 kit feeds the gate: its logo spots are written through site_logo", () => {
+  const voyara = JSON.parse(
+    readFileSync(
+      new URL(
+        '../../../packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.12/template-kit.json',
+        import.meta.url
+      ),
+      'utf8'
+    )
+  )
+  assert.deepEqual(
+    voyara.site.logoSpots.map((s) => [s.setting, s.frameId]),
+    [
+      ['site_logo', null],
+      ['site_logo', null]
+    ]
+  )
+  assert.equal(kitProblem(voyara), null)
 })
 
 test('a logo spot the page never shows may have no frame', () => {
