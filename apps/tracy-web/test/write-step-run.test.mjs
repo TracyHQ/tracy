@@ -196,12 +196,16 @@ test('the same slot twice in the copy with different words is a dispute; identic
   assert.equal(repeated.report.slots.filter((s) => s.slot === 'block-1.1').length, 1)
 })
 
-test('a slot in a kept block with no owner is reported and does not block', async () => {
+test('a slot in a kept block with no owner is reported, does not stop the run, and fails while its demo stays', async () => {
   const c = copy()
   c.slots = c.slots.filter((s) => s.slot !== 'block-5.1')
   const { report, line } = await run({ copy: c })
   assert.equal(report.status, 'done')
-  assert.deepEqual([line('block-5.1').owner, line('block-5.1').status], [null, 'skipped'])
+  // The site cannot empty it, so the closing rule says its demo remains (closing-ladder.js).
+  assert.deepEqual(
+    [line('block-5.1').owner, line('block-5.1').status, line('block-5.1').closing],
+    [null, 'failed', 'demo-remains']
+  )
   assert.ok(report.unowned.some((u) => u.slot === 'block-5.1' && u.block === 'block-5'))
   assert.ok(!report.unowned.some((u) => u.block === 'block-4'), 'a hidden block is not kept')
 })
