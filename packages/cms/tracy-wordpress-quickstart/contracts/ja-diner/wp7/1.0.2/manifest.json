@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-diner/wp7/1.0.2",
+  "platform": "wordpress",
+  "theme": "wp-ja-diner",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-diner/wp7",
+    "version": "1.0.2",
+    "platform": "wordpress",
+    "platformVersion": "7.1.3",
+    "phpVersion": "8.3.36",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-diner",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
+        "bytes": 60051863,
+        "sha256": "c7e5c3d6150248ae0caaef65e50134d50739cbe1ff2d532c44d16d32e181d82b",
+        "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.2.tar.gz"
+      },
+      "database": {
+        "file": "ja-diner-wp7-database-1.0.2.sql.gz",
+        "bytes": 63373,
+        "sha256": "625a1c95b76f14697364553d811f2937e5b4e340d3d952473c2b8db929a8c0ae",
+        "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.2.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.38",
+  "mode": "content-recommendation"
+}
