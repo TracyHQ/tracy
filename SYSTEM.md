@@ -2373,7 +2373,7 @@ into a session of its own that 9b opens for the site as its owner (`lib/site-ses
 soon as the finder answered that page, at most three at once, and completion is read from `site_turn`. A site check of the
 pages the turn changed (`runSiteCheck` `pages`, joined by `lib/scoped-site-check.js`) judges it, and a turn that made a
 page worse is undone whole through `POST /api/sites/:key/turns/undo`. Repairs are Tracy turns, so Site changes shows each
-with Undo; a turn still open at the step's return is stopped with `session/cancel` and judged by what it wrote. Any 9b error takes its turns back and hands over the written site. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
+with Undo; a turn still open at the step's return is stopped with `session/cancel` and judged by what it wrote. Any 9b error takes its turns back and hands over the written site. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
 `write-step-bench-repair-agent.js`); no customer flow calls it yet (#444).
 
 ## 9. Sign-in, seats, permissions

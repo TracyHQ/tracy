@@ -586,6 +586,16 @@ changes with Undo. So:
 - Repairs are Tracy turns of the setup session, shown in Site changes with Undo like any other change. This replaces the
   finisher's decision that setup repairs stay out of the Changes tab.
 
+### 31. No kept slot is handed over with its demo content
+
+Owner's rule, 2026-11-07. A slot the plan keeps visible but that holds no customer content (the writer returned it, no file fills
+it, or the picture step left its frame without a picture) climbs one ladder after the hide stage, once: (1) it is used when a value
+is sent for it by then; (2) else it is emptied through the contract's empty, at the smallest unit that leaves no orphan: every slot
+of its list row (a stat number with its label, a quote with its signature), a slot of no row alone; (3) else, when the kit or the
+site does not let the unit be emptied, its line fails and says the demo content remains, so the site check blocks on it. Every
+resolution is a line in the write report's `closing`. Not yet covered: a menu item whose target page is removed, and replacing a
+rejected picture with another accepted candidate; both stay with the site check's `dead-links` and `demo-pictures`.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

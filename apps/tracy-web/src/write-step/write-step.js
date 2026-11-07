@@ -40,6 +40,7 @@ import { closeForms } from './form-close.js'
 import { settleDialledPhones } from './dialled-phones.js'
 import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
 import { climbTextFallback, withTextFallback } from './text-fallback.js'
+import { closeDemoLeft, withClosing } from './closing-ladder.js'
 import { hideEmptyVideoButtons } from './video-buttons-stage.js'
 import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
 import { hideHiddenPageLinks, relinkOrders } from './hidden-page-links-stage.js'
@@ -183,6 +184,8 @@ export async function runWriteStep(input) {
   let emphasis = new Map()
   let pictureFiles = {}
   let fallbacks = new Map()
+  let copyReturns = []
+  let closing = []
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -226,6 +229,8 @@ export async function runWriteStep(input) {
     lines = followRenamedLinks(lines, renamedLinks)
     lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
     lines = withTextFallback(withEmphasis(lines, emphasis), fallbacks)
+    lines = withClosing(lines, closing, emptied)
+    if (closing.length) report.closing = closing
     if (emphasis.size)
       report.emphasis = [...emphasis].map(([key, e]) => ({
         key,
@@ -305,6 +310,7 @@ export async function runWriteStep(input) {
     leaveOut(pictures.unaddressable ?? [])
     guard.refuse(pictures.refused ?? [])
     const copyRead = readCopy(copy)
+    copyReturns = Array.isArray(copy?.returns) ? copy.returns : []
     const problems = fileProblems({ plan, copy, kitRef: kit.ref }, copyRead.problems)
     if (problems.length)
       return { stop: { code: 'BAD_FILE', reason: `The files cannot be written: ${problems.join('; ')}` } }
@@ -576,6 +582,29 @@ export async function runWriteStep(input) {
   if (hiding.stop) return stopped(hiding.stop)
   hide = hiding
   mapping.emptySlots = hide.emptySlots
+  // The closing rule: a kept slot or frame that holds no customer content is not handed over with its demo (closing-ladder.js).
+  const closed = closeDemoLeft({
+    kit: kit.doc,
+    reading: hide.reading,
+    unowned: report.unowned,
+    unaddressable,
+    returns: copyReturns,
+    // A rerun: what an earlier run wrote is customer content the site still holds.
+    held: last.active
+      ? last
+          .held()
+          .filter((line) => line.status === 'written')
+          .map((line) => line.slot)
+      : [],
+    changes: mapping.changes,
+    emptySlots: mapping.emptySlots
+  })
+  closing = closed.lines
+  for (const key of closed.dropped) {
+    delete mapping.changes[key]
+    delete mapping.evidence?.[key]
+  }
+  mapping.emptySlots = [...mapping.emptySlots, ...closed.emptySlots]
   // A link slot to a hidden page that its kept row keeps (SLOT_NOT_HIDEABLE) is written with a living page instead (card AM).
   if (Array.isArray(kit.doc?.site?.hiddenPageLinks) && mapping.emptySlots.length) {
     try {
