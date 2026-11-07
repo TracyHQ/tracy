@@ -2,7 +2,8 @@
 // icon that takes a transparent drawing, and a gallery alt that may fill its empty sample. A site's plugin decides, per
 // contract, so it is read from the site. An older plugin says nothing and answers as it always did, so nothing is sent
 // that it would refuse. Read at most once a run, and only when a frame needs the answer.
-import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { galleryAltSlot } from '../lib/gallery-alt-slot.js'
+import { PICTURE_OWNER } from './picture-package.js'
 import { infoOf, SLOT_CORRECTIONS_DOOR } from './plugin-doors.js'
 
 const NONE = { icons: false, alts: false }
@@ -30,43 +31,46 @@ export const isKeptIcon = (slot) =>
   slot.fit.kind === 'icon' &&
   slot.fit.transparent === true
 
-const isOpenableAlt = (slot) =>
-  slot.type === 'text' &&
-  String(slot.sample ?? '').trim() === '' &&
-  Array.isArray(slot.jsonPath) &&
-  slot.jsonPath.some((part) => String(part).endsWith('[alt]'))
-
-/** The alt slot beside a frame's picture in its row, or null. Only a gallery row has one a door can fill. */
-function altSlotOf(frame, slots) {
-  const picture = slots.find((s) => s.key === contentMapKey(frame))
-  if (picture?.type !== 'image' || picture.group?.kind !== 'gallery') return null
-  const beside = (s) => s.entity === picture.entity && s.group?.id === picture.group.id
-  return slots.find((s) => beside(s) && isOpenableAlt(s)) ?? null
-}
-
 /**
- * The alts of the site copy that go through the contract door. A frame the files hide is left, and so is one without a slot:
- * those stay in `left` and keep their skipped line.
- * @param {{ alts: Record<string, string>, contentMap?: { slots?: object[] } | null, hidden: Set<string>, file: string }} input
- * @returns {{ claims: object[], changes: Record<string, string>, left: Record<string, string> }}
+ * The alts that go through the contract door. The alt step 8 wrote from the picture it placed (`pictureAlts`, ADR 0043
+ * section 3f) goes over the writer's, who wrote from the wish before any picture was chosen; the writer's stands only on a
+ * frame step 8 wrote none for. A frame the files hide is left, and so is one without a slot: those stay in `left` and keep
+ * their skipped line.
+ * @param {{ alts: Record<string, string>, pictureAlts?: Record<string, string>, contentMap?: { slots?: object[] } | null,
+ *   hidden: Set<string>, file: string, picturesFile?: string | null }} input
+ * @returns {{ claims: object[], changes: Record<string, string>, left: Record<string, string>, leftByPicture: string[] }}
+ *   `leftByPicture` the frames of `left` whose alt is step 8's
  */
-export function galleryAlts({ alts, contentMap, hidden, file }) {
+export function galleryAlts({ alts, pictureAlts = {}, contentMap, hidden, file, picturesFile = null }) {
   const slots = Array.isArray(contentMap?.slots) ? contentMap.slots : []
-  const out = { claims: [], changes: {}, left: {} }
-  for (const [frame, text] of Object.entries(alts)) {
-    const slot = hidden.has(frame) ? null : altSlotOf(frame, slots)
+  const out = { claims: [], changes: {}, left: {}, leftByPicture: [] }
+  const fromPictures = new Map(
+    Object.entries(pictureAlts ?? {}).filter(([, text]) => typeof text === 'string' && text.trim())
+  )
+  for (const frame of new Set([...Object.keys(alts), ...fromPictures.keys()])) {
+    const byPicture = fromPictures.has(frame)
+    const text = byPicture ? fromPictures.get(frame) : alts[frame]
+    const slot = hidden.has(frame) ? null : galleryAltSlot(frame, slots)
     if (!slot) {
       out.left[frame] = text
+      if (byPicture) out.leftByPicture.push(frame)
       continue
     }
     out.changes[slot.key] = text
     out.claims.push({
       slot: slot.key.replace(/^module-/, 'block-'),
-      owner: 'writer',
-      file,
+      owner: byPicture ? PICTURE_OWNER : 'writer',
+      file: byPicture ? (picturesFile ?? file) : file,
       kind: 'text',
       content: text
     })
   }
   return out
+}
+
+/** The alts a picture package carries (`alts`, by frame), only the non-empty strings; an older package has none. */
+export function pictureAltsOf(pictures) {
+  const alts = pictures?.alts
+  if (!alts || typeof alts !== 'object' || Array.isArray(alts)) return {}
+  return Object.fromEntries(Object.entries(alts).filter(([, t]) => typeof t === 'string' && t.trim()))
 }

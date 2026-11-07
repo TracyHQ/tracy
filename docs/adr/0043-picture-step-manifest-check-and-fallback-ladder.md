@@ -279,7 +279,7 @@ Thresholds and readings (named constants in the code):
   cut, the dark overlay), not the looker's. A `specific` frame keeps the full subject check. Real run 3 measured why:
   every owner photo placed in a six-frame gallery shown on every page was rejected, mostly as `wrong subject`, and the
   site ended with no owner photo. One look per picture stays, with one retry only for an unreadable answer; no voting.
-- **Its answer** is `{ verdict, faults, seen }`. The fixed fault list has nine names: the eight the model may name
+- **Its answer** is `{ verdict, faults, seen }`, plus `alt` when the run asks for one (section 3f). The fixed fault list has nine names: the eight the model may name
   (wrong subject, no clear subject, forbidden item, subject cut off, face cut, distorted face or body, stray lettering, visible drawing
   seam) and `look unreadable`, which only code records. A name outside the model's eight is dropped and noted; any fault makes the
   verdict `fail`. The look is stored on the entry as `looker` (above) and its sentence as `seen`.
@@ -376,6 +376,41 @@ Thresholds and readings (named constants in the code):
   reading page only.
 - **Reading page.** `--surface <frame-surface.json>` (scripts/site-pictures-frame-surface.mjs writes it): "Our picture
   in the box" draws the template overlay over the pasted picture, and each card says whether text sits over it.
+
+### 3f. The alt of a picture comes from the picture placed (07/11/2026, #449)
+
+Real runs had the site check flag alts that describe another picture than the one shown: the writer (step 6) writes
+every alt from the frame's wish before step 8 chooses the picture, and step 8 may place a photo of another scene (an
+any-real gallery tile, a later rung of the ladder, a drawing). The looker already sees every finished picture with a
+model, so it writes the alt in the same call; no new call and no new door.
+
+- **The ask** (`site-pictures/alt-ask.js`): when the plan names `site.language`, every look's message also asks for the
+  alt text of the picture, in that language, naming the business (`site.name`) and at most the frame's limit: the
+  smaller of the writer's 125 characters and the `maxCharacters` of the gallery alt slot beside the picture
+  (`lib/gallery-alt-slot.js`, the slot the write step and the plugin's slot corrections fill). A plan without a
+  language asks for none. The ask is part of the look's cache key.
+- **The answer** is `{ verdict, faults, seen, alt }`; `alt` is optional, so an answer without one is still a look and
+  the frame keeps the writer's alt. Code drops double quotes (the plugin refuses them in a picture alt), turns long
+  dashes into commas and cuts at the last whole word within the limit. The cleaned text is the entry's `alt` (a twin
+  takes its source's); `seen` stays the looker's plain English sentence. Initials get the name they are drawn from as
+  their `alt`. Icons get none: no model sees them, and the writer's alt was written from the same wish the icon was
+  ranked from.
+- **The export** (`exportPictureMapping`) carries `alts`, by frame, for every frame it places (a file in `changes`, or
+  initials it paints). The write step sends that alt through the gallery alt slot over the writer's, claimed by the
+  picture owner, only where the plugin opens the slot (slot corrections); the writer's alt stands on every frame step 8
+  wrote none for.
+- **Alts kept in the record beside the picture** (`write-step/record-alt-stage.js`): no contract slot carries them, so
+  after the contract call the write step reads the record and writes step 8's alt with `content.update`, one write per
+  record column, undoable: an article's intro and full picture (`image_intro_alt`, `image_fulltext_alt` in its `images`
+  column) and a picture printed in a record's HTML (an article's text, a custom module: the `alt` of the img whose src
+  the contract wrote). Only step 8's alts go there; the writer's alts on those pictures stay unwritten, as before.
+- **No door reaches the alt** of a template config picture (a module's `jatools-config` hero, feature, team, call to
+  action and signature pictures), an article's extra field pictures (`attribs`), a menu item description picture, an
+  author avatar or a site setting picture: the stored row keeps no alt beside them, so the template prints its own. Their
+  step 8 alt keeps its skipped line.
+- **The site check** (`alt-matches-picture`) counts an alt printed as step 8 wrote it as agreeing: it is in the site's
+  language and may share no word with the English seen sentence.
+- **Cost**: the alt is a few more output tokens on each look already paid for; no extra call per site.
 
 ### 3d. Cut-out frames (#346)
 
