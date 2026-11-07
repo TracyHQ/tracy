@@ -9,7 +9,7 @@
     "contentMapSha256": "c082189c62ce2a62e667ab31643f12161b400480cc696014ce402a0e96d2000c",
     "presentationLockSha256": "6fc369a8498d2118e147688c82b5f7c161e7463fcb63b67cdede0bcfcc061563"
   },
-  "measuredAt": "2026-11-07T18:46:36.538Z",
+  "measuredAt": "2026-11-07T18:59:29.576Z",
   "viewports": [
     "desktop",
     "phone"
@@ -5353,10 +5353,10 @@
     "measuredOn": "/",
     "viewport": "desktop",
     "logo": {
-      "image": "http://127.0.0.1:8699/wp-content/uploads/2026/10/jd-site-logo.png",
+      "image": "/wp-content/uploads/2026/10/jd-site-logo.png",
       "alt": "JA Diner",
       "text": "ja-diner",
-      "href": "http://127.0.0.1:8699/",
+      "href": "/",
       "slots": []
     },
     "menu": [],
