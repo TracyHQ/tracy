@@ -111,9 +111,9 @@ stops are W2, W4 and W5 of that page; in short:
 | Stop | Who must act |
 |---|---|
 | Out of scope (section 0): not a block theme, page builder, WooCommerce, several languages | the preparer |
-| W2: `content-map-missing-lists` (no WordPress tool captures posts into the map) | a person designs it; then procedure W1 |
-| W4: a fix release without the port's dossier on this machine | the person who ran the port |
-| W5: hole of class `unknown`; read-only design data; a piece with no `fix`; a Joomla-only code on WordPress; a blocked command | as in the Joomla skill |
+| W2: `content-map-missing-lists` on a released profile | nobody: cut the next version (W4) and capture it with `--posts` |
+| W4: a fix release without the port's dossier on this machine, or a new sweep difference needing design input ([`references/patch-release.md`](references/patch-release.md) is the release itself) | the person who ran the port, the port owner |
+| W5: a coverage hole with no WordPress door ([`references/coverage-holes.md`](references/coverage-holes.md)); read-only design data; a piece with no `fix`; a Joomla-only code on WordPress; a blocked command | the plugin or port owner, as the fix map says |
 
 ## 6. Done
 
