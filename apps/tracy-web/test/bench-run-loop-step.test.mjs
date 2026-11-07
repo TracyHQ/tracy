@@ -76,7 +76,7 @@ const TOY_STEP = Object.freeze({
     wholeDoc: 'Send the whole draft.\n',
     notADoc: 'Your answer is not a draft.\n'
   },
-  prepare: async () => ({ ok: true, door: DOOR }),
+  prepare: async () => ({ ok: true, kit: { platform: 'joomla' }, door: DOOR }),
   agentRequest: () => ({ firstUser: 'Write the draft.', tools: [] })
 })
 
@@ -132,7 +132,10 @@ test(
       ]
     )
     // The fix round went back in the same conversation, with the step's own instruction after the failure list.
-    assert.equal(model.requests[0].body.messages[0].content[0].text, PROMPT.text)
+    assert.equal(
+      model.requests[0].body.messages[0].content[0].text,
+      `This site runs on Joomla.\n\n${PROMPT.text}`
+    )
     assert.equal(lastUserText(model.requests[1]), `note n2 says "bad"\n${CHANGES}`)
     // The change list was applied with the toy step's part rules, onto the round 0 draft, under its own column.
     assert.deepEqual(run.rounds[1].draft, {

@@ -15372,6 +15372,48 @@
       "sha256": "4ef061739d957e20d956b025bfdc0d767916766484566a7f82643d6ca4d5e011",
       "count": 1,
       "reason": "Exact line of the approved JA Diner 1.0.5 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
+      "sha256": "f3a264e6797c46e1c160c2777ff80a08ce1c7c1a41510887f354f981ed7cc111",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
+      "sha256": "b03112475d2223a43a8ee434fdfc9fbdd2137481dcca26583c8e54dc7ec9c752",
+      "count": 6,
+      "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
+      "sha256": "2ce2df947274b7a158bbd2da19daf5b3b9726aa5e44a7bc138b19a18b7fb330e",
+      "count": 6,
+      "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
+      "sha256": "971950469661b0bab3e929361ca6c0dfa31aacb13762530d626f126d77e88b55",
+      "count": 5,
+      "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
+      "sha256": "92d301bf1a17f4c3e58a381e6cd0bc12e990407b532191f35d79af3dee3b44a1",
+      "count": 5,
+      "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
+      "sha256": "53265229f7429e07f6dc357a2a3ab38eab94249d14f8e9b5fe57a7775cb1027f",
+      "count": 6,
+      "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
+      "sha256": "044f934c2efb62b10840110bacca3cd0b59f59d094327a057ec792791b5ef4f9",
+      "count": 5,
+      "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
     }
   ],
   "objects": [
