@@ -90,7 +90,7 @@ import { dirname, join, resolve } from 'node:path'
 import { assembleKit, reachAcceptsOf, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
 import { readContractMap, readContractSamples } from './lib/contract-read.mjs'
-import { contactFieldChecks } from './lib/coverage-gate.mjs'
+import { contactFieldChecks, listLabelSlots } from './lib/coverage-gate.mjs'
 import { DECLARED_SITE_FIELDS } from './lib/declared-site-fields.mjs'
 import { BASELINE_FILE, contractBaselineOf } from './lib/demo-baseline-file.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
@@ -262,7 +262,7 @@ function relabel(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
   const map = readContractMap(o.contract)
-  const r = relabelKit(kit, { map, linkLabelSlots })
+  const r = relabelKit(kit, { map, linkLabelSlots, listLabelSlots })
   writeJson(file, settled(kit, map, o))
   const links = kit.blocks.flatMap((b) => b.links ?? [])
   console.log(

@@ -189,13 +189,15 @@ export function linkLabelChecks({ kit, errors }) {
 
 /**
  * Settle every link label of a kit already written (no browser, no capture): drop the retired `labelOf` copy from
- * every slot, name each link's label slot again from the content map, mark the fixed ones, and count the rest.
+ * every slot, name each link's label slot again from the content map, list a slot named now on its block (as
+ * assemble does, `listLabelSlots` of coverage-gate.mjs), mark the fixed ones, and count the rest.
  * @param {object} kit changed in place
- * @param {{map: object, linkLabelSlots: Function}} o
+ * @param {{map: object, linkLabelSlots: Function, listLabelSlots?: Function}} o
  */
-export function relabelKit(kit, { map, linkLabelSlots }) {
+export function relabelKit(kit, { map, linkLabelSlots, listLabelSlots }) {
   for (const b of kit.blocks) for (const s of b.slots ?? []) delete s.labelOf
   const set = linkLabelSlots(kit, map)
+  listLabelSlots?.(kit, map)
   const fixed = fixedLinkLabels(kit)
   kit.errors = (kit.errors ?? []).filter((e) => e.kind !== 'link-label')
   kit.checks = { ...kit.checks, linksWithoutLabel: linkLabelChecks({ kit, errors: kit.errors }) }

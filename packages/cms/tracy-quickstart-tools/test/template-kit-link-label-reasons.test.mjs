@@ -2,6 +2,7 @@
 // with neither fails the kit's `linksWithoutLabel` check; no slot carries a `labelOf` copy. Fabricated swim club.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { listLabelSlots } from '../template-kit/lib/coverage-gate.mjs'
 import { fixedLinkLabels, linkLabelChecks, relabelKit } from '../template-kit/lib/link-label-reasons.mjs'
 import { linkLabelSlots } from '../template-kit/lib/link-label-slots.mjs'
 import { settleForeignTexts } from '../template-kit/lib/orphan-text.mjs'
@@ -243,4 +244,32 @@ test("a step word cut short from a word of the fixed text is the template's own 
   fixedLinkLabels({ pages: [], blocks: [block], checks: {}, errors: [] })
   assert.equal(block.links[0].fixedLabel?.rule, 'template-words')
   assert.equal(block.links[1].fixedLabel, undefined)
+})
+
+test('relabel lists a label slot it names now on the block, as assemble does, so the check passes', () => {
+  const map = {
+    entities: [{ key: 'article-3', kind: 'article', identity: { alias: '5-lane-pool' } }],
+    slots: [
+      { key: 'article-3.1', entity: 'article-3', type: 'text', role: 'article.title', sample: '5-lane pool' }
+    ]
+  }
+  const kit = {
+    pages: [{ id: 'page-news', path: '/news', blocks: ['body-news'] }],
+    blocks: [
+      {
+        id: 'body-news',
+        fixedText: [{ text: 'Coach Sam' }],
+        links: [{ id: 'body-news.link-1', label: '5-lane pool Coach Sam', target: '/news/5-lane-pool' }]
+      }
+    ],
+    checks: {},
+    errors: []
+  }
+  const r = relabelKit(kit, { map, linkLabelSlots, listLabelSlots })
+  assert.equal(kit.blocks[0].links[0].labelId, 'article-3.1')
+  assert.deepEqual(
+    kit.blocks[0].slots.map((s) => [s.id, s.role]),
+    [['article-3.1', 'article.title']]
+  )
+  assert.equal(r.wrong, 0)
 })

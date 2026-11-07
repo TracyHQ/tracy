@@ -6,18 +6,19 @@
 // contract cannot write says so,
 // every text slot gets its one limit (slot-limits.mjs), and the main menu row its whole-row limit. `coverageGate`
 // then counts what is still missing, part by part, and lists every failure: green (0) means the kit is final.
-import { linkLabelSlots, linksWithoutLabelSlot } from './link-label-slots.mjs'
-import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
-import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
-import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
-import { neutralKey } from './ids.mjs'
-import { pagesNotForCustomers, pageTitleChecks, settlePageTitles } from './page-titles.mjs'
-import { settleSettingSlots } from './setting-slots.mjs'
-import { settleSentenceGroups } from './sentence-groups.mjs'
+
 import { settleButtons } from './button-slots.mjs'
 import { settleContentPages } from './content-pages.mjs'
-import { settleStoredFields, storedFieldReport } from './stored-fields.mjs'
+import { neutralKey } from './ids.mjs'
+import { linkLabelSlots, linksWithoutLabelSlot } from './link-label-slots.mjs'
+import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
+import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
+import { pagesNotForCustomers, pageTitleChecks, settlePageTitles } from './page-titles.mjs'
+import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
+import { settleSentenceGroups } from './sentence-groups.mjs'
+import { settleSettingSlots } from './setting-slots.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
+import { settleStoredFields, storedFieldReport } from './stored-fields.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
 
 /** The slot entries a block lists as its own (a reference to another block's slot is not one). */
@@ -157,6 +158,16 @@ function mainMenuRow(kit, mapOf, rowFit) {
     maxCharactersFrom:
       'content map fit: the top-level labels of the demo row at desktop, summed; the row is known to hold them, its spare room was not read'
   }
+}
+
+/**
+ * Each link's label slot listed on the block holding the link (its own, or a reference to the owning block's), for a
+ * settle command that names label slots again after the kit was written (`cli.mjs relabel`).
+ * @param {object} kit changed in place
+ * @param {object} map the content map
+ */
+export function listLabelSlots(kit, map) {
+  labelSlots(kit, new Map((map.slots ?? []).map((s) => [neutralKey(s.key), s])))
 }
 
 /**
