@@ -135,6 +135,6 @@ test('lists: JA Diner holds all three; JA Voyara 1.0.11 holds none of them', () 
   assert.ok(verdict.pieces.some((p) => p.piece === 'contract'))
 })
 
-test('lists: not judged off Joomla', () => {
-  assert.equal(CONTENT_MAP_LISTS_CHECK.judge({ ...boxing, platform: 'wordpress' }, { contracts }, {}), null)
+test('lists: not judged off Joomla and WordPress', () => {
+  assert.equal(CONTENT_MAP_LISTS_CHECK.judge({ ...boxing, platform: 'emdash' }, { contracts }, {}), null)
 })

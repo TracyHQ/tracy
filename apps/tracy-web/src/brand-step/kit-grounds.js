@@ -1,4 +1,5 @@
 // What the gate reads from a template kit: the kit id and the grounds the template opens on. Pure functions.
+import { logoWritePath } from '../lib/template-kit/logo-write-path.js'
 import { homeShotOf } from './brand-first-message.js'
 
 /** The kit's quickstart id as the brand file writes it: "<product>@<version>", e.g. "ja-boxing@1.0.10". */
@@ -32,13 +33,17 @@ export function templateGrounds(k) {
  * Why a kit cannot feed the gate, or null when it can. An empty part is a problem, not a pass: a kit whose site reader
  * found nothing (no colour variables, no name slot, a logo the page shows with no slot to write it) would let the gate
  * judge a brand against defaults it invented.
+ * `world.siteLogoBlock`: the theme's header prints a Site Logo block (WordPress), so a spot set through the `site_logo`
+ * option needs no frame.
  */
-export function kitProblem(k) {
+export function kitProblem(k, world = {}) {
   if (!k || typeof k !== 'object') return 'the kit is not an object'
   if (!k.quickstart?.product || !k.quickstart?.version)
     return 'the kit has no quickstart.product and quickstart.version'
   if (!Array.isArray(k.site?.logoSpots) || !k.site.logoSpots.length) return 'the kit has no site.logoSpots'
-  const unwritable = k.site.logoSpots.filter((s) => s?.shownIn?.length && !s.frameId).map((s) => s.id)
+  const unwritable = k.site.logoSpots
+    .filter((s) => s?.shownIn?.length && !s.frameId && logoWritePath(s, world).via !== 'wordpress-option')
+    .map((s) => s.id)
   if (unwritable.length)
     return `the kit has logo spots the page shows with no frame to write them: ${unwritable.join(', ')}`
   if (!Array.isArray(k.site?.nameSlots) || !k.site.nameSlots.length) return 'the kit has no site.nameSlots'
@@ -61,8 +66,8 @@ export function kitProblem(k) {
  * bench refuses a run on it (brand-control.js), and Template kit on the Road to live holds Publish on it
  * (lib/template-kit/flow-reads.js), so a kit /ops passes is a kit the brand step accepts.
  */
-export function brandKitProblem(doc) {
-  const problem = kitProblem(doc)
+export function brandKitProblem(doc, world = {}) {
+  const problem = kitProblem(doc, world)
   if (problem) return problem
   if (!doc.site.favicon) return 'the kit has no site.favicon'
   if (!homeShotOf({ doc })) return 'the kit has no home page shot at 1440'

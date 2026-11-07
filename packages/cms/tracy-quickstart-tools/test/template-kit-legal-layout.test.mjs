@@ -62,3 +62,87 @@ test('the command writes the kit in its own indentation and leaves every other f
     rmSync(dir, { recursive: true, force: true })
   }
 })
+
+// ── WordPress: a block template name, validated against the theme's templates (#457) ─────────────────────────────────
+
+import { mkdirSync } from 'node:fs'
+
+import { HIDDEN_KIT_FIELDS_CHECK } from '../../../../apps/tracy-web/src/lib/template-readiness/hidden-kit-fields.js'
+import { themeTemplatesOf } from '../template-kit/lib/legal-layout.mjs'
+
+const wpKit = () => ({
+  contract: 'quay/wp7/1.0.0',
+  template: { name: 'wp-quay' },
+  site: {}
+})
+const TEMPLATES = ['page', 'page-plain', 'single']
+
+test('WordPress: a block template of the theme is accepted, bare or with its theme; anything else is refused', () => {
+  for (const layout of ['page-plain', 'wp-quay//page-plain']) {
+    const kit = wpKit()
+    assert.deepEqual(declareLegalLayout(kit, { layout, why: WHY, templates: TEMPLATES }), {
+      error: null,
+      changed: true
+    })
+    assert.equal(kit.site.createdPageLayouts.legal.articleLayout, layout)
+  }
+  const refused = (layout, templates = TEMPLATES) =>
+    declareLegalLayout(wpKit(), { layout, why: WHY, templates }).error
+  assert.match(refused('page-booking'), /not a template of wp-quay/)
+  assert.match(refused('other-theme//page'), /wp-quay/)
+  assert.match(refused('quay:plain'), /block template/)
+  assert.match(refused('page;x'), /block template/)
+  assert.match(refused('page', null), /--webroot/)
+  // --none needs no template list, and Joomla keeps <template>:<file> whatever the list says.
+  assert.equal(declareLegalLayout(wpKit(), { none: true, why: WHY }).error, null)
+  assert.match(
+    declareLegalLayout({ contract: 'quay/j6/1.0.0', site: {} }, { layout: 'page', why: WHY }).error,
+    /<template>:<file>/
+  )
+  assert.equal(
+    declareLegalLayout({ contract: 'quay/j6/1.0.0', site: {} }, { layout: 'quay:plain', why: WHY }).error,
+    null
+  )
+})
+
+test('WordPress: the templates of a theme are the .html files of its templates folder', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'kit-legal-wp-'))
+  try {
+    const folder = join(dir, 'wp-content', 'themes', 'wp-quay', 'templates')
+    mkdirSync(folder, { recursive: true })
+    for (const f of ['page.html', 'page-plain.html', 'notes.txt']) writeFileSync(join(folder, f), '')
+    assert.deepEqual(themeTemplatesOf(dir, 'wp-quay'), ['page', 'page-plain'])
+    assert.equal(themeTemplatesOf(dir, 'wp-missing'), null)
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('WordPress round trip: the command writes a template name and the hidden fields check accepts that field', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'kit-legal-wp-'))
+  try {
+    mkdirSync(join(dir, 'wp-content', 'themes', 'wp-quay', 'templates'), { recursive: true })
+    writeFileSync(join(dir, 'wp-content', 'themes', 'wp-quay', 'templates', 'page-plain.html'), '')
+    const file = join(dir, 'template-kit.json')
+    writeFileSync(file, `${JSON.stringify(wpKit(), null, 2)}\n`)
+    const run = (layout) =>
+      spawnSync(
+        process.execPath,
+        [CLI, 'legal-layout', '--kit', file, '--layout', layout, '--why', WHY, '--webroot', dir],
+        { encoding: 'utf8' }
+      )
+    assert.equal(run('page-gone').status, 1)
+    assert.equal(run('wp-quay//page-plain').status, 0)
+    const kit = JSON.parse(readFileSync(file, 'utf8'))
+    const fields = HIDDEN_KIT_FIELDS_CHECK.judge(
+      { platform: 'wordpress' },
+      { templateKit: { state: 'read', doc: kit } },
+      {}
+    )
+    assert.ok(!fields.params.fields.includes('createdPageLayouts.legal'))
+    assert.ok(fields.params.declared.includes('createdPageLayouts.legal'))
+    assert.deepEqual(fields.params.problems, [])
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})

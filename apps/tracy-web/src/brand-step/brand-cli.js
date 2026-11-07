@@ -4,7 +4,7 @@
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { callsOf } from './brand-call-store.js'
-import { brandKitProblem, cancelBrandRun } from './brand-control.js'
+import { brandProblemOfOpenedKit, cancelBrandRun } from './brand-control.js'
 import { listLines, statusLines } from './brand-export.js'
 import { getRunCommand, refused, startRunCommand, Usage } from './brand-cli-run.js'
 import { listRuns, readRun } from './brand-store.js'
@@ -77,7 +77,7 @@ const COMMANDS = {
       if (!kits.length) d.out('no readable kits')
       for (const k of kits) {
         const kit = openKit(k.ref, where)
-        const problem = brandKitProblem(kit.doc)
+        const problem = brandProblemOfOpenedKit(kit, where)
         const images = problem ? null : await d.kitImages.ensure(kit)
         const state = problem
           ? `brand step cannot run: ${problem}`

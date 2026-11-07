@@ -11,13 +11,14 @@
  *   done    demo-baseline-recorded  { contract }
  *
  * The fix of every red code is the two step 0 commands: measure on a fresh untouched quickstart site, then record the
- * file beside the contract (`fixes.js`). This piece asks every Joomla release; which templates Road to live holds from
+ * file beside the contract (`fixes.js`). This piece asks every Joomla and WordPress release (ticket #456); which templates Road to live holds from
  * Publish for it is still `demo-baseline-policy.json` (the Template kit step's `kit-demo-baseline-missing`). A release
  * already shown on Design inspiration only warns, as the other checks (spec #429: a published template is never
  * taken off for a new check). The file is read by `baselineOfContract`, the same reader the site check uses.
  */
 import { contractFor } from '../contracts.js'
 import { shownOnInspiration } from '../quickstart-releases.js'
+import { DEMO_MEASURED_PLATFORMS } from './demo-measures-file.js'
 import { baselineOfContract } from '../template-kit/demo-baseline-file.js'
 
 export const DEMO_BASELINE_STEP = 'demo-baseline'
@@ -25,7 +26,7 @@ export const DEMO_BASELINE_STEP = 'demo-baseline'
 /** @param {any} release @param {any} world */
 export function judgeDemoBaseline(release, world) {
   const platform = release?.setting?.platform ?? release?.platform
-  if (platform !== 'joomla') return null
+  if (!DEMO_MEASURED_PLATFORMS.includes(platform)) return null
   const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
   const contract = contractFor(world?.contracts ?? new Map(), release?.tag, version)
   if (!contract) return { state: 'blocked', code: 'demo-baseline-waiting', params: {}, blockedBy: 'contract' }

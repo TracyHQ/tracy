@@ -121,6 +121,58 @@ test('the page plan opens each page entity by its slug, then the front page', ()
   assert.deepEqual(urls, [`${SITE}?pagename=home`, SITE])
 })
 
+/** A WordPress contract folder whose pages sit under parents, with the inventory capture writes beside the map. */
+function nestedContract(withInventory = true) {
+  const dir = mkdtempSync(path.join(tmpdir(), 'cov-wp-nested-'))
+  const page = (slug) => ({ key: `page-${slug}`, kind: 'page', identity: { postType: 'page', slug } })
+  writeFileSync(
+    path.join(dir, 'manifest.json'),
+    JSON.stringify({ id: 'ja-demo/wp7/1.0.0', platform: 'wordpress', theme: 'wp-demo' })
+  )
+  writeFileSync(
+    path.join(dir, 'content-map.json'),
+    JSON.stringify({ entities: [page('home'), page('visit'), page('book'), page('table')], slots: [] })
+  )
+  writeFileSync(path.join(dir, 'presentation-lock.json'), '{"entities":{}}')
+  const post = (id, slug, parent, status = 'publish') => ({ id, slug, parent, status, type: 'page' })
+  if (withInventory)
+    writeFileSync(
+      path.join(dir, 'inventory.json'),
+      JSON.stringify({
+        options: { page_on_front: '10' },
+        posts: [
+          post(10, 'home', 0),
+          post(20, 'visit', 0),
+          post(21, 'book', 20),
+          post(22, 'table', 21),
+          post(30, 'book', 0, 'draft')
+        ]
+      })
+    )
+  return dir
+}
+
+test('a WordPress page under a parent opens by its whole parent path, read from the inventory beside the map', () => {
+  const contract = loadContract(nestedContract(), SITE)
+  assert.deepEqual(
+    contract.pages.map((p) => [p.entity, p.route, p.openAs]),
+    [
+      ['page-home', 'home', '?pagename=home'],
+      ['page-visit', 'visit', '?pagename=visit'],
+      ['page-book', 'visit/book', '?pagename=visit/book'],
+      ['page-table', 'visit/book/table', '?pagename=visit/book/table']
+    ]
+  )
+})
+
+test('a WordPress contract without an inventory opens each page by its slug, as before', () => {
+  const contract = loadContract(nestedContract(false), SITE)
+  assert.deepEqual(
+    contract.pages.map((p) => p.openAs),
+    ['?pagename=home', '?pagename=visit', '?pagename=book', '?pagename=table']
+  )
+})
+
 test('a request that lands on another host left the site: it is recorded, never audited as a page of the site', () => {
   const { contractDir } = fixture()
   const plan = new PagePlan(SITE, loadContract(contractDir, SITE), 10)
