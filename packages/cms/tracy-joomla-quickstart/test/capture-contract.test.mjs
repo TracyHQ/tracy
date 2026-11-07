@@ -2423,6 +2423,30 @@ test(
 )
 
 test(
+  '--skip-unpublished-menu-pages keeps an unpublished menu item as an entity but no page of the map',
+  needsPhp,
+  () => {
+    const inv = () => {
+      const i = clean()
+      i.menu.push(menu('120', { path: 'experiences/later', title: 'Later', published: '0' }))
+      return i
+    }
+    const plain = capture(inv())
+    assertWritten(plain)
+    assert.ok(plain.read('content-map.json').pages.some((p) => p.entity === 'menuItem-120'))
+    const run = capture(inv(), { args: ['--skip-unpublished-menu-pages'] })
+    assertWritten(run)
+    const map = run.read('content-map.json')
+    assert.deepEqual(
+      map.pages.map((p) => p.entity),
+      ['menuItem-101']
+    )
+    assert.ok(map.entities.some((e) => e.key === 'menuItem-120'))
+    assert.ok(run.read('presentation-lock.json').entities['menuItem-120'])
+  }
+)
+
+test(
   'a menu entry of type url declares the address it opens after its title; a page entry does not',
   needsPhp,
   () => {

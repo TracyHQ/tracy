@@ -414,7 +414,7 @@ path):
        --slots-helper "$CW_WT/joomla/cowork/lib/ContentSlots.php" --out "$WORK/chup/capture-$n" \
        --id "$CID" --template "$TPL" --styles "$TPL" --menutypes "$MENUTYPES" --module-prefix "$MODULE_PREFIX" "${LIST_ITEMS[@]}" \
        --exclude-generated --link-fields-by-role --evidence-by-field --whole-units --inline-markup --full-coverage \
-       --role-vocabulary 3 --file-roots "$ROOTS" --cowork-version "$COWORK_VER" ${PREV[@]+"${PREV[@]}"} || break
+       --role-vocabulary 3 --skip-unpublished-menu-pages --file-roots "$ROOTS" --cowork-version "$COWORK_VER" ${PREV[@]+"${PREV[@]}"} || break
    done
    diff -r "$WORK/chup/capture-1" "$WORK/chup/capture-2"                       # K4: empty
    node "$QC/check-release-fields.mjs" --contract "$WORK/chup/capture-1" --pack "$PACK"   # K2+K3 pass 1

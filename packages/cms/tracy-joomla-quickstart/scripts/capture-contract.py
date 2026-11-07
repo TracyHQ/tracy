@@ -69,6 +69,11 @@ p.add_argument('--skip-trashed-modules',action='store_true')
 # flag such rows are left out of the contract (entities, slots, pages). Off by default so every published profile
 # re-captures byte for byte.
 p.add_argument('--skip-trashed-menu-items',action='store_true')
+# An unpublished menu item (published = 0) opens no page: its route answers 404, so no crawl reaches it and every
+# measure that walks the map's pages counts it as a dead page (JA Voyara 1.0.12: four Experiences items kept for
+# later). With this flag it stays an entity of the contract (the lock still pins it, a customer may publish it) but is
+# no page of the map. Off by default so every published profile re-captures byte for byte.
+p.add_argument('--skip-unpublished-menu-pages',action='store_true')
 # A T3 template keeps its logos in the params of each template style (`logoimage`, `logoimage_sm`, `logofooterimage`,
 # `logoimage_dark`), not in a module or a settings file, so a T3 contract declared no slot for the logo every page prints
 # (JA Cagox 1.0.2: three logo pictures, no slot). With this flag each such param a captured style sets is an image slot
@@ -804,6 +809,7 @@ styles={int(r['id']):r for r in inv['template_styles']}
 for e in entities:
  if e['kind']!='menuItem':continue
  row=e['initial'];mid=e['sourceId'];sid=int(row['template_style_id'])
+ if a.skip_unpublished_menu_pages and str(row.get('published'))!='1':continue
  style=styles.get(sid) if sid else next((s for s in styles.values() if s['home']=='1' and s['client_id']=='0'),None)
  modules=[]
  for m in (v for v in entities if v['kind']=='module'):
