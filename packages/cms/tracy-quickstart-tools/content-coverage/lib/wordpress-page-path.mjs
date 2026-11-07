@@ -1,7 +1,9 @@
 // Where a WordPress page answers: a page under a parent answers only under the parent's path (`j-pages/login`;
 // `login` alone is WordPress's own login screen, or nothing). The parents come from the inventory capture writes beside
-// the content map (`inventory.json` posts: id, slug, parent, status, type). The same rule as the template readiness
-// demo pages (`wordpressPagePath`, ticket #456); kept here because this tool runs without the web app's sources.
+// the content map (`inventory.json` posts: id, slug, parent, status, type). The ONE rule: the template kit
+// (`template-kit/lib/site/adapters/wordpress-map.mjs`) and the template readiness demo pages
+// (`apps/tracy-web/src/lib/template-readiness/demo-pages-of-contract.js`) import it, each adding its own spelling (a
+// front page at `/`, slashes around the path).
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 

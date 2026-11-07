@@ -7,6 +7,7 @@
 // and between them its post content, read as its sections (wordpress-sections.mjs: the top-level blocks, each one a
 // block of the kit, as a Joomla module is) when the run read them from the site, else as one block.
 // The Joomla-only keys stay absent; `platformGaps` names each one the kit cannot read on WordPress and why.
+import { wordpressPagePath } from '../../../../content-coverage/lib/wordpress-page-path.mjs'
 import { sectionOfTarget } from './wordpress-sections.mjs'
 
 /**
@@ -55,16 +56,10 @@ export const WORDPRESS_MAP_GAPS = Object.freeze([
   }
 ])
 
-/** The path of a page post: its slug under its parents' slugs, `/` for the front page. */
-function pathOf(post, byId, frontId) {
+/** The path of a page post: its slug under its parents' slugs (the shared rule), `/` for the front page. */
+function pathOf(post, pages, frontId) {
   if (String(post.id) === String(frontId)) return '/'
-  const parts = []
-  const seen = new Set()
-  for (let p = post; p && !seen.has(p.id); p = byId.get(p.parent)) {
-    seen.add(p.id)
-    parts.unshift(p.slug)
-  }
-  return `/${parts.join('/')}`
+  return `/${wordpressPagePath(post.slug, pages)}`
 }
 
 /**
@@ -115,7 +110,7 @@ export function withWordPressPages(map, inventory, sectionsByPost = null) {
   )
   if (Array.isArray(map.pages) && map.pages.length) return { ...map, platformGaps }
   const posts = (inventory?.posts ?? []).filter((p) => p.type === 'page')
-  const byId = new Map(posts.map((p) => [p.id, p]))
+  const published = posts.filter((p) => p.status === 'publish')
   const front = inventory?.options?.page_on_front ?? null
   const [header, body, footer] = WORDPRESS_AREAS.map((a) => ({ ...a, published: '1' }))
   const pages = []
@@ -126,7 +121,7 @@ export function withWordPressPages(map, inventory, sectionsByPost = null) {
     if (e.kind !== 'page' || !e.identity?.slug) continue
     const post = posts.find((p) => p.slug === e.identity.slug && p.status === 'publish')
     if (!post) continue
-    const path = pathOf(post, byId, front)
+    const path = pathOf(post, published, front)
     let middle = [body]
     const sections = sectionsByPost?.[post.id] ?? sectionsByPost?.[String(post.id)]
     if (sections?.length) {

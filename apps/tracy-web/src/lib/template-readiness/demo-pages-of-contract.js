@@ -14,6 +14,10 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
+// The one WordPress page path rule, shared with the content coverage audit and the template kit. This module is read
+// by `scripts/demo-measures.mjs` in a checkout only, never by the server in the image (which carries no `packages/`).
+import { wordpressPagePath as pathUnderParents } from '../../../../../packages/cms/tracy-quickstart-tools/content-coverage/lib/wordpress-page-path.mjs'
+
 const readJson = (file) => {
   try {
     return JSON.parse(readFileSync(file, 'utf8'))
@@ -34,14 +38,7 @@ export function wordpressPagePath(identity, inventory = { pages: [], front: null
   if (identity?.postType !== 'page' || typeof identity.slug !== 'string' || identity.slug === '') return null
   const own = inventory.pages.find((p) => p.slug === identity.slug)
   if (own ? own.id === inventory.front : identity.slug === FRONT_PAGE_SLUG) return '/'
-  const slugs = [identity.slug]
-  const seen = new Set([own?.id])
-  for (let at = own; at && at.parent && !seen.has(at.parent); ) {
-    seen.add(at.parent)
-    at = inventory.pages.find((p) => p.id === at.parent)
-    if (at) slugs.unshift(at.slug)
-  }
-  return `/${slugs.join('/')}/`
+  return `/${pathUnderParents(identity.slug, inventory.pages)}/`
 }
 
 /** The published pages of a contract's inventory, and its front page id (none when the folder has no inventory). */
