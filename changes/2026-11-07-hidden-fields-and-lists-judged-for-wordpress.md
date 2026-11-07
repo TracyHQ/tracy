@@ -1,0 +1,3 @@
+- **The hidden kit fields check and the content map lists check judge WordPress** — Template readiness verdict · #457 · `feat/wp-457-hidden-fields-lists-wordpress` · 2026-11-07
+  **Affects:** template preparers. A WordPress release now gets `kit-hidden-field-missing` (the five hand-declared fields, the legal layout named as a block template) and `content-map-missing-lists` (posts as `itemPages`/`itemLists`, `wp_navigation` menus as `menuBlocks`, read from `inventory.json`, the content map entities and `navigation-source.json`) instead of no answer. Joomla judgement is unchanged.
+  **Why / Measured:** JA Diner WP7 1.0.1 is red on both today: no hidden field declared in its kit, and 22 published posts that its content map does not carry.

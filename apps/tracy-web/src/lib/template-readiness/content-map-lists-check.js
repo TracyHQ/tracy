@@ -14,13 +14,15 @@
  *   null   every kind the site has is present: nothing to flag, the piece keeps the code it already has
  *   todo   one or more absent or empty (`content-map-missing-lists`, `{ missing, fix }`)
  *
- * Joomla only (the keys are those of the Joomla content map). Not judged (null): no readable map.
+ * Joomla by the code below, WordPress by content-map-lists-wordpress.js (same three keys, read from where WordPress holds
+ * posts and menus). Not judged (null): no readable map, any other platform.
  */
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
 import { contractFor } from '../contracts.js'
 import { kitOfRelease } from '../template-kit/road-step.js'
+import { contractFilesOf, missingListsOfWordpress } from './content-map-lists-wordpress.js'
 import { fixOf } from './fixes.js'
 
 const KEYS = Object.freeze(['itemLists', 'itemPages', 'menuBlocks'])
@@ -43,10 +45,27 @@ export function listsTheSiteHas(map, kitDoc) {
   return has
 }
 
+const todo = (missing) => ({
+  state: 'todo',
+  code: 'content-map-missing-lists',
+  params: { missing, fix: fixOf('content-map-missing-lists', { missing }).text }
+})
+
+function judgeWordpress(release, world) {
+  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
+  const dir = contractFor(world?.contracts ?? new Map(), release?.tag, version)?.dir
+  const files = contractFilesOf(dir, world)
+  if (!files) return null
+  const kit = world?.templateKit ?? kitOfRelease(release, world?.contracts ?? new Map())
+  const missing = missingListsOfWordpress({ ...files, kit: kit?.state === 'read' ? kit.doc : null })
+  return missing.length ? todo(missing) : null
+}
+
 export const CONTENT_MAP_LISTS_CHECK = Object.freeze({
   piece: 'contract',
   step: 'content-map-lists',
   judge(release, world) {
+    if (release?.platform === 'wordpress') return judgeWordpress(release, world)
     if (release?.platform !== 'joomla') return null
     let map = world?.contentMap
     if (map === undefined) {
