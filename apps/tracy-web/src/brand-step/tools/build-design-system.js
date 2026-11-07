@@ -13,7 +13,7 @@
 // every side must be identical in both, else the tool fails (the brand would have changed something besides the accent).
 import { accentSeedModule } from '../../lib/brand-accent/accent-module.js'
 import { contrastHex, liftAccent, neutralReason } from '../../lib/brand-accent/colour-math.js'
-import { slotNamesOfKit } from '../design-slot-of-kit.js'
+import { slotNamesOfKit, wordpressTagOfKit } from '../design-slot-of-kit.js'
 import { templateGrounds } from '../kit-grounds.js'
 import { BrandToolError } from './common.js'
 import { contrastTable, slotDriftOf } from './design-system-report.js'
@@ -102,6 +102,42 @@ export const tool = {
     const base = ds.library.contractBase(ds.root, contract)
     const K = ctx.kit
     const tplAccent = K.site.brandColours.primary?.value?.toLowerCase() ?? base['--accent']
+
+    // WordPress: the accent decisions stand, but the Joomla emitter and its module (64000 bytes) are not run; the
+    // WordPress emit belongs to the write step and is not built yet. Said plainly in the result.
+    if (wordpressTagOfKit(K) !== null) {
+      const r = ds.brand.brandProfile({ accent }, contract, base, { accentOnly: true })
+      if (r.refused) throw new BrandToolError('profile refused', { refused: r.refused })
+      return {
+        ok: true,
+        slot: name,
+        wordpressEmit:
+          'not built yet (write step): no module file and no per-side colours were made for this WordPress release; the accent decision below is all this step returns',
+        profileId: r.profile.id,
+        brandColour,
+        accent,
+        replaces: tplAccent,
+        lift: lift.lifted
+          ? {
+              from: lift.from,
+              to: lift.to,
+              direction: lift.direction,
+              hue: lift.hue,
+              saturation: lift.saturation,
+              lightnessFrom: lift.lightnessFrom,
+              lightnessTo: lift.lightnessTo,
+              grounds: lift.grounds,
+              before: lift.before,
+              after: lift.after,
+              tier: lift.tier,
+              forTheOwner: `the brand colour ${lift.from} was made ${lift.direction} (${lift.to}, same hue) so buttons and links stand out on the template's ${grounds.opens} opening ground`
+            }
+          : null,
+        sides: {},
+        contrast: [],
+        shifts: []
+      }
+    }
 
     const build = (a) => {
       const r = ds.brand.brandProfile({ accent: a }, contract, base, { accentOnly: true })

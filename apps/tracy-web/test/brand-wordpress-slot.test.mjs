@@ -49,11 +49,20 @@ test('build_design_system names the problem for a WordPress release with no slot
   )
 })
 
-test('build_design_system finds the WordPress slot of JA Diner WP7', async () => {
-  const r = await toolByName('build_design_system')
-    .run({ accent: '#c8693f' }, makeCtx({ kit: DINER_WP7 }))
-    .catch((e) => e)
-  // Whatever the Joomla emitter makes of a WordPress contract, the lookup must not be what fails.
-  assert.doesNotMatch(String(r?.message ?? ''), /no (WordPress )?template contract/)
-  if (r?.module) assert.match(r.module.slot, /^wordpress-wp-ja-diner@/)
+test('build_design_system on JA Diner WP7 decides the accent, builds no Joomla module and says the emit is not built', async () => {
+  const ctx = makeCtx({ kit: DINER_WP7 })
+  const r = await toolByName('build_design_system').run({ accent: '#c8693f' }, ctx)
+  assert.equal(r.ok, true, JSON.stringify(r.error))
+  assert.equal(r.brandColour, '#c8693f')
+  assert.match(r.accent, /^#[0-9a-f]{6}$/)
+  assert.equal(r.slot, 'wordpress-wp-ja-diner')
+  assert.equal(r.module, undefined, 'no Joomla module for a WordPress release')
+  assert.match(r.wordpressEmit, /not built yet.*write step/)
+  assert.equal(ctx.files.has('design-system/module.html'), false)
+})
+
+test('build_design_system on a Joomla release still builds its module', async () => {
+  const r = await toolByName('build_design_system').run({ accent: '#c8693f' }, makeCtx())
+  assert.equal(r.module.limit, 64000)
+  assert.equal(r.wordpressEmit, undefined)
 })
