@@ -3,7 +3,7 @@ import { normHref } from './normalize.mjs'
 
 const NOT_A_PAGE =
   /\.(pdf|jpe?g|png|gif|webp|avif|svg|ico|zip|rar|gz|mp4|webm|mp3|wav|docx?|xlsx?|pptx?|css|js|json|xml|txt)(\?|$)/i
-const NOT_PUBLIC =
+export const NOT_PUBLIC =
   /\/administrator\b|[?&](task|format|tmpl|print|layout=edit|return)=|\/component\/(users|mailto|ajax)|logout/i
 // A shop listing re-sorted (VirtueMart `/by,<field>`, `/dirAsc`, `/dirDesc`, `?orderby=`) shows the same products in
 // another order, once per sort field and per filter: 90 of the 400 pages of one shop crawl were such re-sorts.

@@ -8,6 +8,7 @@ import { createMatcher } from './match.mjs'
 import { createClassifier } from './classify.mjs'
 import { findHygiene } from './hygiene.mjs'
 import { normText } from './normalize.mjs'
+import { deadLinksOf, fetchStatus, renderedLinksOf } from './link-check.mjs'
 import { standUserFilter } from './stand-users.mjs'
 
 const log = (...a) => console.error('[audit]', ...a)
@@ -170,6 +171,14 @@ export async function runAudit({
     }
   } finally {
     await browser.close()
+  }
+  // Every link the pages render, asked as the browser follows it: a dead one fails the measure (link-check.mjs).
+  {
+    const links = renderedLinksOf(pages, siteUrl, { isStandLink: stand.isStandLink })
+    const dead = await deadLinksOf(links, (href) => fetchStatus(href))
+    for (const d of dead) log('dead link', d.status, d.url)
+    failures.push(...dead.map((d) => ({ ...d, origin: 'link' })))
+    log(`links checked ${links.size}, dead ${dead.length}`)
   }
   // Pages reached twice keep every map entry on the first record; refresh them now.
   for (const p of pages) {
