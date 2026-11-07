@@ -4,7 +4,13 @@ import { pathOfRoute } from './kit-paths.mjs'
 
 const queryOf = (link) =>
   Object.fromEntries([...String(link ?? '').matchAll(/([\w[\]]+)=([^&]*)/g)].map((m) => [m[1], m[2]]))
-const aliasOf = (segment) => String(segment ?? '').replace(/^\d+-/, '')
+// A segment is an alias, or `<id>-<alias>` on an address with no menu item; an alias may itself start with a number
+// (`48-hours-in-porto`), so the whole segment is tried first.
+const aliasesOf = (segment) => {
+  const whole = String(segment ?? '')
+  const bare = whole.replace(/^\d+-/, '')
+  return bare === whole ? [whole] : [whole, bare]
+}
 
 export function indexMap(map) {
   const entities = new Map(map.entities.map((e) => [e.key, e]))
@@ -80,17 +86,18 @@ export function ownerOfPath(idx, path) {
     return { owner: null, kind: `${component} ${view || 'page'}`.trim() }
   }
   const segments = base.split('/').filter(Boolean)
-  const last = aliasOf(segments.at(-1))
+  const last = aliasesOf(segments.at(-1))
+  const find = (kind) => last.map((a) => idx.byAlias.get(`${kind}:${a}`)).find(Boolean)
   // A page one level under a tags menu page (`view=tags`) is the page of the tag its last segment names.
   const parent = idx.pageByPath.get(`/${segments.slice(0, -1).join('/')}`)
   const underTags = queryOf(parent?.link).option === 'com_tags'
   if (underTags || segments.includes('tag') || segments.includes('tags')) {
-    const tag = idx.byAlias.get(`tag:${last}`)
+    const tag = find('tag')
     return { owner: tag ?? null, kind: tag ? `tag listing${listPage}` : 'tag listing (no map entity)' }
   }
   if (segments.includes('author')) return { owner: null, kind: `author listing${listPage} (no map entity)` }
   for (const kind of ['article', 'contact', 'category']) {
-    const key = idx.byAlias.get(`${kind}:${last}`)
+    const key = find(kind)
     if (key) return { owner: key, kind: kind === 'category' ? `category listing${listPage}` : kind }
   }
   return { owner: null, kind: 'unknown' }
