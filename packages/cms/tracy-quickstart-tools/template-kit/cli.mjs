@@ -11,6 +11,8 @@
 //       --full: the whole pipeline (README "Make a kit for a new template"); without it, read + shoot + assemble only.
 //       The database and file reads feed the site part (site-cli.mjs); without them it reads the pages only.
 //   cli.mjs assemble ...  (template-kit.json again from the files in --out, no browser)
+//       build and assemble keep the site fields a person declared on the kit already in --out (the declare commands
+//       below, lib/declared-site-fields.mjs), as written; a build into an empty folder has none to keep.
 //   cli.mjs measure-min ... --list <id> --page <path> --max <rows> [--block <id>] [--rows <css>] [--row-kind items]
 //                 [--note <why>]   (an override: a person's measurement of one list; the pipeline keeps it)
 //   cli.mjs sheet --out <dir> [--review]   (HTML pages of the kit's own images; nothing is shot)
@@ -87,6 +89,7 @@ import { assembleKit, reachAcceptsOf, readIf, readJson, writeJson } from './lib/
 import { captureSite } from './lib/capture-site.mjs'
 import { readContractMap, readContractSamples } from './lib/contract-read.mjs'
 import { contactFieldChecks } from './lib/coverage-gate.mjs'
+import { DECLARED_SITE_FIELDS } from './lib/declared-site-fields.mjs'
 import { BASELINE_FILE, contractBaselineOf } from './lib/demo-baseline-file.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { declareLegalLayout, themeTemplatesOf } from './lib/legal-layout.mjs'
@@ -99,11 +102,6 @@ import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
 import { reachChecks } from './lib/reach-checks.mjs'
 import { rowPairChecks } from './lib/row-pairs.mjs'
-import {
-  declareCreatedPageHide,
-  declareHiddenPageLinks,
-  declareSelfLinkButtons
-} from './lib/self-link-buttons.mjs'
 import { settleSentenceGroups } from './lib/sentence-groups.mjs'
 import { settleSettingSlots } from './lib/setting-slots.mjs'
 import { writeSheets } from './lib/sheets.mjs'
@@ -114,10 +112,8 @@ import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
 import { settleSlotRoles } from './lib/slot-roles.mjs'
 import { settleSamples } from './lib/slot-samples.mjs'
 import { slotShapeChecks } from './lib/slot-shape-checks.mjs'
-import { declareStockScreen } from './lib/stock-screens.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 import { stampSettled, TOOL } from './lib/version.mjs'
-import { declareVideoButtons } from './lib/video-buttons.mjs'
 
 const COMMANDS = [
   'build',
@@ -361,28 +357,7 @@ function legalLayout(o) {
   return 0
 }
 
-/** Declare a play button with an empty video address in a written kit (lib/video-buttons.mjs). */
-function videoButtons(o) {
-  if (!str(o.kit) || (!o.none && !str(o.selector)))
-    throw new Error(
-      "video-buttons needs --kit <template-kit.json> and --selector '<css>' --why '<words>', or --none --why '<words>'"
-    )
-  const file = resolve(o.kit)
-  const source = readFileSync(file, 'utf8')
-  const kit = JSON.parse(source)
-  const r = declareVideoButtons(kit, { selector: str(o.selector), why: str(o.why), none: o.none === true })
-  if (r.error) {
-    console.error(`nothing written: ${r.error}`)
-    return 1
-  }
-  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
-  console.log(
-    `${kit.site.emptyVideoButtons.length} empty video buttons named${r.changed ? '' : ', unchanged'}`
-  )
-  return 0
-}
-
-/** Declare a container of links in a written kit under one `site` field (lib/self-link-buttons.mjs). */
+/** Declare an entry of a `site` list field in a written kit (lib/declared-site-fields.mjs names them). */
 function containers(o, command, declare, field, words, flag = 'container') {
   if (!str(o.kit) || (!o.none && !str(o[flag])))
     throw new Error(
@@ -425,22 +400,10 @@ async function main() {
   if (cmd === 'baseline') return baseline(o)
   if (cmd === 'looks') return looks(o)
   if (cmd === 'legal-layout') return legalLayout(o)
-  if (cmd === 'video-buttons') return videoButtons(o)
-  if (cmd === 'self-link-buttons')
-    return containers(o, cmd, declareSelfLinkButtons, 'selfLinkButtons', 'self link containers')
-  if (cmd === 'hidden-page-links')
-    return containers(o, cmd, declareHiddenPageLinks, 'hiddenPageLinks', 'hidden page link containers')
-  if (cmd === 'stock-screens')
-    return containers(o, cmd, declareStockScreen, 'stockScreens', 'stock screens', 'path')
-  if (cmd === 'created-page-hide')
-    return containers(
-      o,
-      cmd,
-      declareCreatedPageHide,
-      'createdPageHide',
-      'created page hide selectors',
-      'selector'
-    )
+  // The hand-declared site fields: one list, shared with the merge that keeps them across assemble and build.
+  const declared = DECLARED_SITE_FIELDS.find((d) => d.command === cmd)
+  if (declared?.list)
+    return containers(o, cmd, declared.declare, declared.field, declared.words, declared.flag)
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||

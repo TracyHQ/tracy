@@ -83,7 +83,7 @@ export async function assembleKit(o, out, tool) {
     siteUrl: o.site,
     aliasHosts: host ? [host] : []
   })
-  mergeSite(kit, siteDoc, map, wordsLinks)
+  mergeSite(kit, siteDoc, map, wordsLinks, previous)
   // What the platform's content map does not declare (a WordPress map has no menu blocks or item lists): the kit
   // leaves those fields empty and says why, once each (wordpress-map.mjs).
   for (const g of map.platformGaps ?? [])
