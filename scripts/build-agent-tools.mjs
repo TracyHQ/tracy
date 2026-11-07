@@ -60,6 +60,10 @@ const HOST_ROAD = Object.freeze({
     apply: ['media.upload'],
     emdash: ['media_upload']
   },
+  'media.icon': {
+    what: "Asks tracy-web's icon door for a library icon drawn in the template's look, then uploads it as the viewer and writes the icon slot and its other-theme twin in one contract apply.",
+    apply: ['media.upload', 'content.contract']
+  },
   'page.look': { what: "Photographs one page of the site with the host's own browser." },
   'page.text': { what: 'Reads one page of the site back as the words a visitor sees.' },
   'content.find': { what: "Searches the site's files for the file-backed layer that holds a string." },
