@@ -17,7 +17,7 @@ import { counterpartRole, previewColour, roleOf } from '../../lib/picture-paint/
 import { contrast, iconColourOf, luminanceOfHex } from '../../lib/picture-paint/icons/icon-ink.js'
 import { rankIcons } from './icon-ranker.js'
 import { iconPicture } from '../../lib/picture-paint/icons/icon-render.js'
-import { assignIcons, iconShortlist, usableCatalog } from './icon-shortlist.js'
+import { assignIcons, iconShortlist, usableCatalog } from '../../lib/picture-paint/icons/icon-shortlist.js'
 import { iconStyleOf, sectionWeightOf } from '../../lib/picture-paint/icons/icon-style.js'
 import { PHOSPHOR_SET, phosphorCatalog } from '../../lib/picture-paint/icons/phosphor-set.js'
 

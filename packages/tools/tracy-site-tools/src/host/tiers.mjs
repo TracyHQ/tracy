@@ -55,6 +55,8 @@ export const TIERS = Object.freeze({
   'content.language': 'mutating',
   'media.upload': 'mutating',
   'media.draw': 'mutating',
+  // uploads the icon files and writes the slots in one contract apply: one apply.revert undoes it
+  'media.icon': 'mutating',
   'apply.revert': 'mutating',
   'look.revert': 'mutating',
   'look.set': 'mutating',

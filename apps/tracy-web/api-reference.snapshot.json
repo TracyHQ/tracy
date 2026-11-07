@@ -47594,6 +47594,35 @@
           "x-internal": true
         }
       },
+      "/api/sites/{key}/icons": {
+        "post": {
+          "operationId": "post_api_sites_key_icons",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "key",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Sites"],
+          "x-audience": ["dsh"],
+          "x-internal": true
+        }
+      },
       "/api/sites/{key}/import": {
         "delete": {
           "operationId": "delete_api_sites_key_import",

@@ -1,0 +1,46 @@
+{
+  "_comment": "An invented kit (made-up names and words): one gallery row of a picture and its alt. The alt's demo sample is empty with a 40-character limit in the released contract. The kit's slot corrections let it fill with a 125-character limit, and the site's plugin hands the slot out corrected (opensEmpty, maxCharacters) in its inspect answer. withoutCorrections is the same contract on a plugin that carries no list for it.",
+  "home": "<!doctype html><html lang=\"en-gb\"><head><title>Home</title></head><body class=\"site-default view-featured item-101\"><main><div class=\"t4-module module\" id=\"Mod70\"><div class=\"module-ct\"><img src=\"/images/kit/ring.jpg\" alt=\"An invented ring at dusk\"></div></div></main></body></html>",
+  "picture": {
+    "key": "module-70.5",
+    "entity": "module-70",
+    "column": "params",
+    "type": "image",
+    "sample": "images/kit/ring.jpg",
+    "current": "images/kit/ring.jpg",
+    "requiresEvidence": false,
+    "jsonPath": ["gallery", "g", "g[image]", 0],
+    "label": "[Invented Kit] Gallery / image",
+    "group": { "id": "module-70.gallery.0", "item": 0, "kind": "gallery" }
+  },
+  "alt": {
+    "key": "module-70.12",
+    "entity": "module-70",
+    "column": "params",
+    "type": "text",
+    "sample": "",
+    "current": "An invented ring at dusk",
+    "maxCharacters": 40,
+    "requiresEvidence": false,
+    "jsonPath": ["gallery", "g", "g[alt]", 0],
+    "label": "[Invented Kit] Gallery / alt",
+    "group": { "id": "module-70.gallery.0", "item": 0, "kind": "gallery" }
+  },
+  "corrected": { "opensEmpty": true, "maxCharacters": 125 },
+  "page": {
+    "entity": "menuItem-101",
+    "route": "home",
+    "link": "index.php?option=com_content&view=featured",
+    "assignedModules": [
+      {
+        "entity": "module-70",
+        "assignmentMode": "all",
+        "menuIds": [0],
+        "position": "section",
+        "published": "1",
+        "access": "1",
+        "language": "*"
+      }
+    ]
+  }
+}

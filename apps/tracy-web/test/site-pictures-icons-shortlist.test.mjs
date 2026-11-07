@@ -16,7 +16,7 @@ import {
   usableCatalog,
   validRanking,
   wordsOfWish
-} from '../src/site-pictures/icons/icon-shortlist.js'
+} from '../src/lib/picture-paint/icons/icon-shortlist.js'
 import { hasPhosphorIcon, phosphorCatalog } from '../src/lib/picture-paint/icons/phosphor-set.js'
 
 const catalog = usableCatalog(phosphorCatalog())

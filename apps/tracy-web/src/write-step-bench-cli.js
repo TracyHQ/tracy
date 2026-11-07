@@ -15,12 +15,14 @@ import { openContentMap } from './lib/content-map-source.js'
 import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './write-step/bench-site-cli.js'
 import { runWriteStep } from './write-step/write-step.js'
+import { STEP_NINE_USAGE, stepNineOfRun, stepNineRefusal } from './write-step-bench-step-nine.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
       [--brief-file <path>] [--brand-file <path>] [--pictures-file <path>] [--by <label>]    write the frozen files to a site this bench made; runs in this process,
                                               prints the run id first and the counts last. On a site written before, it
                                               compares with the last report and writes only what differs
+${STEP_NINE_USAGE}
   list [--limit <n>]                          the newest runs
   status <runId>                              state, phase, counts and the cause of a stop
   get <runId> --out <dir>                     write the run's site-write-report.json
@@ -80,6 +82,7 @@ export async function runCli(argv, deps) {
         out: { type: 'string' },
         run: { type: 'string' },
         'all-groups': { type: 'boolean' },
+        repair: { type: 'boolean' },
         'site-pictures-file': { type: 'string' }
       }
     })
@@ -116,6 +119,7 @@ async function startRun(d, values) {
     ['account', '--account']
   ])
     if (!values[flag]) throw new Usage(`run needs ${name}`)
+  if (values.repair && !values.out) throw new Usage('run --repair needs --out <dir>')
   if (values.by !== undefined && !LABEL.test(values.by))
     throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
   const where = d.index ? { index: d.index } : {}
@@ -139,6 +143,8 @@ async function startRun(d, values) {
   const site = sites.find((r) => r.siteKey === values.site)
   if (!site || site.status !== 'ready' || !isBenchSite(site))
     return refused(d, `NOT_A_BENCH_SITE: ${values.site} is not a ready site this bench made.`)
+  const unwired = values.repair ? stepNineRefusal(d) : null
+  if (unwired) return refused(d, unwired)
 
   // What the last run on this site left is what this one compares with. A run that left no report wrote nobody knows what.
   const lastRun = await d.runs.latestEnded(values.site)
@@ -159,7 +165,7 @@ async function startRun(d, values) {
   const inCwd = (file) => path.resolve(d.cwd ?? process.cwd(), file)
   let report
   try {
-    report = await runWriteStep({
+    const write = {
       door: d.makeDoor({ account: values.account, platform: 'joomla' }),
       siteKey: values.site,
       kit: { ref: values.kit, doc: opened.doc },
@@ -183,7 +189,12 @@ async function startRun(d, values) {
       isCancelled: () => d.runs.cancelRequested(id),
       ...(d.now ? { now: d.now } : {}),
       ...(d.sleep ? { sleep: d.sleep } : {})
-    })
+    }
+    if (values.repair) {
+      const step = await stepNineOfRun(d, values, write, inCwd)
+      report = step.report
+      for (const line of step.lines) d.out(line)
+    } else report = await runWriteStep(write)
   } catch (error) {
     const reason = String(error?.message ?? error)
     await d.runs.finish(id, { status: 'stopped', code: 'CRASHED', reason })

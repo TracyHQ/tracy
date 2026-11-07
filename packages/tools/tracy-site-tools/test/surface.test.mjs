@@ -244,7 +244,13 @@ test('🔒 unbound WordPress is never told about a contract, and a quickstart si
       (a) => !SURFACE_ACTIONS[s].includes(a) && a !== 'content.replace'
     )
     assert.deepEqual(missing, [], `${s} leaves out what ${base} offers`)
-    assert.deepEqual(extra, s === 'wordpress-sealed' ? [] : ['content.contract'], s)
+    // A quickstart's contract carries its icon slots, so the icon door rides with it (`icon.mjs`).
+    const contract = s === 'joomla-sealed' || s === 'wordpress-contract'
+    assert.deepEqual(
+      extra,
+      s === 'wordpress-sealed' ? [] : contract ? ['content.contract', 'media.icon'] : ['content.contract'],
+      s
+    )
   }
   // Open Joomla takes content.batch at the component, but no surface offers it (see SURFACE_ACTIONS).
   for (const s of SURFACES) assert.ok(!SURFACE_ACTIONS[s].includes('content.batch'), s)
@@ -413,7 +419,7 @@ test('🔒 a bound WordPress site is told the contract, on top of the open WordP
     new Set(list.filter((a) => a !== 'content.replace'))
   assert.deepEqual(
     noReplace(SURFACE_ACTIONS['wordpress-contract']),
-    noReplace([...SURFACE_ACTIONS.wordpress, 'content.contract'])
+    noReplace([...SURFACE_ACTIONS.wordpress, 'content.contract', 'media.icon'])
   )
   const d = siteToolDescription('wordpress-contract')
   assert.ok(d.includes(WORDPRESS_CONTRACT_BLOCK))
@@ -426,6 +432,15 @@ test('🔒 a bound WordPress site is told the contract, on top of the open WordP
     /Use when content\.replace cannot: a picture, a link, words it refused\. Not for structure or settings \(content\.update\) or a read-only question \(content\.read\)\./
   )
   assert.match(WORDPRESS_CONTRACT_BLOCK, /Pictures: media\.draw \{prompt, slot\}, then apply the path\./)
+  // An icon is picked from the library, never drawn (a picture model asked for a glyph fails, or draws none in the look).
+  assert.match(
+    WORDPRESS_CONTRACT_BLOCK,
+    /An icon slot takes no drawing: media\.icon \{query\} lists icons, \{slot, icon\}/
+  )
+  assert.match(
+    CONTRACT_BLOCK,
+    /An icon slot takes no drawing: media\.icon \{query\} lists icons, \{slot, icon\}/
+  )
   assert.match(WORDPRESS_CONTRACT_BLOCK, /\{operation:"inspect", page, match\}/)
   assert.ok(WORDPRESS_CONTRACT_BLOCK.includes(CONTRACT_IDS_RULE))
   assert.ok(!WORDPRESS_CONTRACT_BLOCK.includes(WORDPRESS_CONTRACT_LANGUAGE_RULE), 'the context says it')

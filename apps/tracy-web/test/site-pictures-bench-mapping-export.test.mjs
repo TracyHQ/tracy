@@ -104,6 +104,7 @@ test('get writes mapping.json beside site-pictures.json and files/, and the writ
     assert.equal(readdirSync(path.join(dir, 'files')).length, 3)
     const pkg = JSON.parse(readFileSync(path.join(dir, 'mapping.json'), 'utf8'))
     assert.deepEqual(Object.keys(pkg).sort(), [
+      'alts',
       'hidden',
       'mapping',
       'painted',

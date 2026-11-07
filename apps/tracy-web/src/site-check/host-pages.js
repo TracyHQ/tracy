@@ -5,6 +5,7 @@
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { forHost } from './demo-baseline.js'
 import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf } from './page-chunks.js'
+import { pagePath } from '../lib/hidden-page-links.js'
 import { keptPaths } from '../lib/site-kept-paths.js'
 
 export const WIDTHS = [1440, 390]
@@ -51,7 +52,8 @@ async function readPages(context) {
   if (typeof context.host !== 'function')
     throw new GroupUnmeasured('No host was given, and only the host has a browser to read the pages.')
   const inspect = await context.read('content.contract', { operation: 'inspect' })
-  const paths = keptPaths(inspect, context.report)
+  const only = context.pages ? new Set(context.pages.map((p) => pagePath(p))) : null
+  const paths = keptPaths(inspect, context.report).filter((p) => !only || only.has(pagePath(p)))
   if (!paths.length) throw new GroupUnmeasured('The site lists no page, so there was nothing to open.')
   const words = writtenWords(context.report)
   const answers = []

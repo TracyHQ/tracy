@@ -4,7 +4,7 @@
 import { createHash } from 'node:crypto'
 import { initialsAvatar } from '../lib/initials-avatar.js'
 import { backdropComposite } from '../lib/picture-paint/cutout-backdrop-draw.js'
-import { iconPicture } from '../lib/picture-paint/icons/icon-render.js'
+import { iconInLook, iconPicture } from '../lib/picture-paint/icons/icon-render.js'
 import { hasPhosphorIcon, PHOSPHOR_SET } from '../lib/picture-paint/icons/phosphor-set.js'
 import { backdropProblem, paintProblem, roleOf } from '../lib/picture-paint/paint.js'
 
@@ -44,15 +44,7 @@ async function drawIconLike(item, look, colourOf, templateAccent) {
   const { icon } = item.draw
   const colour = colourOf(item.paint[item.holds === 'dark' ? 'dark' : 'light'].glyph)
   const plate = plateOf(look, colourOf, templateAccent)
-  const made = await iconPicture({
-    glyph: icon,
-    weight: look.weight,
-    width: look.width,
-    height: look.height,
-    colour,
-    ground: plate,
-    glyphBox: look.glyph
-  })
+  const made = await iconInLook({ glyph: icon, look, colour, plateColour: plate?.colour ?? null })
   return {
     ...made,
     drawnIn: { glyph: colour, plate: plate?.colour ?? null, plateFollows: plate?.follows ?? null }

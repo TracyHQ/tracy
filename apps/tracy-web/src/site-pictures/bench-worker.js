@@ -45,6 +45,7 @@ import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
 import { withLooker } from './looker-round.js'
 import { createLooker } from './looker-step.js'
+import { altAskFor } from './alt-ask.js'
 import { PICTURES_VERSION } from './manifest-shape.js'
 import { ownerPhotoBytes } from './owner-photos.js'
 import { usablePhotos } from './photo-shortlist.js'
@@ -252,6 +253,7 @@ async function prepare(deps, row) {
     runId: row.id,
     idx,
     alts: row.copy?.alts ?? null,
+    altAsk: altAskFor({ plan: row.plan, kit: kit.doc }),
     fetchImpl: deps.fetchImpl
   })
   const prompts = picturePrompts()

@@ -9,9 +9,11 @@ import { WRITER_PROMPT_FILE, writerPrompt } from '../src/site-writer/writer-prom
 // in on 2026-11-04 (a plan label is a suggestion the writer keeps or rewrites, a created page title is its on-page
 // heading, a created privacy page is a complete policy), and on 2026-11-04 ruled that a text follows the demo's length
 // part by part, between 80% and 100% of it, in the demo's lead and points shape, and that a slot whose demo draws
-// words in the accent colour names its own as `emphasis`; its bytes change only with a new
+// words in the accent colour names its own as `emphasis`, and on 2026-11-07 that the emphasis marks the strongest
+// words of the text, never a filler, wherever the demo put its own, and on 2026-11-07 that a count of the distinct
+// items the cited facts name is a fact and a slot is returned only when no true text of any kind fits; its bytes change only with a new
 // approval from the owner, recorded in ADR 0042.
-const APPROVED_SHA256 = '50b69c79498fe4aa219f2abf17267f3a8e0e535c7d9a1f19e59b9b10a5979229'
+const APPROVED_SHA256 = '4bfad57befe0c27ecc2cf0119badac029ee6f1fda62720d780a57b101ad0fc0c'
 
 test('the shipped writer prompt is the approved one, byte for byte', () => {
   const bytes = readFileSync(WRITER_PROMPT_FILE)
@@ -69,6 +71,18 @@ test("the prompt says where footer headings go, how pages entries work and that 
   assert.match(text, /`title` is the heading printed on that page/)
   assert.match(text, /A created privacy page\*\* is a complete policy for this kind of business/)
   assert.match(text, /body.*non-empty list/s)
+})
+
+test('the prompt lets the writer count cited items and try a true text before returning a slot', () => {
+  const { text } = writerPrompt()
+  assert.match(text, /A count of the distinct items the slot's cited facts name is such a fact/)
+  assert.match(text, /never estimate, round up or add "\+"/)
+  assert.match(
+    text,
+    /A number slot whose cited facts hold nothing to count takes a short true phrase without a\s+number/
+  )
+  assert.match(text, /Return the slot only when no true text of any kind fits\./)
+  assert.match(text, /^- W04: [^\n]*\n  count of the distinct items/m)
 })
 
 test('the prompt holds no long dash', () => {

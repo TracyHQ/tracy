@@ -122,11 +122,12 @@ const notGreenAfter = (status, stoppedBy) => (stoppedBy && passes(status) ? stop
 /**
  * @param {{ door: { apply: Function }, report: object, groups?: object[], now?: () => number, host?: Function,
  *   pageHtml?: (path: string) => Promise<string | null>, baseline?: object | null, kit?: object | null, pictures?: object | null,
- *   allGroups?: boolean }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
+ *   allGroups?: boolean, pages?: string[] | null }} input `report` is `site-write-report/1`; its `site` says which site to read. `host` asks
  *   the site's tracy-host to read pages: without it only the groups that need no browser run (`pageGroups: false`).
  *   `pageHtml` reads a page's markup: without it `written-not-printed` does not run. A `kit` adds `kit-version` first.
  *   `allGroups` runs the groups a red or unmeasured group would stop; each says `ranDespite`, and the status stays what the
- *   stopping group made it (never green).
+ *   stopping group made it (never green). `pages` opens only those kept pages in the host (all when null); the answer
+ *   then holds only their page failures, to be joined to a check of the whole site (lib/scoped-site-check.js).
  * @returns {Promise<object>} `site-check/1`
  */
 export async function runSiteCheck({
@@ -145,7 +146,8 @@ export async function runSiteCheck({
     ...(host ? PAGE_CHECK_GROUPS : [])
   ],
   now = Date.now,
-  allGroups = false
+  allGroups = false,
+  pages = null
 }) {
   const siteKey = report.site
   const context = {
@@ -153,6 +155,8 @@ export async function runSiteCheck({
     siteKey,
     now,
     host,
+    // Only these kept pages are opened by the host (step 9b's check after a turn, joined by lib/scoped-site-check.js).
+    pages,
     pageHtml,
     // Measured at the demo's addresses; the kept pages answer at the plan's now (page-slug.js).
     baseline: baselineAtRoutes(baseline, report.routes),

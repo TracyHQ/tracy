@@ -145,6 +145,7 @@ import {
 } from './deploy-hold.mjs'
 import { cutTimes } from './cut-by-deploy.mjs'
 import { mediaDraw } from './draw.mjs'
+import { mediaIcon } from './icon.mjs'
 import {
   EMDASH_DESCRIPTION,
   EMDASH_PARAMETERS,
@@ -1523,6 +1524,43 @@ async function reportTurnCheck(
     warn(
       `[site-tools] ${label}: could not tell Tracy the visual check of ${turnId}: ${error instanceof Error ? error.message : String(error)}`
     )
+  }
+}
+
+/** How long the icon door may take to search, pair or draw: two small PNGs, drawn by code. */
+const ICON_DOOR_TIMEOUT_MS = 30_000
+
+/**
+ * Ask Tracy's icon door (`POST /api/sites/_conversation/icons`, `apps/tracy-web/src/sites/icon-door.js`) for
+ * `media.icon` (`icon.mjs`): it searches the icon library, names an icon slot's twins and draws the icon, and writes
+ * nothing. Signed as `/turn/check` is, the person who typed and the session's own site folder. A failure is an
+ * answer the tool words (`ICON_DOOR_FAILED`): a 404 is an older tracy-web without this door.
+ */
+async function askIconDoor(
+  config: Config,
+  plan: RelayPlan,
+  label: string,
+  sessionId: string | null,
+  body: Record<string, unknown>
+): Promise<unknown> {
+  const headers: Record<string, string> =
+    plan.as === 'prompter'
+      ? { 'x-tracy-actor': actorHeader(plan), 'content-type': 'application/json', accept: 'application/json' }
+      : { cookie: plan.cookie, 'content-type': 'application/json', accept: 'application/json' }
+  headers['x-tracy-workspace-label'] = label
+  if (sessionId) headers['x-tracy-session'] = sessionId
+  try {
+    const res = await (config.fetch ?? fetch)(`${plan.origin}/api/sites/_conversation/icons`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(ICON_DOOR_TIMEOUT_MS)
+    })
+    const answer = (await res.json().catch(() => null)) as Record<string, unknown> | null
+    if (answer && typeof answer === 'object') return answer
+    return { ok: false, code: 'ICON_DOOR_FAILED' }
+  } catch {
+    return { ok: false, code: 'ICON_DOOR_FAILED' }
   }
 }
 
@@ -5678,7 +5716,16 @@ export function apply(ctx: HostContext, config: Config = {}): void {
           })
         )
       }
-      if (plan.action === 'media.draw') {
+      if (plan.action === 'media.draw' || plan.action === 'media.icon') {
+        if (
+          plan.action === 'media.icon' &&
+          (facts.platform === 'emdash' || (site !== null && (await isEmdashSite(config, site))))
+        )
+          return {
+            ok: false,
+            code: 'NOT_ON_THIS_PLATFORM',
+            error: 'EmDash has no icon slots: an icon on this site is part of its template under /app.'
+          }
         // EmDash (26/09/2026): no viewer, no contract door — the picture is uploaded through the
         // site's own `media_upload` tool, as `tracy_emdash` would run it (same fence, same rules),
         // and the answer names the url to write into the entry field. `draw.mjs` holds the road.
@@ -5779,6 +5826,52 @@ export function apply(ctx: HostContext, config: Config = {}): void {
             ...(entity === null ? {} : { entity })
           }) as { slots?: { key: string; label?: string; sample?: string; current?: string }[] }
           return inspected.slots ?? []
+        }
+        if (plan.action === 'media.icon') {
+          // Tracy's icon door draws; the upload and the slots' write go through the Apply door as the viewer, the
+          // apply through `runSiteCall`'s guards like a model's own (`icon.mjs`).
+          const at = label ?? site
+          const send = async (action: string, params: Record<string, unknown>): Promise<unknown> =>
+            relayRaw(route, key, action, params, plan.target, label, sessionId, preset)
+          const { events } = planFor(sessionId ?? undefined)
+          return noted(
+            await mediaIcon({
+              params: plan.params,
+              platform:
+                facts.platform === 'wordpress' || facts.platform === 'joomla'
+                  ? facts.platform
+                  : await detectPlatform(webroot),
+              door: (body: Record<string, unknown>) =>
+                at === null
+                  ? Promise.resolve({ ok: false, code: 'NO_SITE_IN_CONVERSATION' })
+                  : askIconDoor(config, route, at, sessionId ?? null, body),
+              imageSlots: (entity: string | null) => imageSlotsOf(entity),
+              readFile: async (file: string) => {
+                const full = path.resolve(webroot, file)
+                if (!full.startsWith(`${path.resolve(webroot)}${path.sep}`)) return null
+                try {
+                  return await fs.readFile(full)
+                } catch {
+                  return null
+                }
+              },
+              upload: (params: Record<string, unknown>) =>
+                relay(route, key, 'media.upload', params, plan.target, label, sessionId, preset),
+              apply: (params: Record<string, unknown>) =>
+                runSiteCall({
+                  plan: { action: 'content.contract', params, notes: [] },
+                  facts: siteCallFacts(facts, actions),
+                  memory,
+                  send,
+                  ...(config.sleep ? { sleep: config.sleep } : {}),
+                  events,
+                  actorKey,
+                  sessionId,
+                  label: site,
+                  signal: exec?.signal ?? null
+                }) as Promise<any>
+            })
+          )
         }
         return noted(
           await mediaDraw({
