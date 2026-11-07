@@ -49,13 +49,26 @@ export function topLevelLabels(markup) {
   return labels
 }
 
-/** One theme.json palette entry as a colour variable, or none when it states no colour of its own. */
+/** The palette slugs a block theme names its brand colours with (`accent`, `primary`), never a hover or a status. */
+const BRAND_SLUG = {
+  primary: /^(?:primary|brand|accent)(?:-colou?r)?$/i,
+  secondary: /^secondary(?:-colou?r)?$/i
+}
+
+/**
+ * One theme.json palette entry as a colour variable, or none when it states no colour of its own. An entry whose slug
+ * names the brand says so (`names: 'primary'`): theme.json is where a block theme declares its accent, so the colour
+ * measure keeps it a brand colour when a status rule of the stylesheets reuses it (a search badge painted with it).
+ */
 export function paletteVariableOf(entry, declaredIn) {
   const colour = String(entry?.color ?? '').trim()
+  const slug = String(entry?.slug ?? '')
+  const names = Object.keys(BRAND_SLUG).find((k) => BRAND_SLUG[k].test(slug))
+  const named = names ? { names } : {}
   const viaVar = /^var\(\s*(--[\w-]+)\s*,\s*(#[0-9a-f]{3,8})\s*\)$/i.exec(colour)
-  if (viaVar) return [{ name: viaVar[1], value: viaVar[2].toLowerCase(), declaredIn }]
-  if (/^#[0-9a-f]{3,8}$/i.test(colour) && entry?.slug)
-    return [{ name: `--wp--preset--color--${entry.slug}`, value: colour.toLowerCase(), declaredIn }]
+  if (viaVar) return [{ name: viaVar[1], value: viaVar[2].toLowerCase(), declaredIn, ...named }]
+  if (/^#[0-9a-f]{3,8}$/i.test(colour) && slug)
+    return [{ name: `--wp--preset--color--${slug}`, value: colour.toLowerCase(), declaredIn, ...named }]
   return []
 }
 

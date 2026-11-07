@@ -14,6 +14,7 @@ import { measureBrandColours } from '../template-kit/lib/site/colour-measure.mjs
 import { onPicture, pictureGround, pictureScopesOf } from '../template-kit/lib/site/colour-pictures.mjs'
 import { cssRules } from '../template-kit/lib/site/css-rules.mjs'
 import { paletteHtml } from '../template-kit/lib/site/palette.mjs'
+import { paletteVariableOf } from '../template-kit/lib/site/adapters/wordpress.mjs'
 
 const THEME = `
 :root{--color-primary:#2a7de1;--color-secondary:#f0a020;--color-danger:#d93030;--body-bg-color:#101418}
@@ -131,4 +132,36 @@ test('a colour a variable names the primary stays brand when an alert or an erro
   const m = measureBrandColours([{ css, from: 'template.css' }])
   assert.equal(m.primary, '#4d7c0f')
   assert.ok(m.primaryRoles.includes('button-fill'))
+})
+
+// A WordPress block theme names its accent in theme.json (`settings.color.palette`, slug `accent`), and a search badge
+// may reuse it (`.badge-info`): the palette entry, read by the WordPress adapter, names the brand, so the reuse does
+// not file the accent as a status colour. Fabricated stylesheet of a bakery theme.
+const BAKERY = `a{color:#7a3b22} a:hover{color:#7a3b22}
+  .btn-primary{background-color:var(--ds-c-accent, #b8552f)} .bg-primary{background-color:var(--ds-c-accent, #b8552f)}
+  .search .badge-info{background:var(--ds-c-accent, #b8552f)}`
+
+test('a theme.json palette accent stays the brand when a status rule reuses it', () => {
+  const variables = paletteVariableOf({ slug: 'accent', color: 'var(--ds-c-accent, #b8552f)' }, 'theme.json')
+  assert.deepEqual(variables, [
+    { name: '--ds-c-accent', value: '#b8552f', declaredIn: 'theme.json', names: 'primary' }
+  ])
+  const m = measureBrandColours([{ css: BAKERY, from: 'template.css' }], { variables })
+  assert.equal(m.primary, '#b8552f')
+  assert.ok(m.primaryRoles.includes('button-fill'))
+})
+
+test('without a variable that names the brand, the reused colour is still a status colour (Joomla unchanged)', () => {
+  const plain = [{ name: '--ds-c-accent', value: '#b8552f', declaredIn: 'theme.json' }]
+  for (const variables of [[], plain]) {
+    const m = measureBrandColours([{ css: BAKERY, from: 'template.css' }], { variables })
+    assert.equal(m.primary, '#7a3b22')
+    assert.ok(m.status.includes('#b8552f'))
+  }
+  // Only the palette slugs that name the brand do; the hover and status entries do not.
+  for (const slug of ['accent-hover', 'accent-on', 'danger', 'bg'])
+    assert.equal(
+      paletteVariableOf({ slug, color: 'var(--ds-c-x, #b8552f)' }, 'theme.json')[0].names,
+      undefined
+    )
 })
