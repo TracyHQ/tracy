@@ -178,6 +178,9 @@ const percent = (x) => `${Math.round(x * 100)}%`
 function cutoutLines(cutout) {
   return [
     'This picture is a cut-out: the figure was drawn on a plain ground that code removed. The flat colour behind the figure is the page background of the site, shown where the picture is transparent; it is not part of the picture.',
+    // A cut-out has no setting by design, and a lone figure cannot prove a job: without this line the looker failed
+    // every cut-out of a frame whose words name a place ("on court") or a role ("a coach") as "wrong subject".
+    'A cut-out shows the figure alone, with no place around it: never fail it as "wrong subject" because a place or setting the words name (a court, a gym, a kitchen) is not visible, and judge a role the words name (a coach, a trainer, a chef) by what the figure wears, holds and does. It is the wrong subject only when the figure itself is not what the words ask for, or a thing in "mustInclude" is missing.',
     cutout.textOver
       ? "On the site, the page's heading and text sit over part of this picture box, on the part the figure leaves clear."
       : "On the site, the page's heading and text sit beside this picture.",
