@@ -1,6 +1,7 @@
 // What the site writer bench CLI shows and downloads of one run (#329): the shared bench export
 // (lib/bench-export.js) for the writer, whose round document is the copy (copy-v1.json is round 0's copy), plus the
-// writer's own files: the plan it wrote from, the final copy and its Joomla contract mapping export. Pure.
+// writer's own files: the plan it wrote from, the final copy and its contract mapping export (the Joomla content
+// contract door, or the WordPress one for a WordPress kit). Pure.
 import { benchExport } from '../lib/bench-export.js'
 import { MAX_FIX_ROUNDS } from './bench-worker.js'
 import { exportContractMapping } from '../lib/site-copy/contract-mapping.js'
@@ -24,8 +25,9 @@ export const finalCopyOf = (run) => run.rounds.findLast((r) => r.copy)?.copy ?? 
  * @param {object | null} kitDoc the kit document, for the mapping's paragraph and bullet format
  * @param {object | null} [contentMap] the content map beside the kit: the mapping then carries the main menu labels
  *   and the menu items to hide
+ * @param {string} [platform] the kit's platform (openKit): "wordpress" maps to the WordPress door
  */
-export function runFiles(run, turns, kitDoc, contentMap = null) {
+export function runFiles(run, turns, kitDoc, contentMap = null, platform = undefined) {
   const json = (value) => `${JSON.stringify(value, null, 2)}\n`
   const { plan, ...meta } = run
   const files = shared.runFiles(meta, turns)
@@ -44,7 +46,8 @@ export function runFiles(run, turns, kitDoc, contentMap = null) {
           kit: kitDoc,
           brief: run.brief,
           plan,
-          contentMap
+          contentMap,
+          platform
         })
       )
     ])
