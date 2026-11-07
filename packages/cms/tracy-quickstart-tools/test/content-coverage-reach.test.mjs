@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { hiddenSelectorOf, pageKeyOf, reachOf } from '../content-coverage/lib/reach.mjs'
+import { droppedTestOf, hiddenSelectorOf, pageKeyOf, reachOf } from '../content-coverage/lib/reach.mjs'
 
 test('a page linked from a hidden menu entry and from the hero is reached; one linked only from hidden places is not', () => {
   const l = (target, hidden = false) => ({ target, hidden })
@@ -23,11 +23,29 @@ test('a page linked from a hidden menu entry and from the hero is reached; one l
   assert.deepEqual(unreached, ['/pages/writers', '/pages/writers/author/x'])
 })
 
-test('a hidden menu item is matched in the menu module and in the T4 mega menu; kit containers are added as given', () => {
-  assert.equal(
-    hiddenSelectorOf({ menuIds: ['270', 'x', '270'], containers: ['.voy-author-box'] }),
-    'li.item-270, li[data-id="270"], .voy-author-box'
-  )
+test('a hidden menu item is matched in the menu module and in the T4 mega menu', () => {
+  assert.equal(hiddenSelectorOf({ menuIds: ['270', 'x', '270'] }), 'li.item-270, li[data-id="270"]')
+})
+
+test('a link in a hidden-page-links container is inert only when it leads to a stock screen', () => {
+  const links = new Map([
+    [
+      '/',
+      [
+        { target: '/pages/about', hidden: false, inContainer: true },
+        { target: '/pages/team', hidden: false, inContainer: true }
+      ]
+    ],
+    ['/pages/about', []],
+    ['/pages/team', [{ target: '/pages/team/member/ann', hidden: false }]],
+    ['/pages/team/member/ann', []]
+  ])
+  const dropped = droppedTestOf(['/pages/team', '/pages/team/member/*'])
+  const { reached, unreached } = reachOf({ home: '/', links, dropped })
+  assert.deepEqual([...reached.keys()].sort(), ['/', '/pages/about'])
+  assert.deepEqual(unreached, ['/pages/team', '/pages/team/member/ann'])
+  assert.equal(dropped('/pages/team/member/ann?start=3'), true)
+  assert.equal(dropped('/pages/teams'), false)
 })
 
 test('one key per page: index.php, Itemid, case and the list position', () => {

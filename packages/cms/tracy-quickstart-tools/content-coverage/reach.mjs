@@ -5,10 +5,11 @@
 // pages a visitor cannot reach reads this file.
 //
 //   node reach.mjs --site <url> --findings <audit out>/findings.json --contract <contract folder> --out <reach.json>
-//                  [--hide-links '<css>,<css>'] [--showcase-map <showcase-nav-map.json>]
+//                  [--kit <template-kit.json>] [--showcase-map <showcase-nav-map.json>]
+// The kit gives the hidden-page-links containers and the stock screens every plan drops.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { anchorsInPage, hiddenSelectorOf, pageKeyOf, reachOf } from './lib/reach.mjs'
+import { anchorsInPage, droppedTestOf, hiddenSelectorOf, pageKeyOf, reachOf } from './lib/reach.mjs'
 
 const arg = (n) => {
   const i = process.argv.indexOf(n)
@@ -20,7 +21,7 @@ const contract = arg('--contract')
 const outFile = arg('--out')
 if (!site || !findings || !contract || !outFile) {
   console.error(
-    'usage: reach.mjs --site <url> --findings <file> --contract <dir> --out <file> [--hide-links <css,...>] [--showcase-map <file>]'
+    'usage: reach.mjs --site <url> --findings <file> --contract <dir> --out <file> [--kit <file>] [--showcase-map <file>]'
   )
   process.exit(2)
 }
@@ -51,7 +52,7 @@ try {
     try {
       await page.goto(p.url, { waitUntil: 'domcontentloaded', timeout: 60000 })
       const host = new URL(site).host
-      const anchors = (await page.evaluate(anchorsInPage, { hidden })).filter(
+      const anchors = (await page.evaluate(anchorsInPage, { hidden, containers })).filter(
         (a) => new URL(a.href).host === host
       )
       links.set(
@@ -65,10 +66,10 @@ try {
 } finally {
   await browser.close()
 }
-const { reached, unreached } = reachOf({ home: '/', links })
+const { reached, unreached } = reachOf({ home: '/', links, dropped })
 writeFileSync(
   outFile,
-  `${JSON.stringify({ site, hidden, pages: links.size, failed, reached: Object.fromEntries(reached), unreached }, null, 2)}\n`
+  `${JSON.stringify({ site, hidden, containers, stock, pages: links.size, failed, reached: Object.fromEntries(reached), unreached }, null, 2)}\n`
 )
 console.log(
   `pages ${links.size}, reached ${reached.size}, unreached ${unreached.length}, failed ${failed.length}`

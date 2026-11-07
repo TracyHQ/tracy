@@ -5,28 +5,47 @@
 // 245 pages reached, not 203). Here every anchor counts on its own.
 //
 // A link is not shown when it sits in a menu entry the showcase map hides (`li.item-<id>` of the menu module, or the
-// T4 mega menu's `li[data-id="<id>"]`, with everything it holds: a hidden parent hides its children) or inside a container
-// the template kit's hidden-page-links name. Anything else counts as shown, the safe direction for an accept.
+// T4 mega menu's `li[data-id="<id>"]`, with everything it holds: a hidden parent hides its children). A link inside a
+// container the template kit's hidden-page-links name is made inert only when it leads to a page every plan drops (the
+// kit's stock screens), as the write step does; any other link there stays shown. Anything else counts as shown, the
+// safe direction for an accept.
 
-/** The CSS selector of the elements whose links are not shown. */
-export function hiddenSelectorOf({ menuIds = [], containers = [] } = {}) {
+/** The CSS selector of the menu entries whose links are not shown. */
+export function hiddenSelectorOf({ menuIds = [] } = {}) {
   const ids = [...new Set(menuIds.map(String))].filter((id) => /^\d+$/.test(id))
-  return [
-    ...ids.flatMap((id) => [`li.item-${id}`, `li[data-id="${id}"]`]),
-    ...containers.filter(Boolean)
-  ].join(', ')
+  return ids.flatMap((id) => [`li.item-${id}`, `li[data-id="${id}"]`]).join(', ')
+}
+
+/** A test on a page key for the kit's stock-screen paths: exact, or `/*` for every page beneath. */
+export function droppedTestOf(paths = []) {
+  const exact = new Set()
+  const under = []
+  for (const p of paths) {
+    const x = String(p).toLowerCase().replace(/\/+$/, '')
+    if (x.endsWith('/*')) under.push(`${x.slice(0, -2)}/`)
+    else exact.add(x || '/')
+  }
+  return (key) => {
+    const base = String(key).split('?')[0]
+    return exact.has(base) || under.some((u) => base.startsWith(u))
+  }
 }
 
 /**
- * Runs INSIDE the page: every anchor with an address, and whether a hidden element holds it.
- * @param {{ hidden: string }} o the selector from `hiddenSelectorOf`
+ * Runs INSIDE the page: every anchor with an address, whether a hidden menu entry holds it, and whether a kit
+ * hidden-page-links container holds it.
+ * @param {{ hidden: string, containers: string }} o `hiddenSelectorOf` and the containers joined by commas
  */
-export function anchorsInPage({ hidden }) {
+export function anchorsInPage({ hidden, containers }) {
   const out = []
   for (const a of document.querySelectorAll('a[href]')) {
     const href = a.getAttribute('href').trim()
     if (!href || href.startsWith('#') || /^(javascript|mailto|tel):/i.test(href)) continue
-    out.push({ href: new URL(href, location.href).href, hidden: !!(hidden && a.closest(hidden)) })
+    out.push({
+      href: new URL(href, location.href).href,
+      hidden: !!(hidden && a.closest(hidden)),
+      inContainer: !!(containers && a.closest(containers))
+    })
   }
   return out
 }
@@ -54,16 +73,18 @@ export function pageKeyOf(href, siteUrl, routeOfItem = new Map()) {
 
 /**
  * The pages a visitor reaches from `home` over shown links, each with a page that links to it.
- * @param {{ home: string, links: Map<string, { target: string, hidden: boolean }[]> }} o page key -> its link occurrences
+ * @param {{ home: string, links: Map<string, { target: string, hidden: boolean, inContainer?: boolean }[]>, dropped?: (key: string) => boolean }} o
+ *   page key -> its link occurrences; `dropped` tells a stock screen, whose links in a container are inert
  * @returns {{ reached: Map<string, string | null>, unreached: string[] }} reached page -> the page it was reached from
  */
-export function reachOf({ home, links }) {
+export function reachOf({ home, links, dropped = () => false }) {
   const reached = new Map([[home, null]])
   const queue = [home]
   while (queue.length) {
     const from = queue.shift()
     for (const l of links.get(from) ?? []) {
-      if (l.hidden || reached.has(l.target) || !links.has(l.target)) continue
+      if (l.hidden || (l.inContainer && dropped(l.target)) || reached.has(l.target) || !links.has(l.target))
+        continue
       reached.set(l.target, from)
       queue.push(l.target)
     }
