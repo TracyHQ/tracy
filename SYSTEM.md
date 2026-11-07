@@ -417,6 +417,15 @@ calls **the Claude Cowork plugin installed in the site's CMS** (endpoint and tok
 come from Tracy's ledger (the audit table and `site_write`, 30 days, at most 15 apply_ids, newest first), so the agent
 can undo changes from an earlier conversation too, including `site.identity` (the site name).
 
+**c2. An icon from the library (`media.icon`).** An icon slot of a quickstart (a small transparent PNG, often a pair:
+the light and the dark copy) is changed by picking another icon, not by drawing one. `tracy-site-tools` asks
+`POST /api/sites/:key/icons` (`apps/tracy-web/src/sites/icon-door.js`, held within the session's site by
+`conversationSite`, signed as the person typing): `search` lists library names, `pair` names the slot's other-theme twins
+from the template kit (`twinOf`), and `draw` renders the icon in each slot's template look and current colours with the
+write step's own drawing code (`lib/picture-paint/icons/icon-pick.js`). The door writes nothing: the host reads the two
+files it measures from the site folder, then uploads the drawn files with `media.upload` and writes every slot in one
+`content.contract apply`, both through Apply as above, so the change is in Changes and `apply.revert` undoes it.
+
 **d. Writes outside Apply, reported afterwards.** Three kinds of write do not go through Apply: EmDash's own MCP
 (`tracy_emdash`), look changes via file tools, and `look.revert`. `tracy-site-tools` reports each
 success to `POST /api/sites/:key/changed`. Since 20/10/2026: before **every** EmDash write

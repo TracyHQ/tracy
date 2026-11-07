@@ -7,7 +7,7 @@
 // `seederTextDoor` builds the real one from a provider credential and the seeder's `chat` (the call the other text
 // steps make). The credential comes from the provider book, never from this file.
 import { jsonObjectIn } from '../../lib/json-object-in.js'
-import { validRanking } from './icon-shortlist.js'
+import { validRanking } from '../../lib/picture-paint/icons/icon-shortlist.js'
 
 /**
  * The model the icon ranking is meant to run on: a cheap OpenRouter text model (OpenRouter id, the model of the

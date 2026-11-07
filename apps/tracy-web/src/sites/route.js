@@ -296,6 +296,7 @@ import { loadDesignRegistry, oneLanguageDesign, resolveDesignPlan } from './desi
 import { dnsLabelOf } from './dns-label.js'
 import { fileVisibility } from './file-visibility.js'
 import { mountSiteGuide } from './guide.js'
+import { mountSiteIcons } from './icon-door.js'
 import { fleetLabel, labelPrefix, siteLabelRefusal, zoneLabelRefusal } from './label.js'
 import { liveSync, SYNC_PLATFORMS } from './live-sync.js'
 import { livePush } from './live-push.js'
@@ -4213,6 +4214,17 @@ export function sitesRoutes({
     snapshot: settingsSnapshot,
     ownDomains,
     origin: config.origin
+  })
+
+  // The site agent's icon door (`media.icon`): searches Tracy's icon library and draws a slot's icon again in its look.
+  mountSiteIcons(app, {
+    conversationSite,
+    requireGrant,
+    siteByKey: (key) => siteByKey(pool, key),
+    contractOfSite: (site) =>
+      site?.platform === 'emdash'
+        ? null
+        : contractFor(CONTRACTS, site?.quickstart_tag, site?.quickstart_version)
   })
 
   mountSiteSettings(app, {
