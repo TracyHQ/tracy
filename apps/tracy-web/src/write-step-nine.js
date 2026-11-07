@@ -18,6 +18,7 @@ import { buildCommentTurn } from './lib/comment-turn.js'
 import { defaultContracts } from './lib/contracts.js'
 import { contractBaselineStore } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
+import { kitAltSlots } from './write-step/repair-pass/repair-alt-slots.js'
 import { briefValues } from './write-step/repair-pass/repair-brief-values.js'
 import { runRepairPass, undoTurns } from './write-step/repair-pass/repair-pass.js'
 import { pageFeed } from './write-step/repair-pass/repair-schedule.js'
@@ -178,6 +179,8 @@ export async function runStepNine(input) {
     checkSite: (pages) => siteCheck(written, pages),
     urlOf: pageAddressOf(agent),
     pageHtml,
+    // An alt fault names the slot the kit keeps that picture's alt in, when it is not the picture slot.
+    altSlots: kitAltSlots(write.kit?.doc ?? null),
     mark,
     // A second look costs too: its cost joins the finder's.
     refind: finder

@@ -6,6 +6,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { buildCommentTurn } from '../src/lib/comment-turn.js'
+import { kitAltSlots } from '../src/write-step/repair-pass/repair-alt-slots.js'
 import { faultsToSend } from '../src/write-step/repair-pass/repair-faults.js'
 import { pageTurn } from '../src/write-step/repair-pass/repair-items.js'
 import { pageItems } from '../src/write-step/repair-pass/repair-locate.js'
@@ -32,9 +33,10 @@ const altFault = (slot, measured, seen) => ({
 })
 
 /** A pass with a served page and a content.locate answering by `locate(params)` (refused when it returns null). */
-function passOf(locate = () => null) {
+function passOf(locate = () => null, altSlots = null) {
   const located = []
   const pass = {
+    altSlots,
     urlOf: (page) => `https://site.example${page}`,
     pageHtml: async () => GALLERY,
     clock: { within: async (fn) => ({ value: await fn() }), workLeft: () => 60_000 },
@@ -81,6 +83,77 @@ test('an article picture alt names the alt slot and its record, with a selector 
   const turn = turnOf([item])
   assert.match(turn, /- field "article-7\.3 alt"/)
   assert.match(turn, /- record "article 7" \(article #7\)/)
+})
+
+/** An invented kit: a gallery list whose rows pair a picture with its alt in a slot of its own, as stored fields say. */
+const GALLERY_KIT = {
+  blocks: [
+    {
+      id: 'block-21',
+      lists: [
+        {
+          id: 'block-21.gallery',
+          rowSlots: [
+            { id: 'block-21.1', role: 'business.gallery_image', type: 'image' },
+            { id: 'block-21.7', role: 'editorial.paragraph', type: 'text', sample: '' }
+          ],
+          rows: [
+            {
+              index: 0,
+              slots: [
+                { id: 'block-21.1', role: 'business.gallery_image', type: 'image' },
+                { id: 'block-21.7', role: 'editorial.paragraph', type: 'text', sample: '' }
+              ]
+            },
+            {
+              index: 1,
+              slots: [
+                { id: 'block-21.3', role: 'business.gallery_image', type: 'image' },
+                { id: 'block-21.8', role: 'editorial.paragraph', type: 'text', sample: '' }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  storedFields: [
+    { slot: 'block-21.1', field: 'params.gallery.g[gallery][img].0', type: 'image' },
+    { slot: 'block-21.7', field: 'params.gallery.g[gallery][alt].0', type: 'text' },
+    { slot: 'block-21.3', field: 'params.gallery.g[gallery][img].1', type: 'image' },
+    { slot: 'block-21.8', field: 'params.gallery.g[gallery][alt].1', type: 'text' }
+  ]
+}
+
+test('a gallery alt the kit keeps in a slot of its own names that slot, beside its picture slot', async () => {
+  assert.deepEqual(
+    [...kitAltSlots(GALLERY_KIT)],
+    [
+      ['block-21.1', 'block-21.7'],
+      ['block-21.3', 'block-21.8']
+    ]
+  )
+  const { pass } = passOf(undefined, kitAltSlots(GALLERY_KIT))
+  const [item] = await pageItems(pass, '/', [altFault('block-21.3', 'A cyclist on a hill', 'A boxer')])
+  assert.match(item.text, /Where: slot block-21\.8, the alt of the picture in slot block-21\.3/)
+  assert.doesNotMatch(item.text, /the alt of slot block-21\.3/)
+  assert.match(item.text, /module 21/)
+  assert.deepEqual(
+    item.locate.levels.map((l) => [l.kind, l.label]),
+    [
+      ['field', 'block-21.8'],
+      ['record', 'module 21']
+    ]
+  )
+})
+
+test('a kit with no alt slot beside a picture leaves the alt of the picture slot named', async () => {
+  const kit = { blocks: [{ id: 'block-21', slots: [{ id: 'block-21.1', type: 'image' }] }], storedFields: [] }
+  assert.equal(kitAltSlots(kit).size, 0)
+  assert.equal(kitAltSlots(null).size, 0)
+  const { pass } = passOf(undefined, kitAltSlots(kit))
+  const [item] = await pageItems(pass, '/', [altFault('block-21.1', 'Two runners on a beach', 'A swimmer')])
+  assert.match(item.text, /the alt of slot block-21\.1/)
 })
 
 test('when content.locate fails the item still carries its slot and record, unchecked', async () => {
@@ -142,6 +215,8 @@ test('a wrong icon the finder names is sent as an icon to choose from the librar
   const { pass, located } = passOf()
   const [item] = await pageItems(pass, '/', [fault])
   assert.match(item.text, /choose an icon from Tracy's icon library/)
+  assert.match(item.text, /tracy_site media\.icon \{query\}/, 'names the tool that lists the icons')
+  assert.match(item.text, /\{slot, icon\}/, 'and the call that puts one in')
   assert.match(item.text, /"BACKPACK"/)
   assert.doesNotMatch(item.text, /fix what the note describes/)
   assert.equal(located[0].text, 'BACKPACK', 'located by the words it quotes, never an empty query')

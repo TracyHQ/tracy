@@ -27,7 +27,8 @@ export function recordOf(id) {
 const ALT_KINDS = new Set(['wrong-alt'])
 
 /** The slot a fault is about, as the agent should write it: the alt of a picture slot for an alt fault. */
-const slotLabelOf = (fault) => (fault.slot ? `${fault.slot}${ALT_KINDS.has(fault.kind) ? ' alt' : ''}` : '')
+const slotLabelOf = (fault) =>
+  fault.altSlot ?? (fault.slot ? `${fault.slot}${ALT_KINDS.has(fault.kind) ? ' alt' : ''}` : '')
 
 /** What was measured or seen there, written for the fault's kind. */
 function detailOf(fault) {
@@ -50,7 +51,12 @@ function whereOf(fault) {
   const inRecord = record ? `, in ${record.kind} ${record.id}` : ''
   const quoted = quotedWords(fault.seen)
   if (fault.slot) {
-    const slot = ALT_KINDS.has(fault.kind) ? `the alt of slot ${fault.slot}` : `slot ${fault.slot}`
+    // A gallery alt in a slot of its own (repair-alt-slots.js) is named by that slot, beside its picture's.
+    const slot = fault.altSlot
+      ? `slot ${fault.altSlot}, the alt of the picture in slot ${fault.slot}`
+      : ALT_KINDS.has(fault.kind)
+        ? `the alt of slot ${fault.slot}`
+        : `slot ${fault.slot}`
     return ` Where: ${slot}${fault.block ? ` (block ${fault.block})` : ''}${inRecord}.`
   }
   if (fault.block) return ` Where: block ${fault.block}${inRecord}.`

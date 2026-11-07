@@ -566,7 +566,7 @@ changes with Undo. So:
   Every request id stays followed until the pass ends: a dropped prompt the session queue runs later (`late`) and a
   second turn from a resend (`duplicate`) join the ledger and are judged and undone like the rest.
 - Each ended turn is judged on its own: a site check reads only the pages it changed (every page when it changed files
-  or wrote a record no page places), joined to the site as it now is (`site-check/scoped-check.js`; checks run one at a
+  or wrote a record no page places), joined to the site as it now is (`lib/scoped-site-check.js`; checks run one at a
   time, and turns ending within a second share one). A turn is undone whole when that check shows a new blocking failure
   on a page it changed; its pages then hold their failures from before it and are read again before the hand-over. The
   pages a turn changed are read from what it wrote: a write's record is placed on the pages whose items located it, and

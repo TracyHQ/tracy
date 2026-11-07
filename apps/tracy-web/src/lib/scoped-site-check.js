@@ -2,8 +2,8 @@
 // reads only the pages the turn changed (runSiteCheck `pages`), and the site as it now is keeps the earlier check's
 // failures on every other page. A failure that names no page belongs to the newer check, which measured it again. Each
 // group's status and the counts follow the failures kept; a group the newer check could not measure stays unmeasured.
-// Pure.
-import { pagePath } from '../lib/hidden-page-links.js'
+// Pure. It sits in lib/ because the site check and step 9b (write-step/repair-pass/) both use it.
+import { pagePath } from './hidden-page-links.js'
 
 const NOT_APPLICABLE = 'not-applicable'
 

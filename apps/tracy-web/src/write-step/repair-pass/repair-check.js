@@ -1,10 +1,10 @@
 // The site checks of step 9b after its turns (#448): each ended turn is handed to `judge`, and the checks run one at a
 // time. A check waits `judgeGatherMs` for other turns ending at the same moment, reads only the pages those turns changed
 // (every page when one changed files or a write no page places, repair-judge.js), and is joined to the site as it now is
-// (site-check/scoped-check.js). A turn with a new blocking failure on a page it changed is undone, whole, newest first;
+// (lib/scoped-site-check.js). A turn with a new blocking failure on a page it changed is undone, whole, newest first;
 // the pages it changed then hold the failures they had before it, and are read again before the hand-over (`recheck`).
 // A turn that wrote nothing needs no check. A check that cannot end in the time left throws, as any 9b error.
-import { mergeScopedCheck } from '../../site-check/scoped-check.js'
+import { mergeScopedCheck } from '../../lib/scoped-site-check.js'
 import { EVERY_PAGE, pagesChanged, recordPagesOf, turnsToUndo, undoTurns } from './repair-judge.js'
 
 /** One site check within the time left, of `pages` (every page when null), joined to the site as it now is. */

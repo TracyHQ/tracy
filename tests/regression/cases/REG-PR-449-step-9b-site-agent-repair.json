@@ -33,7 +33,10 @@
       "apps/tracy-web/test/door-ladder.test.mjs",
       "apps/tracy-web/test/write-step-bench-repair-cli.test.mjs",
       "apps/tracy-web/test/write-step-nine-repair-pipeline.test.mjs",
-      "apps/tracy-web/test/site-check-scoped-pages.test.mjs"
+      "apps/tracy-web/test/site-check-scoped-pages.test.mjs",
+      "apps/tracy-web/test/write-step-nine-repair-messages.test.mjs",
+      "apps/tracy-web/test/module-graph.test.mjs",
+      "packages/tools/tracy-site-tools/test/slot-corrections.test.mjs"
     ]
   }
 }

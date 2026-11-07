@@ -2,7 +2,7 @@
 // of the whole site, every other page keeps its earlier failures. Every fixture is invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { mergeScopedCheck } from '../src/site-check/scoped-check.js'
+import { mergeScopedCheck } from '../src/lib/scoped-site-check.js'
 import { runSiteCheck } from '../src/site-check/site-check.js'
 import { demoRead, fakeHost, pagedSite, pageRead, writtenReport } from './_site-check-pages.mjs'
 

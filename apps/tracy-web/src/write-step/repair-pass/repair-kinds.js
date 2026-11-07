@@ -32,7 +32,7 @@ export const SENT_KINDS = Object.freeze({
   'wrong-alt': () =>
     "This picture's alt text does not describe it: write an alt text that describes the picture shown, for this business.",
   'wrong-icon': () =>
-    "This icon does not match its item: choose an icon from Tracy's icon library that matches the item, and put it in place of this one, keeping the item's words.",
+    "This icon does not match its item: choose an icon from Tracy's icon library that matches the item (tracy_site media.icon {query} lists them, then {slot, icon} puts one in), and put it in place of this one, keeping the item's words.",
   'unreadable-text': () =>
     'This text is hard to read over its background: make it readable, keeping its words and the template look.',
   'demo-fact': () =>

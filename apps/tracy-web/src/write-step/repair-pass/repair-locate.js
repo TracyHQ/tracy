@@ -3,6 +3,7 @@
 // `content.locate` answer for that element through the Apply door (the agent's `locate`), the same call the popover makes
 // when a person picks it. An answer that is not one (`unavailable`, a refusal, a late or failing call, or an agent with no
 // locate) leaves the fault's own levels, and the item says why. Every call is held to the step clock.
+import { withAltSlot } from './repair-alt-slots.js'
 import { commentItem } from './repair-items.js'
 import { quotedWords, servedElementOf, servedPage } from './repair-served-element.js'
 
@@ -71,7 +72,7 @@ function apart(items, elements, faults) {
 }
 
 /**
- * @param {object} pass the pass's context (repair-pass.js)
+ * @param {object} pass the pass's context (repair-pass.js); `altSlots` the kit's alt slots (repair-alt-slots.js), if any
  * @param {string} page
  * @param {object[]} faults the page's faults to send
  * @returns {Promise<object[]>} one comment item per fault (repair-items.js `commentItem`), each with a selector of its own
@@ -81,7 +82,7 @@ export async function pageItems(pass, page, faults) {
   const served = await servedOf(pass, page)
   const items = []
   const elements = []
-  for (const fault of faults) {
+  for (const fault of faults.map((f) => withAltSlot(f, pass.altSlots))) {
     const element = served ? servedElementOf(served, fault) : null
     const words =
       typeof fault.measured === 'string' && fault.measured ? fault.measured : quotedWords(fault.seen)
