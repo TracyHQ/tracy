@@ -194,7 +194,17 @@ async function main() {
       `[audit] contract ${contract.manifest.id}: ${contract.map.slots.length} slots, ${contract.pages.length} pages; DB ${dbIndex ? `${dbIndex.cells.length} cells` : 'none'}; sources ${sourceIndex ? `${sourceIndex.files.length} files, ${sourceIndex.ini.length} language strings` : 'none'}`
     )
     const cap = Number(o['max-pages'] ?? 150)
-    const run = await runAudit({ chromium, siteUrl, contract, dbIndex, sourceIndex, outDir, cap, viewports })
+    const run = await runAudit({
+      chromium,
+      siteUrl,
+      contract,
+      dbIndex,
+      sourceIndex,
+      outDir,
+      cap,
+      viewports,
+      webroot: sourceIndex ? o.webroot : null
+    })
     result = {
       site: siteUrl,
       contractId: contract.manifest.id,

@@ -166,6 +166,7 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   `lock`, `cause`, `evidence`, `pages`, `firstPage`). `pages.failed` is the count of pages that did not render;
   `pages.failures` lists each one (path and query only, never the stand address, with `mapPage`, `status` or `error`
   when known), so the next reader knows which page it was.
+- **Article layouts.** With `--db-dump` and `--webroot`, each published article whose attribs ask for a layout of the active template (`<template>:<name>` or `<name>`, a file `html/com_content/article/<name>.php`) must show that file's root element on its page: every literal class of the root on one element, at least one of them absent from default.php's root. A page that does not is a failure (`pages.failures`, holds Publish); a layout with no class of its own, or an article the crawl never reached, is listed in `articleLayouts.cannotCheck`, never passed (`content-coverage/lib/article-layout.mjs`).
 - **Site map and header (audit 1.6.0).** The same file carries `sitePages`: one row per page the content map declares,
   in map order, none dropped, with `opens` (`live` with its HTTP status and path, `broken` with the status it answered,
   `no-page` for a menu group or a `#` link, `link` for a menu entry to another address, `unpublished`, `offsite`, or

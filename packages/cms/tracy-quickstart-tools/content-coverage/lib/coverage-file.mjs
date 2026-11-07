@@ -194,6 +194,9 @@ export function buildCoverageFile({
     coverage: Object.fromEntries(Object.entries(counts).map(([k, c]) => [k, percent(c)])),
     holes,
     hygiene: hygieneOf(result, previous),
+    // Articles asking for a template layout: how many pages were checked, how many did not show it (each is also a
+    // failure above), and the ones that cannot be checked with the reason.
+    ...(result.articleLayouts ? { articleLayouts: result.articleLayouts } : {}),
     // Every map page: does it open (HTTP 2xx), is it a menu group or a `#` link, is it in the main menu and the header.
     sitePages: sitePagesOf({ contract, result }),
     // The header of the home page (desktop): null when the run measured none.
