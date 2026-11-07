@@ -398,7 +398,16 @@ model, so it writes the alt in the same call; no new call and no new door.
 - **The export** (`exportPictureMapping`) carries `alts`, by frame, for every frame it places (a file in `changes`, or
   initials it paints). The write step sends that alt through the gallery alt slot over the writer's, claimed by the
   picture owner, only where the plugin opens the slot (slot corrections); the writer's alt stands on every frame step 8
-  wrote none for. A picture whose alt has no slot a door can fill keeps today's skipped line.
+  wrote none for.
+- **Alts kept in the record beside the picture** (`write-step/record-alt-stage.js`): no contract slot carries them, so
+  after the contract call the write step reads the record and writes step 8's alt with `content.update`, one write per
+  record column, undoable: an article's intro and full picture (`image_intro_alt`, `image_fulltext_alt` in its `images`
+  column) and a picture printed in a record's HTML (an article's text, a custom module: the `alt` of the img whose src
+  the contract wrote). Only step 8's alts go there; the writer's alts on those pictures stay unwritten, as before.
+- **No door reaches the alt** of a template config picture (a module's `jatools-config` hero, feature, team, call to
+  action and signature pictures), an article's extra field pictures (`attribs`), a menu item description picture, an
+  author avatar or a site setting picture: the stored row keeps no alt beside them, so the template prints its own. Their
+  step 8 alt keeps its skipped line.
 - **The site check** (`alt-matches-picture`) counts an alt printed as step 8 wrote it as agreeing: it is in the site's
   language and may share no word with the English seen sentence.
 - **Cost**: the alt is a few more output tokens on each look already paid for; no extra call per site.

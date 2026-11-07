@@ -83,7 +83,9 @@ function extraLines(extras, owners, settled) {
     skipped(`${page}:description`, 'writer', 'page-description', ran)
   ]
   return [
-    ...Object.keys(extras.alts ?? {}).map((f) => skipped(f, 'writer', 'alt', 'alt text is not written yet')),
+    ...Object.keys(extras.alts ?? {}).map((f) =>
+      skipped(f, extras.altOwners?.[f] ?? 'writer', 'alt', 'alt text is not written yet')
+    ),
     ...Object.entries(extras.pageMeta ?? {}).flatMap(pageWords),
     ...Object.keys(extras.pages ?? {}).map((p) => skipped(p, 'writer', 'page-body', ran)),
     ...(extras.mainMenu?.hide ?? []).map((h) => skipped(h.item, 'plan', 'menu-hide', ran)),

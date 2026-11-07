@@ -38,11 +38,12 @@ export const isKeptIcon = (slot) =>
  * their skipped line.
  * @param {{ alts: Record<string, string>, pictureAlts?: Record<string, string>, contentMap?: { slots?: object[] } | null,
  *   hidden: Set<string>, file: string, picturesFile?: string | null }} input
- * @returns {{ claims: object[], changes: Record<string, string>, left: Record<string, string> }}
+ * @returns {{ claims: object[], changes: Record<string, string>, left: Record<string, string>, leftByPicture: string[] }}
+ *   `leftByPicture` the frames of `left` whose alt is step 8's
  */
 export function galleryAlts({ alts, pictureAlts = {}, contentMap, hidden, file, picturesFile = null }) {
   const slots = Array.isArray(contentMap?.slots) ? contentMap.slots : []
-  const out = { claims: [], changes: {}, left: {} }
+  const out = { claims: [], changes: {}, left: {}, leftByPicture: [] }
   const fromPictures = new Map(
     Object.entries(pictureAlts ?? {}).filter(([, text]) => typeof text === 'string' && text.trim())
   )
@@ -52,6 +53,7 @@ export function galleryAlts({ alts, pictureAlts = {}, contentMap, hidden, file, 
     const slot = hidden.has(frame) ? null : galleryAltSlot(frame, slots)
     if (!slot) {
       out.left[frame] = text
+      if (byPicture) out.leftByPicture.push(frame)
       continue
     }
     out.changes[slot.key] = text

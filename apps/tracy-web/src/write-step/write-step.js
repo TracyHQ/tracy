@@ -22,6 +22,8 @@
 // Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
 // had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
 import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
+import { writeRecordAlts } from './record-alt-stage.js'
+import { PICTURE_OWNER } from './picture-package.js'
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { indexInputs } from '../lib/site-copy/inputs-index.js'
@@ -179,6 +181,7 @@ export async function runWriteStep(input) {
   let renamedLines = null
   let renamedLinks = null
   let emphasis = new Map()
+  let pictureFiles = {}
   let fallbacks = new Map()
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
@@ -367,15 +370,20 @@ export async function runWriteStep(input) {
       hidden: new Set([...pictures.claims, ...fromPlan].filter((c) => c.kind === 'hide').map((c) => c.slot)),
       file: read.inputs.copy.file
     })
+    const fromStepEight = pictureAltsOf(read.values.pictures)
     const alts =
       placed.claims.length && !(await corrections()).alts
         ? {
             claims: [],
             changes: {},
-            left: { ...extras.alts, ...pictureAltsOf(read.values.pictures) }
+            left: { ...extras.alts, ...fromStepEight },
+            leftByPicture: Object.keys(fromStepEight)
           }
         : placed
-    extras = { ...extras, alts: alts.left }
+    // The frames whose alt is step 8's: their lines are the picture's, and record-alt-stage.js may still write them.
+    const altOwners = Object.fromEntries(alts.leftByPicture.map((frame) => [frame, PICTURE_OWNER]))
+    extras = { ...extras, alts: alts.left, altOwners }
+    pictureFiles = read.values.pictures?.mapping?.changes ?? {}
     // The slot prints only as its kept picture's alt, so a plan's hide of it hides nothing: the alt stands.
     const altSlots = new Set(alts.claims.map((claim) => claim.slot))
     const filing = [
@@ -651,6 +659,15 @@ export async function runWriteStep(input) {
       })
   })
   const written = [...wrote.written, ...held]
+  // Step 8's alts no contract slot carries go into the records that keep them beside their picture (record-alt-stage.js).
+  const recordAlts = await writeRecordAlts({
+    door,
+    siteKey,
+    contentMap,
+    alts: Object.fromEntries(Object.keys(extras.altOwners ?? {}).map((f) => [f, extras.alts[f]])),
+    pictures: pictureFiles,
+    written
+  })
   // A heading whose demo value is HTML takes its emphasis as real tags, after the contract call wrote its words (emphasis-stage.js).
   emphasis = await runEmphasisStage({ door, siteKey, contentMap, written: wrote.written, ordered })
   // Last: the page settings, which the contract door does not take (page-settings-stage.js).
@@ -668,7 +685,7 @@ export async function runWriteStep(input) {
     })
   )
   settingLines = settings.lines ?? []
-  settled = new Map([...settings.results, ...hide.held, ...created.results])
+  settled = new Map([...recordAlts, ...settings.results, ...hide.held, ...created.results])
   if (settings.cancelled) return finish('cancelled', null, written, wrote.refused)
   // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).
   // It has no phase of its own: it makes a few calls, and the phase list is what callers already know.
