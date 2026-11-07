@@ -21,11 +21,14 @@ Two cases, decided by the fix log:
   (`references/quickstart.md`, *Release a fix version*): `release.mjs --patch` assembles the release folder and prints
   the `gh release upload` commands for the tag `quickstart/<slug>/wp7` in `JoomlArt-Products/joomlart-products`;
   naming the template is the go to run them (the stop points of a called skill are passed, as in the Joomla skill).
-  The new version then needs its contract carried by a claude-cowork WordPress plugin release (stop W1 of
-  [`fix-map.md`](fix-map.md)) and a pin in both quickstart lists (stop W3: no WordPress pin procedure exists). The run
-  stops there and reports both, with the release folder, its `VERIFICATION.json` and the contract folder.
+  The new version then needs its contract carried by a claude-cowork WordPress plugin release (procedure W1 of
+  [`fix-map.md`](fix-map.md): `node scripts/release-wordpress.mjs X.Y.Z` in that repository, by hand, `--dry-run`
+  first, through its `release/<tag>` PR) and a pin in both quickstart lists (procedure W3:
+  `scripts/pin-wordpress-quickstart.mjs`, `--dry-run` first). The plugin release is another repository's release: run
+  it only with the preparer's go and access, otherwise report the release folder, its `VERIFICATION.json`, the contract
+  folder and the exact commands, and stop there.
 
-Never cut a Claude Cowork plugin release from this skill, and never hand-write a WordPress pin.
+Never hand-write a WordPress pin: the script reads the sizes and hashes from the assets.
 
 ## 3. Changes note, scan and PR
 

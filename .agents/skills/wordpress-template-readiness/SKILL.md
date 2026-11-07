@@ -69,11 +69,13 @@ green for the exit code. Never try to turn it `done`.
 A stop (section 5) ends the loop for its piece only: record it, then carry on with the next piece whose fix does not
 wait on it, so the report names every stop at once. While a stop is open nothing is released or pinned.
 
-**A new version is the last resort.** On WordPress any new theme version or content map change needs a new contract
-version, and that needs a claude-cowork plugin release (fix map, stop W1). Before such a fix, look for a door that
-lands beside the contract: an accept with its reason (`reach-accepts.json`, `gap-accepts.json`, `accepted` in
-`content-coverage.json`), a hidden kit field the write step acts on, or the planner or write step hiding or
-retargeting the slot.
+**A theme release is the last resort.** Before any fix that needs a new theme version (the theme overlay or the demo
+content) and with it a new contract version, look for a door in the flow: a contract, kit or accept door that lands
+beside the release. An accept with its reason (`reach-accepts.json`, `gap-accepts.json`, `accepted` in
+`content-coverage.json`), a hidden kit field the write step acts on ([`references/kit-rebuild.md`](references/kit-rebuild.md)),
+or the planner or write step hiding or retargeting the slot. Only when none exists, release the theme. A new version
+costs a contract version, a claude-cowork plugin release and a pin (procedures W1 and W3 of
+[`references/fix-map.md`](references/fix-map.md)), so it is never the first move.
 
 **Fix the tool, not the template**, when the fault would hit any WordPress theme (a capture rule, a kit reader, a
 measure, the logo write path): test first, in this repository, in the same PR when small. Never hand-edit one
@@ -100,16 +102,16 @@ log and merge on green CI.
 
 ## 5. Stops
 
-The run stops only on a fault whose fix needs a person, another repository's release, or a WordPress procedure that
-does not exist. Report: the piece, the code, its params, what was tried, and who must act. The stops are W1 to W5 of
-[`references/fix-map.md`](references/fix-map.md); in short:
+The run stops only on a fault whose fix needs a person or the port's dossier. Report: the piece, the code, its params,
+what was tried, and who must act. W1 and W3 are procedures, not stops: a changed contract goes through a claude-cowork
+WordPress plugin release (`release-wordpress.mjs`) and then `scripts/pin-wordpress-quickstart.mjs`, both named in
+[`references/fix-map.md`](references/fix-map.md) and run at green ([`references/green.md`](references/green.md)). The
+stops are W2, W4 and W5 of that page; in short:
 
 | Stop | Who must act |
 |---|---|
 | Out of scope (section 0): not a block theme, page builder, WooCommerce, several languages | the preparer |
-| W1: a new contract version (any content map change, any new theme version) | claude-cowork: a WordPress plugin release carrying the contract |
-| W2: `content-map-missing-lists` (no WordPress tool captures posts into the map) | a person designs it; then W1 |
-| W3: pinning a WordPress version (no WordPress pin procedure exists) | a person |
+| W2: `content-map-missing-lists` (no WordPress tool captures posts into the map) | a person designs it; then procedure W1 |
 | W4: a fix release without the port's dossier on this machine | the person who ran the port |
 | W5: hole of class `unknown`; read-only design data; a piece with no `fix`; a Joomla-only code on WordPress; a blocked command | as in the Joomla skill |
 

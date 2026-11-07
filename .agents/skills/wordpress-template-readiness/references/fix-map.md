@@ -3,7 +3,7 @@
 The fix of every code lives in one place, the fix registry (`apps/tracy-web/src/lib/template-readiness/fixes.js`),
 and the verdict JSON carries it as `fix` under each piece that is not `done`. Its commands and skill sections are
 written for Joomla first. This page says, for **every** code the registry holds, how that fix is run on a WordPress
-block theme, or that it stops the run (SKILL.md section 5), or that a WordPress release never gets it.
+block theme, or that it stops the run (SKILL.md section 5), or that it goes through procedure W1 or W3, or that a WordPress release never gets it.
 `scripts/test/fix-map.test.mjs` fails when a registry code is missing here or a code here is not in the registry.
 
 Words used below:
@@ -16,24 +16,46 @@ Words used below:
   `--webroot` its unpacked webroot. A page under a parent opens by its whole path (`?pagename=j-pages/login`), the
   parents read from `inventory.json` beside the map; a contract without one answers 404 on every child page.
 - **New contract version**: on WordPress the pinned Claude Cowork plugin carries the contract files byte for byte
-  (`cowork.contractFiles` in `quickstarts.json`, held by the `contracts` gate, `scripts/check-contracts.ts`). Any
-  change to `manifest.json`, `content-map.json`, `presentation-lock.json`, `demo-trim-map.json`, `editions.json` or
-  `superseded.json`, and any new template release (a new version needs its own contract), needs a claude-cowork
-  WordPress plugin release carrying the new files: **stop W1**. Files beside the contract that the plugin does not
-  carry (`template-kit.json`, `content-coverage.json`, `demo-measures.json`, `demo-baseline.json`, `inventory.json`,
-  `navigation-source.json`, the accept files) are committed without one.
+  (`cowork.contractFiles` in `quickstarts.json`, held by the `contracts` gate, `scripts/check-contracts.ts`; in the
+  claude-cowork repository they sit in `wordpress/cowork/lib/contracts/<design>/wp7/<version>/`, copied by
+  `wordpress/cowork/build.sh`). Any change to `manifest.json`, `content-map.json`, `presentation-lock.json`,
+  `demo-trim-map.json`, `editions.json`, `showcase-nav-map.json` or `superseded.json`, and any new template release (a
+  new version needs its own contract), needs a plugin release carrying the new files: **procedure W1**. Files beside
+  the contract that the plugin does not carry (`template-kit.json`, `content-coverage.json`, `demo-measures.json`,
+  `demo-baseline.json`, `inventory.json`, `navigation-source.json`, the accept files) are committed without one.
 - **Theme release**: the fix is made in the theme overlay `packages/cms/tracy-wordpress-theme/overlays/<theme>/`
   (`src/<theme>/` is generated whole by `node scripts/build-wordpress-theme.mjs`, `--check` is its gate), then a fix
   release is cut by the vendored `tracy-wordpress-theme` skill (`vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/references/quickstart.md`,
-  sections *Release a fix version* and *Patch release recipe*). A new version means a new contract version: stop W1.
+  sections *Release a fix version* and *Patch release recipe*). A new version means a new contract version: procedure W1.
+
+## Procedures W1 and W3: a contract change reaches a site
+
+Both are steps with a recipe, run at green ([`green.md`](green.md)), not stops.
+
+**W1, the plugin carries the contract.** In the claude-cowork repository, by hand and never from CI:
+`node scripts/release-wordpress.mjs X.Y.Z --dry-run`, then without `--dry-run`. It opens the `release/<tag>` PR
+(`scripts/release-pr.mjs`), tags `wordpress-vX.Y.Z` and attaches `claude-cowork-X.Y.Z.zip`. Merge that PR, then pin.
+A plugin cut before the contract changed is re-cut, never pinned (the pin script refuses it).
+
+**W3, the pin.** In this repository, once the release is published:
+
+```bash
+node scripts/pin-wordpress-quickstart.mjs --quickstart quickstart/<slug>/wp7 --plugin-tag wordpress-vX.Y.Z --dry-run
+# a new quickstart version also moves the entry itself (version, contract, webroot, database from its release):
+node scripts/pin-wordpress-quickstart.mjs --quickstart quickstart/<slug>/wp7 --plugin-tag wordpress-vX.Y.Z --version <V> --dry-run
+```
+
+Read the diff, run again without `--dry-run`: it writes both `quickstarts.json` copies as one text. It refuses, writing
+nothing, unless the zip carries the entry's contract byte for byte as this tree holds it. Then
+`pnpm exec tsx scripts/check-all.ts --only contracts` is green. `design-templates.json` lists Joomla templates only
+and is not touched. The Joomla recipe (`quickstart-contract` `references/ship-and-release.md` section 8 step 6,
+`scripts/pin-joomla-cowork.mjs`) stays Joomla only.
 
 ## Stops
 
 | Stop | When | Who must act |
 |---|---|---|
-| W1 | A new contract version is needed (any content map change, any new template release) | claude-cowork: a WordPress plugin release carrying the contract files; then the pin (stop W3) |
-| W2 | `content-map-missing-lists`: the WordPress capture (`tracy-wordpress-quickstart/scripts/capture-contract.mjs`) makes entities for options and pages only, never for posts, so no current tool puts posts into the map | a person decides how posts enter the WordPress content map and how the plugin writes them; then W1 |
-| W3 | Pinning a WordPress version: `quickstart-contract` section 8 step 6 and `scripts/pin-joomla-cowork.mjs` are Joomla only, and the vendored skill leaves pinning outside itself (*Pinning into the fleet*) | a person; no WordPress pin procedure exists |
+| W2 | `content-map-missing-lists`: the WordPress capture (`tracy-wordpress-quickstart/scripts/capture-contract.mjs`) makes entities for options and pages only, never for posts, so no current tool puts posts into the map | a person decides how posts enter the WordPress content map and how the plugin writes them; then procedure W1 |
 | W4 | A fix release needs the port's dossier (`--run-root`, `--spec`, `page-map.json`, `visual.contract.json`) and it is not on this machine | the person who ran the port |
 | W5 | Coverage hole of class `unknown`; a design-system fault in read-only design data; a piece not `done` with no `fix`; a code this page marks *not on WordPress* that a WordPress release returned; a hook or permission blocks a command | as in the Joomla skill: a person reads the evidence, the design system owners, a person adds the registry entry, a person reads the check, the preparer |
 
@@ -49,16 +71,16 @@ Words used below:
 | `customize-checking`, `ds-checking` | `checking`: read the verdict again |
 | `release-draft` | The first publication of a WordPress port is the vendored skill's last phase and its own person's decision (`release.mjs` prints the publish commands and runs none): stop, report who must publish |
 | `no-install-file`, `install-file-invalid`, `no-template`, `template-not-an-id`, `asset-missing`, `install-file-sha-mismatch` | The registry's `scripts/tracy-setting.mjs` command, which reads `wordpress` from a `/wp7` tag; `--template` is the product slug (`ja-diner`), as the published file holds it. Upload the printed `gh release upload` line |
-| `no-contract`, `sibling-no-contract`, `contract-lower` | Capture with the registry's `batch-contracts.mjs capture --platform wordpress` (it runs `capture-contract.mjs`); a new contract version: stop W1 |
-| `pin-behind-contract` | Pin the newer version: stop W3 |
+| `no-contract`, `sibling-no-contract`, `contract-lower` | Capture with the registry's `batch-contracts.mjs capture --platform wordpress` (it runs `capture-contract.mjs`); a new contract version: procedure W1 |
+| `pin-behind-contract` | Pin the newer version: procedure W3 |
 | `coverage-not-measured`, `coverage-invalid`, `coverage-stale` | Measure (above) with `--write`; `content-coverage.json` is beside the contract and needs no plugin release |
-| `coverage-holes`, `coverage-live-holes` | Class `capture`: capture again with `capture-contract.mjs --all-text` (README, content coverage, WordPress), then W1. Class `template`: theme release, then W1. A hole that is truly not demo content: `accepted` with its reason in `content-coverage.json`. Class `unknown`: stop W5 |
+| `coverage-holes`, `coverage-live-holes` | Class `capture`: capture again with `capture-contract.mjs --all-text` (README, content coverage, WordPress), then procedure W1. Class `template`: theme release, then procedure W1. A hole that is truly not demo content: `accepted` with its reason in `content-coverage.json`. Class `unknown`: stop W5 |
 | `coverage-roles`, `coverage-live-roles` | Roles are placed by the capture (`capture-contract.mjs --previous-map <last map> --role-vocabulary 3`, rule tables `scripts/slot-roles/rule-tables.mjs wordpress`), the unplaced ones bound by the agent, then `scripts/slot-roles/check.mjs <contract folder>` exits 0. A content map change: W1 |
-| `coverage-fit`, `coverage-live-fit` | Measure with `--fit` (WordPress slots found by block `metadata.name`), which writes Slot fit into `content-map.json`: W1 |
-| `coverage-labels`, `coverage-live-labels`, `coverage-judge`, `coverage-judge-warn` | As the registry says (capture rules or content map, `record-judge.mjs`); a content map change: W1 |
+| `coverage-fit`, `coverage-live-fit` | Measure with `--fit` (WordPress slots found by block `metadata.name`), which writes Slot fit into `content-map.json`: procedure W1 |
+| `coverage-labels`, `coverage-live-labels`, `coverage-judge`, `coverage-judge-warn` | As the registry says (capture rules or content map, `record-judge.mjs`); a content map change: procedure W1 |
 | `kit-missing`, `kit-invalid`, `kit-stale`, `kit-map-mismatch`, `kit-front-page-group`, `kit-navigation-missing`, `kit-brand-colour-from-link` | Kit rebuild. Navigation groups come from the `wp_navigation` posts; the accent from the theme.json palette |
-| `kit-gaps` | A gap in the theme: theme release (then W1). A gap right by design: `gap-accepts.json` with its reason, one entry per gap id |
-| `kit-incomplete` | Missing pictures: kit rebuild. `missingLooks`: `quickstart-contract` `references/image-looks.md`. Self-checks above 0 (`reason` names them): a failure the theme keeps on purpose goes to `reach-accepts.json` with its reason (quickstart tools README, *Make a kit for a new template* step 4); a missing slot (`slotCoverage`, `linksWithoutLabel`) is a capture fix, then W1 |
+| `kit-gaps` | A gap in the theme: theme release (then procedure W1). A gap right by design: `gap-accepts.json` with its reason, one entry per gap id |
+| `kit-incomplete` | Missing pictures: kit rebuild. `missingLooks`: `quickstart-contract` `references/image-looks.md`. Self-checks above 0 (`reason` names them): a failure the theme keeps on purpose goes to `reach-accepts.json` with its reason (quickstart tools README, *Make a kit for a new template* step 4); a missing slot (`slotCoverage`, `linksWithoutLabel`) is a capture fix, then procedure W1 |
 | `kit-logo-unsettable`, `kit-brand-unreadable` | A logo spot no WordPress write path reaches (`apps/tracy-web/src/lib/template-kit/logo-write-path.js` reads the write step's own rule): fix the tool, test first, never the kit by hand; then kit rebuild |
 | `kit-zip-missing` | `cli.mjs pack --out <kit dir>`, then attach `template-kit-<theme>-<version>.zip` to the release tag `quickstart/<slug>/wp7` in `JoomlArt-Products/joomlart-products` with `gh release upload`; no other asset is touched |
 | `kit-setting-slot-missing` | The registry's `setting-slots` command, with `--db mysql://...` of the demo |
@@ -68,9 +90,9 @@ Words used below:
 | `kit-tool-outdated` | The registry's `samples` command on a copy of the committed kit; commit it back |
 | `content-map-missing-lists` | Stop W2 |
 | `demo-measure-missing`, `demo-measure-invalid`, `demo-measure-stale`, `demo-measure-incomplete` | `apps/tracy-web/scripts/demo-measures.mjs --contract <contract folder> --base <demo address>`: the pages come from the content map (parents from `inventory.json`), the version from `manifest.json`; commit `demo-measures.json` |
-| `demo-main-heading`, `demo-empty-block`, `demo-overflow`, `demo-orphan-row`, `demo-blank-footer-column` | A layout fault of the untouched demo: theme release, or the demo content of the next cut (`tracy-wordpress-quickstart/content-edits/`), then W1 |
+| `demo-main-heading`, `demo-empty-block`, `demo-overflow`, `demo-orphan-row`, `demo-blank-footer-column` | A layout fault of the untouched demo: theme release, or the demo content of the next cut (`tracy-wordpress-quickstart/content-edits/`), then procedure W1 |
 | `customize-not-checked`, `customize-error`, `customize-unchecked`, `customize-live-unchecked` | The registry's `template-customization-question-readiness.mjs` command with the `/wp7` tag |
-| `customize-must-fix`, `customize-live-failing`, `customize-worth-fixing` | Each failing rule: in the theme (theme release) or the contract (W1). A rule that reads the pinned plugin (STAB-1, on the `cowork-pin` piece): claude-cowork release, stop W1 |
+| `customize-must-fix`, `customize-live-failing`, `customize-worth-fixing` | Each failing rule: in the theme (theme release) or the contract (procedure W1). A rule that reads the pinned plugin (STAB-1, on the `cowork-pin` piece): claude-cowork release, procedure W1 |
 | `ds-not-checked`, `ds-error`, `ds-not-at-probe`, `ds-not-measured` | The registry's `template-design-system-readiness.mjs` command; `tdsr` section 3 (`scripts/pass-wordpress.mjs` for WordPress) |
 | `ds-must-fix`, `ds-live-failing`, `ds-worth-fixing` | `tdsr` sections 2 and 4: the theme in `packages/cms/tracy-wordpress-theme`, a theme release; read-only design data: stop W5 |
 | `demo-baseline-missing`, `demo-baseline-invalid`, `demo-baseline-stale` | The registry's two commands: `site-check-baseline.mjs --base <demo address> --version <contract id> --pages-file <json of the kit's pages[].path>` (WordPress pages are asked as they are, no `/index.php`), then `cli.mjs baseline --from ... --contract <contract folder>`; commit `demo-baseline.json`. Measured last in a round that cuts a version |
