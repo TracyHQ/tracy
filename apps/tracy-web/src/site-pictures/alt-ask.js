@@ -3,7 +3,7 @@
 // the alt slot beside the picture. The alt then comes from the picture placed, not from the wish the writer wrote from
 // before any picture was chosen (steps 6 and 8 run in parallel). Pure code.
 import { galleryAltSlot } from '../lib/gallery-alt-slot.js'
-import { ALT_MAX } from '../site-writer/copy-check/rules-bans.js'
+import { ALT_MAX } from '../lib/site-copy/slot-shape.js'
 
 export { ALT_MAX }
 
