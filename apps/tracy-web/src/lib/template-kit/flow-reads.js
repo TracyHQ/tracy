@@ -59,7 +59,8 @@ const arr = (x) => (Array.isArray(x) ? x : [])
 const some = (ids) => `${ids.slice(0, SHOWN).join(', ')}${ids.length > SHOWN ? ', ...' : ''}`
 
 /**
- * @typedef {{ slotKeys: Set<string>, menuBlocks: string[] }} KitMap what the flow reads of the content map beside a kit
+ * @typedef {{ slotKeys: Set<string>, menuBlocks: string[], siteLogoBlock?: boolean }} KitMap what the flow reads of the content
+ * map beside a kit; `siteLogoBlock` (WordPress only): whether the theme's header prints a Site Logo block
  */
 
 /** @type {Map<string, { stamp: string, value: KitMap | null }>} */
@@ -99,7 +100,7 @@ export function kitMapOfRelease(release, contracts) {
     return null
   }
   const seen = memo.get(file)
-  if (seen && seen.stamp === stamp) return seen.value
+  if (seen && seen.stamp === stamp) return withSiteLogo(seen.value, dir)
   let value = null
   try {
     value = kitMapOf(JSON.parse(readFileSync(file, 'utf8')))
@@ -107,7 +108,50 @@ export function kitMapOfRelease(release, contracts) {
     value = null
   }
   memo.set(file, { stamp, value })
+  return withSiteLogo(value, dir)
+}
+
+/** @type {Map<string, { stamp: string, value: boolean }>} */
+const siteLogoMemo = new Map()
+
+/**
+ * Whether a WordPress theme's header template part prints a Site Logo block, read from the raw markup captured beside
+ * the contract (`navigation-source.json`). Undefined when the contract holds none (Joomla, or an unreadable capture).
+ * @param {string} dir
+ * @returns {boolean | undefined}
+ */
+export function headerSiteLogoBlockOf(dir) {
+  const file = path.join(dir, 'navigation-source.json')
+  let stamp
+  try {
+    const stat = statSync(file)
+    stamp = `${stat.mtimeMs}:${stat.size}`
+  } catch {
+    return undefined
+  }
+  const seen = siteLogoMemo.get(file)
+  if (seen && seen.stamp === stamp) return seen.value
+  let value
+  try {
+    const doc = JSON.parse(readFileSync(file, 'utf8'))
+    const parts = [...arr(doc?.templateParts), ...arr(doc?.themeParts)]
+    value = parts.some(
+      (p) =>
+        (p?.area === 'header' || p?.slug === 'header') &&
+        typeof p?.content === 'string' &&
+        /<!-- wp:site-logo(?:\s|\/|-->)/.test(p.content)
+    )
+  } catch {
+    value = undefined
+  }
+  siteLogoMemo.set(file, { stamp, value })
   return value
+}
+
+function withSiteLogo(map, dir) {
+  if (!map) return map
+  const siteLogoBlock = headerSiteLogoBlockOf(dir)
+  return siteLogoBlock === undefined ? map : { ...map, siteLogoBlock }
 }
 
 /** Every copy slot id of the kit's blocks, lists and rows; an icon is written through its field, not its own key. */
@@ -131,7 +175,7 @@ function kitSlotIds(doc) {
 
 function logoGap(site, map) {
   // The write step's own decision, so a spot passes here only when the write step can write it.
-  const world = map ? { frameKnown: (key) => map.slotKeys.has(key) } : {}
+  const world = map ? { frameKnown: (key) => map.slotKeys.has(key), siteLogoBlock: map.siteLogoBlock } : {}
   const writes = (s) => logoWritePath(s, world).via !== 'none'
   const spots = arr(site.logoSpots).filter((s) => arr(s?.shownIn).length > 0 && !writes(s))
   if (spots.length === 0) return null
@@ -273,7 +317,7 @@ export function flowGapsOf(doc, { map = null, release = null, baseline = undefin
     frontPageGap(doc)
   ]
   const logo = gaps[0]
-  const brand = brandKitProblem(doc)
+  const brand = brandKitProblem(doc, { siteLogoBlock: map?.siteLogoBlock })
   // The brand step names a spot without a frame too: said once, by the logo gap.
   if (brand && !(logo && /logo spots/.test(brand))) gaps.push({ code: 'kit-brand-unreadable', reason: brand })
   if (release && !release.local && Array.isArray(release.assets)) {

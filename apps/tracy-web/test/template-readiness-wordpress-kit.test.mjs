@@ -87,3 +87,37 @@ test('JA Diner WP7: the kit reads each page as its sections, and its accent as t
   const step = stepOf(readinessVerdict(release, world), 'template-kit')
   assert.ok(!(step.params.flowGaps ?? []).some((g) => g.code === 'kit-brand-colour-from-link'))
 })
+
+const flowCodes = (verdict) => (stepOf(verdict, 'template-kit').params.flowGaps ?? []).map((g) => g.code)
+
+test('JA Diner WP7: the header logo is a Site Logo block set through the site_logo option, so no brand gap', () => {
+  const { release, world } = dinerWp7()
+  const codes = flowCodes(readinessVerdict(release, world))
+  assert.ok(!codes.includes('kit-brand-unreadable'), codes.join(', '))
+  assert.ok(!codes.includes('kit-logo-unsettable'), codes.join(', '))
+})
+
+test('a copy whose header logo is not a Site Logo block still raises kit-brand-unreadable', () => {
+  const { release, world, done } = dinerWp7({
+    edit: ({ readJson, writeJson }) => {
+      const nav = readJson('navigation-source.json')
+      for (const part of nav.templateParts)
+        part.content = part.content.replaceAll(/<!-- wp:site-logo[^>]*\/-->/g, '<!-- wp:image /-->')
+      writeJson('navigation-source.json', nav)
+    }
+  })
+  try {
+    assert.ok(flowCodes(readinessVerdict(release, world)).includes('kit-brand-unreadable'))
+  } finally {
+    done()
+  }
+})
+
+test('a copy without the captured theme markup keeps the Joomla judgement: kit-brand-unreadable', () => {
+  const { release, world, done } = dinerWp7({ edit: ({ remove }) => remove('navigation-source.json') })
+  try {
+    assert.ok(flowCodes(readinessVerdict(release, world)).includes('kit-brand-unreadable'))
+  } finally {
+    done()
+  }
+})
