@@ -22,17 +22,19 @@ export const dinerContentMap = () => openContentMap(DINER_REF, { index: dinerInd
 
 const KEPT = ['page-home', 'page-about-us', 'page-contact-us']
 
-/** The first page-body block of a page that has a text slot, and that slot. */
+/** The first body block (page-body or section, else hero) of a page that has a text slot, and that slot. */
 function firstTextOf(kitDoc, pageId) {
   const page = kitDoc.pages.find((p) => p.id === pageId)
   const ids = page.blocks['1440'] ?? Object.values(page.blocks)[0]
-  for (const id of ids) {
-    const block = kitDoc.blocks.find((b) => b.id === id)
-    if (!block || block.role !== 'page-body') continue
-    const slot = (block.slots ?? []).find((s) => s.type === 'text' && s.maxCharacters >= 20)
-    if (slot) return { block: block.id, slot }
+  for (const roles of [['page-body', 'section'], ['hero']]) {
+    for (const id of ids) {
+      const block = kitDoc.blocks.find((b) => b.id === id)
+      if (!block || !roles.includes(block.role)) continue
+      const slot = (block.slots ?? []).find((s) => s.type === 'text' && s.maxCharacters >= 20)
+      if (slot) return { block: block.id, slot }
+    }
   }
-  throw new Error(`${pageId} has no page-body block with a text slot`)
+  throw new Error(`${pageId} has no body or hero block with a text slot`)
 }
 
 export function brief() {
