@@ -144,3 +144,63 @@ export function recordLabelJudge({ request, verdicts }) {
   })
   return { problems: [], block }
 }
+
+/** The shortest reason that can overrule a recorded verdict; shorter is a placeholder, not a decision. */
+const REASON_MIN = 12
+const OVERRULE_FIELDS = new Set(['key', 'why'])
+
+/**
+ * Overrule recorded verdicts that the audit keeps as its cache and `recordLabelJudge` cannot reach (they were not asked
+ * in the request it is given). Each overrule names a recorded "wrong" verdict and a reason of at least 12 characters;
+ * the verdict becomes "right" with the old suggestion and the reason kept in `overruled`, and the counts are rebuilt.
+ * The slot hash is kept, so the cache still holds it until the slot content changes.
+ * @param {{ block: any, overrules: any }} input `block` = the `labelJudge` block of a coverage file, `overrules` = [{ key, why }]
+ * @returns {{ problems: string[], block: any }} `block` null when there is any problem
+ */
+export function overruleLabelJudge({ block, overrules }) {
+  if (!isObject(block) || !Array.isArray(block.slots))
+    return { problems: ['the coverage file has no labelJudge block to overrule'], block: null }
+  if (!Array.isArray(overrules) || overrules.length === 0)
+    return { problems: ['"overrules" must be a non-empty list of {"key", "why"}'], block: null }
+  const problems = []
+  const byKey = new Map(block.slots.map((v) => [v.key, v]))
+  const named = new Set()
+  for (const [i, o] of overrules.entries()) {
+    if (!isObject(o)) {
+      problems.push(`overrules[${i}] must be an object`)
+      continue
+    }
+    for (const k of extra(o, OVERRULE_FIELDS)) problems.push(`overrules[${i}]: unknown field "${k}"`)
+    const held = byKey.get(o.key)
+    if (!held) problems.push(`${JSON.stringify(o.key)} has no recorded verdict`)
+    else if (held.verdict !== 'wrong') problems.push(`${o.key}: the recorded verdict is not "wrong"`)
+    if (named.has(o.key)) problems.push(`${o.key}: overruled more than once`)
+    named.add(o.key)
+    if (typeof o.why !== 'string' || o.why.trim().length < REASON_MIN)
+      problems.push(`${o.key}: "why" must give a reason of at least ${REASON_MIN} characters`)
+  }
+  if (problems.length > 0) return { problems, block: null }
+  const why = new Map(overrules.map((o) => [o.key, cut(o.why.trim(), 200)]))
+  const verdicts = block.slots.map((v) =>
+    why.has(v.key)
+      ? {
+          key: v.key,
+          hash: v.hash,
+          verdict: 'right',
+          overruled: { role: v.role ?? null, suggested: v.suggested ?? null, why: why.get(v.key) }
+        }
+      : v
+  )
+  return {
+    problems: [],
+    block: blockOf({
+      roleVocabularyVersion: block.roleVocabularyVersion,
+      applies: block.applies,
+      total: block.counts?.slots ?? 0,
+      located: block.counts?.located ?? verdicts.length,
+      verdicts,
+      reason: block.reason,
+      judgedBy: block.judgedBy
+    })
+  }
+}

@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url'
 import { judgeLabelJudge } from '../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
 import { buildCoverageFile } from '../content-coverage/lib/coverage-file.mjs'
 import { prepareLabelJudge, slotHash } from '../content-coverage/lib/label-judge.mjs'
-import { recordLabelJudge } from '../content-coverage/lib/label-judge-record.mjs'
+import { overruleLabelJudge, recordLabelJudge } from '../content-coverage/lib/label-judge-record.mjs'
 
 const V3 = 'place-content-roles/3'
 const text = (key, sample, role, extra = {}) => ({
@@ -354,4 +354,31 @@ test('the record-judge command writes labelJudge into the coverage file, and lea
     [after.labelJudge.state, after.labelJudge.judgedBy, after.labelJudge.counts.wrongGroup],
     ['judged', 'agent', 2]
   )
+})
+
+test('a cached wrong verdict is overruled with a recorded reason, and the overrule survives the next audit', async () => {
+  const { request } = await prepare()
+  const first = recordLabelJudge({ request, verdicts: answersFor(request) }).block
+  assert.equal(first.counts.wrongGroup, 2)
+
+  const refused = (overrules) => overruleLabelJudge({ block: first, overrules })
+  assert.match(refused([{ key: 'module-12.phone', why: 'too short' }]).problems[0], /at least 12/)
+  assert.match(refused([{ key: 'module-13.title', why: 'a long enough reason' }]).problems[0], /not "wrong"/)
+  assert.match(refused([{ key: 'nope.key', why: 'a long enough reason' }]).problems[0], /no recorded verdict/)
+  assert.equal(refused([{ key: 'module-12.phone', why: 'too short' }]).block, null)
+
+  const { problems, block } = overruleLabelJudge({
+    block: first,
+    overrules: [{ key: 'module-12.phone', why: 'the phone is demo copy kept on purpose' }]
+  })
+  assert.deepEqual(problems, [])
+  const phone = entry(block, 'module-12.phone')
+  assert.deepEqual([phone.verdict, phone.hash], ['right', entry(first, 'module-12.phone').hash])
+  assert.equal(phone.overruled.suggested, 'contact.phone')
+  assert.equal(phone.overruled.why, 'the phone is demo copy kept on purpose')
+  assert.deepEqual([block.counts.wrongGroup, block.counts.mismatch, block.counts.right], [1, 1, 3])
+
+  const again = await prepare({ previous: { labelJudge: block } })
+  assert.equal(again.request, null)
+  assert.equal(entry(again.block, 'module-12.phone').verdict, 'right')
 })
