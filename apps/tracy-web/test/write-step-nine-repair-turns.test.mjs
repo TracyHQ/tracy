@@ -37,15 +37,19 @@ test('an item carries the content.locate answer for its element and the served b
   assert.match(agent.sent.prompts[0].text, /module/)
 })
 
-test('with content.locate unavailable the item keeps the fault levels and says so', async () => {
+test('with content.locate unavailable the item keeps the fault levels (slot and record) and says so', async () => {
   const agent = fakeAgent({ locate: () => ({ status: 'unavailable', code: 'CONTENT_ADAPTER_UNSUPPORTED' }) })
   await stepNine({ checks: [checkOf([DEMO]), checkOf([])], agent })
   const [item] = itemsOf(agent)
   assert.equal(item.locateFrom, 'fault')
   assert.match(item.locateProblem, /unavailable/)
+  assert.equal(item.locate.status, 'unchecked', 'nothing was looked up')
   assert.deepEqual(
-    item.locate.levels.map((l) => l.id),
-    ['block-2.1']
+    item.locate.levels.map((l) => [l.kind, l.label]),
+    [
+      ['field', 'block-2.1'],
+      ['record', 'module 2']
+    ]
   )
 })
 

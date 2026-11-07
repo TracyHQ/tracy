@@ -5,7 +5,7 @@
 // names at two widths, is sent once. Faults are grouped by page, in the order their page was first named. Pure.
 import { pagePath } from '../../lib/hidden-page-links.js'
 import { notDemoReason } from './repair-brief-values.js'
-import { kindOfFailure, notSentOf } from './repair-kinds.js'
+import { finderKindOf, kindOfFailure, notSentOf } from './repair-kinds.js'
 
 /** The page as a kept page names it (`/index.php/about` and `/about/` are `/about`), or null. */
 export const pageOf = (page) => (typeof page === 'string' && page ? pagePath(page) : null)
@@ -45,7 +45,7 @@ const fromFinder = (f) => ({
   page: pageOf(f.page),
   slot: f.slot ?? null,
   block: f.block ?? null,
-  kind: f.kind,
+  kind: finderKindOf(f),
   width: f.viewport === 'phone' ? 390 : 1440,
   measured: null,
   seen: f.seen ?? null
