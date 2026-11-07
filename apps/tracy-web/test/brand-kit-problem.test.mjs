@@ -24,10 +24,25 @@ test('an empty site part is a problem', () => {
   assert.match(kitProblem(noNames), /nameSlots/)
   const unwritable = copy()
   unwritable.site.logoSpots[0].frameId = null
+  unwritable.site.logoSpots[0].setting = 'logoimage'
   assert.match(
     kitProblem(unwritable),
     new RegExp(`no frame to write them: ${unwritable.site.logoSpots[0].id}`)
   )
+})
+
+test('a T4 logo spot the site profile writes needs no frame', () => {
+  // A demo that leaves site_logo empty has no siteSetting slot in its content map, yet the write step writes the key
+  // through the site profile (logoWritePath via profile), so the brand step can read the kit.
+  const kit = copy()
+  for (const s of kit.site.logoSpots) if (String(s.setting ?? '').startsWith('site_logo')) s.frameId = null
+  assert.equal(kitProblem(kit), null)
+  const offcanvas = copy()
+  offcanvas.site.logoSpots[0] = { ...offcanvas.site.logoSpots[0], frameId: null, where: 'offcanvas' }
+  assert.equal(kitProblem(offcanvas), null)
+  // A kit that keeps no T4 site profile (a WordPress copy without a Site Logo block) still needs the frame.
+  kit.site.favicon.mechanism = { setting: 'option site_icon', value: null, fallback: null }
+  assert.match(kitProblem(kit), /no frame to write them: logo-header-1/)
 })
 
 test('a logo spot the page never shows may have no frame', () => {
