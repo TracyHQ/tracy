@@ -13,8 +13,23 @@ import { brandHarnessFor } from './brand-harness.js'
 import { brandPrompt } from './brand-prompt.js'
 import { activeRun, BRAND_RUN_ACTIVE, createRun, readRun, requestCancel, UUID } from './brand-store.js'
 import { brandKitProblem } from './kit-grounds.js'
+import { headerSiteLogoBlockOf } from '../lib/template-kit/flow-reads.js'
+import { defaultContracts } from '../lib/contracts.js'
 
 export { brandKitProblem, briefOfRevision }
+
+/**
+ * Why an opened kit (`openKit`) cannot feed the brand step, or null: `brandKitProblem` with the evidence the Template kit
+ * gate reads too, whether the WordPress theme header prints a Site Logo block (beside the contract the kit belongs to).
+ * @param {{ ref: string, doc: any }} opened
+ * @param {{ index?: Map<string, any> }} [where]
+ */
+export function brandProblemOfOpenedKit(opened, { index = defaultContracts() } = {}) {
+  let dir = null
+  for (const contract of index.values()) if (contract.id === opened.ref) dir = contract.dir ?? null
+  const siteLogoBlock = dir ? headerSiteLogoBlockOf(dir) : undefined
+  return brandKitProblem(opened.doc, { siteLogoBlock })
+}
 
 const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })
 
@@ -54,7 +69,7 @@ export async function startBrandRun({
       `No readable kit "${kitRef}". Readable kits: ${kits.map((k) => k.ref).join(', ') || 'none'}.`
     )
   const opened = openKit(kitRef, index ? { index } : {})
-  const kitIssue = brandKitProblem(opened.doc)
+  const kitIssue = brandProblemOfOpenedKit(opened, index ? { index } : {})
   if (kitIssue)
     return refuse('BRAND_KIT_UNUSABLE', `The kit ${kitRef} cannot run the brand step: ${kitIssue}.`)
   if (agentModel && !String(agentModel.reason ?? '').trim())
