@@ -1,0 +1,2 @@
+{"id":"REG-PR-449-step-9b-site-agent-repair","verdict":"PASS","commit":"e266e41d917fa93797c3253dcaa47bfcc1b0736f","ran_at":"2026-11-07T09:07:16.123Z","evidence":"tests/regression/.runs/2026-11-07-e266e41d9/REG-PR-449-step-9b-site-agent-repair.log"}
+{"id":"REG-PR-449-site-tool-pick-icon","verdict":"PASS","commit":"e266e41d917fa93797c3253dcaa47bfcc1b0736f","ran_at":"2026-11-07T09:07:16.594Z","evidence":"tests/regression/.runs/2026-11-07-e266e41d9/REG-PR-449-site-tool-pick-icon.log"}
