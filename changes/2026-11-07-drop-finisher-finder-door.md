@@ -1,0 +1,3 @@
+- **Migration 205 drops the finisherFinder door left by migrations 203 and 204** — Database · #449 · `feat/wp-skill-writer-capture` · 2026-11-07
+  **Affects:** `llm_assignment`. Any `finisherFinder` assignment row is deleted, and the door check and the reasoning effort check no longer allow that door. Every other door and effort rule is as 203 and 204 set them.
+  **Why / Measured:** PR #449 removed the finder from `LLM_DOORS`, so `db.test.mjs` "llm_assignment_door_check allows exactly the doors in LLM_DOORS" failed on develop. New test "migration 205" mirrors the 097 one and runs in CI against Postgres.
