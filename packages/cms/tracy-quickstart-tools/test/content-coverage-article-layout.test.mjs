@@ -13,7 +13,8 @@ import { test } from 'node:test'
 import {
   articlesAskingLayout,
   layoutFindingsOf,
-  planLayoutCheck
+  planLayoutCheck,
+  rootClassesOf
 } from '../content-coverage/lib/article-layout.mjs'
 
 function templateFolder() {
@@ -161,4 +162,9 @@ test('an asked article the crawl never reached is reported as not checked, never
   } finally {
     rmSync(webroot, { recursive: true, force: true })
   }
+})
+
+test('a comment marker rebuilt by stripping a comment is stripped too', () => {
+  const root = rootClassesOf('<!<!-- x -->-- <p class="bad"> --><div class="item-page"></div>')
+  assert.deepEqual(root?.literal, ['item-page'])
 })

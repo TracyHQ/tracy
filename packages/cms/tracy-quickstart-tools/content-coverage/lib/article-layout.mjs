@@ -43,9 +43,20 @@ export function articlesAskingLayout(tables, prefix = '') {
  * @returns {{ literal: string[], fragments: string[] } | null}
  */
 export function rootClassesOf(php) {
-  const html = String(php)
-    .replace(/<\?(?:php|=)?[\s\S]*?(?:\?>|$)/g, '\u0000')
-    .replace(/<!--[\s\S]*?-->/g, '')
+  // Strip until stable: one pass can leave a new marker behind (`<!<!---->--`), so a single replace is not enough.
+  const stripped = (text, re, to) => {
+    let out = text
+    for (let prev = null; prev !== out; ) {
+      prev = out
+      out = out.replace(re, to)
+    }
+    return out
+  }
+  const html = stripped(
+    stripped(String(php), /<\?(?:php|=)?[\s\S]*?(?:\?>|$)/g, '\u0000'),
+    /<!--[\s\S]*?-->/g,
+    ''
+  )
   const tag = html.match(/<([a-z][a-z0-9-]*)\b([^>]*)>/i)
   if (!tag) return null
   const cls = tag[2].match(/\bclass\s*=\s*(["'])([\s\S]*?)\1/i)
