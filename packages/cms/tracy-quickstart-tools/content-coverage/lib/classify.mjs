@@ -10,6 +10,10 @@ import { searchSources } from './sources.mjs'
 import { normText, compact } from './normalize.mjs'
 import { videoId } from './match.mjs'
 
+const UPLOADS = 'wp-content/uploads/'
+/** A size WordPress generated from an upload (`cake-300x200.jpg`, `cake-scaled.jpg`): the upload, then the extension. */
+const WORDPRESS_SIZE = /^(.+?)-(?:\d+x\d+|scaled)(\.[a-z0-9]+)$/i
+
 const cut = (s) => String(s).slice(0, 200)
 const MONTHS =
   '(jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|june?|july?|aug(ust)?|sep(t(ember)?)?|oct(ober)?|nov(ember)?|dec(ember)?)'
@@ -170,6 +174,8 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       }
     }
     if (CATALOGUE_MEDIA.test(path)) return catalogue('VirtueMart product or shop media', [path])
+    const attachment = contract.platform === 'wordpress' ? wordpressAttachment(path) : null
+    if (attachment) return attachment
     if (/^(media\/(system|vendor|plg_|mod_|com_|templates\/site\/cassiopeia)|plugins\/)/.test(path))
       return { class: 'c', label: 'core / extension media', evidence: [path] }
     const raw = path.replace(/^https?:\/\//, '')
@@ -181,6 +187,24 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         evidence: [path]
       }
     )
+  }
+
+  /** A WordPress upload no slot names: the attachment, and the rows that print it by id (TracyHQ/tracy#459). */
+  function wordpressAttachment(path) {
+    const pictures = dbIndex?.pictures
+    if (!pictures?.files.size || !path.startsWith(UPLOADS)) return null
+    const rel = path.slice(UPLOADS.length).toLowerCase()
+    const size = WORDPRESS_SIZE.exec(rel)
+    const id = pictures.files.get(rel) ?? (size ? pictures.files.get(size[1] + size[2]) : undefined)
+    if (id === undefined) return null
+    const refs = pictures.refs.get(id) ?? []
+    return {
+      class: 'a',
+      label: refs.length
+        ? `WordPress attachment #${id}, printed from a row that points at it by id; no picture slot names it`
+        : `WordPress attachment #${id}: no row points at it by id (a theme default, or a block of a page outside the contract)`,
+      evidence: [path, ...refs]
+    }
   }
 
   function classifyLink(value) {
