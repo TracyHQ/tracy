@@ -14,7 +14,7 @@
  *   todo cowork-pin-doors-unread    { plugin, doors?, reason }: the plugin, or a door, was not read in its package;
  *   done cowork-pin-doors-ready     { plugin, doors }.
  * A release already shown on Design inspiration only warns (it is never taken off for it, as in Customize your site).
- * WordPress (no write step yet): todo write-doors-not-judged { platform }: not judged, and never a pass.
+ * WordPress (no write step yet): not-judged write-doors-not-judged { platform }: not judged, and never a pass.
  * Not judged (null): any other platform the write step does not write, or a release no plugin is chosen for.
  */
 import { readFileSync } from 'node:fs'
@@ -101,9 +101,9 @@ function judgeVersion(version, doors, manifest) {
 export function judgeWriteDoors(release, world) {
   const platform = release.setting?.platform ?? release.platform
   // WordPress has no write step yet, so no door list to hold a plugin to: say so, never leave a silence that reads as a
-  // pass. `todo` is a piece that is not done and is not a hold of any road step; the code words it as not judged.
+  // pass. `not-judged` is neither a pass nor a hold (`passed` in verdict.js): nothing to fix, never green.
   if (platform === 'wordpress')
-    return { state: 'todo', code: 'write-doors-not-judged', params: { platform: 'wordpress' } }
+    return { state: 'not-judged', code: 'write-doors-not-judged', params: { platform: 'wordpress' } }
   if (platform !== 'joomla') return null
   const { contract, selection } = pluginSelectionOf(release, {
     contracts: world.contracts,

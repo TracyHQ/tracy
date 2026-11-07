@@ -17,7 +17,7 @@
  * Publish and polish after them. So Road to live and the verdict can never disagree, and every code a piece carries
  * is a Road to live code, worded by the same guide.
  *
- * A piece is `{ piece, step, state, code, params, blockedBy? }`, its state one of Road to live's (`done`, `warn`,
+ * A piece is `{ piece, step, state, code, params, blockedBy? }`, its state one of Road to live's, or `not-judged` from a check (never a pass, never a hold) (`done`, `warn`,
  * `todo`, `blocked`, and `checking` while a stored check of the piece still runs): the first of its steps not passed decides it (a
  * `todo`, `blocked` or `checking` step), else its first `warn`, else its last step (`done`). `step` names the step
  * that decided it.
@@ -66,8 +66,11 @@ export const VERDICT_STEPS = Object.freeze([
   'design-system'
 ])
 
-/** A step or piece that holds nothing: done, or done with something worth fixing. */
-export const passed = (s) => s.state === 'done' || s.state === 'warn'
+/**
+ * A step or piece that holds nothing: done, done with something worth fixing, or `not-judged` (a check that cannot
+ * judge this platform yet, e.g. the WordPress write doors: no fix exists, so nothing is held and nothing is green).
+ */
+export const passed = (s) => s.state === 'done' || s.state === 'warn' || s.state === 'not-judged'
 
 /** An empty road, with the two helpers every step module is handed. */
 export function startRoad() {
@@ -128,7 +131,12 @@ export function verdictSteps(release, world, { put, waitingOn }) {
 
 /** The piece made of `entries` (road steps and checks, in order). */
 function pieceOf(piece, entries) {
-  const decider = entries.find((s) => !passed(s)) ?? entries.find((s) => s.state === 'warn') ?? entries.at(-1)
+  const decider =
+    entries.find((s) => !passed(s)) ??
+    entries.find((s) => s.state === 'warn') ??
+    // Never green: a piece with a check that was not judged says so, rather than the done entry beside it.
+    entries.find((s) => s.state === 'not-judged') ??
+    entries.at(-1)
   const out = /** @type {any} */ ({
     piece,
     step: decider.step,

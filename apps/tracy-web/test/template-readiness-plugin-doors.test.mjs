@@ -9,7 +9,7 @@ import { test } from 'node:test'
 import { defaultContracts } from '../src/lib/contracts.js'
 import { latestPin, readPins, releaseOfPin } from '../src/lib/template-readiness/pinned-release.js'
 import { evidenceOfPackage } from '../src/lib/template-readiness/plugin-doors-of-package.js'
-import { readinessVerdict } from '../src/lib/template-readiness/verdict.js'
+import { passed, readinessVerdict } from '../src/lib/template-readiness/verdict.js'
 import { WRITE_DOORS_CHECK } from '../src/lib/template-readiness/write-doors-check.js'
 import { opens, WRITE_STEP_DOORS } from '../src/write-step/plugin-doors.js'
 import { zipOf } from './template-customization-question-readiness-fixtures.mjs'
@@ -237,11 +237,13 @@ function wordpressRelease() {
 test('a WordPress release is not judged on the write doors yet: its own code, never a pass', () => {
   const judged = WRITE_DOORS_CHECK.judge(wordpressRelease(), { contracts: defaultContracts() })
   assert.deepEqual(judged, {
-    state: 'todo',
+    state: 'not-judged',
     code: 'write-doors-not-judged',
     params: { platform: 'wordpress' }
   })
-  assert.ok(judged.state !== 'done' && judged.state !== 'warn')
+  // Never a pass (not done, not warn) and never a hold: it asks nothing of anyone.
+  assert.ok(judged.state !== 'done' && judged.state !== 'warn' && judged.state !== 'todo')
+  assert.equal(passed(judged), true)
 })
 
 test('the verdict of a WordPress release never passes its cowork-pin piece, and the check is the one listed for it', () => {
@@ -258,4 +260,33 @@ test('a platform that is neither Joomla nor WordPress is still not judged by thi
   emdash.platform = 'emdash'
   emdash.setting.platform = 'emdash'
   assert.equal(WRITE_DOORS_CHECK.judge(emdash, { contracts: defaultContracts() }), null)
+})
+
+test('a piece whose only open entry is not judged stays not-judged, and holds nothing', () => {
+  const world = {
+    contracts: defaultContracts(),
+    server: false,
+    checks: [WRITE_DOORS_CHECK],
+    readiness: { version: '1.0.0', state: 'done', report: { results: [] } }
+  }
+  const verdict = readinessVerdict(wordpressRelease(), world)
+  const piece = verdict.pieces.find((p) => p.piece === 'cowork-pin')
+  // The plugin half is blocked for this invented release (no contract), so the piece is held by that, not by us.
+  assert.ok(piece.state !== 'not-judged')
+  // With the plugin half done, the not judged write doors are what the piece says.
+  const done = readinessVerdict(wordpressRelease(), {
+    ...world,
+    checks: [{ ...WRITE_DOORS_CHECK, piece: 'write-doors-only', judge: WRITE_DOORS_CHECK.judge }]
+  })
+  const only = done.pieces.find((p) => p.piece === 'write-doors-only')
+  assert.deepEqual([only.state, only.code], ['not-judged', 'write-doors-not-judged'])
+  assert.equal(passed(only), true)
+})
+
+test('the command line exits 0 when every piece is done or not judged, 1 when one holds', async () => {
+  const { exitCodeOf } = await import('../scripts/template-readiness.mjs')
+  const piece = (state) => ({ state })
+  assert.equal(exitCodeOf([piece('done'), piece('not-judged')]), 0)
+  assert.equal(exitCodeOf([piece('done'), piece('todo'), piece('not-judged')]), 1)
+  assert.equal(exitCodeOf([piece('done'), piece('warn')]), 1)
 })
