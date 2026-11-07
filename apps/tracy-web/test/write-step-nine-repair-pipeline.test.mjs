@@ -208,3 +208,21 @@ test('repair-pass.json holds a timeline of the step: the first check, the finder
   for (const s of saved.get('repair-pass.json').timeline)
     assert.ok(s.startMs >= 0 && s.endMs >= s.startMs, JSON.stringify(s))
 })
+
+test("a write to a record is placed on the pages whose faults name that record's slots, so its check stays scoped", async () => {
+  // No content.locate: the article the turn wrote is known only from the faults' slots (article-16.*).
+  const agent = fakeAgent({
+    behave: ({ page }) =>
+      page === '/services/fitness'
+        ? { changes: [{ action: 'content.update', target: { kind: 'article', id: '16' } }] }
+        : { changes: [] }
+  })
+  const first = checkOf([
+    failure('alt-matches-picture', '/', 'article-16.5', 'Demo coach'),
+    failure('alt-matches-picture', '/services/fitness', 'article-16.6', 'Demo coach')
+  ])
+  const { result, checkOptions } = await stepNine({ checks: [first, checkOf([])], agent })
+  const fitness = result.repair.turns.find((t) => t.page === '/services/fitness')
+  assert.deepEqual(fitness.changedPages.slice().sort(), ['/', '/services/fitness'])
+  assert.deepEqual(checkOptions.at(-1).pages?.slice().sort(), ['/', '/services/fitness'])
+})

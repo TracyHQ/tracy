@@ -1,7 +1,8 @@
 // How step 9b judges its turns (#448): which pages a turn changed, read from what it wrote, and which turns to undo after
 // a site check. A write names its record (`{ kind, id }`, the site write log's target) or, from a fake or a host that
 // says so, its page; a record is placed on a page by the content.locate answers of the pass's own comment items, which
-// name the records each page's elements print. A write the pass cannot place (no target, a record no item located) is
+// name the records each page's elements print, and by the slots of the pass's faults (`article-16.6` is printed by
+// article 16, `block-166.8` by module 166) on the page each fault names. A write the pass cannot place (no target, a record no item located) is
 // counted as changing every page (`*`), and so is a change of files (a turn's Git moments, such as a site-wide CSS look
 // change, which writes no record): a turn is never kept because its writes could not be read. Undo is of the whole
 // turn, newest first, and every undo that fails, is refused or finds no time left is kept with its reason.
@@ -14,17 +15,26 @@ const recordKey = (target) =>
     ? `${target.kind}:${target.id}`
     : null
 
-/** The pages each record is printed on, from the locate levels of the pass's comment items. */
+/** The record a slot belongs to (`article-16.6` is article 16, `block-166.8` module 166), or null. */
+const slotRecord = (slot) => {
+  const m = /^(article|block|module)-(\d+)\./.exec(String(slot ?? ''))
+  return m ? `${m[1] === 'article' ? 'article' : 'module'}:${m[2]}` : null
+}
+
+/** The pages each record is printed on, from the locate levels of the pass's comment items and its faults' slots. */
 export function recordPagesOf(ledger) {
   const out = new Map()
-  for (const record of new Set(ledger.records.values()))
+  const add = (key, page) => {
+    if (!key || !page) return
+    if (!out.has(key)) out.set(key, new Set())
+    out.get(key).add(page)
+  }
+  for (const record of new Set(ledger.records.values())) {
     for (const item of record.items ?? [])
-      for (const level of item.locate?.levels ?? []) {
-        const key = recordKey(level)
-        if (!key) continue
-        if (!out.has(key)) out.set(key, new Set())
-        out.get(key).add(item.page)
-      }
+      for (const level of item.locate?.levels ?? []) add(recordKey(level), item.page)
+    for (const fault of record.faults ?? []) add(slotRecord(fault.slot), pageOf(fault.page))
+  }
+  for (const fault of ledger.faults ?? []) add(slotRecord(fault.slot), pageOf(fault.page))
   return out
 }
 

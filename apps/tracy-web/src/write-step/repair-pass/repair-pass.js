@@ -12,6 +12,7 @@
 // on anything it cannot handle; the caller (write-step-nine.js) then takes back the turns in `ledger` and hands over the
 // site as written. Repairs are Tracy turns, so the customer sees and can undo each one in Site changes.
 import { checkWorker } from './repair-check.js'
+import { blockingFailures } from './repair-faults.js'
 import { itemsGate } from './repair-limits.js'
 import { repairPage } from './repair-page.js'
 import { schedulePages } from './repair-schedule.js'
@@ -57,6 +58,8 @@ export async function runRepairPass(pass, { firstCheck, found = [], feed = null,
   }
   pass.result = result
   pass.rate ??= itemsGate(pass.clock)
+  // Every slot the first check names places its record on a page (repair-judge.js `recordPagesOf`).
+  pass.ledger.faults = blockingFailures(firstCheck)
   const state = { first: firstCheck, check: firstCheck }
   const checks = checkWorker(pass, state, result)
   const { skipped, started } = await schedulePages(pass, {

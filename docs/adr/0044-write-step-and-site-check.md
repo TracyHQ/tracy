@@ -569,8 +569,8 @@ changes with Undo. So:
   or wrote a record no page places), joined to the site as it now is (`site-check/scoped-check.js`; checks run one at a
   time, and turns ending within a second share one). A turn is undone whole when that check shows a new blocking failure
   on a page it changed; its pages then hold their failures from before it and are read again before the hand-over. The
-  pages a turn changed are read from what it wrote: a write's record is placed on the pages whose items located it. A
-  turn is never judged while open. Faults still failing on a kept turn's page get one resend in the same session, judged
+  pages a turn changed are read from what it wrote: a write's record is placed on the pages whose items located it, and
+  on the pages whose first-check faults name its slots (`article-16.6` is article 16). A turn is never judged while open. Faults still failing on a kept turn's page get one resend in the same session, judged
   the same way: the check's, and the finder's still seen when the finder looks again at that page only. Every undo that
   fails is kept as `undo-failed` with its reason.
 - One clock runs from the end of the write: the first site check and the finder spend it too. No new turn after 10
