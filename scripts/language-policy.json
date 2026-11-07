@@ -15388,7 +15388,7 @@
     {
       "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
       "sha256": "2ce2df947274b7a158bbd2da19daf5b3b9726aa5e44a7bc138b19a18b7fb330e",
-      "count": 6,
+      "count": 10,
       "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
     },
     {
@@ -15406,7 +15406,7 @@
     {
       "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.1/template-kit.json",
       "sha256": "53265229f7429e07f6dc357a2a3ab38eab94249d14f8e9b5fe57a7775cb1027f",
-      "count": 6,
+      "count": 9,
       "reason": "Exact line of the approved JA Diner WP7 1.0.1 template kit: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The kit is sealed by its approval digest, so the file is not edited."
     },
     {
