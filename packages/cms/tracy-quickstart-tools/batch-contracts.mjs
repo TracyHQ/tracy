@@ -110,6 +110,8 @@ const COMMON = {
   report: { type: 'string' },
   design: { type: 'string' },
   'baseline-evidence': { type: 'boolean', default: false },
+  // WordPress: also capture every published post (capture-contract.mjs --posts); the Cowork plugin must read post fields.
+  posts: { type: 'boolean', default: false },
   'keep-scratch': { type: 'boolean', default: false }
 }
 const OPTIONS = {
@@ -1958,7 +1960,8 @@ async function wordpressTarget(card, ctx, log, t) {
       release,
       card: card2,
       coworkVersion: ctx.coworkVersions.wordpress,
-      themeRoots: roots
+      themeRoots: roots,
+      posts: ctx.posts === true
     })
   } catch (e) {
     throw blocked('derive', e.message)
@@ -2885,7 +2888,8 @@ async function runBatchIn(command, o, { mode, platforms, scratch, disc, order, p
     coworkVersions,
     projects,
     platforms,
-    baselineEvidence: o['baseline-evidence']
+    baselineEvidence: o['baseline-evidence'],
+    posts: o.posts === true
   }
   const started = Date.now()
   const pilotRows = []

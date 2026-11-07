@@ -11,6 +11,7 @@ import { test } from 'node:test'
 import { CONTENT_MAP_LISTS_CHECK } from '../src/lib/template-readiness/content-map-lists-check.js'
 import { HIDDEN_KIT_FIELDS_CHECK } from '../src/lib/template-readiness/hidden-kit-fields.js'
 import { readinessVerdict } from '../src/lib/template-readiness/verdict.js'
+import { postEntitiesOf } from '../../../packages/cms/tracy-wordpress-quickstart/scripts/capture-contract.mjs'
 import { dinerWp7 } from './ja-diner-wp7-fixture.mjs'
 
 const FIELDS = 'kit-hidden-fields'
@@ -210,4 +211,54 @@ test('lists: in the verdict the Diner map joins the contract piece through the s
   const { release, world } = dinerWp7()
   const verdict = readinessVerdict(release, { ...world, checks: [CONTENT_MAP_LISTS_CHECK] })
   assert.ok(verdict.pieces.some((p) => p.piece === 'contract'))
+})
+
+// ── what the WordPress capture makes (capture-contract.mjs --posts) is what this check accepts ──
+
+/** The Diner inventory's posts as rows of the dump's posts table: the capture reads titles, the inventory records them. */
+const dinerPostRows = (inv) =>
+  inv.posts.map((p) => ({
+    ID: String(p.id),
+    post_type: p.type,
+    post_status: p.status,
+    post_name: p.slug,
+    post_title: p.title,
+    post_excerpt: '',
+    post_content: ''
+  }))
+
+test('lists: the post entities the WordPress capture makes from the 22 Diner posts satisfy the check', () => {
+  let made = 0
+  const step = judged(CONTENT_MAP_LISTS_CHECK, LISTS, ({ readJson, writeJson }) => {
+    const got = postEntitiesOf(dinerPostRows(readJson('inventory.json')))
+    made = got.entities.length
+    const map = readJson('content-map.json')
+    map.entities.push(...got.entities)
+    map.slots.push(...got.slots)
+    writeJson('content-map.json', map)
+  })
+  assert.equal(made, 22)
+  assert.equal(step, undefined)
+})
+
+test('lists: a synced pattern or another structure of WordPress is not a post, so it carries no list', () => {
+  const step = judged(
+    CONTENT_MAP_LISTS_CHECK,
+    LISTS,
+    withMap((map) => {
+      for (const [i, postType] of ['wp_block', 'wp_template_part', 'wp_navigation'].entries()) {
+        map.entities.push({ key: `structure-${i}`, kind: 'post', identity: { postType, slug: `s-${i}` } })
+        map.slots.push({
+          key: `structure-${i}.x`,
+          entity: `structure-${i}`,
+          target: { block: 'x', attr: 'content' },
+          type: 'text',
+          sample: 'x',
+          maxCharacters: 80,
+          label: 'x'
+        })
+      }
+    })
+  )
+  assert.deepEqual(step.params.missing, ['itemLists', 'itemPages'])
 })

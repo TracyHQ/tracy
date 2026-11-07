@@ -264,7 +264,7 @@ export const FIXES = Object.freeze({
     skill: CONTRACT_SKILL('8')
   },
   'content-map-missing-lists': {
-    text: 'Capture the content map again with the current quickstart tools so it holds {missing}, then seal it in a new contract version.',
+    text: 'Capture the content map again with the current quickstart tools so it holds {missing}, then seal it in a new contract version. On WordPress add --posts, which makes every published post an entity of the map.',
     command: `node packages/cms/tracy-quickstart-tools/batch-contracts.mjs capture --only <slug> --platform <platform> --project-prefix qc-batch --cowork-source <claude-cowork checkout> --artifacts <empty folder outside the repo>`,
     skill: CONTRACT_SKILL('7')
   },
