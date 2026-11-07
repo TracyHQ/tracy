@@ -14,9 +14,10 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
-// The one WordPress page path rule, shared with the content coverage audit and the template kit. This module is read
-// by `scripts/demo-measures.mjs` in a checkout only, never by the server in the image (which carries no `packages/`).
-import { wordpressPagePath as pathUnderParents } from '../../../../../packages/cms/tracy-quickstart-tools/content-coverage/lib/wordpress-page-path.mjs'
+// The one WordPress page path rule, shared with the content coverage audit and the template kit. The image carries no
+// `packages/`, so the app reads its byte-identical mirror beside this file; `scripts/test/wordpress-page-path-sync.test.mjs`
+// fails when the two copies differ (edit the canonical file in `content-coverage/lib/`, then copy it here).
+import { wordpressPagePath as pathUnderParents } from './wordpress-page-path.mjs'
 
 const readJson = (file) => {
   try {
