@@ -132,6 +132,8 @@ copy file:
 - Every number, time, price, phone number, email address and web address you write appears in the value of a
   fact the slot cites. Alt text, titles and descriptions cite no fact: their details must appear in one of the
   facts you were given. Spelling a number as a word does not make it allowed: a count still needs a fact.
+- A count of the distinct items the slot's cited facts name is such a fact: four cited facts that each name one
+  service give "4". Count only distinct items the cited facts name; never estimate, round up or add "+".
 - No person, price, hour, count, award, result, guarantee or offer term that a cited fact does not state.
 - A `trade` line is written from common practice of the trade. It may name what every business of the trade
   does (a first consultation, a check-up), never its terms: no price, "free", discount, duration, count,
@@ -143,7 +145,9 @@ copy file:
 - Nothing from the brief's missing list or the plan's `forbidden` list appears, not even as a hint.
 
 When `says` asks for something the cited facts do not hold, or the slot's limit cannot hold it without
-cutting it into something untrue, return the slot. Never pad it, never guess.
+cutting it into something untrue, never pad it and never guess: first write a true text of another kind that fits
+the slot and its label. A number slot whose cited facts hold nothing to count takes a short true phrase without a
+number ("All levels", "Every player"). Return the slot only when no true text of any kind fits.
 
 ## Write in the business's voice
 
@@ -215,7 +219,10 @@ full text of earlier pages, and an interrupted run continues from it.
 - W03: Is every text within its limit and, when its demo is over 40 characters, between 80% and 100% of the demo
   length (`demoChars`), its lead and its points each near the same parts of the demo, with no more items than the
   kit shows? Is every `pages` title at most 60 characters and no paragraph empty?
-- W04: Does every number, time, price, phone, email and web address appear in a fact the slot cites?
+- W04: Does every number, time, price, phone, email and web address appear in a fact the slot cites, or is it a
+  count of the distinct items the cited facts name, never estimated, rounded up or with "+"?
+- Is every returned slot one where no true text of any kind fits, a number slot only after a true phrase without a
+  number was tried?
 - W05: Is every quote an exact passage of a review you were given?
 - W06: Does any sentence share five words in a row with another sentence on the site? Check the notebook.
 - W07: Is any demo sentence or demo name left?
