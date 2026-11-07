@@ -35,6 +35,7 @@
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { AgentError, runAgent } from './agent-over-door.js'
 import { playRound } from './bench-run-round.js'
+import { platformRefusal, withCmsLine } from './cms-line.js'
 import { readBalance, readsBalance } from './provider-balance.js'
 
 /** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
@@ -182,7 +183,7 @@ async function ask(
   try {
     const result = await runAgent({
       door: ready.door,
-      system: ready.prompt.text,
+      system: withCmsLine(ready.prompt.text, ready.kit?.platform),
       ...step.agentRequest({ row, ready, history }),
       ...(firstUser !== undefined ? { firstUser } : {}),
       history: history.slice(from).map((t) => shift(t, -from)),
@@ -226,7 +227,8 @@ async function prepare(step, deps, row) {
       reason: `the checker is ${step.checker.version}, the run was started on ${row.checker_version}`
     }
   const ready = await step.prepare(deps, row)
-  return ready.ok ? { ...ready, prompt } : ready
+  if (!ready.ok) return ready
+  return platformRefusal(ready.kit, step.codePrefix) ?? { ...ready, prompt }
 }
 
 const harnessOf = (harness) =>

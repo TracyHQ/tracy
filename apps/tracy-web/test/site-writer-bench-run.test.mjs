@@ -6,6 +6,8 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { after, before, beforeEach, test } from 'node:test'
+import { withCmsLine } from '../src/lib/cms-line.js'
+import { writerPrompt } from '../src/site-writer/writer-prompt.js'
 import { readRun } from '../src/site-writer/bench-store.js'
 import { CHECKER_VERSION } from '../src/site-writer/copy-check/check-copy.js'
 import { scriptedModel } from './_agent-over-door-fake.mjs'
@@ -43,6 +45,57 @@ after(db.close)
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const kits = kitIndex()
 after(kits.done)
+
+test('the writer prompt opens with the CMS line of the kit, WordPress or Joomla', opts, async () => {
+  const { pool } = db
+  for (const platform of ['wordpress', 'joomla']) {
+    await db.reset()
+    const own = kitIndex({ platform })
+    try {
+      await assignWriterDoor(pool)
+      const started = await startRun(pool, own.index)
+      const model = scriptedModel([reply(writerAnswer())])
+      await drain(pool, {
+        fetchImpl: model.fetchImpl,
+        index: own.index,
+        balanceFetch: balances(['1', '1']).fetchImpl
+      })
+      const run = await readRun(pool, started.id)
+      assert.equal(run.status, 'succeeded', run.error)
+      const system = model.requests[0].body.messages[0].content
+      assert.equal(system, withCmsLine(writerPrompt().text, platform))
+      assert.match(
+        system,
+        platform === 'wordpress'
+          ? /^This site runs on WordPress \(block editor\)\.\n\n/
+          : /^This site runs on Joomla\.\n\n/
+      )
+    } finally {
+      own.done()
+    }
+  }
+})
+
+test('a kit with no platform fails the writer run before any model call', opts, async () => {
+  const { pool } = db
+  const own = kitIndex({ platform: '' })
+  try {
+    await assignWriterDoor(pool)
+    const started = await startRun(pool, own.index)
+    const model = scriptedModel([reply(writerAnswer())])
+    await drain(pool, {
+      fetchImpl: model.fetchImpl,
+      index: own.index,
+      balanceFetch: balances(['1', '1']).fetchImpl
+    })
+    const run = await readRun(pool, started.id)
+    assert.equal(run.status, 'failed')
+    assert.match(run.error, /SITE_WRITER_KIT_PLATFORM/)
+    assert.equal(model.requests.length, 0)
+  } finally {
+    own.done()
+  }
+})
 
 test(
   'a run writes a valid site-copy/1 file, with the label slots filled by code from the plan',

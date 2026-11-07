@@ -61,6 +61,7 @@ import {
 } from './picker-picks.js'
 import { CHECKER_VERSION, checkPictures } from './picture-check/check-pictures.js'
 import { indexInputs } from './picture-check/inputs-index.js'
+import { platformRefusal, withCmsLine } from '../lib/cms-line.js'
 import { picturePrompts } from './picture-prompts.js'
 
 export { BENCH_QUEUE }
@@ -156,6 +157,8 @@ async function prepare(deps, row) {
   let kit = openKitWithMap(row.kit?.ref, deps.index ? { index: deps.index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_PICTURES_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
+  const unplatformed = platformRefusal(kit, 'SITE_PICTURES')
+  if (unplatformed) return unplatformed
   const door = await doorOf(deps, row)
   if (!door.ok) return door
   const lookerDoor = await runLookerDoor({ ...deps, picker: door.door ?? null }, row.door?.looker)
@@ -241,7 +244,10 @@ async function prepare(deps, row) {
   const looker = createLooker({
     door: lookerDoor.door,
     snapshot: lookerDoor.snapshot,
-    prompt: { text: picturePrompts().looker, sha256: picturePrompts().roles.looker },
+    prompt: {
+      text: withCmsLine(picturePrompts().looker, kit.platform),
+      sha256: picturePrompts().roles.looker
+    },
     storeDir: store.dir,
     runId: row.id,
     idx,

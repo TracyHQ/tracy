@@ -14,6 +14,7 @@ import { brandFileInAnswer, saveBrandFileTool } from './brand-save-tool.js'
 import { CostCapReached, createSpend } from './brand-spend.js'
 import { roundsOf, saveRound } from './brand-round-store.js'
 import { cancelAsked, setProgress } from './brand-store.js'
+import { withCmsLine } from '../lib/cms-line.js'
 import { checkBrandFile } from './save-brand-file.js'
 
 export const NO_FILE = {
@@ -125,7 +126,7 @@ async function ask(deps, { row, ready, round, history, followUp, leaseToken, mus
   try {
     return await runAgent({
       door: ready.agent.door,
-      system: ready.prompt.text,
+      system: withCmsLine(ready.prompt.text, ready.kit?.platform),
       firstUser: firstUserMessage({ kit: ready.kit, brief: row.brief }),
       tools,
       resolveImage,
