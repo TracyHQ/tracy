@@ -215,3 +215,31 @@ test('a rerun knows a stock screen the last run took off was dropped, and nothin
     /page-guides \(a page that was dropped\)/
   )
 })
+
+test('a link printed with a run of index.php segments before the path is a hidden page link too, and only the rule passes the guard', async () => {
+  const {
+    deadTargetsOf,
+    hiddenLinkBlockFor,
+    hiddenLinkSelectorsFor,
+    isDeadHref,
+    isHiddenLinkBlock,
+    pagePath
+  } = await import('../src/lib/hidden-page-links.js')
+  assert.equal(pagePath('/index.php/index.php/guides/author/ana'), '/guides/author/ana')
+  assert.equal(pagePath('index.php/index.php'), '/')
+  const targets = deadTargetsOf({ rows: ROWS, droppedPaths: ['/guides/author/ana'], keptPaths: ['/'] })
+  assert.equal(
+    isDeadHref('http://site.test/index.php/index.php/guides/author/ana', targets, 'http://site.test'),
+    true
+  )
+  const selectors = hiddenLinkSelectorsFor(targets, [CONTAINER])
+  assert.ok(selectors.includes(`${CONTAINER} a[href="/guides/author/ana"]`))
+  assert.ok(selectors.includes(`${CONTAINER} a[href$="/index.php/guides/author/ana"]`))
+  const block = hiddenLinkBlockFor(selectors)
+  assert.equal(isHiddenLinkBlock(block, [CONTAINER]), true)
+  assert.equal(isHiddenLinkBlock(block, ['.elsewhere']), false)
+  assert.equal(
+    isHiddenLinkBlock(block.replace('a[href$="/index.php/guides', 'a[href*="/index.php/guides'), [CONTAINER]),
+    false
+  )
+})
