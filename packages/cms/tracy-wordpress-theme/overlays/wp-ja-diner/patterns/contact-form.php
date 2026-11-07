@@ -19,8 +19,9 @@ $jm_notice = function_exists( 'wp_ja_diner_form_notice' ) ? wp_ja_diner_form_not
 		'error-send'   => __( 'The message could not be sent. Please try again later.', 'wp-ja-diner' ),
 	)
 ) : '';
+// The Contact picture: an attachment named banner-contact when the site has one, else the source's photograph bundled with the theme.
 $jd_pic = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'name' => 'banner-contact', 'posts_per_page' => 1, 'fields' => 'ids' ) );
-$jd_pic = $jd_pic ? (string) wp_get_attachment_url( (int) $jd_pic[0] ) : get_theme_file_uri( 'assets/img/placeholder.svg' );
+$jd_pic = $jd_pic ? (string) wp_get_attachment_url( (int) $jd_pic[0] ) : get_theme_file_uri( 'assets/img/banner-contact.jpg' );
 $jd_req = '<span class="star" aria-hidden="true">&nbsp;*</span>';
 ?>
 <!-- wp:html {"metadata":{"name":"contact.body"}} -->
