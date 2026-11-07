@@ -23,7 +23,10 @@ The registry's measure (`content-coverage/cli.mjs`, see the words of [`fix-map.m
 
 The Claude Cowork WordPress plugin addresses a block by its `metadata.name` only (`QuickstartContract::findBlock`),
 writes a slot as plain text (markup is escaped), reads a page's or post's `post_title` / `post_excerpt`, and reads one
-post meta, `_thumbnail_id`. Nothing else is a door. `capture-contract.mjs --all-text` makes slots addressed by
+post meta, `_thumbnail_id`. From 0.18.39 it also writes a text slot with `markup: "inline"` as inline markup (a fixed
+allowlist: `span[class]`, `strong`, `em`, `b`, `i`, `br`, `a[href|class|target|rel]`, `sup`, `sub`; classes held to the
+slot's demo; then `wp_kses`), and reads and writes the pictures the manifest declares in `themePictures` (options with
+the theme's own prefix, post meta keys not starting with `_`), each holding an attachment id. Nothing else is a door. `capture-contract.mjs --all-text` makes slots addressed by
 position (`blockType` + `occurrence`): the plugin cannot bind them, so never ship a profile with them.
 
 | What the evidence shows | Door | Fix |
@@ -32,8 +35,12 @@ position (`blockType` + `occurrence`): the plugin cannot bind them, so never shi
 | A post's title, excerpt, featured picture | post fields, `_thumbnail_id` | capture with `--posts` |
 | A plain-text block with no name, or the second block of a name, in a page, post or template part | `metadata.name` | name the block in the theme pattern (overlay `patterns/`) and in the demo content of the next cut, then capture again |
 | An image block with no name | `metadata.name` | as above; `capture-image-slots.mjs` makes the slot |
-| Text with inline markup in one block: a price `<span>`, a highlight `<span>`, a link inside a paragraph, `<br>` lines | none: a plain-text slot would drop the markup | stop W5: a plugin door for marked-up text, or a design change that splits the block |
-| A `core/html` block, a navigation label kept in a `wp_navigation` post, a category or tag name, a picture a theme option or a theme post meta points at | none | stop W5 |
+| Text with inline markup in one NAMED block: a price `<span>`, a highlight `<span>`, a link inside a paragraph, `<br>` lines | `markup: "inline"` (plugin 0.18.39) | capture with `--inline-markup`: the sample is the inner HTML in the notation (`((span class="price"))$56((/span))`), the limit counts the words |
+| The same in a block with no name (every one on JA Diner WP7 1.0.2: dish names with their price, `btn` links in paragraphs, footer contact lines) | `metadata.name` + `markup: "inline"` | name the block in the theme pattern and the demo content of the next cut, then capture with `--inline-markup` |
+| Inline markup the plugin does not write (`small`, `mark`, a `style` attribute, a bare `#` link) | none | accept when it is a style guide sample; otherwise a theme change to the allowed tags; the capture says which tag or attribute (`inline markup the plugin cannot write: …`) |
+| A picture a theme option or a theme post meta points at by attachment id (`<theme>_blog_banner_image`, a list thumbnail meta) | `manifest.themePictures` (plugin 0.18.39) | capture with `--theme-picture-options <options>` and `--theme-picture-meta <keys>` (each option becomes an entity), then `capture-image-slots.mjs` makes their image slots; on JA Diner WP7: `wp_ja_diner_blog_banner_image`, `wp_ja_diner_categories_banner_image`, `jd_intro_image` |
+| A navigation label kept in a `wp_navigation` post, a category or tag name | none yet | stop W5: plugin follow-up (navigation labels are attributes of self-closing `navigation-link` blocks with no name, in a row the showcase navigation map rewrites; terms need a new entity kind) |
+| A `core/html` block | none, on purpose: arbitrary HTML is never made writable | accept with the reason (what the block holds, why a customer does not need to change it), or a design change that rebuilds it from named blocks |
 | Business words hard-coded in a theme pattern (`class: template`: an address, a phone, a price) | the page content | theme release: the pattern prints them from named blocks of the page |
 | Interface words of the theme (`class: template`: pagination, read more, form labels, buttons, accessible names) | none needed | accept: interface string of the theme's text domain |
 | WordPress core words (paged document titles, submenu toggles, the default widgets) | none needed | accept with the core source |
