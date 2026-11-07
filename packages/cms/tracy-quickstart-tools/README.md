@@ -137,7 +137,9 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
 ```
 
 - **WordPress.** The same command audits a WordPress contract (`.../tracy-wordpress-quickstart/contracts/<slug>/wp7/<version>`).
-  A WordPress map declares no routes, so each page entity opens as `?pagename=<slug>` and the front page is crawled; the
+  A WordPress map declares no routes, so each page entity opens as `?pagename=<path>` and the front page is crawled; a
+  page under a parent opens by its whole parent path (`?pagename=j-pages/login`), the parents read from the
+  `inventory.json` beside the map (without one, the slug alone); the
   database dump is read by the `<prefix>posts` / `<prefix>options` tables (a hit on a page is matched to its contract
   entity by slug); `--webroot` reads only `wp-content/themes/<theme>`, never WordPress itself. Capture the contract with
   `capture-contract.mjs --all-text` (every visible text, not only named blocks; `--role-vocabulary 3` for version 3 roles)
