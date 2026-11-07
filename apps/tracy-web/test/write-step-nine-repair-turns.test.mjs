@@ -63,14 +63,14 @@ test('a comment page address is the page as the site serves it; an agent with no
 
 test('a prompt the queue runs after the resend gave up is judged and undone like the rest', async () => {
   const clock = fakeClock()
-  // The home page's first prompt runs only after both waits; its resend never runs.
+  // The home page's first prompt runs only after both waits; its resend never runs. The about turn is still at work.
   const agent = fakeAgent({
     clock,
     behave: ({ page, attempt }) =>
-      page === '/' ? (attempt === 1 ? { appearAfterMs: 150_000 } : { silent: true }) : { ms: 30_000 }
+      page === '/' ? (attempt === 1 ? { appearAfterMs: 150_000 } : { silent: true }) : { openForMs: 180_000 }
   })
   const later = checkOf([failure('text-overflow', '/', 'block-2.1', 'wider than 390 px')])
-  const { result } = await stepNine({ checks: [checkOf([DEMO, ALT]), later, checkOf([])], agent, clock })
+  const { result } = await stepNine({ checks: [checkOf([DEMO, ALT]), later], agent, clock })
   assert.equal(result.repair.dropped.length, 1)
   const late = result.repair.turns.find((t) => t.page === '/')
   assert.ok(late, 'the late turn is in the ledger')
@@ -86,7 +86,7 @@ test('a resend that yields two turns keeps both, and both are judged', async () 
     behave: ({ attempt }) => (attempt === 1 ? { appearAfterMs: 61_000 } : { ms: 5_000 })
   })
   const later = checkOf([failure('text-overflow', '/', 'block-2.1', 'wider than 390 px')])
-  const { result } = await stepNine({ checks: [checkOf([DEMO]), later, checkOf([])], agent, clock })
+  const { result } = await stepNine({ checks: [checkOf([DEMO]), later], agent, clock })
   const home = result.repair.turns.filter((t) => t.page === '/')
   assert.equal(home.length, 2, JSON.stringify(home.map((t) => t.turnId)))
   assert.deepEqual(home.map((t) => t.how).sort(), ['duplicate', 'sent'])
@@ -111,7 +111,7 @@ test('a turn still open at ten minutes is waited for, never judged while open, a
   assert.ok(clock.t - from <= REPAIR_LIMITS.returnByMs, `${(clock.t - from) / 1000} s`)
 })
 
-test('a turn still open at the return is cancelled through the session, logged and taken back', async () => {
+test('a turn still open at the return is cancelled through its session, logged, and kept when it made nothing worse', async () => {
   const clock = fakeClock()
   const agent = fakeAgent({ clock, canCancel: true, behave: () => ({ openForMs: 30 * 60_000 }) })
   const from = clock.t
@@ -123,7 +123,7 @@ test('a turn still open at the return is cancelled through the session, logged a
   )
   const [turn] = result.repair.turns
   assert.equal(turn.cancelled, true)
-  assert.deepEqual(agent.sent.undone, [turn.turnId], 'work cut short is not judged, it is taken back')
+  assert.deepEqual(agent.sent.undone, [], 'judged by the check after it, which shows nothing worse')
   assert.ok(clock.t - from <= REPAIR_LIMITS.returnByMs, `${(clock.t - from) / 1000} s`)
 })
 
@@ -205,7 +205,7 @@ test('a write the pass cannot place on a page counts as changing every page', as
 test('an undo the site refuses, or that throws, is kept in repair-pass.json as undo-failed with its reason', async () => {
   const agent = fakeAgent({
     undo: (turnId) => {
-      if (turnId.endsWith(':1')) return { ok: false, code: 'TURN_UNDO_CONFLICT' }
+      if (turnId.startsWith('sess-1:')) return { ok: false, code: 'TURN_UNDO_CONFLICT' }
       throw new Error('undo door answered 502')
     }
   })

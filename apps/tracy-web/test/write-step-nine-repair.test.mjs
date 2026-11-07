@@ -37,8 +37,8 @@ test('each visible fault is sent once, with its page, element and one sentence; 
   ]
   const { result } = await stepNine({ checks: [first, checkOf([])], agent, found })
   assert.equal(result.report.status, 'done')
-  assert.equal(agent.sent.opened, 1)
-  // Two pages, two turns, in one session.
+  // Two pages, two turns, each page in a session of its own.
+  assert.equal(agent.sent.opened, 2)
   assert.equal(agent.sent.prompts.length, 2)
   const pages = agent.sent.requests.map((r) => r.items.map((i) => i.page))
   assert.deepEqual(
@@ -64,13 +64,10 @@ test('each visible fault is sent once, with its page, element and one sentence; 
   assert.deepEqual(result.repair.undone, [])
 })
 
-test('excluded kinds are never sent: accent emphasis, glued words, emphasis codes, a missing h1, faults with no page, invisible faults', async () => {
+test('what is not sent: missing accent emphasis, faults with no page, faults no visitor sees', async () => {
   const agent = fakeAgent()
   const first = checkOf([
     failure('accent-emphasis', '/', 'module-2.1', 'Strong body'),
-    failure('glued-words', '/', 'module-2.2', 'THEPOOL'),
-    failure('emphasis-codes-left', '/', 'module-2.3', '((SPAN))'),
-    failure('main-heading', '/', null, 'no h1'),
     failure('demo-words', null, 'module-6.2', 'Demo Gym'),
     failure('read-back', '/', 'module-2.1', 'written value missing')
   ])
@@ -87,7 +84,7 @@ test('excluded kinds are never sent: accent emphasis, glued words, emphasis code
   assert.equal(agent.sent.opened, 0, 'no fault to send opens no session')
   assert.equal(agent.sent.prompts.length, 0)
   const reasons = result.repair.skipped.map((s) => s.reason)
-  assert.equal(result.repair.skipped.length, 7)
+  assert.equal(result.repair.skipped.length, 4)
   assert.ok(reasons.some((r) => /accent emphasis/.test(r)))
   assert.ok(reasons.some((r) => /no page/.test(r)))
   assert.equal(result.siteCheck, first, 'nothing changed, so the first check is handed over')
@@ -126,7 +123,7 @@ test('a turn that causes a new blocking failure on its page is undone, newest fi
     result.repair.undone.map((u) => u.turnId),
     agent.sent.undone
   )
-  assert.equal(result.siteCheck.groups.length, 0, 'the check after the undo is the one handed over')
+  assert.equal(result.siteCheck.counts.block, 0, 'the pages undone are read again before the hand-over')
 })
 
 test('a prompt that opens no turn is resent once after 60 seconds, then dropped and logged', async () => {
@@ -160,26 +157,27 @@ test('faults still there after the second check get one resend round, then the p
   assert.deepEqual(agent.sent.undone, [], 'a fault still there is no new failure')
 })
 
-test('past ten minutes no new work starts, and the step returns by twelve', async () => {
+test('past ten minutes no new turn starts, and the step returns by twelve', async () => {
   const clock = fakeClock()
-  // Each turn takes five and a half minutes: the third page would start past ten.
-  const agent = fakeAgent({ clock, behave: () => ({ ms: 5.5 * 60_000 }) })
+  // Three pages at a time, each turn five and a half minutes: the seventh page would start past ten.
+  const agent = fakeAgent({ clock, behave: () => ({ openForMs: 5.5 * 60_000 }) })
+  const pages = ['/', '/about', '/classes', '/contact', '/prices', '/team', '/faq']
   const from = clock.t
   const { result } = await stepNine({
     checks: [
-      checkOf([DEMO, ALT, failure('demo-words', '/contact', 'module-5.1', 'demo@example.test')]),
+      checkOf(pages.map((p, i) => failure('demo-words', p, `module-${i}.1`, `Demo Gym ${i}`))),
       checkOf([])
     ],
     agent,
     clock
   })
-  assert.equal(agent.sent.prompts.length, 2, 'the third page is not started')
+  assert.equal(agent.sent.prompts.length, 6, 'the seventh page is not started')
   assert.deepEqual(
-    result.repair.notSent.map((n) => n.page),
-    ['/about']
+    result.repair.notSent.map((n) => [n.page, n.reason]),
+    [['/faq', 'time-limit']]
   )
   assert.ok(clock.t - from <= REPAIR_LIMITS.returnByMs, `${(clock.t - from) / 1000} s`)
-  assert.equal(result.repair.resent.length, 0, 'no resend round past the limit')
+  assert.equal(result.repair.resent.length, 0, 'no resend past the limit')
 })
 
 test('any error in the repair pass hands over the written site with the first check, its turns undone, and logs why', async () => {
@@ -197,7 +195,11 @@ test('any error in the repair pass hands over the written site with the first ch
   assert.equal(result.siteCheck, first)
   assert.equal(result.report.siteCheck?.status ?? first.status, first.status)
   assert.match(result.repair.error, /requests door answered 500/)
-  assert.deepEqual(agent.sent.undone, [result.repair.turns[0].turnId], 'the turn already made is taken back')
+  assert.deepEqual(
+    agent.sent.undone,
+    result.repair.turns.map((t) => t.turnId).reverse(),
+    'every turn already made is taken back, newest first'
+  )
   assert.ok(logged.some((line) => /requests door answered 500/.test(line)))
   assert.match(saved.get('repair-pass.json').error, /500/)
 })

@@ -2359,11 +2359,12 @@ by the site's host at 1440 and 390 px, one call per page through the `finisherFi
 (`write-step/repair-pass/`): each page's customer-visible faults become one numbered comment turn, built by the preview
 popover's own builder (`lib/comment-turn.js`, `@tracy/dsh-chat-input` `buildCommentTurn`, copied into the image, whose
 build imports the copy), after each element is located through the Apply door (`content.locate`) and the comment requests
-are made through `POST /api/sites/:key/requests`. The turn is queued into a session 9b opens for the site
-as its owner (`lib/site-session-ahead.js`, the path demo QA uses), and completion is read from `site_turn`. After the site
-check runs again, a turn that made a page worse is undone whole through `POST /api/sites/:key/turns/undo`, newest first.
-Repairs are Tracy turns of that session, so Site changes shows each with Undo; a turn still open at the step's return is
-stopped with `session/cancel`. Any 9b error takes its turns back and hands over the written site. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
+are made through `POST /api/sites/:key/requests` (20 items a minute per site, kept by the pass). Each page's turn is queued
+into a session of its own that 9b opens for the site as its owner (`lib/site-session-ahead.js`, the path demo QA uses), as
+soon as the finder answered that page, at most three at once, and completion is read from `site_turn`. A site check of the
+pages the turn changed (`runSiteCheck` `pages`, joined by `site-check/scoped-check.js`) judges it, and a turn that made a
+page worse is undone whole through `POST /api/sites/:key/turns/undo`. Repairs are Tracy turns, so Site changes shows each
+with Undo; a turn still open at the step's return is stopped with `session/cancel` and judged by what it wrote. Any 9b error takes its turns back and hands over the written site. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
 `write-step-bench-repair-agent.js`); no customer flow calls it yet (#444).
 
 ## 9. Sign-in, seats, permissions

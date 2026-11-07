@@ -8,15 +8,15 @@
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "S1: Run the step 9 entry point tests with the site agent faked: node --test --test-concurrency=1 apps/tracy-web/test/write-step-nine-repair.test.mjs and its -faults and -turns siblings.",
+    "S1: Run the step 9 entry point tests with the site agent faked: node --test --test-concurrency=1 apps/tracy-web/test/write-step-nine-repair.test.mjs and its -faults, -turns and -pipeline siblings, and the scoped site check test.",
     "S2: Run the finder, finder door, bench command and image layout tests one file at a time: write-step-finder, door-ladder, write-step-bench-repair-cli, scripts/test/tracy-web-comment-turn-image."
   ],
   "expect": [
-    "S1: every test passes: each fault is sent once with page, element and sentence; one turn per page; excluded kinds are never sent; a turn causing a new blocking failure is undone newest first; a prompt with no turn is resent once then dropped; one resend round; no new work after 10 minutes and a return by 12; any error hands over the written site with the first check; no faults means no turn; a brief's own values are logged not-demo; items carry the content.locate answer and the served selector on the served page address; late and duplicate turns are judged and undone; every wait races one step clock; an open turn is waited for, then cancelled and taken back; capped, unknown and invisible faults are logged with a code; the finder looks again before the resend round; the pages a turn changed come from its writes; undo failures are kept; a finder stopped at its limit hands over what it found, its cost and the pages it missed; every check runs the page groups despite a red read-back; a turn that only changed files counts as changing every page and is undone when it breaks one.",
+    "S1: every test passes: each fault is sent once with page, element and sentence; one turn per page; only missing accent emphasis, invisible faults and faults with no page are not sent (glued words and the finder's other faults are); a turn causing a new blocking failure is undone newest first; a prompt with no turn is resent once then dropped; one resend round; no new work after 10 minutes and a return by 12; any error hands over the written site with the first check; no faults means no turn; a brief's own values are logged not-demo; items carry the content.locate answer and the served selector on the served page address; late and duplicate turns are judged and undone; every wait races one step clock; an open turn is waited for, then cancelled and judged by what it wrote; capped, unknown and invisible faults are logged with a code; the finder looks again before the resend round; the pages a turn changed come from its writes; undo failures are kept; a finder stopped at its limit hands over what it found, its cost and the pages it missed; every check runs the page groups despite a red read-back; a turn that only changed files counts as changing every page and is undone when it breaks one. A page goes as soon as the finder answered it; pages run side by side in sessions of their own, at most three turns at once, within 20 request items a minute; each turn is judged by a check of the pages it changed only; repair-pass.json has a timeline.",
     "S2: every test passes: the finder shoots pages four at once and asks about each as soon as it is shot, keeps what it found when stopped, and the bench agent reads a turn's committed files as a change; comment-turn.mjs loads from the image layout the Dockerfile copies."
   ],
   "selectors": {
-    "files": "apps/tracy-web/test/write-step-nine-repair.test.mjs, apps/tracy-web/test/write-step-nine-repair-faults.test.mjs, apps/tracy-web/test/write-step-nine-repair-turns.test.mjs, scripts/test/tracy-web-comment-turn-image.test.mjs, apps/tracy-web/test/write-step-finder.test.mjs, apps/tracy-web/test/door-ladder.test.mjs, apps/tracy-web/test/write-step-bench-repair-cli.test.mjs",
+    "files": "apps/tracy-web/test/write-step-nine-repair.test.mjs, apps/tracy-web/test/write-step-nine-repair-faults.test.mjs, apps/tracy-web/test/write-step-nine-repair-turns.test.mjs, scripts/test/tracy-web-comment-turn-image.test.mjs, apps/tracy-web/test/write-step-finder.test.mjs, apps/tracy-web/test/door-ladder.test.mjs, apps/tracy-web/test/write-step-bench-repair-cli.test.mjs, apps/tracy-web/test/write-step-nine-repair-pipeline.test.mjs, apps/tracy-web/test/site-check-scoped-pages.test.mjs",
     "door": "runStepNine (apps/tracy-web/src/write-step-nine.js)"
   },
   "fence": "The step 9 entry point's repair pass: what it sends to the site agent, what it undoes and what it hands over, checked with a fake site agent",
@@ -31,7 +31,9 @@
       "scripts/test/tracy-web-comment-turn-image.test.mjs",
       "apps/tracy-web/test/write-step-finder.test.mjs",
       "apps/tracy-web/test/door-ladder.test.mjs",
-      "apps/tracy-web/test/write-step-bench-repair-cli.test.mjs"
+      "apps/tracy-web/test/write-step-bench-repair-cli.test.mjs",
+      "apps/tracy-web/test/write-step-nine-repair-pipeline.test.mjs",
+      "apps/tracy-web/test/site-check-scoped-pages.test.mjs"
     ]
   }
 }

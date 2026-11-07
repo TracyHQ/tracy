@@ -83,7 +83,7 @@ export async function undoTurns(pass, turns, why) {
     }
     const answer = await pass.clock
       .bounded('the turn undo door', () =>
-        pass.agent.undo({ sessionId: pass.sessionId, turnId: turn.turnId })
+        pass.agent.undo({ sessionId: turn.sessionId, turnId: turn.turnId })
       )
       .catch((error) => ({ ok: false, code: null, reason: String(error?.message ?? error) }))
     const ok = answer?.ok === true

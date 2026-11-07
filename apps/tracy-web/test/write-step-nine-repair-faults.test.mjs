@@ -90,8 +90,7 @@ test('every fault not sent says why by code; an unknown group or kind is unknown
     failure('a-group-no-table-names', '/', 'block-2.3', 'something'),
     failure('demo-words', null, 'block-6.2', 'Demo Gym')
   ])
-  const found = [{ page: '/', viewport: 'desktop', tile: 0, kind: 'other', seen: 'Something odd' }]
-  const { result } = await stepNine({ checks: [first], agent, found })
+  const { result } = await stepNine({ checks: [first], agent })
   assert.equal(agent.sent.prompts.length, 0)
   const byGroup = Object.fromEntries(result.repair.skipped.map((s) => [s.group ?? s.kind, s.code]))
   assert.deepEqual(byGroup, {
@@ -99,8 +98,7 @@ test('every fault not sent says why by code; an unknown group or kind is unknown
     'read-back': 'not-visible',
     'kit-version': 'not-visible',
     'a-group-no-table-names': 'unknown-kind',
-    'demo-words': 'no-page',
-    other: 'never-sent'
+    'demo-words': 'no-page'
   })
   assert.ok(result.repair.skipped.every((s) => typeof s.reason === 'string' && s.reason))
 })
@@ -126,8 +124,9 @@ test('the resend round asks the finder again on the pages it had faults on and r
   // First look: both. Look again on their pages: the home page's layout is still broken, the alt was fixed.
   const found = (call) => (call === 1 ? [LOGO, ALT] : [LOGO])
   const { result, finds } = await stepNine({ checks: [checkOf([]), checkOf([]), checkOf([])], agent, found })
+  // Each page's second look is its own, on that page only.
   assert.deepEqual(
-    finds[1]?.slice().sort(),
+    finds.slice(1).flat().sort(),
     ['/', '/about'],
     'the finder looks again at the pages it had faults on'
   )

@@ -211,3 +211,25 @@ test('stopped at its time limit, the finder keeps every fault found so far and n
   assert.equal(looked.costUsd, 0.04)
   assert.match(looked.problem, /4 pages not looked at/)
 })
+
+test('each page is handed on as soon as it was looked at, with its faults, before the finder ends', async () => {
+  const { capture } = fakeCapture(['/about'])
+  const fault = { page: '/', viewport: 'phone', tile: 0, kind: 'broken-layout', seen: 'The menu runs off' }
+  const handed = []
+  let ended = false
+  const look = siteFinder({ door: door({ '/': { faults: [fault] } }), capture })
+    .find(REPORT, { onPage: (page, faults) => handed.push({ page, faults: faults.length, ended }) })
+    .then((answer) => {
+      ended = true
+      return answer
+    })
+  await look
+  assert.deepEqual(
+    handed.sort((a, b) => a.page.localeCompare(b.page)),
+    [
+      { page: '/', faults: 1, ended: false },
+      // A page it could not shoot is handed on with no faults, so its check faults need not wait.
+      { page: '/about', faults: 0, ended: false }
+    ]
+  )
+})

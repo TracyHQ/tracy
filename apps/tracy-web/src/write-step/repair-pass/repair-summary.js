@@ -1,6 +1,8 @@
 // The result of step 9b as kept with the build's other step outputs (#448): what was found and skipped, each turn with
 // the faults it carried, how it joined (sent, late, duplicate), the items as sent, the turn sent, what it changed and on
-// which pages, what was undone (or failed to be, with why), resent, dropped and not sent, how long it took and what it cost.
+// which pages, what was undone (or failed to be, with why), resent, dropped and not sent, how long it took and what it cost,
+// and the timeline of the step's stages from the start of the write (write, first check, finder per page, each session,
+// turn and check after).
 // `repair-pass.json` beside the write report and the site checks. Pure.
 
 export const REPAIR_VERSION = 'repair-pass/1'
@@ -20,6 +22,7 @@ const turnLine = (t) => ({
   page: t.page,
   round: t.round,
   how: t.how ?? 'sent',
+  sessionId: t.sessionId ?? null,
   turnId: t.turnId,
   state: t.state,
   ...(t.cancelled ? { cancelled: true } : {}),
@@ -47,9 +50,9 @@ const sum = (values) => {
 
 /**
  * @param {{ outcome: object, found: { faults: object[], problem: string | null, problems?: object[], costUsd: number | null },
- *   clock: { elapsed: () => number, limits: object }, site: string }} input
+ *   clock: { elapsed: () => number, limits: object }, site: string, timeline?: object[] }} input
  */
-export function repairSummary({ outcome, found, clock, site }) {
+export function repairSummary({ outcome, found, clock, site, timeline = [] }) {
   const turns = (outcome.turns ?? []).map(turnLine)
   const agentUsd = sum(turns.map((t) => t.costUsd))
   return {
@@ -58,7 +61,7 @@ export function repairSummary({ outcome, found, clock, site }) {
     status: outcome.status,
     ...(outcome.reason ? { reason: outcome.reason } : {}),
     ...(outcome.error ? { error: outcome.error } : {}),
-    sessionId: outcome.sessionId ?? null,
+    sessions: outcome.sessions ?? [],
     ms: clock.elapsed(),
     limits: { stopNewWorkMs: clock.limits.stopNewWorkMs, returnByMs: clock.limits.returnByMs },
     costUsd: { finder: found.costUsd ?? null, agent: agentUsd },
@@ -70,6 +73,7 @@ export function repairSummary({ outcome, found, clock, site }) {
     resent: outcome.resent ?? [],
     dropped: outcome.dropped ?? [],
     notSent: outcome.notSent ?? [],
-    checks: outcome.checks ?? 1
+    checks: outcome.checks ?? 1,
+    timeline
   }
 }

@@ -6,8 +6,10 @@
 // tile and each reply is kept.
 //
 // Pages go through a pipeline: each is shot on its own (`SHOTS_AT_ONCE` at a time; the host queues past its browser
-// slots) and asked about as soon as its shots exist (`ASKS_AT_ONCE` at a time). Given a `signal`, an abort (the step's
-// time limit) ends the look at once: every fault found before it is kept, and each page not looked at is named.
+// slots) and asked about as soon as its shots exist (`ASKS_AT_ONCE` at a time). Each page looked at is handed on at once
+// (`onPage(page, faults)`, none when it could not be shot or asked about), so step 9b sends it while the finder still
+// looks at the others. Given a `signal`, an abort (the step's time limit) ends the look at once: every fault found before
+// it is kept, and each page not looked at is named.
 import { shootPages } from '../../lib/page-shots.js'
 import { keptPageList } from '../../lib/site-kept-paths.js'
 import { askFinder, demoBlockShots } from './finder-ask.js'
@@ -64,12 +66,13 @@ function problemLine(problems) {
  * @param {{ door: { ok: boolean, ask: Function, code?: string, reason?: string }, capture: Function, kit?: object | null,
  *   demoImages?: { open: (id: string) => Promise<any> } | null, saveFile?: ((name: string, data: any) => Promise<void>) | null }} input
  *   `capture` asks the site's host to stream the pages (lib/page-shots.js); `demoImages` opens the kit's images
- * @returns {{ find: (report: object, options?: { pages?: string[] | null, signal?: AbortSignal | null }) => Promise<{ faults: object[], problem: string | null, problems: object[],
+ * @returns {{ find: (report: object, options?: { pages?: string[] | null, signal?: AbortSignal | null,
+ *   onPage?: ((page: string, faults: object[]) => void) | null }) => Promise<{ faults: object[], problem: string | null, problems: object[],
  *   costUsd: number | null }> }}
  */
 export function siteFinder({ door, capture, kit = null, demoImages = null, saveFile = null }) {
   return {
-    async find(report, { pages: only = null, signal = null } = {}) {
+    async find(report, { pages: only = null, signal = null, onPage = null } = {}) {
       if (!door?.ok)
         return { faults: [], problem: `${door?.code}: ${door?.reason}`, problems: [], costUsd: null }
       // A second look (step 9b's resend round) names the pages it looks at again; the first looks at every kept page.
@@ -110,8 +113,13 @@ export function siteFinder({ door, capture, kit = null, demoImages = null, saveF
         }
         return heldFaults(call.answer, tiles)
       }
+      const handOn = (page) => async () => {
+        const faults = await lookAt(page)
+        if (faults !== null && !signal?.aborted) onPage?.(page, faults)
+        return faults
+      }
       // Stopped at its time limit, every page still at work is named, and what was found before is kept.
-      const looks = pages.map((page) => Promise.race([lookAt(page), stopped.then(() => null)]))
+      const looks = pages.map((page) => Promise.race([handOn(page)(), stopped.then(() => null)]))
       const found = await Promise.all(looks)
       found.forEach((faults, i) => {
         if (faults === null) problems.push({ page: pages[i], problem: TIME_RAN_OUT })

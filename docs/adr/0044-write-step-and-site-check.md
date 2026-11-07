@@ -537,13 +537,15 @@ changes with Undo. So:
   step 9b, the site check again, hand-over. Callers never run the parts on their own.
 - Fault sources are the site check (customer-visible groups only) and the finder, carried over from the finisher with its
   fixer and checker dropped (door `finisherFinder`, migration 203). A fault both name is sent once.
-- Never sent, by explicit tables (`write-step/repair-pass/repair-kinds.js`), each logged with a code and its reason:
-  missing accent emphasis and emphasis codes (the write step's gap, fixed at its source, PR #446; the agent cannot write
-  accent emphasis), glued words (#446), a missing h1, an empty frame or a demo picture (the picture step's), a CMS error
-  (`never-sent`); every site check group that checks an earlier step's own work or harms no visitor (`not-visible`); a
-  fault with no page (`no-page`); a demo fault whose measured value, link target or quoted words are a phone, e-mail,
-  name or address the brief gives (`not-demo`, `repair-brief-values.js`). A group or kind no table names is
-  `unknown-kind`, never dropped silently. Faults past the per-turn cap (12) are logged in `notSent` as `item-cap`.
+- Sending rule (amended 2026-11-07 after the second real run): the customer sees it, send it. Glued words, emphasis
+  codes printed raw, a repeated or missing h1, an empty frame, a demo picture, a CMS error and the finder's `other`
+  faults are sent. Never sent, by explicit tables (`write-step/repair-pass/repair-kinds.js`), each logged with a code
+  and its reason: missing accent emphasis only (`never-sent`; the site agent's text tool cannot write emphasis, so the
+  write step fixes it at its source, PR #446); every site check group that checks an earlier step's own work or harms
+  no visitor (`not-visible`); a fault with no page (`no-page`); a demo fault whose measured value, link target or quoted
+  words are a phone, e-mail, name or address the brief gives (`not-demo`, `repair-brief-values.js`). A group or kind no
+  table names is `unknown-kind`, never dropped silently. Faults past the per-turn cap (12) are logged in `notSent` as
+  `item-cap`.
 - Each fault is one comment item made as the popover makes it: the page's address as the preview frame names it (the
   site's public address and the served path, `/index.php/<path>` on a Joomla site with rewriting off; never a bare
   path), the element read from the served page (the kit block's `Mod<N>`/`acm-…-<N>` id as the selector, the matching
@@ -551,19 +553,33 @@ changes with Undo. So:
   what should change. When locate is unavailable the fault's slot and block stand in as levels and the item says why. A
   page's items go in one numbered comment turn, built by the popover's own builder after the comment requests are made
   through the same requests door, so the agent's writes cite each number.
-- The turn is queued into a session 9b opens for the site as its owner, through the site session prompt path demo QA uses,
-  and its end is read from the site turn records. A prompt with no turn after 60 seconds is resent once, then dropped and
-  logged. Every request id stays followed until the pass ends: a dropped prompt the session queue runs later (`late`) and
-  a second turn from a resend (`duplicate`) join the ledger and are judged and undone like the rest.
-- A turn is undone whole, newest first, when the site check after it shows a new blocking failure on a page it changed.
-  The pages a turn changed are read from what it wrote: a write's record is placed on the pages whose items located it;
-  a write that cannot be placed counts as changing every page. A turn is never judged while open. Faults still failing
-  get one resend round, judged the same way: the check's, and the finder's still seen when the finder looks again at the
-  pages it had faults on; then the pass ends. Every undo that fails is kept as `undo-failed` with its reason.
-- One clock runs from the end of the write: the first site check and the finder spend it too. No new work after 10
-  minutes; the step returns by 12 (`repair-limits.js`). Every agent call, the bench's rate limit wait and the site check
+- A pipeline, not stages (amended 2026-11-07: the second real run spent 630 s, five minutes of them waiting for the
+  finder before one turn went, and that one turn held the pass until it was cancelled). The first site check and the
+  finder start at the same moment after the write. 9b starts once the first check ended (its groups judge the whole
+  site at once, so no page's check faults exist before), and a page goes as soon as the finder answered it (or the
+  finder ended), carrying that page's check faults and finder faults in one turn.
+- Pages run side by side, each in a session of its own opened for the site as its owner, through the site session
+  prompt path demo QA uses, at most three turns in flight (`turnsAtOnce`). The comment requests door's own budget (20
+  request items a minute per site, `sites/comments.js`) is kept by the pass: a request waits while 20 items were asked
+  in the last minute, and a page whose wait would pass the stop is `notSent` as `time-limit`. A turn's end is read from
+  the site turn records of its session. A prompt with no turn after 60 seconds is resent once, then dropped and logged.
+  Every request id stays followed until the pass ends: a dropped prompt the session queue runs later (`late`) and a
+  second turn from a resend (`duplicate`) join the ledger and are judged and undone like the rest.
+- Each ended turn is judged on its own: a site check reads only the pages it changed (every page when it changed files
+  or wrote a record no page places), joined to the site as it now is (`site-check/scoped-check.js`; checks run one at a
+  time, and turns ending within a second share one). A turn is undone whole when that check shows a new blocking failure
+  on a page it changed; its pages then hold their failures from before it and are read again before the hand-over. The
+  pages a turn changed are read from what it wrote: a write's record is placed on the pages whose items located it. A
+  turn is never judged while open. Faults still failing on a kept turn's page get one resend in the same session, judged
+  the same way: the check's, and the finder's still seen when the finder looks again at that page only. Every undo that
+  fails is kept as `undo-failed` with its reason.
+- One clock runs from the end of the write: the first site check and the finder spend it too. No new turn after 10
+  minutes; the step returns by 12 (`repair-limits.js`). Every agent call, the requests budget wait and the site check
   race the time left. A turn still open is waited for until only the last check's and the undos' time is left; one still
-  open then is cancelled through the session (`session/cancel`), logged, and taken back unjudged.
+  open then is cancelled through its session (`session/cancel`), logged, its record read again until it ends (20 s at
+  most), and judged by what it wrote like any other turn: undone only when it made a page worse. Any turn that wrote
+  something is always followed by a site check. `repair-pass.json` holds a timeline of the step's stages from the start
+  of the write.
 - Any error in 9b takes back the turns it made and hands over the written site with the first site check, logged, with no
   customer notice. The result (faults sent and skipped, turns, changes, undos, time, cost) is `repair-pass.json` beside
   the build's other step outputs.

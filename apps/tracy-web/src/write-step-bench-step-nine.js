@@ -24,6 +24,10 @@ export function repairLines(repair) {
   const lines = [
     `step 9b: ${repair.status}${repair.error ? ` (${repair.error})` : ''}${repair.reason ? ` (${repair.reason})` : ''}, ${repair.sent} faults sent in ${repair.turns.length} turns, ${repair.undone.length} undone, ${repair.resent.length} resent, ${repair.dropped.length} dropped, ${repair.skipped.length} skipped, ${(repair.ms / 1000).toFixed(1)} s`
   ]
+  for (const s of repair.timeline ?? [])
+    lines.push(
+      `  ${s.stage}${s.page ? ` ${s.page}` : ''} ${(s.startMs / 1000).toFixed(1)}-${(s.endMs / 1000).toFixed(1)} s`
+    )
   for (const t of repair.turns)
     lines.push(
       `  turn ${t.turnId} ${t.state} ${t.how} page=${t.page} round=${t.round} faults=${t.faults.length} changes=${t.changes.length}`
@@ -52,7 +56,8 @@ export async function stepNineOfRun(d, values, write, inCwd) {
     : null
   const kit = openKit(values.kit, d.index ? { index: d.index } : {})?.doc ?? null
   const host = d.makeHost ? await d.makeHost(values.site) : null
-  const checkSite = (report, { baseline, allGroups = false }) =>
+  // A check after a repair turn reads only the pages it changed (`pages`, write-step-nine.js).
+  const checkSite = (report, { baseline, allGroups = false, pages = null }) =>
     runSiteCheck({
       door: d.makeDoor({ account: values.account, platform: 'joomla' }),
       report,
@@ -63,6 +68,7 @@ export async function stepNineOfRun(d, values, write, inCwd) {
       pictures,
       // Step 9 asks for every group; `--all-groups` says the same.
       allGroups: allGroups || values['all-groups'] === true,
+      ...(pages ? { pages } : {}),
       ...(d.now ? { now: d.now } : {})
     })
   const finder = d.makeFinder

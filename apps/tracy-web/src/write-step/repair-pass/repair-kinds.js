@@ -1,7 +1,8 @@
-// What step 9b sends to the site agent (#448), in explicit tables. A fault is sent when its kind is in SENT_KINDS, each with
-// the one plain sentence of what should change, the words a person would type in the preview's comment popover. A fault
-// whose kind is in NEVER_SENT is a known gap of an earlier step, fixed there, or something the agent cannot do (code
-// `never-sent`); a site check group in NOT_SENT_GROUPS is not a customer-visible fault the agent edits (`not-visible`).
+// What step 9b sends to the site agent (#448), in explicit tables. The rule is "the customer sees it, send it": a fault is
+// sent when its kind is in SENT_KINDS, each with the one plain sentence of what should change, the words a person would
+// type in the preview's comment popover. The one kind never sent is missing accent emphasis (NEVER_SENT, code
+// `never-sent`): the site agent's text tool cannot write emphasis. A site check group in NOT_SENT_GROUPS is not a
+// customer-visible fault the agent edits (`not-visible`).
 // Every one is logged with its reason. A group or kind no table names is logged `unknown-kind`, never dropped silently,
 // so a new check group is seen the first time it fails. A kind joins by adding a row here, never a branch elsewhere.
 
@@ -16,7 +17,7 @@ export const CHECK_GROUP_KINDS = Object.freeze({
   'hidden-page-links': 'bad-link',
   'text-overflow': 'broken-layout',
   'empty-controls': 'empty-block',
-  // Rows of NEVER_SENT, named here so the reason logged is theirs.
+  // The row of NEVER_SENT, named here so the reason logged is its own.
   'accent-emphasis': 'lost-emphasis',
   'emphasis-codes-left': 'emphasis-codes',
   'glued-words': 'glued-words',
@@ -45,21 +46,27 @@ export const SENT_KINDS = Object.freeze({
   'demo-title-meta': () =>
     "This page's title or meta description is the template demo's or repeats another page's: write one for this page.",
   'lost-design': () =>
-    'This block lost a design trait the template demo shows (an accent button, a small label above the heading): bring it back.'
+    'This block lost a design trait the template demo shows (an accent button, a small label above the heading): bring it back.',
+  'emphasis-codes': () =>
+    'This shows emphasis codes printed as words (double brackets): remove the codes and keep the words.',
+  'glued-words': () =>
+    'These words run into each other with no space where a line breaks: put the space back, keeping the words.',
+  'main-heading': () =>
+    'This page has more than one main heading, or none: keep exactly one main heading, without changing the words.',
+  'empty-frame': () =>
+    'This picture frame or box is empty: hide it, or fill it from what the site already has.',
+  'demo-picture': () =>
+    "This still shows a picture of the template demo: put one of this business's pictures from the site in its place, or hide it.",
+  'cms-error': () =>
+    'This shows a CMS error or a placeholder printed as words: remove it, keeping the words around it.',
+  other: () =>
+    'A visitor sees this as wrong: fix what the note describes, keeping the words and the template look.'
 })
 
-/** Kinds never sent, each with why (a known gap of an earlier step, or something the agent cannot write). */
+/** Kinds never sent, each with why: the site agent's text tool cannot write accent emphasis. */
 export const NEVER_SENT = Object.freeze({
   'lost-emphasis':
-    'missing accent emphasis is fixed at its source (the write step, PR #446); the site agent cannot write accent emphasis',
-  'emphasis-codes':
-    "emphasis codes printed raw come from the write step's emphasis stage and are fixed there; the site agent cannot write accent emphasis",
-  'glued-words': 'words glued at a dropped line break are fixed at their source (the write step, PR #446)',
-  'main-heading': 'a missing or repeated h1 is the template structure, not content the agent edits',
-  'empty-frame': 'an empty picture frame needs a picture, which only the picture step chooses',
-  'demo-picture': 'a demo picture is replaced by the picture step, which chooses every picture',
-  'cms-error': "a CMS error comes from the site's code, not from content the agent edits",
-  other: 'the finder named it outside its fault list, so it is logged and never sent'
+    "missing accent emphasis is fixed at its source (the write step, PR #446); the site agent's text tool cannot write emphasis"
 })
 
 const OWN_STEP =

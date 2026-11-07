@@ -6,8 +6,15 @@
 //     open is waited for only until both are left.
 //   - `noTurnMs`: a prompt that opened no turn by then is resent once; a resend that opened none by then is dropped.
 //   - `pollMs`: how often the turn records are read while a turn is awaited.
-//   - `itemsPerTurn`: the most faults one page turn carries (the comment requests door takes 20 a minute per site).
-//   - `finderMs`: the finder's whole look at the kept pages, run beside the first site check, before the pass starts.
+//   - `itemsPerTurn`: the most faults one page turn carries.
+//   - `itemsPerMinute`: the comment requests door's own budget, items a minute per site (sites/comments.js
+//     MAX_REQUESTS_PER_MINUTE): a request waits while that many were asked in the last minute.
+//   - `turnsAtOnce`: page turns in flight at once, each page in a session of its own.
+//   - `cancelSettleMs`: after a turn still open at the limit is cancelled, how long its record is read until it ends.
+//   - `judgeGatherMs`: how long the check after the turns waits for other turns ending at the same moment, to read them
+//     in one check.
+//   - `finderMs`: the finder's whole look at the kept pages, run beside the first site check; pages it answered are
+//     sent while it still looks at the others.
 export const REPAIR_LIMITS = Object.freeze({
   stopNewWorkMs: 10 * 60_000,
   returnByMs: 12 * 60_000,
@@ -16,6 +23,10 @@ export const REPAIR_LIMITS = Object.freeze({
   noTurnMs: 60_000,
   pollMs: 5_000,
   itemsPerTurn: 12,
+  itemsPerMinute: 20,
+  turnsAtOnce: 3,
+  cancelSettleMs: 20_000,
+  judgeGatherMs: 1_000,
   finderMs: 5 * 60_000
 })
 
@@ -75,6 +86,39 @@ export function repairClock({ now, sleep, limits = null, timer = realTimer }) {
       const done = await this.within(work, ms)
       if (done.late) throw new Error(`${what} did not answer in the time left`)
       return done.value
+    }
+  }
+}
+
+const MINUTE = 60_000
+
+/**
+ * The comment requests door's budget, kept by the pass: `take(n)` waits while `itemsPerMinute` items were asked in the
+ * last minute (the door refuses a request then), and answers false when the wait would pass the time new work stops.
+ * Requests of pages running side by side share it.
+ */
+export function itemsGate(clock) {
+  const asked = []
+  let queue = Promise.resolve()
+  const take = async (n) => {
+    for (;;) {
+      while (asked.length && asked[0].at <= clock.now() - MINUTE) asked.shift()
+      const lately = asked.reduce((sum, a) => sum + a.n, 0)
+      if (lately < clock.limits.itemsPerMinute) {
+        asked.push({ at: clock.now(), n })
+        return true
+      }
+      const wait = asked[0].at + MINUTE - clock.now()
+      if (wait >= clock.workLeft()) return false
+      await clock.sleep(Math.max(1, wait))
+    }
+  }
+  return {
+    // One request at a time through the gate, so two pages never both see room for themselves.
+    take: (n) => {
+      const turn = queue.then(() => take(n))
+      queue = turn.catch(() => {})
+      return turn
     }
   }
 }
