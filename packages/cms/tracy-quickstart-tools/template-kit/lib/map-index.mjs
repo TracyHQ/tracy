@@ -81,7 +81,10 @@ export function ownerOfPath(idx, path) {
   }
   const segments = base.split('/').filter(Boolean)
   const last = aliasOf(segments.at(-1))
-  if (segments.includes('tag') || segments.includes('tags')) {
+  // A page one level under a tags menu page (`view=tags`) is the page of the tag its last segment names.
+  const parent = idx.pageByPath.get(`/${segments.slice(0, -1).join('/')}`)
+  const underTags = queryOf(parent?.link).option === 'com_tags'
+  if (underTags || segments.includes('tag') || segments.includes('tags')) {
     const tag = idx.byAlias.get(`tag:${last}`)
     return { owner: tag ?? null, kind: tag ? `tag listing${listPage}` : 'tag listing (no map entity)' }
   }

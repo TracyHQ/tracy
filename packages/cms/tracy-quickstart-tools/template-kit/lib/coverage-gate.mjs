@@ -190,12 +190,14 @@ export function applyCoverage(
 /**
  * Count what the kit still lacks against the content map (`map`) and the read pass (`readings`: block id -> the
  * block's reading at the widest width), part by part (`kit.coverage.parts`), list every failure
- * (`kit.coverage.failures`, also in `kit.errors`) and return the total: 0 means every shown slot is covered.
+ * (`kit.coverage.failures`, also in `kit.errors`) and return the total: 0 means every shown slot is covered. A page
+ * without a title slot that `gapAccepts` (gap-accepts.json) or `accepts` (reach-accepts.json) explain is still counted,
+ * and listed in `kit.checkAccepts.slotCoverage` instead of the failures (page-titles.mjs pageTitleChecks).
  */
-export function coverageGate(kit, { map, readings = new Map() }) {
+export function coverageGate(kit, { map, readings = new Map(), gapAccepts = {}, accepts = [] }) {
   const mapOf = new Map((map.slots ?? []).map((s) => [neutralKey(s.key), s]))
   const failures = []
-  const fail = (part, where, reason) => failures.push({ part, where, reason })
+  const fail = (part, where, reason, extra = {}) => failures.push({ part, where, reason, ...extra })
   const parts = {}
   // 1. Every text slot a kit page shows is listed with a limit and its source.
   const listed = new Map()
@@ -279,7 +281,9 @@ export function coverageGate(kit, { map, readings = new Map() }) {
   // 6. Shown words from a slot declared nowhere (the orphan check, counted here too).
   parts.orphanTexts = kit.checks?.orphanTexts ?? 0
   // 7. Every page for customers has exactly one title slot (page-titles.mjs).
-  parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p) ? pageTitleChecks(kit, fail, { map }) : 0
+  parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p)
+    ? pageTitleChecks(kit, fail, { map, gapAccepts, accepts })
+    : 0
   // How many shown text slots part 1 checked, so a gate at 0 over nothing is told from a covered kit.
   const fields = storedFieldReport(kit)
   const notForCustomers = pagesNotForCustomers(kit, map)

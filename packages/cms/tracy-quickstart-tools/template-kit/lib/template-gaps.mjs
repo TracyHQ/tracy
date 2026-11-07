@@ -78,3 +78,17 @@ export function templateGaps({ kit, mainHeadings = [], dead = [], fixes = [], ac
     )
   return gaps
 }
+
+/**
+ * The errors a template gap already says: a page without an h1 is a defect of the template (`page-without-h1`), not a
+ * measurement the kit missed, so its `missing pages[<id>].h1` error leaves `errors[]` (a page with two h1 is no gap and
+ * keeps its error).
+ * @param {object[]} errors
+ * @param {object[]} gaps
+ */
+export function errorsBesideGaps(errors, gaps) {
+  const noH1 = new Set(
+    gaps.filter((g) => g.kind === 'page-without-h1').map((g) => `pages[${g.where.pageId}].h1`)
+  )
+  return errors.filter((e) => !(e.kind === 'missing' && noH1.has(e.field) && /no h1/.test(e.reason ?? '')))
+}

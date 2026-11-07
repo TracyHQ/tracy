@@ -297,3 +297,91 @@ test('a sub-category page no menu item names declares its own list, and its item
   // An item of the blog's own category keeps the blog page.
   assert.equal(itemPages['article-41'].categoryRoute, 'workshops')
 })
+
+/** Category 32 under Workshops and article 43 in it, with the sub-category page reached at `path` (no menu item). */
+function subCategoryAt(path, href) {
+  const { map, lock, findings } = fixture()
+  map.entities.push(
+    { key: 'category-32', kind: 'category', identity: { path: 'workshops/evening' }, sourceId: 32 },
+    { key: 'article-43', kind: 'article', sourceId: 43, identityReferences: { catid: 'category-32' } }
+  )
+  map.slots.push(
+    slot('category-32.0', 'title', 'text', 'Evening', 'editorial.heading'),
+    slot('article-43.0', 'title', 'text', 'Night Stretch', 'offering.name')
+  )
+  findings.pages.push({
+    url: `http://site.invalid/index.php${path}`,
+    mapPages: [],
+    items: [text('Night Stretch', ['article-43.0'], at(0, 100, 300, 30), { href })]
+  })
+  return { map, lock, findings }
+}
+
+test('a sub-category page reached by a URL without ids (the category path under the blog route) declares its list', () => {
+  const { map, lock, findings } = subCategoryAt('/workshops/evening', '/workshops/evening/night-stretch')
+  const { itemLists, itemPages } = listingListsOf({ map, lock, findings })
+  const list = itemLists['category-32.items']
+  assert.ok(list, 'the sub-category page declares a list')
+  assert.equal(list.pagePath, '/workshops/evening')
+  assert.equal(list.source.route, 'workshops/evening')
+  assert.deepEqual(list.shown, ['article-43'])
+  assert.deepEqual([list.max, list.maxFrom], [4, 'view-setting'])
+  assert.deepEqual(
+    list.rowSlots.map((r) => r.field),
+    ['title', 'link']
+  )
+  assert.equal(itemPages['article-43'].categoryRoute, 'workshops/evening')
+})
+
+test('a nested category page under a categories view menu item declares its list from its path below that category', () => {
+  const { map, lock, findings } = subCategoryAt('/browse/evening', '/browse/evening/night-stretch')
+  // A categories view (a tree of the Workshops category) whose route is `browse`.
+  map.pages.push({
+    entity: 'menuItem-306',
+    route: 'browse',
+    link: 'index.php?option=com_content&view=categories&id=31'
+  })
+  lock.entities['menuItem-306'] = { params: { num_leading_articles: '0', num_intro_articles: '6' } }
+  const { itemLists } = listingListsOf({ map, lock, findings })
+  const list = itemLists['category-32.items']
+  assert.ok(list, 'the nested category page declares a list')
+  assert.equal(list.pagePath, '/browse/evening')
+  assert.deepEqual([list.max, list.maxFrom], [6, 'view-setting'])
+})
+
+test('a page whose path names no category below its parent route declares no list', () => {
+  const { map, lock, findings } = subCategoryAt('/workshops/morning', '/workshops/evening/night-stretch')
+  assert.equal(listingListsOf({ map, lock, findings }).itemLists['category-32.items'], undefined)
+})
+
+test('a tag menu item page (com_tags, view=tag) declares its items list with the tag as source', () => {
+  const { map, lock, findings } = fixture()
+  map.entities.push({ key: 'tag-7', kind: 'tag', identity: { path: 'outdoor' }, sourceId: 7 })
+  map.slots.push(slot('tag-7.0', 'title', 'text', 'Outdoor', 'editorial.heading'))
+  map.pages.push({
+    entity: 'menuItem-305',
+    route: 'outdoor',
+    link: 'index.php?option=com_tags&view=tag&layout=demo:cards&id[0]=7'
+  })
+  lock.entities['menuItem-305'] = { params: { display_num: '6' } }
+  findings.pages.push({
+    url: 'http://site.invalid/index.php/outdoor',
+    mapPages: [{ entity: 'menuItem-305', route: 'outdoor' }],
+    items: [
+      text('Rope Basics', ['article-41.0'], at(0, 100, 300, 30), { href: '/outdoor/rope-basics' }),
+      text('Kettlebell Flow', ['article-42.0'], at(320, 100, 300, 30), { href: '/outdoor/kettlebell-flow' })
+    ]
+  })
+  const list = listingListsOf({ map, lock, findings }).itemLists['menuItem-305.items']
+  assert.ok(list, 'the tag page declares a list')
+  assert.deepEqual(list.source, {
+    kind: 'tag',
+    id: 'tag-7',
+    title: 'Outdoor',
+    page: 'menuItem-305',
+    route: 'outdoor'
+  })
+  assert.deepEqual(list.shown, ['article-41', 'article-42'])
+  assert.deepEqual([list.max, list.maxFrom], [6, 'view-setting'])
+  assert.equal(list.rowSlots[0].field, 'title')
+})

@@ -28,6 +28,8 @@
 //   cli.mjs slot-roles --out <dir> --contract <dir>   (the template-kit.json in --out settled again from the content
 //                 map and field-drives.json: page title slots, sentence groups, stored fields, the gate counted
 //                 again; no browser, no capture, no image; it only adds, no slot id, list or role moves)
+//                 (a page's missing title is explained by its accepted page-without-h1 gap in gap-accepts.json, or a
+//                 pageTitleSlots entry of reach-accepts.json: still counted, listed in checkAccepts.slotCoverage)
 //                 [--only sentences]: only the sentence groups (a kit whose page titles are not settled yet keeps its gate)
 //   cli.mjs samples --out <dir> --contract <dir>   (the text slot samples of the template-kit.json in --out settled
 //                 again from the content map: every text slot's whole demo text as `sample` and its lengths as
@@ -204,12 +206,18 @@ function slotRoles(o, out) {
     return 0
   }
   if (o.only !== undefined) throw new Error('slot-roles --only takes: sentences')
-  const r = settleSlotRoles(kit, { map, drives: readIf(join(out, 'field-drives.json')) ?? {} })
+  // A page's missing title is explained by its accepted no-h1 gap or a reach-accepts.json entry (page-titles.mjs).
+  const r = settleSlotRoles(kit, {
+    map,
+    drives: readIf(join(out, 'field-drives.json')) ?? {},
+    gapAccepts: readIf(join(out, 'gap-accepts.json')) ?? {},
+    accepts: reachAcceptsOf(resolve(out))
+  })
   writeJson(file, settled(kit, map, o))
   console.log(JSON.stringify(r, null, 1))
   for (const f of kit.coverage.failures.filter((x) => x.part === 'pageTitleSlots'))
     console.error(`${f.where}: ${f.reason}`)
-  return r.pageTitleSlots ? 1 : 0
+  return r.pageTitleSlots > r.pageTitlesExplained ? 1 : 0
 }
 
 /** Settle every text slot's sample, demoChars and inline of the kit in `out` again (slot-samples.mjs); exit 1 when a
