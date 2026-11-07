@@ -30,7 +30,9 @@ export const CHECK_GROUP_KINDS = Object.freeze({
 /** Kinds sent to the agent: what the change is, as one sentence. `seen` is what was measured or seen there. */
 export const SENT_KINDS = Object.freeze({
   'wrong-alt': () =>
-    "This picture's alt text does not describe it: write an alt text that says what the picture shows, for this business.",
+    "This picture's alt text does not describe it: write an alt text that describes the picture shown, for this business.",
+  'wrong-icon': () =>
+    "This icon does not match its item: choose an icon from Tracy's icon library that matches the item, and put it in place of this one, keeping the item's words.",
   'unreadable-text': () =>
     'This text is hard to read over its background: make it readable, keeping its words and the template look.',
   'demo-fact': () =>
@@ -102,6 +104,10 @@ export const NOT_SENT_GROUPS = Object.freeze({
 })
 
 const UNKNOWN = 'no table of repair-kinds.js names it, so it is logged and not sent until one does'
+
+/** The kind of a finder fault: one it names `other` that is about an icon is a wrong icon, sent with its own sentence. */
+export const finderKindOf = (f) =>
+  f.kind === 'other' && /\bicons?\b/i.test(String(f.seen ?? '')) ? 'wrong-icon' : f.kind
 
 /** The kind of a site check failure, or null when no table names its group. A demo link that dials or mails is a contact link. */
 export function kindOfFailure(f) {

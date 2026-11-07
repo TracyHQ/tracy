@@ -2,8 +2,9 @@
 // the preview's picker would report for it (packages/cms/tracy-cms-preview/src/pick.mjs): the kit block's own element
 // (`Mod<N>` for a T4 module, `acm-<name>-<N>` for an ACM block, block `block-<N>`), its id as the selector, and inside it
 // the element whose words (or picture alt) are the fault's, with the provenance marks of it and its ancestors, innermost
-// first (`data-tracy-src`, a `<template data-tracy-owner>`, a menu item id). A fault whose block the page does not hold has
-// no element. Pure.
+// first (`data-tracy-src`, a `<template data-tracy-owner>`, a menu item id). A fault whose slot names no block (an article's
+// picture, a finder fault) is looked for on the whole page by its words or alt. A fault whose block the page does not
+// hold, or whose words the page does not show, has no element. Pure.
 import { parse } from 'parse5'
 
 const MAX_TEXT = 300
@@ -69,40 +70,70 @@ function innermost(root, matches) {
   return null
 }
 
-/** Every served block element of a page, by block number. */
-export function servedBlocks(html) {
-  const found = new Map()
+/** The words a sentence quotes in double quotes (`The "BACKPACK" item ...`), or ''. */
+export const quotedWords = (text) => flat(String(text ?? '').match(/"([^"]{3,})"/)?.[1])
+
+/** A CSS selector for one element: from its nearest ancestor with an id (or `body`), one `tag:nth-of-type(k)` a step. */
+export function pathOf(el) {
+  const steps = []
+  for (let at = el; at?.tagName; at = at.parentNode) {
+    const id = attrOf(at, 'id')
+    if (id && /^[A-Za-z][\w-]*$/.test(id)) return [`#${id}`, ...steps].join(' > ')
+    if (at.tagName === 'body' || at.tagName === 'html') return ['body', ...steps].join(' > ')
+    const same = elements(at.parentNode ?? {}).filter((n) => n.tagName === at.tagName)
+    steps.unshift(`${at.tagName}:nth-of-type(${same.indexOf(at) + 1})`)
+  }
+  return steps.join(' > ')
+}
+
+/** Every served block element of a page, by block number, and the page's body (`servedPage`). */
+export function servedPage(html) {
+  const blocks = new Map()
+  let body = null
   const walk = (node) => {
     for (const child of elements(node)) {
+      if (child.tagName === 'body') body = child
       const n = servedNumberOf(child)
-      if (n && !found.has(n)) found.set(n, child)
+      if (n && !blocks.has(n)) blocks.set(n, child)
       walk(child)
     }
   }
   if (typeof html === 'string' && html) walk(parse(html))
-  return found
+  return { blocks, body }
 }
 
+/** The words a fault names on the page: what was measured, else the words its sentence quotes. */
+const saidOf = (fault) =>
+  typeof fault.measured === 'string' && fault.measured.trim() ? flat(fault.measured) : quotedWords(fault.seen)
+
 /**
- * The element a fault points at on its served page, or null.
- * @param {Map<string, object>} blocks from servedBlocks
- * @param {{ slot?: string | null, block?: string | null, kind: string, measured?: unknown }} fault
- * @returns {{ selector: string, tag: string, text: string, marks: string[], image: { src: string, alt: string } | null } | null}
+ * The element a fault points at on its served page, or null. A fault whose slot names a block is looked for inside that
+ * block; one whose slot names no block (an article's picture, a finder fault) is looked for on the whole page by its words
+ * or its picture's alt, and is found only when they are there. `path` is the element's own selector, `selector` the
+ * block's (as the picker reports it) or, for an element in no block, its path.
+ * @param {{ blocks: Map<string, object>, body: object | null }} page from servedPage
+ * @param {{ slot?: string | null, block?: string | null, kind: string, measured?: unknown, seen?: unknown }} fault
+ * @returns {{ selector: string, path: string, tag: string, text: string, marks: string[],
+ *   image: { src: string, alt: string } | null } | null}
  */
-export function servedElementOf(blocks, fault) {
+export function servedElementOf({ blocks, body }, fault) {
   const n = blockNumberOf(fault.slot) ?? blockNumberOf(fault.block)
   const block = n ? blocks.get(n) : null
-  if (!block) return null
-  const said = typeof fault.measured === 'string' ? flat(fault.measured).toLowerCase() : ''
+  const root = block ?? (n ? null : body)
+  if (!root) return null
+  const said = saidOf(fault).toLowerCase()
   const picture =
     fault.kind === 'wrong-alt' && said
-      ? innermost(block, (el) => el.tagName === 'img' && flat(attrOf(el, 'alt')).toLowerCase().includes(said))
+      ? innermost(root, (el) => el.tagName === 'img' && flat(attrOf(el, 'alt')).toLowerCase().includes(said))
       : null
   const worded =
-    !picture && said ? innermost(block, (el) => flat(textOf(el)).toLowerCase().includes(said)) : null
+    !picture && said ? innermost(root, (el) => flat(textOf(el)).toLowerCase().includes(said)) : null
   const el = picture ?? worded ?? block
+  if (!el) return null
+  const path = pathOf(el)
   return {
-    selector: `#${attrOf(block, 'id')}`,
+    selector: block ? `#${attrOf(block, 'id')}` : path,
+    path,
     tag: el.tagName,
     text: picture ? '' : flat(textOf(el)).slice(0, MAX_TEXT),
     marks: marksUp(el),
