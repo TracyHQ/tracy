@@ -13,6 +13,7 @@
 // every side must be identical in both, else the tool fails (the brand would have changed something besides the accent).
 import { accentSeedModule } from '../../lib/brand-accent/accent-module.js'
 import { contrastHex, liftAccent, neutralReason } from '../../lib/brand-accent/colour-math.js'
+import { slotNamesOfKit } from '../design-slot-of-kit.js'
 import { templateGrounds } from '../kit-grounds.js'
 import { BrandToolError } from './common.js'
 import { contrastTable, slotDriftOf } from './design-system-report.js'
@@ -32,23 +33,24 @@ const ACCENT_ROLES = [
 const SLOT_MODULES = ['library', 'joomla', 'brand']
 
 async function dsSlot() {
-  const { dsSlotModule, DS_ROOT } = await import('../../lib/ds-slot.js')
+  const { dsSlotModule, quickstartContractOf, DS_ROOT } = await import('../../lib/ds-slot.js')
   const [library, joomla, brand] = await Promise.all(SLOT_MODULES.map((m) => dsSlotModule(m)))
-  return { library, joomla, brand, root: DS_ROOT }
+  return { library, joomla, brand, root: DS_ROOT, wordpressSlotOf: quickstartContractOf }
 }
 
-/** The ds-slot contract of the kit's template: ctx.dsContract, else joomla-<product>-modes, else joomla-<product>. */
-function contractOf(ctx, library) {
-  const product = ctx.kit.quickstart?.product
-  for (const name of [ctx.dsContract, `joomla-${product}-modes`, `joomla-${product}`].filter(Boolean)) {
+/** The ds-slot contract of the kit's template: ctx.dsContract, else its slot names (design-slot-of-kit.js: Joomla modes then plain, WordPress its own). */
+function contractOf(ctx, ds) {
+  const slot = slotNamesOfKit(ctx.kit, ds.wordpressSlotOf)
+  for (const name of [ctx.dsContract, ...slot.names].filter(Boolean)) {
     try {
-      return { name, contract: library.loadContract(name) }
+      return { name, contract: ds.library.loadContract(name) }
     } catch {
       /* try the next name */
     }
   }
   throw new BrandToolError(
-    `the Design system has no template contract for ${product}: no accent can be built`
+    slot.problem ??
+      `the Design system has no template contract for ${ctx.kit.quickstart?.product}: no accent can be built`
   )
 }
 
@@ -96,7 +98,7 @@ export const tool = {
     const accent = lift.to
 
     const ds = await dsSlot()
-    const { name, contract } = contractOf(ctx, ds.library)
+    const { name, contract } = contractOf(ctx, ds)
     const base = ds.library.contractBase(ds.root, contract)
     const K = ctx.kit
     const tplAccent = K.site.brandColours.primary?.value?.toLowerCase() ?? base['--accent']
