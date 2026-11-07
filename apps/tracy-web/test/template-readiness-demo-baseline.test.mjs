@@ -94,7 +94,7 @@ test('a template already shown on Design inspiration only warns', () => {
   assert.deepEqual([judged.state, judged.code], ['warn', 'demo-baseline-missing'])
 })
 
-test('with no contract sealing the release the piece waits for the contract; off Joomla it does not apply', () => {
+test('with no contract sealing the release the piece waits for the contract, on Joomla and on WordPress; other platforms do not apply', () => {
   const waiting = DEMO_BASELINE_CHECK.judge(
     release(),
     { contracts: new Map() },
@@ -105,7 +105,9 @@ test('with no contract sealing the release the piece waits for the contract; off
     ['blocked', 'demo-baseline-waiting', 'contract']
   )
   const wp = release({ platform: 'wordpress', setting: { platform: 'wordpress', version: '1.0.0' } })
-  assert.equal(DEMO_BASELINE_CHECK.judge(wp, { contracts: new Map() }, {}), null)
+  assert.equal(DEMO_BASELINE_CHECK.judge(wp, { contracts: new Map() }, {}).code, 'demo-baseline-waiting')
+  const emdash = release({ platform: 'emdash', setting: { platform: 'emdash', version: '1.0.0' } })
+  assert.equal(DEMO_BASELINE_CHECK.judge(emdash, { contracts: new Map() }, {}), null)
 })
 
 test('the verdict carries the demo baseline as its last piece, in the fixed order', () => {
