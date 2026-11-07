@@ -22,4 +22,6 @@
 !tch-dev/**
 !tdsr/
 !tdsr/**
+!wordpress-template-readiness/
+!wordpress-template-readiness/**
 **/node_modules/

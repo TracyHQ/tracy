@@ -35,10 +35,14 @@ to action. A pattern block is addressed by `metadata.name` exactly as
 
 ## What differs from the Joomla one
 
-- **No Claude Cowork plugin pin.** The Joomla contracts are also shipped inside the Claude Cowork plugin package, so
-  `quickstarts.json` pins the Claude Cowork plugin and hashes the contract files. The WordPress Cowork plugin is
-  installed at provision time as the latest release the `claude-cowork` manifest names, never below
-  `coworkMinVersion`; the contract lives only here and in the seeder. (`tasks/todo-wordpress-theme-skill.md` Q6.)
+- **The Claude Cowork plugin is pinned, like the Joomla one.** The plugin carries the contract files byte for byte
+  (in the claude-cowork repository: `wordpress/cowork/lib/contracts/<design>/wp7/<version>/`, copied by
+  `wordpress/cowork/build.sh`). Each `wp7` entry of `quickstarts.json` pins a plugin release (`cowork`: file, version,
+  bytes, sha256, url) and records the hashes of the contract files it carries (`contractFiles`, `alsoCarries`,
+  `contractVersions`); the `contracts` gate (`scripts/check-contracts.ts`) holds them to this tree. A contract change
+  goes: claude-cowork `node scripts/release-wordpress.mjs X.Y.Z` (by hand, through a `release/<tag>` PR), then
+  `node scripts/pin-wordpress-quickstart.mjs --quickstart <key> --plugin-tag wordpress-vX.Y.Z` (`--dry-run` first),
+  which refuses a plugin that does not carry the contract byte for byte.
 - **No `content.contract` door.** The WordPress plugin does not bind a contract. The seeder writes the
   slots itself through the seat door (`content.update` on options and `wp_block` posts); the Build's
   `check` stage verifies the plugin version against the floor and that the contract is shipped.
