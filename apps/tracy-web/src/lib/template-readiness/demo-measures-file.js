@@ -22,6 +22,9 @@ import { DEMO_MEASURES_VERSION } from '../../site-check/demo-measures.js'
 
 export const DEMO_MEASURES_FILE = 'demo-measures.json'
 
+/** The platforms whose untouched demo is measured (baseline and layout measures): the same rules on each. */
+export const DEMO_MEASURED_PLATFORMS = Object.freeze(['joomla', 'wordpress'])
+
 /** The widths a demo is measured at: the site check's own (desktop and phone). */
 const REQUIRED_WIDTHS = [1440, 390]
 

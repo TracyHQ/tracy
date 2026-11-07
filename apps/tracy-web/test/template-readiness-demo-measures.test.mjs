@@ -258,7 +258,9 @@ test('a template already shown on Design inspiration only warns', async () => {
   assert.deepEqual([judge(doc, published()).state, judge(doc, published()).code], ['warn', 'demo-overflow'])
 })
 
-test('the check does not apply off Joomla, or to a release with no contract (the contract piece says that)', () => {
+test('the check does not apply off Joomla and WordPress, or to a release with no contract (the contract piece says that)', () => {
+  const emdash = release({ platform: 'emdash', setting: { platform: 'emdash', version: '1.0.0' } })
+  assert.equal(DEMO_MEASURES_CHECK.judge(emdash, { contracts: new Map() }, {}), null)
   const wp = release({ platform: 'wordpress', setting: { platform: 'wordpress', version: '1.0.0' } })
   assert.equal(DEMO_MEASURES_CHECK.judge(wp, { contracts: new Map() }, {}), null)
   assert.equal(DEMO_MEASURES_CHECK.judge(release(), { contracts: new Map() }, {}), null)

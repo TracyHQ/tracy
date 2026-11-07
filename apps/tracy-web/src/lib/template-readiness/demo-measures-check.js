@@ -18,12 +18,12 @@
  *
  * The faults are the template's: nothing was written to the demo, so the fix is a template (quickstart) release. Which
  * fault is a block and which a warning is the site check's own level; this file adds no rule. A release already shown
- * on Design inspiration only warns, as the other checks. Joomla only, like the content coverage audit, and only when a
- * contract seals the release (the contract piece says when none does).
+ * on Design inspiration only warns, as the other checks. Joomla and WordPress (ticket #456; the content coverage audit
+ * is Joomla only), and only when a contract seals the release (the contract piece says when none does).
  */
 import { shownOnInspiration } from '../quickstart-releases.js'
 import { DEMO_MEASURE_NAMES } from '../../site-check/demo-measures.js'
-import { demoMeasuresOfRelease } from './demo-measures-file.js'
+import { DEMO_MEASURED_PLATFORMS, demoMeasuresOfRelease } from './demo-measures-file.js'
 import { DEMO_MEASURES_COMMAND, fixOf } from './fixes.js'
 
 export { DEMO_MEASURES_COMMAND }
@@ -56,7 +56,7 @@ const SHOWN_FAULTS = 8
 /** @param {any} release @param {any} world */
 export function judgeDemoMeasures(release, world) {
   const platform = release?.setting?.platform ?? release?.platform
-  if (platform !== 'joomla') return null
+  if (!DEMO_MEASURED_PLATFORMS.includes(platform)) return null
   const read = world?.demoMeasures ?? demoMeasuresOfRelease(release, world?.contracts ?? new Map())
   if (read.state === 'no-contract') return null
   // What a failing answer is: a hold on a new release, only a warning on one already shown on Design inspiration.
