@@ -25,6 +25,11 @@ emphasis rule of section 11); the checker version moved to `site-copy-check/6`, 
 Amended a seventh time (2026-11-07, owner's ruling): the emphasis marks the strongest word or words of the text, the
 ones that carry its claim, never a filler or connecting word, and the demo's position is not a rule (section 11, and
 the W16 self-check). The prompt's sha256 is now `79658a692fcf4a3b33d7e32a9f295b4af05e40bba7f5911924bef9d77902e32c`; the checker is unchanged.
+Amended an eighth time (2026-11-07, owner's ruling): a count of the distinct items the slot's cited facts name is a fact
+the writer may write (four cited services give "4"; never estimated, rounded up or with "+"), and a slot is returned only
+when no true text of any kind fits: a number slot with nothing to count first takes a true phrase without a number
+(section 3, the W04 self-check and a new returns self-check). The prompt's sha256 is now
+`4bfad57befe0c27ecc2cf0119badac029ee6f1fda62720d780a57b101ad0fc0c`; the checker is unchanged.
 Noted 2026-11-05 (planner side, ADR 0041 decisions 12 and 13): the planner prompt, sha256
 `ec160022e152e5c66db6eb168a64a5923e9def4781d2e39ec7ee3b263cd58612`, now keeps a section that shows how the trade works
 (how a session, a visit or an order runs) as `basis: "trade"` lines without numbers, so the writer receives such
