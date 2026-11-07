@@ -56,6 +56,9 @@ import { readFileSync } from 'node:fs'
 
 const SAFE = /^[\x20-\x7e]+$/
 const UNSAFE = /["'\\/]/
+// A row edit may name a path (`/pages/contact`): it is counted inside its own row in the dump, the lock and the
+// column, so a value written there as `\/` (PHP json_encode) is a count mismatch that stops the cut, never a miss.
+const UNSAFE_IN_ROW = /["'\\]/
 /** One JSON pair: a quoted key, then a string, number, true, false or null; no quote inside a string. */
 const JSON_PAIR = /^"([\w-]+)":("[^"]*"|-?\d+(\.\d+)?|true|false|null)$/
 /** A nested pair: the same, or an array of one string, and a key that may carry ACM's brackets (`f[button-link]`). */
@@ -71,6 +74,7 @@ function sameShape(e, at) {
     )
 }
 const NOT_IN_PAIR = /['\\/]/
+const NOT_IN_ROW_PAIR = /['\\]/
 const FIELD = /^[a-zA-Z_]+$/
 
 /** The text an edit's `from` / `to` is in a dump and in the lock file (a JSON pair's quotes as \"). */
@@ -120,12 +124,19 @@ export function loadContentEdits(file) {
       const v = e[k]
       if (k === 'to' && v === '' && e.json !== true) continue
       if (e.json === true) {
-        if (typeof v !== 'string' || !SAFE.test(v) || NOT_IN_PAIR.test(v) || !pairOf(e, v))
+        if (
+          typeof v !== 'string' ||
+          !SAFE.test(v) ||
+          (e.row === true ? NOT_IN_ROW_PAIR : NOT_IN_PAIR).test(v) ||
+          !pairOf(e, v)
+        )
           throw new Error(
             `${at}: "${k}" must be one JSON pair ("key":"value") without backslashes, slashes or single quotes`
           )
-      } else if (typeof v !== 'string' || !SAFE.test(v) || UNSAFE.test(v))
-        throw new Error(`${at}: "${k}" must be printable ASCII without quotes, backslashes or slashes`)
+      } else if (typeof v !== 'string' || !SAFE.test(v) || (e.row === true ? UNSAFE_IN_ROW : UNSAFE).test(v))
+        throw new Error(
+          `${at}: "${k}" must be printable ASCII without quotes, backslashes or (outside a row edit) slashes`
+        )
     }
     if (e.json === true && pairOf(e, e.from)[1] !== pairOf(e, e.to)[1])
       throw new Error(`${at}: a JSON pair edit changes the value, not the key`)

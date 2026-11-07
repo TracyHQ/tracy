@@ -850,3 +850,39 @@ test('a table edit reaches a copy Joomla keeps outside the contract (the tag ind
     /either "entity" or "table"/
   )
 })
+
+test('a row edit may name a path; a path written as \\/ in the dump is a count mismatch, not a miss', () => {
+  // A demo hero button linked to /pages/contact, which a site served without URL rewriting answers 404
+  const edit = {
+    entity: 'module-400',
+    field: 'params',
+    row: true,
+    from: '/pages/contact',
+    to: 'index.php?Itemid=275',
+    count: 1
+  }
+  const [e] = loadContentEdits(editsFile([edit]))
+  // outside a row the escapings still decide: a plain edit keeps refusing a slash
+  assert.throws(() => loadContentEdits(editsFile([{ ...edit, row: undefined, field: undefined }])), /slashes/)
+  const dump = (link) =>
+    'CREATE TABLE `jd_modules` (\n  `id` int,\n  `title` varchar(100),\n  `params` text\n);\n' +
+    `INSERT INTO \`jd_modules\` VALUES (400,'Hero','{\\"btn-link\\":\\"${link}\\"}'),(450,'Other','{\\"btn-link\\":\\"/pages/contact\\"}');\n`
+  // only module 400's row is edited; module 450 keeps the same link
+  const before = dump('/pages/contact')
+  const at = before.indexOf('/pages/contact')
+  assert.equal(editDump(before, [e]), before.slice(0, at) + 'index.php?Itemid=275' + before.slice(at + 14))
+  assert.throws(() => editDump(dump('\\\\/pages\\\\/contact'), [e]), /occurs 0 times/)
+  const lock = JSON.stringify(
+    {
+      entities: {
+        'module-400': { params: '{"btn-link":"/pages/contact"}' },
+        'module-450': { params: '{"btn-link":"/pages/contact"}' }
+      }
+    },
+    null,
+    2
+  )
+  const L = JSON.parse(editLock(lock, [e])).entities
+  assert.equal(L['module-400'].params, '{"btn-link":"index.php?Itemid=275"}')
+  assert.equal(L['module-450'].params, '{"btn-link":"/pages/contact"}')
+})
