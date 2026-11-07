@@ -596,3 +596,30 @@ test('listing rows: a nested block is not the listing, a card opens its item thr
   assert.deepEqual([one.max, one.maxSource, one.maxEvidence.rowsShown], [20, 'page-size-control', 3])
   assert.equal(matchRepeat(repeats, 5), null, 'a nested row set is not a block row set')
 })
+
+test('an empty category page (no item of its own in the map, no item row shown) declares no items list', () => {
+  const capture = structuredClone(CAPTURE)
+  capture.pages.push({
+    path: '/blog/empty-shelf',
+    slug: 'blog_empty-shelf',
+    from: ['/blog'],
+    widths: { 1440: { full: 'images/page-empty-1440.jpg', blocks: ['header', 'body-blog_empty-shelf'] } }
+  })
+  capture.blocks['body-blog_empty-shelf'] = {
+    id: 'body-blog_empty-shelf',
+    source: 'main-body',
+    kind: 'component',
+    widths: { 1440: { pages: ['blog_empty-shelf'], image: 'images/body-empty-1440.jpg', details: details() } }
+  }
+  const map = structuredClone(MAP)
+  map.entities.push({ key: 'category-6', kind: 'category', identity: { path: 'blog/empty-shelf' } })
+  map.entities.find((e) => e.key === 'article-1').identityReferences = { catid: 'category-5' }
+  const kit = kitOf({ map, capture })
+  const by = Object.fromEntries(kit.blocks.map((b) => [b.id, b]))
+  assert.equal(by['body-blog_empty-shelf'].source.owner, 'category-6')
+  assert.deepEqual(by['body-blog_empty-shelf'].lists, [])
+  assert.ok(!kit.errors.some((e) => String(e.field).includes('body-blog_empty-shelf.items')))
+  // A category with an item whose rows the read did not find still has its list, and says why it has no minimum.
+  assert.equal(by['body-blog'].lists[0].rowKind, 'items')
+  assert.ok(kit.errors.some((e) => e.field === 'blocks[body-blog].lists[body-blog.items].min'))
+})
