@@ -56,7 +56,9 @@ test('a slot that already has a role keeps it: the tables only fill what is empt
   const { contentMap, unplaced } = proposeContentMapRoles(map, { cms: 'wordpress' })
   assert.equal(contentMap.slots[6].role, 'editorial.heading')
   assert.equal(contentMap.slots[1].role, 'offering.description')
-  assert.deepEqual(unplaced, [])
+  // The first card has no name left (its name slot was given another role), so it is no card: the price, which no
+  // editorial default fits, is left to the packaging agent.
+  assert.deepEqual(unplaced, ['home.menu.dish-price.1'])
 })
 
 test('from the command line, a capture step in any language reads the same proposal', () => {
@@ -115,4 +117,63 @@ test('a Joomla menu entry that opens a social network is a contact card, the nth
   // Not a social network: the address keeps no role and the title stays a menu label.
   assert.deepEqual(got['menuItem-7.1'], [null, null])
   assert.equal(got['menuItem-7.0'][1], null)
+})
+
+test('a WordPress card whose name is no slot gets no group: its other slots fall back to an editorial role', () => {
+  // A fictional bakery theme: the dish name heading carries inline price markup, so only the description is a slot.
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      {
+        key: 'home.menu.dish-description.1',
+        type: 'text',
+        sample: 'Rye crust, honey glaze and toasted seeds.'
+      },
+      { key: 'home.menu.dish-image.1', type: 'image', sample: 'loaf-1.jpg' },
+      { key: 'home.menu.dish-name.2', type: 'text', sample: 'Fig twist' },
+      { key: 'home.menu.dish-description.2', type: 'text', sample: 'Folded with dried figs and orange zest.' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  const got = fieldsOf(contentMap)
+  assert.equal(got['home.menu.dish-description.1'][1], null)
+  assert.equal(got['home.menu.dish-image.1'][1], null)
+  assert.match(String(got['home.menu.dish-description.1'][0]), /^editorial\./)
+  // The card that has its name keeps its group.
+  assert.deepEqual(got['home.menu.dish-description.2'], [
+    'offering.description',
+    { id: 'home.menu.dish.1', item: 1, kind: 'menu_item' }
+  ])
+  const check = checkContentMapRoles(contentMap)
+  assert.deepEqual(
+    check.errors.filter((e) => e.includes('lacks the role')),
+    []
+  )
+})
+
+test('a WordPress slot joins a card whose name the map already placed', () => {
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      {
+        key: 'home.menu.dish-name.1',
+        type: 'text',
+        sample: 'Fig twist',
+        role: 'offering.name',
+        group: { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' }
+      },
+      { key: 'home.menu.dish-image.1', type: 'image', sample: 'fig-1.jpg' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  assert.deepEqual(fieldsOf(contentMap)['home.menu.dish-image.1'], [
+    'offering.image',
+    { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' }
+  ])
 })
