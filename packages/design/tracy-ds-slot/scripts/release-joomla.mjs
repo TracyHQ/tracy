@@ -225,6 +225,10 @@ for (const p of inParts)
     gh('release', 'download', tag, '-R', REPO, '-D', dl, '-p', p.file, '--clobber')
 for (const p of inParts)
   if (shaFile(join(dl, p.file)) !== p.sha256) throw new Error(`${p.file}: SHA-256 does not match the release`)
+// the folder holds the base as a release of its own (release-batch.mjs verify stands it up with stand.mjs --from-dir):
+// its manifest is the base's, not a newer one the release already carries
+if (JSON.parse(readFileSync(join(dl, 'manifest.json'), 'utf8')).version !== cur.version)
+  writeFileSync(join(dl, 'manifest.json'), `${JSON.stringify(cur, null, 2)}\n`)
 
 // ── 1. webroot, tokenized ──
 const site = join(OUT, 'webroot')
