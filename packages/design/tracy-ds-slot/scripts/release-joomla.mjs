@@ -1,4 +1,20 @@
 #!/usr/bin/env node
+import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync
+} from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { contractBase, loadContract } from '../src/library.mjs'
+import { editContentMap, editDump, editLock, loadContentEdits } from '../src/release-content-edits.mjs'
 /**
  * The next version of a released JA Joomla quickstart whose stylesheets follow a worn system — built
  * LOCALLY, published nowhere:
@@ -39,31 +55,16 @@
  * Prints a JSON summary. Uploading, the Claude Cowork plugin that carries the contract and the pins
  * are the release owner's steps (quickstart-contract skill §8–9).
  */
-import { execFileSync } from 'node:child_process'
-import { createHash } from 'node:crypto'
-import {
-  copyFileSync,
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-  statSync,
-  writeFileSync
-} from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { contractBase, loadContract } from '../src/library.mjs'
-import { manifestFromSetting } from '../src/release-manifest.mjs'
-import { editContentMap, editDump, editLock, loadContentEdits } from '../src/release-content-edits.mjs'
+import { releaseManifestRefusal } from '../src/release-current-manifest.mjs'
 import { pinAddedFiles } from '../src/release-lock-added.mjs'
+import { manifestFromSetting } from '../src/release-manifest.mjs'
 import { packTar, packZip } from '../src/release-pack.mjs'
-import { releaseRoleScan, ROLE_SCAN_FILE, roleScanError } from '../src/release-role-scan.mjs'
 import { removeUser } from '../src/release-remove-user.mjs'
-import { untagArchived } from '../src/release-untag-archived.mjs'
+import { ROLE_SCAN_FILE, releaseRoleScan, roleScanError } from '../src/release-role-scan.mjs'
+import { siteLanguageTwins } from '../src/release-site-language.mjs'
 import { repairTagPaths } from '../src/release-tag-paths.mjs'
 import { resyncUcmContent } from '../src/release-ucm-sync.mjs'
-import { siteLanguageTwins } from '../src/release-site-language.mjs'
+import { untagArchived } from '../src/release-untag-archived.mjs'
 import { paletteForFile, tokenizeCss } from '../src/tokenize.mjs'
 import { COLOUR_TOKENS } from '../src/tokens56.mjs'
 
@@ -129,8 +130,10 @@ let cur
 try {
   gh('release', 'download', tag, '-R', REPO, '-D', dl, '-p', 'manifest.json', '--clobber')
   cur = JSON.parse(readFileSync(join(dl, 'manifest.json'), 'utf8'))
-  // an older single-zip manifest is not the release's current state (tracy-business/j6)
-  if (!cur.platform || !cur.parts) throw new Error('stale manifest')
+  // an older single-zip manifest is not the release's current state (tracy-business/j6), nor is the manifest of a
+  // version uploaded but not switched on when --from names the one the switch serves (release-current-manifest.mjs)
+  const refusal = releaseManifestRefusal(cur, FROM)
+  if (refusal) throw new Error(refusal)
 } catch {
   const base = join(CONTRACTS, product, 'j6')
   // the version the release serves is the one its switch names (a contract built here for the next
