@@ -5,6 +5,8 @@
  * is required: a copy of the release without one, or with one captured for another version, is held.
  */
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
 import { test } from 'node:test'
 
 import { readinessVerdict } from '../src/lib/template-readiness/verdict.js'
@@ -65,4 +67,23 @@ test('a copy of JA Diner WP7 whose kit was captured for another quickstart versi
   } finally {
     done()
   }
+})
+
+test('JA Diner WP7: the kit reads each page as its sections, and its accent as the brand colour', () => {
+  const { release, world, dir } = dinerWp7()
+  const kit = JSON.parse(readFileSync(path.join(dir, 'template-kit.json'), 'utf8'))
+  // The front page is its sections (hero, features, tabs, news, subscribe), not one block of the whole post content.
+  const front = kit.pages.find((p) => p.path === '/')
+  const shown = front.blocks['1440']
+  assert.ok(shown.length > 3, `the front page shows ${shown.length} blocks`)
+  assert.ok(shown.includes('block-front-page-slideshow'))
+  assert.ok(
+    !shown.some((id) => id.startsWith('body-')),
+    'no whole post content block on a page with sections'
+  )
+  assert.equal(kit.blocks.find((b) => b.id === 'block-front-page-slideshow').role, 'hero')
+  // theme.json names the accent; a search badge reusing it does not make it a status colour.
+  assert.equal(kit.site.brandColours.primary.value, '#c36349')
+  const step = stepOf(readinessVerdict(release, world), 'template-kit')
+  assert.ok(!(step.params.flowGaps ?? []).some((g) => g.code === 'kit-brand-colour-from-link'))
 })
