@@ -444,7 +444,7 @@ test('a kit with no platform fails the picture run before any model call', opts,
     await assignPickerDoor(pool)
     const started = await startPickerRun(pool, here)
     const calls = []
-    const fetchImpl = async (url, init) => {
+    const fetchImpl = async (url) => {
       calls.push(url)
       return json({})
     }
