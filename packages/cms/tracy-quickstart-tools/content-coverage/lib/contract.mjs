@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { normText, normPath, normHref, basename, letterCount, alnumCount, compact } from './normalize.mjs'
+import { inventoryPagesOf, wordpressPagePath } from './wordpress-page-path.mjs'
 
 const readJson = (dir, name) => JSON.parse(readFileSync(join(dir, name), 'utf8'))
 /** sha256 of a contract file's bytes: the coverage file names the exact map and lock it measured. */
@@ -37,6 +38,16 @@ function paramsOf(raw) {
   } catch {
     return {}
   }
+}
+
+/** The page entities of a WordPress map, each opened by its whole path from the inventory's parents. */
+function wordpressMapPages(map, pages) {
+  return map.entities
+    .filter((e) => e.kind === 'page' && typeof e.identity?.slug === 'string')
+    .map((e) => {
+      const route = wordpressPagePath(e.identity.slug, pages)
+      return { entity: e.key, route, openAs: `?pagename=${route}` }
+    })
 }
 
 export function loadContract(dir, siteUrl) {
@@ -114,10 +125,9 @@ export function loadContract(dir, siteUrl) {
   // whatever the site's SEF settings, so the audit never depends on guessing URL rewriting.
   const mapPages =
     platform === 'wordpress'
-      ? // A WordPress map declares no routes: every page entity opens by its slug, whatever the permalinks are.
-        map.entities
-          .filter((e) => e.kind === 'page' && typeof e.identity?.slug === 'string')
-          .map((e) => ({ entity: e.key, route: e.identity.slug, openAs: `?pagename=${e.identity.slug}` }))
+      ? // A WordPress map declares no routes: every page entity opens by its path (`?pagename=parent/child`), whatever
+        // the permalinks are; a page under a parent answers only under the parent's path (`wordpress-page-path.mjs`).
+        wordpressMapPages(map, inventoryPagesOf(dir))
       : map.pages
   const pages = mapPages.map((p) => {
     const ent = entityByKey.get(p.entity)

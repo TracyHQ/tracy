@@ -47,7 +47,9 @@ export function freezeFloating() {
  * - the template header (`#t4-header`, `#t3-header`) and the component area (`#t4-main-body`, `#t3-mainbody`, or
  *   `main` when it holds only the component and not the whole page).
  * A block inside the off-canvas menu, hidden, or without size is recorded with `visible: false`.
- * @param {{entity: string, position: string}[]} assigned
+ * On a platform whose map names its blocks by selector (`{entity, selector, position}` entries, WordPress), only those
+ * selectors are read.
+ * @param {{entity: string, position: string, selector?: string}[]} assigned
  */
 export function findBlocks(assigned) {
   const OFF = '.t4-offcanvas, .t4-off-canvas, .t3-off-canvas, [class*="off-canvas"], .offcanvas'
@@ -79,6 +81,33 @@ export function findBlocks(assigned) {
     // Tagged so later reads (details, row measurements) find the same element.
     el.setAttribute('data-kit-block', block)
     taken.add(block)
+  }
+  // A platform that names its blocks by selector (WordPress: the template parts and the post content or its sections, from
+  // `lib/site/adapters/wordpress-map.mjs`) is read by those selectors only: the Joomla module wrappers below would
+  // read a ported template's leftover ids (`#acm-slideshow-94`) as modules the content map does not hold.
+  const named = (assigned ?? []).filter((a) => a && typeof a.selector === 'string')
+  if (named.length) {
+    const KIND = { header: 'template-header', 'main-body': 'component' }
+    for (const a of named) {
+      const el = document.querySelector(a.selector)
+      if (el && !taken.has(a.entity))
+        add(
+          el,
+          a.entity,
+          a.kind ?? KIND[a.entity] ?? 'template-part',
+          a.position ? { position: a.position } : {}
+        )
+      else if (!el && a.entity === 'main-body')
+        out.push({
+          block: 'main-body',
+          kind: 'component',
+          visible: false,
+          offCanvas: false,
+          note: 'no component area'
+        })
+    }
+    const docHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
+    return { blocks: out.sort((a, b) => (a.top ?? 0) - (b.top ?? 0)), docHeight }
   }
   for (const el of document.querySelectorAll('[id^="Mod"]')) {
     const m = el.id.match(/^Mod(\d+)$/)

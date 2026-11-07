@@ -24,7 +24,7 @@
  *
  * The Slot fit group (ADR 0039 decision 7) follows the same rule with its own verdict (`judgeFit`), after holes and
  * roles: when only Slot fit is left the code is `coverage-fit` (todo) or `coverage-live-fit` (warn). It is judged
- * only where the audit measures Slot fit (`policy.fitPlatforms`: Joomla); elsewhere its state is `not-applicable`.
+ * only where the audit measures Slot fit (`policy.fitPlatforms`: Joomla and WordPress); elsewhere its state is `not-applicable`.
  *
  * The label rules group (ADR 0040, spec #37) is the fifth, judged by `judgeLabelRules` from the `labelRules` block the
  * audit committed in the coverage file (this step never runs the audit): when only a failing rule is left the code is

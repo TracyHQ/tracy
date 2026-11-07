@@ -153,8 +153,8 @@ test('a T3 kit with none of the five names all five (JA Diner 1.0.5 before #439 
   )
 })
 
-test('the check does not apply off Joomla, or without a readable kit (the kit step says that)', () => {
-  const wp = release('quickstart/ja-example/wp7', '1.0.0', 'wordpress')
+test('the check does not apply off Joomla and WordPress (see template-readiness-wordpress-hidden-lists), or without a readable kit (the kit step says that)', () => {
+  const wp = release('quickstart/ja-example/emdash', '1.0.0', 'emdash')
   assert.equal(
     HIDDEN_KIT_FIELDS_CHECK.judge(wp, { templateKit: { state: 'read', doc: kitAt(BOXING) } }, {}),
     null

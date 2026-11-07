@@ -30,13 +30,25 @@ export function indexMap(map) {
 
 /**
  * The published modules the map assigns to the page at `path` (for blocks that render without a wrapper id), each
- * with the module it renders inside, if any (contract-read.mjs withModulesInside). An unpublished one prints nothing.
+ * with the module it renders inside, if any (contract-read.mjs withModulesInside), and the selector it is found by
+ * when its platform names blocks that way. An unpublished one prints nothing.
  */
 export function assignedAt(idx, path) {
-  const p = idx.pageByPath.get(path.split('?')[0]) ?? idx.pageByPath.get('/')
+  // A page the map does not list prints what the front page prints (Joomla modules on every page), or, on a platform
+  // whose map names the areas any page prints (WordPress, `otherPageAreas`), those areas.
+  const p =
+    idx.pageByPath.get(path.split('?')[0]) ??
+    (idx.map.otherPageAreas ? { assignedModules: idx.map.otherPageAreas } : idx.pageByPath.get('/'))
   return (p?.assignedModules ?? [])
     .filter((a) => String(a.published ?? '1') !== '0')
-    .map((a) => ({ entity: a.entity, position: a.position, ...(a.inside ? { inside: a.inside } : {}) }))
+    .map((a) => ({
+      entity: a.entity,
+      position: a.position,
+      ...(a.inside ? { inside: a.inside } : {}),
+      // A block a platform finds by selector (WordPress areas and page sections, wordpress-map.mjs).
+      ...(a.selector ? { selector: a.selector } : {}),
+      ...(a.kind ? { kind: a.kind } : {})
+    }))
 }
 
 /**
@@ -49,6 +61,8 @@ export function ownerOfPath(idx, path) {
   const [base, query] = path.split('?')
   const page = idx.pageByPath.get(base)
   const listPage = query ? ` (list position ${query.replace('start=', '')})` : ''
+  // A page entity (WordPress: `page-<slug>`, its post content found by metadata.name) owns the page it is.
+  if (page && idx.entities.get(page.entity)?.kind === 'page') return { owner: page.entity, kind: 'page' }
   if (page && page.link && page.link !== '#') {
     const q = queryOf(page.link)
     const view = q.view ?? ''

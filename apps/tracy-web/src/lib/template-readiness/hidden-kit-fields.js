@@ -20,9 +20,20 @@
  *   todo   a field missing, an empty list without a reason, or an entry the write step would leave out
  *          (`kit-hidden-field-missing`, `fields` names each, `problems` the reader's words)
  *
- * Joomla only, and only on a kit that reads: the kit step itself says when there is none. The same on T3 and T4: the
- * fields name what the template prints, and the readers scope their rules by framework (lib/kit-framework.js); `framework`
- * in the params says which one the write step will use, null when no template profile row records it (read as T4).
+ * Joomla and WordPress, and only on a kit that reads: the kit step itself says when there is none. The same on T3 and T4:
+ * the fields name what the template prints, and the readers scope their rules by framework (lib/kit-framework.js);
+ * `framework` in the params says which one the write step will use, null when no template profile row records it (read
+ * as T4).
+ *
+ * WordPress (a block theme, ticket #457): all five fields keep their meaning and are judged by the same readers, which
+ * test CSS selectors and nothing Joomla specific. None is "not applicable": a block theme prints play buttons, "more"
+ * buttons, card links and a post template's share bar in its patterns, template parts and templates exactly as a
+ * Joomla template does in its layouts, and a page the write step creates meets all of them. What differs:
+ *   createdPageLayouts.legal  names the block template a created legal page prints through (`page`, or
+ *                             `<theme>//<slug>`), not a Joomla `<template>:<file>` article layout; none = the theme's
+ *                             default `page` template. Nothing reads it yet: the WordPress write step does not exist.
+ *   framework                 always null: the body class scoping of self link and created page rules is Joomla's
+ *                             (T3, T4). The WordPress write step will scope by `page-id-<id>`; `platform` says which.
  */
 import { emptyVideoButtonsOf } from '../empty-video-buttons.js'
 import { createdPageHideOf } from '../created-page-hide.js'
@@ -35,6 +46,9 @@ export const HIDDEN_FIELDS_STEP = 'kit-hidden-fields'
 
 /** A Joomla layout as `article_layout` holds it: `<template or _>:<file>` (the kit tool's legal-layout.mjs rule). */
 const LAYOUT = /^(?:_|[a-z0-9_-]+):[a-z0-9_-]+$/i
+
+/** A WordPress block template as the kit names it: its slug, or `<theme>//<slug>` as the site editor writes it. */
+const WP_TEMPLATE = /^(?:[a-z0-9_-]+\/\/)?[a-z0-9_-]+$/i
 
 const isNonBlank = (value) => typeof value === 'string' && value.trim() !== ''
 
@@ -69,18 +83,20 @@ export const HIDDEN_KIT_FIELDS = Object.freeze([
   {
     field: 'createdPageLayouts.legal',
     command: 'legal-layout',
-    /** @param {any} site */
-    judge(site) {
+    /** @param {any} site @param {string} [platform] */
+    judge(site, platform = 'joomla') {
+      const wordpress = platform === 'wordpress'
       const legal = site?.createdPageLayouts?.legal
       if (!legal || typeof legal !== 'object') return { state: 'missing', problems: [] }
       if (legal.articleLayout === null)
         return isNonBlank(legal.why) ? { state: 'none', problems: [] } : { state: 'missing', problems: [] }
-      return typeof legal.articleLayout === 'string' && LAYOUT.test(legal.articleLayout.trim())
+      const layout = typeof legal.articleLayout === 'string' ? legal.articleLayout.trim() : ''
+      return (wordpress ? WP_TEMPLATE : LAYOUT).test(layout)
         ? { state: 'declared', problems: [] }
         : {
             state: 'missing',
             problems: [
-              `the kit's legal layout ${JSON.stringify(legal.articleLayout)} is not <template>:<file>`
+              `the kit's legal layout ${JSON.stringify(legal.articleLayout)} is not ${wordpress ? '<theme>//<template> or <template>' : '<template>:<file>'}`
             ]
           }
     }
@@ -90,12 +106,13 @@ export const HIDDEN_KIT_FIELDS = Object.freeze([
 /**
  * Which of the five fields a kit declares, says none with a reason, or lacks.
  * @param {any} doc the template kit document
+ * @param {string} [platform] `joomla` (default) or `wordpress`
  * @returns {{ declared: string[], none: string[], missing: string[], problems: string[] }}
  */
-export function hiddenKitFieldsOf(doc) {
+export function hiddenKitFieldsOf(doc, platform = 'joomla') {
   const out = { declared: [], none: [], missing: [], problems: [] }
   for (const f of HIDDEN_KIT_FIELDS) {
-    const { state, problems } = f.judge(doc?.site)
+    const { state, problems } = f.judge(doc?.site, platform)
     out[state].push(f.field)
     out.problems.push(...problems)
   }
@@ -107,18 +124,25 @@ export const HIDDEN_KIT_FIELDS_CHECK = Object.freeze({
   piece: 'template-kit',
   step: HIDDEN_FIELDS_STEP,
   judge(release, world) {
-    if (release?.platform !== 'joomla') return null
+    const platform = release?.platform
+    if (platform !== 'joomla' && platform !== 'wordpress') return null
     const kit = world?.templateKit ?? kitOfRelease(release, world?.contracts ?? new Map())
     if (kit?.state !== 'read') return null
-    const { declared, none, missing, problems } = hiddenKitFieldsOf(kit.doc)
+    const { declared, none, missing, problems } = hiddenKitFieldsOf(kit.doc, platform)
     // The body class the write step scopes the self link and created page rules by (null: no profile row, read as T4).
-    const framework = frameworkOfKit(kit.doc, { contracts: world?.contracts })
+    const framework =
+      platform === 'wordpress' ? null : frameworkOfKit(kit.doc, { contracts: world?.contracts })
+    const where = platform === 'wordpress' ? { platform } : {}
     if (missing.length)
       return {
         state: 'todo',
         code: 'kit-hidden-field-missing',
-        params: { fields: missing, declared, none, problems, framework }
+        params: { fields: missing, declared, none, problems, framework, ...where }
       }
-    return { state: 'done', code: 'kit-hidden-fields-declared', params: { declared, none, framework } }
+    return {
+      state: 'done',
+      code: 'kit-hidden-fields-declared',
+      params: { declared, none, framework, ...where }
+    }
   }
 })

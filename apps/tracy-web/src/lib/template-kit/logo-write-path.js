@@ -17,6 +17,11 @@ export const PROFILE_LOGO_KEYS = new Set([
   'site_logo_small',
   'site_logo_dark_small'
 ])
+/**
+ * The options a WordPress block theme keeps its logo in. The header (and footer) logo is a Site Logo block, which
+ * prints the attachment of the `site_logo` option; a theme that reads a dark logo keeps it in `tracy_logo_dark`.
+ */
+export const WORDPRESS_LOGO_OPTIONS = new Set(['site_logo', 'tracy_logo_dark'])
 /** The phone menu's own picture of a main logo key. */
 const SMALL_KEY = { site_logo: 'site_logo_small', site_logo_dark: 'site_logo_dark_small' }
 
@@ -24,13 +29,22 @@ const named = (value) => typeof value === 'string' && value !== ''
 
 /**
  * @param {{ setting?: string | null, frameId?: string | null, where?: string }} spot a kit logo spot
- * @param {{ frameKnown?: (key: string) => boolean }} [world] `frameKnown`: whether the content map holds a frame key;
- *   without it any named frame counts
- * @returns {{ via: 'profile' | 'small-logo', key: string } | { via: 'contract', key: string, frame: string } |
+ * @param {{ frameKnown?: (key: string) => boolean, siteLogoBlock?: boolean }} [world] `frameKnown`: whether the content
+ *   map holds a frame key; without it any named frame counts. `siteLogoBlock`: true when the theme's header prints a
+ *   Site Logo block (WordPress); left out, a spot is judged as on Joomla
+ * @returns {{ via: 'profile' | 'small-logo', key: string } | { via: 'wordpress-option', key: string } | { via: 'contract', key: string, frame: string } |
  *   { via: 'none', reason: string }}
  */
-export function logoWritePath(spot, { frameKnown } = {}) {
+export function logoWritePath(spot, { frameKnown, siteLogoBlock } = {}) {
   const setting = spot?.setting
+  // WordPress: a Site Logo block is set through an option; no frame is needed, the block follows the option.
+  if (
+    siteLogoBlock === true &&
+    !named(spot?.frameId) &&
+    named(setting) &&
+    WORDPRESS_LOGO_OPTIONS.has(setting)
+  )
+    return { via: 'wordpress-option', key: setting }
   if (named(setting) && PROFILE_LOGO_KEYS.has(setting)) {
     if (spot.where !== 'offcanvas') return { via: 'profile', key: setting }
     if (!SMALL_KEY[setting]) return { via: 'none', reason: `no small logo for ${setting}` }

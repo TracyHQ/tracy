@@ -18,7 +18,7 @@
  *
  *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --site <site key> --version <contract id> \
  *     --pages-file <json> [--force]
- *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --base <untouched Joomla demo address> \
+ *   WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --base <untouched demo address> \
  *     --version <contract id> --pages-file <json> [--force]
  *
  * `--base` reads the demo on this machine with tracy-host's own browser reader, as `demo-measures.mjs --base` does (it
@@ -47,19 +47,26 @@ import {
 import { hostMeasure, underIndex } from '../src/site-check/host-measure.js'
 import { siteByKey } from '../src/sites/store.js'
 
-/** Joomla answers its pages under `/index.php`: the demo read on this machine is asked them as the site's host asks them. */
+/** Joomla answers its pages under `/index.php` (WordPress does not: `underIndex` leaves its pages be): the demo read on this machine is asked them as the site's host asks them. */
 const underIndexHost =
-  (host) =>
+  (host, platform = 'joomla') =>
   ({ pages, ...payload }) =>
     host({
       ...payload,
-      ...(Array.isArray(pages) ? { pages: pages.map((p) => underIndex('joomla', p)) } : {})
+      ...(Array.isArray(pages) ? { pages: pages.map((p) => underIndex(platform, p)) } : {})
     })
 
+/** The platform of the contract whose id is `version`: wordpress or joomla. */
+function platformOfVersion(index, version) {
+  for (const contract of index.values())
+    if (contract.id === version) return contract.platform === 'wordpress' ? 'wordpress' : 'joomla'
+  return 'joomla'
+}
+
 /** A demo read on this machine by tracy-host's own browser reader (`demo-measures.mjs --base`). */
-async function localReader(base) {
+async function localReader(base, platform) {
   const { localHost } = await import('./demo-measures.mjs')
-  return localHost(base)
+  return localHost(base, platform)
 }
 
 /**
@@ -90,7 +97,7 @@ export async function main(argv, env = process.env, deps = {}) {
   ) {
     err(
       'usage: WRITE_BENCH_BASELINE_DIR=<dir> DATABASE_URL=... node scripts/site-check-baseline.mjs --site <key> --version <contract id> --pages-file <json> [--force]\n' +
-        '   or: WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --base <untouched Joomla demo address> --version <contract id> --pages-file <json> [--force]'
+        '   or: WRITE_BENCH_BASELINE_DIR=<dir> node scripts/site-check-baseline.mjs --base <untouched demo address> --version <contract id> --pages-file <json> [--force]'
     )
     return 2
   }
@@ -114,9 +121,11 @@ export async function main(argv, env = process.env, deps = {}) {
     return 0
   }
   if (values.base) {
-    const reader = deps.hostOf ? await deps.hostOf(values) : await localReader(values.base)
+    // The platform is the contract's own (its manifest); a version with no contract here is read as Joomla, as before.
+    const platform = platformOfVersion(deps.index ?? defaultContracts(), values.version)
+    const reader = deps.hostOf ? await deps.hostOf(values) : await localReader(values.base, platform)
     try {
-      return await measure(underIndexHost(reader.host))
+      return await measure(underIndexHost(reader.host, platform))
     } finally {
       await reader.close?.()
     }

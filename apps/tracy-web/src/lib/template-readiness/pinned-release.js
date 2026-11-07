@@ -73,7 +73,7 @@ export function releaseOfPin(pin, contracts) {
   if (contract) {
     try {
       const manifest = JSON.parse(readFileSync(`${contract.dir}/manifest.json`, 'utf8'))
-      template = manifest.template ?? manifest.quickstart?.template ?? null
+      template = manifest.template ?? manifest.quickstart?.template ?? manifest.theme ?? null
     } catch {
       template = null
     }
