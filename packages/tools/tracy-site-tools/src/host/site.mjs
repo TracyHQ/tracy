@@ -7,6 +7,7 @@
 
 // A fleet label, as the path fence reads one — reused, not restated.
 import { QUICKSTART_DESIGN_RULE } from '../../../tracy-subprocess-docker/src/content-contract.mjs'
+import { opensEmpty } from './contract-check.mjs'
 import { isLegacyStructureRefusal } from './legacy-refusal.mjs'
 import { LABEL } from '../../../tracy-subprocess-docker/src/route.mjs'
 // ⚠ A CYCLE, SAFE ONLY WHILE BOTH SIDES READ THE OTHER AT CALL TIME: `emdash.mjs` imports
@@ -3553,7 +3554,8 @@ export function narrowInspect(answer, params, limit = INSPECT_BUDGET_CHARS) {
       // J2 keeps it in a lean answer too: the "Content too long" refusal sends the model to this
       // field, and a lean answer without it re-opened that loop (review of #harness-flows, 26/09).
       ...(s.type !== 'image' && Number.isInteger(s.maxCharacters) ? { max: s.maxCharacters } : {}),
-      ...(s.type !== 'image' && s.sample === '' ? { empty: true } : {}),
+      // a slot the plugin's slot corrections opened is not empty to the component (`opensEmpty`)
+      ...(s.type !== 'image' && s.sample === '' && !opensEmpty(s) ? { empty: true } : {}),
       ...(s.requiresEvidence ? { requiresEvidence: true } : {})
     }
   })

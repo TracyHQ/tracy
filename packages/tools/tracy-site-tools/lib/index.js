@@ -9136,6 +9136,114 @@ function hasContentContract(cwd, sitesRoot) {
 }
 var QUICKSTART_DESIGN_RULE = "Keep the quickstart's design: reuse its own sections and styles, and keep new text close to the length of the text it replaces (0.75\xD7 to 1.25\xD7).";
 
+// src/host/contract-check.mjs
+var IDENTITY_TOKENS = Object.freeze([
+  "site.name",
+  "site.legalName",
+  "site.slogan",
+  "site.monogram",
+  "contact.email",
+  "contact.phone",
+  "contact.tel",
+  "contact.address",
+  "contact.hours",
+  "social.facebook",
+  "social.instagram",
+  "social.linkedin",
+  "social.tiktok",
+  "social.youtube"
+]);
+var IDENTITY_FIELDS = Object.freeze({
+  "site-name": "site.name",
+  "legal-name": "site.legalName",
+  slogan: "site.slogan",
+  monogram: "site.monogram",
+  email: "contact.email",
+  phone: "contact.phone",
+  address: "contact.address",
+  hours: "contact.hours",
+  facebook: "social.facebook",
+  instagram: "social.instagram",
+  linkedin: "social.linkedin",
+  tiktok: "social.tiktok",
+  youtube: "social.youtube"
+});
+var EVIDENCE_MAX_BYTES = 8e3;
+var CTA_URL = /^(https:\/\/[^\t\n\v\f\r ]+|mailto:[^\t\n\v\f\r ]+|tel:[+0-9 ()-]+|index\.php\?Itemid=[0-9]+|\/[a-zA-Z0-9/_?&=.%#-]*|#[a-zA-Z0-9_-]+)$/;
+var IMAGE_PATH = /^images\/[a-zA-Z0-9/_-]+\.(png|jpe?g|webp)$/;
+var PHP_TRIM_SET = /* @__PURE__ */ new Set([" ", "	", "\n", "\r", "\0", "\v"]);
+function phpTrim(s) {
+  let a = 0;
+  let b = s.length;
+  while (a < b && PHP_TRIM_SET.has(s[a])) a += 1;
+  while (b > a && PHP_TRIM_SET.has(s[b - 1])) b -= 1;
+  return s.slice(a, b);
+}
+var phpEmpty = (v2) => v2 === void 0 || v2 === null || v2 === false || v2 === 0 || v2 === "" || v2 === "0";
+var IDENTITY_TOKEN = new RegExp(
+  `\\{(${IDENTITY_TOKENS.map((n) => n.replace(".", "\\.")).join("|")})\\}`,
+  "g"
+);
+function stripIdentityTokens(value) {
+  return value.replace(IDENTITY_TOKEN, "");
+}
+var INVENTED_EVIDENCE = "Invented by Tracy to fit the customer; not from the brief. Replace it with the real one.";
+function hasDirective(value) {
+  return /\{\/?[a-z][^{}]*\}/i.test(stripIdentityTokens(value));
+}
+function hasMarkup(value) {
+  for (let i = 0; i < value.length; i += 1) {
+    const c = value.charCodeAt(i);
+    if (c === 60 || c === 62) return true;
+    if (c < 32 && c !== 9 && c !== 10 && c !== 13) return true;
+  }
+  return false;
+}
+function isIdentitySlot(slot) {
+  return !phpEmpty(slot?.siteIdentity) || String(slot?.label ?? "").startsWith("[Tracy] Site identity");
+}
+var opensEmpty = (slot) => !phpEmpty(slot?.opensEmpty);
+function checkSlotValue(slot, value, { evidence = null } = {}) {
+  const key = String(slot.key);
+  const sample = typeof slot.sample === "string" ? slot.sample : "";
+  if (!phpEmpty(slot.requiresEvidence) && value !== slot.sample) {
+    const given = evidence?.[key];
+    if (typeof given !== "string" || phpTrim(given) === "" || Buffer.byteLength(given, "utf8") > EVIDENCE_MAX_BYTES)
+      return { rule: "evidence", key, message: `Customer evidence required: ${key}` };
+  }
+  if (!isIdentitySlot(slot)) {
+    if (phpTrim(value) === "" && phpTrim(sample) !== "")
+      return { rule: "cannot-empty", key, message: `Content cannot remove an occupied slot: ${key}` };
+    if (phpTrim(value) !== "" && phpTrim(sample) === "" && !opensEmpty(slot))
+      return { rule: "cannot-fill", key, message: `Content cannot activate an empty slot: ${key}` };
+  }
+  if (hasMarkup(value))
+    return { rule: "no-markup", key, message: `Markup and control characters are not content: ${key}` };
+  if (hasDirective(value))
+    return { rule: "no-directive", key, message: `Joomla plugin directives are not content: ${key}` };
+  const length = [...value].length;
+  if (Number.isFinite(slot.maxCharacters) && length > Number(slot.maxCharacters))
+    return {
+      rule: "max-characters",
+      key,
+      message: `Content too long: ${key}`,
+      limit: Number(slot.maxCharacters),
+      length
+    };
+  if (slot.type === "url") {
+    if (value.startsWith("//") || value.includes("\\"))
+      return { rule: "url", key, message: `Unsupported CTA URL: ${key}` };
+    if (value !== "" && !CTA_URL.test(value))
+      return { rule: "url", key, message: `Unsupported CTA URL: ${key}` };
+  }
+  if (slot.type === "image" && value !== "" && !IMAGE_PATH.test(value))
+    return { rule: "image", key, message: `Image must already exist in the site media library: ${key}` };
+  return null;
+}
+function contractPrecheckOn(env = process.env) {
+  return String(env?.TRACY_CONTRACT_PRECHECK ?? "").trim().toLowerCase() !== "off";
+}
+
 // src/host/comment-echo.mjs
 var COMMENT_KEY = "_comment";
 var COMMENT_MIN = 1;
@@ -14763,7 +14871,8 @@ function narrowInspect(answer, params, limit = INSPECT_BUDGET_CHARS) {
       // J2 keeps it in a lean answer too: the "Content too long" refusal sends the model to this
       // field, and a lean answer without it re-opened that loop (review of #harness-flows, 26/09).
       ...s.type !== "image" && Number.isInteger(s.maxCharacters) ? { max: s.maxCharacters } : {},
-      ...s.type !== "image" && s.sample === "" ? { empty: true } : {},
+      // a slot the plugin's slot corrections opened is not empty to the component (`opensEmpty`)
+      ...s.type !== "image" && s.sample === "" && !opensEmpty(s) ? { empty: true } : {},
       ...s.requiresEvidence ? { requiresEvidence: true } : {}
     };
   });
@@ -36384,113 +36493,6 @@ async function restoreOnEmdash(deps, plan, table) {
     undo: emdashUndo(writes)
   });
   return { ...out, next: REPLACE_NEXT.restored };
-}
-
-// src/host/contract-check.mjs
-var IDENTITY_TOKENS = Object.freeze([
-  "site.name",
-  "site.legalName",
-  "site.slogan",
-  "site.monogram",
-  "contact.email",
-  "contact.phone",
-  "contact.tel",
-  "contact.address",
-  "contact.hours",
-  "social.facebook",
-  "social.instagram",
-  "social.linkedin",
-  "social.tiktok",
-  "social.youtube"
-]);
-var IDENTITY_FIELDS = Object.freeze({
-  "site-name": "site.name",
-  "legal-name": "site.legalName",
-  slogan: "site.slogan",
-  monogram: "site.monogram",
-  email: "contact.email",
-  phone: "contact.phone",
-  address: "contact.address",
-  hours: "contact.hours",
-  facebook: "social.facebook",
-  instagram: "social.instagram",
-  linkedin: "social.linkedin",
-  tiktok: "social.tiktok",
-  youtube: "social.youtube"
-});
-var EVIDENCE_MAX_BYTES = 8e3;
-var CTA_URL = /^(https:\/\/[^\t\n\v\f\r ]+|mailto:[^\t\n\v\f\r ]+|tel:[+0-9 ()-]+|index\.php\?Itemid=[0-9]+|\/[a-zA-Z0-9/_?&=.%#-]*|#[a-zA-Z0-9_-]+)$/;
-var IMAGE_PATH = /^images\/[a-zA-Z0-9/_-]+\.(png|jpe?g|webp)$/;
-var PHP_TRIM_SET = /* @__PURE__ */ new Set([" ", "	", "\n", "\r", "\0", "\v"]);
-function phpTrim(s) {
-  let a = 0;
-  let b = s.length;
-  while (a < b && PHP_TRIM_SET.has(s[a])) a += 1;
-  while (b > a && PHP_TRIM_SET.has(s[b - 1])) b -= 1;
-  return s.slice(a, b);
-}
-var phpEmpty = (v2) => v2 === void 0 || v2 === null || v2 === false || v2 === 0 || v2 === "" || v2 === "0";
-var IDENTITY_TOKEN = new RegExp(
-  `\\{(${IDENTITY_TOKENS.map((n) => n.replace(".", "\\.")).join("|")})\\}`,
-  "g"
-);
-function stripIdentityTokens(value) {
-  return value.replace(IDENTITY_TOKEN, "");
-}
-var INVENTED_EVIDENCE = "Invented by Tracy to fit the customer; not from the brief. Replace it with the real one.";
-function hasDirective(value) {
-  return /\{\/?[a-z][^{}]*\}/i.test(stripIdentityTokens(value));
-}
-function hasMarkup(value) {
-  for (let i = 0; i < value.length; i += 1) {
-    const c = value.charCodeAt(i);
-    if (c === 60 || c === 62) return true;
-    if (c < 32 && c !== 9 && c !== 10 && c !== 13) return true;
-  }
-  return false;
-}
-function isIdentitySlot(slot) {
-  return !phpEmpty(slot?.siteIdentity) || String(slot?.label ?? "").startsWith("[Tracy] Site identity");
-}
-function checkSlotValue(slot, value, { evidence = null } = {}) {
-  const key = String(slot.key);
-  const sample = typeof slot.sample === "string" ? slot.sample : "";
-  if (!phpEmpty(slot.requiresEvidence) && value !== slot.sample) {
-    const given = evidence?.[key];
-    if (typeof given !== "string" || phpTrim(given) === "" || Buffer.byteLength(given, "utf8") > EVIDENCE_MAX_BYTES)
-      return { rule: "evidence", key, message: `Customer evidence required: ${key}` };
-  }
-  if (!isIdentitySlot(slot)) {
-    if (phpTrim(value) === "" && phpTrim(sample) !== "")
-      return { rule: "cannot-empty", key, message: `Content cannot remove an occupied slot: ${key}` };
-    if (phpTrim(value) !== "" && phpTrim(sample) === "")
-      return { rule: "cannot-fill", key, message: `Content cannot activate an empty slot: ${key}` };
-  }
-  if (hasMarkup(value))
-    return { rule: "no-markup", key, message: `Markup and control characters are not content: ${key}` };
-  if (hasDirective(value))
-    return { rule: "no-directive", key, message: `Joomla plugin directives are not content: ${key}` };
-  const length = [...value].length;
-  if (Number.isFinite(slot.maxCharacters) && length > Number(slot.maxCharacters))
-    return {
-      rule: "max-characters",
-      key,
-      message: `Content too long: ${key}`,
-      limit: Number(slot.maxCharacters),
-      length
-    };
-  if (slot.type === "url") {
-    if (value.startsWith("//") || value.includes("\\"))
-      return { rule: "url", key, message: `Unsupported CTA URL: ${key}` };
-    if (value !== "" && !CTA_URL.test(value))
-      return { rule: "url", key, message: `Unsupported CTA URL: ${key}` };
-  }
-  if (slot.type === "image" && value !== "" && !IMAGE_PATH.test(value))
-    return { rule: "image", key, message: `Image must already exist in the site media library: ${key}` };
-  return null;
-}
-function contractPrecheckOn(env = process.env) {
-  return String(env?.TRACY_CONTRACT_PRECHECK ?? "").trim().toLowerCase() !== "off";
 }
 
 // src/host/rendered-words.mjs
