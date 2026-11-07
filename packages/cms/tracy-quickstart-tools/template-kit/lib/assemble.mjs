@@ -102,7 +102,8 @@ export async function assembleKit(o, out, tool) {
     readings,
     textFit: readIf(join(out, 'text-fit.json')) ?? {},
     rowFit: readIf(join(out, 'row-fit.json')) ?? {},
-    drives: readIf(join(out, 'field-drives.json')) ?? {}
+    drives: readIf(join(out, 'field-drives.json')) ?? {},
+    classes: readIf(join(out, 'icon-classes.json')) ?? {}
   })
   // Which text slots print in the same card as each list row's picture (row-pairs.mjs, from the frames pass).
   pairListRows(kit, frameEvidence)

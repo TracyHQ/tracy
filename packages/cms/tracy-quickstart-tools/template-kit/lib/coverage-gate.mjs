@@ -162,13 +162,16 @@ function mainMenuRow(kit, mapOf, rowFit) {
 /**
  * Complete the kit from the contract: link label slots, contact fields, one limit per slot, the main menu row.
  * @param {object} kit changed in place
- * @param {{map: object, textFit?: object, rowFit?: object, drives?: object}} o
+ * @param {{map: object, textFit?: object, rowFit?: object, drives?: object, classes?: object}} o
  */
-export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = new Map(), drives = {} }) {
+export function applyCoverage(
+  kit,
+  { map, textFit = {}, rowFit = {}, readings = new Map(), drives = {}, classes = {} }
+) {
   const mapSlots = map.slots ?? []
   const mapOf = new Map(mapSlots.map((s) => [neutralKey(s.key), s]))
   linkLabelSlots(kit, map)
-  pictureFrames(kit, map, readings)
+  pictureFrames(kit, map, readings, classes)
   labelSlots(kit, mapOf)
   contactFields(kit, mapSlots)
   unifyLimits(kit, { mapSlots, textFit })

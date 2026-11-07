@@ -42,6 +42,18 @@ function unheld(b, readings, held) {
   return (readings.get(b.id)?.pictures ?? []).filter((p) => p.file && !held.get(b.id)?.has(norm(p.file)))
 }
 
+/** A person's class for the frame, else the answer of a same-file frame, else unchecked (null). */
+function facesOf(cls, same) {
+  if (cls?.class === 'demo-faces' || cls?.class === 'illustration')
+    return {
+      faces: cls.class === 'demo-faces',
+      classReason: `${cls.reason ?? ''} (${cls.by ?? 'unknown'})`.trim()
+    }
+  if (same && typeof same.faces === 'boolean')
+    return { faces: same.faces, classReason: same.classReason ?? `same file as ${same.id}` }
+  return { faces: null }
+}
+
 /**
  * Adds a frame for every picture a block shows that no frame or declared image slot of the block holds. The same
  * painter showing the same file in several blocks is one picture: the first block's frame is the one, the others are
@@ -50,13 +62,20 @@ function unheld(b, readings, held) {
  * @param {object} kit
  * @param {object} map the content map
  * @param {Map<string, object>} readings block id -> the read pass's reading at the widest width
+ * @param {Record<string, {class: string, reason?: string, by?: string}>} [classes] icon-classes.json: a person's faces
+ *   class for a frame id (`demo-faces` or `illustration`) wins over a copy from a same-file frame
  */
-export function pictureFrames(kit, map, readings) {
+export function pictureFrames(kit, map, readings, classes = {}) {
   const held = heldPictures(kit, map)
   const byFile = new Map()
   for (const b of kit.blocks)
     for (const f of b.frames ?? [])
-      if (f.picture && !byFile.has(norm(f.picture))) byFile.set(norm(f.picture), f)
+      if (f.picture) {
+        // The first frame of a file that has a faces answer; a frame never shown has none and must not hide it.
+        const held = byFile.get(norm(f.picture))
+        if (!held || (typeof held.faces !== 'boolean' && typeof f.faces === 'boolean'))
+          byFile.set(norm(f.picture), f)
+      }
   const slotFiles = new Set(
     (map.slots ?? []).filter((s) => s.type === 'image').map((s) => norm(pictureOf(s)))
   )
@@ -105,9 +124,7 @@ export function pictureFrames(kit, map, readings) {
                 'a content map slot shows the same file elsewhere; replacing that slot does not change this one'
             }
           : {}),
-        ...(same && typeof same.faces === 'boolean'
-          ? { faces: same.faces, classReason: same.classReason ?? `same file as ${same.id}` }
-          : { faces: null })
+        ...facesOf(classes[id], same)
       }
       if (!main) firstOf.set(key, frame)
       b.frames.push(frame)

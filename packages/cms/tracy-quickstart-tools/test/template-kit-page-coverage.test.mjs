@@ -560,3 +560,43 @@ test("a link wrapping a whole card names the card's label slot: the member's nam
     'the card of the block own only, its words in order'
   )
 })
+
+test('a picture frame takes its faces class from a person entry, or from a same-file frame that has one', () => {
+  const pic = (file) => ({
+    position: 0,
+    file,
+    via: 'img',
+    painter: 'img',
+    behind: false,
+    box: { width: 72, height: 72 }
+  })
+  const readings = new Map([
+    ['page-a', { pictures: [pic('media/ada.jpg')] }],
+    ['page-b', { pictures: [pic('media/lake.jpg')] }],
+    ['page-c', { pictures: [pic('media/quote.jpg')] }]
+  ])
+  const kit = {
+    blocks: [
+      { id: 'page-a', frames: [] },
+      { id: 'page-b', frames: [] },
+      { id: 'page-c', frames: [] },
+      // a frame of the same file that was never shown has no faces answer: it must not hide the one that has
+      {
+        id: 'quote',
+        frames: [
+          { id: 'quote.1', picture: 'media/quote.jpg', kind: null },
+          { id: 'quote.2', picture: 'media/quote.jpg', kind: 'photo', faces: true, classReason: 'portrait' }
+        ]
+      }
+    ]
+  }
+  const classes = {
+    'page-a.picture-1': { class: 'demo-faces', reason: 'portrait of an author', by: 'person' },
+    'page-b.picture-1': { class: 'illustration', reason: 'a lake', by: 'person' }
+  }
+  pictureFrames(kit, { slots: [] }, readings, classes)
+  const [a, b, c] = kit.blocks
+  assert.deepEqual([a.frames[0].faces, a.frames[0].classReason], [true, 'portrait of an author (person)'])
+  assert.deepEqual([b.frames[0].faces, b.frames[0].classReason], [false, 'a lake (person)'])
+  assert.equal(c.frames[0].faces, true)
+})
