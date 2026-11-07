@@ -168,7 +168,8 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
         (a) => `brief photo ${a.id} is labelled as this person's portrait`
       )
       if (!tried) continue
-      const letters = initialsOf(personName(brief, wish.person))
+      const name = personName(brief, wish.person)
+      const letters = initialsOf(name)
       if (letters) {
         const size = outputSizeFor(idx.demoSize(frameId), frame, frame.width)
         // A preview only: the tile's colours are roles the write step resolves from the Design system.
@@ -182,6 +183,8 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
           list,
           entry: placedEntry(frameId, 'initials', made, {
             letters,
+            // The alt of initials is the name they are drawn from (ADR 0043 section 3f).
+            alt: name,
             paint: { ...INITIALS_PAINT },
             preview: true,
             reason:

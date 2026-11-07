@@ -168,6 +168,7 @@ function readEntry(e, list) {
   )
     return { problem: 'templateOverlay must be null, "unknown" or { colour, strength (0 to 1), from }' }
   if (e.seen != null && typeof e.seen !== 'string') return { problem: 'seen must be a string or null' }
+  if (e.alt != null && typeof e.alt !== 'string') return { problem: 'alt must be a string or null' }
   if (typeof e.reason !== 'string') return { problem: 'reason must be a string' }
   return {
     entry: {
@@ -197,6 +198,8 @@ function readEntry(e, list) {
       preview: painted,
       backdrop: e.backdrop ?? null,
       seen: e.seen ?? null,
+      // The alt step 8 wrote from the picture it placed (the looker's, or a person's name on initials), when it wrote one.
+      ...(typeof e.alt === 'string' && e.alt.trim() ? { alt: e.alt.trim() } : {}),
       reason: e.reason
     }
   }

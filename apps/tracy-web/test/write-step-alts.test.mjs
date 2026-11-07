@@ -183,3 +183,52 @@ test('the plugin is asked once a run, and a door that throws reads as an older p
   const broken = correctionsReader({ apply: () => Promise.reject(new Error('gone')) }, 'site', CONTRACT)
   assert.deepEqual(await broken(), { icons: false, alts: false })
 })
+
+// Step 8's alts (ADR 0043 section 3f): the picture step writes the alt of each picture it placed, from that picture, and
+// the write step sends it over the writer's, who wrote from the wish before any picture was chosen.
+const picturesWithAlts = (alts) => ({
+  mapping: {
+    contract: CONTRACT,
+    revision: 'a picture run',
+    changes: {},
+    evidence: {},
+    pending: [],
+    emptyLinks: []
+  },
+  uploads: [],
+  hidden: [],
+  painted: [],
+  siteSettings: [],
+  alts,
+  problems: []
+})
+const runWithPictures = (alts, info = takes()) =>
+  runStep(
+    { copy: copyWithAlts(), pictures: picturesWithAlts(alts) },
+    { info, extraKeys: ['module-8.11', 'module-8.12'] },
+    { contentMap: CONTENT_MAP }
+  )
+
+test('the alt step 8 wrote from the placed picture goes over the writer alt; the writer keeps the frames step 8 left', async () => {
+  const seen = 'A made-up lifeguard chair beside a made-up pool at noon.'
+  const { report, site } = await runWithPictures({ 'block-8.5': seen })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  const sent = site.applies().at(-1).params.changes
+  assert.equal(sent['module-8.11'], seen)
+  assert.equal(sent['module-8.12'], ALTS[1].text, 'step 8 wrote no alt here: the writer alt stands')
+  assert.equal(altLine(report, 'block-8.11').owner, 'picture')
+  assert.equal(altLine(report, 'block-8.11').ordered, seen)
+  assert.equal(altLine(report, 'block-8.12').owner, 'writer')
+})
+
+test('a step 8 alt for a frame the writer gave none is still written, and a plugin that opens no alt sends none', async () => {
+  const copyless = await runStep(
+    { copy: { ...copy(), alts: [] }, pictures: picturesWithAlts({ 'block-8.6': 'A made-up pool at dusk.' }) },
+    { info: takes(), extraKeys: ['module-8.11', 'module-8.12'] },
+    { contentMap: CONTENT_MAP }
+  )
+  assert.equal(copyless.site.applies().at(-1).params.changes['module-8.12'], 'A made-up pool at dusk.')
+  const closed = await runWithPictures({ 'block-8.5': 'A made-up chair.' }, takes(CONTRACT, 0))
+  assert.equal(closed.site.applies().at(-1)?.params.changes['module-8.11'], undefined)
+  assert.equal(altLine(closed.report, 'block-8.5').status, 'skipped')
+})

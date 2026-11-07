@@ -21,7 +21,7 @@
 //
 // Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
 // had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
-import { correctionsReader, galleryAlts } from './slot-corrections.js'
+import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { indexInputs } from '../lib/site-copy/inputs-index.js'
@@ -360,13 +360,20 @@ export async function runWriteStep(input) {
     // An alt goes through the door only where the plugin says it opens its slot; any other keeps its skipped line.
     const placed = galleryAlts({
       alts: extras.alts ?? {},
+      // Step 8's alts, written from the pictures it placed, go over the writer's (ADR 0043 section 3f).
+      pictureAlts: pictureAltsOf(read.values.pictures),
+      picturesFile: read.inputs.pictures?.file ?? null,
       contentMap,
       hidden: new Set([...pictures.claims, ...fromPlan].filter((c) => c.kind === 'hide').map((c) => c.slot)),
       file: read.inputs.copy.file
     })
     const alts =
       placed.claims.length && !(await corrections()).alts
-        ? { claims: [], changes: {}, left: extras.alts ?? {} }
+        ? {
+            claims: [],
+            changes: {},
+            left: { ...extras.alts, ...pictureAltsOf(read.values.pictures) }
+          }
         : placed
     extras = { ...extras, alts: alts.left }
     // The slot prints only as its kept picture's alt, so a plan's hide of it hides nothing: the alt stands.

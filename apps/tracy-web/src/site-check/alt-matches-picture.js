@@ -9,6 +9,10 @@
 // frame the looker did not look at (an icon, initials, a look that failed), a picture painted as a background (no alt), an empty
 // alt, or no page that prints it (`written-not-printed` owns that). With several printed copies, one alt that agrees is enough.
 //
+// An alt printed as step 8 wrote it (the `alt` of the frame's manifest entry, written by the looker from the picture placed,
+// ADR 0043 section 3f) agrees by construction: it is in the site's language, so it may share no word with the English seen
+// sentence.
+//
 // A disagreeing alt blocks on its slot. It is the writer's (step 6) when the alt is words the write report says the writer wrote;
 // otherwise the page prints an alt nobody in the run wrote (the template's or the demo's, left by the write step), step 9.
 import { compareAlt } from '../lib/alt-compare.js'
@@ -66,6 +70,16 @@ export function printedAlts(html, file) {
   return out
 }
 
+/** The alts step 8 wrote from its pictures, by frame, as word keys. */
+function pictureAltsByFrame(pictures) {
+  const out = new Map()
+  for (const list of ['frames', 'siteSettings'])
+    for (const e of Array.isArray(pictures?.[list]) ? pictures[list] : [])
+      if (typeof e?.frame === 'string' && typeof e.alt === 'string' && wordsKey(e.alt))
+        out.set(e.frame, wordsKey(e.alt))
+  return out
+}
+
 /** Step 8's seen sentence by frame: frames and template settings, only the non-empty ones. */
 function seenByFrame(pictures) {
   const out = new Map()
@@ -97,6 +111,7 @@ export const altMatchesPictureGroup = {
         `No ${PICTURES_VERSION} manifest of step 8 was given, so what each picture shows is not known.`
       )
     const seen = seenByFrame(pictures)
+    const stepEight = pictureAltsByFrame(pictures)
     const onPages = slotsOnPages(kit, report?.keptPages)
     const html = new Map()
     const pageOf = async (path) => {
@@ -140,6 +155,7 @@ export const altMatchesPictureGroup = {
         continue
       }
       checked++
+      if (withAlt.some((p) => stepEight.get(s.slot) === wordsKey(p.alt))) continue
       const compared = withAlt.map((p) => ({ ...p, ...compareAlt(p.alt, said) }))
       if (compared.some((c) => c.agrees)) continue
       const [first] = compared

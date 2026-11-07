@@ -15,6 +15,9 @@
 // alone, and also listed in `painted` (kind `backdrop`) with the recipe: step 9 paints the backdrop behind the figure
 // in the brand's colours (a file of both, or the backdrop behind the slot), and its preview is only for review.
 //
+// The alt of every frame the export places (a file in `changes`, or initials it paints) is the alt step 8 wrote from that
+// picture, when it wrote one (`alts`, by frame): the write step writes it over the writer's (ADR 0043 section 3f).
+//
 // A frame the manifest returns (the plan wants it filled and the step left it without a picture) is a problem of the
 // package, never silently left out: only the logo frame, which the brand step fills, is not.
 import { contentMapKey } from '../lib/content-map-key.js'
@@ -63,6 +66,7 @@ export { contentMapKey }
  *     preview: { sitePath: string, file: string, sha256: string, width: number, height: number },
  *     previewDark: object | null }[],
  *   siteSettings: object[],
+ *   alts: Record<string, string>,
  *   problems: { where: string, detail: string }[]
  * }}
  */
@@ -89,6 +93,10 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
   // must hide the row itself, or the frame silently keeps its demo picture.
   const hidden = []
   const painted = []
+  const alts = {}
+  const altOf = (e) => {
+    if (typeof e.alt === 'string' && e.alt) alts[e.frame] = e.alt
+  }
   const previewOf = (f) => ({
     sitePath: f.sitePath,
     file: f.file,
@@ -170,6 +178,7 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     if (e.paint) {
       const p = paintedOf(e, key)
       if (p) painted.push(p)
+      if (p?.kind === 'initials') altOf(e)
       continue
     }
     const block = blockOf.get(e.frame)
@@ -197,6 +206,7 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
       continue
     }
     changes[key] = e.sitePath
+    altOf(e)
     if (e.backdrop)
       painted.push({
         frame: e.frame,
@@ -245,6 +255,7 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     hidden,
     painted,
     siteSettings,
+    alts,
     problems
   }
 }

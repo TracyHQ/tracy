@@ -68,5 +68,14 @@ Answer with one JSON object and nothing before or after it:
 { "verdict": "pass" or "fail", "faults": [ fault names from the list above, exactly as written ], "seen": "<one
 sentence saying what the picture actually shows>" }
 
+When the message asks for the alt text of the picture, add an "alt" field to the same object: the text a visitor who
+cannot see the picture reads in its place. Write it from what you see in this picture, never from the plan's words: the
+plan was written before the picture was chosen. Write it in the site's language the message names, within the number of
+characters it gives. Say what the picture shows plainly and concretely: who or what is in it and what they do. Use the
+business's own words for its offering, its place and its people where the plan's words name them and the picture shows
+them; name the business only when the message gives its name and the picture is of its place or its work. No "image of"
+or "photo of", no double quote, no long dash, no claim the picture does not show. Write the alt even when the picture
+fails.
+
 A picture with no fault passes, with an empty faults list. A picture with any fault fails and names every fault it has.
 The seen sentence describes the picture plainly, as alt text would, without judging it.

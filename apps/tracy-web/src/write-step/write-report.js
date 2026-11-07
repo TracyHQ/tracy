@@ -129,7 +129,10 @@ export function slotLines({
     ...pictureLines,
     ...shareLines,
     ...[...owners.values()]
-      .filter((c) => c.owner !== 'brand' && (c.owner !== PICTURE_OWNER || c.kind === 'hide'))
+      // The picture stage says its own image lines; its hides and the alts step 8 wrote (kind text) are said here.
+      .filter(
+        (c) => c.owner !== 'brand' && (c.owner !== PICTURE_OWNER || c.kind === 'hide' || c.kind === 'text')
+      )
       .map((claim) => claimLine(claim, done)),
     ...unowned.map((u) =>
       line(u.slot, contentMapKey(u.slot), null, 'skipped', 'no owner: a slot in a kept block no file fills')

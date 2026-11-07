@@ -16,6 +16,9 @@
 // name outside the model's list is dropped and noted; any fault makes the verdict "fail". An answer that cannot be read,
 // or a call that fails, is a look with no verdict and its reason; the caller asks once more, then records the fault
 // "look unreadable" (looker-step.js). It never stops the run.
+// When the run asks for alts (`alt`: the site's language, the business's name and the frame's limit, alt-ask.js), the
+// same answer also carries `alt`: the alt text of the picture seen, written by the one model that sees it (ADR 0043
+// section 3f). An answer without one is still a look; the frame then keeps the writer's alt.
 import sharp from 'sharp'
 import { costOfCall, priceFor } from '../lib/brand-prices.js'
 import { costOf } from '../lib/agent-over-door-wire.js'
@@ -186,6 +189,13 @@ function cutoutLines(cutout) {
   ]
 }
 
+// The lines that ask for the alt text of the picture (ADR 0043 section 3f).
+function altLines({ language, business, limit }) {
+  return [
+    `Also write the alt text of this picture for the site: in the site's language ${JSON.stringify(language)}, at most ${limit} characters, saying what this picture shows.${business ? ` The business is ${JSON.stringify(business)}.` : ''}`
+  ]
+}
+
 const ANY_REAL_LINES = [
   'This frame accepts any real photo of the business (a gallery, background or atmosphere picture): it does not ask for a particular scene, so never fail it for what it shows. Fail it only for a fault in the list below that is visible in it.'
 ]
@@ -194,7 +204,15 @@ const ANY_REAL_LINES = [
  * The look's only user message. `cutout`: { textOver, figure, demoFigure } for a cut-out, else null; `anyReal` for a
  * frame that takes any real owner photo.
  */
-export function lookMessage({ words, image, outlined, cutout = null, anyReal = false, surface = null }) {
+export function lookMessage({
+  words,
+  image,
+  outlined,
+  cutout = null,
+  anyReal = false,
+  surface = null,
+  alt = null
+}) {
   const faults = faultsFor({ cutout, anyReal, surface })
   const text = [
     `The plan's words for this frame:`,
@@ -210,7 +228,10 @@ export function lookMessage({ words, image, outlined, cutout = null, anyReal = f
     ...(anyReal ? ANY_REAL_LINES : []),
     ...(surface && !cutout ? surfaceLines(surface) : []),
     `Faults you may name: ${faults.map((f) => `"${f}"`).join(', ')}.`,
-    'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>" }'
+    ...(alt ? altLines(alt) : []),
+    alt
+      ? 'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>", "alt": "<alt text>" }'
+      : 'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>" }'
   ].join('\n')
   return [
     { type: 'text', text },
@@ -237,7 +258,8 @@ export function readLook(text, { anyReal = false, surface = null } = {}) {
     return { problem: `the verdict must be "pass" or "fail", found ${JSON.stringify(answer.verdict)}` }
   const slipOnly = anyReal && !faults.length && named.includes(WRONG_SUBJECT)
   const verdict = faults.length ? 'fail' : slipOnly ? 'pass' : answer.verdict
-  return { verdict, faults, seen, dropped }
+  const alt = typeof answer.alt === 'string' && answer.alt.trim() ? answer.alt.trim() : null
+  return { verdict, faults, seen, dropped, ...(alt ? { alt } : {}) }
 }
 
 /**
@@ -254,6 +276,7 @@ export async function askLooker({
   cutout = null,
   anyReal = false,
   surface = null,
+  alt = null,
   fetchImpl = fetch,
   ms = LOOK_MS
 }) {
@@ -287,7 +310,7 @@ export async function askLooker({
         model: door.model,
         messages: [
           { role: 'system', content: system },
-          { role: 'user', content: lookMessage({ words, image, outlined, cutout, anyReal, surface }) }
+          { role: 'user', content: lookMessage({ words, image, outlined, cutout, anyReal, surface, alt }) }
         ],
         max_tokens: LOOK_MAX_TOKENS,
         temperature: 0,
