@@ -1,5 +1,5 @@
-// One page turn of step 9b (#448), sent as a person sends comments from the preview: the items are made as the popover
-// makes them (repair-locate.js), the comment requests through the requests door (the agent's `request`, which numbers
+// One page turn of step 9b (#448), sent as a person sends comments from the preview: the items, made as the popover
+// makes them (repair-locate.js) and packed to fit one turn (repair-parts.js), go as comment requests through the requests door (the agent's `request`, which numbers
 // them; the pass's rate gate keeps it under the door's items a minute), the numbered comment turn is built from them and
 // prompted into the page's own session through the site session prompt path demo QA uses (the agent's `prompt`). Completion is read from the site turn records (the agent's `turns`): a
 // turn on one of this prompt's request ids that is closed or stale. A prompt that opened no turn in `noTurnMs` is resent
@@ -11,7 +11,6 @@
 // id of the pass, session by session,
 // and a turn the ledger does not hold yet joins it (`late` for a dropped page, `duplicate` beside a page's turn), to be
 // judged and undone like the rest.
-import { pageItems } from './repair-locate.js'
 import { pageTurn } from './repair-items.js'
 
 const ENDED = new Set(['closed', 'stale'])
@@ -121,17 +120,17 @@ export async function cutShort(pass, entry) {
 }
 
 /**
- * Sends one page's faults as one turn in the page's session and waits for it.
+ * Sends one turn of a page's faults in the page's session and waits for it.
  * @param {object} pass the pass's context (repair-pass.js)
- * @param {{ page: string, faults: object[], round: number, sessionId: string }} input
+ * @param {{ page: string, faults: object[], items: object[], round: number, sessionId: string }} input `items` the
+ *   comment items of `faults`, one each, in order (repair-locate.js `pageItems`)
  * @returns {Promise<object>} the turn record: `{ page, round, faults, items, numbers, requestIds, sessionId, turnId, state,
  *   changes, costUsd, ms, how }`, or with `dropped` (no turn after one resend), `refused` (the agent did not take the
  *   prompt) or `timeLimit` (the requests door's minute would not free up before new work stops)
  */
-export async function sendPageTurn(pass, { page, faults, round, sessionId }) {
+export async function sendPageTurn(pass, { page, faults, items, round, sessionId }) {
   const { agent, clock, buildCommentTurn, ledger } = pass
   const from = clock.now()
-  const items = await pageItems(pass, page, faults)
   if (pass.rate && !(await pass.rate.take(items.length)))
     return { page, round, faults, items, sessionId, timeLimit: true, ms: clock.now() - from }
   const requestId = pass.nextRequestId()

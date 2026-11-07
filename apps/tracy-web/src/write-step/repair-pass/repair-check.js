@@ -64,6 +64,8 @@ export function checkWorker(pass, state, result) {
       }
       for (const b of batch) b.resolve({ undone: pass.ledger.undone.has(b.turn.turnId) })
     } catch (error) {
+      // Not judged after all: the pass judges them again before the hand-over (repair-pass.js `judgeTheRest`).
+      for (const b of batch) b.turn.judged = false
       for (const b of batch) b.reject(error)
     }
   }

@@ -1,7 +1,7 @@
 // Wiring: the write step bench's `run --repair --out <dir>`, step 9 whole as a build runs it (#448): the write, the first
-// site check with the finder beside it, step 9b through Tracy's site agent, and hand-over, through the one step 9 entry
+// site check, step 9b through Tracy's site agent on that check's faults, and hand-over, through the one step 9 entry
 // point (write-step-nine.js `runStepNine`). Without `--repair` the bench's `run` writes only. It sits beside app.js because
-// it joins the write step, the site check, the finder and the site agent. BENCH ONLY: it writes to a site this bench made.
+// it joins the write step, the site check and the site agent. BENCH ONLY: it writes to a site this bench made.
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { openKit } from './lib/template-kit-source.js'
@@ -10,7 +10,7 @@ import { runSiteCheck } from './site-check/site-check.js'
 import { runStepNine } from './write-step-nine.js'
 
 export const STEP_NINE_USAGE = `      [--repair --out <dir> [--site-pictures-file <path>]]
-                                              with --repair: step 9 whole (write, first site check with the finder,
+                                              with --repair: step 9 whole (write, first site check,
                                               step 9b through Tracy's site agent as the site owner, site check again);
                                               the write report, both site checks and repair-pass.json go into <dir>`
 
@@ -36,6 +36,7 @@ export function repairLines(repair) {
     lines.push(`  undone ${u.turnId} page=${u.page}: ${u.ok ? u.why : `undo-failed ${u.reason}`}`)
   for (const x of repair.dropped) lines.push(`  dropped page=${x.page}: ${x.reason}`)
   for (const x of repair.notSent) lines.push(`  not sent page=${x.page}: ${x.faults} faults, ${x.reason}`)
+  for (const x of repair.errors ?? []) lines.push(`  failed page=${x.page}: ${x.error}`)
   return lines
 }
 
@@ -71,14 +72,10 @@ export async function stepNineOfRun(d, values, write, inCwd) {
       ...(pages ? { pages } : {}),
       ...(d.now ? { now: d.now } : {})
     })
-  const finder = d.makeFinder
-    ? await d.makeFinder({ siteKey: values.site, kitRef: values.kit, saveFile })
-    : null
   const agent = await d.makeRepairAgent({ siteKey: values.site, account: values.account })
   const step = await runStepNine({
     write,
     checkSite,
-    finder,
     agent,
     saveFile,
     // The page as the site serves it, for the element each comment points at (repair-served-element.js).
@@ -89,10 +86,6 @@ export async function stepNineOfRun(d, values, write, inCwd) {
     ...(d.sleep ? { sleep: d.sleep } : {}),
     log: { warn: (line) => d.err(line) }
   })
-  const lines = [
-    ...(finder ? [] : ['finder: none given, so step 9b sends only the site check faults']),
-    ...repairLines(step.repair),
-    ...(step.siteCheck ? checkLines(step.siteCheck) : [])
-  ]
+  const lines = [...repairLines(step.repair), ...(step.siteCheck ? checkLines(step.siteCheck) : [])]
   return { report: step.report, lines }
 }

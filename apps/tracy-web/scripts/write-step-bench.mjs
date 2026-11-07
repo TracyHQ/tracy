@@ -15,7 +15,7 @@
  */
 import { readConfig } from '../src/config.js'
 import { createPool } from '../src/db/index.js'
-import { hostCall, hostStreamCall } from '../src/host/client.js'
+import { hostCall } from '../src/host/client.js'
 import { demoSelfNames } from '../src/ops/quickstarts.js'
 import { designSystemSiteReaders } from '../src/sites/design-system-site-readers.js'
 import { siteByKey } from '../src/sites/store.js'
@@ -29,14 +29,8 @@ import { siteFileReader } from '../src/write-step/site-file.js'
 import { sitePageReader, siteSheetsReader } from '../src/write-step/site-sheets.js'
 import { pgBenchSiteStore } from '../src/write-step/bench-site-store.js'
 import { pgWriteRunStore } from '../src/write-step/write-run-store.js'
-import { joomlaAddresses } from '../src/lib/quickstart-releases.js'
-import { SHOT_MODE } from '../src/lib/page-shots.js'
-import { kitImagesFor } from '../src/lib/template-kit-images.js'
-import { openKit } from '../src/lib/template-kit-source.js'
 import { mintSeatSession } from '../src/workspace/seat-door.js'
 import { benchRepairAgent } from '../src/write-step-bench-repair-agent.js'
-import { finderDoor } from '../src/write-step/finder/finder-door.js'
-import { siteFinder } from '../src/write-step/finder/finder.js'
 
 export async function main(argv, env = process.env) {
   if (!env.DATABASE_URL || !env.SESSION_SECRET) {
@@ -84,41 +78,6 @@ export async function main(argv, env = process.env) {
           siteKey,
           email: account
         }),
-      // Step 9b's finder: the kept pages shot by the site's host at both widths, looked at by the finder door from
-      // /ops > Model & AI beside the template demo's block shots (write-step/finder/).
-      makeFinder: async ({ siteKey, kitRef, saveFile }) => {
-        const config = readConfig(env)
-        const site = await siteByKey(pool, siteKey)
-        if (!site) throw new Error(`No site ${siteKey}`)
-        const opened = openKit(kitRef)
-        const ready = opened
-          ? await kitImagesFor({ pool, config })
-              .ensure(opened)
-              .catch(() => null)
-          : null
-        return siteFinder({
-          door: await finderDoor({ pool, secret: env.SESSION_SECRET }),
-          kit: opened?.doc ?? null,
-          demoImages: ready?.ok ? ready.images : null,
-          saveFile,
-          capture: (layouts, { onFrame, signal }) =>
-            hostStreamCall(
-              config,
-              site.host ?? config.defaultHost,
-              '/capture',
-              {
-                label: site.label,
-                platform: site.platform,
-                // A bench site is Joomla with rewriting off: each layout carries its /index.php address.
-                layouts: joomlaAddresses(layouts, 'joomla'),
-                port: site.port ?? null,
-                ...demoSelfNames(config, site),
-                mode: SHOT_MODE
-              },
-              { onFrame, signal, timeoutMs: 240_000 }
-            )
-        })
-      },
       baselines: contractBaselineStore({
         index: defaultContracts(),
         cache: env.WRITE_BENCH_BASELINE_DIR ? fileBaselineStore(env.WRITE_BENCH_BASELINE_DIR) : null

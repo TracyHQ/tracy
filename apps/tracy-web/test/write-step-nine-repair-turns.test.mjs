@@ -60,8 +60,8 @@ test('a comment page address is the page as the site serves it; an agent with no
   const bare = fakeAgent()
   delete bare.pageUrl
   const { result } = await stepNine({ checks: [checkOf([ALT])], agent: bare })
-  assert.equal(result.repair.status, 'failed')
-  assert.match(result.repair.error, /page address/)
+  assert.equal(result.repair.errors.length, 1, 'the page fails, logged with why')
+  assert.match(result.repair.errors[0].error, /page address/)
   assert.equal(bare.sent.requests.length, 0, 'no comment goes out with a bare path')
 })
 
@@ -148,27 +148,26 @@ test('every agent call and the site check are raced against the time left; the c
   for (let i = 0; i < 5000 && !agent.sent.requests.length; i++) await new Promise((r) => setImmediate(r))
   fire?.()
   const { result } = await run
-  assert.equal(result.repair.status, 'failed')
-  assert.match(result.repair.error, /did not answer in the time left/)
+  assert.equal(result.repair.status, 'done', 'the step returns, the page that hung logged')
+  assert.match(result.repair.errors[0].error, /did not answer in the time left/)
   assert.ok(
     agent.sent.requests[0].timeLeftMs > 0 && agent.sent.requests[0].timeLeftMs <= REPAIR_LIMITS.stopNewWorkMs
   )
 })
 
-test('the finder shares the step clock: a slow finder leaves 9b less time for new work', async () => {
+test('the first check shares the step clock: a slow first check leaves 9b less time for new work', async () => {
   const clock = fakeClock()
   const agent = fakeAgent({ clock })
-  const slow = {
-    find: async () => {
-      clock.t += 10 * 60_000 + 1
-      return { faults: [] }
-    }
-  }
   const { result } = await stepNine({
     checks: [checkOf([DEMO]), checkOf([])],
     agent,
     clock,
-    input: { finder: slow }
+    input: {
+      checkSite: async () => {
+        clock.t += 10 * 60_000 + 1
+        return checkOf([DEMO])
+      }
+    }
   })
   assert.equal(agent.sent.prompts.length, 0, 'no turn starts past ten minutes of the step')
   assert.deepEqual(

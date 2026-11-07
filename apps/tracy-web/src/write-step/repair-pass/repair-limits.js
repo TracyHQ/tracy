@@ -1,5 +1,5 @@
 // The limits of step 9b, the repair pass through Tracy's site agent (#448): the one place their numbers live. One clock
-// runs them for the whole of step 9 after the write: the first site check and the finder beside it spend it too.
+// runs them for the whole of step 9 after the write: the first site check spends it too.
 //   - `stopNewWorkMs`: from the end of the write, no new page turn and no resend round starts after it.
 //   - `returnByMs`: the step hands the site over by then, whatever the agent or the site check does; `undoReserveMs` of it
 //     is kept for undoing turns after the last site check, and `judgeReserveMs` more for that last check, so a turn still
@@ -13,8 +13,6 @@
 //   - `cancelSettleMs`: after a turn still open at the limit is cancelled, how long its record is read until it ends.
 //   - `judgeGatherMs`: how long the check after the turns waits for other turns ending at the same moment, to read them
 //     in one check.
-//   - `finderMs`: the finder's whole look at the kept pages, run beside the first site check; pages it answered are
-//     sent while it still looks at the others.
 export const REPAIR_LIMITS = Object.freeze({
   stopNewWorkMs: 10 * 60_000,
   returnByMs: 12 * 60_000,
@@ -26,8 +24,7 @@ export const REPAIR_LIMITS = Object.freeze({
   itemsPerMinute: 20,
   turnsAtOnce: 3,
   cancelSettleMs: 20_000,
-  judgeGatherMs: 1_000,
-  finderMs: 5 * 60_000
+  judgeGatherMs: 1_000
 })
 
 /** A real timer that never keeps the process alive: `(fire, ms) => cancel`. */

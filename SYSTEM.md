@@ -2363,17 +2363,19 @@ row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tr
 (`site-copy/`, `brand-accent/`, `picture-paint/`).
 
 **Step 9 whole and step 9b** (#448, ADR 0044 decision 30). `apps/tracy-web/src/write-step-nine.js` (`runStepNine`) is the
-one entry point of step 9: the write, the first site check with the finder beside it (`write-step/finder/`: kept pages shot
-by the site's host at 1440 and 390 px, one call per page through the `finisherFinder` door, migration 203), then step 9b
-(`write-step/repair-pass/`): each page's customer-visible faults become one numbered comment turn, built by the preview
-popover's own builder (`lib/comment-turn.js`, `@tracy/dsh-chat-input` `buildCommentTurn`, copied into the image, whose
-build imports the copy), after each element is located through the Apply door (`content.locate`) and the comment requests
-are made through `POST /api/sites/:key/requests` (20 items a minute per site, kept by the pass). Each page's turn is queued
-into a session of its own that 9b opens for the site as its owner (`lib/site-session-ahead.js`, the path demo QA uses), as
-soon as the finder answered that page, at most three at once, and completion is read from `site_turn`. A site check of the
-pages the turn changed (`runSiteCheck` `pages`, joined by `lib/scoped-site-check.js`) judges it, and a turn that made a
-page worse is undone whole through `POST /api/sites/:key/turns/undo`. Repairs are Tracy turns, so Site changes shows each
-with Undo; a turn still open at the step's return is stopped with `session/cancel` and judged by what it wrote. Any 9b error takes its turns back and hands over the written site. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
+one entry point of step 9: the write, the first site check (step 11's script; no model looks at screenshots), then step 9b
+(`write-step/repair-pass/`) on the customer-visible faults of that check: each page's faults become numbered comment
+turns, built by the preview popover's own builder (`lib/comment-turn.js`, `@tracy/dsh-chat-input` `buildCommentTurn`,
+copied into the image, whose build imports the copy) and packed into as few turns as fit its length limit, after each
+element is located through the Apply door (`content.locate`) and the comment requests are made through
+`POST /api/sites/:key/requests` (20 items a minute per site, kept by the pass). Each page's turns are queued into a session
+of its own that 9b opens for the site as its owner (`lib/site-session-ahead.js`, the path demo QA uses), at most three
+pages at once, and completion is read from `site_turn`. A site check of the pages the turn changed (`runSiteCheck`
+`pages`, joined by `lib/scoped-site-check.js`) judges it, and a turn that made a page worse is undone whole through
+`POST /api/sites/:key/turns/undo`. Repairs are Tracy turns, so Site changes shows each with Undo; a turn still open at the
+step's return is stopped with `session/cancel` and judged by what it wrote. A page that fails is logged and the others go
+on; only a site check that cannot run takes the turns back and hands over the written site; the pass never throws to the
+step. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
 `write-step-bench-repair-agent.js`); no customer flow calls it yet (#444).
 
 ## 9. Sign-in, seats, permissions

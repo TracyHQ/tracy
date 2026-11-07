@@ -173,18 +173,16 @@ export function scopedTo(check, pages) {
 
 /**
  * Step 9 whole on the fake site: `checks` are the site checks in the order they run (the last one repeats), `agent` the
- * site agent fake, `found` what the finder reports on its first look (a second look sees nothing), or
- * `(call, { pages }) => faults`, `files` frozen files beside the plan and copy (a brief). A check asked for some `pages`
- * holds only their failures (`scopedTo`).
+ * site agent fake, `files` frozen files beside the plan and copy (a brief). A check asked for some `pages` holds only
+ * their failures (`scopedTo`).
  */
-export async function stepNine({ checks, agent, found = null, clock = fakeClock(), input = {}, files = {} }) {
+export async function stepNine({ checks, agent, clock = fakeClock(), input = {}, files = {} }) {
   const site = fakeSite()
   const frozen = frozenFiles(files)
   const ran = []
   const checkOptions = []
   const saved = new Map()
   const logged = []
-  const finds = []
   try {
     const result = await runStepNine({
       write: { door: site.door, siteKey: SITE, kit: KIT(), contentMap: null, files: frozen.files },
@@ -194,23 +192,6 @@ export async function stepNine({ checks, agent, found = null, clock = fakeClock(
         return scopedTo(checks[Math.min(ran.length, checks.length) - 1], options?.pages ?? null)
       },
       baselines: { read: async () => null },
-      ...(found
-        ? {
-            finder: {
-              find: async (report, options = {}) => {
-                finds.push(options.pages ?? null)
-                return {
-                  faults:
-                    typeof found === 'function'
-                      ? found(finds.length, options)
-                      : finds.length === 1
-                        ? found
-                        : []
-                }
-              }
-            }
-          }
-        : {}),
       agent,
       saveFile: async (name, data) => {
         saved.set(name, JSON.parse(String(data)))
@@ -220,7 +201,7 @@ export async function stepNine({ checks, agent, found = null, clock = fakeClock(
       sleep: clock.sleep,
       ...input
     })
-    return { result, checksRun: ran.length, checkOptions, saved, logged, clock, finds }
+    return { result, checksRun: ran.length, checkOptions, saved, logged, clock }
   } finally {
     frozen.done()
   }

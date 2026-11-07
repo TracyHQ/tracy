@@ -19,7 +19,6 @@
  */
 
 import { baseUrlFor, catalogEntry, LLM_DOORS } from './llm-catalog.js'
-import { effortsFor } from './bench-harness.js'
 import { effortOptions } from './llm-effort.js'
 import { hintFor, openSecret, sealSecret } from './secret-box.js'
 
@@ -173,19 +172,6 @@ export async function assignDoor(pool, door, { providerId, model = null, effort 
     // Only "off" (menu photo reading without reasoning); null = the step's default, `low`.
     if (effort !== undefined && effort !== null && effort !== 'off')
       return { error: 'MODEL_EFFORT_UNSUPPORTED', supported: ['off'], mode: 'selectable' }
-    chosenEffort = effort ?? null
-  } else if (door === 'finisherFinder') {
-    // No effort = the finder's own default (write-step/finder/finder-door.js FINDER_EFFORT); another only when the
-    // model's bench profile says it takes it, as the door checks again before each run.
-    if (effort !== undefined && effort !== null) {
-      const takes = effortsFor(model, providerId) ?? []
-      if (!takes.includes(effort))
-        return {
-          error: 'MODEL_EFFORT_UNSUPPORTED',
-          supported: [...takes],
-          mode: takes.length ? 'selectable' : 'unsupported'
-        }
-    }
     chosenEffort = effort ?? null
   } else if (effort !== undefined && effort !== null) return { error: 'DOOR_EFFORT_UNSUPPORTED' }
   await pool.query(

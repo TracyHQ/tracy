@@ -7,7 +7,6 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { buildCommentTurn } from '../src/lib/comment-turn.js'
 import { kitAltSlots } from '../src/write-step/repair-pass/repair-alt-slots.js'
-import { faultsToSend } from '../src/write-step/repair-pass/repair-faults.js'
 import { pageTurn } from '../src/write-step/repair-pass/repair-items.js'
 import { pageItems } from '../src/write-step/repair-pass/repair-locate.js'
 
@@ -17,7 +16,6 @@ const GALLERY = `<html><body><div id="Mod21" class="t4-module"><div class="galle
 </div></div>
 <main><article class="item-page"><div class="body"><p>Our studio</p>
   <img src="/images/c.jpg" alt="A rower on a lake"></div>
-  <ul class="kit"><li><span class="icon"><img src="/images/share.svg" alt=""></span><h4>BACKPACK</h4></li></ul>
   <p>Open everyday at nine</p></article></main></body></html>`
 
 const altFault = (slot, measured, seen) => ({
@@ -195,34 +193,6 @@ test('a wrong alt says what the picture shows and what the alt reads now, and as
   assert.ok(!item.text.includes('\n'), 'one paragraph')
 })
 
-test('a wrong icon the finder names is sent as an icon to choose from the library, pointing at its item', async () => {
-  const { pages } = faultsToSend({
-    firstCheck: null,
-    found: [
-      {
-        page: '/',
-        viewport: 'desktop',
-        tile: 0,
-        kind: 'other',
-        slot: null,
-        block: null,
-        seen: 'The "BACKPACK" item shows a share icon instead of a backpack.'
-      }
-    ]
-  })
-  const [fault] = pages[0].faults
-  assert.equal(fault.kind, 'wrong-icon')
-  const { pass, located } = passOf()
-  const [item] = await pageItems(pass, '/', [fault])
-  assert.match(item.text, /choose an icon from Tracy's icon library/)
-  assert.match(item.text, /tracy_site media\.icon \{query\}/, 'names the tool that lists the icons')
-  assert.match(item.text, /\{slot, icon\}/, 'and the call that puts one in')
-  assert.match(item.text, /"BACKPACK"/)
-  assert.doesNotMatch(item.text, /fix what the note describes/)
-  assert.equal(located[0].text, 'BACKPACK', 'located by the words it quotes, never an empty query')
-  assert.ok(item.element.selector, 'the page shows the item')
-})
-
 test('glued words are quoted and the instruction is to put the space back', async () => {
   const { pass } = passOf()
   const fault = {
@@ -246,15 +216,15 @@ test('glued words are quoted and the instruction is to put the space back', asyn
 test('a fault with nothing to look up is not sent to content.locate as an empty query', async () => {
   const { pass, located } = passOf()
   const fault = {
-    source: 'finder',
-    group: null,
+    source: 'site-check',
+    group: 'empty-controls',
     kind: 'empty-block',
     page: '/',
     slot: null,
     block: null,
     width: 1440,
     measured: null,
-    seen: 'A wide blank column sits beside the contact details.'
+    seen: 'empty-controls measured nothing'
   }
   const [item] = await pageItems(pass, '/', [fault])
   assert.equal(located.length, 0)

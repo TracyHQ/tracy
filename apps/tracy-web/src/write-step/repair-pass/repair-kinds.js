@@ -31,8 +31,6 @@ export const CHECK_GROUP_KINDS = Object.freeze({
 export const SENT_KINDS = Object.freeze({
   'wrong-alt': () =>
     "This picture's alt text does not describe it: write an alt text that describes the picture shown, for this business.",
-  'wrong-icon': () =>
-    "This icon does not match its item: choose an icon from Tracy's icon library that matches the item (tracy_site media.icon {query} lists them, then {slot, icon} puts one in), and put it in place of this one, keeping the item's words.",
   'unreadable-text': () =>
     'This text is hard to read over its background: make it readable, keeping its words and the template look.',
   'demo-fact': () =>
@@ -42,13 +40,8 @@ export const SENT_KINDS = Object.freeze({
   'broken-layout': () =>
     'This breaks the layout at phone or desktop width (wider than the page, overlapping or cut off): make it fit without changing its words.',
   'empty-block': () => 'This button or block is empty, left from the template demo: remove it.',
-  'raw-markup': () => 'This shows code or markup printed as words: remove the code and keep the words.',
   'demo-contact-link': () =>
     "This phone or e-mail link still dials or mails the template demo: point it at this business's own number or address.",
-  'demo-title-meta': () =>
-    "This page's title or meta description is the template demo's or repeats another page's: write one for this page.",
-  'lost-design': () =>
-    'This block lost a design trait the template demo shows (an accent button, a small label above the heading): bring it back.',
   'emphasis-codes': () =>
     'This shows emphasis codes printed as words (double brackets): remove the codes and keep the words.',
   'glued-words': () =>
@@ -60,9 +53,7 @@ export const SENT_KINDS = Object.freeze({
   'demo-picture': () =>
     "This still shows a picture of the template demo: put one of this business's pictures from the site in its place, or hide it.",
   'cms-error': () =>
-    'This shows a CMS error or a placeholder printed as words: remove it, keeping the words around it.',
-  other: () =>
-    'A visitor sees this as wrong: fix what the note describes, keeping the words and the template look.'
+    'This shows a CMS error or a placeholder printed as words: remove it, keeping the words around it.'
 })
 
 /** Kinds never sent, each with why: the site agent's text tool cannot write accent emphasis. */
@@ -104,10 +95,6 @@ export const NOT_SENT_GROUPS = Object.freeze({
 })
 
 const UNKNOWN = 'no table of repair-kinds.js names it, so it is logged and not sent until one does'
-
-/** The kind of a finder fault: one it names `other` that is about an icon is a wrong icon, sent with its own sentence. */
-export const finderKindOf = (f) =>
-  f.kind === 'other' && /\bicons?\b/i.test(String(f.seen ?? '')) ? 'wrong-icon' : f.kind
 
 /** The kind of a site check failure, or null when no table names its group. A demo link that dials or mails is a contact link. */
 export function kindOfFailure(f) {

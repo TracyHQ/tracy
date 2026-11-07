@@ -1,7 +1,6 @@
-// Step 9b (#448) as a pipeline: what the customer sees is sent; a page's turn goes as soon as that page has its faults;
-// pages run side by side in sessions of their own, each turn judged and undone on its own pages; a turn cut short at the
+// Step 9b (#448) as a pipeline: what the customer sees in the first site check is sent; pages run side by side in sessions of their own, each turn judged and undone on its own pages; a turn cut short at the
 // time limit is still judged; the check after a turn reads only the pages it changed. Tested at the step 9 entry point
-// with the site agent, the site check and the finder faked. Nothing here is a real business or a real site.
+// with the site agent and the site check faked. Nothing here is a real business or a real site.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkOf, failure, fakeAgent, fakeClock, stepNine } from './_write-step-nine-repair.mjs'
@@ -9,11 +8,8 @@ import { checkOf, failure, fakeAgent, fakeClock, stepNine } from './_write-step-
 const ALT = failure('alt-matches-picture', '/index.php/about', 'module-4.1', 'Demo coach lifting weights')
 const DEMO = failure('demo-words', '/', 'module-2.1', 'Call Demo Gym today')
 const itemsOf = (agent) => agent.sent.requests.flatMap((r) => r.items)
-const settle = async (until) => {
-  for (let i = 0; i < 20_000 && !until(); i++) await new Promise((r) => setImmediate(r))
-}
 
-test('whatever the customer sees is sent, glued words and the finder\'s "other" too; only missing accent emphasis is not', async () => {
+test('whatever the customer sees is sent, glued words too; only missing accent emphasis is not', async () => {
   const agent = fakeAgent()
   const first = checkOf([
     failure('accent-emphasis', '/', 'module-2.1', 'Strong body'),
@@ -25,19 +21,9 @@ test('whatever the customer sees is sent, glued words and the finder\'s "other" 
     failure('demo-words', null, 'module-6.2', 'Demo Gym'),
     failure('read-back', '/', 'module-2.1', 'written value missing')
   ])
-  const found = [
-    {
-      page: '/',
-      viewport: 'desktop',
-      tile: 0,
-      kind: 'lost-emphasis',
-      seen: 'The accent word lost its colour'
-    },
-    { page: '/', viewport: 'phone', tile: 1, kind: 'other', seen: 'The menu button covers the logo' }
-  ]
-  const { result } = await stepNine({ checks: [first, checkOf([])], agent, found })
+  const { result } = await stepNine({ checks: [first, checkOf([])], agent })
   const labels = itemsOf(agent).map((i) => i.element.label)
-  for (const sent of ['module-2.2', 'module-2.3', 'main-heading', 'module-2.4', 'module-2.5', 'other'])
+  for (const sent of ['module-2.2', 'module-2.3', 'main-heading', 'module-2.4', 'module-2.5'])
     assert.ok(labels.includes(sent), `${sent} in ${labels}`)
   const glued = itemsOf(agent).find((i) => i.element.label === 'module-2.2')
   assert.match(glued.text, /space/)
@@ -47,68 +33,9 @@ test('whatever the customer sees is sent, glued words and the finder\'s "other" 
     [
       ['demo-fact', 'no-page'],
       ['lost-emphasis', 'never-sent'],
-      ['lost-emphasis', 'never-sent'],
       [null, 'not-visible']
     ].sort()
   )
-})
-
-test("a page's turn goes as soon as the finder answered that page, before the finder ends, with the check's faults of that page", async () => {
-  const clock = fakeClock()
-  let finderDone = false
-  const agent = fakeAgent({ clock })
-  const home = {
-    page: '/',
-    viewport: 'phone',
-    tile: 0,
-    kind: 'broken-layout',
-    seen: 'The heading runs off the page'
-  }
-  const about = {
-    page: '/about',
-    viewport: 'desktop',
-    tile: 0,
-    block: 'module-4',
-    kind: 'demo-fact',
-    seen: '"Demo Gym"'
-  }
-  const finder = {
-    find: async (_report, { onPage, pages } = {}) => {
-      // A second look sees the faults gone.
-      if (pages) return { faults: [] }
-      onPage?.('/', [home])
-      // The finder looks at the about page only once the home turn is out.
-      await settle(() => agent.sent.prompts.length > 0)
-      onPage?.('/about', [about])
-      finderDone = true
-      return { faults: [home, about] }
-    }
-  }
-  const promptsBeforeEnd = []
-  const prompt = agent.prompt
-  agent.prompt = async (input) => {
-    if (!finderDone) promptsBeforeEnd.push(input.sessionId)
-    return prompt(input)
-  }
-  await stepNine({ checks: [checkOf([DEMO, ALT]), checkOf([])], agent, clock, input: { finder } })
-  assert.equal(promptsBeforeEnd.length, 1, 'the home turn went while the finder was still looking')
-  const byPage = new Map()
-  for (const r of agent.sent.requests)
-    byPage.set(r.items[0].page, [
-      ...(byPage.get(r.items[0].page) ?? []),
-      ...r.items.map((i) => i.element.label)
-    ])
-  assert.deepEqual(
-    byPage.get('/'),
-    ['module-2.1', 'broken-layout'],
-    "home: the check's fault and the finder's"
-  )
-  assert.deepEqual(
-    byPage.get('/about'),
-    ['module-4.1', 'module-4'],
-    'about waited for its finder answer: one turn'
-  )
-  assert.equal(agent.sent.prompts.filter((p) => p.page === '/about').length, 1)
 })
 
 test('pages run side by side, each in a session of its own, never more than three turns at once', async () => {
@@ -196,15 +123,11 @@ test('a turn cancelled while open at the time limit is judged by the check after
   }
 })
 
-test('repair-pass.json holds a timeline of the step: the first check, the finder, each turn and each check after', async () => {
+test('repair-pass.json holds a timeline of the step: the first check, each turn and each check after', async () => {
   const agent = fakeAgent()
-  const found = [
-    { page: '/', viewport: 'phone', tile: 0, kind: 'broken-layout', seen: 'The heading runs off' }
-  ]
-  const { saved } = await stepNine({ checks: [checkOf([DEMO]), checkOf([])], agent, found })
+  const { saved } = await stepNine({ checks: [checkOf([DEMO]), checkOf([])], agent })
   const stages = saved.get('repair-pass.json').timeline.map((s) => s.stage)
-  for (const stage of ['first-check', 'finder', 'turn', 'check'])
-    assert.ok(stages.includes(stage), stages.join(', '))
+  for (const stage of ['first-check', 'turn', 'check']) assert.ok(stages.includes(stage), stages.join(', '))
   for (const s of saved.get('repair-pass.json').timeline)
     assert.ok(s.startMs >= 0 && s.endMs >= s.startMs, JSON.stringify(s))
 })

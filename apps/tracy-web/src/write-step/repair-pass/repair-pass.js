@@ -1,16 +1,18 @@
 // Step 9b, the repair pass through Tracy's site agent (#448; ADR 0044 decision 30). After the write and the first site
-// check (with the finder beside it), it does what a person does with the preview's comment popover: for each page with
-// customer-visible faults, point at each element, say in one sentence what should change, and ask Tracy to edit, one turn
-// per page (repair-page.js), each page in a session of its own opened for the site as the site owner. A page goes as soon
-// as it has its faults (the finder's answer for it, with the first check's faults of that page), pages run side by side
-// (repair-schedule.js), and each turn is judged by a site check of the pages it changed (repair-check.js): undone, the
-// whole turn, when that check shows a new blocking failure on a page it changed. A turn still open at the time limit is
-// cancelled and judged by what it wrote. Every turn of the pass's request ids is judged, a late or duplicate one too.
-// Past `stopNewWorkMs` no new turn starts, and the pass returns by `returnByMs` (repair-limits.js).
+// check, it does what a person does with the preview's comment popover: for each page with customer-visible faults in
+// that check, point at each element, say in one sentence what should change, and ask Tracy to edit, each page in a
+// session of its own opened for the site as the site owner, its faults packed into as few turns as fit the comment turn's
+// budget (repair-page.js). Pages run side by side (repair-schedule.js), and each turn is judged by a site check of the
+// pages it changed (repair-check.js): undone, the whole turn, when that check shows a new blocking failure on a page it
+// changed. A turn still open at the time limit is cancelled and judged by what it wrote. Every turn of the pass's request
+// ids is judged, a late or duplicate one too. Past `stopNewWorkMs` no new turn starts, and the pass returns by `returnByMs`
+// (repair-limits.js).
 //
-// It reaches the agent only through `agent`, the site check only through `checkSite(pages)`, so tests give fakes. It throws
-// on anything it cannot handle; the caller (write-step-nine.js) then takes back the turns in `ledger` and hands over the
-// site as written. Repairs are Tracy turns, so the customer sees and can undo each one in Site changes.
+// A page that fails (a door refusal, a turn that cannot be built) is logged in `errors` and the other pages go on, and
+// every turn that wrote is still judged by a check. It reaches the agent only through `agent`, the site check only through
+// `checkSite(pages)`, so tests give fakes. It throws only when the site check itself cannot run; the caller
+// (write-step-nine.js) then takes back the turns in `ledger` and hands over the site as written. Repairs are Tracy turns,
+// so the customer sees and can undo each one in Site changes.
 import { checkWorker } from './repair-check.js'
 import { blockingFailures } from './repair-faults.js'
 import { itemsGate } from './repair-limits.js'
@@ -37,14 +39,13 @@ async function judgeTheRest(pass, result, checks) {
 }
 
 /**
- * @param {object} pass `{ agent, clock, checkSite, buildCommentTurn, urlOf, pageHtml?, refind?, log, ledger,
- *   nextRequestId, mark? }`; `ledger` is `{ turns, undone, records }`
- * @param {{ firstCheck: object, found?: object[], feed?: object | null, brief?: Map<string, string[]> | null }} input
- *   `feed` the finder's answers page by page (repair-schedule.js `pageFeed`); without it, `found` is all it found
+ * @param {object} pass `{ agent, clock, checkSite, buildCommentTurn, urlOf, pageHtml?, log, ledger, nextRequestId,
+ *   mark? }`; `ledger` is `{ turns, undone, records }`
+ * @param {{ firstCheck: object, brief?: Map<string, string[]> | null }} input
  * @returns {Promise<object>} the pass's result: `check` the site check of the site handed over, and what was sent, made,
- *   undone, resent, dropped, skipped and not sent
+ *   undone, resent, dropped, skipped, not sent, and the pages that failed (`errors`)
  */
-export async function runRepairPass(pass, { firstCheck, found = [], feed = null, brief = null }) {
+export async function runRepairPass(pass, { firstCheck, brief = null }) {
   const result = {
     status: 'done',
     skipped: [],
@@ -54,6 +55,7 @@ export async function runRepairPass(pass, { firstCheck, found = [], feed = null,
     resent: [],
     dropped: [],
     notSent: [],
+    errors: [],
     checks: 1
   }
   pass.result = result
@@ -64,8 +66,6 @@ export async function runRepairPass(pass, { firstCheck, found = [], feed = null,
   const checks = checkWorker(pass, state, result)
   const { skipped, started } = await schedulePages(pass, {
     firstCheck,
-    found,
-    feed,
     brief,
     result,
     run: (page) => repairPage(pass, page, result, checks, state)

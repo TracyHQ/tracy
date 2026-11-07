@@ -60,14 +60,13 @@ function whereOf(fault) {
     return ` Where: ${slot}${fault.block ? ` (block ${fault.block})` : ''}${inRecord}.`
   }
   if (fault.block) return ` Where: block ${fault.block}${inRecord}.`
-  if (quoted)
-    return ` Where: the ${fault.kind === 'wrong-icon' ? 'icon of the item' : 'element showing'} "${quoted}" on this page.`
+  if (quoted) return ` Where: the element showing "${quoted}" on this page.`
   return ' Where: on this page, as the note describes.'
 }
 
 /** The words a person would type in the popover for this fault: what to do, what was seen, and where. One paragraph. */
 export const changeSentence = (fault) => {
-  const base = SENT_KINDS[fault.kind]?.() ?? 'Fix what a visitor sees wrong here.'
+  const base = SENT_KINDS[fault.kind]()
   return `${base}${detailOf(fault)}${whereOf(fault)}`.replace(/\s+/g, ' ').trim()
 }
 

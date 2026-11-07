@@ -1,26 +1,22 @@
-// One page of step 9b (#448): a session of its own for the site, as the site owner; one turn with the page's faults
-// (repair-turns.js); a turn still open at the time limit cut short and read again (`cutShort`); the turn judged by the
-// check after it (repair-check.js), undone when it made a page it changed worse. Faults still there once it is kept (the
-// check's, and the finder's on a second look at this page) get one resend in the same session, judged the same way.
-import { stillSeen, stillThere } from './repair-faults.js'
+// One page of step 9b (#448): a session of its own for the site, as the site owner; the page's faults as comment items,
+// packed into as few turns as fit the comment turn's budget (repair-parts.js), sent one after the other in that session
+// (repair-turns.js); a turn still open at the time limit cut short and read again (`cutShort`); each turn judged by the
+// check after it (repair-check.js), undone when it made a page it changed worse. Site check faults still there once a turn
+// is kept get one resend round in the same session, packed and judged the same way.
+import { pageItems } from './repair-locate.js'
+import { stillThere } from './repair-faults.js'
+import { turnParts } from './repair-parts.js'
 import { cutShort, sendPageTurn } from './repair-turns.js'
 
-/** One turn of the page, kept in the ledger and the result; null when none was made. */
-async function sendOne(pass, result, { page, faults, round, sessionId }) {
-  const cap = pass.clock.limits.itemsPerTurn
-  if (faults.length > cap)
-    result.notSent.push({
-      page,
-      round,
-      faults: faults.length - cap,
-      reason: 'item-cap',
-      slots: faults.slice(cap).map((f) => f.slot ?? f.block ?? f.kind)
-    })
+const slotsOf = (faults) => faults.map((f) => f.slot ?? f.block ?? f.kind)
+
+/** One turn of the page, kept in the ledger and the result; null when none was made, `{ stop }` past the time limit. */
+async function sendOne(pass, result, { page, faults, items, round, sessionId }) {
   const from = pass.clock.now()
-  const turn = await sendPageTurn(pass, { page, faults: faults.slice(0, cap), round, sessionId })
+  const turn = await sendPageTurn(pass, { page, faults, items, round, sessionId })
   if (turn.timeLimit) {
     result.notSent.push({ page, round, faults: turn.faults.length, reason: 'time-limit' })
-    return null
+    return { stop: true }
   }
   if (!turn.turnId) {
     result.dropped.push({ page, round, reason: turn.dropped ?? turn.refused, requestIds: turn.requestIds })
@@ -33,19 +29,53 @@ async function sendOne(pass, result, { page, faults, round, sessionId }) {
   return turn
 }
 
-/** What is still failing on the page after its kept turn: the check's faults, and the finder's on a second look. */
-async function stillFailing(pass, turn, check) {
-  let refound = []
-  if (turn.faults.some((f) => f.source === 'finder') && pass.refind && !pass.clock.stopped()) {
-    const from = pass.clock.now()
-    const look = await pass.clock
-      .within(() => pass.refind([turn.page]), Math.min(pass.clock.limits.finderMs, pass.clock.workLeft()))
-      .catch((error) => ({ value: { faults: [], problem: String(error?.message ?? error) } }))
-    pass.mark?.('finder-again', from, { page: turn.page })
-    if (look.late) pass.log(`step 9b: the finder did not look at ${turn.page} again in the time left`)
-    else refound = look.value?.faults ?? []
+/**
+ * One round of the page: its faults (at most `itemsPerTurn`, the rest named `item-cap`) as items, packed into turns
+ * (an item no turn holds named `too-long`), each sent and judged in turn.
+ * @returns {Promise<{ made: object[], kept: object[] }>} the turns made, and those of them judged and not undone
+ */
+async function sendRound(pass, result, checks, { page, faults, round, sessionId }) {
+  const cap = pass.clock.limits.itemsPerTurn
+  if (faults.length > cap)
+    result.notSent.push({
+      page,
+      round,
+      faults: faults.length - cap,
+      reason: 'item-cap',
+      slots: slotsOf(faults.slice(cap))
+    })
+  const capped = faults.slice(0, cap)
+  const items = await pageItems(pass, page, capped)
+  const { parts, tooLong } = turnParts(pass.buildCommentTurn, items)
+  if (tooLong.length) {
+    const left = tooLong.map((i) => capped[i])
+    result.notSent.push({ page, round, faults: left.length, reason: 'too-long', slots: slotsOf(left) })
+    pass.log(`step 9b: ${left.length} fault(s) on ${page} do not fit a comment turn even alone; not sent`)
   }
-  return [...stillThere(turn.faults, check), ...stillSeen(turn.faults, refound)]
+  const made = []
+  const kept = []
+  for (const [k, part] of parts.entries()) {
+    const turnFaults = part.map((i) => capped[i])
+    if (k > 0 && pass.clock.stopped()) {
+      const rest = parts.slice(k).flat().length
+      result.notSent.push({ page, round, faults: rest, reason: 'time-limit' })
+      break
+    }
+    const turn = await sendOne(pass, result, {
+      page,
+      faults: turnFaults,
+      items: part.map((i) => items[i]),
+      round,
+      sessionId
+    })
+    if (turn?.stop) break
+    if (!turn) continue
+    made.push(turn)
+    if (turn.leftOpen) continue
+    const verdict = await checks.judge(turn)
+    if (!verdict.undone) kept.push(turn)
+  }
+  return { made, kept }
 }
 
 /**
@@ -63,15 +93,12 @@ export async function repairPage(pass, { page, faults }, result, checks, state) 
   const { sessionId } = opened
   result.sessions.push(sessionId)
   pass.mark?.('session', from, { page })
-  const turn = await sendOne(pass, result, { page, faults, round: 1, sessionId })
-  if (!turn || turn.leftOpen) return
-  const verdict = await checks.judge(turn)
+  const { kept } = await sendRound(pass, result, checks, { page, faults, round: 1, sessionId })
   // A turn that wrote nothing gave no check to resend from; a cut-short or undone one is not resent.
-  if (verdict.undone || pass.clock.stopped() || turn.cancelled || !turn.changes.length) return
-  const again = await stillFailing(pass, turn, state.check)
+  const again = kept
+    .filter((t) => !t.cancelled && t.changes.length)
+    .flatMap((t) => stillThere(t.faults, state.check))
   if (!again.length || pass.clock.stopped()) return
-  const resent = await sendOne(pass, result, { page, faults: again, round: 2, sessionId })
-  if (!resent) return
-  result.resent.push({ page, turnId: resent.turnId, faults: resent.faults.length })
-  if (!resent.leftOpen) await checks.judge(resent)
+  const { made } = await sendRound(pass, result, checks, { page, faults: again, round: 2, sessionId })
+  for (const t of made) result.resent.push({ page, turnId: t.turnId, faults: t.faults.length })
 }

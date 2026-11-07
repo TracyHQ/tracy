@@ -533,17 +533,20 @@ undos in an order the site refused, CSS aimed at the wrong block). Tracy's site 
 the preview's comment popover, fixed three such faults on the dev environment in 63 to 87 seconds each, recorded in Site
 changes with Undo. So:
 
-- Step 9 is one entry point (`write-step-nine.js` `runStepNine`): write, first site check with the finder beside it,
-  step 9b, the site check again, hand-over. Callers never run the parts on their own.
-- Fault sources are the site check (customer-visible groups only) and the finder, carried over from the finisher with its
-  fixer and checker dropped (door `finisherFinder`, migration 203). A fault both name is sent once.
+- Step 9 is one entry point (`write-step-nine.js` `runStepNine`): write, the first site check (step 11, a script), step
+  9b on the customer-visible faults of THAT check, a second check of only the pages a turn changed, undo of a turn that
+  made things worse, hand-over. Callers never run the parts on their own.
+- The one fault source is the first site check (customer-visible groups only). Amended 2026-11-07 (owner's decision after
+  the fifth real run): the model screenshot finder that ran beside the first check is removed from the flow and its code
+  deleted. It was slow (five minutes of the step's ten), costly, often gave nothing back (provider errors, its time running
+  out), and its faults were rarely ones the agent could fix. Its door rows of migrations 203 and 204 stay as applied,
+  unused; /ops no longer lists the door.
 - Sending rule (amended 2026-11-07 after the second real run): the customer sees it, send it. Glued words, emphasis
-  codes printed raw, a repeated or missing h1, an empty frame, a demo picture, a CMS error and the finder's `other`
-  faults are sent. Never sent, by explicit tables (`write-step/repair-pass/repair-kinds.js`), each logged with a code
+  codes printed raw, a repeated or missing h1, an empty frame, a demo picture and a CMS error are sent. Never sent, by explicit tables (`write-step/repair-pass/repair-kinds.js`), each logged with a code
   and its reason: missing accent emphasis only (`never-sent`; the site agent's text tool cannot write emphasis, so the
   write step fixes it at its source, PR #446); every site check group that checks an earlier step's own work or harms
-  no visitor (`not-visible`); a fault with no page (`no-page`); a demo fault whose measured value, link target or quoted
-  words are a phone, e-mail, name or address the brief gives (`not-demo`, `repair-brief-values.js`). A group or kind no
+  no visitor (`not-visible`); a fault with no page (`no-page`); a demo fault whose measured value or link target is a
+  phone, e-mail, name or address the brief gives (`not-demo`, `repair-brief-values.js`). A group or kind no
   table names is `unknown-kind`, never dropped silently. Faults past the per-turn cap (12) are logged in `notSent` as
   `item-cap`.
 - Each fault is one comment item made as the popover makes it: the page's address as the preview frame names it (the
@@ -551,13 +554,14 @@ changes with Undo. So:
   path), the element read from the served page (the kit block's `Mod<N>`/`acm-…-<N>` id as the selector, the matching
   element's words and provenance marks), the `content.locate` answer for it through the Apply door, and one sentence of
   what should change. When locate is unavailable the fault's slot and block stand in as levels and the item says why. A
-  page's items go in one numbered comment turn, built by the popover's own builder after the comment requests are made
-  through the same requests door, so the agent's writes cite each number.
-- A pipeline, not stages (amended 2026-11-07: the second real run spent 630 s, five minutes of them waiting for the
-  finder before one turn went, and that one turn held the pass until it was cancelled). The first site check and the
-  finder start at the same moment after the write. 9b starts once the first check ended (its groups judge the whole
-  site at once, so no page's check faults exist before), and a page goes as soon as the finder answered it (or the
-  finder ended), carrying that page's check faults and finder faults in one turn.
+  page's items go in numbered comment turns, built by the popover's own builder after the comment requests are made
+  through the same requests door, so the agent's writes cite each number. Amended 2026-11-07 (fifth real run: a turn of
+  4811 characters over the builder's 4673 limit for two comments stopped the whole pass, and the second check never ran):
+  the items are packed, in order, into as few turns as fit the builder's limit (`repair-parts.js`, measured with the
+  builder itself), each item self-contained, the turns sent one after the other in the page's session and each judged;
+  an item that fits no turn alone is `notSent` as `too-long`.
+- 9b starts once the first check ended (its groups judge the whole site at once, so no page's check faults exist
+  before); every page with faults is then ready.
 - Pages run side by side, each in a session of its own opened for the site as its owner, through the site session
   prompt path demo QA uses, at most three turns in flight (`turnsAtOnce`). The comment requests door's own budget (20
   request items a minute per site, `sites/comments.js`) is kept by the pass: a request waits while 20 items were asked
@@ -570,19 +574,22 @@ changes with Undo. So:
   time, and turns ending within a second share one). A turn is undone whole when that check shows a new blocking failure
   on a page it changed; its pages then hold their failures from before it and are read again before the hand-over. The
   pages a turn changed are read from what it wrote: a write's record is placed on the pages whose items located it, and
-  on the pages whose first-check faults name its slots (`article-16.6` is article 16). A turn is never judged while open. Faults still failing on a kept turn's page get one resend in the same session, judged
-  the same way: the check's, and the finder's still seen when the finder looks again at that page only. Every undo that
+  on the pages whose first-check faults name its slots (`article-16.6` is article 16). A turn is never judged while open. Check faults still failing on a kept turn's page get one resend round in the same
+  session, packed and judged the same way. Every undo that
   fails is kept as `undo-failed` with its reason.
-- One clock runs from the end of the write: the first site check and the finder spend it too. No new turn after 10
+- One clock runs from the end of the write: the first site check spends it too. No new turn after 10
   minutes; the step returns by 12 (`repair-limits.js`). Every agent call, the requests budget wait and the site check
   race the time left. A turn still open is waited for until only the last check's and the undos' time is left; one still
   open then is cancelled through its session (`session/cancel`), logged, its record read again until it ends (20 s at
   most), and judged by what it wrote like any other turn: undone only when it made a page worse. Any turn that wrote
   something is always followed by a site check. `repair-pass.json` holds a timeline of the step's stages from the start
   of the write.
-- Any error in 9b takes back the turns it made and hands over the written site with the first site check, logged, with no
-  customer notice. The result (faults sent and skipped, turns, changes, undos, time, cost) is `repair-pass.json` beside
-  the build's other step outputs.
+- A page that fails (a door refusal, a turn that cannot be built, a call that does not answer in time) is logged in
+  `errors` with its reason and the other pages go on; every turn that wrote is still judged by a check before the
+  hand-over (amended 2026-11-07, fifth real run). Only a site check that cannot run takes back the turns 9b made and hands
+  over the written site with the first site check, logged, with no customer notice. The pass never throws to the step.
+  The result (faults sent and skipped, turns, changes, undos, the pages that failed, time, cost) is `repair-pass.json`
+  beside the build's other step outputs.
 - Repairs are Tracy turns of the setup session, shown in Site changes with Undo like any other change. This replaces the
   finisher's decision that setup repairs stay out of the Changes tab.
 

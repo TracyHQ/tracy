@@ -3,7 +3,7 @@
 // (`Mod<N>` for a T4 module, `acm-<name>-<N>` for an ACM block, block `block-<N>`), its id as the selector, and inside it
 // the element whose words (or picture alt) are the fault's, with the provenance marks of it and its ancestors, innermost
 // first (`data-tracy-src`, a `<template data-tracy-owner>`, a menu item id). A fault whose slot names no block (an article's
-// picture, a finder fault) is looked for on the whole page by its words or alt. A fault whose block the page does not
+// picture) is looked for on the whole page by its words or alt. A fault whose block the page does not
 // hold, or whose words the page does not show, has no element. Pure.
 import { parse } from 'parse5'
 
@@ -108,7 +108,7 @@ const saidOf = (fault) =>
 
 /**
  * The element a fault points at on its served page, or null. A fault whose slot names a block is looked for inside that
- * block; one whose slot names no block (an article's picture, a finder fault) is looked for on the whole page by its words
+ * block; one whose slot names no block (an article's picture) is looked for on the whole page by its words
  * or its picture's alt, and is found only when they are there. `path` is the element's own selector, `selector` the
  * block's (as the picker reports it) or, for an element in no block, its path.
  * @param {{ blocks: Map<string, object>, body: object | null }} page from servedPage

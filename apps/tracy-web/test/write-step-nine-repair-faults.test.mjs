@@ -1,6 +1,6 @@
 // Step 9b (#448): which faults the repair pass sends, tested at the step 9 entry point with the site agent faked. A value
 // the brief gives is never sent as the demo's, a fault past the per-turn cap is logged, every kind that is not sent says
-// why, and the resend round asks the finder again. The brief is the invented one of the copy check tests.
+// why. The brief is the invented one of the copy check tests.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { REPAIR_LIMITS } from '../src/write-step/repair-pass/repair-limits.js'
@@ -16,33 +16,14 @@ test("a fault naming the brief's own phone, e-mail, name or address is logged no
     // The brief's phone, spaced another way, measured as a demo fact.
     failure('demo-words', '/', 'block-2.1', 'Call +000 5550 100'),
     failure('demo-links', '/contact', 'block-5.1', 'mailto:hello@quay-fitness.example'),
+    // The brief's name and address, measured as demo words.
+    failure('demo-words', '/', 'block-2.3', 'Quay Fitness Studio'),
+    failure('demo-words', '/contact', 'block-5.2', '12 Harbour Row - Quay District - Example City'),
+    failure('demo-words', '/about', 'block-4.2', 'Welcome to Quay Fitness Studio'),
     // A demo fact that is the demo's: still sent.
     failure('demo-words', '/', 'block-2.2', 'Call Demo Gym on 111 222 3333')
   ])
-  const found = [
-    {
-      page: '/',
-      viewport: 'desktop',
-      tile: 0,
-      kind: 'demo-fact',
-      seen: 'The heading says "Quay Fitness Studio"'
-    },
-    {
-      page: '/contact',
-      viewport: 'phone',
-      tile: 0,
-      kind: 'demo-contact-link',
-      seen: 'The address "12 Harbour Row - Quay District - Example City" is linked to the demo map'
-    },
-    {
-      page: '/about',
-      viewport: 'desktop',
-      tile: 0,
-      kind: 'demo-title-meta',
-      seen: 'The title is "Quay Fitness Studio"'
-    }
-  ]
-  const { result } = await stepNine({ checks: [first, checkOf([])], agent, found, files: { brief: brief() } })
+  const { result } = await stepNine({ checks: [first, checkOf([])], agent, files: { brief: brief() } })
   const notDemo = result.repair.skipped.filter((s) => s.code === 'not-demo')
   assert.equal(notDemo.length, 5, JSON.stringify(result.repair.skipped))
   assert.ok(notDemo.every((s) => /the brief gives/.test(s.reason)))
@@ -101,39 +82,4 @@ test('every fault not sent says why by code; an unknown group or kind is unknown
     'demo-words': 'no-page'
   })
   assert.ok(result.repair.skipped.every((s) => typeof s.reason === 'string' && s.reason))
-})
-
-test('the resend round asks the finder again on the pages it had faults on and resends what it still sees', async () => {
-  const agent = fakeAgent()
-  const LOGO = {
-    page: '/',
-    viewport: 'phone',
-    tile: 0,
-    block: 'block-2',
-    kind: 'broken-layout',
-    seen: 'The heading runs off the page'
-  }
-  const ALT = {
-    page: '/about',
-    viewport: 'desktop',
-    tile: 0,
-    slot: 'block-4.1',
-    kind: 'wrong-alt',
-    seen: 'The alt says "Demo coach"'
-  }
-  // First look: both. Look again on their pages: the home page's layout is still broken, the alt was fixed.
-  const found = (call) => (call === 1 ? [LOGO, ALT] : [LOGO])
-  const { result, finds } = await stepNine({ checks: [checkOf([]), checkOf([]), checkOf([])], agent, found })
-  // Each page's second look is its own, on that page only.
-  assert.deepEqual(
-    finds.slice(1).flat().sort(),
-    ['/', '/about'],
-    'the finder looks again at the pages it had faults on'
-  )
-  assert.equal(result.repair.resent.length, 1)
-  assert.equal(result.repair.resent[0].page, '/')
-  assert.deepEqual(
-    agent.sent.requests.at(-1).items.map((i) => i.element.label),
-    ['block-2']
-  )
 })

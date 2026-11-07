@@ -14,28 +14,9 @@ const itemsOf = (agent) => agent.sent.requests.flatMap((r) => r.items)
 
 test('each visible fault is sent once, with its page, element and one sentence; faults of one page share one turn', async () => {
   const agent = fakeAgent()
-  const first = checkOf([ALT, OVER, DEMO, { ...ALT, width: 390 }])
-  const found = [
-    // The same alt fault the check names, seen by the finder: sent once.
-    {
-      page: '/about',
-      viewport: 'desktop',
-      tile: 0,
-      slot: 'module-4.1',
-      kind: 'wrong-alt',
-      seen: 'The alt says "Demo coach"'
-    },
-    {
-      page: '/',
-      viewport: 'phone',
-      tile: 1,
-      slot: null,
-      block: 'module-3',
-      kind: 'broken-layout',
-      seen: 'The heading runs off the page'
-    }
-  ]
-  const { result } = await stepNine({ checks: [first, checkOf([])], agent, found })
+  const LAYOUT = failure('text-overflow', '/', 'module-3.1', 'The heading runs off the page', { width: 390 })
+  const first = checkOf([ALT, OVER, DEMO, { ...ALT, width: 390 }, LAYOUT])
+  const { result } = await stepNine({ checks: [first, checkOf([])], agent })
   assert.equal(result.report.status, 'done')
   // Two pages, two turns, each page in a session of its own.
   assert.equal(agent.sent.opened, 2)
@@ -50,7 +31,7 @@ test('each visible fault is sent once, with its page, element and one sentence; 
     'pages in the order their first fault was named'
   )
   const items = itemsOf(agent)
-  assert.equal(items.length, 4, 'the alt fault named twice and by the finder is one item')
+  assert.equal(items.length, 4, 'the alt fault named at two widths is one item')
   const alt = items.find((i) => i.element.label === 'module-4.1')
   assert.equal(alt.url, 'https://site.example/index.php/about', 'the page as the site serves it')
   assert.equal(alt.element.text, 'Demo coach lifting weights')
@@ -71,20 +52,11 @@ test('what is not sent: missing accent emphasis, faults with no page, faults no 
     failure('demo-words', null, 'module-6.2', 'Demo Gym'),
     failure('read-back', '/', 'module-2.1', 'written value missing')
   ])
-  const found = [
-    {
-      page: '/',
-      viewport: 'desktop',
-      tile: 0,
-      kind: 'lost-emphasis',
-      seen: 'The accent word lost its colour'
-    }
-  ]
-  const { result } = await stepNine({ checks: [first], agent, found })
+  const { result } = await stepNine({ checks: [first], agent })
   assert.equal(agent.sent.opened, 0, 'no fault to send opens no session')
   assert.equal(agent.sent.prompts.length, 0)
   const reasons = result.repair.skipped.map((s) => s.reason)
-  assert.equal(result.repair.skipped.length, 4)
+  assert.equal(result.repair.skipped.length, 3)
   assert.ok(reasons.some((r) => /accent emphasis/.test(r)))
   assert.ok(reasons.some((r) => /no page/.test(r)))
   assert.equal(result.siteCheck, first, 'nothing changed, so the first check is handed over')
@@ -180,27 +152,29 @@ test('past ten minutes no new turn starts, and the step returns by twelve', asyn
   assert.equal(result.repair.resent.length, 0, 'no resend past the limit')
 })
 
-test('any error in the repair pass hands over the written site with the first check, its turns undone, and logs why', async () => {
+test('a site check that cannot run after the turns hands over the written site with the first check, its turns undone', async () => {
   const agent = fakeAgent()
-  let requests = 0
-  const request = agent.request
-  agent.request = async (input) => {
-    requests += 1
-    if (requests === 2) throw new Error('requests door answered 500')
-    return request(input)
-  }
   const first = checkOf([DEMO, ALT])
-  const { result, logged, saved } = await stepNine({ checks: [first], agent })
+  const { result, logged, saved } = await stepNine({
+    checks: [first],
+    agent,
+    input: {
+      checkSite: async (_report, options) => {
+        if (options?.pages) throw new Error('the site check answered 500')
+        return first
+      }
+    }
+  })
   assert.equal(result.report.status, 'done')
   assert.equal(result.siteCheck, first)
-  assert.equal(result.report.siteCheck?.status ?? first.status, first.status)
-  assert.match(result.repair.error, /requests door answered 500/)
+  assert.match(result.repair.error, /the site check answered 500/)
+  assert.ok(result.repair.turns.length > 0)
   assert.deepEqual(
     agent.sent.undone,
     result.repair.turns.map((t) => t.turnId).reverse(),
     'every turn already made is taken back, newest first'
   )
-  assert.ok(logged.some((line) => /requests door answered 500/.test(line)))
+  assert.ok(logged.some((line) => /the site check answered 500/.test(line)))
   assert.match(saved.get('repair-pass.json').error, /500/)
 })
 
@@ -224,58 +198,4 @@ test('every site check of step 9 runs the page groups even when read-back is red
     ['module-4.1']
   )
   assert.equal(result.siteCheck.status, 'red', 'a read-back failure is still blocking in what is handed over')
-})
-
-test('a finder stopped at its time limit hands over every fault it found before, with its cost and the pages it missed', async () => {
-  const agent = fakeAgent()
-  const seen = {
-    page: '/about',
-    viewport: 'phone',
-    tile: 0,
-    slot: null,
-    block: 'module-4',
-    kind: 'broken-layout',
-    seen: 'The heading "Our coaches" runs off the page'
-  }
-  // The finder answers only once it is stopped, with what it found so far.
-  const finder = {
-    find: (_report, { signal }) =>
-      new Promise((resolve) =>
-        signal.addEventListener('abort', () =>
-          resolve({
-            faults: [seen],
-            problem: '2 pages not looked at',
-            problems: [
-              { page: '/classes', problem: "not looked at: the finder's time ran out" },
-              { page: '/contact', problem: "not looked at: the finder's time ran out" }
-            ],
-            costUsd: 0.034
-          })
-        )
-      )
-  }
-  const fires = []
-  const timer = (go) => {
-    fires.push(go)
-    return () => {}
-  }
-  const run = stepNine({ checks: [checkOf([]), checkOf([])], agent, input: { finder, timer } })
-  for (let i = 0; i < 5000 && !fires.length; i++) await new Promise((r) => setImmediate(r))
-  fires[0]()
-  const { result, logged } = await run
-  assert.deepEqual(
-    itemsOf(agent).map((i) => i.page),
-    ['/about'],
-    'the fault found before the limit is sent'
-  )
-  assert.equal(result.repair.finder.faults, 1)
-  assert.equal(result.repair.costUsd.finder, 0.034)
-  assert.deepEqual(
-    result.repair.finder.notLookedAt.map((p) => p.page),
-    ['/classes', '/contact']
-  )
-  assert.ok(
-    logged.some((l) => /\/classes/.test(l) && /not looked at/.test(l)),
-    logged.join('\n')
-  )
 })
