@@ -1253,6 +1253,28 @@ var NAMED = /* @__PURE__ */ Object.freeze({
 });
 var VOID = new Set("br img hr input wbr source meta link area col embed param track".split(" "));
 
+// ../../tools/tracy-site-tools/src/host/contract-check.mjs
+var IDENTITY_TOKENS = /* @__PURE__ */ Object.freeze([
+  "site.name",
+  "site.legalName",
+  "site.slogan",
+  "site.monogram",
+  "contact.email",
+  "contact.phone",
+  "contact.tel",
+  "contact.address",
+  "contact.hours",
+  "social.facebook",
+  "social.instagram",
+  "social.linkedin",
+  "social.tiktok",
+  "social.youtube"
+]);
+var IDENTITY_TOKEN = new RegExp(
+  `\\{(${IDENTITY_TOKENS.map((n) => n.replace(".", "\\.")).join("|")})\\}`,
+  "g"
+);
+
 // ../tracy-site-build-core/src/host/design-check.mjs
 var ACCENT_ROLES = /* @__PURE__ */ Object.freeze([
   "--ds-c-accent",
