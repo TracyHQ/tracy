@@ -3,7 +3,8 @@
 // around the product: create is POST /api/sites naming the template card a customer presses and its quickstart
 // (answers 202 with a job id), the job is read from
 // GET /api/sites/:key/jobs/:id, the contract from the Apply door (content.contract inspect), and the delete is
-// DELETE /api/sites/:key, which only the site's owner may call.
+// DELETE /api/sites/:key, which only the site's owner may call. Step 9b's comment requests and turn undo go through the
+// customer's doors too (`requests`, `undoTurn`).
 import { mintSession } from '../lib/session.js'
 
 const sleepFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -118,6 +119,28 @@ export function httpSiteDoor(input) {
         code: b.code ?? nested?.code ?? `HTTP_${answer.status}`,
         ...(nested ? { error: nested.code, message: nested.message } : {})
       }
+    },
+    /**
+     * Step 9b's comment requests, through the door a preview's "Send to Tracy" calls (`POST /api/sites/:key/requests`): one
+     * numbered request per item, `{ ok, requests: [{ id, n }] }`, or the refusal with its code and `retryAfter`.
+     */
+    async requests(siteKey, body) {
+      const answer = await call('POST', `${keyPath(siteKey)}/requests`, body)
+      const b = answer.body ?? {}
+      if (answer.status === 201 && Array.isArray(b.requests)) return { ok: true, requests: b.requests }
+      return {
+        ok: false,
+        status: answer.status,
+        code: b.code ?? `HTTP_${answer.status}`,
+        retryAfter: b.retryAfter ?? null
+      }
+    },
+    /** Undo of one whole chat turn, through the door Site changes calls (`POST /api/sites/:key/turns/undo`). */
+    async undoTurn(siteKey, body) {
+      const answer = await call('POST', `${keyPath(siteKey)}/turns/undo`, body)
+      const b = answer.body ?? {}
+      if (answer.status < 400 && b.ok !== false) return { ok: true, ...b }
+      return { ...b, ok: false, status: answer.status, code: b.code ?? `HTTP_${answer.status}` }
     },
     async remove(siteKey) {
       for (let attempt = 0; attempt < 30; attempt++) {

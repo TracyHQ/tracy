@@ -126,6 +126,13 @@ export async function runHideStage(input) {
   return {
     reading,
     emptySlots: order.emptySlots,
+    // The slots the hide stage takes out with their row, this run or an earlier one: the closing rule leaves them alone.
+    takenSlots: [
+      ...new Set([
+        ...order.removeSlots,
+        ...[...order.orders.values()].filter((o) => o.via === 'removed').map((o) => o.key)
+      ])
+    ],
     ...settingsPart(extras, order.menu),
     results: (done) => hideLines({ order, words, blocks, pages, cannotHide, removed, ...done })
   }

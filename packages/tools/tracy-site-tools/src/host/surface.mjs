@@ -267,9 +267,13 @@ const WORDPRESS_ACTIONS = Object.freeze([
 ])
 
 export const SURFACE_ACTIONS = Object.freeze({
-  'joomla-sealed': withReplace('joomla-sealed', [...JOOMLA_ACTIONS, 'content.contract']),
+  'joomla-sealed': withReplace('joomla-sealed', [...JOOMLA_ACTIONS, 'content.contract', 'media.icon']),
   joomla: withReplace('joomla', [...JOOMLA_ACTIONS]),
-  'wordpress-contract': withReplace('wordpress-contract', [...WORDPRESS_ACTIONS, 'content.contract']),
+  'wordpress-contract': withReplace('wordpress-contract', [
+    ...WORDPRESS_ACTIONS,
+    'content.contract',
+    'media.icon'
+  ]),
   'wordpress-sealed': withReplace('wordpress-sealed', [...WORDPRESS_ACTIONS]),
   wordpress: withReplace('wordpress', [...WORDPRESS_ACTIONS]),
   // media.draw joined on 26/09/2026 (#402): it uploads through the site's own media_upload, and the
@@ -545,7 +549,7 @@ export const APPLY_LIST_RULE =
 export const CONTRACT_BLOCK =
   'content.contract: reads and changes this quickstart site slot by slot. Use when content.replace cannot: a picture, a link, words it refused. Not for structure or settings (content.update) or a read-only question (content.read). Call: after content.read showed the slot (field.next), ONE {operation:"apply", changes:{"<slot key>":"<value>", …}} carrying every change — no inspect, Tracy sends the revisions it read; a slot marked requiresEvidence also takes evidence:{"<key>":"<the customer\'s words>"}. Only when content.read did not show the slot: {operation:"inspect", page, slots:"text", match} (10–20 s at first), then apply with expected_revision:<its revision>. ' +
   CONTRACT_IDS_RULE +
-  ' A slot\'s language: the site context\'s rule. Apart from Site identity, an occupied slot cannot be emptied and an empty one cannot be filled; nothing is created or deleted. Returns the apply\'s receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. Languages: content.contract {operation:"multilingual.retire", keep:[<tags to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed); tracy_site_build_joomla request language.add adds one. Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed → its next; writer_busy → Tracy already retried: tell the customer.'
+  ' A slot\'s language: the site context\'s rule. Apart from Site identity, an occupied slot cannot be emptied and an empty one cannot be filled; nothing is created or deleted. Returns the apply\'s receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. An icon slot takes no drawing: media.icon {query} lists icons, {slot, icon} writes one there and in its other-theme twin. Languages: content.contract {operation:"multilingual.retire", keep:[<tags to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed); tracy_site_build_joomla request language.add adds one. Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed → its next; writer_busy → Tracy already retried: tell the customer.'
 
 /**
  * T13 on a BOUND WordPress site (#337): the same door, the same ids (T6), the same receipts — and
@@ -565,7 +569,7 @@ export const CONTRACT_BLOCK =
 export const WORDPRESS_CONTRACT_BLOCK =
   'content.contract: reads and changes this quickstart site\'s words slot by slot. Use when content.replace cannot: a picture, a link, words it refused. Not for structure or settings (content.update) or a read-only question (content.read). Call: after content.read showed the slot (field.next), ONE {operation:"apply", changes:{"<slot key>":"<plain words>", …}} carrying every change — no inspect, Tracy sends the revisions it read. Only when content.read did not show the slot: {operation:"inspect", page, match} then apply with expected_revision:<its revision>. ' +
   CONTRACT_IDS_RULE +
-  ' A slot\'s language and its other editions\' keys: the site context\'s rule. No markup; a link takes https://, mailto:, tel: or a /path. Returns the apply\'s receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. Languages: content.contract {operation:"multilingual.retire", keep:[<languages to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed). Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed → its next; writer_busy → Tracy already retried: tell the customer.'
+  ' A slot\'s language and its other editions\' keys: the site context\'s rule. No markup; a link takes https://, mailto:, tel: or a /path. Returns the apply\'s receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. An icon slot takes no drawing: media.icon {query} lists icons, {slot, icon} writes one there and in its other-theme twin. Languages: content.contract {operation:"multilingual.retire", keep:[<languages to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed). Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed → its next; writer_busy → Tracy already retried: tell the customer.'
 
 /**
  * The derived contract of an IMPORTED copy (01/10/2026): what its Claude Cowork plugin derived from the

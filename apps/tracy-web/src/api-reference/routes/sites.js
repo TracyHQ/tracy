@@ -1302,6 +1302,20 @@ export const SITES_ROUTES = [
     answers:
       '`{ok: true}`; 400 `INVALID_TURN`, `INVALID_RATING`, `INVALID_CATEGORIES`; 404 `TURN_UNKNOWN` when the turn is not this site’s'
   },
+  // src/sites/icon-door.js
+  {
+    method: 'POST',
+    path: '/api/sites/:key/icons',
+    summary: 'Search Tracy’s icon library, name an icon slot’s twins, or draw an icon in the template’s look',
+    description:
+      'The site agent’s icon door, called by the host’s dsh for `tracy_site media.icon` in a conversation on this site (a session, or `x-tracy-actor` signed as the person it works for, with a grant on the site). One `operation` per call: `search` `{query}` answers `{set, icons}`, the Phosphor names whose names or tags say the words; `pair` `{slot}` answers the icon slots that show that icon in each theme, read from the template kit (`NO_KIT` when the template has none); `draw` `{icon, files: [{slot, template_b64?, current_b64?}]}` (1 to 4 files, 2 MiB each) answers `{set, icon, pictures}`, each slot’s icon drawn with that glyph in the look of its template icon and the colours it shows now. It writes nothing: the dsh uploads the pictures and writes the slots through the Apply door, so the change has its receipt in Changes and its undo. Not cached.',
+    audience: ['dsh'],
+    auth: 'session-or-actor',
+    internal: true,
+    params: { path: { key: 'Site key' } },
+    answers:
+      '`{ok: true, …}` per operation; 400 `BAD_PARAMS` (unknown operation, empty query, a slot that is no contract key, a bad icon or file); 404 `SITE_UNKNOWN`; `{ok: false, code: NO_KIT}` for `pair` on a template with no kit'
+  },
   // src/sites/route.js
   {
     method: 'POST',

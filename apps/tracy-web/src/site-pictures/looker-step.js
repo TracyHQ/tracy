@@ -13,6 +13,9 @@
 // manifest's `looker` holds the door's model and snapshot, the prompt hash and one record per picture (frame, file hash,
 // time, cost, cached); `cost.looker` and `timing.looker` are their sums, and `paid` (what this save spent, cached looks
 // excluded) is added to the run's cost by the caller.
+// When the run asks for alts (`altAsk`, alt-ask.js), each look also writes the alt of the picture it saw, cleaned and held to
+// the frame's limit, as the entry's `alt` (a twin takes its source's); the export hands it to the write step, which
+// writes it over the writer's (ADR 0043 section 3f).
 // When the run was given a writer copy file, `altNotes` compares its alts with the seen sentences (alt-notes.js); without
 // one, the manifest's `altCheck` says the comparison is deferred to the site check's `alt-matches-picture` (step 11).
 //
@@ -21,6 +24,7 @@
 // the prompt), so a resumed run or a later round pays once per picture.
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { cleanAlt } from './alt-ask.js'
 import { altNotesFor } from './alt-notes.js'
 import { hasTextOver } from './darken.js'
 import { fileStore, sha256Hex } from './file-store.js'
@@ -73,7 +77,8 @@ export async function inParallel(items, n, work) {
  * The looker of one run.
  * @param {{ door: object, snapshot?: object | null, prompt: { text: string, sha256: string }, storeDir: string,
  *   runId: string, idx: object, alts: Array<{ frame: string, text: string }> | null, fetchImpl?: typeof fetch,
- *   concurrency?: number }} input `idx` the picture check's index of plan and kit; `alts` the writer's alts, or null
+ *   concurrency?: number, altAsk?: { language: string, business: string | null, limit: (frame: string) => number } | null }} input
+ *   `idx` the picture check's index of plan and kit; `alts` the writer's alts, or null; `altAsk` asks each look for an alt
  */
 export function createLooker({
   door,
@@ -83,6 +88,7 @@ export function createLooker({
   runId,
   idx,
   alts,
+  altAsk = null,
   fetchImpl = fetch,
   concurrency
 }) {
@@ -100,6 +106,9 @@ export function createLooker({
     const cutout = entry.cutout ? cutoutFacts(frame, entry) : null
     // A cut-out says where the text sits in its own lines; any other picture is told its frame's surface (section 3e).
     const surface = cutout ? null : surfaceFacts(frame)
+    const alt = altAsk
+      ? { language: altAsk.language, business: altAsk.business, limit: altAsk.limit(entry.frame) }
+      : null
     const key = sha256Hex(
       JSON.stringify([
         entry.sha256,
@@ -110,17 +119,18 @@ export function createLooker({
         prompt.sha256,
         ...(cutout ? [cutout] : []),
         ...(anyReal ? ['any-real'] : []),
-        ...(surface ? [surface] : [])
+        ...(surface ? [surface] : []),
+        ...(alt ? [alt] : [])
       ])
     )
     // A look already taken in this save (the fallback ladder looks again after each rung), readable or not.
-    if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true }
-    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface })
+    if (memo?.has(key)) return { list, entry, said: memo.get(key), cached: true, limit: alt?.limit ?? null }
+    const looked = await lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface, alt })
     memo?.set(key, looked.said)
-    return looked
+    return { ...looked, limit: alt?.limit ?? null }
   }
 
-  async function lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface }) {
+  async function lookFresh(list, entry, { key, words, box, realPart, cutout, anyReal, surface, alt }) {
     const before = await readFile(kept(key), 'utf8')
       .then(JSON.parse)
       .catch(() => null)
@@ -150,6 +160,7 @@ export function createLooker({
         cutout,
         anyReal,
         surface,
+        alt,
         fetchImpl
       })
     const first = await ask()
@@ -197,7 +208,7 @@ export function createLooker({
     const looks = await inParallel(todo, concurrency ?? LOOK_CONCURRENCY, ([list, e]) =>
       lookAt(list, e, memo)
     )
-    for (const { list, entry, said, cached } of looks) {
+    for (const { list, entry, said, cached, limit } of looks) {
       calls.push({
         frame: entry.frame,
         sha256: entry.sha256,
@@ -207,6 +218,9 @@ export function createLooker({
         cached: Boolean(cached)
       })
       entry.seen = said.seen
+      const alt = limit ? cleanAlt(said.alt, limit) : null
+      if (alt) entry.alt = alt
+      else delete entry.alt
       entry.looker = {
         verdict: said.verdict,
         faults: said.faults,
@@ -215,10 +229,13 @@ export function createLooker({
       }
       if (said.dropped?.length)
         notes.push(`${entry.frame}: fault names outside the list dropped: ${said.dropped.join(', ')}`)
-      // A rejected picture the ladder kept because its only faults are minor (rung best-rejected) is noted, not failed.
-      if (said.verdict === 'fail' && entry.filledBy?.rung === 'best-rejected' && onlyMinorFaults(said.faults))
+      // A rejected picture the ladder kept (rung best-rejected) is noted, not failed: with minor faults only, or placed
+      // despite the looker because nothing better was made (a rejection never leaves the demo, owner's rule 2026-11-07).
+      if (said.verdict === 'fail' && entry.filledBy?.rung === 'best-rejected')
         notes.push(
-          `${entry.frame}: kept with minor faults (${said.faults.join(', ')}): no better picture fits`
+          onlyMinorFaults(said.faults)
+            ? `${entry.frame}: kept with minor faults (${said.faults.join(', ')}): no better picture fits`
+            : `${entry.frame}: placed despite looker: ${said.faults.join(', ') || 'no fault named'}: no better picture was made`
         )
       else if (said.verdict === 'fail')
         failures.push({
@@ -236,6 +253,7 @@ export function createLooker({
         const src = bySource.get(e.twinOf)
         e.seen = src.seen
         e.looker = { ...src.looker }
+        if (src.alt) e.alt = src.alt
       }
     const sum = (key, of = calls) => of.reduce((n, c) => n + (Number.isFinite(c[key]) ? c[key] : 0), 0)
     const out = {

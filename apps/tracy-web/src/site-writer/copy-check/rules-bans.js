@@ -2,8 +2,9 @@
 import { allTexts } from './copy-view.js'
 import { bannedPhrases } from '../../lib/site-copy/inputs-index.js'
 import { hasPhrase } from '../../lib/site-copy/text-tools.js'
+import { ALT_MAX } from '../../lib/site-copy/slot-shape.js'
 
-export const ALT_MAX = 125
+export { ALT_MAX }
 export const TITLE_MAX = 60
 export const DESCRIPTION_MAX = 160
 

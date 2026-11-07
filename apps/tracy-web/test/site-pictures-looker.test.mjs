@@ -72,6 +72,9 @@ test('the picture is shown at display size, never enlarged, and an extended phot
   })
   assert.match(cut[0].text, /This picture is a cut-out/)
   assert.match(cut[0].text, /"rough cut-out edge", "leftover ground", "missing part", "covers the text"/)
+  // A cut-out has no setting and no scene: the looker judges the figure, never a place or a role it cannot show.
+  assert.match(cut[0].text, /never fail it as "wrong subject" because a place or setting/)
+  assert.match(cut[0].text, /a role the words name \(a coach, a trainer, a chef\)/)
 })
 
 test('the maker of a model is its vendor prefix, else its provider', () => {

@@ -45,6 +45,28 @@ export async function iconPicture({
   return { bytes, ext: 'png', width, height, sha256: createHash('sha256').update(bytes).digest('hex') }
 }
 
+/**
+ * An icon drawn in a template icon's look (#380): the file's size, the line weight, the glyph's place and the backing are the
+ * look's; only the drawing, the glyph's colour and the backing's colour are given. The write step's painted frames and the
+ * site agent's icon door both draw a replaced icon through here, so the two cannot draw it differently.
+ * @param {{ glyph: string, look: import('./template-icon-look.js').IconLook, colour: string, plateColour?: string | null }} input
+ *   `plateColour`: the backing's colour; left out, the look's own
+ */
+export function iconInLook({ glyph, look, colour, plateColour = null }) {
+  const plate = look.plate
+    ? { ...look.plate, glyph: look.glyph, colour: plateColour ?? look.plate.colour }
+    : null
+  return iconPicture({
+    glyph,
+    weight: look.weight,
+    width: look.width,
+    height: look.height,
+    colour,
+    ground: plate,
+    glyphBox: look.glyph
+  })
+}
+
 const CLEAR = { r: 0, g: 0, b: 0, alpha: 0 }
 
 /**

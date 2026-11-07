@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-449-site-tool-pick-icon",
+  "kind": "feat",
+  "title": "The site agent changes an icon by picking one from Tracy's icon library and writing it into the icon slot and its other-theme twin",
+  "pr": 449,
+  "area": "site-tools/media-icon",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the icon door test: node --test --test-concurrency=1 apps/tracy-web/test/site-icon-door.test.mjs.",
+    "S2: Run the tool test and the surface test of the site tools one file at a time: packages/tools/tracy-site-tools/test/media-icon.test.mjs, then surface.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes: a search answers library names and no brand logo; an icon slot names its twin from either side; a redrawn icon keeps the template's size and backing and the colours the slot shows now; an unknown name or an unreadable icon draws nothing; the door refuses a bad slot, an unknown operation and a site with no kit.",
+    "S2: every test passes: the tool draws the slot and its twin, uploads both files and writes both slots in one contract apply; a slot that is not an icon is sent to media.draw; a missing icon, an unknown name or a failed upload writes nothing; the contract surfaces offer media.icon and say an icon slot takes no drawing."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/site-icon-door.test.mjs, packages/tools/tracy-site-tools/test/media-icon.test.mjs, packages/tools/tracy-site-tools/test/surface.test.mjs",
+    "door": "tracy_site media.icon (packages/tools/tracy-site-tools/src/host/icon.mjs) and POST /api/sites/:key/icons (apps/tracy-web/src/sites/icon-door.js)"
+  },
+  "fence": "Picking and drawing an icon for an icon slot pair, checked with invented kits and icon files and a fake Apply door",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-icon-door.test.mjs",
+      "packages/tools/tracy-site-tools/test/media-icon.test.mjs",
+      "packages/tools/tracy-site-tools/test/surface.test.mjs"
+    ]
+  }
+}

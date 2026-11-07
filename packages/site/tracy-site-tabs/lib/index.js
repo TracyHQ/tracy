@@ -1253,6 +1253,28 @@ var NAMED = /* @__PURE__ */ Object.freeze({
 });
 var VOID = new Set("br img hr input wbr source meta link area col embed param track".split(" "));
 
+// ../../tools/tracy-site-tools/src/host/contract-check.mjs
+var IDENTITY_TOKENS = /* @__PURE__ */ Object.freeze([
+  "site.name",
+  "site.legalName",
+  "site.slogan",
+  "site.monogram",
+  "contact.email",
+  "contact.phone",
+  "contact.tel",
+  "contact.address",
+  "contact.hours",
+  "social.facebook",
+  "social.instagram",
+  "social.linkedin",
+  "social.tiktok",
+  "social.youtube"
+]);
+var IDENTITY_TOKEN = new RegExp(
+  `\\{(${IDENTITY_TOKENS.map((n) => n.replace(".", "\\.")).join("|")})\\}`,
+  "g"
+);
+
 // ../tracy-site-build-core/src/host/design-check.mjs
 var ACCENT_ROLES = /* @__PURE__ */ Object.freeze([
   "--ds-c-accent",
@@ -2955,6 +2977,8 @@ var ACTION_CLASS = /* @__PURE__ */ Object.freeze({
   "media.delete": "write",
   // Draws a picture and uploads it through media.upload: the site's media library changes.
   "media.draw": "write",
+  // Puts a library icon into an icon slot and its twin (`icon.mjs`): the customer's change itself.
+  "media.icon": "write",
   // Finds visible words where they are stored and rewrites them there (F3): the customer's change
   // itself, so it resets the budget and never runs beside a sibling. Classed before the door lists
   // it, which costs nothing — the test walks the door's lists, not this table.

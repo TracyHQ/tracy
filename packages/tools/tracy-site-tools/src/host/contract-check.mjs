@@ -166,8 +166,18 @@ export function isIdentitySlot(slot) {
 }
 
 /**
+ * Did the plugin open this empty-demo slot? A kit's slot corrections (the plugin's
+ * `lib/slot-corrections.json`, `SlotCorrections::apply`) hand out a gallery alt the template prints
+ * with `opensEmpty` and the kit's own `maxCharacters`, and the component then lets it be filled
+ * (QC.php `checkValue`). The flag is read off the slot the inspect answered, never from a list here:
+ * the plugin's list is the one truth the writer, the component and this mirror all follow.
+ * @param {{ opensEmpty?: unknown }} slot
+ */
+export const opensEmpty = (slot) => !phpEmpty(slot?.opensEmpty)
+
+/**
  * @typedef {{ key: string, type?: string, sample?: string, maxCharacters?: number,
- *   requiresEvidence?: unknown, siteIdentity?: unknown, label?: string }} ContractSlot
+ *   requiresEvidence?: unknown, siteIdentity?: unknown, opensEmpty?: unknown, label?: string }} ContractSlot
  *   One slot of an inspect answer (or of `content-map.json`); `current` is not read here.
  * @typedef {'evidence' | 'cannot-empty' | 'cannot-fill' | 'no-markup' | 'no-directive'
  *   | 'max-characters' | 'url' | 'image'} ContractRule
@@ -198,11 +208,12 @@ export function checkSlotValue(slot, value, { evidence = null } = {}) {
     )
       return { rule: 'evidence', key, message: `Customer evidence required: ${key}` }
   }
-  // QC.php:547-550 — occupancy, except the identity block (a fact the customer lacks is emptied).
+  // QC.php:547-550 — occupancy, except the identity block (a fact the customer lacks is emptied),
+  // and a slot the plugin's corrections opened ({@link opensEmpty}) may be filled.
   if (!isIdentitySlot(slot)) {
     if (phpTrim(value) === '' && phpTrim(sample) !== '')
       return { rule: 'cannot-empty', key, message: `Content cannot remove an occupied slot: ${key}` }
-    if (phpTrim(value) !== '' && phpTrim(sample) === '')
+    if (phpTrim(value) !== '' && phpTrim(sample) === '' && !opensEmpty(slot))
       return { rule: 'cannot-fill', key, message: `Content cannot activate an empty slot: ${key}` }
   }
   // QC.php:551

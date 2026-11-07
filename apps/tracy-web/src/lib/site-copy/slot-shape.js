@@ -7,6 +7,9 @@
 // the total, the lines before the first "- " line for the lead and each "- " line for a point.
 import { stripEllipsis } from './text-tools.js'
 
+/** The longest alt text a picture may carry: the copy check (W09) and the picture step's alt ask share it. */
+export const ALT_MAX = 125
+
 /** A text whose demo is at most this long is a short heading: no floor, no ceiling from the demo. */
 export const SHORT_DEMO_MAX = 40
 /** The share of the demo a written text must reach (part by part). */

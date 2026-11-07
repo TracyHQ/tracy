@@ -191,3 +191,13 @@ test('step 8 says when its alt check is deferred to the site check, instead of l
   assert.match(altCheckFor(null).reason, /alt-matches-picture/)
   assert.equal(altCheckFor([{ frame: 'block-5.1', text: 'A pool' }]).status, 'compared')
 })
+
+// Step 8 writes the alt of a picture from the picture itself (ADR 0043 section 3f), in the site's language, so it may share no
+// word with the looker's English seen sentence: printed as step 8 wrote it, it describes its picture by construction.
+test('an alt printed as step 8 wrote it from the picture agrees, whatever words its seen sentence uses', async () => {
+  const pictures = seenAll()
+  pictures.frames[1].alt = 'Little swimmers splash with rubber ducks'
+  const check = await gate({ pictures, alts: { kids: 'Little swimmers splash with rubber ducks' } })
+  assert.equal(check.status, 'green', JSON.stringify(check.groups[0].failures))
+  assert.equal(check.groups[0].checked, 2)
+})

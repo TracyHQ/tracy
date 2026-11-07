@@ -1,0 +1,1 @@
+{"id":"REG-PR-449-step-9b-site-agent-repair","verdict":"PASS","commit":"fb98f7ec5e8b45ec762a377240dd2a8f2463fdca","ran_at":"2026-11-07T10:07:02.706Z","evidence":"tests/regression/.runs/2026-11-07-fb98f7ec5/REG-PR-449-step-9b-site-agent-repair.log"}

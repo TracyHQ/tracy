@@ -320,28 +320,22 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   // Not in a list row: hidden where the kit allows it, returned to the planner where it does not.
   assert.deepEqual(rungs(m, 'block-b.1'), [...drawAndPhotos, ['fewer-rows', 'skipped'], ['hide', 'hidden']])
   assert.equal(e.get('block-b.1').source, 'hide')
-  // A frame that cannot be hidden is drawn again in other compositions first; only when every picture it got had a
-  // hard fault (here a wrong subject) is it returned, and then the picture package says so as a problem.
+  // A frame that cannot be hidden is drawn again in other compositions first; when every picture it got had a hard
+  // fault (here a wrong subject), the best of them is placed despite the looker: a rejection never leaves the demo
+  // (owner's rule 2026-11-07), and the picture package names no problem for it.
   assert.deepEqual(rungs(m, 'block-c.1'), [
     ...drawAndPhotos,
     ['fewer-rows', 'skipped'],
     ['hide', 'skipped'],
     ...ALT_DRAWS,
-    ['best-rejected', 'skipped'],
-    ['return', 'returned']
+    ['best-rejected', 'placed']
   ])
-  assert.ok(!e.has('block-c.1'))
-  assert.match(m.returns.find((r) => r.frame === 'block-c.1').reason, /after: draw placed/)
+  assert.ok(!m.returns.some((r) => r.frame === 'block-c.1'), 'never returned')
+  assert.deepEqual(e.get('block-c.1').filledBy, { rung: 'best-rejected', faults: ['wrong subject'] })
+  assert.match(e.get('block-c.1').reason, /^placed despite looker: wrong subject, after: draw placed/)
   const exported = exportPictureMapping({ pictures: m, contract: kit().contract, revision: 'r', kit: kit() })
-  assert.ok(!('module-c.1' in exported.mapping.changes))
-  const problem = exported.problems.find((x) => x.where === 'block-c.1')
-  assert.match(
-    problem?.detail ?? '',
-    /^the plan wants a picture here and the picture step left it without one/
-  )
-  assert.ok(
-    packageProblems(exported, kit().contract).some((x) => x.startsWith('block-c.1: the plan wants a picture'))
-  )
+  assert.ok(!exported.problems.some((x) => x.where === 'block-c.1'))
+  assert.ok(!packageProblems(exported, kit().contract).some((x) => x.startsWith('block-c.1:')))
   // The redraw names the looker's faults; the first drawing does not.
   const bDraws = doors.drawings.filter((d) => d.frame === 'block-b.1')
   assert.equal(bDraws.length, 2)
@@ -395,7 +389,8 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   // this save.
   assert.equal(doors.drawings.length, 10)
   assert.equal(m.drawer.calls.length, 10)
-  assert.equal(m.drawer.count, 2)
+  // Drawn pictures on the site: w, k and c (placed despite the looker).
+  assert.equal(m.drawer.count, 3)
   assert.equal(m.drawer.model, DRAWER_MODEL)
   assert.ok(Math.abs(m.cost.drawer - 10 * DRAW_COST) < 1e-9, `${m.cost.drawer}`)
   assert.ok(m.timing.drawer >= 0)

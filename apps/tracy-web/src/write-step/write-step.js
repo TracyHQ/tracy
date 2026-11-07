@@ -21,7 +21,9 @@
 //
 // Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
 // had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
-import { correctionsReader, galleryAlts } from './slot-corrections.js'
+import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
+import { writeRecordAlts } from './record-alt-stage.js'
+import { PICTURE_OWNER } from './picture-package.js'
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { indexInputs } from '../lib/site-copy/inputs-index.js'
@@ -38,6 +40,7 @@ import { closeForms } from './form-close.js'
 import { settleDialledPhones } from './dialled-phones.js'
 import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
 import { climbTextFallback, withTextFallback } from './text-fallback.js'
+import { closeDemoLeft, withClosing } from './closing-ladder.js'
 import { hideEmptyVideoButtons } from './video-buttons-stage.js'
 import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
 import { hideHiddenPageLinks, relinkOrders } from './hidden-page-links-stage.js'
@@ -179,7 +182,10 @@ export async function runWriteStep(input) {
   let renamedLines = null
   let renamedLinks = null
   let emphasis = new Map()
+  let pictureFiles = {}
   let fallbacks = new Map()
+  let copyReturns = []
+  let closing = []
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -223,6 +229,8 @@ export async function runWriteStep(input) {
     lines = followRenamedLinks(lines, renamedLinks)
     lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
     lines = withTextFallback(withEmphasis(lines, emphasis), fallbacks)
+    lines = withClosing(lines, closing, emptied)
+    if (closing.length) report.closing = closing
     if (emphasis.size)
       report.emphasis = [...emphasis].map(([key, e]) => ({
         key,
@@ -302,6 +310,7 @@ export async function runWriteStep(input) {
     leaveOut(pictures.unaddressable ?? [])
     guard.refuse(pictures.refused ?? [])
     const copyRead = readCopy(copy)
+    copyReturns = Array.isArray(copy?.returns) ? copy.returns : []
     const problems = fileProblems({ plan, copy, kitRef: kit.ref }, copyRead.problems)
     if (problems.length)
       return { stop: { code: 'BAD_FILE', reason: `The files cannot be written: ${problems.join('; ')}` } }
@@ -360,15 +369,27 @@ export async function runWriteStep(input) {
     // An alt goes through the door only where the plugin says it opens its slot; any other keeps its skipped line.
     const placed = galleryAlts({
       alts: extras.alts ?? {},
+      // Step 8's alts, written from the pictures it placed, go over the writer's (ADR 0043 section 3f).
+      pictureAlts: pictureAltsOf(read.values.pictures),
+      picturesFile: read.inputs.pictures?.file ?? null,
       contentMap,
       hidden: new Set([...pictures.claims, ...fromPlan].filter((c) => c.kind === 'hide').map((c) => c.slot)),
       file: read.inputs.copy.file
     })
+    const fromStepEight = pictureAltsOf(read.values.pictures)
     const alts =
       placed.claims.length && !(await corrections()).alts
-        ? { claims: [], changes: {}, left: extras.alts ?? {} }
+        ? {
+            claims: [],
+            changes: {},
+            left: { ...extras.alts, ...fromStepEight },
+            leftByPicture: Object.keys(fromStepEight)
+          }
         : placed
-    extras = { ...extras, alts: alts.left }
+    // The frames whose alt is step 8's: their lines are the picture's, and record-alt-stage.js may still write them.
+    const altOwners = Object.fromEntries(alts.leftByPicture.map((frame) => [frame, PICTURE_OWNER]))
+    extras = { ...extras, alts: alts.left, altOwners }
+    pictureFiles = read.values.pictures?.mapping?.changes ?? {}
     // The slot prints only as its kept picture's alt, so a plan's hide of it hides nothing: the alt stands.
     const altSlots = new Set(alts.claims.map((claim) => claim.slot))
     const filing = [
@@ -561,6 +582,30 @@ export async function runWriteStep(input) {
   if (hiding.stop) return stopped(hiding.stop)
   hide = hiding
   mapping.emptySlots = hide.emptySlots
+  // The closing rule: a kept slot or frame that holds no customer content is not handed over with its demo (closing-ladder.js).
+  const closed = closeDemoLeft({
+    kit: kit.doc,
+    reading: hide.reading,
+    unowned: report.unowned,
+    unaddressable,
+    returns: copyReturns,
+    // A rerun: what an earlier run wrote is customer content the site still holds.
+    held: last.active
+      ? last
+          .held()
+          .filter((line) => line.status === 'written')
+          .map((line) => line.slot)
+      : [],
+    changes: mapping.changes,
+    // A slot the hide stage removes with its row is not kept, so it is no demo left.
+    emptySlots: [...mapping.emptySlots, ...(hide.takenSlots ?? [])]
+  })
+  closing = closed.lines
+  for (const key of closed.dropped) {
+    delete mapping.changes[key]
+    delete mapping.evidence?.[key]
+  }
+  mapping.emptySlots = [...mapping.emptySlots, ...closed.emptySlots]
   // A link slot to a hidden page that its kept row keeps (SLOT_NOT_HIDEABLE) is written with a living page instead (card AM).
   if (Array.isArray(kit.doc?.site?.hiddenPageLinks) && mapping.emptySlots.length) {
     try {
@@ -644,6 +689,15 @@ export async function runWriteStep(input) {
       })
   })
   const written = [...wrote.written, ...held]
+  // Step 8's alts no contract slot carries go into the records that keep them beside their picture (record-alt-stage.js).
+  const recordAlts = await writeRecordAlts({
+    door,
+    siteKey,
+    contentMap,
+    alts: Object.fromEntries(Object.keys(extras.altOwners ?? {}).map((f) => [f, extras.alts[f]])),
+    pictures: pictureFiles,
+    written
+  })
   // A heading whose demo value is HTML takes its emphasis as real tags, after the contract call wrote its words (emphasis-stage.js).
   emphasis = await runEmphasisStage({ door, siteKey, contentMap, written: wrote.written, ordered })
   // Last: the page settings, which the contract door does not take (page-settings-stage.js).
@@ -661,7 +715,7 @@ export async function runWriteStep(input) {
     })
   )
   settingLines = settings.lines ?? []
-  settled = new Map([...settings.results, ...hide.held, ...created.results])
+  settled = new Map([...recordAlts, ...settings.results, ...hide.held, ...created.results])
   if (settings.cancelled) return finish('cancelled', null, written, wrote.refused)
   // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).
   // It has no phase of its own: it makes a few calls, and the phase list is what callers already know.
