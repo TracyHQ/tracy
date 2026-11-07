@@ -310,3 +310,49 @@ test('a footer column of social profile links holds the social profiles; an arti
   ]
   assert.equal(articleLayoutOf(pages).pageId, 'page-about')
 })
+
+test("footer columns: links that lead to the site's own pages hold pages, whatever their words", () => {
+  const reads = [
+    { pageId: 'page-home', slug: 'home', path: '/' },
+    { pageId: 'page-careers', slug: 'careers', path: '/careers' },
+    { pageId: 'page-privacy', slug: 'privacy', path: '/privacy-policy' },
+    {
+      pageId: 'page-press',
+      slug: 'press',
+      path: '/press',
+      navGroups: [
+        {
+          block: 'module-7',
+          heading: 'Company',
+          links: [
+            { label: 'Join the crew', href: '/index.php/careers' },
+            { label: 'In the news', href: 'http://pool.example/index.php/press/' },
+            { label: 'Our story', href: '#' }
+          ]
+        },
+        {
+          block: 'module-8',
+          heading: null,
+          links: [
+            { label: 'Privacy', href: '/privacy-policy?lang=en' },
+            { label: 'Elsewhere', href: 'https://other.example/x' },
+            { label: 'Nowhere', href: '#' }
+          ]
+        }
+      ]
+    }
+  ]
+  const { navigationGroups: g, errors } = buildNavigationGroups(reads, {
+    listingTitles: new Map(),
+    menuLabels: new Set(['home', 'about']),
+    idOf
+  })
+  assert.deepEqual(
+    g.map((x) => [x.block, x.holds]),
+    [
+      ['block-7', 'pages'],
+      ['block-8', null]
+    ]
+  )
+  assert.equal(errors.length, 1)
+})

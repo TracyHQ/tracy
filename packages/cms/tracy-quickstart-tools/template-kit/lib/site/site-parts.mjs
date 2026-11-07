@@ -114,15 +114,30 @@ export function buildForms(reads, { idOf = (b) => b } = {}) {
   return [...by.values()].map((f) => ({ ...f, pages: f.pages.size }))
 }
 
+/** The site path a link address opens (`/index.php`, a trailing slash, the query and the fragment dropped), or null. */
+function sitePathOf(href) {
+  const h = String(href ?? '').trim()
+  if (!h || /^(?:#|javascript:|mailto:|tel:)/i.test(h)) return null
+  const path = h
+    .replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]+/i, '')
+    .replace(/[?#].*$/, '')
+    .replace(/^\/?index\.php(?=\/|$)/, '')
+    .replace(/\/+$/, '')
+  return path.startsWith('/') || path === '' ? path || '/' : `/${path}`
+}
+
 /**
  * Footer link columns and what each holds: `offerings` when its heading names a listing page of the site (the column
  * lists that page's items), `socialProfiles` when every link is a profile on a social network, `pages` when most of
- * its labels are names of the site's own main menu pages.
- * @param {{listingTitles: Map<string, string>, menuLabels: Set<string>, idOf?: Function}} ctx listing title -> page id
+ * its labels are names of the site's own main menu pages, or most of its links lead to pages the build read (an
+ * "About Voyara" or "Privacy" link to the site's own page, whatever its words).
+ * @param {{listingTitles: Map<string, string>, menuLabels: Set<string>, sitePaths?: string[], idOf?: Function}} ctx listing
+ *   title -> page id; `sitePaths`, the content map's page paths, beside the pages read
  */
-export function buildNavigationGroups(reads, { listingTitles, menuLabels, idOf = (b) => b }) {
+export function buildNavigationGroups(reads, { listingTitles, menuLabels, sitePaths = [], idOf = (b) => b }) {
   const by = new Map()
   const errors = []
+  const pagePaths = new Set([...reads.map((r) => r.path), ...sitePaths].map(sitePathOf).filter(Boolean))
   for (const r of reads)
     for (const g of r.navGroups ?? []) {
       const id = idOf(g.block, r)
@@ -134,6 +149,7 @@ export function buildNavigationGroups(reads, { listingTitles, menuLabels, idOf =
       const named = labels.filter((l) =>
         [l, `${l}s`, `${l}es`, l.replace(/e?s$/, '')].some((x) => menuLabels.has(x))
       ).length
+      const toPages = g.links.filter((l) => pagePaths.has(sitePathOf(l.href))).length
       // A column whose every link is a profile on a social network holds the business's social profiles (the
       // vocabulary of a list's `holds`, helpers.mjs), not pages of the site.
       const social = g.links.length > 0 && g.links.every((l) => isSocialProfile(l.href))
@@ -141,7 +157,7 @@ export function buildNavigationGroups(reads, { listingTitles, menuLabels, idOf =
         ? 'offerings'
         : social
           ? 'socialProfiles'
-          : named * 2 >= labels.length
+          : Math.max(named, toPages) * 2 >= labels.length
             ? 'pages'
             : null
       const group = {
