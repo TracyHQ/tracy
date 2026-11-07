@@ -47303,7 +47303,43 @@
       "articleLayoutForNewPage": "page-jason-alexander-is-kfc-s-new-colonel"
     },
     "fixedTexts": [],
-    "settingSlots": []
+    "settingSlots": [],
+    "emptyVideoButtons": [],
+    "noneWhy": {
+      "emptyVideoButtons": "No play button is printed. The theme templates, parts, patterns and inc hold no video, embed or play markup, and no published page, post or template part of the release database holds a core/video or core/embed block, a video element or a data-src address",
+      "selfLinkButtons": "No call to action leads to the page it sits on. The buttons of the front page and its four colour copies lead to about-us, reservation and contact-us; about-us leads to reservation and contact-us; reservation leads to the front page menu anchor and a phone number; the footer part prints only a Get Direction link to # and a mailto link. The only self links are the button style samples of the typography showcase page, which link to that page by design",
+      "createdPageHide": "A created page prints through the theme default page template, templates/page.html, which holds the header part, post-content and the footer part only: no share bar, related list or other block hard coded"
+    },
+    "selfLinkButtons": [],
+    "hiddenPageLinks": [
+      {
+        "container": ".slide-action",
+        "why": "the slideshow of the front page and its colour copies prints each slide with div.slide-action holding two unnamed buttons (Book a Table to /about-us, View full menu to /reservation) that no contract slot reaches, so a plan that drops one of those pages leaves the link leading to a hidden page"
+      },
+      {
+        "container": ".features-action",
+        "why": "the features intro of the front page and its colour copies prints div.features-action with an unnamed Discover our Story button to /about-us that no contract slot reaches, so a plan that drops one of those pages leaves the link leading to a hidden page"
+      },
+      {
+        "container": ".feature-action",
+        "why": "the features intro rows print p.feature-action with an unnamed link to /reservation and /contact-us that no contract slot reaches, so a plan that drops one of those pages leaves the link leading to a hidden page"
+      },
+      {
+        "container": ".menu-action",
+        "why": "the menu tabs of the front page and its colour copies print div.menu-action with an unnamed View full menu button to /about-us, /contact-us and /reservation that no contract slot reaches, so a plan that drops one of those pages leaves the link leading to a hidden page"
+      },
+      {
+        "container": ".link-btn",
+        "why": "the about-us page prints div.link-btn with unnamed Join Now buttons to /reservation and /contact-us that no contract slot reaches, so a plan that drops one of those pages leaves the link leading to a hidden page"
+      }
+    ],
+    "createdPageHide": [],
+    "createdPageLayouts": {
+      "legal": {
+        "articleLayout": null,
+        "why": "templates/page.html prints the header part, the page content alone and the footer part; the custom page templates (page-account, page-contact, page-landing, page-login, page-password, page-register) add account forms, a contact form or landing sections"
+      }
+    }
   },
   "storedFields": [
     {
