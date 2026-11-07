@@ -142,8 +142,50 @@ export function buildDbIndex(dumpFile, siteConfig = {}) {
     tableCount: tables.size,
     users: usersOfDump(tables, prefix),
     authors: authorsOfDump(tables, prefix),
-    accounts: accountsOfDump(tables, prefix)
+    accounts: accountsOfDump(tables, prefix),
+    pictures: wordpressPictures(tables, prefix)
   }
+}
+
+/**
+ * The uploads of a WordPress dump and the rows that print them by attachment id (TracyHQ/tracy#459). WordPress stores
+ * an upload's path without `wp-content/uploads/` (`_wp_attached_file`), and a theme option, a theme's post meta or the
+ * site logo points at the attachment with a bare number, so the text search of the index never finds either.
+ * @param {Map<string, Record<string, any>[]>} tables
+ * @param {string} prefix
+ * @returns {{ files: Map<string, string>, refs: Map<string, string[]> }} upload path (lowercase) -> attachment id,
+ *   attachment id -> where it is printed from
+ */
+export function wordpressPictures(tables, prefix = '') {
+  const rowsOf = (name) => tables.get(`${prefix}${name}`) ?? []
+  const files = new Map()
+  for (const r of rowsOf('postmeta'))
+    if (r.meta_key === '_wp_attached_file' && typeof r.meta_value === 'string')
+      files.set(r.meta_value.toLowerCase(), String(r.post_id))
+  const refs = new Map()
+  if (!files.size) return { files, refs }
+  const ids = new Set(files.values())
+  const add = (id, where) => {
+    if (!ids.has(id)) return
+    if (!refs.has(id)) refs.set(id, [])
+    refs.get(id).push(where)
+  }
+  for (const r of rowsOf('options'))
+    add(String(r.option_value ?? '').trim(), `options#${r.option_id}.option_value ${r.option_name}`)
+  for (const r of rowsOf('postmeta'))
+    if (!String(r.meta_key ?? '').startsWith('_wp_'))
+      add(
+        String(r.meta_value ?? '').trim(),
+        `postmeta#${r.meta_id}.meta_value ${r.meta_key} (post ${r.post_id})`
+      )
+  for (const r of rowsOf('posts')) {
+    if (r.post_type === 'revision') continue
+    const content = String(r.post_content ?? '')
+    for (const m of content.matchAll(/\bwp-image-(\d+)\b|"id":(\d+)/g))
+      add(m[1] ?? m[2], `posts#${r.ID}.post_content (${r.post_type} ${r.post_name})`)
+  }
+  for (const [id, list] of refs) refs.set(id, [...new Set(list)])
+  return { files, refs }
 }
 
 /**

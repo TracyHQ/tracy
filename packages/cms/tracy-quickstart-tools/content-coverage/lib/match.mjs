@@ -2,6 +2,9 @@
 import { normText, normPath, normHref, letterCount, alnumCount, compact } from './normalize.mjs'
 import { isLockedDesignAsset } from './contract.mjs'
 
+/** A size WordPress generated from an upload: the upload's path, the size suffix, the extension. */
+const WORDPRESS_SIZE = /^(wp-content\/uploads\/.+?)-(?:\d+x\d+|scaled)(\.[a-z0-9]+)$/i
+
 const isWordChar = (c) => !!c && /[\p{L}\p{N}]/u.test(c)
 
 /** Where `needle` occurs in `hay` on word boundaries (short samples must not hit inside words). */
@@ -121,6 +124,11 @@ export function createMatcher(contract, siteUrl) {
     const p = normPath(value, siteUrl)
     if (!p) return { status: 'ignored', reason: 'empty src' }
     if (image.has(p)) return { status: 'matched', by: 'path', slots: image.get(p), path: p }
+    // WordPress prints a picture with the sizes it generated from the attachment (`cake-300x200.jpg` in srcset, a
+    // `-scaled` copy of a large upload). A write to the slot moves the block's attachment id, so every size follows it.
+    const size = contract.platform === 'wordpress' ? WORDPRESS_SIZE.exec(p) : null
+    if (size && image.has(size[1] + size[2]))
+      return { status: 'matched', by: 'wordpress image size', slots: image.get(size[1] + size[2]), path: p }
     if (isLockedDesignAsset(contract, p))
       return { status: 'locked', reason: 'design asset pinned by presentation-lock.files', path: p }
     // No basename fallback: JA demos reuse item-1.jpg in many folders, so a name match proves nothing.
