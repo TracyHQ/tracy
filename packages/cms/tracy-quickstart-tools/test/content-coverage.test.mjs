@@ -59,6 +59,8 @@ function contractDir() {
       { key: 'module-90.phone', type: 'text', sample: '(239) 555-0177' },
       // A figure field the template prints after a hard-coded currency sign ("$<?= $raise ?>").
       { key: 'module-90.raised', type: 'text', sample: '4,500' },
+      // A tour's price field, printed alone in the quick facts and after a hard-coded label on the booking button.
+      { key: 'article-4.price', type: 'text', sample: '$2,450' },
       // A store link kept in a text field of the template's extra fields.
       { key: 'article-2.store', type: 'text', sample: 'https://music.apple.com/' },
       // Template language strings with printf placeholders (capture's language-string rule) and an author's name.
@@ -174,6 +176,23 @@ test('a block made of a label slot and a phone slot is that pair: a figure slot 
     [block.status, block.matchBy, [...block.slots].sort()],
     ['matched', 'composite', ['module-90.phone', 'module-90.phone-label']]
   )
+})
+
+test('a short figure slot inside a block is removed from it: the words the template writes around it are what is left', () => {
+  // JA Voyara 1.0.12: tour.php prints 'Reserve \u2014 ' . $tourPrice on the booking button; the price is a slot with
+  // no letter and fewer than 7 figures, so the whole button used to be one unknown hole that read as a price.
+  const { items } = audit([
+    { kind: 'text', value: 'Reserve \u2014 $2,450' },
+    { kind: 'text', value: 'Reserve \u2014 $9,950' },
+    { kind: 'text', value: 'Reserve \u2014 $2,4500' }
+  ])
+  const [button, other, longer] = items
+  assert.deepEqual(
+    [button.status, button.matchBy, button.slots, button.remainder],
+    ['hole', 'partial', ['article-4.price'], 'reserve -']
+  )
+  assert.deepEqual([other.status, other.slots ?? null], ['hole', null])
+  assert.deepEqual([longer.status, longer.slots ?? null], ['hole', null])
 })
 
 test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside a word is not', () => {

@@ -52,6 +52,13 @@ export function createMatcher(contract, siteUrl) {
     )
     .map((s) => ({ norm: normText(s.sample), key: s.key }))
     .filter((s) => s.norm)
+  // Figure slots too short for the containment list (no letter, fewer than 7 figures: a price "$2,450", a year): inside a
+  // composite block they are removed on word boundaries, so the words a layout writes around them ("Reserve - $2,450")
+  // are what is left and classified. At least 3 digits, so a lone "1" or "24" never splits a block.
+  const shortFigures = [...text.entries()]
+    .filter(([n]) => letterCount(n) === 0 && alnumCount(n) < 7 && (n.match(/\d/g) ?? []).length >= 3)
+    .map(([norm, keys]) => ({ norm, keys }))
+    .sort((x, y) => y.norm.length - x.norm.length)
   const textCache = new Map()
   const site = new URL(siteUrl)
 
@@ -118,6 +125,11 @@ export function createMatcher(contract, siteUrl) {
         if (!occ.length) continue
         slots.push(s.key)
         rest = rest.split(s.norm).join(' \u0000 ')
+      }
+      for (const f of shortFigures) {
+        if (!occurrences(rest, f.norm).length) continue
+        slots.push(...f.keys)
+        rest = rest.split(f.norm).join(' \u0000 ')
       }
       const parts = rest
         .split('\u0000')
