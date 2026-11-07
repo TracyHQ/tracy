@@ -3,9 +3,15 @@
 // and words are invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import sharp from 'sharp'
 import { siteFinder } from '../src/write-step/finder/finder.js'
 
-const TILE = Buffer.from('a tile of a page').toString('base64')
+/** A viewport tile as the host sends it: a plain JPEG (the finder stitches tiles into sheets, so they must decode). */
+const TILE = (
+  await sharp({ create: { width: 390, height: 300, channels: 3, background: '#d0d0d0' } })
+    .jpeg()
+    .toBuffer()
+).toString('base64')
 
 /** A host capture that streams one tile per page and width, and fails the pages named in `failing`. */
 function fakeCapture(failing = []) {
@@ -73,10 +79,14 @@ test('the finder looks at every kept page at both widths and keeps faults on til
     [['/'], ['/about']],
     'each page is shot on its own, so it is asked about once shot'
   )
-  assert.deepEqual(finderDoor.calls, [
-    { page: '/', images: 2 },
-    { page: '/about', images: 2 }
-  ])
+  // Pages are asked about as each one's sheets are ready, in no fixed order.
+  assert.deepEqual(
+    finderDoor.calls.toSorted((a, b) => a.page.localeCompare(b.page)),
+    [
+      { page: '/', images: 2 },
+      { page: '/about', images: 2 }
+    ]
+  )
   assert.deepEqual(
     faults.map((f) => [f.page, f.viewport, f.kind]),
     [
@@ -161,6 +171,12 @@ const settle = async () => {
   for (let i = 0; i < 50; i++) await new Promise((r) => setImmediate(r))
 }
 
+/** Waits until `ready()` holds: stitching a page's sheets runs off the main thread, so a few turns are not enough. */
+const until = async (ready, what) => {
+  for (let i = 0; i < 400 && !ready(); i++) await new Promise((r) => setTimeout(r, 5))
+  assert.ok(ready(), `waited for ${what}`)
+}
+
 test('pages are shot four at once and each is asked about as soon as its shots exist', async () => {
   const { capture, state, release } = heldCapture()
   const asked = []
@@ -175,6 +191,7 @@ test('pages are shot four at once and each is asked about as soon as its shots e
   await settle()
   assert.equal(state.running, 4, 'four pages are shot at once')
   release('/')
+  await until(() => asked.length > 0, 'the home page to be asked about')
   await settle()
   assert.deepEqual(asked, ['Page /.'], 'the home page is asked about while the others are still being shot')
   assert.equal(state.most, 4)
@@ -196,9 +213,12 @@ test('stopped at its time limit, the finder keeps every fault found so far and n
     }
   }
   const controller = new AbortController()
-  const run = siteFinder({ door: finderDoor, capture }).find(MANY, { signal: controller.signal })
+  let answered = 0
+  const counted = { ok: true, ask: async (input) => ((answered += 1), finderDoor.ask(input)) }
+  const run = siteFinder({ door: counted, capture }).find(MANY, { signal: controller.signal })
   release('/')
   release('/about')
+  await until(() => answered === 2, 'both released pages to be asked about')
   await settle()
   controller.abort()
   const looked = await run
@@ -212,24 +232,65 @@ test('stopped at its time limit, the finder keeps every fault found so far and n
   assert.match(looked.problem, /4 pages not looked at/)
 })
 
-test('each page is handed on as soon as it was looked at, with its faults, before the finder ends', async () => {
-  const { capture } = fakeCapture(['/about'])
-  const fault = { page: '/', viewport: 'phone', tile: 0, kind: 'broken-layout', seen: 'The menu runs off' }
+test('each page is handed on as soon as its look ends, with its faults; a page cut off by the time limit is not', async () => {
+  const { capture, release } = heldCapture()
+  const finderDoor = {
+    ok: true,
+    async ask({ content }) {
+      const page = content[0].text.replace(/^Page (.*)\.$/, '$1')
+      const fault = {
+        page,
+        viewport: 'phone',
+        tile: 0,
+        kind: 'empty-frame',
+        seen: `a broken picture on "${page}"`
+      }
+      return { text: JSON.stringify({ faults: page === '/about' ? [fault] : [] }), costUsd: 0.01 }
+    }
+  }
   const handed = []
-  let ended = false
-  const look = siteFinder({ door: door({ '/': { faults: [fault] } }), capture })
-    .find(REPORT, { onPage: (page, faults) => handed.push({ page, faults: faults.length, ended }) })
-    .then((answer) => {
-      ended = true
-      return answer
-    })
-  await look
+  const controller = new AbortController()
+  const run = siteFinder({ door: finderDoor, capture }).find(MANY, {
+    signal: controller.signal,
+    onPage: (page, faults) => handed.push([page, faults.map((f) => f.kind)])
+  })
+  release('/about')
+  await until(() => handed.length === 1, 'the about page to be handed on')
+  await settle()
   assert.deepEqual(
-    handed.sort((a, b) => a.page.localeCompare(b.page)),
-    [
-      { page: '/', faults: 1, ended: false },
-      // A page it could not shoot is handed on with no faults, so its check faults need not wait.
-      { page: '/about', faults: 0, ended: false }
-    ]
+    handed,
+    [['/about', ['empty-frame']]],
+    'the page is handed on while the others are still shot'
   )
+  release('/')
+  await until(() => handed.length === 2, 'the home page to be handed on')
+  assert.deepEqual(handed.at(-1), ['/', []], 'a clean page is handed on too, with no faults')
+  controller.abort()
+  const looked = await run
+  assert.equal(
+    handed.length,
+    2,
+    'pages the time limit cut off are named as problems, never handed on as clean'
+  )
+  assert.equal(looked.faults.length, 1)
+})
+
+test('a page whose tiles cannot be read is named, never asked about with nothing', async () => {
+  const broken = Buffer.from('not a picture').toString('base64')
+  const capture = async (layouts, { onFrame }) => {
+    for (const width of [1440, 390]) {
+      const base = { page: layouts[0].path, key: layouts[0].key, width }
+      await onFrame({ type: 'tile', ...base, index: 0, y: 0, height: 900, documentHeight: 900, jpeg: broken })
+      await onFrame({ type: 'view-end', ...base, complete: true })
+    }
+    return { ok: true }
+  }
+  const finderDoor = door({})
+  const looked = await siteFinder({ door: finderDoor, capture }).find(REPORT, { pages: ['/about'] })
+  assert.deepEqual(finderDoor.calls, [])
+  assert.deepEqual(
+    looked.problems.map((p) => p.page),
+    ['/about']
+  )
+  assert.match(looked.problems[0].problem, /could not be stitched/)
 })

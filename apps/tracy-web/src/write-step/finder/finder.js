@@ -6,14 +6,17 @@
 // tile and each reply is kept.
 //
 // Pages go through a pipeline: each is shot on its own (`SHOTS_AT_ONCE` at a time; the host queues past its browser
-// slots) and asked about as soon as its shots exist (`ASKS_AT_ONCE` at a time). Each page looked at is handed on at once
-// (`onPage(page, faults)`, none when it could not be shot or asked about), so step 9b sends it while the finder still
-// looks at the others. Given a `signal`, an abort (the step's time limit) ends the look at once: every fault found before
-// it is kept, and each page not looked at is named.
+// slots) and asked about as soon as its shots exist (`ASKS_AT_ONCE` at a time). Given a `signal`, an abort (the step's
+// time limit) ends the look at once: every fault found before it is kept, and each page not looked at is named.
+//
+// The call is kept small (finder-sheets.js): a page's tiles go in as a few stitched sheets per width, the demo's block
+// shots shrunk the same way. Given `onPage`, each page is handed on the moment its look ends, so step 9b's repair pass can
+// start on it while the finder still looks at the others.
 import { shootPages } from '../../lib/page-shots.js'
 import { keptPageList } from '../../lib/site-kept-paths.js'
 import { askFinder, demoBlockShots } from './finder-ask.js'
 import { heldFaults } from './finder-kinds.js'
+import { pageSheets, shrunkDemoShots } from './finder-sheets.js'
 
 /** Pages shot at once (the host queues what its browser slots cannot take), and pages asked about at once. */
 export const SHOTS_AT_ONCE = 4
@@ -62,6 +65,16 @@ function problemLine(problems) {
   return parts.length ? parts.join('; ') : null
 }
 
+/** Hands a page on without ever stopping the look: a handler that throws or rejects is its own problem. */
+function handOn(onPage, page, faults) {
+  if (!onPage) return
+  try {
+    Promise.resolve(onPage(page, faults)).catch(() => {})
+  } catch {
+    // The handler's failure is not the finder's: the page's faults are still in the result.
+  }
+}
+
 /**
  * @param {{ door: { ok: boolean, ask: Function, code?: string, reason?: string }, capture: Function, kit?: object | null,
  *   demoImages?: { open: (id: string) => Promise<any> } | null, saveFile?: ((name: string, data: any) => Promise<void>) | null }} input
@@ -95,10 +108,20 @@ export function siteFinder({ door, capture, kit = null, demoImages = null, saveF
           problems.push({ page: u.page, viewport: u.viewport, problem: `not shot: ${u.why}` })
         const tiles = shot.shots.filter((s) => s.page === page)
         if (!tiles.length) return []
+        const sheets = await pageSheets(tiles).catch(() => null)
+        if (!sheets?.length) {
+          problems.push({ page, problem: 'not looked at: its tiles could not be stitched into sheets' })
+          return []
+        }
         const call = await askGate(async () =>
           signal?.aborted
             ? { stopped: true }
-            : Promise.race([demo(page).then((d) => askFinder(door, page, tiles, d)), stopped])
+            : Promise.race([
+                demo(page)
+                  .then(shrunkDemoShots)
+                  .then((d) => askFinder(door, page, sheets, d)),
+                stopped
+              ])
         )
         if (call.stopped) return null
         if (typeof call.costUsd === 'number' && Number.isFinite(call.costUsd)) costs.push(call.costUsd)
@@ -111,15 +134,16 @@ export function siteFinder({ door, capture, kit = null, demoImages = null, saveF
           problems.push({ page, problem: `the finder: ${call.problem}` })
           return []
         }
-        return heldFaults(call.answer, tiles)
+        return heldFaults(call.answer, sheets)
       }
-      const handOn = (page) => async () => {
+      // A page whose look ended (found faults, none, or a problem named) is handed on; one cut off by the time limit is not.
+      const lookAndHandOn = async (page) => {
         const faults = await lookAt(page)
-        if (faults !== null && !signal?.aborted) onPage?.(page, faults)
+        if (faults !== null && !signal?.aborted) handOn(onPage, page, faults)
         return faults
       }
       // Stopped at its time limit, every page still at work is named, and what was found before is kept.
-      const looks = pages.map((page) => Promise.race([handOn(page)(), stopped.then(() => null)]))
+      const looks = pages.map((page) => Promise.race([lookAndHandOn(page), stopped.then(() => null)]))
       const found = await Promise.all(looks)
       found.forEach((faults, i) => {
         if (faults === null) problems.push({ page: pages[i], problem: TIME_RAN_OUT })
