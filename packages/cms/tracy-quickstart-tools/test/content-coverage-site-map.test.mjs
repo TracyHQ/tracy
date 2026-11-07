@@ -225,6 +225,35 @@ test('the header entry: logo, menu items with where each leads, buttons and text
   )
 })
 
+test('a header printed with absolute addresses of the measured site is written with paths, so the file names no machine', () => {
+  const contract = loadContract(contractDir(), SITE)
+  const result = auditResult()
+  const origin = SITE.replace(/\/$/, '')
+  const header = headerOf({
+    contract,
+    result: {
+      ...result,
+      header: {
+        ...result.header,
+        logo: { ...result.header.logo, image: `${origin}/images/demo/crumb-logo.png`, href: `${origin}/` },
+        menu: [
+          { text: 'Home', href: `${origin}/`, depth: 0 },
+          { text: 'Partner farm', href: 'https://farm.invalid/', depth: 0 }
+        ],
+        buttons: [{ text: 'Order a cake', href: `${origin}/order` }]
+      }
+    }
+  })
+  assert.equal(header.logo.image, '/images/demo/crumb-logo.png')
+  assert.equal(header.logo.href, '/')
+  assert.deepEqual(header.logo.slots, ['siteSetting-1.0'])
+  assert.deepEqual(
+    header.menu.map((m) => m.href),
+    ['/', 'https://farm.invalid/']
+  )
+  assert.equal(header.buttons[0].href, '/order')
+})
+
 test('no header measured is said as null, never an empty header', () => {
   const contract = loadContract(contractDir(), SITE)
   assert.equal(headerOf({ contract, result: { ...auditResult(), header: null } }), null)
