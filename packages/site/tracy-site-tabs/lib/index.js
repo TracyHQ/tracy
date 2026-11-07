@@ -2977,6 +2977,8 @@ var ACTION_CLASS = /* @__PURE__ */ Object.freeze({
   "media.delete": "write",
   // Draws a picture and uploads it through media.upload: the site's media library changes.
   "media.draw": "write",
+  // Puts a library icon into an icon slot and its twin (`icon.mjs`): the customer's change itself.
+  "media.icon": "write",
   // Finds visible words where they are stored and rewrites them there (F3): the customer's change
   // itself, so it resets the budget and never runs beside a sibling. Classed before the door lists
   // it, which costs nothing — the test walks the door's lists, not this table.

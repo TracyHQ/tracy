@@ -13004,6 +13004,9 @@ var WRITE_VERBS = "content.update {kind, id, fields, apply_id} EDITS one record;
 var LOCAL_ACTIONS = Object.freeze([
   "media.scan",
   "media.draw",
+  // Another library icon in an icon slot and its twin (`icon.mjs`): drawn by tracy-web's icon door, written
+  // through the same upload and contract apply as every other picture.
+  "media.icon",
   "page.look",
   "page.text",
   "content.find",
@@ -17123,6 +17126,8 @@ var ACTION_CLASS = Object.freeze({
   "media.delete": "write",
   // Draws a picture and uploads it through media.upload: the site's media library changes.
   "media.draw": "write",
+  // Puts a library icon into an icon slot and its twin (`icon.mjs`): the customer's change itself.
+  "media.icon": "write",
   // Finds visible words where they are stored and rewrites them there (F3): the customer's change
   // itself, so it resets the budget and never runs beside a sibling. Classed before the door lists
   // it, which costs nothing — the test walks the door's lists, not this table.
@@ -17908,6 +17913,8 @@ var TIERS = Object.freeze({
   "content.language": "mutating",
   "media.upload": "mutating",
   "media.draw": "mutating",
+  // uploads the icon files and writes the slots in one contract apply: one apply.revert undoes it
+  "media.icon": "mutating",
   "apply.revert": "mutating",
   "look.revert": "mutating",
   "look.set": "mutating",
@@ -27120,6 +27127,144 @@ async function mediaDraw({
     // `placedNext`) lost the phrase for the same reason; this one had kept it.
     next: `The picture is in the media library as ${picture.path}. Put it where it belongs: on a quickstart with a contract, content.contract {operation:"apply", changes:{"${plan.slot ?? "<image slot key>"}":"${picture.path}"}} \u2014 Tracy adds the revision; one apply can carry every picture you drew, and each reaches every language by itself; elsewhere, the content.update of the record that shows it.${!plan.slot && platform === "joomla" ? JOOMLA_ARTICLE_PICTURES : !plan.slot && platform === "wordpress" ? WORDPRESS_THEME_PICTURES : ""} ${DRAWN_RULES}`
   });
+}
+
+// src/host/icon.mjs
+var SLOT_KEY3 = /^[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+$/;
+var ICON_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+var SITE_PICTURE = /^(?!.*\.\.)[\w./-]+\.(?:png|webp|jpe?g|gif)$/i;
+function planIcon(params) {
+  const p = params && typeof params === "object" ? params : {};
+  const icon = typeof p.icon === "string" ? p.icon.trim().toLowerCase() : "";
+  const slot = typeof p.slot === "string" ? p.slot.trim() : "";
+  const query = typeof p.query === "string" ? p.query.trim() : "";
+  if (icon === "") {
+    if (query === "")
+      return {
+        ok: false,
+        error: 'media.icon {query:"<what the icon shows>"} lists icons; {slot, icon} puts one in'
+      };
+    if (query.length > 200) return { ok: false, error: "query: at most 200 characters" };
+    return { ok: true, search: query };
+  }
+  if (!ICON_NAME.test(icon))
+    return { ok: false, error: 'icon: a name media.icon {query} listed, e.g. "barbell"' };
+  if (!SLOT_KEY3.test(slot))
+    return {
+      ok: false,
+      error: "slot: the icon slot key, such as article-2.18 (content.read names it as field.slotKey)"
+    };
+  return { ok: true, slot, icon };
+}
+function pictureOfSlotValue(value) {
+  const file = String(value ?? "").split("#")[0].replace(/^\/+/, "");
+  return SITE_PICTURE.test(file) ? file : null;
+}
+async function mediaIcon({ params, platform, door, imageSlots, readFile, upload, apply: apply2 }) {
+  const plan = planIcon(params);
+  if (!plan.ok) return { ok: false, code: "BAD_PARAMS", error: plan.error };
+  if ("search" in plan) {
+    const found = await door({ operation: "search", query: plan.search });
+    if (!found?.ok) return iconDoorRefusal(found);
+    const icons = Array.isArray(found.icons) ? found.icons : [];
+    if (icons.length === 0)
+      return {
+        ok: true,
+        icons: [],
+        next: "No icon in the library says those words: search again with a simpler word for the same thing (one noun)."
+      };
+    return {
+      ok: true,
+      icons,
+      next: 'Choose the name that shows what the customer asked for, then media.icon {slot:"<the icon slot>", icon:"<that name>"}.'
+    };
+  }
+  const pair = await door({ operation: "pair", slot: plan.slot });
+  if (!pair?.ok) {
+    if (pair?.code === "NOT_AN_ICON_SLOT")
+      return {
+        ok: false,
+        code: "NOT_AN_ICON_SLOT",
+        error: `${plan.slot} holds a ${pair.kind ?? "picture"}, not an icon: media.draw {prompt, slot} draws a picture for it.`
+      };
+    if (pair?.code === "SLOT_UNKNOWN")
+      return {
+        ok: false,
+        code: "SLOT_UNKNOWN",
+        error: `${plan.slot} is not a slot of this site's template kit: content.read names a picture's slot (field.slotKey).`
+      };
+    return iconDoorRefusal(pair);
+  }
+  const keys2 = (
+    /** @type {string[]} */
+    pair.slots
+  );
+  const known = /* @__PURE__ */ new Map();
+  for (const entity of new Set(keys2.map((k) => k.split(".")[0])))
+    for (const s of await imageSlots(entity)) known.set(s.key, s);
+  const files = [];
+  for (const key of keys2) {
+    const slot = known.get(key);
+    if (!slot)
+      return {
+        ok: false,
+        code: "SLOT_NOT_FOUND",
+        error: `${key} is not an image slot of this site's contract; nothing was written.`
+      };
+    const template = pictureOfSlotValue(slot.sample);
+    const current = pictureOfSlotValue(slot.current);
+    const templateBytes = template ? await readFile(template) : null;
+    const currentBytes = current ? await readFile(current) : null;
+    if (!templateBytes && !currentBytes)
+      return {
+        ok: false,
+        code: "ICON_NOT_ON_SITE",
+        error: `The icon ${key} shows is not in the site's folder, so its look cannot be read; nothing was written.`
+      };
+    files.push({
+      slot: key,
+      ...templateBytes ? { template_b64: templateBytes.toString("base64") } : {},
+      ...currentBytes ? { current_b64: currentBytes.toString("base64") } : {}
+    });
+  }
+  const drawn = await door({ operation: "draw", icon: plan.icon, files });
+  if (!drawn?.ok) {
+    if (drawn?.code === "ICON_UNKNOWN")
+      return {
+        ok: false,
+        code: "ICON_UNKNOWN",
+        error: `The library has no icon named ${plan.icon}: media.icon {query:"<what it shows>"} lists the names.`
+      };
+    return iconDoorRefusal(drawn);
+  }
+  const changes = {};
+  for (const picture of drawn.pictures) {
+    const path22 = `${pictureFolder(platform)}/${picture.sha256}.png`;
+    const uploaded = await upload({
+      apply_id: `media-icon-${String(picture.sha256).slice(0, 16)}`,
+      path: path22,
+      content_b64: picture.png_b64
+    });
+    if (!uploaded?.ok)
+      return { ...uploaded && typeof uploaded === "object" ? uploaded : {}, ok: false, slot: picture.slot };
+    changes[picture.slot] = path22;
+  }
+  const applied = await apply2({ operation: "apply", changes });
+  if (!applied?.ok) return applied;
+  return {
+    ...applied,
+    icon: plan.icon,
+    slots: changes,
+    next: `The ${plan.icon} icon now shows in ${keys2.length === 1 ? "that slot" : `both themes (${keys2.join(", ")})`}, in the template's look and colours. apply.revert with this receipt's apply_id puts the old icon back.`
+  };
+}
+function iconDoorRefusal(answer) {
+  const a = answer && typeof answer === "object" ? answer : {};
+  return {
+    ok: false,
+    code: typeof a.code === "string" ? a.code : "ICON_DOOR_FAILED",
+    error: typeof a.error === "string" && a.error !== "" ? `${a.error}. Nothing was written.` : "Tracy could not pick or draw the icon just now; nothing was written. Tell the customer, and try once more later."
+  };
 }
 
 // src/host/media-emdash.mjs
@@ -45685,9 +45830,13 @@ var WORDPRESS_ACTIONS = Object.freeze([
   "core.manifest"
 ]);
 var SURFACE_ACTIONS = Object.freeze({
-  "joomla-sealed": withReplace("joomla-sealed", [...JOOMLA_ACTIONS, "content.contract"]),
+  "joomla-sealed": withReplace("joomla-sealed", [...JOOMLA_ACTIONS, "content.contract", "media.icon"]),
   joomla: withReplace("joomla", [...JOOMLA_ACTIONS]),
-  "wordpress-contract": withReplace("wordpress-contract", [...WORDPRESS_ACTIONS, "content.contract"]),
+  "wordpress-contract": withReplace("wordpress-contract", [
+    ...WORDPRESS_ACTIONS,
+    "content.contract",
+    "media.icon"
+  ]),
   "wordpress-sealed": withReplace("wordpress-sealed", [...WORDPRESS_ACTIONS]),
   wordpress: withReplace("wordpress", [...WORDPRESS_ACTIONS]),
   // media.draw joined on 26/09/2026 (#402): it uploads through the site's own media_upload, and the
@@ -45749,8 +45898,8 @@ var EMDASH_CONTENT_READ_BLOCK = contentReadBlock(
   'Call {view:"pages", locale:"<requested>", search:"<title>"}; batch: search:[\u2026\u22648]; url replaces search. offset/limit: page rows. {id} only for fields; links.next: segments.'
 );
 var APPLY_LIST_RULE = "never after a write: the write's answer is the receipt; with no apply_id before any write: the site's recent changes";
-var CONTRACT_BLOCK = `content.contract: reads and changes this quickstart site slot by slot. Use when content.replace cannot: a picture, a link, words it refused. Not for structure or settings (content.update) or a read-only question (content.read). Call: after content.read showed the slot (field.next), ONE {operation:"apply", changes:{"<slot key>":"<value>", \u2026}} carrying every change \u2014 no inspect, Tracy sends the revisions it read; a slot marked requiresEvidence also takes evidence:{"<key>":"<the customer's words>"}. Only when content.read did not show the slot: {operation:"inspect", page, slots:"text", match} (10\u201320 s at first), then apply with expected_revision:<its revision>. ` + CONTRACT_IDS_RULE + ` A slot's language: the site context's rule. Apart from Site identity, an occupied slot cannot be emptied and an empty one cannot be filled; nothing is created or deleted. Returns the apply's receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. Languages: content.contract {operation:"multilingual.retire", keep:[<tags to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed); tracy_site_build_joomla request language.add adds one. Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed \u2192 its next; writer_busy \u2192 Tracy already retried: tell the customer.`;
-var WORDPRESS_CONTRACT_BLOCK = `content.contract: reads and changes this quickstart site's words slot by slot. Use when content.replace cannot: a picture, a link, words it refused. Not for structure or settings (content.update) or a read-only question (content.read). Call: after content.read showed the slot (field.next), ONE {operation:"apply", changes:{"<slot key>":"<plain words>", \u2026}} carrying every change \u2014 no inspect, Tracy sends the revisions it read. Only when content.read did not show the slot: {operation:"inspect", page, match} then apply with expected_revision:<its revision>. ` + CONTRACT_IDS_RULE + ` A slot's language and its other editions' keys: the site context's rule. No markup; a link takes https://, mailto:, tel: or a /path. Returns the apply's receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. Languages: content.contract {operation:"multilingual.retire", keep:[<languages to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed). Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed \u2192 its next; writer_busy \u2192 Tracy already retried: tell the customer.`;
+var CONTRACT_BLOCK = `content.contract: reads and changes this quickstart site slot by slot. Use when content.replace cannot: a picture, a link, words it refused. Not for structure or settings (content.update) or a read-only question (content.read). Call: after content.read showed the slot (field.next), ONE {operation:"apply", changes:{"<slot key>":"<value>", \u2026}} carrying every change \u2014 no inspect, Tracy sends the revisions it read; a slot marked requiresEvidence also takes evidence:{"<key>":"<the customer's words>"}. Only when content.read did not show the slot: {operation:"inspect", page, slots:"text", match} (10\u201320 s at first), then apply with expected_revision:<its revision>. ` + CONTRACT_IDS_RULE + ` A slot's language: the site context's rule. Apart from Site identity, an occupied slot cannot be emptied and an empty one cannot be filled; nothing is created or deleted. Returns the apply's receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. An icon slot takes no drawing: media.icon {query} lists icons, {slot, icon} writes one there and in its other-theme twin. Languages: content.contract {operation:"multilingual.retire", keep:[<tags to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed); tracy_site_build_joomla request language.add adds one. Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed \u2192 its next; writer_busy \u2192 Tracy already retried: tell the customer.`;
+var WORDPRESS_CONTRACT_BLOCK = `content.contract: reads and changes this quickstart site's words slot by slot. Use when content.replace cannot: a picture, a link, words it refused. Not for structure or settings (content.update) or a read-only question (content.read). Call: after content.read showed the slot (field.next), ONE {operation:"apply", changes:{"<slot key>":"<plain words>", \u2026}} carrying every change \u2014 no inspect, Tracy sends the revisions it read. Only when content.read did not show the slot: {operation:"inspect", page, match} then apply with expected_revision:<its revision>. ` + CONTRACT_IDS_RULE + ` A slot's language and its other editions' keys: the site context's rule. No markup; a link takes https://, mailto:, tel: or a /path. Returns the apply's receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. An icon slot takes no drawing: media.icon {query} lists icons, {slot, icon} writes one there and in its other-theme twin. Languages: content.contract {operation:"multilingual.retire", keep:[<languages to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed). Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed \u2192 its next; writer_busy \u2192 Tracy already retried: tell the customer.`;
 var DERIVED_CONTRACT_BLOCK = `content.contract: changes an imported site's words, links and pictures slot by slot. Use when content.read, a pick or docs/agents/import-contract/slots.tsv (grep -i) gives a slotKey. Not for longer text, new or removed parts, settings: content.update. Call {operation:"apply", changes:{"<slotKey>":"<plain text | URL | library path>", \u2026}} with every change, no inspect: Tracy makes the ids and sends the revision content.read showed; with none read, the first apply answers INSPECT_FIRST (the slot's words now, a revision): send the same apply again. Returns the receipt: read nothing afterwards. Effects: a slot takes plain text up to 1.25\xD7 its length; a Joomla slot is never emptied; apply.revert {apply_id} undoes the latest apply. Refusals: SLOT_TOO_LONG or SLOT_EMPTY_STATE \u2192 content.update or content.replace on that record; SLOT_UNKNOWN \u2192 grep the index or content.read again.`;
 var leadOf = (normalized) => "tracy_site: THIS site's content, as the person you work with. Call {action, params}." + (normalized ? ` ${NORMALIZED_FACT}` : "");
 var LIST_SEARCH_OLDER = "an older one answers LIST_SEARCH_UNSUPPORTED, whose next is the road";
@@ -47763,6 +47912,25 @@ async function reportTurnCheck(config, plan, label, sessionId, turnId, report, w
     warn(
       `[site-tools] ${label}: could not tell Tracy the visual check of ${turnId}: ${error instanceof Error ? error.message : String(error)}`
     );
+  }
+}
+var ICON_DOOR_TIMEOUT_MS = 3e4;
+async function askIconDoor(config, plan, label, sessionId, body) {
+  const headers = plan.as === "prompter" ? { "x-tracy-actor": actorHeader(plan), "content-type": "application/json", accept: "application/json" } : { cookie: plan.cookie, "content-type": "application/json", accept: "application/json" };
+  headers["x-tracy-workspace-label"] = label;
+  if (sessionId) headers["x-tracy-session"] = sessionId;
+  try {
+    const res = await (config.fetch ?? fetch)(`${plan.origin}/api/sites/_conversation/icons`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(ICON_DOOR_TIMEOUT_MS)
+    });
+    const answer = await res.json().catch(() => null);
+    if (answer && typeof answer === "object") return answer;
+    return { ok: false, code: "ICON_DOOR_FAILED" };
+  } catch {
+    return { ok: false, code: "ICON_DOOR_FAILED" };
   }
 }
 async function siteChangedAtOf(config, plan, label, sessionId, warn) {
@@ -50495,7 +50663,13 @@ ${text6}`);
           })
         );
       }
-      if (plan.action === "media.draw") {
+      if (plan.action === "media.draw" || plan.action === "media.icon") {
+        if (plan.action === "media.icon" && (facts.platform === "emdash" || site !== null && await isEmdashSite(config, site)))
+          return {
+            ok: false,
+            code: "NOT_ON_THIS_PLATFORM",
+            error: "EmDash has no icon slots: an icon on this site is part of its template under /app."
+          };
         if (facts.platform === "emdash" || site !== null && await isEmdashSite(config, site)) {
           const emdashSite = emdashSiteHere();
           if (!emdashSite.ok) return noted(withNext(emdashSite, { platform: "emdash" }));
@@ -50568,6 +50742,41 @@ ${text6}`);
           });
           return inspected.slots ?? [];
         };
+        if (plan.action === "media.icon") {
+          const at = label ?? site;
+          const send = async (action, params) => relayRaw(route3, key, action, params, plan.target, label, sessionId, preset);
+          const { events: events2 } = planFor(sessionId ?? void 0);
+          return noted(
+            await mediaIcon({
+              params: plan.params,
+              platform: facts.platform === "wordpress" || facts.platform === "joomla" ? facts.platform : await detectPlatform(webroot),
+              door: (body) => at === null ? Promise.resolve({ ok: false, code: "NO_SITE_IN_CONVERSATION" }) : askIconDoor(config, route3, at, sessionId ?? null, body),
+              imageSlots: (entity) => imageSlotsOf(entity),
+              readFile: async (file) => {
+                const full = path21.resolve(webroot, file);
+                if (!full.startsWith(`${path21.resolve(webroot)}${path21.sep}`)) return null;
+                try {
+                  return await fs8.readFile(full);
+                } catch {
+                  return null;
+                }
+              },
+              upload: (params) => relay2(route3, key, "media.upload", params, plan.target, label, sessionId, preset),
+              apply: (params) => runSiteCall({
+                plan: { action: "content.contract", params, notes: [] },
+                facts: siteCallFacts(facts, actions),
+                memory,
+                send,
+                ...config.sleep ? { sleep: config.sleep } : {},
+                events: events2,
+                actorKey: actorKey2,
+                sessionId,
+                label: site,
+                signal: exec?.signal ?? null
+              })
+            })
+          );
+        }
         return noted(
           await mediaDraw({
             params: plan.params,

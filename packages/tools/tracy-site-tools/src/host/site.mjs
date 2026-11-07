@@ -140,6 +140,9 @@ export const WRITE_VERBS =
 export const LOCAL_ACTIONS = Object.freeze([
   'media.scan',
   'media.draw',
+  // Another library icon in an icon slot and its twin (`icon.mjs`): drawn by tracy-web's icon door, written
+  // through the same upload and contract apply as every other picture.
+  'media.icon',
   'page.look',
   'page.text',
   'content.find',
