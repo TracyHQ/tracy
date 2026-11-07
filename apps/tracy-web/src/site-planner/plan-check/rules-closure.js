@@ -1,3 +1,4 @@
+import { stockScreenOf, stockScreensOf } from '../../lib/stock-screens.js'
 import { arr, has, obj, str } from './rule-set.js'
 
 // R10a closure
@@ -46,6 +47,17 @@ export function checkR10a(ctx) {
       )
     else r.ok()
   }
+  // A stock screen of the kit (site.stockScreens) is a page every plan drops; a kit without the field checks nothing here.
+  const { screens } = stockScreensOf(ctx.kit)
+  if (screens.length)
+    planPages.forEach((p) => {
+      const screen = p?.decision === 'keep' ? stockScreenOf(kitPages.get(p.id)?.path ?? '/', screens) : null
+      if (screen)
+        r.fail(
+          `pages ${p.id}`,
+          `is a stock screen of the kit (site.stockScreens ${screen.path}: ${screen.why}), which every plan drops`
+        )
+    })
   const sharedDecided = new Set(arr(plan.sharedBlocks).map((d) => asDecision(d).block))
   livePages.forEach((p) => {
     const kp = kitPages.get(p.id)

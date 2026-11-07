@@ -15,6 +15,7 @@
 // parts already sent, WRITE_STEP_MESSAGE goes out and every later request carries tool_choice "none". A run whose
 // answered calls cost more than the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
+import { withStockScreensDropped } from '../lib/stock-screens.js'
 import { SITE_PLANNER_STORE } from './bench-store.js'
 import { sitePlannerDoor } from './door.js'
 import { kitImagesFor } from './kit-images.js'
@@ -30,6 +31,7 @@ import { oversizedReplacements, smallEditsMessage } from './plan-change-size.js'
 import {
   CHANGES_INSTRUCTION,
   invalidChangesMessage,
+  isChangeList,
   PLAN_CHANGE_RULES,
   WHOLE_PLAN_MESSAGE
 } from './plan-changes.js'
@@ -61,8 +63,17 @@ export const SITE_PLANNER_STEP = Object.freeze({
       checkPlan({ plan: doc, kit: ready.kit.doc, brief: row.brief, briefRef: briefRefOf(row.brief_source) }),
     failureListText
   }),
+  // After the model, before the checker: every stock screen of the kit (site.stockScreens) is dropped, on a whole plan and on the
+  // plan a fix round's change list leaves, so no answer keeps one (lib/stock-screens.js). A kit without the field changes nothing.
+  readAnswer: (value, { ready }) =>
+    value && typeof value === 'object' && !isChangeList(value)
+      ? withStockScreensDropped(value, ready?.kit?.doc)
+      : value,
   changes: Object.freeze({
-    applyValidChanges: PLAN_CHANGE_RULES.applyValidChanges,
+    applyValidChanges: (previous, list, { ready } = {}) => {
+      const applied = PLAN_CHANGE_RULES.applyValidChanges(previous, list)
+      return applied.ok ? { ...applied, doc: withStockScreensDropped(applied.doc, ready?.kit?.doc) } : applied
+    },
     oversized: oversizedReplacements,
     smallEditsMessage,
     invalidChangesMessage
