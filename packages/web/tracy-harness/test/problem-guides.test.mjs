@@ -640,7 +640,7 @@ test('no internal words in the copy an admin reads', () => {
   }
 })
 
-test('the road is in the order steps finish: the contract third, Content coverage fourth, Customize your site fifth, Design system sixth, polish last', () => {
+test('the road is in the order steps finish: the contract third, Content coverage fourth, Customize your site fifth, Design system sixth, polish then the write doors last', () => {
   assert.deepEqual(mod.ROAD_ORDER, [
     'release',
     'install-file',
@@ -652,7 +652,9 @@ test('the road is in the order steps finish: the contract third, Content coverag
     'demo',
     'listing',
     'published',
-    'polish'
+    'polish',
+    // Only a road whose plugin write doors are not judged yet carries it (WordPress, #454): last, so no number moves.
+    'write-doors'
   ])
 })
 
@@ -1516,7 +1518,7 @@ test('Content coverage with page problems only: the title and the fact line say 
 
 test('Slot roles group of Content coverage: guides, lists and ONE prompt that binds roles in content-map.json', () => {
   assert.equal(mod.ROAD_ORDER.includes('slot-roles'), false)
-  assert.equal(mod.ROAD_ORDER.length, 11)
+  assert.equal(mod.ROAD_ORDER.length, 12)
 
   const missing = mod.guideOf(
     { step: 'content-coverage', state: 'todo', code: 'coverage-roles', params: ROLES_MISSING },

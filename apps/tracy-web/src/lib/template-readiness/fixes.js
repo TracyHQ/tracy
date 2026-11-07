@@ -303,7 +303,7 @@ export const FIXES = Object.freeze({
     skill: CONTRACT_SKILL('8')
   },
   'write-doors-not-judged': {
-    text: 'Not judged until the {platform} write step exists. This is not a pass, and there is nothing to fix here; the plugin write doors are judged like Joomla once that step is built.'
+    text: 'Not judged until the WordPress write step exists. This is not a pass, and there is nothing to fix here; the plugin write doors are judged like Joomla once that step is built.'
   },
   'cowork-release-needed': {
     text: 'No Claude Cowork release has the write doors {doors}. A new plugin release is needed first, then move the Cowork pin to it.'
@@ -413,11 +413,14 @@ export function fixOf(code, params = {}) {
   return out
 }
 
-/** The states of a road step that ask for a fix: to do now, or done with something worth fixing. */
-const NEEDS_FIX = new Set(['todo', 'warn'])
+/**
+ * The states of a road step that carry the registry's text: to do now, done with something worth fixing, or not judged
+ * (the text says why, and that there is nothing to fix: the WordPress write doors, #454).
+ */
+const NEEDS_FIX = new Set(['todo', 'warn', 'not-judged'])
 
 /**
- * A road with the registry's fix on each step that asks for one (`todo` or `warn`), as `fix`, so Road to live shows
+ * A road with the registry's fix on each step that asks for one (`todo`, `warn`, or `not-judged`), as `fix`, so Road to live shows
  * the fix text under a red step from this registry alone. A step whose code has no entry (the steps after the
  * verdict's) gets none. The road handed in is not changed.
  * @template {{ state: string, code: string, params?: Record<string, unknown> }} S
