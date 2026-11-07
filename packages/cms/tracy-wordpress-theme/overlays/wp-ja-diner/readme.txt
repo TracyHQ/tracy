@@ -42,6 +42,11 @@ License. Both as the source template ships them (assets/fonts, assets/css/icons.
 
 == Changelog ==
 
+= 1.0.2 =
+* Design pages (fixtures, artifacts) print the site's Additional CSS again: dequeuing the global styles had dropped it (TracyHQ/tch#1710).
+* Carousels: the carousel takes keyboard focus, and the arrow keys leave links and buttons inside a slide alone; a horizontal swipe captures the pointer, a photograph cannot be dragged out of a slide, and the click that ends a swipe does not open the link under it.
+* The licence files of the bundled Font Awesome and Ionicons fonts ship in assets/fonts.
+
 = 1.0.1 =
 * The Subscribe band's photograph is declared as a picture to readers of computed styles (the photograph's dark as background colour and an empty gradient layer on `.acy-mailing`); the opaque photograph covers both, so nothing is painted differently.
 
