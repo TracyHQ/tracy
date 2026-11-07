@@ -9,7 +9,8 @@
  *
  *   key          the site has it when (inventory.json, the record of the demo database)   the contract carries it when
  *   itemPages    a published post of any type but `page`, or the kit pictures none       the map has an entity of a post type
- *                                                                                         other than `page`, with a slot
+ *                                                                                         other than `page` and the theme's own
+ *                                                                                         structures (`wp_block`...), with a slot
  *   itemLists    two or more such posts, or the kit pictures a list of items (rowKind     the map has two or more such entities
  *                `items`)                                                                  with a slot (a list is refilled by its
  *                                                                                         entries)
@@ -36,10 +37,23 @@ const readJson = (file) => {
 const array = (value) => (Array.isArray(value) ? value : [])
 const LINK_BLOCK = /<!--\s*wp:navigation-(?:link|submenu)\b/
 
-/** The post type of a map entity that is not a page, or null. */
+/**
+ * Types a map entity may name that hold the theme's structure, not something a visitor opens as an article: a synced
+ * pattern, a template, a template part, a navigation, the global styles. Carrying one is not carrying a post.
+ */
+const STRUCTURE_TYPES = new Set([
+  'page',
+  'wp_block',
+  'wp_template',
+  'wp_template_part',
+  'wp_navigation',
+  'wp_global_styles'
+])
+
+/** The post type of a map entity that is a post (not a page, not a structure of the theme), or null. */
 const postTypeOf = (entity) => {
   const type = entity?.identity?.postType
-  return typeof type === 'string' && type !== '' && type !== 'page' ? type : null
+  return typeof type === 'string' && type !== '' && !STRUCTURE_TYPES.has(type) ? type : null
 }
 
 /** The posts of other types than `page` the demo holds that a visitor can open. */

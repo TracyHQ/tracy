@@ -12,6 +12,7 @@ import {
   findNamedBlock,
   normalizeRelease,
   pageSlots,
+  postEntitiesOf,
   readText,
   readUrl
 } from '../scripts/capture-contract.mjs'
@@ -80,7 +81,16 @@ const q = (v) =>
   v === null ? 'NULL' : `'${String(v).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n')}'`
 const table = (name, columns, rows) =>
   `CREATE TABLE \`tr_${name}\` (\n${columns.map((c) => `  \`${c}\` text`).join(',\n')}\n) ENGINE=InnoDB;\nINSERT INTO \`tr_${name}\` VALUES ${rows.map((r) => `(${r.map(q).join(',')})`).join(',')};\n`
-const POST = ['ID', 'post_content', 'post_title', 'post_status', 'post_name', 'post_type', 'post_parent']
+const POST = [
+  'ID',
+  'post_content',
+  'post_title',
+  'post_status',
+  'post_name',
+  'post_type',
+  'post_parent',
+  'post_excerpt'
+]
 const dump = ({ pages, options = [], taxonomies = [] }) =>
   table(
     'options',
@@ -100,11 +110,12 @@ const dump = ({ pages, options = [], taxonomies = [] }) =>
     pages.map((p, i) => [
       p.id ?? i + 10,
       p.content,
-      p.name,
+      p.title ?? p.name,
       p.status ?? 'publish',
       p.name,
       p.type ?? 'page',
-      0
+      0,
+      p.excerpt ?? ''
     ])
   )
 
@@ -125,13 +136,14 @@ const CARD = {
   repo: 'o/r',
   assets: { 'w.tar.gz': { id: 7 } }
 }
-const derive = (sql) =>
+const derive = (sql, extra = {}) =>
   deriveProfile({
     sql,
     release: RELEASE,
     card: CARD,
     coworkVersion: '0.17.1',
-    themeRoots: ['wp-content/themes/wp-demo']
+    themeRoots: ['wp-content/themes/wp-demo'],
+    ...extra
   })
 
 test('a profile is made from the site name, the tagline and every page that has addressable text', () => {
@@ -169,6 +181,118 @@ test('a profile is made from the site name, the tagline and every page that has 
   assert.equal(out.manifest.quickstart.parts.webroot.githubAssetId, 7)
   assert.deepEqual(out.lock.fileRoots, ['wp-content/themes/wp-demo'])
   assert.deepEqual(out.lock.options, { stylesheet: 'wp-demo', template: 'wp-demo' })
+})
+
+// ── published posts (spec #452, the content map lists check of #457) ──
+
+const HOME = { name: 'home', content: heading('hero.title', 'Hello') }
+const NEWS = [
+  HOME,
+  {
+    id: 41,
+    name: 'first-news',
+    type: 'post',
+    title: 'Our first news',
+    excerpt: 'A short summary of the news.',
+    content: '<!-- wp:paragraph -->\n<p>An unnamed paragraph.</p>\n<!-- /wp:paragraph -->'
+  },
+  {
+    id: 42,
+    name: 'second-news',
+    type: 'post',
+    title: 'The second one',
+    excerpt: 'Has <em>markup</em>',
+    content: para('post.lead', 'A named lead')
+  },
+  { id: 43, name: 'draft-news', type: 'post', title: 'Not out yet', status: 'draft', content: '' },
+  { id: 44, name: 'twin', type: 'post', title: 'Twin A', content: '' },
+  { id: 45, name: 'twin', type: 'post', title: 'Twin B', status: 'private', content: '' },
+  { id: 46, name: 'untitled', type: 'post', title: '', content: '' },
+  { id: 47, name: 'a-block', type: 'wp_block', title: 'A synced pattern', content: para('x', 'y') }
+]
+
+test('by default a capture makes no post entity, so every released profile re-captures byte for byte', () => {
+  const out = derive(dump({ pages: NEWS }))
+  assert.deepEqual(
+    out.contentMap.entities.map((e) => e.key),
+    ['option-blogname', 'option-blogdescription', 'page-home']
+  )
+  assert.equal('posts' in out.coverage, false)
+  assert.doesNotMatch(out.contentMap.$comment, /post/)
+})
+
+test('with posts, every published post with one row of its slug is an entity, with its title, excerpt and named blocks', () => {
+  const out = derive(dump({ pages: NEWS }), { posts: true })
+  const posts = out.contentMap.entities.filter((e) => e.kind === 'post')
+  assert.deepEqual(posts, [
+    { key: 'post-first-news', kind: 'post', identity: { postType: 'post', slug: 'first-news' } },
+    { key: 'post-second-news', kind: 'post', identity: { postType: 'post', slug: 'second-news' } }
+  ])
+  const slots = out.contentMap.slots.filter((s) => s.entity.startsWith('post-'))
+  assert.deepEqual(
+    slots.map((s) => [s.key, s.entity, s.type, JSON.stringify(s.target), s.sample]),
+    [
+      ['post-first-news.title', 'post-first-news', 'text', '{"field":"post_title"}', 'Our first news'],
+      [
+        'post-first-news.excerpt',
+        'post-first-news',
+        'text',
+        '{"field":"post_excerpt"}',
+        'A short summary of the news.'
+      ],
+      ['post-second-news.title', 'post-second-news', 'text', '{"field":"post_title"}', 'The second one'],
+      [
+        'post-second-news.post.lead',
+        'post-second-news',
+        'text',
+        '{"block":"post.lead","attr":"content"}',
+        'A named lead'
+      ]
+    ]
+  )
+  for (const s of slots) assert.ok(s.maxCharacters >= 80 && typeof s.label === 'string', s.key)
+  assert.deepEqual(out.coverage.posts, 4)
+  assert.match(out.coverage.ambiguousPosts.join(), /twin \(2 rows\)/)
+  assert.deepEqual(out.coverage.postsWithoutSlots, ['untitled'])
+  assert.match(out.coverage.skipped.join('\n'), /post-second-news:excerpt \(inline markup\)/)
+  assert.match(out.contentMap.$comment, /published post/)
+  // Pages are captured exactly as without posts.
+  const without = derive(dump({ pages: NEWS }))
+  assert.deepEqual(
+    out.contentMap.slots.filter((s) => !s.entity.startsWith('post-')),
+    without.contentMap.slots
+  )
+})
+
+test('with posts and all text, the unnamed blocks of a post are captured by position like a page', () => {
+  const out = derive(dump({ pages: NEWS }), { posts: true, allText: true })
+  const first = out.contentMap.slots.filter((s) => s.entity === 'post-first-news')
+  assert.deepEqual(
+    first.map((s) => s.sample),
+    ['Our first news', 'A short summary of the news.', 'An unnamed paragraph.']
+  )
+  assert.equal(first[2].target.blockType, 'paragraph')
+})
+
+test('the posts of rows read elsewhere are captured on their own, by the same rule', () => {
+  const posts = postEntitiesOf(
+    [
+      {
+        ID: '9',
+        post_type: 'post',
+        post_status: 'publish',
+        post_name: 'one',
+        post_title: 'One',
+        post_excerpt: '',
+        post_content: ''
+      }
+    ],
+    {}
+  )
+  assert.deepEqual(
+    posts.slots.map((s) => s.key),
+    ['post-one.title']
+  )
 })
 
 test('deriving twice gives the same bytes', () => {
@@ -253,7 +377,9 @@ test('both shapes of a release manifest are read, and a missing field stays miss
 
 test('capture-contract.mjs writes the three profile files under --contracts-root and refuses a wrong dump', () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'wp-cc-'))
-  const sql = dump({ pages: [{ name: 'home', content: heading('hero.title', 'Hello') }] })
+  const sql = dump({
+    pages: [HOME, { id: 30, name: 'news', type: 'post', title: 'News', content: '' }]
+  })
   const gz = gzipSync(sql)
   const dumpFile = path.join(dir, 'd.sql.gz')
   writeFileSync(dumpFile, gz)
@@ -290,6 +416,9 @@ test('capture-contract.mjs writes the three profile files under --contracts-root
     )
   const out = JSON.parse(run().trim().split('\n').at(-1))
   assert.equal(out.entities, 3)
+  const withPosts = JSON.parse(run(['--posts']).trim().split('\n').at(-1))
+  assert.equal(withPosts.entities, 4)
+  assert.equal(withPosts.coverage.posts, 1)
   for (const f of ['manifest.json', 'content-map.json', 'presentation-lock.json'])
     assert.ok(existsSync(path.join(dir, 'contracts/ja-demo/wp7/1.0.0', f)), f)
   writeFileSync(manifest, JSON.stringify(RELEASE))

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { imageSlotsOf, withImageSlots } from '../scripts/capture-image-slots.mjs'
+import { featuredImageSlotOf, imageSlotsOf, withImageSlots } from '../scripts/capture-image-slots.mjs'
 
 const HERO =
   '<!-- wp:image {"className":"wtb-hero__media","sizeSlug":"large","metadata":{"role":"content","name":"hero.img"},"id":91} -->\n' +
@@ -65,4 +65,44 @@ test('a second block of the same name is out of reach, so it gets no slot', () =
   assert.deepEqual(skipped, [
     'page-about:hero.img (a second block of that name; only the first is addressable)'
   ])
+})
+
+// ── a post's featured picture (spec #452) ──
+
+const META = [
+  { meta_id: '1', post_id: '41', meta_key: '_thumbnail_id', meta_value: '6' },
+  { meta_id: '2', post_id: '6', meta_key: '_wp_attached_file', meta_value: '2026/10/news-1.jpg' },
+  { meta_id: '3', post_id: '42', meta_key: '_thumbnail_id', meta_value: '7' },
+  { meta_id: '4', post_id: '43', meta_key: '_thumbnail_id', meta_value: '8' },
+  { meta_id: '5', post_id: '8', meta_key: '_wp_attached_file', meta_value: '../outside.jpg' }
+]
+
+test('a post with a featured picture in uploads gets an image slot on its thumbnail meta', () => {
+  assert.deepEqual(
+    featuredImageSlotOf({ postId: 41, entityKey: 'post-news', prefix: 'post-news', postmeta: META }),
+    {
+      slot: {
+        key: 'post-news.featured-image',
+        entity: 'post-news',
+        target: { meta: '_thumbnail_id' },
+        type: 'image',
+        sample: 'wp-content/uploads/2026/10/news-1.jpg',
+        sampleId: 6,
+        maxCharacters: 255,
+        label: 'post-news — featured image'
+      },
+      skipped: null
+    }
+  )
+})
+
+test('a featured picture the slot could not put back is reported, and a post without one has none', () => {
+  const of = (postId) =>
+    featuredImageSlotOf({ postId, entityKey: 'post-x', prefix: 'post-x', postmeta: META })
+  assert.deepEqual(of(42), { slot: null, skipped: 'post-x:featured image (attachment 7 has no file)' })
+  assert.deepEqual(of(43), {
+    slot: null,
+    skipped: 'post-x:featured image (picture not in uploads: ../outside.jpg)'
+  })
+  assert.deepEqual(of(99), { slot: null, skipped: null })
 })
