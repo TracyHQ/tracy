@@ -19,6 +19,7 @@ new doc **cannot** quietly end up with nothing pointing to it.
 | Document | What it covers |
 |---|---|
 | [Adding a demo machine](references/adding-a-demo-machine.md) | Adding another machine to hold quickstart demos (DEMO_HOSTS) — the four things a new machine must have, and the four failures measured while building tracy-fleet-01 on 23/09/2026. |
+| [AI capabilities audit — 8 November 2026](references/ai-capabilities-audit-2026-11-08.md) | AI capabilities audit — 8 November 2026 |
 | [Tracy API changelog](references/api-changelog.md) | Dated changelog of the public Tracy API (the reference at docs.tracy.ai/api/reference/) — what was added, changed or removed, and when; the api-spec gate holds it to the committed snapshot. |
 | [Apply in the "Tell Tracy about your site" popup](references/apply-popup-site-description.md) | "Apply" in the "Tell Tracy about your site" popup — text and images following the customer's words, made while the site is installing and written to the site as soon as it is up; its shape, the language / fact / image rules, the three engines WordPress · Joomla · EmDash, measurements against "I will do it later", and known limits. |
 | [Ask the council before settling a plan](references/ask-the-council.md) | Ask the council (Codex gpt-6-astra) before settling a decision in a plan — when to ask, how to ask, and installing the claude-council plugin and Codex on a new machine. |

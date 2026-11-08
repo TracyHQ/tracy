@@ -1,0 +1,57 @@
+# AI capabilities audit — 8 November 2026
+
+This audit uses `origin/develop` at `3172697b70`, the change journal, open GitHub issues and pull requests, and source inspection. It does not claim that a deployed site was exercised. A passing unit test establishes the behavior named by that test, not the quality of a complete customer site.
+
+## Product boundary
+
+Tracy helps a person change a real website through an agent. Site changes, Diff, Undo and Backup are the trust mechanism; chat is the way to ask. There is no approval step before an agent change. The supported platforms are WordPress, Joomla and EmDash. These statements come from `CONTEXT.md` and govern the proposals below.
+
+## Capability inventory
+
+| Capability | Entry and current path | Evidence and limit |
+| --- | --- | --- |
+| Site editing by chat and page comments | dsh agent, `tracy_site` Apply, EmDash MCP and file tools | `SYSTEM.md` sections 4–5; four write paths have different recording and isolation behavior. |
+| New site and business-link demos | Add site, Website Opportunities, `agent-demo/1` | `SYSTEM.md` section 8 and Website Opportunities addenda; the existing agent build remains on `develop`. |
+| Proposed step chain | Brand, planner, writer, pictures, write, site check | Bench descriptions in `SYSTEM.md` section 8. PR #488 connects the chain to a Build but is not merged into the audited commit. |
+| Customer AI accounts | Claude/ChatGPT connections, ordered routing, optional Tracy AI fallback | `SYSTEM.md`, AI accounts section; site-creation workspace uses the default model. |
+| `/help` assistant | Assistant route, model and guide prompt | `apps/tracy-web/src/assistant/`; it reads site and account context but does not make a site change. |
+| Voice | Speech relay, turn-taking, agent, text-to-speech | `packages/ui/tracy-chat-input/src/client/voice-mode.mjs`; physical-device quality needs measurement. |
+| Supporting model work | Research and brief, template blurb translations, picture picker/looker/drawer, brand reviewer | `packages/wo/website-opportunities/`, `apps/tracy-web/src/brand-step/`, `site-pictures/` and `SYSTEM.md`. |
+
+## Priority 0: acceptance gaps that affect the customer's site
+
+1. **A brief-built site may still contain demo identity or unsupported claims.** Two pilots and the scope of issue #189 describe demo pictures, incomplete replacement and facts that did not come from the business. The existing single-agent build can stop partway through. The acceptance target is a whole handed-over site with no demo residue, invented people/prices/numbers, wrong-offering pictures or broken links, including phone and desktop views. Track #189, #192–#198 and #231. Do not treat the replacement step chain as evidence of a corrected customer outcome until its end-to-end cases pass.
+2. **The new step chain is not yet a completed customer Build on audited `develop`.** Planner, writer, picture and write benches exist, while PR #488 connects them for business-link builds. The PR description records defects found in a local chain run: missing logo media, demo portraits left visible, false dead-link results and disputed slot ownership that stopped a write. Complete #482 acceptance, then repeat on a WordPress and an EmDash quickstart before enabling either CMS broadly. Track #472, #479, #482–#484 and PR #488.
+3. **A formally valid input can be semantically wrong.** Brief media labels and template slot roles determine what the agent chooses and writes. The open readiness specs require the labels to be judged against actual content, not merely present. Measure source, person, offering, subject and frame labels on real briefs and rendered template pages before admitting a template to the chain. Track #37, #38 and #376.
+
+## Priority 1: consistency, cost and recovery
+
+4. **EmDash writes can proceed after the write-lease door fails.** `packages/tools/tracy-site-tools/src/host/index.ts` `emdashWriteLease` returns `null` for a missing session or plan and logs then proceeds for any answer other than Stop or `SITE_BUSY` (around lines 3219–3246). This preserves compatibility with older `tracy-web`, but a live web outage can allow two conversations to write without serialization. The existing test checks contention when the lease door answers; add a separate unavailable-door case. First establish the minimum compatible deployment version, then fail closed for a real unavailable/error answer and retain the intentional `SITE_BUSY` wait. Update `SYSTEM.md` in the same PR as any behavior change.
+5. **A bench budget is checked after answered calls, and unknown call cost contributes zero.** `agent-over-door.js` checks `totalsOf(turns).cost` before the next call. `agent-over-door-wire.js` counts `turnsWithoutCost` but sums only known costs. A single call can cross the budget, and a provider that reports no cost without a price table can keep the numeric total under budget. Record the unknown state as a budget decision, add an estimated upper bound or refuse an unpriced budgeted door, and measure overshoot. Do not silently present a partial total as the full spend. Coordinate with #478 and the whole-build cost work in #480.
+6. **Stop is honored between model turns, not during a call in flight.** The `agent-over-door.js` contract states this explicitly. In-flight model work can continue after a user or operator stops a bench. Bound request time and avoid replay of ambiguous write outcomes; measure the time and cost from Stop to actual termination. The site-editing agent's stopped-write receipt already addresses a different, related case and should be preserved.
+7. **Output quality of a picture can be below a passing looker verdict when a frame cannot be hidden.** The picture fallback may keep the best picture rejected for minor faults so a required frame is not empty (change journal, 6 November). Carry `filledBy` and its fault names into the final site report and review a stratified sample by frame role. A hero, person or offering picture needs a stricter acceptance policy than decoration. Track #336 and #194.
+8. **Template and plugin readiness must be an admission rule for the chain.** Missing contract doors, stale content maps, missing baseline measurements or unreleased plugin pins cannot be repaired by a prompt. The readiness verdict detects many cases, but the operational policy for already-live releases differs from a new Publish. Build a CMS × release × plugin-door matrix and only enable chain builds where the required read and write contracts pass. Track #429, #452 and the readiness sections of `SYSTEM.md`.
+9. **The write step needs full-site idempotence and read-back.** Open issues cover creating planned pages, hiding every planned item, stable reruns, page settings, link targets and printed alts. An unchanged rerun should produce no new Site changes entry and no demo content on kept pages. Test the complete site, not only a mapping export. Track #352–#379, particularly #374, #375 and #379.
+10. **Repair needs an exact fault list and a bounded scope.** The post-write site agent should receive only remaining site-check faults, change only those sites/pages/slots, and be scored by before/after findings. An unresolved finding must remain visible at handover. Track #197, #477 and ADR 0044 section 30.
+
+## Priority 2: assistant, voice and observability
+
+11. **`/help` streaming admission is per process.** `apps/tracy-web/src/assistant/route.js` uses a local `Map` and `MAX_STREAMS_PER_ACCOUNT = 2`. This is an actual per-process bound, not an account-wide bound across web instances. Confirm the deployment topology; if several instances serve the door, use shared admission or state the chosen per-instance policy and load-test it.
+12. **`/help` attachments are not read by the model.** The route sends only file names, types and sizes, and `assistant/prompt.js` explicitly tells the model it cannot open their content. This is intentional current behavior, not a discovered implementation bug. Check that the customer-facing flow conveys that limit; a request to answer from a document requires a separate content-reading feature and permissions.
+13. **Telegram staff identity depends on configuration.** With support enabled and an empty `CS_TELEGRAM_STAFF_IDS`, the assistant route logs that every member of the support group can reply as staff. The audited source does not establish the live configuration. Verify every deployment; if the group is not the intended trust boundary, require staff IDs or disable the staff reply path when empty.
+14. **The cost and time of one complete Build need a common record.** Individual benches and Website Opportunities have partial ledgers. PR #488 proposes per-step minutes and USD, a deadline and an ops row. Verify retry cost, unknown cost, drawing cost and total time against a real run; compare failure and cost distributions by CMS/template rather than optimizing a single example. Track #480 and #481.
+15. **Voice quality requires device and language evidence.** The implementation covers echo, interruption, connection loss and spoken question cards, but microphone gain, speaker echo, ambient sound and service latency determine whether those decisions work for customers. Measure false sends, missed interruptions, time to response, card answer errors and recovery on representative devices and interface languages using the existing trace. This is a measurement proposal, not a reproduced bug.
+16. **AI account fallback needs outcome measures.** The routing code can switch to Tracy AI after the customer's connection fails. Count switch reasons and whether the next turn succeeds; test quota, authorization, timeout and network cases. Keep the note about the answering model separate from the agent's site permissions and write capability.
+17. **Model-translated template blurbs need language review.** The background translation checks retained terms and length, which are useful structural checks but do not establish meaning or natural language quality. Sample high-traffic blurbs across offered languages and record corrections. `SYSTEM.md` describes the translation path.
+
+## Existing work and proposed order
+
+| Stage | Existing work | Acceptance evidence still needed |
+| --- | --- | --- |
+| 1. End-to-end build | PR #488; #472 and #479–#484 | Complete CI and customer-like builds on the enabled Joomla template, then WordPress and EmDash. |
+| 2. Input and template readiness | #37, #38, #429, #452 | Label accuracy and door matrix on named releases. |
+| 3. Whole-site correctness | #189, #192–#198, #352–#379 | No demo residue or invented facts; read-back and browser measures on every kept page. |
+| 4. Consistency and spend | Lease behavior above; #478, #480–#481 | Concurrent writes, unavailable door, Stop latency and complete cost ledger. |
+| 5. Everyday assistant | Findings 11–17 | Deployment topology, configuration audit and user/device samples. |
+
+Do not open duplicate tickets for work already represented by those issues. The EmDash lease failure, unknown budget cost and per-process assistant admission are source-confirmed follow-ups that need their own narrowly scoped cases if the deployment facts confirm impact. The attachment behavior is an explicit product limit; any change to it needs a product decision.
