@@ -89,6 +89,13 @@ section 2.
 more (exit 0), pin and release through `quickstart-contract` sections 8 and 9, write the changes note, open the PR with
 the fix log. The Cowork pin moves only to a plugin version already released with every door.
 
+**Before every push, run the slot roles gate on this machine**:
+`pnpm exec tsx scripts/check-all.ts --only slot-roles` (with the other contract gates). The verdict does not read it,
+and CI fails the whole build check on it. A group of kind `service` needs an `offering.name`, and label rule R4
+needs one group per item of an indexed repeat. So the indexed feature lines of an offering (JA Voyara's "What's
+included" rows) take one `claim` group per line with role `package.feature_item`, the shape of JA Kinetic 1.0.11's
+feature rows: never one service group per line, never all lines in the offering's own group.
+
 ## 5. Stops
 
 The run stops only on a code whose fix needs a person or another repository's release. Report: the piece, the code,
