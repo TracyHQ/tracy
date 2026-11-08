@@ -264,6 +264,15 @@ test('record-judge refuses a file that does not say what each crop shows: judgin
     crops: [...full.crops, { crop: 'images/module-99-p1-desktop.jpg', seen: 'a crop nobody asked about' }]
   })
   assert.match(foreign.problems[0], /is not a crop of this request/)
+
+  // The same words for two crops: one of them was not looked at (a script wrote the lines).
+  if (full.crops.length > 1) {
+    const copied = refused({
+      ...full,
+      crops: full.crops.map((c) => ({ ...c, seen: 'A Section As  a visitor sees it' }))
+    })
+    assert.match(copied.problems.at(-1), /"seen" repeats the words given for .*: say what this crop shows/)
+  }
 })
 
 test('a rerun on unchanged content asks nothing: the recorded verdicts are the cache', async () => {
@@ -320,7 +329,7 @@ test('the verdicts are written into the committed coverage file beside labelRule
   const doc = buildCoverageFile({ result, contract: CONTRACT, labelJudge })
   assert.ok(doc.labelRules)
   assert.equal(doc.labelJudge.state, 'judged')
-  assert.equal(doc.tool.version, '1.7.0')
+  assert.equal(doc.tool.version, '1.8.0')
   assert.equal(buildCoverageFile({ result, contract: CONTRACT }).labelJudge, undefined)
 })
 

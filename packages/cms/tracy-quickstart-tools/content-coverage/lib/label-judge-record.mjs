@@ -67,6 +67,8 @@ function cropProblems(request, crops) {
   const problems = []
   const asked = new Set((request.components ?? []).map((c) => c.crop))
   const named = new Set()
+  // The words said for each crop: the same words for two crops mean one was not looked at (a script wrote them).
+  const saidFor = new Map()
   for (const [i, entry] of crops.entries()) {
     if (!isObject(entry)) {
       problems.push(`crops[${i}] must be an object`)
@@ -81,6 +83,13 @@ function cropProblems(request, crops) {
     named.add(entry.crop)
     if (typeof entry.seen !== 'string' || entry.seen.trim().length < SEEN_MIN)
       problems.push(`${entry.crop}: "seen" must say in a few words what the crop shows (open the image)`)
+    else {
+      const said = entry.seen.replace(/\s+/g, ' ').trim().toLowerCase()
+      const other = saidFor.get(said)
+      if (other && other !== entry.crop)
+        problems.push(`${entry.crop}: "seen" repeats the words given for ${other}: say what this crop shows`)
+      else saidFor.set(said, entry.crop)
+    }
   }
   for (const crop of asked) if (!named.has(crop)) problems.push(`${crop}: not opened (no "crops" entry)`)
   return problems
