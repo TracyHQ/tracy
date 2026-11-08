@@ -15,7 +15,7 @@ export const SLOW_MIN_BUILDS = 3
 /** How many builds the table shows, newest first. */
 export const CHAIN_BUILDS_LIMIT = 200
 
-const number = (value) => (Number.isFinite(Number(value)) ? Number(value) : 0)
+const finiteOrZero = (value) => (Number.isFinite(Number(value)) ? Number(value) : 0)
 
 const medianOf = (values) => {
   if (values.length === 0) return 0
