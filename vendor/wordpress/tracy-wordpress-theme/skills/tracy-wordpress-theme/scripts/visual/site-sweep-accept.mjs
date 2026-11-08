@@ -10,7 +10,7 @@
 //   evidence  a path (absolute, or relative to the dossier) that exists, or an http(s) URL
 //   kind      "source-fault" (the source is wrong) | "decided" (the port keeps the difference on purpose) | "not-measurable" (below)
 //   key       optional: words the decision's own text must contain
-//   intermittent  optional, true: the group fails in one run and not the next (the source's own measure); a run without it is no stale error
+//   intermittent  optional, true: the group fails in one run and not the next (the source's own measure); a run without it, or without some of the cells the row names, is no error
 //
 // A third kind records what the tool COULD NOT MEASURE (the not-measured causes of site-sweep.md: `icons-unpairable`, `icon-covered`,
 // `touch-control-not-found`, `form-purpose-unknown`, a chips cause…) after the dossier measured it by hand:
@@ -127,7 +127,9 @@ export function applyAccept(judged, rows, scope) {
     for (const w of row.widths ?? []) if ((!ranWidths || ranWidths.includes(w)) && !covered.some((d) => d.width === w)) over.push(`width ${w}`)
     for (const x of row.schemes ?? []) if (!covered.some((d) => d.scheme === x || d.state === x)) over.push(`scheme ${x}`)
     if (partial && !covered.length) return skipped.push({ row: n, why: 'its group was not in the measured scope', unvalidated: true })
-    if (over.length && !partial) return fail(`names ${over.join(', ')} where the group does not occur — a row covers only what it was measured on`)
+    // an intermittent row tolerates cells it names that did not occur in this run; it covers the ones that did
+    if (row.intermittent === true && !covered.length) return skipped.push({ row: n, why: 'intermittent row: none of its cells occurred in this run', unvalidated: true })
+    if (over.length && !partial && row.intermittent !== true) return fail(`names ${over.join(', ')} where the group does not occur — a row covers only what it was measured on`)
     const twice = covered.find((d) => claimed.has(d))
     if (twice) return fail(`a defect row (${twice.route}${twice.width != null ? ` @${twice.width}` : ''}) is also covered by sweep.accept[${claimed.get(twice)}]: a group is matched to at most one row`)
     for (const d of covered) claimed.set(d, n)

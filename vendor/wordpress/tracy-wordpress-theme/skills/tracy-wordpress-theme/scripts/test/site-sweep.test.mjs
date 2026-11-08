@@ -900,6 +900,17 @@ test('accept rows: an exact-cell row declared intermittent is skipped, not stale
   const there = judged()
   assert.deepEqual(applyAccept(there, [rowOf(null, { routes: ['/a'], intermittent: true })], scope).errors, [])
   assert.equal(there.chips.defects.length, 0)
+  // the group is in the run on other routes: an intermittent row tolerates the cells it names that did not occur
+  const other = () => ({ chips: { cases: 4, defects: [defectRow({ route: '/a' }), defectRow({ route: '/b', width: 390 })], listed: [], notDefects: [] } })
+  const wide = { routes: ['/a', '/b', '/c'], widths: [390, 1440] }
+  assert.match(applyAccept(other(), [rowOf(null, { routes: ['/c'] })], wide).errors[0].message, /where the group does not occur/)
+  const tol = other()
+  const tolerated = applyAccept(tol, [rowOf(null, { routes: ['/a', '/c'], widths: [390, 1440], intermittent: true })], wide)
+  assert.deepEqual(tolerated.errors, [])
+  assert.deepEqual(tol.chips.defects.map((d) => d.route), ['/b'], 'only the cells that occurred move')
+  const none = applyAccept(other(), [rowOf(null, { routes: ['/c'], intermittent: true })], wide)
+  assert.deepEqual(none.errors, [])
+  assert.match(none.skipped[0].why, /intermittent/)
   // the flag is a boolean, and only on defect rows
   const dir = evidenceDir()
   const errs = (o) => validateSweepAccept([rowOf(dir, o)], { decisions: decisionsOf(), runRoot: dir })
