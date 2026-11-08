@@ -2,6 +2,22 @@
 
 This audit uses `origin/develop` at `3172697b70`, the change journal, open GitHub issues and pull requests, and source inspection. It does not claim that a deployed site was exercised. A passing unit test establishes the behavior named by that test, not the quality of a complete customer site.
 
+## Read-only deployment cross-check — 9 November 2026
+
+The account holder signed into `cowork.tracy.site` in Chrome and named the profile to use. Read-only requests used that profile's existing session without printing or saving the session value. `GET /api/build` answered `3172697b70f1` (built 8 November 2026 at 14:55:39 UTC), matching the source commit above. This establishes that the audited `tracy-web` image was the one answering these requests. It does not establish the image version of a separate dsh, host or customer-site container.
+
+| Read-only check | Observed answer | What it establishes |
+| --- | --- | --- |
+| `/auth/me` | 200, signed in | The selected browser account's session reached the server. |
+| `/api/seat-plan/status` | 200, feature and routing enabled; no connected AI account for this account | AI account management is live. Provider routing and fallback cannot be exercised with this account state. |
+| `/api/speech` | 200, available, ElevenLabs, six offered voices | The speech door is configured and currently advertises service. Audio quality, quota and interruption were not measured. |
+| `/api/templates` | 200, 33 template cards | The live catalogue answered; this count is a snapshot and says nothing about template readiness. |
+| `/api/assistant/conversation` | 200, AI state and support available | The assistant read door answered. No model turn was sent. |
+| `/api/ops/wo/demos/summary` | 200 | The signed-in operator could read the demo summary; no Build was started. |
+| Authenticated browser root `/` | 200, workspace shell, no page or console errors in the observed window | One basic browser load worked. A later direct workspace deep link timed out in the separate headless browser; the cause was not established and is not classified as a product bug here. |
+
+No model call, voice recording, site edit, Build, Undo or backup restore was performed. The source-confirmed concerns below remain concerns; this cross-check only narrows the deployment-version and feature-availability uncertainty.
+
 ## Product boundary
 
 Tracy helps a person change a real website through an agent. Site changes, Diff, Undo and Backup are the trust mechanism; chat is the way to ask. There is no approval step before an agent change. The supported platforms are WordPress, Joomla and EmDash. These statements come from `CONTEXT.md` and govern the proposals below.
