@@ -132,6 +132,20 @@ test('no false alarms: real all-caps headings, lorem ipsum, prices, prose with a
   assert.deepEqual(found, [])
 })
 
+test("a code sample is never flagged: its ${API_KEY} and CI_RUN_ID are the sample's own words", () => {
+  const found = findHygiene({
+    items: [
+      text('headers: x-api-key: ${KINETIC_API_KEY} env: CI_RUN_ID', { inCode: true }),
+      text('Set ${KINETIC_API_KEY} first')
+    ]
+  })
+  // The same words outside a code sample are still flagged.
+  assert.deepEqual(kinds(found), [
+    ['language-constant', 'KINETIC_API_KEY'],
+    ['placeholder', 'Set ${KINETIC_API_KEY} first']
+  ])
+})
+
 test('the rules live in data: constant prefixes, PHP levels, placeholder words and the case threshold', () => {
   for (const key of [
     'constantPrefixes',

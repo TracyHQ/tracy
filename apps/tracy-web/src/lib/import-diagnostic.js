@@ -29,6 +29,7 @@ export const DIAGNOSTIC_STEPS = new Set([
 export const DIAGNOSTIC_CHECKS = new Set([
   'admin_form_not_found',
   'admin_gate',
+  'answered_page',
   'bad_location',
   'basic_challenge',
   'below_minimum',
@@ -57,7 +58,10 @@ export const DIAGNOSTIC_CHECKS = new Set([
   'not_downloaded',
   'not_installed',
   'over_limit',
+  'page_after_ban',
+  'page_after_proof',
   'parse_error',
+  'permission_denied',
   'refused',
   'server_denied',
   'signed_out',
@@ -83,6 +87,12 @@ export const DIAGNOSTIC_ACTIONS = new Set([
  * text: nothing, PHP's fatal, PHP's notices with no engine reply after them, a page, other JSON, text.
  */
 export const DIAGNOSTIC_ANSWERS = new Set(['empty', 'php_fatal', 'php_notice', 'html', 'json', 'text'])
+
+/**
+ * What a page that was not the engine's showed (`doors.mjs` `pageKind`), never its text: Joomla's
+ * administrator sign-in form, a challenge or block page, or anything else.
+ */
+export const DIAGNOSTIC_PAGES = new Set(['login_form', 'challenge', 'other'])
 
 /**
  * The engine's own refusal codes (Claude Cowork's `err('<code>')`), named on `engine_refused`; any
@@ -184,8 +194,17 @@ export const DIAGNOSTIC_ERRORS = new Set([
  *   username_is_email?: boolean,
  *   action?: string,
  *   answer?: string,
+ *   page?: string,
+ *   doors?: ImportDoor[],
  *   engine_error?: string
  * }} ImportDiagnostic
+ */
+
+/**
+ * What one Claude Cowork door answered (`joomla.ts` `doorMiss`): its path, status, and the fixed
+ * kinds of its body. Both doors are kept, so a front door's 404 does not hide an administrator
+ * door's page.
+ * @typedef {{ path?: string, status?: number, answer?: string, page?: string }} ImportDoor
  */
 
 /** @param {unknown} value */
@@ -233,6 +252,8 @@ export function importDiagnostic(value) {
     username_is_email,
     action,
     answer,
+    page,
+    doors,
     engine_error
   } = /** @type {Record<string, unknown>} */ (value)
   if (typeof at !== 'string' || !DIAGNOSTIC_STEPS.has(at)) return undefined
@@ -268,6 +289,27 @@ export function importDiagnostic(value) {
   // A `call_failed`: which engine call, what came back instead of its reply, or the engine's own code.
   if (typeof action === 'string' && DIAGNOSTIC_ACTIONS.has(action)) detail.action = action
   if (typeof answer === 'string' && DIAGNOSTIC_ANSWERS.has(answer)) detail.answer = answer
+  if (typeof page === 'string' && DIAGNOSTIC_PAGES.has(page)) detail.page = page
+  if (Array.isArray(doors)) {
+    const kept = doors.slice(0, 2).flatMap((one) => {
+      if (!one || typeof one !== 'object') return []
+      const {
+        path: doorPath,
+        status: doorStatus,
+        answer: doorAnswer,
+        page: doorPage
+      } = /** @type {Record<string, unknown>} */ (one)
+      /** @type {ImportDoor} */
+      const door = {}
+      if (typeof doorPath === 'string' && DIAGNOSTIC_PATHS.has(doorPath)) door.path = doorPath
+      const said = httpStatus(doorStatus)
+      if (said !== undefined) door.status = said
+      if (typeof doorAnswer === 'string' && DIAGNOSTIC_ANSWERS.has(doorAnswer)) door.answer = doorAnswer
+      if (typeof doorPage === 'string' && DIAGNOSTIC_PAGES.has(doorPage)) door.page = doorPage
+      return Object.keys(door).length ? [door] : []
+    })
+    if (kept.length) detail.doors = kept
+  }
   if (engine_error !== undefined)
     detail.engine_error =
       typeof engine_error === 'string' && DIAGNOSTIC_ENGINE_ERRORS.has(engine_error) ? engine_error : 'other'

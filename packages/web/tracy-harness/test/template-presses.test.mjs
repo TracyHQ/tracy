@@ -1367,3 +1367,86 @@ test('Design system: verdict, runs, the paste block up front, every rule behind 
   )
   assert.doesNotMatch(row.textContent, /[–—]/, 'no dash')
 })
+
+test('Road to live: a red step with no guidance of its own shows the registry fix; a step with its own prompt does not repeat it', async () => {
+  const fix = {
+    text: 'Run the Customize your site check of this version, then read its result here.',
+    command: 'node scripts/example-fix.mjs --tag example',
+    skill: '.agents/skills/example-skill/SKILL.md section 9'
+  }
+  const draftFix = {
+    text: 'Publish the GitHub release of the quickstart.',
+    skill: '.agents/skills/example/SKILL.md'
+  }
+  const road = WITH_CONTRACT_ROAD.map((s) =>
+    s.step === 'release'
+      ? { ...s, state: 'todo', code: 'release-draft', fix: draftFix }
+      : s.step === 'customize'
+        ? { ...s, state: 'todo', code: 'customize-not-checked', fix }
+        : s
+  )
+  const r = release('quickstart/ja-restaurant/j6', 'joomla', 'none', { version: '1.0.2', road })
+  const ui = await mount(lib.RoadToLive, { releases: [r], writable: true, onGo: noop })
+  await ui.click(ui.host.querySelector('[data-road-release] [data-road-toggle]'))
+  // Customize your site, not checked yet: the step has no fix of its own, so the registry's shows.
+  const step = ui.host.querySelector('[data-road-step="customize"]')
+  assert.equal(step.querySelector('[data-road-fix-text]').textContent, fix.text)
+  assert.equal(step.querySelector('[data-road-fix-command]').textContent, fix.command)
+  assert.equal(step.querySelector('[data-road-fix-skill]').textContent, fix.skill)
+  // A draft release already has its own prompt to paste: the registry fix is not added under it.
+  const draft = ui.host.querySelector('[data-road-step="release"]')
+  assert.notEqual(draft.querySelector('[data-road-outside], ol'), null)
+  assert.equal(draft.querySelector('[data-road-fix]'), null)
+  // A done step shows no fix block.
+  assert.equal(ui.host.querySelector('[data-road-step="install-file"] [data-road-fix]'), null)
+  assert.doesNotMatch(ui.host.textContent, /[\u2013\u2014]/)
+})
+
+test('Road to live of a live WordPress release: the plugin write doors read "Not judged yet" in grey, never counted, never red (#454)', async () => {
+  const done = (step, code, params = {}) => ({ step, state: 'done', code, params })
+  const text =
+    'Not judged until the WordPress write step exists. This is not a pass, and there is nothing to fix here; the plugin write doors are judged like Joomla once that step is built.'
+  const r = release('quickstart/ja-diner/wp7', 'wordpress', 'on', {
+    road: [
+      done('release', 'release-published'),
+      done('install-file', 'install-file-ready'),
+      done('contract', 'contract-exact', { profile: 'p/1.0.0' }),
+      done('customize', 'customize-ready', { passed: 29, total: 29, mustFix: [], worthFixing: [] }),
+      done('demo', 'demo-live'),
+      done('listing', 'listing-saved', { hidden: false }),
+      done('published', 'published'),
+      done('polish', 'polish-done'),
+      {
+        step: 'write-doors',
+        state: 'not-judged',
+        code: 'write-doors-not-judged',
+        params: { platform: 'wordpress' },
+        fix: { text }
+      }
+    ]
+  })
+  const ui = await mount(lib.RoadToLive, { releases: [r], writable: true, onGo: noop })
+  // Left out of the count: the live release still reads whole, and Live with nothing to look at.
+  assert.equal(ui.host.querySelector('[data-road-summary]').getAttribute('data-road-summary'), '8/8')
+  assert.equal(ui.host.querySelector('[data-road-live]').textContent, 'Live')
+  // Its bar segment is hollow grey, neither the green of done nor the red of to do.
+  const bar = ui.host.querySelector('[data-road-bar="not-judged"]')
+  assert.ok(bar)
+  assert.doesNotMatch(bar.className, /emerald|destructive|amber/)
+  await ui.click(ui.host.querySelector('[data-road-release] [data-road-toggle]'))
+  const row = ui.host.querySelector('[data-road-step="write-doors"]')
+  assert.equal(row.getAttribute('data-road-state'), 'not-judged')
+  assert.equal(row.getAttribute('data-road-code'), 'write-doors-not-judged')
+  assert.match(row.textContent, /Plugin write doors/)
+  assert.equal(row.querySelector('[data-road-not-judged]').textContent, 'Not judged yet')
+  assert.equal(row.querySelector('[data-road-fix-text]').textContent, text)
+  assert.doesNotMatch(row.innerHTML, /emerald|destructive|amber/)
+  // Nothing to press: no Go there, no Check again.
+  assert.equal(row.querySelector('button'), null)
+  // Last on the road, after polish, so every other step keeps its number.
+  const steps = [...ui.host.querySelectorAll('[data-road-step]')].map((el) =>
+    el.getAttribute('data-road-step')
+  )
+  assert.equal(steps.at(-1), 'write-doors')
+  assert.doesNotMatch(ui.host.textContent, /[–—]/)
+})

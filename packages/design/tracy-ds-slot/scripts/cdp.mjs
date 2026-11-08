@@ -29,14 +29,24 @@ const FONT_HOST = 'https://fonts.gstatic.com/'
  */
 export function fontFetchUrl(url) {
   if (typeof url !== 'string' || !url.startsWith(FONT_HOST)) return null
+  // the query kept apart from the path: Google's dynamic subset faces (/l/font?kit=…&skey=…) are chosen by
+  // it, and encoded into the path it asked gstatic for a 404 (JA Boxing 1.0.11, 06/11/2026). A fragment
+  // never reaches the server
+  const address = url.slice(FONT_HOST.length).split('#')[0]
+  const queryStart = address.indexOf('?')
   // each path segment is URI-encoded: a real gstatic path (letters, digits, _ - .) is unchanged, and
   // nothing in it can reach the host part (CodeQL counts the encoding as the request-forgery barrier)
-  const path = url
-    .slice(FONT_HOST.length)
+  const path = (queryStart === -1 ? address : address.slice(0, queryStart))
     .split('/')
     .map((segment) => encodeURIComponent(segment))
     .join('/')
-  return `${FONT_HOST}${path}`
+  // the query as it came, every character outside a query's own (letters, digits, - . _ ~ % = & +) encoded:
+  // a real kit query is unchanged byte for byte, and nothing in it can reach the host or the path
+  const query =
+    queryStart === -1
+      ? ''
+      : address.slice(queryStart + 1).replace(/[^A-Za-z0-9\-._~%=&+]/g, (c) => encodeURIComponent(c))
+  return `${FONT_HOST}${path}${query ? `?${query}` : ''}`
 }
 
 /**

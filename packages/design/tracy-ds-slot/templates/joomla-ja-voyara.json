@@ -6,9 +6,9 @@
     "quickstart/ja-voyara/j6": "1.0.5"
   },
   "maxVersion": {
-    "quickstart/ja-voyara/j6": "1.0.11"
+    "quickstart/ja-voyara/j6": "1.0.12"
   },
-  "maxVersionNote": "1.0.11 21/10/2026 (TEXT-1 batch 2): built from 1.0.10 (release-batch.mjs --overlay); only css/contact.css, css/landing.css, css/taxonomy.css, css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 17/10/2026 (batch 2, role variables): 1.0.10 = 1.0.9 with every template stylesheet reading the design-system role variables (--ds-*), each falling back to the template's own value (verify: 0 computed differences unworn); role button-primary is the hero's \"Plan a trip\" link button (the hero search submit sits in a form, whose metrics the slot keeps the template's); the call band's words list names the writers/tags band classes. Measured at preview probe v9, 0 rules not passed. Earlier: 13/10/2026 (readiness, TracyHQ/tch#1318): 1.0.8 = the 1.0.7 pair with template 1.0.4 (block layouts print their module fields; six module rows of the database given those words); every css file is byte-identical to 1.0.7, so the 1185 var(--ds-c- reads stand; contract ja-voyara/j6/1.0.8 carried by Claude Cowork for Joomla 0.24.27. Earlier: 1.0.6 checked 11/10/2026 (ds-minversion-audit): its css files are byte-identical to 1.0.5 (1185 var(--ds-c- reads); the change is the typography of local/etc/site/default.json 1.0.9 16/10/2026 (#1375): re-cut of 1.0.8 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "maxVersionNote": "1.0.12 07/11/2026: a database-only cut of 1.0.11 (menu items given the use_article layout, link and tag fixes, two booking-policy headings), no template file changed; measured again at preview probe v10. 1.0.11 21/10/2026 (TEXT-1 batch 2): built from 1.0.10 (release-batch.mjs --overlay); only css/contact.css, css/landing.css, css/taxonomy.css, css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 17/10/2026 (batch 2, role variables): 1.0.10 = 1.0.9 with every template stylesheet reading the design-system role variables (--ds-*), each falling back to the template's own value (verify: 0 computed differences unworn); role button-primary is the hero's \"Plan a trip\" link button (the hero search submit sits in a form, whose metrics the slot keeps the template's); the call band's words list names the writers/tags band classes. Measured at preview probe v9, 0 rules not passed. Earlier: 13/10/2026 (readiness, TracyHQ/tch#1318): 1.0.8 = the 1.0.7 pair with template 1.0.4 (block layouts print their module fields; six module rows of the database given those words); every css file is byte-identical to 1.0.7, so the 1185 var(--ds-c- reads stand; contract ja-voyara/j6/1.0.8 carried by Claude Cowork for Joomla 0.24.27. Earlier: 1.0.6 checked 11/10/2026 (ds-minversion-audit): its css files are byte-identical to 1.0.5 (1185 var(--ds-c- reads); the change is the typography of local/etc/site/default.json 1.0.9 16/10/2026 (#1375): re-cut of 1.0.8 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
   "modes": true,
   "modesAuto": false,
   "modeHook": "[data-theme=\"dark\"][data-bs-theme=\"dark\"].t4-dark",
@@ -205,9 +205,25 @@
   "followRules": {
     ".voy-price": {
       "color": "accent-text"
+    },
+    ".voy-tour-cta__btn.btn-white": {
+      "background-color": "on-accent-band",
+      "color": "accent-band"
+    },
+    ".voy-tour-cta__btn.btn-white:hover": {
+      "background-color": "on-accent-band",
+      "color": "accent-band"
+    },
+    ".voy-art-cta .btn-white": {
+      "background-color": "on-accent-band",
+      "color": "accent-band"
+    },
+    ".voy-art-cta .btn-white:hover": {
+      "background-color": "on-accent-band",
+      "color": "accent-band"
     }
   },
-  "followNote": "the destination cards' prices (.voy-price) are text painted with the template's primary (--voy-primary), which follows the system's accent fill: they take the readable accent (MotherDuck's light blue on the white card 1.94, Apple's blue on its grey card 4.31; found 11/10/2026 once contrast kind card-text read the cards' texts)",
+  "followNote": "the destination cards' prices (.voy-price) are text painted with the template's primary (--voy-primary), which follows the system's accent fill: they take the readable accent (MotherDuck's light blue on the white card 1.94, Apple's blue on its grey card 4.31; found 11/10/2026 once contrast kind card-text read the cards' texts) 08/11/2026 (BTN-1, measurement of 1.0.12): the white pills of the accent call bands (the tour layout's Reserve, .voy-tour-cta__btn.btn-white in css/tour.css; the article band's .btn-white in css/single.css) fill with --ds-c-surface on a band painted --ds-c-accent-band. The surface role is not drawn apart from the band: under Figma's dark side the surface is #212121 and the band #151444 (1.07:1), so the preview lost the button on the four tour pages. The blog call band (.voy-cta-band) is a kept band: its buttons are the band machine's, not followed here. They take the band's own pair instead, rest and hover: the fill is the band's words colour (on-accent-band, 4.5:1 on the band by construction) and the label the band, the template's light pill with the band's colour as its words on every system and side.",
   "bands": {
     ".acm-statistics": {
       "ground": "#1f6f6b",

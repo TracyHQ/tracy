@@ -8,16 +8,48 @@
 // redrawn once, then hidden or returned; any other cut-out (a person, any real photo) is never drawn: hidden or returned.
 // A gallery tile (an any-real frame of a picture list, gallery-tiles.js) is never hidden alone: after the next photo
 // and fewer rows it reuses an owner photo already on its page, cut to another region, then takes any usable owner
-// photo (any-photo, heads whole, not its neighbour's photo, not another tile's very cut); returned only after that.
+// photo (any-photo, heads whole, not its neighbour's photo, at most half shared with another cut of the photo, card AK);
+// with no such cut left the tile is drawn (draw, redraw), and returned only after that.
+//
+// A frame the plan wants filled is never left without a picture while one can be had (owner decision 06/11/2026, card
+// AJ): before `return`, a drawn frame is drawn again in other compositions (`redraw-alt`, the subject whole and centred
+// with a margin, in the frame's shape, at most REDRAW_ALT_TRIES), and any frame that is not a person keeps the best
+// picture the looker rejected for minor faults only (`best-rejected`, looker-call.js MINOR_FAULTS), else the best of
+// its rejected pictures, placed despite the looker: a checker's rejection never leaves the demo (owner's rule
+// 2026-11-07). Only a frame that got no picture at all is still returned, and the picture package names it as a problem
+// (contract-mapping.js).
 
 /** The rungs per plan match. */
 export const RUNGS = Object.freeze({
-  specific: Object.freeze(['draw', 'redraw', 'next-photo', 'fewer-rows', 'hide', 'return']),
-  'any-real': Object.freeze(['next-photo', 'fewer-rows', 'hide', 'return']),
+  specific: Object.freeze([
+    'draw',
+    'redraw',
+    'next-photo',
+    'fewer-rows',
+    'hide',
+    'redraw-alt',
+    'best-rejected',
+    'return'
+  ]),
+  'any-real': Object.freeze(['next-photo', 'fewer-rows', 'hide', 'best-rejected', 'return']),
   person: Object.freeze(['hide', 'return']),
-  cutout: Object.freeze(['draw', 'redraw', 'hide', 'return']),
-  gallery: Object.freeze(['next-photo', 'fewer-rows', 'reuse', 'any-photo', 'return'])
+  cutout: Object.freeze(['draw', 'redraw', 'hide', 'redraw-alt', 'best-rejected', 'return']),
+  // A gallery tile no owner photo is left for is drawn, with one redraw (card AK): the only drawing an any-real frame
+  // may get.
+  gallery: Object.freeze([
+    'next-photo',
+    'fewer-rows',
+    'reuse',
+    'any-photo',
+    'draw',
+    'redraw',
+    'best-rejected',
+    'return'
+  ])
 })
+
+/** The drawing rungs: one picture from the drawer door each. */
+export const DRAW_RUNGS = new Set(['draw', 'redraw', 'redraw-alt'])
 
 /**
  * The rungs of a plan wish in its kit frame (an unknown match climbs only the rungs that place nothing new).

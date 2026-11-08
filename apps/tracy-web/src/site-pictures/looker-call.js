@@ -16,6 +16,9 @@
 // name outside the model's list is dropped and noted; any fault makes the verdict "fail". An answer that cannot be read,
 // or a call that fails, is a look with no verdict and its reason; the caller asks once more, then records the fault
 // "look unreadable" (looker-step.js). It never stops the run.
+// When the run asks for alts (`alt`: the site's language, the business's name and the frame's limit, alt-ask.js), the
+// same answer also carries `alt`: the alt text of the picture seen, written by the one model that sees it (ADR 0043
+// section 3f). An answer without one is still a look; the frame then keeps the writer's alt.
 import sharp from 'sharp'
 import { costOfCall, priceFor } from '../lib/brand-prices.js'
 import { costOf } from '../lib/agent-over-door-wire.js'
@@ -42,6 +45,21 @@ export const CUTOUT_FAULTS = Object.freeze([
 ])
 /** The fault it may name when the site's text sits over the picture with no template overlay (section 3e). */
 export const TEXT_OVER_FAULT = 'text would not read'
+/**
+ * The faults that are minor (owner decision 06/11/2026, card AJ): a picture rejected for these only may still fill a
+ * frame that would otherwise be left without one (ladder rung `best-rejected`). Every other fault is hard: a wrong or
+ * missing subject, a forbidden item, a cut face, a distorted body, lettering, a missing part, leftover ground, or a
+ * figure over the text.
+ */
+export const MINOR_FAULTS = Object.freeze([
+  'subject cut off',
+  'visible drawing seam',
+  'rough cut-out edge',
+  TEXT_OVER_FAULT
+])
+/** Whether a look's faults are all minor (and at least one is named). */
+export const onlyMinorFaults = (faults) =>
+  Array.isArray(faults) && faults.length > 0 && faults.every((f) => MINOR_FAULTS.includes(f))
 /** Every fault the looker model may name. */
 export const MODEL_FAULTS = Object.freeze([...PICTURE_FAULTS, ...CUTOUT_FAULTS, TEXT_OVER_FAULT])
 /** The fault code records when the looker could not look at a picture, twice: it fails the picture. */
@@ -160,6 +178,9 @@ const percent = (x) => `${Math.round(x * 100)}%`
 function cutoutLines(cutout) {
   return [
     'This picture is a cut-out: the figure was drawn on a plain ground that code removed. The flat colour behind the figure is the page background of the site, shown where the picture is transparent; it is not part of the picture.',
+    // A cut-out has no setting by design, and a lone figure cannot prove a job: without this line the looker failed
+    // every cut-out of a frame whose words name a place ("on court") or a role ("a coach") as "wrong subject".
+    'A cut-out shows the figure alone, with no place around it: never fail it as "wrong subject" because a place or setting the words name (a court, a gym, a kitchen) is not visible, and judge a role the words name (a coach, a trainer, a chef) by what the figure wears, holds and does. It is the wrong subject only when the figure itself is not what the words ask for, or a thing in "mustInclude" is missing.',
     cutout.textOver
       ? "On the site, the page's heading and text sit over part of this picture box, on the part the figure leaves clear."
       : "On the site, the page's heading and text sit beside this picture.",
@@ -171,6 +192,13 @@ function cutoutLines(cutout) {
   ]
 }
 
+// The lines that ask for the alt text of the picture (ADR 0043 section 3f).
+function altLines({ language, business, limit }) {
+  return [
+    `Also write the alt text of this picture for the site: in the site's language ${JSON.stringify(language)}, at most ${limit} characters, saying what this picture shows.${business ? ` The business is ${JSON.stringify(business)}.` : ''}`
+  ]
+}
+
 const ANY_REAL_LINES = [
   'This frame accepts any real photo of the business (a gallery, background or atmosphere picture): it does not ask for a particular scene, so never fail it for what it shows. Fail it only for a fault in the list below that is visible in it.'
 ]
@@ -179,7 +207,15 @@ const ANY_REAL_LINES = [
  * The look's only user message. `cutout`: { textOver, figure, demoFigure } for a cut-out, else null; `anyReal` for a
  * frame that takes any real owner photo.
  */
-export function lookMessage({ words, image, outlined, cutout = null, anyReal = false, surface = null }) {
+export function lookMessage({
+  words,
+  image,
+  outlined,
+  cutout = null,
+  anyReal = false,
+  surface = null,
+  alt = null
+}) {
   const faults = faultsFor({ cutout, anyReal, surface })
   const text = [
     `The plan's words for this frame:`,
@@ -195,7 +231,10 @@ export function lookMessage({ words, image, outlined, cutout = null, anyReal = f
     ...(anyReal ? ANY_REAL_LINES : []),
     ...(surface && !cutout ? surfaceLines(surface) : []),
     `Faults you may name: ${faults.map((f) => `"${f}"`).join(', ')}.`,
-    'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>" }'
+    ...(alt ? altLines(alt) : []),
+    alt
+      ? 'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>", "alt": "<alt text>" }'
+      : 'Answer with one JSON object: { "verdict": "pass" | "fail", "faults": [...], "seen": "<one sentence>" }'
   ].join('\n')
   return [
     { type: 'text', text },
@@ -222,7 +261,8 @@ export function readLook(text, { anyReal = false, surface = null } = {}) {
     return { problem: `the verdict must be "pass" or "fail", found ${JSON.stringify(answer.verdict)}` }
   const slipOnly = anyReal && !faults.length && named.includes(WRONG_SUBJECT)
   const verdict = faults.length ? 'fail' : slipOnly ? 'pass' : answer.verdict
-  return { verdict, faults, seen, dropped }
+  const alt = typeof answer.alt === 'string' && answer.alt.trim() ? answer.alt.trim() : null
+  return { verdict, faults, seen, dropped, ...(alt ? { alt } : {}) }
 }
 
 /**
@@ -239,6 +279,7 @@ export async function askLooker({
   cutout = null,
   anyReal = false,
   surface = null,
+  alt = null,
   fetchImpl = fetch,
   ms = LOOK_MS
 }) {
@@ -272,7 +313,7 @@ export async function askLooker({
         model: door.model,
         messages: [
           { role: 'system', content: system },
-          { role: 'user', content: lookMessage({ words, image, outlined, cutout, anyReal, surface }) }
+          { role: 'user', content: lookMessage({ words, image, outlined, cutout, anyReal, surface, alt }) }
         ],
         max_tokens: LOOK_MAX_TOKENS,
         temperature: 0,

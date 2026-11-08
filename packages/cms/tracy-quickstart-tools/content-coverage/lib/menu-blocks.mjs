@@ -141,12 +141,21 @@ export function menuBlocksOf({ map, lock, findings }) {
   const lockRows = Object.entries(lock?.entities ?? {})
   // A visitor who has not signed in sees the items of the public (1) and guest (5) access levels only: an item for
   // registered users or administrators ("Your Profile", "Site Settings") is never drawn on the pages a site build plans.
+  // Joomla's menu module also drops an item set to "Display in Menu: No" (`menu_show` 0) and every item under it
+  // (`MenuHelper`, `$hidden_parents`): the page still opens, but no block draws its link.
+  const rowOf = new Map(lockRows)
+  const hidden = (k) => {
+    for (let r = rowOf.get(k), hop = 0; r && hop < 20; r = rowOf.get(`menuItem-${whole(r.parent_id)}`), hop++)
+      if (String(objectOf(r.params).menu_show ?? '1') === '0') return true
+    return false
+  }
   const menuRows = lockRows.filter(
     ([k, r]) =>
       k.startsWith('menuItem-') &&
       r?.menutype &&
       String(r.published ?? PUBLISHED) === PUBLISHED &&
-      VISITOR_ACCESS.has(String(r.access ?? '1'))
+      VISITOR_ACCESS.has(String(r.access ?? '1')) &&
+      !hidden(k)
   )
   const menus = new Set(menuRows.map(([, r]) => r.menutype))
   const slots = map.slots ?? []

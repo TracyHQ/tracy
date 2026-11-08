@@ -17,7 +17,8 @@
  *             A kit the flow cannot use holds Publish too, whatever its pictures: a fact a flow step reads that the kit
  *             gets wrong (`flow-reads.js`: a logo spot nothing can write, an accent read from links, a menu without a
  *             navigation group, slots the content map beside it lacks, a front page without its own group, a kit the
- *             brand step refuses, no image zip on the release). Every such gap rides along as `flowGaps` on the
+ *             brand step refuses, no image zip on the release, and for a template `demo-baseline-policy.json` opts in no
+ *             `demo-baseline.json` of this version beside the contract). Every such gap rides along as `flowGaps` on the
  *             step's params from the version check on, so the first code never hides the others;
  *   warn      the same on a release already published: it is never taken off for it, as Content coverage does; or a
  *             gap the flow only works around (`kit-setting-slot-missing`) on a kit otherwise approved.
@@ -25,6 +26,7 @@
 import { contractFor } from '../contracts.js'
 import { COVERAGE_POLICY } from '../content-coverage/judge.js'
 import { shownOnInspiration } from '../quickstart-releases.js'
+import { BASELINE_FILE } from './demo-baseline-file.js'
 import { flowGapsOf } from './flow-reads.js'
 import {
   imagesDigest,
@@ -257,15 +259,17 @@ function looksIncompleteOf(doc) {
 /**
  * @param {(step: string, state: any, code: string, params?: Record<string, unknown>, blockedBy?: string) => unknown} put
  * @param {(steps: string[]) => string | undefined} waitingOn
- * @param {{ release: any, version: string | null, contractId?: string | null, kit: import('./reader.js').Kit, map?: import('./flow-reads.js').KitMap | null, policy?: any }} input
+ * @param {{ release: any, version: string | null, contractId?: string | null, kit: import('./reader.js').Kit, map?: import('./flow-reads.js').KitMap | null, baseline?: import('./demo-baseline-file.js').DemoBaseline, policy?: any }} input
  *   `kit`: the kit beside the contract that seals this version (`kitOfRelease`)
+ *   `baseline`: the demo baseline beside the same contract (`baselineOfRelease`), asked of the templates the baseline
+ *   policy opts in; left out, it is not asked
  *   `map`: what the flow reads of the content map beside it (`kitMapOfRelease`); null skips the checks that need it
  *   `policy`: the Content coverage policy, whose `rolesPlatforms` are the platforms with a content map
  */
 export function templateKitStep(
   put,
   waitingOn,
-  { release, version, contractId = null, kit, map = null, policy = COVERAGE_POLICY }
+  { release, version, contractId = null, kit, map = null, baseline = undefined, policy = COVERAGE_POLICY }
 ) {
   const plain = { version, platform: release.platform, contract: contractId }
   // A kit summarises the content map, so it applies where Content coverage judges a content map (ADR 0038).
@@ -305,7 +309,7 @@ export function templateKitStep(
       ...params,
       reason: `it was built on the contract ${doc.contract}, not ${contractId}`
     })
-  const flowGaps = flowGapsOf(doc, { map, release })
+  const flowGaps = flowGapsOf(doc, { map, release, baseline })
   const flow = flowGaps.length > 0 ? { flowGaps } : {}
   const incomplete = incompleteOf(doc)
   if (incomplete)
@@ -383,6 +387,8 @@ export function templateKitRefusal(step) {
         return `The brand step cannot read the template kit of ${version}: ${String(p.reason)}. Capture the kit again so its site part is complete.`
       case 'kit-zip-missing':
         return `The template kit of ${version} has no image zip on the release: ${String(p.reason)}. Pack the kit and attach the zip to the release.`
+      case 'kit-demo-baseline-missing':
+        return `The demo baseline of ${version} is not beside the contract: ${String(p.reason)}. Measure it on the untouched quickstart site with apps/tracy-web/scripts/site-check-baseline.mjs, write it with \`template-kit baseline\` and commit ${BASELINE_FILE}.`
       default:
         return `The template kit of ${version} is missing. ${CAPTURE} Then approve it.`
     }

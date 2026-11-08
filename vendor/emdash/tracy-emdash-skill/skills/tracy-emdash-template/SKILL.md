@@ -32,7 +32,7 @@ scan installed software, do not suggest another platform.
 
 | `road` | When | What to do |
 |---|---|---|
-| `contract` | CMS **within reach** (this machine, or access has been granted) | Read the **content model**, do not scrape HTML: `joomla-dump.mjs` → `from-joomla.mjs` → `site-model.json` → `tools/compile-seed.mjs`. **The first two scripts live in the sibling repo** `JoomlArt-Products/tracy-wordpress-theme` — see [`references/site-model.md`](references/site-model.md) §Where to get the two sibling-repo scripts |
+| `contract` | CMS **within reach** (this machine, or access has been granted) | Read the **content model**, do not scrape HTML: `joomla-dump.mjs` → `from-joomla.mjs` → `site-model.json` → `tools/compile-seed.mjs`. **The first two scripts live in the sibling repo** `JoomlArt-Products/tracy-wordpress-theme` — see [`references/site-model.md`](references/site-model.md) §Where to get the two sibling-repo scripts (their dependencies — jsdom, parse5, php-parser, acorn, playwright — must be installed first: `npm install` in that skill's folder, or in a copy of it when its folder is read-only) |
 | `rendered-ask` | CMS but **HTTP only** (someone else's demo, a production site) | Ask **exactly one question**: is there database access, a backup, or a quickstart package? Yes → `contract` (faster and more accurate). No → `rendered` — **the template can still be built**, it just costs more work; record in `DECISIONS.md` the fields that had to be inferred from markup |
 | `contract-pending` | WordPress | No skill has an adapter that reads WordPress yet. Write `from-wordpress.mjs` emitting `site-model.json`, or go `rendered` and say so plainly |
 | `rendered` | No CMS declared — HTML folder, canvas, frames | The old road: `tools/inventory.mjs` on the source folder ([`references/source-inventory.md`](references/source-inventory.md)) |
@@ -96,15 +96,15 @@ run ends with the turn), bounded output and batched reads, images opened once, l
 ## Toolkit — copy into the template's `tools/`, run from the template folder
 
 `scripts/new-template.sh <target> [package] [template-id]` copies `scripts/tools/*`, `scripts/src/*`, `scripts/tests/*`
-and a skeleton `template.config.json` into a new package. The tools import `playwright`, `acorn`, `emdash`,
+and a skeleton `template.config.json` into a new package (also `scripts/contract/` and `scripts/ingest/`, which `compile-seed.mjs` and the copied tests import). It does **not** scaffold the Astro project — `package.json`, `astro.config.mjs`, `tsconfig.json`, `components.json`, the layout, styles, `[...path].astro` and a lockfile come from a sibling theme on the same stack or are written per [`references/runtime.md`](references/runtime.md). The tools import `playwright`, `acorn`, `emdash`,
 `better-sqlite3` from the **template's** `node_modules`: run them as `node tools/<x>.mjs` in the template folder, not
 from the skill folder, and read identity (site name, locales, forms, audit policy, theme hook) from `template.config.json`.
 Every tool, its flags and its phase: [`references/tools.md`](references/tools.md).
 
 `npm test` (kit; `scripts/test-kit.mjs` runs the suite inside a throwaway template) or `node --test tests/*.test.mjs`
-in the template runs the kit's 327 regression tests (`test(`/`it(` calls in `scripts/tests/*.test.mjs`; the runner
+in the template runs the kit's 364 regression tests (`test(`/`it(` calls in `scripts/tests/*.test.mjs`; the runner
 reports more, because a few are declared once in a loop) without a real EmDash site. Duration: ~8–9 min measured
-14/09/2026 on a smaller suite — dated, not re-measured since. Needs Playwright's browser installed; do not run it
+14/09/2026 on a smaller suite — dated, not re-measured since. Needs Playwright's browser installed (`npx playwright install chromium`); do not run it
 alongside another `visual-qa` run. `npm run test:docs` checks the counts these docs quote.
 
 Which tool per phase (rows in `references/tools.md`). Every phase: `scripts/lessons.mjs scan <template> --phase <Pn>`

@@ -206,7 +206,8 @@ test('repeated links in one block (same words, same address) are each listed, ke
     <div data-kit-block="card-1"><h3>Sam Doe</h3>
     <a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-twitter"></i></a>
     <a href="#"><i class="fa fa-instagram"></i></a><a href="#"><i class="fa fa-linkedin"></i></a>
-    <a href="/team/sam">Profile</a></div>`
+    <a href="/team/sam">Profile</a><div data-kit-block="cta-2"><a href="/join">Join</a></div>
+    <a aria-current="true" href="#">1</a></div>`
   let browser
   try {
     browser = await chromium.launch()
@@ -224,11 +225,18 @@ test('repeated links in one block (same words, same address) are each listed, ke
         [1, '#'],
         [2, '#'],
         [3, '#'],
-        [4, '/team/sam']
+        [4, '/team/sam'],
+        [5, '#']
       ]
     )
     const icons = await page.evaluate(readLinkIcons, { block: 'card-1' })
-    assert.equal(icons.links.length, 5)
+    // Both readings list the same links at the same positions: a nested block's link is its own, the current page
+    // of a pagination is marked.
+    assert.deepEqual(
+      icons.links.map((l) => [l.position, l.href, !!l.current]),
+      details['card-1'].links.map((l) => [l.position, l.href, !!l.current])
+    )
+    assert.equal(icons.links[5].current, true)
     assert.deepEqual(
       icons.links.slice(0, 4).map((l) => [l.position, l.icon?.classes]),
       [

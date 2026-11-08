@@ -21,7 +21,9 @@
 //
 // Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
 // had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
-import { correctionsReader, galleryAlts } from './slot-corrections.js'
+import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
+import { writeRecordAlts } from './record-alt-stage.js'
+import { PICTURE_OWNER } from './picture-package.js'
 import { seeder } from '../lib/seeder.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { indexInputs } from '../lib/site-copy/inputs-index.js'
@@ -35,6 +37,14 @@ import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
+import { settleDialledPhones } from './dialled-phones.js'
+import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
+import { climbTextFallback, withTextFallback } from './text-fallback.js'
+import { closeDemoLeft, withClosing } from './closing-ladder.js'
+import { hideEmptyVideoButtons } from './video-buttons-stage.js'
+import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
+import { hideHiddenPageLinks, relinkOrders } from './hidden-page-links-stage.js'
+import { hideOnCreatedPages } from './created-page-hide-stage.js'
 import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
@@ -45,6 +55,8 @@ import { planLinkTable } from './plan-link-table.js'
 import { createPages, pagesWithoutCopy } from './page-create-stage.js'
 import { routeLines } from './page-route-lines.js'
 import { hasPlanSlugs, restoreRoutes, runRouteStage } from './page-route-stage.js'
+import { phonesOf } from './phone-links.js'
+import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
 import { coordinatesOf, runPageSettings } from './page-settings-stage.js'
 import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { preparePictureStage } from './picture-stage.js'
@@ -52,6 +64,8 @@ import { runPrintedStage } from './printed-stage.js'
 import { runShareStage } from './share-stage.js'
 import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
 import { unaddressableOf, withGuardFindings, withUnaddressable } from './unaddressable-lines.js'
+import { menuRows } from '../lib/joomla-menu-rows.js'
+import { doorCall } from './settings-door.js'
 
 /** What one contract call takes (the seeder's and the plugin's own limits); more is refused whole, so it is said first. */
 const MAX_SLOTS = 1500
@@ -107,11 +121,12 @@ function siteProblem({ reading, contract, changes }) {
  *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
  *   place?: { latitude: unknown, longitude: unknown } | null,
  *   onPhase?: (phase: string) => Promise<void>, onNoWayOut?: (named: { slot: string, reason: string }[]) => Promise<void>,
- *   pageHtml?: (input: { siteKey: string, path: string }) => Promise<string | null>,
+ *   pageHtml?: (input: { siteKey: string, path: string }) => Promise<string | null>, siteHosts?: string[],
  *   now?: () => number, sleep?: (ms: number) => Promise<void> }} input
  *   `last`: the report of the last run on this site, to write only what differs; `lastRun`: that run's id, for the report;
  *   `onNoWayOut`: told what the plan hides and cannot take off, before anything is written; `pageHtml`: a page of the site as a
- *   visitor reads it, for the printed check (without it the report has no `printed` section)
+ *   visitor reads it, for the printed check (without it the report has no `printed` section); `siteHosts`: the host names
+ *   the site answers at, so a full link to a renamed address on one of them is rewritten too (renamed-link-stage.js)
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
 export async function runWriteStep(input) {
@@ -158,21 +173,28 @@ export async function runWriteStep(input) {
   let pictures = { active: false, lines: () => [] }
   let hide = null
   let emptied = []
+  let relinked = new Map()
   let shareLines = []
   let settingLines = []
   let links = null
-  let created = { pages: new Map(), results: [], lines: [], kept: [] }
+  let created = { pages: new Map(), results: [], lines: [], kept: [], opened: [] }
   let restored = []
   let renamedLines = null
+  let renamedLinks = null
+  let emphasis = new Map()
+  let pictureFiles = {}
+  let fallbacks = new Map()
+  let copyReturns = []
+  let closing = []
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
     // What the guard found on a value was written all the same; what it held back (a channel nobody listed) was not sent.
-    report.guard = { findings: guard.findings(), refused: guard.refused() }
+    report.guard = { findings: guard.findings(), refused: guard.refused(), allowed: guard.allowed() }
     report.unaddressable = unaddressableOf(unaddressable)
     let lines = []
     if (table) {
-      const hidden = hide?.results({ emptied, refused, settled })
+      const hidden = hide?.results({ emptied, refused, settled, relinked })
       lines = slotLines({
         owners: table.owners,
         // A slot of a row the plan gave up has its own line, as it left with its row.
@@ -186,7 +208,13 @@ export async function runWriteStep(input) {
         pictureLines: pictures.lines({ written, refused }),
         hides: hidden?.hides,
         frameLines: hidden?.lines,
-        shareLines: [...created.lines, ...settingLines, ...shareLines, ...pageRouteLines()],
+        shareLines: [
+          ...created.lines,
+          ...settingLines,
+          ...shareLines,
+          ...pageRouteLines(),
+          ...(renamedLinks?.lines ?? [])
+        ],
         links: links?.results({
           written,
           refused,
@@ -197,12 +225,25 @@ export async function runWriteStep(input) {
         ...routes
       })
     }
+    // A value the renamed-link stage rewrote is read back as the site holds it now (renamed-link-stage.js).
+    lines = followRenamedLinks(lines, renamedLinks)
     lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
+    lines = withTextFallback(withEmphasis(lines, emphasis), fallbacks)
+    lines = withClosing(lines, closing, emptied)
+    if (closing.length) report.closing = closing
+    if (emphasis.size)
+      report.emphasis = [...emphasis].map(([key, e]) => ({
+        key,
+        storage: e.storage,
+        converted: Boolean(e.stored),
+        ...(e.warning ? { warning: e.warning } : {}),
+        ...(e.blocking ? { blocking: true } : {})
+      }))
     const against = last.active ? againstLast(lines, last, status) : { slots: lines }
     report.slots = against.slots
     // Rows kept against the plan, per list (hide-lines.js): what the site check's list-rows holds the printed list to.
     if (table && hide) {
-      const rows = hide.results({ emptied, refused, settled }).rows
+      const rows = hide.results({ emptied, refused, settled, relinked }).rows
       if (rows.length) report.rows = rows
     }
     report.counts = countsOf(report.slots)
@@ -269,6 +310,7 @@ export async function runWriteStep(input) {
     leaveOut(pictures.unaddressable ?? [])
     guard.refuse(pictures.refused ?? [])
     const copyRead = readCopy(copy)
+    copyReturns = Array.isArray(copy?.returns) ? copy.returns : []
     const problems = fileProblems({ plan, copy, kitRef: kit.ref }, copyRead.problems)
     if (problems.length)
       return { stop: { code: 'BAD_FILE', reason: `The files cannot be written: ${problems.join('; ')}` } }
@@ -327,15 +369,27 @@ export async function runWriteStep(input) {
     // An alt goes through the door only where the plugin says it opens its slot; any other keeps its skipped line.
     const placed = galleryAlts({
       alts: extras.alts ?? {},
+      // Step 8's alts, written from the pictures it placed, go over the writer's (ADR 0043 section 3f).
+      pictureAlts: pictureAltsOf(read.values.pictures),
+      picturesFile: read.inputs.pictures?.file ?? null,
       contentMap,
       hidden: new Set([...pictures.claims, ...fromPlan].filter((c) => c.kind === 'hide').map((c) => c.slot)),
       file: read.inputs.copy.file
     })
+    const fromStepEight = pictureAltsOf(read.values.pictures)
     const alts =
       placed.claims.length && !(await corrections()).alts
-        ? { claims: [], changes: {}, left: extras.alts ?? {} }
+        ? {
+            claims: [],
+            changes: {},
+            left: { ...extras.alts, ...fromStepEight },
+            leftByPicture: Object.keys(fromStepEight)
+          }
         : placed
-    extras = { ...extras, alts: alts.left }
+    // The frames whose alt is step 8's: their lines are the picture's, and record-alt-stage.js may still write them.
+    const altOwners = Object.fromEntries(alts.leftByPicture.map((frame) => [frame, PICTURE_OWNER]))
+    extras = { ...extras, alts: alts.left, altOwners }
+    pictureFiles = read.values.pictures?.mapping?.changes ?? {}
     // The slot prints only as its kept picture's alt, so a plan's hide of it hides nothing: the alt stands.
     const altSlots = new Set(alts.claims.map((claim) => claim.slot))
     const filing = [
@@ -360,7 +414,7 @@ export async function runWriteStep(input) {
       })
     ])
     extras = withEveryMenuHide({ extras, owners: table.owners, contentMap })
-    guard.know({ owners: table.owners, routes: brand.routes ?? null })
+    guard.know({ owners: table.owners, routes: brand.routes ?? null, copy, brief })
     report.keptPages = keptPagesOf(plan, kit.doc)
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
@@ -453,9 +507,33 @@ export async function runWriteStep(input) {
   if (restoring.stop) return stopped(restoring.stop)
 
   // First of all the writes: a link to a created page needs its address (page-create-stage.js).
-  created = await createPages({ door, siteKey, kit: kit.doc, plan, owners: table.owners, extras, last })
+  created = await createPages({
+    door,
+    siteKey,
+    kit: kit.doc,
+    plan,
+    owners: table.owners,
+    extras,
+    last,
+    phones: phonesOf(brief)
+  })
   settled = new Map(created.results)
   report.keptPages.push(...created.kept)
+  // A rerun's restored addresses and the created pages move the revision the contract call must name, which the inspect above read
+  // before them: read it again, or the call is refused "Content changed" with nothing written (card AL, 2026-11-06).
+  if (restored.length || created.results.length) {
+    const again = await apply({
+      siteKey,
+      action: 'content.contract',
+      params: { operation: 'inspect' }
+    }).catch((error) => ({ ok: false, message: String(error?.message ?? error) }))
+    if (!again?.ok)
+      return stopped({
+        code: 'INSPECT_REFUSED',
+        reason: `the site could not be read again after the pages moved: ${again?.message ?? again?.error ?? 'no answer'}`
+      })
+    inspected.reading = again
+  }
 
   // Before the hide stage: a slot a kept link writes is not emptied as well.
   if ([...table.owners.values()].some((claim) => claim.kind === 'link')) {
@@ -504,6 +582,45 @@ export async function runWriteStep(input) {
   if (hiding.stop) return stopped(hiding.stop)
   hide = hiding
   mapping.emptySlots = hide.emptySlots
+  // The closing rule: a kept slot or frame that holds no customer content is not handed over with its demo (closing-ladder.js).
+  const closed = closeDemoLeft({
+    kit: kit.doc,
+    reading: hide.reading,
+    unowned: report.unowned,
+    unaddressable,
+    returns: copyReturns,
+    // A rerun: what an earlier run wrote is customer content the site still holds.
+    held: last.active
+      ? last
+          .held()
+          .filter((line) => line.status === 'written')
+          .map((line) => line.slot)
+      : [],
+    changes: mapping.changes,
+    // A slot the hide stage removes with its row is not kept, so it is no demo left.
+    emptySlots: [...mapping.emptySlots, ...(hide.takenSlots ?? [])]
+  })
+  closing = closed.lines
+  for (const key of closed.dropped) {
+    delete mapping.changes[key]
+    delete mapping.evidence?.[key]
+  }
+  mapping.emptySlots = [...mapping.emptySlots, ...closed.emptySlots]
+  // A link slot to a hidden page that its kept row keeps (SLOT_NOT_HIDEABLE) is written with a living page instead (card AM).
+  if (Array.isArray(kit.doc?.site?.hiddenPageLinks) && mapping.emptySlots.length) {
+    try {
+      const rows = await menuRows(doorCall(door, siteKey))
+      mapping.relink = relinkOrders({
+        reading: hide.reading,
+        emptySlots: mapping.emptySlots,
+        kit: kit.doc,
+        plan,
+        rows
+      })
+    } catch {
+      // No menu to read: the slots are emptied or refused as before, and the plain text rule at the end still holds them.
+    }
+  }
   if (await isCancelled()) return finish('cancelled', null)
 
   let reading = hide.reading
@@ -529,9 +646,9 @@ export async function runWriteStep(input) {
     delete mapping.changes[key]
     delete mapping.evidence?.[key]
   }
-  const wrote = await timed('write', async () => {
-    const { applyJoomlaContract } = await seeder('apply-joomla-contract')
-    return writeContract({
+  const { applyJoomlaContract } = await seeder('apply-joomla-contract')
+  const wrote = await timed('write', () =>
+    writeContract({
       applyJoomlaContract,
       apply,
       siteKey,
@@ -540,12 +657,49 @@ export async function runWriteStep(input) {
       isCancelled,
       sleep
     })
-  })
+  )
   report.rounds = wrote.rounds
   emptied = wrote.emptied ?? []
+  relinked = wrote.relinked ?? new Map()
   if (wrote.cancelled) return finish('cancelled', null, [], wrote.refused)
   if (wrote.stop) return finish('stopped', wrote.stop, [], wrote.refused)
+  // A refused text slot keeps no demo words if it can help it: plain words, else hidden, else said (text-fallback.js).
+  fallbacks = await climbTextFallback({
+    refused: wrote.refused,
+    changes: mapping.changes,
+    evidence: mapping.evidence,
+    kit: kit.doc,
+    contentMap,
+    before: reading,
+    inspect: () => apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } }),
+    send: (order) =>
+      writeContract({
+        applyJoomlaContract,
+        apply,
+        siteKey,
+        reading: order.reading,
+        mapping: {
+          contract: mapping.contract,
+          changes: order.changes,
+          evidence: order.evidence,
+          emptySlots: order.emptySlots
+        },
+        isCancelled,
+        sleep
+      })
+  })
   const written = [...wrote.written, ...held]
+  // Step 8's alts no contract slot carries go into the records that keep them beside their picture (record-alt-stage.js).
+  const recordAlts = await writeRecordAlts({
+    door,
+    siteKey,
+    contentMap,
+    alts: Object.fromEntries(Object.keys(extras.altOwners ?? {}).map((f) => [f, extras.alts[f]])),
+    pictures: pictureFiles,
+    written
+  })
+  // A heading whose demo value is HTML takes its emphasis as real tags, after the contract call wrote its words (emphasis-stage.js).
+  emphasis = await runEmphasisStage({ door, siteKey, contentMap, written: wrote.written, ordered })
   // Last: the page settings, which the contract door does not take (page-settings-stage.js).
   const settings = await timed('settings', () =>
     runPageSettings({
@@ -561,7 +715,7 @@ export async function runWriteStep(input) {
     })
   )
   settingLines = settings.lines ?? []
-  settled = new Map([...settings.results, ...hide.held, ...created.results])
+  settled = new Map([...recordAlts, ...settings.results, ...hide.held, ...created.results])
   if (settings.cancelled) return finish('cancelled', null, written, wrote.refused)
   // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).
   // It has no phase of its own: it makes a few calls, and the phase list is what callers already know.
@@ -576,7 +730,14 @@ export async function runWriteStep(input) {
     isCancelled,
     last
   })
-  shareLines = [...shared.lines, ...(await closeForms({ door, siteKey, plan, kit: kit.doc, last }))]
+  shareLines = [
+    ...shared.lines,
+    ...(await closeForms({ door, siteKey, plan, kit: kit.doc, last })),
+    // After the contract call, which saves the head block's module in its own form: the kit's empty video button rule.
+    ...(await hideEmptyVideoButtons({ door, siteKey, kit: kit.doc })),
+    // And the kit's blocks a created page must not show, on those pages only (card AT).
+    ...(await hideOnCreatedPages({ door, siteKey, kit: kit.doc, created: created.opened }))
+  ]
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
   const done = finish('done', null, written, wrote.refused)
@@ -591,10 +752,24 @@ export async function runWriteStep(input) {
         pageHtml: (path) => input.pageHtml({ siteKey, path })
       })
     )
+  // A phone link refused for want of a door is read against the page: the template may already dial the brief's number (card AZ).
+  if (
+    input.pageHtml &&
+    done.status === 'done' &&
+    report.slots.some((s) => s.status === 'refused' && s.keeps)
+  ) {
+    report.slots = await settleDialledPhones({
+      lines: report.slots,
+      planLinks: report.planLinks,
+      keptPages: report.keptPages ?? [],
+      pageHtml: (path) => input.pageHtml({ siteKey, path })
+    })
+    report.counts = countsOf(report.slots)
+  }
   // Last of the writes, once every page was found and read back at its demo address: the kept pages take the plan's slugs.
   if (report.status === 'done' && hasPlanSlugs(plan)) {
-    const routed = await timed('routes', () =>
-      runRouteStage({
+    const routed = await timed('routes', async () => {
+      const out = await runRouteStage({
         door,
         siteKey,
         kit: kit.doc,
@@ -602,10 +777,44 @@ export async function runWriteStep(input) {
         keptPages: report.keptPages ?? [],
         menutype: hide.settingsExtras?.mainMenu?.menutype ?? null
       })
-    )
+      // Then every link written as a string to an address the stage moved follows it (card AD).
+      renamedLinks = await rewriteRenamedLinks({
+        door,
+        siteKey,
+        routes: out.routes,
+        hosts: input.siteHosts ?? [],
+        writeSlots: async ({ reading, changes, evidence }) => {
+          const { applyJoomlaContract } = await seeder('apply-joomla-contract')
+          return writeContract({
+            applyJoomlaContract,
+            apply,
+            siteKey,
+            reading,
+            mapping: { contract: mapping.contract, changes, evidence },
+            isCancelled,
+            sleep
+          })
+        }
+      })
+      return out
+    })
     renamedLines = routed.lines
     report.keptPages = routed.keptPages
     if (routed.routes.length) report.routes = routed.routes
   }
+  // After the renames: the kit's "more" buttons that lead to their own page, each kept page named at the address it answers now.
+  if (report.status === 'done')
+    shareLines = [
+      ...shareLines,
+      ...(await hideSelfLinkButtons({
+        door,
+        siteKey,
+        kit: kit.doc,
+        keptPages: report.keptPages ?? [],
+        menutype: hide.settingsExtras?.mainMenu?.menutype ?? null
+      })),
+      // And the links in the kit's containers that still lead to a page the plan hid read as plain text (card AM).
+      ...(await hideHiddenPageLinks({ door, siteKey, kit: kit.doc, plan, keptPages: report.keptPages ?? [] }))
+    ]
   return finish('done', null, written, wrote.refused)
 }

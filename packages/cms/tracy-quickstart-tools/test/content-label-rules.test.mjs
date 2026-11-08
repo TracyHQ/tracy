@@ -7,7 +7,8 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { buildCoverageFile } from '../content-coverage/lib/coverage-file.mjs'
-import { labelRulesOf } from '../content-coverage/lib/label-rules.mjs'
+import { slotHash } from '../content-coverage/lib/label-judge.mjs'
+import { applyJudgeToLabelRules, labelRulesOf } from '../content-coverage/lib/label-rules.mjs'
 
 const V3 = 'place-content-roles/3'
 const V2 = 'place-content-roles/2'
@@ -67,7 +68,7 @@ test('clean fixture: no rule fails, R1 is a number', () => {
   assert.deepEqual([res.r1.facts, res.r1.slots], [9, 10])
 })
 
-test('R2: a phone, email, address, price or hours sample with an editorial role fails; contact and price roles pass', () => {
+test('R2: a phone, email, address, price or hours sample with an editorial role fails; contact and price roles pass; a stat or claim role may carry a sum, not a phone', () => {
   const map = cleanMap()
   map.slots.push(
     text('about.p', 'Call us on (555) 010-9921 any day', 'editorial.paragraph'),
@@ -76,6 +77,16 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
     text('menu.cost', 'Sourdough $6.50', 'editorial.paragraph'),
     text('about.hours', 'Mon-Fri 8am - 6pm', 'editorial.paragraph'),
     text('ok.price', '$4.00', 'offering.price', { group: grp('m.0', 0, 'menu_item') }),
+    text('ok.claim', 'A platform that helped raise over $500 million for startups', 'claim.notice'),
+    text('ok.stat', '$4.8m', 'stat.value'),
+    text('ok.stat2', '$ 250k', 'stat.value'),
+    text('home.price', 'Lakeside villa, $1.2 million', 'editorial.paragraph'),
+    text('stat.phone', 'Call (555) 010-9921', 'stat.value'),
+    text(
+      'ok.icon',
+      '((svg viewBox="0 0 40 40"))((path d="M3.75 2.5 10.6250 12.5000 18.7684 15.7303"))((/svg))',
+      'editorial.item_icon'
+    ),
     text('ok.hours', 'Mon-Fri 8am - 6pm', 'contact.hours', { group: grp('site.0', 0, 'business') })
   )
   const res = labelRulesOf({ map })
@@ -85,7 +96,9 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
     'about.hours',
     'about.mail',
     'about.p',
-    'menu.cost'
+    'home.price',
+    'menu.cost',
+    'stat.phone'
   ])
 })
 
@@ -189,6 +202,76 @@ test('R7: siblings of a repeat with different roles fail', () => {
   assert.deepEqual(rule(res, 'R7').keys, ['team.1.n'])
 })
 
+test('a contact block whose cards each link one fact (address, email, phone) passes R4 and R7; T4 layout sections are not siblings', () => {
+  // JA Impact 1.0.6 module 112: `<a href="mailto:…"><h5>email</h5></a>` — the fact is the link's label, and each card
+  // of the repeat holds another channel.
+  const card = (i, role, sample, href) => [
+    text(`contact.${i}.t`, sample, role, {
+      jsonPath: ['contact', 'contact[title]', i],
+      group: grp(`contact.card.${i}`, 0, 'contact')
+    }),
+    {
+      key: `contact.${i}.l`,
+      type: 'url',
+      sample: href,
+      role: 'contact.cta_url',
+      jsonPath: ['contact', 'contact[link]', i],
+      group: grp(`contact.card.${i}`, 0, 'contact')
+    }
+  ]
+  const map = cleanMap()
+  map.slots.push(
+    ...card(0, 'contact.address', '12 Wren Lane, Larkspur', ''),
+    ...card(1, 'contact.email', 'hello@larkspur.example', 'mailto:hello@larkspur.example'),
+    ...card(2, 'contact.phone', '(555) 010-4478', 'tel:5550104478')
+  )
+  assert.deepEqual(fails(labelRulesOf({ map })), [])
+
+  // An offer's link still needs a button label: a phone beside it is not one.
+  const offer = cleanMap()
+  offer.slots.push(
+    text('offer.phone', '(555) 010-4479', 'contact.phone', { group: grp('offer.0', 0, 'business') }),
+    {
+      key: 'offer.link',
+      type: 'url',
+      sample: 'index.php?Itemid=12',
+      role: 'offering.cta_url',
+      group: grp('offer.0', 0, 'business')
+    }
+  )
+  assert.deepEqual(rule(labelRulesOf({ map: offer }), 'R4').keys, ['offer.link'])
+
+  // Backgrounds of different sections of one T4 layout: a photo and a pattern may carry different roles.
+  const bg = (i, role) => ({
+    key: `templateConfig-1.${i}`,
+    type: 'image',
+    sample: `images/demo/bg-${i}.jpg`,
+    role,
+    entity: 'templateConfig-1',
+    jsonPath: ['layout', 'sections', i, 'background_image'],
+    group: grp(`templateConfig-1.section.${i}`, 0, 'business'),
+    fit: { measured: true, kind: 'photo', replace: role === 'editorial.design_element' ? 'keep' : 'photo' }
+  })
+  const layout = cleanMap()
+  layout.slots.push(
+    bg(5, 'editorial.illustration'),
+    bg(6, 'editorial.illustration'),
+    bg(7, 'editorial.design_element')
+  )
+  assert.deepEqual(fails(labelRulesOf({ map: layout })), [])
+
+  // Columns of one mega menu are still siblings.
+  const col = (i, role) =>
+    text(`templateConfig-2.${i}`, ['Platform', 'Styles', 'Guides'][i], role, {
+      entity: 'templateConfig-2',
+      jsonPath: ['mainmenu', '105', 'settings', 0, 'contents', i, 'title'],
+      group: grp(`templateConfig-2.column.${i}`, 0, 'business')
+    })
+  const menu = cleanMap()
+  menu.slots.push(col(0, 'editorial.heading'), col(1, 'editorial.heading'), col(2, 'editorial.paragraph'))
+  assert.deepEqual(rule(labelRulesOf({ map: menu }), 'R7').keys, ['templateConfig-2.2'])
+})
+
 test('R7: the pieces of one HTML field in a repeat are not siblings of each other; the same piece across items is', () => {
   // Each item's description field holds an icon and words: the icon of item 0 and the icon of item 1 are siblings, the
   // icon and the words of one item are not, so their different roles are right.
@@ -231,6 +314,30 @@ const item = (value, slot, rect, tag = 'span') => ({
   status: 'matched',
   slots: [slot],
   viewports: { desktop: { visible: true, count: 1, rect } }
+})
+
+test('R8: short slots on one line in two different items of a grouped repeat (a row of member cards) are not a cut heading', () => {
+  const map = cleanMap()
+  map.slots.push(
+    text('m.0', 'Siggi Campel', 'person.name', {
+      entity: 'module-99',
+      group: grp('module-99.person.0', 0, 'person')
+    }),
+    text('m.1', 'Lee McClayton', 'person.name', {
+      entity: 'module-99',
+      group: grp('module-99.person.1', 1, 'person')
+    })
+  )
+  const pages = [
+    {
+      url: 'https://site.example/',
+      items: [
+        item('Siggi Campel', 'm.0', { x: 100, y: 200, w: 120, h: 30 }),
+        item('Lee McClayton', 'm.1', { x: 250, y: 200, w: 130, h: 30 })
+      ]
+    }
+  ]
+  assert.deepEqual(fails(labelRulesOf({ map, pages })), [])
 })
 
 test('R8: adjacent short slots of one entity on one line are flagged as a cut heading; a full line or another line is not', () => {
@@ -353,11 +460,19 @@ test('R9: a fact-like hole fails and an accepted reason does not lift it; other 
     },
     { kind: 'text', value: 'Lemon tart 3.50 EUR', class: 'template' },
     { kind: 'text', value: 'Read more about our story', class: 'template' },
-    { kind: 'text', value: 'Call 555 010 1111', class: 'core' }
+    { kind: 'text', value: 'Call 555 010 1111', class: 'core' },
+    // A code sample's log line (JA Kinetic): the sample's own words, never the business's.
+    {
+      kind: 'text',
+      value: 'WARN: SAML assertion for user@example.com contained 340 group claims',
+      class: 'capture',
+      inCode: true
+    }
   ]
   const res = labelRulesOf({ map: cleanMap(), holes })
   assert.deepEqual(fails(res), ['R9'])
   assert.equal(rule(res, 'R9').count, 2)
+  assert.ok(!rule(res, 'R9').keys.some((k) => k.includes('user@example')))
 })
 
 test('a version 2 map is measured and reported but does not apply', () => {
@@ -379,8 +494,60 @@ test('the committed coverage file carries the rule results', () => {
   }
   const contract = { manifest: { id: 'x/j6/1.0.0' }, sha256: { contentMap: 'a', presentationLock: 'b' }, map }
   const doc = buildCoverageFile({ result, contract })
-  assert.equal(doc.tool.version, '1.7.0')
+  assert.equal(doc.tool.version, '1.8.0')
   assert.equal(doc.labelRules.rules.R3.count, 1)
   assert.deepEqual(doc.labelRules.rules.R3.keys, ['foot.link'])
   assert.equal(doc.labelRules.applies, true)
+})
+
+test('R5: a design cut-out leaves R5 only once the label judge saw it as it is now and said right', () => {
+  const design = (key, sample) => ({
+    key,
+    type: 'image',
+    sample,
+    role: 'editorial.design_element',
+    customize: 'keep',
+    fit: { measured: true, kind: 'cutout', replace: 'keep' }
+  })
+  const brush = design('hero.brush', 'images/demo/hero/deco.png')
+  const trainer = design('hero.trainer', 'images/demo/hero/item-1.png')
+  const keptPhone = text('foot.phone', '(555) 010-9999', 'contact.phone', { customize: 'keep' })
+  const map = cleanMap()
+  map.slots.push(brush, trainer, keptPhone)
+  const measured = labelRulesOf({ map })
+  // Measured alone, all three fail; the two design cut-outs wait for the judge.
+  assert.equal(rule(measured, 'R5').count, 3)
+  assert.deepEqual(
+    rule(measured, 'R5').pendingJudge.map((p) => p.key),
+    ['hero.brush', 'hero.trainer']
+  )
+  const judge = (slots) => ({ slots })
+  // The brush stroke judged right as it is: lifted. The trainer cut-out judged wrong: still fails. A kept fact: still fails.
+  const judged = applyJudgeToLabelRules(
+    measured,
+    judge([
+      { key: 'hero.brush', hash: slotHash(brush), verdict: 'right' },
+      { key: 'hero.trainer', hash: slotHash(trainer), verdict: 'wrong', groupWrong: true }
+    ])
+  )
+  assert.equal(rule(judged, 'R5').count, 2)
+  assert.deepEqual(rule(judged, 'R5').keys, ['hero.trainer', 'foot.phone'])
+  assert.deepEqual(rule(judged, 'R5').exempted, ['hero.brush'])
+  // No verdict, or a verdict on the slot as it was before (another hash): nothing is lifted.
+  assert.equal(rule(applyJudgeToLabelRules(measured, null), 'R5').count, 3)
+  const stale = applyJudgeToLabelRules(
+    measured,
+    judge([
+      { key: 'hero.brush', hash: slotHash({ ...brush, sample: 'images/demo/old.png' }), verdict: 'right' }
+    ])
+  )
+  assert.equal(rule(stale, 'R5').count, 3)
+  // Recording again is idempotent, and a later wrong verdict puts the slot back.
+  assert.deepEqual(
+    applyJudgeToLabelRules(judged, judge([{ key: 'hero.brush', hash: slotHash(brush), verdict: 'right' }])),
+    judged
+  )
+  const back = applyJudgeToLabelRules(judged, judge([]))
+  assert.equal(rule(back, 'R5').count, 3)
+  assert.deepEqual(rule(back, 'R5').exempted, [])
 })

@@ -149,8 +149,15 @@ function replaceOf(slot, kind, byRole) {
  */
 function labelWordsOf(slot) {
   const label = String(slot.label ?? '')
-  if (!String(slot.entity ?? '').startsWith('article-') || !label.includes(' / ')) return label
-  return label.slice(label.lastIndexOf(' / ') + 3)
+  // A WordPress block slot is labelled "<page slug> — <block name>": the slug is the demo's words (a page named for a
+  // map), the block's metadata.name is the field. Joomla has no page entities.
+  if (String(slot.entity ?? '').startsWith('page-')) {
+    const at = label.indexOf(' — ')
+    return at >= 0 ? label.slice(at + 3) : String(slot.target?.block ?? '')
+  }
+  if (!String(slot.entity ?? '').startsWith('article-')) return label
+  // A picture in the article's own text is labelled with the title alone ("…the Changing Face of Mourning…", JA Nova).
+  return label.includes(' / ') ? label.slice(label.lastIndexOf(' / ') + 3) : ''
 }
 
 function pictureFit(slot, ev, byRole) {
@@ -158,6 +165,8 @@ function pictureFit(slot, ev, byRole) {
   const words = [
     labelWordsOf(slot),
     slot.column,
+    // A WordPress slot's field is its block (found by metadata.name) and attribute.
+    slot.target?.block,
     ...(slot.jsonPath ?? []).filter((p) => typeof p === 'string')
   ].join(' ')
   const boxes = ev?.boxes ?? {}

@@ -1,0 +1,1 @@
+{"id":"REG-PR-415-pictures-never-leave-frame-empty","verdict":"PASS","commit":"16a07d6864e8946a6cca962a40b7324f7899ae40","ran_at":"2026-11-06T03:47:19.061Z","evidence":"tests/regression/.runs/2026-11-06-16a07d686/REG-PR-415-pictures-never-leave-frame-empty.log"}

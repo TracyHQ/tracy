@@ -2552,6 +2552,8 @@ const ACTION_CLASS = Object.freeze({
   'media.delete': 'write',
   // Draws a picture and uploads it through media.upload: the site's media library changes.
   'media.draw': 'write',
+  // Puts a library icon into an icon slot and its twin (`icon.mjs`): the customer's change itself.
+  'media.icon': 'write',
   // Finds visible words where they are stored and rewrites them there (F3): the customer's change
   // itself, so it resets the budget and never runs beside a sibling. Classed before the door lists
   // it, which costs nothing — the test walks the door's lists, not this table.
@@ -3347,9 +3349,17 @@ export function resultOutcomeUnknown(data) {
  * 🔒 A BUILD WITH A SAVED PLAN HAS `scale` TIMES THE ROOM (pilot 23/10/2026): a whole site built in one turn
  * pages through its research and every native record before it writes, and waits 30 s at a time on its
  * provision — work a single change never does, and that a ten-step bar called wandering.
+ * 🔒 AN ANSWERED QUESTION IS A RESET POINT TOO, AND THE WAIT FOR IT WAS NEVER TOOL TIME. Asking is the
+ * exit the notice itself names, and the customer's answer is new work. Measured 04/11/2026 on a dev
+ * Joomla site: the customer took 479 s to answer a confirmation card; that step's span made the next
+ * notice due on time — "12 steps and 497 s of tool time … You were already asked to stop exploring and
+ * did not" — sent to an agent that had just been told "Yes, go ahead".
+ * 🔒 `changed`: the run began after a settled change of this turn, so the notice says "since your last
+ * change" — "without changing the site" was false there (the same turn: a replace had written five
+ * places at step 2, and the agent answered the notice with "Wait — the site already changed").
  * @param {{ session?: { seq?: number, eventAt?: (seq: number) => any } } | undefined} agent
  * @param {number} [scale] - how many times the bar a turn has (`loopNotices` `build`).
- * @returns {{ steps: number, sent: number, seconds?: number } | null}
+ * @returns {{ steps: number, sent: number, seconds?: number, changed?: true } | null}
  */
 export function stepBudget(agent, scale = 1) {
   const bar = STEP_BUDGET * scale
@@ -3396,10 +3406,15 @@ export function stepBudget(agent, scale = 1) {
       if (typeof event.time === 'number') lastResult = Math.max(lastResult, event.time)
     } else if (event?.type === 'tool/call') {
       // A settled change is the other reset point: everything before it belongs to earlier work. So is a
-      // demo build waiting on its provision: the site is being made, nothing is being looked at.
+      // demo build waiting on its provision: the site is being made, nothing is being looked at. So is a
+      // question the customer answered: what follows works on their answer.
+      if ((changesSite(event.data) || buildsSite(event.data)) && settled(settledById, event.data)) {
+        const answer = due()
+        return answer === null ? null : { ...answer, changed: true }
+      }
       if (
-        ((changesSite(event.data) || buildsSite(event.data)) && settled(settledById, event.data)) ||
-        waitsOnProvision(event.data)
+        waitsOnProvision(event.data) ||
+        (event.data?.name === 'ask_user_question' && settledById.has(event.data?.callId))
       )
         return due()
       if (typeof event.time === 'number') firstCall = Math.min(firstCall, event.time)
@@ -3820,17 +3835,27 @@ export function hasPlan(agent) {
  * @param {number} [seconds] - the run's tool seconds, when they made the notice due.
  * @param {{ todo?: boolean }} [reach] - whether the agent has `todo_write` (`toolReach`); default yes.
  * @param {boolean} [build] - a demo or own-site build with a saved plan (`loopNotices` `build`): told to write its plan.
+ * @param {boolean} [changed] - the run began after a change this turn made (`stepBudget` `changed`).
  * @returns {string}
  */
-export function stepBudgetNotice(steps, planned = false, sent = 0, seconds, reach = {}, build = false) {
+export function stepBudgetNotice(
+  steps,
+  planned = false,
+  sent = 0,
+  seconds,
+  reach = {},
+  build = false,
+  changed = false
+) {
   const plan =
     reach.todo === false
       ? 'write the plan in your reply, one line per change, and start its first item.'
       : 'call `todo_write` with the plan, one item per change, and start its first item.'
+  const since = changed ? 'since your last change to the site' : 'without changing the site'
   const opening =
     typeof seconds === 'number'
-      ? `You have taken ${steps} step${steps === 1 ? '' : 's'} and ${seconds} s of tool time without changing the site.`
-      : `You have taken ${steps} steps without changing the site.`
+      ? `You have taken ${steps} step${steps === 1 ? '' : 's'} and ${seconds} s of tool time ${since}.`
+      : `You have taken ${steps} steps ${since}.`
   // A whole site built from a saved plan is not one change: it is told to write its plan, never to make the smallest
   // change or to stop and report while checks remain (`buildsSite`).
   const body = build
@@ -3877,7 +3902,8 @@ export function loopNotices(agent, options = {}) {
         budget.sent,
         budget.seconds,
         toolReach(options?.tools),
-        scale !== 1
+        scale !== 1,
+        budget.changed === true
       ),
       summary: `step budget ${budget.sent + 1}`
     })

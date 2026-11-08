@@ -3,10 +3,10 @@
 // Blocking when a customer would see the fault; warning when it needs a person's eye.
 //
 //   group              level  causing step  source
-//   demo-words         block  6 writer      host no-demo-words, against the demo baseline
+//   demo-words         block  6 or 9        host no-demo-words, against the demo baseline; 9 for a slot the write step left with its demo
 //   demo-pictures      block  8 pictures    host no-demo-pictures, against the demo baseline
 //   demo-links         block  3 planner     host no-third-party-demo, cta-real (the plan owns link targets)
-//   dead-links         block  3 planner     new: visited pages and links that answer an error
+//   dead-links         block  3 or 9        new: visited pages and links that answer an error; 9 for an address the write step renamed
 //   empty-frames       block  3 planner     host no-empty-picture-slots, no-empty-boxes (the plan owns hide decisions)
 //   cms-errors         block  9 write       host no-cms-error-leak, no-raw-placeholders
 //   text-overflow      block  6 writer      new: text cut by or past its box
@@ -18,9 +18,11 @@
 //   glued-words        block  9 write       new: words run into a highlight with no space
 //   unfinished-heading block  6 writer      new: a heading that stops on a small word; the writer owns the final text of every slot, labels included
 //   main-heading       block  9 write       new: more than one main heading on a page; a warning when there is none
+//   orphan-row         block  3 planner     new: a grid or wrapping row of cards whose last row holds fewer, pushed left with a hole
+//   blank-footer-column block 3 planner     new: a footer column that prints no words, link or picture beside one that does
 //   brand-accent       block  2 brand       new: the brand style changes only the accent family, and no template accent is left
 //   band-contrast      block  2 brand       theme-reads.js: words the brand style touched, on a plain ground, in both themes (3:1 for brand accent words; the template's own warn only under 3:1)
-//   words-over-picture block  8, 2 or 0     theme-reads.js: words against the picture region under them, in both themes
+//   words-over-picture block  8, 2 or 0     theme-reads.js: words against the picture region under them, in both themes (band-contrast's bars; accent over a veiled layer warns)
 //   logo-readable      block  2 or 0        theme-reads.js: a logo's pixels against its ground, in both themes (block over 60% under 2:1, warn from 40%)
 //   self-links         block  3 or 6        page-faults.js: a button that leads to the page it is on
 //   heading-separator  block  6 writer      page-faults.js: a page title printed as a heading, separator and all
@@ -31,9 +33,12 @@
 //   list-rows          block  9 write       reach-measures.js: a list prints the rows the plan keeps, and no empty item
 //   map-location       block  9 write       reach-measures.js: a map is not at the demo's place, and near the business
 //   phone-callable     block  0 template    reach-measures.js: a brief phone the page prints sits inside a tel: link
+//   empty-video-buttons block 9 or 0       video-buttons.js: no shown control opens a video player with no video; 9 when the kit names a hide rule
+//   hidden-page-links  block  9 write       hidden-page-links.js: no shown link that takes a click leads to a page the plan hid
 //
 // Faults that need the meaning understood (does an icon suit the words, is a sentence clumsy) are step 12's, a person with eyes.
 import { accentEmphasisGroup } from './accent-emphasis.js'
+import { demoLeftByWrite } from './demo-left-by-write.js'
 import { brandAccentGroup } from './brand-accent.js'
 import { createdControlsGroup, headingSeparatorGroup, selfLinksGroup } from './page-faults.js'
 import { brokenSentenceGroup } from './printed-sentences.js'
@@ -44,8 +49,10 @@ import { hostVerdictGroup } from './host-verdicts.js'
 import {
   findDeadLinks,
   findEmptyControls,
+  findBlankFooterColumns,
   findGluedWords,
   findMainHeadings,
+  findOrphanRows,
   findStretchedPictures,
   findTallBlocks,
   findTextFill,
@@ -53,8 +60,19 @@ import {
   findUnfinishedHeadings
 } from './page-measures.js'
 import { planLinksGroup } from './plan-links.js'
+import { addressWords, mapsAddress } from '../lib/map-links.js'
 import { listRowsGroup, mapLocationGroup, phoneCallableGroup } from './reach-measures.js'
 import { unownedShownGroup } from './unowned-shown.js'
+import { emptyVideoButtonsGroup } from './video-buttons.js'
+import { hiddenPageLinksGroup } from './hidden-page-links.js'
+
+/** A maps link the host calls off-site that searches an address the demo baseline's maps do not name. */
+function movedMapLink(finding, { baseline }) {
+  const address = mapsAddress(finding?.href)
+  const demo = Array.isArray(baseline?.maps) ? baseline.maps : null
+  if (!address || !demo?.length) return false
+  return !demo.some((m) => typeof m?.address === 'string' && addressWords(m.address) === address)
+}
 
 /** A group over the browser measures the host adds to its answer. Without them it could not tell, so it is unmeasured. */
 function measuredGroup({ name, level, causingStep, find, needsVisited = false }) {
@@ -80,7 +98,8 @@ export const PAGE_CHECK_GROUPS = [
     ids: ['no-demo-words'],
     level: 'block',
     causingStep: 6,
-    needsBaseline: true
+    needsBaseline: true,
+    blame: demoLeftByWrite
   }),
   hostVerdictGroup({
     name: 'demo-pictures',
@@ -93,14 +112,17 @@ export const PAGE_CHECK_GROUPS = [
     name: 'demo-links',
     ids: ['no-third-party-demo', 'cta-real'],
     level: 'block',
-    causingStep: 3
+    causingStep: 3,
+    // Card AP: a maps link leaves the site by what it is. It is a demo link only while it searches the demo's address; one that
+    // searches another address kept the demo's words, not its target, and map-location holds that address to the business.
+    notMine: movedMapLink
   }),
   measuredGroup({
     name: 'dead-links',
     level: 'block',
     causingStep: 3,
     needsVisited: true,
-    find: (read) => findDeadLinks(read.visited, read.measures)
+    find: (read, context) => findDeadLinks(read.visited, read.measures, context.report?.routes)
   }),
   hostVerdictGroup({
     name: 'empty-frames',
@@ -169,6 +191,28 @@ export const PAGE_CHECK_GROUPS = [
       return findMainHeadings(read.measures)
     }
   }),
+  measuredGroup({
+    name: 'orphan-row',
+    level: 'block',
+    // The plan keeps the cards a list prints; the template's own grid fixes how many fit on a row.
+    causingStep: 3,
+    find: (read) => {
+      if (read.measures.length && !read.measures.some((m) => Array.isArray(m.orphanRows)))
+        throw new GroupUnmeasured('The host answered no orphan rows, so this was not measured.')
+      return findOrphanRows(read.measures)
+    }
+  }),
+  measuredGroup({
+    name: 'blank-footer-column',
+    level: 'block',
+    // The plan owns hide decisions: a footer module emptied or hidden leaves its column standing.
+    causingStep: 3,
+    find: (read) => {
+      if (read.measures.length && !read.measures.some((m) => Array.isArray(m.blankFooterColumns)))
+        throw new GroupUnmeasured('The host answered no footer columns, so this was not measured.')
+      return findBlankFooterColumns(read.measures)
+    }
+  }),
   brandAccentGroup,
   unownedShownGroup,
   bandContrastGroup,
@@ -182,5 +226,7 @@ export const PAGE_CHECK_GROUPS = [
   planLinksGroup,
   listRowsGroup,
   mapLocationGroup,
-  phoneCallableGroup
+  phoneCallableGroup,
+  emptyVideoButtonsGroup,
+  hiddenPageLinksGroup
 ]

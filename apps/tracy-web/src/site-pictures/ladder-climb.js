@@ -6,15 +6,19 @@ import { darkerFirst } from './darken.js'
 import { hiddenEntry, placedEntry } from './frame-entries.js'
 import { modeOf, WIDE_BAND } from './ladder-draw.js'
 import { anyPhotoRung, reuseRung } from './ladder-reuse.js'
-import { fewerRowsRefusal, rowOf, rungsFor } from './ladder-rungs.js'
+import { DRAW_RUNGS, fewerRowsRefusal, rowOf, rungsFor } from './ladder-rungs.js'
+import { onlyMinorFaults } from './looker-call.js'
 import { inParallel } from './looker-step.js'
 import { rankForFrame, sameService } from './photo-shortlist.js'
 
 export const DRAW_CONCURRENCY = 4
 /** How many other owner photos the "next photo" rung places for one frame before it gives up. */
 export const NEXT_PHOTO_TRIES = 2
-/** The rungs a frame stays on after a placement: the looker's rejection is followed by the rung's next photo. */
-const STAYS = new Set(['next-photo', 'reuse', 'any-photo'])
+/** How many other compositions the "redraw-alt" rung draws for a frame that would otherwise be returned (one
+ * `take<n>` part of drawing-prompt.md each, so no two are the same request). */
+export const REDRAW_ALT_TRIES = 2
+/** The rungs a frame stays on after a placement: the looker's rejection is followed by the rung's next try. */
+const STAYS = new Set(['next-photo', 'reuse', 'any-photo', 'redraw-alt'])
 
 // The picture of a frame for its drawing rungs: a wide band is extended from a portrait owner photo of its own offering
 // that no other frame on its pages shows; any other frame is drawn.
@@ -48,9 +52,21 @@ function chooseMode({ idx, usable }, s, frameId, p) {
 async function drawRung(ctx, s, frameId, p, rung) {
   const { idx, drawing } = ctx
   if (!drawing) return { skip: 'the run has no drawer door' }
+  const alt = rung === 'redraw-alt'
+  if (alt && (p.alts ?? 0) >= REDRAW_ALT_TRIES)
+    return { skip: `${REDRAW_ALT_TRIES} other compositions tried` }
   chooseMode(ctx, s, frameId, p)
   const frame = idx.frames.get(frameId)
-  const attempt = rung === 'redraw' ? 2 : 1
+  // Another composition is drawn whole: never extended from an owner photo, whose framing the looker already rejected.
+  if (alt && p.mode === 'outpaint') {
+    p.mode = modeOf(frame)
+    p.asset = null
+  }
+  if (alt) p.alts = (p.alts ?? 0) + 1
+  // A gallery tile drawn after its photo rungs found nothing (card AK): its entry says so, the only drawing P07 lets an
+  // any-real frame have.
+  const tileDraw = idx.wishes.get(frameId)?.match === 'any-real' && Boolean(idx.galleryTile?.(frameId))
+  const attempt = alt ? 2 + p.alts : rung === 'redraw' ? 2 : 1
   const ask = () =>
     drawing.draw({
       frameId,
@@ -59,8 +75,9 @@ async function drawRung(ctx, s, frameId, p, rung) {
       demo: idx.demoSize(frameId),
       mode: p.mode,
       asset: p.asset,
-      faults: rung === 'redraw' ? p.faults : null,
-      attempt
+      faults: rung === 'draw' ? null : alt ? [...(p.allFaults ?? p.faults ?? [])] : p.faults,
+      attempt,
+      recompose: alt ? p.alts : 0
     })
   let res = await ask()
   if (!res.made && !res.call && p.mode === 'outpaint') {
@@ -83,15 +100,47 @@ async function drawRung(ctx, s, frameId, p, rung) {
     ? `owner photo ${p.asset.id} extended sideways to fill the wide band`
     : cut
       ? `drawn as a cut-out on a plain ${cut.groundName} ground (${cut.ground}), the ground removed by code: no owner photo is cut out`
-      : `drawn (${p.mode}): no owner photo fits`
+      : tileDraw
+        ? `drawn (${p.mode}): a gallery tile is never hidden alone and no owner photo is left that can be cut clearly differently from its other cuts`
+        : `drawn (${p.mode}): no owner photo fits`
   return {
     list,
     entry: placedEntry(frameId, extended ? 'owner-photo-extended' : 'drawn', res.made, {
       ...res.extra,
       drawing: { mode: p.mode, attempt },
-      reason,
+      reason: alt ? `drawn again in another composition, after: ${s.story(frameId)}` : reason,
+      ...(alt
+        ? { filledBy: { rung: 'redraw-alt', faults: [] } }
+        : tileDraw
+          ? { filledBy: { rung: 'draw', faults: [] } }
+          : {}),
       ...s.extraOf(list)
     })
+  }
+}
+
+// The best picture the looker rejected for this frame: the fewest faults, then the latest (a later picture was made to
+// avoid the faults of the earlier ones). One whose only faults are minor wins; with none, the best of the others is
+// placed despite the looker, because a checker's rejection never leaves the demo in a frame (owner's rule 2026-11-07).
+// An owner photo another frame of its pages now shows is passed over.
+function bestRejectedRung(s, frameId, p) {
+  const used = s.onPages(frameId)
+  const usable = (p.rejected ?? []).filter((r) => r.entry.file && !(r.entry.asset && used.has(r.entry.asset)))
+  if (!usable.length) return { skip: 'no picture of this frame was made' }
+  const minor = usable.filter((r) => onlyMinorFaults(r.faults))
+  const pool = minor.length ? minor : usable
+  const best = pool.reduce((a, b) => (b.faults.length <= a.faults.length ? b : a))
+  p.done = true
+  return {
+    list: best.list,
+    final: true,
+    entry: {
+      ...best.entry,
+      filledBy: { rung: 'best-rejected', faults: [...best.faults] },
+      reason: minor.length
+        ? `the best rejected picture, kept because its only faults are minor (${best.faults.join(', ')}), after: ${s.story(frameId)}`
+        : `placed despite looker: ${best.faults.join(', ') || 'no fault named'}, after: ${s.story(frameId)}`
+    }
   }
 }
 
@@ -166,7 +215,8 @@ function hideRung({ idx }, s, frameId) {
 
 /** Run one rung for a frame. */
 function runRung(ctx, s, frameId, p, rung) {
-  if (rung === 'draw' || rung === 'redraw') return drawRung(ctx, s, frameId, p, rung)
+  if (DRAW_RUNGS.has(rung)) return drawRung(ctx, s, frameId, p, rung)
+  if (rung === 'best-rejected') return bestRejectedRung(s, frameId, p)
   if (rung === 'next-photo') return nextPhotoRung(ctx, s, frameId, p)
   if (rung === 'fewer-rows') return fewerRowsRung(ctx, s, frameId)
   if (rung === 'hide') return hideRung(ctx, s, frameId)
@@ -190,6 +240,8 @@ async function climb(ctx, s, frameId, firstResult = null) {
       p.last = rung
       // The photo rungs stay where they are: a rejected photo is followed by another, up to their tries.
       if (!STAYS.has(rung)) p.at += 1
+      // A kept rejected picture ends the frame: it is not looked at again for a verdict.
+      if (result.final) p.done = true
       return
     }
     if (result.done) return s.note(frameId, rung, 'done')
@@ -226,7 +278,7 @@ async function climb(ctx, s, frameId, firstResult = null) {
  */
 export async function climbAll(ctx, s, frameIds) {
   const rungOf = (f) => rungsFor(ctx.idx, f)[s.progress.get(f).at]
-  const drawsFirst = frameIds.filter((f) => ['draw', 'redraw'].includes(rungOf(f)))
+  const drawsFirst = frameIds.filter((f) => DRAW_RUNGS.has(rungOf(f)))
   const drawn = await inParallel(drawsFirst, DRAW_CONCURRENCY, (f) =>
     drawRung(ctx, s, f, s.progress.get(f), rungOf(f))
   )

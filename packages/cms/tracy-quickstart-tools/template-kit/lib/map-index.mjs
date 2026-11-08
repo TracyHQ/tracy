@@ -4,7 +4,13 @@ import { pathOfRoute } from './kit-paths.mjs'
 
 const queryOf = (link) =>
   Object.fromEntries([...String(link ?? '').matchAll(/([\w[\]]+)=([^&]*)/g)].map((m) => [m[1], m[2]]))
-const aliasOf = (segment) => String(segment ?? '').replace(/^\d+-/, '')
+// A segment is an alias, or `<id>-<alias>` on an address with no menu item; an alias may itself start with a number
+// (`48-hours-in-porto`), so the whole segment is tried first.
+const aliasesOf = (segment) => {
+  const whole = String(segment ?? '')
+  const bare = whole.replace(/^\d+-/, '')
+  return bare === whole ? [whole] : [whole, bare]
+}
 
 export function indexMap(map) {
   const entities = new Map(map.entities.map((e) => [e.key, e]))
@@ -28,10 +34,27 @@ export function indexMap(map) {
   return { map, entities, slotsBy, positionOf, pageByPath, byAlias }
 }
 
-/** The modules the map assigns to the page at `path` (for blocks that render without a wrapper id). */
+/**
+ * The published modules the map assigns to the page at `path` (for blocks that render without a wrapper id), each
+ * with the module it renders inside, if any (contract-read.mjs withModulesInside), and the selector it is found by
+ * when its platform names blocks that way. An unpublished one prints nothing.
+ */
 export function assignedAt(idx, path) {
-  const p = idx.pageByPath.get(path.split('?')[0]) ?? idx.pageByPath.get('/')
-  return (p?.assignedModules ?? []).map((a) => ({ entity: a.entity, position: a.position }))
+  // A page the map does not list prints what the front page prints (Joomla modules on every page), or, on a platform
+  // whose map names the areas any page prints (WordPress, `otherPageAreas`), those areas.
+  const p =
+    idx.pageByPath.get(path.split('?')[0]) ??
+    (idx.map.otherPageAreas ? { assignedModules: idx.map.otherPageAreas } : idx.pageByPath.get('/'))
+  return (p?.assignedModules ?? [])
+    .filter((a) => String(a.published ?? '1') !== '0')
+    .map((a) => ({
+      entity: a.entity,
+      position: a.position,
+      ...(a.inside ? { inside: a.inside } : {}),
+      // A block a platform finds by selector (WordPress areas and page sections, wordpress-map.mjs).
+      ...(a.selector ? { selector: a.selector } : {}),
+      ...(a.kind ? { kind: a.kind } : {})
+    }))
 }
 
 /**
@@ -44,6 +67,8 @@ export function ownerOfPath(idx, path) {
   const [base, query] = path.split('?')
   const page = idx.pageByPath.get(base)
   const listPage = query ? ` (list position ${query.replace('start=', '')})` : ''
+  // A page entity (WordPress: `page-<slug>`, its post content found by metadata.name) owns the page it is.
+  if (page && idx.entities.get(page.entity)?.kind === 'page') return { owner: page.entity, kind: 'page' }
   if (page && page.link && page.link !== '#') {
     const q = queryOf(page.link)
     const view = q.view ?? ''
@@ -61,14 +86,18 @@ export function ownerOfPath(idx, path) {
     return { owner: null, kind: `${component} ${view || 'page'}`.trim() }
   }
   const segments = base.split('/').filter(Boolean)
-  const last = aliasOf(segments.at(-1))
-  if (segments.includes('tag') || segments.includes('tags')) {
-    const tag = idx.byAlias.get(`tag:${last}`)
+  const last = aliasesOf(segments.at(-1))
+  const find = (kind) => last.map((a) => idx.byAlias.get(`${kind}:${a}`)).find(Boolean)
+  // A page one level under a tags menu page (`view=tags`) is the page of the tag its last segment names.
+  const parent = idx.pageByPath.get(`/${segments.slice(0, -1).join('/')}`)
+  const underTags = queryOf(parent?.link).option === 'com_tags'
+  if (underTags || segments.includes('tag') || segments.includes('tags')) {
+    const tag = find('tag')
     return { owner: tag ?? null, kind: tag ? `tag listing${listPage}` : 'tag listing (no map entity)' }
   }
   if (segments.includes('author')) return { owner: null, kind: `author listing${listPage} (no map entity)` }
   for (const kind of ['article', 'contact', 'category']) {
-    const key = idx.byAlias.get(`${kind}:${last}`)
+    const key = find(kind)
     if (key) return { owner: key, kind: kind === 'category' ? `category listing${listPage}` : kind }
   }
   return { owner: null, kind: 'unknown' }

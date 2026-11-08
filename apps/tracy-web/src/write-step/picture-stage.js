@@ -86,7 +86,7 @@ export async function preparePictureStage({
       reason: `The files cannot be written: pictures: ${problems.join('; ')}`
     })
   // An item with nothing to write to is left out and said as refused; the rest of the package is written (decision 26).
-  const items = packageItems(pictures)
+  const items = packageItems(pictures, contentMap ?? kit?.contentMap ?? null)
   const unaddressable = items.map((i) => ({
     slot: i.frame,
     key: i.key,
@@ -116,7 +116,11 @@ export async function preparePictureStage({
       claim(o.slot, 'image', `picture ${o.entry.sha256}`),
       claim(o.frame, 'image', `picture ${o.entry.sha256}`)
     ]),
-    ...pictures.hidden.map((h) => claim(h.frame, 'hide', '(hide)')),
+    // Step 8 hid these frames, not the plan (card AU): the line says so and why, never "the plan hides this slot".
+    ...pictures.hidden.map((h) => ({
+      ...claim(h.frame, 'hide', '(hide)'),
+      why: `step 8 (pictures) hid this frame, not the plan: ${h.reason || 'no reason given'}`
+    })),
     // A backdrop sits behind a figure that has its claim, so it claims nothing of its own.
     ...pictures.painted
       .filter((p) => p.kind !== 'backdrop')

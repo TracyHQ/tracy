@@ -82,11 +82,20 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
     const where = WHERE.includes(g.region) ? g.region : 'other'
     const own = g.block ? slots.filter((s) => s.entity === g.block && s.file === g.file) : []
     const siteLevel = slots.filter((s) => !s.entity.startsWith('module-') && s.file === g.file)
-    const slot = own[0] ?? (g.block ? null : pickByTheme(siteLevel, g.themeClass))
-    const settingKey = slot?.setting ?? null
+    // A block whose own content holds no slot with this file wraps the template's logo element (a T4 footer or
+    // off-canvas logo found inside a module's section): the site setting prints it. A block that does hold the file
+    // prints it itself, so only its own logo slot can change it.
+    const blockPrints =
+      g.block && (map.slots ?? []).some((s) => s.entity === g.block && fileOf(s.sample) === g.file)
+    const slot = own[0] ?? (blockPrints ? null : pickByTheme(siteLevel, g.themeClass))
+    // No slot: a template logo setting whose layout prints here, holding this file or empty (the page shows the
+    // layout's stand-in, a drawn mark or the name), is what writes this logo.
+    const byLayout =
+      slot || blockPrints ? null : settingPrinting(settings, where, g.block, g.file, g.themeClass)
+    const settingKey = slot?.setting ?? byLayout ?? null
     const setting = settings.find((s) => s.key === settingKey)
     const entity = g.block ? entities.get(g.block) : null
-    let emptyShows = setting?.prints.find((p) => p.where === where)?.emptyShows ?? null
+    let emptyShows = setting?.prints.find((p) => printsAt(p, where, g.block))?.emptyShows ?? null
     if (!emptyShows && entity && isFreeHtml(entity) && g.blockTextOnly) emptyShows = 'nothing'
     const viaPhone = !g.at && g.phone
     const m = g.at ?? (viaPhone ? g.phone : g)
@@ -142,6 +151,25 @@ export function buildLogoSpots({ reads, map, settings, isFreeHtml }) {
 
 const openingTheme = (reads) => reads.find((r) => r.opening)?.theme ?? 'base'
 const isOpening = (spot, reads) => spot.shownIn.includes(openingTheme(reads))
+
+/** Whether a layout's print is this place: a block layout (`blocks`) prints in its own blocks only. */
+const printsAt = (print, where, block) =>
+  Array.isArray(print.blocks) ? block != null && print.blocks.includes(block) : print.where === where
+
+/**
+ * The key of the logo setting a template layout prints at `where` (or in `block`), holding `file` or empty; of
+ * several, by theme.
+ */
+function settingPrinting(settings, where, block, file, themeClass) {
+  const list = settings
+    .filter(
+      (s) =>
+        (s.value === file || s.value === '') &&
+        s.prints.some((p) => printsAt(p, where, block) && p.emptyShows)
+    )
+    .map((s) => ({ setting: s.key }))
+  return pickByTheme(list, themeClass)?.setting ?? null
+}
 
 /** Of several site-level slots with the same file, the one whose setting names the logo's theme. */
 function pickByTheme(list, themeClass) {

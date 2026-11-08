@@ -4,7 +4,7 @@
 // Also fetches the stylesheets the pages serve, for the colour measure.
 import { openFrozen, openKitContext } from '../capture.mjs'
 import { httpFetcher } from '../crawl.mjs'
-import { urlOfPath } from '../kit-paths.mjs'
+import { canonicalPath, urlOfPath } from '../kit-paths.mjs'
 import { assignedAt } from '../map-index.mjs'
 import { readLogos, switchTheme } from './read-logos.js'
 import { readPage } from './read-page.js'
@@ -116,6 +116,12 @@ export async function browseSite({
       }
     }
     const notFound = await readMissing(ctx, siteUrl, siteName)
+    // A link of the not-found page to this site names its path, never the address the site was read at (a WordPress
+    // page prints its links absolute, with the site's own host name).
+    for (const l of notFound.read?.links ?? []) {
+      const path = canonicalPath(l.href, siteUrl, hostHeader ? [hostHeader] : [])
+      if (path) l.href = path
+    }
     return { reads, logoReads, notFound, failures }
   } finally {
     await ctx.close()
@@ -131,7 +137,7 @@ async function readMissing(ctx, siteUrl, siteName) {
       timeout: 60000
     })
     const read = await page.evaluate(readPage, { siteName, contactPattern: CONTACT_PATTERN })
-    return { status: resp?.status() ?? null, read }
+    return { status: resp?.status() ?? null, siteUrl, read }
   } catch (e) {
     return { status: null, error: String(e.message ?? e).split('\n')[0] }
   } finally {

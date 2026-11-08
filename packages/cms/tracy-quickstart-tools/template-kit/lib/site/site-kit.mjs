@@ -92,6 +92,7 @@ export function buildSite({ map, adapter, reads, logoReads, notFound, styles, ht
   const nav = buildNavigationGroups(reads, {
     listingTitles,
     menuLabels: new Set(adapter.mainMenuTitles().map(norm)),
+    sitePaths: [...mapPageOf.keys()],
     idOf
   })
   errors.push(...nav.errors)

@@ -4,9 +4,11 @@
 // is added beside the slots (`pages[].titleSlot`, `pageTitleOf` on the slot); no slot id, list or role changes, so a
 // plan or a copy made on an earlier kit of the same contract still names everything it named.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
-import { accountOfPath, knownAccounts } from './exclude.mjs'
+import { UNMATCHED_PART } from './check-accepts.mjs'
+import { accountOfPath, knownAccounts, pathPattern } from './exclude.mjs'
 import { neutralKey } from './ids.mjs'
 import { indexMap, ownerOfPath } from './map-index.mjs'
+import { gapId } from './template-gaps.mjs'
 
 /** Blocks that print a page's name as a link to it, never as its title. */
 const NAVIGATION = new Set(['header', 'footer', 'mobile-menu'])
@@ -21,13 +23,22 @@ function shownIds(block) {
   return ids.filter(Boolean)
 }
 
+/** Words without the marks a template prints around them (`#`, quotes, a trailing colon). */
+const unmarked = (text) => normText(text).replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '')
+
+/** The words of several h1 that all print the same title (a masthead and a body heading), else nothing. */
+const oneText = (texts) => {
+  const words = new Set((texts ?? []).map(normText).filter(Boolean))
+  return words.size === 1 ? [...words][0] : ''
+}
+
 const titledOnPage = (controls, path) => (controls ?? []).some((c) => c.title && c.page === path)
 
 /** The title slot of one page, or null with the slots it could not tell apart. */
 function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, drives }) {
   const measured = Object.keys(drives).filter((id) => titledOnPage(drives[id]?.controls, page.path))
   if (measured.length === 1) return { slot: measured[0], from: 'field measurement' }
-  const text = normText(page.h1?.text ?? '')
+  const text = normText(page.h1?.text ?? oneText(page.h1?.texts))
   if (!text) return { slot: null, candidates: measured }
   const same = (id) => samples.get(id)?.type === 'text' && normText(samples.get(id).sample) === text
   // A link's label names another page, whatever words it shares with this page's title.
@@ -36,7 +47,7 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, drives }) {
     const labels = new Set((block.links ?? []).map((l) => l.labelId))
     return [...new Set(shownIds(block).filter((s) => same(s) && !labels.has(s)))]
   }
-  if (page.h1.block && blocks.has(page.h1.block)) {
+  if (page.h1?.block && blocks.has(page.h1.block)) {
     const named = inBlock(page.h1.block)
     if (named.length === 1) return { slot: named[0], from: 'page reading' }
     if (named.length > 1) return { slot: null, candidates: named }
@@ -57,6 +68,13 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, drives }) {
   if (shown.size > 1) return { slot: null, candidates: [...shown].sort() }
   if (own.length === 1) return { slot: own[0], from: 'the page entity' }
   if (own.length > 1) return { slot: null, candidates: own }
+  // The template may print the page entity's words inside a mark of its own (`#Squads` for a tag): matched so on the
+  // page's own entity only, never on another item's words a block shows.
+  const marked = ownersOf(page)
+    .flatMap((e) => slotsOfEntity.get(e) ?? [])
+    .filter((id) => samples.get(id)?.type === 'text' && unmarked(samples.get(id).sample) === unmarked(text))
+  if (marked.length === 1) return { slot: marked[0], from: 'the page entity' }
+  if (marked.length > 1) return { slot: null, candidates: marked }
   // Printed by nothing a block lists (an author's name on the author's page): the slot the site part read it from.
   return page.h1.slot ? { slot: page.h1.slot, from: 'page reading' } : { slot: null, candidates: [] }
 }
@@ -125,20 +143,55 @@ export function pagesNotForCustomers(kit, map) {
   })
 }
 
-/** Every page for customers has exactly one title slot. Returns how many do not, each passed to `fail`. */
-export function pageTitleChecks(kit, fail, { map } = {}) {
+/**
+ * Every page for customers has exactly one title slot. Every page without one is counted; one whose missing title a
+ * person explained is listed in `kit.checkAccepts.slotCoverage` (`{part, where, reason, by}`) instead of passed to
+ * `fail`: a page that shows no h1 by its accepted `page-without-h1` gap (gap-accepts.json, the same cause), any other
+ * by a `pageTitleSlots` entry of reach-accepts.json (check-accepts.mjs). An entry matching no such page is passed to
+ * `fail` as part `checkAcceptsUnmatched`, so a stale reason holds the kit.
+ * @param {object} kit
+ * @param {(part: string, where: string, reason: string, extra?: object) => void} fail
+ * @param {{map?: object, gapAccepts?: Record<string, {reason?: string, by?: string}>, accepts?: object[]}} [o]
+ * @returns {number} every page without a title slot, explained or not
+ */
+export function pageTitleChecks(kit, fail, { map, gapAccepts = {}, accepts = [] } = {}) {
   const skipped = new Set(map ? pagesNotForCustomers(kit, map).map((p) => p.page) : [])
+  const rules = (accepts ?? [])
+    .filter((a) => a?.check === 'pageTitleSlots')
+    .map((a) => ({ a, test: pathPattern(a.where) }))
+  const used = new Set()
+  const explained = []
   let wrong = 0
   for (const p of kit.pages ?? []) {
     if (p.titleSlot || skipped.has(p.id)) continue
     wrong++
+    const where = `pages[${p.id}]`
+    const gap = gapAccepts?.[gapId('page-without-h1', { pageId: p.id })]
+    const noH1 = !p.h1?.via && /no h1/.test(p.h1?.reason ?? '')
+    const hit = rules.find((r) => r.a.where === where) ?? rules.find((r) => r.test(where))
+    const why = noH1 && gap?.reason?.trim() ? { reason: gap.reason.trim(), by: gap.by ?? null } : hit?.a
+    if (hit && why === hit.a) used.add(hit.a)
+    if (why) {
+      explained.push({ part: 'pageTitleSlots', where, reason: why.reason, by: why.by ?? null })
+      continue
+    }
     fail(
       'pageTitleSlots',
-      `pages[${p.id}]`,
+      where,
       p.titleCandidates?.length
-        ? `${p.path}: ${p.titleCandidates.length} slots print the title "${p.h1?.text}": ${p.titleCandidates.join(', ')}`
+        ? `${p.path}: ${p.titleCandidates.length} slots print the title "${p.h1?.text ?? p.h1?.texts?.[0]}": ${p.titleCandidates.join(', ')}`
         : `${p.path}: no page title slot${p.h1?.text ? ` prints "${p.h1.text}"` : ` (${p.h1?.reason ?? 'no title read'})`}`
     )
   }
+  for (const { a } of rules)
+    if (!used.has(a))
+      fail(
+        UNMATCHED_PART,
+        a.where,
+        `an explanation of pageTitleSlots at ${a.where} matches no page without a title slot: remove it from reach-accepts.json or fix its where`,
+        { check: 'pageTitleSlots' }
+      )
+  const others = (kit.checkAccepts?.slotCoverage ?? []).filter((e) => e.part !== 'pageTitleSlots')
+  kit.checkAccepts = { ...kit.checkAccepts, slotCoverage: [...others, ...explained] }
   return wrong
 }

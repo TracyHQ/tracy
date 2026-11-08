@@ -59,9 +59,14 @@ export function emptyShowsOf(php, variable) {
   return null
 }
 
-/** The variable a layout reads a site setting into: `$logo = $site_settings->get('site_logo')` gives `logo`. */
+/**
+ * The variable a layout reads a site setting into: `$logo = $site_settings->get('site_logo')` gives `logo`, and so
+ * does a read wrapped on the same statement (`$logo = $s ? $clean($s->get('site_logo')) : ''`).
+ */
 export function variableOf(php, key) {
-  const m = new RegExp(`\\$(\\w+)\\s*=\\s*\\$\\w+->get\\(\\s*['"]${key}['"]`).exec(String(php ?? ''))
+  const m = new RegExp(`\\$(\\w+)\\s*=\\s*[^;=\\n]{0,160}?\\$\\w+->get\\(\\s*['"]${key}['"]`).exec(
+    String(php ?? '')
+  )
   return m ? m[1] : null
 }
 
@@ -84,3 +89,37 @@ export function logoLayouts(readFile, template) {
 export const t4PrintsOpenGraph = (readFile) =>
   /og:title/.test(readFile('plugins/system/t4/src/t4/Document/Template.php') ?? '') ||
   /og:title/.test(readFile('plugins/system/t4/src/t4/Helper/Metadata.php') ?? '')
+
+/**
+ * The block layouts of a T4 template's ACM blocks (`acm/<type>/tmpl/<style>.php`): a block layout may print the site
+ * profile logo itself (a footer brand), and only the blocks set to that type and style print it.
+ * @returns {Array<{type: string, style: string, file: string, php: string}>}
+ */
+export function acmLayouts(readFile, listDir, template) {
+  if (!listDir || !readFile) return []
+  const out = []
+  for (const type of listDir(`templates/${template}/acm`)) {
+    if (!/^[\w-]+$/.test(type)) continue
+    for (const name of listDir(`templates/${template}/acm/${type}/tmpl`)) {
+      if (!/^[\w-]+\.php$/.test(name)) continue
+      const file = `templates/${template}/acm/${type}/tmpl/${name}`
+      const php = readFile(file)
+      if (php) out.push({ type, style: name.slice(0, -'.php'.length), file, php })
+    }
+  }
+  return out
+}
+
+/** The ACM type and layout style a mod_ja_acm module's params name (`jatools-config`), or null. */
+export function acmOfParams(params) {
+  try {
+    const config = JSON.parse(JSON.parse(params)['jatools-config'])
+    const type = String(config[':type'] ?? '')
+      .split(':')
+      .pop()
+    const style = config[type]?.[`jatools-layout-${type}`]
+    return type && typeof style === 'string' ? { type, style } : null
+  } catch {
+    return null
+  }
+}

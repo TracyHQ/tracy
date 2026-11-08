@@ -7,8 +7,9 @@
 //     pictures: [{ selector, src, naturalWidth, naturalHeight, width, height, fit }],
 //     controls: [{ selector, fault: 'wordless' | 'nowhere', href, text }], fields: [{ selector, name }],
 //     glued: [{ selector, text, around }], headings: [text], mainHeadings: [text], shownText,
-//     minorHeadings: [text], hiddenHeadings: [text], selfLinks: [{ selector, text, href }], contentControls: [{ key, text }], view,
-//     title, shownLinks: [{ href, text }], shownPictures: [src], brandStyle?, look? }
+//     minorHeadings: [text], hiddenHeadings: [text], selfLinks: [{ selector, text, href, holders }], contentControls: [{ key, text }], view,
+//     title, shownLinks: [{ href, text, clickable }], shownLinksClickable, shownPictures: [src],
+//     orphanRows: [{ selector, perRow, lastRow, rows, gap }], blankFooterColumns: [{ selector, width, height }], brandStyle?, look? }
 
 /** A box counts as overflowed only past this many pixels, so rounding in the browser is no finding. */
 export const OVERFLOW_TOLERANCE_PX = 2
@@ -32,6 +33,7 @@ export const LIST_ITEM_LONGER = 2
 /** A picture drawn with its width and height ratio this far from the file's own is stretched (fit `fill` only). */
 export const STRETCH_TOLERANCE = 0.1
 
+import { addressMoves, addressNow, movePath } from '../lib/renamed-addresses.js'
 import { pathOfMeasure } from './page-faults.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -41,20 +43,43 @@ const clip = (text, n = 120) => String(text ?? '').slice(0, n)
 const dead = (status) =>
   status === null || status === undefined || Number(status) >= 400 || Number(status) === 0
 
+/** A link's path as a move compares it: no origin, no query, no fragment. */
+const hrefPath = (href) =>
+  String(href ?? '')
+    .replace(/^(?:https?:)?\/\/[^/?#]+/i, '')
+    .replace(/[?#].*$/, '')
+
 /**
- * Pages the host could not open, and links on the pages that lead nowhere.
+ * Pages the host could not open, and links on the pages that lead nowhere. A dead address the write step's route stage moved
+ * is the write step's (card AD): it renamed the page and left the link behind, so the failure names step 9 and the rename.
  * @param {{ path: string, status: number | null, skipped?: string }[]} visited the kept pages the host opened
  * @param {object[]} measures
+ * @param {object[]} [routes] the write report's route table
  */
-export function findDeadLinks(visited, measures) {
+export function findDeadLinks(visited, measures, routes = []) {
+  const moves = addressMoves(routes)
+  const blame = (href) => {
+    const path = hrefPath(href)
+    if (!path.startsWith('/') && !/^index\.php\//i.test(path)) return {}
+    const now = addressNow(path, moves)
+    if (now === null) return {}
+    const move = moves.find((m) => movePath(path) === m.from || movePath(path).startsWith(`${m.from}/`))
+    return {
+      causingStep: 9,
+      why: `; the write step renamed ${move.from} to ${move.to} and left this at the old address (${now} now)`
+    }
+  }
   const failures = []
   for (const v of each(visited))
-    if (v.skipped === 'not found' || (v.status !== null && v.status !== undefined && v.status >= 400))
+    if (v.skipped === 'not found' || (v.status !== null && v.status !== undefined && v.status >= 400)) {
+      const { why = '', ...step } = blame(v.path)
       failures.push({
         page: v.path,
         measured: v.status ?? v.skipped,
-        reason: `A kept page does not answer (${v.status ?? v.skipped})`
+        reason: `A kept page does not answer (${v.status ?? v.skipped})${why}`,
+        ...step
       })
+    }
   const seen = new Set()
   for (const m of each(measures))
     for (const link of each(m.links)) {
@@ -62,10 +87,12 @@ export function findDeadLinks(visited, measures) {
       const id = `${m.path} ${link.href}`
       if (seen.has(id)) continue
       seen.add(id)
+      const { why = '', ...step } = blame(link.href)
       failures.push({
         page: m.path,
         measured: link.status ?? 'no answer',
-        reason: `A link to ${clip(link.href, 100)} (${clip(link.text, 40) || 'no words'}) answers ${link.status ?? 'nothing'}`
+        reason: `A link to ${clip(link.href, 100)} (${clip(link.text, 40) || 'no words'}) answers ${link.status ?? 'nothing'}${why}`,
+        ...step
       })
     }
   return failures
@@ -107,6 +134,47 @@ function oncePerPage(measures, listOf, findingOf) {
       failures.push(finding)
     }
   return failures
+}
+
+/** One finding per page and element, at the first width that shows it: the same grid or column is one fault at both widths. */
+function oncePerElement(measures, listOf, reasonOf) {
+  const seen = new Set()
+  const failures = []
+  for (const m of each(measures))
+    for (const item of each(listOf(m))) {
+      const id = `${m.path} ${item?.selector}`
+      if (seen.has(id)) continue
+      seen.add(id)
+      failures.push({
+        page: m.path,
+        width: m.width,
+        measured: clip(item?.selector, 120),
+        reason: reasonOf(item),
+        selector: item?.selector ?? null
+      })
+    }
+  return failures
+}
+
+/**
+ * A grid or wrapping row of cards of one kind whose last row holds fewer cards, pushed to the left with a hole on its right
+ * (the host's `orphanRows`, which names the rule): the visitor sees a gap where a card is missing.
+ */
+export function findOrphanRows(measures) {
+  return oncePerElement(
+    measures,
+    (m) => m.orphanRows,
+    (o) => `${o.lastRow} cards on the last row of ${o.perRow}, leaving ${o.gap} px empty`
+  )
+}
+
+/** A footer column that prints no words, link or picture beside one that does (the host's `blankFooterColumns`). */
+export function findBlankFooterColumns(measures) {
+  return oncePerElement(
+    measures,
+    (m) => m.blankFooterColumns,
+    (c) => `A footer column ${c.width} px wide prints no words, link or picture`
+  )
 }
 
 /** A button with no words, a button going nowhere, a form field nothing names: a visitor cannot use them. */

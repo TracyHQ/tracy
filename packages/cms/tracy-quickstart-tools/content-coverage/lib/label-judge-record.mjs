@@ -1,8 +1,9 @@
 // The second half of the label judge (`label-judge.mjs`): the agent that runs the release answered the audit's judge
 // request in a verdicts file; this checks that file strictly and turns it into the `labelJudge` block Road to live
 // reads. Strict means: every requested slot answered once, nothing else answered, only `right` or `wrong`, and a wrong
-// verdict names a different role of the version 3 vocabulary. Any problem refuses the whole file, so a half-read
-// answer is never written as a verdict.
+// verdict names a different role of the version 3 vocabulary, and every component's crop carries one line of what the
+// judge saw in it (`crops`), so a verdicts file written from the slot tables alone, without opening the images, is
+// refused rather than recorded. Any problem refuses the whole file, so a half-read answer is never written as a verdict.
 import {
   ROLE_VOCABULARY_V3,
   isRole
@@ -16,7 +17,10 @@ import {
   roleGroupOf
 } from './label-judge.mjs'
 
-const FILE_FIELDS = new Set(['judgedBy', 'slots'])
+const FILE_FIELDS = new Set(['judgedBy', 'crops', 'slots'])
+const CROP_FIELDS = new Set(['crop', 'seen'])
+/** The shortest line that says what a crop shows; shorter is a placeholder, not a look at the image. */
+const SEEN_MIN = 12
 const SLOT_FIELDS = new Set(['key', 'verdict', 'suggestedRole', 'why'])
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v)
 const extra = (o, allowed) => Object.keys(o).filter((k) => !allowed.has(k))
@@ -54,6 +58,43 @@ function verdictOf(answer, key, asked) {
   }
 }
 
+/** Every crop of the request named once in `crops`, each with what the judge saw in it. */
+function cropProblems(request, crops) {
+  if (!Array.isArray(crops))
+    return [
+      '"crops" must be a list: for each component crop you opened, {"crop": "<its path>", "seen": "<what it shows>"}'
+    ]
+  const problems = []
+  const asked = new Set((request.components ?? []).map((c) => c.crop))
+  const named = new Set()
+  // The words said for each crop: the same words for two crops mean one was not looked at (a script wrote them).
+  const saidFor = new Map()
+  for (const [i, entry] of crops.entries()) {
+    if (!isObject(entry)) {
+      problems.push(`crops[${i}] must be an object`)
+      continue
+    }
+    for (const k of extra(entry, CROP_FIELDS)) problems.push(`crops[${i}]: unknown field "${k}"`)
+    if (typeof entry.crop !== 'string' || !asked.has(entry.crop)) {
+      problems.push(`crops[${i}]: ${JSON.stringify(entry.crop)} is not a crop of this request`)
+      continue
+    }
+    if (named.has(entry.crop)) problems.push(`${entry.crop}: named more than once in "crops"`)
+    named.add(entry.crop)
+    if (typeof entry.seen !== 'string' || entry.seen.trim().length < SEEN_MIN)
+      problems.push(`${entry.crop}: "seen" must say in a few words what the crop shows (open the image)`)
+    else {
+      const said = entry.seen.replace(/\s+/g, ' ').trim().toLowerCase()
+      const other = saidFor.get(said)
+      if (other && other !== entry.crop)
+        problems.push(`${entry.crop}: "seen" repeats the words given for ${other}: say what this crop shows`)
+      else saidFor.set(said, entry.crop)
+    }
+  }
+  for (const crop of asked) if (!named.has(crop)) problems.push(`${crop}: not opened (no "crops" entry)`)
+  return problems
+}
+
 /**
  * @param {{ request: any, verdicts: any }} input `request` = the audit's request.json, `verdicts` = the agent's file
  * @returns {{ problems: string[], block: any }} `block` null when there is any problem
@@ -73,6 +114,7 @@ export function recordLabelJudge({ request, verdicts }) {
   if (!Array.isArray(verdicts.slots))
     return { problems: [...problems, '"slots" must be a list'], block: null }
 
+  problems.push(...cropProblems(request, verdicts.crops))
   const askedSlots = request.record?.slots ?? {}
   const seen = new Set()
   const held = []
@@ -110,4 +152,64 @@ export function recordLabelJudge({ request, verdicts }) {
     judgedBy: judgedBy.trim()
   })
   return { problems: [], block }
+}
+
+/** The shortest reason that can overrule a recorded verdict; shorter is a placeholder, not a decision. */
+const REASON_MIN = 12
+const OVERRULE_FIELDS = new Set(['key', 'why'])
+
+/**
+ * Overrule recorded verdicts that the audit keeps as its cache and `recordLabelJudge` cannot reach (they were not asked
+ * in the request it is given). Each overrule names a recorded "wrong" verdict and a reason of at least 12 characters;
+ * the verdict becomes "right" with the old suggestion and the reason kept in `overruled`, and the counts are rebuilt.
+ * The slot hash is kept, so the cache still holds it until the slot content changes.
+ * @param {{ block: any, overrules: any }} input `block` = the `labelJudge` block of a coverage file, `overrules` = [{ key, why }]
+ * @returns {{ problems: string[], block: any }} `block` null when there is any problem
+ */
+export function overruleLabelJudge({ block, overrules }) {
+  if (!isObject(block) || !Array.isArray(block.slots))
+    return { problems: ['the coverage file has no labelJudge block to overrule'], block: null }
+  if (!Array.isArray(overrules) || overrules.length === 0)
+    return { problems: ['"overrules" must be a non-empty list of {"key", "why"}'], block: null }
+  const problems = []
+  const byKey = new Map(block.slots.map((v) => [v.key, v]))
+  const named = new Set()
+  for (const [i, o] of overrules.entries()) {
+    if (!isObject(o)) {
+      problems.push(`overrules[${i}] must be an object`)
+      continue
+    }
+    for (const k of extra(o, OVERRULE_FIELDS)) problems.push(`overrules[${i}]: unknown field "${k}"`)
+    const held = byKey.get(o.key)
+    if (!held) problems.push(`${JSON.stringify(o.key)} has no recorded verdict`)
+    else if (held.verdict !== 'wrong') problems.push(`${o.key}: the recorded verdict is not "wrong"`)
+    if (named.has(o.key)) problems.push(`${o.key}: overruled more than once`)
+    named.add(o.key)
+    if (typeof o.why !== 'string' || o.why.trim().length < REASON_MIN)
+      problems.push(`${o.key}: "why" must give a reason of at least ${REASON_MIN} characters`)
+  }
+  if (problems.length > 0) return { problems, block: null }
+  const why = new Map(overrules.map((o) => [o.key, cut(o.why.trim(), 200)]))
+  const verdicts = block.slots.map((v) =>
+    why.has(v.key)
+      ? {
+          key: v.key,
+          hash: v.hash,
+          verdict: 'right',
+          overruled: { role: v.role ?? null, suggested: v.suggested ?? null, why: why.get(v.key) }
+        }
+      : v
+  )
+  return {
+    problems: [],
+    block: blockOf({
+      roleVocabularyVersion: block.roleVocabularyVersion,
+      applies: block.applies,
+      total: block.counts?.slots ?? 0,
+      located: block.counts?.located ?? verdicts.length,
+      verdicts,
+      reason: block.reason,
+      judgedBy: block.judgedBy
+    })
+  }
 }

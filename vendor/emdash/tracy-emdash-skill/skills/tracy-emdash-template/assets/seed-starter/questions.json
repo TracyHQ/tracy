@@ -80,6 +80,65 @@
       ]
     },
     {
+      "id": "languages",
+      "kind": "choice",
+      "multiple": true,
+      "label": {
+        "en": "Website languages",
+        "vi": "Ngôn ngữ website",
+        "de": "Sprachen der Website",
+        "fr": "Langues du site",
+        "it": "Lingue del sito",
+        "nl": "Talen van de website",
+        "pt": "Idiomas do site",
+        "pl": "Języki witryny",
+        "sv": "Webbplatsens språk",
+        "ru": "Языки сайта",
+        "tr": "Site dilleri",
+        "id": "Bahasa situs web",
+        "th": "ภาษาของเว็บไซต์",
+        "ja": "サイトの言語",
+        "ko": "웹사이트 언어",
+        "ar": "لغات الموقع",
+        "hi": "वेबसाइट की भाषाएँ",
+        "zh": "网站语言",
+        "zh-TW": "網站語言",
+        "zh-HK": "網站語言",
+        "zh-MO": "網站語言"
+      },
+      "options": [
+        "en"
+      ],
+      "optionLabels": {
+        "en": {
+          "en": "English",
+          "vi": "Tiếng Anh",
+          "de": "Englisch",
+          "fr": "Anglais",
+          "it": "Inglese",
+          "nl": "Engels",
+          "pt": "Inglês",
+          "pl": "Angielski",
+          "sv": "Engelska",
+          "ru": "Английский",
+          "tr": "İngilizce",
+          "id": "Inggris",
+          "th": "อังกฤษ",
+          "ja": "英語",
+          "ko": "영어",
+          "ar": "الإنجليزية",
+          "hi": "अंग्रेज़ी",
+          "zh": "英语",
+          "zh-TW": "英文",
+          "zh-HK": "英文",
+          "zh-MO": "英文"
+        }
+      },
+      "feeds": [
+        "agent"
+      ]
+    },
+    {
       "id": "sector",
       "kind": "choice",
       "label": {
@@ -281,6 +340,36 @@
         "zh-TW": "台北市北門路12號 · +886 2 0000 0000",
         "zh-HK": "香港北門道12號 · +852 0000 0000",
         "zh-MO": "澳門北門街12號 · +853 0000 0000"
+      },
+      "feeds": [
+        "agent"
+      ]
+    },
+    {
+      "id": "email",
+      "kind": "text",
+      "label": {
+        "en": "Contact email",
+        "vi": "Email liên hệ",
+        "de": "Kontakt-E-Mail",
+        "fr": "E-mail de contact",
+        "it": "E-mail di contatto",
+        "nl": "Contact-e-mailadres",
+        "pt": "E-mail de contato",
+        "pl": "E-mail kontaktowy",
+        "sv": "Kontaktadress (e-post)",
+        "ru": "Контактный e-mail",
+        "tr": "İletişim e-postası",
+        "id": "Email kontak",
+        "th": "อีเมลติดต่อ",
+        "ja": "連絡先メールアドレス",
+        "ko": "연락처 이메일",
+        "ar": "البريد الإلكتروني للتواصل",
+        "hi": "संपर्क ईमेल",
+        "zh": "联系邮箱",
+        "zh-TW": "聯絡信箱",
+        "zh-HK": "聯絡電郵",
+        "zh-MO": "聯絡電郵"
       },
       "feeds": [
         "agent"

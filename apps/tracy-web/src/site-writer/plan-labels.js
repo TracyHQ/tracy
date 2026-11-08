@@ -5,27 +5,13 @@
 // alone). Code records what happened on the copy entry: `owner: "plan-label"` when the plan's words are kept,
 // `owner: "writer"` with `replacedPlanLabel` when the writer's text replaced them. Pure: inputs in, new objects out.
 import { planCopyEntries } from '../lib/site-copy/main-menu.js'
+import { kitSlotsWithBlock } from '../lib/template-kit/kit-slots.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 
 /** The copy entry field that records the plan label a writer text replaced. */
 export const REPLACED_PLAN_LABEL = 'replacedPlanLabel'
-
-// Text slots of the kit by id (first listing wins), each with the block it prints in.
-function kitSlotsWithBlock(kit) {
-  const out = new Map()
-  for (const b of arr(kit?.blocks)) {
-    if (!isObject(b)) continue
-    const slots = [
-      ...arr(b.slots),
-      ...arr(b.lists).flatMap((l) => [...arr(l?.rowSlots), ...arr(l?.rows).flatMap((r) => arr(r?.slots))])
-    ]
-    for (const s of slots)
-      if (isObject(s) && typeof s.id === 'string' && !out.has(s.id)) out.set(s.id, { slot: s, block: b })
-  }
-  return out
-}
 
 // The copy entry of the plan for a slot, with its says and limit (planCopyEntries keeps only block, slot and text).
 function planEntryOf(plan, slot) {

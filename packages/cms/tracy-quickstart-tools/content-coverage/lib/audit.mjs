@@ -8,6 +8,8 @@ import { createMatcher } from './match.mjs'
 import { createClassifier } from './classify.mjs'
 import { findHygiene } from './hygiene.mjs'
 import { normText } from './normalize.mjs'
+import { deadLinksOf, fetchStatus, renderedLinksOf } from './link-check.mjs'
+import { layoutFindingsOf, planLayoutCheck } from './article-layout.mjs'
 import { standUserFilter } from './stand-users.mjs'
 
 const log = (...a) => console.error('[audit]', ...a)
@@ -27,7 +29,7 @@ const signature = (cls) => {
 
 /** For a page the map does not declare: does it at least render an entity the contract knows? */
 export function guessEntity(contract, page) {
-  const h1 = page.items.find((i) => i.kind === 'text' && i.tag === 'h1' && i.status === 'matched')
+  const h1 = page.items.find((i) => i.kind === 'text' && (i.tag === 'h1' || i.h1) && i.status === 'matched')
   if (!h1) return null
   const slot = contract.slotsByKey.get(h1.slots?.[0])
   return slot ? { entity: slot.entity, via: `h1 matches slot ${slot.key}` } : null
@@ -41,7 +43,8 @@ export async function runAudit({
   sourceIndex,
   outDir,
   cap,
-  viewports
+  viewports,
+  webroot = null
 }) {
   mkdirSync(join(outDir, 'shots'), { recursive: true })
   const match = createMatcher(contract, siteUrl)
@@ -49,6 +52,12 @@ export async function runAudit({
   const plan = new PagePlan(siteUrl, contract, cap)
   // The stand's own accounts (absent from the release database) are never crawled nor reported.
   const stand = standUserFilter({ users: dbIndex?.users ?? null })
+  // Articles that ask for a template layout, and the root classes that prove it rendered (article-layout.mjs).
+  const layoutPlan =
+    contract.platform === 'joomla' && webroot && dbIndex?.layoutAsks?.length
+      ? planLayoutCheck({ articles: dbIndex.layoutAsks, webroot, template: contract.template })
+      : null
+  const layoutProbes = new Map()
   const browser = await chromium.launch()
   const ctx = {}
   for (const vp of viewports) ctx[vp] = await openContext(browser, vp)
@@ -162,6 +171,8 @@ export async function runAudit({
         header = { ...first.data.header, measuredOn: pathOfUrl(first.finalUrl), viewport: viewports[0] }
         headerFromHome = isHome
       }
+      if (layoutPlan)
+        layoutProbes.set(page.url, { bodyClass: first.data.bodyClass, served: layoutPlan.probe(first.html) })
       pages.push(page)
       const c = count(items)
       log(
@@ -171,6 +182,14 @@ export async function runAudit({
   } finally {
     await browser.close()
   }
+  // Every link the pages render, asked as the browser follows it: a dead one fails the measure (link-check.mjs).
+  {
+    const links = renderedLinksOf(pages, siteUrl, { isStandLink: stand.isStandLink })
+    const dead = await deadLinksOf(links, (href) => fetchStatus(href))
+    for (const d of dead) log('dead link', d.status, d.url)
+    failures.push(...dead.map((d) => ({ ...d, origin: 'link' })))
+    log(`links checked ${links.size}, dead ${dead.length}`)
+  }
   // Pages reached twice keep every map entry on the first record; refresh them now.
   for (const p of pages) {
     const rec = [...plan.byFinal.values()].find((r) => r.url === p.url)
@@ -179,7 +198,23 @@ export async function runAudit({
     if (p.unmapped) p.rendersEntity = guessEntity(contract, p)
     p.counts = count(p.items)
   }
+  // An article's page that does not show the layout the article asks for fails the measure, like a dead link.
+  let articleLayouts = null
+  if (layoutPlan) {
+    const r = layoutFindingsOf({
+      plan: layoutPlan,
+      mapPages: contract.pages,
+      pages: pages.map((p) => ({ url: p.url, mapPages: p.mapPages, ...layoutProbes.get(p.url) }))
+    })
+    for (const m of r.mismatches) log('layout not served', m.asked, m.url)
+    failures.push(...r.mismatches.map((m) => ({ url: m.url, origin: 'layout', error: m.error })))
+    articleLayouts = { checked: r.checked, mismatched: r.mismatches.length, cannotCheck: r.cannotCheck }
+    log(
+      `article layouts checked ${r.checked}, not served ${r.mismatches.length}, cannot check ${r.cannotCheck.length}`
+    )
+  }
   return {
+    articleLayouts,
     pages,
     failures,
     duplicates,

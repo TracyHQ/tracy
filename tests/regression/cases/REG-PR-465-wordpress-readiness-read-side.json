@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-465-wordpress-readiness-read-side",
+  "kind": "feat",
+  "title": "The template readiness verdict judges a WordPress release on the read side: JA Diner WP7 reads its kit, a copy without the kit is held",
+  "pr": 465,
+  "area": "template-readiness/wordpress",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root run node --test --test-reporter=tap apps/tracy-web/test/template-readiness-wordpress-kit.test.mjs.",
+    "S2: Read the TAP lines for the named tests."
+  ],
+  "expect": [
+    "The JA Diner WP7 template-kit piece reads the WordPress kit beside the contract.",
+    "A copy of JA Diner WP7 without its kit is held with kit-missing.",
+    "The kit reads each page as its sections and its theme accent as the brand colour; the header Site Logo block leaves no brand gap.",
+    "A copy whose header logo is not a Site Logo block still raises kit-brand-unreadable."
+  ],
+  "selectors": {},
+  "fence": "apps/tracy-web/src/lib/template-readiness/verdict.js and packages/cms/tracy-quickstart-tools/template-kit/lib/site/adapters/wordpress.mjs",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/template-readiness-wordpress-kit.test.mjs"
+    ],
+    "tests": [
+      "JA Diner WP7: the template-kit piece reads the WordPress kit",
+      "a copy of JA Diner WP7 without its kit is held with kit-missing",
+      "JA Diner WP7: the kit reads each page as its sections",
+      "JA Diner WP7: the header logo is a Site Logo block",
+      "a copy whose header logo is not a Site Logo block still raises kit-brand-unreadable"
+    ]
+  }
+}

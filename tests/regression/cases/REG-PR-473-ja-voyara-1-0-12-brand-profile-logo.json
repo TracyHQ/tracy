@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-473-ja-voyara-1-0-12-brand-profile-logo",
+  "kind": "feat",
+  "title": "JA Voyara j6 1.0.12: the brand step reads a T4 kit whose logo spots are written through the site profile, with no content map frame",
+  "pr": 473,
+  "area": "template-kit/brand-step",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Load the committed contracts/ja-voyara/j6/1.0.12/template-kit.json (logo-header-1 and logo-footer-1: setting site_logo, frameId null) and run kitProblem from apps/tracy-web/src/brand-step/kit-grounds.js on it.",
+    "S2: Run kitProblem on the JA Boxing kit with the frames of its site_logo spots removed, and again after its favicon mechanism is changed to a WordPress option."
+  ],
+  "expect": [
+    "S1: kitProblem returns null, so the Road to live Template kit step no longer holds Voyara on kit-brand-unreadable.",
+    "S2: with a T4 site profile the spots need no frame (null); without one the spots are refused as having no frame to write them."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/brand-step/kit-grounds.js",
+    "tool": "apps/tracy-web/test/brand-kit-problem.test.mjs"
+  },
+  "evidence": "Before this change the Road to live gate on the packed Voyara 1.0.12 kit returned todo kit-brand-unreadable; after it, todo kit-not-approved, and done kit-approved once approved",
+  "fence": "Pure function on the committed kit; the brand write on a live site is covered by the write step tests",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/brand-kit-problem.test.mjs"]
+  }
+}

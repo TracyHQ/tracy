@@ -53,8 +53,13 @@ export type StepName =
   | 'listing'
   | 'published'
   | 'polish'
-/** `checking`: the Customize your site or Design system check of the release is still running (those steps only). */
-export type StepState = 'done' | 'blocked' | 'todo' | 'warn' | 'checking'
+  | 'write-doors'
+/**
+ * `checking`: the Customize your site or Design system check of the release is still running (those steps only).
+ * `not-judged`: a check that cannot judge this platform yet (the plugin write doors on WordPress, #454): never a pass,
+ * never a hold, nothing to fix.
+ */
+export type StepState = 'done' | 'blocked' | 'todo' | 'warn' | 'checking' | 'not-judged'
 
 /** One step of a release's road, exactly as the server sends it. */
 export interface RoadStep {
@@ -63,11 +68,18 @@ export interface RoadStep {
   code: string
   params: Record<string, unknown>
   blockedBy?: StepName
+  /**
+   * The fix of a red or warn step, read on the server from the fix registry
+   * (`apps/tracy-web/src/lib/template-readiness/fixes.js`), the one place fix text lives: the text, and the command
+   * or skill section that does the fixing when there is one. Shown as sent, never worded here.
+   */
+  fix?: { text: string; command?: string; skill?: string }
 }
 
 /**
  * The fixed order of the road, the order steps FINISH in (several start side by side); a step's
- * number on the page is its place here, from 1.
+ * number on the page is its place here, from 1. `write-doors` comes last: only a road whose plugin write doors are
+ * not judged yet carries it (WordPress, #454), so every other step keeps its number on every platform.
  */
 export const ROAD_ORDER: readonly StepName[] = [
   'release',
@@ -80,7 +92,8 @@ export const ROAD_ORDER: readonly StepName[] = [
   'demo',
   'listing',
   'published',
-  'polish'
+  'polish',
+  'write-doors'
 ]
 
 export const stepNumber = (step: StepName) => ROAD_ORDER.indexOf(step) + 1
@@ -119,6 +132,9 @@ export const STEP_TITLE: Readonly<Record<StepName, string>> = {
   },
   get polish() {
     return tr('cms-readiness.step.polish.title')
+  },
+  get 'write-doors'() {
+    return tr('cms-readiness.step.writeDoors.title')
   }
 }
 
@@ -156,6 +172,9 @@ export const STEP_WHY: Readonly<Record<StepName, string>> = {
   },
   get polish() {
     return tr('cms-readiness.step.polish.why')
+  },
+  get 'write-doors'() {
+    return tr('cms-readiness.step.writeDoors.why')
   }
 }
 
@@ -171,7 +190,8 @@ export const STEP_TAB: Record<StepName, 'card' | 'settings'> = {
   customize: 'settings',
   'design-system': 'settings',
   published: 'card',
-  polish: 'card'
+  polish: 'card',
+  'write-doors': 'settings'
 }
 
 /** A place on the detail page: the tab, the section the page scrolls to, and the control to focus. */
@@ -572,6 +592,8 @@ const FLOW_GAP_FIX: Record<string, string> = {
   'kit-front-page-group': 'give the front page its own group and shot',
   'kit-brand-unreadable': 'complete the site part the brand step reads',
   'kit-zip-missing': 'pack the kit images and attach the zip to the release',
+  'kit-demo-baseline-missing':
+    'measure the demo baseline on the untouched quickstart site and commit demo-baseline.json beside the contract',
   'kit-setting-slot-missing': 'give the map button or the frame painted behind its setting slot'
 }
 
@@ -1481,6 +1503,7 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
     case 'kit-front-page-group':
     case 'kit-brand-unreadable':
     case 'kit-zip-missing':
+    case 'kit-demo-baseline-missing':
     case 'kit-setting-slot-missing':
       return g(tr('cms-readiness.kit.incomplete'), {
         detail: kitDetail(p, tr('cms-readiness.kit.incomplete.detail')),
@@ -1997,6 +2020,10 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
     // 9. Polish
     case 'polish-done':
       return g(tr('cms-readiness.polish.done'))
+    // 12. Plugin write doors: only while they cannot be judged (WordPress, #454). The why line says what is not judged;
+    // the registry text the server sends (`fix`) says until when.
+    case 'write-doors-not-judged':
+      return g(STEP_TITLE['write-doors'])
     case 'polish': {
       const items = Array.isArray(p.items)
         ? (p.items as { code: string; params: Record<string, unknown> }[])

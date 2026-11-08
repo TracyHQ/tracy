@@ -18,7 +18,7 @@ after(() => setTimeout(() => process.exit(), 200))
 
 const HIDDEN = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap'
 const head =
-  '<meta name="viewport" content="width=device-width, initial-scale=1"><style>body{margin:0;font:16px sans-serif}.btn{display:inline-block;padding:8px 16px}</style>'
+  '<meta name="viewport" content="width=device-width, initial-scale=1"><style>body{margin:0;font:16px sans-serif}.btn{display:inline-block;padding:8px 16px}.title-has-highlight:not(.shown) br{display:none}</style>'
 const PAGES = {
   '/faults': `${head}
     <h1 id="seen" style="${HIDDEN}">A long hidden heading that runs far past its one pixel box on purpose</h1>
@@ -36,6 +36,9 @@ const PAGES = {
       <button id="send" type="submit"></button>
     </form>
     <div id="glued">Open to<span>Every age</span>every level</div>
+    <h2 id="hidden-br" class="title-has-highlight">A lesson in the<br/><span>pool</span></h2>
+    <h2 id="space-hidden-br" class="title-has-highlight">A lesson in the <br/><span>pool</span></h2>
+    <h2 id="shown-br" class="title-has-highlight shown">A lesson in the<br/><span>pool</span></h2>
     <div id="spaced">Open to <span>Every age</span> every level</div>
     <div>Own <b>words</b> stand <i>apart</i></div>`,
   '/clean': `${head}<h1>Rowing for every age</h1><a href="/next" class="btn">Book a seat</a><p>Short and sound.</p>`
@@ -88,9 +91,17 @@ test('a page with each fault reports each, at both widths', opts, async () => {
       m.fields.map((f) => f.selector),
       ['input#blank']
     )
-    assert.equal(m.glued.length, 2)
-    assert.ok(m.glued.every((g) => g.selector === 'div#glued'))
-    assert.deepEqual(m.headings, ['Rowing for'], 'a visually hidden heading is not what shows')
+    assert.equal(m.glued.length, 3)
+    assert.deepEqual(
+      m.glued.map((g) => g.selector).sort(),
+      ['div#glued', 'div#glued', 'h2#hidden-br.title-has-highlight'],
+      'a break the page hides does not stand between the words; a space beside it or a visible break does'
+    )
+    assert.deepEqual(
+      m.headings,
+      ['Rowing for', 'A lesson in thepool', 'A lesson in the pool', 'A lesson in the pool'],
+      'a visually hidden heading is not what shows'
+    )
   }
 })
 

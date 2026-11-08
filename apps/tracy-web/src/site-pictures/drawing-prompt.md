@@ -3,8 +3,10 @@
 The drawer's fixed template (ADR 0043, #344). Code fills the `{{...}}` places from the site plan's words for one frame
 (shows, mustInclude, avoid, mood, size) and nothing else, and for a cut-out frame (#346) the plain ground colour code
 chose and will remove (cutout-ground.js), joins the `common` part with the part of the mode code chose,
-adds the `style` part when the kit's demo picture of a cut-out frame is attached as a style reference, and adds the
-`redraw` part on the one redraw after the looker rejected a drawing. Only the text under the `##` headings
+adds the `style` part when the kit's demo picture of a cut-out frame is attached as a style reference, adds the
+`redraw` part on the one redraw after the looker rejected a drawing, and the `recompose` part instead of it on the other
+compositions drawn for a frame that would otherwise be left without a picture, with the `take<n>` part of that try
+(each try is seen from another distance, so no two tries are the same request). Only the text under the `##` headings
 is sent; this paragraph is not.
 
 ## common
@@ -66,3 +68,18 @@ background is only the one plain colour named above.
 ## redraw
 
 An earlier drawing for this frame was rejected because of: {{faults}}. Make a new picture that avoids these faults.
+
+## recompose
+
+Earlier pictures for this frame were rejected because of: {{faults}}. Compose this one differently. The frame is
+{{framing}}: compose for exactly that shape. Keep the main subject centred, whole and a little smaller in the picture,
+with a clear margin of quiet surroundings on every side, so nothing important touches or crosses an edge, even after the
+picture is trimmed slightly to fit the frame. {{take}}
+
+## take1
+
+Show it at eye level, from a few steps further back than a close-up.
+
+## take2
+
+Show it from further back again, in a wider view of its surroundings, and from a slightly different side.

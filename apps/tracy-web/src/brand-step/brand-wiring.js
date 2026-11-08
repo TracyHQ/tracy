@@ -4,6 +4,7 @@
 // brand-step/run-files.js (`diskRunFiles`), the font brand-step/template-font.js (`templateFont`).
 import path from 'node:path'
 import { kitImagesDirOf } from '../lib/template-kit-images.js'
+import { slotNamesOfKit } from './design-slot-of-kit.js'
 
 const benchDirOf = (config) => path.join(path.dirname(kitImagesDirOf(config)), 'brand-bench')
 
@@ -13,10 +14,12 @@ export const brandRunDir = (config, runId) => path.join(benchDirOf(config), Stri
 /** Where the heading fonts fetched for the template are cached: one file per family and weight. */
 export const brandFontDir = (config) => path.join(benchDirOf(config), 'fonts')
 
-/** The ds-slot contract of a kit's template: `joomla-<product>-modes`, else `joomla-<product>` (as build_design_system). */
-export function contractOfKit(library, kit) {
-  const product = (kit.doc ?? kit).quickstart?.product
-  for (const name of [`joomla-${product}-modes`, `joomla-${product}`]) {
+/**
+ * The ds-slot contract of a kit's template, or null: Joomla `joomla-<product>-modes`, else `joomla-<product>` (as
+ * build_design_system); WordPress the contract of its release by `wordpressSlotOf` (design-slot-of-kit.js), never a Joomla one.
+ */
+export function contractOfKit(library, kit, wordpressSlotOf) {
+  for (const name of slotNamesOfKit(kit.doc ?? kit, wordpressSlotOf).names) {
     try {
       return library.loadContract(name)
     } catch {
@@ -36,12 +39,13 @@ export function productionWiring(config, { fetchImpl = fetch, prices, objects = 
   let loaded = null
   return async () => {
     if (loaded) return loaded
-    const [{ brandTools }, { diskRunFiles }, { templateFont }, { dsSlotModule }] = await Promise.all([
-      import('./tools/index.js'),
-      import('./run-files.js'),
-      import('./template-font.js'),
-      import('../lib/ds-slot.js')
-    ])
+    const [{ brandTools }, { diskRunFiles }, { templateFont }, { dsSlotModule, quickstartContractOf }] =
+      await Promise.all([
+        import('./tools/index.js'),
+        import('./run-files.js'),
+        import('./template-font.js'),
+        import('../lib/ds-slot.js')
+      ])
     loaded = {
       tools: brandTools,
       ...(prices ? { prices } : {}),
@@ -56,7 +60,7 @@ export function productionWiring(config, { fetchImpl = fetch, prices, objects = 
       /** The kit's heading font, or null with the reason in `refusal` when the template does not give it. */
       async fontFor(kit) {
         const library = await dsSlotModule('library')
-        const contract = contractOfKit(library, kit)
+        const contract = contractOfKit(library, kit, quickstartContractOf)
         if (!contract) return null
         return templateFont({
           contract,

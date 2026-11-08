@@ -290,7 +290,7 @@
       "name": "JA Voyara",
       "base": {
         "quickstart": "quickstart/ja-voyara/j6",
-        "version": "1.0.10"
+        "version": "1.0.12"
       },
       "template": {
         "element": "ja_voyara",
@@ -299,15 +299,16 @@
       },
       "preparedTemplate": false,
       "multilingual": false,
-      "contractProfile": "ja-voyara/j6/1.0.10",
+      "contractProfile": "ja-voyara/j6/1.0.12",
       "contractFiles": {
-        "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
-        "design-system-measurement.json": "29d2fb6569974436a7a6c0d02b351cba2bb381da1161f3e669c008f76e6d2566",
-        "manifest.json": "bb39773bffdece97fbe9b9e6b91c30dd96a56ee73897bae286cc98692e072103",
-        "presentation-lock.json": "07ed4984cdafa54b25f244e226160b4ae790964d8ab51076c7cfb8b4a6576b13",
-        "showcase-nav-map.json": "750443739beab176510698cf09681e69688d2f641b20659e78ddbc5a103cf0fd"
+        "content-map.json": "5842836cbe11915bb61f30871f3b5b695cdcfa595858041baaa9f9a9e1012ab3",
+        "design-system-measurement.json": "8206152747d6316bd1a016a0a9bbd3e807cd1120f50021c31baed91219ac3c3d",
+        "manifest.json": "897489b649536906753f46c8b9517cdc2cdd0e7b0c35af5fbd057623febcd5fe",
+        "presentation-lock.json": "425bf05cce746f39d266de4e351f2961e8519093fc35db4b5ebf1774d0b0add0",
+        "showcase-nav-map.json": "7dbf117b8904a5e5c73df79b30c0485afdf336791cffa8ff507a16a41ef7d35a",
+        "template-kit.json": "b73a201a3c9104359ad73158de59aec817f1bf3e5906f1f6a549f155313256d4"
       },
-      "coworkMinVersion": "0.24.37",
+      "coworkMinVersion": "0.24.89",
       "requires": [
         {
           "type": "plugin",
@@ -316,7 +317,7 @@
         }
       ],
       "activation": {
-        "id": "ja-voyara/j6/1.0.10",
+        "id": "ja-voyara/j6/1.0.12",
         "styles": [
           {
             "sourceStyleId": 14,
@@ -371,7 +372,7 @@
       "name": "JA Kinetic",
       "base": {
         "quickstart": "quickstart/ja-kinetic/j6",
-        "version": "1.0.9"
+        "version": "1.0.11"
       },
       "template": {
         "element": "ja_kinetic",
@@ -382,16 +383,16 @@
       "multilingual": false,
       "demoTrim": true,
       "demoTrimKeep": ["pages/kineticql"],
-      "contractProfile": "ja-kinetic/j6/1.0.9",
+      "contractProfile": "ja-kinetic/j6/1.0.11",
       "contractFiles": {
-        "content-map.json": "17d45a7d2108280eb68f8478b5023b75b1249d520900e0578fcf53427ef87435",
-        "demo-trim-map.json": "f2b53cb30bae6913c64894f2a48eb3a9268f2fb1872c863da2bf779aaf967033",
-        "design-system-measurement.json": "1749aa13fac2a4f0f0dd8a1a2fb2628e4f9830d97fcf903f801b141a9eeca4cc",
-        "manifest.json": "dec0c251ba7e4ce99a3053d42fa127bb7f03c41f8a7ac4b0ead49f3aca692724",
-        "presentation-lock.json": "00f09a8c2ef3b330da240579f5655c41abc7603afa1adef8fde27d04d4b07b3e",
-        "showcase-nav-map.json": "30a3a64b526b2b350b597b069394c7fb2ce8e1fba13833c007198e0363890c3d"
+        "content-map.json": "e67f3a6da437206d89d0179be01a6d1f3e7c72a5dc6879b0228bd859ada3e339",
+        "demo-trim-map.json": "8801fe0fcec64f2e74f53f443ac6c5668e9ccbd86ac38c564f74de3a3e465c3a",
+        "manifest.json": "19e2087e4ecc8799968514cbb8aefa6cc35bc9f0195f774fd1e20892c2b28498",
+        "presentation-lock.json": "c74daecbb0224222908eac4bd659c902211cbcda56b954597b4982a8b4bab47a",
+        "showcase-nav-map.json": "ed783c8c719053fc9ec29a98d5be6b0e1b28aa496a89a95a9f48b9fabe47f8b1",
+        "template-kit.json": "593a8e67f9d4fca8a5a86884659b7544fb6292ec54445ae5ba5d61cd8068e321"
       },
-      "coworkMinVersion": "0.24.43",
+      "coworkMinVersion": "0.24.86",
       "requires": [
         {
           "type": "plugin",
@@ -400,7 +401,7 @@
         }
       ],
       "activation": {
-        "id": "ja-kinetic/j6/1.0.9",
+        "id": "ja-kinetic/j6/1.0.11",
         "styles": [
           {
             "sourceStyleId": 32,

@@ -933,6 +933,8 @@ const fullInventory = () => {
     { user_id: '44', profile_key: 'profile.user_jobtitle', profile_value: '"Boxer"' },
     { user_id: '44', profile_key: 'profile.user_tagline', profile_value: '""' },
     { user_id: '44', profile_key: 'profile.user_avatar', profile_value: '"images\\/author\\/pic-4.jpg"' },
+    // JA Impact prints the author's address under "Live in" on the author page.
+    { user_id: '44', profile_key: 'profile.address1', profile_value: '"Brooklyn, New York"' },
     { user_id: '52', profile_key: 'profile.user_jobtitle', profile_value: '"Owner"' },
     // The release's Super User has a picture too: demo content, though its account is not.
     {
@@ -992,6 +994,7 @@ test('--full-coverage declares the rest of what a visitor reads, each kept from 
     'user-44 name  text Drew Stokes  keep',
     'userProfile-4401 value  text Boxer keep',
     'userProfile-4403 value  image images/author/pic-4.jpg keep',
+    'userProfile-4404 value  text Brooklyn, New York keep',
     'userProfile-4203 value  image images/author/pic-1.jpg#joomlaImage://local-images/author/pic-1.jpg keep'
   ])
     assert.ok(slots.includes(want), `missing: ${want}\n${slots.join('\n')}`)
@@ -1028,6 +1031,7 @@ test('--full-coverage declares the rest of what a visitor reads, each kept from 
       ['user-44', { username: 'Drew_Stokes' }, null, 44],
       ['userProfile-4401', { field: 'user_jobtitle' }, { user_id: 'user-44' }, 4401],
       ['userProfile-4403', { field: 'user_avatar' }, { user_id: 'user-44' }, 4403],
+      ['userProfile-4404', { field: 'address1' }, { user_id: 'user-44' }, 4404],
       // The Super User has no `user` entity (its username changes); its picture is matched by the account id.
       ['userProfile-4203', { field: 'user_avatar', user_id: '42' }, null, 4203]
     ]
@@ -1140,6 +1144,113 @@ test(
 )
 
 test(
+  "--full-coverage reads JA content types, Joomla's own article fields, an article's meta description and byline, a login page's words, a jaitems field's rows and a contact's picture",
+  needsPhp,
+  () => {
+    // JA Symphony 1.0.5: an audio article keeps its tracks in `ctm_audio`, a `jaitems` field of the template's
+    // content type (`contenttype/types/audio.xml`, not `etc/extrafields/`), and a video its poster in `ctm_thumbnail`.
+    const audioXml = `<?xml version="1.0" encoding="utf-8"?>
+<form><fields name="attribs"><fieldset name="content_meta">
+  <field name="ctm_content_type" type="hidden"/>
+  <field name="ctm_audio" type="jaitems">
+    <item name="audio-src" type="text"/>
+    <item name="audio-title" type="text"/>
+  </field>
+  <field name="ctm_thumbnail" type="media"/>
+  <field name="ctm_width" type="text"/>
+</fieldset></fields></form>`
+    // JA Impact 1.0.5: an event's button prints Joomla's own "Read more" text field (`alternative_readmore`).
+    const coreArticleXml = `<?xml version="1.0" encoding="utf-8"?>
+<form><field name="note" type="text"/><fields name="attribs"><fieldset name="basic">
+  <field name="show_title" type="list"/>
+  <field name="alternative_readmore" type="text"/>
+</fieldset></fields></form>`
+    // JA Impact 1.0.5: JA Masthead keeps a title per page in `menuitem_config`, a `jaitems` field whose rows are
+    // stored under the keys "0", "1"… (an object), not as a list.
+    const mastheadXml = `<?xml version="1.0" encoding="utf-8"?>
+<extension type="module"><config><fields name="params"><fieldset name="basic">
+  <field name="menuitem_config" type="jaitems">
+    <item name="item_id" type="menuitem"/>
+    <item name="title" type="text"/>
+    <item name="background" type="media"/>
+  </field>
+</fieldset></fields></config></extension>`
+    const inv = fullInventory()
+    inv.content[1].attribs = JSON.stringify({
+      ...JSON.parse(inv.content[1].attribs),
+      alternative_readmore: 'Join our event',
+      note: 'not an attribs field',
+      ctm_content_type: 'audio',
+      ctm_audio: { 'audio-src': ['images/audio/item-1.mp3'], 'audio-title': ['Bit Rush'] },
+      ctm_thumbnail: 'images/tours/item-1.jpg',
+      ctm_width: '640'
+    })
+    inv.modules.push(
+      module('14', {
+        title: 'JA Masthead',
+        module: 'mod_jamasthead',
+        params: JSON.stringify({
+          menuitem_config: {
+            item_id: { 0: ['102'], 2: ['116'] },
+            title: { 0: 'Who we are', 2: 'Blog' },
+            background: { 0: 'images/hero/hero-1.jpg', 2: '' }
+          }
+        })
+      })
+    )
+    inv.modules_menu.push({ id: '14', moduleid: '14', menuid: '101' })
+    inv.contact_details[0].image = 'images/others/avatar-contact.jpg'
+    // JA Kinetic 1.0.10: a blog post prints its meta description and the byline `created_by_alias`.
+    inv.content[1].metadesc = 'How we cut retries to survive it.'
+    inv.content[1].created_by_alias = 'Dana Reyes'
+    // JA Kinetic 1.0.10: the sign-in page prints its menu item's login description above the form.
+    inv.menu[0].params = JSON.stringify({ login_description: 'Pick up right where you left off.' })
+    const run = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage'],
+      schemas: { features: ICONS_XML },
+      files: {
+        ...FULL_FILES,
+        'templates/tracy/contenttype/types/audio.xml': audioXml,
+        'administrator/components/com_content/forms/article.xml': coreArticleXml,
+        'modules/mod_jamasthead/mod_jamasthead.xml': mastheadXml
+      }
+    })
+    assertWritten(run)
+    const slots = described(run)
+    for (const want of [
+      'article-3 attribs alternative_readmore text Join our event keep',
+      'article-3 attribs ctm_audio|audio-src|0 image images/audio/item-1.mp3 keep',
+      'article-3 attribs ctm_audio|audio-title|0 text Bit Rush keep',
+      'article-3 attribs ctm_thumbnail image images/tours/item-1.jpg keep',
+      'module-14 params menuitem_config|title|0 text Who we are keep',
+      'module-14 params menuitem_config|title|2 text Blog keep',
+      'module-14 params menuitem_config|background|0 image images/hero/hero-1.jpg keep',
+      'contact-1 image  image images/others/avatar-contact.jpg keep',
+      'article-3 metadesc  text How we cut retries to survive it. keep',
+      'article-3 created_by_alias  text Dana Reyes keep',
+      'menuItem-101 params login_description text Pick up right where you left off. keep'
+    ])
+      assert.ok(slots.includes(want), `missing: ${want}\n${slots.join('\n')}`)
+    // The form types the masthead's fields, so the JSON walk declares them; the per-page masthead rule adds no second
+    // slot for the same field.
+    const masthead = slots.filter((s) => s.startsWith('module-14 params menuitem_config|'))
+    assert.deepEqual(
+      masthead.map((s) => s.split(' ')[2]).sort(),
+      ['menuitem_config|background|0', 'menuitem_config|title|0', 'menuitem_config|title|2'],
+      masthead.join('\n')
+    )
+    // Options and ids are not words, and a core field outside `attribs` is not an article extra field.
+    for (const name of ['ctm_content_type', 'ctm_width', 'item_id', 'note'])
+      assert.ok(!slots.some((s) => s.split(' ')[2].split('|').includes(name)), `${name} is not content`)
+    // A contact's picture is not a fact the customer has to prove.
+    const picture = run
+      .read('content-map.json')
+      .slots.find((s) => s.entity === 'contact-1' && s.column === 'image')
+    assert.equal(picture.requiresEvidence, false)
+  }
+)
+
+test(
   '--full-coverage with --evidence-by-field leaves no fact field the contracts gate refuses',
   needsPhp,
   () => {
@@ -1172,6 +1283,44 @@ test(
       after.slots.filter((s) => s.customize === 'keep').map((s) => [s.entity, s.column]),
       [['category-8', 'title']]
     )
+  }
+)
+
+test(
+  "--full-coverage declares an article's note, which a card can print as its label, after its other slots",
+  needsPhp,
+  () => {
+    // JA Voyara 1.0.12: the featured view prints each article's note as the card's label chip.
+    const plain = fullInventory()
+    plain.content[1].created_by_alias = 'Wren Harbor'
+    const noted = fullInventory()
+    noted.content[1].created_by_alias = 'Wren Harbor'
+    noted.content[1].note = 'Outdoors'
+    noted.content[0].note = ''
+    const args = {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage'],
+      schemas: { features: ICONS_XML },
+      files: FULL_FILES
+    }
+    const before = capture(plain, args)
+    const after = capture(noted, args)
+    assertWritten(before)
+    assertWritten(after)
+    const slotsOf = (run) => run.read('content-map.json').slots
+    const note = slotsOf(after).filter((s) => s.column === 'note')
+    assert.deepEqual(
+      note.map((s) => [s.entity, s.type, s.sample, s.customize]),
+      [['article-3', 'text', 'Outdoors', 'keep']]
+    )
+    // Every slot the old rules made keeps its key; the note is the article's last slot.
+    const keys = (run) =>
+      slotsOf(run)
+        .filter((s) => s.column !== 'note')
+        .map((s) => [s.key, s.column, s.sample])
+    assert.deepEqual(keys(after), keys(before))
+    const article = slotsOf(after).filter((s) => s.entity === 'article-3')
+    assert.equal(article.at(-1).column, 'note')
+    assert.equal(note[0].key, `article-3.${article.length - 1}`)
   }
 )
 
@@ -1400,6 +1549,178 @@ test(
     const plain = capture(inv, { args: ['--module-prefix', ''], files })
     assertWritten(plain)
     assert.ok(!plain.read('content-map.json').entities.some((e) => e.kind === 'siteSetting'))
+  }
+)
+
+// ── T4 layout and navigation profiles, and users' custom field values (--full-coverage) ─────────────
+// JA Vega 1.0.8 / JA Kinetic 1.0.10: the mega menu's column titles ("Our Portfolio", "Company") live only in
+// `etc/navigation/default.json` (`mega_settings`, a JSON string), a section's background picture only in its layout profile,
+// and each team member's skill bars in a user custom field (`#__fields_values`).
+const templateConfigId = (template, group, profile) =>
+  Number.parseInt(
+    createHash('sha1').update(`${template}|${group}|${profile}`).digest('hex').slice(0, 7),
+    16
+  ) + 1
+const MEGA = JSON.stringify({
+  mainmenu: {
+    120: {
+      settings: [
+        {
+          contents: [
+            { name: 'Mega Title', type: 'module', title: '' },
+            { name: 'Selected Items', type: 'items', title: 'Our Portfolio' }
+          ]
+        }
+      ]
+    },
+    101: { settings: [{ contents: [{}] }] }
+  }
+})
+const SECTION_PICTURE = 'images/bg/wave.jpg#joomlaImage://local-images/bg/wave.jpg?width=1920&height=959'
+
+test(
+  '--full-coverage declares the mega menu titles and section pictures of the T4 profiles a style uses, and the words of a user or article custom field',
+  needsPhp,
+  () => {
+    const inv = clean()
+    // The home style names layout `home` and sub-layout `sub`; the second style names layout `missing`, which T4 reads as `default`.
+    inv.template_styles = [
+      style('9', {
+        home: '1',
+        params: '{"typelist-layout":"home","sub-layout":"sub","typelist-navigation":"default"}'
+      }),
+      style('10', { title: 'Tracy - Two', params: '{"typelist-layout":"missing","sub-layout":""}' })
+    ]
+    inv.users = [
+      { id: '43', name: 'Priya Raman', username: 'priya', admin: '0' },
+      { id: '42', name: 'Tracy Agent', username: 'tracyagent', admin: '1' }
+    ]
+    inv.fields = [
+      {
+        id: '1',
+        name: 'info',
+        context: 'com_users.user',
+        type: 'editor',
+        state: '1',
+        title: 'Info',
+        label: 'Info',
+        params: '{}'
+      },
+      {
+        id: '2',
+        name: 'author_role',
+        context: 'com_content.article',
+        type: 'text',
+        state: '1',
+        title: 'Role',
+        label: 'Role',
+        params: '{}'
+      }
+    ]
+    inv.fields_values = [
+      { field_id: '1', item_id: '43', value: '<h5>IT Management</h5><div class="progress">90%</div>' },
+      // A pair of several rows has no one value; a field of a user the dump does not know is not a visitor's.
+      { field_id: '1', item_id: '42', value: '<h5>A</h5>' },
+      { field_id: '1', item_id: '42', value: '<h5>B</h5>' },
+      { field_id: '1', item_id: '77', value: '<h5>Ghost</h5>' },
+      // An article's field (JA Kinetic's author line under a post); an article the map does not hold is not a visitor's.
+      { field_id: '2', item_id: '3', value: 'Platform Engineer' },
+      { field_id: '2', item_id: '88', value: 'Staff SRE' }
+    ]
+    const files = {
+      'templates/tracy/etc/navigation/default.json': JSON.stringify({
+        menu_type: 'mainmenu',
+        mega_settings: MEGA
+      }),
+      'templates/tracy/etc/layout/default.json': JSON.stringify({
+        sections: [{ name: 'header', background_image: '' }]
+      }),
+      'templates/tracy/etc/layout/home.json': JSON.stringify({
+        sections: [{ name: 'hero', background_image: SECTION_PICTURE }]
+      }),
+      'templates/tracy/etc/layout/sub.json':
+        '{"sections":[{"name":"top","background_image":"images/bg/top.jpg"}]}',
+      'templates/tracy/local/etc/layout/sub.json':
+        '{"sections":[{"name":"top","background_image":"images/bg/top-local.jpg"}]}'
+    }
+    const run = capture(inv, {
+      args: ['--module-prefix', '', '--full-coverage'],
+      files,
+      helper: PER_TEXT_HELPER
+    })
+    assertWritten(run)
+    const map = run.read('content-map.json')
+    const lock = run.read('presentation-lock.json')
+    const configs = map.entities.filter((e) => e.kind === 'templateConfig')
+    assert.deepEqual(
+      configs.map((e) => e.identity),
+      [
+        { template: 'tracy', group: 'layout', profile: 'home' },
+        { template: 'tracy', group: 'layout', profile: 'sub' },
+        { template: 'tracy', group: 'navigation', profile: 'default' }
+      ]
+    )
+    for (const e of configs) {
+      const id = templateConfigId('tracy', e.identity.group, e.identity.profile)
+      assert.equal(e.key, `templateConfig-${id}`)
+      assert.equal(e.sourceId, id)
+    }
+    assert.equal(lock.entities[configs[1].key].value, files['templates/tracy/local/etc/layout/sub.json'])
+    const slotsOf = (key) =>
+      map.slots
+        .filter((s) => s.entity === key)
+        .map((s) => [
+          s.column,
+          s.nestedJson ?? '-',
+          (s.jsonPath ?? []).join('|'),
+          s.type,
+          s.sample,
+          s.customize
+        ])
+    assert.deepEqual(slotsOf(configs[0].key), [
+      ['value', '-', 'sections|0|background_image', 'image', SECTION_PICTURE, 'keep']
+    ])
+    assert.deepEqual(slotsOf(configs[1].key), [
+      ['value', '-', 'sections|0|background_image', 'image', 'images/bg/top-local.jpg', 'keep']
+    ])
+    assert.deepEqual(slotsOf(configs[2].key), [
+      ['value', 'mega_settings', 'mainmenu|120|settings|0|contents|1|title', 'text', 'Our Portfolio', 'keep']
+    ])
+    const values = map.entities.filter((e) => e.kind === 'fieldValue')
+    assert.deepEqual(
+      values.map((e) => [e.key, e.identity, e.identityReferences ?? null, lock.entities[e.key]]),
+      [
+        [
+          'fieldValue-1000000043',
+          { field: 'info', context: 'com_users.user', item_id: '43' },
+          null,
+          { value: '<h5>IT Management</h5><div class="progress">90%</div>' }
+        ],
+        [
+          'fieldValue-2000000003',
+          { field: 'author_role', context: 'com_content.article' },
+          { item_id: 'article-3' },
+          { value: 'Platform Engineer' }
+        ]
+      ]
+    )
+    assert.deepEqual(
+      map.slots.filter((s) => s.entity === 'fieldValue-2000000003').map((s) => [s.column, s.type, s.sample]),
+      [['value', 'text', 'Platform Engineer']]
+    )
+    assert.deepEqual(
+      map.slots.filter((s) => s.entity === 'fieldValue-1000000043').map((s) => [s.column, s.type, s.sample]),
+      [
+        ['value', 'text', 'IT Management'],
+        ['value', 'text', '90%']
+      ]
+    )
+    for (const kind of ['templateConfig', 'fieldValue']) assert.ok(!(kind in lock.inventoryCounts))
+    const plain = capture(inv, { args: ['--module-prefix', ''], files })
+    assertWritten(plain)
+    assert.ok(
+      !plain.read('content-map.json').entities.some((e) => ['templateConfig', 'fieldValue'].includes(e.kind))
+    )
   }
 )
 
@@ -2096,6 +2417,52 @@ test(
     )
     assert.equal(
       map.entities.some((e) => e.key === 'menuItem-102'),
+      false
+    )
+  }
+)
+
+test(
+  '--skip-unpublished-menu-pages keeps an unpublished menu item as an entity but no page of the map',
+  needsPhp,
+  () => {
+    const inv = () => {
+      const i = clean()
+      i.menu.push(menu('120', { path: 'experiences/later', title: 'Later', published: '0' }))
+      return i
+    }
+    const plain = capture(inv())
+    assertWritten(plain)
+    assert.ok(plain.read('content-map.json').pages.some((p) => p.entity === 'menuItem-120'))
+    const run = capture(inv(), { args: ['--skip-unpublished-menu-pages'] })
+    assertWritten(run)
+    const map = run.read('content-map.json')
+    assert.deepEqual(
+      map.pages.map((p) => p.entity),
+      ['menuItem-101']
+    )
+    assert.ok(map.entities.some((e) => e.key === 'menuItem-120'))
+    assert.ok(run.read('presentation-lock.json').entities['menuItem-120'])
+  }
+)
+
+test(
+  'a menu entry of type url declares the address it opens after its title; a page entry does not',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.menu.push(menu('130', { path: 'twitter', title: 'Twitter', type: 'url', link: '#' }))
+    const run = capture(inv)
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots
+    const of = (e) =>
+      slots.filter((s) => s.entity === e).map((s) => [s.column, s.type, s.sample, s.role ?? null])
+    assert.deepEqual(of('menuItem-130'), [
+      ['title', 'text', 'Twitter', 'contact.social_label'],
+      ['link', 'url', '#', 'contact.social_url']
+    ])
+    assert.equal(
+      slots.some((s) => s.entity === 'menuItem-101' && s.column === 'link'),
       false
     )
   }

@@ -1,5 +1,6 @@
 /** Import preflight regressions exercise the customer's first pass through the real wizard. */
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import http from 'node:http'
 import { createRequire } from 'node:module'
@@ -18,6 +19,20 @@ let scratch, browser, server, base
 
 before(async () => {
   scratch = mkdtempSync(path.join(tmpdir(), 'import-preflight-e2e-'))
+  if (process.env.TRACY_IMPORT_EVIDENCE) {
+    execFileSync(
+      process.execPath,
+      [
+        path.join(pkgRoot, 'node_modules/@tailwindcss/cli/dist/index.mjs'),
+        '--input',
+        path.join(pkgRoot, 'src/client/add-site.css'),
+        '--output',
+        path.join(scratch, 'styles.css'),
+        '--minify'
+      ],
+      { cwd: pkgRoot, stdio: 'ignore' }
+    )
+  }
   await require('esbuild').build({
     entryPoints: [path.join(pkgRoot, 'test/fixtures/import-preflight-entry.tsx')],
     bundle: true,
@@ -30,11 +45,16 @@ before(async () => {
     logLevel: 'silent'
   })
   server = http.createServer((req, res) => {
+    if (req.url === '/styles.css') {
+      res.writeHead(200, { 'content-type': 'text/css' })
+      res.end(process.env.TRACY_IMPORT_EVIDENCE ? readFileSync(path.join(scratch, 'styles.css')) : '')
+      return
+    }
     res.writeHead(200, { 'content-type': req.url === '/client.js' ? 'text/javascript' : 'text/html' })
     res.end(
       req.url === '/client.js'
         ? readFileSync(path.join(scratch, 'client.js'))
-        : '<!doctype html><html><body><div id="root"></div><script src="/client.js"></script></body></html>'
+        : '<!doctype html><html><head><link rel="stylesheet" href="/styles.css"></head><body style="font-family:system-ui;padding:24px"><div id="root"></div><script src="/client.js"></script></body></html>'
     )
   })
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
@@ -378,5 +398,23 @@ test('missing Joomla admin form points to the platform sign-in path instead of t
     assert.equal(await link.getAttribute('href'), 'https://source.example/administrator')
     assert.equal(await link.innerText(), 'https://source.example/administrator')
     assert.equal(await link.getAttribute('target'), '_blank')
+  })
+})
+
+test('unreadable paths appear in progress and the permission failure gives a concrete recovery step', async () => {
+  await withPage(async (page) => {
+    await page.goto(`${base}/?fixture=unreadable`)
+    const warning = page.locator('[data-import-unreadable]')
+    await warning.waitFor()
+    assert.match(await warning.innerText(), /certificates\/thumbs\//)
+    assert.match(await warning.innerText(), /images\/private.png/)
+    assert.match(await warning.innerText(), /Sync from live/)
+    const problem = page.locator('[data-import-problem="p56"]')
+    assert.match(await problem.innerText(), /read permission/)
+    assert.doesNotMatch(await problem.innerText(), /stopped answering/)
+    if (process.env.TRACY_IMPORT_EVIDENCE) {
+      await page.screenshot({ path: process.env.TRACY_IMPORT_EVIDENCE, fullPage: true })
+      console.log(`permission UI fixture: ${base}, PID ${process.pid}`)
+    }
   })
 })

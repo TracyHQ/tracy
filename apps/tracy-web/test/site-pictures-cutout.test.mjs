@@ -311,7 +311,7 @@ test('both specific cut-outs are drawn on a plain ground, the ground removed, an
   assert.deepEqual(byFrame(second.doc).get('block-h.1').cutout, e.get('block-h.1').cutout)
 })
 
-test('a rejected cut-out is redrawn once with the faults, then hidden where the kit allows it, else returned', async () => {
+test('a rejected cut-out is redrawn with the faults, then hidden where the kit allows it, else drawn again, else returned', async () => {
   const doors = fakeDoors({
     rejects: new Map([
       ['block-h.1', Infinity],
@@ -330,13 +330,27 @@ test('a rejected cut-out is redrawn once with the faults, then hidden where the 
   // Never another owner photo, never fewer rows: one redraw, then hidden or returned.
   assert.deepEqual(rungs(m, 'block-h.1'), [...climbed, ['hide', 'hidden']])
   assert.equal(byFrame(m).get('block-h.1').source, 'hide')
-  assert.deepEqual(rungs(m, 'block-s.1'), [...climbed, ['hide', 'skipped'], ['return', 'returned']])
-  assert.ok(!byFrame(m).has('block-s.1'))
-  assert.match(m.returns.find((r) => r.frame === 'block-s.1').reason, /redraw rejected \(missing part\)/)
+  // A cut-out that cannot be hidden is drawn in two other compositions first; when every drawing has a hard fault (a
+  // missing part), the best of them is placed despite the looker, never the demo (owner's rule 2026-11-07).
+  assert.deepEqual(rungs(m, 'block-s.1'), [
+    ...climbed,
+    ['hide', 'skipped'],
+    ['redraw-alt', 'placed'],
+    ['redraw-alt', 'rejected'],
+    ['redraw-alt', 'placed'],
+    ['redraw-alt', 'rejected'],
+    ['redraw-alt', 'skipped'],
+    ['best-rejected', 'placed']
+  ])
+  assert.ok(!m.returns.some((r) => r.frame === 'block-s.1'), 'never returned')
+  const s1 = byFrame(m).get('block-s.1')
+  assert.deepEqual(s1.filledBy, { rung: 'best-rejected', faults: ['missing part'] })
+  assert.match(s1.reason, /^placed despite looker: missing part, after: .*redraw rejected \(missing part\)/)
   const sDraws = doors.drawings.filter((d) => d.frame === 'block-s.1')
-  assert.equal(sDraws.length, 2)
+  assert.equal(sDraws.length, 4)
   assert.match(sDraws[1].text, /rejected because of: missing part/)
-  assert.equal(m.drawer.calls.length, 4)
+  assert.match(sDraws[2].text, /Compose this one differently/)
+  assert.equal(m.drawer.calls.length, 6)
   noDemoFigure(m)
   assert.deepEqual(failedRules(check(out)), [])
 })

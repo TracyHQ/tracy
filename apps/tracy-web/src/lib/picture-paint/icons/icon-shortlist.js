@@ -1,3 +1,4 @@
+// Shared: the picture step ranks with it and the site agent's icon door searches with it, so it is in lib/ (module-graph.test.mjs).
 // Which icon each icon frame shows (ADR 0043 section 3, #345): code builds a shortlist of library names from the plan's
 // words, a text model ranks it, code assigns. Pure and deterministic.
 //

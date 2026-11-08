@@ -91,3 +91,51 @@ test('cachedFont treats a redirect from fonts.gstatic.com as a miss and caches n
   assert.equal(calls.length, 1)
   assert.deepEqual(readdirSync(dir), [])
 })
+
+// a dynamic subset address of Google's css2 (/l/font?kit=...&skey=...): the query chooses the bytes
+const DYNAMIC = 'https://fonts.gstatic.com/l/font?kit=Wren0Example-Kit_Value&skey=0a1b2c3d4e5f6a7b&v=v19'
+
+test('fontFetchUrl keeps the query of a dynamic subset address byte for byte', () => {
+  assert.equal(fontFetchUrl(DYNAMIC), DYNAMIC)
+  for (const url of [
+    'https://fonts.gstatic.com/l/font?kit=a~b%2Fc&flag',
+    'https://fonts.gstatic.com/l/font?text=Wren+Example&kit=x'
+  ])
+    assert.equal(fontFetchUrl(url), url)
+})
+
+test('fontFetchUrl keeps the fetch on fonts.gstatic.com whatever the query holds', () => {
+  for (const [url, search] of [
+    ['https://fonts.gstatic.com/l/font?kit=x@example.net/y', '?kit=x%40example.net%2Fy'],
+    ['https://fonts.gstatic.com/l/font?kit=//example.net/x#frag', '?kit=%2F%2Fexample.net%2Fx'],
+    ['https://fonts.gstatic.com/l/font?a=1&b=http://example.net\\x', '?a=1&b=http%3A%2F%2Fexample.net%5Cx']
+  ]) {
+    const u = new URL(fontFetchUrl(url) ?? '')
+    assert.equal(u.host, 'fonts.gstatic.com', url)
+    assert.equal(u.pathname, '/l/font', url)
+    assert.equal(u.search, search, url)
+    assert.equal(u.hash, '', url)
+  }
+})
+
+test('cachedFont fetches a dynamic subset address with its query and keeps it on disk', async () => {
+  const dir = cacheDir()
+  const { calls, fetchImpl } = recorder((url) =>
+    new URL(url).searchParams.get('kit') === 'Wren0Example-Kit_Value'
+      ? new Response(Buffer.from('subset-bytes'), { headers: { 'content-type': 'font/woff2' } })
+      : new Response('not found', { status: 404 })
+  )
+  const font = await cachedFont(DYNAMIC, { fetchImpl, dir })
+  assert.equal(font?.body.toString(), 'subset-bytes')
+  assert.equal(calls[0].url, DYNAMIC)
+  assert.equal((await cachedFont(DYNAMIC, { fetchImpl, dir }))?.body.toString(), 'subset-bytes')
+  assert.equal(calls.length, 1)
+})
+
+test('cachedFont still fails a dynamic subset address gstatic does not serve, and caches nothing for it', async () => {
+  const dir = cacheDir()
+  const { calls, fetchImpl } = recorder(() => new Response('not found', { status: 404 }))
+  assert.equal(await cachedFont(DYNAMIC, { fetchImpl, dir }), null)
+  assert.equal(calls.length, 1)
+  assert.deepEqual(readdirSync(dir), [])
+})

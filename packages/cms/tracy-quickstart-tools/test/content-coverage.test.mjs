@@ -44,12 +44,37 @@ function contractDir() {
       { key: 'article-2.image', type: 'image', sample: 'images/joomlart/classes/intro-1.jpg' },
       // A whole-unit slot (capture --whole-units): the xpath names the heading, the sample joins its pieces.
       { key: 'article-2.heading', type: 'text', sample: 'Ring Ready Now', xpath: '/html/body/div/h2' },
+      // A paragraph with inline code: capture leaves the code words out of the sample.
+      {
+        key: 'article-2.typed',
+        type: 'text',
+        sample: 'Assign types at ingest: is an integer, is a float.',
+        xpath: '/html/body/div/p[3]'
+      },
       { key: 'module-90.video', type: 'text', sample: '7CZ5I-PZjEg' },
       { key: 'module-90.email', type: 'text', sample: 'sale@getfit.com' },
       { key: 'module-90.info', type: 'html', sample: '<p>Call us: <span>(239) 555-0108</span></p>' },
       // A label and a phone number in fields of their own, printed as one list item ("or CALL: <a>number</a>").
       { key: 'module-90.phone-label', type: 'text', sample: 'or CALL:' },
-      { key: 'module-90.phone', type: 'text', sample: '(239) 555-0177' }
+      { key: 'module-90.phone', type: 'text', sample: '(239) 555-0177' },
+      // A figure field the template prints after a hard-coded currency sign ("$<?= $raise ?>").
+      { key: 'module-90.raised', type: 'text', sample: '4,500' },
+      // A tour's price field, printed alone in the quick facts and after a hard-coded label on the booking button.
+      { key: 'article-4.price', type: 'text', sample: '$2,450' },
+      // A store link kept in a text field of the template's extra fields.
+      { key: 'article-2.store', type: 'text', sample: 'https://music.apple.com/' },
+      // Template language strings with printf placeholders (capture's language-string rule) and an author's name.
+      { key: 'languageString-1.0', type: 'text', sample: 'Showing %1$s of %2$s' },
+      { key: 'languageString-2.0', type: 'text', sample: 'Follow %s' },
+      { key: 'languageString-3.0', type: 'text', sample: 'Ready to write your own %s chapter?' },
+      { key: 'user-45.0', type: 'text', sample: 'Riley Moss' },
+      // A policy paragraph that names an address in its text, and a label a card prints before it.
+      { key: 'article-3.label', type: 'text', sample: 'HOUSE RULES' },
+      {
+        key: 'article-3.body',
+        type: 'text',
+        sample: 'Write to rules@example.test for any question about these rules and we answer within a day.'
+      }
     ],
     pages: [{ entity: 'menu-101', route: 'home' }]
   })
@@ -111,6 +136,15 @@ test('declared text, a fragment of a slot and a slot image match; a video id in 
   )
 })
 
+test('a web address kept in a text field is the slot of the link that prints it', () => {
+  const { items } = audit([
+    { kind: 'link', value: 'https://music.apple.com/', source: 'a', role: 'content' },
+    { kind: 'link', value: 'https://open.spotify.com/', source: 'a', role: 'content' }
+  ])
+  assert.equal(byValue(items, 'https://music.apple.com/').status, 'matched')
+  assert.equal(byValue(items, 'https://open.spotify.com/').status, 'hole')
+})
+
 test('a phone number declared inside a field of markup is declared: a segment with digits and no letter counts', () => {
   const { items } = audit([
     { kind: 'text', value: '(239) 555-0108' },
@@ -121,6 +155,19 @@ test('a phone number declared inside a field of markup is declared: a segment wi
   assert.notEqual(byValue(items, '(239) 555-0199').status, 'matched')
 })
 
+test('a figure printed after a currency sign the template writes is its slot; another figure is not', () => {
+  // JA Impact 1.0.6: donation cards print "$" + the raise field, so the page shows "$4,500" for the slot "4,500".
+  const { items } = audit([
+    { kind: 'text', value: '$4,500' },
+    { kind: 'text', value: '$40,000' }
+  ])
+  assert.deepEqual(
+    [byValue(items, '$4,500').status, byValue(items, '$4,500').slots],
+    ['matched', ['module-90.raised']]
+  )
+  assert.notEqual(byValue(items, '$40,000').status, 'matched')
+})
+
 test('a block made of a label slot and a phone slot is that pair: a figure slot with no letter still counts', () => {
   // JA Boxing 1.0.8: "or CALL: (239) 555-0108" is one list item printed from two fields; the number has no letter.
   const { items } = audit([{ kind: 'text', value: 'or CALL: (239) 555-0177' }])
@@ -129,6 +176,23 @@ test('a block made of a label slot and a phone slot is that pair: a figure slot 
     [block.status, block.matchBy, [...block.slots].sort()],
     ['matched', 'composite', ['module-90.phone', 'module-90.phone-label']]
   )
+})
+
+test('a short figure slot inside a block is removed from it: the words the template writes around it are what is left', () => {
+  // JA Voyara 1.0.12: tour.php prints 'Reserve \u2014 ' . $tourPrice on the booking button; the price is a slot with
+  // no letter and fewer than 7 figures, so the whole button used to be one unknown hole that read as a price.
+  const { items } = audit([
+    { kind: 'text', value: 'Reserve \u2014 $2,450' },
+    { kind: 'text', value: 'Reserve \u2014 $9,950' },
+    { kind: 'text', value: 'Reserve \u2014 $2,4500' }
+  ])
+  const [button, other, longer] = items
+  assert.deepEqual(
+    [button.status, button.matchBy, button.slots, button.remainder],
+    ['hole', 'partial', ['article-4.price'], 'reserve -']
+  )
+  assert.deepEqual([other.status, other.slots ?? null], ['hole', null])
+  assert.deepEqual([longer.status, longer.slots ?? null], ['hole', null])
 })
 
 test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside a word is not', () => {
@@ -146,6 +210,63 @@ test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside
   )
   assert.equal(byValue(items, 'Now').status, 'matched')
   assert.notEqual(byValue(items, 'Rea').status, 'matched')
+})
+
+test('a language string with placeholders matches text filled with counts, slot text or a first name; other words stay holes', () => {
+  const { items } = audit([
+    { kind: 'text', value: 'Showing 8 of 82' },
+    { kind: 'text', value: 'Follow Riley' },
+    { kind: 'text', value: 'Ready to write your own Advanced Boxing chapter?' },
+    { kind: 'text', value: 'Follow Morgan' }
+  ])
+  assert.deepEqual(
+    items.map((i) => [i.status, i.matchBy ?? null, i.slots ?? null]),
+    [
+      ['matched', 'language pattern', ['languageString-1.0']],
+      ['matched', 'language pattern', ['languageString-2.0']],
+      ['matched', 'language pattern', ['languageString-3.0']],
+      ['hole', null, null]
+    ]
+  )
+})
+
+test('a card excerpt cut inside a slot is that slot; a cloaked address inside a slot text is its mailto link', () => {
+  const { items } = audit([
+    { kind: 'text', value: 'HOUSE RULES Write to rules@example.test for any question about…' },
+    { kind: 'text', value: 'HOUSE RULES Something else entirely that no slot holds…' },
+    { kind: 'link', value: 'mailto:rules@example.test', source: 'a', role: 'content' },
+    { kind: 'link', value: 'mailto:other@example.test', source: 'a', role: 'content' }
+  ])
+  assert.deepEqual(
+    items.map((i) => [i.status, i.matchBy ?? null]),
+    [
+      ['matched', 'composite'],
+      ['hole', 'partial'],
+      ['matched', 'address inside a slot text'],
+      ['hole', null]
+    ]
+  )
+})
+
+test('a paragraph with inline code is its slot when the words outside the code match; a block of code alone stays a hole', () => {
+  const { items } = audit([
+    {
+      kind: 'text',
+      value: 'Assign types at ingest: status is an integer, duration_ms is a float.',
+      outsideCode: 'Assign types at ingest: is an integer, is a float.'
+    },
+    {
+      kind: 'text',
+      value: 'Assign types at ingest: status is a string.',
+      outsideCode: 'Assign types at ingest: is a string.'
+    },
+    { kind: 'text', value: 'alert "disk pressure" | when disk_used > 0.9 for 15m', outsideCode: '' }
+  ])
+  const p = items[0]
+  assert.deepEqual([p.status, p.slots], ['matched', ['article-2.typed']])
+  assert.match(p.matchBy, /^text outside inline code/)
+  assert.notEqual(items[1].status, 'matched')
+  assert.notEqual(items[2].status, 'matched')
 })
 
 test('a price is demo content: numeric-only text is not ignored, and is found in the database; a bare counter is core', () => {
@@ -178,6 +299,17 @@ test('an all-numeric date a layout prints is core like a written one; a phone nu
   )
   // A phone number has the digits but not the shape: never core.
   assert.notEqual(byValue(items, '(084) 555-0110').class, 'c')
+})
+
+test('an article date a module prints with a weekday ("Tue, Aug 2021", date_format "D, M Y") is core, like other Joomla dates', () => {
+  const { items } = audit([
+    { kind: 'text', value: 'Tue, Aug 2021' },
+    { kind: 'text', value: 'Monday, 14 June 2021' },
+    { kind: 'text', value: 'Tuesday is gig night' }
+  ])
+  assert.equal(byValue(items, 'Tue, Aug 2021').class, 'c')
+  assert.equal(byValue(items, 'Monday, 14 June 2021').class, 'c')
+  assert.notEqual(byValue(items, 'Tuesday is gig night').class, 'c')
 })
 
 test('a capture hole says whether the presentation lock pins its field (locked) or nothing declares it', () => {
@@ -238,6 +370,60 @@ test('the coverage file: counts per class, one line per distinct hole, accepted 
   )
   const verdict = judgeCoverage(doc)
   assert.deepEqual([verdict.holds, verdict.blocking.length, verdict.accepted], [true, 1, 1])
+})
+
+test('the coverage file names each page that failed to render, by path, never by stand address', () => {
+  const { contract, items } = audit([{ kind: 'text', value: 'Advanced Boxing' }])
+  const result = {
+    pages: [{ url: `${SITE}index.php?Itemid=101`, items }],
+    failures: [
+      { url: `${SITE}index.php?Itemid=909`, origin: 'map', mapPage: 'menuItem-909', status: 503 },
+      { url: `${SITE}blog/slow-page`, origin: 'crawl', status: undefined, error: 'Timeout 30000ms exceeded' }
+    ],
+    capReached: false,
+    viewports: ['desktop'],
+    summary: { pages: 1, mappedPages: 1, unmappedPages: 0 }
+  }
+  const doc = buildCoverageFile({ result, contract, measuredAt: '2026-10-24T00:00:00.000Z' })
+  assert.equal(doc.pages.failed, 2)
+  assert.deepEqual(doc.pages.failures, [
+    { url: '/index.php?Itemid=909', code: 'page-not-rendered', mapPage: 'menuItem-909', status: 503 },
+    { url: '/blog/slow-page', code: 'page-not-rendered', error: 'Timeout 30000ms exceeded' }
+  ])
+  assert.equal(JSON.stringify(doc).includes(new URL(SITE).host), false)
+  const clean = buildCoverageFile({ result: { ...result, failures: [] }, contract })
+  assert.deepEqual(clean.pages.failures, [])
+  assert.equal(coverageFileProblem(doc), null)
+})
+
+test('each failure of the coverage file names what failed by a code, so a dead link is never read as a page that did not render', () => {
+  const { contract, items } = audit([{ kind: 'text', value: 'Advanced Boxing' }])
+  const result = {
+    pages: [{ url: `${SITE}index.php?Itemid=101`, items }],
+    failures: [
+      {
+        url: `${SITE}pages/contact`,
+        origin: 'link',
+        status: 404,
+        error: 'dead link (404) shown on 2 page(s): /, /about'
+      },
+      {
+        url: `${SITE}tours/glacier-walk`,
+        origin: 'layout',
+        error: 'asks for layout ja_example:tour, the page serves the default'
+      },
+      { url: `${SITE}about`, error: 'module boxes not read (desktop: Timeout 30000ms exceeded)' },
+      { url: `${SITE}blog/slow-page`, origin: 'crawl', error: 'Timeout 30000ms exceeded' }
+    ],
+    capReached: false,
+    viewports: ['desktop'],
+    summary: { pages: 1, mappedPages: 1, unmappedPages: 0 }
+  }
+  const doc = buildCoverageFile({ result, contract })
+  assert.deepEqual(
+    doc.pages.failures.map((f) => f.code),
+    ['dead-link', 'layout-not-served', 'module-boxes-not-read', 'page-not-rendered']
+  )
 })
 
 test('configuration.php gives the visible site strings and never a secret', () => {
@@ -333,4 +519,21 @@ test('an item VirtueMart printed on one viewport keeps its catalogue zone when t
     SITE
   )
   assert.equal(merged[0].zone, 'catalogue')
+})
+
+test('a breadcrumb that prints the page heading first keeps the heading mark when the copies merge', () => {
+  const merged = mergeViewports(
+    {
+      desktop: {
+        items: [
+          { kind: 'text', value: 'Company', tag: 'li', role: 'nav', visible: true },
+          { kind: 'text', value: 'Company', tag: 'h1', role: 'content', visible: true }
+        ]
+      }
+    },
+    SITE
+  )
+  assert.equal(merged.length, 1)
+  assert.equal(merged[0].tag, 'li')
+  assert.equal(merged[0].h1, true)
 })

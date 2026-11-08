@@ -8,6 +8,7 @@
 // Theme handling follows `template.config.json → qa.theme` (selector + attribute + values, and the
 // storageKey the page reads before first paint). `values[theme] === null` means "attribute absent".
 import { readFileSync, existsSync } from 'node:fs'
+import { joinInside } from './safe-path.mjs'
 import { browserIdentity, launchBrowser } from './qa-browser.mjs'
 export { browserIdentity, launchBrowser }
 
@@ -166,6 +167,19 @@ export const SNAPSHOT_PROPERTIES = [
   'border-top-color',
   'border-radius'
 ]
+
+/**
+ * The parity properties to compare on one theme. A source that has no frame in `theme` (design.parity.sourceThemes
+ * lists the ones it has; absent = all) is still compared on geometry and type, but not on colour: its render in that
+ * theme is the light page, so a colour pair there can never agree and `design.exceptions` (element/rule/selector)
+ * cannot silence it. The theme's colours are held by per-variant `design.rules` instead.
+ */
+const COLOUR_PROPERTY = /colou?r|^background|shadow|outline|fill|stroke/i
+export function parityPropertiesFor(parity, theme) {
+  const all = parity?.properties ?? SNAPSHOT_PROPERTIES
+  const has = parity?.sourceThemes
+  return !Array.isArray(has) || has.includes(theme) ? all : all.filter((p) => !COLOUR_PROPERTY.test(p))
+}
 
 // ───────────────────────── theme ─────────────────────────
 export function loadConfig(file = 'template.config.json') {
@@ -333,6 +347,12 @@ export function captureDesign(request) {
     width: innerWidth,
     height: innerHeight,
     fontsReady: document.fonts.status === 'loaded',
+    // 🔒 `identityMatches` WAS REMOVED HERE, and the removal is the point. It was a
+    // `querySelectorAll` plus a visibility filter on EVERY axis of EVERY page, and nothing in any
+    // of these packages ever read the number. What it looks like it asserts is asserted for real
+    // twice over: `navigate()` waits on the same selector and throws when it is not visible, and
+    // `qa-browser.mjs` checks a match count directly. Found in the business template first (all 48
+    // pages of its contract declare an identity); this copy went on paying for it.
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
     tokens: Object.fromEntries((request.tokens ?? []).map((k) => [k, root.getPropertyValue(k).trim()])),
@@ -381,142 +401,6 @@ export function findOneSpec({ spec }) {
   )
 }
 
-/**
- * Is the SOURCE render finished, or is it still showing placeholders?
- *
- * The export renders twice from two sources of the same markup -- once from a snapshot of live DOM
- * that its picture component has already written `data-filled` into, then again from the raw file
- * text, which never carries it (`support.js` boot). So the page settles filled or unfilled per LOAD
- * and LATCHES: measured 2026-09-16 on this contract's About page, six loads gave
- * `0/7 · 7/7 · 0/7 · 7/7 · 7/7 · 0/7`, and polling to 5 s changed none of them. The unfilled state
- * is not cosmetic -- `:host([data-filled]) .ring{display:none}` means a 1.5px dashed placeholder
- * border is drawn over every picture, so the artifact tells a reviewer the design has no photo
- * where it has one. Forcing the attribute on an unfilled load reproduced a naturally-filled
- * screenshot byte for byte, three times of three, so this attribute is the whole difference.
- *
- * Two things this must NOT do, both of which an earlier version did:
- *   · pass because it examined nothing. Zero matches is reported as `total: 0` and the caller
- *     decides; a selector that matches nothing is not evidence that a page is ready.
- *   · trust the attribute alone. The component sets it the moment it assigns `img.src` and its
- *     error handler does not take it back, so a broken picture carries it too. The decoded image
- *     behind the slot is checked as well, through the open shadow root the component uses.
- */
-export function sourcePending({ selector, attribute = null }) {
-  // A picture the page deliberately does not show is not a picture that failed to render, and a
-  // lazy one can never decode: the browser does not request `loading="lazy"` behind `display:none`,
-  // so no amount of scrolling or reloading will change it. Measured 2026-09-17 on
-  // `pages/resources/home-variation.html`, the source `en-landing` cites: light gives `pending: 0`,
-  // dark gives `pending: 6` -- exactly the six `.tracy-clients__light-image` logos that
-  // `site-repairs.css` sets to `display: none` under `html[data-theme=dark]`. Without this filter
-  // every dark axis of that page carries a `source-not-rendered` finding that names working images.
-  // The test is participation in LAYOUT, not intersection with the viewport: a picture below the
-  // fold is legitimately off-screen and must still be examined.
-  const laidOut = (e) => e.offsetParent !== null || getComputedStyle(e).position === 'fixed'
-  const all = [...document.querySelectorAll(selector)].filter(
-    (e) => (e.getAttribute('src') ?? '') !== '' && laidOut(e)
-  )
-  const describe = (e) => e.id || e.getAttribute('src') || '(no id)'
-  const unmarked = attribute ? all.filter((e) => !e.hasAttribute(attribute)) : []
-  const undecoded = all.filter((e) => {
-    // A marker the element does not carry yet means it has not upgraded -- unknown, not broken;
-    // `unmarked` owns that case, and an upgraded slot with no <img> is the component's own shape.
-    if (attribute && !e.hasAttribute(attribute)) return false
-    // The element named by `selector` is either the picture itself (`img`) or a wrapper that holds
-    // one -- in its open shadow root, or in its light children. Ask whichever it is; a wrapper that
-    // holds none is the component's own shape, not a broken picture.
-    const img = e.tagName === 'IMG' ? e : (e.shadowRoot?.querySelector('img') ?? e.querySelector('img'))
-    return img ? !(img.complete && img.naturalWidth > 0) : false
-  })
-  return {
-    total: all.length,
-    pending: unmarked.length + undecoded.length,
-    unmarked: unmarked.length,
-    undecoded: undecoded.length,
-    examples: [...unmarked, ...undecoded].slice(0, 6).map(describe)
-  }
-}
-export function siteSnapshotOf({ selectors, properties }) {
-  const out = {}
-  for (const [key, selector] of Object.entries(selectors)) {
-    // ABSENCE IS AN ANSWER HERE -- a pair missing on both sides is a role the page does not have --
-    // so a selector this reader cannot resolve must NOT be reported as a missing element. Only the
-    // shape the contract actually uses is accepted: one CSS selector, optionally followed by one
-    // `nth=` with a non-negative index. Everything else Playwright can express resolves differently
-    // or not at all here: `nth=-1` (the LAST match), a multi-segment chain (`section >> a` narrows
-    // to the anchor; this would return the section), a second `nth=`, the engine prefixes `text=`
-    // `css=` `xpath=`, the pseudo-classes `:visible` `:has-text()` `:nth-match()`, and a valid CSS
-    // attribute value that happens to contain `>>`. Each is reported as `__unsupported` and becomes
-    // a finding in the caller -- the loud failure a contract error deserves, instead of a quiet
-    // "not on the page".
-    //
-    // Open shadow roots are the one case the SHAPE cannot reveal: Playwright pierces them and
-    // `querySelectorAll` does not, so a selector that used to resolve would now read as an absent
-    // element -- an answer, and the wrong one. That case is caught on the miss path below instead,
-    // by asking the open roots the same question before absence is believed.
-    const raw = String(selector)
-    const parts = raw.split('>>')
-    const css = parts[0].trim()
-    const nth = parts.length > 1 ? /^\s*nth=(\d+)\s*$/.exec(parts[1]) : null
-    const shapeOk = parts.length === 1 || (parts.length === 2 && nth)
-    const enginePrefix = /^\s*(text|css|xpath|id|data-testid|react|vue)\s*=/.test(css)
-    const pwPseudo = /:visible\b|:has-text\(|:text\(|:text-is\(|:nth-match\(|:light\(/.test(css)
-    if (!shapeOk || enginePrefix || pwPseudo) {
-      out[key] = { __unsupported: raw }
-      continue
-    }
-    let all
-    try {
-      all = document.querySelectorAll(css)
-    } catch (err) {
-      out[key] = { __unsupported: `${raw} (${err.message})` }
-      continue
-    }
-    const el = nth ? all[Number(nth[1])] : all[0]
-    if (!el) {
-      // Absence is only an answer when the light DOM is the whole question. Playwright pierces open
-      // shadow roots and `querySelectorAll` does not, so a selector that used to resolve would now
-      // read as an absent element -- an answer, and the wrong one. Ask the open roots, depth-first,
-      // before believing absence.
-      //
-      // This is a DETECTOR, not a second selector engine, and what it cannot see is worth naming
-      // rather than discovering later. ⚠ ONE OF THE TWO STILL PRODUCES SILENCE, so read this
-      // before trusting an absent pair:
-      //   · a selector whose left-hand side is an ancestor OUTSIDE the host -- `main h2`, where
-      //     `main` wraps the host and the `h2` is inside its shadow root -- is resolved by
-      //     Playwright and matched by NEITHER the light-DOM read nor this probe, which repeats the
-      //     whole selector inside the root and finds nothing. That pair reads as absent. A contract
-      //     naming a parity target across a shadow boundary needs the host-relative selector;
-      //   · `nth=` is ignored here, so the probe answers "a match exists somewhere in an open
-      //     root", not "the requested index exists". That direction is safe: it reports a contract
-      //     error the reader can act on rather than swallowing an element.
-      const roots = []
-      const collect = (node) => {
-        for (const e of node.querySelectorAll('*')) {
-          if (!e.shadowRoot) continue
-          roots.push(e.shadowRoot)
-          collect(e.shadowRoot)
-        }
-      }
-      collect(document)
-      if (roots.some((r) => r.querySelector(css)))
-        out[key] = { __unsupported: `${raw} (matches inside an open shadow root)` }
-      continue
-    }
-    // Match the source reader's visibility boundary, including display-none ancestors.
-    const rect = el.getBoundingClientRect()
-    const style = getComputedStyle(el)
-    if (rect.width <= 1 || rect.height <= 1 || style.display === 'none' || style.visibility === 'hidden')
-      continue
-    el.__vqa = el.__vqa || new Set()
-    properties.forEach((p) => el.__vqa.add(p))
-    const cs = getComputedStyle(el)
-    out[key] = {
-      __tag: el.tagName.toLowerCase(),
-      ...Object.fromEntries(properties.map((p) => [p, cs.getPropertyValue(p) || '(none)']))
-    }
-  }
-  return out
-}
 export function snapshotOf({ selectors, properties }) {
   const visible = (e) => {
     const r = e.getBoundingClientRect()
@@ -886,7 +770,8 @@ export function scanSeams() {
  * site's "no picture yet" element: every visible one is a picture the page promised and lost.
  */
 export function imageCensus({ scope = 'main', slot = null, placeholder = null } = {}) {
-  const root = document.querySelector(scope) ?? document.body
+  const found = document.querySelector(scope)
+  const root = found ?? document.body
   const visible = (e) => e.getClientRects().length > 0 && e.getBoundingClientRect().width > 20
   const decoded = (img) => img.naturalWidth > 0 && visible(img)
   const imgs = [...root.querySelectorAll('img')].filter(decoded)
@@ -903,97 +788,14 @@ export function imageCensus({ scope = 'main', slot = null, placeholder = null } 
       }))
     : []
   return {
+    // what the scope resolved to on THIS page: a source with no <main> counts its whole body
+    resolved: found ? scope : 'body',
     images: imgs.length + slotDecoded.length,
     slots: slots.map((e) => e.id || e.getAttribute('src') || e.tagName.toLowerCase()),
     placeholders
   }
 }
 /** Tag interactive elements so hover/rect probes can address them; returns their ids and rest rects. */
-export function tagInteractive(selectors) {
-  const out = [],
-    seen = new Set()
-  selectors.forEach((sel, si) => {
-    let list
-    try {
-      list = document.querySelectorAll(sel)
-    } catch {
-      return
-    }
-    let i = 0
-    for (const e of list) {
-      const r = e.getBoundingClientRect(),
-        cs = getComputedStyle(e)
-      if (
-        r.width < 6 ||
-        r.height < 6 ||
-        cs.visibility === 'hidden' ||
-        cs.display === 'none' ||
-        (!e.offsetParent && cs.position !== 'fixed')
-      )
-        continue
-      // 🔒 AN ELEMENT ALREADY TAGGED KEEPS ITS FIRST ID. `data-vqa` is a single attribute, so
-      // re-tagging under a later selector OVERWRITES it and strands the earlier id: that id is
-      // still in `out`, but no node carries it any more. The caller used to wait the full
-      // `scrollIntoViewIfNeeded` timeout on a selector that can never resolve, catch, and
-      // `continue` in silence; it now reports the id as `untagged` at once, which is still an
-      // element promised and never measured.
-      //
-      // The overlap is not exotic, it is the default: `DEFAULT_INTERACTIVE` lists both `nav a` and
-      // `header a`, and a `<nav>` inside a `<header>` is ordinary markup. Measured 14/09 on this
-      // template: 1.5s lost per stranded id per axis, ~12s per page, and `scans.hover` reporting
-      // 13 elements examined when one of them never was -- a coverage number that overstates what
-      // the reviewer is signing for.
-      //
-      // Skipping does not narrow the sample. `seen` keys on `sel|className` and `i` caps at 3, so
-      // the intent is "up to three distinct class signatures per selector"; an element already
-      // scheduled for measurement does not need a second slot to be measured.
-      if (e.hasAttribute('data-vqa')) continue
-      const sig = sel + '|' + (e.className || '').toString().trim()
-      if (seen.has(sig)) continue
-      seen.add(sig)
-      const id = `v${si}-${i++}`
-      e.setAttribute('data-vqa', id)
-      out.push({
-        id,
-        selector: sel,
-        text: (e.textContent || '').trim().slice(0, 24),
-        rect: { x: r.x, y: r.y, width: r.width, height: r.height }
-      })
-      if (i >= 3) break
-    }
-  })
-  return out
-}
-// The rect is what the hover check compares, before and after the pointer arrives. `color` and `bg`
-// are for a SECOND caller: `visual-scan.mjs` reads them to compute a dark-hover contrast ratio.
-//
-// 🔒 THEY WERE REMOVED ONCE, ON THE GROUND THAT NOBODY READ THEM, AND THAT CLAIM WAS WRONG — it came
-// from grepping `visual-qa.mjs` alone instead of the package. Nothing crashed: `visual-scan.mjs`
-// reads them with `?.`, `parseColor(undefined)` is falsy, and its `if (dc && db && lc && lb)` guard
-// then skipped the whole `hover-contrast-dark` check in silence. A check that quietly stops checking
-// is the failure shape this repo refuses everywhere else. Grep the package, not one file, before
-// deleting a field from a shared probe.
-export function measureTagged(id) {
-  const e = document.querySelector(`[data-vqa="${id}"]`)
-  if (!e) return null
-  const cs = getComputedStyle(e),
-    r = e.getBoundingClientRect()
-  let n = e,
-    bg = null
-  while (n) {
-    const c = getComputedStyle(n).backgroundColor
-    if (c && !c.startsWith('rgba(0, 0, 0, 0')) {
-      bg = c
-      break
-    }
-    n = n.parentElement
-  }
-  return {
-    color: cs.color,
-    bg: bg || 'rgb(255, 255, 255)',
-    rect: { x: r.x, y: r.y, width: r.width, height: r.height }
-  }
-}
 // One round trip per side of the hover check: (optionally) scroll the element into view, wait until
 // nothing that can move its box is still animating, then read the box and the scroll offset it was
 // read at -- or say why it never settled. Both sides use it: the REST side with `scrollIntoView`,
@@ -1002,11 +804,11 @@ export function measureTagged(id) {
 // Why one round trip. This used to be three Playwright calls per element on the rest side alone --
 // `locator.scrollIntoViewIfNeeded()` (which waits for the box to hold still over two animation
 // frames, then scrolls over CDP), an `evaluate` for the rect, and after the hover an `evaluate` to
-// settle and another for the rect. Measured 15/09 on this template (320 elements, 3 pages x 2 widths
-// x 4 reps, medians): the scroll call alone was 72 ms of a 195 ms element, the four rect/settle
-// evaluates 1-2 ms each; this shape is 85 ms an element with the SAME rest rect, hovered rect and
-// scroll offset on all 320 (the in-page `scrollIntoViewIfNeeded()` and Playwright's CDP scroll both
-// centre-if-needed, so `hover()`'s own scroll that follows is a no-op). The alternative of measuring
+// settle and another for the rect. Measured 15/09 on a template built from this kit (320 elements,
+// 3 pages x 2 widths x 4 reps, medians): the scroll call alone was 72 ms of a 195 ms element, the
+// four rect/settle evaluates 1-2 ms each; this shape is 85 ms an element with the SAME rest rect,
+// hovered rect and scroll offset on all 320 (the in-page `scrollIntoViewIfNeeded()` and Playwright's
+// CDP scroll both centre-if-needed, so `hover()`'s own scroll is a no-op). The alternative of measuring
 // every rest rect in one batch up front was rejected on correctness, not speed: a rect read before
 // any scrolling and one read after `hover()` scrolled are in different viewport frames for in-flow
 // elements and the SAME frame for sticky/fixed ones, so no single coordinate space makes a batch
@@ -1017,10 +819,12 @@ export function measureTagged(id) {
 // Why the box has to be settled. The hover check compares rest with hovered at a 1 px threshold, so
 // both have to be the SETTLED box. A fixed 60 ms sample was not: a 4 px `translateY` behind
 // `transition: transform 400ms` reads under 1 px at 60 ms and the page was called clean (measured
-// 15/09: caught 1/8 at 150 ms, 0/8 at 300 ms). `reducedMotion: 'reduce'` on the context does not
-// help -- it flips the media query, it does not stop transitions, and neither Tailwind's preflight
-// nor this template carries a reduced-motion rule. Settling AFTER the scroll matters on the rest
-// side too: a header that shrinks on scroll starts its transition at the scroll, and a box read
+// 15/09 on a template built from this kit: caught 1/8 at 150 ms, 0/8 at 300 ms).
+// `reducedMotion: 'reduce'` on the context does not help -- it flips the media query, it does not
+// stop transitions, and a `prefers-reduced-motion` rule of the kind these templates ship (the base
+// template has exactly one, `scroll-behavior: auto`) does not touch them either. Settling AFTER the
+// scroll matters on the rest side too: a header that shrinks on scroll starts its transition at the
+// scroll, and a box read
 // before it ends is a hover jump that never happened.
 //
 // What is waited on: every running animation (Web Animations API, which includes CSS transitions and
@@ -1118,6 +922,169 @@ export function settledRect([id, boundMs, opts]) {
     ]).then(step)
   }
   return step()
+}
+
+export function siteSnapshotOf({ selectors, properties }) {
+  const out = {}
+  for (const [key, selector] of Object.entries(selectors)) {
+    // ABSENCE IS AN ANSWER HERE -- a pair missing on both sides is a role the page does not have --
+    // so a selector this reader cannot resolve must NOT be reported as a missing element. Only the
+    // shape the contract actually uses is accepted: one CSS selector, optionally followed by one
+    // `nth=` with a non-negative index. Everything else Playwright can express resolves differently
+    // or not at all here: `nth=-1` (the LAST match), a multi-segment chain (`section >> a` narrows
+    // to the anchor; this would return the section), a second `nth=`, the engine prefixes `text=`
+    // `css=` `xpath=`, the pseudo-classes `:visible` `:has-text()` `:nth-match()`, and a valid CSS
+    // attribute value that happens to contain `>>`. Each is reported as `__unsupported` and becomes
+    // a finding in the caller -- the loud failure a contract error deserves, instead of a quiet
+    // "not on the page".
+    //
+    // Open shadow roots are the one case the SHAPE cannot reveal: Playwright pierces them and
+    // `querySelectorAll` does not, so a selector that used to resolve would now read as an absent
+    // element -- an answer, and the wrong one. That case is caught on the miss path below instead,
+    // by asking the open roots the same question before absence is believed.
+    const raw = String(selector)
+    const parts = raw.split('>>')
+    const css = parts[0].trim()
+    const nth = parts.length > 1 ? /^\s*nth=(\d+)\s*$/.exec(parts[1]) : null
+    const shapeOk = parts.length === 1 || (parts.length === 2 && nth)
+    const enginePrefix = /^\s*(text|css|xpath|id|data-testid|react|vue)\s*=/.test(css)
+    const pwPseudo = /:visible\b|:has-text\(|:text\(|:text-is\(|:nth-match\(|:light\(/.test(css)
+    if (!shapeOk || enginePrefix || pwPseudo) {
+      out[key] = { __unsupported: raw }
+      continue
+    }
+    let all
+    try {
+      all = document.querySelectorAll(css)
+    } catch (err) {
+      out[key] = { __unsupported: `${raw} (${err.message})` }
+      continue
+    }
+    const el = nth ? all[Number(nth[1])] : all[0]
+    if (!el) {
+      // Absence is only an answer when the light DOM is the whole question. Playwright pierces open
+      // shadow roots and `querySelectorAll` does not, so a selector that used to resolve would now
+      // read as an absent element -- an answer, and the wrong one. Ask the open roots, depth-first,
+      // before believing absence.
+      //
+      // This is a DETECTOR, not a second selector engine, and what it cannot see is worth naming
+      // rather than discovering later. ⚠ ONE OF THE TWO STILL PRODUCES SILENCE, so read this
+      // before trusting an absent pair:
+      //   · a selector whose left-hand side is an ancestor OUTSIDE the host -- `main h2`, where
+      //     `main` wraps the host and the `h2` is inside its shadow root -- is resolved by
+      //     Playwright and matched by NEITHER the light-DOM read nor this probe, which repeats the
+      //     whole selector inside the root and finds nothing. That pair reads as absent. A contract
+      //     naming a parity target across a shadow boundary needs the host-relative selector;
+      //   · `nth=` is ignored here, so the probe answers "a match exists somewhere in an open
+      //     root", not "the requested index exists". That direction is safe: it reports a contract
+      //     error the reader can act on rather than swallowing an element.
+      const roots = []
+      const collect = (node) => {
+        for (const e of node.querySelectorAll('*')) {
+          if (!e.shadowRoot) continue
+          roots.push(e.shadowRoot)
+          collect(e.shadowRoot)
+        }
+      }
+      collect(document)
+      if (roots.some((r) => r.querySelector(css)))
+        out[key] = { __unsupported: `${raw} (matches inside an open shadow root)` }
+      continue
+    }
+    // Match the source reader's visibility boundary, including display-none ancestors.
+    const rect = el.getBoundingClientRect()
+    const style = getComputedStyle(el)
+    if (rect.width <= 1 || rect.height <= 1 || style.display === 'none' || style.visibility === 'hidden')
+      continue
+    el.__vqa = el.__vqa || new Set()
+    properties.forEach((p) => el.__vqa.add(p))
+    const cs = getComputedStyle(el)
+    out[key] = {
+      __tag: el.tagName.toLowerCase(),
+      ...Object.fromEntries(properties.map((p) => [p, cs.getPropertyValue(p) || '(none)']))
+    }
+  }
+  return out
+}
+
+export function tagInteractive(selectors) {
+  const out = [],
+    seen = new Set()
+  selectors.forEach((sel, si) => {
+    let list
+    try {
+      list = document.querySelectorAll(sel)
+    } catch {
+      return
+    }
+    let i = 0
+    for (const e of list) {
+      const r = e.getBoundingClientRect(),
+        cs = getComputedStyle(e)
+      if (
+        r.width < 6 ||
+        r.height < 6 ||
+        cs.visibility === 'hidden' ||
+        cs.display === 'none' ||
+        (!e.offsetParent && cs.position !== 'fixed')
+      )
+        continue
+      // 🔒 AN ELEMENT ALREADY TAGGED KEEPS ITS FIRST ID. `data-vqa` is a single attribute, so
+      // re-tagging under a later selector OVERWRITES it and strands the earlier id: that id is
+      // still in `out`, but no node carries it any more. The caller then waits the full
+      // `scrollIntoViewIfNeeded` timeout on a selector that can never resolve, catches, and
+      // `continue`s in silence.
+      //
+      // The overlap is not exotic, it is the default: `DEFAULT_INTERACTIVE` lists both `nav a` and
+      // `header a`, and a `<nav>` inside a `<header>` is ordinary markup. Measured 14/09 on this
+      // template: 1.5s lost per stranded id per axis, ~12s per page, and `scans.hover` reporting
+      // 13 elements examined when one of them never was -- a coverage number that overstates what
+      // the reviewer is signing for.
+      //
+      // Skipping does not narrow the sample. `seen` keys on `sel|className` and `i` caps at 3, so
+      // the intent is "up to three distinct class signatures per selector"; an element already
+      // scheduled for measurement does not need a second slot to be measured.
+      if (e.hasAttribute('data-vqa')) continue
+      const sig = sel + '|' + (e.className || '').toString().trim()
+      if (seen.has(sig)) continue
+      seen.add(sig)
+      const id = `v${si}-${i++}`
+      e.setAttribute('data-vqa', id)
+      out.push({
+        id,
+        selector: sel,
+        text: (e.textContent || '').trim().slice(0, 24),
+        rect: { x: r.x, y: r.y, width: r.width, height: r.height }
+      })
+      if (i >= 3) break
+    }
+  })
+  return out
+}
+// Only the rect leaves this function, and only `x/y/width/height` of it are read -- the hover check
+// compares the box before and after the pointer arrives. It used to also return the element's colour
+// and the first opaque background found by walking its ancestors; no caller ever read either, and
+// the walk costs a `getComputedStyle` per ancestor, twice per element, on every axis.
+export function measureTagged(id) {
+  const e = document.querySelector(`[data-vqa="${id}"]`)
+  if (!e) return null
+  const cs = getComputedStyle(e),
+    r = e.getBoundingClientRect()
+  let n = e,
+    bg = null
+  while (n) {
+    const c = getComputedStyle(n).backgroundColor
+    if (c && !c.startsWith('rgba(0, 0, 0, 0')) {
+      bg = c
+      break
+    }
+    n = n.parentElement
+  }
+  return {
+    color: cs.color,
+    bg: bg || 'rgb(255, 255, 255)',
+    rect: { x: r.x, y: r.y, width: r.width, height: r.height }
+  }
 }
 export const DEFAULT_INTERACTIVE = [
   'nav a',
@@ -1248,7 +1215,12 @@ export function pageHash(contract, spec, { root = process.cwd(), toolsDir } = {}
         .map((it) => [it.file, it.targets.filter((t) => cols.includes(t.collection))])
       add('media targets', sha(JSON.stringify(mine)))
       for (const [f] of mine) {
-        const p = path.join(root, 'seed', 'media', f)
+        let p
+        try {
+          p = joinInside(path.join(root, 'seed', 'media'), f, { within: path.join(root, 'seed') })
+        } catch {
+          continue // a name outside the media folder is never read
+        }
         if (existsSync(p)) add(`media ${f}`, sha(readFileSync(p)))
       }
     }
@@ -1359,11 +1331,73 @@ export function scanOffSystem(ds, theme) {
   return [...found.values()].slice(0, 60)
 }
 
+/**
+ * Is the SOURCE render finished, or is it still showing empty picture frames?
+ *
+ * A design source is often a folder of plain HTML with ordinary `<img>` elements. Measured
+ * 2026-09-17 on the base template this kit generates: 183 images across the 25 documents its
+ * contract cites, 23 of them carrying `loading="lazy"`. A full-page screenshot does not scroll the page, so at the
+ * moment the runner shoots it the images below the fold have never been asked for. Measured
+ * 2026-09-17 on that template's `pages/company/about.html`, three loads at the point the runner shoots
+ * (`networkidle` -> `fonts.ready` -> 200 ms): 5, 6 and 6 of 11 images undecoded -- non-deterministic,
+ * which is why two runs of the same page disagree. One scroll pass through the document, then the
+ * same read: 0 of 11, all three times.
+ *
+ * Two harms, not one. The saved artifact shows empty frames where the design has photos; and
+ * `imageCensus` counts only `naturalWidth > 0`, so the SOURCE side under-reports what the page
+ * promises and `image-missing` cannot fire for the pictures the site is really missing.
+ *
+ * `attribute` is optional, because a picture says it is ready in one of two ways. An export whose
+ * picture component writes a marker onto itself (`image-slot[src]` + `data-filled`) is asked for
+ * the marker AND for the decoded image behind its open shadow root; a plain `<img>` is asked only
+ * whether it decoded. Pass `attribute: null` for the second.
+ *
+ * Two things this must NOT do:
+ *   · pass because it examined nothing. Zero matches is reported as `total: 0` and the caller
+ *     decides; a selector that matches nothing is not evidence that a page is ready.
+ *   · trust a marker alone. A component sets it the moment it assigns `img.src` and an error
+ *     handler does not take it back, so a broken picture carries it too.
+ */
+export function sourcePending({ selector, attribute = null }) {
+  // A picture the page deliberately does not show is not a picture that failed to render, and a
+  // lazy one can never decode: the browser does not request `loading="lazy"` behind `display:none`,
+  // so no amount of scrolling or reloading will change it. Measured 2026-09-17 on
+  // `pages/resources/home-variation.html`, the source `en-landing` cites: light gives `pending: 0`,
+  // dark gives `pending: 6` -- exactly the six `.tracy-clients__light-image` logos that
+  // `site-repairs.css` sets to `display: none` under `html[data-theme=dark]`. Without this filter
+  // every dark axis of that page carries a `source-not-rendered` finding that names working images.
+  // The test is participation in LAYOUT, not intersection with the viewport: a picture below the
+  // fold is legitimately off-screen and must still be examined.
+  const laidOut = (e) => e.offsetParent !== null || getComputedStyle(e).position === 'fixed'
+  const all = [...document.querySelectorAll(selector)].filter(
+    (e) => (e.getAttribute('src') ?? '') !== '' && laidOut(e)
+  )
+  const describe = (e) => e.id || e.getAttribute('src') || '(no id)'
+  const unmarked = attribute ? all.filter((e) => !e.hasAttribute(attribute)) : []
+  const undecoded = all.filter((e) => {
+    // A marker the element does not carry yet means it has not upgraded -- unknown, not broken;
+    // `unmarked` owns that case, and an upgraded slot with no <img> is the component's own shape.
+    if (attribute && !e.hasAttribute(attribute)) return false
+    // The element named by `selector` is either the picture itself (`img`) or a wrapper that holds
+    // one -- in its open shadow root, or in its light children. Ask whichever it is; a wrapper that
+    // holds none is the component's own shape, not a broken picture.
+    const img = e.tagName === 'IMG' ? e : (e.shadowRoot?.querySelector('img') ?? e.querySelector('img'))
+    return img ? !(img.complete && img.naturalWidth > 0) : false
+  })
+  return {
+    total: all.length,
+    pending: unmarked.length + undecoded.length,
+    unmarked: unmarked.length,
+    undecoded: undecoded.length,
+    examples: [...unmarked, ...undecoded].slice(0, 6).map(describe)
+  }
+}
+
 // The full-page screenshot is cut into tiles here instead of asking the browser for one clip per
 // tile. Seven extra renders per page cost ~6.4s and, worse, each clip is its own render: nothing
 // guaranteed a tile was a crop of the picture printed beside it. Decoding once and cropping makes
-// that identity hold, and `tests/visual.test.mjs` F15 proves it with Chromium's decoder rather
-// than with the codec that just produced the bytes.
+// that identity hold: `tests/visual.test.mjs` F15 pins the tiles a run writes and the tiles a
+// `--reuse` run points at, so a tile that stopped being a crop of its picture shows up there.
 //
 // `pngjs` does the codec work. A hand-rolled decoder lived here first and was correct — it kept
 // each row's original filter bytes so pixel identity held by construction — but it was 120 lines

@@ -505,3 +505,108 @@ test("#1616: the site's own PHP 500 mid-files is still site_resource_limit", asy
   )
   assert.equal(cursorBook()?.uploadId, 'up-1')
 })
+
+// ── a folder the site's PHP may not read (05/11/2026) ────────────────────────────────────────────
+
+test('what the engine leaves out, unreadable to its PHP, is said while the files are read and kept on the result', async () => {
+  const leftOut = { paths: ['old/gallery/thumbs/', 'gallery/thumbs/'], count: 2 }
+  const { stored } = engine({
+    pack: (params, n) => ({ ...packed(params, { done: n >= 2 }), unreadable: leftOut })
+  })
+  const events = []
+  const result = await exporter.exportFiles(ENDPOINT, 'token', stored.artifacts, SITE, (p) => events.push(p))
+  assert.deepEqual(result.unreadable, leftOut)
+  assert.deepEqual(events.at(-1).unreadable, leftOut)
+  assert.equal(events[0].unreadable, undefined, 'nothing is said before the engine named it')
+})
+
+test('an older engine stopping the walk at a folder it may not read is files_unreadable, naming it, not call_failed', async () => {
+  const { stored } = engine({
+    pack: () => ({
+      ok: false,
+      error: 'pack_failed',
+      message:
+        'RecursiveDirectoryIterator::__construct(/var/www/site/gallery/thumbs): Failed to open directory: Permission denied'
+    })
+  })
+  await assert.rejects(exporter.exportFiles(ENDPOINT, 'token', stored.artifacts, SITE), (error) => {
+    assert.equal(error.reason, 'files_unreadable')
+    assert.equal(error.folder, '/var/www/site/gallery/thumbs')
+    assert.deepEqual(error.diagnostic, {
+      at: 'export',
+      check: 'permission_denied',
+      status: 200,
+      action: 'files.pack',
+      engine_error: 'pack_failed'
+    })
+    return true
+  })
+})
+
+test('a page on an engine call after the engine answered is the host blocking Tracy, never "stopped answering"', async () => {
+  const { stored } = engine({
+    pack: (params, n) =>
+      n === 1
+        ? packed(params, { done: false })
+        : { __page: '<!DOCTYPE html><html><title>Security check</title></html>' }
+  })
+  const pageFetch = globalThis.fetch
+  globalThis.fetch = async (url, init = {}) => {
+    const answer = await pageFetch(url, init)
+    if (String(url) !== ENDPOINT) return answer
+    const body = await answer
+      .clone()
+      .json()
+      .catch(() => null)
+    return body?.__page
+      ? new Response(body.__page, { status: 200, headers: { 'content-type': 'text/html' } })
+      : answer
+  }
+  await assert.rejects(exporter.exportFiles(ENDPOINT, 'token', stored.artifacts, SITE), (error) => {
+    assert.equal(error.reason, 'blocked_by_host')
+    assert.deepEqual(error.diagnostic, {
+      at: 'export',
+      check: 'answered_page',
+      status: 200,
+      action: 'files.pack',
+      answer: 'html',
+      page: 'challenge'
+    })
+    assert.match(error.detail, /files\.pack answered a page: <!DOCTYPE html>/)
+    return true
+  })
+})
+
+test('the engine’s unreadable list is kept only in its own shape', () => {
+  assert.deepEqual(exporter.unreadableOf({ paths: ['a/', 'b.png', '../x', 7, 'c\u0000d'], count: 3 }), {
+    paths: ['a/', 'b.png'],
+    count: 3
+  })
+  assert.equal(exporter.unreadableOf({ paths: [], count: 0 }), undefined)
+  assert.equal(exporter.unreadableOf('a/'), undefined)
+  assert.equal(exporter.unreadableRefusal('cannot open images/a.png'), 'images/a.png')
+  assert.equal(exporter.unreadableRefusal('fopen(/srv/www/x.zip): Permission denied'), '/srv/www/x.zip')
+  assert.equal(exporter.unreadableRefusal('Unknown column'), undefined)
+})
+
+test('omitted paths survive later parts and a resumed upload even when permissions recover', async () => {
+  const leftOut = { paths: ['images/private/'], count: 1 }
+  let fail = true
+  const { stored } = engine({
+    pack: (params, n) => {
+      if (n === 1) return { ...packed(params, { done: false }), unreadable: leftOut }
+      if (fail) return { ok: false, error: 'pack_failed', message: 'disk failure' }
+      return packed(params, { done: true })
+    }
+  })
+  await assert.rejects(exporter.exportFiles(ENDPOINT, 'token', stored.artifacts, SITE))
+  const book = JSON.parse(
+    readFileSync(path.join(process.env.DSH_HOME, 'tracy-add-site/uploads.json'), 'utf8')
+  )
+  assert.deepEqual(book[SITE].unreadable, leftOut)
+  fail = false
+  const events = []
+  const result = await exporter.exportFiles(ENDPOINT, 'token', stored.artifacts, SITE, (p) => events.push(p))
+  assert.deepEqual(result.unreadable, leftOut)
+  assert.deepEqual(events.at(-1).unreadable, leftOut)
+})

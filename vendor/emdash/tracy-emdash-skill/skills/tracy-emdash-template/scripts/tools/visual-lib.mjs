@@ -8,6 +8,7 @@
 // Theme handling follows `template.config.json → qa.theme` (selector + attribute + values, and the
 // storageKey the page reads before first paint). `values[theme] === null` means "attribute absent".
 import { readFileSync, existsSync } from 'node:fs'
+import { joinInside } from './safe-path.mjs'
 import { browserIdentity, launchBrowser } from './qa-browser.mjs'
 export { browserIdentity, launchBrowser }
 
@@ -166,6 +167,19 @@ export const SNAPSHOT_PROPERTIES = [
   'border-top-color',
   'border-radius'
 ]
+
+/**
+ * The parity properties to compare on one theme. A source that has no frame in `theme` (design.parity.sourceThemes
+ * lists the ones it has; absent = all) is still compared on geometry and type, but not on colour: its render in that
+ * theme is the light page, so a colour pair there can never agree and `design.exceptions` (element/rule/selector)
+ * cannot silence it. The theme's colours are held by per-variant `design.rules` instead.
+ */
+const COLOUR_PROPERTY = /colou?r|^background|shadow|outline|fill|stroke/i
+export function parityPropertiesFor(parity, theme) {
+  const all = parity?.properties ?? SNAPSHOT_PROPERTIES
+  const has = parity?.sourceThemes
+  return !Array.isArray(has) || has.includes(theme) ? all : all.filter((p) => !COLOUR_PROPERTY.test(p))
+}
 
 // ───────────────────────── theme ─────────────────────────
 export function loadConfig(file = 'template.config.json') {
@@ -746,7 +760,8 @@ export function scanSeams() {
  * site's "no picture yet" element: every visible one is a picture the page promised and lost.
  */
 export function imageCensus({ scope = 'main', slot = null, placeholder = null } = {}) {
-  const root = document.querySelector(scope) ?? document.body
+  const found = document.querySelector(scope)
+  const root = found ?? document.body
   const visible = (e) => e.getClientRects().length > 0 && e.getBoundingClientRect().width > 20
   const decoded = (img) => img.naturalWidth > 0 && visible(img)
   const imgs = [...root.querySelectorAll('img')].filter(decoded)
@@ -763,6 +778,8 @@ export function imageCensus({ scope = 'main', slot = null, placeholder = null } 
       }))
     : []
   return {
+    // what the scope resolved to on THIS page: a source with no <main> counts its whole body
+    resolved: found ? scope : 'body',
     images: imgs.length + slotDecoded.length,
     slots: slots.map((e) => e.id || e.getAttribute('src') || e.tagName.toLowerCase()),
     placeholders
@@ -1188,7 +1205,12 @@ export function pageHash(contract, spec, { root = process.cwd(), toolsDir } = {}
         .map((it) => [it.file, it.targets.filter((t) => cols.includes(t.collection))])
       add('media targets', sha(JSON.stringify(mine)))
       for (const [f] of mine) {
-        const p = path.join(root, 'seed', 'media', f)
+        let p
+        try {
+          p = joinInside(path.join(root, 'seed', 'media'), f, { within: path.join(root, 'seed') })
+        } catch {
+          continue // a name outside the media folder is never read
+        }
         if (existsSync(p)) add(`media ${f}`, sha(readFileSync(p)))
       }
     }

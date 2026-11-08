@@ -5,7 +5,7 @@ import { test } from 'node:test'
 
 import { mergeSite } from '../template-kit/lib/kit-site.mjs'
 import { reviewRows } from '../template-kit/lib/review-sheet.mjs'
-import { gapId, templateGaps } from '../template-kit/lib/template-gaps.mjs'
+import { errorsBesideGaps, gapId, templateGaps } from '../template-kit/lib/template-gaps.mjs'
 
 const MAP = {
   entities: [
@@ -187,7 +187,7 @@ test('a block says each CMS sentence once, with its source; the name line is a n
   assert.ok(kit.errors.some((e) => e.field === 'blocks[block-3].fixedText[Members only].canHide'))
 })
 
-test('a link with no address that opens something on the page (a tab, a menu heading) is no dead link', () => {
+test('a link with no address that opens something on the page (a tab, a menu heading, the current page) is no dead link', () => {
   const kit = {
     pages: [],
     blocks: [
@@ -201,7 +201,8 @@ test('a link with no address that opens something on the page (a tab, a menu hea
             target: null,
             opens: { kind: 'panel', element: '#day' }
           },
-          { id: 'block-7.link-2', label: 'Lanes', target: null }
+          { id: 'block-7.link-2', label: 'Lanes', target: null },
+          { id: 'block-7.link-3', label: '1', target: null, current: true }
         ]
       }
     ]
@@ -238,5 +239,19 @@ test('template gaps: a row fix measured on a page the kit left out is not propos
   assert.deepEqual(
     gaps.map((g) => g.where.selector),
     ['div.kept-by-block div.row', 'div.kept-by-list ul']
+  )
+})
+
+test('a page without an h1 is a template gap, so its missing h1 is no longer an error; two h1 stay one', () => {
+  const kit = kitOf()
+  const gaps = templateGaps({ kit, mainHeadings: SITE.mainHeadings })
+  const errors = [
+    ...SITE.errors,
+    { kind: 'missing', field: 'pages[page-home].h1', reason: 'the page shows 2 h1' },
+    { kind: 'missing', field: 'pages[page-home].images', reason: 'no shot' }
+  ]
+  assert.deepEqual(
+    errorsBesideGaps(errors, gaps).map((e) => e.field),
+    ['pages[page-home].h1', 'pages[page-home].images']
   )
 })

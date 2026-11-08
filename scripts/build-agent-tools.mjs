@@ -60,6 +60,10 @@ const HOST_ROAD = Object.freeze({
     apply: ['media.upload'],
     emdash: ['media_upload']
   },
+  'media.icon': {
+    what: "Asks tracy-web's icon door for a library icon drawn in the template's look, then uploads it as the viewer and writes the icon slot and its other-theme twin in one contract apply.",
+    apply: ['media.upload', 'content.contract']
+  },
   'page.look': { what: "Photographs one page of the site with the host's own browser." },
   'page.text': { what: 'Reads one page of the site back as the words a visitor sees.' },
   'content.find': { what: "Searches the site's files for the file-backed layer that holds a string." },
@@ -162,7 +166,10 @@ function literalValue(token) {
   const quote = token[0]
   if (quote !== "'" && quote !== '"') return null
   const body = token.slice(1, -1)
-  const json = quote === '"' ? body : body.replace(/\\'/g, "'").replace(/"/g, '\\"')
+  const json =
+    quote === '"'
+      ? body
+      : body.replace(/\\([\s\S])|"/g, (m, c) => (c === undefined ? '\\"' : c === "'" ? "'" : m))
   try {
     return JSON.parse(`"${json}"`)
   } catch {

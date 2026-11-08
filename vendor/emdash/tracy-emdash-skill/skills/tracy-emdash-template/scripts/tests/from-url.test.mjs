@@ -17,7 +17,15 @@ const SCRIPT = join(import.meta.dirname, '..', 'ingest', 'from-url.mjs')
 const PAGES = {
   '/': `<html lang="en"><head><title>Home</title><link rel="stylesheet" href="/css/site.css"></head>
         <body><a href="/about">About</a><a href="/deep/page.html">Deep</a><a href="/gone">Gone</a>
-        <a href="mailto:a@b.c">mail</a><a href="/leaving">Off</a><img src="/img/hero.png"></body></html>`,
+        <a href="mailto:a@b.c">mail</a><a href="/leaving">Off</a><img src="/img/hero.png">
+        <a href="/blog">Blog</a><a href="/blog?start=5">Blog 2</a><a href="/blog?q=${'x'.repeat(80)}3203">L1</a><a href="/blog?q=${'x'.repeat(80)}67538">L2</a><a href="/blog?a=b-c">X1</a><a href="/blog?a-b=c">X2</a>
+        <div style="background-image:url(&quot;/img/inline-bg.jpg&quot;)"></div></body></html>`,
+  '/blog': `<html lang="en"><head><title>Blog</title></head><body><p>Blog page one, at some length.</p></body></html>`,
+  '/blog?a=b-c': `<html lang="en"><head><title>X1</title></head><body><p>First of two look-alike queries, at length.</p></body></html>`,
+  '/blog?a-b=c': `<html lang="en"><head><title>X2</title></head><body><p>Second of two look-alike queries, at length.</p></body></html>`,
+  [`/blog?q=${'x'.repeat(80)}3203`]: `<html lang="en"><head><title>L1</title></head><body><p>Long query one, at some length.</p></body></html>`,
+  [`/blog?q=${'x'.repeat(80)}67538`]: `<html lang="en"><head><title>L2</title></head><body><p>Long query two, at some length.</p></body></html>`,
+  '/blog?start=5': `<html lang="en"><head><title>Blog 2</title></head><body><p>Blog page two, at some length.</p></body></html>`,
   '/about': `<html lang="en"><head><title>About</title></head><body><p>About us, at some length.</p></body></html>`,
   '/deep/page.html': `<html lang="en"><head><title>Deep</title></head><body><p>Deep page body text.</p></body></html>`
 }
@@ -46,11 +54,11 @@ before(async () => {
       res.writeHead(200, { 'content-type': 'text/css' })
       return res.end(CSS)
     }
-    if (['/img/hero.png', '/img/bg.jpg', '/fonts/x.woff2'].includes(url)) {
+    if (['/img/hero.png', '/img/bg.jpg', '/img/inline-bg.jpg', '/fonts/x.woff2'].includes(url)) {
       res.writeHead(200, { 'content-type': 'application/octet-stream' })
       return res.end(Buffer.from('binary-ish'))
     }
-    const page = PAGES[url] ?? PAGES[`${url}/`]
+    const page = PAGES[req.url] ?? PAGES[url] ?? PAGES[`${url}/`]
     if (!page) {
       res.writeHead(404)
       return res.end()
@@ -94,7 +102,7 @@ test('pages are saved at the path the site serves them from, so relative links s
     assert.ok(existsSync(join(out, 'index.html')), '/ becomes index.html')
     assert.ok(existsSync(join(out, 'about', 'index.html')), '/about becomes about/index.html')
     assert.ok(existsSync(join(out, 'deep', 'page.html')), 'a real .html path is kept as is')
-    assert.equal(report.pages.length, 3)
+    assert.equal(report.pages.length, 9)
   } finally {
     rmSync(out, { recursive: true, force: true })
   }
@@ -165,6 +173,34 @@ test('crawl.json is the record a rights question gets answered from', async () =
     assert.equal(report.sameOrigin, true)
     assert.ok(Date.parse(report.crawledAt) > 0)
     for (const page of report.pages) assert.ok(page.bytes > 0 && page.url.startsWith(base))
+  } finally {
+    rmSync(out, { recursive: true, force: true })
+  }
+})
+
+// found while porting JA Restaurant
+test('pages that differ only by query string are kept apart', async () => {
+  const { out, report } = await crawl()
+  try {
+    assert.ok(existsSync(join(out, 'blog', 'index.html')))
+    assert.ok(existsSync(join(out, 'blog', 'index~start=5.html')), 'the paged copy has its own file')
+    assert.match(readFileSync(join(out, 'blog', 'index.html'), 'utf8'), /page one/)
+    assert.match(readFileSync(join(out, 'blog', 'index~start=5.html'), 'utf8'), /page two/)
+    const long = report.pages.filter((p) => p.url.includes('xxxxxxxx'))
+    assert.equal(new Set(long.map((p) => p.file)).size, 2, 'two long queries, two files')
+    assert.deepEqual(long.map((p) => readFileSync(join(out, p.file), 'utf8').match(/Long query (one|two)/)[1]).sort(), ['one', 'two'])
+    assert.match(readFileSync(join(out, 'blog', 'index~a=b-c.html'), 'utf8'), /First of two/)
+    assert.match(readFileSync(join(out, 'blog', 'index~a-b=c.html'), 'utf8'), /Second of two/)
+    assert.ok(report.pages.some((p) => p.file === 'blog/index~start=5.html' && p.url.endsWith('?start=5')))
+  } finally {
+    rmSync(out, { recursive: true, force: true })
+  }
+})
+
+test('a background set in an inline style comes with the page', async () => {
+  const { out, report } = await crawl()
+  try {
+    assert.ok(report.assets.some((a) => a.file === 'img/inline-bg.jpg'))
   } finally {
     rmSync(out, { recursive: true, force: true })
   }

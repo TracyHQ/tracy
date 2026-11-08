@@ -828,6 +828,25 @@
           "proof": "images/joomlart/logo/logo.png is a light logo drawn on the navy header top band and footer, which css/darkmode.css keeps navy (--color-primary, palette blue) in dark mode"
         },
         "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.4."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "Blog", "home-magz"],
+        "footerSlot": "module-117.2",
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "logoHeight": 123,
+        "darkSpots": {
+          "profiles": ["default", "Blog", "home-magz"],
+          "footer": true,
+          "proof": "images/joomlart/logo/logo.png is a light logo drawn on the navy header top band and footer, which css/darkmode.css keeps navy (--color-primary, palette blue) in dark mode"
+        },
+        "note": "Same logos as 1.0.5: the logo pictures, logo layouts and T4 site profile files are byte for byte those of 1.0.5 (the two contracts' presentation locks compared); this release gives every page one h1, uses the finder search form and drops SVN conflict leftovers."
       }
     },
     "quickstart/ja-fresco/wp7": {
@@ -1023,6 +1042,15 @@
         "framework": "t4",
         "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
         "note": "Same logos and content as 1.0.9; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.9."
+      },
+      "1.0.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "unverified": ["brandReady", "faviconReady"],
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Template ja_kinetic (T4) 1.0.11 pairs the site logo with the site name: the default, blueprint and signal profiles set site_logo (kinetic-logo.png, -blueprint.png, -signal.png, 78 x 120) and site_logo_dark (the -dark twins), printed by html/layouts/t4/element/logo.php as a .d-light/.d-dark pair, each followed by the site name, and swapped by [data-bs-theme=\"dark\"] (scss/_logo-pair.scss); Blog and home-magz keep the blank T4 logo. The CSS caps the header logo at 40px high, so no logoHeight; the footer brand (acm-social) wears the same pair, so there is no footer slot. other_faviconFile is empty in every profile. Read from the 1.0.11 pack's files; the brand writer and favicon proof was not run on this layout, hence unverified."
       }
     },
     "quickstart/ja-kinetic/wp7": {
@@ -1359,6 +1387,24 @@
         },
         "logoHeight": 49,
         "note": "Same logos and content as 1.0.8; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.8."
+      },
+      "1.0.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "logoHeight": 49,
+        "note": "Same logos as 1.0.9: the logo pictures, logo layouts and T4 site profile files are byte for byte those of 1.0.9 (the two contracts' presentation locks compared); this release gives every page one h1, uses the finder search form and adds an author info override."
       }
     },
     "quickstart/ja-nova/wp7": {
@@ -2491,6 +2537,14 @@
         "framework": "t4",
         "profiles": ["default"],
         "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.4."
+      },
+      "1.0.6": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos as 1.0.5: the logo pictures, logo layouts and T4 site profile files are byte for byte those of 1.0.5 (the two contracts' presentation locks compared); this release takes its one h1 from the masthead, drops hidden link words and placeholder alt text and uses the finder search form."
       }
     },
     "quickstart/ja-tour/j6": {
@@ -2740,6 +2794,22 @@
           "proof": "default site_logo item-1.png lum 196"
         },
         "note": "Same logos and content as 1.0.7; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.7."
+      },
+      "1.0.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "darkSpots": {
+          "profiles": ["default"],
+          "proof": "default site_logo item-1.png lum 196"
+        },
+        "note": "Same logos as 1.0.8: the logo pictures, logo layouts and T4 site profile files are byte for byte those of 1.0.8 (the two contracts' presentation locks compared); this release gives every page one h1, centres short card rows and uses the finder search form."
       }
     },
     "quickstart/ja-vega/wp7": {
@@ -3137,6 +3207,14 @@
         "framework": "t4",
         "profiles": ["default"],
         "note": "Same logos and content as 1.0.10; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.10."
+      },
+      "1.0.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos as 1.0.11; the template logo keys are those of the T4 site profile, and the 1.0.12 cut edits demo content only where no Tracy step reaches it (menu items ask for the article layout, links carry index.php, one h1 per page, tag paths repaired, archived articles untagged). The demo leaves site_logo empty and prints its own mark, so the 1.0.12 kit reads two spots (header and footer brand) written through site_logo."
       }
     },
     "tracy-base/emdash-0.x": {
@@ -3594,6 +3672,12 @@
         "brandReady": true,
         "faviconReady": true,
         "note": "Read off the 1.0.0 pack source: the header is the only logo spot (BrandLogo with logoSpots); settings.logo in the light header and the chrome entry's logo_dark in the dark one, switched by the ◐ toggle and the visitor system; the template icon only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      },
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.0.0: only the stylesheets changed (type, shape and colour roles read the design-system slot); the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
       }
     },
     "tracy-saas/emdash-0.x": {

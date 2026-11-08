@@ -125,5 +125,5 @@ agents that read neither.
 
 ## Requirements
 
-Node ≥ 22.19 (24.x used), pnpm 11, Playwright with system Chrome for the visual pass, Docker only
+Node ≥ 22.19 (24.x used), pnpm 11, Playwright's Chromium (`npx playwright install chromium`) for the visual pass, Docker only
 if you want a local mailbox for form tests.

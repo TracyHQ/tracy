@@ -7,7 +7,12 @@ export function tryRowFix({ block, path, shape, css }) {
   const STATE = /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)/
   const sig = (el) =>
     `${el.tagName}.${[...el.classList]
-      .filter((c) => !STATE.test(c) && !/^[a-z]+-\d+$/.test(c))
+      .filter(
+        (c) =>
+          !STATE.test(c) &&
+          !/^[a-z]+-\d+$/.test(c) &&
+          !(c.includes('--') && el.classList.contains(c.split('--')[0]))
+      )
       .sort()
       .join('.')}`
   const root = document.querySelector(`[data-kit-block="${block}"]`)

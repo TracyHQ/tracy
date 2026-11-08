@@ -44,6 +44,8 @@ export interface ImportRun {
     rate?: number
     /** When the part on its way was first asked for, on the host's clock. */
     partStartedAt?: number
+    /** Folders (ending in `/`) and files the site's engine leaves out, unreadable to its PHP. */
+    unreadable?: { paths: string[]; count: number }
   }
   /** The host's clock when it answered, to measure `partStartedAt` against. */
   now?: number
@@ -67,6 +69,8 @@ export interface ImportErrorDetail {
   /** On `upload_too_large` over a PHP limit the site named: the package and that limit, in MB. */
   packageMb?: string
   limitMb?: string
+  /** On `files_unreadable`: the folder or file the site's engine could not read, as it named it. */
+  folder?: string
   /** On `blocked_by_firewall`: the firewall that answered, one of `FIREWALLS` and nothing else. */
   firewall?: Firewall
   /** The diagnostic check the run failed on, when the sentence depends on it. */

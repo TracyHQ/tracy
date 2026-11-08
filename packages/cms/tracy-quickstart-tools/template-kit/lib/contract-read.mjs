@@ -8,6 +8,7 @@ import { join } from 'node:path'
 
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { inlineOf } from './inline-marks.mjs'
+import { withWordPressPages } from './site/adapters/wordpress-map.mjs'
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 const readIf = (file) => (existsSync(file) ? readJson(file) : null)
@@ -88,16 +89,87 @@ export function withInlineMarkup(map, coverage) {
   return taken ? { ...map, slots } : map
 }
 
+/**
+ * The sections of each WordPress page post, by post id, that this run read from the site (wordpress-sections.mjs);
+ * null until a run sets them (cli.mjs, once, beside `usePlatform`), and the post contents then stay one block each.
+ * @type {Record<string, object[]>|null}
+ */
+let wordpressSections = null
+
+/** Settle, once per run, the WordPress page sections every read of the contract map splits pages by. */
+export function useWordPressSections(sectionsByPost) {
+  wordpressSections = sectionsByPost ?? null
+}
+
+/**
+ * The content map in the shape the kit reads, whatever the platform: a WordPress map lists no pages, so they are
+ * derived from its page entities and the release inventory beside it (`wordpress-map.mjs`), each page's post content
+ * split into its sections when the run read them.
+ * @param {object} map
+ * @param {string} contract the contract folder
+ */
+function withPlatformShape(map, contract) {
+  const manifest = readIf(join(contract, 'manifest.json'))
+  if (String(manifest?.platform ?? '').toLowerCase() !== 'wordpress') return map
+  return withWordPressPages(map, readIf(join(contract, 'inventory.json')), wordpressSections)
+}
+
 /** @param {string} contract the contract folder: its content map with the inline markup carried beside it */
 export const readContractSamples = (contract) =>
   withInlineMarkup(
-    readJson(join(contract, 'content-map.json')),
+    withPlatformShape(readJson(join(contract, 'content-map.json')), contract),
     readIf(join(contract, 'content-coverage.json'))
   )
 
+/** Every string a module's params give under a key naming a position, JSON strings inside them read too. */
+function positionsNamed(value, key = '', out = new Set()) {
+  if (typeof value === 'string') {
+    const t = value.trim()
+    if (/^[[{]/.test(t)) {
+      try {
+        return positionsNamed(JSON.parse(t), key, out)
+      } catch {}
+    }
+    if (/position/i.test(key) && t) out.add(t)
+  } else if (Array.isArray(value)) for (const v of value) positionsNamed(v, key, out)
+  else if (value && typeof value === 'object')
+    for (const [k, v] of Object.entries(value)) positionsNamed(v, k, out)
+  return out
+}
+
+/**
+ * The content map with each page's assigned module marked `inside` the module that prints it: a module whose params
+ * name a position (an ACM block's `items_position_2`, JA Impact's "Stay connected" printing the `follow` position
+ * where its "Follow us" icons sit) renders the modules of that position in its own markup, with no wrapper of theirs.
+ * @param {object} map
+ * @param {object | null} lock presentation-lock.json
+ */
+export function withModulesInside(map, lock) {
+  const hostOf = new Map()
+  for (const [key, e] of Object.entries(lock?.entities ?? {}))
+    if (key.startsWith('module-') && String(e?.published) !== '0')
+      for (const p of positionsNamed(e?.params)) if (!hostOf.has(p)) hostOf.set(p, key)
+  if (!hostOf.size) return map
+  return {
+    ...map,
+    pages: (map.pages ?? []).map((page) => {
+      const here = new Set((page.assignedModules ?? []).map((a) => a.entity))
+      return {
+        ...page,
+        assignedModules: (page.assignedModules ?? []).map((a) => {
+          const host = hostOf.get(a.position)
+          return host && host !== a.entity && here.has(host) ? { ...a, inside: host } : a
+        })
+      }
+    })
+  }
+}
+
 /** @param {string} contract the contract folder */
-export const readContractMap = (contract) =>
-  withHomeRoute(readContractSamples(contract), readIf(join(contract, 'presentation-lock.json')))
+export const readContractMap = (contract) => {
+  const lock = readIf(join(contract, 'presentation-lock.json'))
+  return withModulesInside(withHomeRoute(readContractSamples(contract), lock), lock)
+}
 
 /** @param {string} contract the contract folder */
 export const readContractCoverage = (contract) =>

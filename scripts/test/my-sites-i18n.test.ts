@@ -11,6 +11,7 @@ import { readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
+import { runInNewContext } from 'node:vm'
 import { en } from '../../packages/site/tracy-my-sites/src/client/strings.ts'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -70,10 +71,35 @@ test('no translation of the failure line still describes the old sentence', () =
 })
 
 test('the built locale bundles carry the same lines as the catalogues', () => {
-  const viBundle = readFileSync(join(ROOT, 'packages/locale/tracy-locale-vi/lib/client.js'), 'utf8')
-  assert.ok(viBundle.includes('Không tải được danh sách site.'))
-  assert.ok(!viBundle.includes('Đang đọc ghế của bạn'))
-  const others = readFileSync(join(ROOT, 'packages/locale/tracy-locales/lib/client.js'), 'utf8')
-  assert.ok(others.includes('无法加载你的 site。'))
-  assert.ok(!others.includes('Ihre Plätze werden gelesen'))
+  const registered = new Map<string, Record<string, string>>()
+  for (const name of ['tracy-locale-vi', 'tracy-locales']) {
+    const bundle = readFileSync(join(ROOT, 'packages/locale', name, 'lib/client.js'), 'utf8')
+    runInNewContext(bundle, {
+      window: {
+        __ModuleLoader__: {
+          load({ factory }: { factory: () => { apply: (context: unknown) => void } }) {
+            factory().apply({
+              effect(fn: () => void) {
+                fn()
+              },
+              locale: {
+                register(namespace: string, language: string, dictionary: Record<string, string>) {
+                  if (namespace === 'tracy-my-sites') {
+                    assert.equal(registered.has(language), false, `${language}: duplicate dictionary`)
+                    registered.set(language, JSON.parse(JSON.stringify(dictionary)))
+                  }
+                },
+                addLanguage() {}
+              }
+            })
+          }
+        }
+      }
+    })
+  }
+  assert.equal(registered.size, LANGS.length)
+  for (const lang of LANGS) {
+    assert.deepEqual(registered.get(lang), catalogue(lang), `${lang}: built dictionary is stale`)
+    assert.equal('state.loading' in registered.get(lang)!, false, `${lang}: removed key is still built`)
+  }
 })

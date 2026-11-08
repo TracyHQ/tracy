@@ -1,7 +1,7 @@
 {
   "id": "tracy-restaurant",
   "label": "JA Restaurant",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "locales": ["en"],
   "defaultLocale": "en",
   "site": {

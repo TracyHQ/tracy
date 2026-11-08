@@ -1,6 +1,7 @@
 // Searchable index of every string cell in the Joomla database dump, JSON params flattened.
 import { readDump } from './sql-dump.mjs'
 import { normText, letterCount, compact } from './normalize.mjs'
+import { articlesAskingLayout } from './article-layout.mjs'
 
 // Tables that hold copies, logs or installer metadata: a hit there says nothing about where a page's text comes from.
 const NOISE =
@@ -142,7 +143,9 @@ export function buildDbIndex(dumpFile, siteConfig = {}) {
     tableCount: tables.size,
     users: usersOfDump(tables, prefix),
     authors: authorsOfDump(tables, prefix),
-    accounts: accountsOfDump(tables, prefix)
+    accounts: accountsOfDump(tables, prefix),
+    // Published articles whose attribs ask for a layout: the audit checks their pages render it (article-layout.mjs).
+    layoutAsks: articlesAskingLayout(tables, prefix)
   }
 }
 

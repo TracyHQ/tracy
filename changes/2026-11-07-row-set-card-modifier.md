@@ -1,0 +1,3 @@
+- **A highlighted card (a modifier of its own class, `plan--featured` beside `plan`) stays in its row set** — Quickstart tools · `feat/ja-voyara-readiness` · 2026-11-07
+  **Affects:** template kits built after this (`template-kit/lib/read-details.js` row sets, `measure-min.mjs`, `row-context.js`, `row-fix.js`): a class `<base>--<variant>` on an element that also carries `<base>` no longer makes a shape of its own, so a pricing table with a featured plan is one row set and its minimum can be measured. The body skeleton that groups layouts keeps every class.
+  **Why / Measured:** On JA Voyara 1.0.12 the pricing block's three plans read as a set of two (the middle one carries `acm-plan--hl`), so the list of 3 had no row set and no minimum.

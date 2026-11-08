@@ -1111,6 +1111,13 @@
       "reason": "JoomlArt template demo content captured byte for byte into quickstart contracts (sealed: carried by shipped plugins and pinned hashes)"
     },
     {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/**",
+      "category": "email",
+      "match": "^((africa|americas|asia|europe|hello|help|oceania)@voyara\\.com|jane@email\\.com)$",
+      "kind": "third-party-content",
+      "reason": "JA Voyara template demo addresses (the fictional Voyara agency and a form placeholder) captured byte for byte into its quickstart contracts"
+    },
+    {
       "path": "packages/cms/tracy-wordpress-quickstart/contracts/**",
       "category": "email",
       "match": "@(acme\\.com|anstudio\\.com|blooms\\.com|company\\.ru|company\\.com|conference\\.eu|fresco\\.com|getfit\\.com|gmail\\.com|helixlabs\\.dev|helix\\.dev|imed\\.com|jadirectory\\.com|jarent\\.com|joomlart\\.com|joomsolutions\\.com|kineticlabs\\.dev|kinetic\\.dev|lensofadventure\\.com|morgan\\.com|nicast\\.com|no-reply\\.com|northgate-ind\\.ru|phio\\.com|prodex\\.com|salmon\\.com|stark\\.com)$",
@@ -4238,6 +4245,13 @@
       "match": "^\\+[78][ \\d-]+$",
       "kind": "third-party-content",
       "reason": "sample contact number of the Tracy Business template's demo content (seed and contracts), echoed by tests that check the template is personalised or replaced; template demo content is reviewed separately"
+    },
+    {
+      "path": "tests/regression/cases/REG-PR-385-site-agent-recheck.json",
+      "category": "phone",
+      "match": "^\\+780055067(?:90|00)$",
+      "kind": "third-party-content",
+      "reason": "Tracy Business template demo number and its replacement, quoted from the phone-link regression tests; only these two fixture values in this case are allowed"
     },
     {
       "path": "packages/cms/tracy-wordpress-theme/test/identity.test.mjs",

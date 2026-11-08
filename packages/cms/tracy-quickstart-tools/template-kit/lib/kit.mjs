@@ -216,6 +216,18 @@ export function buildKit({
           block.lists.splice(block.lists.indexOf(own), 1)
         }
         let list = fromMap ?? own
+        const most = listingMax({
+          path: pathOfBody.get(rec.id),
+          repeats: rec.widths[widths[0]]?.details?.repeats,
+          pageSizeControl: rec.widths[widths[0]]?.details?.pageSizeControl ?? null,
+          pagePaths,
+          isItemPage: (p) => String(kindByPath.get(p) ?? '').startsWith('article'),
+          siteUrl,
+          aliasHosts
+        })
+        // A category page that lists nothing (no item of its own in the map, no item row on the page, no list the
+        // map declares, no measured rows: "there are no articles in this category") gives a planner no list to fill.
+        if (!list && !most && emptyCategory(map, body.owner)) return block
         if (!list) {
           list = { id: `${rec.id}.items`, rowKind: 'items', min: null, max: null, rowSlots: [] }
           block.lists.unshift(list)
@@ -227,15 +239,6 @@ export function buildKit({
             field: field('min'),
             reason: noMinReason(minEvidence[list.id], list.max)
           })
-        const most = listingMax({
-          path: pathOfBody.get(rec.id),
-          repeats: rec.widths[widths[0]]?.details?.repeats,
-          pageSizeControl: rec.widths[widths[0]]?.details?.pageSizeControl ?? null,
-          pagePaths,
-          isItemPage: (p) => String(kindByPath.get(p) ?? '').startsWith('article'),
-          siteUrl,
-          aliasHosts
-        })
         // The view's page size from the map beats a count of the rows this demo happens to show (an author with
         // three articles on a page of six).
         if (most && most.maxSource === 'captured-rows' && list.maxFrom === 'view-setting' && list.max != null)
@@ -285,7 +288,7 @@ export function buildKit({
     listLimitsDiffering: limitChecks({ blocks, errors }),
     showcasePagesNotExcluded: showcaseChecks({ judged: showcase, pages, excludedPages, errors }),
     mixedPageGroups: mixedGroupChecks({ pages, pageGroups, itemParent, listedBy, errors }),
-    detailPagesOutsideListing: detailPageChecks({ pages, pageGroups, listedBy, errors }),
+    detailPagesOutsideListing: detailPageChecks({ pages, pageGroups, itemParent, listedBy, errors }),
     representativesNotListing: representativeChecks({ pages, pageGroups, errors }),
     slotsInTwoBlocks: slotOwnerChecks({ blocks, errors }),
     orphanTexts: orphanTextChecks({ blocks, errors }),
@@ -340,6 +343,12 @@ export function buildKit({
     approval: null
   }
 }
+
+/** A category the map knows that holds no content item of its own. */
+const emptyCategory = (map, owner) =>
+  String(owner ?? '').startsWith('category-') &&
+  (map.entities ?? []).some((e) => e.key === owner) &&
+  !(map.entities ?? []).some((e) => e.identityReferences?.catid === owner)
 
 /**
  * Items lists and their card fields: a further result page's list takes page 1's card fields (`rowSlotsFrom`);

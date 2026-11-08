@@ -813,6 +813,47 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
   // and next to no words of its own. Outermost only.
   const SLOT_CLASS =
     /(^|[-_\s])(visual|media|image|img|photo|picture|thumb|thumbnail|gallery|gallery-item|figure)([-_\s]|$)/i
+  // A picture painted without an <img>: a mask filled with a colour, a background image, or an icon font glyph, on the
+  // element itself or its ::before / ::after. JA Boxing 1.0.11 hides its icon <img> (opacity 0) and paints the icon with
+  // two masked pseudo elements; its twelve feature and class icons read as empty frames (ticket #436 follow-up). A bare
+  // colour block paints no picture, and a paint under a quarter of the frame (a placeholder glyph) does not fill it.
+  const URL_PAINT = /url\(/
+  // A colour with no alpha left: `transparent`, `rgba(r, g, b, 0)` or `color(srgb r g b / 0)`.
+  const seeThrough = (colour) =>
+    !colour ||
+    colour === 'transparent' ||
+    /^rgba\([^,]+,[^,]+,[^,]+,\s*0(?:\.0+)?\s*\)$/.test(colour) ||
+    /\/\s*0(?:\.0+)?\s*\)$/.test(colour)
+  const paintArea = (cs, size) => {
+    const w = Number.parseFloat(cs.width)
+    const h = Number.parseFloat(cs.height)
+    const font = Number.parseFloat(cs.fontSize) || 0
+    return (
+      (Number.isFinite(w) ? w : (size?.width ?? font)) * (Number.isFinite(h) ? h : (size?.height ?? font))
+    )
+  }
+  const paints = (cs, glyph) => {
+    if (cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity) === 0) return false
+    if (URL_PAINT.test(cs.backgroundImage)) return true
+    const mask = cs.maskImage || cs.webkitMaskImage || ''
+    if (URL_PAINT.test(mask) && !seeThrough(cs.backgroundColor)) return true
+    return glyph && !seeThrough(cs.color)
+  }
+  const paintsPicture = (e, area) => {
+    const min = 0.25 * area.width * area.height
+    const own = e.getBoundingClientRect()
+    if (paints(getComputedStyle(e), false) && own.width * own.height >= min) return true
+    for (const which of ['::before', '::after']) {
+      const ps = getComputedStyle(e, which)
+      if (!ps.content || ps.content === 'none' || ps.content === 'normal') continue
+      // A quoted string with a character in it is a glyph (an icon font); an empty one paints only its box.
+      const quoted = /^["']/.test(ps.content)
+      const glyph = quoted && ps.content.slice(1, -1).trim() !== ''
+      const size = ps.position === 'absolute' || ps.position === 'fixed' ? own : null
+      if (paints(ps, glyph) && paintArea(ps, size) >= min) return true
+    }
+    return false
+  }
   const drawsPicture = (box) => {
     const area = box.getBoundingClientRect()
     for (const e of [box, ...box.querySelectorAll('*')]) {
@@ -826,6 +867,7 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
         const r = e.getBoundingClientRect()
         if (r.width * r.height >= 0.25 * area.width * area.height) return true
       }
+      if (paintsPicture(e, area)) return true
     }
     return false
   }

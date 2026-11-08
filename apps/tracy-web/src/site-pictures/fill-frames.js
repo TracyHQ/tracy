@@ -6,6 +6,7 @@
 // siteSettings, as does a frame the kit writes through a setting slot (the T4 page background, whose twins follow the setting); twins copy their source. A frame with text over its picture tries darker photos first (the overlay a
 // picture still too bright gets is baked when the round is finished, ladder-step.js). Specific, icon and cut-out frames are left as pending entries for the steps
 // that come later (the picker, the icons, the cut-outs, ladder-step.js): never a demo picture. No owner photo is shown twice on a page.
+// The owner photos of the tiles of one list are then paired with the tiles by what each tile shows (shows-match.js).
 import { initialsOf } from 'website-opportunities/domain/person-avatar.mjs'
 import { initialsAvatar } from '../lib/initials-avatar.js'
 import { cutPhoto, outputSizeFor } from './cut-photo.js'
@@ -14,6 +15,7 @@ import { addTwins, hiddenEntry, pendingEntry, placedEntry } from './frame-entrie
 import { INITIALS_PAINT, previewColour } from '../lib/picture-paint/paint.js'
 import { portraitsOf, rankForFrame, sameService, usablePhotos } from './photo-shortlist.js'
 import { indexInputs } from './picture-check/inputs-index.js'
+import { matchTilesByShows } from './shows-match.js'
 
 /** What each later step fills; a pending entry names it. */
 export const WAITS_FOR = Object.freeze({
@@ -166,7 +168,8 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
         (a) => `brief photo ${a.id} is labelled as this person's portrait`
       )
       if (!tried) continue
-      const letters = initialsOf(personName(brief, wish.person))
+      const name = personName(brief, wish.person)
+      const letters = initialsOf(name)
       if (letters) {
         const size = outputSizeFor(idx.demoSize(frameId), frame, frame.width)
         // A preview only: the tile's colours are roles the write step resolves from the Design system.
@@ -180,6 +183,8 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
           list,
           entry: placedEntry(frameId, 'initials', made, {
             letters,
+            // The alt of initials is the name they are drawn from (ADR 0043 section 3f).
+            alt: name,
             paint: { ...INITIALS_PAINT },
             preview: true,
             reason:
@@ -219,6 +224,18 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
       entries.set(frameId, { list, entry: hiddenEntry(frameId, why) })
     else returns.push({ frame: frameId, reason: `${why}, and the frame cannot be hidden` })
   }
+
+  // The tiles of one list then trade their photos so each shows what the plan asks of it (card AV, shows-match.js).
+  await matchTilesByShows({
+    idx,
+    usable,
+    photoBytes,
+    entries,
+    usage,
+    onPage,
+    files,
+    spare: (a) => ![...forPicker].some((k) => k.endsWith(` ${a.id}`))
+  })
 
   if (iconJobs.length) {
     // The icon step (icons/fill-icons.js): library icons ranked by a text model, light and dark previews, their twins;

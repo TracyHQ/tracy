@@ -81,9 +81,11 @@ copy file:
   point, each a short phrase like the demo points, not a sentence.
 - `emphasis`: only on a slot whose kit view has `inline`. The exact words of your `text` to draw in the accent
   colour, copied character for character from one item: one run, about as long as the demo's (one or two words of
-  a heading, the unit of a price), at most twice as long, never the whole text and never half of it. `text` itself
-  stays plain. A label slot with `inline` is written in `slots` too (keep the plan's words or rewrite them) so it
-  carries its `emphasis`. No other slot has `emphasis`.
+  a heading, the unit of a price), at most twice as long, never the whole text and never half of it. Mark the
+  strongest word or words of the text, the ones that carry its claim (the distinctive service, the number, the
+  proof, the place only when the place is the point), never a filler or connecting word; where the demo put its
+  emphasis is not a rule. `text` itself stays plain. A label slot with `inline` is written in `slots` too (keep the
+  plan's words or rewrite them) so it carries its `emphasis`. No other slot has `emphasis`.
 - `factIds`: the slot's `factIds` from the plan, copied. Add a fact id only when a detail you wrote rests on a
   fact you were given that the plan did not list for the slot.
 - **Labels.** The plan's `text` on a label slot is a suggestion, not the final text. Keep it when it already fits
@@ -130,6 +132,8 @@ copy file:
 - Every number, time, price, phone number, email address and web address you write appears in the value of a
   fact the slot cites. Alt text, titles and descriptions cite no fact: their details must appear in one of the
   facts you were given. Spelling a number as a word does not make it allowed: a count still needs a fact.
+- A count of the distinct items the slot's cited facts name is such a fact: four cited facts that each name one
+  service give "4". Count only distinct items the cited facts name; never estimate, round up or add "+".
 - No person, price, hour, count, award, result, guarantee or offer term that a cited fact does not state.
 - A `trade` line is written from common practice of the trade. It may name what every business of the trade
   does (a first consultation, a check-up), never its terms: no price, "free", discount, duration, count,
@@ -141,7 +145,9 @@ copy file:
 - Nothing from the brief's missing list or the plan's `forbidden` list appears, not even as a hint.
 
 When `says` asks for something the cited facts do not hold, or the slot's limit cannot hold it without
-cutting it into something untrue, return the slot. Never pad it, never guess.
+cutting it into something untrue, never pad it and never guess: first write a true text of another kind that fits
+the slot and its label. A number slot whose cited facts hold nothing to count takes a short true phrase without a
+number ("All levels", "Every player"). Return the slot only when no true text of any kind fits.
 
 ## Write in the business's voice
 
@@ -213,7 +219,10 @@ full text of earlier pages, and an interrupted run continues from it.
 - W03: Is every text within its limit and, when its demo is over 40 characters, between 80% and 100% of the demo
   length (`demoChars`), its lead and its points each near the same parts of the demo, with no more items than the
   kit shows? Is every `pages` title at most 60 characters and no paragraph empty?
-- W04: Does every number, time, price, phone, email and web address appear in a fact the slot cites?
+- W04: Does every number, time, price, phone, email and web address appear in a fact the slot cites, or is it a
+  count of the distinct items the cited facts name, never estimated, rounded up or with "+"?
+- Is every returned slot one where no true text of any kind fits, a number slot only after a true phrase without a
+  number was tried?
 - W05: Is every quote an exact passage of a review you were given?
 - W06: Does any sentence share five words in a row with another sentence on the site? Check the notebook.
 - W07: Is any demo sentence or demo name left?
@@ -230,7 +239,7 @@ full text of earlier pages, and an interrupted run continues from it.
 - W15: When `shape.lead` is true, is the first item the lead paragraph near `shape.leadChars`, and every item after
   it one short point, a phrase and not a sentence, at most one and a half times the longest demo point?
 - W16: Does every slot with `inline` carry an `emphasis` that is exact words of its text, a short run and not
-  the whole text, and does no other slot carry one?
+  the whole text, and is it the strongest words of the text, not a filler? Does no other slot carry one?
 - Did you change anything the plan decided? Did you add any point the plan does not make?
 
 ## After you answer

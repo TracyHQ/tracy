@@ -166,3 +166,66 @@ test('without a page reader or a kit the measure cannot tell, and runs only when
   for (const g of PAGE_READ_GROUPS) assert.ok(isStep(g.causingStep), g.name)
   assert.ok(PAGE_READ_GROUPS.includes(writtenNotPrintedGroup))
 })
+
+// Card K: a gallery prints a picture's description only as the image's alt (or a title), never as visible words. Invented words.
+test('a written text slot counts as printed when the page prints it as an img alt or a title attribute', () => {
+  const words = (slot, value) => ({ slot, kind: 'text', value })
+  const html = (inner) => `<html><body><div class="gallery">${inner}</div></body></html>`
+  const alt = html(
+    '<a class="html5lightbox" href="/images/a.jpg"><img src="/images/a.jpg" alt="A rower&#39;s  boat at   dawn on the quay."></a>'
+  )
+  assert.deepEqual(
+    pagePrints(alt, [words('block-50.11', "A rower's boat at dawn on the quay.")]).notPrinted,
+    []
+  )
+  const title = html(
+    '<a class="html5lightbox" title="Two swimmers &amp; a coach" href="/images/b.jpg"><img src="/images/b.jpg" alt=""></a>'
+  )
+  assert.deepEqual(pagePrints(title, [words('block-50.12', 'Two swimmers & a coach')]).notPrinted, [])
+  // A value in no attribute a visitor is shown and in no text is still not printed; a data-* attribute does not count.
+  const data = html('<img src="/images/c.jpg" alt="" data-caption="A quiet lane by the river">')
+  assert.deepEqual(pagePrints(data, [words('block-50.13', 'A quiet lane by the river')]).notPrinted, [
+    'block-50.13'
+  ])
+})
+
+// Card AY, 2026-11-06: a class intro picture also stands in a list's row pair (`lists[].rowSlots[].slots[]`) of the class list,
+// so the pages that print the list show it; reading only `rows[].slots` placed it on its detail page alone.
+test('a slot nested in a list row pair counts on the pages whose blocks print the list', () => {
+  const kit = {
+    blocks: [
+      {
+        id: 'block-40',
+        slots: [{ id: 'block-40.1' }],
+        lists: [
+          {
+            rowSlots: [{ id: 'block-40.row-3', slots: [{ id: 'article-12.5' }, { id: 'article-12.1' }] }],
+            rows: [{ slots: [{ id: 'block-40.row-1' }] }]
+          }
+        ]
+      },
+      { id: 'body-lesson', frames: [{ id: 'article-12.5' }] }
+    ],
+    pages: [
+      { id: 'home', blocks: { 1440: ['block-40'] } },
+      { id: 'lesson', blocks: { 1440: ['body-lesson'] } }
+    ]
+  }
+  const on = slotsOnPages(kit, [
+    { id: 'home', path: '/' },
+    { id: 'lesson', path: '/lessons/rowing' }
+  ])
+  assert.deepEqual(on.get('/'), [
+    'block-40.1',
+    'block-40.row-3',
+    'article-12.5',
+    'article-12.1',
+    'block-40.row-1'
+  ])
+  const picture = { slot: 'article-12.5', kind: 'picture', value: PIC }
+  const pages = new Map([
+    ['/', `<html><body><figure class="item-image"><img src="/${PIC}"></figure></body></html>`],
+    ['/lessons/rowing', '<html><body><script type="application/ld+json">{}</script></body></html>']
+  ])
+  assert.deepEqual(sitePrints({ onPages: on, pages, slots: [picture] }).notPrinted, [])
+})

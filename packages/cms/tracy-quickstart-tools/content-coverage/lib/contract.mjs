@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { normText, normPath, normHref, basename, letterCount, alnumCount, compact } from './normalize.mjs'
+import { inventoryPagesOf, wordpressPagePath } from './wordpress-page-path.mjs'
 
 const readJson = (dir, name) => JSON.parse(readFileSync(join(dir, name), 'utf8'))
 /** sha256 of a contract file's bytes: the coverage file names the exact map and lock it measured. */
@@ -37,6 +38,16 @@ function paramsOf(raw) {
   } catch {
     return {}
   }
+}
+
+/** The page entities of a WordPress map, each opened by its whole path from the inventory's parents. */
+function wordpressMapPages(map, pages) {
+  return map.entities
+    .filter((e) => e.kind === 'page' && typeof e.identity?.slug === 'string')
+    .map((e) => {
+      const route = wordpressPagePath(e.identity.slug, pages)
+      return { entity: e.key, route, openAs: `?pagename=${route}` }
+    })
 }
 
 export function loadContract(dir, siteUrl) {
@@ -85,6 +96,8 @@ export function loadContract(dir, siteUrl) {
     } else if (s.type === 'url') {
       push(url, normHref(s.sample, siteUrl), s.key)
     } else {
+      // A text field that holds a web address (a store link among a template's extra fields) prints it as an href.
+      if (/^https?:\/\//i.test(String(s.sample ?? '').trim())) push(url, normHref(s.sample, siteUrl), s.key)
       const n = normText(s.sample)
       if (!n) continue
       push(text, n, s.key)
@@ -108,14 +121,25 @@ export function loadContract(dir, siteUrl) {
   }
   textList.sort((a, b) => b.norm.length - a.norm.length)
 
+  // A language string with printf placeholders ("Showing %1$s of %2$s", "Follow %s") renders with each placeholder
+  // filled at run time: one pattern per such slot, its fixed parts in order, each gap captured.
+  const PLACEHOLDER = /%(?:\d+\$)?[sdu]/g
+  const patterns = []
+  for (const s of map.slots) {
+    if (s.type !== 'text' || typeof s.sample !== 'string' || !PLACEHOLDER.test(s.sample)) continue
+    PLACEHOLDER.lastIndex = 0
+    const fixed = s.sample.split(PLACEHOLDER).map((x) => normText(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    if (letterCount(fixed.join('')) < 3) continue
+    patterns.push({ re: new RegExp(`^${fixed.join('\\s*(.+?)\\s*')}$`), key: s.key })
+  }
+
   // Pages declared by the map: menu item id + route. `index.php?Itemid=<id>` opens any of them
   // whatever the site's SEF settings, so the audit never depends on guessing URL rewriting.
   const mapPages =
     platform === 'wordpress'
-      ? // A WordPress map declares no routes: every page entity opens by its slug, whatever the permalinks are.
-        map.entities
-          .filter((e) => e.kind === 'page' && typeof e.identity?.slug === 'string')
-          .map((e) => ({ entity: e.key, route: e.identity.slug, openAs: `?pagename=${e.identity.slug}` }))
+      ? // A WordPress map declares no routes: every page entity opens by its path (`?pagename=parent/child`), whatever
+        // the permalinks are; a page under a parent answers only under the parent's path (`wordpress-page-path.mjs`).
+        wordpressMapPages(map, inventoryPagesOf(dir))
       : map.pages
   const pages = mapPages.map((p) => {
     const ent = entityByKey.get(p.entity)
@@ -161,7 +185,7 @@ export function loadContract(dir, siteUrl) {
     pages,
     lockedFiles,
     slotsByKey: new Map(map.slots.map((s) => [s.key, s])),
-    index: { text, textCompact, textList, image, imageBase, url, rawSample },
+    index: { text, textCompact, textList, patterns, image, imageBase, url, rawSample },
     template: manifest.template ?? manifest.theme,
     prefix: manifest.quickstart?.prefix ?? manifest.quickstart?.tablePrefix ?? ''
   }

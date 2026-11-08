@@ -6,6 +6,7 @@
 // with neither warns and is listed under `reads`, so that green never claims more than was read.
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { sameValue } from './slot-values.js'
+import { contractRefusals } from './write-findings.js'
 
 const INSPECT = 'content.contract inspect'
 
@@ -60,7 +61,7 @@ function judge(line, held) {
     key: line.key,
     page: held.page,
     measured: held.value,
-    ordered: line.ordered ?? null
+    ordered: line.stored ?? line.ordered ?? null
   }
   // A line the write step refused never reached the site: it blocks as a refused write does, in the step's own words.
   if (line.status === 'refused')
@@ -93,15 +94,21 @@ function judge(line, held) {
           result: 'differs',
           failure: { ...base, reason: 'The plan hides this slot and it still holds words' }
         }
-  return sameValue(line.ordered, held.value, held.slot)
+  // A heading the write step gave real emphasis tags is held to what it stored, not to the codes it sent (emphasis-stage.js).
+  return sameValue(line.stored ?? line.ordered, held.value, held.slot)
     ? { result: 'match' }
     : { result: 'differs', failure: { ...base, reason: 'The site does not hold what was ordered' } }
 }
 
 async function run({ report, read }) {
-  // An item the write step had nothing to write to is blamed on its owning step by `unaddressable-items` (write-findings.js).
+  // An item the write step had nothing to write to, and a hide the plugin refused for want of a contract slot, are blamed on
+  // their owning step by `unaddressable-items` (write-findings.js), never here on step 9.
+  const contractLacks = new Set(contractRefusals(report).map((item) => item.slot))
   const compared = report.slots.filter(
-    (s) => ['written', 'failed', 'refused', 'hidden'].includes(s.status) && !s.unaddressable
+    (s) =>
+      ['written', 'failed', 'refused', 'hidden'].includes(s.status) &&
+      !s.unaddressable &&
+      !(s.status === 'failed' && contractLacks.has(s.slot))
   )
   const noOrder = compared.filter((s) => s.status === 'written' && s.ordered === undefined)
   if (noOrder.length)

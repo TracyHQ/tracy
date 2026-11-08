@@ -280,7 +280,7 @@ async function downloadAsset(fetchImpl, asset, token, dir, signal) {
  * rules fail only because they cannot read the template.
  * @param {any} setting @param {string[]} names
  */
-const needsWebroot = (setting, names) =>
+export const needsWebroot = (setting, names) =>
   setting?.platform === 'joomla' || (setting?.platform === 'wordpress' && themeZipOf(setting, names) === null)
 
 /**

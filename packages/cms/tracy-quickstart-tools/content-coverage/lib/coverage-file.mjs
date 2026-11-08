@@ -2,7 +2,7 @@
 // Compact on purpose: counts per class and one line per distinct hole, never screenshots or pages.
 // /ops reads it (apps/tracy-web/src/lib/content-coverage/) and holds Publish on unexplained holes
 // and on page hygiene findings (raw language constants, PHP errors, unfilled placeholders).
-import { labelRulesOf } from './label-rules.mjs'
+import { applyJudgeToLabelRules, labelRulesOf } from './label-rules.mjs'
 import { normText } from './normalize.mjs'
 import { rootCause } from './root-cause.mjs'
 import { headerOf, sitePagesOf } from './site-map.mjs'
@@ -19,7 +19,9 @@ export const SCHEMA = 'tracy-content-coverage/v1'
 // 1.7.0 (04/11/2026): an all-numeric date a layout prints (06.09.2021) is core like a written one; label rules R4, R7 and
 //   R8 read cards (a mailto: link labelled by its email, info cards of different contact facts, names of two cards side
 //   by side).
-export const TOOL_VERSION = '1.7.0'
+// 1.8.0 (08/11/2026): each entry of pages.failures carries a `code` (dead-link, layout-not-served,
+//   module-boxes-not-read, page-not-rendered), so the reader names what failed instead of "pages did not render".
+export const TOOL_VERSION = '1.8.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */
@@ -156,6 +158,7 @@ export function buildCoverageFile({
       class: cls,
       ...(cls === 'capture' ? { lock: it.lockState === 'locked' ? 'locked' : 'undeclared' } : {}),
       cause: rootCause(it),
+      ...(it.inCode ? { inCode: true } : {}),
       evidence: cut(it.evidence?.[0] ?? '', 160),
       pages: pagesOf.get(it.key)?.n ?? 0,
       firstPage: pagesOf.get(it.key)?.first ?? null
@@ -185,28 +188,38 @@ export function buildCoverageFile({
       inMap: s.mappedPages,
       notInMap: s.unmappedPages,
       failed: result.failures.length,
+      // Which pages failed: path and query only (never the stand address), so the next reader can tell.
+      failures: failuresOf(result.failures),
       capReached: result.capReached === true
     },
     counts,
     coverage: Object.fromEntries(Object.entries(counts).map(([k, c]) => [k, percent(c)])),
     holes,
     hygiene: hygieneOf(result, previous),
+    // Articles asking for a template layout: how many pages were checked, how many did not show it (each is also a
+    // failure above), and the ones that cannot be checked with the reason.
+    ...(result.articleLayouts ? { articleLayouts: result.articleLayouts } : {}),
     // Every map page: does it open (HTTP 2xx), is it a menu group or a `#` link, is it in the main menu and the header.
     sitePages: sitePagesOf({ contract, result }),
     // The header of the home page (desktop): null when the run measured none.
     header: headerOf({ contract, result }),
     // Rules R2 to R9 over the map, the page snapshots and every hole found (core strings are skipped by R9 itself).
-    labelRules: labelRulesOf({
-      map: contract.map,
-      pages: result.pages,
-      holes: [...unique.values()]
-        .filter((it) => it.status === 'hole')
-        .map((it) => ({
-          kind: it.kind === 'attr' || it.kind === 'meta' ? `${it.kind}:${it.attr}` : it.kind,
-          value: shownValue(it),
-          class: CLASS_NAME[it.class] ?? 'unknown'
-        }))
-    }),
+    // A design cut-out the label judge said right leaves R5 (`applyJudgeToLabelRules`).
+    labelRules: applyJudgeToLabelRules(
+      labelRulesOf({
+        map: contract.map,
+        pages: result.pages,
+        holes: [...unique.values()]
+          .filter((it) => it.status === 'hole')
+          .map((it) => ({
+            kind: it.kind === 'attr' || it.kind === 'meta' ? `${it.kind}:${it.attr}` : it.kind,
+            value: shownValue(it),
+            class: CLASS_NAME[it.class] ?? 'unknown',
+            ...(it.inCode ? { inCode: true } : {})
+          }))
+      }),
+      labelJudge
+    ),
     // The label judge (spec #37): per slot right or wrong with a suggested role; also the cache of the next run.
     ...(labelJudge ? { labelJudge } : {}),
     // Inline markup of the samples against the database (resample.mjs): the template kit's `inlineMarkupLost` reads it.
@@ -221,6 +234,41 @@ function inlineMarkupOf(measured, previous, contract) {
 }
 
 /** matched / (matched + every hole that needs a slot); locked design and core strings are not asked of a slot. */
+/** One entry per page that did not render: its path, and the map page, HTTP status or error when known. */
+/**
+ * What failed, as a code the readiness skill indexes (`joomla-template-readiness/references/fix-map.md`): a link a page
+ * renders that answers no page, an article page that does not serve the layout the article asks for, a page whose
+ * module boxes could not be read for the label judge, or a page that did not render at all.
+ * @param {{ origin?: string, error?: string }} f
+ */
+export function failureCodeOf(f) {
+  if (f.code) return String(f.code)
+  if (f.origin === 'link') return 'dead-link'
+  if (f.origin === 'layout') return 'layout-not-served'
+  // addModuleBoxFailures (verify/module-boxes.mjs) names no origin; its words are fixed there.
+  if (String(f.error ?? '').startsWith('module boxes not read')) return 'module-boxes-not-read'
+  return 'page-not-rendered'
+}
+
+function failuresOf(failures) {
+  return (failures ?? []).map((f) => {
+    let url = String(f.url ?? '')
+    try {
+      const u = new URL(url)
+      url = u.pathname + u.search
+    } catch {
+      // already relative: keep as is
+    }
+    return {
+      url,
+      code: failureCodeOf(f),
+      ...(f.mapPage ? { mapPage: f.mapPage } : {}),
+      ...(f.status ? { status: f.status } : {}),
+      ...(f.error ? { error: String(f.error).slice(0, 300) } : {})
+    }
+  })
+}
+
 export function percent(c) {
   const need = c.matched + c.capture + c.template + c.unknown
   return need ? Math.round((c.matched / need) * 1000) / 10 : 100

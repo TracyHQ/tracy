@@ -69,6 +69,11 @@ p.add_argument('--skip-trashed-modules',action='store_true')
 # flag such rows are left out of the contract (entities, slots, pages). Off by default so every published profile
 # re-captures byte for byte.
 p.add_argument('--skip-trashed-menu-items',action='store_true')
+# An unpublished menu item (published = 0) opens no page: its route answers 404, so no crawl reaches it and every
+# measure that walks the map's pages counts it as a dead page (JA Voyara 1.0.12: four Experiences items kept for
+# later). With this flag it stays an entity of the contract (the lock still pins it, a customer may publish it) but is
+# no page of the map. Off by default so every published profile re-captures byte for byte.
+p.add_argument('--skip-unpublished-menu-pages',action='store_true')
 # A T3 template keeps its logos in the params of each template style (`logoimage`, `logoimage_sm`, `logofooterimage`,
 # `logoimage_dark`), not in a module or a settings file, so a T3 contract declared no slot for the logo every page prints
 # (JA Cagox 1.0.2: three logo pictures, no slot). With this flag each such param a captured style sets is an image slot
@@ -260,7 +265,17 @@ def form_types(files):
 tpl_dir=root/'templates'/template
 # T4 and T3 both read an article's extra fields from `etc/extrafields/*.xml` and add module fields from `etc/form/`:
 # `com_modules*.xml` for every module, `<module>.xml` for that one (JA Kids Corner's "view all" link of mod_articles_category).
-article_types=form_types(sorted((tpl_dir/'etc'/'extrafields').glob('*.xml'))) if a.full_coverage else {}
+# A JA content type (`contenttype/types/<type>.xml`) adds its fields to `attribs` too: JA Symphony's audio article keeps its
+# tracks in `ctm_audio`, a video its poster in `ctm_thumbnail`. Last come Joomla's own `attribs` fields, read from the
+# `<fields name="attribs">` group of the core article form only: an event's button prints `alternative_readmore` (JA Impact).
+article_types=form_types(sorted((tpl_dir/'etc'/'extrafields').glob('*.xml'))+sorted((tpl_dir/'contenttype'/'types').glob('*.xml'))) if a.full_coverage else {}
+if a.full_coverage:
+ try:core_form=ET.parse(root/'administrator/components/com_content/forms/article.xml')
+ except (ET.ParseError,OSError):core_form=None
+ for group in (core_form.iter('fields') if core_form is not None else []):
+  if group.get('name')!='attribs':continue
+  for node in group.iter('field'):
+   if node.get('name') and node.get('type'):article_types.setdefault(node.get('name'),node.get('type').lower())
 module_form=sorted((tpl_dir/'etc'/'form').glob('com_modules*.xml')) if a.full_coverage else []
 module_types_cache={}
 def module_types(module):
@@ -278,8 +293,13 @@ TECHNICAL=re.compile(r'color|(^|[-_])class(name)?($|[-_])|style|layout|icon|widt
 VISIBILITY_PARAMS={'moduleclass_sfx','module_tag','header_tag','header_class','style','bootstrap_size','cache','cache_time'}
 LINK_ROLE=re.compile(r'(link|url|href)[-_]?\d*$|^(link|url|href)[-_]')
 MARKUP=re.compile(r'<[a-zA-Z/!]')
+# A `jaitems` field stores its rows under the keys "0", "1"… (an object, not a list: JA Masthead's `menuitem_config`
+# skips a deleted row's number), so a numeric key is a row, not a field name.
+row_key=lambda x:isinstance(x,int) or isinstance(x,str) and x.isdigit()
+# A text field naming the file an <audio>/<video> plays (`audio-src`) is a picture slot: the page reads it as a `src`.
+MEDIA_SRC=re.compile(r'(^|[-_])src$')
 def leaf_name(path):
- name=next((str(x) for x in reversed(path) if not isinstance(x,int)),'')
+ name=next((str(x) for x in reversed(path) if not row_key(x)),'')
  return re.sub(r'.*\[([^]]+)\]$',r'\1',name)
 def declare_json(add,column,value,types,label,skip=()):
  """One slot per content field in a JSON column, by the form that declares the field."""
@@ -297,7 +317,7 @@ def declare_json(add,column,value,types,label,skip=()):
    name=leaf_name(path);ft=types.get(name)
    if ft not in CONTENT_TYPES:return
    if ft!='media' and 'video' not in name.lower() and TECHNICAL.search(name):return
-   typ='image' if ft=='media' else 'url' if ft=='url' or LINK_ROLE.search(name) else 'text'
+   typ='image' if ft=='media' or MEDIA_SRC.search(name) else 'url' if ft=='url' or LINK_ROLE.search(name) else 'text'
    if typ=='text' and MARKUP.search(node):
     for h in html_slots(node):add(column,h['type'],h['sample'],jsonPath=path,xpath=h['xpath'],label=label+' / '+name,customize='keep')
    else:add(column,typ,node,jsonPath=path,label=label+' / '+name,customize='keep')
@@ -357,6 +377,12 @@ def declare_everything(kind,row,add):
    v=images.get(k) if isinstance(images,dict) else None
    if isinstance(v,str) and v.strip():add('images',typ,v,jsonPath=[k],label=title+' / '+k,customize='keep')
   declare_json(add,'attribs',row.get('attribs'),article_types,title)
+  # Words for search engines and the byline printed in place of the author's name (JA Kinetic's blog), after the
+  # images and attribs so their keys stay.
+  declare_text(add,'metadesc',row.get('metadesc'),title+' / metadesc')
+  declare_text(add,'created_by_alias',row.get('created_by_alias'),title+' / created_by_alias')
+  # The administrator's note, which a card can print as its label (JA Voyara's featured view: the label chip), last.
+  declare_text(add,'note',row.get('note'),title+' / note')
  elif kind=='module':
   if module_title_shown(row):declare_text(add,'title',row.get('title'),title+' / title')
   # mod_custom bodies outside the module prefix were never slots.
@@ -368,7 +394,8 @@ def declare_everything(kind,row,add):
  elif kind=='menuItem':
   try:params=json.loads(row.get('params') or '{}')
   except ValueError:params={}
-  for k in ['page_title','menu-meta_description','menu-anchor_title','page_heading']:
+  # A login page's words above and below the form (JA Kinetic's sign-in page), after the others so their keys stay.
+  for k in ['page_title','menu-meta_description','menu-anchor_title','page_heading','login_description','logout_description']:
    v=params.get(k) if isinstance(params,dict) else None
    if isinstance(v,str) and v.strip():add('params','text',v,jsonPath=[k],label=title+' / '+k,customize='keep')
  elif kind=='contact':
@@ -382,6 +409,8 @@ def declare_everything(kind,row,add):
    for k,typ in ((f'link{n}_name','text'),(f'link{n}','url')):
     v=params.get(k) if isinstance(params,dict) else None
     if isinstance(v,str) and v.strip():add('params',typ,v,jsonPath=[k],label=title+' / '+k,customize='keep',**({'requiresEvidence':True} if typ=='url' else {}))
+  # The contact's picture (JA Symphony, Nova, Vega: the Contact page), after the links so their keys stay.
+  declare_text(add,'image',row.get('image'),title+' / image','image',requiresEvidence=False)
  elif kind=='tag':
   declare_text(add,'title',row.get('title'),title+' / title')
   declare_html(add,'description',row.get('description'),title+' / description')
@@ -405,6 +434,8 @@ def declare_masthead(row,add,declared=()):
  except ValueError:return
  cfg=params.get('menuitem_config') if isinstance(params,dict) else None
  if not isinstance(cfg,dict):return
+ # A template whose module form types the `menuitem_config` fields (T4) has them declared by the JSON walk already:
+ # a second slot for one field would be two writers of one value (`written` covers the background too).
  def column(name):
   v=cfg.get(name)
   return v if isinstance(v,dict) else dict(enumerate(v)) if isinstance(v,list) else {}
@@ -415,7 +446,7 @@ def declare_masthead(row,add,declared=()):
   if not any(i in menu_ids for i in ids):continue
   page=f'{row["title"]} / menu item {",".join(ids) or k}'
   bg=backgrounds.get(k)
-  if isinstance(bg,str) and bg.strip() and not MASTHEAD_VIDEO.search(bg.split('#')[0]):
+  if isinstance(bg,str) and bg.strip() and not MASTHEAD_VIDEO.search(bg.split('#')[0]) and ('background',str(k)) not in written:
    add('params','image',bg,jsonPath=['menuitem_config','background',k],label=page+' / background',role='business.hero_image',group={'id':f'module-{row["id"]}.masthead-{k}','item':0,'kind':'business'})
   for name,role in (('title','editorial.heading'),('description','editorial.paragraph')):
    v=(titles if name=='title' else descriptions).get(k)
@@ -492,6 +523,10 @@ for kind,table in tables.items():
     for h in html_slots(body):add(col,h['type'],h['sample'],xpath=h['xpath'],label=row['title'])
   # Labels remain content; identities use stable aliases rather than mutable titles.
   if kind in ['article','menuItem']:add('title','text',row['title'],label=row['title'])
+  # A menu entry that opens an address of its own (type `url`: JA Impact's "Follow us" Twitter, Facebook…) prints that
+  # address as its link; it is the business's to write, after the title so the keys before it stay.
+  if kind=='menuItem' and row.get('type')=='url' and isinstance(row.get('link'),str) and row['link'].strip():
+   add('link','url',row['link'],label=row['title']+' / link',requiresEvidence=True)
   if a.full_coverage:declare_everything(kind,row,add)
   if kind=='templateStyle' and a.template_style_logos:
    try:style_params=json.loads(row.get('params') or '{}')
@@ -525,7 +560,7 @@ for kind,table in tables.items():
 # title. A `user` entity per author of a captured article (identity: username; only name and username are kept, never
 # the account), and a `userProfile` entity per profile value the plugin lists (\UserProfileKey: user_id x 100 + the
 # key's place in FIELDS), matched by its field and its author. Neither kind is counted: every provision adds people.
-PROFILE_FIELDS=['profile.aboutme','profile.user_jobtitle','profile.user_tagline','profile.user_avatar']
+PROFILE_FIELDS=['profile.aboutme','profile.user_jobtitle','profile.user_tagline','profile.user_avatar','profile.address1']
 people_rows={'user':[],'userProfile':[]}
 if a.full_coverage:
  def words(v):
@@ -559,6 +594,38 @@ if a.full_coverage:
  # author page), but the account itself is not: its username changes. So no `user` entity; the profile is matched by the
  # account's id, which a provision keeps (it only resets the password).
  for uid in sorted(owners,key=int):declare_profiles(uid,owners[uid]['name'],{'user_id':str(uid)},None)
+# Custom field values (--full-coverage): words an author page prints from a user's custom field (JA Vega's `info` field holds
+# each team member's skill bars, `#__fields_values`, field 1 x users 42-50). A `fieldValue` entity per value that is the one
+# row of its (field, item) pair, identity {field (its name), context}, matched to its item: the item's `user` entity when the
+# contract has one, else the item's id, which a provision keeps (as for the Super User's profile). The row id is the plugin's
+# FieldValueKey (field_id x 1e9 + item_id). An article's field is matched the same way to the item's `article` entity (JA
+# Kinetic's `author_role` prints "Platform Engineer · <date>" under each post; the plugin's ContentProjection owns it to the
+# article). Never counted.
+FIELD_SPAN=1000000000
+people_rows['fieldValue']=[]
+if a.full_coverage:
+ field_defs={r['id']:r for r in inv.get('fields',[]) if r.get('context') in ('com_users.user','com_content.article') and str(r.get('state'))=='1'}
+ pairs=collections.Counter((r['field_id'],r['item_id']) for r in inv.get('fields_values',[]))
+ people={**users,**owners}
+ article_keys={e['key'] for e in entities if e['kind']=='article'}
+ titles={str(r['id']):r.get('title') or '' for r in inv['content'] if f'article-{r["id"]}' in article_keys}
+ for r in sorted(inv.get('fields_values',[]),key=lambda r:(int(r['field_id']),int(r['item_id']) if str(r['item_id']).isdigit() else 0)):
+  f=field_defs.get(r['field_id'])
+  if f is None or pairs[(r['field_id'],r['item_id'])]!=1 or not str(r['item_id']).isdigit():continue
+  article=f['context']=='com_content.article'
+  if r['item_id'] not in (titles if article else people):continue
+  fid=int(r['field_id'])*FIELD_SPAN+int(r['item_id']);eid=f'fieldValue-{fid}'
+  label=(titles[r['item_id']] if article else people[r['item_id']]['name']).strip()+' / '+f['name']
+  def add(column,typ,sample,**extra):
+   slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':255 if typ=='image' else max(40,min(2000,len(sample)*2+20)),'requiresEvidence':False,**extra})
+  value=r.get('value') or ''
+  if MARKUP.search(value):declare_html(add,'value',value,label)
+  else:declare_text(add,'value',value,label,'image' if f.get('type')=='media' else 'text')
+  if not any(sl['entity']==eid for sl in slots):continue
+  owner=f'{"article" if article else "user"}-{r["item_id"]}'
+  identity={'field':f['name'],'context':f['context'],**({} if any(e['key']==owner for e in entities) else {'item_id':str(r['item_id'])})}
+  entities.append({'key':eid,'kind':'fieldValue','identity':identity,**({'identityReferences':{'item_id':owner}} if 'item_id' not in identity else {}),'sourceId':fid,'initial':{'value':value}})
+  people_rows['fieldValue'].append({'id':str(fid),'field':f['name'],'context':f['context'],'item_id':str(r['item_id'])})
 # Template language strings (--full-coverage): words a template keeps in its language file and prints itself (JA Boxing's
 # "Try a class" is `Text::_('TPL_TRY_CLASS')`; JA Kids Corner's map hands `'TPL_MAP_STATIC_OPEN'` to a helper of its own that
 # calls `Text::_`). One `languageString` entity per key the template's front-end PHP names as a literal (in a `Text` call,
@@ -647,6 +714,62 @@ if a.full_coverage:
    identity={'template':tpl,'profile':profile,'key':key}
    entities.append({'key':eid,'kind':'siteSetting','identity':identity,'sourceId':sid,'initial':{**identity,'value':value}})
    people_rows['siteSetting'].append({'id':str(sid),**identity})
+# T4 layout and navigation profiles (--full-coverage): a T4 template keeps a page's sections and its mega menu in FILES,
+# `etc/{layout,navigation}/<profile>.json` (read from `local/etc/` first, `default` when the profile has no file), each template
+# style naming its profiles in `typelist-layout`, `sub-layout` and `typelist-navigation`. Visitors read two things there: a mega
+# menu column's title (`mega_settings`, itself a JSON string: [menutype][item id].settings[i].contents[j].title, printed by T4's
+# mod_menu/mega_sub.php; JA Vega's "Our Portfolio", JA Kinetic's "Company") and a section's `background_image`. One
+# `templateConfig` entity per profile file holding one, identity {template, group, profile}, whose one column `value` is the
+# file's whole text; its slots point into it. The plugin writes the new text to the profile's `local/` copy. The row id is the
+# plugin's TemplateConfigRows::id(). Never counted: a profile file is not inventory.
+def template_config_id(tpl,group,profile):return int(hashlib.sha1(f'{tpl}|{group}|{profile}'.encode()).hexdigest()[:7],16)+1
+PROFILE_NAME=re.compile(r'[A-Za-z0-9_-][A-Za-z0-9 _.-]{0,99}')
+if a.full_coverage:
+ people_rows['templateConfig']=[];wanted=set()
+ for r in inv.get('template_styles',[]):
+  if r.get('client_id')!='0' or r.get('template') not in styleTemplates:continue
+  try:params=json.loads(r.get('params') or '{}') or {}
+  except ValueError:params={}
+  if not isinstance(params,dict):params={}
+  for group,names in [('layout',['typelist-layout','sub-layout']),('navigation',['typelist-navigation'])]:
+   for name in names:
+    profile=params.get(name)
+    if name=='sub-layout' and not profile:continue
+    wanted.add((r['template'],group,profile if isinstance(profile,str) and PROFILE_NAME.fullmatch(profile) else 'default'))
+ for tpl,group,profile in sorted(wanted):
+  src=next((f for f in [root/'templates'/tpl/'local'/'etc'/group/f'{profile}.json',root/'templates'/tpl/'etc'/group/f'{profile}.json'] if f.is_file()),None)
+  if src is None and profile!='default':profile='default';src=next((f for f in [root/'templates'/tpl/'local'/'etc'/group/'default.json',root/'templates'/tpl/'etc'/group/'default.json'] if f.is_file()),None)
+  if src is None:continue
+  text=read_text(src)
+  try:data=json.loads(text)
+  except ValueError:continue
+  if not isinstance(data,dict):continue
+  cid=template_config_id(tpl,group,profile);eid=f'templateConfig-{cid}'
+  if any(e['key']==eid for e in entities):continue
+  def add(typ,sample,label,**extra):
+   slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':'value','type':typ,'sample':sample,'maxCharacters':255 if typ=='image' else max(40,min(2000,len(sample)*2+20)),'requiresEvidence':False,'label':label,'customize':'keep',**extra})
+  if group=='navigation':
+   try:mega=json.loads(data.get('mega_settings') or '{}')
+   except (TypeError,ValueError):mega={}
+   for menutype,items in (mega.items() if isinstance(mega,dict) else []):
+    for item,setting in (items.items() if isinstance(items,dict) else []):
+     for i,row in enumerate(setting.get('settings') or [] if isinstance(setting,dict) else []):
+      for j,col in enumerate(row.get('contents') or [] if isinstance(row,dict) else []):
+       title=col.get('title') if isinstance(col,dict) else None
+       if isinstance(title,str) and title.strip():add('text',title,f'{title.strip()} (mega menu column, {menutype} item {item})',nestedJson='mega_settings',jsonPath=[menutype,item,'settings',i,'contents',j,'title'])
+  else:
+   def walk(node,path):
+    if isinstance(node,dict):
+     for k,v in node.items():
+      if k=='background_image' and isinstance(v,str) and v.strip():add('image',v,f'background_image (layout {profile}, '+'/'.join(map(str,path))+')',jsonPath=[*path,k])
+      else:walk(v,[*path,k])
+    elif isinstance(node,list):
+     for n,v in enumerate(node):walk(v,[*path,n])
+   walk(data,[])
+  if not any(sl['entity']==eid for sl in slots):continue
+  identity={'template':tpl,'group':group,'profile':profile}
+  entities.append({'key':eid,'kind':'templateConfig','identity':identity,'sourceId':cid,'initial':{**identity,'value':text}})
+  people_rows['templateConfig'].append({'id':str(cid),**identity})
 if a.evidence_by_field:
  rules=json.load(open(pathlib.Path(__file__).resolve().parents[4]/'apps/tracy-web/src/lib/fact-fields.json'))
  roles=[re.compile(src,re.I) for src in rules['roles'].values()]
@@ -686,6 +809,7 @@ styles={int(r['id']):r for r in inv['template_styles']}
 for e in entities:
  if e['kind']!='menuItem':continue
  row=e['initial'];mid=e['sourceId'];sid=int(row['template_style_id'])
+ if a.skip_unpublished_menu_pages and str(row.get('published'))!='1':continue
  style=styles.get(sid) if sid else next((s for s in styles.values() if s['home']=='1' and s['client_id']=='0'),None)
  modules=[]
  for m in (v for v in entities if v['kind']=='module'):

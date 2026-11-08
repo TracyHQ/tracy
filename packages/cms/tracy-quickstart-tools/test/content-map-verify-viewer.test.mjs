@@ -176,3 +176,40 @@ test('a demo-only entity (a style-guide page) is located and shown but never mar
   // The same map without the mark still flags the figure filed as editorial.
   assert.equal(model().counts.suspicious, 1)
 })
+
+test('an address slot whose demo value is # is not located, and does not drag its entity to the other # links', () => {
+  // A "Follow us" entry: its title sits in the footer, its address `#` matches every `#` link of the page (the logo).
+  const at = (y) => ({ visible: true, rect: { x: 40, y, w: 100, h: 20 }, selector: 'a' })
+  const map = {
+    slots: [
+      { key: 'menuItem-132.0', entity: 'menuItem-132', type: 'text', sample: 'Twitter' },
+      { key: 'menuItem-132.1', entity: 'menuItem-132', type: 'url', sample: '#' }
+    ]
+  }
+  const link = (y) => ({ ...matched('menuItem-132.1', at(y), at(y)), kind: 'link', matchBy: 'href' })
+  const findings = {
+    pages: [
+      {
+        n: 1,
+        url: 'https://bakery.example/',
+        title: 'Home',
+        shots: {},
+        items: [
+          { ...matched('menuItem-132.0', at(5000), at(5000)), kind: 'link' },
+          link(140),
+          link(160),
+          link(400)
+        ]
+      }
+    ]
+  }
+  const m = locate({ map, findings, isFactRole, mods: {} })
+  assert.deepEqual(
+    m.components.flatMap((c) => c.rows.map((r) => r.slot.key)),
+    ['menuItem-132.0']
+  )
+  assert.deepEqual(
+    m.notLocated.map((r) => r.slot.key),
+    ['menuItem-132.1']
+  )
+})

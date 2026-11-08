@@ -11,6 +11,7 @@ import { DARK_ENOUGH, darkenPicture, luminanceOf, overlayFor } from '../src/site
 import { aspectRatioFor, drawingText } from '../src/site-pictures/drawer-call.js'
 import { fileStore } from '../src/site-pictures/file-store.js'
 import { fillFrames } from '../src/site-pictures/fill-frames.js'
+import { exportPictureMapping } from '../src/site-pictures/contract-mapping.js'
 import { createDrawing } from '../src/site-pictures/ladder-draw.js'
 import { createFinisher } from '../src/site-pictures/ladder-step.js'
 import { createLooker } from '../src/site-pictures/looker-step.js'
@@ -20,6 +21,7 @@ import { checkPictures } from '../src/site-pictures/picture-check/check-pictures
 import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
 import { picturePrompts } from '../src/site-pictures/picture-prompts.js'
 import { manifestFor } from '../src/site-pictures/picker-picks.js'
+import { packageProblems } from '../src/write-step/picture-package.js'
 import { scene } from './_generated-photos.mjs'
 import {
   brief as kestrelBrief,
@@ -169,8 +171,12 @@ const photoBytes = new Map([...PHOTO_BYTES, ['p-bench-tall', TALL]])
 const frameOf = (text) => /block-[a-z]\.\d/.exec(text)?.[0] ?? null
 const json = (body) => new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json' } })
 
-/** Fake doors: `reject` the frames the looker rejects; every drawing and every look is recorded by frame. */
-function fakeDoors({ reject, bright = new Set() }) {
+/**
+ * Fake doors: `reject` the frames the looker rejects; every drawing and every look is recorded by frame. `faultOf` the
+ * fault a rejected frame is named (default: wrong subject, or forbidden item for an any-real frame); `passFrom` the
+ * look of a frame (1 based) from which the looker passes it.
+ */
+function fakeDoors({ reject, bright = new Set(), faultOf = {}, passFrom = {} }) {
   const drawings = []
   const looks = []
   const fetchImpl = async (_url, init) => {
@@ -184,10 +190,12 @@ function fakeDoors({ reject, bright = new Set() }) {
     const f = frameOf(text)
     looks.push({ frame: f, text, model: body.model })
     // An any-real frame is never failed for its subject (spec #336), so it is rejected for a thing to avoid.
-    const fault = /accepts any real photo/.test(text) ? 'forbidden item' : 'wrong subject'
-    const said = reject.has(f)
-      ? { verdict: 'fail', faults: [fault], seen: 'A shop sign over a door.' }
-      : { verdict: 'pass', faults: [], seen: 'A bicycle in a workshop.' }
+    const fault = faultOf[f] ?? (/accepts any real photo/.test(text) ? 'forbidden item' : 'wrong subject')
+    const nth = looks.filter((l) => l.frame === f).length
+    const said =
+      reject.has(f) && !(passFrom[f] && nth >= passFrom[f])
+        ? { verdict: 'fail', faults: [fault], seen: 'A shop sign over a door.' }
+        : { verdict: 'pass', faults: [], seen: 'A bicycle in a workshop.' }
     return json({
       model: LOOKER_MODEL,
       choices: [{ message: { role: 'assistant', content: JSON.stringify(said) } }],
@@ -263,6 +271,14 @@ async function setUp(doors, runId) {
   return { doc, finisher, check, fs }
 }
 
+// The two other compositions a frame that cannot be hidden is drawn in before it may be returned.
+const ALT_DRAWS = [
+  ['redraw-alt', 'placed'],
+  ['redraw-alt', 'rejected'],
+  ['redraw-alt', 'placed'],
+  ['redraw-alt', 'rejected'],
+  ['redraw-alt', 'skipped']
+]
 const byFrame = (doc) => new Map([...doc.frames, ...doc.siteSettings].map((e) => [e.frame, e]))
 const rungs = (doc, f) => doc.ladder.find((l) => l.frame === f)?.steps.map((s) => [s.rung, s.outcome]) ?? []
 
@@ -304,14 +320,22 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   // Not in a list row: hidden where the kit allows it, returned to the planner where it does not.
   assert.deepEqual(rungs(m, 'block-b.1'), [...drawAndPhotos, ['fewer-rows', 'skipped'], ['hide', 'hidden']])
   assert.equal(e.get('block-b.1').source, 'hide')
+  // A frame that cannot be hidden is drawn again in other compositions first; when every picture it got had a hard
+  // fault (here a wrong subject), the best of them is placed despite the looker: a rejection never leaves the demo
+  // (owner's rule 2026-11-07), and the picture package names no problem for it.
   assert.deepEqual(rungs(m, 'block-c.1'), [
     ...drawAndPhotos,
     ['fewer-rows', 'skipped'],
     ['hide', 'skipped'],
-    ['return', 'returned']
+    ...ALT_DRAWS,
+    ['best-rejected', 'placed']
   ])
-  assert.ok(!e.has('block-c.1'))
-  assert.match(m.returns.find((r) => r.frame === 'block-c.1').reason, /after: draw placed/)
+  assert.ok(!m.returns.some((r) => r.frame === 'block-c.1'), 'never returned')
+  assert.deepEqual(e.get('block-c.1').filledBy, { rung: 'best-rejected', faults: ['wrong subject'] })
+  assert.match(e.get('block-c.1').reason, /^placed despite looker: wrong subject, after: draw placed/)
+  const exported = exportPictureMapping({ pictures: m, contract: kit().contract, revision: 'r', kit: kit() })
+  assert.ok(!exported.problems.some((x) => x.where === 'block-c.1'))
+  assert.ok(!packageProblems(exported, kit().contract).some((x) => x.startsWith('block-c.1:')))
   // The redraw names the looker's faults; the first drawing does not.
   const bDraws = doors.drawings.filter((d) => d.frame === 'block-b.1')
   assert.equal(bDraws.length, 2)
@@ -361,15 +385,17 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   assert.ok(k.overlay.after < k.overlay.before)
   assert.equal(k.overlay.after <= DARK_ENOUGH + 0.02, true, `${k.overlay.after}`)
 
-  // Draw count and cost: g, b and c twice each, w and k once; every one paid in this save.
-  assert.equal(doors.drawings.length, 8)
-  assert.equal(m.drawer.calls.length, 8)
-  assert.equal(m.drawer.count, 2)
+  // Draw count and cost: g and b twice each, c four times (two other compositions), w and k once; every one paid in
+  // this save.
+  assert.equal(doors.drawings.length, 10)
+  assert.equal(m.drawer.calls.length, 10)
+  // Drawn pictures on the site: w, k and c (placed despite the looker).
+  assert.equal(m.drawer.count, 3)
   assert.equal(m.drawer.model, DRAWER_MODEL)
-  assert.ok(Math.abs(m.cost.drawer - 8 * DRAW_COST) < 1e-9, `${m.cost.drawer}`)
+  assert.ok(Math.abs(m.cost.drawer - 10 * DRAW_COST) < 1e-9, `${m.cost.drawer}`)
   assert.ok(m.timing.drawer >= 0)
   const looksPaid = m.looker.calls.filter((c) => !c.cached).length * 0.0002
-  assert.ok(Math.abs(out.paid - (8 * DRAW_COST + looksPaid)) < 1e-9, `${out.paid}`)
+  assert.ok(Math.abs(out.paid - (10 * DRAW_COST + looksPaid)) < 1e-9, `${out.paid}`)
   assert.equal(new Set(m.looker.calls.map((c) => `${c.frame} ${c.sha256}`)).size, m.looker.calls.length)
 
   // The finished manifest passes the picture check: nothing drawn in an any-real frame (P07), nothing but a portrait,
@@ -429,6 +455,79 @@ test('a frame the picker placed climbs only in the last round; an any-real frame
   assert.ok(got.doc.pending.some((p) => p.frame === 'block-d.1'))
 })
 
+test('a frame the plan wants filled that cannot be hidden keeps the best picture whose only fault is minor', async () => {
+  // Card AJ: every drawing and photo of block-c.1 is rejected for a cut-off subject, and the kit cannot hide it.
+  const doors = fakeDoors({ reject: new Set(['block-c.1']), faultOf: { 'block-c.1': 'subject cut off' } })
+  const { doc, finisher, check } = await setUp(doors, 'run-minor')
+  const out = await finisher.finish(doc, { lastRound: true })
+  const m = out.doc
+  assert.deepEqual(rungs(m, 'block-c.1'), [
+    ['draw', 'placed'],
+    ['draw', 'rejected'],
+    ['redraw', 'placed'],
+    ['redraw', 'rejected'],
+    ['next-photo', 'placed'],
+    ['next-photo', 'rejected'],
+    ['next-photo', 'placed'],
+    ['next-photo', 'rejected'],
+    ['next-photo', 'skipped'],
+    ['fewer-rows', 'skipped'],
+    ['hide', 'skipped'],
+    ...ALT_DRAWS,
+    ['best-rejected', 'placed']
+  ])
+  assert.ok(!m.returns.some((r) => r.frame === 'block-c.1'), 'never returned')
+  const c = byFrame(m).get('block-c.1')
+  assert.ok(c?.file, 'the frame has a file')
+  assert.deepEqual(c.filledBy, { rung: 'best-rejected', faults: ['subject cut off'] })
+  // The last picture with the fewest minor faults: the second other composition.
+  const lastAlt = m.drawer.calls.filter((x) => x.frame === 'block-c.1').at(-1)
+  assert.equal(c.sha256, lastAlt.sha256)
+  assert.equal(c.source, 'drawn')
+  assert.match(
+    c.reason,
+    /^the best rejected picture, kept because its only faults are minor \(subject cut off\)/
+  )
+  // The other compositions ask for the subject whole, centred, with a margin, in the frame's shape.
+  const draws = doors.drawings.filter((d) => d.frame === 'block-c.1')
+  assert.equal(draws.length, 4)
+  for (const d of draws.slice(2)) {
+    assert.match(d.text, /centred/)
+    assert.match(d.text, /4:3/)
+    assert.match(d.text, /subject cut off/)
+  }
+  assert.doesNotMatch(draws[1].text, /centred, whole/)
+  assert.match(draws[2].text, /a few steps further back/)
+  assert.match(draws[3].text, /a wider view/)
+  // The looker's rule notes the kept picture instead of failing it, and the package writes it.
+  assert.ok(!out.rule.failures.some((f) => f.where === 'block-c.1'), JSON.stringify(out.rule.failures))
+  assert.ok(out.rule.notes.some((n) => /block-c\.1: kept with minor faults/.test(n)))
+  const result = await check(out)
+  assert.deepEqual(
+    result.rules.filter((r) => r.status === 'fail').map((r) => [r.id, r.failures]),
+    []
+  )
+  const exported = exportPictureMapping({ pictures: m, contract: kit().contract, revision: 'r', kit: kit() })
+  assert.equal(exported.mapping.changes['module-c.1'], c.sitePath)
+  assert.ok(!exported.problems.some((x) => x.where === 'block-c.1'))
+})
+
+test('a frame that cannot be hidden takes another composition the looker passes', async () => {
+  const doors = fakeDoors({ reject: new Set(['block-c.1']), passFrom: { 'block-c.1': 5 } })
+  const { doc, finisher } = await setUp(doors, 'run-alt')
+  const out = await finisher.finish(doc, { lastRound: true })
+  const steps = rungs(out.doc, 'block-c.1')
+  assert.deepEqual(steps.slice(-3), [
+    ['fewer-rows', 'skipped'],
+    ['hide', 'skipped'],
+    ['redraw-alt', 'placed']
+  ])
+  const c = byFrame(out.doc).get('block-c.1')
+  assert.equal(c.looker.verdict, 'pass')
+  assert.deepEqual(c.filledBy, { rung: 'redraw-alt', faults: [] })
+  assert.deepEqual(c.drawing, { mode: 'scene', attempt: 3 })
+})
+
 test('the drawing text is the fixed template filled from the plan words only', () => {
   const parts = picturePrompts().drawing
   assert.deepEqual(Object.keys(parts).sort(), [
@@ -436,9 +535,12 @@ test('the drawing text is the fixed template filled from the plan words only', (
     'cutout',
     'object',
     'outpaint',
+    'recompose',
     'redraw',
     'scene',
-    'style'
+    'style',
+    'take1',
+    'take2'
   ])
   const w = {
     shows: 'a wheel on a stand',

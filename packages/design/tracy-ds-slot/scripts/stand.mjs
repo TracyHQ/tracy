@@ -31,6 +31,7 @@ import { fileURLToPath } from 'node:url'
 import { manifestFromSetting } from '../src/release-manifest.mjs'
 import { standAddressOf } from '../src/stand-address.mjs'
 import { STAND_DB_ARGS } from '../src/stand-db.mjs'
+import { dockerEndpoint, remoteEngineProblem } from '../src/stand-docker-host.mjs'
 
 const IMAGES = {
   wordpress: 'tracy/web-wordpress:php8.3-apache-20260923-r1',
@@ -262,6 +263,18 @@ if (args.includes('--fetch-only')) {
   process.exit(0)
 }
 
+// the site is a bind mount of this machine's folder: an engine elsewhere would serve its empty CMS installer
+{
+  const contextEndpoint = process.env.DOCKER_HOST
+    ? ''
+    : spawnSync('docker', ['context', 'inspect', '--format', '{{.Endpoints.docker.Host}}'], {
+        encoding: 'utf8'
+      }).stdout
+  const problem = remoteEngineProblem(
+    dockerEndpoint({ dockerHost: process.env.DOCKER_HOST, contextEndpoint })
+  )
+  if (problem) throw new Error(problem)
+}
 const site = join(dir, 'site')
 mkdirSync(site, { recursive: true })
 if (installer) execFileSync('unzip', ['-q', '-o', join(dir, 'dl', webFile), '-d', site])

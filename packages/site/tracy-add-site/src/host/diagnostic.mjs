@@ -33,6 +33,7 @@ export const DIAGNOSTIC_STEPS = new Set([
 export const DIAGNOSTIC_CHECKS = new Set([
   'admin_form_not_found',
   'admin_gate',
+  'answered_page',
   'bad_location',
   'basic_challenge',
   'below_minimum',
@@ -61,7 +62,10 @@ export const DIAGNOSTIC_CHECKS = new Set([
   'not_downloaded',
   'not_installed',
   'over_limit',
+  'page_after_ban',
+  'page_after_proof',
   'parse_error',
+  'permission_denied',
   'refused',
   'server_denied',
   'signed_out',
@@ -87,6 +91,12 @@ export const DIAGNOSTIC_ACTIONS = new Set([
  * text: nothing, PHP's fatal, PHP's notices with no engine reply after them, a page, other JSON, text.
  */
 export const DIAGNOSTIC_ANSWERS = new Set(['empty', 'php_fatal', 'php_notice', 'html', 'json', 'text'])
+
+/**
+ * What a page that was not the engine's showed (`doors.mjs` `pageKind`), never its text: Joomla's
+ * administrator sign-in form, a challenge or block page, or anything else.
+ */
+export const DIAGNOSTIC_PAGES = new Set(['login_form', 'challenge', 'other'])
 
 /**
  * The engine's own refusal codes (Claude Cowork's `err('<code>')`), named on `engine_refused`; any

@@ -89,7 +89,10 @@ test('the export breaks the line before the emphasis only where the demo did, as
   }
   // The demo "Our((br/)) ((span))Classes((/span))": a break, then the accent words at the end.
   const twoLines = [{ tag: 'br' }, { tag: 'span', attrs: '', text: 'Classes', at: 'end' }]
-  assert.equal(out(twoLines, 'Our Sessions', 'Sessions'), 'Our((br/))((span))Sessions((/span))')
+  assert.equal(out(twoLines, 'Our Sessions', 'Sessions'), 'Our ((br/))((span))Sessions((/span))')
+  // The space before the break stays (a theme may hide the break on a narrow screen), and is never doubled.
+  assert.equal(out(twoLines, 'Our   Sessions', 'Sessions'), 'Our ((br/))((span))Sessions((/span))')
+  assert.equal(out(twoLines, 'A lesson in the pool', 'pool'), 'A lesson in the ((br/))((span))pool((/span))')
   // An emphasis that opens the text has no line above it.
   assert.equal(out(twoLines, 'Sessions for everyone', 'Sessions'), '((span))Sessions((/span)) for everyone')
   // A demo without the break, or with its break after the accent words, gets none.

@@ -8,6 +8,7 @@
 import { isFactRole } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { cardsOnPage, pathOfHref, rowSlotsOf } from './item-lists.mjs'
 import { bodyPool } from './listing-lists.mjs'
+import { normText } from './normalize.mjs'
 
 const laterPage = (url) => /[?&](?:start|limitstart)=[1-9]/.test(String(url ?? ''))
 const lastSegment = (path) =>
@@ -17,6 +18,21 @@ const lastSegment = (path) =>
     .filter(Boolean)
     .pop()
     ?.toLowerCase() ?? null
+
+// The page heading prints the tag's title among other words ("Tagged: Metrics"). The matcher may give those words
+// to a slot of another entity with the same words (a feature named "Metrics") and not to the tag: the words still
+// tie the page to the tag, whose alias its path already ends with.
+const headedBy = (p, tagKey, slotsByKey, title) =>
+  (p.items ?? []).some(
+    (i) =>
+      i.kind === 'text' &&
+      (i.tag === 'h1' || i.h1) &&
+      i.status === 'matched' &&
+      (i.slots ?? []).some((k) => {
+        const s = slotsByKey.get(k)
+        return s?.entity === tagKey || (title && normText(s?.sample) === title)
+      })
+  )
 
 /**
  * @param {{map: any, findings: any}} input the map should already carry its slot fit
@@ -36,7 +52,11 @@ export function tagListsOf({ map, findings }) {
   for (const p of findings?.pages ?? []) {
     if ((p.mapPages ?? []).length || laterPage(p.url)) continue
     const tag = byAlias.get(lastSegment(pathOfHref(p.url)))
-    if (!tag || p.rendersEntity?.entity !== tag.key) continue
+    if (!tag) continue
+    const title = normText(
+      (map.slots ?? []).find((s) => s.entity === tag.key && s.column === 'title')?.sample
+    )
+    if (!(p.rendersEntity?.entity === tag.key || headedBy(p, tag.key, slotsByKey, title))) continue
     const seen = cardsOnPage(p, bodyPool, candidates, slotsByKey)
     const prev = best.get(tag.key)
     if (seen && (!prev || seen.cards.size > prev.seen.cards.size)) best.set(tag.key, { seen, url: p.url })

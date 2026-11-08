@@ -1,0 +1,136 @@
+{
+  "platform": "joomla",
+  "from": "0.24.80",
+  "releases": {
+    "0.24.37": {
+      "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
+      "evidence": {
+        "'hide_ops' =>": false,
+        "'rows_remove' =>": false,
+        "'page_create' =>": false,
+        "'slot_corrections' =>": false,
+        "function urlSafeAlias(": false
+      }
+    },
+    "0.24.75": {
+      "sha256": "26d16a664fc946be76af92f6c7a6c004d0441d7f87adaf10c3baa205158d9764",
+      "evidence": {
+        "'hide_ops' =>": false,
+        "'rows_remove' =>": false,
+        "'page_create' =>": false,
+        "'slot_corrections' =>": false,
+        "function urlSafeAlias(": false
+      }
+    },
+    "0.24.77": {
+      "sha256": "b627621d8cf1076bc45bdaeea9d12a3496b9fe8ae0cf88e315be67f548dae5b5",
+      "evidence": {
+        "'hide_ops' =>": false,
+        "'rows_remove' =>": false,
+        "'page_create' =>": false,
+        "'slot_corrections' =>": false,
+        "function urlSafeAlias(": false
+      }
+    },
+    "0.24.80": {
+      "sha256": "c843a19b8f684ea516501d1f22ffc6e71f98574dc605930eedc44395017e2dc6",
+      "evidence": {
+        "'hide_ops' =>": false,
+        "'rows_remove' =>": false,
+        "'page_create' =>": false,
+        "'slot_corrections' =>": false,
+        "function urlSafeAlias(": false
+      }
+    },
+    "0.24.81": {
+      "sha256": "30597c2c2730131ed45cc5956045052d032ba396614599ad048acde86346df1b",
+      "evidence": {
+        "'hide_ops' =>": false,
+        "'rows_remove' =>": false,
+        "'page_create' =>": false,
+        "'slot_corrections' =>": false,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.82": {
+      "sha256": "d145d7f06bdebeba78eb8d90f07930335a9198dcb30529e819571e228770432a",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.83": {
+      "sha256": "29552bb57f69feb3afec380827219c0ba2ef8d4fa70263879d681ec95503ee3f",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.84": {
+      "sha256": "78088dae0bbab7a330c2ed07aa44ae9f0bf32fea8dcce5ae00d8bbff54e26a39",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.85": {
+      "sha256": "0ad0c6f455f107df66cb04631b1dad7007373311652f4f2db3580c558a28bcf4",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.86": {
+      "sha256": "957377d7cef726dd543d7ee49e9f8d5f3f7ca9cbd2d3abc348d0f35f239b7869",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.87": {
+      "sha256": "6f503fd998ef22e5eadfea7bcd7cce6800b2cc1d644d20aad5c1955c36ed5e21",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.88": {
+      "sha256": "eba3fb9f4df5baba39cf59ec41d259a9b9e9c80f4c1eaea3419eb1b89caba421",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.89": {
+      "sha256": "bc915fbe463fa7a0b25641b0139dd964d20bcd352ebba6e8dfa427b9251493b5",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    }
+  }
+}

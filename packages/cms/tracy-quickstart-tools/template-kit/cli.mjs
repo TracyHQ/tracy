@@ -11,6 +11,8 @@
 //       --full: the whole pipeline (README "Make a kit for a new template"); without it, read + shoot + assemble only.
 //       The database and file reads feed the site part (site-cli.mjs); without them it reads the pages only.
 //   cli.mjs assemble ...  (template-kit.json again from the files in --out, no browser)
+//       build and assemble keep the site fields a person declared on the kit already in --out (the declare commands
+//       below, lib/declared-site-fields.mjs), as written; a build into an empty folder has none to keep.
 //   cli.mjs measure-min ... --list <id> --page <path> --max <rows> [--block <id>] [--rows <css>] [--row-kind items]
 //                 [--note <why>]   (an override: a person's measurement of one list; the pipeline keeps it)
 //   cli.mjs sheet --out <dir> [--review]   (HTML pages of the kit's own images; nothing is shot)
@@ -26,6 +28,8 @@
 //   cli.mjs slot-roles --out <dir> --contract <dir>   (the template-kit.json in --out settled again from the content
 //                 map and field-drives.json: page title slots, sentence groups, stored fields, the gate counted
 //                 again; no browser, no capture, no image; it only adds, no slot id, list or role moves)
+//                 (a page's missing title is explained by its accepted page-without-h1 gap in gap-accepts.json, or a
+//                 pageTitleSlots entry of reach-accepts.json: still counted, listed in checkAccepts.slotCoverage)
 //                 [--only sentences]: only the sentence groups (a kit whose page titles are not settled yet keeps its gate)
 //   cli.mjs samples --out <dir> --contract <dir>   (the text slot samples of the template-kit.json in --out settled
 //                 again from the content map: every text slot's whole demo text as `sample` and its lengths as
@@ -45,6 +49,39 @@
 //                 --images is the folder the image paths are relative to, the kit's own folder by default)
 //   cli.mjs looks --kit <template-kit.json> --apply <looks.json>   (merge [{image, sha256, text}] written by the
 //                 packager's own Claude Code: all entries checked, none written when one is wrong; lib/looks.mjs)
+//   cli.mjs legal-layout --kit <template-kit.json> --layout '<template>:<file>' --why '<what it prints>'
+//                 (WordPress kit: --layout '<template>' or '<theme>//<template>' --webroot <dir holding the theme>)
+//   cli.mjs legal-layout --kit <template-kit.json> --none --why '<words>'
+//                 (site.createdPageLayouts.legal, lib/legal-layout.mjs: the plain article layout a created legal page
+//                 prints through, never a content page's own file; --none: the component's default. A person reads the
+//                 template's article layouts first; nothing is measured, and no image moves, so an approval stays valid)
+//   cli.mjs video-buttons --kit <template-kit.json> --selector '<css>' --why '<where the template prints it>'
+//   cli.mjs video-buttons --kit <template-kit.json> --none --why '<what was read>'
+//                 (site.emptyVideoButtons, lib/video-buttons.mjs: a play button the template prints with an empty video
+//                 address, which the write step hides with one CSS rule; --none says the template has none, with its reason in
+//                 site.noneWhy (lib/none-why.mjs; every --none of these four commands needs --why). A person reads
+//                 the template's layout first; nothing is measured, and no image moves, so an approval stays valid)
+//   cli.mjs self-link-buttons --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
+//   cli.mjs self-link-buttons --kit <template-kit.json> --none --why '<what was read>'
+//                 (site.selfLinkButtons, lib/self-link-buttons.mjs: the container of a "more" button that may lead to the
+//                 page it sits on, which the write step hides on that page only; same reading, no image moves)
+//   cli.mjs hidden-page-links --kit <template-kit.json> --container '<css>' --why '<where the template prints it>'
+//   cli.mjs hidden-page-links --kit <template-kit.json> --none --why '<what was read>'
+//                 (site.hiddenPageLinks: the container of list row links that may lead to a page the plan hides, which the
+//                 write step sends to a living page or makes plain text; same reading, no image moves)
+//   cli.mjs created-page-hide --kit <template-kit.json> --selector '<css>' --why '<where the template prints it>'
+//   cli.mjs created-page-hide --kit <template-kit.json> --none --why '<what was read>'
+//                 (site.createdPageHide: a block the template prints hard coded on every article page, such as a share bar,
+//                 which the write step hides on the pages it creates only; same reading, no image moves)
+//   cli.mjs stock-screens --kit <template-kit.json> --path '<path or path/*>' --why '<why no customer content fills it>'
+//   cli.mjs stock-screens --kit <template-kit.json> --none --why '<what was read>'
+//                 (site.stockScreens, lib/stock-screens.mjs: a stock screen every plan drops, such as a list of demo writers; the
+//                 planner drops it after the model and the write step unpublishes its menu item; same reading, no image moves)
+//   cli.mjs baseline --from <measured baseline.json> --contract <dir>
+//                 (step 0, #419: demo-baseline.json beside the contract, lib/demo-baseline-file.mjs, from the demo baseline
+//                 tracy-web measured on the untouched quickstart site with apps/tracy-web/scripts/site-check-baseline.mjs;
+//                 only tracy-web reaches a site's host, so the measuring is there and the writing here. The measuring
+//                 time is dropped and a value naming a machine refuses the file; nothing else of the kit moves)
 //
 // Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -53,8 +90,11 @@ import { dirname, join, resolve } from 'node:path'
 import { assembleKit, reachAcceptsOf, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
 import { readContractMap, readContractSamples } from './lib/contract-read.mjs'
-import { contactFieldChecks } from './lib/coverage-gate.mjs'
+import { contactFieldChecks, listLabelSlots } from './lib/coverage-gate.mjs'
+import { DECLARED_SITE_FIELDS } from './lib/declared-site-fields.mjs'
+import { BASELINE_FILE, contractBaselineOf } from './lib/demo-baseline-file.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
+import { declareLegalLayout, themeTemplatesOf } from './lib/legal-layout.mjs'
 import { relabelKit } from './lib/link-label-reasons.mjs'
 import { linkLabelSlots } from './lib/link-label-slots.mjs'
 import { applyLooks, indentOf, lookWorklist } from './lib/looks.mjs'
@@ -62,19 +102,20 @@ import { assignedAt, indexMap } from './lib/map-index.mjs'
 import { measureMin } from './lib/measure-min.mjs'
 import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
-import { settleSettingSlots } from './lib/setting-slots.mjs'
-import { settleSamples } from './lib/slot-samples.mjs'
-import { settleSentenceGroups } from './lib/sentence-groups.mjs'
-import { settleSlotRoles } from './lib/slot-roles.mjs'
-import { slotShapeChecks } from './lib/slot-shape-checks.mjs'
 import { reachChecks } from './lib/reach-checks.mjs'
 import { rowPairChecks } from './lib/row-pairs.mjs'
-import { stampSettled, TOOL } from './lib/version.mjs'
-import { runFieldMeasure } from './lib/site/measure-fields.mjs'
+import { settleSentenceGroups } from './lib/sentence-groups.mjs'
+import { settleSettingSlots } from './lib/setting-slots.mjs'
 import { writeSheets } from './lib/sheets.mjs'
-import { adapterFor } from './lib/site/adapters/index.mjs'
+import { adapterFor, usePlatform } from './lib/site/adapters/index.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
+import { runFieldMeasure } from './lib/site/measure-fields.mjs'
+import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
+import { settleSlotRoles } from './lib/slot-roles.mjs'
+import { settleSamples } from './lib/slot-samples.mjs'
+import { slotShapeChecks } from './lib/slot-shape-checks.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
+import { stampSettled, TOOL } from './lib/version.mjs'
 
 const COMMANDS = [
   'build',
@@ -165,12 +206,18 @@ function slotRoles(o, out) {
     return 0
   }
   if (o.only !== undefined) throw new Error('slot-roles --only takes: sentences')
-  const r = settleSlotRoles(kit, { map, drives: readIf(join(out, 'field-drives.json')) ?? {} })
+  // A page's missing title is explained by its accepted no-h1 gap or a reach-accepts.json entry (page-titles.mjs).
+  const r = settleSlotRoles(kit, {
+    map,
+    drives: readIf(join(out, 'field-drives.json')) ?? {},
+    gapAccepts: readIf(join(out, 'gap-accepts.json')) ?? {},
+    accepts: reachAcceptsOf(resolve(out))
+  })
   writeJson(file, settled(kit, map, o))
   console.log(JSON.stringify(r, null, 1))
   for (const f of kit.coverage.failures.filter((x) => x.part === 'pageTitleSlots'))
     console.error(`${f.where}: ${f.reason}`)
-  return r.pageTitleSlots ? 1 : 0
+  return r.pageTitleSlots > r.pageTitlesExplained ? 1 : 0
 }
 
 /** Settle every text slot's sample, demoChars and inline of the kit in `out` again (slot-samples.mjs); exit 1 when a
@@ -215,7 +262,7 @@ function relabel(o, out) {
   const file = join(out, 'template-kit.json')
   const kit = readJson(file)
   const map = readContractMap(o.contract)
-  const r = relabelKit(kit, { map, linkLabelSlots })
+  const r = relabelKit(kit, { map, linkLabelSlots, listLabelSlots })
   writeJson(file, settled(kit, map, o))
   const links = kit.blocks.flatMap((b) => b.links ?? [])
   console.log(
@@ -290,10 +337,81 @@ function looks(o) {
   return 0
 }
 
+/** Name the article layout of a created legal page in a written kit (lib/legal-layout.mjs). */
+function legalLayout(o) {
+  if (!str(o.kit) || (!o.none && !str(o.layout)))
+    throw new Error(
+      "legal-layout needs --kit <template-kit.json> and --layout '<template>:<file>' --why '<words>', or --none"
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  // A WordPress kit's layout is checked against the block templates of its theme on --webroot.
+  const templates =
+    str(o.webroot) && kit.template?.name ? themeTemplatesOf(resolve(o.webroot), kit.template.name) : null
+  const r = declareLegalLayout(kit, {
+    layout: str(o.layout),
+    why: str(o.why),
+    none: o.none === true,
+    templates
+  })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  const named = kit.site.createdPageLayouts.legal.articleLayout ?? 'the default article'
+  console.log(`created legal pages print through ${named}${r.changed ? '' : ', unchanged'}`)
+  return 0
+}
+
+/** Declare an entry of a `site` list field in a written kit (lib/declared-site-fields.mjs names them). */
+function containers(o, command, declare, field, words, flag = 'container') {
+  if (!str(o.kit) || (!o.none && !str(o[flag])))
+    throw new Error(
+      `${command} needs --kit <template-kit.json> and --${flag} '<${flag === 'path' ? 'path' : 'css'}>' --why '<words>', or --none --why '<words>'`
+    )
+  const file = resolve(o.kit)
+  const source = readFileSync(file, 'utf8')
+  const kit = JSON.parse(source)
+  const r = declare(kit, { [flag]: str(o[flag]), why: str(o.why), none: o.none === true })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  if (r.changed) writeFileSync(file, `${JSON.stringify(kit, null, indentOf(source))}\n`)
+  console.log(`${kit.site[field].length} ${words} named${r.changed ? '' : ', unchanged'}`)
+  return 0
+}
+
+/** Write the measured demo baseline beside the contract (lib/demo-baseline-file.mjs). */
+function baseline(o) {
+  if (!str(o.from) || !str(o.contract))
+    throw new Error('baseline needs --from <measured baseline.json> and --contract <dir>')
+  const dir = resolve(o.contract)
+  const contractId = readJson(join(dir, 'manifest.json'))?.id
+  const r = contractBaselineOf(readJson(resolve(o.from)), { contractId: String(contractId) })
+  if (r.error) {
+    console.error(`nothing written: ${r.error}`)
+    return 1
+  }
+  writeFileSync(join(dir, BASELINE_FILE), `${JSON.stringify(r.doc, null, 2)}\n`)
+  console.log(
+    `${BASELINE_FILE} of ${contractId}: ${r.doc.texts.length} texts, ${r.doc.pictures.files.length} picture files, ${r.doc.unread?.length ?? 0} pages with no demo`
+  )
+  return 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
+  if (cmd === 'baseline') return baseline(o)
   if (cmd === 'looks') return looks(o)
+  if (cmd === 'legal-layout') return legalLayout(o)
+  // The hand-declared site fields: one list, shared with the merge that keeps them across assemble and build.
+  const declared = DECLARED_SITE_FIELDS.find((d) => d.command === cmd)
+  if (declared?.list)
+    return containers(o, cmd, declared.declare, declared.field, declared.words, declared.flag)
   const needSite = !NO_SITE.includes(cmd)
   if (
     !o.out ||
@@ -308,6 +426,13 @@ async function main() {
   }
   const out = resolve(o.out)
   mkdirSync(join(out, 'images'), { recursive: true })
+  // Page addresses are spelled the platform's way (lib/kit-paths.mjs urlOfPath).
+  const platform = o.contract ? readIf(join(o.contract, 'manifest.json'))?.platform : undefined
+  if (o.contract) usePlatform(platform)
+  // A WordPress page is read as its sections (the top-level blocks of its post content), from the database or the
+  // work folder's wordpress-sections.json.
+  const split = settleWordPressSections({ platform, out, db: str(o.db), dbCommand: str(o['db-command']) })
+  if (split) log('wordpress sections', split.pages, 'pages, from', split.from)
   if (cmd === 'sheet') return sheet(o, out).then(() => 0)
   if (cmd === 'approve') return approve(o, out)
   if (cmd === 'pack') return pack(out)

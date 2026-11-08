@@ -2,7 +2,9 @@
 // writes. Each hide decision gets one order: it goes with its dropped block or its menu item, by the kit's language constant,
 // as an emptied slot, or it cannot be taken and says why. A menu item a kept page depends on is left published and reported:
 // Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
+import { NEW_CONTRACT } from '../lib/new-contract-pointer.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { stockScreensToDrop } from '../lib/stock-screens.js'
 import { goneRowSlots, listRowCounts, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
 import { menuItemOfLabel } from './menu-hides.js'
@@ -14,8 +16,7 @@ const blocksOfPage = (page) => [...new Set(Object.values(page?.blocks ?? {}).fla
 const MODULE = /^module-\d+$/
 const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
 
-/** The pointer every refusal carries: a hide the plugin cannot take needs a contract that captures the whole unit. */
-export const NEW_CONTRACT = 'tracked as issue #369'
+export { NEW_CONTRACT }
 
 /** The kit's blocks the plan drops whole, as module keys: no kept page keeps or shows one. */
 export function droppedBlocks(plan, kit) {
@@ -247,10 +248,14 @@ export function hideOrders({
     }
   }
   const taken = new Set(each(extras?.mainMenu?.hide).map((h) => slashless(h.path)))
-  const pages = each(plan?.pages)
+  // The plan's drops, then the kit's stock screens the plan does not keep (lib/stock-screens.js), each dropped like any other.
+  const planDrops = each(plan?.pages)
     .filter((p) => p?.decision === 'drop')
     .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
-    .filter((page) => page && !taken.has(slashless(page.path)))
+    .filter(Boolean)
+  const stock = stockScreensToDrop(kit, plan).filter((s) => !planDrops.some((page) => page.id === s.id))
+  const pages = [...planDrops, ...stock.map(({ id, path }) => ({ id, path }))]
+    .filter((page) => !taken.has(slashless(page.path)))
     .map((page) => ({ page, depends: pageDependingOn(page.path, { plan, kit }) }))
   const claimed = new Set(
     [...owners.values()]

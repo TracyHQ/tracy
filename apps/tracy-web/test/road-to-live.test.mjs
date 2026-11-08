@@ -18,9 +18,12 @@ import { test } from 'node:test'
 
 import { readContracts } from '../src/lib/contracts.js'
 import { DS_READY_CODE } from '../src/lib/design-system-ready-templates.js'
-import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
+import { publishRefusalOf, ROAD_STEPS, roadOf, WRITE_DOORS_STEP } from '../src/lib/road-to-live.js'
+import { withFixes } from '../src/lib/template-readiness/fixes.js'
+import { WRITE_DOORS_CHECK } from '../src/lib/template-readiness/write-doors-check.js'
 import { imagesDigest } from '../src/lib/template-kit/reader.js'
 import { FLOW_SITE, frontGroup } from './_template-kit-flow-site.mjs'
+import { dinerWp7 } from './ja-diner-wp7-fixture.mjs'
 import { DS_SEVERITY, phaseTwoOf } from '../src/lib/template-design-system-readiness/severity.js'
 
 /**
@@ -1126,4 +1129,52 @@ test('a contract released before ADR 0038 declares no roles: Content coverage ho
   assert.match(refusal.reason, /declares no slot roles/)
   const live = stepOf(roadOf(release({ inspiration: CARD }), world), 'content-coverage')
   assert.deepEqual([live.state, live.code], ['warn', 'coverage-live-roles'])
+})
+
+test('a WordPress release road says the plugin write doors are not judged yet, with the registry wording (#454)', () => {
+  const { release: diner, world } = dinerWp7()
+  const road = withFixes(roadOf(diner, world))
+  const step = stepOf(road, WRITE_DOORS_STEP)
+  assert.ok(step, 'the WordPress road has a write doors step')
+  assert.deepEqual([step.state, step.code], ['not-judged', 'write-doors-not-judged'])
+  // The very answer of the verdict's check: no second judgement of the write doors.
+  const judged = WRITE_DOORS_CHECK.judge(diner, world)
+  assert.deepEqual(
+    { state: step.state, code: step.code, params: step.params },
+    { state: judged.state, code: judged.code, params: judged.params }
+  )
+  assert.match(step.fix.text, /^Not judged until the WordPress write step exists\./)
+  // Last on the road: it holds nothing, so every other step keeps its number and Publish is not held by it.
+  assert.equal(road.at(-1), step)
+  assert.deepEqual(
+    road.slice(0, -1).map((s) => s.step),
+    [...ROAD_STEPS]
+  )
+  const published = stepOf(road, 'published')
+  assert.ok(!(published.params.waiting ?? []).includes(WRITE_DOORS_STEP))
+  assert.notEqual(published.blockedBy, WRITE_DOORS_STEP)
+})
+
+test('a Joomla road has no write doors step: the same steps, order and states as before (#454)', () => {
+  const world = {
+    demo: { url: 'https://d/', version: '1.0.2', platform: 'joomla' },
+    has: () => true,
+    contracts: indexWith('quickstart/ja-restaurant/j6', 'joomla', ['1.0.2']),
+    readiness: READY,
+    dsReadiness: DS_READY
+  }
+  for (const r of [
+    release(),
+    release({ inspiration: CARD }),
+    release({ inspiration: CARD, inspirationHidden: true })
+  ]) {
+    for (const w of [{ contracts: NO_CONTRACTS }, world]) {
+      const road = roadOf(r, w)
+      assert.deepEqual(
+        road.map((s) => s.step),
+        [...ROAD_STEPS]
+      )
+      assert.ok(road.every((s) => s.state !== 'not-judged'))
+    }
+  }
 })

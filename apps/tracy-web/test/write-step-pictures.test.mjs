@@ -312,6 +312,17 @@ test('a hidden frame belongs to the hide stage: one line, its picture never sent
   assert.equal(contractCalls(site)[0].params.changes['module-2.gone'], undefined)
 })
 
+test('a frame step 8 hid says step 8 hid it and why, never that the plan hides it (card AU)', async () => {
+  const { line } = await runPictures({ site: { info: { hide_ops: { version: 1 } } } })
+  const hidden = line('block-2.gone')
+  assert.equal(hidden.status, 'hidden', JSON.stringify(hidden))
+  assert.doesNotMatch(hidden.reason, /the plan hides/)
+  assert.match(
+    hidden.reason,
+    /^step 8 \(pictures\) hid this frame, not the plan: no picture of the owner fits/
+  )
+})
+
 test('with no brand file a painted frame is skipped and its preview never reaches the site', async () => {
   const { site, line } = await runPictures()
   const icon = line('block-3.icon')

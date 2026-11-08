@@ -124,6 +124,8 @@ export function shownPath(p, base = process.cwd()) {
   return rel === '' ? '.' : rel.startsWith('..') || path.isAbsolute(rel) ? path.basename(abs) : rel.split(path.sep).join('/')
 }
 
+const SYSTEM_DIRS = new Set(['etc', 'var', 'mnt', 'root', 'bin', 'sbin', 'proc', 'sys', 'dev', 'Volumes', 'Applications', 'System'])
+
 /**
  * Whether a string names a path of THE BUILDER'S machine. Decided by evidence, not by a prefix alone, so a site route such as
  * `/home/contact` stays a route:
@@ -132,6 +134,8 @@ export function shownPath(p, base = process.cwd()) {
  *  - a user or temp area with something below it: a macOS or Linux user home with a user and a folder, the macOS private
  *    and per-user temp folders, or a folder under the system temp root,
  *    `/tmp/<x>` (a lone `/home/contact` has only one segment under `/home`);
+ *  - a path below a system directory no site route starts with (`/etc/passwd`, `/usr/local/bin`, `/Volumes/x`; not `/opt/x` or `/usr/x`, which a route may be), which
+ *    names a file of the builder's machine whether or not it exists there;
  *  - any other absolute path whose longest ancestor that exists on the builder is at least two segments deep
  *    (`/opt/builds/worker/pack`: `/opt/builds/worker` exists while building). One existing segment (`/home`, `/opt`) is not
  *    evidence: every machine has those, and a route can start with one.
@@ -149,6 +153,7 @@ export function holdsLocalPath(text, roots = [], exists = isDirectory) {
     if (/^\/(?:Users|home)\/[^/]+\/[^/]+/.test(raw) || /^\/(?:private|tmp)\/[^/]+/.test(raw) || raw.startsWith('/var/folders/'))
       return true
     const segs = raw.split('/').filter(Boolean)
+    if (segs.length >= 2 && (SYSTEM_DIRS.has(segs[0]) || (segs[0] === 'usr' && /^(local|bin|sbin|lib|lib64|share|src|include)$/.test(segs[1])))) return true
     for (let k = segs.length; k >= 2; k--) if (exists(`/${segs.slice(0, k).join('/')}`)) return true
   }
   return false

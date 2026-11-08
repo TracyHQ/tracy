@@ -10,7 +10,10 @@
     "presentationLockSha256": "e8de147cd2daa6fe4d302649cae046c1fe8bf003794dce2e258ec0549c5af40e"
   },
   "measuredAt": "2026-11-04T16:11:07.689Z",
-  "viewports": ["desktop", "phone"],
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
   "pages": {
     "audited": 73,
     "inMap": 22,
@@ -5170,5 +5173,27 @@
         "verdict": "right"
       }
     ]
+  },
+  "inlineMarkup": {
+    "measuredAt": "2026-11-06T13:40:53.391Z",
+    "dump": {
+      "file": "custom.sql",
+      "sha256": "798aed11fc82fc0151cf642ab78cbf8e6a206a13135b4ffe7351fa188e68a243"
+    },
+    "checked": 311,
+    "unread": 10,
+    "lost": 0,
+    "lostSlots": [],
+    "mismatched": 0,
+    "mismatchedSlots": [],
+    "samples": {
+      "article-28.3": "We take ((span class=\"hightlight\"))reservations((/span)) for lunch and dinner efforts to curb soda consumption",
+      "article-28.8": "This week’s 5 head-spinning ((span class=\"hightlight\"))restaurant((/span)) moments for diner",
+      "module-103.1": "Three Broomsticks ((span class=\"text-highlight\"))is your best((/span))((br/)) café & restaurant in the Hogsmeade.",
+      "module-110.0": "((span))Tuesday - Saturday: 9a.m - Close.((br/)) Sunday: 10a.m - Close.((br/)) Monday: Closed.((/span))",
+      "module-95.14": "The Three Broomsticks is a ((span class=\"text-highlight\"))café & restaurant((/span)) nestled in the beautiful and quaint Hogsmeade Village.",
+      "module-96.10": "Modern Wizard cuisine ((span class=\"text-highlight\"))inspired((/span)) by traditional artisan methods.",
+      "module-97.2": "Menu changes ((span class=\"text-highlight\"))frequently,((/span)) here is a((br/)) sample of what may be available."
+    }
   }
 }

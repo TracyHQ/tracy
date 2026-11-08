@@ -6,18 +6,19 @@
 // contract cannot write says so,
 // every text slot gets its one limit (slot-limits.mjs), and the main menu row its whole-row limit. `coverageGate`
 // then counts what is still missing, part by part, and lists every failure: green (0) means the kit is final.
-import { linkLabelSlots, linksWithoutLabelSlot } from './link-label-slots.mjs'
-import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
-import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
-import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
-import { neutralKey } from './ids.mjs'
-import { pagesNotForCustomers, pageTitleChecks, settlePageTitles } from './page-titles.mjs'
-import { settleSettingSlots } from './setting-slots.mjs'
-import { settleSentenceGroups } from './sentence-groups.mjs'
+
 import { settleButtons } from './button-slots.mjs'
 import { settleContentPages } from './content-pages.mjs'
-import { settleStoredFields, storedFieldReport } from './stored-fields.mjs'
+import { neutralKey } from './ids.mjs'
+import { linkLabelSlots, linksWithoutLabelSlot } from './link-label-slots.mjs'
+import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
+import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
+import { pagesNotForCustomers, pageTitleChecks, settlePageTitles } from './page-titles.mjs'
+import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
+import { settleSentenceGroups } from './sentence-groups.mjs'
+import { settleSettingSlots } from './setting-slots.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
+import { settleStoredFields, storedFieldReport } from './stored-fields.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
 
 /** The slot entries a block lists as its own (a reference to another block's slot is not one). */
@@ -53,6 +54,16 @@ function labelSlots(kit, mapOf) {
       b.slots = [...(b.slots ?? []), slot]
       here.add(l.labelId)
       if (!o) owner.set(l.labelId, { b, s: slot })
+    }
+    // A link that is a menu entry's address slot (kit-blocks.mjs): the block lists that slot too.
+    for (const l of b.links ?? []) {
+      const m = mapOf.get(l.id)
+      if (!l.menuItem || m?.type !== 'url' || here.has(l.id)) continue
+      b.slots = [
+        ...(b.slots ?? []),
+        { id: l.id, type: 'url', role: m.role ?? null, sample: m.sample ?? null }
+      ]
+      here.add(l.id)
     }
   }
 }
@@ -150,15 +161,28 @@ function mainMenuRow(kit, mapOf, rowFit) {
 }
 
 /**
+ * Each link's label slot listed on the block holding the link (its own, or a reference to the owning block's), for a
+ * settle command that names label slots again after the kit was written (`cli.mjs relabel`).
+ * @param {object} kit changed in place
+ * @param {object} map the content map
+ */
+export function listLabelSlots(kit, map) {
+  labelSlots(kit, new Map((map.slots ?? []).map((s) => [neutralKey(s.key), s])))
+}
+
+/**
  * Complete the kit from the contract: link label slots, contact fields, one limit per slot, the main menu row.
  * @param {object} kit changed in place
- * @param {{map: object, textFit?: object, rowFit?: object, drives?: object}} o
+ * @param {{map: object, textFit?: object, rowFit?: object, drives?: object, classes?: object}} o
  */
-export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = new Map(), drives = {} }) {
+export function applyCoverage(
+  kit,
+  { map, textFit = {}, rowFit = {}, readings = new Map(), drives = {}, classes = {} }
+) {
   const mapSlots = map.slots ?? []
   const mapOf = new Map(mapSlots.map((s) => [neutralKey(s.key), s]))
   linkLabelSlots(kit, map)
-  pictureFrames(kit, map, readings)
+  pictureFrames(kit, map, readings, classes)
   labelSlots(kit, mapOf)
   contactFields(kit, mapSlots)
   unifyLimits(kit, { mapSlots, textFit })
@@ -177,12 +201,14 @@ export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = 
 /**
  * Count what the kit still lacks against the content map (`map`) and the read pass (`readings`: block id -> the
  * block's reading at the widest width), part by part (`kit.coverage.parts`), list every failure
- * (`kit.coverage.failures`, also in `kit.errors`) and return the total: 0 means every shown slot is covered.
+ * (`kit.coverage.failures`, also in `kit.errors`) and return the total: 0 means every shown slot is covered. A page
+ * without a title slot that `gapAccepts` (gap-accepts.json) or `accepts` (reach-accepts.json) explain is still counted,
+ * and listed in `kit.checkAccepts.slotCoverage` instead of the failures (page-titles.mjs pageTitleChecks).
  */
-export function coverageGate(kit, { map, readings = new Map() }) {
+export function coverageGate(kit, { map, readings = new Map(), gapAccepts = {}, accepts = [] }) {
   const mapOf = new Map((map.slots ?? []).map((s) => [neutralKey(s.key), s]))
   const failures = []
-  const fail = (part, where, reason) => failures.push({ part, where, reason })
+  const fail = (part, where, reason, extra = {}) => failures.push({ part, where, reason, ...extra })
   const parts = {}
   // 1. Every text slot a kit page shows is listed with a limit and its source.
   const listed = new Map()
@@ -266,7 +292,9 @@ export function coverageGate(kit, { map, readings = new Map() }) {
   // 6. Shown words from a slot declared nowhere (the orphan check, counted here too).
   parts.orphanTexts = kit.checks?.orphanTexts ?? 0
   // 7. Every page for customers has exactly one title slot (page-titles.mjs).
-  parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p) ? pageTitleChecks(kit, fail, { map }) : 0
+  parts.pageTitleSlots = kit.pages?.some((p) => 'titleSlot' in p)
+    ? pageTitleChecks(kit, fail, { map, gapAccepts, accepts })
+    : 0
   // How many shown text slots part 1 checked, so a gate at 0 over nothing is told from a covered kit.
   const fields = storedFieldReport(kit)
   const notForCustomers = pagesNotForCustomers(kit, map)

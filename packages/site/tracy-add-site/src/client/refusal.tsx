@@ -90,6 +90,7 @@ const IMPORT_ERRORS = new Set([
   'credentials_required',
   'cowork_not_answering',
   'call_failed',
+  'files_unreadable',
   'store_refused',
   'too_many_parts',
   'run_lost',
@@ -224,7 +225,7 @@ export function ImportErrorText({
   const key = importErrorKey(code, detail)
   return (
     <>
-      {t(key)}
+      {t(key, key === 'import_error_files_unreadable' ? { folder: detail?.folder ?? '' } : undefined)}
       {versions ? ` ${versions}` : null}
       {steps && key === 'import_error_blocked_by_cloudflare' ? <CloudflareSteps t={t} /> : null}
       {importSignedOut(code) ? (

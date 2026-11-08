@@ -11,7 +11,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { promisify } from 'node:util'
 import { after, before, describe, it } from 'node:test'
-import { diffSnapshots, siteSnapshotOf, snapshotOf, navigate, scanSeams } from '../tools/visual-lib.mjs'
+import { diffSnapshots, imageCensus, siteSnapshotOf, snapshotOf, navigate, scanSeams } from '../tools/visual-lib.mjs'
 import { launchBrowser } from '../tools/qa-browser.mjs'
 const execFileP = promisify(execFile)
 const HERE = new URL('.', import.meta.url).pathname
@@ -37,7 +37,7 @@ function pageHtml(d = {}, { source = false } = {}) {
     : d.missingImage
       ? '<span class="photo-placeholder">Lead photo · 16:9</span>'
       : '<img src="/logo.png" alt="lead" width="40" height="40">'
-  return `<!doctype html><html lang="de"${source && d.twoSignalSource ? ' data-theme="dark" data-bs-theme="dark"' : ''}><head><meta charset="utf-8"><title>Mock</title>
+  const html = `<!doctype html><html lang="de"${source && d.twoSignalSource ? ' data-theme="dark" data-bs-theme="dark"' : ''}><head><meta charset="utf-8"><title>Mock</title>
 <script>try{if(localStorage.getItem('mini-theme')==='dark'${d.stuckTheme ? '&&false' : ''})document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 <style>
 body{margin:0;font-family:serif;background:#fff;color:#111}
@@ -88,6 +88,8 @@ li.addEventListener('mouseenter',()=>{p.classList.add('open');t.setAttribute('ar
 document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){p.classList.remove('open');li.classList.add('closed');t.focus();setTimeout(()=>li.classList.remove('closed'),50)}});
 document.addEventListener('click',(e)=>{if(!li.contains(e.target))p.classList.remove('open')});
 </script></body></html>`
+  // a source that was never drawn in a dark theme: its stylesheet has no dark rule at all
+  return source && d.sourceNoDark ? html.replace(/html\[data-theme=dark\][^{<]*\{[^}]*\}/g, '') : html
 }
 function serve(defects = {}) {
   return new Promise((res) => {
@@ -425,6 +427,40 @@ describe('F12 — visual-qa on a mock site', { concurrency: CONCURRENCY }, () =>
     },
     { timeout: 180000 }
   )
+  // found while porting JA Restaurant: a source with no dark frame is compared in the dark tiers too
+  it('design.parity.sourceThemes: a theme the source has no frame in is compared on geometry and type, not colour', {
+    timeout: 180000
+  }, async () => {
+    const site = await serve({ sourceNoDark: true })
+    try {
+      const c = contract()
+      const before = await visual(site, c)
+      assert.equal(before.code, 1, 'colour parity on the dark tier fails')
+      has(before, 'parity-mismatch')
+      c.design.parity.sourceThemes = ['light']
+      const after = await visual(site, c)
+      assert.equal(after.code, 0, JSON.stringify(after.report.pages[0].findings.map((f) => [f.kind, f.property, f.selector])))
+      const dark = after.report.pages[0].axes.find((a) => a.variant === 'desktop-dark')
+      assert.ok(dark.parity.checked > 0, 'geometry and type are still compared')
+    } finally {
+      await site.close()
+    }
+  })
+  it('an optional rule with no styles for a variant declares the role absent there: a visible match is a finding', {
+    timeout: 120000
+  }, async () => {
+    const site = await serve()
+    try {
+      const c = contract()
+      c.design.rules[1].optional = true
+      delete c.design.rules[1].styles['desktop-dark']
+      const r = await visual(site, c)
+      assert.equal(r.code, 1, r.out.slice(-800))
+      has(r, 'rule-unexpected-visible')
+    } finally {
+      await site.close()
+    }
+  })
   it("pages[].images: 'placeholders' — a derived page's count is data, a placeholder is still a defect", {
     timeout: 120000
   }, async () => {
@@ -1236,6 +1272,28 @@ it('seam scanning ignores a proven sticky occlusion but preserves visible, offsc
     await page.setContent('<style>body{margin:0}.hero{position:relative;height:120px;width:600px;border-bottom:1px solid #888}.inner{position:absolute;bottom:1px;left:0;width:600px;height:60px;border-bottom:1px solid #888}</style><div class="hero"><div class="inner">Nested preview</div></div>')
     await page.evaluate(() => scrollTo(0, 0))
     assert.ok((await page.evaluate(scanSeams)).length > 0, 'a real nested hero border seam remains a finding')
+  } finally {
+    await browser.close()
+  }
+})
+
+// found while porting JA Restaurant: the default scope `main` resolved to <main> on the site but to the whole body on a
+// source with no <main>, so the same pictures were counted over two different roots
+it('imageCensus says which root it counted, so a source without <main> can be matched on the site side', async () => {
+  const png = `data:image/png;base64,${LOGO.toString('base64')}`
+  const img = `<img src="${png}" width="40" height="40">`
+  const browser = await launchBrowser()
+  try {
+    const page = await browser.newPage()
+    await page.setContent(`<body><header>${img}</header><div>${img}${img}</div><footer>${img}</footer></body>`)
+    const source = await page.evaluate(imageCensus, { scope: 'main' })
+    assert.deepEqual([source.resolved, source.images], ['body', 4])
+    await page.setContent(`<body><header>${img}</header><main>${img}${img}</main><footer>${img}</footer></body>`)
+    assert.deepEqual(
+      await page.evaluate(imageCensus, { scope: 'main' }).then((r) => [r.resolved, r.images]),
+      ['main', 2]
+    )
+    assert.equal((await page.evaluate(imageCensus, { scope: 'body' })).images, 4, 'the site counted by the source root agrees')
   } finally {
     await browser.close()
   }

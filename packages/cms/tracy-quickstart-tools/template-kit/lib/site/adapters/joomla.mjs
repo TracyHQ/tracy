@@ -12,7 +12,15 @@ import {
   t3LogoSettings,
   t3NameFallsBack
 } from './joomla-t3.mjs'
-import { emptyShowsOf, logoLayouts, t4PrintsOpenGraph, t4Settings, variableOf } from './joomla-t4.mjs'
+import {
+  acmLayouts,
+  acmOfParams,
+  emptyShowsOf,
+  logoLayouts,
+  t4PrintsOpenGraph,
+  t4Settings,
+  variableOf
+} from './joomla-t4.mjs'
 
 /** The most bytes Joomla stores in one module's content (`Table\Module::check`). */
 export const FREE_HTML_MAX_BYTES = 65535
@@ -85,6 +93,28 @@ export function joomlaAdapter(source) {
     if (source.listDir) return source.listDir(dir).includes(rel.split('/').pop())
     return readFile?.(`templates/${state.template}/${rel}`) != null
   }
+  // The ACM block layouts of a T4 template with the published modules set to each (`module-<id>`), read once.
+  let acmBlocks = null
+  const acmLogoBlocks = () => {
+    if (acmBlocks) return acmBlocks
+    acmBlocks = []
+    if (!t4 || !query || !state.prefix || !/^[\w-]+$/.test(state.template ?? '')) return acmBlocks
+    const layouts = acmLayouts(readFile, source.listDir, state.template)
+    if (layouts.length === 0) return acmBlocks
+    const modules = query(
+      `SELECT id, params FROM ${state.prefix}modules WHERE client_id = 0 AND published = 1 AND module = 'mod_ja_acm'`
+    )
+    for (const l of layouts) {
+      const ids = modules
+        .filter((m) => {
+          const acm = acmOfParams(m.params)
+          return acm?.type === l.type && acm.style === l.style
+        })
+        .map((m) => `module-${m.id}`)
+      if (ids.length > 0) acmBlocks.push({ ...l, blocks: ids })
+    }
+    return acmBlocks
+  }
   const siteName = state.config.sitename ?? null
   return {
     cms: 'joomla',
@@ -133,15 +163,25 @@ export function joomlaAdapter(source) {
       if (t3) return t3LogoSettings({ params: t3.params, layouts: t3.layouts, templateHas })
       if (!t4) return []
       const layouts = logoLayouts(readFile, state.template)
+      const blocks = acmLogoBlocks()
       return Object.entries(t4.values)
         .filter(([k]) => k.startsWith('site_logo'))
         .map(([key, value]) => ({
           key,
           value: String(value ?? '').split('#')[0],
-          prints: layouts.map((l) => {
-            const v = variableOf(l.php, key)
-            return { where: l.where, layout: l.file, emptyShows: v ? emptyShowsOf(l.php, v) : null }
-          })
+          prints: [
+            ...layouts.map((l) => {
+              const v = variableOf(l.php, key)
+              return { where: l.where, layout: l.file, emptyShows: v ? emptyShowsOf(l.php, v) : null }
+            }),
+            // A block layout that reads this key prints it too, but only in the blocks set to that layout.
+            ...blocks.flatMap((l) => {
+              const v = variableOf(l.php, key)
+              return v
+                ? [{ where: 'module', layout: l.file, blocks: l.blocks, emptyShows: emptyShowsOf(l.php, v) }]
+                : []
+            })
+          ]
         }))
     },
     /**

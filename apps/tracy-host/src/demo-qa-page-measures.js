@@ -5,9 +5,11 @@
  * `pageMeasures`, one entry per page and width:
  *   { path, width, links: [{ href, text, status }], textBoxes: [...], blocks: [...], textBlocks: [...], pictures: [...], controls: [...],
  *     fields: [...], glued: [...], headingSpans: [...], headings: [...], mainHeadings: [...], minorHeadings: [...], hiddenHeadings: [...],
- *     selfLinks: [...], contentControls: [...], view, title, shownText, shownLinks: [...], shownPictures: [...],
- *     lists: [{ selector, items: [{ chars, text, pictures }] }], maps: [{ kind, lat?, lng?, address?, from }],
- *     phones: [{ text, digits, inTel, selector }], brandStyle?, look? }
+ *     selfLinks: [{ selector, text, href, holders: [{ tag, id, classes }] }], contentControls: [...], view, title, shownText,
+ *     shownLinks: [{ href, text, clickable }], shownLinksClickable, shownPictures: [...],
+ *     lists: [{ selector, items: [{ chars, text, pictures }] }],
+ *     orphanRows: [{ selector, perRow, lastRow, rows, gap }], blankFooterColumns: [{ selector, width, height }], maps: [{ kind, lat?, lng?, address?, from }],
+ *     phones: [{ text, digits, inTel, selector }], videoButtons: [{ selector, attribute, address }], brandStyle?, look? }
  * The shape is the one `apps/tracy-web/src/site-check/page-measures.js` documents; the judging stays there.
  */
 
@@ -38,8 +40,11 @@ export const MEASURE_CAPS = Object.freeze({
   shownPictures: 100,
   shownText: 30000,
   lists: 60,
+  orphanRows: 20,
+  blankFooterColumns: 20,
   maps: 10,
-  phones: 40
+  phones: 40,
+  videoButtons: 40
 })
 
 /**
@@ -236,7 +241,11 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   for (const el of document.body.querySelectorAll('*')) {
     if (glued.length >= caps.glued) break
     if (SKIP.has(el.tagName.toUpperCase()) || !shown(el)) continue
-    const nodes = Array.from(el.childNodes)
+    // What the visitor sees beside the highlight: elements and comments that print nothing (a break a theme hides on a narrow
+    // screen) are stepped over, a break that shows ends the line and so is not text.
+    const nodes = Array.from(el.childNodes).filter(
+      (n) => n.nodeType === 3 || (n.nodeType === 1 && getComputedStyle(n).display !== 'none')
+    )
     nodes.forEach((node, at) => {
       if (node.nodeType !== 1 || getComputedStyle(node).display !== 'inline') return
       const inner = node.textContent ?? ''
@@ -330,7 +339,15 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       continue
     }
     if (to.origin !== location.origin || pathOf(to) !== herePath) continue
-    selfLinks.push({ selector: selectorOf(a), text: saidBy(a).slice(0, 80), href: a.href })
+    // What holds it, nearest first, so the judge can tell a container the kit names (ADR 0044, decision 29).
+    const holders = []
+    for (let el = a.parentElement; el && el !== document.body && holders.length < 12; el = el.parentElement)
+      holders.push({
+        tag: el.tagName.toLowerCase(),
+        id: el.id || null,
+        classes: [...el.classList].slice(0, 8)
+      })
+    selfLinks.push({ selector: selectorOf(a), text: saidBy(a).slice(0, 80), href: a.href, holders })
   }
 
   // The controls of the page's own content, named by what holds them, for the judge to compare a page the write step created
@@ -376,8 +393,10 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   const shownLinks = []
   for (const a of document.body.querySelectorAll('a[href]')) {
     if (shownLinks.length >= caps.shownLinks) break
-    if (!shown(a) || clippedAway(a, getComputedStyle(a))) continue
-    shownLinks.push({ href: a.href, text: saidBy(a).slice(0, 80) })
+    const style = getComputedStyle(a)
+    if (!shown(a) || clippedAway(a, style)) continue
+    // Whether a click reaches it: a link made plain text (`pointer-events: none`) leads nowhere a visitor can go.
+    shownLinks.push({ href: a.href, text: saidBy(a).slice(0, 80), clickable: style.pointerEvents !== 'none' })
   }
   const shownPictures = []
   for (const img of document.body.querySelectorAll('img')) {
@@ -422,6 +441,106 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
           text: (it.innerText ?? '').replace(/\s+/g, ' ').trim().slice(0, 60),
           pictures: picturesIn(it)
         }))
+      })
+    }
+  }
+
+  // Orphan card rows: a grid, or a flex row that wraps, of three or more cards of one shape and about one width (each at least
+  // 120 x 80, so no tag cloud or menu), laid out in two or more rows whose full rows hold the same number of cards, and whose
+  // last row holds fewer, starting at the first row's left edge and leaving at least half a card of empty width on its right.
+  // A last row that is centred or stretched to the edge is the template's choice, not a hole (`orphan-row`).
+  const near = (a, b, px) => Math.abs(a - b) <= px
+  const inFlow = (el) => !/^(?:absolute|fixed)$/.test(getComputedStyle(el).position)
+  const SLIDES =
+    '[class*="carousel"],[class*="swiper"],[class*="slick"],[class*="splide"],[class*="owl-"],[class*="glide"]'
+  const orphanRows = []
+  for (const box of document.body.querySelectorAll('*')) {
+    if (orphanRows.length >= caps.orphanRows) break
+    if (SKIP.has(box.tagName.toUpperCase()) || box.children.length < 3) continue
+    const cs = getComputedStyle(box)
+    const grid = /grid/.test(cs.display)
+    const wraps = /flex/.test(cs.display) && cs.flexDirection === 'row' && cs.flexWrap === 'wrap'
+    if ((!grid && !wraps) || !shown(box) || box.closest(`${MENU},${SLIDES}`)) continue
+    const items = Array.from(box.children).filter(
+      (c) => !SKIP.has(c.tagName.toUpperCase()) && shown(c) && inFlow(c)
+    )
+    if (items.length < 3 || items.some((it) => shapeOf(it) !== shapeOf(items[0]))) continue
+    const rects = items.map((it) => it.getBoundingClientRect())
+    const cardWidth = rects[0].width
+    if (rects.some((r) => r.width < 120 || r.height < 80 || !near(r.width, cardWidth, cardWidth * 0.1)))
+      continue
+    const rows = []
+    for (const r of rects) {
+      const row = rows.find((rw) => near(rw.top, r.top, 4))
+      if (row) row.cards.push(r)
+      else rows.push({ top: r.top, cards: [r] })
+    }
+    if (rows.length < 2) continue
+    rows.sort((a, b) => a.top - b.top)
+    for (const row of rows) row.cards.sort((a, b) => a.left - b.left)
+    const perRow = rows[0].cards.length
+    const last = rows[rows.length - 1].cards
+    if (perRow < 2 || rows.slice(0, -1).some((row) => row.cards.length !== perRow) || last.length >= perRow)
+      continue
+    const first = rows[0].cards
+    if (!near(last[0].left, first[0].left, 4)) continue
+    const gap = Math.round(first[first.length - 1].right - last[last.length - 1].right)
+    if (gap < cardWidth * 0.5) continue
+    orphanRows.push({ selector: selectorOf(box), perRow, lastRow: last.length, rows: rows.length, gap })
+  }
+
+  // Blank footer columns: in the site footer (not an article's own footer), a column of a row laid out side by side (a flex row
+  // or a grid, the column at least 100 px wide and sharing its line with a sibling) that holds markup but prints no words, no
+  // link, no picture, no icon and no control, while a sibling column prints something (`blank-footer-column`). A column with
+  // no markup at all is the template's spacer.
+  const PRINTS = 'img,svg,picture,video,canvas,iframe,object,embed,input,select,textarea,button,[role="img"]'
+  const paintedIn = (el) =>
+    [el, ...el.querySelectorAll('*')].some((n) => {
+      if (n !== el && !shown(n)) return false
+      if (/url\(/.test(getComputedStyle(n).backgroundImage)) return true
+      return ['::before', '::after'].some((which) => {
+        const ps = getComputedStyle(n, which)
+        if (!ps.content || ps.content === 'none' || ps.content === 'normal') return false
+        const glyph = /^["']/.test(ps.content) && ps.content.slice(1, -1).trim() !== ''
+        // A mask paints only the colour under it: one over a see-through ground shows nothing.
+        const clear =
+          ps.backgroundColor === 'transparent' ||
+          /^rgba\([^,]+,[^,]+,[^,]+,\s*0(?:\.0+)?\s*\)$/.test(ps.backgroundColor) ||
+          /\/\s*0(?:\.0+)?\s*\)$/.test(ps.backgroundColor)
+        const masked = /url\(/.test(ps.maskImage || '') && !clear
+        return glyph || /url\(/.test(ps.backgroundImage) || masked
+      })
+    })
+  const blank = (col) =>
+    !(col.innerText ?? '').replace(/[\s\u200b-\u200d\ufeff]+/g, '') &&
+    !Array.from(col.querySelectorAll(PRINTS)).some(shown) &&
+    !paintedIn(col)
+  const blankFooterColumns = []
+  const FOOTER = 'footer,[role="contentinfo"],#t4-footer,.t4-footer,#t3-footer,.t3-footer'
+  for (const footer of document.body.querySelectorAll(FOOTER)) {
+    if (footer.parentElement?.closest(FOOTER) || footer.closest('main,article,[role="main"]')) continue
+    for (const row of [footer, ...footer.querySelectorAll('*')]) {
+      if (blankFooterColumns.length >= caps.blankFooterColumns) break
+      const cs = getComputedStyle(row)
+      if (!/grid/.test(cs.display) && !(/flex/.test(cs.display) && cs.flexDirection.startsWith('row')))
+        continue
+      const cols = Array.from(row.children).filter(
+        (c) => !SKIP.has(c.tagName.toUpperCase()) && shown(c) && inFlow(c)
+      )
+      if (cols.length < 2) continue
+      const rects = cols.map((c) => c.getBoundingClientRect())
+      const empty = cols.map(blank)
+      if (empty.every(Boolean)) continue
+      cols.forEach((col, at) => {
+        const r = rects[at]
+        const beside = rects.some((o, k) => k !== at && near(o.top, r.top, 4))
+        if (!empty[at] || !beside || r.width < 100 || !col.children.length) return
+        if (blankFooterColumns.length < caps.blankFooterColumns)
+          blankFooterColumns.push({
+            selector: selectorOf(col),
+            width: Math.round(r.width),
+            height: Math.round(r.height)
+          })
       })
     }
   }
@@ -506,6 +625,18 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       phones.push({ text: m[0].trim().slice(0, 40), digits, inTel: Boolean(tel), selector: selectorOf(host) })
     }
   }
+  // Shown elements that open a video player: the address an attribute names (`empty-video-buttons` judges which name no video).
+  const videoButtons = []
+  const VIDEO_HOST = /(?:youtube(?:-nocookie)?\.com|youtu\.be|vimeo\.com)/i
+  const VIDEO_ATTRS = ['data-src', 'href', 'src', 'data-video', 'data-url', 'data-href', 'data-video-url']
+  const videoSelector = VIDEO_ATTRS.map((a) => `[${a}]`).join(',')
+  for (const el of document.querySelectorAll(videoSelector)) {
+    if (videoButtons.length >= caps.videoButtons) break
+    if (!shown(el)) continue
+    const attribute = VIDEO_ATTRS.find((a) => VIDEO_HOST.test(el.getAttribute(a) || ''))
+    if (attribute)
+      videoButtons.push({ selector: selectorOf(el), attribute, address: el.getAttribute(attribute) })
+  }
   return {
     links,
     textBoxes,
@@ -526,10 +657,14 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     title: document.title,
     shownText,
     shownLinks,
+    shownLinksClickable: true,
     shownPictures,
     lists,
+    orphanRows,
+    blankFooterColumns,
     maps,
-    phones
+    phones,
+    videoButtons
   }
 }
 

@@ -1,7 +1,7 @@
 // The site check's `page-slug` measure (ADR 0044, decision 20): each kept page the plan gives a slug answers at an address that
 // ends with it. The write step's route stage renames the page's menu item and keeps a route table in the report
-// (write-step/page-route-stage.js); this reads the item's address back as the site answers it, in inspect's pages (the routes the
-// host is given to open) or else on the row. A page whose item ends with another name blocks on step 9 (write); a page the site
+// (write-step/page-route-stage.js); this reads the item's address back as the site answers it now, on its row, or else in
+// inspect's pages (captured with the contract, so from before any rename). A page whose item ends with another name blocks on step 9 (write); a page the site
 // answers nothing for is unmeasured. When the host read the pages, a kept page that does not answer at its new address blocks too:
 // an old demo address that answers 404 is what a rename leaves, and is fine.
 import { GroupUnmeasured } from './group-unmeasured.js'
@@ -12,13 +12,26 @@ const each = (value) => (Array.isArray(value) ? value : [])
 const trimmed = (path) => String(path ?? '').replace(/^\/+|\/+$/g, '')
 const LANDED = new Set(['written', 'already'])
 
-/** The address the site answers a menu item at, or null when it says nothing of it. */
+/**
+ * The address the site answers a menu item at, or null when it says nothing of it. The row is read first: inspect's routes
+ * are the paths the contract was captured with, from before the route stage renamed anything (card AE).
+ */
 async function addressOf(itemId, { routes, read }) {
-  if (routes.has(itemId)) return routes.get(itemId)
   try {
     const answer = await read('content.get', { kind: 'menuItem', id: itemId })
     const path = answer?.item?.path
-    return typeof path === 'string' && path ? `/${trimmed(path)}` : null
+    if (typeof path === 'string' && path) return `/${trimmed(path)}`
+  } catch {
+    // No row: inspect's route is all the site says.
+  }
+  return routes.get(itemId) ?? null
+}
+
+/** The alias an article holds now, or null when the site says nothing of it. */
+async function articleAlias(id, read) {
+  try {
+    const alias = (await read('content.get', { kind: 'article', id }))?.item?.alias
+    return typeof alias === 'string' && alias ? alias : null
   } catch {
     return null
   }
@@ -54,6 +67,22 @@ async function run(context) {
   let checked = 0
   for (const route of table) {
     const where = { page: route.to ?? route.from ?? null, slot: `${route.pageId}:slug` }
+    // A page its parent item opens took the slug as its article's alias (card P): the article is read for it.
+    if (!route.itemId && route.via === 'article' && route.articleId) {
+      const alias = await articleAlias(route.articleId, read)
+      if (alias === null) {
+        unread.push(`${route.pageId} (the site answers nothing for article ${route.articleId})`)
+        continue
+      }
+      checked++
+      if (alias !== route.slug)
+        failures.push({
+          ...where,
+          measured: alias,
+          reason: `${route.pageId} is its article's address, and the article answers at "${alias}", not its plan slug "${route.slug}"`
+        })
+      continue
+    }
     if (!route.itemId) {
       unread.push(`${route.pageId} (the write report names no menu item for it)`)
       continue

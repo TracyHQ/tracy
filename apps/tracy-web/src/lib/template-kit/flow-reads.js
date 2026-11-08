@@ -20,6 +20,9 @@
  *                                     bench runs before a run)
  *   kit-zip-missing             todo  the release lacks the kit's image zip, which the planner, the brand step and
  *                                     the picture step download before any model call (`lib/template-kit-images.js`)
+ *   kit-demo-baseline-missing   todo  only for a template `demo-baseline-policy.json` opts in: no readable
+ *                                     `demo-baseline.json` of this version beside the contract, which the site check's
+ *                                     demo groups judge a written site against (`demo-baseline-file.js`)
  *   kit-setting-slot-missing    warn  a map button or a frame painted behind the blocks points at no setting slot:
  *                                     the planner leaves it to the demo (`rules-map-judgement.js`)
  *
@@ -35,6 +38,8 @@ import { brandKitProblem } from '../../brand-step/kit-grounds.js'
 import { contentMapKey } from '../content-map-key.js'
 import { contractFor } from '../contracts.js'
 import { kitZipName } from '../template-kit-images.js'
+import { BASELINE_FILE, baselineAskedOf } from './demo-baseline-file.js'
+import { logoWritePath } from './logo-write-path.js'
 
 /** The codes that hold Publish, in the order the step names them. */
 export const FLOW_TODO_CODES = Object.freeze([
@@ -44,7 +49,8 @@ export const FLOW_TODO_CODES = Object.freeze([
   'kit-map-mismatch',
   'kit-front-page-group',
   'kit-brand-unreadable',
-  'kit-zip-missing'
+  'kit-zip-missing',
+  'kit-demo-baseline-missing'
 ])
 
 /** How many ids a gap names itself. */
@@ -53,7 +59,8 @@ const arr = (x) => (Array.isArray(x) ? x : [])
 const some = (ids) => `${ids.slice(0, SHOWN).join(', ')}${ids.length > SHOWN ? ', ...' : ''}`
 
 /**
- * @typedef {{ slotKeys: Set<string>, menuBlocks: string[] }} KitMap what the flow reads of the content map beside a kit
+ * @typedef {{ slotKeys: Set<string>, menuBlocks: string[], siteLogoBlock?: boolean }} KitMap what the flow reads of the content
+ * map beside a kit; `siteLogoBlock` (WordPress only): whether the theme's header prints a Site Logo block
  */
 
 /** @type {Map<string, { stamp: string, value: KitMap | null }>} */
@@ -93,7 +100,7 @@ export function kitMapOfRelease(release, contracts) {
     return null
   }
   const seen = memo.get(file)
-  if (seen && seen.stamp === stamp) return seen.value
+  if (seen && seen.stamp === stamp) return withSiteLogo(seen.value, dir)
   let value = null
   try {
     value = kitMapOf(JSON.parse(readFileSync(file, 'utf8')))
@@ -101,7 +108,50 @@ export function kitMapOfRelease(release, contracts) {
     value = null
   }
   memo.set(file, { stamp, value })
+  return withSiteLogo(value, dir)
+}
+
+/** @type {Map<string, { stamp: string, value: boolean }>} */
+const siteLogoMemo = new Map()
+
+/**
+ * Whether a WordPress theme's header template part prints a Site Logo block, read from the raw markup captured beside
+ * the contract (`navigation-source.json`). Undefined when the contract holds none (Joomla, or an unreadable capture).
+ * @param {string} dir
+ * @returns {boolean | undefined}
+ */
+export function headerSiteLogoBlockOf(dir) {
+  const file = path.join(dir, 'navigation-source.json')
+  let stamp
+  try {
+    const stat = statSync(file)
+    stamp = `${stat.mtimeMs}:${stat.size}`
+  } catch {
+    return undefined
+  }
+  const seen = siteLogoMemo.get(file)
+  if (seen && seen.stamp === stamp) return seen.value
+  let value
+  try {
+    const doc = JSON.parse(readFileSync(file, 'utf8'))
+    const parts = [...arr(doc?.templateParts), ...arr(doc?.themeParts)]
+    value = parts.some(
+      (p) =>
+        (p?.area === 'header' || p?.slug === 'header') &&
+        typeof p?.content === 'string' &&
+        /<!-- wp:site-logo(?:\s|\/|-->)/.test(p.content)
+    )
+  } catch {
+    value = undefined
+  }
+  siteLogoMemo.set(file, { stamp, value })
   return value
+}
+
+function withSiteLogo(map, dir) {
+  if (!map) return map
+  const siteLogoBlock = headerSiteLogoBlockOf(dir)
+  return siteLogoBlock === undefined ? map : { ...map, siteLogoBlock }
 }
 
 /** Every copy slot id of the kit's blocks, lists and rows; an icon is written through its field, not its own key. */
@@ -124,18 +174,16 @@ function kitSlotIds(doc) {
 }
 
 function logoGap(site, map) {
-  const writes = (s) =>
-    (typeof s.setting === 'string' && s.setting !== '') ||
-    (typeof s.frameId === 'string' &&
-      s.frameId !== '' &&
-      (!map || map.slotKeys.has(contentMapKey(s.frameId))))
+  // The write step's own decision, so a spot passes here only when the write step can write it.
+  const world = map ? { frameKnown: (key) => map.slotKeys.has(key), siteLogoBlock: map.siteLogoBlock } : {}
+  const writes = (s) => logoWritePath(s, world).via !== 'none'
   const spots = arr(site.logoSpots).filter((s) => arr(s?.shownIn).length > 0 && !writes(s))
   if (spots.length === 0) return null
   const ids = spots.map((s) => String(s.id))
   return {
     code: 'kit-logo-unsettable',
     spots: ids.slice(0, SHOWN),
-    reason: `${ids.length} logo spot${ids.length === 1 ? '' : 's'} the page shows ${ids.length === 1 ? 'has' : 'have'} no setting and no content map frame: ${some(ids)}`
+    reason: `${ids.length} logo spot${ids.length === 1 ? '' : 's'} the page shows ${ids.length === 1 ? 'has' : 'have'} no setting the write step can write and no content map frame: ${some(ids)}`
   }
 }
 
@@ -236,13 +284,30 @@ function settingSlotGap(doc) {
 }
 
 /**
+ * The demo baseline an opted in template must carry beside its contract, or null. Not asked when `baseline` is left out.
+ * @param {any} release
+ * @param {import('./demo-baseline-file.js').DemoBaseline | undefined} baseline
+ */
+function baselineGap(release, baseline) {
+  if (baseline === undefined || baseline.state === 'read' || !baselineAskedOf(release)) return null
+  return {
+    code: 'kit-demo-baseline-missing',
+    baselineState: baseline.state,
+    reason:
+      baseline.state === 'none' ? `there is no ${BASELINE_FILE} beside the contract` : `${baseline.reason}`
+  }
+}
+
+/**
  * Every fact the flow reads that this kit gets wrong, todo ones first in `FLOW_TODO_CODES` order, then the warnings.
  * @param {any} doc the parsed kit
  * @param {{ map?: KitMap | null, release?: any }} [world] `map`: the content map beside the kit (`kitMapOfRelease`),
- *   null skips the checks that need it; `release`: its assets name the kit zip (a local pack carries none)
+ *   null skips the checks that need it; `release`: its assets name the kit zip (a local pack carries none); `baseline`:
+ *   the demo baseline beside the contract (`baselineOfRelease`), asked of the templates the baseline policy opts in;
+ *   left out, it is not asked
  * @returns {{ code: string, severity: 'todo' | 'warn', reason: string, [k: string]: unknown }[]}
  */
-export function flowGapsOf(doc, { map = null, release = null } = {}) {
+export function flowGapsOf(doc, { map = null, release = null, baseline = undefined } = {}) {
   const site = doc?.site && typeof doc.site === 'object' ? doc.site : {}
   const gaps = [
     logoGap(site, map),
@@ -252,7 +317,7 @@ export function flowGapsOf(doc, { map = null, release = null } = {}) {
     frontPageGap(doc)
   ]
   const logo = gaps[0]
-  const brand = brandKitProblem(doc)
+  const brand = brandKitProblem(doc, { siteLogoBlock: map?.siteLogoBlock })
   // The brand step names a spot without a frame too: said once, by the logo gap.
   if (brand && !(logo && /logo spots/.test(brand))) gaps.push({ code: 'kit-brand-unreadable', reason: brand })
   if (release && !release.local && Array.isArray(release.assets)) {
@@ -260,6 +325,7 @@ export function flowGapsOf(doc, { map = null, release = null } = {}) {
     if (!release.assets.some((a) => a?.name === file))
       gaps.push({ code: 'kit-zip-missing', file, reason: `the release has no asset ${file}` })
   }
+  gaps.push(baselineGap(release, baseline))
   const todo = gaps.filter(Boolean).map((g) => ({ ...g, severity: /** @type {const} */ ('todo') }))
   todo.sort((a, b) => FLOW_TODO_CODES.indexOf(a.code) - FLOW_TODO_CODES.indexOf(b.code))
   const warn = [settingSlotGap(doc)]

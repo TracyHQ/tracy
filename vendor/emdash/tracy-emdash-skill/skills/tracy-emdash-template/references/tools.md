@@ -10,7 +10,7 @@
 `scripts/src/*` + `scripts/tests/*` (mock EmDash API + DE/FR fixtures) + a skeleton `template.config.json` into a new
 package. Every tool has `--help`/usage at the top of the file, meaningful exit codes, no hardcoded machine paths, **no
 hardcoded identity**: site name, locales, form bindings, audit policy, theme hook (`qa.theme`) are all read
-from `template.config.json` (`--config`). They import `playwright`, `acorn`, `emdash`, `better-sqlite3`
+from `template.config.json` (`--config`). They import `playwright` (browser: `npx playwright install chromium`), `acorn`, `emdash`, `better-sqlite3`
 from the **template's** `node_modules`, so they must be run as `node tools/<x>.mjs` in the template folder —
 not from the skill folder. `scripts/check-kit-sync.mjs` compares a template's copy with the kit
 (`scripts/kit-manifest.json` says who owns which file).
@@ -46,12 +46,13 @@ printed line is percent-encoded when it holds a control character, `%` or (in `g
 |---|---|---|
 | `ingest/detect-source.mjs <url\|folder>` | **run BEFORE everything**: which CMS · whether T4/ACM · reach (local/remote) · suggested package name + location → pick the road ([`SKILL.md`](../SKILL.md) §Getting started) | P0 |
 | `ingest/from-url.mjs <url> --out <dir>` | running site → a source folder `inventory.mjs` can read: same-origin crawl, keeps the site's paths, also pulls assets referenced by CSS, `crawl.json` as the record; says so when it hits the page cap or when the site renders with JS ([`references/inputs/from-url.md`](inputs/from-url.md)) | P1 |
-| `inventory.mjs <src> <out>` | hash + classify pages + referenced assets (HTML **and** strings in data scripts) | P1 |
+| `inventory.mjs <src> <out-dir>` — `<out-dir>` is a directory (`inventory` → `inventory/source-inventory.json` + `assets.json`; a `.json` name is refused). Resolves `./`, root-relative and own-origin references and `url()` in stylesheets, so a mirrored CMS site reports real counts | hash + classify pages + referenced assets (HTML **and** strings in data scripts) | P1 |
 | `extract.mjs <src> <out.json>` | extract the canvas data objects via **AST literals**, no eval | P1 |
-| `render-source.mjs <url> <out> --pages a,b` | render the source at 1440/390 × light/dark, measure overflow/fonts/errors | P1 |
+| `render-source.mjs <url> <out> --pages a,b [--block host,host]` | render the source at 1440/390 × light/dark, measure overflow/fonts/errors; `--block` aborts requests to hosts that never settle offline (booking iframes, analytics); a page that fails is listed under `failed` in `render-manifest.json` and the run goes on (exit 1) | P1 |
 | `validate-seed.mjs seed/seed.json` | EmDash's own `validateSeed` | P2 |
 | `contract/validate.mjs <site-model.json>` | **source contract gate** ([`references/site-model.md`](site-model.md), ADR 0016): named error codes, one negative fixture per rule; also scans the storage vocabulary of the three CMSes in `scripts/contract/` | P1/P2 |
-| `compile-seed.mjs <site-model.json> <seed-dir> [--config]` | contract → `seed.json` + `field-map.json` + `media-map.json`; rebuilds translation relations, rejects unmapped field kinds instead of guessing | P2 |
+| `compile-seed.mjs <site-model.json> <seed-dir> [--config] [--media-from <dir>]` | contract → `seed.json` + `field-map.json` + `media-map.json` (`files` for the model, `items` in the shape `seed-apply.mjs` reads; `--media-from` copies the files into `<seed-dir>/media/`; a file name with `..`, an absolute path or a backslash is refused); datetimes written as UTC ISO; warns on HTML in a `text` prose field and on a configured collection without a label; rebuilds translation relations, rejects unmapped field kinds instead of guessing | P2 |
+| `safe-path.mjs` | library: `joinInside(root, name)` / `unsafeReason(name)` refuse a model-, seed- or media-map-supplied file name that is absolute, has `..` or a backslash; used by `compile-seed`, `seed-apply` (media upload) and `visual-lib` (media hash) | P2 |
 | `carry-field-map-roles.mjs` | library, not a command: `compile-seed.mjs` (and a template's own `build-seed.mjs`) keep each field's slot role (`role`, `group`, `subRoles`) when they regenerate `seed/field-map.json` (ADR 0038); a field map without roles comes out unchanged | P2 |
 | `from-emdash-seed.mjs <seed.json> <out>` | **one-time bootstrap**: the seed of a template built before the contract → `site-model.json` + `compile.config.json` | P2 |
 | `from-wp-spec.mjs <spec-dir> <out-dir>` | **bridge** ([`references/inputs/from-wp-spec.md`](inputs/from-wp-spec.md)): an existing Joomla spec-pack from the WordPress kit → `site-model.json`, stripping WordPress-isation traces; not the long-term Joomla adapter road | P1/P2 |
@@ -94,7 +95,7 @@ printed line is percent-encoded when it holds a control character, `%` or (in `g
 | `content-api/` (directory) | the Content API reader every template builds in (`/content.json`, `TRACY_CONTENT_API_SCALARS`); its own `README.md` is the spec; [`content-api.md`](content-api.md) | P2/P8 |
 | `docker-entrypoint.sh` | the image entrypoint: creates `data/` + `uploads/`, hands only those to `www-data`, drops root via `gosu` | P8 |
 
-There are 45 entries in `scripts/tools/` (files and the `content-api/` directory); each has a row above
+There are 46 entries in `scripts/tools/` (files and the `content-api/` directory); each has a row above
 (`scripts/check-docs-numbers.mjs` fails when one is missing or the count is wrong).
 
 `new-template.sh` also copies `assets/package-docs/` into the new package, keeping guide files that already exist.

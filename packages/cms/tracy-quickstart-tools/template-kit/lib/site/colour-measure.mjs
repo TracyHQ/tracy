@@ -2,7 +2,8 @@
 //
 //   primary    the colour the framework role rules resolve to (links, the primary button, `.text-primary`, `.bg-primary`,
 //              the primary/link/accent theme variables), voted; with every role it was found in. A winner only
-//              links are painted with gives way to the colour that fills the primary button or ground
+//              links are painted with gives way to the colour that fills the primary button or ground. A colour a
+//              status rule paints is never brand, unless a variable names it the primary
 //   secondary  the same from the secondary roles, kept only when its hue stands apart from the primary
 //   status     the status colours (danger, warning, success, info), never brand
 //   on         the words the template writes on the primary colour, most used first
@@ -33,6 +34,8 @@ const FILL_ROLES = new Set(['button-fill', 'fill'])
 const LINK_ROLE = /link/i
 const PRIMARY_VAR =
   /^--(?!ds-)(?:[a-z0-9]+-)*(?:(?:primary|brand|accent)(?:-colou?r)?|link(?:-hover|-active)?-colou?r)$/
+/** A stylesheet variable that names the brand itself (`--color-primary`, `--t4-primary`), not the link colour. */
+const BRAND_VAR = /^--(?!ds-)(?:[a-z0-9]+-)*(?:primary|brand|accent)(?:-colou?r)?$/
 const SECONDARY_VAR = /^--(?!ds-)(?:[a-z0-9]+-)*secondary(?:-colou?r)?$/
 /** The same roles among variables a template declares before compiling (LESS `@brand-primary`, `@brand-secondary`). */
 const DECLARED_PRIMARY = /^@(?:[a-z0-9]+-)*(?:primary|brand|accent)(?:-colou?r)?$/
@@ -54,7 +57,9 @@ export const rulesOf = (styles) =>
  * @param {{variables?: Array<{name: string, value: string}>}} [o] colour variables the template declares outside its
  *   stylesheets (a T3 template's LESS variables, compiled away): each votes like a CSS variable, but only when a rule
  *   of the stylesheets paints its colour. A colour the template declares as its primary stays a brand colour even
- *   when a status rule reuses it (JA Cagox paints `.invalid` borders with `@brand-primary`).
+ *   when a status rule reuses it (JA Cagox paints `.invalid` borders with `@brand-primary`). A variable whose source
+ *   names its role (`names: 'primary'`, a WordPress theme.json palette accent) counts as declared under that role,
+ *   whatever its name.
  */
 export function measureBrandColours(styles, { variables = [] } = {}) {
   const rules = rulesOf(styles)
@@ -85,9 +90,17 @@ export function measureBrandColours(styles, { variables = [] } = {}) {
     return c ? hexOf(c) : null
   }
   const declared = variables.filter((v) => painted.has(hexOfValue(v.value)))
-  const declaredPrimary = new Set(
-    declared.filter((v) => DECLARED_PRIMARY.test(v.name)).map((v) => hexOfValue(v.value))
-  )
+  const declaresPrimary = (v) => v.names === 'primary' || DECLARED_PRIMARY.test(v.name)
+  const declaresSecondary = (v) => v.names === 'secondary' || DECLARED_SECONDARY.test(v.name)
+  // A colour the template names as its primary stays a brand colour when a status rule reuses it: an alert border
+  // painted with the primary, or a page class read as a status (`.t4-error-page`).
+  const declaredPrimary = new Set([
+    ...declared.filter(declaresPrimary).map((v) => hexOfValue(v.value)),
+    ...[...base.vars]
+      .filter(([name]) => BRAND_VAR.test(name))
+      .map(([, value]) => hexOfValue(resolveVars(value, base.vars)))
+      .filter(Boolean)
+  ])
   const votes = { primary: new Map(), secondary: new Map() }
   const roles = { primary: new Map(), secondary: new Map() }
   const vote = (kind, value, weight, role) => {
@@ -104,9 +117,9 @@ export function measureBrandColours(styles, { variables = [] } = {}) {
     if (PRIMARY_VAR.test(name)) vote('primary', value, 1, `variable ${name}`)
     else if (SECONDARY_VAR.test(name)) vote('secondary', value, 1, `variable ${name}`)
   }
-  for (const { name, value } of declared) {
-    if (DECLARED_PRIMARY.test(name)) vote('primary', value, 1, `variable ${name}`)
-    else if (DECLARED_SECONDARY.test(name)) vote('secondary', value, 1, `variable ${name}`)
+  for (const v of declared) {
+    if (declaresPrimary(v)) vote('primary', v.value, 1, `variable ${v.name}`)
+    else if (declaresSecondary(v)) vote('secondary', v.value, 1, `variable ${v.name}`)
   }
   const top = (m) => [...m.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
   // A colour only links are painted with is a link colour, not the brand: a colour that fills the primary button or

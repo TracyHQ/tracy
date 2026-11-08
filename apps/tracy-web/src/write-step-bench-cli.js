@@ -3,32 +3,37 @@
 // BENCH ONLY. The write step bench's command line (ADR 0044), with the commands of the other benches. A run executes in
 // this process and needs no worker in the server; other shells read it or stop it through its row (write-run-store.js).
 // Exit codes: 0 done, 1 refused, stopped, cancelled or not found, 2 wrong usage.
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { openKit, readableKits } from './lib/template-kit-source.js'
 import { checkLines } from './site-check/check-lines.js'
+import { baselineOutcome, ensureBaseline } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
 import { runSiteCheck } from './site-check/site-check.js'
 import { openContentMap } from './lib/content-map-source.js'
 import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './write-step/bench-site-cli.js'
 import { runWriteStep } from './write-step/write-step.js'
+import { STEP_NINE_USAGE, stepNineOfRun, stepNineRefusal } from './write-step-bench-step-nine.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
       [--brief-file <path>] [--brand-file <path>] [--pictures-file <path>] [--by <label>]    write the frozen files to a site this bench made; runs in this process,
                                               prints the run id first and the counts last. On a site written before, it
                                               compares with the last report and writes only what differs
+${STEP_NINE_USAGE}
   list [--limit <n>]                          the newest runs
   status <runId>                              state, phase, counts and the cause of a stop
   get <runId> --out <dir>                     write the run's site-write-report.json
   cancel <runId>                              stop a run between phases
-  check --run <runId> --account <email> [--out <dir>] [--all-groups]
+  check --run <runId> --account <email> [--out <dir>] [--all-groups] [--site-pictures-file <path>]
                                               measure the run's site against its report (site-check/1): reads only,
                                               runs in this process, keeps the result on the run's report; --out also
                                               writes site-check.json. Exit 0 green, 1 red or unmeasured.
                                               --all-groups runs the page groups even when read-back is red (never green)
+                                              --site-pictures-file: step 8's site-pictures.json, for alt-matches-picture
+                                              (each printed alt against what the picture shows)
 ${SITE_USAGE}`
 
 const LABEL = /^[A-Za-z0-9._@-]{1,64}$/
@@ -58,7 +63,7 @@ const causeOf = (r) => (r.code ? `${r.code}: ${r.reason}` : '')
  */
 export async function runCli(argv, deps) {
   const io = { out: deps.out ?? console.log, err: deps.err ?? console.error }
-  if (SITE_COMMANDS.has(argv[0])) return runSiteCli(argv, deps)
+  if (SITE_COMMANDS.has(argv[0])) return runSiteCli(argv, { ensureBaseline, baselineOutcome, ...deps })
   try {
     const { values, positionals } = parseArgs({
       args: argv,
@@ -76,7 +81,9 @@ export async function runCli(argv, deps) {
         limit: { type: 'string' },
         out: { type: 'string' },
         run: { type: 'string' },
-        'all-groups': { type: 'boolean' }
+        'all-groups': { type: 'boolean' },
+        repair: { type: 'boolean' },
+        'site-pictures-file': { type: 'string' }
       }
     })
     const [command, runId] = positionals
@@ -112,6 +119,7 @@ async function startRun(d, values) {
     ['account', '--account']
   ])
     if (!values[flag]) throw new Usage(`run needs ${name}`)
+  if (values.repair && !values.out) throw new Usage('run --repair needs --out <dir>')
   if (values.by !== undefined && !LABEL.test(values.by))
     throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
   const where = d.index ? { index: d.index } : {}
@@ -135,6 +143,8 @@ async function startRun(d, values) {
   const site = sites.find((r) => r.siteKey === values.site)
   if (!site || site.status !== 'ready' || !isBenchSite(site))
     return refused(d, `NOT_A_BENCH_SITE: ${values.site} is not a ready site this bench made.`)
+  const unwired = values.repair ? stepNineRefusal(d) : null
+  if (unwired) return refused(d, unwired)
 
   // What the last run on this site left is what this one compares with. A run that left no report wrote nobody knows what.
   const lastRun = await d.runs.latestEnded(values.site)
@@ -155,7 +165,7 @@ async function startRun(d, values) {
   const inCwd = (file) => path.resolve(d.cwd ?? process.cwd(), file)
   let report
   try {
-    report = await runWriteStep({
+    const write = {
       door: d.makeDoor({ account: values.account, platform: 'joomla' }),
       siteKey: values.site,
       kit: { ref: values.kit, doc: opened.doc },
@@ -179,7 +189,12 @@ async function startRun(d, values) {
       isCancelled: () => d.runs.cancelRequested(id),
       ...(d.now ? { now: d.now } : {}),
       ...(d.sleep ? { sleep: d.sleep } : {})
-    })
+    }
+    if (values.repair) {
+      const step = await stepNineOfRun(d, values, write, inCwd)
+      report = step.report
+      for (const line of step.lines) d.out(line)
+    } else report = await runWriteStep(write)
   } catch (error) {
     const reason = String(error?.message ?? error)
     await d.runs.finish(id, { status: 'stopped', code: 'CRASHED', reason })
@@ -265,6 +280,24 @@ async function checkRun(d, values) {
   if (!r) return refused(d, `No run ${values.run}.`)
   if (r.status === 'running') return refused(d, `Run ${r.id} is still going.`)
   if (!r.report) return refused(d, `Run ${r.id} left no report.`)
+  // Step 8's manifest, whose seen sentences `alt-matches-picture` compares with the printed alts (alt-matches-picture.js).
+  let pictures = null
+  if (values['site-pictures-file']) {
+    const file = path.resolve(d.cwd ?? process.cwd(), values['site-pictures-file'])
+    try {
+      pictures = JSON.parse(await readFile(file, 'utf8'))
+    } catch (error) {
+      return refused(d, `--site-pictures-file cannot be read as JSON: ${error?.message ?? error}`)
+    }
+  }
+  // The demo baseline create-site settled for the quickstart version: a check never measures one, as the site is written.
+  const baseline = d.baselines ? await d.baselines.read(r.report.contract) : null
+  if (d.makeHost)
+    d.out(
+      baseline
+        ? `baseline ${baselineOutcome({ measured: false })} for ${r.report.contract}`
+        : `baseline: none stored for ${r.report.contract}, so the demo groups stay unmeasured (create-site measures it on an untouched site)`
+    )
   const check = await runSiteCheck({
     door: d.makeDoor({ account: values.account, platform: 'joomla' }),
     report: r.report,
@@ -272,8 +305,9 @@ async function checkRun(d, values) {
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
     // The pages as a visitor reads them, for `written-not-printed` (written-not-printed.js).
     ...(d.pageHtml ? { pageHtml: (path) => d.pageHtml({ siteKey: r.report.site, path }) } : {}),
-    baseline: d.baselines ? await d.baselines.read(r.report.contract) : null,
+    baseline,
     kit: openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null,
+    pictures,
     allGroups: values['all-groups'] === true,
     ...(d.now ? { now: d.now } : {})
   })

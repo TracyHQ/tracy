@@ -864,5 +864,12 @@
   "own_source_website": "website của doanh nghiệp",
   "brand_chat_title": "Từ chat của bạn",
   "brand_chat_use": "Dùng {file} làm logo",
-  "brand_chat_not_png": "Ảnh bạn gửi trong chat không phải file PNG nên không dùng làm logo được."
+  "brand_chat_not_png": "Ảnh bạn gửi trong chat không phải file PNG nên không dùng làm logo được.",
+  "import_detail_unreadable": "Đã bỏ qua các mục không đọc được trên site ({count}): {paths}. Cấp quyền đọc trên hosting rồi dùng Sync from live để lấy chúng về.",
+  "import_error_files_unreadable": "Site không cho Tracy đọc {folder}, nên lượt nhập đã dừng. Cấp quyền đọc trên hosting rồi bắt đầu lại.",
+  "import_problem_p56_action_0": "Bắt đầu lại",
+  "import_problem_p56_fix_0": "Trong trình quản lý file của hosting, cấp quyền đọc (755 cho folder, 644 cho file), hoặc xóa mục này nếu site không cần.",
+  "import_problem_p56_fix_1": "Hoặc cập nhật Claude Cowork trên site: phiên bản mới bỏ qua folder không đọc được, cho biết folder nào và tiếp tục.",
+  "import_problem_p56_what": "Site không cho Tracy đọc {folder}.",
+  "import_problem_p56_why": "Quyền trên hosting không cho phép đọc mục này, và phiên bản Claude Cowork trên {domain} dừng toàn bộ lượt nhập tại đây."
 }

@@ -1865,9 +1865,7 @@ test('modes: per platform, a mode with a shell gets the shell roads; one without
         /A token for the whole site: ONE `tracy_site look\.set \{path, target:\{text\|selector\}, props:\{…\}, scope:"site"\}` changes it in `styles\/tokens\.css`/
       ],
       none: [
-        new RegExp(
-          `only a mode with a shell edits \\(${withShellModes.join(', ').replaceAll(/[()]/g, '\\$&')}\\): say so`
-        )
+        new RegExp(`only a mode with a shell edits \\(${RegExp.escape(withShellModes.join(', '))}\\): say so`)
       ]
     }
   ]
@@ -1973,7 +1971,7 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
         for (const other of others)
           assert.doesNotMatch(
             await bareText(`role-${platform}`, platform, `${other}-${platform}`),
-            new RegExp(`^${start.replaceAll(/[()/]/g, '\\$&')}`, 'm'),
+            new RegExp(`^${RegExp.escape(start)}`, 'm'),
             `${other}-${platform}`
           )
         const notInstalled = await siteContext(
@@ -1984,7 +1982,7 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
         )
         assert.doesNotMatch(
           notInstalled.text,
-          new RegExp(`^${start.replaceAll(/[()/]/g, '\\$&')}`, 'm'),
+          new RegExp(`^${RegExp.escape(start)}`, 'm'),
           'no webroot, nothing to read'
         )
       }
@@ -2668,7 +2666,7 @@ const applyFor = { ...site('content.contract', { operation: 'apply', changes: {}
     [
       'ten steps after a write are due again',
       turnLog([...exploring(9), [write], ...exploring(10)]),
-      { steps: 10, sent: 0 }
+      { steps: 10, sent: 0, changed: true }
     ],
     ...['edit', 'write'].map((name) => [
       `a ${name} file tool call resets`,
@@ -2774,13 +2772,13 @@ test('stepBudget: every relay action is classified exactly once, so the door can
     [
       'emdash write, 10 looks after',
       r2Turn([...exploringR2(9), [emdashWrite], ...exploringR2(10)]),
-      { steps: 10, sent: 0 }
+      { steps: 10, sent: 0, changed: true }
     ],
     ['contract apply, 5 looks after', r2Turn([...exploringR2(9), [contractApply], ...exploringR2(5)]), null],
     [
       'contract apply, 10 looks after',
       r2Turn([...exploringR2(9), [contractApply], ...exploringR2(10)]),
-      { steps: 10, sent: 0 }
+      { steps: 10, sent: 0, changed: true }
     ],
     [
       'a refused write (isError false) resets nothing',
@@ -2833,6 +2831,50 @@ test('stepBudget: 120 s of tool time is due however few the steps; overlapping r
     test(`stepBudget: 120 s of tool time is due however few the steps; overlapping reads are one span; a change and a notice reset it: ${label}`, () => {
       assert.deepEqual(stepBudget(log), expected, label)
     })
+}
+
+{
+  // Survey 04/11/2026 (dev, elite-smiles-dental): a replace wrote at step 2, ten looks later the notice said
+  // "without changing the site"; the customer then took 479 s on a confirmation card, and that span made the
+  // next notice due on time ("497 s of tool time … you were already asked to stop exploring").
+  const ask = { name: 'ask_user_question', args: { questions: [] }, ms: 479_000 }
+  const look = () => [inspectFor(2_000)]
+  const rows = [
+    [
+      'an answered question restarts the run',
+      timedLog([...Array.from({ length: 9 }, look), [ask], look()]),
+      null
+    ],
+    ['and its wait is never tool time', timedLog([[inspectFor(100_000)], [ask], [inspectFor(5_000)]]), null],
+    [
+      'ten looks after a change are due, said as since that change',
+      timedLog([[applyFor], ...Array.from({ length: 10 }, look)]),
+      { steps: 10, sent: 0, changed: true }
+    ],
+    [
+      'ten looks with no change before them',
+      timedLog(Array.from({ length: 10 }, look)),
+      { steps: 10, sent: 0 }
+    ]
+  ]
+  for (const [label, log, expected] of rows)
+    test(`stepBudget: an answered question restarts the run, and a run after a change says so: ${label}`, () => {
+      assert.deepEqual(stepBudget(log), expected, label)
+    })
+  test('stepBudgetNotice: a run after a change is "since your last change", never "without changing the site"', () => {
+    assert.match(
+      stepBudgetNotice(10, false, 0, undefined, {}, false, true),
+      /10 steps since your last change to the site\./
+    )
+    assert.match(
+      stepBudgetNotice(3, false, 0, 162, {}, false, true),
+      /162 s of tool time since your last change/
+    )
+    assert.doesNotMatch(
+      stepBudgetNotice(10, false, 0, undefined, {}, false, true),
+      /without changing the site/
+    )
+  })
 }
 
 test('stepBudget: a notice sent by dsh 0.1.6 and migrated still raises the bar', () => {

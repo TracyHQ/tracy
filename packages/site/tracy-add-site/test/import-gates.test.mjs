@@ -755,6 +755,110 @@ test('a site that could fetch the release itself still gets the slim package, ca
   assert.equal(contractsOf(state.uploadFiles[0]).length, 0)
 })
 
+// The install can finish before both Joomla clients route to the new system plugin.
+// Exercise the real installer, including the decision whether to write a second package.
+for (const english of [false, true]) {
+  test(`a newly installed API becomes ready without a second install (${english ? 'English success' : 'translated result'})`, async () => {
+    const state = fakeInstaller({})
+    const original = globalThis.fetch
+    let probes = 0
+    globalThis.fetch = async (url, init = {}) => {
+      const key = String(url)
+      if (state.installed && [FRONT_DOOR, ADMIN_DOOR].includes(key)) {
+        probes += 1
+        assert.equal(headerOf(init, 'cookie'), undefined, 'the API keeps token authentication')
+        assert.equal(JSON.parse(init.body).token, TOKEN)
+        if (probes <= 4)
+          return withUrl(
+            new Response(
+              key === ADMIN_DOOR
+                ? '<form id="form-login"><input name="username"></form>'
+                : '<html>Not found</html>',
+              { status: key === ADMIN_DOOR ? 200 : 404 }
+            ),
+            key
+          )
+      }
+      if (
+        english &&
+        state.installed &&
+        key === `${ADMIN}?option=com_installer&view=install` &&
+        init.method !== 'POST'
+      )
+        return withUrl(
+          new Response('<div class="alert-success">Installation of the package was successful</div>'),
+          key
+        )
+      return original(url, init)
+    }
+    const result = await joomla.installCowork(SESSION, PACKAGE_URL, LATEST)
+    assert.deepEqual(result, { ok: true, token: TOKEN, version: LATEST })
+    assert.deepEqual(state.posts, ['upload'], 'waiting for API routing must not upload another package')
+    assert.ok(probes >= 5, 'both initial rounds missed before the engine answered')
+  })
+}
+
+test('an installed API that keeps showing login stops after bounded readiness checks', async () => {
+  const state = fakeInstaller({})
+  const original = globalThis.fetch
+  let probes = 0
+  globalThis.fetch = async (url, init = {}) => {
+    const key = String(url)
+    if (state.installed && [FRONT_DOOR, ADMIN_DOOR].includes(key)) {
+      probes += 1
+      return withUrl(new Response('<form id="form-login"><input name="username"></form>'), key)
+    }
+    if (state.installed && key === `${ADMIN}?option=com_installer&view=install` && init.method !== 'POST')
+      return withUrl(
+        new Response('<div class="alert-success">Installation of the package was successful</div>'),
+        key
+      )
+    return original(url, init)
+  }
+  const result = await joomla.installCowork(SESSION, PACKAGE_URL, LATEST)
+  assert.equal(result.ok, false)
+  assert.equal(result.reason, 'configure_failed')
+  assert.equal(result.detail.page, 'login_form')
+  assert.equal(probes, 6, 'three rounds of two doors, then stop')
+  assert.deepEqual(state.posts, ['upload'])
+})
+
+for (const [kind, expected, calls] of [
+  ['unauthorized', 'configure_failed', 1],
+  ['challenge', 'blocked_by_firewall', 2],
+  ['parse_error', 'php_too_old', 2]
+]) {
+  test(`post-install readiness does not retry ${kind}`, async () => {
+    const state = fakeInstaller({})
+    const original = globalThis.fetch
+    let probes = 0
+    globalThis.fetch = async (url, init = {}) => {
+      const key = String(url)
+      if (state.installed && [FRONT_DOOR, ADMIN_DOOR].includes(key)) {
+        probes += 1
+        const response =
+          kind === 'unauthorized'
+            ? new Response('{"ok":false,"error":"unauthorized"}', { status: 401 })
+            : kind === 'challenge'
+              ? cloudflareChallenge(200)
+              : new Response(PARSE_ERROR, { status: 500 })
+        return withUrl(response, key)
+      }
+      if (state.installed && key === `${ADMIN}?option=com_installer&view=install` && init.method !== 'POST')
+        return withUrl(
+          new Response('<div class="alert-success">Installation of the package was successful</div>'),
+          key
+        )
+      return original(url, init)
+    }
+    const result = await joomla.installCowork(SESSION, PACKAGE_URL, LATEST)
+    assert.equal(result.ok, false)
+    assert.equal(result.reason, expected)
+    assert.equal(probes, calls, 'a definite refusal must not enter the readiness wait')
+    assert.deepEqual(state.posts, ['upload'])
+  })
+}
+
 test('the URL road is the fallback when the upload road does not install', async () => {
   const state = fakeInstaller({
     uploadInstall: 'dropped',
@@ -1326,6 +1430,43 @@ test('engine doors that answer a challenge are blocked_by_firewall, at install a
     [ADMIN_DOOR]: () => new Response('<html>Not found</html>', { status: 404 })
   })
   assert.equal((await joomla.resolveDoor(ROOT, TOKEN, { secondLookMs: 0 })).refusal, 'cowork_not_answering')
+})
+
+test('doors answered by a web page are answered_page, each door kept by kind, the page heads for the operator only', async () => {
+  const page = '<!DOCTYPE html><html><head><title>Security check</title></head><body>verifying</body></html>'
+  routes({
+    [FRONT_DOOR]: () => new Response(page, { status: 200, headers: { 'content-type': 'text/html' } }),
+    [ADMIN_DOOR]: () => new Response(page, { status: 200, headers: { 'content-type': 'text/html' } })
+  })
+  const door = await joomla.resolveDoor(ROOT, TOKEN, { secondLookMs: 0 })
+  assert.equal(door.refusal, 'cowork_not_answering')
+  assert.deepEqual(door.detail, {
+    at: 'api_door',
+    check: 'answered_page',
+    status: 200,
+    path: '/administrator/index.php',
+    answer: 'html',
+    page: 'challenge',
+    doors: [
+      { path: '/index.php', status: 200, answer: 'html', page: 'challenge' },
+      { path: '/administrator/index.php', status: 200, answer: 'html', page: 'challenge' }
+    ]
+  })
+  assert.match(door.log, /\/administrator\/index\.php 200 html\/challenge: <!DOCTYPE html>/)
+  // Joomla's own sign-in form on the administrator door is not a page in front of the site.
+  routes({
+    [FRONT_DOOR]: () => new Response('<html>Not found</html>', { status: 404 }),
+    [ADMIN_DOOR]: () =>
+      new Response(
+        '<form action="index.php?option=com_login" id="form-login"><input name="username"></form>',
+        {
+          status: 200
+        }
+      )
+  })
+  const login = await joomla.resolveDoor(ROOT, TOKEN, { secondLookMs: 0 })
+  assert.equal(login.detail.check, 'no_engine')
+  assert.equal(login.detail.page, 'login_form')
 })
 
 test('blocked_by_firewall has its own sentence on the Joomla path too', () => {

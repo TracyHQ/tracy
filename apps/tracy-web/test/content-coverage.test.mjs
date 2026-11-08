@@ -10,7 +10,7 @@ import { mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from 
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
-
+import { measureSlotFit } from '../../../packages/cms/tracy-quickstart-tools/content-coverage/lib/slot-fit.mjs'
 import { holeBlocks, judgeCoverage } from '../src/lib/content-coverage/judge.js'
 import { coverageOfContract } from '../src/lib/content-coverage/reader.js'
 import { readContracts } from '../src/lib/contracts.js'
@@ -175,6 +175,24 @@ test('a failed page or a cut crawl is an incomplete measurement and holds', () =
   assert.deepEqual([failed.holds, failed.incomplete], [true, '1 page did not render'])
   const cut = judgeCoverage(doc([], { pages: { audited: 150, failed: 0, capReached: true } }))
   assert.equal(cut.holds, true)
+})
+
+test('an incomplete measurement names its failures by code, so the fix of each is found', () => {
+  const failures = [
+    { url: '/tours/glacier-walk', code: 'layout-not-served' },
+    { url: '/tours/fjord-day', code: 'layout-not-served' },
+    { url: '/pages/contact', code: 'dead-link', status: 404 }
+  ]
+  const coded = judgeCoverage(doc([], { pages: { audited: 9, failed: 3, failures, capReached: false } }))
+  assert.equal(coded.holds, true)
+  assert.equal(coded.incomplete, '3 measure failures: layout-not-served 2, dead-link 1')
+  assert.deepEqual(coded.failureCodes, { 'layout-not-served': 2, 'dead-link': 1 })
+  // A file written before the codes keeps its words.
+  const old = judgeCoverage(
+    doc([], { pages: { audited: 4, failed: 1, failures: [{ url: '/x' }], capReached: false } })
+  )
+  assert.equal(old.incomplete, '1 page did not render')
+  assert.deepEqual(old.failureCodes, {})
 })
 
 test('the reader: none, measured, stale when the map or lock changed, invalid when unreadable', () => {
@@ -650,13 +668,90 @@ test('fit group: holes keep their verdict, and Slot fit rides along in the refus
   assert.match(reason, /Slot fit/)
 })
 
-test('fit group: WordPress and EmDash are not judged until their audit measures Slot fit', () => {
+test('fit group: WordPress is judged like Joomla, EmDash not until its audit measures Slot fit', () => {
   const { contracts, wp } = wordpressProfile(MAP_WITHOUT_FIT)
   const step = stepOf(roadOf(wp, { contracts, coverage: { state: 'measured', doc: doc() } }))
+  assert.deepEqual(fitFields(step), ['todo', 'coverage-fit', 'none', 12])
+  const emdash = release({ tag: 'quickstart/ja-boxing/emdash', platform: 'emdash' })
+  const other = stepOf(roadOf(emdash, { contracts, fit: { state: 'none', count: 12, shown: [] } }))
+  assert.deepEqual([other.params.fitState, other.params.fitHolds], ['not-applicable', false])
+})
+
+// The JA Diner WP7 1.0.1 release: ten slots of its released content map and what the content coverage audit measured for
+// them on the demo at desktop and phone widths (test/fixtures/ja-diner-wp7-slot-fit). The fit is measured here, by the
+// audit's own `measureSlotFit`, never written by hand (ADR 0039 decision 2).
+const DINER = path.join(import.meta.dirname, 'fixtures/ja-diner-wp7-slot-fit')
+const readDiner = (file) => JSON.parse(readFileSync(path.join(DINER, file), 'utf8'))
+const dinerMeasured = () =>
+  measureSlotFit({ map: readDiner('content-map.json'), findings: readDiner('findings.json') }).map
+
+/** The content coverage step of the JA Diner WP7 1.0.1 release whose contract carries `map`. */
+function dinerRelease(map, over = {}) {
+  const dir = mkdtempSync(path.join(tmpdir(), 'coverage-diner-'))
+  const at = path.join(dir, 'ja-diner', 'wp7', '1.0.1')
+  mkdirSync(at, { recursive: true })
+  const id = 'quickstart/ja-diner/wp7'
+  const manifest = {
+    id: 'ja-diner/wp7/1.0.1',
+    platform: 'wordpress',
+    quickstart: { release: id, version: '1.0.1' }
+  }
+  writeFileSync(path.join(at, 'manifest.json'), JSON.stringify(manifest))
+  writeFileSync(path.join(at, 'content-map.json'), JSON.stringify(map))
+  writeFileSync(path.join(at, 'presentation-lock.json'), LOCK)
+  const r = release({
+    tag: id,
+    name: 'JA Diner',
+    platform: 'wordpress',
+    setting: { ...release().setting, platform: 'wordpress', version: '1.0.1', template: 'wp-ja-diner' },
+    ...over
+  })
+  // Slot roles are another group (ADR 0038), handed in as ready so the step's code is the fit group's own.
+  const roles = { state: 'ready', count: 0, shown: [], reason: null }
+  const coverage = { state: 'measured', doc: doc() }
+  return stepOf(roadOf(r, { contracts: readContracts(dir), coverage, roles }))
+}
+
+test('fit group: the JA Diner WP7 release with its measured Slot fit is green on the fit group', () => {
+  const map = dinerMeasured()
+  const hero = map.slots.find((s) => s.key === 'front-page.slideshow.image.1')
   assert.deepEqual(
-    [step.state, step.code, step.params.fitState, step.params.fitHolds],
-    ['done', 'coverage-ready', 'not-applicable', false]
+    [hero.fit.kind, hero.fit.boxes.desktop, hero.fit.boxes.phone.width],
+    ['photo', { width: 1440, height: 840 }, 390]
   )
+  const tabs = map.slots.find((s) => s.key === 'front-page.container-tabs.image-intro')
+  assert.deepEqual([tabs.fit.kind, tabs.fit.transparent, tabs.customize], ['cutout', true, 'keep'])
+  const title = map.slots.find((s) => s.key === 'front-page.slideshow.title.1')
+  assert.ok(title.fit.measured && title.fit.maxChars.desktop > 0 && title.fit.maxChars.phone > 0)
+  const step = dinerRelease(map)
+  assert.deepEqual(
+    [step.params.fitState, step.params.fitCount, step.params.fitHolds, step.params.fitWarns],
+    ['ready', 0, false, false]
+  )
+})
+
+test('fit group: a JA Diner WP7 copy with a slot left without fit is red with coverage-fit, and warns once shown', () => {
+  const map = dinerMeasured()
+  delete map.slots.find((s) => s.key === 'front-page.features-intro.module-title').fit
+  const step = dinerRelease(map)
+  assert.deepEqual(fitFields(step), ['todo', 'coverage-fit', 'missing', 1])
+  assert.deepEqual(step.params.fitShown, ['front-page.features-intro.module-title'])
+  assert.match(refusalOf(step, release()).reason, /Slot fit: 1 text or image slot has no fit/)
+  const shown = dinerRelease(map, { inspiration: { template: 'wp-ja-diner' }, inspirationHidden: false })
+  assert.deepEqual([shown.state, shown.code], ['warn', 'coverage-live-fit'])
+})
+
+test('fit group: a JA Diner WP7 copy whose keep flag disagrees with the measured kind is red with coverage-fit', () => {
+  const map = dinerMeasured()
+  map.slots.find((s) => s.key === 'front-page.slideshow.image.1').customize = 'keep'
+  const step = dinerRelease(map)
+  assert.deepEqual(fitFields(step), ['todo', 'coverage-fit', 'invalid', 0])
+  assert.match(step.params.fitReason, /front-page\.slideshow\.image\.1.*must not carry customize "keep"/)
+})
+
+test('fit group: the JA Diner WP7 release with no Slot fit at all (as released) holds a new release', () => {
+  const step = dinerRelease(readDiner('content-map.json'))
+  assert.deepEqual([step.params.fitState, step.params.fitCount, step.params.fitHolds], ['none', 10, true])
 })
 
 test('fit group: the caller may hand the fit in', () => {

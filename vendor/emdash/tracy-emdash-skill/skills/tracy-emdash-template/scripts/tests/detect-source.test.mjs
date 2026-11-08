@@ -5,7 +5,7 @@
 // right road, and each of them was met on a real site while this was written.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { detectFromHtml, reachOf, roadFor, suggestNames } from '../ingest/detect-source.mjs'
+import { detectFromFolder, detectFromHtml, reachOf, roadFor, suggestNames } from '../ingest/detect-source.mjs'
 
 const joomla = `<html lang="en"><head><meta name="generator" content="Joomla! - Open Source Content Management">
 <title>Home</title><script src="/media/system/js/core.js"></script></head>
@@ -64,4 +64,28 @@ test('reach decides the road, not the CMS name alone', () => {
   assert.equal(roadFor({ cms: 'joomla', reach: 'remote' }).road, 'rendered-ask')
   assert.equal(roadFor({ cms: 'unknown', reach: 'remote' }).road, 'rendered')
   assert.equal(roadFor({ cms: 'wordpress', reach: 'local' }).road, 'contract-pending')
+})
+
+// found while porting JA Restaurant: the title "Restaurant Joomla Template - JA Restaurant" named the package after the product kind
+test('a title that wraps the name in product words still yields the name', () => {
+  const named = suggestNames({ title: 'Restaurant Joomla Template - JA Restaurant', url: 'http://127.0.0.1:8216/' })
+  assert.equal(named.label, 'JA Restaurant')
+  assert.equal(named.needsName, false)
+  const page = suggestNames({ title: 'Home - Kinetic', url: 'http://127.0.0.1:8216/' })
+  assert.equal(page.label, 'Kinetic')
+  // two candidates that are neither pages nor product words: say so instead of guessing the order
+  const unsure = suggestNames({ title: 'Our Menu | Harbour Grill', url: 'http://127.0.0.1:8216/' })
+  assert.equal(unsure.needsName, true)
+})
+
+test('a CMS webroot folder is recognised without an index.html', () => {
+  assert.equal(detectFromFolder(['configuration.php', 'administrator', 'templates', 'index.php']).cms, 'joomla')
+  assert.equal(detectFromFolder(['configuration.php', 'administrator', 'templates']).t4, false, 'plain Joomla')
+  assert.equal(
+    detectFromFolder(['configuration.php', 'administrator', 'templates'], (rel) => rel === 'plugins/system/t4').t4,
+    true
+  )
+  assert.equal(detectFromFolder(['wp-config.php', 'wp-content']).cms, 'wordpress')
+  assert.equal(detectFromFolder(['about.html', 'css']), null)
+  assert.equal(roadFor({ cms: 'joomla', reach: reachOf('./webroot') }).road, 'contract')
 })

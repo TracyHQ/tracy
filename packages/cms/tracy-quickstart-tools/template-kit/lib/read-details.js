@@ -35,6 +35,13 @@ export function readDetails() {
       .filter((c) => !STATE.test(c))
       .sort()
       .join('.')}`
+  // A row's shape: a modifier of one of its own classes (`plan--featured` beside `plan`, a highlighted card) is a
+  // variant of the row, not a shape of its own. Only the row sets use it; the body skeleton keeps every class.
+  const rowSig = (el) =>
+    `${el.tagName}.${[...el.classList]
+      .filter((c) => !STATE.test(c) && !(c.includes('--') && el.classList.contains(c.split('--')[0])))
+      .sort()
+      .join('.')}`
   const pathFrom = (root, el) => {
     const idx = []
     for (let x = el; x && x !== root; x = x.parentElement)
@@ -162,14 +169,25 @@ export function readDetails() {
   for (const root of document.querySelectorAll('[data-kit-block]')) {
     if (!shown(root)) continue
     // Every shown link, in page order and keyed by its position: links that repeat a label and an address (four
-    // icon links all pointing to `#`) are each listed.
+    // icon links all pointing to `#`) are each listed. A link of a block rendered inside this one (a call-to-action
+    // module an article layout prints) is that block's, read there once. The page a pagination marks as the current one
+    // (`aria-current`, address `#`: Joomla's own pagination layout) goes nowhere by design.
+    const ofRoot = (el) => el.closest('[data-kit-block]') === root
     const links = []
     for (const a of root.querySelectorAll('a[href]')) {
-      if (!shown(a)) continue
+      if (!shown(a) || !ofRoot(a)) continue
       const label = (a.innerText || a.getAttribute('aria-label') || a.getAttribute('title') || '')
         .replace(/\s+/g, ' ')
         .trim()
-      links.push({ position: links.length, label, href: a.getAttribute('href') })
+      const current =
+        /^#?$/.test(a.getAttribute('href') ?? '') &&
+        /^(true|page)$/.test(a.getAttribute('aria-current') ?? '')
+      links.push({
+        position: links.length,
+        label,
+        href: a.getAttribute('href'),
+        ...(current ? { current: true } : {})
+      })
     }
     const texts = new Set()
     // How many shown elements print each text: a text printed by three elements is three slots, never one.
@@ -197,7 +215,7 @@ export function readDetails() {
     for (const el of root.querySelectorAll(
       'button, [role="button"], [role="tab"], a:not([href]), a[href^="#"][data-bs-toggle], a[href^="#"][data-toggle], a[href^="#"][data-bs-slide], a[href^="#"][data-slide], form a[href="#"], a[href^="javascript:" i], input[type="submit"], input[type="button"]'
     )) {
-      if (!shown(el)) continue
+      if (!shown(el) || !ofRoot(el)) continue
       const label = (
         el.innerText ||
         el.value ||
@@ -211,6 +229,15 @@ export function readDetails() {
       // A link with a real address is read as a link, even when it also toggles a menu.
       const href = el.tagName === 'A' ? (el.getAttribute('href') ?? '').trim() : ''
       if (href && !/^(#|javascript:)/i.test(href)) continue
+      // A bare `#` link styled as a button (`role="button"`, no toggle, slide, form or handler) is read once, as the
+      // link it is: one going nowhere is a dead link of the template, not a second, undeclared control.
+      if (
+        href === '#' &&
+        !el.getAttribute('onclick') &&
+        !el.closest('form') &&
+        !el.matches('[data-bs-toggle], [data-toggle], [data-bs-slide], [data-slide]')
+      )
+        continue
       // A toggle names its panel by data-bs-target, aria-controls, or (a tab or collapse link) its own #fragment;
       // Bootstrap 3 and 4 (a T3 template) spell the attributes without "bs-".
       const toggle = el.getAttribute('data-bs-toggle') || el.getAttribute('data-toggle')
@@ -241,12 +268,22 @@ export function readDetails() {
         }
       } else if (el.type === 'submit' && el.form)
         target = { kind: 'form', action: el.form.getAttribute('action') }
-      // A `#` link inside a form (the stars of a rating form) is a control of that form: its script sends it.
-      else if (el.tagName === 'A' && href === '#' && el.closest('form'))
+      // A `#` link inside a form (the stars of a rating form), or a plain button of a form with its own handler (a
+      // newsletter's `<input type="button" onclick="submit…">`), is a control of that form: its script sends it.
+      else if (
+        el.closest('form') &&
+        ((el.tagName === 'A' && href === '#') || (el.type === 'button' && el.getAttribute('onclick')))
+      )
         target = { kind: 'form', action: el.closest('form').getAttribute('action') }
-      // A handler in its own attribute, or an address that only runs a script (`javascript:void(0)`, bound by the
-      // template's script): either way a script decides what it does.
-      else if (el.getAttribute('onclick') || /^javascript:/i.test(href)) target = { kind: 'script' }
+      // A handler in its own attribute, an address that only runs a script (`javascript:void(0)`, bound by the
+      // template's script), or a `<button type="button">` (no default action: only a listener, often bound on the
+      // document, gives it one — a dark mode toggle): either way a script decides what it does.
+      else if (
+        el.getAttribute('onclick') ||
+        /^javascript:/i.test(href) ||
+        (el.tagName === 'BUTTON' && el.type === 'button')
+      )
+        target = { kind: 'script' }
       clickables.push({ position: clickables.length, label, tag: el.tagName.toLowerCase(), target })
     }
     const repeats = []
@@ -257,7 +294,7 @@ export function readDetails() {
         const r = c.getBoundingClientRect()
         // A row not rendered at all (in a closed tab) still counts; a rendered sliver (a spacer) does not.
         if (c.getClientRects().length && (r.width < 40 || r.height < 20)) continue
-        const k = sig(c)
+        const k = rowSig(c)
         if (!groups.has(k)) groups.set(k, [])
         groups.get(k).push(c)
       }

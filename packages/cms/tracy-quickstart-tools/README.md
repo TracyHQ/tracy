@@ -137,11 +137,15 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
 ```
 
 - **WordPress.** The same command audits a WordPress contract (`.../tracy-wordpress-quickstart/contracts/<slug>/wp7/<version>`).
-  A WordPress map declares no routes, so each page entity opens as `?pagename=<slug>` and the front page is crawled; the
+  A WordPress map declares no routes, so each page entity opens as `?pagename=<path>` and the front page is crawled; a
+  page under a parent opens by its whole parent path (`?pagename=j-pages/login`), the parents read from the
+  `inventory.json` beside the map (without one, the slug alone); the
   database dump is read by the `<prefix>posts` / `<prefix>options` tables (a hit on a page is matched to its contract
   entity by slug); `--webroot` reads only `wp-content/themes/<theme>`, never WordPress itself. Capture the contract with
   `capture-contract.mjs --all-text` (every visible text, not only named blocks; `--role-vocabulary 3` for version 3 roles)
-  so there are slots to match. Not measured on WordPress yet: Slot fit (`--fit`).
+  so there are slots to match. Slot fit (`--fit`) is measured on WordPress the same way: a block slot is found by
+  its `metadata.name`, and a picture's kind is read from the block name (`<page slug> — <block>` labels: the page slug is
+  the demo's words, never a field name), its file and its boxes, with the same `pictureKindOf` rules as Joomla.
 - **What it reads.** Every page the content map declares (`index.php?Itemid=N`), plus a same-host
   crawl (list pagination `?start=N` and author pages included), at 1440 px and 390 px, read-only
   (every request that is not GET/HEAD/OPTIONS is aborted). Per page: visible text by block, `alt` /
@@ -159,7 +163,10 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   never commit them). With `--write`: `content-coverage.json` in the contract folder, the compact
   file `/ops` reads: tool version, the contract id and sha256 of the map and lock it measured,
   counts per class, coverage per kind, and one line per distinct hole (`kind`, `value`, `class`,
-  `lock`, `cause`, `evidence`, `pages`, `firstPage`).
+  `lock`, `cause`, `evidence`, `pages`, `firstPage`). `pages.failed` is the count of pages that did not render;
+  `pages.failures` lists each one (path and query only, never the stand address, with `mapPage`, `status` or `error`
+  when known), so the next reader knows which page it was.
+- **Article layouts.** With `--db-dump` and `--webroot`, each published article whose attribs ask for a layout of the active template (`<template>:<name>` or `<name>`, a file `html/com_content/article/<name>.php`) must show that file's root element on its page: every literal class of the root on one element, at least one of them absent from default.php's root. A page that does not is a failure (`pages.failures`, holds Publish); a layout with no class of its own, or an article the crawl never reached, is listed in `articleLayouts.cannotCheck`, never passed (`content-coverage/lib/article-layout.mjs`).
 - **Site map and header (audit 1.6.0).** The same file carries `sitePages`: one row per page the content map declares,
   in map order, none dropped, with `opens` (`live` with its HTTP status and path, `broken` with the status it answered,
   `no-page` for a menu group or a `#` link, `link` for a menu entry to another address, `unpublished`, `offsite`, or
@@ -249,8 +256,9 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   the question, the allowed verdicts and version 3 roles, the answer format, and per component its crop with numbered
   slots (the verify viewer's crops, with a margin, in `<out>/label-judge/images/`), the page title and URL, the module
   title and position, the neighbouring components' titles, and the slots to judge (number, key, kind, sample, role,
-  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "slots": [{"key", "verdict": "right" |
-  "wrong", "suggestedRole", "why"}]}`) and records it with `content-coverage/record-judge.mjs --request <file>
+  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "crops": [{"crop", "seen"}], "slots": [{"key",
+  "verdict": "right" | "wrong", "suggestedRole", "why"}]}`; every crop of the request named once with a line of what it
+  shows, so a file written from the slot tables alone is refused) and records it with `content-coverage/record-judge.mjs --request <file>
   --verdicts <file>`, which refuses the whole file on a missing, unknown or doubled key, a verdict other than right or
   wrong, or a suggested role outside `place-content-roles/3` (`content-coverage/lib/label-judge-record.mjs`), and
   otherwise writes `labelJudge` (with `judgedBy`) into the coverage files the request names. It targets what the rules
@@ -261,6 +269,16 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   (`coverage-judge-warn`); a version 2 map is listed and never holds.
 - **Accepting a hole or a page problem.** Only when it is truly not demo content a customer sees: add
   `"accepted": "<reason>"` to that line (English, at least 12 characters). The next `--write` keeps it.
+- **Rebuild without the site (`--reclassify`, `--report-only`).** After a content-map-only change, run the same
+  command with `--reclassify` on the same `--out`: the items come from `findings.json` (per page and viewport: text,
+  images, links, boxes, selectors, looks, shots), and the label judge reuses `<out>/module-boxes.json` (the module
+  wrapper and article container boxes, `module-boxes/1`) instead of opening every page again. It reuses them only when
+  their input fingerprint matches this run's: site address, `--db-dump` sha256, `--webroot` tree hash, the audited
+  page list and the source of the code that reads them. No dump or webroot, no fingerprint (a run before this file
+  existed), a mismatch or a saved failed page: the boxes are read in the browser again and stderr says why
+  (`[modules] reading module boxes in the browser: ...`). `--trust-saved-boxes` skips the check (logged `TRUSTED`;
+  for one-off proofs only). A full run always reads the site and saves the file for the next one
+  (`content-coverage/lib/verify/module-boxes-saved.mjs`).
 - **Exit.** `0` the policy passes · `1` holes, page problems (or an incomplete run) hold Publish ·
   `2` usage or run error.
 - **When it is red.** The fix loop (capture class: fix the capture RULE for every template, never one
@@ -422,6 +440,39 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    it copies a look to the pages and blocks drawn by another one's shot (`fullShotOf`, `shotOf`) and keeps the
    approval, which covers images only. A rebuild keeps the look of every unchanged shot. On /ops the Template kit
    step reads `kit-incomplete` (`missingLooks`) until every packed 1440 shot has a current look.
+8. Name the **article layout of a created legal page** (`site.createdPageLayouts.legal`): read the template's
+   `html/com_content/article/` files for the plain one, the file that prints the article alone (JA Boxing:
+   `default.php`; `classes.php`, the class pages' file, adds booking bars), then
+   `cli.mjs legal-layout --kit <kit dir>/template-kit.json --layout ja_boxing:default --why '<what it prints>'`, or
+   `--none --why '<words>'` when the component's default article is right. The write step prints a privacy or terms
+   page it creates through that file, never through the content pages' own one.
+9. Name the **play buttons with an empty video address** (`site.emptyVideoButtons`, Tracy ADR 0044 decision 29): read
+   the template's layouts for a video play button whose address is built from a video field with no check that it is
+   set (JA Boxing `html/com_content/article/classes.php`: `data-src="https://www.youtube.com/embed/<id>"`), then
+   `cli.mjs video-buttons --kit <kit dir>/template-kit.json --selector '.video-btn[data-src$="/embed/"]' --why '<where>'`
+   once per such button, or `--none --why '<what was read>'` when the template has none (the reason goes to
+   `site.noneWhy.<field>`; an empty list without one reads as never looked at, on this command and the three below).
+   The selector must test the address, so a button
+   with a video is never hidden; the write step hides the listed ones with one CSS rule in the head injection block,
+   and the site check's `empty-video-buttons` group blocks on any shown control that opens an empty player.
+   In the same reading, `cli.mjs self-link-buttons --kit <kit dir>/template-kit.json --container '.bottom-actions' --why '<where>'`
+   names the container of a "more" button the template prints from settings no slot reaches (or `--none --why`); the write step
+   hides, on each kept page only, a link there whose address is that page's own.
+   `cli.mjs hidden-page-links --kit <kit dir>/template-kit.json --container '.teams-item' --why '<where>'` names the
+   container of list row links (a card's name and photo) that may lead to a page the plan hides; the write step sends such a
+   link to a living page, or makes it plain text (or `--none --why`).
+   `cli.mjs created-page-hide --kit <kit dir>/template-kit.json --selector '.share-social' --why '<where>'` names a block the
+   template prints hard coded on every article page (a share bar) that a page the write step creates must not show (or
+   `--none --why`); the write step hides it on the created pages only, so the owner's own articles keep it.
+   `cli.mjs stock-screens --kit <kit dir>/template-kit.json --path '/pages/writers' --why '<why no customer content fills it>'`
+   names a stock screen every plan drops (a path, or one ending in `/*` for every page beneath it; it may name a page left out
+   of the kit); the planner drops it after the model, its checker refuses a plan that keeps it, and the write step unpublishes
+   its menu item unless a kept page needs the path, so pair it with a `hidden-page-links` container for the links to it. The
+   field is optional (or `--none --why`), and the readiness verdict does not ask for it.
+   The template readiness verdict holds the kit until all five of these fields (steps 8 and 9) name something or say
+   none with a reason (`kit-hidden-field-missing`). The write step scopes the self link and created page rules by the
+   menu item class the framework prints on the body (T4 `item-<id>`, T3 `itemid-<id>`), read from the release's template
+   profile.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
 shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `setting-slots --out <dir> --contract <dir> --db-command <prefix>` (settle the setting slots again, reading the map settings from the site's database, no browser and no image touched), `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one

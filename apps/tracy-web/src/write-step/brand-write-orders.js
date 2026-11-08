@@ -3,9 +3,9 @@
 //
 // Each order says what one brand item is and how it travels:
 //   identity    a Global Configuration key, through `site.identity`
-//   profile     a key of the template's site profile, through `template.siteSettings`
+//   profile     a key of the template's site profile (T4), through `template.siteSettings`
 //   small-logo  the phone menu's own picture: a small-logo key of the profile, or CSS when the profile has none
-//   contract    a content slot, in the one contract call
+//   contract    a content slot, in the one contract call; a T3 logo is its template style frame
 //   head        a tab icon, as a link tag in the kit's head injection block
 //   module      the accent-only Design system module, on every page
 //   follows     nothing to write: the page prints it from the site name
@@ -13,9 +13,9 @@
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 // The major in the release name does not change the folder, so any stands in for it.
 import { templateFolderOf } from '../lib/brand-joomla-places.js'
+import { logoWritePath } from '../lib/template-kit/logo-write-path.js'
 
 const BRAND_VERSION = 10
-const SMALL_KEY = { site_logo: 'site_logo_small', site_logo_dark: 'site_logo_dark_small' }
 const each = (value) => (Array.isArray(value) ? value : [])
 
 function nameOrder(s) {
@@ -34,15 +34,13 @@ function logoOrder(k, s) {
   const base = { item: 'logo', slot: k.id, spot: k.id }
   if (!s?.file) return { ...base, via: 'none', reason: 'the brand file has no picture for this spot' }
   const order = { ...base, file: s.file }
-  if (k.setting === null || k.setting === undefined) {
-    if (!k.frameId) return { ...base, via: 'none', reason: 'the kit names no frame for this spot' }
-    return { ...order, via: 'contract', slot: k.frameId, key: contentMapKey(k.frameId) }
-  }
-  if (k.where === 'offcanvas') {
-    if (!SMALL_KEY[k.setting]) return { ...base, via: 'none', reason: `no small logo for ${k.setting}` }
-    return { ...order, via: 'small-logo', key: SMALL_KEY[k.setting], side: k.ground?.side ?? 'light' }
-  }
-  return { ...order, via: 'profile', slot: k.frameId ?? k.id, key: k.setting }
+  // The same decision as the Template kit gate: a T3 style param goes through its frame, not the T4 profile.
+  const path = logoWritePath(k)
+  if (path.via === 'none') return { ...base, via: 'none', reason: path.reason }
+  if (path.via === 'contract') return { ...order, via: 'contract', slot: path.frame, key: path.key }
+  if (path.via === 'small-logo')
+    return { ...order, via: 'small-logo', key: path.key, side: k.ground?.side ?? 'light' }
+  return { ...order, via: 'profile', slot: k.frameId ?? k.id, key: path.key }
 }
 
 function faviconOrders(favicon, kit, headModule) {
@@ -76,7 +74,7 @@ function accentOrder(colours) {
 }
 
 /** The module id of the kit's head injection block ("block-170" is 170), or null. */
-const headModuleOf = (kit) => {
+export const headModuleOf = (kit) => {
   const found = /^block-(\d+)$/.exec(String(kit?.site?.head?.injection?.position?.block ?? ''))
   return found ? Number(found[1]) : null
 }

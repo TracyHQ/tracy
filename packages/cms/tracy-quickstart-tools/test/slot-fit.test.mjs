@@ -537,6 +537,15 @@ test("an article's title is the demo's words, not a field name: a picture of a p
         jsonPath: ['image_intro']
       },
       {
+        key: 'article-10.11',
+        entity: 'article-10',
+        type: 'image',
+        sample: 'images/demo/blog/pic-1.jpg',
+        label: 'Digital Tributes: Examining the Changing Face of Mourning',
+        column: 'fulltext',
+        xpath: '/html/body/div/img/@src'
+      },
+      {
         key: 'module-7.2',
         entity: 'module-7',
         type: 'image',
@@ -552,6 +561,7 @@ test("an article's title is the demo's words, not a field name: a picture of a p
       {
         items: [
           image('images/demo/blog/sample-8.jpg', ['article-9.11'], { desktop: vp(608, 360) }, file),
+          image('images/demo/blog/pic-1.jpg', ['article-10.11'], { desktop: vp(494, 349) }, file),
           image(
             'images/demo/people/anna.jpg',
             ['module-7.2'],
@@ -564,6 +574,49 @@ test("an article's title is the demo's words, not a field name: a picture of a p
   }
   const fitted = measureSlotFit({ map, findings }).map
   assert.equal(slotOf(fitted, 'article-9.11').fit.kind, 'photo')
+  // a picture in the post's text is labelled with the title alone
+  assert.equal(slotOf(fitted, 'article-10.11').fit.kind, 'photo')
   // a module's title names its layout, so a testimonials avatar stays a face
   assert.equal(slotOf(fitted, 'module-7.2').fit.kind, 'avatar')
+})
+
+test('WordPress: a page slot is named by its block (metadata.name), not by the slug of the page that holds it', () => {
+  // A WordPress capture labels a block slot "<page slug> — <block name>"; the slug is the demo's own words, like an
+  // article title on Joomla. The page slugs and files here are invented.
+  const wp = (key, slug, block) => ({
+    key: `${slug}.${block}`,
+    entity: `page-${slug}`,
+    target: { block, attr: 'src' },
+    type: 'image',
+    sample: `wp-content/uploads/2026/10/${key}.jpg`,
+    label: `${slug} — ${block}`
+  })
+  const map = {
+    slots: [
+      wp('pic-1', 'our-partners', 'masthead.background'),
+      wp('pic-2', 'find-us-on-the-map', 'features-intro.img.1'),
+      wp('pic-3', 'about', 'testimonial.avatar.1'),
+      wp('pic-4', 'about', 'clients.logo.1')
+    ]
+  }
+  const photo = { width: 1600, height: 850, alpha: false }
+  const findings = {
+    pages: [
+      {
+        items: [
+          image('/a.jpg', ['our-partners.masthead.background'], { desktop: vp(1440, 389) }, photo),
+          image('/b.jpg', ['find-us-on-the-map.features-intro.img.1'], { desktop: vp(576, 432) }, photo),
+          image('/c.jpg', ['about.testimonial.avatar.1'], { desktop: vp(96, 96) }, photo),
+          image('/d.jpg', ['about.clients.logo.1'], { desktop: vp(180, 60) }, photo)
+        ]
+      }
+    ]
+  }
+  const fitted = measureSlotFit({ map, findings }).map
+  assert.equal(slotOf(fitted, 'our-partners.masthead.background').fit.kind, 'photo')
+  assert.equal(slotOf(fitted, 'find-us-on-the-map.features-intro.img.1').fit.kind, 'photo')
+  // the block's own name still decides
+  assert.equal(slotOf(fitted, 'about.testimonial.avatar.1').fit.kind, 'avatar')
+  assert.equal(slotOf(fitted, 'about.clients.logo.1').fit.kind, 'logo')
+  assert.ok(checkContentMapFit(fitted).ok, checkContentMapFit(fitted).errors.join('\n'))
 })

@@ -32,20 +32,23 @@ const key = (s) => slug(s).replace(/-/g, '_')
 const fileOf = (src) => (src ? basename(String(src).split('?')[0].split('#')[0]) : null)
 
 /** What a source value IS — not which widget edits it, which is the compiler's decision. */
+const IMAGE_FILE = /^[^<>\s"']+\.(?:png|jpe?g|gif|webp|avif|svg)(?:[?#]\S*)?$/i
 function fieldKind(name, value) {
   if (/(^|[-_])(image|logo|photo|cover|thumb)([-_]|$)/.test(name)) return 'image'
   if (/(^|[-_])(url|link|href)([-_]|$)/.test(name)) return 'url'
   if (/(^|[-_])email([-_]|$)/.test(name)) return 'email'
+  // a value that is nothing but an image path is an image, whatever the field is called (avatar, background, icon)
+  if (typeof value === 'string' && IMAGE_FILE.test(value.trim())) return 'image'
   if (typeof value === 'string' && (value.includes('</p>') || value.length > 220)) return 'prose'
   return 'text'
 }
 
 /** Rewrite every image reference to a bare file name and report what was found. */
 function collectImages(html, onFile) {
-  return String(html ?? '').replace(/(src|href)="([^"]+\.(?:png|jpe?g|gif|webp|avif|svg))"/gi, (_, attr, src) => {
+  return String(html ?? '').replace(/(src|href)=(["'])([^"']+\.(?:png|jpe?g|gif|webp|avif|svg))\2/gi, (_, attr, q, src) => {
     const file = fileOf(src)
     if (file) onFile(file)
-    return `${attr}="${file}"`
+    return `${attr}=${q}${file}${q}`
   })
 }
 
@@ -55,7 +58,7 @@ function collectImages(html, onFile) {
  * `arts` are Joomla articles as authored; `wpPages`, `sectionsAcm`, `menus`, `redirects`, `cats`
  * and `routes` are the structures buildSpecPack already computed.
  */
-export function buildSiteModel({ tpl, site, arts, cats, catById, wpPages, archives, sectionsAcm, menus, redirects, isPageArticle, postPath }) {
+export function buildSiteModel({ tpl, site, arts, cats, catById, wpPages, archives, sectionsAcm, customModules, menus, redirects, isPageArticle, postPath }) {
   const locale = 'en'
   const media = new Map()
   const useMedia = (src, alt, usedBy) => {
@@ -140,10 +143,19 @@ export function buildSiteModel({ tpl, site, arts, cats, catById, wpPages, archiv
   const kinds = new Map()
   for (const acm of sectionsAcm ?? []) {
     const kind = key(acm.type)
-    const bucket = kinds.get(kind) ?? { fields: new Map(), itemFields: new Map(), instances: [] }
-    for (const [k, v] of Object.entries(acm.fields ?? {})) if (!bucket.fields.has(k)) bucket.fields.set(k, fieldKind(k, v))
+    const bucket = kinds.get(kind) ?? { fields: new Map(), itemFields: new Map(), openFields: new Set(), openItemFields: new Set(), instances: [] }
+    // A field's type is settled by its first non-empty value; an empty value leaves it open (provisionally 'text') and later values never change a settled type.
+    const learn = (map, open, k, v) => {
+      const kind = fieldKind(k, v)
+      const blank = v == null || String(v).trim() === ''
+      if (!map.has(k)) {
+        map.set(k, kind)
+        if (blank && kind === 'text') open.add(k)
+      } else if (!blank && open.delete(k)) map.set(k, kind)
+    }
+    for (const [k, v] of Object.entries(acm.fields ?? {})) learn(bucket.fields, bucket.openFields, k, v)
     for (const item of acm.items ?? []) {
-      for (const [k, v] of Object.entries(item)) if (!bucket.itemFields.has(k)) bucket.itemFields.set(k, fieldKind(k, v))
+      for (const [k, v] of Object.entries(item)) learn(bucket.itemFields, bucket.openItemFields, k, v)
     }
     bucket.instances.push(acm)
     kinds.set(kind, bucket)
@@ -163,12 +175,55 @@ export function buildSiteModel({ tpl, site, arts, cats, catById, wpPages, archiv
       const values = {}
       for (const [k, v] of Object.entries(acm.fields ?? {})) {
         const name = key(k)
-        values[name] = fieldKind(k, v) === 'image' ? (useMedia(v, null, `${kind}/${s}#${name}`) ?? '') : v
+        values[name] = bucket.fields.get(k) === 'image' && fieldKind(k, v) === 'image' ? (useMedia(v, null, `${kind}/${s}#${name}`) ?? '') : v
       }
       if (acm.items?.length) {
-        values.items = acm.items.map((item) => Object.fromEntries(Object.entries(item).map(([k, v]) => [key(k), v])))
+        values.items = acm.items.map((item, n) =>
+          Object.fromEntries(Object.entries(item).map(([k, v]) => [key(k), bucket.itemFields.get(k) === 'image' && fieldKind(k, v) === 'image' ? (useMedia(v, null, `${kind}/${s}#items.${n}.${key(k)}`) ?? '') : v]))
+        )
       }
       records.push({ type: kind, slug: s, locale, status: acm.published ? 'published' : 'draft', values })
+    }
+  }
+
+  // ── custom modules: their content and where the source draws them ─────────────
+  // `placement` is `['ALL']` or the route paths of the pages that show the module; a module placed on no
+  // route has an empty list. Module kinds other than mod_custom (menus, search, …) carry no content
+  // of their own and are not recorded here.
+  const withHtml = (customModules ?? []).filter((m) => m.html !== undefined)
+  if (withHtml.length) {
+    types.push({
+      name: 'modules',
+      mode: 'list',
+      label: { [locale]: 'Modules' },
+      fields: [
+        { name: 'title', type: 'text' },
+        { name: 'position', type: 'text' },
+        { name: 'scope', type: 'text' },
+        { name: 'show_title', type: 'text' },
+        { name: 'placement', type: 'text' },
+        { name: 'content', type: 'prose' }
+      ]
+    })
+    const used = new Set()
+    for (const m of withHtml) {
+      let s = slug(m.title) || `module-${m.id}`
+      while (used.has(s)) s = `${s}-${m.id}`
+      used.add(s)
+      records.push({
+        type: 'modules',
+        slug: s,
+        locale,
+        status: 'published',
+        values: {
+          title: m.title ?? '',
+          position: m.position ?? '',
+          scope: m.scope ?? '',
+          show_title: m.showtitle ? '1' : '0',
+          placement: JSON.stringify(m.placement ?? []),
+          content: collectImages(m.html, (file) => useMedia(file, null, `modules/${s}#content`))
+        }
+      })
     }
   }
 

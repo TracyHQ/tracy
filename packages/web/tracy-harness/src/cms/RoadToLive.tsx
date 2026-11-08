@@ -28,6 +28,10 @@
  * exactly like Customize your site ("Design system · 5/7 passed", the two rule groups, one prompt
  * naming the tdsr skill, Check again pressing its own door).
  *
+ * NOT JUDGED (#454): a step the server could not judge on this platform (the plugin write doors on WordPress) reads
+ * "Not judged yet" in grey, beside the registry text saying until when: never green, never red, never counted as
+ * done, and not counted in the header's total either, so a live release still reads whole.
+ *
  * RE-CHECKING (12/10/2026): a release that already has a result and is judged again (new rules, a new
  * profile row, a new contract) keeps that result on its row, with a small "Rechecking…" note, never
  * an empty "Checking": Publish keeps reading the last result until the new one lands.
@@ -39,6 +43,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleCheck,
+  CircleDashed,
   CircleDot,
   Copy,
   ExternalLink,
@@ -87,7 +92,12 @@ const STATE = {
   },
   todo: { icon: CircleDot, tone: 'text-destructive', word: 'cms-readiness.road.state.todo' },
   blocked: { icon: Lock, tone: 'text-muted-foreground', word: 'cms-readiness.road.state.blocked' },
-  checking: { icon: LoaderCircle, tone: 'text-muted-foreground', word: 'cms-readiness.road.state.checking' }
+  checking: { icon: LoaderCircle, tone: 'text-muted-foreground', word: 'cms-readiness.road.state.checking' },
+  'not-judged': {
+    icon: CircleDashed,
+    tone: 'text-muted-foreground',
+    word: 'cms-readiness.road.state.notJudged'
+  }
 } as const
 
 /** The tag the content contract wears while it is to do: it takes longest, so it starts first. */
@@ -102,7 +112,9 @@ const BAR: Record<RoadStep['state'], string> = {
   warn: 'bg-amber-500 dark:bg-amber-400',
   todo: 'bg-destructive',
   blocked: 'bg-muted-foreground/25',
-  checking: 'bg-muted-foreground/50'
+  checking: 'bg-muted-foreground/50',
+  // Hollow: neither a pass nor a hold.
+  'not-judged': 'border border-muted-foreground/50 border-dashed'
 }
 
 /** How often the panel reads the list again while a Customize your site check runs. */
@@ -272,6 +284,37 @@ function Outside({ fix }: { fix: OutsideFix }) {
         {fix.doc.label}
         <ExternalLink className="size-3 shrink-0" />
       </a>
+    </div>
+  )
+}
+
+/**
+ * The fix of a red or warn step, exactly as the server read it from the fix registry (#432): the text, then the
+ * command to run (with a copy button) and the skill section, when the registry names them. Shown only on a step
+ * whose guide has no fix of its own (no how-to-fix steps, no prompt to paste), so the advice never appears twice.
+ */
+function RegistryFix({ fix }: { fix: NonNullable<RoadStep['fix']> }) {
+  return (
+    <div className="flex flex-col gap-1 border-border border-s-2 ps-2" data-road-fix="">
+      <p className="break-words text-sm leading-snug" data-road-fix-text="">
+        {fix.text}
+      </p>
+      {fix.command ? (
+        <div className="flex items-start gap-1 rounded bg-muted/60 ps-2">
+          <code
+            className="min-w-0 flex-1 whitespace-pre-wrap break-words py-1 font-mono text-xs"
+            data-road-fix-command=""
+          >
+            {fix.command}
+          </code>
+          <CopyButton text={fix.command} />
+        </div>
+      ) : null}
+      {fix.skill ? (
+        <code className="break-all font-mono text-muted-foreground text-xs" data-road-fix-skill="">
+          {fix.skill}
+        </code>
+      ) : null}
     </div>
   )
 }
@@ -510,6 +553,7 @@ function StepRow({
   // "Measured on" line, #1313) shows that list too, so a pass says which run it came from.
   const doneRules = s.state === 'done' && guide.rules ? guide.rules : null
   const rechecking = isRechecking(s)
+  const notJudged = s.state === 'not-judged'
   // the Design system step: verdict, the prompt, then one Details fold (`DesignSystemStepBody`)
   const isDs = s.step === 'design-system'
   const checkAgain =
@@ -548,6 +592,14 @@ function StepRow({
             <span className="flex items-center gap-1 text-muted-foreground text-xs" data-road-rechecking="">
               <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
               {t('cms-readiness.road.rechecking')}
+            </span>
+          ) : null}
+          {notJudged ? (
+            <span
+              className="rounded border border-border px-1.5 text-[11px] text-muted-foreground leading-5"
+              data-road-not-judged=""
+            >
+              {t(st.word)}
             </span>
           ) : null}
           {waiting ? (
@@ -603,6 +655,17 @@ function StepRow({
             </ol>
           ) : null}
           {guide.outside ? <Outside fix={guide.outside} /> : null}
+          {/* The registry fix only where the step has no guidance of its own: never the same advice twice. */}
+          {s.fix && !guide.ops && !guide.outside && !guide.rules ? <RegistryFix fix={s.fix} /> : null}
+        </div>
+      ) : notJudged ? (
+        <div className="flex flex-col gap-1 ps-[2.625rem]">
+          <p className="text-muted-foreground text-sm leading-snug">{guide.why}</p>
+          {s.fix ? (
+            <p className="break-words text-muted-foreground text-sm leading-snug" data-road-fix-text="">
+              {s.fix.text}
+            </p>
+          ) : null}
         </div>
       ) : doneRules ? (
         <div className="flex flex-col gap-1 ps-[2.625rem]">
@@ -637,6 +700,8 @@ function ReleaseGroup({
   const road = roadOfRelease(r)
   const ordered = ROAD_ORDER.map((n) => road.find((s) => s.step === n)).filter((s): s is RoadStep => !!s)
   const done = ordered.filter((s) => s.state === 'done' || s.state === 'warn').length
+  // A step not judged is neither done nor missing: it is left out of the count (it still has its hollow bar segment).
+  const counted = ordered.filter((s) => s.state !== 'not-judged').length
   const ctx: GuideContext = {
     tag: r.tag,
     cms: name,
@@ -705,8 +770,8 @@ function ReleaseGroup({
           <span
             className="inline-flex items-center gap-2"
             role="img"
-            aria-label={t('cms-readiness.road.summary', { done, total: ordered.length })}
-            data-road-summary={`${done}/${ordered.length}`}
+            aria-label={t('cms-readiness.road.summary', { done, total: counted })}
+            data-road-summary={`${done}/${counted}`}
           >
             <span className="flex gap-0.5" aria-hidden="true">
               {ordered.map((s) => (
@@ -718,7 +783,7 @@ function ReleaseGroup({
               ))}
             </span>
             <span className="font-normal text-muted-foreground text-xs tabular-nums" aria-hidden="true">
-              {done}/{ordered.length}
+              {done}/{counted}
             </span>
           </span>
           {live ? (

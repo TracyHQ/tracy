@@ -22,7 +22,7 @@ export function videoId(href) {
 }
 
 export function createMatcher(contract, siteUrl) {
-  const { text, textCompact, textList, image, url, rawSample } = contract.index
+  const { text, textCompact, textList, patterns = [], image, url, rawSample } = contract.index
   // Compact forms of every slot sample, for blocks whose spans render with no space between them ("Our<span>Classes</span>").
   const compactSet = new Set([...text.keys()].map((k) => compact(k)).filter((k) => k.length >= 2))
   /** Whether a compact piece is a run of slot samples written with no space between them. */
@@ -52,8 +52,25 @@ export function createMatcher(contract, siteUrl) {
     )
     .map((s) => ({ norm: normText(s.sample), key: s.key }))
     .filter((s) => s.norm)
+  // Figure slots too short for the containment list (no letter, fewer than 7 figures: a price "$2,450", a year): inside a
+  // composite block they are removed on word boundaries, so the words a layout writes around them ("Reserve - $2,450")
+  // are what is left and classified. At least 3 digits, so a lone "1" or "24" never splits a block.
+  const shortFigures = [...text.entries()]
+    .filter(([n]) => letterCount(n) === 0 && alnumCount(n) < 7 && (n.match(/\d/g) ?? []).length >= 3)
+    .map(([norm, keys]) => ({ norm, keys }))
+    .sort((x, y) => y.norm.length - x.norm.length)
   const textCache = new Map()
   const site = new URL(siteUrl)
+
+  /**
+   * Whether a placeholder of a language pattern was filled with run-time text: a count or a figure, a slot's text, or
+   * the first words of a slot's text (a layout prints an author's first name).
+   */
+  function filledGap(gap) {
+    if (/^[\p{N}\p{P}\p{S}\s]*\p{N}[\p{N}\p{P}\p{S}\s]*$/u.test(gap)) return true
+    if (text.has(gap) || textCompact.has(compact(gap))) return true
+    return letterCount(gap) >= 2 && textList.some((s) => s.norm.startsWith(`${gap} `))
+  }
 
   function matchText(value) {
     const v = normText(value)
@@ -63,6 +80,13 @@ export function createMatcher(contract, siteUrl) {
     else if (text.has(v)) res = { status: 'matched', by: 'exact', slots: text.get(v) }
     else if (textCompact.has(compact(v)))
       res = { status: 'matched', by: 'exact ignoring spaces/punctuation', slots: textCompact.get(compact(v)) }
+    if (!res) {
+      const hit = patterns.find((p) => {
+        const m = v.match(p.re)
+        return m && m.slice(1).every(filledGap)
+      })
+      if (hit) res = { status: 'matched', by: 'language pattern', slots: [hit.key] }
+    }
     if (!res && /(\.\.\.|…)$/.test(v)) {
       const p = v.replace(/\s*(\.\.\.|…)$/, '')
       const hit = p.length >= 15 && textList.find((s) => s.norm.startsWith(p) || s.norm.includes(p))
@@ -80,12 +104,32 @@ export function createMatcher(contract, siteUrl) {
       // Composite block: remove every slot sample found inside it; what is left is unmatched.
       let rest = v
       const slots = []
+      // A card excerpt joins a label, a title and the start of a paragraph, then cuts it ("... the component wrapper -
+      // your..."): the longest cut tail that starts a slot's text is that slot.
+      if (/(\.\.\.|…)$/.test(v)) {
+        const tail = v.replace(/\s*(\.\.\.|…)$/, '')
+        for (let i = 0; i < tail.length; i = tail.indexOf(' ', i + 1) + 1 || tail.length) {
+          const cut = tail.slice(i).trim()
+          if (cut.length < 15) break
+          const hit = textList.find((s) => s.norm.length > cut.length && s.norm.startsWith(cut))
+          if (hit) {
+            slots.push(hit.key)
+            rest = `${tail.slice(0, i)} \u0000 `
+            break
+          }
+        }
+      }
       for (const s of textList) {
         if (s.norm.length > rest.length) continue
         const occ = occurrences(rest, s.norm)
         if (!occ.length) continue
         slots.push(s.key)
         rest = rest.split(s.norm).join(' \u0000 ')
+      }
+      for (const f of shortFigures) {
+        if (!occurrences(rest, f.norm).length) continue
+        slots.push(...f.keys)
+        rest = rest.split(f.norm).join(' \u0000 ')
       }
       const parts = rest
         .split('\u0000')
@@ -140,6 +184,12 @@ export function createMatcher(contract, siteUrl) {
       .split('?')[0]
     if (addr !== String(item.value).trim() && rawSample.has(decodeURIComponent(addr)))
       return { status: 'matched', by: 'address slot', slots: rawSample.get(decodeURIComponent(addr)) }
+    // Joomla's e-mail cloaking turns an address written in a slot's text into a mailto link.
+    if (/^mailto:/i.test(String(item.value).trim()) && addr.includes('@')) {
+      const a = decodeURIComponent(addr).toLowerCase()
+      const hit = textList.find((s) => occurrences(s.norm, a).length)
+      if (hit) return { status: 'matched', by: 'address inside a slot text', slots: [hit.key] }
+    }
     let u
     try {
       u = new URL(item.value, site)
@@ -160,6 +210,13 @@ export function createMatcher(contract, siteUrl) {
   return function match(item) {
     if (item.kind === 'image') return matchImage(item.value)
     if (item.kind === 'link') return matchLink(item)
-    return matchText(item.value)
+    const res = matchText(item.value)
+    // Inline code is left out of every slot on purpose (capture skips <code>): the words around it are the slot's text.
+    if (res.status === 'hole' && typeof item.outsideCode === 'string') {
+      const rest = matchText(item.outsideCode)
+      // Only a match counts: a block that is all code (<pre><code>) stays a hole, to be accepted with a reason.
+      if (rest.status === 'matched') return { ...rest, by: `text outside inline code (${rest.by})` }
+    }
+    return res
   }
 }

@@ -14,9 +14,43 @@
 // A drawn cut-out with a backdrop (the disc and bands its demo has behind the figure) is placed as it is, the figure
 // alone, and also listed in `painted` (kind `backdrop`) with the recipe: step 9 paints the backdrop behind the figure
 // in the brand's colours (a file of both, or the backdrop behind the slot), and its preview is only for review.
+//
+// The alt of every frame the export places (a file in `changes`, or initials it paints) is the alt step 8 wrote from that
+// picture, when it wrote one (`alts`, by frame): the write step writes it over the writer's (ADR 0043 section 3f).
+//
+// A frame the manifest returns (the plan wants it filled and the step left it without a picture) is a problem of the
+// package, never silently left out: only the logo frame, which the brand step fills, is not.
 import { contentMapKey } from '../lib/content-map-key.js'
+import { ANY_PHOTO_MAX_OVERLAP, cropOverlap } from './gallery-tiles.js'
 import { readPictures } from './manifest-shape.js'
 import { paintKindOf } from '../lib/picture-paint/paint.js'
+
+/**
+ * A return that is not the picture step's to fill: the brand step places the logo, and a frame the kit marks not
+ * writable (module chrome, a twin a template setting paints) has no slot to write to.
+ */
+const NOT_OURS = /^(a logo frame belongs to the brand step|the kit marks this frame not writable)/
+/**
+ * The check of a file's width against its content map slot's `fit.minWidth` (the write door's SlotFit checkPicture):
+ * `(key, width)` gives the problem sentence, or null when the slot takes it. Shared with the write step's package check.
+ * @param {{ slots?: object[] } | null | undefined} contentMap
+ */
+export function narrowerThanSlot(contentMap) {
+  const mins = new Map(
+    (Array.isArray(contentMap?.slots) ? contentMap.slots : [])
+      .filter((s) => Number.isInteger(s?.fit?.minWidth) && s.fit.minWidth > 0)
+      .map((s) => [s.key, s.fit.minWidth])
+  )
+  return (key, width) => {
+    const min = mins.get(key)
+    return min && Number(width) < min
+      ? `its file is ${width} px wide; the kit slot ${key} takes at least ${min}`
+      : null
+  }
+}
+
+/** The opening of the problem that names a frame the plan wants filled and the picture step left without a picture. */
+export const LEFT_EMPTY = 'the plan wants a picture here and the picture step left it without one'
 
 export { contentMapKey }
 
@@ -32,6 +66,7 @@ export { contentMapKey }
  *     preview: { sitePath: string, file: string, sha256: string, width: number, height: number },
  *     previewDark: object | null }[],
  *   siteSettings: object[],
+ *   alts: Record<string, string>,
  *   problems: { where: string, detail: string }[]
  * }}
  */
@@ -41,6 +76,13 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
   const imageSlots = kit?.contentMap?.slots
     ? new Set(kit.contentMap.slots.filter((s) => s.type === 'image').map((s) => s.key))
     : null
+  const tooNarrow = narrowerThanSlot(kit?.contentMap)
+  // The kit block of each frame, and the cuts of each owner photo already placed in each block: two cuts of one photo
+  // in one block share at most ANY_PHOTO_MAX_OVERLAP (card AK: a near duplicate reads as the same picture twice).
+  const blockOf = new Map()
+  for (const b of Array.isArray(kit?.blocks) ? kit.blocks : [])
+    for (const f of Array.isArray(b?.frames) ? b.frames : []) if (f?.id) blockOf.set(f.id, b.id)
+  const shownIn = new Map()
   const bad = (where, detail) => {
     problems.push({ where, detail })
   }
@@ -51,6 +93,10 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
   // must hide the row itself, or the frame silently keeps its demo picture.
   const hidden = []
   const painted = []
+  const alts = {}
+  const altOf = (e) => {
+    if (typeof e.alt === 'string' && e.alt) alts[e.frame] = e.alt
+  }
   const previewOf = (f) => ({
     sitePath: f.sitePath,
     file: f.file,
@@ -132,9 +178,35 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     if (e.paint) {
       const p = paintedOf(e, key)
       if (p) painted.push(p)
+      if (p?.kind === 'initials') altOf(e)
+      continue
+    }
+    const block = blockOf.get(e.frame)
+    if (block && e.source === 'owner-photo' && e.asset) {
+      const key = `${block} ${e.asset}`
+      const near = e.crop
+        ? (shownIn.get(key) ?? []).find(
+            (o) => o.crop && cropOverlap(o.crop, e.crop) > ANY_PHOTO_MAX_OVERLAP + 1e-9
+          )
+        : null
+      if (near) {
+        const share = Math.round(cropOverlap(near.crop, e.crop) * 100)
+        bad(
+          e.frame,
+          `owner photo ${e.asset} is already shown in ${near.frame} of the same block ${block}, the two cuts sharing ${share}% (at most ${ANY_PHOTO_MAX_OVERLAP * 100}%)`
+        )
+        continue
+      }
+      shownIn.set(key, [...(shownIn.get(key) ?? []), { frame: e.frame, crop: e.crop }])
+    }
+    // A file narrower than the slot's minimum is refused by the write door and the demo picture stays (card AI).
+    const narrow = tooNarrow(key, e.width)
+    if (narrow) {
+      bad(e.frame, narrow)
       continue
     }
     changes[key] = e.sitePath
+    altOf(e)
     if (e.backdrop)
       painted.push({
         frame: e.frame,
@@ -157,6 +229,10 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
         height: e.height
       })
   }
+  // A frame the plan wants filled that the step returned keeps its demo picture unless someone acts: never silent
+  // (card AJ). Each is a problem of the package, which step 9 reports as refused instead of "no owner".
+  for (const r of view.returns)
+    if (!NOT_OURS.test(r.reason) && !frames.has(r.frame)) bad(r.frame, `${LEFT_EMPTY}: ${r.reason}`)
   const siteSettings = view.entries
     .filter((e) => e.list === 'siteSettings')
     .map((e) => ({
@@ -179,6 +255,7 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     hidden,
     painted,
     siteSettings,
+    alts,
     problems
   }
 }

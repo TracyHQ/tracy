@@ -6,10 +6,15 @@
 // The main menu dropdown labels are copy slots like any other (`menuItem-195.0` in `changes`). The menu items to hide
 // are not words, so they are not in the copy file: given the plan and the content map, the export derives them
 // (main-menu.js) into `extras.mainMenu.hide` for step 9, which the write door does not take today.
+//
+// The kit's platform chooses the door: `platform: 'wordpress'` maps to the WordPress content contract door
+// (contract-mapping-wordpress.js), with the same extras; any other platform keeps the Joomla mapping above.
 import { readCopy } from '../site-copy-view.js'
 import { mainMenuOf } from './main-menu.js'
 import { contentMapKey } from '../content-map-key.js'
 import { withEmphasis } from './inline-emphasis.js'
+import { kitSlotIndex } from '../template-kit/kit-slots.js'
+import { wordpressContractMapping } from './contract-mapping-wordpress.js'
 
 const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragraphs) > 0)
 
@@ -44,21 +49,6 @@ export function listFormOf(sample) {
   const lead = /\(\(\s*p(?:\s[^()]*)?\s*\)\)/i.exec(before)
   const tag = list[1].toLowerCase()
   return { tag, open: list[0], lead: lead && before.replace(/\(\([^()]*\)\)/g, '').trim() ? lead[0] : null }
-}
-
-function kitSlotIndex(kit) {
-  const index = new Map()
-  const walk = (slots) => {
-    for (const s of slots ?? []) index.set(s.id, s)
-  }
-  for (const b of kit?.blocks ?? []) {
-    walk(b.slots)
-    for (const l of b.lists ?? []) {
-      walk(l.rowSlots)
-      for (const r of l.rows ?? []) walk(r.slots)
-    }
-  }
-  return index
 }
 
 /**
@@ -115,12 +105,25 @@ export function mainMenuExport({ plan, kit, contentMap, copy }) {
 
 /**
  * @param {{ copy: object, contract: string, revision: string, kit?: object, brief?: { facts?: {id:string,value:string}[] },
- *   plan?: object, contentMap?: object | null }} input with `plan` and `contentMap`, `extras.mainMenu` carries the main
- *   menu labels and the items to hide (mainMenuExport)
+ *   plan?: object, contentMap?: object | null, platform?: string }} input with `plan` and `contentMap`,
+ *   `extras.mainMenu` carries the main menu labels and the items to hide (mainMenuExport); `platform` is the kit's
+ *   (openKit), "wordpress" for the WordPress door, else the Joomla one
  * @returns {{ mapping: object, extras: { alts: Record<string,string>, pageMeta: Record<string,{title:string,description:string}>, pages: Record<string,{title:string,body:string[]}>, mainMenu?: object }, problems: object[] }}
  */
-export function exportContractMapping({ copy, contract, revision, kit, brief, plan, contentMap }) {
+export function exportContractMapping({ copy, contract, revision, kit, brief, plan, contentMap, platform }) {
   const { view, problems } = readCopy(copy)
+  if (platform === 'wordpress') {
+    const mainMenu = plan && contentMap ? mainMenuExport({ plan, kit, contentMap, copy }) : null
+    const out = wordpressContractMapping({
+      copy,
+      contract,
+      revision,
+      brief,
+      contentMap,
+      menuSlots: new Set((mainMenu?.items ?? []).map((i) => i.slot))
+    })
+    return { mapping: out.mapping, extras: extrasOf({ view, plan, kit, mainMenu }), problems: out.problems }
+  }
   const kitSlots = kitSlotIndex(kit)
   const samples = new Map((contentMap?.slots ?? []).map((c) => [c?.key, c?.sample]))
   const facts = new Map((brief?.facts ?? []).map((f) => [f.id, f.value]))
@@ -136,21 +139,24 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
       evidence[key] = `Brief facts: ${cited.join('; ')}`
     }
   }
-  const alts = Object.fromEntries(view.alts.map((a) => [a.frame, a.text]))
-  const pageMeta = Object.fromEntries(
-    view.seo.map((s) => [s.page, { title: s.title, description: s.description }])
-  )
-  const pages = Object.fromEntries(view.pages.map((p) => [p.page, { title: p.title, body: p.body }]))
+  const mainMenu = plan && contentMap ? mainMenuExport({ plan, kit, contentMap, copy }) : null
   return {
     mapping: { contract, revision, changes, evidence, pending: [], emptyLinks: [] },
-    extras: {
-      alts,
-      pageMeta,
-      pages,
-      ...(plan && kit ? { footerHeadings: footerHeadingsOf(plan, kit) } : {}),
-      ...(plan && contentMap ? { mainMenu: mainMenuExport({ plan, kit, contentMap, copy }) } : {})
-    },
+    extras: extrasOf({ view, plan, kit, mainMenu }),
     problems
+  }
+}
+
+/** What the door does not take, for either platform: alt texts, page meta, pages without kit slots, the menus. */
+function extrasOf({ view, plan, kit, mainMenu }) {
+  return {
+    alts: Object.fromEntries(view.alts.map((a) => [a.frame, a.text])),
+    pageMeta: Object.fromEntries(
+      view.seo.map((s) => [s.page, { title: s.title, description: s.description }])
+    ),
+    pages: Object.fromEntries(view.pages.map((p) => [p.page, { title: p.title, body: p.body }])),
+    ...(plan && kit ? { footerHeadings: footerHeadingsOf(plan, kit) } : {}),
+    ...(mainMenu ? { mainMenu } : {})
   }
 }
 

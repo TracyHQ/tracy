@@ -47,7 +47,9 @@ export function freezeFloating() {
  * - the template header (`#t4-header`, `#t3-header`) and the component area (`#t4-main-body`, `#t3-mainbody`, or
  *   `main` when it holds only the component and not the whole page).
  * A block inside the off-canvas menu, hidden, or without size is recorded with `visible: false`.
- * @param {{entity: string, position: string}[]} assigned
+ * On a platform whose map names its blocks by selector (`{entity, selector, position}` entries, WordPress), only those
+ * selectors are read.
+ * @param {{entity: string, position: string, selector?: string}[]} assigned
  */
 export function findBlocks(assigned) {
   const OFF = '.t4-offcanvas, .t4-off-canvas, .t3-off-canvas, [class*="off-canvas"], .offcanvas'
@@ -80,6 +82,33 @@ export function findBlocks(assigned) {
     el.setAttribute('data-kit-block', block)
     taken.add(block)
   }
+  // A platform that names its blocks by selector (WordPress: the template parts and the post content or its sections, from
+  // `lib/site/adapters/wordpress-map.mjs`) is read by those selectors only: the Joomla module wrappers below would
+  // read a ported template's leftover ids (`#acm-slideshow-94`) as modules the content map does not hold.
+  const named = (assigned ?? []).filter((a) => a && typeof a.selector === 'string')
+  if (named.length) {
+    const KIND = { header: 'template-header', 'main-body': 'component' }
+    for (const a of named) {
+      const el = document.querySelector(a.selector)
+      if (el && !taken.has(a.entity))
+        add(
+          el,
+          a.entity,
+          a.kind ?? KIND[a.entity] ?? 'template-part',
+          a.position ? { position: a.position } : {}
+        )
+      else if (!el && a.entity === 'main-body')
+        out.push({
+          block: 'main-body',
+          kind: 'component',
+          visible: false,
+          offCanvas: false,
+          note: 'no component area'
+        })
+    }
+    const docHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
+    return { blocks: out.sort((a, b) => (a.top ?? 0) - (b.top ?? 0)), docHeight }
+  }
   for (const el of document.querySelectorAll('[id^="Mod"]')) {
     const m = el.id.match(/^Mod(\d+)$/)
     if (m && !taken.has(`module-${m[1]}`)) add(el, `module-${m[1]}`, 'module')
@@ -107,7 +136,8 @@ export function findBlocks(assigned) {
   for (const el of assignedIds.size ? document.querySelectorAll('[id]') : []) {
     const m = /^[a-z][a-z0-9_]*(?:-[a-z][a-z0-9_]*)*-(\d+)$/i.exec(el.id)
     if (!m || LAYOUT_ID.test(el.id) || !assignedIds.has(m[1]) || taken.has(`module-${m[1]}`)) continue
-    if (el.closest('[data-kit-block]')) continue
+    // Outside every block found so far, and around none: a wrapper holding one only shares the digits.
+    if (el.closest('[data-kit-block]') || el.querySelector('[data-kit-block]')) continue
     const list = byId.get(m[1]) ?? []
     if (!list.some((x) => x.contains(el))) list.push(el)
     byId.set(m[1], list)
@@ -133,6 +163,17 @@ export function findBlocks(assigned) {
         if (m && `module-${m[1]}` !== rec.block) inner.add(`module-${m[1]}`)
       }
     if (inner.size) rec.contains = [...inner]
+  }
+  // A module with no block of its own that a block found above prints: in a T4 layout column named after its position
+  // inside that block (`<div class="col-lg-4 footer-r t4-col">` of a footer section), or inside the module whose params
+  // name its position (`a.inside`, an ACM block printing another position in its own markup).
+  const recOf = (block) => out.find((r) => r.block === block)
+  for (const a of assigned ?? []) {
+    if (taken.has(a.entity)) continue
+    const col = a.position ? document.querySelector(`.t4-col.${CSS.escape(a.position)}`) : null
+    const host = recOf(a.inside) ?? recOf(col?.closest('[data-kit-block]')?.getAttribute('data-kit-block'))
+    if (host && host.block !== a.entity && !(host.contains ??= []).includes(a.entity))
+      host.contains.push(a.entity)
   }
   const header = document.querySelector(HEADER)
   if (header) add(header, 'header', 'template-header')

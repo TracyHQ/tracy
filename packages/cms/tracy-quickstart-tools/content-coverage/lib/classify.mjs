@@ -13,8 +13,10 @@ import { videoId } from './match.mjs'
 const cut = (s) => String(s).slice(0, 200)
 const MONTHS =
   '(jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|june?|july?|aug(ust)?|sep(t(ember)?)?|oct(ober)?|nov(ember)?|dec(ember)?)'
+// A module's date_format may lead with the weekday ("D, M Y" prints "Tue, Aug 2021").
+const WEEKDAY = '((mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\\s+)?'
 const DATE = new RegExp(
-  `^(\\d{1,2}(st|nd|rd|th)?\\s+${MONTHS},?\\s+\\d{4}|${MONTHS}\\s+\\d{1,2}(st|nd|rd|th)?,?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}|${MONTHS}\\s+\\d{4})$`
+  `^${WEEKDAY}(\\d{1,2}(st|nd|rd|th)?\\s+${MONTHS},?\\s+\\d{4}|${MONTHS}\\s+\\d{1,2}(st|nd|rd|th)?,?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}|${MONTHS}\\s+\\d{4})$`
 )
 // An all-numeric date a layout prints from an item's own date with a format string (JA's latest-news layout: `d.m.Y`
 // -> 06.09.2021): day, month and year in either order, split by dots, slashes or dashes. It is the article's date, not

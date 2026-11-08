@@ -1,7 +1,10 @@
 // A rewrite compares new files with the last report of the same site (ADR 0044, decision 6). Only a line the site really took
 // counts as done: a failed line, one the run never reached and one the site check found different are all sent again. The
 // report of every run keeps what the site holds, so the next run can compare with it, whatever way this one ended.
+import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { stockScreensToDrop } from '../lib/stock-screens.js'
 import { droppedBlocks } from './hide-plan.js'
+import { goneRowSlots } from './hide-rows.js'
 import { NO_LAST } from './no-last-report.js'
 
 const NAMED = 20
@@ -73,15 +76,40 @@ export function lastReportProblem(last, { siteKey, contract }) {
   return null
 }
 
+/** Every slot id of the kit's list rows, as the content map key the site holds it under. */
+function rowKeysOf(kit, ids = null) {
+  const out = new Set()
+  for (const block of Array.isArray(kit?.blocks) ? kit.blocks : [])
+    for (const list of Array.isArray(block?.lists) ? block.lists : [])
+      for (const row of Array.isArray(list?.rows) ? list.rows : [])
+        for (const slot of Array.isArray(row?.slots) ? row.slots : [])
+          if (typeof slot?.id === 'string' && (!ids || ids.has(slot.id)))
+            out.add(contentMapKey(slot.field ?? slot.id))
+  return out
+}
+
+/**
+ * A slot that left the stored field with its row (`part: 'row'`) is brought back only when these files want it again (card AL):
+ * they fill it, or it is a slot of a kit row these files no longer give up. A row these files still give up, or a slot of it no
+ * kit row names (a url slot the plugin took with the row), stays gone and is the same as before.
+ */
+function rowBack(line, { plan, kit, changes }) {
+  if (line.key in changes) return true
+  if (!rowKeysOf(kit).has(line.key)) return false
+  return !rowKeysOf(kit, goneRowSlots({ plan, kit })).has(line.key)
+}
+
 const named = (list) =>
   list.length > NAMED ? `${list.slice(0, NAMED).join(', ')} and ${list.length - NAMED} more` : list.join(', ')
 
 /** What an earlier run took off the site and these files no longer take off, as words naming each. */
 function broughtBack(last, { plan, kit, owners, extras, changes }) {
   const blocks = new Set(droppedBlocks(plan, kit).keys())
-  const dropped = new Set(
-    (Array.isArray(plan?.pages) ? plan.pages : []).filter((p) => p?.decision === 'drop').map((p) => p.id)
-  )
+  // The plan's drops and the kit's stock screens the plan does not keep, which the write step drops too (lib/stock-screens.js).
+  const dropped = new Set([
+    ...(Array.isArray(plan?.pages) ? plan.pages : []).filter((p) => p?.decision === 'drop').map((p) => p.id),
+    ...stockScreensToDrop(kit, plan).map((p) => p.id)
+  ])
   const items = new Set((extras?.mainMenu?.hide ?? []).map((h) => h.item))
   const forms = new Set(
     (Array.isArray(plan?.site?.forms) ? plan.site.forms : [])
@@ -99,6 +127,9 @@ function broughtBack(last, { plan, kit, owners, extras, changes }) {
       if (!items.has(slot)) out.push(`${slot} (a menu item that was unpublished)`)
     } else if (part === 'form') {
       if (!forms.has(slot)) out.push(`${slot} (a form that was closed)`)
+    } else if (part === 'row') {
+      if (line.status === 'hidden' && rowBack(line, { plan, kit, changes }))
+        out.push(`${slot} (a row slot that was removed)`)
     } else if (line.status === 'hidden' && !line.leftWith && (!line.readFrom || line.ordered === 'removed')) {
       // A line gone with its block or menu item, or a link gone with what holds it, is decided by that one's own line. A slot
       // taken out of the stored field reads back on the plugin's list, and it is its own line all the same.

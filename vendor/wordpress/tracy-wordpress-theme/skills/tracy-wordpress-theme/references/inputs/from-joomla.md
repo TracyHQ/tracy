@@ -19,6 +19,22 @@ node scripts/ingest/joomla-dump.mjs --out <j6-dir> \
   [--capture [--capture-timeout-ms 30000]]   # needs --site-url and a web target: builds capture/ (§Pages and posts beyond the markup)
 ```
 
+### Before you run it
+
+- **Install the skill's packages first.** `from-joomla.mjs` imports `jsdom` and the other packages of this folder's
+  `package.json`; a checkout without `node_modules` stops with `ERR_MODULE_NOT_FOUND`. Run `npm install` in the skill
+  folder (or in a copy of `scripts/` and `package.json` kept outside the repository), and `npx playwright install chromium`
+  for the browser steps.
+- **Docker.** `joomla-dump.mjs` passes the environment on unchanged, `DOCKER_HOST` and `DOCKER_CONFIG` included, so a remote or
+  rootless engine works as it does for `docker` on the command line.
+- **A T3 stand needs a writable `t3-assets/` in the web root.** T3 compiles its per-page CSS there; where it cannot create
+  the folder (a bind-mounted web root) Joomla prints `Folder::create: Could not create folder … t3-assets` on every page,
+  and the banner is baked into any render taken meanwhile. Create the folder and make it writable by the web server
+  before the first `--capture` or render.
+- **`--capture` requests the routes the way the site addresses them**, from the `sef` and `sef_rewrite` fields of
+  `configuration.php`: `/<path>` with URL rewriting, `/index.php/<path>` with SEF but `sef_rewrite = 0`, `/index.php?Itemid=<id>`
+  with SEF off. `render-routes.json` keeps the bare `path`.
+
 Read-only (`SELECT`, `SHOW COLUMNS`), six tables, **every column `CAST … AS CHAR`** because the inventory contract
 says every value is a string. Each row comes back as **a JSON object built by the database itself** —
 Joomla article bodies contain newlines, tabs and quotes, which a TSV dump loses in a way that looks like

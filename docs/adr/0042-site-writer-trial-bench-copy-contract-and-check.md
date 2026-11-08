@@ -22,6 +22,14 @@ Amended a sixth time (2026-11-04, owner's ruling): a text follows the demo's len
 100% of it, and a slot whose demo is a lead paragraph followed by points is written in that shape (section 10). The
 prompt's sha256 is now `50b69c79498fe4aa219f2abf17267f3a8e0e535c7d9a1f19e59b9b10a5979229` (it also carries the inline
 emphasis rule of section 11); the checker version moved to `site-copy-check/6`, once for sections 10 and 11.
+Amended a seventh time (2026-11-07, owner's ruling): the emphasis marks the strongest word or words of the text, the
+ones that carry its claim, never a filler or connecting word, and the demo's position is not a rule (section 11, and
+the W16 self-check). The prompt's sha256 is now `79658a692fcf4a3b33d7e32a9f295b4af05e40bba7f5911924bef9d77902e32c`; the checker is unchanged.
+Amended an eighth time (2026-11-07, owner's ruling): a count of the distinct items the slot's cited facts name is a fact
+the writer may write (four cited services give "4"; never estimated, rounded up or with "+"), and a slot is returned only
+when no true text of any kind fits: a number slot with nothing to count first takes a true phrase without a number
+(section 3, the W04 self-check and a new returns self-check). The prompt's sha256 is now
+`4bfad57befe0c27ecc2cf0119badac029ee6f1fda62720d780a57b101ad0fc0c`; the checker is unchanged.
 Noted 2026-11-05 (planner side, ADR 0041 decisions 12 and 13): the planner prompt, sha256
 `ec160022e152e5c66db6eb168a64a5923e9def4781d2e39ec7ee3b263cd58612`, now keeps a section that shows how the trade works
 (how a session, a visit or an order runs) as `basis: "trade"` lines without numbers, so the writer receives such
@@ -309,7 +317,14 @@ printed in one colour.
   more, and an `emphasis` on a slot whose demo has no span.
 - The export (`contract-mapping.js`) wraps the emphasis in the demo's tag and attributes, in content map notation, in
   the first item holding it: `European Coaching in ((span))Dubai((/span))`. A slot without a span mark ignores it.
+- Which words (2026-11-07, owner's ruling): the strongest word or words of the text, the ones that carry its claim (the
+  distinctive service, the number, the proof, the place only when the place is the point), never a filler or connecting
+  word; where the demo put its emphasis is not a rule. The prompt says so; W16 does not judge it.
 - The site check's `accent-emphasis` (ADR 0044 decision 19) measures the printed heading.
+- The write step's emphasis stage (`write-step/emphasis-stage.js`, 2026-11-06) turns the codes into tags where the slot stores
+  HTML. It looks for the written words at the content map's path, then in every text of the whole stored value, since rows
+  removed in the same write move an indexed heading (card N). Words found twice or nowhere keep their codes, and the site
+  check's `emphasis-codes-left` blocks on step 9 with the reason.
 
 ## Consequences
 

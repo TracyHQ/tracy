@@ -607,3 +607,40 @@ test('join guidance uses only safe local paths and stays text while no join dest
     assert.doesNotMatch(html, /acme-dental/)
   }
 })
+
+test('a folder the site’s Claude Cowork may not read names that folder and says how to give access (p56)', () => {
+  assert.equal(lib.importProblemCase('files_unreadable', { folder: '/var/www/site/gallery/thumbs' }), 'p56')
+  const html = render('p56', { detail: { folder: '/var/www/site/gallery/thumbs' } })
+  assert.match(html, /would not let Tracy read \/var\/www\/site\/gallery\/thumbs/)
+  assert.match(html, /755 for a folder, 644 for a file/)
+  assert.match(html, /newer versions leave such a folder out/)
+  assert.doesNotMatch(html, /stopped answering/)
+})
+
+test('the files step says what the site leaves out, unreadable to its PHP, at most five paths', () => {
+  const html = lib.renderToStaticMarkup(
+    lib.createElement(lib.ImportProgress, {
+      t,
+      platform: 'joomla',
+      run: {
+        state: 'running',
+        step: 'reading_files',
+        detail: {
+          files: 40,
+          unreadable: { paths: ['a/', 'b/', 'c/', 'd/', 'e/', 'f.png'], count: 7 }
+        }
+      }
+    })
+  )
+  assert.match(html, /data-import-unreadable=""/)
+  assert.match(html, /Left out, unreadable on your site \(7\): a\/, b\/, c\/, d\/, e\/, …/)
+  assert.match(html, /Sync from live brings them in/)
+  const none = lib.renderToStaticMarkup(
+    lib.createElement(lib.ImportProgress, {
+      t,
+      platform: 'joomla',
+      run: { step: 'reading_files', detail: { files: 3 } }
+    })
+  )
+  assert.doesNotMatch(none, /data-import-unreadable/)
+})

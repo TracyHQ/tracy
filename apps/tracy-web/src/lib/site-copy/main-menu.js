@@ -8,6 +8,11 @@
 // Plan pages map to menu items through the kit's pages[].path ("/about-us/our-trainers" opens the menu item whose
 // content map path is "about-us/our-trainers"). A plan child that maps to no menu item is reported in `problems`,
 // never guessed.
+//
+// A WordPress content map has no menu item: its main menu is the theme's header navigation (main-menu-wordpress.js),
+// read when the content map carries `navigationSource` (content-map-source.js).
+import { wordpressMainMenuOf } from './main-menu-wordpress.js'
+
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 
@@ -63,6 +68,8 @@ const empty = (problems = []) => ({ menutype: null, items: [], slots: [], hidden
  *   dropdown slots the writer writes; hidden: the items step 9 hides; problems: plan children matched to no item.
  */
 export function mainMenuOf({ plan, kit, contentMap }) {
+  if (isObject(contentMap?.navigationSource))
+    return wordpressMainMenuOf({ plan, kit, navigationSource: contentMap.navigationSource })
   const withChildren = arr(plan?.mainMenu).filter((m) => isObject(m) && arr(m.children).length)
   if (!isObject(contentMap))
     return empty(

@@ -193,6 +193,30 @@ test('a site that names its default is narrowed without facts; a call that names
   assert.ok(!whole.columns.includes('locale'))
 })
 
+test('a list the relay walked in one language because the site serves many says so, and names the road to another', async () => {
+  // tracy-web `oneLanguageOf` (dev 04/11/2026, 40 languages): the relay walks the default language alone and
+  // names it as `locale`; the other languages are not in the list, so `otherLanguages` cannot count them.
+  const many = [...LOCALES, ...Array.from({ length: 8 }, (_, i) => `x${i}-XX`)]
+  const en = {
+    ...pageList({ only: 'en-GB', perLocale: 5, common: 0, defaultLocale: 'en-GB', locales: many }),
+    locale: 'en-GB'
+  }
+  const out = await call(ctxOf('wordpress', { send: relay(() => en).send }), {
+    action: 'content.read',
+    params: { view: 'pages' }
+  })
+  assert.equal(out.pages.length, 5)
+  assert.equal(out.otherLanguages, undefined)
+  assert.deepEqual(out.next.params, { view: 'pages', locale: '<a locale of site.locales>' })
+  assert.match(out.next.why, /Pages of en-GB, the site's default language; it serves 11/)
+  // the same list, asked for by its language: nothing more to say
+  const asked = await call(ctxOf('wordpress', { send: relay(() => en).send }), {
+    action: 'content.read',
+    params: { view: 'pages', locale: 'en-GB' }
+  })
+  assert.equal(asked.next, undefined)
+})
+
 test('🔒 a page list still over the budget says how many more and the road to one page', async () => {
   const big = pageList({ defaultLocale: 'en-GB', perLocale: 400 })
   const out = await call(ctxOf('wordpress', { send: relay(() => big).send }), {

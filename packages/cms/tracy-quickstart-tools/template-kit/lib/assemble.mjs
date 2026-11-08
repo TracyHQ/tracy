@@ -6,24 +6,23 @@
 // stamp.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-
-import { readContractCoverage, readContractMap } from './contract-read.mjs'
 import { readCheckAccepts } from './check-accepts.mjs'
+import { readContractCoverage, readContractMap } from './contract-read.mjs'
 import { applyCoverage, coverageGate } from './coverage-gate.mjs'
-import { slotShapeChecks } from './slot-shape-checks.mjs'
-import { keepEmbeddedMaps, reachChecks } from './reach-checks.mjs'
-import { pairListRows, rowPairChecks } from './row-pairs.mjs'
 import { httpFetcher } from './crawl.mjs'
 import { buildKit } from './kit.mjs'
+import { mergeSite } from './kit-site.mjs'
 import { fixedLinkLabels, linkLabelChecks } from './link-label-reasons.mjs'
 import { keepLooks } from './looks.mjs'
-import { mergeSite } from './kit-site.mjs'
-import { slotOwnerChecks } from './slot-owners.mjs'
-import { templateGaps } from './template-gaps.mjs'
-import { fixesOf } from './template-fixes.mjs'
-import { showcaseViewFor } from './site/adapters/index.mjs'
+import { keepEmbeddedMaps, reachChecks } from './reach-checks.mjs'
+import { pairListRows, rowPairChecks } from './row-pairs.mjs'
+import { showcaseViewFor, templateFileOf } from './site/adapters/index.mjs'
 import { logoFrameIds } from './site/logo-spots.mjs'
-import { buildStamp, imageChecksums, templateVersionOf } from './stamp.mjs'
+import { slotOwnerChecks } from './slot-owners.mjs'
+import { slotShapeChecks } from './slot-shape-checks.mjs'
+import { buildStamp, imageChecksums } from './stamp.mjs'
+import { fixesOf } from './template-fixes.mjs'
+import { errorsBesideGaps, templateGaps } from './template-gaps.mjs'
 import { limitChecks } from './text-limits.mjs'
 
 export const readJson = (f) => JSON.parse(readFileSync(f, 'utf8'))
@@ -32,17 +31,17 @@ export const writeJson = (f, v) => writeFileSync(f, `${JSON.stringify(v, null, 1
 /** A person's reasons for reach and row pair check failures in the kit work folder `out` (check-accepts.mjs). */
 export const reachAcceptsOf = (out) => readCheckAccepts(join(out, 'reach-accepts.json'))
 
-/** The template version: the flag, else the one already in the kit, else templateDetails.xml read on the site. */
+/** The template version: the flag, else the one already in the kit, else the template's own file read on the site. */
 async function templateVersion(o, manifest, previous) {
   if (typeof o['template-version'] === 'string')
     return { version: o['template-version'], from: 'flag --template-version' }
   if (previous?.version) return { version: previous.version, from: previous.measuredFrom }
-  if (!manifest.template) return { version: null, from: 'the contract names no template' }
-  const xml = `templates/${manifest.template}/templateDetails.xml`
+  const file = templateFileOf(manifest)
+  if (!file) return { version: null, from: 'the contract names no template' }
   const host = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
-  const r = await httpFetcher({ siteUrl: o.site, hostHeader: host })(new URL(xml, o.site).href)
-  const version = r.status === 200 ? templateVersionOf(r.html) : null
-  return { version, from: version ? `${xml} on the site` : `${xml} answered ${r.status}` }
+  const r = await httpFetcher({ siteUrl: o.site, hostHeader: host })(new URL(file.path, o.site).href)
+  const version = r.status === 200 ? file.versionOf(r.html) : null
+  return { version, from: version ? `${file.path} on the site` : `${file.path} answered ${r.status}` }
 }
 
 /** Assemble and write template-kit.json; returns the kit. */
@@ -83,7 +82,14 @@ export async function assembleKit(o, out, tool) {
     siteUrl: o.site,
     aliasHosts: host ? [host] : []
   })
-  mergeSite(kit, siteDoc, map, wordsLinks)
+  mergeSite(kit, siteDoc, map, wordsLinks, previous)
+  // What the platform's content map does not declare (a WordPress map has no menu blocks or item lists): the kit
+  // leaves those fields empty and says why, once each (wordpress-map.mjs).
+  for (const g of map.platformGaps ?? [])
+    kit.errors.push({ kind: 'not-on-platform', field: g.field, reason: g.reason })
+  // A WordPress page whose post content could not be split into its sections (wordpress-map.mjs).
+  for (const g of map.sectionGaps ?? [])
+    kit.errors.push({ kind: 'missing', field: g.field, reason: g.reason })
   // The coverage gate (coverage-gate.mjs): complete the kit from the contract, then count what it still lacks. The
   // list and owner checks run again over the completed kit.
   const desk = String(capture.widths?.[0] ?? '1440')
@@ -95,14 +101,20 @@ export async function assembleKit(o, out, tool) {
     readings,
     textFit: readIf(join(out, 'text-fit.json')) ?? {},
     rowFit: readIf(join(out, 'row-fit.json')) ?? {},
-    drives: readIf(join(out, 'field-drives.json')) ?? {}
+    drives: readIf(join(out, 'field-drives.json')) ?? {},
+    classes: readIf(join(out, 'icon-classes.json')) ?? {}
   })
   // Which text slots print in the same card as each list row's picture (row-pairs.mjs, from the frames pass).
   pairListRows(kit, frameEvidence)
   kit.errors = kit.errors.filter((e) => !/^(list-limits-differ|slot-in-two-blocks)$/.test(e.kind))
   kit.checks.listLimitsDiffering = limitChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotsInTwoBlocks = slotOwnerChecks({ blocks: kit.blocks, errors: kit.errors })
-  kit.checks.slotCoverage = coverageGate(kit, { map, readings })
+  kit.checks.slotCoverage = coverageGate(kit, {
+    map,
+    readings,
+    gapAccepts: readIf(join(out, 'gap-accepts.json')) ?? {},
+    accepts: reachAcceptsOf(out)
+  })
   // Text slot shape against the content map: whole samples, sentence groups, inline marks (slot-shape-checks.mjs).
   slotShapeChecks(kit, { map, contentCoverage: readIf(join(o.contract, 'content-coverage.json')) ?? null })
   // What a visitor reaches: a button with no door, a map no slot moves, a phone outside a link (reach-checks.mjs).
@@ -131,6 +143,7 @@ export async function assembleKit(o, out, tool) {
     fixes: fixesOf(readIf(join(out, 'template-fixes.json'))),
     accepts: readIf(join(out, 'gap-accepts.json')) ?? {}
   })
+  kit.errors = errorsBesideGaps(kit.errors, kit.templateGaps)
   if (!kit.template.version) kit.errors.push({ kind: 'missing', field: 'template.version', reason: tv.from })
   // A look (looks.mjs) is written by a person's Claude Code once per kit version: a shot that did not change keeps it.
   keepLooks(kit, previous)

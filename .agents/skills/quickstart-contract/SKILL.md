@@ -379,6 +379,13 @@ path):
      several text pieces becomes ONE slot on its element, and the rule tables group each link-list item (label and link) into one card.
      Add `--role-vocabulary 3` only with the release that moves the template to `place-content-roles/3` (it writes `article.title`,
      `editorial.navigation_url` and `editorial.illustration`, and derives `customize` from the role); the default stays 2.
+   - **The level a template is brought to (JA Boxing 1.0.11, the reference):** a new profile, or the recapture that
+     brings a template to that level, also passes `--full-coverage` (every piece of demo content a visitor reads: an
+     article's images and extra fields, a module's shown title, contacts, users, tags, the template's `TPL_` strings),
+     `--inline-markup` (with `--whole-units`) and `--role-vocabulary 3`. Without them the capture declares a fraction of the
+     demo (JA Voyara 1.0.11: no article extra fields, no tags) and the coverage audit (K8) is red. `--full-coverage` reads
+     more tables, so it can stop at K7 on demo rows that never stopped a narrower capture (JA Voyara 1.0.11: five tags
+     saved without a path); that is demo data to repair in the next version, not a reason to drop the flag.
    - `--file-roots`: `templates/$TPL` + the template's own framework code (`plugins/system/t4` or
      `plugins/system/t3`) + `modules/mod_ja_acm` + `media`, only folders that actually exist in the pack's webroot:
 
@@ -406,7 +413,8 @@ path):
        --webroot "$WORK/chup/webroot" --inventory "$WORK/chup/inventory.json" --manifest "$PACK/manifest.json" \
        --slots-helper "$CW_WT/joomla/cowork/lib/ContentSlots.php" --out "$WORK/chup/capture-$n" \
        --id "$CID" --template "$TPL" --styles "$TPL" --menutypes "$MENUTYPES" --module-prefix "$MODULE_PREFIX" "${LIST_ITEMS[@]}" \
-       --exclude-generated --link-fields-by-role --file-roots "$ROOTS" --cowork-version "$COWORK_VER" ${PREV[@]+"${PREV[@]}"} || break
+       --exclude-generated --link-fields-by-role --evidence-by-field --whole-units --inline-markup --full-coverage \
+       --role-vocabulary 3 --skip-unpublished-menu-pages --file-roots "$ROOTS" --cowork-version "$COWORK_VER" ${PREV[@]+"${PREV[@]}"} || break
    done
    diff -r "$WORK/chup/capture-1" "$WORK/chup/capture-2"                       # K4: empty
    node "$QC/check-release-fields.mjs" --contract "$WORK/chup/capture-1" --pack "$PACK"   # K2+K3 pass 1
@@ -490,8 +498,13 @@ path):
    slots without a cached verdict (`labelJudge.reason` is `AWAITING_AGENT`; no file means nothing to judge):
    1. Read the request top to bottom: the question, the allowed verdicts and roles, the answer format, then per component
       its `crop` (open the image; the slots are numbered on it) and its `slots` table. `alreadyJudged` is context only.
-   2. Judge each listed slot by key: `right`, or `wrong` with one `suggestedRole` and a short `why`. Write the answers to
-      `"$WORK/coverage/verdicts.json"` (`{"judgedBy": "agent", "slots": [...]}`).
+   2. Judge each listed slot by key, **from the crop**: `right`, or `wrong` with one `suggestedRole` and a short `why`.
+      Write the answers to `"$WORK/coverage/verdicts.json"` (`{"judgedBy": "agent", "crops": [...], "slots": [...]}`),
+      with one `{"crop": "<path from the request>", "seen": "<what it shows>"}` per component crop. A judgement from the
+      slot table alone is not one, and `record-judge.mjs` refuses a file that leaves a crop out: on JA Voyara (06/11/2026)
+      six helpers judged 2838 slots from the text without opening a crop, and the contested slots had to be judged again. Splitting a big request among helpers: give each whole
+      components with their crop paths and the rule "open every crop with the image reader before judging its slots;
+      record each under `crops` with what you saw", then spot-check a few `seen` lines against the images yourself.
    3. `node packages/cms/tracy-quickstart-tools/content-coverage/record-judge.mjs --request "$WORK/coverage/label-judge/request.json" --verdicts "$WORK/coverage/verdicts.json"`.
       It refuses the whole file on a missing, unknown or doubled key or a role outside version 3; fix and rerun.
    4. Relabel every slot you marked wrong in `content-map.json` (a wrong fact/editorial group holds Publish for a new

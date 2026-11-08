@@ -155,6 +155,27 @@ test('system pages: legal pages by name, the not-found answer, the plainest arti
   assert.equal(buildSystemPages({ pages: [], notFound: null }).errors.length, 2)
 })
 
+test('a not-found link the template prints as a full address of the site is kept as its site path', () => {
+  const { systemPages } = buildSystemPages({
+    pages: [],
+    notFound: {
+      status: 404,
+      siteUrl: 'http://stand.example:8080',
+      read: {
+        links: [
+          { label: 'Read the journal', href: 'http://stand.example:8080/pages/blog?x=1#top' },
+          { label: 'Home', href: '/index.php' },
+          { label: 'Elsewhere', href: 'https://other.example/pages/blog' }
+        ]
+      }
+    }
+  })
+  assert.deepEqual(
+    systemPages.notFound.slots.map((s) => s.target),
+    ['/pages/blog?x=1#top', '/index.php', 'https://other.example/pages/blog']
+  )
+})
+
 test('link actions', () => {
   const ctx = { itemPaths: new Set(['/lessons/morning']), contactPaths: new Set(['/contact']) }
   assert.equal(
@@ -309,4 +330,50 @@ test('a footer column of social profile links holds the social profiles; an arti
     { pageId: 'page-about', path: '/about', bodyClass: '', articleView: true, blockCount: 4 }
   ]
   assert.equal(articleLayoutOf(pages).pageId, 'page-about')
+})
+
+test("footer columns: links that lead to the site's own pages hold pages, whatever their words", () => {
+  const reads = [
+    { pageId: 'page-home', slug: 'home', path: '/' },
+    { pageId: 'page-careers', slug: 'careers', path: '/careers' },
+    { pageId: 'page-privacy', slug: 'privacy', path: '/privacy-policy' },
+    {
+      pageId: 'page-press',
+      slug: 'press',
+      path: '/press',
+      navGroups: [
+        {
+          block: 'module-7',
+          heading: 'Company',
+          links: [
+            { label: 'Join the crew', href: '/index.php/careers' },
+            { label: 'In the news', href: 'http://pool.example/index.php/press/' },
+            { label: 'Our story', href: '#' }
+          ]
+        },
+        {
+          block: 'module-8',
+          heading: null,
+          links: [
+            { label: 'Privacy', href: '/privacy-policy?lang=en' },
+            { label: 'Elsewhere', href: 'https://other.example/x' },
+            { label: 'Nowhere', href: '#' }
+          ]
+        }
+      ]
+    }
+  ]
+  const { navigationGroups: g, errors } = buildNavigationGroups(reads, {
+    listingTitles: new Map(),
+    menuLabels: new Set(['home', 'about']),
+    idOf
+  })
+  assert.deepEqual(
+    g.map((x) => [x.block, x.holds]),
+    [
+      ['block-7', 'pages'],
+      ['block-8', null]
+    ]
+  )
+  assert.equal(errors.length, 1)
 })

@@ -27,7 +27,7 @@ basis (the design system) — it never becomes not-applicable on its own.
 If you don't know what the source is yet, `scripts/ingest/detect-source.mjs` answers (SKILL.md §Getting started).
 
 
-`node tools/inventory.mjs <src> <out>` classifies each HTML file: `dc-canvas` (has `<script type="text/x-dc">`)
+`node tools/inventory.mjs <src> <out-dir>` (a directory: `inventory` gives `inventory/source-inventory.json`, the file `checkpoint.mjs` looks for) classifies each HTML file: `dc-canvas` (has `<script type="text/x-dc">`)
 or `html`. With a canvas, **every file may share one template and one data script** (Northgate:
 34 files differing in exactly 3 lines — `<title>`, `state.page`, `LANG_HREF`); `dataScriptSha256` in the output
 tells how many real scripts there are. Count pages by `state.page` + `get lang()`, not by file name.

@@ -1,4 +1,4 @@
-// Page addresses of a Joomla site in one canonical form, so the crawl never captures one page twice.
+// Page addresses of a site (Joomla or WordPress) in one canonical form, so the crawl never captures one page twice.
 // A page is named by its path without the `/index.php` prefix, without a trailing slash, lower case,
 // and with only the list position (`?start=N`) kept from its query: `/`, `/classes`, `/blogs?start=6`.
 
@@ -110,12 +110,31 @@ export function siteAddress(href, siteUrl, aliasHosts = []) {
   return u.pathname.replace(/\/{2,}/g, '/') + u.search
 }
 
-/** The address to request for a canonical path (this site has no URL rewrite: pages live under /index.php). */
+/**
+ * How the site spells a page address: `index-php` (Joomla with no URL rewrite: pages live under /index.php) or
+ * `pretty-slash` (WordPress pretty permalinks, `/%postname%/`: a page answers at its path with a trailing slash, and
+ * any other spelling redirects to the site's own address, which a site served under a Host header cannot follow).
+ * Set once per run from the contract's platform (`usePlatform` in lib/site/adapters/index.mjs).
+ */
+let urlStyle = 'index-php'
+/** @param {'index-php'|'pretty-slash'} style */
+export function setUrlStyle(style) {
+  if (style !== 'index-php' && style !== 'pretty-slash') throw new Error(`unknown url style ${style}`)
+  urlStyle = style
+}
+
+/** The address to request for a canonical path, in the site's own spelling (`setUrlStyle`). */
 export function urlOfPath(path, siteUrl) {
   const base = new URL(siteUrl)
   const [p, q] = path.split('?')
+  const query = q ? `?${q}` : ''
+  if (urlStyle === 'pretty-slash') {
+    // A file (`/feed.xml`) or the front page keeps its spelling; every other page path ends in a slash.
+    const tail = p === '/' || /\.[a-z0-9]+$/i.test(p) ? p : `${p.replace(/\/+$/, '')}/`
+    return new URL(`${tail}${query}`, base).href
+  }
   const tail = p === '/' ? '' : p
-  return new URL(`/index.php${tail}${q ? `?${q}` : ''}`, base).href
+  return new URL(`/index.php${tail}${query}`, base).href
 }
 
 /** The canonical path of a content map menu route (`home` is the front page). */

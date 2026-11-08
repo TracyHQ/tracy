@@ -263,7 +263,8 @@ export async function collectBrowser(contract, base, out, options = {}) {
         observation.styles = []
         for (const id of spec.rules) {
           const rule = contract.design.rules.find((r) => r.id === id),
-            expected = rule.styles[variant.id]
+            // an optional rule with no styles for this variant declares the role absent here
+            expected = rule.styles[variant.id] ?? {}
           const values = await page.locator(rule.selector).evaluateAll(
             (els, properties) =>
               els
@@ -284,6 +285,10 @@ export async function collectBrowser(contract, base, out, options = {}) {
             continue
           }
           assert(values.length > 0, `design selector matches: ${id}`)
+          assert(
+            !(rule.optional && rule.styles[variant.id] === undefined),
+            `design ${id}: declared absent on ${variant.id} (no styles for it), but ${values.length} element(s) are visible`
+          )
           observation.styles.push({ id, values })
           for (const item of values)
             for (const [property, value] of Object.entries(expected)) {

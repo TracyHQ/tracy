@@ -40,30 +40,44 @@ export function packageStops(pictures, contract) {
 
 /**
  * The items of the package that have nothing to write to or nothing to write: a frame the export could not place (its own
- * `problems`, such as a frame the kit has no image slot for) and a slot holding a file the uploads do not list. Each is left
- * out and said once, and the rest of the package is written (ADR 0044, decision 26). Empty for a file that is not the export.
+ * `problems`, such as a frame the kit has no image slot for, or one the plan wants filled that the picture step left
+ * without a picture), a slot holding a file the uploads do not list, and, given the content map, a slot holding a file
+ * narrower than the slot's `fit.minWidth` (the write door refuses it, SLOT_IMAGE_TOO_SMALL, card AI). Each is left out
+ * and said once, and the rest of the package is written (ADR 0044, decision 26). Empty for a file that is not the export.
+ * @param {{ slots?: object[] } | null} [contentMap] the kit's content map, whose slots may set `fit.minWidth`
  * @returns {{ frame: string, key: string | null, reason: string }[]}
  */
-export function packageItems(pictures) {
+export function packageItems(pictures, contentMap = null) {
   if (!isExport(pictures)) return []
   const { mapping, uploads, problems } = pictures
   const out = problems.map((p) => ({ frame: String(p?.where), key: null, reason: String(p?.detail) }))
-  const sent = new Set(uploads.map((u) => u?.sitePath))
-  for (const [key, value] of Object.entries(mapping.changes))
-    if (!sent.has(value))
+  const sent = new Map(uploads.map((u) => [u?.sitePath, u]))
+  const minOf = new Map(
+    (Array.isArray(contentMap?.slots) ? contentMap.slots : [])
+      .filter((s) => Number.isInteger(s?.fit?.minWidth) && s.fit.minWidth > 0)
+      .map((s) => [s.key, s.fit.minWidth])
+  )
+  for (const [key, value] of Object.entries(mapping.changes)) {
+    const frame = key.replace(/^module-/, 'block-')
+    if (!sent.has(value)) out.push({ frame, key, reason: 'it holds a file the uploads do not list' })
+    else if (minOf.has(key) && Number(sent.get(value).width) < minOf.get(key))
       out.push({
-        frame: key.replace(/^module-/, 'block-'),
+        frame,
         key,
-        reason: 'it holds a file the uploads do not list'
+        reason: `its file is ${sent.get(value).width} px wide; the kit slot ${key} takes at least ${minOf.get(key)}`
       })
+  }
   return out
 }
 
 /** Whatever keeps this package or one of its items off this contract, each as a sentence; empty when all of it can be used. */
-export function packageProblems(pictures, contract) {
+export function packageProblems(pictures, contract, contentMap = null) {
   if (!isExport(pictures)) return packageStops(pictures, contract)
-  const items = packageItems(pictures)
-  const said = (i) => (i.key ? `${i.key} holds a file the uploads do not list` : `${i.frame}: ${i.reason}`)
+  const items = packageItems(pictures, contentMap)
+  const said = (i) =>
+    i.key && i.reason === 'it holds a file the uploads do not list'
+      ? `${i.key} holds a file the uploads do not list`
+      : `${i.frame}: ${i.reason}`
   return [
     ...items.filter((i) => !i.key).map(said),
     ...packageStops(pictures, contract),

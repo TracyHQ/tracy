@@ -104,6 +104,8 @@ export function findHygiene({ html = null, items, rules = HYGIENE_RULES }) {
   }
   for (const it of items ?? []) {
     if (!WORDY.has(it.kind) || typeof it.value !== 'string') continue
+    // A code sample's ${API_KEY} or CI_RUN_ID is the sample's own word, not an unfilled token or a raw language key.
+    if (it.inCode) continue
     const visible = it.visibleAnywhere ?? it.visible ?? true
     if (!visible && rules.includeHidden === false) continue
     const where = whereOf(it)

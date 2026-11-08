@@ -192,6 +192,24 @@ The run also carries `handover` (`pending`/`filed`/`refused`): a wizard still op
 itself when the host refuses, there is no `handover`, or it has waited more than 60 seconds. Both sides calling at once still yields **one** job: the
 `/provision` door is unchanged, holds an advisory lock and returns `reused` to the second request.
 
+**Unreadable source files during import and Sync from live:** the engine can return
+`unreadable: {paths, count}` alongside `files.list` and `files.pack` (folders end in `/`). Add site
+shows the omitted paths during the read and retains that warning across multipart resumes. An
+older engine's permission refusal is `files_unreadable`, with the path shown only to the owner;
+operator signals keep the closed-set `permission_denied` check, not a raw server error. A door
+returning HTML records the reply kind and both Joomla doors; after a successful engine proof,
+an unexpected page follows the existing `blocked_by_host` recovery path. This diagnoses the
+observed reply, without identifying which hosting layer produced it. After an installer write,
+Joomla API checks can make up to three read-only rounds with 1- and 2-second waits while routing
+still returns HTML or non-engine JSON (HTTP 200/403/404). An engine answer, PHP error, Basic
+challenge or recognized security challenge ends the readiness wait immediately. This absorbs
+short registration delays without another installation when the API becomes ready.
+
+Sync records omitted paths in the private read's `live/unreadable.json`. An incremental read
+keeps their previous manifest entries and never lists them as deleted. A whole read restores
+those paths from the preceding live tree before the three-way merge. A truncated or invalid
+omission list refuses the read because unnamed paths cannot safely be treated as deleted.
+
 **An unfinished import is never opened as a workspace** (22/10/2026). An import claim creates the row and
 the claimed seat *before* the read; the site folder on the host exists only when `/provision` runs at the end, and a failed read
 keeps the row for Retry. One single rule, [`lib/import-pending.js`](apps/tracy-web/src/lib/import-pending.js):
@@ -398,6 +416,15 @@ calls **the Claude Cowork plugin installed in the site's CMS** (endpoint and tok
 `apply.revert`. `apply.list` without an `apply_id` is answered by the door itself, without calling the site: recent changes
 come from Tracy's ledger (the audit table and `site_write`, 30 days, at most 15 apply_ids, newest first), so the agent
 can undo changes from an earlier conversation too, including `site.identity` (the site name).
+
+**c2. An icon from the library (`media.icon`).** An icon slot of a quickstart (a small transparent PNG, often a pair:
+the light and the dark copy) is changed by picking another icon, not by drawing one. `tracy-site-tools` asks
+`POST /api/sites/:key/icons` (`apps/tracy-web/src/sites/icon-door.js`, held within the session's site by
+`conversationSite`, signed as the person typing): `search` lists library names, `pair` names the slot's other-theme twins
+from the template kit (`twinOf`), and `draw` renders the icon in each slot's template look and current colours with the
+write step's own drawing code (`lib/picture-paint/icons/icon-pick.js`). The door writes nothing: the host reads the two
+files it measures from the site folder, then uploads the drawn files with `media.upload` and writes every slot in one
+`content.contract apply`, both through Apply as above, so the change is in Changes and `apply.revert` undoes it.
 
 **d. Writes outside Apply, reported afterwards.** Three kinds of write do not go through Apply: EmDash's own MCP
 (`tracy_emdash`), look changes via file tools, and `look.revert`. `tracy-site-tools` reports each
@@ -2294,7 +2321,8 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   is asked once more, then fails as "look unreadable". Its verdict, faults and seen sentence are stored on the entry;
   rejections are rule L01 failures that go back to the picker in the fix rounds. The run's cost adds the looks and the
   icon ranking to the picker's turns. `run --copy-file` passes a writer copy file whose alts are compared with the
-  seen sentences (`altNotes`). Migration 201 adds the door to the door check and the run's `copy` column.
+  seen sentences (`altNotes`); without it the manifest's `altCheck` says `deferred`, and step 11's
+  `alt-matches-picture` compares the printed alts with the seen sentences instead. Migration 201 adds the door to the door check and the run's `copy` column. When the plan names a site language, the same look also writes the picture's alt (site language, business name, within the gallery alt slot's limit) as the entry's `alt`; initials take the person's name, the export's `alts` carries them, and the write step sends them over the writer's alts through the gallery alt slots, and into the article `images` alt keys and record HTML img alts through `content.update` (`write-step/record-alt-stage.js`, ADR 0043 section 3f).
 - **The drawer and the fallback ladder** (#344) finish every checked round before it is saved
   ([`ladder-step.js`](apps/tracy-web/src/site-pictures/ladder-step.js), wrapped around the store's `saveRound` like the
   looker, so the shared loop is unchanged). A specific frame no owner photo fits (or the picker answered "none") is
@@ -2333,6 +2361,22 @@ write report `site-write-report/1`, kept on the run row. `cancel` sets a flag on
 row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tracy-web/src/write-step/`, its command line
 `apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
 (`site-copy/`, `brand-accent/`, `picture-paint/`).
+
+**Step 9 whole and step 9b** (#448, ADR 0044 decision 30). `apps/tracy-web/src/write-step-nine.js` (`runStepNine`) is the
+one entry point of step 9: the write, the first site check (step 11's script; no model looks at screenshots), then step 9b
+(`write-step/repair-pass/`) on the customer-visible faults of that check: each page's faults become numbered comment
+turns, built by the preview popover's own builder (`lib/comment-turn.js`, `@tracy/dsh-chat-input` `buildCommentTurn`,
+copied into the image, whose build imports the copy) and packed into as few turns as fit its length limit, after each
+element is located through the Apply door (`content.locate`) and the comment requests are made through
+`POST /api/sites/:key/requests` (20 items a minute per site, kept by the pass). Each page's turns are queued into a session
+of its own that 9b opens for the site as its owner (`lib/site-session-ahead.js`, the path demo QA uses), at most three
+pages at once, and completion is read from `site_turn`. A site check of the pages the turn changed (`runSiteCheck`
+`pages`, joined by `lib/scoped-site-check.js`) judges it, and a turn that made a page worse is undone whole through
+`POST /api/sites/:key/turns/undo`. Repairs are Tracy turns, so Site changes shows each with Undo; a turn still open at the
+step's return is stopped with `session/cancel` and judged by what it wrote. A page that fails is logged and the others go
+on; only a site check that cannot run takes the turns back and hands over the written site; the pass never throws to the
+step. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
+`write-step-bench-repair-agent.js`); no customer flow calls it yet (#444).
 
 ## 9. Sign-in, seats, permissions
 

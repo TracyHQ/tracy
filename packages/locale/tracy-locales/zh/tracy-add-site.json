@@ -864,5 +864,12 @@
   "own_source_website": "其网站",
   "brand_chat_title": "来自你的chat",
   "brand_chat_use": "将 {file} 用作标志",
-  "brand_chat_not_png": "你在chat中发送的图片不是 PNG file，因此不能用作标志。"
+  "brand_chat_not_png": "你在chat中发送的图片不是 PNG file，因此不能用作标志。",
+  "import_detail_unreadable": "已跳过 site 上无法读取的项目（{count}）：{paths}。请在托管空间中授予读取权限，再通过 Sync from live 获取这些项目。",
+  "import_error_files_unreadable": "你的 site 不允许 Tracy 读取 {folder}，因此导入已停止。请在托管空间中授予读取权限，然后重新开始。",
+  "import_problem_p56_action_0": "重新开始",
+  "import_problem_p56_fix_0": "在托管空间的文件管理器（file manager）中授予读取权限（文件夹（folder）为 755，文件（file）为 644），或在 site 不需要此项时将其删除。",
+  "import_problem_p56_fix_1": "也可以更新 site 上的 Claude Cowork：较新版本会跳过此类文件夹（folder），列出名称并继续导入。",
+  "import_problem_p56_what": "你的 site 不允许 Tracy 读取 {folder}。",
+  "import_problem_p56_why": "托管空间的权限不允许读取此项，而 {domain} 上的 Claude Cowork 版本会因此停止整个导入。"
 }

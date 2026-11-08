@@ -8,7 +8,8 @@
 //   node tools/qa-notes.mjs status <run-dir> --stage <id>     → counts (open/done/closed/reopened/lee)
 //
 // Shapes (Markdown tables; the first table after the heading is read, `|` inside cells escaped as \|):
-//   notes/<lens>.md        ## Opened: one absolute picture path per `- ` line — what the lens actually
+//   notes/<lens>.md        (or notes/<lens>-<suffix>.md, any number: all are read)
+//                          ## Opened: one absolute picture path per line (`- ` optional) — what the lens actually
 //                          looked at. ## Notes: | Page | Axis | What | Where | Fix | Verify | Flag |
 //                          Flag is empty, LEE (a design decision the agent may not take) or SOURCE (the
 //                          source has the same defect; the rule is to do better than the source, so it
@@ -61,16 +62,26 @@ export function readTable(text, heading) {
   }
   return rows
 }
+/** The pictures a lens says it opened: `- <path>` lines or bare paths, up to the next `## ` heading. */
 const readOpened = (text) => {
   const i = text.indexOf('## Opened')
   if (i < 0) return []
-  return text
-    .slice(i)
-    .split('\n')
-    .slice(1)
-    .filter((l) => l.startsWith('- '))
-    .map((l) => l.slice(2).trim())
+  const lines = text.slice(i).split('\n').slice(1)
+  const end = lines.findIndex((l) => l.startsWith('## '))
+  return (end < 0 ? lines : lines.slice(0, end))
+    .map((l) =>
+      l
+        .trim()
+        .replace(/^[-*]\s+/, '')
+        .replace(/^`|`$/g, '')
+    )
+    .filter((l) => /\.(png|jpe?g|webp)$/i.test(l))
 }
+/** `notes/<lens>.md` and `notes/<lens>-<suffix>.md` (one per stage or per agent); `-close` files are verdicts, not notes. */
+const lensFiles = (notesDir, lens) =>
+  (existsSync(notesDir) ? readdirSync(notesDir).sort() : []).filter(
+    (f) => f === `${lens}.md` || (f.startsWith(`${lens}-`) && f.endsWith('.md') && !f.endsWith('-close.md'))
+  )
 
 export function main(argv = process.argv.slice(2)) {
   const args = argv
@@ -127,11 +138,12 @@ export function main(argv = process.argv.slice(2)) {
     }
   const opened = {}
   for (const lens of LENSES) {
-    const f = path.join(notesDir, `${lens}.md`)
-    if (!existsSync(f)) continue
-    const text = readFileSync(f, 'utf8')
-    opened[lens] = readOpened(text)
-    for (const r of readTable(text, '## Notes')) {
+    const files = lensFiles(notesDir, lens)
+    if (files.length === 0) continue
+    opened[lens] = []
+    const texts = files.map((f) => readFileSync(path.join(notesDir, f), 'utf8'))
+    for (const text of texts) opened[lens].push(...readOpened(text))
+    for (const r of texts.flatMap((text) => readTable(text, '## Notes'))) {
       if (!r.page || !r.what) continue
       const key = id('N', r.page, r.axis, lens, r.what)
       add(key, {
@@ -260,6 +272,14 @@ export function main(argv = process.argv.slice(2)) {
       extra: coverage.extra.length
     })
   )
+  if (coverage.missing.length)
+    console.error(
+      `${coverage.missing.length} picture(s) with a consumer not opened. Lens files read: ${LENSES.map(
+        (l) => `${l}=[${lensFiles(notesDir, l).join(', ')}] ${(opened[l] ?? []).length} opened`
+      ).join(
+        '; '
+      )}. A lens file lists them under "## Opened" as "- <path>" or one bare path per line, ending in .png/.jpg/.webp.`
+    )
   process.exit(coverage.missing.length ? 1 : 0)
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) main()

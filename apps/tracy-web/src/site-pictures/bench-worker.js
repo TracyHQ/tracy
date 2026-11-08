@@ -29,6 +29,7 @@
 import sharp from 'sharp'
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { kitIdOf } from '../lib/kit-id.js'
+import { altCheckFor } from './alt-notes.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
 import { demoPictureReader } from './demo-pictures.js'
 import { picturePickerDoor } from './door.js'
@@ -44,6 +45,7 @@ import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
 import { withLooker } from './looker-round.js'
 import { createLooker } from './looker-step.js'
+import { altAskFor } from './alt-ask.js'
 import { PICTURES_VERSION } from './manifest-shape.js'
 import { ownerPhotoBytes } from './owner-photos.js'
 import { usablePhotos } from './photo-shortlist.js'
@@ -60,6 +62,7 @@ import {
 } from './picker-picks.js'
 import { CHECKER_VERSION, checkPictures } from './picture-check/check-pictures.js'
 import { indexInputs } from './picture-check/inputs-index.js'
+import { platformRefusal, withCmsLine } from '../lib/cms-line.js'
 import { picturePrompts } from './picture-prompts.js'
 
 export { BENCH_QUEUE }
@@ -155,6 +158,8 @@ async function prepare(deps, row) {
   let kit = openKitWithMap(row.kit?.ref, deps.index ? { index: deps.index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_PICTURES_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
+  const unplatformed = platformRefusal(kit, 'SITE_PICTURES')
+  if (unplatformed) return unplatformed
   const door = await doorOf(deps, row)
   if (!door.ok) return door
   const lookerDoor = await runLookerDoor({ ...deps, picker: door.door ?? null }, row.door?.looker)
@@ -228,6 +233,8 @@ async function prepare(deps, row) {
       prompts: row.prompts
     },
     altNotes: [],
+    // Without the writer's copy file the alts are compared by the site check (step 11), and the manifest says so.
+    altCheck: altCheckFor(row.copy?.alts ?? null),
     refusedPhotos: refused,
     // The picker's cost is the cost of the run's turns (one row per call), and its balance is read around the run.
     cost: { code: 0, iconRanking: iconsDone.cost },
@@ -238,11 +245,15 @@ async function prepare(deps, row) {
   const looker = createLooker({
     door: lookerDoor.door,
     snapshot: lookerDoor.snapshot,
-    prompt: { text: picturePrompts().looker, sha256: picturePrompts().roles.looker },
+    prompt: {
+      text: withCmsLine(picturePrompts().looker, kit.platform),
+      sha256: picturePrompts().roles.looker
+    },
     storeDir: store.dir,
     runId: row.id,
     idx,
     alts: row.copy?.alts ?? null,
+    altAsk: altAskFor({ plan: row.plan, kit: kit.doc }),
     fetchImpl: deps.fetchImpl
   })
   const prompts = picturePrompts()

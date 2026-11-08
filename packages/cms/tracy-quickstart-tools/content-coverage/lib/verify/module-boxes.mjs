@@ -4,10 +4,14 @@ import { wakeLazyContent } from '../render.mjs'
 // the same way the audit renders (same contexts, same lazy-content wake), so the boxes share its document coordinates.
 // A slot of module N only counts as located when its element sits inside Mod<N>. `containers` are the article / blog
 // item / contact boxes, used for entities that are not modules (the box holding the entity's own title).
+// A page that does not open or read is returned in `failures` (url, viewport, error), never only logged: its slots
+// cannot be located, so the measure that asked counts it as a failed page.
 
+/** @returns {Promise<{ boxes: Record<string, any>, failures: { url: string, viewport: string, error: string }[] }>} */
 export async function moduleBoxes({ chromium, openContext, findings }) {
   const browser = await chromium.launch()
   const out = {}
+  const failures = []
   try {
     for (const vp of ['desktop', 'phone']) {
       const ctx = await openContext(browser, vp)
@@ -40,7 +44,9 @@ export async function moduleBoxes({ chromium, openContext, findings }) {
           })
           ;(out[p.n] ??= {})[vp] = boxes
         } catch (e) {
-          console.error(`[modules] ${p.url} ${vp}: ${String(e.message).split('\n')[0]}`)
+          const error = String(e?.message ?? e).split('\n')[0]
+          failures.push({ url: p.url, viewport: vp, error })
+          console.error(`[modules] ${p.url} ${vp}: ${error}`)
         } finally {
           await page.close()
         }
@@ -50,5 +56,20 @@ export async function moduleBoxes({ chromium, openContext, findings }) {
   } finally {
     await browser.close()
   }
-  return out
+  return { boxes: out, failures }
+}
+
+/**
+ * The pages whose module boxes failed, added to the audit's failures (once per page, every failed viewport named),
+ * so the coverage file counts them under `pages.failed` and the policy holds Publish until a rerun reads them.
+ */
+export function addModuleBoxFailures(result, failures) {
+  const byUrl = new Map()
+  for (const f of failures ?? []) byUrl.set(f.url, [...(byUrl.get(f.url) ?? []), f])
+  for (const [url, fs] of byUrl)
+    result.failures.push({
+      url,
+      error: `module boxes not read (${fs.map((f) => `${f.viewport}: ${f.error}`).join('; ')})`
+    })
+  return result
 }
