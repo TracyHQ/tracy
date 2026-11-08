@@ -234,7 +234,7 @@ test('no header measured is said as null, never an empty header', () => {
 test('the coverage file carries the site pages and the header', () => {
   const contract = loadContract(contractDir(), SITE)
   const doc = buildCoverageFile({ result: auditResult(), contract, measuredAt: '2026-11-01T00:00:00.000Z' })
-  assert.equal(doc.tool.version, '1.7.0')
+  assert.equal(doc.tool.version, '1.8.0')
   assert.equal(doc.sitePages.length, 8)
   assert.equal(doc.header.menu.length, 6)
 })

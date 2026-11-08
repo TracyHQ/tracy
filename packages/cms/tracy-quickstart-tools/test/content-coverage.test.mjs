@@ -387,13 +387,43 @@ test('the coverage file names each page that failed to render, by path, never by
   const doc = buildCoverageFile({ result, contract, measuredAt: '2026-10-24T00:00:00.000Z' })
   assert.equal(doc.pages.failed, 2)
   assert.deepEqual(doc.pages.failures, [
-    { url: '/index.php?Itemid=909', mapPage: 'menuItem-909', status: 503 },
-    { url: '/blog/slow-page', error: 'Timeout 30000ms exceeded' }
+    { url: '/index.php?Itemid=909', code: 'page-not-rendered', mapPage: 'menuItem-909', status: 503 },
+    { url: '/blog/slow-page', code: 'page-not-rendered', error: 'Timeout 30000ms exceeded' }
   ])
   assert.equal(JSON.stringify(doc).includes(new URL(SITE).host), false)
   const clean = buildCoverageFile({ result: { ...result, failures: [] }, contract })
   assert.deepEqual(clean.pages.failures, [])
   assert.equal(coverageFileProblem(doc), null)
+})
+
+test('each failure of the coverage file names what failed by a code, so a dead link is never read as a page that did not render', () => {
+  const { contract, items } = audit([{ kind: 'text', value: 'Advanced Boxing' }])
+  const result = {
+    pages: [{ url: `${SITE}index.php?Itemid=101`, items }],
+    failures: [
+      {
+        url: `${SITE}pages/contact`,
+        origin: 'link',
+        status: 404,
+        error: 'dead link (404) shown on 2 page(s): /, /about'
+      },
+      {
+        url: `${SITE}tours/glacier-walk`,
+        origin: 'layout',
+        error: 'asks for layout ja_example:tour, the page serves the default'
+      },
+      { url: `${SITE}about`, error: 'module boxes not read (desktop: Timeout 30000ms exceeded)' },
+      { url: `${SITE}blog/slow-page`, origin: 'crawl', error: 'Timeout 30000ms exceeded' }
+    ],
+    capReached: false,
+    viewports: ['desktop'],
+    summary: { pages: 1, mappedPages: 1, unmappedPages: 0 }
+  }
+  const doc = buildCoverageFile({ result, contract })
+  assert.deepEqual(
+    doc.pages.failures.map((f) => f.code),
+    ['dead-link', 'layout-not-served', 'module-boxes-not-read', 'page-not-rendered']
+  )
 })
 
 test('configuration.php gives the visible site strings and never a secret', () => {

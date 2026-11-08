@@ -68,7 +68,7 @@ export function hygieneBlocks(finding, policy = COVERAGE_POLICY) {
 /**
  * @param {any} doc a coverage file `coverageFileProblem` accepts
  * @param {any} [policy]
- * @returns {{ holds: boolean, blocking: any[], accepted: number, byClass: Record<string, number>, lockedContent: number, incomplete: string | null, coverage: Record<string, number>, hygiene: any[], hygieneByKind: Record<string, number>, hygieneAccepted: number }}
+ * @returns {{ holds: boolean, blocking: any[], accepted: number, byClass: Record<string, number>, lockedContent: number, incomplete: string | null, failureCodes: Record<string, number>, coverage: Record<string, number>, hygiene: any[], hygieneByKind: Record<string, number>, hygieneAccepted: number }}
  */
 export function judgeCoverage(doc, policy = COVERAGE_POLICY) {
   const blocking = doc.holes.filter((h) => holeBlocks(h, policy))
@@ -88,9 +88,19 @@ export function judgeCoverage(doc, policy = COVERAGE_POLICY) {
   for (const h of hygiene) hygieneByKind[h.kind] = (hygieneByKind[h.kind] ?? 0) + 1
   const lockedContent = blocking.filter((h) => h.class === 'capture' && h.lock === 'locked').length
   const failed = Number(doc.pages?.failed ?? 0)
+  // Each failure's code (coverage-file.mjs failureCodeOf, tool 1.8.0): a file written before the codes counts none.
+  /** @type {Record<string, number>} */
+  const failureCodes = {}
+  for (const f of Array.isArray(doc.pages?.failures) ? doc.pages.failures : [])
+    if (f?.code) failureCodes[f.code] = (failureCodes[f.code] ?? 0) + 1
+  const coded = Object.entries(failureCodes)
+  const failedText =
+    coded.length && !(coded.length === 1 && failureCodes['page-not-rendered'])
+      ? `${failed} measure failure${failed === 1 ? '' : 's'}: ${coded.map(([c, n]) => `${c} ${n}`).join(', ')}`
+      : `${failed} page${failed === 1 ? '' : 's'} did not render`
   const incomplete =
     failed > Number(policy.maxFailedPages ?? 0)
-      ? `${failed} page${failed === 1 ? '' : 's'} did not render`
+      ? failedText
       : policy.capReachedHolds && doc.pages?.capReached === true
         ? 'the page cap cut the crawl'
         : null
@@ -104,6 +114,7 @@ export function judgeCoverage(doc, policy = COVERAGE_POLICY) {
     byClass,
     lockedContent,
     incomplete,
+    failureCodes,
     coverage: doc.coverage ?? {},
     hygiene,
     hygieneByKind,

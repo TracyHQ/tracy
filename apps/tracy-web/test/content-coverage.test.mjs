@@ -177,6 +177,24 @@ test('a failed page or a cut crawl is an incomplete measurement and holds', () =
   assert.equal(cut.holds, true)
 })
 
+test('an incomplete measurement names its failures by code, so the fix of each is found', () => {
+  const failures = [
+    { url: '/tours/glacier-walk', code: 'layout-not-served' },
+    { url: '/tours/fjord-day', code: 'layout-not-served' },
+    { url: '/pages/contact', code: 'dead-link', status: 404 }
+  ]
+  const coded = judgeCoverage(doc([], { pages: { audited: 9, failed: 3, failures, capReached: false } }))
+  assert.equal(coded.holds, true)
+  assert.equal(coded.incomplete, '3 measure failures: layout-not-served 2, dead-link 1')
+  assert.deepEqual(coded.failureCodes, { 'layout-not-served': 2, 'dead-link': 1 })
+  // A file written before the codes keeps its words.
+  const old = judgeCoverage(
+    doc([], { pages: { audited: 4, failed: 1, failures: [{ url: '/x' }], capReached: false } })
+  )
+  assert.equal(old.incomplete, '1 page did not render')
+  assert.deepEqual(old.failureCodes, {})
+})
+
 test('the reader: none, measured, stale when the map or lock changed, invalid when unreadable', () => {
   const { contracts: none } = profile(null)
   assert.equal(coverageOfContract([...none.values()][0]).state, 'none')

@@ -19,7 +19,9 @@ export const SCHEMA = 'tracy-content-coverage/v1'
 // 1.7.0 (04/11/2026): an all-numeric date a layout prints (06.09.2021) is core like a written one; label rules R4, R7 and
 //   R8 read cards (a mailto: link labelled by its email, info cards of different contact facts, names of two cards side
 //   by side).
-export const TOOL_VERSION = '1.7.0'
+// 1.8.0 (08/11/2026): each entry of pages.failures carries a `code` (dead-link, layout-not-served,
+//   module-boxes-not-read, page-not-rendered), so the reader names what failed instead of "pages did not render".
+export const TOOL_VERSION = '1.8.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */
@@ -233,6 +235,21 @@ function inlineMarkupOf(measured, previous, contract) {
 
 /** matched / (matched + every hole that needs a slot); locked design and core strings are not asked of a slot. */
 /** One entry per page that did not render: its path, and the map page, HTTP status or error when known. */
+/**
+ * What failed, as a code the readiness skill indexes (`joomla-template-readiness/references/fix-map.md`): a link a page
+ * renders that answers no page, an article page that does not serve the layout the article asks for, a page whose
+ * module boxes could not be read for the label judge, or a page that did not render at all.
+ * @param {{ origin?: string, error?: string }} f
+ */
+export function failureCodeOf(f) {
+  if (f.code) return String(f.code)
+  if (f.origin === 'link') return 'dead-link'
+  if (f.origin === 'layout') return 'layout-not-served'
+  // addModuleBoxFailures (verify/module-boxes.mjs) names no origin; its words are fixed there.
+  if (String(f.error ?? '').startsWith('module boxes not read')) return 'module-boxes-not-read'
+  return 'page-not-rendered'
+}
+
 function failuresOf(failures) {
   return (failures ?? []).map((f) => {
     let url = String(f.url ?? '')
@@ -244,6 +261,7 @@ function failuresOf(failures) {
     }
     return {
       url,
+      code: failureCodeOf(f),
       ...(f.mapPage ? { mapPage: f.mapPage } : {}),
       ...(f.status ? { status: f.status } : {}),
       ...(f.error ? { error: String(f.error).slice(0, 300) } : {})
