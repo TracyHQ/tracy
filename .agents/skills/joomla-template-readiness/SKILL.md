@@ -43,7 +43,9 @@ is the one judged. DEMO-1 and the preview door health are server facts, judged o
    Skip `kit-not-approved` and `kit-approval-stale`: the approval comes at green.
 2. Its fix is the piece's `fix` in the verdict JSON (`text`, and `command` or `skill` when one exists), from the one
    fix registry (`apps/tracy-web/src/lib/template-readiness/fixes.js`). Before running it, check
-   [`references/fix-map.md`](references/fix-map.md): a code listed there is a stop (section 5).
+   [`references/fix-map.md`](references/fix-map.md): a code listed there is a stop (section 5). A code a tool prints
+   on the way (an audit failure, a refusal, a gate line) is in its fault code index (section 2), which points to the
+   generic fix in [`references/faults.md`](references/faults.md).
 3. Run that section or command. Rebuilding the kit goes through [`references/kit-rebuild.md`](references/kit-rebuild.md)
    (a `build` wipes the five hand-declared hidden fields).
 4. Append one line to `$RUN/fix-log.md`: piece, code, what changed, where (template release, contract, kit, pin, tool).
@@ -89,9 +91,11 @@ section 2.
 more (exit 0), pin and release through `quickstart-contract` sections 8 and 9, write the changes note, open the PR with
 the fix log. The Cowork pin moves only to a plugin version already released with every door.
 
-**Before every push, run the slot roles gate on this machine**:
-`pnpm exec tsx scripts/check-all.ts --only slot-roles` (with the other contract gates). The verdict does not read it,
-and CI fails the whole build check on it. A group of kind `service` needs an `offering.name`, and label rule R4
+**After any change of slot roles or groups, and before every measure and every push, run the two static gates on
+this machine**: `node packages/cms/tracy-quickstart-tools/content-coverage/label-rules-check.mjs --contract <dir>`
+(rules R2 to R9 in seconds, no stand) and `pnpm exec tsx scripts/check-all.ts --only slot-roles` (with the other
+contract gates); [`references/faults.md`](references/faults.md) F8. The verdict reads neither,
+and CI fails the whole build check on the slot roles gate. A group of kind `service` needs an `offering.name`, and label rule R4
 needs one group per item of an indexed repeat. So the indexed feature lines of an offering (JA Voyara's "What's
 included" rows) take one `claim` group per line with role `package.feature_item`, the shape of JA Kinetic 1.0.11's
 feature rows: never one service group per line, never all lines in the offering's own group.
