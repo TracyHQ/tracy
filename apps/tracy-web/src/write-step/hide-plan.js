@@ -4,6 +4,7 @@
 // Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
 import { NEW_CONTRACT } from '../lib/new-contract-pointer.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { guardControlLabels } from './hide-control-labels.js'
 import { goneRowSlots, listRowCounts, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
 import { linkDoors } from './link-doors.js'
@@ -194,13 +195,16 @@ function carriedLink(slot, { doorOf, removal, removedAlready, gone, changes, hid
 
 /**
  * @param {{ plan: object, kit: object, owners: Map<string, object>, extras: object, reading: object,
- *   changes: Record<string, string>, cannotHide: string | null, rowsRemove?: boolean, last?: object }} input `cannotHide`: why
+ *   changes: Record<string, string>, cannotHide: string | null, rowsRemove?: boolean, last?: object,
+ *   heldWords?: Map<string, string> }} input `cannotHide`: why
  *   this plugin takes no hide order, or null when it does; `rowsRemove`: whether it has the door that takes a row or an element;
- *   `last`: the last report, whose hidden lines are off the site already
+ *   `last`: the last report, whose hidden lines are off the site already; `heldWords`: words a file had for a slot whose hide
+ *   won over them, by content map key (hide-control-labels.js)
  * @returns {{ orders: Map<string, object>, blocks: Map<string, string>, emptySlots: string[], removeSlots: string[],
  *   keepSlots: string[], rowRest: string[], rowLists: object[], strings: Record<string, string>, pages: object[], menu: Map<string, object>,
- *   noWayOut: { slot: string, reason: string }[] }} `orders`: by the line's slot, each with a `via`; `blocks`: block id to module
- *   key; `removeSlots`, `keepSlots`: what `rows.remove` is sent; `noWayOut`: what the plan hides and cannot take off
+ *   noWayOut: { slot: string, reason: string }[], restored: Record<string, string>, controls: Map<string, object> }} `orders`: by the line's slot, each with a `via`; `blocks`: block id to module
+ *   key; `removeSlots`, `keepSlots`: what `rows.remove` is sent; `noWayOut`: what the plan hides and cannot take off;
+ *   `restored`: label words written instead of a hide; `controls`: controls taken with their only label, by link id
  */
 export function hideOrders({
   plan,
@@ -211,7 +215,8 @@ export function hideOrders({
   changes,
   cannotHide,
   rowsRemove = false,
-  last = NO_LAST
+  last = NO_LAST,
+  heldWords = new Map()
 }) {
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const icons = iconsOf(kit)
@@ -300,6 +305,27 @@ export function hideOrders({
       failedAs(notEmptiable(key, held))
     }
   }
+  // The only label of a control that stays never leaves alone (hide-control-labels.js).
+  const guarded = guardControlLabels({
+    plan,
+    kit,
+    orders,
+    dropped: blocks,
+    doorOf,
+    onSite,
+    changes,
+    owners,
+    heldWords
+  })
+  const emptiedHere = new Set([
+    ...[...orders.values()].filter((o) => o.via === 'slot').map((o) => o.key),
+    ...[...guarded.controls.values()].flatMap((o) => o.empties)
+  ])
+  emptySlots.splice(
+    0,
+    emptySlots.length,
+    ...[...emptySlots, ...emptiedHere].filter((key) => emptiedHere.has(key))
+  )
   // A button leaves whole or not at all: words gone and an address left draw an empty button, and the other way a dead one.
   const buttons = new Map()
   for (const claim of owners.values())
@@ -351,6 +377,8 @@ export function hideOrders({
     strings,
     pages,
     menu,
-    noWayOut: noWayOutOf(orders, pages)
+    noWayOut: noWayOutOf(orders, pages),
+    restored: guarded.restored,
+    controls: guarded.controls
   }
 }

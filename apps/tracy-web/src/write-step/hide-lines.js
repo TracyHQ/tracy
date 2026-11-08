@@ -100,8 +100,20 @@ function carriedResult({ key, keys, holder }, { gone, removed, relinked, refused
   }
 }
 
+/** A label written with a file's words, since hiding it would leave its control with none (hide-control-labels.js). */
+function restoredResult({ key, value, reason }, { refused, written }) {
+  const base = { key, part: 'control-label' }
+  if (refused.has(key))
+    return {
+      ...base,
+      status: 'failed',
+      reason: `${reason}; the words were refused: ${refusalWords(refused.get(key))}`
+    }
+  return written.has(key) ? { ...base, status: 'written', ordered: value, reason } : null
+}
+
 /** What became of one hide claim, or null while nothing did, which the report reads as the run having ended first. */
-function claimResult(order, { blocks, words, gone, refused, settled, removed, relinked }) {
+function claimResult(order, { blocks, words, gone, refused, settled, removed, relinked, written }) {
   const { via, key } = order
   if (via === 'kept') {
     const { status, reason, key: heldKey, ordered, readFrom, part } = order.line
@@ -110,6 +122,7 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
   if (via === 'failed')
     return { status: 'failed', reason: order.reason, key, ...(order.part ? { part: order.part } : {}) }
   if (via === 'fixed') return fixedResult(order, words)
+  if (via === 'restored') return restoredResult(order, { refused, written })
   if (via === 'removed') return removedResult(order, removed)
   if (via === 'empty')
     return { status: 'hidden', key, reason: `${PLAN_HIDES}: it is already empty on the site` }
@@ -159,7 +172,8 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
 /**
  * @param {{ order: object, words: object, blocks: Map<string, true | string>, pages: Map<string, object>,
  *   cannotHide: string | null, emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object>,
- *   removed?: Map<string, true | string>, relinked?: Map<string, { address: string, refusal: object }> }} input
+ *   removed?: Map<string, true | string>, relinked?: Map<string, { address: string, refusal: object }>,
+ *   written?: Iterable<string> }} input `written`: the keys the contract call wrote
  * @returns {{ hides: Map<string, object>, lines: object[], removed: Map<string, true | string>, rows: object[],
  *   rowKeys: Set<string> }} `rows`: rows kept against the plan per list; `rowKeys`: the unclaimed slots of given-up rows
  */
@@ -173,9 +187,19 @@ export function hideLines({
   refused,
   settled,
   removed = new Map(),
-  relinked = new Map()
+  relinked = new Map(),
+  written = []
 }) {
-  const seen = { blocks, words, gone: new Set(emptied), refused, settled, removed, relinked }
+  const seen = {
+    blocks,
+    words,
+    gone: new Set(emptied),
+    refused,
+    settled,
+    removed,
+    relinked,
+    written: new Set(written)
+  }
   const hides = new Map()
   for (const [slot, claim] of order.orders) {
     const result = claimResult(claim, seen)
@@ -191,6 +215,20 @@ export function hideLines({
   })
   const lines = [...pages].map(([page, result]) => frameLine(page, 'page-drop', result))
   lines.push(...rowRestLines(order, removed))
+  // A control taken with its only label, which no plan line names (hide-control-labels.js).
+  for (const [link, taking] of order.controls ?? []) {
+    const result = claimResult(taking, seen)
+    const said = result?.status === 'hidden' ? { reason: taking.reason } : {}
+    lines.push(
+      frameLine(
+        link,
+        'control',
+        result
+          ? { ...result, ...said }
+          : { status: 'skipped', reason: 'the run ended before this control was hidden' }
+      )
+    )
+  }
   for (const [block, module] of order.blocks) {
     const done =
       cannotHide && blocks.get(module) !== true

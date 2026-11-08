@@ -186,6 +186,8 @@ export async function runWriteStep(input) {
   let fallbacks = new Map()
   let copyReturns = []
   let closing = []
+  // Words a file had for a slot whose hide won over them, by content map key (hide-control-labels.js).
+  const heldWords = new Map()
   // The plan the page create stage reads: without the pages the copy holds no words for.
   let creating = null
   const finish = (status, cause, written = [], refused = new Map()) => {
@@ -196,7 +198,7 @@ export async function runWriteStep(input) {
     report.unaddressable = unaddressableOf(unaddressable)
     let lines = []
     if (table) {
-      const hidden = hide?.results({ emptied, refused, settled, relinked })
+      const hidden = hide?.results({ emptied, refused, settled, relinked, written })
       lines = slotLines({
         owners: table.owners,
         // A slot of a row the plan gave up has its own line, as it left with its row.
@@ -246,7 +248,7 @@ export async function runWriteStep(input) {
     report.slots = against.slots
     // Rows kept against the plan, per list (hide-lines.js): what the site check's list-rows holds the printed list to.
     if (table && hide) {
-      const rows = hide.results({ emptied, refused, settled, relinked }).rows
+      const rows = hide.results({ emptied, refused, settled, relinked, written }).rows
       if (rows.length) report.rows = rows
     }
     report.counts = countsOf(report.slots)
@@ -443,6 +445,9 @@ export async function runWriteStep(input) {
     ])
     for (const loser of table.losers) {
       const values = valuesOf.get(loser)
+      // Words that lost to a hide stay at hand: a control's only label is written with them rather than hidden alone.
+      if (values && loser.kind === 'text' && table.owners.get(loser.slot)?.kind === 'hide')
+        heldWords.set(contentMapKey(loser.slot), values[contentMapKey(loser.slot)])
       // Two claims of one file share its value under one key: the winner's value stays.
       if (values && values !== valuesOf.get(table.owners.get(loser.slot)))
         delete values[contentMapKey(loser.slot)]
@@ -615,6 +620,7 @@ export async function runWriteStep(input) {
       contract,
       sleep,
       last,
+      heldWords,
       onNoWayOut: async (named) => {
         report.noWayOut = named
         await onNoWayOut(named)
@@ -624,6 +630,10 @@ export async function runWriteStep(input) {
   if (hiding.stop) return stopped(hiding.stop)
   hide = hiding
   mapping.emptySlots = hide.emptySlots
+  for (const [key, value] of Object.entries(hide.restored ?? {})) {
+    mapping.changes[key] = value
+    ordered[key] = value
+  }
   // The closing rule: a kept slot or frame that holds no customer content is not handed over with its demo (closing-ladder.js).
   const closed = closeDemoLeft({
     kit: kit.doc,

@@ -27,7 +27,7 @@ function settingsPart(extras, menu) {
 /**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, owners: Map<string, object>,
  *   extras: object, reading: object, changes: Record<string, string>, contract: string,
- *   sleep: (ms: number) => Promise<void>, last?: object,
+ *   sleep: (ms: number) => Promise<void>, last?: object, heldWords?: Map<string, string>,
  *   onNoWayOut?: (named: { slot: string, reason: string }[]) => Promise<void> }} input `onNoWayOut`: told before anything is written
  * @returns {Promise<{ stop?: object, reading?: object, emptySlots?: string[], settingsExtras?: object, held?: Map<string, object>,
  *   results?: (done: { emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object> }) =>
@@ -46,6 +46,7 @@ export async function runHideStage(input) {
     contract,
     sleep,
     last = NO_LAST,
+    heldWords = new Map(),
     onNoWayOut = async () => {}
   } = input
   const asksToHide = [...owners.values()].some((c) => c.kind === 'hide')
@@ -60,7 +61,8 @@ export async function runHideStage(input) {
     changes,
     cannotHide,
     rowsRemove: ops.rowsRemove,
-    last
+    last,
+    heldWords
   })
   await onNoWayOut(order.noWayOut)
   const total = Object.keys(changes).length + order.emptySlots.length
@@ -126,6 +128,8 @@ export async function runHideStage(input) {
   return {
     reading,
     emptySlots: order.emptySlots,
+    // Label words written instead of a hide that would leave a control with no words (hide-control-labels.js).
+    restored: order.restored,
     // The slots the hide stage takes out with their row, this run or an earlier one: the closing rule leaves them alone.
     takenSlots: [
       ...new Set([
