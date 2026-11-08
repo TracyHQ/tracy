@@ -106,17 +106,79 @@ export function servedPage(html) {
 const saidOf = (fault) =>
   typeof fault.measured === 'string' && fault.measured.trim() ? flat(fault.measured) : quotedWords(fault.seen)
 
+/** A simple selector as the host writes it (`a#id.first-class`), as its parts, or null. */
+const simpleSelector = (selector) => {
+  const m = /^([a-z][a-z0-9]*)(?:#([\w-]+))?(?:\.([\w-]+))?$/i.exec(String(selector ?? ''))
+  return m ? { tag: m[1].toLowerCase(), id: m[2] ?? null, cls: m[3] ?? null } : null
+}
+
+/** The nearest served block holding an element (`Mod<N>`, `acm-…-<N>`), or null. */
+function blockAround(el) {
+  for (let at = el.parentNode; at?.tagName; at = at.parentNode) if (servedNumberOf(at)) return at
+  return null
+}
+
 /**
- * The element a fault points at on its served page, or null. A fault whose slot names a block is looked for inside that
+ * The control an empty-controls fault names, on the whole page: the elements matching its selector (and its address, when
+ * the fault has one), the first with no words for a wordless button, else the first whose words are the fault's.
+ */
+function controlElement(body, fault) {
+  const want = simpleSelector(fault.selector)
+  if (!want || !body) return null
+  const all = []
+  const walk = (node) => {
+    for (const child of elements(node)) {
+      if (SKIPPED.has(child.tagName)) continue
+      const classes = (attrOf(child, 'class') ?? '').split(/\s+/)
+      if (
+        child.tagName === want.tag &&
+        (!want.id || attrOf(child, 'id') === want.id) &&
+        (!want.cls || classes.includes(want.cls)) &&
+        (fault.href == null || attrOf(child, 'href') === fault.href)
+      )
+        all.push(child)
+      walk(child)
+    }
+  }
+  walk(body)
+  const said = fault.wordless ? '' : saidOf(fault).toLowerCase()
+  return (
+    all.find((el) => (said ? flat(textOf(el)).toLowerCase().includes(said) : !flat(textOf(el)))) ??
+    all[0] ??
+    null
+  )
+}
+
+/** The element of a control fault, as the picker reports it: its block's id as the selector, else its own path. */
+function servedControlOf(body, fault) {
+  const el = controlElement(body, fault)
+  if (!el) return null
+  const block = blockAround(el)
+  const path = pathOf(el)
+  return {
+    selector: block ? `#${attrOf(block, 'id')}` : path,
+    path,
+    tag: el.tagName,
+    text: flat(textOf(el)).slice(0, MAX_TEXT),
+    marks: marksUp(el),
+    image: null
+  }
+}
+
+/**
+ * The element a fault points at on its served page, or null. A control fault (empty-controls) is looked for by the
+ * selector and address the host measured. A fault whose slot names a block is looked for inside that
  * block; one whose slot names no block (an article's picture) is looked for on the whole page by its words
  * or its picture's alt, and is found only when they are there. `path` is the element's own selector, `selector` the
  * block's (as the picker reports it) or, for an element in no block, its path.
  * @param {{ blocks: Map<string, object>, body: object | null }} page from servedPage
- * @param {{ slot?: string | null, block?: string | null, kind: string, measured?: unknown, seen?: unknown }} fault
+ * @param {{ slot?: string | null, block?: string | null, kind: string, measured?: unknown, seen?: unknown, group?: string,
+ *   selector?: string, href?: string | null, wordless?: boolean }} fault
  * @returns {{ selector: string, path: string, tag: string, text: string, marks: string[],
  *   image: { src: string, alt: string } | null } | null}
  */
 export function servedElementOf({ blocks, body }, fault) {
+  if (fault.group === 'empty-controls' && fault.selector) return servedControlOf(body, fault)
   const n = blockNumberOf(fault.slot) ?? blockNumberOf(fault.block)
   const block = n ? blocks.get(n) : null
   const root = block ?? (n ? null : body)

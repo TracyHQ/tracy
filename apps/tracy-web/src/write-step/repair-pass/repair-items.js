@@ -60,6 +60,9 @@ function whereOf(fault) {
     return ` Where: ${slot}${fault.block ? ` (block ${fault.block})` : ''}${inRecord}.`
   }
   if (fault.block) return ` Where: block ${fault.block}${inRecord}.`
+  // A control names no slot: the element the host measured, and where it leads.
+  if (fault.selector)
+    return ` Where: the element ${fault.selector}${fault.href ? ` that links to ${fault.href}` : ''} on this page.`
   if (quoted) return ` Where: the element showing "${quoted}" on this page.`
   return ' Where: on this page, as the note describes.'
 }
@@ -105,7 +108,7 @@ export function commentItem(fault, { url, element = null, located = null }) {
       url,
       selector: element?.selector ?? '',
       label: fault.slot ?? fault.block ?? fault.kind,
-      text: element ? element.text || (element.image ? '' : measured) : measured,
+      text: element ? element.text || (element.image || fault.selector ? '' : measured) : measured,
       marks: element?.marks ?? [],
       tag: element?.tag ?? '',
       image: element?.image ?? null

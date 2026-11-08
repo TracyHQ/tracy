@@ -24,6 +24,19 @@ export function sameFault(a, b) {
   return Boolean(qa && qb && (qa.includes(qb) || qb.includes(qa)))
 }
 
+/**
+ * The button an empty-controls failure names (#448): it has no slot and no words, only the selector the host measured and,
+ * for a button with no words, the address it leads to (`a.btn -> /contact`); a button going nowhere leads to `#`. Kept on
+ * the fault so 9b finds the element on the served page (repair-served-element.js).
+ */
+function controlOf(f) {
+  if (f.group !== 'empty-controls' || typeof f.selector !== 'string' || !f.selector) return {}
+  const arrow = typeof f.measured === 'string' ? f.measured.split(' -> ') : []
+  const led = arrow.length === 2 && arrow[0] === f.selector ? arrow[1].trim() : null
+  const href = led && led !== '(no address)' ? led : /goes nowhere/.test(f.reason ?? '') ? '#' : null
+  return { selector: f.selector, href, wordless: led !== null }
+}
+
 /** A blocking site check failure as a fault. */
 const fromFailure = (f) => ({
   source: 'site-check',
@@ -34,7 +47,8 @@ const fromFailure = (f) => ({
   kind: kindOfFailure(f),
   width: f.width ?? null,
   measured: f.measured ?? null,
-  seen: f.reason ?? null
+  seen: f.reason ?? null,
+  ...controlOf(f)
 })
 
 /** Every blocking failure of a site check, named by its group. */
