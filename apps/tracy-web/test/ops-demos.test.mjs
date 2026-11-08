@@ -1322,6 +1322,18 @@ test('a failed provision says the line it died on, not only "provision"', async 
     failureReason({ output: fatal }) ?? '',
     /^PHP Fatal error: {2}Uncaught RuntimeException: Cowork token probe failed/
   )
+  // The profile fetch names its own reason; the shell's "not on disk" line after it says only that
+  // it failed (JA Voyara 1.0.12 on /ops, 08/11/2026: the reason was in the log, not on the screen).
+  const profile = [
+    '==> installing the Cowork component this release carries',
+    '!! contract-fetch: profile wren-example/j6/1.0.0 could not be put on disk: fetch failed: download failed: The requested URL returned error: 504',
+    '!! contract profile wren-example/j6/1.0.0: not on disk \u2014 the site cannot be bound to it',
+    '[stage]    41s  +2s    wren-example-joomla.tracy.site'
+  ].join('\n')
+  assert.equal(
+    failureReason({ output: profile }),
+    'contract-fetch: profile wren-example/j6/1.0.0 could not be put on disk: fetch failed: download failed: The requested URL returned error: 504'
+  )
   // A thrown error is its own reason; a pointer to a log file on the host is not one.
   assert.equal(failureReason({ detail: 'spawn bash ENOENT' }), 'spawn bash ENOENT')
   assert.equal(failureReason({ detail: 'see /var/lib/tracy-host/logs/provision-x.log', output: '' }), null)

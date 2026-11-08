@@ -44,7 +44,7 @@ const shell = (body, mode = 'ok') => {
       docker() {
         printf '%s\\n' "$*" >> "$FAKE_DIR/docker.log"
         cat > "$FAKE_DIR/stdin"
-        [ "$FAKE_MODE" = ok ] || { echo '!! contract profile ja-fresco/j6/1.0.4 could not be put on disk: fetch failed: HTTP 404' >&2; return 1; }
+        [ "$FAKE_MODE" = ok ] || { echo '!! contract-fetch: profile ja-fresco/j6/1.0.4 could not be put on disk: fetch failed: HTTP 404' >&2; return 1; }
       }
       . "$JOOMLA_SH"
       ${body}
@@ -148,7 +148,7 @@ const FAKE_FETCHER = String.raw`<?php
 final class ContractFetch {
   public const UNKNOWN = '';
   private string $lib;
-  public function __construct(string $lib, ?string $release) { $this->lib = $lib; file_put_contents($lib . '/release.seen', var_export($release, true)); }
+  public function __construct(string $lib, ?string $release, array $curlOptions = [], ?callable $download = null) { $this->lib = $lib; file_put_contents($lib . '/release.seen', var_export($release, true)); file_put_contents($lib . '/download.seen', is_string($download) ? $download : var_export($download, true)); }
   public static function releaseOf(?string $version): ?string { return $version === null ? null : 'R/joomla-v' . $version . '/'; }
   public function directory(string $id): string { return $this->lib . '/contracts/' . $id; }
   public function ensure(string $id): ?string {
@@ -197,6 +197,7 @@ const fetchCase = ({
       'dirMode' => is_file($manifest) ? sprintf('%o', fileperms(dirname($manifest)) & 0777) : null,
       'marker' => is_file($lib . '/contracts/ja-fresco/j6/1.0.4.fetch-failed'),
       'release' => is_file($lib . '/release.seen') ? file_get_contents($lib . '/release.seen') : null,
+      'download' => is_file($lib . '/download.seen') ? file_get_contents($lib . '/download.seen') : null,
     ];
     exec('rm -rf ' . escapeshellarg($root));
     echo json_encode($out);
@@ -280,5 +281,116 @@ test('read from stdin the way provision runs it, a refusal is one `!!` line and 
   // (exit 255, no reason) the first time this ran against the real component.
   const [r] = php.run([{ args: [], input: FETCH_SRC, env: { TRACY_CONTRACT_ID: 'ja-fresco/j6' } }])
   assert.equal(r.status, 1, r.stderr)
-  assert.equal(r.stderr, '!! contract profile ja-fresco/j6 could not be put on disk: not a profile id\n')
+  assert.equal(
+    r.stderr,
+    '!! contract-fetch: profile ja-fresco/j6 could not be put on disk: not a profile id\n'
+  )
+})
+
+// ── The download the provisioner hands ContractFetch: a second road through the GitHub API ────
+//
+// Measured 08/11/2026: github.com's release download route answered HTTP 504 for whole Claude
+// Cowork releases while api.github.com served the same assets. quickstart.py fell back (#491) and
+// the demo prefetch passed; the profile fetch, on the component's plain-URL downloader, did not,
+// and the JA Voyara 1.0.12 demo update died at "contract profile ...: not on disk".
+
+test('the provisioner hands ContractFetch its own downloader', { skip: PHP_SKIP }, () => {
+  assert.equal(fetchCase().download, 'tracy_contract_download')
+})
+
+const PLAIN =
+  'https://github.com/Example-Org/example-plugin/releases/download/joomla-v9.9.9/wren-example--j6--1.0.0.zip'
+const API_ASSET = 'https://api.github.com/repos/Example-Org/example-plugin/releases/assets/4242'
+
+/** Runs `tracy_contract_download` with a stand-in toFile (answers in order) and API, and what each saw. */
+const downloadCase = ({ answers, release }) => {
+  const code = `
+    putenv('TRACY_CONTRACT_FETCH_LIB_ONLY=1');
+    eval('?>' . getenv('SRC'));
+    $answers = json_decode(getenv('ANSWERS'), true);
+    $calls = [];
+    $asked = [];
+    $toFile = function (string $u, string $t, int $b, string $s, array $curl) use (&$answers, &$calls): array {
+      $calls[] = ['url' => $u, 'bytes' => $b, 'sha256' => $s, 'headers' => array_values($curl)[0] ?? []];
+      return array_shift($answers);
+    };
+    $get = function (string $u) use (&$asked): ?array { $asked[] = $u; return json_decode(getenv('RELEASE'), true); };
+    $got = tracy_contract_download(getenv('URL'), '/nowhere', 835842, str_repeat('a', 64), $toFile, $get);
+    echo json_encode(['got' => $got, 'calls' => $calls, 'asked' => $asked]);
+  `
+  const [r] = php.run([
+    {
+      args: ['-r', code],
+      env: {
+        SRC: FETCH_SRC,
+        URL: PLAIN,
+        ANSWERS: JSON.stringify(answers),
+        RELEASE: JSON.stringify(release ?? null)
+      }
+    }
+  ])
+  assert.equal(r.status, 0, `php failed: ${r.stderr}`)
+  return JSON.parse(r.stdout)
+}
+
+const RELEASE = {
+  assets: [
+    { name: 'other.zip', url: 'https://api.github.com/repos/Example-Org/example-plugin/releases/assets/1' },
+    { name: 'wren-example--j6--1.0.0.zip', url: API_ASSET }
+  ]
+}
+
+test('a plain release address that fails is fetched once more through the GitHub API asset', {
+  skip: PHP_SKIP
+}, () => {
+  const out = downloadCase({
+    answers: [
+      { ok: false, error: 'download failed: The requested URL returned error: 504' },
+      { ok: true, error: null }
+    ],
+    release: RELEASE
+  })
+  assert.equal(out.got.ok, true, JSON.stringify(out))
+  assert.deepEqual(out.asked, [
+    'https://api.github.com/repos/Example-Org/example-plugin/releases/tags/joomla-v9.9.9'
+  ])
+  assert.deepEqual(
+    out.calls.map((c) => c.url),
+    [PLAIN, API_ASSET]
+  )
+  assert.deepEqual(out.calls[1].headers, ['Accept: application/octet-stream'])
+  // The same size and sha256 checks ride on both roads: the index stays the only thing trusted.
+  assert.deepEqual(
+    out.calls.map((c) => [c.bytes, c.sha256]),
+    [
+      [835842, 'a'.repeat(64)],
+      [835842, 'a'.repeat(64)]
+    ]
+  )
+})
+
+test('a plain download that works asks no API; one the API cannot place keeps its first reason', {
+  skip: PHP_SKIP
+}, () => {
+  const fine = downloadCase({ answers: [{ ok: true, error: null }], release: RELEASE })
+  assert.equal(fine.got.ok, true)
+  assert.deepEqual(fine.asked, [])
+  const missing = downloadCase({
+    answers: [{ ok: false, error: 'download failed: The requested URL returned error: 504' }],
+    release: { assets: [{ name: 'other.zip', url: API_ASSET }] }
+  })
+  assert.deepEqual(missing.got, {
+    ok: false,
+    error: 'download failed: The requested URL returned error: 504'
+  })
+  assert.equal(missing.calls.length, 1)
+  const both = downloadCase({
+    answers: [
+      { ok: false, error: 'download failed: The requested URL returned error: 504' },
+      { ok: false, error: 'sha256 x is not the announced y' }
+    ],
+    release: RELEASE
+  })
+  assert.equal(both.got.ok, false)
+  assert.match(both.got.error, /504; through the GitHub API: sha256 x is not the announced y$/)
 })
