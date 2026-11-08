@@ -5,7 +5,9 @@ import { STEP_CHAIN_TEMPLATES, STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../
 const on = { STEP_CHAIN_ENABLED: '1' }
 
 test('the contract names the chain workflow and the first template', () => {
+  // test-quality: contract the workflow marker is part of the POST /api/sites contract
   assert.equal(STEP_CHAIN_WORKFLOW, 'step-chain/1')
+  // test-quality: contract only ja-boxing/j6 is on the chain until dev acceptance passes
   assert.deepEqual(STEP_CHAIN_TEMPLATES, ['ja-boxing/j6'])
 })
 

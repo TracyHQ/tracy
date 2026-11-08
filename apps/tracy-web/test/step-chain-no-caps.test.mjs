@@ -22,7 +22,9 @@ import { REPAIR_LIMITS, repairClock } from '../src/write-step/repair-pass/repair
 const MIN = 60_000
 
 test('the frame keeps its 25 minute run cut for every other engine, the chain has the 2 hour deadline', () => {
+  // test-quality: contract the frame keeps its 25 minute run cut for every other engine
   assert.equal(DEFAULT_LIMITS.runMs, 25 * MIN)
+  // test-quality: contract the chain deadline is 2 hours, by the owner's decision
   assert.equal(STEP_CHAIN_DEADLINE_MS, 120 * MIN)
   assert.ok(STEP_CHAIN_LIMITS.runMs > STEP_CHAIN_DEADLINE_MS)
   assert.ok(STEP_CHAIN_LIMITS.applyMs > DEFAULT_LIMITS.applyMs)
@@ -72,13 +74,16 @@ test('step 9b keeps its windows by default; in a chain build it runs to the dead
     at = 90 * MIN
     assert.equal(clock.stopped(), stoppedAt90)
   }
+  // test-quality: contract the default repair window stops new work at 10 minutes and returns by 12
   assert.equal(REPAIR_LIMITS.stopNewWorkMs, 10 * MIN)
   assert.equal(REPAIR_LIMITS.returnByMs, 12 * MIN)
+  // test-quality: contract the chain hands over 15 minutes after the deadline
   assert.equal(STEP_CHAIN_HANDOVER_MS, 15 * MIN)
   // Starting at 30 minutes: new work until the 2 hour mark, back by 15 minutes after it.
   assert.deepEqual(chainRepairLimits(30 * MIN), { stopNewWorkMs: 90 * MIN, returnByMs: 105 * MIN })
   // Starting after the deadline: no new 9b work at all, only the short bounded window.
   assert.deepEqual(chainRepairLimits(130 * MIN), { stopNewWorkMs: 0, returnByMs: 15 * MIN })
+  // test-quality: contract the chain run cut is the deadline plus the hand-over
   assert.equal(STEP_CHAIN_LIMITS.runMs, 135 * MIN)
 })
 

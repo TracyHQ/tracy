@@ -31888,6 +31888,22 @@
           "x-internal": true
         }
       },
+      "/api/ops/wo/chain-builds": {
+        "get": {
+          "operationId": "get_api_ops_wo_chain_builds",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
       "/api/ops/wo/demos/summary": {
         "get": {
           "operationId": "get_api_ops_wo_demos_summary",
