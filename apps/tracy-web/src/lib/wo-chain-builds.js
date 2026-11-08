@@ -47,14 +47,14 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       address: row.label && config.siteDomain ? bornSiteAddress(row.label, config) : null,
       template: chainTemplateOf(row.quickstart) || null,
       startedAt: new Date(row.created_at).toISOString(),
-      totalMinutes: number(chain.totalMinutes),
-      totalUsd: number(chain.totalUsd),
+      totalMinutes: finiteOrZero(chain.totalMinutes),
+      totalUsd: finiteOrZero(chain.totalUsd),
       ending: chain.ending === 'complete' ? 'complete' : 'soft-failure',
       failedStep: typeof chain.failedStep === 'string' ? chain.failedStep : null,
       steps: (Array.isArray(chain.steps) ? chain.steps : []).map((s) => ({
         step: String(s.step),
-        minutes: number(s.minutes),
-        usd: number(s.usd),
+        minutes: finiteOrZero(s.minutes),
+        usd: finiteOrZero(s.usd),
         outcome: String(s.outcome ?? ''),
         error: typeof s.error === 'string' ? s.error : null
       })),
