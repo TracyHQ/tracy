@@ -1,10 +1,11 @@
 // The write step (ADR 0044, step 9): frozen files in, one site written, a write report out, with no model. It checks the
-// files and builds the owner table before anything is written, so a bad file or a dispute leaves the site untouched.
+// files and builds the owner table before anything is written, so a bad file leaves the site untouched.
 //
 // Only what breaks the whole run stops it (ADR 0044, decision 26): a file that is not JSON or not the shape its step writes,
 // files made on another kit or contract, a file outside its folder or not matching its hash, a site that is not ready or answers
-// another contract, and a dispute. An item with nothing to write to (a slot the kit or the site does not have, a picture frame
-// with no slot) is left out with a `refused` line naming its step (`unaddressable`), and the rest is written. What the look guard
+// another contract. A dispute on a slot is settled on that slot (owner-table.js). An item with nothing to write to (a slot the
+// kit or the site does not have, a picture frame with no slot, a page to create with no words, an accent that cannot be built)
+// is left out with a `refused` line naming its step (`unaddressable`), and the rest is written. What the look guard
 // finds on a value is written all the same and kept in `report.guard.findings`. The site check blocks on both
 // (site-check/write-findings.js).
 //
@@ -70,11 +71,8 @@ import { doorCall } from './settings-door.js'
 /** What one contract call takes (the seeder's and the plugin's own limits); more is refused whole, so it is said first. */
 const MAX_SLOTS = 1500
 const MAX_ENTITIES = 300
-const NAMED = 20
 
 const sleepFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-const named = (list) =>
-  list.length > NAMED ? `${list.slice(0, NAMED).join(', ')} and ${list.length - NAMED} more` : list.join(', ')
 const entityOf = (key) => (key.lastIndexOf('.') > 0 ? key.slice(0, key.lastIndexOf('.')) : key)
 
 /** Where a copy problem is about the whole file rather than one entry of it (site-copy-view.js). */
@@ -186,6 +184,8 @@ export async function runWriteStep(input) {
   let fallbacks = new Map()
   let copyReturns = []
   let closing = []
+  // The plan the page create stage reads: without the pages the copy holds no words for.
+  let creating = null
   const finish = (status, cause, written = [], refused = new Map()) => {
     report.status = status
     report.cause = cause
@@ -330,14 +330,28 @@ export async function runWriteStep(input) {
       contentMap
     })
     extras = exported.extras
-    const wordless = pagesWithoutCopy(plan, extras.pages)
-    if (wordless.length)
-      return {
-        stop: {
-          code: 'PAGE_WITHOUT_COPY',
-          reason: `The plan creates these pages and the copy holds no words for them: ${named(wordless)}.`
+    // A page the plan creates with no words in the copy is not created, and said once on step 6; every other page is written.
+    const wordless = new Set(pagesWithoutCopy(plan, extras.pages))
+    leaveOut(
+      [...wordless].map((page) => ({
+        slot: page,
+        key: null,
+        owner: 'writer',
+        step: 6,
+        reason: 'copy: the plan creates this page and the copy holds no words for it, so it was not created'
+      }))
+    )
+    creating = wordless.size
+      ? {
+          ...plan,
+          site: {
+            ...plan.site,
+            legalPages: plan.site.legalPages.filter(
+              (page) => !wordless.has(page?.id ?? `legal:${page?.kind}`)
+            )
+          }
         }
-      }
+      : plan
     const index = indexInputs({ plan, kit: kit.doc, brief, contentMap: contentMap ?? undefined })
     // A copy slot the kit does not have has nothing to write to: it is left out and said as refused, and the rest is written.
     const known = kitSlotIds(kit.doc)
@@ -392,10 +406,11 @@ export async function runWriteStep(input) {
     pictureFiles = read.values.pictures?.mapping?.changes ?? {}
     // The slot prints only as its kept picture's alt, so a plan's hide of it hides nothing: the alt stands.
     const altSlots = new Set(alts.claims.map((claim) => claim.slot))
+    const fromCopy = copyClaims(view.slots, read.inputs.copy.file)
     const filing = [
       ...brand.claims,
       ...pictures.claims,
-      ...copyClaims(view.slots, read.inputs.copy.file),
+      ...fromCopy,
       ...alts.claims,
       ...fromPlan.filter((claim) => !altSlots.has(claim.slot))
     ]
@@ -403,30 +418,37 @@ export async function runWriteStep(input) {
     for (const [slot, source] of buttons.twins)
       exported.mapping.changes[contentMapKey(slot)] = exported.mapping.changes[contentMapKey(source)]
     const speaking = [...filing, ...buttons.claims]
-    table = ownerTable([
-      ...speaking,
-      ...storedDemoClaims({
-        plan,
-        kit: kit.doc,
-        contentMap,
-        filled: new Set(speaking.map((claim) => claim.slot)),
-        file: kit.ref
-      })
+    table = ownerTable(
+      [
+        ...speaking,
+        ...storedDemoClaims({
+          plan,
+          kit: kit.doc,
+          contentMap,
+          filled: new Set(speaking.map((claim) => claim.slot)),
+          file: kit.ref
+        })
+      ],
+      { kit: kit.doc }
+    )
+    // A dispute is settled on its slot (owner-table.js): a claim that lost is not written, and the rest of the run goes on.
+    const valuesOf = new Map([
+      ...brand.claims.map((claim) => [claim, brand.changes]),
+      ...pictures.claims.map((claim) => [claim, pictures.changes]),
+      ...fromCopy.map((claim) => [claim, exported.mapping.changes]),
+      ...alts.claims.map((claim) => [claim, alts.changes])
     ])
+    for (const loser of table.losers) {
+      const values = valuesOf.get(loser)
+      // Two claims of one file share its value under one key: the winner's value stays.
+      if (values && values !== valuesOf.get(table.owners.get(loser.slot)))
+        delete values[contentMapKey(loser.slot)]
+    }
     extras = withEveryMenuHide({ extras, owners: table.owners, contentMap })
     guard.know({ owners: table.owners, routes: brand.routes ?? null, copy, brief })
     report.keptPages = keptPagesOf(plan, kit.doc)
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
-    if (table.disputes.length)
-      return {
-        stop: {
-          code: 'SLOT_DISPUTE',
-          reason: table.disputes
-            .map((d) => `${d.slot}: ${d.claims.map((c) => `${c.file} (${c.owner})`).join(' against ')}`)
-            .join('; ')
-        }
-      }
     const { changes, ...found } = routeChanges(exported.mapping.changes, kit.doc, view.slots)
     routes = found
     const spaced = keepSpaceAround(changes, contentMap)
@@ -511,7 +533,7 @@ export async function runWriteStep(input) {
     door,
     siteKey,
     kit: kit.doc,
-    plan,
+    plan: creating,
     owners: table.owners,
     extras,
     last,

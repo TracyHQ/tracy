@@ -3,7 +3,8 @@
 // brand file) joins by adding a function that lists its claims, with nothing here changed.
 //
 // A claim is { slot, owner, file, kind, content }. Different content on one slot is a dispute, whichever files it came
-// from; identical repeats are one owner reaching the slot twice and are not.
+// from; identical repeats are one owner reaching the slot twice and are not. A dispute is settled on its slot, never by
+// stopping the run (ADR 0044, decision 3 as amended 2026-11-08).
 
 /** The site copy's claims: every slot it fills. `owner` is the entry's own ("writer" or "plan-label"). */
 export const copyClaims = (slots, file) =>
@@ -108,29 +109,88 @@ export function planClaims(
   return claims
 }
 
+// Who wins a disputed slot (ADR 0044 decisions 3 and 26, amended 2026-11-08): the plan first, then the brand, the pictures, and
+// every other file in the order it claimed. A claim wins only when it fits the slot's kind in the kit.
+const RANK = { plan: 0, brand: 1, picture: 2 }
+const rankOf = (claim) => RANK[claim.owner] ?? 3
+const TEXT_TYPES = new Set(['text', 'url'])
+const IMAGE_KINDS = new Set(['image', 'painted'])
+
+/** The kit's slot types and link ids, so a claim can be held to the slot it lands on. */
+function slotKinds(kit) {
+  const types = new Map()
+  const links = new Set()
+  for (const block of arr(kit?.blocks)) {
+    for (const l of arr(block?.links)) if (typeof l?.id === 'string') links.add(l.id)
+    const lists = arr(block?.lists)
+    for (const s of [
+      ...arr(block?.slots),
+      ...lists.flatMap((l) => [...arr(l?.rowSlots), ...arr(l?.rows).flatMap((r) => arr(r?.slots))])
+    ])
+      if (typeof s?.id === 'string' && typeof s.type === 'string' && !types.has(s.id)) types.set(s.id, s.type)
+  }
+  return { types, links, known: Boolean(kit) }
+}
+
+/** Whether a claim fits its slot: a link needs a kit link, words a text or url slot, a picture an image slot. */
+function fits(claim, kinds) {
+  if (!kinds.known || claim.kind === 'hide') return true
+  if (claim.kind === 'link') return kinds.links.has(claim.slot) || kinds.types.get(claim.slot) === 'url'
+  const type = kinds.types.get(claim.slot)
+  if (!type) return true
+  if (claim.kind === 'text') return TEXT_TYPES.has(type)
+  if (IMAGE_KINDS.has(claim.kind)) return type === 'image'
+  return true
+}
+
+const said = ({ owner, file, kind, content }) => ({ owner, file, kind, content })
+
 /**
+ * The owner of every slot. A dispute (two claims with different content on one slot) never stops the run: it is settled on
+ * that slot alone. The winner is the first claim, by RANK, that fits the slot's kind in the kit; every other claim loses and
+ * is not written. When no claim fits, the slot has no owner, so the closing ladder empties it or reports its demo remains.
  * @param {object[]} claims
- * @returns {{ owners: Map<string, object>, disputes: { slot: string, claims: object[] }[] }} `owners`: the first claim of
- *   each slot; `disputes`: each slot with different content, with one claim per content
+ * @param {{ kit?: object | null }} [options] the kit, to hold each claim to its slot's kind (without it every claim fits)
+ * @returns {{ owners: Map<string, object>, disputes: { slot: string, claims: object[], settled: object | null, reason: string }[],
+ *   losers: object[] }} `owners`: each slot's winning claim; `disputes`: each slot with different content, with one claim per
+ *   content and how it was settled; `losers`: the claims that lost, as given, so their values are taken out of the write
  */
-export function ownerTable(claims) {
+export function ownerTable(claims, { kit = null } = {}) {
   const bySlot = new Map()
   for (const claim of claims) {
     const list = bySlot.get(claim.slot) ?? []
     if (!list.some((c) => c.content === claim.content)) list.push(claim)
     bySlot.set(claim.slot, list)
   }
+  const kinds = slotKinds(kit)
   const owners = new Map()
   const disputes = []
+  const losers = []
   for (const [slot, list] of bySlot) {
-    owners.set(slot, list[0])
-    if (list.length > 1)
-      disputes.push({
-        slot,
-        claims: list.map(({ owner, file, kind, content }) => ({ owner, file, kind, content }))
-      })
+    if (list.length === 1) {
+      owners.set(slot, list[0])
+      continue
+    }
+    const ranked = list
+      .map((claim, at) => ({ claim, at }))
+      .sort((a, b) => rankOf(a.claim) - rankOf(b.claim) || a.at - b.at)
+    const winner = ranked.find(({ claim }) => fits(claim, kinds))?.claim ?? null
+    if (winner) owners.set(slot, winner)
+    const lost = claims.filter((c) => c.slot === slot && c.content !== winner?.content)
+    losers.push(...lost)
+    disputes.push({
+      slot,
+      claims: list.map(said),
+      settled: winner ? said(winner) : null,
+      reason: winner
+        ? `${winner.file} (${winner.owner}) wins: ${winner.owner === 'plan' ? 'the plan comes first' : 'the first claim that fits the slot'}; ${list
+            .filter((c) => c !== winner)
+            .map((c) => `${c.file} (${c.owner})`)
+            .join(', ')} not written`
+        : 'no claim fits the slot, so it has no owner and the closing ladder takes it'
+    })
   }
-  return { owners, disputes }
+  return { owners, disputes, losers }
 }
 
 /** Every slot of the kit's kept blocks that no file claims: it still holds demo content unless something removes it. */

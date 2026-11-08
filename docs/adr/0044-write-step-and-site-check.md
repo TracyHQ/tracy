@@ -46,9 +46,22 @@ in a module it shared with the brand colours.
 
 Before any write, code builds the owner table from the three files and the plan. The plan owns link targets and hide
 decisions; its labels already arrive through the site copy as `owner: "plan-label"`. Two owners with different content
-stop the run with nothing written, and the report names the slot and both files. Identical repeats are not a dispute.
+are a dispute, settled on that slot alone (amended 2026-11-08, see below); the report names the slot and both files.
+Identical repeats are not a dispute.
 One owner reaching a slot by two paths is not a dispute either: the body background frames go through the site
 setting. A slot in a kept block with no owner is reported and does not block, since it may not show on the page.
+
+Amended 2026-11-08, owner's decision (#488). A real run stopped with nothing written over one slot: the JA Boxing footer social
+link, which the plan claimed as a link to the brief's profile and the writer filled with the profile address as text. The site
+kept the whole template demo. A dispute now never stops the run (`write-step/owner-table.js` `ownerTable`):
+
+- the winner is the first claim that fits the slot's kind in the kit, in this order: the plan, the brand, the pictures, then
+  every other file in the order it claimed. A link fits a kit link or a url slot, words a text or url slot, a picture an image
+  slot, a hide any slot;
+- every losing claim is not written, and the rest of the run goes on;
+- when no claim fits, the slot has no owner, so the closing ladder (decision 31) empties it, or its line says the demo remains;
+- each dispute stays in `report.disputes` with `settled` (the winning claim, or null) and `reason`, and the site check's
+  `slot-disputes` group blocks on each, on the step whose claim lost.
 
 ### 4. Write order
 
@@ -372,7 +385,15 @@ The run still stops, with nothing written, only when the whole run cannot be tru
 - a file the inputs name that is outside its folder, cannot be read, is not its sha256, is not named by its sha256 under
   `images/tracy-content/`, or is over the plugin's upload limit;
 - a site that does not answer `inspect`, answers another contract, or takes more slots than one contract call holds;
-- two owners disputing one slot (decision 3), a rewrite that needs a new site (decision 6), and a door that throws.
+- a rewrite that needs a new site (decision 6), and a door that throws.
+
+Amended 2026-11-08 (#488): three more one-item stops are now per item. A slot dispute is settled on its slot (decision 3). A page
+the plan creates that the copy holds no words for (`PAGE_WITHOUT_COPY`) is not created and is said once on step 6 in
+`report.unaddressable`; every other page is written. An accent the brand stage cannot build or place (`BAD_ACCENT`,
+`TEMPLATE_CSS_UNREADABLE`, a module with no `tracy-ds-slot` mark, a slot contract the server does not have, a whole design-system
+style with no stylesheets to build from) is left out and said once on step 2: the template keeps its own accent colour, and the
+name, the logos and the rest of the brand are written. A failed item never leaves demo words or pictures: only a slot the
+template cannot empty may keep them, and its line says the demo remains, which blocks.
 
 These are kept because each says the files or the site are not what the run believes, so no item of it can be trusted, and
 because a second run with the same files must still write nothing.

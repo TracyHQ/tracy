@@ -246,8 +246,9 @@ test('warnings alone never turn the check red, and are counted', async () => {
     ['logo-readable', 'broken-sentence']
   )
   assert.ok(check.groups.every((g) => g.status !== 'red'))
-  // 14, not 13: emphasis-codes-left (card N) finds no emphasis codes written into an HTML slot here, so it is not applicable (decision 27).
-  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 2, notApplicable: 14 })
+  // 15: emphasis-codes-left (card N) finds no emphasis codes written into an HTML slot here, and slot-disputes no dispute, so both
+  // are not applicable (decision 27).
+  assert.deepEqual(check.counts, { block: 0, warn: 1, unmeasured: 2, notApplicable: 15 })
 })
 
 test('when the host answers no page measures, the groups that need them are unmeasured and dead pages are still found', async () => {
