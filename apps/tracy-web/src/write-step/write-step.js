@@ -36,7 +36,7 @@ import { goneRowSlots } from './hide-rows.js'
 import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
-import { routeChanges } from './kit-slot-routes.js'
+import { iconLinkLines, iconsOf, linkIconChanges, routeChanges } from './kit-slot-routes.js'
 import { closeForms } from './form-close.js'
 import { settleDialledPhones } from './dialled-phones.js'
 import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
@@ -50,7 +50,7 @@ import { lookGuard } from './look-guard.js'
 import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
 import { kitSlotIds } from './kit-slot-ids.js'
-import { withEveryMenuHide } from './menu-hides.js'
+import { strandMenuItems, withEveryMenuHide } from './menu-hides.js'
 import { prepareLinks } from './link-stage.js'
 import { planLinkTable } from './plan-link-table.js'
 import { createPages, pagesWithoutCopy } from './page-create-stage.js'
@@ -168,6 +168,8 @@ export async function runWriteStep(input) {
   let brand = { active: false, lines: () => [] }
   let sent = {}
   let settled = new Map()
+  let strandedLabels = new Map()
+  let linkIcons = []
   let pictures = { active: false, lines: () => [] }
   let hide = null
   let emptied = []
@@ -213,7 +215,8 @@ export async function runWriteStep(input) {
           ...settingLines,
           ...shareLines,
           ...pageRouteLines(),
-          ...(renamedLinks?.lines ?? [])
+          ...(renamedLinks?.lines ?? []),
+          ...iconLinkLines(linkIcons, { written, refused, ordered })
         ],
         links: links?.results({
           written,
@@ -579,6 +582,23 @@ export async function runWriteStep(input) {
     Object.assign(mapping.evidence, links.evidence)
     // A slot a plan link writes has an owner, though the plan names the link and not the slot.
     report.unowned = report.unowned.filter((u) => !(contentMapKey(u.slot) in links.changes))
+    // A relabelled menu item whose target cannot move leaves the menus with its label (link-stage.js `stranded`).
+    const leavingItems = strandMenuItems({
+      stranded: links.stranded,
+      extras,
+      changes: mapping.changes,
+      contentMap
+    })
+    extras = leavingItems.extras
+    strandedLabels = leavingItems.labels
+    // A row's icon follows the network its link now opens, in the template's own icon set (kit-slot-routes.js).
+    const rowIcons = linkIconChanges({ kit: kit.doc, links: links.changes })
+    for (const [key, value] of Object.entries(rowIcons.changes)) {
+      mapping.changes[key] = value
+      ordered[key] = value
+    }
+    linkIcons = rowIcons.owned.map((slot) => ({ slot, key: contentMapKey(iconsOf(kit.doc).get(slot).field) }))
+    report.unowned = report.unowned.filter((u) => !rowIcons.owned.includes(u.slot))
   }
 
   // Page frame first: the blocks and pages the plan drops; the hidden slots go with the contract call.
@@ -738,7 +758,7 @@ export async function runWriteStep(input) {
     })
   )
   settingLines = settings.lines ?? []
-  settled = new Map([...recordAlts, ...settings.results, ...hide.held, ...created.results])
+  settled = new Map([...recordAlts, ...settings.results, ...hide.held, ...created.results, ...strandedLabels])
   if (settings.cancelled) return finish('cancelled', null, written, wrote.refused)
   // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).
   // It has no phase of its own: it makes a few calls, and the phase list is what callers already know.
