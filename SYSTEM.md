@@ -2376,7 +2376,22 @@ pages at once, and completion is read from `site_turn`. A site check of the page
 step's return is stopped with `session/cancel` and judged by what it wrote. A page that fails is logged and the others go
 on; only a site check that cannot run takes the turns back and hands over the written site; the pass never throws to the
 step. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
-`write-step-bench-repair-agent.js`); no customer flow calls it yet (#444).
+`write-step-bench-repair-agent.js`).
+
+**The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
+the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
+`workflow: 'step-chain/1'` and `researchRevisionId` (a `wo_revision` of the caller's own; no `brief`). The door refuses before
+anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`) or the revision is not the caller's (404); otherwise
+the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
+as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with only a 2 hour outer
+deadline on the run. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
+and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
+queued through the bench's own command line on the revision and played by the bench worker this server runs
+(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Once the site is up and every input
+is ready, step 9 runs whole (`runStepNine`), every Apply call through the setup door under the run's id
+(`applyAs(..., { setupRun })`), so Site changes shows one Tracy setup row. A step that fails ends the chain early: what depends
+on it does not run, a brand or picture failure still lets step 9 write the rest, and the row ends `applied` either way, with
+per-step minutes and USD and the ending kept in `site_brief.timings.chain`.
 
 ## 9. Sign-in, seats, permissions
 
