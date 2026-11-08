@@ -54,6 +54,7 @@ export function createStepChainSteps(deps) {
     brand: {
       cli: brandCli,
       table: 'brand_run',
+      cost: 'coalesce(cost_agent_usd, 0) + coalesce(cost_drawing_usd, 0) + coalesce(cost_reviewer_usd, 0)',
       deps: { pool, secret, kitImages, wiring: brandWiring, runDir: (id) => brandRunDir(config, id) }
     },
     plan: { cli: plannerCli, table: 'site_planner_run', deps: { pool, secret, kitImages } },
@@ -99,7 +100,7 @@ export function createStepChainSteps(deps) {
       let row
       for (;;) {
         const { rows } = await pool.query(
-          `select status, error, cost_usd from ${benches[name].table} where id = $1`,
+          `select status, error, ${benches[name].cost ?? 'cost_usd'} as cost_usd from ${benches[name].table} where id = $1`,
           [runId]
         )
         row = rows[0]

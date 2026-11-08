@@ -44,7 +44,7 @@ import {
   restartBrief,
   updateBrief
 } from './brief-store.js'
-import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
+import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
 
 /**
  * The host's step once the CMS is fully up and only the site's folder on the host is left to build (measured 03/10/2026:
@@ -195,7 +195,6 @@ function withTimeout(promise, ms, message) {
  * @param {Record<string, BriefEngine>} deps.engines - by platform, plus the step chain engine under `STEP_CHAIN_WORKFLOW`
  *   (`brief-engines/step-chain.js`): picked for a build whose brief carries that workflow while its quickstart template is
  *   allow-listed and the master switch is on (`lib/step-chain-switch.js`); every other build runs its platform's engine
- * @param {Record<string, string | undefined>} [deps.env] - where the master switch is read (`process.env`)
  * @param {(input: BriefInput) => Promise<any>} deps.normalize - brief → what the engines read
  * @param {() => number} [deps.now]
  * @param {{info?: Function, warn?: Function}} [deps.log]
@@ -224,11 +223,9 @@ export function createBriefBuilds({
   brand = null,
   webroot = null,
   limits = {},
-  recoverOnStart = true,
-  env = process.env
+  recoverOnStart = true
 }) {
-  const base = { ...DEFAULT_LIMITS, ...limits }
-  const cap = base
+  const cap = { ...DEFAULT_LIMITS, ...limits }
   /** @type {Map<string, Promise<void>>} the runs this process is doing */
   const running = new Map()
 
@@ -341,7 +338,7 @@ export function createBriefBuilds({
    * @param {number} startedAt
    * @returns {Promise<{value: unknown} | {down: true}>} `down`: the site will not come up, so nothing will be written
    */
-  async function preparedInTime(preparing, siteUp, stop, startedAt, cap = base) {
+  async function preparedInTime(preparing, siteUp, stop, startedAt, runCap = cap) {
     let settled = false
     /** @type {Array<ReturnType<typeof setTimeout>>} */
     const timers = []
@@ -350,14 +347,14 @@ export function createBriefBuilds({
         if (!settled) timers.push(setTimeout(resolve, Math.max(1, ms)))
       })
     const tooLong = () => new Error('writing the text took too long')
-    const backstop = after(startedAt + cap.prepareMs + cap.prepareGraceMs - now()).then(() => {
+    const backstop = after(startedAt + runCap.prepareMs + runCap.prepareGraceMs - now()).then(() => {
       throw tooLong()
     })
     const graced = siteUp.then(async (up) => {
       if (!up) return /** @type {const} */ ({ down: true })
-      await after(cap.prepareGraceMs)
+      await after(runCap.prepareGraceMs)
       stop.abort(new Error('the site is up and the words had their time'))
-      await after(cap.prepareStopMs)
+      await after(runCap.prepareStopMs)
       throw tooLong()
     })
     try {
@@ -421,14 +418,16 @@ export function createBriefBuilds({
   }
 
   /**
-   * The engine a build runs: the step chain for a chain build of an enabled template, its platform's engine otherwise.
+   * The engine a build runs: the step chain for a chain build, its platform's engine otherwise.
    * @param {BriefInput} input
    */
   function engineOf(input) {
-    const chain =
-      /** @type {any} */ (input.brief)?.workflow === STEP_CHAIN_WORKFLOW &&
-      stepChainEnabled({ quickstart: input.quickstart, env })
-    return chain ? engines[STEP_CHAIN_WORKFLOW] : engines[input.platform]
+    // The press decided (the creation door refuses a chain build unless the template is enabled), so a chain build already
+    // under way stays one even if the switch is turned off while it is queued or recovered: an enabled template never
+    // falls back to the old build, and the platform engine never receives a brief that has no words in it.
+    if (/** @type {any} */ (input.brief)?.workflow === STEP_CHAIN_WORKFLOW)
+      return engines[STEP_CHAIN_WORKFLOW]
+    return engines[input.platform]
   }
 
   /** @param {BriefInput} input */
@@ -438,13 +437,13 @@ export function createBriefBuilds({
     if (!engine) return fail(siteKey, `no engine writes content for ${input.platform}`)
     if (!(await claimWork(pool, siteKey))) return
     // An engine may bring its own clocks (the step chain: only an outer deadline, `brief-engines/step-chain.js`).
-    const cap = { ...base, .../** @type {any} */ (engine).limits }
+    const runCap = { ...cap, .../** @type {any} */ (engine).limits }
     const startedAt = now()
     // This run's id: every write it makes is recorded under it (`site_write.origin_ref`), so Site changes
     // shows one "Tracy setup" row for the run instead of one Unknown row per write (sweep #4).
     const runId = randomUUID()
     const controller = new AbortController()
-    const killer = setTimeout(() => controller.abort(new Error('the run took too long')), cap.runMs)
+    const killer = setTimeout(() => controller.abort(new Error('the run took too long')), runCap.runMs)
     // The row's own clock: a worker that is alive keeps touching it, and `gate` reads silence as death.
     const beat = setInterval(() => void updateBrief(pool, siteKey, {}).catch(() => {}), 5_000)
     const phase = {}
@@ -526,7 +525,7 @@ export function createBriefBuilds({
         time,
         note: (n) => notes.push(String(n).slice(0, 200)),
         applied,
-        deadlineAt: startedAt + cap.prepareMs
+        deadlineAt: startedAt + runCap.prepareMs
       }
       // The words are made while the site is waited for, side by side: the site may come up first, and then the words
       // get `prepareGraceMs` from that moment (`preparedInTime`). `prepare` itself honours `ctx.deadlineAt` too.
@@ -535,12 +534,12 @@ export function createBriefBuilds({
       preparing.catch(() => {})
       /** When the site came up, if it did. */
       let siteUpAt = 0
-      const siteUp = waitProvisioned(input, startedAt + cap.runMs, waitStop.signal).then((up) => {
+      const siteUp = waitProvisioned(input, startedAt + runCap.runMs, waitStop.signal).then((up) => {
         if (up) siteUpAt = now()
         return up
       })
       siteUp.catch(() => {})
-      const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt, cap)
+      const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt, runCap)
       const notUp = async () => {
         prepareStop.abort()
         const row = await briefOf(pool, siteKey)
@@ -570,7 +569,7 @@ export function createBriefBuilds({
       try {
         report = await withTimeout(
           engine.apply({ ...ctx, signal: AbortSignal.any([controller.signal, applyStop.signal]) }, prepared),
-          made?.workflow === 'quickstart-first/1' ? cap.runMs - 120_000 : cap.applyMs,
+          made?.workflow === 'quickstart-first/1' ? runCap.runMs - 120_000 : runCap.applyMs,
           'writing into the site took too long'
         )
       } catch (error) {

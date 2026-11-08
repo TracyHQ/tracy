@@ -27,7 +27,6 @@ after(db.close)
 const dbOpts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const quiet = { info() {}, warn() {} }
 const instant = () => Promise.resolve()
-const ON = { STEP_CHAIN_ENABLED: '1' }
 const REVISION = '6f0b6a52-3c1e-4b8e-9a51-2f7d1c0e9a11'
 
 const chainInput = (over = {}) => ({
@@ -91,7 +90,6 @@ function builds(pool, engines, extra = {}) {
     sleep: instant,
     pollMs: 1,
     recoverOnStart: false,
-    env: ON,
     ...extra
   })
 }
@@ -125,33 +123,49 @@ test(
   }
 )
 
+test('a build that did not ask for the chain runs the CMS engine exactly as today', dbOpts, async (t) => {
+  const { pool } = db
+  for (const [name, over] of [
+    ['a typed brief', { siteKey: 'c.tracy.test', brief: { about: 'A padel club', goal: null, style: null } }],
+    [
+      'another workflow',
+      { siteKey: 'd.tracy.test', brief: { about: '', goal: null, style: null, workflow: 'agent-demo/1' } }
+    ]
+  ]) {
+    await t.test(name, async () => {
+      const cms = cmsEngine()
+      const { steps, log } = fakeSteps()
+      const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
+      const b = builds(pool, { joomla: cms, [STEP_CHAIN_WORKFLOW]: chain })
+      await b.start(chainInput(over))
+      await untilSettled(b, over.siteKey)
+      assert.deepEqual(cms.calls, { prepare: 1, apply: 1 })
+      assert.deepEqual(log, [], 'no chain step ran')
+      const row = await briefOf(pool, over.siteKey)
+      assert.equal(row.timings.chain, undefined)
+    })
+  }
+})
+
 test(
-  'a template not on the list, or the switch off, runs the CMS engine exactly as today',
+  'a chain build stays on the chain when the switch is turned off after the press, never falling back to the old build',
   dbOpts,
-  async (t) => {
+  async () => {
     const { pool } = db
-    for (const [name, over, env] of [
-      ['not listed', { quickstart: 'quickstart/ja-diner/j6', siteKey: 'a.tracy.test' }, ON],
-      ['switch off', { siteKey: 'b.tracy.test' }, {}],
-      [
-        'a typed brief',
-        { siteKey: 'c.tracy.test', brief: { about: 'A padel club', goal: null, style: null } },
-        ON
-      ]
-    ]) {
-      await t.test(name, async () => {
-        const cms = cmsEngine()
-        const { steps, log } = fakeSteps()
-        const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
-        const b = builds(pool, { joomla: cms, [STEP_CHAIN_WORKFLOW]: chain }, { env })
-        await b.start(chainInput(over))
-        await untilSettled(b, over.siteKey)
-        assert.deepEqual(cms.calls, { prepare: 1, apply: 1 })
-        assert.deepEqual(log, [], 'no chain step ran')
-        const row = await briefOf(pool, over.siteKey)
-        assert.equal(row.timings.chain, undefined)
-      })
+    const cms = cmsEngine()
+    const { steps, log } = fakeSteps()
+    const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
+    const was = process.env.STEP_CHAIN_ENABLED
+    delete process.env.STEP_CHAIN_ENABLED
+    try {
+      const b = builds(pool, { joomla: cms, [STEP_CHAIN_WORKFLOW]: chain })
+      await b.start(chainInput({ siteKey: 'e.tracy.test' }))
+      assert.equal((await untilSettled(b, 'e.tracy.test')).state, 'applied')
+    } finally {
+      if (was !== undefined) process.env.STEP_CHAIN_ENABLED = was
     }
+    assert.deepEqual(cms.calls, { prepare: 0, apply: 0 })
+    assert.ok(log.includes('write:end'), log.join(' '))
   }
 )
 
