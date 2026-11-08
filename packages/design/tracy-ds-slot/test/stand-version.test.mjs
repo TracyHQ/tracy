@@ -25,6 +25,7 @@ function standAsking(version) {
     cpSync(join(PKG, 'src/release-manifest.mjs'), join(slot, 'src/release-manifest.mjs'))
     cpSync(join(PKG, 'src/stand-db.mjs'), join(slot, 'src/stand-db.mjs'))
     cpSync(join(PKG, 'src/stand-address.mjs'), join(slot, 'src/stand-address.mjs'))
+    cpSync(join(PKG, 'src/stand-docker-host.mjs'), join(slot, 'src/stand-docker-host.mjs'))
     mkdirSync(join(root, CONTRACT, '1.3.0'), { recursive: true })
     writeFileSync(
       join(root, CONTRACT, '1.3.0/manifest.json'),

@@ -24,7 +24,7 @@ const PATH = /^\/[\w\-./~%]*$/
 /** A page address as a kept page says it: no `/index.php`, no trailing slash, `/` for the front page. */
 export const pagePath = (value) => {
   const path = String(value ?? '')
-    .replace(/^\/?index\.php(?=\/|$)/, '')
+    .replace(/^(?:\/?index\.php)+(?=\/|$)/, '')
     .replace(/\/+$/, '')
   return path === '' ? '/' : path.startsWith('/') ? path : `/${path}`
 }
@@ -86,13 +86,17 @@ export function isDeadHref(href, targets, origin = null) {
   return targets.paths.includes(pagePath(url.pathname))
 }
 
-/** The selectors of links in the kit's containers whose address is a hidden page's, as a page prints it. */
+/**
+ * The selectors of links in the kit's containers whose address is a hidden page's, as a page prints it. A path is matched exact,
+ * and as the end of an address after any run of `/index.php` (a template may print `/index.php/index.php<path>`, which Joomla
+ * answers all the same).
+ */
 export function hiddenLinkSelectorsFor(targets, containers) {
   const forms = [
-    ...each(targets?.itemIds).flatMap((id) => [`index.php?Itemid=${id}`, `/index.php?Itemid=${id}`]),
-    ...each(targets?.paths).flatMap((path) => [path, `/index.php${path}`])
+    ...each(targets?.itemIds).flatMap((id) => [`="index.php?Itemid=${id}"`, `="/index.php?Itemid=${id}"`]),
+    ...each(targets?.paths).flatMap((path) => [`="${path}"`, `$="/index.php${path}"`])
   ]
-  return containers.flatMap((container) => forms.map((href) => `${container} a[href="${href}"]`))
+  return containers.flatMap((container) => forms.map((form) => `${container} a[href${form}]`))
 }
 
 /**
@@ -123,7 +127,7 @@ export const hiddenLinkBlockIn = (content) => markedBlockIn(content, HIDDEN_LINK
 export const withHiddenLinkBlock = (content, block) =>
   withMarkedBlock(content, block, HIDDEN_LINKS_START, HIDDEN_LINKS_END)
 
-const SELECTOR = /^(\S+) a\[href="([^"\\<>]*)"\]$/
+const SELECTOR = /^(\S+) a\[href(?:="[^"\\<>]*"|\$="\/index\.php\/[^"\\<>]*")\]$/
 
 /** Whether a block holds only the inert rule on links in the kit's containers (the look guard's test). */
 export function isHiddenLinkBlock(block, containers) {

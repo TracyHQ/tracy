@@ -3,8 +3,10 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { coverageGate } from '../template-kit/lib/coverage-gate.mjs'
+import { indexMap, ownerOfPath } from '../template-kit/lib/map-index.mjs'
 import { settlePageTitles } from '../template-kit/lib/page-titles.mjs'
 import { settleSlotRoles } from '../template-kit/lib/slot-roles.mjs'
+import { gapId } from '../template-kit/lib/template-gaps.mjs'
 
 const slot = (key, sample, extra = {}) => ({
   key,
@@ -207,4 +209,102 @@ test('a path that only looks like an account is a page of the map, and owes its 
   settlePageTitles(k, { map })
   coverageGate(k, { map })
   assert.equal(k.coverage.parts.pageTitleSlots, 1)
+})
+
+// A tag listing: the tags menu page lists the club's tags, and each tag page prints the tag with a mark of the template.
+const TAG_MAP = {
+  ...MAP,
+  slots: [
+    ...MAP.slots,
+    slot('tag-4.0', 'Squads', { role: 'editorial.heading' }),
+    // The same word on a card the tag page lists: another item's words, never the page's title.
+    slot('article-5.9', 'Squads', { role: 'editorial.paragraph' })
+  ],
+  entities: [...MAP.entities, { key: 'tag-4', kind: 'tag', identity: { path: 'squads' } }],
+  pages: [
+    ...MAP.pages,
+    { entity: 'menuItem-12', route: 'club/topics', link: 'index.php?option=com_tags&view=tags' }
+  ]
+}
+
+test('a page under a tags menu page is owned by the tag its last segment names', () => {
+  const idx = indexMap(TAG_MAP)
+  assert.equal(ownerOfPath(idx, '/club/topics').owner, null, 'the tags menu page itself lists every tag')
+  assert.equal(ownerOfPath(idx, '/club/topics/squads').owner, 'tag-4')
+  assert.equal(ownerOfPath(idx, '/club/topics/squads?start=9').owner, 'tag-4')
+})
+
+test('a tag page printing its tag with a mark of the template around it is titled by the tag', () => {
+  const k = kit([
+    {
+      id: 'page-club_topics_squads',
+      path: '/club/topics/squads',
+      blocks: { 1440: ['body-rules'] },
+      h1: { via: 'template', text: '#Squads', block: 'body-rules' }
+    }
+  ])
+  k.blocks
+    .find((b) => b.id === 'body-rules')
+    .slots.push({ id: 'article-5.9', type: 'text', sample: 'Squads' })
+  settlePageTitles(k, { map: TAG_MAP })
+  assert.equal(k.pages[0].titleSlot, 'tag-4.0', 'the mark is matched on the page entity only, not on a card')
+})
+
+const noH1 = (id, path) => ({
+  id,
+  path,
+  blocks: { 1440: ['header'] },
+  h1: { via: null, reason: 'the page shows no h1' }
+})
+
+test('a missing title explained by its accepted no-h1 gap or a person still counts, but holds the kit no more', () => {
+  const k = kit([
+    noH1('page-a', '/a'),
+    noH1('page-b', '/b'),
+    noH1('page-c', '/c'),
+    page('page-learn', '/learn-to-swim', 'Learn to Swim', ['body-learn'])
+  ])
+  const gapAccepts = {
+    [gapId('page-without-h1', { pageId: 'page-a' })]: { reason: 'the masthead prints it as h2', by: 'owner' },
+    // A gap of another kind on the same page explains nothing.
+    [gapId('dead-path', { pageId: 'page-c' })]: { reason: 'unrelated', by: 'owner' }
+  }
+  const accepts = [
+    { check: 'pageTitleSlots', where: 'pages[page-learn]', reason: 'reached by no visitor', by: 'owner' },
+    { check: 'pageTitleSlots', where: 'pages[page-gone]', reason: 'stale', by: 'owner' }
+  ]
+  settlePageTitles(k, { map: MAP })
+  coverageGate(k, { map: MAP, gapAccepts, accepts })
+  assert.equal(k.coverage.parts.pageTitleSlots, 4, 'every failure is counted')
+  assert.deepEqual(
+    k.coverage.failures.filter((f) => f.part === 'pageTitleSlots').map((f) => f.where),
+    ['pages[page-b]', 'pages[page-c]']
+  )
+  assert.deepEqual(k.checkAccepts.slotCoverage, [
+    { part: 'pageTitleSlots', where: 'pages[page-a]', reason: 'the masthead prints it as h2', by: 'owner' },
+    { part: 'pageTitleSlots', where: 'pages[page-learn]', reason: 'reached by no visitor', by: 'owner' }
+  ])
+  const stale = k.coverage.failures.filter((f) => f.part === 'checkAcceptsUnmatched')
+  assert.deepEqual(
+    stale.map((f) => [f.check, f.where]),
+    [['pageTitleSlots', 'pages[page-gone]']]
+  )
+  const r = settleSlotRoles(k, { map: MAP, gapAccepts, accepts })
+  assert.equal(r.pageTitleSlots, 4)
+  assert.equal(r.pageTitlesExplained, 2)
+  assert.equal(
+    k.coverage.failures.filter((f) => f.part === 'checkAcceptsUnmatched').length,
+    1,
+    'settling again names the stale entry once'
+  )
+  assert.equal(k.checkAccepts.slotCoverage.length, 2)
+})
+
+test('a page printing its title in two h1 with the same words still has that title; two different h1 stay open', () => {
+  const twice = page('page-rules', '/pool-rules', null, ['body-rules'])
+  twice.h1 = { via: null, reason: 'the page shows 2 h1', texts: ['Pool Rules', 'POOL RULES'] }
+  assert.equal(onePage(twice).pages[0].titleSlot, 'article-5.0')
+  const two = page('page-rules', '/pool-rules', null, ['body-rules'])
+  two.h1 = { via: null, reason: 'the page shows 2 h1', texts: ['Pool Rules', 'Lane Hire'] }
+  assert.equal(onePage(two).pages[0].titleSlot, null)
 })

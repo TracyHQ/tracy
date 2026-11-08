@@ -9,6 +9,13 @@ import { cardsOnPage, objectOf, pathOfHref, rowSlotsOf } from './item-lists.mjs'
 
 const viewOf = (link) => /[?&]view=([a-z]+)/i.exec(String(link ?? ''))?.[1]?.toLowerCase() ?? null
 const idOf = (link) => /[?&]id=(\d+)(?:&|$)/.exec(String(link ?? ''))?.[1] ?? null
+const optionOf = (link) =>
+  /[?&]option=([a-z_]+)/i.exec(String(link ?? ''))?.[1]?.toLowerCase() ?? 'com_content'
+/** The one tag of a tag view (`id[0]=N`, or `id=N`), or null when it shows several. */
+const tagIdOf = (link) => {
+  const ids = [...String(link ?? '').matchAll(/[?&]id(?:\[\d*\]|%5B\d*%5D)?=(\d+)/gi)].map((m) => m[1])
+  return ids.length === 1 ? ids[0] : null
+}
 const count = (v) => (/^\d+$/.test(String(v ?? '').trim()) ? Number(v) : null)
 
 /** The page body's items (`by: "body"`), from the per-copy homes of a crawl that records them; menus drawn outside
@@ -32,6 +39,7 @@ export const bodyPool = (items) => {
 /** How many rows one page of the listing shows, from the view's own settings, or null when they inherit it. */
 function pageSizeOf(view, settings) {
   if (view === 'author') return count(settings.num_authors)
+  if (view === 'tag') return count(settings.display_num)
   const leading = count(settings.num_leading_articles)
   const intro = count(settings.num_intro_articles)
   if (leading === null && intro === null) return count(settings.display_num)
@@ -54,7 +62,20 @@ export function listingListsOf({ map, lock, findings }) {
     let source
     let kinds
     let catKeys = null
-    if (view === 'category') {
+    const option = optionOf(page.link)
+    if (option === 'com_tags') {
+      // A tag menu item (`view=tag`): every article is a candidate, as on a tag page with no menu item.
+      const tag =
+        view === 'tag'
+          ? entities.find((e) => e.kind === 'tag' && String(e.sourceId) === tagIdOf(page.link))
+          : null
+      if (!tag) continue
+      const title =
+        (map.slots ?? []).find((s) => s.entity === tag.key && s.column === 'title')?.sample ?? null
+      source = { kind: 'tag', id: tag.key, title: title ?? tag.identity?.path ?? null }
+      kinds = new Set(['article'])
+    } else if (option !== 'com_content') continue
+    else if (view === 'category') {
       const cat = categories.find((c) => String(c.sourceId) === idOf(page.link))
       if (!cat) continue
       catKeys = new Set([cat.key])
@@ -137,18 +158,15 @@ const routeOfUrl = (url) => {
 }
 
 /**
- * Category pages no menu item names, reached from a blog's own links (`/our-blog/2-restaurant-business`: the category
- * `<id>-<alias>` under the blog's menu route): each declares its list like a category page with a menu item, keyed by
- * the category (`itemLists["category-2.items"]`, `page: null`, `pagePath`), its bounds from the parent page's view
- * settings, and each item it shows names it as its category page (`itemPages[item].categoryRoute`).
+ * The category a page no menu item names stands for, and the listing page it sits under, from its route alone. Two
+ * URL forms: `<blog route>/<id>-<alias>` (Joomla's URLs with ids), or, without ids (the Joomla 4+ default), the
+ * category's path below the category of a category or categories view, under that view's route
+ * (`journal/adventure` under a blog of `journal` at `pages/blog` is `pages/blog/adventure`). The most specific
+ * parent route wins.
  */
-function categoryPagesOf({ map, lock, findings, categories, entities, slotsByKey, itemLists, itemPages }) {
-  const pages = map.pages ?? []
-  for (const p of findings?.pages ?? []) {
-    if ((p.mapPages ?? []).length) continue
-    const route = routeOfUrl(p.url)
-    const m = /^(.+)\/(\d+)-([a-z0-9-]+)$/.exec(route ?? '')
-    if (!m) continue
+function categoryOfRoute(route, pages, categories) {
+  const m = /^(.+)\/(\d+)-([a-z0-9-]+)$/.exec(route)
+  if (m) {
     const [, parentRoute, id, alias] = m
     const cat = categories.find(
       (c) =>
@@ -158,9 +176,38 @@ function categoryPagesOf({ map, lock, findings, categories, entities, slotsByKey
             .split('/')
             .at(-1) === alias)
     )
-    if (!cat || itemLists[`${cat.key}.items`]) continue
     const parent = pages.find((pg) => pg.route === parentRoute && viewOf(pg.link) === 'category')
-    if (!parent) continue
+    if (cat && parent) return { cat, parent }
+  }
+  const parents = pages
+    .filter((pg) => ['category', 'categories'].includes(viewOf(pg.link)))
+    .filter((pg) => pg.route && route.startsWith(`${pg.route}/`))
+    .sort((a, b) => b.route.length - a.route.length)
+  for (const parent of parents) {
+    const base = categories.find((c) => String(c.sourceId) === idOf(parent.link))
+    if (!base?.identity?.path) continue
+    const path = `${base.identity.path}/${route.slice(parent.route.length + 1)}`
+    const cat = categories.find((c) => c.identity?.path === path)
+    if (cat) return { cat, parent }
+  }
+  return null
+}
+
+/**
+ * Category pages no menu item names, reached from a listing's own links (`/our-blog/2-restaurant-business`, or
+ * `/our-blog/restaurant-business` without ids: `categoryOfRoute`): each declares its list like a category page with a
+ * menu item, keyed by the category (`itemLists["category-2.items"]`, `page: null`, `pagePath`), its bounds from the
+ * parent page's view settings, and each item it shows names it as its category page (`itemPages[item].categoryRoute`).
+ */
+function categoryPagesOf({ map, lock, findings, categories, entities, slotsByKey, itemLists, itemPages }) {
+  const pages = map.pages ?? []
+  for (const p of findings?.pages ?? []) {
+    if ((p.mapPages ?? []).length) continue
+    const route = routeOfUrl(p.url)
+    if (!route) continue
+    const found = categoryOfRoute(route, pages, categories)
+    if (!found || itemLists[`${found.cat.key}.items`]) continue
+    const { cat, parent } = found
     const catKeys = new Set([cat.key])
     for (const c of categories)
       if (String(c.identity?.path ?? '').startsWith(`${cat.identity?.path}/`)) catKeys.add(c.key)

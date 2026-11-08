@@ -8,7 +8,8 @@ import { join } from 'node:path'
 import { prepareLabelJudge } from './label-judge.mjs'
 import { openContext } from './render.mjs'
 import { renderCrops } from './verify/crops.mjs'
-import { moduleBoxes } from './verify/module-boxes.mjs'
+import { addModuleBoxFailures } from './verify/module-boxes.mjs'
+import { inputFingerprint, readModuleBoxes } from './verify/module-boxes-saved.mjs'
 
 /** Where the request and its crops go, under the audit's --out. */
 export const JUDGE_DIR = 'label-judge'
@@ -22,7 +23,28 @@ export async function runLabelJudge({ o, result, contract, outDir, chromium, pre
   const dir = join(outDir, JUDGE_DIR)
   rmSync(dir, { recursive: true, force: true })
   const judge = !o['no-judge'] && Boolean(chromium)
-  const mods = judge ? await moduleBoxes({ chromium, openContext, findings: result }) : {}
+  let mods = {}
+  if (judge) {
+    // A rebuild from saved findings (--reclassify, --report-only) reuses the saved module boxes when the input
+    // fingerprint proves the site unchanged (lib/verify/module-boxes-saved.mjs); a full run reads them again.
+    const fingerprint = inputFingerprint({
+      site: result.site,
+      dbDump: typeof o['db-dump'] === 'string' ? o['db-dump'] : null,
+      webroot: typeof o.webroot === 'string' ? o.webroot : null,
+      pages: result.pages
+    })
+    const read = await readModuleBoxes({
+      chromium,
+      openContext,
+      findings: result,
+      outDir,
+      fingerprint,
+      trust: Boolean(o['trust-saved-boxes']),
+      reuse: Boolean(o.reclassify || o['report-only'])
+    })
+    mods = read.boxes
+    addModuleBoxFailures(result, read.failures)
+  }
   const crop = async (components, { margin }) => {
     const files = new Map()
     if (!chromium) return files

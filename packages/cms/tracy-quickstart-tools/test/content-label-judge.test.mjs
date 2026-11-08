@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url'
 import { judgeLabelJudge } from '../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
 import { buildCoverageFile } from '../content-coverage/lib/coverage-file.mjs'
 import { prepareLabelJudge, slotHash } from '../content-coverage/lib/label-judge.mjs'
-import { recordLabelJudge } from '../content-coverage/lib/label-judge-record.mjs'
+import { overruleLabelJudge, recordLabelJudge } from '../content-coverage/lib/label-judge-record.mjs'
 
 const V3 = 'place-content-roles/3'
 const text = (key, sample, role, extra = {}) => ({
@@ -121,6 +121,10 @@ function answersFor(request, over = {}) {
   }
   return {
     judgedBy: 'agent',
+    crops: request.components.map((c) => ({
+      crop: c.crop,
+      seen: `the ${c.module.title} section as a visitor sees it`
+    })),
     slots: keysOf(request).map((key) => ({ key, ...(say[key] ?? { verdict: 'right' }) }))
   }
 }
@@ -239,6 +243,38 @@ test('record-judge refuses a missing slot, a bad role, an unknown key and an unk
   assert.match(same.problems[0], /suggestedRole is the current role/)
 })
 
+test('record-judge refuses a file that does not say what each crop shows: judging from the slot table alone is not judging', async () => {
+  const { request } = await prepare()
+  const full = answersFor(request)
+  const refused = (verdicts) => recordLabelJudge({ request, verdicts })
+
+  const tableOnly = refused({ judgedBy: full.judgedBy, slots: full.slots })
+  assert.equal(tableOnly.block, null)
+  assert.match(tableOnly.problems[0], /"crops" must be a list/)
+
+  const [first, ...rest] = full.crops
+  const skipped = refused({ ...full, crops: rest })
+  assert.deepEqual(skipped.problems, [`${first.crop}: not opened (no "crops" entry)`])
+
+  const blank = refused({ ...full, crops: [{ crop: first.crop, seen: 'ok' }, ...rest] })
+  assert.match(blank.problems[0], /"seen" must say in a few words what the crop shows/)
+
+  const foreign = refused({
+    ...full,
+    crops: [...full.crops, { crop: 'images/module-99-p1-desktop.jpg', seen: 'a crop nobody asked about' }]
+  })
+  assert.match(foreign.problems[0], /is not a crop of this request/)
+
+  // The same words for two crops: one of them was not looked at (a script wrote the lines).
+  if (full.crops.length > 1) {
+    const copied = refused({
+      ...full,
+      crops: full.crops.map((c) => ({ ...c, seen: 'A Section As  a visitor sees it' }))
+    })
+    assert.match(copied.problems.at(-1), /"seen" repeats the words given for .*: say what this crop shows/)
+  }
+})
+
 test('a rerun on unchanged content asks nothing: the recorded verdicts are the cache', async () => {
   const { request } = await prepare()
   const first = recordLabelJudge({ request, verdicts: answersFor(request) }).block
@@ -265,7 +301,10 @@ test('a changed slot is asked again alone; the cached slots of its component are
   assert.deepEqual([second.block.state, second.block.counts.judged], ['partly', 4])
   const third = recordLabelJudge({
     request: second.request,
-    verdicts: { slots: [{ key: 'module-13.intro', verdict: 'right' }] }
+    verdicts: {
+      crops: [{ crop: second.request.components[0].crop, seen: 'the classes intro as a visitor sees it' }],
+      slots: [{ key: 'module-13.intro', verdict: 'right' }]
+    }
   }).block
   assert.equal(third.state, 'judged')
   assert.equal(entry(third, 'module-13.intro').hash, slotHash(map.slots[4]))
@@ -290,7 +329,7 @@ test('the verdicts are written into the committed coverage file beside labelRule
   const doc = buildCoverageFile({ result, contract: CONTRACT, labelJudge })
   assert.ok(doc.labelRules)
   assert.equal(doc.labelJudge.state, 'judged')
-  assert.equal(doc.tool.version, '1.7.0')
+  assert.equal(doc.tool.version, '1.8.0')
   assert.equal(buildCoverageFile({ result, contract: CONTRACT }).labelJudge, undefined)
 })
 
@@ -324,4 +363,31 @@ test('the record-judge command writes labelJudge into the coverage file, and lea
     [after.labelJudge.state, after.labelJudge.judgedBy, after.labelJudge.counts.wrongGroup],
     ['judged', 'agent', 2]
   )
+})
+
+test('a cached wrong verdict is overruled with a recorded reason, and the overrule survives the next audit', async () => {
+  const { request } = await prepare()
+  const first = recordLabelJudge({ request, verdicts: answersFor(request) }).block
+  assert.equal(first.counts.wrongGroup, 2)
+
+  const refused = (overrules) => overruleLabelJudge({ block: first, overrules })
+  assert.match(refused([{ key: 'module-12.phone', why: 'too short' }]).problems[0], /at least 12/)
+  assert.match(refused([{ key: 'module-13.title', why: 'a long enough reason' }]).problems[0], /not "wrong"/)
+  assert.match(refused([{ key: 'nope.key', why: 'a long enough reason' }]).problems[0], /no recorded verdict/)
+  assert.equal(refused([{ key: 'module-12.phone', why: 'too short' }]).block, null)
+
+  const { problems, block } = overruleLabelJudge({
+    block: first,
+    overrules: [{ key: 'module-12.phone', why: 'the phone is demo copy kept on purpose' }]
+  })
+  assert.deepEqual(problems, [])
+  const phone = entry(block, 'module-12.phone')
+  assert.deepEqual([phone.verdict, phone.hash], ['right', entry(first, 'module-12.phone').hash])
+  assert.equal(phone.overruled.suggested, 'contact.phone')
+  assert.equal(phone.overruled.why, 'the phone is demo copy kept on purpose')
+  assert.deepEqual([block.counts.wrongGroup, block.counts.mismatch, block.counts.right], [1, 1, 3])
+
+  const again = await prepare({ previous: { labelJudge: block } })
+  assert.equal(again.request, null)
+  assert.equal(entry(again.block, 'module-12.phone').verdict, 'right')
 })

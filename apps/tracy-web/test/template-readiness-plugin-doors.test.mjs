@@ -4,6 +4,7 @@
  * from its own bytes into a derived manifest, and the check holds the pinned plugin to the declared list.
  */
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 
 import { defaultContracts } from '../src/lib/contracts.js'
@@ -203,8 +204,24 @@ test('the T3 case: JA Diner j6 on plugin 0.24.80 lacked every write door; on 0.2
     before.params.missing,
     WRITE_STEP_DOORS.map((d) => d.id)
   )
-  assert.equal(before.params.fixVersion, '0.24.87')
+  // test-quality: contract the fix a missing door names is the newest release the committed manifest has read; it moves
+  // with every plugin release (0.24.89 carries the final JA Voyara 1.0.12 profile), so it is read, not copied.
+  assert.equal(before.params.fixVersion, newestReadRelease())
 })
+
+/** The newest Claude Cowork for Joomla release the committed write doors manifest has read. */
+function newestReadRelease() {
+  const url = new URL('../src/lib/template-readiness/cowork-plugin-doors.json', import.meta.url)
+  const versions = Object.keys(JSON.parse(readFileSync(url, 'utf8')).releases)
+  const parts = (v) => v.split('.').map(Number)
+  return versions
+    .sort((a, b) => {
+      const [x, y] = [parts(a), parts(b)]
+      for (let i = 0; i < 3; i += 1) if (x[i] !== y[i]) return x[i] - y[i]
+      return 0
+    })
+    .at(-1)
+}
 
 /** An invented WordPress quickstart release: the write step has no WordPress door list to hold a plugin to yet. */
 function wordpressRelease() {

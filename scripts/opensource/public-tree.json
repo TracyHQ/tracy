@@ -1111,6 +1111,13 @@
       "reason": "JoomlArt template demo content captured byte for byte into quickstart contracts (sealed: carried by shipped plugins and pinned hashes)"
     },
     {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/**",
+      "category": "email",
+      "match": "^((africa|americas|asia|europe|hello|help|oceania)@voyara\\.com|jane@email\\.com)$",
+      "kind": "third-party-content",
+      "reason": "JA Voyara template demo addresses (the fictional Voyara agency and a form placeholder) captured byte for byte into its quickstart contracts"
+    },
+    {
       "path": "packages/cms/tracy-wordpress-quickstart/contracts/**",
       "category": "email",
       "match": "@(acme\\.com|anstudio\\.com|blooms\\.com|company\\.ru|company\\.com|conference\\.eu|fresco\\.com|getfit\\.com|gmail\\.com|helixlabs\\.dev|helix\\.dev|imed\\.com|jadirectory\\.com|jarent\\.com|joomlart\\.com|joomsolutions\\.com|kineticlabs\\.dev|kinetic\\.dev|lensofadventure\\.com|morgan\\.com|nicast\\.com|no-reply\\.com|northgate-ind\\.ru|phio\\.com|prodex\\.com|salmon\\.com|stark\\.com)$",

@@ -9,12 +9,17 @@
 //     --request <out>/label-judge/request.json --verdicts <verdicts.json> [--coverage <content-coverage.json>]
 //
 // Without --coverage it writes the coverage files the audit named in the request (the copy in --out and, after
-// --write, the one beside the contract). Exit: 0 written · 1 the verdicts were refused (each problem printed) ·
+// --write, the one beside the contract).
+//
+// A verdict the audit keeps as its cache is not in any request, so it is overruled apart, with a recorded reason of at
+// least 12 characters each, in a file {"overrules": [{"key": "...", "why": "..."}]}:
+//   node .../record-judge.mjs --overrule <overrules.json> --coverage <content-coverage.json>
+// Exit: 0 written · 1 the verdicts were refused (each problem printed) ·
 // 2 usage or file error.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-import { recordLabelJudge } from './lib/label-judge-record.mjs'
+import { overruleLabelJudge, recordLabelJudge } from './lib/label-judge-record.mjs'
 import { applyJudgeToLabelRules } from './lib/label-rules.mjs'
 
 const USAGE =
@@ -38,8 +43,33 @@ const readJson = (file, what) => {
   }
 }
 
+function overrule(o) {
+  const file = resolve(o.coverage)
+  const doc = readJson(file, 'coverage file')
+  const { overrules } = readJson(resolve(o.overrule), 'overrules file')
+  const { problems, block } = overruleLabelJudge({ block: doc.labelJudge, overrules })
+  if (problems.length > 0) {
+    console.error(`refused, nothing written (${problems.length} problem${problems.length === 1 ? '' : 's'}):`)
+    for (const p of problems) console.error(`  - ${p}`)
+    return 1
+  }
+  writeFileSync(
+    file,
+    `${JSON.stringify({ ...doc, ...(doc.labelRules ? { labelRules: applyJudgeToLabelRules(doc.labelRules, block) } : {}), labelJudge: block }, null, 2)}\n`
+  )
+  console.log(
+    JSON.stringify({ written: [file], state: block.state, reason: block.reason, ...block.counts }, null, 1)
+  )
+  return 0
+}
+
 function main(argv) {
   const o = parseArgs(argv)
+  if (typeof o.overrule === 'string') {
+    if (typeof o.coverage === 'string') return overrule(o)
+    console.error('--overrule needs --coverage <content-coverage.json>')
+    return 2
+  }
   if (typeof o.request !== 'string' || typeof o.verdicts !== 'string') {
     console.error(USAGE)
     return 2

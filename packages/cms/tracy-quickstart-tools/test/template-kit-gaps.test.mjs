@@ -5,7 +5,7 @@ import { test } from 'node:test'
 
 import { mergeSite } from '../template-kit/lib/kit-site.mjs'
 import { reviewRows } from '../template-kit/lib/review-sheet.mjs'
-import { gapId, templateGaps } from '../template-kit/lib/template-gaps.mjs'
+import { errorsBesideGaps, gapId, templateGaps } from '../template-kit/lib/template-gaps.mjs'
 
 const MAP = {
   entities: [
@@ -239,5 +239,19 @@ test('template gaps: a row fix measured on a page the kit left out is not propos
   assert.deepEqual(
     gaps.map((g) => g.where.selector),
     ['div.kept-by-block div.row', 'div.kept-by-list ul']
+  )
+})
+
+test('a page without an h1 is a template gap, so its missing h1 is no longer an error; two h1 stay one', () => {
+  const kit = kitOf()
+  const gaps = templateGaps({ kit, mainHeadings: SITE.mainHeadings })
+  const errors = [
+    ...SITE.errors,
+    { kind: 'missing', field: 'pages[page-home].h1', reason: 'the page shows 2 h1' },
+    { kind: 'missing', field: 'pages[page-home].images', reason: 'no shot' }
+  ]
+  assert.deepEqual(
+    errorsBesideGaps(errors, gaps).map((e) => e.field),
+    ['pages[page-home].h1', 'pages[page-home].images']
   )
 })

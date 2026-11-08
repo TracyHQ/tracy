@@ -124,6 +124,7 @@ export async function openFrozen(ctx, url, assigned, hide, { wake = 'full' } = {
     await page.waitForLoadState('load', { timeout: 5000 }).catch(() => {})
     await quickWake(page)
   }
+  if (wake === 'full') await waitForReveals(page)
   // Text is measured in the template's own fonts, never in a fallback that happens to show while they load.
   if (wake !== 'full')
     await page.evaluate(() => Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 2000))]))
@@ -132,6 +133,38 @@ export async function openFrozen(ctx, url, assigned, hide, { wake = 'full' } = {
   await page.waitForTimeout(wake === 'full' ? 300 : 50)
   const found = await page.evaluate(findBlocks, assigned ?? [])
   return { page, status, ...found }
+}
+
+/**
+ * Wait, at most `REVEAL_WAIT` ms, while a block is faded out by a scroll reveal: a module wrapper (`#Mod<N>`,
+ * `#acm-...`) or an element around it at opacity 0 with an opacity transition, with a size, outside the header and
+ * the off-canvas menu. A reveal observer that skips the bottom of the window never fires for the last line of the
+ * page; the script's own timer shows it, and a block read before that is recorded as hidden and never shot.
+ */
+const REVEAL_WAIT = 5000
+export async function waitForReveals(page) {
+  const fading = () =>
+    page
+      .evaluate(() => {
+        const SKIP = '#t4-header, .t4-header, #t3-header, .t3-header, [class*="off-canvas"], .offcanvas'
+        const faded = (x) => {
+          const cs = getComputedStyle(x)
+          return (
+            Number(cs.opacity) === 0 &&
+            /\b(?:opacity|all)\b/.test(cs.transitionProperty) &&
+            cs.display !== 'none'
+          )
+        }
+        for (const el of document.querySelectorAll('[id^="Mod"], [id^="acm-"]')) {
+          if (el.closest(SKIP)) continue
+          const r = el.getBoundingClientRect()
+          if (r.width < 4 || r.height < 4) continue
+          for (let x = el; x && x !== document.body; x = x.parentElement) if (faded(x)) return true
+        }
+        return false
+      })
+      .catch(() => false)
+  for (let waited = 0; waited < REVEAL_WAIT && (await fading()); waited += 200) await page.waitForTimeout(200)
 }
 
 /** One PNG of the page from the top, at most MAX_SHOT_HEIGHT tall. */

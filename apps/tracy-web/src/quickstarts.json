@@ -1158,33 +1158,46 @@
   },
   "quickstart/ja-voyara/j6": {
     "platform": "joomla",
-    "version": "1.0.10",
+    "version": "1.0.12",
     "webroot": {
-      "file": "ja-voyara-j6-webroot-1.0.10.tar.gz",
-      "bytes": 196029350,
-      "sha256": "3a14efae170be5d4f998dc92d8f6befaf888dc2a3095cf528e04fb34a96d5d8d",
-      "githubAssetId": 683875069,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-webroot-1.0.10.tar.gz"
+      "file": "ja-voyara-j6-webroot-1.0.12.tar.gz",
+      "bytes": 196038507,
+      "sha256": "b74b04a08671fead170edf60d500d8c3cea1f35d52dea32d9e6b6c8510fd787a",
+      "githubAssetId": 720286341,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-webroot-1.0.12.tar.gz"
     },
     "database": {
-      "file": "ja-voyara-j6-database-1.0.10.sql.gz",
-      "bytes": 356059,
-      "sha256": "6482a528fd611110262708ab96825259545000096a2fc2e95d166bc3eb632351",
-      "githubAssetId": 683870055,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-database-1.0.10.sql.gz"
+      "file": "ja-voyara-j6-database-1.0.12.sql.gz",
+      "bytes": 369378,
+      "sha256": "78e622660c3efc8619364be183c282ffe865d87778f7e95b26834fa81bddcab8",
+      "githubAssetId": 720286347,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-database-1.0.12.sql.gz"
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.37.zip",
-      "version": "0.24.37",
-      "bytes": 58117565,
-      "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.37/pkg_claudecowork-0.24.37.zip",
+      "file": "pkg_claudecowork-0.24.89.zip",
+      "version": "0.24.89",
+      "bytes": 585599,
+      "sha256": "bc915fbe463fa7a0b25641b0139dd964d20bcd352ebba6e8dfa427b9251493b5",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.89/pkg_claudecowork-0.24.89.zip",
       "overridesRelease": true,
-      "contractVersions": ["1.0.1", "1.0.2", "1.0.3", "1.0.4", "1.0.5", "1.0.6", "1.0.7", "1.0.8", "1.0.9"],
+      "contractVersions": [
+        "1.0.1",
+        "1.0.2",
+        "1.0.3",
+        "1.0.4",
+        "1.0.5",
+        "1.0.6",
+        "1.0.7",
+        "1.0.8",
+        "1.0.9",
+        "1.0.10",
+        "1.0.11"
+      ],
       "contractFiles": {
-        "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
-        "manifest.json": "bb39773bffdece97fbe9b9e6b91c30dd96a56ee73897bae286cc98692e072103",
-        "presentation-lock.json": "07ed4984cdafa54b25f244e226160b4ae790964d8ab51076c7cfb8b4a6576b13"
+        "content-map.json": "5842836cbe11915bb61f30871f3b5b695cdcfa595858041baaa9f9a9e1012ab3",
+        "manifest.json": "897489b649536906753f46c8b9517cdc2cdd0e7b0c35af5fbd057623febcd5fe",
+        "presentation-lock.json": "425bf05cce746f39d266de4e351f2961e8519093fc35db4b5ebf1774d0b0add0",
+        "showcase-nav-map.json": "7dbf117b8904a5e5c73df79b30c0485afdf336791cffa8ff507a16a41ef7d35a"
       },
       "alsoCarries": {
         "ja-voyara/j6/1.0.1": {
@@ -1231,10 +1244,20 @@
           "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
           "manifest.json": "005f8492935cddc1990a007c5e207b4d2b759c4adc7fc3134a95a0732ab7df77",
           "presentation-lock.json": "633d5599873e26fca5b5c8ff65152aca7ed67d7f2f392bf858a694b61f0846fe"
+        },
+        "ja-voyara/j6/1.0.10": {
+          "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+          "manifest.json": "bb39773bffdece97fbe9b9e6b91c30dd96a56ee73897bae286cc98692e072103",
+          "presentation-lock.json": "07ed4984cdafa54b25f244e226160b4ae790964d8ab51076c7cfb8b4a6576b13"
+        },
+        "ja-voyara/j6/1.0.11": {
+          "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+          "manifest.json": "c60306ad7dba945af3b5edba92bf0963e1c277e981443c49783efc0cc16eb943",
+          "presentation-lock.json": "44d43b156b2e6e3934783dc1e78be498f5dce558885bfbaf5b65eb864d508f48"
         }
       }
     },
-    "contract": "ja-voyara/j6/1.0.10"
+    "contract": "ja-voyara/j6/1.0.12"
   },
   "quickstart/ja-kinetic/j6": {
     "platform": "joomla",

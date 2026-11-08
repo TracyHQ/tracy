@@ -16,7 +16,7 @@ export function keepRows({ block, path, shape, css, keep }) {
     /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$|(?:^|-)row\d$|^(?:odd|even)$/
   const sig = (el) =>
     `${el.tagName}.${[...el.classList]
-      .filter((c) => !STATE.test(c))
+      .filter((c) => !STATE.test(c) && !(c.includes('--') && el.classList.contains(c.split('--')[0])))
       .sort()
       .join('.')}`
   const root = document.querySelector(`[data-kit-block="${block}"]`)

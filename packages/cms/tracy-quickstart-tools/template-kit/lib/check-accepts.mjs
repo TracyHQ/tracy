@@ -16,7 +16,9 @@ export const ACCEPTABLE_CHECKS = [
   'deadControls',
   'mapLocationUnmapped',
   'phoneNotCallable',
-  'rowPartsUnpaired'
+  'rowPartsUnpaired',
+  // A page without a title slot (page-titles.mjs), counted in the coverage gate: explained in checkAccepts.slotCoverage.
+  'pageTitleSlots'
 ]
 export const UNMATCHED_PART = 'checkAcceptsUnmatched'
 

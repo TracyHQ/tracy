@@ -4,6 +4,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { normText, letterCount } from './normalize.mjs'
+import { decodePhpLiterals } from './php-literals.mjs'
 
 const TEXT_EXT = /\.(php|ini|json|xml|html?|css|scss|less|js|svg|txt)$/i
 
@@ -81,7 +82,9 @@ export function buildSourceIndex(webroot, template, platform = 'joomla') {
       !rel.toLowerCase().startsWith(`templates/${template.toLowerCase()}/`)
     )
       continue
-    const body = readFileSync(f, 'utf8')
+    const read = readFileSync(f, 'utf8')
+    // A PHP literal is indexed as PHP prints it ("Don\'t" is "Don't"), so the words it renders are found.
+    const body = /\.php$/i.test(rel) ? decodePhpLiterals(read) : read
     const origin = wordpress ? { cls: 'b', label: 'theme file' } : originOf(rel, template)
     if (rel.endsWith('.ini')) for (const s of iniStrings(body)) ini.push({ rel, origin, ...s })
     else

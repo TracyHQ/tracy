@@ -22,6 +22,10 @@ import { declaredIn } from './page-coverage.mjs'
 const LABEL_ROLE = /(_label|\.title|\.name)$/
 const hasLetters = (s) => /\p{L}/u.test(s)
 const hasDigits = (s) => /\p{N}/u.test(s)
+const escaped = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+/** The words `w` stand whole in `n`: no letter or digit right before or after them. */
+const wholeIn = (n, w) =>
+  !!w && new RegExp(`(?:^|[^\\p{L}\\p{N}])${escaped(w)}(?:$|[^\\p{L}\\p{N}])`, 'u').test(n)
 
 /** A resolver: (block, link, declared ids of the block, ids its links already name) -> the label slot id, or null. */
 function labelResolver(map) {
@@ -56,12 +60,12 @@ function labelResolver(map) {
   const opened = openedBy(map)
   // A link wrapping a whole card of an item (its tag, title, a cut excerpt, author and date in one `<a>`) shows that
   // item's title whole among other words: the title, name or heading slot of the item the link opens, the longest.
+  // A sign glued to the title (the `#` of a tag) is a word boundary too.
   const titleIn = (n, entities) => {
-    const padded = ` ${n} `
     for (const e of entities) {
       const hit = text
         .filter((s) => s.entity === e && /(_label|\.title|\.name|\.heading)$/.test(s.role ?? ''))
-        .filter((s) => hasLetters(normText(s.sample ?? '')) && padded.includes(` ${normText(s.sample)} `))
+        .filter((s) => hasLetters(normText(s.sample ?? '')) && wholeIn(n, normText(s.sample)))
         .sort((x, y) => normText(y.sample).length - normText(x.sample).length)[0]
       if (hit) return neutralKey(hit.key)
     }
@@ -97,7 +101,46 @@ function labelResolver(map) {
       (letters && same.length === 1 ? same[0] : null)
     return pick ? neutralKey(pick.key) : null
   }
-  return (b, l, declared, used = new Set()) => {
+  const textByKey = new Map(text.map((s) => [neutralKey(s.key), s]))
+  // A card link of the block's own slots printed one after another (a help card's title and line, a post's
+  // category and title), with the block's strings between them: the title or name slot, else the first one shown.
+  const ownCard = (b, n, declared) => {
+    const parts = [...(declared ?? [])]
+      .map((k) => textByKey.get(k))
+      .filter((s) => s && hasLetters(normText(s.sample ?? '')) && wholeIn(n, normText(s.sample)))
+      .sort((x, y) => normText(y.sample).length - normText(x.sample).length)
+    let rest = n
+    const shown = []
+    for (const s of parts) {
+      const w = normText(s.sample)
+      if (!rest.includes(w)) continue
+      rest = rest.split(w).join(' ')
+      shown.push(s)
+    }
+    for (const t of b.fixedText ?? []) {
+      const f = normText(t.text ?? '')
+      if (f) rest = rest.split(f).join(' ')
+    }
+    if (shown.length < 2 || /[\p{L}\p{N}]/u.test(rest)) return null
+    const at = (s) => n.indexOf(normText(s.sample))
+    const titled = shown.filter((s) => /(\.title|\.name|\.heading)$/.test(s.role ?? ''))
+    const pick = titled[0] ?? [...shown].sort((x, y) => at(x) - at(y))[0]
+    return neutralKey(pick.key)
+  }
+  // A link that shows its own e-mail or phone address, written inside a text slot of the block's own item (a body
+  // that prints `<a href="mailto:...">` in its text): that text slot, when it is the only one.
+  const addressIn = (b, l, n) => {
+    const to = String(l.target ?? '')
+    if (!n || !/^(?:mailto|tel):/i.test(to)) return null
+    const address = decodeURIComponent(to.replace(/^[a-z]+:/i, '').split('?')[0])
+    const digits = (x) => x.replace(/\D/g, '')
+    const same = /^tel:/i.test(to) ? digits(address) === digits(n) : normText(address) === n
+    if (!same) return null
+    const own = new Set([b.source?.entity, ...(b.source?.contains ?? [])].filter(Boolean))
+    const hits = text.filter((s) => own.has(s.entity) && wholeIn(normText(s.sample ?? ''), n))
+    return hits.length === 1 ? neutralKey(hits[0].key) : null
+  }
+  const shownWords = (b, l, declared, used) => {
     const n = normText(l.label ?? '')
     const found = resolveWords(b, l, n, declared, used)
     if (found || !n) return found
@@ -118,6 +161,18 @@ function labelResolver(map) {
     if (!rest || !hasLetters(rest) || fixed.some((f) => f.includes(rest))) return null
     return resolveWords(b, l, rest, declared, used, true) ?? titleIn(n, opened(l.target))
   }
+  return (b, l, declared, used = new Set()) => {
+    const n = normText(l.label ?? '')
+    const found = shownWords(b, l, declared, used) ?? (n ? ownCard(b, n, declared) : null)
+    if (found) return found
+    // A picture link whose words are a badge and a rating, named by its own aria-label or title (the item's title).
+    const name = l.icon?.title
+    if (name && normText(name) !== n) {
+      const named = shownWords(b, { ...l, label: name }, declared, used)
+      if (named) return named
+    }
+    return addressIn(b, l, n)
+  }
 }
 
 /**
@@ -137,8 +192,8 @@ function openedBy(map) {
     const q = new URLSearchParams(String(p.link ?? '').split('?')[1] ?? '')
     const view = q.get('view') === 'author' ? 'user' : q.get('view')
     const item =
-      /^(category|article|tag|contact|user)$/.test(view ?? '') && q.get('id')
-        ? `${view}-${q.get('id')}`
+      /^(category|article|tag|contact|user)$/.test(view ?? '') && (q.get('id') ?? q.get('id[0]'))
+        ? `${view}-${q.get('id') ?? q.get('id[0]')}`
         : null
     pages.set(clean(p.route), [item, p.entity].filter(Boolean))
   }
@@ -161,7 +216,9 @@ function openedBy(map) {
     const seg = r.split('/')
     const view = seg.at(-2)
     const kind = view === 'author' ? 'user' : view
-    const named = (byAlias.get(seg.at(-1).replace(/^\d+-/, '')) ?? []).filter(
+    // An alias may start with a number (`48-hours-in-porto`): the whole segment first, then without an id prefix.
+    const last = seg.at(-1)
+    const named = (byAlias.get(last) ?? byAlias.get(last.replace(/^\d+-/, '')) ?? []).filter(
       (e) => !/^(tag|category|article|contact|user)$/.test(kind) || e.kind === kind
     )
     const page = pages.get(r) ?? []

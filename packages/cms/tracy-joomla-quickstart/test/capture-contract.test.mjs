@@ -1286,6 +1286,44 @@ test(
   }
 )
 
+test(
+  "--full-coverage declares an article's note, which a card can print as its label, after its other slots",
+  needsPhp,
+  () => {
+    // JA Voyara 1.0.12: the featured view prints each article's note as the card's label chip.
+    const plain = fullInventory()
+    plain.content[1].created_by_alias = 'Wren Harbor'
+    const noted = fullInventory()
+    noted.content[1].created_by_alias = 'Wren Harbor'
+    noted.content[1].note = 'Outdoors'
+    noted.content[0].note = ''
+    const args = {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage'],
+      schemas: { features: ICONS_XML },
+      files: FULL_FILES
+    }
+    const before = capture(plain, args)
+    const after = capture(noted, args)
+    assertWritten(before)
+    assertWritten(after)
+    const slotsOf = (run) => run.read('content-map.json').slots
+    const note = slotsOf(after).filter((s) => s.column === 'note')
+    assert.deepEqual(
+      note.map((s) => [s.entity, s.type, s.sample, s.customize]),
+      [['article-3', 'text', 'Outdoors', 'keep']]
+    )
+    // Every slot the old rules made keeps its key; the note is the article's last slot.
+    const keys = (run) =>
+      slotsOf(run)
+        .filter((s) => s.column !== 'note')
+        .map((s) => [s.key, s.column, s.sample])
+    assert.deepEqual(keys(after), keys(before))
+    const article = slotsOf(after).filter((s) => s.entity === 'article-3')
+    assert.equal(article.at(-1).column, 'note')
+    assert.equal(note[0].key, `article-3.${article.length - 1}`)
+  }
+)
+
 // ── Template language strings and titles a layout prints (--full-coverage) ─────────────────────────
 // JA Boxing 1.0.2 keeps visitor words in its language file ("Try a class" is `Text::_('TPL_TRY_CLASS')`), and
 // prints module titles its modules hide (`showtitle` 0): a tab bar of an ACM container (`$mod->title` of the
@@ -2381,6 +2419,30 @@ test(
       map.entities.some((e) => e.key === 'menuItem-102'),
       false
     )
+  }
+)
+
+test(
+  '--skip-unpublished-menu-pages keeps an unpublished menu item as an entity but no page of the map',
+  needsPhp,
+  () => {
+    const inv = () => {
+      const i = clean()
+      i.menu.push(menu('120', { path: 'experiences/later', title: 'Later', published: '0' }))
+      return i
+    }
+    const plain = capture(inv())
+    assertWritten(plain)
+    assert.ok(plain.read('content-map.json').pages.some((p) => p.entity === 'menuItem-120'))
+    const run = capture(inv(), { args: ['--skip-unpublished-menu-pages'] })
+    assertWritten(run)
+    const map = run.read('content-map.json')
+    assert.deepEqual(
+      map.pages.map((p) => p.entity),
+      ['menuItem-101']
+    )
+    assert.ok(map.entities.some((e) => e.key === 'menuItem-120'))
+    assert.ok(run.read('presentation-lock.json').entities['menuItem-120'])
   }
 )
 

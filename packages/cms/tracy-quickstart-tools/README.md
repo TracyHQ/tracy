@@ -166,6 +166,7 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   `lock`, `cause`, `evidence`, `pages`, `firstPage`). `pages.failed` is the count of pages that did not render;
   `pages.failures` lists each one (path and query only, never the stand address, with `mapPage`, `status` or `error`
   when known), so the next reader knows which page it was.
+- **Article layouts.** With `--db-dump` and `--webroot`, each published article whose attribs ask for a layout of the active template (`<template>:<name>` or `<name>`, a file `html/com_content/article/<name>.php`) must show that file's root element on its page: every literal class of the root on one element, at least one of them absent from default.php's root. A page that does not is a failure (`pages.failures`, holds Publish); a layout with no class of its own, or an article the crawl never reached, is listed in `articleLayouts.cannotCheck`, never passed (`content-coverage/lib/article-layout.mjs`).
 - **Site map and header (audit 1.6.0).** The same file carries `sitePages`: one row per page the content map declares,
   in map order, none dropped, with `opens` (`live` with its HTTP status and path, `broken` with the status it answered,
   `no-page` for a menu group or a `#` link, `link` for a menu entry to another address, `unpublished`, `offsite`, or
@@ -255,8 +256,9 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   the question, the allowed verdicts and version 3 roles, the answer format, and per component its crop with numbered
   slots (the verify viewer's crops, with a margin, in `<out>/label-judge/images/`), the page title and URL, the module
   title and position, the neighbouring components' titles, and the slots to judge (number, key, kind, sample, role,
-  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "slots": [{"key", "verdict": "right" |
-  "wrong", "suggestedRole", "why"}]}`) and records it with `content-coverage/record-judge.mjs --request <file>
+  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "crops": [{"crop", "seen"}], "slots": [{"key",
+  "verdict": "right" | "wrong", "suggestedRole", "why"}]}`; every crop of the request named once with a line of what it
+  shows, so a file written from the slot tables alone is refused) and records it with `content-coverage/record-judge.mjs --request <file>
   --verdicts <file>`, which refuses the whole file on a missing, unknown or doubled key, a verdict other than right or
   wrong, or a suggested role outside `place-content-roles/3` (`content-coverage/lib/label-judge-record.mjs`), and
   otherwise writes `labelJudge` (with `judgedBy`) into the coverage files the request names. It targets what the rules
@@ -267,6 +269,16 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   (`coverage-judge-warn`); a version 2 map is listed and never holds.
 - **Accepting a hole or a page problem.** Only when it is truly not demo content a customer sees: add
   `"accepted": "<reason>"` to that line (English, at least 12 characters). The next `--write` keeps it.
+- **Rebuild without the site (`--reclassify`, `--report-only`).** After a content-map-only change, run the same
+  command with `--reclassify` on the same `--out`: the items come from `findings.json` (per page and viewport: text,
+  images, links, boxes, selectors, looks, shots), and the label judge reuses `<out>/module-boxes.json` (the module
+  wrapper and article container boxes, `module-boxes/1`) instead of opening every page again. It reuses them only when
+  their input fingerprint matches this run's: site address, `--db-dump` sha256, `--webroot` tree hash, the audited
+  page list and the source of the code that reads them. No dump or webroot, no fingerprint (a run before this file
+  existed), a mismatch or a saved failed page: the boxes are read in the browser again and stderr says why
+  (`[modules] reading module boxes in the browser: ...`). `--trust-saved-boxes` skips the check (logged `TRUSTED`;
+  for one-off proofs only). A full run always reads the site and saves the file for the next one
+  (`content-coverage/lib/verify/module-boxes-saved.mjs`).
 - **Exit.** `0` the policy passes · `1` holes, page problems (or an incomplete run) hold Publish ·
   `2` usage or run error.
 - **When it is red.** The fix loop (capture class: fix the capture RULE for every template, never one
@@ -452,6 +464,11 @@ Run `pack` after. Without a measurement a tie between two slots of a page stays 
    `cli.mjs created-page-hide --kit <kit dir>/template-kit.json --selector '.share-social' --why '<where>'` names a block the
    template prints hard coded on every article page (a share bar) that a page the write step creates must not show (or
    `--none --why`); the write step hides it on the created pages only, so the owner's own articles keep it.
+   `cli.mjs stock-screens --kit <kit dir>/template-kit.json --path '/pages/writers' --why '<why no customer content fills it>'`
+   names a stock screen every plan drops (a path, or one ending in `/*` for every page beneath it; it may name a page left out
+   of the kit); the planner drops it after the model, its checker refuses a plan that keeps it, and the write step unpublishes
+   its menu item unless a kept page needs the path, so pair it with a `hidden-page-links` container for the links to it. The
+   field is optional (or `--none --why`), and the readiness verdict does not ask for it.
    The template readiness verdict holds the kit until all five of these fields (steps 8 and 9) name something or say
    none with a reason (`kit-hidden-field-missing`). The write step scopes the self link and created page rules by the
    menu item class the framework prints on the body (T4 `item-<id>`, T3 `itemid-<id>`), read from the release's template

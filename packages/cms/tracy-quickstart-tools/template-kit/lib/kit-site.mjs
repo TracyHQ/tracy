@@ -4,6 +4,7 @@
 import { createHash } from 'node:crypto'
 
 import { normText } from '../../content-coverage/lib/normalize.mjs'
+import { keepDeclaredSiteFields } from './declared-site-fields.mjs'
 import { neutralKey } from './ids.mjs'
 import { indexMap, ownerOfPath } from './map-index.mjs'
 import { linkAction, listHolds } from './site/helpers.mjs'
@@ -15,8 +16,10 @@ const ITEM_KINDS = /^(article|contact|user|userProfile)$/ // an entity with a pa
  * @param {{site: object, mainHeadings: object[], errors: object[]}|null} doc site.json, or null when it is missing
  * @param {object} map the content map
  * @param {object|null} [words] words-links.json: the DOM verdict on each piece of template words
+ * @param {object|null} [previous] the kit already in the folder: the site fields a person declared on it are kept as
+ *   written (declared-site-fields.mjs), since site.json never holds them
  */
-export function mergeSite(kit, doc, map, words = null) {
+export function mergeSite(kit, doc, map, words = null, previous = null) {
   if (!doc) {
     kit.site = null
     kit.errors.push({ kind: 'missing', field: 'site', reason: 'the site part did not run (no site.json)' })
@@ -29,6 +32,7 @@ export function mergeSite(kit, doc, map, words = null) {
       if (channels[entity]) c.accepts = channels[entity]
     }
     if (doc.site) delete doc.site.contactChannels
+    keepDeclaredSiteFields(kit, previous)
     // A page the kit left out (a template showcase page) is not the kit's to fix.
     const kept = new Set(kit.pages.map((p) => p.id))
     const leftOut = (e) => {

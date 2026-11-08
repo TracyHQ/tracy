@@ -20,6 +20,7 @@ import {
   withHiddenLinkBlock
 } from '../lib/hidden-page-links.js'
 import { menuRows } from '../lib/joomla-menu-rows.js'
+import { stockScreensToDrop } from '../lib/stock-screens.js'
 import { headModuleOf } from './brand-write-orders.js'
 import { rowsOpening } from './page-meta-write.js'
 import { doorCall, readRow } from './settings-door.js'
@@ -28,12 +29,15 @@ export { HIDDEN_LINKS_SLOT }
 
 const each = (value) => (Array.isArray(value) ? value : [])
 
-/** The kit paths of the pages the plan does not keep. */
+/** The kit paths of the pages the plan does not keep, and of the kit's stock screens it does not keep (lib/stock-screens.js). */
 const droppedPathsOf = (kit, plan) => {
   const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
-  return each(plan?.pages)
-    .filter((p) => p?.decision !== 'keep' && typeof kitPages.get(p?.id)?.path === 'string')
-    .map((p) => kitPages.get(p.id).path)
+  return [
+    ...each(plan?.pages)
+      .filter((p) => p?.decision !== 'keep' && typeof kitPages.get(p?.id)?.path === 'string')
+      .map((p) => kitPages.get(p.id).path),
+    ...stockScreensToDrop(kit, plan).map((p) => p.path)
+  ]
 }
 
 /** The kit block a content map key belongs to (`module-178.16` is in the block whose source is module-178). */

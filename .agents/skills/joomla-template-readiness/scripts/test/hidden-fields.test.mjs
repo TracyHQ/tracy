@@ -16,7 +16,9 @@ test('saves only the five hidden fields and their reasons', () => {
     emptyVideoButtons: site.emptyVideoButtons,
     selfLinkButtons: [],
     noneWhy: { selfLinkButtons: 'no more button on any layout' },
-    legal: site.createdPageLayouts.legal
+    // Saved under its own field path since the shared list (template-kit lib/declared-site-fields.mjs); a file saved
+    // before it, with `legal`, still replays.
+    createdPageLayouts: { legal: site.createdPageLayouts.legal }
   })
 })
 

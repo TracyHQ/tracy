@@ -59,8 +59,22 @@ function contractDir() {
       { key: 'module-90.phone', type: 'text', sample: '(239) 555-0177' },
       // A figure field the template prints after a hard-coded currency sign ("$<?= $raise ?>").
       { key: 'module-90.raised', type: 'text', sample: '4,500' },
+      // A tour's price field, printed alone in the quick facts and after a hard-coded label on the booking button.
+      { key: 'article-4.price', type: 'text', sample: '$2,450' },
       // A store link kept in a text field of the template's extra fields.
-      { key: 'article-2.store', type: 'text', sample: 'https://music.apple.com/' }
+      { key: 'article-2.store', type: 'text', sample: 'https://music.apple.com/' },
+      // Template language strings with printf placeholders (capture's language-string rule) and an author's name.
+      { key: 'languageString-1.0', type: 'text', sample: 'Showing %1$s of %2$s' },
+      { key: 'languageString-2.0', type: 'text', sample: 'Follow %s' },
+      { key: 'languageString-3.0', type: 'text', sample: 'Ready to write your own %s chapter?' },
+      { key: 'user-45.0', type: 'text', sample: 'Riley Moss' },
+      // A policy paragraph that names an address in its text, and a label a card prints before it.
+      { key: 'article-3.label', type: 'text', sample: 'HOUSE RULES' },
+      {
+        key: 'article-3.body',
+        type: 'text',
+        sample: 'Write to rules@example.test for any question about these rules and we answer within a day.'
+      }
     ],
     pages: [{ entity: 'menu-101', route: 'home' }]
   })
@@ -164,6 +178,23 @@ test('a block made of a label slot and a phone slot is that pair: a figure slot 
   )
 })
 
+test('a short figure slot inside a block is removed from it: the words the template writes around it are what is left', () => {
+  // JA Voyara 1.0.12: tour.php prints 'Reserve \u2014 ' . $tourPrice on the booking button; the price is a slot with
+  // no letter and fewer than 7 figures, so the whole button used to be one unknown hole that read as a price.
+  const { items } = audit([
+    { kind: 'text', value: 'Reserve \u2014 $2,450' },
+    { kind: 'text', value: 'Reserve \u2014 $9,950' },
+    { kind: 'text', value: 'Reserve \u2014 $2,4500' }
+  ])
+  const [button, other, longer] = items
+  assert.deepEqual(
+    [button.status, button.matchBy, button.slots, button.remainder],
+    ['hole', 'partial', ['article-4.price'], 'reserve -']
+  )
+  assert.deepEqual([other.status, other.slots ?? null], ['hole', null])
+  assert.deepEqual([longer.status, longer.slots ?? null], ['hole', null])
+})
+
 test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside a word is not', () => {
   // The page shows "Ring Ready" <br> "Now" as two blocks; each is a piece of the one heading slot, which a writer
   // replaces as a whole.
@@ -179,6 +210,42 @@ test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside
   )
   assert.equal(byValue(items, 'Now').status, 'matched')
   assert.notEqual(byValue(items, 'Rea').status, 'matched')
+})
+
+test('a language string with placeholders matches text filled with counts, slot text or a first name; other words stay holes', () => {
+  const { items } = audit([
+    { kind: 'text', value: 'Showing 8 of 82' },
+    { kind: 'text', value: 'Follow Riley' },
+    { kind: 'text', value: 'Ready to write your own Advanced Boxing chapter?' },
+    { kind: 'text', value: 'Follow Morgan' }
+  ])
+  assert.deepEqual(
+    items.map((i) => [i.status, i.matchBy ?? null, i.slots ?? null]),
+    [
+      ['matched', 'language pattern', ['languageString-1.0']],
+      ['matched', 'language pattern', ['languageString-2.0']],
+      ['matched', 'language pattern', ['languageString-3.0']],
+      ['hole', null, null]
+    ]
+  )
+})
+
+test('a card excerpt cut inside a slot is that slot; a cloaked address inside a slot text is its mailto link', () => {
+  const { items } = audit([
+    { kind: 'text', value: 'HOUSE RULES Write to rules@example.test for any question about…' },
+    { kind: 'text', value: 'HOUSE RULES Something else entirely that no slot holds…' },
+    { kind: 'link', value: 'mailto:rules@example.test', source: 'a', role: 'content' },
+    { kind: 'link', value: 'mailto:other@example.test', source: 'a', role: 'content' }
+  ])
+  assert.deepEqual(
+    items.map((i) => [i.status, i.matchBy ?? null]),
+    [
+      ['matched', 'composite'],
+      ['hole', 'partial'],
+      ['matched', 'address inside a slot text'],
+      ['hole', null]
+    ]
+  )
 })
 
 test('a paragraph with inline code is its slot when the words outside the code match; a block of code alone stays a hole', () => {
@@ -320,13 +387,43 @@ test('the coverage file names each page that failed to render, by path, never by
   const doc = buildCoverageFile({ result, contract, measuredAt: '2026-10-24T00:00:00.000Z' })
   assert.equal(doc.pages.failed, 2)
   assert.deepEqual(doc.pages.failures, [
-    { url: '/index.php?Itemid=909', mapPage: 'menuItem-909', status: 503 },
-    { url: '/blog/slow-page', error: 'Timeout 30000ms exceeded' }
+    { url: '/index.php?Itemid=909', code: 'page-not-rendered', mapPage: 'menuItem-909', status: 503 },
+    { url: '/blog/slow-page', code: 'page-not-rendered', error: 'Timeout 30000ms exceeded' }
   ])
   assert.equal(JSON.stringify(doc).includes(new URL(SITE).host), false)
   const clean = buildCoverageFile({ result: { ...result, failures: [] }, contract })
   assert.deepEqual(clean.pages.failures, [])
   assert.equal(coverageFileProblem(doc), null)
+})
+
+test('each failure of the coverage file names what failed by a code, so a dead link is never read as a page that did not render', () => {
+  const { contract, items } = audit([{ kind: 'text', value: 'Advanced Boxing' }])
+  const result = {
+    pages: [{ url: `${SITE}index.php?Itemid=101`, items }],
+    failures: [
+      {
+        url: `${SITE}pages/contact`,
+        origin: 'link',
+        status: 404,
+        error: 'dead link (404) shown on 2 page(s): /, /about'
+      },
+      {
+        url: `${SITE}tours/glacier-walk`,
+        origin: 'layout',
+        error: 'asks for layout ja_example:tour, the page serves the default'
+      },
+      { url: `${SITE}about`, error: 'module boxes not read (desktop: Timeout 30000ms exceeded)' },
+      { url: `${SITE}blog/slow-page`, origin: 'crawl', error: 'Timeout 30000ms exceeded' }
+    ],
+    capReached: false,
+    viewports: ['desktop'],
+    summary: { pages: 1, mappedPages: 1, unmappedPages: 0 }
+  }
+  const doc = buildCoverageFile({ result, contract })
+  assert.deepEqual(
+    doc.pages.failures.map((f) => f.code),
+    ['dead-link', 'layout-not-served', 'module-boxes-not-read', 'page-not-rendered']
+  )
 })
 
 test('configuration.php gives the visible site strings and never a secret', () => {

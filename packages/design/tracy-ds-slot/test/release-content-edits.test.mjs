@@ -850,3 +850,77 @@ test('a table edit reaches a copy Joomla keeps outside the contract (the tag ind
     /either "entity" or "table"/
   )
 })
+
+test('a row edit may name a path; a path written as \\/ in the dump is a count mismatch, not a miss', () => {
+  // A demo hero button linked to /pages/contact, which a site served without URL rewriting answers 404
+  const edit = {
+    entity: 'module-400',
+    field: 'params',
+    row: true,
+    from: '/pages/contact',
+    to: 'index.php?Itemid=275',
+    count: 1
+  }
+  const [e] = loadContentEdits(editsFile([edit]))
+  // outside a row the escapings still decide: a plain edit keeps refusing a slash
+  assert.throws(() => loadContentEdits(editsFile([{ ...edit, row: undefined, field: undefined }])), /slashes/)
+  const dump = (link) =>
+    'CREATE TABLE `jd_modules` (\n  `id` int,\n  `title` varchar(100),\n  `params` text\n);\n' +
+    `INSERT INTO \`jd_modules\` VALUES (400,'Hero','{\\"btn-link\\":\\"${link}\\"}'),(450,'Other','{\\"btn-link\\":\\"/pages/contact\\"}');\n`
+  // only module 400's row is edited; module 450 keeps the same link
+  const before = dump('/pages/contact')
+  const at = before.indexOf('/pages/contact')
+  assert.equal(editDump(before, [e]), before.slice(0, at) + 'index.php?Itemid=275' + before.slice(at + 14))
+  assert.throws(() => editDump(dump('\\\\/pages\\\\/contact'), [e]), /occurs 0 times/)
+  const lock = JSON.stringify(
+    {
+      entities: {
+        'module-400': { params: '{"btn-link":"/pages/contact"}' },
+        'module-450': { params: '{"btn-link":"/pages/contact"}' }
+      }
+    },
+    null,
+    2
+  )
+  const L = JSON.parse(editLock(lock, [e])).entities
+  assert.equal(L['module-400'].params, '{"btn-link":"index.php?Itemid=275"}')
+  assert.equal(L['module-450'].params, '{"btn-link":"/pages/contact"}')
+})
+
+// JA Voyara 1.0.12 (07/11/2026): Joomla 6 merges an article's own `article_layout` only where the menu item's value is
+// `use_article`; the tour category menu items had no such key, so every tour article printed the default layout. The
+// next version adds the key: a JSON pair edit may add one setting after a pair it keeps (`"adds": true`).
+const ADD_LAYOUT = {
+  entity: 'menuItem-7',
+  field: 'params',
+  row: true,
+  json: true,
+  adds: true,
+  from: '"menu-anchor_css":""',
+  to: '"menu-anchor_css":"","article_layout":"use_article"',
+  count: 1
+}
+
+test('an adding JSON edit keeps its pair and adds one new key, in its row only', () => {
+  assert.equal(loadContentEdits(editsFile([ADD_LAYOUT])).length, 1)
+  for (const bad of [
+    { adds: undefined }, // a plain pair edit changes a value, never adds a key
+    { to: '"menu-anchor_css":"x","article_layout":"use_article"' }, // the kept pair changed
+    { to: '"menu-anchor_css":"","menu-anchor_css":"x"' }, // the same key again
+    { to: '"menu-anchor_css":"","a":"b","c":"d"' }, // two new pairs
+    { row: undefined },
+    { count: 2 }
+  ])
+    assert.throws(() => loadContentEdits(editsFile([{ ...ADD_LAYOUT, ...bad }])))
+  const dump =
+    'INSERT INTO `x_menu` (`id`, `params`) VALUES (7,\'{\\"menu-anchor_css\\":\\"\\",\\"menu_show\\":1}\'),(8,\'{\\"menu-anchor_css\\":\\"\\"}\');'
+  const out = editDump(dump, [ADD_LAYOUT])
+  assert.ok(
+    out.includes(
+      '(7,\'{\\"menu-anchor_css\\":\\"\\",\\"article_layout\\":\\"use_article\\",\\"menu_show\\":1}\')'
+    )
+  )
+  assert.ok(out.includes('(8,\'{\\"menu-anchor_css\\":\\"\\"}\')'))
+  // a second run finds the key already there
+  assert.throws(() => editDump(out, [ADD_LAYOUT]), /already/)
+})
