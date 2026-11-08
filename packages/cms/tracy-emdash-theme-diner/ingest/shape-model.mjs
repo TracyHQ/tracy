@@ -26,10 +26,16 @@ for (const m of model.menus) {
 // The site chrome: one labelled singleton (brand, footer columns, newsletter band words). The footer columns are the
 // mod_custom modules 109/110/111 of the source, which the model keeps as `modules` entries; the newsletter words are those of
 // module 127 (AcyMailing, not ported: the model has no record for it), read from the rendered source.
+const stripTags = (h) => {
+  let prev
+  do {
+    prev = h
+    h = h.replace(/<[^>]+>/g, '')
+  } while (h !== prev)
+  return h
+}
 const strip = (h) =>
-  String(h ?? '')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<[^>]+>/g, '')
+  stripTags(String(h ?? '').replace(/<br\s*\/?>/gi, '\n'))
     .replace(/&amp;/g, '&')
     .replace(/[ \t\r]*\n[ \t\r\n]*/g, '\n')
     .trim()

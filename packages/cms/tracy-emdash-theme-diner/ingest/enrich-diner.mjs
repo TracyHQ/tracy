@@ -149,10 +149,15 @@ for (const c of inv.categories.filter((x) =>
       { name: 'online_button', type: 'text' }
     ]
   })
-  const mark = (h) =>
-    h
-      .replace(/<span class="hightlight">([\s\S]*?)<\/span>/g, '<mark>$1</mark>')
-      .replace(/<(?!\/?mark)[^>]+>/g, '')
+  const mark = (h) => {
+    let out = h.replace(/<span class="hightlight">([\s\S]*?)<\/span>/g, '<mark>$1</mark>')
+    let prev
+    do {
+      prev = out
+      out = out.replace(/<(?!\/?mark)[^>]+>/g, '')
+    } while (out !== prev)
+    return out
+  }
   const [top, s3 = ''] = html.split(/<div class="section-3/)
   const row = (chunk) => ({
     image: chunk.match(/<img src="([^"]+)"/)?.[1] ?? '',
