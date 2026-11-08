@@ -7,7 +7,8 @@
 //      row goes with every slot of its row (a stat card with its label, a quote with its signature), a slot of no row alone;
 //   3. demo-remains: no unit slot can be emptied (the kit keeps it, or the site says it cannot), and the line says so.
 // "No customer content" means: a text or picture slot of a kept block no file fills (the writer returned it, or left it out of
-// the copy), or a picture frame the picture step left without a picture. Every resolution is a line in `report.closing`.
+// the copy), a picture frame the picture step left without a picture, or a painted frame the write step could not draw (no brand
+// file to colour it, a drawing that failed). Every resolution is a line in `report.closing`.
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { kitSlotIndex } from '../lib/template-kit/kit-slots.js'
 
@@ -31,9 +32,10 @@ function unitOf(kit, id) {
  * The slots the closing rule empties, and its lines.
  * @param {{ kit: object, reading: object | null, unowned: { slot: string, type?: string | null }[],
  *   unaddressable: { slot: string, owner?: string | null, reason?: string }[], returns?: { slot: string, reason?: string }[],
- *   held?: string[], changes: Record<string, string>, emptySlots: string[] }} input `changes` what will be sent and `held`
+ *   held?: string[], changes: Record<string, string>, emptySlots: string[],
+ *   undrawn?: { slot: string, reason?: string }[] }} input `changes` what will be sent and `held`
  *   the slots an earlier run wrote (rung 1), `emptySlots` what
- *   the hide stage already empties
+ *   the hide stage already empties, `undrawn` the painted frames the picture stage could not draw
  * @returns {{ emptySlots: string[], dropped: string[], lines: object[] }} `emptySlots` to add, `dropped` change keys the
  *   unit's emptying takes back (a label written beside a number nobody gave), `lines` one per resolved slot
  */
@@ -45,7 +47,8 @@ export function closeDemoLeft({
   returns = [],
   held = [],
   changes,
-  emptySlots
+  emptySlots,
+  undrawn = []
 }) {
   const heldSlots = new Set(held)
   const kitSlots = kitSlotIndex(kit)
@@ -64,6 +67,9 @@ export function closeDemoLeft({
   for (const item of each(unaddressable))
     if (item?.owner === 'picture' && kitSlots.has(item.slot))
       why.set(item.slot, 'the picture step left this frame without a picture')
+  for (const item of each(undrawn))
+    if (typeof item?.slot === 'string')
+      why.set(item.slot, `this painted frame was not drawn (${item.reason ?? 'no reason given'})`)
   const add = []
   const dropped = []
   const lines = []

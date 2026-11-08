@@ -33,6 +33,20 @@ export const BENCH_HARNESS = Object.freeze({
 })
 
 /**
+ * The same harness with its cost caps taken off, for a run of the step chain (#478): a chain build is bounded by the
+ * chain's outer deadline, not by a USD figure per step. `budgetUsd` is left out (the agent door sets no budget when it
+ * is absent) and `capUsd` (the brand run's own cap) is `null`. Every other setting stays as it was.
+ * @param {object} harness
+ */
+export function withoutCaps(harness) {
+  const { budgetUsd: _budget, ...rest } = harness
+  return 'capUsd' in rest ? { ...rest, capUsd: null } : rest
+}
+
+/** `withoutCaps(harness)` for a run of a chain build, the harness as it is for any other (#478). */
+export const capsOf = (harness, noCaps) => (noCaps ? withoutCaps(harness) : harness)
+
+/**
  * DeepSeek's peak hours, in UTC: 01:00 to 04:00 and 06:00 to 10:00, Monday to Friday; every other hour is off-peak
  * (DeepSeek's pricing page, read 03/11/2026). DeepSeek also prices Chinese public holidays off-peak; they are ignored
  * here, so a call on such a holiday inside these hours is costed at the peak rate, an overestimate.

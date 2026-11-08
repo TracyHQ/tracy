@@ -4,7 +4,7 @@
 // block on each, naming the cell and the step that owns the value: copy is step 6, the plan step 3, pictures step 8, the brand
 // step 2, and the write step itself step 9. They read only the report, so they run before read-back and are never stopped by it.
 import { GroupUnmeasured } from './group-unmeasured.js'
-import { isStep, TEMPLATE_STEP, WRITE_STEP } from '../lib/site-build-steps.js'
+import { isStep, ownerStep, TEMPLATE_STEP, WRITE_STEP } from '../lib/site-build-steps.js'
 import { NEW_CONTRACT } from '../lib/new-contract-pointer.js'
 
 const stepOf = (step) => (isStep(step) ? step : WRITE_STEP)
@@ -117,4 +117,39 @@ export const emphasisCodesLeftGroup = {
   }
 }
 
-export const WRITE_FINDING_GROUPS = [lookGuardFindingsGroup, unaddressableItemsGroup, emphasisCodesLeftGroup]
+/**
+ * `slot-disputes`: every slot two files claimed with different content (ADR 0044, decision 3 as amended 2026-11-08). The write
+ * step settled each on its slot and went on; the step whose claim lost is blamed, as its file and the winner's disagree. A slot
+ * no claim fitted has no owner, so the closing ladder emptied it or its line says the demo remains.
+ */
+export const slotDisputesGroup = {
+  name: 'slot-disputes',
+  causingStep: WRITE_STEP,
+  /** @param {{ report: object }} context */
+  async run({ report }) {
+    // Every write report since decision 3 keeps `disputes`; one without it disputed nothing.
+    const disputes = each(report?.disputes)
+    return {
+      checked: disputes.length,
+      ...(disputes.length ? {} : { notApplicable: 'no two files claimed one slot with different content' }),
+      failures: disputes.map((d) => {
+        const lost = each(d.claims).find((c) => c?.content !== d.settled?.content) ?? each(d.claims)[0]
+        return {
+          slot: d.slot,
+          causingStep: stepOf(ownerStep(lost?.owner)),
+          measured: d.settled ? `${d.settled.owner} written` : 'no owner',
+          reason: `Two files claim this slot (${each(d.claims)
+            .map((c) => `${c.file} (${c.owner}, ${c.kind})`)
+            .join(' against ')}): ${d.reason ?? 'settled on this slot'}`
+        }
+      })
+    }
+  }
+}
+
+export const WRITE_FINDING_GROUPS = [
+  lookGuardFindingsGroup,
+  unaddressableItemsGroup,
+  slotDisputesGroup,
+  emphasisCodesLeftGroup
+]

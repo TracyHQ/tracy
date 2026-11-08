@@ -3,7 +3,7 @@
 // brief.brand and brief.missing, so those are the only parts looked at here.
 const isObject = (x) => x !== null && typeof x === 'object' && !Array.isArray(x)
 const isText = (x) => typeof x === 'string' && x.trim() !== ''
-/** The brief fields that hold the business name back (name-slots.js HELD_BACK_FIELDS). */
+/** The brief fields that hold the business name back (lib/brand-name-slots.js HELD_BACK_FIELDS). */
 const NAME_FIELDS = ['brand.name', 'name', 'business.name']
 
 /** Every problem that keeps the brief off the brand bench, in order; an empty list when it may run. */

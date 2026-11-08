@@ -330,3 +330,18 @@ test('a model that reads pictures records that images were given', opts, async (
   const run = await startRun(pool)
   assert.equal((await readRun(pool, run.id)).door.images, true)
 })
+
+test(
+  'a run started for a chain build (noCaps) stores no USD budget; a plain run keeps it (#478)',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool)
+    const plain = await readRun(pool, (await start(pool)).run.id)
+    assert.equal(plain.harness.budgetUsd, BENCH_HARNESS.budgetUsd)
+    await pool.query("update site_planner_run set status = 'cancelled', step = 'done', finished_at = now()")
+    const chained = await readRun(pool, (await start(pool, { noCaps: true })).run.id)
+    assert.equal('budgetUsd' in chained.harness, false)
+    assert.equal(chained.harness.maxTurns, plain.harness.maxTurns)
+  }
+)

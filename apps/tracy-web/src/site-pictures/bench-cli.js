@@ -16,6 +16,7 @@ export const USAGE = `usage: node scripts/site-pictures-bench.mjs <command>
                                           and a folder of its owner photos, each file named by its sha256
   run --plan-file <path> --kit <ref> --brief-revision <id>   queue a run on a plan and the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
+      [--no-caps]                         run without the USD budget (a step of a chain build)
       [--copy-file <path>]                a writer copy file (site-copy/1): its alts are compared with what the
                                           looker saw, in the manifest's altNotes
   list [--limit <n>]                      the newest runs
@@ -55,6 +56,7 @@ export async function runCli(argv, deps) {
         photos: { type: 'string' },
         'copy-file': { type: 'string' },
         by: { type: 'string' },
+        'no-caps': { type: 'boolean' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -183,6 +185,7 @@ async function startRun(d, values) {
     briefSource: brief.source,
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
+    noCaps: values['no-caps'] === true,
     photos,
     copy,
     storeDir: d.storeDir,

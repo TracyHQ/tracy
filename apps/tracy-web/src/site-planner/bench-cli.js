@@ -15,6 +15,7 @@ export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
   run --kit <ref> --brief-file <path>     queue a run on a brief JSON file
   run --kit <ref> --brief-revision <id>   queue a run on the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
+      [--no-caps]                         run without the USD budget (a step of a chain build)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, duration, checker summary
   get <runId> --out <dir>                 write every plan version, the check and failure list of each round,
@@ -46,6 +47,7 @@ export async function runCli(argv, deps) {
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
         by: { type: 'string' },
+        'no-caps': { type: 'boolean' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -158,6 +160,7 @@ async function startRun(d, values) {
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
     kitImages: d.kitImages,
+    noCaps: values['no-caps'] === true,
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)

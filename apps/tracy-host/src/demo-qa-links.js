@@ -12,12 +12,22 @@
  * out and counted as `overCap` or `outOfTime`, never reported as dead.
  */
 import { hostIn } from './demo-qa.js'
+import { probeSiteProxy } from './site-proxy-probe.js'
 
 export const MAX_LINKS_CHECKED = 120
 export const LINKS_AT_ONCE = 4
 export const REQUEST_TIMEOUT_MS = 5_000
 export const PHASE_MS = 20_000
 const REDIRECT_HOPS = 3
+
+/**
+ * The default request: Node's fetch drops a `host` header, so an address asked of the site proxy under the site's own name
+ * would reach the proxy as itself and never answer as the site. Such a request goes out by `node:http`, which keeps it.
+ */
+const siteFetch = (url, init) =>
+  init?.headers?.host
+    ? probeSiteProxy(url, { method: init.method, headers: init.headers, signal: init.signal })
+    : fetch(url, init)
 
 /**
  * @param {{ base: string, serveFrom?: string | null, serveFromIsProxy?: boolean, proxySiteLabel?: string | null, siteHosts?: string[] }} site
@@ -122,7 +132,7 @@ async function statusOf(href, target, how) {
 export async function withLinkStatus(
   measures,
   {
-    fetchImpl = fetch,
+    fetchImpl = siteFetch,
     signal,
     now = Date.now,
     deadlineAt = Infinity,

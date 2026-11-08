@@ -110,7 +110,7 @@ export async function prepareBrandStage({
   // brand is written (ADR 0044, decision 26).
   const known = kitSlotIds(kit)
   const unknown = plan.orders.filter((o) => o.via === 'contract' && !known.has(o.slot))
-  const orders = plan.orders.filter((o) => !unknown.includes(o))
+  let orders = plan.orders.filter((o) => !unknown.includes(o))
   const unaddressable = unknown.map((o) => ({
     slot: o.slot,
     key: o.key ?? null,
@@ -123,29 +123,38 @@ export async function prepareBrandStage({
   const read = await readPictures(orders, path.dirname(brandPath), inputs)
   if (read.stop) return stoppedBy(read.stop)
   const { pictures } = read
-  const accentOrder = orders.find((o) => o.via === 'module')
+  let accentOrder = orders.find((o) => o.via === 'module')
   let accent = null
   let routes = null
-  if (accentOrder) {
+  // An accent that cannot be built or placed is left out and said once on step 2: the template keeps its own accent colour, and the
+  // name, the logos and the rest of the brand are written (ADR 0044, decision 26 as amended 2026-11-08).
+  const accentProblem = async () => {
     const held = pictures.get(accentOrder.file).toString('utf8')
-    if (!held.includes(MODULE_MARK))
-      return stoppedBy({ code: 'BAD_FILE', reason: `brand: ${accentOrder.file} has no tracy-ds-slot mark` })
+    if (!held.includes(MODULE_MARK)) return `brand: ${accentOrder.file} has no tracy-ds-slot mark`
     accent = await accentPlace(accentOrder.contract)
-    if (!accent)
-      return stoppedBy({
-        code: 'BAD_FILE',
-        reason: `brand: this server has no slot contract ${accentOrder.contract}`
-      })
+    if (!accent) return `brand: this server has no slot contract ${accentOrder.contract}`
     if (templateSheets) {
       const built = await builtAccent({ templateSheets, brand, place: accent })
-      if (built.stop) return stoppedBy(built.stop)
+      if (built.stop) return built.stop.reason
       pictures.set(accentOrder.file, Buffer.from(built.html))
       routes = built.routes
     } else if (!held.includes(`tracy-ds-slot: ${ACCENT_SLOT_STEM}`))
-      return stoppedBy({
-        code: 'BAD_FILE',
-        reason: `brand: ${accentOrder.file} is a whole design-system style and no stylesheets were given to build the accent from`
-      })
+      return `brand: ${accentOrder.file} is a whole design-system style and no stylesheets were given to build the accent from`
+    return null
+  }
+  const problem = accentOrder ? await accentProblem() : null
+  if (problem) {
+    unaddressable.push({
+      slot: accentOrder.slot ?? 'brand:accent',
+      key: null,
+      owner: BRAND_OWNER,
+      part: PARTS[accentOrder.item],
+      reason: `${problem}; the template keeps its own accent colour`
+    })
+    orders = orders.filter((o) => o !== accentOrder)
+    accentOrder = null
+    accent = null
+    routes = null
   }
   const valueOf = (o) => (o.file ? picturePath(o, pictures.get(o.file)) : o.value)
   const changes = Object.fromEntries(inContract.map((o) => [o.key, valueOf(o)]))

@@ -169,6 +169,17 @@ export const OPS_B_ROUTES = [
   },
   {
     method: 'GET',
+    path: '/api/ops/wo/chain-builds',
+    summary: 'Read the step chain builds of /ops/wo with their minutes and spend',
+    description:
+      'For the chain builds table of /ops/wo: one row per site the step chain built, newest first (at most 200), with the minutes and USD of each step, the total, and how the build ended. A build still running shows the live snapshot of its run. `medianMinutes` is the usual duration of the finished builds and `slowAfterMinutes` the duration above which a build is far above the usual (null while fewer than three builds have finished). Staff seat required.',
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    answers: '`{builds, medianMinutes, slowAfterMinutes}`'
+  },
+  {
+    method: 'GET',
     path: '/api/ops/wo/demos/summary',
     summary: 'Read the demo retention settings and how many demos each state holds',
     description:

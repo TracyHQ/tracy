@@ -322,22 +322,24 @@ test('a copy-only run keeps working: no brand action, no brand line, no brand ph
   assert.equal(report.inputs.brand, undefined)
 })
 
-test('a slot the copy fills with other words is a dispute: nothing written, both files named', async () => {
+test('a slot the copy fills with other words is a dispute the brand wins: the name is written, both files named', async () => {
   const c = copy()
   c.slots.push({ slot: 'block-88.0', owner: 'writer', text: 'Another Name', factIds: [] })
-  const { report, site } = await runBrand({ files: { copyFile: c } })
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'SLOT_DISPUTE')
-  assert.match(report.cause.reason, /block-88\.0/)
+  const { report, line } = await runBrand({ files: { copyFile: c } })
+  assert.equal(report.status, 'done')
   assert.deepEqual(report.disputes[0].claims.map((x) => x.file).sort(), ['brand-file.json', 'copy.json'])
-  assert.equal(site.log.length, 0)
+  assert.equal(report.disputes[0].settled.owner, 'brand')
+  assert.equal(line('block-88.0').owner, 'brand')
+  assert.notEqual(line('block-88.0').ordered, 'Another Name')
 })
 
-test('the footer logo frame in the copy is a dispute too; the same name in the copy is not', async () => {
+test('the footer logo frame in the copy is a dispute the brand wins; the same name in the copy is not', async () => {
   const framed = copy()
   framed.slots.push({ slot: 'block-88.1', owner: 'writer', text: 'not a picture', factIds: [] })
   const disputed = await runBrand({ files: { copyFile: framed } })
-  assert.equal(disputed.report.cause.code, 'SLOT_DISPUTE')
+  assert.equal(disputed.report.status, 'done')
+  assert.equal(disputed.report.disputes[0].slot, 'block-88.1')
+  assert.equal(disputed.report.disputes[0].settled.owner, 'brand')
   const same = copy()
   same.slots.push({ slot: 'block-88.0', owner: 'writer', text: NAME, factIds: [] })
   const repeated = await runBrand({ files: { copyFile: same } })
@@ -359,9 +361,27 @@ const badBrands = {
   'not a brand file': [(b) => (b.kind = 'site-copy'), /kind/],
   'another version': [(b) => (b.version = 9), /version/],
   'a spot the kit lacks': [(b) => (b.logo.spots[0].spot = 'logo-side-9'), /logo-side-9/],
-  'a path out of its folder': [(b) => (b.favicon.ico = '../secret.ico'), /secret\.ico/],
-  'a module with no mark': [(b) => (b.colours.module.file = 'spots/logo-header-1.png'), /tracy-ds-slot/]
+  'a path out of its folder': [(b) => (b.favicon.ico = '../secret.ico'), /secret\.ico/]
 }
+
+/** An accent the stage cannot use is left out on step 2: the template keeps its accent and the rest of the brand is written. */
+function assertAccentLeftOut({ report, site }, words) {
+  assert.equal(report.status, 'done')
+  const item = report.unaddressable.find((u) => u.owner === 'brand' && words.test(u.reason))
+  assert.ok(item, 'the accent is said once, on the brand step')
+  assert.equal(item.step, 2)
+  assert.match(item.reason, /keeps its own accent colour/)
+  assert.ok(
+    !site.of('content.update').some((c) => String(c.params?.fields?.content ?? '').includes('tracy-ds-slot'))
+  )
+  assert.ok(site.of('content.contract', 'apply').length >= 1, 'the rest is written')
+}
+
+test('a brand file with a module with no mark keeps the template accent, and the rest of the brand is written', async () => {
+  const brand = brandFile()
+  brand.colours.module.file = 'spots/logo-header-1.png'
+  assertAccentLeftOut(await runBrand({ files: { brand } }), /tracy-ds-slot/)
+})
 for (const [what, [change, words]] of Object.entries(badBrands))
   test(`a brand file with ${what} stops the run with nothing asked of the site`, async () => {
     const brand = brandFile()
@@ -387,11 +407,8 @@ test('a brand file that is not JSON stops the run; a name slot the kit lacks is 
   assert.ok(unknown.site.log.length > 0, 'the rest of the brand is written')
 })
 
-test('a slot contract the server does not have stops the run before any write', async () => {
-  const { report, site } = await runBrand({ deps: { accentPlace: async () => null } })
-  assert.equal(report.cause.code, 'BAD_FILE')
-  assert.match(report.cause.reason, /joomla-demo-gym-modes/)
-  assert.equal(site.log.length, 0)
+test('a slot contract the server does not have keeps the template accent, and the rest of the brand is written', async () => {
+  assertAccentLeftOut(await runBrand({ deps: { accentPlace: async () => null } }), /joomla-demo-gym-modes/)
 })
 
 test("a plugin refusal fails that item in the plugin's words, and the others are still written", async () => {
@@ -592,23 +609,23 @@ test('the module the site gets is built from the served sheets, whatever the bra
   assert.equal(line('accent').ordered, html)
 })
 
-test('stylesheets that cannot be read, or that never paint the accent, stop the run before anything is written', async () => {
-  const unread = await runBrand(withSheets(async () => Promise.reject(new Error('no answer'))))
-  assert.equal(unread.report.status, 'stopped')
-  assert.equal(unread.report.cause.code, 'TEMPLATE_CSS_UNREADABLE')
-  assert.equal(unread.site.of('content.update').length, 0)
-  const foreign = await runBrand(withSheets(async () => ['a{color:#123456}']))
-  assert.equal(foreign.report.cause.code, 'BAD_ACCENT')
-  assert.match(foreign.report.cause.reason, /do not paint its accent #f0a000/)
+test('stylesheets that cannot be read, or that never paint the accent, keep the template accent; the rest is written', async () => {
+  assertAccentLeftOut(
+    await runBrand(withSheets(async () => Promise.reject(new Error('no answer')))),
+    /stylesheets could not be read/
+  )
+  assertAccentLeftOut(
+    await runBrand(withSheets(async () => ['a{color:#123456}'])),
+    /do not paint its accent #f0a000/
+  )
 })
 
-test('with no sheets to read, a whole design-system style is refused, so it can never reach a site again', async () => {
-  const { report } = await runBrand({
+test('with no sheets to read, a whole design-system style is never written: the template keeps its accent', async () => {
+  const run = await runBrand({
     files: {
       module:
         '<style id="tracy-ds-slot">/* tracy-ds-slot: brand:121111-ffffff-0f884d */ a{border-radius:18px}</style>'
     }
   })
-  assert.equal(report.status, 'stopped')
-  assert.match(report.cause.reason, /whole design-system style/)
+  assertAccentLeftOut(run, /whole design-system style/)
 })

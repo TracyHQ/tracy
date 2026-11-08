@@ -5,17 +5,18 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { turnOf } from '../lib/bench-turn.js'
+import { openContentMap } from '../lib/content-map-source.js'
 import { balanceLine } from '../lib/provider-balance.js'
 import { openKit } from '../lib/template-kit-source.js'
 import { briefOfRevision, cancelWriterRun, startWriterRun } from './bench-control.js'
 import { listLines, runFiles, standingLines, statusLines } from './bench-export.js'
 import { listRuns, planOf, readRun } from './bench-store.js'
-import { openContentMap } from '../lib/content-map-source.js'
 
 export const USAGE = `usage: node scripts/site-writer-bench.mjs <command>
   run --plan-file <path> --kit <ref> --brief-file <path>     queue a run on a plan and a brief JSON file
   run --plan-file <path> --kit <ref> --brief-revision <id>   queue a run on a plan and the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
+      [--no-caps]                         run without the USD budget (a step of a chain build)
       [--pages-per-turn <n|all>]          pages per writing turn, frozen with the run (default all: one turn)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, balance, duration, checker summary
@@ -47,6 +48,7 @@ export async function runCli(argv, deps) {
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
         by: { type: 'string' },
+        'no-caps': { type: 'boolean' },
         'pages-per-turn': { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
@@ -153,6 +155,7 @@ async function startRun(d, values) {
     briefSource: brief.source,
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
+    noCaps: values['no-caps'] === true,
     ...(perTurn !== undefined ? { pagesPerTurn: perTurn === 'all' ? 'all' : Number(perTurn) } : {}),
     ...(d.index ? { index: d.index } : {})
   })

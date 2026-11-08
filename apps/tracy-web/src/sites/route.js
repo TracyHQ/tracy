@@ -136,6 +136,7 @@ import {
 } from '../lib/site-design.js'
 import { completeProvisionDesign } from './provision-design-tokens.js'
 import { siteSessionAhead } from '../lib/site-session-ahead.js'
+import { setupRunOfSession } from './setup-session.js'
 import { templateThumbnailOf } from '../lib/template-thumbnail.js'
 import { readUiHidden, uiSwitchOn } from '../lib/ui-setting.js'
 import { mountActivity } from './activity.js'
@@ -335,6 +336,8 @@ import {
   writeComponent
 } from './store.js'
 import { teardownSaid } from './teardown-said.js'
+import { researchRevisionOwned } from '../lib/research-revision.js'
+import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
 
 /** How long a call to a site's component may take. Why this number: the signal it feeds. */
 const COMPONENT_TIMEOUT_MS = 170_000
@@ -2669,11 +2672,27 @@ export function sitesRoutes({
       !quickstartReleaseMatches(body.expectedQuickstartRelease, quickstartReleaseIdentity(install))
     )
       return json(c, { code: 'TEMPLATE_VERSION_CHANGED' }, 409)
+    // A build that asks for the step chain (#483, spec #472): its research revision is the brief, nothing is built from
+    // chat, and only an enabled template takes it (`lib/step-chain-switch.js`). An enabled template never falls back.
+    const chainAsked = body.workflow === STEP_CHAIN_WORKFLOW
+    let chainBrief = null
+    if (chainAsked) {
+      const refusal = await stepChainRefusal(body, chosenQuickstart, caller.id)
+      if (refusal) return json(c, { code: refusal.code }, refusal.status)
+      chainBrief = {
+        about: '',
+        goal: null,
+        style: null,
+        workflow: STEP_CHAIN_WORKFLOW,
+        researchRevisionId: body.researchRevisionId.toLowerCase()
+      }
+    }
     let agentDemoContext = null
     try {
-      agentDemoContext =
-        (await agentDemo?.createContext({ accountId: caller.id, buildId, body, install })) ?? null
-      if (body.workflow !== undefined && !agentDemoContext)
+      agentDemoContext = chainAsked
+        ? null
+        : ((await agentDemo?.createContext({ accountId: caller.id, buildId, body, install })) ?? null)
+      if (body.workflow !== undefined && !chainAsked && !agentDemoContext)
         return json(c, { code: 'DEMO_WORKFLOW_INVALID' }, 400)
     } catch (error) {
       return json(c, { code: error.code ?? 'AGENT_DEMO_CREATE_REFUSED' }, 409)
@@ -3038,9 +3057,11 @@ export function sitesRoutes({
       // the moment it is up (`brief-build.js`). "I will do it later" sends no brief and this does nothing.
       // `start` never throws and never waits: the site is answered 202 exactly when it would have been.
       const brief =
-        briefs && !qualityContext && !agentDemoContext
-          ? await briefOfPress(body.brief, platform, chosenQuickstart, { accountId: caller.id, siteKey })
-          : null
+        briefs && chainBrief
+          ? chainBrief
+          : briefs && !qualityContext && !agentDemoContext
+            ? await briefOfPress(body.brief, platform, chosenQuickstart, { accountId: caller.id, siteKey })
+            : null
       if (brief)
         await briefs.start({
           siteKey,
@@ -3299,6 +3320,25 @@ export function sitesRoutes({
     const answersWritten = (await modelForChain(pool, ['seedText', 'web'], config)) !== null
     return json(c, { ...resolved, answersWritten }, 200)
   })
+
+  /**
+   * Why a press asking for the step chain cannot have it, or null: the research revision must be the caller's own, and
+   * the template enabled with the master switch on. Nothing is claimed before this answers.
+   * @param {any} body
+   * @param {string | null} quickstart
+   * @param {string} accountId
+   * @returns {Promise<{code: string, status: 400 | 404 | 409} | null>}
+   */
+  async function stepChainRefusal(body, quickstart, accountId) {
+    if (!briefs) return { code: 'STEP_CHAIN_UNAVAILABLE', status: 409 }
+    if (body.brief !== undefined) return { code: 'STEP_CHAIN_BRIEF_GIVEN', status: 400 }
+    if (typeof body.researchRevisionId !== 'string' || !UUID.test(body.researchRevisionId))
+      return { code: 'INVALID_RESEARCH_REVISION', status: 400 }
+    if (!stepChainEnabled({ quickstart })) return { code: 'STEP_CHAIN_OFF', status: 409 }
+    if (!(await researchRevisionOwned(pool, body.researchRevisionId, accountId)))
+      return { code: 'RESEARCH_REVISION_UNKNOWN', status: 404 }
+    return null
+  }
 
   /**
    * The brief a press carries, from `body.brief`.
@@ -6725,12 +6765,21 @@ export function sitesRoutes({
     // 🔒 WHERE THE WRITE CAME FROM, AS THIS DOOR KNOWS IT (sweep #4/#2, council 11/10/2026) — never read off a
     // header: a seat key's call is the key's (`/v1`), and `setupRun` reaches here only through `applyAs`, the
     // server writing a new site's brief for its person (never over HTTP). Everything else names none.
+    // A chat session the server opened for a setup run (the 9b repair pass of a step chain build) is that run's: its
+    // writes are the run's too, so Site changes holds them in the one "Tracy setup" row. The pair is the server's own
+    // record (`setup-session.js`); the header only names the session.
+    const sessionRun =
+      auth.kind !== 'key' && writeClass && !(typeof setupRun === 'string' && setupRun !== '')
+        ? await setupRunOfSession(pool, siteKey, auditSession).catch(() => null)
+        : null
     const writeOrigin =
       auth.kind === 'key'
         ? { kind: 'api', ref: auth.key.keyId }
         : typeof setupRun === 'string' && setupRun !== ''
           ? { kind: 'setup', ref: setupRun }
-          : null
+          : sessionRun
+            ? { kind: 'setup', ref: sessionRun }
+            : null
     /**
      * The audit line, and — for a call that changes the site (`writeClass`) — its `site_write` row in
      * the same statement. `outcome`: `ok` the source said it wrote; `refused` it said no cleanly;

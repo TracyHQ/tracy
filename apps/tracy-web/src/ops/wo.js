@@ -4,6 +4,7 @@
  *   GET  /api/ops/wo                              → full Live Queue, user tabs, provider facts, settings,
  *                                                   capability groups with their provider order and states
  *   GET  /api/ops/wo/demos/summary                → demo retention keys + live/frozen/expiring/deleted counts
+ *   GET  /api/ops/wo/chain-builds                 → per-site step chain builds: minutes and USD per step, how each ended
  *   PUT  /api/ops/wo/read                         { opportunityId, read } → mark row read/unread for viewer
  *   PUT  /api/ops/wo/settings                     { settings, uiEnabled? } → save deployment settings
  *   GET  /api/ops/wo/public-demos                 → `/v1/demos` live cap and model budget (Tracy's, not the package's)
@@ -40,6 +41,7 @@ import {
   SOCIAL_SERVICE_SCOPES,
   socialOrigin
 } from 'website-opportunities/src/wo-social-auth.js'
+import { listChainBuilds } from '../lib/wo-chain-builds.js'
 import { admit, denied } from './admit.js'
 import {
   parsePublicDemoSettings,
@@ -102,6 +104,14 @@ export function woOpsRoutes({
     }
   }
 
+  // The per-site table of chain builds (#481): staff only, read from what each build measured about itself.
+  app.get('/api/ops/wo/chain-builds', async (c) => {
+    const g = await guard(c)
+    if (g.deny) return g.deny
+    if (!pool) return c.json({ error: 'NO_DATABASE' }, 503)
+    c.header('cache-control', 'no-store')
+    return c.json(await listChainBuilds(pool, config))
+  })
   app.get('/api/ops/wo/prefetch/dubai', async (c) => {
     const g = await guard(c)
     if (g.deny) return g.deny

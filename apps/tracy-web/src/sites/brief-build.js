@@ -44,6 +44,8 @@ import {
   restartBrief,
   updateBrief
 } from './brief-store.js'
+import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
+import { withBaseSite } from './brief-engines/step-chain.js'
 
 /**
  * The host's step once the CMS is fully up and only the site's folder on the host is left to build (measured 03/10/2026:
@@ -175,6 +177,7 @@ function withTimeout(promise, ms, message) {
  * @property {any} normalized - what `normalize` read out of the brief (name, languages, tone, ...)
  * @property {AbortSignal} signal
  * @property {(phase: string, ms: number) => void} time - record how long a phase of the engine took
+ * @property {(chain: object) => Promise<void>} progress - keep what the engine measured so far on the row (`timings.chain`)
  * @property {(note: string) => void} note - say something the report should carry
  * @property {(applyId: string, how?: {reused: boolean}) => void} applied - an apply id a write named (`recordedDoor`): kept on
  *   the row so the whole Apply can be undone; a `reused` one (not minted by this Apply) is kept apart
@@ -191,7 +194,9 @@ function withTimeout(promise, ms, message) {
 /**
  * @param {object} deps
  * @param {import('pg').Pool} deps.pool
- * @param {Record<string, BriefEngine>} deps.engines - by platform
+ * @param {Record<string, BriefEngine>} deps.engines - by platform, plus the step chain engine under `STEP_CHAIN_WORKFLOW`
+ *   (`brief-engines/step-chain.js`): picked for a build whose brief carries that workflow while its quickstart template is
+ *   allow-listed and the master switch is on (`lib/step-chain-switch.js`); every other build runs its platform's engine
  * @param {(input: BriefInput) => Promise<any>} deps.normalize - brief → what the engines read
  * @param {() => number} [deps.now]
  * @param {{info?: Function, warn?: Function}} [deps.log]
@@ -335,7 +340,7 @@ export function createBriefBuilds({
    * @param {number} startedAt
    * @returns {Promise<{value: unknown} | {down: true}>} `down`: the site will not come up, so nothing will be written
    */
-  async function preparedInTime(preparing, siteUp, stop, startedAt) {
+  async function preparedInTime(preparing, siteUp, stop, startedAt, runCap = cap) {
     let settled = false
     /** @type {Array<ReturnType<typeof setTimeout>>} */
     const timers = []
@@ -344,14 +349,14 @@ export function createBriefBuilds({
         if (!settled) timers.push(setTimeout(resolve, Math.max(1, ms)))
       })
     const tooLong = () => new Error('writing the text took too long')
-    const backstop = after(startedAt + cap.prepareMs + cap.prepareGraceMs - now()).then(() => {
+    const backstop = after(startedAt + runCap.prepareMs + runCap.prepareGraceMs - now()).then(() => {
       throw tooLong()
     })
     const graced = siteUp.then(async (up) => {
       if (!up) return /** @type {const} */ ({ down: true })
-      await after(cap.prepareGraceMs)
+      await after(runCap.prepareGraceMs)
       stop.abort(new Error('the site is up and the words had their time'))
-      await after(cap.prepareStopMs)
+      await after(runCap.prepareStopMs)
       throw tooLong()
     })
     try {
@@ -414,18 +419,33 @@ export function createBriefBuilds({
     }
   }
 
+  /**
+   * The engine a build runs: the step chain for a chain build, its platform's engine otherwise.
+   * @param {BriefInput} input
+   */
+  function engineOf(input) {
+    // The press decided (the creation door refuses a chain build unless the template is enabled), so a chain build already
+    // under way stays one even if the switch is turned off while it is queued or recovered: an enabled template never
+    // falls back to the old build, and the platform engine never receives a brief that has no words in it.
+    if (/** @type {any} */ (input.brief)?.workflow === STEP_CHAIN_WORKFLOW)
+      return engines[STEP_CHAIN_WORKFLOW]
+    return engines[input.platform]
+  }
+
   /** @param {BriefInput} input */
   async function work(input) {
     const { siteKey } = input
-    const engine = engines[input.platform]
+    const engine = engineOf(input)
     if (!engine) return fail(siteKey, `no engine writes content for ${input.platform}`)
     if (!(await claimWork(pool, siteKey))) return
+    // An engine may bring its own clocks (the step chain: only an outer deadline, `brief-engines/step-chain.js`).
+    const runCap = { ...cap, .../** @type {any} */ (engine).limits }
     const startedAt = now()
     // This run's id: every write it makes is recorded under it (`site_write.origin_ref`), so Site changes
     // shows one "Tracy setup" row for the run instead of one Unknown row per write (sweep #4).
     const runId = randomUUID()
     const controller = new AbortController()
-    const killer = setTimeout(() => controller.abort(new Error('the run took too long')), cap.runMs)
+    const killer = setTimeout(() => controller.abort(new Error('the run took too long')), runCap.runMs)
     // The row's own clock: a worker that is alive keeps touching it, and `gate` reads silence as death.
     const beat = setInterval(() => void updateBrief(pool, siteKey, {}).catch(() => {}), 5_000)
     const phase = {}
@@ -504,10 +524,12 @@ export function createBriefBuilds({
         brief: input.brief,
         normalized,
         signal: controller.signal,
+        // What an engine measured so far, kept on the row while the run goes (/ops/wo reads it); a failure to save it never stops the run.
+        progress: (chain) => updateBrief(pool, siteKey, { timings: { chain } }).catch(() => {}),
         time,
         note: (n) => notes.push(String(n).slice(0, 200)),
         applied,
-        deadlineAt: startedAt + cap.prepareMs
+        deadlineAt: startedAt + runCap.prepareMs
       }
       // The words are made while the site is waited for, side by side: the site may come up first, and then the words
       // get `prepareGraceMs` from that moment (`preparedInTime`). `prepare` itself honours `ctx.deadlineAt` too.
@@ -516,12 +538,12 @@ export function createBriefBuilds({
       preparing.catch(() => {})
       /** When the site came up, if it did. */
       let siteUpAt = 0
-      const siteUp = waitProvisioned(input, startedAt + cap.runMs, waitStop.signal).then((up) => {
+      const siteUp = waitProvisioned(input, startedAt + runCap.runMs, waitStop.signal).then((up) => {
         if (up) siteUpAt = now()
         return up
       })
       siteUp.catch(() => {})
-      const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt)
+      const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt, runCap)
       const notUp = async () => {
         prepareStop.abort()
         const row = await briefOf(pool, siteKey)
@@ -551,7 +573,7 @@ export function createBriefBuilds({
       try {
         report = await withTimeout(
           engine.apply({ ...ctx, signal: AbortSignal.any([controller.signal, applyStop.signal]) }, prepared),
-          made?.workflow === 'quickstart-first/1' ? cap.runMs - 120_000 : cap.applyMs,
+          made?.workflow === 'quickstart-first/1' ? runCap.runMs - 120_000 : runCap.applyMs,
           'writing into the site took too long'
         )
       } catch (error) {
@@ -560,7 +582,10 @@ export function createBriefBuilds({
       }
       time('applyMs', now() - t3)
       // Still `applying`: the brand is written before the row says the site is done (plan D2).
-      if (made?.workflow !== 'quickstart-first/1' || !applyError) {
+      if (
+        !(/** @type {any} */ (engine).writesBrand) &&
+        (made?.workflow !== 'quickstart-first/1' || !applyError)
+      ) {
         try {
           const assertBrandAllowed = async () => engine.beforeBrand?.(ctx, prepared)
           await assertBrandAllowed()
@@ -579,6 +604,30 @@ export function createBriefBuilds({
       // The writes are over, failed or not: what they left on the webroot is the run's (SC-3).
       if (held) await holdWebroot('close', ctx)
       if (applyError) throw applyError
+      // 🔒 A STEP CHAIN RUN ENDS AS A FINISHED BUILD, WHATEVER STEP FAILED (#483, ADR 0044): the site is handed over with
+      // what was written, and how the run ended is kept for staff (`timings.chain`), never said to the customer.
+      if (report && /** @type {any} */ (report).chain) {
+        time('afterUpMs', now() - upAt)
+        // The base site is a step of the measurement: from the press until the host had it up (`provisionedAt` is the
+        // poll door's word, `readyAt` the frame's own look at the host job).
+        const own = await briefOf(pool, siteKey).catch(() => null)
+        const upMs = Number(own?.timings?.provisionedAt ?? own?.timings?.readyAt) || siteUpAt || upAt
+        const pressedMs = own?.created_at ? new Date(own.created_at).getTime() : startedAt
+        const chain = withBaseSite(/** @type {any} */ (report).chain, upMs - Math.min(pressedMs, startedAt))
+        await inTurn(() =>
+          advanceBrief(pool, siteKey, ['applying'], {
+            state: 'applied',
+            stage: null,
+            error: null,
+            timings: timingsNow({
+              wrote: report?.wrote ?? 0,
+              kept: report?.kept ?? 0,
+              chain
+            })
+          })
+        )
+        return
+      }
       // 🔒 AN APPLY THAT WROTE NOTHING IS NOT A PLAIN FINISH (TCH #1013, tamq-7q-tbwp3/4 on 08/10/2026): it is said on the row
       // like every other part that did not happen, so the poll door and the assistant can tell the customer.
       if (report && report.wrote === 0)
