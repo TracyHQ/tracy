@@ -588,6 +588,7 @@ export async function runWriteStep(input) {
     reading: hide.reading,
     unowned: report.unowned,
     unaddressable,
+    undrawn: pictures.undrawn ?? [],
     returns: copyReturns,
     // A rerun: what an earlier run wrote is customer content the site still holds.
     held: last.active
