@@ -6,7 +6,12 @@
 // The closing rule (closing-ladder.js) then treats every text and picture slot no other file fills as holding no customer
 // content: it is emptied at its smallest unit, or said to keep its demo when the site cannot empty it. What the brand and
 // picture steps made is still written over it. Nothing here is invented content: both files are empty of words.
+//
+// A brand step that made no brand file gets a stand-in too (standInBrand): the business name the brief gives, placed by the
+// same code rule the brand step uses (brand-step/name-slots.js), and the template's own accent and logos. Without it the site
+// keeps the template's demo name and the site label in its footer.
 import { createHash } from 'node:crypto'
+import { computeNameSlots } from '../brand-step/name-slots.js'
 import { COPY_VERSION } from '../lib/site-copy-view.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -70,5 +75,38 @@ export function standInCopy(kit, { planText, briefText = '' }) {
     pages: [],
     notebook: [],
     returns: []
+  }
+}
+
+/**
+ * A brand file that writes only the business name from the brief, where the kit's name slots say; it keeps the template's
+ * accent, logos and favicon. No model and no judgement: a brief that holds the name back writes nothing.
+ * @param {{ ref: string, doc: object }} kit
+ * @param {object} brief the research revision's brief
+ */
+export function standInBrand(kit, brief) {
+  const names = computeNameSlots(kit.doc, brief)
+  const accent = kit.doc?.site?.brandColours?.primary?.value ?? null
+  return {
+    kind: 'brand-file',
+    version: 10,
+    standIn: true,
+    kit: `${kit.doc?.quickstart?.product}@${kit.doc?.quickstart?.version}`,
+    name: { value: names.name, from: 'brief.brand.name', slots: names.slots },
+    colours: {
+      decision: 'kept-template',
+      why: 'No brand file was made: the template keeps its own accent.',
+      brandColour: null,
+      lift: null,
+      accent,
+      replaces: accent,
+      keeps: 'template',
+      builds: 0,
+      shifts: [],
+      module: null
+    },
+    logo: { material: null, mark: null, name: null, logos: {}, look: [], spots: [] },
+    favicon: null,
+    ownerTasks: names.ownerTasks
   }
 }

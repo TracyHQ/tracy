@@ -6,6 +6,7 @@ import { NEW_CONTRACT } from '../lib/new-contract-pointer.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { goneRowSlots, listRowCounts, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
+import { linkDoors } from './link-doors.js'
 import { menuItemOfLabel } from './menu-hides.js'
 import { NO_LAST } from './no-last-report.js'
 
@@ -14,6 +15,7 @@ const slashless = (path) => String(path ?? '').replace(/^\/+|\/+$/g, '')
 const blocksOfPage = (page) => [...new Set(Object.values(page?.blocks ?? {}).flat())]
 const MODULE = /^module-\d+$/
 const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
+const ANCHOR = /<a[\s>]|\(\(a /i
 
 export { NEW_CONTRACT }
 
@@ -146,6 +148,51 @@ function removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gon
 }
 
 /**
+ * A hidden kit link with no slot of its own goes with the slot that holds it (TracyHQ/tracy#371's doors): a link printed among
+ * the words of a cell leaves with its row when the row goes, with its block when the block goes, and with the words when the
+ * write step puts words with no link in that cell; a link whose address is held by slots the plan hides follows them. Null when
+ * no door holds it; a failed order when its holder stays.
+ */
+function carriedLink(slot, { doorOf, removal, removedAlready, gone, changes, hiddenKeys, onSite }) {
+  const door = doorOf(slot)
+  const leaves = (key) => key in removedAlready || removal?.remove.has(key)
+  if (door.via === 'words') {
+    const key = door.key
+    const entity = key.slice(0, key.lastIndexOf('.'))
+    if (leaves(key)) return { via: 'carried', key, keys: [key], holder: 'row' }
+    if (gone.has(entity)) return { via: 'block', key, module: entity }
+    if (typeof changes[key] === 'string' && !ANCHOR.test(changes[key])) return { via: 'rewritten', key }
+    if (hiddenKeys.has(key)) return { via: 'carried', key, keys: [key], holder: 'slot' }
+    return {
+      via: 'failed',
+      key,
+      reason: `this link is inside the words of ${key}, which stay on the page, and no door takes one link out of words`
+    }
+  }
+  // A link drawn around a picture of the block (the kit measured the file it wraps) goes when that picture's slot goes.
+  const file = door.link?.icon?.mechanism === 'image-file' ? door.link.icon.file : null
+  if (door.via === 'none' && file) {
+    const entity = door.block?.source?.entity
+    // A Joomla picture value carries its size after a '#' (`...item-2.jpg#joomlaImage://...`).
+    const shows = (value) =>
+      String(value ?? '')
+        .split('#')[0]
+        .endsWith(`/${file}`)
+    const pictures = [...onSite.values()].filter(
+      (s) => s?.entity === entity && s.type === 'image' && (shows(s.sample) || shows(s.current))
+    )
+    if (pictures.length === 1 && (leaves(pictures[0].key) || hiddenKeys.has(pictures[0].key)))
+      return { via: 'carried', key: pictures[0].key, keys: [pictures[0].key], holder: 'picture' }
+  }
+  if ((door.via === 'slot' || door.via === 'shared') && door.keys.length) {
+    const keys = door.keys
+    if (keys.every((key) => leaves(key) || hiddenKeys.has(key)))
+      return { via: 'carried', key: keys[0], keys, holder: 'address' }
+  }
+  return null
+}
+
+/**
  * @param {{ plan: object, kit: object, owners: Map<string, object>, extras: object, reading: object,
  *   changes: Record<string, string>, cannotHide: string | null, rowsRemove?: boolean, last?: object }} input `cannotHide`: why
  *   this plugin takes no hide order, or null when it does; `rowsRemove`: whether it has the door that takes a row or an element;
@@ -177,6 +224,13 @@ export function hideOrders({
       ? null
       : removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gone })
   const removedAlready = reading?.removedSlots ?? {}
+  const doorOf = linkDoors({ kit, reading, rows: [] })
+  // The keys the plan's own hides name, for a link whose holder they are.
+  const hiddenKeys = new Set(
+    [...owners.values()]
+      .filter((c) => c.kind === 'hide')
+      .map((c) => contentMapKey(icons.get(c.slot)?.field ?? c.slot))
+  )
   const orders = new Map()
   const emptySlots = []
   const strings = {}
@@ -206,6 +260,21 @@ export function hideOrders({
     const failedAs = (reason) => orders.set(slot, { via: 'failed', key, reason })
     const held = onSite.get(key)
     const entity = key.slice(0, key.lastIndexOf('.'))
+    if (!held && !icon && !cannotHide && !(key in removedAlready) && !removal?.remove.has(key)) {
+      const carried = carriedLink(slot, {
+        doorOf,
+        removal,
+        removedAlready,
+        gone,
+        changes,
+        hiddenKeys,
+        onSite
+      })
+      if (carried) {
+        orders.set(slot, carried)
+        continue
+      }
+    }
     if (key in removedAlready || removal?.remove.has(key)) {
       if (key in changes) failedAs(`the write step also writes ${key}, so it cannot be removed as well`)
       else orders.set(slot, { via: 'removed', key, ...(key in removedAlready ? { already: true } : {}) })

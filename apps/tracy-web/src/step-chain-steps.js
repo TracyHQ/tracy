@@ -30,7 +30,7 @@ import { mintSeatSession } from './workspace/seat-door.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
 import { siteFileReader } from './write-step/site-file.js'
 import { sitePageReader, siteSheetsReader } from './write-step/site-sheets.js'
-import { standInCopy, standInPlan } from './write-step/stand-in-files.js'
+import { standInBrand, standInCopy, standInPlan } from './write-step/stand-in-files.js'
 import { benchRepairAgent } from './write-step-bench-repair-agent.js'
 import { runStepNine } from './write-step-nine.js'
 
@@ -254,6 +254,13 @@ export function createStepChainSteps(deps) {
         const planText = await readFile(planFile, 'utf8')
         await writeFile(copyFile, JSON.stringify(standInCopy(inputs.kit, { planText, briefText }), null, 2))
       }
+      // A brand step that made no file leaves a stand-in that still names the business from the brief, so the site never
+      // keeps the template's demo name or its label (write-step/stand-in-files.js).
+      let brandFile = inputs.brand?.file
+      if (!brandFile) {
+        brandFile = path.join(dir, 'brand-stand-in.json')
+        await writeFile(brandFile, JSON.stringify(standInBrand(inputs.kit, rows[0].brief), null, 2))
+      }
       const site = await siteOf(ctx.siteKey)
       if (!site) throw stepError(`no site ${ctx.siteKey}`)
       // The comment requests and turn undo of 9b go through the web app's own doors as the site owner; every Apply call of
@@ -281,7 +288,7 @@ export function createStepChainSteps(deps) {
           plan: planFile,
           copy: copyFile,
           brief,
-          ...(inputs.brand ? { brand: inputs.brand.file } : {}),
+          brand: brandFile,
           ...(inputs.pictures ? { pictures: inputs.pictures.file } : {})
         },
         templateSheets: siteSheetsReader({ siteOf, readers, fetchImpl }),

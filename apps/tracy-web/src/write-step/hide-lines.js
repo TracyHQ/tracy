@@ -48,6 +48,58 @@ function removedResult({ key, already }, removed) {
   return typeof done === 'string' ? { status: 'failed', key, reason: done } : null
 }
 
+/** A link among words the write step replaces with words that hold no link: it leaves with the old words. */
+function rewrittenResult({ key }, refused) {
+  if (refused.has(key))
+    return {
+      status: 'failed',
+      key,
+      reason: `this link is inside the words of ${key}, whose new words were refused (${refusalWords(refused.get(key))}), so it stays`
+    }
+  return {
+    status: 'hidden',
+    key,
+    reason: `${PLAN_HIDES}: it was printed inside the words of ${key}, which the write step replaced with words that hold no link`
+  }
+}
+
+/** A link that follows the slots holding it: hidden when they all left, relinked or failed as they were. */
+function carriedResult({ key, keys, holder }, { gone, removed, relinked, refused }) {
+  const left = (k) => removed.get(k) === true || gone.has(k)
+  const relink = keys.find((k) => relinked?.has(k))
+  if (relink) {
+    const { address } = relinked.get(relink)
+    return {
+      status: 'written',
+      key: relink,
+      ordered: address,
+      part: 'relink',
+      reason: `${PLAN_HIDES}; the slot ${relink} that holds its address stays with its row, so it leads to the living page ${address}`
+    }
+  }
+  const failed = keys.find((k) => typeof removed.get(k) === 'string' || refused.has(k))
+  if (failed)
+    return {
+      status: 'failed',
+      key: failed,
+      reason: `this link stays with ${failed}, which could not leave: ${
+        typeof removed.get(failed) === 'string' ? removed.get(failed) : refusalWords(refused.get(failed))
+      }`
+    }
+  if (!keys.every(left)) return null
+  const what = {
+    row: 'its row',
+    slot: 'the slot of words',
+    address: 'the slots holding its address',
+    picture: 'the picture it is drawn around'
+  }[holder]
+  return {
+    status: 'hidden',
+    key,
+    reason: `${PLAN_HIDES}: it was printed by ${keys.join(', ')} and left with ${what ?? 'them'}`
+  }
+}
+
 /** What became of one hide claim, or null while nothing did, which the report reads as the run having ended first. */
 function claimResult(order, { blocks, words, gone, refused, settled, removed, relinked }) {
   const { via, key } = order
@@ -61,6 +113,8 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
   if (via === 'removed') return removedResult(order, removed)
   if (via === 'empty')
     return { status: 'hidden', key, reason: `${PLAN_HIDES}: it is already empty on the site` }
+  if (via === 'rewritten') return rewrittenResult(order, refused)
+  if (via === 'carried') return carriedResult(order, { gone, removed, relinked, refused })
   if (via === 'block') {
     const done = blockResult(blocks, order.module)
     if (!done) return null

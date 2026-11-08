@@ -64,6 +64,21 @@ async function roleColours(brand, brandPath) {
   }
 }
 
+/**
+ * The frames the stage leaves without a picture of their own: not drawn, not a kept picture the template holds on purpose, not an
+ * icon (the template's icon is its look, not demo content), and with nothing else sent for them. The write step's closing rule
+ * (closing-ladder.js) empties each, so a frame no brand colour could paint never keeps the template's demo picture.
+ * @param {object[]} left `out.left` of preparePainted
+ * @param {Record<string, string>} changes what the picture stage sends, by content map key
+ * @returns {{ slot: string, key: string, reason: string }[]}
+ */
+export function undrawnFrames(left, changes) {
+  return left
+    .filter(({ item, reason }) => item.kind !== 'icon' && item.kind !== 'backdrop' && reason !== KEPT)
+    .filter(({ item }) => typeof item.key === 'string' && !(item.key in changes))
+    .map(({ item, reason }) => ({ slot: item.frame, key: item.key, reason }))
+}
+
 /** Why this frame is not drawn, or null. */
 function gate(item, slot, colours, takesIcons) {
   if (!colours) return { status: 'skipped', reason: NO_BRAND }
