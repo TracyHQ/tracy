@@ -61,9 +61,25 @@ green for the exit code. Never try to turn it `done`.
 2. Its fix is the piece's `fix` in the verdict JSON. Look its code up in
    [`references/fix-map.md`](references/fix-map.md), which says how that fix runs on WordPress, or that it is a stop.
    For `coverage-holes`, `coverage-labels` and `coverage-judge`, and for a red release sweep check (`heights`,
-   `scheme`), find the symptom in [`references/coverage-holes.md`](references/coverage-holes.md) section 6 (recipes
-   H1 to H8: business words in a pattern, a fact in a `core/html` band, a priced item name, cut-out pictures, a
-   template part, a style guide sample, text with no door, a markup change that moves heights) and follow its recipe.
+   `scheme`), find the symptom in [`references/coverage-holes.md`](references/coverage-holes.md) section 6 and follow
+   its recipe. Every recipe goal is the same: a built customer site carries zero demo business data in a writable
+   place, with no layout change.
+
+   | State code | Symptom | Recipe |
+   |---|---|---|
+   | `coverage-holes` | business words (phone, address, email) hard-coded in a pattern or part (class `template`) | H1 |
+   | `coverage-holes` | a fact inside a `core/html` band (class `unknown`) | H2 |
+   | `coverage-labels` (R2) | a menu or price item name that carries its price in inline markup | H3 |
+   | `coverage-labels` (R5), `coverage-judge` | cut-out or decoration pictures on an editorial role | H4 |
+   | `coverage-holes` | words in a footer or header template part, not captured | H5 |
+   | `coverage-labels` (R9) | a style guide sample that reads as a fact | H6 |
+   | `coverage-holes` | visible text in an unnamed block (typography, patterns), markup the capture skips | H7 |
+   | `measure-failed` (release gate), sweep checks `heights`, `scheme` | a markup change moved heights | H8 |
+   | `coverage-holes` | a link inside an inline markup slot | H9 |
+   | `coverage-holes` | a page or post title (evidence `post_title`) | H10 |
+   | `coverage-holes` | a picture a theme option or theme post meta points at | H11 |
+
+   `apps/tracy-web/test/template-readiness-wordpress-holes.test.mjs` holds each row to a deliberately broken copy.
 3. Run it. Rebuilding the kit goes through [`references/kit-rebuild.md`](references/kit-rebuild.md) (a `build` wipes
    the five hand-declared hidden fields, and needs the database to read pages as sections).
 4. Append one line to `$RUN/fix-log.md`: piece, code, what changed, where (theme, contract folder, kit, tool, release).

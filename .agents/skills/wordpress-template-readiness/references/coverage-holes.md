@@ -93,6 +93,9 @@ to the same list.
 | H6 | A style guide page whose samples read as facts (a sample address and phone) | `coverage-labels` R9 |
 | H7 | Visible text in an unnamed block, or markup the capture skips | `coverage-holes` class `capture` or `unknown` |
 | H8 | A markup change that moves heights (a rebuilt band, a longer text) | release sweep, check `heights` (also `scheme`), `patch-release.md` |
+| H9 | A link (an address) inside an inline markup slot | `coverage-holes`, hole kind `link` |
+| H10 | A page or post title | `coverage-holes`, evidence `….post_title` |
+| H11 | A picture a theme option or theme post meta points at | `coverage-holes`, hole kind `image`, evidence an `options#` or `postmeta#` row |
 
 ### H1. Business words hard-coded in a theme pattern or part
 
@@ -144,8 +147,9 @@ to the same list.
 - **Confirm.** Hole evidence names a `wp_template_part` row (`posts#97.post_content`); the plugin reads pages, posts
   and options, and a `templatePart` entity (identity `{slug}`, lock = skeleton) from 0.18.x.
 - **Fix.** Give each text block of the part a `metadata.name` in the overlay part file and the demo database, then
-  capture with `--template-parts footer`; the inventory locks the part by its skeleton. Business words in the part
-  follow H1.
+  capture with `--template-parts footer,header` (every part that prints words; `--template-parts` alone captures
+  nothing); the inventory locks the part by its skeleton. Business words in the part follow H1. A part holding inline
+  markup follows H3 as well.
 - **Verify.** The part has slots in `content-map.json`; the part's rendered HTML is unchanged.
 
 ### H6. A style guide page that reads as facts
@@ -161,7 +165,9 @@ to the same list.
 - **Confirm.** Capture holes on blocks without a name, or text the capture skipped (`coverage.skipped` in the capture
   output: a second block of a name, markup the plugin does not write).
 - **Fix.** Name the block (`metadata.name`) in the pattern and the demo content; make names unique per page (a
-  repeated section gets `menu-2.*`); inline markup follows H3. Never ship `--all-text` slots.
+  repeated section gets `menu-2.*`); inline markup follows H3. Never ship `--all-text` slots. Blocks of a style
+  guide (typography) page that stay unnamed are a hole too: name them, or accept them as H6 does when no customer
+  writes that page.
 - **Verify.** Measure again; skipped list empty or each entry accepted with a reason.
 
 ### H8. A markup change that moves heights
@@ -173,3 +179,29 @@ to the same list.
   sees). A group that changes width to width between runs on a page you did not touch is a flaky measure of the
   source, not your change: compare two runs before accepting it.
 - **Verify.** Sweep again: all eleven checks pass.
+
+### H9. A link inside an inline markup slot
+
+- **Confirm.** Hole kind `link` whose page text sits in a block with inline markup (a button link inside a paragraph,
+  a link in a heading).
+- **Fix.** Name the block and capture with `--inline-markup`: the address held in the slot's notation
+  (`((a href="/menu/"))…((/a))`) is the slot's address, so the link is covered by it; a bare `#` link or a tag the
+  plugin does not write is not (accept it only for a style guide or showcase page).
+- **Verify.** The link hole is gone, the rendered HTML of the page is unchanged, no `heights` group.
+
+### H10. A page or post title
+
+- **Confirm.** Hole evidence ends in `.post_title` (document title `"<title> -"`).
+- **Fix.** Capture with `--page-titles` (every page entity gets a `post_title` slot) and `--posts` for posts. A menu
+  label equal to a page title then matches by text, but the label really comes from `wp_navigation`: do not count it.
+  Adding a slot to a released profile is a new profile version (W2/W4).
+- **Verify.** The title holes are slots; the page's `<title>` renders as before.
+
+### H11. A picture a theme option or post meta points at
+
+- **Confirm.** Hole kind `image`, evidence an `options#… <theme prefix>_…` or `postmeta#… <meta key> (post N)` row,
+  never `unknown`.
+- **Fix.** Capture with `--theme-picture-options <options>` and `--theme-picture-meta <keys>` (own prefix, no leading
+  underscore), then `capture-image-slots.mjs` makes the image slots; the plugin (0.18.39 or later) writes them.
+  A picture the theme prints from a fixed asset file is not a hole of this kind: the theme must read an option first.
+- **Verify.** The image holes are slots; the page renders the same picture; no `heights` group.
