@@ -301,14 +301,14 @@
       "multilingual": false,
       "contractProfile": "ja-voyara/j6/1.0.12",
       "contractFiles": {
-        "content-map.json": "5842836cbe11915bb61f30871f3b5b695cdcfa595858041baaa9f9a9e1012ab3",
+        "content-map.json": "ac637fd80c8e235bf8c9c5deb4e723b3ab01888d46cd81eaa015c2b00aba5c99",
         "design-system-measurement.json": "8206152747d6316bd1a016a0a9bbd3e807cd1120f50021c31baed91219ac3c3d",
         "manifest.json": "897489b649536906753f46c8b9517cdc2cdd0e7b0c35af5fbd057623febcd5fe",
         "presentation-lock.json": "425bf05cce746f39d266de4e351f2961e8519093fc35db4b5ebf1774d0b0add0",
-        "showcase-nav-map.json": "7dbf117b8904a5e5c73df79b30c0485afdf336791cffa8ff507a16a41ef7d35a",
-        "template-kit.json": "b73a201a3c9104359ad73158de59aec817f1bf3e5906f1f6a549f155313256d4"
+        "showcase-nav-map.json": "05c4ab9be911b00e8dd1104f6c202fd7190e3fedeeb9eb9936d63d5434c75a9e",
+        "template-kit.json": "df633cb92bc82e7e8737521d88efa987f2ccfac390df73fda63f6f8672dc067d"
       },
-      "coworkMinVersion": "0.24.89",
+      "coworkMinVersion": "0.24.90",
       "requires": [
         {
           "type": "plugin",

@@ -1468,6 +1468,49 @@ test(
   }
 )
 
+// A language string is HTML: Joomla prints `Text::_` as it stands, so a file writes "&" as `&amp;` and a curly quote as
+// `&rsquo;`. Such a value is read as the HTML it is, so its sample is the words a visitor reads ("Rooms & suites"), not
+// the entity a model would copy into a business name, and the plugin writes the slot back through its node.
+test('--full-coverage reads a template string written with HTML entities as plain words', needsPhp, () => {
+  const run = capture(stringsInventory(), {
+    args: ['--module-prefix', '', '--full-coverage'],
+    schemas: { 'container-tabs': CONTAINER_XML },
+    helper: PER_TEXT_HELPER,
+    files: {
+      ...STRING_FILES,
+      'language/en-GB/en-GB.tpl_tracy.ini': `${STRING_FILES['language/en-GB/en-GB.tpl_tracy.ini']}TPL_ROOMS="Rooms &amp; suites"\nTPL_OPEN="We&rsquo;re open &#8211; daily"\nTPL_PLAIN="Tea & cake"\n`,
+      'templates/tracy/html/mod_menu/rooms.php':
+        "<?php echo Text::_('TPL_ROOMS'); echo Text::_('TPL_OPEN'); echo Text::_('TPL_PLAIN');"
+    }
+  })
+  assertWritten(run)
+  const map = run.read('content-map.json')
+  const lock = run.read('presentation-lock.json')
+  const slotOf = (key) => {
+    const e = map.entities.find((x) => x.kind === 'languageString' && x.identity.key === key)
+    assert.ok(e, key)
+    return [map.slots.filter((s) => s.entity === e.key), lock.entities[e.key].value]
+  }
+  const [rooms, roomsValue] = slotOf('TPL_ROOMS')
+  assert.deepEqual(
+    rooms.map((s) => [s.type, s.sample, s.xpath]),
+    [['text', 'Rooms & suites', '/html/body/div/text()']]
+  )
+  // The lock keeps the value as the file has it: the plugin finds the row by it.
+  assert.equal(roomsValue, 'Rooms &amp; suites')
+  const [open] = slotOf('TPL_OPEN')
+  assert.deepEqual(
+    open.map((s) => [s.sample, s.xpath]),
+    [['We’re open – daily', '/html/body/div/text()']]
+  )
+  // A bare "&" is no entity: the value stays one plain text slot, as before.
+  const [plain] = slotOf('TPL_PLAIN')
+  assert.deepEqual(
+    plain.map((s) => [s.sample, 'xpath' in s]),
+    [['Tea & cake', false]]
+  )
+})
+
 test('without --full-coverage no template string and no hidden title is declared', needsPhp, () => {
   const run = capture(stringsInventory(), {
     args: ['--module-prefix', ''],
