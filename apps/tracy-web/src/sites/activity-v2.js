@@ -75,6 +75,7 @@ import { cmsLogCoverage } from './cms-log.js'
 import { parseTurnId, recordOutside } from './turns.js'
 import { designSystemApplies, designSystemDescription, designSystemRowOf } from './design-system-rows.js'
 import { isSetupMoment, setupMomentFiles, setupRunOf } from './setup-moment.js'
+import { addRepairFiles, setupRepairTurns } from './setup-session.js'
 
 /**
  * `people`: every Source except `automatic` — the changes a person (or Tracy for one) made, the
@@ -190,10 +191,13 @@ export async function readActivityV2(
   // before the rows are counted: with its paths it can be folded into the CMS row that wrote them.
   if (git.sealed) await recordOutside(pool, siteKey, [{ ...git.sealed, cause: 'seal' }])
   const trailerTurns = git.rows.map((r) => r.turn).filter((t) => typeof t === 'string' && t)
-  const [accounted, opShas] = await Promise.all([
+  const [accounted, opShas, repairTurns] = await Promise.all([
     accountedForGit(pool, siteKey, trailerTurns),
-    operationShas(pool, siteKey)
+    operationShas(pool, siteKey),
+    setupRepairTurns(pool, siteKey)
   ])
+  /** The files the repair turns of a setup run committed (a step chain build's 9b pass), for the run's row. */
+  const repairFiles = new Map()
   // The Git moments no row accounts for, classified once: the page AND the counts use this set.
   const gitOnly = []
   /** A setup run's moment known only by its commit (SC-3): run → its files, for the run's row. */
@@ -202,6 +206,11 @@ export async function readActivityV2(
     const setupRun = setupRunOf(r.turn)
     if (setupRun && accounted.setupRuns.has(setupRun) && !setupMoments.has(setupRun))
       setupMoments.set(setupRun, { sha: r.sha, count: fileCount(r) })
+    const repairRun = typeof r.turn === 'string' ? repairTurns.get(r.turn) : undefined
+    if (repairRun && accounted.setupRuns.has(repairRun)) {
+      addRepairFiles(repairFiles, repairRun, { sha: r.sha, count: fileCount(r), at: Number(r.at) })
+      continue
+    }
     if (accounted.shas.has(r.sha) || opShas.has(r.sha)) continue
     if (typeof r.turn === 'string' && accounted.turns.has(r.turn)) continue
     if (setupRun && accounted.setupRuns.has(setupRun)) continue
@@ -246,7 +255,8 @@ export async function readActivityV2(
     viewer,
     undone: undoneIndex(undos, git.rows, opShas),
     gitOnly: new Map(gitOnly.map((g) => [g.row.sha, g])),
-    setupMoments
+    setupMoments,
+    repairFiles
   }
   const byKey = await hydrate(pool, siteKey, page, ctx)
   const items = page.map((k) => byKey.get(`${k.kind}:${k.id}`)).filter(Boolean)
@@ -708,9 +718,14 @@ async function hydrate(pool, siteKey, page, ctx) {
     // SC-3: a Tracy setup run's own moment — recorded by the run (its carrier row, which is no
     // operation of its own), or known by the commit's trailer when the run did not hear back.
     const carrier = writes.find(isSetupMoment) ?? null
-    const setupFiles =
+    const ownFiles =
       (carrier && setupMomentFiles(carrier)) ??
       (first.origin === 'setup' ? (ctx.setupMoments?.get(first.origin_ref) ?? null) : null)
+    // The files its repair turns committed ride on the same row: one more moment, the newest commit shown.
+    const repaired = first.origin === 'setup' ? (ctx.repairFiles?.get(first.origin_ref) ?? null) : null
+    const setupFiles = repaired
+      ? { sha: repaired.sha, count: (ownFiles?.count ?? 0) + repaired.count }
+      : ownFiles
     const files = seal ? { sha: seal.sha, count: seal.files } : setupFiles
     const { effects, technical } = effectsOf({
       writes: carrier ? writes.filter((w) => w !== carrier) : writes,

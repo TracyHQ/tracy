@@ -148,12 +148,16 @@ export function benchRepairAgent({
       ? {
           async retire({ sessionId }) {
             const rpc = site ? await siteSeatRpc({ config, seatDoor, fetchImpl, site, email }) : null
-            const answer = rpc
-              ? await rpc('workspace/archiveSession', { sessionId, stopActivity: true }).catch(() => null)
-              : null
-            return {
-              ok: Array.isArray(answer?.archivedSessionIds) && answer.archivedSessionIds.includes(sessionId)
+            if (!rpc) return { ok: false, reason: 'no seat door to ask dsh through' }
+            let answer = null
+            try {
+              answer = await rpc('workspace/archiveSession', { sessionId, stopActivity: true })
+            } catch (error) {
+              return { ok: false, reason: String(error?.message ?? error) }
             }
+            return Array.isArray(answer?.archivedSessionIds) && answer.archivedSessionIds.includes(sessionId)
+              ? { ok: true }
+              : { ok: false, reason: 'dsh did not list the session as archived' }
           }
         }
       : {}),

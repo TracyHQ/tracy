@@ -49,8 +49,14 @@ const pageAddressOf = (agent) => (page) => {
 async function retireSessions(agent, sessions, warn) {
   if (typeof agent?.retire !== 'function') return
   for (const sessionId of sessions) {
-    const done = await agent.retire({ sessionId }).catch(() => null)
-    if (!done?.ok) warn(`step 9b: the session ${sessionId} could not be retired`)
+    let done = null
+    try {
+      done = await agent.retire({ sessionId })
+    } catch (error) {
+      done = { ok: false, reason: String(error?.message ?? error) }
+    }
+    if (!done?.ok)
+      warn(`step 9b: the session ${sessionId} could not be retired${done?.reason ? `: ${done.reason}` : ''}`)
   }
 }
 

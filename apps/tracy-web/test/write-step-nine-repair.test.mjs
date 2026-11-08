@@ -190,7 +190,14 @@ test('a build’s agent retires every session of the pass once it is over, and t
 
 test('the sessions are retired when the pass was taken back too, and a retire that fails is logged, not thrown', async () => {
   const agent = fakeAgent({ canRetire: true })
-  agent.retire = async () => ({ ok: false })
+  let thrown = false
+  agent.retire = async () => {
+    if (!thrown) {
+      thrown = true
+      throw new Error('dsh refused the archive')
+    }
+    return { ok: false, reason: 'dsh did not list the session as archived' }
+  }
   const first = checkOf([DEMO, ALT])
   const { result, logged } = await stepNine({
     checks: [first],
@@ -203,7 +210,8 @@ test('the sessions are retired when the pass was taken back too, and a retire th
     }
   })
   assert.equal(result.report.status, 'done')
-  assert.ok(logged.some((line) => /could not be retired/.test(line)))
+  assert.ok(logged.some((line) => /could not be retired: dsh refused the archive/.test(line)))
+  assert.ok(logged.some((line) => /could not be retired: dsh did not list/.test(line)))
 })
 
 test('a step 9 run with no site agent writes and checks, and says the repair pass did not run', async () => {

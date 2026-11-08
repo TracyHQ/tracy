@@ -1826,6 +1826,43 @@ describe('site activity V2', { skip }, () => {
     assert.equal(page.counts.all, 2)
   })
 
+  test('#477: the files a repair turn committed ride on the run’s row, never a row of their own', async () => {
+    const { pool } = db
+    await seed(pool)
+    const run = '3b9c1d5e-7a2f-4c8d-9e0a-1b2c3d4e5f60'
+    await write(pool, {
+      at: iso(10),
+      action: 'setup.files',
+      via: 'setup-moment',
+      target: { sha: sha('5'), files: 25 },
+      origin: 'setup',
+      origin_ref: run
+    })
+    await write(pool, {
+      at: iso(11),
+      target: { kind: 'post', id: '1', fields: ['post_title'] },
+      origin: 'setup',
+      origin_ref: run
+    })
+    await pool.query(
+      `insert into setup_session (site_key, session_id, run_id) values ($1, 'repair-a', $2), ($1, 'repair-b', $2)`,
+      [SITE.site_key, run]
+    )
+    // Two repair turns that wrote no record, only files (a look change in the template's CSS), each with its commit.
+    await turn(pool, 'repair-a:1', { opened_at: iso(20), closed_at: iso(21), files: 2, head_sha: sha('a') })
+    await turn(pool, 'repair-b:1', { opened_at: iso(22), closed_at: iso(23), files: 3, head_sha: sha('b') })
+    const moments = [
+      commit('5', 10, { turn: `setup-${run}:1`, title: 'Tracy setup', files: 25 }),
+      commit('a', 21, { turn: 'repair-a:1', files: 2 }),
+      commit('b', 23, { turn: 'repair-b:1', files: 3 })
+    ]
+    const page = await v2(pool, fakeHost(moments))
+    assert.deepEqual(keys(page), [`writes:setup:${run}`])
+    assert.equal(page.items[0].effects.files.count, 30)
+    assert.equal(page.items[0].effects.files.sha, sha('b'), 'the newest commit is the one shown')
+    assert.equal(page.counts.all, 1)
+  })
+
   test('SC-3: a setup moment the run did not hear back from is still its own, never Unknown', async () => {
     const { pool } = db
     await seed(pool)

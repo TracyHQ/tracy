@@ -33,3 +33,33 @@ export async function setupRunOfSession(pool, siteKey, sessionId) {
   )
   return rows[0]?.run_id ?? null
 }
+
+/**
+ * The turns made in the sessions setup runs opened, each with its run: what lets a Git moment trailered with such a turn
+ * ride on the run's row instead of a row of its own.
+ * @param {import('pg').Pool} pool
+ * @param {string} siteKey
+ * @returns {Promise<Map<string, string>>} turn id → run id
+ */
+export async function setupRepairTurns(pool, siteKey) {
+  const { rows } = await pool.query(
+    `select t.turn_id, ss.run_id from site_turn t
+       join setup_session ss on ss.site_key = t.site_key and ss.session_id = t.session_id
+      where t.site_key = $1`,
+    [siteKey]
+  )
+  return new Map(rows.map((r) => [r.turn_id, r.run_id]))
+}
+
+/**
+ * Add one moment's files to a run's total: the count adds up, the commit shown is the newest (the site as the run left it).
+ * @param {Map<string, {sha: string, count: number, at: number}>} totals run → total so far
+ */
+export function addRepairFiles(totals, run, { sha, count, at }) {
+  const so = totals.get(run)
+  totals.set(run, {
+    sha: !so || at >= so.at ? sha : so.sha,
+    count: (so?.count ?? 0) + count,
+    at: Math.max(at, so?.at ?? 0)
+  })
+}
