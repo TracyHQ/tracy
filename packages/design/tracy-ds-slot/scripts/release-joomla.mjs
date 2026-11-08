@@ -35,7 +35,8 @@ import { editContentMap, editDump, editLock, loadContentEdits } from '../src/rel
  *  1b. design-system-roles.json: the role scan of templates/<tpl> as it ships (release-role-scan.mjs),
  *     run before anything is packed; the build stops while rule VARS-1 would hold anything it finds;
  *  2. database: the same dump, under the new version's name (demo tags saved without a path given
- *     one, src/release-tag-paths.mjs; articles' stale UCM copies resynced, src/release-ucm-sync.mjs);
+ *     one, src/release-tag-paths.mjs; articles' stale UCM copies resynced, src/release-ucm-sync.mjs; a backup
+ *     copy of a table is named as release-stray-table, src/release-stray-tables.mjs);
  *  3. manifest.json + SHA256SUMS for the release;
  *  4. the tch contract for the new version: contracts/<slug>/j6/<new>/ — manifest.json re-embedding
  *     the new release manifest, presentation-lock.json with the changed files' hashes, content-map.json
@@ -62,6 +63,7 @@ import { packTar, packZip } from '../src/release-pack.mjs'
 import { removeUser } from '../src/release-remove-user.mjs'
 import { ROLE_SCAN_FILE, releaseRoleScan, roleScanError } from '../src/release-role-scan.mjs'
 import { siteLanguageTwins } from '../src/release-site-language.mjs'
+import { strayTablesOf } from '../src/release-stray-tables.mjs'
 import { repairTagPaths } from '../src/release-tag-paths.mjs'
 import { resyncUcmContent } from '../src/release-ucm-sync.mjs'
 import { untagArchived } from '../src/release-untag-archived.mjs'
@@ -539,6 +541,12 @@ if (INSTALLER) {
   const original = execFileSync('gunzip', ['-c', join(dl, cur.parts.database.file)], {
     maxBuffer: 1 << 30
   }).toString('latin1')
+  // a backup copy of a table the template author left is named, never removed (src/release-stray-tables.mjs)
+  const stray = strayTablesOf(original, cur.prefix ?? '')
+  if (stray.length)
+    console.warn(
+      `release-stray-table: ${stray.join(', ')} (a backup copy in the demo database; the template's next version drops it)`
+    )
   // demo tags saved without a path get one, and the tags' nested set is rebuilt (src/release-tag-paths.mjs)
   const tags = repairTagPaths(original, cur.prefix ?? '')
   if (tags.repaired.length)
