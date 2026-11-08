@@ -1,6 +1,6 @@
 # AI capabilities audit — 8 November 2026
 
-This audit uses `origin/develop` at `3172697b70`, the change journal, open GitHub issues and pull requests, and source inspection. The read-only deployment cross-check below establishes availability, not the quality of a complete customer site. A passing unit test establishes the behavior named by that test, not the quality of a complete customer site.
+This audit uses `origin/develop` at `3172697b70`, the change journal, open GitHub issues and pull requests, source inspection, and bounded checks on `cowork.tracy.site`. Voice is outside this audit at the account holder's request. A passing unit test establishes the behavior named by that test, not the quality of a complete customer site.
 
 ## Read-only deployment cross-check — 9 November 2026
 
@@ -10,13 +10,26 @@ The account holder signed into `cowork.tracy.site` in Chrome and named the profi
 | --- | --- | --- |
 | `/auth/me` | 200, signed in | The selected browser account's session reached the server. |
 | `/api/seat-plan/status` | 200, feature and routing enabled; no connected AI account for this account | AI account management is live. Provider routing and fallback cannot be exercised with this account state. |
-| `/api/speech` | 200, available, ElevenLabs, six offered voices | The speech door is configured and currently advertises service. Audio quality, quota and interruption were not measured. |
 | `/api/templates` | 200, 33 template cards | The live catalogue answered; this count is a snapshot and says nothing about template readiness. |
-| `/api/assistant/conversation` | 200, AI state and support available | The assistant read door answered. No model turn was sent. |
+| `/api/assistant/conversation` | 200, AI state and support available | The assistant read door answered. A separate `/help` turn is documented below. |
 | `/api/ops/wo/demos/summary` | 200 | The signed-in operator could read the demo summary; no Build was started. |
 | Authenticated browser root `/` | 200, workspace shell, no page or console errors in the observed window | One basic browser load worked. A later direct workspace deep link timed out in the separate headless browser; the cause was not established and is not classified as a product bug here. |
 
-No model call, voice recording, site edit, Build, Undo or backup restore was performed. The source-confirmed concerns below remain concerns; this cross-check only narrows the deployment-version and feature-availability uncertainty.
+### Bounded live checks and remaining coverage
+
+These checks used the signed-in `david@lab3.asia` Chrome profile on 9 November 2026 against web build `3172697b70f1`. The session value, account-file contents and provider settings were neither printed nor committed. `GET` calls and one `/help` turn did not change a customer site. Result labels describe exactly the observed operation, not an entire capability.
+
+| Capability and operation | Result | Evidence and limit |
+| --- | --- | --- |
+| Model administration: `GET /api/ops/llm` | PASS for the read door; CONFIGURATION GAP for chain admission | HTTP 200 exposed 15 door entries and two enabled provider entries. Nine doors had assignments. `sitePlanner`, `siteWriter`, `picturePicker`, `pictureIconRanker`, `pictureLooker`, and `pictureDrawer` had none; source `lib/llm-store.js` says unassigned doors may use environment fallback. The API does not prove that effective fallback credentials and models work. `visionTest.state` was `unavailable`; no pixel test was run. Before accepting PR #488's chain on this installation, verify an effective model and a successful call at each needed door. |
+| Customer AI account routing: `GET /api/seat-plan/status` | PASS for the read door; NOT TESTED for provider fallback | HTTP 200, feature enabled, four provider options, zero connected accounts on this account. Quota, authorization, timeout and fallback behavior need a connected test account. |
+| `/help`: one Vietnamese question about finding Site changes, explicitly asking for guidance only | PASS for this turn | `POST /api/assistant/turns` returned HTTP 200 with `meta`, 73 `delta` frames and `done`. The answer named the My Sites row's `…` menu and Site changes, which matches `tracy-my-sites/src/client/more.tsx`. Its padded Markdown link is accepted by `tracy-assistant/src/client/chat.ts`; the destination is a server-allowlisted My Sites link. This is one sample, not a quality rate. |
+| WordPress site read: `GET /api/sites/:key/state`, `/changes`, `/backups` on `wp-tracy-ai.xemaydienhocsinh.com` | PASS for the read doors | All three answered HTTP 200. State reported `fleet_import`; Changes returned no current moments or files; Backups returned 101 rows in this response (95 backups, four moments, two outside rows). This does not test a new write, Diff, Undo, restore integrity or whether all rows are rendered correctly. |
+| Joomla site read: `GET /api/sites/:key/state` on `ja-energy-solutions24.xemaydienhocsinh.com` | PASS for the read door | HTTP 200, `fleet_import`, accepted owner seat. A separate authenticated headless browser timed out while navigating directly to this workspace, so agent chat behavior was not observed. The HTTP route and the browser's timing are insufficient to classify the timeout as a Tracy defect. |
+| Import preflight: `GET /api/sites/import-address?siteKey=...` on the three account-file hosts | PASS for ownership preflight; NOT TESTED for import execution | WordPress and JA Energy returned `mine`; JA Impact returned `other` with a join path, consistent with its pending editor seat. Importing these addresses would duplicate or collide with existing records. No credentials from the account file were sent. |
+| Website Opportunities: `GET /api/ops/wo/demos/summary` and `/api/ops/wo` | PASS for read doors; NOT TESTED for Build | Both returned HTTP 200; the former exposed retention and count fields, and the latter exposed the opportunity list. No Build was started, so no conclusion follows about brief quality, pictures, handover, cost or elapsed time. PR #488 remains open, unmerged and absent from this web build. |
+
+The accepted WordPress and Joomla seats are suitable for a later bounded agent acceptance run. A live site write is public immediately. That run needs an exact intended change, the site's own `.webroot/AGENTS.md`, a before snapshot, the `apply_id` receipt, read-back, and Undo verification. None of those steps was completed in this audit, so site-editing and recovery behavior remains NOT TESTED live. The account-file hosts are already known to this installation and were not imported again.
 
 ## Product boundary
 
@@ -31,7 +44,6 @@ Tracy helps a person change a real website through an agent. Site changes, Diff,
 | Proposed step chain | Brand, planner, writer, pictures, write, site check | Bench descriptions in `SYSTEM.md` section 8. PR #488 connects the chain to a Build but is not merged into the audited commit. |
 | Customer AI accounts | Claude/ChatGPT connections, ordered routing, optional Tracy AI fallback | `SYSTEM.md`, AI accounts section; site-creation workspace uses the default model. |
 | `/help` assistant | Assistant route, model and guide prompt | `apps/tracy-web/src/assistant/`; it reads site and account context but does not make a site change. |
-| Voice | Speech relay, turn-taking, agent, text-to-speech | `packages/ui/tracy-chat-input/src/client/voice-mode.mjs`; physical-device quality needs measurement. |
 | Supporting model work | Research and brief, template blurb translations, picture picker/looker/drawer, brand reviewer | `packages/wo/website-opportunities/`, `apps/tracy-web/src/brand-step/`, `site-pictures/` and `SYSTEM.md`. |
 
 ## Priority 0: acceptance gaps that affect the customer's site
@@ -50,14 +62,15 @@ Tracy helps a person change a real website through an agent. Site changes, Diff,
 9. **The write step needs full-site idempotence and read-back.** Open issues cover creating planned pages, hiding every planned item, stable reruns, page settings, link targets and printed alts. An unchanged rerun should produce no new Site changes entry and no demo content on kept pages. Test the complete site, not only a mapping export. Track #352–#379, particularly #374, #375 and #379.
 10. **Repair needs an exact fault list and a bounded scope.** The post-write site agent should receive only remaining site-check faults, change only those sites/pages/slots, and be scored by before/after findings. An unresolved finding must remain visible at handover. Track #197, #477 and ADR 0044 section 30.
 
-## Priority 2: assistant, voice and observability
+11. **Effective model readiness is not established by an unassigned door.** The live `/api/ops/llm` response had no assignments for six doors of the proposed Build chain. Source permits an unassigned door to use an environment fallback, so absence of a row is not proof of failure. Add an admission check for each enabled chain step that resolves its effective provider/model and performs the required capability test, including picture looker vision. Record the result per deployment and template before turning on the chain. Do not call the chain ready solely because the ops page and provider entries load.
 
-11. **`/help` streaming admission is per process.** `apps/tracy-web/src/assistant/route.js` uses a local `Map` and `MAX_STREAMS_PER_ACCOUNT = 2`. This is an actual per-process bound, not an account-wide bound across web instances. Confirm the deployment topology; if several instances serve the door, use shared admission or state the chosen per-instance policy and load-test it.
-12. **`/help` attachments are not read by the model.** The route sends only file names, types and sizes, and `assistant/prompt.js` explicitly tells the model it cannot open their content. This is intentional current behavior, not a discovered implementation bug. Check that the customer-facing flow conveys that limit; a request to answer from a document requires a separate content-reading feature and permissions.
-13. **Telegram staff identity depends on configuration.** With support enabled and an empty `CS_TELEGRAM_STAFF_IDS`, the assistant route logs that every member of the support group can reply as staff. The audited source does not establish the live configuration. Verify every deployment; if the group is not the intended trust boundary, require staff IDs or disable the staff reply path when empty.
-14. **The cost and time of one complete Build need a common record.** Individual benches and Website Opportunities have partial ledgers. PR #488 proposes per-step minutes and USD, a deadline and an ops row. Verify retry cost, unknown cost, drawing cost and total time against a real run; compare failure and cost distributions by CMS/template rather than optimizing a single example. Track #480 and #481.
-15. **Voice quality requires device and language evidence.** The implementation covers echo, interruption, connection loss and spoken question cards, but microphone gain, speaker echo, ambient sound and service latency determine whether those decisions work for customers. Measure false sends, missed interruptions, time to response, card answer errors and recovery on representative devices and interface languages using the existing trace. This is a measurement proposal, not a reproduced bug.
-16. **AI account fallback needs outcome measures.** The routing code can switch to Tracy AI after the customer's connection fails. Count switch reasons and whether the next turn succeeds; test quota, authorization, timeout and network cases. Keep the note about the answering model separate from the agent's site permissions and write capability.
+## Priority 2: assistant and observability
+
+12. **`/help` streaming admission is per process.** `apps/tracy-web/src/assistant/route.js` uses a local `Map` and `MAX_STREAMS_PER_ACCOUNT = 2`. This is an actual per-process bound, not an account-wide bound across web instances. Confirm the deployment topology; if several instances serve the door, use shared admission or state the chosen per-instance policy and load-test it.
+13. **`/help` attachments are not read by the model.** The route sends only file names, types and sizes, and `assistant/prompt.js` explicitly tells the model it cannot open their content. This is intentional current behavior, not a discovered implementation bug. Check that the customer-facing flow conveys that limit; a request to answer from a document requires a separate content-reading feature and permissions.
+14. **Telegram staff identity depends on configuration.** With support enabled and an empty `CS_TELEGRAM_STAFF_IDS`, the assistant route logs that every member of the support group can reply as staff. The audited source does not establish the live configuration. Verify every deployment; if the group is not the intended trust boundary, require staff IDs or disable the staff reply path when empty.
+15. **The cost and time of one complete Build need a common record.** Individual benches and Website Opportunities have partial ledgers. PR #488 proposes per-step minutes and USD, a deadline and an ops row. Verify retry cost, unknown cost, drawing cost and total time against a real run; compare failure and cost distributions by CMS/template rather than optimizing a single example. Track #480 and #481.
+16. **AI account fallback needs outcome measures.** The routing code can switch to Tracy AI after the customer's connection fails. Count switch reasons and whether the next turn succeeds; test quota, authorization, timeout and network cases. Keep the note about the answering model separate from the agent's site permissions and write capability. The live account has no connected provider, so this path was not exercised.
 17. **Model-translated template blurbs need language review.** The background translation checks retained terms and length, which are useful structural checks but do not establish meaning or natural language quality. Sample high-traffic blurbs across offered languages and record corrections. `SYSTEM.md` describes the translation path.
 
 ## Existing work and proposed order
@@ -65,9 +78,9 @@ Tracy helps a person change a real website through an agent. Site changes, Diff,
 | Stage | Existing work | Acceptance evidence still needed |
 | --- | --- | --- |
 | 1. End-to-end build | PR #488; #472 and #479–#484 | Complete CI and customer-like builds on the enabled Joomla template, then WordPress and EmDash. |
-| 2. Input and template readiness | #37, #38, #429, #452 | Label accuracy and door matrix on named releases. |
+| 2. Input and template readiness | #37, #38, #429, #452; finding 11 | Label accuracy, door matrix and effective model checks on named releases. |
 | 3. Whole-site correctness | #189, #192–#198, #352–#379 | No demo residue or invented facts; read-back and browser measures on every kept page. |
 | 4. Consistency and spend | Lease behavior above; #478, #480–#481 | Concurrent writes, unavailable door, Stop latency and complete cost ledger. |
-| 5. Everyday assistant | Findings 11–17 | Deployment topology, configuration audit and user/device samples. |
+| 5. Everyday assistant | Findings 12–17 | Deployment topology, configuration audit and representative answer samples. |
 
 Do not open duplicate tickets for work already represented by those issues. The EmDash lease failure, unknown budget cost and per-process assistant admission are source-confirmed follow-ups that need their own narrowly scoped cases if the deployment facts confirm impact. The attachment behavior is an explicit product limit; any change to it needs a product decision.
