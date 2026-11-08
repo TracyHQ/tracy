@@ -293,6 +293,8 @@ TECHNICAL=re.compile(r'color|(^|[-_])class(name)?($|[-_])|style|layout|icon|widt
 VISIBILITY_PARAMS={'moduleclass_sfx','module_tag','header_tag','header_class','style','bootstrap_size','cache','cache_time'}
 LINK_ROLE=re.compile(r'(link|url|href)[-_]?\d*$|^(link|url|href)[-_]')
 MARKUP=re.compile(r'<[a-zA-Z/!]')
+# An HTML character reference: named (`&amp;`), decimal (`&#8211;`) or hex (`&#x2019;`). A bare "&" is none.
+HTML_ENTITY=re.compile(r'&(?:[A-Za-z][A-Za-z0-9]{1,31}|#[0-9]{1,7}|#[xX][0-9A-Fa-f]{1,6});')
 # A `jaitems` field stores its rows under the keys "0", "1"… (an object, not a list: JA Masthead's `menuitem_config`
 # skips a deleted row's number), so a numeric key is a row, not a field name.
 row_key=lambda x:isinstance(x,int) or isinstance(x,str) and x.isdigit()
@@ -678,7 +680,10 @@ if a.full_coverage:
    sid=string_id(ext,tag,key);eid=f'languageString-{sid}';label=f'{key} (template string, {tag})'
    def add(column,typ,sample,**extra):
     slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':False,**extra})
-   if MARKUP.search(value):declare_html(add,'value',value,label)
+   # A language string is HTML (Joomla prints it as it stands), so one written with an entity (`&amp;`, `&rsquo;`) is
+   # read as HTML too: its slot holds the words a visitor reads, the entity decoded, and the plugin writes it through
+   # its node. Kept as text, the sample would teach a model to write "&amp;" into a business name (rule NAME-4).
+   if MARKUP.search(value) or HTML_ENTITY.search(value):declare_html(add,'value',value,label)
    else:declare_text(add,'value',value,label)
    if not any(sl['entity']==eid for sl in slots):continue
    identity={'extension':ext,'key':key,'language':tag}
