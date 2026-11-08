@@ -3,7 +3,7 @@ import { isAgentDemo } from './agent-demo.js'
 import { demoSelectionMatchesRevision } from '../lib/quickstart-selection.js'
 /** Durable one-click demo orchestration, using the existing revision, build and hand-off services. */
 import { mintSession } from '../lib/session.js'
-import { settleBuild, startBuild } from './builds.js'
+import { isStepChainBuild, settleBuild, startBuild } from './builds.js'
 import { resumeDemoQa } from './demo-qa.js'
 import { startDemoClock } from './demo-retention.js'
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
@@ -242,6 +242,12 @@ export function createDemoRunner(deps) {
         if (build.state !== 'done') {
           await mark('build')
           return wait()
+        }
+        // 🔒 A STEP CHAIN BUILD HAS NO CHAT TO HAND OVER TO (#479): the chain writes the site, so there is no agent
+        // brief to send, no QA baseline to take and no fill to wait for. The action ends with the site.
+        if (isStepChainBuild(build)) {
+          await mark('build')
+          return finish('completed')
         }
         await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
         // A manual quickstart-first build still owns its site's fill: the fill writes only while this
