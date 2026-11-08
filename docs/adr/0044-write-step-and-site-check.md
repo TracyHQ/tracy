@@ -592,6 +592,10 @@ changes with Undo. So:
   beside the build's other step outputs.
 - Repairs are Tracy turns of the setup session, shown in Site changes with Undo like any other change. This replaces the
   finisher's decision that setup repairs stay out of the Changes tab.
+  Amended 2026-11-08 (#477): in a step chain build the repairs are part of the build's one "Tracy setup" row instead of a
+  chat row each. The repair sessions are the build's: the server writes each to `setup_session` before its first prompt,
+  the Apply door records a write made in one as setup under the build's run id, Site changes leaves the sessions' turns
+  out of the list, and each session is archived when the pass ends so the customer's chat list never shows it.
 
 ### 31. No kept slot is handed over with its demo content
 

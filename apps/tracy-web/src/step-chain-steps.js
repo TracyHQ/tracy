@@ -307,7 +307,8 @@ export function createStepChainSteps(deps) {
         door: siteDoor,
         siteKey: ctx.siteKey,
         email: ctx.email,
-        fetchImpl
+        fetchImpl,
+        setupRun: ctx.runId
       })
       const out = path.join(dir, 'step-9')
       await mkdir(out, { recursive: true })
