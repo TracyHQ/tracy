@@ -25,10 +25,7 @@ const copies = () =>
   ].map((m) => [m[1], m[2]])
 
 test('the image build imports the copied comment turn builder, so a missing import fails the build', () => {
-  assert.match(
-    DOCKERFILE,
-    new RegExp(`^RUN node --input-type=module -e .*${IMAGE_PATH.replace(/[./]/g, '\\$&')}`, 'm')
-  )
+  assert.match(DOCKERFILE, new RegExp(`^RUN node --input-type=module -e .*${RegExp.escape(IMAGE_PATH)}`, 'm'))
   assert.ok(
     copies().some(([, to]) => to === `./${IMAGE_PATH}`),
     'the Dockerfile copies comment-turn.mjs to src/comment-turn/'

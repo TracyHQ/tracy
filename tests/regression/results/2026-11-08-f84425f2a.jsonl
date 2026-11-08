@@ -1,0 +1,1 @@
+{"id":"REG-PR-487-codeql-release-alerts","verdict":"PASS","commit":"f84425f2a2477a68934ed9ab4c8469bbba18f4c9","ran_at":"2026-11-08T07:31:17.338Z","evidence":"tests/regression/.runs/2026-11-08-f84425f2a/REG-PR-487-codeql-release-alerts.log"}
