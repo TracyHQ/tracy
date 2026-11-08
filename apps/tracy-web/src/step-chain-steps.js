@@ -7,7 +7,7 @@
 // same prompts, checkers and doors, and each step's USD is its run's own spend record. A bench holds one run at a time; a
 // start that finds another run going waits for it. Step 9 is `runStepNine` whole, its writes through the setup door the
 // engine hands it, its site check and 9b repair agent as the write step bench wires them.
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { runCli as brandCli } from './brand-step/brand-cli.js'
@@ -29,6 +29,7 @@ import { siteByKey } from './sites/store.js'
 import { mintSeatSession } from './workspace/seat-door.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
 import { siteFileReader } from './write-step/site-file.js'
+import { standInCopy, standInPlan } from './write-step/stand-in-files.js'
 import { sitePageReader, siteSheetsReader } from './write-step/site-sheets.js'
 import { benchRepairAgent } from './write-step-bench-repair-agent.js'
 import { runStepNine } from './write-step-nine.js'
@@ -110,17 +111,18 @@ export function createStepChainSteps(deps) {
         await sleep(POLL_MS)
       }
       const usd = Number(row.cost_usd ?? 0)
-      if (row.status !== 'succeeded')
-        throw stepError(
-          `the ${name} run ${runId} ended ${row.status}: ${String(row.error ?? '').slice(0, 200)}`,
-          usd
-        )
+      // A run that failed may still have made versions the checks rejected: its files are taken out all the same, so the
+      // best version it made can be used (the write never falls back to demo content).
       await mkdir(dir, { recursive: true })
       const got = await command(name, ['get', runId, '--out', dir])
-      if (got.code !== 0)
-        throw stepError(`the ${name} run ${runId} files: ${got.err.join(' ').slice(0, 200)}`, usd)
-      log.info?.(`[step-chain] ${name} run ${runId} succeeded, ${usd} USD`)
-      return { runId, usd }
+      const failure =
+        row.status !== 'succeeded'
+          ? `the ${name} run ${runId} ended ${row.status}: ${String(row.error ?? '').slice(0, 200)}`
+          : got.code !== 0
+            ? `the ${name} run ${runId} files: ${got.err.join(' ').slice(0, 200)}`
+            : null
+      log.info?.(`[step-chain] ${name} run ${runId} ${failure ?? 'succeeded'}, ${usd} USD`)
+      return { runId, usd, failure }
     } finally {
       signal.removeEventListener('abort', cancel)
     }
@@ -137,6 +139,19 @@ export function createStepChainSteps(deps) {
     return folders.get(ctx.runId)
   }
   const revisionOf = (ctx) => String(ctx.brief?.researchRevisionId ?? '')
+  const exists = (file) =>
+    stat(file).then(
+      (f) => f.isFile() && f.size > 0,
+      () => false
+    )
+  /**
+   * A bench step's answer: its output when the run succeeded; when it failed, an error that still carries the output it
+   * made (if any), so the chain uses the best version rather than nothing.
+   */
+  async function answerOf({ usd, failure }, value, made) {
+    if (!failure) return { value, usd }
+    throw Object.assign(stepError(failure, usd), (await made) ? { value } : {})
+  }
 
   return {
     // The template kit (the template profile the release is sealed with), fetched and checked before anything forks.
@@ -154,49 +169,44 @@ export function createStepChainSteps(deps) {
 
     async brand(ctx, { kit }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'brand')
-      const { usd } = await benchRun(
+      const ran = await benchRun(
         'brand',
         ['--kit', kit.ref, '--brief-revision', revisionOf(ctx)],
         dir,
         signal
       )
-      return { value: { file: path.join(dir, 'brand-file.json') }, usd }
+      const file = path.join(dir, 'brand-file.json')
+      return answerOf(ran, { file }, exists(file))
     },
 
     async plan(ctx, { kit }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'plan')
-      const { runId, usd } = await benchRun(
-        'plan',
-        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx)],
-        dir,
-        signal
-      )
+      const ran = await benchRun('plan', ['--kit', kit.ref, '--brief-revision', revisionOf(ctx)], dir, signal)
       // The plan the run ended with: the last round that has one, as `get` writes it (plan-vN.json).
       const { rows } = await pool.query(
         'select plan from site_planner_round where run_id = $1 and plan is not null order by round desc limit 1',
-        [runId]
+        [ran.runId]
       )
-      if (!rows[0]?.plan) throw stepError(`the planner run ${runId} left no plan`, usd)
+      if (!rows[0]?.plan) throw stepError(ran.failure ?? `the planner run ${ran.runId} left no plan`, ran.usd)
       const file = path.join(dir, 'plan.json')
       await writeFile(file, `${JSON.stringify(rows[0].plan, null, 2)}\n`)
-      return { value: { file }, usd }
+      return answerOf(ran, { file }, true)
     },
 
     async copy(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'copy')
       const argv = ['--plan-file', plan.file, '--kit', kit.ref, '--brief-revision', revisionOf(ctx)]
-      const { usd } = await benchRun('copy', argv, dir, signal)
-      return { value: { file: path.join(dir, 'site-copy.json') }, usd }
+      const ran = await benchRun('copy', argv, dir, signal)
+      const file = path.join(dir, 'site-copy.json')
+      return answerOf(ran, { file }, exists(file))
     },
 
     async pictures(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'pictures')
       const argv = ['--plan-file', plan.file, '--kit', kit.ref, '--brief-revision', revisionOf(ctx)]
-      const { usd } = await benchRun('pictures', argv, dir, signal)
-      return {
-        value: { file: path.join(dir, 'mapping.json'), manifest: path.join(dir, 'site-pictures.json') },
-        usd
-      }
+      const ran = await benchRun('pictures', argv, dir, signal)
+      const value = { file: path.join(dir, 'mapping.json'), manifest: path.join(dir, 'site-pictures.json') }
+      return answerOf(ran, value, exists(value.file))
     },
 
     // Step 9 whole: write, Site check, 9b repair pass, recheck, hand-over (write-step-nine.js).
@@ -205,7 +215,21 @@ export function createStepChainSteps(deps) {
       const { rows } = await pool.query('select brief from wo_revision where id = $1', [revisionOf(ctx)])
       if (!rows[0]) throw stepError(`no research revision ${revisionOf(ctx)}`)
       const brief = path.join(dir, 'brief.json')
-      await writeFile(brief, `${JSON.stringify(rows[0].brief, null, 2)}\n`)
+      const briefText = `${JSON.stringify(rows[0].brief, null, 2)}\n`
+      await writeFile(brief, briefText)
+      // A planner or writer that made nothing leaves stand-ins: the whole kit kept, no slot filled, so the closing ladder
+      // empties every kept slot nothing else fills (write-step/stand-in-files.js).
+      let planFile = inputs.plan?.file
+      if (!planFile) {
+        planFile = path.join(dir, 'plan-stand-in.json')
+        await writeFile(planFile, JSON.stringify(standInPlan(inputs.kit), null, 2))
+      }
+      let copyFile = inputs.copy?.file
+      if (!copyFile) {
+        copyFile = path.join(dir, 'site-copy-stand-in.json')
+        const planText = await readFile(planFile, 'utf8')
+        await writeFile(copyFile, JSON.stringify(standInCopy(inputs.kit, { planText, briefText }), null, 2))
+      }
       const site = await siteOf(ctx.siteKey)
       if (!site) throw stepError(`no site ${ctx.siteKey}`)
       // The comment requests and turn undo of 9b go through the web app's own doors as the site owner; every Apply call of
@@ -230,8 +254,8 @@ export function createStepChainSteps(deps) {
         kit: { ref: inputs.kit.ref, doc: inputs.kit.doc },
         contentMap: inputs.kit.contentMap,
         files: {
-          plan: inputs.plan.file,
-          copy: inputs.copy.file,
+          plan: planFile,
+          copy: copyFile,
           brief,
           ...(inputs.brand ? { brand: inputs.brand.file } : {}),
           ...(inputs.pictures ? { pictures: inputs.pictures.file } : {})

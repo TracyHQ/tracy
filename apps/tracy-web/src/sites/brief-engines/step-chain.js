@@ -19,16 +19,18 @@
  * `applyFor(email, runId)` (the Apply door as the person who pressed Build, `applyAs(..., { setupRun })`), so Site changes
  * folds every write of the build into one "Tracy setup" row.
  *
- * 🔒 FAILURE IS SOFT AND SILENT (ADR 0044). A step that fails ends the chain early: what depends on its output does not
- * run, and the site is handed over with what was written. A brand or picture step that fails still lets the Write step
- * write the plan and the copy, and the Write step's closing ladder leaves no kept slot with demo content (decision 31). A
- * template kit, planner or writer that fails leaves the Write step nothing it can write from, so the steps still running
- * are stopped and the site is handed over as created. Either way the run ends `applied`, with the ending kept on the row
- * (`timings.chain`), and nothing is said to the operator or the owner. An enabled template never falls back to the old
- * build.
+ * 🔒 FAILURE IS SOFT AND SILENT, AND THE WRITE NEVER LEAVES DEMO CONTENT (ADR 0044, the product owner's rule). A step that
+ * fails does not stop the others: what depends on its output is skipped, and the Write step still runs with whatever
+ * exists. A failed step that still made something (the checks rejected every version) hands over its best version, which
+ * is used. A step that made nothing hands over nothing: the Write step then writes from stand-ins (a plan that keeps the
+ * whole kit, a copy that fills nothing, `write-step/stand-in-files.js`), and its closing ladder empties every kept slot
+ * nothing fills (decision 31). Only a template kit that cannot be read stops the Write step, since no slot can be mapped
+ * without it: the base site is handed over as created (a configuration error). Either way the run ends `applied`, with
+ * the ending kept on the row (`timings.chain`), and nothing is said to the operator or the owner. An enabled template
+ * never falls back to the old build.
  *
- * Steps are injected (`app.js` wires the real ones, `step-chain-steps.js`); each answers `{ value, usd }` or throws, and is
- * given an `AbortSignal` that fires when the chain no longer needs it.
+ * Steps are injected (`app.js` wires the real ones, `step-chain-steps.js`); each answers `{ value, usd }` or throws (an
+ * error may carry the `value` it still made, and the `usd` it spent), and is given the run's `AbortSignal`.
  */
 
 /** The outer deadline of a whole chain run: past it, the site is handed over as a soft failure. */
@@ -42,9 +44,6 @@ export const STEP_CHAIN_LIMITS = Object.freeze({
   runMs: STEP_CHAIN_DEADLINE_MS
 })
 
-/** The steps whose output the Write step cannot do without: one failing stops the rest of the chain. */
-const NEEDED = new Set(['kit', 'plan', 'copy'])
-
 const round = (n, places) => Math.round(n * 10 ** places) / 10 ** places
 const messageOf = (error) => String(error instanceof Error ? error.message : error).slice(0, 300)
 
@@ -56,8 +55,8 @@ const messageOf = (error) => String(error instanceof Error ? error.message : err
  * @property {(ctx: object, inputs: {kit: any, plan: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} copy
  * @property {(ctx: object, inputs: {kit: any, plan: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} pictures
  * @property {(ctx: object, inputs: {kit: any, plan: any, copy: any, brand: any, pictures: any},
- *   how: {signal: AbortSignal, door: {apply: Function}}) => Promise<{value: any, usd?: number}>} write - step 9 whole; its
- *   value carries the write report (`report`)
+ *   how: {signal: AbortSignal, door: {apply: Function}}) => Promise<{value: any, usd?: number}>} write - step 9 whole; any
+ *   input but the kit may be null (its step made nothing), and its value carries the write report (`report`)
  * @property {(prepared: any) => Promise<void>} [dispose] - what the steps left behind (files), whatever became of the run
  */
 
@@ -75,12 +74,10 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
       const t0 = now()
       /** @type {Array<{step: string, startMs: number, endMs: number, usd: number, outcome: string, error?: string}>} */
       const record = []
-      const stop = new AbortController()
-      const signal = AbortSignal.any([ctx.signal, stop.signal])
+      const { signal } = ctx
       let failed = null
-      /** Run one step, timed and costed; a failure is kept, never thrown. */
+      /** Run one step, timed and costed; a failure is kept, never thrown, and what the step still made is used. */
       const run = async (step, inputs) => {
-        if (failed && NEEDED.has(failed)) return null
         const start = now()
         try {
           const answer = await steps[step](ctx, inputs, { signal })
@@ -93,28 +90,38 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
           })
           return { value: answer?.value ?? null }
         } catch (error) {
-          const stopped = signal.aborted && failed !== null
+          const made = error?.value ?? null
           record.push({
             step,
             startMs: start - t0,
             endMs: now() - t0,
             usd: Number(error?.usd ?? 0),
-            outcome: stopped ? 'stopped' : 'failed',
+            outcome: signal.aborted ? 'stopped' : made ? 'failed, best version used' : 'failed',
             error: messageOf(error)
           })
-          if (!stopped) {
-            failed ??= step
-            if (NEEDED.has(step)) stop.abort(new Error(`the ${step} step failed`))
-          }
-          return null
+          failed ??= step
+          return made ? { value: made } : null
         }
+      }
+      /** A step that cannot start because the step it reads made nothing. */
+      const skip = (step, because) => {
+        const at = now() - t0
+        record.push({
+          step,
+          startMs: at,
+          endMs: at,
+          usd: 0,
+          outcome: 'skipped',
+          error: `no ${because} to work from`
+        })
+        return null
       }
       const kit = await run('kit', {})
       if (!kit) return { runId: ctx.runId, t0, record, failed, inputs: null }
       const [brand, planned] = await Promise.all([
         run('brand', { kit: kit.value }),
         run('plan', { kit: kit.value }).then(async (plan) => {
-          if (!plan) return { plan: null, copy: null, pictures: null }
+          if (!plan) return { plan: null, copy: skip('copy', 'plan'), pictures: skip('pictures', 'plan') }
           const [copy, pictures] = await Promise.all([
             run('copy', { kit: kit.value, plan: plan.value }),
             run('pictures', { kit: kit.value, plan: plan.value })
@@ -122,21 +129,18 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
           return { plan, copy, pictures }
         })
       ])
-      const writable = Boolean(planned.plan && planned.copy)
       return {
         runId: ctx.runId,
         t0,
         record,
         failed,
-        inputs: writable
-          ? {
-              kit: kit.value,
-              plan: planned.plan.value,
-              copy: planned.copy.value,
-              brand: brand?.value ?? null,
-              pictures: planned.pictures?.value ?? null
-            }
-          : null
+        inputs: {
+          kit: kit.value,
+          plan: planned.plan?.value ?? null,
+          copy: planned.copy?.value ?? null,
+          brand: brand?.value ?? null,
+          pictures: planned.pictures?.value ?? null
+        }
       }
     },
 

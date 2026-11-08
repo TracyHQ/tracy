@@ -2389,9 +2389,12 @@ and the planner side by side, then the writer (with Copy check) and the picture 
 queued through the bench's own command line on the revision and played by the bench worker this server runs
 (`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Once the site is up and every input
 is ready, step 9 runs whole (`runStepNine`), every Apply call through the setup door under the run's id
-(`applyAs(..., { setupRun })`), so Site changes shows one Tracy setup row. A step that fails ends the chain early: what depends
-on it does not run, a brand or picture failure still lets step 9 write the rest, and the row ends `applied` either way, with
-per-step minutes and USD and the ending kept in `site_brief.timings.chain`.
+(`applyAs(..., { setupRun })`), so Site changes shows one Tracy setup row. The write never leaves demo content: a step that
+fails does not stop the others (what reads its output is skipped), a failed run that still made versions hands over its best
+one, and a planner or writer that made nothing is replaced by stand-ins (`write-step/stand-in-files.js`: a plan keeping the
+whole kit, a copy filling nothing), so step 9's closing ladder empties every kept slot nothing fills. Only a template kit that
+cannot be read stops step 9 (a configuration error); the base site is then handed over as created. The row ends `applied`
+either way, with per-step minutes and USD and the ending kept in `site_brief.timings.chain`.
 
 ## 9. Sign-in, seats, permissions
 
