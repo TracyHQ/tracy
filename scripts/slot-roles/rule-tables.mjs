@@ -31,8 +31,9 @@ import {
 } from 'website-opportunities/domain'
 import { editorialRoleOf, repeatedRowOf } from './editorial-defaults.mjs'
 import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
-import { proposeMarkupBindings } from './rule-tables-markup.mjs'
+import { placeHoursSamples } from './rule-tables-hours.mjs'
 import { proposeJoomlaMenuLinks } from './rule-tables-joomla-menu-links.mjs'
+import { proposeMarkupBindings } from './rule-tables-markup.mjs'
 import { proposeWordpressLinks } from './rule-tables-wordpress-links.mjs'
 
 export { FACT_FAMILY_ROLES }
@@ -528,10 +529,11 @@ export function proposeWordpress(slots, { placedRoles = new Map() } = {}) {
 
     if (parts.length === 3) {
       const [page, section, field] = parts
-      if (section === 'happyhours') {
+      if (/^happyhours(?:-\d+)?$/.test(section)) {
         const hpMap = {
           'hp-title': 'event.title',
           'hp-desc': 'event.description',
+          'hp-info': 'event.date_or_year',
           'hp-badge': 'package.badge',
           'hp-bg': 'event.image'
         }
@@ -879,6 +881,8 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
     const group = groupOf.get(binding.groupId)
     slot.group = { id: binding.groupId, item: group.itemIndex, kind: group.entityKind }
   }
+  // An hours or schedule sample is a fact: it takes the role of its card, or contact.hours (rule-tables-hours.mjs).
+  if (vocabulary3) placeHoursSamples(open, slots)
   // What no fact table placed: a text or image slot takes an editorial role from its own signals (never over a fact role).
   for (const slot of open) {
     if (slot.role !== undefined || !ROLE_TYPES.has(slot.type)) continue

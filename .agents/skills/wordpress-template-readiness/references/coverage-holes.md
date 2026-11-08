@@ -139,8 +139,11 @@ to the same list.
 - **Confirm.** R5 lists picture slots (a plate cut out of its photo, a brush stroke).
 - **Fix.** Read the crop of each (`label-judge/images/`) yourself: right as `editorial.illustration` or
   `editorial.design_element` is recorded with `record-judge.mjs`; a person, quote or business picture gets its role in
-  the content map (a plated dish: `offering.image`; a staff member or chef: `person.image`; both are empty on a
-  customer site until the customer adds their own). No model call.
+  the content map through the **role hints file** of the template
+  (`packages/cms/tracy-wordpress-quickstart/role-hints/<design>-wp<major>.json`, `{key, role, group?, why}` per slot,
+  passed as `--role-hints` to `capture-contract` and `capture-image-slots`, so every recapture produces the role again;
+  a plated dish: `offering.image`; a staff member or chef: `person.image`; both are empty on a customer site until the
+  customer adds their own). No model call, no edit of the map after the capture.
 - **Verify.** R5 is 0 after the judge is recorded on the **final** capture; a changed slot is asked again.
 
 ### H5. Words in a template part
@@ -223,7 +226,8 @@ to the same list.
 
 - **Confirm.** R2 names a slot whose sample is an hours or schedule line (`Mon to Thu 12 Noon to 11 PM`) on
   `editorial.paragraph`.
-- **Fix.** Give the slot `offering.schedule` (when an offering runs) or `contact.hours` (the business hours) and put it
-  in the group of its card. The slot stays writable and reads empty on a customer site until it is filled. A blanket
+- **Fix.** The rule `scripts/slot-roles/rule-tables-hours.mjs` gives the slot the role of the card it sits in
+  (`event.date_or_year`, `offering.schedule`) or `contact.hours` when it sits in none, and a group. A sample the rule
+  cannot place goes in the role hints file (H4). The slot stays writable and reads empty on a customer site until it is filled. A blanket
   accept would leave the demo hours in place.
 - **Verify.** R2 is 0; the slot has a role and a group.

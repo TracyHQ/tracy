@@ -177,3 +177,60 @@ test('a WordPress slot joins a card whose name the map already placed', () => {
     { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' }
   ])
 })
+
+test('an hours-shaped sample takes the role of the card it sits in, or contact.hours when it sits in none', () => {
+  const V3 = 'place-content-roles/3'
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      { key: 'home.menu.dish-name.1', type: 'text', sample: 'Smoked oolong' },
+      {
+        key: 'home.menu.dish-when.1',
+        type: 'text',
+        sample: 'Mon. Tue. & Sun ((br/))12 Noon to 11 PM',
+        markup: 'inline'
+      },
+      { key: 'home.happyhours.hp-title', type: 'text', sample: 'Evening special' },
+      {
+        key: 'home.happyhours.hp-info',
+        type: 'text',
+        sample: 'Mon. Tue. Thu. & Sun ((br/))12 Noon to 11 PM',
+        markup: 'inline'
+      },
+      { key: 'home.happyhours-2.hp-title', type: 'text', sample: 'Late special' },
+      {
+        key: 'home.happyhours-2.hp-info',
+        type: 'text',
+        sample: 'Fri. Sat. ((br/))9 PM to 1 AM',
+        markup: 'inline'
+      },
+      { key: 'home.footer.opening-line', type: 'text', sample: 'Open Mon to Fri, 9 AM to 5 PM' },
+      {
+        key: 'home.story.paragraph',
+        type: 'text',
+        sample:
+          'On Monday mornings at 9 AM our bakers start the dough, and by the end of the week the whole street smells of it.'
+      }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, { cms: 'wordpress', vocabulary: V3 })
+  const by = Object.fromEntries(contentMap.slots.map((s) => [s.key, s]))
+  assert.equal(by['home.menu.dish-when.1'].role, 'offering.schedule')
+  assert.deepEqual(by['home.menu.dish-when.1'].group, by['home.menu.dish-name.1'].group)
+  for (const sec of ['happyhours', 'happyhours-2']) {
+    assert.equal(by[`home.${sec}.hp-title`].role, 'event.title')
+    assert.equal(by[`home.${sec}.hp-info`].role, 'event.date_or_year')
+    assert.deepEqual(by[`home.${sec}.hp-info`].group, by[`home.${sec}.hp-title`].group)
+  }
+  assert.equal(by['home.footer.opening-line'].role, 'contact.hours')
+  assert.notEqual(
+    by['home.story.paragraph'].role,
+    'contact.hours',
+    'prose that mentions a day and a time is not an hours line'
+  )
+  assert.equal(
+    checkContentMapRoles(contentMap).errors.length,
+    0,
+    JSON.stringify(checkContentMapRoles(contentMap).errors)
+  )
+})

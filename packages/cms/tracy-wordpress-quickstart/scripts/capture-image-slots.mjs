@@ -33,6 +33,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { proposeContentMapRoles } from '../../../../scripts/slot-roles/rule-tables.mjs'
 import { readDump, tableRows, wordpressPrefix } from '../../tracy-quickstart-tools/mysqldump.mjs'
+import { applyRoleHints } from './role-hints.mjs'
 
 const UPLOADS = /^\/?(wp-content\/uploads\/[A-Za-z0-9/_.-]+\.(?:png|jpe?g|webp))$/
 
@@ -222,7 +223,7 @@ function main() {
   }
   if (!args.contract || !args.dump) {
     console.error(
-      'usage: capture-image-slots.mjs --contract <design>/wp<major>/<version> --dump <database.sql.gz> [--contracts-root <dir>] [--check]'
+      'usage: capture-image-slots.mjs --contract <design>/wp<major>/<version> --dump <database.sql.gz> [--contracts-root <dir>] [--role-hints <role-hints.json>] [--check]'
     )
     process.exit(2)
   }
@@ -307,7 +308,15 @@ function main() {
     for (const p of problems) console.error(`  ✖ ${p}`)
     process.exit(1)
   }
-  const next = `${JSON.stringify(withImageRoles(withImageSlots(contentMap, captured)), null, 2)}\n`
+  const withRoles = withImageRoles(withImageSlots(contentMap, captured))
+  // The committed role hints go last (capture-contract applied the ones for text slots; every key must exist now).
+  const hinted = applyRoleHints(
+    withRoles,
+    args['role-hints'] ? JSON.parse(readFileSync(args['role-hints'], 'utf8')) : undefined,
+    withRoles.roleVocabularyVersion ?? 'place-content-roles/2'
+  )
+  if (hinted.errors.length) throw new Error(hinted.errors.join('\n'))
+  const next = `${JSON.stringify(hinted.contentMap, null, 2)}\n`
   const file = path.join(dir, 'content-map.json')
   if (args.check) {
     if (readFileSync(file, 'utf8') !== next) {

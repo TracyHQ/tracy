@@ -30,7 +30,7 @@
  *     --release-manifest <manifest.json> --tag <release tag> --cowork-version <x.y.z>
  *     --contracts-root <dir> [--webroot-members <file listing the archive's paths>]
  *     [--previous-map <previous version's content-map.json>] [--unplaced-report <file>]
- *     [--all-text] [--posts] [--page-titles] [--inline-markup] [--role-vocabulary 2|3]
+ *     [--all-text] [--posts] [--page-titles] [--inline-markup] [--role-vocabulary 2|3] [--role-hints <role-hints.json>]
  *     [--theme-picture-options <option,...>] [--theme-picture-meta <meta key,...>]
  *     [--theme-text-options <option,...>] [--template-parts <slug,...>]
  *
@@ -76,11 +76,12 @@ import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { proposeContentMapRoles } from '../../../../scripts/slot-roles/rule-tables.mjs'
 import { readDump, tableRows, wordpressPrefix } from '../../tracy-quickstart-tools/mysqldump.mjs'
 import { setBlockValue } from '../../tracy-seeder/src/apply-wordpress-contract.mjs'
-import { proposeContentMapRoles } from '../../../../scripts/slot-roles/rule-tables.mjs'
 import { allTextSlots } from './capture-all-text.mjs'
 import { markupProblem, notationOf, wordsOf } from './inline-markup.mjs'
+import { applyRoleHints } from './role-hints.mjs'
 
 const TEXT_BLOCKS = new Set(['heading', 'paragraph', 'list-item', 'button'])
 const OPTION_SLOTS = [
@@ -469,6 +470,7 @@ export function deriveProfile({
   coworkVersion,
   themeRoots,
   previousMap,
+  roleHints,
   allText = false,
   posts = false,
   pageTitles = false,
@@ -628,10 +630,18 @@ export function deriveProfile({
     slots
   }
   const carried = carryRoles(contentMap, previousMap)
-  const { contentMap: mapWithRoles, unplaced } = proposeContentMapRoles(carried, {
+  const proposed = proposeContentMapRoles(carried, {
     cms: 'wordpress',
     ...(vocabulary ? { vocabulary } : {})
   })
+  // The committed role hints go last: what the rule tables cannot decide from a slot's own signals.
+  const hinted = applyRoleHints(proposed.contentMap, roleHints, vocabulary ?? 'place-content-roles/2', {
+    allowMissing: true
+  })
+  if (hinted.errors.length) throw new Error(hinted.errors.join('\n'))
+  const mapWithRoles = hinted.contentMap
+  const placedByHint = new Set((roleHints?.hints ?? []).map((h) => h.key))
+  const unplaced = proposed.unplaced.filter((key) => !placedByHint.has(key))
   const lock = {
     schemaVersion: 'tracy-quickstart-presentation-lock/wordpress/v1',
     $comment: `What a build must leave alone on a restored ${card.tag} ${card.version} site. Options are compared by value; files by sha256 of the shipped theme, captured from the release's webroot archive; each governed page by the hash of its markup with every slot masked.`,
@@ -718,7 +728,8 @@ function main() {
     themeTextOptions: (args['theme-text-options'] ?? '').split(',').filter(Boolean),
     templateParts: (args['template-parts'] ?? '').split(',').filter(Boolean),
     vocabulary: args['role-vocabulary'] === '3' ? 'place-content-roles/3' : undefined,
-    previousMap: args['previous-map'] ? JSON.parse(readFileSync(args['previous-map'], 'utf8')) : undefined
+    previousMap: args['previous-map'] ? JSON.parse(readFileSync(args['previous-map'], 'utf8')) : undefined,
+    roleHints: args['role-hints'] ? JSON.parse(readFileSync(args['role-hints'], 'utf8')) : undefined
   })
   const dir = path.join(path.resolve(args['contracts-root']), args.contract)
   mkdirSync(dir, { recursive: true })
