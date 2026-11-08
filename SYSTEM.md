@@ -434,8 +434,9 @@ success to `POST /api/sites/:key/changed`. Since 20/10/2026: before **every** Em
 `POST /api/sites/:key/lease/acquire` (held within the session's site by `conversationSite`, signed as the person typing,
 carrying `x-tracy-session` + `x-tracy-turn`; a seat that cannot write → 403); `SITE_BUSY` is waited out as on the
 Apply path (`lease-wait.mjs`, outside the flight, cut by Stop — a Stop during the wait sends nothing), and the lease is released
-at the end of the turn (`/lease/release`). If tracy-web does not answer this door (older version, unreachable), the write
-still goes ahead as before. Look changes (`look.set`/`look.revert`) take no lease, on all three CMSs.
+at the end of the turn (`/lease/release`). If tracy-web does not answer this door (older version, unreachable),
+or the answer does not confirm the lease, the EmDash write is refused before it reaches the site. Look changes
+(`look.set`/`look.revert`) take no lease, on all three CMSs.
 The text of EmDash contact forms (plugin `emdash-forms`, stored in the plugin's own store, which no content tool reaches)
 goes through the **form door** of `tracy_emdash` (25/10/2026): `form_list` reads, `form_words` changes exactly the words the customer reads (labels, hints,
 option labels with the same count, submit button, thank-you message) — the host reads the form, then sends `forms/update` back with only those words changed;
