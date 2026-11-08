@@ -153,14 +153,14 @@ test('H8 has no verdict piece: the release sweep detects it, and the patch relea
 })
 
 test('every recipe has its four parts, and SKILL.md and the fix map lead to them from the red code', () => {
-  for (let n = 1; n <= 8; n++) {
+  for (let n = 1; n <= 11; n++) {
     const body = HOLES.split(new RegExp(`^### H${n}\\. `, 'm'))[1]?.split(/^### H\d\. |^## /m)[0] ?? ''
     assert.ok(body, `recipe H${n} is missing`)
     for (const part of ['**Confirm.**', '**Fix.**', '**Verify.**'])
       assert.ok(body.includes(part), `H${n} lacks ${part}`)
   }
   assert.match(SKILL, /coverage-holes\.md`?\]?\(references\/coverage-holes\.md\) section 6/)
-  assert.match(FIXMAP, /recipes H1, H2, H5, H7 of section 6/)
+  assert.match(FIXMAP, /recipes H1, H2, H5, H7, H9, H10, H11 of section 6/)
   assert.match(FIXMAP, /recipes H1 to H6 of section 6/)
   for (const code of ['coverage-holes', 'coverage-labels', 'coverage-judge']) assert.ok(SKILL.includes(code))
 })
