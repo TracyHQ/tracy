@@ -142,6 +142,10 @@ test(
     const done = (await w.pool.query('select * from wo_demo_action')).rows[0]
     assert.equal(done.status, 'completed', JSON.stringify(done))
     assert.equal(done.error, null)
+    // The owner-link step and the retention sweep read these: the row reaches Outreach and the demo has a clock.
+    const build = (await w.pool.query('select qa, demo_expires_at from wo_build')).rows[0]
+    assert.equal(build.qa.state, 'passed')
+    assert.ok(build.demo_expires_at)
   }
 )
 
