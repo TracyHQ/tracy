@@ -3,7 +3,7 @@ import { isAgentDemo } from './agent-demo.js'
 import { demoSelectionMatchesRevision } from '../lib/quickstart-selection.js'
 /** Durable one-click demo orchestration, using the existing revision, build and hand-off services. */
 import { mintSession } from '../lib/session.js'
-import { settleBuild, startBuild } from './builds.js'
+import { isStepChainBuild, settleBuild, startBuild } from './builds.js'
 import { resumeDemoQa } from './demo-qa.js'
 import { startDemoClock } from './demo-retention.js'
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
@@ -242,6 +242,25 @@ export function createDemoRunner(deps) {
         if (build.state !== 'done') {
           await mark('build')
           return wait()
+        }
+        // 🔒 A STEP CHAIN BUILD HAS NO CHAT TO HAND OVER TO (#479): the chain writes the site, so there is no agent
+        // brief to send, no QA baseline to take and no fill to wait for. The action ends with the site.
+        // The row still reaches Outreach (it needs a passed QA state) and the demo keeps its retention clock, so the
+        // "send the link to the owner" step and the sweep treat it like any finished demo. The chain's own checks
+        // belong to the chain; a soft failure still hands the site over.
+        if (isStepChainBuild(build)) {
+          await mark('build')
+          await db.query(
+            `update wo_build set qa = coalesce(qa,'{}'::jsonb) || $2::jsonb, updated_at = $3 where id = $1 and account_id = $4`,
+            [
+              build.id,
+              JSON.stringify({ state: 'passed', workflow: 'step-chain/1', humanAccepted: false }),
+              new Date(now()),
+              action.account_id
+            ]
+          )
+          await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
+          return finish('completed')
         }
         await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
         // A manual quickstart-first build still owns its site's fill: the fill writes only while this

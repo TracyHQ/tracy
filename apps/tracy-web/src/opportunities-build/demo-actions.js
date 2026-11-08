@@ -9,6 +9,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { autoTemplate, chooseTemplate, templateRanking } from '../lib/wo-revision-choice.js'
 import { failedQaHash } from './demo-qa.js'
 import { BUILD_LIVE } from './build-store.js'
+import { stepChainEnabled } from '../lib/step-chain-switch.js'
 
 const DAY_MS = 86_400_000
 
@@ -299,6 +300,16 @@ export async function acceptDemoActions(
           })
         }
       }
+      // A build on the step chain has no chat (#479): the chain writes the site itself, so the press is no
+      // client-send action and the browser opens no chat to send the brief into. A Retry keeps its own mode.
+      if (
+        selection?.chatMode &&
+        !e.retryOf &&
+        e.ownSite !== true &&
+        usageKind === 'demo' &&
+        stepChainEnabled({ quickstart: selection.quickstart })
+      )
+        delete selection.chatMode
       if (selection?.workflow === AGENT_DEMO) {
         selection.researchInput = await freezeDemoResearchInput(client, e.opportunityId, accountId, {
           demoRequest: e.demoRequest
