@@ -379,7 +379,9 @@ test(
     const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
     assert.equal(record.ending, 'soft-failure')
     assert.equal(record.failedStep, 'plan')
-    const outcome = Object.fromEntries(record.steps.map((s) => [s.step, s.outcome]))
+    const outcome = Object.fromEntries(
+      record.steps.filter((s) => s.step !== 'site').map((s) => [s.step, s.outcome])
+    )
     assert.deepEqual(outcome, {
       kit: 'done',
       brand: 'done',
@@ -492,7 +494,7 @@ test('the row keeps minutes and USD per step, the totals and the ending', dbOpts
   assert.equal(record.ending, 'complete')
   const by = Object.fromEntries(record.steps.map((s) => [s.step, [s.minutes, s.usd]]))
   // Steps running side by side share the clock, so only the steps that moved it are compared by their minutes.
-  assert.deepEqual(Object.keys(by).sort(), ['brand', 'copy', 'kit', 'pictures', 'plan', 'write'])
+  assert.deepEqual(Object.keys(by).sort(), ['brand', 'copy', 'kit', 'pictures', 'plan', 'site', 'write'])
   assert.deepEqual(
     [by.plan, by.pictures, by.write],
     [
@@ -505,6 +507,25 @@ test('the row keeps minutes and USD per step, the totals and the ending', dbOpts
   assert.equal(record.totalMinutes, 27)
   assert.equal(record.totalUsd, 2.2)
 })
+
+test(
+  'the base site is a step of its own: minutes from the press until the host had it up, no USD',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    const { steps } = fakeSteps()
+    const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
+    const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
+    await b.start(chainInput())
+    await untilSettled(b, 'harbourpadel.tracy.test')
+    const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
+    const site = record.steps.find((s) => s.step === 'site')
+    assert.ok(site, 'the base site has a step')
+    assert.equal(site.usd, 0)
+    assert.equal(site.outcome, 'done')
+    assert.ok(Number.isFinite(site.minutes) && site.minutes >= 0)
+  }
+)
 
 test(
   'the customer is told "working" until the chain has handed the site over, a soft failure included',

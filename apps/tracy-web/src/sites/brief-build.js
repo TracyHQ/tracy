@@ -45,6 +45,7 @@ import {
   updateBrief
 } from './brief-store.js'
 import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
+import { withBaseSite } from './brief-engines/step-chain.js'
 
 /**
  * The host's step once the CMS is fully up and only the site's folder on the host is left to build (measured 03/10/2026:
@@ -604,6 +605,12 @@ export function createBriefBuilds({
       // what was written, and how the run ended is kept for staff (`timings.chain`), never said to the customer.
       if (report && /** @type {any} */ (report).chain) {
         time('afterUpMs', now() - upAt)
+        // The base site is a step of the measurement: from the press until the host had it up (`provisionedAt` is the
+        // poll door's word, `readyAt` the frame's own look at the host job).
+        const own = await briefOf(pool, siteKey).catch(() => null)
+        const upMs = Number(own?.timings?.provisionedAt ?? own?.timings?.readyAt) || siteUpAt || upAt
+        const pressedMs = own?.created_at ? new Date(own.created_at).getTime() : startedAt
+        const chain = withBaseSite(/** @type {any} */ (report).chain, upMs - Math.min(pressedMs, startedAt))
         await inTurn(() =>
           advanceBrief(pool, siteKey, ['applying'], {
             state: 'applied',
@@ -612,7 +619,7 @@ export function createBriefBuilds({
             timings: timingsNow({
               wrote: report?.wrote ?? 0,
               kept: report?.kept ?? 0,
-              chain: /** @type {any} */ (report).chain
+              chain
             })
           })
         )

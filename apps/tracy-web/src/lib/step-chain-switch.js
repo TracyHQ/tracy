@@ -12,7 +12,7 @@ export const STEP_CHAIN_WORKFLOW = 'step-chain/1'
 export const STEP_CHAIN_TEMPLATES = ['ja-boxing/j6']
 
 /** A quickstart tag without its release prefix or version suffix: `quickstart/ja-boxing/j6/1.0.10` is `ja-boxing/j6`. */
-function templateOf(quickstart) {
+export function chainTemplateOf(quickstart) {
   if (typeof quickstart !== 'string') return ''
   return quickstart
     .trim()
@@ -26,5 +26,5 @@ function templateOf(quickstart) {
  * @param {{ quickstart?: string | null, env?: Record<string, string | undefined> }} args
  */
 export function stepChainEnabled({ quickstart, env = process.env }) {
-  return env.STEP_CHAIN_ENABLED === '1' && STEP_CHAIN_TEMPLATES.includes(templateOf(quickstart))
+  return env.STEP_CHAIN_ENABLED === '1' && STEP_CHAIN_TEMPLATES.includes(chainTemplateOf(quickstart))
 }

@@ -210,3 +210,14 @@ export function chainSummary(record, failed, totalMs) {
     }))
   }
 }
+
+/**
+ * The base site as a step of the measurement. The host makes it beside the model steps, from the press until the host
+ * says it is up, so it is not timed by the chain's own clock: its minutes are given. It costs no model money.
+ * @param {ReturnType<typeof chainSummary>} chain
+ * @param {number} ms - from the press until the site was up
+ */
+export function withBaseSite(chain, ms) {
+  const minutes = round(Math.max(0, Number.isFinite(ms) ? ms : 0) / 60_000, 2)
+  return { ...chain, steps: [{ step: 'site', minutes, usd: 0, outcome: 'done' }, ...chain.steps] }
+}

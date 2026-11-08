@@ -76,6 +76,7 @@ import {
 } from './i18n/index.ts'
 import { useWoAddress, type WoNavigate } from './use-wo-address.ts'
 import { ViewAsUserButton } from './ViewAsUserButton'
+import { WoChainBuildsPanel } from './WoChainBuilds'
 import { WoPlaces } from './WoPlaces'
 import { WoProviderOrderPanel } from './WoProviderOrder'
 import { WoPublicDemosPanel } from './WoPublicDemos'
@@ -970,6 +971,18 @@ export function Wo({ entry, navigate }: { entry?: object; navigate?: WoNavigate 
                 {viewMode === 'places' ? t('wo.queue.backToQueue') : t('wo.queue.places')}
               </Button>
               <Button
+                variant={viewMode === 'builds' ? 'default' : 'outline'}
+                size="sm"
+                className="h-8 gap-1.5 text-xs"
+                onClick={() => {
+                  push()
+                  setViewMode((v) => (v === 'builds' ? 'queue' : 'builds'))
+                }}
+              >
+                <Zap className="size-3.5" />
+                {viewMode === 'builds' ? t('wo-builds.back') : t('wo-builds.open')}
+              </Button>
+              <Button
                 variant="outline"
                 size="sm"
                 className="h-8 gap-1.5 text-xs"
@@ -1052,6 +1065,8 @@ export function Wo({ entry, navigate }: { entry?: object; navigate?: WoNavigate 
         <WoDubaiPilot writable={writable} />
       ) : viewMode === 'places' ? (
         <WoPlaces address={placesAddress} onAddress={changePlaces} />
+      ) : viewMode === 'builds' ? (
+        <WoChainBuildsPanel />
       ) : viewMode === 'settings' && draftSettings ? (
         <WoSettingsView
           payload={payload}
