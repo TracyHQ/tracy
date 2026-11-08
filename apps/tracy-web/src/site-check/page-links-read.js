@@ -11,8 +11,8 @@ const plain = (html) =>
     .trim()
 const bodyOf = (html) =>
   String(html ?? '')
-    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script\b[\s\S]*?<\/script\s*>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style\s*>/gi, ' ')
     .replace(/<!--[\s\S]*?-->/g, ' ')
 
 const BLOCK_TAGS = 'h[1-6]|p|li|a|span|td|th|strong|em|b|small|label|button|dt|dd|figcaption|blockquote'
