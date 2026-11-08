@@ -1,0 +1,40 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "slug": "home",
+      "view": "front-page"
+    },
+    {
+      "path": "/contact-us",
+      "slug": "contact-us",
+      "view": "page-contact"
+    },
+    {
+      "path": "/offers",
+      "slug": "offers",
+      "view": "page-landing"
+    },
+    {
+      "path": "/about-us",
+      "slug": "about-us",
+      "view": "page"
+    },
+    {
+      "path": "/reservation",
+      "slug": "reservation",
+      "view": "page"
+    },
+    {
+      "path": "/our-blog",
+      "slug": "our-blog",
+      "view": "page-blog"
+    }
+  ],
+  "lists": [
+    {
+      "path": "/our-blog",
+      "type": "posts"
+    }
+  ]
+}

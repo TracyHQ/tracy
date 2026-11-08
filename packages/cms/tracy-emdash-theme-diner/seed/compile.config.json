@@ -1,0 +1,63 @@
+{
+  "fields": {
+    "posts.body": {
+      "type": "portableText"
+    },
+    "posts.excerpt": {
+      "type": "portableText"
+    },
+    "pages.body": {
+      "type": "portableText"
+    },
+    "features_intro.description": {
+      "type": "portableText"
+    },
+    "modules.content": {
+      "type": "portableText"
+    },
+    "contact.image": { "type": "image" },
+    "category_info.image": {
+      "type": "image"
+    },
+    "contact.card_text": {
+      "type": "portableText"
+    },
+    "contact.social_links.url": {
+      "type": "string"
+    },
+    "contact.webpage": {
+      "type": "string"
+    },
+    "reservation.blocks.image": {
+      "type": "image"
+    },
+    "reservation.online_image": {
+      "type": "image"
+    }
+  },
+  "collections": {
+    "posts": {
+      "label": "Posts",
+      "labelSingular": "Post",
+      "sortOrder": 2,
+      "routable": true,
+      "supports": [
+        "revisions",
+        "search"
+      ],
+      "editLocking": false,
+      "description": "Articles. `path` records the address a post is served at."
+    },
+    "pages": {
+      "label": "Pages",
+      "labelSingular": "Page",
+      "sortOrder": 1,
+      "routable": false,
+      "supports": [
+        "revisions"
+      ],
+      "editLocking": false,
+      "description": "One entry per page of the site."
+    }
+  }
+}

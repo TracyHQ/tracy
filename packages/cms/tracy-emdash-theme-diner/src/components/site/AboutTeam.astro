@@ -1,0 +1,67 @@
+---
+/** Teams style 1: heading, intro and a grid of members (portrait, name, office, words, social links). */
+import { mediaUrl } from '@/lib/media'
+import { dataHref } from '@/lib/data-links'
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+  stamp: Stamp
+}
+const { entry, stamp: $t } = Astro.props
+const members: any[] = entry.items ?? []
+const cols = Math.min(Math.max(parseInt(String(entry.number_column ?? '4'), 10) || 4, 1), 6)
+
+/** The social links of a member are stored as a small list: read each `<a href><i class="fa fa-NAME">` pair, never print the HTML. */
+const NETWORKS = ['facebook', 'twitter', 'google-plus', 'instagram', 'pinterest', 'linkedin']
+function socials(html: unknown): { net: string; url: string }[] {
+  if (typeof html !== 'string') return []
+  const out: { net: string; url: string }[] = []
+  for (const m of html.matchAll(
+    /<a\s+[^>]*href=['"]([^'"]*)['"][^>]*>\s*<i\s+[^>]*class=['"][^'"]*fa-([a-z-]+)/gi
+  )) {
+    const net = m[2].toLowerCase()
+    const url = dataHref(m[1], (p) => p)
+    if (NETWORKS.includes(net) && url) out.push({ net, url })
+  }
+  return out
+}
+// No icon font on the site: each network is a small inline glyph (24-unit boxes, currentColor)
+const GLYPH: Record<string, string> = { 'google-plus': 'G+', pinterest: 'P', linkedin: 'in' }
+const ICON: Record<string, string> = {
+  facebook:
+    '<path fill="currentColor" d="M13.5 22v-8.2h2.8l.5-3.3h-3.3V8.4c0-.9.4-1.7 1.8-1.7h1.6V3.8S15.6 3.5 14.3 3.5c-2.7 0-4.4 1.6-4.4 4.5v2.5H7.2v3.3h2.7V22z"/>',
+  twitter:
+    '<path fill="currentColor" d="M22 5.9c-.7.3-1.5.5-2.3.6.8-.5 1.4-1.3 1.7-2.2-.8.5-1.6.8-2.5 1a3.9 3.9 0 0 0-6.7 3.6C8.9 8.7 6 7.1 4.1 4.7a3.9 3.9 0 0 0 1.2 5.2c-.6 0-1.2-.2-1.8-.5 0 1.9 1.3 3.5 3.1 3.9-.6.2-1.2.2-1.8.1.5 1.6 2 2.7 3.7 2.7A7.9 7.9 0 0 1 2 17.7 11 11 0 0 0 8 19.5c7.2 0 11.2-6 11.2-11.2v-.5c.8-.6 1.5-1.3 2-2z"/>'
+}
+---
+
+<section class="dn-section dn-about-team">
+	<div class="dn-wrap">
+		<div class="dn-team-head">
+			<h2 class="dn-team-title" {...$t('title_section')}>{entry.title_section}</h2>
+			<p class="dn-team-intro" {...$t('description_section')}>{entry.description_section}</p>
+		</div>
+		<div class="dn-team-grid" style={`--dn-team-cols:${cols}`}>
+			{members.map((m, i) => (
+				<div class="dn-member">
+					<div class="dn-member-pic">{mediaUrl(m.img) && <img src={mediaUrl(m.img)!} alt="" width="318" height="318" loading="lazy" {...$t(`items[${i}].img`)} />}</div>
+					<h3 class="dn-member-name" {...$t(`items[${i}].name_member`)}>{m.name_member}</h3>
+					<div class="dn-member-office" {...$t(`items[${i}].name_office`)}>{m.name_office}</div>
+					<p class="dn-member-desc" {...$t(`items[${i}].description`)}>{m.description}</p>
+					{socials(m.link_social).length > 0 && (
+						<ul class="dn-member-social" {...$t(`items[${i}].link_social`)}>
+							{socials(m.link_social).map((s) => (
+								<li><a class={`is-${s.net}`} href={s.url} aria-label={s.net}>{s.net === 'instagram'
+									? <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.5" /><circle cx="8" cy="8" r="2.8" fill="none" stroke="currentColor" stroke-width="1.5" /><circle cx="11.6" cy="4.4" r=".9" fill="currentColor" /></svg>
+									: ICON[s.net]
+										? <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" set:html={ICON[s.net]} />
+										: <span aria-hidden="true">{GLYPH[s.net]}</span>}</a></li>
+							))}
+						</ul>
+					)}
+				</div>
+			))}
+		</div>
+	</div>
+</section>

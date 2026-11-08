@@ -1,0 +1,60 @@
+/* offers page family (P5). Imported by global.css. Source: .acm-happyhours.style-1/2/3 of the JA Diner Offers page. */
+@layer components {
+	.dn-hh-section { font-family: var(--font-display); font-weight: 400; font-size: 45px; line-height: 60px; text-transform: uppercase; text-align: center; color: var(--color-heading); margin: 0 0 36px; }
+	.dn-hh-photo { margin-inline: -18px; background-position: center; background-repeat: no-repeat; background-size: cover; }
+	.dn-hh-heading { font-family: var(--font-display); font-weight: 400; font-size: 45px; line-height: 60px; margin: 0; }
+	.dn-hh-heading > span { position: relative; }
+	.dn-hh-desc { margin: 0; }
+	.dn-hh-info-inner { text-wrap: balance; }
+	.dn-hh-info-inner { font-family: var(--font-display); line-height: 1.4; }
+	.dn-hh-badge { text-transform: uppercase; }
+	.is-style-1 .dn-hh-card .dn-btn, .is-style-2 .dn-hh-card .dn-btn { margin: 0 0 24px; }
+
+	/* style 1: white card on the left, ink panel with a round badge */
+	.is-style-1 .dn-hh-photo { padding: 96px; }
+	.is-style-1 .dn-hh-card { background: var(--color-surface); max-width: 420px; padding: 48px; text-align: center; }
+	.is-style-1 .dn-hh-heading { color: var(--color-heading); margin: 24px 0; position: relative; }
+	.is-style-1 .dn-hh-heading::before { content: ""; position: absolute; left: 50%; bottom: 6px; width: 40%; height: 18px; transform: translateX(-50%); background: var(--color-mark); }
+	.is-style-1 .dn-hh-desc { margin-bottom: 72px; }
+	.is-style-1 .dn-hh-info { position: relative; background: var(--color-ink); color: var(--color-on-ink); font-size: 36px; margin-bottom: 48px; }
+	.is-style-1 .dn-hh-info::before { content: ""; position: absolute; inset: 0; background: url('/brand/pattern.png') center / cover; }
+	.is-style-1 .dn-hh-info-inner { position: relative; padding: 72px 36px 36px; }
+	.is-style-1 .dn-hh-badge { position: absolute; display: block; left: 50%; top: -48px; transform: translateX(-50%); z-index: 2; width: 100px; height: 100px; padding: 16px; line-height: 84px; border: 3px solid var(--ds-c-border, #fff); border-radius: 50%; background: var(--ds-c-accent, #5cb85c); color: var(--ds-c-accent-on, #fff); text-align: center; }
+	.is-style-1 .dn-hh-badge > span { display: inline-block; font-size: 22px; line-height: 1.1; vertical-align: middle; }
+
+	/* style 2: centred translucent card, badge on its corner */
+	.is-style-2 .dn-hh-photo { padding: 144px 0; text-align: center; }
+	.is-style-2 .dn-hh-card { position: relative; display: inline-block; max-width: 450px; padding: 72px 48px; background: rgba(0, 0, 0, 0.5); color: #fff; } /* ds-keep: offer card: white text on a translucent black box over a photograph, the pair is kept under every system */
+	.is-style-2 .dn-hh-heading { color: #fff; margin: 24px 0; } /* ds-keep: offer card: white text on a translucent black box over a photograph, the pair is kept under every system */
+	.is-style-2 .dn-hh-desc { margin-bottom: 24px; }
+	.is-style-2 .dn-hh-info { font-size: 32px; margin-bottom: 36px; }
+	.is-style-2 .dn-hh-badge { position: absolute; right: -32px; top: -56px; z-index: 2; width: 130px; height: 130px; padding: 24px; line-height: 110px; border: 3px solid var(--ds-c-border, #fff); border-radius: 50%; background: var(--ds-c-accent, #5cb85c); color: var(--ds-c-accent-on, #fff); text-align: center; box-sizing: border-box; }
+	.is-style-2 .dn-hh-badge > span { display: inline-block; font-size: 30px; line-height: 1.1; vertical-align: middle; }
+
+	/* style 3: dark box on the left, the badge a green tag across its top */
+	.is-style-3 { margin-bottom: 108px; }
+	.is-style-3 .dn-hh-photo { padding: 96px; }
+	.is-style-3 .dn-hh-card { position: relative; max-width: 450px; width: 100%; padding: 108px 72px 72px; background: rgba(0, 0, 0, 0.8); color: #fff; text-align: left; } /* ds-keep: offer card: white text on a translucent black box over a photograph, the pair is kept under every system */
+	.is-style-3 .dn-hh-heading { color: #fff; margin: 0 0 24px; } /* ds-keep: offer card: white text on a translucent black box over a photograph, the pair is kept under every system */
+	.is-style-3 .dn-hh-desc { margin-bottom: 36px; }
+	.is-style-3 .dn-hh-info { margin-bottom: 36px; }
+	.is-style-3 .dn-hh-info-inner { font-size: 26px; }
+	.is-style-3 .dn-hh-badge { position: absolute; display: block; left: -18px; top: 36px; width: 100%; font-size: 28px; }
+	.is-style-3 .dn-hh-badge > span { position: relative; display: inline-block; padding: 12px 18px 12px 48px; line-height: 1; font-weight: 400; background: var(--ds-c-accent, #5cb85c); color: var(--ds-c-accent-on, #fff); }
+	.is-style-3 .dn-hh-badge > span::before { content: ""; position: absolute; left: 0; bottom: -20px; width: 0; height: 0; border-left: 18px solid transparent; border-top: 20px solid var(--ds-c-accent-hover, #5b940e); }
+}
+@media (max-width: 767px) {
+	.dn-hh-section { font-size: 28px; line-height: 37.3333px; margin-bottom: 24px; }
+	.dn-hh-heading { font-size: 36px; line-height: 48px; }
+	.is-style-1 .dn-hh-photo { padding: 24px; }
+	.is-style-1 .dn-hh-card { padding: 36px; }
+	.is-style-1 .dn-hh-heading::before { height: 12px; }
+	.is-style-1 .dn-hh-info { font-size: 30px; }
+	.is-style-2 .dn-hh-photo { padding: 48px; }
+	.is-style-2 .dn-hh-card { padding: 48px 24px 24px; }
+	.is-style-2 .dn-hh-info { font-size: 28px; }
+	.is-style-2 .dn-hh-badge { width: 90px; height: 90px; top: -24px; right: -12px; line-height: 80px; padding: 12px; }
+	.is-style-2 .dn-hh-badge > span { font-size: 22px; }
+	.is-style-3 .dn-hh-photo { padding: 36px; }
+	.is-style-3 .dn-hh-card { padding: 108px 24px 36px; }
+}

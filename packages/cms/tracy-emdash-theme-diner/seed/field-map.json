@@ -1,0 +1,615 @@
+{
+	"generatedAt": "2026-11-08T11:08:13.201Z",
+	"fields": {
+		"pages.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"pages.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"pages.view": {
+			"source": "text",
+			"target": "string",
+			"label": "View"
+		},
+		"pages.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"posts.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"posts.excerpt": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Excerpt"
+		},
+		"posts.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"posts.date": {
+			"source": "date",
+			"target": "datetime",
+			"label": "Date"
+		},
+		"posts.cover": {
+			"source": "image",
+			"target": "image",
+			"label": "Cover"
+		},
+		"posts.detail_image": {
+			"source": "image",
+			"target": "image",
+			"label": "Detail image"
+		},
+		"posts.created": {
+			"source": "date",
+			"target": "datetime",
+			"label": "Created"
+		},
+		"posts.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"slideshow.title_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Title link"
+		},
+		"slideshow.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"slideshow.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"features_intro.basic_description": {
+			"source": "text",
+			"target": "string",
+			"label": "Basic description"
+		},
+		"features_intro.basic_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Basic btn title"
+		},
+		"features_intro.basic_btn_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Basic btn link"
+		},
+		"features_intro.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"features_intro.align": {
+			"source": "text",
+			"target": "string",
+			"label": "Align"
+		},
+		"features_intro.img_features": {
+			"source": "image",
+			"target": "image",
+			"label": "Img features"
+		},
+		"features_intro.description": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Description"
+		},
+		"features_intro.title_small": {
+			"source": "text",
+			"target": "string",
+			"label": "Title small"
+		},
+		"features_intro.title_large": {
+			"source": "text",
+			"target": "string",
+			"label": "Title large"
+		},
+		"features_intro.button": {
+			"source": "text",
+			"target": "string",
+			"label": "Button"
+		},
+		"features_intro.button_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Button link"
+		},
+		"features_intro.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"features_intro.sub_heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub heading"
+		},
+		"container_tabs.image_intro": {
+			"source": "image",
+			"target": "image",
+			"label": "Image intro"
+		},
+		"container_tabs.position": {
+			"source": "text",
+			"target": "string",
+			"label": "Position"
+		},
+		"container_tabs.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"container_tabs.sub_heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub heading"
+		},
+		"menu.basic_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Basic btn title"
+		},
+		"menu.basic_btn_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Basic btn link"
+		},
+		"menu.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"menu.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"happyhours.hp_img": {
+			"source": "image",
+			"target": "image",
+			"label": "Hp img"
+		},
+		"happyhours.hp_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp title"
+		},
+		"happyhours.hp_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp desc"
+		},
+		"happyhours.hp_info": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp info"
+		},
+		"happyhours.hp_badge": {
+			"source": "text",
+			"target": "string",
+			"label": "Hp badge"
+		},
+		"happyhours.hp_link_text": {
+			"source": "url",
+			"target": "string",
+			"label": "Hp link text"
+		},
+		"happyhours.hp_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Hp link"
+		},
+		"happyhours.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"teams.number_column": {
+			"source": "text",
+			"target": "string",
+			"label": "Number column"
+		},
+		"teams.title_section": {
+			"source": "text",
+			"target": "string",
+			"label": "Title section"
+		},
+		"teams.description_section": {
+			"source": "text",
+			"target": "string",
+			"label": "Description section"
+		},
+		"teams.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"teams.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"modules.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"modules.content": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Content"
+		},
+		"chrome.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"chrome.brand_name": {
+			"source": "text",
+			"target": "string",
+			"label": "Brand name"
+		},
+		"chrome.footer_location_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer location title"
+		},
+		"chrome.footer_address": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer address"
+		},
+		"chrome.footer_map_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer map label"
+		},
+		"chrome.footer_hours_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer hours title"
+		},
+		"chrome.footer_hours": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer hours"
+		},
+		"chrome.footer_contact_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer contact title"
+		},
+		"chrome.footer_phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer phone"
+		},
+		"chrome.footer_email": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer email"
+		},
+		"chrome.subscribe_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe label"
+		},
+		"chrome.subscribe_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe title"
+		},
+		"chrome.subscribe_placeholder": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe placeholder"
+		},
+		"chrome.subscribe_button": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe button"
+		},
+		"chrome.subscribe_note": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe note"
+		},
+		"chrome.news_label": {
+			"source": "text",
+			"target": "string",
+			"label": "News label"
+		},
+		"chrome.news_title": {
+			"source": "text",
+			"target": "string",
+			"label": "News title"
+		},
+		"chrome.copyright": {
+			"source": "text",
+			"target": "string",
+			"label": "Copyright"
+		},
+		"chrome.skip_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Skip label"
+		},
+		"chrome.menu_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Menu label"
+		},
+		"chrome.appearance_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Appearance label"
+		},
+		"chrome.categories_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Categories title"
+		},
+		"chrome.prev_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Prev label"
+		},
+		"chrome.next_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Next label"
+		},
+		"chrome.more_label": {
+			"source": "text",
+			"target": "string",
+			"label": "More label"
+		},
+		"chrome.read_more": {
+			"source": "text",
+			"target": "string",
+			"label": "Read more"
+		},
+		"chrome.breadcrumb_home": {
+			"source": "text",
+			"target": "string",
+			"label": "Breadcrumb home"
+		},
+		"chrome.latest_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Latest title"
+		},
+		"chrome.not_found_code": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found code"
+		},
+		"chrome.not_found_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found title"
+		},
+		"chrome.not_found_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found text"
+		},
+		"chrome.not_found_back_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found back label"
+		},
+		"chrome.footer_map_url": {
+			"source": "url",
+			"target": "string",
+			"label": "Footer map url"
+		},
+		"chrome.logo_dark": {
+			"source": "image",
+			"target": "image",
+			"label": "Logo dark"
+		},
+		"chrome.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		},
+		"chrome.search_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Search title"
+		},
+		"chrome.search_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Search label"
+		},
+		"chrome.search_placeholder": {
+			"source": "text",
+			"target": "string",
+			"label": "Search placeholder"
+		},
+		"chrome.search_button": {
+			"source": "text",
+			"target": "string",
+			"label": "Search button"
+		},
+		"chrome.search_results": {
+			"source": "text",
+			"target": "string",
+			"label": "Search results"
+		},
+		"chrome.search_empty": {
+			"source": "text",
+			"target": "string",
+			"label": "Search empty"
+		},
+		"chrome.page_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Page label"
+		},
+		"chrome.start_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Start label"
+		},
+		"chrome.end_label": {
+			"source": "text",
+			"target": "string",
+			"label": "End label"
+		},
+		"masthead.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"masthead.description": {
+			"source": "text",
+			"target": "string",
+			"label": "Description"
+		},
+		"masthead.background": {
+			"source": "image",
+			"target": "image",
+			"label": "Background"
+		},
+		"category_info.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"category_info.description": {
+			"source": "text",
+			"target": "string",
+			"label": "Description"
+		},
+		"category_info.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image"
+		},
+		"contact.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"contact.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image"
+		},
+		"contact.card_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Card title"
+		},
+		"contact.card_text": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Card text"
+		},
+		"contact.social_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Social title"
+		},
+		"contact.social_links": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Social links"
+		},
+		"contact.address": {
+			"source": "text",
+			"target": "string",
+			"label": "Address"
+		},
+		"contact.phone_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Phone label"
+		},
+		"contact.phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Phone"
+		},
+		"contact.web_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Web label"
+		},
+		"contact.webpage": {
+			"source": "url",
+			"target": "string",
+			"label": "Webpage"
+		},
+		"contact.form_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Form title"
+		},
+		"contact.form_note": {
+			"source": "text",
+			"target": "string",
+			"label": "Form note"
+		},
+		"contact.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		},
+		"reservation.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"reservation.blocks": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Blocks"
+		},
+		"reservation.online_image": {
+			"source": "image",
+			"target": "image",
+			"label": "Online image"
+		},
+		"reservation.online_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Online title"
+		},
+		"reservation.online_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Online text"
+		},
+		"reservation.online_phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Online phone"
+		},
+		"reservation.online_button": {
+			"source": "text",
+			"target": "string",
+			"label": "Online button"
+		}
+	}
+}

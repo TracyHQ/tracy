@@ -92,7 +92,7 @@ export function splitDatabaseGated(files, skip, read) {
   return { run, dropped }
 }
 const E2E = /^(?:apps\/[^/]+|packages\/[^/]+\/[^/]+)\/test\/e2e\/[^/]+\.test\.mjs$/
-const STANDALONE = /^packages\/cms\/tracy-emdash-theme-(?:base|business|saas|coffee|restaurant)\//
+const STANDALONE = /^packages\/cms\/tracy-emdash-theme-(?:base|business|saas|coffee|restaurant|diner)\//
 const GLOBAL =
   /^(?:\.github\/workflows\/tracy-ci\.yml|\.node-version|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|scripts\/check-(?:all|tests)\.ts|scripts\/ci\/|scripts\/test-timings\.json|vendor\/tracy\/deepseek-harness(?:\/|$))/
 const DOCS =
@@ -213,7 +213,7 @@ export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/emdash/tracy-emdash-skill/',
     reason:
-      'no worker test and none of the five EmDash suites read the tree; five regression scripts read the skill (REG-PR-1156, 1159, 1161, 1177 run its tests; REG-PR-399 loads its release tools and reads their sources); no CI row runs a regression script, they run by hand through the regression runner',
+      'no worker test and none of the six EmDash suites read the tree; five regression scripts read the skill (REG-PR-1156, 1159, 1161, 1177 run its tests; REG-PR-399 loads its release tools and reads their sources); no CI row runs a regression script, they run by hand through the regression runner',
     gate: 'check-site-model and check-emdash-kit-sync in the checks row',
     readers: [],
     outsideCi: [

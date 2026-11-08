@@ -24,7 +24,7 @@ import { load } from 'js-yaml'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 /** The standalone templates: their own lockfile, outside the workspace (`pnpm-workspace.yaml`). */
-export const STANDALONE_LOCKS = ['base', 'business', 'saas', 'restaurant'].map(
+export const STANDALONE_LOCKS = ['base', 'business', 'saas', 'restaurant', 'diner'].map(
   (t) => `packages/cms/tracy-emdash-theme-${t}/pnpm-lock.yaml`
 )
 const NAMES = ['playwright', '@playwright/test']

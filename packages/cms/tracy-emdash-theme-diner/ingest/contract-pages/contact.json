@@ -1,0 +1,56 @@
+{
+  "layout": { "id": "Contact", "view": "src/views/Contact.astro", "family": "form" },
+  "rules": [
+    ["contact-heading", ".dn-contact .dn-sub", "index.php/contact-us/index.html", false],
+    ["contact-social", ".dn-contact-social a", "index.php/contact-us/index.html", false],
+    ["contact-label", ".dn-contact .ec-form-label", "index.php/contact-us/index.html", false],
+    ["contact-submit", ".dn-contact .ec-form-submit", "index.php/contact-us/index.html", false]
+  ],
+  "parity": {},
+  "pages": [
+    {
+      "id": "en-contact",
+      "path": "/contact-us",
+      "status": 200,
+      "source": ["index.php/contact-us/index.html"],
+      "identity": ".dn-contact-form",
+      "collections": ["chrome", "masthead", "contact"],
+      "rules": ["masthead-title", "contact-heading", "contact-social", "contact-label", "contact-submit"],
+      "parity": ["nav", "footerTitle", "ground"],
+      "content": [
+        [
+          "masthead-title",
+          ".dn-masthead-title",
+          "index.php/contact-us/index.html",
+          "field",
+          "masthead.title",
+          "Ja Diner"
+        ],
+        [
+          "contact-social",
+          ".dn-contact-social a",
+          "index.php/contact-us/index.html",
+          "field",
+          "contact.social_links[0].label",
+          "FACEBOOK"
+        ],
+        [
+          "contact-form-title",
+          ".dn-contact-form .dn-sub",
+          "index.php/contact-us/index.html",
+          "field",
+          "contact.form_title",
+          "Contact Form"
+        ],
+        [
+          "contact-address",
+          ".dn-contact-list li",
+          "index.php/contact-us/index.html",
+          "field",
+          "contact.address",
+          "1600 Amphitheatre Parkway, Mountain View 5692"
+        ]
+      ]
+    }
+  ]
+}

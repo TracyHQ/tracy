@@ -1,0 +1,53 @@
+/* contact page family (P5). Imported by global.css. */
+@layer components {
+	.dn-contact { display: grid; grid-template-columns: 465px 1fr; gap: 0 60px; padding-top: 72px; padding-bottom: 81px; align-items: start; }
+	.dn-contact-info, .dn-contact-form { min-width: 0; }
+	.dn-contact-info img { display: block; width: 100%; height: auto; margin-bottom: 24px; }
+	.dn-contact-text p { margin: 0 0 24px; }
+	.dn-contact-social { padding-top: 22px; }
+	.dn-contact-social .dn-sub { margin-bottom: 8px; }
+	.dn-contact-social ul { display: flex; flex-wrap: wrap; list-style: none; margin: 0 0 36px; padding: 0; }
+	.dn-contact-social li { margin: 8px 8px 0 0; }
+	.dn-contact-social a { display: block; padding: 12px; border: 1px solid var(--color-line); color: var(--color-fg); font-size: 12px; line-height: 19.2px; font-weight: 600; text-transform: uppercase; }
+	.dn-contact-social a:hover { color: var(--color-accent-text); border-color: var(--color-accent); }
+	.dn-contact-list { list-style: none; margin: 0; padding: 0; }
+	.dn-contact-list li { display: flex; align-items: center; gap: 16px; margin: 0 0 12px; }
+	.dn-contact-list svg { flex: none; color: var(--color-fg); }
+	.dn-contact-list a { color: var(--color-fg); }
+	.dn-contact-form .dn-sub { margin-bottom: 24px; }
+	.dn-contact-note { font-size: 12px; line-height: 19.2px; margin: 0 0 24px; }
+
+	/* the Forms plugin's markup in the design's field style */
+	.dn-contact .ec-form { display: grid; gap: 24px; container-type: inline-size; }
+	.dn-contact .ec-form .ec-form-page { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 36px; border: 0; padding: 0; margin: 0; min-width: 0; }
+	.dn-contact .ec-form .ec-form-field { grid-column: span 2; min-width: 0; }
+	.dn-contact .ec-form .ec-form-field--half { grid-column: span 1; }
+	.dn-contact .ec-form .ec-form-label { display: block; margin-bottom: 5px; color: var(--color-fg); }
+	.dn-contact .ec-form .ec-form-field:not(.ec-form-field--half) .ec-form-label { margin-bottom: 0; }
+	.dn-contact .ec-form .ec-form-required { color: var(--color-mark); margin-left: 4px; }
+	html[data-theme="dark"] .dn-contact .ec-form .ec-form-required { color: var(--color-accent-text); }
+	.dn-contact .ec-form .ec-form-input,
+	.dn-contact .ec-form input[type="text"], .dn-contact .ec-form input[type="email"], .dn-contact .ec-form textarea { width: 100%; height: 54px; padding: 12px 20px; background: var(--color-surface); border: 1px solid var(--color-line); color: var(--color-fg); font: inherit; border-radius: var(--ds-input-radius, 0); box-sizing: border-box; }
+	.dn-contact .ec-form textarea, .dn-contact .ec-form textarea.ec-form-input { height: 266px; resize: vertical; }
+	.dn-contact .ec-form .ec-form-input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
+	.dn-contact .ec-form .ec-form-error { display: block; font-size: 13px; color: var(--color-accent-text); margin-top: 4px; }
+	.dn-contact .ec-form .ec-form-error:empty { display: none; }
+	.dn-contact .ec-form .ec-form-nav { display: flex; justify-content: flex-end; gap: 12px; margin-top: -7px; }
+	.dn-contact .ec-form .ec-form-submit, .dn-contact .ec-form .ec-form-next, .dn-contact .ec-form .ec-form-prev { display: inline-block; height: 54px; padding: 16px 36px; background: var(--color-accent); color: var(--color-accent-on); border: 0; font: 600 12px/20px var(--font-body); text-transform: uppercase; cursor: pointer; border-radius: var(--ds-btn-radius, 0); }
+	.dn-contact .ec-form .ec-form-submit:hover { background: var(--color-accent-hover); }
+	.dn-contact .ec-form .ec-form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+	.dn-contact .ec-form .ec-form-status { padding: 10px 14px; border-left: 3px solid var(--color-accent); background: var(--color-surface); }
+	.dn-contact .ec-form .ec-form-status:empty { display: none; }
+	.dn-contact .ec-form.is-disabled .ec-form-input { opacity: 0.6; cursor: not-allowed; }
+	@media (max-width: 991px) {
+		.dn-contact { grid-template-columns: 1fr; gap: 72px 0; padding-top: 72px; padding-bottom: 96px; }
+	}
+	@media (max-width: 767px) {
+		.dn-contact .ec-form .ec-form-field--half { grid-column: span 2; }
+	}
+	@media (max-width: 575px) { .dn-contact .ec-form .ec-form-nav { justify-content: flex-start; margin-top: 30px; } }
+}
+/* unlayered: global.css sets .dn-sub to 26px below 576px outside any layer */
+@media (max-width: 575px) {
+	.dn-contact .dn-sub { font-size: 36px; line-height: 48px; }
+}

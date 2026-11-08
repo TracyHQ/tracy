@@ -1,0 +1,284 @@
+---
+/**
+ * Home: slideshow · intro (location, hours) · gallery · menu tabs · news · chef quote. Composition (which entry fills which
+ * band) is the spec-pack's page-map for the front page (DECISIONS D5): slideshow = slideshow/slideshow · intro =
+ * features_intro/meet-three-broomsticks · gallery = features_intro/gallery · tabs = container_tabs/discover-our-menu with
+ * menu/{main-dishes,soft-drinks,dessert} · news = the four newest posts of the blog categories · chef = features_intro/meet-our-chef.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import PostCard from '@/components/site/PostCard.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { section, sections } from '@/lib/content'
+import { PortableText } from 'emdash/ui'
+import { cleanHtml } from '@/lib/html'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { blogPosts, loadPosts } from '@/lib/posts'
+import { liveLinks, livePosts } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const site = chrome.site
+const [{ entry: pageEntry }, slideshow, intro, gallery, tabs, chef, menus, all] = await Promise.all([
+  getEmDashEntry('pages', 'home', { locale }),
+  section('slideshow', 'slideshow', locale),
+  section('features_intro', 'meet-three-broomsticks', locale),
+  section('features_intro', 'gallery', locale),
+  section('container_tabs', 'discover-our-menu', locale),
+  section('features_intro', 'meet-our-chef', locale),
+  sections('menu', locale, ['main-dishes', 'soft-drinks', 'dessert']),
+  loadPosts(locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'home' } : null)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const $sl = stampFor(
+  Astro.request,
+  'slideshow',
+  slideshow ? { id: slideshow.id, slug: slideshow.slug } : null
+)
+const $in = stampFor(Astro.request, 'features_intro', intro ? { id: intro.id, slug: intro.slug } : null)
+const $ga = stampFor(Astro.request, 'features_intro', gallery ? { id: gallery.id, slug: gallery.slug } : null)
+const $tb = stampFor(Astro.request, 'container_tabs', tabs ? { id: tabs.id, slug: tabs.slug } : null)
+const $ch = stampFor(Astro.request, 'features_intro', chef ? { id: chef.id, slug: chef.slug } : null)
+const news = (await livePosts(Astro.request, locale, blogPosts(all))).slice(0, 4)
+const slides: any[] = slideshow?.items ?? []
+const link = (u: string) => dataHref(u, (p) => href(locale, p))
+const bg = (v: unknown) => {
+  const u = mediaUrl(v as any)
+  return u ? `background-image:url('${u}')` : undefined
+}
+const items: any[] = intro?.items ?? []
+// a button whose page the customer unticked is not drawn (link gate): every button link this page reads, asked once
+const live = await liveLinks(Astro.request, locale, [
+  ...slides.flatMap((s) => [s.btn_link1, s.btn_link2]),
+  intro?.basic_btn_link,
+  items[0]?.btn_link,
+  items[1]?.btn_link,
+  ...(menus ?? []).map((m: any) => m?.basic_btn_link)
+])
+// the source's carousel shows the first item in the centred slot when it loads
+const galleryCount = (gallery?.items ?? []).length
+const galleryOrder = Array.from({ length: galleryCount }, (_, k) => k)
+---
+
+<Base chrome={chrome} title={page.title ?? site.brand_name} currentPath="/" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'home', toPath: () => '/' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		{slides.length > 0 && (
+			<section class="dn-slides" aria-roledescription="carousel" aria-label={slideshow!.title}>
+				{slides.map((s, i) => (
+					<div class:list={['dn-slide', i === 0 && 'is-active']} style={bg(s.image)} data-slide>
+						<div class="dn-slide-mask"></div>
+						<div class="dn-slide-inner">
+							<div class="dn-slide-body">
+								{i === 0 ? <h1 set:html={cleanHtml(s.title)} {...$sl(`items[${i}].title`)} /> : <h2 set:html={cleanHtml(s.title)} {...$sl(`items[${i}].title`)} />}
+								<p {...$sl(`items[${i}].desc`)}>{s.desc}</p>
+								<div class="dn-slide-actions">
+									{s.button1 && live(s.btn_link1) && <a class="dn-btn" href={link(s.btn_link1)} {...$sl(`items[${i}].button1`)}>{s.button1}</a>}
+									{s.button2 && live(s.btn_link2) && <a class="dn-btn is-inverse" href={link(s.btn_link2)} {...$sl(`items[${i}].button2`)}>{s.button2}</a>}
+								</div>
+							</div>
+						</div>
+					</div>
+				))}
+				{slides.length > 1 && (
+					<div class="dn-dots">
+						{slides.map((_, i) => <button type="button" aria-label={`${i + 1} / ${slides.length}`} aria-current={i === 0 ? 'true' : 'false'} data-dot={i}></button>)}
+					</div>
+				)}
+			</section>
+		)}
+
+		{intro && (
+			<section class="dn-section">
+				<div class="dn-wrap dn-intro">
+					<div class="dn-intro-info">
+						<h5 class="dn-label" {...$in('title')}>{intro.title}</h5>
+						<h2 class="dn-sub" set:html={cleanHtml(intro.sub_heading)} {...$in('sub_heading')} />
+						<p style="margin-bottom:72px" {...$in('basic_description')}>{intro.basic_description}</p>
+						{intro.basic_btn_title && live(intro.basic_btn_link) && <a class="dn-btn" href={link(intro.basic_btn_link)} {...$in('basic_btn_title')}>{intro.basic_btn_title}</a>}
+					</div>
+					{items[0] && (
+						<div class="dn-item is-a">
+							{mediaUrl(items[0].ft_img) && <img src={mediaUrl(items[0].ft_img)!} alt="" width="486" height="729" loading="lazy" {...$in('items[0].ft_img')} />}
+							<h5 class="dn-label" {...$in('items[0].title')}>{items[0].title}</h5>
+							<p set:html={cleanHtml(items[0].description)} {...$in('items[0].description')} />
+							{items[0].btn_title && live(items[0].btn_link) && <a class="dn-link" href={link(items[0].btn_link)} {...$in('items[0].btn_title')}>{items[0].btn_title}</a>}
+						</div>
+					)}
+					{items[1] && (
+						<div class="dn-item is-b">
+							{mediaUrl(items[1].ft_img) && <img src={mediaUrl(items[1].ft_img)!} alt="" width="594" height="396" loading="lazy" {...$in('items[1].ft_img')} />}
+							<h5 class="dn-label" {...$in('items[1].title')}>{items[1].title}</h5>
+							<p set:html={cleanHtml(items[1].description)} {...$in('items[1].description')} />
+							{items[1].btn_title && live(items[1].btn_link) && <a class="dn-link" href={link(items[1].btn_link)} {...$in('items[1].btn_title')}>{items[1].btn_title}</a>}
+						</div>
+					)}
+				</div>
+			</section>
+		)}
+
+		{gallery && (
+			<section class="dn-section">
+				<div class="dn-wrap dn-gallery">
+					<div>
+						<h5 class="dn-label" {...$ga('title')}>{gallery.title}</h5>
+						<h2 class="dn-sub" set:html={cleanHtml(gallery.sub_heading)} {...$ga('sub_heading')} />
+						<p {...$ga('basic_description')}>{gallery.basic_description}</p>
+						<div class="dn-gallery-nav">
+							<button type="button" data-gallery-prev aria-label={site.prev_label}><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M13 7H1m5-5L1 7l5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></button>
+							<button type="button" data-gallery-next aria-label={site.next_label}><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 7h12M8 2l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></button>
+						</div>
+					</div>
+					<div class="dn-gallery-track" data-gallery-track>
+						{[0, 1, 2].flatMap((round) => galleryOrder.map((i: number) => ({ g: (gallery.items ?? [])[i], i, round }))).map(({ g, i, round }) => (
+							<figure aria-hidden={round > 0 ? 'true' : undefined}>
+								{mediaUrl(g.img) && <img src={mediaUrl(g.img)!} alt="" width="702" height="468" loading="eager" {...(round === 0 ? $ga(`items[${i}].img`) : {})} />}
+								<figcaption>
+									<h4 class="dn-card-title" {...(round === 0 ? $ga(`items[${i}].title`) : {})}>{g.title}</h4>
+									<p {...(round === 0 ? $ga(`items[${i}].description`) : {})}>{g.description}</p>
+								</figcaption>
+							</figure>
+						))}
+					</div>
+				</div>
+			</section>
+		)}
+
+		{tabs && menus.length > 0 && (
+			<section class="dn-section" style="overflow:hidden">
+				<div class="dn-wrap dn-menu">
+					<div class="dn-menu-plate">
+						{mediaUrl(tabs.image_intro) && <img src={mediaUrl(tabs.image_intro)!} alt="" width="489" height="489" loading="lazy" {...$tb('image_intro')} />}
+					</div>
+					<div>
+						<h5 class="dn-label" {...$tb('title')}>{tabs.title}</h5>
+						<h2 class="dn-sub" set:html={cleanHtml(tabs.sub_heading).replace(/<br\s*\/?>/g, '<br> ')} {...$tb('sub_heading')} />
+						<ul class="dn-tabs" role="tablist">
+							{menus.map((m: any, i: number) => <li role="presentation"><button type="button" role="tab" id={`tab-${m.slug}`} aria-controls={`panel-${m.slug}`} aria-selected={i === 0 ? 'true' : 'false'} data-tab={m.slug}>{m.title}</button></li>)}
+						</ul>
+						{menus.map((m: any, i: number) => {
+							const $m = stampFor(Astro.request, 'menu', { id: m.id, slug: m.slug })
+							return (
+								<div class="dn-panel" role="tabpanel" id={`panel-${m.slug}`} aria-labelledby={`tab-${m.slug}`} hidden={i !== 0}>
+									<ul class="dn-dishes">
+										{(m.items ?? []).map((d: any, j: number) => (
+											<li class="dn-dish">
+												<div class="dn-dish-head"><h4 {...$m(`items[${j}].dish_name`)}>{d.dish_name}</h4><span class="dn-dish-price" {...$m(`items[${j}].dish_price`)}>{d.dish_price}</span></div>
+												<p {...$m(`items[${j}].dish_description`)}>{d.dish_description}</p>
+											</li>
+										))}
+									</ul>
+									{m.basic_btn_title && live(m.basic_btn_link) && <a class="dn-btn" href={link(m.basic_btn_link)} {...$m('basic_btn_title')}>{m.basic_btn_title}</a>}
+								</div>
+							)
+						})}
+					</div>
+				</div>
+			</section>
+		)}
+
+		{news.length > 0 && (
+			<section class="dn-section">
+				<div class="dn-wrap">
+					<div class="dn-title" {...$c('news_label')}>{site.news_label}</div>
+					<h2 class="dn-sub" set:html={cleanHtml(site.news_title).replace("</mark> ", "</mark><br> ")} {...$c('news_title')} />
+					<div class="dn-news">
+						{news.map((p) => <PostCard post={p} locale={locale} readMore={site.read_more} />)}
+					</div>
+					<div class="dn-news-dots" data-news-dots></div>
+				</div>
+			</section>
+		)}
+
+		{chef && (
+			<section class="dn-wrap dn-chef">
+				<div class="dn-chef-pic">
+					{mediaUrl(chef.img_features) && <img src={mediaUrl(chef.img_features)!} alt="" width="515" height="729" loading="lazy" {...$ch('img_features')} />}
+				</div>
+				<div class="dn-chef-text">
+					<h5 class="dn-label" {...$ch('title')}>{chef.title}</h5>
+					<blockquote class="dn-sub" {...$ch('sub_heading')}>{chef.sub_heading}</blockquote>
+					<div {...$ch('description')}><PortableText value={chef.description} /></div>
+				</div>
+			</section>
+		)}
+	</main>
+</Base>
+<script is:inline>
+	(function () {
+		const slides = document.querySelectorAll('[data-slide]');
+		const dots = document.querySelectorAll('[data-dot]');
+		let cur = 0;
+		function show(n) {
+			cur = (n + slides.length) % slides.length;
+			slides.forEach(function (s, i) { s.classList.toggle('is-active', i === cur); });
+			dots.forEach(function (d, i) { d.setAttribute('aria-current', i === cur ? 'true' : 'false'); });
+		}
+		dots.forEach(function (d, i) { d.addEventListener('click', function () { show(i); }); });
+		const tabs = document.querySelectorAll('[data-tab]');
+		tabs.forEach(function (t) {
+			t.addEventListener('click', function () {
+				tabs.forEach(function (o) {
+					const on = o === t;
+					o.setAttribute('aria-selected', on ? 'true' : 'false');
+					const p = document.getElementById('panel-' + o.getAttribute('data-tab'));
+					if (p) p.hidden = !on;
+				});
+			});
+		});
+		const news = document.querySelector('.dn-news');
+		const nd = document.querySelector('[data-news-dots]');
+		function buildNewsDots() {
+			if (!news || !nd) return;
+			const card = news.querySelector('.dn-card');
+			const per = card ? Math.max(1, Math.round(news.clientWidth / (card.getBoundingClientRect().width + 36))) : 1;
+			const pages = Math.ceil(news.children.length / per);
+			nd.innerHTML = '';
+			for (let i = 0; i < pages; i++) {
+				const d = document.createElement('button');
+				d.type = 'button';
+				d.setAttribute('aria-label', (i + 1) + ' / ' + pages);
+				d.setAttribute('aria-current', i === 0 ? 'true' : 'false');
+				(function (n) { d.addEventListener('click', function () { news.scrollTo({ left: news.clientWidth * n, behavior: 'smooth' }); }); })(i);
+				nd.appendChild(d);
+			}
+		}
+		// the slider is as tall as the cards in view (the source's carousel resizes to its slide), not as the tallest card
+		function fitNews() {
+			if (!news) return;
+			if (getComputedStyle(news).display !== 'flex') { news.style.height = ''; return; }
+			const card = news.querySelector('.dn-card');
+			const per = card ? Math.max(1, Math.round(news.clientWidth / (card.getBoundingClientRect().width + 36))) : 1;
+			const from = Math.round(news.scrollLeft / Math.max(news.clientWidth, 1)) * per;
+			let h = 0;
+			[].slice.call(news.children, from, from + per).forEach(function (c) { h = Math.max(h, c.offsetHeight); });
+			news.style.height = h ? h + 'px' : '';
+		}
+		if (news && nd) {
+			buildNewsDots();
+			fitNews();
+			window.addEventListener('resize', function () { buildNewsDots(); fitNews(); });
+			window.addEventListener('load', fitNews);
+			news.addEventListener('scroll', function () {
+				fitNews();
+				const i = Math.round(news.scrollLeft / Math.max(news.clientWidth, 1));
+				nd.querySelectorAll('button').forEach(function (d, j) { d.setAttribute('aria-current', j === i ? 'true' : 'false'); });
+			});
+		}
+		const track = document.querySelector('[data-gallery-track]');
+		const step = function () { const f = track && track.querySelector('figure'); return f ? f.getBoundingClientRect().width + 36 : 0; };
+		const prev = document.querySelector('[data-gallery-prev]');
+		const next = document.querySelector('[data-gallery-next]');
+		if (track && prev) prev.addEventListener('click', function () { if (track.scrollLeft < 2) track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' }); else track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+		if (track && next) next.addEventListener('click', function () { if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 2) track.scrollTo({ left: 0, behavior: 'smooth' }); else track.scrollBy({ left: step(), behavior: 'smooth' }); });
+	})();
+</script>

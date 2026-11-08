@@ -98,7 +98,9 @@ const STANDALONE = [
   // Tracy Coffee, the 3D coffee-shop template copied from Tracy Base.
   'packages/cms/tracy-emdash-theme-coffee',
   // JA Restaurant (EmDash port of the JA Restaurant Joomla site): same shape as the four above.
-  'packages/cms/tracy-emdash-theme-restaurant'
+  'packages/cms/tracy-emdash-theme-restaurant',
+  // JA Diner (EmDash port of the JA Diner Joomla site): same shape as the five above.
+  'packages/cms/tracy-emdash-theme-diner'
 ] as const
 
 /** One run group: the command that runs it, and the test files that command picks up. */
@@ -120,7 +122,7 @@ const GROUPS: readonly CoverageGroup[] = [
   {
     run: 'standalone',
     files:
-      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant)\/tests\/[^/]+\.test\.mjs$/
+      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant|diner)\/tests\/[^/]+\.test\.mjs$/
   }
 ]
 
@@ -151,6 +153,7 @@ const PARTS = [
   'standalone:saas',
   'standalone:coffee',
   'standalone:restaurant',
+  'standalone:diner',
   'vendor',
   'rest',
   'owner'
@@ -1678,6 +1681,7 @@ function main(): void {
       else if (spec.part === 'standalone:saas') runStandalone(STANDALONE[2])
       else if (spec.part === 'standalone:coffee') runStandalone(STANDALONE[3])
       else if (spec.part === 'standalone:restaurant') runStandalone(STANDALONE[4])
+      else if (spec.part === 'standalone:diner') runStandalone(STANDALONE[5])
       else if (spec.part === 'vendor') runVendor()
       else if (spec.part === 'owner') runOwner(spec.owner ?? '', spec.shard)
       else {

@@ -1,0 +1,101 @@
+---
+/** A blog post: masthead · article · prev/next · sidebar. Route: /<category>/<slug>. */
+import { getEmDashEntry, getEntryTerms, getTaxonomyTerms } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { section } from '@/lib/content'
+import { PortableText } from 'emdash/ui'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuote from '@/components/site/ProseQuote.astro'
+import { mediaUrl } from '@/lib/media'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { BLOG_CATEGORIES, blogPosts, loadPosts, postPath } from '@/lib/posts'
+import { liveBlocks, liveLinks, livePosts } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+  category: string
+}
+const { chrome, locale, slug, category } = Astro.props
+const { site } = chrome
+const { entry } = await getEmDashEntry('posts', slug, { locale })
+const terms = entry ? await getEntryTerms('posts', (entry.data as any).id, 'category', { locale }) : []
+// The address is /<category>/<slug>: another category in the URL is another page, so it answers 404.
+if (!entry || terms[0]?.slug !== category) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const a = entry.data as Record<string, any>
+const [all, cats, banner, masthead] = await Promise.all([
+  loadPosts(locale),
+  getTaxonomyTerms('category', { locale }),
+  section('modules', 'banner-1', locale),
+  section('masthead', 'our-blog', locale)
+])
+const $post = stampFor(Astro.request, 'posts', { id: a.id, slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const $ma = stampFor(Astro.request, 'masthead', masthead ? { id: masthead.id, slug: masthead.slug } : null)
+const list = await livePosts(Astro.request, locale, blogPosts(all))
+const idx = list.findIndex((p) => p.slug === slug)
+const older = idx >= 0 ? list[idx + 1] : undefined
+const newer = idx > 0 ? list[idx - 1] : undefined
+const catLive = await liveLinks(
+  Astro.request,
+  locale,
+  (cats as any[]).map((c) => `/${c.slug}`)
+)
+const categories = (cats as any[]).filter((c) => BLOG_CATEGORIES.includes(c.slug) && catLive(`/${c.slug}`))
+const latest = list.slice(0, 5)
+const cover = mediaUrl(a.detail_image) ?? mediaUrl(a.cover)
+const dateTag = ui(locale).tag
+const mastBg = mediaUrl(masthead?.background)
+// On a stamped request each text block names itself and is printed by a renderer that carries the stamp.
+const body = await liveBlocks(Astro.request, locale, stampBlocks($post, 'body', a.body))
+const bodyComponents = $post.owner
+  ? { block: ProseBlock, listItem: ProseListItem, type: { blockquoteGroup: ProseQuote } }
+  : {}
+---
+
+<Base chrome={chrome} title={a.title} image={cover} currentPath="/our-blog" type="article" content={{ collection: 'posts', id: a.id, slug, toPath: () => `/${category}/${slug}` }}>
+	<main id="main">
+		<PageOwner stamp={$post} />
+		<div class="dn-masthead" style={mastBg ? `background-image:url('${mastBg}')` : undefined}>
+			<div class="dn-wrap">
+				<div class="dn-masthead-title" {...$ma('title')}>{masthead?.title}</div>
+				<div class="dn-masthead-desc" {...$ma('description')}>{masthead?.description}</div>
+			</div>
+		</div>
+		<div class="dn-wrap dn-main">
+			<div class="dn-main-grid">
+				<article class="dn-article">
+					<h1 {...$post('title')}>{a.title}</h1>
+					<p class="dn-meta"><time datetime={a.date}>{formatDate(a.date, dateTag)}</time></p>
+					{cover && <img class="dn-article-cover" src={cover} alt="" width="743" height="420" {...$post('cover')} />}
+					<div class="dn-prose" {...$post('body')}><PortableText value={body} components={bodyComponents} /></div>
+					<nav class="dn-pager" aria-label="Posts">
+						{older ? <a class="is-prev" href={href(locale, postPath(older))} {...$c('prev_label')}>{site.prev_label}</a> : <span />}
+						{newer && <a class="is-next" href={href(locale, postPath(newer))} {...$c('next_label')}>{site.next_label}</a>}
+					</nav>
+				</article>
+				<aside class="dn-aside">
+					{banner && <div class="dn-aside-banner"><PortableText value={banner.content} /></div>}
+					<h3 {...$c('categories_title')}>{site.categories_title}</h3>
+					<ul class="dn-aside-cats">{categories.map((c) => <li><a href={href(locale, `/${c.slug}`)}>{c.label}</a></li>)}</ul>
+					<h3 {...$c('latest_title')}>{site.latest_title}</h3>
+					<ul class="dn-aside-latest">{latest.map((p) => <li><a href={href(locale, postPath(p))}>{p.title}</a></li>)}</ul>
+				</aside>
+			</div>
+		</div>
+	</main>
+</Base>
+
+<style is:global>
+	/* below the two-column width the sidebar stacks under the article: the source leaves 25 px less between the pager and the banner */
+	@media (max-width: 767px) { .dn-article + .dn-aside { margin-top: -23px; } }
+</style>

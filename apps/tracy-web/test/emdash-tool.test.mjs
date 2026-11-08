@@ -34,7 +34,8 @@ test('the image carries every seed file the tool reads, for every template that 
     ['tracy-saas', 'tracy-emdash-theme-saas'],
     ['tracy-base', 'tracy-emdash-theme-base'],
     ['tracy-coffee', 'tracy-emdash-theme-coffee'],
-    ['tracy-restaurant', 'tracy-emdash-theme-restaurant']
+    ['tracy-restaurant', 'tracy-emdash-theme-restaurant'],
+    ['tracy-diner', 'tracy-emdash-theme-diner']
   ]) {
     const copied = new Set(
       dockerfile

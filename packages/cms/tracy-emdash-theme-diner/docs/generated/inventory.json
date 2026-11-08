@@ -1,0 +1,1071 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-diner",
+    "label": "JA Diner",
+    "version": "0.1.0"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "view",
+          "label": "View",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 6
+    },
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "routable": true,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "detail_image",
+          "label": "Detail image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "created",
+          "label": "Created",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 22
+    },
+    {
+      "slug": "slideshow",
+      "label": "slideshow",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title_link",
+          "label": "Title link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "features_intro",
+      "label": "features intro",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "basic_description",
+          "label": "Basic description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "basic_btn_title",
+          "label": "Basic btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "basic_btn_link",
+          "label": "Basic btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "align",
+          "label": "Align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "img_features",
+          "label": "Img features",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "title_small",
+          "label": "Title small",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title_large",
+          "label": "Title large",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button",
+          "label": "Button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button_link",
+          "label": "Button link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "sub_heading",
+          "label": "Sub heading",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 5
+    },
+    {
+      "slug": "container_tabs",
+      "label": "container tabs",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "image_intro",
+          "label": "Image intro",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "position",
+          "label": "Position",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub_heading",
+          "label": "Sub heading",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "menu",
+      "label": "menu",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "basic_btn_title",
+          "label": "Basic btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "basic_btn_link",
+          "label": "Basic btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 3
+    },
+    {
+      "slug": "happyhours",
+      "label": "happyhours",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "hp_img",
+          "label": "Hp img",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "hp_title",
+          "label": "Hp title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_desc",
+          "label": "Hp desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_info",
+          "label": "Hp info",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_badge",
+          "label": "Hp badge",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_link_text",
+          "label": "Hp link text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_link",
+          "label": "Hp link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 3
+    },
+    {
+      "slug": "teams",
+      "label": "teams",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "number_column",
+          "label": "Number column",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title_section",
+          "label": "Title section",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "description_section",
+          "label": "Description section",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "modules",
+      "label": "Modules",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "content",
+          "label": "Content",
+          "type": "portableText",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "chrome",
+      "label": "Site chrome",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand_name",
+          "label": "Brand name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_location_title",
+          "label": "Footer location title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_address",
+          "label": "Footer address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_map_label",
+          "label": "Footer map label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_hours_title",
+          "label": "Footer hours title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_hours",
+          "label": "Footer hours",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_contact_title",
+          "label": "Footer contact title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_phone",
+          "label": "Footer phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_email",
+          "label": "Footer email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_label",
+          "label": "Subscribe label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_title",
+          "label": "Subscribe title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_placeholder",
+          "label": "Subscribe placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_button",
+          "label": "Subscribe button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_note",
+          "label": "Subscribe note",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "news_label",
+          "label": "News label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "news_title",
+          "label": "News title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "copyright",
+          "label": "Copyright",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "skip_label",
+          "label": "Skip label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_label",
+          "label": "Menu label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "appearance_label",
+          "label": "Appearance label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "categories_title",
+          "label": "Categories title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_label",
+          "label": "Prev label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_label",
+          "label": "Next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_label",
+          "label": "More label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "read_more",
+          "label": "Read more",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "breadcrumb_home",
+          "label": "Breadcrumb home",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "latest_title",
+          "label": "Latest title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_code",
+          "label": "Not found code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_title",
+          "label": "Not found title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_text",
+          "label": "Not found text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_back_label",
+          "label": "Not found back label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_map_url",
+          "label": "Footer map url",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "logo_dark",
+          "label": "Logo dark",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_title",
+          "label": "Search title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_label",
+          "label": "Search label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_placeholder",
+          "label": "Search placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_button",
+          "label": "Search button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_results",
+          "label": "Search results",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_empty",
+          "label": "Search empty",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "page_label",
+          "label": "Page label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "start_label",
+          "label": "Start label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "end_label",
+          "label": "End label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "masthead",
+      "label": "Mastheads",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "background",
+          "label": "Background",
+          "type": "image",
+          "required": false
+        }
+      ],
+      "seedEntries": 6
+    },
+    {
+      "slug": "category_info",
+      "label": "Category pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        }
+      ],
+      "seedEntries": 4
+    },
+    {
+      "slug": "contact",
+      "label": "Contact page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "card_title",
+          "label": "Card title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "card_text",
+          "label": "Card text",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "social_title",
+          "label": "Social title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social_links",
+          "label": "Social links",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "address",
+          "label": "Address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone_label",
+          "label": "Phone label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone",
+          "label": "Phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "web_label",
+          "label": "Web label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "webpage",
+          "label": "Webpage",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_title",
+          "label": "Form title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_note",
+          "label": "Form note",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "reservation",
+      "label": "Reservation page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "blocks",
+          "label": "Blocks",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "online_image",
+          "label": "Online image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "online_title",
+          "label": "Online title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "online_text",
+          "label": "Online text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "online_phone",
+          "label": "Online phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "online_button",
+          "label": "Online button",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary",
+      "locale": "en",
+      "items": 6
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 6
+    }
+  ],
+  "formBindings": [
+    {
+      "form": "contact-{locale}",
+      "collection": "contact",
+      "slug": "contact",
+      "field": "form_id"
+    },
+    {
+      "form": "subscribe-{locale}",
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "form_id"
+    }
+  ],
+  "dependencies": {
+    "@astrojs/node": "11.1.3",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.3.3",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/site/AboutFeatures.astro",
+    "src/components/site/AboutHappyHours.astro",
+    "src/components/site/AboutMasthead.astro",
+    "src/components/site/AboutTeam.astro",
+    "src/components/site/BlogListCard.astro",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/PostCard.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/components/site/Subscribe.astro",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/brand.ts",
+    "src/lib/chrome-labels.ts",
+    "src/lib/chrome.ts",
+    "src/lib/content.ts",
+    "src/lib/data-links.ts",
+    "src/lib/demo-logo.ts",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/html.ts",
+    "src/lib/i18n.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/listed-children.ts",
+    "src/lib/media.ts",
+    "src/lib/menu-gate.ts",
+    "src/lib/newsletter-client.ts",
+    "src/lib/page-records.ts",
+    "src/lib/page-routes.json",
+    "src/lib/parent-gate.ts",
+    "src/lib/posts.ts",
+    "src/lib/prose-text.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/stamps.ts",
+    "src/lib/ui-words.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/global.css",
+    "src/styles/pages/about.css",
+    "src/styles/pages/blog.css",
+    "src/styles/pages/contact.css",
+    "src/styles/pages/offers.css",
+    "src/styles/pages/reservation.css",
+    "src/styles/pages/search.css",
+    "src/styles/tokens.css",
+    "src/views/About.astro",
+    "src/views/BlogList.astro",
+    "src/views/Contact.astro",
+    "src/views/Home.astro",
+    "src/views/NotFound.astro",
+    "src/views/Offers.astro",
+    "src/views/Post.astro",
+    "src/views/Reservation.astro",
+    "src/views/Search.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
+    "package.json": "sha256:cae4f0e41663abae2681b4a1b4a3eb749337b7ad6adc0d04283fd61ce0b2a0e9",
+    "pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
+    "seed/field-map.json": "sha256:77df304fb8bc5249a9a1fa8588efb1219454a501dc74c2359fa6737acce18a97",
+    "seed/media-map.json": "sha256:8ae8d2c1418af210d859f9b9223b78b5b07311ed977933a63a50b7f7fe0e4b17",
+    "seed/seed.json": "sha256:5ac02a17ac52e79c1c89f4b2dc773310391ab30cc81f73ad08224c159b14d04a",
+    "src/components/site/AboutFeatures.astro": "sha256:e4fb4ab66774a010e077529b1693d4d331a9b19ad435c65ce52705b5af97bec7",
+    "src/components/site/AboutHappyHours.astro": "sha256:f31570c6ecb4166b7a3d53b6363f936efae4c2816aabb384c8cead57da47eeef",
+    "src/components/site/AboutMasthead.astro": "sha256:da6466f51e4a4bcb459a3aa5a276daa7c39e1b809059892d15c582f5f591fa35",
+    "src/components/site/AboutTeam.astro": "sha256:d082cc646277d82d1338531417f44f171945f940d8b7d51f71d22c5ed475246f",
+    "src/components/site/BlogListCard.astro": "sha256:1207957ef36857d47cf5c5dfcbf7666a63eca0e75ea8d4e818f43e3f35945616",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/Footer.astro": "sha256:e7f82ccfe842ae7d6a0bcb8ed3c6640f391e5906057cd93cb8557a18f564d1a6",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/Header.astro": "sha256:613fe5ce2b8d1c71af9d21bcee1ee017a1e24c12febc0420d10f807a437c9cdb",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/PostCard.astro": "sha256:5311fb12373dfd09458eecb7f2b7ed1f1089bd9085f0e194fe03a72494457fb2",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/components/site/Subscribe.astro": "sha256:6a25f11870de4e71e7de2293258ecb488f41f1de2c16287f3324626e0069b8c5",
+    "src/fonts.json": "sha256:4244cfbc648bd5d00a3d4a1c23c779279ed806cef9e9063656fb573d631b7cad",
+    "src/layouts/Base.astro": "sha256:db221d3754a1a1a920d04ab582c2fad0f4e048027456172285e58573cf647a3f",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/chrome-labels.ts": "sha256:caf6017c4fda7d87717e8fffbe17bcbacc16d948849869dc9544b07b612a1b75",
+    "src/lib/chrome.ts": "sha256:79d4a7839b688654671f252597e8c08ac4afd7fe20ff4cb464558b68e9f81a7d",
+    "src/lib/content.ts": "sha256:684f9fba7ecc3ea9332c640791e917a13a2805eb6fe818cd0004a1e06510e31c",
+    "src/lib/data-links.ts": "sha256:fb08660882cf4e99e35cddf7631c84d95405c9e72d0d761f83d1e935ef62910e",
+    "src/lib/demo-logo.ts": "sha256:250c407f7ecb16c20ae7aacdc37f56856a361aed87065dab44cc42ba4e8ad868",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:4588e6245fff77b220db5b153406c28cb7c8df3d4de1c2d6ab01a7848e2f6689",
+    "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
+    "src/lib/hreflang-plugin.ts": "sha256:fb1993974b6296c4a677f4691b7038313c5eb3b222088f4c9160a52e744fbe0d",
+    "src/lib/hreflang.ts": "sha256:924561614f01c3e11fa8f6f06b17ef04e1212a47dc7d1bedd83bb64cfe0f5f98",
+    "src/lib/html.ts": "sha256:30442b05e2b16f22159c04d2dace659f7f553d40a0c6651e25bcb04078d8c5ef",
+    "src/lib/i18n.ts": "sha256:aaea1f019b9b16abf51a977a1b120e6078fd15280354f57c9f9d9960a7577d03",
+    "src/lib/link-gate.ts": "sha256:b125265644bb9acc78943e653f2098d16b486d109808e1114dc2ab624955c880",
+    "src/lib/listed-children.ts": "sha256:fb03fc5213623a76c22ae6ff13e9f5e6bee4b6a9884b4a9ea5e5e4cf695c13d3",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/menu-gate.ts": "sha256:1884514cd874f6edb1a845332a1da81afb4d85abebd65d287538a6a6a79d1441",
+    "src/lib/newsletter-client.ts": "sha256:12327d880e310238857cce2cf6e719fa53c758a2ec01831abf4ddab066ceb507",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/page-routes.json": "sha256:a044769361e9d03fa9bd94db17e6bf9f7e73647805873c3f40a6225fd5876c0e",
+    "src/lib/parent-gate.ts": "sha256:299a77bee7cb473c869e6e3b9642c99afddf4097f492217a3d9be150bb9ca6bc",
+    "src/lib/posts.ts": "sha256:ce6ae11b46b3feee6afad7bbe757a57d305f859ae4b691e17d834fb8d5caab85",
+    "src/lib/prose-text.ts": "sha256:13755292b7abdbc64a511467e36966a9536a9b22d882ccf65319c4e63b4a5f33",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/ui-words.ts": "sha256:e3e5d1dab8b3b981efd7b180c95e7bfa1ad573dc65252198c8c006814e3eecbf",
+    "src/lib/ui.ts": "sha256:f83d530f9d9b2c5107f21e14bb2bac40a9cca39733f2b661003250a2fe1171a9",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
+    "src/pages/[...path].astro": "sha256:56de83d89f6bdd50745bd8bbeb2d1391caa1d358f6a8ce6e77bc681ed22740b4",
+    "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
+    "src/styles/global.css": "sha256:cfdf938139ac4974e28e8211bc323ba7660057060081b56defda0677e284a5b0",
+    "src/styles/pages/about.css": "sha256:d3813b4bf3d224d86ed0ace8bab77407460de36af368adf5ef7ee3e404497562",
+    "src/styles/pages/blog.css": "sha256:2fa9641c09355d6f23b105138035594904666037660269e2e30c0c12eeec24f1",
+    "src/styles/pages/contact.css": "sha256:87dfada2fcd57c13136109bf0918978d8a6bbb0dd891a953de667e51115cb57f",
+    "src/styles/pages/offers.css": "sha256:5ba91b8fe9a965bdd4f9eb72a9b4119367100eea292da7ee86c73eedff91b737",
+    "src/styles/pages/reservation.css": "sha256:b13dcc7740aa8105328ba2881d06c1442cd06946f6466d51616e16436f741d85",
+    "src/styles/pages/search.css": "sha256:f4e7324e90f6a635e1ffe1d0421394f4d2433b92a718b7ca49beba427a1a74b1",
+    "src/styles/tokens.css": "sha256:5e49267a2084661b1d0a90982299cd876a27f77f7bc0ff3e29dccc15dcec0d71",
+    "src/views/About.astro": "sha256:f2aa2852e264f9daf11be875f0eec2bd3ade3f9b00ba91f9634ab2222c76bf4d",
+    "src/views/BlogList.astro": "sha256:78f3f0c9384d836a7fec77631798302d7acf875b0e26718d05f871fdc222754d",
+    "src/views/Contact.astro": "sha256:bb770a92fb44d9171506eb3c8abb1ab881ee25ce00321aa896ed7cfc16079ebe",
+    "src/views/Home.astro": "sha256:bc014bd8ff5a2e33cc19443ac6c9769513082192357566aab73a7c9de828ce38",
+    "src/views/NotFound.astro": "sha256:9810312dfc16f7e5a0b2e516e07ab2a84de3a1341cf728c355caa31f50ee07b4",
+    "src/views/Offers.astro": "sha256:cf6b5498cc021210e3ea0b4036453a51dae530419df9b2447e9531204c9a77e2",
+    "src/views/Post.astro": "sha256:a5fa4522bb20f852d6eb24a4342a95937bc5bc55e2d1ea390f1d3efd89f0fe42",
+    "src/views/Reservation.astro": "sha256:5e440bdc7da0eadcc0096e5dea40a4c67b65cf888bf3d19a5caf9114c83cb6e5",
+    "src/views/Search.astro": "sha256:0f82d395c783589958a7051a04a06970a9d8f0bf43884d8a16aa7c388f04aa1f",
+    "template.config.json": "sha256:6909fb8c573a103453116613dced7ffd351eb79f11b2710381f94a76d5a136ee",
+    "tools/forms.json": "sha256:b338c304ed95527ce5ac509a14e080734d616136c4a899053b62f24084445409",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "scope": "entry-scalars",
+  "note": "Tracy Content API: one row per collection of seed/site-model.json. type is page, article, service, project, shared or generic; urlPattern is the public path ({slug} for one entry per page), null when the collection has no page of its own. chrome names the shared entry the header and footer print. tools/content-api-gate.mjs refuses a collection of the model that has no row here. pages and posts keep their own public path in the data field `path` (urlField): this template's post paths (`/<category>/<slug>`) are not a function of the slug (ingest/bind-paths.mjs). Section collections have no page of their own.",
+  "collections": {
+    "pages": {
+      "type": "page",
+      "urlPattern": null,
+      "urlField": "path"
+    },
+    "posts": {
+      "type": "article",
+      "urlPattern": null,
+      "urlField": "path"
+    },
+    "slideshow": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "features_intro": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "container_tabs": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "menu": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "happyhours": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "teams": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "modules": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "chrome": {
+      "type": "shared",
+      "urlPattern": null
+    },
+    "masthead": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "category_info": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "contact": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "reservation": {
+      "type": "generic",
+      "urlPattern": null
+    }
+  },
+  "chrome": {
+    "collection": "chrome",
+    "slug": "chrome"
+  }
+}

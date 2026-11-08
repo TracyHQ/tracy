@@ -1,0 +1,471 @@
+{
+  "schemaVersion": "tracy-personalize/v1",
+  "note": "What tools/personalize.mjs changes on a customer's copy of THIS template from their questionnaire answers (seed/questions.json). Five kinds, and the difference between them is what may be INVENTED: `identity` is the customer's own words, written exactly (an answer they did not give EMPTIES the field — it never keeps the demo value); `replace` rewrites the demo brand everywhere it appears; `copy` is prose a model writes for their sector, with the demo text as the length-and-register reference; `rewrite` does the same for whole demo entries; `facts` are CLAIMS about a real business — counts, founding years, certifications, named clients, prices — and those are REMOVED, never written, because a made-up \"380 projects since 2004\" is a lie in the customer's name. `hide` unpublishes pages that are nothing but claims and drops their menu items. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}; a rule whose value needs an answer the customer did not give is skipped and reported, never guessed.",
+  "settings": {
+    "title": "{name}"
+  },
+  "identity": [
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "brand_name",
+      "value": "{name}"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "copyright",
+      "value": {
+        "en": "Copyright © {year} {name}. All Rights Reserved. Designed by JoomlArt.com.",
+        "vi": "Bản quyền © {year} {name}. Bảo lưu mọi quyền. Thiết kế bởi JoomlArt.com.",
+        "de": "Copyright © {year} {name}. Alle Rechte vorbehalten. Gestaltet von JoomlArt.com.",
+        "fr": "Copyright © {year} {name}. Tous droits réservés. Conçu par JoomlArt.com.",
+        "it": "Copyright © {year} {name}. Tutti i diritti riservati. Progettato da JoomlArt.com.",
+        "nl": "Copyright © {year} {name}. Alle rechten voorbehouden. Ontworpen door JoomlArt.com.",
+        "es": "Copyright © {year} {name}. Todos los derechos reservados. Diseñado por JoomlArt.com.",
+        "zh": "版权所有 © {year} {name}。保留所有权利。由 JoomlArt.com 设计。"
+      }
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_address",
+      "value": "{address}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_phone",
+      "value": "{phone}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_email",
+      "value": "{email}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "address",
+      "value": "{address}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "phone",
+      "value": "{phone}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "card_title",
+      "value": "{name}"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "social_links",
+      "value": [],
+      "from": "social",
+      "item": {
+        "label": "{name}",
+        "url": "{url}"
+      }
+    }
+  ],
+  "replace": [
+    {
+      "find": "JA Diner",
+      "with": "{name}"
+    },
+    {
+      "find": "Ja Diner",
+      "with": "{name}"
+    },
+    {
+      "find": "Three BroomSticks",
+      "with": "{name}"
+    },
+    {
+      "find": "Three Broomsticks",
+      "with": "{name}"
+    },
+    {
+      "find": "The Three Broomsticks",
+      "with": "{name}"
+    }
+  ],
+  "copy": [
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "news_title",
+      "brief": "one sentence under the News & Events label: what the news of this restaurant is about, one phrase may be wrapped in <mark>…</mark>",
+      "maxWords": 16
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "subscribe_title",
+      "brief": "one sentence inviting guests to join the newsletter for offers and news",
+      "maxWords": 16
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "subscribe_note",
+      "brief": "a short friendly line under the newsletter form promising no spam",
+      "maxWords": 8
+    },
+    {
+      "collection": "features_intro",
+      "slug": "meet-three-broomsticks",
+      "field": "sub_heading",
+      "brief": "one sentence about this restaurant and where it is, one phrase wrapped in <mark>…</mark>",
+      "maxWords": 22
+    },
+    {
+      "collection": "features_intro",
+      "slug": "gallery",
+      "field": "sub_heading",
+      "brief": "one sentence about how this restaurant cooks, one word wrapped in <mark>…</mark>",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "meet-our-chef",
+      "field": "sub_heading",
+      "brief": "a short quote in curly quotes about the cooking in this restaurant, with no names or counts",
+      "maxWords": 24
+    },
+    {
+      "collection": "teams",
+      "slug": "teams-style-1",
+      "field": "description_section",
+      "brief": "two short lines under the Our Team heading about what makes a good chef and the people in this kitchen",
+      "maxWords": 30
+    },
+    {
+      "collection": "masthead",
+      "slug": "offers",
+      "field": "description",
+      "brief": "one line under the Offers masthead about this restaurant’s current offers",
+      "maxWords": 16
+    },
+    {
+      "collection": "masthead",
+      "slug": "about-us",
+      "field": "description",
+      "brief": "one line under the About Us masthead about this restaurant",
+      "maxWords": 16
+    },
+    {
+      "collection": "features_intro",
+      "slug": "meet-three-broomsticks",
+      "field": "basic_description",
+      "brief": "two sentences about this restaurant and its welcome, with no year, address or number",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "gallery",
+      "field": "basic_description",
+      "brief": "two sentences about the dishes of this restaurant, with no price or number",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "meet-our-chef",
+      "field": "description",
+      "brief": "the role line under the chef's heading, about the kitchen of this restaurant, with no name",
+      "maxWords": 8
+    },
+    {
+      "collection": "features_intro",
+      "slug": "features-style-4",
+      "field": "title_large",
+      "brief": "one sentence heading about this restaurant, one phrase wrapped in <mark>…</mark>",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "features-style-4",
+      "field": "description",
+      "brief": "two sentences inviting guests to explore the dishes of this restaurant, with no number",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "features-style-5",
+      "field": "title_large",
+      "brief": "one sentence heading about this restaurant, one phrase wrapped in <mark>…</mark>",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "features-style-5",
+      "field": "description",
+      "brief": "two sentences inviting guests to explore the dishes of this restaurant, with no number",
+      "maxWords": 40
+    },
+    {
+      "collection": "container_tabs",
+      "slug": "discover-our-menu",
+      "field": "sub_heading",
+      "brief": "two short lines about how the menu of this restaurant changes, one word wrapped in <mark>…</mark>",
+      "maxWords": 16
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "card_text",
+      "brief": "one short sentence on the contact card: how to reach the restaurant",
+      "maxWords": 14
+    },
+    {
+      "collection": "reservation",
+      "slug": "reservation-layout",
+      "field": "online_text",
+      "brief": "one or two sentences inviting guests to book a table by phone, with no hours or number",
+      "maxWords": 30
+    }
+  ],
+  "rewrite": [
+    {
+      "collection": "posts",
+      "slugs": [
+        "cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+        "we-ve-been-nominated-for-the-britain-restaurant-awards",
+        "three-broomsticks-welcomes-new-chef-caleb-nunez",
+        "three-broomsticks-s-autumn-menu-unveiled",
+        "4-habits-that-can-improve-your-customer-service",
+        "8-trends-trickling-down-to-mainstream-menus",
+        "starbucks-brings-under-armour-exec-on-board",
+        "inside-olive-garden-s-never-ending-pasta-pass",
+        "century-old-nathan-s-famous-aims-for-youth-with-new-look",
+        "did-ihop-s-publicity-stunt-hurt-applebee-s",
+        "buffalo-wild-wings-considers-adding-sports-betting",
+        "this-week-s-restaurant-nightmares-language-people",
+        "jason-alexander-is-kfc-s-new-colonel",
+        "10-most-alluring-ltos-on-menus-in-july",
+        "newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+        "this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+        "5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+        "burger-king-takes-a-stand-on-the-pink-tax",
+        "efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+        "how-restaurants-can-promote-a-james-beard-recognition",
+        "from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+        "lorem-ipsum"
+      ],
+      "brief": "one news post this restaurant would publish for its guests: a story about its kitchen, a cooking tip, a dish or news from the dining room",
+      "fields": [
+        "title",
+        "excerpt",
+        "body"
+      ],
+      "body": "body",
+      "bodyWords": 160,
+      "batch": 3,
+      "decides": [
+        "title"
+      ]
+    },
+    {
+      "collection": "category_info",
+      "brief": "the introduction of one group of news this restaurant publishes",
+      "fields": [
+        "title",
+        "description"
+      ],
+      "decides": [
+        "title"
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_hours",
+      "why": "opening hours of the demo restaurant"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "meet-three-broomsticks",
+      "field": "items",
+      "why": "address and opening hours of the demo restaurant"
+    },
+    {
+      "collection": "teams",
+      "slug": "teams-style-1",
+      "field": "items",
+      "why": "named members of the demo kitchen team"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-1",
+      "field": "hp_info",
+      "why": "days and hours of the demo offer"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-2",
+      "field": "hp_info",
+      "why": "days and hours of the demo offer"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-3",
+      "field": "hp_info",
+      "why": "days and hours of the demo offer"
+    },
+    {
+      "collection": "reservation",
+      "slug": "reservation-layout",
+      "field": "online_phone",
+      "why": "the demo restaurant phone number"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "webpage",
+      "why": "web address of the demo restaurant"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-1",
+      "field": "hp_desc",
+      "why": "the offer of the demo restaurant"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-2",
+      "field": "hp_desc",
+      "why": "the offer of the demo restaurant"
+    },
+    {
+      "collection": "happyhours",
+      "slug": "happy-hours-style-3",
+      "field": "hp_desc",
+      "why": "the offer of the demo restaurant"
+    }
+  ],
+  "hide": [],
+  "brand": {
+    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, from the kit's brand PR; a tool without it ignores this block): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none. Name the chrome entry the header and footer read (references/brand-and-pages.md).",
+    "logoDark": {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "logo_dark",
+      "label": "Logo for dark backgrounds"
+    }
+  },
+  "demoCompanyNames": [
+    "JA Diner",
+    "Ja Diner",
+    "Three Broomsticks",
+    "Three BroomSticks"
+  ],
+  "labels": [
+    {
+      "collection": "features_intro"
+    },
+    {
+      "collection": "container_tabs"
+    },
+    {
+      "collection": "menu"
+    },
+    {
+      "collection": "happyhours"
+    },
+    {
+      "collection": "chrome"
+    },
+    {
+      "collection": "contact"
+    },
+    {
+      "collection": "reservation"
+    },
+    {
+      "collection": "masthead"
+    },
+    {
+      "collection": "category_info"
+    }
+  ],
+  "blocks": [
+    {
+      "collection": "slideshow",
+      "slug": "slideshow",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "desc"
+      ],
+      "brief": "the text over one picture of the home page slideshow: a short welcome to this restaurant in two short lines, then one sentence about the food, with no hours or number"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "gallery",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one dish of this restaurant for its gallery: its name and the main ingredients"
+    },
+    {
+      "collection": "reservation",
+      "slug": "reservation-layout",
+      "field": "blocks",
+      "itemFields": [
+        "label",
+        "title",
+        "text",
+        "button_label"
+      ],
+      "brief": "one way to book at this restaurant (lunch, dinner, groups): a label, a title with one word wrapped in <mark>…</mark>, a sentence and a button label, with no hours, prices or counts"
+    },
+    {
+      "collection": "menu",
+      "slug": "main-dishes",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "soft-drinks",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    },
+    {
+      "collection": "menu",
+      "slug": "dessert",
+      "field": "items",
+      "itemFields": [
+        "dish_name",
+        "dish_description"
+      ],
+      "brief": "one dish on the menu of this restaurant, of the same kind as its example (a starter stays a starter, a dessert a dessert, a drink a drink): its name and a short description of the ingredients"
+    }
+  ],
+  "keptText": [
+    "contact/contact.form_note"
+  ]
+}

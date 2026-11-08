@@ -1,0 +1,106 @@
+---
+/** Search (the source's Smart Search): a form, then the blog posts whose words match. Route: /search?q=… */
+import { search } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { section } from '@/lib/content'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { blogPosts, loadPosts, postPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+import { firstParagraph } from '@/lib/prose-text'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const { tag } = ui(locale)
+Astro.response.headers.set('cache-control', 'no-store')
+
+const q = (Astro.url.searchParams.get('q') ?? '').trim().slice(0, 200)
+const [all, masthead, found] = await Promise.all([
+  loadPosts(locale),
+  section('masthead', 'search', locale),
+  q
+    ? search(q, { collections: ['posts'], locale, status: 'published', limit: 50 }).then(
+        (r: any) => r.items ?? r
+      )
+    : Promise.resolve([])
+])
+const live = await livePosts(Astro.request, locale, blogPosts(all))
+const indexed = (found as any[])
+  .map((r) => live.find((p) => p.slug === r.slug))
+  .filter(Boolean) as typeof live
+// The search index is a CMS feature a site may not have switched on: with no index hit, the posts are matched on their own words.
+const words = q.toLowerCase().split(/\s+/).filter(Boolean)
+const plain = (v: unknown) =>
+  Array.isArray(v)
+    ? v.map((b: any) => (b?.children ?? []).map((c: any) => c.text ?? '').join('')).join(' ')
+    : ''
+const results =
+  indexed.length > 0 || words.length === 0
+    ? indexed
+    : live.filter((p) => {
+        const hay = `${p.title} ${plain(p.excerpt)} ${plain(p.body)}`.toLowerCase()
+        return words.every((x) => hay.includes(x))
+      })
+const latest = live.slice(0, 5)
+const mastBg = mediaUrl(masthead?.background)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const $ma = stampFor(Astro.request, 'masthead', masthead ? { id: masthead.id, slug: masthead.slug } : null)
+---
+
+<Base chrome={chrome} title={site.search_title} currentPath="/search" robots="noindex, follow">
+	<main id="main">
+		<PageOwner stamp={$c} />
+		<div class="dn-masthead" style={mastBg ? `background-image:url('${mastBg}')` : undefined}>
+			<div class="dn-wrap">
+				<h1 class="dn-masthead-title" {...$c('search_title')}>{site.search_title}</h1>
+				<div class="dn-masthead-desc" {...$ma('description')}>{masthead?.description}</div>
+			</div>
+		</div>
+		<div class="dn-wrap dn-main">
+			<div class="dn-main-grid">
+				<div class="dn-search">
+					<form class="dn-search-form" action={href(locale, '/search')} method="get" role="search">
+						<label for="dn-q" {...$c('search_label')}>{site.search_label}</label>
+						<div class="dn-search-row">
+							<input id="dn-q" type="search" name="q" value={q} placeholder={site.search_placeholder} autocomplete="off" />
+							<button type="submit" class="dn-btn" {...$c('search_button')}>{site.search_button}</button>
+						</div>
+					</form>
+					{q && (
+						<div class="dn-search-results" aria-live="polite">
+							<h2 class="dn-search-count" {...$c('search_results')}>{site.search_results}<span>{results.length > 0 ? ` (${results.length})` : ''}</span></h2>
+							{results.length === 0 ? (
+								<p class="dn-search-empty" {...$c('search_empty')}>{site.search_empty}</p>
+							) : (
+								<ol>
+									{results.map((p) => {
+										const intro = firstParagraph(p.excerpt) || firstParagraph(p.body)
+										return (
+											<li>
+												<h3><a href={href(locale, postPath(p))}>{p.title}</a></h3>
+												<p class="dn-card-meta"><time datetime={p.date}>{formatDate(p.date, tag)}</time>{p.category && <span> · {p.category.label}</span>}</p>
+												{intro && <p>{intro}</p>}
+											</li>
+										)
+									})}
+								</ol>
+							)}
+						</div>
+					)}
+				</div>
+				<aside class="dn-aside">
+					<h3 {...$c('latest_title')}>{site.latest_title}</h3>
+					<ul class="dn-aside-latest">{latest.map((p) => <li><a href={href(locale, postPath(p))}>{p.title}</a></li>)}</ul>
+				</aside>
+			</div>
+		</div>
+	</main>
+</Base>

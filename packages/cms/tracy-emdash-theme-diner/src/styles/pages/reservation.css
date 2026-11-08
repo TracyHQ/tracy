@@ -1,0 +1,40 @@
+/* reservation page family (P5). Imported by global.css. */
+@layer components {
+	.dn-rsv { padding-top: 72px; }
+	.dn-rsv-row { display: grid; grid-template-columns: 570px 1fr; gap: 0 60px; align-items: start; margin-bottom: 144px; }
+	.dn-rsv-row.is-flip { grid-template-columns: 1fr 594px; }
+	.dn-rsv-pic img { display: block; width: 100%; height: auto; }
+	.dn-rsv-text { min-width: 0; }
+	.dn-rsv-text .dn-sub { text-wrap: pretty; max-width: 414px; }
+	.dn-rsv-row.is-flip .dn-rsv-text .dn-sub { max-width: 390px; }
+	.dn-rsv-text p { margin: 0 0 24px; }
+	.dn-rsv-call { background: var(--color-ink) center / cover no-repeat; padding: 108px 0; text-align: center; }
+	.dn-rsv-card { background: var(--color-surface); margin: 0 auto; max-width: 750px; width: 100%; padding: 72px; }
+	.dn-rsv-card h2 { font-family: var(--font-display); font-size: 40px; line-height: 48px; margin: 0 0 24px; color: var(--color-heading); }
+	.dn-rsv-card p { margin: 0 0 24px; }
+	.dn-rsv-card h3 { font-family: var(--font-display); font-size: 26px; line-height: 35.45px; font-weight: 600; color: var(--color-fg); margin: 0 0 24px; }
+	.dn-rsv-card h3 a { color: inherit; }
+	.dn-rsv-call + .dn-chef { padding-top: 216px; }
+	@media (max-width: 991px) { .dn-rsv-call + .dn-chef { padding-top: 144px !important; } }
+	@media (max-width: 991px) {
+		.dn-rsv-row, .dn-rsv-row.is-flip { grid-template-columns: 1fr; gap: 48px 0; }
+		.dn-rsv-text .dn-sub { max-width: none; }
+		.dn-rsv-row.is-flip .dn-rsv-text .dn-sub { max-width: none; }
+	}
+	@media (min-width: 768px) and (max-width: 991px) {
+		.dn-rsv-row { grid-template-columns: 306px 330px; gap: 0 60px; padding-inline: 12px; margin-bottom: 144px; }
+		.dn-rsv-row.is-flip { grid-template-columns: 306px 330px; gap: 0 60px; }
+		.dn-rsv-pic img { width: 100%; }
+		.dn-rsv-row .dn-rsv-text .dn-sub { font-size: 28px; line-height: 37.33px; }
+	}
+	@media (max-width: 767px) {
+		.dn-rsv { padding-top: 72px; }
+		.dn-rsv-row .dn-rsv-text .dn-sub { font-size: 28px; line-height: 37.33px; }
+		.dn-rsv-row { padding-inline: 18px; }
+		.dn-rsv-row { margin-bottom: 72px; }
+		.dn-rsv-call { padding: 36px 18px; }
+		.dn-rsv-card { padding: 36px 24px; }
+		.dn-rsv-card h2 { font-size: 35px; }
+		.dn-rsv-card h3 { font-size: 22px; }
+	}
+}

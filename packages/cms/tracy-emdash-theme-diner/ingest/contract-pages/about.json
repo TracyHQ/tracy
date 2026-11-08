@@ -1,0 +1,109 @@
+{
+  "layout": {
+    "id": "About",
+    "view": "src/views/About.astro",
+    "family": "page"
+  },
+  "rules": [
+    ["team-title", ".dn-team-title", "index.php/about-us/index.html"],
+    ["member-name", ".dn-member-name", "index.php/about-us/index.html"],
+    ["member-office", ".dn-member-office", "index.php/about-us/index.html"],
+    ["about-button", ".dn-about-words .dn-btn", "index.php/about-us/index.html"],
+    ["about-sub", "main section .dn-sub", "index.php/about-us/index.html"]
+  ],
+  "parity": {},
+  "pages": [
+    {
+      "id": "en-about",
+      "path": "/about-us",
+      "status": 200,
+      "source": ["index.php/about-us/index.html"],
+      "identity": ".dn-about-features",
+      "collections": ["chrome", "pages", "masthead", "features_intro", "teams"],
+      "rules": [
+        "masthead-title",
+        "section-label",
+        "team-title",
+        "member-name",
+        "member-office",
+        "about-button",
+        "about-sub"
+      ],
+      "parity": ["nav", "footerTitle", "ground"],
+      "content": [
+        [
+          "about-masthead",
+          ".dn-masthead-title",
+          "index.php/about-us/index.html",
+          "field",
+          "masthead/about-us.title",
+          "About Us"
+        ],
+        [
+          "about-f4-label",
+          ".dn-about-features:not(.is-words-first) .dn-label",
+          "index.php/about-us/index.html",
+          "field",
+          "features_intro/features-style-4.title_small",
+          "DISCOVER OUR MENU."
+        ],
+        [
+          "about-f4-title",
+          ".dn-about-features:not(.is-words-first) .dn-sub",
+          "index.php/about-us/index.html",
+          "field",
+          "features_intro/features-style-4.title_large",
+          "Efforts to curb soda consumption bring results on both coasts"
+        ],
+        [
+          "about-f4-button",
+          ".dn-about-features:not(.is-words-first) .dn-btn",
+          "index.php/about-us/index.html",
+          "field",
+          "features_intro/features-style-4.button",
+          "JOIN NOW"
+        ],
+        [
+          "about-f5-label",
+          ".dn-about-features.is-words-first .dn-label",
+          "index.php/about-us/index.html",
+          "field",
+          "features_intro/features-style-5.title_small",
+          "MEET THREE BROOMSTICKS"
+        ],
+        [
+          "about-f5-button",
+          ".dn-about-features.is-words-first .dn-btn",
+          "index.php/about-us/index.html",
+          "field",
+          "features_intro/features-style-5.button",
+          "MEET OUR TEAM"
+        ],
+        [
+          "about-team-title",
+          ".dn-team-title",
+          "index.php/about-us/index.html",
+          "field",
+          "teams/teams-style-1.title_section",
+          "Our Team"
+        ],
+        [
+          "about-team-intro",
+          ".dn-team-intro",
+          "index.php/about-us/index.html",
+          "field",
+          "teams/teams-style-1.description_section",
+          "What makes a good chef the best in the world? Here are a few best chefs recommended by their peers in the field."
+        ],
+        [
+          "about-member-1",
+          ".dn-member-name",
+          "index.php/about-us/index.html",
+          "field",
+          "teams/teams-style-1.items[0].name_member",
+          "Darren Klein"
+        ]
+      ]
+    }
+  ]
+}

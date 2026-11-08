@@ -1,0 +1,72 @@
+/* about page family (P5). Imported by global.css. Source: .acm-features.style-4/5 and .acm-teams.style-1 of the JA Diner About Us page. */
+@layer components {
+	/* features style 4 / 5: two columns of 594 (bootstrap md-6), pictures in two rows of two */
+	.dn-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; align-items: start; }
+	.dn-about-pics { list-style: none; margin: 0 -4px; padding: 0; display: flex; flex-wrap: wrap; }
+	.dn-about-features:not(.is-words-first) .dn-about-pics { margin-right: 14px; }
+	.dn-about-pics li { width: 50%; padding: 0 4px; margin-bottom: 8px; }
+	.dn-about-pics img { display: block; width: 100%; height: auto; }
+	.dn-about-words .dn-sub { padding-right: 144px; }
+	.dn-about-features.is-words-first .dn-about-words { padding-right: 18px; }
+	.dn-about-words .dn-label { margin-bottom: 24px; }
+	.dn-about-words .dn-sub { margin-bottom: 24px; }
+	.dn-about-desc { margin-bottom: 24px; }
+	.dn-about-features:not(.is-words-first) .dn-about-desc { padding-right: 120px; }
+	.dn-about-desc p { margin: 0; }
+	.dn-about-features.is-words-first .dn-about-words { order: -1; }
+	.dn-about-features.is-words-first .dn-about-pics { order: 1; }
+
+	/* teams style 1 */
+	.dn-about-team { padding-bottom: 82px; }
+	.dn-team-head { text-align: center; }
+	.dn-team-title { font-family: var(--font-display); font-weight: 400; font-size: 60px; line-height: 72px; color: var(--color-heading); margin: 0 0 12px; }
+	.dn-team-intro { margin: 0; }
+	.dn-team-grid { display: grid; grid-template-columns: repeat(var(--dn-team-cols, 4), minmax(0, 1fr)); gap: 0 36px; }
+	.dn-member { margin-top: 48px; text-align: center; }
+	.dn-member-pic { display: inline-block; overflow: hidden; background: rgba(0, 0, 0, 0.7); max-width: 100%; }
+	.dn-member-pic img { display: block; width: 100%; height: auto; max-width: 100%; transition: 0.4s; }
+	.dn-member:hover .dn-member-pic img { opacity: 0.8; transform: scale(1.1); }
+	.dn-member-name { font-family: var(--font-display); font-weight: 400; font-size: 25px; line-height: 33.3333px; color: var(--color-heading); margin: 24px 0 0; }
+	.dn-member-office { font-size: 12px; margin-bottom: 24px; }
+	.dn-member-desc { margin: 0 0 24px; }
+	.dn-member-social { display: inline-block; list-style: none; margin: 0; padding: 0; }
+	.dn-member-social li { float: left; margin: 6px 8px 0 0; }
+	.dn-member-social li:last-child { margin-right: 0; }
+	.dn-member-social a { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border: 1px solid var(--color-line); color: var(--color-accent-text); font-size: 12px; font-weight: 600; line-height: 1; transition: 0.4s; }
+	.dn-member-social a:hover { background: var(--color-accent); color: var(--color-accent-on); }
+	.dn-member-social .is-facebook { color: var(--ds-c-accent-text, #3b5999); }
+	.dn-member-social .is-twitter { color: var(--ds-c-accent-text, #55acee); }
+	.dn-member-social .is-google-plus { color: var(--ds-c-accent-text, #dd4b39); }
+	.dn-member-social .is-instagram { color: var(--ds-c-accent-text, #e4405f); }
+	.dn-member-social .is-pinterest { color: var(--ds-c-accent-text, #bd081c); }
+	.dn-member-social .is-linkedin { color: var(--ds-c-accent-text, #0077b5); }
+	.dn-member-social a:hover { color: var(--color-accent-on); }
+}
+@media (max-width: 1199px) {
+	.dn-about-words .dn-sub { padding-right: 0; }
+	.dn-about-features:not(.is-words-first) .dn-about-desc { padding-right: 0; }
+	.dn-about-words .dn-sub { font-size: 28px; line-height: 37.3333px; }
+}
+@media (max-width: 991px) {
+	.dn-about-grid { grid-template-columns: 1fr; }
+	.dn-about-features.is-words-first .dn-about-words { padding-right: 0; }
+	.dn-about-features:not(.is-words-first) .dn-about-words { margin-top: 48px; }
+	.dn-about-features.is-words-first .dn-about-words { margin-bottom: 48px; }
+	.dn-team-title { font-size: 45px; line-height: 54px; }
+}
+@media (max-width: 767px) {
+	/* the source's floated pictures overflow their column, so its first text line sits 48px under them with its own 14px inside that gap */
+	.dn-about-features:not(.is-words-first) .dn-about-pics { margin-right: -4px; }
+	.dn-about-features:not(.is-words-first) .dn-about-words { margin-top: 34px; }
+	.dn-team-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+	.dn-about-pics li { width: 100%; }
+}
+html[data-theme="dark"] .dn-member-social a { color: var(--color-accent-text); }
+html[data-theme="dark"] .dn-member-social a:hover { color: var(--color-accent-on); }
+@media (min-width: 768px) and (max-width: 991px) {
+	/* four icons in a 153 px card column: 4 × 35 + 3 × 4 = 152 */
+	.dn-member-social li { margin-right: 4px; }
+	.dn-member-social li:last-child { margin-right: 0; }
+}

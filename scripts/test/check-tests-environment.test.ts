@@ -503,7 +503,7 @@ test('a package script is run with its own flags and globs, the reporter in betw
     'scripts/test/*.test.mjs',
     'packages/*/*/test/*.test.mjs'
   ])
-  for (const theme of ['base', 'business', 'saas', 'coffee', 'restaurant']) {
+  for (const theme of ['base', 'business', 'saas', 'coffee', 'restaurant', 'diner']) {
     const rel = `packages/cms/tracy-emdash-theme-${theme}`
     assert.deepEqual(reportedScript(rel, 'test', read(rel)), ['--test', ...rep, 'tests/*.test.mjs'], rel)
   }
@@ -543,7 +543,7 @@ test('an EmDash template suite runs with --test-force-exit, so a file left holdi
         scripts: Record<string, unknown>
       }
     ).scripts
-  for (const theme of ['base', 'business', 'saas', 'restaurant']) {
+  for (const theme of ['base', 'business', 'saas', 'restaurant', 'diner']) {
     const rel = `packages/cms/tracy-emdash-theme-${theme}`
     const args = reportedScript(rel, 'test', scripts(rel))
     assert.ok(Array.isArray(args), rel)
