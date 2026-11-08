@@ -4,11 +4,11 @@
   "provenance": {
     "database": {
       "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-      "sha256": "c536f9cf394b28bae6c374ed6b9dd153c58777e4c75e2e7bbb86e5be4e708f92"
+      "sha256": "fc1ed1890f3f8bc0dfe0fbcec96e02737fc4fe3fdcdb490403822bfa28635360"
     },
     "webroot": {
       "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-      "sha256": "fc319a8dda261f63f6ea0f3ef74b1d0a70cbddfbdcf613d996a45484a76f719d"
+      "sha256": "0200acaeefe3680fb0d5fb0f483e3b3dfa375c070ba10ae634f6789df00e4c08"
     }
   },
   "tablePrefix": "tr_",
@@ -781,9 +781,9 @@
         "subscribe.form",
         "subscribe.posttext"
       ],
-      "contentSha256": "690404d40c2eccb0271850dba3b53eb40fddfb5bede0882ee5e608fa3e10d79f",
+      "contentSha256": "2bc46f5c3773782f4ba8be2701a4dc51e194d9df4e4e7dc124692014cfab0b63",
       "entity": "page-reservation",
-      "skeleton": "c0559d4ba706dad9c52278d7464c41880056a48ed50c7920262caea78c26f926"
+      "skeleton": "ec065c3af7cee3bd60305b30e6ac23ec2063dbe2ae0dcf95e56820f482da2ff1"
     },
     {
       "id": 69,
@@ -1675,9 +1675,9 @@
         "subscribe.form",
         "subscribe.posttext"
       ],
-      "contentSha256": "e28e39916072ac61c5fea0e65676c19833c7d5e0aa232ffaf1ead3426fb30f9b",
+      "contentSha256": "f02bcab9fc433e0c6861b12c3f7265280347c4f08c853b9b73e548e32667c754",
       "entity": "page-typography",
-      "skeleton": "f5b66484e628a4f1c042637705dfe4a266d4d4330812acbfe2fce7b898913281"
+      "skeleton": "b76f7c9dbbcf3ac371e5c9a7bdc0ab9b57742ea258d53f974dc36f57fcb6730e"
     },
     {
       "id": 277,
@@ -1878,7 +1878,7 @@
       "id": 97,
       "slug": "footer",
       "area": "footer",
-      "sha256": "0ce77c6e651346eae88cb217ad0104a537d7855f602bc9fe80b1ab65e5189940",
+      "sha256": "32a2d7827a1c1e5cde75eed65ba7a6c1b3112e868fdbf4e26acfca683d479e49",
       "blocks": [
         "footer.location",
         "footer.location.title",
